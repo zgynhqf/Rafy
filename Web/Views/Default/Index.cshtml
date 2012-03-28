@@ -1,0 +1,120 @@
+﻿@{
+    ViewBag.Title = "首页";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section head{
+    <script type="text/javascript">
+        function addTab(item) {
+            var tabPanel = Ext.getCmp('centerTab');
+            var tab = tabPanel.getComponent(item.text);
+            if (!tab) {
+                tab = {
+                    id: item.text,
+                    title: item.text,
+                    layout: 'fit',
+                    closable: true,
+                    autoScroll: true
+                };
+                if (item.url) {
+                    tab.html = Ext.String.format('<iframe width="100%" height="99%" scrolling="auto" frameborder="0" src="{0}" ></iframe>', item.url);
+                }
+                else {
+                    tab.items = Ext.widget('container', {
+                        border: 0,
+                        layout: 'fit',
+                        autoScroll: true
+                    });
+
+                    Oea.App.showModel({
+                        viewName: item.viewName,
+                        model: item.model,
+                        container: tab.items,
+                        isAggt: true
+                    });
+                }
+
+                tab = tabPanel.add(tab);
+            }
+            tabPanel.setActiveTab(tab);
+        }
+
+        function createModuleStore() {
+            var store = Ext.create('Ext.data.TreeStore', {
+                root: @{WriteLiteral(this.ViewBag.ModuleRootJson);}
+            });
+
+            return store;
+        }
+
+        Ext.onReady(function () {
+
+            var store = createModuleStore();
+
+            Ext.QuickTips.init();
+
+            //左边的模块列表
+            var moduleList = Ext.create('Ext.tree.Panel', {
+                region: 'west',
+                title: '模块列表',
+                split: true,
+                collapsible: true,
+                width: 200,
+                margins: '5',
+                store: store,
+                rootVisible: false,
+                listeners: {
+                    'selectionchange': function (view, selection) {
+                        if (selection.length > 0) {
+                            var item = selection[0].raw;
+                            if (item.url || item.model) { addTab(item); }
+                        }
+                    }
+                }
+            });
+            moduleList.expandAll();
+
+            //中间的主叶签体
+            var tab = {
+                xtype: 'tabpanel',
+                id: 'centerTab',
+                region: 'center',
+                activeTab: 0,
+                items: {
+                    contentEl: 'center-panel',
+                    title: '首页',
+                    autoScroll: true
+                }
+            };
+
+            //整个布局
+            var viewport = Ext.widget('viewport', {
+                layout: 'border',
+                items: [
+                    {
+                        region: 'north',
+                        contentEl: 'north-panel',
+                        height: 50,
+                        border: 0,
+                        margins: '5'
+                    },
+                    {
+                        region: 'south',
+                        contentEl: 'south-panel',
+                        border: 0,
+                        margins: '5',
+                        height: 30
+                    },
+                    moduleList, tab
+                ]
+            });
+        });
+    </script>
+}
+<div id="north-panel">
+    <img style="float:right;" src="@Url.Content("~/Content/images/Logo.png")" />
+</div>
+<div id="south-panel" style="text-align: center">
+    页脚</div>
+<div id="center-panel">
+    <img style="text-align:center; width:100%;" src="@Url.Content("~/Content/images/ProductSplash.jpg")" />
+</div>

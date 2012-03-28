@@ -1,0 +1,52 @@
+﻿<Window x:Class="OEA.Module.WPF.Shell.DefaultLoginWindow" 
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+        SizeToContent="WidthAndHeight" Background="Transparent"
+        Title="登录"  WindowStartupLocation="CenterScreen" WindowStyle="None" 
+        AllowsTransparency="True" ResizeMode="NoResize" 
+    >
+    <Border CornerRadius="10"
+        BorderBrush="Gray"
+        BorderThickness="3"
+        Margin="24"
+        Padding="4">
+        <Border.Background>
+            <LinearGradientBrush EndPoint="0.503,1.261" StartPoint="0.492,-0.245">
+                <GradientStop Color="#FF3658AB"/>
+                <GradientStop Color="White" Offset="0.992"/>
+            </LinearGradientBrush>
+        </Border.Background>
+        <Border.Effect>
+            <DropShadowEffect Color="Gray" Opacity=".50" ShadowDepth="16" />
+        </Border.Effect>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="85" />
+                <ColumnDefinition Width="240" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Label Name="title" HorizontalAlignment="Center" Grid.Row="0" Grid.ColumnSpan="2" FontSize="20" Margin="10" FontWeight="Normal"/>
+            <Label Grid.Row="1">用户名：</Label>
+            <TextBox Grid.Column="1" Grid.Row="1" ToolTip="输入用户代号，不是名称" Name="txtUserName" AutomationProperties.Name="用户名" Text="admin"/>
+            <Label Grid.Row="2">密码：</Label>
+            <PasswordBox Grid.Column="1" Grid.Row="2" ToolTip="输入密码" Name="txtPassword" AutomationProperties.Name="密码"/>
+            <StackPanel Grid.Column="1" Grid.Row="4" Margin="10,5" HorizontalAlignment="Right" Orientation="Horizontal">
+                <Button Name="btnLogin" AutomationProperties.AutomationId="login" IsDefault="True" Content="登录" Click="btnLogin_Click"  Width="68">
+                    <Button.Effect>
+                        <DropShadowEffect Color="Gray" Opacity=".50" ShadowDepth="8" />
+                    </Button.Effect>
+                </Button>
+                <Button Name="btnCancel" Margin="2"  Width="68" Height="22" IsCancel="True" Content="取消" Click="Cancel">
+                    <Button.Effect>
+                        <DropShadowEffect Color="Gray" Opacity=".50" ShadowDepth="8" />
+                    </Button.Effect>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>
