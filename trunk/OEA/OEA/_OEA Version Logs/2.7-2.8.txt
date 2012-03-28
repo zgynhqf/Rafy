@@ -1,0 +1,505 @@
+﻿/*******************************************************
+ * 
+ * 创建时间：20110726
+ * 说明：本文件用于记录 OEA 框架版本号及相应的变更记录。格式如下：
+ * 暂时分为以下几类：
+ * ★较大改动、★修改接口、★删除接口、添加接口、添加功能、重构、内部修改、BUG修改。
+ * 
+*******************************************************/
+
+2.8.0.224
+    BUG修改
+        解决“当给值类型的托管属性赋值 null 表示重设时，会抛出异常。”的问题。
+
+2.8.0.223
+    重构
+        DbMigration
+            * RollbackAll 时不支持 DropDatabase。
+            * 当版本号嵌入到当前数据库中时，也不支持自动 DropDatabase。
+            * 删除多个表时应该按照关系进行删除。
+
+2.8.0.222
+    重构
+        * 删除 log4net 的引用，改为使用一个简单的 Logger 类。
+
+2.8.0.221
+    重构
+        * 支持直接从托管属性查找引用实体属性元数据。
+
+2.8.0.220
+    重构
+        * 在实体元数据中嵌入托管属性对象。
+        * 支持直接从托管属性查找实体属性元数据。
+
+2.8.0.219
+    重构
+        * DBConvention 添加 TreePId 约定。
+        * DbMigration.DatabaseChanges 小bug。
+
+2.8.0.218
+    重构
+        * 删除 ButtonPropertyEditor 中生成的无用的 ResizingPanel 以及它相应的常量。
+
+2.8.0.217
+    重构
+        * 添加数据迁移的注释
+        * 部分相关代码重构。
+
+2.8.0.216
+    ★较大改动、重构
+        * OEA 的库开始使用 DbMigration
+            * 修正结构上的问题
+            * 添加初始数据
+
+2.8.0.215
+    ★较大改动、添加功能
+        * 完善数据库升级/迁移。
+
+2.8.0.214
+    重构
+        * 完善 Common.DBAccesser 的方法。
+
+2.8.0.213
+    添加功能
+        * 完善数据库升级/迁移。
+
+2.8.0.212
+    添加接口
+        * IApp 支持 DbMigratingOperations 事件。
+
+2.8.0.211
+    重构
+        * Common.DBAccesser 支持 SqlTrace。
+
+2.8.0.210
+    重构
+        * Common.DBAccesser 中的 TryCatch 变为 TryFinally。
+        * Result 支持方便的隐式转换。
+
+2.8.0.209
+    ★较大改动、添加功能
+        * 支持部分数据库升级/迁移。
+
+2.7.0.208
+    ★较大改动、重构
+        * 添加 Common 项目
+
+2.7.0.207
+    添加接口
+        * 添加 OpenModuleOrAlert 方法。
+
+2.7.0.206
+    BUG修改
+        * EntityViewMetaAC 不需要序列化，引用实体需要标记不可序列化。
+
+2.7.0.205
+    BUG修改
+        * EntityViewMetaAC 类上没有标记 Serializable
+
+2.7.0.204
+    重构
+        * 增加 ITableExtension 接口
+        * 增加 ITableExtension.Translate 方法，用来获取数据库中的所有数据
+
+2.7.0.203
+    重构
+        * 删除 Entity.DisableReference 属性，外键功能不能被禁用。
+        * 删除 Entity.IsLoadingDataDirectly 属性。
+
+2.7.0.202
+    BUG修改
+        * 去除 2.6.0.107 中的临时修改：EntityViewMeta.Temp_IgnoreDefaultCommand。
+
+2.7.0.201
+    BUG修改
+        * SelectionManager 中的关系加载使用异步时没有加锁。
+
+2.7.0.200
+    BUG修改
+        * 导出 Excel 使用的 Meta 应该是 View 中的 Meta
+
+2.7.0.199
+    重构
+        * QueryDb 中 Select 不需要传入 EntityType。
+
+2.7.0.198
+    重构
+        * RegisterRef 方法去除隐式参数。
+
+2.7.0.197
+    BUG修改
+        * EntityMeta.BeglongsToPrimaryAggt 属性需要考虑当根类型也被放在其它类型中作为子显示时的情况。（例如 PBSTypeNavigateCriteria。）
+
+2.7.0.196
+    ★较大改动、重构
+        * RBAC 中的类重写，包括：BusinessObjectInfo、BoInfoOperation、BoInfoOperationSelected，
+            新的类包括：ModuleAC、EntityViewMetaAC、OperationAC、OperationSelected。
+        * UIModuleMeta 中添加 Id 列，配合权限控制。
+
+2.7.0.195
+    BUG修改
+        * MTTG 在多选状态下无法使用 Ctrl 取消反选。
+
+2.7.0.194
+    重构
+        * 实体集合类添加方法 GetFromRow、ReadRows。
+        * 实体类属性 Parent 变为私有。
+
+2.7.0.193
+    重构、★删除接口、★较大改动
+        * 删除 EM 类。
+
+2.7.0.192
+    重构、★删除接口、★较大改动
+        * 删除 EF 的支持。
+
+2.7.0.191
+    重构
+        * ComboListControl 中的过滤代码使用新的 Filter 接口实现。
+
+2.7.0.190
+    重构
+        * CommandInfo 中的 CanServeFor 修改为 OnDefaultCanServeFor，并先判断没有任何配置才使用此方法。
+        * ListObjectView 直接依赖 MTTGListEditor，方便调试。
+        * 修改自动化显示文本。
+
+2.7.0.189
+    BUG修改
+        * LookupListPropertyEditor：修正编码错误：变量用错。
+
+2.7.0.188
+    重构
+        * 把 WPFModule 中 SetDefaultCommand 中的默认按钮可见性逻辑提取到 AddCommandInfo、DeleteCommandInfo、EditCommandInfo、SaveCommandInfo 中。
+        * 把 ComboListControl 的皮肤移动到 Theme.xaml 中。
+        * 枚举编辑器在列表中生成后需要直接下拉出来。
+
+2.7.0.187
+    BUG修改
+        * 展开到按钮支持灰显。
+
+2.7.0.186
+    ★修改接口
+        * 把 AddChildTable 移动到应用层，同时调用 AddCommand 以减少其中重复的代码，同时让它对所有对象不可用。
+    重构
+        * 删除 ObjectView 中的 CurrentId 属性。
+        * 统一一些扩展方法的类名。
+        * UIHelper 重命名为 AutoUIHelper。
+
+2.7.0.185
+    重构
+        GridTreeViewRow
+        * 把不易理解、无用的 OnSelected 代码删除。
+
+2.7.0.184
+    添加功能
+        LookupListTreeColumn
+        * 支持“如果是可输入下拉列表,非编辑状态下是绑定到自身属性上”。
+
+2.7.0.183
+    重构
+        LookupListPropertyEditor
+        * 提取重用方法。
+
+2.7.0.182
+    重构
+        ListObjectView
+        * BindData 不需要判断是否为树型结构。
+
+2.7.0.181
+    BUG修改
+        MTTG
+        * 布局中的展开项需要防止重入。
+
+2.7.0.180
+    重构
+        MTTG
+        * ClearSelection 方法中也应该支持清空 SelectedItem 属性。
+
+2.7.0.179
+    重构
+        MTTG
+        * EnsureNodeIsVisible 方法中提取出 FindOrGenerateNode 方法。
+
+2.7.0.178
+    BUG修改
+        AddChildTableCommand
+        * 修复“在添加清单数据以后，空间没有 view.RefreshControl() ，view.CurrentObject 无法赋值”的问题。
+
+2.7.0.177
+    BUG修改
+        ListObjectView
+        * 修复“在有 Filter 的情况下，设置 CurrentObject 报错”的问题。
+    重构
+        ListObjectView.CurrentObject
+        * 由 object 类型改为 Entity 类型。
+
+2.7.0.176
+    BUG修改
+        ClearQueryConditionCommand
+        * 修复“清除按钮中已经执行了 AttachNewQueryObject() 函数，不用在把每个对象的 PropertyValue 设置为 null。”的问题。
+
+2.7.0.175
+    BUG修改
+        TreeGrid
+        * 修复“TreeColumn 动态更新 Visibility 没有判断数据类型”的问题。
+
+2.7.0.174
+    BUG修改
+        http://ipm.grandsoft.com.cn/issues/248372
+        http://ipm.grandsoft.com.cn/issues/248378
+        http://ipm.grandsoft.com.cn/issues/248432
+        TreeGrid
+        * 修复“TreeColumn 不能动态更新 Visibility”的问题。
+        * 修复“Shift 多选没有按照 View 的顺序来选择项”的问题。
+
+2.7.0.173
+    BUG修改
+        http://ipm.grandsoft.com.cn/issues/248374
+        http://ipm.grandsoft.com.cn/issues/248427
+        TreeGrid
+        * 修复“勾选模式下没有发生 SelectedItemChanged 事件”的问题。
+        * 修复“点击选择列排序出错”的问题。
+        * 修复“子列表排序事件没有处理，导致父列表接着排序”的问题。
+        * 修复“TreeView 在被排序时会发生 SelectedItemChanged 事件，需要过滤掉这种情况。”的问题。
+
+2.7.0.172
+    BUG修改
+        * http://ipm.grandsoft.com.cn/issues/248388
+            TreeGrid.CheckingMode：如果是在行选的模式下，则需要把 TreeView 的 SelecteItemChanged 事件屏蔽掉。
+            这样，用户只能通过勾选来选择行。数据选择的模式下不应该屏蔽此事件。
+
+2.7.0.171
+    BUG修改
+        * ServiceBase 不应该从 ManagedProperty 继承。
+
+2.7.0.170
+    内部修改
+        把开源代码 CompactMessageEncoder 加入到 OEA 项目中。
+
+2.7.0.169
+    BUG修改
+        TreeGrid UIV : 使用类似于 TreeView 默认 UI Virtualization 方案来实现 TreeGrid 中的 UIV。
+
+2.7.0.168
+    BUG修改
+        由于和分组功能冲突，所以暂时去除 UI Virtualization。
+
+2.7.0.167
+    重构
+        PopupAddCommand 不需要两次刷新控件。
+
+2.7.0.166
+    重构
+        UIA
+
+2.7.0.165
+    内部修改
+        MTTG
+        * 支持根对象的 UI Virtualization，以提升性能。具体内容，参考文章：
+            http://www.cnblogs.com/zgynhqf/archive/2011/12/12/2284335.html
+
+2.7.0.164
+    重构
+        MTTG
+        * OnNodeExpanded 和 OnNodeCollapsed 使用直接通知，而不是 RoutedEvent。因为后者在界面加载完成前没有作用。
+        * 删除 EnsureNodeLoaded 方法，全部使用 EnsureNodeIsVisible 方法。
+        * 删除 DummyItem 的过滤支持。
+
+2.7.0.163
+    重构
+        UIA
+
+2.7.0.162
+    BUG修改
+        * 多选状态下不能进入某行的编辑。
+        * MTTG 在多选时不支持 Ctrl 取消选择。
+
+2.7.0.161
+    内部修改
+        * 支持自动化。
+
+2.7.0.160
+    BUG修改
+        * 修改 EntityMetaRepository.FindViewMeta 方法：找到主聚合中的元数据。如果没有标记主聚合的元数据，则直接返回第一个。这样可以保持和原来的兼容。
+
+2.7.0.159
+    内部修改
+        * ManagedPropertyObject.OnPropertyChanged 方法需要考虑没有静态事件的情况。
+
+2.7.0.158
+    内部修改、重构
+        * 服务端在启动时，需要清空缓存信息库。
+        * 分离类的代码到单独的文件中。
+
+2.7.0.157
+    BUG修改
+        * 回滚 2.7.0.156 所做的样式更改。
+        * 修改 GridTreeViewRowPresenter.MeasureOverride 中的坐标计算错误。
+
+2.7.0.156
+    内部修改
+        * 修改控件：修改 MTTG 的 ScrollViewer 显示样式。
+
+2.7.0.155
+    内部修改
+        * 添加测试 MTTG 性能的一个按钮。
+
+2.7.0.154
+    BUG修改
+        * FindViewMeta 方法应该只找主聚合中的对象。
+        * EntityMeta 添加属性 BelongsToPrimaryAggt。
+
+2.7.0.153
+    内部修改
+        * TreeColumn 继承自 GridTreeViewColumn 类，而不是相互组合。
+        * 自动扩展列宽的代码有问题。
+        * 重构 MTTG 控件动态列宽中的部分代码。
+
+2.7.0.152
+    添加功能
+        * MTTG 控件支持动态列宽。
+        * 添加 GridTreeViewColumn 类。
+
+2.7.0.151
+    BUG修改
+        * 由于 WinUIA 的速度太快，需要一定的时间来等待控件生成。
+
+2.7.0.150
+    ★较大改动、内部修改
+        * 自动化底层代码调整。
+
+2.7.0.149
+    重构
+        * 调整列号的宽度。
+
+2.7.0.148
+    重构
+        * 代码规范。
+
+2.7.0.147
+    ★较大改动、内部修改、重构
+        * 下拉列表控件更好地支持自动化。
+        * 整理 MTTG 类中的 Refresh 方法。
+
+2.7.0.146
+    BUG修改
+        * EditDetailCommand 中应该把修改后的对象设置为 Dirty 状态，但是需要考虑到当前对象为新增状态时的情况。
+
+2.7.0.145
+    内部修改
+        * 修改内置的编辑按钮中的代码，使得其控件代码与操作代码分离。
+
+2.7.0.144
+    BUG修改
+        * TableMeta 类应该带有无参的构造函数。
+
+2.7.0.143
+    内部修改、重构
+        * 整理 Entity 及 EntityList 类型的 Save 方法。
+        * 添加 IEntityOrListInternal 接口，用于内部的 Saved 事件调用。
+
+2.7.0.142
+    内部修改
+        * 如果是新的对象，则不需要加入到 DeletedList 列表中。
+
+2.7.0.141
+    内部修改
+        * 对名称的修改使用 MP 完成。
+
+2.7.0.140
+    内部修改
+        * 支持自动化 - 添加两个 CodeSnippets 。
+
+2.7.0.139
+    内部修改
+        * 添加 MMTG 的一些测试代码。
+
+2.7.0.136 - 138
+    内部修改
+        * 支持自动化。
+
+2.7.0.135
+    内部修改
+        * 删除无用的文件。
+
+2.7.0.134
+    ★较大改动、添加功能、内部修改
+        * 添加自动化框架代码。
+
+2.7.0.133
+    内部修改
+        * 修改一些支持自动化的代码。
+
+2.7.0.132
+    内部修改
+        * CheckMode 模式下不支持行选择，否则又是选择框，又是行选，用户会晕。
+        * Tab 编辑下一个单元格。
+        * 支持自动化
+            * MTTGCell 在 UIA 调用 Invoke 时，进入编辑状态。
+    BUG修改
+        * GridTreeViewRowPresenter 中不能使用 Loaded 事件，否则在二级窗体（GIX4 必填属性）造成无法找到 Columns 对象。
+
+2.7.0.131
+    内部修改
+        * 支持部分自动化。
+
+2.7.0.130
+    内部修改
+        * 刷新的时候也需要列号。
+
+2.7.0.129
+    内部修改
+        MTTG
+        * 列拉得太小时，第一列的编码显示不全。
+        * GridMode 下，不需要把 Expander 给空出来。
+
+2.7.0.128
+    添加功能
+        * 所有控件全部默认支持行号。
+
+2.7.0.127
+    重构
+        * 整合 ViewLayoutManager，并重命名为 GridTreeViewColumnRangeManager。
+        * 一些相关的小重构。
+
+2.7.0.127
+    重构
+        * 重命名：
+            TreeListView                ->  GridTreeView
+            TreeListViewItem            ->  GridTreeViewRow
+            TreeGridViewRowPresenter    ->  GridTreeViewRowPresenter
+
+2.7.0.126
+    重构
+        * 重构 CreateCheckingColumnTemplate 中重复的代码。
+
+2.7.0.125
+    ★删除接口
+        * IUnderlyModel 删除 AlertDataDeleting 属性及约定。
+        * 不再支持取消勾选时的弹出提示。
+
+2.7.0.124
+    添加接口
+        * EntityViewMeta 添加用于配置的扩展方法 SortProperties。
+
+2.7.0.123
+    内部修改
+        * CanExecute 中的代码不应该抛出异常，否则界面会一直弹出错误信息。
+
+2.7.0.122
+    重构
+        * MultiObjectTreeView 重命名为 MultiTypesTreeGrid。
+
+2.7.0.121
+    重构
+        * MOTVListEditor 中的 GroupDescriptions 需要保存。
+
+2.7.0.120
+    ★修改接口
+        * Entity.Id 使用托管属性编写，不再设置为可重写的属性。
+        * BQInfoOperation 类不应该直接使用构造函数构造，而是使用 Repository，否则造成没有 Id。
+
+2.7.0.119
+    ★较大改动
+        * 删除 SelectionDataGrid 控件，准备和 MOTV 合并为一个控件。
+        * MOTV 支持过滤、排序、分组、勾选

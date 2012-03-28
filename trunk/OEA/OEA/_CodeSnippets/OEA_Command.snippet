@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+    <CodeSnippet Format="1.0.0">
+        <Header>
+            <Description>一般命令</Description>
+            <Title>OEA_Command</Title>
+            <Shortcut>OEACommand</Shortcut>
+            <Author>HuQingfang</Author>
+            <SnippetTypes>
+                <SnippetType>Expansion</SnippetType>
+            </SnippetTypes>
+        </Header>
+        <Snippet>
+            <Declarations>
+                <Literal>
+                    <ID>Id</ID>
+                    <Default>D26D584D-1258-4FF3-8FF3-B0967C33DCD2</Default>
+                </Literal>
+                <Literal>
+                    <ID>Entity</ID>
+                    <Default>Entity</Default>
+                </Literal>
+                <Literal>
+                    <ID>Label</ID>
+                    <Default>Label</Default>
+                </Literal>
+                <Literal>
+                    <ID>Name</ID>
+                    <Default>Name</Default>
+                </Literal>
+            </Declarations>
+            <Code Language="csharp">
+                <![CDATA[[Command("$Id$", typeof($Entity$), Label = "$Label$")]
+    public class $Name$ : ListViewCommand
+    {
+        public override void Execute(ListObjectView view)
+        {
+            $end$
+        }
+    }]]>
+            </Code>
+        </Snippet>
+    </CodeSnippet>
+</CodeSnippets>

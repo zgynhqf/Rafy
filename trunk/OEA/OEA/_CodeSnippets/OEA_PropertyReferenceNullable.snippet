@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+    <CodeSnippet Format="1.0.0">
+        <Header>
+            <Description>一般外键引用对象属性</Description>
+            <Title>OEA_PropertyReferenceNullable</Title>
+            <Shortcut>OEAPropertyReferenceNullable</Shortcut>
+            <Author>HuQingfang</Author>
+            <SnippetTypes>
+                <SnippetType>Expansion</SnippetType>
+            </SnippetTypes>
+        </Header>
+        <Snippet>
+            <Declarations>
+                <Literal>
+                    <ID>refEntityType</ID>
+                    <ToolTip>外键对象类型</ToolTip>
+                    <Default>RefEntity</Default>
+                </Literal>
+                <Literal>
+                    <ID>referenceType</ID>
+                    <ToolTip>是否为父外键</ToolTip>
+                    <!--<Default>Parent</Default>-->
+                    <Default>Normal</Default>
+                </Literal>
+                <Literal>
+                    <ID>Label</ID>
+                    <Default>Label</Default>
+                </Literal>
+        <Literal Editable="false">
+                    <ID>ClassName</ID>
+                    <Function>ClassName()</Function>
+                    <Default>ClassNamePlaceholder</Default>
+                </Literal>
+            </Declarations>
+            <Code Language="csharp">
+                <![CDATA[public static readonly RefProperty<$refEntityType$> $refEntityType$RefProperty =
+            P<$ClassName$>.RegisterRef(e => e.$refEntityType$, ReferenceType.$referenceType$);
+        public int? $refEntityType$Id
+        {
+            get { return this.GetRefNullableId($refEntityType$RefProperty); }
+            set { this.SetRefNullableId($refEntityType$RefProperty, value); }
+        }
+        public $refEntityType$ $refEntityType$
+        {
+            get { return this.GetRefEntity($refEntityType$RefProperty); }
+            set { this.SetRefEntity($refEntityType$RefProperty, value); }
+        }$end$]]>
+            </Code>
+        </Snippet>
+    </CodeSnippet>
+</CodeSnippets>

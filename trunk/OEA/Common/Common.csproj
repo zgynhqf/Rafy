@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{796B149B-32C9-4BB0-A23F-69C012450DB8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>hxy.Common</RootNamespace>
+    <AssemblyName>Common</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Collection\LRUCache.cs" />
+    <Compile Include="Configuration\ConfigurationExtension.cs" />
+    <Compile Include="Configuration\ConfigurationHelper.cs" />
+    <Compile Include="Data\DbSetting.cs" />
+    <Compile Include="Data\DBAccesser.cs" />
+    <Compile Include="Data\IDBAccesser.cs" />
+    <Compile Include="Data\IDbBackuper.cs" />
+    <Compile Include="Data\IParameterFactory.cs" />
+    <Compile Include="Data\LongTimeDbAccesser.cs" />
+    <Compile Include="Data\Providers\ConverterFactory.cs" />
+    <Compile Include="Data\Providers\ISqlProvider.cs" />
+    <Compile Include="Data\Providers\ODBCProvider.cs" />
+    <Compile Include="Data\Providers\OracleProvider.cs" />
+    <Compile Include="Data\Providers\SqlServer2005Backuper.cs" />
+    <Compile Include="Data\Providers\SqlServer2008Backuper.cs" />
+    <Compile Include="Data\Providers\SqlServerBackuper.cs" />
+    <Compile Include="Data\Providers\SqlServerProvider.cs" />
+    <Compile Include="Data\SQLTrace.cs" />
+    <Compile Include="Extensions\ConverterHZToPY.cs" />
+    <Compile Include="Extensions\IEnumerableExtension.cs" />
+    <Compile Include="Extensions\MemberInfoExtension.cs" />
+    <Compile Include="Extensions\SystemExtension.cs" />
+    <Compile Include="PagerInfo.cs" />
+    <Compile Include="Extensions\StringBuilderExtension.cs" />
+    <Compile Include="Extensions\StringExtension.cs" />
+    <Compile Include="Extensions\TextFormatter.cs" />
+    <Compile Include="Result.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reflection\ExpressionHelper.cs" />
+    <Compile Include="Reflection\Reflect.cs" />
+    <Compile Include="Reflection\TypeHelper.cs" />
+    <Compile Include="Serialization\BinaryFormatter.cs" />
+    <Compile Include="Serialization\FormatType.cs" />
+    <Compile Include="Serialization\IStateFormatter.cs" />
+    <Compile Include="Serialization\SerializationHelper.cs" />
+    <Compile Include="Serialization\XmlFormatter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="_ReadMe.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

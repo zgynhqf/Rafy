@@ -1,0 +1,18 @@
+﻿<local:TraditionalLayout
+    x:Class="OEA.Module.WPF.Layout.DetailLayout"
+    xmlns:local="clr-namespace:OEA.Module.WPF.Layout"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cal="http://www.codeplex.com/CompositeWPF"
+    xmlns:csla="clr-namespace:SimpleCsla.Wpf;assembly=SimpleCsla"
+    xmlns:caliburn="http://www.caliburnproject.org"
+    xmlns:av="http://schemas.codeplex.com/wpfcontrib/xaml/presentation"
+    xmlns:ad="clr-namespace:AvalonDock;assembly=AvalonDock">
+    <ad:ResizingPanel Name="container">
+        <StackPanel Name="detail">
+            <ContentControl x:Name="toolBarContainer"/>
+            <ContentControl Name="result"/>
+        </StackPanel>
+        <TabControl Name="childrenTab"/>
+    </ad:ResizingPanel>
+</local:TraditionalLayout>

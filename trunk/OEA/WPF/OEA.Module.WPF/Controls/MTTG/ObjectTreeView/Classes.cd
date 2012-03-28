@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Comment CommentText="Two partial classes - one only contains dependency property declaration and initialization code.">
+    <Position X="0.5" Y="8.73" Height="0.854" Width="2.533" />
+  </Comment>
+  <Class Name="Hardcodet.Wpf.GenericTreeView.TreeViewBase&lt;T&gt;">
+    <Position X="0.5" Y="0.5" Width="3.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAgACGIACcRDCAAEgACAAAAAiAAAgAgAiSAEAhAAIAA=</HashCode>
+      <FileName>TreeViewBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hardcodet.Wpf.GenericTreeView.TreeViewBase&lt;T&gt;">
+    <Position X="4.5" Y="0.5" Width="3.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAhQBAAAwwKQDDAEAUMABJAgBIAAEAACABAgACXzEAE=</HashCode>
+      <FileName>TreeViewBase.Declarations.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

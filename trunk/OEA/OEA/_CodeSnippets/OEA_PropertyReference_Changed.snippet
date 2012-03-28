@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+    <CodeSnippet Format="1.0.0">
+        <Header>
+            <Description>一般外键引用对象属性</Description>
+            <Title>OEA_PropertyReference_Changed</Title>
+            <Shortcut>OEAPropertyReference_Changed</Shortcut>
+            <Author>HuQingfang</Author>
+            <SnippetTypes>
+                <SnippetType>Expansion</SnippetType>
+            </SnippetTypes>
+        </Header>
+        <Snippet>
+            <Declarations>
+                <Literal>
+                    <ID>RefEntityType</ID>
+                    <ToolTip>外键对象类型</ToolTip>
+                    <Default>RefEntity</Default>
+                </Literal>
+                <Literal Editable="false">
+                    <ID>ClassName</ID>
+                    <Function>ClassName()</Function>
+                    <Default>ClassNamePlaceholder</Default>
+                </Literal>
+            </Declarations>
+            <Code Language="csharp">
+                <![CDATA[, new RefPropertyMeta
+            {
+                IdChangedCallBack = (o,e) => (o as $ClassName$).On$RefEntityType$IdChanged(e),
+                RefEntityChangedCallBack = (o,e) => (o as $ClassName$).On$RefEntityType$Changed(e),
+            }
+        protected virtual void On$RefEntityType$IdChanged(RefIdChangedEventArgs e)
+        {
+        
+        }
+        protected virtual void On$RefEntityType$Changed(RefEntityChangedEventArgs e)
+        {
+            var value = e.NewEntity as $RefEntityType$;
+            $end$
+        }]]>
+            </Code>
+        </Snippet>
+    </CodeSnippet>
+</CodeSnippets>
