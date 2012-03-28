@@ -1,0 +1,188 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{257BF7C4-07DE-4E76-B2E2-443E2200B1E0}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WPFClient</RootNamespace>
+    <AssemblyName>WPFClient</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AvalonDock">
+      <HintPath>..\Lib\AvalonDock.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity">
+      <HintPath>..\Lib\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Shell\DefaultLoginWindow.xaml.cs">
+      <DependentUpon>DefaultLoginWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Shell\DefaultShell.xaml.cs">
+      <DependentUpon>DefaultShell.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Shell\DefaultTopBanner.xaml.cs">
+      <DependentUpon>DefaultTopBanner.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OEA\Common\Common.csproj">
+      <Project>{796B149B-32C9-4BB0-A23F-69C012450DB8}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OEA\DbMigration\DbMigration.csproj">
+      <Project>{D7C4F80D-24A4-47F1-985C-CFA55CFA13E9}</Project>
+      <Name>DbMigration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OEA\ManagedProperty\ManagedProperty.csproj">
+      <Project>{66BE29D5-F1CA-4941-A4EB-6B3E8F577166}</Project>
+      <Name>ManagedProperty</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OEA\OEA.Library\OEA.Library.csproj">
+      <Project>{9F8BB429-70DE-449A-8A67-5190191E7EE6}</Project>
+      <Name>OEA.Library</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OEA\OEA\OEA.csproj">
+      <Project>{966A5BF2-D690-426B-AD68-AD868BB8F855}</Project>
+      <Name>OEA %28OEA\OEA%29</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OEA\Plugins\OEA.RBAC\OEA.RBAC.csproj">
+      <Project>{03D5A267-C106-42A9-8959-93D7AE3648DD}</Project>
+      <Name>OEA.RBAC</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\OEA\SimpleCsla\SimpleCsla.csproj">
+      <Project>{DC0539B9-8570-4132-B89A-478FB3F1CEC2}</Project>
+      <Name>SimpleCsla</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OEA\Web\OEA.Web.Meta\OEA.Web.Meta.csproj">
+      <Project>{2AECFBB6-34AC-41A6-AB8C-F52A3F68BA1A}</Project>
+      <Name>OEA.Web.Meta</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OEA\WPF\OEA.Module.WPF\OEA.Module.WPF.csproj">
+      <Project>{84399E4E-CC81-4B1F-9953-586B25B29792}</Project>
+      <Name>OEA.Module.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OEA\WPF\OEA.Module\OEA.Module.csproj">
+      <Project>{786446BE-FB56-4281-9CA2-D5B699B0B388}</Project>
+      <Name>OEA.Module</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Shell\DefaultLoginWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Shell\DefaultShell.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Shell\DefaultTopBanner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Files\Common\Images\Logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\Common\Images\ProductSplash.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Files\Common\Library\" />
+    <Folder Include="Files\Common\Module\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

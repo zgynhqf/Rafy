@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BBC530FC-0B10-4DA9-9360-FFF250415EB5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Demo</RootNamespace>
+    <AssemblyName>Demo</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Ciloci.Flee">
+      <HintPath>..\Lib\Ciloci.Flee.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BookStore\Book.cs" />
+    <Compile Include="BookStore\BookCategory.cs" />
+    <Compile Include="BookStore\BookQueryCriteria.cs" />
+    <Compile Include="BookStore\Chapter.cs" />
+    <Compile Include="BookStore\Service\CountServerBookService.cs" />
+    <Compile Include="DemoEntity.cs" />
+    <Compile Include="DemoLibrary.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="BookStore\Scripts\commands\CountServerBookCommand.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="BookStore\Scripts\commands\CountLocalBookCommand.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OEA\Common\Common.csproj">
+      <Project>{796B149B-32C9-4BB0-A23F-69C012450DB8}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OEA\DbMigration\DbMigration.csproj">
+      <Project>{D7C4F80D-24A4-47F1-985C-CFA55CFA13E9}</Project>
+      <Name>DbMigration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OEA\ManagedProperty\ManagedProperty.csproj">
+      <Project>{66BE29D5-F1CA-4941-A4EB-6B3E8F577166}</Project>
+      <Name>ManagedProperty</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OEA\OEA.Library\OEA.Library.csproj">
+      <Project>{9F8BB429-70DE-449A-8A67-5190191E7EE6}</Project>
+      <Name>OEA.Library</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OEA\OEA\OEA.csproj">
+      <Project>{966A5BF2-D690-426B-AD68-AD868BB8F855}</Project>
+      <Name>OEA %28OEA\OEA%29</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OEA\SimpleCsla\SimpleCsla.csproj">
+      <Project>{DC0539B9-8570-4132-B89A-478FB3F1CEC2}</Project>
+      <Name>SimpleCsla</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OEA\Web\OEA.Web.Meta\OEA.Web.Meta.csproj">
+      <Project>{2AECFBB6-34AC-41A6-AB8C-F52A3F68BA1A}</Project>
+      <Name>OEA.Web.Meta</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(TargetPath)" "$(SolutionDir)Web\bin\Library\" /Y
+xcopy "$(TargetPath)" "$(SolutionDir)WPFClient\bin\$(ConfigurationName)\Library\" /Y</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

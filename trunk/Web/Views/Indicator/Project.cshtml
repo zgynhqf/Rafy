@@ -1,0 +1,61 @@
+﻿@{
+    ViewBag.Title = "项目列表";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var img1 = Url.Content("~/Content/Indicator/1.png");
+    var img2 = Url.Content("~/Content/Indicator/2.png");
+    var img3 = Url.Content("~/Content/Indicator/3.png");
+    var img4 = Url.Content("~/Content/Indicator/4.png");
+    var img5 = Url.Content("~/Content/Indicator/5.png");
+}
+@section head{
+    <script type="text/javascript">
+        Ext.onReady(function () {
+            var images = ['@img1', '@img2', '@img3', '@img4', '@img5'];
+
+            var model = 'GIX5.Library.Project';
+            Oea.AutoUI.getMeta({
+                model : model,
+                callback : function (meta) {
+                    var mColumn = Oea.findFirst(meta.gridConfig.columns, function (c) { return c.dataIndex == "Mask" });
+                    if (mColumn != null) {
+                        mColumn.renderer = function (value) {
+                            var img = images[value];
+                            return Ext.String.format('<img src="{0}"/>', img);
+                        }
+                    }
+
+                    var listView = Oea.AutoUI.createListView(meta);
+
+                    listView.loadData();
+
+                    var projectList = listView.getControl();
+                    projectList.setHeight(300);
+
+                    var container = Ext.widget('viewport', {
+                        border: 0,
+                        autoScroll: true,
+                        items: [projectList, {
+                            contentEl: 'detailDiv'
+                        }]
+                    });
+
+                    listView.on('currentChanged', function (old, model) {
+                        Ext.fly('detailDiv').setHTML(model.get("Mask"));
+                    });
+
+                    listView.getControl().on('cellclick', function (grid, td, cellIndex, model) {
+                        if (cellIndex == 3) {
+                            var m = model.get("Mask");
+                            m++;
+                            if (m > 4) m = 0;
+                            model.set("Mask", m);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}
+<div id="detailDiv" style="height: 300px;">
+</div>
