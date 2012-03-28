@@ -1,0 +1,37 @@
+﻿<local:TraditionalLayout
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:OEA.Module.WPF.Layout"
+    xmlns:oea="clr-namespace:OEA.Module.WPF"
+    xmlns:cal="http://www.codeplex.com/CompositeWPF"
+    xmlns:csla="clr-namespace:SimpleCsla.Wpf;assembly=SimpleCsla"       
+    xmlns:caliburn="http://www.caliburnproject.org"   
+    xmlns:av="http://schemas.codeplex.com/wpfcontrib/xaml/presentation"
+    xmlns:ad="clr-namespace:AvalonDock;assembly=AvalonDock"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+    x:Class="OEA.Module.WPF.Layout.ListDetailLayout"
+    mc:Ignorable="d"
+    d:DesignWidth="800" d:DesignHeight="500">
+    <DockPanel x:Name="dockPanel">
+        <ContentControl x:Name="toolBarContainer" DockPanel.Dock="Top"/>
+        <ad:ResizingPanel>
+            <TabControl x:Name="queryPanel" TabStripPlacement="Bottom" ad:ResizingPanel.ResizeWidth="300" Style="{StaticResource OEA_TabControlHeaderHide}">
+                <TabItem x:Name="navigate" AutomationProperties.Name="导航查询" Header="导航查询"/>
+                <TabItem x:Name="condition" AutomationProperties.Name="条件查询" Header="条件查询"/>
+            </TabControl>
+            <ContentControl>
+                <ad:ResizingPanel x:Name="container">
+                    <ContentControl x:Name="main"/>
+                    <DockPanel x:Name="resultChildren">
+                        <ContentControl x:Name="result" DockPanel.Dock="Top"/>
+                        <!--当没有 childrenTab 时，result 也不能放到最大，所以加入一个冗余的 ContentControl-->
+                        <ContentControl DockPanel.Dock="Top"/>
+                        <TabControl x:Name="childrenTab"/>
+                    </DockPanel>
+                </ad:ResizingPanel>
+            </ContentControl>
+        </ad:ResizingPanel>
+    </DockPanel>
+</local:TraditionalLayout>

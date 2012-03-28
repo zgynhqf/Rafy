@@ -1,0 +1,188 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="OEA.Module.WPF.Editors.EnumViewModel" Collapsed="true">
+    <Position X="1.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAAAgAAAAAAAAAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>Editors\PropertyEditor\EnumViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OEA.Module.WPF.Editors.EnumPropertyEditor" Collapsed="true">
+    <Position X="1.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAiAAAAAACAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Editors\PropertyEditor\EnumPropertyEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OEA.Module.WPF.Editors.WPFPropertyEditor" Collapsed="true">
+    <Position X="3.75" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAIAAAIAAAAAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>Editors\PropertyEditor\WPFPropertyEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OEA.Module.WPF.Editors.ListEditor" Collapsed="true">
+    <Position X="0.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAEACABCAAAAAAEAAAAEAABAAAAAAAAAgACAAA=</HashCode>
+      <FileName>Editors\ListEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OEA.Module.WPF.Editors.LookupListPropertyEditor" Collapsed="true">
+    <Position X="5.75" Y="2" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAEAAEAAAAAAAiAAAAgACAAAAAQAQACAAAAAQAAAAAA=</HashCode>
+      <FileName>Editors\PropertyEditor\LookupListPropertyEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OEA.Module.WPF.Editors.ButtonPropertyEditor" Collapsed="true">
+    <Position X="7.75" Y="2" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAABAAAAAACAAAAAAAAAIAAAAAAQAAAAA=</HashCode>
+      <FileName>Editors\PropertyEditor\ButtonPropertyEditor.cs</FileName>
+      <NewMemberFileName>Editors\MemoPropertyEditor.cs</NewMemberFileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OEA.Module.WPF.Editors.StringPropertyEditor" Collapsed="true">
+    <Position X="3.75" Y="2" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAABAAAAAACAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Editors\PropertyEditor\StringPropertyEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OEA.Module.WPF.Editors.TreeListEditor" Collapsed="true">
+    <Position X="0.75" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAECAAAACAAAAAAAAAUAQAAEAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Editors\TreeListEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OEA.Module.WPF.Editors.PropertyEditorsFactory" Collapsed="true">
+    <Position X="1.25" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAgAAAAAAAAAAgIAAACAAAAAAAAAA=</HashCode>
+      <FileName>Editors\PropertyEditor\PropertyEditorsFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OEA.Module.WPF.Editors.MemoPropertyEditor" Collapsed="true">
+    <Position X="7" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAA=</HashCode>
+      <FileName>Editors\PropertyEditor\MemoPropertyEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OEA.Module.WPF.Editors.FileDataPropertyEditor" Collapsed="true">
+    <Position X="9" Y="3.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AgAAAEAAAAAAABAAAAAACAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Editors\PropertyEditor\FileDataPropertyEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OEA.Module.WPF.Editors.BooleanTreeColumn" Collapsed="true">
+    <Position X="3" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAIAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>Editors\TreeColumn\BooleanTreeColumn.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OEA.Module.WPF.Editors.TreeColumnsFactory" Collapsed="true">
+    <Position X="3.75" Y="6.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAQAAAAAAgAAAAAAAAAAAAAABAAAAAAAAAAAA=</HashCode>
+      <FileName>Editors\TreeColumn\TreeColumnsFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OEA.Module.WPF.Editors.EnumTreeColumn" Collapsed="true">
+    <Position X="9.75" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAEAAAAAAAAIAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>Editors\TreeColumn\EnumTreeColumn.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OEA.Module.WPF.Editors.LookupListTreeColumn" Collapsed="true">
+    <Position X="5.25" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAEAAAAAAAAIAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>Editors\TreeColumn\LookupListTreeColumn.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OEA.Module.WPF.Editors.MemoTreeColumn" Collapsed="true">
+    <Position X="7.5" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>Editors\TreeColumn\MemoTreeColumn.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OEA.Module.WPF.Editors.StringTreeColumn" Collapsed="true">
+    <Position X="12" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>Editors\TreeColumn\StringTreeColumn.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OEA.Module.WPF.Editors.TreeColumn" Collapsed="true">
+    <Position X="7.5" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAAEAAAACAAAIABAAAAAAAAAAAAFAA=</HashCode>
+      <FileName>Editors\TreeColumn\TreeColumn.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OEA.Module.WPF.Editors.GDataGridColumn" Collapsed="true">
+    <Position X="6.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Editors\GridColumn\GDataGridColumn.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OEA.Module.WPF.Editors.GridColumnsFactory" Collapsed="true">
+    <Position X="4" Y="9" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAQAAAAAEggAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Editors\GridColumn\GridColumnsFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OEA.Module.WPF.Editors.GDataGridEnumColumn" Collapsed="true">
+    <Position X="7.75" Y="7.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAABAAAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Editors\GridColumn\GDataGridEnumColumn.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OEA.Module.WPF.Editors.GDataGridFileDataColumn" Collapsed="true">
+    <Position X="3" Y="7.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAABAAAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Editors\GridColumn\GDataGridFileDataColumn.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OEA.Module.WPF.Editors.GDataGridLookupListColumn" Collapsed="true">
+    <Position X="12.25" Y="7.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAABAAAAAAAAAAAQQAAgAAAAAA=</HashCode>
+      <FileName>Editors\GridColumn\GDataGridLookupListColumn.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OEA.Module.WPF.Editors.GDataGridMemoColumn" Collapsed="true">
+    <Position X="10" Y="7.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAABAAAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Editors\GridColumn\GDataGridMemoColumn.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OEA.Module.WPF.Editors.GDataGridStringColumn" Collapsed="true">
+    <Position X="5.5" Y="7.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgBAAAAAAQAABAAAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Editors\GridColumn\GDataGridStringColumn.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Windows.Controls.DataGridComboBoxColumn" Collapsed="true">
+    <Position X="12.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Microsoft.Windows.Controls.DataGridColumn" Collapsed="true">
+    <Position X="9.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Font Name="Microsoft YaHei" Size="9" />
+</ClassDiagram>

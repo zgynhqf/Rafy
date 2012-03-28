@@ -1,0 +1,26 @@
+﻿<local:TraditionalLayout x:Class="OEA.Module.WPF.Layout.ListDetailPopupChildrenLayout"
+             xmlns:local="clr-namespace:OEA.Module.WPF.Layout"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:cal="http://www.codeplex.com/CompositeWPF"
+             xmlns:csla="clr-namespace:SimpleCsla.Wpf;assembly=SimpleCsla"       
+             xmlns:caliburn="http://www.caliburnproject.org"   
+             xmlns:av="http://schemas.codeplex.com/wpfcontrib/xaml/presentation"
+             xmlns:ad="clr-namespace:AvalonDock;assembly=AvalonDock"    
+             Height="Auto" Width="Auto">
+    <DockPanel>
+        <ContentControl x:Name="toolBarContainer" DockPanel.Dock="Top"/>
+        <ContentControl>
+            <ad:ResizingPanel Name="resizingPanel">
+                <TabControl x:Name="queryPane" TabStripPlacement="Bottom" ad:ResizingPanel.ResizeWidth="300" Style="{StaticResource OEA_TabControlHeaderHide}">
+                    <TabItem x:Name="dcNavigate" AutomationProperties.Name="导航查询" Header="导航查询"/>
+                    <TabItem x:Name="dcCondition" AutomationProperties.Name="条件查询" Header="条件查询"/>
+                </TabControl>
+                <ad:ResizingPanel>
+                    <ContentControl Name="listRegion" ad:ResizingPanel.ResizeWidth="3*"/>
+                    <ContentControl Name="detailRegion" ad:ResizingPanel.ResizeWidth="7*"/>
+                </ad:ResizingPanel>
+            </ad:ResizingPanel>
+        </ContentControl>
+    </DockPanel>
+</local:TraditionalLayout>

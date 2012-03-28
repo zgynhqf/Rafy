@@ -1,0 +1,167 @@
+﻿/*******************************************************
+ * 
+ * 创建时间：20110726
+ * 说明：本文件用于记录 OEA 框架版本号及相应的变更记录。格式如下：
+ * 暂时分为以下几类：
+ * ★较大改动、★修改接口、★删除接口、添加接口、添加功能、重构、内部修改、BUG修改。
+ * 
+*******************************************************/
+
+2.9.0.450
+    ★较大改动
+        修复 RBAC 项目，使其可以正常运行。
+
+2.9.0.430
+    ★较大改动
+        修复 WPF 项目，使其可以运行。
+
+2.9.0.379
+    内部修改
+        Csla Update 时不再 Clone 对象。
+
+2.9.0.379
+    内部修改
+        DbMigration 的数据库中应该存储具体的数据库名称，而不是数据库配置。
+
+2.9.0.378
+    ★较大改动、重构
+        RBAC 以及 Caching 数据层类库移植到插件 DLL 中。
+        OEA 框架本身不带任何数据库。
+
+2.9.0.377
+    添加接口
+        添加 CommonModel.Modules 属性用于定义模块。
+
+2.9.0.376
+    重构
+        添加 WebAppStartupModule.
+
+2.9.0.376
+    BUG修改
+        ViewConfigurationModel 的文件路径计算出错。
+
+2.9.0.375
+    内部修改
+        ConnectionStringFinder 查找连接字符串时，根据用户的 LocalSqlServer 来查找。
+
+2.9.0.374
+    ★较大改动、添加功能
+        继 TreeEntityList 重构后，B/S 支持树型结点的随意拖动。
+
+2.9.0.373
+    ★较大改动、添加功能
+        继 TreeEntityList 重构后，B/S 支持树型结点的随意拖动。（尚遗留问题：删除结点时的父子关系有问题。）
+
+2.9.0.372
+    ★删除接口
+        去除 Entity 上标记的 Id。
+
+2.9.0.371
+    ★较大改动、重构、添加功能
+        TreeEntity,TreeEntityList 重构（具体内容见分析文档）
+        Entity 支持直接使用 new 创建。
+        其它
+            DataPortal_Fetch 支持以 int 为参数。
+            删除了 Entity、EntityList 的 IsChild 属性。
+
+2.9.0.370
+    ★较大改动、重构、添加功能
+        主键由 Guid 变为 Int
+            * DbMigration 支持主键的 IDentity
+            * 实体框架
+
+2.9.0.369
+    ★较大改动、重构、添加功能
+        MetaModel 重构
+            * 添加 AggtBlocks 及其相关的类用于保存聚合对象的信息。
+            * 完整支持 AggtBlocks 的定义、显示。
+
+2.9.0.368
+    添加接口
+        支持 DefaultOrderBy。
+
+2.9.0.367
+    重构
+        优化 HTTP 聚合保存的请求对象中无用的空列表。
+
+2.9.0.366
+    添加接口
+        Oea.Window.show 方法中的 buttons 格式修改为 '按钮1,按钮2'.
+
+2.9.0.365
+    添加接口
+        BlockConfig 支持 GroupBy 以及 PageSize 的配置。
+
+2.9.0.364
+    添加接口
+        View.js 支持 getCmdControl 方法。
+
+2.9.0.363
+    BUG修改
+        UI配置没有变化时，Xml 文件应该删除。
+
+2.9.0.362
+    添加功能
+        命令按钮也能使用 UIConfig 了。
+
+2.9.0.361
+    重构
+        EntityProperty 方法重命名为 Property
+
+2.9.0.360
+    ★较大改动、重构、添加功能
+        MetaModel 重构
+            * 界面配置已经基本完成，整个流程已经可以跑全。（流程见设计文档）
+            * ViewConfigurationModel 使用自定义的聚合保存按钮。
+            * ListView 支持聚合保存
+    BUG修改
+        * LabelToEnum：如果在 Label 中没有找到，那这个 label 其实就是枚举本身的名称。
+
+2.9.0.359
+    ★较大改动、重构、添加功能
+        MetaModel 重构
+            * 把 Web.EntityViewMeta 修改为自已懒加载关系。
+            * EntityViewMeta 重构后，可以运行了。
+
+2.9.0.358
+    重构
+        把 DbTable 移动到 OEA.Library 中去。
+
+2.9.0.357
+    重构
+        把 OEA 和 OEA.MetaModel 合并为一个项目。
+        把 OEA.ManagedProperty 重命名为 ManagedProperty。
+
+2.9.0.356
+    添加功能
+        B/S 支持列表分组。
+
+2.9.0.355
+    添加功能
+        B/S 客户端界面客户化功能已经可以运行。
+
+2.9.0.354
+    添加功能
+        客户端开始支持使用“客户化按钮”来定制界面。
+
+2.9.0.353
+    内部修改
+        BelongsToPrimaryAggt 属性变到 EntityViewMeta 上。防止创建重复的 EntityMeta。
+
+2.9.0.352
+    重构
+        重命名：EntityViews -> DefaultViews，FindViewMeta -> Get
+
+2.9.0.351
+    添加功能
+        支持使用 ViewConfiguration 类来定义多个视图，并预留以 xml 文件进行客户化的接口。
+
+2.9.0.350
+    ★较大改动、添加功能
+        开始支持 B/S 架构。
+            OEA.js
+            OEACommands.js
+            OEAEntity.js
+            MetaService & MetaPortal
+            DataService & DataPortal
+            ServiceInvoker
