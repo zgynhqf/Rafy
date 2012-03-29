@@ -80,7 +80,7 @@ namespace OEA.Module.WPF
                 if (resultView == null) throw new InvalidOperationException("还没有设置 ResultView");
 
                 //查询出结果集是不是需要到服务器取数据。
-                CommandRepository.TryExecuteCommand(new QueryObjectCommand(), this);
+                CommandRepository.TryExecuteCommand(typeof(QueryObjectCommand), this);
             }
         }
 

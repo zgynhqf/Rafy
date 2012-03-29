@@ -73,12 +73,6 @@ namespace Itenso.Windows.Input
                 new CanExecuteRoutedEventHandler(CommandBindingCanExecute));
         }
 
-        public static bool TryExecuteCommand(string cmdId, object cmdArg)
-        {
-            var cmdInfo = UIModel.WPFCommands.Find(cmdId);
-            return TryExecuteCommand(cmdId, cmdArg);
-        }
-
         public static bool TryExecuteCommand(Type cmdId, object cmdArg)
         {
             var cmdInfo = UIModel.WPFCommands.Find(cmdId);
