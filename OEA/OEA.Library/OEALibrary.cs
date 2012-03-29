@@ -29,7 +29,7 @@ namespace OEA.Library
 {
     class OEALibrary : ILibrary
     {
-        ReuseLevel IPlugin.ReuseLevel { get { return ReuseLevel.Main; } }
+        ReuseLevel IPlugin.ReuseLevel { get { return ReuseLevel._System; } }
 
         void ILibrary.Initialize(IApp app)
         {
