@@ -65,8 +65,6 @@ namespace Demo
             base.ConfigView();
 
             View.HasTitle(Chapter.NameProperty).HasLabel("章节");
-
-            //WebView.EntityProperty(Chapter.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
         }
     }
 }

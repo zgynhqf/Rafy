@@ -35,7 +35,7 @@ using OEA.Module.WPF.Editors;
 
 
 using OEA.WPF.Command;
-using OEA.Module.WPF.ViewControllers;
+
 using System.Windows.Controls.Primitives;
 using OEA.Module.WPF.Automation;
 using System.Windows.Input;

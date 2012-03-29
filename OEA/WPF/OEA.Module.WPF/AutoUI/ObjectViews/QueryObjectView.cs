@@ -32,27 +32,24 @@ namespace OEA.Module.WPF
             : base(evm) { }
 
         /// <summary>
-        /// 查询后的结果使用的View
+        /// 查询后的结果使用的 View
         /// </summary>
-        public ObjectView ResultView
+        public IEnumerable<ObjectView> ResultViews
         {
             get
             {
-                return this.TryFindRelation(SurrounderType.Result.GetDescription());
+                var res = SurrounderType.Result.GetDescription();
+                foreach (var r in this.Relations)
+                {
+                    if (r.SurrounderType == res) yield return r.View;
+                }
             }
         }
 
         public new Criteria Current
         {
-            get
-            {
-                return base.Current as Criteria;
-            }
-            set
-            {
-                if (!(value is Criteria)) throw new InvalidOperationException("查询对象必须继承 QueryEntity 类.");
-                base.Current = value as Criteria;
-            }
+            get { return base.Current as Criteria; }
+            set { base.Current = value; }
         }
 
         /// <summary>
@@ -70,18 +67,40 @@ namespace OEA.Module.WPF
         /// <summary>
         /// 命令这个查询面板执行查询命令
         /// </summary>
-        public void ExecuteQuery()
+        public virtual void TryExecuteQuery()
         {
-            var queryObject = this.Current;
-            queryObject.CheckRules();
-            if (queryObject.BrokenRulesCollection.Count <= 0)
+            if (this.CanQuery())
             {
-                var resultView = this.ResultView;
-                if (resultView == null) throw new InvalidOperationException("还没有设置 ResultView");
-
-                //查询出结果集是不是需要到服务器取数据。
-                CommandRepository.TryExecuteCommand(typeof(QueryObjectCommand), this);
+                foreach (var resultView in this.ResultViews)
+                {
+                    this.FireQuery(resultView);
+                }
             }
+        }
+
+        /// <summary>
+        /// 主动为某个特定的视图使用本导航面板来执行查询。
+        /// </summary>
+        /// <param name="resultView"></param>
+        public void TryExecuteQuery(ObjectView resultView)
+        {
+            if (this.CanQuery())
+            {
+                this.FireQuery(resultView);
+            }
+        }
+
+        private void FireQuery(ObjectView resultView)
+        {
+            //导航面板的查询使用隐式查询。
+            resultView.DataLoader.LoadDataAsync(
+                () => RF.Create(resultView.EntityType).__GetListImplicitly(this.Current)
+                );
+        }
+
+        private bool CanQuery()
+        {
+            return this.Current.CheckRules().Count <= 0;
         }
 
         #region PropertyEditors
@@ -95,10 +114,7 @@ namespace OEA.Module.WPF
         /// </summary>
         public IList<IPropertyEditor> PropertyEditors
         {
-            get
-            {
-                return this._propertyEditors.AsReadOnly();
-            }
+            get { return this._propertyEditors.AsReadOnly(); }
         }
 
         /// <summary>

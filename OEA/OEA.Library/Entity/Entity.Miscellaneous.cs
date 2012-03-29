@@ -31,9 +31,14 @@ namespace OEA.Library
     {
         #region 属性规则
 
-        public virtual void CheckRules()
+        /// <summary>
+        /// 检查规则，并返回违反的规则集合。
+        /// </summary>
+        /// <returns></returns>
+        public virtual BrokenRulesCollection CheckRules()
         {
             this.ValidationRules.CheckRules();
+            return this.BrokenRulesCollection;
         }
 
         #endregion

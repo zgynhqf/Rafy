@@ -18,7 +18,6 @@ using OEA.MetaModel.Attributes;
 using OEA.Module.WPF;
 using OEA.Module.WPF.Editors;
 
-
 namespace OEA.WPF.Command
 {
     [Command(ImageName = "Refresh.bmp", Label = "刷新", ToolTip = "刷新列表", GroupType = CommandGroupType.Edit)]
@@ -40,31 +39,26 @@ namespace OEA.WPF.Command
         /// <param name="view"></param>
         public override void Execute(ListObjectView view)
         {
-            var controller = view.DataLoader;
-            QueryObjectView queryObjectView = view.NavigateQueryView;
-            if (queryObjectView == null)
-            {
-                queryObjectView = view.CondtionQueryView;
-            }
+            QueryObjectView queryView = view.NavigateQueryView;
+            if (queryView == null) { queryView = view.CondtionQueryView; }
 
             //刷新查询或导航面板的下拉列表框数据
-            if (queryObjectView != null)
+            if (queryView != null)
             {
-                var queryObject = queryObjectView.Current;
-                controller.GetObjectAsync(queryObject);
+                queryView.TryExecuteQuery(view);
 
-                foreach (var item in queryObjectView.PropertyEditors)
+                foreach (var item in queryView.PropertyEditors)
                 {
                     if (item.PropertyViewInfo.EditorName == WPFEditorNames.LookupDropDown)
                     {
                         (item as LookupListPropertyEditor).DataSourse = null;
                     }
                 }
-                queryObjectView.AttachNewQueryObject();
+                queryView.AttachNewQueryObject();
             }
             else
             {
-                view.DataLoader.GetObjectAsync();
+                view.DataLoader.LoadDataAsync();
             }
         }
     }

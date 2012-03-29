@@ -28,7 +28,6 @@ using OEA.Module.WPF;
 using OEA.Library;
 using OEA.RBAC;
 using OEA.MetaModel.View;
-using OEA.Module.WPF.ViewControllers;
 using OEA;
 using OEA.Module.WPF.Controls;
 
@@ -62,7 +61,7 @@ namespace RBAC
             //左边的导航
             this._naviModulesView = AutoUI.ViewFactory.CreateListObjectView(typeof(ModuleAC));
             //this._naviModulesView.DataLoader.DataLoaded += (o, e) => this._naviModulesView.ExpandAll();
-            this._naviModulesView.DataLoader.GetObjectAsync();
+            this._naviModulesView.DataLoader.LoadDataAsync();
             this._naviModulesView.CurrentObjectChanged += new EventHandler(_naviModulesView_CurrentObjectChanged);
             navigation.Content = this._naviModulesView.Control;
 

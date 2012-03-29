@@ -22,7 +22,7 @@ using System.Windows.Controls;
 using SimpleCsla.Core;
 using OEA.Editors;
 using System.Diagnostics;
-using OEA.Module.WPF.ViewControllers;
+
 using OEA.MetaModel;
 using OEA.MetaModel.View;
 using OEA.Library;

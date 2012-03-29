@@ -18,7 +18,7 @@ using System.Text;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows;
-using OEA.Module.WPF.ViewControllers;
+
 using OEA.MetaModel;
 using OEA.MetaModel.View;
 
@@ -31,11 +31,20 @@ namespace OEA.Module.WPF
     {
         private ItemsControl _commandsContainer;
 
-        public WPFObjectView(EntityViewMeta meta) : base(meta) { }
+        public WPFObjectView(EntityViewMeta meta)
+            : base(meta)
+        {
+            base.DataLoader = new ViewDataLoader(this);
+        }
 
         public new FrameworkElement Control
         {
             get { return base.Control as FrameworkElement; }
+        }
+
+        internal new ViewDataLoader DataLoader
+        {
+            get { return base.DataLoader as ViewDataLoader; }
         }
 
         /// <summary>

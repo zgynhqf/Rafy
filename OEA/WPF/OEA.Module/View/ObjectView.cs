@@ -57,7 +57,7 @@ namespace OEA
         /// <summary>
         /// 为这个View加载数据的对象
         /// </summary>
-        public IViewDataLoader DataLoader { get; set; }
+        public IAsyncDataLoader DataLoader { get; set; }
 
         /// <summary>
         /// 这个视图作为子视图时，对应的父Model中的属性名称
@@ -671,6 +671,11 @@ namespace OEA
         #region RelationsViews
 
         private RelationViewCollection _relations;
+
+        public IEnumerable<RelationView> Relations
+        {
+            get { return this._relations; }
+        }
 
         public void SetRelation(RelationView relation)
         {

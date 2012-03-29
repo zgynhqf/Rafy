@@ -98,50 +98,14 @@ namespace OEA.Library
             return this.GetByIdCore(id);
         }
 
-        public virtual Entity Get(object[] parameters)
-        {
-            if (parameters.Length == 1)
-            {
-                if (parameters[0] is int)
-                {
-                    return this.GetById((int)parameters[0]);
-                }
-            }
-
-            throw new NotSupportedException();
-        }
-
         /// <summary>
         /// 子类重写此方法来显式实现单参数的GetList调用
         /// </summary>
-        /// <param name="parameter"></param>
+        /// <param name="criteria"></param>
         /// <returns></returns>
-        protected virtual EntityList GetListImplicitly(object parameter)
+        protected virtual EntityList GetListImplicitly(object criteria)
         {
-            return null;
-        }
-
-        /// <summary>
-        /// 此方法用于显式实现原有的隐式GetList调用
-        /// 
-        /// 子类重写以显式调用。
-        /// </summary>
-        /// <param name="parameters"></param>
-        /// <returns></returns>
-        internal protected virtual EntityList GetListImplicitly(params object[] parameters)
-        {
-            if (parameters.Length == 0)
-            {
-                return this.GetAll();
-            }
-
-            if (parameters.Length == 1)
-            {
-                var result = this.GetListImplicitly(parameters[0]);
-                if (result != null) return result;
-            }
-
-            throw new NotSupportedException("请重写此方法或者相应的重载，以支持隐式调用。");
+            throw new NotSupportedException("请重写此方法，以支持隐式调用。");
         }
 
         /// <summary>
@@ -149,10 +113,33 @@ namespace OEA.Library
         /// </summary>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public EntityList __WebGetListImplicitly(params object[] parameters)
+        public EntityList __GetListImplicitly(object parameter)
         {
-            return this.GetListImplicitly(parameters);
+            return this.GetListImplicitly(parameter);
         }
+
+        ///// <summary>
+        ///// 此方法用于显式实现原有的隐式GetList调用
+        ///// 
+        ///// 子类重写以显式调用。
+        ///// </summary>
+        ///// <param name="parameters"></param>
+        ///// <returns></returns>
+        //protected virtual EntityList GetListImplicitly(params object[] parameters)
+        //{
+        //    if (parameters.Length == 0)
+        //    {
+        //        return this.GetAll();
+        //    }
+
+        //    if (parameters.Length == 1)
+        //    {
+        //        var result = this.GetListImplicitly(parameters[0]);
+        //        if (result != null) return result;
+        //    }
+
+        //    throw new NotSupportedException("请重写此方法或者相应的重载，以支持隐式调用。");
+        //}
 
         #endregion
 

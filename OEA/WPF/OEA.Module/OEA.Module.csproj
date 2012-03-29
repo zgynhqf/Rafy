@@ -78,7 +78,7 @@
     <Compile Include="Abstraction\IControlWrapper.cs" />
     <Compile Include="Abstraction\IActiveSelectionContext.cs" />
     <Compile Include="Abstraction\View\DataLoadedEventArgs.cs" />
-    <Compile Include="Abstraction\View\IViewDataLoader.cs" />
+    <Compile Include="Abstraction\View\IViewDataAsyncLoader.cs" />
     <Compile Include="WorkspaceWindowClosingEventArgs.cs" />
     <Compile Include="IWorkspaceWindow.cs" />
     <Compile Include="IEntityWindow.cs" />
@@ -91,7 +91,6 @@
     <Compile Include="Abstraction\IDataContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlErrorInfo.cs" />
-    <Compile Include="Abstraction\AsyncDataContextHelper.cs" />
     <Compile Include="Abstraction\IAsyncDataContext.cs" />
     <Compile Include="Abstraction\View\IObjectView.cs" />
     <Compile Include="View\RoutedViewEvent.cs" />

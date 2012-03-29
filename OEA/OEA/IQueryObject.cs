@@ -42,7 +42,7 @@ namespace OEA
         /// <summary>
         /// 如果数据不符合规则，则抛出异常。
         /// </summary>
-        void CheckRules();
+        BrokenRulesCollection CheckRules();
     }
 
     /// <summary>

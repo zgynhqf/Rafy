@@ -218,9 +218,9 @@ namespace OEA.Module.WPF
         /// </summary>
         public bool SuppressAutoQuery { get; set; }
 
-        private void TryExecuteQuery()
+        public override void TryExecuteQuery()
         {
-            if (!this.SuppressAutoQuery) this.ExecuteQuery();
+            if (!this.SuppressAutoQuery) base.TryExecuteQuery();
         }
 
         /// <summary>

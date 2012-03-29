@@ -164,7 +164,6 @@
     <Compile Include="Commands\ServerTimeCommand.cs" />
     <Compile Include="Consts.cs" />
     <Compile Include="EntityRepository\AggregateSQL\EntityInfo.cs" />
-    <Compile Include="EntityRepository\RepositoryInvoker.cs" />
     <Compile Include="EntityRepository\RF.cs" />
     <Compile Include="Entity\BaseQueryObject.cs" />
     <Compile Include="Entity\CloneOptions.cs" />
