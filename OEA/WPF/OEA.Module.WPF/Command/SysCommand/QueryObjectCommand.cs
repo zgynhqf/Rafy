@@ -54,7 +54,7 @@ namespace OEA.WPF.Command
             }
         }
 
-        protected virtual void QueryData(ObjectView resultView, Criteria queryObject)
+        private void QueryData(ObjectView resultView, Criteria queryObject)
         {
             resultView.DataLoader.GetObjectAsync(queryObject);
         }

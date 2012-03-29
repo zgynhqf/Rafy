@@ -226,7 +226,6 @@
     <Compile Include="PrimitiveUI\ViewAdapter.cs" />
     <Compile Include="Behaviors\DoubleCloseViewBehavior.cs" />
     <Compile Include="Behaviors\SaveAsChangedBehavior.cs" />
-    <Compile Include="Behaviors\TreeSelectViewBehavior.cs" />
     <Compile Include="Command\SysCommand\AddCommand.cs" />
     <Compile Include="Command\SysCommand\BaseSaveCommand.cs" />
     <Compile Include="Command\SysCommand\CancelCommand.cs" />
@@ -236,7 +235,6 @@
     <Compile Include="Command\SysCommand\DeleteBillObjectCommand.cs" />
     <Compile Include="Command\SysCommand\DeleteChildObjectCommand.cs" />
     <Compile Include="Command\SysCommand\DeleteListObjectCommand.cs" />
-    <Compile Include="Command\SysCommand\FilterObjectCommand.cs" />
     <Compile Include="Command\SysCommand\PopupAddCommand.cs" />
     <Compile Include="Command\SysCommand\QueryObjectCommand.cs" />
     <Compile Include="Command\SysCommand\RefreshCommand.cs" />

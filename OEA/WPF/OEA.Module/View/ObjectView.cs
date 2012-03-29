@@ -290,7 +290,7 @@ namespace OEA
             }
         }
 
-        protected object GetRawChildrenData()
+        protected EntityList GetRawChildrenData()
         {
             return this._parent.Current.GetLazyChildren(this._childBlock.ChildrenProperty);
         }

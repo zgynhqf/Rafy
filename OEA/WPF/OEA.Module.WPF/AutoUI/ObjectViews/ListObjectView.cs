@@ -108,31 +108,7 @@ namespace OEA.Module.WPF
             get
             {
                 //返回控件的值
-                var value = this._listEditor.CurrentObject as Entity;
-
-                #region 对于显示虚拟数据对象的界面，应该返回真实的对象。
-
-                if (value != null && this.DisplayVisualData)
-                {
-                    //获取真实的数据。
-                    var underlyList = this.UnderlyData;
-
-                    //有可能这时候还没有对DestData赋值，所以再判断一次。
-                    if (underlyList != null)
-                    {
-                        //寻找与这个可视模型对应的内在模型。
-                        var displayModel = value as IDisplayModel;
-                        Debug.Assert(displayModel != null, "visualModel != null");
-
-                        //没找到，则返回null，说明这个可视模型还没有被“选中”。
-                        return underlyList.Cast<IUnderlyModel>()
-                            .FirstOrDefault(um => um.IsMappingTo(displayModel)) as Entity;
-                    }
-                }
-
-                #endregion
-
-                return value;
+                return this._listEditor.CurrentObject as Entity;
             }
             set
             {
@@ -233,10 +209,6 @@ namespace OEA.Module.WPF
         /// </summary>
         protected override void OnDataChanged()
         {
-            var data = this.Data;
-
-            this.ConvertToDisplayData(data);
-
             //重设置数据源后，当前选择的对象应该清空。
             this.Current = null;
 
@@ -414,91 +386,6 @@ namespace OEA.Module.WPF
             //}
         }
 
-        #region Underly-Display Object
-
-        /// <summary>
-        /// 选择编辑方式下的目标结果数据对象。
-        /// 这个数据是真正的对象拥有的数据，而不一定是绑定到控件上面的数据。
-        /// </summary>
-        private static readonly DependencyProperty DestDataProperty =
-            DependencyProperty.RegisterAttached("DestData", typeof(IUnderlyModelList), typeof(ListObjectView));
-
-        /// <summary>
-        /// 是否需要间接地使用IDiaplayModel来显示这些数据？
-        /// </summary>
-        private bool DisplayVisualData
-        {
-            get
-            {
-                //var childrenProperty = this.ChildBlock as ChildrenPropertyViewMeta;
-
-                //if (childrenProperty != null) return childrenProperty.ViewType == ChildrenViewType.SelectionView;
-
-                //不再直接支持勾选视图。应用层要实现此功能，可以使用弹出命令的方式完成。
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// 如果DisplayVisualData是真时，
-        /// 那么Data里面存储的是显示的对象列表，
-        /// 而这个属性里面存储的是真实的对象列表。
-        /// </summary>
-        public IUnderlyModelList UnderlyData
-        {
-            get
-            {
-                return this.Control.GetValue(DestDataProperty) as IUnderlyModelList;
-            }
-            private set
-            {
-                //先设置null，然后再设置为destData，
-                //否则有可能在先前已经设置过destData而不会发生PropertyChanged事件。
-                var control = this.Control;
-                control.SetValue(DestDataProperty, null);
-                if (value != null)
-                {
-                    control.SetValue(DestDataProperty, value);
-
-                    //打开控件的勾选操作功能。
-                    this.CheckingMode = CheckingMode.CheckingViewModel;
-                }
-            }
-        }
-
-        /// <summary>
-        /// 导航过滤数据
-        /// </summary>
-        /// <param name="queryObject">
-        /// 通过这个查询对象来过滤数据。
-        /// </param>
-        internal void FilterBySelfList(Criteria queryObject)
-        {
-            if (this.Parent.Current == null) { return; }
-
-            var rawData = this.GetRawChildrenData() as IList;
-
-            if (rawData != null && this.DisplayVisualData)
-            {
-                //如果是勾选视图，则需要查询出所有用于勾选的数据和已经勾选的数据。
-                //这两个数据，可能并不是一个类型。但是一定要保证它们有相同的列。
-
-                var underlyModels = rawData as IUnderlyModelList;
-                if (underlyModels == null) throw new ArgumentNullException("列表必须实现IUnderlyModelList接口。");
-
-                //如果实现了过滤，就先把数据过滤一下。
-                var filterList = underlyModels as IFilterUnderlyModelList;
-                if (filterList != null) { underlyModels = filterList.FilterByCriteria(queryObject); }
-
-                this.Data = underlyModels.GetDisplayModels(queryObject as IQueryObject);
-                this.UnderlyData = underlyModels;
-            }
-            else
-            {
-                throw new NotSupportedException();
-            }
-        }
-
         /// <summary>
         /// 装载数据，考虑 AssociationOperateType.Selected
         /// </summary>
@@ -507,33 +394,9 @@ namespace OEA.Module.WPF
             if (this.CouldLoadDataFromParent())
             {
                 var rawData = this.GetRawChildrenData();
-
-                if (this.DisplayVisualData) { this.ConvertToDisplayData(rawData); }
-                else { this.Data = rawData as EntityList; }
+                this.Data = rawData;
             }
         }
-
-        /// <summary>
-        /// 如果需要转换为显示模型，
-        /// 则查找并显示出显示模型，
-        /// 然后存储好UnderlyData
-        /// </summary>
-        /// <param name="data"></param>
-        private void ConvertToDisplayData(object data)
-        {
-            if (this.DisplayVisualData)
-            {
-                var underlyData = data as IUnderlyModelList;
-                if (underlyData != null)
-                {
-                    var parent = this.Parent.Current as Entity;
-                    this.Data = underlyData.GetDisplayModels(parent);
-                    this.UnderlyData = underlyData;
-                }
-            }
-        }
-
-        #endregion
 
         #region RefreshControl
 

@@ -213,8 +213,6 @@
     <Compile Include="ORM\LiteORM\TraceObject.cs" />
     <Compile Include="Utils\DataBase\DbExtension.cs" />
     <Compile Include="Utils\DataBase\DBHelper.cs" />
-    <Compile Include="View\IUnderlyModel.cs" />
-    <Compile Include="View\SelectionManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
