@@ -169,10 +169,11 @@ namespace OEA
         {
             base.OnQueryFinished(newData, error, completionWork, callbackArguments);
 
-            if (null != error)
+            if (error != null)
             {
                 Logger.LogError("CSLADataProvider获取数据报错", error);
-                Action<Exception> action = e => e.ManageException();
+
+                Action<Exception> action = e => e.Alert();
                 Application.Current.Dispatcher.Invoke(action, error);
             }
         }

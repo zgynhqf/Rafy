@@ -344,7 +344,7 @@ namespace OEA.Library
             var entityType = list.EntityType;
             string idName = RF.GetReadableColumnSql(entityType, DBConvention.FieldName_Id);
 
-            Guid? lastId = null;
+            int? lastId = null;
             //每个TEntity对象对应的第一行数据
             int startRow = 0;
             for (int i = 0, c = table.Count; i < c; i++)
@@ -352,7 +352,7 @@ namespace OEA.Library
                 var row = table[i];
 
                 var objId = row[idName];
-                Guid? id = objId != DBNull.Value ? (Guid)objId : (Guid?)null;
+                int? id = objId != DBNull.Value ? (int)objId : (int?)null;
 
                 //如果 id 改变，表示已经进入到下一个 TEntity 对象的开始行了。
                 if (id != lastId)

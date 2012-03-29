@@ -7,6 +7,10 @@
  * 
 *******************************************************/
 
+2.9.454.0
+    BUG修改
+        * 聚合 SQL 可以正常使用。
+
 2.9.453.0
     ★修改接口
         * 数据层直接把实体加载出来，而不再浪费一次多余的实体类加载。
@@ -14,48 +18,48 @@
 
 2.9.452.0
     ★修改接口
-        修改 ViewDataLoader 的接口，不再支持同步操作，只支持异步操作。
+        * 修改 ViewDataLoader 的接口，不再支持同步操作，只支持异步操作。
 
 2.9.451.0
     ★删除接口
-        删除勾选视图相应的接口 SelectionManager
+        * 删除勾选视图相应的接口 SelectionManager
 
 2.9.0.450
     ★较大改动
-        修复 RBAC 项目，使其可以正常运行。
+        * 修复 RBAC 项目，使其可以正常运行。
 
 2.9.0.430
     ★较大改动
-        修复 WPF 项目，使其可以运行。
+        * 修复 WPF 项目，使其可以运行。
 
 2.9.0.379
     内部修改
-        Csla Update 时不再 Clone 对象。
+        * Csla Update 时不再 Clone 对象。
 
 2.9.0.379
     内部修改
-        DbMigration 的数据库中应该存储具体的数据库名称，而不是数据库配置。
+        * DbMigration 的数据库中应该存储具体的数据库名称，而不是数据库配置。
 
 2.9.0.378
     ★较大改动、重构
-        RBAC 以及 Caching 数据层类库移植到插件 DLL 中。
-        OEA 框架本身不带任何数据库。
+        * RBAC 以及 Caching 数据层类库移植到插件 DLL 中。
+        * OEA 框架本身不带任何数据库。
 
 2.9.0.377
     添加接口
-        添加 CommonModel.Modules 属性用于定义模块。
+        * 添加 CommonModel.Modules 属性用于定义模块。
 
 2.9.0.376
     重构
-        添加 WebAppStartupModule.
+        * 添加 WebAppStartupModule.
 
 2.9.0.376
     BUG修改
-        ViewConfigurationModel 的文件路径计算出错。
+        * ViewConfigurationModel 的文件路径计算出错。
 
 2.9.0.375
     内部修改
-        ConnectionStringFinder 查找连接字符串时，根据用户的 LocalSqlServer 来查找。
+        * ConnectionStringFinder 查找连接字符串时，根据用户的 LocalSqlServer 来查找。
 
 2.9.0.374
     ★较大改动、添加功能

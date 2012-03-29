@@ -223,30 +223,32 @@ namespace OEA.Library
 
         private void GenerateWhere()
         {
-            var dqTableName = this._directlyQueryRepository.GetTableInfo().Name;
-            var dqTableAlias = this.GetTableAlias(dqTableName);
-            this._sql.Append("WHERE ");
             if (this._whereCondition != null)
             {
                 //把 whereCondition 中的所有表名都进行替换。
+                this._sql.Append("WHERE ");
                 string condition = this._whereCondition;
                 foreach (var kv in this._tableAlias)
                 {
                     condition = condition.Replace(kv.Key + '.', kv.Value + '.');
                 }
                 this._sql.Append(condition);
+                this._sql.AppendLine();
             }
-            else
+            else if (this._directlyQueryRepository.EntityMeta.EntityCategory == EntityCategory.Child)
             {
-                var rootTypeFKColumn = this._directlyQueryRepository.GetParentPropertyInfo().Name;//属性名就是列名
+                this._sql.Append("WHERE ");
+                var parentProperty = this._directlyQueryRepository.GetParentPropertyInfo();
+                var rootTypeFKColumn = parentProperty.Name;//属性名就是列名
 
+                var dqTableName = this._directlyQueryRepository.GetTableInfo().Name;
+                var dqTableAlias = this.GetTableAlias(dqTableName);
                 this._sql.Append(dqTableAlias);
                 this._sql.Append('.');
                 this._sql.Append(rootTypeFKColumn);
                 this._sql.Append(" = '{0}'");
+                this._sql.AppendLine();
             }
-
-            this._sql.AppendLine();
         }
 
         private void GenerateOrderBy()

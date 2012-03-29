@@ -48,36 +48,39 @@ namespace OEA.Module.WPF
         /// 用以管理程序的异常信息
         /// </summary>
         /// <param name="ex"></param>
-        public static void ManageException(this Exception ex)
+        public static void Alert(this Exception ex)
         {
-            string msg = @"遇到未知错误，我们对此引起的不便表示抱歉。系统已经产生了一个关于此错误的报告，希望您将问题反馈给我们以帮助改善质量。";
-
-            var baseException = ex.GetBaseException();
-            if (baseException is FriendlyMessageException)
+            if (!OEAEnvironment.IsDebuggingEnabled)
             {
-                msg = baseException.Message;
-            }
-            else if (baseException is SqlException)
-            {
-                var sqlex = baseException as SqlException;
-                var sqlerr = SqlErrorInfo.GetSqlError(sqlex.Number);
-                if (sqlerr != null) msg = sqlerr.ErrorMessage;
-            }
-            else if (ex is System.Data.Common.DbException)
-                msg = "数据库访问出现异常";
-            else if (ex is TimeoutException)
-                msg = "网络连接超时，请检查网络连接是否正常";
-            else if (ex is FriendlyMessageException)
-                msg = ex.Message;
-            else if (ex is System.ComponentModel.Win32Exception)
-                msg = "网络连接出现异常，请检查连接地址是否正确或连接是否正常";
-            else if (ex is System.ServiceModel.EndpointNotFoundException)
-                msg = "网络连接出现异常，请检查连接地址是否正确";
+                string msg = @"遇到未知错误，我们对此引起的不便表示抱歉。系统已经产生了一个关于此错误的报告，希望您将问题反馈给我们以帮助改善质量。";
 
-            App.Current.MessageBox.Show("异常提示", msg, MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                var baseException = ex.GetBaseException();
+                if (baseException is FriendlyMessageException)
+                {
+                    msg = baseException.Message;
+                }
+                else if (baseException is SqlException)
+                {
+                    var sqlex = baseException as SqlException;
+                    var sqlerr = SqlErrorInfo.GetSqlError(sqlex.Number);
+                    if (sqlerr != null) msg = sqlerr.ErrorMessage;
+                }
+                else if (ex is System.Data.Common.DbException)
+                    msg = "数据库访问出现异常";
+                else if (ex is TimeoutException)
+                    msg = "网络连接超时，请检查网络连接是否正常";
+                else if (ex is FriendlyMessageException)
+                    msg = ex.Message;
+                else if (ex is System.ComponentModel.Win32Exception)
+                    msg = "网络连接出现异常，请检查连接地址是否正确或连接是否正常";
+                else if (ex is System.ServiceModel.EndpointNotFoundException)
+                    msg = "网络连接出现异常，请检查连接地址是否正确";
 
-            //记录异常信息
-            Logger.LogError("系统未捕获异常", ex);
+                App.Current.MessageBox.Show("异常提示", msg, MessageBoxButton.OK, MessageBoxImage.Exclamation);
+
+                //记录异常信息
+                Logger.LogError("系统未捕获异常", ex);
+            }
         }
     }
 }

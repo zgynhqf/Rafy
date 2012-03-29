@@ -44,22 +44,22 @@ namespace OEA.Library
 
         #region 更简单的API
 
-        public EntityList LoadEntities<TEntity>(Action<PropertySelector<TEntity>> loader, Guid parentId)
+        public void LoadEntities<TEntity>(EntityList list, Action<PropertySelector<TEntity>> loader, int parentId)
             where TEntity : Entity
         {
             var loadOptions = this.BeginLoadOptions<TEntity>();
             loader(loadOptions);
             var sql = GenerateQuerySQL(loadOptions, parentId);
-            return LoadEntities(sql, loadOptions);
+            LoadEntities(list, sql, loadOptions);
         }
 
-        public EntityList LoadEntities<TEntity>(Action<PropertySelector<TEntity>> loader, string whereCondition = null, string joinCondition = null)
+        public void LoadEntities<TEntity>(EntityList list, Action<PropertySelector<TEntity>> loader, string whereCondition = null, string joinCondition = null)
             where TEntity : Entity
         {
             var loadOptions = this.BeginLoadOptions<TEntity>();
             loader(loadOptions);
             var sql = GenerateQuerySQL(loadOptions, whereCondition, joinCondition);
-            return LoadEntities(sql, loadOptions);
+            LoadEntities(list, sql, loadOptions);
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace OEA.Library
         /// <param name="loadOptions"></param>
         /// <param name="parentId"></param>
         /// <returns></returns>
-        public string GenerateQuerySQL<TEntity>(Action<PropertySelector<TEntity>> loader, Guid parentId)
+        public string GenerateQuerySQL<TEntity>(Action<PropertySelector<TEntity>> loader, int parentId)
             where TEntity : Entity
         {
             var loadOptions = this.BeginLoadOptions<TEntity>();
@@ -118,7 +118,7 @@ namespace OEA.Library
         /// <param name="loadOptions"></param>
         /// <param name="parentId"></param>
         /// <returns></returns>
-        public string GenerateQuerySQL(LoadOptionSelector loadOptions, Guid parentId)
+        public string GenerateQuerySQL(LoadOptionSelector loadOptions, int parentId)
         {
             var aggregateSQL = new AggregateSQLGenerator(loadOptions.InnerDescriptor, null);
             var result = aggregateSQL.Generate();
@@ -148,11 +148,10 @@ namespace OEA.Library
         /// <param name="sql">聚合SQL</param>
         /// <param name="loadOptions">聚合加载选项</param>
         /// <returns></returns>
-        public EntityList LoadEntities(string sql, LoadOptionSelector loadOptions)
+        public void LoadEntities(EntityList list, string sql, LoadOptionSelector loadOptions)
         {
             var loader = new AggregateEntityLoader(loadOptions.InnerDescriptor);
-            var list = loader.Query(sql);
-            return list;
+            loader.Query(list, sql);
         }
 
         #endregion
