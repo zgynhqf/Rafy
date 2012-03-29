@@ -171,18 +171,18 @@ namespace OEA.Library
         }
 
         /// <summary>
-        /// 把一个table转换为新的实体列表
+        /// 把一个 table 转换为新的实体列表
         /// </summary>
         /// <param name="table"></param>
         /// <returns></returns>
-        protected EntityList Convert(IList<Entity> table)
+        protected EntityList ConvertTable(IList<Entity> table)
         {
-            var newList = this.CreateEmptyOldList();
+            var newList = this.OldList();
 
             newList.RaiseListChangedEvents = false;
             for (int i = 0, c = table.Count; i < c; i++)
             {
-                var item = this.Convert(table[i]);
+                var item = this.ConvertRow(table[i]);
                 newList.Add(item);
             }
             newList.RaiseListChangedEvents = true;
@@ -195,7 +195,7 @@ namespace OEA.Library
         /// 这个空列表的IsNew标识为false，它可能正准备存入旧数据。
         /// </summary>
         /// <returns></returns>
-        public EntityList CreateEmptyOldList()
+        public EntityList OldList()
         {
             var list = this.IsRootType() ?
                 DataPortal.Fetch(this.ListType, new GetRootsCriteria()) as EntityList :
@@ -232,7 +232,7 @@ namespace OEA.Library
         {
             if (oldList == null) throw new ArgumentNullException("oldList");
 
-            var newList = this.CreateEmptyOldList();
+            var newList = this.OldList();
 
             newList.RaiseListChangedEvents = false;
             newList.AddRange(oldList.OrderBy(keySelector));
@@ -256,9 +256,13 @@ namespace OEA.Library
         /// </summary>
         /// <param name="row"></param>
         /// <returns></returns>
-        public Entity Convert(Entity row)
+        public Entity ConvertRow(Entity row)
         {
-            var entity = Entity.FastFetch(row);
+            var entity = Entity.New(row.GetType());
+            entity.Status = PersistenceStatus.Unchanged;
+
+            //返回的子对象的属性只是简单的完全Copy参数data的数据。
+            entity.Clone(row, CloneOptions.ReadDbRow());
 
             this.NotifyLoaded(entity);
 
@@ -271,21 +275,7 @@ namespace OEA.Library
         /// <returns></returns>
         public Entity New()
         {
-            var entity = Activator.CreateInstance(this.EntityType, true) as Entity;
-
-            this.NotifyLoaded(entity);
-
-            return entity;
-        }
-
-        /// <summary>
-        /// 创建一个空的对象。
-        /// 这个空列表的IsNew标识为false，它可能正准备存入旧数据。
-        /// </summary>
-        /// <returns></returns>
-        public Entity CreateEmptyOldEntity()
-        {
-            Entity entity = Entity.FastFetch(this.EntityType);
+            var entity = Entity.New(this.EntityType);
 
             this.NotifyLoaded(entity);
 
@@ -393,7 +383,7 @@ namespace OEA.Library
 
                 if (table != null)
                 {
-                    var list = this.Convert(table);
+                    var list = this.ConvertTable(table);
                     this.NotifyLoaded(list);
                     return list;
                 }
@@ -420,7 +410,7 @@ namespace OEA.Library
                     var smallTable = EntityRowCache.Instance.CacheByParent(this.EntityType, parent, this.GetByParentId);
                     if (smallTable != null)
                     {
-                        children = this.Convert(smallTable);
+                        children = this.ConvertTable(smallTable);
                     }
                 }
             }
@@ -465,11 +455,11 @@ namespace OEA.Library
                 {
                     var table = this.GetCachedTable();
 
-                    var entity = table.FirstOrDefault(e => e.Id == id);
+                    var row = table.FirstOrDefault(e => e.Id == id);
 
-                    if (entity != null)
+                    if (row != null)
                     {
-                        result = this.Convert(entity);
+                        result = this.ConvertRow(row);
                     }
                 }
             }
@@ -611,9 +601,7 @@ namespace OEA.Library
         /// <returns></returns>
         public Entity GetFromRow(DataRow rowData)
         {
-            var row = this.SQLColumnsGenerator.ReadDataDirectly(rowData);
-            var result = this.Convert(row);
-            return result;
+            return this.SQLColumnsGenerator.ReadDataDirectly(rowData);
         }
 
         #endregion

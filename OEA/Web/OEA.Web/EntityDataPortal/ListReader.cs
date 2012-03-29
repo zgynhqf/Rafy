@@ -63,7 +63,8 @@ namespace OEA.Web.EntityDataPortal
                 var jsonList = p.Value as JArray;
                 foreach (JObject item in jsonList)
                 {
-                    var e = this.Repository.CreateEmptyOldEntity();
+                    var e = this.Repository.New();
+                    e.Status = PersistenceStatus.Unchanged;
 
                     this._setter.SetEntity(e, item);
 

@@ -28,7 +28,7 @@ namespace OEA.Web.EntityDataPortal
     {
         protected override void ReadCore()
         {
-            this.ResultEntityList = this.Repository.CreateEmptyOldList();
+            this.ResultEntityList = this.Repository.OldList();
 
             //读取 Create、Update 的列表。
             this.ReadRootList(this.ChangeSet, this.ResultEntityList);
@@ -58,7 +58,8 @@ namespace OEA.Web.EntityDataPortal
             if (newEntityMark != null) { newEntityMark.Remove(); }
 
             //先把当前对象加入集合中。
-            var e = newEntityMark != null ? this.Repository.New() : this.Repository.CreateEmptyOldEntity();
+            var e = this.Repository.New();
+            if (newEntityMark == null) { e.Status = PersistenceStatus.Unchanged; }
             this._setter.SetEntity(e, item);
             if (treeParent != null)
             {

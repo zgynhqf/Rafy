@@ -38,7 +38,7 @@ namespace OEA.Library
 
         [NonSerialized]
         private PersistenceStatus _previousStatusBeforeDeleted = PersistenceStatus.Unchanged;
-        private PersistenceStatus _status = PersistenceStatus.Unchanged;
+        private PersistenceStatus _status = PersistenceStatus.New;
 
         public PersistenceStatus Status
         {

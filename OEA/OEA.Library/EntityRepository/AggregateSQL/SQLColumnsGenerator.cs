@@ -47,7 +47,7 @@ namespace OEA.Library
             this._entityInfoHost = repository;
         }
 
-        public Entity ReadDataDirectly(DataRow rowData)
+        internal Entity ReadDataDirectly(DataRow rowData)
         {
             Entity result = null;
 
@@ -59,7 +59,7 @@ namespace OEA.Library
                 if (rowData[idName] != DBNull.Value)
                 {
                     //利用反射创建对象。
-                    result = Activator.CreateInstance(this._repository.EntityType, true) as Entity;
+                    result = this._repository.New();
 
                     foreach (IColumn column in tableInfo.Columns)
                     {

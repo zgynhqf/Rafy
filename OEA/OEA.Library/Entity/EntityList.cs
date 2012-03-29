@@ -255,7 +255,7 @@ namespace OEA.Library
         /// <param name="table"></param>
         internal protected void ReadFromTable(IDbTable table)
         {
-            this.ReadFromTable(table, (item, subTable) => this.FindRepository().Convert(item));
+            this.ReadFromTable(table, null);
         }
 
         /// <summary>
@@ -274,7 +274,7 @@ namespace OEA.Library
         /// IGTable：在这些行中加载所有子对象的数据
         /// 返回TEntity：加载完毕孩子后的实体对象。
         /// </param>
-        internal protected void ReadFromTable(IDbTable table, Func<Entity, IDbTable, Entity> relationLoader)
+        internal protected void ReadFromTable(IDbTable table, Action<Entity, IDbTable> relationLoader)
         {
             EntityListHelper.ReadFromTable(this, table, relationLoader);
         }
@@ -338,7 +338,7 @@ namespace OEA.Library
         /// 为每个TEntity调用此方法，从IGTable中加载它对应的孩子对象。
         /// 加载完成后的对象会被加入到list中，所以此方法有可能返回一个全新的TEntity。
         /// </param>
-        public static void ReadFromTable(this EntityList list, IDbTable table, Func<Entity, IDbTable, Entity> relationLoader)
+        public static void ReadFromTable(this EntityList list, IDbTable table, Action<Entity, IDbTable> relationLoader)
         {
             list.RaiseListChangedEvents = false;
             var entityType = list.EntityType;
@@ -395,14 +395,14 @@ namespace OEA.Library
         /// <param name="endRow"></param>
         /// <param name="relationLoader"></param>
         /// <returns></returns>
-        private static Entity CreateEntity(Type entityType, IDbTable table, int startRow, int endRow, Func<Entity, IDbTable, Entity> relationLoader)
+        private static Entity CreateEntity(Type entityType, IDbTable table, int startRow, int endRow, Action<Entity, IDbTable> relationLoader)
         {
             //新的TEntity
-            var entity = RF.Create(entityType).SQLColumnsGenerator.ReadDataDirectly(table[startRow]);
+            var entity = RF.Create(entityType).GetFromRow(table[startRow]);
             Debug.Assert(entity != null, "id不为空，对象也不应该为空。");
 
             var childTable = new SubTable(table, startRow, endRow);
-            entity = relationLoader(entity, childTable);
+            if (relationLoader != null) { relationLoader(entity, childTable); }
             return entity;
         }
     }

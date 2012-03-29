@@ -648,7 +648,11 @@ namespace OEA.ORM.sqlserver
 
         private Entity CreateEntity()
         {
-            return ITableExtension.CreateEntity(type);
+            var entity = Entity.New(type);
+
+            entity.Status = PersistenceStatus.Unchanged;
+
+            return entity;
         }
 
         #region OEA

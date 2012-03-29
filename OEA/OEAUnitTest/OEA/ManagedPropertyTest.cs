@@ -349,7 +349,7 @@ namespace OEAUnitTest
         [TestMethod]
         public void MPT_WPFBinding()
         {
-            var userList = RF.Create<TestUser>().CreateEmptyOldList();
+            var userList = RF.Create<TestUser>().OldList();
             var newUser = Get<TestUser>();
             newUser.Name = "1";
             userList.Add(newUser);
@@ -559,7 +559,9 @@ namespace OEAUnitTest
         private static TEntity Get<TEntity>()
             where TEntity : Entity
         {
-            return RF.Create<TEntity>().CreateEmptyOldEntity().CastTo<TEntity>();
+            var e = RF.NewEntity<TEntity>();
+            e.Status = PersistenceStatus.Unchanged;
+            return e;
         }
     }
 }

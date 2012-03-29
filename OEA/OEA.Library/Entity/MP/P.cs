@@ -206,7 +206,10 @@ namespace OEA.Library
             });
         }
 
-        public static RefProperty<TRefEntity> RegisterRef<TRefEntity>(Expression<Func<TEntity, TRefEntity>> refEntityPropertyExp, RefPropertyMeta meta)
+        public static RefProperty<TRefEntity> RegisterRef<TRefEntity>(
+            Expression<Func<TEntity, TRefEntity>> refEntityPropertyExp,
+            RefPropertyMeta meta
+            )
             where TRefEntity : Entity
         {
             meta.RefEntityProperty = GetPropertyName(refEntityPropertyExp);

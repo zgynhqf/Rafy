@@ -157,7 +157,7 @@ namespace OEA.Library
             }
         }
 
-        partial void OnCloneCore(Entity target, CloneOptions options)
+        private void OnCloneCore(Entity target, CloneOptions options)
         {
             if (!this.SupportTree) return;
 

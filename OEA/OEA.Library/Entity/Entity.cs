@@ -51,6 +51,8 @@ namespace OEA.Library
     [Serializable]
     public abstract partial class Entity : CslaEntity, IEntity, IReferenceOwner, IDenpendentObject
     {
+        #region 构造函数及工厂方法
+
         protected Entity()
         {
             //this.LoadProperty(IdProperty, OEAEnvironment.NewLocalId());
@@ -58,8 +60,22 @@ namespace OEA.Library
 
             //ValidationRules.CheckRules();
 
-            this.MarkNew();
+            //this.MarkNew();
         }
+
+        /// <summary>
+        /// 通过实体类型反射构造一个新的实体。
+        /// </summary>
+        /// <param name="entityType"></param>
+        /// <returns></returns>
+        public static Entity New(Type entityType)
+        {
+            //经测试，Activator创建对象一样非常迅速。
+            //return MethodCaller.CreateInstance(entityType) as Entity;
+            return Activator.CreateInstance(entityType, true) as Entity;
+        }
+
+        #endregion
 
         #region 属性
 
@@ -219,22 +235,6 @@ namespace OEA.Library
             options.NotifyCloned(target, this);
 
             this.OnCloneCore(target, options);
-        }
-
-        partial void OnCloneCore(Entity target, CloneOptions options);
-
-        #endregion
-
-        #region 整合 根对象和子对象 在一起的方法
-
-        /// <summary>
-        /// 子类可以重写这个方法，用于在获取时及时加载一些额外的属性。
-        /// 本过程与根对象子对象无关。
-        /// </summary>
-        /// <param name="data"></param>
-        protected virtual void OnGetRow(Entity data)
-        {
-            this.Clone(data, CloneOptions.ReadDbRow());
         }
 
         #endregion
@@ -569,36 +569,6 @@ namespace OEA.Library
                 var meta = field.Property.GetMeta(this) as IPropertyMetadata;
                 if (meta.IsChild) { yield return field; }
             }
-        }
-
-        #endregion
-
-        #region 快速的CSLA
-
-        //以下内容抽取自CSLA
-        //由于调用CSLA方法较慢，所以这里把它们直接抽取出来。
-        //var result = DataPortal.FetchChild(data.GetType(), data) as Entity;
-
-        /// <summary>
-        /// 调用此方法返回孩子对象。
-        /// 返回的子对象的属性只是简单的完全Copy参数data的数据。
-        /// </summary>
-        /// <param name="row">这个对象只有数据，没有CSLA相关的属性。如：IsChild。</param>
-        /// <returns></returns>
-        internal static Entity FastFetch(Entity row)
-        {
-            var model = FastFetch(row.GetType());
-            model.OnGetRow(row);
-            return model;
-        }
-
-        internal static Entity FastFetch(Type entityType)
-        {
-            //经测试，Activator创建对象一样非常迅速。
-            var model = Activator.CreateInstance(entityType, true) as Entity;
-            //var model = MethodCaller.CreateInstance(entityType) as Entity;
-            model.MarkOld();
-            return model;
         }
 
         #endregion

@@ -1,13 +1,13 @@
 /*******************************************************
  * 
- * ï¿½ï¿½ï¿½ß£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
- * ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ä£º20111123
- * Ëµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½Ö»ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½à£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¼ï¿½ï¿½ï¿½ï¿½ï¿½×¢ï¿½Í¡ï¿½
- * ï¿½ï¿½ï¿½Ð»ï¿½ï¿½ï¿½ï¿½ï¿½.NET 4.0
- * ï¿½æ±¾ï¿½Å£ï¿½1.0.0
+ * ×÷Õß£ººúÇì·Ã
+ * ´´½¨Ê±¼ä£º20111123
+ * ËµÃ÷£º´ËÎÄ¼þÖ»°üº¬Ò»¸öÀà£¬¾ßÌåÄÚÈÝ¼ûÀàÐÍ×¢ÊÍ¡£
+ * ÔËÐÐ»·¾³£º.NET 4.0
+ * °æ±¾ºÅ£º1.0.0
  * 
- * ï¿½ï¿½Ê·ï¿½ï¿½Â¼ï¿½ï¿½
- * ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ 20111123
+ * ÀúÊ·¼ÇÂ¼£º
+ * ´´½¨ÎÄ¼þ ºúÇì·Ã 20111123
  * 
 *******************************************************/
 
@@ -33,7 +33,7 @@ using Hardcodet.Wpf.GenericTreeView;
 namespace OEA.Module.WPF.Controls
 {
     /// <summary>
-    /// GridTreeView ï¿½Ø¼ï¿½ï¿½Ðµï¿½Ò»ï¿½ï¿½
+    /// GridTreeView ¿Ø¼þÖÐµÄÒ»ÐÐ
     /// </summary>
     [TemplatePart(Name = "PART_RowPresenter", Type = typeof(GridTreeViewRowPresenter))]
     public class GridTreeViewRow : TreeViewItem
@@ -51,7 +51,7 @@ namespace OEA.Module.WPF.Controls
             this.PrepareToAdjustFirstColumnWidth();
         }
 
-        #region ï¿½Ö¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        #region ×Ö¶ÎÓëÊôÐÔ
 
         private EntityViewMeta _entityViewMeta;
 
@@ -93,8 +93,8 @@ namespace OEA.Module.WPF.Controls
         private int _level = -1;
 
         /// <summary>
-        /// ï¿½ï¿½ï¿½ÐµÄ¼ï¿½ï¿½ï¿½
-        /// ï¿½ï¿½ï¿½ï¿½ 0ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¿Ò»ï¿½ï¿½ï¿½ï¿½ 1ï¿½ï¿½
+        /// Ê÷ÖÐµÄ¼¶±ð
+        /// ¸ùÊÇ 0£¬ÆäÏÂÃ¿Ò»¼¶¼Ó 1¡£
         /// </summary>
         public int Level
         {
@@ -120,7 +120,7 @@ namespace OEA.Module.WPF.Controls
             );
 
         /// <summary>
-        /// ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½Ðºï¿½
+        /// ´ËÐÐÓ¦¸ÃÏÔÊ¾ÐÐºÅ
         /// </summary>
         internal int RowNo
         {
@@ -130,8 +130,8 @@ namespace OEA.Module.WPF.Controls
 
         private void OnRowNoChanged(DependencyPropertyChangedEventArgs e)
         {
-            //ï¿½ï¿½Ç°Ö»ï¿½Ç°ï¿½Öµï¿½òµ¥µï¿½Í¬ï¿½ï¿½ï¿½ï¿½ RowHeader ï¿½Ï£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-            //ï¿½ï¿½ï¿½ï¿½ GridTreeViewRowPresenter ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½Í¿ï¿½ï¿½Ô°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+            //µ±Ç°Ö»ÊÇ°ÑÖµ¼òµ¥µØÍ¬²½µ½ RowHeader ÉÏ£¬ÕâÑù£¬
+            //ÓÉÓÚ GridTreeViewRowPresenter °ó¶¨ÁËÕâ¸öÖµ£¬¾Í¿ÉÒÔ°ÑÕâ¸öÊý×ÖÏÔÊ¾³öÀ´¡£
             this.RowHeader = e.NewValue;
         }
 
@@ -144,7 +144,7 @@ namespace OEA.Module.WPF.Controls
             );
 
         /// <summary>
-        /// RowHeader ï¿½ï¿½ï¿½ï¿½Í·ï¿½Ø¼ï¿½ï¿½ï¿½
+        /// RowHeader ÊÇÐÐÍ·¿Ø¼þ¡£
         /// </summary>
         public object RowHeader
         {
@@ -154,7 +154,7 @@ namespace OEA.Module.WPF.Controls
 
         #endregion
 
-        #region Êµï¿½ï¿½ ItemsControl ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½Ò»Ð©ï¿½ï¿½ï¿½ï¿½
+        #region ÊµÏÖ ItemsControl ¼°ÖØÐ´¸¸ÀàµÄÒ»Ð©·½·¨
 
         protected override DependencyObject GetContainerForItemOverride()
         {
@@ -181,7 +181,7 @@ namespace OEA.Module.WPF.Controls
         }
 
         /// <summary>
-        /// ï¿½ï¿½Ö¹ TreeViewItem ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ TreeViewItem Ò²ï¿½ï¿½ï¿½ï¿½ SelectedItemChanged
+        /// ·ÀÖ¹ TreeViewItem ¸ü¸ÄÊ±µ¼ÖÂÈÝÆ÷ TreeViewItem Ò²´¥·¢ SelectedItemChanged
         /// </summary>
         /// <param name="e"></param>
         protected override void OnMouseDown(MouseButtonEventArgs e)
@@ -193,24 +193,24 @@ namespace OEA.Module.WPF.Controls
 
         #endregion
 
-        #region ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½Åµï¿½Ò»ï¿½ÐµÄ¿ï¿½ï¿½
-        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½â£ºhttp://ipm.grandsoft.com.cn/issues/166987
+        #region ×Ô¶¯À©ÕÅµÚÒ»ÁÐµÄ¿í¶È
+        //½â¾öÎÊÌâ£ºhttp://ipm.grandsoft.com.cn/issues/166987
 
         /// <summary>
-        /// ï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÈµÄ´ï¿½ï¿½ë¡£
+        /// ¼àÌýÊÊµ±µÄÊÂ¼þ£¬ÒÔ´¥·¢µ÷Õû¿í¶ÈµÄ´úÂë¡£
         /// 
-        /// ï¿½ï¿½ï¿½ìº¯ï¿½ï¿½ï¿½ï¿½ï¿½Ã´Ë·ï¿½ï¿½ï¿½ï¿½ï¿½
+        /// ¹¹Ôìº¯Êýµ÷ÓÃ´Ë·½·¨¡£
         /// </summary>
         private void PrepareToAdjustFirstColumnWidth()
         {
-            /*********************** ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ *********************************
+            /*********************** ´úÂë¿é½âÊÍ *********************************
              * 
-             * Ä¿Ç°ï¿½ï¿½Ñ¡ï¿½ï¿½Ä´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç£ï¿½
-             * ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Úµã±» Expand Ê±ï¿½ï¿½ï¿½Ã½Úµï¿½ï¿½Âµï¿½ï¿½Ó½Úµï¿½ï¿½ï¿½ï¿½ï¿½É£ï¿½
-             * ItemContainerGenerator.StatusChanged ï¿½Â¼ï¿½ï¿½á·¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Status ï¿½ï¿½ GeneratorStatus.ContainersGeneratedï¿½ï¿½
-             * ï¿½ï¿½ï¿½Ç´ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ GridTreeViewRow ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¸ï¿½ï¿½Ôµï¿½ VisualChildï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½Ù´Î¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ó½Úµï¿½Äµï¿½ Loaded ï¿½Â¼ï¿½ï¿½ï¿½
-             * ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Ð½Úµã¼°ï¿½ï¿½ VisualChild ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É£ï¿½ï¿½ï¿½ï¿½Ô¿ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ÐµÄ¿ï¿½È¡ï¿½
-             * ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½Ñ¡ï¿½ï¿½ Expanded ï¿½Â¼ï¿½ï¿½ï¿½Ô­ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½Ç¸ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó½Úµï¿½ GridTreeViewRow ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½É¡ï¿½
+             * Ä¿Ç°ËùÑ¡ÔñµÄ´¥·¢Ìõ¼þÊÇ£º
+             * µ±Ò»¸ö½Úµã±» Expand Ê±£¬¸Ã½ÚµãÏÂµÄ×Ó½Úµã»áÉú³É£¬
+             * ItemContainerGenerator.StatusChanged ÊÂ¼þ»á·¢Éú£¬ÇÒ Status ÊÇ GeneratorStatus.ContainersGenerated¡£
+             * µ«ÊÇ´ËÊ±¸÷×Ó GridTreeViewRow ²¢Ã»ÓÐÉú³ÉËüÃÇ¸÷×ÔµÄ VisualChild£¬ËùÒÔÐèÒªÔÙ´Î¼àÌý×îºóÒ»¸ö×Ó½ÚµãµÄµÄ Loaded ÊÂ¼þ£¬
+             * ´ËÊ±ËùÓÐ½Úµã¼°Æä VisualChild ¶¼ÒÑ¾­¼ÓÔØÍê³É£¬¿ÉÒÔ¿ªÊ¼µ÷ÕûµÚÒ»ÁÐµÄ¿í¶È¡£
+             * ÕâÀïÃ»ÓÐÑ¡Ôñ Expanded ÊÂ¼þµÄÔ­Òò£¬Ö÷ÒªÊÇÄÇ¸öÊÂ¼þ·¢ÉúÊ±£¬ËùÓÐ×Ó½Úµã GridTreeViewRow ¶¼Ã»ÓÐÉú³É¡£
              * 
             **********************************************************************/
 
@@ -247,8 +247,8 @@ namespace OEA.Module.WPF.Controls
             );
 
         /// <summary>
-        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú±ï¿½Ê¾ï¿½ï¿½Ç°ï¿½ï¿½ï¿½Ç·ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½Ñ¡ï¿½Ð¡ï¿½
-        /// Ä¿Ç°ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½Í¨Öª Style ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½É«ï¿½ä»»ï¿½ï¿½
+        /// Õâ¸öÊôÐÔÓÃÓÚ±íÊ¾µ±Ç°ÏîÊÇ·ñÒÑ¾­±»Ñ¡ÖÐ¡£
+        /// Ä¿Ç°Ö÷ÒªÓÃÓÚÍ¨Öª Style ×ö³öÏàÓ¦µÄÑÕÉ«±ä»»¡£
         /// </summary>
         public bool IsMultiSelected
         {
@@ -260,20 +260,20 @@ namespace OEA.Module.WPF.Controls
         {
             if (!this.IsSettingInternal)
             {
-                //Öµï¿½Ä±ï¿½ï¿½ï¿½ï¿½Ô´ï¿½Ç£ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½Í¼Ê±ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ß·ï¿½ï¿½ï¿½Ñ¡Ä³Ò»ï¿½Ð¡ï¿½
+                //Öµ¸Ä±äµÄÀ´Ô´ÊÇ£º¹´Ñ¡ÊÓÍ¼Ê±£¬¹´Ñ¡»òÕß·´¹´Ñ¡Ä³Ò»ÐÐ¡£
                 var value = (bool)e.NewValue;
                 this.TreeGrid.CheckRowWithCascade(this, (bool)e.NewValue);
             }
         }
 
         /// <summary>
-        /// ï¿½ï¿½ï¿½ï¿½ IsMultiSelected ï¿½ï¿½Öµï¿½Ç·ï¿½ï¿½ï¿½ï¿½Ú±ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ä¡£
+        /// ±íÃ÷ IsMultiSelected µÄÖµÊÇ·ñÕýÔÚ±»ÄÚ²¿·½·¨¸Ä±ä¡£
         /// </summary>
         internal bool IsSettingInternal;
 
         #endregion
 
-        #region ï¿½Ô¶ï¿½ï¿½ï¿½
+        #region ×Ô¶¯»¯
 
         internal bool _isAutomationFired = false;
 
@@ -281,14 +281,14 @@ namespace OEA.Module.WPF.Controls
         {
             /**********************************************************************
              * 
-             * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ OnGotFocus ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½ Select ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-             * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¸ï¿½ï¿½Ðµï¿½Ñ¡ï¿½Ð£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¹Ø±Õ¡ï¿½
+             * Èç¹ûÊÇ×Ô¶¯»¯´¥·¢µÄ½¹µãÊÂ¼þ£¬ÔòÐèÒªÆÁ±Î»ùÀà OnGotFocus ·½·¨ÖÐµÄ Select ·½·¨£¬
+             * ·ñÔò»áÔì³É¸ÃÐÐµÄÑ¡ÖÐ£¬µ¼ÖÂÏÂÀ­½çÃæµÄ¹Ø±Õ¡£
              * 
             **********************************************************************/
 
             if (!this._isAutomationFired)
             {
-                //ï¿½ï¿½ï¿½ï¿½ï¿½Ú»ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Ñ¡ï¿½Ðµï¿½Ç°ï¿½ï¿½
+                //»ùÀàÔÚ»ñÈ¡½¹µãµÄÊ±ºò»áÑ¡ÖÐµ±Ç°ÐÐ
                 base.OnGotFocus(e);
             }
             else
@@ -353,8 +353,8 @@ namespace OEA.Module.WPF.Controls
 
         /**************************************************
          * 
-         * ï¿½Ú¹ï¿½Ñ¡Ä£Ê½ï¿½Â£ï¿½Ö±ï¿½ï¿½Ê¹ï¿½ï¿½ IsMultiSelected ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½ ISelectionItemProviderï¿½ï¿½
-         * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¹ï¿½Ñ¡Ä£Ê½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½Ê¹ï¿½ï¿½ IsSelected ï¿½ï¿½ï¿½Ô¡ï¿½
+         * ÔÚ¹´Ñ¡Ä£Ê½ÏÂ£¬Ö±½ÓÊ¹ÓÃ IsMultiSelected ÊôÐÔÀ´ÊµÏÖ ISelectionItemProvider£¬
+         * Èç¹û²»ÊÇ¹´Ñ¡Ä£Ê½£¬ÔòÓ¦¸ÃÊ¹ÓÃ IsSelected ÊôÐÔ¡£
          * 
          ***************************************************/
 

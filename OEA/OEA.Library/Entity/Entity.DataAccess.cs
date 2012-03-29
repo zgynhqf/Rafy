@@ -196,6 +196,12 @@ namespace OEA.Library
 
         #endregion
 
+        /// <summary>
+        /// 重写这个方法，用于在从数据库获取出来时，及时地加载一些额外的属性。
+        /// </summary>
+        /// <param name="data"></param>
+        internal protected virtual void OnDbLoaded() { }
+
         internal protected virtual string ConnectionStringSettingName
         {
             get { return ConnectionStringNames.OEA; }

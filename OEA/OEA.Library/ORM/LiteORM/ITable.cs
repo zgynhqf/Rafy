@@ -16,7 +16,8 @@ namespace OEA.ORM
     {
         public static object Translate(this ITable table, DataRow row)
         {
-            var entity = CreateEntity(table.Class);
+            var entity = Entity.New(table.Class);
+            entity.Status = PersistenceStatus.Unchanged;
 
             foreach (var column in table.Columns)
             {
@@ -24,15 +25,6 @@ namespace OEA.ORM
                 column.SetValue(entity, val);
             }
 
-            return entity;
-        }
-
-        internal static Entity CreateEntity(Type entityType)
-        {
-            var entity = Activator.CreateInstance(entityType, true) as Entity;
-            if (entity == null) throw new NotSupportedException("只支持实体类型");
-
-            entity.NotifyLoaded(null);
             return entity;
         }
     }
