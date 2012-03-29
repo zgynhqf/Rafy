@@ -80,13 +80,7 @@ namespace OEA.Module.WPF
                 if (resultView == null) throw new InvalidOperationException("还没有设置 ResultView");
 
                 //查询出结果集是不是需要到服务器取数据。
-                Type commandType = typeof(QueryObjectCommand);
-                //Type commandType = resultView.EntityViewInfo.NavigateQueryMode == NavigateQueryMode.Remote ?
-                //    typeof(QueryObjectCommand) : typeof(FilterObjectCommand);
-
-                var cmd = Activator.CreateInstance(commandType) as ICommand;
-
-                CommandRepository.TryExecuteCommand(cmd, this);
+                CommandRepository.TryExecuteCommand(new QueryObjectCommand(), this);
             }
         }
 
