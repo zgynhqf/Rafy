@@ -13,26 +13,24 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using SimpleCsla;
-using SimpleCsla.Core;
-using SimpleCsla.Wpf;
 using OEA.Library;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
-
-using OEA.Module.WPF.Controls;
-using System.Linq;
-using System.Linq.Expressions;
-using OEA.Utils;
-using OEA.Module.WPF.ViewControllers;
 using OEA.Module.WPF.Automation;
-using System.Collections.Generic;
-using System.ComponentModel;
+using OEA.Module.WPF.Controls;
+using OEA.Utils;
+using SimpleCsla;
+using SimpleCsla.Core;
+using SimpleCsla.Wpf;
 
 namespace OEA.Module.WPF.Editors
 {
@@ -92,7 +90,7 @@ namespace OEA.Module.WPF.Editors
             var panel = base.CreateLabelElement() as Panel;
 
             //生成busy控件
-            var loader = this._listView.DataLoader as ViewDataLoaderBase;
+            var loader = this._listView.DataLoader as ViewDataLoader;
             var busy = AutoUIHelper.CreateBusyControl(loader);
             panel.Children.Add(busy);
 
@@ -387,18 +385,17 @@ namespace OEA.Module.WPF.Editors
                 {
                     if (async)
                     {
-                        this._listView.DataLoader.ListenDataChangedOnce(() =>
+                        this._listView.DataLoader.LoadDataAsync(() =>
                         {
                             using (this.TryEnterProcess(ProcessSource.AsyncDataLoaded))
                             {
                                 this.SyncValueToSelection();
                             }
                         });
-                        this._listView.DataLoader.GetObjectAsync();
                     }
                     else
                     {
-                        this._listView.DataLoader.GetObject();
+                        this._listView.Data = RF.Create(this._listView.EntityType).GetAll();
                     }
                 }
             }

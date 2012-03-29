@@ -118,7 +118,7 @@ namespace Demo
 
             View.UseWebCommands("CountLocalBookCommand", "CountServerBookCommand");
 
-            //WebView.EntityProperty(Book.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
+            //View.Property(Book.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
         }
     }
 }

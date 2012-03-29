@@ -149,6 +149,7 @@
     </Compile>
     <Compile Include="AutoUI\Editors\PropertyEditor\NumberRangePropertyEditor.cs" />
     <Compile Include="AutoUI\ObjectViews\CustomObjectView.cs" />
+    <Compile Include="AutoUI\ObjectViews\ViewController\AsyncDataContextHelper.cs" />
     <Compile Include="Command\LookupSelectAddCommand.cs" />
     <Compile Include="Command\SysCommand\CustomizeUI\CustomizeUI.cs" />
     <Compile Include="Command\SysCommand\CustomizeUI\BackupViewConfig.cs" />
@@ -171,7 +172,7 @@
     <Compile Include="AutoUI\ObjectViews\Relations\DetailRelationView.cs" />
     <Compile Include="AutoUI\ObjectViews\Relations\NavigateRelationView.cs" />
     <Compile Include="AutoUI\ObjectViews\ViewController\OEADataProvider.cs" />
-    <Compile Include="AutoUI\ObjectViews\ViewController\ViewDataLoaderBase.cs" />
+    <Compile Include="AutoUI\ObjectViews\ViewController\ViewDataLoader.cs" />
     <Compile Include="Controls\MTTG\TreeColumn\TreeColumnCollection.cs" />
     <Compile Include="Controls\MTTG\_MTTGTestCommands.cs" />
     <Compile Include="PrimitiveUI\EntityModule.cs" />
@@ -345,8 +346,6 @@
     <Compile Include="Common\PropertyChangeNotifier.cs" />
     <Compile Include="WPFModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="AutoUI\ObjectViews\ViewController\DetailViewController.cs" />
-    <Compile Include="AutoUI\ObjectViews\ViewController\ListViewController.cs" />
     <Compile Include="TabControlWorkSpace.cs" />
     <Compile Include="ViewModel.cs" />
     <Compile Include="WPFModuleBase.cs" />

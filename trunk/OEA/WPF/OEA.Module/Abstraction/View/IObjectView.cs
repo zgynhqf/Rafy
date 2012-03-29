@@ -23,7 +23,7 @@ namespace OEA
         /// <summary>
         /// 为这个View加载数据的对象
         /// </summary>
-        IViewDataLoader DataLoader { get; set; }
+        IAsyncDataLoader DataLoader { get; set; }
 
         ///// <summary>
         ///// 区域的类型

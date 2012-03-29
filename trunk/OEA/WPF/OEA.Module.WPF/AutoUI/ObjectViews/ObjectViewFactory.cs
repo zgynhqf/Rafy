@@ -18,11 +18,8 @@ using System.Text;
 using System.Windows;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
-
 using OEA.Module.WPF.Controls;
 using OEA.Module.WPF.Editors;
-
-using OEA.Module.WPF.ViewControllers;
 
 namespace OEA.Module.WPF
 {
@@ -57,6 +54,9 @@ namespace OEA.Module.WPF
             {
                 var viewType = Type.GetType(block.CustomViewType);
                 var view = Activator.CreateInstance(viewType, block.EVM) as WPFObjectView;
+
+                this.OnViewCreated(view);
+
                 return view;
             }
 
@@ -170,18 +170,12 @@ namespace OEA.Module.WPF
             var listEditor = new MTTGListEditor(view);
             listEditor.SetControl(resultControl);
             view.InitializeEditor(listEditor);
-
-            //ListViewController
-            view.DataLoader = new ListViewController(view);
         }
 
         private void InitDetailView(DetailObjectView view)
         {
             var control = this._uiFactory.CreateDetailPanel(view);
             view.SetControl(control);
-
-            //DetailViewController
-            view.DataLoader = new DetailViewController(view);
         }
 
         public event EventHandler<InstanceCreatedEventArgs<ObjectView>> ViewCreated;

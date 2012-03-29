@@ -73,8 +73,6 @@ namespace Demo
             base.ConfigView();
 
             View.HasTitle(BookCategory.NameProperty).HasLabel("书籍类别");
-
-            //WebView.EntityProperty(BookCategory.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
         }
     }
 }

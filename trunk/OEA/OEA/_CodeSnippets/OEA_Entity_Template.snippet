@@ -89,7 +89,7 @@ namespace $NAMESPACE$
             
             View.HasLabel("$Label$").HasTitle($EntityClassName$.NameProperty);
             
-            //View.EntityProperty($EntityClassName$.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
+            View.Property($EntityClassName$.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
         }
     }
 }]]>

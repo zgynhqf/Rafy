@@ -23,40 +23,31 @@ using OEA.MetaModel.Attributes;
 using OEA.Module;
 using OEA.Module.WPF;
 using OEA.Module.WPF.Editors;
-
-
 using OEA.Module.WPF.Controls;
-
 
 namespace OEA.WPF.Command
 {
     /// <summary>
-    /// View为NavigateQueryObjectView
+    /// 此命令只能在导航查询面板视图 QueryObjectView 中使用
     /// </summary>
     [Command(Label = "查询", ToolTip = "查询记录")]
-    public class QueryObjectCommand : ViewCommand
+    public class QueryObjectCommand : ClientCommand<QueryObjectView>
     {
-        public override void Execute(ObjectView view)
+        public override void Execute(QueryObjectView queryView)
         {
-            var queryView = view as QueryObjectView;
-            Debug.Assert(queryView != null, "此命令只能在导航查询面板视图QueryObjectView中使用");
-
-            var queryObject = queryView.Current;
-            queryObject.CheckRules();
-            if (queryObject.BrokenRulesCollection.Count > 0)
+            var brokenRules = queryView.Current.CheckRules();
+            if (brokenRules.Count > 0)
             {
-                App.Current.MessageBox.Show("条件错误", queryObject.BrokenRulesCollection[0].Description, MessageBoxButton.OK);
+                App.Current.MessageBox.Show(
+                    "条件错误",
+                    brokenRules[0].Description,
+                    MessageBoxButton.OK
+                    );
             }
             else
             {
-                var resultView = queryView.ResultView;
-                this.QueryData(resultView, queryObject);
+                queryView.TryExecuteQuery();
             }
-        }
-
-        private void QueryData(ObjectView resultView, Criteria queryObject)
-        {
-            resultView.DataLoader.GetObjectAsync(queryObject);
         }
     }
 }

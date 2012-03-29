@@ -50,7 +50,7 @@ namespace OEA.Module.WPF.Command
 
             var listView = AutoUI.ViewFactory.CreateListObjectView(this.TargetEntityType);
 
-            listView.DataLoader.GetObjectAsync();
+            listView.DataLoader.LoadDataAsync();
 
             var result = App.Current.Windows.ShowDialog(listView.Control, w =>
             {

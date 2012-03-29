@@ -16,10 +16,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
-using OEA.Module.WPF.ViewControllers;
 using System.Windows.Controls;
-using SimpleCsla.Wpf;
 using System.Windows.Data;
+using SimpleCsla.Wpf;
 
 namespace OEA.Module.WPF
 {
@@ -46,7 +45,7 @@ namespace OEA.Module.WPF
         /// <returns></returns>
         public static FrameworkElement TryWrapWithBusyControl(WPFObjectView target)
         {
-            var viewController = target.DataLoader as ViewDataLoaderBase;
+            var viewController = target.DataLoader;
             if (viewController != null)
             {
                 var busy = CreateBusyControl(viewController);
@@ -69,7 +68,7 @@ namespace OEA.Module.WPF
         /// </summary>
         /// <param name="viewController"></param>
         /// <returns></returns>
-        internal static FrameworkElement CreateBusyControl(ViewDataLoaderBase viewController)
+        internal static FrameworkElement CreateBusyControl(ViewDataLoader viewController)
         {
             //生成busy控件
             var busy = new BusyAnimation();

@@ -30,8 +30,6 @@ using OEA.MetaModel.View;
 using OEA.Module.WPF.CommandAutoUI;
 using OEA.Module.WPF.Controls;
 using OEA.Module.WPF.Layout;
-using OEA.Module.WPF.ViewControllers;
-
 using OEA.WPF;
 using SimpleCsla;
 

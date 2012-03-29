@@ -27,7 +27,6 @@ using System.Windows.Shapes;
 using OEA.Module.WPF;
 using OEA.Library;
 using OEA.MetaModel.View;
-using OEA.Module.WPF.ViewControllers;
 using OEA.RBAC;
 
 namespace RBAC

@@ -216,7 +216,7 @@ namespace OEA.Module.WPF
                 listView.NavigateQueryView == null
                 )
             {
-                listView.DataLoader.GetObjectAsync();
+                listView.DataLoader.LoadDataAsync();
             }
         }
 
