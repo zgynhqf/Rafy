@@ -79,7 +79,7 @@ namespace OEA.Library
             where TList : EntityList
         {
             var entityType = EntityConvention.EntityType(typeof(TList));
-            return Create(entityType).CreateEmptyOldList() as TList;
+            return Create(entityType).OldList() as TList;
         }
 
         /// <summary>

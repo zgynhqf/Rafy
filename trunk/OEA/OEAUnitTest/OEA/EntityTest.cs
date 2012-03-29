@@ -270,7 +270,9 @@ namespace OEAUnitTest
         private static TEntity Get<TEntity>()
             where TEntity : Entity
         {
-            return RF.Create<TEntity>().CreateEmptyOldEntity().CastTo<TEntity>();
+            var e = RF.NewEntity<TEntity>();
+            e.Status = PersistenceStatus.Unchanged;
+            return e;
         }
     }
 }

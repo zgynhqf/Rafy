@@ -66,10 +66,8 @@ namespace OEA.Library
         {
             var option = optionNode.Value;
             var newList = option.OwnerRepository.NewList();
-            newList.ReadFromTable(table, (row, subTable) =>
+            newList.ReadFromTable(table, (entity, subTable) =>
             {
-                var entity = option.OwnerRepository.Convert(row);
-
                 EntityList listResult = null;
 
                 //是否还有后继需要加载的对象？如果是，则递归调用自己进行子对象的加载。
@@ -102,8 +100,6 @@ namespace OEA.Library
                         option.SetReferenceEntity(entity, listResult[0]);
                     }
                 }
-
-                return entity;
             });
 
             return newList;
@@ -119,7 +115,7 @@ namespace OEA.Library
         {
             var newList = repository.NewList();
 
-            newList.ReadFromTable(table, (row, subTable) => repository.Convert(row));
+            newList.ReadFromTable(table);
 
             return newList;
         }

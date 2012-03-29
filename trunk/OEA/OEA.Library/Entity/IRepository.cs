@@ -44,6 +44,15 @@ namespace OEA.Library
         Entity New();
 
         /// <summary>
+        /// 把行转换为对象
+        /// 
+        /// （复制出一个新的实体对象）
+        /// </summary>
+        /// <param name="row"></param>
+        /// <returns></returns>
+        Entity ConvertRow(Entity row);
+
+        /// <summary>
         /// 创建一个全新的实体列表对象
         /// </summary>
         /// <returns></returns>
@@ -77,13 +86,6 @@ namespace OEA.Library
         bool SupportTree { get; }
 
         TreeCodeOption TreeCodeOption { get; }
-
-        /// <summary>
-        /// 把行转换为对象
-        /// </summary>
-        /// <param name="row"></param>
-        /// <returns></returns>
-        Entity Convert(Entity row);
 
         /// <summary>
         /// 获取所有的静态的CSLA属性标记器。

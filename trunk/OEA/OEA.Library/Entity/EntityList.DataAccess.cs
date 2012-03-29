@@ -50,7 +50,13 @@ namespace OEA.Library
 
         protected virtual void OnSaved() { }
 
-        protected void QueryDb(string tSql)
+        /// <summary>
+        /// 使用 sql 语句加载对象
+        /// </summary>
+        /// <param name="sql">
+        /// 尽量使用 T-SQL。
+        /// </param>
+        protected void QueryDb(string sql)
         {
             this.RaiseListChangedEvents = false;
             try
@@ -58,10 +64,10 @@ namespace OEA.Library
                 using (var db = this.CreateDb())
                 {
                     //访问数据库
-                    var rows = db.ExecSql(this.EntityType, tSql);
+                    var table = db.ExecSql(this.EntityType, sql);
 
                     //读取数据
-                    this.ReadRows(rows);
+                    this.AddTable(table);
                 }
             }
             finally
@@ -71,7 +77,7 @@ namespace OEA.Library
         }
 
         /// <summary>
-        /// 访问数据库，把指定的实体类entityType满足queryBuider条件的所有实体查询出来，并直接加到本列表中。
+        /// 访问数据库，把指定的实体类 entityType 满足 queryBuider 条件的所有实体查询出来，并直接加到本列表中。
         /// </summary>
         /// <param name="entityType"></param>
         protected void QueryDb(Action<IQuery> queryBuider)
@@ -87,10 +93,10 @@ namespace OEA.Library
                     this.OnQueryDbOrder(query);
 
                     //访问数据库
-                    var rows = db.Select(query);
+                    var table = db.Select(query);
 
                     //读取数据
-                    this.ReadRows(rows);
+                    this.AddTable(table);
                 }
             }
             finally
@@ -112,13 +118,11 @@ namespace OEA.Library
             }
         }
 
-        protected void ReadRows(IEnumerable dataRows)
+        public void AddTable(IEnumerable entities)
         {
-            var provider = this.FindRepository();
-
-            foreach (Entity row in dataRows)
+            foreach (Entity entity in entities)
             {
-                var entity = provider.Convert(row);
+                entity.OnDbLoaded();
                 this.Add(entity);
             }
         }
