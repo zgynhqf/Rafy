@@ -30,7 +30,7 @@ namespace WPFClient
         /// <param name="e"></param>
         private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            //e.Exception.ManageException();
+            e.Exception.Alert();
             e.Handled = true;
         }
 

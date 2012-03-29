@@ -169,7 +169,7 @@ namespace OEA.Module.WPF
                 }
                 catch (Exception ex)
                 {
-                    ex.ManageException();
+                    ex.Alert();
                 }
                 finally
                 {

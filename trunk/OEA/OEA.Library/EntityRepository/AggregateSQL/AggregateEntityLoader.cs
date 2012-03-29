@@ -38,7 +38,7 @@ namespace OEA.Library
         /// </summary>
         /// <param name="sql"></param>
         /// <returns></returns>
-        internal EntityList Query(string sql)
+        internal void Query(EntityList list, string sql)
         {
             IDbTable dataTable = null;
 
@@ -49,9 +49,7 @@ namespace OEA.Library
             }
 
             //使用dataTable中的数据 和 AggregateDescriptor 中的描述信息，读取整个聚合列表。
-            var list = this.ReadFromTable(dataTable, this._aggregateInfo.Items.First);
-
-            return list;
+            this.ReadFromTable(list, dataTable, this._aggregateInfo.Items.First);
         }
 
         /// <summary>
@@ -62,11 +60,10 @@ namespace OEA.Library
         /// <param name="table"></param>
         /// <param name="optionNode"></param>
         /// <returns></returns>
-        private EntityList ReadFromTable(IDbTable table, LinkedListNode<LoadOptionItem> optionNode)
+        private void ReadFromTable(EntityList list, IDbTable table, LinkedListNode<LoadOptionItem> optionNode)
         {
             var option = optionNode.Value;
-            var newList = option.OwnerRepository.NewList();
-            newList.ReadFromTable(table, (entity, subTable) =>
+            list.ReadFromTable(table, (entity, subTable) =>
             {
                 EntityList listResult = null;
 
@@ -74,11 +71,13 @@ namespace OEA.Library
                 var nextNode = optionNode.Next;
                 if (nextNode != null)
                 {
-                    listResult = this.ReadFromTable(subTable, nextNode);
+                    listResult = nextNode.Value.OwnerRepository.NewList();
+                    this.ReadFromTable(listResult, subTable, nextNode);
                 }
                 else
                 {
-                    listResult = this.ReadFromTable(subTable, option.PropertyEntityRepository);
+                    listResult = option.PropertyEntityRepository.NewList();
+                    listResult.ReadFromTable(table);
                 }
 
                 //是否需要排序？
@@ -101,23 +100,6 @@ namespace OEA.Library
                     }
                 }
             });
-
-            return newList;
-        }
-
-        /// <summary>
-        /// 简单地从table中加载指定的实体列表。
-        /// </summary>
-        /// <param name="table"></param>
-        /// <param name="repository"></param>
-        /// <returns></returns>
-        private EntityList ReadFromTable(IDbTable table, EntityRepository repository)
-        {
-            var newList = repository.NewList();
-
-            newList.ReadFromTable(table);
-
-            return newList;
         }
     }
 }

@@ -44,7 +44,7 @@ namespace OEA.Library.Caching
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="TScope"></typeparam>
         /// <param name="scopeId"></param>
-        public void Enable<T, TScope>(Func<Entity, Guid> getScopeIdByParent)
+        public void Enable<T, TScope>(Func<Entity, int> getScopeIdByParent)
             where T : Entity
             where TScope : Entity
         {

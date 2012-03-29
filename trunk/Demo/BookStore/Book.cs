@@ -70,6 +70,11 @@ namespace Demo
     {
         protected BookList() { }
 
+        protected override void OnGetAll()
+        {
+            AggregateSQL.Instance.LoadEntities<Book>(this, p => p.LoadChildren(b => b.ChapterList));
+        }
+
         private void DataPortal_Fetch(BookQueryCriteria criteria)
         {
             this.QueryDb(q =>
@@ -118,7 +123,11 @@ namespace Demo
 
             View.UseWebCommands("CountLocalBookCommand", "CountServerBookCommand");
 
-            //View.Property(Book.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
+            View.Property(Book.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
+            View.Property(Book.AuthorProperty).HasLabel("作者").ShowIn(ShowInWhere.All);
+            View.Property(Book.AmountProperty).HasLabel("剩余数量").ShowIn(ShowInWhere.All);
+            View.Property(Book.PublisherProperty).HasLabel("出版社").ShowIn(ShowInWhere.All);
+            View.Property(Book.BookCategoryRefProperty).HasLabel("所属类别").ShowIn(ShowInWhere.All);
         }
     }
 }
