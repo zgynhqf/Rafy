@@ -304,10 +304,6 @@ namespace hxy
         /// </summary>
         public static readonly Regex ReNumber = new Regex("^-?\\d+$|^(-?\\d+)(\\.\\d+)?$", RegexOptions.Compiled);
         /// <summary>
-        /// Positive number or zero.
-        /// </summary>
-        public static readonly Regex ReNotNagtiveNumber = new Regex(@"^\d+$", RegexOptions.Compiled);
-        /// <summary>
         /// Positive integer
         /// </summary>
         public static readonly Regex ReUint = new Regex("^[0-9]*[1-9][0-9]*$", RegexOptions.Compiled);
@@ -344,19 +340,12 @@ namespace hxy
         /// <summary>
         /// E-Mail address
         /// </summary>
-        public static readonly Regex ReEMail = new Regex(@"^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$");
+        public static readonly Regex ReEmail = new Regex(@"^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$");
+        //public static readonly Regex ReEmail = new Regex(@"^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$");
         /// <summary>
         /// new line
         /// </summary>
         public static readonly Regex ReNewLine = new Regex("\r\n|\r|\n", RegexOptions.Compiled);
-        /// <summary>
-        /// 2 or more white spaces
-        /// </summary>
-        public static readonly Regex ReWhiteSpaces = new Regex("\\s{2,}", RegexOptions.Compiled);
-        /// <summary>
-        /// 2 or more spaces
-        /// </summary>
-        public static readonly Regex ReBlanks = new Regex(" {2,}", RegexOptions.Compiled);
         /// <summary>
         /// XML tags
         /// </summary>
