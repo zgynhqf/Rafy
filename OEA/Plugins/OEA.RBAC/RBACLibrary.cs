@@ -27,6 +27,9 @@ using OEA.RBAC.Security;
 
 namespace OEA.RBAC
 {
+    /// <summary>
+    /// 比较简单的通用权限系统。
+    /// </summary>
     internal class RBACLibrary : ILibrary
     {
         public ReuseLevel ReuseLevel
@@ -41,7 +44,6 @@ namespace OEA.RBAC
 
             app.ModuleOperations += (o, e) =>
             {
-
                 var module = CommonModel.Modules.AddRoot(new ModuleMeta
                 {
                     Label = "权限管理",
@@ -68,11 +70,11 @@ namespace OEA.RBAC
             {
                 using (var c = new OEADbMigrationContext(ConnectionStringNames.OEA))
                 {
-                    //c.ClassMetaReader.IgnoreTables.Add("ReportObjectMetaData");
-
-                    //c.RollbackToHistory(DateTime.Parse("2008-12-31 23:59:58.700"), RollbackAction.DeleteHistory);
                     c.AutoMigrate();
 
+                    //其它一些可用的API
+                    //c.ClassMetaReader.IgnoreTables.Add("ReportObjectMetaData");
+                    //c.RollbackToHistory(DateTime.Parse("2008-12-31 23:59:58.700"), RollbackAction.DeleteHistory);
                     //c.DeleteDatabase();
                     //c.ResetHistories();
                     //c.RollbackAll();

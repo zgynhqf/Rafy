@@ -63,82 +63,6 @@ namespace SimpleCsla.Reflection
 
         #endregion
 
-        #region Dynamic Constructor Cache
-
-        private static IDictionary<Type, DynamicCtorDelegate> _ctorCache = new SortedDictionary<Type, DynamicCtorDelegate>(TypeNameComparer.Instance);
-
-        private static DynamicCtorDelegate GetCachedConstructor(Type objectType)
-        {
-            DynamicCtorDelegate result = null;
-            if (!_ctorCache.TryGetValue(objectType, out result))
-            {
-                lock (_ctorCache)
-                {
-                    if (!_ctorCache.TryGetValue(objectType, out result))
-                    {
-                        ConstructorInfo info =
-                          objectType.GetConstructor(ctorFlags, null, Type.EmptyTypes, null);
-                        result = DynamicMethodHandlerFactory.CreateConstructor(info);
-                        _ctorCache.Add(objectType, result);
-                    }
-                }
-            }
-            return result;
-        }
-
-        #endregion
-
-        #region GetType
-
-        /// <summary>
-        /// Gets a Type object based on the type name.
-        /// </summary>
-        /// <param name="typeName">Type name including assembly name.</param>
-        /// <param name="throwOnError">true to throw an exception if the type can't be found.</param>
-        /// <param name="ignoreCase">true for a case-insensitive comparison of the type name.</param>
-        public static Type GetType(string typeName, bool throwOnError, bool ignoreCase)
-        {
-            return Type.GetType(typeName, throwOnError, ignoreCase);
-        }
-
-        /// <summary>
-        /// Gets a Type object based on the type name.
-        /// </summary>
-        /// <param name="typeName">Type name including assembly name.</param>
-        /// <param name="throwOnError">true to throw an exception if the type can't be found.</param>
-        public static Type GetType(string typeName, bool throwOnError)
-        {
-            return Type.GetType(typeName, throwOnError);
-        }
-
-        /// <summary>
-        /// Gets a Type object based on the type name.
-        /// </summary>
-        /// <param name="typeName">Type name including assembly name.</param>
-        public static Type GetType(string typeName)
-        {
-            return Type.GetType(typeName);
-        }
-
-        #endregion
-
-        #region Create Instance
-
-        /// <summary>
-        /// Uses reflection to create an object using its 
-        /// default constructor.
-        /// </summary>
-        /// <param name="objectType">Type of object to create.</param>
-        public static object CreateInstance(Type objectType)
-        {
-            var ctor = GetCachedConstructor(objectType);
-            if (ctor == null)
-                throw new NotImplementedException("Resources.DefaultConstructor + Resources.MethodNotImplemented");
-            return ctor.Invoke();
-        }
-
-        #endregion
-
         private const BindingFlags propertyFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
         private const BindingFlags fieldFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
@@ -213,7 +137,6 @@ namespace SimpleCsla.Reflection
             var mh = GetCachedProperty(obj.GetType(), property);
             mh.DynamicMemberSet(obj, value);
         }
-
 
         #region Call Method
 

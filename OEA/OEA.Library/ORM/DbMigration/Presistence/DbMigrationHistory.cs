@@ -18,8 +18,6 @@ namespace OEA.Library.ORM.DbMigration.Presistence
             get { return ConnectionStringNames.DbMigrationHistory; }
         }
 
-        protected DbMigrationHistory() { }
-
         public static readonly Property<string> DatabaseProperty = P<DbMigrationHistory>.Register(e => e.Database);
         [EntityProperty]
         public string Database

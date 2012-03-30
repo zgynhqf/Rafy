@@ -44,7 +44,7 @@ namespace OEA.Library.ORM.DbMigration
 
             if (item == null)
             {
-                item = this._versionRepo.New().CastTo<DbVersion>();
+                item = new DbVersion();
                 item.Database = database;
             }
 

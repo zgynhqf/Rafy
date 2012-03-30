@@ -24,7 +24,7 @@ using SimpleCsla;
 namespace OEA.RBAC
 {
     [RootEntity, Serializable]
-    public partial class User : Entity
+    public class User : Entity
     {
         public static readonly Property<string> CodeProperty = P<User>.Register(e => e.Code);
         public string Code

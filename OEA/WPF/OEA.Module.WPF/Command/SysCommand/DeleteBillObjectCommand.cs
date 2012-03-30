@@ -85,7 +85,7 @@ namespace OEA.WPF.Command
             foreach (var item in deleteList) { list.Remove(item); }
 
             //保存
-            list.Save();
+            RF.Save(list);
 
             if (b != null) b.SuppressSaveAction = false;
 

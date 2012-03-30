@@ -46,7 +46,7 @@ namespace OEA.WPF.Command
                 }
             }
 
-            RF.Save(currentObject);
+            RF.Save(currentObject, EntitySaveType.DiffSave);
         }
     }
 }

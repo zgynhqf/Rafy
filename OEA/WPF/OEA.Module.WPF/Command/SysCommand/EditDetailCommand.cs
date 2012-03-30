@@ -35,8 +35,8 @@ namespace OEA.WPF.Command
         public override void Execute(ListObjectView view)
         {
             //创建一个临时的拷贝数据
-            var listEntity = view.Current as Entity;
-            var tmp = RF.Create(view.EntityType).New();
+            var listEntity = view.Current;
+            var tmp = Entity.New(view.EntityType);
             tmp.Clone(listEntity);
             tmp.CheckRules();
 

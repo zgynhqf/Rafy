@@ -74,8 +74,15 @@ namespace Demo
             {
                 using (var c = new OEADbMigrationContext(DemoEntity.ConnectionString))
                 {
-                    //c.RollbackToHistory(DateTime.Parse("2012-01-07 21:27:00.000"), RollbackAction.DeleteHistory);
                     c.AutoMigrate();
+
+                    //其它一些可用的API
+                    //c.ClassMetaReader.IgnoreTables.Add("ReportObjectMetaData");
+                    //c.RollbackToHistory(DateTime.Parse("2008-12-31 23:59:58.700"), RollbackAction.DeleteHistory);
+                    //c.DeleteDatabase();
+                    //c.ResetHistories();
+                    //c.RollbackAll();
+                    //c.JumpToHistory(DateTime.Parse("2012-01-07 21:27:00.000"));
                 };
             };
         }

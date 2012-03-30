@@ -71,7 +71,7 @@ namespace OEA.Module.WPF.Behaviors
                     if (oldEntity.IsValid)
                     {
                         //oldEntity.MergeOldObject((oldEntity as ISavable).Save() as BusinessBase);
-                        RF.Save(oldEntity);
+                        RF.Save(oldEntity, EntitySaveType.DiffSave);
                     }
                     else
                     {

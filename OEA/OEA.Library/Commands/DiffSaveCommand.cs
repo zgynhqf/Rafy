@@ -22,7 +22,8 @@ using System.Collections;
 using SimpleCsla;
 using OEA.MetaModel;
 using System.ComponentModel;
-using OEA.Library; using System.Runtime.Serialization;
+using OEA.Library;
+using System.Runtime.Serialization;
 
 namespace OEA.Library
 {
@@ -48,7 +49,7 @@ namespace OEA.Library
         {
             bool isNew = this._diffEntity.IsNew;
 
-            this._diffEntity.Save();
+            RF.Save(this._diffEntity);
 
             //如果是新加的数据，则不需要传回客户端了。
             if (isNew)

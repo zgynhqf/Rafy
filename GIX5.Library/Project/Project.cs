@@ -15,8 +15,6 @@ namespace GIX5.Library
     [Label("项目")]
     public class Project : GEntity
     {
-        protected Project() { }
-
         public static readonly Property<string> FileNameProperty = P<Project>.Register(e => e.FileName);
         public string FileName
         {

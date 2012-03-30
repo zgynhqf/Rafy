@@ -35,7 +35,6 @@ namespace OEA.Library.Caching
         /// 以此类作为缓存的“区域”划分
         /// </summary>
         public static readonly Property<string> ClassRegionProperty = P<ScopeVersion>.Register(e => e.ClassRegion);
-        [EntityProperty]
         public string ClassRegion
         {
             get { return GetProperty(ClassRegionProperty); }
@@ -47,7 +46,6 @@ namespace OEA.Library.Caching
         /// 可以为null，表示整个表作为缓存的范围。
         /// </summary>
         public static readonly Property<string> ScopeClassProperty = P<ScopeVersion>.Register(e => e.ScopeClass);
-        [EntityProperty]
         public string ScopeClass
         {
             get { return GetProperty(ScopeClassProperty); }
@@ -58,7 +56,6 @@ namespace OEA.Library.Caching
         /// 范围的Id号
         /// </summary>
         public static ManagedProperty<string> ScopeIdProperty = P<ScopeVersion>.Register(e => e.ScopeId);
-        [EntityProperty]
         public string ScopeId
         {
             get { return GetProperty(ScopeIdProperty); }
@@ -69,14 +66,11 @@ namespace OEA.Library.Caching
         /// 当前的版本号
         /// </summary>
         public static ManagedProperty<DateTime> ValueProperty = P<ScopeVersion>.Register(e => e.Value);
-        [EntityProperty]
         public DateTime Value
         {
             get { return GetProperty(ValueProperty); }
             set { SetProperty(ValueProperty, value); }
         }
-
-        protected ScopeVersion() { }
 
         protected override void OnUpdate()
         {
@@ -99,8 +93,6 @@ namespace OEA.Library.Caching
     internal class ScopeVersionList : EntityList
     {
         public DateTime ServerTime { get; set; }
-
-        private ScopeVersionList() { }
 
         protected override void OnGetAll()
         {

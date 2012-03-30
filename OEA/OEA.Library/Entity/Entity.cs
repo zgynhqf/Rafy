@@ -33,6 +33,7 @@ using OEA.Threading;
 using SimpleCsla;
 using SimpleCsla.Core;
 using SimpleCsla.Validation;
+using System.Diagnostics;
 
 namespace OEA.Library
 {
@@ -65,14 +66,16 @@ namespace OEA.Library
 
         /// <summary>
         /// 通过实体类型反射构造一个新的实体。
+        /// 
+        /// 此方法功能与构造函数一致，主要用于不能显式调用的场景下。
         /// </summary>
         /// <param name="entityType"></param>
         /// <returns></returns>
+        [DebuggerStepThrough]
         public static Entity New(Type entityType)
         {
-            //经测试，Activator创建对象一样非常迅速。
-            //return MethodCaller.CreateInstance(entityType) as Entity;
-            return Activator.CreateInstance(entityType, true) as Entity;
+            //经测试，Activator 创建对象也非常快，这是因为它的内部作了缓存处理。
+            return Activator.CreateInstance(entityType) as Entity;
         }
 
         #endregion

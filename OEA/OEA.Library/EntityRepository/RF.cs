@@ -61,17 +61,6 @@ namespace OEA.Library
         #region Shortcuts
 
         /// <summary>
-        /// 直接 new 一个新的实体。
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <returns></returns>
-        public static TEntity NewEntity<TEntity>()
-            where TEntity : Entity
-        {
-            return RepositoryFactory.Instance.Find(typeof(TEntity)).New() as TEntity;
-        }
-
-        /// <summary>
         /// 获取一个空的TCollection，准备加入数据库中存储的数据
         /// </summary>
         /// <returns></returns>
@@ -108,7 +97,7 @@ namespace OEA.Library
         /// <param name="entity"></param>
         public static void Save(Entity entity)
         {
-            Save(entity, EntitySaveType.DiffSave);
+            Save(entity, EntitySaveType.Normal);
         }
 
         /// <summary>

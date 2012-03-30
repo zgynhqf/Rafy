@@ -47,7 +47,7 @@ namespace OEA.Library
                 if (this._delegate == null)
                 {
                     //这里创建 delegate 时不能使用 this.New 方法，因为这样会发生 NotifyLoaded 事件。
-                    this._delegate = Activator.CreateInstance(this.EntityType, true) as Entity;
+                    this._delegate = Entity.New(this.EntityType);
                 }
 
                 return _delegate;
@@ -271,6 +271,9 @@ namespace OEA.Library
 
         /// <summary>
         /// 创建一个新的实体。
+        /// 
+        /// 如果在已经获取 Repository 的场景下，使用本方法返回的实体会设置好内部的 Repository 属性，
+        /// 这会使得 FindRepositor 方法更加快速。
         /// </summary>
         /// <returns></returns>
         public Entity New()

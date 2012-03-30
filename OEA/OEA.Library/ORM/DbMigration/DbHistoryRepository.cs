@@ -56,7 +56,7 @@ namespace OEA.Library.ORM.DbMigration
 
         protected override Result AddHistoryCore(string database, HistoryItem history)
         {
-            var item = this._historyRepo.New().CastTo<DbMigrationHistory>();
+            var item = new DbMigrationHistory();
 
             item.Database = database;
 

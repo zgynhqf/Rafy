@@ -79,23 +79,5 @@ namespace OEA.Library
 
             return list;
         }
-
-        /// <summary>
-        /// 把这个实体中的所有改动保存到仓库中。
-        /// </summary>
-        /// <param name="component"></param>
-        public static IEntityOrList Save(this Entity component)
-        {
-            return component.FindRepository().Save(component);
-        }
-
-        /// <summary>
-        /// 把这个列表中的所有改动保存到仓库中。
-        /// </summary>
-        /// <param name="component"></param>
-        public static IEntityOrList Save(this EntityList component)
-        {
-            return component.FindRepository().Save(component);
-        }
     }
 }
