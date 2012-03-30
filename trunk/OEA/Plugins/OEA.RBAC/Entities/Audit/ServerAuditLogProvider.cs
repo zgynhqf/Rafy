@@ -14,7 +14,7 @@ namespace OEA.Library.Audit
 
         public void Log(AuditLogItem log)
         {
-            var dbItem = RF.NewEntity<AuditItem>();
+            var dbItem = new AuditItem();
 
             dbItem.Title = log.Title;
             dbItem.Content = log.FriendlyContent;
@@ -26,7 +26,7 @@ namespace OEA.Library.Audit
             dbItem.LogTime = log.LogTime;
             dbItem.EntityId = log.EntityId;
 
-            dbItem.Save();
+            RF.Save(dbItem);
         }
 
         #endregion

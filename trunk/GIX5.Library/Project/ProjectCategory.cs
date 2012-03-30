@@ -15,8 +15,6 @@ namespace GIX5.Library
     [Label("项目分类")]
     public class ProjectCategory : GEntity
     {
-        protected ProjectCategory() { }
-
         #region 支持树型操作
 
         public static readonly Property<string> TreeCodeProperty = P<ProjectCategory>.Register(e => e.TreeCode);

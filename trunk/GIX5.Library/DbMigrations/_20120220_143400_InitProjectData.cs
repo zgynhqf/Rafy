@@ -42,34 +42,34 @@ namespace GIX5.Library.DbMigrations
                     {
                         #region 添加 ProjectCategories
 
-                        var c1 = cateRepo.New().CastTo<ProjectCategory>();
+                        var c1 = new ProjectCategory();
                         c1.Name = "市政工程";
                         cateRepo.Save(c1);
-                        c1 = cateRepo.New().CastTo<ProjectCategory>();
+                        c1 = new ProjectCategory();
                         c1.Name = "园林工程";
                         cateRepo.Save(c1);
-                        c1 = cateRepo.New().CastTo<ProjectCategory>();
+                        c1 = new ProjectCategory();
                         c1.Name = "建筑工程";
                         cateRepo.Save(c1);
 
-                        var c11 = cateRepo.New().CastTo<ProjectCategory>();
+                        var c11 = new ProjectCategory();
                         c11.Name = "住宅";
                         c11.TreeParent = c1;
                         cateRepo.Save(c11);
-                        var c12 = cateRepo.New().CastTo<ProjectCategory>();
+                        var c12 = new ProjectCategory();
                         c12.Name = "写字楼";
                         c12.TreeParent = c1;
                         cateRepo.Save(c12);
 
-                        var c111 = cateRepo.New().CastTo<ProjectCategory>();
+                        var c111 = new ProjectCategory();
                         c111.Name = "高层";
                         c111.TreeParent = c11;
                         cateRepo.Save(c111);
-                        var c112 = cateRepo.New().CastTo<ProjectCategory>();
+                        var c112 = new ProjectCategory();
                         c112.Name = "小高层";
                         c112.TreeParent = c11;
                         cateRepo.Save(c112);
-                        var c113 = cateRepo.New().CastTo<ProjectCategory>();
+                        var c113 = new ProjectCategory();
                         c113.Name = "超高层";
                         c113.TreeParent = c11;
                         cateRepo.Save(c113);
@@ -80,10 +80,10 @@ namespace GIX5.Library.DbMigrations
 
                         var userRepo = RF.Concreate<UserRepository>();
 
-                        var user1 = userRepo.New().CastTo<User>();
+                        var user1 = new User();
                         user1.Name = "张工";
                         userRepo.Save(user1);
-                        var user2 = userRepo.New().CastTo<User>();
+                        var user2 = new User();
                         user2.Name = "李工";
                         userRepo.Save(user2);
 
@@ -92,7 +92,7 @@ namespace GIX5.Library.DbMigrations
                         #region 添加项目
 
                         var projectRepo = RF.Concreate<ProjectRepository>();
-                        var p = projectRepo.New().CastTo<Project>();
+                        var p = new Project();
                         p.FileName = "广联达大厦";
                         p.ProjectName = "广联达大厦";
                         p.ProjectCategory = c12;
@@ -100,7 +100,7 @@ namespace GIX5.Library.DbMigrations
                         //p.Mask = MaskType.Mask1;
                         projectRepo.Save(p);
 
-                        p = projectRepo.New().CastTo<Project>();
+                        p = new Project();
                         p.FileName = "住宅1";
                         p.ProjectName = "住宅1";
                         p.ProjectCategory = c111;
@@ -109,7 +109,7 @@ namespace GIX5.Library.DbMigrations
                         p.Opener = user1;
                         projectRepo.Save(p);
 
-                        p = projectRepo.New().CastTo<Project>();
+                        p = new Project();
                         p.FileName = "住宅2";
                         p.ProjectName = "住宅2";
                         p.ProjectCategory = c112;

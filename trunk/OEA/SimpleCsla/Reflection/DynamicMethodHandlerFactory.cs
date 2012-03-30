@@ -34,27 +34,6 @@ namespace SimpleCsla.Reflection
 
     internal static class DynamicMethodHandlerFactory
     {
-        public static DynamicCtorDelegate CreateConstructor(ConstructorInfo constructor)
-        {
-            if (constructor == null)
-                throw new ArgumentNullException("constructor");
-            if (constructor.GetParameters().Length > 0)
-                throw new NotSupportedException("Resources.ConstructorsWithParametersNotSupported");
-
-            DynamicMethod dm = new DynamicMethod(
-                "ctor",
-                constructor.DeclaringType,
-                Type.EmptyTypes,
-                true);
-
-            ILGenerator il = dm.GetILGenerator();
-            il.Emit(OpCodes.Nop);
-            il.Emit(OpCodes.Newobj, constructor);
-            il.Emit(OpCodes.Ret);
-
-            return (DynamicCtorDelegate)dm.CreateDelegate(typeof(DynamicCtorDelegate));
-        }
-
         public static DynamicMethodDelegate CreateMethod(MethodInfo method)
         {
             ParameterInfo[] pi = method.GetParameters();

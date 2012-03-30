@@ -25,10 +25,8 @@ using SimpleCsla;
 namespace OEA.RBAC
 {
     [RootEntity, Serializable]
-    public partial class Position : Entity
+    public class Position : Entity
     {
-        protected Position() { }
-
         public static readonly Property<string> CodeProperty = P<Position>.Register(e => e.Code);
         public string Code
         {

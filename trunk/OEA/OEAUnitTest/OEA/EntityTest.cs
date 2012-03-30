@@ -27,7 +27,7 @@ namespace OEAUnitTest
         public void EntityTest_RoutedEvent()
         {
             //创建对象
-            var user = RF.NewEntity<TestUser>();
+            var user = new TestUser();
             var list = user.TestTreeTaskList;
             var taskRoot = list.AddNew().CastTo<TestTreeTask>();
             var task1 = list.AddNew().CastTo<TestTreeTask>();
@@ -78,7 +78,7 @@ namespace OEAUnitTest
         public void EntityTest_AutoCollect()
         {
             //创建对象
-            var user = RF.NewEntity<TestUser>();
+            var user = new TestUser();
             var list = user.TestTreeTaskList;
             var taskRoot = list.AddNew().CastTo<TestTreeTask>();
             var task1 = list.AddNew().CastTo<TestTreeTask>();
@@ -268,9 +268,9 @@ namespace OEAUnitTest
         //}
 
         private static TEntity Get<TEntity>()
-            where TEntity : Entity
+            where TEntity : Entity, new()
         {
-            var e = RF.NewEntity<TEntity>();
+            var e = new TEntity();
             e.Status = PersistenceStatus.Unchanged;
             return e;
         }

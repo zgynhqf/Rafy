@@ -65,11 +65,10 @@ namespace OEA.Module.WPF.Editors
 
         private void PopupDetail()
         {
-            object currData = Context.CurrentObject;
-            var listEntity = currData as Entity;
-            Type currType = currData.GetType();
-            var tmp = RF.Create(currType).New();
-            tmp.Clone(listEntity);
+            var curListEntity = this.Context.CurrentObject;
+            Type currType = curListEntity.GetType();
+            var tmp = Entity.New(currType);
+            tmp.Clone(curListEntity);
             tmp.CheckRules();
 
             //弹出窗体显示详细面板

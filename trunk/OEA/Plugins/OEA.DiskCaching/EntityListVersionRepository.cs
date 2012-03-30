@@ -51,13 +51,13 @@ namespace OEA.Library.Caching
         /// <returns></returns>
         public EntityListVersion Add(Type region, Type scopeClass, string scopeId)
         {
-            var item = RF.NewEntity<ScopeVersion>();
+            var item = new ScopeVersion();
 
             item.ClassRegion = region.FullName;
             item.ScopeClass = scopeClass == null ? null : scopeClass.FullName;
             item.ScopeId = scopeId;
             item.Value = DateTime.Now;
-            item.Save();
+            RF.Save(item);
 
             _versionListCache.Expire();
 
@@ -145,7 +145,7 @@ namespace OEA.Library.Caching
                     if (item != null)
                     {
                         item.Value = DateTime.Now;
-                        item.Save();
+                        RF.Save(item);
 
                         _versionListCache.Expire();
                     }
@@ -238,7 +238,7 @@ namespace OEA.Library.Caching
                     if (item != null)
                     {
                         item.Value = DateTime.Now;
-                        item.Save();
+                        RF.Save(item);
                     }
                 }
 

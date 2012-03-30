@@ -371,7 +371,7 @@ namespace OEAUnitTest
                     var repo = RF.Create<TestUser>();
                     for (int i = 0; i < 10; i++)
                     {
-                        var user = repo.New().CastTo<TestUser>();
+                        var user = new TestUser();
                         repo.Save(user);
                     }
                 });

@@ -605,7 +605,10 @@ namespace OEA.Module.WPF
         /// <returns></returns>
         public Entity CreateNewItem()
         {
-            var newEntity = RF.Create(this.EntityType).New();
+            var newEntity = Entity.New(this.EntityType);
+
+            //为了避免所有的新建结点都是 -1 的 Id，这里需要重新赋值。
+            newEntity.Id = OEAEnvironment.NewLocalId();
 
             this.InitRefProperties(newEntity);
 

@@ -31,8 +31,6 @@ namespace OEA.RBAC
     [RootEntity]
     public class UserLoginLog : Entity
     {
-        protected UserLoginLog() { }
-
         public static readonly RefProperty<User> UserRefProperty =
             P<UserLoginLog>.RegisterRef(e => e.User, ReferenceType.Normal);
         public int UserId
@@ -171,15 +169,13 @@ namespace OEA.RBAC
         /// </param>
         private static void Log(User user, bool isIn)
         {
-            var r = RF.Create<UserLoginLog>();
-
-            var log = r.New() as UserLoginLog;
+            var log = new UserLoginLog();
 
             log.User = user;
             log.UserId = user.Id;
             log.IsIn = isIn;
 
-            r.Save(log);
+            RF.Save(log);
         }
     }
 }

@@ -90,8 +90,6 @@ namespace OEA.Library.Audit
             get { return this.GetProperty(EntityIdProperty); }
             set { this.SetProperty(EntityIdProperty, value); }
         }
-
-        protected AuditItem() { }
     }
 
     [Serializable]

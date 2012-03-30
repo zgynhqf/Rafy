@@ -72,11 +72,14 @@ namespace Demo
 
         protected override void OnGetAll()
         {
+            //聚合 SQL 示例
+            //为了降低数据库的查询次数，这里使用了聚合加载。
             AggregateSQL.Instance.LoadEntities<Book>(this, p => p.LoadChildren(b => b.ChapterList));
         }
 
         private void DataPortal_Fetch(BookQueryCriteria criteria)
         {
+            //自定义查询示例。
             this.QueryDb(q =>
             {
                 q.Constrain(Book.BookCategoryRefProperty).Equal(criteria.BookCategoryId)

@@ -50,6 +50,7 @@ namespace OEA.Library
         {
             base.NotifyLoadedIfMemory(entity);
 
+            //如果是新的内存对象，则为它生成 Id
             if (entity.Id < 0) { this.GenerateIntId(entity); }
         }
 

@@ -15,8 +15,6 @@ namespace GIX5.Library
     [Label("用户")]
     public class User : GEntity
     {
-        protected User() { }
-
         public static readonly Property<string> NameProperty = P<User>.Register(e => e.Name);
         public string Name
         {

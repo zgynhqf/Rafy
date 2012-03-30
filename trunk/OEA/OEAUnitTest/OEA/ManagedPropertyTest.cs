@@ -557,9 +557,9 @@ namespace OEAUnitTest
         }
 
         private static TEntity Get<TEntity>()
-            where TEntity : Entity
+            where TEntity : Entity, new()
         {
-            var e = RF.NewEntity<TEntity>();
+            var e = new TEntity();
             e.Status = PersistenceStatus.Unchanged;
             return e;
         }

@@ -42,20 +42,20 @@ namespace OEA.Library.DbMigrations
                     {
                         //Position
                         var positionRepo = RF.Concreate<PositionRepository>();
-                        var p = positionRepo.New().CastTo<Position>();
+                        var p = new Position();
                         p.Code = "01";
                         p.Name = "系统管理员";
                         positionRepo.Save(p);
 
                         //User
                         var repo = RF.Concreate<UserRepository>();
-                        var admin = repo.New().CastTo<User>();
+                        var admin = new User();
                         admin.Code = "admin";
                         admin.Name = "admin";
                         repo.Save(admin);
 
                         //Org
-                        var org = orgRepository.New().CastTo<Org>();
+                        var org = new Org();
                         org.TreeCode = "01";
                         org.Name = "IT系统管理部";
                         var op = org.OrgPositionList.AddNew().CastTo<OrgPosition>();
@@ -71,7 +71,7 @@ namespace OEA.Library.DbMigrations
                     //var userRepo = RF.Concreate<UserRepository>();
                     //for (int i = 0; i < 100; i++)
                     //{
-                    //    var user = userRepo.New().CastTo<User>();
+                    //    var user = new User();
                     //    user.Code = "testUserCode" + i;
                     //    user.Name = "testUserName" + i;
                     //    userRepo.Save(user);
@@ -81,7 +81,7 @@ namespace OEA.Library.DbMigrations
                     //var pRepo = RF.Concreate<PositionRepository>();
                     //for (int i = 0; i < 100; i++)
                     //{
-                    //    var p = pRepo.New().CastTo<Position>();
+                    //    var p = new Position();
                     //    p.Code = "01" + i;
                     //    p.Name = "系统管理员" + i;
                     //    pRepo.Save(p);
