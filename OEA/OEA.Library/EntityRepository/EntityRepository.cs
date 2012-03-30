@@ -25,6 +25,7 @@ using OEA.Utils;
 using SimpleCsla;
 using SimpleCsla.Core;
 using hxy;
+using OEA.Library.Validation;
 
 namespace OEA.Library
 {
@@ -36,27 +37,17 @@ namespace OEA.Library
     /// 1. 其子类必须是线程安全的！
     /// 2. 子类的构建函数建议使用protected，不要向外界暴露，全部通过仓库工厂获取。
     /// </summary>
-    public abstract class EntityRepository : IRepository, IDbFactory, ITableInfoHost, IEntityInfoHost
+    public abstract class EntityRepository : IRepository,
+        IDbFactory, ITableInfoHost, IEntityInfoHost, ITypeValidationsHost
     {
         private Entity _delegate;
-
-        private Entity Delegate
-        {
-            get
-            {
-                if (this._delegate == null)
-                {
-                    //这里创建 delegate 时不能使用 this.New 方法，因为这样会发生 NotifyLoaded 事件。
-                    this._delegate = Entity.New(this.EntityType);
-                }
-
-                return _delegate;
-            }
-        }
 
         public EntityRepository()
         {
             this._sqlColumnsGenerator = new SQLColumnsGenerator(this);
+
+            //这里创建 delegate 时不能使用 this.New 方法，因为这样会发生 NotifyLoaded 事件。
+            this._delegate = Entity.New(this.EntityType);
         }
 
         #region Merged API
@@ -331,31 +322,6 @@ namespace OEA.Library
             }
 
             return list;
-        }
-
-        private bool _parentPropertyIndicatorLoaded;
-
-        private IRefProperty _parentPropertyIndicator;
-
-        public IRefProperty ParentPropertyIndicator
-        {
-            get
-            {
-                if (!this._parentPropertyIndicatorLoaded)
-                {
-                    var parentsIndicators = this.GetAvailableIndicators()
-                        .OfType<IRefProperty>()
-                        .Where(p => p.GetMeta(this.EntityType).ReferenceType == ReferenceType.Parent)
-                        .ToArray();
-
-                    if (parentsIndicators.Length > 1) throw new InvalidOperationException("一个类中只能定义一个父外键。");
-                    if (parentsIndicators.Length == 1) this._parentPropertyIndicator = parentsIndicators[0];
-
-                    this._parentPropertyIndicatorLoaded = true;
-                }
-
-                return this._parentPropertyIndicator;
-            }
         }
 
         #region Caching
@@ -670,11 +636,6 @@ namespace OEA.Library
             return this.GetByParent(parent);
         }
 
-        EntityPropertyMeta IRepository.GetParentPropertyInfo()
-        {
-            return this.GetParentPropertyInfo();
-        }
-
         #endregion
 
         #region IDbFactory Members
@@ -686,7 +647,7 @@ namespace OEA.Library
 
         public string ConnectionStringSettingName
         {
-            get { return this.Delegate.ConnectionStringSettingName; }
+            get { return this._delegate.ConnectionStringSettingName; }
         }
 
         #endregion
@@ -719,7 +680,6 @@ namespace OEA.Library
         #region IEntityInfoHost Members
 
         private EntityPropertyMeta _parentPropertyCache;
-
         /// <summary>
         /// 找到本对象上层父聚合对象的外键
         /// </summary>
@@ -737,7 +697,6 @@ namespace OEA.Library
         }
 
         private ConsolidatedTypePropertiesContainer _propertiesContainer;
-
         /// <summary>
         /// 获取所有的托管属性信息
         /// </summary>
@@ -756,7 +715,6 @@ namespace OEA.Library
         }
 
         private EntityMeta _entityInfo;
-
         public EntityMeta EntityMeta
         {
             get
@@ -770,16 +728,72 @@ namespace OEA.Library
             }
         }
 
+        private bool _parentPropertyIndicatorLoaded;
+        private IRefProperty _parentPropertyIndicator;
+        public IRefProperty ParentPropertyIndicator
+        {
+            get
+            {
+                if (!this._parentPropertyIndicatorLoaded)
+                {
+                    var parentsIndicators = this.GetAvailableIndicators()
+                        .OfType<IRefProperty>()
+                        .Where(p => p.GetMeta(this.EntityType).ReferenceType == ReferenceType.Parent)
+                        .ToArray();
+
+                    if (parentsIndicators.Length > 1) throw new InvalidOperationException("一个类中只能定义一个父外键。");
+                    if (parentsIndicators.Length == 1) this._parentPropertyIndicator = parentsIndicators[0];
+
+                    this._parentPropertyIndicatorLoaded = true;
+                }
+
+                return this._parentPropertyIndicator;
+            }
+        }
+
         #endregion
 
         public bool SupportTree
         {
-            get { return this.Delegate.SupportTree; }
+            get { return this._delegate.SupportTree; }
         }
 
         public TreeCodeOption TreeCodeOption
         {
-            get { return this.Delegate.TreeCodeOption; }
+            get { return this._delegate.TreeCodeOption; }
         }
+
+        #region ITypeValidationsHost Members
+
+        private bool _typeRulesLoad = false;
+
+        private ValidationRulesManager _typeRules;
+
+        ValidationRulesManager ITypeValidationsHost.Rules
+        {
+            get
+            {
+                if (!this._typeRulesLoad)
+                {
+                    this._typeRulesLoad = true;
+
+                    this._typeRules = new ValidationRulesManager();
+
+                    //在第一次创建时，添加类型的业务规则
+                    //注意，这个方法可能会调用到 Rules 属性获取刚才设置在 _typeRules 上的 ValidationRulesManager。
+                    this._delegate.AddValidations();
+
+                    //如果没有一个规则，则把这个属性删除。
+                    if (this._typeRules.PropertyRules.Count == 0 && this._typeRules.TypeRules.GetList(false).Count == 0)
+                    {
+                        this._typeRules = null;
+                    }
+                }
+
+                return this._typeRules;
+            }
+        }
+
+        #endregion
     }
 }

@@ -32,21 +32,16 @@ namespace OEA.WPF.Command
 
         public override void Execute(ObjectView view)
         {
-            var currentObject = view.Current as Entity;
-
             //检测条件
-            var denpendentObject = currentObject as IDenpendentObject;
-            if (denpendentObject != null)
+            var current = view.Current;
+            var brokenRules = current.ValidationRules.CheckRules();
+            if (brokenRules.Count > 0)
             {
-                denpendentObject.CheckRules();
-                if (denpendentObject.BrokenRulesCollection.Count > 0)
-                {
-                    App.Current.MessageBox.Show("保存出错", denpendentObject.BrokenRulesCollection[0].Description);
-                    return;
-                }
+                App.Current.MessageBox.Show("保存出错", brokenRules.ToString());
+                return;
             }
 
-            RF.Save(currentObject, EntitySaveType.DiffSave);
+            RF.Save(current, EntitySaveType.DiffSave);
         }
     }
 }

@@ -142,9 +142,6 @@ namespace SimpleCsla
 
         #region IDataPortalTarget Members
 
-        void IDataPortalTarget.CheckRules()
-        { }
-
         void IDataPortalTarget.MarkAsChild()
         { }
 

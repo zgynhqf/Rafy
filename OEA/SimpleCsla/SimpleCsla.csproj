@@ -129,22 +129,6 @@
     <Compile Include="Server\TransactionalDataPortal.cs" />
     <Compile Include="TransactionalAttribute.cs" />
     <Compile Include="TransactionalTypes.cs" />
-    <Compile Include="Validation\BrokenRule.cs" />
-    <Compile Include="Validation\BrokenRulesCollection.cs" />
-    <Compile Include="Validation\CommonRules.cs" />
-    <Compile Include="Core\MobileBindingList.cs" />
-    <Compile Include="Validation\DecoratedRuleArgs.cs" />
-    <Compile Include="Validation\IRuleMethod.cs" />
-    <Compile Include="Validation\RuleArgs.cs" />
-    <Compile Include="Validation\RuleDescription.cs" />
-    <Compile Include="Validation\RuleHandler.cs" />
-    <Compile Include="Validation\RuleMethod.cs" />
-    <Compile Include="Validation\RuleSeverity.cs" />
-    <Compile Include="Validation\RulesList.cs" />
-    <Compile Include="Validation\SharedValidationRules.cs" />
-    <Compile Include="Validation\ValidationException.cs" />
-    <Compile Include="Validation\ValidationRules.cs" />
-    <Compile Include="Validation\ValidationRulesManager.cs" />
     <Compile Include="_OldNamespaces.cs" />
     <Compile Include="_OEA\PersistenceStatus.cs" />
   </ItemGroup>

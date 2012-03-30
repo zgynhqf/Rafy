@@ -83,6 +83,11 @@ namespace OEA.Module.WPF.Editors
             {
                 binding.Mode = BindingMode.OneWay;
             }
+            else
+            {
+                binding.ValidatesOnDataErrors = true;
+                //binding.ValidationRules.Add(new DataErrorValidationRule());
+            }
 
             return binding;
         }

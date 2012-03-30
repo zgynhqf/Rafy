@@ -16,10 +16,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
-using SimpleCsla.Validation;
 using System.Linq.Expressions;
 using OEA.ManagedProperty;
 using OEA.Serialization;
+using OEA.Library.Validation;
 
 namespace OEA.Library
 {
@@ -29,20 +29,6 @@ namespace OEA.Library
     [DebuggerDisplay("{DebuggerDisplay}")]
     public partial class Entity
     {
-        #region 属性规则
-
-        /// <summary>
-        /// 检查规则，并返回违反的规则集合。
-        /// </summary>
-        /// <returns></returns>
-        public virtual BrokenRulesCollection CheckRules()
-        {
-            this.ValidationRules.CheckRules();
-            return this.BrokenRulesCollection;
-        }
-
-        #endregion
-
         #region 自动汇总数据
 
         protected void AutoCollectAsChanged(IManagedPropertyChangedEventArgs e, bool toTreeParent = true, IManagedProperty toParentProperty = null)
@@ -93,6 +79,11 @@ namespace OEA.Library
             {
                 var name = string.Empty;
                 if (this.SupportTree) { name += this.TreeCode + " Name:"; }
+
+                if (this is IHasHame)
+                {
+                    return name + (this as IHasHame).Name;
+                }
 
                 //尝试读取Name属性。
                 var nameProperty = AllProperties().FirstOrDefault(p => p.Name == "Name");

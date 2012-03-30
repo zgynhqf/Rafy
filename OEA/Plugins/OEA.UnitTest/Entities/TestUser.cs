@@ -5,10 +5,10 @@ using System.Runtime.Serialization;
 using System.Text;
 using OEA.ManagedProperty;
 using OEA.MetaModel.Attributes;
-using SimpleCsla.Validation;
 using OEA.ORM;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
+using OEA.Library.Validation;
 
 namespace OEA.Library._Test
 {
@@ -109,7 +109,7 @@ namespace OEA.Library._Test
             }
         }
 
-        protected override void AddBusinessRules()
+        protected override void AddValidations()
         {
             this.ValidationRules.AddRule(
                 CommonRules.StringRequired,

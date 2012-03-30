@@ -27,7 +27,7 @@ namespace SimpleCsla.Reflection
         /// default constructor.
         /// </remarks>
         public LateBoundObject(Type objectType)
-            : this(Activator.CreateInstance(objectType)) { }
+            : this(Activator.CreateInstance(objectType, true)) { }
 
         /// <summary>
         /// Contains the provided object within

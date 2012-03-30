@@ -18,6 +18,7 @@ using System.Text;
 using OEA.MetaModel;
 using OEA.ORM;
 using OEA.ManagedProperty;
+using OEA.Library.Validation;
 
 namespace OEA.Library
 {
@@ -26,7 +27,7 @@ namespace OEA.Library
     /// 
     /// 实体类只依赖这个抽象类，而不依赖具体的提供方案。
     /// </summary>
-    public interface IRepository : IDbFactory
+    public interface IRepository : IDbFactory, IEntityInfoHost
     {
         Type EntityType { get; }
 
@@ -86,24 +87,6 @@ namespace OEA.Library
         bool SupportTree { get; }
 
         TreeCodeOption TreeCodeOption { get; }
-
-        /// <summary>
-        /// 获取所有的静态的CSLA属性标记器。
-        /// </summary>
-        /// <param name="entityType"></param>
-        /// <returns></returns>
-        IList<IManagedProperty> GetAvailableIndicators();
-
-        /// <summary>
-        /// 找到所管理类的上层父聚合对象的外键属性元数据
-        /// </summary>
-        /// <param name="entityType"></param>
-        /// <returns></returns>
-        EntityPropertyMeta GetParentPropertyInfo();
-
-        EntityMeta EntityMeta { get; }
-
-        IRefProperty ParentPropertyIndicator { get; }
 
         #endregion
     }

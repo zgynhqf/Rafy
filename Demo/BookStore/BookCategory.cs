@@ -14,8 +14,6 @@ namespace Demo
     [RootEntity]
     public class BookCategory : DemoEntity
     {
-        protected BookCategory() { }
-
         #region 支持树型操作
 
         public static readonly Property<string> TreeCodeProperty = P<BookCategory>.Register(e => e.TreeCode);
@@ -47,10 +45,7 @@ namespace Demo
     }
 
     [Serializable]
-    public class BookCategoryList : DemoEntityList
-    {
-        protected BookCategoryList() { }
-    }
+    public class BookCategoryList : DemoEntityList { }
 
     public class BookCategoryRepository : EntityRepository
     {

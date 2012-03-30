@@ -32,7 +32,7 @@ using OEA.ORM;
 using OEA.Threading;
 using SimpleCsla;
 using SimpleCsla.Core;
-using SimpleCsla.Validation;
+using OEA.Library.Validation;
 using System.Diagnostics;
 
 namespace OEA.Library
@@ -50,16 +50,16 @@ namespace OEA.Library
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [Serializable]
-    public abstract partial class Entity : CslaEntity, IEntity, IReferenceOwner, IDenpendentObject
+    public abstract partial class Entity : CslaEntity, IEntity, IReferenceOwner
     {
         #region 构造函数及工厂方法
 
         protected Entity()
         {
-            //this.LoadProperty(IdProperty, OEAEnvironment.NewLocalId());
-            //this.LoadProperty(IdProperty, Guid.NewGuid());
-
             //ValidationRules.CheckRules();
+
+            //不需要此行，所有新增的实体的 Id 都是 -1.
+            //this.LoadProperty(IdProperty, OEAEnvironment.NewLocalId());
 
             //this.MarkNew();
         }
@@ -75,7 +75,7 @@ namespace OEA.Library
         public static Entity New(Type entityType)
         {
             //经测试，Activator 创建对象也非常快，这是因为它的内部作了缓存处理。
-            return Activator.CreateInstance(entityType) as Entity;
+            return Activator.CreateInstance(entityType, true) as Entity;
         }
 
         #endregion

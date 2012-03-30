@@ -38,7 +38,6 @@ namespace OEA.WPF.Command
             var listEntity = view.Current;
             var tmp = Entity.New(view.EntityType);
             tmp.Clone(listEntity);
-            tmp.CheckRules();
 
             var evm = this.GetViewMeta(view);
             var res = EditAddHelper.ShowEditingDialog(evm, tmp, w =>

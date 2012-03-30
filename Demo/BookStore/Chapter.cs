@@ -14,8 +14,6 @@ namespace Demo
     [ChildEntity]
     public class Chapter : DemoEntity
     {
-        protected Chapter() { }
-
         public static readonly RefProperty<Book> BookRefProperty =
             P<Chapter>.RegisterRef(e => e.Book, ReferenceType.Parent);
         public int BookId
@@ -38,10 +36,7 @@ namespace Demo
     }
 
     [Serializable]
-    public class ChapterList : DemoEntityList
-    {
-        protected ChapterList() { }
-    }
+    public class ChapterList : DemoEntityList { }
 
     public class ChapterRepository : EntityRepository
     {
