@@ -67,8 +67,8 @@ namespace OEA.Module.WPF.Behaviors
                 //如果不是新增后立即删除的可更改对象则自动保存
                 if (oldEntity.IsDirty)
                 {
-                    oldEntity.CheckRules();
-                    if (oldEntity.IsValid)
+                    var broken = oldEntity.ValidationRules.CheckRules();
+                    if (broken.Count == 0)
                     {
                         //oldEntity.MergeOldObject((oldEntity as ISavable).Save() as BusinessBase);
                         RF.Save(oldEntity, EntitySaveType.DiffSave);
@@ -81,7 +81,7 @@ namespace OEA.Module.WPF.Behaviors
                             var id = e.NewItem.Id;
                             warn = id != this._lastWarnedObjId;
                         }
-                        if (warn && oldEntity.BrokenRulesCollection.Count > 0)
+                        if (warn && broken.Count > 0)
                         {
                             this._lastWarnedObjId = oldEntity.Id;
 
@@ -89,7 +89,7 @@ namespace OEA.Module.WPF.Behaviors
 旧对象没有填写完整，系统没有保存！
 {0}
 
-是否切换到该对象，继续编辑？", oldEntity.BrokenRulesCollection[0].Description);
+是否切换到该对象，继续编辑？", broken.ToString());
                             var result = App.Current.MessageBox.Show("提示", description, MessageBoxButton.YesNo, MessageBoxImage.Warning);
                             if (result == MessageBoxResult.Yes)
                             {

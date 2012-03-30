@@ -7,6 +7,7 @@ using OEA.Library;
 using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
 using OEA.MetaModel.View;
+using OEA.Library.Validation;
 
 namespace Demo
 {
@@ -14,8 +15,6 @@ namespace Demo
     [RootEntity]
     public class Book : DemoEntity
     {
-        protected Book() { }
-
         public static readonly Property<string> NameProperty = P<Book>.Register(e => e.Name);
         public string Name
         {
@@ -63,13 +62,40 @@ namespace Demo
         {
             get { return this.GetLazyChildren(ChapterListProperty); }
         }
+
+        protected override void AddValidations()
+        {
+            base.AddValidations();
+
+            //示例属性验证。
+            this.ValidationRules.AddRule(Book.AuthorProperty, CommonRules.StringRequired);
+            this.ValidationRules.AddRule(Book.AuthorProperty, CommonRules.StringMaxLength, new { MaxLength = 3 });
+            this.ValidationRules.AddRule(Book.NameProperty, (e, args) =>
+            {
+                var value = e.GetProperty(args.Property) as string;
+                if (string.IsNullOrEmpty(value))
+                {
+                    args.BrokenDescription = "书籍的名称不能为空。";
+                }
+                else if (!value.Contains("《") || !value.Contains("》"))
+                {
+                    args.BrokenDescription = "书籍的名称需要带上书名号：《》";
+                }
+            });
+            //this.ValidationRules.AddRule(Book.AmountProperty, (e, args) =>
+            //{
+            //    var value = (e as Book).Amount;
+            //    if (value < 0)
+            //    {
+            //        args.BrokenDescription = "数量不能是负数。";
+            //    }
+            //});
+        }
     }
 
     [Serializable]
     public class BookList : DemoEntityList
     {
-        protected BookList() { }
-
         protected override void OnGetAll()
         {
             //聚合 SQL 示例

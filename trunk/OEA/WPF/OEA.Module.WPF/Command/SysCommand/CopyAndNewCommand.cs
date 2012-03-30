@@ -260,9 +260,9 @@ namespace OEA.WPF.Command
             {
                 if (modifyName)
                 {
-                    if (newObject is INamedObject)
+                    if (newObject is IHasHame)
                     {
-                        var no = newObject as INamedObject;
+                        var no = newObject as IHasHame;
                         no.Name += "-新增";
                     }
                     else

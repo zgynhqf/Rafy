@@ -72,7 +72,6 @@
     <Compile Include="ILibrary.cs" />
     <Compile Include="IModule.cs" />
     <Compile Include="IPlugin.cs" />
-    <Compile Include="IQueryObject.cs" />
     <Compile Include="ManagedProperty\IOEARefProperty.cs" />
     <Compile Include="ManagedProperty\IOEARefPropertyMetadata.cs" />
     <Compile Include="ManagedProperty\OEARefPropertyExtension.cs" />

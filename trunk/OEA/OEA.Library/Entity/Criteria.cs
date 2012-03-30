@@ -22,7 +22,7 @@ namespace OEA.Library
     /// 所有查询对象的基类
     /// </summary>
     [Serializable]
-    public abstract class Criteria : Entity, IQueryObject
+    public abstract class Criteria : Entity
     {
         //public Criteria()
         //{

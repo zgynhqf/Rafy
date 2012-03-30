@@ -79,10 +79,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EntityRepository\MemoryEntityRepository.cs" />
+    <Compile Include="Entity\Entity.Validation.cs">
+      <DependentUpon>Entity.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entity\EntityList.Csla.cs">
       <DependentUpon>EntityList.cs</DependentUpon>
     </Compile>
+    <Compile Include="Entity\IValidatable.cs" />
     <Compile Include="Entity\TreeCodeOption.cs" />
+    <Compile Include="Entity\Validation\ITypeValidationsHost.cs" />
     <Compile Include="Utils\DataBase\DbTable.cs" />
     <Compile Include="EntityRepository\Caching\EntityListVersion.cs" />
     <Compile Include="EntityRepository\IEntityOrListInternal.cs" />
@@ -92,8 +97,7 @@
     <Compile Include="Entity\MP\EntityPropertyMetaProvider.cs" />
     <Compile Include="Entity\MP\PropertyInfo.cs" />
     <Compile Include="Entity\MP\PropertyMetadata.cs" />
-    <Compile Include="Entity\INamedObject.cs" />
-    <Compile Include="Entity\IOrderedObject.cs" />
+    <Compile Include="Entity\IHasHame.cs" />
     <Compile Include="Entity\EntityExtension.cs" />
     <Compile Include="Entity\IAddOrEditCommandCallback.cs" />
     <Compile Include="Entity\LazyEntityReference\ILazyEntityRef.cs" />
@@ -163,7 +167,7 @@
     <Compile Include="EntityRepository\Caching\VersionChecker.cs" />
     <Compile Include="Commands\ServerTimeCommand.cs" />
     <Compile Include="Consts.cs" />
-    <Compile Include="EntityRepository\AggregateSQL\EntityInfo.cs" />
+    <Compile Include="Entity\IEntityInfoHost.cs" />
     <Compile Include="EntityRepository\RF.cs" />
     <Compile Include="Entity\BaseQueryObject.cs" />
     <Compile Include="Entity\CloneOptions.cs" />
@@ -212,6 +216,18 @@
     <Compile Include="ORM\LiteORM\TraceObject.cs" />
     <Compile Include="Utils\DataBase\DbExtension.cs" />
     <Compile Include="Utils\DataBase\DBHelper.cs" />
+    <Compile Include="Entity\Validation\BrokenRule.cs" />
+    <Compile Include="Entity\Validation\BrokenRulesCollection.cs" />
+    <Compile Include="Entity\Validation\CommonRules.cs" />
+    <Compile Include="Entity\Validation\IRuleMethod.cs" />
+    <Compile Include="Entity\Validation\RuleArgs.cs" />
+    <Compile Include="Entity\Validation\RuleHandler.cs" />
+    <Compile Include="Entity\Validation\RuleMethod.cs" />
+    <Compile Include="Entity\Validation\RuleLevel.cs" />
+    <Compile Include="Entity\Validation\RulesContainer.cs" />
+    <Compile Include="Entity\Validation\ValidationException.cs" />
+    <Compile Include="Entity\Validation\ValidationRules.cs" />
+    <Compile Include="Entity\Validation\ValidationRulesManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
@@ -259,6 +275,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Modeling\Web\Scripts\commands\BackupViewConfig.js" />
     <EmbeddedResource Include="Modeling\Web\Scripts\commands\SaveViewConfig.js" />
+    <Content Include="Entity\Validation\_ReadMe.txt" />
     <Content Include="OEA_Entity_Cache.sdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

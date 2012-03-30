@@ -35,12 +35,13 @@ namespace OEA.WPF.Command
     {
         public override void Execute(QueryObjectView queryView)
         {
-            var brokenRules = queryView.Current.CheckRules();
+            var brokenRules = queryView.Current.ValidationRules.CheckRules();
             if (brokenRules.Count > 0)
             {
                 App.Current.MessageBox.Show(
                     "条件错误",
-                    brokenRules[0].Description,
+                    brokenRules.ToString(),
+                    //brokenRules[0].Description,
                     MessageBoxButton.OK
                     );
             }

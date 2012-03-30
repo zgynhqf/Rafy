@@ -21,7 +21,6 @@ using System.ComponentModel;
 using System.Collections.Specialized;
 using SimpleCsla;
 using System.Runtime.Serialization;
-using SimpleCsla.Validation;
 using OEA.Serialization.Mobile;
 using OEA.Serialization;
 
@@ -248,10 +247,6 @@ namespace OEA.Library
         {
             base.OnDeserialized(context);
 
-            this.ValidationRules.SetTarget(this);
-
-            this.InitializeBusinessRules();
-
             this.SetChildrenParent();
         }
 
@@ -266,11 +261,6 @@ namespace OEA.Library
 
         #endregion
 
-        public virtual bool IsValid
-        {
-            get { return IsSelfValid; }
-        }
-
         void SimpleCsla.Server.IDataPortalTarget.MarkNew()
         {
             this.MarkNew();
@@ -282,11 +272,6 @@ namespace OEA.Library
     /// </summary>
     public partial class CslaEntity : ICloneable, SimpleCsla.Server.IDataPortalTarget
     {
-        protected CslaEntity()
-        {
-            this.InitializeBusinessRules();
-        }
-
         #region ICloneable
 
         object ICloneable.Clone()
@@ -307,143 +292,6 @@ namespace OEA.Library
 
         #endregion
 
-        #region ValidationRules, IsValid
-
-        private ValidationRules _validationRules;
-
-        [NonSerialized]
-        private EventHandler _validationCompleteHandlers;
-
-        /// <summary>
-        /// Event raised when validation is complete.
-        /// </summary>
-        public event EventHandler ValidationComplete
-        {
-            add
-            {
-                _validationCompleteHandlers = (EventHandler)
-                  System.Delegate.Combine(_validationCompleteHandlers, value);
-            }
-            remove
-            {
-                _validationCompleteHandlers = (EventHandler)
-                  System.Delegate.Remove(_validationCompleteHandlers, value);
-            }
-        }
-
-        /// <summary>
-        /// Raises the ValidationComplete event
-        /// </summary>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        protected virtual void OnValidationComplete()
-        {
-            if (_validationCompleteHandlers != null)
-                _validationCompleteHandlers(this, EventArgs.Empty);
-        }
-
-        private void InitializeBusinessRules()
-        {
-            AddInstanceBusinessRules();
-            if (!(SharedValidationRules.RulesExistFor(this.GetType())))
-            {
-                lock (this.GetType())
-                {
-                    if (!(SharedValidationRules.RulesExistFor(this.GetType())))
-                    {
-                        SharedValidationRules.GetManager(this.GetType(), true);
-                        AddBusinessRules();
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Provides access to the broken rules functionality.
-        /// </summary>
-        /// <remarks>
-        /// This property is used within your business logic so you can
-        /// easily call the AddRule() method to associate validation
-        /// rules with your object's properties.
-        /// </remarks>
-        public ValidationRules ValidationRules
-        {
-            get
-            {
-                if (_validationRules == null)
-                {
-                    _validationRules = new ValidationRules(this);
-                }
-                else if (_validationRules.Target == null)
-                    _validationRules.SetTarget(this);
-                return _validationRules;
-            }
-        }
-
-        /// <summary>
-        /// Override this method in your business class to
-        /// be notified when you need to set up business
-        /// rules.
-        /// </summary>
-        /// <remarks>
-        /// This method is automatically called by CSLA .NET
-        /// when your object should associate per-instance
-        /// validation rules with its properties.
-        /// </remarks>
-        protected virtual void AddInstanceBusinessRules()
-        {
-
-        }
-
-        /// <summary>
-        /// Override this method in your business class to
-        /// be notified when you need to set up shared 
-        /// business rules.
-        /// </summary>
-        /// <remarks>
-        /// This method is automatically called by CSLA .NET
-        /// when your object should associate per-type 
-        /// validation rules with its properties.
-        /// </remarks>
-        protected virtual void AddBusinessRules()
-        {
-
-        }
-
-        /// <summary>
-        /// Returns <see langword="true" /> if the object is currently 
-        /// valid, <see langword="false" /> if the
-        /// object has broken rules or is otherwise invalid.
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// By default this property relies on the underling ValidationRules
-        /// object to track whether any business rules are currently broken for this object.
-        /// </para><para>
-        /// You can override this property to provide more sophisticated
-        /// implementations of the behavior. 
-        /// </para>
-        /// </remarks>
-        /// <returns>A value indicating if the object is currently valid.</returns>
-        [Browsable(false)]
-        public virtual bool IsSelfValid
-        {
-            get { return ValidationRules.IsValid; }
-        }
-
-        /// <summary>
-        /// Provides access to the readonly collection of broken business rules
-        /// for this object.
-        /// </summary>
-        /// <returns>A RulesCollection object.</returns>
-        [Browsable(false)]
-        [EditorBrowsable(EditorBrowsableState.Advanced)]
-        public virtual BrokenRulesCollection BrokenRulesCollection
-        {
-            get { return ValidationRules.GetBrokenRules(); }
-        }
-
-        #endregion
-
         #region Data Access
 
         /// <summary>
@@ -459,7 +307,7 @@ namespace OEA.Library
         [RunLocal]
         protected virtual void DataPortal_Create()
         {
-            ValidationRules.CheckRules();
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -553,7 +401,7 @@ namespace OEA.Library
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores", MessageId = "Member")]
         protected virtual void Child_Create()
         {
-            ValidationRules.CheckRules();
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -581,11 +429,6 @@ namespace OEA.Library
         #endregion
 
         #region IDataPortalTarget Members
-
-        void SimpleCsla.Server.IDataPortalTarget.CheckRules()
-        {
-            ValidationRules.CheckRules();
-        }
 
         void SimpleCsla.Server.IDataPortalTarget.MarkAsChild() { }
 

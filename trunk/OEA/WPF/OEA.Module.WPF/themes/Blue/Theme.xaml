@@ -48,6 +48,15 @@
         <GradientStop Color="{DynamicResource PrimaryColor}" Offset="0.232" />
         <GradientStop Color="{DynamicResource SecondaryColor}" Offset="1" />
     </LinearGradientBrush>
+    <ControlTemplate x:Key="ValidationErrorTemplate">
+        <DockPanel LastChildFill="True">
+            <TextBlock Foreground="Red" FontWeight="Bold" DockPanel.Dock="Right" VerticalAlignment="Center">*</TextBlock>
+            <Border BorderBrush="Red" BorderThickness="2" CornerRadius="3">
+                <!--装饰占位符-->
+                <AdornedElementPlaceholder/>
+            </Border>
+        </DockPanel>
+    </ControlTemplate>
     <!-- Button -->
     <Style TargetType="Button">
         <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
@@ -5923,6 +5932,13 @@
             <oea:LevelToIndentConverter x:Key="LevelToIndentConverter"/>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         </Style.Resources>
+        <Setter Property="Validation.ErrorTemplate">
+            <Setter.Value>
+                <ControlTemplate>
+                    <TextBlock Margin="2,0,0,0" VerticalAlignment="Center" Foreground="Red" Text="!" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
         <Setter Property="Background" Value="#00FFFFFF"/>
         <Setter Property="TextElement.Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
         <Setter Property="Control.HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType=ItemsControl}}"/>
@@ -6921,5 +6937,12 @@
     <Style x:Key="OEA_StringPropertyEditor_TextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
         <Setter Property="MaxHeight" Value="20"/>
         <Setter Property="MaxLines" Value="1"/>
+        <Setter Property="Validation.ErrorTemplate" Value="{StaticResource ValidationErrorTemplate}"/>
+        <Style.Triggers>
+            <Trigger Property="Validation.HasError" Value="true">
+                <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, 
+                       Path=(Validation.Errors)[0].ErrorContent}"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 </ResourceDictionary>

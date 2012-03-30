@@ -36,8 +36,6 @@ namespace OEA.RBAC
     [ChildEntity, Serializable]
     public class OrgPositionUser : Entity
     {
-        protected OrgPositionUser() { }
-
         public static readonly RefProperty<OrgPosition> OrgPositionRefProperty =
             P<OrgPositionUser>.RegisterRef(e => e.OrgPosition, ReferenceType.Parent);
         public int OrgPositionId

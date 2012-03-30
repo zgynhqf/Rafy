@@ -393,8 +393,6 @@ namespace OEA.Library
 
         #region IDataPortalTarget Members
 
-        void SimpleCsla.Server.IDataPortalTarget.CheckRules() { }
-
         void SimpleCsla.Server.IDataPortalTarget.MarkAsChild() { }
 
         void SimpleCsla.Server.IDataPortalTarget.MarkNew() { }

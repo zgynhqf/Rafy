@@ -136,10 +136,10 @@ namespace OEA.WPF.Command
                         return;
                     }
 
-                    tmpEntity.CheckRules();
-                    if (!tmpEntity.IsValid)
+                    var broken = tmpEntity.ValidationRules.CheckRules();
+                    if (broken.Count > 0)
                     {
-                        App.Current.MessageBox.Show("属性错误", tmpEntity.BrokenRulesCollection[0].Description);
+                        App.Current.MessageBox.Show("属性错误", broken.ToString());
                         e.Cancel = true;
                     }
                 };

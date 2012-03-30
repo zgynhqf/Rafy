@@ -69,7 +69,6 @@ namespace OEA.Module.WPF.Editors
             Type currType = curListEntity.GetType();
             var tmp = Entity.New(currType);
             tmp.Clone(curListEntity);
-            tmp.CheckRules();
 
             //弹出窗体显示详细面板
             var viewMeta = UIModel.Views.Create(currType);

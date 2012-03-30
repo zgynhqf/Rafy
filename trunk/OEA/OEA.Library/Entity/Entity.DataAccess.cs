@@ -21,7 +21,6 @@ using OEA.Library.Caching;
 using OEA.MetaModel;
 using System.Data;
 using SimpleCsla;
-using SimpleCsla.Validation;
 
 namespace OEA.Library
 {
