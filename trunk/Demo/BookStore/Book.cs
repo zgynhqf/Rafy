@@ -8,6 +8,7 @@ using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
 using OEA.MetaModel.View;
 using OEA.Library.Validation;
+using hxy;
 
 namespace Demo
 {
@@ -70,6 +71,20 @@ namespace Demo
             //示例属性验证。
             this.ValidationRules.AddRule(Book.AuthorProperty, CommonRules.StringRequired);
             this.ValidationRules.AddRule(Book.AuthorProperty, CommonRules.StringMaxLength, new { MaxLength = 3 });
+            this.ValidationRules.AddRule(Book.BookCategoryRefProperty, CommonRules.Required);
+            this.ValidationRules.AddRule(Book.AmountProperty, CommonRules.IntegerMinValue, new
+            {
+                MinValue = 5
+            });
+            this.ValidationRules.AddRule(Book.AmountProperty, CommonRules.IntegerMaxValue, new
+            {
+                MaxValue = 50
+            });
+            this.ValidationRules.AddRule(Book.PublisherProperty, CommonRules.RegexMatch, new
+            {
+                Regex = TextFormatter.ReAllChinese,
+                RegexLabel = "全中文"
+            });
             this.ValidationRules.AddRule(Book.NameProperty, (e, args) =>
             {
                 var value = e.GetProperty(args.Property) as string;
