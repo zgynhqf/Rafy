@@ -116,7 +116,7 @@ namespace OEA.Module.WPF
             }
         }
 
-        public void ReloadData()
+        public void ReloadDataAsync()
         {
             if (this._dataProvider.DataProducer == null)
             {

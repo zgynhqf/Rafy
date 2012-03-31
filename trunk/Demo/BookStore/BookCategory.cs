@@ -69,6 +69,8 @@ namespace Demo
 
             View.HasLabel("书籍类别").HasTitle(BookCategory.NameProperty);
 
+            View.UseWPFCommands("Demo.WPF.Commands.DemoCommand");
+
             View.Property(BookCategory.TreeCodeProperty).ShowIn(ShowInWhere.List).HasLabel("编码");
             View.Property(BookCategory.NameProperty).ShowIn(ShowInWhere.List).HasLabel("名称");
         }

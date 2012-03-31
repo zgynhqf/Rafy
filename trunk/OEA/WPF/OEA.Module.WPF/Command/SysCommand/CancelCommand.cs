@@ -48,7 +48,7 @@ namespace OEA.WPF.Command
             if (b != null) b.SuppressSaveAction = true;
 
             //重新获取数据
-            view.DataLoader.ReloadData();
+            view.DataLoader.ReloadDataAsync();
 
             if (b != null) b.SuppressSaveAction = false;
 

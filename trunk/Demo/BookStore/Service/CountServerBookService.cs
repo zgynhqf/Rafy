@@ -9,7 +9,7 @@ namespace Demo
 {
     [Serializable]
     [ClientServiceName("CountServerBookService")]
-    internal class CountServerBookJsonService : JsonService
+    public class CountServerBookJsonService : JsonService
     {
         [ServiceOutput]
         public int BookCount { get; set; }
