@@ -56,7 +56,7 @@ namespace OEA.Library.DbMigrations
 
                         //Org
                         var org = new Org();
-                        org.TreeCode = "01";
+                        org.TreeCode = "1.";
                         org.Name = "IT系统管理部";
                         var op = org.OrgPositionList.AddNew().CastTo<OrgPosition>();
                         op.PositionId = p.Id;

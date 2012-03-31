@@ -67,7 +67,10 @@ namespace Demo
         {
             base.ConfigView();
 
-            View.HasTitle(BookCategory.NameProperty).HasLabel("书籍类别");
+            View.HasLabel("书籍类别").HasTitle(BookCategory.NameProperty);
+
+            View.Property(BookCategory.TreeCodeProperty).ShowIn(ShowInWhere.List).HasLabel("编码");
+            View.Property(BookCategory.NameProperty).ShowIn(ShowInWhere.List).HasLabel("名称");
         }
     }
 }
