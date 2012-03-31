@@ -58,7 +58,6 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\IndicatorController.cs" />
     <Compile Include="Controllers\DefaultController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Global.asax.cs">
@@ -69,11 +68,6 @@
   <ItemGroup>
     <Content Include="Content\images\Logo.png" />
     <Content Include="Content\images\ProductSplash.jpg" />
-    <Content Include="Content\Indicator\1.png" />
-    <Content Include="Content\Indicator\2.png" />
-    <Content Include="Content\Indicator\3.png" />
-    <Content Include="Content\Indicator\4.png" />
-    <Content Include="Content\Indicator\5.png" />
     <Content Include="ExtJs\ext-all-debug.js" />
     <Content Include="ExtJs\ext-all.js" />
     <Content Include="ExtJs\resources\css\ext-all-access.css" />
@@ -1291,9 +1285,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Scripts\Commands\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Views\Login\Index.cshtml" />
   </ItemGroup>
@@ -1386,7 +1378,6 @@
     <None Include="ExtJs\resources\themes\templates\resources\sass\my-ext-theme.scss" />
     <Content Include="Views\Default\EntityModule.cshtml" />
     <Content Include="Views\Default\ExtTest.cshtml" />
-    <Content Include="Views\Indicator\Project.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OEA\Common\Common.csproj">
