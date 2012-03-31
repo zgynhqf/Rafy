@@ -45,9 +45,22 @@ namespace OEA.Library
         public EntityRepository()
         {
             this._sqlColumnsGenerator = new SQLColumnsGenerator(this);
+        }
 
-            //这里创建 delegate 时不能使用 this.New 方法，因为这样会发生 NotifyLoaded 事件。
-            this._delegate = Entity.New(this.EntityType);
+        private Entity Delegate
+        {
+            get
+            {
+                //这个字段必须使用懒加载的方式，否则如果在构造函数中执行时，
+                //对于系统自动生成的 Repository，会无法在动态程序集中找到对应的实体类而出现异常。
+                if (this._delegate == null)
+                {
+                    //这里创建 delegate 时不能使用 this.New 方法，因为这样会发生 NotifyLoaded 事件。
+                    this._delegate = Entity.New(this.EntityType);
+                }
+
+                return this._delegate;
+            }
         }
 
         #region Merged API
@@ -647,7 +660,7 @@ namespace OEA.Library
 
         public string ConnectionStringSettingName
         {
-            get { return this._delegate.ConnectionStringSettingName; }
+            get { return this.Delegate.ConnectionStringSettingName; }
         }
 
         #endregion
@@ -755,12 +768,12 @@ namespace OEA.Library
 
         public bool SupportTree
         {
-            get { return this._delegate.SupportTree; }
+            get { return this.Delegate.SupportTree; }
         }
 
         public TreeCodeOption TreeCodeOption
         {
-            get { return this._delegate.TreeCodeOption; }
+            get { return this.Delegate.TreeCodeOption; }
         }
 
         #region ITypeValidationsHost Members
@@ -781,7 +794,7 @@ namespace OEA.Library
 
                     //在第一次创建时，添加类型的业务规则
                     //注意，这个方法可能会调用到 Rules 属性获取刚才设置在 _typeRules 上的 ValidationRulesManager。
-                    this._delegate.AddValidations();
+                    this.Delegate.AddValidations();
 
                     //如果没有一个规则，则把这个属性删除。
                     if (this._typeRules.PropertyRules.Count == 0 && this._typeRules.TypeRules.GetList(false).Count == 0)
