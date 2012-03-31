@@ -41,7 +41,7 @@ namespace OEA.Web.Services
 
         public JsonService Invoke()
         {
-            return DataPortal.Execute(this) as JsonService;
+            return DataPortal.Execute(this);
         }
     }
 }
