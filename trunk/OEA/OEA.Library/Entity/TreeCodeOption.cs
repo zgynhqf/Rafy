@@ -77,6 +77,7 @@ namespace OEA.Library
             }
             else
             {
+                layerIndex = 0;
                 parentCode = string.Empty;
             }
 
