@@ -56,8 +56,8 @@ namespace OEA.Module.WPF.Command
             {
                 w.ResizeMode = ResizeMode.CanResize;
                 w.Title = this.CommandInfo.Label;
-                w.Width = 800;
-                w.Height = 600;
+                w.Width = 600;
+                w.Height = 300;
             });
 
             if (result == WindowButton.Yes)

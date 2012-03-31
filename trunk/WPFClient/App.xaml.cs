@@ -8,6 +8,7 @@ using OEA.Module.WPF;
 using OEA.Module.WPF.Shell;
 using System.Windows.Threading;
 using OEA;
+using Common;
 
 namespace WPFClient
 {
@@ -15,7 +16,7 @@ namespace WPFClient
     {
         public App()
         {
-            OEAEnvironment.Provider.IsDebuggingEnabled = true;
+            OEAEnvironment.Provider.IsDebuggingEnabled = ConfigurationHelper.GetAppSettingOrDefault("IsDebuggingEnabled", false);
 
             ClientApp.Register(this);
             this.DispatcherUnhandledException += OnDispatcherUnhandledException;
