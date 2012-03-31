@@ -71,11 +71,12 @@ namespace OEA.Library
             int layerIndex = -1;
             if (!string.IsNullOrEmpty(parentCode))
             {
+                //父结点中有几个分隔符，就表示第几层。
                 for (int i = 0; i < parentCode.Length; i++) { if (parentCode[i] == Seperator) layerIndex++; }
+                if (layerIndex == -1) layerIndex = 0;
             }
             else
             {
-                layerIndex = 0;
                 parentCode = string.Empty;
             }
 
