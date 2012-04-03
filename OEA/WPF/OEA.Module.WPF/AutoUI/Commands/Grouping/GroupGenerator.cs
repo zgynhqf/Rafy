@@ -136,7 +136,7 @@ namespace OEA.Module.WPF.CommandAutoUI
             CommandRepository.TryExecuteCommand(cmd, cmdSource.CommandParameter);
         }
 
-        protected void TryExcuteCommand(OEA.MetaModel.IClientCommand runtimeCmd)
+        protected void TryExcuteCommand(IClientCommand runtimeCmd)
         {
             CommandRepository.TryExecuteCommand(runtimeCmd, this.Context.CommandArg);
         }
