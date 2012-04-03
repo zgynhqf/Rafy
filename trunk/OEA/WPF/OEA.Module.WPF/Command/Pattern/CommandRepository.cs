@@ -14,6 +14,7 @@ using OEA;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
 using OEA.Module.WPF.Editors;
+using OEA.Module;
 
 namespace Itenso.Windows.Input
 {
@@ -88,7 +89,7 @@ namespace Itenso.Windows.Input
             return TryExecuteCommand(runtimeCmd, cmdArg);
         }
 
-        public static bool TryExecuteCommand(OEA.MetaModel.IClientCommand runtimeCmd, object cmdArg)
+        public static bool TryExecuteCommand(IClientCommand runtimeCmd, object cmdArg)
         {
             if (runtimeCmd == null) throw new ArgumentNullException("cmdInfo");
 
