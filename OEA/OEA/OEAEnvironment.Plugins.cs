@@ -294,7 +294,7 @@ namespace OEA
                         {
                             var config = Activator.CreateInstance(type).CastTo<EntityConfig>();
                             config.ReuseLevel = (int)p.Instance.ReuseLevel;
-                            config.InheritanceCount = TypeHelper.GetHierarchy(type, typeof(CslaEntityBase)).Count();
+                            config.InheritanceCount = TypeHelper.GetHierarchy(type, typeof(ManagedPropertyObject)).Count();
 
                             List<EntityConfig> typeList = null;
                             if (!repo.TryGetValue(config.EntityType, out typeList))
@@ -315,7 +315,7 @@ namespace OEA
 
         internal static IEnumerable<EntityConfig> FindConfigurations(Type entityType)
         {
-            var hierachy = TypeHelper.GetHierarchy(entityType, typeof(CslaEntityBase)).Reverse();
+            var hierachy = TypeHelper.GetHierarchy(entityType, typeof(ManagedPropertyObject)).Reverse();
             foreach (var type in hierachy)
             {
                 List<EntityConfig> configList = null;

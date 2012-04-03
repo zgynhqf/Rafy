@@ -160,8 +160,8 @@ namespace OEA.Library
         ///     所以这里子类实现时，是先更新，再删除。
         /// 2.删除结点时，考虑树结点的问题，先删除子结点，再删除父结点。
         /// </summary>
-        /// <param name="parameters"></param>
-        protected virtual void Child_Update(params object[] parameters)
+        /// <param name="parent"></param>
+        internal void Child_Update(Entity parent)
         {
             this.NotifyCacheVersion();
 
@@ -201,7 +201,7 @@ namespace OEA.Library
                 for (int i = 0, c = deletedNodes.Length; i < c; i++)
                 {
                     var child = deletedNodes[i];
-                    DataPortal.UpdateChild(child, parameters);
+                    DataPortal.UpdateChild(child, parent);
                 }
 
                 this.DeletedList.Clear();
@@ -209,7 +209,7 @@ namespace OEA.Library
                 for (int i = 0, c = this.Count; i < c; i++)
                 {
                     var child = this[i];
-                    DataPortal.UpdateChild(child, parameters);
+                    DataPortal.UpdateChild(child, parent);
                 }
             }
             finally

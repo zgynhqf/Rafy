@@ -50,7 +50,7 @@ namespace OEA.Library
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [Serializable]
-    public abstract partial class Entity : CslaEntity, IEntity, IReferenceOwner
+    public abstract partial class Entity : ManagedPropertyObject, IEntity, IReferenceOwner
     {
         #region 构造函数及工厂方法
 
@@ -105,21 +105,8 @@ namespace OEA.Library
         protected virtual void OnIdChanging(ManagedPropertyChangingEventArgs<int> e) { }
         protected virtual void OnIdChanged(ManagedPropertyChangedEventArgs<int> e) { }
 
-        public override void LoadProperty<TPropertyType>(ManagedProperty<TPropertyType> property, TPropertyType value)
+        private void OnPropertyLoaded(IManagedProperty property)
         {
-            base.LoadProperty<TPropertyType>(property, value);
-
-            if ((IManagedProperty)property == IdProperty)
-            {
-                this.ResetFastField(this._idFast);
-                this.OnTreeIdLoaded();
-            }
-        }
-
-        public override void LoadProperty(IManagedProperty property, object value)
-        {
-            base.LoadProperty(property, value);
-
             if (property == IdProperty)
             {
                 this.ResetFastField(this._idFast);
@@ -244,61 +231,22 @@ namespace OEA.Library
 
         #region 根对象
 
-        internal protected override void DataPortal_Insert()
+        internal void DataPortal_Insert()
         {
-            if (EntityListVersion.Repository != null)
-            {
-                using (EntityListVersion.Repository.BeginBillSave())
-                {
-                    using (var tran = new TransactionScope())
-                    {
-                        this.OnInsert();
-
-                        tran.Complete();
-                    }
-
-                    EntityListVersion.Repository.EndBillSave();
-                }
-            }
-            else
-            {
-                using (var tran = new TransactionScope())
-                {
-                    this.OnInsert();
-
-                    tran.Complete();
-                }
-            }
+            this.DoInTransaction(this.OnInsert);
         }
 
-        internal protected override void DataPortal_Update()
+        internal void DataPortal_Update()
         {
-            if (EntityListVersion.Repository != null)
-            {
-                using (EntityListVersion.Repository.BeginBillSave())
-                {
-                    using (var tran = new TransactionScope())
-                    {
-                        this.OnUpdate();
-
-                        tran.Complete();
-                    }
-
-                    EntityListVersion.Repository.EndBillSave();
-                }
-            }
-            else
-            {
-                using (var tran = new TransactionScope())
-                {
-                    this.OnUpdate();
-
-                    tran.Complete();
-                }
-            }
+            this.DoInTransaction(this.OnUpdate);
         }
 
-        internal protected override void DataPortal_DeleteSelf()
+        internal void DataPortal_DeleteSelf()
+        {
+            this.DoInTransaction(this.OnDelete);
+        }
+
+        private void DoInTransaction(Action action)
         {
             if (EntityListVersion.Repository != null)
             {
@@ -306,7 +254,7 @@ namespace OEA.Library
                 {
                     using (var tran = new TransactionScope())
                     {
-                        this.OnDelete();
+                        action();
 
                         tran.Complete();
                     }
@@ -318,7 +266,7 @@ namespace OEA.Library
             {
                 using (var tran = new TransactionScope())
                 {
-                    this.OnDelete();
+                    action();
 
                     tran.Complete();
                 }
@@ -329,24 +277,24 @@ namespace OEA.Library
 
         #region 子对象
 
-        internal protected override void Child_Insert(CslaEntity parent)
+        internal void Child_Insert(Entity parent)
         {
             this.OnInsert();
         }
 
-        internal protected override void Child_Update(CslaEntity parent)
+        internal void Child_Update(Entity parent)
         {
             this.OnUpdate();
         }
 
-        internal protected override void Child_Delete(CslaEntity parent)
+        internal void Child_Delete(Entity parent)
         {
             this.OnDelete();
         }
 
         #endregion
 
-        #region Caching
+        #region 缓存
 
         /// <summary>
         /// 在本实体更新时，通知服务器更新对象的版本号。
@@ -361,106 +309,6 @@ namespace OEA.Library
                     EntityListVersion.Repository.UpdateVersion(entityType);
                 }
             }
-        }
-
-        #endregion
-
-        #region 延迟加载
-
-        /// <summary>
-        /// 延迟加载子对象的集合。
-        /// </summary>
-        /// <typeparam name="TCollection">
-        /// 子对象集合类型
-        /// </typeparam>
-        /// <param name="propertyInfo">当前属性的元信息</param>
-        /// <param name="creator">构造一个新的子集合</param>
-        /// <param name="childrenLoader">根据当前对象，查询出一个子集合</param>
-        /// <returns></returns>
-        protected TCollection GetLazyChildren<TCollection>(ManagedProperty<TCollection> propertyInfo)
-            where TCollection : EntityList
-        {
-            return this.LoadLazyChildren(propertyInfo) as TCollection;
-        }
-
-        /// <summary>
-        /// 延迟加载子对象的集合。
-        /// </summary>
-        /// <typeparam name="TCollection">
-        /// 子对象集合类型
-        /// </typeparam>
-        /// <param name="propertyInfo">当前属性的元信息</param>
-        /// <param name="creator">构造一个新的子集合</param>
-        /// <param name="childrenLoader">根据当前对象，查询出一个子集合</param>
-        /// <returns></returns>
-        public EntityList GetLazyChildren(IManagedProperty childrenProperty)
-        {
-            return this.LoadLazyChildren(childrenProperty) as EntityList;
-        }
-
-        /// <summary>
-        /// 执行懒加载操作。
-        /// </summary>
-        /// <param name="childrenProperty"></param>
-        private object LoadLazyChildren(IManagedProperty childrenProperty)
-        {
-            object data = null;
-
-            if (this.FieldExists(childrenProperty))
-            {
-                data = this.GetProperty(childrenProperty);
-                if (data != null) return data;
-            }
-
-            var listType = childrenProperty.PropertyType;
-            var entityType = EntityConvention.EntityType(listType);
-            var childRepository = RepositoryFactoryHost.Factory.Create(entityType);
-
-            if (this.IsNew)
-            {
-                data = childRepository.NewList();
-            }
-            else
-            {
-                data = childRepository.GetByParent(this);
-            }
-
-            this.LoadProperty(childrenProperty, data);
-
-            return data;
-        }
-
-        /// <summary>
-        /// 延迟加载子对象的集合。
-        /// </summary>
-        /// <typeparam name="TCollection">
-        /// 子对象集合类型
-        /// </typeparam>
-        /// <param name="property">当前属性的元信息</param>
-        /// 
-        /// <param name="childrenLoader">根据当前对象，查询出一个子集合</param>
-        /// <returns></returns>
-        protected TCollection GetLazyChildren<TCollection>(ManagedProperty<TCollection> property, Func<Entity, TCollection> childrenLoader)
-        {
-            if (this.FieldExists(property))
-            {
-                var data = this.GetProperty(property);
-                if (data != null) return data;
-            }
-
-            if (this.IsNew)
-            {
-                var entityType = EntityConvention.EntityType(property.PropertyType);
-                var repo = RepositoryFactoryHost.Factory.Create(entityType);
-
-                this.LoadProperty(property, repo.NewList());
-            }
-            else
-            {
-                this.LoadProperty(property, childrenLoader(this));
-            }
-
-            return this.GetProperty(property);
         }
 
         #endregion
@@ -523,23 +371,6 @@ namespace OEA.Library
             var childProperty = entityInfo.ChildrenProperties
                 .FirstOrDefault(b => b.ChildType.EntityType == typeof(TChild));
             return this.GetPropertyValue<IList>(childProperty.Name);
-        }
-
-        /// <summary>
-        /// 获取所有已经加载的子的字段集合。
-        /// 
-        /// 子有可能是集合、也有可能只是一个实体。
-        /// </summary>
-        /// <returns></returns>
-        protected override IEnumerable<IManagedPropertyField> GetLoadedChildren()
-        {
-            var fields = this.GetNonDefaultPropertyValues();
-
-            foreach (var field in fields)
-            {
-                var meta = field.Property.GetMeta(this) as IPropertyMetadata;
-                if (meta.IsChild) { yield return field; }
-            }
         }
 
         #endregion

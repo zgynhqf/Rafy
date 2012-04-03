@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OEA;
 using OEA.Library;
 using OEA.Library._Test;
-using SimpleCsla.Reflection;
+using OEA.Reflection;
 using OEA.Library.ORM.DbMigration;
 
 namespace OEAUnitTest

@@ -42,7 +42,7 @@ namespace OEA.Server
         {
             LateBoundObject lb = new LateBoundObject(obj);
             // tell the business object to update itself
-            var target = obj as CslaEntity;
+            var target = obj as Entity;
             if (target != null)
             {
                 if (target.IsDeleted)
@@ -72,6 +72,10 @@ namespace OEA.Server
             else if (obj is Service)
             {
                 (obj as Service).ExecuteInternal();
+            }
+            else if (obj is EntityList)
+            {
+                (obj as EntityList).DataPortal_Update();
             }
             else
             {

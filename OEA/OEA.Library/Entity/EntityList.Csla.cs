@@ -159,14 +159,14 @@ namespace OEA.Library
             get
             {
                 // any non-new deletions make us dirty
-                foreach (CslaEntity item in DeletedList)
+                foreach (Entity item in DeletedList)
                     if (!item.IsNew)
                         return true;
 
                 // run through all the child objects
                 // and if any are dirty then then
                 // collection is dirty
-                foreach (CslaEntity child in this)
+                foreach (Entity child in this)
                     if (child.IsDirty)
                         return true;
 
@@ -216,7 +216,7 @@ namespace OEA.Library
         /// Override this method to allow update of a business
         /// object.
         /// </summary>
-        protected virtual void DataPortal_Update()
+        internal void DataPortal_Update()
         {
             this.OnSave();
         }
