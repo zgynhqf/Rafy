@@ -1,7 +1,7 @@
 using System;
 using System.Security.Principal;
-using SimpleCsla.Serialization;
-using SimpleCsla.Serialization.Mobile;
+
+
 using OEA;
 using OEA.ManagedProperty;
 using System.Runtime.Serialization;
@@ -13,21 +13,21 @@ namespace SimpleCsla.Security
     /// objects should inherit to operate
     /// properly with the data portal.
     /// </summary>
-    [Serializable()]
-    public class BusinessPrincipalBase : IPrincipal
+    [Serializable]
+    public class CslaPrincipal : IPrincipal//GenericPrincipal
     {
         private IIdentity _identity;
 
         /// <summary>
         /// Creates an instance of the object.
         /// </summary>
-        protected BusinessPrincipalBase() { _identity = new UnauthenticatedIdentity(); }
+        public CslaPrincipal() { _identity = new CslaIdentity(); }
 
         /// <summary>
         /// Creates an instance of the object.
         /// </summary>
         /// <param name="identity">Identity object for the user.</param>
-        protected BusinessPrincipalBase(IIdentity identity)
+        public CslaPrincipal(IIdentity identity)
         {
             _identity = identity;
         }
@@ -47,11 +47,7 @@ namespace SimpleCsla.Security
         /// <param name="role">Name of the role.</param>
         public virtual bool IsInRole(string role)
         {
-            var check = _identity as ICheckRoles;
-            if (check != null)
-                return check.IsInRole(role);
-            else
-                return false;
+            return false;
         }
     }
 }

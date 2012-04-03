@@ -43,10 +43,4 @@ namespace OEA.Web.Services
             get { return this._name; }
         }
     }
-
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class ServiceInputAttribute : Attribute { }
-
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class ServiceOutputAttribute : Attribute { }
 }

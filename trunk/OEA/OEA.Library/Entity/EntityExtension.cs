@@ -68,7 +68,7 @@ namespace OEA.Library
             IEnumerable srcList, bool resetParent = true
             )
         {
-            var list = repository.OldList();
+            var list = repository.NewList();
 
             list.SupressSetItemParent = !resetParent;
             list.RaiseListChangedEvents = false;

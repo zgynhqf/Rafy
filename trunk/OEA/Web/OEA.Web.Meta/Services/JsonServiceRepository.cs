@@ -40,7 +40,7 @@ namespace OEA.Web.Services
             var serviceType = Find(serviceName);
             if (serviceType == null) throw new InvalidOperationException();
 
-            var service = Activator.CreateInstance(serviceType) as JsonService;
+            var service = Activator.CreateInstance(serviceType) as Service;
 
             //参数输入
             var jInput = JObject.Parse(jsonInput);
@@ -82,7 +82,7 @@ namespace OEA.Web.Services
         private static void AddByAssembly(System.Reflection.Assembly assembly)
         {
             var serviceTypes = assembly.GetTypes()
-                    .Where(t => !t.IsGenericType && !t.IsAbstract && t.IsSubclassOf(typeof(JsonService)))
+                    .Where(t => !t.IsGenericType && !t.IsAbstract && t.IsSubclassOf(typeof(Service)))
                     .ToArray();
 
             foreach (var serviceType in serviceTypes) { Add(serviceType); }

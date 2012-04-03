@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
-using SimpleCsla.Properties;
+
 using SimpleCsla.Server;
 using SimpleCsla;
 
@@ -13,7 +13,6 @@ namespace SimpleCsla.Reflection
     /// </summary>
     public static class MethodCaller
     {
-
         private const BindingFlags allLevelFlags = BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
         private const BindingFlags oneLevelFlags = BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
@@ -492,20 +491,6 @@ namespace SimpleCsla.Reflection
                 }
             }
             return result.ToArray();
-        }
-
-        /// <summary>
-        /// Returns a business object type based on
-        /// the supplied criteria object.
-        /// </summary>
-        /// <param name="criteria">
-        /// Criteria object.
-        /// </param>
-        public static Type GetObjectType(object criteria)
-        {
-            // get the type of the actual business object
-            // based on the nested class scheme in the book
-            return criteria.GetType().DeclaringType;
         }
 
         /// <summary>

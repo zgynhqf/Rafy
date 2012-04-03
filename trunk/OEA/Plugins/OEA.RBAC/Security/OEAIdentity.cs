@@ -26,7 +26,7 @@ namespace OEA.RBAC.Security
         public User User { get; set; }
 
         private OrgPositionList _roles;
-        public new OrgPositionList Roles
+        public OrgPositionList Roles
         {
             get { return this._roles; }
         }
@@ -35,12 +35,18 @@ namespace OEA.RBAC.Security
 
         internal static OEAIdentity GetIdentity(string username, string password)
         {
-            return DataPortal.Fetch<OEAIdentity>(new UsernameCriteria(username, password));
+            var c = new UsernameCriteria()
+            {
+                Username = username,
+                Password = password
+            };
+
+            return DataPortal.Fetch(typeof(OEAIdentity), c) as OEAIdentity;
         }
 
         internal static OEAIdentity GetIdentity(int id)
         {
-            return DataPortal.Fetch<OEAIdentity>(id);
+            return DataPortal.Fetch(typeof(OEAIdentity), id) as OEAIdentity;
         }
 
         private OEAIdentity() { }

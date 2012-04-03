@@ -2,7 +2,7 @@ using System;
 using System.Configuration;
 using System.Data;
 using System.Data.Common;
-using SimpleCsla.Properties;
+
 
 namespace SimpleCsla.Data
 {
@@ -187,6 +187,5 @@ namespace SimpleCsla.Data
         }
 
         #endregion
-
     }
 }

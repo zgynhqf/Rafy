@@ -18,7 +18,7 @@ namespace OEA.MetaModel.Audit
             //如果不是单机版
             if (OEAEnvironment.Location != OEALocation.LocalVersion)
             {
-                DataPortal.Execute(new AuditServerService(log));
+                new AuditServerService(log).Invoke();
             }
         }
 

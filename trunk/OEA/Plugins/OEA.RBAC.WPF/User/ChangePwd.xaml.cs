@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using OEA.Library;
-using SimpleCsla.OEA;
+
 using System.Security.Cryptography;
 using OEA.Utils;
 using OEA.RBAC;

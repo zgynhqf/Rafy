@@ -72,38 +72,6 @@ namespace SimpleCsla.DataPortalClient
         }
 
         /// <summary>
-        /// Called by <see cref="DataPortal" /> to create a
-        /// new business object.
-        /// </summary>
-        /// <param name="objectType">Type of business object to create.</param>
-        /// <param name="criteria">Criteria object describing business object.</param>
-        /// <param name="context">
-        /// <see cref="Server.DataPortalContext" /> object passed to the server.
-        /// </param>
-        public DataPortalResult Create(Type objectType, object criteria, DataPortalContext context)
-        {
-            ChannelFactory<IWcfPortal> cf = GetChannelFactory();
-            IWcfPortal svr = GetProxy(cf);
-            WcfResponse response = null;
-            try
-            {
-                response =
-                  svr.Create(new CreateRequest(objectType, criteria, context));
-                if (cf != null)
-                    cf.Close();
-            }
-            catch
-            {
-                cf.Abort();
-                throw;
-            }
-            object result = response.Result;
-            if (result is Exception)
-                throw (Exception)result;
-            return (DataPortalResult)result;
-        }
-
-        /// <summary>
         /// Called by <see cref="DataPortal" /> to load an
         /// existing business object.
         /// </summary>
@@ -154,40 +122,6 @@ namespace SimpleCsla.DataPortalClient
             {
                 response =
                       svr.Update(new UpdateRequest(obj, context));
-                if (cf != null)
-                    cf.Close();
-            }
-            catch
-            {
-                cf.Abort();
-                throw;
-            }
-
-
-            object result = response.Result;
-            if (result is Exception)
-                throw (Exception)result;
-            return (DataPortalResult)result;
-        }
-
-        /// <summary>
-        /// Called by <see cref="DataPortal" /> to delete a
-        /// business object.
-        /// </summary>
-        /// <param name="objectType">Type of business object to create.</param>
-        /// <param name="criteria">Criteria object describing business object.</param>
-        /// <param name="context">
-        /// <see cref="Server.DataPortalContext" /> object passed to the server.
-        /// </param>
-        public DataPortalResult Delete(Type objectType, object criteria, DataPortalContext context)
-        {
-            ChannelFactory<IWcfPortal> cf = GetChannelFactory();
-            IWcfPortal svr = GetProxy(cf);
-            WcfResponse response = null;
-            try
-            {
-                response =
-                      svr.Delete(new DeleteRequest(objectType, criteria, context));
                 if (cf != null)
                     cf.Close();
             }

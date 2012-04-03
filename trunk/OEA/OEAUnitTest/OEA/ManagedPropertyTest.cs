@@ -349,7 +349,7 @@ namespace OEAUnitTest
         [TestMethod]
         public void MPT_WPFBinding()
         {
-            var userList = RF.Create<TestUser>().OldList();
+            var userList = RF.Create<TestUser>().NewList();
             var newUser = Get<TestUser>();
             newUser.Name = "1";
             userList.Add(newUser);

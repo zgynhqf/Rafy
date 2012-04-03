@@ -26,7 +26,7 @@ using System.Windows.Markup;
 using AvalonDock;
 using SimpleCsla;
 using SimpleCsla.Core;
-using SimpleCsla.OEA;
+
 using SimpleCsla.Wpf;
 
 using OEA.Library;

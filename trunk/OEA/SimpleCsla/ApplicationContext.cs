@@ -19,6 +19,7 @@ using System.Collections.Specialized;
 using System.Configuration;
 using System.Web;
 using SimpleCsla.Core;
+using SimpleCsla.Security;
 
 namespace SimpleCsla
 {
@@ -77,7 +78,7 @@ namespace SimpleCsla
                     if (_principal == null)
                     {
                         if (ApplicationContext.AuthenticationType != "Windows")
-                            _principal = new SimpleCsla.Security.UnauthenticatedPrincipal();
+                            _principal = new CslaPrincipal();
                         else
                             _principal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
                     }

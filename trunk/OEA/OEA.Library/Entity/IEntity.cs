@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SimpleCsla.Serialization.Mobile;
+
 using SimpleCsla.Core;
 using System.ComponentModel;
 using SimpleCsla.Security;

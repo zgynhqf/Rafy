@@ -53,61 +53,32 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationContext.cs" />
-    <Compile Include="ServiceBase.cs" />
+    <Compile Include="_OEA\Service.cs" />
     <Compile Include="ContextDictionary.cs" />
-    <Compile Include="Core\ObjectCloner.cs" />
-    <Compile Include="Core\SavedEventArgs.cs" />
-    <Compile Include="DataPortalClient\EnterpriseServicesProxy.cs" />
-    <Compile Include="DataPortalClient\RemotingProxy.cs" />
+    <Compile Include="ObjectCloner.cs" />
     <Compile Include="Data\ConnectionManager.cs" />
-    <Compile Include="NotUndoableAttribute.cs" />
-    <Compile Include="Security\UsernameCriteria.cs" />
-    <Compile Include="Server\Hosts\EnterpriseServicesPortal.cs" />
-    <Compile Include="Server\Hosts\RemotingPortal.cs" />
-    <Compile Include="Server\Hosts\WebServicePortal.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="SortedBindingList.cs" />
     <Compile Include="Wpf\BusyAnimation.cs" />
-    <Compile Include="Wpf\CslaDataProvider.cs" />
     <Compile Include="_OEA\CslaEntity.cs" />
     <Compile Include="_OEA\IDirtyAware.cs" />
     <Compile Include="_OEA\IEntityOrList.cs" />
     <Compile Include="DataPortal.cs" />
-    <Compile Include="DataPortalClient\DesignTimeProxy.cs" />
     <Compile Include="DataPortalClient\IDataPortalProxy.cs" />
-    <Compile Include="DataPortalClient\LocalProxy.cs" />
     <Compile Include="DataPortalClient\WcfProxy.cs" />
-    <Compile Include="DataPortalEventArgs.cs" />
-    <Compile Include="DataPortalException.cs" />
-    <Compile Include="DataPortalOperations.cs" />
     <Compile Include="DataPortalResult.cs" />
     <Compile Include="_OEA\TypeComparer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Reflection\CallMethodException.cs" />
     <Compile Include="Reflection\DynamicMemberHandle.cs" />
     <Compile Include="Reflection\DynamicMethodHandle.cs" />
     <Compile Include="Reflection\DynamicMethodHandlerFactory.cs" />
     <Compile Include="Reflection\LateBoundObject.cs" />
     <Compile Include="Reflection\MethodCacheKey.cs" />
     <Compile Include="Reflection\MethodCaller.cs" />
-    <Compile Include="RunLocalAttribute.cs" />
-    <Compile Include="Security\BusinessPrincipalBase.cs" />
+    <Compile Include="Security\CslaPrincipal.cs" />
     <Compile Include="Security\CslaIdentity.cs" />
-    <Compile Include="Security\CslaIdentity.partial.cs" />
-    <Compile Include="Security\ICheckRoles.cs" />
-    <Compile Include="Security\UnauthenticatedIdentity.cs" />
-    <Compile Include="Security\UnauthenticatedPrincipal.cs" />
-    <Compile Include="Server\AuthorizeRequest.cs" />
-    <Compile Include="Server\ChildDataPortal.cs" />
-    <Compile Include="Server\DataPortal.cs" />
+    <Compile Include="Server\DataPortalFacade.cs" />
     <Compile Include="Server\DataPortalContext.cs" />
-    <Compile Include="Server\DataPortalException.cs" />
-    <Compile Include="Server\DataPortalMethodCache.cs" />
-    <Compile Include="Server\DataPortalMethodInfo.cs" />
     <Compile Include="Server\DataPortalResult.cs" />
-    <Compile Include="Server\DataPortalSelector.cs" />
-    <Compile Include="Server\FactoryDataPortal.cs" />
     <Compile Include="Server\Hosts\IWcfPortal.cs" />
     <Compile Include="Server\Hosts\WcfChannel\CreateRequest.cs" />
     <Compile Include="Server\Hosts\WcfChannel\DeleteRequest.cs" />
@@ -118,18 +89,8 @@
     <Compile Include="Server\Hosts\WcfChannel\UseNetDataContractAttribute.cs" />
     <Compile Include="Server\Hosts\WcfChannel\WcfResponse.cs" />
     <Compile Include="Server\Hosts\WcfPortal.cs" />
-    <Compile Include="Server\IAuthorizeDataPortal.cs" />
     <Compile Include="Server\IDataPortalServer.cs" />
-    <Compile Include="Server\IDataPortalTarget.cs" />
-    <Compile Include="Server\IObjectFactoryLoader.cs" />
-    <Compile Include="Server\ObjectFactoryAttribute.cs" />
-    <Compile Include="Server\ObjectFactoryLoader.cs" />
-    <Compile Include="Server\ServicedDataPortal.cs" />
-    <Compile Include="Server\SimpleDataPortal.cs" />
-    <Compile Include="Server\TransactionalDataPortal.cs" />
-    <Compile Include="TransactionalAttribute.cs" />
-    <Compile Include="TransactionalTypes.cs" />
-    <Compile Include="_OldNamespaces.cs" />
+    <Compile Include="Server\FinalDataPortal.cs" />
     <Compile Include="_OEA\PersistenceStatus.cs" />
   </ItemGroup>
   <ItemGroup>

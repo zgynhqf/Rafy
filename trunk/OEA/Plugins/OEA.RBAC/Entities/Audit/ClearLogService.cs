@@ -7,9 +7,9 @@ using OEA.Utils;
 namespace OEA.Library.Audit
 {
     [Serializable]
-    public class ClearLogCommand : SimpleCsla.ServiceBase
+    public class ClearLogService : Service
     {
-        protected override void DataPortal_Execute()
+        protected override void Execute()
         {
             using (var db = DBHelper.CreateDb(ConnectionStringNames.OEA))
             {

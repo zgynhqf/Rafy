@@ -165,7 +165,6 @@
     <Compile Include="EntityRepository\Caching\CacheInstance.cs" />
     <Compile Include="EntityRepository\Caching\EntityRowCache.cs" />
     <Compile Include="EntityRepository\Caching\VersionChecker.cs" />
-    <Compile Include="Commands\ServerTimeCommand.cs" />
     <Compile Include="Consts.cs" />
     <Compile Include="Entity\IEntityInfoHost.cs" />
     <Compile Include="EntityRepository\RF.cs" />

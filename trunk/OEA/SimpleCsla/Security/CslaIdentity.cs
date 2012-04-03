@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Security.Principal;
-using SimpleCsla.Serialization;
+
 using System.Collections.Generic;
-using SimpleCsla.Core.FieldManager;
+
 using System.Runtime.Serialization;
 using System.Reflection;
 using SimpleCsla.Core;
@@ -18,46 +18,8 @@ namespace SimpleCsla.Security
     /// a .NET identity object for use with BusinessPrincipalBase.
     /// </summary>
     [Serializable()]
-    public abstract partial class CslaIdentity : ManagedPropertyObject, IIdentity, ICheckRoles
+    public class CslaIdentity : ManagedPropertyObject, IIdentity
     {
-        #region UnauthenticatedIdentity
-
-        /// <summary>
-        /// Creates an instance of the class.
-        /// </summary>
-        /// <returns></returns>
-        public static CslaIdentity UnauthenticatedIdentity()
-        {
-            return new SimpleCsla.Security.UnauthenticatedIdentity();
-        }
-
-        #endregion
-
-        #region  IsInRole
-
-        private static readonly ManagedProperty<List<string>> RolesProperty = RegisterProperty<CslaIdentity, List<string>>(e => e.Roles, null);
-        /// <summary>
-        /// Gets or sets the list of roles for this user.
-        /// </summary>
-        protected List<string> Roles
-        {
-            get { return GetProperty(RolesProperty); }
-            set { LoadProperty(RolesProperty, value); }
-        }
-
-        bool ICheckRoles.IsInRole(string role)
-        {
-            var roles = GetProperty(RolesProperty);
-            if (roles != null)
-                return roles.Contains(role);
-            else
-                return false;
-        }
-
-        #endregion
-
-        #region  IIdentity
-
         private static readonly ManagedProperty<string> AuthenticationTypeProperty = RegisterProperty<CslaIdentity, string>(e => e.AuthenticationType, "SimpleCsla");
         /// <summary>
         /// Gets the authentication type for this identity.
@@ -88,7 +50,5 @@ namespace SimpleCsla.Security
             get { return GetProperty<string>(NameProperty); }
             protected set { LoadProperty<string>(NameProperty, value); }
         }
-
-        #endregion
     }
 }

@@ -22,7 +22,7 @@ namespace OEA.Library
     /// 客户端向服务端获取表信息的命令
     /// </summary>
     [Serializable]
-    class GetTableInfoCommand : SimpleCsla.ServiceBase
+    class GetTableInfoService : Service
     {
         public TableInfo ResultTableInfo { get; private set; }
 
@@ -31,7 +31,7 @@ namespace OEA.Library
         /// </summary>
         public string EntityTypeName { get; set; }
 
-        protected override void DataPortal_Execute()
+        protected override void Execute()
         {
             var entityType = Type.GetType(this.EntityTypeName, true, true);
             var repository = RepositoryFactory.Instance.Find(entityType);

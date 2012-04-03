@@ -68,9 +68,9 @@ namespace OEA.Library
         /// <returns></returns>
         private ITable GetTableInfo_OnClient()
         {
-            var cmd = new GetTableInfoCommand() { EntityTypeName = this._entityType.AssemblyQualifiedName };
-            var result = DataPortal.Execute(cmd).ResultTableInfo;
-            return result;
+            var cmd = new GetTableInfoService() { EntityTypeName = this._entityType.AssemblyQualifiedName };
+            cmd.Invoke(out cmd);
+            return cmd.ResultTableInfo;
         }
 
         /// <summary>
