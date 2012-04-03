@@ -15,7 +15,6 @@ using OEA.Library;
 using SimpleCsla.OEA;
 using System.Security.Cryptography;
 using OEA.Utils;
-using OEA.Command;
 using OEA.RBAC;
 
 namespace OEA.Module.WPF
