@@ -65,7 +65,7 @@ namespace OEA.Module.WPF.Controls
                 new FrameworkPropertyMetadata(typeof(ComboListControl)));
         }
 
-        private object _clearCmdArg;
+        private PropertyEditor _clearCmdArg;
 
         /// <summary>
         /// 下拉的弹出框使用的是一个临时的ListObjectView来生成动态Grid。
@@ -144,11 +144,11 @@ namespace OEA.Module.WPF.Controls
             {
                 Panel buttonPanel = this.Template.FindName("PART_ButtonPanel", this) as Panel;
 
-                Button btnClearValue = new Button();
+                //清除属性值按钮
+                var btnClearValue = new Button();
+                btnClearValue.Content = "清除属性值";
                 btnClearValue.SetValue(DockPanel.DockProperty, Dock.Right);
-                btnClearValue.CommandParameter = this._clearCmdArg;
-                var command = CommandRepository.NewCommand(typeof(ClearLookupPropertyValueCommand));
-                ButtonCommand.SetCommand(btnClearValue, command);
+                btnClearValue.Click += (o, e) => { this._clearCmdArg.PropertyValue = null; };
 
                 buttonPanel.Children.Add(btnClearValue);
             }
