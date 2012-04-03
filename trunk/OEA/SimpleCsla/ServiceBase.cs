@@ -84,7 +84,7 @@ namespace SimpleCsla
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "criteria")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        private void DataPortal_Fetch(object criteria)
+        private void QueryBy(object criteria)
         {
             throw new NotSupportedException("Resources.FetchNotSupportedException");
         }

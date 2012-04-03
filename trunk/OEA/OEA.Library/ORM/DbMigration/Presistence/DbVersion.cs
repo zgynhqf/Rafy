@@ -40,7 +40,7 @@ namespace OEA.Library.ORM.DbMigration.Presistence
     {
         protected DbVersionList() { }
 
-        protected void DataPortal_Fetch(string database)
+        protected void QueryBy(string database)
         {
             this.QueryDb(q => q.Constrain(DbVersion.DatabaseProperty).Equal(database));
         }

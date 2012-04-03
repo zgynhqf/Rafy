@@ -321,7 +321,7 @@ namespace OEA.Library
         /// </remarks>
         /// <param name="criteria">An object containing criteria values to identify the object.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores", MessageId = "Member")]
-        protected virtual void DataPortal_Fetch(object criteria)
+        protected virtual void QueryBy(object criteria)
         {
             throw new NotSupportedException();
         }

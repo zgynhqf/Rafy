@@ -127,29 +127,29 @@ namespace OEA.Library
             }
         }
 
-        #region DataPortal_Fetch
+        #region QueryBy
 
         private void Child_Fetch() { }
 
         [RunLocal]
-        protected void DataPortal_Fetch(GetRootsCriteria criteria) { }
+        protected void QueryBy(GetRootsCriteria criteria) { }
 
-        protected void DataPortal_Fetch(GetByIdCriteria criteria)
+        protected void QueryBy(GetByIdCriteria criteria)
         {
             this.OnGetById(criteria.Id);
         }
 
-        protected void DataPortal_Fetch(GetByParentIdCriteria parentIdCriteria)
+        protected void QueryBy(GetByParentIdCriteria parentIdCriteria)
         {
             this.OnGetByParentId(parentIdCriteria.Id);
         }
 
-        protected void DataPortal_Fetch(GetAllCriteria criteria)
+        protected void QueryBy(GetAllCriteria criteria)
         {
             this.OnGetAll();
         }
 
-        protected void DataPortal_Fetch(GetByTreeParentCodeCriteria criteria)
+        protected void QueryBy(GetByTreeParentCodeCriteria criteria)
         {
             this.OnGetByTreeParentCode(criteria.TreeCode);
         }

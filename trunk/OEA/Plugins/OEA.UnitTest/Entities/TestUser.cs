@@ -166,7 +166,7 @@ namespace OEA.Library._Test
     [Serializable]
     public class TestUserList : EntityList
     {
-        protected void DataPortal_Fetch(TestUserGetByNameCriteria criteria)
+        protected void QueryBy(TestUserGetByNameCriteria criteria)
         {
             this.QueryDb(q => q.Constrain(TestUser.NameProperty).Equal(criteria.UserName));
         }

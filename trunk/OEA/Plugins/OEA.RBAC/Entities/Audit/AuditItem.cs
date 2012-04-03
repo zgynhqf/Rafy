@@ -100,7 +100,7 @@ namespace OEA.Library.Audit
             this.QueryDb(q => q.Order(AuditItem.LogTimeProperty, false));
         }
 
-        protected void DataPortal_Fetch(AuditItemConditionCriteria criteria)
+        protected void QueryBy(AuditItemConditionCriteria criteria)
         {
             this.QueryDb(q =>
             {

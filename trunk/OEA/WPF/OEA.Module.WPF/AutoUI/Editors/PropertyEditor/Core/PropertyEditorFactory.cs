@@ -31,7 +31,8 @@ namespace OEA.Module.WPF.Editors
         public PropertyEditorFactory()
         {
             this.SetDictionary(new Dictionary<string, Type>() { 
-                { WPFEditorNames.Int32, typeof(NumbericPropertyEditor)},
+                { WPFEditorNames.Int32, typeof(NumericUpDownPropertyEditor)},
+                //{ WPFEditorNames.Int32, typeof(NumbericPropertyEditor)},
                 { WPFEditorNames.NumericUpDown, typeof(NumericUpDownPropertyEditor)},
                 { WPFEditorNames.NumberRange, typeof(NumberRangePropertyEditor)},
                 { WPFEditorNames.Boolean, typeof(BooleanPropertyEditor)},
