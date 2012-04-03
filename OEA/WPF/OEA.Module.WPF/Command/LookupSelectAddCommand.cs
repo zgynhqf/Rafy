@@ -30,6 +30,9 @@ using SimpleCsla.Core;
 
 namespace OEA.Module.WPF.Command
 {
+    /// <summary>
+    /// 选择新增功能按钮的基类。
+    /// </summary>
     public abstract class LookupSelectAddCommand : ListViewCommand
     {
         public override bool CanExecute(ListObjectView view)

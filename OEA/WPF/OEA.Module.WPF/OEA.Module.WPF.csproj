@@ -259,7 +259,6 @@
     <Compile Include="AutoUI\ObjectViews\QueryObjectView.cs" />
     <Compile Include="AutoUI\ObjectViews\WPFObjectView.cs" />
     <Compile Include="Controls\ToolBarExtension.cs" />
-    <Compile Include="Command\ClearLookupPropertyValueCommand.cs" />
     <Compile Include="Command\Pattern\MenuItemCommand.cs" />
     <Compile Include="Command\Pattern\MenuItemImage.cs" />
     <Compile Include="Command\SysCommand\TreeEditCommands\TreeEditCommand.cs" />
