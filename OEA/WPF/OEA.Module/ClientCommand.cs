@@ -21,16 +21,15 @@ using System.ComponentModel;
 using System.Text.RegularExpressions;
 using OEA.MetaModel;
 using OEA.MetaModel.Command;
+using OEA.MetaModel.View;
 using Common;
 
-using OEA.MetaModel.View;
-
-namespace OEA.Command
+namespace OEA.Module
 {
     /// <summary>
     /// 所有命令的基类
     /// </summary>
-    public abstract class ClientCommand : ICommand, ICustomParamsHolder, INotifyPropertyChanged
+    public abstract class ClientCommand : IClientCommand, ICustomParamsHolder, INotifyPropertyChanged
     {
         #region 私有字段
 
@@ -127,6 +126,12 @@ namespace OEA.Command
             }
         }
 
+        /// <summary>
+        /// 是否需要触发命令失败的事件。
+        /// 默认为 false
+        /// </summary>
+        protected bool CommandFailedEventEnabled { get; set; }
+
         #endregion
 
         #region 扩充的命令参数
@@ -197,7 +202,7 @@ namespace OEA.Command
         /// <param name="param"></param>
         public void Execute(object param)
         {
-            if (ConfigurationHelper.GetAppSettingOrDefault<bool>("CommandFailedEventEnabled", false))
+            if (this.CommandFailedEventEnabled)
             {
                 try
                 {

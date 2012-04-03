@@ -18,7 +18,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using Itenso.Windows.Input;
-using OEA.Command;
+
 using OEA.MetaModel;
 using OEA.MetaModel.View;
 using OEA.WPF.Command;
@@ -136,7 +136,7 @@ namespace OEA.Module.WPF.CommandAutoUI
             CommandRepository.TryExecuteCommand(cmd, cmdSource.CommandParameter);
         }
 
-        protected void TryExcuteCommand(OEA.MetaModel.ICommand runtimeCmd)
+        protected void TryExcuteCommand(OEA.MetaModel.IClientCommand runtimeCmd)
         {
             CommandRepository.TryExecuteCommand(runtimeCmd, this.Context.CommandArg);
         }

@@ -53,10 +53,8 @@
     <Compile Include="Audit\AuditServerCommand.cs" />
     <Compile Include="Audit\ClientAuditLogProvider.cs" />
     <Compile Include="Audit\IAuditLogProvider.cs" />
-    <Compile Include="Command\ClientCommand.cs" />
     <Compile Include="Command\CommandExecuteFailedArgs.cs" />
-    <Compile Include="Command\ICommand.cs" />
-    <Compile Include="Command\ICopySource.cs" />
+    <Compile Include="Command\IClientCommand.cs" />
     <Compile Include="Command\ProgressValue.cs" />
     <Compile Include="Convensions\Consts.cs" />
     <Compile Include="Convensions\DBConvention.cs" />

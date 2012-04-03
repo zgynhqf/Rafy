@@ -16,16 +16,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OEA.Command;
 
 using System.ComponentModel;
 
-namespace OEA.MetaModel
+namespace OEA
 {
     /// <summary>
     /// 运行时命令
     /// </summary>
-    public interface ICommand
+    public interface IClientCommand
     {
         /// <summary>
         /// 是否这个命令所对应的按钮可以被执行

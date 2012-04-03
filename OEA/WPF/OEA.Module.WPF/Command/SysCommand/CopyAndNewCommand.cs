@@ -15,7 +15,7 @@ using SimpleCsla;
 using SimpleCsla.Core;
 using SimpleCsla.OEA;
 using SimpleCsla.Wpf;
-using OEA.Command;
+
 using OEA.MetaModel;
 using OEA.MetaModel.View;
 using OEA.MetaModel.Attributes;
@@ -94,16 +94,6 @@ namespace OEA.WPF.Command
             public void Execute()
             {
                 var currentObject = this._currentView.Current as Entity;
-
-                #region NotifyCopying
-
-                var listener = currentObject as ICopySource;
-                if (listener != null)
-                {
-                    listener.NotifyCopying();
-                }
-
-                #endregion
 
                 //拷贝一个新的对象
                 var newObject = this.CopyObject(currentObject, null, true, CloneOptions.NewAggregate());

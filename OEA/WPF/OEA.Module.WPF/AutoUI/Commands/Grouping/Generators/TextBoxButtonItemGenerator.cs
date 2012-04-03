@@ -22,7 +22,7 @@ using OEA.WPF.Command;
 using System.Windows.Media;
 using System.Windows.Automation;
 using System.Windows.Input;
-using OEA.Command;
+
 
 namespace OEA.Module.WPF.CommandAutoUI
 {
