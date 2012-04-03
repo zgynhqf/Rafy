@@ -9,7 +9,7 @@ using SimpleCsla;
 namespace OEA.RBAC.Security
 {
     [Serializable]
-    public class OEAPrincipal : BusinessPrincipalBase
+    public class OEAPrincipal : CslaPrincipal
     {
         /// <summary>
         /// 由于DataportalContext使用了Principel，所以每次都传输OEAIdentity对象，
@@ -51,14 +51,14 @@ namespace OEA.RBAC.Security
             }
             else
             {
-                ApplicationContext.User = new UnauthenticatedPrincipal();
+                ApplicationContext.User = new CslaPrincipal();
                 return false;
             }
         }
 
         public static void Logout()
         {
-            ApplicationContext.User = new UnauthenticatedPrincipal();
+            ApplicationContext.User = new CslaPrincipal();
         }
 
         [Serializable]

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SimpleCsla.OEA;
+
 
 using OEA.MetaModel.Attributes;
 using OEA.MetaModel;
@@ -37,7 +37,7 @@ namespace RBAC
             if (result != MessageBoxResult.Yes) return;
 
             //清空
-            DataPortal.Execute(new ClearLogCommand());
+            new ClearLogService().Invoke();
 
             //刷新数据
             var refresh = new RefreshCommand();

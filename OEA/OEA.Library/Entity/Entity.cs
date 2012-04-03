@@ -325,53 +325,21 @@ namespace OEA.Library
             }
         }
 
-        protected override void DataPortal_Delete(object criteria)
-        {
-            if (EntityListVersion.Repository != null)
-            {
-                using (EntityListVersion.Repository.BeginBillSave())
-                {
-                    using (var tran = new TransactionScope())
-                    {
-                        this.OnDelete();
-
-                        tran.Complete();
-                    }
-
-                    EntityListVersion.Repository.EndBillSave();
-                }
-            }
-            else
-            {
-                using (var tran = new TransactionScope())
-                {
-                    this.OnDelete();
-
-                    tran.Complete();
-                }
-            }
-        }
-
         #endregion
 
         #region 子对象
 
-        /// <summary>
-        /// 空方法，用于支持GetChild静态方法。
-        /// </summary>
-        protected virtual void Child_Fetch() { }
-
-        protected virtual void Child_Insert(Entity parent)
+        protected override void Child_Insert(CslaEntity parent)
         {
             this.OnInsert();
         }
 
-        protected virtual void Child_Update(Entity parent)
+        protected override void Child_Update(CslaEntity parent)
         {
             this.OnUpdate();
         }
 
-        protected virtual void Child_DeleteSelf(Entity parent)
+        protected override void Child_Delete(CslaEntity parent)
         {
             this.OnDelete();
         }
@@ -537,7 +505,7 @@ namespace OEA.Library
             return result;
         }
 
-        [NonSerialized, NotUndoable]
+        [NonSerialized]
         private Dictionary<IManagedProperty, ForeAsyncLoader> _allForeLoaders;
 
         #endregion

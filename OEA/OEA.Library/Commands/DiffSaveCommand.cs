@@ -32,7 +32,7 @@ namespace OEA.Library
     /// </summary>
     /// <typeparam name="TCommand"></typeparam>
     [Serializable]
-    internal class DiffSaveService : SimpleCsla.ServiceBase
+    internal class DiffSaveService : Service
     {
         private Entity _diffEntity;
 
@@ -45,7 +45,7 @@ namespace OEA.Library
             return new CleanDataClear();
         }
 
-        protected override void DataPortal_Execute()
+        protected override void Execute()
         {
             bool isNew = this._diffEntity.IsNew;
 
@@ -76,7 +76,7 @@ namespace OEA.Library
             }
 
             //保存数据
-            cmd = DataPortal.Execute<DiffSaveService>(cmd);
+            cmd.Invoke(out cmd);
 
             //整合新旧数据
             clear.MakeOld(businessBase);

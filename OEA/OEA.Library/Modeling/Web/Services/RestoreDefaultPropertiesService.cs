@@ -13,7 +13,7 @@ using System.Diagnostics;
 namespace OEA.Library.Modeling.Web
 {
     [Serializable]
-    public class BackupViewConfigService : JsonService
+    public class BackupViewConfigService : Service
     {
         [ServiceInput]
         public string Model { get; set; }

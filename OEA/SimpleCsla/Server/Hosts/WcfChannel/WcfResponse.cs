@@ -1,6 +1,6 @@
 using System;
 using System.Runtime.Serialization;
-using SimpleCsla.Serialization.Mobile;
+
 using System.Xml;
 using System.IO;
 using System.Runtime.Serialization.Json;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OEA.Library;
-using SimpleCsla.OEA;
+
 using OEA.MetaModel.Attributes;
 using OEA.MetaModel;
 using OEA.MetaModel.View;

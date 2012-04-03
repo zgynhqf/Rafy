@@ -29,17 +29,6 @@ namespace OEA.Library
     {
         #region Delete and Undelete child
 
-        //[NonSerialized]
-        //private bool _deleteAsRemove = true;
-        ///// <summary>
-        ///// 是否在移除实体的同时标记它为删除状态
-        ///// </summary>
-        //public bool DeleteAsRemove
-        //{
-        //    get { return this._deleteAsRemove; }
-        //    set { this._deleteAsRemove = value; }
-        //}
-
         private ManagedPropertyObjectList<Entity> _deletedList;
 
         public ManagedPropertyObjectList<Entity> DeletedList
@@ -54,8 +43,6 @@ namespace OEA.Library
 
         private void DeleteChild(Entity child)
         {
-            //if (this._deleteAsRemove)
-            //{
             //如果是新的对象，则不需要加入到 DeletedList 列表中。
             if (!child.IsNew)
             {
@@ -65,18 +52,6 @@ namespace OEA.Library
                 // and add it to the deleted collection for storage
                 this.DeletedList.Add(child);
             }
-            //}
-        }
-
-        /// <summary>
-        /// Returns <see langword="true"/> if the internal deleted list
-        /// contains the specified child object.
-        /// </summary>
-        /// <param name="item">Child object to check.</param>
-        [EditorBrowsable(EditorBrowsableState.Advanced)]
-        public bool ContainsDeleted(Entity item)
-        {
-            return this.DeletedList.Contains(item);
         }
 
         #endregion
@@ -238,19 +213,9 @@ namespace OEA.Library
         #endregion
 
         /// <summary>
-        /// Override this method to load a new business object with default
-        /// values from the database.
-        /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores", MessageId = "Member")]
-        [RunLocal]
-        protected virtual void DataPortal_Create() { }
-
-        /// <summary>
         /// Override this method to allow update of a business
         /// object.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores", MessageId = "Member")]
-        [Transactional(TransactionalTypes.TransactionScope)]
         protected virtual void DataPortal_Update()
         {
             this.OnSave();
@@ -260,7 +225,7 @@ namespace OEA.Library
     /// <summary>
     /// copy from csla
     /// </summary>
-    public partial class EntityList : ICloneable, SimpleCsla.Server.IDataPortalTarget
+    public partial class EntityList : ICloneable
     {
         #region ICloneable
 
@@ -316,107 +281,6 @@ namespace OEA.Library
             }
 
             this.NotifyLoaded(null);
-        }
-
-        #endregion
-
-        #region  Child Data Access
-
-        /// <summary>
-        /// Initializes a new instance of the object
-        /// with default values.
-        /// </summary>
-        protected virtual void Child_Create() { /* do nothing - list self-initializes */ }
-
-        #endregion
-
-        #region Data Access
-
-        /// <summary>
-        /// Override this method to allow retrieval of an existing business
-        /// object based on data in the database.
-        /// </summary>
-        /// <param name="criteria">An object containing criteria values to identify the object.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores", MessageId = "Member")]
-        protected virtual void QueryBy(object criteria)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <summary>
-        /// Override this method to allow immediate deletion of a business object.
-        /// </summary>
-        /// <param name="criteria">An object containing criteria values to identify the object.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores", MessageId = "Member")]
-        protected virtual void DataPortal_Delete(object criteria)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <summary>
-        /// Called by the server-side DataPortal prior to calling the 
-        /// requested DataPortal_xyz method.
-        /// </summary>
-        /// <param name="e">The DataPortalContext object passed to the DataPortal.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores", MessageId = "Member")]
-        [EditorBrowsable(EditorBrowsableState.Advanced)]
-        protected virtual void DataPortal_OnDataPortalInvoke(DataPortalEventArgs e) { }
-
-        /// <summary>
-        /// Called by the server-side DataPortal after calling the 
-        /// requested DataPortal_xyz method.
-        /// </summary>
-        /// <param name="e">The DataPortalContext object passed to the DataPortal.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores", MessageId = "Member")]
-        [EditorBrowsable(EditorBrowsableState.Advanced)]
-        protected virtual void DataPortal_OnDataPortalInvokeComplete(DataPortalEventArgs e) { }
-
-        /// <summary>
-        /// Called by the server-side DataPortal prior to calling the 
-        /// requested DataPortal_XYZ method.
-        /// </summary>
-        /// <param name="e">The DataPortalContext object passed to the DataPortal.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores", MessageId = "Member")]
-        [EditorBrowsable(EditorBrowsableState.Advanced)]
-        protected virtual void Child_OnDataPortalInvoke(DataPortalEventArgs e) { }
-
-        /// <summary>
-        /// Called by the server-side DataPortal after calling the 
-        /// requested DataPortal_XYZ method.
-        /// </summary>
-        /// <param name="e">The DataPortalContext object passed to the DataPortal.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores", MessageId = "Member")]
-        [EditorBrowsable(EditorBrowsableState.Advanced)]
-        protected virtual void Child_OnDataPortalInvokeComplete(DataPortalEventArgs e) { }
-
-        #endregion
-
-        #region IDataPortalTarget Members
-
-        void SimpleCsla.Server.IDataPortalTarget.MarkAsChild() { }
-
-        void SimpleCsla.Server.IDataPortalTarget.MarkNew() { }
-
-        void SimpleCsla.Server.IDataPortalTarget.MarkOld() { }
-
-        void SimpleCsla.Server.IDataPortalTarget.DataPortal_OnDataPortalInvoke(DataPortalEventArgs e)
-        {
-            this.DataPortal_OnDataPortalInvoke(e);
-        }
-
-        void SimpleCsla.Server.IDataPortalTarget.DataPortal_OnDataPortalInvokeComplete(DataPortalEventArgs e)
-        {
-            this.DataPortal_OnDataPortalInvokeComplete(e);
-        }
-
-        void SimpleCsla.Server.IDataPortalTarget.Child_OnDataPortalInvoke(DataPortalEventArgs e)
-        {
-            this.Child_OnDataPortalInvoke(e);
-        }
-
-        void SimpleCsla.Server.IDataPortalTarget.Child_OnDataPortalInvokeComplete(DataPortalEventArgs e)
-        {
-            this.Child_OnDataPortalInvokeComplete(e);
         }
 
         #endregion

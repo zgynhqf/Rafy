@@ -28,7 +28,7 @@ namespace OEA.Web.EntityDataPortal
     {
         protected override void ReadCore()
         {
-            this.ResultEntityList = this.Repository.OldList();
+            this.ResultEntityList = this.Repository.NewList();
 
             //读取 Create、Update 的列表。
             this.ReadRootList(this.ChangeSet, this.ResultEntityList);

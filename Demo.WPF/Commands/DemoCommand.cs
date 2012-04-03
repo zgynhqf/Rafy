@@ -21,7 +21,7 @@ namespace Demo.WPF.Commands
         {
             //调用服务端查询库中的所有书籍量
             var svc = new CountServerBookJsonService();
-            svc = svc.Invoke() as CountServerBookJsonService;
+            svc.Invoke(out svc);
             App.Current.MessageBox.Show("库中一共有书籍：" + svc.BookCount + "本。");
 
             //view.Data = null;//清空列表数据

@@ -14,6 +14,7 @@ namespace SimpleCsla.Server
     public class DataPortalResult : MobileObject
     {
         private object _returnObject;
+
         private ContextDictionary _globalContext;
 
         /// <summary>

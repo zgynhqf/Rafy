@@ -181,7 +181,7 @@ namespace OEA.Library
         /// <returns></returns>
         protected EntityList ConvertTable(IList<Entity> table)
         {
-            var newList = this.OldList();
+            var newList = this.NewList();
 
             newList.RaiseListChangedEvents = false;
             for (int i = 0, c = table.Count; i < c; i++)
@@ -195,30 +195,12 @@ namespace OEA.Library
         }
 
         /// <summary>
-        /// 创建一个空列表。
-        /// 这个空列表的IsNew标识为false，它可能正准备存入旧数据。
-        /// </summary>
-        /// <returns></returns>
-        public EntityList OldList()
-        {
-            var list = this.IsRootType() ?
-                DataPortal.Fetch(this.ListType, new GetRootsCriteria()) as EntityList :
-                DataPortal.FetchChild(this.ListType) as EntityList;
-
-            this.NotifyLoaded(list);
-
-            return list;
-        }
-
-        /// <summary>
         /// 创建一个全新的列表
         /// </summary>
         /// <returns></returns>
         public EntityList NewList()
         {
-            var list = this.IsRootType() ?
-                DataPortal.Create(this.ListType) as EntityList :
-                DataPortal.CreateChild(this.ListType) as EntityList;
+            var list = New(this.ListType);
 
             this.NotifyLoaded(list);
 
@@ -236,13 +218,18 @@ namespace OEA.Library
         {
             if (oldList == null) throw new ArgumentNullException("oldList");
 
-            var newList = this.OldList();
+            var newList = this.NewList();
 
             newList.RaiseListChangedEvents = false;
             newList.AddRange(oldList.OrderBy(keySelector));
             newList.RaiseListChangedEvents = true;
 
             return newList;
+        }
+
+        private static EntityList New(Type listType)
+        {
+            return Activator.CreateInstance(listType) as EntityList;
         }
 
         #endregion
@@ -297,7 +284,7 @@ namespace OEA.Library
         /// <param name="component"></param>
         public IEntityOrList Save(IEntityOrList component)
         {
-            IEntityOrList result = component.IsDirty ? DataPortal.Update(component) : component;
+            IEntityOrList result = component.IsDirty ? DataPortal.Update(component) as IEntityOrList : component;
 
             (component as IEntityOrListInternal).NotifySaved();
 
@@ -622,7 +609,9 @@ namespace OEA.Library
         protected EntityList FetchList(object criteria)
         {
             var list = DataPortal.Fetch(this.ListType, criteria) as EntityList;
+
             this.NotifyLoaded(list);
+
             return list;
         }
 

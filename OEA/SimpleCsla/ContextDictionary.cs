@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Collections.Generic;
-using SimpleCsla.Serialization.Mobile;
+
 using System.Collections.Specialized;
 
 namespace SimpleCsla.Core

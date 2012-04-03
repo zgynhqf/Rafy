@@ -131,8 +131,10 @@ namespace OEA.Library
 
         private void Child_Fetch() { }
 
-        [RunLocal]
-        protected void QueryBy(GetRootsCriteria criteria) { }
+        protected virtual void QueryBy(object criteria)
+        {
+            throw new NotImplementedException("子类重写此方法完成数据访问逻辑。");
+        }
 
         protected void QueryBy(GetByIdCriteria criteria)
         {

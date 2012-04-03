@@ -41,7 +41,4 @@ namespace OEA
             set { this.SetProperty(TreeCodeProperty, value); }
         }
     }
-
-    [Serializable]
-    public class GetRootsCriteria { }
 }

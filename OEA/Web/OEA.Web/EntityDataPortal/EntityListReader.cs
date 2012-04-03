@@ -30,7 +30,7 @@ namespace OEA.Web.EntityDataPortal
 
         protected override void ReadCore()
         {
-            this.ResultEntityList = this.Repository.OldList();
+            this.ResultEntityList = this.Repository.NewList();
 
             this.ReadCreateList(this.ChangeSet, this.ResultEntityList);
             this.ReadList(this.ChangeSet, "toUpdate", this.ResultEntityList);

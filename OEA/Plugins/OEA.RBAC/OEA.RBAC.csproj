@@ -43,7 +43,7 @@
   <ItemGroup>
     <Compile Include="Entities\Audit\AuditItem.cs" />
     <Compile Include="Entities\Audit\AuditItemConditionCriteria.cs" />
-    <Compile Include="Entities\Audit\ClearLogCommand.cs" />
+    <Compile Include="Entities\Audit\ClearLogService.cs" />
     <Compile Include="Entities\Audit\ServerAuditLogProvider.cs" />
     <Compile Include="Entities\OrgPositionOperationDeny.cs" />
     <Compile Include="Security\OEAPermissionMgr.cs" />
@@ -60,6 +60,7 @@
     <Compile Include="Security\OEAPrincipal.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Entities\UserLoginLog.cs" />
+    <Compile Include="Security\UsernameCriteria.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Common.csproj">
