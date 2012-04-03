@@ -9,7 +9,7 @@ using System.Windows.Input;
 using System.Collections.Generic;
 using System.Diagnostics;
 using OEA.WPF.Command;
-using OEA.Command;
+
 using OEA;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
@@ -88,7 +88,7 @@ namespace Itenso.Windows.Input
             return TryExecuteCommand(runtimeCmd, cmdArg);
         }
 
-        public static bool TryExecuteCommand(OEA.MetaModel.ICommand runtimeCmd, object cmdArg)
+        public static bool TryExecuteCommand(OEA.MetaModel.IClientCommand runtimeCmd, object cmdArg)
         {
             if (runtimeCmd == null) throw new ArgumentNullException("cmdInfo");
 

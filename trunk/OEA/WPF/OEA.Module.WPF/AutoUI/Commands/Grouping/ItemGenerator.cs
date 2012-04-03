@@ -154,6 +154,6 @@ namespace OEA.Module.WPF.CommandAutoUI
         /// <summary>
         /// 控件所使用的运行时命令
         /// </summary>
-        public ICommand Command { get; private set; }
+        public IClientCommand Command { get; private set; }
     }
 }

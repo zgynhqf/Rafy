@@ -15,7 +15,7 @@ using SimpleCsla;
 using SimpleCsla.Core;
 using SimpleCsla.OEA;
 using SimpleCsla.Wpf;
-using OEA.Command;
+
 using OEA.Library;
 using OEA.MetaModel;
 using OEA.MetaModel.View;

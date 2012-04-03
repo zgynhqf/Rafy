@@ -17,7 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using Wpf.Controls;
-using OEA.Command;
+
 using OEA.MetaModel;
 using OEA.MetaModel.View;
 using System.Windows.Controls;

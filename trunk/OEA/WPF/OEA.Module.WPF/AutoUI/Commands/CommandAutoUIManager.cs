@@ -21,7 +21,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using Itenso.Windows.Input;
-using OEA.Command;
+
 using OEA.Library;
 using OEA.MetaModel;
 using OEA.MetaModel.View;

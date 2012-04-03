@@ -21,7 +21,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using Itenso.Windows.Input;
-using OEA.Command;
+
 using OEA.Library;
 
 
@@ -51,7 +51,7 @@ namespace OEA.Module.WPF.CommandAutoUI
         /// </summary>
         public ItemsControl CommandsContainer { get; private set; }
 
-        public IList Items
+        internal IList Items
         {
             get { return this.CommandsContainer.Items; }
         }

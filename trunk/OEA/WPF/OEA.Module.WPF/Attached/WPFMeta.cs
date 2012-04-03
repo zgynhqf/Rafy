@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using OEA.Module.WPF.Editors;
 using System.Collections.ObjectModel;
-using OEA.Command;
+
 using OEA.MetaModel;
 using OEA.MetaModel.View;
 

@@ -102,7 +102,7 @@ namespace OEA.MetaModel.View
         /// <param name="commandType"></param>
         /// <returns></returns>
         private WPFCommand Create<TCommand>()
-            where TCommand : OEA.Command.ClientCommand
+            where TCommand : IClientCommand
         {
             return this.Create(typeof(TCommand));
         }

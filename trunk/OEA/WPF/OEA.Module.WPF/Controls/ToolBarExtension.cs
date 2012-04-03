@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using OEA.Module.WPF.Controls;
-using OEA.Command;
+
 using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using OEA.MetaModel;
