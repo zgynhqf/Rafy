@@ -17,9 +17,9 @@ using OEA.MetaModel;
 
 using OEA.Serialization;
 using OEA.Serialization.Mobile;
-using SimpleCsla;
-using SimpleCsla.Core;
-using SimpleCsla.Serialization;
+using OEA;
+using OEA.Core;
+using OEA.Serialization;
 
 namespace OEAUnitTest
 {

@@ -30,8 +30,7 @@ namespace OEA.Library
     /// 原来 Csla 中的 BusinessBase 中的代码，都移动到这个类中。
     /// 
     /// </summary>
-    [Serializable]
-    public abstract partial class CslaEntity : OEA.CslaEntityBase, IDirtyAware, IEntityOrList
+    public abstract partial class Entity : IDirtyAware, IEntityOrList
     {
         #region PersistenceStatus
 
@@ -142,6 +141,8 @@ namespace OEA.Library
             base.LoadProperty<TPropertyType>(property, value);
 
             this.MarkOldIfDirty(value);
+
+            this.OnPropertyLoaded(property);
         }
 
         public override void LoadProperty(IManagedProperty property, object value)
@@ -151,6 +152,8 @@ namespace OEA.Library
             base.LoadProperty(property, value);
 
             this.MarkOldIfDirty(value);
+
+            this.OnPropertyLoaded(property);
         }
 
         private void SetParentIfChild(object value)
@@ -181,15 +184,30 @@ namespace OEA.Library
             base.OnPropertyChanged(e);
         }
 
-        protected void UpdateChildren(params object[] parameters)
+        protected void UpdateChildren()
         {
             foreach (var field in this.GetLoadedChildren())
             {
-                DataPortal.UpdateChild(field.Value, parameters);
+                DataPortal.UpdateChild(field.Value, this);
             }
         }
 
-        protected abstract IEnumerable<IManagedPropertyField> GetLoadedChildren();
+        /// <summary>
+        /// 获取所有已经加载的子的字段集合。
+        /// 
+        /// 子有可能是集合、也有可能只是一个实体。
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerable<IManagedPropertyField> GetLoadedChildren()
+        {
+            var fields = this.GetNonDefaultPropertyValues();
+
+            foreach (var field in fields)
+            {
+                var meta = field.Property.GetMeta(this) as IPropertyMetadata;
+                if (meta.IsChild) { yield return field; }
+            }
+        }
 
         #region IEntityOrList Members
 
@@ -211,6 +229,15 @@ namespace OEA.Library
         void IEntityOrList.SetParent(IEntityOrList parent)
         {
             _parent = parent;
+        }
+
+        private void SetChildrenParent_OnDeserializaion()
+        {
+            foreach (var field in this.GetLoadedChildren())
+            {
+                var v = field.Value as IEntityOrList;
+                v.SetParent(this);
+            }
         }
 
         #endregion
@@ -242,67 +269,6 @@ namespace OEA.Library
 
         //    this.SetChildrenParent();
         //}
-
-        protected override void OnDeserialized(DesirializedArgs context)
-        {
-            base.OnDeserialized(context);
-
-            this.SetChildrenParent();
-        }
-
-        private void SetChildrenParent()
-        {
-            foreach (var field in this.GetLoadedChildren())
-            {
-                var v = field.Value as IEntityOrList;
-                v.SetParent(this);
-            }
-        }
-
-        #endregion
-
-        #region Data Access
-
-        /// <summary>
-        /// Override this method to allow insertion of a business
-        /// object.
-        /// </summary>
-        internal protected virtual void DataPortal_Insert()
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <summary>
-        /// Override this method to allow update of a business
-        /// object.
-        /// </summary>
-        internal protected virtual void DataPortal_Update()
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <summary>
-        /// Override this method to allow deferred deletion of a business object.
-        /// </summary>
-        internal protected virtual void DataPortal_DeleteSelf()
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <summary>
-        /// Override this method to allow immediate deletion of a business object.
-        /// </summary>
-        /// <param name="criteria">An object containing criteria values to identify the object.</param>
-        protected virtual void DataPortal_Delete(object criteria)
-        {
-            throw new NotSupportedException();
-        }
-
-        internal protected virtual void Child_Delete(CslaEntity parent) { }
-
-        internal protected virtual void Child_Insert(CslaEntity parent) { }
-
-        internal protected virtual void Child_Update(CslaEntity parent) { }
 
         #endregion
     }

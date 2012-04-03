@@ -69,11 +69,11 @@ namespace OEA
         /// <param name="parameters">
         /// Parameters passed to child update method.
         /// </param>
-        public static void UpdateChild(object obj, params object[] parameters)
+        public static void UpdateChild(object obj, Entity parent)
         {
             if (obj == null) return;
 
-            var entity = obj as CslaEntity;
+            var entity = obj as Entity;
             // tell the business object to update itself
             if (entity != null)
             {
@@ -85,7 +85,7 @@ namespace OEA
                     if (!entity.IsNew)
                     {
                         // tell the object to delete itself
-                        entity.Child_Delete(parameters[0] as CslaEntity);
+                        entity.Child_Delete(parent);
                         entity.MarkNew();
                     }
                 }
@@ -94,15 +94,19 @@ namespace OEA
                     if (entity.IsNew)
                     {
                         // tell the object to insert itself
-                        entity.Child_Insert(parameters[0] as CslaEntity);
+                        entity.Child_Insert(parent);
                     }
                     else
                     {
                         // tell the object to update itself
-                        entity.Child_Update(parameters[0] as CslaEntity);
+                        entity.Child_Update(parent);
                     }
                     entity.MarkOld();
                 }
+            }
+            else if (obj is EntityList)
+            {
+                (obj as EntityList).Child_Update(parent);
             }
             else
             {
@@ -110,7 +114,7 @@ namespace OEA
                 // non-BusinessBase type of object
                 // tell the object to update itself
                 LateBoundObject lb = new LateBoundObject(obj);
-                lb.CallMethod("Child_Update", parameters);
+                lb.CallMethod("Child_Update", parent);
             }
         }
 

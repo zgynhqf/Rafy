@@ -85,6 +85,8 @@ namespace OEA.Library
             this.ValidationRules.SetTarget(this);
 
             base.OnDeserialized(context);
+
+            this.SetChildrenParent_OnDeserializaion();
         }
 
         #region IDataErrorInfo Memebers

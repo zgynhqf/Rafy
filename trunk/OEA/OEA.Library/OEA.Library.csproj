@@ -108,11 +108,13 @@
     <Compile Include="DataPortal\Server\Hosts\WcfChannel\WcfResponse.cs" />
     <Compile Include="DataPortal\Server\Hosts\WcfPortal.cs" />
     <Compile Include="DataPortal\Server\IDataPortalServer.cs" />
-    <Compile Include="DataPortal\_OEA\CslaEntity.cs" />
-    <Compile Include="DataPortal\_OEA\IDirtyAware.cs" />
-    <Compile Include="DataPortal\_OEA\IEntityOrList.cs" />
-    <Compile Include="DataPortal\_OEA\InnerSerializer.cs" />
-    <Compile Include="DataPortal\_OEA\PersistenceStatus.cs" />
+    <Compile Include="Entity\Entity.Csla.cs">
+      <DependentUpon>Entity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\IDirtyAware.cs" />
+    <Compile Include="Entity\IEntityOrList.cs" />
+    <Compile Include="Entity\InnerSerializer.cs" />
+    <Compile Include="Entity\PersistenceStatus.cs" />
     <Compile Include="EntityRepository\MemoryEntityRepository.cs" />
     <Compile Include="Entity\Entity.Validation.cs">
       <DependentUpon>Entity.cs</DependentUpon>

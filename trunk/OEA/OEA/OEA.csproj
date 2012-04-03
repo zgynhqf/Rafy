@@ -62,7 +62,6 @@
     <Compile Include="Convensions\IHasViewFilter.cs" />
     <Compile Include="Convensions\MethodConvention.cs" />
     <Compile Include="Convensions\PropertyConvention.cs" />
-    <Compile Include="CslaEntity.cs" />
     <Compile Include="EnumViewModel.cs" />
     <Compile Include="Freezable.cs" />
     <Compile Include="FriendlyMessageException.cs" />

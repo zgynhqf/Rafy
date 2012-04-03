@@ -109,7 +109,7 @@ namespace OEA.Library
             else
             {
                 // update child objects
-                this.UpdateChildren(this);
+                this.UpdateChildren();
             }
         }
 
@@ -144,7 +144,7 @@ namespace OEA.Library
             }
 
             // update child objects
-            this.UpdateChildren(this);
+            this.UpdateChildren();
         }
 
         protected virtual void OnDelete()
