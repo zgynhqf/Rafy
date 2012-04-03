@@ -12,6 +12,7 @@
     ★较大改动、★修改接口、重构
         * DataPortal_Fetch 替换为 QueryBy 
         * 大量修改 SimpleCsla 程序集，准备删除该程序集
+        * 删除 SimpleCsla 程序集
 
 2.9.460.0
     重构

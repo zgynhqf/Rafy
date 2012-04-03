@@ -15,7 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SimpleCsla;
+using OEA;
 using Newtonsoft.Json.Linq;
 using OEA.Web.Json;
 
@@ -40,7 +40,7 @@ namespace OEA.Web.Services
             var serviceType = Find(serviceName);
             if (serviceType == null) throw new InvalidOperationException();
 
-            var service = Activator.CreateInstance(serviceType) as Service;
+            var service = Activator.CreateInstance(serviceType) as IService;
 
             //参数输入
             var jInput = JObject.Parse(jsonInput);
@@ -58,7 +58,7 @@ namespace OEA.Web.Services
                 }
             }
 
-            service = service.Invoke();
+            service.Invoke(out service);
 
             //结果输出
             var res = new DynamicJsonModel();
@@ -82,7 +82,7 @@ namespace OEA.Web.Services
         private static void AddByAssembly(System.Reflection.Assembly assembly)
         {
             var serviceTypes = assembly.GetTypes()
-                    .Where(t => !t.IsGenericType && !t.IsAbstract && t.IsSubclassOf(typeof(Service)))
+                    .Where(t => !t.IsGenericType && !t.IsAbstract && typeof(IService).IsAssignableFrom(t))
                     .ToArray();
 
             foreach (var serviceType in serviceTypes) { Add(serviceType); }

@@ -15,7 +15,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OEA.MetaModel.Audit;
 using OEA.Library;
 using System.Runtime.Serialization;
 using System.ComponentModel;

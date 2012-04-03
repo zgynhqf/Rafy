@@ -24,6 +24,7 @@ using OEA.Library.Audit;
 using OEA.Web;
 using OEA.MetaModel.View;
 using OEA.RBAC.Security;
+using OEA.MetaModel.Audit;
 
 namespace OEA.RBAC
 {
@@ -41,6 +42,16 @@ namespace OEA.RBAC
         {
             //设置权限提供程序为本模块中实体类
             PermissionMgr.Provider = new OEAPermissionMgr();
+
+            //依赖注入
+            if (OEAEnvironment.Location.IsOnServer())
+            {
+                AuditLogService.SetProvider(new ServerAuditLogProvider());
+            }
+            else
+            {
+                AuditLogService.SetProvider(new ClientAuditLogProvider());
+            }
 
             app.ModuleOperations += (o, e) =>
             {

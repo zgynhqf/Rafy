@@ -15,7 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SimpleCsla;
+
 using OEA;
 using OEA.ManagedProperty;
 using System.ComponentModel;
@@ -241,7 +241,7 @@ namespace OEA.Library
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         protected virtual object GetClone()
         {
-            return SimpleCsla.Core.ObjectCloner.Clone(this);
+            return OEA.Core.ObjectCloner.Clone(this);
         }
 
         /// <summary>

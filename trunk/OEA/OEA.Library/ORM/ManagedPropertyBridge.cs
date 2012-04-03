@@ -13,7 +13,7 @@
 
 using System;
 using System.Reflection;
-using SimpleCsla.Core;
+using OEA.Core;
 using OEA.ManagedProperty;
 using OEA.Library;
 

@@ -122,10 +122,6 @@
       <Project>{9F8BB429-70DE-449A-8A67-5190191E7EE6}</Project>
       <Name>OEA.Library</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\SimpleCsla\SimpleCsla.csproj">
-      <Project>{DC0539B9-8570-4132-B89A-478FB3F1CEC2}</Project>
-      <Name>SimpleCsla</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

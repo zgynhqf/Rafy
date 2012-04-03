@@ -19,7 +19,7 @@ using OEA.ManagedProperty;
 using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
 using OEA.MetaModel.View;
-using SimpleCsla;
+using OEA;
 
 namespace OEA.RBAC
 {

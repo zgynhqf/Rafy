@@ -5,7 +5,7 @@ using OEA.ORM;
 using OEA.MetaModel;
 using System.Linq.Expressions;
 using OEA.MetaModel.Attributes;
-using SimpleCsla;
+
 
 namespace OEA.Library
 {

@@ -9,7 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
-using SimpleCsla;
+using OEA;
 using OEA.Library;
 
 using OEA.MetaModel;

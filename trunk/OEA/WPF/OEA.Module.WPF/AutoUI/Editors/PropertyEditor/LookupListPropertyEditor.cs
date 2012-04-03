@@ -28,9 +28,9 @@ using OEA.MetaModel.View;
 using OEA.Module.WPF.Automation;
 using OEA.Module.WPF.Controls;
 using OEA.Utils;
-using SimpleCsla;
-using SimpleCsla.Core;
-using SimpleCsla.Wpf;
+
+using OEA.Core;
+
 
 namespace OEA.Module.WPF.Editors
 {

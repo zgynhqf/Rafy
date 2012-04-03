@@ -16,10 +16,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SimpleCsla.Core;
+using OEA.Core;
 using OEA;
 using System.Collections;
-using SimpleCsla;
+
 using OEA.MetaModel;
 using System.ComponentModel;
 using OEA.Library;

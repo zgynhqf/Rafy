@@ -15,8 +15,8 @@ using OEA.ManagedProperty;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
 using OEA.Module.WPF.Editors;
-using SimpleCsla;
-using SimpleCsla.Core;
+
+using OEA.Core;
 
 namespace OEA.Module.WPF.Editors
 {

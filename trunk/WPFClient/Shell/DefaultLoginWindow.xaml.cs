@@ -23,7 +23,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using SimpleCsla;
+using OEA;
 using OEA.Library;
 
 using OEA.MetaModel.Audit;

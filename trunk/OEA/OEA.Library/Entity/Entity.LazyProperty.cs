@@ -15,8 +15,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SimpleCsla;
-using SimpleCsla.Core;
+
+using OEA.Core;
 using System.Linq.Expressions;
 using OEA.Utils;
 using OEA.MetaModel;

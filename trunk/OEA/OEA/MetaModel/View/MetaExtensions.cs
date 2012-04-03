@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SimpleCsla;
+
 using OEA.MetaModel.Attributes;
 using OEA.ManagedProperty;
 

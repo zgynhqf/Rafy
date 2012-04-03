@@ -20,13 +20,11 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Practices.Unity;
-using OEA.Library;
+
 using OEA.ManagedProperty;
 using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
 using OEA.Utils;
-using SimpleCsla;
-using SimpleCsla.Security;
 
 namespace OEA
 {
@@ -90,8 +88,7 @@ namespace OEA
         internal static void InitManagedProperties()
         {
             var allAssemblies = OEAEnvironment.GetAllPlugins()
-                .Select(p => p.Assembly)
-                .Concat(new Assembly[] { typeof(CslaIdentity).Assembly });
+                .Select(p => p.Assembly);
 
             ManagedPropertyInitializer.Initialize(allAssemblies);
         }
@@ -297,7 +294,7 @@ namespace OEA
                         {
                             var config = Activator.CreateInstance(type).CastTo<EntityConfig>();
                             config.ReuseLevel = (int)p.Instance.ReuseLevel;
-                            config.InheritanceCount = TypeHelper.GetHierarchy(type, typeof(CslaEntity)).Count();
+                            config.InheritanceCount = TypeHelper.GetHierarchy(type, typeof(CslaEntityBase)).Count();
 
                             List<EntityConfig> typeList = null;
                             if (!repo.TryGetValue(config.EntityType, out typeList))
@@ -318,7 +315,7 @@ namespace OEA
 
         internal static IEnumerable<EntityConfig> FindConfigurations(Type entityType)
         {
-            var hierachy = TypeHelper.GetHierarchy(entityType, typeof(CslaEntity)).Reverse();
+            var hierachy = TypeHelper.GetHierarchy(entityType, typeof(CslaEntityBase)).Reverse();
             foreach (var type in hierachy)
             {
                 List<EntityConfig> configList = null;

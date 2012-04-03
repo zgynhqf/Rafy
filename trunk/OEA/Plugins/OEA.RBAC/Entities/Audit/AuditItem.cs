@@ -12,7 +12,7 @@
 *******************************************************/
 using System;
 using System.Linq;
-using SimpleCsla;
+using OEA;
 using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
 using OEA.MetaModel.View;

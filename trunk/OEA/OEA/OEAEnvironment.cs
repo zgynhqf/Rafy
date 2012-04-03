@@ -19,7 +19,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using SimpleCsla;
+
 using Microsoft.Practices.Unity;
 using Common;
 using OEA.MetaModel;

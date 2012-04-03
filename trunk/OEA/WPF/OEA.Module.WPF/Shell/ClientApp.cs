@@ -28,7 +28,7 @@ using Microsoft.Practices.Unity;
 using OEA.Library;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
-using OEA.MetaModel.Audit;
+
 using OEA.Module.WPF;
 using OEA.Utils;
 using System.ComponentModel.Composition;
@@ -78,9 +78,6 @@ namespace OEA.Module.WPF.Shell
 
             OEAEnvironment.Location = string.IsNullOrWhiteSpace(ConfigurationHelper.GetAppSettingOrDefault("CslaDataPortalProxy")) ?
                 OEALocation.LocalVersion : OEALocation.Client;
-
-            //依赖注入
-            AuditLogService.SetProvider(new ClientAuditLogProvider());
 
             base.InitEnvironment();
 

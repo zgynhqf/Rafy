@@ -22,8 +22,8 @@ using OEA.ManagedProperty;
 using OEA.MetaModel;
 using OEA.ORM;
 using OEA.Utils;
-using SimpleCsla;
-using SimpleCsla.Core;
+using OEA;
+using OEA.Core;
 using hxy;
 using OEA.Library.Validation;
 

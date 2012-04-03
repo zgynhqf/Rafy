@@ -18,7 +18,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using SimpleCsla.Wpf;
+
 using OEA.Editors;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
