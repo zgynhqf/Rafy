@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using SimpleCsla.Core;
+using OEA.Core;
 using System.ComponentModel;
-using SimpleCsla.Security;
+using OEA.Security;
 using OEA.MetaModel;
 
 namespace OEA.Library

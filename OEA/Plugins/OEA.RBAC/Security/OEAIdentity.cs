@@ -11,9 +11,9 @@ using OEA.MetaModel.View;
 using OEA.ORM;
 using OEA.Serialization.Mobile;
 using OEA.Utils;
-using SimpleCsla;
-using SimpleCsla.Data;
-using SimpleCsla.Security;
+using OEA;
+using OEA.Data;
+using OEA.Security;
 
 namespace OEA.RBAC.Security
 {

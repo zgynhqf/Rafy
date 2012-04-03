@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
-using SimpleCsla.Wpf;
+
 using OEA.Library;
 using OEA.Module.WPF;
 

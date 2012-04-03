@@ -11,10 +11,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 using AvalonDock;
-using SimpleCsla;
-using SimpleCsla.Core;
 
-using SimpleCsla.Wpf;
+using OEA.Core;
+
+
 
 using OEA.MetaModel;
 using OEA.MetaModel.View;

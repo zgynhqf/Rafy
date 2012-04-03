@@ -17,7 +17,7 @@ using Common;
 using Itenso.Windows.Input;
 using OEA.Library;
 using OEA.MetaModel;
-using OEA.MetaModel.Audit;
+
 using OEA.MetaModel.View;
 using OEA.WPF.Command;
 using OEA.WPF;

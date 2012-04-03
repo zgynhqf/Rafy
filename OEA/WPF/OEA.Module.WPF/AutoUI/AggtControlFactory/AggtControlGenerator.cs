@@ -25,13 +25,12 @@ using AvalonDock;
 using Itenso.Windows.Input;
 using OEA.Library;
 using OEA.MetaModel;
-using OEA.MetaModel.Audit;
+
 using OEA.MetaModel.View;
 using OEA.Module.WPF.CommandAutoUI;
 using OEA.Module.WPF.Controls;
 using OEA.Module.WPF.Layout;
 using OEA.WPF;
-using SimpleCsla;
 
 namespace OEA.Module.WPF
 {

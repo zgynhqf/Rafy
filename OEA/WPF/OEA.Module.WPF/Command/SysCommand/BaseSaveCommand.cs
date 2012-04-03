@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OEA.Module;
-using SimpleCsla.Core;
+using OEA.Core;
 using System.Windows;
 using OEA.Module.WPF;
 using OEA.Library;

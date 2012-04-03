@@ -14,7 +14,6 @@
     xmlns:oeaModuleWPF="clr-namespace:OEA.Module.WPF"
     xmlns:avalon="clr-namespace:AvalonDock;assembly=AvalonDock"
     xmlns:wpfsb="clr-namespace:Wpf.Controls;assembly=Wpf.SplitButton"
-    xmlns:csla = "clr-namespace:SimpleCsla.Wpf;assembly=SimpleCsla"
     mc:Ignorable="d">
     <Color x:Key="DisabledColor">#8CFFFFFF</Color>
     <Color x:Key="PrimaryColor">#FF63AADA</Color>
@@ -5046,7 +5045,7 @@
         </Setter>
     </Style>
     <!--BusyAnimation-->
-    <Style TargetType="{x:Type csla:BusyAnimation}">
+    <Style TargetType="{x:Type oea:BusyAnimation}">
         <Setter Property="Width" Value="30"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -5057,7 +5056,7 @@
         <Setter Property="StateDuration" Value="0:0:0.125" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type csla:BusyAnimation}">
+                <ControlTemplate TargetType="{x:Type oea:BusyAnimation}">
                     <ControlTemplate.Resources>
                         <Storyboard x:Key="normal">
                             <DoubleAnimation To="0"

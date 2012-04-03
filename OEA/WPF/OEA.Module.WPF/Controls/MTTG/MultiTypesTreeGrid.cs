@@ -27,8 +27,8 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using SimpleCsla;
-using SimpleCsla.Core;
+
+using OEA.Core;
 using Hardcodet.Wpf.GenericTreeView;
 using OEA.Library;
 using OEA.MetaModel;

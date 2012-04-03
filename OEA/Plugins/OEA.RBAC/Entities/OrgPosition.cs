@@ -13,7 +13,7 @@
 
 using System;
 using System.Linq;
-using SimpleCsla;
+using OEA;
 using OEA.ORM;
 using OEA.MetaModel;
 using OEA.MetaModel.Attributes;

@@ -15,8 +15,8 @@
 //using System.IO;
 //using System.Linq;
 //using System.Windows.Forms;
-//using SimpleCsla;
-//using SimpleCsla.Core;
+//
+//using OEA.Core;
 //using GIX4.Library;
 //using OEA;
 //using OEA.MetaModel;

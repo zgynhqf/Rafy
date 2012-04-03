@@ -41,6 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\Audit\AuditLogItem.cs" />
+    <Compile Include="Entities\Audit\AuditLogService.cs" />
+    <Compile Include="Entities\Audit\AuditServerCommand.cs" />
+    <Compile Include="Entities\Audit\ClientAuditLogProvider.cs" />
+    <Compile Include="Entities\Audit\IAuditLogProvider.cs" />
     <Compile Include="Entities\Audit\AuditItem.cs" />
     <Compile Include="Entities\Audit\AuditItemConditionCriteria.cs" />
     <Compile Include="Entities\Audit\ClearLogService.cs" />
@@ -82,10 +87,6 @@
     <ProjectReference Include="..\..\OEA\OEA.csproj">
       <Project>{966A5BF2-D690-426B-AD68-AD868BB8F855}</Project>
       <Name>OEA %28OEA\OEA%29</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\SimpleCsla\SimpleCsla.csproj">
-      <Project>{DC0539B9-8570-4132-B89A-478FB3F1CEC2}</Project>
-      <Name>SimpleCsla</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Web\OEA.Web.Meta\OEA.Web.Meta.csproj">
       <Project>{2AECFBB6-34AC-41A6-AB8C-F52A3F68BA1A}</Project>

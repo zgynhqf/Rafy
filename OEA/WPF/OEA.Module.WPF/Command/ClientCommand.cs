@@ -15,7 +15,7 @@ using OEA.Editors;
 using OEA.Library;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
-using OEA.MetaModel.Audit;
+
 using OEA.Module.WPF;
 using OEA.Module.WPF.Controls;
 using OEA.Module;

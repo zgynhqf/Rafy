@@ -44,7 +44,7 @@ namespace OEA.Module.WPF.Shell
             imgLogo.Source = new BitmapImage(new Uri(logo));
 
             //用户名
-            this.txtUserName.Text = SimpleCsla.ApplicationContext.User.Identity.Name;
+            this.txtUserName.Text = OEA.ApplicationContext.User.Identity.Name;
         }
 
         private void btnModifyPwd_Click(object sender, RoutedEventArgs e)

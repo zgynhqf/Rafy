@@ -18,7 +18,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Data;
 using System.ComponentModel;
-using SimpleCsla.Wpf;
+
 using System.Windows.Threading;
 using OEA.Module.WPF;
 using System.Windows;

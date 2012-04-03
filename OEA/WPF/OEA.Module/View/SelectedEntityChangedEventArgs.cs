@@ -15,7 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SimpleCsla.Core;
+using OEA.Core;
 using OEA.Library;
 
 namespace OEA

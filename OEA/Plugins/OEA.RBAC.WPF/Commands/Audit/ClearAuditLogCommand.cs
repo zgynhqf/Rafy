@@ -3,19 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
-
-using OEA.MetaModel.Attributes;
-using OEA.MetaModel;
-using OEA.MetaModel.View;
-using OEA.Library;
-
-using OEA.WPF.Command;
-using SimpleCsla;
 using System.Windows;
-using OEA.Library.Audit;
 using OEA;
+using OEA.Library;
+using OEA.Library.Audit;
+using OEA.MetaModel;
+using OEA.MetaModel.Attributes;
+using OEA.MetaModel.View;
 using OEA.Module.WPF;
+using OEA.WPF.Command;
 
 namespace RBAC
 {

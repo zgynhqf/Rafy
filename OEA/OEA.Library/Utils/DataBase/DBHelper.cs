@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OEA.ORM;
-using SimpleCsla.Data;
+using OEA.Data;
 using System.Data.SqlClient;
 using System.Data;
 using System.Collections;

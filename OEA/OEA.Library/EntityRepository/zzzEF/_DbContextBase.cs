@@ -18,7 +18,7 @@
 //////using System.Data.Entity.ModelConfiguration.Configuration;
 ////using System.Data.Common;
 //using System.Collections;
-//using SimpleCsla.Data;
+//using OEA.Data;
 //using System.Data.SqlClient;
 
 //namespace OEA.Library.Internal

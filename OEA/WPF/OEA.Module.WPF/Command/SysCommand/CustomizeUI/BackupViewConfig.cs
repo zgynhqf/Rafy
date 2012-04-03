@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using OEA.MetaModel.Attributes;
 using OEA.WPF.Command;
-using SimpleCsla;
+
 using OEA.Library.Modeling.Web;
 using OEA.Library;
 using OEA.Module.WPF;

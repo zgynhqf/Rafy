@@ -25,9 +25,9 @@ using OEA.MetaModel;
 using OEA.MetaModel.View;
 using OEA.MetaModel.Attributes;
 using OEA.ORM;
-using SimpleCsla;
-using SimpleCsla.Core;
-using SimpleCsla.Data;
+using OEA;
+using OEA.Core;
+using OEA.Data;
 using OEA.Web;
 using OEA.Library;
 

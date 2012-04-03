@@ -19,7 +19,7 @@ using System.Windows;
 using System.Windows.Input;
 using OEA.Module.WPF.Controls;
 using System.Diagnostics;
-using SimpleCsla;
+
 using System.Collections;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;

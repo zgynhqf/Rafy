@@ -13,7 +13,7 @@
 
 using System;
 using System.Collections.Generic;
-using SimpleCsla;
+
 using OEA.ManagedProperty;
 
 namespace OEA.Library

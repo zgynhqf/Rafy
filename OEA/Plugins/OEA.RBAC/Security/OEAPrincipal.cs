@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SimpleCsla.Security;
+using OEA.Security;
 using System.Security.Principal;
-using SimpleCsla;
+using OEA;
 
 namespace OEA.RBAC.Security
 {

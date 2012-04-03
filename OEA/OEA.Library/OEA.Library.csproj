@@ -67,6 +67,8 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -78,6 +80,39 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataPortal\DataPortal.cs" />
+    <Compile Include="DataPortal\DataPortalClient\IDataPortalProxy.cs" />
+    <Compile Include="DataPortal\DataPortalClient\WcfProxy.cs" />
+    <Compile Include="DataPortal\DataPortalResult.cs" />
+    <Compile Include="DataPortal\Data\ConnectionManager.cs" />
+    <Compile Include="DataPortal\ObjectCloner.cs" />
+    <Compile Include="DataPortal\Reflection\DynamicMemberHandle.cs" />
+    <Compile Include="DataPortal\Reflection\DynamicMethodHandle.cs" />
+    <Compile Include="DataPortal\Reflection\DynamicMethodHandlerFactory.cs" />
+    <Compile Include="DataPortal\Reflection\LateBoundObject.cs" />
+    <Compile Include="DataPortal\Reflection\MethodCacheKey.cs" />
+    <Compile Include="DataPortal\Reflection\MethodCaller.cs" />
+    <Compile Include="DataPortal\Security\CslaIdentity.cs" />
+    <Compile Include="DataPortal\Security\CslaPrincipal.cs" />
+    <Compile Include="DataPortal\Server\DataPortalContext.cs" />
+    <Compile Include="DataPortal\Server\DataPortalFacade.cs" />
+    <Compile Include="DataPortal\Server\DataPortalResult.cs" />
+    <Compile Include="DataPortal\Server\FinalDataPortal.cs" />
+    <Compile Include="DataPortal\Server\Hosts\IWcfPortal.cs" />
+    <Compile Include="DataPortal\Server\Hosts\WcfChannel\CreateRequest.cs" />
+    <Compile Include="DataPortal\Server\Hosts\WcfChannel\DeleteRequest.cs" />
+    <Compile Include="DataPortal\Server\Hosts\WcfChannel\FetchRequest.cs" />
+    <Compile Include="DataPortal\Server\Hosts\WcfChannel\NetDataContractOperationBehavior.cs" />
+    <Compile Include="DataPortal\Server\Hosts\WcfChannel\UpdateRequest.cs" />
+    <Compile Include="DataPortal\Server\Hosts\WcfChannel\UseNetDataContractAttribute.cs" />
+    <Compile Include="DataPortal\Server\Hosts\WcfChannel\WcfResponse.cs" />
+    <Compile Include="DataPortal\Server\Hosts\WcfPortal.cs" />
+    <Compile Include="DataPortal\Server\IDataPortalServer.cs" />
+    <Compile Include="DataPortal\_OEA\CslaEntity.cs" />
+    <Compile Include="DataPortal\_OEA\IDirtyAware.cs" />
+    <Compile Include="DataPortal\_OEA\IEntityOrList.cs" />
+    <Compile Include="DataPortal\_OEA\InnerSerializer.cs" />
+    <Compile Include="DataPortal\_OEA\PersistenceStatus.cs" />
     <Compile Include="EntityRepository\MemoryEntityRepository.cs" />
     <Compile Include="Entity\Entity.Validation.cs">
       <DependentUpon>Entity.cs</DependentUpon>
@@ -88,6 +123,7 @@
     <Compile Include="Entity\IValidatable.cs" />
     <Compile Include="Entity\TreeCodeOption.cs" />
     <Compile Include="Entity\Validation\ITypeValidationsHost.cs" />
+    <Compile Include="Service.cs" />
     <Compile Include="Utils\DataBase\DbTable.cs" />
     <Compile Include="EntityRepository\Caching\EntityListVersion.cs" />
     <Compile Include="EntityRepository\IEntityOrListInternal.cs" />
@@ -244,10 +280,6 @@
     <ProjectReference Include="..\OEA\OEA.csproj">
       <Project>{966A5BF2-D690-426B-AD68-AD868BB8F855}</Project>
       <Name>OEA %28OEA\OEA%29</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SimpleCsla\SimpleCsla.csproj">
-      <Project>{DC0539B9-8570-4132-B89A-478FB3F1CEC2}</Project>
-      <Name>SimpleCsla</Name>
     </ProjectReference>
     <ProjectReference Include="..\Web\OEA.Web.Meta\OEA.Web.Meta.csproj">
       <Project>{2AECFBB6-34AC-41A6-AB8C-F52A3F68BA1A}</Project>

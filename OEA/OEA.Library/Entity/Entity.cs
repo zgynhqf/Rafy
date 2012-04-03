@@ -30,8 +30,8 @@ using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
 using OEA.ORM;
 using OEA.Threading;
-using SimpleCsla;
-using SimpleCsla.Core;
+
+using OEA.Core;
 using OEA.Library.Validation;
 using System.Diagnostics;
 
@@ -244,7 +244,7 @@ namespace OEA.Library
 
         #region 根对象
 
-        protected override void DataPortal_Insert()
+        internal protected override void DataPortal_Insert()
         {
             if (EntityListVersion.Repository != null)
             {
@@ -271,7 +271,7 @@ namespace OEA.Library
             }
         }
 
-        protected override void DataPortal_Update()
+        internal protected override void DataPortal_Update()
         {
             if (EntityListVersion.Repository != null)
             {
@@ -298,7 +298,7 @@ namespace OEA.Library
             }
         }
 
-        protected override void DataPortal_DeleteSelf()
+        internal protected override void DataPortal_DeleteSelf()
         {
             if (EntityListVersion.Repository != null)
             {
@@ -329,17 +329,17 @@ namespace OEA.Library
 
         #region 子对象
 
-        protected override void Child_Insert(CslaEntity parent)
+        internal protected override void Child_Insert(CslaEntity parent)
         {
             this.OnInsert();
         }
 
-        protected override void Child_Update(CslaEntity parent)
+        internal protected override void Child_Update(CslaEntity parent)
         {
             this.OnUpdate();
         }
 
-        protected override void Child_Delete(CslaEntity parent)
+        internal protected override void Child_Delete(CslaEntity parent)
         {
             this.OnDelete();
         }

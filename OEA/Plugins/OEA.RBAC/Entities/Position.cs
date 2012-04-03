@@ -20,7 +20,7 @@ using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
 using OEA.MetaModel.View;
 using OEA.ORM;
-using SimpleCsla;
+using OEA;
 
 namespace OEA.RBAC
 {

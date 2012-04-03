@@ -15,13 +15,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SimpleCsla;
+
 using OEA.ORM;
 using OEA.MetaModel.Attributes;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using System.Collections;
-using SimpleCsla.Core;
+using OEA.Core;
 using OEA.Serialization.Mobile;
 using OEA.Serialization;
 using OEA.MetaModel;

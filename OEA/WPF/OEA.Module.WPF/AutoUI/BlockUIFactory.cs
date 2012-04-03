@@ -22,7 +22,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using AvalonDock;
-using SimpleCsla;
+
 using Itenso.Windows.Input;
 using OEA.Editors;
 using OEA.Library;

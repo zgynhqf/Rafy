@@ -4,7 +4,6 @@
     xmlns:local="clr-namespace:OEA.Module.WPF.Layout"
     xmlns:oea="clr-namespace:OEA.Module.WPF"
     xmlns:cal="http://www.codeplex.com/CompositeWPF"
-    xmlns:csla="clr-namespace:SimpleCsla.Wpf;assembly=SimpleCsla"       
     xmlns:caliburn="http://www.caliburnproject.org"   
     xmlns:av="http://schemas.codeplex.com/wpfcontrib/xaml/presentation"
     xmlns:ad="clr-namespace:AvalonDock;assembly=AvalonDock"

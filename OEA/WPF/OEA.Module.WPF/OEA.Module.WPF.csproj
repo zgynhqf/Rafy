@@ -154,6 +154,7 @@
     <Compile Include="Command\SysCommand\CustomizeUI\CustomizeUI.cs" />
     <Compile Include="Command\SysCommand\CustomizeUI\BackupViewConfig.cs" />
     <Compile Include="Common\Logger.cs" />
+    <Compile Include="Controls\BusyAnimation.cs" />
     <Compile Include="Controls\MTTG\GridTreeView\ColumnMeasureState.cs" />
     <Compile Include="Controls\MTTG\GridTreeView\GridTreeViewColumn.cs" />
     <Compile Include="Controls\MTTG\GridTreeView\GridTreeViewColumnCollection.cs" />
@@ -464,10 +465,6 @@
     <ProjectReference Include="..\OEA.Module\OEA.Module.csproj">
       <Project>{786446BE-FB56-4281-9CA2-D5B699B0B388}</Project>
       <Name>OEA.Module</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\SimpleCsla\SimpleCsla.csproj">
-      <Project>{DC0539B9-8570-4132-B89A-478FB3F1CEC2}</Project>
-      <Name>SimpleCsla</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

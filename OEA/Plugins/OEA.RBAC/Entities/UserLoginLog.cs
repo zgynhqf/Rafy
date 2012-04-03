@@ -17,7 +17,7 @@ using System.Linq;
 using System.Text;
 using OEA.MetaModel.Attributes;
 using OEA.ORM;
-using SimpleCsla;
+using OEA;
 using OEA.Library;
 using System.Diagnostics;
 using OEA.MetaModel;
