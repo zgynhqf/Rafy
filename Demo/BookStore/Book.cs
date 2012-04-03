@@ -125,7 +125,7 @@ namespace Demo
             AggregateSQL.Instance.LoadEntities<Book>(this, p => p.LoadChildren(b => b.ChapterList));
         }
 
-        private void DataPortal_Fetch(BookQueryCriteria criteria)
+        private void QueryBy(BookQueryCriteria criteria)
         {
             //自定义查询示例。
             this.QueryDb(q =>

@@ -108,21 +108,21 @@ namespace OEA.Library.Caching
             this.ServerTime = DateTime.Now;
         }
 
-        protected void DataPortal_Fetch(DateTime lastTime)
+        protected void QueryBy(DateTime lastTime)
         {
             this.QueryDb(q => q.Constrain(ScopeVersion.ValueProperty).Greater(lastTime));
 
             this.ServerTime = DateTime.Now;
         }
 
-        protected void DataPortal_Fetch(string classRegion)
+        protected void QueryBy(string classRegion)
         {
             this.QueryDb(q => q.Constrain(ScopeVersion.ClassRegionProperty).Equal(classRegion));
 
             this.ServerTime = DateTime.Now;
         }
 
-        protected void DataPortal_Fetch(GetByPKCriteria criteria)
+        protected void QueryBy(GetByPKCriteria criteria)
         {
             this.QueryDb(q => q.Constrain(ScopeVersion.ClassRegionProperty).Equal(criteria.ClassRegion)
                 .And().Constrain(ScopeVersion.ScopeClassProperty).Equal(criteria.ScopeClass)

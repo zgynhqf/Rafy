@@ -49,14 +49,14 @@ namespace OEA.RBAC.Security
 
         #region  Data Access
 
-        protected void DataPortal_Fetch(int id)
+        protected void QueryBy(int id)
         {
             this.User = RF.Concreate<UserRepository>().GetById(id) as User;
 
             this.LoadChildrenProperties();
         }
 
-        protected void DataPortal_Fetch(UsernameCriteria criteria)
+        protected void QueryBy(UsernameCriteria criteria)
         {
             this.User = RF.Concreate<UserRepository>().GetBy(criteria.Username, criteria.Password);
 

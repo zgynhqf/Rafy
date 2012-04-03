@@ -108,7 +108,7 @@ namespace OEA.RBAC
     [Serializable]
     public class OrgPositionList : EntityList
     {
-        protected void DataPortal_Fetch(int userId)
+        protected void QueryBy(int userId)
         {
             using (var db = this.CreateDb())
             {

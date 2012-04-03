@@ -8,6 +8,10 @@
  * 
 *******************************************************/
 
+2.9.462.0
+    重构、★修改接口
+        * DataPortal_Fetch 替换为 QueryBy 
+
 2.9.460.0
     重构
         * 删除 ClearLookupPropertyValueCommand，逻辑直接写在 Button 中。

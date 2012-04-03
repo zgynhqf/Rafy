@@ -72,7 +72,7 @@ namespace OEA.Library.ORM.DbMigration.Presistence
     {
         protected DbMigrationHistoryList() { }
 
-        protected void DataPortal_Fetch(string database)
+        protected void QueryBy(string database)
         {
             this.QueryDb(q => q.Constrain(DbMigrationHistory.DatabaseProperty).Equal(database));
         }

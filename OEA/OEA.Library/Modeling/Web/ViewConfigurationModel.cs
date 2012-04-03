@@ -388,7 +388,7 @@ namespace OEA
     {
         protected ViewConfigurationModelList() { }
 
-        protected void DataPortal_Fetch(ViewConfigurationModelNameCriteria criteria)
+        protected void QueryBy(ViewConfigurationModelNameCriteria criteria)
         {
             var viewName = criteria.ViewName;
             Type entityType = ClientEntityConverter.ToClientType(criteria.EntityType);

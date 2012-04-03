@@ -34,7 +34,7 @@ namespace OEA.Module.WPF
     /// </summary>
     public class DetailObjectView : WPFObjectView
     {
-        internal DetailObjectView(EntityViewMeta entityViewInfo) : base(entityViewInfo) { }
+        internal protected DetailObjectView(EntityViewMeta entityViewInfo) : base(entityViewInfo) { }
 
         #region 属性
 

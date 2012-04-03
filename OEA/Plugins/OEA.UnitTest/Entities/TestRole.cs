@@ -74,7 +74,7 @@ namespace OEA.Library._Test
     [Serializable]
     public class TestRoleList : EntityList
     {
-        protected void DataPortal_Fetch(GetByUserIdCriteria criteria)
+        protected void QueryBy(GetByUserIdCriteria criteria)
         {
             this.QueryDb(q => q.Constrain(TestRole.TestUserRefProperty).Equal(criteria.UserId));
         }

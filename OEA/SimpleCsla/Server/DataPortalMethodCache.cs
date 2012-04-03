@@ -75,7 +75,7 @@ namespace SimpleCsla.Server
         }
 
         /// <summary>
-        /// Gets a reference to the DataPortal_Fetch method for
+        /// Gets a reference to the QueryBy method for
         /// the specified business object type.
         /// </summary>
         /// <param name="objectType">Type of the business object.</param>
@@ -94,9 +94,9 @@ namespace SimpleCsla.Server
             if (factoryInfo == null)
             {
                 //if (criteria is int)
-                //    method = GetMethodInfo(objectType, "DataPortal_Fetch");
+                //    method = GetMethodInfo(objectType, "QueryBy");
                 //else
-                method = GetMethodInfo(objectType, "DataPortal_Fetch", criteria);
+                method = GetMethodInfo(objectType, "QueryBy", criteria);
             }
             else
             {

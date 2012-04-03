@@ -120,9 +120,9 @@ namespace SimpleCsla.Server
 
             // tell the business object to fetch its data
             //if (criteria is int)
-            //    obj.CallMethod("DataPortal_Fetch");
+            //    obj.CallMethod("QueryBy");
             //else
-            obj.CallMethod("DataPortal_Fetch", criteria);
+            obj.CallMethod("QueryBy", criteria);
 
             if (target != null)
                 target.DataPortal_OnDataPortalInvokeComplete(eventArgs);

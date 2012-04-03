@@ -100,7 +100,7 @@ namespace OEA.RBAC
     [Serializable]
     public partial class UserList : EntityList
     {
-        protected void DataPortal_Fetch(string code)
+        protected void QueryBy(string code)
         {
             this.QueryDb(q => q.Constrain(User.CodeProperty).Equal(code));
         }
