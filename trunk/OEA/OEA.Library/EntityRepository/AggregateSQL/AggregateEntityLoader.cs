@@ -77,7 +77,7 @@ namespace OEA.Library
                 else
                 {
                     listResult = option.PropertyEntityRepository.NewList();
-                    listResult.ReadFromTable(table);
+                    listResult.ReadFromTable(subTable);
                 }
 
                 //是否需要排序？

@@ -76,12 +76,12 @@ namespace SimpleCsla
             if (obj == null) return;
 
             var entity = obj as CslaEntity;
-            // if the object isn't dirty, then just exit
-            if (entity != null && !entity.IsDirty) { return; }
-
             // tell the business object to update itself
             if (entity != null)
             {
+                // if the object isn't dirty, then just exit
+                if (!entity.IsDirty) { return; }
+
                 if (entity.IsDeleted)
                 {
                     if (!entity.IsNew)
@@ -111,7 +111,8 @@ namespace SimpleCsla
                 // this is an updatable collection or some other
                 // non-BusinessBase type of object
                 // tell the object to update itself
-                entity.Child_Update(parameters[0] as CslaEntity);
+                LateBoundObject lb = new LateBoundObject(obj);
+                lb.CallMethod("Child_Update", parameters);
             }
         }
 
