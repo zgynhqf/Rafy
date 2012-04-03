@@ -210,7 +210,6 @@
     <Compile Include="DynamicPropertyHelperBase.cs" />
     <Compile Include="ReverseBooleanConverter.cs" />
     <Compile Include="Shell\ClientApp.cs" />
-    <Compile Include="Command\zzzAutoHideChildrenCommand.cs" />
     <Compile Include="Common\ExcelHelper.cs" />
     <Compile Include="Common\ExportToExcelCommand.cs" />
     <Compile Include="Common\ITableData.cs" />
@@ -260,7 +259,7 @@
     <Compile Include="AutoUI\ObjectViews\QueryObjectView.cs" />
     <Compile Include="AutoUI\ObjectViews\WPFObjectView.cs" />
     <Compile Include="Controls\ToolBarExtension.cs" />
-    <Compile Include="Command\LookupCommand.cs" />
+    <Compile Include="Command\ClearLookupPropertyValueCommand.cs" />
     <Compile Include="Command\Pattern\MenuItemCommand.cs" />
     <Compile Include="Command\Pattern\MenuItemImage.cs" />
     <Compile Include="Command\SysCommand\TreeEditCommands\TreeEditCommand.cs" />
@@ -283,7 +282,7 @@
     <Compile Include="Command\Pattern\CommandRepository.cs" />
     <Compile Include="Command\Pattern\CommandToolTipService.cs" />
     <Compile Include="Command\Pattern\CommandToolTipStyle.cs" />
-    <Compile Include="Command\WPFCommand.cs" />
+    <Compile Include="Command\ClientCommand.cs" />
     <Compile Include="Controls\MTTG\ObjectTreeView\ItemMonitor.cs" />
     <Compile Include="Controls\MTTG\ObjectTreeView\RoutedTreeItemEventArgs.cs" />
     <Compile Include="Controls\MTTG\ObjectTreeView\TreeLayout.cs" />
@@ -495,7 +494,6 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Command\Command.cd" />
     <Resource Include="Images\Expand.bmp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

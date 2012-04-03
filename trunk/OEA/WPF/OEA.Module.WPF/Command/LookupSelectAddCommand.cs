@@ -23,7 +23,6 @@ using OEA.Library;
 using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
 using OEA.MetaModel.View;
-
 using OEA.Module.WPF.Editors;
 using OEA.WPF;
 using OEA.WPF.Command;
@@ -31,7 +30,6 @@ using SimpleCsla.Core;
 
 namespace OEA.Module.WPF.Command
 {
-    //[Command(ImageName = "LookupSelectAdd.bmp", Label = "选择新增")]
     public abstract class LookupSelectAddCommand : ListViewCommand
     {
         public override bool CanExecute(ListObjectView view)
