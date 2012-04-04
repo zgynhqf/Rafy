@@ -44,12 +44,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BookStore\Admin\City.cs" />
+    <Compile Include="BookStore\Admin\Country.cs" />
+    <Compile Include="BookStore\Admin\Province.cs" />
     <Compile Include="BookStore\Book.cs" />
     <Compile Include="BookStore\Admin\BookAdministrator.cs" />
     <Compile Include="BookStore\BookCategory.cs" />
     <Compile Include="BookStore\BookQueryCriteria.cs" />
     <Compile Include="BookStore\Chapter.cs" />
     <Compile Include="BookStore\Service\CountServerBookService.cs" />
+    <Compile Include="DbMigrations\_20120404_131000_InitAddress.cs" />
     <Compile Include="DemoEntity.cs" />
     <Compile Include="DemoLibrary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
