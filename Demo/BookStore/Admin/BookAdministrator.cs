@@ -33,7 +33,10 @@ namespace Demo
         }
 
         public static readonly RefProperty<Province> ProvinceRefProperty =
-            P<BookAdministrator>.RegisterRef(e => e.Province, ReferenceType.Normal);
+            P<BookAdministrator>.RegisterRef(e => e.Province, new RefPropertyMeta
+            {
+                RefEntityChangedCallBack = (o, e) => (o as BookAdministrator).OnProvinceChanged(e),
+            });
         public int? ProvinceId
         {
             get { return this.GetRefNullableId(ProvinceRefProperty); }
@@ -44,9 +47,17 @@ namespace Demo
             get { return this.GetRefEntity(ProvinceRefProperty); }
             set { this.SetRefEntity(ProvinceRefProperty, value); }
         }
+        protected virtual void OnProvinceChanged(RefEntityChangedEventArgs e)
+        {
+            this.City = null;
+        }
+
 
         public static readonly RefProperty<City> CityRefProperty =
-            P<BookAdministrator>.RegisterRef(e => e.City, ReferenceType.Normal);
+            P<BookAdministrator>.RegisterRef(e => e.City, new RefPropertyMeta
+            {
+                RefEntityChangedCallBack = (o, e) => (o as BookAdministrator).OnCityChanged(e),
+            });
         public int? CityId
         {
             get { return this.GetRefNullableId(CityRefProperty); }
@@ -56,6 +67,10 @@ namespace Demo
         {
             get { return this.GetRefEntity(CityRefProperty); }
             set { this.SetRefEntity(CityRefProperty, value); }
+        }
+        protected virtual void OnCityChanged(RefEntityChangedEventArgs e)
+        {
+            this.Country = null;
         }
 
         public static readonly RefProperty<Country> CountryRefProperty =
