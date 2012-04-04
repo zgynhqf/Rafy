@@ -79,14 +79,8 @@ namespace Demo
             this.ValidationRules.AddRule(Book.AuthorProperty, CommonRules.StringRequired);
             this.ValidationRules.AddRule(Book.AuthorProperty, CommonRules.StringMaxLength, new { MaxLength = 3 });
             this.ValidationRules.AddRule(Book.BookCategoryRefProperty, CommonRules.Required);
-            this.ValidationRules.AddRule(Book.AmountProperty, CommonRules.IntegerMinValue, new
-            {
-                MinValue = 5
-            });
-            this.ValidationRules.AddRule(Book.AmountProperty, CommonRules.IntegerMaxValue, new
-            {
-                MaxValue = 50
-            });
+            this.ValidationRules.AddRule(Book.AmountProperty, CommonRules.IntegerMinValue, new { MinValue = 5 });
+            this.ValidationRules.AddRule(Book.AmountProperty, CommonRules.IntegerMaxValue, new { MaxValue = 50 });
             this.ValidationRules.AddRule(Book.PublisherProperty, CommonRules.RegexMatch, new
             {
                 Regex = TextFormatter.ReAllChinese,
@@ -174,6 +168,7 @@ namespace Demo
             View.HasTitle(Book.NameProperty).HasLabel("书籍");
 
             View.UseWebCommands("CountLocalBookCommand", "CountServerBookCommand");
+            View.UseWPFCommands("Demo.WPF.Commands.BookSearchCommand");
 
             View.Property(Book.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
             View.Property(Book.AuthorProperty).HasLabel("作者").ShowIn(ShowInWhere.All);

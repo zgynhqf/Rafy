@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BookStore\Book.cs" />
+    <Compile Include="BookStore\Admin\BookAdministrator.cs" />
     <Compile Include="BookStore\BookCategory.cs" />
     <Compile Include="BookStore\BookQueryCriteria.cs" />
     <Compile Include="BookStore\Chapter.cs" />

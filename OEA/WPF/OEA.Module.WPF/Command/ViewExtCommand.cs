@@ -97,25 +97,4 @@ namespace OEA.WPF.Command
             return 1;
         }
     }
-
-    [Command(ImageName = "OpenFile.bmp", Label = "显示子表")]
-    public class ChildShowViewCommand : ListViewCommand
-    {
-        public override bool CanExecute(ListObjectView view)
-        {
-            return view.Current != null;
-        }
-
-        public override void Execute(ListObjectView view)
-        {
-            object childType = null;
-            var childView = this.TryGetCustomParams<ListObjectView>(CommandCustomParams.ChildViewName);
-
-            Debug.Assert(childType != null);
-            childView = view.GetChildView(childType as Type, true) as ListObjectView;
-            childView.IsActive = true;
-
-            CommandRepository.TryExecuteCommand(typeof(MaxShowViewCommand), childView);
-        }
-    }
 }
