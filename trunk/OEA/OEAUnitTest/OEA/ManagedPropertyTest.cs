@@ -18,8 +18,9 @@ using OEA.MetaModel;
 using OEA.Serialization;
 using OEA.Serialization.Mobile;
 using OEA;
-using OEA.Core;
+
 using OEA.Serialization;
+using OEA.Utils;
 
 namespace OEAUnitTest
 {
@@ -46,9 +47,9 @@ namespace OEAUnitTest
         public void MPT_Validation()
         {
             var user = Get<TestUser>();
-            user.CheckRules();
-            Assert.AreEqual(user.BrokenRulesCollection.Count, 1);
-            Assert.AreEqual(user.BrokenRulesCollection[0].Description, "编码 不可空白");
+            var brokenRules = user.ValidationRules.CheckRules();
+            Assert.AreEqual(brokenRules.Count, 1);
+            Assert.AreEqual(brokenRules[0].Description, "编码 并没有填写。");
         }
 
         [TestMethod]
@@ -289,8 +290,7 @@ namespace OEAUnitTest
             e1._mySelfReference = e1;
             TestUserExt.SetUserCode(e1, "UserCode");
 
-            e1.CheckRules();
-            Assert.AreEqual(e1.BrokenRulesCollection.Count, 1);
+            Assert.AreEqual(e1.ValidationRules.CheckRules().Count, 1);
 
             //在这里可以查看序列化后传输的字符串
             var serializedString = MobileFormatter.SerializeToString(e1);
@@ -326,7 +326,6 @@ namespace OEAUnitTest
 
             //引用属性
             Assert.AreEqual(e2.ValidationRules.Target, e2);
-            Assert.AreEqual(e2.BrokenRulesCollection.Count, 1);
 
             #endregion
 

@@ -11,7 +11,7 @@ namespace OEA
     /// </summary>
     public static class ConnectionStringNames
     {
-        public const string OEA = "OEA";
+        public const string OEAPlugins = "OEAPlugins";
 
         public const string DbMigrationHistory = "DbMigrationHistory";
     }

@@ -26,7 +26,7 @@ namespace OEA.Library.DbMigrations
     {
         public override string DbSetting
         {
-            get { return ConnectionStringNames.OEA; }
+            get { return ConnectionStringNames.OEAPlugins; }
         }
 
         protected override void Up()

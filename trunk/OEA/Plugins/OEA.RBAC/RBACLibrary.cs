@@ -79,7 +79,7 @@ namespace OEA.RBAC
 
             app.DbMigratingOperations += (o, e) =>
             {
-                using (var c = new OEADbMigrationContext(ConnectionStringNames.OEA))
+                using (var c = new OEADbMigrationContext(ConnectionStringNames.OEAPlugins))
                 {
                     c.AutoMigrate();
 

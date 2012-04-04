@@ -22,7 +22,6 @@ namespace OEA.Library._Test
             DefaultValue = "DefaultName",
             CoerceGetValueCallBack = (s, v) => (s as TestUser).CoerceGetName(v)
         });
-        [EntityProperty]
         public string Name
         {
             get { return this.GetProperty(NameProperty); }
@@ -40,7 +39,6 @@ namespace OEA.Library._Test
             PropertyChangingCallBack = (o, e) => (o as TestUser).OnAgeChanging(e),
             PropertyChangedCallBack = (o, e) => (o as TestUser).OnAgeChanged(e),
         });
-        [EntityProperty]
         [Column]
         public int Age
         {
@@ -68,7 +66,6 @@ namespace OEA.Library._Test
         public int AgeChangedInternally_Persistence { get; private set; }
 
         public static ManagedProperty<string> NotEmptyCodeProperty = P<TestUser>.Register(e => e.NotEmptyCode, OnNotEmptyCodeChanged, null);
-        [EntityProperty]
         public string NotEmptyCode
         {
             get { return this.GetProperty(NotEmptyCodeProperty); }
@@ -111,10 +108,7 @@ namespace OEA.Library._Test
 
         protected override void AddValidations()
         {
-            this.ValidationRules.AddRule(
-                CommonRules.StringRequired,
-                new RuleArgs(NotEmptyCodeProperty.Name, "编码")
-                );
+            this.ValidationRules.AddRule(NotEmptyCodeProperty, CommonRules.StringRequired);
         }
 
         #region TestTreeTaskList 的路由事件
@@ -150,7 +144,6 @@ namespace OEA.Library._Test
         #endregion
 
         public static Property<int> TasksTimeByAutoCollectProperty = P<TestUser>.Register(e => e.TasksTimeByAutoCollect);
-        [EntityProperty]
         public int TasksTimeByAutoCollect
         {
             get { return this.GetProperty(TasksTimeByAutoCollectProperty); }

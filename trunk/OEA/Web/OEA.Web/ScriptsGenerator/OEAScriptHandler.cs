@@ -86,7 +86,7 @@ namespace OEA.Web
         /// </summary>
         private Stream GetStream_Debugging(Assembly assembly, string jsFileName)
         {
-            var dir = ConfigurationHelper.GetAppSettingOrDefault("ForDeveloper_GIX5RootDIR");
+            var dir = ConfigurationHelper.GetAppSettingOrDefault("ForDeveloper_OEARootDir");
             if (dir != string.Empty)
             {
                 var file = Path.Combine(dir, "OEA/Web/OEA.Web/Scripts/", jsFileName);

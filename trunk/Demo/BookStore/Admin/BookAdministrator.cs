@@ -52,7 +52,6 @@ namespace Demo
             this.City = null;
         }
 
-
         public static readonly RefProperty<City> CityRefProperty =
             P<BookAdministrator>.RegisterRef(e => e.City, new RefPropertyMeta
             {

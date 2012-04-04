@@ -53,7 +53,7 @@ namespace OEA.Library.Validation
             this._target = entity;
         }
 
-        internal Entity Target
+        public Entity Target
         {
             get { return this._target; }
         }
