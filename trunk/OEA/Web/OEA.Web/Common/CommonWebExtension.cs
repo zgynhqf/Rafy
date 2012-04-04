@@ -17,6 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Web.Caching;
 using System.Web;
+using OEA.Reflection;
 
 namespace OEA.Web
 {
@@ -44,7 +45,7 @@ namespace OEA.Web
             {
                 try
                 {
-                    result = OEA.TypeHelper.CoerceValue<T>(strResult);
+                    result = TypeHelper.CoerceValue<T>(strResult);
                 }
                 catch { }
             }
@@ -61,7 +62,7 @@ namespace OEA.Web
             {
                 try
                 {
-                    result = OEA.TypeHelper.CoerceValue<T>(strResult);
+                    result = TypeHelper.CoerceValue<T>(strResult);
                 }
                 catch { }
             }
