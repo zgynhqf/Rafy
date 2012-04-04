@@ -18,6 +18,7 @@ using System.Text;
 using System.Runtime.Serialization;
 using System.ComponentModel;
 using System.Security.Permissions;
+using OEA.Reflection;
 
 namespace OEA.ManagedProperty
 {

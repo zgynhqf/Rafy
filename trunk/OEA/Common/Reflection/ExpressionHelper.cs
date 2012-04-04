@@ -18,7 +18,7 @@ using System.Text;
 using System.Reflection;
 using System.Linq.Expressions;
 
-namespace OEA.Utils
+namespace OEA.Reflection
 {
     public static class ExpressionHelper
     {

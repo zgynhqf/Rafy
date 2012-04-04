@@ -12,7 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Markup;
 using AvalonDock;
 
-using OEA.Core;
+
 
 
 

@@ -12,8 +12,6 @@ using OEA.ORM;
 using OEA.Serialization.Mobile;
 using OEA.Utils;
 using OEA;
-using OEA.Data;
-using OEA.Security;
 
 namespace OEA.RBAC.Security
 {
@@ -21,7 +19,7 @@ namespace OEA.RBAC.Security
     /// 注意：防止重名，User增加Code区分唯一性，查询时通过Code查询，同时返回Code和Name
     /// </summary>
     [Serializable]
-    public class OEAIdentity : CslaIdentity, IUser
+    public class OEAIdentity : Entity, IUser
     {
         public User User { get; set; }
 
@@ -31,7 +29,26 @@ namespace OEA.RBAC.Security
             get { return this._roles; }
         }
 
-        #region  Factory Methods
+        public static readonly Property<string> AuthenticationTypeProperty = P<OEAIdentity>.Register(e => e.AuthenticationType);
+        public string AuthenticationType
+        {
+            get { return this.GetProperty(AuthenticationTypeProperty); }
+            set { this.SetProperty(AuthenticationTypeProperty, value); }
+        }
+
+        public static readonly Property<bool> IsAuthenticatedProperty = P<OEAIdentity>.Register(e => e.IsAuthenticated);
+        public bool IsAuthenticated
+        {
+            get { return this.GetProperty(IsAuthenticatedProperty); }
+            set { this.SetProperty(IsAuthenticatedProperty, value); }
+        }
+
+        public static readonly Property<string> NameProperty = P<OEAIdentity>.Register(e => e.Name);
+        public string Name
+        {
+            get { return this.GetProperty(NameProperty); }
+            set { this.SetProperty(NameProperty, value); }
+        }
 
         internal static OEAIdentity GetIdentity(string username, string password)
         {
@@ -48,10 +65,6 @@ namespace OEA.RBAC.Security
         {
             return DataPortal.Fetch(typeof(OEAIdentity), id) as OEAIdentity;
         }
-
-        private OEAIdentity() { }
-
-        #endregion
 
         #region  Data Access
 
@@ -73,16 +86,14 @@ namespace OEA.RBAC.Security
         {
             if (this.User != null)
             {
-                base.Name = this.User.Name;
-                base.IsAuthenticated = true;
+                this.Name = this.User.Name;
+                this.IsAuthenticated = true;
                 this._roles = (RF.Create<OrgPosition>() as OrgPositionRepository).GetList(User.Id); // list of roles from security store
-
-                //var loadThis = this.OrgsHavePermission;
             }
             else
             {
-                base.Name = string.Empty;
-                base.IsAuthenticated = false;
+                this.Name = string.Empty;
+                this.IsAuthenticated = false;
                 this._roles = null;
             }
         }

@@ -68,6 +68,11 @@
     <Compile Include="Extensions\StringBuilderExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Extensions\TextFormatter.cs" />
+    <Compile Include="Reflection\DynamicMemberHandle.cs" />
+    <Compile Include="Reflection\DynamicMethodHandle.cs" />
+    <Compile Include="Reflection\DynamicMethodHandlerFactory.cs" />
+    <Compile Include="Reflection\MethodCacheKey.cs" />
+    <Compile Include="Reflection\MethodCaller.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reflection\ExpressionHelper.cs" />

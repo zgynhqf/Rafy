@@ -16,7 +16,7 @@
 //using System.Linq;
 //using System.Windows.Forms;
 //
-//using OEA.Core;
+//
 //using GIX4.Library;
 //using OEA;
 //using OEA.MetaModel;

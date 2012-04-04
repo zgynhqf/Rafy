@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OEA.ManagedProperty;
-using OEA.Core;
+
 using System.ComponentModel;
 using System.Collections.Specialized;
 

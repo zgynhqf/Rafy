@@ -176,7 +176,6 @@
     <Compile Include="Utils\CompactMessageEncoder\CompactMessageEncodingElement.cs" />
     <Compile Include="Utils\DateRange.cs" />
     <Compile Include="Utils\EmitContext.cs" />
-    <Compile Include="Utils\InvokeEXE.cs" />
     <Compile Include="Utils\NumberRange.cs" />
     <Compile Include="Utils\PathHelper.cs" />
     <Compile Include="Utils\SDBCConvert.cs" />

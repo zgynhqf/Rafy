@@ -21,6 +21,7 @@ using System.Security.Permissions;
 using System.Security;
 using OEA.Serialization.Mobile;
 using System.Reflection;
+using OEA.Reflection;
 
 namespace OEA.ManagedProperty
 {

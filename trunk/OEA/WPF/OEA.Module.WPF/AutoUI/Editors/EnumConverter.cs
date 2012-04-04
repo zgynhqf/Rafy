@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Data;
 using OEA.Module.WPF.Editors;
-using OEA.Core;
+
 using System.Globalization;
 using OEA.MetaModel;
 using OEA.MetaModel.View;

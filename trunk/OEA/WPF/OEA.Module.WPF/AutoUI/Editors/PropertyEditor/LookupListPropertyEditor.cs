@@ -29,7 +29,7 @@ using OEA.Module.WPF.Automation;
 using OEA.Module.WPF.Controls;
 using OEA.Utils;
 
-using OEA.Core;
+
 
 
 namespace OEA.Module.WPF.Editors

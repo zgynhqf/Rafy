@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using OEA.Serialization.Mobile;
+using OEA.Reflection;
 
 namespace OEA.Serialization
 {

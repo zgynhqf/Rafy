@@ -17,6 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using OEA.ManagedProperty;
+using OEA.Reflection;
 
 namespace OEA.Serialization.Mobile
 {

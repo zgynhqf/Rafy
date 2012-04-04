@@ -16,7 +16,7 @@ using OEA.MetaModel;
 using OEA.MetaModel.View;
 using OEA.Module.WPF.Editors;
 
-using OEA.Core;
+
 
 namespace OEA.Module.WPF.Editors
 {

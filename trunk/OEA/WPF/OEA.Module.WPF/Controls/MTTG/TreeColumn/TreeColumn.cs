@@ -28,6 +28,7 @@ using OEA.Utils;
 using System.Windows.Media;
 using System.Windows.Automation.Provider;
 using System.Windows.Threading;
+using OEA.Reflection;
 
 namespace OEA.Module.WPF.Editors
 {

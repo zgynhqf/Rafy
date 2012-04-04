@@ -22,7 +22,7 @@ using OEA.MetaModel.Attributes;
 using OEA.ORM;
 using OEA.ORM.sqlserver;
 using OEA.Utils;
-using OEA.Core;
+
 
 namespace OEA.ORM
 {

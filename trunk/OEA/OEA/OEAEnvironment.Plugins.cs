@@ -25,6 +25,7 @@ using OEA.ManagedProperty;
 using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
 using OEA.Utils;
+using OEA.Reflection;
 
 namespace OEA
 {
