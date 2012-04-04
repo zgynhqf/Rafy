@@ -338,7 +338,14 @@ namespace OEA.Module.WPF.Editors
             var dataSourceProperty = refInfo.DataSourceProperty;
             if (string.IsNullOrWhiteSpace(dataSourceProperty)) throw new InvalidOperationException("string.IsNullOrWhiteSpace(dataSourceProperty) must be false.");
 
-            var values = this.Context.CurrentObject.GetPropertyValue(dataSourceProperty) as EntityList;
+            //以一种不会出错的方式来尝试获取数据源属性。
+            EntityList values = null;
+            try
+            {
+                values = this.Context.CurrentObject.GetPropertyValue(dataSourceProperty) as EntityList;
+            }
+            catch { }
+
             if (values != this._listView.Data)
             {
                 try

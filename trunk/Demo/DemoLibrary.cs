@@ -41,8 +41,9 @@ namespace Demo
                     Label = "书籍录入",
                     Children =
                     {
-                        new ModuleMeta{ Label = "书籍类别", EntityType = typeof(BookCategory)},
+                        new ModuleMeta{ Label = "类别管理", EntityType = typeof(BookCategory)},
                         new ModuleMeta{ Label = "书籍管理", EntityType = typeof(Book)},
+                        new ModuleMeta{ Label = "图书管理员", EntityType = typeof(BookAdministrator)},
                     }
                 });
 
