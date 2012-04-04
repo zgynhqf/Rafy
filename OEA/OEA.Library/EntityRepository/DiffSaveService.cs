@@ -24,6 +24,7 @@ using OEA.MetaModel;
 using System.ComponentModel;
 using OEA.Library;
 using System.Runtime.Serialization;
+using OEA.Utils;
 
 namespace OEA.Library
 {
@@ -70,7 +71,7 @@ namespace OEA.Library
             else
             {
                 //清除数据
-                cmd._diffEntity = (businessBase as ICloneable).Clone() as Entity;
+                cmd._diffEntity = ObjectCloner.Clone(businessBase);
                 clear.ClearData(cmd._diffEntity);
             }
 

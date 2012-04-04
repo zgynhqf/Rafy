@@ -16,7 +16,7 @@ namespace OEA.Utils
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public static object Clone(object obj)
+        public static T Clone<T>(T obj)
         {
             using (MemoryStream buffer = new MemoryStream())
             {
@@ -24,7 +24,7 @@ namespace OEA.Utils
                 formatter.Serialize(buffer, obj);
                 buffer.Position = 0;
                 object temp = formatter.Deserialize(buffer);
-                return temp;
+                return (T)temp;
             }
         }
     }
