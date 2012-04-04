@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\BookSearchCommand.cs" />
     <Compile Include="Commands\DemoCommand.cs" />
     <Compile Include="DemoModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

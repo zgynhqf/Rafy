@@ -25,12 +25,6 @@ namespace OEA.MetaModel.View
         public const string NumericUpDown = "NumericUpDown";
     }
 
-    public class CommandCustomParams
-    {
-        public const string ChildViewName = "ChildViewName";
-        public const string TextBox = "TextBox";
-    }
-
     //public class ViewRegionNames
     //{
     //    public const string ConditionQueryRegion = "conditionQueryRegion";
