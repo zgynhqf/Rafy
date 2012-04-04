@@ -17,7 +17,7 @@ using System.Linq;
 using System.Text;
 using System.ComponentModel;
 
-namespace OEA
+namespace OEA.Reflection
 {
     public static class TypeHelper
     {

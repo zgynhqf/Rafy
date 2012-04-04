@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OEA.Core;
+
 using OEA;
 using System.Collections;
 
@@ -30,7 +30,6 @@ namespace OEA.Library
     /// <summary>
     /// 差异保存类
     /// </summary>
-    /// <typeparam name="TCommand"></typeparam>
     [Serializable]
     internal class DiffSaveService : Service
     {

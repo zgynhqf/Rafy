@@ -26,8 +26,6 @@ using OEA.MetaModel.View;
 using OEA.MetaModel.Attributes;
 using OEA.ORM;
 using OEA;
-using OEA.Core;
-using OEA.Data;
 using OEA.Web;
 using OEA.Library;
 

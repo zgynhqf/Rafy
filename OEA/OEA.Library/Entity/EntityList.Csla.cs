@@ -220,40 +220,6 @@ namespace OEA.Library
         {
             this.OnSave();
         }
-    }
-
-    /// <summary>
-    /// copy from csla
-    /// </summary>
-    public partial class EntityList : ICloneable
-    {
-        #region ICloneable
-
-        object ICloneable.Clone()
-        {
-            return GetClone();
-        }
-
-        /// <summary>
-        /// Creates a clone of the object.
-        /// </summary>
-        /// <returns>A new object containing the exact data of the original object.</returns>
-        [EditorBrowsable(EditorBrowsableState.Advanced)]
-        protected virtual object GetClone()
-        {
-            return OEA.Core.ObjectCloner.Clone(this);
-        }
-
-        /// <summary>
-        /// Creates a clone of the object.
-        /// </summary>
-        /// <returns>A new object containing the exact data of the original object.</returns>
-        public EntityList Clone()
-        {
-            return (EntityList)GetClone();
-        }
-
-        #endregion
 
         #region Serialization Notification
 

@@ -84,16 +84,8 @@
     <Compile Include="DataPortal\DataPortalClient\IDataPortalProxy.cs" />
     <Compile Include="DataPortal\DataPortalClient\WcfProxy.cs" />
     <Compile Include="DataPortal\DataPortalResult.cs" />
-    <Compile Include="DataPortal\Data\ConnectionManager.cs" />
-    <Compile Include="DataPortal\ObjectCloner.cs" />
-    <Compile Include="DataPortal\Reflection\DynamicMemberHandle.cs" />
-    <Compile Include="DataPortal\Reflection\DynamicMethodHandle.cs" />
-    <Compile Include="DataPortal\Reflection\DynamicMethodHandlerFactory.cs" />
-    <Compile Include="DataPortal\Reflection\LateBoundObject.cs" />
-    <Compile Include="DataPortal\Reflection\MethodCacheKey.cs" />
-    <Compile Include="DataPortal\Reflection\MethodCaller.cs" />
-    <Compile Include="DataPortal\Security\CslaIdentity.cs" />
-    <Compile Include="DataPortal\Security\CslaPrincipal.cs" />
+    <Compile Include="Utils\DataBase\ConnectionManager.cs" />
+    <Compile Include="Utils\ObjectCloner.cs" />
     <Compile Include="DataPortal\Server\DataPortalContext.cs" />
     <Compile Include="DataPortal\Server\DataPortalFacade.cs" />
     <Compile Include="DataPortal\Server\DataPortalResult.cs" />
@@ -165,7 +157,7 @@
     <Compile Include="EntityRepository\zzzEF\DbContextExtension.cs" />
     <Compile Include="EntityRepository\zzzEF\DbCreationType.cs" />
     <Compile Include="EntityRepository\zzzEF\ORMContext.cs" />
-    <Compile Include="Commands\DiffSaveCommand.cs" />
+    <Compile Include="EntityRepository\DiffSaveService.cs" />
     <Compile Include="EntityRepository\zzzEF\_DbContextBase.cs" />
     <Compile Include="EntityRepository\zzzEF\ORMapping.cs" />
     <Compile Include="EntityRepository\AggregateSQL\AggregateDescriptor.cs" />

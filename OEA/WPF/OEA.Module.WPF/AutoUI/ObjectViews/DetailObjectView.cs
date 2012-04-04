@@ -19,7 +19,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using OEA.Core;
+
 using OEA.Editors;
 using System.Diagnostics;
 

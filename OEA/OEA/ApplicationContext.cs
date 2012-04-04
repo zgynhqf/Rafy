@@ -77,7 +77,7 @@ namespace OEA
                     if (_principal == null)
                     {
                         if (ApplicationContext.AuthenticationType != "Windows")
-                            _principal = new GenericPrincipal(new GenericIdentity(string.Empty), null);
+                            _principal = new GenericPrincipal(AnonymousIdentity.Instance, null);
                         else
                             _principal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
                     }

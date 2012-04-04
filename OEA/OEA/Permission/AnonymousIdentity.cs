@@ -19,7 +19,7 @@ using System.Security.Principal;
 
 namespace OEA
 {
-    internal class AnonymousIdentity : GenericIdentity, IUser
+    public class AnonymousIdentity : GenericIdentity, IUser
     {
         public static readonly AnonymousIdentity Instance = new AnonymousIdentity();
 

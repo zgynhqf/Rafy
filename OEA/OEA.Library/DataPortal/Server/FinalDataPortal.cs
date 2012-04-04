@@ -23,12 +23,12 @@ namespace OEA.Server
         public DataPortalResult Fetch(Type objectType, object criteria, DataPortalContext context)
         {
             // create an instance of the business object.
-            var obj = new LateBoundObject(objectType);
+            var obj = Activator.CreateInstance(objectType, true);
 
-            obj.CallMethod("QueryBy", criteria);
+            MethodCaller.CallMethodIfImplemented(obj, "QueryBy", criteria);
 
             // return the populated business object as a result
-            return new DataPortalResult(obj.Instance);
+            return new DataPortalResult(obj);
         }
 
         /// <summary>
@@ -40,7 +40,6 @@ namespace OEA.Server
         /// </param>
         public DataPortalResult Update(object obj, DataPortalContext context)
         {
-            LateBoundObject lb = new LateBoundObject(obj);
             // tell the business object to update itself
             var target = obj as Entity;
             if (target != null)
@@ -82,7 +81,7 @@ namespace OEA.Server
                 // this is an updatable collection or some other
                 // non-BusinessBase type of object
                 // tell the object to update itself
-                lb.CallMethod("DataPortal_Update");
+                MethodCaller.CallMethodIfImplemented(obj, "DataPortal_Update");
             }
 
             return new DataPortalResult(obj);

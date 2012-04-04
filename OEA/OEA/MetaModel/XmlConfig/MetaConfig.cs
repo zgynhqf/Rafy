@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using OEA.Reflection;
 
 namespace OEA.MetaModel.XmlConfig
 {

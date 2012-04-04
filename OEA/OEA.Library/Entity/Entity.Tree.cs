@@ -21,7 +21,7 @@ using OEA.MetaModel.Attributes;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using System.Collections;
-using OEA.Core;
+
 using OEA.Serialization.Mobile;
 using OEA.Serialization;
 using OEA.MetaModel;

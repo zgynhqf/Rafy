@@ -2,35 +2,36 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OEA.Security;
 using System.Security.Principal;
 using OEA;
 
 namespace OEA.RBAC.Security
 {
     [Serializable]
-    public class OEAPrincipal : CslaPrincipal
+    public class OEAPrincipal : IPrincipal
     {
         /// <summary>
-        /// 由于DataportalContext使用了Principel，所以每次都传输OEAIdentity对象，
+        /// 由于 DataportalContext 使用了 Principel，所以每次都传输 OEAIdentity 对象，
         /// 内部的数据要尽量简单，不可以序列化此字段。
         /// </summary>
         [NonSerialized]
         private OEAIdentity _realIdentity;
 
+        private IIdentity _identity;
+
         private OEAPrincipal(IIdentity identity, OEAIdentity realIdentity)
-            : base(identity)
         {
-            _realIdentity = realIdentity;
+            this._identity = identity;
+            this._realIdentity = realIdentity;
         }
 
-        public override IIdentity Identity
+        public IIdentity Identity
         {
             get
             {
                 if (this._realIdentity == null)
                 {
-                    var id = (base.Identity as IdentityId).UserId;
+                    var id = (this._identity as IdentityIdCache).UserId;
                     this._realIdentity = OEAIdentity.GetIdentity(id);
                 }
 
@@ -38,12 +39,22 @@ namespace OEA.RBAC.Security
             }
         }
 
+        /// <summary>
+        /// Returns a value indicating whether the
+        /// user is in a given role.
+        /// </summary>
+        /// <param name="role">Name of the role.</param>
+        public virtual bool IsInRole(string role)
+        {
+            return false;
+        }
+
         public static bool Login(string username, string password)
         {
             var identity = OEAIdentity.GetIdentity(username, password);
             if (identity.IsAuthenticated)
             {
-                ApplicationContext.User = new OEAPrincipal(new IdentityId()
+                ApplicationContext.User = new OEAPrincipal(new IdentityIdCache()
                 {
                     UserId = identity.User.Id
                 }, identity);
@@ -51,18 +62,18 @@ namespace OEA.RBAC.Security
             }
             else
             {
-                ApplicationContext.User = new CslaPrincipal();
+                ApplicationContext.User = new GenericPrincipal(AnonymousIdentity.Instance, null);
                 return false;
             }
         }
 
         public static void Logout()
         {
-            ApplicationContext.User = new CslaPrincipal();
+            ApplicationContext.User = new GenericPrincipal(AnonymousIdentity.Instance, null);
         }
 
         [Serializable]
-        private class IdentityId : IIdentity
+        private class IdentityIdCache : IIdentity
         {
             public int UserId;
 

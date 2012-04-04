@@ -113,8 +113,7 @@ namespace OEA
                 // this is an updatable collection or some other
                 // non-BusinessBase type of object
                 // tell the object to update itself
-                LateBoundObject lb = new LateBoundObject(obj);
-                lb.CallMethod("Child_Update", parent);
+                MethodCaller.CallMethodIfImplemented(obj, "Child_Update", parent);
             }
         }
 

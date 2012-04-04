@@ -17,6 +17,7 @@ using System.Linq;
 using System.Text;
 using OEA.MetaModel.View;
 using System.Xml.Linq;
+using OEA.Reflection;
 
 namespace OEA.MetaModel.XmlConfig.Web
 {

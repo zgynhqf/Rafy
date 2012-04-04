@@ -13,9 +13,10 @@
 
 using System;
 using System.Reflection;
-using OEA.Core;
+
 using OEA.ManagedProperty;
 using OEA.Library;
+using OEA.Reflection;
 
 namespace OEA.ORM.sqlserver
 {
