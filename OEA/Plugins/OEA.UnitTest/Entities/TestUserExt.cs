@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using OEA.ManagedProperty;
 using OEA.MetaModel;
-using OEA.MetaModel.WPF;
+
 using OEA.MetaModel.View;
 
 namespace OEA.Library._Test

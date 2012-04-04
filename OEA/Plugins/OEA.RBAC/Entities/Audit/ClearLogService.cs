@@ -11,7 +11,7 @@ namespace OEA.Library.Audit
     {
         protected override void Execute()
         {
-            using (var db = DBHelper.CreateDb(ConnectionStringNames.OEA))
+            using (var db = DBHelper.CreateDb(ConnectionStringNames.OEAPlugins))
             {
                 var sql = "DELETE FROM AUDITITEM";
                 db.Exec("sys.sp_sqlexec", new object[] { sql });

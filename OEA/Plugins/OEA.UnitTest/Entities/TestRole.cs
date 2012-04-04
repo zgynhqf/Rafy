@@ -9,7 +9,7 @@ using OEA.ManagedProperty;
 using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
 using OEA.ORM;
-using OEA.MetaModel.WPF;
+
 using OEA.MetaModel.View;
 
 namespace OEA.Library._Test
@@ -20,8 +20,6 @@ namespace OEA.Library._Test
     [Table("Role")]
     public class TestRole : UnitTestEntity
     {
-        protected TestRole() { }
-
         public bool IsLock { get; set; }
         public static readonly RefProperty<TestUser> TestUserRefProperty =
             P<TestRole>.RegisterRef(e => e.TestUser, new RefPropertyMeta

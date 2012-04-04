@@ -30,7 +30,7 @@ namespace OEA.ClientCachingProvider
 
             app.DbMigratingOperations += (o, e) =>
             {
-                using (var c = new OEADbMigrationContext(ConnectionStringNames.OEA))
+                using (var c = new OEADbMigrationContext(ConnectionStringNames.OEAPlugins))
                 {
                     //由于其它的库可能需要在 OEA 库中添加表，所以这里不要删除表、字段
                     c.RunDataLossOperation = false;

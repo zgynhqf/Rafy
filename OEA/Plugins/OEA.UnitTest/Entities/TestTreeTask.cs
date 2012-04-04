@@ -5,7 +5,7 @@ using System.Text;
 using OEA.MetaModel.Attributes;
 using OEA.ManagedProperty;
 using OEA.MetaModel;
-using OEA.MetaModel.WPF;
+
 using OEA.MetaModel.View;
 
 namespace OEA.Library._Test

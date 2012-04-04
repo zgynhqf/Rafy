@@ -203,7 +203,7 @@ namespace OEA.Library
 
         internal protected virtual string ConnectionStringSettingName
         {
-            get { return ConnectionStringNames.OEA; }
+            get { return ConnectionStringNames.OEAPlugins; }
         }
 
         void IEntityOrListInternal.NotifySaved()
