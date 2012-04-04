@@ -16,13 +16,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Security.Principal;
+using System.Runtime.Serialization;
 
 namespace OEA
 {
+    [Serializable]
     public class AnonymousIdentity : GenericIdentity, IUser
     {
-        public static readonly AnonymousIdentity Instance = new AnonymousIdentity();
+        public AnonymousIdentity() : base(string.Empty) { }
 
-        private AnonymousIdentity() : base(string.Empty) { }
+        protected AnonymousIdentity(SerializationInfo info, StreamingContext context) : base(string.Empty) { }
     }
 }

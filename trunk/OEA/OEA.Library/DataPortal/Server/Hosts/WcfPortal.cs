@@ -6,10 +6,11 @@ using System.ServiceModel.Activation;
 namespace OEA.Server.Hosts
 {
     /// <summary>
-    /// Exposes server-side DataPortal functionality
-    /// through WCF.
+    /// 使用 WCF 实现的统一的数据门户。
+    /// 
+    /// 标记了 ConcurrencyMode.Multiple 来表示多线程进行
     /// </summary>
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall)]
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall, ConcurrencyMode = ConcurrencyMode.Multiple, UseSynchronizationContext = false)]
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
     public class WcfPortal : IWcfPortal
     {

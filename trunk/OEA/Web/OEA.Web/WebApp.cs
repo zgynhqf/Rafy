@@ -23,6 +23,8 @@ using System.IO;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
 using OEA.Web.Services;
+using System.ServiceModel;
+using OEA.Server.Hosts;
 
 namespace OEA.Web
 {
@@ -31,9 +33,14 @@ namespace OEA.Web
     /// </summary>
     public class WebApp : AppImplementationBase
     {
-        public void Startup()
+        internal void Startup()
         {
             this.OnAppStartup();
+        }
+
+        internal void NotifyExit()
+        {
+            this.OnExit();
         }
 
         protected override void InitEnvironment()
@@ -93,5 +100,10 @@ namespace OEA.Web
         }
 
         protected override void StartMainProcess() { }
+
+        public override void Shutdown()
+        {
+            throw new InvalidOperationException("Web 服务器不支持关闭操作。");
+        }
     }
 }

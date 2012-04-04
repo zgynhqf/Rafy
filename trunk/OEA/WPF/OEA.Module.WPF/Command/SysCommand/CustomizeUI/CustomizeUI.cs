@@ -25,14 +25,17 @@ namespace OEA.WPF.Command
                 w.Width = 1000;
             });
 
-            var model = RF.Concreate<ViewConfigurationModelRepository>()
-                .GetByName(new ViewConfigurationModelNameCriteria
-                {
-                    EntityType = view.EntityType.AssemblyQualifiedName,
-                    ViewName = view.Meta.ExtendView
-                });
+            cr.MainView.DataLoader.LoadDataAsync(() =>
+            {
+                var model = RF.Concreate<ViewConfigurationModelRepository>()
+                    .GetByName(new ViewConfigurationModelNameCriteria
+                    {
+                        EntityType = ClientEntityConverter.ToClientName(view.EntityType),
+                        ViewName = view.Meta.ExtendView
+                    });
 
-            cr.MainView.Current = model;
+                return model;
+            });
         }
     }
 }

@@ -79,11 +79,6 @@ namespace OEA.MetaModel
 
         protected abstract void StartMainProcess();
 
-        protected void OnAppExit()
-        {
-            this.OnExit();
-        }
-
         #region IClientApp IServerApp 的成员
 
         public virtual void ShowMessage(string message, string title) { }

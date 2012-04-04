@@ -46,7 +46,7 @@ namespace OEA
         /// <returns></returns>
         public virtual IUser CurrentUser
         {
-            get { return AnonymousIdentity.Instance; }
+            get { return new AnonymousIdentity(); }
         }
 
         /// <summary>
