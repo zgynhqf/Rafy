@@ -26,22 +26,28 @@ namespace OEA
     {
         public static Type ToClientType(string clientName)
         {
-            if (OEAEnvironment.IsWeb)
-            {
-                return ClientEntities.Find(clientName).EntityType;
-            }
+            //作为服务端，对 Web 及 WPF 的处理应该是一样的，否则 Web 的项目无法直接为 WPFClient 提供服务。
 
-            return Type.GetType(clientName);
+            return ClientEntities.Find(clientName).EntityType;
+
+            //if (OEAEnvironment.IsWeb)
+            //{
+            //    return ClientEntities.Find(clientName).EntityType;
+            //}
+
+            //return Type.GetType(clientName);
         }
 
         public static string ToClientName(Type clientType)
         {
-            if (OEAEnvironment.IsWeb)
-            {
-                return ClientEntities.GetClientName(clientType);
-            }
+            return ClientEntities.GetClientName(clientType);
 
-            return clientType.AssemblyQualifiedName;
+            //if (OEAEnvironment.IsWeb)
+            //{
+            //    return ClientEntities.GetClientName(clientType);
+            //}
+
+            //return clientType.AssemblyQualifiedName;
         }
     }
 }

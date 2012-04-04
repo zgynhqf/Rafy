@@ -26,25 +26,28 @@ namespace OEA.Web
     {
         private static bool _initialized = false;
 
-        private static object _lock = new object();
+        private HttpApplication context;
 
         public void Init(HttpApplication context)
         {
-            context.BeginRequest += new EventHandler(StartupApp);
+            this.context = context;
+            context.BeginRequest += new EventHandler(context_BeginRequest);
         }
 
-        private void StartupApp(object sender, EventArgs e)
+        private void context_BeginRequest(object sender, EventArgs e)
         {
-            if (!_initialized)
-            {
-                lock (_lock)
-                {
-                    if (!_initialized)
-                    {
-                        new WebApp().Startup();
+            context.BeginRequest -= new EventHandler(context_BeginRequest);
 
-                        _initialized = true;
-                    }
+            lock (context)
+            {
+                if (!_initialized)
+                {
+                    var webApp = new WebApp();
+                    webApp.Startup();
+
+                    context.Disposed += (oo, ee) => { webApp.NotifyExit(); };
+
+                    _initialized = true;
                 }
             }
         }

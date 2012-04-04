@@ -77,7 +77,7 @@ namespace OEA
                     if (_principal == null)
                     {
                         if (ApplicationContext.AuthenticationType != "Windows")
-                            _principal = new GenericPrincipal(AnonymousIdentity.Instance, null);
+                            _principal = new GenericPrincipal(new AnonymousIdentity(), null);
                         else
                             _principal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
                     }
@@ -388,7 +388,7 @@ namespace OEA
         /// <para>
         /// If this value is empty or null, a new value is read from the 
         /// application configuration file with the key value 
-        /// "CslaDataPortalProxy".
+        /// "DataPortalProxy".
         /// </para><para>
         /// The proxy class must implement SimpleCsla.Server.IDataPortalServer.
         /// </para><para>
@@ -417,7 +417,7 @@ namespace OEA
         /// </remarks>
         public static string DataPortalProxy
         {
-            get { return ConfigurationHelper.GetAppSettingOrDefault("CslaDataPortalProxy", "Local"); }
+            get { return ConfigurationHelper.GetAppSettingOrDefault("DataPortalProxy", "Local"); }
         }
 
         /// <summary>

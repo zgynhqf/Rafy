@@ -62,14 +62,14 @@ namespace OEA.RBAC.Security
             }
             else
             {
-                ApplicationContext.User = new GenericPrincipal(AnonymousIdentity.Instance, null);
+                ApplicationContext.User = new GenericPrincipal(new AnonymousIdentity(), null);
                 return false;
             }
         }
 
         public static void Logout()
         {
-            ApplicationContext.User = new GenericPrincipal(AnonymousIdentity.Instance, null);
+            ApplicationContext.User = new GenericPrincipal(new AnonymousIdentity(), null);
         }
 
         [Serializable]

@@ -8,10 +8,15 @@
  * 
 *******************************************************/
 
+2.10.472.0
+    添加功能
+        * Web 项目可直接作为 C/S 程序的服务端。
+        * ClientEntityConverter 作为服务端，对 Web 及 WPF 的处理应该是一样的，否则 Web 的项目无法直接为 WPFClient 提供服务。
+
 2.10.470.0
     内部修改
         * OEA.Reflection 中的内容移动到 Common 中。
-        * 删除 CslaIdentity、CslaPrincipal 两个类。 
+        * 删除 CslaIdentity、CslaPrincipal 两个类。
 
 2.10.467.0
     内部修改

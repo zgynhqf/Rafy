@@ -20,8 +20,7 @@ namespace OEA
         protected ViewConfigurationModel() { }
 
         /// <summary>
-        /// Web 下是客户端实体名
-        /// WPF 下是类型全名
+        /// 实体的客户端名称
         /// </summary>
         public static readonly Property<string> EntityTypeProperty = P<ViewConfigurationModel>.Register(e => e.EntityType);
         public string EntityType
@@ -433,6 +432,9 @@ namespace OEA
     public class ViewConfigurationModelNameCriteria : Criteria
     {
         public static readonly Property<string> ClientEntityProperty = P<ViewConfigurationModelNameCriteria>.Register(e => e.EntityType);
+        /// <summary>
+        /// 实体的客户端名称
+        /// </summary>
         public string EntityType
         {
             get { return this.GetProperty(ClientEntityProperty); }

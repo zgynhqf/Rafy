@@ -32,6 +32,8 @@ namespace OEA.Server
         /// <summary>
         /// 注册服务端应用程序。
         /// 在服务端 Application 类的构造函数中调用此法。
+        /// 
+        /// 不能继承自类的类型才使用此方法，否则建议继承此类。
         /// </summary>
         /// <param name="serverApp"></param>
         public static void Register(IServerAppRuntime serverApp)
@@ -48,7 +50,7 @@ namespace OEA.Server
             if (runtime == null) throw new ArgumentNullException("runtime");
 
             runtime.AppStartup += (s, e) => this.OnAppStartup();
-            runtime.AppExit += (s, e) => this.OnAppExit();
+            runtime.AppExit += (s, e) => this.OnExit();
 
             this._runtime = runtime;
         }

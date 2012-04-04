@@ -63,7 +63,7 @@ namespace OEA.Module.WPF.Shell
             if (wpfApp == null) throw new ArgumentNullException("wpfApp");
 
             wpfApp.Startup += (s, e) => this.OnAppStartup();
-            wpfApp.Exit += (s, e) => this.OnAppExit();
+            wpfApp.Exit += (s, e) => this.OnExit();
 
             this._wpfApp = wpfApp;
         }
@@ -76,7 +76,7 @@ namespace OEA.Module.WPF.Shell
             FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement),
                 new FrameworkPropertyMetadata(XmlLanguage.GetLanguage("zh-CN")));
 
-            OEAEnvironment.Location = string.IsNullOrWhiteSpace(ConfigurationHelper.GetAppSettingOrDefault("CslaDataPortalProxy")) ?
+            OEAEnvironment.Location = ApplicationContext.DataPortalProxy == "Local" ?
                 OEALocation.LocalVersion : OEALocation.Client;
 
             base.InitEnvironment();
@@ -215,15 +215,12 @@ namespace OEA.Module.WPF.Shell
         /// </summary>
         private void ModifyPrivateBinPath()
         {
-            var pathes = new List<string> { 
-                "Library", "Module", "Files", "Report"
-            };
-
             var dlls = OEAEnvironment.GetEntityDlls(false);
             if (dlls.Length > 0)
             {
-                var dir = Path.GetDirectoryName(dlls[0]) + @"\Library";
-                pathes.Add(dir);
+                var pathes = new List<string> { 
+                    "Library", "Module", "Files", Path.GetDirectoryName(dlls[0]) + @"\Library"
+                };
 
                 var path = string.Join(";", pathes);
 

@@ -98,7 +98,6 @@ namespace OEA.DataPortalClient
                 throw;
             }
 
-
             object result = response.Result;
             if (result is Exception)
                 throw (Exception)result;
