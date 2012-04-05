@@ -14,21 +14,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
-
 using System.Linq.Expressions;
-using OEA.Utils;
+using System.Text;
+using OEA.ManagedProperty;
 using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
-using OEA.ManagedProperty;
+using OEA.Utils;
 
 namespace OEA.Library
 {
     /// <summary>
     /// 懒加载引用实体的相关实现
     /// </summary>
-    public partial class Entity
+    public partial class Entity : IReferenceOwner
     {
         #region 延迟加载 - 子集合
 

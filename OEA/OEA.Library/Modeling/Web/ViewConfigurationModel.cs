@@ -17,8 +17,6 @@ namespace OEA
     [RootEntity]
     public class ViewConfigurationModel : Entity
     {
-        protected ViewConfigurationModel() { }
-
         /// <summary>
         /// 实体的客户端名称
         /// </summary>
@@ -385,8 +383,6 @@ namespace OEA
     [Serializable]
     public class ViewConfigurationModelList : EntityList
     {
-        protected ViewConfigurationModelList() { }
-
         protected void QueryBy(ViewConfigurationModelNameCriteria criteria)
         {
             var viewName = criteria.ViewName;

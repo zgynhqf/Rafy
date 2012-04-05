@@ -196,7 +196,8 @@ namespace OEA.Module.WPF.Editors
             var template = this.GenerateDisplayTemplateInCell();
 
             var cellContainer = MTTGCell.Wrap(template, this);
-            cellContainer.SetValue(AutomationProperties.NameProperty, this._propertyInfo.Label);
+            var l = this._propertyInfo.Label;
+            if (l != null) { cellContainer.SetValue(AutomationProperties.NameProperty, l); }
 
             return cellContainer;
         }

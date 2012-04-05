@@ -35,7 +35,7 @@ namespace OEA.WPF.Command
     {
         public override void Execute(QueryObjectView queryView)
         {
-            var brokenRules = queryView.Current.ValidationRules.CheckRules();
+            var brokenRules = queryView.Current.ValidationRules.Validate();
             if (brokenRules.Count > 0)
             {
                 App.Current.MessageBox.Show(

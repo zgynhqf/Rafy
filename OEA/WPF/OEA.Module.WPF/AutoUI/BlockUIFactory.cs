@@ -161,7 +161,8 @@ namespace OEA.Module.WPF
                     if (view != null) { view.AddPropertyEditor(editor); }
 
                     //支持UI Test
-                    AutomationProperties.SetName(editor.Control, propertyView.Label);
+                    var label = propertyView.Label;
+                    if (label != null) { AutomationProperties.SetName(editor.Control, propertyView.Label); }
                 }
             }
 

@@ -76,17 +76,17 @@ namespace Demo
             base.AddValidations();
 
             //示例属性验证。
-            this.ValidationRules.AddRule(AuthorProperty, CommonRules.StringRequired);
-            this.ValidationRules.AddRule(AuthorProperty, CommonRules.StringMaxLength, new { MaxLength = 3 });
-            this.ValidationRules.AddRule(BookCategoryRefProperty, CommonRules.Required);
-            this.ValidationRules.AddRule(AmountProperty, CommonRules.IntegerMinValue, new { MinValue = 5 });
-            this.ValidationRules.AddRule(AmountProperty, CommonRules.IntegerMaxValue, new { MaxValue = 50 });
-            this.ValidationRules.AddRule(PublisherProperty, CommonRules.RegexMatch, new
+            var rules = this.ValidationRules;
+            rules.AddRule(AuthorProperty, CommonRules.StringRequired);
+            rules.AddRule(AuthorProperty, CommonRules.StringMaxLength, new { MaxLength = 3 });
+            rules.AddRule(AmountProperty, CommonRules.IntegerMinValue, new { MinValue = 5 });
+            rules.AddRule(AmountProperty, CommonRules.IntegerMaxValue, new { MaxValue = 50 });
+            rules.AddRule(PublisherProperty, CommonRules.RegexMatch, new
             {
                 Regex = TextFormatter.ReAllChinese,
                 RegexLabel = "全中文"
             });
-            this.ValidationRules.AddRule(NameProperty, (e, args) =>
+            rules.AddRule(NameProperty, (e, args) =>
             {
                 var value = e.GetProperty(args.Property) as string;
                 if (string.IsNullOrEmpty(value))
@@ -98,7 +98,7 @@ namespace Demo
                     args.BrokenDescription = "书籍的名称需要带上书名号：《》";
                 }
             });
-            //this.ValidationRules.AddRule(AmountProperty, (e, args) =>
+            //rules.AddRule(AmountProperty, (e, args) =>
             //{
             //    var value = (e as Book).Amount;
             //    if (value < 0)

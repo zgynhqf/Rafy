@@ -47,7 +47,7 @@ namespace OEAUnitTest
         public void MPT_Validation()
         {
             var user = Get<TestUser>();
-            var brokenRules = user.ValidationRules.CheckRules();
+            var brokenRules = user.ValidationRules.Validate();
             Assert.AreEqual(brokenRules.Count, 1);
             Assert.AreEqual(brokenRules[0].Description, "编码 并没有填写。");
         }
@@ -290,7 +290,7 @@ namespace OEAUnitTest
             e1._mySelfReference = e1;
             TestUserExt.SetUserCode(e1, "UserCode");
 
-            Assert.AreEqual(e1.ValidationRules.CheckRules().Count, 1);
+            Assert.AreEqual(e1.ValidationRules.Validate().Count, 1);
 
             //在这里可以查看序列化后传输的字符串
             var serializedString = MobileFormatter.SerializeToString(e1);

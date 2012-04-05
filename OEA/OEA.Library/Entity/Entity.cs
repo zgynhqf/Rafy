@@ -41,22 +41,23 @@ namespace OEA.Library
     /// 对象实体
     /// 
     /// 继承此类，可以获得以下功能：
-    /// *去除CSLA的属性权限验证，提高速度。
-    /// *自动管理CSLA属性，子类可以通过属性AllProperties获取到所有的CSLA属性。
-    /// *实现IClonable(T)接口，并自动复制对应的CSLA属性。
-    /// *默认实现了所有数据库访问的方法：CDUQ。
-    /// *提供了延迟加载子对象集合的方法。
-    /// *提供了创建延迟外键对象的方法。
+    /// * 自动管理托管属性，可以通过属性 FindRepository().GetAvailableIndicators() 获取到所有的托管属性。
+    /// * 默认实现了所有数据库访问的方法：CDUQ。
+    /// * 提供了延迟加载子对象集合的方法。
+    /// * 提供了创建延迟外键对象的方法。
+    /// * 提供实体验证规则框架。
+    /// * 提供树型实体支持。
+    /// * 支持聚合对象的路由事件。
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [Serializable]
-    public abstract partial class Entity : ManagedPropertyObject, IEntity, IReferenceOwner
+    public abstract partial class Entity : ManagedPropertyObject, IEntity
     {
         #region 构造函数及工厂方法
 
         protected Entity()
         {
-            //ValidationRules.CheckRules();
+            //ValidationRules.Validate();
 
             //不需要此行，所有新增的实体的 Id 都是 -1.
             //this.LoadProperty(IdProperty, OEAEnvironment.NewLocalId());
@@ -76,6 +77,23 @@ namespace OEA.Library
         {
             //经测试，Activator 创建对象也非常快，这是因为它的内部作了缓存处理。
             return Activator.CreateInstance(entityType, true) as Entity;
+        }
+
+        #endregion
+
+        #region 所属仓库
+
+        [NonSerialized]
+        private IRepository _repository;
+
+        internal protected IRepository FindRepository()
+        {
+            if (this._repository == null)
+            {
+                this._repository = RepositoryFactoryHost.Factory.Create(this.GetType());
+            }
+
+            return this._repository;
         }
 
         #endregion
@@ -178,7 +196,7 @@ namespace OEA.Library
             }
 
             //复制目标对象的所有 CSLA 字段。
-            var allProperties = AllProperties();
+            var allProperties = FindRepository().GetAvailableIndicators();
             for (int i = 0, c = allProperties.Count; i < c; i++)
             {
                 var property = allProperties[i];
@@ -374,24 +392,6 @@ namespace OEA.Library
         }
 
         #endregion
-
-        private IList<IManagedProperty> AllProperties()
-        {
-            return this.FindRepository().GetAvailableIndicators();
-        }
-
-        [NonSerialized]
-        private IRepository _repository;
-
-        internal protected IRepository FindRepository()
-        {
-            if (this._repository == null)
-            {
-                this._repository = RepositoryFactoryHost.Factory.Create(this.GetType());
-            }
-
-            return this._repository;
-        }
 
         #region 快速字段
 

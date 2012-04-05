@@ -136,7 +136,7 @@ namespace OEA.WPF.Command
                         return;
                     }
 
-                    var broken = tmpEntity.ValidationRules.CheckRules();
+                    var broken = tmpEntity.ValidationRules.Validate();
                     if (broken.Count > 0)
                     {
                         App.Current.MessageBox.Show("属性错误", broken.ToString());

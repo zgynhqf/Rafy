@@ -29,9 +29,26 @@ namespace OEA.WPF.Command
     {
         public override void Execute(ObjectView view)
         {
-            RF.Save(view.Data.CastTo<EntityList>());
+            var listView = view.CastTo<ListObjectView>();
 
-            view.CastTo<ListObjectView>().RefreshControl();
+            var list = listView.Data;
+            if (list.Count > 0)
+            {
+                //检测条件
+                for (int i = 0, c = list.Count; i < c; i++)
+                {
+                    var item = list[i];
+                    var brokenRules = item.ValidationRules.Validate();
+                    if (brokenRules.Count > 0)
+                    {
+                        var msg = string.Format("第 {0} 行数据验证不通过：\r\n{1}", i + 1, brokenRules);
+                        App.Current.MessageBox.Show("保存出错", msg);
+                        return;
+                    }
+                }
+
+                RF.Save(list);
+            }
         }
     }
 }

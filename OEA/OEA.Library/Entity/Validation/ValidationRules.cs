@@ -139,7 +139,7 @@ namespace OEA.Library.Validation
         /// 检查某个属性是否满足规则
         /// </summary>
         /// <param name="property">托管属性</param>
-        public BrokenRulesCollection CheckRules(IManagedProperty property)
+        public BrokenRulesCollection Validate(IManagedProperty property)
         {
             var res = new BrokenRulesCollection();
 
@@ -167,7 +167,7 @@ namespace OEA.Library.Validation
         /// <summary>
         /// 检查整个实体对象是否满足规则
         /// </summary>
-        public BrokenRulesCollection CheckRules()
+        public BrokenRulesCollection Validate()
         {
             var res = new BrokenRulesCollection();
 

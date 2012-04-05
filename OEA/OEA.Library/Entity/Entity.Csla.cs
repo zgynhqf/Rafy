@@ -13,22 +13,19 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using OEA.ManagedProperty;
-
-using System.ComponentModel;
-using System.Collections.Specialized;
-
-using System.Runtime.Serialization;
-using OEA.Serialization.Mobile;
 using OEA.Serialization;
+using OEA.Serialization.Mobile;
 
 namespace OEA.Library
 {
     /// <summary>
     /// 原来 Csla 中的 BusinessBase 中的代码，都移动到这个类中。
-    /// 
     /// </summary>
     public abstract partial class Entity : IDirtyAware, IEntityOrList
     {

@@ -12,20 +12,18 @@
 *******************************************************/
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using OEA.ORM;
-using OEA.MetaModel.Attributes;
-using System.Collections.ObjectModel;
-using System.Runtime.Serialization;
 using System.Collections;
-
-using OEA.Serialization.Mobile;
-using OEA.Serialization;
-using OEA.MetaModel;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.Text;
+using OEA.MetaModel;
+using OEA.MetaModel.Attributes;
+using OEA.ORM;
+using OEA.Serialization;
+using OEA.Serialization.Mobile;
 
 namespace OEA.Library
 {
