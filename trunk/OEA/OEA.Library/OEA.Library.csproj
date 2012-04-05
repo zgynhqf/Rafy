@@ -114,7 +114,6 @@
     <Compile Include="Entity\EntityList.Csla.cs">
       <DependentUpon>EntityList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Entity\IValidatable.cs" />
     <Compile Include="Entity\TreeCodeOption.cs" />
     <Compile Include="Entity\Validation\ITypeValidationsHost.cs" />
     <Compile Include="Service.cs" />

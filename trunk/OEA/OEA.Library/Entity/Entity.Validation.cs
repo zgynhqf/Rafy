@@ -21,13 +21,14 @@ using OEA.ManagedProperty;
 using OEA.Serialization;
 using OEA.Library.Validation;
 using System.ComponentModel;
+using OEA.MetaModel;
 
 namespace OEA.Library
 {
     /// <summary>
     /// 实体类的一些不太重要的实现代码。
     /// </summary>
-    public partial class Entity : IValidatable, IDataErrorInfo
+    public partial class Entity : IDataErrorInfo
     {
         private ValidationRules _validationRules;
 
@@ -56,29 +57,34 @@ namespace OEA.Library
             }
         }
 
-        /// <summary>
-        /// 检查整个实体对象是否满足规则
-        /// </summary>
-        public BrokenRulesCollection Validate()
-        {
-            return this.ValidationRules.CheckRules();
-        }
-
-        /// <summary>
-        /// 检查某个属性是否满足规则
-        /// </summary>
-        /// <param name="property">托管属性</param>
-        public BrokenRulesCollection Validate(IManagedProperty property)
-        {
-            return this.ValidationRules.CheckRules(property);
-        }
-
         internal virtual void AddInstanceValidations() { }
 
         /// <summary>
         /// 重写此方法添加实体验证。
         /// </remarks>
-        internal protected virtual void AddValidations() { }
+        internal protected virtual void AddValidations()
+        {
+            //为所有不可空的引用属性加上 Required 验证规则。
+            var properties = this.FindRepository().GetAvailableIndicators()
+                .Where(p =>
+                {
+                    if (p is IRefProperty)
+                    {
+                        var meta = p.GetMeta(this) as IRefPropertyMetadata;
+                        return meta.ReferenceType == ReferenceType.Normal && !meta.Nullable;
+                    }
+                    return false;
+                })
+                .ToArray();
+            if (properties.Length > 0)
+            {
+                var rules = this.ValidationRules;
+                foreach (var p in properties)
+                {
+                    rules.AddRule(p, CommonRules.Required);
+                }
+            }
+        }
 
         protected override void OnDeserialized(DesirializedArgs context)
         {
@@ -93,7 +99,12 @@ namespace OEA.Library
 
         string IDataErrorInfo.Error
         {
-            get { return null; }
+            get
+            {
+                var broken = this.ValidationRules.Validate();
+                if (broken.Count > 0) return broken.ToString();
+                return null;
+            }
         }
 
         public string this[string columnName]
@@ -104,7 +115,7 @@ namespace OEA.Library
                 var property = allIndicators.FirstOrDefault(p => p.Name == columnName);
                 if (property != null)
                 {
-                    var broken = this.Validate(property);
+                    var broken = this.ValidationRules.Validate(property);
                     if (broken.Count > 0) return broken.ToString();
                 }
 

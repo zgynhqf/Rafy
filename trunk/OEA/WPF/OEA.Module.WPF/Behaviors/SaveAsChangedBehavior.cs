@@ -67,7 +67,7 @@ namespace OEA.Module.WPF.Behaviors
                 //如果不是新增后立即删除的可更改对象则自动保存
                 if (oldEntity.IsDirty)
                 {
-                    var broken = oldEntity.ValidationRules.CheckRules();
+                    var broken = oldEntity.ValidationRules.Validate();
                     if (broken.Count == 0)
                     {
                         //oldEntity.MergeOldObject((oldEntity as ISavable).Save() as BusinessBase);

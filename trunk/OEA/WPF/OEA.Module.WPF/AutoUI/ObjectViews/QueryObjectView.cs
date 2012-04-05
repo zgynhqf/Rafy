@@ -100,7 +100,7 @@ namespace OEA.Module.WPF
 
         private bool CanQuery()
         {
-            return this.Current.ValidationRules.CheckRules().Count == 0;
+            return this.Current.ValidationRules.Validate().Count == 0;
         }
 
         #region PropertyEditors

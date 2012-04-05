@@ -14,8 +14,6 @@ namespace OEA
     [ChildEntity, Serializable]
     public class ViewConfigurationCommand : Entity
     {
-        protected ViewConfigurationCommand() { }
-
         public static readonly RefProperty<ViewConfigurationModel> ViewConfigurationModelRefProperty =
             P<ViewConfigurationCommand>.RegisterRef(e => e.ViewConfigurationModel, ReferenceType.Parent);
         public int ViewConfigurationModelId
@@ -54,8 +52,6 @@ namespace OEA
     [Serializable]
     public class ViewConfigurationCommandList : EntityList
     {
-        protected ViewConfigurationCommandList() { }
-
         protected override void OnGetByParentId(int parentId)
         {
             var evm = ViewConfigurationModel.GetEVMByParentId(parentId);
