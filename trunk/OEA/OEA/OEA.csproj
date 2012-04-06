@@ -130,7 +130,6 @@
     <Compile Include="MetaModel\View\Config\Helper.cs" />
     <Compile Include="MetaModel\View\Config\ViewExtensionConfig.cs" />
     <Compile Include="MetaModel\View\Block\EntityViewMetaFactory.cs" />
-    <Compile Include="MetaModel\View\MetaExtensions.cs" />
     <Compile Include="MetaModel\View\Block\EntityPropertyViewMeta.cs" />
     <Compile Include="MetaModel\View\Block\EntityViewMeta.cs" />
     <Compile Include="MetaModel\View\Block\ReferenceViewInfo.cs" />

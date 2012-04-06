@@ -55,7 +55,7 @@ namespace OEA.Module.WPF.Editors
             if (!string.IsNullOrEmpty(refInfo.RefEntityProperty))
             {
                 var textBlock = new FrameworkElementFactory(typeof(TextBlock));
-                var binding = new Binding(refInfo.TitlePath());
+                var binding = new Binding(this.PropertyInfo.BindingPath());
                 textBlock.SetBinding(TextBlock.TextProperty, binding);
                 return textBlock;
             }
