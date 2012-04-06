@@ -74,6 +74,10 @@ namespace OEA.MetaModel.View
         }
 
         private EntityPropertyViewMeta _TitleProperty;
+        /// <summary>
+        /// 实体的标题属性/主显示属性。
+        /// （可能为 null）
+        /// </summary>
         public EntityPropertyViewMeta TitleProperty
         {
             get { return this._TitleProperty; }
@@ -208,6 +212,26 @@ namespace OEA.MetaModel.View
             foreach (var item in greaterzerolist) res[i++] = item;
 
             return res;
+        }
+
+        /// <summary>
+        /// 根据名字查询实体属性（忽略大小写）
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public EntityPropertyViewMeta Property(IManagedProperty property)
+        {
+            return this.Property(property.GetMetaPropertyName(this.EntityType));
+        }
+
+        /// <summary>
+        /// 根据名字查询实体属性（忽略大小写）
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public EntityPropertyViewMeta Property(string name)
+        {
+            return this.EntityProperties.FirstOrDefault(item => item.Name.EqualsIgnorecase(name));
         }
 
         #endregion

@@ -94,7 +94,7 @@ namespace OEA.Module.WPF
             set
             {
                 if (this._showInWhere.HasValue) throw new InvalidOperationException("只能设置一次。");
-                if (value != ShowInWhere.List && value != ShowInWhere.Lookup) throw new ArgumentOutOfRangeException("propertyFilter");
+                if (value != ShowInWhere.List && value != ShowInWhere.DropDown) throw new ArgumentOutOfRangeException("propertyFilter");
 
                 this._showInWhere = value;
             }

@@ -172,16 +172,6 @@ namespace OEA.MetaModel.View
             set { this.SetValue(ref this._NavigatePropertyMeta, value); }
         }
 
-        /// <summary>
-        /// 判断是否可以显示在某处
-        /// </summary>
-        /// <param name="where"></param>
-        /// <returns></returns>
-        public bool CanShowIn(ShowInWhere where)
-        {
-            return (this.ShowInWhere & where) == where;
-        }
-
         public override bool IsVisible
         {
             get
@@ -206,6 +196,42 @@ namespace OEA.MetaModel.View
         {
             return this.IsReference && this._refViewInfo.ReferenceInfo.Type == ReferenceType.Child;
         }
+
+        #region 查询方法
+
+        /// <summary>
+        /// 判断是否可以显示在某处
+        /// </summary>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public bool CanShowIn(ShowInWhere where)
+        {
+            return (this.ShowInWhere & where) == where;
+        }
+
+        /// <summary>
+        /// 用于绑定显示的属性名
+        /// </summary>
+        /// <returns></returns>
+        public string BindingPath()
+        {
+            if (this.IsReference)
+            {
+                var reference = this.ReferenceViewInfo;
+
+                //该引用属性没有对应的引用实体属性
+                var title = reference.RefTypeDefaultView.TitleProperty;
+                if (string.IsNullOrEmpty(reference.RefEntityProperty) || title == null) { return this.Name; }
+
+                return reference.RefEntityProperty + "." + title.Name;
+            }
+            else
+            {
+                return this.Name;
+            }
+        }
+
+        #endregion
     }
 
     /// <summary>
@@ -238,7 +264,7 @@ namespace OEA.MetaModel.View
         /// 是否在下拉框中显示
         /// </summary>
         [Label("显示在下拉框中")]
-        Lookup = 1,
+        DropDown = 1,
 
         /// <summary>
         /// 是否在列表中显示
@@ -253,6 +279,6 @@ namespace OEA.MetaModel.View
         Detail = 4,
 
         [Label("全显示")]
-        All = Lookup | List | Detail
+        All = DropDown | List | Detail
     }
 }

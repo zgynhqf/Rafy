@@ -100,7 +100,7 @@ namespace OEA.Module.WPF
         {
             var view = new ListObjectView(entityViewInfo);
 
-            if (isLookup) { view.ShowInWhere = ShowInWhere.Lookup; }
+            if (isLookup) { view.ShowInWhere = ShowInWhere.DropDown; }
 
             this.InitListView(view);
 

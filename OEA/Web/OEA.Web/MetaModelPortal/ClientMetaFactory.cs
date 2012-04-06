@@ -131,7 +131,7 @@ namespace OEA.Web.ClientMetaModel
 
             var isTree = evm.EntityMeta.IsTreeEntity;
 
-            var showInWhere = this.Option.isLookup ? ShowInWhere.Lookup : ShowInWhere.List;
+            var showInWhere = this.Option.isLookup ? ShowInWhere.DropDown : ShowInWhere.List;
 
             //使用list里面的属性生成每一列
             foreach (var property in evm.OrderedEntityProperties())

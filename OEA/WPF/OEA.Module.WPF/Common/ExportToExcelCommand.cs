@@ -91,14 +91,9 @@ namespace OEA.Module.WPF
 
                     //处理外键关系
                     var rvi = property.ReferenceViewInfo;
-                    if (rvi != null)
+                    if (rvi != null && rvi.ReferenceInfo.Type == ReferenceType.Normal)
                     {
-                        var ri = rvi.ReferenceInfo;
-                        if (ri.Type == ReferenceType.Normal)
-                        {
-                            propertyName = ri.RefEntityProperty + '.'
-                                + rvi.RefTypeDefaultView.TitleProperty.Name;
-                        }
+                        propertyName = property.BindingPath();
                     }
                     columnPropertyMappings.Add(property.Label, propertyName);
                 }

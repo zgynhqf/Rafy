@@ -62,21 +62,21 @@ namespace OEA
         [Label("不显示")]
         Hide = ShowInWhere.Hide,
         [Label("下拉框")]
-        Lookup = ShowInWhere.Lookup,
+        DropDownList = ShowInWhere.DropDown,
         [Label("列表")]
         List = ShowInWhere.List,
         [Label("表单")]
         Detail = ShowInWhere.Detail,
 
         [Label("下拉框,列表")]
-        LookupList = Lookup | List,
+        ListAndDronDown = DropDownList | List,
         [Label("下拉框,表单")]
-        LookupDetail = Lookup | Detail,
+        DetailAndDronDown = DropDownList | Detail,
         [Label("列表,表单")]
         ListDetail = List | Detail,
 
         [Label("全显示")]
-        All = Lookup | List | Detail
+        All = DropDownList | List | Detail
     }
 
     [Serializable]

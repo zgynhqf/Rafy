@@ -137,15 +137,15 @@ namespace OEA.Module.WPF.Editors
             var bindingMode = BindingMode.OneWay;
             var bindingPath = string.Empty;
 
-            var refInfo = this.PropertyViewInfo.ReferenceViewInfo;
-            if (string.IsNullOrEmpty(refInfo.RefEntityProperty))
+            var property = this.PropertyViewInfo;
+            if (string.IsNullOrEmpty(property.ReferenceViewInfo.RefEntityProperty))
             {
-                bindingPath = this.PropertyViewInfo.Name;
+                bindingPath = property.Name;
                 if (this.PropertyCanWrite) { bindingMode = BindingMode.TwoWay; }
             }
             else
             {
-                bindingPath = refInfo.TitlePath();
+                bindingPath = this.PropertyViewInfo.BindingPath();
             }
 
             editingControl.SetBinding(ComboBox.TextProperty, new Binding()
