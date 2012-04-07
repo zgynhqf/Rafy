@@ -70,6 +70,7 @@
     <Compile Include="ILibrary.cs" />
     <Compile Include="IModule.cs" />
     <Compile Include="IPlugin.cs" />
+    <Compile Include="IPropertyMetadata.cs" />
     <Compile Include="IService.cs" />
     <Compile Include="ManagedProperty\IOEARefProperty.cs" />
     <Compile Include="ManagedProperty\IOEARefPropertyMetadata.cs" />

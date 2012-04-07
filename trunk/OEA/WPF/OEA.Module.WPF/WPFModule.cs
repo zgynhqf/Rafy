@@ -41,6 +41,7 @@ namespace OEA.Module.WPF
 
             //初始化命令列表
             WPFCommandNames.CustomizeUI = typeof(CustomizeUI);
+            WPFCommandNames.FireQuery = typeof(QueryObjectCommand);
             WPFCommandNames.Add = typeof(PopupAddCommand);
             //WPFCommandNames.Add = typeof(AddCommand);
             WPFCommandNames.SaveBill = typeof(SaveBillCommand);

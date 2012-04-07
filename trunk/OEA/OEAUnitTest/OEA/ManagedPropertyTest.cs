@@ -16,7 +16,6 @@ using OEA.ManagedProperty;
 using OEA.MetaModel;
 using OEA.Serialization;
 using OEA.Serialization.Mobile;
-using OEA.Serialization;
 using OEA.Utils;
 
 namespace OEAUnitTest

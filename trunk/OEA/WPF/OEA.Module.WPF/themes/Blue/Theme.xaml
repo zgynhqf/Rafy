@@ -6139,7 +6139,7 @@
                                 <BeginStoryboard Storyboard="{StaticResource MouseOut}" x:Name="MouseOut_BeginStoryboard"/>
                             </Trigger.ExitActions>
                         </Trigger>
-                        <Trigger Property="IsMultiSelected" Value="true">
+                        <Trigger Property="IsUISelected" Value="true">
                             <Setter Property="Opacity" TargetName="SelectedHoverGrid" Value="1"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">

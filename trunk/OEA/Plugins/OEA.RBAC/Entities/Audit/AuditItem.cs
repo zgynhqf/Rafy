@@ -166,15 +166,19 @@ namespace OEA.Library.Audit
         {
             base.ConfigView();
 
-            View.NotAllowEdit().HasLabel("日志");
-            View.RemoveWebCommands(WebCommandNames.Add).RemoveWPFCommands(WPFCommandNames.Add);
+            View.HasLabel("日志").NotAllowEdit();
 
             if (!OEAEnvironment.IsWeb)
             {
-                View.UseWPFCommands(
+                View.ClearWPFCommands(false)
+                    .UseWPFCommands(
                     "RBAC.LoginLogStatisticCommand",
                     "RBAC.ClearAuditLogCommand"
                     );
+            }
+            else
+            {
+                View.RemoveWebCommands(WebCommandNames.Add);
             }
 
             View.Property(AuditItem.TitleProperty).ShowIn(ShowInWhere.All).HasLabel("标题");

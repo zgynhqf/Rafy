@@ -54,8 +54,11 @@ namespace OEA.MetaModel.View
             {
                 //初始化实体视图中的命令按钮
                 var em = evm.EntityMeta;
-                if (em.EntityCategory == EntityCategory.ConditionQueryObject
-                    || em.EntityCategory == EntityCategory.NavigateQueryObject)
+                if (em.EntityCategory == EntityCategory.ConditionQueryObject)
+                {
+                    evm.UseWPFCommands(WPFCommandNames.CustomizeUI, WPFCommandNames.FireQuery);
+                }
+                else if (em.EntityCategory == EntityCategory.NavigateQueryObject)
                 {
                     evm.UseWPFCommands(WPFCommandNames.CustomizeUI);
                 }
@@ -70,7 +73,10 @@ namespace OEA.MetaModel.View
                         evm.UseWPFCommands(WPFCommandNames.CommonCommands);
                     }
 
-                    if (evm.EntityMeta.EntityCategory == EntityCategory.Root) { evm.UseWPFCommands(WPFCommandNames.RootCommands); }
+                    if (em.EntityCategory == EntityCategory.Root)
+                    {
+                        evm.UseWPFCommands(WPFCommandNames.RootCommands);
+                    }
                 }
 
                 var commands = evm.WPFCommands;
@@ -157,10 +163,6 @@ namespace OEA.MetaModel.View
 
             var em = evm.EntityMeta;
             item.PropertyMeta = em.EntityProperties.First(p => (p.Runtime.Core as PropertyInfo) == runtimeProperty);
-
-            //EntityPropertyAttribute
-            var entityPropertyAttri = runtimeProperty.GetSingleAttribute<EntityPropertyAttribute>();
-            if (entityPropertyAttri != null) item.OrderNo = entityPropertyAttri.OrderNo;
 
             //数字的默认显示方式
             var labelAttri = runtimeProperty.GetSingleAttribute<LabelAttribute>();

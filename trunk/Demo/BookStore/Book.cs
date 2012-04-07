@@ -12,8 +12,7 @@ using hxy;
 
 namespace Demo
 {
-    [Serializable]
-    [RootEntity]
+    [RootEntity, Serializable]
     public class Book : DemoEntity
     {
         public static readonly Property<string> NameProperty = P<Book>.Register(e => e.Name);
@@ -64,8 +63,7 @@ namespace Demo
             set { this.SetRefEntity(BookCategoryRefProperty, value); }
         }
 
-        public static readonly Property<ChapterList> ChapterListProperty = P<Book>.Register(e => e.ChapterList);
-        [Association]
+        public static readonly Property<ChapterList> ChapterListProperty = P<Book>.RegisterChildren(e => e.ChapterList);
         public ChapterList ChapterList
         {
             get { return this.GetLazyChildren(ChapterListProperty); }

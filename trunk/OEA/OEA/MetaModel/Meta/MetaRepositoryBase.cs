@@ -88,7 +88,8 @@ namespace OEA.MetaModel
         internal static List<PropertySource> GetEntityProperties(EntityMeta entityMeta)
         {
             //通过反射属性列表构建属性元数据列表
-            var properties = entityMeta.EntityType.GetProperties();
+            var entityType = entityMeta.EntityType;
+            var properties = entityType.GetProperties();
             var list = properties
                 .Where(property => property.HasMarked<EntityPropertyAttribute>())
                 .ToList();
@@ -99,11 +100,10 @@ namespace OEA.MetaModel
             {
                 if (!mp.IsExtension)
                 {
-                    var name = mp.GetMetaPropertyName(entityMeta.EntityType);
+                    var mpMeta = mp.GetMeta(entityType) as IPropertyMetadata;
+                    var name = mp.GetMetaPropertyName(entityType);
                     var property = properties.FirstOrDefault(i => i.Name == name);
-                    if (property != null
-                        && !property.HasMarked<EntityPropertyAttribute>()
-                        && !property.HasMarked<AssociationAttribute>())
+                    if (!mpMeta.IsChild && property != null && !property.HasMarked<EntityPropertyAttribute>())
                     {
                         list.Add(property);
                     }
@@ -121,7 +121,7 @@ namespace OEA.MetaModel
             var result = list.Select(p => new PropertySource
             {
                 CLR = p,
-                MP = managedProperties.FirstOrDefault(mp => mp.GetMetaPropertyName(entityMeta.EntityType) == p.Name)
+                MP = managedProperties.FirstOrDefault(mp => mp.GetMetaPropertyName(entityType) == p.Name)
             }).ToList();
             return result;
         }
@@ -133,15 +133,38 @@ namespace OEA.MetaModel
         /// <returns></returns>
         internal static List<PropertySource> GetChildrenProperties(EntityMeta entityMeta)
         {
-            var list = entityMeta.EntityType.GetProperties()
-                .Where(property => property.HasMarked<AssociationAttribute>())
-                .ToList();
+            var entityType = entityMeta.EntityType;
+            var properties = entityType.GetProperties();
+            var list = properties.Where(property => property.HasMarked<AssociationAttribute>()).ToList();
 
+            //对于使用托管属性编写，而没有标记 AssociationAttribute 的托管属性，也创建它对应的元数据。
             var managedProperties = entityMeta.ManagedProperties.GetCompiledProperties();
+            foreach (var mp in managedProperties)
+            {
+                if (!mp.IsExtension)
+                {
+                    var mpMeta = mp.GetMeta(entityType) as IPropertyMetadata;
+                    var name = mp.GetMetaPropertyName(entityType);
+                    var property = properties.FirstOrDefault(i => i.Name == name);
+                    if (mpMeta.IsChild && property != null && !property.HasMarked<AssociationAttribute>())
+                    {
+                        list.Add(property);
+                    }
+                }
+            }
+
+            //由于托管属性中的顺序是按照名称排序的，所以要使用 CLR 属性重新排序。
+            list.Sort((p1, p2) =>
+            {
+                var i1 = Array.IndexOf(properties, p1);
+                var i2 = Array.IndexOf(properties, p2);
+                return i1.CompareTo(i2);
+            });
+
             var result = list.Select(p => new PropertySource
             {
                 CLR = p,
-                MP = managedProperties.FirstOrDefault(mp => mp.GetMetaPropertyName(entityMeta.EntityType) == p.Name)
+                MP = managedProperties.FirstOrDefault(mp => mp.GetMetaPropertyName(entityType) == p.Name)
             }).ToList();
 
             return result;

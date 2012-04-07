@@ -86,10 +86,7 @@ namespace OEA.RBAC
     }
 
     [Serializable]
-    public partial class UserLoginLogList : EntityList
-    {
-        protected UserLoginLogList() { }
-    }
+    public partial class UserLoginLogList : EntityList { }
 
     public class UserLoginLogRepository : EntityRepository
     {
@@ -154,10 +151,7 @@ namespace OEA.RBAC
         /// </summary>
         public static void NotifyLogout()
         {
-            if (_user != null)
-            {
-                Log(_user, false);
-            }
+            if (_user != null) { Log(_user, false); }
         }
 
         /// <summary>
@@ -169,13 +163,12 @@ namespace OEA.RBAC
         /// </param>
         private static void Log(User user, bool isIn)
         {
-            var log = new UserLoginLog();
-
-            log.User = user;
-            log.UserId = user.Id;
-            log.IsIn = isIn;
-
-            RF.Save(log);
+            RF.Save(new UserLoginLog()
+            {
+                User = user,
+                IsIn = isIn,
+                LogTime = DateTime.Now
+            });
         }
     }
 }

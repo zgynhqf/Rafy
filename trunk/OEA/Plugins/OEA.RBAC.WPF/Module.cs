@@ -77,7 +77,7 @@ namespace OEA.Module.WPF
 
             app.ModuleOperations += (s, e) =>
             {
-                var m = CommonModel.Modules.FindModule("部门管理");
+                var m = CommonModel.Modules.FindModule("部门权限管理");
                 m.AggtBlocksName = "部门模块布局";
             };
 
