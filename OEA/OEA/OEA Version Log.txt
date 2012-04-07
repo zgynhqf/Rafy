@@ -8,6 +8,20 @@
  * 
 *******************************************************/
 
+2.10.480.0
+    BUG修复
+        * UserLoginLog 没有记录当前时间。
+        * 日志模块按钮整理
+
+2.10.479.0
+    内部修改
+        * MTTG 在不是 CheckingRow 的模式下，才显示选择状态。否则，只显示 CheckBox 状态就行了。
+
+2.10.478.0
+    ★修改接口
+        * ChildrenProperty 可以不使用 AsociationAtribute 进行标记。
+        * ChildrenProperty 的注册使用一个单独的 RegisterChildren 方法。
+
 2.10.477.0
     ★修改接口
         * ShowInLookup 改为 ShowInDropDown

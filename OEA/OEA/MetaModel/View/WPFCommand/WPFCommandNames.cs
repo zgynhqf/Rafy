@@ -11,6 +11,7 @@ namespace OEA.MetaModel.View
     public static class WPFCommandNames
     {
         public static Type CustomizeUI;
+        public static Type FireQuery;
         public static Type Add;
         public static Type SaveBill;
         public static Type SaveList;

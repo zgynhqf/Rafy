@@ -271,6 +271,22 @@ namespace OEA.Library
 
         #endregion
 
+        #region Register
+
+        /// <summary>
+        /// 注册一个孩子属性
+        /// </summary>
+        /// <typeparam name="TProperty"></typeparam>
+        /// <param name="propertyExp"></param>
+        /// <returns></returns>
+        public static Property<TProperty> RegisterChildren<TProperty>(Expression<Func<TEntity, TProperty>> propertyExp)
+        {
+            //目前孩子属性都是一般属性
+            return Register(propertyExp);
+        }
+
+        #endregion
+
         public static void UnRegisterAllRuntimeProperties()
         {
             ManagedPropertyRepository.Instance.UnRegisterAllRuntimeProperties(typeof(TEntity));

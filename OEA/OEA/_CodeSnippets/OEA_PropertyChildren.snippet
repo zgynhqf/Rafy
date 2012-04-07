@@ -23,8 +23,7 @@
                 </Literal>
             </Declarations>
             <Code Language="csharp">
-                <![CDATA[public static readonly Property<$ChildrenListType$> $ChildrenListType$Property = P<$ClassName$>.Register(e => e.$ChildrenListType$);
-        [Association]
+                <![CDATA[public static readonly Property<$ChildrenListType$> $ChildrenListType$Property = P<$ClassName$>.RegisterChildren(e => e.$ChildrenListType$);
         public $ChildrenListType$ $ChildrenListType$
         {
             get { return this.GetLazyChildren($ChildrenListType$Property); }

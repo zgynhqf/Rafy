@@ -78,6 +78,11 @@ namespace OEA.MetaModel.View
 
         public void Remove(params string[] names)
         {
+            this.Remove(names as IEnumerable<string>);
+        }
+
+        public void Remove(IEnumerable<string> names)
+        {
             foreach (var name in names)
             {
                 var c = this.Find(name);
@@ -99,6 +104,11 @@ namespace OEA.MetaModel.View
         }
 
         public void Remove(params Type[] commands)
+        {
+            this.Remove(commands as IEnumerable<Type>);
+        }
+
+        public void Remove(IEnumerable<Type> commands)
         {
             foreach (var cmd in commands)
             {

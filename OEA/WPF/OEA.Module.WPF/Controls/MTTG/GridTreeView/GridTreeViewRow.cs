@@ -258,11 +258,17 @@ namespace OEA.Module.WPF.Controls
 
         private void OnIsMultiSelectedChanged(DependencyPropertyChangedEventArgs e)
         {
+            var value = (bool)e.NewValue;
             if (!this.IsSettingInternal)
             {
                 //值改变的来源是：勾选视图时，勾选或者反勾选某一行。
-                var value = (bool)e.NewValue;
                 this.TreeGrid.CheckRowWithCascade(this, (bool)e.NewValue);
+            }
+
+            //在不是 CheckingRow 的模式下，才显示选择状态。否则，只显示 CheckBox 状态就行了。
+            if (this.TreeGrid.CheckingMode != CheckingMode.CheckingRow)
+            {
+                this.IsUISelected = value;
             }
         }
 
@@ -270,6 +276,23 @@ namespace OEA.Module.WPF.Controls
         /// 表明 IsMultiSelected 的值是否正在被内部方法改变。
         /// </summary>
         internal bool IsSettingInternal;
+
+        #endregion
+
+        #region IsUISelected DependencyProperty
+
+        public static readonly DependencyProperty IsUISelectedProperty = DependencyProperty.Register(
+            "IsUISelected", typeof(bool), typeof(GridTreeViewRow)
+            );
+
+        /// <summary>
+        /// 这个属性只用于界面绑定当前行的选中状态。
+        /// </summary>
+        public bool IsUISelected
+        {
+            get { return (bool)this.GetValue(IsUISelectedProperty); }
+            set { this.SetValue(IsUISelectedProperty, value); }
+        }
 
         #endregion
 

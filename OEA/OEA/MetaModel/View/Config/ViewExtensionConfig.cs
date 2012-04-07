@@ -76,6 +76,31 @@ namespace OEA.MetaModel.View
             return meta;
         }
 
+        public static EntityViewMeta GroupBy(this EntityViewMeta meta, IManagedProperty property)
+        {
+            //foreach (var item in properties) { meta.GroupDescriptions.Add(item); }
+
+            //暂时只支持一个属性分组
+            meta.GroupBy = meta.Property(property);
+
+            return meta;
+        }
+
+        public static EntityViewMeta HasLockProperty(this EntityViewMeta meta, params IManagedProperty[] properties)
+        {
+            foreach (var item in properties)
+            {
+                var property = meta.Property(item);
+                meta.LockedProperties.Add(property);
+            }
+
+            return meta;
+        }
+
+        #endregion
+
+        #region EntityViewMeta Commands
+
         /// <summary>
         /// 注意，使用此方法后，返回值是 JsCommand，可对其继续进行配置。
         /// </summary>
@@ -178,34 +203,31 @@ namespace OEA.MetaModel.View
             return meta;
         }
 
+        public static EntityViewMeta RemoveWebCommands(this EntityViewMeta meta, IEnumerable<string> commands)
+        {
+            meta.WebCommands.Remove(commands);
+            return meta;
+        }
+
         public static EntityViewMeta RemoveWPFCommands(this EntityViewMeta meta, params Type[] commands)
         {
             meta.WPFCommands.Remove(commands);
             return meta;
         }
 
-        public static EntityViewMeta ClearWPFCommands(this EntityViewMeta meta)
+        public static EntityViewMeta RemoveWPFCommands(this EntityViewMeta meta, IEnumerable<Type> commands)
+        {
+            meta.WPFCommands.Remove(commands);
+            return meta;
+        }
+
+        public static EntityViewMeta ClearWPFCommands(this EntityViewMeta meta, bool removeCustomizeUI = true)
         {
             meta.WPFCommands.Clear();
-            return meta;
-        }
 
-        public static EntityViewMeta GroupBy(this EntityViewMeta meta, IManagedProperty property)
-        {
-            //foreach (var item in properties) { meta.GroupDescriptions.Add(item); }
-
-            //暂时只支持一个属性分组
-            meta.GroupBy = meta.Property(property);
-
-            return meta;
-        }
-
-        public static EntityViewMeta HasLockProperty(this EntityViewMeta meta, params IManagedProperty[] properties)
-        {
-            foreach (var item in properties)
+            if (!removeCustomizeUI && OEAEnvironment.IsDebuggingEnabled)
             {
-                var property = meta.Property(item);
-                meta.LockedProperties.Add(property);
+                meta.UseWPFCommands(WPFCommandNames.CustomizeUI);
             }
 
             return meta;

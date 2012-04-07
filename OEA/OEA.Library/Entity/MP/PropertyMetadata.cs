@@ -21,17 +21,6 @@ using OEA.MetaModel;
 namespace OEA.Library
 {
     /// <summary>
-    /// OEA 中的属性元数据
-    /// </summary>
-    public interface IPropertyMetadata : IManagedPropertyMetadata
-    {
-        /// <summary>
-        /// 当前属性是否孩子属性
-        /// </summary>
-        bool IsChild { get; }
-    }
-
-    /// <summary>
     /// OEA 中的属性元数据都从这个类继承下来。
     /// </summary>
     /// <typeparam name="TPropertyType"></typeparam>
