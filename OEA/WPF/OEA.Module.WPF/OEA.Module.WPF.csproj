@@ -156,6 +156,7 @@
     <Compile Include="Command\SysCommand\CustomizeUI\BackupViewConfig.cs" />
     <Compile Include="Common\Logger.cs" />
     <Compile Include="Controls\BusyAnimation.cs" />
+    <Compile Include="Controls\EditorHost.cs" />
     <Compile Include="Controls\MTTG\GridTreeView\ColumnMeasureState.cs" />
     <Compile Include="Controls\MTTG\GridTreeView\GridTreeViewColumn.cs" />
     <Compile Include="Controls\MTTG\GridTreeView\GridTreeViewColumnCollection.cs" />
@@ -177,6 +178,7 @@
     <Compile Include="AutoUI\ObjectViews\ViewController\ViewDataLoader.cs" />
     <Compile Include="Controls\MTTG\TreeColumn\TreeColumnCollection.cs" />
     <Compile Include="Controls\MTTG\_MTTGTestCommands.cs" />
+    <Compile Include="PrimitiveUI\Detail\DefaultDetailPanel.cs" />
     <Compile Include="PrimitiveUI\EntityModule.cs" />
     <Compile Include="Themes\OEAStyles.cs" />
     <Compile Include="Application.cs" />
@@ -300,7 +302,6 @@
     </Compile>
     <Compile Include="Attached\WPFMeta.cs" />
     <Compile Include="AutoUI\Editors\PropertyEditor\Core\IWPFPropertyEditor.cs" />
-    <Compile Include="AutoUI\Editors\PropertyEditor\ButtonPropertyEditor.cs" />
     <Compile Include="AutoUI\Editors\PropertyEditor\DatePropertyEditor.cs" />
     <Compile Include="AutoUI\Editors\PropertyEditor\EnumPropertyEditor.cs" />
     <Compile Include="AutoUI\Editors\PropertyEditor\LookupListPropertyEditor.cs" />

@@ -35,13 +35,19 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Book\BookConfig.cs" />
+    <Compile Include="Book\BookDetailPanel.xaml.cs">
+      <DependentUpon>BookDetailPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Commands\BookSearchCommand.cs" />
     <Compile Include="Commands\DemoCommand.cs" />
     <Compile Include="DemoModule.cs" />
@@ -84,6 +90,12 @@
       <Project>{786446BE-FB56-4281-9CA2-D5B699B0B388}</Project>
       <Name>OEA.Module</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Book\BookDetailPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -35,11 +35,6 @@ namespace OEA.Module.WPF
             get { return FindStyle("OEA_TabControlHeaderHide"); }
         }
 
-        public static Style DetailPanel_ItemContentControl
-        {
-            get { return FindStyle("OEA_DetailPanel_ItemContentControl"); }
-        }
-
         public static Style StringPropertyEditor_TextBox
         {
             get { return FindStyle("OEA_StringPropertyEditor_TextBox"); }

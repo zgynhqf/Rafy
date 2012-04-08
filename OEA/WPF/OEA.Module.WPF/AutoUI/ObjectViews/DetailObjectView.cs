@@ -57,7 +57,10 @@ namespace OEA.Module.WPF
             get
             {
                 var colCount = this.Meta.ColumnsCountShowInDetail;
-                return colCount == 0 ? (this.Meta.EntityProperties.Where(e => e.CanShowIn(ShowInWhere.Detail)).Count() > 6 ? 2 : 1) : colCount;
+                if (colCount != 0) return colCount;
+
+                var detailPropertiesCount = this.Meta.EntityProperties.Where(e => e.CanShowIn(ShowInWhere.Detail)).Count();
+                return detailPropertiesCount > 6 ? 2 : 1;
             }
         }
 

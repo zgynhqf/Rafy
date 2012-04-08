@@ -8,6 +8,17 @@
  * 
 *******************************************************/
 
+2.10.482.0
+    添加功能、★修改接口
+        * 添加 EditorHost 控件。
+        * DetailPanel 支持自定义扩展。
+        * 在 EntityViewMeta 中添加 DetailPanelType、DetailLabelWidth 两个属性。
+        * 添加示例：Book 类使用自定义 Detail 界面。
+
+2.10.481.0
+    重构
+        * MetaExtension 中的扩展方法改为实例方法。
+
 2.10.480.0
     BUG修复
         * UserLoginLog 没有记录当前时间。

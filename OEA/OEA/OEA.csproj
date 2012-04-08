@@ -107,7 +107,6 @@
     <Compile Include="MetaModel\Meta\Entity\IEntityAttachedMeta.cs" />
     <Compile Include="MetaModel\Meta\Entity\PropertyMeta.cs" />
     <Compile Include="MetaModel\Meta\Entity\ReferenceInfo.cs" />
-    <Compile Include="MetaModel\Meta\MetaExtensions.cs" />
     <Compile Include="MetaModel\Meta\MetaRepositoryBase.cs" />
     <Compile Include="MetaModel\Meta\Module\ModuleMeta.cs" />
     <Compile Include="MetaModel\Meta\Module\ModuleOperation.cs" />

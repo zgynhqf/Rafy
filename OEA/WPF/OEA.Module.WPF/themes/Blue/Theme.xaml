@@ -456,7 +456,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <!--CheckBox-->
+    <!-- CheckBox -->
     <Style TargetType="{x:Type CheckBox}">
         <Setter Property="SnapsToDevicePixels" Value="true" />
         <Setter Property="Background" Value="#00FFFFFF" />
@@ -649,7 +649,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <!--RadioButton-->
+    <!-- RadioButton -->
     <Style TargetType="{x:Type RadioButton}">
         <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
         <Setter Property="Background" Value="#00F4F4F4" />
@@ -835,7 +835,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <!--Expander-->
+    <!-- Expander -->
     <Style TargetType="{x:Type Expander}">
         <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
         <Setter Property="Background" Value="{x:Null}" />
@@ -6930,10 +6930,6 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style x:Key="OEA_DetailPanel_ItemContentControl" TargetType="{x:Type ContentControl}">
-        <Setter Property="Margin" Value="0,2"/>
-        <Setter Property="Focusable" Value="False"/>
-    </Style>
     <Style x:Key="OEA_StringPropertyEditor_TextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
         <Setter Property="MaxHeight" Value="20"/>
         <Setter Property="MaxLines" Value="1"/>
@@ -6944,5 +6940,25 @@
                        Path=(Validation.Errors)[0].ErrorContent}"/>
             </Trigger>
         </Style.Triggers>
+    </Style>
+    <!-- EditorHost -->
+    <Style TargetType="oea:EditorHost">
+        <Setter Property="Margin" Value="0,2"/>
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="LabelWidth" Value="80"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="oea:EditorHost">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{TemplateBinding LabelWidth}"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <ContentControl Name="PART_LabelContainer" Focusable="False"/>
+                        <ContentControl Grid.Column="1" Name="PART_EditorControlContainer" Focusable="False"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 </ResourceDictionary>
