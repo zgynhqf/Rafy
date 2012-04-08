@@ -72,7 +72,7 @@ namespace Demo
             View.UseWPFCommands("Demo.WPF.Commands.DemoCommand");
 
             View.Property(BookCategory.TreeCodeProperty).ShowIn(ShowInWhere.List).HasLabel("编码");
-            View.Property(BookCategory.NameProperty).ShowIn(ShowInWhere.List).HasLabel("名称");
+            View.Property(BookCategory.NameProperty).ShowIn(ShowInWhere.List | ShowInWhere.DropDown).HasLabel("名称");
         }
     }
 }
