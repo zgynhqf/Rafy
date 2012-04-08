@@ -43,6 +43,13 @@ namespace Demo
             set { this.SetProperty(PublisherProperty, value); }
         }
 
+        public static readonly Property<DateTime> PublishTimeProperty = P<Book>.Register(e => e.PublishTime);
+        public DateTime PublishTime
+        {
+            get { return this.GetProperty(PublishTimeProperty); }
+            set { this.SetProperty(PublishTimeProperty, value); }
+        }
+
         public static readonly Property<string> SubContentProperty = P<Book>.Register(e => e.SubContent);
         public string SubContent
         {
@@ -153,6 +160,7 @@ namespace Demo
                 Book.NameProperty,
                 Book.AuthorProperty,
                 Book.AmountProperty,
+                Book.PublishTimeProperty,
                 Book.PublisherProperty,
                 Book.SubContentProperty,
                 Book.BookCategoryRefProperty
@@ -166,12 +174,12 @@ namespace Demo
             View.HasTitle(Book.NameProperty).HasLabel("书籍");
 
             View.UseWebCommands("CountLocalBookCommand", "CountServerBookCommand");
-            View.UseWPFCommands("Demo.WPF.Commands.BookSearchCommand");
 
             View.Property(Book.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
             View.Property(Book.AuthorProperty).HasLabel("作者").ShowIn(ShowInWhere.All);
             View.Property(Book.AmountProperty).HasLabel("剩余数量").ShowIn(ShowInWhere.All);
             View.Property(Book.PublisherProperty).HasLabel("出版社").ShowIn(ShowInWhere.All);
+            View.Property(Book.PublishTimeProperty).HasLabel("出版时间").ShowIn(ShowInWhere.All);
             View.Property(Book.SubContentProperty).HasLabel("简要").ShowIn(ShowInWhere.Detail).UseEditor(WPFEditorNames.Memo);
             View.Property(Book.BookCategoryRefProperty).HasLabel("所属类别").ShowIn(ShowInWhere.All);
         }

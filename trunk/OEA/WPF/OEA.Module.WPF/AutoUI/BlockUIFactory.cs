@@ -47,33 +47,23 @@ namespace OEA.Module.WPF
     /// </summary>
     public class BlockUIFactory
     {
-        private PropertyEditorFactory _propertyEditorFactory;
-
-        private TreeColumnFactory _treeColumnFactory;
-
         public BlockUIFactory(PropertyEditorFactory propertyEditorFactory)
         {
             if (propertyEditorFactory == null) throw new ArgumentNullException("propertyEditorFactory");
-            this._propertyEditorFactory = propertyEditorFactory;
+            this.PropertyEditorFactory = propertyEditorFactory;
 
-            this._treeColumnFactory = new TreeColumnFactory(propertyEditorFactory);
+            this.TreeColumnFactory = new TreeColumnFactory(propertyEditorFactory);
         }
 
         /// <summary>
         /// 属性编辑器工厂
         /// </summary>
-        public PropertyEditorFactory PropertyEditorFactory
-        {
-            get { return this._propertyEditorFactory; }
-        }
+        public PropertyEditorFactory PropertyEditorFactory { get; private set; }
 
         /// <summary>
         /// 树型控件的列工厂
         /// </summary>
-        public TreeColumnFactory TreeColumnFactory
-        {
-            get { return this._treeColumnFactory; }
-        }
+        public TreeColumnFactory TreeColumnFactory { get; private set; }
 
         /// <summary>
         /// 自动生成树形列表UI
@@ -97,7 +87,7 @@ namespace OEA.Module.WPF
             {
                 if (propertyViewInfo.CanShowIn(showInWhere))
                 {
-                    var column = this._treeColumnFactory.Create(propertyViewInfo);
+                    var column = this.TreeColumnFactory.Create(propertyViewInfo);
 
                     columns.Add(column);
                 }
@@ -114,59 +104,22 @@ namespace OEA.Module.WPF
         public virtual FrameworkElement CreateDetailPanel(DetailObjectView detailView)
         {
             if (detailView == null) throw new ArgumentNullException("detailView");
-            Type boType = detailView.EntityType;
 
-            var vm = detailView.Meta;
+            FrameworkElement result = null;
 
-            //生成一个AutoGrid，用于承载所有的字段显示控件。
-            var detailGrid = new AutoGrid();
-
-            //一般加四列，ConditionQuery/NavigateQuery加两列
-            var colCount = detailView.ColumnsCount;
-            for (int i = 0; i < colCount; i++)
+            var detailType = detailView.Meta.DetailPanelType;
+            if (detailType == null)
             {
-                detailGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
-                detailGrid.ColumnDefinitions.Add(new ColumnDefinition());
+                result = new DefaultDetailPanel();
+            }
+            else
+            {
+                result = Activator.CreateInstance(detailType) as FrameworkElement;
             }
 
-            //加入所有标记了ShowInDetail的属性
-            foreach (var propertyView in vm.EntityProperties)
-            {
-                if (propertyView.CanShowIn(ShowInWhere.Detail))
-                {
-                    var editor = this._propertyEditorFactory.Create(propertyView);
+            EditorHost.SetDetailObjectView(result, detailView);
 
-                    //在创建详细面板时，如果是动态的属性编辑器
-                    var dynamicPE = editor as EntityDynamicPropertyEditor;
-                    if (dynamicPE != null)
-                    {
-                        detailView.CurrentObjectChanged += (o, e) =>
-                        {
-                            editor.PrepareElementForEdit(dynamicPE.Control, new RoutedEventArgs());
-                        };
-                    }
-
-                    detailGrid.Children.Add(new ContentControl()
-                    {
-                        Style = OEAStyles.DetailPanel_ItemContentControl,
-                        Content = editor.LabelControl
-                    });
-                    detailGrid.Children.Add(new ContentControl()
-                    {
-                        Style = OEAStyles.DetailPanel_ItemContentControl,
-                        Content = editor.Control
-                    });
-
-                    var view = detailView as QueryObjectView;
-                    if (view != null) { view.AddPropertyEditor(editor); }
-
-                    //支持UI Test
-                    var label = propertyView.Label;
-                    if (label != null) { AutomationProperties.SetName(editor.Control, propertyView.Label); }
-                }
-            }
-
-            return detailGrid;
+            return result;
         }
 
         public void AppendCommands(

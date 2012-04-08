@@ -123,5 +123,10 @@ namespace OEA.MetaModel
         {
             get { return typeof(TEntity); }
         }
+
+        protected bool IsWeb
+        {
+            get { return OEAEnvironment.IsWeb; }
+        }
     }
 }

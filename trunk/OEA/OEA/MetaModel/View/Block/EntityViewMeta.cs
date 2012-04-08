@@ -121,6 +121,27 @@ namespace OEA.MetaModel.View
 
         #region WPF
 
+        private Type _DetailPanelType;
+        /// <summary>
+        /// 生成 DetailPanel 时使用的控件类型
+        /// </summary>
+        public Type DetailPanelType
+        {
+            get { return this._DetailPanelType; }
+            set { this.SetValue(ref this._DetailPanelType, value); }
+        }
+
+        private int _DetailLabelWidth;
+        /// <summary>
+        /// 在 DetailPanel 中显示的 Label 的宽度。
+        /// 默认值 0 表示不指定，使用系统默认宽度。
+        /// </summary>
+        public int DetailLabelWidth
+        {
+            get { return this._DetailLabelWidth; }
+            set { this.SetValue(ref this._DetailLabelWidth, value); }
+        }
+
         private WPFCommandCollection _WPFCommands = new WPFCommandCollection();
         /// <summary>
         /// 为这个类可用的命令
@@ -187,13 +208,13 @@ namespace OEA.MetaModel.View
 
         public IEnumerable<EntityPropertyViewMeta> OrderedEntityProperties()
         {
-            return this.Ordered(this.EntityProperties).Cast<EntityPropertyViewMeta>();
+            return this.Ordered(this.EntityProperties);
         }
 
         /// <summary>
         /// 把000010000300002排序为000000000000123
         /// 
-        /// 不把0的位置改变。
+        /// 不把0的位置改变，这样可以保证顺序与属性定义的顺序一致。
         /// </summary>
         private EntityPropertyViewMeta[] Ordered(IEnumerable<EntityPropertyViewMeta> properties)
         {

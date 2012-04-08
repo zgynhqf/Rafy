@@ -157,6 +157,66 @@ namespace OEA.MetaModel
 
         #endregion
 
+        #region 查询方法
+
+        public EntityPropertyMeta FindParentReferenceProperty()
+        {
+            var result = this.EntityProperties
+                .FirstOrDefault(p => p.ReferenceInfo != null && p.ReferenceInfo.Type == ReferenceType.Parent);
+            return result;
+        }
+
+        /// <summary>
+        /// 根据名字查询属性（忽略大小写）
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public PropertyMeta FindProperty(IManagedProperty property)
+        {
+            var ep = this.Property(property);
+            if (ep != null) return ep;
+
+            return this.ChildrenProperty(property);
+        }
+
+        /// <summary>
+        /// 根据名字查询实体属性（忽略大小写）
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public EntityPropertyMeta Property(IManagedProperty property)
+        {
+            return this.Property(property.GetMetaPropertyName(this.EntityType));
+        }
+
+        /// <summary>
+        /// 根据名字查询实体属性（忽略大小写）
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public EntityPropertyMeta Property(string name)
+        {
+            return this.EntityProperties.FirstOrDefault(item => item.Name.EqualsIgnorecase(name));
+        }
+
+        /// <summary>
+        /// 根据名字查询关联属性（忽略大小写）
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public ChildrenPropertyMeta ChildrenProperty(IManagedProperty property)
+        {
+            var name = property.GetMetaPropertyName(this.EntityType);
+            return this.ChildrenProperties.FirstOrDefault(item => item.Name.EqualsIgnorecase(name));
+        }
+
+        public ChildrenPropertyMeta ChildrenProperty(string property)
+        {
+            return this.ChildrenProperties.FirstOrDefault(item => item.Name.EqualsIgnorecase(property));
+        }
+
+        #endregion
+
         protected override void OnFrozen()
         {
             base.OnFrozen();
