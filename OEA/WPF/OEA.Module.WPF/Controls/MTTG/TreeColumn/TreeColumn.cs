@@ -65,7 +65,7 @@ namespace OEA.Module.WPF.Editors
 
         protected virtual IWPFPropertyEditor CreateEditorCore(PropertyEditorFactory factory) { return null; }
 
-        private void CreateNewEditor()
+        protected void CreateNewEditor()
         {
             this.Editor = this.CreateEditorCore(this._editorFactory);
         }

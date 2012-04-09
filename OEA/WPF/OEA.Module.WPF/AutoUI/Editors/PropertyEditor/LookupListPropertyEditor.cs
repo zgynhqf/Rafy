@@ -177,46 +177,17 @@ namespace OEA.Module.WPF.Editors
 
         #region 同步 Value 和 Selection
 
-        private const string MULTI_SELECTION_SPLITTER = ";";
-
         /// <summary>
         /// 根据当前的值（PropertyValue），找到并定位到当前对象
         /// </summary>
         private void SyncValueToSelection()
         {
-            var items = this._listView.Data;
-            if (items == null || items.Count == 0) return;
-
-            //找到值对应的数据项
-            var selectedItems = new List<Entity>();
-            if (this.Context.CurrentObject != null && this.PropertyViewInfo != null)
-            {
-                //根据设置的 SelectedValuePath 来对比属性值 this.PropertyValue，如果相同，则找到对应的CurrentObject
-                var targetValue = this.PropertyValue;
-                if (this.IsMultiSelection && targetValue != null)
-                {
-                    var values = targetValue.ToString().Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                    foreach (var selectedValue in values)
-                    {
-                        AddToListBySelectedValue(items, selectedItems, selectedValue);
-                    }
-                }
-                else
-                {
-                    AddToListBySelectedValue(items, selectedItems, targetValue);
-                }
-            }
-
             //定位 SelectedObjects
             try
             {
                 this.SelectedByUser = false;
 
-                var selectedObjects = this._listView.SelectedObjects;
-
-                selectedObjects.Clear();
-
-                foreach (var item in selectedItems) { selectedObjects.Add(item); }
+                this.SyncValueToSelection(this._listView);
             }
             finally
             {
@@ -224,39 +195,12 @@ namespace OEA.Module.WPF.Editors
             }
         }
 
-        private void AddToListBySelectedValue(IList items, List<Entity> selectedItems, object targetValue)
-        {
-            var selectedItem = items.OfType<Entity>().FirstOrDefault(item =>
-                 object.Equals(targetValue, this.GetSelectedValue(item))
-                 );
-            if (selectedItem != null) selectedItems.Add(selectedItem);
-        }
-
         /// <summary>
         /// 根据选中的对象设置CurrentObject相关的值。
         /// </summary>
         private void SyncSelectionToValue()
         {
-            if (this.IsMultiSelection)
-            {
-                var result = string.Empty;
-
-                foreach (Entity item in this._listView.SelectedObjects)
-                {
-                    if (result.Length == 0)
-                        result += this.GetSelectedValue(item);
-                    else
-                        result += MULTI_SELECTION_SPLITTER + this.GetSelectedValue(item);
-                }
-
-                //赋值给this.PropertyValue
-                this.PropertyValue = result;
-            }
-            else
-            {
-                var selecteEntity = this._listView.Current;
-                this.NotifyReferenceSelected(selecteEntity);
-            }
+            this.SyncSelectionToValue(this._listView.SelectedObjects);
         }
 
         #endregion
@@ -350,15 +294,6 @@ namespace OEA.Module.WPF.Editors
                     }
                 }
             }
-        }
-
-        #endregion
-
-        #region 私有方法
-
-        private bool IsMultiSelection
-        {
-            get { return this.PropertyViewInfo.ReferenceViewInfo.SelectionMode == ReferenceSelectionMode.Multiple; }
         }
 
         private bool IsUseLocalData()

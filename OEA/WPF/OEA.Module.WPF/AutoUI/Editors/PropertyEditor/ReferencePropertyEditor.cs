@@ -17,6 +17,8 @@ using System.Linq;
 using System.Text;
 using OEA.Library;
 using System.Windows.Data;
+using System.Collections;
+using OEA.MetaModel;
 using System.Windows;
 
 namespace OEA.Module.WPF.Editors
@@ -26,6 +28,8 @@ namespace OEA.Module.WPF.Editors
     /// </summary>
     public abstract class ReferencePropertyEditor : WPFPropertyEditor
     {
+        private const string MULTI_SELECTION_SPLITTER = ";";
+
         #region 事件
 
         /// <summary>
@@ -68,24 +72,99 @@ namespace OEA.Module.WPF.Editors
         /// 当编辑器已经先选中某个值时，需要使用此方法通知属性变更。
         /// </summary>
         /// <param name="selecteEntity"></param>
-        protected void NotifyReferenceSelected(Entity selecteEntity)
+        protected void SyncSelectionToValue(IList selectedEntities)
         {
-            if (selecteEntity != null)
+            if (!this.IsMultiSelection)
             {
                 var curObj = this.Context.CurrentObject;
                 if (curObj != null)
                 {
                     var refInfo = this.PropertyViewInfo.ReferenceViewInfo;
-                    if (!string.IsNullOrEmpty(refInfo.RefEntityProperty))
+                    if (selectedEntities.Count > 0)
                     {
-                        this.OnReferenceEntityChanging();
-                        curObj.SetPropertyValue(refInfo.RefEntityProperty, selecteEntity);
+                        var selecteEntity = selectedEntities[0] as Entity;
+
+                        if (!string.IsNullOrEmpty(refInfo.RefEntityProperty))
+                        {
+                            this.OnReferenceEntityChanging();
+                            curObj.SetPropertyValue(refInfo.RefEntityProperty, selecteEntity);
+                        }
+                        else
+                        {
+                            this.PropertyValue = this.GetSelectedValue(selecteEntity);
+                        }
                     }
+                    else
+                    {
+                        if (!string.IsNullOrEmpty(refInfo.RefEntityProperty))
+                        {
+                            this.OnReferenceEntityChanging();
+                            curObj.SetPropertyValue(refInfo.RefEntityProperty, null);
+                        }
+                        else
+                        {
+                            this.PropertyValue = null;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                var result = string.Empty;
+
+                foreach (Entity item in selectedEntities)
+                {
+                    if (result.Length == 0)
+                        result += this.GetSelectedValue(item);
+                    else
+                        result += MULTI_SELECTION_SPLITTER + this.GetSelectedValue(item);
                 }
 
                 //赋值给this.PropertyValue
-                this.PropertyValue = this.GetSelectedValue(selecteEntity);
+                this.PropertyValue = result;
             }
+        }
+
+        /// <summary>
+        /// 根据当前的值（PropertyValue），找到并定位到当前对象
+        /// </summary>
+        protected void SyncValueToSelection(IListObjectView listView)
+        {
+            var items = listView.Data;
+            if (items == null || items.Count == 0) return;
+
+            //找到值对应的数据项
+            var selectedItems = new List<Entity>();
+            if (this.Context.CurrentObject != null && this.PropertyViewInfo != null)
+            {
+                //根据设置的 SelectedValuePath 来对比属性值 this.PropertyValue，如果相同，则找到对应的CurrentObject
+                var targetValue = this.PropertyValue;
+                if (this.IsMultiSelection && targetValue != null)
+                {
+                    var values = targetValue.ToString().Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var selectedValue in values)
+                    {
+                        AddToListBySelectedValue(items, selectedItems, selectedValue);
+                    }
+                }
+                else
+                {
+                    AddToListBySelectedValue(items, selectedItems, targetValue);
+                }
+            }
+
+            //定位 SelectedObjects
+            var selectedObjects = listView.SelectedObjects;
+            selectedObjects.Clear();
+            foreach (var item in selectedItems) { selectedObjects.Add(item); }
+        }
+
+        private void AddToListBySelectedValue(IList items, List<Entity> selectedItems, object targetValue)
+        {
+            var selectedItem = items.OfType<Entity>().FirstOrDefault(item =>
+                 object.Equals(targetValue, this.GetSelectedValue(item))
+                 );
+            if (selectedItem != null) selectedItems.Add(selectedItem);
         }
 
         /// <summary>
@@ -93,12 +172,20 @@ namespace OEA.Module.WPF.Editors
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        protected object GetSelectedValue(Entity entity)
+        private object GetSelectedValue(Entity entity)
         {
             string selectedValuePath = this.PropertyViewInfo.ReferenceViewInfo.SelectedValuePath;
             if (string.IsNullOrEmpty(selectedValuePath)) { return entity.Id; }
 
             return entity.GetPropertyValue(selectedValuePath);
+        }
+
+        /// <summary>
+        /// 当前是否处于多选的模式下。
+        /// </summary>
+        protected bool IsMultiSelection
+        {
+            get { return this.PropertyViewInfo.ReferenceViewInfo.SelectionMode == ReferenceSelectionMode.Multiple; }
         }
     }
 }

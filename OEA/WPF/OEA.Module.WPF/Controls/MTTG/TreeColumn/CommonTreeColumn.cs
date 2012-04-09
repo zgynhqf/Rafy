@@ -15,6 +15,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace OEA.Module.WPF.Editors
 {
@@ -23,6 +26,18 @@ namespace OEA.Module.WPF.Editors
         protected override IWPFPropertyEditor CreateEditorCore(PropertyEditorFactory factory)
         {
             return factory.Create(this.PropertyInfo);
+        }
+
+        protected override Binding GenerateBindingFormat(string name, string stringformat)
+        {
+            //使用 PropertyEditor 来生成 Binding 的原因是：
+            //如果是下拉框、则不能直接使用默认的绑定方案。
+            this.CreateNewEditor();
+            var binding = (this.Editor as WPFPropertyEditor).CreateBindingInternal();
+
+            binding.StringFormat = stringformat;
+
+            return binding;
         }
     }
 
