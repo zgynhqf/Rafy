@@ -190,7 +190,9 @@ namespace OEA.Module.WPF.CommandAutoUI
             //当TextBox的值改变时，通知命令进行新的输入值
             textBox.TextChanged += (o, e) =>
             {
-                runtimeCommand.SetCustomParams(CommandCustomParams.TextBox, textBox.Text);
+                var txt = textBox.Text;
+                if (txt == textBox.EmptyValue) txt = string.Empty;
+                runtimeCommand.SetCustomParams(CommandCustomParams.TextBox, txt);
             };
 
             //支持UI Test
