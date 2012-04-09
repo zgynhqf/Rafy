@@ -19,26 +19,21 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
+using System.Windows.Input;
 using System.Windows.Media;
 using AvalonDock;
-
 using Itenso.Windows.Input;
 using OEA.Editors;
 using OEA.Library;
-
 using OEA.MetaModel;
 using OEA.MetaModel.View;
+using OEA.Module.WPF.Automation;
 using OEA.Module.WPF.CommandAutoUI;
 using OEA.Module.WPF.Controls;
 using OEA.Module.WPF.Editors;
-
-
 using OEA.WPF.Command;
-
-using System.Windows.Controls.Primitives;
-using OEA.Module.WPF.Automation;
-using System.Windows.Input;
 
 namespace OEA.Module.WPF
 {

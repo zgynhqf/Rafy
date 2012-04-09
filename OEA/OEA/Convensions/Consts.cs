@@ -16,6 +16,7 @@ namespace OEA.MetaModel.View
         public const string DateRange = "OEA.DateRange";
         public const string Enum = "enum";
         public const string LookupDropDown = "lookupDropDown";
+        public const string PopupSearchList = "PopupSearchList";
         public const string Password = "password";
         /// <summary>
         /// 备注

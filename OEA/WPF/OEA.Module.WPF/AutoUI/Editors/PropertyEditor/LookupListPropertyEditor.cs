@@ -29,9 +29,6 @@ using OEA.Module.WPF.Automation;
 using OEA.Module.WPF.Controls;
 using OEA.Utils;
 
-
-
-
 namespace OEA.Module.WPF.Editors
 {
     /// <summary>
@@ -39,7 +36,7 @@ namespace OEA.Module.WPF.Editors
     /// 
     /// 此类使用 ListObjectView 作为实现的核心，构造了一个 ComboListControl 容器来呈现 ListObjectView 中的 Control。
     /// </summary>
-    public class LookupListPropertyEditor : WPFPropertyEditor
+    public class LookupListPropertyEditor : ReferencePropertyEditor
     {
         #region 私有字段 与 构造函数
 
@@ -60,21 +57,6 @@ namespace OEA.Module.WPF.Editors
         {
             get { return this._listView.Data; }
             set { this._listView.Data = value; }
-        }
-
-        #endregion
-
-        #region 事件
-
-        /// <summary>
-        /// 属性变化前发生此事件。
-        /// </summary>
-        public event EventHandler ReferenceEntityChanging;
-
-        private void OnReferenceEntityChanging()
-        {
-            var handler = this.ReferenceEntityChanging;
-            if (handler != null) handler(this, EventArgs.Empty);
         }
 
         #endregion
@@ -128,31 +110,9 @@ namespace OEA.Module.WPF.Editors
             return this._cmbList;
         }
 
-        /// <summary>
-        /// 由于直接对ComboBox.Text直接赋值，导致TextBinding Detach，所以需要手动新增绑定
-        /// </summary>
         protected override void ResetBinding(FrameworkElement editingControl)
         {
-            //设置绑定模式，不允许从Text修改到原对象（bug #18098）
-            var bindingMode = BindingMode.OneWay;
-            var bindingPath = string.Empty;
-
-            var property = this.PropertyViewInfo;
-            if (string.IsNullOrEmpty(property.ReferenceViewInfo.RefEntityProperty))
-            {
-                bindingPath = property.Name;
-                if (this.PropertyCanWrite) { bindingMode = BindingMode.TwoWay; }
-            }
-            else
-            {
-                bindingPath = this.PropertyViewInfo.BindingPath();
-            }
-
-            editingControl.SetBinding(ComboBox.TextProperty, new Binding()
-            {
-                Mode = bindingMode,
-                Path = new PropertyPath(bindingPath)
-            });
+            editingControl.SetBinding(ComboBox.TextProperty, this.CreateBinding());
         }
 
         #endregion
@@ -294,24 +254,8 @@ namespace OEA.Module.WPF.Editors
             }
             else
             {
-                var selecteEntity = this._listView.Current as Entity;
-                if (selecteEntity != null)
-                {
-                    var curObj = this.Context.CurrentObject;
-                    if (curObj != null)
-                    {
-                        //设置 View.CurrentObject 指定的 refProperty 属性为选中的对象
-                        var refProperty = this.PropertyViewInfo.ReferenceViewInfo.RefEntityProperty;
-                        if (!string.IsNullOrEmpty(refProperty))
-                        {
-                            this.OnReferenceEntityChanging();
-                            curObj.SetPropertyValue(refProperty, selecteEntity);
-                        }
-                    }
-
-                    //赋值给this.PropertyValue
-                    this.PropertyValue = this.GetSelectedValue(selecteEntity);
-                }
+                var selecteEntity = this._listView.Current;
+                this.NotifyReferenceSelected(selecteEntity);
             }
         }
 
@@ -420,19 +364,6 @@ namespace OEA.Module.WPF.Editors
         private bool IsUseLocalData()
         {
             return !string.IsNullOrEmpty(this.PropertyViewInfo.ReferenceViewInfo.DataSourceProperty);
-        }
-
-        /// <summary>
-        /// 根据SelectedValuePath指定的值，获取目标属性值
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        private object GetSelectedValue(Entity entity)
-        {
-            string selectedValuePath = this.PropertyViewInfo.ReferenceViewInfo.SelectedValuePath;
-            if (string.IsNullOrEmpty(selectedValuePath)) { return entity.Id; }
-
-            return entity.GetPropertyValue(selectedValuePath);
         }
 
         #endregion

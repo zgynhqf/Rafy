@@ -57,7 +57,7 @@ namespace OEA.Module.WPF.Editors
             var binding = this.CreateBinding();
             //可空类型需要指定空值时的显示值，否则可能会出现转换错误，如double?
             binding.TargetNullValue = string.Empty;
-            editingControl.SetBinding(TextBox.TextProperty, this.CreateBinding());
+            editingControl.SetBinding(TextBox.TextProperty, binding);
         }
 
         #region 以下代码拷贝自：DataGridTextColumn 类。

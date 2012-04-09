@@ -117,7 +117,7 @@ namespace Demo
             View.Property(BookAdministrator.UserNameProperty).HasLabel("姓名").ShowIn(ShowInWhere.All);
 
             //三级联动示例
-            View.Property(BookAdministrator.ProvinceRefProperty).HasLabel("住址：省").ShowIn(ShowInWhere.All);
+            View.Property(BookAdministrator.ProvinceRefProperty).HasLabel("住址：省").ShowIn(ShowInWhere.All).UseEditor(WPFEditorNames.PopupSearchList);
             View.Property(BookAdministrator.CityRefProperty).HasLabel("住址：市").ShowIn(ShowInWhere.All)
                 .ReferenceViewInfo.DataSourceProperty = "Province.CityList";
             View.Property(BookAdministrator.CountryRefProperty).HasLabel("住址：县").ShowIn(ShowInWhere.All)

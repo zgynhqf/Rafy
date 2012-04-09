@@ -139,6 +139,7 @@
     <Compile Include="AutoUI\Editors\IListEditorContext.cs" />
     <Compile Include="AutoUI\Editors\PropertyEditor\Core\EntityDynamicPropertyEditor.cs" />
     <Compile Include="AutoUI\Editors\PropertyEditor\Core\PropertyEditorHelper.cs" />
+    <Compile Include="AutoUI\Editors\PropertyEditor\ReferencePropertyEditor.cs" />
     <Compile Include="AutoUI\Editors\PropertyEditor\DateRangePropertyEditor.cs" />
     <Compile Include="AutoUI\Editors\PropertyEditor\DateRangePropertyEditorControl.xaml.cs">
       <DependentUpon>DateRangePropertyEditorControl.xaml</DependentUpon>
@@ -148,6 +149,7 @@
       <DependentUpon>NumberRangePropertyEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="AutoUI\Editors\PropertyEditor\NumberRangePropertyEditor.cs" />
+    <Compile Include="AutoUI\Editors\PropertyEditor\PopupSearchListPropertyEditor.cs" />
     <Compile Include="AutoUI\ObjectViews\CustomObjectView.cs" />
     <Compile Include="AutoUI\ObjectViews\ViewController\AsyncDataContextHelper.cs" />
     <Compile Include="CommandCustomParams.cs" />
