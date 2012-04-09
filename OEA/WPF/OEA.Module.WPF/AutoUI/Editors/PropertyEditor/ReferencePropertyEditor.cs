@@ -17,6 +17,7 @@ using System.Linq;
 using System.Text;
 using OEA.Library;
 using System.Windows.Data;
+using System.Windows;
 
 namespace OEA.Module.WPF.Editors
 {
