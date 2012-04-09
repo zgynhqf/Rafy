@@ -32,6 +32,11 @@ namespace OEA.Module.WPF.Editors
     /// </summary>
     public class PopupSearchListPropertyEditor : ReferencePropertyEditor
     {
+        protected override FrameworkElement CreateLabelElement()
+        {
+            return base.CreateLabelElement();
+        }
+
         protected override FrameworkElement CreateEditingElement()
         {
             var propertyName = this.PropertyViewInfo.Name;
@@ -68,9 +73,14 @@ namespace OEA.Module.WPF.Editors
             var block = new Block(refInfo.RefType);
             var title = block.EVM.TitleProperty;
             if (title == null) throw new InvalidOperationException("该实体没有标题属性，不能使用此控件进行编辑。");
-            block.EVM.ClearWPFCommands().UseWPFCommands(typeof(SearchListCommand));
+            block.EVM.NotAllowEdit().ClearWPFCommands()
+                .UseWPFCommands(typeof(ClearReferenceCommand), typeof(SearchListCommand));
             var ui = AutoUI.AggtUIFactory.GenerateControl(block);
-            ui.MainView.DataLoader.LoadDataAsync();
+            var listView = ui.MainView as IListObjectView;
+            listView.DataLoader.LoadDataAsync(() =>
+            {
+                this.SyncValueToSelection(listView);
+            });
 
             //弹出
             var res = App.Current.Windows.ShowDialog(ui.Control, w =>
@@ -78,12 +88,17 @@ namespace OEA.Module.WPF.Editors
                 w.Title = "选择" + title.Label;
                 w.Width = 600;
                 w.Height = 300;
+
+                listView.MouseDoubleClick += (o, e) =>
+                {
+                    w.DialogResult = true;
+                };
             });
 
             //确定
             if (res == WindowButton.Yes)
             {
-                this.NotifyReferenceSelected(ui.MainView.Current);
+                this.SyncSelectionToValue(listView.SelectedObjects);
             }
         }
     }
@@ -110,6 +125,15 @@ namespace OEA.Module.WPF.Editors
                     return title.Contains(txt);
                 };
             }
+        }
+    }
+
+    [Command(Label = "清空")]
+    public class ClearReferenceCommand : ListViewCommand
+    {
+        public override void Execute(ListObjectView view)
+        {
+            view.Current = null;
         }
     }
 }

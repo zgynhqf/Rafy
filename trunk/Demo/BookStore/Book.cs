@@ -58,7 +58,10 @@ namespace Demo
         }
 
         public static readonly RefProperty<BookCategory> BookCategoryRefProperty =
-            P<Book>.RegisterRef(e => e.BookCategory, ReferenceType.Normal);
+            P<Book>.RegisterRef(e => e.BookCategory, new RefPropertyMeta
+            {
+                RefEntityChangingCallBack = (o, e) => (o as Book).OnBookCategoryChanging(e),
+            });
         public int BookCategoryId
         {
             get { return this.GetRefId(BookCategoryRefProperty); }
@@ -68,6 +71,15 @@ namespace Demo
         {
             get { return this.GetRefEntity(BookCategoryRefProperty); }
             set { this.SetRefEntity(BookCategoryRefProperty, value); }
+        }
+        protected virtual void OnBookCategoryChanging(RefEntityChangingEventArgs e)
+        {
+            //业务逻辑示例：只能选择最末级的图书类别。
+            var value = e.Value as BookCategory;
+            if (value != null && value.TreeChildren.Count > 0)
+            {
+                e.Cancel = true;
+            }
         }
 
         public static readonly Property<ChapterList> ChapterListProperty = P<Book>.RegisterChildren(e => e.ChapterList);

@@ -75,6 +75,11 @@ namespace OEA.Module.WPF.Editors
 
         protected abstract void ResetBinding(FrameworkElement editingControl);
 
+        internal Binding CreateBindingInternal()
+        {
+            return this.CreateBinding();
+        }
+
         protected virtual Binding CreateBinding()
         {
             var binding = new Binding(this.PropertyViewInfo.Name);
