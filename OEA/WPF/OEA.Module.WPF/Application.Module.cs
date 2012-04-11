@@ -166,15 +166,7 @@ namespace OEA.Module.WPF
             IWorkspaceWindow window = null;
             if (!moduleMeta.IsCustomUI)
             {
-                AggtBlocks blocks = null;
-                if (!string.IsNullOrEmpty(moduleMeta.AggtBlocksName))
-                {
-                    blocks = UIModel.AggtBlocks.GetDefinedBlocks(moduleMeta.AggtBlocksName);
-                }
-                else
-                {
-                    blocks = UIModel.AggtBlocks.GetDefaultBlocks(moduleMeta.EntityType);
-                }
+                AggtBlocks blocks = UIModel.AggtBlocks.GetModuleBlocks(moduleMeta);
 
                 try
                 {
