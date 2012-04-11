@@ -140,16 +140,8 @@ namespace OEA.RBAC
             //系统生成的界面，迭归生成功能列表
             if (!m.IsCustomUI)
             {
-                if (!string.IsNullOrEmpty(m.AggtBlocksName))
-                {
-                    var blocks = UIModel.AggtBlocks.GetDefinedBlocks(m.AggtBlocksName);
-                    this.GetByBlocksRecur(blocks, list);
-                }
-                else
-                {
-                    var blocks = UIModel.AggtBlocks.GetDefaultBlocks(m.EntityType);
-                    this.GetByBlocksRecur(blocks, list);
-                }
+                var blocks = UIModel.AggtBlocks.GetModuleBlocks(m);
+                this.GetByBlocksRecur(blocks, list);
             }
 
             return list;

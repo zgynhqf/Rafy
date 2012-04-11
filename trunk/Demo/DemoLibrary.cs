@@ -18,8 +18,9 @@ namespace Demo
 
         public void Initialize(IApp app)
         {
-            app.ModuleOperations += (o, e) =>
+            app.AllPluginsMetaIntialized += (o, e) =>
             {
+                //定义书籍查询界面的结构
                 UIModel.AggtBlocks.DefineBlocks("书籍查询界面", new AggtBlocks
                 {
                     MainBlock = new Block(typeof(Book))
@@ -35,7 +36,10 @@ namespace Demo
                         }
                     }
                 });
+            };
 
+            app.ModuleOperations += (o, e) =>
+            {
                 var moduleBookImport = CommonModel.Modules.AddRoot(new ModuleMeta
                 {
                     Label = "书籍录入",

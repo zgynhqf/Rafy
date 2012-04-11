@@ -36,6 +36,37 @@ namespace OEA.MetaModel.View
         }
 
         /// <summary>
+        /// 获取某个模块定义的界面块
+        /// </summary>
+        /// <param name="moduleMeta"></param>
+        /// <returns></returns>
+        public AggtBlocks GetModuleBlocks(ModuleMeta moduleMeta)
+        {
+            AggtBlocks blocks = null;
+
+            if (!string.IsNullOrEmpty(moduleMeta.AggtBlocksName))
+            {
+                blocks = GetDefinedBlocks(moduleMeta.AggtBlocksName);
+            }
+            else
+            {
+                blocks = GetDefaultBlocks(moduleMeta.EntityType);
+            }
+
+            return blocks;
+        }
+
+        /// <summary>
+        /// 获取默认的聚合块对象
+        /// </summary>
+        /// <param name="entityType"></param>
+        /// <returns></returns>
+        public AggtBlocks GetDefaultBlocks(Type entityType)
+        {
+            return this._codeReader.Read(entityType);
+        }
+
+        /// <summary>
         /// 获取某个自定义的聚合块
         /// </summary>
         /// <param name="blocksName"></param>
@@ -74,16 +105,6 @@ namespace OEA.MetaModel.View
         public void DefineBlocks(string blocksName, AggtBlocks blocks)
         {
             this._memory[blocksName] = blocks;
-        }
-
-        /// <summary>
-        /// 获取默认的聚合块对象
-        /// </summary>
-        /// <param name="entityType"></param>
-        /// <returns></returns>
-        public AggtBlocks GetDefaultBlocks(Type entityType)
-        {
-            return this._codeReader.Read(entityType);
         }
     }
 }
