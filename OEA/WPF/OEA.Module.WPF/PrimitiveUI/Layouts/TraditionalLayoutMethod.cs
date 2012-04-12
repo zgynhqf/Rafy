@@ -47,7 +47,7 @@ namespace OEA
             container.TryArrangeCommandsContainer(control);
 
             control = regions.TryGetControl(SurrounderType.Navigation.GetDescription());
-            container.TryArrangeNavigate(control);
+            container.TryArrangeNavigation(control);
 
             control = regions.TryGetControl(SurrounderType.Condition.GetDescription());
             container.TryArrangeCondition(control);

@@ -53,11 +53,10 @@ namespace OEA.RBAC
             set { this.SetProperty(NameProperty, value); }
         }
 
-        public static readonly Property<OrgPositionList> OrgPositionListProperty = P<Org>.Register(e => e.OrgPositionList);
-        [Association]
+        public static readonly ListProperty<OrgPositionList> OrgPositionListProperty = P<Org>.RegisterList(e => e.OrgPositionList);
         public OrgPositionList OrgPositionList
         {
-            get { return this.GetLazyChildren(OrgPositionListProperty); }
+            get { return this.GetLazyList(OrgPositionListProperty); }
         }
 
         //由于使用自动编码，所以此块的功能暂时去除。

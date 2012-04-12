@@ -24,11 +24,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 using AvalonDock;
-
-
-
-
-
 using OEA.Library;
 using OEA.MetaModel;
 using OEA.MetaModel.View;

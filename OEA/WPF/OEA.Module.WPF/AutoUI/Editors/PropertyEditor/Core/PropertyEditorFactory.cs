@@ -45,6 +45,7 @@ namespace OEA.Module.WPF.Editors
                 { WPFEditorNames.DateRange, typeof(DateRangePropertyEditor)},
                 { WPFEditorNames.LookDetail, typeof(LookDetailPropertyEditor)},
                 { WPFEditorNames.PopupSearchList, typeof(PopupSearchListPropertyEditor)},
+                { WPFEditorNames.TiledList, typeof(TiledListReferenceEditor)},
             });
         }
 

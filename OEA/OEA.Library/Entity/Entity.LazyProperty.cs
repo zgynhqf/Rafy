@@ -40,10 +40,10 @@ namespace OEA.Library
         /// <param name="creator">构造一个新的子集合</param>
         /// <param name="childrenLoader">根据当前对象，查询出一个子集合</param>
         /// <returns></returns>
-        protected TCollection GetLazyChildren<TCollection>(ManagedProperty<TCollection> propertyInfo)
+        protected TCollection GetLazyList<TCollection>(ListProperty<TCollection> propertyInfo)
             where TCollection : EntityList
         {
-            return this.LoadLazyChildren(propertyInfo) as TCollection;
+            return this.LoadLazyList(propertyInfo) as TCollection;
         }
 
         /// <summary>
@@ -56,74 +56,48 @@ namespace OEA.Library
         /// <param name="creator">构造一个新的子集合</param>
         /// <param name="childrenLoader">根据当前对象，查询出一个子集合</param>
         /// <returns></returns>
-        public EntityList GetLazyChildren(IManagedProperty childrenProperty)
+        public EntityList GetLazyList(IListProperty listProperty)
         {
-            return this.LoadLazyChildren(childrenProperty) as EntityList;
+            return this.LoadLazyList(listProperty);
         }
 
         /// <summary>
         /// 执行懒加载操作。
         /// </summary>
-        /// <param name="childrenProperty"></param>
-        private object LoadLazyChildren(IManagedProperty childrenProperty)
+        /// <param name="listProperty"></param>
+        private EntityList LoadLazyList(IListProperty listProperty)
         {
-            object data = null;
+            EntityList data = null;
 
-            if (this.FieldExists(childrenProperty))
+            if (this.FieldExists(listProperty))
             {
-                data = this.GetProperty(childrenProperty);
+                data = this.GetProperty(listProperty) as EntityList;
                 if (data != null) return data;
             }
 
-            var listType = childrenProperty.PropertyType;
-            var entityType = EntityConvention.EntityType(listType);
-            var childRepository = RepositoryFactoryHost.Factory.Create(entityType);
-
             if (this.IsNew)
             {
-                data = childRepository.NewList();
+                var listRepository = RepositoryFactoryHost.Factory.Create(listProperty.ListEntityType);
+                data = listRepository.NewList();
             }
             else
             {
-                data = childRepository.GetByParent(this);
+                var meta = listProperty.GetMeta(this) as IListPropertyMetadata;
+                var dataProvider = meta.DataProvider;
+                if (dataProvider != null)
+                {
+                    data = dataProvider(this);
+                }
+                else
+                {
+                    var listRepository = RepositoryFactoryHost.Factory.Create(listProperty.ListEntityType);
+                    data = listRepository.GetByParent(this);
+                }
             }
 
-            this.LoadProperty(childrenProperty, data);
+            this.LoadProperty(listProperty, data);
 
             return data;
-        }
-
-        /// <summary>
-        /// 延迟加载子对象的集合。
-        /// </summary>
-        /// <typeparam name="TCollection">
-        /// 子对象集合类型
-        /// </typeparam>
-        /// <param name="property">当前属性的元信息</param>
-        /// 
-        /// <param name="childrenLoader">根据当前对象，查询出一个子集合</param>
-        /// <returns></returns>
-        protected TCollection GetLazyChildren<TCollection>(ManagedProperty<TCollection> property, Func<Entity, TCollection> childrenLoader)
-        {
-            if (this.FieldExists(property))
-            {
-                var data = this.GetProperty(property);
-                if (data != null) return data;
-            }
-
-            if (this.IsNew)
-            {
-                var entityType = EntityConvention.EntityType(property.PropertyType);
-                var repo = RepositoryFactoryHost.Factory.Create(entityType);
-
-                this.LoadProperty(property, repo.NewList());
-            }
-            else
-            {
-                this.LoadProperty(property, childrenLoader(this));
-            }
-
-            return this.GetProperty(property);
         }
 
         #endregion

@@ -3,8 +3,8 @@
     <CodeSnippet Format="1.0.0">
         <Header>
             <Description>子属性模板</Description>
-            <Title>OEA_PropertyChildren</Title>
-            <Shortcut>OEAPropertyChildren</Shortcut>
+            <Title>OEA_PropertyChildren_Full</Title>
+            <Shortcut>OEAPropertyList_Full</Shortcut>
             <Author>HuQingfang</Author>
             <SnippetTypes>
                 <SnippetType>Expansion</SnippetType>
@@ -13,8 +13,8 @@
         <Snippet>
             <Declarations>
                 <Literal>
-                  <ID>ChildrenListType</ID>
-                  <Default>ChildrenListType</Default>
+                    <ID>EntityListType</ID>
+                    <Default>EntityListType</Default>
                 </Literal>
                 <Literal Editable="false">
                     <ID>ClassName</ID>
@@ -23,11 +23,19 @@
                 </Literal>
             </Declarations>
             <Code Language="csharp">
-                <![CDATA[public static readonly Property<$ChildrenListType$> $ChildrenListType$Property = P<$ClassName$>.RegisterChildren(e => e.$ChildrenListType$);
-        public $ChildrenListType$ $ChildrenListType$
+                <![CDATA[public static readonly ListProperty<$EntityListType$> $EntityListType$Property = P<$ClassName$>.RegisterList(e => e.$EntityListType$, new ListPropertyMeta
         {
-            get { return this.GetLazyChildren($ChildrenListType$Property); }
-        }$end$]]>
+            HasManyType = HasManyType.Aggregation,
+            DataProvider = e => (e as ProductNavigationCriteria).LoadProductCategoryList()
+        });
+        public $EntityListType$ $EntityListType$
+        {
+            get { return this.GetLazyList($EntityListType$Property); }
+        }
+        private $EntityListType$ LoadProductCategoryList()
+        {
+            $end$
+        }]]>
             </Code>
         </Snippet>
     </CodeSnippet>

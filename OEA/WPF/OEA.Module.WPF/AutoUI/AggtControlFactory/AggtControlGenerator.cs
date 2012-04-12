@@ -171,7 +171,7 @@ namespace OEA.Module.WPF
             //本类只对以下“认识”的环绕块生成控件
             if (surrounderType == SurrounderType.Condition)
             {
-                var result = this._viewFactory.CreateConditionQueryObjectView(surrounderBlock.EVM);
+                var result = this._viewFactory.CreateConditionQueryView(surrounderBlock.EVM);
                 this.CreateCommandsUI(result, surrounderBlock);
 
                 reverseRelation = new RelationView(SurrounderType.Result, mainView);
@@ -179,10 +179,10 @@ namespace OEA.Module.WPF
             }
             else if (surrounderType == SurrounderType.Navigation)
             {
-                var result = this._viewFactory.CreateNavigateQueryObjectView(surrounderBlock.EVM);
+                var result = this._viewFactory.CreateNavigationQueryView(surrounderBlock.EVM);
                 this.CreateCommandsUI(result, surrounderBlock);
 
-                relation = new NavigateRelationView(result);
+                relation = new NavigationRelationView(result);
                 reverseRelation = new RelationView(SurrounderType.Result, mainView);
                 surrounderView = result;
             }

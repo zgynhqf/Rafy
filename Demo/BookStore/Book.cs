@@ -82,10 +82,10 @@ namespace Demo
             }
         }
 
-        public static readonly Property<ChapterList> ChapterListProperty = P<Book>.RegisterChildren(e => e.ChapterList);
+        public static readonly ListProperty<ChapterList> ChapterListProperty = P<Book>.RegisterList(e => e.ChapterList);
         public ChapterList ChapterList
         {
-            get { return this.GetLazyChildren(ChapterListProperty); }
+            get { return this.GetLazyList(ChapterListProperty); }
         }
 
         protected override void AddValidations()
@@ -136,7 +136,11 @@ namespace Demo
             AggregateSQL.Instance.LoadEntities<Book>(this, p => p.LoadChildren(b => b.ChapterList));
         }
 
-        private void QueryBy(BookQueryCriteria criteria)
+        /// <summary>
+        /// 查询面板
+        /// </summary>
+        /// <param name="criteria"></param>
+        protected void QueryBy(BookQueryCriteria criteria)
         {
             //自定义查询示例。
             this.QueryDb(q =>
@@ -150,16 +154,6 @@ namespace Demo
     public class BookRepository : EntityRepository
     {
         protected BookRepository() { }
-
-        protected override EntityList GetListImplicitly(object parameter)
-        {
-            if (parameter is BookQueryCriteria)
-            {
-                return this.FetchList(parameter);
-            }
-
-            return base.GetListImplicitly(parameter);
-        }
     }
 
     internal class BookConfig : EntityConfig<Book>

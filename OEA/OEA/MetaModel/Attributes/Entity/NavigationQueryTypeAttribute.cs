@@ -10,13 +10,13 @@ namespace OEA.MetaModel.Attributes
     /// 对该类进行导航查询的条件
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class NavigateQueryTypeAttribute : Attribute
+    public class NavigationQueryTypeAttribute : Attribute
     {
         /// <summary>
         /// 
         /// </summary>
         /// <param name="type">导航查询的条件对象的类型</param>
-        public NavigateQueryTypeAttribute(Type queryType)
+        public NavigationQueryTypeAttribute(Type queryType)
         {
             QueryType = queryType;
         }

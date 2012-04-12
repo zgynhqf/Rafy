@@ -25,13 +25,7 @@ namespace OEA.WPF.Command
     {
         public override bool CanExecute(ListObjectView view)
         {
-            IDirtyAware currentObject = null;
-            if (view != null)
-            {
-                currentObject = view.Current as IDirtyAware;
-            }
-
-            return currentObject == null || !currentObject.IsDirty;
+            return view.Data != null && !view.Data.IsDirty;
         }
         /// <summary>
         /// 如果存在查询和导航面板，则刷新查询和导航面板的下拉列表框数据
@@ -39,27 +33,29 @@ namespace OEA.WPF.Command
         /// <param name="view"></param>
         public override void Execute(ListObjectView view)
         {
-            QueryObjectView queryView = view.NavigateQueryView;
-            if (queryView == null) { queryView = view.CondtionQueryView; }
+            view.DataLoader.ReloadDataAsync();
 
-            //刷新查询或导航面板的下拉列表框数据
-            if (queryView != null)
-            {
-                queryView.TryExecuteQuery(view);
+            //QueryObjectView queryView = view.NavigateQueryView;
+            //if (queryView == null) { queryView = view.CondtionQueryView; }
 
-                foreach (var item in queryView.PropertyEditors)
-                {
-                    if (item.PropertyViewInfo.EditorName == WPFEditorNames.LookupDropDown)
-                    {
-                        (item as LookupListPropertyEditor).DataSourse = null;
-                    }
-                }
-                queryView.AttachNewQueryObject();
-            }
-            else
-            {
-                view.DataLoader.LoadDataAsync();
-            }
+            ////刷新查询或导航面板的下拉列表框数据
+            //if (queryView != null)
+            //{
+            //    queryView.TryExecuteQuery(view);
+
+            //    foreach (var item in queryView.PropertyEditors)
+            //    {
+            //        if (item.PropertyViewInfo.EditorName == WPFEditorNames.LookupDropDown)
+            //        {
+            //            (item as LookupListPropertyEditor).DataSourse = null;
+            //        }
+            //    }
+            //    queryView.AttachNewQueryObject();
+            //}
+            //else
+            //{
+            //    view.DataLoader.LoadDataAsync();
+            //}
         }
     }
 }

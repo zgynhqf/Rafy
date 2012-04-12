@@ -162,14 +162,14 @@ namespace OEA.MetaModel.View
             }
         }
 
-        private NavigatePropertyMeta _NavigatePropertyMeta;
+        private NavigationPropertyMeta _NavigationPropertyMeta;
         /// <summary>
-        /// 如果当前属性是一个导航属性，则这个属性不为 null。
+        /// 如果当前属性是一个导航触发属性，则这个属性不为 null。
         /// </summary>
-        public NavigatePropertyMeta NavigationMeta
+        public NavigationPropertyMeta NavigationMeta
         {
-            get { return this._NavigatePropertyMeta; }
-            set { this.SetValue(ref this._NavigatePropertyMeta, value); }
+            get { return this._NavigationPropertyMeta; }
+            set { this.SetValue(ref this._NavigationPropertyMeta, value); }
         }
 
         public override bool IsVisible
@@ -237,7 +237,7 @@ namespace OEA.MetaModel.View
     /// <summary>
     /// 导航属性的元数据
     /// </summary>
-    public class NavigatePropertyMeta : Freezable
+    public class NavigationPropertyMeta : Freezable
     {
         private string _IdPropertyName;
 
@@ -257,26 +257,27 @@ namespace OEA.MetaModel.View
         /// <summary>
         /// 默认值：不显示。
         /// </summary>
-        [Label("不显示")]
         Hide = 0,
 
         /// <summary>
         /// 是否在下拉框中显示
         /// </summary>
-        [Label("显示在下拉框中")]
         DropDown = 1,
 
         /// <summary>
         /// 是否在列表中显示
         /// </summary>
-        [Label("显示在列表中")]
         List = 2,
 
         /// <summary>
         /// 是否在详细视图中显示
         /// </summary>
-        [Label("显示在表单中")]
         Detail = 4,
+
+        /// <summary>
+        /// 显示在列表和详细视图中
+        /// </summary>
+        ListDetail = List | Detail,
 
         [Label("全显示")]
         All = DropDown | List | Detail

@@ -12,8 +12,6 @@ namespace Demo.WPF
     {
         protected override void ConfigView()
         {
-            base.ConfigView();
-
             View.UseWPFCommands(typeof(BookSearchCommand));
             View.DetailPanelType = typeof(BookDetailPanel);
             View.DetailLabelWidth = 120;

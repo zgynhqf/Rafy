@@ -37,29 +37,32 @@ namespace OEA.Library
 
             app.AllPluginsMetaIntialized += (o, e) =>
             {
-                var blocks = new AggtBlocks
+                UIModel.AggtBlocks.DefineBlocks("ViewConfigurationModel模块界面", m =>
                 {
-                    MainBlock = new Block(typeof(ViewConfigurationModel))
+                    var blocks = new AggtBlocks
                     {
-                        BlockType = BlockType.Detail
-                    },
-                    Children = 
+                        MainBlock = new Block(typeof(ViewConfigurationModel))
+                        {
+                            BlockType = BlockType.Detail
+                        },
+                        Children = 
                     {
                         new ChildBlock("属性", ViewConfigurationModel.ViewConfigurationPropertyListProperty),
                         new ChildBlock("命令", ViewConfigurationModel.ViewConfigurationCommandListProperty)
                     }
-                };
+                    };
 
-                if (OEAEnvironment.IsWeb)
-                {
-                    blocks.Layout.Class = "Oea.autoUI.layouts.RightChildren";
-                }
-                else
-                {
-                    blocks.Layout.IsLayoutChildrenHorizonal = true;
-                }
+                    if (OEAEnvironment.IsWeb)
+                    {
+                        blocks.Layout.Class = "Oea.autoUI.layouts.RightChildren";
+                    }
+                    else
+                    {
+                        blocks.Layout.IsLayoutChildrenHorizonal = true;
+                    }
 
-                UIModel.AggtBlocks.DefineBlocks("ViewConfigurationModel模块界面", blocks);
+                    return blocks;
+                });
             };
 
             app.AppModelCompleted += (o, e) =>

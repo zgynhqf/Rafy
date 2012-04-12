@@ -22,7 +22,7 @@ namespace JXC
             {
                 var moduleBookImport = CommonModel.Modules.AddRoot(new ModuleMeta
                 {
-                    Label = "进销存系统",
+                    Label = "进销存系统示例",
                     Children =
                     {
                         new ModuleMeta
@@ -32,9 +32,10 @@ namespace JXC
                             {
                                 new ModuleMeta{ Label = "计量单位", EntityType = typeof(Unit)},
                                 new ModuleMeta{ Label = "商品类别", EntityType = typeof(ProductCategory)},
+                                new ModuleMeta{ Label = "商品管理", EntityType = typeof(Product)},
+                                new ModuleMeta{ Label = "仓库管理", EntityType = typeof(Storage)},
                                 new ModuleMeta{ Label = "客户类别", EntityType = typeof(ClientCategory)},
                                 new ModuleMeta{ Label = "客户管理", EntityType = typeof(ClientInfo)},
-                                new ModuleMeta{ Label = "仓库管理", EntityType = typeof(Storage)},
                             }
                         },
                         new ModuleMeta

@@ -38,6 +38,6 @@ namespace OEA.MetaModel
         /// <summary>
         /// 导航面板对象
         /// </summary>
-        NavigateQueryObject
+        NavigationQueryObject
     }
 }

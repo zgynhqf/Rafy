@@ -24,7 +24,7 @@ namespace OEA.MetaModel.View
     /// </summary>
     public class AggtBlocksRepository
     {
-        private Dictionary<string, AggtBlocks> _memory = new Dictionary<string, AggtBlocks>();
+        private Dictionary<string, Func<object, AggtBlocks>> _memory = new Dictionary<string, Func<object, AggtBlocks>>();
 
         private CodeBlocksReader _codeReader = new CodeBlocksReader();
 
@@ -74,7 +74,12 @@ namespace OEA.MetaModel.View
         public AggtBlocks GetDefinedBlocks(string blocksName)
         {
             AggtBlocks res = null;
-            if (!this._memory.TryGetValue(blocksName, out res))
+            Func<object, AggtBlocks> creator = null;
+            if (this._memory.TryGetValue(blocksName, out creator))
+            {
+                res = creator(null);
+            }
+            else
             {
                 res = this._xmlCfgMgr.GetBlocks(blocksName);
                 if (res == null) throw new InvalidOperationException("没有找到相应的聚合视图配置文件：" + blocksName);
@@ -102,7 +107,7 @@ namespace OEA.MetaModel.View
         /// </summary>
         /// <param name="blocksName"></param>
         /// <param name="blocks"></param>
-        public void DefineBlocks(string blocksName, AggtBlocks blocks)
+        public void DefineBlocks(string blocksName, Func<object, AggtBlocks> blocks)
         {
             this._memory[blocksName] = blocks;
         }

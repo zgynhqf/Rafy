@@ -118,9 +118,11 @@ namespace OEA.ManagedProperty
 
         #region 使用字符串的 GetProperty / SetProperty
 
-        public IManagedProperty FindProperty(string propertyName)
+        public IManagedProperty FindProperty(string managedProperty)
         {
-            return this.PropertiesContainer.GetAvailableProperties().FirstOrDefault(p => p.Name == propertyName);
+            if (string.IsNullOrWhiteSpace(managedProperty)) throw new ArgumentNullException("managedProperty");
+
+            return this.PropertiesContainer.GetAvailableProperties().FirstOrDefault(p => p.Name == managedProperty);
         }
 
         /// <summary>
@@ -288,6 +290,8 @@ namespace OEA.ManagedProperty
         /// <returns></returns>
         public bool FieldExists(string propertyName)
         {
+            if (string.IsNullOrWhiteSpace(propertyName)) throw new ArgumentNullException("propertyName");
+
             var property = this.FindProperty(propertyName);
             if (property == null) return false;
 
@@ -296,6 +300,8 @@ namespace OEA.ManagedProperty
 
         public bool FieldExists(IManagedProperty property)
         {
+            if (property == null) throw new ArgumentNullException("property");
+
             return this._fields.FieldExists(property);
         }
 

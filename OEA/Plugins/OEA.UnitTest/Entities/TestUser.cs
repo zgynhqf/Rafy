@@ -76,11 +76,10 @@ namespace OEA.Library._Test
             //var entity = sender as TestUser;
         }
 
-        public static ManagedProperty<TestRoleList> TestRoleListProperty = P<TestUser>.Register(e => e.TestRoleList);
-        [Association]
+        public static ListProperty<TestRoleList> TestRoleListProperty = P<TestUser>.RegisterList(e => e.TestRoleList);
         public TestRoleList TestRoleList
         {
-            get { return this.GetLazyChildren(TestRoleListProperty); }
+            get { return this.GetLazyList(TestRoleListProperty); }
         }
 
         public static ManagedProperty<string> ReadOnlyNameAgeProperty = P<TestUser>.RegisterReadOnly(e => e.ReadOnlyNameAge, ReadOnlyNameAgeProperty_GetValue, null, NameProperty, AgeProperty);
@@ -113,15 +112,13 @@ namespace OEA.Library._Test
 
         #region TestTreeTaskList 的路由事件
 
-        public static Property<TestTreeTaskList> TestTreeTaskListProperty = P<TestUser>.Register(e => e.TestTreeTaskList);
-        [Association]
+        public static ListProperty<TestTreeTaskList> TestTreeTaskListProperty = P<TestUser>.RegisterList(e => e.TestTreeTaskList);
         public TestTreeTaskList TestTreeTaskList
         {
-            get { return this.GetLazyChildren(TestTreeTaskListProperty); }
+            get { return this.GetLazyList(TestTreeTaskListProperty); }
         }
 
         public static Property<int> TasksTimeProperty = P<TestUser>.Register(e => e.TasksTime);
-        [EntityProperty]
         [Column]
         public int TasksTime
         {

@@ -246,7 +246,7 @@ namespace OEA
         {
             return entityType.HasMarked<RootEntityAttribute>() ||
                 entityType.HasMarked<ConditionQueryEntityAttribute>() ||
-                entityType.HasMarked<NavigateQueryEntityAttribute>();
+                entityType.HasMarked<NavigationQueryEntityAttribute>();
         }
 
         #endregion

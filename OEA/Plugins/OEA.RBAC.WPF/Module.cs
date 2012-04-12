@@ -47,7 +47,7 @@ namespace OEA.Module.WPF
 
             app.AllPluginsMetaIntialized += (o, e) =>
             {
-                var orgBlocks = new AggtBlocks
+                UIModel.AggtBlocks.DefineBlocks("部门模块布局", m => new AggtBlocks
                 {
                     MainBlock = new Block(typeof(Org)),
                     Layout = new LayoutMeta()
@@ -71,8 +71,7 @@ namespace OEA.Module.WPF
                             }
                         }
                     }
-                };
-                UIModel.AggtBlocks.DefineBlocks("部门模块布局", orgBlocks);
+                });
             };
 
             app.ModuleOperations += (s, e) =>
