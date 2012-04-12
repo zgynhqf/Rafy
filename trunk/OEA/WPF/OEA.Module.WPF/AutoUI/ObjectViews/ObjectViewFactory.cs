@@ -66,9 +66,9 @@ namespace OEA.Module.WPF
             {
                 if (sur.SurrounderType == SurrounderType.Navigation)
                 {
-                    return this.CreateNavigateQueryObjectView(block.EVM);
+                    return this.CreateNavigationQueryView(block.EVM);
                 }
-                return this.CreateConditionQueryObjectView(block.EVM);
+                return this.CreateConditionQueryView(block.EVM);
             }
 
             if (block.BlockType == BlockType.List)
@@ -130,9 +130,9 @@ namespace OEA.Module.WPF
         /// </summary>
         /// <param name="entityViewInfo"></param>
         /// <returns></returns>
-        public NavigateQueryObjectView CreateNavigateQueryObjectView(EntityViewMeta entityViewInfo)
+        public NavigationQueryObjectView CreateNavigationQueryView(EntityViewMeta entityViewInfo)
         {
-            var view = new NavigateQueryObjectView(entityViewInfo);
+            var view = new NavigationQueryObjectView(entityViewInfo);
 
             this.InitDetailView(view);
 
@@ -148,7 +148,7 @@ namespace OEA.Module.WPF
         /// </summary>
         /// <param name="entityViewInfo"></param>
         /// <returns></returns>
-        public ConditionQueryObjectView CreateConditionQueryObjectView(EntityViewMeta entityViewInfo)
+        public ConditionQueryObjectView CreateConditionQueryView(EntityViewMeta entityViewInfo)
         {
             var view = new ConditionQueryObjectView(entityViewInfo);
 

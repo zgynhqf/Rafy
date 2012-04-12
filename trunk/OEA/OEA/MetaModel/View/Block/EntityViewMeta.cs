@@ -131,12 +131,12 @@ namespace OEA.MetaModel.View
             set { this.SetValue(ref this._DetailPanelType, value); }
         }
 
-        private int _DetailLabelWidth;
+        private int? _DetailLabelWidth;
         /// <summary>
         /// 在 DetailPanel 中显示的 Label 的宽度。
-        /// 默认值 0 表示不指定，使用系统默认宽度。
+        /// 不指定，则使用系统默认宽度。
         /// </summary>
-        public int DetailLabelWidth
+        public int? DetailLabelWidth
         {
             get { return this._DetailLabelWidth; }
             set { this.SetValue(ref this._DetailLabelWidth, value); }

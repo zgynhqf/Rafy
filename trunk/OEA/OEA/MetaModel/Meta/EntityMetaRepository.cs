@@ -171,9 +171,9 @@ namespace OEA.MetaModel
             {
                 entityMeta.EntityCategory = EntityCategory.ConditionQueryObject;
             }
-            else if (boAttri is NavigateQueryEntityAttribute)
+            else if (boAttri is NavigationQueryEntityAttribute)
             {
-                entityMeta.EntityCategory = EntityCategory.NavigateQueryObject;
+                entityMeta.EntityCategory = EntityCategory.NavigationQueryObject;
             }
             else if (boAttri is RootEntityAttribute)
             {

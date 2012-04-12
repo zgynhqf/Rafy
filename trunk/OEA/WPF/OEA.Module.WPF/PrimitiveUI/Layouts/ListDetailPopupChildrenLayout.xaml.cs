@@ -41,7 +41,7 @@ namespace OEA.Module.WPF.Layout
             }
         }
 
-        public override void TryArrangeNavigate(ControlResult control)
+        public override void TryArrangeNavigation(ControlResult control)
         {
             if (control != null)
             {

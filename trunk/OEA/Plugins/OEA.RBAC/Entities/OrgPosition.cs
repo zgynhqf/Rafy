@@ -87,21 +87,19 @@ namespace OEA.RBAC
 
         #endregion
 
-        public static readonly Property<OrgPositionUserList> OrgPositionUserListProperty = P<OrgPosition>.Register(e => e.OrgPositionUserList);
-        [Association]
+        public static readonly ListProperty<OrgPositionUserList> OrgPositionUserListProperty = P<OrgPosition>.RegisterList(e => e.OrgPositionUserList);
         public OrgPositionUserList OrgPositionUserList
         {
-            get { return this.GetLazyChildren(OrgPositionUserListProperty); }
+            get { return this.GetLazyList(OrgPositionUserListProperty); }
         }
 
         /// <summary>
         /// 注意，这个列表中存储的是“不可用”的命令列表。
         /// </summary>
-        public static readonly Property<OrgPositionOperationDenyList> OrgPositionOperationDenyListProperty = P<OrgPosition>.Register(e => e.OrgPositionOperationDenyList);
-        [Association]
+        public static readonly ListProperty<OrgPositionOperationDenyList> OrgPositionOperationDenyListProperty = P<OrgPosition>.RegisterList(e => e.OrgPositionOperationDenyList);
         public OrgPositionOperationDenyList OrgPositionOperationDenyList
         {
-            get { return this.GetLazyChildren(OrgPositionOperationDenyListProperty); }
+            get { return this.GetLazyList(OrgPositionOperationDenyListProperty); }
         }
     }
 

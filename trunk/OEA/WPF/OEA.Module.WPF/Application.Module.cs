@@ -205,7 +205,7 @@ namespace OEA.Module.WPF
             var listView = window.View as ListObjectView;
             if (listView != null &&
                 listView.CondtionQueryView == null &&
-                listView.NavigateQueryView == null
+                listView.NavigationQueryView == null
                 )
             {
                 listView.DataLoader.LoadDataAsync();

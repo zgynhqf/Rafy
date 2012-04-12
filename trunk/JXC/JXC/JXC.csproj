@@ -44,6 +44,7 @@
     <Compile Include="Entities\BasicData\ClientInfo.cs" />
     <Compile Include="Entities\BasicData\Product.cs" />
     <Compile Include="Entities\BasicData\ProductCategory.cs" />
+    <Compile Include="Entities\BasicData\ProductNavigationCriteria.cs" />
     <Compile Include="Entities\BasicData\Storage.cs" />
     <Compile Include="Entities\BasicData\Unit.cs" />
     <Compile Include="JXCEntity.cs" />

@@ -46,7 +46,7 @@ namespace OEA.MetaModel.View
         /// </summary>
         /// <param name="label"></param>
         /// <param name="childrenProperty"></param>
-        public ChildBlock(string label, IManagedProperty childrenProperty)
+        public ChildBlock(string label, IListProperty childrenProperty)
         {
             if (label == null) throw new ArgumentNullException("label");
             if (childrenProperty == null) throw new ArgumentNullException("childrenProperty");
@@ -65,9 +65,9 @@ namespace OEA.MetaModel.View
         [XmlIgnore]
         public AggtBlocks Owner { get; internal set; }
 
-        private IManagedProperty _ChildrenProperty;
+        private IListProperty _ChildrenProperty;
         [XmlIgnore]
-        public IManagedProperty ChildrenProperty
+        public IListProperty ChildrenProperty
         {
             get
             {
@@ -75,7 +75,7 @@ namespace OEA.MetaModel.View
                 {
                     this._ChildrenProperty = CommonModel.Entities.Get(this.Owner.MainBlock.EntityType)
                         .ChildrenProperty(this._ChildrenPropertyName)
-                        .ManagedProperty;
+                        .ManagedProperty as IListProperty;
                 }
                 return this._ChildrenProperty;
             }
@@ -85,7 +85,7 @@ namespace OEA.MetaModel.View
                 if (value != null)
                 {
                     this._ChildrenPropertyName = value.Name;
-                    this.EntityType = EntityConvention.EntityType(value.PropertyType);
+                    this.EntityType = value.ListEntityType;
                 }
             }
         }

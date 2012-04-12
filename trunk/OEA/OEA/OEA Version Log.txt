@@ -5,8 +5,45 @@
  * 说明：本文件用于记录 OEA 框架版本号及相应的变更记录。格式如下：
  * 暂时分为以下几类：
  * ★较大改动、★修改接口、★删除接口、添加接口、添加功能、重构、内部修改、BUG修复。
+ * （重构与内部修改相比，是不会造成任何功能变动的。）
  * 
 *******************************************************/
+
+2.10.490.0
+    添加功能
+        * 添加 TiledListReferencEditor。
+
+2.10.489.0
+    ★修改接口、添加接口
+        * GetLazyChildren 变为 GetLazyList。
+        * 支持 LazyProperty。
+
+2.10.488.0
+    重构
+        * 去除不需要的引用。
+
+2.10.487.0
+    BUG修复
+        * 修改“定义的聚合块可能会被更改，不能直接把它们存储起来。”的问题。
+
+2.10.486.0
+    内部修改
+        * NavigationQueryObjectView 中的 Children 模式不要了，外部可以直接使用 Entity 的 RoutedEvent 来间接实现。
+    重构
+        * Navigate 改为名词的 Navigation。
+        * CommonCommand 中的添加按钮从 AddCommand 变为一般的 PopupAddCommand。
+
+2.10.485.0
+    ★删除接口
+        * 删除 GetListImplicity 接口。
+    重构
+        * 修改类名 NavigateQueryType 为 NavigationQueryType。
+        * RefreshCommand 简单化。
+        * CommonCommand 中的添加按钮从 PopupAddCommand 变为一般的 AddCommand。
+    BUG修复
+        * CodeBlocksReader 中导航面板应该使用 Navigation 的环绕类型。
+    其它
+        * 添加、完善 JXC 示例。
 
 2.10.484.0
     添加功能

@@ -100,6 +100,10 @@ namespace OEA.Library.Audit
             this.QueryDb(q => q.Order(AuditItem.LogTimeProperty, false));
         }
 
+        /// <summary>
+        /// 条件面板查询
+        /// </summary>
+        /// <param name="criteria"></param>
         protected void QueryBy(AuditItemConditionCriteria criteria)
         {
             this.QueryDb(q =>
@@ -132,15 +136,7 @@ namespace OEA.Library.Audit
 
     public class AuditItemRepository : EntityRepository
     {
-        protected override EntityList GetListImplicitly(object parameter)
-        {
-            if (parameter is AuditItemConditionCriteria)
-            {
-                return this.FetchList(parameter);
-            }
-
-            return base.GetListImplicitly(parameter);
-        }
+        protected AuditItemRepository() { }
     }
 
     internal class AuditItemConfig : EntityConfig<AuditItem>

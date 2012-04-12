@@ -292,7 +292,9 @@ namespace OEA
 
         protected EntityList GetRawChildrenData()
         {
-            return this._parent.Current.GetLazyChildren(this._childBlock.ChildrenProperty);
+            return this._parent.Current.GetLazyList(
+                this._childBlock.ChildrenProperty
+                );
         }
 
         /// <summary>

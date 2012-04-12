@@ -84,6 +84,8 @@
     <Compile Include="DataPortal\DataPortalClient\IDataPortalProxy.cs" />
     <Compile Include="DataPortal\DataPortalClient\WcfProxy.cs" />
     <Compile Include="DataPortal\DataPortalResult.cs" />
+    <Compile Include="Entity\MP\ListProperty.cs" />
+    <Compile Include="Entity\MP\ListPropertyMetadata.cs" />
     <Compile Include="Utils\DataBase\ConnectionManager.cs" />
     <Compile Include="Utils\ObjectCloner.cs" />
     <Compile Include="DataPortal\Server\DataPortalContext.cs" />

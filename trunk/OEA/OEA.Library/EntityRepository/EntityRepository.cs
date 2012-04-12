@@ -103,23 +103,13 @@ namespace OEA.Library
         }
 
         /// <summary>
-        /// 子类重写此方法来显式实现单参数的GetList调用
-        /// </summary>
-        /// <param name="criteria"></param>
-        /// <returns></returns>
-        protected virtual EntityList GetListImplicitly(object criteria)
-        {
-            throw new NotSupportedException("请重写此方法，以支持隐式调用。");
-        }
-
-        /// <summary>
         /// 外界不要使用，OEA 框架自身使用。
         /// </summary>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public EntityList __GetListImplicitly(object parameter)
+        public EntityList __GetListImplicitly(object criteria)
         {
-            return this.GetListImplicitly(parameter);
+            return this.FetchList(criteria);
         }
 
         ///// <summary>

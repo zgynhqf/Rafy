@@ -32,11 +32,6 @@ namespace OEA.Module.WPF.Editors
     /// </summary>
     public class PopupSearchListPropertyEditor : ReferencePropertyEditor
     {
-        protected override FrameworkElement CreateLabelElement()
-        {
-            return base.CreateLabelElement();
-        }
-
         protected override FrameworkElement CreateEditingElement()
         {
             var propertyName = this.PropertyViewInfo.Name;

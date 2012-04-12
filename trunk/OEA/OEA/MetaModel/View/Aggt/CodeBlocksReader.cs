@@ -64,14 +64,14 @@ namespace OEA.MetaModel.View
 
                 result.Surrounders.Add(surAggt);
             }
-            var naviAttri = em.EntityType.GetSingleAttribute<NavigateQueryTypeAttribute>();
+            var naviAttri = em.EntityType.GetSingleAttribute<NavigationQueryTypeAttribute>();
             if (naviAttri != null)
             {
                 var surBlock = new SurrounderBlock
                 {
                     EntityType = naviAttri.QueryType,
                     BlockType = View.BlockType.Detail,
-                    SurrounderType = SurrounderType.Condition
+                    SurrounderType = SurrounderType.Navigation
                 };
                 var surEM = CommonModel.Entities.Get(surBlock.EntityType);
                 var surAggt = this.Read(surEM, surBlock);

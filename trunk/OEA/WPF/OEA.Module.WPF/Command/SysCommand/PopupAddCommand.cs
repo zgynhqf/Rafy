@@ -32,7 +32,7 @@ namespace OEA.WPF.Command
         public override void Execute(ListObjectView view)
         {
             //创建一个临时的拷贝数据
-            var tmp = Entity.New(view.EntityType);
+            var tmp = view.CreateNewItem();
 
             this.OnTmpEntityCreated(tmp);
 

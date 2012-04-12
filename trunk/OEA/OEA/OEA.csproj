@@ -72,6 +72,8 @@
     <Compile Include="IPlugin.cs" />
     <Compile Include="IPropertyMetadata.cs" />
     <Compile Include="IService.cs" />
+    <Compile Include="ManagedProperty\IOEAListProperty.cs" />
+    <Compile Include="ManagedProperty\IOEAListPropertyMetadata.cs" />
     <Compile Include="ManagedProperty\IOEARefProperty.cs" />
     <Compile Include="ManagedProperty\IOEARefPropertyMetadata.cs" />
     <Compile Include="ManagedProperty\OEARefPropertyExtension.cs" />
@@ -82,15 +84,14 @@
     <Compile Include="MetaModel\Attributes\Entity\ConditionQueryTypeAttribute.cs" />
     <Compile Include="MetaModel\Attributes\Entity\CriteriaAttribute.cs" />
     <Compile Include="MetaModel\Attributes\Entity\EntityAttribute.cs" />
-    <Compile Include="MetaModel\Attributes\Entity\NavigateQueryEntityAttribute.cs" />
-    <Compile Include="MetaModel\Attributes\Entity\NavigateQueryTypeAttribute.cs" />
+    <Compile Include="MetaModel\Attributes\Entity\NavigationQueryEntityAttribute.cs" />
+    <Compile Include="MetaModel\Attributes\Entity\NavigationQueryTypeAttribute.cs" />
     <Compile Include="MetaModel\Attributes\Entity\ORM\ColumnAttribute.cs" />
     <Compile Include="MetaModel\Attributes\Entity\ORM\PKAttribute.cs" />
     <Compile Include="MetaModel\Attributes\Entity\ORM\TableAttribute.cs" />
     <Compile Include="MetaModel\Attributes\Entity\Property\AssociationAttribute.cs" />
     <Compile Include="MetaModel\Attributes\Entity\Property\EntityPropertyAttribute.cs" />
     <Compile Include="MetaModel\Attributes\Entity\Property\LookupAttribute.cs" />
-    <Compile Include="MetaModel\Attributes\Entity\Property\NavigateQueryItemAttribute.cs" />
     <Compile Include="MetaModel\Attributes\Entity\RootEntityAttribute.cs" />
     <Compile Include="MetaModel\Attributes\Enums.cs" />
     <Compile Include="MetaModel\Attributes\LabelAttribute.cs" />
@@ -196,6 +197,7 @@
     <Content Include="_OEA Version Logs\2.5-2.6.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="_CodeSnippets\OEA_PropertyList_Full.snippet" />
     <None Include="_CodeSnippets\UIA_InTab.snippet" />
     <None Include="_CodeSnippets\UIA_InWindow.snippet" />
     <None Include="_CodeSnippets\OEA_PropertyReference_Changed.snippet" />
@@ -208,7 +210,7 @@
     <None Include="_CodeSnippets\OEA_Entity_Template.snippet" />
     <None Include="_CodeSnippets\OEA_ForeAsyncLoader.snippet" />
     <None Include="_CodeSnippets\OEA_Property.snippet" />
-    <None Include="_CodeSnippets\OEA_PropertyChildren.snippet" />
+    <None Include="_CodeSnippets\OEA_PropertyList.snippet" />
     <None Include="_CodeSnippets\OEA_PropertyReference.snippet" />
     <None Include="_CodeSnippets\OEA_PropertyReferenceNullable.snippet" />
     <None Include="_CodeSnippets\OEA_TreeEntity.snippet" />

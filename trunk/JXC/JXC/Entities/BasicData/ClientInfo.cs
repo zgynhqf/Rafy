@@ -106,8 +106,6 @@ namespace JXC
     {
         protected override void ConfigMeta()
         {
-            base.ConfigMeta();
-
             Meta.MapTable().HasColumns(
                 ClientInfo.ClientCategoryRefProperty,
                 ClientInfo.NameProperty,
@@ -124,19 +122,17 @@ namespace JXC
 
         protected override void ConfigView()
         {
-            base.ConfigView();
-
             View.HasLabel("客户").HasTitle(ClientInfo.NameProperty);
 
             View.Property(ClientInfo.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
-            View.Property(ClientInfo.ZhuJiMaProperty).HasLabel("助记码").ShowIn(ShowInWhere.All);
-            View.Property(ClientInfo.FaRenDaiBiaoProperty).HasLabel("法人代表").ShowIn(ShowInWhere.All);
-            View.Property(ClientInfo.YouXiangProperty).HasLabel("邮箱").ShowIn(ShowInWhere.All);
-            View.Property(ClientInfo.ClientCategoryRefProperty).HasLabel("客户类别").ShowIn(ShowInWhere.All);
-            View.Property(ClientInfo.KaiHuYinHangProperty).HasLabel("开户银行").ShowIn(ShowInWhere.All);
-            View.Property(ClientInfo.ShouJiaJiBieProperty).HasLabel("售价级别").ShowIn(ShowInWhere.All);
-            View.Property(ClientInfo.YinHangZhangHuProperty).HasLabel("银行帐户").ShowIn(ShowInWhere.All);
-            View.Property(ClientInfo.BeiZhuProperty).HasLabel("备注").ShowIn(ShowInWhere.All).UseEditor(WPFEditorNames.Memo);
+            View.Property(ClientInfo.ZhuJiMaProperty).HasLabel("助记码").ShowIn(ShowInWhere.ListDetail);
+            View.Property(ClientInfo.FaRenDaiBiaoProperty).HasLabel("法人代表").ShowIn(ShowInWhere.ListDetail);
+            View.Property(ClientInfo.YouXiangProperty).HasLabel("邮箱").ShowIn(ShowInWhere.ListDetail);
+            View.Property(ClientInfo.ClientCategoryRefProperty).HasLabel("客户类别").ShowIn(ShowInWhere.ListDetail);
+            View.Property(ClientInfo.KaiHuYinHangProperty).HasLabel("开户银行").ShowIn(ShowInWhere.ListDetail);
+            View.Property(ClientInfo.ShouJiaJiBieProperty).HasLabel("售价级别").ShowIn(ShowInWhere.ListDetail);
+            View.Property(ClientInfo.YinHangZhangHuProperty).HasLabel("银行帐户").ShowIn(ShowInWhere.ListDetail);
+            View.Property(ClientInfo.BeiZhuProperty).HasLabel("备注").ShowIn(ShowInWhere.ListDetail).UseEditor(WPFEditorNames.Memo);
         }
     }
 }

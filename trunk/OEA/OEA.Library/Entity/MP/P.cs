@@ -271,18 +271,36 @@ namespace OEA.Library
 
         #endregion
 
-        #region Register
+        #region RegisterList
 
         /// <summary>
-        /// 注册一个孩子属性
+        /// 注册一个列表属性
         /// </summary>
         /// <typeparam name="TProperty"></typeparam>
         /// <param name="propertyExp"></param>
         /// <returns></returns>
-        public static Property<TProperty> RegisterChildren<TProperty>(Expression<Func<TEntity, TProperty>> propertyExp)
+        public static ListProperty<TEntityList> RegisterList<TEntityList>(Expression<Func<TEntity, TEntityList>> propertyExp)
+            where TEntityList : EntityList
         {
-            //目前孩子属性都是一般属性
-            return Register(propertyExp);
+            return RegisterListCore<TEntityList>(GetPropertyName(propertyExp), new ListPropertyMeta());
+        }
+
+        public static ListProperty<TEntityList> RegisterList<TEntityList>(Expression<Func<TEntity, TEntityList>> propertyExp, ListPropertyMeta core)
+            where TEntityList : EntityList
+        {
+            return RegisterListCore<TEntityList>(GetPropertyName(propertyExp), core);
+        }
+
+        private static ListProperty<TEntityList> RegisterListCore<TEntityList>(string propertyName, ListPropertyMeta core)
+            where TEntityList : EntityList
+        {
+            var meta = new ListPropertyMetadata<TEntityList>(core);
+
+            var property = new ListProperty<TEntityList>(typeof(TEntity), propertyName, meta);
+
+            ManagedPropertyRepository.Instance.RegisterProperty(property);
+
+            return property;
         }
 
         #endregion

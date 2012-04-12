@@ -103,6 +103,51 @@ namespace OEA.Module.WPF
             return this.Current.ValidationRules.Validate().Count == 0;
         }
 
+        /// <summary>
+        /// 使用这个查询面板中的查询对象数据，
+        /// 给 newEntity 的外键设置值。
+        /// </summary>
+        /// <param name="newEntity"></param>
+        public void SetReferenceEntity(Entity newEntity)
+        {
+            if (newEntity == null) throw new ArgumentNullException("newEntity");
+
+            var criteria = this.Current;
+            if (criteria != null)
+            {
+                var destIndicators = newEntity.FindRepository().GetAvailableIndicators();
+
+                //对每一个导航的实体引用属性，都给 referenceEntity 赋相应的值
+                //只有导航查询实体中的引用实体ID属性名和被查询实体的引用实体ID属性名相同时，才能设置
+                foreach (var naviProperty in this.Meta.EntityProperties)
+                {
+                    //naviProperty 是一个引用实体属性
+                    var refMeta = naviProperty.ReferenceViewInfo;
+                    if (refMeta != null)
+                    {
+                        //被查询实体的引用实体ID属性名与 naviProperty 的名称相同时，才能设置。
+                        foreach (var mp in destIndicators)
+                        {
+                            var destRefProperty = mp as IRefProperty;
+                            if (destRefProperty != null)
+                            {
+                                var idProperty = destRefProperty.GetMeta(newEntity).IdProperty;
+                                if (idProperty == naviProperty.Name)
+                                {
+                                    //读值
+                                    var lazyRef = criteria.GetLazyRef(naviProperty.PropertyMeta.ManagedProperty.CastTo<IRefProperty>());
+                                    var value = lazyRef.Entity;
+
+                                    //写值到新对象中
+                                    newEntity.GetLazyRef(destRefProperty).Entity = value;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         #region PropertyEditors
 
         private List<IPropertyEditor> _propertyEditors = new List<IPropertyEditor>();

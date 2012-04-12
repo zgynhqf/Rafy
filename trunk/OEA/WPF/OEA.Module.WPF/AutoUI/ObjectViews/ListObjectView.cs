@@ -159,11 +159,11 @@ namespace OEA.Module.WPF
         /// 这个ListView可能会有导航View
         /// CondtionQueryView 和 NavigateQueryView 只能一个不为空
         /// </summary>
-        public NavigateQueryObjectView NavigateQueryView
+        public NavigationQueryObjectView NavigationQueryView
         {
             get
             {
-                return this.TryFindRelation(SurrounderType.Navigation) as NavigateQueryObjectView;
+                return this.TryFindRelation(SurrounderType.Navigation) as NavigationQueryObjectView;
             }
         }
 
@@ -187,7 +187,7 @@ namespace OEA.Module.WPF
         /// </summary>
         protected override bool CouldLoadDataFromParent()
         {
-            return base.CouldLoadDataFromParent() && this.NavigateQueryView == null;
+            return base.CouldLoadDataFromParent() && this.NavigationQueryView == null;
         }
 
         /// <summary>
@@ -527,15 +527,17 @@ namespace OEA.Module.WPF
             if (list != null && list.AllowNew)
             {
                 //如果有导航面板，则必须先给导航值赋值
-                var naviView = this.NavigateQueryView;
+                var naviView = this.NavigationQueryView;
                 if (naviView != null)
                 {
-                    foreach (var naviProperty in naviView.NavigateProperties)
+                    var criteria = naviView.Current;
+                    foreach (var naviProperty in naviView.NavigationProperties)
                     {
-                        if (naviProperty.IsReferenceId && !naviProperty.Optional)
+                        //naviProperty 是一个引用实体属性
+                        var refProperty = naviProperty.PropertyMeta.ManagedProperty as IRefProperty;
+                        if (refProperty != null && !refProperty.GetMeta(this.EntityType).Nullable)
                         {
-                            var pName = naviProperty.RefEntityProperty;
-                            var value = naviView.Current.GetPropertyValue(pName);
+                            var value = criteria.GetLazyRef(refProperty).Entity;
                             if (value == null) return false;
                         }
                     }
@@ -624,8 +626,13 @@ namespace OEA.Module.WPF
         /// <param name="view"></param>
         private void InitRefProperties(Entity newEntity)
         {
-            var navigateView = this.NavigateQueryView;
+            var navigateView = this.NavigationQueryView;
             if (navigateView != null) { navigateView.SetReferenceEntity(newEntity); }
+            else
+            {
+                var conditionView = this.CondtionQueryView;
+                if (conditionView != null) { conditionView.SetReferenceEntity(newEntity); }
+            }
 
             //设置父对象
             newEntity.ResetParentEntity();

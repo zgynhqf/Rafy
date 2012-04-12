@@ -22,9 +22,9 @@ namespace OEA.Module.WPF
     /// <summary>
     /// 暂无行为，以后添加
     /// </summary>
-    public class NavigateRelationView : RelationView
+    public class NavigationRelationView : RelationView
     {
-        public NavigateRelationView(NavigateQueryObjectView view)
+        public NavigationRelationView(NavigationQueryObjectView view)
             : base(OEA.MetaModel.View.SurrounderType.Navigation, view) { }
 
         //public new NavigateQueryObjectView View

@@ -19,11 +19,10 @@ namespace Demo
             set { this.SetProperty(NameProperty, value); }
         }
 
-        public static readonly Property<CityList> CityListProperty = P<Province>.Register(e => e.CityList);
-        [Association]
+        public static readonly ListProperty<CityList> CityListProperty = P<Province>.RegisterList(e => e.CityList);
         public CityList CityList
         {
-            get { return this.GetLazyChildren(CityListProperty); }
+            get { return this.GetLazyList(CityListProperty); }
         }
     }
 

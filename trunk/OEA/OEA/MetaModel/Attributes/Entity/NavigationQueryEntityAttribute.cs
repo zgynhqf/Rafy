@@ -22,5 +22,5 @@ namespace OEA.MetaModel.Attributes
     /// 所有导航查询实体对象都应该标记这个属性。
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class NavigateQueryEntityAttribute : EntityAttribute { }
+    public class NavigationQueryEntityAttribute : EntityAttribute { }
 }

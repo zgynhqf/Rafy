@@ -86,7 +86,7 @@ namespace OEA.Library
         [NonSerialized]
         private IRepository _repository;
 
-        internal protected IRepository FindRepository()
+        public IRepository FindRepository()
         {
             if (this._repository == null)
             {
@@ -200,7 +200,7 @@ namespace OEA.Library
             for (int i = 0, c = allProperties.Count; i < c; i++)
             {
                 var property = allProperties[i];
-                var propertyMeta = property.GetMeta(this) as IPropertyMetadata;
+                //var propertyMeta = property.GetMeta(this) as IPropertyMetadata;
 
                 //过滤一些不需要拷贝的属性
                 if (property == IdProperty && !copyId) continue;
@@ -209,12 +209,12 @@ namespace OEA.Library
                 ////如果目标不存在这个值时，不需要也不能进行拷贝，否则会为懒加载属性的加载null值。
                 //if (!target.FieldManager.FieldExists(propertyInfo)) continue;
 
-                if (propertyMeta.IsChild)
+                if (property is IListProperty)
                 {
                     if (childrenRecur)
                     {
-                        var targetList = target.GetLazyChildren(property);
-                        var srcList = this.GetLazyChildren(property);
+                        var targetList = target.GetLazyList(property as IListProperty);
+                        var srcList = this.GetLazyList(property as IListProperty);
                         srcList.Clone(targetList, options);
 
                         //当一个子对象挂接到多个父对象的场景下，如果非正式的父对象进行复制操作，会对它的子集合进行复制。
@@ -338,7 +338,7 @@ namespace OEA.Library
         /// </summary>
         /// <param name="childrenProperty"></param>
         /// <returns></returns>
-        protected ForeAsyncLoader ChildrenLoader(IManagedProperty childrenProperty)
+        protected ForeAsyncLoader ChildrenLoader(IListProperty childrenProperty)
         {
             ForeAsyncLoader result = null;
 
@@ -361,7 +361,7 @@ namespace OEA.Library
                     {
                         result = new ForeAsyncLoader(() =>
                         {
-                            this.LoadLazyChildren(childrenProperty);
+                            this.LoadLazyList(childrenProperty);
                         });
                         this._allForeLoaders.Add(childrenProperty, result);
                     }

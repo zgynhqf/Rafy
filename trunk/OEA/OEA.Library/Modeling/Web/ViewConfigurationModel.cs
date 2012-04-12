@@ -48,18 +48,16 @@ namespace OEA
             set { this.SetProperty(PageSizeProperty, value); }
         }
 
-        public static readonly Property<ViewConfigurationPropertyList> ViewConfigurationPropertyListProperty = P<ViewConfigurationModel>.Register(e => e.ViewConfigurationPropertyList);
-        [Association]
+        public static readonly ListProperty<ViewConfigurationPropertyList> ViewConfigurationPropertyListProperty = P<ViewConfigurationModel>.RegisterList(e => e.ViewConfigurationPropertyList);
         public ViewConfigurationPropertyList ViewConfigurationPropertyList
         {
-            get { return this.GetLazyChildren(ViewConfigurationPropertyListProperty); }
+            get { return this.GetLazyList(ViewConfigurationPropertyListProperty); }
         }
 
-        public static readonly Property<ViewConfigurationCommandList> ViewConfigurationCommandListProperty = P<ViewConfigurationModel>.Register(e => e.ViewConfigurationCommandList);
-        [Association]
+        public static readonly ListProperty<ViewConfigurationCommandList> ViewConfigurationCommandListProperty = P<ViewConfigurationModel>.RegisterList(e => e.ViewConfigurationCommandList);
         public ViewConfigurationCommandList ViewConfigurationCommandList
         {
-            get { return this.GetLazyChildren(ViewConfigurationCommandListProperty); }
+            get { return this.GetLazyList(ViewConfigurationCommandListProperty); }
         }
 
         #region 保存为 Xml
@@ -383,6 +381,10 @@ namespace OEA
     [Serializable]
     public class ViewConfigurationModelList : EntityList
     {
+        /// <summary>
+        /// 导航面板查询
+        /// </summary>
+        /// <param name="criteria"></param>
         protected void QueryBy(ViewConfigurationModelNameCriteria criteria)
         {
             var viewName = criteria.ViewName;
@@ -411,16 +413,6 @@ namespace OEA
         public ViewConfigurationModel GetByName(ViewConfigurationModelNameCriteria c)
         {
             return this.FetchFirstAs<ViewConfigurationModel>(c);
-        }
-
-        protected override EntityList GetListImplicitly(object parameter)
-        {
-            if (parameter is ViewConfigurationModelNameCriteria)
-            {
-                return this.FetchList(parameter);
-            }
-
-            return base.GetListImplicitly(parameter);
         }
     }
 

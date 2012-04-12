@@ -176,7 +176,7 @@ namespace OEA.Module.WPF.Controls
 
             //LabelWidth
             var labelWidth = detailView.Meta.DetailLabelWidth;
-            if (labelWidth != 0) { this.LabelWidth = new GridLength(labelWidth); }
+            if (labelWidth != null) { this.LabelWidth = new GridLength(labelWidth.Value); }
         }
 
         private EntityPropertyViewMeta GetPropertyViewMeta(DetailObjectView detailView)

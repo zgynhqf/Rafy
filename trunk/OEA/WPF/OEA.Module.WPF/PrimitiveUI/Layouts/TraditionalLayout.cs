@@ -42,7 +42,7 @@ namespace OEA.Module.WPF.Layout
 
         public virtual void TryArrangeCommandsContainer(ControlResult control) { }
 
-        public virtual void TryArrangeNavigate(ControlResult control) { }
+        public virtual void TryArrangeNavigation(ControlResult control) { }
 
         public virtual void TryArrangeCondition(ControlResult control) { }
 

@@ -21,7 +21,7 @@ namespace Demo
             app.AllPluginsMetaIntialized += (o, e) =>
             {
                 //定义书籍查询界面的结构
-                UIModel.AggtBlocks.DefineBlocks("书籍查询界面", new AggtBlocks
+                UIModel.AggtBlocks.DefineBlocks("书籍查询界面", m => new AggtBlocks
                 {
                     MainBlock = new Block(typeof(Book))
                     {

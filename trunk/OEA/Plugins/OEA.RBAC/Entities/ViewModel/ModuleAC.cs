@@ -19,9 +19,7 @@ using OEA;
 using OEA.Library;
 using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
-
 using OEA.ManagedProperty;
-
 using OEA.MetaModel.View;
 using OEA.RBAC;
 
@@ -67,11 +65,10 @@ namespace OEA.Library
             return this.Core.Label;
         }
 
-        public static readonly Property<OperationACList> OperationACListProperty = P<ModuleAC>.Register(e => e.OperationACList);
-        [Association]
+        public static readonly ListProperty<OperationACList> OperationACListProperty = P<ModuleAC>.RegisterList(e => e.OperationACList);
         public OperationACList OperationACList
         {
-            get { return this.GetLazyChildren(OperationACListProperty); }
+            get { return this.GetLazyList(OperationACListProperty); }
         }
     }
 

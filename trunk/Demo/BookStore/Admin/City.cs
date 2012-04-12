@@ -32,11 +32,10 @@ namespace Demo
             set { this.SetProperty(NameProperty, value); }
         }
 
-        public static readonly Property<CountryList> CountryListProperty = P<City>.Register(e => e.CountryList);
-        [Association]
+        public static readonly ListProperty<CountryList> CountryListProperty = P<City>.RegisterList(e => e.CountryList);
         public CountryList CountryList
         {
-            get { return this.GetLazyChildren(CountryListProperty); }
+            get { return this.GetLazyList(CountryListProperty); }
         }
     }
 

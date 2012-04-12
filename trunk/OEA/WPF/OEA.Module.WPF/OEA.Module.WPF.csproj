@@ -58,7 +58,6 @@
     <Reference Include="AvalonDock">
       <HintPath>..\..\..\Lib\AvalonDock.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Expression.Interactions" />
     <Reference Include="Microsoft.Office.Interop.Excel">
       <HintPath>..\..\Lib\Microsoft.Office.Interop.Excel.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
@@ -85,7 +84,6 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Windows.Interactivity" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -150,6 +148,7 @@
     </Compile>
     <Compile Include="AutoUI\Editors\PropertyEditor\NumberRangePropertyEditor.cs" />
     <Compile Include="AutoUI\Editors\PropertyEditor\PopupSearchListPropertyEditor.cs" />
+    <Compile Include="AutoUI\Editors\PropertyEditor\TiledListReferenceEditor.cs" />
     <Compile Include="AutoUI\ObjectViews\CustomObjectView.cs" />
     <Compile Include="AutoUI\ObjectViews\ViewController\AsyncDataContextHelper.cs" />
     <Compile Include="CommandCustomParams.cs" />
@@ -175,7 +174,7 @@
     <Compile Include="AutoUI\ObjectViews\ExtendEventConvention.cs" />
     <Compile Include="AutoUI\ObjectViews\ObjectViewFactory.cs" />
     <Compile Include="AutoUI\ObjectViews\Relations\DetailRelationView.cs" />
-    <Compile Include="AutoUI\ObjectViews\Relations\NavigateRelationView.cs" />
+    <Compile Include="AutoUI\ObjectViews\Relations\NavigationRelationView.cs" />
     <Compile Include="AutoUI\ObjectViews\ViewController\OEADataProvider.cs" />
     <Compile Include="AutoUI\ObjectViews\ViewController\ViewDataLoader.cs" />
     <Compile Include="Controls\MTTG\TreeColumn\TreeColumnCollection.cs" />
@@ -261,7 +260,7 @@
     </Compile>
     <Compile Include="AutoUI\Editors\ListEditor.cs" />
     <Compile Include="AutoUI\Editors\PropertyEditor\BooleanPropertyEditor.cs" />
-    <Compile Include="AutoUI\ObjectViews\NavigateQueryObjectView.cs" />
+    <Compile Include="AutoUI\ObjectViews\NavigationQueryObjectView.cs" />
     <Compile Include="AutoUI\ObjectViews\QueryObjectView.cs" />
     <Compile Include="AutoUI\ObjectViews\WPFObjectView.cs" />
     <Compile Include="Controls\ToolBarExtension.cs" />
@@ -581,9 +580,6 @@
     <Resource Include="Images\Search.bmp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Controls\MTTG\MultiTypesTreeGrid SelectionChanged event analysis.png" />
