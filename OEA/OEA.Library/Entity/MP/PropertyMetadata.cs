@@ -30,18 +30,6 @@ namespace OEA.Library
             : base(new EntityPropertyMetaProvider())
         {
             this.DefaultValue = CreateDefaultValue<TPropertyType>();
-            this.IsChild = IsChildType<TPropertyType>();
-        }
-
-        /// <summary>
-        /// 当前属性是否孩子属性
-        /// </summary>
-        public bool IsChild { get; set; }
-
-        private static bool IsChildType<TProperty>()
-        {
-            bool isChild = typeof(EntityList).IsAssignableFrom(typeof(TProperty));
-            return isChild;
         }
 
         private static TProperty CreateDefaultValue<TProperty>()

@@ -117,6 +117,29 @@ namespace OEA.Module.WPF.Controls
 
         #endregion
 
+        #region TotalWidth DependencyProperty
+
+        public static readonly DependencyProperty TotalWidthProperty = DependencyProperty.Register(
+            "TotalWidth", typeof(GridLength), typeof(EditorHost),
+            new PropertyMetadata(new GridLength(1000, GridUnitType.Star), (d, e) => (d as EditorHost).OnTotalWidthChanged(e))
+            );
+
+        /// <summary>
+        /// 本属性所占的格子宽度。
+        /// </summary>
+        public GridLength TotalWidth
+        {
+            get { return (GridLength)this.GetValue(TotalWidthProperty); }
+            set { this.SetValue(TotalWidthProperty, value); }
+        }
+
+        private void OnTotalWidthChanged(DependencyPropertyChangedEventArgs e)
+        {
+            var value = (GridLength)e.NewValue;
+        }
+
+        #endregion
+
         /// <summary>
         /// 本控件对应的运行时属性编辑器
         /// </summary>
@@ -170,13 +193,28 @@ namespace OEA.Module.WPF.Controls
             var view = detailView as QueryObjectView;
             if (view != null) { view.AddPropertyEditor(editor); }
 
-            //支持UI Test
+            //Width
+            if (property.DetailColumnsSpan != null) { Grid.SetColumnSpan(this, property.DetailColumnsSpan.Value); }
+            if (property.DetailWidth != null)
+            {
+                var value = property.DetailWidth.Value;
+                if (value > 0 && value < 1)
+                {
+                    value = value / (1 - value);
+                    this.TotalWidth = new GridLength(value, GridUnitType.Star);
+                }
+                else
+                {
+                    this.TotalWidth = new GridLength(value);
+                }
+            }
+            if (property.DetailHeight != null) { this.Height = property.DetailHeight.Value; }
+            var labelWidth = property.DetailLabelWidth ?? detailView.Meta.DetailLabelWidth;
+            if (labelWidth != null) { this.LabelWidth = new GridLength(labelWidth.Value); }
+
+            //支持 UI Test
             var label = property.Label;
             if (label != null) { AutomationProperties.SetName(editor.Control, property.Label); }
-
-            //LabelWidth
-            var labelWidth = detailView.Meta.DetailLabelWidth;
-            if (labelWidth != null) { this.LabelWidth = new GridLength(labelWidth.Value); }
         }
 
         private EntityPropertyViewMeta GetPropertyViewMeta(DetailObjectView detailView)

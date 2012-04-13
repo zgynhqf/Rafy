@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.ComponentModel;
 
 namespace OEA.Module.WPF.Controls
 {
@@ -19,7 +20,7 @@ namespace OEA.Module.WPF.Controls
         /// <summary>
         /// A value of <c>true</c> forces children to be re-indexed at the next oportunity.
         /// </summary>
-        private bool _shouldReindex = true;
+        private bool _indexDirty = true;
 
         private int _rowOrColumnCount;
 
@@ -117,105 +118,143 @@ namespace OEA.Module.WPF.Controls
 
         private static void OnPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
         {
-            ((AutoGrid)o)._shouldReindex = true;
+            ((AutoGrid)o).InvalidateIndex();
         }
 
         #endregion
 
         #region Overrides
 
-        /// <summary>
-        /// Measures the children of a <see cref="T:System.Windows.Controls.Grid"/> in anticipation of arranging them during the <see cref="M:ArrangeOverride"/> pass.
-        /// </summary>
-        /// <param name="constraint">Indicates an upper limit size that should not be exceeded.</param>
-        /// <returns>
-        /// 	<see cref="Size"/> that represents the required size to arrange child content.
-        /// </returns>
         protected override Size MeasureOverride(Size constraint)
         {
             bool isVertical = Orientation == Orientation.Vertical;
 
-            if (_shouldReindex || (IsAutoIndexing &&
-                ((isVertical && _rowOrColumnCount != ColumnDefinitions.Count) ||
-                (!isVertical && _rowOrColumnCount != RowDefinitions.Count))))
+            //如果需要重新计算所有孩子的索引，则执行计算逻辑。
+            if (this._indexDirty || (this.IsAutoIndexing &&
+                ((isVertical && this._rowOrColumnCount != ColumnDefinitions.Count) ||
+                (!isVertical && this._rowOrColumnCount != RowDefinitions.Count))))
             {
-                _shouldReindex = false;
-
                 if (IsAutoIndexing)
                 {
-                    _rowOrColumnCount = (isVertical) ? ColumnDefinitions.Count : RowDefinitions.Count;
-                    if (_rowOrColumnCount == 0) _rowOrColumnCount = 1;
-
-                    int cellCount = 0;
-                    foreach (UIElement child in Children)
-                    {
-                        cellCount += (isVertical) ? Grid.GetColumnSpan(child) : Grid.GetRowSpan(child);
-                    }
-
-                    //  Update the number of rows/columns
                     if (isVertical)
                     {
-                        int newRowCount = ((cellCount - 1) / _rowOrColumnCount + 1);
-                        while (RowDefinitions.Count < newRowCount)
+                        this._rowOrColumnCount = this.ColumnDefinitions.Count;
+                        if (this._rowOrColumnCount == 0) this._rowOrColumnCount = 1;
+
+                        int curRow = 0, cellMax = this._rowOrColumnCount, cellLeft = cellMax;
+                        foreach (UIElement child in this.Children)
                         {
-                            RowDefinitions.Add(new RowDefinition());
+                            var span = Grid.GetColumnSpan(child);
+                            //如果该子对象需要的格子数据超过限制，则自动修复该子对象的索引，并停止当前计算，等待下次计算。
+                            if (span > cellMax)
+                            {
+                                Grid.SetColumnSpan(child, cellMax);
+                                return base.MeasureOverride(constraint);
+                            }
+
+                            //如果当前格子不够用了，则需要另起一行
+                            if (span > cellLeft)
+                            {
+                                curRow++;
+                                cellLeft = cellMax;
+
+                                Grid.SetColumn(child, 0);
+                            }
+                            else
+                            {
+                                Grid.SetColumn(child, cellMax - cellLeft);
+                            }
+
+                            Grid.SetRow(child, curRow);
+                            cellLeft -= span;
                         }
-                        if (RowDefinitions.Count > newRowCount)
+
+                        var rowsCount = curRow + 1;
+
+                        //最后再同步行数
+                        var rows = this.RowDefinitions;
+                        while (rows.Count < rowsCount)
                         {
-                            RowDefinitions.RemoveRange(newRowCount, RowDefinitions.Count - newRowCount);
+                            rows.Add(new RowDefinition());
                         }
+
+                        if (rows.Count > rowsCount) { rows.RemoveRange(rowsCount, rows.Count - rowsCount); }
                     }
-                    else // horizontal
+                    else
                     {
-                        int newColumnCount = ((cellCount - 1) / _rowOrColumnCount + 1);
-                        while (ColumnDefinitions.Count < newColumnCount)
+                        #region 水平方向（算法同上）
+
+                        this._rowOrColumnCount = this.RowDefinitions.Count;
+                        if (this._rowOrColumnCount == 0) this._rowOrColumnCount = 1;
+
+                        int curColumn = 0, cellMax = this._rowOrColumnCount, cellLeft = cellMax;
+                        foreach (UIElement child in this.Children)
                         {
-                            ColumnDefinitions.Add(new ColumnDefinition());
+                            var span = Grid.GetRowSpan(child);
+                            if (span > cellMax)
+                            {
+                                Grid.SetRowSpan(child, cellMax);
+                                return base.MeasureOverride(constraint);
+                            }
+
+                            if (span > cellLeft)
+                            {
+                                curColumn++;
+                                cellLeft = cellMax;
+
+                                Grid.SetRow(child, 0);
+                            }
+                            else
+                            {
+                                Grid.SetRow(child, cellMax - cellLeft);
+                            }
+
+                            Grid.SetColumn(child, curColumn);
+                            cellLeft -= span;
                         }
-                        if (ColumnDefinitions.Count > newColumnCount)
+
+                        var columnsCount = curColumn + 1;
+
+                        var columns = this.ColumnDefinitions;
+                        while (columns.Count < columnsCount)
                         {
-                            ColumnDefinitions.RemoveRange(newColumnCount, ColumnDefinitions.Count - newColumnCount);
+                            columns.Add(new ColumnDefinition());
                         }
+                        if (columns.Count > columnsCount)
+                        {
+                            columns.RemoveRange(columnsCount, columns.Count - columnsCount);
+                        }
+
+                        #endregion
                     }
                 }
 
-                //  Update children indices
-                int position = 0;
-                foreach (UIElement child in Children)
-                {
-                    if (IsAutoIndexing)
-                    {
-                        if (isVertical)
-                        {
-                            Grid.SetRow(child, position / _rowOrColumnCount);
-                            Grid.SetColumn(child, position % _rowOrColumnCount);
-                            position += Grid.GetColumnSpan(child);
-                        }
-                        else
-                        {
-                            Grid.SetRow(child, position % _rowOrColumnCount);
-                            Grid.SetColumn(child, position / _rowOrColumnCount);
-                            position += Grid.GetRowSpan(child);
-                        }
-                    }
+                this.SetChildrenDefault();
 
-                    // Set margin and alignment
-                    if (ChildMargin != null)
-                    {
-                        child.SetIfDefault(FrameworkElement.MarginProperty, ChildMargin.Value);
-                    }
-                    if (ChildHorizontalAlignment != null)
-                    {
-                        child.SetIfDefault(FrameworkElement.HorizontalAlignmentProperty, ChildHorizontalAlignment.Value);
-                    }
-                    if (ChildVerticalAlignment != null)
-                    {
-                        child.SetIfDefault(FrameworkElement.VerticalAlignmentProperty, ChildVerticalAlignment.Value);
-                    }
-                }
+                this._indexDirty = false;
             }
 
             return base.MeasureOverride(constraint);
+        }
+
+        private void SetChildrenDefault()
+        {
+            foreach (UIElement child in this.Children)
+            {
+                // Set margin and alignment
+                if (ChildMargin != null)
+                {
+                    child.SetIfDefault(FrameworkElement.MarginProperty, ChildMargin.Value);
+                }
+                if (ChildHorizontalAlignment != null)
+                {
+                    child.SetIfDefault(FrameworkElement.HorizontalAlignmentProperty, ChildHorizontalAlignment.Value);
+                }
+                if (ChildVerticalAlignment != null)
+                {
+                    child.SetIfDefault(FrameworkElement.VerticalAlignmentProperty, ChildVerticalAlignment.Value);
+                }
+            }
         }
 
         /// <summary>
@@ -226,9 +265,27 @@ namespace OEA.Module.WPF.Controls
         /// <param name="visualRemoved">Identifies the visual child that's removed.</param>
         protected override void OnVisualChildrenChanged(DependencyObject visualAdded, DependencyObject visualRemoved)
         {
-            _shouldReindex = true;
+            this.InvalidateIndex();
 
             base.OnVisualChildrenChanged(visualAdded, visualRemoved);
+
+            var propertyToListen = this.Orientation == Orientation.Vertical ?
+                Grid.ColumnSpanProperty : Grid.RowSpanProperty;
+            var descriptor = DependencyPropertyDescriptor.FromProperty(propertyToListen, typeof(Grid));
+
+            if (visualAdded != null) descriptor.AddValueChanged(visualAdded, OnChildIndexChanged);
+            if (visualRemoved != null) descriptor.RemoveValueChanged(visualRemoved, OnChildIndexChanged);
+        }
+
+        private void OnChildIndexChanged(object sender, EventArgs e)
+        {
+            this.InvalidateIndex();
+        }
+
+        private void InvalidateIndex()
+        {
+            this._indexDirty = true;
+            this.InvalidateMeasure();
         }
 
         #endregion

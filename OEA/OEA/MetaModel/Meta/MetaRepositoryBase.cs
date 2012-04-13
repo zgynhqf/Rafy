@@ -100,10 +100,9 @@ namespace OEA.MetaModel
             {
                 if (!mp.IsExtension)
                 {
-                    var mpMeta = mp.GetMeta(entityType) as IPropertyMetadata;
                     var name = mp.GetMetaPropertyName(entityType);
                     var property = properties.FirstOrDefault(i => i.Name == name);
-                    if (!mpMeta.IsChild && property != null && !property.HasMarked<EntityPropertyAttribute>())
+                    if (!(mp is IListProperty) && property != null && !property.HasMarked<EntityPropertyAttribute>())
                     {
                         list.Add(property);
                     }
@@ -143,10 +142,9 @@ namespace OEA.MetaModel
             {
                 if (!mp.IsExtension)
                 {
-                    var mpMeta = mp.GetMeta(entityType) as IPropertyMetadata;
                     var name = mp.GetMetaPropertyName(entityType);
                     var property = properties.FirstOrDefault(i => i.Name == name);
-                    if (mpMeta.IsChild && property != null && !property.HasMarked<AssociationAttribute>())
+                    if ((mp is IListProperty) && property != null && !property.HasMarked<AssociationAttribute>())
                     {
                         list.Add(property);
                     }

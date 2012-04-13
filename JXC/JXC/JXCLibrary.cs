@@ -25,6 +25,7 @@ namespace JXC
                     Label = "进销存系统示例",
                     Children =
                     {
+                        new ModuleMeta{ Label = "商品管理Test", EntityType = typeof(Product)},
                         new ModuleMeta
                         {
                             Label = "基础数据",

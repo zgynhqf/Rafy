@@ -23,6 +23,8 @@ namespace OEA.ManagedProperty
     /// </summary>
     public interface IPropertyMetaProvider
     {
+        //for extend
+
         //object GetDefaultValue();
     }
 }

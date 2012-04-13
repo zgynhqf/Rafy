@@ -68,16 +68,6 @@ namespace OEA.Library
             return RegisterCore<TProperty>(GetPropertyName(propertyExp), defaultMeta);
         }
 
-        private static Property<TProperty> RegisterCore<TProperty>(string propertyName, ManagedPropertyChangedCallBack<TProperty> propertyChangedCallBack, TProperty defaultValue, bool isChild)
-        {
-            return RegisterCore(propertyName, new PropertyMetadata<TProperty>
-            {
-                DefaultValue = defaultValue,
-                IsChild = isChild,
-                PropertyChangedCallBack = propertyChangedCallBack
-            });
-        }
-
         private static Property<TProperty> RegisterCore<TProperty>(string propertyName, PropertyMetadata<TProperty> defaultMeta)
         {
             var mp = new Property<TProperty>(typeof(TEntity), propertyName, defaultMeta);

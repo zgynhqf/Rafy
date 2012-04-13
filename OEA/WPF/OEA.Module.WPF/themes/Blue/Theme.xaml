@@ -6951,11 +6951,17 @@
                 <ControlTemplate TargetType="oea:EditorHost">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{TemplateBinding LabelWidth}"/>
-                            <ColumnDefinition/>
+                            <ColumnDefinition Width="{TemplateBinding TotalWidth}"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <ContentControl Name="PART_LabelContainer" Focusable="False"/>
-                        <ContentControl Grid.Column="1" Name="PART_EditorControlContainer" Focusable="False"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{TemplateBinding LabelWidth}"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <ContentControl Name="PART_LabelContainer" Focusable="False"/>
+                            <ContentControl Grid.Column="1" Name="PART_EditorControlContainer" Focusable="False"/>
+                        </Grid>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

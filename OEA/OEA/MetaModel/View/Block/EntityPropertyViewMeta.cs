@@ -135,6 +135,53 @@ namespace OEA.MetaModel.View
             set { this.SetValue(ref this._GridWidth, value); }
         }
 
+        private int? _DetailColumnsSpan;
+        /// <summary>
+        /// 表单中该属性所占的列数
+        /// 不指定，则使用系统默认宽度。
+        /// </summary>
+        public int? DetailColumnsSpan
+        {
+            get { return this._DetailColumnsSpan; }
+            set { this.SetValue(ref this._DetailColumnsSpan, value); }
+        }
+
+        private double? _DetailWidth;
+        /// <summary>
+        /// 表单中该属性所占的格子宽度。
+        /// 
+        /// 如果值在 0 - 1 之间，表示百分比。否则表示绝对值。
+        /// 
+        /// 不指定，则使用系统默认值。
+        /// </summary>
+        public double? DetailWidth
+        {
+            get { return this._DetailWidth; }
+            set { this.SetValue(ref this._DetailWidth, value); }
+        }
+
+        private int? _DetailHeight;
+        /// <summary>
+        /// 表单中该属性所占的总高度
+        /// 不指定，则使用系统默认宽度。
+        /// </summary>
+        public int? DetailHeight
+        {
+            get { return this._DetailHeight; }
+            set { this.SetValue(ref this._DetailHeight, value); }
+        }
+
+        private int? _DetailLabelWidth;
+        /// <summary>
+        /// 在 DetailPanel 中显示的 Label 的宽度。
+        /// 不指定，则使用系统默认宽度。
+        /// </summary>
+        public int? DetailLabelWidth
+        {
+            get { return this._DetailLabelWidth; }
+            set { this.SetValue(ref this._DetailLabelWidth, value); }
+        }
+
         #endregion
 
         private double _OrderNo;

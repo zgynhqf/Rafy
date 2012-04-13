@@ -21,6 +21,7 @@ using System.Text;
 using OEA.ManagedProperty;
 using OEA.Serialization;
 using OEA.Serialization.Mobile;
+using OEA.MetaModel;
 
 namespace OEA.Library
 {
@@ -201,8 +202,7 @@ namespace OEA.Library
 
             foreach (var field in fields)
             {
-                var meta = field.Property.GetMeta(this) as IPropertyMetadata;
-                if (meta.IsChild) { yield return field; }
+                if (field.Property is IListProperty) { yield return field; }
             }
         }
 

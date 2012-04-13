@@ -9,6 +9,26 @@
  * 
 *******************************************************/
 
+2.10.496.0
+    添加接口、添加功能
+        * ShowInDetail 支持百分比宽度定义。
+
+2.10.495.0
+    内部修改
+        * 使用一个 StackPanel 弹出 DetailPanel，保证详细面板不会自动变大。
+
+2.10.494.0
+    BUG修复
+        * AutoGrid 的索引算法有问题。
+
+2.10.492.0
+    添加接口、添加功能
+        * 支持 DetailPanel 的一些更详细的配置：DetailColumnsSpan、DetailWidth、DetailHeight、DetailLabelWidth。
+
+2.10.491.0
+    重构
+        * 去除 IPropertyMetadata 中的 IsChild 属性。
+
 2.10.490.0
     添加功能
         * 添加 TiledListReferencEditor。
