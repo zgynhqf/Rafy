@@ -1,4 +1,17 @@
-﻿using System;
+﻿/*******************************************************
+ * 
+ * 作者：胡庆访
+ * 创建时间：20120413
+ * 说明：此文件只包含一个类，具体内容见类型注释。
+ * 运行环境：.NET 4.0
+ * 版本号：1.0.0
+ * 
+ * 历史记录：
+ * 创建文件 胡庆访 20120413
+ * 
+*******************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +19,9 @@ using OEA.Library;
 using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
 using OEA.MetaModel.View;
+using OEA.RBAC;
+using OEA.RBAC.Security;
+using OEA;
 
 namespace JXC
 {
@@ -13,6 +29,19 @@ namespace JXC
     [NavigationQueryType(typeof(ProductNavigationCriteria))]
     public class Product : JXCEntity
     {
+        public Product()
+        {
+            if (OEAEnvironment.Location.IsOnClient())
+            {
+                if (OEAIdentity.Current != null)
+                {
+                    this.User = OEAIdentity.Current.User;
+                }
+            }
+
+            this.OperateTime = DateTime.Now;
+        }
+
         public static readonly Property<string> BianMaProperty = P<Product>.Register(e => e.BianMa);
         public string BianMa
         {
@@ -108,6 +137,26 @@ namespace JXC
             get { return this.GetProperty(BeiZhuProperty); }
             set { this.SetProperty(BeiZhuProperty, value); }
         }
+
+        public static readonly RefProperty<User> UserRefProperty =
+            P<Product>.RegisterRef(e => e.User, ReferenceType.Normal);
+        public int UserId
+        {
+            get { return this.GetRefId(UserRefProperty); }
+            set { this.SetRefId(UserRefProperty, value); }
+        }
+        public User User
+        {
+            get { return this.GetRefEntity(UserRefProperty); }
+            set { this.SetRefEntity(UserRefProperty, value); }
+        }
+
+        public static readonly Property<DateTime> OperateTimeProperty = P<Product>.Register(e => e.OperateTime);
+        public DateTime OperateTime
+        {
+            get { return this.GetProperty(OperateTimeProperty); }
+            set { this.SetProperty(OperateTimeProperty, value); }
+        }
     }
 
     [Serializable]
@@ -149,7 +198,9 @@ namespace JXC
                 Product.BeiZhuProperty,
                 Product.XiaoShouJia_1Property,
                 Product.XiaoShouJia_2Property,
-                Product.XiaoShouJia_3Property
+                Product.XiaoShouJia_3Property,
+                Product.OperateTimeProperty,
+                Product.UserRefProperty
                 );
         }
 
@@ -176,6 +227,8 @@ namespace JXC
             View.Property(Product.BeiZhuProperty).HasLabel("备注").ShowIn(ShowInWhere.All)
                 .ShowInDetail(columnSpan: 2, height: 200)
                 .UseEditor(WPFEditorNames.Memo);
+            View.Property(Product.OperateTimeProperty).HasLabel("操作时间").ShowIn(ShowInWhere.Detail).Readonly(true);
+            View.Property(Product.UserRefProperty).HasLabel("操作员").ShowIn(ShowInWhere.Detail).Readonly(true);
         }
     }
 }

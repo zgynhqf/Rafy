@@ -186,7 +186,7 @@ namespace OEA.ManagedProperty
             var reflectedPropertyInfo = Reflect<T>.GetProperty(propertyLambdaExpression);
 
             var property = new ManagedProperty<P>(
-                typeof(T), reflectedPropertyInfo.Name, new ManagedPropertyMetadata<P>(null)
+                typeof(T), reflectedPropertyInfo.Name, new ManagedPropertyMetadata<P>()
                 {
                     DefaultValue = defaultValue
                 });

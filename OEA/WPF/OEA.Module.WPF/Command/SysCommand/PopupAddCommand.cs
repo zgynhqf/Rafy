@@ -41,7 +41,7 @@ namespace OEA.WPF.Command
 
             var result = EditAddHelper.ShowEditingDialog(evm, tmp, w =>
             {
-                w.Title = "添加记录";
+                w.Title = "添加" + view.Meta.Label;
                 this.OnWindowShowing(w);
             }, () => this.CheckTemporaryEntityError(view, tmp));
 

@@ -47,6 +47,7 @@
     <Compile Include="Entities\BasicData\ProductNavigationCriteria.cs" />
     <Compile Include="Entities\BasicData\Storage.cs" />
     <Compile Include="Entities\BasicData\Unit.cs" />
+    <Compile Include="Entities\SystemMaintain\AutoCodeInfo.cs" />
     <Compile Include="JXCEntity.cs" />
     <Compile Include="JXCLibrary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -71,6 +72,10 @@
     <ProjectReference Include="..\..\OEA\OEA\OEA.csproj">
       <Project>{966A5BF2-D690-426B-AD68-AD868BB8F855}</Project>
       <Name>OEA %28OEA\OEA%29</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\OEA\Plugins\OEA.RBAC\OEA.RBAC.csproj">
+      <Project>{03D5A267-C106-42A9-8959-93D7AE3648DD}</Project>
+      <Name>OEA.RBAC</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\OEA\Web\OEA.Web.Meta\OEA.Web.Meta.csproj">
       <Project>{2AECFBB6-34AC-41A6-AB8C-F52A3F68BA1A}</Project>

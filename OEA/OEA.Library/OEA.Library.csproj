@@ -125,7 +125,6 @@
     <Compile Include="Entity\Entity.RoutedEvent.cs">
       <DependentUpon>Entity.cs</DependentUpon>
     </Compile>
-    <Compile Include="Entity\MP\EntityPropertyMetaProvider.cs" />
     <Compile Include="Entity\MP\PropertyInfo.cs" />
     <Compile Include="Entity\MP\PropertyMetadata.cs" />
     <Compile Include="Entity\IHasHame.cs" />
