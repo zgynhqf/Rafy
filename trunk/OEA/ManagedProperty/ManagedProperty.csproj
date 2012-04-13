@@ -79,7 +79,6 @@
     <Compile Include="Serialization\NetDataContractSerializerWrapper.cs" />
     <Compile Include="Serialization\SerializationFormatterFactory.cs" />
     <Compile Include="Serialization\Serializer.cs" />
-    <Compile Include="IPropertyMetaProvider.cs" />
     <Compile Include="ManagedProperty.cs" />
     <Compile Include="ManagedPropertyChangedEventArgs.cs" />
     <Compile Include="ManagedPropertyChangedSource.cs" />

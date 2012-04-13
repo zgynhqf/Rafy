@@ -27,15 +27,14 @@ namespace OEA.Library
     public class PropertyMetadata<TPropertyType> : ManagedPropertyMetadata<TPropertyType>, IPropertyMetadata
     {
         public PropertyMetadata()
-            : base(new EntityPropertyMetaProvider())
         {
-            this.DefaultValue = CreateDefaultValue<TPropertyType>();
+            this.DefaultValue = CreateDefaultValue();
         }
 
-        private static TProperty CreateDefaultValue<TProperty>()
+        private static TPropertyType CreateDefaultValue()
         {
-            var propertyType = typeof(TProperty);
-            object defaultValue = default(TProperty);
+            var propertyType = typeof(TPropertyType);
+            object defaultValue = default(TPropertyType);
 
             //处理DateTime类型的默认值为当前时间。
             if (propertyType == typeof(DateTime) && (DateTime)defaultValue == default(DateTime)
@@ -60,7 +59,7 @@ namespace OEA.Library
                 defaultValue = new NumberRange();
             }
 
-            return (TProperty)defaultValue;
+            return (TPropertyType)defaultValue;
         }
     }
 }

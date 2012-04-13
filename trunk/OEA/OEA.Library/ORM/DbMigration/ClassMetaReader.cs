@@ -245,12 +245,16 @@ namespace OEA.Library.ORM.DbMigration
                     var fkColumn = fkTable.FindColumn(foreign.FkColumn);
 
                     var pkTable = this.Database.FindTable(foreign.PkTableName);
-                    var pkColumn = pkTable.FindColumn(foreign.PkColumn);
-
-                    fkColumn.ForeignConstraint = new ForeignConstraint(pkColumn)
+                    //有可能这个引用的表并不在这个数据库中，此时不需要创建外键。
+                    if (pkTable != null)
                     {
-                        NeedDeleteCascade = foreign.NeedDeleteCascade
-                    };
+                        var pkColumn = pkTable.FindColumn(foreign.PkColumn);
+
+                        fkColumn.ForeignConstraint = new ForeignConstraint(pkColumn)
+                        {
+                            NeedDeleteCascade = foreign.NeedDeleteCascade
+                        };
+                    }
                 }
             }
 

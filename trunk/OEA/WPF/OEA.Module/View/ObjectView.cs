@@ -1,14 +1,25 @@
-﻿using System;
+﻿/*******************************************************
+ * 
+ * 作者：周金根
+ * 创建时间：2009
+ * 说明：此文件只包含一个类，具体内容见类型注释。
+ * 运行环境：.NET 4.0
+ * 版本号：1.0.0
+ * 
+ * 历史记录：
+ * 创建文件 周金根 2009
+ * 
+*******************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-
 using OEA.Library;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
 using OEA.Module.View;
-
 
 namespace OEA
 {
@@ -31,7 +42,7 @@ namespace OEA
         #endregion
 
         /// <summary>
-        /// 
+        /// 构造器
         /// </summary>
         /// <param name="entityType">这个视图对应这个业务模型类型</param>
         protected ObjectView(EntityViewMeta entityViewInfo)

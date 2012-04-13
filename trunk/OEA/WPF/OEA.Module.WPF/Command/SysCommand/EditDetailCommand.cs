@@ -42,7 +42,7 @@ namespace OEA.WPF.Command
             var evm = this.GetViewMeta(view);
             var res = EditAddHelper.ShowEditingDialog(evm, tmp, w =>
             {
-                w.Title = this.CommandInfo.Label;
+                w.Title = this.CommandInfo.Label + view.Meta.Label;
             }, () => this.CheckTemporaryEntityError(view, tmp));
 
             if (res == WindowButton.Yes)

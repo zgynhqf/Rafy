@@ -49,7 +49,7 @@ namespace OEA.ManagedProperty
     {
         #region 字段
 
-        private IPropertyMetaProvider _provider;
+        private TPropertyType _defaultValue;
 
         private ManagedProperty<TPropertyType> _property;
 
@@ -60,11 +60,6 @@ namespace OEA.ManagedProperty
         private ManagedPropertyChangedCallBack<TPropertyType> _propertyChangedCallBack;
 
         #endregion
-
-        public ManagedPropertyMetadata(IPropertyMetaProvider provider)
-        {
-            this._provider = provider;
-        }
 
         /// <summary>
         /// 默认值
