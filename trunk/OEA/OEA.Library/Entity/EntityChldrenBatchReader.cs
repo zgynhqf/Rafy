@@ -72,9 +72,7 @@ namespace OEA.Library
             for (int i = 0, c = allProperties.Count; i < c; i++)
             {
                 var property = allProperties[i];
-                var meta = property.GetMeta(entity) as IPropertyMetadata;
-
-                if (meta.IsChild)
+                if (property is IListProperty)
                 {
                     var children = entity.GetProperty(property) as IList<Entity>;
                     if (children != null && children.Count > 0)

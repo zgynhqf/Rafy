@@ -257,6 +257,20 @@ namespace OEA.MetaModel.View
             return meta;
         }
 
+        public static EntityPropertyViewMeta ShowInDetail(this EntityPropertyViewMeta meta,
+            int? columnSpan = null, double? width = null, int? height = null, int? labelWidth = null
+            )
+        {
+            meta.ShowInWhere |= ShowInWhere.Detail;
+
+            meta.DetailColumnsSpan = columnSpan;
+            meta.DetailLabelWidth = labelWidth;
+            meta.DetailWidth = width;
+            meta.DetailHeight = height;
+
+            return meta;
+        }
+
         public static EntityPropertyViewMeta HasLabel(this EntityPropertyViewMeta meta, string label)
         {
             meta.Label = label;

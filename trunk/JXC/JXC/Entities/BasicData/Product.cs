@@ -81,13 +81,6 @@ namespace JXC
             set { this.SetRefEntity(ClientInfoRefProperty, value); }
         }
 
-        public static readonly Property<string> BeiZhuProperty = P<Product>.Register(e => e.BeiZhu);
-        public string BeiZhu
-        {
-            get { return this.GetProperty(BeiZhuProperty); }
-            set { this.SetProperty(BeiZhuProperty, value); }
-        }
-
         public static readonly Property<double> XiaoShouJia_1Property = P<Product>.Register(e => e.XiaoShouJia_1);
         public double XiaoShouJia_1
         {
@@ -107,6 +100,13 @@ namespace JXC
         {
             get { return this.GetProperty(XiaoShouJia_3Property); }
             set { this.SetProperty(XiaoShouJia_3Property, value); }
+        }
+
+        public static readonly Property<string> BeiZhuProperty = P<Product>.Register(e => e.BeiZhu);
+        public string BeiZhu
+        {
+            get { return this.GetProperty(BeiZhuProperty); }
+            set { this.SetProperty(BeiZhuProperty, value); }
         }
     }
 
@@ -159,18 +159,23 @@ namespace JXC
 
             View.HasLabel("商品").HasTitle(Product.MingChengProperty);
 
-            View.Property(Product.BianMaProperty).HasLabel("编码").ShowIn(ShowInWhere.All);
-            View.Property(Product.MingChengProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
+            View.Property(Product.BianMaProperty).HasLabel("编码").ShowIn(ShowInWhere.All)
+                .ShowInDetail(columnSpan: 2, width: 0.7);
+            View.Property(Product.MingChengProperty).HasLabel("名称").ShowIn(ShowInWhere.All)
+                .ShowInDetail(columnSpan: 2, width: 600);
             View.Property(Product.ProductCategoryRefProperty).HasLabel("商品类别").ShowIn(ShowInWhere.All);
             View.Property(Product.GuiGeProperty).HasLabel("规格").ShowIn(ShowInWhere.All);
-            View.Property(Product.PingPaiProperty).HasLabel("品牌").ShowIn(ShowInWhere.All);
+            View.Property(Product.PingPaiProperty).HasLabel("品牌").ShowIn(ShowInWhere.All)
+                .ShowInDetail(columnSpan: 2);
             View.Property(Product.CaiGouDanjiaProperty).HasLabel("采购单价").ShowIn(ShowInWhere.All);
             View.Property(Product.XiaoShouDanJiaProperty).HasLabel("销售单价").ShowIn(ShowInWhere.All);
             View.Property(Product.ClientInfoRefProperty).HasLabel("销售商名称").ShowIn(ShowInWhere.All);
-            View.Property(Product.BeiZhuProperty).HasLabel("备注").ShowIn(ShowInWhere.All);
             View.Property(Product.XiaoShouJia_1Property).HasLabel("一级销售价").ShowIn(ShowInWhere.All);
             View.Property(Product.XiaoShouJia_2Property).HasLabel("二级销售价").ShowIn(ShowInWhere.All);
             View.Property(Product.XiaoShouJia_3Property).HasLabel("三级销售价").ShowIn(ShowInWhere.All);
+            View.Property(Product.BeiZhuProperty).HasLabel("备注").ShowIn(ShowInWhere.All)
+                .ShowInDetail(columnSpan: 2, height: 200)
+                .UseEditor(WPFEditorNames.Memo);
         }
     }
 }

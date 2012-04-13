@@ -22,6 +22,7 @@ using OEA.Module.WPF.Behaviors;
 using OEA.Module.WPF.Controls;
 using System;
 using System.ComponentModel;
+using System.Windows.Controls;
 
 
 namespace OEA.WPF.Command
@@ -119,7 +120,13 @@ namespace OEA.WPF.Command
             detailView.Control.VerticalAlignment = VerticalAlignment.Top;
             detailView.Data = tmpEntity;
 
-            var result = App.Current.Windows.ShowDialog(detailView.Control, w =>
+            //使用一个 StackPanel，保证详细面板不会自动变大
+            var ctrl = new StackPanel
+            {
+                Children = { detailView.Control }
+            };
+
+            var result = App.Current.Windows.ShowDialog(ctrl, w =>
             {
                 w.Buttons = ViewDialogButtons.YesNo;
                 w.SizeToContent = SizeToContent.Height;

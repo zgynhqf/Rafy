@@ -25,9 +25,6 @@ namespace OEA
     /// </summary>
     public interface IPropertyMetadata : IManagedPropertyMetadata
     {
-        /// <summary>
-        /// 当前属性是否孩子属性
-        /// </summary>
-        bool IsChild { get; }
+        //for extend
     }
 }

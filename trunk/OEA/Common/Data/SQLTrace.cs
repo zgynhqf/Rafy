@@ -33,7 +33,7 @@ namespace hxy.Common.Data
                 {
                     try
                     {
-                        _sqlTraceEnabled = System.IO.File.Exists(@"C:\SQL_TRACE_ENABLED");
+                        _sqlTraceEnabled = System.IO.File.Exists(@"C:\OEA_SQL_TRACE_ENABLED");
                     }
                     catch { }
                 }

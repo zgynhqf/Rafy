@@ -24,7 +24,7 @@ namespace OEA.Library
     /// </summary>
     public interface IOEAPropertyMetaProvider : IPropertyMetaProvider { }
 
-    internal class EntityPropertyMetaProvider : IOEAPropertyMetaProvider
+    internal class EntityPropertyMetaProvider : IOEAPropertyMetaProvider, IPropertyMetaProvider
     {
         //public object GetDefaultValue()
         //{
