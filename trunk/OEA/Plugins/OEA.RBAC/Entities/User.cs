@@ -145,7 +145,7 @@ namespace OEA.RBAC
         {
             base.ConfigView();
 
-            View.HasTitle(User.NameProperty).HasLabel("用户");
+            View.HasDelegate(User.NameProperty).DomainName("用户");
 
             if (!OEAEnvironment.IsWeb)
             {

@@ -110,7 +110,7 @@ namespace JXC
 
         protected override void ConfigView()
         {
-            View.HasLabel("自动编码信息").HasTitle(AutoCodeInfo.MingChengProperty);
+            View.DomainName("自动编码信息").HasDelegate(AutoCodeInfo.MingChengProperty);
 
             View.Property(AutoCodeInfo.MingChengProperty).HasLabel("参数名称").ShowIn(ShowInWhere.All);
             View.Property(AutoCodeInfo.CanShuZhiProperty).HasLabel("参数值").ShowIn(ShowInWhere.ListDetail);

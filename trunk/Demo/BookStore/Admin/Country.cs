@@ -57,7 +57,7 @@ namespace Demo
         {
             base.ConfigView();
 
-            View.HasLabel("县").HasTitle(Country.NameProperty);
+            View.DomainName("县").HasDelegate(Country.NameProperty);
 
             View.Property(Country.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
         }

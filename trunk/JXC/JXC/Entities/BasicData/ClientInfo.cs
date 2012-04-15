@@ -135,7 +135,7 @@ namespace JXC
 
         protected override void ConfigView()
         {
-            View.HasLabel("客户").HasTitle(ClientInfo.NameProperty);
+            View.DomainName("客户").HasDelegate(ClientInfo.NameProperty);
 
             View.Property(ClientInfo.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
             View.Property(ClientInfo.ZhuJiMaProperty).HasLabel("助记码").ShowIn(ShowInWhere.ListDetail);

@@ -195,7 +195,7 @@ namespace JXC
         {
             base.ConfigView();
 
-            View.HasLabel("商品").HasTitle(Product.MingChengProperty);
+            View.DomainName("商品").HasDelegate(Product.MingChengProperty);
 
             View.Property(Product.BianMaProperty).HasLabel("编码").ShowIn(ShowInWhere.All)
                 .ShowInDetail(columnSpan: 2, width: 0.7);

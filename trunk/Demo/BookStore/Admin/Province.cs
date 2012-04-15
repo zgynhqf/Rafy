@@ -49,7 +49,7 @@ namespace Demo
         {
             base.ConfigView();
 
-            View.HasLabel("省").HasTitle(Province.NameProperty);
+            View.DomainName("省").HasDelegate(Province.NameProperty);
 
             View.Property(Province.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
         }

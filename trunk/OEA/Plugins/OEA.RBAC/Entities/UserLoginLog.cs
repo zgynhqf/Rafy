@@ -112,7 +112,7 @@ namespace OEA.RBAC
 
             View.NotAllowEdit(true)
                 .RemoveWPFCommands(WPFCommandNames.Add, WPFCommandNames.Cancel, WPFCommandNames.Delete, WPFCommandNames.SaveList)
-                .HasLabel("用户登录记录");
+                .DomainName("用户登录记录");
 
             View.Property(UserLoginLog.UserNameProperty).HasLabel("用户").ShowIn(ShowInWhere.List);
             View.Property(UserLoginLog.IsInTextProperty).HasLabel("类型").ShowIn(ShowInWhere.List);

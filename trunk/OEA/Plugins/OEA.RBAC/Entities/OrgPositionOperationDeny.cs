@@ -104,7 +104,7 @@ namespace OEA.RBAC
         {
             base.ConfigView();
 
-            View.HasLabel("功能权限").ClearWPFCommands()
+            View.DomainName("功能权限").ClearWPFCommands()
                 .UseWPFCommands("RBAC.Command.ExpandAllModules");
         }
     }

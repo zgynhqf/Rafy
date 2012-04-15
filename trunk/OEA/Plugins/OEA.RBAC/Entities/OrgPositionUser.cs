@@ -109,7 +109,7 @@ namespace OEA.RBAC
         {
             base.ConfigView();
 
-            View.HasLabel("岗位用户").NotAllowEdit();
+            View.DomainName("岗位用户").NotAllowEdit();
 
             if (OEAEnvironment.IsWeb)
             {

@@ -162,7 +162,7 @@ namespace OEA.Library.Audit
         {
             base.ConfigView();
 
-            View.HasLabel("日志").NotAllowEdit();
+            View.DomainName("日志").NotAllowEdit();
 
             if (!OEAEnvironment.IsWeb)
             {

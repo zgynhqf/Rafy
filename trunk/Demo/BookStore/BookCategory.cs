@@ -44,7 +44,7 @@ namespace Demo
         {
             base.ConfigView();
 
-            View.HasLabel("书籍类别").HasTitle(BookCategory.NameProperty);
+            View.DomainName("书籍类别").HasDelegate(BookCategory.NameProperty);
 
             View.UseWPFCommands("Demo.WPF.Commands.DemoCommand");
 

@@ -92,7 +92,7 @@ namespace OEA.RBAC
         {
             base.ConfigView();
 
-            View.HasLabel("部门").HasTitle(Org.NameProperty);
+            View.DomainName("部门").HasDelegate(Org.NameProperty);
 
             View.Property(Org.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
         }

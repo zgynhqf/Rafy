@@ -96,7 +96,7 @@ namespace JXC
         {
             base.ConfigView();
 
-            View.HasLabel("仓库").HasTitle(Storage.MingChengProperty);
+            View.DomainName("仓库").HasDelegate(Storage.MingChengProperty);
 
             View.Property(Storage.BianMaProperty).HasLabel("仓库编码").ShowIn(ShowInWhere.All);
             View.Property(Storage.MingChengProperty).HasLabel("仓库名称").ShowIn(ShowInWhere.All);

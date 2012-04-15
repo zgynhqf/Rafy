@@ -72,7 +72,7 @@ namespace JXC
         {
             base.ConfigView();
 
-            View.HasLabel("计量单位").HasTitle(Unit.NameProperty);
+            View.DomainName("计量单位").HasDelegate(Unit.NameProperty);
 
             View.Property(Unit.CodeProperty).HasLabel("编码").ShowIn(ShowInWhere.All);
             View.Property(Unit.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);

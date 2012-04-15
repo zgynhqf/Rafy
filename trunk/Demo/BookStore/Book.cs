@@ -177,7 +177,7 @@ namespace Demo
         {
             base.ConfigView();
 
-            View.HasTitle(Book.NameProperty).HasLabel("书籍");
+            View.DomainName("书籍").HasDelegate(Book.NameProperty);
 
             View.UseWebCommands("CountLocalBookCommand", "CountServerBookCommand");
 
