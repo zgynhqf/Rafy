@@ -446,8 +446,8 @@ namespace OEA
             View.HasTitle(ViewConfigurationModel.ViewNameProperty);//.HasLabel("界面配置信息");
             View.PageSize = 10000;
 
-            View.Property(ViewConfigurationModel.EntityTypeProperty).HasLabel("实体").ShowIn(ShowInWhere.All).Readonly(true);
-            View.Property(ViewConfigurationModel.ViewNameProperty).HasLabel("界面名称").ShowIn(ShowInWhere.All).Readonly(true);
+            View.Property(ViewConfigurationModel.EntityTypeProperty).HasLabel("实体").ShowIn(ShowInWhere.All).Readonly();
+            View.Property(ViewConfigurationModel.ViewNameProperty).HasLabel("界面名称").ShowIn(ShowInWhere.All).Readonly();
             View.Property(ViewConfigurationModel.GroupByProperty).HasLabel("按属性分组").ShowIn(ShowInWhere.All);
 
             if (OEAEnvironment.IsWeb)

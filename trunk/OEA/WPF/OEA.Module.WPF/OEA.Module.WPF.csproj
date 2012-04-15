@@ -156,6 +156,7 @@
     <Compile Include="Command\LookupSelectAddCommand.cs" />
     <Compile Include="Command\SysCommand\CustomizeUI\CustomizeUI.cs" />
     <Compile Include="Command\SysCommand\CustomizeUI\BackupViewConfig.cs" />
+    <Compile Include="Command\SysCommand\PopupDetailCommand.cs" />
     <Compile Include="Common\Logger.cs" />
     <Compile Include="Controls\BusyAnimation.cs" />
     <Compile Include="Controls\EditorHost.cs" />

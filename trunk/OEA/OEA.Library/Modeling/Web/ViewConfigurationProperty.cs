@@ -114,7 +114,7 @@ namespace OEA
             View.HasTitle(ViewConfigurationProperty.LabelProperty);
             View.PageSize = 10000;
 
-            View.Property(ViewConfigurationProperty.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All).Readonly(true);
+            View.Property(ViewConfigurationProperty.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All).Readonly();
             View.Property(ViewConfigurationProperty.LabelProperty).HasLabel("标题").ShowIn(ShowInWhere.All);
             View.Property(ViewConfigurationProperty.ShowInWhereProperty).HasLabel("显示信息").ShowIn(ShowInWhere.All);
             View.Property(ViewConfigurationProperty.OrderNoProperty).HasLabel("排序字段").ShowIn(ShowInWhere.All);

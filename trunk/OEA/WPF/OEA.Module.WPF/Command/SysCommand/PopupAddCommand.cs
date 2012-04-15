@@ -28,20 +28,24 @@ using System.Windows.Controls;
 namespace OEA.WPF.Command
 {
     [Command(ImageName = "Add.bmp", Label = "添加", GroupType = CommandGroupType.Edit)]
-    public class PopupAddCommand : AddCommand
+    public class PopupAddCommand : PopupDetailCommand
     {
+        public override bool CanExecute(ListObjectView view)
+        {
+            return view.CanAddItem();
+        }
+
         public override void Execute(ListObjectView view)
         {
             //创建一个临时的拷贝数据
             var tmp = view.CreateNewItem();
 
-            var evm = this.GetViewMeta(view);
-
-            var result = EditAddHelper.ShowEditingDialog(evm, tmp, w =>
+            var evm = view.Meta;
+            var result = PopupEditingDialog(evm, tmp, w =>
             {
-                w.Title = "添加" + view.Meta.Label;
+                w.Title = this.CommandInfo.Label + evm.Label;
                 this.OnWindowShowing(w);
-            }, () => this.CheckTemporaryEntityError(view, tmp));
+            });
 
             //如果没有点击确定，则删除刚才添加的记录。
             if (result == WindowButton.Yes)
@@ -49,36 +53,30 @@ namespace OEA.WPF.Command
                 //先添加一行记录
                 var curEntity = view.AddNew(false);
 
-                EditAddHelper.CloneWithCallback(curEntity, tmp);
+                var oldTreeCode = string.Empty;
+                if (evm.EntityMeta.IsTreeEntity)
+                {
+                    oldTreeCode = curEntity.TreeCode;
+                }
+
+                curEntity.Clone(tmp, new CloneOptions(
+                    CloneActions.NormalProperties | CloneActions.RefEntities
+                    ));
+
+                //如果用户没有设置树型编码，则把树型编码还原到 Clone 之前系统自动生成的编码
+                if (!string.IsNullOrEmpty(oldTreeCode) &&
+                    string.IsNullOrEmpty(curEntity.TreeCode) &&
+                    view.Data.AutoTreeCodeEnabled)
+                {
+                    curEntity.TreeCode = oldTreeCode;
+                }
 
                 this.OnDataCloned(curEntity, tmp);
 
                 view.RefreshControl();
                 view.Current = curEntity;
-
-                AfterNotifyEditCompleted(view);
             }
         }
-
-        /// <summary>
-        /// 获取用于编辑的实体视图模型，子类重写此方法可更改元模型。
-        /// </summary>
-        /// <param name="view"></param>
-        /// <returns></returns>
-        protected virtual EntityViewMeta GetViewMeta(ListObjectView view)
-        {
-            return view.Meta;
-        }
-
-        /// <summary>
-        /// 检测临时编辑对象的状态。
-        /// </summary>
-        /// <param name="view"></param>
-        /// <param name="tmp"></param>
-        /// <returns>
-        /// 如果状态不可用，则返回提示信息。否则，返回null。
-        /// </returns>
-        protected virtual string CheckTemporaryEntityError(ListObjectView view, object tmp) { return null; }
 
         /// <summary>
         /// 窗体弹出前发生的事件
@@ -87,79 +85,10 @@ namespace OEA.WPF.Command
         protected virtual void OnWindowShowing(Window w) { }
 
         /// <summary>
-        /// 当前窗口数据刷新之后
-        /// </summary>
-        /// <param name="w"></param>
-        protected virtual void AfterNotifyEditCompleted(ListObjectView view) { }
-
-        /// <summary>
         /// 临时对象数据拷贝时发生
         /// </summary>
         /// <param name="newEntity"></param>
         /// <param name="tmp"></param>
         protected virtual void OnDataCloned(Entity newEntity, Entity tmp) { }
-    }
-
-    internal static class EditAddHelper
-    {
-        internal static WindowButton ShowEditingDialog(
-            EntityViewMeta entityViewMeta, Entity tmpEntity,
-            Action<ViewDialog> windowSetter, Func<string> checkError
-            )
-        {
-            //弹出窗体显示详细面板
-            var detailView = AutoUI.ViewFactory.CreateDetailObjectView(entityViewMeta);
-            detailView.Control.VerticalAlignment = VerticalAlignment.Top;
-            detailView.Data = tmpEntity;
-
-            //使用一个 StackPanel，保证详细面板不会自动变大
-            var ctrl = new StackPanel
-            {
-                Children = { detailView.Control }
-            };
-
-            var result = App.Current.Windows.ShowDialog(ctrl, w =>
-            {
-                w.Buttons = ViewDialogButtons.YesNo;
-                w.SizeToContent = SizeToContent.Height;
-                w.MinHeight = 100;
-                w.MinWidth = 200;
-                w.Width = 400 * detailView.ColumnsCount;
-                w.ValidateOperations += (o, e) =>
-                {
-                    var error = checkError();
-                    if (error != null)
-                    {
-                        App.Current.MessageBox.Show("提示", error);
-                        e.Cancel = true;
-                        return;
-                    }
-
-                    var broken = tmpEntity.ValidationRules.Validate();
-                    if (broken.Count > 0)
-                    {
-                        App.Current.MessageBox.Show("属性错误", broken.ToString());
-                        e.Cancel = true;
-                    }
-                };
-
-                windowSetter(w);
-            });
-
-            return result;
-        }
-
-        internal static void CloneWithCallback(Entity realEntity, Entity tmp)
-        {
-            var callBackEntity = realEntity as IAddOrEditCommandCallback;
-            if (callBackEntity != null) { callBackEntity.BeforeClone(tmp); }
-
-            //修改按钮如果使用新的Id，则它下面子对象的父外键都将是错误的值。
-            realEntity.Clone(tmp, new CloneOptions(
-                CloneActions.NormalProperties | CloneActions.RefEntities
-                ));
-
-            if (callBackEntity != null) { callBackEntity.AfterClone(tmp); }
-        }
     }
 }

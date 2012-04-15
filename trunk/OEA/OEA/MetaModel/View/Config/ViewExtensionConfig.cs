@@ -237,6 +237,12 @@ namespace OEA.MetaModel.View
 
         #region EntityPropertyViewMeta
 
+        public static EntityPropertyViewMeta Readonly(this EntityPropertyViewMeta meta)
+        {
+            meta.IsReadonly = true;
+            return meta;
+        }
+
         public static EntityPropertyViewMeta Readonly(this EntityPropertyViewMeta meta, bool value)
         {
             meta.IsReadonly = value;

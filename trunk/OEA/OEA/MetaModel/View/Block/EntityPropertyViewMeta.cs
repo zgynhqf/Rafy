@@ -326,6 +326,11 @@ namespace OEA.MetaModel.View
         /// </summary>
         ListDetail = List | Detail,
 
+        /// <summary>
+        /// 显示在列表和下拉框中
+        /// </summary>
+        ListDropDown = List | DropDown,
+
         [Label("全显示")]
         All = DropDown | List | Detail
     }

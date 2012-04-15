@@ -154,7 +154,7 @@ namespace OEA.RBAC
                     );
             }
 
-            View.Property(User.CodeProperty).HasLabel("登录代号").ShowIn(ShowInWhere.List | ShowInWhere.DropDown);
+            View.Property(User.CodeProperty).HasLabel("登录代号").ShowIn(ShowInWhere.ListDropDown);
             View.Property(User.NameProperty).HasLabel("姓名").ShowIn(ShowInWhere.List);
             View.Property(User.PasswordProperty).HasLabel("密码").UseEditor(WPFEditorNames.Password);
             View.Property(User.LastLoginTimeProperty).HasLabel("最后登录时间");

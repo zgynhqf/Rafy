@@ -128,7 +128,6 @@
     <Compile Include="Entity\MP\PropertyMetadata.cs" />
     <Compile Include="Entity\IHasHame.cs" />
     <Compile Include="Entity\EntityExtension.cs" />
-    <Compile Include="Entity\IAddOrEditCommandCallback.cs" />
     <Compile Include="Entity\LazyEntityReference\ILazyEntityRef.cs" />
     <Compile Include="Entity\LazyEntityReference\IReferenceOwner.cs" />
     <Compile Include="Entity\LazyEntityReference\LazyEntityRef.cs" />

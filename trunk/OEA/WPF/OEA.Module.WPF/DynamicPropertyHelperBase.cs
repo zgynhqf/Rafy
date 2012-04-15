@@ -59,7 +59,7 @@ namespace OEA.Module.WPF
 
                 CommonModel.Entities.CreateExtensionPropertyMeta(mp, evm.EntityMeta);
                 var ep = UIModel.Views.CreateExtensionPropertyViewMeta(mp, evm);
-                ep.Readonly(true).ShowIn(ShowInWhere.List).HasLabel(yLabels[i]);
+                ep.Readonly().ShowIn(ShowInWhere.List).HasLabel(yLabels[i]);
 
                 this._dynamicProperties[label] = mp;
             }

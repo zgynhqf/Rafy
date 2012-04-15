@@ -214,8 +214,8 @@ namespace JXC
             View.Property(Product.BeiZhuProperty).HasLabel("备注").ShowIn(ShowInWhere.All)
                 .ShowInDetail(columnSpan: 2, height: 200)
                 .UseEditor(WPFEditorNames.Memo);
-            View.Property(Product.OperateTimeProperty).HasLabel("操作时间").ShowIn(ShowInWhere.Detail).Readonly(true);
-            View.Property(Product.UserRefProperty).HasLabel("操作员").ShowIn(ShowInWhere.Detail).Readonly(true);
+            View.Property(Product.OperateTimeProperty).HasLabel("操作时间").ShowIn(ShowInWhere.Detail).Readonly();
+            View.Property(Product.UserRefProperty).HasLabel("操作员").ShowIn(ShowInWhere.Detail).Readonly();
         }
     }
 }
