@@ -30,35 +30,43 @@ namespace OEA.Library
     /// <summary>
     /// 树型实体类的基类
     /// </summary>
-    public partial class Entity : IEntityAttachedMeta
+    public partial class Entity
     {
         #region 公有配置项
 
-        public virtual bool SupportTree
+        public bool SupportTree
         {
-            get { return false; }
+            get { return this.FindRepository().SupportTree; }
         }
 
+        public static readonly Property<string> TreeCodeProperty = P<Entity>.Register(e => e.TreeCode);
+        /// <summary>
+        /// 树型实体的树型编码
+        /// 这个属性是实现树型实体的关键所在！
+        /// </summary>
         public virtual string TreeCode
         {
-            get { throw new NotSupportedException(); }
-            set { throw new NotSupportedException(); }
+            get { return this.GetProperty(TreeCodeProperty); }
+            set { this.SetProperty(TreeCodeProperty, value); }
+        }
+
+        public static readonly Property<int?> TreePIdProperty = P<Entity>.Register(e => e.TreePId);
+        /// <summary>
+        /// 树型父对象的 Id
+        /// 
+        /// 默认使用存储于数据库中的字段，子类可以重写此属性以实现自定义的父子结构逻辑。
+        /// </summary>
+        public virtual int? TreePId
+        {
+            get { return this.GetProperty(TreePIdProperty); }
+            set { this.SetProperty(TreePIdProperty, value); }
         }
 
         /// <summary>
-        /// 此配置项在实现时，应该是不可变的。
+        /// 在树中的 Id
+        /// 
+        /// 默认使用存储于数据库中的 Id 字段，子类可以重写此属性以实现自定义的父子结构逻辑。
         /// </summary>
-        internal protected virtual TreeCodeOption TreeCodeOption
-        {
-            get { return TreeCodeOption.Default; }
-        }
-
-        public virtual int? TreePId
-        {
-            get { throw new NotSupportedException(); }
-            set { throw new NotSupportedException(); }
-        }
-
         public virtual int TreeId
         {
             get { return this.Id; }
@@ -203,7 +211,7 @@ namespace OEA.Library
             {
                 if (this.Count > 0)
                 {
-                    var option = this._owner.TreeCodeOption;
+                    var option = this._owner.FindRepository().TreeCodeOption;
 
                     var pCode = this._owner.TreeCode;
                     for (int i = 0, c = this.Count; i < c; i++)

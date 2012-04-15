@@ -195,8 +195,8 @@ namespace OEA.Library
                 this.CopyProperty(target, IdProperty);
             }
 
-            //复制目标对象的所有 CSLA 字段。
-            var allProperties = FindRepository().GetAvailableIndicators();
+            //复制目标对象的所有托管属性。
+            var allProperties = this.FindRepository().GetAvailableIndicators();
             for (int i = 0, c = allProperties.Count; i < c; i++)
             {
                 var property = allProperties[i];

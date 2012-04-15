@@ -14,28 +14,6 @@ namespace Demo
     [RootEntity]
     public class BookCategory : DemoEntity
     {
-        #region 支持树型操作
-
-        public static readonly Property<string> TreeCodeProperty = P<BookCategory>.Register(e => e.TreeCode);
-        [Column]
-        public override string TreeCode
-        {
-            get { return GetProperty(TreeCodeProperty); }
-            set { SetProperty(TreeCodeProperty, value); }
-        }
-
-        public static readonly Property<int?> TreePIdProperty = P<BookCategory>.Register(e => e.TreePId);
-        [Column]
-        public override int? TreePId
-        {
-            get { return this.GetProperty(TreePIdProperty); }
-            set { this.SetProperty(TreePIdProperty, value); }
-        }
-
-        public override bool SupportTree { get { return true; } }
-
-        #endregion
-
         public static readonly Property<string> NameProperty = P<BookCategory>.Register(e => e.Name);
         public string Name
         {
@@ -56,7 +34,7 @@ namespace Demo
     {
         protected override void ConfigMeta()
         {
-            base.ConfigMeta();
+            Meta.SupportTree();
 
             Meta.MapTable().HasColumns(
                 BookCategory.NameProperty
@@ -71,7 +49,7 @@ namespace Demo
 
             View.UseWPFCommands("Demo.WPF.Commands.DemoCommand");
 
-            View.Property(BookCategory.TreeCodeProperty).ShowIn(ShowInWhere.List).HasLabel("编码");
+            View.Property(BookCategory.TreeCodeProperty).ShowIn(ShowInWhere.List).HasLabel("编码").HasOrderNo(-1);
             View.Property(BookCategory.NameProperty).ShowIn(ShowInWhere.List | ShowInWhere.DropDown).HasLabel("名称");
         }
     }

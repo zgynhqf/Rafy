@@ -91,12 +91,13 @@ namespace OEA.MetaModel
         /// </summary>
         protected internal virtual void ConfigMeta() { }
 
-        internal virtual void ConfigViewInternal()
-        {
-            this.ConfigView();
-        }
-
-        protected virtual void ConfigView() { }
+        /// <summary>
+        /// 子类重写此方法，并完成对 Meta 属性的配置。
+        /// 
+        /// 注意：
+        /// * 为了给当前类的子类也运行同样的配置，这个方法可能会被调用多次。
+        /// </summary>
+        protected internal virtual void ConfigView() { }
 
         /// <summary>
         /// 客户化该类的元数据

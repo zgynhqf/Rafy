@@ -105,9 +105,9 @@
     <Compile Include="MetaModel\Meta\Entity\EntityCategory.cs" />
     <Compile Include="MetaModel\Meta\Entity\EntityMeta.cs" />
     <Compile Include="MetaModel\Meta\Entity\EntityPropertyMeta.cs" />
-    <Compile Include="MetaModel\Meta\Entity\IEntityAttachedMeta.cs" />
     <Compile Include="MetaModel\Meta\Entity\PropertyMeta.cs" />
     <Compile Include="MetaModel\Meta\Entity\ReferenceInfo.cs" />
+    <Compile Include="MetaModel\Meta\Entity\TreeCodeOption.cs" />
     <Compile Include="MetaModel\Meta\MetaRepositoryBase.cs" />
     <Compile Include="MetaModel\Meta\Module\ModuleMeta.cs" />
     <Compile Include="MetaModel\Meta\Module\ModuleOperation.cs" />
@@ -214,7 +214,6 @@
     <None Include="_CodeSnippets\OEA_PropertyList.snippet" />
     <None Include="_CodeSnippets\OEA_PropertyReference.snippet" />
     <None Include="_CodeSnippets\OEA_PropertyReferenceNullable.snippet" />
-    <None Include="_CodeSnippets\OEA_TreeEntity.snippet" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

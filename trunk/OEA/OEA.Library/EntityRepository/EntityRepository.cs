@@ -747,12 +747,12 @@ namespace OEA.Library
 
         public bool SupportTree
         {
-            get { return this.Delegate.SupportTree; }
+            get { return this.EntityMeta.IsTreeEntity; }
         }
 
         public TreeCodeOption TreeCodeOption
         {
-            get { return this.Delegate.TreeCodeOption; }
+            get { return this.EntityMeta.TreeCodeOption ?? TreeCodeOption.Default; }
         }
 
         #region ITypeValidationsHost Members

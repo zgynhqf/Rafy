@@ -55,8 +55,6 @@ namespace OEA.Module.WPF.Editors
         {
             //绑定TextBox到对象属性
             var binding = this.CreateBinding();
-            //可空类型需要指定空值时的显示值，否则可能会出现转换错误，如double?
-            binding.TargetNullValue = string.Empty;
             editingControl.SetBinding(TextBox.TextProperty, binding);
         }
 
