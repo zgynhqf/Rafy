@@ -115,7 +115,7 @@ namespace OEA
             View.HasTitle(ViewConfigurationCommand.LabelProperty);
             View.PageSize = 10000;
 
-            View.Property(ViewConfigurationCommand.NameProperty).HasLabel("命令类型").ShowIn(ShowInWhere.All).Readonly(true);
+            View.Property(ViewConfigurationCommand.NameProperty).HasLabel("命令类型").ShowIn(ShowInWhere.All).Readonly();
             View.Property(ViewConfigurationCommand.LabelProperty).HasLabel("命令名称").ShowIn(ShowInWhere.All);
             View.Property(ViewConfigurationCommand.IsVisibleProperty).HasLabel("是否可见").ShowIn(ShowInWhere.All);
 

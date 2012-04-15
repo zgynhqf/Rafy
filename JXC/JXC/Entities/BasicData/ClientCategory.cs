@@ -59,7 +59,7 @@ namespace JXC
             View.HasLabel("客户类别").HasTitle(ClientCategory.NameProperty);
 
             View.Property(ClientCategory.TreeCodeProperty).HasLabel("编码").ShowIn(ShowInWhere.All)
-                .HasOrderNo(-1).Readonly(true);
+                .HasOrderNo(-1).Readonly();
             View.Property(ClientCategory.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
         }
     }

@@ -137,7 +137,7 @@ namespace OEA.Library
     }
 
     /// <summary>
-    /// 克隆的操作
+    /// 克隆操作的参数。
     /// </summary>
     [Flags]
     public enum CloneActions

@@ -58,8 +58,8 @@ namespace JXC
 
             View.HasLabel("商品类别").HasTitle(ProductCategory.NameProperty);
 
-            View.Property(ProductCategory.TreeCodeProperty).HasLabel("编码").ShowIn(ShowInWhere.All)
-                .HasOrderNo(-1).Readonly(true);
+            View.Property(ProductCategory.TreeCodeProperty).HasLabel("编码").ShowIn(ShowInWhere.ListDropDown)
+                .HasOrderNo(-1).Readonly();
             View.Property(ProductCategory.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
         }
     }

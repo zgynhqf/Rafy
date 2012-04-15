@@ -20,11 +20,13 @@ using OEA.MetaModel.Attributes;
 using OEA.Module.WPF;
 using OEA.Module.WPF.Behaviors;
 using OEA.Module.WPF.Controls;
+using System;
+using System.Windows.Controls;
 
 namespace OEA.WPF.Command
 {
     [Command(Label = "修改", GroupType = CommandGroupType.Edit)]
-    public class EditDetailCommand : ListViewCommand
+    public class EditDetailCommand : PopupDetailCommand
     {
         public override bool CanExecute(ListObjectView view)
         {
@@ -39,32 +41,23 @@ namespace OEA.WPF.Command
             var tmp = Entity.New(view.EntityType);
             tmp.Clone(listEntity);
 
-            var evm = this.GetViewMeta(view);
-            var res = EditAddHelper.ShowEditingDialog(evm, tmp, w =>
+            var evm = view.Meta;
+            var res = PopupEditingDialog(evm, tmp, w =>
             {
-                w.Title = this.CommandInfo.Label + view.Meta.Label;
-            }, () => this.CheckTemporaryEntityError(view, tmp));
+                w.Title = this.CommandInfo.Label + evm.Label;
+            });
 
             if (res == WindowButton.Yes)
             {
-                EditAddHelper.CloneWithCallback(listEntity, tmp);
+                //修改按钮如果使用新的 Id，则它下面子对象的父外键都将是错误的值。
+                listEntity.Clone(tmp, new CloneOptions(
+                    CloneActions.NormalProperties | CloneActions.RefEntities
+                    ));
 
                 listEntity.MarkDirty();
 
                 view.RefreshControl();
             }
-        }
-
-        protected virtual string CheckTemporaryEntityError(ListObjectView view, object tmp) { return null; }
-
-        /// <summary>
-        /// 获取用于编辑的实体视图模型，子类重写此方法可更改元模型。
-        /// </summary>
-        /// <param name="view"></param>
-        /// <returns></returns>
-        protected virtual EntityViewMeta GetViewMeta(ListObjectView view)
-        {
-            return view.Meta;
         }
     }
 }

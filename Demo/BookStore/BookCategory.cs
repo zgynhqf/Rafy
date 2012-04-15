@@ -10,8 +10,7 @@ using OEA.MetaModel.View;
 
 namespace Demo
 {
-    [Serializable]
-    [RootEntity]
+    [RootEntity, Serializable]
     public class BookCategory : DemoEntity
     {
         public static readonly Property<string> NameProperty = P<BookCategory>.Register(e => e.Name);
@@ -49,8 +48,8 @@ namespace Demo
 
             View.UseWPFCommands("Demo.WPF.Commands.DemoCommand");
 
-            View.Property(BookCategory.TreeCodeProperty).ShowIn(ShowInWhere.List).HasLabel("编码").HasOrderNo(-1);
-            View.Property(BookCategory.NameProperty).ShowIn(ShowInWhere.List | ShowInWhere.DropDown).HasLabel("名称");
+            View.Property(BookCategory.TreeCodeProperty).HasLabel("编码").ShowIn(ShowInWhere.List).HasOrderNo(-1);
+            View.Property(BookCategory.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.ListDropDown);
         }
     }
 }

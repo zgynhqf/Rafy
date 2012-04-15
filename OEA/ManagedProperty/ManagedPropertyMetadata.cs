@@ -49,8 +49,6 @@ namespace OEA.ManagedProperty
     {
         #region 字段
 
-        private TPropertyType _defaultValue;
-
         private ManagedProperty<TPropertyType> _property;
 
         private ManagedPropertyCoerceGetValueCallBack<TPropertyType> _coerceGetValueCallBack;
