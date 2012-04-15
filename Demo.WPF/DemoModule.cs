@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using OEA.Module.WPF;
 using OEA;
+using OEA.MetaModel;
 
 namespace Demo.WPF
 {
@@ -14,6 +15,12 @@ namespace Demo.WPF
             get { return ReuseLevel.Main; }
         }
 
-        public void Initialize(IClientApp app) { }
+        public void Initialize(IClientApp app)
+        {
+            app.ModuleOperations += (o, e) =>
+            {
+                CommonModel.Modules["书籍查询"].UseCustomModule<BookQueryModule>();
+            };
+        }
     }
 }

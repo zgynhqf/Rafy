@@ -46,10 +46,10 @@ namespace OEA.Library
                             BlockType = BlockType.Detail
                         },
                         Children = 
-                    {
-                        new ChildBlock("属性", ViewConfigurationModel.ViewConfigurationPropertyListProperty),
-                        new ChildBlock("命令", ViewConfigurationModel.ViewConfigurationCommandListProperty)
-                    }
+                        {
+                            new ChildBlock("属性", ViewConfigurationModel.ViewConfigurationPropertyListProperty),
+                            new ChildBlock("命令", ViewConfigurationModel.ViewConfigurationCommandListProperty)
+                        }
                     };
 
                     if (OEAEnvironment.IsWeb)
