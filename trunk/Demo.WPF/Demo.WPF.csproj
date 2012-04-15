@@ -48,6 +48,7 @@
     <Compile Include="Book\BookDetailPanel.xaml.cs">
       <DependentUpon>BookDetailPanel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Book\BookQueryModule.cs" />
     <Compile Include="Commands\BookSearchCommand.cs" />
     <Compile Include="Commands\DemoCommand.cs" />
     <Compile Include="DemoModule.cs" />

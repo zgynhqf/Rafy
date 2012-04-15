@@ -54,7 +54,7 @@ namespace Demo
                     {
                         new ModuleMeta
                         {
-                            Label = "书籍查询", EntityType = typeof(Book), AggtBlocksName= "书籍查询界面",
+                            Label = "书籍查询", EntityType = typeof(Book),
                         }
                     }
                 });
@@ -63,7 +63,9 @@ namespace Demo
                 {
                     moduleBookImport.Children.Add(new ModuleMeta { Label = "163", CustomUI = "http://www.163.com" });
 
-                    moduleQuery.Children[0].Children.Add(new ModuleMeta
+                    var bookQuery = moduleQuery.Children[0];
+                    bookQuery.AggtBlocksName = "书籍查询界面";
+                    bookQuery.Children.Add(new ModuleMeta
                     {
                         Label = "书籍查询(Url访问)",
                         CustomUI = "EntityModule?isAggt=1&type=Demo.Book&viewName=书籍查询界面"

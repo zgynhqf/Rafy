@@ -19,7 +19,7 @@ namespace JXC.WPF
         {
             app.ModuleOperations += (o, e) =>
             {
-                CommonModel.Modules["商品管理Test"].UseCustomModule<ProductModule>();
+                CommonModel.Modules["商品管理"].UseCustomModule<ProductModule>();
             };
         }
     }

@@ -155,15 +155,18 @@ namespace DbMigration
         #endregion
     }
 
+    /// <summary>
+    /// 手动升级的类型
+    /// </summary>
     public enum ManualMigrationType
     {
         /// <summary>
-        /// 自动生成的更新项
+        /// 手动结构升级
         /// </summary>
         Schema,
 
         /// <summary>
-        /// 手工更新项
+        /// 手动数据升级
         /// </summary>
         Data
     }

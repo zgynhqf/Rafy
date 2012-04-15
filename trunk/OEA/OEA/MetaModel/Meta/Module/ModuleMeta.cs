@@ -113,6 +113,22 @@ namespace OEA.MetaModel
             set { this.SetValue(ref this._EntityType, value); }
         }
 
+        #region Web
+
+        private string _AggtBlocksName;
+        /// <summary>
+        /// 如果当前模块是一个主动定义的聚合块，则这个属性表示此聚合块的名称。
+        /// </summary>
+        public string AggtBlocksName
+        {
+            get { return this._AggtBlocksName; }
+            set { this.SetValue(ref this._AggtBlocksName, value); }
+        }
+
+        #endregion
+
+        #region WPF
+
         private Type _TemplateType;
         /// <summary>
         /// 使用的模板类型。
@@ -124,15 +140,7 @@ namespace OEA.MetaModel
             set { this.SetValue(ref this._TemplateType, value); }
         }
 
-        private string _AggtBlocksName;
-        /// <summary>
-        /// 如果当前模块是一个主动定义的聚合块，则这个属性表示此聚合块的名称。
-        /// </summary>
-        public string AggtBlocksName
-        {
-            get { return this._AggtBlocksName; }
-            set { this.SetValue(ref this._AggtBlocksName, value); }
-        }
+        #endregion
 
         private ModuleMeta _Parent;
         /// <summary>
