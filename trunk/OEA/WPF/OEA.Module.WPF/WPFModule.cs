@@ -26,19 +26,16 @@ namespace OEA.Module.WPF
 {
     /// <summary>
     /// 当前工程所对应的模块类。
-    /// 详细功能，见Initailize方法。
     /// </summary>
-    internal class WPFModule : WPFModuleBase
+    internal class WPFModule : IModule
     {
-        /// <summary>
-        /// 把 ModuleListPad.xaml 加入到 Region 中。
-        /// 
-        /// 加入 ComboListControl.xaml 到Resource中
-        /// </summary>
-        protected override void InitializeCore(IClientApp app)
+        public ReuseLevel ReuseLevel
         {
-            base.InitializeCore(app);
+            get { return ReuseLevel.Main; }
+        }
 
+        public void Initialize(IClientApp app)
+        {
             //初始化命令列表
             WPFCommandNames.CustomizeUI = typeof(CustomizeUI);
             WPFCommandNames.FireQuery = typeof(QueryObjectCommand);

@@ -24,9 +24,7 @@ namespace OEA.MetaModel.View
     /// </summary>
     public class AggtBlocksRepository
     {
-        private Dictionary<string, Func<object, AggtBlocks>> _memory = new Dictionary<string, Func<object, AggtBlocks>>();
-
-        private CodeBlocksReader _codeReader = new CodeBlocksReader();
+        private Dictionary<string, Func<ModuleMeta, AggtBlocks>> _memory = new Dictionary<string, Func<ModuleMeta, AggtBlocks>>();
 
         private XmlConfigManager _xmlCfgMgr;
 
@@ -44,13 +42,24 @@ namespace OEA.MetaModel.View
         {
             AggtBlocks blocks = null;
 
-            if (!string.IsNullOrEmpty(moduleMeta.AggtBlocksName))
+            //如果模块自己指定的模板类，则使用模板类生成聚合块。
+            if (moduleMeta.TemplateType != null)
             {
-                blocks = GetDefinedBlocks(moduleMeta.AggtBlocksName);
+                var template = Activator.CreateInstance(moduleMeta.TemplateType) as BlocksTemplate;
+                if (template == null) throw new InvalidProgramException("模板类需要从 BlocksTemplate 类继承。");
+                template.EntityType = moduleMeta.EntityType;
+                blocks = template.GetBlocks();
             }
             else
             {
-                blocks = GetDefaultBlocks(moduleMeta.EntityType);
+                if (!string.IsNullOrEmpty(moduleMeta.AggtBlocksName))
+                {
+                    blocks = GetDefinedBlocks(moduleMeta.AggtBlocksName);
+                }
+                else
+                {
+                    blocks = GetDefaultBlocks(moduleMeta.EntityType);
+                }
             }
 
             return blocks;
@@ -63,7 +72,12 @@ namespace OEA.MetaModel.View
         /// <returns></returns>
         public AggtBlocks GetDefaultBlocks(Type entityType)
         {
-            return this._codeReader.Read(entityType);
+            //默认模板使用代码结构生成
+            var template = new CodeBlocksTemplate
+            {
+                EntityType = entityType
+            };
+            return template.GetBlocks();
         }
 
         /// <summary>
@@ -74,7 +88,7 @@ namespace OEA.MetaModel.View
         public AggtBlocks GetDefinedBlocks(string blocksName)
         {
             AggtBlocks res = null;
-            Func<object, AggtBlocks> creator = null;
+            Func<ModuleMeta, AggtBlocks> creator = null;
             if (this._memory.TryGetValue(blocksName, out creator))
             {
                 res = creator(null);
@@ -107,7 +121,7 @@ namespace OEA.MetaModel.View
         /// </summary>
         /// <param name="blocksName"></param>
         /// <param name="blocks"></param>
-        public void DefineBlocks(string blocksName, Func<object, AggtBlocks> blocks)
+        public void DefineBlocks(string blocksName, Func<ModuleMeta, AggtBlocks> blocks)
         {
             this._memory[blocksName] = blocks;
         }

@@ -41,6 +41,14 @@ namespace JXC
                         },
                         new ModuleMeta
                         {
+                            Label = "系统管理",
+                            Children =
+                            {
+                                new ModuleMeta{ Label = "自动编码管理", EntityType = typeof(AutoCodeInfo)},
+                            }
+                        },
+                        new ModuleMeta
+                        {
                             Label = "采购管理"
                         },
                         new ModuleMeta
@@ -50,7 +58,7 @@ namespace JXC
                         new ModuleMeta
                         {
                             Label = "销售管理"
-                        }
+                        },
                     }
                 });
             };

@@ -20,6 +20,7 @@ using OEA.Library;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
 using OEA.Module.View;
+using OEA.Module;
 
 namespace OEA
 {
@@ -33,23 +34,23 @@ namespace OEA
         #region 字段
 
         /// <summary>
-        /// 如果当前View作为其它
+        /// 如果当前 View 作为其它视图的子视图时，这个字段表示对应的子块元数据。
         /// </summary>
         private ChildBlock _childBlock;
 
-        private EntityViewMeta _entityViewInfo;
+        private EntityViewMeta _evm;
 
         #endregion
 
         /// <summary>
         /// 构造器
         /// </summary>
-        /// <param name="entityType">这个视图对应这个业务模型类型</param>
-        protected ObjectView(EntityViewMeta entityViewInfo)
+        /// <param name="entityViewMeta">这个视图对应这个业务模型类型</param>
+        protected ObjectView(EntityViewMeta entityViewMeta)
         {
-            if (entityViewInfo == null) throw new ArgumentNullException("entityViewInfo");
+            if (entityViewMeta == null) throw new ArgumentNullException("entityViewInfo");
 
-            this._entityViewInfo = entityViewInfo;
+            this._evm = entityViewMeta;
 
             this.EnableResetVisibility = true;
             this._relations = new RelationViewCollection(this);
@@ -62,7 +63,15 @@ namespace OEA
         /// </summary>
         public EntityViewMeta Meta
         {
-            get { return this._entityViewInfo; }
+            get { return this._evm; }
+        }
+
+        /// <summary>
+        /// 当前View对应这个业务模型类型
+        /// </summary>
+        public Type EntityType
+        {
+            get { return this._evm.EntityType; }
         }
 
         /// <summary>
@@ -94,6 +103,20 @@ namespace OEA
 
                 this._childBlock = value;
             }
+        }
+
+        #endregion
+
+        #region Commands
+
+        private ClientCommandCollection _commands = new ClientCommandCollection();
+
+        /// <summary>
+        /// 该视图对应的所有命令集合。
+        /// </summary>
+        public ClientCommandCollection Commands
+        {
+            get { return this._commands; }
         }
 
         #endregion
@@ -722,36 +745,6 @@ namespace OEA
 
         #endregion
 
-        ///// <summary>
-        ///// 在界面中使用新的视图替换当前视图
-        ///// </summary>
-        ///// <param name="newView"></param>
-        //public void ReplaceBy(ObjectView newView)
-        //{
-        //    if (newView == null) throw new ArgumentNullException("newView");
-
-        //    this.ReplaceByViewCore(newView);
-        //}
-
-        //protected virtual void ReplaceByViewCore(ObjectView newView)
-        //{
-        //    if (this._parent != null)
-        //    {
-        //        var index = this._parent._childrenViews.IndexOf(this);
-        //        this._parent._childrenViews[index] = newView;
-        //        newView._parent = this._parent;
-        //    }
-
-        //    foreach (var childView in this._childrenViews.ToArray())
-        //    {
-        //        childView.Parent = newView;
-        //    }
-
-        //    //todo
-        //    //替换后，之前的挂接的事件都丢失了。
-        //    //可以把相关的事件都赋值过来，暂时未完成。
-        //}
-
         #region MouseDoubleClick
 
         public event EventHandler MouseDoubleClick;
@@ -763,10 +756,8 @@ namespace OEA
         /// <param name="e"></param>
         protected virtual void OnMouseDoubleClick(EventArgs e)
         {
-            if (MouseDoubleClick != null)
-            {
-                MouseDoubleClick(this, e);
-            }
+            var handler = this.MouseDoubleClick;
+            if (handler != null) { handler(this, e); }
         }
 
         #endregion
@@ -797,7 +788,7 @@ namespace OEA
 
         #endregion
 
-        #region Event Extesion
+        #region RoutedEvent
 
         /// <summary>
         /// 发生某个路由事件
@@ -838,18 +829,6 @@ namespace OEA
             };
 
             this.OnRoutedEvent(this, arg);
-        }
-
-        #endregion
-
-        #region IObjectView Members
-
-        /// <summary>
-        /// 当前View对应这个业务模型类型
-        /// </summary>
-        public Type EntityType
-        {
-            get { return this._entityViewInfo.EntityType; }
         }
 
         #endregion

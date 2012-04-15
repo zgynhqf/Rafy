@@ -151,6 +151,7 @@
     <Compile Include="AutoUI\Editors\PropertyEditor\TiledListReferenceEditor.cs" />
     <Compile Include="AutoUI\ObjectViews\CustomObjectView.cs" />
     <Compile Include="AutoUI\ObjectViews\ViewController\AsyncDataContextHelper.cs" />
+    <Compile Include="CallbackModule.cs" />
     <Compile Include="CommandCustomParams.cs" />
     <Compile Include="Command\LookupSelectAddCommand.cs" />
     <Compile Include="Command\SysCommand\CustomizeUI\CustomizeUI.cs" />
@@ -179,6 +180,7 @@
     <Compile Include="AutoUI\ObjectViews\ViewController\ViewDataLoader.cs" />
     <Compile Include="Controls\MTTG\TreeColumn\TreeColumnCollection.cs" />
     <Compile Include="Controls\MTTG\_MTTGTestCommands.cs" />
+    <Compile Include="CustomModule.cs" />
     <Compile Include="PrimitiveUI\Detail\DefaultDetailPanel.cs" />
     <Compile Include="PrimitiveUI\EntityModule.cs" />
     <Compile Include="Themes\OEAStyles.cs" />
@@ -350,7 +352,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TabControlWorkSpace.cs" />
     <Compile Include="ViewModel.cs" />
-    <Compile Include="WPFModuleBase.cs" />
     <Compile Include="Zoom.cs" />
     <Compile Include="Themes\NoDataVisibilityConverter.cs" />
   </ItemGroup>

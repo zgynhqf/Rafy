@@ -12,6 +12,7 @@
 *******************************************************/
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -21,39 +22,36 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using Itenso.Windows.Input;
-
 using OEA.Library;
-
-
-using OEA.WPF.Command;
-using Wpf.Controls;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
-using System.Collections;
+using OEA.WPF.Command;
+using Wpf.Controls;
 
 namespace OEA.Module.WPF.CommandAutoUI
 {
     /// <summary>
     /// 命令生成子系统的生成上下文
+    /// 
+    /// 在整个生成过程中，每一个 GroupGenerator 可以直接把生成的控件以以下种方式添加到 Context 中：
+    /// 1. 直接添加到 ContainerItems 中。
+    /// 2. 直接添加到 ContextMenuItems 中。
+    /// 3. 使用 RegisterGroupedContainerItem 添加经过分组的控件，
+    /// 这些控件会被最终使用分隔符添加到 ContainerItems 中（见：AddGroupedItems 方法）。
     /// </summary>
     public class CommandAutoUIContext
     {
-        private Dictionary<CommandGroupType, IList<FrameworkElement>> _cmdGroups = new Dictionary<CommandGroupType, IList<FrameworkElement>>();
-
-        public CommandAutoUIContext(ItemsControl commandsContainer, object commandArg)
-        {
-            this.CommandsContainer = commandsContainer;
-            this.CommandArg = commandArg;
-        }
+        private Dictionary<CommandGroupType, IList<FrameworkElement>> _groupedCommands = new Dictionary<CommandGroupType, IList<FrameworkElement>>();
 
         /// <summary>
         /// 为这个Toolbar进行生成子项
         /// </summary>
-        public ItemsControl CommandsContainer { get; private set; }
+        private ItemsControl _commandsContainer;
 
-        internal IList Items
+        public CommandAutoUIContext(ItemsControl commandsContainer, object commandArg)
         {
-            get { return this.CommandsContainer.Items; }
+            this._commandsContainer = commandsContainer;
+            this.CommandArg = commandArg;
         }
 
         /// <summary>
@@ -61,30 +59,63 @@ namespace OEA.Module.WPF.CommandAutoUI
         /// </summary>
         public object CommandArg { get; private set; }
 
-        public void AddItem(CommandGroupType groupType, FrameworkElement control)
+        /// <summary>
+        /// 命令控件的主要存储列表
+        /// </summary>
+        public IList ContainerItems
         {
-            IList<FrameworkElement> cmds;
-            if (this._cmdGroups.TryGetValue(groupType, out cmds))
+            get { return this._commandsContainer.Items; }
+        }
+
+        /// <summary>
+        /// 找到或者创建右键菜单
+        /// </summary>
+        /// <returns></returns>
+        public IList ContextMenuItems
+        {
+            get
             {
-                cmds.Add(control);
-            }
-            else
-            {
-                this._cmdGroups[groupType] = new List<FrameworkElement>() { control };
+                var mainContentControl = this._commandsContainer.GetServicedControl();
+                var contextMenu = mainContentControl.ContextMenu;
+                if (contextMenu == null)
+                {
+                    contextMenu = new ContextMenu();
+                    mainContentControl.ContextMenu = contextMenu;
+                }
+
+                return contextMenu.Items;
             }
         }
 
-        public void AddCommandsByGroupType()
+        /// <summary>
+        /// 在整个生成过程中，每一个 GroupGenerator 可以直接把生成的控件以以下种方式添加到 Context 中：
+        /// 1. 直接使用 CommandsContainerItems 添加到 CommandsContainerItems 中
+        /// 2. 直接
+        /// </summary>
+        /// <param name="groupType"></param>
+        /// <param name="control"></param>
+        public void RegisterGroupedContainerItem(CommandGroupType groupType, FrameworkElement control)
         {
-            foreach (var group in this._cmdGroups.Keys)
+            IList<FrameworkElement> cmds;
+            if (!this._groupedCommands.TryGetValue(groupType, out cmds))
+            {
+                cmds = new List<FrameworkElement>();
+                this._groupedCommands.Add(groupType, cmds);
+            }
+
+            cmds.Add(control);
+        }
+
+        internal void AttachGroupedItems()
+        {
+            var items = this.ContainerItems;
+
+            foreach (var kv in this._groupedCommands)
             {
                 //添加分隔符
-                if (this.Items.Count > 0) this.Items.Add(new Separator());
+                if (items.Count > 0) items.Add(new Separator());
 
-                foreach (var cmd in this._cmdGroups[group])
-                {
-                    this.Items.Add(cmd);
-                }
+                foreach (var cmd in kv.Value) { items.Add(cmd); }
             }
         }
     }

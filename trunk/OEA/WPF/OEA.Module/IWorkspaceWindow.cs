@@ -20,6 +20,7 @@ namespace OEA.Module
 {
     /// <summary>
     /// 在 Workspace 中显示的每一个“页签”
+    /// 注意，实现这个接口的类必须继承自 FrameworkElement！
     /// </summary>
     public interface IWorkspaceWindow
     {

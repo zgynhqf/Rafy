@@ -80,6 +80,7 @@
     <Compile Include="Abstraction\View\DataLoadedEventArgs.cs" />
     <Compile Include="Abstraction\View\IViewDataAsyncLoader.cs" />
     <Compile Include="ClientCommand.cs" />
+    <Compile Include="ClientCommandCollection.cs" />
     <Compile Include="WorkspaceWindowClosingEventArgs.cs" />
     <Compile Include="IWorkspaceWindow.cs" />
     <Compile Include="IEntityWindow.cs" />

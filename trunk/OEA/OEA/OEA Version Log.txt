@@ -9,6 +9,29 @@
  * 
 *******************************************************/
 
+2.10.502.0
+    内部修改
+        * 登录窗口确定、取消按钮大小调整为一样。
+        * TiledListReferenceEditor 生成的 ListView 应该是只读的。
+
+2.10.501.0
+    ★较大改动、添加接口
+        * 添加 BlocksTemplate、CustomModule、CallbackModule 类。
+    重构
+        * Org 模块使用 OrgModule 来实现。
+    示例
+        * 为 JXC.Product 添加 ProductModule。
+
+2.10.500.0
+    ★删除接口
+        * 删除 WPFModuleBase 类。
+
+2.10.499.0
+    添加接口
+        * 在 ObjectView 类型上添加 Commands 集合。
+    重构
+        * 重构部分 CommandAutoUI 的内容。
+
 2.10.498.0
     重构
         * 删除不必要的 IPropertyMetaProvider 接口。

@@ -12,6 +12,7 @@
 *******************************************************/
 
 using System.Windows;
+using System;
 
 namespace OEA.Module.WPF
 {
@@ -54,6 +55,21 @@ namespace OEA.Module.WPF
         {
             var app = Application.Current;
             return app != null ? app.TryFindResource(key) as Style : null;
+        }
+
+        /// <summary>
+        /// 把指定的Resouce加入到应用程序中
+        /// 
+        /// 使用方法：
+        /// AddResource("OEA.Module.WPF;component/Resources/ComboListControl.xaml");
+        /// </summary>
+        /// <param name="packUri"></param>
+        public static void AddResource(string packUri)
+        {
+            var uri = new Uri(packUri, UriKind.Relative);
+            var resouceDic = Application.LoadComponent(uri) as ResourceDictionary;
+            var app = Application.Current;
+            if (app != null) app.Resources.MergedDictionaries.Add(resouceDic);
         }
     }
 }

@@ -27,57 +27,19 @@ namespace OEA.Module.WPF
 {
     /// <summary>
     /// 当前工程所对应的模块类。
-    /// 详细功能，见Initailize方法。
     /// </summary>
-    internal class Module : WPFModuleBase
+    internal class RBACModule : IModule
     {
-        public override ReuseLevel ReuseLevel
+        public ReuseLevel ReuseLevel
         {
             get { return ReuseLevel._System; }
         }
 
-        /// <summary>
-        /// 把 ModuleListPad.xaml 加入到 Region 中。
-        /// 
-        /// 加入 ComboListControl.xaml 到Resource中
-        /// </summary>
-        protected override void InitializeCore(IClientApp app)
+        public void Initialize(IClientApp app)
         {
-            base.InitializeCore(app);
-
-            app.AllPluginsMetaIntialized += (o, e) =>
-            {
-                UIModel.AggtBlocks.DefineBlocks("部门模块布局", m => new AggtBlocks
-                {
-                    MainBlock = new Block(typeof(Org)),
-                    Layout = new LayoutMeta()
-                    {
-                        IsLayoutChildrenHorizonal = true,
-                        ParentChildProportion = new ParentChildProportion(15, 85)
-                    },
-                    Children = 
-                    {
-                        new AggtBlocks
-                        {
-                            MainBlock = new ChildBlock("岗位", Org.OrgPositionListProperty),
-                            Layout = new LayoutMeta() { IsLayoutChildrenHorizonal = true },
-                            Children = 
-                            {
-                                new ChildBlock("岗位成员", OrgPosition.OrgPositionUserListProperty),
-                                new ChildBlock("岗位功能权限", OrgPosition.OrgPositionOperationDenyListProperty)
-                                {
-                                    CustomViewType = typeof(OperationSelectionView).AssemblyQualifiedName
-                                },
-                            }
-                        }
-                    }
-                });
-            };
-
             app.ModuleOperations += (s, e) =>
             {
-                var m = CommonModel.Modules.FindModule("部门权限管理");
-                m.AggtBlocksName = "部门模块布局";
+                CommonModel.Modules["部门权限管理"].UseCustomModule<OrgModule>();
             };
 
             this.LogSystem(app);

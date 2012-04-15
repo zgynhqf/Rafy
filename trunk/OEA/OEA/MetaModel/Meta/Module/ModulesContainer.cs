@@ -69,6 +69,22 @@ namespace OEA.MetaModel
         }
 
         /// <summary>
+        /// 直接获得某一个模块。
+        /// 如果没有找到，则会抛出异常。
+        /// </summary>
+        /// <param name="keyName"></param>
+        /// <returns></returns>
+        public ModuleMeta this[string keyName]
+        {
+            get
+            {
+                var m = this.FindModule(keyName);
+                if (m == null) throw new InvalidProgramException("没有定义这个模块：" + keyName);
+                return m;
+            }
+        }
+
+        /// <summary>
         /// 冻结所有的元数据
         /// </summary>
         internal void Freeze()

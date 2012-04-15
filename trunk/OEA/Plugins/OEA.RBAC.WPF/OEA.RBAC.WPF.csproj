@@ -51,7 +51,8 @@
     <Compile Include="Commands\ChooseUserCommand.cs" />
     <Compile Include="Commands\ExpandAllModules.cs" />
     <Compile Include="Commands\ModifyUserPasswordCommand.cs" />
-    <Compile Include="Module.cs" />
+    <Compile Include="Org\OrgModule.cs" />
+    <Compile Include="RBACModule.cs" />
     <Compile Include="Org\OperationSelection.xaml.cs">
       <DependentUpon>OperationSelection.xaml</DependentUpon>
     </Compile>

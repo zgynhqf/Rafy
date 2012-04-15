@@ -202,28 +202,21 @@ namespace OEA.Module
         /// <param name="param"></param>
         public void Execute(object param)
         {
-            if (this.CommandFailedEventEnabled)
+            try
             {
-                try
-                {
-                    this.ExecuteCore(param);
+                this.OnExecuting();
 
-                    this.OnExecuted();
-                }
-                catch (Exception ex)
-                {
-                    var args = new CommandExecuteFailedArgs(ex, param);
-
-                    this.OnExecuteFailed(args);
-
-                    if (!args.Cancel) throw ex;
-                }
-            }
-            else
-            {
                 this.ExecuteCore(param);
 
                 this.OnExecuted();
+            }
+            catch (Exception ex)
+            {
+                var args = new CommandExecuteFailedArgs(ex, param);
+
+                this.OnExecuteFailed(args);
+
+                if (!args.Cancel) throw ex;
             }
         }
 
@@ -232,6 +225,14 @@ namespace OEA.Module
         protected abstract void ExecuteCore(object param);
 
         #region 事件
+
+        public event EventHandler Executing;
+
+        protected virtual void OnExecuting()
+        {
+            var handler = this.Executing;
+            if (handler != null) handler(this, EventArgs.Empty);
+        }
 
         /// <summary>
         /// 执行成功后的事件。

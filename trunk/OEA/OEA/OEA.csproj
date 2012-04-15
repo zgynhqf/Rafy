@@ -118,10 +118,11 @@
     <Compile Include="MetaModel\View\Aggt\AggtBlocksRepository.cs" />
     <Compile Include="MetaModel\View\Aggt\Block.cs" />
     <Compile Include="MetaModel\View\Aggt\ChildBlock.cs" />
-    <Compile Include="MetaModel\View\Aggt\CodeBlocksReader.cs" />
+    <Compile Include="MetaModel\View\Aggt\CodeBlocksTemplate.cs" />
     <Compile Include="MetaModel\View\Aggt\AggtBlocks.cs" />
     <Compile Include="MetaModel\View\Aggt\SurrounderBlock.cs" />
     <Compile Include="MetaModel\View\Aggt\LayoutMeta.cs" />
+    <Compile Include="MetaModel\View\Aggt\BlocksTemplate.cs" />
     <Compile Include="MetaModel\View\Block\WPF\PropertyReadonlyIndicator.cs" />
     <Compile Include="MetaModel\View\Block\WPF\PropertyVisibilityIndicator.cs" />
     <Compile Include="MetaModel\View\WebCommand\WebCommandNames.cs" />

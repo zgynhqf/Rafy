@@ -113,6 +113,17 @@ namespace OEA.MetaModel
             set { this.SetValue(ref this._EntityType, value); }
         }
 
+        private Type _TemplateType;
+        /// <summary>
+        /// 使用的模板类型。
+        /// 如果指定此属性，则指定的该类型必须继承自 BlocksTemplate 类。
+        /// </summary>
+        public Type TemplateType
+        {
+            get { return this._TemplateType; }
+            set { this.SetValue(ref this._TemplateType, value); }
+        }
+
         private string _AggtBlocksName;
         /// <summary>
         /// 如果当前模块是一个主动定义的聚合块，则这个属性表示此聚合块的名称。

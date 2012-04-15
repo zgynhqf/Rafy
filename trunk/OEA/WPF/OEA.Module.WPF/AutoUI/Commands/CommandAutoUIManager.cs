@@ -21,7 +21,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using Itenso.Windows.Input;
-
 using OEA.Library;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
@@ -66,7 +65,7 @@ namespace OEA.Module.WPF.CommandAutoUI
             }
 
             //根据分组类型重新重新生成控件
-            context.AddCommandsByGroupType();
+            context.AttachGroupedItems();
 
             //如果没有生成任何一个项，则这个toolbar里面设置为不可见。
             if (commandsContainer.Items.Count == 0)
@@ -78,6 +77,9 @@ namespace OEA.Module.WPF.CommandAutoUI
             {
                 commandsContainer.Visibility = Visibility.Visible;
             }
+
+            var view = commandArg as ObjectView;
+            if (view != null) { view.Commands.Seal(); }
         }
 
         ///// <summary>
