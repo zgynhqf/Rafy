@@ -31,8 +31,6 @@ namespace OEA.MetaModel
 
         private Type _entityType;
 
-        private bool _IsTreeEntity;
-
         private EntityMeta _parentEntityInfo;
 
         private IList<EntityMeta> _aggtChildren = new List<EntityMeta>();
@@ -76,6 +74,7 @@ namespace OEA.MetaModel
             set { this.SetValue(ref this._entityType, value); }
         }
 
+        private bool _IsTreeEntity;
         /// <summary>
         /// 是否为树型实体。
         /// </summary>
@@ -83,6 +82,16 @@ namespace OEA.MetaModel
         {
             get { return this._IsTreeEntity; }
             set { this.SetValue(ref this._IsTreeEntity, value); }
+        }
+
+        private TreeCodeOption _TreeCodeOption;
+        /// <summary>
+        /// 如果是树型实体，则可以通过这个属性来设置它的树型编码存储规则。
+        /// </summary>
+        public TreeCodeOption TreeCodeOption
+        {
+            get { return this._TreeCodeOption; }
+            set { this.SetValue(ref this._TreeCodeOption, value); }
         }
 
         /// <summary>

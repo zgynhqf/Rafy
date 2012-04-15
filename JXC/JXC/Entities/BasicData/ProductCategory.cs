@@ -25,28 +25,6 @@ namespace JXC
     [RootEntity, Serializable]
     public class ProductCategory : JXCEntity
     {
-        #region 支持树型实体
-
-        public static readonly Property<string> TreeCodeProperty = P<ProductCategory>.Register(e => e.TreeCode);
-        [Column]
-        public override string TreeCode
-        {
-            get { return GetProperty(TreeCodeProperty); }
-            set { SetProperty(TreeCodeProperty, value); }
-        }
-
-        public static readonly Property<int?> TreePIdProperty = P<ProductCategory>.Register(e => e.TreePId);
-        [Column]
-        public override int? TreePId
-        {
-            get { return this.GetProperty(TreePIdProperty); }
-            set { this.SetProperty(TreePIdProperty, value); }
-        }
-
-        public override bool SupportTree { get { return true; } }
-
-        #endregion
-
         public static readonly Property<string> NameProperty = P<ProductCategory>.Register(e => e.Name);
         public string Name
         {
@@ -67,7 +45,7 @@ namespace JXC
     {
         protected override void ConfigMeta()
         {
-            base.ConfigMeta();
+            Meta.SupportTree();
 
             Meta.MapTable().HasColumns(
                 ProductCategory.NameProperty
@@ -80,7 +58,8 @@ namespace JXC
 
             View.HasLabel("商品类别").HasTitle(ProductCategory.NameProperty);
 
-            View.Property(ProductCategory.TreeCodeProperty).HasLabel("编码").ShowIn(ShowInWhere.All).Readonly(true);
+            View.Property(ProductCategory.TreeCodeProperty).HasLabel("编码").ShowIn(ShowInWhere.All)
+                .HasOrderNo(-1).Readonly(true);
             View.Property(ProductCategory.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
         }
     }

@@ -16,10 +16,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OEA.MetaModel;
-using OEA.ORM;
 using OEA.ManagedProperty;
 
-namespace OEA.Library
+namespace OEA.MetaModel
 {
     /// <summary>
     /// 树型实体的编码生成规则
@@ -54,19 +53,13 @@ namespace OEA.Library
             return this.Layers[this.Layers.Length - 1];
         }
 
-        private string GetSingleCode(int layerIndex, int nodeIndex)
-        {
-            var layer = this.GetLayer(layerIndex);
-
-            if (nodeIndex < layer.Length)
-            {
-                return layer[nodeIndex];
-            }
-
-            return layer[layer.Length - 1];
-        }
-
-        internal string CalculateCode(string parentCode, int nodeIndex)
+        /// <summary>
+        /// 通过父对象的编码以及当前的索引来生成可用的树型编码
+        /// </summary>
+        /// <param name="parentCode"></param>
+        /// <param name="nodeIndex"></param>
+        /// <returns></returns>
+        public string CalculateCode(string parentCode, int nodeIndex)
         {
             int layerIndex = -1;
             if (!string.IsNullOrEmpty(parentCode))
@@ -84,6 +77,18 @@ namespace OEA.Library
             var code = this.GetSingleCode(layerIndex, nodeIndex);
 
             return parentCode + code + Seperator;
+        }
+
+        private string GetSingleCode(int layerIndex, int nodeIndex)
+        {
+            var layer = this.GetLayer(layerIndex);
+
+            if (nodeIndex < layer.Length)
+            {
+                return layer[nodeIndex];
+            }
+
+            return layer[layer.Length - 1];
         }
     }
 }

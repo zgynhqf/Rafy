@@ -32,26 +32,6 @@ namespace OEA.Library
     [RootEntity]
     public class ModuleAC : Entity
     {
-        #region 支持树型实体
-
-        public static readonly Property<string> TreeCodeProperty = P<ModuleAC>.Register(e => e.TreeCode);
-        public override string TreeCode
-        {
-            get { return GetProperty(TreeCodeProperty); }
-            set { SetProperty(TreeCodeProperty, value); }
-        }
-
-        public static readonly Property<int?> TreePIdProperty = P<ModuleAC>.Register(e => e.TreePId);
-        public override int? TreePId
-        {
-            get { return this.GetProperty(TreePIdProperty); }
-            set { this.SetProperty(TreePIdProperty, value); }
-        }
-
-        public override bool SupportTree { get { return true; } }
-
-        #endregion
-
         public ModuleMeta Core { get; set; }
 
         public static readonly Property<string> KeyNameProperty = P<ModuleAC>.RegisterReadOnly(e => e.KeyName, e => (e as ModuleAC).GetKeyName(), null);
@@ -126,6 +106,11 @@ namespace OEA.Library
 
     internal class ModuleACConfig : EntityConfig<ModuleAC>
     {
+        protected override void ConfigMeta()
+        {
+            Meta.SupportTree();
+        }
+
         protected override void ConfigView()
         {
             base.ConfigView();

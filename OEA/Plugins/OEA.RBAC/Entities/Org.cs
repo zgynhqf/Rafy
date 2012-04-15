@@ -26,26 +26,6 @@ namespace OEA.RBAC
     [RootEntity, Serializable]
     public partial class Org : Entity
     {
-        #region 支持树型操作
-
-        public static readonly Property<string> TreeCodeProperty = P<Org>.Register(e => e.TreeCode);
-        public override string TreeCode
-        {
-            get { return GetProperty(TreeCodeProperty); }
-            set { SetProperty(TreeCodeProperty, value); }
-        }
-
-        public static readonly Property<int?> TreePIdProperty = P<Org>.Register(e => e.TreePId);
-        public override int? TreePId
-        {
-            get { return GetProperty(TreePIdProperty); }
-            set { SetProperty(TreePIdProperty, value); }
-        }
-
-        public override bool SupportTree { get { return true; } }
-
-        #endregion
-
         public static readonly Property<string> NameProperty = P<Org>.Register(e => e.Name);
         public string Name
         {
@@ -101,12 +81,10 @@ namespace OEA.RBAC
     {
         protected override void ConfigMeta()
         {
-            base.ConfigMeta();
+            Meta.SupportTree();
 
-            this.Meta.MapTable().HasColumns(
-                Org.NameProperty,
-                Org.TreeCodeProperty,
-                Org.TreePIdProperty
+            Meta.MapTable().HasColumns(
+                Org.NameProperty
                 );
         }
 

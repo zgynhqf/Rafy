@@ -83,6 +83,20 @@ namespace OEA.MetaModel
         }
 
         /// <summary>
+        /// 打开指定实体类型的树型功能
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <returns></returns>
+        public static EntityMeta SupportTree(this EntityMeta meta)
+        {
+            meta.IsTreeEntity = true;
+
+            EnsureTreeColumns(meta);
+
+            return meta;
+        }
+
+        /// <summary>
         /// 指定某实体映射某个表。
         /// 并表明该表是否支持数据库迁移。
         /// </summary>
@@ -93,6 +107,8 @@ namespace OEA.MetaModel
         {
             meta.TableMeta = new TableMeta(meta.EntityType.Name);
             meta.TableMeta.SupportMigrating = supprtMigrating;
+
+            EnsureTreeColumns(meta);
 
             return meta;
         }
@@ -110,7 +126,21 @@ namespace OEA.MetaModel
             meta.TableMeta = new TableMeta(tableName);
             meta.TableMeta.SupportMigrating = supprtMigrating;
 
+            EnsureTreeColumns(meta);
+
             return meta;
+        }
+
+        private static void EnsureTreeColumns(EntityMeta meta)
+        {
+            if (meta.IsTreeEntity && meta.TableMeta != null)
+            {
+                var p = meta.Property(DBConvention.FieldName_TreeCode);
+                if (p != null) p.MapColumn();
+
+                p = meta.Property(DBConvention.FieldName_TreePId);
+                if (p != null) p.MapColumn();
+            }
         }
 
         /// <summary>

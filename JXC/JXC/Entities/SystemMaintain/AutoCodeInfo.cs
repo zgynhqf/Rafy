@@ -73,8 +73,8 @@ namespace JXC
                 {
                     MingCheng = name,
                     CanShuZhi = defaultFormat ?? "<YEAR><MONTH><DAY>***",
-                    BeiZhu = beiZhu ?? @"
-自动编码填写规则
+                    BeiZhu = beiZhu ??
+@"自动编码填写规则
 ***表示随机编号
 <YEAR> 表示当前年份
 <MONTH> 表示当前月份
@@ -114,7 +114,9 @@ namespace JXC
 
             View.Property(AutoCodeInfo.MingChengProperty).HasLabel("参数名称").ShowIn(ShowInWhere.All);
             View.Property(AutoCodeInfo.CanShuZhiProperty).HasLabel("参数值").ShowIn(ShowInWhere.ListDetail);
-            View.Property(AutoCodeInfo.BeiZhuProperty).HasLabel("备注").ShowIn(ShowInWhere.ListDetail);
+            View.Property(AutoCodeInfo.BeiZhuProperty).HasLabel("备注").ShowIn(ShowInWhere.ListDetail)
+                .ShowInDetail(height: 300)
+                .UseEditor(WPFEditorNames.Memo);
         }
     }
 }

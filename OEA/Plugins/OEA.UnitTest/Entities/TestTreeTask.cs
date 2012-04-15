@@ -82,26 +82,6 @@ namespace OEA.Library._Test
         }
 
         #endregion
-
-        #region 支持树型操作
-
-        public static readonly Property<string> TreeCodeProperty = P<TestTreeTask>.Register(e => e.TreeCode);
-        public override string TreeCode
-        {
-            get { return GetProperty(TreeCodeProperty); }
-            set { SetProperty(TreeCodeProperty, value); }
-        }
-
-        public static readonly Property<int?> TreePIdProperty = P<TestTreeTask>.Register(e => e.TreePId);
-        public override int? TreePId
-        {
-            get { return GetProperty(TreePIdProperty); }
-            set { SetProperty(TreePIdProperty, value); }
-        }
-
-        public override bool SupportTree { get { return true; } }
-
-        #endregion
     }
 
     [Serializable]
@@ -111,7 +91,7 @@ namespace OEA.Library._Test
     {
         protected override void ConfigMeta()
         {
-            base.ConfigMeta();
+            Meta.SupportTree();
 
             Meta.HasColumns(
                 TestTreeTask.TestUserRefProperty,
@@ -126,7 +106,7 @@ namespace OEA.Library._Test
         {
             base.ConfigView();
 
-            View.Property(TestTreeTask.TestUserRefProperty).ShowIn(ShowInWhere.List | ShowInWhere.Detail).HasLabel("Label");
+            View.Property(TestTreeTask.TestUserRefProperty).HasLabel("负责人").ShowIn(ShowInWhere.ListDetail);
         }
     }
 }

@@ -32,13 +32,5 @@ namespace OEA
     public class GetAllCriteria : Criteria { }
 
     [Serializable]
-    public class GetByTreeParentCodeCriteria : Criteria
-    {
-        public static readonly Property<string> TreeCodeProperty = P<GetByTreeParentCodeCriteria>.Register(e => e.TreeCode);
-        public override string TreeCode
-        {
-            get { return this.GetProperty(TreeCodeProperty); }
-            set { this.SetProperty(TreeCodeProperty, value); }
-        }
-    }
+    public class GetByTreeParentCodeCriteria : Criteria { }
 }

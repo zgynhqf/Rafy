@@ -42,7 +42,7 @@ namespace OEA.MetaModel.View
             foreach (var config in OEAEnvironment.FindConfigurations(meta.EntityType))
             {
                 config.View = evm;
-                config.ConfigViewInternal();
+                config.ConfigView();
             }
 
             return evm;

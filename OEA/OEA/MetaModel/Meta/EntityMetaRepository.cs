@@ -150,12 +150,9 @@ namespace OEA.MetaModel
             var boAttri = entityType.GetSingleAttribute<EntityAttribute>();
             if (boAttri == null) throw new ArgumentNullException(string.Format("{0} 没有标记 BusinessObjectAttribute", entityType.FullName));
 
-            var instanceMeta = Activator.CreateInstance(entityType, true) as IEntityAttachedMeta;
-
             entityMeta = new EntityMeta
             {
-                EntityType = entityType,
-                IsTreeEntity = instanceMeta.SupportTree
+                EntityType = entityType
             };
 
             //聚合关系设置
