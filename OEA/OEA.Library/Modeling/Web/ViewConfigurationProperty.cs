@@ -111,7 +111,7 @@ namespace OEA
         {
             base.ConfigView();
 
-            View.HasTitle(ViewConfigurationProperty.LabelProperty);
+            View.HasDelegate(ViewConfigurationProperty.LabelProperty);
             View.PageSize = 10000;
 
             View.Property(ViewConfigurationProperty.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All).Readonly();

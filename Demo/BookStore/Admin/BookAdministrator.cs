@@ -112,7 +112,7 @@ namespace Demo
         {
             base.ConfigView();
 
-            View.HasLabel("管理员").HasTitle(BookAdministrator.UserNameProperty);
+            View.DomainName("管理员").HasDelegate(BookAdministrator.UserNameProperty);
 
             View.Property(BookAdministrator.UserNameProperty).HasLabel("姓名").ShowIn(ShowInWhere.All);
 

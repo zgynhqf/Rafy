@@ -115,7 +115,7 @@ namespace OEA.Library
         {
             base.ConfigView();
 
-            View.HasTitle(ModuleAC.KeyNameProperty).HasLabel("界面模块");
+            View.HasDelegate(ModuleAC.KeyNameProperty).DomainName("界面模块");
 
             View.Property(ModuleAC.KeyNameProperty).HasLabel("模块").ShowIn(ShowInWhere.ListDropDown);
         }

@@ -56,7 +56,7 @@ namespace JXC
         {
             base.ConfigView();
 
-            View.HasLabel("商品类别").HasTitle(ProductCategory.NameProperty);
+            View.DomainName("商品类别").HasDelegate(ProductCategory.NameProperty);
 
             View.Property(ProductCategory.TreeCodeProperty).HasLabel("编码").ShowIn(ShowInWhere.ListDropDown)
                 .HasOrderNo(-1).Readonly();

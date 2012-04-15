@@ -106,12 +106,15 @@ namespace OEA.Module.WPF.Controls
                 commandArg = window.View;
             }
 
+            var items = commandPanel.Items;
+            items.Remove(btnConfirm);
+            items.Remove(btnCancel);
+
             var commands = new WPFCommand[] { commandInfo };
             AutoUI.BlockUIFactory.AppendCommands(commandPanel, commandArg, commands);
-            foreach (UIElement item in commandPanel.Items)
-            {
-                DockPanel.SetDock(item, Dock.Right);
-            }
+
+            items.Add(btnConfirm);
+            items.Add(btnCancel);
 
             //commandPanel.Style = OEAResources.OEA_CommandsContainer_Style;
 

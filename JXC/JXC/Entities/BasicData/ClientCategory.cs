@@ -56,7 +56,7 @@ namespace JXC
         {
             base.ConfigView();
 
-            View.HasLabel("客户类别").HasTitle(ClientCategory.NameProperty);
+            View.DomainName("客户类别").HasDelegate(ClientCategory.NameProperty);
 
             View.Property(ClientCategory.TreeCodeProperty).HasLabel("编码").ShowIn(ShowInWhere.All)
                 .HasOrderNo(-1).Readonly();

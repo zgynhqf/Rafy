@@ -59,7 +59,7 @@ namespace Demo
         {
             base.ConfigView();
 
-            View.HasTitle(Chapter.NameProperty).HasLabel("章节");
+            View.HasDelegate(Chapter.NameProperty).DomainName("章节");
         }
     }
 }

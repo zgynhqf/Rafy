@@ -94,7 +94,7 @@ namespace OEA.RBAC
         {
             base.ConfigView();
 
-            View.HasTitle(Position.NameProperty).HasLabel("岗位");
+            View.HasDelegate(Position.NameProperty).DomainName("岗位");
 
             View.Property(Position.CodeProperty).HasLabel("编码").ShowIn(ShowInWhere.All);
             View.Property(Position.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);

@@ -109,7 +109,7 @@ namespace OEA.Library._Test
         {
             base.ConfigView();
 
-            View.HasTitle(TestRole.NameProperty);
+            View.HasDelegate(TestRole.NameProperty);
             View.Property(TestRole.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
             View.Property(TestRole.TestUserRefProperty).HasLabel("用户扩展编码").ShowIn(ShowInWhere.List);
         }

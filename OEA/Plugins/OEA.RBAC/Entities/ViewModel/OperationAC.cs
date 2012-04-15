@@ -189,8 +189,8 @@ namespace OEA.RBAC
         {
             base.ConfigView();
 
-            View.HasLabel("权限控制项")
-                .HasTitle(OperationAC.OperationKeyProperty)
+            View.DomainName("权限控制项")
+                .HasDelegate(OperationAC.OperationKeyProperty)
                 .GroupBy(OperationAC.ScopeKeyLabelProperty);
 
             View.Property(OperationAC.LabelProperty).HasLabel("名称").ShowIn(ShowInWhere.List);

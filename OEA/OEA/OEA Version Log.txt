@@ -9,6 +9,14 @@
  * 
 *******************************************************/
 
+2.10.509.0
+    ★修改接口
+        * 用于配置 EntityMeta 的扩展方法 HasLabel、HasTitle 分别修改为更易读的 DomainName、HasDelegate。
+
+2.10.508.0
+    BUG修复
+        * PopupAddCommand、EditDetailCommand 的焦点问题。
+
 2.10.507.0
     BUG修复
         * PopupAddCommand 中添加的新对象的树型编码为空。

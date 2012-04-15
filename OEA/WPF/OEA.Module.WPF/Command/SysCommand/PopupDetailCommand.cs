@@ -11,7 +11,6 @@
  * 
 *******************************************************/
 
-
 using System.Windows;
 using OEA.Library;
 using OEA.MetaModel;
@@ -22,6 +21,7 @@ using OEA.Module.WPF.Behaviors;
 using OEA.Module.WPF.Controls;
 using System;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace OEA.WPF.Command
 {
@@ -43,7 +43,7 @@ namespace OEA.WPF.Command
                 w.Buttons = ViewDialogButtons.YesNo;
                 w.SizeToContent = SizeToContent.Height;
                 w.MinHeight = 200;
-                w.MinWidth = 200;
+                w.MinWidth = 400;
                 w.Width = 400 * detailView.ColumnsCount;
                 w.ValidateOperations += (o, e) =>
                 {
@@ -56,6 +56,12 @@ namespace OEA.WPF.Command
                 };
 
                 windowSetter(w);
+
+                w.Loaded += (o, e) =>
+                {
+                    var txt = w.GetVisualChild<TextBox>();
+                    if (txt != null) { Keyboard.Focus(txt); }
+                };
 
                 this.OnWindowShowing(w);
             });

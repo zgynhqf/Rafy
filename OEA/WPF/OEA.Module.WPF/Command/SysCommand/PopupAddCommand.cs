@@ -44,7 +44,6 @@ namespace OEA.WPF.Command
             var result = PopupEditingDialog(evm, tmp, w =>
             {
                 w.Title = this.CommandInfo.Label + evm.Label;
-                this.OnWindowShowing(w);
             });
 
             //如果没有点击确定，则删除刚才添加的记录。
@@ -78,17 +77,31 @@ namespace OEA.WPF.Command
             }
         }
 
-        /// <summary>
-        /// 窗体弹出前发生的事件
-        /// </summary>
-        /// <returns></returns>
-        protected virtual void OnWindowShowing(Window w) { }
+        #region DataCloned
 
         /// <summary>
-        /// 临时对象数据拷贝时发生
+        /// 临时对象数据拷贝时发生此事件
         /// </summary>
-        /// <param name="newEntity"></param>
-        /// <param name="tmp"></param>
-        protected virtual void OnDataCloned(Entity newEntity, Entity tmp) { }
+        public event EventHandler<DataClonedEventArgs> DataCloned;
+
+        protected virtual void OnDataCloned(Entity newEntity, Entity tmp)
+        {
+            var handler = this.DataCloned;
+            if (handler != null) handler(this, new DataClonedEventArgs(newEntity, tmp));
+        }
+
+        public class DataClonedEventArgs : EventArgs
+        {
+            public DataClonedEventArgs(Entity newEntity, Entity tmp)
+            {
+                this.NewEntity = newEntity;
+                this.TempEntity = tmp;
+            }
+
+            public Entity NewEntity { get; private set; }
+            public Entity TempEntity { get; private set; }
+        }
+
+        #endregion
     }
 }

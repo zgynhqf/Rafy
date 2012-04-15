@@ -26,23 +26,43 @@ namespace OEA.MetaModel.View
     {
         #region EntityViewMeta
 
-        public static EntityViewMeta NotAllowEdit(this EntityViewMeta meta, bool value = true)
+        /// <summary>
+        /// 设置实体的领域含义。
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="label"></param>
+        /// <returns></returns>
+        public static EntityViewMeta DomainName(this EntityViewMeta meta, string label)
         {
-            meta.NotAllowEdit = value;
-
+            meta.Label = label;
             return meta;
         }
 
-        public static EntityViewMeta HasTitle(this EntityViewMeta meta, IManagedProperty property)
+        /// <summary>
+        /// 设置实体的主显示属性。
+        /// 
+        /// 例如，用户的主显示属性一般是用户姓名。
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        public static EntityViewMeta HasDelegate(this EntityViewMeta meta, IManagedProperty property)
         {
             meta.TitleProperty = meta.Property(property);
 
             return meta;
         }
 
-        public static EntityViewMeta HasLabel(this EntityViewMeta meta, string label)
+        /// <summary>
+        /// 设置该实体是否可以在界面上进行编辑
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static EntityViewMeta NotAllowEdit(this EntityViewMeta meta, bool value = true)
         {
-            meta.Label = label;
+            meta.NotAllowEdit = value;
+
             return meta;
         }
 
@@ -76,6 +96,12 @@ namespace OEA.MetaModel.View
             return meta;
         }
 
+        /// <summary>
+        /// 设置实体在列表中显示时，按照哪个属性分组。
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="property"></param>
+        /// <returns></returns>
         public static EntityViewMeta GroupBy(this EntityViewMeta meta, IManagedProperty property)
         {
             //foreach (var item in properties) { meta.GroupDescriptions.Add(item); }
@@ -237,18 +263,25 @@ namespace OEA.MetaModel.View
 
         #region EntityPropertyViewMeta
 
-        public static EntityPropertyViewMeta Readonly(this EntityPropertyViewMeta meta)
-        {
-            meta.IsReadonly = true;
-            return meta;
-        }
-
-        public static EntityPropertyViewMeta Readonly(this EntityPropertyViewMeta meta, bool value)
+        /// <summary>
+        /// 设置该属性是否为只读
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static EntityPropertyViewMeta Readonly(this EntityPropertyViewMeta meta, bool value = true)
         {
             meta.IsReadonly = value;
+
             return meta;
         }
 
+        /// <summary>
+        /// 设置该属性可显示的范围
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static EntityPropertyViewMeta ShowIn(this EntityPropertyViewMeta meta, ShowInWhere value)
         {
             if (value == ShowInWhere.Hide)
@@ -263,6 +296,15 @@ namespace OEA.MetaModel.View
             return meta;
         }
 
+        /// <summary>
+        /// 设置该属性在详细面板中显示时的详细信息
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="columnSpan"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="labelWidth"></param>
+        /// <returns></returns>
         public static EntityPropertyViewMeta ShowInDetail(this EntityPropertyViewMeta meta,
             int? columnSpan = null, double? width = null, int? height = null, int? labelWidth = null
             )
@@ -277,12 +319,24 @@ namespace OEA.MetaModel.View
             return meta;
         }
 
+        /// <summary>
+        /// 设置属性的显示名称
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="label"></param>
+        /// <returns></returns>
         public static EntityPropertyViewMeta HasLabel(this EntityPropertyViewMeta meta, string label)
         {
             meta.Label = label;
             return meta;
         }
 
+        /// <summary>
+        /// 设置属性的编辑器
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="editorName"></param>
+        /// <returns></returns>
         public static EntityPropertyViewMeta UseEditor(this EntityPropertyViewMeta meta, string editorName)
         {
             meta.EditorName = editorName;

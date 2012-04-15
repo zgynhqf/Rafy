@@ -443,7 +443,7 @@ namespace OEA
         {
             base.ConfigView();
 
-            View.HasTitle(ViewConfigurationModel.ViewNameProperty);//.HasLabel("界面配置信息");
+            View.HasDelegate(ViewConfigurationModel.ViewNameProperty);//.HasLabel("界面配置信息");
             View.PageSize = 10000;
 
             View.Property(ViewConfigurationModel.EntityTypeProperty).HasLabel("实体").ShowIn(ShowInWhere.All).Readonly();

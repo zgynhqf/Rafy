@@ -63,7 +63,7 @@ namespace Demo
         {
             base.ConfigView();
 
-            View.HasLabel("市").HasTitle(City.NameProperty);
+            View.DomainName("市").HasDelegate(City.NameProperty);
 
             View.Property(City.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
         }
