@@ -30,9 +30,9 @@ namespace OEA.MetaModel.View
     public class Block
     {
         public Block(Type entityType)
+            : this()
         {
             this.EntityType = entityType;
-            this.BlockType = BlockType.List;
         }
 
         protected Block()

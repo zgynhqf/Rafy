@@ -12,23 +12,20 @@
 *******************************************************/
 
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
-
+using OEA.Library;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
-
-
 using OEA.Utils;
-using System.Reflection;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using OEA.Library;
 
 namespace OEA.Module.WPF
 {
@@ -166,19 +163,25 @@ namespace OEA.Module.WPF
             IWorkspaceWindow window = null;
             if (!moduleMeta.IsCustomUI)
             {
-                AggtBlocks blocks = UIModel.AggtBlocks.GetModuleBlocks(moduleMeta);
-
                 try
                 {
                     AutoUI.AggtUIFactory.CurentModule = moduleMeta;
 
-                    var res = AutoUI.AggtUIFactory.GenerateControl(blocks);
-
-                    var entityWin = new EntityModule(res, moduleMeta.Label);
-
-                    this.AsyncLoadListData(entityWin);
-
-                    window = entityWin;
+                    //在 WPF 中，TemplateType 属性应该是继承自 CustomModule 的类，表示使用的自定义实体模块类型
+                    if (moduleMeta.TemplateType != null)
+                    {
+                        var module = Activator.CreateInstance(moduleMeta.TemplateType) as CustomModule;
+                        if (module == null) throw new InvalidProgramException("WPF 中模板类需要从 CustomModule 类继承。");
+                        module.EntityType = moduleMeta.EntityType;
+                        module.ModuleMeta = moduleMeta;
+                        window = module.CreateWindow();
+                    }
+                    else
+                    {
+                        AggtBlocks blocks = UIModel.AggtBlocks.GetModuleBlocks(moduleMeta);
+                        var ui = AutoUI.AggtUIFactory.GenerateControl(blocks);
+                        window = new EntityModule(ui, moduleMeta.Label);
+                    }
                 }
                 finally
                 {
@@ -197,19 +200,6 @@ namespace OEA.Module.WPF
             this.OnModuleCreated(new ModuleCreatedArgs(window, moduleMeta));
 
             return window;
-        }
-
-        private void AsyncLoadListData(IEntityWindow window)
-        {
-            //如果是个列表，并且没有导航面板，则默认开始查询数据
-            var listView = window.View as ListObjectView;
-            if (listView != null &&
-                listView.CondtionQueryView == null &&
-                listView.NavigationQueryView == null
-                )
-            {
-                listView.DataLoader.LoadDataAsync();
-            }
         }
 
         #endregion

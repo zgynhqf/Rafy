@@ -35,8 +35,6 @@ namespace OEA.WPF.Command
             //创建一个临时的拷贝数据
             var tmp = view.CreateNewItem();
 
-            this.OnTmpEntityCreated(tmp);
-
             var evm = this.GetViewMeta(view);
 
             var result = EditAddHelper.ShowEditingDialog(evm, tmp, w =>
@@ -81,12 +79,6 @@ namespace OEA.WPF.Command
         /// 如果状态不可用，则返回提示信息。否则，返回null。
         /// </returns>
         protected virtual string CheckTemporaryEntityError(ListObjectView view, object tmp) { return null; }
-
-        /// <summary>
-        /// 子类重写此方法来设置默认值。
-        /// </summary>
-        /// <param name="tmp"></param>
-        protected virtual void OnTmpEntityCreated(Entity tmp) { }
 
         /// <summary>
         /// 窗体弹出前发生的事件

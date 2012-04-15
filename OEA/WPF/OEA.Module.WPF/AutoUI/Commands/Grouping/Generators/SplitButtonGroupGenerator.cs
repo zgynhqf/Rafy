@@ -38,7 +38,7 @@ namespace OEA.Module.WPF.CommandAutoUI
             var groupName = this.CommandGroup.Name;
 
             //尝试查找已经生成的该组的按钮
-            var splitButton = this.Context.Items.OfType<SplitButton>()
+            var splitButton = this.Context.ContainerItems.OfType<SplitButton>()
                 .FirstOrDefault(btnGroup => btnGroup.Content.Equals(groupName));
 
             //还没有生成，则创建一个新的。
@@ -76,7 +76,7 @@ namespace OEA.Module.WPF.CommandAutoUI
         /// <param name="control"></param>
         protected override void AttachToContextCore(FrameworkElement control)
         {
-            this.Context.Items.Insert(0, control);
+            this.Context.ContainerItems.Insert(0, control);
         }
     }
 }

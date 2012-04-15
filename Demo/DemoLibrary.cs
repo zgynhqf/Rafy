@@ -29,11 +29,7 @@ namespace Demo
                     },
                     Surrounders = 
                     {
-                        new SurrounderBlock(typeof(BookQueryCriteria))
-                        {
-                            BlockType = BlockType.Detail,
-                            SurrounderType = SurrounderType.Condition,
-                        }
+                        new SurrounderBlock(typeof(BookQueryCriteria), SurrounderType.Condition)
                     }
                 });
             };

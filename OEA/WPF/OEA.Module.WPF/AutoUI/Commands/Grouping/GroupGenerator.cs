@@ -75,7 +75,7 @@ namespace OEA.Module.WPF.CommandAutoUI
         /// <param name="control"></param>
         protected virtual void AttachToContextCore(FrameworkElement control)
         {
-            this.AttachToToolbar(control);
+            this.AttachToContainer(control);
         }
 
         #region 其它API
@@ -99,29 +99,16 @@ namespace OEA.Module.WPF.CommandAutoUI
         /// <param name="control"></param>
         protected virtual void AttachToContextMenu(FrameworkElement control)
         {
-            var contextMenu = this.FindOrCreateContextMenu();
-            contextMenu.Items.Add(control);
-        }
-
-        protected ContextMenu FindOrCreateContextMenu()
-        {
-            var mainContentControl = this.Context.CommandsContainer.GetServicedControl();
-            var contextMenu = mainContentControl.ContextMenu;
-            if (contextMenu == null)
-            {
-                contextMenu = new ContextMenu();
-                mainContentControl.ContextMenu = contextMenu;
-            }
-            return contextMenu;
+            this.Context.ContextMenuItems.Add(control);
         }
 
         /// <summary>
         /// 简单的添加到Toolbar中
         /// </summary>
         /// <param name="control"></param>
-        protected virtual void AttachToToolbar(FrameworkElement control)
+        protected virtual void AttachToContainer(FrameworkElement control)
         {
-            this.Context.Items.Add(control);
+            this.Context.ContainerItems.Add(control);
         }
 
         /// <summary>
@@ -136,11 +123,6 @@ namespace OEA.Module.WPF.CommandAutoUI
             CommandRepository.TryExecuteCommand(cmd, cmdSource.CommandParameter);
         }
 
-        protected void TryExcuteCommand(IClientCommand runtimeCmd)
-        {
-            CommandRepository.TryExecuteCommand(runtimeCmd, this.Context.CommandArg);
-        }
-
         /// <summary>
         /// 为运行时的Command生成一个按钮
         /// </summary>
@@ -148,10 +130,13 @@ namespace OEA.Module.WPF.CommandAutoUI
         /// <returns></returns>
         protected Button CreateAButton(CommandAdapter runtimeCommand)
         {
-            var btn = new Button();
+            var args = this.Context.CommandArg;
+            var view = args as ObjectView;
+            if (view != null) { view.Commands.Add(runtimeCommand.CoreCommand); }
 
+            var btn = new Button();
             btn.Name = "btn" + runtimeCommand.CoreCommand.ProgramingName;
-            btn.CommandParameter = this.Context.CommandArg;
+            btn.CommandParameter = args;
             ButtonCommand.SetCommand(btn, runtimeCommand);
 
             return btn;
@@ -164,8 +149,12 @@ namespace OEA.Module.WPF.CommandAutoUI
         /// <returns></returns>
         protected MenuItem CreateAMenuItem(CommandAdapter runtimeCommand)
         {
+            var args = this.Context.CommandArg;
+            var view = args as ObjectView;
+            if (view != null) { view.Commands.Add(runtimeCommand.CoreCommand); }
+
             MenuItem menuItem = new MenuItem();
-            menuItem.CommandParameter = this.Context.CommandArg;
+            menuItem.CommandParameter = args;
             MenuItemCommand.SetCommand(menuItem, runtimeCommand);
 
             return menuItem;

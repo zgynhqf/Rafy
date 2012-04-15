@@ -614,8 +614,35 @@ namespace OEA.Module.WPF
 
             this.InitRefProperties(newEntity);
 
+            this.OnListViewItemCreated(new ListViewItemCreatedEventArgs(newEntity));
+
             return newEntity;
         }
+
+        #region ListViewItemCreated Event
+
+        /// <summary>
+        /// 当 ListView 使用 CreateNewItem 创建某个实体时，发生此事件。
+        /// </summary>
+        public event EventHandler<ListViewItemCreatedEventArgs> ListViewItemCreated;
+
+        protected virtual void OnListViewItemCreated(ListViewItemCreatedEventArgs e)
+        {
+            var handler = this.ListViewItemCreated;
+            if (handler != null) handler(this, e);
+        }
+
+        public class ListViewItemCreatedEventArgs : EventArgs
+        {
+            public ListViewItemCreatedEventArgs(Entity item)
+            {
+                this.Item = item;
+            }
+
+            public Entity Item { get; private set; }
+        }
+
+        #endregion
 
         /// <summary>
         /// 设置某些属性

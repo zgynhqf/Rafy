@@ -51,7 +51,6 @@ namespace OEA.Module.WPF.Controls
     /// 所以，外部操作 ListObjectView 的事件时，都应该同步到本对象上。
     /// 
     /// 继承ComboBox。
-    /// 使用Resources/ComboListControl.xaml作为模板。
     /// </summary>
     [TemplatePart(Name = "PART_DropDownPanel", Type = typeof(DockPanel))]
     [TemplatePart(Name = "PART_ButtonPanel", Type = typeof(DockPanel))]

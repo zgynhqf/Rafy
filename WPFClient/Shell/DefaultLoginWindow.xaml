@@ -41,7 +41,7 @@
                         <DropShadowEffect Color="Gray" Opacity=".50" ShadowDepth="8" />
                     </Button.Effect>
                 </Button>
-                <Button Name="btnCancel" Margin="2"  Width="68" Height="22" IsCancel="True" Content="取消" Click="Cancel">
+                <Button Name="btnCancel" Margin="2,0,0,0" Width="68" IsCancel="True" Content="取消" Click="Cancel">
                     <Button.Effect>
                         <DropShadowEffect Color="Gray" Opacity=".50" ShadowDepth="8" />
                     </Button.Effect>

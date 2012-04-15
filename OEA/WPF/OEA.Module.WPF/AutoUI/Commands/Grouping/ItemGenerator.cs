@@ -49,7 +49,7 @@ namespace OEA.Module.WPF.CommandAutoUI
             }
             else if (loc == CommandLocation.Toolbar)
             {
-                this.AttachToToolbar(control);
+                this.AttachToContainer(control);
             }
             else
             {
@@ -61,18 +61,17 @@ namespace OEA.Module.WPF.CommandAutoUI
 
         #region 按照顺序加入到 Toolbar/ContextMenu 中。
 
-        protected override void AttachToToolbar(FrameworkElement control)
+        protected override void AttachToContainer(FrameworkElement control)
         {
             //外部已经排过序了，此处不需要再根据顺序插入
-            this.Context.AddItem(this.CommandItem.GroupType, control);
+            this.Context.RegisterGroupedContainerItem(this.CommandItem.GroupType, control);
         }
 
         protected override void AttachToContextMenu(FrameworkElement control)
         {
             var groups = this.CommandItem.Groups;
 
-            var contextMenu = this.FindOrCreateContextMenu();
-            var items = contextMenu.Items;
+            var items = this.Context.ContextMenuItems;
 
             //自动生成多组菜单
             if (groups.Count > 0)
@@ -115,10 +114,11 @@ namespace OEA.Module.WPF.CommandAutoUI
 
             //绑定运行时 Command 的 IsVisible 属性到控件上。
             result.Element.DataContext = result.Command;
-            var binding = new Binding("IsVisible");
-            binding.Mode = BindingMode.OneWay;
-            binding.Converter = new BooleanToVisibilityConverter();
-            result.Element.SetBinding(UIElement.VisibilityProperty, binding);
+            result.Element.SetBinding(UIElement.VisibilityProperty, new Binding("IsVisible")
+            {
+                Mode = BindingMode.OneWay,
+                Converter = new BooleanToVisibilityConverter()
+            });
 
             return result.Element;
         }

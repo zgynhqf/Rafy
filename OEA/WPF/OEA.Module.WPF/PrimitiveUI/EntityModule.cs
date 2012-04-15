@@ -24,24 +24,42 @@ namespace OEA.Module.WPF
     /// </summary>
     internal class EntityModule : ContentControl, IEntityWindow, IWorkspaceWindow
     {
-        private ControlResult _control;
+        private ControlResult _ui;
 
-        public EntityModule(ControlResult control, string moduleTitle)
+        public EntityModule(ControlResult ui, string moduleTitle, bool autoLoad = true)
         {
-            this._control = control;
-            this.Content = control.Control;
+            this._ui = ui;
             this.Title = moduleTitle;
+
+            this.Content = ui.Control;
+
+            if (autoLoad) { this.AsyncLoadListData(ui); }
         }
 
+        /// <summary>
+        /// 对应的窗口主要的 view
+        /// </summary>
         public ObjectView View
         {
-            get { return this._control.MainView; }
+            get { return this._ui.MainView; }
         }
 
         /// <summary>
         /// 直接取根对象的名字作为Title
         /// </summary>
         public string Title { get; private set; }
-        //get { return this._control.MainView.EntityViewInfo.Label; }
+
+        private void AsyncLoadListData(ControlResult ui)
+        {
+            //如果是个列表，并且没有导航面板，则默认开始查询数据
+            var listView = ui.MainView as ListObjectView;
+            if (listView != null &&
+                listView.CondtionQueryView == null &&
+                listView.NavigationQueryView == null
+                )
+            {
+                listView.DataLoader.LoadDataAsync();
+            }
+        }
     }
 }

@@ -25,9 +25,17 @@ namespace OEA.MetaModel.View
     /// </summary>
     public class SurrounderBlock : Block
     {
-        public SurrounderBlock(Type entityType) : base(entityType) { }
+        public SurrounderBlock(Type entityType, SurrounderType surrounderType)
+            : this()
+        {
+            this.EntityType = entityType;
+            this.SurrounderType = surrounderType;
+        }
 
-        public SurrounderBlock() { }
+        public SurrounderBlock()
+        {
+            this.BlockType = BlockType.Detail;
+        }
 
         /// <summary>
         /// 环绕类型

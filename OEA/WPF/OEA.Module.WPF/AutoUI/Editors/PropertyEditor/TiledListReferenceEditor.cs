@@ -24,6 +24,7 @@ namespace OEA.Module.WPF.Editors
             var refInfo = this.PropertyViewInfo.ReferenceViewInfo;
 
             var listView = AutoUI.ViewFactory.CreateListObjectView(refInfo.RefTypeDefaultView, true);
+            listView.IsReadOnly = true;
             listView.DataLoader.LoadDataAsync(() =>
             {
                 this.SyncValueToSelection(listView);

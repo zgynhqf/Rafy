@@ -42,7 +42,7 @@ namespace OEA.Module.WPF.CommandAutoUI
 
         protected override void AttachToContextCore(FrameworkElement control)
         {
-            base.AttachToToolbar(control);
+            base.AttachToContainer(control);
         }
     }
 }

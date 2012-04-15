@@ -19,13 +19,18 @@ using OEA.MetaModel.Attributes;
 
 namespace OEA.MetaModel.View
 {
-    internal class CodeBlocksReader
+    /// <summary>
+    /// 代码结构即是模板结构
+    /// </summary>
+    public class CodeBlocksTemplate : BlocksTemplate
     {
-        public AggtBlocks Read(Type entityType)
+        protected override AggtBlocks DefineBlocks()
         {
+            var entityType = this.EntityType;
+
             var em = CommonModel.Entities.Get(entityType);
 
-            var mainBlock = new Block(em.EntityType);
+            var mainBlock = new Block(entityType);
 
             return this.Read(em, mainBlock);
         }
@@ -56,7 +61,6 @@ namespace OEA.MetaModel.View
                 var surBlock = new SurrounderBlock
                 {
                     EntityType = conAttri.QueryType,
-                    BlockType = View.BlockType.Detail,
                     SurrounderType = SurrounderType.Condition
                 };
                 var surEM = CommonModel.Entities.Get(surBlock.EntityType);
@@ -70,7 +74,6 @@ namespace OEA.MetaModel.View
                 var surBlock = new SurrounderBlock
                 {
                     EntityType = naviAttri.QueryType,
-                    BlockType = View.BlockType.Detail,
                     SurrounderType = SurrounderType.Navigation
                 };
                 var surEM = CommonModel.Entities.Get(surBlock.EntityType);

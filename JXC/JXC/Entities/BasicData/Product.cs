@@ -29,19 +29,6 @@ namespace JXC
     [NavigationQueryType(typeof(ProductNavigationCriteria))]
     public class Product : JXCEntity
     {
-        public Product()
-        {
-            if (OEAEnvironment.Location.IsOnClient())
-            {
-                if (OEAIdentity.Current != null)
-                {
-                    this.User = OEAIdentity.Current.User;
-                }
-            }
-
-            this.OperateTime = DateTime.Now;
-        }
-
         public static readonly Property<string> BianMaProperty = P<Product>.Register(e => e.BianMa);
         public string BianMa
         {

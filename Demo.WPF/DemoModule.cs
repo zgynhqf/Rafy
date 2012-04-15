@@ -7,11 +7,13 @@ using OEA;
 
 namespace Demo.WPF
 {
-    internal class DemoModule : WPFModuleBase
+    internal class DemoModule : IModule
     {
-        protected override void InitializeCore(IClientApp app)
+        public ReuseLevel ReuseLevel
         {
-            base.InitializeCore(app);
+            get { return ReuseLevel.Main; }
         }
+
+        public void Initialize(IClientApp app) { }
     }
 }
