@@ -6164,6 +6164,7 @@
     </Style>
     <!-- MTTGCell 单元格-->
     <Style TargetType="{x:Type oea:MTTGCell}">
+        <Setter Property="MaxHeight" Value="25"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type oea:MTTGCell}">
