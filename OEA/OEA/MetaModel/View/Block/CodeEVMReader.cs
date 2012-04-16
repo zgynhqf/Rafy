@@ -54,11 +54,7 @@ namespace OEA.MetaModel.View
             {
                 //初始化实体视图中的命令按钮
                 var em = evm.EntityMeta;
-                if (em.EntityCategory == EntityCategory.ConditionQueryObject)
-                {
-                    evm.UseWPFCommands(WPFCommandNames.CustomizeUI, WPFCommandNames.FireQuery);
-                }
-                else if (em.EntityCategory == EntityCategory.NavigationQueryObject)
+                if (em.EntityCategory == EntityCategory.QueryObject)
                 {
                     evm.UseWPFCommands(WPFCommandNames.CustomizeUI);
                 }
@@ -90,8 +86,7 @@ namespace OEA.MetaModel.View
             {
                 //初始化实体视图中的命令按钮
                 var em = evm.EntityMeta;
-                if (em.EntityCategory == EntityCategory.ConditionQueryObject
-                    || em.EntityCategory == EntityCategory.NavigationQueryObject)
+                if (em.EntityCategory == EntityCategory.QueryObject)
                 {
                     evm.UseWebCommands(WebCommandNames.CustomizeUI);
                 }

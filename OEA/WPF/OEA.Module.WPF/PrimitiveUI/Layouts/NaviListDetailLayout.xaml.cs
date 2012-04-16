@@ -18,21 +18,29 @@ using OEA.MetaModel.View;
 
 namespace OEA.Module.WPF.Layout
 {
-    public partial class NaviListDetailLayout : TraditionalLayout
+    public partial class NaviListDetailLayout : UserControl, ITraditionalLayoutControl
     {
         public NaviListDetailLayout()
         {
             InitializeComponent();
         }
 
-        public override void OnArraging(AggtBlocks blocksInfo)
+        public void Arrange(TraditionalComponents components)
         {
-            base.OnArraging(blocksInfo);
+            LayoutSlippingAnimation.Initialize(mainPart, resultChildren, components.AggtBlocks.Layout.ParentChildProportion);
 
-            LayoutSlippingAnimation.Initialize(this, mainPart, resultChildren);
+            //Children
+            components.ArrangeChildrenByTabControl(childrenTab);
+
+            this.TryArrangeMain(components.Main);
+            this.TryArrangeCommandsContainer(components.CommandsContainer);
+            this.TryArrangeNavigation(components.Navigation);
+            this.TryArrangeDetail(components.Detail);
+
+            this.OnArrangedCore(components.AggtBlocks);
         }
 
-        public override void TryArrangeMain(ControlResult control)
+        private void TryArrangeMain(ControlResult control)
         {
             if (control != null)
             {
@@ -44,7 +52,7 @@ namespace OEA.Module.WPF.Layout
             }
         }
 
-        public override void TryArrangeCommandsContainer(ControlResult toolBar)
+        private void TryArrangeCommandsContainer(ControlResult toolBar)
         {
             if (toolBar != null)
             {
@@ -56,7 +64,7 @@ namespace OEA.Module.WPF.Layout
             }
         }
 
-        public override void TryArrangeNavigation(ControlResult control)
+        private void TryArrangeNavigation(ControlResult control)
         {
             if (control != null)
             {
@@ -68,7 +76,7 @@ namespace OEA.Module.WPF.Layout
             }
         }
 
-        public override void TryArrangeDetail(ControlResult control)
+        private void TryArrangeDetail(ControlResult control)
         {
             if (control != null)
             {
@@ -80,18 +88,8 @@ namespace OEA.Module.WPF.Layout
             }
         }
 
-        protected override TabControl ChildrenTab
+        private void OnArrangedCore(AggtBlocks blocksInfo)
         {
-            get
-            {
-                return childrenTab;
-            }
-        }
-
-        protected override void OnArrangedCore()
-        {
-            base.OnArrangedCore();
-
             if (result.Parent == null)
             {
                 //如果 resultChildren 中只显示聚合子类的视图
@@ -99,7 +97,7 @@ namespace OEA.Module.WPF.Layout
                 {
                     ResizingPanelExt.SetStarGridLength(resultChildren, 0);
 
-                    container.Orientation = this.AggtBlocks.Layout.IsLayoutChildrenHorizonal ?
+                    container.Orientation = blocksInfo.Layout.IsLayoutChildrenHorizonal ?
                         Orientation.Horizontal : Orientation.Vertical;
                 }
                 else

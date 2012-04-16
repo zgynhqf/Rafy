@@ -127,7 +127,7 @@ namespace OEA.Module.WPF.Controls
 
         protected override Size MeasureOverride(Size constraint)
         {
-            bool isVertical = Orientation == Orientation.Vertical;
+            bool isVertical = this.Orientation == Orientation.Vertical;
 
             //如果需要重新计算所有孩子的索引，则执行计算逻辑。
             if (this._indexDirty || (this.IsAutoIndexing &&

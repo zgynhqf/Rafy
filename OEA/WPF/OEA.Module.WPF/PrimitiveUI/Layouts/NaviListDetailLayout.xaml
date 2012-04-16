@@ -1,4 +1,4 @@
-﻿<local:TraditionalLayout
+﻿<UserControl
     x:Class="OEA.Module.WPF.Layout.NaviListDetailLayout"
     xmlns:local="clr-namespace:OEA.Module.WPF.Layout"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -15,16 +15,16 @@
     <DockPanel>
         <ContentControl x:Name="toolBarContainer" DockPanel.Dock="Top"/>
         <ad:ResizingPanel Name="container">
-			<DockPanel Name="mainPart">
+            <DockPanel Name="mainPart">
                 <ContentControl Name="navigate" DockPanel.Dock="Top"/>
                 <ContentControl Name="main"/>
             </DockPanel>
-			<DockPanel Name="resultChildren">
-				<ContentControl Name="result" DockPanel.Dock="Top"/>
-				<!--当没有 childrenTab 时，result 也不能放到最大，所以加入一个冗余的 ContentControl-->
-				<ContentControl DockPanel.Dock="Top"/>
-				<TabControl Name="childrenTab"/>
+            <DockPanel Name="resultChildren">
+                <ContentControl Name="result" DockPanel.Dock="Top"/>
+                <!--当没有 childrenTab 时，result 也不能放到最大，所以加入一个冗余的 ContentControl-->
+                <ContentControl DockPanel.Dock="Top"/>
+                <TabControl Name="childrenTab"/>
             </DockPanel>
         </ad:ResizingPanel>
     </DockPanel>
-</local:TraditionalLayout>
+</UserControl>

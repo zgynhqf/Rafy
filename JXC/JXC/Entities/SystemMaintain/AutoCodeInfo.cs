@@ -63,8 +63,12 @@ namespace JXC
     {
         protected AutoCodeInfoRepository() { }
 
-        public string GetOrCreateAutoCode(string name, string defaultFormat = null, string beiZhu = null)
+        public string GetOrCreateAutoCode<TTargetType>(string defaultFormat = null, string beiZhu = null)
+            where TTargetType : Entity
         {
+            var vm = UIModel.Views.CreateDefaultView(typeof(TTargetType));
+            string name = vm.Label + "-自动编码规则";
+
             var item = this.FetchFirstAs<AutoCodeInfo>(name);
 
             if (item == null)
@@ -75,11 +79,11 @@ namespace JXC
                     CanShuZhi = defaultFormat ?? "<YEAR><MONTH><DAY>***",
                     BeiZhu = beiZhu ??
 @"自动编码填写规则
-***表示随机编号
+***表示自动编号
 <YEAR> 表示当前年份
 <MONTH> 表示当前月份
 <DAY> 表示当前日号
-如要编写 年+月+日+随机编号
+如要编写 年+月+日+自动编号
 则值为：<YEAR><MONTH><DAY>***"
                 };
                 RF.Save(item);
@@ -88,12 +92,17 @@ namespace JXC
             var format = item.CanShuZhi;
 
             var t = DateTime.Today;
-            var value = format.Replace("<YEAR>", t.Year.ToString())
+            var code = format.Replace("<YEAR>", t.Year.ToString())
                 .Replace("<MONTH>", t.Month.ToString())
-                .Replace("<DAY>", t.Day.ToString())
-                .Replace("***", new Random().Next(1000, 9999).ToString());
+                .Replace("<DAY>", t.Day.ToString());
 
-            return value;
+            if (code.Contains("***"))
+            {
+                var count = RF.Create<TTargetType>().CountAll() + 1;
+                code = code.Replace("***", count.ToString("0000"));
+            }
+
+            return code;
         }
     }
 
@@ -115,8 +124,9 @@ namespace JXC
             View.Property(AutoCodeInfo.MingChengProperty).HasLabel("参数名称").ShowIn(ShowInWhere.All);
             View.Property(AutoCodeInfo.CanShuZhiProperty).HasLabel("参数值").ShowIn(ShowInWhere.ListDetail);
             View.Property(AutoCodeInfo.BeiZhuProperty).HasLabel("备注").ShowIn(ShowInWhere.ListDetail)
-                .ShowInDetail(height: 300)
-                .UseEditor(WPFEditorNames.Memo);
+                .ShowInDetail(height: 200)
+                .UseEditor(WPFEditorNames.Memo)
+                .Readonly();
         }
     }
 }

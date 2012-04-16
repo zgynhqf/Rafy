@@ -6,9 +6,9 @@
             <SnippetTypes>
                 <SnippetType>Expansion</SnippetType>
             </SnippetTypes>
-            <Title>OEA_Entity_Template</Title>
+            <Title>OEA_Entity</Title>
             <Author>HuQingfang</Author>
-            <Shortcut>OEAEntity_Template</Shortcut>
+            <Shortcut>OEA_Entity</Shortcut>
         </Header>
         <Snippet>
             <Declarations>
@@ -17,12 +17,8 @@
                     <Default>OEA</Default>
                 </Literal>
                 <Literal>
-                    <ID>Catalog</ID>
-                    <Default>子系统</Default>
-                </Literal>
-                <Literal>
-                    <ID>EntityClassName</ID>
-                    <Default>EntityClassName</Default>
+                    <ID>EntityName</ID>
+                    <Default>EntityName</Default>
                 </Literal>
                 <Literal>
                     <ID>Label</ID>
@@ -32,11 +28,6 @@
                     <ID>BaseEntity</ID>
                     <Default>My</Default>
                 </Literal>
-                <Literal>
-                    <ID>ModuleType</ID>
-                    <Default>List</Default>
-                </Literal>
-                <!--//, Catalog = "$Catalog$", ModuleType = ModuleType.$ModuleType$-->
             </Declarations>
             <Code Language="csharp">
                 <![CDATA[using System;
@@ -53,9 +44,9 @@ namespace $NAMESPACE$
     [RootEntity, Serializable]
     //根据是根对象，还是子对象，在上下两行中删除一行！$end$
     [ChildEntity, Serializable]
-    public class $EntityClassName$ : $BaseEntity$Entity
+    public class $EntityName$ : $BaseEntity$Entity
     {
-        public static readonly Property<string> NameProperty = P<$EntityClassName$>.Register(e => e.Name);
+        public static readonly Property<string> NameProperty = P<$EntityName$>.Register(e => e.Name);
         public string Name
         {
             get { return this.GetProperty(NameProperty); }
@@ -64,27 +55,30 @@ namespace $NAMESPACE$
     }
 
     [Serializable]
-    public class $EntityClassName$List : $BaseEntity$EntityList { }
+    public class $EntityName$List : $BaseEntity$EntityList { }
 
-    public class $EntityClassName$Repository : EntityRepository 
+    public class $EntityName$Repository : EntityRepository 
     { 
-        protected $EntityClassName$Repository() { }
+        protected $EntityName$Repository() { }
     }
 
-    internal class $EntityClassName$Config : EntityConfig<$EntityClassName$>
+    internal class $EntityName$Config : EntityConfig<$EntityName$>
     {
         protected override void ConfigMeta()
         {
             Meta.MapTable().HasColumns(
-                $EntityClassName$.NameProperty
+                $EntityName$.NameProperty
                 );
         }
 
         protected override void ConfigView()
         {
-            View.DomainName("$Label$").HasDelegate($EntityClassName$.NameProperty);
+            View.DomainName("$Label$").HasDelegate($EntityName$.NameProperty);
             
-            View.Property($EntityClassName$.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
+            using (View.OrderProperties())
+            {
+                View.Property($EntityName$.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
+            }
         }
     }
 }]]>

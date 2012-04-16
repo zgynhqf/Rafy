@@ -158,6 +158,14 @@ namespace JXC
             this.QueryDb(q =>
             {
                 q.Constrain(Product.ProductCategoryRefProperty).Equal(criteria.ProductCategoryId);
+
+                if (criteria.IncludeSub)
+                {
+                    foreach (var child in criteria.ProductCategory.GetTreeChildrenRecur())
+                    {
+                        q.Or().Constrain(Product.ProductCategoryRefProperty).Equal(child.Id);
+                    }
+                }
             });
         }
     }

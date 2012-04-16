@@ -297,7 +297,7 @@ namespace OEA.MetaModel.View
         }
 
         /// <summary>
-        /// 设置该属性在详细面板中显示时的详细信息
+        /// 设置该属性在表单中显示时的详细信息
         /// </summary>
         /// <param name="meta"></param>
         /// <param name="columnSpan"></param>
@@ -341,6 +341,20 @@ namespace OEA.MetaModel.View
         {
             meta.EditorName = editorName;
             return meta;
+        }
+
+        /// <summary>
+        /// 设置该属性为导航项。
+        /// 此时，如果该属性变更，会自动触发导航查询
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static NavigationPropertyMeta FireNavigation(this EntityPropertyViewMeta meta)
+        {
+            meta.NavigationMeta = new NavigationPropertyMeta();
+
+            return meta.NavigationMeta;
         }
 
         #endregion

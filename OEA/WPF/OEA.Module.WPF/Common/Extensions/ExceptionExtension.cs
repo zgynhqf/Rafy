@@ -19,36 +19,35 @@ namespace OEA.Module.WPF
         {
             var baseException = ex.GetBaseException();
 
-            string msg = null;
-
-            if (baseException is FriendlyMessageException)
-            {
-                msg = baseException.Message;
-            }
-            else if (baseException is SqlException)
-            {
-                var sqlEx = baseException as SqlException;
-                var sqlErr = SqlErrorInfo.GetSqlError(sqlEx.Number);
-                if (sqlErr != null) msg = sqlErr.ErrorMessage;
-                else { msg = "数据库访问出现异常。"; }
-            }
-            else if (ex is System.Data.Common.DbException)
-                msg = "数据库访问出现异常。";
-            else if (ex is TimeoutException)
-                msg = "网络连接超时，请检查网络连接是否正常";
-            else if (ex is FriendlyMessageException)
-                msg = ex.Message;
-            else if (ex is System.ComponentModel.Win32Exception || ex is System.ServiceModel.EndpointNotFoundException)
-                msg = "网络连接出现异常，请检查连接地址是否正确或连接是否正常";
-
-            msg = msg ?? @"遇到未知错误，我们对此引起的不便表示抱歉。系统已经产生了一个关于此错误的报告，希望您将问题反馈给我们以帮助改善质量。";
-
             if (OEAEnvironment.IsDebuggingEnabled)
             {
-                ShowErrorDetail(msg, ex);
+                ShowErrorDetail(baseException.Message, ex);
             }
             else
             {
+                string msg = null;
+
+                if (baseException is FriendlyMessageException)
+                {
+                    msg = baseException.Message;
+                }
+                else if (baseException is SqlException)
+                {
+                    var sqlEx = baseException as SqlException;
+                    var sqlErr = SqlErrorInfo.GetSqlError(sqlEx.Number);
+                    if (sqlErr != null) msg = sqlErr.ErrorMessage;
+                    else { msg = "数据库访问出现异常。"; }
+                }
+                else if (ex is System.Data.Common.DbException)
+                    msg = "数据库访问出现异常。";
+                else if (ex is TimeoutException)
+                    msg = "网络连接超时，请检查网络连接是否正常";
+                else if (ex is FriendlyMessageException)
+                    msg = ex.Message;
+                else if (ex is System.ComponentModel.Win32Exception || ex is System.ServiceModel.EndpointNotFoundException)
+                    msg = "网络连接出现异常，请检查连接地址是否正确或连接是否正常";
+                msg = msg ?? @"遇到未知错误，我们对此引起的不便表示抱歉。系统已经产生了一个关于此错误的报告，希望您将问题反馈给我们以帮助改善质量。";
+
                 App.Current.MessageBox.Show("异常提示", msg, MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
 

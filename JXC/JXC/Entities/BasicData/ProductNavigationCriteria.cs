@@ -22,20 +22,27 @@ using OEA.Library;
 
 namespace JXC
 {
-    [Serializable, NavigationQueryEntity]
+    [QueryEntity, Serializable]
     public class ProductNavigationCriteria : Criteria
     {
         public static readonly RefProperty<ProductCategory> ProductCategoryRefProperty =
             P<ProductNavigationCriteria>.RegisterRef(e => e.ProductCategory, ReferenceType.Normal);
-        public int? ProductCategoryId
+        public int ProductCategoryId
         {
-            get { return this.GetRefNullableId(ProductCategoryRefProperty); }
-            set { this.SetRefNullableId(ProductCategoryRefProperty, value); }
+            get { return this.GetRefId(ProductCategoryRefProperty); }
+            set { this.SetRefId(ProductCategoryRefProperty, value); }
         }
         public ProductCategory ProductCategory
         {
             get { return this.GetRefEntity(ProductCategoryRefProperty); }
             set { this.SetRefEntity(ProductCategoryRefProperty, value); }
+        }
+
+        public static readonly Property<bool> IncludeSubProperty = P<ProductNavigationCriteria>.Register(e => e.IncludeSub, true);
+        public bool IncludeSub
+        {
+            get { return this.GetProperty(IncludeSubProperty); }
+            set { this.SetProperty(IncludeSubProperty, value); }
         }
     }
 
@@ -43,11 +50,18 @@ namespace JXC
     {
         protected override void ConfigView()
         {
-            View.DetailLabelWidth = 0;
+            View.UseWPFCommands(
+                "JXC.RefreshProductNavigation",
+                "JXC.OpenProductCategory"
+                );
+
+            View.Property(ProductNavigationCriteria.IncludeSubProperty)
+                .HasLabel("包含下级").ShowInDetail()
+                .FireNavigation();
             View.Property(ProductNavigationCriteria.ProductCategoryRefProperty)
-                .HasLabel("商品类别").ShowIn(ShowInWhere.Detail)
+                .HasLabel("商品类别").ShowInDetail(labelWidth: 0)
                 .UseEditor(WPFEditorNames.TiledList)
-                .NavigationMeta = new NavigationPropertyMeta();
+                .FireNavigation();
         }
     }
 }

@@ -148,6 +148,12 @@ namespace Demo
                 q.Constrain(Book.BookCategoryRefProperty).Equal(criteria.BookCategoryId)
                     .And().Constrain(Book.NameProperty).Like(criteria.BookName);
             });
+
+            //            //使用 SQL 的自定义查询示例。
+            //            this.QueryDb(string.Format(@"
+            //Select * from Book
+            //where BookCategoryId = {0} and Name = '{1}'
+            //", criteria.BookCategoryId, criteria.BookName));
         }
     }
 

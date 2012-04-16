@@ -48,15 +48,22 @@ namespace OEA.Module.WPF.Editors
 
         #endregion
 
-        #region 公共属性
+        #region 公共属性/方法
 
         /// <summary>
         /// 手动设置下拉的数据源
         /// </summary>
-        public EntityList DataSourse
+        public IListObjectView ListView
         {
-            get { return this._listView.Data; }
-            set { this._listView.Data = value; }
+            get { return this._listView; }
+        }
+
+        public void RefreshDataSource()
+        {
+            this.ListView.DataLoader.LoadDataAsync(() =>
+            {
+                this.SyncValueToSelection(this.ListView);
+            });
         }
 
         #endregion

@@ -26,23 +26,12 @@ namespace JXC.WPF
 {
     public class ProductModule : ModuleBase
     {
-        protected override AggtBlocks DefineBlocks()
-        {
-            //示例自定义结构
-            return new AggtBlocks
-            {
-                MainBlock = new Block(typeof(Product)),
-                Surrounders =
-                {
-                    new SurrounderBlock(typeof(ProductNavigationCriteria), SurrounderType.Navigation)
-                }
-            };
-        }
-
         protected override void OnItemCreated(Entity entity)
         {
+            var code = RF.Concreate<AutoCodeInfoRepository>().GetOrCreateAutoCode<Product>();
+
             var p = entity as Product;
-            p.BianMa = RF.Concreate<AutoCodeInfoRepository>().GetOrCreateAutoCode("商品自动编码规则");
+            p.BianMa = code;
             p.User = OEAIdentity.Current.User;
             p.OperateTime = DateTime.Now;
         }

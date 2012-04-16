@@ -19,6 +19,7 @@ using OEA.Library;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
 using OEA.WPF.Command;
+using OEA.ManagedProperty;
 
 
 namespace OEA.Module.WPF
@@ -178,6 +179,17 @@ namespace OEA.Module.WPF
                 this._propertyEditors.Add(result);
             }
             return result;
+        }
+
+        /// <summary>
+        /// 在View中寻找指定属性的Editor
+        /// </summary>
+        /// <param name="conView"></param>
+        /// <param name="property">找这个属性对应的Editor</param>
+        /// <returns></returns>
+        public IPropertyEditor FindPropertyEditor(IManagedProperty property)
+        {
+            return this._propertyEditors.FirstOrDefault(e => e.PropertyViewInfo.PropertyMeta.ManagedProperty == property);
         }
 
         /// <summary>

@@ -137,7 +137,7 @@ namespace OEA.Module.WPF
                 switch (this.Type)
                 {
                     case ModuleViewModelType.EntityModule:
-                        App.Current.OpenModule(this._moduleInfo);
+                        App.Current.OpenModuleOrAlert(this._moduleInfo);
                         return true;
                     case ModuleViewModelType.CustomAction:
                         return this._action();

@@ -105,7 +105,10 @@ namespace OEA.Module.WPF
             var detailType = detailView.Meta.DetailPanelType;
             if (detailType == null)
             {
-                result = new DefaultDetailPanel();
+                result = new DefaultDetailPanel
+                {
+                    Orientation = detailView.Meta.DetailAsHorizontal ? Orientation.Horizontal : Orientation.Vertical
+                };
             }
             else
             {

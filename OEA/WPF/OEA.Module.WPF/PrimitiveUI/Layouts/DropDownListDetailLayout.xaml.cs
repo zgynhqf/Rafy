@@ -24,7 +24,7 @@ namespace OEA.Module.WPF.Layout
     /// <summary>
     /// 下拉主列表的布局
     /// </summary>
-    public partial class DropDownListDetailLayout : TraditionalLayout
+    public partial class DropDownListDetailLayout : UserControl, ITraditionalLayoutControl
     {
         public DropDownListDetailLayout()
         {
@@ -33,10 +33,10 @@ namespace OEA.Module.WPF.Layout
 
         private ListObjectView _mainView;
 
-        public override void TryArrangeMain(ControlResult control)
+        public void Arrange(TraditionalComponents components)
         {
             //使用下拉框显示主区域。
-
+            var control = components.Main;
             if (control != null)
             {
                 this._mainView = control.MainView as ListObjectView;
@@ -61,10 +61,8 @@ namespace OEA.Module.WPF.Layout
             {
                 main.RemoveFromParent();
             }
-        }
 
-        public override void TryArrangeCommandsContainer(ControlResult toolBar)
-        {
+            var toolBar = components.CommandsContainer;
             if (toolBar != null)
             {
                 toolBarContainer.Content = toolBar.Control;
@@ -73,14 +71,9 @@ namespace OEA.Module.WPF.Layout
             {
                 toolBarContainer.RemoveFromParent();
             }
-        }
 
-        protected override TabControl ChildrenTab
-        {
-            get
-            {
-                return childrenTab;
-            }
+            //Children
+            components.ArrangeChildrenByTabControl(childrenTab);
         }
     }
 }

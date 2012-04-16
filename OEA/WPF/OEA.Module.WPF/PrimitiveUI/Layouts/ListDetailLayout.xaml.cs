@@ -18,24 +18,32 @@ using System.Windows.Media.Animation;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
 
-
 namespace OEA.Module.WPF.Layout
 {
-    public partial class ListDetailLayout : TraditionalLayout
+    public partial class ListDetailLayout : UserControl, ITraditionalLayoutControl
     {
         public ListDetailLayout()
         {
             InitializeComponent();
         }
 
-        public override void OnArraging(AggtBlocks blocksInfo)
+        public void Arrange(TraditionalComponents components)
         {
-            base.OnArraging(blocksInfo);
+            LayoutSlippingAnimation.Initialize(main, resultChildren, components.AggtBlocks.Layout.ParentChildProportion);
 
-            LayoutSlippingAnimation.Initialize(this, main, resultChildren);
+            this.TryArrangeMain(components.Main);
+            this.TryArrangeCommandsContainer(components.CommandsContainer);
+            this.TryArrangeNavigation(components.Navigation);
+            this.TryArrangeCondition(components.Condition);
+            this.TryArrangeDetail(components.Detail);
+
+            //Children
+            components.ArrangeChildrenByTabControl(childrenTab);
+
+            this.OnArrangedCore(components);
         }
 
-        public override void TryArrangeMain(ControlResult control)
+        private void TryArrangeMain(ControlResult control)
         {
             if (control != null)
             {
@@ -47,7 +55,7 @@ namespace OEA.Module.WPF.Layout
             }
         }
 
-        public override void TryArrangeCommandsContainer(ControlResult toolBar)
+        private void TryArrangeCommandsContainer(ControlResult toolBar)
         {
             if (toolBar != null)
             {
@@ -59,7 +67,7 @@ namespace OEA.Module.WPF.Layout
             }
         }
 
-        public override void TryArrangeNavigation(ControlResult control)
+        private void TryArrangeNavigation(ControlResult control)
         {
             if (control != null)
             {
@@ -71,7 +79,7 @@ namespace OEA.Module.WPF.Layout
             }
         }
 
-        public override void TryArrangeCondition(ControlResult control)
+        private void TryArrangeCondition(ControlResult control)
         {
             if (control != null)
             {
@@ -83,7 +91,7 @@ namespace OEA.Module.WPF.Layout
             }
         }
 
-        public override void TryArrangeDetail(ControlResult control)
+        private void TryArrangeDetail(ControlResult control)
         {
             if (control != null)
             {
@@ -96,15 +104,8 @@ namespace OEA.Module.WPF.Layout
             }
         }
 
-        protected override TabControl ChildrenTab
+        private void OnArrangedCore(TraditionalComponents components)
         {
-            get { return childrenTab; }
-        }
-
-        protected override void OnArrangedCore()
-        {
-            base.OnArrangedCore();
-
             if (queryPanel.Items.Count == 0)
             {
                 queryPanel.RemoveFromParent(false);
@@ -120,7 +121,7 @@ namespace OEA.Module.WPF.Layout
                         ResizingPanelExt.SetStarGridLength(resultChildren, 0);
                     }
 
-                    container.Orientation = this.AggtBlocks.Layout.IsLayoutChildrenHorizonal ?
+                    container.Orientation = components.AggtBlocks.Layout.IsLayoutChildrenHorizonal ?
                         Orientation.Horizontal : Orientation.Vertical;
                 }
                 else

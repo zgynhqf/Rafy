@@ -1,4 +1,4 @@
-﻿<local:TraditionalLayout x:Class="OEA.Module.WPF.Layout.ListDetailPopupChildrenLayout"
+﻿<UserControl x:Class="OEA.Module.WPF.Layout.ListDetailPopupChildrenLayout"
              xmlns:local="clr-namespace:OEA.Module.WPF.Layout"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -22,4 +22,4 @@
             </ad:ResizingPanel>
         </ContentControl>
     </DockPanel>
-</local:TraditionalLayout>
+</UserControl>
