@@ -30,15 +30,43 @@ namespace OEA
         internal void ExecuteInternal()
         {
             this.Execute();
+
+            //清除不必要的引用，减少数据传输。
+            var properties = this.GetType().GetProperties();
+            foreach (var property in properties)
+            {
+                if (property.HasMarked<ServiceInputAttribute>())
+                {
+                    if (property.PropertyType.IsClass)
+                    {
+                        try
+                        {
+                            property.SetValue(this, null, null);
+                        }
+                        catch { }
+                    }
+                }
+            }
         }
 
         protected abstract void Execute();
 
+        /// <summary>
+        /// 调用服务并把返回值转换为指定的类型。
+        /// </summary>
+        /// <returns></returns>
         public IService Invoke()
         {
             return DataPortal.Update(this) as IService;
         }
 
+        /// <summary>
+        /// 调用服务并把返回值转换为指定的类型。
+        /// 
+        /// （out 参数是为了简化接口调用，编译器直接隐式推断。）
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="svcReturn"></param>
         public void Invoke<T>(out T svcReturn)
             where T : IService
         {

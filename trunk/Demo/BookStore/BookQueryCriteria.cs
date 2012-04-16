@@ -8,7 +8,7 @@ using OEA.MetaModel;
 
 namespace Demo
 {
-    [ConditionQueryEntity, Serializable]
+    [QueryEntity, Serializable]
     public class BookQueryCriteria : Criteria
     {
         public static readonly RefProperty<BookCategory> BookCategoryRefProperty =

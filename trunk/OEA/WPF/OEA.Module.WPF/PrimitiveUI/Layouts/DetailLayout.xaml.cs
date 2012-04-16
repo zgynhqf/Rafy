@@ -14,15 +14,16 @@ using System.Windows.Shapes;
 
 namespace OEA.Module.WPF.Layout
 {
-    public partial class DetailLayout : TraditionalLayout
+    public partial class DetailLayout : UserControl, ITraditionalLayoutControl
     {
         public DetailLayout()
         {
             InitializeComponent();
         }
 
-        public override void TryArrangeMain(ControlResult control)
+        public void Arrange(TraditionalComponents components)
         {
+            var control = components.Main;
             if (control != null)
             {
                 result.Content = control.Control;
@@ -31,10 +32,8 @@ namespace OEA.Module.WPF.Layout
             {
                 result.RemoveFromParent();
             }
-        }
 
-        public override void TryArrangeCommandsContainer(ControlResult toolBar)
-        {
+            var toolBar = components.CommandsContainer;
             if (toolBar != null)
             {
                 toolBarContainer.Content = toolBar.Control;
@@ -43,14 +42,14 @@ namespace OEA.Module.WPF.Layout
             {
                 toolBarContainer.RemoveFromParent();
             }
-        }
 
-        protected override void OnArrangedCore()
-        {
+            //Children
+            components.ArrangeChildrenByTabControl(childrenTab);
+
             ResizingPanelExt.SetStarGridLength(detail, 3);
             ResizingPanelExt.SetStarGridLength(childrenTab, 7);
 
-            if (this.AggtBlocks.Layout.IsLayoutChildrenHorizonal)
+            if (components.AggtBlocks.Layout.IsLayoutChildrenHorizonal)
             {
                 container.Orientation = Orientation.Horizontal;
             }
@@ -58,11 +57,6 @@ namespace OEA.Module.WPF.Layout
             {
                 container.Orientation = Orientation.Vertical;
             }
-        }
-
-        protected override TabControl ChildrenTab
-        {
-            get { return childrenTab; }
         }
     }
 }

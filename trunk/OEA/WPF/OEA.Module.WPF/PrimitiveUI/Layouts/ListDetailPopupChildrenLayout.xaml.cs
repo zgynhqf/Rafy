@@ -14,14 +14,25 @@ using System.Windows.Shapes;
 
 namespace OEA.Module.WPF.Layout
 {
-    public partial class ListDetailPopupChildrenLayout : TraditionalLayout
+    public partial class ListDetailPopupChildrenLayout : UserControl, ITraditionalLayoutControl
     {
         public ListDetailPopupChildrenLayout()
         {
             InitializeComponent();
         }
 
-        public override void TryArrangeMain(ControlResult control)
+        public void Arrange(TraditionalComponents components)
+        {
+            this.TryArrangeMain(components.Main);
+            this.TryArrangeCommandsContainer(components.CommandsContainer);
+            this.TryArrangeNavigation(components.Navigation);
+            this.TryArrangeCondition(components.Condition);
+            this.TryArrangeDetail(components.Detail);
+            this.TryArrangeChildren(components.Children);
+            this.OnArrangedCore();
+        }
+
+        private void TryArrangeMain(ControlResult control)
         {
             if (control != null)
             {
@@ -33,7 +44,7 @@ namespace OEA.Module.WPF.Layout
             }
         }
 
-        public override void TryArrangeCommandsContainer(ControlResult toolBar)
+        private void TryArrangeCommandsContainer(ControlResult toolBar)
         {
             if (toolBar != null)
             {
@@ -41,7 +52,7 @@ namespace OEA.Module.WPF.Layout
             }
         }
 
-        public override void TryArrangeNavigation(ControlResult control)
+        private void TryArrangeNavigation(ControlResult control)
         {
             if (control != null)
             {
@@ -53,7 +64,7 @@ namespace OEA.Module.WPF.Layout
             }
         }
 
-        public override void TryArrangeCondition(ControlResult control)
+        private void TryArrangeCondition(ControlResult control)
         {
             if (control != null)
             {
@@ -65,7 +76,7 @@ namespace OEA.Module.WPF.Layout
             }
         }
 
-        public override void TryArrangeDetail(ControlResult control)
+        private void TryArrangeDetail(ControlResult control)
         {
             if (control != null)
             {
@@ -77,7 +88,7 @@ namespace OEA.Module.WPF.Layout
             }
         }
 
-        public override void TryArrangeChildren(IList<Region> children)
+        private void TryArrangeChildren(IList<Region> children)
         {
             if (children.Count > 0)
             {
@@ -110,10 +121,8 @@ namespace OEA.Module.WPF.Layout
             }
         }
 
-        protected override void OnArrangedCore()
+        private void OnArrangedCore()
         {
-            base.OnArrangedCore();
-
             if (toolBarContainer.Content == null)
             {
                 toolBarContainer.RemoveFromParent();

@@ -47,6 +47,21 @@ namespace OEA.Module
             return cmd;
         }
 
+        /// <summary>
+        /// 找到某个类型的运行时命令
+        /// </summary>
+        /// <param name="commandType"></param>
+        /// <returns></returns>
+        public ClientCommand this[Type commandType]
+        {
+            get
+            {
+                var c = this.Find(commandType);
+                if (c == null) throw new InvalidOperationException("该视图不存在这个命令：" + commandType.FullName);
+                return c;
+            }
+        }
+
         #region Sealed
 
         private bool _sealed;

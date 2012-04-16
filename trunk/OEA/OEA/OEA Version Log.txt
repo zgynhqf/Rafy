@@ -9,6 +9,53 @@
  * 
 *******************************************************/
 
+2.10.517.0
+    添加接口
+        * EntityRepository 添加 CountAll 方法。
+        * 添加 CountAllEntityService 服务类。
+    示例
+        * 随机编码修改为自动编码。
+
+2.10.516.0
+    重构、★修改接口
+        * 简化 TraditionalLayout 编写的 API。
+    示例
+        * JXC-采购订单-布局。
+
+2.10.515.0
+    添加接口、添加功能
+        * EntityViewMeta 支持 DetailAsHorizontal 属性。表单支持横向生成。
+    示例
+        * JXC-采购订单-条件查询放在上方。
+
+2.10.514.0
+    添加接口
+        * EntityViewMeta 支持 OrderProperties 方法。
+    示例
+        * JXC 中采购订单导航面板。
+
+2.10.513.0
+    内部修改
+        * 异常提示更清晰。
+
+2.10.512.0
+    ★删除接口、★修改接口
+        * NavigationQueryEntityAttribute、ConditionQueryEntityAttribute 合并为 QueryEntityAttribute。
+        * 添加 OEA_Entity_Criteria 代码模板。
+    示例
+        * 完善 JXC.Product 示例。
+            * 添加 PurchaseOrder 类及其对应的条件查询面板。
+
+2.10.511.0
+    添加接口
+        * 添加一些方便客户端使用的接口。
+    示例
+        * 完善 JXC.Product 示例。
+
+2.10.510.0
+    BUG修复
+        * PopupAddCommand 中添加的新对象的树型父 Id 为空。
+
 2.10.509.0
     ★修改接口
         * 用于配置 EntityMeta 的扩展方法 HasLabel、HasTitle 分别修改为更易读的 DomainName、HasDelegate。

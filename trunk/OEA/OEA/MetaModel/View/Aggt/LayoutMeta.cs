@@ -7,6 +7,14 @@ namespace OEA.MetaModel.View
 {
     public class LayoutMeta
     {
+        public LayoutMeta(string layoutClass)
+            : this()
+        {
+            this.Class = layoutClass;
+        }
+
+        public LayoutMeta() { }
+
         /// <summary>
         /// 布局类的名称
         /// 不可为 null。
@@ -18,27 +26,28 @@ namespace OEA.MetaModel.View
         #region WPF
 
         /// <summary>
+        /// 本构造函数是 WPF 专用
+        /// </summary>
+        /// <param name="layoutType"></param>
+        public LayoutMeta(Type layoutType)
+            : this()
+        {
+            this.Class = layoutType.AssemblyQualifiedName;
+        }
+
+        /// <summary>
         /// 父子的分布比例
         /// 此属性 可空
         /// </summary>
         public ParentChildProportion ParentChildProportion { get; set; }
 
+        /// <summary>
+        /// 是否把聚合子对象横向排列。
+        /// 默认为 false。
+        /// </summary>
         public bool IsLayoutChildrenHorizonal { get; set; }
 
         #endregion
-
-        /// <summary>
-        /// 一个简单的块也可以直接转换为一个聚合块。
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static implicit operator LayoutMeta(string layoutClass)
-        {
-            return new LayoutMeta
-            {
-                Class = layoutClass
-            };
-        }
     }
 
     /// <summary>

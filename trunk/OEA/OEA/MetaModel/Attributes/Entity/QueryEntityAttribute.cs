@@ -19,8 +19,8 @@ using System.Text;
 namespace OEA.MetaModel.Attributes
 {
     /// <summary>
-    /// 所有条件查询实体对象都应该标记这个属性。
+    /// 所有查询实体对象都应该标记这个属性。
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class ConditionQueryEntityAttribute : EntityAttribute { }
+    public class QueryEntityAttribute : EntityAttribute { }
 }

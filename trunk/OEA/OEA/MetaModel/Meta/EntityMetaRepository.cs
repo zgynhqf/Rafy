@@ -164,13 +164,9 @@ namespace OEA.MetaModel
 
             #region EntityCategory
 
-            if (boAttri is ConditionQueryEntityAttribute)
+            if (boAttri is QueryEntityAttribute)
             {
-                entityMeta.EntityCategory = EntityCategory.ConditionQueryObject;
-            }
-            else if (boAttri is NavigationQueryEntityAttribute)
-            {
-                entityMeta.EntityCategory = EntityCategory.NavigationQueryObject;
+                entityMeta.EntityCategory = EntityCategory.QueryObject;
             }
             else if (boAttri is RootEntityAttribute)
             {

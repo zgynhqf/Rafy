@@ -19,16 +19,31 @@ namespace OEA.Module.WPF.Editors
     /// </summary>
     public class TiledListReferenceEditor : ReferencePropertyEditor
     {
+        /// <summary>
+        /// 手动设置下拉的数据源
+        /// </summary>
+        public ListObjectView ListView { get; private set; }
+
+        /// <summary>
+        /// 外部可以通过这个方法重新刷新编辑器的数据。
+        /// </summary>
+        public void RefreshDataSource()
+        {
+            this.ListView.DataLoader.LoadDataAsync(() =>
+            {
+                this.SyncValueToSelection(this.ListView);
+            });
+        }
+
         protected override FrameworkElement CreateEditingElement()
         {
             var refInfo = this.PropertyViewInfo.ReferenceViewInfo;
 
             var listView = AutoUI.ViewFactory.CreateListObjectView(refInfo.RefTypeDefaultView, true);
+            this.ListView = listView;
+
             listView.IsReadOnly = true;
-            listView.DataLoader.LoadDataAsync(() =>
-            {
-                this.SyncValueToSelection(listView);
-            });
+            this.RefreshDataSource();
             listView.CurrentObjectChanged += (o, e) =>
             {
                 this.SyncSelectionToValue(listView.SelectedObjects);

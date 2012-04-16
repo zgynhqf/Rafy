@@ -162,7 +162,7 @@ namespace OEA.Module.WPF
         protected virtual WPFObjectView CreateSurrounderView(WPFObjectView mainView, SurrounderBlock surrounderBlock)
         {
             var surrounderType = surrounderBlock.SurrounderType;
-            var surrounderViewInfo = surrounderBlock.EVM;
+            var surrounderVM = surrounderBlock.EVM;
 
             WPFObjectView surrounderView = null;
             RelationView relation = null;
@@ -171,7 +171,11 @@ namespace OEA.Module.WPF
             //本类只对以下“认识”的环绕块生成控件
             if (surrounderType == SurrounderType.Condition)
             {
-                var result = this._viewFactory.CreateConditionQueryView(surrounderBlock.EVM);
+                var result = this._viewFactory.CreateConditionQueryView(surrounderVM);
+
+                //条件面板需要额外添加一个查询按钮。
+                surrounderVM.UseWPFCommands(WPFCommandNames.FireQuery);
+
                 this.CreateCommandsUI(result, surrounderBlock);
 
                 reverseRelation = new RelationView(SurrounderType.Result, mainView);
@@ -179,7 +183,7 @@ namespace OEA.Module.WPF
             }
             else if (surrounderType == SurrounderType.Navigation)
             {
-                var result = this._viewFactory.CreateNavigationQueryView(surrounderBlock.EVM);
+                var result = this._viewFactory.CreateNavigationQueryView(surrounderVM);
                 this.CreateCommandsUI(result, surrounderBlock);
 
                 relation = new NavigationRelationView(result);
@@ -188,7 +192,7 @@ namespace OEA.Module.WPF
             }
             else if (surrounderType == SurrounderType.Result)
             {
-                surrounderView = this._viewFactory.CreateDetailObjectView(surrounderViewInfo);
+                surrounderView = this._viewFactory.CreateDetailObjectView(surrounderVM);
                 reverseRelation = new RelationView(SurrounderType.List, mainView);
             }
             else

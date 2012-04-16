@@ -17,7 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 
-namespace OEA
+namespace OEA.Module.WPF
 {
     /// <summary>
     /// 布局方法：为多个控件进行布局

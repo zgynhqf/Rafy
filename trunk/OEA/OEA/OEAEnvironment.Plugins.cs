@@ -245,8 +245,7 @@ namespace OEA
         internal static bool IsRootType(Type entityType)
         {
             return entityType.HasMarked<RootEntityAttribute>() ||
-                entityType.HasMarked<ConditionQueryEntityAttribute>() ||
-                entityType.HasMarked<NavigationQueryEntityAttribute>();
+                entityType.HasMarked<QueryEntityAttribute>();
         }
 
         #endregion

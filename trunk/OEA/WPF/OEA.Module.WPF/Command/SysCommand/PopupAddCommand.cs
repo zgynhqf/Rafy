@@ -53,9 +53,11 @@ namespace OEA.WPF.Command
                 var curEntity = view.AddNew(false);
 
                 var oldTreeCode = string.Empty;
+                int? oldTreePId = null;
                 if (evm.EntityMeta.IsTreeEntity)
                 {
                     oldTreeCode = curEntity.TreeCode;
+                    oldTreePId = curEntity.TreePId;
                 }
 
                 curEntity.Clone(tmp, new CloneOptions(
@@ -68,6 +70,7 @@ namespace OEA.WPF.Command
                     view.Data.AutoTreeCodeEnabled)
                 {
                     curEntity.TreeCode = oldTreeCode;
+                    curEntity.TreePId = oldTreePId;
                 }
 
                 this.OnDataCloned(curEntity, tmp);

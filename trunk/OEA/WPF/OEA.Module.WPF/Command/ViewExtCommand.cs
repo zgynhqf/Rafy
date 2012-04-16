@@ -27,7 +27,7 @@ namespace OEA.WPF.Command
     {
         public override bool CanExecute(WPFObjectView view)
         {
-            var curControl = view.Control.GetLogicalParent<TraditionalLayout>();
+            var curControl = GetParentLayout(view.Control);
             if (curControl == null) return false;
 
             return base.CanExecute(view);
@@ -35,7 +35,7 @@ namespace OEA.WPF.Command
 
         public override void Execute(WPFObjectView view)
         {
-            var curControl = view.Control.GetLogicalParent<TraditionalLayout>();
+            var curControl = GetParentLayout(view.Control);
             if (curControl == null) return;
 
             view.IsActive = true;
@@ -95,6 +95,15 @@ namespace OEA.WPF.Command
                     return GetInitScale(v);
             }
             return 1;
+        }
+
+        private static FrameworkElement GetParentLayout(DependencyObject child)
+        {
+            var v = LogicalTreeHelper.GetParent(child);
+            if (v == null) return null;
+            if (v is ITraditionalLayoutControl) return v as FrameworkElement;
+
+            return GetParentLayout(v);
         }
     }
 }

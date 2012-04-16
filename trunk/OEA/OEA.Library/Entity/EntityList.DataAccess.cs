@@ -133,7 +133,10 @@ namespace OEA.Library
 
         protected virtual void QueryBy(object criteria)
         {
-            throw new NotImplementedException("子类重写此方法完成数据访问逻辑。");
+            throw new NotImplementedException(string.Format(
+                "实体列表类需要编写对应 {0} 类型的 QueryBy 数据层方法完成数据访问逻辑。",
+                criteria.GetType().FullName
+                ));
         }
 
         protected void QueryBy(GetByIdCriteria criteria)

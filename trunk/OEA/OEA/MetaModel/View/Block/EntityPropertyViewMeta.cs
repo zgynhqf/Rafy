@@ -317,12 +317,12 @@ namespace OEA.MetaModel.View
         List = 2,
 
         /// <summary>
-        /// 是否在详细视图中显示
+        /// 是否在表单中显示
         /// </summary>
         Detail = 4,
 
         /// <summary>
-        /// 显示在列表和详细视图中
+        /// 显示在列表和表单中
         /// </summary>
         ListDetail = List | Detail,
 

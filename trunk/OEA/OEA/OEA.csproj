@@ -80,11 +80,10 @@
     <Compile Include="MetaModel\Attributes\CanAddMethodAttribute.cs" />
     <Compile Include="MetaModel\Attributes\Command\CommandAttribute.cs" />
     <Compile Include="MetaModel\Attributes\Entity\ChildEntityAttribute.cs" />
-    <Compile Include="MetaModel\Attributes\Entity\ConditionQueryEntityAttribute.cs" />
     <Compile Include="MetaModel\Attributes\Entity\ConditionQueryTypeAttribute.cs" />
     <Compile Include="MetaModel\Attributes\Entity\CriteriaAttribute.cs" />
     <Compile Include="MetaModel\Attributes\Entity\EntityAttribute.cs" />
-    <Compile Include="MetaModel\Attributes\Entity\NavigationQueryEntityAttribute.cs" />
+    <Compile Include="MetaModel\Attributes\Entity\QueryEntityAttribute.cs" />
     <Compile Include="MetaModel\Attributes\Entity\NavigationQueryTypeAttribute.cs" />
     <Compile Include="MetaModel\Attributes\Entity\ORM\ColumnAttribute.cs" />
     <Compile Include="MetaModel\Attributes\Entity\ORM\PKAttribute.cs" />
@@ -198,6 +197,7 @@
     <Content Include="_OEA Version Logs\2.5-2.6.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="_CodeSnippets\OEA_Entity_Criteria.snippet" />
     <None Include="_CodeSnippets\OEA_PropertyList_Full.snippet" />
     <None Include="_CodeSnippets\UIA_InTab.snippet" />
     <None Include="_CodeSnippets\UIA_InWindow.snippet" />
@@ -208,7 +208,7 @@
     <None Include="_CodeSnippets\OEA_PropertyExtensionReadOnly.snippet" />
     <None Include="_CodeSnippets\OEA_PropertyReadOnly.snippet" />
     <None Include="_CodeSnippets\OEA_Command.snippet" />
-    <None Include="_CodeSnippets\OEA_Entity_Template.snippet" />
+    <None Include="_CodeSnippets\OEA_Entity.snippet" />
     <None Include="_CodeSnippets\OEA_ForeAsyncLoader.snippet" />
     <None Include="_CodeSnippets\OEA_Property.snippet" />
     <None Include="_CodeSnippets\OEA_PropertyList.snippet" />

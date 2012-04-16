@@ -34,10 +34,6 @@ namespace OEA.MetaModel
         /// <summary>
         /// 查询面板对象
         /// </summary>
-        ConditionQueryObject,
-        /// <summary>
-        /// 导航面板对象
-        /// </summary>
-        NavigationQueryObject
+        QueryObject
     }
 }

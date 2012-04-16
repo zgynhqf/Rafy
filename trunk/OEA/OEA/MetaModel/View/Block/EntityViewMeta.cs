@@ -142,6 +142,16 @@ namespace OEA.MetaModel.View
             set { this.SetValue(ref this._DetailLabelWidth, value); }
         }
 
+        private bool _DetailAsHorizontal;
+        /// <summary>
+        /// 是否需要表单设置为横向布局
+        /// </summary>
+        public bool DetailAsHorizontal
+        {
+            get { return this._DetailAsHorizontal; }
+            set { this.SetValue(ref this._DetailAsHorizontal, value); }
+        }
+
         private WPFCommandCollection _WPFCommands = new WPFCommandCollection();
         /// <summary>
         /// 为这个类可用的命令
@@ -252,7 +262,39 @@ namespace OEA.MetaModel.View
         /// <returns></returns>
         public EntityPropertyViewMeta Property(string name)
         {
-            return this.EntityProperties.FirstOrDefault(item => item.Name.EqualsIgnorecase(name));
+            var res = this.EntityProperties.FirstOrDefault(item => item.Name.EqualsIgnorecase(name));
+
+            if (this.SetOrder.HasValue)
+            {
+                res.OrderNo = this.SetOrder.Value;
+                this.SetOrder++;
+            }
+
+            return res;
+        }
+
+        internal int? SetOrder;
+
+        /// <summary>
+        /// 使用此方法定义的代码块中，自动根据代码调用的顺序设置属性排列的顺序。
+        /// </summary>
+        /// <param name="from"></param>
+        /// <returns></returns>
+        public IDisposable OrderProperties(int from = 1)
+        {
+            this.SetOrder = from;
+
+            return new ReorderingWrapper { Owner = this };
+        }
+
+        private class ReorderingWrapper : IDisposable
+        {
+            internal EntityViewMeta Owner;
+
+            public void Dispose()
+            {
+                Owner.SetOrder = null;
+            }
         }
 
         #endregion

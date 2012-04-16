@@ -91,6 +91,17 @@ namespace OEA.Library
         }
 
         /// <summary>
+        /// 统计仓库中所有的实体数量
+        /// </summary>
+        /// <returns></returns>
+        public int CountAll()
+        {
+            var svc = new CountAllEntityService { EntityType = this.EntityType };
+            svc.Invoke(out svc);
+            return svc.Count;
+        }
+
+        /// <summary>
         /// 通过Id在数据层中查询指定的对象
         /// </summary>
         /// <param name="id"></param>

@@ -102,6 +102,33 @@ namespace OEA.Module.WPF
             var module = UIModel.Modules.FindModule(moduleName);
             if (module == null) throw new ArgumentNullException("没有找到对应的模块：" + moduleName);
 
+            return this.OpenModuleOrAlert(module);
+        }
+
+        /// <summary>
+        /// 打开指定类型的模块
+        /// 
+        /// 如果没有权限打开该模块，则弹出提示框。
+        /// </summary>
+        /// <param name="entityType"></param>
+        public IWorkspaceWindow OpenModuleOrAlert(Type entityType)
+        {
+            //在列表中获取指定类型的元数据
+            var module = UIModel.Modules.FindModule(entityType);
+            if (module == null) throw new ArgumentNullException("没有找到对应的模块：" + entityType.FullName);
+
+            return this.OpenModuleOrAlert(module);
+        }
+
+        /// <summary>
+        /// 打开某个模块。
+        /// 
+        /// 如果没有权限打开该模块，则弹出提示框。
+        /// </summary>
+        /// <param name="module"></param>
+        /// <returns></returns>
+        public IWorkspaceWindow OpenModuleOrAlert(ModuleMeta module)
+        {
             if (!PermissionMgr.Provider.CanShowModule(module))
             {
                 this.MessageBox.Show(string.Format(
@@ -118,30 +145,28 @@ namespace OEA.Module.WPF
         /// <summary>
         /// 直接打开某个模块。
         /// </summary>
-        /// <param name="existModuleInfo"></param>
+        /// <param name="module"></param>
         /// <returns></returns>
-        public IWorkspaceWindow OpenModule(ModuleMeta existModuleInfo)
+        public IWorkspaceWindow OpenModule(ModuleMeta module)
         {
-            return this.FindOrCreateWindow(existModuleInfo);
+            return this.FindOrCreateWindow(module);
         }
 
         /// <summary>
         /// 创建/找到具体的视图控件。
         /// </summary>
-        /// <param name="mainRegion"></param>
-        /// <param name="selectItem"></param>
-        /// <param name="view"></param>
+        /// <param name="module"></param>
         /// <returns></returns>
-        private IWorkspaceWindow FindOrCreateWindow(ModuleMeta selectItem)
+        private IWorkspaceWindow FindOrCreateWindow(ModuleMeta module)
         {
             var workSpace = this.Workspace;
 
-            var view = workSpace.GetWindow(selectItem.Label);
+            var view = workSpace.GetWindow(module.Label);
 
             //如果已经打开则激活模块，否则新增模块窗体
             if (view == null)
             {
-                view = this.CreateModule(selectItem);
+                view = this.CreateModule(module);
 
                 workSpace.Add(view);
             }
@@ -155,7 +180,7 @@ namespace OEA.Module.WPF
         /// 构造模块的窗口
         /// </summary>
         /// <param name="moduleMeta"></param>
-        private IWorkspaceWindow CreateModule(ModuleMeta moduleMeta)
+        public IWorkspaceWindow CreateModule(ModuleMeta moduleMeta)
         {
             if (moduleMeta == null) throw new ArgumentNullException("moduleMeta");
 

@@ -11,8 +11,7 @@ using OEA.ManagedProperty;
 
 namespace OEA.Library.Audit
 {
-    [Serializable]
-    [ConditionQueryEntity]
+    [Serializable, QueryEntity]
     public partial class AuditItemConditionCriteria : Criteria
     {
         public AuditItemConditionCriteria()

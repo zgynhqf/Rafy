@@ -184,6 +184,8 @@
     <Compile Include="CustomModule.cs" />
     <Compile Include="PrimitiveUI\Detail\DefaultDetailPanel.cs" />
     <Compile Include="PrimitiveUI\EntityModule.cs" />
+    <Compile Include="PrimitiveUI\Layouts\ITraditionalLayout.cs" />
+    <Compile Include="PrimitiveUI\Layouts\TraditionalComponents.cs" />
     <Compile Include="Themes\OEAStyles.cs" />
     <Compile Include="Application.cs" />
     <Compile Include="AutoUI\ObjectViews\IEventListener.cs" />
@@ -344,7 +346,6 @@
       <DependentUpon>NaviListDetailLayout.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="PrimitiveUI\Layouts\TraditionalLayout.cs" />
     <Compile Include="PrimitiveUI\Layouts\TraditionalLayoutMethod.cs" />
     <Compile Include="PrimitiveUI\Layouts\TraditionalRegions.cs" />
     <Compile Include="PrimitiveUI\ResizingPanelExt.cs" />

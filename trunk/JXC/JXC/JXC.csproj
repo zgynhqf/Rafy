@@ -47,7 +47,10 @@
     <Compile Include="Entities\BasicData\ProductNavigationCriteria.cs" />
     <Compile Include="Entities\BasicData\Storage.cs" />
     <Compile Include="Entities\BasicData\Unit.cs" />
+    <Compile Include="Entities\Purchase\PurchaseOrder.cs" />
+    <Compile Include="Entities\Purchase\PurchaseOrderCriteria.cs" />
     <Compile Include="Entities\SystemMaintain\AutoCodeInfo.cs" />
+    <Compile Include="Entities\TimeSpanCriteria.cs" />
     <Compile Include="JXCEntity.cs" />
     <Compile Include="JXCLibrary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -82,7 +85,9 @@
       <Name>OEA.Web.Meta</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Entities\JXC.eap" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(TargetPath)" "$(SolutionDir)Web\bin\Library\" /Y

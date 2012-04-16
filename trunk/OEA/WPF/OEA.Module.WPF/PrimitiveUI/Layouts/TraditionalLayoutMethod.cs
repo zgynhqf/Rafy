@@ -16,57 +16,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
-
 using System.Windows.Controls;
 using OEA.Module;
 using OEA.Module.WPF.Layout;
 using OEA.MetaModel.View;
 
-namespace OEA
+namespace OEA.Module.WPF
 {
     /// <summary>
     /// 传统的布局方法
+    /// 90% 以上的场景都可以通过传统布局实现
     /// </summary>
-    /// <typeparam name="TContainerType"></typeparam>
-    public class TraditionalLayoutMethod<TContainerType> : LayoutMethod
-        where TContainerType : TraditionalLayout, new()
+    /// <typeparam name="TTraditionalLayoutControl">
+    /// 传统布局控件（用户自定义控件），注意，此控件需要继承自 FrameworkElement
+    /// </typeparam>
+    public class TraditionalLayoutMethod<TTraditionalLayoutControl> : LayoutMethod
+        where TTraditionalLayoutControl : ITraditionalLayoutControl, new()
     {
         protected override FrameworkElement ArrageCore(RegionContainer regions)
         {
-            //尝试布局以下内容：
-            //Main, Toolbar, Navigate, Condition, Result, List, Detail, Children
+            var container = new TTraditionalLayoutControl();
 
-            var container = new TContainerType();
+            var components = new TraditionalComponents(regions);
+            container.Arrange(components);
 
-            container.OnArraging(regions.BlocksInfo);
-
-            var control = regions.TryGetControl(TraditionalRegions.Main);
-            container.TryArrangeMain(control);
-
-            control = regions.TryGetControl(TraditionalRegions.CommandsContainer);
-            container.TryArrangeCommandsContainer(control);
-
-            control = regions.TryGetControl(SurrounderType.Navigation.GetDescription());
-            container.TryArrangeNavigation(control);
-
-            control = regions.TryGetControl(SurrounderType.Condition.GetDescription());
-            container.TryArrangeCondition(control);
-
-            control = regions.TryGetControl(SurrounderType.Result.GetDescription());
-            container.TryArrangeResult(control);
-
-            control = regions.TryGetControl(SurrounderType.List.GetDescription());
-            container.TryArrangeList(control);
-
-            control = regions.TryGetControl(SurrounderType.Detail.GetDescription());
-            container.TryArrangeDetail(control);
-
-            var children = regions.GetChildrenRegions().ToList();
-            container.TryArrangeChildren(children);
-
-            container.OnArranged();
-
-            return container;
+            return container.CastTo<FrameworkElement>();
         }
     }
 }

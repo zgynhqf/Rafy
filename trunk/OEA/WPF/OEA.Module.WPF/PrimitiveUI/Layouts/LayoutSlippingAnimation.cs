@@ -31,12 +31,13 @@ namespace OEA.Module.WPF.Layout
         /// <summary>
         /// 初始化整个布局
         /// </summary>
-        /// <param name="layout"></param>
         /// <param name="left"></param>
         /// <param name="right"></param>
-        public static void Initialize(TraditionalLayout layout, FrameworkElement left, FrameworkElement right)
+        /// <param name="layout"></param>
+        public static void Initialize(FrameworkElement left, FrameworkElement right, ParentChildProportion leftRightPercent = null)
         {
-            var leftRightPercent = layout.AggtBlocks.Layout.ParentChildProportion ?? ParentChildProportion.Default;
+            //layout.AggtBlocks.Layout.ParentChildProportion
+            leftRightPercent = leftRightPercent ?? ParentChildProportion.Default;
 
             ResizingPanelExt.SetStarGridLength(left, leftRightPercent.Parent);
             ResizingPanelExt.SetStarGridLength(right, leftRightPercent.Children);
@@ -69,18 +70,14 @@ namespace OEA.Module.WPF.Layout
             };
 
             //监听 childrenTab.VisiblityChanged 事件，播放动画效果
-            var childrenTab = layout.TryGetChildrenTab();
-            if (childrenTab != null)
-            {
-                DependencyPropertyDescriptor.FromProperty(UIElement.VisibilityProperty, typeof(UIElement))
-                    .AddValueChanged(childrenTab, (o, e) =>
-                    {
-                        right.BeginAnimation(
-                            ResizingPanelExt.StarGridLengthProperty,
-                            childrenTab.Visibility == Visibility.Visible ? show : hide
-                            );
-                    });
-            }
+            DependencyPropertyDescriptor.FromProperty(UIElement.VisibilityProperty, typeof(UIElement))
+                .AddValueChanged(right, (o, e) =>
+                {
+                    right.BeginAnimation(
+                        ResizingPanelExt.StarGridLengthProperty,
+                        right.Visibility == Visibility.Visible ? show : hide
+                        );
+                });
         }
     }
 }
