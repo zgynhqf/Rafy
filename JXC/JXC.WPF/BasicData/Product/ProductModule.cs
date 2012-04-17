@@ -32,7 +32,7 @@ namespace JXC.WPF
 
             var p = entity as Product;
             p.BianMa = code;
-            p.User = OEAIdentity.Current.User;
+            p.Operator = OEAIdentity.Current.User;
             p.OperateTime = DateTime.Now;
         }
     }

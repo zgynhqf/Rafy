@@ -28,11 +28,13 @@ namespace OEA.MetaModel.View
         /// <summary>
         /// 本构造函数是 WPF 专用
         /// </summary>
-        /// <param name="layoutType"></param>
-        public LayoutMeta(Type layoutType)
+        /// <param name="layoutMethodType">
+        /// 该类需要继承自 LayoutMethod，一般情况下，只需要使用 TraditionalLayoutMethod 泛型类即可。
+        /// </param>
+        public LayoutMeta(Type layoutMethodType)
             : this()
         {
-            this.Class = layoutType.AssemblyQualifiedName;
+            this.Class = layoutMethodType.AssemblyQualifiedName;
         }
 
         /// <summary>

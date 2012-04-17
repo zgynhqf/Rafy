@@ -6,6 +6,7 @@ using OEA;
 using OEA.Library.ORM.DbMigration;
 using OEA.MetaModel.View;
 using OEA.MetaModel;
+using DbMigration;
 
 namespace JXC
 {
@@ -33,7 +34,7 @@ namespace JXC
                                 new ModuleMeta{ Label = "计量单位", EntityType = typeof(Unit)},
                                 new ModuleMeta{ Label = "商品类别", EntityType = typeof(ProductCategory)},
                                 new ModuleMeta{ Label = "商品管理", EntityType = typeof(Product)},
-                                new ModuleMeta{ Label = "仓库管理", EntityType = typeof(Storage)},
+                                //new ModuleMeta{ Label = "仓库管理", EntityType = typeof(Storage)},
                                 new ModuleMeta{ Label = "客户类别", EntityType = typeof(ClientCategory)},
                                 new ModuleMeta{ Label = "客户管理", EntityType = typeof(ClientInfo)},
                             }
@@ -70,6 +71,7 @@ namespace JXC
             {
                 using (var c = new OEADbMigrationContext(JXCEntity.ConnectionString))
                 {
+                    c.DeleteDatabase();
                     c.AutoMigrate();
 
                     //其它一些可用的API

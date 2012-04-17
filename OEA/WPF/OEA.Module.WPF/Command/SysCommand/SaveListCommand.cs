@@ -32,7 +32,7 @@ namespace OEA.WPF.Command
             var listView = view.CastTo<ListObjectView>();
 
             var list = listView.Data;
-            if (list.Count > 0)
+            if (list.IsDirty)
             {
                 //检测条件
                 for (int i = 0, c = list.Count; i < c; i++)

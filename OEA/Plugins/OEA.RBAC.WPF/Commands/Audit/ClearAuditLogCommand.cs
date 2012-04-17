@@ -29,7 +29,7 @@ namespace RBAC
 
         public override void Execute(ObjectView view)
         {
-            var result = App.Current.MessageBox.Show("确定清空所有日志？", "请确认", MessageBoxButton.YesNo);
+            var result = App.Current.MessageBox.Show("请确认", "确定清空所有日志？", MessageBoxButton.YesNo);
             if (result != MessageBoxResult.Yes) return;
 
             //清空

@@ -26,11 +26,65 @@ namespace JXC
     [ConditionQueryType(typeof(PurchaseOrderCriteria))]
     public class PurchaseOrder : JXCEntity
     {
-        public static readonly Property<string> NameProperty = P<PurchaseOrder>.Register(e => e.Name);
-        public string Name
+        public static readonly RefProperty<ClientInfo> SupplierRefProperty =
+            P<PurchaseOrder>.RegisterRef(e => e.Supplier, ReferenceType.Normal);
+        public int SupplierId
         {
-            get { return this.GetProperty(NameProperty); }
-            set { this.SetProperty(NameProperty, value); }
+            get { return this.GetRefId(SupplierRefProperty); }
+            set { this.SetRefId(SupplierRefProperty, value); }
+        }
+        public ClientInfo Supplier
+        {
+            get { return this.GetRefEntity(SupplierRefProperty); }
+            set { this.SetRefEntity(SupplierRefProperty, value); }
+        }
+
+        public static readonly ListProperty<PurchaseOrderItemList> PurchaseOrderItemListProperty = P<PurchaseOrder>.RegisterList(e => e.PurchaseOrderItemList);
+        public PurchaseOrderItemList PurchaseOrderItemList
+        {
+            get { return this.GetLazyList(PurchaseOrderItemListProperty); }
+        }
+
+        public static readonly Property<string> CodeProperty = P<PurchaseOrder>.Register(e => e.Code);
+        public string Code
+        {
+            get { return this.GetProperty(CodeProperty); }
+            set { this.SetProperty(CodeProperty, value); }
+        }
+
+        public static readonly Property<DateTime> DateProperty = P<PurchaseOrder>.Register(e => e.Date);
+        public DateTime Date
+        {
+            get { return this.GetProperty(DateProperty); }
+            set { this.SetProperty(DateProperty, value); }
+        }
+
+        public static readonly Property<DateTime> PlanStorageInDateProperty = P<PurchaseOrder>.Register(e => e.PlanStorageInDate);
+        public DateTime PlanStorageInDate
+        {
+            get { return this.GetProperty(PlanStorageInDateProperty); }
+            set { this.SetProperty(PlanStorageInDateProperty, value); }
+        }
+
+        public static readonly Property<double> TotalMoneyProperty = P<PurchaseOrder>.Register(e => e.TotalMoney);
+        public double TotalMoney
+        {
+            get { return this.GetProperty(TotalMoneyProperty); }
+            set { this.SetProperty(TotalMoneyProperty, value); }
+        }
+
+        public static readonly Property<bool> StorageInDirectlyProperty = P<PurchaseOrder>.Register(e => e.StorageInDirectly);
+        public bool StorageInDirectly
+        {
+            get { return this.GetProperty(StorageInDirectlyProperty); }
+            set { this.SetProperty(StorageInDirectlyProperty, value); }
+        }
+
+        public static readonly Property<string> CommentProperty = P<PurchaseOrder>.Register(e => e.Comment);
+        public string Comment
+        {
+            get { return this.GetProperty(CommentProperty); }
+            set { this.SetProperty(CommentProperty, value); }
         }
     }
 
@@ -46,16 +100,17 @@ namespace JXC
     {
         protected override void ConfigMeta()
         {
-            Meta.MapTable().HasColumns(
-                PurchaseOrder.NameProperty
-                );
+            Meta.MapTable().MapAllPropertiesToTable();
         }
 
         protected override void ConfigView()
         {
-            View.DomainName("采购订单").HasDelegate(PurchaseOrder.NameProperty);
+            View.DomainName("采购订单").HasDelegate(PurchaseOrder.CodeProperty);
 
-            View.Property(PurchaseOrder.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
+            using (View.OrderProperties())
+            {
+                View.Property(PurchaseOrder.CodeProperty).HasLabel("订单编号").ShowIn(ShowInWhere.All);
+            }
         }
     }
 }

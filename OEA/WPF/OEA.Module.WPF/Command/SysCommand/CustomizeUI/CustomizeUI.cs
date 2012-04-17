@@ -12,7 +12,7 @@ using OEA.MetaModel;
 
 namespace OEA.WPF.Command
 {
-    [Command(Label = "界面设置", GroupType = CommandGroupType.Edit)]
+    [Command(Label = "界面设置", ToolTip = "实施人员使用的界面配置功能，只在调试期可见。", GroupType = CommandGroupType.Edit)]
     public class CustomizeUI : ViewCommand
     {
         public override void Execute(ObjectView view)

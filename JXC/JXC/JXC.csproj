@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DbMigrations\_20120417_131600_InitProduct.cs" />
     <Compile Include="Entities\BasicData\ClientCategory.cs" />
     <Compile Include="Entities\BasicData\ClientInfo.cs" />
     <Compile Include="Entities\BasicData\Product.cs" />
@@ -49,10 +50,19 @@
     <Compile Include="Entities\BasicData\Unit.cs" />
     <Compile Include="Entities\Purchase\PurchaseOrder.cs" />
     <Compile Include="Entities\Purchase\PurchaseOrderCriteria.cs" />
+    <Compile Include="Entities\Purchase\PurchaseOrderItem.cs" />
+    <Compile Include="Entities\StorageIn\OrderStorageInBill.cs" />
+    <Compile Include="Entities\StorageIn\OtherStorageInBill.cs" />
+    <Compile Include="Entities\StorageIn\StorageInBill.cs" />
+    <Compile Include="Entities\StorageIn\StorageInItem.cs" />
+    <Compile Include="Entities\StorageOut\OtherStorageOutBill.cs" />
+    <Compile Include="Entities\StorageOut\StorageOutBill.cs" />
+    <Compile Include="Entities\StorageOut\StorageOutBillItem.cs" />
     <Compile Include="Entities\SystemMaintain\AutoCodeInfo.cs" />
     <Compile Include="Entities\TimeSpanCriteria.cs" />
     <Compile Include="JXCEntity.cs" />
     <Compile Include="JXCLibrary.cs" />
+    <Compile Include="MetaExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -86,7 +96,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Entities\JXC.eap" />
+    <Content Include="UML\1 基础数据.jpg" />
+    <Content Include="UML\2 库存.jpg" />
+    <Content Include="UML\3 采购订单.jpg" />
+    <Content Include="UML\4 入库单.jpg" />
+    <Content Include="UML\5 出库单.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

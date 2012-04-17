@@ -46,8 +46,10 @@ namespace OEA.MetaModel
         /// <param name="property"></param>
         /// <param name="ascending"></param>
         /// <returns></returns>
-        public static EntityMeta DefaultOrderBy(this EntityMeta meta, IManagedProperty property, bool ascending = true)
+        public static EntityMeta DataOrderBy(this EntityMeta meta, IManagedProperty property, bool ascending = true)
         {
+            if (meta.IsTreeEntity) { throw new NotSupportedException("树型实体不支持修改默认排序规则！"); }
+
             meta.DefaultOrderBy = meta.Property(property);
             meta.DefaultOrderByAscending = ascending;
 
@@ -55,14 +57,34 @@ namespace OEA.MetaModel
         }
 
         /// <summary>
-        /// 指定某个实体的所有属性全部映射数据库字段
+        /// 指定所有属性全部映射数据库字段
         /// </summary>
         /// <param name="meta"></param>
         /// <returns></returns>
         public static EntityMeta MapAllPropertiesToTable(this EntityMeta meta)
         {
-            var properties = meta.ManagedProperties.GetCompiledProperties();
-            return meta.HasColumns(properties.ToArray());
+            var properties = meta.ManagedProperties.GetCompiledProperties()
+                .Where(p => !p.IsReadOnly && !(p is IListProperty)).ToArray();
+            return meta.HasColumns(properties);
+        }
+
+        /// <summary>
+        /// 指定某个实体的所有属性全部映射数据库字段
+        /// 同时排除指定的属性列表。
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="exceptProperties">
+        /// 这些属性不需要映射数据库
+        /// </param>
+        /// <returns></returns>
+        public static EntityMeta MapAllPropertiesToTableExcept(this EntityMeta meta, params IManagedProperty[] exceptProperties)
+        {
+            var properties = meta.ManagedProperties.GetCompiledProperties()
+                .Where(p => !p.IsReadOnly && !(p is IListProperty))
+                .Except(exceptProperties)
+                .ToArray();
+
+            return meta.HasColumns(properties);
         }
 
         /// <summary>
@@ -136,7 +158,12 @@ namespace OEA.MetaModel
             if (meta.IsTreeEntity && meta.TableMeta != null)
             {
                 var p = meta.Property(DBConvention.FieldName_TreeCode);
-                if (p != null) p.MapColumn();
+                if (p != null)
+                {
+                    p.MapColumn();
+                    meta.DefaultOrderBy = p;
+                    meta.DefaultOrderByAscending = true;
+                }
 
                 p = meta.Property(DBConvention.FieldName_TreePId);
                 if (p != null) p.MapColumn();

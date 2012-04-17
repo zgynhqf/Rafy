@@ -9,6 +9,22 @@
  * 
 *******************************************************/
 
+2.10.524.0
+    添加接口
+        * 提供 EntityMeta 的扩展配置方法 MapAllPropertiesToTable、MapAllPropertiesToTableExcept。
+    BUG修复
+        * 抽象类不可以映射数据库。
+    内部修改
+        * RBAC Org 布局。
+        * RBAC 日志查询布局。
+    示例
+        * 为 JXC 添加实体类。
+
+2.10.519.0
+    BUG修复
+        * 修复：“SaveListCommand 列表删除最后一行时，不能保存”。
+        * 修复：“树型实体被修改默认排序规则”。
+
 2.10.517.0
     添加接口
         * EntityRepository 添加 CountAll 方法。
