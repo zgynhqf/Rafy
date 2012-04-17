@@ -71,7 +71,7 @@ namespace JXC
             {
                 using (var c = new OEADbMigrationContext(JXCEntity.ConnectionString))
                 {
-                    c.DeleteDatabase();
+                    //c.DeleteDatabase();
                     c.AutoMigrate();
 
                     //其它一些可用的API
