@@ -30,16 +30,13 @@ namespace JXC
         public void Arrange(TraditionalComponents components)
         {
             var control = components.Main;
-            if (control != null)
-            {
-                content.Content = control.Control;
-            }
+            if (control != null) { content.Content = control.Control; }
+
+            control = components.CommandsContainer;
+            if (control != null) { commands.Content = control.Control; }
 
             control = components.Condition;
-            if (control != null)
-            {
-                queryPanel.Content = control.Control;
-            }
+            if (control != null) { queryPanel.Content = control.Control; }
         }
     }
 }

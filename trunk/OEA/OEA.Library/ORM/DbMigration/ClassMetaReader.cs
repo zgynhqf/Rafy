@@ -74,16 +74,19 @@ namespace OEA.Library.ORM.DbMigration
             {
                 foreach (var type in assembly.Assembly.GetTypes())
                 {
-                    //判断实体类型是否映射了某一个数据库
-                    var em = CommonModel.Entities.Find(type);
-                    if (em != null)
+                    if (!type.IsAbstract)
                     {
-                        if (em.TableMeta != null)
+                        //判断实体类型是否映射了某一个数据库
+                        var em = CommonModel.Entities.Find(type);
+                        if (em != null)
                         {
-                            var entityDb = RF.Create(type).ConnectionStringSettingName;
-                            if (entityDb == this._dbSetting.Name)
+                            if (em.TableMeta != null)
                             {
-                                tableEntityTypes.Add(em);
+                                var entityDb = RF.Create(type).ConnectionStringSettingName;
+                                if (entityDb == this._dbSetting.Name)
+                                {
+                                    tableEntityTypes.Add(em);
+                                }
                             }
                         }
                     }

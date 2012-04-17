@@ -98,7 +98,7 @@ namespace OEA.Module.WPF.Shell
 
         private void sdScale_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            sdScale.Value = 1.0;
+            sdScale.Value = 1.1;
         }
     }
 }

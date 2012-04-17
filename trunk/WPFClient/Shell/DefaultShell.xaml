@@ -25,7 +25,7 @@
         <DockPanel DockPanel.Dock="Bottom">
             <!--暂时关闭皮肤选择功能-->
             <ComboBox x:Name="themes" Width="150" Height="20" SelectedIndex="0" DockPanel.Dock="Right" Visibility="Collapsed" />
-            <Slider x:Name="sdScale" Width="50" DockPanel.Dock="Right" Value="1" Minimum="0.8" Maximum="2" MouseDoubleClick="sdScale_MouseDoubleClick"/>
+            <Slider x:Name="sdScale" Width="50" DockPanel.Dock="Right" Value="1.1" Minimum="0.8" Maximum="2" MouseDoubleClick="sdScale_MouseDoubleClick"/>
             <TextBlock VerticalAlignment="Center" DockPanel.Dock="Right">缩放</TextBlock>
             <Separator DockPanel.Dock="Right" Margin="0,0,40,0"/>
             <Label Name="status" VerticalAlignment="Center" DataContext="{x:Static local:App.Current}" Content="{Binding Status}"/>

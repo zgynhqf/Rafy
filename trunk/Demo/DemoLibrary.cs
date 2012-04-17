@@ -44,18 +44,7 @@ namespace Demo
                         new ModuleMeta{ Label = "类别管理", EntityType = typeof(BookCategory)},
                         new ModuleMeta{ Label = "书籍管理", EntityType = typeof(Book)},
                         new ModuleMeta{ Label = "图书管理员", EntityType = typeof(BookAdministrator)},
-                    }
-                });
-
-                var moduleQuery = CommonModel.Modules.AddRoot(new ModuleMeta
-                {
-                    Label = "书籍查询模块",
-                    Children =
-                    {
-                        new ModuleMeta
-                        {
-                            Label = "书籍查询", EntityType = typeof(Book),
-                        }
+                        new ModuleMeta{ Label = "书籍查询", EntityType = typeof(Book)}
                     }
                 });
 
@@ -63,7 +52,7 @@ namespace Demo
                 {
                     moduleBookImport.Children.Add(new ModuleMeta { Label = "163", CustomUI = "http://www.163.com" });
 
-                    var bookQuery = moduleQuery.Children[0];
+                    var bookQuery = moduleBookImport.Children[3];
                     bookQuery.AggtBlocksName = "书籍查询界面";
                     bookQuery.Children.Add(new ModuleMeta
                     {
@@ -73,21 +62,21 @@ namespace Demo
                 }
             };
 
-            app.DbMigratingOperations += (o, e) =>
-            {
-                using (var c = new OEADbMigrationContext(DemoEntity.ConnectionString))
-                {
-                    c.AutoMigrate();
+            //app.DbMigratingOperations += (o, e) =>
+            //{
+            //    using (var c = new OEADbMigrationContext(DemoEntity.ConnectionString))
+            //    {
+            //        c.AutoMigrate();
 
-                    //其它一些可用的API
-                    //c.ClassMetaReader.IgnoreTables.Add("ReportObjectMetaData");
-                    //c.RollbackToHistory(DateTime.Parse("2008-12-31 23:59:58.700"), RollbackAction.DeleteHistory);
-                    //c.DeleteDatabase();
-                    //c.ResetHistories();
-                    //c.RollbackAll();
-                    //c.JumpToHistory(DateTime.Parse("2012-01-07 21:27:00.000"));
-                };
-            };
+            //        //其它一些可用的API
+            //        //c.ClassMetaReader.IgnoreTables.Add("ReportObjectMetaData");
+            //        //c.RollbackToHistory(DateTime.Parse("2008-12-31 23:59:58.700"), RollbackAction.DeleteHistory);
+            //        //c.DeleteDatabase();
+            //        //c.ResetHistories();
+            //        //c.RollbackAll();
+            //        //c.JumpToHistory(DateTime.Parse("2012-01-07 21:27:00.000"));
+            //    };
+            //};
         }
     }
 }

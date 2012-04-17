@@ -34,14 +34,13 @@ namespace RBAC
                 Layout = new LayoutMeta()
                 {
                     IsLayoutChildrenHorizonal = true,
-                    ParentChildProportion = new ParentChildProportion(15, 85)
+                    ParentChildProportion = new ParentChildProportion(20, 80)
                 },
                 Children = 
                 {
                     new AggtBlocks
                     {
                         MainBlock = new ChildBlock("岗位", Org.OrgPositionListProperty),
-                        Layout = new LayoutMeta() { IsLayoutChildrenHorizonal = true },
                         Children = 
                         {
                             new ChildBlock("岗位成员", OrgPosition.OrgPositionUserListProperty),

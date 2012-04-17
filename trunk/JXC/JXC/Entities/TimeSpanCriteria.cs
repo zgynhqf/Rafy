@@ -24,6 +24,11 @@ namespace JXC
     [Serializable]
     public abstract class TimeSpanCriteria : Criteria
     {
+        public TimeSpanCriteria()
+        {
+            this.TimeSpanType = TimeSpanType.LastMonth;
+        }
+
         public static readonly Property<TimeSpanType> TimeSpanTypeProperty = P<TimeSpanCriteria>.Register(e => e.TimeSpanType, new PropertyMetadata<TimeSpanType>
         {
             PropertyChangedCallBack = (o, e) => (o as TimeSpanCriteria).OnTimeSpanTypeChanged(e)

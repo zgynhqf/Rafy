@@ -66,9 +66,7 @@ namespace $NAMESPACE$
     {
         protected override void ConfigMeta()
         {
-            Meta.MapTable().HasColumns(
-                $EntityName$.NameProperty
-                );
+            Meta.MapTable().MapAllPropertiesToTable();
         }
 
         protected override void ConfigView()

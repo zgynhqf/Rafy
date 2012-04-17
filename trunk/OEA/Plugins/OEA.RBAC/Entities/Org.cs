@@ -94,7 +94,11 @@ namespace OEA.RBAC
 
             View.DomainName("部门").HasDelegate(Org.NameProperty);
 
-            View.Property(Org.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
+            using (View.OrderProperties())
+            {
+                View.Property(Org.TreeCodeProperty).HasLabel("编码").ShowIn(ShowInWhere.ListDropDown).Readonly();
+                View.Property(Org.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
+            }
         }
     }
 }

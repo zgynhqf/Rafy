@@ -152,16 +152,22 @@ namespace OEA.MetaModel
             set { this.SetValue(ref this._TableMeta, value); }
         }
 
+        /// <summary>
+        /// 实体的数据默认按照某个属性排序。
+        /// </summary>
         public EntityPropertyMeta DefaultOrderBy
         {
             get { return this._DefaultOrderBy; }
-            set { this.SetValue(ref this._DefaultOrderBy, value); }
+            internal set { this.SetValue(ref this._DefaultOrderBy, value); }
         }
 
+        /// <summary>
+        /// 实体的数据默认按照这个次序排序。
+        /// </summary>
         public bool DefaultOrderByAscending
         {
             get { return this._DefaultOrderByAscending; }
-            set { this.SetValue(ref this._DefaultOrderByAscending, value); }
+            internal set { this.SetValue(ref this._DefaultOrderByAscending, value); }
         }
 
         #endregion
