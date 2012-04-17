@@ -10,7 +10,7 @@ namespace JXC
     {
         public static EntityPropertyViewMeta ShowMemoInDetail(this EntityPropertyViewMeta meta)
         {
-            return meta.ShowInDetail(columnSpan: 2, height: 200)
+            return meta.ShowInDetail(columnSpan: 2, height: 100)
                 .UseEditor(WPFEditorNames.Memo);
         }
     }

@@ -7,7 +7,7 @@ using OEA.MetaModel.View;
 
 namespace Demo.WPF
 {
-    public class BookQueryModule : CallbackModule
+    public class BookQueryModule : CallbackTemplate
     {
         protected override AggtBlocks DefineBlocks()
         {

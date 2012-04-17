@@ -37,7 +37,7 @@ namespace OEA.WPF.Command
             var brokenRules = current.ValidationRules.Validate();
             if (brokenRules.Count > 0)
             {
-                App.Current.MessageBox.Show("保存出错", brokenRules.ToString());
+                App.MessageBox.Show(brokenRules.ToString(), "保存出错");
                 return;
             }
 

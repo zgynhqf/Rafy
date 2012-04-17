@@ -104,7 +104,7 @@ namespace OEA.Module.WPF.Editors
                 IsReadOnly = this.IsReadonly
             };
 
-            var result = App.Current.Windows.ShowDialog(edtInfo, w =>
+            var result = App.Windows.ShowDialog(edtInfo, w =>
             {
                 w.ResizeMode = ResizeMode.CanResize;
                 w.Title = "编辑" + PropertyViewInfo.Label;

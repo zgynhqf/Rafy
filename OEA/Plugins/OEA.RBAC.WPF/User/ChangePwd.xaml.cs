@@ -12,7 +12,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using OEA.Library;
-
 using System.Security.Cryptography;
 using OEA.Utils;
 using OEA.RBAC;
@@ -38,12 +37,12 @@ namespace OEA.Module.WPF
         {
             if (StringHelper.MD5(txtOldPassword.Password) != user.Password)
             {
-                App.Current.MessageBox.Show("旧密码输入错误，请重新输入!", "错误");
+                App.MessageBox.Show("错误", "旧密码输入错误，请重新输入!");
                 return;
             }
             else if (txtNewPassword1.Password != txtNewPassword2.Password)
             {
-                App.Current.MessageBox.Show("两次输入的新密码不一致，请重新输入!", "错误");
+                App.MessageBox.Show("错误", "两次输入的新密码不一致，请重新输入!");
                 return;
             }
             user.Password = StringHelper.MD5(txtNewPassword1.Password);

@@ -163,8 +163,6 @@ namespace OEA.Library
 
         public void Clone(Entity target, CloneOptions options)
         {
-            if (options == null) throw new ArgumentNullException("options");
-
             this.CloneCore(target, options);
         }
 
@@ -180,6 +178,9 @@ namespace OEA.Library
         /// <param name="cloneChildren">是否复制孩子对象的引用</param>
         protected virtual void CloneCore(Entity target, CloneOptions options)
         {
+            if (target == null) throw new ArgumentNullException("target");
+            if (options == null) throw new ArgumentNullException("options");
+
             var grabChildren = options.HasAction(CloneActions.GrabChildren);
             var childrenRecur = options.HasAction(CloneActions.ChildrenRecur);
             var copyId = options.HasAction(CloneActions.IdProperty);
@@ -190,10 +191,7 @@ namespace OEA.Library
             //注意：
             //由于 IdProperty 在 AllProperties 中的位置并不是第一个。所以会出现拷贝其它属性时，再次访问本ID导致缓存重建。
             //所以这里需要单独对 Id 进行一次拷贝。
-            if (copyId)
-            {
-                this.CopyProperty(target, IdProperty);
-            }
+            if (copyId) { this.CopyProperty(target, IdProperty); }
 
             //复制目标对象的所有托管属性。
             var allProperties = this.FindRepository().GetAvailableIndicators();

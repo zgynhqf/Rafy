@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="BasicData\Product\ProductModule.cs" />
     <Compile Include="BasicData\Product\ProductNavigationCommands.cs" />
+    <Compile Include="Commands\AddBillCommand.cs" />
     <Compile Include="JXCModule.cs" />
     <Compile Include="Layouts\ConditionQueryLayout.xaml.cs">
       <DependentUpon>ConditionQueryLayout.xaml</DependentUpon>
@@ -55,7 +56,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Templates\ConditionQueryModule.cs" />
-    <Compile Include="Templates\ListModule.cs" />
+    <Compile Include="Templates\DetailChildrenTemplate.cs" />
     <Compile Include="Templates\ModuleBase.cs" />
   </ItemGroup>
   <ItemGroup>

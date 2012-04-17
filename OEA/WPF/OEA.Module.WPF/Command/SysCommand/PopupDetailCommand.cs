@@ -38,7 +38,7 @@ namespace OEA.WPF.Command
             ctrl.VerticalAlignment = VerticalAlignment.Top;
             ctrl = new StackPanel { Children = { ctrl } };
 
-            var result = App.Current.Windows.ShowDialog(ctrl, w =>
+            var result = App.Windows.ShowDialog(ctrl, w =>
             {
                 w.Buttons = ViewDialogButtons.YesNo;
                 w.SizeToContent = SizeToContent.Height;
@@ -50,7 +50,7 @@ namespace OEA.WPF.Command
                     var broken = tmpEntity.ValidationRules.Validate();
                     if (broken.Count > 0)
                     {
-                        App.Current.MessageBox.Show("属性错误", broken.ToString());
+                        App.MessageBox.Show(broken.ToString(), "属性错误");
                         e.Cancel = true;
                     }
                 };
@@ -61,6 +61,18 @@ namespace OEA.WPF.Command
                 {
                     var txt = w.GetVisualChild<TextBox>();
                     if (txt != null) { Keyboard.Focus(txt); }
+                };
+
+                //窗口在数据改变后再关闭窗口，需要提示用户是否保存。
+                bool changed = false;
+                tmpEntity.PropertyChanged += (o, e) => changed = true;
+                w.Closing += (o, e) =>
+                {
+                    if (changed)
+                    {
+                        var res = App.MessageBox.Show("直接退出将不会保存数据，是否继续？", MessageBoxButton.YesNo);
+                        e.Cancel = res == MessageBoxResult.No;
+                    }
                 };
 
                 this.OnWindowShowing(w);

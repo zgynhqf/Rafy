@@ -52,7 +52,7 @@ namespace OEA.WPF.Command
 
         public override void Execute(ListObjectView view)
         {
-            //var result = App.Current.MessageBox.Show("确认删除", this.Message, MessageBoxButton.YesNo);
+            //var result = App.MessageBox.Show("确认删除", this.Message, MessageBoxButton.YesNo);
             //if (result == MessageBoxResult.Yes)
             //{
             var dataList = view.Data as EntityList;

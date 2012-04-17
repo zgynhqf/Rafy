@@ -20,7 +20,7 @@
 //using GIX4.Library;
 //using OEA;
 //using OEA.MetaModel;
-using OEA.MetaModel.View;
+//using OEA.MetaModel.View;
 //using OEA.MetaModel.Attributes;
 //using OEA.Module.WPF;
 //using OEA.Module.WPF.Controls;
@@ -180,25 +180,25 @@ using OEA.MetaModel.View;
 //            this.PrepareActions(
 //                view =>
 //                {
-//                    App.Current.MessageBox.Show("CheckingRowCascade.None");
+//                    App.MessageBox.Show("CheckingRowCascade.None");
 //                    view.CheckingRowCascade = CheckingRowCascade.None;
 //                    view.CheckingMode = CheckingMode.CheckingRow;
 //                },
 //                view =>
 //                {
-//                    App.Current.MessageBox.Show("CheckingRowCascade.CascadeParent");
+//                    App.MessageBox.Show("CheckingRowCascade.CascadeParent");
 //                    view.CheckingRowCascade = CheckingRowCascade.CascadeParent;
 //                    view.CheckingMode = CheckingMode.CheckingRow;
 //                },
 //                view =>
 //                {
-//                    App.Current.MessageBox.Show("CheckingRowCascade.CascadeChildren");
+//                    App.MessageBox.Show("CheckingRowCascade.CascadeChildren");
 //                    view.CheckingRowCascade = CheckingRowCascade.CascadeChildren;
 //                    view.CheckingMode = CheckingMode.CheckingRow;
 //                },
 //                view =>
 //                {
-//                    App.Current.MessageBox.Show("CheckingRowCascade.CascadeParent | CheckingRowCascade.CascadeChildren");
+//                    App.MessageBox.Show("CheckingRowCascade.CascadeParent | CheckingRowCascade.CascadeChildren");
 //                    view.CheckingRowCascade = CheckingRowCascade.CascadeParent | CheckingRowCascade.CascadeChildren;
 //                    view.CheckingMode = CheckingMode.CheckingRow;
 //                },
@@ -221,7 +221,7 @@ using OEA.MetaModel.View;
 
 //            var msg = string.Format("Data：{0}；\n\rSelectedObjects：{1}。", dataCount, selectedObjectsCount);
 
-//            App.Current.MessageBox.Show(msg);
+//            App.MessageBox.Show(msg);
 //        }
 //    }
 
@@ -240,7 +240,7 @@ using OEA.MetaModel.View;
 //            control.MainView.Data = type.PBSs;
 //            (control.MainView as ListObjectView).IsReadOnly = true;
 
-//            App.Current.Windows.ShowWindow(control.Control);
+//            App.Windows.ShowWindow(control.Control);
 //        }
 //    }
 
@@ -264,7 +264,7 @@ using OEA.MetaModel.View;
 
 //        //    controlResult.Data = All;
 
-//        //    App.Current.Windows.ShowDialog(controlResult.Control);
+//        //    App.Windows.ShowDialog(controlResult.Control);
 //        //}
 
 //        public override void Execute(ListObjectView view)
@@ -287,7 +287,7 @@ using OEA.MetaModel.View;
 
 //            controlResult.Data = data;
 
-//            App.Current.Windows.ShowDialog(controlResult.Control, w =>
+//            App.Windows.ShowDialog(controlResult.Control, w =>
 //            {
 //                w.AddCommand("5692543B-8AFD-44C3-919E-355F2A259122", controlResult);
 //            });

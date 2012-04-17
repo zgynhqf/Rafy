@@ -10,7 +10,6 @@ using OEA.Module.WPF;
 using OEA.Module.WPF.Controls;
 using OEA.Module.WPF.Layout;
 
-
 namespace OEA.WPF.Command
 {
     [Command(Label = "选择全部")]
@@ -57,7 +56,7 @@ namespace OEA.WPF.Command
             }
 
             //window
-            App.Current.Windows.ShowDialog(curControl, win =>
+            App.Windows.ShowDialog(curControl, win =>
             {
                 win.ResizeMode = ResizeMode.CanResize;
                 win.Title = title;

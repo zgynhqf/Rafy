@@ -35,7 +35,8 @@ namespace DbMigration.History
         {
             var items = this.GetHistoriesCore(database);
 
-            return items.Select(history => this.Restore(history))
+            return items.Select(history => this.TryRestore(history))
+                .Where(h => h != null)
                 .OrderByDescending(dm => dm.TimeId)
                 .ToList();
         }
@@ -83,9 +84,19 @@ namespace DbMigration.History
         /// </summary>
         /// <param name="history"></param>
         /// <returns></returns>
-        internal DbMigration Restore(HistoryItem history)
+        internal DbMigration TryRestore(HistoryItem history)
         {
-            var type = Type.GetType(history.MigrationClass);
+            Type type = null;
+            try
+            {
+                type = Type.GetType(history.MigrationClass);
+            }
+            catch (TypeLoadException)
+            {
+                //如果当前这个类已经不存在了，无法还原，则直接返回 null，跳过该项。
+                return null;
+            }
+
 
             DbMigration migration = null;
 

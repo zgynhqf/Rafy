@@ -20,6 +20,7 @@ using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
 using OEA.MetaModel.View;
 using OEA.Module.WPF;
+using OEA.Module;
 
 namespace JXC.WPF.Templates
 {
@@ -57,6 +58,15 @@ namespace JXC.WPF.Templates
             }
 
             return result;
+        }
+
+        protected override void OnUIGenerated(ControlResult ui)
+        {
+            base.OnUIGenerated(ui);
+
+            //默认发起一次查询。
+            var queryView = ui.MainView.CastTo<ListObjectView>().CondtionQueryView;
+            if (queryView != null) queryView.TryExecuteQuery();
         }
     }
 }

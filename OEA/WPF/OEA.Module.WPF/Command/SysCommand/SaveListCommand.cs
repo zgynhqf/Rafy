@@ -12,11 +12,10 @@
 *******************************************************/
 
 using System.Linq;
-
 using OEA.Library;
 using OEA.MetaModel;
-using OEA.MetaModel.View;
 using OEA.MetaModel.Attributes;
+using OEA.MetaModel.View;
 using OEA.Module.WPF;
 
 namespace OEA.WPF.Command
@@ -42,7 +41,7 @@ namespace OEA.WPF.Command
                     if (brokenRules.Count > 0)
                     {
                         var msg = string.Format("第 {0} 行数据验证不通过：\r\n{1}", i + 1, brokenRules);
-                        App.Current.MessageBox.Show("保存出错", msg);
+                        App.MessageBox.Show(msg, "保存出错");
                         return;
                     }
                 }

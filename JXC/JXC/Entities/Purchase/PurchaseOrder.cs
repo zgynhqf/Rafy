@@ -89,7 +89,22 @@ namespace JXC
     }
 
     [Serializable]
-    public class PurchaseOrderList : JXCEntityList { }
+    public class PurchaseOrderList : JXCEntityList
+    {
+        protected void QueryBy(PurchaseOrderCriteria criteria)
+        {
+            this.QueryDb(q =>
+            {
+                q.Constrain(PurchaseOrder.DateProperty).GreaterEqual(criteria.From)
+                    .And().Constrain(PurchaseOrder.DateProperty).LessEqual(criteria.To);
+
+                if (criteria.ClientInfoId.HasValue)
+                {
+                    q.And().Constrain(PurchaseOrder.SupplierRefProperty).Equal(criteria.ClientInfoId.Value);
+                }
+            });
+        }
+    }
 
     public class PurchaseOrderRepository : EntityRepository
     {
@@ -110,6 +125,13 @@ namespace JXC
             using (View.OrderProperties())
             {
                 View.Property(PurchaseOrder.CodeProperty).HasLabel("订单编号").ShowIn(ShowInWhere.All);
+                View.Property(PurchaseOrder.DateProperty).HasLabel("订单日期").ShowIn(ShowInWhere.ListDetail);
+                View.Property(PurchaseOrder.SupplierRefProperty).HasLabel("供应商").ShowIn(ShowInWhere.ListDetail);
+                View.Property(PurchaseOrder.PlanStorageInDateProperty).HasLabel("计划到货日期").ShowIn(ShowInWhere.ListDetail);
+                View.Property(PurchaseOrder.TotalMoneyProperty).HasLabel("总金额").ShowIn(ShowInWhere.ListDetail);
+                View.Property(PurchaseOrder.StorageInDirectlyProperty).HasLabel("直接入库").ShowIn(ShowInWhere.ListDetail);
+                View.Property(PurchaseOrder.CommentProperty).HasLabel("备注").ShowIn(ShowInWhere.ListDetail)
+                    .ShowMemoInDetail();
             }
         }
     }

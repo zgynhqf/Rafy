@@ -27,7 +27,6 @@ using OEA.Module.WPF.Editors;
 using OEA.WPF;
 using OEA.WPF.Command;
 
-
 namespace OEA.Module.WPF.Command
 {
     /// <summary>
@@ -53,7 +52,7 @@ namespace OEA.Module.WPF.Command
 
             listView.DataLoader.LoadDataAsync();
 
-            var result = App.Current.Windows.ShowDialog(listView.Control, w =>
+            var result = App.Windows.ShowDialog(listView.Control, w =>
             {
                 w.ResizeMode = ResizeMode.CanResize;
                 w.Title = this.CommandInfo.Label;

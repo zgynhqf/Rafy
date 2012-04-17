@@ -234,7 +234,15 @@ namespace OEA.Module.WPF.Controls
                 this._indexDirty = false;
             }
 
-            return base.MeasureOverride(constraint);
+            try
+            {
+                this._isChildrenMeasuring = true;
+                return base.MeasureOverride(constraint);
+            }
+            finally
+            {
+                this._isChildrenMeasuring = false;
+            }
         }
 
         private void SetChildrenDefault()
@@ -277,8 +285,26 @@ namespace OEA.Module.WPF.Controls
             if (visualRemoved != null) descriptor.RemoveValueChanged(visualRemoved, OnChildIndexChanged);
         }
 
+        private bool _isChildrenMeasuring = false;
+
         private void OnChildIndexChanged(object sender, EventArgs e)
         {
+            if (this._isChildrenMeasuring)
+            {
+                //由于正在测量过程中，所以不能直接使用 InvalidateMeasure 方法，
+                //需要在布局刷新后再调用。
+                base.LayoutUpdated += this.OnLayoutUpdated;
+            }
+            else
+            {
+                this.InvalidateIndex();
+            }
+        }
+
+        public void OnLayoutUpdated(object sender, EventArgs e)
+        {
+            base.LayoutUpdated -= this.OnLayoutUpdated;
+
             this.InvalidateIndex();
         }
 

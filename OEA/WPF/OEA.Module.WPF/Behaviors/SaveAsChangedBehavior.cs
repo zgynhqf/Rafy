@@ -16,7 +16,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
-
 using OEA.Library;
 using OEA.Library.Caching;
 using OEA.Module.View;
@@ -90,7 +89,7 @@ namespace OEA.Module.WPF.Behaviors
 {0}
 
 是否切换到该对象，继续编辑？", broken.ToString());
-                            var result = App.Current.MessageBox.Show("提示", description, MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                            var result = App.MessageBox.Show(description, MessageBoxButton.YesNo, MessageBoxImage.Warning);
                             if (result == MessageBoxResult.Yes)
                             {
                                 this.View.Current = oldEntity as Entity;

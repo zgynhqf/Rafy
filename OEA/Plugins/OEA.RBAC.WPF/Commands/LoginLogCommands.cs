@@ -24,7 +24,7 @@ namespace RBAC
                 .ToList();
 
             var control = new LoginLogStatistic(list);
-            App.Current.Windows.ShowDialog(control, w =>
+            App.Windows.ShowDialog(control, w =>
             {
                 w.Title = "登录时间统计";
                 w.MinHeight = 300;

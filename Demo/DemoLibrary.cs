@@ -38,7 +38,7 @@ namespace Demo
             {
                 var moduleBookImport = CommonModel.Modules.AddRoot(new ModuleMeta
                 {
-                    Label = "书籍录入",
+                    Label = "书籍管理系统示例",
                     Children =
                     {
                         new ModuleMeta{ Label = "类别管理", EntityType = typeof(BookCategory)},

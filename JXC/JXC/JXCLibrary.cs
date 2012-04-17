@@ -31,7 +31,7 @@ namespace JXC
                             Label = "基础数据",
                             Children =
                             {
-                                new ModuleMeta{ Label = "计量单位", EntityType = typeof(Unit)},
+                                //new ModuleMeta{ Label = "计量单位", EntityType = typeof(Unit)},
                                 new ModuleMeta{ Label = "商品类别", EntityType = typeof(ProductCategory)},
                                 new ModuleMeta{ Label = "商品管理", EntityType = typeof(Product)},
                                 //new ModuleMeta{ Label = "仓库管理", EntityType = typeof(Storage)},
@@ -45,7 +45,21 @@ namespace JXC
                             Children =
                             {
                                 new ModuleMeta{ Label = "采购订单", EntityType = typeof(PurchaseOrder)},
+                                new ModuleMeta{ Label = "采购订单入库", EntityType = typeof(OrderStorageInBill)},
                             }
+                        },
+                        new ModuleMeta
+                        {
+                            Label = "库存管理",
+                            Children =
+                            {
+                                new ModuleMeta{ Label = "其它入库", EntityType = typeof(OtherStorageInBill)},
+                                new ModuleMeta{ Label = "其它出库", EntityType = typeof(OtherStorageOutBill)},
+                            }
+                        },
+                        new ModuleMeta
+                        {
+                            Label = "销售管理"
                         },
                         new ModuleMeta
                         {
@@ -54,14 +68,6 @@ namespace JXC
                             {
                                 new ModuleMeta{ Label = "自动编码管理", EntityType = typeof(AutoCodeInfo)},
                             }
-                        },
-                        new ModuleMeta
-                        {
-                            Label = "库存管理"
-                        },
-                        new ModuleMeta
-                        {
-                            Label = "销售管理"
                         },
                     }
                 });

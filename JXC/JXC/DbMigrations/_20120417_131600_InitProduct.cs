@@ -4,19 +4,15 @@ using System.Linq;
 using System.Text;
 using DbMigration;
 using OEA.Library;
+using System.Transactions;
 
 namespace JXC.DbMigrations
 {
-    public class _20120417_131600_InitProduct : ManualDbMigration
+    public class _20120417_131600_InitProduct : DataMigration
     {
-        public override string DbSetting
+        protected override string GetDescription()
         {
-            get { return JXCEntity.ConnectionString; }
-        }
-
-        public override ManualMigrationType Type
-        {
-            get { return ManualMigrationType.Data; }
+            return "添加 商品 的初始数据。";
         }
 
         protected override void Up()
@@ -50,13 +46,6 @@ namespace JXC.DbMigrations
                     repo.Save(list);
                 }
             });
-        }
-
-        protected override void Down() { }
-
-        protected override string GetDescription()
-        {
-            return "添加 商品 的初始数据。";
         }
     }
 }

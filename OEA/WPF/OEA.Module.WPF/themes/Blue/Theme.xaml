@@ -5882,23 +5882,23 @@
                                   SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
                                 <ItemsPresenter SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
                             </ScrollViewer>
-                            <TextBlock Opacity="0.5" TextWrapping="Wrap" FontSize="36" Text="没有数据" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="STCaiyun" RenderTransformOrigin="0.5,0.5" Foreground="#80000000">
-                                    <TextBlock.Visibility>
-                                        <MultiBinding>
-                                            <MultiBinding.Converter>
-                                                <oeaModuleWPF:ItemsControlNoDataConverter/>
-                                            </MultiBinding.Converter>
-                                            <Binding Path="Data" RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type oea:GridTreeView}}"/>
-                                            <Binding Path="Items.Count" RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type oea:GridTreeView}}"/>
-                                        </MultiBinding>
-                                    </TextBlock.Visibility>
-                                    <TextBlock.RenderTransform>
-                                        <TransformGroup>
-                                            <ScaleTransform ScaleX="1.5"/>
-                                            <SkewTransform AngleX="-30"/>
-                                            <RotateTransform Angle="-30"/>
-                                        </TransformGroup>
-                                    </TextBlock.RenderTransform>
+                            <TextBlock Text="没有数据" IsHitTestVisible="False" Opacity="0.5" TextWrapping="Wrap" FontSize="36" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="STCaiyun" RenderTransformOrigin="0.5,0.5" Foreground="#80000000">
+                                <TextBlock.Visibility>
+                                    <MultiBinding>
+                                        <MultiBinding.Converter>
+                                            <oeaModuleWPF:ItemsControlNoDataConverter/>
+                                        </MultiBinding.Converter>
+                                        <Binding Path="Data" RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type oea:GridTreeView}}"/>
+                                        <Binding Path="Items.Count" RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type oea:GridTreeView}}"/>
+                                    </MultiBinding>
+                                </TextBlock.Visibility>
+                                <TextBlock.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform ScaleX="1.5"/>
+                                        <SkewTransform AngleX="-30"/>
+                                        <RotateTransform Angle="-30"/>
+                                    </TransformGroup>
+                                </TextBlock.RenderTransform>
                             </TextBlock>
                         </Grid>
                     </Border>
