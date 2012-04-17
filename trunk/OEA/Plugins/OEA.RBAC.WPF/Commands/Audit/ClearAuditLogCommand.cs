@@ -1,3 +1,16 @@
+/*******************************************************
+ * 
+ * 作者：胡庆访
+ * 创建时间：2010
+ * 说明：此文件只包含一个类，具体内容见类型注释。
+ * 运行环境：.NET 4.0
+ * 版本号：1.0.0
+ * 
+ * 历史记录：
+ * 创建文件 胡庆访 2010
+ * 
+*******************************************************/
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -29,7 +42,7 @@ namespace RBAC
 
         public override void Execute(ObjectView view)
         {
-            var result = App.Current.MessageBox.Show("请确认", "确定清空所有日志？", MessageBoxButton.YesNo);
+            var result = App.MessageBox.Show("确定清空所有日志？", "请确认", MessageBoxButton.YesNo);
             if (result != MessageBoxResult.Yes) return;
 
             //清空

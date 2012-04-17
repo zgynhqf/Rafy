@@ -38,28 +38,25 @@ namespace OEA.Module.WPF
     {
         public static readonly App Current = new App();
 
-        private App()
-        {
-            this.Windows = new OEAWindows();
-            this.MessageBox = new OEAMessageBox();
-        }
+        /// <summary>
+        /// Windows 相关的 API
+        /// </summary>
+        public static readonly OEAWindows Windows = new OEAWindows();
 
+        /// <summary>
+        /// 弹出框相关的 API
+        /// </summary>
+        public static readonly OEAMessageBox MessageBox = new OEAMessageBox();
+
+        /// <summary>
+        /// OEA 客户端使用的 MEF 容器
+        /// </summary>
         public CompositionContainer CompositionContainer { get; private set; }
 
         internal void InitCompositionContainer(CompositionContainer value)
         {
             this.CompositionContainer = value;
         }
-
-        /// <summary>
-        /// Windows 相关的 API
-        /// </summary>
-        public OEAWindows Windows { get; private set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public OEAMessageBox MessageBox { get; private set; }
 
         #region Shutdown & MainWindow
 
@@ -253,24 +250,32 @@ namespace OEA.Module.WPF
         /// </summary>
         public class OEAMessageBox
         {
-            internal OEAMessageBox() { }
-
             public MessageBoxResult Show(string messageText)
             {
-                return System.Windows.MessageBox.Show(messageText, "提示");
+                return Show(messageText, "提示", MessageBoxButton.OK, MessageBoxImage.Information);
             }
 
-            public MessageBoxResult Show(string caption, string messageText)
+            public MessageBoxResult Show(string messageText, MessageBoxButton button)
             {
-                return System.Windows.MessageBox.Show(messageText, caption);
+                return Show(messageText, "提示", button, MessageBoxImage.Information);
             }
 
-            public MessageBoxResult Show(string caption, string messageText, MessageBoxButton button)
+            public MessageBoxResult Show(string messageText, MessageBoxButton button, MessageBoxImage icon)
             {
-                return System.Windows.MessageBox.Show(messageText, caption, button);
+                return Show(messageText, "提示", button, icon);
             }
 
-            public MessageBoxResult Show(string caption, string messageText, MessageBoxButton button, MessageBoxImage icon)
+            public MessageBoxResult Show(string messageText, string caption)
+            {
+                return Show(messageText, caption, MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+
+            public MessageBoxResult Show(string messageText, string caption, MessageBoxButton button)
+            {
+                return Show(messageText, caption, button, MessageBoxImage.Warning);
+            }
+
+            public MessageBoxResult Show(string messageText, string caption, MessageBoxButton button, MessageBoxImage icon)
             {
                 //var wpfApp = Application.Current;
                 //if (wpfApp.Windows.OfType<Window>().All(w => !w.IsActive))

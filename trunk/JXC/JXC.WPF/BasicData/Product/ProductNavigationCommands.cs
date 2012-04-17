@@ -42,7 +42,7 @@ namespace JXC
             if (PermissionMgr.Provider.CanShowModule(moduleMeta))
             {
                 var page = App.Current.CreateModule(moduleMeta);
-                var btn = App.Current.Windows.ShowDialog(page as FrameworkElement, w =>
+                var btn = App.Windows.ShowDialog(page as FrameworkElement, w =>
                 {
                     w.Title = "维护分类";
                 });

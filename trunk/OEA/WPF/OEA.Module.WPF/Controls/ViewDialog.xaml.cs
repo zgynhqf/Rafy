@@ -160,9 +160,8 @@ namespace OEA.Module.WPF.Controls
             else
             {
                 this._windowResult = WindowButton.No;
+                this.Close();
             }
-
-            this.Close();
         }
 
         /// <summary>
@@ -185,9 +184,9 @@ namespace OEA.Module.WPF.Controls
                 else
                 {
                     this._windowResult = WindowButton.Yes;
-                }
 
-                this.Close();
+                    this.Close();
+                }
             }
         }
 

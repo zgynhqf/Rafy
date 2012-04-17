@@ -25,6 +25,19 @@ namespace JXC
     [RootEntity, Serializable]
     public class ClientInfo : JXCEntity
     {
+        public static readonly RefProperty<ClientCategory> ClientCategoryRefProperty =
+            P<ClientInfo>.RegisterRef(e => e.ClientCategory, ReferenceType.Normal);
+        public int ClientCategoryId
+        {
+            get { return this.GetRefId(ClientCategoryRefProperty); }
+            set { this.SetRefId(ClientCategoryRefProperty, value); }
+        }
+        public ClientCategory ClientCategory
+        {
+            get { return this.GetRefEntity(ClientCategoryRefProperty); }
+            set { this.SetRefEntity(ClientCategoryRefProperty, value); }
+        }
+
         public static readonly Property<string> NameProperty = P<ClientInfo>.Register(e => e.Name);
         public string Name
         {
@@ -53,19 +66,6 @@ namespace JXC
             set { this.SetProperty(YouXiangProperty, value); }
         }
 
-        public static readonly RefProperty<ClientCategory> ClientCategoryRefProperty =
-            P<ClientInfo>.RegisterRef(e => e.ClientCategory, ReferenceType.Normal);
-        public int ClientCategoryId
-        {
-            get { return this.GetRefId(ClientCategoryRefProperty); }
-            set { this.SetRefId(ClientCategoryRefProperty, value); }
-        }
-        public ClientCategory ClientCategory
-        {
-            get { return this.GetRefEntity(ClientCategoryRefProperty); }
-            set { this.SetRefEntity(ClientCategoryRefProperty, value); }
-        }
-
         public static readonly Property<string> KaiHuYinHangProperty = P<ClientInfo>.Register(e => e.KaiHuYinHang);
         public string KaiHuYinHang
         {
@@ -73,7 +73,7 @@ namespace JXC
             set { this.SetProperty(KaiHuYinHangProperty, value); }
         }
 
-        public static readonly Property<ShouJiaJiBie> ShouJiaJiBieProperty = P<ClientInfo>.Register(e => e.ShouJiaJiBie);
+        public static readonly Property<ShouJiaJiBie> ShouJiaJiBieProperty = P<ClientInfo>.Register(e => e.ShouJiaJiBie, ShouJiaJiBie.LinShouDanJia);
         public ShouJiaJiBie ShouJiaJiBie
         {
             get { return this.GetProperty(ShouJiaJiBieProperty); }
@@ -125,7 +125,6 @@ namespace JXC
                 ClientInfo.ZhuJiMaProperty,
                 ClientInfo.FaRenDaiBiaoProperty,
                 ClientInfo.YouXiangProperty,
-                ClientInfo.ClientCategoryRefProperty,
                 ClientInfo.KaiHuYinHangProperty,
                 ClientInfo.ShouJiaJiBieProperty,
                 ClientInfo.YinHangZhangHuProperty,
@@ -137,15 +136,19 @@ namespace JXC
         {
             View.DomainName("客户").HasDelegate(ClientInfo.NameProperty);
 
-            View.Property(ClientInfo.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
-            View.Property(ClientInfo.ZhuJiMaProperty).HasLabel("助记码").ShowIn(ShowInWhere.ListDetail);
-            View.Property(ClientInfo.FaRenDaiBiaoProperty).HasLabel("法人代表").ShowIn(ShowInWhere.ListDetail);
-            View.Property(ClientInfo.YouXiangProperty).HasLabel("邮箱").ShowIn(ShowInWhere.ListDetail);
-            View.Property(ClientInfo.ClientCategoryRefProperty).HasLabel("客户类别").ShowIn(ShowInWhere.ListDetail);
-            View.Property(ClientInfo.KaiHuYinHangProperty).HasLabel("开户银行").ShowIn(ShowInWhere.ListDetail);
-            View.Property(ClientInfo.ShouJiaJiBieProperty).HasLabel("售价级别").ShowIn(ShowInWhere.ListDetail);
-            View.Property(ClientInfo.YinHangZhangHuProperty).HasLabel("银行帐户").ShowIn(ShowInWhere.ListDetail);
-            View.Property(ClientInfo.BeiZhuProperty).HasLabel("备注").ShowIn(ShowInWhere.ListDetail).UseEditor(WPFEditorNames.Memo);
+            using (View.OrderProperties())
+            {
+                View.Property(ClientInfo.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
+                View.Property(ClientInfo.ZhuJiMaProperty).HasLabel("助记码").ShowIn(ShowInWhere.ListDetail);
+                View.Property(ClientInfo.FaRenDaiBiaoProperty).HasLabel("法人代表").ShowIn(ShowInWhere.ListDetail);
+                View.Property(ClientInfo.YouXiangProperty).HasLabel("邮箱").ShowIn(ShowInWhere.ListDetail);
+                View.Property(ClientInfo.ClientCategoryRefProperty).HasLabel("客户类别").ShowIn(ShowInWhere.ListDetail);
+                View.Property(ClientInfo.KaiHuYinHangProperty).HasLabel("开户银行").ShowIn(ShowInWhere.ListDetail);
+                View.Property(ClientInfo.ShouJiaJiBieProperty).HasLabel("售价级别").ShowIn(ShowInWhere.ListDetail);
+                View.Property(ClientInfo.YinHangZhangHuProperty).HasLabel("银行帐户").ShowIn(ShowInWhere.ListDetail);
+                View.Property(ClientInfo.BeiZhuProperty).HasLabel("备注").ShowIn(ShowInWhere.ListDetail)
+                    .ShowMemoInDetail();
+            }
         }
     }
 }

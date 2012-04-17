@@ -5,9 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <StackPanel>
-        <ContentControl Name="commands"/>
-        <ContentControl Name="queryPanel"/>
+    <DockPanel>
+        <ContentControl Name="commands" DockPanel.Dock="Top"/>
+        <ContentControl Name="queryPanel" DockPanel.Dock="Top"/>
         <ContentControl Name="content"/>
-    </StackPanel>
+    </DockPanel>
 </UserControl>

@@ -9,6 +9,32 @@
  * 
 *******************************************************/
 
+2.10.531.0
+    ★修改接口
+        * App.Current.Windows、App.Current.MessageBox 变为静态属性，方便调用。
+
+2.10.530.0
+    添加功能
+        * 添加、编辑窗口在数据改变后再关闭窗口，需要提示用户是否保存。
+    BUG修复
+        * ViewDialog 中 Cancel 按钮如果添加 IsCancel="True" 的话，窗体的 Closing 事件会发生两次。暂时不知道原因。
+
+2.10.529.0
+    重构、★修改接口
+        * CustomModule 重命名为 CustomTemplate，提供非模块的界面设计。
+
+2.10.528.0
+    BUG修复
+        * AutoGrid 在测量过程中，不能直接使用 InvalidateMeasure 方法。
+    示例
+        * JXC ConditionQueryModule 默认发起一次查询。
+
+2.10.526.0
+    内部修改
+        * DbMigration 中，如果发现某个迁移类已经不存在了，无法还原，则直接返回 null，跳过该项。
+    示例
+        * 为 JXC 添加 用户 的初始数据。
+
 2.10.524.0
     添加接口
         * 提供 EntityMeta 的扩展配置方法 MapAllPropertiesToTable、MapAllPropertiesToTableExcept。

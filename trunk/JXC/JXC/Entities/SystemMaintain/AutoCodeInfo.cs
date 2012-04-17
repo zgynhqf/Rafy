@@ -124,9 +124,7 @@ namespace JXC
             View.Property(AutoCodeInfo.MingChengProperty).HasLabel("参数名称").ShowIn(ShowInWhere.All);
             View.Property(AutoCodeInfo.CanShuZhiProperty).HasLabel("参数值").ShowIn(ShowInWhere.ListDetail);
             View.Property(AutoCodeInfo.BeiZhuProperty).HasLabel("备注").ShowIn(ShowInWhere.ListDetail)
-                .ShowInDetail(height: 200)
-                .UseEditor(WPFEditorNames.Memo)
-                .Readonly();
+                .ShowMemoInDetail().Readonly();
         }
     }
 }

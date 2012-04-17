@@ -10,7 +10,6 @@
  * 
 *******************************************************/
 
-
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -78,7 +77,7 @@ namespace OEA.Module.WPF.Editors
             detailView.Data = tmp;
             detailView.Control.VerticalAlignment = VerticalAlignment.Top;
 
-            App.Current.Windows.ShowDialog(detailView.Control, w =>
+            App.Windows.ShowDialog(detailView.Control, w =>
             {
                 w.Title = "详细信息";
                 w.Buttons = ViewDialogButtons.Close;

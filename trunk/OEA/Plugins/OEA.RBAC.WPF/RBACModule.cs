@@ -118,7 +118,7 @@ namespace OEA.Module.WPF
                             var sqlerr = SqlErrorInfo.GetSqlError(sqlex.Number);
                             if (sqlerr == null) return;
 
-                            App.Current.MessageBox.Show(sqlerr.ErrorMessage);
+                            App.MessageBox.Show(sqlerr.ErrorMessage);
                             ee.Cancel = true;
                         }
                     };

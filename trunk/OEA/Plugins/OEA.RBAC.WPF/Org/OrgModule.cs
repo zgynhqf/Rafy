@@ -24,7 +24,7 @@ namespace RBAC
     /// <summary>
     /// 组织权限模块
     /// </summary>
-    public class OrgModule : CustomModule
+    public class OrgModule : CustomTemplate
     {
         protected override AggtBlocks DefineBlocks()
         {

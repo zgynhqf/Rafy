@@ -14,7 +14,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
+using System.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -24,18 +26,15 @@ using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using Common;
 using Microsoft.Practices.Unity;
 using OEA.Library;
+using OEA.ManagedProperty;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
-
 using OEA.Module.WPF;
-using OEA.Utils;
-using System.ComponentModel.Composition;
-using OEA.ManagedProperty;
 using OEA.Server;
-using System.Configuration;
-using Common;
+using OEA.Utils;
 using OEA.WPF.Command;
 
 namespace OEA.Module.WPF.Shell
@@ -266,7 +265,7 @@ namespace OEA.Module.WPF.Shell
 
         public override void ShowMessage(string message, string title)
         {
-            App.Current.MessageBox.Show(title, message);
+            App.MessageBox.Show(message, title);
         }
 
         /// <summary>

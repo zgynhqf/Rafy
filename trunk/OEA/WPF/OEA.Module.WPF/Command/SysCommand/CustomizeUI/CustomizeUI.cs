@@ -33,7 +33,7 @@ namespace OEA.WPF.Command
                 return model;
             });
 
-            App.Current.Windows.ShowWindow(ui.Control, w =>
+            App.Windows.ShowWindow(ui.Control, w =>
             {
                 w.Title = "定制" + view.Meta.Label;
                 w.Width = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Width * 0.8;
@@ -41,7 +41,7 @@ namespace OEA.WPF.Command
                 {
                     if (e.Button == WindowButton.Yes)
                     {
-                        var res = App.Current.MessageBox.Show("提示", "重新打开当前模块以使设置生效？", MessageBoxButton.YesNo);
+                        var res = App.MessageBox.Show("重新打开当前模块以使设置生效？", MessageBoxButton.YesNo);
                         if (res == MessageBoxResult.Yes)
                         {
                             var ws = App.Current.Workspace;

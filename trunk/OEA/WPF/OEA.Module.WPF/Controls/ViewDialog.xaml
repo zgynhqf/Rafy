@@ -20,7 +20,8 @@
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <Button Name="btnConfirm" AutomationProperties.Name="确定" IsDefault="True" Click="OnAcceptButtonClick">确定</Button>
-            <Button Name="btnCancel" AutomationProperties.Name="取消" IsCancel="True" Click="OnCancelButtonClick">取消</Button>
+            <!--Cancel 按钮如果添加 IsCancel="True" 的话，窗体的 Closing 事件会发生两次。暂时不知道原因。-->
+            <Button Name="btnCancel" AutomationProperties.Name="取消" Click="OnCancelButtonClick">取消</Button>
         </ItemsControl>
         <ContentControl Name="innerContent" Margin="8" Focusable="False"/>
     </DockPanel>

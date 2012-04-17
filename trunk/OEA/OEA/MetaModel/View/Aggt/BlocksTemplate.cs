@@ -21,7 +21,8 @@ namespace OEA.MetaModel.View
     /// <summary>
     /// 聚合块模板。
     /// 
-    /// 模板是同一种视图结构的抽象定义
+    /// 模板是同一种视图结构的抽象定义。
+    /// 注意：此类及其子类不是线程安全的。
     /// </summary>
     public abstract class BlocksTemplate
     {

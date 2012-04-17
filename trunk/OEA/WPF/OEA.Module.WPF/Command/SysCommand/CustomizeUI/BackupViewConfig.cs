@@ -58,7 +58,7 @@ namespace OEA.WPF.Command
 
             if (!svc.Opened)
             {
-                App.Current.MessageBox.Show("提示", "暂时还没有进行任何配置，没有找到对应的 XML 文件。");
+                App.MessageBox.Show("暂时还没有进行任何配置，没有找到对应的 XML 文件。");
             }
         }
     }

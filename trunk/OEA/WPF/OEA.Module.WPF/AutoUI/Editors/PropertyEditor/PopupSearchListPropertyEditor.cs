@@ -78,7 +78,7 @@ namespace OEA.Module.WPF.Editors
             });
 
             //弹出
-            var res = App.Current.Windows.ShowDialog(ui.Control, w =>
+            var res = App.Windows.ShowDialog(ui.Control, w =>
             {
                 w.Title = "选择" + title.Label;
                 w.Width = 600;

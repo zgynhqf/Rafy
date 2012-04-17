@@ -131,7 +131,7 @@ namespace OEA.Module.WPF
         {
             if (!PermissionMgr.Provider.CanShowModule(module))
             {
-                this.MessageBox.Show(string.Format(
+                App.MessageBox.Show(string.Format(
                     "对不起，此功能需要 [ {0} ] 模块权限，您不具备此权限，如有需要，请与系统管理员联系！",
                     module.Label
                     ));
@@ -195,11 +195,10 @@ namespace OEA.Module.WPF
                     //在 WPF 中，TemplateType 属性应该是继承自 CustomModule 的类，表示使用的自定义实体模块类型
                     if (moduleMeta.TemplateType != null)
                     {
-                        var module = Activator.CreateInstance(moduleMeta.TemplateType) as CustomModule;
+                        var module = Activator.CreateInstance(moduleMeta.TemplateType) as CustomTemplate;
                         if (module == null) throw new InvalidProgramException("WPF 中模板类需要从 CustomModule 类继承。");
-                        module.EntityType = moduleMeta.EntityType;
-                        module.ModuleMeta = moduleMeta;
-                        window = module.CreateWindow();
+                        var ui = module.CreateUI(moduleMeta.EntityType);
+                        window = new EntityModule(ui, moduleMeta.Label);
                     }
                     else
                     {

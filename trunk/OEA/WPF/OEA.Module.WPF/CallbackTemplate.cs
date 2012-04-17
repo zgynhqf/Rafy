@@ -26,14 +26,20 @@ namespace OEA.Module.WPF
     /// <summary>
     /// 一个添加了许多系统内置回调的自定义模块基类。
     /// </summary>
-    public abstract class CallbackModule : CustomModule
+    public abstract class CallbackTemplate : CustomTemplate
     {
         private ControlResult _ui;
 
-        protected ListObjectView MainView
+        protected ListObjectView ListView
         {
             get { return this._ui.MainView as ListObjectView; }
         }
+
+        /// <summary>
+        /// 是否不创建所有 CallBack 功能。
+        /// 子类可以在其构造函数中设置该值。
+        /// </summary>
+        public bool SuppressCallback { get; set; }
 
         /// <summary>
         /// 子类可以重写此方法来添加当前模块中 UI 的初始化逻辑。
@@ -41,11 +47,14 @@ namespace OEA.Module.WPF
         /// 当使用自动生成的 UI 时，此方法会被调用。
         /// </summary>
         /// <param name="ui"></param>
-        protected override void OnUIGenerated(ControlResult ui)
+        internal protected override void OnUIGenerated(ControlResult ui)
         {
             this._ui = ui;
 
-            this.CreateCallback();
+            if (!this.SuppressCallback)
+            {
+                this.CreateCallback();
+            }
 
             base.OnUIGenerated(ui);
         }
@@ -54,7 +63,7 @@ namespace OEA.Module.WPF
         {
             this._mainViewCommands = this._ui.MainView.Commands;
 
-            this.MainView.ListViewItemCreated += (o, e) => this.OnItemCreated(e.Item);
+            this.ListView.ListViewItemCreated += (o, e) => this.OnItemCreated(e.Item);
 
             IfHas<AddCommand>(cmd =>
             {

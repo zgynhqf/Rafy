@@ -208,8 +208,7 @@ namespace JXC
                 View.Property(Product.XiaoShouJia_2Property).HasLabel("二级销售价").ShowIn(ShowInWhere.All);
                 View.Property(Product.XiaoShouJia_3Property).HasLabel("三级销售价").ShowIn(ShowInWhere.All);
                 View.Property(Product.BeiZhuProperty).HasLabel("备注").ShowIn(ShowInWhere.All)
-                    .ShowInDetail(columnSpan: 2, height: 200)
-                    .UseEditor(WPFEditorNames.Memo);
+                    .ShowMemoInDetail();
                 View.Property(Product.OperateTimeProperty).HasLabel("操作时间").ShowIn(ShowInWhere.Detail).Readonly();
                 View.Property(Product.OperatorRefProperty).HasLabel("操作员").ShowIn(ShowInWhere.Detail).Readonly();
             }

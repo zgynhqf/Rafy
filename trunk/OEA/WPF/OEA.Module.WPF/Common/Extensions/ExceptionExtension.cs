@@ -1,10 +1,22 @@
-﻿using System;
+﻿/*******************************************************
+ * 
+ * 作者：胡庆访
+ * 创建时间：20120120
+ * 说明：此文件只包含一个类，具体内容见类型注释。
+ * 运行环境：.NET 4.0
+ * 版本号：1.0.0
+ * 
+ * 历史记录：
+ * 创建文件 胡庆访 20120120
+ * 
+*******************************************************/
+
+using System;
+using System.Data.SqlClient;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using OEA.Module.WPF.Controls;
-
-using System.Data.SqlClient;
 using OEA.WPF.Command;
 
 namespace OEA.Module.WPF
@@ -48,7 +60,7 @@ namespace OEA.Module.WPF
                     msg = "网络连接出现异常，请检查连接地址是否正确或连接是否正常";
                 msg = msg ?? @"遇到未知错误，我们对此引起的不便表示抱歉。系统已经产生了一个关于此错误的报告，希望您将问题反馈给我们以帮助改善质量。";
 
-                App.Current.MessageBox.Show("异常提示", msg, MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                App.MessageBox.Show(msg, "异常提示", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
 
             //记录异常信息
@@ -80,7 +92,7 @@ namespace OEA.Module.WPF
             DockPanel.SetDock(msgBlock, Dock.Top);
             content.Children.Add(detailTxtBox);
 
-            App.Current.Windows.ShowDialog(content, w =>
+            App.Windows.ShowDialog(content, w =>
             {
                 w.Width = 600;
                 w.Height = 400;

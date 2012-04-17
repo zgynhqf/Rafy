@@ -19,7 +19,7 @@ using OEA.Module.WPF;
 
 namespace JXC.WPF.Templates
 {
-    public abstract class ModuleBase : CallbackModule
+    public abstract class ModuleBase : CallbackTemplate
     {
         //for extend
     }

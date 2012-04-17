@@ -47,9 +47,7 @@ namespace JXC
         {
             Meta.SupportTree();
 
-            Meta.MapTable().HasColumns(
-                ClientCategory.NameProperty
-                );
+            Meta.MapTable().MapAllPropertiesToTable();
         }
 
         protected override void ConfigView()
@@ -58,9 +56,11 @@ namespace JXC
 
             View.DomainName("客户类别").HasDelegate(ClientCategory.NameProperty);
 
-            View.Property(ClientCategory.TreeCodeProperty).HasLabel("编码").ShowIn(ShowInWhere.All)
-                .HasOrderNo(-1).Readonly();
-            View.Property(ClientCategory.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
+            using (View.OrderProperties())
+            {
+                View.Property(ClientCategory.TreeCodeProperty).HasLabel("编码").ShowIn(ShowInWhere.All).Readonly();
+                View.Property(ClientCategory.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
+            }
         }
     }
 }

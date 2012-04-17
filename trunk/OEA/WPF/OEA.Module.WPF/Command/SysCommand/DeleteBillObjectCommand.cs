@@ -1,10 +1,22 @@
+/*******************************************************
+ * 
+ * 作者：周金根
+ * 创建时间：2009
+ * 说明：此文件只包含一个类，具体内容见类型注释。
+ * 运行环境：.NET 4.0
+ * 版本号：1.0.0
+ * 
+ * 历史记录：
+ * 创建文件 周金根 2009
+ * 
+*******************************************************/
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
-
 using OEA.Library;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
@@ -38,7 +50,7 @@ namespace OEA.WPF.Command
             var entityList = view.Data as EntityList;
             bool isTree = entityList.SupportTree;
             var content = string.Format("删除后将无法恢复，是否确认删除{0}?", isTree ? "当前记录及其子记录" : string.Empty);
-            var result = App.Current.MessageBox.Show("确认删除", content, MessageBoxButton.YesNo);
+            var result = App.MessageBox.Show(content, "确认删除", MessageBoxButton.YesNo);
             if (result == MessageBoxResult.Yes)
             {
                 this.Deletetems(view, isTree);

@@ -43,6 +43,8 @@ namespace OEA.Module.WPF.Shell
             InitializeComponent();
 
             title.Content = ConfigurationHelper.GetAppSettingOrDefault("登录窗口标题", "管理信息系统");
+
+            Loaded += (o, e) => btnLogin_Click(null, null);
         }
 
         private void btnLogin_Click(object sender, RoutedEventArgs e)

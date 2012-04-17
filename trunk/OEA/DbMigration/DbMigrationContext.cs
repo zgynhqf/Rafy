@@ -394,7 +394,9 @@ namespace DbMigration
             if (histories.Count > 0)
             {
                 var migrations = histories.Reverse()
-                    .Select(h => this.HistoryRepository.Restore(h)).ToList();
+                    .Select(h => this.HistoryRepository.TryRestore(h))
+                    .Where(h => h != null)
+                    .ToList();
 
                 return this.MigrateUpBatch(migrations, true);
             }
@@ -434,17 +436,19 @@ namespace DbMigration
             {
                 foreach (var history in histories)
                 {
-                    var migration = historyRepo.Restore(history);
-
-                    //CreateDatabase 不能回滚，需要使用 DeleteDatabase 方法。
-                    if (!(migration is CreateDatabase))
+                    var migration = historyRepo.TryRestore(history);
+                    if (migration != null)
                     {
-                        this.MigrateDown(migration);
+                        //CreateDatabase 不能回滚，需要使用 DeleteDatabase 方法。
+                        if (!(migration is CreateDatabase))
+                        {
+                            this.MigrateDown(migration);
 
-                        var version = migration.TimeId.AddMilliseconds(-TimeIdSpan / 2);
-                        Must(this.DbVersionProvider.SetDbVersion(this.DbName, version));
+                            var version = migration.TimeId.AddMilliseconds(-TimeIdSpan / 2);
+                            Must(this.DbVersionProvider.SetDbVersion(this.DbName, version));
 
-                        if (rollbackAction == RollbackAction.DeleteHistory) { historyRepo.Remove(this.DbName, history); }
+                            if (rollbackAction == RollbackAction.DeleteHistory) { historyRepo.Remove(this.DbName, history); }
+                        }
                     }
                 }
             }
