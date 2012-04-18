@@ -156,8 +156,6 @@ namespace OEA.Library.Validation
                         // get the actual list of rules (sorted by priority)
                         CheckRules(rulesList, res);
                     }
-
-                    CheckRules(rules.TypeRules, res);
                 }
             }
 

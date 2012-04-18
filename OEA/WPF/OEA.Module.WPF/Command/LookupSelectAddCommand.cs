@@ -49,7 +49,7 @@ namespace OEA.Module.WPF.Command
             if (this.RefProperty == null) throw new ArgumentNullException("this.RefProperty");
 
             var listView = AutoUI.ViewFactory.CreateListObjectView(this.TargetEntityType);
-
+            listView.IsReadOnly = true;
             listView.DataLoader.LoadDataAsync();
 
             var result = App.Windows.ShowDialog(listView.Control, w =>

@@ -58,7 +58,7 @@ namespace OEA.Web.Services
                 }
             }
 
-            service.Invoke(out service);
+            service.Invoke();
 
             //结果输出
             var res = new DynamicJsonModel();

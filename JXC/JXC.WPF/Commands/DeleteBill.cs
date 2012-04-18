@@ -1,13 +1,13 @@
 ﻿/*******************************************************
  * 
  * 作者：胡庆访
- * 创建时间：20120417
+ * 创建时间：20120418
  * 说明：此文件只包含一个类，具体内容见类型注释。
  * 运行环境：.NET 4.0
  * 版本号：1.0.0
  * 
  * 历史记录：
- * 创建文件 胡庆访 20120417
+ * 创建文件 胡庆访 20120418
  * 
 *******************************************************/
 
@@ -15,21 +15,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OEA.WPF.Command;
+using OEA.MetaModel.Attributes;
 using OEA.MetaModel.View;
 using OEA.Module.WPF;
 
-namespace JXC.WPF.Templates
+namespace JXC.Commands
 {
-    class DetailChildrenTemplate : CustomTemplate
+    [Command(Label = "删除", GroupType = CommandGroupType.Edit)]
+    public class DeleteBill : ListViewCommand
     {
-        protected override AggtBlocks DefineBlocks()
+        public override bool CanExecute(ListObjectView view)
         {
-            var blocks = base.DefineBlocks();
-
-            //只需要把主块的生成方式变为 Detail 就行了。
-            blocks.MainBlock.BlockType = BlockType.Detail;
-
-            return blocks;
+            return view.Current != null;
         }
+
+        public override void Execute(ListObjectView view) { }
     }
 }

@@ -24,18 +24,16 @@ using OEA.RBAC.Security;
 
 namespace JXC.WPF
 {
-    public class ProductModule : ModuleBase
+    public class PurchaseOrderModule : ConditionQueryModule
     {
         protected override void OnItemCreated(Entity entity)
         {
             base.OnItemCreated(entity);
 
-            var code = RF.Concreate<AutoCodeInfoRepository>().GetOrCreateAutoCode<Product>();
+            var code = RF.Concreate<AutoCodeInfoRepository>().GetOrCreateAutoCode<PurchaseOrder>();
 
-            var p = entity as Product;
-            p.BianMa = code;
-            p.Operator = OEAIdentity.Current.User;
-            p.OperateTime = DateTime.Now;
+            var p = entity as PurchaseOrder;
+            p.Code = code;
         }
     }
 }

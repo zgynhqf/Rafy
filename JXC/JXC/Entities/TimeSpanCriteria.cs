@@ -76,6 +76,8 @@ namespace JXC
                 default:
                     break;
             }
+            var to = this.To;
+            this.To = to.Add(new TimeSpan(23, 59, 59));
         }
 
         public static readonly Property<DateTime> FromProperty = P<TimeSpanCriteria>.Register(e => e.From);

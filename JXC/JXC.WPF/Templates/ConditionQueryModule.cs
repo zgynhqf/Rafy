@@ -25,7 +25,7 @@ using OEA.Module;
 namespace JXC.WPF.Templates
 {
     /// <summary>
-    /// 通用的条件查询模块模板
+    /// 通用的条件查询单据模块模板
     /// </summary>
     public class ConditionQueryModule : ModuleBase
     {
@@ -65,8 +65,10 @@ namespace JXC.WPF.Templates
             base.OnUIGenerated(ui);
 
             //默认发起一次查询。
-            var queryView = ui.MainView.CastTo<ListObjectView>().CondtionQueryView;
+            var queryView = this.ListView.CondtionQueryView;
             if (queryView != null) queryView.TryExecuteQuery();
+
+            this.ListView.IsReadOnly = true;
         }
     }
 }

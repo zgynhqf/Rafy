@@ -69,6 +69,8 @@ namespace OEA.ManagedProperty
 
         /// <summary>
         /// 变更后的值
+        /// 
+        /// 注意，如果是只读属性，则这个值永远是默认值。
         /// </summary>
         public TPropertyType NewValue
         {
@@ -77,6 +79,8 @@ namespace OEA.ManagedProperty
 
         /// <summary>
         /// 变更前的值
+        /// 
+        /// 注意，如果是只读属性，则这个值永远是默认值。
         /// </summary>
         public TPropertyType OldValue
         {

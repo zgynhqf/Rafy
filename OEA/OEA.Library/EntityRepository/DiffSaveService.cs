@@ -34,6 +34,9 @@ namespace OEA.Library
     [Serializable]
     internal class DiffSaveService : Service
     {
+        [ServiceOutput]
+        public int NewId { get; set; }
+
         private Entity _diffEntity;
 
         /// <summary>
@@ -49,7 +52,8 @@ namespace OEA.Library
         {
             bool isNew = this._diffEntity.IsNew;
 
-            RF.Save(this._diffEntity);
+            var e = this._diffEntity.FindRepository().Save(this._diffEntity) as Entity;
+            this.NewId = e.Id;
 
             //如果是新加的数据，则不需要传回客户端了。
             if (isNew)
@@ -58,28 +62,28 @@ namespace OEA.Library
             }
         }
 
-        public static DiffSaveService Execute(Entity businessBase)
+        public static DiffSaveService Execute(Entity entity)
         {
             //清除数据
             var cmd = new DiffSaveService();
             var clear = cmd.CreateClear();
 
-            if (businessBase.IsNew)
+            if (entity.IsNew)
             {
-                cmd._diffEntity = businessBase;
+                cmd._diffEntity = entity;
             }
             else
             {
                 //清除数据
-                cmd._diffEntity = ObjectCloner.Clone(businessBase);
+                cmd._diffEntity = ObjectCloner.Clone(entity);
                 clear.ClearData(cmd._diffEntity);
             }
 
             //保存数据
-            cmd.Invoke(out cmd);
+            cmd.Invoke();
 
             //整合新旧数据
-            clear.MakeOld(businessBase);
+            clear.MakeOld(entity);
 
             return cmd;
         }

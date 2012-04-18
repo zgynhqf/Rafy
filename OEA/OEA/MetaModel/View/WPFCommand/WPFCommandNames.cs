@@ -12,6 +12,7 @@ namespace OEA.MetaModel.View
     {
         public static Type CustomizeUI;
         public static Type FireQuery;
+        public static Type PopupAdd;
         public static Type Add;
         public static Type SaveBill;
         public static Type SaveList;
@@ -37,7 +38,7 @@ namespace OEA.MetaModel.View
 
         /*********************** 代码块解释 *********************************
          * 
-         * 可以这两个集合中的数据以达到修改整个应用程序的效果。
+         * 可以修改这几个集合中的数据以达到修改整个应用程序的效果。
          * 
         **********************************************************************/
         public static readonly List<Type> CommonCommands = new List<Type>();
@@ -48,15 +49,13 @@ namespace OEA.MetaModel.View
         public static void InitCommonCommands()
         {
             WPFCommandNames.CommonCommands.AddRange(new Type[]{
-                Add, Edit, Delete, 
-                //SaveList, Cancel, Refresh
+                PopupAdd, Edit, Delete,
             });
 
             WPFCommandNames.TreeCommands.AddRange(new Type[]{
                 ExpandAll, ExpandOne, ExpandTwo, ExpandThree, ExpandFour,
-                Add, Edit, Delete,
+                PopupAdd, Edit, Delete,
                 MoveUp, MoveDown, LevelUp, LevelDown, InsertBefore, InsertChild,
-                //SaveList, Cancel, Refresh
             });
 
             WPFCommandNames.TreeExpandCommands.AddRange(new Type[]{

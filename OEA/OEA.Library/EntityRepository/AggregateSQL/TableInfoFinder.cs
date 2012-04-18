@@ -69,7 +69,7 @@ namespace OEA.Library
         private ITable GetTableInfo_OnClient()
         {
             var cmd = new GetTableInfoService() { EntityTypeName = this._entityType.AssemblyQualifiedName };
-            cmd.Invoke(out cmd);
+            cmd.Invoke();
             return cmd.ResultTableInfo;
         }
 

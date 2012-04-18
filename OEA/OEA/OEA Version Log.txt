@@ -9,6 +9,28 @@
  * 
 *******************************************************/
 
+2.10.540.0
+    内部修改、★修改接口
+        * Service 不需要返回值了，直接使用反射修改当前对象的值。
+        * 为了更方便调试，ClientCommand 在调试状态下不应该截取异常。
+    添加接口
+        * 添加 UseWPFCommands(object[]) 方法，更方便设置。
+    添加接口
+        * ViewDataLoader 添加 ReloadDataAsync(callback) 方法。
+    BUG修复
+        * LookupSelectAddCommand 中弹出的框应该是只读的。
+        * Validation 中属性的规则检查不需要检查整个类型的规则。
+        * Validation.CommonRules 中，类型转换应该使用更安全的方式。
+    示例
+        * JXC 采购订单可以添加了。
+
+2.10.534.0
+    BUG修复
+        * PopupAddCommand 中，在确定时不应该弹出是否保存的弹出提示。
+        * MapAllProperties 时，不能把 TreeCode、TreePId 都映射。
+    示例
+        * JXC 创建单据类模板、命令。
+
 2.10.531.0
     ★修改接口
         * App.Current.Windows、App.Current.MessageBox 变为静态属性，方便调用。

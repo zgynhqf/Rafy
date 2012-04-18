@@ -64,13 +64,12 @@ namespace OEA.WPF.Command
                 };
 
                 //窗口在数据改变后再关闭窗口，需要提示用户是否保存。
-                bool changed = false;
-                tmpEntity.PropertyChanged += (o, e) => changed = true;
+                tmpEntity.MarkOld();
                 w.Closing += (o, e) =>
                 {
-                    if (changed)
+                    if (tmpEntity.IsDirty && w.DialogResult != true)
                     {
-                        var res = App.MessageBox.Show("直接退出将不会保存数据，是否继续？", MessageBoxButton.YesNo);
+                        var res = App.MessageBox.Show("直接退出将不会保存数据，是否退出？", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                         e.Cancel = res == MessageBoxResult.No;
                     }
                 };

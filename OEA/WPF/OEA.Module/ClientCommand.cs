@@ -202,21 +202,33 @@ namespace OEA.Module
         /// <param name="param"></param>
         public void Execute(object param)
         {
-            try
+            //调试阶段如果接住了异常，会比较难以调试，所以调试期关闭异常事件。。
+            if (!OEAEnvironment.IsDebuggingEnabled)
+            {
+                try
+                {
+                    this.OnExecuting();
+
+                    this.ExecuteCore(param);
+
+                    this.OnExecuted();
+                }
+                catch (Exception ex)
+                {
+                    var args = new CommandExecuteFailedArgs(ex, param);
+
+                    this.OnExecuteFailed(args);
+
+                    if (!args.Cancel) throw ex;
+                }
+            }
+            else
             {
                 this.OnExecuting();
 
                 this.ExecuteCore(param);
 
                 this.OnExecuted();
-            }
-            catch (Exception ex)
-            {
-                var args = new CommandExecuteFailedArgs(ex, param);
-
-                this.OnExecuteFailed(args);
-
-                if (!args.Cancel) throw ex;
             }
         }
 

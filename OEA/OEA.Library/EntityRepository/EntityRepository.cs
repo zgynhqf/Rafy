@@ -97,7 +97,7 @@ namespace OEA.Library
         public int CountAll()
         {
             var svc = new CountAllEntityService { EntityType = this.EntityType };
-            svc.Invoke(out svc);
+            svc.Invoke();
             return svc.Count;
         }
 
@@ -280,7 +280,9 @@ namespace OEA.Library
         #endregion
 
         /// <summary>
-        /// 把这个列表中的所有改动保存到仓库中。
+        /// 把这个组件中的所有改动保存到仓库中。
+        /// 
+        /// 方法返回保存结束的结果对象（保存可能会涉及到跨网络，所以服务端传输回来的值并不是之前传入的对象。）
         /// </summary>
         /// <param name="component"></param>
         public IEntityOrList Save(IEntityOrList component)
@@ -292,6 +294,18 @@ namespace OEA.Library
             component.MarkOld();
 
             return result;
+        }
+
+        /// <summary>
+        /// 把这个组件中的所有改动保存到仓库中。
+        /// </summary>
+        /// <param name="component">
+        /// 传入的参数以及传出的结果。
+        /// </param>
+        public void Save<T>(ref T component)
+            where T : class, IEntityOrList
+        {
+            component = this.Save(component) as T;
         }
 
         protected Entity NotifyLoaded(Entity entity)

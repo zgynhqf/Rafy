@@ -15,10 +15,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OEA;
 using OEA.Library;
+using OEA.Library.Validation;
 using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
 using OEA.MetaModel.View;
+using OEA.ManagedProperty;
 
 namespace JXC
 {
@@ -86,6 +89,33 @@ namespace JXC
             get { return this.GetProperty(CommentProperty); }
             set { this.SetProperty(CommentProperty, value); }
         }
+
+        protected override void AddValidations()
+        {
+            base.AddValidations();
+
+            var rules = this.ValidationRules;
+            rules.AddRule(CodeProperty, CommonRules.StringRequired);
+            rules.AddRule((e, args) =>
+            {
+                var po = e as PurchaseOrder;
+                if (po.PurchaseOrderItemList.Count == 0)
+                {
+                    args.BrokenDescription = "订单至少需要一个订单项。";
+                }
+            });
+        }
+
+        protected override void OnRoutedEvent(object sender, EntityRoutedEventArgs e)
+        {
+            base.OnRoutedEvent(sender, e);
+
+            if (e.Event == PurchaseOrderItem.PriceChangedEvent)
+            {
+                this.TotalMoney = this.PurchaseOrderItemList.Sum(poi => (poi as PurchaseOrderItem).View_TotalPrice);
+                e.Handled = true;
+            }
+        }
     }
 
     [Serializable]
@@ -122,14 +152,23 @@ namespace JXC
         {
             View.DomainName("采购订单").HasDelegate(PurchaseOrder.CodeProperty);
 
+            View.ClearWPFCommands(false)
+                .UseWPFCommands(
+                "JXC.Commands.AddPurchaseOrder",
+                "JXC.Commands.EditBill",
+                "JXC.Commands.DeleteBill",
+                "JXC.Commands.ShowBill",
+                WPFCommandNames.Refresh
+                );
+
             using (View.OrderProperties())
             {
                 View.Property(PurchaseOrder.CodeProperty).HasLabel("订单编号").ShowIn(ShowInWhere.All);
                 View.Property(PurchaseOrder.DateProperty).HasLabel("订单日期").ShowIn(ShowInWhere.ListDetail);
                 View.Property(PurchaseOrder.SupplierRefProperty).HasLabel("供应商").ShowIn(ShowInWhere.ListDetail);
                 View.Property(PurchaseOrder.PlanStorageInDateProperty).HasLabel("计划到货日期").ShowIn(ShowInWhere.ListDetail);
-                View.Property(PurchaseOrder.TotalMoneyProperty).HasLabel("总金额").ShowIn(ShowInWhere.ListDetail);
-                View.Property(PurchaseOrder.StorageInDirectlyProperty).HasLabel("直接入库").ShowIn(ShowInWhere.ListDetail);
+                View.Property(PurchaseOrder.TotalMoneyProperty).HasLabel("总金额").ShowIn(ShowInWhere.ListDetail).Readonly();
+                View.Property(PurchaseOrder.StorageInDirectlyProperty).HasLabel("直接入库").ShowIn(ShowInWhere.Detail);
                 View.Property(PurchaseOrder.CommentProperty).HasLabel("备注").ShowIn(ShowInWhere.ListDetail)
                     .ShowMemoInDetail();
             }
