@@ -78,7 +78,7 @@ namespace OEA.Module.WPF.Shell
             //根据模块页签切换时模块列表自动切换
             App.Current.Workspace.WindowActived += (s, e) =>
             {
-                var title = e.ActiveWindow.Title;
+                var title = WorkspaceWindow.GetTitle(e.ActiveWindow);
 
                 var vm = modules.FindByLabel(title);
 

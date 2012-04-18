@@ -63,10 +63,11 @@ namespace OEA.Module.WPF
                 var win = e.ResultWindow;
 
                 //日志
+                var title = WorkspaceWindow.GetTitle(win);
                 AuditLogService.LogAsync(new AuditLogItem()
                 {
-                    Title = "打开模块：" + win.Title,
-                    ModuleName = win.Title,
+                    Title = "打开模块：" + title,
+                    ModuleName = title,
                     Type = AuditLogType.OpenModule
                 });
             };
@@ -182,7 +183,7 @@ namespace OEA.Module.WPF
                 Title = title,
                 FriendlyContent = string.Format(@"对象：{0}", evm.Label),
                 PrivateContent = coderContent,
-                ModuleName = App.Current.Workspace.ActiveWindow.Title,
+                ModuleName = WorkspaceWindow.GetTitle(App.Current.Workspace.ActiveWindow),
                 Type = AuditLogType.Command,
                 EntityId = entityId
             });

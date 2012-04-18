@@ -16,8 +16,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OEA.MetaModel;
+using System.Windows;
 
-namespace OEA.Module
+namespace OEA.Module.WPF
 {
     /// <summary>
     /// 用户界面主要工作区
@@ -47,38 +48,38 @@ namespace OEA.Module
         /// <summary>
         /// 工作区中的所有页签
         /// </summary>
-        IEnumerable<IWorkspaceWindow> Windows { get; }
+        IEnumerable<FrameworkElement> Windows { get; }
 
         /// <summary>
         /// 已经选中的页签
         /// </summary>
-        IWorkspaceWindow ActiveWindow { get; }
+        FrameworkElement ActiveWindow { get; }
 
         /// <summary>
         /// 添加一个页签。
         /// </summary>
         /// <param name="window"></param>
-        void Add(IWorkspaceWindow window);
+        void Add(FrameworkElement window);
 
         /// <summary>
         /// 尝试移除一个页签，返回是否成功。
         /// （有时候某些模块可以监听 WindowClosing 事件来阻止此操作，）
         /// </summary>
         /// <param name="window"></param>
-        bool TryRemove(IWorkspaceWindow window);
+        bool TryRemove(FrameworkElement window);
 
         /// <summary>
         /// 尝试激活某一个页签，返回是否成功。（展示给用户）
         /// （有时候某些模块可以监听 WindowActiving 事件来阻止此操作，）
         /// </summary>
         /// <param name="window"></param>
-        bool TryActive(IWorkspaceWindow window);
+        bool TryActive(FrameworkElement window);
 
         /// <summary>
         /// 在所有页签中查找指定名称的页签。
         /// </summary>
         /// <param name="windowTitle"></param>
         /// <returns></returns>
-        IWorkspaceWindow GetWindow(string windowTitle);
+        FrameworkElement GetWindow(string windowTitle);
     }
 }

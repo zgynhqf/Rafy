@@ -62,12 +62,14 @@ namespace OEA.Module.WPF
             {
                 if (e.ActiveWindow != null)
                 {
-                    this._userModulesView.SelectSingle(e.ActiveWindow.Title);
+                    var title = WorkspaceWindow.GetTitle(e.ActiveWindow);
+                    this._userModulesView.SelectSingle(title);
                 }
             };
             this.Workspace.WindowClosed += (s, e) =>
             {
-                this._userModulesView.Deselect(e.DeactiveWindow.Title);
+                var title = WorkspaceWindow.GetTitle(e.DeactiveWindow);
+                this._userModulesView.Deselect(title);
             };
         }
 
@@ -96,7 +98,7 @@ namespace OEA.Module.WPF
         /// 如果没有权限打开该模块，则弹出提示框。
         /// </summary>
         /// <param name="boType"></param>
-        public IWorkspaceWindow OpenModuleOrAlert(string moduleName)
+        public FrameworkElement OpenModuleOrAlert(string moduleName)
         {
             //在列表中获取指定类型的元数据
             var module = UIModel.Modules.FindModule(moduleName);
@@ -111,7 +113,7 @@ namespace OEA.Module.WPF
         /// 如果没有权限打开该模块，则弹出提示框。
         /// </summary>
         /// <param name="entityType"></param>
-        public IWorkspaceWindow OpenModuleOrAlert(Type entityType)
+        public FrameworkElement OpenModuleOrAlert(Type entityType)
         {
             //在列表中获取指定类型的元数据
             var module = UIModel.Modules.FindModule(entityType);
@@ -127,7 +129,7 @@ namespace OEA.Module.WPF
         /// </summary>
         /// <param name="module"></param>
         /// <returns></returns>
-        public IWorkspaceWindow OpenModuleOrAlert(ModuleMeta module)
+        public FrameworkElement OpenModuleOrAlert(ModuleMeta module)
         {
             if (!PermissionMgr.Provider.CanShowModule(module))
             {
@@ -147,7 +149,7 @@ namespace OEA.Module.WPF
         /// </summary>
         /// <param name="module"></param>
         /// <returns></returns>
-        public IWorkspaceWindow OpenModule(ModuleMeta module)
+        public FrameworkElement OpenModule(ModuleMeta module)
         {
             return this.FindOrCreateWindow(module);
         }
@@ -157,11 +159,11 @@ namespace OEA.Module.WPF
         /// </summary>
         /// <param name="module"></param>
         /// <returns></returns>
-        private IWorkspaceWindow FindOrCreateWindow(ModuleMeta module)
+        private FrameworkElement FindOrCreateWindow(ModuleMeta module)
         {
             var workSpace = this.Workspace;
 
-            var view = workSpace.GetWindow(module.Label);
+            var view = workSpace.GetWindow(module.Label) as FrameworkElement;
 
             //如果已经打开则激活模块，否则新增模块窗体
             if (view == null)
@@ -180,12 +182,12 @@ namespace OEA.Module.WPF
         /// 构造模块的窗口
         /// </summary>
         /// <param name="moduleMeta"></param>
-        public IWorkspaceWindow CreateModule(ModuleMeta moduleMeta)
+        public FrameworkElement CreateModule(ModuleMeta moduleMeta)
         {
             if (moduleMeta == null) throw new ArgumentNullException("moduleMeta");
 
             //创建 IWindow
-            IWorkspaceWindow window = null;
+            FrameworkElement window = null;
             if (!moduleMeta.IsCustomUI)
             {
                 try
@@ -198,13 +200,13 @@ namespace OEA.Module.WPF
                         var module = Activator.CreateInstance(moduleMeta.TemplateType) as CustomTemplate;
                         if (module == null) throw new InvalidProgramException("WPF 中模板类需要从 CustomModule 类继承。");
                         var ui = module.CreateUI(moduleMeta.EntityType);
-                        window = new EntityModule(ui, moduleMeta.Label);
+                        window = new EntityModule(ui);
                     }
                     else
                     {
                         AggtBlocks blocks = UIModel.AggtBlocks.GetModuleBlocks(moduleMeta);
                         var ui = AutoUI.AggtUIFactory.GenerateControl(blocks);
-                        window = new EntityModule(ui, moduleMeta.Label);
+                        window = new EntityModule(ui);
                     }
                 }
                 finally
@@ -214,12 +216,13 @@ namespace OEA.Module.WPF
             }
             else
             {
-                var templateType = Type.GetType(moduleMeta.CustomUI);
-                window = Activator.CreateInstance(templateType) as IWorkspaceWindow;
-                if (window == null) throw new InvalidProgramException(templateType.Name + " 类型必须实现 IWindow 接口。");
+                var windowType = Type.GetType(moduleMeta.CustomUI);
+                window = Activator.CreateInstance(windowType) as FrameworkElement;
+                if (window == null) throw new InvalidProgramException(windowType + " 类型必须是一个 FrameworkElement。");
             }
 
-            AutomationProperties.SetName(window as FrameworkElement, moduleMeta.Label);
+            WorkspaceWindow.SetTitle(window, moduleMeta.Label);
+            AutomationProperties.SetName(window, moduleMeta.Label);
 
             this.OnModuleCreated(new ModuleCreatedArgs(window, moduleMeta));
 
@@ -271,7 +274,7 @@ namespace OEA.Module.WPF
     /// </summary>
     public class ModuleCreatedArgs : EventArgs
     {
-        public ModuleCreatedArgs(IWorkspaceWindow result, ModuleMeta moduleMeta)
+        public ModuleCreatedArgs(FrameworkElement result, ModuleMeta moduleMeta)
         {
             this.ResultWindow = result;
             this.ModuleMeta = moduleMeta;
@@ -280,7 +283,7 @@ namespace OEA.Module.WPF
         /// <summary>
         /// 生成好的模块窗口。
         /// </summary>
-        public IWorkspaceWindow ResultWindow { get; private set; }
+        public FrameworkElement ResultWindow { get; private set; }
 
         public ModuleMeta ModuleMeta { get; private set; }
     }

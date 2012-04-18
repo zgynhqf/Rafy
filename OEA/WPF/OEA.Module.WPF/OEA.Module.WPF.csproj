@@ -186,6 +186,12 @@
     <Compile Include="PrimitiveUI\EntityModule.cs" />
     <Compile Include="PrimitiveUI\Layouts\ITraditionalLayout.cs" />
     <Compile Include="PrimitiveUI\Layouts\TraditionalComponents.cs" />
+    <Compile Include="Shell\IEntityWindow.cs" />
+    <Compile Include="Shell\IWorkspace.cs" />
+    <Compile Include="Shell\WorkspaceWindowActivedEventArgs.cs" />
+    <Compile Include="Shell\WorkspaceWindowActivingEventArgs.cs" />
+    <Compile Include="Shell\WorkspaceWindowChangedEventArgs.cs" />
+    <Compile Include="Shell\WorkspaceWindowClosingEventArgs.cs" />
     <Compile Include="Themes\OEAStyles.cs" />
     <Compile Include="Application.cs" />
     <Compile Include="AutoUI\ObjectViews\IEventListener.cs" />
@@ -350,6 +356,7 @@
     <Compile Include="PrimitiveUI\Layouts\TraditionalRegions.cs" />
     <Compile Include="PrimitiveUI\ResizingPanelExt.cs" />
     <Compile Include="Common\PropertyChangeNotifier.cs" />
+    <Compile Include="WorkspaceWindow.cs" />
     <Compile Include="WPFModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TabControlWorkSpace.cs" />
