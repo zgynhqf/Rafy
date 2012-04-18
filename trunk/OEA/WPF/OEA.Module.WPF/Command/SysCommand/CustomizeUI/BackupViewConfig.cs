@@ -54,7 +54,7 @@ namespace OEA.WPF.Command
             var svc = new GetBlockConfigFileService();
             svc.Model = c.EntityType;
             svc.ViewName = c.ViewName;
-            svc.Invoke(out svc);
+            svc.Invoke();
 
             if (!svc.Opened)
             {

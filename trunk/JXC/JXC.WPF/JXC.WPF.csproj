@@ -46,8 +46,19 @@
   <ItemGroup>
     <Compile Include="BasicData\Product\ProductModule.cs" />
     <Compile Include="BasicData\Product\ProductNavigationCommands.cs" />
-    <Compile Include="Commands\AddBillCommand.cs" />
+    <Compile Include="BasicData\Purchase\Commands\AddPurchaseOrderItem.cs" />
+    <Compile Include="BasicData\Purchase\PurchaseOrderBillUI.cs" />
+    <Compile Include="BasicData\Purchase\Commands\AddPurchaseOrder.cs" />
+    <Compile Include="BasicData\Purchase\PurchaseOrderModule.cs" />
+    <Compile Include="Commands\AddBill.cs" />
+    <Compile Include="Commands\DeleteBill.cs" />
+    <Compile Include="Commands\EditBill.cs" />
+    <Compile Include="Commands\PopupBillCommandBase.cs" />
+    <Compile Include="Commands\ShowBill.cs" />
     <Compile Include="JXCModule.cs" />
+    <Compile Include="Layouts\BillLayout.xaml.cs">
+      <DependentUpon>BillLayout.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Layouts\ConditionQueryLayout.xaml.cs">
       <DependentUpon>ConditionQueryLayout.xaml</DependentUpon>
     </Compile>
@@ -56,7 +67,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Templates\ConditionQueryModule.cs" />
-    <Compile Include="Templates\DetailChildrenTemplate.cs" />
+    <Compile Include="Templates\BillTemplate.cs" />
     <Compile Include="Templates\ModuleBase.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -102,6 +113,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Layouts\BillLayout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Layouts\ConditionQueryLayout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -111,8 +126,11 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="BasicData\Purchase\" />
+    <Resource Include="Images\Add.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

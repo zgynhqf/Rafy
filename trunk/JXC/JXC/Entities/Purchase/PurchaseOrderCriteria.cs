@@ -43,6 +43,8 @@ namespace JXC
     {
         protected override void ConfigView()
         {
+            View.DomainName("采购订单查询条件");
+
             //横向显示查询面板。
             View.DetailAsHorizontal = true;
 

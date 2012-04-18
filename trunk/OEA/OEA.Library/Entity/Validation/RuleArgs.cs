@@ -73,7 +73,10 @@ namespace OEA.Library.Validation
         /// </summary>
         public override string ToString()
         {
-            return this.Property.Name;
+            var p = this.Property;
+            if (p != null) return this.Property.Name;
+
+            return "TypeRules";
         }
 
         #region GetPropertyDisplay

@@ -64,25 +64,27 @@ namespace OEA.Library
         /// </remarks>
         internal protected virtual void AddValidations()
         {
+            var rules = this.ValidationRules;
+
             //为所有不可空的引用属性加上 Required 验证规则。
-            var properties = this.FindRepository().GetAvailableIndicators()
-                .Where(p =>
-                {
-                    if (p is IRefProperty)
-                    {
-                        var meta = p.GetMeta(this) as IRefPropertyMetadata;
-                        return meta.ReferenceType == ReferenceType.Normal && !meta.Nullable;
-                    }
-                    return false;
-                })
-                .ToArray();
-            if (properties.Length > 0)
+            var properties = this.FindRepository().GetAvailableIndicators();
+            foreach (var p in properties)
             {
-                var rules = this.ValidationRules;
-                foreach (var p in properties)
+                if (p is IRefProperty)
                 {
-                    rules.AddRule(p, CommonRules.Required);
+                    var meta = p.GetMeta(this) as IRefPropertyMetadata;
+                    if (meta.ReferenceType == ReferenceType.Normal && !meta.Nullable)
+                    {
+                        rules.AddRule(p, CommonRules.Required);
+                    }
                 }
+                //else
+                //{
+                //    if (p.PropertyType == typeof(DateTime))
+                //    {
+
+                //    }
+                //}
             }
         }
 

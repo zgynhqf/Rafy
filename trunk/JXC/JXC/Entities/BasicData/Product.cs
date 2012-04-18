@@ -144,6 +144,13 @@ namespace JXC
             get { return this.GetProperty(OperateTimeProperty); }
             set { this.SetProperty(OperateTimeProperty, value); }
         }
+
+        public static readonly Property<int> StorageAmountProperty = P<Product>.Register(e => e.StorageAmount);
+        public int StorageAmount
+        {
+            get { return this.GetProperty(StorageAmountProperty); }
+            set { this.SetProperty(StorageAmountProperty, value); }
+        }
     }
 
     [Serializable]
@@ -203,6 +210,7 @@ namespace JXC
                     .ShowInDetail(columnSpan: 2);
                 View.Property(Product.CaiGouDanjiaProperty).HasLabel("采购单价").ShowIn(ShowInWhere.All);
                 View.Property(Product.XiaoShouDanJiaProperty).HasLabel("销售单价").ShowIn(ShowInWhere.All);
+                View.Property(Product.StorageAmountProperty).HasLabel("库存量").ShowIn(ShowInWhere.List).Readonly();
                 View.Property(Product.SupplierRefProperty).HasLabel("销售商名称").ShowIn(ShowInWhere.All);
                 View.Property(Product.XiaoShouJia_1Property).HasLabel("一级销售价").ShowIn(ShowInWhere.All);
                 View.Property(Product.XiaoShouJia_2Property).HasLabel("二级销售价").ShowIn(ShowInWhere.All);

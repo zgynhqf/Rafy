@@ -64,7 +64,11 @@ namespace OEA.MetaModel
         public static EntityMeta MapAllPropertiesToTable(this EntityMeta meta)
         {
             var properties = meta.ManagedProperties.GetCompiledProperties()
-                .Where(p => !p.IsReadOnly && !(p is IListProperty)).ToArray();
+                .Where(p => !p.IsReadOnly
+                    && !(p is IListProperty)
+                    && p.Name != DBConvention.FieldName_TreeCode
+                    && p.Name != DBConvention.FieldName_TreePId
+                ).ToArray();
             return meta.HasColumns(properties);
         }
 
@@ -80,8 +84,11 @@ namespace OEA.MetaModel
         public static EntityMeta MapAllPropertiesToTableExcept(this EntityMeta meta, params IManagedProperty[] exceptProperties)
         {
             var properties = meta.ManagedProperties.GetCompiledProperties()
-                .Where(p => !p.IsReadOnly && !(p is IListProperty))
-                .Except(exceptProperties)
+                .Where(p => !p.IsReadOnly
+                    && !(p is IListProperty)
+                    && p.Name != DBConvention.FieldName_TreeCode
+                    && p.Name != DBConvention.FieldName_TreePId
+                ).Except(exceptProperties)
                 .ToArray();
 
             return meta.HasColumns(properties);

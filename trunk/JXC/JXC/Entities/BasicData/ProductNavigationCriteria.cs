@@ -51,8 +51,8 @@ namespace JXC
         protected override void ConfigView()
         {
             View.UseWPFCommands(
-                "JXC.RefreshProductNavigation",
-                "JXC.OpenProductCategory"
+                "JXC.Commands.RefreshProductNavigation",
+                "JXC.Commands.OpenProductCategory"
                 );
 
             View.Property(ProductNavigationCriteria.IncludeSubProperty)

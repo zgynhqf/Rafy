@@ -34,7 +34,12 @@ namespace JXC.WPF
             app.ModuleOperations += (o, e) =>
             {
                 CommonModel.Modules["商品管理"].UseCustomModule<ProductModule>();
-                CommonModel.Modules["采购订单"].UseCustomModule<ConditionQueryModule>();
+                CommonModel.Modules["采购订单"].UseCustomModule<PurchaseOrderModule>();
+            };
+
+            app.MainWindowLoaded += (o, e) =>
+            {
+                App.Current.OpenModuleOrAlert("采购订单");
             };
         }
     }

@@ -109,11 +109,13 @@ namespace OEA.Library
         {
             if (saveWay == EntitySaveType.DiffSave)
             {
-                DiffSaveService.Execute(entity);
+                var res = DiffSaveService.Execute(entity);
+                if (entity.IsNew) { entity.Id = res.NewId; }
             }
             else
             {
-                entity.FindRepository().Save(entity);
+                var res = entity.FindRepository().Save(entity) as Entity;
+                if (entity.IsNew) { entity.Id = res.Id; }
             }
         }
 

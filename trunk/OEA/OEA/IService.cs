@@ -20,14 +20,9 @@ namespace OEA
     public interface IService
     {
         /// <summary>
-        /// 调用服务并把返回值转换为指定的类型。
-        /// 
-        /// （out 参数是为了简化接口调用，编译器直接隐式推断。）
+        /// 调用服务。
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="svcReturn"></param>
-        void Invoke<T>(out T svcReturn)
-            where T : OEA.IService;
+        void Invoke();
     }
 
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]

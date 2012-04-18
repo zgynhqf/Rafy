@@ -113,7 +113,7 @@ namespace OEA.Library.Validation
         public static void IntegerMaxValue(Entity target, RuleArgs e)
         {
             var max = e.TryGetCustomParams<int>("MaxValue");
-            var value = (int)target.GetProperty(e.Property);
+            var value = Convert.ToInt32(target.GetProperty(e.Property));
 
             if (value > max)
             {
@@ -132,7 +132,7 @@ namespace OEA.Library.Validation
         public static void IntegerMinValue(Entity target, RuleArgs e)
         {
             var min = e.TryGetCustomParams<int>("MinValue");
-            var value = (int)target.GetProperty(e.Property);
+            var value = Convert.ToInt32(target.GetProperty(e.Property));
 
             if (value < min)
             {

@@ -57,5 +57,11 @@ namespace OEA
         /// 使用最后一次使用的数据提供器重新加载数据。
         /// </summary>
         void ReloadDataAsync();
+
+        /// <summary>
+        /// 使用最后一次使用的数据提供器重新加载数据。
+        /// </summary>
+        /// <param name="changedCallback"></param>
+        void ReloadDataAsync(Action changedCallback);
     }
 }

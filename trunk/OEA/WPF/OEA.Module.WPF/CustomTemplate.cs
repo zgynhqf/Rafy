@@ -21,7 +21,7 @@ using OEA.MetaModel;
 namespace OEA.Module.WPF
 {
     /// <summary>
-    /// 自定义模块
+    /// 自定义模板
     /// 
     /// 本类主要是为了给上层使用者提供一个统一的扩展接口：
     /// 通过 CreateUICore 方法提供了生成期扩展性、

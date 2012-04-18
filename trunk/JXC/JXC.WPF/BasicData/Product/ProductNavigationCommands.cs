@@ -13,7 +13,7 @@ using OEA.MetaModel;
 using System.Windows;
 using Itenso.Windows.Input;
 
-namespace JXC
+namespace JXC.Commands
 {
     [Command(Label = "刷新")]
     public class RefreshProductNavigation : ClientCommand<QueryObjectView>

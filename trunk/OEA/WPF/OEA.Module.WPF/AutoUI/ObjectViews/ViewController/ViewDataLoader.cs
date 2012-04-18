@@ -118,13 +118,18 @@ namespace OEA.Module.WPF
 
         public void ReloadDataAsync()
         {
+            this.ReloadDataAsync(null);
+        }
+
+        public void ReloadDataAsync(Action changedCallback)
+        {
             if (this._dataProvider.DataProducer == null)
             {
-                this.LoadDataAsync();
+                this.LoadDataAsync(changedCallback);
             }
             else
             {
-                this.LoadDataAsync(this._dataProvider.DataProducer, null);
+                this.LoadDataAsync(this._dataProvider.DataProducer, changedCallback);
             }
         }
 

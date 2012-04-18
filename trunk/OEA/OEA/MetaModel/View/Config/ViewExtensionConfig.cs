@@ -174,48 +174,56 @@ namespace OEA.MetaModel.View
             return meta;
         }
 
-        public static EntityViewMeta UseWPFCommands(this EntityViewMeta meta, params Type[] commands)
-        {
-            return meta.UseWPFCommands(commands as IEnumerable<Type>);
-        }
-
-        public static EntityViewMeta UseWPFCommands(this EntityViewMeta meta, IEnumerable<Type> commands)
-        {
-            if (!OEAEnvironment.IsWeb)
-            {
-                foreach (var cmd in commands)
-                {
-                    var command = meta.WPFCommands.Find(cmd);
-                    if (command == null)
-                    {
-                        command = UIModel.WPFCommands[cmd].CloneMutable();
-                        meta.WPFCommands.Add(command);
-                    }
-                }
-            }
-
-            return meta;
-        }
-
         /// <summary>
-        /// 
+        /// 指定某个类型使用指定的命令列表。
         /// </summary>
         /// <param name="meta"></param>
         /// <param name="commands">
-        /// 这里的每一个字符串都是命令类型的全名称。
+        /// 只支持两个类型：String、Type
+        /// 如果是字符串，则是命令类型的全名称。
         /// </param>
         /// <returns></returns>
-        public static EntityViewMeta UseWPFCommands(this EntityViewMeta meta, params string[] commands)
+        public static EntityViewMeta UseWPFCommands(this EntityViewMeta meta, params object[] commands)
+        {
+            return meta.UseWPFCommands(commands as IEnumerable<object>);
+        }
+
+        /// <summary>
+        /// 指定某个类型使用指定的命令列表。
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="commands">
+        /// 只支持两个类型：String、Type
+        /// 如果是字符串，则是命令类型的全名称。
+        /// </param>
+        /// <returns></returns>
+        public static EntityViewMeta UseWPFCommands(this EntityViewMeta meta, IEnumerable<object> commands)
         {
             if (!OEAEnvironment.IsWeb)
             {
                 foreach (var cmd in commands)
                 {
-                    var command = meta.WPFCommands.Find(cmd);
-                    if (command == null)
+                    var cmdStr = cmd as string;
+                    if (cmdStr != null)
                     {
-                        command = UIModel.WPFCommands[cmd].CloneMutable();
-                        meta.WPFCommands.Add(command);
+                        var command = meta.WPFCommands.Find(cmdStr);
+                        if (command == null)
+                        {
+                            command = UIModel.WPFCommands[cmdStr].CloneMutable();
+                            meta.WPFCommands.Add(command);
+                        }
+                    }
+                    else
+                    {
+                        var cmdType = cmd as Type;
+                        if (cmdType == null) throw new ArgumentNullException("只支持两个类型：String、Type");
+
+                        var command = meta.WPFCommands.Find(cmdType);
+                        if (command == null)
+                        {
+                            command = UIModel.WPFCommands[cmdType].CloneMutable();
+                            meta.WPFCommands.Add(command);
+                        }
                     }
                 }
             }
