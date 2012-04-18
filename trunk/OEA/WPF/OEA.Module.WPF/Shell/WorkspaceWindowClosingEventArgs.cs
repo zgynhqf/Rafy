@@ -15,19 +15,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.ComponentModel;
+using System.Windows;
 
-namespace OEA.Module
+namespace OEA.Module.WPF
 {
-    public class WorkspaceWindowChangedEventArgs : EventArgs
+    public class WorkspaceWindowClosingEventArgs : CancelEventArgs
     {
-        public WorkspaceWindowChangedEventArgs(IWorkspaceWindow deactiveWindow, IWorkspaceWindow activeWindow)
+        public WorkspaceWindowClosingEventArgs(FrameworkElement window)
         {
-            this.DeactiveWindow = deactiveWindow;
-            this.ActiveWindow = activeWindow;
+            this.Window = window;
         }
 
-        public IWorkspaceWindow DeactiveWindow { get; private set; }
-
-        public IWorkspaceWindow ActiveWindow { get; private set; }
+        public FrameworkElement Window { get; private set; }
     }
 }

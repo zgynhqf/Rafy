@@ -22,14 +22,13 @@ namespace OEA.Module.WPF
     /// <summary>
     /// 一个最简单的实现 IEntityWindow 接口的类。
     /// </summary>
-    internal class EntityModule : ContentControl, IEntityWindow, IWorkspaceWindow
+    internal class EntityModule : ContentControl, IEntityWindow
     {
         private ControlResult _ui;
 
-        public EntityModule(ControlResult ui, string moduleTitle, bool autoLoad = true)
+        public EntityModule(ControlResult ui, bool autoLoad = true)
         {
             this._ui = ui;
-            this.Title = moduleTitle;
 
             this.Content = ui.Control;
 
@@ -43,11 +42,6 @@ namespace OEA.Module.WPF
         {
             get { return this._ui.MainView; }
         }
-
-        /// <summary>
-        /// 直接取根对象的名字作为Title
-        /// </summary>
-        public string Title { get; private set; }
 
         private void AsyncLoadListData(ControlResult ui)
         {

@@ -15,14 +15,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows;
 
-namespace OEA.Module
+namespace OEA.Module.WPF
 {
-    public class WorkspaceWindowActivingEventArgs : WorkspaceWindowActivedEventArgs
+    public class WorkspaceWindowActivedEventArgs : WorkspaceWindowChangedEventArgs
     {
-        public WorkspaceWindowActivingEventArgs(IWorkspaceWindow deactiveWindow, IWorkspaceWindow activeWindow)
+        public WorkspaceWindowActivedEventArgs(FrameworkElement deactiveWindow, FrameworkElement activeWindow)
             : base(deactiveWindow, activeWindow) { }
-
-        public bool Cancel { get; set; }
     }
 }

@@ -59,7 +59,7 @@ namespace OEA.WPF.Command
 
         #region 在切换/关闭叶签时，提示用户
 
-        private IWorkspaceWindow _ownerWindow;
+        private IEntityWindow _ownerWindow;
 
         private ObjectView _ownerView;
 

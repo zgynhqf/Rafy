@@ -28,7 +28,7 @@ namespace OEA.Module.WPF
     {
         private TabControl _tabControl;
 
-        private IWorkspaceWindow _activeWindow;
+        private FrameworkElement _activeWindow;
 
         public TabControlWorkSpace(TabControl tc)
         {
@@ -38,7 +38,7 @@ namespace OEA.Module.WPF
             this._tabControl.SelectionChanged += new SelectionChangedEventHandler(On_tabControl_SelectionChanged);
         }
 
-        public IEnumerable<IWorkspaceWindow> Windows
+        public IEnumerable<FrameworkElement> Windows
         {
             get
             {
@@ -47,7 +47,7 @@ namespace OEA.Module.WPF
             }
         }
 
-        public IWorkspaceWindow ActiveWindow
+        public FrameworkElement ActiveWindow
         {
             get
             {
@@ -60,11 +60,11 @@ namespace OEA.Module.WPF
             private set { this._activeWindow = value; }
         }
 
-        public void Add(IWorkspaceWindow window)
+        public void Add(FrameworkElement window)
         {
             var ti = new CloseableTabItem()
             {
-                Header = window.Title,
+                Header = WorkspaceWindow.GetTitle(window),
                 Content = window
             };
             ti.CloseButtonClicked += On_tabItem_CloseButtonClicked;
@@ -75,13 +75,14 @@ namespace OEA.Module.WPF
             this._tabControl.Items.Add(ti);
         }
 
-        public bool TryRemove(IWorkspaceWindow window)
+        public bool TryRemove(FrameworkElement window)
         {
             try
             {
                 this._suppressEvent = true;
 
-                TabItem dc = GetTabItem(window.Title);
+                var title = WorkspaceWindow.GetTitle(window);
+                TabItem dc = GetTabItem(title);
                 if (dc != null)
                 {
                     var args = new WorkspaceWindowClosingEventArgs(window);
@@ -104,13 +105,14 @@ namespace OEA.Module.WPF
             }
         }
 
-        public bool TryActive(IWorkspaceWindow window)
+        public bool TryActive(FrameworkElement window)
         {
             try
             {
                 this._suppressEvent = true;
 
-                TabItem newItem = GetTabItem(window.Title);
+                var title = WorkspaceWindow.GetTitle(window);
+                TabItem newItem = GetTabItem(title);
                 if (newItem != null)
                 {
                     var oldItem = this._tabControl.SelectedItem as TabItem;
@@ -196,7 +198,7 @@ namespace OEA.Module.WPF
                 {
                     var newWindow = GetWindow(newTabitem);
 
-                    IWorkspaceWindow oldWindow = null;
+                    FrameworkElement oldWindow = null;
                     if (e.RemovedItems.Count > 0)
                     {
                         var oldTabItem = e.RemovedItems[0] as TabItem;
@@ -290,7 +292,7 @@ namespace OEA.Module.WPF
 
         #region 帮助方法
 
-        public IWorkspaceWindow GetWindow(string title)
+        public FrameworkElement GetWindow(string title)
         {
             TabItem item = GetTabItem(title);
             return GetWindow(item);
@@ -302,9 +304,9 @@ namespace OEA.Module.WPF
                 .FirstOrDefault(item => item.Header.ToString() == title);
         }
 
-        private static IWorkspaceWindow GetWindow(TabItem item)
+        private static FrameworkElement GetWindow(TabItem item)
         {
-            return item != null ? item.Content as IWorkspaceWindow : null;
+            return item != null ? item.Content as FrameworkElement : null;
         }
 
         #endregion

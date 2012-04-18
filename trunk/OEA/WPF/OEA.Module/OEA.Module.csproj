@@ -81,11 +81,7 @@
     <Compile Include="Abstraction\View\IViewDataAsyncLoader.cs" />
     <Compile Include="ClientCommand.cs" />
     <Compile Include="ClientCommandCollection.cs" />
-    <Compile Include="WorkspaceWindowClosingEventArgs.cs" />
-    <Compile Include="IWorkspaceWindow.cs" />
-    <Compile Include="IEntityWindow.cs" />
     <Compile Include="Abstraction\View\IListObjectView.cs" />
-    <Compile Include="IWorkspace.cs" />
     <Compile Include="Abstraction\ICurrentObjectContext.cs" />
     <Compile Include="Abstraction\Editors\IPropertyEditor.cs" />
     <Compile Include="Editor\PropertyEditor.cs" />
@@ -102,9 +98,6 @@
     <Compile Include="View\RelationViewCollection.cs" />
     <Compile Include="View\SelectedEntityChangedEventArgs.cs" />
     <Compile Include="View\ViewBehavior.cs" />
-    <Compile Include="WorkspaceWindowActivedEventArgs.cs" />
-    <Compile Include="WorkspaceWindowActivingEventArgs.cs" />
-    <Compile Include="WorkspaceWindowChangedEventArgs.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Common.csproj">
