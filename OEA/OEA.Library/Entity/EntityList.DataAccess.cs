@@ -27,7 +27,7 @@ namespace OEA.Library
         /// <param name="parentId"></param>
         protected virtual void OnGetByParentId(int parentId)
         {
-            var parentProperty = this.FindRepository().GetParentPropertyInfo();
+            var parentProperty = this.FindRepository().FindParentPropertyInfo(true);
 
             this.QueryDb(q => q.Constrain(parentProperty.Name).Equal(parentId));
         }

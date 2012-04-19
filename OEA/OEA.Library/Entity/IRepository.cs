@@ -76,11 +76,14 @@ namespace OEA.Library
         void AddBatch(IList<Entity> entityList);
 
         /// <summary>
-        /// 保存某个实体或实体列表。
+        /// 把这个组件中的所有改动保存到仓库中。
+        /// 
+        /// 方法返回保存结束的结果对象（保存可能会涉及到跨网络，所以服务端传输回来的值并不是之前传入的对象。）
         /// </summary>
         /// <param name="component"></param>
+        /// <param name="markOld">是否需要把参数对象保存为未修改状态</param>
         /// <returns></returns>
-        IEntityOrList Save(IEntityOrList component);
+        IEntityOrList Save(IEntityOrList component, bool markOld = true);
 
         #region 一些其它的元数据获取方法
 

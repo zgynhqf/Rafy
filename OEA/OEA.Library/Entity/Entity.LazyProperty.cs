@@ -254,46 +254,17 @@ namespace OEA.Library
         /// <param name="parent"></param>
         public void SetParentEntity(Entity parent)
         {
-            //★EntityList 有相同逻辑的代码，修改时请注意！！！
-
-            var property = this.FindRepository().ParentPropertyIndicator;
-            if (property == null) throw new NotSupportedException("请为父外键引用属性标记，传入 ReferenceType.Parent 的参数。");
-
+            var property = this.FindRepository().FindParentPropertyInfo(true).ManagedProperty as IRefProperty;
             this.GetLazyRef(property).Entity = parent;
-        }
-
-        /// <summary>
-        /// 尝试设置父对象为某个实体。
-        /// </summary>
-        /// <param name="parent"></param>
-        internal void TrySetParentEntity(Entity parent)
-        {
-            //★EntityList 有相同逻辑的代码，修改时请注意！！！
-
-            //如果父外键是懒加载外键，并且其对应的实体类型兼容 parent 的类型，才进行属性值设置。
-
-            var property = this.FindRepository().ParentPropertyIndicator;
-            if (property != null)
-            {
-                var propertyType = property.PropertyType;
-                if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(ILazyEntityRef<>))
-                {
-                    var entityType = propertyType.GetGenericArguments()[0];
-                    if (parent == null || entityType.IsAssignableFrom(parent.GetType()))
-                    {
-                        this.GetLazyRef(property).Entity = parent;
-                    }
-                }
-            }
         }
 
         /// <summary>
         /// 获取聚合关系中父对象的引用。
         /// </summary>
-        public Entity GetParentEntity()
+        public Entity FindParentEntity()
         {
-            var property = this.FindRepository().ParentPropertyIndicator;
-            if (property != null) return this.GetLazyRef(property).Entity;
+            var pMeta = this.FindRepository().FindParentPropertyInfo(false);
+            if (pMeta != null) { return this.GetLazyRef(pMeta.ManagedProperty as IRefProperty).Entity; }
             return null;
         }
 

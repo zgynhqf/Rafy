@@ -59,6 +59,67 @@ namespace OEA.Library
 
         #endregion
 
+        #region FindListProperty
+
+        [NonSerialized]
+        private IListProperty _listProperty;
+        [NonSerialized]
+        private HasManyType? _listHasManyType;
+
+        internal void InitListProperty(IListProperty value)
+        {
+            this._listProperty = value;
+        }
+
+        /// <summary>
+        /// 查找本实体对应的列表属性
+        /// 
+        /// 以下情况下返回 null：
+        /// * 这是一个根对象的集合。
+        /// * 这是一个子对象的集合，但是这个集合不在根对象聚合树中。（没有 this.Parent 属性。）
+        /// </summary>
+        /// <returns></returns>
+        private IListProperty FindListProperty()
+        {
+            if (this._listProperty == null)
+            {
+                var parentEntity = this.Parent;
+                if (parentEntity != null)
+                {
+                    this._listProperty = parentEntity.GetLoadedChildren()
+                        .First(f => f.Value == this).Property as IListProperty;
+                }
+            }
+
+            return this._listProperty;
+        }
+
+        /// <summary>
+        /// 当前集合的一对多类型
+        /// </summary>
+        internal HasManyType HasManyType
+        {
+            get
+            {
+                if (this._listHasManyType == null)
+                {
+                    var parentEntity = this.Parent;
+                    if (parentEntity != null)
+                    {
+                        var listProperty = this.FindListProperty();
+                        if (listProperty != null)
+                        {
+                            this._listHasManyType = listProperty.GetMeta(parentEntity).HasManyType;
+                        }
+                    }
+                }
+
+                return this._listHasManyType.GetValueOrDefault(HasManyType.Aggregation);
+            }
+        }
+
+        #endregion
+
         protected override object AddNewCore()
         {
             var item = this.FindRepository().New();
@@ -89,16 +150,9 @@ namespace OEA.Library
                 this._deletedList.Remove(item);
             }
 
-            if (needParent)
+            if (needParent && this.HasManyType == HasManyType.Composition)
             {
-                var parentEntity = this.Parent;
-                if (parentEntity != null)
-                {
-                    //有 ParentList.Parent 属性，则必然有 ParentProperty，本来可以直接调用以下方法进行设置，
-                    //但是，由于一个类的集合，并不一定只是作为其父类的子集合（也就是说，可能作为其它类的引用集合），
-                    //这时，父对象的类型并不匹配，所以需要进行尝试设置：
-                    item.TrySetParentEntity(parentEntity);
-                }
+                item.SetParentEntity(this.Parent);
             }
 
             if (this.SupportTree) { this.OnTreeItemInserted(index, item); }
@@ -111,36 +165,27 @@ namespace OEA.Library
 
         public void SetParentEntity(Entity entity)
         {
-            //★Entity 有相同逻辑的代码，修改时请注意！！！
-            var property = this.FindRepository().ParentPropertyIndicator;
-            if (property == null) throw new NotSupportedException("请为父外键引用属性标记，传入 ReferenceType.Parent 的参数。");
-
-            for (int i = 0, c = this.Count; i < c; i++)
-            {
-                var child = this[i];
-                child.GetLazyRef(property).Entity = entity;
-            }
+            var property = this.FindRepository().FindParentPropertyInfo(true).ManagedProperty as IRefProperty;
+            foreach (var child in this) { child.GetLazyRef(property).Entity = entity; }
         }
 
-        public void TrySetParentEntity(Entity entity)
+        /// <summary>
+        /// 由于有时父引用实体没有发生改变，但是父引用实体的 Id 变了，此时需要调用此方法同步二者的 Id。
+        /// </summary>
+        /// <param name="parent"></param>
+        internal void SyncParentEntityId(Entity parent)
         {
-            //★Entity 有相同逻辑的代码，修改时请注意！！！
-            //如果父外键是懒加载外键，并且其对应的实体类型兼容 parent 的类型，才进行属性值设置。
-
-            var property = this.FindRepository().ParentPropertyIndicator;
-            if (property != null)
+            if (this.HasManyType == HasManyType.Composition)
             {
-                var propertyType = property.PropertyType;
-                if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(ILazyEntityRef<>))
+                var property = this.FindRepository().FindParentPropertyInfo(true).ManagedProperty as IRefProperty;
+                foreach (var child in this)
                 {
-                    if (entity == null || propertyType.GetGenericArguments()[0].IsAssignableFrom(entity.GetType()))
-                    {
-                        for (int i = 0, c = this.Count; i < c; i++)
-                        {
-                            var child = this[i];
-                            child.GetLazyRef(property).Entity = entity;
-                        }
-                    }
+                    var lazyRef = child.GetLazyRef(property);
+
+                    //注意，由于实体可能并没有发生改变，而只是 Id 变了，
+                    //所以在设置的时候，先设置 Id，然后设置 Entity。
+                    lazyRef.Id = parent.Id;
+                    lazyRef.Entity = parent;
                 }
             }
         }

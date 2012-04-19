@@ -209,16 +209,15 @@ namespace OEA.Library
 
                 if (property is IListProperty)
                 {
+                    var listProperty = property as IListProperty;
                     if (childrenRecur)
                     {
-                        var targetList = target.GetLazyList(property as IListProperty);
-                        var srcList = this.GetLazyList(property as IListProperty);
+                        var targetList = target.GetLazyList(listProperty);
+                        var srcList = this.GetLazyList(listProperty);
                         srcList.Clone(targetList, options);
 
-                        //当一个子对象挂接到多个父对象的场景下，如果非正式的父对象进行复制操作，会对它的子集合进行复制。
-                        //而复制集合完成后，它会设置这个新的集合的父对象为自己。
-                        //这时，子对象不支持此操作，所以需要使用 TrySetParentEntity，而不是 SetParentEntity。
-                        srcList.TrySetParentEntity(this);
+                        var isComposition = srcList.HasManyType == HasManyType.Composition;
+                        if (isComposition) { srcList.SetParentEntity(this); }
                     }
                     else
                     {
@@ -228,7 +227,8 @@ namespace OEA.Library
                             this.LoadProperty(property, children);
                             if (children == null) return;
 
-                            children.TrySetParentEntity(this);
+                            var isComposition = children.HasManyType == HasManyType.Composition;
+                            if (isComposition) { children.SetParentEntity(this); }
                         }
                     }
                 }

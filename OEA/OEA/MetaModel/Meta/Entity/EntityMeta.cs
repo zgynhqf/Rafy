@@ -177,8 +177,11 @@ namespace OEA.MetaModel
         public EntityPropertyMeta FindParentReferenceProperty()
         {
             var result = this.EntityProperties
-                .FirstOrDefault(p => p.ReferenceInfo != null && p.ReferenceInfo.Type == ReferenceType.Parent);
-            return result;
+                .Where(p => p.ReferenceInfo != null && p.ReferenceInfo.Type == ReferenceType.Parent).ToArray();
+
+            if (result.Length > 1) throw new InvalidOperationException("一个类中只能定义一个父引用属性。");
+
+            return result.Length > 0 ? result[0] : null;
         }
 
         /// <summary>

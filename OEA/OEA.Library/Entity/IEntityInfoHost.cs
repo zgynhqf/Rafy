@@ -23,9 +23,8 @@ namespace OEA.Library
         /// <summary>
         /// 找到本对象上层父聚合对象的外键
         /// </summary>
+        /// <param name="throwOnNotFound">如果没有找到，是否需要抛出异常。</param>
         /// <returns></returns>
-        EntityPropertyMeta GetParentPropertyInfo();
-
-        IRefProperty ParentPropertyIndicator { get; }
+        EntityPropertyMeta FindParentPropertyInfo(bool throwOnNotFound);
     }
 }

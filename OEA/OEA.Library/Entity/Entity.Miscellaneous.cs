@@ -46,7 +46,7 @@ namespace OEA.Library
 
             if (toParentProperty != null)
             {
-                var parent = this.GetParentEntity();
+                var parent = this.FindParentEntity();
                 if (parent != null)
                 {
                     parent.CalculateCollectValue(toParentProperty, e);
