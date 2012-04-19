@@ -23,17 +23,24 @@ using OEA.Module.WPF;
 using OEA.Module.WPF.Controls;
 using OEA.WPF.Command;
 using OEA.Library;
-using OEA.Module.WPF.Command;
 
 namespace JXC.Commands
 {
-    [Command(Label = "选择商品")]
-    public class AddPurchaseOrderItem : LookupSelectAddCommand
+    [Command(ImageName = "Add.bmp", Label = "添加", ToolTip = "添加一个采购入库单", GroupType = CommandGroupType.Edit)]
+    public class AddOrderStorageInBill : AddBill
     {
-        public AddPurchaseOrderItem()
+        public AddOrderStorageInBill()
         {
-            this.TargetEntityType = typeof(Product);
-            this.RefProperty = PurchaseOrderItem.ProductRefProperty;
+            this.Service = new AddOrderStorageInBillService();
+        }
+    }
+
+    [Command(ImageName = "Delete.bmp", Label = "删除", ToolTip = "删除一个采购入库单", GroupType = CommandGroupType.Edit)]
+    public class DeleteStorageInBill : DeleteBill
+    {
+        public DeleteStorageInBill()
+        {
+            this.Service = new DeleteOrderStorageInBillService();
         }
     }
 }

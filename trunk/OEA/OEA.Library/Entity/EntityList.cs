@@ -104,11 +104,6 @@ namespace OEA.Library
             if (this.SupportTree) { this.OnTreeItemInserted(index, item); }
         }
 
-        public Entity Parent
-        {
-            get { return (this as IEntityOrList).Parent as Entity; }
-        }
-
         public Type EntityType
         {
             get { return this.FindRepository().EntityType; }
@@ -305,6 +300,32 @@ namespace OEA.Library
         }
 
         #endregion
+
+        /// <summary>
+        /// 触发某个路由事件
+        /// </summary>
+        /// <param name="indicator"></param>
+        /// <param name="args"></param>
+        protected void RaiseRoutedEvent(EntityRoutedEvent indicator, EventArgs args)
+        {
+            if (indicator.Type == EntityRoutedEventType.BubbleToTreeParent)
+            {
+                throw new InvalidOperationException("列表类上只支持 BubbleToParent 的实体路由事件。");
+            }
+
+            //如果没有父实体，则直接返回
+            var parent = this.Parent;
+            if (parent == null) return;
+
+            var arg = new EntityRoutedEventArgs
+            {
+                Source = this,
+                Event = indicator,
+                Args = args
+            };
+
+            parent.RouteByList(this, arg);
+        }
     }
 
     /// <summary>

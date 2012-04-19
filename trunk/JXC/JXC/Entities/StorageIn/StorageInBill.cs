@@ -6,6 +6,7 @@ using OEA.Library;
 using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
 using OEA.MetaModel.View;
+using OEA.Library.Validation;
 
 namespace JXC
 {
@@ -44,6 +45,41 @@ namespace JXC
         {
             get { return this.GetProperty(CommentProperty); }
             set { this.SetProperty(CommentProperty, value); }
+        }
+
+        protected override void AddValidations()
+        {
+            base.AddValidations();
+
+            var rules = this.ValidationRules;
+            rules.AddRule(CodeProperty, CommonRules.StringRequired);
+            rules.AddRule((e, args) =>
+            {
+                var po = e as StorageInBill;
+                if (po.StorageInItemList.Count == 0)
+                {
+                    args.BrokenDescription = "至少需要一个商品项。";
+                }
+                else
+                {
+                    foreach (StorageInItem item in po.StorageInItemList)
+                    {
+                        if (item.View_TotalPrice <= 0)
+                        {
+                            args.BrokenDescription = "商品项金额应该是正数。";
+                            return;
+                        }
+                    }
+                }
+            });
+        }
+
+        protected override void OnRoutedEvent(object sender, EntityRoutedEventArgs e)
+        {
+            if (e.Event == StorageInItem.PriceChangedEvent || e.Event == StorageInItemList.ListChangedEvent)
+            {
+                this.TotalMoney = this.StorageInItemList.Sum(poi => (poi as StorageInItem).View_TotalPrice);
+            }
         }
     }
 

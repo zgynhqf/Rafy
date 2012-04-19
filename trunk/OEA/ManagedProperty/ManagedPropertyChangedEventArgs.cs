@@ -49,7 +49,7 @@ namespace OEA.ManagedProperty
     /// 泛型版本的属性变更事件
     /// </summary>
     /// <typeparam name="TPropertyType"></typeparam>
-    public class ManagedPropertyChangedEventArgs<TPropertyType> : EventArgs, IManagedPropertyChangedEventArgs
+    public struct ManagedPropertyChangedEventArgs<TPropertyType> : IManagedPropertyChangedEventArgs
     {
         private TPropertyType _newValue;
 

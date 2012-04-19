@@ -130,7 +130,7 @@ namespace OEA.Library._Test
         {
             if (e.Event == TestTreeTask.AllTimeChangedParentRoutedEvent)
             {
-                var args = e.Args.CastTo<ManagedPropertyChangedEventArgs<int>>();
+                var args = (ManagedPropertyChangedEventArgs<int>)e.Args;
                 this.TasksTime += (args.NewValue - args.OldValue);
                 e.Handled = true;
             }

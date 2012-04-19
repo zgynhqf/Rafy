@@ -21,6 +21,9 @@ using JXC.WPF.Layouts;
 
 namespace JXC.WPF.Templates
 {
+    /// <summary>
+    /// 单据模块
+    /// </summary>
     public class BillTemplate : CustomTemplate
     {
         protected override AggtBlocks DefineBlocks()
@@ -29,9 +32,41 @@ namespace JXC.WPF.Templates
 
             //只需要把主块的生成方式变为 Detail 就行了。
             blocks.MainBlock.BlockType = BlockType.Detail;
-            blocks.MainBlock.EVM.ClearWPFCommands();
+            blocks.MainBlock.ViewMeta.ClearWPFCommands();
 
             blocks.Layout = new LayoutMeta(typeof(TraditionalLayoutMethod<BillLayout>));
+
+            return blocks;
+        }
+    }
+
+    /// <summary>
+    /// 一个只读的单据模块
+    /// </summary>
+    public class ReadonlyBillCommand : BillTemplate
+    {
+        protected override AggtBlocks DefineBlocks()
+        {
+            var blocks = base.DefineBlocks();
+
+            blocks.MainBlock.ViewMeta.DisableEditing();
+
+            //把所有孩子块上的非查询型命令都删除
+            foreach (var child in blocks.Children)
+            {
+                var childMeta = child.MainBlock.ViewMeta;
+                childMeta.DisableEditing();
+
+                var commands = childMeta.WPFCommands;
+                for (int i = commands.Count - 1; i >= 0; i--)
+                {
+                    var cmd = commands[i];
+                    if (cmd.GroupType != CommandGroupType.View)
+                    {
+                        commands.Remove(cmd);
+                    }
+                }
+            }
 
             return blocks;
         }

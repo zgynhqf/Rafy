@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
+using System.Windows.Input;
 
 namespace OEA.Module.WPF.Controls
 {
@@ -145,6 +146,16 @@ namespace OEA.Module.WPF.Controls
         #endregion
 
         #region Event handlers
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+
+            if (e.Key == Key.Escape)
+            {
+                this.OnCancelButtonClick(this, e);
+            }
+        }
 
         /// <summary>
         /// Handles the click event of the cancel button

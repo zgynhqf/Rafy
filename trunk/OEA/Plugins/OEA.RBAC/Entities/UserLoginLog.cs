@@ -110,7 +110,7 @@ namespace OEA.RBAC
         {
             base.ConfigView();
 
-            View.NotAllowEdit(true)
+            View.DisableEditing(true)
                 .RemoveWPFCommands(WPFCommandNames.Add, WPFCommandNames.Cancel, WPFCommandNames.Delete, WPFCommandNames.SaveList)
                 .DomainName("用户登录记录");
 

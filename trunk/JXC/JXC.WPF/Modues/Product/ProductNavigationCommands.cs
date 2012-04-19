@@ -15,6 +15,18 @@ using Itenso.Windows.Input;
 
 namespace JXC.Commands
 {
+    [Command(Label = "重置商品数据（调试）")]
+    public class ResetProductAmountCommand : ClientCommand<ListObjectView>
+    {
+        public override void Execute(ListObjectView view)
+        {
+            foreach (Product item in view.SelectedObjects)
+            {
+                item.StorageAmount = 0;
+            }
+        }
+    }
+
     [Command(Label = "刷新")]
     public class RefreshProductNavigation : ClientCommand<QueryObjectView>
     {

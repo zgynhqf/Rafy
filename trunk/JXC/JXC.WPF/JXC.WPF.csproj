@@ -44,12 +44,16 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BasicData\Product\ProductModule.cs" />
-    <Compile Include="BasicData\Product\ProductNavigationCommands.cs" />
-    <Compile Include="BasicData\Purchase\Commands\AddPurchaseOrderItem.cs" />
-    <Compile Include="BasicData\Purchase\PurchaseOrderBillUI.cs" />
-    <Compile Include="BasicData\Purchase\Commands\AddPurchaseOrder.cs" />
-    <Compile Include="BasicData\Purchase\PurchaseOrderModule.cs" />
+    <Compile Include="Modues\Product\ProductModule.cs" />
+    <Compile Include="Modues\Product\ProductNavigationCommands.cs" />
+    <Compile Include="Modues\Purchase\Commands\AddPurchaseOrderItem.cs" />
+    <Compile Include="Modues\Purchase\Commands\CompletePurchaseOrder.cs" />
+    <Compile Include="Modues\Purchase\Commands\OrderStorageInBillCommands.cs" />
+    <Compile Include="Modues\Purchase\Commands\DeletePurchaseOrder.cs" />
+    <Compile Include="Modues\Purchase\Commands\AddPurchaseOrder.cs" />
+    <Compile Include="Modues\Purchase\Commands\StorageInItemCommands.cs" />
+    <Compile Include="Modues\Purchase\PurchaseOrderModule.cs" />
+    <Compile Include="Modues\Purchase\OrderStorageInModule.cs" />
     <Compile Include="Commands\AddBill.cs" />
     <Compile Include="Commands\DeleteBill.cs" />
     <Compile Include="Commands\EditBill.cs" />
@@ -126,7 +130,11 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Images\Delete.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Add.bmp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

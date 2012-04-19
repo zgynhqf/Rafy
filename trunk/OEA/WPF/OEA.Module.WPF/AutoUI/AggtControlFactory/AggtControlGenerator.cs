@@ -106,7 +106,7 @@ namespace OEA.Module.WPF
             var regions = new RegionContainer(aggt);
 
             //如果不要查询面板，则需要生成主区域
-            var viewInfo = aggt.MainBlock.EVM;
+            var viewInfo = aggt.MainBlock.ViewMeta;
 
             regions.Add(TraditionalRegions.Main, AutoUIHelper.CreateBusyControlResult(mainView));
             if (mainView.CommandsContainer != null)
@@ -162,7 +162,7 @@ namespace OEA.Module.WPF
         protected virtual WPFObjectView CreateSurrounderView(WPFObjectView mainView, SurrounderBlock surrounderBlock)
         {
             var surrounderType = surrounderBlock.SurrounderType;
-            var surrounderVM = surrounderBlock.EVM;
+            var surrounderVM = surrounderBlock.ViewMeta;
 
             WPFObjectView surrounderView = null;
             RelationView relation = null;
@@ -249,7 +249,7 @@ namespace OEA.Module.WPF
             if (view == null) throw new ArgumentNullException("view");
             if (block == null) throw new ArgumentNullException("uiInfo");
 
-            var commands = block.EVM.WPFCommands.Where(c => c.IsVisible).ToList();
+            var commands = block.ViewMeta.WPFCommands.Where(c => c.IsVisible).ToList();
             if (commands.Count > 0)
             {
                 if (this.NeedPermission)

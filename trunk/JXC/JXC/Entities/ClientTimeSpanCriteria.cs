@@ -23,10 +23,10 @@ using OEA.MetaModel.View;
 namespace JXC
 {
     [QueryEntity, Serializable]
-    public class PurchaseOrderCriteria : TimeSpanCriteria
+    public class ClientTimeSpanCriteria : TimeSpanCriteria
     {
         public static readonly RefProperty<ClientInfo> ClientInfoRefProperty =
-            P<PurchaseOrderCriteria>.RegisterRef(e => e.ClientInfo, ReferenceType.Normal);
+            P<ClientTimeSpanCriteria>.RegisterRef(e => e.ClientInfo, ReferenceType.Normal);
         public int? ClientInfoId
         {
             get { return this.GetRefNullableId(ClientInfoRefProperty); }
@@ -39,24 +39,16 @@ namespace JXC
         }
     }
 
-    internal class PurchaseOrderCriteriaConfig : EntityConfig<PurchaseOrderCriteria>
+    internal class ClientTimeSpanCriteriaConfig : EntityConfig<ClientTimeSpanCriteria>
     {
         protected override void ConfigView()
         {
-            View.DomainName("采购订单查询条件");
-
-            //横向显示查询面板。
-            View.DetailAsHorizontal = true;
-
             using (View.OrderProperties())
             {
-                View.Property(PurchaseOrderCriteria.TimeSpanTypeProperty)
-                    .HasLabel("入库日期").ShowIn(ShowInWhere.Detail);
-                View.Property(PurchaseOrderCriteria.FromProperty)
-                    .HasLabel("从").ShowInDetail(labelWidth: 30);
-                View.Property(PurchaseOrderCriteria.ToProperty)
-                    .HasLabel("至").ShowInDetail(labelWidth: 30);
-                View.Property(PurchaseOrderCriteria.ClientInfoRefProperty)
+                View.Property(TimeSpanCriteria.TimeSpanTypeProperty);
+                View.Property(TimeSpanCriteria.FromProperty);
+                View.Property(TimeSpanCriteria.ToProperty);
+                View.Property(ClientTimeSpanCriteria.ClientInfoRefProperty)
                     .HasLabel("相关单位：").ShowIn(ShowInWhere.Detail);
             }
         }

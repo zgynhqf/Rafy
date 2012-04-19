@@ -55,7 +55,7 @@ namespace OEA.MetaModel.View
             get
             {
                 if (this._keyLabel != null) { return this._keyLabel; }
-                return this.EVM.Label;
+                return this.ViewMeta.Label;
             }
             set { this._keyLabel = value; }
         }
@@ -123,20 +123,20 @@ namespace OEA.MetaModel.View
         /// </summary>
         public BlockType BlockType { get; set; }
 
-        private EntityViewMeta _EVM;
+        private EntityViewMeta _ViewMeta;
         /// <summary>
         /// 缓存 EVM 的属性（当前块显示的实体类型）
         /// </summary>
-        public EntityViewMeta EVM
+        public EntityViewMeta ViewMeta
         {
             get
             {
-                if (this._EVM == null)
+                if (this._ViewMeta == null)
                 {
-                    this._EVM = UIModel.Views.Create(this.EntityType, this.ExtendView);
+                    this._ViewMeta = UIModel.Views.Create(this.EntityType, this.ExtendView);
                 }
 
-                return this._EVM;
+                return this._ViewMeta;
             }
         }
 

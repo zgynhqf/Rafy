@@ -149,6 +149,26 @@ namespace OEA.Module.WPF
             internal OEAWindows() { }
 
             /// <summary>
+            /// 当前是否有弹出窗口
+            /// </summary>
+            public bool HasPopup
+            {
+                get { return this._popupWindows.Count > 0; }
+            }
+
+            /// <summary>
+            /// 当前激活的窗口
+            /// </summary>
+            public Window Current
+            {
+                get
+                {
+                    return this._popupWindows.FirstOrDefault(w => w.IsActive)
+                        ?? App.Current.MainWindow;
+                }
+            }
+
+            /// <summary>
             /// 使用一个通用的Dialog来显示某个UI元素。
             /// </summary>
             /// <param name="content"></param>

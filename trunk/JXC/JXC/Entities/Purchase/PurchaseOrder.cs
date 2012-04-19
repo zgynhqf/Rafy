@@ -26,7 +26,7 @@ using OEA.ManagedProperty;
 namespace JXC
 {
     [RootEntity, Serializable]
-    [ConditionQueryType(typeof(PurchaseOrderCriteria))]
+    [ConditionQueryType(typeof(ClientTimeSpanCriteria))]
     public class PurchaseOrder : JXCEntity
     {
         public static readonly RefProperty<ClientInfo> SupplierRefProperty =
@@ -76,11 +76,18 @@ namespace JXC
             set { this.SetProperty(TotalMoneyProperty, value); }
         }
 
-        public static readonly Property<bool> StorageInDirectlyProperty = P<PurchaseOrder>.Register(e => e.StorageInDirectly);
+        public static readonly Property<bool> StorageInDirectlyProperty = P<PurchaseOrder>.Register(e => e.StorageInDirectly, new PropertyMetadata<bool>
+        {
+            PropertyChangedCallBack = (o, e) => (o as PurchaseOrder).OnStorageInDirectlyChanged(e)
+        });
         public bool StorageInDirectly
         {
             get { return this.GetProperty(StorageInDirectlyProperty); }
             set { this.SetProperty(StorageInDirectlyProperty, value); }
+        }
+        protected virtual void OnStorageInDirectlyChanged(ManagedPropertyChangedEventArgs<bool> e)
+        {
+            if (e.NewValue) { this.StorageInStatus = OrderStorageInStatus.Completed; }
         }
 
         public static readonly Property<string> CommentProperty = P<PurchaseOrder>.Register(e => e.Comment);
@@ -88,6 +95,23 @@ namespace JXC
         {
             get { return this.GetProperty(CommentProperty); }
             set { this.SetProperty(CommentProperty, value); }
+        }
+
+        public static readonly Property<int> TotalAmountLeftProperty = P<PurchaseOrder>.RegisterReadOnly(e => e.TotalAmountLeft, e => (e as PurchaseOrder).GetTotalAmountLeft(), null);
+        public int TotalAmountLeft
+        {
+            get { return this.GetProperty(TotalAmountLeftProperty); }
+        }
+        private int GetTotalAmountLeft()
+        {
+            return this.PurchaseOrderItemList.Cast<PurchaseOrderItem>().Sum(e => e.AmountLeft);
+        }
+
+        public static readonly Property<OrderStorageInStatus> StorageInStatusProperty = P<PurchaseOrder>.Register(e => e.StorageInStatus, OrderStorageInStatus.Waiting);
+        public OrderStorageInStatus StorageInStatus
+        {
+            get { return this.GetProperty(StorageInStatusProperty); }
+            set { this.SetProperty(StorageInStatusProperty, value); }
         }
 
         protected override void AddValidations()
@@ -103,25 +127,41 @@ namespace JXC
                 {
                     args.BrokenDescription = "订单至少需要一个订单项。";
                 }
+                else
+                {
+                    foreach (PurchaseOrderItem item in po.PurchaseOrderItemList)
+                    {
+                        if (item.View_TotalPrice <= 0)
+                        {
+                            args.BrokenDescription = "商品项金额应该是正数。";
+                            return;
+                        }
+                    }
+                }
             });
         }
 
         protected override void OnRoutedEvent(object sender, EntityRoutedEventArgs e)
         {
-            base.OnRoutedEvent(sender, e);
-
-            if (e.Event == PurchaseOrderItem.PriceChangedEvent)
+            if (e.Event == PurchaseOrderItem.PriceChangedEvent || e.Event == PurchaseOrderItemList.ListChangedEvent)
             {
                 this.TotalMoney = this.PurchaseOrderItemList.Sum(poi => (poi as PurchaseOrderItem).View_TotalPrice);
-                e.Handled = true;
             }
         }
+    }
+
+    public enum OrderStorageInStatus
+    {
+        [Label("等待入库")]
+        Waiting,
+        [Label("完全入库")]
+        Completed,
     }
 
     [Serializable]
     public class PurchaseOrderList : JXCEntityList
     {
-        protected void QueryBy(PurchaseOrderCriteria criteria)
+        protected void QueryBy(ClientTimeSpanCriteria criteria)
         {
             this.QueryDb(q =>
             {
@@ -155,10 +195,10 @@ namespace JXC
             View.ClearWPFCommands(false)
                 .UseWPFCommands(
                 "JXC.Commands.AddPurchaseOrder",
-                "JXC.Commands.EditBill",
-                "JXC.Commands.DeleteBill",
+                "JXC.Commands.DeletePurchaseOrder",
                 "JXC.Commands.ShowBill",
-                WPFCommandNames.Refresh
+                WPFCommandNames.Refresh,
+                "JXC.Commands.CompletePurchaseOrder"
                 );
 
             using (View.OrderProperties())
@@ -169,6 +209,7 @@ namespace JXC
                 View.Property(PurchaseOrder.PlanStorageInDateProperty).HasLabel("计划到货日期").ShowIn(ShowInWhere.ListDetail);
                 View.Property(PurchaseOrder.TotalMoneyProperty).HasLabel("总金额").ShowIn(ShowInWhere.ListDetail).Readonly();
                 View.Property(PurchaseOrder.StorageInDirectlyProperty).HasLabel("直接入库").ShowIn(ShowInWhere.Detail);
+                View.Property(PurchaseOrder.StorageInStatusProperty).HasLabel("入库状态").ShowIn(ShowInWhere.List).Readonly();
                 View.Property(PurchaseOrder.CommentProperty).HasLabel("备注").ShowIn(ShowInWhere.ListDetail)
                     .ShowMemoInDetail();
             }

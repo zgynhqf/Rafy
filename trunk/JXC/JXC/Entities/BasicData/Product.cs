@@ -198,6 +198,8 @@ namespace JXC
 
             View.DomainName("商品").HasDelegate(Product.MingChengProperty);
 
+            View.UseWPFCommands("JXC.Commands.ResetProductAmountCommand");
+
             using (View.OrderProperties())
             {
                 View.Property(Product.BianMaProperty).HasLabel("编码").ShowIn(ShowInWhere.All)

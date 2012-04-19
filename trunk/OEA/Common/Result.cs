@@ -9,7 +9,7 @@ namespace hxy.Common
     /// <summary>
     /// indicates the result of a normal invoking the "service"
     /// </summary>
-    [DataContract]
+    [DataContract, Serializable]
     public struct Result
     {
         /// <summary>

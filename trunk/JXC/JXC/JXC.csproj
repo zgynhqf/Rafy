@@ -43,7 +43,8 @@
   <ItemGroup>
     <Compile Include="DbMigrations\_20120417_142100_InitClient.cs" />
     <Compile Include="DbMigrations\DataMigration.cs" />
-    <Compile Include="DbMigrations\_20120417_131600_InitProduct.cs" />
+    <Compile Include="DbMigrations\_20120417_131600_InitProductCategory.cs" />
+    <Compile Include="DbMigrations\_20120418_213000_InitProduct.cs" />
     <Compile Include="Entities\BasicData\ClientCategory.cs" />
     <Compile Include="Entities\BasicData\ClientInfo.cs" />
     <Compile Include="Entities\BasicData\Product.cs" />
@@ -52,7 +53,7 @@
     <Compile Include="Entities\BasicData\Storage.cs" />
     <Compile Include="Entities\BasicData\Unit.cs" />
     <Compile Include="Entities\Purchase\PurchaseOrder.cs" />
-    <Compile Include="Entities\Purchase\PurchaseOrderCriteria.cs" />
+    <Compile Include="Entities\ClientTimeSpanCriteria.cs" />
     <Compile Include="Entities\Purchase\PurchaseOrderItem.cs" />
     <Compile Include="Entities\StorageIn\OrderStorageInBill.cs" />
     <Compile Include="Entities\StorageIn\OtherStorageInBill.cs" />
@@ -68,6 +69,9 @@
     <Compile Include="MetaExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AddPurchaseOrderService.cs" />
+    <Compile Include="Services\AddService.cs" />
+    <Compile Include="Services\OrderStorageInBillServices.cs" />
+    <Compile Include="Services\DeletePurchaseService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\OEA\Common\Common.csproj">

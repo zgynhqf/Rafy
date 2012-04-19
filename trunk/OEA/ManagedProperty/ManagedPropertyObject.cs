@@ -50,6 +50,9 @@ namespace OEA.ManagedProperty
             this._fields = new ManagedPropertyObjectFieldsManager(this);
         }
 
+        /// <summary>
+        /// 本对象所有的属性容器
+        /// </summary>
         public ConsolidatedTypePropertiesContainer PropertiesContainer
         {
             get

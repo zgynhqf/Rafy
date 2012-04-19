@@ -18,11 +18,13 @@ using System.Text;
 using OEA.Library;
 using OEA.MetaModel.Attributes;
 using OEA.ManagedProperty;
+using OEA.MetaModel;
+using OEA.MetaModel.View;
 
 namespace JXC
 {
-    [Serializable]
-    public abstract class TimeSpanCriteria : Criteria
+    [QueryEntity, Serializable]
+    public class TimeSpanCriteria : Criteria
     {
         public TimeSpanCriteria()
         {
@@ -111,5 +113,26 @@ namespace JXC
         Year,
         [Label("全部")]
         All
+    }
+
+    internal class TimeSpanCriteriaConfig : EntityConfig<TimeSpanCriteria>
+    {
+        protected override void ConfigView()
+        {
+            View.DomainName("查询条件");
+
+            //横向显示查询面板。
+            View.DetailAsHorizontal = true;
+
+            using (View.OrderProperties())
+            {
+                View.Property(TimeSpanCriteria.TimeSpanTypeProperty)
+                    .HasLabel("入库日期").ShowIn(ShowInWhere.Detail);
+                View.Property(TimeSpanCriteria.FromProperty)
+                    .HasLabel("从").ShowInDetail(labelWidth: 30);
+                View.Property(TimeSpanCriteria.ToProperty)
+                    .HasLabel("至").ShowInDetail(labelWidth: 30);
+            }
+        }
     }
 }

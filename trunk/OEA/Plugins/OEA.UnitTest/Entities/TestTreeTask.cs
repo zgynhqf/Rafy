@@ -57,7 +57,7 @@ namespace OEA.Library._Test
         {
             if (e.Event == AllTimeChangedTreeRoutedEvent)
             {
-                var args = e.Args.CastTo<ManagedPropertyChangedEventArgs<int>>();
+                var args = (ManagedPropertyChangedEventArgs<int>)e.Args;
                 this.AllTime += (args.NewValue - args.OldValue);
                 e.Handled = true;
             }

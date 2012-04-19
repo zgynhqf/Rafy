@@ -111,7 +111,7 @@ namespace OEA.MetaModel.View
             {
                 if (this._ChildrePropertyMeta == null)
                 {
-                    this._ChildrePropertyMeta = this.EVM.EntityMeta.FindProperty(this.ChildrenProperty);
+                    this._ChildrePropertyMeta = this.ViewMeta.EntityMeta.FindProperty(this.ChildrenProperty);
                 }
 
                 return this._ChildrePropertyMeta;

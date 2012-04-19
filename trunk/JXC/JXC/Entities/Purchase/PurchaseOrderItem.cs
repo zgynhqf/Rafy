@@ -7,6 +7,7 @@ using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
 using OEA.MetaModel.View;
 using OEA.ManagedProperty;
+using System.ComponentModel;
 
 namespace JXC
 {
@@ -39,11 +40,28 @@ namespace JXC
             set { this.SetRefEntity(ProductRefProperty, value); }
         }
 
-        public static readonly Property<int> AmountProperty = P<PurchaseOrderItem>.Register(e => e.Amount);
+        public static readonly Property<int> AmountProperty = P<PurchaseOrderItem>.Register(e => e.Amount, new PropertyMetadata<int>
+        {
+            PropertyChangedCallBack = (o, e) => (o as PurchaseOrderItem).OnAmountChanged(e)
+        });
         public int Amount
         {
             get { return this.GetProperty(AmountProperty); }
             set { this.SetProperty(AmountProperty, value); }
+        }
+        protected virtual void OnAmountChanged(ManagedPropertyChangedEventArgs<int> e)
+        {
+            this.AmountLeft = e.NewValue;
+        }
+
+        /// <summary>
+        /// 剩余数量
+        /// </summary>
+        public static readonly Property<int> AmountLeftProperty = P<PurchaseOrderItem>.Register(e => e.AmountLeft);
+        public int AmountLeft
+        {
+            get { return this.GetProperty(AmountLeftProperty); }
+            set { this.SetProperty(AmountLeftProperty, value); }
         }
 
         public static readonly Property<double> RawPriceProperty = P<PurchaseOrderItem>.Register(e => e.RawPrice);
@@ -114,7 +132,17 @@ namespace JXC
     }
 
     [Serializable]
-    public class PurchaseOrderItemList : JXCEntityList { }
+    public class PurchaseOrderItemList : JXCEntityList
+    {
+        protected override void OnListChanged(ListChangedEventArgs e)
+        {
+            base.OnListChanged(e);
+
+            this.RaiseRoutedEvent(ListChangedEvent, e);
+        }
+
+        public static readonly EntityRoutedEvent ListChangedEvent = EntityRoutedEvent.Register(EntityRoutedEventType.BubbleToParent);
+    }
 
     public class PurchaseOrderItemRepository : EntityRepository
     {
@@ -146,6 +174,7 @@ namespace JXC
                 View.Property(PurchaseOrderItem.RawPriceProperty).HasLabel("单价").ShowIn(ShowInWhere.List);
                 View.Property(PurchaseOrderItem.AmountProperty).HasLabel("数量").ShowIn(ShowInWhere.List);
                 View.Property(PurchaseOrderItem.View_TotalPriceProperty).HasLabel("总价").ShowIn(ShowInWhere.List);
+                View.Property(PurchaseOrderItem.AmountLeftProperty).HasLabel("未入库数量").ShowIn(ShowInWhere.List).Readonly();
             }
         }
     }
