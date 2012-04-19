@@ -13,7 +13,7 @@ namespace OEA.Server
     /// message router as discussed
     /// in Chapter 4.
     /// </summary>
-    public class DataPortalFacade : IDataPortalServer, IDataPortalProxy
+    public class DataPortalFacade : IDataPortalServer
     {
         /// <summary>
         /// Get an existing business object.
@@ -123,14 +123,6 @@ namespace OEA.Server
             ApplicationContext.Clear();
             if (ApplicationContext.AuthenticationType != "Windows")
                 ApplicationContext.User = null;
-        }
-
-        /// <summary>
-        /// 同时，这个类可以作为本地的 LocalProxy
-        /// </summary>
-        bool IDataPortalProxy.IsServerRemote
-        {
-            get { return false; }
         }
     }
 }

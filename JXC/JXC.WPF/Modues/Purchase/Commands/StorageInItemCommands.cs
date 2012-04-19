@@ -23,26 +23,24 @@ using OEA.Module.WPF;
 using OEA.Module.WPF.Controls;
 using OEA.WPF.Command;
 using OEA.Library;
+using OEA.Module.WPF.Command;
 
 namespace JXC.Commands
 {
-    [Command(ImageName = "Add.bmp", Label = "添加", ToolTip = "添加一个订单", GroupType = CommandGroupType.Edit)]
-    public class AddPurchaseOrder : AddBill
+    [Command(Label = "选择商品", GroupType = CommandGroupType.Edit)]
+    public class AddStorageInItem : LookupSelectAddCommand
     {
-        public AddPurchaseOrder()
+        public AddStorageInItem()
         {
-            //this.Template = 
+            this.TargetEntityType = typeof(Product);
+            this.RefProperty = StorageInItem.ProductRefProperty;
         }
 
-        protected override void Save(Entity tmpEntity)
+        protected override void OnAdded(Entity newEntity)
         {
-            var svc = new AddPurchaseOrderService
-            {
-                Item = tmpEntity as PurchaseOrder
-            };
-            svc.Invoke();
+            base.OnAdded(newEntity);
 
-            tmpEntity.Id = svc.NewId;
+            (newEntity as StorageInItem).Amount = 1;
         }
     }
 }

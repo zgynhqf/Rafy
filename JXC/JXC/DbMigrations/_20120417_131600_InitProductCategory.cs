@@ -12,7 +12,7 @@ namespace JXC.DbMigrations
     {
         protected override string GetDescription()
         {
-            return "添加 商品 的初始数据。";
+            return "添加 商品类别 的初始数据。";
         }
 
         protected override void Up()

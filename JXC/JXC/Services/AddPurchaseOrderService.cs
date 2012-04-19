@@ -18,21 +18,16 @@ using System.Text;
 using OEA;
 using System.Transactions;
 using OEA.Library;
+using hxy.Common;
 
 namespace JXC
 {
     [Serializable]
-    public class AddPurchaseOrderService : Service
+    public class AddPurchaseOrderService : AddService
     {
-        [ServiceInput]
-        public PurchaseOrder Item { get; set; }
-
-        [ServiceOutput]
-        public int NewId { get; set; }
-
-        protected override void Execute()
+        protected override Result ExecuteCore()
         {
-            var po = this.Item;
+            var po = this.Item as PurchaseOrder;
             var poRepo = RF.Concreate<PurchaseOrderRepository>();
 
             using (var tran = new TransactionScope())
@@ -46,25 +41,17 @@ namespace JXC
                     {
                         Order = po,
                         Code = po.Code + " - 入库",
-                        TotalMoney = po.TotalMoney,
                         Date = DateTime.Now,
                     };
-                    foreach (PurchaseOrderItem item in po.PurchaseOrderItemList)
-                    {
-                        storageIn.StorageInItemList.Add(new StorageInItem
-                        {
-                            ProductId = item.ProductId,
-                            Amount = item.Amount
-                        });
-                    }
-                    RF.Save(storageIn);
 
-                    //修改库存
-                    foreach (PurchaseOrderItem item in po.PurchaseOrderItemList)
+                    //调用另外一个服务直接入库
+                    var siService = new AddOrderStorageInBillService
                     {
-                        item.Product.StorageAmount += item.Amount;
-                        RF.Save(item.Product);
-                    }
+                        Item = storageIn
+                    };
+                    siService.Invoke();
+
+                    if (!siService.Result) { return siService.Result; }
                 }
 
                 //提交事务
@@ -72,6 +59,8 @@ namespace JXC
             }
 
             this.NewId = po.Id;
+
+            return true;
         }
     }
 }

@@ -15,37 +15,27 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OEA.WPF.Command;
+using hxy.Common;
+using OEA.Library;
 using OEA.MetaModel.Attributes;
 using OEA.MetaModel.View;
 using OEA.Module.WPF;
-using OEA.Library;
-using System.Windows;
+using OEA.WPF.Command;
 
 namespace JXC.Commands
 {
-    public abstract class DeleteBill : ListViewCommand
+    [Command(Label = "入库完成", ToolTip = "标记该订单已入库完成", GroupType = CommandGroupType.Business)]
+    class CompletePurchaseOrder : ListViewCommand
     {
-        protected DeleteService Service;
-
         public override bool CanExecute(ListObjectView view)
         {
-            return view.SelectedObjects.Count == 1;
+            var e = view.Current as PurchaseOrder;
+            return e != null && e.StorageInStatus == OrderStorageInStatus.Waiting;
         }
 
         public override void Execute(ListObjectView view)
         {
-            var res = App.MessageBox.Show(string.Format("确定删除该{0}，删除后不可还原？", view.Meta.Label), MessageBoxButton.YesNo);
-            if (res == MessageBoxResult.Yes)
-            {
-                this.Service.ItemId = view.Current.Id;
-                this.Service.Invoke();
-
-                var result = this.Service.Result;
-                if (result) { view.DataLoader.ReloadDataAsync(); }
-
-                App.MessageBox.Show(result.Message);
-            }
+            App.MessageBox.Show("暂时还没有完成本功能，待入库操作完成后再添加。");
         }
     }
 }

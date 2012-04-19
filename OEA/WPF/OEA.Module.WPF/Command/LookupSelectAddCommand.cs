@@ -82,10 +82,14 @@ namespace OEA.Module.WPF.Command
                     //把选中对象赋值到新增对象的引用属性上
                     var newEntity = view.AddNew(false);
                     newEntity.GetLazyRef(this.RefProperty).Entity = src;
+
+                    this.OnAdded(newEntity);
                 }
 
                 view.RefreshControl();
             }
         }
+
+        protected virtual void OnAdded(Entity newEntity) { }
     }
 }

@@ -52,7 +52,7 @@ namespace OEA.WPF.Command
             }
             else
             {
-                title = view.ChildBlock.EVM.Label;
+                title = view.ChildBlock.ViewMeta.Label;
             }
 
             //window

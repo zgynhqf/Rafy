@@ -41,16 +41,23 @@ namespace OEA.WPF.Command
                 {
                     if (e.Button == WindowButton.Yes)
                     {
-                        var res = App.MessageBox.Show("重新打开当前模块以使设置生效？", MessageBoxButton.YesNo);
-                        if (res == MessageBoxResult.Yes)
+                        if (!App.Windows.HasPopup)
                         {
-                            var ws = App.Current.Workspace;
-                            var aw = ws.ActiveWindow;
-                            if (ws.TryRemove(aw))
+                            var res = App.MessageBox.Show("重新打开当前模块以使设置生效？", MessageBoxButton.YesNo);
+                            if (res == MessageBoxResult.Yes)
                             {
-                                var title = WorkspaceWindow.GetTitle(aw);
-                                App.Current.OpenModuleOrAlert(title);
+                                var ws = App.Current.Workspace;
+                                var aw = ws.ActiveWindow;
+                                if (ws.TryRemove(aw))
+                                {
+                                    var title = WorkspaceWindow.GetTitle(aw);
+                                    App.Current.OpenModuleOrAlert(title);
+                                }
                             }
+                        }
+                        else
+                        {
+                            App.MessageBox.Show("下次打开此弹出窗口时生效。", MessageBoxButton.OK);
                         }
                     }
                 };

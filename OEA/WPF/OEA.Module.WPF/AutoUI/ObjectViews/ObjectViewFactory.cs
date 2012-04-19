@@ -53,7 +53,7 @@ namespace OEA.Module.WPF
             if (block.CustomViewType != null)
             {
                 var viewType = Type.GetType(block.CustomViewType);
-                var view = Activator.CreateInstance(viewType, block.EVM) as WPFObjectView;
+                var view = Activator.CreateInstance(viewType, block.ViewMeta) as WPFObjectView;
 
                 this.OnViewCreated(view);
 
@@ -66,17 +66,17 @@ namespace OEA.Module.WPF
             {
                 if (sur.SurrounderType == SurrounderType.Navigation)
                 {
-                    return this.CreateNavigationQueryView(block.EVM);
+                    return this.CreateNavigationQueryView(block.ViewMeta);
                 }
-                return this.CreateConditionQueryView(block.EVM);
+                return this.CreateConditionQueryView(block.ViewMeta);
             }
 
             if (block.BlockType == BlockType.List)
             {
-                return this.CreateListObjectView(block.EVM);
+                return this.CreateListObjectView(block.ViewMeta);
             }
 
-            return this.CreateDetailObjectView(block.EVM);
+            return this.CreateDetailObjectView(block.ViewMeta);
         }
 
         /// <summary>

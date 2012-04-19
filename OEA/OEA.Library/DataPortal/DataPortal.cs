@@ -4,6 +4,7 @@ using OEA;
 using OEA.Library;
 using OEA.Reflection;
 using OEA.Server;
+using OEA.DataPortalClient;
 
 namespace OEA
 {
@@ -127,7 +128,7 @@ namespace OEA
             {
                 string proxyTypeName = ApplicationContext.DataPortalProxy;
                 if (proxyTypeName == "Local")
-                    _proxyType = typeof(DataPortalFacade);
+                    _proxyType = typeof(LocalProxy);
                 else
                     _proxyType = Type.GetType(proxyTypeName, true, true);
             }

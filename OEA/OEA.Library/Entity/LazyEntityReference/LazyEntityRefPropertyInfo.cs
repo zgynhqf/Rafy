@@ -79,7 +79,7 @@ namespace OEA.Library
             {
                 //由于子类可能会重写父类的实体引用属性并修改名字，所以这里不使用 Property.Name 来查找，
                 //而是使用 IdProperty + RefEntityProperty 的方式来查找。
-                var mp = owner.PropertiesContainer.GetAvailableProperties().FirstOrDefault(p =>
+                var mp = owner.FindRepository().GetAvailableIndicators().FirstOrDefault(p =>
                 {
                     if (p is IRefProperty)
                     {

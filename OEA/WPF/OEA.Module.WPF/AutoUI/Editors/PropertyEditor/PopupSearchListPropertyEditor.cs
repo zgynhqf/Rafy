@@ -66,9 +66,9 @@ namespace OEA.Module.WPF.Editors
 
             //界面生成
             var block = new Block(refInfo.RefType);
-            var title = block.EVM.TitleProperty;
+            var title = block.ViewMeta.TitleProperty;
             if (title == null) throw new InvalidOperationException("该实体没有标题属性，不能使用此控件进行编辑。");
-            block.EVM.NotAllowEdit().ClearWPFCommands()
+            block.ViewMeta.DisableEditing().ClearWPFCommands()
                 .UseWPFCommands(typeof(ClearReferenceCommand), typeof(SearchListCommand));
             var ui = AutoUI.AggtUIFactory.GenerateControl(block);
             var listView = ui.MainView as IListObjectView;

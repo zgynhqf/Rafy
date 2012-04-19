@@ -12,6 +12,9 @@ namespace OEA.Library
     {
         /// <summary>
         /// 发生某个路由事件
+        /// 子类重写此方法以实现监听路由事件。
+        /// 
+        /// 注意：子类在重写时，调用基类方法就表示继续路由。一般把放在最后调用。
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -25,7 +28,7 @@ namespace OEA.Library
         /// </summary>
         /// <param name="indicator"></param>
         /// <param name="args"></param>
-        protected void RaiseRoutedEvent(EntityRoutedEvent indicator, EventArgs args)
+        protected void RaiseRoutedEvent(EntityRoutedEvent indicator, object args)
         {
             var arg = new EntityRoutedEventArgs
             {
@@ -35,6 +38,11 @@ namespace OEA.Library
             };
 
             this.Route(this, arg);
+        }
+
+        internal void RouteByList(object sender, EntityRoutedEventArgs e)
+        {
+            this.OnRoutedEvent(sender, e);
         }
 
         private void Route(object sender, EntityRoutedEventArgs e)
@@ -74,9 +82,9 @@ namespace OEA.Library
         internal EntityRoutedEventArgs() { }
 
         /// <summary>
-        /// 事件源头的 ObjectView
+        /// 事件源头的实体
         /// </summary>
-        public Entity Source { get; internal set; }
+        public IEntityOrList Source { get; internal set; }
 
         /// <summary>
         /// 发生的事件标记
@@ -86,7 +94,7 @@ namespace OEA.Library
         /// <summary>
         /// 事件参数
         /// </summary>
-        public EventArgs Args { get; internal set; }
+        public object Args { get; internal set; }
 
         public bool Handled { get; set; }
     }

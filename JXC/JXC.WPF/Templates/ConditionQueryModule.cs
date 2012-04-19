@@ -21,6 +21,7 @@ using OEA.MetaModel.Attributes;
 using OEA.MetaModel.View;
 using OEA.Module.WPF;
 using OEA.Module;
+using JXC.Commands;
 
 namespace JXC.WPF.Templates
 {
@@ -64,11 +65,20 @@ namespace JXC.WPF.Templates
         {
             base.OnUIGenerated(ui);
 
+            var listView = this.ListView;
+
             //默认发起一次查询。
-            var queryView = this.ListView.CondtionQueryView;
+            var queryView = listView.CondtionQueryView;
             if (queryView != null) queryView.TryExecuteQuery();
 
-            this.ListView.IsReadOnly = true;
+            listView.IsReadOnly = true;
+
+            //列表双击时，弱出查看窗口
+            listView.MouseDoubleClick += (o, e) =>
+            {
+                var cmd = listView.Commands.Find<ShowBill>();
+                if (cmd != null) cmd.Execute(listView);
+            };
         }
     }
 }

@@ -29,8 +29,7 @@ using OEA.Library;
 
 namespace JXC.Commands
 {
-    [Command(ImageName = "Add.bmp", Label = "添加", ToolTip = "添加一个新的单据", GroupType = CommandGroupType.Edit)]
-    public class AddBill : ListViewCommand
+    public abstract class AddBill : ListViewCommand
     {
         public AddBill()
         {
@@ -39,12 +38,12 @@ namespace JXC.Commands
 
         protected CustomTemplate Template;
 
+        protected AddService Service;
+
         public override void Execute(ListObjectView view)
         {
             //创建一个临时的拷贝数据
             var tmpEntity = view.CreateNewItem();
-
-            var evm = view.Meta;
 
             //弹出窗体显示详细面板
             var ui = this.Template.CreateUI(view.EntityType);
@@ -55,7 +54,7 @@ namespace JXC.Commands
             App.Windows.ShowDialog(ui.Control, w =>
             {
                 w.Buttons = ViewDialogButtons.YesNo;
-                w.Title = this.CommandInfo.Label + evm.Label;
+                w.Title = this.CommandInfo.Label + view.Meta.Label;
 
                 //验证
                 w.ValidateOperations += (o, e) =>
@@ -93,9 +92,20 @@ namespace JXC.Commands
                         try
                         {
                             tmpEntity.MarkNew();
-                            this.Save(tmpEntity);
 
-                            App.MessageBox.Show("保存成功。");
+                            this.Service.Item = tmpEntity;
+                            this.Service.Invoke();
+
+                            App.MessageBox.Show(this.Service.Result.Message);
+
+                            if (!this.Service.Result.Success)
+                            {
+                                e.Cancel = true;
+                            }
+                            else
+                            {
+                                tmpEntity.Id = this.Service.NewId;
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -113,11 +123,6 @@ namespace JXC.Commands
                     }
                 };
             });
-        }
-
-        protected virtual void Save(Entity tmpEntity)
-        {
-            RF.Save(tmpEntity);
         }
     }
 }

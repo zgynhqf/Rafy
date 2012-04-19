@@ -15,20 +15,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using JXC.WPF.Templates;
-using OEA;
-using OEA.Module;
-using OEA.Module.WPF;
+using OEA.Library;
+using hxy.Common;
+using OEA.MetaModel.Attributes;
+using OEA.MetaModel.View;
 
-namespace JXC
+namespace JXC.Commands
 {
-    public class PurchaseOrderBillUI : BillTemplate
+    [Command(ImageName = "Delete.bmp", Label = "删除", ToolTip = "删除一个订单", GroupType = CommandGroupType.Edit)]
+    class DeletePurchaseOrder : DeleteBill
     {
-        protected override void OnUIGenerated(ControlResult ui)
+        public DeletePurchaseOrder()
         {
-            base.OnUIGenerated(ui);
-
-            var mainView = ui.MainView.CastTo<DetailObjectView>();
+            this.Service = new DeletePurchaseService();
         }
     }
 }

@@ -166,7 +166,7 @@ namespace OEA.RBAC
             });
 
             //功能按钮权限
-            foreach (var cmd in mainBlock.EVM.WPFCommands)
+            foreach (var cmd in mainBlock.ViewMeta.WPFCommands)
             {
                 list.Add(new OperationAC
                 {

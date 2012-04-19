@@ -202,12 +202,17 @@ namespace OEA.Library
 
         public void SetParent(IEntityOrList parent)
         {
-            _parent = parent;
+            this._parent = parent;
         }
 
         IEntityOrList IEntityOrList.Parent
         {
-            get { return _parent; }
+            get { return this._parent; }
+        }
+
+        public Entity Parent
+        {
+            get { return this._parent as Entity; }
         }
 
         #endregion

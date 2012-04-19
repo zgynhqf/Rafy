@@ -59,7 +59,7 @@ namespace OEA.MetaModel.View
         /// <param name="meta"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static EntityViewMeta NotAllowEdit(this EntityViewMeta meta, bool value = true)
+        public static EntityViewMeta DisableEditing(this EntityViewMeta meta, bool value = true)
         {
             meta.NotAllowEdit = value;
 
