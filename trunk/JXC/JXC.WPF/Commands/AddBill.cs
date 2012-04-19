@@ -26,6 +26,7 @@ using OEA.Module.WPF;
 using OEA.Module.WPF.Controls;
 using OEA.WPF.Command;
 using OEA.Library;
+using System.ComponentModel;
 
 namespace JXC.Commands
 {
@@ -91,6 +92,9 @@ namespace JXC.Commands
                         //如果保存的过程中发生异常，不要关闭当前窗口
                         try
                         {
+                            this.OnServiceInvoking(detailView, e);
+                            if (e.Cancel) return;
+
                             tmpEntity.MarkNew();
 
                             this.Service.Item = tmpEntity;
@@ -124,5 +128,7 @@ namespace JXC.Commands
                 };
             });
         }
+
+        protected virtual void OnServiceInvoking(DetailObjectView detailView, CancelEventArgs e) { }
     }
 }

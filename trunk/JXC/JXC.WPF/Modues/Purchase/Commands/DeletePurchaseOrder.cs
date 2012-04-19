@@ -27,7 +27,7 @@ namespace JXC.Commands
     {
         public DeletePurchaseOrder()
         {
-            this.Service = new DeletePurchaseService();
+            this.Service = new DeletePurchaseOrderService();
         }
     }
 }

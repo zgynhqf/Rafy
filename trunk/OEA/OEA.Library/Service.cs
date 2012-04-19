@@ -15,11 +15,14 @@ using System;
 using System.ComponentModel;
 using OEA.ManagedProperty;
 using OEA;
+using hxy.Common;
 
 namespace OEA
 {
     /// <summary>
     /// 跨 C/S，B/S 的服务基类
+    /// 
+    /// 注意，如果该服务要被使用到 B/S 上，输入和输出参数都应该是基本的数据类型。
     /// </summary>
     [Serializable]
     public abstract class Service : IService
@@ -75,5 +78,24 @@ namespace OEA
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// 一种过程化服务的基类
+    /// 
+    /// 过程化简单地指：进行一系列操作，返回是否成功以及相应的提示消息。
+    /// </summary>
+    [Serializable]
+    public abstract class FlowService : Service
+    {
+        [ServiceOutput]
+        public Result Result { get; set; }
+
+        protected override sealed void Execute()
+        {
+            this.Result = this.ExecuteCore();
+        }
+
+        protected abstract Result ExecuteCore();
     }
 }

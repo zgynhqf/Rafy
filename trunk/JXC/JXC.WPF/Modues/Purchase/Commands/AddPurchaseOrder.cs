@@ -23,6 +23,8 @@ using OEA.Module.WPF;
 using OEA.Module.WPF.Controls;
 using OEA.WPF.Command;
 using OEA.Library;
+using System.ComponentModel;
+using System.Windows;
 
 namespace JXC.Commands
 {
@@ -32,6 +34,18 @@ namespace JXC.Commands
         public AddPurchaseOrder()
         {
             this.Service = new AddPurchaseOrderService();
+        }
+
+        protected override void OnServiceInvoking(DetailObjectView detailView, CancelEventArgs e)
+        {
+            base.OnServiceInvoking(detailView, e);
+
+            var entity = detailView.Current as PurchaseOrder;
+            if (entity.StorageInDirectly)
+            {
+                var btn = App.MessageBox.Show("您选择了直接入库，系统将会为本次采购自动生成一张相应的入库单。\r\n是否继续？", MessageBoxButton.YesNo);
+                if (btn == MessageBoxResult.No) e.Cancel = true;
+            }
         }
     }
 }

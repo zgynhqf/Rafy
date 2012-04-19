@@ -68,12 +68,11 @@
     <Compile Include="JXCLibrary.cs" />
     <Compile Include="MetaExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\AddPurchaseOrderService.cs" />
-    <Compile Include="Services\AddService.cs" />
+    <Compile Include="Services\PurchaseOrderServices.cs" />
+    <Compile Include="Services\ServiceBase.cs" />
     <Compile Include="Services\OtherStorageOutBillServices.cs" />
     <Compile Include="Services\OtherStorageInBillServices.cs" />
     <Compile Include="Services\OrderStorageInBillServices.cs" />
-    <Compile Include="Services\DeletePurchaseService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\OEA\Common\Common.csproj">

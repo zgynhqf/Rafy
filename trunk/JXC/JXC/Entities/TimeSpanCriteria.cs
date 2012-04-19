@@ -74,7 +74,8 @@ namespace JXC
                     this.To = new DateTime(9999, 12, 31);
                     break;
                 case TimeSpanType.Custom:
-                    break;
+                    //Custom 不需要走下面的逻辑。
+                    return;
                 default:
                     break;
             }
