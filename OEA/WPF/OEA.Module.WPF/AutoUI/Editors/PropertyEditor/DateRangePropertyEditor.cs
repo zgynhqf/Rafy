@@ -28,7 +28,7 @@ namespace OEA.Module.WPF.Editors
             var value = this.PropertyValue;
 
             //支持两种属性类型：DateRange,String，所以这里使用这个变量进行分辨
-            var useDateRangeType = this.PropertyViewInfo.PropertyMeta.Runtime.PropertyType == typeof(DateRange);
+            var useDateRangeType = this.Meta.PropertyMeta.Runtime.PropertyType == typeof(DateRange);
 
             var range = useDateRangeType ?
                 new DateRange(value as DateRange) :

@@ -70,15 +70,6 @@ namespace JXC
     [Serializable]
     public class OrderStorageInBillList : StorageInBillList
     {
-        protected void QueryBy(TimeSpanCriteria criteria)
-        {
-            this.QueryDb(q =>
-            {
-                q.Constrain(OrderStorageInBill.DateProperty).GreaterEqual(criteria.From)
-                    .And().Constrain(OrderStorageInBill.DateProperty).LessEqual(criteria.To);
-            });
-        }
-
         protected void QueryBy(int orderId)
         {
             this.QueryDb(q => q.Constrain(OrderStorageInBill.PurchaseOrderRefProperty).Equal(orderId));

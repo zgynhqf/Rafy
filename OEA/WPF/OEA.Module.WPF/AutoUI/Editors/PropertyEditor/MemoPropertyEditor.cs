@@ -55,7 +55,7 @@ namespace OEA.Module.WPF.Editors
             this._tb = new TextBox()
             {
                 AcceptsReturn = true,
-                Name = this.PropertyViewInfo.Name,
+                Name = this.Meta.Name,
             };
 
             //绑定TextBox到对象属性
@@ -107,7 +107,7 @@ namespace OEA.Module.WPF.Editors
             var result = App.Windows.ShowDialog(edtInfo, w =>
             {
                 w.ResizeMode = ResizeMode.CanResize;
-                w.Title = "编辑" + PropertyViewInfo.Label;
+                w.Title = "编辑" + Meta.Label;
                 w.Width = 600;
                 w.Height = 400;
                 if (this.IsReadonly)

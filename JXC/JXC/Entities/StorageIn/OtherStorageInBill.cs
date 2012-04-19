@@ -10,6 +10,7 @@ using OEA.MetaModel.View;
 namespace JXC
 {
     [RootEntity, Serializable]
+    [ConditionQueryType(typeof(TimeSpanCriteria))]
     public class OtherStorageInBill : StorageInBill
     {
         public static readonly RefProperty<ClientInfo> SupplierRefProperty =
@@ -39,6 +40,15 @@ namespace JXC
         protected override void ConfigView()
         {
             View.DomainName("其它入库单").HasDelegate(StorageInBill.CodeProperty);
+
+            View.ColumnsCountShowInDetail = 2;
+
+            View.ClearWPFCommands(false)
+                .UseWPFCommands(
+                "JXC.Commands.AddOtherStorageInBill",
+                "JXC.Commands.ShowBill",
+                WPFCommandNames.Refresh
+                );
 
             using (View.OrderProperties())
             {

@@ -332,7 +332,6 @@
     <Compile Include="AutoUI\Editors\PropertyEditor\Core\WPFPropertyEditor.cs" />
     <Compile Include="Common\Extensions\ExceptionExtension.cs" />
     <Compile Include="Common\IVersionedPartMeta.cs" />
-    <Compile Include="IViews.cs" />
     <Compile Include="PrimitiveUI\Layouts\DetailLayout.xaml.cs">
       <DependentUpon>DetailLayout.xaml</DependentUpon>
       <SubType>Code</SubType>

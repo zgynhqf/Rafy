@@ -25,7 +25,7 @@ namespace OEA.Module.WPF.Editors
 
         protected override FrameworkElement CreateEditingElement()
         {
-            var propertyName = this.PropertyViewInfo.Name;
+            var propertyName = this.Meta.Name;
 
             var textbox = new TextBox()
             {

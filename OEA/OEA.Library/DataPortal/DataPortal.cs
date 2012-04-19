@@ -60,64 +60,6 @@ namespace OEA
             return result.ReturnObject;
         }
 
-        /// <summary>
-        /// Inserts, updates or deletes an existing
-        /// child business object.
-        /// </summary>
-        /// <param name="child">
-        /// Business object to update.
-        /// </param>
-        /// <param name="parameters">
-        /// Parameters passed to child update method.
-        /// </param>
-        public static void UpdateChild(object obj, Entity parent)
-        {
-            if (obj == null) return;
-
-            var entity = obj as Entity;
-            // tell the business object to update itself
-            if (entity != null)
-            {
-                // if the object isn't dirty, then just exit
-                if (!entity.IsDirty) { return; }
-
-                if (entity.IsDeleted)
-                {
-                    if (!entity.IsNew)
-                    {
-                        // tell the object to delete itself
-                        entity.Child_Delete(parent);
-                        entity.MarkNew();
-                    }
-                }
-                else
-                {
-                    if (entity.IsNew)
-                    {
-                        // tell the object to insert itself
-                        entity.Child_Insert(parent);
-                    }
-                    else
-                    {
-                        // tell the object to update itself
-                        entity.Child_Update(parent);
-                    }
-                    entity.MarkOld();
-                }
-            }
-            else if (obj is EntityList)
-            {
-                (obj as EntityList).Child_Update(parent);
-            }
-            else
-            {
-                // this is an updatable collection or some other
-                // non-BusinessBase type of object
-                // tell the object to update itself
-                MethodCaller.CallMethodIfImplemented(obj, "Child_Update", parent);
-            }
-        }
-
         #region Helpers
 
         private static Type _proxyType;

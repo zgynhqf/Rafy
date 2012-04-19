@@ -247,22 +247,10 @@ namespace OEA.Library
 
         #region 根对象
 
-        internal void DataPortal_Insert()
-        {
-            this.DoInTransaction(this.OnInsert);
-        }
-
-        internal void DataPortal_Update()
-        {
-            this.DoInTransaction(this.OnUpdate);
-        }
-
-        internal void DataPortal_DeleteSelf()
-        {
-            this.DoInTransaction(this.OnDelete);
-        }
-
-        private void DoInTransaction(Action action)
+        /// <summary>
+        /// 保存根对象
+        /// </summary>
+        internal void SaveRoot()
         {
             if (EntityListVersion.Repository != null)
             {
@@ -270,7 +258,7 @@ namespace OEA.Library
                 {
                     using (var tran = new TransactionScope())
                     {
-                        action();
+                        this.DoSaveRoot();
 
                         tran.Complete();
                     }
@@ -282,10 +270,34 @@ namespace OEA.Library
             {
                 using (var tran = new TransactionScope())
                 {
-                    action();
+                    this.DoSaveRoot();
 
                     tran.Complete();
                 }
+            }
+        }
+
+        private void DoSaveRoot()
+        {
+            if (this.IsDeleted)
+            {
+                if (!this.IsNew)
+                {
+                    this.OnDelete();
+                    this.MarkNew();
+                }
+            }
+            else
+            {
+                if (this.IsNew)
+                {
+                    this.OnInsert();
+                }
+                else
+                {
+                    this.OnUpdate();
+                }
+                this.MarkOld();
             }
         }
 
@@ -293,19 +305,40 @@ namespace OEA.Library
 
         #region 子对象
 
-        internal void Child_Insert(Entity parent)
+        /// <summary>
+        /// 保存子对象
+        /// </summary>
+        /// <param name="parent"></param>
+        internal void SaveChild(Entity parent)
         {
-            this.OnInsert();
-        }
+            var entity = this;
 
-        internal void Child_Update(Entity parent)
-        {
-            this.OnUpdate();
-        }
+            // if the object isn't dirty, then just exit
+            if (!entity.IsDirty) { return; }
 
-        internal void Child_Delete(Entity parent)
-        {
-            this.OnDelete();
+            if (entity.IsDeleted)
+            {
+                if (!entity.IsNew)
+                {
+                    // tell the object to delete itself
+                    entity.OnDelete();
+                    entity.MarkNew();
+                }
+            }
+            else
+            {
+                if (entity.IsNew)
+                {
+                    // tell the object to insert itself
+                    entity.OnInsert();
+                }
+                else
+                {
+                    // tell the object to update itself
+                    entity.OnUpdate();
+                }
+                entity.MarkOld();
+            }
         }
 
         #endregion

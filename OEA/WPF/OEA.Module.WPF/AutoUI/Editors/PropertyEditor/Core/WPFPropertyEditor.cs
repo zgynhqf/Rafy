@@ -35,13 +35,13 @@ namespace OEA.Module.WPF.Editors
     /// 
     /// 生成的控件，自动使用 DataContext 来作为当前对象。
     /// </summary>
-    public abstract class WPFPropertyEditor : PropertyEditor, IWPFPropertyEditor, IWPFControlGenerator
+    public abstract class WPFPropertyEditor : PropertyEditor, IWPFPropertyEditor
     {
         private InnerContext _context = new InnerContext();
 
         internal protected virtual void Initialize(EntityPropertyViewMeta propertyInfo)
         {
-            this.PropertyViewInfo = propertyInfo;
+            this.Meta = propertyInfo;
         }
 
         public override IPropertyEditorContext Context
@@ -70,7 +70,7 @@ namespace OEA.Module.WPF.Editors
         /// </summary>
         public bool PropertyCanWrite
         {
-            get { return this.PropertyViewInfo.PropertyMeta.Runtime.CanWrite; }
+            get { return this.Meta.PropertyMeta.Runtime.CanWrite; }
         }
 
         protected abstract void ResetBinding(FrameworkElement editingControl);
@@ -82,7 +82,7 @@ namespace OEA.Module.WPF.Editors
 
         protected virtual Binding CreateBinding()
         {
-            var binding = new Binding(this.PropertyViewInfo.Name);
+            var binding = new Binding(this.Meta.Name);
 
             if (!this.PropertyCanWrite)
             {
@@ -128,7 +128,7 @@ namespace OEA.Module.WPF.Editors
             //Label，
             var label = new Label()
             {
-                Content = this.PropertyViewInfo.Label,
+                Content = this.Meta.Label,
                 Target = Control
             };
             panel.Children.Add(label);
@@ -159,7 +159,7 @@ namespace OEA.Module.WPF.Editors
         /// </summary>
         private void BindVisibility()
         {
-            var visibilityIndicator = this.PropertyViewInfo.VisibilityIndicator;
+            var visibilityIndicator = this.Meta.VisibilityIndicator;
             if (visibilityIndicator.IsDynamic)
             {
                 Binding visibleBinding = new Binding(visibilityIndicator.PropertyName);
@@ -222,7 +222,7 @@ namespace OEA.Module.WPF.Editors
             };
             this._readonlyElements.Add(readonlyMatrix);
 
-            PropertyEditorHelper.BindElementReadOnly(readonlyMatrix, this.PropertyViewInfo);
+            PropertyEditorHelper.BindElementReadOnly(readonlyMatrix, this.Meta);
         }
 
         #endregion
@@ -264,16 +264,6 @@ namespace OEA.Module.WPF.Editors
             {
                 return base.LabelControl as FrameworkElement;
             }
-        }
-
-        object IControlGenerator.CreateControl()
-        {
-            return this.CreateEditingElement();
-        }
-
-        FrameworkElement IWPFControlGenerator.CreateControl()
-        {
-            return this.CreateEditingElement();
         }
 
         public void PrepareElementForEdit(FrameworkElement editingElement, RoutedEventArgs editingEventArgs)

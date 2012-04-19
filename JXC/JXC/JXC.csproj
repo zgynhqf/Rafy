@@ -70,6 +70,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AddPurchaseOrderService.cs" />
     <Compile Include="Services\AddService.cs" />
+    <Compile Include="Services\OtherStorageOutBillServices.cs" />
+    <Compile Include="Services\OtherStorageInBillServices.cs" />
     <Compile Include="Services\OrderStorageInBillServices.cs" />
     <Compile Include="Services\DeletePurchaseService.cs" />
   </ItemGroup>

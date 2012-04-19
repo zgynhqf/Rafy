@@ -44,29 +44,7 @@ namespace OEA.Server
             var target = obj as Entity;
             if (target != null)
             {
-                if (target.IsDeleted)
-                {
-                    if (!target.IsNew)
-                    {
-                        // tell the object to delete itself
-                        target.DataPortal_DeleteSelf();
-                        target.MarkNew();
-                    }
-                }
-                else
-                {
-                    if (target.IsNew)
-                    {
-                        // tell the object to insert itself
-                        target.DataPortal_Insert();
-                    }
-                    else
-                    {
-                        // tell the object to update itself
-                        target.DataPortal_Update();
-                    }
-                    target.MarkOld();
-                }
+                target.SaveRoot();
             }
             else if (obj is Service)
             {
@@ -74,7 +52,7 @@ namespace OEA.Server
             }
             else if (obj is EntityList)
             {
-                (obj as EntityList).DataPortal_Update();
+                (obj as EntityList).SaveRootList();
             }
             else
             {

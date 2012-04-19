@@ -84,7 +84,17 @@ namespace JXC
     }
 
     [Serializable]
-    public abstract class StorageInBillList : JXCEntityList { }
+    public abstract class StorageInBillList : JXCEntityList
+    {
+        protected void QueryBy(TimeSpanCriteria criteria)
+        {
+            this.QueryDb(q =>
+            {
+                q.Constrain(OrderStorageInBill.DateProperty).GreaterEqual(criteria.From)
+                    .And().Constrain(OrderStorageInBill.DateProperty).LessEqual(criteria.To);
+            });
+        }
+    }
 
     public abstract class StorageInBillRepository : EntityRepository
     {

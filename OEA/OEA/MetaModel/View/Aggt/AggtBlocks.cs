@@ -87,6 +87,10 @@ namespace OEA.MetaModel.View
                 MainBlock = value
             };
         }
+
+        #region 查询 API
+
+        #endregion
     }
 
     public class AggtChildrenCollection : Collection<AggtBlocks>
@@ -114,9 +118,28 @@ namespace OEA.MetaModel.View
 
         #region 查询
 
-        public AggtBlocks this[Type entityType]
+        /// <summary>
+        /// 查找某个子块。
+        /// </summary>
+        /// <returns></returns>
+        public AggtBlocks Find(Type childType)
         {
-            get { return this.FirstOrDefault(b => b.MainBlock.EntityType == entityType); }
+            return this.FirstOrDefault(b => b.MainBlock.EntityType == childType);
+        }
+
+        /// <summary>
+        /// 获取某个子块
+        /// </summary>
+        /// <param name="childType"></param>
+        /// <returns></returns>
+        public AggtBlocks this[Type childType]
+        {
+            get
+            {
+                var item = this.Find(childType);
+                if (item == null) throw new ArgumentOutOfRangeException("childType");
+                return item;
+            }
         }
 
         #endregion

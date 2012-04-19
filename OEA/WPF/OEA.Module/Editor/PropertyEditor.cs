@@ -22,7 +22,7 @@ namespace OEA.Editors
         /// <summary>
         /// 被编辑的属性
         /// </summary>
-        public EntityPropertyViewMeta PropertyViewInfo
+        public EntityPropertyViewMeta Meta
         {
             get
             {
@@ -95,7 +95,7 @@ namespace OEA.Editors
         {
             get
             {
-                var visibilityIndicator = this.PropertyViewInfo.VisibilityIndicator;
+                var visibilityIndicator = this.Meta.VisibilityIndicator;
                 if (visibilityIndicator.IsDynamic)
                 {
                     var curObj = this.Context.CurrentObject;

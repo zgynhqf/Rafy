@@ -27,8 +27,8 @@ namespace JXC.DbMigrations
                     {
                         var supplier = new ClientCategory { Name = "供应商" };
                         var customer = new ClientCategory { Name = "客户" };
-                        ccRepo.Save(supplier);
-                        ccRepo.Save(customer);
+                        RF.Save(supplier);
+                        RF.Save(customer);
 
                         var clientRepo = RF.Concreate<ClientInfoRepository>();
                         clientRepo.Save(new ClientInfo

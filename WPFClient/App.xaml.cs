@@ -19,6 +19,7 @@ namespace WPFClient
             OEAEnvironment.Provider.IsDebuggingEnabled = ConfigurationHelper.GetAppSettingOrDefault("IsDebuggingEnabled", false);
 
             ClientApp.Register(this);
+
             this.DispatcherUnhandledException += OnDispatcherUnhandledException;
         }
 

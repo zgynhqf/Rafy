@@ -10,7 +10,7 @@ namespace OEA.Library
 {
     public abstract partial class EntityList
     {
-        protected virtual void OnSave()
+        internal protected virtual void SaveRootList()
         {
             //using (var ctx = ConnectionManager<SqlConnection>.GetManager(this.ConnectionString))
             {
@@ -45,7 +45,7 @@ namespace OEA.Library
                             {
                                 //需要先把这些对象的 TreePId 置为空，否则父对象不能被删除。
                                 c.TreePId = null;
-                                repo.Save(c);
+                                c.SaveRoot();
 
                                 recurChildren.RemoveAt(i);
                             }
@@ -57,19 +57,19 @@ namespace OEA.Library
                             var child = recurChildren[i];
                             child.MarkDeleted();
 
-                            repo.Save(child);
+                            child.SaveRoot();
                         }
-                        repo.Save(root);
+                        root.SaveRoot();
                     }
                 }
                 else
                 {
-                    foreach (var child in toDelete) { repo.Save(child); }
+                    foreach (var child in toDelete) { child.SaveRoot(); }
                 }
 
                 toDelete.Clear();
 
-                foreach (var item in this) { repo.Save(item); }
+                foreach (var item in this) { item.SaveRoot(); }
             }
         }
     }
