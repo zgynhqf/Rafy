@@ -202,27 +202,30 @@ namespace OEA.Library
         /// <param name="diffEntity"></param>
         protected virtual void ClearDataCore(Entity diffEntity, EntityMeta entityInfo)
         {
-            foreach (var item in entityInfo.EntityProperties)
+            foreach (var item in entityInfo.ChildrenProperties)
             {
-                //如果是懒加载属性，并且没有加载数据时，不需要遍历此属性值
-                if (!diffEntity.FieldExists(item.Name)) continue;
-                var childs = diffEntity.GetPropertyValue(item.Name) as EntityList;
-                if (childs == null) continue;
+                var mp = item.ManagedProperty;
 
-                var oldDeleteSetting = childs.AllowRemove;
+                //如果是懒加载属性，并且没有加载数据时，不需要遍历此属性值
+                if (!diffEntity.FieldExists(mp)) continue;
+                var children = diffEntity.GetProperty(mp) as EntityList;
+                if (children == null) continue;
+
+                var oldDeleteSetting = children.AllowRemove;
+                children.AllowRemove = true;
 
                 try
                 {
-                    for (int i = childs.Count - 1; i >= 0; i--)
+                    for (int i = children.Count - 1; i >= 0; i--)
                     {
-                        var child = childs[i];
+                        var child = children[i];
                         if (!child.IsDirty)
                         {
                             //child.NeedCalc = false;
                             //(childs as IEditableCollection).RemoveChild(child);
                             //((childs as IEditableCollection).GetDeletedList() as IList).Remove(child);
                             //child.NeedCalc = true;
-                            childs.Remove(child);
+                            children.Remove(child);
                         }
                         else
                         {
@@ -232,7 +235,7 @@ namespace OEA.Library
                 }
                 finally
                 {
-                    childs.AllowRemove = oldDeleteSetting;
+                    children.AllowRemove = oldDeleteSetting;
                 }
             }
         }
@@ -245,19 +248,21 @@ namespace OEA.Library
         {
             foreach (var item in entityInfo.ChildrenProperties)
             {
-                //如果是懒加载属性，并且没有加载数据时，不需要遍历此属性值
-                if (oldEntity.FieldExists(item.Name) == false) continue;
+                var mp = item.ManagedProperty as IListProperty;
 
-                IList childs = oldEntity.GetPropertyValue(item.Name) as IList;
-                if (childs == null) continue;
+                //如果是懒加载属性，并且没有加载数据时，不需要遍历此属性值
+                if (!oldEntity.FieldExists(mp)) continue;
+
+                var children = oldEntity.GetProperty(mp) as EntityList;
+                if (children == null) continue;
 
                 //清除已删除数据
-                childs.CastTo<EntityList>().DeletedList.Clear();
+                children.CastTo<EntityList>().DeletedList.Clear();
 
                 //所有子对象，都标记为已保存
-                for (int i = childs.Count - 1; i >= 0; i--)
+                for (int i = children.Count - 1; i >= 0; i--)
                 {
-                    var child = childs[i] as Entity;
+                    var child = children[i] as Entity;
                     if (child.IsDirty || child.IsNew) MakeOld(child);
                 }
             }

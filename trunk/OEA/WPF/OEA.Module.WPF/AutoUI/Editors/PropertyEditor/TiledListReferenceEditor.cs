@@ -37,7 +37,7 @@ namespace OEA.Module.WPF.Editors
 
         protected override FrameworkElement CreateEditingElement()
         {
-            var refInfo = this.PropertyViewInfo.ReferenceViewInfo;
+            var refInfo = this.Meta.ReferenceViewInfo;
 
             var listView = AutoUI.ViewFactory.CreateListObjectView(refInfo.RefTypeDefaultView, true);
             this.ListView = listView;

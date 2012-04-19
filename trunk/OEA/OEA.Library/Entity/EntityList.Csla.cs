@@ -217,15 +217,6 @@ namespace OEA.Library
 
         #endregion
 
-        /// <summary>
-        /// Override this method to allow update of a business
-        /// object.
-        /// </summary>
-        internal void DataPortal_Update()
-        {
-            this.OnSave();
-        }
-
         #region Serialization Notification
 
         [OnDeserialized]

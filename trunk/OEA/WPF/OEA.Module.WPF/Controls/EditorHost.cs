@@ -190,8 +190,7 @@ namespace OEA.Module.WPF.Controls
                 };
             }
 
-            var view = detailView as QueryObjectView;
-            if (view != null) { view.AddPropertyEditor(editor); }
+            detailView.AddPropertyEditor(editor);
 
             //Width
             if (property.DetailColumnsSpan != null) { Grid.SetColumnSpan(this, property.DetailColumnsSpan.Value); }

@@ -33,7 +33,7 @@ namespace OEA.Module.WPF.Editors
         {
             var cb = new CheckBox()
             {
-                Name = this.PropertyViewInfo.Name
+                Name = this.Meta.Name
             };
 
             this.ResetBinding(cb);

@@ -41,18 +41,16 @@ namespace OEA.Library.DbMigrations
                     using (var tran = new TransactionScope())
                     {
                         //Position
-                        var positionRepo = RF.Concreate<PositionRepository>();
                         var p = new Position();
                         p.Code = "01";
                         p.Name = "系统管理员";
-                        positionRepo.Save(p);
+                        RF.Save(p);
 
                         //User
-                        var repo = RF.Concreate<UserRepository>();
                         var admin = new User();
                         admin.Code = "admin";
                         admin.Name = "admin";
-                        repo.Save(admin);
+                        RF.Save(admin);
 
                         //Org
                         var org = new Org();

@@ -34,7 +34,7 @@ namespace OEA.Module.WPF.Editors
     {
         protected override FrameworkElement CreateEditingElement()
         {
-            var propertyName = this.PropertyViewInfo.Name;
+            var propertyName = this.Meta.Name;
 
             var textbox = new TextBox()
             {
@@ -62,7 +62,7 @@ namespace OEA.Module.WPF.Editors
 
         private void PopupSelection()
         {
-            var refInfo = this.PropertyViewInfo.ReferenceViewInfo;
+            var refInfo = this.Meta.ReferenceViewInfo;
 
             //界面生成
             var block = new Block(refInfo.RefType);

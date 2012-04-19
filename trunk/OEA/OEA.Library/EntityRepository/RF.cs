@@ -107,15 +107,17 @@ namespace OEA.Library
         /// <param name="saveWay"></param>
         public static void Save(Entity entity, EntitySaveType saveWay)
         {
+            var isNew = entity.IsNew;
+
             if (saveWay == EntitySaveType.DiffSave)
             {
                 var res = DiffSaveService.Execute(entity);
-                if (entity.IsNew) { entity.Id = res.NewId; }
+                if (isNew) { entity.Id = res.NewId; }
             }
             else
             {
                 var res = entity.FindRepository().Save(entity) as Entity;
-                if (entity.IsNew) { entity.Id = res.Id; }
+                if (isNew) { entity.Id = res.Id; }
             }
         }
 

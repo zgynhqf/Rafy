@@ -52,6 +52,8 @@
     <Compile Include="Modues\Purchase\Commands\DeletePurchaseOrder.cs" />
     <Compile Include="Modues\Purchase\Commands\AddPurchaseOrder.cs" />
     <Compile Include="Modues\Purchase\Commands\StorageInItemCommands.cs" />
+    <Compile Include="Modues\Storage\Commands\OrderStorageInBillCommands.cs" />
+    <Compile Include="Modues\Storage\OtherStorageInModule.cs" />
     <Compile Include="Modues\Purchase\PurchaseOrderModule.cs" />
     <Compile Include="Modues\Purchase\OrderStorageInModule.cs" />
     <Compile Include="Commands\AddBill.cs" />

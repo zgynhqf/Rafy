@@ -92,7 +92,7 @@ namespace OEA.Module.WPF.Editors
         /// <returns></returns>
         protected override FrameworkElement CreateEditingElement()
         {
-            var refTypeMeta = this.PropertyViewInfo.ReferenceViewInfo.RefTypeDefaultView;
+            var refTypeMeta = this.Meta.ReferenceViewInfo.RefTypeDefaultView;
 
             //创建 ListObjectView
             this._listView = AutoUI.ViewFactory.CreateListObjectView(refTypeMeta, true);
@@ -102,7 +102,7 @@ namespace OEA.Module.WPF.Editors
             //创建 ComboListControl : 使用下拉控件显示
             this._cmbList = new ComboListControl(this._listView, this)
             {
-                Name = this.PropertyViewInfo.Name
+                Name = this.Meta.Name
             };
             this._cmbList.DropDownOpened += On_ComboDataGrid_DropDownOpened;
             this._cmbList.TextPath = refTypeMeta.TitleProperty.Name;
@@ -229,7 +229,7 @@ namespace OEA.Module.WPF.Editors
         private void RefreshPropertyDataSource()
         {
             //如果设定了DataSourceProperty，则从这个属性中获取下拉对象集合
-            var refInfo = this.PropertyViewInfo.ReferenceViewInfo;
+            var refInfo = this.Meta.ReferenceViewInfo;
             var dataSourceProperty = refInfo.DataSourceProperty;
             if (string.IsNullOrWhiteSpace(dataSourceProperty)) throw new InvalidOperationException("string.IsNullOrWhiteSpace(dataSourceProperty) must be false.");
 
@@ -305,7 +305,7 @@ namespace OEA.Module.WPF.Editors
 
         private bool IsUseLocalData()
         {
-            return !string.IsNullOrEmpty(this.PropertyViewInfo.ReferenceViewInfo.DataSourceProperty);
+            return !string.IsNullOrEmpty(this.Meta.ReferenceViewInfo.DataSourceProperty);
         }
 
         #endregion

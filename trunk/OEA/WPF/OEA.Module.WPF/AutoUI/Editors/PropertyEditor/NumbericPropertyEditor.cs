@@ -77,7 +77,7 @@ namespace OEA.Module.WPF.Editors
 
         protected override FrameworkElement CreateEditingElement()
         {
-            var updown = new AutomationNumericUpDown() { Name = PropertyViewInfo.Name };
+            var updown = new AutomationNumericUpDown() { Name = Meta.Name };
 
             this.ResetBinding(updown);
 

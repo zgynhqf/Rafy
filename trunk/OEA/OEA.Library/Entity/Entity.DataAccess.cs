@@ -107,7 +107,6 @@ namespace OEA.Library
             }
             else
             {
-                // update child objects
                 this.UpdateChildren();
             }
         }
@@ -142,12 +141,12 @@ namespace OEA.Library
                 }
             }
 
-            // update child objects
             this.UpdateChildren();
         }
 
         protected virtual void OnDelete()
         {
+            //根对象默认使用级联删除，所以不需要更新聚合子，直接删除本对象即可。
             try
             {
                 this._isDataAccessing = true;

@@ -26,6 +26,7 @@ using System.Diagnostics;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
 using OEA.Library;
+using OEA.ManagedProperty;
 
 namespace OEA.Module.WPF
 {
@@ -179,5 +180,53 @@ namespace OEA.Module.WPF
 
             this.RaiseRoutedEvent(CurrentObjectPropertyChangedEvent, e);
         }
+
+        #region PropertyEditors
+
+        private List<IPropertyEditor> _editors = new List<IPropertyEditor>();
+
+        /// <summary>
+        /// 这个View使用的所有的属性Editor
+        /// Key：BOType的属性
+        /// Value：这个属性使用的编辑器
+        /// </summary>
+        public IList<IPropertyEditor> PropertyEditors
+        {
+            get { return this._editors.AsReadOnly(); }
+        }
+
+        /// <summary>
+        /// 在View中寻找指定属性的Editor
+        /// </summary>
+        /// <param name="conView"></param>
+        /// <param name="property">找这个属性对应的Editor</param>
+        /// <returns></returns>
+        public IPropertyEditor FindPropertyEditor(IManagedProperty property)
+        {
+            return this._editors.FirstOrDefault(e => e.Meta.PropertyMeta.ManagedProperty == property);
+        }
+
+        /// <summary>
+        /// 在View中寻找指定属性的Editor
+        /// </summary>
+        /// <param name="conView"></param>
+        /// <param name="propertyName">找这个属性对应的Editor</param>
+        /// <returns></returns>
+        public IPropertyEditor FindPropertyEditor(string propertyName)
+        {
+            return this._editors.FirstOrDefault(e => e.Meta.Name == propertyName);
+        }
+
+        /// <summary>
+        /// 添加某个 Editor
+        /// </summary>
+        /// <param name="editor"></param>
+        /// <returns></returns>
+        internal void AddPropertyEditor(IPropertyEditor editor)
+        {
+            this._editors.Add(editor);
+        }
+
+        #endregion
     }
 }

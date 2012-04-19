@@ -5,6 +5,7 @@ using System.Text;
 using DbMigration;
 using OEA.Library;
 using System.Transactions;
+using OEA;
 
 namespace JXC.DbMigrations
 {
@@ -26,6 +27,7 @@ namespace JXC.DbMigrations
                 {
                     list.Add(new ProductCategory
                     {
+                        Id = OEAEnvironment.NewLocalId(),
                         Name = "服饰类",
                         TreeChildren ={
                             new ProductCategory{ Name = "裤子" },
@@ -36,6 +38,7 @@ namespace JXC.DbMigrations
                     });
                     list.Add(new ProductCategory
                     {
+                        Id = OEAEnvironment.NewLocalId(),
                         Name = "食品类",
                         TreeChildren ={
                             new ProductCategory{ Name = "生鲜食品" },
@@ -43,7 +46,12 @@ namespace JXC.DbMigrations
                         }
                     });
 
-                    repo.Save(list);
+                    using (var tran = new TransactionScope())
+                    {
+                        repo.Save(list);
+
+                        tran.Complete();
+                    }
                 }
             });
         }

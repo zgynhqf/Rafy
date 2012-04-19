@@ -50,7 +50,7 @@ namespace OEA.Module.WPF.Editors
             var bindingMode = BindingMode.OneWay;
             var bindingPath = string.Empty;
 
-            var property = this.PropertyViewInfo;
+            var property = this.Meta;
             if (string.IsNullOrEmpty(property.ReferenceViewInfo.RefEntityProperty))
             {
                 bindingPath = property.Name;
@@ -58,7 +58,7 @@ namespace OEA.Module.WPF.Editors
             }
             else
             {
-                bindingPath = this.PropertyViewInfo.BindingPath();
+                bindingPath = this.Meta.BindingPath();
             }
 
             return new Binding()
@@ -79,7 +79,7 @@ namespace OEA.Module.WPF.Editors
                 var curObj = this.Context.CurrentObject;
                 if (curObj != null)
                 {
-                    var refInfo = this.PropertyViewInfo.ReferenceViewInfo;
+                    var refInfo = this.Meta.ReferenceViewInfo;
                     if (selectedEntities.Count > 0)
                     {
                         var selecteEntity = selectedEntities[0] as Entity;
@@ -135,7 +135,7 @@ namespace OEA.Module.WPF.Editors
 
             //找到值对应的数据项
             var selectedItems = new List<Entity>();
-            if (this.Context.CurrentObject != null && this.PropertyViewInfo != null)
+            if (this.Context.CurrentObject != null && this.Meta != null)
             {
                 //根据设置的 SelectedValuePath 来对比属性值 this.PropertyValue，如果相同，则找到对应的CurrentObject
                 var targetValue = this.PropertyValue;
@@ -174,7 +174,7 @@ namespace OEA.Module.WPF.Editors
         /// <returns></returns>
         private object GetSelectedValue(Entity entity)
         {
-            string selectedValuePath = this.PropertyViewInfo.ReferenceViewInfo.SelectedValuePath;
+            string selectedValuePath = this.Meta.ReferenceViewInfo.SelectedValuePath;
             if (string.IsNullOrEmpty(selectedValuePath)) { return entity.Id; }
 
             return entity.GetPropertyValue(selectedValuePath);
@@ -185,7 +185,7 @@ namespace OEA.Module.WPF.Editors
         /// </summary>
         protected bool IsMultiSelection
         {
-            get { return this.PropertyViewInfo.ReferenceViewInfo.SelectionMode == ReferenceSelectionMode.Multiple; }
+            get { return this.Meta.ReferenceViewInfo.SelectionMode == ReferenceSelectionMode.Multiple; }
         }
     }
 }

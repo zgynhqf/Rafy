@@ -36,12 +36,14 @@ namespace JXC.WPF
                 CommonModel.Modules["商品管理"].UseCustomModule<ProductModule>();
                 CommonModel.Modules["采购订单"].UseCustomModule<PurchaseOrderModule>();
                 CommonModel.Modules["采购订单入库"].UseCustomModule<OrderStorageInModule>();
+                CommonModel.Modules["其它入库"].UseCustomModule<OtherStorageInModule>();
             };
 
             app.MainWindowLoaded += (o, e) =>
             {
                 App.Current.OpenModuleOrAlert("采购订单");
                 App.Current.OpenModuleOrAlert("采购订单入库");
+                App.Current.OpenModuleOrAlert("其它入库");
             };
         }
     }

@@ -196,7 +196,7 @@ namespace OEA.Library
                 for (int i = 0, c = deletedNodes.Length; i < c; i++)
                 {
                     var child = deletedNodes[i];
-                    DataPortal.UpdateChild(child, parent);
+                    child.SaveChild(parent);
                 }
 
                 this.DeletedList.Clear();
@@ -204,7 +204,7 @@ namespace OEA.Library
                 for (int i = 0, c = this.Count; i < c; i++)
                 {
                     var child = this[i];
-                    DataPortal.UpdateChild(child, parent);
+                    child.SaveChild(parent);
                 }
             }
             finally

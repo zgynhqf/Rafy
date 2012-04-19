@@ -38,6 +38,13 @@ namespace JXC
             set { this.SetRefEntity(ProductRefProperty, value); }
         }
 
+        public static readonly Property<int> AmountProperty = P<StorageOutBillItem>.Register(e => e.Amount);
+        public int Amount
+        {
+            get { return this.GetProperty(AmountProperty); }
+            set { this.SetProperty(AmountProperty, value); }
+        }
+
         public static readonly Property<string> View_ProductNameProperty = P<StorageOutBillItem>.RegisterReadOnly(e => e.View_ProductName, e => (e as StorageOutBillItem).GetView_ProductName(), null);
         public string View_ProductName
         {

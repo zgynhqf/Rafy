@@ -186,7 +186,8 @@ namespace OEA.Library
         {
             foreach (var field in this.GetLoadedChildren())
             {
-                DataPortal.UpdateChild(field.Value, this);
+                var list = field.Value.CastTo<EntityList>();
+                list.Child_Update(this);
             }
         }
 

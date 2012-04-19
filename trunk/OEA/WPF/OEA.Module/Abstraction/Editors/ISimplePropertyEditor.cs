@@ -19,7 +19,7 @@ namespace OEA
         /// <summary>
         /// 被编辑的属性（可以动态更改）
         /// </summary>
-        EntityPropertyViewMeta PropertyViewInfo { get; }
+        EntityPropertyViewMeta Meta { get; }
 
         /// <summary>
         /// 被编辑的属性的当前值

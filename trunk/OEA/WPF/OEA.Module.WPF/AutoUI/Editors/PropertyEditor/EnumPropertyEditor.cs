@@ -33,13 +33,13 @@ namespace OEA.Module.WPF.Editors
         {
             this._cb = new ComboBox()
             {
-                Name = PropertyViewInfo.Name
+                Name = Meta.Name
             };
 
             this.ResetBinding(this._cb);
 
             //cb.Items.Clear();
-            foreach (var item in EnumViewModel.GetByEnumType(this.PropertyViewInfo.PropertyMeta.Runtime.PropertyType))
+            foreach (var item in EnumViewModel.GetByEnumType(this.Meta.PropertyMeta.Runtime.PropertyType))
             {
                 this._cb.Items.Add(item);
             }

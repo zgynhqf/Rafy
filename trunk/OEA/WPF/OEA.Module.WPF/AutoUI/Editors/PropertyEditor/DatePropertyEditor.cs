@@ -29,7 +29,7 @@ namespace OEA.Module.WPF.Editors
         {
             var datePicker = new DatePicker()
             {
-                Name = PropertyViewInfo.Name,
+                Name = Meta.Name,
             };
 
             this.ResetBinding(datePicker);
