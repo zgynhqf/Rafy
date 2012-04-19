@@ -75,28 +75,28 @@ namespace JXC
         }
     }
 
-    [Serializable]
-    public class DeleteOrderStorageInBillService : DeleteService
-    {
-        protected override Result ExecuteCore()
-        {
-            var orderId = this.ItemId;
-            var repo = RF.Create<OrderStorageInBill>();
+    //[Serializable]
+    //public class DeleteOrderStorageInBillService : DeleteService
+    //{
+    //    protected override Result ExecuteCore()
+    //    {
+    //        var orderId = this.ItemId;
+    //        var repo = RF.Create<OrderStorageInBill>();
 
-            //var osibRepo = RF.Concreate<OrderStorageInBillRepository>();
+    //        //var osibRepo = RF.Concreate<OrderStorageInBillRepository>();
 
-            //var storageInList = osibRepo.GetByOrderId(orderId);
-            //if (storageInList.Count > 0)
-            //{
-            //    this.Result = "该定单已经生成入库单，不直接删除。";
-            //    return;
-            //}
+    //        //var storageInList = osibRepo.GetByOrderId(orderId);
+    //        //if (storageInList.Count > 0)
+    //        //{
+    //        //    this.Result = "该定单已经生成入库单，不直接删除。";
+    //        //    return;
+    //        //}
 
-            //var order = RF.Create<PurchaseOrder>().GetById(orderId);
-            //order.MarkDeleted();
-            //RF.Save(order);
+    //        //var order = RF.Create<PurchaseOrder>().GetById(orderId);
+    //        //order.MarkDeleted();
+    //        //RF.Save(order);
 
-            return true;
-        }
-    }
+    //        return true;
+    //    }
+    //}
 }

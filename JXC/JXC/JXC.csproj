@@ -109,6 +109,7 @@
     <Content Include="UML\3 采购订单.jpg" />
     <Content Include="UML\4 入库单.jpg" />
     <Content Include="UML\5 出库单.jpg" />
+    <Content Include="_ReadMe.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -26,7 +26,7 @@ using OEA.Library;
 
 namespace JXC.Commands
 {
-    [Command(ImageName = "Add.bmp", Label = "添加", ToolTip = "添加一个采购订单", GroupType = CommandGroupType.Edit)]
+    [Command(ImageName = "Add.bmp", Label = "添加采购订单", ToolTip = "添加一个采购订单", GroupType = CommandGroupType.Edit)]
     public class AddPurchaseOrder : AddBill
     {
         public AddPurchaseOrder()

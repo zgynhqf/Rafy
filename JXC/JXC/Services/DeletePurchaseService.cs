@@ -33,7 +33,7 @@ namespace JXC
             var storageInList = osibRepo.GetByOrderId(orderId);
             if (storageInList.Count > 0)
             {
-                return "该定单已经生成入库单，不直接删除。";
+                return "该定单已经有相应的入库记录，不直接删除。";
             }
 
             var order = RF.Create<PurchaseOrder>().GetById(orderId);
