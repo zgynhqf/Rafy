@@ -42,6 +42,7 @@ namespace JXC.WPF
 
             app.MainWindowLoaded += (o, e) =>
             {
+                App.Current.OpenModuleOrAlert("商品管理");
                 App.Current.OpenModuleOrAlert("采购订单");
                 App.Current.OpenModuleOrAlert("采购订单入库");
                 App.Current.OpenModuleOrAlert("其它入库");
