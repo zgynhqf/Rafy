@@ -155,7 +155,7 @@ namespace JXC
                 View.Property(StorageInItem.View_ProductCategoryNameProperty).HasLabel("商品类别").ShowIn(ShowInWhere.List);
                 View.Property(StorageInItem.View_SpecificationProperty).HasLabel("规格").ShowIn(ShowInWhere.List);
                 View.Property(StorageInItem.UnitPriceProperty).HasLabel("单价").ShowIn(ShowInWhere.List).Readonly();
-                View.Property(StorageInItem.AmountProperty).HasLabel("数量").ShowIn(ShowInWhere.List);
+                View.Property(StorageInItem.AmountProperty).HasLabel("入库数量*").ShowIn(ShowInWhere.List);
                 View.Property(StorageInItem.View_TotalPriceProperty).HasLabel("总价").ShowIn(ShowInWhere.List);
             }
         }

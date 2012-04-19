@@ -106,7 +106,7 @@ namespace JXC
             View.ClearWPFCommands(false)
                 .UseWPFCommands(
                 "JXC.Commands.AddOrderStorageInBill",
-                "JXC.Commands.DeleteStorageInBill",
+                //"JXC.Commands.DeleteStorageInBill",
                 "JXC.Commands.ShowBill",
                 WPFCommandNames.Refresh
                 );
