@@ -76,7 +76,7 @@ namespace JXC
                 item = new AutoCodeInfo
                 {
                     MingCheng = name,
-                    CanShuZhi = defaultFormat ?? "<YEAR><MONTH><DAY>***",
+                    CanShuZhi = defaultFormat ?? "<YEAR><MONTH><DAY>-***",
                     BeiZhu = beiZhu ??
 @"自动编码填写规则
 ***表示自动编号
@@ -84,7 +84,7 @@ namespace JXC
 <MONTH> 表示当前月份
 <DAY> 表示当前日号
 如要编写 年+月+日+自动编号
-则值为：<YEAR><MONTH><DAY>***"
+则值为：<YEAR><MONTH><DAY>-***"
                 };
                 RF.Save(item);
             }

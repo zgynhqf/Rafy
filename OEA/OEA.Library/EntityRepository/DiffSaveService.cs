@@ -52,7 +52,7 @@ namespace OEA.Library
         {
             bool isNew = this._diffEntity.IsNew;
 
-            var e = this._diffEntity.FindRepository().Save(this._diffEntity) as Entity;
+            var e = this._diffEntity.GetRepository().Save(this._diffEntity) as Entity;
             this.NewId = e.Id;
 
             //如果是新加的数据，则不需要传回客户端了。

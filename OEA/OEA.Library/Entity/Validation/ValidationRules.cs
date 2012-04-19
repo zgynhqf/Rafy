@@ -88,7 +88,7 @@ namespace OEA.Library.Validation
         private ValidationRulesManager GetTypeRules()
         {
             //类型的规则，都放在 Repository 上。
-            return this._target.FindRepository().CastTo<ITypeValidationsHost>().Rules;
+            return this._target.GetRepository().CastTo<ITypeValidationsHost>().Rules;
         }
 
         /// <summary>

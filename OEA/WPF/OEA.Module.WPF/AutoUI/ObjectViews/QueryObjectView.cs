@@ -116,7 +116,7 @@ namespace OEA.Module.WPF
             var criteria = this.Current;
             if (criteria != null)
             {
-                var destIndicators = newEntity.FindRepository().GetAvailableIndicators();
+                var destIndicators = newEntity.GetRepository().GetAvailableIndicators();
 
                 //对每一个导航的实体引用属性，都给 referenceEntity 赋相应的值
                 //只有导航查询实体中的引用实体ID属性名和被查询实体的引用实体ID属性名相同时，才能设置

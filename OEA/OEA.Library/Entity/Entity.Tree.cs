@@ -36,7 +36,7 @@ namespace OEA.Library
 
         public bool SupportTree
         {
-            get { return this.FindRepository().SupportTree; }
+            get { return this.GetRepository().SupportTree; }
         }
 
         public static readonly Property<string> TreeCodeProperty = P<Entity>.Register(e => e.TreeCode);
@@ -211,7 +211,7 @@ namespace OEA.Library
             {
                 if (this.Count > 0)
                 {
-                    var option = this._owner.FindRepository().TreeCodeOption;
+                    var option = this._owner.GetRepository().TreeCodeOption;
 
                     var pCode = this._owner.TreeCode;
                     for (int i = 0, c = this.Count; i < c; i++)

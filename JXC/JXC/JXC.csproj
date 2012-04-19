@@ -58,7 +58,7 @@
     <Compile Include="Entities\StorageIn\OrderStorageInBill.cs" />
     <Compile Include="Entities\StorageIn\OtherStorageInBill.cs" />
     <Compile Include="Entities\StorageIn\StorageInBill.cs" />
-    <Compile Include="Entities\StorageIn\StorageInItem.cs" />
+    <Compile Include="Entities\StorageIn\StorageInBillItem.cs" />
     <Compile Include="Entities\StorageOut\OtherStorageOutBill.cs" />
     <Compile Include="Entities\StorageOut\StorageOutBill.cs" />
     <Compile Include="Entities\StorageOut\StorageOutBillItem.cs" />

@@ -254,7 +254,7 @@ namespace OEA.Library
         /// <param name="parent"></param>
         public void SetParentEntity(Entity parent)
         {
-            var property = this.FindRepository().FindParentPropertyInfo(true).ManagedProperty as IRefProperty;
+            var property = this.GetRepository().FindParentPropertyInfo(true).ManagedProperty as IRefProperty;
             this.GetLazyRef(property).Entity = parent;
         }
 
@@ -263,7 +263,7 @@ namespace OEA.Library
         /// </summary>
         public Entity FindParentEntity()
         {
-            var pMeta = this.FindRepository().FindParentPropertyInfo(false);
+            var pMeta = this.GetRepository().FindParentPropertyInfo(false);
             if (pMeta != null) { return this.GetLazyRef(pMeta.ManagedProperty as IRefProperty).Entity; }
             return null;
         }

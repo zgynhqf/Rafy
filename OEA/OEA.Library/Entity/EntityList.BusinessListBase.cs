@@ -14,7 +14,7 @@ namespace OEA.Library
         {
             //using (var ctx = ConnectionManager<SqlConnection>.GetManager(this.ConnectionString))
             {
-                var repo = this.FindRepository();
+                var repo = this.GetRepository();
 
                 var toDelete = this.DeletedList;
 

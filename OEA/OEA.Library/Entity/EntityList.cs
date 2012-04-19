@@ -46,7 +46,7 @@ namespace OEA.Library
         [NonSerialized]
         private IRepository _repository;
 
-        internal protected IRepository FindRepository()
+        internal protected IRepository GetRepository()
         {
             if (this._repository == null)
             {
@@ -122,7 +122,7 @@ namespace OEA.Library
 
         protected override object AddNewCore()
         {
-            var item = this.FindRepository().New();
+            var item = this.GetRepository().New();
             this.Add(item);
             return item;
         }
@@ -160,12 +160,12 @@ namespace OEA.Library
 
         public Type EntityType
         {
-            get { return this.FindRepository().EntityType; }
+            get { return this.GetRepository().EntityType; }
         }
 
         public void SetParentEntity(Entity entity)
         {
-            var property = this.FindRepository().FindParentPropertyInfo(true).ManagedProperty as IRefProperty;
+            var property = this.GetRepository().FindParentPropertyInfo(true).ManagedProperty as IRefProperty;
             foreach (var child in this) { child.GetLazyRef(property).Entity = entity; }
         }
 
@@ -177,7 +177,7 @@ namespace OEA.Library
         {
             if (this.HasManyType == HasManyType.Composition)
             {
-                var property = this.FindRepository().FindParentPropertyInfo(true).ManagedProperty as IRefProperty;
+                var property = this.GetRepository().FindParentPropertyInfo(true).ManagedProperty as IRefProperty;
                 foreach (var child in this)
                 {
                     var lazyRef = child.GetLazyRef(property);

@@ -30,7 +30,7 @@ namespace JXC.Commands
 
         public override bool CanExecute(ListObjectView view)
         {
-            return view.SelectedObjects.Count == 1;
+            return view.SelectedEntities.Count == 1;
         }
 
         public override void Execute(ListObjectView view)

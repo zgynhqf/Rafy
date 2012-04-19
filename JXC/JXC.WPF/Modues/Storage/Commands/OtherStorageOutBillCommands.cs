@@ -23,24 +23,15 @@ using OEA.Module.WPF;
 using OEA.Module.WPF.Controls;
 using OEA.WPF.Command;
 using OEA.Library;
-using OEA.Module.WPF.Command;
 
 namespace JXC.Commands
 {
-    [Command(Label = "选择商品", GroupType = CommandGroupType.Edit)]
-    public class AddStorageInItem : LookupSelectAddCommand
+    [Command(ImageName = "Add.bmp", Label = "出库", ToolTip = "添加一个出库单", GroupType = CommandGroupType.Edit)]
+    public class AddOtherStorageOutBill : AddBill
     {
-        public AddStorageInItem()
+        public AddOtherStorageOutBill()
         {
-            this.TargetEntityType = typeof(Product);
-            this.RefProperty = StorageInBillItem.ProductRefProperty;
-        }
-
-        protected override void OnAdded(Entity newEntity)
-        {
-            base.OnAdded(newEntity);
-
-            (newEntity as StorageInBillItem).Amount = 1;
+            this.Service = new AddOtherStorageOutBillService();
         }
     }
 }

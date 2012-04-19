@@ -97,13 +97,13 @@ namespace OEA.Module.WPF.Editors
             this.AdaptEventsToContext(oldTreeView, newTreeView);
         }
 
-        public override object CurrentObject
+        public override Entity Current
         {
             get { return this.Control.SelectedItem; }
-            set { this.Control.SelectedItem = value as Entity; }
+            set { this.Control.SelectedItem = value; }
         }
 
-        public override IList SelectedObjects
+        public override IList<Entity> SelectedEntities
         {
             get { return this.Control.SelectedItems; }
         }

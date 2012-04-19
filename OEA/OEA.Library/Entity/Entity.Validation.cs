@@ -67,7 +67,7 @@ namespace OEA.Library
             var rules = this.ValidationRules;
 
             //为所有不可空的引用属性加上 Required 验证规则。
-            var properties = this.FindRepository().GetAvailableIndicators();
+            var properties = this.GetRepository().GetAvailableIndicators();
             foreach (var p in properties)
             {
                 if (p is IRefProperty)
@@ -113,7 +113,7 @@ namespace OEA.Library
         {
             get
             {
-                var allIndicators = this.FindRepository().GetAvailableIndicators();
+                var allIndicators = this.GetRepository().GetAvailableIndicators();
                 var property = allIndicators.FirstOrDefault(p => p.Name == columnName);
                 if (property != null)
                 {

@@ -12,10 +12,10 @@ using System.ComponentModel;
 namespace JXC
 {
     [ChildEntity, Serializable]
-    public class StorageInItem : JXCEntity
+    public class StorageInBillItem : JXCEntity
     {
         public static readonly RefProperty<StorageInBill> StorageInBillRefProperty =
-            P<StorageInItem>.RegisterRef(e => e.StorageInBill, ReferenceType.Parent);
+            P<StorageInBillItem>.RegisterRef(e => e.StorageInBill, ReferenceType.Parent);
         public int StorageInBillId
         {
             get { return this.GetRefId(StorageInBillRefProperty); }
@@ -28,7 +28,7 @@ namespace JXC
         }
 
         public static readonly RefProperty<Product> ProductRefProperty =
-            P<StorageInItem>.RegisterRef(e => e.Product, ReferenceType.Normal);
+            P<StorageInBillItem>.RegisterRef(e => e.Product, ReferenceType.Normal);
         public int ProductId
         {
             get { return this.GetRefId(ProductRefProperty); }
@@ -40,14 +40,14 @@ namespace JXC
             set { this.SetRefEntity(ProductRefProperty, value); }
         }
 
-        public static readonly Property<int> AmountProperty = P<StorageInItem>.Register(e => e.Amount);
+        public static readonly Property<int> AmountProperty = P<StorageInBillItem>.Register(e => e.Amount);
         public int Amount
         {
             get { return this.GetProperty(AmountProperty); }
             set { this.SetProperty(AmountProperty, value); }
         }
 
-        public static readonly Property<double> UnitPriceProperty = P<StorageInItem>.Register(e => e.UnitPrice);
+        public static readonly Property<double> UnitPriceProperty = P<StorageInBillItem>.Register(e => e.UnitPrice);
         public double UnitPrice
         {
             get { return this.GetProperty(UnitPriceProperty); }
@@ -56,7 +56,7 @@ namespace JXC
 
         #region 视图属性
 
-        public static readonly Property<string> View_ProductNameProperty = P<StorageInItem>.RegisterReadOnly(e => e.View_ProductName, e => (e as StorageInItem).GetView_ProductName(), null);
+        public static readonly Property<string> View_ProductNameProperty = P<StorageInBillItem>.RegisterReadOnly(e => e.View_ProductName, e => (e as StorageInBillItem).GetView_ProductName(), null);
         public string View_ProductName
         {
             get { return this.GetProperty(View_ProductNameProperty); }
@@ -66,7 +66,7 @@ namespace JXC
             return this.Product.MingCheng;
         }
 
-        public static readonly Property<string> View_ProductCategoryNameProperty = P<StorageInItem>.RegisterReadOnly(e => e.View_ProductCategoryName, e => (e as StorageInItem).GetView_ProductCategoryName(), null);
+        public static readonly Property<string> View_ProductCategoryNameProperty = P<StorageInBillItem>.RegisterReadOnly(e => e.View_ProductCategoryName, e => (e as StorageInBillItem).GetView_ProductCategoryName(), null);
         public string View_ProductCategoryName
         {
             get { return this.GetProperty(View_ProductCategoryNameProperty); }
@@ -76,7 +76,7 @@ namespace JXC
             return this.Product.ProductCategory.Name;
         }
 
-        public static readonly Property<string> View_SpecificationProperty = P<StorageInItem>.RegisterReadOnly(e => e.View_Specification, e => (e as StorageInItem).GetView_Specification(), null);
+        public static readonly Property<string> View_SpecificationProperty = P<StorageInBillItem>.RegisterReadOnly(e => e.View_Specification, e => (e as StorageInBillItem).GetView_Specification(), null);
         public string View_Specification
         {
             get { return this.GetProperty(View_SpecificationProperty); }
@@ -87,7 +87,7 @@ namespace JXC
         }
 
         public static readonly Property<double> View_TotalPriceProperty =
-            P<StorageInItem>.RegisterReadOnly(e => e.View_TotalPrice, e => (e as StorageInItem).GetView_TotalPrice(), null,
+            P<StorageInBillItem>.RegisterReadOnly(e => e.View_TotalPrice, e => (e as StorageInBillItem).GetView_TotalPrice(), null,
             AmountProperty, UnitPriceProperty
             );
         public double View_TotalPrice
@@ -115,7 +115,7 @@ namespace JXC
     }
 
     [Serializable]
-    public class StorageInItemList : JXCEntityList
+    public class StorageInBillItemList : JXCEntityList
     {
         public static readonly EntityRoutedEvent ListChangedEvent = EntityRoutedEvent.Register(EntityRoutedEventType.BubbleToParent);
 
@@ -127,21 +127,22 @@ namespace JXC
         }
     }
 
-    public class StorageInItemRepository : EntityRepository
+    public class StorageInBillItemRepository : EntityRepository
     {
-        protected StorageInItemRepository() { }
+        protected StorageInBillItemRepository() { }
     }
 
-    internal class StorageInItemConfig : EntityConfig<StorageInItem>
+    internal class StorageInBillItemConfig : EntityConfig<StorageInBillItem>
     {
         protected override void ConfigMeta()
         {
-            Meta.MapTable().MapAllPropertiesToTable();
+            //示例映射自定义表名
+            Meta.MapTable("StorageInItem").MapAllPropertiesToTable();
         }
 
         protected override void ConfigView()
         {
-            View.DomainName("入库单项").HasDelegate(StorageInItem.View_ProductNameProperty);
+            View.DomainName("入库单项").HasDelegate(StorageInBillItem.View_ProductNameProperty);
 
             View.ClearWPFCommands(false)
                 .UseWPFCommands(
@@ -151,12 +152,12 @@ namespace JXC
 
             using (View.OrderProperties())
             {
-                View.Property(StorageInItem.View_ProductNameProperty).HasLabel("商品名称").ShowIn(ShowInWhere.All);
-                View.Property(StorageInItem.View_ProductCategoryNameProperty).HasLabel("商品类别").ShowIn(ShowInWhere.List);
-                View.Property(StorageInItem.View_SpecificationProperty).HasLabel("规格").ShowIn(ShowInWhere.List);
-                View.Property(StorageInItem.UnitPriceProperty).HasLabel("单价").ShowIn(ShowInWhere.List);
-                View.Property(StorageInItem.AmountProperty).HasLabel("入库数量*").ShowIn(ShowInWhere.List);
-                View.Property(StorageInItem.View_TotalPriceProperty).HasLabel("总价").ShowIn(ShowInWhere.List);
+                View.Property(StorageInBillItem.View_ProductNameProperty).HasLabel("商品名称").ShowIn(ShowInWhere.All);
+                View.Property(StorageInBillItem.View_ProductCategoryNameProperty).HasLabel("商品类别").ShowIn(ShowInWhere.List);
+                View.Property(StorageInBillItem.View_SpecificationProperty).HasLabel("规格").ShowIn(ShowInWhere.List);
+                View.Property(StorageInBillItem.UnitPriceProperty).HasLabel("单价").ShowIn(ShowInWhere.List);
+                View.Property(StorageInBillItem.AmountProperty).HasLabel("入库数量*").ShowIn(ShowInWhere.List);
+                View.Property(StorageInBillItem.View_TotalPriceProperty).HasLabel("总价").ShowIn(ShowInWhere.List);
             }
         }
     }

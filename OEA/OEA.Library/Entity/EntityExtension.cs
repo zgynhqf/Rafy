@@ -24,12 +24,12 @@ namespace OEA.Library
     {
         public static IDb CreateDb(this Entity entity)
         {
-            return entity.FindRepository().CreateDb();
+            return entity.GetRepository().CreateDb();
         }
 
         public static IDb CreateDb(this EntityList entityList)
         {
-            return entityList.FindRepository().CreateDb();
+            return entityList.GetRepository().CreateDb();
         }
 
         /// <summary>

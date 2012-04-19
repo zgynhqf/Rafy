@@ -147,7 +147,7 @@ namespace RBAC
                             (string.IsNullOrEmpty(deny.BlockKey) && item.ScopeKeyLabel == OperationAC.ModuleScope || deny.BlockKey == item.ScopeKeyLabel)
                             )
                         {
-                            this._opertaionsView.SelectedObjects.Remove(item);
+                            this._opertaionsView.SelectedEntities.Remove(item);
                             break;
                         }
                     }
@@ -175,7 +175,7 @@ namespace RBAC
             foreach (var item in moduleOperations) { this._denyList.Remove(item); }
 
             //根据当前的选择项把数据重新加入到 denyList 中。
-            var toDeny = this._opertaionsView.Data.Except(this._opertaionsView.SelectedObjects.Cast<Entity>());
+            var toDeny = this._opertaionsView.Data.Except(this._opertaionsView.SelectedEntities.Cast<Entity>());
             foreach (OperationAC item in toDeny)
             {
                 var deny = new OrgPositionOperationDeny

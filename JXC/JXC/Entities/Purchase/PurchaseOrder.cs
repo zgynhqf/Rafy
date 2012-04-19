@@ -210,6 +210,7 @@ namespace JXC
                 View.Property(PurchaseOrder.TotalMoneyProperty).HasLabel("总金额").ShowIn(ShowInWhere.ListDetail).Readonly();
                 View.Property(PurchaseOrder.StorageInDirectlyProperty).HasLabel("直接入库").ShowIn(ShowInWhere.Detail);
                 View.Property(PurchaseOrder.StorageInStatusProperty).HasLabel("入库状态").ShowIn(ShowInWhere.List).Readonly();
+                View.Property(PurchaseOrder.TotalAmountLeftProperty).HasLabel("未入库商品数").ShowIn(ShowInWhere.List).Readonly();
                 View.Property(PurchaseOrder.CommentProperty).HasLabel("备注").ShowIn(ShowInWhere.ListDetail)
                     .ShowMemoInDetail();
             }

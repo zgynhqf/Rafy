@@ -31,7 +31,7 @@ namespace JXC.WPF.Templates
     public class ConditionQueryModule : ModuleBase
     {
         /// <summary>
-        /// 生成条件查询和主体查询
+        /// 生成条件查询和主体模块
         /// </summary>
         /// <returns></returns>
         protected override AggtBlocks DefineBlocks()
@@ -73,11 +73,14 @@ namespace JXC.WPF.Templates
 
             listView.IsReadOnly = true;
 
-            //列表双击时，弱出查看窗口
+            //列表双击时，弹出查看窗口
             listView.MouseDoubleClick += (o, e) =>
             {
                 var cmd = listView.Commands.Find<ShowBill>();
-                if (cmd != null) cmd.Execute(listView);
+                if (cmd != null)
+                {
+                    if (cmd.CanExecute(listView)) cmd.Execute(listView);
+                }
             };
         }
     }

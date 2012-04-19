@@ -75,7 +75,7 @@ namespace OEA.Library
         /// </summary>
         public bool SupportTree
         {
-            get { return this.FindRepository().SupportTree; }
+            get { return this.GetRepository().SupportTree; }
         }
 
         #endregion
@@ -173,7 +173,7 @@ namespace OEA.Library
             //向列表中添加根对象时，需要自动计算该实体及其后面实体的 TreeCode
             if (item.TreePId == null && this.AutoTreeCodeEnabled)
             {
-                var option = this.FindRepository().TreeCodeOption;
+                var option = this.GetRepository().TreeCodeOption;
                 var i = 0;
                 foreach (var root in this.FindRoots())
                 {
