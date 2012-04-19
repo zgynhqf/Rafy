@@ -210,9 +210,9 @@ namespace JXC
                 View.Property(Product.GuiGeProperty).HasLabel("规格").ShowIn(ShowInWhere.All);
                 View.Property(Product.PingPaiProperty).HasLabel("品牌").ShowIn(ShowInWhere.All)
                     .ShowInDetail(columnSpan: 2);
+                View.Property(Product.StorageAmountProperty).HasLabel("库存量").ShowIn(ShowInWhere.List).Readonly();
                 View.Property(Product.CaiGouDanjiaProperty).HasLabel("采购单价").ShowIn(ShowInWhere.All);
                 View.Property(Product.XiaoShouDanJiaProperty).HasLabel("销售单价").ShowIn(ShowInWhere.All);
-                View.Property(Product.StorageAmountProperty).HasLabel("库存量").ShowIn(ShowInWhere.List).Readonly();
                 View.Property(Product.SupplierRefProperty).HasLabel("销售商名称").ShowIn(ShowInWhere.All);
                 View.Property(Product.XiaoShouJia_1Property).HasLabel("一级销售价").ShowIn(ShowInWhere.All);
                 View.Property(Product.XiaoShouJia_2Property).HasLabel("二级销售价").ShowIn(ShowInWhere.All);

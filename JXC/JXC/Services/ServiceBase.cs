@@ -23,21 +23,7 @@ using hxy.Common;
 namespace JXC
 {
     [Serializable]
-    public abstract class ServiceBase : Service
-    {
-        [ServiceOutput]
-        public Result Result { get; set; }
-
-        protected override void Execute()
-        {
-            this.Result = this.ExecuteCore();
-        }
-
-        protected abstract Result ExecuteCore();
-    }
-
-    [Serializable]
-    public abstract class AddService : ServiceBase
+    public abstract class AddService : FlowService
     {
         [ServiceInput]
         public Entity Item { get; set; }
@@ -47,7 +33,7 @@ namespace JXC
     }
 
     [Serializable]
-    public abstract class DeleteService : ServiceBase
+    public abstract class DeleteService : FlowService
     {
         [ServiceInput]
         public int ItemId { get; set; }

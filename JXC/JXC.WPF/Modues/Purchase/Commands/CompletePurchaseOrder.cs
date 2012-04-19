@@ -21,6 +21,7 @@ using OEA.MetaModel.Attributes;
 using OEA.MetaModel.View;
 using OEA.Module.WPF;
 using OEA.WPF.Command;
+using System.Windows;
 
 namespace JXC.Commands
 {
@@ -35,7 +36,19 @@ namespace JXC.Commands
 
         public override void Execute(ListObjectView view)
         {
-            App.MessageBox.Show("暂时还没有完成本功能，待入库操作完成后再添加。");
+            var order = view.Current as PurchaseOrder;
+
+            var msg = string.Format("系统将会为采购单 {0} 剩余的所有商品自动入库，并生成相应的入库单。\r\n是否继续？", order.Code);
+            var btn = App.MessageBox.Show(msg, MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (btn == MessageBoxResult.Yes)
+            {
+                var svc = new CompletePurchaseOrderService { OrderId = order.Id };
+                svc.Invoke();
+
+                App.MessageBox.Show(svc.Result.Message);
+
+                if (svc.Result.Success) { view.DataLoader.ReloadDataAsync(); }
+            }
         }
     }
 }
