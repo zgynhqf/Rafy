@@ -113,14 +113,10 @@ namespace OEA.Library
 
         private void SyncChildrenPId()
         {
-            foreach (var value in this.GetCompiledPropertyValues())
+            foreach (var field in this.GetLoadedChildren())
             {
-                var children = value.Value as EntityList;
-                if (children != null)
-                {
-                    children.TrySetParentEntity(null);
-                    children.TrySetParentEntity(this);
-                }
+                var children = field.Value as EntityList;
+                children.SyncParentEntityId(this);
             }
         }
 

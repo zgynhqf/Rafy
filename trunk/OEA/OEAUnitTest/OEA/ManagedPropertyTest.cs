@@ -549,6 +549,10 @@ namespace OEAUnitTest
             Assert.AreEqual(roles.Count, 1);
             Assert.AreEqual(userRoles.Count, 1);
             Assert.AreEqual(roles[0].CastTo<TestRole>().Name, role.Name);
+
+            //clear
+            user.MarkDeleted();
+            repo.Save(user);
         }
 
         private static TEntity Get<TEntity>()

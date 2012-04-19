@@ -183,7 +183,7 @@ namespace OEA.Library
                 {
                     pkTable = item.OwnerRepository.GetTableInfo();
                     fkTable = item.PropertyEntityRepository.GetTableInfo();
-                    fkName = item.PropertyEntityRepository.GetParentPropertyInfo().Name;
+                    fkName = item.PropertyEntityRepository.FindParentPropertyInfo(true).Name;
                 }
                 else
                 {
@@ -238,7 +238,7 @@ namespace OEA.Library
             else if (this._directlyQueryRepository.EntityMeta.EntityCategory == EntityCategory.Child)
             {
                 this._sql.Append("WHERE ");
-                var parentProperty = this._directlyQueryRepository.GetParentPropertyInfo();
+                var parentProperty = this._directlyQueryRepository.FindParentPropertyInfo(true);
                 var rootTypeFKColumn = parentProperty.Name;//属性名就是列名
 
                 var dqTableName = this._directlyQueryRepository.GetTableInfo().Name;

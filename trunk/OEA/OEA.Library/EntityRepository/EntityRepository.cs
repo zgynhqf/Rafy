@@ -281,23 +281,6 @@ namespace OEA.Library
 
         /// <summary>
         /// 把这个组件中的所有改动保存到仓库中。
-        /// 
-        /// 方法返回保存结束的结果对象（保存可能会涉及到跨网络，所以服务端传输回来的值并不是之前传入的对象。）
-        /// </summary>
-        /// <param name="component"></param>
-        public IEntityOrList Save(IEntityOrList component)
-        {
-            IEntityOrList result = component.IsDirty ? DataPortal.Update(component) as IEntityOrList : component;
-
-            (component as IEntityOrListInternal).NotifySaved();
-
-            component.MarkOld();
-
-            return result;
-        }
-
-        /// <summary>
-        /// 把这个组件中的所有改动保存到仓库中。
         /// </summary>
         /// <param name="component">
         /// 传入的参数以及传出的结果。
@@ -305,7 +288,58 @@ namespace OEA.Library
         public void Save<T>(ref T component)
             where T : class, IEntityOrList
         {
-            component = this.Save(component) as T;
+            component = this.Save(component, false) as T;
+        }
+
+        /// <summary>
+        /// 把这个组件中的所有改动保存到仓库中。
+        /// 
+        /// 方法返回保存结束的结果对象（保存可能会涉及到跨网络，所以服务端传输回来的值并不是之前传入的对象。）
+        /// </summary>
+        /// <param name="component"></param>
+        /// <param name="markOld">是否需要把参数对象保存为未修改状态</param>
+        /// <returns></returns>
+        public IEntityOrList Save(IEntityOrList component, bool markOld = true)
+        {
+            var e = component as Entity;
+            bool isNewEntity = e != null && e.IsNew;
+
+            IEntityOrList result = component.IsDirty ? DataPortal.Update(component) as IEntityOrList : component;
+
+            (component as IEntityOrListInternal).NotifySaved();
+
+            if (markOld)
+            {
+                if (isNewEntity) { this.MergeIdRecur(e, result as Entity); }
+
+                component.MarkOld();
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 把整个聚合对象的 Id 设置完整。
+        /// </summary>
+        /// <param name="oldEntity"></param>
+        /// <param name="newEntity"></param>
+        private void MergeIdRecur(Entity oldEntity, Entity newEntity)
+        {
+            oldEntity.LoadProperty(Entity.IdProperty, newEntity.GetProperty(Entity.IdProperty));
+
+            foreach (var field in oldEntity.GetLoadedChildren())
+            {
+                var oldChildren = field.Value as EntityList;
+                var newChildren = newEntity.GetLazyList(field.Property as IListProperty) as EntityList;
+
+                //两个集合应该是一样的数据、顺序？如果后期出现 bug，则修改此处的逻辑为查找到对应项再修改。
+                for (int i = 0, c = oldChildren.Count; i < c; i++)
+                {
+                    this.MergeIdRecur(oldChildren[i], newChildren[i]);
+                }
+
+                oldChildren.SyncParentEntityId(oldEntity);
+            }
         }
 
         protected Entity NotifyLoaded(Entity entity)
@@ -696,18 +730,23 @@ namespace OEA.Library
 
         #region IEntityInfoHost Members
 
+        private bool _parentPropertyCacheLoaded;
         private EntityPropertyMeta _parentPropertyCache;
-        /// <summary>
-        /// 找到本对象上层父聚合对象的外键
-        /// </summary>
-        /// <returns></returns>
-        public EntityPropertyMeta GetParentPropertyInfo()
+        public EntityPropertyMeta FindParentPropertyInfo(bool throwOnNotFound = false)
         {
-            if (this._parentPropertyCache == null)
+            if (!this._parentPropertyCacheLoaded)
             {
                 var result = this.EntityMeta.FindParentReferenceProperty();
-                if (result == null) throw new ArgumentNullException(this.EntityMeta.Name + "类还没有标记IsParent=true的外键属性。");
-                this._parentPropertyCache = result;
+                if (result != null)
+                {
+                    this._parentPropertyCache = result;
+                    this._parentPropertyCacheLoaded = true;
+                }
+            }
+
+            if (this._parentPropertyCache == null && throwOnNotFound)
+            {
+                throw new NotSupportedException(this.EntityType + " 类型中没有注册引用类型为 ReferenceType.Parent 的父引用属性。");
             }
 
             return this._parentPropertyCache;
@@ -742,29 +781,6 @@ namespace OEA.Library
                 }
 
                 return this._entityInfo;
-            }
-        }
-
-        private bool _parentPropertyIndicatorLoaded;
-        private IRefProperty _parentPropertyIndicator;
-        public IRefProperty ParentPropertyIndicator
-        {
-            get
-            {
-                if (!this._parentPropertyIndicatorLoaded)
-                {
-                    var parentsIndicators = this.GetAvailableIndicators()
-                        .OfType<IRefProperty>()
-                        .Where(p => p.GetMeta(this.EntityType).ReferenceType == ReferenceType.Parent)
-                        .ToArray();
-
-                    if (parentsIndicators.Length > 1) throw new InvalidOperationException("一个类中只能定义一个父外键。");
-                    if (parentsIndicators.Length == 1) this._parentPropertyIndicator = parentsIndicators[0];
-
-                    this._parentPropertyIndicatorLoaded = true;
-                }
-
-                return this._parentPropertyIndicator;
             }
         }
 

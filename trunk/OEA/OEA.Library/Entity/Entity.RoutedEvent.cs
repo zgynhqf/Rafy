@@ -53,7 +53,7 @@ namespace OEA.Library
             {
                 case EntityRoutedEventType.BubbleToParent:
 
-                    var parent = this.GetParentEntity();
+                    var parent = this.FindParentEntity();
                     if (parent != null)
                     {
                         parent.OnRoutedEvent(sender, e);

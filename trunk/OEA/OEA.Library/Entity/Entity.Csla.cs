@@ -141,6 +141,11 @@ namespace OEA.Library
             this.MarkOldIfDirty(value);
 
             this.OnPropertyLoaded(property);
+
+            if (property is IListProperty)
+            {
+                (value as EntityList).InitListProperty(property as IListProperty);
+            }
         }
 
         public override void LoadProperty(IManagedProperty property, object value)
@@ -152,6 +157,11 @@ namespace OEA.Library
             this.MarkOldIfDirty(value);
 
             this.OnPropertyLoaded(property);
+
+            if (property is IListProperty)
+            {
+                (value as EntityList).InitListProperty(property as IListProperty);
+            }
         }
 
         private void SetParentIfChild(object value)
@@ -197,10 +207,9 @@ namespace OEA.Library
         /// 子有可能是集合、也有可能只是一个实体。
         /// </summary>
         /// <returns></returns>
-        private IEnumerable<IManagedPropertyField> GetLoadedChildren()
+        internal IEnumerable<IManagedPropertyField> GetLoadedChildren()
         {
             var fields = this.GetNonDefaultPropertyValues();
-
             foreach (var field in fields)
             {
                 if (field.Property is IListProperty) { yield return field; }
