@@ -36,7 +36,7 @@ namespace JXC
                 repo.Save(ref storageIn);
 
                 //修改库存
-                foreach (StorageInItem item in storageIn.StorageInItemList)
+                foreach (StorageInBillItem item in storageIn.StorageInItemList)
                 {
                     item.Product.StorageAmount += item.Amount;
                     RF.Save(item.Product);

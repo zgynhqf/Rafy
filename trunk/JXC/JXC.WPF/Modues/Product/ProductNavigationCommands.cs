@@ -20,7 +20,7 @@ namespace JXC.Commands
     {
         public override void Execute(ListObjectView view)
         {
-            foreach (Product item in view.SelectedObjects)
+            foreach (Product item in view.SelectedEntities)
             {
                 item.StorageAmount = 0;
             }

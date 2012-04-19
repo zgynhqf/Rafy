@@ -56,7 +56,7 @@ namespace OEA.WPF.Command
         public override void Execute(ListObjectView view)
         {
             //获取选中对象的副本（使用副本是因为下面的操作，会改变选中的对象列表。）
-            var selectedList = view.SelectedObjects.OfType<Entity>().ToArray();
+            var selectedList = view.SelectedEntities.OfType<Entity>().ToArray();
             var rootList = view.Data as EntityList;
             var isDealingTree = rootList != null && rootList.SupportTree;
 

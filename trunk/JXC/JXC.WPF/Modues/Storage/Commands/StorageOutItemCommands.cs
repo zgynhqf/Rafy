@@ -1,13 +1,13 @@
 ﻿/*******************************************************
  * 
  * 作者：胡庆访
- * 创建时间：20120418
+ * 创建时间：20120419
  * 说明：此文件只包含一个类，具体内容见类型注释。
  * 运行环境：.NET 4.0
  * 版本号：1.0.0
  * 
  * 历史记录：
- * 创建文件 胡庆访 20120418
+ * 创建文件 胡庆访 20120419
  * 
 *******************************************************/
 
@@ -28,19 +28,19 @@ using OEA.Module.WPF.Command;
 namespace JXC.Commands
 {
     [Command(Label = "选择商品", GroupType = CommandGroupType.Edit)]
-    public class AddStorageInItem : LookupSelectAddCommand
+    public class AddStorageOutItem : LookupSelectAddCommand
     {
-        public AddStorageInItem()
+        public AddStorageOutItem()
         {
             this.TargetEntityType = typeof(Product);
-            this.RefProperty = StorageInBillItem.ProductRefProperty;
+            this.RefProperty = StorageOutBillItem.ProductRefProperty;
         }
 
         protected override void OnAdded(Entity newEntity)
         {
             base.OnAdded(newEntity);
 
-            (newEntity as StorageInBillItem).Amount = 1;
+            (newEntity as StorageOutBillItem).Amount = 1;
         }
     }
 }

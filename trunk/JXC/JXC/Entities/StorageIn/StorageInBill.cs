@@ -13,8 +13,8 @@ namespace JXC
     [RootEntity, Serializable]
     public abstract class StorageInBill : JXCEntity
     {
-        public static readonly ListProperty<StorageInItemList> StorageInItemListProperty = P<StorageInBill>.RegisterList(e => e.StorageInItemList);
-        public StorageInItemList StorageInItemList
+        public static readonly ListProperty<StorageInBillItemList> StorageInItemListProperty = P<StorageInBill>.RegisterList(e => e.StorageInItemList);
+        public StorageInBillItemList StorageInItemList
         {
             get { return this.GetLazyList(StorageInItemListProperty); }
         }
@@ -62,7 +62,7 @@ namespace JXC
                 }
                 else
                 {
-                    foreach (StorageInItem item in po.StorageInItemList)
+                    foreach (StorageInBillItem item in po.StorageInItemList)
                     {
                         if (item.View_TotalPrice <= 0)
                         {
@@ -76,9 +76,9 @@ namespace JXC
 
         protected override void OnRoutedEvent(object sender, EntityRoutedEventArgs e)
         {
-            if (e.Event == StorageInItem.PriceChangedEvent || e.Event == StorageInItemList.ListChangedEvent)
+            if (e.Event == StorageInBillItem.PriceChangedEvent || e.Event == StorageInBillItemList.ListChangedEvent)
             {
-                this.TotalMoney = this.StorageInItemList.Sum(poi => (poi as StorageInItem).View_TotalPrice);
+                this.TotalMoney = this.StorageInItemList.Sum(poi => (poi as StorageInBillItem).View_TotalPrice);
             }
         }
     }
@@ -90,8 +90,8 @@ namespace JXC
         {
             this.QueryDb(q =>
             {
-                q.Constrain(OrderStorageInBill.DateProperty).GreaterEqual(criteria.From)
-                    .And().Constrain(OrderStorageInBill.DateProperty).LessEqual(criteria.To);
+                q.Constrain(StorageInBill.DateProperty).GreaterEqual(criteria.From)
+                    .And().Constrain(StorageInBill.DateProperty).LessEqual(criteria.To);
             });
         }
     }

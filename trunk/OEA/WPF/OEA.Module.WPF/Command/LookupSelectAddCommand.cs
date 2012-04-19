@@ -62,10 +62,8 @@ namespace OEA.Module.WPF.Command
 
             if (result == WindowButton.Yes)
             {
-                var activeObjects = listView.GetActiveObjects();
-                for (int i = activeObjects.Count - 1; i >= 0; i--)
+                foreach (var src in listView.SelectedEntities)
                 {
-                    var src = activeObjects[i] as Entity;
                     //如果已经存在，则退出
                     bool eixst = false;
                     foreach (var item in view.Data)

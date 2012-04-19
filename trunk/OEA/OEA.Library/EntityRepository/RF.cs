@@ -88,7 +88,7 @@ namespace OEA.Library
         /// <param name="entity"></param>
         public static void Save(EntityList entityList)
         {
-            entityList.FindRepository().Save(entityList);
+            entityList.GetRepository().Save(entityList);
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace OEA.Library
             }
             else
             {
-                entity.FindRepository().Save(entity);
+                entity.GetRepository().Save(entity);
             }
         }
 
@@ -150,7 +150,7 @@ namespace OEA.Library
         /// <returns></returns>
         public static EntityList NewChildOrderBy<TKey>(EntityList oldList, Func<Entity, TKey> keySelector)
         {
-            return oldList.FindRepository().CastTo<EntityRepository>().NewListOrderBy(oldList, keySelector);
+            return oldList.GetRepository().CastTo<EntityRepository>().NewListOrderBy(oldList, keySelector);
         }
     }
 

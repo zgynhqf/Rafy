@@ -57,7 +57,7 @@ namespace OEA.WPF.Command
             //{
             var dataList = view.Data as EntityList;
             var dealingTree = dataList.SupportTree;
-            var list = view.SelectedObjects.OfType<Entity>().ToArray();
+            var list = view.SelectedEntities.OfType<Entity>().ToArray();
             for (int i = list.Length - 1; i >= 0; i--)
             {
                 var item = list[i];

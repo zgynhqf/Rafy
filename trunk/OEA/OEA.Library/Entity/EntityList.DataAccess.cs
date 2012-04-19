@@ -27,7 +27,7 @@ namespace OEA.Library
         /// <param name="parentId"></param>
         protected virtual void OnGetByParentId(int parentId)
         {
-            var parentProperty = this.FindRepository().FindParentPropertyInfo(true);
+            var parentProperty = this.GetRepository().FindParentPropertyInfo(true);
 
             this.QueryDb(q => q.Constrain(parentProperty.Name).Equal(parentId));
         }
@@ -35,7 +35,7 @@ namespace OEA.Library
         protected virtual void OnGetByTreeParentCode(string treeCode)
         {
             //递归查找所有树型子
-            var childCode = treeCode + "%" + this.FindRepository().TreeCodeOption.Seperator;
+            var childCode = treeCode + "%" + this.GetRepository().TreeCodeOption.Seperator;
 
             this.QueryDb(q => q.Constrain(DBConvention.FieldName_TreeCode).Like(childCode));
         }
@@ -110,7 +110,7 @@ namespace OEA.Library
             if (!query.HasOrdered)
             {
                 //如果有OrderNo字段，则需要排序。
-                var em = this.FindRepository().EntityMeta;
+                var em = this.GetRepository().EntityMeta;
                 if (em.DefaultOrderBy != null)
                 {
                     query = query.Order(em.DefaultOrderBy.Name, em.DefaultOrderByAscending);

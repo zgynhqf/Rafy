@@ -46,7 +46,7 @@ namespace OEA.Module.WPF.Editors
             this.RefreshDataSource();
             listView.CurrentObjectChanged += (o, e) =>
             {
-                this.SyncSelectionToValue(listView.SelectedObjects);
+                this.SyncSelectionToValue(listView.SelectedEntities);
             };
 
             return listView.Control;

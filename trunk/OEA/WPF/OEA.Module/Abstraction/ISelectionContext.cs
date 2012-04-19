@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Collections;
+using OEA.Library;
 
 namespace OEA
 {
@@ -14,7 +15,7 @@ namespace OEA
         /// <summary>
         /// 选中的对象集合
         /// </summary>
-        IList SelectedObjects { get; }
+        IList<Entity> SelectedEntities { get; }
 
         event EventHandler<SelectedEntityChangedEventArgs> SelectedItemChanged;
     }

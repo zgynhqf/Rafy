@@ -41,11 +41,11 @@ namespace JXC
             {
                 foreach (PurchaseOrderItem item in value.PurchaseOrderItemList)
                 {
-                    var siItem = new StorageInItem
+                    var siItem = new StorageInBillItem
                     {
                         Id = OEAEnvironment.NewLocalId(),
                         Product = item.Product,
-                        Amount = item.Amount,
+                        Amount = item.AmountLeft,
                         UnitPrice = item.RawPrice
                     };
                     children.Add(siItem);

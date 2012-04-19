@@ -72,7 +72,7 @@ namespace OEA.Module.WPF.Editors
         /// 当编辑器已经先选中某个值时，需要使用此方法通知属性变更。
         /// </summary>
         /// <param name="selecteEntity"></param>
-        protected void SyncSelectionToValue(IList selectedEntities)
+        protected void SyncSelectionToValue(IList<Entity> selectedEntities)
         {
             if (!this.IsMultiSelection)
             {
@@ -154,7 +154,7 @@ namespace OEA.Module.WPF.Editors
             }
 
             //定位 SelectedObjects
-            var selectedObjects = listView.SelectedObjects;
+            var selectedObjects = listView.SelectedEntities;
             selectedObjects.Clear();
             foreach (var item in selectedItems) { selectedObjects.Add(item); }
         }

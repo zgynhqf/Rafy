@@ -37,7 +37,7 @@ namespace JXC
 
                 //修改对应的采购订单
                 var order = storageIn.Order;
-                foreach (StorageInItem item in storageIn.StorageInItemList)
+                foreach (StorageInBillItem item in storageIn.StorageInItemList)
                 {
                     var orderItem = order.PurchaseOrderItemList.Cast<PurchaseOrderItem>()
                         .FirstOrDefault(e => e.ProductId == item.ProductId);
@@ -59,7 +59,7 @@ namespace JXC
                 RF.Save(order);
 
                 //修改库存
-                foreach (StorageInItem item in storageIn.StorageInItemList)
+                foreach (StorageInBillItem item in storageIn.StorageInItemList)
                 {
                     item.Product.StorageAmount += item.Amount;
                     RF.Save(item.Product);

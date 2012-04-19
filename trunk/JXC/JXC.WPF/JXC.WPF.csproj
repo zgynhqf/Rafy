@@ -48,11 +48,14 @@
     <Compile Include="Modues\Product\ProductNavigationCommands.cs" />
     <Compile Include="Modues\Purchase\Commands\AddPurchaseOrderItem.cs" />
     <Compile Include="Modues\Purchase\Commands\CompletePurchaseOrder.cs" />
+    <Compile Include="Modues\Storage\Commands\StorageOutItemCommands.cs" />
     <Compile Include="Modues\Purchase\Commands\OrderStorageInBillCommands.cs" />
     <Compile Include="Modues\Purchase\Commands\DeletePurchaseOrder.cs" />
     <Compile Include="Modues\Purchase\Commands\AddPurchaseOrder.cs" />
     <Compile Include="Modues\Purchase\Commands\StorageInItemCommands.cs" />
-    <Compile Include="Modues\Storage\Commands\OrderStorageInBillCommands.cs" />
+    <Compile Include="Modues\Storage\Commands\OtherStorageOutBillCommands.cs" />
+    <Compile Include="Modues\Storage\Commands\OtherStorageInBillCommands.cs" />
+    <Compile Include="Modues\Storage\OtherStorageOutModule.cs" />
     <Compile Include="Modues\Storage\OtherStorageInModule.cs" />
     <Compile Include="Modues\Purchase\PurchaseOrderModule.cs" />
     <Compile Include="Modues\Purchase\OrderStorageInModule.cs" />

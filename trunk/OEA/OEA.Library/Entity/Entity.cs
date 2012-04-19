@@ -86,7 +86,7 @@ namespace OEA.Library
         [NonSerialized]
         private IRepository _repository;
 
-        public IRepository FindRepository()
+        public IRepository GetRepository()
         {
             if (this._repository == null)
             {
@@ -194,7 +194,7 @@ namespace OEA.Library
             if (copyId) { this.CopyProperty(target, IdProperty); }
 
             //复制目标对象的所有托管属性。
-            var allProperties = this.FindRepository().GetAvailableIndicators();
+            var allProperties = this.GetRepository().GetAvailableIndicators();
             for (int i = 0, c = allProperties.Count; i < c; i++)
             {
                 var property = allProperties[i];
@@ -416,7 +416,7 @@ namespace OEA.Library
         /// <returns></returns>
         public IList GetChildProperty<TChild>()
         {
-            var entityInfo = this.FindRepository().EntityMeta;
+            var entityInfo = this.GetRepository().EntityMeta;
             var childProperty = entityInfo.ChildrenProperties
                 .FirstOrDefault(b => b.ChildType.EntityType == typeof(TChild));
             return this.GetPropertyValue<IList>(childProperty.Name);

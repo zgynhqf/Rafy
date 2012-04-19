@@ -5,6 +5,7 @@ using System.Text;
 using System.Collections;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
+using OEA.Library;
 
 namespace OEA.Module.WPF
 {
@@ -18,14 +19,14 @@ namespace OEA.Module.WPF
         /// </summary>
         /// <param name="view"></param>
         /// <returns></returns>
-        public static IList GetActiveObjects(this IObjectView view)
+        public static IList<Entity> GetSelectedEntities(this IObjectView view)
         {
             if (view is IListObjectView)
             {
-                return (view as IListObjectView).SelectedObjects;
+                return (view as IListObjectView).SelectedEntities;
             }
 
-            ArrayList list = new ArrayList();
+            var list = new List<Entity>();
             list.Add(view.Current);
             return list;
         }

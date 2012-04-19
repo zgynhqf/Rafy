@@ -93,7 +93,7 @@ namespace OEA.Module.WPF.Editors
             //确定
             if (res == WindowButton.Yes)
             {
-                this.SyncSelectionToValue(listView.SelectedObjects);
+                this.SyncSelectionToValue(listView.SelectedEntities);
             }
         }
     }

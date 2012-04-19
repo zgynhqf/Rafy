@@ -70,7 +70,7 @@ namespace OEA.WPF.Command
             var deleteList = new List<Entity>();
             if (isTree)
             {
-                foreach (Entity item in view.SelectedObjects)
+                foreach (Entity item in view.SelectedEntities)
                 {
                     var children = item.GetRecurChildren();
                     //先删除细记录再删除主记录
@@ -83,7 +83,7 @@ namespace OEA.WPF.Command
             }
             else
             {
-                deleteList.AddRange(view.SelectedObjects.OfType<Entity>());
+                deleteList.AddRange(view.SelectedEntities.OfType<Entity>());
             }
             int deleteCount = deleteList.Count;
 

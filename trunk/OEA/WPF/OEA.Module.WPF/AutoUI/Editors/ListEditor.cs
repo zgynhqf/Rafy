@@ -105,12 +105,12 @@ namespace OEA.Module.WPF.Editors
         /// <summary>
         /// 当前选中的数据模型
         /// </summary>
-        public abstract object CurrentObject { get; set; }
+        public abstract Entity Current { get; set; }
 
         /// <summary>
         /// 当前选中的数据模型集合
         /// </summary>
-        public abstract IList SelectedObjects { get; }
+        public abstract IList<Entity> SelectedEntities { get; }
 
         /// <summary>
         /// 选择所有的数据

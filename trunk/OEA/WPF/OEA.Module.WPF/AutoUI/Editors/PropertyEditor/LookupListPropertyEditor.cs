@@ -207,7 +207,7 @@ namespace OEA.Module.WPF.Editors
         /// </summary>
         private void SyncSelectionToValue()
         {
-            this.SyncSelectionToValue(this._listView.SelectedObjects);
+            this.SyncSelectionToValue(this._listView.SelectedEntities);
         }
 
         #endregion

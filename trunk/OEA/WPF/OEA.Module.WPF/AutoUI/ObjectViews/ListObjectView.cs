@@ -108,7 +108,7 @@ namespace OEA.Module.WPF
             get
             {
                 //返回控件的值
-                return this._listEditor.CurrentObject as Entity;
+                return this._listEditor.Current as Entity;
             }
             set
             {
@@ -123,7 +123,7 @@ namespace OEA.Module.WPF
                 if (oldObj != value)
                 {
                     //更新控件上的当前选中对象
-                    this._listEditor.CurrentObject = value;
+                    this._listEditor.Current = value;
 
                     this.OnCurrentObjectChanged();
                 }
@@ -237,8 +237,8 @@ namespace OEA.Module.WPF
             if (curObj != null)
             {
                 //为了发生 OnSelectedItemChanged 事件处理函数，先设置为 null，再设置回去。
-                this._listEditor.CurrentObject = null;
-                this._listEditor.CurrentObject = curObj;
+                this._listEditor.Current = null;
+                this._listEditor.Current = curObj;
             }
             else
             {
@@ -276,9 +276,9 @@ namespace OEA.Module.WPF
         /// 
         /// ListEditor中选择的对象集
         /// </summary>
-        public IList SelectedObjects
+        public IList<Entity> SelectedEntities
         {
-            get { return this._listEditor.SelectedObjects; }
+            get { return this._listEditor.SelectedEntities; }
         }
 
         /// <summary>

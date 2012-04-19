@@ -86,7 +86,7 @@ namespace OEA.Library
                 }
 
                 //尝试读取Name属性。
-                var nameProperty = FindRepository().GetAvailableIndicators().FirstOrDefault(p => p.Name == "Name");
+                var nameProperty = GetRepository().GetAvailableIndicators().FirstOrDefault(p => p.Name == "Name");
                 if (nameProperty != null)
                 {
                     var value = this.GetProperty(nameProperty);
