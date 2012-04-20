@@ -19,6 +19,7 @@ using System.Text;
 using OEA.Module;
 using System.Windows;
 using OEA.MetaModel.View;
+using OEA.Module.WPF;
 
 namespace OEA
 {

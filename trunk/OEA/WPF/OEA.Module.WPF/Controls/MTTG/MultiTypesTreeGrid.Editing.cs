@@ -39,6 +39,17 @@ namespace OEA.Module.WPF.Controls
         }
 
         /// <summary>
+        /// 尝试通知本树型控件编辑某个单元格。
+        /// </summary>
+        /// <param name="cell"></param>
+        /// <returns>返回是否成功进入编辑状态</returns>
+        public bool TryEditCell(MTTGCell cell)
+        {
+            var emptyArgs = new RoutedEventArgs(UIElement.MouseDownEvent, this);
+            return this.TryEditCell(cell, emptyArgs);
+        }
+
+        /// <summary>
         /// 某一列被左键点击时，会通知本树型控件需要进入编辑状态。
         /// </summary>
         /// <param name="column"></param>
@@ -109,7 +120,7 @@ namespace OEA.Module.WPF.Controls
         /// <returns></returns>
         private GridTreeViewRow GetSingleSelectedRow()
         {
-            if (this._selectedItems.Count == 1) { return this.GetRow(this._selectedItems[0]); }
+            if (this._selectedItems.Count == 1) { return this.FindRow(this._selectedItems[0]); }
 
             return null;
         }
@@ -127,7 +138,7 @@ namespace OEA.Module.WPF.Controls
 
             //树显示多个对象时，需要切换TreeColumn的PropertyInfo
             var entityMeta = cell.Row.EntityViewMeta;
-            var propInfo = entityMeta.Property(treeColumn.PropertyInfo.Name);
+            var propInfo = entityMeta.Property(treeColumn.Meta.Name);
 
             FrameworkElement resultControl = null;
 

@@ -81,7 +81,7 @@ namespace OEA.Module.WPF.Controls
                 //树形控件的默认状态：数据默认展开第一级。
                 if (!this.Tree.OnlyGridMode && this.Items.Count() == 1)
                 {
-                    var row = this.GetRow(this.Items.First());
+                    var row = this.FindRow(this.Items.First());
                     row.IsExpanded = true;
                 }
             }
@@ -162,7 +162,7 @@ namespace OEA.Module.WPF.Controls
         /// </returns>
         protected internal virtual GridTreeViewRow FindOrGenerateNode(Entity item)
         {
-            var row = this.GetRow(item);
+            var row = this.FindRow(item);
             if (row == null)
             {
                 var parent = this.GetParentItem(item);
@@ -174,7 +174,7 @@ namespace OEA.Module.WPF.Controls
                         parentRow.IsExpanded = true;
                     }
 
-                    row = this.GetRow(item);
+                    row = this.FindRow(item);
                 }
             }
 
@@ -211,7 +211,7 @@ namespace OEA.Module.WPF.Controls
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public GridTreeViewRow GetRow(Entity item)
+        public GridTreeViewRow FindRow(Entity item)
         {
             GridTreeViewRow treeListItem = null;
 
@@ -221,6 +221,20 @@ namespace OEA.Module.WPF.Controls
             }
 
             return treeListItem;
+        }
+
+        /// <summary>
+        /// 获取对应对象的节点
+        /// 
+        /// 如果找不到（目前没有生成），则返回 null。
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public GridTreeViewRow GetRow(Entity item)
+        {
+            var row = this.FindRow(item);
+            if (row == null) throw new InvalidOperationException("没有找到对应实体的行。");
+            return row;
         }
 
         /// <summary>

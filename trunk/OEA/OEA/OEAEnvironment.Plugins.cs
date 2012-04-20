@@ -279,12 +279,30 @@ namespace OEA
         #region EntityConfig
 
         private static Dictionary<Type, List<EntityConfig>> _typeConfigurations;
+        private static Dictionary<ExtendTypeKey, List<EntityConfig>> _typeExtendConfigurations;
 
+        /// <summary>
+        /// 获取所有的实体配置列表。
+        /// </summary>
+        /// <returns></returns>
         internal static Dictionary<Type, List<EntityConfig>> GetTypeConfigurations()
         {
-            if (_typeConfigurations == null)
+            InitTypeConfigurations();
+
+            return _typeConfigurations;
+        }
+
+        private static void InitTypeConfigurations()
+        {
+            if (_typeExtendConfigurations == null)
             {
-                var repo = new Dictionary<Type, List<EntityConfig>>(100);
+                /*********************** 代码块解释 *********************************
+                 * 查找所有 EntityConfig 类型，并根据是否为扩展视图的配置类，
+                 * 分别加入到两个不同的列表中。
+                **********************************************************************/
+
+                var defaultRepo = new Dictionary<Type, List<EntityConfig>>(100);
+                var extendRepo = new Dictionary<ExtendTypeKey, List<EntityConfig>>(100);
                 var entityType = typeof(EntityConfig);
                 foreach (var p in OEAEnvironment.GetAllPlugins())
                 {
@@ -292,38 +310,93 @@ namespace OEA
                     {
                         if (entityType.IsAssignableFrom(type))
                         {
-                            var config = Activator.CreateInstance(type).CastTo<EntityConfig>();
+                            var config = Activator.CreateInstance(type) as EntityConfig;
                             config.ReuseLevel = (int)p.Instance.ReuseLevel;
                             config.InheritanceCount = TypeHelper.GetHierarchy(type, typeof(ManagedPropertyObject)).Count();
 
                             List<EntityConfig> typeList = null;
-                            if (!repo.TryGetValue(config.EntityType, out typeList))
+
+                            if (config.ExtendView == null)
                             {
-                                typeList = new List<EntityConfig>(2);
-                                repo.Add(config.EntityType, typeList);
+                                if (!defaultRepo.TryGetValue(config.EntityType, out typeList))
+                                {
+                                    typeList = new List<EntityConfig>(2);
+                                    defaultRepo.Add(config.EntityType, typeList);
+                                }
+                            }
+                            else
+                            {
+                                var key = new ExtendTypeKey { EntityType = config.EntityType, ExtendView = config.ExtendView };
+                                if (!extendRepo.TryGetValue(key, out typeList))
+                                {
+                                    typeList = new List<EntityConfig>(2);
+                                    extendRepo.Add(key, typeList);
+                                }
                             }
 
                             typeList.Add(config);
                         }
                     }
                 }
-                _typeConfigurations = repo;
+                _typeConfigurations = defaultRepo;
+                _typeExtendConfigurations = extendRepo;
             }
-
-            return _typeConfigurations;
         }
 
-        internal static IEnumerable<EntityConfig> FindConfigurations(Type entityType)
+        /// <summary>
+        /// 获取某个实体视图的所有配置类实例
+        /// </summary>
+        /// <param name="entityType"></param>
+        /// <param name="extendView">如果想获取扩展视图列表，则需要传入指定的扩展视图列表</param>
+        /// <returns></returns>
+        internal static IEnumerable<EntityConfig> FindConfigurations(Type entityType, string extendView = null)
         {
+            InitTypeConfigurations();
+
             var hierachy = TypeHelper.GetHierarchy(entityType, typeof(ManagedPropertyObject)).Reverse();
-            foreach (var type in hierachy)
+            if (extendView == null)
             {
-                List<EntityConfig> configList = null;
-                if (OEAEnvironment.GetTypeConfigurations().TryGetValue(type, out configList))
+                foreach (var type in hierachy)
                 {
-                    var orderedList = configList.OrderByDescending(o => o.ReuseLevel).ThenBy(o => o.InheritanceCount);
-                    foreach (var config in orderedList) { yield return config; }
+                    List<EntityConfig> configList = null;
+                    if (_typeConfigurations.TryGetValue(type, out configList))
+                    {
+                        var orderedList = configList.OrderByDescending(o => o.ReuseLevel).ThenBy(o => o.InheritanceCount);
+                        foreach (var config in orderedList) { yield return config; }
+                    }
                 }
+            }
+            else
+            {
+                foreach (var type in hierachy)
+                {
+                    var key = new ExtendTypeKey { EntityType = type, ExtendView = extendView };
+
+                    List<EntityConfig> configList = null;
+                    if (_typeExtendConfigurations.TryGetValue(key, out configList))
+                    {
+                        var orderedList = configList.OrderByDescending(o => o.ReuseLevel).ThenBy(o => o.InheritanceCount);
+                        foreach (var config in orderedList) { yield return config; }
+                    }
+                }
+            }
+        }
+
+        private struct ExtendTypeKey
+        {
+            public Type EntityType;
+
+            public string ExtendView;
+
+            public override int GetHashCode()
+            {
+                return this.EntityType.GetHashCode() ^ this.ExtendView.GetHashCode();
+            }
+
+            public override bool Equals(object obj)
+            {
+                var other = (ExtendTypeKey)obj;
+                return other.EntityType == this.EntityType && other.ExtendView == this.ExtendView;
             }
         }
 

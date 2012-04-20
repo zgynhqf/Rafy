@@ -48,13 +48,10 @@ namespace OEA.Module.WPF.Controls
             return cellContainer;
         }
 
-        public MTTGCell()
+        protected override void OnVisualParentChanged(DependencyObject oldParent)
         {
-            this.Loaded += new RoutedEventHandler(OnLoaded);
-        }
+            base.OnVisualParentChanged(oldParent);
 
-        private void OnLoaded(object sender, RoutedEventArgs e)
-        {
             this.Row.AddCell(this);
         }
 
@@ -147,7 +144,7 @@ namespace OEA.Module.WPF.Controls
                     var column = cell.Column;
                     if (column != null)
                     {
-                        column.Owner.TryEditCell(cell, new RoutedEventArgs(UIElement.MouseDownEvent, cell));
+                        column.Owner.TryEditCell(cell);
                     }
                 };
                 this.Dispatcher.BeginInvoke(DispatcherPriority.Input, a);

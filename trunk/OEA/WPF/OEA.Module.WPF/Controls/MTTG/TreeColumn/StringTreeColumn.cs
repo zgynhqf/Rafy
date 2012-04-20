@@ -21,9 +21,9 @@ using System.Windows.Data;
 using OEA.Editors;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
+using OEA.Module.WPF.Editors;
 
-
-namespace OEA.Module.WPF.Editors
+namespace OEA.Module.WPF.Controls
 {
     /// <summary>
     /// 一般的文本列
@@ -34,24 +34,24 @@ namespace OEA.Module.WPF.Editors
 
         protected override IWPFPropertyEditor CreateEditorCore(PropertyEditorFactory factory)
         {
-            return factory.Create<StringPropertyEditor>(this.PropertyInfo);
+            return factory.Create<StringPropertyEditor>(this.Meta);
         }
 
-        protected override FrameworkElement GenerateEditingElementCore()
-        {
-            var control = base.GenerateEditingElementCore();
+        //protected override FrameworkElement GenerateEditingElementCore()
+        //{
+        //    var control = base.GenerateEditingElementCore();
 
-            if (!this.Editor.IsReadonly)
-            {
-                //当类库属性PropertyInfo.Name的set赋值过程更改了value时，需要强制将数据从绑定源属性传输到绑定目标属性。
-                control.LostFocus += (s, e) =>
-                {
-                    control.GetBindingExpression(TextBox.TextProperty).UpdateTarget();
-                };
-            }
+        //    if (!this.Editor.IsReadonly)
+        //    {
+        //        //当类库属性PropertyInfo.Name的set赋值过程更改了value时，需要强制将数据从绑定源属性传输到绑定目标属性。
+        //        control.LostFocus += (s, e) =>
+        //        {
+        //            control.GetBindingExpression(TextBox.TextProperty).UpdateTarget();
+        //        };
+        //    }
 
-            return control;
-        }
+        //    return control;
+        //}
 
         public override void CommitEdit()
         {

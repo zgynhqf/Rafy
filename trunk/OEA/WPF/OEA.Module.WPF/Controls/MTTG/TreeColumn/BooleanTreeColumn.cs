@@ -21,9 +21,9 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
+using OEA.Module.WPF.Editors;
 
-
-namespace OEA.Module.WPF.Editors
+namespace OEA.Module.WPF.Controls
 {
     public class BooleanTreeColumn : TreeColumn
     {
@@ -31,14 +31,14 @@ namespace OEA.Module.WPF.Editors
 
         protected override IWPFPropertyEditor CreateEditorCore(PropertyEditorFactory factory)
         {
-            return factory.Create<BooleanPropertyEditor>(this.PropertyInfo);
+            return factory.Create<BooleanPropertyEditor>(this.Meta);
         }
 
         protected override FrameworkElementFactory GenerateDisplayTemplateInCell()
         {
             var cb = new FrameworkElementFactory(typeof(CheckBox));
 
-            cb.SetBinding(CheckBox.IsCheckedProperty, new Binding(this.PropertyInfo.Name));
+            cb.SetBinding(CheckBox.IsCheckedProperty, new Binding(this.Meta.Name));
 
             return cb;
         }

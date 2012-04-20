@@ -20,7 +20,7 @@ using OEA.Module.WPF;
 using System.Windows;
 using System.Diagnostics;
 
-namespace OEA.Module
+namespace OEA.Module.WPF
 {
     /// <summary>
     /// 一个生成的控件结果

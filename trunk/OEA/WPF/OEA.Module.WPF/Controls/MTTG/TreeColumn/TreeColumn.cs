@@ -29,8 +29,9 @@ using System.Windows.Media;
 using System.Windows.Automation.Provider;
 using System.Windows.Threading;
 using OEA.Reflection;
+using OEA.Module.WPF.Editors;
 
-namespace OEA.Module.WPF.Editors
+namespace OEA.Module.WPF.Controls
 {
     /// <summary>
     /// 树型表的列的基类
@@ -44,8 +45,6 @@ namespace OEA.Module.WPF.Editors
         /// </summary>
         private EntityPropertyViewMeta _propertyInfo;
 
-        private PropertyEditorFactory _editorFactory;
-
         #endregion
 
         protected TreeColumn() { }
@@ -53,7 +52,8 @@ namespace OEA.Module.WPF.Editors
         internal void IntializeViewMeta(EntityPropertyViewMeta info, PropertyEditorFactory editorFactory)
         {
             this._propertyInfo = info;
-            this._editorFactory = editorFactory;
+
+            this.Editor = this.CreateEditorCore(editorFactory);
         }
 
         #region Editor
@@ -61,21 +61,16 @@ namespace OEA.Module.WPF.Editors
         /// <summary>
         /// 默认没有Editor
         /// </summary>
-        protected IWPFPropertyEditor Editor { get; private set; }
+        public IWPFPropertyEditor Editor { get; private set; }
 
         protected virtual IWPFPropertyEditor CreateEditorCore(PropertyEditorFactory factory) { return null; }
-
-        protected void CreateNewEditor()
-        {
-            this.Editor = this.CreateEditorCore(this._editorFactory);
-        }
 
         #endregion
 
         /// <summary>
         /// 正在编辑的属性
         /// </summary>
-        public EntityPropertyViewMeta PropertyInfo
+        public EntityPropertyViewMeta Meta
         {
             get { return this._propertyInfo; }
         }
@@ -124,7 +119,7 @@ namespace OEA.Module.WPF.Editors
             if (index < gridColumns.Count)
             {
                 var nextColumn = gridColumns[index] as TreeColumn;
-                var nextCell = cell.Row.Cells.First(c => c.Column == nextColumn);
+                var nextCell = cell.Row.GetCell(nextColumn);
 
                 var success = nextColumn.TryBeginEdit(nextCell, e);
                 if (success)
@@ -160,9 +155,9 @@ namespace OEA.Module.WPF.Editors
         protected virtual bool TryCheckIsReadonly(object dataItem)
         {
             //如果一个树用于多个对象,此方法不适用，需要切换PropertyInfo
-            if (dataItem != null && dataItem.GetType() == this.PropertyInfo.Owner.EntityType)
+            if (dataItem != null && dataItem.GetType() == this.Meta.Owner.EntityType)
             {
-                return PropertyEditorHelper.CheckIsReadonly(dataItem as Entity, this.PropertyInfo);
+                return PropertyEditorHelper.CheckIsReadonly(dataItem as Entity, this.Meta);
             }
 
             return false;
@@ -215,12 +210,7 @@ namespace OEA.Module.WPF.Editors
 
         internal FrameworkElement GenerateEditingElement()
         {
-            //这里 Editor 不可以被重用，所以必须每次都构造一个。
-            this.CreateNewEditor();
-
-            var editingElement = this.GenerateEditingElementCore();
-
-            return editingElement;
+            return this.GenerateEditingElementCore();
         }
 
         protected virtual Binding GenerateBindingFormat(string name, string stringformat)

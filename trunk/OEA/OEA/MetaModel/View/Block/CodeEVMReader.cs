@@ -39,12 +39,6 @@ namespace OEA.MetaModel.View
 
             this.SetDefaultCommands(evm);
 
-            foreach (var config in OEAEnvironment.FindConfigurations(meta.EntityType))
-            {
-                config.View = evm;
-                config.ConfigView();
-            }
-
             return evm;
         }
 

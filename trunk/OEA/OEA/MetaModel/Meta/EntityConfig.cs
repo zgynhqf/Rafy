@@ -41,6 +41,14 @@ namespace OEA.MetaModel
         /// </summary>
         protected internal abstract Type EntityType { get; }
 
+        /// <summary>
+        /// 如果是扩展视图，需要重写这个属性。
+        /// </summary>
+        internal protected virtual string ExtendView
+        {
+            get { return null; }
+        }
+
         private EntityMeta _meta;
 
         private EntityViewMeta _view;
@@ -69,7 +77,7 @@ namespace OEA.MetaModel
                 if (this._view == null)
                 {
                     //只获取 代码视图
-                    this._view = UIModel.Views.CreateDefaultView(this.EntityType, null);
+                    this._view = UIModel.Views.Create(this.EntityType, this.ExtendView, null);
                 }
 
                 return this._view;

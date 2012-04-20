@@ -21,9 +21,9 @@ using System.Windows.Data;
 using OEA.Editors;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
-using OEA.Module.WPF.Controls;
+using OEA.Module.WPF.Editors;
 
-namespace OEA.Module.WPF.Editors
+namespace OEA.Module.WPF.Controls
 {
     /// <summary>
     /// 下拉列
@@ -34,7 +34,7 @@ namespace OEA.Module.WPF.Editors
 
         protected override IWPFPropertyEditor CreateEditorCore(PropertyEditorFactory factory)
         {
-            return factory.Create<LookupListPropertyEditor>(this.PropertyInfo);
+            return factory.Create<LookupListPropertyEditor>(this.Meta);
         }
 
         protected override FrameworkElement GenerateEditingElementCore()
@@ -49,13 +49,13 @@ namespace OEA.Module.WPF.Editors
 
         protected override FrameworkElementFactory GenerateDisplayTemplateInCell()
         {
-            var refInfo = this.PropertyInfo.ReferenceViewInfo;
+            var refInfo = this.Meta.ReferenceViewInfo;
 
             //如果是可输入下拉列表,非编辑状态下是绑定到自身属性上
             if (!string.IsNullOrEmpty(refInfo.RefEntityProperty))
             {
                 var textBlock = new FrameworkElementFactory(typeof(TextBlock));
-                var binding = new Binding(this.PropertyInfo.BindingPath());
+                var binding = new Binding(this.Meta.BindingPath());
                 textBlock.SetBinding(TextBlock.TextProperty, binding);
                 return textBlock;
             }

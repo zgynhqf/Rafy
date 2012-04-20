@@ -9,6 +9,38 @@
  * 
 *******************************************************/
 
+2.10.569.0
+    添加接口
+        * 支持定义 ExtendViewConfig（实体扩展视图配置）。
+    示例
+        * JXC
+            * 采购订单入库界面的商品单价是不能被修改的-ExtendView 实现。
+
+2.10.568.0
+    添加接口
+        * TreeGrid 支持 GetRow、GridTreeViewRow 支持 GetCell 方法。
+    内部修改
+        * ShowWindow 默认大小根据屏幕分辨率变化。
+    重构
+        * MTTGCell 把自己加入到 Row 中的时机从 Loaded 事件转移到 OnVisualParentChanged 事件中。
+        * 重命名 GetRow 到 FindRow。
+    示例
+        * JXC
+            * 添加 ProductRefItem 基类，提供代码重用。
+            * 入库模块，选择商品后，直接定位到数量上。
+            * 选择商品使用商品管理界面。
+
+2.10.565.0
+    ★重要改动
+        * TreeColumn 中的 Editor 不需要每次都生成，在开始时生成就行了。
+            （原来每次都重新生成是因为，MTTG 要支持同时绑定不同的实体，而同一列可能需要为不同的属性生成不同的编辑器。）
+        * StringTreeColumn 在 LostFocus 时不需要主动提交更改。
+    重构、★修改接口
+        * 重命名。
+    示例
+        * JXC
+            * 采购订单入库界面的商品单价是不能被修改的 - ListObjectView 实现。
+
 2.10.564.0
     示例
         * JXC
@@ -98,7 +130,6 @@
         * 为了更方便调试，ClientCommand 在调试状态下不应该截取异常。
     添加接口
         * 添加 UseWPFCommands(object[]) 方法，更方便设置。
-    添加接口
         * ViewDataLoader 添加 ReloadDataAsync(callback) 方法。
     BUG修复
         * LookupSelectAddCommand 中弹出的框应该是只读的。

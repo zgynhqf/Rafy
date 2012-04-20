@@ -174,7 +174,12 @@ namespace OEA.Module.WPF.Editors
         #region IsReadOnly
 
         /// <summary>
-        /// 在表格控件及树型列表控件中，已经对 IsReadonly 进行了控制，如果只读就不生成编辑控件。
+        /// 控制已经生成好的编辑控件的是否只读。
+        /// 
+        /// 注意，这里是对生成好的编辑控件的只读性进行设置，不能控制是否生成编辑控件。
+        /// 
+        /// 场景：
+        /// 在树型表格控件中，已经对 IsReadonly 进行了控制，如果只读就不生成编辑控件。
         /// 这里的 IsReadonly 主要是用于控制在详细编辑面板中的属性编辑器只读状态。
         /// </summary>
         public override bool IsReadonly

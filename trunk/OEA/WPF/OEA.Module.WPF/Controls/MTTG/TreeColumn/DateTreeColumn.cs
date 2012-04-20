@@ -11,8 +11,9 @@
 *******************************************************/
 
 using System.Windows.Data;
+using OEA.Module.WPF.Editors;
 
-namespace OEA.Module.WPF.Editors
+namespace OEA.Module.WPF.Controls
 {
     public class DateTreeColumn : TreeColumn
     {
@@ -28,7 +29,7 @@ namespace OEA.Module.WPF.Editors
 
         protected override IWPFPropertyEditor CreateEditorCore(PropertyEditorFactory factory)
         {
-            return factory.Create<DatePropertyEditor>(this.PropertyInfo);
+            return factory.Create<DatePropertyEditor>(this.Meta);
         }
     }
 }

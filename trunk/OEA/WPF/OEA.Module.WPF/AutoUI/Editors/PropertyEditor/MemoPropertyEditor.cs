@@ -116,7 +116,7 @@ namespace OEA.Module.WPF.Editors
                 }
             });
 
-            if (result == WindowButton.Yes && !IsReadonly)
+            if (result == WindowButton.Yes && !this.IsReadonly)
             {
                 PropertyValue = edtInfo.Text;
             }

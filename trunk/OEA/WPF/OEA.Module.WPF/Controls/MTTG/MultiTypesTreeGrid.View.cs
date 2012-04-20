@@ -54,7 +54,7 @@ namespace OEA.Module.WPF.Controls
             if (treeColumn == null) return;
 
             //如果是一些没有属性列（例如“选择”列），不需要执行排序。
-            var property = treeColumn.PropertyInfo;
+            var property = treeColumn.Meta;
             if (property == null) return;
 
             if (this._lastSortColumn != treeColumn)
@@ -68,7 +68,7 @@ namespace OEA.Module.WPF.Controls
 
             //motv.NodeSortDescriptions 中的属性必须加上 Header.
             //详见：http://www.codeproject.com/KB/WPF/versatile_treeview.aspx#sorting
-            var sort = new SortDescription(treeColumn.PropertyInfo.Name, this._ascending ? ListSortDirection.Ascending : ListSortDirection.Descending);
+            var sort = new SortDescription(treeColumn.Meta.Name, this._ascending ? ListSortDirection.Ascending : ListSortDirection.Descending);
             this.NodeSortDescriptions = new SortDescription[] { sort };
 
             this._lastSortColumn = treeColumn;

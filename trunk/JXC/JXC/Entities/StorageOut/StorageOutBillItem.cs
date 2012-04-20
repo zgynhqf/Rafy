@@ -12,7 +12,7 @@ using System.ComponentModel;
 namespace JXC
 {
     [ChildEntity, Serializable]
-    public class StorageOutBillItem : JXCEntity
+    public class StorageOutBillItem : ProductRefItem
     {
         public static readonly RefProperty<StorageOutBill> StorageOutBillRefProperty =
             P<StorageOutBillItem>.RegisterRef(e => e.StorageOutBill, ReferenceType.Parent);
@@ -27,82 +27,18 @@ namespace JXC
             set { this.SetRefEntity(StorageOutBillRefProperty, value); }
         }
 
-        public static readonly RefProperty<Product> ProductRefProperty =
-            P<StorageOutBillItem>.RegisterRef(e => e.Product, ReferenceType.Normal);
-        public int ProductId
+        protected override void OnAmountChanged(ManagedPropertyChangedEventArgs<int> e)
         {
-            get { return this.GetRefId(ProductRefProperty); }
-            set { this.SetRefId(ProductRefProperty, value); }
-        }
-        public Product Product
-        {
-            get { return this.GetRefEntity(ProductRefProperty); }
-            set { this.SetRefEntity(ProductRefProperty, value); }
-        }
+            base.OnAmountChanged(e);
 
-        public static readonly Property<int> AmountProperty = P<StorageOutBillItem>.Register(e => e.Amount, new PropertyMetadata<int>
-        {
-            PropertyChangedCallBack = (o, e) => (o as StorageOutBillItem).OnAmountChanged(e)
-        });
-        public int Amount
-        {
-            get { return this.GetProperty(AmountProperty); }
-            set { this.SetProperty(AmountProperty, value); }
-        }
-        protected virtual void OnAmountChanged(ManagedPropertyChangedEventArgs<int> e)
-        {
             this.RaiseRoutedEvent(PriceChangedEvent, e);
         }
 
         public static readonly EntityRoutedEvent PriceChangedEvent = EntityRoutedEvent.Register(EntityRoutedEventType.BubbleToParent);
-
-        #region 视图属性
-
-        public static readonly Property<string> View_ProductNameProperty = P<StorageOutBillItem>.RegisterReadOnly(e => e.View_ProductName, e => (e as StorageOutBillItem).GetView_ProductName(), null);
-        public string View_ProductName
-        {
-            get { return this.GetProperty(View_ProductNameProperty); }
-        }
-        private string GetView_ProductName()
-        {
-            return this.Product.MingCheng;
-        }
-
-        public static readonly Property<string> View_ProductCategoryNameProperty = P<StorageOutBillItem>.RegisterReadOnly(e => e.View_ProductCategoryName, e => (e as StorageOutBillItem).GetView_ProductCategoryName(), null);
-        public string View_ProductCategoryName
-        {
-            get { return this.GetProperty(View_ProductCategoryNameProperty); }
-        }
-        private string GetView_ProductCategoryName()
-        {
-            return this.Product.ProductCategory.Name;
-        }
-
-        public static readonly Property<string> View_SpecificationProperty = P<StorageOutBillItem>.RegisterReadOnly(e => e.View_Specification, e => (e as StorageOutBillItem).GetView_Specification(), null);
-        public string View_Specification
-        {
-            get { return this.GetProperty(View_SpecificationProperty); }
-        }
-        private string GetView_Specification()
-        {
-            return this.Product.GuiGe;
-        }
-
-        #endregion
     }
 
     [Serializable]
-    public class StorageOutBillItemList : JXCEntityList
-    {
-        public static readonly EntityRoutedEvent ListChangedEvent = EntityRoutedEvent.Register(EntityRoutedEventType.BubbleToParent);
-
-        protected override void OnListChanged(ListChangedEventArgs e)
-        {
-            base.OnListChanged(e);
-
-            this.RaiseRoutedEvent(ListChangedEvent, e);
-        }
-    }
+    public class StorageOutBillItemList : ProductRefItemList { }
 
     public class StorageOutBillItemRepository : EntityRepository
     {

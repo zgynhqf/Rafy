@@ -219,13 +219,14 @@ namespace OEA.Module.WPF
 
                 view.RemoveFromParent();
 
+                var screenSize = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea;
                 var dialog = new ViewDialog()
                 {
                     InnerContent = view,
                     MinWidth = 400,
                     MinHeight = 200,
-                    Width = 800,
-                    Height = 600,
+                    Width = screenSize.Width * 0.7,
+                    Height = screenSize.Height * 0.7,
                     WindowStartupLocation = WindowStartupLocation.CenterScreen
                 };
 
