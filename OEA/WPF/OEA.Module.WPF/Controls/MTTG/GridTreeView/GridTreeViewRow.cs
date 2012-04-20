@@ -73,17 +73,34 @@ namespace OEA.Module.WPF.Controls
 
         private List<MTTGCell> _cells = new List<MTTGCell>();
 
-        internal IList<MTTGCell> Cells
-        {
-            get { return this._cells; }
-        }
-
         internal void AddCell(MTTGCell cell)
         {
             if (!this._cells.Contains(cell))
             {
                 this._cells.Add(cell);
             }
+        }
+
+        /// <summary>
+        /// 找到该行中的某一个单元格
+        /// </summary>
+        /// <param name="column"></param>
+        /// <returns></returns>
+        public MTTGCell FindCell(TreeColumn column)
+        {
+            return this._cells.Find(c => c.Column == column);
+        }
+
+        /// <summary>
+        /// 获取该行中的某一个单元格，没有找到，则抛出异常。
+        /// </summary>
+        /// <param name="column"></param>
+        /// <returns></returns>
+        public MTTGCell GetCell(TreeColumn column)
+        {
+            var cell = this._cells.Find(c => c.Column == column);
+            if (cell == null) throw new InvalidOperationException("当前行还没有加载完成，目前无法找到对应的单元格。");
+            return cell;
         }
 
         #endregion

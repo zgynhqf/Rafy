@@ -12,7 +12,7 @@ using System.ComponentModel;
 namespace JXC
 {
     [ChildEntity, Serializable]
-    public class StorageInBillItem : JXCEntity
+    public class StorageInBillItem : ProductRefItem
     {
         public static readonly RefProperty<StorageInBill> StorageInBillRefProperty =
             P<StorageInBillItem>.RegisterRef(e => e.StorageInBill, ReferenceType.Parent);
@@ -27,26 +27,6 @@ namespace JXC
             set { this.SetRefEntity(StorageInBillRefProperty, value); }
         }
 
-        public static readonly RefProperty<Product> ProductRefProperty =
-            P<StorageInBillItem>.RegisterRef(e => e.Product, ReferenceType.Normal);
-        public int ProductId
-        {
-            get { return this.GetRefId(ProductRefProperty); }
-            set { this.SetRefId(ProductRefProperty, value); }
-        }
-        public Product Product
-        {
-            get { return this.GetRefEntity(ProductRefProperty); }
-            set { this.SetRefEntity(ProductRefProperty, value); }
-        }
-
-        public static readonly Property<int> AmountProperty = P<StorageInBillItem>.Register(e => e.Amount);
-        public int Amount
-        {
-            get { return this.GetProperty(AmountProperty); }
-            set { this.SetProperty(AmountProperty, value); }
-        }
-
         public static readonly Property<double> UnitPriceProperty = P<StorageInBillItem>.Register(e => e.UnitPrice);
         public double UnitPrice
         {
@@ -55,36 +35,6 @@ namespace JXC
         }
 
         #region 视图属性
-
-        public static readonly Property<string> View_ProductNameProperty = P<StorageInBillItem>.RegisterReadOnly(e => e.View_ProductName, e => (e as StorageInBillItem).GetView_ProductName(), null);
-        public string View_ProductName
-        {
-            get { return this.GetProperty(View_ProductNameProperty); }
-        }
-        private string GetView_ProductName()
-        {
-            return this.Product.MingCheng;
-        }
-
-        public static readonly Property<string> View_ProductCategoryNameProperty = P<StorageInBillItem>.RegisterReadOnly(e => e.View_ProductCategoryName, e => (e as StorageInBillItem).GetView_ProductCategoryName(), null);
-        public string View_ProductCategoryName
-        {
-            get { return this.GetProperty(View_ProductCategoryNameProperty); }
-        }
-        private string GetView_ProductCategoryName()
-        {
-            return this.Product.ProductCategory.Name;
-        }
-
-        public static readonly Property<string> View_SpecificationProperty = P<StorageInBillItem>.RegisterReadOnly(e => e.View_Specification, e => (e as StorageInBillItem).GetView_Specification(), null);
-        public string View_Specification
-        {
-            get { return this.GetProperty(View_SpecificationProperty); }
-        }
-        private string GetView_Specification()
-        {
-            return this.Product.GuiGe;
-        }
 
         public static readonly Property<double> View_TotalPriceProperty =
             P<StorageInBillItem>.RegisterReadOnly(e => e.View_TotalPrice, e => (e as StorageInBillItem).GetView_TotalPrice(), null,
@@ -115,17 +65,7 @@ namespace JXC
     }
 
     [Serializable]
-    public class StorageInBillItemList : JXCEntityList
-    {
-        public static readonly EntityRoutedEvent ListChangedEvent = EntityRoutedEvent.Register(EntityRoutedEventType.BubbleToParent);
-
-        protected override void OnListChanged(ListChangedEventArgs e)
-        {
-            base.OnListChanged(e);
-
-            this.RaiseRoutedEvent(ListChangedEvent, e);
-        }
-    }
+    public class StorageInBillItemList : ProductRefItemList { }
 
     public class StorageInBillItemRepository : EntityRepository
     {

@@ -52,6 +52,7 @@
     <Compile Include="Entities\BasicData\ProductNavigationCriteria.cs" />
     <Compile Include="Entities\BasicData\Storage.cs" />
     <Compile Include="Entities\BasicData\Unit.cs" />
+    <Compile Include="Entities\ProductRefItem.cs" />
     <Compile Include="Entities\Purchase\PurchaseOrder.cs" />
     <Compile Include="Entities\ClientTimeSpanCriteria.cs" />
     <Compile Include="Entities\Purchase\PurchaseOrderItem.cs" />

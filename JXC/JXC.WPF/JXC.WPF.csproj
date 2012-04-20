@@ -44,14 +44,13 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\SelectProductCommand.cs" />
     <Compile Include="Modues\Product\ProductModule.cs" />
     <Compile Include="Modues\Product\ProductNavigationCommands.cs" />
-    <Compile Include="Modues\Purchase\Commands\AddPurchaseOrderItem.cs" />
-    <Compile Include="Modues\Purchase\Commands\CompletePurchaseOrder.cs" />
+    <Compile Include="Modues\Purchase\Commands\PurchaseOrderItemCommands.cs" />
     <Compile Include="Modues\Storage\Commands\StorageOutItemCommands.cs" />
     <Compile Include="Modues\Purchase\Commands\OrderStorageInBillCommands.cs" />
-    <Compile Include="Modues\Purchase\Commands\DeletePurchaseOrder.cs" />
-    <Compile Include="Modues\Purchase\Commands\AddPurchaseOrder.cs" />
+    <Compile Include="Modues\Purchase\Commands\PurchaseOrderCommands.cs" />
     <Compile Include="Modues\Purchase\Commands\StorageInItemCommands.cs" />
     <Compile Include="Modues\Storage\Commands\OtherStorageOutBillCommands.cs" />
     <Compile Include="Modues\Storage\Commands\OtherStorageInBillCommands.cs" />

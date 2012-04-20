@@ -21,8 +21,9 @@ using System.Windows.Data;
 using OEA.Editors;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
+using OEA.Module.WPF.Editors;
 
-namespace OEA.Module.WPF.Editors
+namespace OEA.Module.WPF.Controls
 {
     public class MemoTreeColumn : TreeColumn
     {
@@ -30,7 +31,7 @@ namespace OEA.Module.WPF.Editors
 
         protected override IWPFPropertyEditor CreateEditorCore(PropertyEditorFactory factory)
         {
-            return factory.Create<MemoPropertyEditor>(this.PropertyInfo);
+            return factory.Create<MemoPropertyEditor>(this.Meta);
         }
 
         /// <summary>

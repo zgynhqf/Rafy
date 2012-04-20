@@ -260,16 +260,8 @@ namespace OEA
             {
                 res.OutputBlockConfigKey.Type = BlockConfigType.Customization;
 
-                //CustomizeDefaultView
-                if (string.IsNullOrEmpty(viewId.ViewName))
-                {
-                    res.InputView = UIModel.Views.CreateDefaultView(viewId.EntityType, BlockConfigType.Config);
-                }
-                //CustomizeExtendView
-                else
-                {
-                    res.InputView = UIModel.Views.CreateExtendView(viewId.EntityType, viewId.ViewName, BlockConfigType.Config);
-                }
+                //CustomizeDefaultView，CustomizeExtendView
+                res.InputView = UIModel.Views.Create(viewId.EntityType, viewId.ViewName, BlockConfigType.Config);
 
                 ////CustomizeDefaultView
                 //if (extendViewId == null)
@@ -347,14 +339,7 @@ namespace OEA
             var viewId = TryGetViewUniqueId(parentId);
             if (viewId != null)
             {
-                if (!string.IsNullOrEmpty(viewId.ViewName))
-                {
-                    evm = UIModel.Views.CreateExtendView(viewId.EntityType, viewId.ViewName, dest);
-                }
-                else
-                {
-                    evm = UIModel.Views.CreateDefaultView(viewId.EntityType, dest);
-                }
+                evm = UIModel.Views.Create(viewId.EntityType, viewId.ViewName, dest);
             }
             //else
             //{
@@ -390,15 +375,7 @@ namespace OEA
             var viewName = criteria.ViewName;
             Type entityType = ClientEntityConverter.ToClientType(criteria.EntityType);
 
-            EntityViewMeta evm = null;
-            if (string.IsNullOrEmpty(viewName))
-            {
-                evm = UIModel.Views.CreateDefaultView(entityType);
-            }
-            else
-            {
-                evm = UIModel.Views.CreateExtendView(entityType, viewName);
-            }
+            var evm = UIModel.Views.Create(entityType, viewName);
 
             var m = this.AddNew().CastTo<ViewConfigurationModel>();
             m.Read(evm);

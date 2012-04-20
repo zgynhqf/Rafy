@@ -209,7 +209,7 @@ namespace OEA.Module.WPF.Controls
                 }
 
                 var lastOne = this._selectedItems[this._selectedItems.Count - 1];
-                this._shiftStartItem = this.GetRow(lastOne);
+                this._shiftStartItem = this.FindRow(lastOne);
             }
             else
             {
@@ -223,7 +223,7 @@ namespace OEA.Module.WPF.Controls
             //这时，需要考虑多选、勾选，并同步到 IsMultiSelected 值上。
             if (!IsCtrlPressed() && !IsShiftPressed())
             {
-                var oldRow = this.GetRow(e.OldItem);
+                var oldRow = this.FindRow(e.OldItem);
                 if (oldRow != null)
                 {
                     this.SelectRow(oldRow, false);
@@ -232,7 +232,7 @@ namespace OEA.Module.WPF.Controls
 
             if (e.NewItem != null)
             {
-                var newRow = this.GetRow(e.NewItem);
+                var newRow = this.FindRow(e.NewItem);
                 if (newRow != null)
                 {
                     //如果没有按住 Ctrl，并且在 CheckRow 的模式下，则清空的选择项。
@@ -323,7 +323,7 @@ namespace OEA.Module.WPF.Controls
 
                 while (parent != null)
                 {
-                    var parentRow = this.GetRow(parent);
+                    var parentRow = this.FindRow(parent);
                     if (parentRow == null || parentRow.IsMultiSelected) { break; }
 
                     this.SelectRow(parentRow, true);
@@ -355,7 +355,7 @@ namespace OEA.Module.WPF.Controls
             {
                 foreach (var child in children)
                 {
-                    var childRow = this.GetRow(child);
+                    var childRow = this.FindRow(child);
 
                     //如果该孩子对象对应的行已经生成，则直接选择。
                     if (childRow != null)
@@ -419,7 +419,7 @@ namespace OEA.Module.WPF.Controls
             {
                 this._selectedItems.Add(entity);
 
-                var row = this.GetRow(entity);
+                var row = this.FindRow(entity);
                 if (row != null) this.SelectRow(row, true);
             }
         }
@@ -437,7 +437,7 @@ namespace OEA.Module.WPF.Controls
             {
                 var item = this._selectedItems[i];
 
-                var viewItem = this.GetRow(item);
+                var viewItem = this.FindRow(item);
                 if (viewItem != null)
                 {
                     this.SelectRow(viewItem, false);
@@ -591,7 +591,7 @@ namespace OEA.Module.WPF.Controls
 
             private bool TryDeselectEntity(Entity item)
             {
-                var row = this._owner.GetRow(item);
+                var row = this._owner.FindRow(item);
 
                 if (row != null) { this._owner.SelectRow(row, false); }
 

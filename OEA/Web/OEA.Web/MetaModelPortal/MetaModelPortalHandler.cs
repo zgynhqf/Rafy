@@ -63,16 +63,7 @@ namespace OEA.Web
             }
             else
             {
-                EntityViewMeta evm = null;
-
-                if (!string.IsNullOrEmpty(op.viewName))
-                {
-                    evm = UIModel.Views.CreateExtendView(type.EntityType, op.viewName);
-                }
-                else
-                {
-                    evm = UIModel.Views.CreateDefaultView(type.EntityType);
-                }
+                var evm = UIModel.Views.Create(type.EntityType, op.viewName);
 
                 jsonResult = converter.ConvertToClientMeta(evm);
             }

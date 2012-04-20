@@ -18,9 +18,9 @@ using OEA.MetaModel.View;
 using System.Windows.Controls;
 using OEA.Module.WPF.Controls;
 using System.Windows;
+using OEA.Module.WPF.Editors;
 
-
-namespace OEA.Module.WPF.Editors
+namespace OEA.Module.WPF
 {
     /// <summary>
     /// 类似GridColumnsFactory

@@ -28,19 +28,20 @@ using OEA.Module.WPF.Command;
 namespace JXC.Commands
 {
     [Command(Label = "选择商品", GroupType = CommandGroupType.Edit)]
-    public class AddPurchaseOrderItem : LookupSelectAddCommand
+    public class AddPurchaseOrderItem : SelectProductCommand
     {
         public AddPurchaseOrderItem()
         {
-            this.TargetEntityType = typeof(Product);
             this.RefProperty = PurchaseOrderItem.ProductRefProperty;
         }
 
-        protected override void OnAdded(Entity newEntity)
+        protected override Entity AddSelection(ListObjectView view, Entity src)
         {
-            base.OnAdded(newEntity);
+            var e = base.AddSelection(view, src);
 
-            (newEntity as PurchaseOrderItem).Amount = 1;
+            (e as PurchaseOrderItem).Amount = 1;
+
+            return e;
         }
     }
 }

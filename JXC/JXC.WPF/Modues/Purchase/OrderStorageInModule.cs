@@ -31,7 +31,6 @@ namespace JXC.WPF
             base.OnItemCreated(entity);
 
             var code = RF.Concreate<AutoCodeInfoRepository>().GetOrCreateAutoCode<OrderStorageInBill>();
-
             var p = entity as OrderStorageInBill;
             p.Code = code;
         }

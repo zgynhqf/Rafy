@@ -27,8 +27,6 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-
-
 using Hardcodet.Wpf.GenericTreeView;
 using OEA.Library;
 using OEA.MetaModel;
@@ -119,7 +117,7 @@ namespace OEA.Module.WPF.Controls
             this.EnsureNodeIsVisible(node);
 
             //如果对象不在Items里面，则return
-            var curItem = this.GetRow(node);
+            var curItem = this.FindRow(node);
             if (curItem != null)
             {
                 curItem.IsExpanded = true;
@@ -145,7 +143,7 @@ namespace OEA.Module.WPF.Controls
             this.EnsureNodeIsVisible(node);
 
             //如果对象不在Items里面，则return
-            var curItem = this.GetRow(node);
+            var curItem = this.FindRow(node);
             if (curItem != null)
             {
                 if (recur)
@@ -174,7 +172,7 @@ namespace OEA.Module.WPF.Controls
                 this.Expand(node, false);
 
                 //如果对象不在Items里面，则return
-                var curItem = this.GetRow(node);
+                var curItem = this.FindRow(node);
                 if (curItem != null)
                 {
                     foreach (GridTreeViewRow item in curItem.Items)

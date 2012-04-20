@@ -32,6 +32,16 @@ namespace RBAC
             this.TargetEntityType = typeof(User);
             this.RefProperty = OrgPositionUser.UserRefProperty;
         }
+
+        protected override WindowButton PopupSelectionWindow(ControlResult ui)
+        {
+            return App.Windows.ShowDialog(ui.Control, w =>
+            {
+                w.Title = this.CommandInfo.Label;
+                w.Width = 600;
+                w.Height = 300;
+            });
+        }
     }
 
     [Command(Label = "选择岗位")]
@@ -41,6 +51,16 @@ namespace RBAC
         {
             this.TargetEntityType = typeof(Position);
             this.RefProperty = OrgPosition.PositionRefProperty;
+        }
+
+        protected override WindowButton PopupSelectionWindow(ControlResult ui)
+        {
+            return App.Windows.ShowDialog(ui.Control, w =>
+            {
+                w.Title = this.CommandInfo.Label;
+                w.Width = 600;
+                w.Height = 300;
+            });
         }
     }
 }

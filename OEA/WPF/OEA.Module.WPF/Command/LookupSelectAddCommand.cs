@@ -48,21 +48,13 @@ namespace OEA.Module.WPF.Command
             if (this.TargetEntityType == null) throw new ArgumentNullException("this.TargetEntityType");
             if (this.RefProperty == null) throw new ArgumentNullException("this.RefProperty");
 
-            var listView = AutoUI.ViewFactory.CreateListObjectView(this.TargetEntityType);
-            listView.IsReadOnly = true;
-            listView.DataLoader.LoadDataAsync();
+            var ui = this.GenerateSelectionUI();
 
-            var result = App.Windows.ShowDialog(listView.Control, w =>
-            {
-                w.ResizeMode = ResizeMode.CanResize;
-                w.Title = this.CommandInfo.Label;
-                w.Width = 600;
-                w.Height = 300;
-            });
+            var result = this.PopupSelectionWindow(ui);
 
             if (result == WindowButton.Yes)
             {
-                foreach (var src in listView.SelectedEntities)
+                foreach (var src in ui.MainView.GetSelectedEntities())
                 {
                     //如果已经存在，则退出
                     bool eixst = false;
@@ -77,17 +69,60 @@ namespace OEA.Module.WPF.Command
                     }
                     if (eixst) continue;
 
-                    //把选中对象赋值到新增对象的引用属性上
-                    var newEntity = view.AddNew(false);
-                    newEntity.GetLazyRef(this.RefProperty).Entity = src;
-
-                    this.OnAdded(newEntity);
+                    this.AddSelection(view, src);
                 }
 
-                view.RefreshControl();
+                this.Complete(view);
             }
         }
 
-        protected virtual void OnAdded(Entity newEntity) { }
+        /// <summary>
+        /// 通过实体类生成选择界面。
+        /// 重写时注意，这个界面的主块应该是一个列表视图
+        /// </summary>
+        /// <returns></returns>
+        protected virtual ControlResult GenerateSelectionUI()
+        {
+            var listView = AutoUI.ViewFactory.CreateListObjectView(this.TargetEntityType);
+            listView.IsReadOnly = true;
+            listView.DataLoader.LoadDataAsync();
+            return listView;
+        }
+
+        /// <summary>
+        /// 子类重写此方法实现自己的弹窝逻辑。
+        /// </summary>
+        /// <param name="ui"></param>
+        /// <returns></returns>
+        protected virtual WindowButton PopupSelectionWindow(ControlResult ui)
+        {
+            return App.Windows.ShowDialog(ui.Control, w =>
+            {
+                w.Title = this.CommandInfo.Label;
+            });
+        }
+
+        /// <summary>
+        /// 为被选择的对象添加一个引用实体属性值
+        /// </summary>
+        /// <param name="view"></param>
+        /// <param name="selected"></param>
+        /// <returns></returns>
+        protected virtual Entity AddSelection(ListObjectView view, Entity selected)
+        {
+            //把选中对象赋值到新增对象的引用属性上
+            var newEntity = view.AddNew(false);
+            newEntity.GetLazyRef(this.RefProperty).Entity = selected;
+            return newEntity;
+        }
+
+        /// <summary>
+        /// 最后完成本次选择。
+        /// </summary>
+        /// <param name="view"></param>
+        protected virtual void Complete(ListObjectView view)
+        {
+            view.RefreshControl();
+        }
     }
 }

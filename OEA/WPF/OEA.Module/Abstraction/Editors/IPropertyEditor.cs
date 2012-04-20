@@ -18,7 +18,7 @@ namespace OEA
         /// <summary>
         /// 这个属性是否是只读的
         /// </summary>
-        bool IsReadonly { get; }
+        bool IsReadonly { get; set; }
 
         /// <summary>
         /// 当前的LabelControl

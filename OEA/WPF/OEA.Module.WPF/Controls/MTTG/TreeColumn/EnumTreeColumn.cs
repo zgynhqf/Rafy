@@ -18,15 +18,14 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-
 using OEA.Editors;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
 using OEA.Module.WPF.Converter;
-
 using OEA.Utils;
+using OEA.Module.WPF.Editors;
 
-namespace OEA.Module.WPF.Editors
+namespace OEA.Module.WPF.Controls
 {
     public class EnumTreeColumn : TreeColumn
     {
@@ -34,7 +33,7 @@ namespace OEA.Module.WPF.Editors
 
         protected override IWPFPropertyEditor CreateEditorCore(PropertyEditorFactory factory)
         {
-            return factory.Create<EnumPropertyEditor>(this.PropertyInfo);
+            return factory.Create<EnumPropertyEditor>(this.Meta);
         }
 
         protected override FrameworkElement GenerateEditingElementCore()
@@ -50,7 +49,7 @@ namespace OEA.Module.WPF.Editors
         protected override FrameworkElementFactory GenerateDisplayTemplateInCell()
         {
             var textBlock = new FrameworkElementFactory(typeof(TextBlock));
-            Binding textBinding = new Binding(this.PropertyInfo.Name);
+            Binding textBinding = new Binding(this.Meta.Name);
             textBinding.Converter = new EnumConverter();
             textBlock.SetValue(TextBlock.TextProperty, textBinding);
             return textBlock;

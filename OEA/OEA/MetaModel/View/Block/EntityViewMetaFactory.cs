@@ -45,14 +45,14 @@ namespace OEA.MetaModel.View
         /// <param name="entityType"></param>
         /// <param name="extendViewName"></param>
         /// <returns></returns>
-        public EntityViewMeta Create(Type entityType, string extendViewName = null)
+        public EntityViewMeta Create(Type entityType, string extendViewName = null, BlockConfigType? destination = BlockConfigType.Customization)
         {
             if (string.IsNullOrEmpty(extendViewName))
             {
-                return this.CreateDefaultView(entityType);
+                return this.CreateDefaultView(entityType, destination);
             }
 
-            return this.CreateExtendView(entityType, extendViewName);
+            return this.CreateExtendView(entityType, extendViewName, destination);
         }
 
         /// <summary>
@@ -76,6 +76,13 @@ namespace OEA.MetaModel.View
             var meta = CommonModel.Entities.Get(entityType);
 
             var raw = this._codeReader.Read(meta);
+
+            //使用配置对象进行配置
+            foreach (var config in OEAEnvironment.FindConfigurations(entityType))
+            {
+                config.View = raw;
+                config.ConfigView();
+            }
 
             if (destination != null)
             {
@@ -111,33 +118,43 @@ namespace OEA.MetaModel.View
         /// <param name="extendViewName"></param>
         /// <param name="destination"></param>
         /// <returns></returns>
-        public EntityViewMeta CreateExtendView(Type entityType, string extendViewName, BlockConfigType destination = BlockConfigType.Customization)
+        public EntityViewMeta CreateExtendView(Type entityType, string extendViewName, BlockConfigType? destination = BlockConfigType.Customization)
         {
             var raw = this.CreateDefaultViewCore(entityType, destination);
 
-            //Config
-            var key = new BlockConfigKey
+            //使用扩展视图配置对象进行配置
+            foreach (var config in OEAEnvironment.FindConfigurations(entityType, extendViewName))
             {
-                EntityType = entityType,
-                ExtendView = extendViewName,
-                Type = BlockConfigType.Config
-            };
+                config.View = raw;
+                config.ConfigView();
+            }
 
-            var blockCfg = this._xmlCfgMgr.GetBlockConfig(key);
-            if (blockCfg != null) { blockCfg.Config(raw); }
-
-            //Customization
-            if (destination == BlockConfigType.Customization)
+            if (destination != null)
             {
-                key = new BlockConfigKey
+                //Config
+                var key = new BlockConfigKey
                 {
                     EntityType = entityType,
                     ExtendView = extendViewName,
-                    Type = BlockConfigType.Customization
+                    Type = BlockConfigType.Config
                 };
 
-                blockCfg = this._xmlCfgMgr.GetBlockConfig(key);
+                var blockCfg = this._xmlCfgMgr.GetBlockConfig(key);
                 if (blockCfg != null) { blockCfg.Config(raw); }
+
+                //Customization
+                if (destination == BlockConfigType.Customization)
+                {
+                    key = new BlockConfigKey
+                    {
+                        EntityType = entityType,
+                        ExtendView = extendViewName,
+                        Type = BlockConfigType.Customization
+                    };
+
+                    blockCfg = this._xmlCfgMgr.GetBlockConfig(key);
+                    if (blockCfg != null) { blockCfg.Config(raw); }
+                }
             }
 
             raw.ExtendView = extendViewName;

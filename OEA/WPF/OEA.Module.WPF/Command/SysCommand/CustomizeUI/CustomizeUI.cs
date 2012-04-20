@@ -36,7 +36,6 @@ namespace OEA.WPF.Command
             App.Windows.ShowWindow(ui.Control, w =>
             {
                 w.Title = "定制" + view.Meta.Label;
-                w.Width = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Width * 0.8;
                 w.WindowClosedByUser += (o, e) =>
                 {
                     if (e.Button == WindowButton.Yes)
