@@ -15,7 +15,7 @@ using OEA.Module;
 using OEA.Module.WPF;
 using OEA.Module.WPF.Layout;
 
-namespace JXC
+namespace JXC.WPF
 {
     /// <summary>
     /// 使用上下布局来摆放条件面板和主体

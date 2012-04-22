@@ -15,11 +15,11 @@ using System.Windows.Shapes;
 namespace Demo.WPF
 {
     /// <summary>
-    /// Interaction logic for BookDetailPanel.xaml
+    /// Interaction logic for BookForm.xaml
     /// </summary>
-    public partial class BookDetailPanel : UserControl
+    public partial class BookForm : UserControl
     {
-        public BookDetailPanel()
+        public BookForm()
         {
             InitializeComponent();
         }

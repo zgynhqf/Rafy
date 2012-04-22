@@ -17,7 +17,6 @@ using System.Linq;
 using System.Text;
 using OEA.MetaModel.View;
 using OEA.Module.WPF;
-using JXC.WPF.Layouts;
 
 namespace JXC.WPF.Templates
 {

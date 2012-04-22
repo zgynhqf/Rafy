@@ -26,20 +26,6 @@ namespace OEA.MetaModel
     public static class MetaExtensionConfig
     {
         /// <summary>
-        /// 为模块使用某个指定的自定义模板类型
-        /// </summary>
-        /// <typeparam name="TTemplateType"></typeparam>
-        /// <param name="meta"></param>
-        /// <returns></returns>
-        public static ModuleMeta UseCustomModule<TTemplateType>(this ModuleMeta meta)
-            where TTemplateType : BlocksTemplate
-        {
-            meta.TemplateType = typeof(TTemplateType);
-
-            return meta;
-        }
-
-        /// <summary>
         /// 默认按照某个属性进行排序
         /// </summary>
         /// <param name="meta"></param>

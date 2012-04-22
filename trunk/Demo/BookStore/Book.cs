@@ -9,6 +9,8 @@ using OEA.MetaModel.Attributes;
 using OEA.MetaModel.View;
 using OEA.Library.Validation;
 using hxy;
+using Demo.WPF.Commands;
+using Demo.WPF;
 
 namespace Demo
 {
@@ -194,6 +196,10 @@ namespace Demo
             View.Property(Book.PublishTimeProperty).HasLabel("出版时间").ShowIn(ShowInWhere.All);
             View.Property(Book.SubContentProperty).HasLabel("简要").ShowIn(ShowInWhere.Detail).UseEditor(WPFEditorNames.Memo);
             View.Property(Book.BookCategoryRefProperty).HasLabel("所属类别").ShowIn(ShowInWhere.All);
+
+            View.UseWPFCommands(typeof(BookSearchCommand));
+            View.DetailPanelType = typeof(BookForm);
+            View.DetailLabelWidth = 120;
         }
     }
 }

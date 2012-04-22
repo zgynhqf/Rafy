@@ -13,7 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using OEA.Module.WPF;
 
-namespace JXC.WPF.Layouts
+namespace JXC.WPF
 {
     /// <summary>
     /// Interaction logic for BillLayout.xaml

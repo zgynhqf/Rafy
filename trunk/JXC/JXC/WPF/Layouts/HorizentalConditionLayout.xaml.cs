@@ -29,7 +29,7 @@ using OEA.Module.WPF.Layout;
 using OEA.Module;
 using OEA;
 
-namespace JXC
+namespace JXC.WPF
 {
     /// <summary>
     /// 使用左右布局来摆放主体和命令框

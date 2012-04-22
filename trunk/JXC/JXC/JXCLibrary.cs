@@ -7,6 +7,8 @@ using OEA.Library.ORM.DbMigration;
 using OEA.MetaModel.View;
 using OEA.MetaModel;
 using DbMigration;
+using JXC.WPF;
+using OEA.Module.WPF;
 
 namespace JXC
 {
@@ -32,9 +34,9 @@ namespace JXC
                             Children =
                             {
                                 //new ModuleMeta{ Label = "计量单位", EntityType = typeof(Unit)},
-                                new ModuleMeta{ Label = "商品类别", EntityType = typeof(ProductCategory)},
-                                new ModuleMeta{ Label = "商品管理", EntityType = typeof(Product)},
                                 //new ModuleMeta{ Label = "仓库管理", EntityType = typeof(Storage)},
+                                new ModuleMeta{ Label = "商品类别", EntityType = typeof(ProductCategory)},
+                                new ModuleMeta{ Label = "商品管理", EntityType = typeof(Product), TemplateType= typeof(ProductModule)},
                                 new ModuleMeta{ Label = "客户类别", EntityType = typeof(ClientCategory)},
                                 new ModuleMeta{ Label = "客户管理", EntityType = typeof(ClientInfo)},
                             }
@@ -44,8 +46,8 @@ namespace JXC
                             Label = "采购管理",
                             Children =
                             {
-                                new ModuleMeta{ Label = "采购订单", EntityType = typeof(PurchaseOrder)},
-                                new ModuleMeta{ Label = "采购订单入库", EntityType = typeof(OrderStorageInBill)},
+                                new ModuleMeta{ Label = "采购订单", EntityType = typeof(PurchaseOrder), TemplateType= typeof(PurchaseOrderModule)},
+                                new ModuleMeta{ Label = "采购订单入库", EntityType = typeof(OrderStorageInBill), TemplateType= typeof(OrderStorageInModule)},
                             }
                         },
                         new ModuleMeta
@@ -53,8 +55,8 @@ namespace JXC
                             Label = "库存管理",
                             Children =
                             {
-                                new ModuleMeta{ Label = "其它入库", EntityType = typeof(OtherStorageInBill)},
-                                new ModuleMeta{ Label = "其它出库", EntityType = typeof(OtherStorageOutBill)},
+                                new ModuleMeta{ Label = "其它入库", EntityType = typeof(OtherStorageInBill), TemplateType= typeof(OtherStorageInModule)},
+                                new ModuleMeta{ Label = "其它出库", EntityType = typeof(OtherStorageOutBill), TemplateType= typeof(OtherStorageOutModule)},
                             }
                         },
                         new ModuleMeta
@@ -89,6 +91,21 @@ namespace JXC
                     //c.JumpToHistory(DateTime.Parse("2012-01-07 21:27:00.000"));
                 };
             };
+
+            var clientApp = app as IClientApp;
+            if (clientApp != null)
+            {
+                clientApp.MainWindowLoaded += (o, e) =>
+                {
+                    App.Current.OpenModuleOrAlert("商品管理");
+                    App.Current.OpenModuleOrAlert("采购订单");
+                    App.Current.OpenModuleOrAlert("采购订单入库");
+                    App.Current.OpenModuleOrAlert("其它入库");
+                    App.Current.OpenModuleOrAlert("其它出库");
+
+                    App.Current.OpenModuleOrAlert("其它入库");
+                };
+            }
         }
     }
 }
