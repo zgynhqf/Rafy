@@ -229,7 +229,8 @@ namespace JXC
                 View.Property(Product.GuiGeProperty).HasLabel("规格").ShowIn(ShowInWhere.All);
                 View.Property(Product.PingPaiProperty).HasLabel("品牌").ShowIn(ShowInWhere.All)
                     .ShowInDetail(columnSpan: 2);
-                View.Property(Product.StorageAmountProperty).HasLabel("库存量").ShowIn(ShowInWhere.List).Readonly();
+                View.Property(Product.StorageAmountProperty).HasLabel("库存量").ShowIn(ShowInWhere.List)
+                    .Readonly();
                 View.Property(Product.CaiGouDanjiaProperty).HasLabel("采购单价").ShowIn(ShowInWhere.All);
                 View.Property(Product.XiaoShouDanJiaProperty).HasLabel("销售单价").ShowIn(ShowInWhere.All);
                 View.Property(Product.SupplierRefProperty).HasLabel("销售商名称").ShowIn(ShowInWhere.All);
@@ -238,8 +239,10 @@ namespace JXC
                 View.Property(Product.XiaoShouJia_3Property).HasLabel("三级销售价").ShowIn(ShowInWhere.All);
                 View.Property(Product.BeiZhuProperty).HasLabel("备注").ShowIn(ShowInWhere.All)
                     .ShowMemoInDetail();
-                View.Property(Product.OperateTimeProperty).HasLabel("操作时间").ShowIn(ShowInWhere.Detail).Readonly();
-                View.Property(Product.OperatorRefProperty).HasLabel("操作员").ShowIn(ShowInWhere.Detail).Readonly();
+                View.Property(Product.OperateTimeProperty).HasLabel("操作时间").ShowIn(ShowInWhere.Detail)
+                    .Readonly();
+                View.Property(Product.OperatorRefProperty).HasLabel("操作员").ShowIn(ShowInWhere.Detail)
+                    .Readonly();
             }
         }
     }

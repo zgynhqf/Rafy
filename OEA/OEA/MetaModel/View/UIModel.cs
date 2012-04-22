@@ -78,7 +78,7 @@ namespace OEA.MetaModel.View
             else
             {
                 //加入所有 Module 中 Commands。
-                foreach (var plugin in OEAEnvironment.GetAllModules())
+                foreach (var plugin in OEAEnvironment.GetAllPlugins())
                 {
                     WPFCommands.AddByAssembly(plugin.Assembly);
                 }

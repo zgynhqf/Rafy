@@ -79,7 +79,7 @@ namespace OEA.Module.WPF
         {
             var list = new List<ResourceDictionary>();
 
-            foreach (var modulePlugin in OEAEnvironment.GetAllModules())
+            foreach (var modulePlugin in OEAEnvironment.GetAllPlugins())
             {
                 var name = modulePlugin.Assembly.GetName().Name;
                 string packUri = string.Format(@"/{0};component/Themes/{1}/Theme.xaml", name, theme);

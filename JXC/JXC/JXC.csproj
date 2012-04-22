@@ -31,14 +31,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbMigrations\_20120417_142100_InitClient.cs" />
@@ -74,6 +78,38 @@
     <Compile Include="Services\OtherStorageOutBillServices.cs" />
     <Compile Include="Services\OtherStorageInBillServices.cs" />
     <Compile Include="Services\OrderStorageInBillServices.cs" />
+    <Compile Include="WPF\Commands\AddBill.cs" />
+    <Compile Include="WPF\Commands\BarcodeSelectProduct.cs" />
+    <Compile Include="WPF\Commands\DeleteBill.cs" />
+    <Compile Include="WPF\Commands\EditBill.cs" />
+    <Compile Include="WPF\Commands\PopupBillCommandBase.cs" />
+    <Compile Include="WPF\Commands\SelectProductCommand.cs" />
+    <Compile Include="WPF\Commands\ShowBill.cs" />
+    <Compile Include="WPF\Layouts\BillLayout.xaml.cs">
+      <DependentUpon>BillLayout.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WPF\Layouts\ConditionQueryLayout.xaml.cs">
+      <DependentUpon>ConditionQueryLayout.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WPF\Layouts\HorizentalConditionLayout.xaml.cs">
+      <DependentUpon>HorizentalConditionLayout.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WPF\Modues\Product\ProductModule.cs" />
+    <Compile Include="WPF\Modues\Product\ProductNavigationCommands.cs" />
+    <Compile Include="WPF\Modues\Purchase\Commands\OrderStorageInBillCommands.cs" />
+    <Compile Include="WPF\Modues\Purchase\Commands\PurchaseOrderCommands.cs" />
+    <Compile Include="WPF\Modues\Purchase\Commands\PurchaseOrderItemCommands.cs" />
+    <Compile Include="WPF\Modues\Purchase\Commands\StorageInItemCommands.cs" />
+    <Compile Include="WPF\Modues\Purchase\OrderStorageInModule.cs" />
+    <Compile Include="WPF\Modues\Purchase\PurchaseOrderModule.cs" />
+    <Compile Include="WPF\Modues\Storage\Commands\OtherStorageInBillCommands.cs" />
+    <Compile Include="WPF\Modues\Storage\Commands\OtherStorageOutBillCommands.cs" />
+    <Compile Include="WPF\Modues\Storage\Commands\StorageOutItemCommands.cs" />
+    <Compile Include="WPF\Modues\Storage\OtherStorageInModule.cs" />
+    <Compile Include="WPF\Modues\Storage\OtherStorageOutModule.cs" />
+    <Compile Include="WPF\Templates\BillTemplate.cs" />
+    <Compile Include="WPF\Templates\ConditionQueryModule.cs" />
+    <Compile Include="WPF\Templates\ModuleBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\OEA\Common\Common.csproj">
@@ -104,6 +140,14 @@
       <Project>{2AECFBB6-34AC-41A6-AB8C-F52A3F68BA1A}</Project>
       <Name>OEA.Web.Meta</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\OEA\WPF\OEA.Module.WPF\OEA.Module.WPF.csproj">
+      <Project>{84399E4E-CC81-4B1F-9953-586B25B29792}</Project>
+      <Name>OEA.Module.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\OEA\WPF\OEA.Module\OEA.Module.csproj">
+      <Project>{786446BE-FB56-4281-9CA2-D5B699B0B388}</Project>
+      <Name>OEA.Module</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="UML\1 基础数据.jpg" />
@@ -111,7 +155,27 @@
     <Content Include="UML\3 采购订单.jpg" />
     <Content Include="UML\4 入库单.jpg" />
     <Content Include="UML\5 出库单.jpg" />
+    <Resource Include="Images\Add.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Delete.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Content Include="_ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="WPF\Layouts\BillLayout.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WPF\Layouts\ConditionQueryLayout.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WPF\Layouts\HorizentalConditionLayout.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

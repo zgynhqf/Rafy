@@ -39,7 +39,7 @@ namespace OEA.Module.WPF
         {
             app.ModuleOperations += (s, e) =>
             {
-                CommonModel.Modules["部门权限管理"].UseCustomModule<OrgModule>();
+                CommonModel.Modules["部门权限管理"].TemplateType = typeof(OrgModule);
             };
 
             this.LogSystem(app);

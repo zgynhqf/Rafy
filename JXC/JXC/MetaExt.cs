@@ -21,25 +21,6 @@ namespace JXC
 {
     public static class MetaExt
     {
-        /// <summary>
-        /// 设置为单据模板
-        /// </summary>
-        /// <param name="meta"></param>
-        /// <returns></returns>
-        public static EntityViewMeta IsBill(this EntityViewMeta meta)
-        {
-            meta.ClearWPFCommands(false);
-            meta.UseWPFCommands(
-                "JXC.Commands.AddBill",
-                "JXC.Commands.EditBill",
-                "JXC.Commands.DeleteBill",
-                "JXC.Commands.ShowBill"
-                );
-            meta.UseWPFCommands(WPFCommandNames.Refresh);
-
-            return meta;
-        }
-
         public static EntityPropertyViewMeta ShowMemoInDetail(this EntityPropertyViewMeta meta)
         {
             return meta.ShowInDetail(columnSpan: 2, height: 100)
