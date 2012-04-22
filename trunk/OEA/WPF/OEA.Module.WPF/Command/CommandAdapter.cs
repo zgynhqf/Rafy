@@ -8,6 +8,9 @@ using OEA.Module;
 
 namespace OEA.WPF.Command
 {
+    /// <summary>
+    /// 从 ClientCommand 适配到 RoutedUICommand。
+    /// </summary>
     public class CommandAdapter : Itenso.Windows.Input.Command
     {
         private readonly ClientCommand _coreCommand;

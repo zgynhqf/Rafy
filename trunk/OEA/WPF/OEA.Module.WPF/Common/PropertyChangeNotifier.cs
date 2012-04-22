@@ -6,9 +6,9 @@ using System.Windows;
 using System.Windows.Data;
 using System.ComponentModel;
 
-namespace OEA.WPF
+namespace OEA.Module.WPF
 {
-    public sealed class PropertyChangeNotifier: DependencyObject, IDisposable
+    public sealed class PropertyChangeNotifier : DependencyObject, IDisposable
     {
         #region Member Variables
         private WeakReference _propertySource;

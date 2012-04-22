@@ -39,7 +39,11 @@ namespace OEA.Module.WPF.CommandAutoUI
             if (group == null)
             {
                 group = this.AddNewGroup(groupName);
-                group.Generator = new SplitButtonGroupGenerator(group, this.Context);
+                group.Generator = new SplitButtonGroupGenerator
+                {
+                    CommandGroup = group,
+                    Context = this.Context
+                };
             }
 
             group.AddCommand(cmd);

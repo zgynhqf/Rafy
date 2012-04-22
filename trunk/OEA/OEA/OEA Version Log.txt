@@ -9,6 +9,30 @@
  * 
 *******************************************************/
 
+2.10.575.0
+    BUG修复
+        * Keyboard.ClearFocus 不能引发 LostFocus，改为使用 MoveFocus。
+
+2.10.574.0
+    重构
+        * 为了简化实现的代码，CommandAutoUI 中每一个组件都支持默认构造函数。
+        * 在 ItemGenerator 中添加了一些方便的 API。
+    示例
+        * JXC
+            * 添加刷条码的功能。
+            * bugs.
+            * 选择商品订单时，只显示状态为未完成的订单。
+
+2.10.571.0
+    ★重要改动、重构
+        * 重构 PropertyEditor，原因是在 TreeGrid 控件同一行切换焦点时，编辑器无法提交数据。
+    ★重要改动、内部修改
+        * 删除 MTTG.UpdateEditingStatus 方法中支持多类型的代码。（已决定 MTTG 不再支持同时绑定多个类型，将改名为 TreeGrid。）
+
+2.10.570.0
+    重构
+        * IPropertyEditorContext 支持 IsForList 属性。
+
 2.10.569.0
     添加接口
         * 支持定义 ExtendViewConfig（实体扩展视图配置）。

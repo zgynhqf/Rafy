@@ -86,9 +86,9 @@ namespace OEA.Module.WPF.Editors
             return updown;
         }
 
-        protected override void ResetBinding(FrameworkElement editingControl)
+        protected override DependencyProperty BindingProperty()
         {
-            editingControl.SetBinding(NumericUpDown.ValueProperty, this.CreateBinding());
+            return NumericUpDown.ValueProperty;
         }
     }
 

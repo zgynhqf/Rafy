@@ -352,6 +352,22 @@ namespace OEA.MetaModel.View
         }
 
         /// <summary>
+        /// 设置属性的编辑器
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="editorName"></param>
+        /// <returns></returns>
+        public static EntityPropertyViewMeta UseLookupDataSource(this EntityPropertyViewMeta meta, IManagedProperty property)
+        {
+            var refView = meta.ReferenceViewInfo;
+            if (refView == null) throw new InvalidOperationException("只有引用实体属性才可以为其设置数据源。");
+
+            refView.DataSourceProperty = property.Name;
+
+            return meta;
+        }
+
+        /// <summary>
         /// 设置该属性为导航项。
         /// 此时，如果该属性变更，会自动触发导航查询
         /// </summary>

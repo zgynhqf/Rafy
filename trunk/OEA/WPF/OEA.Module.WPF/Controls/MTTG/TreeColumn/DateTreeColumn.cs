@@ -21,15 +21,12 @@ namespace OEA.Module.WPF.Controls
 
         protected override Binding GenerateBindingFormat(string name, string stringformat)
         {
-            return new Binding(name)
+            var binding = base.GenerateBindingFormat(name, stringformat);
+            if (string.IsNullOrEmpty(stringformat))
             {
-                StringFormat = "d"
-            };
-        }
-
-        protected override IWPFPropertyEditor CreateEditorCore(PropertyEditorFactory factory)
-        {
-            return factory.Create<DatePropertyEditor>(this.Meta);
+                binding.StringFormat = "d";
+            }
+            return binding;
         }
     }
 }

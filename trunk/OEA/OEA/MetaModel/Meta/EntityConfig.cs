@@ -64,10 +64,7 @@ namespace OEA.MetaModel
 
                 return this._meta;
             }
-            set
-            {
-                this._meta = value;
-            }
+            internal set { this._meta = value; }
         }
 
         protected internal EntityViewMeta View
@@ -82,7 +79,7 @@ namespace OEA.MetaModel
 
                 return this._view;
             }
-            set { this._view = value; }
+            internal set { this._view = value; }
         }
 
         internal void UseDefaultMeta()

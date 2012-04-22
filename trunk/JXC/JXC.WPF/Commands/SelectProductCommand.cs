@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OEA.Module.WPF.Command;
 using OEA;
 using OEA.Module.WPF;
 using OEA.MetaModel.View;
@@ -10,6 +9,7 @@ using OEA.Library;
 using JXC.WPF;
 using OEA.Module.WPF.Controls;
 using System.Windows;
+using OEA.WPF.Command;
 
 namespace JXC.Commands
 {
@@ -52,17 +52,20 @@ namespace JXC.Commands
 
         protected override void Complete(ListObjectView view)
         {
-            view.RefreshControl();
+            if (this._firstSelection != null)
+            {
+                view.RefreshControl();
 
-            view.Current = this._firstSelection;
+                view.Current = this._firstSelection;
 
-            var treeGrid = view.Control.CastTo<MultiTypesTreeGrid>();
-            var amountColumn = treeGrid.Columns.FindByProperty(ProductRefItem.AmountProperty);
-            var row = treeGrid.GetRow(this._firstSelection);
+                var treeGrid = view.Control.CastTo<MultiTypesTreeGrid>();
+                var amountColumn = treeGrid.Columns.FindByProperty(ProductRefItem.AmountProperty);
+                var row = treeGrid.GetRow(this._firstSelection);
 
-            row.UpdateLayout();
-            var cell = row.GetCell(amountColumn);
-            treeGrid.TryEditCell(cell);
+                row.UpdateLayout();
+                var cell = row.GetCell(amountColumn);
+                treeGrid.TryEditCell(cell);
+            }
         }
 
         #endregion

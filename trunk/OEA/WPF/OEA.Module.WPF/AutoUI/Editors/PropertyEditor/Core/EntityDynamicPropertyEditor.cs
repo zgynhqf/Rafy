@@ -35,6 +35,11 @@ namespace OEA.Module.WPF.Editors
 
         protected override sealed void ResetBinding(FrameworkElement editingControl) { }
 
+        protected override DependencyProperty BindingProperty()
+        {
+            return null;
+        }
+
         protected override sealed void PrepareElementForEditCore(FrameworkElement editingElement, RoutedEventArgs editingEventArgs)
         {
             var curEntity = this.Context.CurrentObject;

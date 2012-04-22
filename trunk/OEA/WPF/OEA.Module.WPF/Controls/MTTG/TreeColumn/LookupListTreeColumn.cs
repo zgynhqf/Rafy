@@ -32,11 +32,6 @@ namespace OEA.Module.WPF.Controls
     {
         protected LookupListTreeColumn() { }
 
-        protected override IWPFPropertyEditor CreateEditorCore(PropertyEditorFactory factory)
-        {
-            return factory.Create<LookupListPropertyEditor>(this.Meta);
-        }
-
         protected override FrameworkElement GenerateEditingElementCore()
         {
             var combo = base.GenerateEditingElementCore().CastTo<ComboBox>();

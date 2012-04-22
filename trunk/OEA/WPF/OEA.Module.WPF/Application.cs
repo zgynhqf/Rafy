@@ -281,6 +281,11 @@ namespace OEA.Module.WPF
                 return Show(messageText, "提示", button, MessageBoxImage.Information);
             }
 
+            public MessageBoxResult Show(string messageText, MessageBoxImage icon)
+            {
+                return Show(messageText, "提示", MessageBoxButton.OK, icon);
+            }
+
             public MessageBoxResult Show(string messageText, MessageBoxButton button, MessageBoxImage icon)
             {
                 return Show(messageText, "提示", button, icon);

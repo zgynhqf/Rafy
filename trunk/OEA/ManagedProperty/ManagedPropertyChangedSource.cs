@@ -35,6 +35,7 @@ namespace OEA.ManagedProperty
 
         /// <summary>
         /// 来自数据库设置
+        /// （暂时无用）
         /// </summary>
         FromPersistence = 2,
     }

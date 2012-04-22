@@ -68,6 +68,13 @@ namespace JXC
             set { this.SetRefEntity(OperatorRefProperty, value); }
         }
 
+        public static readonly Property<string> BarcodeProperty = P<Product>.Register(e => e.Barcode);
+        public string Barcode
+        {
+            get { return this.GetProperty(BarcodeProperty); }
+            set { this.SetProperty(BarcodeProperty, value); }
+        }
+
         public static readonly Property<string> BianMaProperty = P<Product>.Register(e => e.BianMa);
         public string BianMa
         {
@@ -175,11 +182,21 @@ namespace JXC
                 }
             });
         }
+
+        protected void QueryBy(string barcode)
+        {
+            this.QueryDb(q => q.Constrain(Product.BarcodeProperty).Equal(barcode));
+        }
     }
 
     public class ProductRepository : EntityRepository
     {
         protected ProductRepository() { }
+
+        public Product GetByBarcode(string barcode)
+        {
+            return this.FetchFirstAs<Product>(barcode);
+        }
     }
 
     internal class ProductConfig : EntityConfig<Product>
@@ -206,6 +223,8 @@ namespace JXC
                     .ShowInDetail(columnSpan: 2, width: 0.7);
                 View.Property(Product.MingChengProperty).HasLabel("名称").ShowIn(ShowInWhere.All)
                     .ShowInDetail(columnSpan: 2, width: 600);
+                View.Property(Product.BarcodeProperty).HasLabel("条码").ShowIn(ShowInWhere.All)
+                    .ShowInDetail(columnSpan: 2, width: 0.7);
                 View.Property(Product.ProductCategoryRefProperty).HasLabel("商品类别").ShowIn(ShowInWhere.All);
                 View.Property(Product.GuiGeProperty).HasLabel("规格").ShowIn(ShowInWhere.All);
                 View.Property(Product.PingPaiProperty).HasLabel("品牌").ShowIn(ShowInWhere.All)

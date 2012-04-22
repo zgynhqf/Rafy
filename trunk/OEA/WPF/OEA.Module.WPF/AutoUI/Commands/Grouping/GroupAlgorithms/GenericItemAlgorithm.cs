@@ -35,7 +35,9 @@ namespace OEA.Module.WPF.CommandAutoUI
             var group = AddNewGroup(cmd.Name);
 
             //构造并设置控件生成器
-            var generator = Activator.CreateInstance(typeof(TGenerator), group, this.Context) as GroupGenerator;
+            var generator = Activator.CreateInstance(typeof(TGenerator)) as GroupGenerator;
+            generator.CommandGroup = group;
+            generator.Context = this.Context;
             group.Generator = generator;
 
             group.AddCommand(cmd);

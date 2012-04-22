@@ -26,8 +26,6 @@ namespace OEA.Module.WPF.CommandAutoUI
     {
         private List<GroupGenerator> _list = new List<GroupGenerator>();
 
-        internal CompoundGenerator(CommandGroup group, CommandAutoUIContext context) : base(group, context) { }
-
         internal int Count { get { return this._list.Count; } }
 
         internal void Add(GroupGenerator item) { this._list.Add(item); }

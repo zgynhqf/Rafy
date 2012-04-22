@@ -44,7 +44,7 @@ namespace OEA.Module.WPF.Editors
 
             if (instance != null && !suppressEvent)
             {
-                this.OnInstanceCreated(new InstanceCreatedEventArgs<T>(instance));
+                this.OnInstanceCreated(instance);
             }
 
             return instance;
@@ -56,10 +56,10 @@ namespace OEA.Module.WPF.Editors
         /// 当不使用 CreateInstance 方法构建某个实例时，必须调用此方法进行事件通知。
         /// </summary>
         /// <param name="args"></param>
-        protected virtual void OnInstanceCreated(InstanceCreatedEventArgs<T> args)
+        protected virtual void OnInstanceCreated(T instance)
         {
             var handler = this.InstanceCreated;
-            if (handler != null) handler(this, args);
+            if (handler != null) handler(this, new InstanceCreatedEventArgs<T>(instance));
         }
 
         /// <summary>

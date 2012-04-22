@@ -23,7 +23,6 @@ using OEA.Module.WPF;
 using OEA.Module.WPF.Controls;
 using OEA.WPF.Command;
 using OEA.Library;
-using OEA.Module.WPF.Command;
 
 namespace JXC.Commands
 {

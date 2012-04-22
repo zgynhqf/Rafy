@@ -25,6 +25,7 @@ using OEA.Library;
 using System.Windows.Automation;
 using OEA.Module.WPF.Controls;
 using OEA.Module.WPF.Automation;
+using System.Runtime;
 
 namespace OEA.Module.WPF.Editors
 {
@@ -37,7 +38,7 @@ namespace OEA.Module.WPF.Editors
     /// </summary>
     public abstract class WPFPropertyEditor : PropertyEditor, IWPFPropertyEditor
     {
-        private InnerContext _context = new InnerContext();
+        internal InnerContext _context = new InnerContext();
 
         internal protected virtual void Initialize(EntityPropertyViewMeta propertyInfo)
         {
@@ -58,7 +59,7 @@ namespace OEA.Module.WPF.Editors
         /// 2.调用 BindElementReadOnly 方法：
         ///     调用此方法以支持只读属性的绑定。
         /// </summary>
-        /// <returns></returns>
+        /// <returns></returns>     
         protected abstract FrameworkElement CreateEditingElement();
 
         protected virtual void PrepareElementForEditCore(FrameworkElement editingElement, RoutedEventArgs editingEventArgs) { }
@@ -73,12 +74,26 @@ namespace OEA.Module.WPF.Editors
             get { return this.Meta.PropertyMeta.Runtime.CanWrite; }
         }
 
-        protected abstract void ResetBinding(FrameworkElement editingControl);
-
+        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
         internal Binding CreateBindingInternal()
         {
             return this.CreateBinding();
         }
+
+        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
+        internal DependencyProperty GetBindingProperty()
+        {
+            return this.BindingProperty();
+        }
+
+        protected virtual void ResetBinding(FrameworkElement editingControl)
+        {
+            var property = this.GetBindingProperty();
+            var binding = this.CreateBinding();
+            editingControl.SetBinding(property, binding);
+        }
+
+        protected abstract DependencyProperty BindingProperty();
 
         protected virtual Binding CreateBinding()
         {
@@ -95,11 +110,6 @@ namespace OEA.Module.WPF.Editors
             }
 
             return binding;
-        }
-
-        public void RebindEditingControl()
-        {
-            this.ResetBinding(this.Control);
         }
 
         #endregion
@@ -265,10 +275,7 @@ namespace OEA.Module.WPF.Editors
 
         public new FrameworkElement LabelControl
         {
-            get
-            {
-                return base.LabelControl as FrameworkElement;
-            }
+            get { return base.LabelControl as FrameworkElement; }
         }
 
         public void PrepareElementForEdit(FrameworkElement editingElement, RoutedEventArgs editingEventArgs)
@@ -280,10 +287,13 @@ namespace OEA.Module.WPF.Editors
 
         #region private class InnerContext : IPropertyEditorContext
 
-        private class InnerContext : IPropertyEditorContext
+        internal class InnerContext : IPropertyEditorContext
         {
             public FrameworkElement control;
 
+            /// <summary>
+            /// 当前“激活/显示/选中”的对象
+            /// </summary>
             public Entity CurrentObject
             {
                 get
@@ -293,6 +303,11 @@ namespace OEA.Module.WPF.Editors
                     return this.control.DataContext as Entity;
                 }
             }
+
+            /// <summary>
+            /// 是否显示在详细视图中
+            /// </summary>
+            public bool IsForList { get; internal set; }
         }
 
         #endregion

@@ -26,8 +26,9 @@ using OEA.MetaModel.View;
 using OEA.Module.WPF.Editors;
 using OEA.WPF;
 using OEA.WPF.Command;
+using OEA.Module.WPF;
 
-namespace OEA.Module.WPF.Command
+namespace OEA.WPF.Command
 {
     /// <summary>
     /// 选择新增功能按钮的基类。

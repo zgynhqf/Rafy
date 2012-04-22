@@ -29,11 +29,6 @@ namespace OEA.Module.WPF.Controls
     {
         protected BooleanTreeColumn() { }
 
-        protected override IWPFPropertyEditor CreateEditorCore(PropertyEditorFactory factory)
-        {
-            return factory.Create<BooleanPropertyEditor>(this.Meta);
-        }
-
         protected override FrameworkElementFactory GenerateDisplayTemplateInCell()
         {
             var cb = new FrameworkElementFactory(typeof(CheckBox));

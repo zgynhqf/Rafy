@@ -47,6 +47,8 @@ namespace JXC.WPF
                 App.Current.OpenModuleOrAlert("采购订单入库");
                 App.Current.OpenModuleOrAlert("其它入库");
                 App.Current.OpenModuleOrAlert("其它出库");
+
+                App.Current.OpenModuleOrAlert("其它入库");
             };
         }
     }

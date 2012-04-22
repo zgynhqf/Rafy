@@ -117,9 +117,9 @@ namespace OEA.Module.WPF.Editors
             return this._cmbList;
         }
 
-        protected override void ResetBinding(FrameworkElement editingControl)
+        protected override DependencyProperty BindingProperty()
         {
-            editingControl.SetBinding(ComboBox.TextProperty, this.CreateBinding());
+            return ComboBox.TextProperty;
         }
 
         #endregion

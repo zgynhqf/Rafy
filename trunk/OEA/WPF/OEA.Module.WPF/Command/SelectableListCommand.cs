@@ -21,7 +21,7 @@ using OEA.Module.WPF.CommandAutoUI;
 using Itenso.Windows.Input;
 using System.Windows.Controls;
 
-namespace OEA.Module.WPF.Command
+namespace OEA.WPF.Command
 {
     /// <summary>
     /// 提供菜单下拉数据源的命令基类
@@ -84,8 +84,6 @@ namespace OEA.Module.WPF.Command
     /// </summary>
     public class DataSelectorMenuGenerator : ItemGenerator
     {
-        public DataSelectorMenuGenerator(CommandGroup group, CommandAutoUIContext context) : base(group, context) { }
-
         protected override ItemControlResult CreateItemControl()
         {
             var cmd = CommandRepository.NewCommand(this.CommandItem);

@@ -24,15 +24,6 @@ namespace OEA.Module.WPF.CommandAutoUI
     /// </summary>
     public abstract class CommandAutoUIComponent
     {
-        /// <summary>
-        /// 每个构件都需要其所在的上下文对象
-        /// </summary>
-        /// <param name="context"></param>
-        public CommandAutoUIComponent(CommandAutoUIContext context)
-        {
-            this._context = context;
-        }
-
         private CommandAutoUIContext _context;
 
         /// <summary>
@@ -42,9 +33,10 @@ namespace OEA.Module.WPF.CommandAutoUI
         {
             get
             {
-                Debug.Assert(this._context != null, "请先设置此属性");
+                if (this._context == null) throw new ArgumentNullException("this._context");
                 return this._context;
             }
+            set { this._context = value; }
         }
     }
 }

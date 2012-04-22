@@ -56,5 +56,10 @@ namespace OEA.Module.WPF.Editors
         {
             //do nothing
         }
+
+        protected override DependencyProperty BindingProperty()
+        {
+            return null;
+        }
     }
 }

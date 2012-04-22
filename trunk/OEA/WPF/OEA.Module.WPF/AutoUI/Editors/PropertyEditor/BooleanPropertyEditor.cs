@@ -27,7 +27,7 @@ namespace OEA.Module.WPF.Editors
 {
     public class BooleanPropertyEditor : WPFPropertyEditor
     {
-        public BooleanPropertyEditor() { }
+        protected BooleanPropertyEditor() { }
 
         protected override FrameworkElement CreateEditingElement()
         {
@@ -43,9 +43,9 @@ namespace OEA.Module.WPF.Editors
             return cb;
         }
 
-        protected override void ResetBinding(FrameworkElement editingControl)
+        protected override DependencyProperty BindingProperty()
         {
-            editingControl.SetBinding(CheckBox.IsCheckedProperty, this.CreateBinding());
+            return CheckBox.IsCheckedProperty;
         }
     }
 }

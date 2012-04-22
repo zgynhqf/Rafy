@@ -1,13 +1,13 @@
 /*******************************************************
  * 
  * 作者：胡庆访
- * 创建时间：????????
+ * 创建时间：2010
  * 说明：此文件只包含一个类，具体内容见类型注释。
  * 运行环境：.NET 4.0
  * 版本号：1.0.0
  * 
  * 历史记录：
- * 创建文件 胡庆访 ????????
+ * 创建文件 胡庆访 2010
  * 不再使用 ComboListControl 的 DisplayMemberPath 及 ItemsSource 属性，
  *      而是直接绑定 Text，内部直接使用 AutoUI 生成的列表控件 胡庆访 20110810
  * ComboDataGrid 重命名为 ComboListControl。
@@ -23,6 +23,8 @@ using System.Text;
 using System.Timers;
 using System.Windows;
 using System.Windows.Automation;
+using System.Windows.Automation.Peers;
+using System.Windows.Automation.Provider;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -30,17 +32,13 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using Itenso.Windows.Input;
 using OEA.Editors;
+using OEA.Library;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
-
 using OEA.Module.WPF.Automation;
 using OEA.Module.WPF.Controls;
 using OEA.Module.WPF.Editors;
 using OEA.Utils;
-using System.Windows.Automation.Peers;
-using System.Windows.Automation.Provider;
-using OEA.Library;
-using OEA.Module.WPF.Command;
 
 namespace OEA.Module.WPF.Controls
 {

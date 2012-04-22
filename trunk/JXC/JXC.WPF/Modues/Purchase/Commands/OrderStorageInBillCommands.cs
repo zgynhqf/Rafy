@@ -33,13 +33,17 @@ namespace JXC.Commands
     {
         public AddOrderStorageInBill()
         {
-            this.Template = new OrderStoreageIn_ReaonlyUnitPrice_ByExtendView();
+            this.Template = new OrderStoreageIn_CustomizedBy_ExtendView();
             this.Service = new AddOrderStorageInBillService();
         }
 
-        #region 采购订单入库界面的商品单价是不能被修改的 - ★ 三大实现方案 ★
+        #region 定制视图 - ★ 三大实现方案 ★
 
         /*********************** 代码块解释 *********************************
+         * 
+         * 需求：
+         * * 采购订单入库界面的商品单价是不能被修改的，因为它和订单中写的单价应该是一致的；
+         * * 同时，这个界面不需要条码录入商品的功能。
          * 
          * 一般情况下，单块界面都是在实体默认界面配置中进行的。
          * 但是如果某个实体在一些地方需要显示得比较特殊的时候，就需要用到特殊视图的定制功能了。
@@ -62,14 +66,14 @@ namespace JXC.Commands
         /// * 不支持客户化
         /// * 不支持权限读取
         /// </summary>
-        private class OrderStoreageIn_ReaonlyUnitPrice_ByListObjectView : BillTemplate
+        private class OrderStoreageIn_CustomizedBy_ListObjectView : BillTemplate
         {
             protected override void OnUIGenerated(ControlResult ui)
             {
                 base.OnUIGenerated(ui);
 
-                //采购订单入库界面的商品单价列是不能被修改的，因为它和订单中写的单价应该是一致的。
                 var itemView = ui.MainView.GetChildView(typeof(StorageInBillItem));
+
                 var treeGrid = itemView.Control.CastTo<MultiTypesTreeGrid>();
                 var column = treeGrid.Columns.FindByProperty(StorageInBillItem.UnitPriceProperty);
                 if (column != null)
@@ -78,6 +82,9 @@ namespace JXC.Commands
 
                     column.Meta.Label = "订单单价";//注意，此行代码将会无效
                 }
+
+                //只能把该按钮隐藏
+                itemView.Commands[typeof(BarcodeSelectProduct)].IsVisible = false;
             }
         }
 
@@ -91,14 +98,16 @@ namespace JXC.Commands
         /// * 不支持客户化
         /// * 不支持权限读取
         /// </summary>
-        private class OrderStoreageIn_ReaonlyUnitPrice_ByBlocksView : BillTemplate
+        private class OrderStoreageIn_CustomizedBy_BlocksView : BillTemplate
         {
             protected override AggtBlocks DefineBlocks()
             {
                 var blocks = base.DefineBlocks();
 
-                blocks.Children[typeof(StorageInBillItem)].MainBlock
-                    .ViewMeta.Property(StorageInBillItem.UnitPriceProperty).HasLabel("订单单价").Readonly();
+                var vm = blocks.Children[typeof(StorageInBillItem)].MainBlock.ViewMeta;
+
+                vm.Property(StorageInBillItem.UnitPriceProperty).HasLabel("订单单价").Readonly();
+                vm.RemoveWPFCommands(typeof(BarcodeSelectProduct));
 
                 return blocks;
             }
@@ -112,7 +121,7 @@ namespace JXC.Commands
         /// * 支持权限读取
         /// * 扩展视图实体配置，可读性与实体配置保持一致。并可把该实体的所有视图配置统一存放、管理。
         /// </summary>
-        private class OrderStoreageIn_ReaonlyUnitPrice_ByExtendView : BillTemplate
+        private class OrderStoreageIn_CustomizedBy_ExtendView : BillTemplate
         {
             protected override AggtBlocks DefineBlocks()
             {
@@ -134,6 +143,8 @@ namespace JXC.Commands
 
             protected override void ConfigView()
             {
+                View.RemoveWPFCommands(typeof(BarcodeSelectProduct));
+
                 View.Property(StorageInBillItem.UnitPriceProperty).HasLabel("订单单价").Readonly();
             }
         }

@@ -23,7 +23,6 @@ using OEA.Module.WPF;
 using OEA.Module.WPF.Controls;
 using OEA.WPF.Command;
 using OEA.Library;
-using OEA.Module.WPF.Command;
 
 namespace JXC.Commands
 {
@@ -37,9 +36,10 @@ namespace JXC.Commands
 
         protected override Entity AddSelection(ListObjectView view, Entity src)
         {
-            var e = base.AddSelection(view, src);
+            var e = base.AddSelection(view, src) as PurchaseOrderItem;
 
-            (e as PurchaseOrderItem).Amount = 1;
+            e.Amount = 1;
+            e.RawPrice = (src as Product).CaiGouDanjia;
 
             return e;
         }

@@ -81,6 +81,19 @@ namespace JXC
                 this.TotalMoney = this.StorageInItemList.Sum(poi => (poi as StorageInBillItem).View_TotalPrice);
             }
         }
+
+        protected override void OnDelete()
+        {
+            base.OnDelete();
+
+            //由于本类没有映射数据表，所以在删除的时候需要删除下面的数据
+            using (var db = this.CreateDb())
+            {
+                db.Delete(typeof(StorageInBillItem), db.Query(typeof(StorageInBillItem))
+                    .Constrain(StorageInBillItem.StorageInBillRefProperty).Equal(this.Id)
+                    );
+            }
+        }
     }
 
     [Serializable]

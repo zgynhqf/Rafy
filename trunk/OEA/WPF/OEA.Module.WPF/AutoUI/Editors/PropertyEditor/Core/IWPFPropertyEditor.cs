@@ -22,11 +22,6 @@ namespace OEA.Module.WPF.Editors
         new FrameworkElement LabelControl { get; }
 
         /// <summary>
-        /// 重新给当前的编辑控件（DataGrid 在每次创建单元格时都需要执行此代码。原因不详。）
-        /// </summary>
-        void RebindEditingControl();
-
-        /// <summary>
         /// 把生成的某个编辑控件准备好，马上开始编辑。
         /// </summary>
         /// <param name="editingElement"></param>

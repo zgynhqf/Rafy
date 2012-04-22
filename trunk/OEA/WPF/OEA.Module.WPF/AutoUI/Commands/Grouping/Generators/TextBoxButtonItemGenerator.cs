@@ -33,14 +33,11 @@ namespace OEA.Module.WPF.CommandAutoUI
     /// </summary>
     public class TextBoxButtonItemGenerator : ItemGenerator
     {
-        public TextBoxButtonItemGenerator(CommandGroup group, CommandAutoUIContext context) : base(group, context) { }
-
         protected override ItemControlResult CreateItemControl()
         {
-            var commandInfo = this.CommandItem;
-            var cmd = CommandRepository.NewCommand(commandInfo);
+            var cmd = this.CreateItemCommand();
 
-            var textBox = CreateTextBox(cmd.CoreCommand);
+            var textBox = this.CreateTextBox(cmd);
 
             var btn = this.CreateAButton(cmd);
 
