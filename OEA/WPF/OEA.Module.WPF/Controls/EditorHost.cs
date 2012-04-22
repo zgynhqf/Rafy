@@ -91,11 +91,11 @@ namespace OEA.Module.WPF.Controls
 
         #region DetailObjectView DependencyProperty
 
-        internal static readonly DependencyProperty DetailObjectViewProperty = DependencyProperty.RegisterAttached(
+        public static readonly DependencyProperty DetailObjectViewProperty = DependencyProperty.RegisterAttached(
             "DetailObjectView", typeof(DetailObjectView), typeof(EditorHost)
             );
 
-        internal static DetailObjectView GetDetailObjectView(FrameworkElement element)
+        public static DetailObjectView GetDetailObjectView(FrameworkElement element)
         {
             //从当前元素往上找，一直到找到为止。
             //如果到达逻辑树根，还没有找到，则返回 null。
@@ -110,7 +110,7 @@ namespace OEA.Module.WPF.Controls
             return value;
         }
 
-        internal static void SetDetailObjectView(FrameworkElement element, DetailObjectView value)
+        public static void SetDetailObjectView(FrameworkElement element, DetailObjectView value)
         {
             element.SetValue(DetailObjectViewProperty, value);
         }
@@ -192,28 +192,46 @@ namespace OEA.Module.WPF.Controls
 
             detailView.AddPropertyEditor(editor);
 
-            //Width
-            if (property.DetailColumnsSpan != null) { Grid.SetColumnSpan(this, property.DetailColumnsSpan.Value); }
-            if (property.DetailWidth != null)
-            {
-                var value = property.DetailWidth.Value;
-                if (value > 0 && value < 1)
-                {
-                    value = value / (1 - value);
-                    this.TotalWidth = new GridLength(value, GridUnitType.Star);
-                }
-                else
-                {
-                    this.TotalWidth = new GridLength(value);
-                }
-            }
-            if (property.DetailHeight != null) { this.Height = property.DetailHeight.Value; }
-            var labelWidth = property.DetailLabelWidth ?? detailView.Meta.DetailLabelWidth;
-            if (labelWidth != null) { this.LabelWidth = new GridLength(labelWidth.Value); }
+            this.SetLayoutValues(detailView, property);
 
             //支持 UI Test
             var label = property.Label;
             if (label != null) { AutomationProperties.SetName(editor.Control, property.Label); }
+        }
+
+        private void SetLayoutValues(DetailObjectView detailView, EntityPropertyViewMeta property)
+        {
+            //Width
+            if (property.DetailColumnsSpan != null)
+            {
+                this.SetIfNonLocal(Grid.ColumnSpanProperty, property.DetailColumnsSpan.Value);
+            }
+            if (property.DetailWidth != null)
+            {
+                var source = DependencyPropertyHelper.GetValueSource(this, TotalWidthProperty);
+                if (source.BaseValueSource != BaseValueSource.Local)
+                {
+                    var value = property.DetailWidth.Value;
+                    if (value > 0 && value < 1)
+                    {
+                        value = value / (1 - value);
+                        this.TotalWidth = new GridLength(value, GridUnitType.Star);
+                    }
+                    else
+                    {
+                        this.TotalWidth = new GridLength(value);
+                    }
+                }
+            }
+            if (property.DetailHeight != null)
+            {
+                this.SetIfNonLocal(HeightProperty, (double)property.DetailHeight.Value);
+            }
+            var labelWidth = property.DetailLabelWidth ?? detailView.Meta.DetailLabelWidth;
+            if (labelWidth != null)
+            {
+                this.SetIfNonLocal(LabelWidthProperty, new GridLength(labelWidth.Value));
+            }
         }
 
         private EntityPropertyViewMeta GetPropertyViewMeta(DetailObjectView detailView)

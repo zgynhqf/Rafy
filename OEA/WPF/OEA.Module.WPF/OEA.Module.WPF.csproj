@@ -182,7 +182,6 @@
     <Compile Include="Controls\MTTG\TreeColumn\TreeColumnCollection.cs" />
     <Compile Include="Controls\MTTG\_MTTGTestCommands.cs" />
     <Compile Include="CustomTemplate.cs" />
-    <Compile Include="PrimitiveUI\Detail\DefaultDetailPanel.cs" />
     <Compile Include="PrimitiveUI\EntityModule.cs" />
     <Compile Include="PrimitiveUI\Layouts\ITraditionalLayout.cs" />
     <Compile Include="PrimitiveUI\Layouts\TraditionalComponents.cs" />

@@ -8,6 +8,7 @@ using OEA.MetaModel.Attributes;
 using OEA.MetaModel.View;
 using OEA.ManagedProperty;
 using System.ComponentModel;
+using JXC.Commands;
 
 namespace JXC
 {
@@ -100,7 +101,7 @@ namespace JXC
 
             View.ClearWPFCommands(false)
                 .UseWPFCommands(
-                "JXC.Commands.AddPurchaseOrderItem",
+                typeof(AddPurchaseOrderItem),
                 WPFCommandNames.Delete
                 );
 

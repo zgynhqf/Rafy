@@ -105,10 +105,25 @@ namespace OEA.Module.WPF
             var detailType = detailView.Meta.DetailPanelType;
             if (detailType == null)
             {
-                result = new DefaultDetailPanel
+                var panel = new AutoGrid
                 {
+                    ColumnsCount = detailView.ColumnsCount,
                     Orientation = detailView.Meta.DetailAsHorizontal ? Orientation.Horizontal : Orientation.Vertical
                 };
+
+                //加入所有标记了ShowInDetail的属性
+                foreach (var propertyView in detailView.Meta.OrderedEntityProperties())
+                {
+                    if (propertyView.CanShowIn(ShowInWhere.Detail))
+                    {
+                        panel.Children.Add(new EditorHost
+                        {
+                            EntityProperty = propertyView
+                        });
+                    }
+                }
+
+                result = panel;
             }
             else
             {
