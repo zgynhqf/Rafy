@@ -32,12 +32,13 @@ using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
 using OEA.MetaModel.View;
 using OEA.Module.WPF;
+using OEA.Module.WPF.CommandAutoUI;
 using OEA.Module.WPF.Controls;
 using OEA.WPF.Command;
 
 namespace $NAMESPACE$
 {
-    [Command(Label = "$Label$")]
+    [Command(Label = "$Label$", GroupType = CommandGroupType.Business)]
     public class $CommandName$ : ListViewCommand
     {
         public override void Execute(ListObjectView view)

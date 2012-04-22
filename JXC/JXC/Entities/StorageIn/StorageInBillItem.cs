@@ -87,6 +87,7 @@ namespace JXC
             View.ClearWPFCommands(false)
                 .UseWPFCommands(
                 "JXC.Commands.AddStorageInItem",
+                "JXC.Commands.BarcodeSelectProduct",
                 WPFCommandNames.Delete
                 );
 
@@ -95,7 +96,7 @@ namespace JXC
                 View.Property(StorageInBillItem.View_ProductNameProperty).HasLabel("商品名称").ShowIn(ShowInWhere.All);
                 View.Property(StorageInBillItem.View_ProductCategoryNameProperty).HasLabel("商品类别").ShowIn(ShowInWhere.List);
                 View.Property(StorageInBillItem.View_SpecificationProperty).HasLabel("规格").ShowIn(ShowInWhere.List);
-                View.Property(StorageInBillItem.UnitPriceProperty).HasLabel("单价").ShowIn(ShowInWhere.List);
+                View.Property(StorageInBillItem.UnitPriceProperty).HasLabel("单价*").ShowIn(ShowInWhere.List);
                 View.Property(StorageInBillItem.AmountProperty).HasLabel("入库数量*").ShowIn(ShowInWhere.List);
                 View.Property(StorageInBillItem.View_TotalPriceProperty).HasLabel("总价").ShowIn(ShowInWhere.List);
             }

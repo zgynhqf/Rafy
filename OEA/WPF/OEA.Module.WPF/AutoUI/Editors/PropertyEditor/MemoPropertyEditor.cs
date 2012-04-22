@@ -76,10 +76,9 @@ namespace OEA.Module.WPF.Editors
             this._tb.Focus();
         }
 
-        protected override void ResetBinding(FrameworkElement editingControl)
+        protected override DependencyProperty BindingProperty()
         {
-            //绑定TextBox到对象属性
-            editingControl.SetBinding(TextBox.TextProperty, this.CreateBinding());
+            return TextBox.TextProperty;
         }
 
         private void btnPop_Click(object sender, RoutedEventArgs e)

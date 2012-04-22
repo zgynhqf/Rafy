@@ -39,13 +39,17 @@ namespace OEA.Module.WPF.Editors
             return datePicker;
         }
 
-        protected override void ResetBinding(FrameworkElement editingControl)
+        protected override Binding CreateBinding()
         {
-            //绑定TextBox到对象属性
-            var binding = this.CreateBinding();
+            var binding = base.CreateBinding();
             binding.StringFormat = "yyyy-MM-dd";
             binding.Converter = new AnyToDateConverter();
-            editingControl.SetBinding(DatePicker.SelectedDateProperty, binding);
+            return binding;
+        }
+
+        protected override DependencyProperty BindingProperty()
+        {
+            return DatePicker.SelectedDateProperty;
         }
 
         class AnyToDateConverter : IValueConverter

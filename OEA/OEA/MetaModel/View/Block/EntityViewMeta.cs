@@ -264,7 +264,7 @@ namespace OEA.MetaModel.View
         {
             var res = this.EntityProperties.FirstOrDefault(item => item.Name.EqualsIgnorecase(name));
 
-            if (this.SetOrder.HasValue)
+            if (res != null && this.SetOrder.HasValue)
             {
                 res.OrderNo = this.SetOrder.Value;
                 this.SetOrder++;

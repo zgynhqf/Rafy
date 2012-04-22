@@ -50,6 +50,8 @@ namespace OEA.Module.WPF.Editors
 
         protected override void ResetBinding(FrameworkElement editingControl) { }
 
+        protected override DependencyProperty BindingProperty() { return null; }
+
         #region 以下代码拷贝自：DataGridTextColumn 类。
 
         protected override void PrepareElementForEditCore(FrameworkElement editingElement, RoutedEventArgs editingEventArgs)

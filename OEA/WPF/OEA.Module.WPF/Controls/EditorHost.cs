@@ -171,7 +171,7 @@ namespace OEA.Module.WPF.Controls
                 return;
             }
 
-            var editor = AutoUI.BlockUIFactory.PropertyEditorFactory.Create(property);
+            var editor = AutoUI.BlockUIFactory.PropertyEditorFactory.Create(property, false);
 
             var labelContainer = this.Template.FindName("PART_LabelContainer", this) as ContentControl;
             var editorControlContainer = this.Template.FindName("PART_EditorControlContainer", this) as ContentControl;

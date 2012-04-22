@@ -31,11 +31,6 @@ namespace OEA.Module.WPF.Controls
     {
         protected EnumTreeColumn() { }
 
-        protected override IWPFPropertyEditor CreateEditorCore(PropertyEditorFactory factory)
-        {
-            return factory.Create<EnumPropertyEditor>(this.Meta);
-        }
-
         protected override FrameworkElement GenerateEditingElementCore()
         {
             var combo = base.GenerateEditingElementCore().CastTo<ComboBox>();

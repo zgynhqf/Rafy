@@ -35,21 +35,10 @@ namespace OEA.Module.WPF.CommandAutoUI
     /// </summary>
     public abstract class GroupGenerator : CommandAutoUIComponent
     {
-        private CommandGroup _commandGroup;
-
-        public GroupGenerator(CommandGroup group, CommandAutoUIContext context)
-            : base(context)
-        {
-            this._commandGroup = group;
-        }
-
         /// <summary>
         /// 为这个命令组生成控件
         /// </summary>
-        protected CommandGroup CommandGroup
-        {
-            get { return this._commandGroup; }
-        }
+        internal protected CommandGroup CommandGroup { get; set; }
 
         /// <summary>
         /// 使用动态算法将控件添加到上下文对象中。
@@ -65,6 +54,9 @@ namespace OEA.Module.WPF.CommandAutoUI
 
         /// <summary>
         /// 子类完成此方法实现具体的生成控件方法。
+        /// 
+        /// 可以返回 null，不生成任何控件：
+        /// 原因是子类有可能用当前环境中某一个已经生成好的控件，也有可能是子类自己把生成的控件附加到环境中了。
         /// </summary>
         /// <returns></returns>
         protected virtual FrameworkElement CreateControlCore() { return null; }
@@ -130,13 +122,9 @@ namespace OEA.Module.WPF.CommandAutoUI
         /// <returns></returns>
         protected Button CreateAButton(CommandAdapter runtimeCommand)
         {
-            var args = this.Context.CommandArg;
-            var view = args as ObjectView;
-            if (view != null) { view.Commands.Add(runtimeCommand.CoreCommand); }
-
             var btn = new Button();
             btn.Name = "btn" + runtimeCommand.CoreCommand.ProgramingName;
-            btn.CommandParameter = args;
+            btn.CommandParameter = this.Context.CommandArg;
             ButtonCommand.SetCommand(btn, runtimeCommand);
 
             return btn;
@@ -149,12 +137,8 @@ namespace OEA.Module.WPF.CommandAutoUI
         /// <returns></returns>
         protected MenuItem CreateAMenuItem(CommandAdapter runtimeCommand)
         {
-            var args = this.Context.CommandArg;
-            var view = args as ObjectView;
-            if (view != null) { view.Commands.Add(runtimeCommand.CoreCommand); }
-
             MenuItem menuItem = new MenuItem();
-            menuItem.CommandParameter = args;
+            menuItem.CommandParameter = this.Context.CommandArg;
             MenuItemCommand.SetCommand(menuItem, runtimeCommand);
 
             return menuItem;
@@ -173,14 +157,15 @@ namespace OEA.Module.WPF.CommandAutoUI
                 Width = 150,
                 VerticalAlignment = VerticalAlignment.Center,
                 Margin = new Thickness(2),
-                EmptyValue = runtimeCommand.CommandInfo.ToolTip
+                EmptyValue = runtimeCommand.CommandInfo.Label,
+                ToolTip = runtimeCommand.CommandInfo.ToolTip
             };
 
             //当TextBox的值改变时，通知命令进行新的输入值
             textBox.TextChanged += (o, e) =>
             {
                 var txt = textBox.Text;
-                if (txt == textBox.EmptyValue) txt = string.Empty;
+                if (txt == textBox.EmptyValue) { txt = string.Empty; }
                 runtimeCommand.SetCustomParams(CommandCustomParams.TextBox, txt);
             };
 

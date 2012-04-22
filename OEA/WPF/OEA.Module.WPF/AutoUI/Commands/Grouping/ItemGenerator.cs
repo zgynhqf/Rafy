@@ -20,6 +20,7 @@ using System.Windows.Data;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
 using OEA.WPF.Command;
+using Itenso.Windows.Input;
 
 namespace OEA.Module.WPF.CommandAutoUI
 {
@@ -29,8 +30,6 @@ namespace OEA.Module.WPF.CommandAutoUI
     [DebuggerDisplay("SingleItem : {CommandItem.Label}")]
     public abstract class ItemGenerator : GroupGenerator
     {
-        public ItemGenerator(CommandGroup group, CommandAutoUIContext context) : base(group, context) { }
-
         /// <summary>
         /// 单个命令
         /// </summary>
@@ -128,6 +127,31 @@ namespace OEA.Module.WPF.CommandAutoUI
         /// </summary>
         /// <returns></returns>
         protected abstract ItemControlResult CreateItemControl();
+
+        #endregion
+
+        #region 方便的 API
+
+        public CommandAdapter CreateItemCommand()
+        {
+            var runtimeCommand = CommandRepository.NewCommand(this.CommandItem);
+
+            var args = this.Context.CommandArg;
+            var view = args as ObjectView;
+            if (view != null) { view.Commands.Add(runtimeCommand.CoreCommand); }
+
+            return runtimeCommand;
+        }
+
+        protected TextBox CreateTextBox(CommandAdapter command)
+        {
+            return CreateTextBox(command.CoreCommand);
+        }
+
+        protected void TryExecuteCommand(CommandAdapter command)
+        {
+            CommandRepository.TryExecuteCommand(command.CoreCommand, this.Context.CommandArg);
+        }
 
         #endregion
     }

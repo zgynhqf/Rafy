@@ -28,5 +28,11 @@ namespace OEA
         /// 当前“激活/显示/选中”的对象
         /// </summary>
         Entity CurrentObject { get; }
+
+        /// <summary>
+        /// 是否显示在列表视图中
+        /// true 为列表，false 为详细视图
+        /// </summary>
+        bool IsForList { get; }
     }
 }

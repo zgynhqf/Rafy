@@ -36,7 +36,6 @@ namespace OEA.Module.WPF
 
             //默认的列类型和column编辑器的映射关系
             this.SetDictionary(new Dictionary<string, Type>() { 
-                { WPFEditorNames.String, typeof(StringTreeColumn) },
                 { WPFEditorNames.Enum, typeof(EnumTreeColumn) },
                 { WPFEditorNames.LookupDropDown, typeof(LookupListTreeColumn)},
                 { WPFEditorNames.Memo, typeof(MemoTreeColumn) },

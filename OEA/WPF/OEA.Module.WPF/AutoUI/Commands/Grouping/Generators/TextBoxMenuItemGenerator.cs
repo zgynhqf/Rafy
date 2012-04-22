@@ -23,18 +23,15 @@ namespace OEA.Module.WPF.CommandAutoUI
     /// </summary>
     public class TextBoxMenuItemGenerator : ItemGenerator
     {
-        public TextBoxMenuItemGenerator(CommandGroup group, CommandAutoUIContext context) : base(group, context) { }
-
         /// <summary>
         /// 生成TextBox + MenuItem
         /// </summary>
         /// <returns></returns>
         protected override ItemControlResult CreateItemControl()
         {
-            var commandInfo = this.CommandItem;
-            var runtimeCommand = CommandRepository.NewCommand(commandInfo);
+            var runtimeCommand = this.CreateItemCommand();
 
-            var tb = CreateTextBox(runtimeCommand.CoreCommand);
+            var tb = this.CreateTextBox(runtimeCommand);
 
             //使用MenuItem加入
             MenuItem menuItem = this.CreateAMenuItem(runtimeCommand);

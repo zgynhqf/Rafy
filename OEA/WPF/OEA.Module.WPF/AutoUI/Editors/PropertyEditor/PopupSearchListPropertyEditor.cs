@@ -55,9 +55,9 @@ namespace OEA.Module.WPF.Editors
             return textbox;
         }
 
-        protected override void ResetBinding(FrameworkElement editingControl)
+        protected override DependencyProperty BindingProperty()
         {
-            editingControl.SetBinding(TextBox.TextProperty, this.CreateBinding());
+            return TextBox.TextProperty;
         }
 
         private void PopupSelection()

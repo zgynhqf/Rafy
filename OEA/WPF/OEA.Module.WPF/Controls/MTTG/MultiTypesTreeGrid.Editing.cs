@@ -103,7 +103,7 @@ namespace OEA.Module.WPF.Controls
             if (editingElement == null) return;
             this._editingCell = editingCell;
 
-            //模仿 DataGrild.BeginEdit(FrameworkElement editingElement, RoutedEventArgs e) 方法
+            //模仿 DataGrid.BeginEdit(FrameworkElement editingElement, RoutedEventArgs e) 方法
             editingElement.UpdateLayout();
             editingElement.Focus();
             editingCell.Column.PrepareElementForEdit(editingElement, editingEventArgs);
@@ -136,33 +136,20 @@ namespace OEA.Module.WPF.Controls
 
             cell.ContentTemplate = null;
 
-            //树显示多个对象时，需要切换TreeColumn的PropertyInfo
-            var entityMeta = cell.Row.EntityViewMeta;
-            var propInfo = entityMeta.Property(treeColumn.Meta.Name);
-
             FrameworkElement resultControl = null;
 
-            if (propInfo != null)
+            if (isEditing)
             {
-                treeColumn.ResetPropertyInfo(propInfo);
-                if (isEditing)
-                {
-                    resultControl = treeColumn.GenerateEditingElement();
-                }
-                else
-                {
-                    //此处需要调用更新绑定的源，给cp.Content赋值时会将原有的值清空，而不触发绑定属性的更改
-                    treeColumn.CommitEdit();
-                    resultControl = treeColumn.GenerateDisplayElement();
-                }
-
-                cell.Content = resultControl;
+                resultControl = treeColumn.GenerateEditingElement();
             }
-            //如果当前对象不存在列，则不生成控件
             else
             {
-                cell.Content = null;
+                //此处需要调用更新绑定的源，给cp.Content赋值时会将原有的值清空，而不触发绑定属性的更改
+                treeColumn.CommitEdit();
+                resultControl = treeColumn.GenerateDisplayElement();
             }
+
+            cell.Content = resultControl;
 
             return resultControl;
         }

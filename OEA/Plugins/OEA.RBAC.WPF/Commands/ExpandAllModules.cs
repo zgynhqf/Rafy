@@ -18,7 +18,6 @@ using System.Text;
 using OEA.MetaModel.Attributes;
 using OEA.WPF.Command;
 using OEA.Module.WPF;
-using OEA.Module.WPF.Command;
 using OEA.Library;
 using OEA.RBAC;
 

@@ -65,11 +65,16 @@ namespace OEA.Module.WPF.Editors
             return this._cb;
         }
 
-        protected override void ResetBinding(FrameworkElement editingControl)
+        protected override Binding CreateBinding()
         {
-            var textBinding = this.CreateBinding();
+            var textBinding = base.CreateBinding();
             textBinding.Converter = new EnumConverter();
-            editingControl.SetBinding(ComboBox.TextProperty, textBinding);
+            return textBinding;
+        }
+
+        protected override DependencyProperty BindingProperty()
+        {
+            return ComboBox.TextProperty;
         }
 
         private void On_cb_DropDownOpened(object sender, EventArgs e)

@@ -29,8 +29,6 @@ namespace OEA.Module.WPF.CommandAutoUI
     /// </summary>
     public class SplitButtonGroupGenerator : GroupGenerator
     {
-        public SplitButtonGroupGenerator(CommandGroup group, CommandAutoUIContext context) : base(group, context) { }
-
         protected override FrameworkElement CreateControlCore()
         {
             FrameworkElement generatedResult = null;
@@ -65,7 +63,11 @@ namespace OEA.Module.WPF.CommandAutoUI
             {
                 var group = new CommandGroup(command.Name);
                 group.AddCommand(command);
-                var control = new MenuItemGenerator(group, this.Context).CreateControl();
+                var control = new MenuItemGenerator
+                {
+                    CommandGroup = group,
+                    Context = this.Context
+                }.CreateControl();
                 items.Add(control);
             }
         }

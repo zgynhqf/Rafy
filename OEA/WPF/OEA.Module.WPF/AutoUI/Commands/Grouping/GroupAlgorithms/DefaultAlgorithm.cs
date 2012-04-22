@@ -36,7 +36,11 @@ namespace OEA.Module.WPF.CommandAutoUI
         protected override void GroupCommandCore(WPFCommand cmd)
         {
             var newGroup = new GeneratableCommandGroup(cmd.Name);
-            var generator = new CompoundGenerator(newGroup, this.Context);
+            var generator = new CompoundGenerator
+            {
+                CommandGroup = newGroup,
+                Context = this.Context
+            };
             newGroup.Generator = generator;
 
             //是否生成到菜单中
@@ -44,14 +48,22 @@ namespace OEA.Module.WPF.CommandAutoUI
             {
                 //为每一个命令都声明一个单独的组
                 //构造并设置控件生成器
-                generator.Add(new MenuItemGenerator(newGroup, this.Context));
+                generator.Add(new MenuItemGenerator
+                {
+                    CommandGroup = newGroup,
+                    Context = this.Context
+                });
             }
 
             if (cmd.HasLocation(CommandLocation.Toolbar))
             {
                 if (cmd.Groups.Count != 1)
                 {
-                    generator.Add(new ButtonItemGenerator(newGroup, this.Context));
+                    generator.Add(new ButtonItemGenerator
+                    {
+                        CommandGroup = newGroup,
+                        Context = this.Context
+                    });
                 }
                 else
                 {
@@ -63,7 +75,11 @@ namespace OEA.Module.WPF.CommandAutoUI
                     if (newGroup == null)
                     {
                         newGroup = this.AddNewGroup(groupName);
-                        newGroup.Generator = new SplitButtonGroupGenerator(newGroup, this.Context);
+                        newGroup.Generator = new SplitButtonGroupGenerator
+                        {
+                            CommandGroup = newGroup,
+                            Context = this.Context
+                        };
                     }
                 }
             }

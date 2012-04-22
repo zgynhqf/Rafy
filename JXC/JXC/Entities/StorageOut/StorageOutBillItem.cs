@@ -59,6 +59,7 @@ namespace JXC
             View.ClearWPFCommands(false)
                 .UseWPFCommands(
                 "JXC.Commands.AddStorageOutItem",
+                "JXC.Commands.BarcodeSelectProduct",
                 WPFCommandNames.Delete
                 );
 

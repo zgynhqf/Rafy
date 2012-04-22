@@ -17,13 +17,16 @@ using System.Linq;
 using System.Text;
 using JXC.WPF.Templates;
 using OEA;
+using OEA.Library;
 using OEA.MetaModel.Attributes;
 using OEA.MetaModel.View;
 using OEA.Module.WPF;
+using OEA.Module.WPF.CommandAutoUI;
 using OEA.Module.WPF.Controls;
 using OEA.WPF.Command;
-using OEA.Library;
-using OEA.Module.WPF.Command;
+using Itenso.Windows.Input;
+using System.Windows.Input;
+using System.Windows;
 
 namespace JXC.Commands
 {

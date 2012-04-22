@@ -44,6 +44,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\BarcodeSelectProduct.cs" />
     <Compile Include="Commands\SelectProductCommand.cs" />
     <Compile Include="Modues\Product\ProductModule.cs" />
     <Compile Include="Modues\Product\ProductNavigationCommands.cs" />

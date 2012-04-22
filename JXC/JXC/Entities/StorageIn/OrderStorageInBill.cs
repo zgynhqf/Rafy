@@ -17,7 +17,6 @@ namespace JXC
         public static readonly RefProperty<PurchaseOrder> PurchaseOrderRefProperty =
             P<OrderStorageInBill>.RegisterRef(e => e.Order, new RefPropertyMeta
             {
-                IdChangedCallBack = (o, e) => (o as OrderStorageInBill).OnOrderIdChanged(e),
                 RefEntityChangedCallBack = (o, e) => (o as OrderStorageInBill).OnOrderChanged(e),
             });
         public int OrderId
@@ -30,7 +29,6 @@ namespace JXC
             get { return this.GetRefEntity(PurchaseOrderRefProperty); }
             set { this.SetRefEntity(PurchaseOrderRefProperty, value); }
         }
-        protected virtual void OnOrderIdChanged(RefIdChangedEventArgs e) { }
         protected virtual void OnOrderChanged(RefEntityChangedEventArgs e)
         {
             var value = e.NewEntity as PurchaseOrder;
@@ -41,19 +39,33 @@ namespace JXC
             {
                 foreach (PurchaseOrderItem item in value.PurchaseOrderItemList)
                 {
-                    var siItem = new StorageInBillItem
+                    if (item.AmountLeft > 0)
                     {
-                        Id = OEAEnvironment.NewLocalId(),
-                        Product = item.Product,
-                        Amount = item.AmountLeft,
-                        UnitPrice = item.RawPrice
-                    };
-                    children.Add(siItem);
+                        var siItem = new StorageInBillItem
+                        {
+                            Id = OEAEnvironment.NewLocalId(),
+                            Product = item.Product,
+                            Amount = item.AmountLeft,
+                            UnitPrice = item.RawPrice
+                        };
+                        children.Add(siItem);
+                    }
                 }
             }
 
             this.OnPropertyChanged(StorageInItemListProperty);
             this.OnPropertyChanged(View_SupplierNameProperty);
+        }
+
+        public static readonly Property<PurchaseOrderList> PurchaseOrderDataSourceProperty = P<OrderStorageInBill>.RegisterReadOnly(e => e.PurchaseOrderDataSource, e => (e as OrderStorageInBill).GetPurchaseOrderDataSource(), null);
+        public PurchaseOrderList PurchaseOrderDataSource
+        {
+            get { return this.GetProperty(PurchaseOrderDataSourceProperty); }
+        }
+        private PurchaseOrderList GetPurchaseOrderDataSource()
+        {
+            //自定义数据源：选择商品订单时，只显示状态为未完成的订单。
+            return RF.Concreate<PurchaseOrderRepository>().GetByStatus(OrderStorageInStatus.Waiting);
         }
 
         public static readonly Property<string> View_SupplierNameProperty = P<OrderStorageInBill>.RegisterReadOnly(e => e.View_SupplierName, e => (e as OrderStorageInBill).GetView_SupplierName(), null);
@@ -107,7 +119,8 @@ namespace JXC
                 View.Property(StorageInBill.CodeProperty).HasLabel("商品入库编号").ShowIn(ShowInWhere.All);
                 View.Property(StorageInBill.TotalMoneyProperty).HasLabel("总金额").ShowIn(ShowInWhere.ListDetail).Readonly();
 
-                View.Property(OrderStorageInBill.PurchaseOrderRefProperty).HasLabel("商品订单").ShowIn(ShowInWhere.ListDetail);
+                View.Property(OrderStorageInBill.PurchaseOrderRefProperty).HasLabel("商品订单").ShowIn(ShowInWhere.ListDetail)
+                    .UseLookupDataSource(OrderStorageInBill.PurchaseOrderDataSourceProperty);
                 View.Property(OrderStorageInBill.View_SupplierNameProperty).HasLabel("供应商").ShowIn(ShowInWhere.ListDetail);
 
                 View.Property(StorageInBill.DateProperty).HasLabel("入库日期").ShowIn(ShowInWhere.ListDetail);

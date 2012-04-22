@@ -325,7 +325,6 @@
     <Compile Include="Controls\MTTG\TreeColumn\EnumTreeColumn.cs" />
     <Compile Include="Controls\MTTG\TreeColumn\LookupListTreeColumn.cs" />
     <Compile Include="Controls\MTTG\TreeColumn\MemoTreeColumn.cs" />
-    <Compile Include="Controls\MTTG\TreeColumn\StringTreeColumn.cs" />
     <Compile Include="Controls\MTTG\TreeColumn\TreeColumn.cs" />
     <Compile Include="Controls\MTTG\TreeColumn\TreeColumnFactory.cs" />
     <Compile Include="AutoUI\Editors\MTTGListEditor.cs" />

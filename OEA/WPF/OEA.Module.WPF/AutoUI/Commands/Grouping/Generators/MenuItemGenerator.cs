@@ -21,11 +21,9 @@ namespace OEA.Module.WPF.CommandAutoUI
     /// </summary>
     public class MenuItemGenerator : ItemGenerator
     {
-        public MenuItemGenerator(CommandGroup group, CommandAutoUIContext context) : base(group, context) { }
-
         protected override ItemControlResult CreateItemControl()
         {
-            var cmd = CommandRepository.NewCommand(this.CommandItem);
+            var cmd = this.CreateItemCommand();
             var element = this.CreateAMenuItem(cmd);
             return new ItemControlResult(element, cmd);
         }

@@ -54,7 +54,7 @@ namespace OEA.Module.WPF.CommandAutoUI
 
             //使用分组算法进行分组，并为每个组创建对应的控件生成器
             //注意：如果是单独的Command，一样生成一个单独的“组”
-            var grouping = new GroupOperation(context);
+            var grouping = new GroupOperation { Context = context };
             var groups = grouping.GroupCommands(commands);
 
             //对于每一个命令组，开始生成控件，并添加到上下文对象中。

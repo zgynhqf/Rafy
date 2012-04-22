@@ -21,28 +21,15 @@ namespace OEA.Module.WPF.Editors
 {
     public class StringPropertyEditor : WPFPropertyEditor
     {
-        public StringPropertyEditor() { }
-
         protected override FrameworkElement CreateEditingElement()
         {
-            var propertyName = this.Meta.Name;
-
             var textbox = new TextBox()
             {
-                Name = propertyName,
+                Name = this.Meta.Name,
                 Style = OEAStyles.StringPropertyEditor_TextBox
             };
 
             this.ResetBinding(textbox);
-
-            //回车移动焦点c
-            textbox.KeyDown += (o, e) =>
-            {
-                if (e.Key == Key.Enter)
-                {
-                    textbox.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
-                }
-            };
 
             this.BindElementReadOnly(textbox, TextBox.IsReadOnlyProperty);
 
@@ -51,11 +38,9 @@ namespace OEA.Module.WPF.Editors
             return textbox;
         }
 
-        protected override void ResetBinding(FrameworkElement editingControl)
+        protected override DependencyProperty BindingProperty()
         {
-            //绑定TextBox到对象属性
-            var binding = this.CreateBinding();
-            editingControl.SetBinding(TextBox.TextProperty, binding);
+            return TextBox.TextProperty;
         }
 
         #region 以下代码拷贝自：DataGridTextColumn 类。

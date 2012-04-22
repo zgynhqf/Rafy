@@ -161,6 +161,11 @@ namespace JXC
     [Serializable]
     public class PurchaseOrderList : JXCEntityList
     {
+        protected void QueryBy(OrderStorageInStatus status)
+        {
+            this.QueryDb(q => q.Constrain(PurchaseOrder.StorageInStatusProperty).Equal(status));
+        }
+
         protected void QueryBy(ClientTimeSpanCriteria criteria)
         {
             this.QueryDb(q =>
@@ -179,6 +184,11 @@ namespace JXC
     public class PurchaseOrderRepository : EntityRepository
     {
         protected PurchaseOrderRepository() { }
+
+        public PurchaseOrderList GetByStatus(OrderStorageInStatus status)
+        {
+            return this.FetchListCast<PurchaseOrderList>(status);
+        }
     }
 
     internal class PurchaseOrderConfig : EntityConfig<PurchaseOrder>

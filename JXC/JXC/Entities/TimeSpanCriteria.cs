@@ -83,18 +83,32 @@ namespace JXC
             this.To = to.Add(new TimeSpan(23, 59, 59));
         }
 
-        public static readonly Property<DateTime> FromProperty = P<TimeSpanCriteria>.Register(e => e.From);
+        public static readonly Property<DateTime> FromProperty = P<TimeSpanCriteria>.Register(e => e.From, new PropertyMetadata<DateTime>
+        {
+            PropertyChangedCallBack = (o, e) => (o as TimeSpanCriteria).OnTimeChanged(e)
+        });
         public DateTime From
         {
             get { return this.GetProperty(FromProperty); }
             set { this.SetProperty(FromProperty, value); }
         }
 
-        public static readonly Property<DateTime> ToProperty = P<TimeSpanCriteria>.Register(e => e.To);
+        public static readonly Property<DateTime> ToProperty = P<TimeSpanCriteria>.Register(e => e.To, new PropertyMetadata<DateTime>
+        {
+            PropertyChangedCallBack = (o, e) => (o as TimeSpanCriteria).OnTimeChanged(e)
+        });
         public DateTime To
         {
             get { return this.GetProperty(ToProperty); }
             set { this.SetProperty(ToProperty, value); }
+        }
+
+        private void OnTimeChanged(ManagedPropertyChangedEventArgs<DateTime> e)
+        {
+            if (e.Source == ManagedPropertyChangedSource.FromUIOperating)
+            {
+                this.TimeSpanType = TimeSpanType.Custom;
+            }
         }
     }
 

@@ -43,50 +43,30 @@ namespace OEA.Module.WPF.Controls
         /// <summary>
         /// 该字段可能为空，表示该列没有对应任何元数据。
         /// </summary>
-        private EntityPropertyViewMeta _propertyInfo;
+        private EntityPropertyViewMeta _meta;
 
         #endregion
 
         protected TreeColumn() { }
 
-        internal void IntializeViewMeta(EntityPropertyViewMeta info, PropertyEditorFactory editorFactory)
+        internal void IntializeViewMeta(EntityPropertyViewMeta meta, PropertyEditorFactory editorFactory)
         {
-            this._propertyInfo = info;
+            this._meta = meta;
 
-            this.Editor = this.CreateEditorCore(editorFactory);
+            this.Editor = editorFactory.Create(meta, true);
         }
-
-        #region Editor
 
         /// <summary>
         /// 默认没有Editor
         /// </summary>
-        public IWPFPropertyEditor Editor { get; private set; }
-
-        protected virtual IWPFPropertyEditor CreateEditorCore(PropertyEditorFactory factory) { return null; }
-
-        #endregion
+        public WPFPropertyEditor Editor { get; private set; }
 
         /// <summary>
         /// 正在编辑的属性
         /// </summary>
         public EntityPropertyViewMeta Meta
         {
-            get { return this._propertyInfo; }
-        }
-
-        /// <summary>
-        /// 重设列对应到新的元数据上
-        /// </summary>
-        /// <param name="value"></param>
-        internal void ResetPropertyInfo(EntityPropertyViewMeta value)
-        {
-            /*********************** 代码块解释 *********************************
-             * 该属性可以被设置。
-             * 这是因为在多类型 TreeGrid 中，同样的列可能被多个不同的实体所重用。
-            **********************************************************************/
-
-            this._propertyInfo = value;
+            get { return this._meta; }
         }
 
         /// <summary>
@@ -166,7 +146,23 @@ namespace OEA.Module.WPF.Controls
         /// <summary>
         /// 提交当前的编辑状态，更新绑定的数据源。
         /// </summary>
-        public virtual void CommitEdit() { }
+        public void CommitEdit()
+        {
+            var editor = this.Editor;
+            var dp = editor.GetBindingProperty();
+            if (dp != null)
+            {
+                //需要把焦点从这个控件上移除，否则用户输入的值还没有同步到控件上，这时 UpdateSource 无用。
+                //象 TextBox、NumericUpDown 这些控件都是需要焦点移除后才起使用的。
+                //（NumericUpDown 在输入模式下是这样，内部其实也是 TextBox）
+                var ctrl = editor.Control;
+                ctrl.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+                //Keyboard.ClearFocus();
+
+                var exp = ctrl.GetBindingExpression(dp);
+                exp.UpdateSource();
+            }
+        }
 
         internal protected virtual void PrepareElementForEdit(FrameworkElement editingElement, RoutedEventArgs editingEventArgs)
         {
@@ -191,7 +187,7 @@ namespace OEA.Module.WPF.Controls
             var template = this.GenerateDisplayTemplateInCell();
 
             var cellContainer = MTTGCell.Wrap(template, this);
-            var l = this._propertyInfo.Label;
+            var l = this._meta.Label;
             if (l != null) { cellContainer.SetValue(AutomationProperties.NameProperty, l); }
 
             return cellContainer;
@@ -215,10 +211,13 @@ namespace OEA.Module.WPF.Controls
 
         protected virtual Binding GenerateBindingFormat(string name, string stringformat)
         {
-            return new Binding(name)
-            {
-                StringFormat = stringformat
-            };
+            //使用 PropertyEditor 来生成 Binding 的原因是：
+            //如果是下拉框、则不能直接使用默认的绑定方案。
+            var binding = this.Editor.CreateBindingInternal();
+
+            binding.StringFormat = stringformat;
+
+            return binding;
         }
 
         #endregion
@@ -234,11 +233,11 @@ namespace OEA.Module.WPF.Controls
         {
             var textBlock = new FrameworkElementFactory(typeof(TextBlock));
 
-            var textBinding = GenerateBindingFormat(this._propertyInfo.Name, this._propertyInfo.StringFormat);
+            var textBinding = GenerateBindingFormat(this._meta.Name, this._meta.StringFormat);
 
             textBlock.SetBinding(TextBlock.TextProperty, textBinding);
 
-            var propertyType = this._propertyInfo.PropertyMeta.Runtime.PropertyType;
+            var propertyType = this._meta.PropertyMeta.Runtime.PropertyType;
             if (TypeHelper.IsNumber(propertyType))
             {
                 textBlock.SetValue(TextBlock.StyleProperty, OEAStyles.TreeColumn_TextBlock_Number);
@@ -271,16 +270,16 @@ namespace OEA.Module.WPF.Controls
 
         internal void UpdateVisibility(object currData)
         {
-            if (this._propertyInfo != null)
+            if (this._meta != null)
             {
                 bool isVisible = false;
-                var visibilityIndicator = this._propertyInfo.VisibilityIndicator;
+                var visibilityIndicator = this._meta.VisibilityIndicator;
 
                 //如果是动态计算，则尝试从数据中获取是否可见的值。
                 if (visibilityIndicator.IsDynamic)
                 {
                     //实体类型与属性的实体类型一致时，才进行计算。
-                    var propertyOwnerType = this._propertyInfo.Owner.EntityType;
+                    var propertyOwnerType = this._meta.Owner.EntityType;
                     if (currData != null && propertyOwnerType.IsAssignableFrom(currData.GetType()))
                     {
                         isVisible = currData.GetPropertyValue<bool>(visibilityIndicator.PropertyName);

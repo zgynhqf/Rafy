@@ -226,7 +226,7 @@ namespace OEA.ManagedProperty
         /// </summary>
         /// <param name="property"></param>
         /// <param name="source"></param>
-        protected void OnPropertyChanged(IManagedProperty property, ManagedPropertyChangedSource source = ManagedPropertyChangedSource.FromPersistence)
+        protected void OnPropertyChanged(IManagedProperty property, ManagedPropertyChangedSource source = ManagedPropertyChangedSource.FromProperty)
         {
             var propertyInternal = property as IManagedPropertyInternal;
             if (property.IsReadOnly)

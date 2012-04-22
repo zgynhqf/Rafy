@@ -28,8 +28,6 @@ namespace OEA.Module.WPF.CommandAutoUI
     /// </summary>
     class GroupOperation : CommandAutoUIComponent
     {
-        public GroupOperation(CommandAutoUIContext context) : base(context) { }
-
         /// <summary>
         /// 临时存放的所有生成的命令组
         /// </summary>

@@ -29,11 +29,6 @@ namespace OEA.Module.WPF.Controls
     {
         protected MemoTreeColumn() { }
 
-        protected override IWPFPropertyEditor CreateEditorCore(PropertyEditorFactory factory)
-        {
-            return factory.Create<MemoPropertyEditor>(this.Meta);
-        }
-
         /// <summary>
         /// 强制进入编辑状态，生成编辑状态下的按钮用于弹出窗口
         /// </summary>

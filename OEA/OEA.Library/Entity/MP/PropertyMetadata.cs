@@ -36,11 +36,11 @@ namespace OEA.Library
             var propertyType = typeof(TPropertyType);
             object defaultValue = default(TPropertyType);
 
-            //处理DateTime类型的默认值为当前时间。
-            if (propertyType == typeof(DateTime) && (DateTime)defaultValue == default(DateTime)
-                )
+            //处理DateTime类型的默认值为当天。
+            //注意：目前不支持只支持到天，不支持到时间。
+            if (propertyType == typeof(DateTime) && (DateTime)defaultValue == default(DateTime))
             {
-                defaultValue = DateTime.Now;
+                defaultValue = DateTime.Today;
             }
             else if (propertyType == typeof(DateRange) && defaultValue == null)
             {

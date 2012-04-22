@@ -17,10 +17,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
-using OEA.Utils;
 using OEA.Reflection;
-
-
+using OEA.Utils;
 
 namespace OEA.Module.WPF.Editors
 {
@@ -56,13 +54,13 @@ namespace OEA.Module.WPF.Editors
         /// <param name="currentObject"></param>
         /// <param name="property">属性表达式</param>
         /// <returns></returns>
-        public WPFPropertyEditor Create<TCurrentEntity>(Expression<Func<TCurrentEntity, object>> property)
+        public WPFPropertyEditor Create<TCurrentEntity>(Expression<Func<TCurrentEntity, object>> property, bool forList)
         {
             var vm = UIModel.Views.CreateDefaultView(typeof(TCurrentEntity));
             var pvm = vm.Property(ExpressionHelper.GetProperty(property));
             if (pvm == null) throw new InvalidOperationException("没有找到这个属性。");
 
-            return this.Create(pvm);
+            return this.Create(pvm, forList);
         }
 
         /// <summary>
@@ -70,11 +68,12 @@ namespace OEA.Module.WPF.Editors
         /// </summary>
         /// <typeparam name="TPropertyEditor">指定使用这种编辑器类型</typeparam>
         /// <param name="propertyInfo"></param>
+        /// <param name="forList"></param>
         /// <returns></returns>
-        public TPropertyEditor Create<TPropertyEditor>(EntityPropertyViewMeta propertyInfo)
+        public TPropertyEditor Create<TPropertyEditor>(EntityPropertyViewMeta propertyInfo, bool forList = true)
             where TPropertyEditor : WPFPropertyEditor
         {
-            return this.Create(typeof(TPropertyEditor), propertyInfo) as TPropertyEditor;
+            return this.Create(typeof(TPropertyEditor), propertyInfo, forList) as TPropertyEditor;
         }
 
         /// <summary>
@@ -83,11 +82,11 @@ namespace OEA.Module.WPF.Editors
         /// <param name="editorType">指定使用这种编辑器类型</param>
         /// <param name="propertyInfo"></param>
         /// <returns></returns>
-        public WPFPropertyEditor Create(Type editorType, EntityPropertyViewMeta propertyInfo)
+        public WPFPropertyEditor Create(Type editorType, EntityPropertyViewMeta propertyInfo, bool forList)
         {
             var result = Activator.CreateInstance(editorType, true) as WPFPropertyEditor;
 
-            this.InitPropertyEditor(result, propertyInfo);
+            this.InitPropertyEditor(result, propertyInfo, forList);
 
             return result;
         }
@@ -98,23 +97,25 @@ namespace OEA.Module.WPF.Editors
         /// <param name="context"></param>
         /// <param name="propertyInfo"></param>
         /// <returns></returns>
-        public WPFPropertyEditor Create(EntityPropertyViewMeta propertyInfo)
+        public WPFPropertyEditor Create(EntityPropertyViewMeta propertyInfo, bool forList)
         {
             var result = this.CreateInstance(propertyInfo.EditorName, true) ??
                 this.CreateInstance(WPFEditorNames.String, true);
 
-            this.InitPropertyEditor(result, propertyInfo);
+            this.InitPropertyEditor(result, propertyInfo, forList);
 
             return result;
         }
 
-        protected void InitPropertyEditor(WPFPropertyEditor result, EntityPropertyViewMeta propertyInfo)
+        protected void InitPropertyEditor(WPFPropertyEditor result, EntityPropertyViewMeta propertyInfo, bool forList)
         {
+            result._context.IsForList = forList;
+
             result.Initialize(propertyInfo);
 
             result.EnsureControlsCreated();
 
-            this.OnInstanceCreated(new InstanceCreatedEventArgs<WPFPropertyEditor>(result));
+            this.OnInstanceCreated(result);
         }
     }
 }
