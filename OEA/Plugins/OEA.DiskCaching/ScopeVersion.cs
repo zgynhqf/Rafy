@@ -171,8 +171,8 @@ namespace OEA.Library.Caching
                 ScopeVersion.ScopeIdProperty,
                 ScopeVersion.ValueProperty
                 );
-            Meta.Property(ScopeVersion.ScopeClassProperty).MapColumn().IsRequired(false);
-            Meta.Property(ScopeVersion.ScopeIdProperty).MapColumn().IsRequired(false);
+            Meta.Property(ScopeVersion.ScopeClassProperty).MapColumn().IsNullable();
+            Meta.Property(ScopeVersion.ScopeIdProperty).MapColumn().IsNullable();
         }
     }
 
