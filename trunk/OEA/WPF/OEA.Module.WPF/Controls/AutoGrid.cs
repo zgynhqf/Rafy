@@ -123,6 +123,34 @@ namespace OEA.Module.WPF.Controls
 
         #endregion
 
+        #region ColumnsCount DependencyProperty
+
+        public static readonly DependencyProperty ColumnsCountProperty = DependencyProperty.Register(
+            "ColumnsCount", typeof(int), typeof(AutoGrid),
+            new PropertyMetadata((d, e) => (d as AutoGrid).OnColumnsCountChanged(e))
+            );
+
+        public int ColumnsCount
+        {
+            get { return (int)this.GetValue(ColumnsCountProperty); }
+            set { this.SetValue(ColumnsCountProperty, value); }
+        }
+
+        private void OnColumnsCountChanged(DependencyPropertyChangedEventArgs e)
+        {
+            var value = (int)e.NewValue;
+            var columns = this.ColumnDefinitions;
+
+            columns.Clear();
+
+            for (int i = 0; i < value; i++)
+            {
+                columns.Add(new ColumnDefinition());
+            }
+        }
+
+        #endregion
+
         #region Overrides
 
         protected override Size MeasureOverride(Size constraint)
@@ -252,15 +280,15 @@ namespace OEA.Module.WPF.Controls
                 // Set margin and alignment
                 if (ChildMargin != null)
                 {
-                    child.SetIfDefault(FrameworkElement.MarginProperty, ChildMargin.Value);
+                    child.SetIfNonLocal(FrameworkElement.MarginProperty, ChildMargin.Value);
                 }
                 if (ChildHorizontalAlignment != null)
                 {
-                    child.SetIfDefault(FrameworkElement.HorizontalAlignmentProperty, ChildHorizontalAlignment.Value);
+                    child.SetIfNonLocal(FrameworkElement.HorizontalAlignmentProperty, ChildHorizontalAlignment.Value);
                 }
                 if (ChildVerticalAlignment != null)
                 {
-                    child.SetIfDefault(FrameworkElement.VerticalAlignmentProperty, ChildVerticalAlignment.Value);
+                    child.SetIfNonLocal(FrameworkElement.VerticalAlignmentProperty, ChildVerticalAlignment.Value);
                 }
             }
         }

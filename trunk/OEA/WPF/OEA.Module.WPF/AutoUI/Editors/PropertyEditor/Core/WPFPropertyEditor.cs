@@ -105,6 +105,7 @@ namespace OEA.Module.WPF.Editors
             }
             else
             {
+                binding.Mode = BindingMode.TwoWay;
                 binding.ValidatesOnDataErrors = true;
                 //binding.ValidationRules.Add(new DataErrorValidationRule());
             }

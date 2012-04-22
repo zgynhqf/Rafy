@@ -7,6 +7,7 @@ using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
 using OEA.MetaModel.View;
 using OEA;
+using JXC.Commands;
 
 namespace JXC
 {
@@ -108,9 +109,9 @@ namespace JXC
 
             View.ClearWPFCommands(false)
                 .UseWPFCommands(
-                "JXC.Commands.AddOrderStorageInBill",
-                //"JXC.Commands.DeleteStorageInBill",
-                "JXC.Commands.ShowBill",
+                typeof(AddOrderStorageInBill),
+                //typeof(DeleteStorageInBill),
+                typeof(ShowBill),
                 WPFCommandNames.Refresh
                 );
 

@@ -22,6 +22,8 @@ using OEA.MetaModel.View;
 using OEA.RBAC;
 using OEA.RBAC.Security;
 using OEA;
+using JXC.Commands;
+using JXC.WPF;
 
 namespace JXC
 {
@@ -73,6 +75,13 @@ namespace JXC
         {
             get { return this.GetProperty(BarcodeProperty); }
             set { this.SetProperty(BarcodeProperty, value); }
+        }
+
+        public static readonly Property<byte[]> PictureProperty = P<Product>.Register(e => e.Picture);
+        public byte[] Picture
+        {
+            get { return this.GetProperty(PictureProperty); }
+            set { this.SetProperty(PictureProperty, value); }
         }
 
         public static readonly Property<string> BianMaProperty = P<Product>.Register(e => e.BianMa);
@@ -205,6 +214,7 @@ namespace JXC
         {
             Meta.MapTable().MapAllPropertiesToTable();
 
+            Meta.Property(Product.PictureProperty).MapColumn().IsNullable();
             Meta.Property(Product.SupplierRefProperty).MapColumn().HasColumnName("ClientInfoId");
             Meta.Property(Product.OperatorRefProperty).MapColumn().HasColumnName("UserId");
         }
@@ -215,7 +225,9 @@ namespace JXC
 
             View.DomainName("商品").HasDelegate(Product.MingChengProperty);
 
-            View.UseWPFCommands("JXC.Commands.ResetProductAmountCommand");
+            View.UseWPFCommands(typeof(ResetProductAmountCommand));
+
+            View.DetailPanelType = typeof(ProductDetailPanel);
 
             using (View.OrderProperties())
             {
@@ -223,21 +235,23 @@ namespace JXC
                     .ShowInDetail(columnSpan: 2, width: 0.7);
                 View.Property(Product.MingChengProperty).HasLabel("名称").ShowIn(ShowInWhere.All)
                     .ShowInDetail(columnSpan: 2, width: 600);
-                View.Property(Product.BarcodeProperty).HasLabel("条码").ShowIn(ShowInWhere.All)
+                View.Property(Product.BarcodeProperty).HasLabel("条码").ShowIn(ShowInWhere.ListDetail)
                     .ShowInDetail(columnSpan: 2, width: 0.7);
-                View.Property(Product.ProductCategoryRefProperty).HasLabel("商品类别").ShowIn(ShowInWhere.All);
-                View.Property(Product.GuiGeProperty).HasLabel("规格").ShowIn(ShowInWhere.All);
-                View.Property(Product.PingPaiProperty).HasLabel("品牌").ShowIn(ShowInWhere.All)
+                View.Property(Product.PictureProperty).HasLabel("图片").ShowIn(ShowInWhere.Detail)
+                    .UseEditor("ImageSelector");
+                View.Property(Product.ProductCategoryRefProperty).HasLabel("商品类别").ShowIn(ShowInWhere.ListDetail);
+                View.Property(Product.GuiGeProperty).HasLabel("规格").ShowIn(ShowInWhere.ListDetail);
+                View.Property(Product.PingPaiProperty).HasLabel("品牌").ShowIn(ShowInWhere.ListDetail)
                     .ShowInDetail(columnSpan: 2);
-                View.Property(Product.StorageAmountProperty).HasLabel("库存量").ShowIn(ShowInWhere.List)
+                View.Property(Product.StorageAmountProperty).HasLabel("库存量").ShowIn(ShowInWhere.ListDetail)
                     .Readonly();
-                View.Property(Product.CaiGouDanjiaProperty).HasLabel("采购单价").ShowIn(ShowInWhere.All);
-                View.Property(Product.XiaoShouDanJiaProperty).HasLabel("销售单价").ShowIn(ShowInWhere.All);
-                View.Property(Product.SupplierRefProperty).HasLabel("销售商名称").ShowIn(ShowInWhere.All);
-                View.Property(Product.XiaoShouJia_1Property).HasLabel("一级销售价").ShowIn(ShowInWhere.All);
-                View.Property(Product.XiaoShouJia_2Property).HasLabel("二级销售价").ShowIn(ShowInWhere.All);
-                View.Property(Product.XiaoShouJia_3Property).HasLabel("三级销售价").ShowIn(ShowInWhere.All);
-                View.Property(Product.BeiZhuProperty).HasLabel("备注").ShowIn(ShowInWhere.All)
+                View.Property(Product.CaiGouDanjiaProperty).HasLabel("采购单价").ShowIn(ShowInWhere.ListDetail);
+                View.Property(Product.XiaoShouDanJiaProperty).HasLabel("销售单价").ShowIn(ShowInWhere.ListDetail);
+                View.Property(Product.SupplierRefProperty).HasLabel("销售商名称").ShowIn(ShowInWhere.ListDetail);
+                View.Property(Product.XiaoShouJia_1Property).HasLabel("一级销售价").ShowIn(ShowInWhere.ListDetail);
+                View.Property(Product.XiaoShouJia_2Property).HasLabel("二级销售价").ShowIn(ShowInWhere.ListDetail);
+                View.Property(Product.XiaoShouJia_3Property).HasLabel("三级销售价").ShowIn(ShowInWhere.ListDetail);
+                View.Property(Product.BeiZhuProperty).HasLabel("备注").ShowIn(ShowInWhere.ListDetail)
                     .ShowMemoInDetail();
                 View.Property(Product.OperateTimeProperty).HasLabel("操作时间").ShowIn(ShowInWhere.Detail)
                     .Readonly();

@@ -22,6 +22,7 @@ using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
 using OEA.MetaModel.View;
 using OEA.ManagedProperty;
+using JXC.Commands;
 
 namespace JXC
 {
@@ -204,11 +205,11 @@ namespace JXC
 
             View.ClearWPFCommands(false)
                 .UseWPFCommands(
-                "JXC.Commands.AddPurchaseOrder",
-                "JXC.Commands.DeletePurchaseOrder",
-                "JXC.Commands.ShowBill",
+                typeof(AddPurchaseOrder),
+                typeof(DeletePurchaseOrder),
+                typeof(ShowBill),
                 WPFCommandNames.Refresh,
-                "JXC.Commands.CompletePurchaseOrder"
+                typeof(CompletePurchaseOrder)
                 );
 
             using (View.OrderProperties())

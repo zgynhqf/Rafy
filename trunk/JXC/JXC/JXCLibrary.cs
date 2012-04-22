@@ -21,6 +21,8 @@ namespace JXC
 
         public void Initialize(IApp app)
         {
+            AutoUI.BlockUIFactory.PropertyEditorFactory.Set("ImageSelector", typeof(ImagePropertyEditor));
+
             app.ModuleOperations += (o, e) =>
             {
                 var moduleBookImport = CommonModel.Modules.AddRoot(new ModuleMeta
@@ -103,7 +105,7 @@ namespace JXC
                     App.Current.OpenModuleOrAlert("其它入库");
                     App.Current.OpenModuleOrAlert("其它出库");
 
-                    App.Current.OpenModuleOrAlert("其它入库");
+                    App.Current.OpenModuleOrAlert("商品管理");
                 };
             }
         }

@@ -6,6 +6,7 @@ using OEA.Library;
 using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
 using OEA.MetaModel.View;
+using JXC.Commands;
 
 namespace JXC
 {
@@ -45,8 +46,8 @@ namespace JXC
 
             View.ClearWPFCommands(false)
                 .UseWPFCommands(
-                "JXC.Commands.AddOtherStorageOutBill",
-                "JXC.Commands.ShowBill",
+                typeof(AddOtherStorageOutBill),
+                typeof(ShowBill),
                 WPFCommandNames.Refresh
                 );
 

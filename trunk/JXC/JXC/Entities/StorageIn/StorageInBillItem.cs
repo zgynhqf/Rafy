@@ -8,6 +8,7 @@ using OEA.MetaModel.Attributes;
 using OEA.MetaModel.View;
 using OEA.ManagedProperty;
 using System.ComponentModel;
+using JXC.Commands;
 
 namespace JXC
 {
@@ -86,8 +87,8 @@ namespace JXC
 
             View.ClearWPFCommands(false)
                 .UseWPFCommands(
-                "JXC.Commands.AddStorageInItem",
-                "JXC.Commands.BarcodeSelectProduct",
+                typeof(AddStorageInItem),
+                typeof(BarcodeSelectProduct),
                 WPFCommandNames.Delete
                 );
 

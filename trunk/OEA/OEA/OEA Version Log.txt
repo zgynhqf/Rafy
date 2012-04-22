@@ -8,6 +8,18 @@
  * 
 *******************************************************/
 
+2.10.578.0
+    BUG修复
+        * WPFPropertyEditor 的 CreateBinding 中应该给 TwoWay 设置显式值。
+    示例
+        * JXC 商品添加图片。
+
+2.10.577.0
+    重构
+        * 优化 DetailPanel 的定制接口。
+    示例
+        * 定制 JXC 中商品表单界面。
+
 2.10.576.0
     重构
         * 支持在 Library 中直接编写 WPF 界面的代码。（Command、Module 等）。

@@ -119,13 +119,12 @@ namespace OEA.Module.WPF
         /// <param name="property">The property.</param>
         /// <param name="value">The value.</param>
         /// <returns></returns>
-        public static bool SetIfDefault<T>(this DependencyObject obj, DependencyProperty property, T value)
+        public static bool SetIfNonLocal<T>(this DependencyObject obj, DependencyProperty property, T value)
         {
             if (obj == null) throw new ArgumentNullException("obj");
             if (property == null) throw new ArgumentNullException("property");
-            if (!property.PropertyType.IsAssignableFrom(typeof(T))) { throw new ArgumentException(""); }
 
-            if (DependencyPropertyHelper.GetValueSource(obj, property).BaseValueSource == BaseValueSource.Default)
+            if (DependencyPropertyHelper.GetValueSource(obj, property).BaseValueSource != BaseValueSource.Local)
             {
                 obj.SetValue(property, value);
 

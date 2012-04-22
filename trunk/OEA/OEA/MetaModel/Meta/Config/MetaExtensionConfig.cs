@@ -219,9 +219,21 @@ namespace OEA.MetaModel
         /// <param name="meta"></param>
         /// <param name="isRequired"></param>
         /// <returns></returns>
-        public static ColumnMeta IsRequired(this ColumnMeta meta, bool isRequired)
+        public static ColumnMeta IsRequired(this ColumnMeta meta)
         {
-            meta.IsRequired = isRequired;
+            meta.IsRequired = true;
+            return meta;
+        }
+
+        /// <summary>
+        /// 指定某个属性映射字段时的是否为必需的
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="isRequired"></param>
+        /// <returns></returns>
+        public static ColumnMeta IsNullable(this ColumnMeta meta)
+        {
+            meta.IsRequired = false;
             return meta;
         }
     }
