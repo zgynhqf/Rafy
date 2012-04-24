@@ -15,6 +15,7 @@ using System;
 using System.Configuration;
 using System.Data;
 using System.Data.Common;
+using hxy.Common.Data;
 
 namespace OEA.Library
 {
@@ -36,87 +37,45 @@ namespace OEA.Library
     {
         private static object _lock = new object();
         private IDbConnection _connection;
-        private string _connectionString;
+        private DbSetting _dbSetting;
+
         private string _label;
 
         /// <summary>
         /// Gets the ConnectionManager object for the 
         /// specified database.
         /// </summary>
-        /// <param name="database">
+        /// <param name="dbSetting">
         /// Database name as shown in the config file.
         /// </param>
-        public static ConnectionManager GetManager(string database)
+        public static ConnectionManager GetManager(string dbSetting)
         {
-            return GetManager(database, true);
+            return GetManager(dbSetting, "Default");
         }
 
         /// <summary>
         /// Gets the ConnectionManager object for the 
         /// specified database.
         /// </summary>
-        /// <param name="database">
-        /// Database name as shown in the config file.
-        /// </param>
-        /// <param name="label">Label for this connection.</param>
-        public static ConnectionManager GetManager(string database, string label)
-        {
-            return GetManager(database, true, label);
-        }
-
-        /// <summary>
-        /// Gets the ConnectionManager object for the 
-        /// specified database.
-        /// </summary>
-        /// <param name="database">
+        /// <param name="dbSetting">
         /// The database name or connection string.
         /// </param>
-        /// <param name="isDatabaseName">
-        /// True to indicate that the connection string
-        /// should be retrieved from the config file. If
-        /// False, the database parameter is directly 
-        /// used as a connection string.
-        /// </param>
-        /// <returns>ConnectionManager object for the name.</returns>
-        public static ConnectionManager GetManager(string database, bool isDatabaseName)
-        {
-            return GetManager(database, isDatabaseName, "default");
-        }
-
-        /// <summary>
-        /// Gets the ConnectionManager object for the 
-        /// specified database.
-        /// </summary>
-        /// <param name="database">
-        /// The database name or connection string.
-        /// </param>
-        /// <param name="isDatabaseName">
-        /// True to indicate that the connection string
-        /// should be retrieved from the config file. If
-        /// False, the database parameter is directly 
-        /// used as a connection string.
-        /// </param>
+        /// 
         /// <param name="label">Label for this connection.</param>
         /// <returns>ConnectionManager object for the name.</returns>
-        public static ConnectionManager GetManager(string database, bool isDatabaseName, string label)
+        public static ConnectionManager GetManager(string dbSetting, string label)
         {
-            if (isDatabaseName)
-            {
-                database = hxy.Common.Data.DbSetting.FindOrCreate(database).ConnectionString;
-            }
-
             lock (_lock)
             {
-                var ctxName = GetContextName(database, label);
+                var ctxName = GetContextName(dbSetting, label);
                 ConnectionManager mgr = null;
                 if (ApplicationContext.LocalContext.Contains(ctxName))
                 {
                     mgr = (ConnectionManager)(ApplicationContext.LocalContext[ctxName]);
-
                 }
                 else
                 {
-                    mgr = new ConnectionManager(database, label);
+                    mgr = new ConnectionManager(DbSetting.FindOrCreate(dbSetting), label);
                     ApplicationContext.LocalContext[ctxName] = mgr;
                 }
                 mgr.AddRef();
@@ -124,27 +83,21 @@ namespace OEA.Library
             }
         }
 
-        private ConnectionManager(string connectionString, string label)
+        private ConnectionManager(DbSetting dbSetting, string label)
         {
-            _label = label;
-            _connectionString = connectionString;
-
-            string provider = ConfigurationManager.AppSettings["dbProvider"];
-            if (string.IsNullOrEmpty(provider))
-                provider = "System.Data.SqlClient";
-
-            DbProviderFactory factory = DbProviderFactories.GetFactory(provider);
+            this._label = label;
+            this._dbSetting = dbSetting;
+            DbProviderFactory factory = DbProviderFactories.GetFactory(dbSetting.ProviderName);
 
             // open connection
             _connection = factory.CreateConnection();
-            _connection.ConnectionString = connectionString;
+            _connection.ConnectionString = dbSetting.ConnectionString;
             _connection.Open();
-
         }
 
-        private static string GetContextName(string connectionString, string label)
+        private static string GetContextName(string dbSettingName, string label)
         {
-            return "__db:" + label + "-" + connectionString;
+            return "__db:" + label + "-" + dbSettingName;
         }
 
         /// <summary>
@@ -160,6 +113,14 @@ namespace OEA.Library
             }
         }
 
+        /// <summary>
+        /// 对应的数据库配置信息
+        /// </summary>
+        public DbSetting DbSetting
+        {
+            get { return this._dbSetting; }
+        }
+
         #region  Reference counting
 
         private int mRefCount;
@@ -171,17 +132,16 @@ namespace OEA.Library
 
         private void DeRef()
         {
-
             lock (_lock)
             {
                 mRefCount -= 1;
                 if (mRefCount == 0)
                 {
                     _connection.Dispose();
-                    ApplicationContext.LocalContext.Remove(GetContextName(_connectionString, _label));
+                    var name = GetContextName(this._dbSetting.Name, _label);
+                    ApplicationContext.LocalContext.Remove(name);
                 }
             }
-
         }
 
         #endregion

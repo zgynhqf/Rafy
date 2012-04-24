@@ -16,5 +16,11 @@ namespace OEA.Library
         /// 主键
         /// </summary>
         int Id { get; set; }
+
+        /// <summary>
+        /// 获取当前实体的 仓库
+        /// </summary>
+        /// <returns></returns>
+        IRepository GetRepository();
     }
 }

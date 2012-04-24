@@ -5,6 +5,7 @@ using System.Text;
 using System.Data;
 using OEA.ManagedProperty;
 using OEA.MetaModel;
+using hxy.Common.Data;
 
 namespace OEA.ORM.sqlserver
 {
@@ -242,10 +243,12 @@ namespace OEA.ORM.sqlserver
             return buf.ToString();
         }
 
-        public virtual void SetParameters(IDbCommand cmd)
+        public virtual void SetParameters(IParameterFactory pf, List<IDbDataParameter> paramaters)
         {
             foreach (SqlConstraint constraint in constraints)
-                constraint.SetParameters(cmd);
+            {
+                constraint.SetParameters(pf, paramaters);
+            }
         }
 
         public virtual string GetSql(SqlTable table)

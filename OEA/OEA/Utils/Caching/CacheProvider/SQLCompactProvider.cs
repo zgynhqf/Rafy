@@ -17,10 +17,10 @@ using System.Linq;
 using System.Text;
 using System.Runtime.Caching;
 using System.Threading;
-using System.Data.SqlServerCe;
 using System.Data.Common;
 using System.Data;
 using System.IO;
+using hxy.Common.Data;
 
 namespace OEA.Utils.Caching
 {
@@ -38,8 +38,6 @@ namespace OEA.Utils.Caching
 
         private ISQLCompactSerializer _serializer;
 
-        private string _conString;
-
         /// <summary>
         /// 由于SQLCE不支持多链接，所以打开/关闭链接时，需要手工进行同步。
         /// </summary>
@@ -51,15 +49,18 @@ namespace OEA.Utils.Caching
         /// </summary>
         private string _cacheDir;
 
+        private IDBAccesser _db;
+
         public SQLCompactProvider(string dbFile, ISQLCompactSerializer serializer)
         {
             if (string.IsNullOrWhiteSpace(dbFile)) throw new ArgumentNullException("dbFile");
             if (serializer == null) throw new ArgumentNullException("serializer");
 
-            this._conString = "DataSource=" + dbFile;
             this._cacheDir = Path.Combine(Path.GetDirectoryName(dbFile), @"CacheItems\");
 
             this._serializer = serializer;
+
+            this._db = new DBAccesser("DataSource=" + dbFile, DbSetting.Provider_SqlCe);
         }
 
         internal protected override StoredValue GetCacheItemCore(string region, string key)
@@ -152,7 +153,8 @@ namespace OEA.Utils.Caching
 
         private void Db_Clear()
         {
-            this.ExecuteSQL("delete from [Entities]");
+            this._db.ExecuteTextNormal("delete from [Entities]");
+
             Directory.Delete(this._cacheDir, true);
         }
 
@@ -176,87 +178,37 @@ namespace OEA.Utils.Caching
                 valueData = new byte[0];
             }
 
-            var cmd = this.CreateCommand("Insert into [Entities]([Region], [Key], [Value], [ChangeChecker], [Time], [ValuePath]) values(?, ?, ?, ?, ?, ?)");
-
-            var parameters = cmd.Parameters;
-
-            var p = cmd.CreateParameter();
-            p.ParameterName = "p1";
-            p.Value = region;
-            p.DbType = DbType.String;
-            parameters.Add(p);
-
-            p = cmd.CreateParameter();
-            p.ParameterName = "p2";
-            p.Value = key;
-            p.DbType = DbType.String;
-            parameters.Add(p);
-
-            p = cmd.CreateParameter();
-            p.ParameterName = "p3";
-            p.Value = valueData;
-            p.DbType = DbType.Binary;
-            parameters.Add(p);
-
-            p = cmd.CreateParameter();
-            p.ParameterName = "p4";
-            p.Value = checkerData;
-            p.DbType = DbType.Binary;
-            parameters.Add(p);
-
-            p = cmd.CreateParameter();
-            p.ParameterName = "p5";
-            p.Value = DateTime.Now;
-            p.DbType = DbType.DateTime;
-            parameters.Add(p);
-
-            p = cmd.CreateParameter();
-            p.ParameterName = "p6";
-            p.Value = valuePath;
-            p.DbType = DbType.String;
-            parameters.Add(p);
-
-            this.ExeNonquery(cmd);
+            this._db.ExecuteText(
+                @"Insert into [Entities]([Region], [Key], [Value], [ChangeChecker], [Time], [ValuePath]) values({0}, {1}, {2}, {3}, {4}, {5})",
+                region, key, valueData, checkerData, DateTime.Now, valuePath
+                );
         }
 
         private void Db_Remove(string region, string key)
         {
             if (region == null) region = _commonRegionName;
 
-            //先查询一次，看是否把内容存储为文件了。
-            var con = this.CreateConnection();
-            var cmd = this.CreateCommand(
-                string.Format(@"select ValuePath from Entities where [Region] = '{0}' and [Key] = '{1}'", region, key),
-                con
-                );
-
             //处理文件
             bool hasRecord = false;
-            try
+            //先查询一次，看是否把内容存储为文件了。
+            using (var reader = this._db.QueryDataReader(
+@"select ValuePath from Entities where [Region] = {0} and [Key] = {1}", region, key))
             {
-                this.OpenConnection(con);
-                using (var reader = cmd.ExecuteReader())
+                if (reader.Read())
                 {
-                    if (reader.Read())
+                    hasRecord = true;
+                    var path = reader["ValuePath"] as string;
+                    if (!string.IsNullOrWhiteSpace(path))
                     {
-                        hasRecord = true;
-                        var path = reader["ValuePath"] as string;
-                        if (!string.IsNullOrWhiteSpace(path))
-                        {
-                            if (File.Exists(path)) File.Delete(path);
-                        }
+                        if (File.Exists(path)) File.Delete(path);
                     }
                 }
-            }
-            finally
-            {
-                this.CloseConnection(con);
             }
 
             //处理数据库
             if (hasRecord)
             {
-                this.ExecuteSQL(string.Format(@"delete from [Entities] where [Region] = '{0}' and [Key] = '{1}'", region, key));
+                this._db.ExecuteText(@"delete from [Entities] where [Region] = {0} and [Key] = {1}", region, key);
             }
         }
 
@@ -266,104 +218,42 @@ namespace OEA.Utils.Caching
 
             if (region == null) region = _commonRegionName;
 
-            var con = this.CreateConnection();
-            var cmd = this.CreateCommand(string.Format(@"
-Select Value, ValuePath, ChangeChecker 
+            using (var reader = this._db.QueryDataReader(
+@"Select Value, ValuePath, ChangeChecker 
 from [Entities]
-where [Region] = '{0}' and [Key] = '{1}'
-", region, key), con);
-            try
+where [Region] = {0} and [Key] = {1}
+", region, key))
             {
-                this.OpenConnection(con);
-                using (var reader = cmd.ExecuteReader())
+                if (reader.Read())
                 {
-                    if (reader.Read())
+                    var checkerData = reader["ChangeChecker"] as byte[];
+                    var valueData = reader["Value"] as byte[];
+                    var valuePath = reader["ValuePath"] as string;
+                    bool loadDataSuccess = true;
+
+                    //如果已经存储进了文件，则在文件中读取数据。
+                    if (!string.IsNullOrWhiteSpace(valuePath))
                     {
-                        var checkerData = reader["ChangeChecker"] as byte[];
-                        var valueData = reader["Value"] as byte[];
-                        var valuePath = reader["ValuePath"] as string;
-                        bool loadDataSuccess = true;
-
-                        //如果已经存储进了文件，则在文件中读取数据。
-                        if (!string.IsNullOrWhiteSpace(valuePath))
+                        if (File.Exists(valuePath))
                         {
-                            if (File.Exists(valuePath))
-                            {
-                                valueData = File.ReadAllBytes(valuePath);
-                            }
-                            else
-                            {
-                                loadDataSuccess = false;
-                                this.Db_Remove(region, key);
-                            }
+                            valueData = File.ReadAllBytes(valuePath);
                         }
-
-                        //反序列化为对象。
-                        if (loadDataSuccess)
+                        else
                         {
-                            value = Deserialize(valueData);
-                            changeChecker = Deserialize(checkerData);
+                            loadDataSuccess = false;
+                            this.Db_Remove(region, key);
                         }
+                    }
+
+                    //反序列化为对象。
+                    if (loadDataSuccess)
+                    {
+                        value = Deserialize(valueData);
+                        changeChecker = Deserialize(checkerData);
                     }
                 }
             }
-            finally
-            {
-                this.CloseConnection(con);
-            }
         }
-
-        #region 数据库访问的基础操作封装
-
-        private void ExecuteSQL(string sql)
-        {
-            var cmd = this.CreateCommand(sql);
-            this.ExeNonquery(cmd);
-        }
-
-        private DbCommand CreateCommand(string sql, DbConnection con = null)
-        {
-            con = con ?? this.CreateConnection();
-            var cmd = con.CreateCommand();
-            cmd.CommandText = sql;
-            return cmd;
-        }
-
-        private void ExeNonquery(DbCommand cmd)
-        {
-            try
-            {
-                this.OpenConnection(cmd.Connection);
-                cmd.ExecuteNonQuery();
-            }
-            finally
-            {
-                this.CloseConnection(cmd.Connection);
-            }
-        }
-
-        private void OpenConnection(DbConnection con)
-        {
-            if (con.State == ConnectionState.Closed)
-            {
-                con.Open();
-            }
-        }
-
-        private void CloseConnection(DbConnection con)
-        {
-            if (con.State != ConnectionState.Closed)
-            {
-                con.Close();
-            }
-        }
-
-        private DbConnection CreateConnection()
-        {
-            return new SqlCeConnection(this._conString);
-        }
-
-        #endregion
 
         #endregion
 

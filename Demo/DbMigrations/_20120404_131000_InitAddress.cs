@@ -25,7 +25,7 @@ namespace Demo.DbMigrations
             {
                 //由于本类没有支持 Down 操作，所以这里面的 Up 需要防止重入。
                 var pvcRepo = RF.Concreate<ProvinceRepository>();
-                var list = pvcRepo.GetAll();
+                var list = pvcRepo.GetAll(false);
                 if (list.Count == 0)
                 {
                     var yn = new Province

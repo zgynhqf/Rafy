@@ -44,6 +44,7 @@ namespace JXC
 
         public static readonly Property<int> AmountProperty = P<ProductRefItem>.Register(e => e.Amount, new PropertyMetadata<int>
         {
+            PropertyChangingCallBack = (o, e) => (o as ProductRefItem).OnAmountChanging(e),
             PropertyChangedCallBack = (o, e) => (o as ProductRefItem).OnAmountChanged(e)
         });
         public int Amount
@@ -51,6 +52,7 @@ namespace JXC
             get { return this.GetProperty(AmountProperty); }
             set { this.SetProperty(AmountProperty, value); }
         }
+        protected virtual void OnAmountChanging(ManagedPropertyChangingEventArgs<int> e) { }
         protected virtual void OnAmountChanged(ManagedPropertyChangedEventArgs<int> e) { }
 
         #region 视图属性

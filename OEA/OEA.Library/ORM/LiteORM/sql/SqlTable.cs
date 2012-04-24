@@ -1,457 +1,207 @@
-﻿using System;
-using System.Data;
+﻿/*******************************************************
+ * 
+ * 作者：胡庆访
+ * 创建时间：20120424
+ * 说明：此文件只包含一个类，具体内容见类型注释。
+ * 运行环境：.NET 4.0
+ * 版本号：1.0.0
+ * 
+ * 历史记录：
+ * 创建文件 胡庆访 20120424
+ * 
+*******************************************************/
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
-using OEA.Utils;
-using OEA.Library;
 using hxy.Common.Data;
+using OEA.Library;
+using OEA.MetaModel;
+using OEA.Utils;
 
 namespace OEA.ORM.sqlserver
 {
     public class SqlTable : ITable
     {
-        protected Type type;
-        protected string name;
-        protected string schema;
-        protected List<SqlColumn> columns;
-        protected SqlColumn identity;
-        protected bool isSPResult;
+        protected EntityMeta meta;
+        protected string _name;
+        protected List<SqlColumn> _columns;
+        protected SqlColumn _identity;
 
-        private string insertSQL;
-        private string updateSQL;
-        private string deleteSQL;
-        private string selectSQL;
+        private string _insertSQL;
+        private string _updateSQL;
+        private string _deleteSQL;
+        private string _selectSQL;
 
-        public SqlTable(Type type, string name, string schema)
+        public SqlTable(EntityMeta meta, string name)
         {
-            this.type = type;
-            if (name != null)
-                this.name = name;
-            if (schema != null)
-                this.schema = schema.ToLower();
-            columns = new List<SqlColumn>();
-            isSPResult = (name == null || name.Length == 0);
+            this.meta = meta;
+            this._name = name;
+            this._columns = new List<SqlColumn>();
         }
+
+        #region 元数据属性
 
         public Type Class
         {
-            get { return type; }
+            get { return this.meta.EntityType; }
         }
 
         public string Name
         {
-            get { return name; }
-        }
-
-        public string Schema
-        {
-            get { return schema; }
+            get { return _name; }
         }
 
         public IColumn[] Columns
         {
-            get { return columns.ToArray(); }
+            get { return _columns.ToArray(); }
         }
+
+        #endregion
 
         public virtual void Add(SqlColumn column)
         {
             if (column.IsID)
             {
-                if (identity != null)
+                if (_identity != null)
                 {
                     throw new LightException(string.Format(
                         "cannot add idenity column {0} to table {1}, it already has an identity column {2}",
-                        column.Name, this.Name, identity.Name));
+                        column.Name, this.Name, _identity.Name));
                 }
-                identity = column;
+                _identity = column;
             }
-            columns.Add(column);
-            column.Ordinal = columns.Count;
+            _columns.Add(column);
+            column.Ordinal = _columns.Count;
         }
 
-        public SqlColumn FindByColumnName(string name)
+        #region 数据操作 CRUD
+
+        public virtual int Insert(IDb db, object item)
         {
-            if (name == null || name.Length == 0)
-                return null;
-            string target = name.ToLower();
-            foreach (SqlColumn column in columns)
+            var dba = db.DBA;
+
+            var parameters = new List<IDbDataParameter>();
+            foreach (SqlColumn column in _columns)
             {
-                if (column.Name.Equals(target))
-                    return column;
-            }
-            return null;
-        }
+                if (column.IsReadable && !column.IsID)
+                {
+                    var p = dba.ParameterFactory.CreateParameter();
+                    p.ParameterName = string.Format("@{0}", column.Ordinal);
 
-        public SqlColumn FindByPropertyName(string propertyName)
-        {
-            if (string.IsNullOrEmpty(propertyName)) return null;
+                    SqlUtils.PrepParam(p, column.DataType);
+                    parameters.Add(p);
 
-            string target = propertyName.ToLower();
-
-            foreach (SqlColumn column in columns)
-            {
-                if (column.PropertyName == target) return column;
-                if (column.RefPropertyName == target) return column;
+                    //设置值
+                    column.SetParameterValue(p, item);
+                }
             }
 
-            return null;
-        }
-
-        public string Translate(string propertyName)
-        {
-            SqlColumn column = FindByPropertyName(propertyName);
-            if (column == null)
-                return null;
-            return column.Name;
-        }
-
-        private void ErrorIfSPResult()
-        {
-            if (isSPResult)
-            {
-                string format = "type {0} is marked with SPResultAttribute, not TableAttribute";
-                throw new LightException(string.Format(format, type.FullName));
-            }
-        }
-
-        public virtual int Insert(IDb db, ICollection items)
-        {
-            ErrorIfSPResult();
-            int result = 0;
             string sql = GetInsertSql();
-            Trace(sql);
-            IDbCommand cmd = null;
-            IDbDataParameter idP = null;
-            try
-            {
-                cmd = db.Connection.CreateCommand();
-                cmd.CommandText = sql;
-                cmd.CommandTimeout = 600000; //add by zhoujg
-                cmd.CommandType = CommandType.Text;
-                cmd.Transaction = db.Transaction;
-                foreach (SqlColumn column in columns)
-                {	// add parameters
-                    if (column.IsReadable && !column.IsID)
-                    {
-                        IDbDataParameter p = cmd.CreateParameter();
-                        p.ParameterName = string.Format("@{0}", column.Ordinal);
-                        SqlUtils.PrepParam(p, column.DataType);
-                        cmd.Parameters.Add(p);
-                    }
-                }
-                if (identity != null)
-                {	// add output parameter for identity column
-                    idP = cmd.CreateParameter();
-                    idP.ParameterName = "@id";
-                    SqlUtils.PrepParam(idP, identity.DataType);
-                    idP.Direction = ParameterDirection.Output;
-                    cmd.Parameters.Add(idP);
-                }
-                cmd.Prepare();
-                foreach (object item in items)
-                {
-                    if (item == null)
-                        continue;
-                    foreach (SqlColumn column in columns)
-                    {	// assign values to all parameters
-                        if (column.IsReadable && !column.IsID)
-                        {
-                            string pname = string.Format("@{0}", column.Ordinal);
-                            IDbDataParameter p = (IDbDataParameter)cmd.Parameters[pname];
-                            column.SetParameterValue(p, item);
-                        }
-                    }
+            var result = dba.ExecuteTextNormal(sql, parameters.ToArray());
 
-                    TraceObject.Instance.TraceCommand(cmd);
-
-                    result += cmd.ExecuteNonQuery();
-                    if (identity != null)
-                    {	// write generated identity value back into the object
-                        identity.SetValue(item, idP.Value);
-                    }
-                }
-            }
-            finally
+            // write generated identity value back into the object
+            if (this._identity != null)
             {
-                if (cmd != null)
-                {
-                    cmd.Dispose();
-                    cmd = null;
-                }
+                var value = dba.QueryValueNormal("select @@identity;", CommandType.Text);
+                this._identity.SetValue(item, value);
             }
+
             return result;
         }
 
-        //columns param add by zhoujg
-        public virtual int Update(IDb db, ICollection items, IList<string> updateColumns)
+        public virtual int Delete(IDb db, object item)
         {
-            ErrorIfSPResult();
-            int result = 0;
-            string sql = GetUpdateSql(updateColumns);
-            Trace(sql);
-            IDbCommand cmd = null;
-            try
+            var dba = db.DBA;
+
+            var parameters = new List<IDbDataParameter>();
+
+            foreach (SqlColumn column in _columns)
             {
-                cmd = db.Connection.CreateCommand();
-                cmd.CommandTimeout = 600000;  //add by zhoujg
-                cmd.CommandText = sql;
-                cmd.CommandType = CommandType.Text;
-                cmd.Transaction = db.Transaction;
-                foreach (SqlColumn column in columns)
-                {	// add parameters
-                    if (column.IsReadable && !(column.IsID && !column.IsPK) && ((null == updateColumns) || (updateColumns.Contains(column.Name.ToLower()))))
-                    {
-                        string prefix = column.IsPK ? "@pk" : "@";
-                        IDbDataParameter p = cmd.CreateParameter();
-                        p.ParameterName = string.Format("{0}{1}", prefix, column.Ordinal);
-                        SqlUtils.PrepParam(p, column.DataType);
-                        cmd.Parameters.Add(p);
-                    }
-                }
-                cmd.Prepare();
-                foreach (object item in items)
+                if (column.IsPK)
                 {
-                    if (item != null)
-                    {
-                        foreach (SqlColumn column in columns)
-                        {	// assign values to parameters
-                            if (column.IsReadable && !(column.IsID && !column.IsPK) && ((null == updateColumns) || (updateColumns.Contains(column.Name.ToLower()))))
-                            {
-                                string prefix = column.IsPK ? "@pk" : "@";
-                                string pname = string.Format("{0}{1}", prefix, column.Ordinal);
-                                IDbDataParameter p = (IDbDataParameter)cmd.Parameters[pname];
-                                column.SetParameterValue(p, item);
-                            }
-                        }
+                    IDbDataParameter p = dba.ParameterFactory.CreateParameter();
+                    p.ParameterName = string.Format("@pk{0}", column.Ordinal);
+                    SqlUtils.PrepParam(p, column.DataType);
+                    parameters.Add(p);
 
-                        TraceObject.Instance.TraceCommand(cmd);
-
-                        result += cmd.ExecuteNonQuery();
-                    }
+                    column.SetParameterValue(p, item);
                 }
             }
-            finally
-            {
-                if (cmd != null)
-                {
-                    cmd.Dispose();
-                    cmd = null;
-                }
-            }
-            return result;
-        }
 
-        public virtual int Delete(IDb db, ICollection items)
-        {
-            ErrorIfSPResult();
-            int result = 0;
             string sql = GetDeleteSql();
-            Trace(sql);
-            IDbCommand cmd = null;
-            try
-            {
-                cmd = db.Connection.CreateCommand();
-                cmd.CommandText = sql;
-                cmd.CommandType = CommandType.Text;
-                cmd.Transaction = db.Transaction;
-                foreach (SqlColumn column in columns)
-                {
-                    if (column.IsPK)
-                    {
-                        IDbDataParameter p = cmd.CreateParameter();
-                        p.ParameterName = string.Format("@pk{0}", column.Ordinal);
-                        SqlUtils.PrepParam(p, column.DataType);
-                        cmd.Parameters.Add(p);
-                    }
-                }
-                cmd.Prepare();
-                foreach (object item in items)
-                {
-                    if (item != null)
-                    {
-                        foreach (SqlColumn column in columns)
-                        {
-                            if (column.IsPK)
-                            {
-                                string pname = string.Format("@pk{0}", column.Ordinal);
-                                IDbDataParameter p = (IDbDataParameter)cmd.Parameters[pname];
-                                column.SetParameterValue(p, item);
-                            }
-                        }
-
-                        TraceObject.Instance.TraceCommand(cmd);
-
-                        result += cmd.ExecuteNonQuery();
-                    }
-                }
-            }
-            finally
-            {
-                if (cmd != null)
-                {
-                    cmd.Dispose();
-                    cmd = null;
-                }
-            }
-            return result;
+            return dba.ExecuteTextNormal(sql, parameters.ToArray());
         }
 
         public virtual int Delete(IDb db, IQuery query)
         {
-            ErrorIfSPResult();
-            int result = 0;
+            var dba = db.DBA;
+
+            var parameters = new List<IDbDataParameter>();
+
             SqlQuery sqlquery = (SqlQuery)query; //as SqlQuery;
             string sql = GetDeleteSql(sqlquery);
-            Trace(sql);
-            IDbCommand cmd = null;
-            try
-            {
-                cmd = db.Connection.CreateCommand();
-                cmd.CommandText = sql;
-                cmd.CommandTimeout = 600000;  //add by zhoujg
-                cmd.CommandType = CommandType.Text;
-                cmd.Transaction = db.Transaction;
-                if (sqlquery != null)
-                    sqlquery.SetParameters(cmd);
-                cmd.Prepare();
 
-                TraceObject.Instance.TraceCommand(cmd);
+            if (sqlquery != null) sqlquery.SetParameters(dba.ParameterFactory, parameters);
 
-                result = cmd.ExecuteNonQuery();
-            }
-            finally
+            return dba.ExecuteTextNormal(sql, parameters.ToArray());
+        }
+
+        public virtual int Update(IDb db, object item)
+        {
+            var dba = db.DBA;
+
+            var parameters = new List<IDbDataParameter>();
+            foreach (SqlColumn column in _columns)
             {
-                if (cmd != null)
+                if (column.IsReadable && !(column.IsID && !column.IsPK))
                 {
-                    cmd.Dispose();
-                    cmd = null;
+                    IDbDataParameter p = dba.ParameterFactory.CreateParameter();
+                    p.ParameterName = string.Format("{0}{1}", column.IsPK ? "@pk" : "@", column.Ordinal);
+                    SqlUtils.PrepParam(p, column.DataType);
+                    parameters.Add(p);
+
+                    column.SetParameterValue(p, item);
                 }
             }
-            return result;
+
+            string sql = GetUpdateSql(null);
+            return dba.ExecuteTextNormal(sql, parameters.ToArray());
         }
 
         public virtual void Select(IDb db, IQuery query, IList list)
         {
-            ErrorIfSPResult();
-            SqlQuery sqlquery = (SqlQuery)query;
+            var dba = db.DBA;
+
+            var sqlquery = query as SqlQuery;
             string sql = GetSelectSql(sqlquery);
-            Trace(sql);
-            IDbCommand cmd = null;
-            IDataReader reader = null;
-            try
+            var parameters = new List<IDbDataParameter>();
+            if (sqlquery != null)
             {
-                cmd = db.Connection.CreateCommand();
-                cmd.CommandText = sql;
-                cmd.CommandType = CommandType.Text;
-                cmd.Transaction = db.Transaction;
-                if (sqlquery != null)
-                    sqlquery.SetParameters(cmd);
-                cmd.Prepare();
+                sqlquery.SetParameters(dba.ParameterFactory, parameters);
+            }
 
-                TraceObject.Instance.TraceCommand(cmd);
-
-                reader = cmd.ExecuteReader();
+            using (var reader = dba.QueryDataReaderNormal(sql, CommandType.Text, parameters.ToArray()))
+            {
                 FillByIndex(reader, list);
             }
-            finally
-            {
-                if (reader != null)
-                {
-                    if (!reader.IsClosed)
-                        reader.Close();
-                    reader.Dispose();
-                    reader = null;
-                }
-                if (cmd != null)
-                {
-                    cmd.Dispose();
-                    cmd = null;
-                }
-            }
         }
 
-        public virtual object Find(IDb session, object key)
-        {
-            ErrorIfSPResult();
-            SqlColumn pk = null;
-            object result = null;
-            foreach (SqlColumn c in columns)
-            {
-                if (c.IsPK)
-                {
-                    pk = c;
-                    break;
-                }
-            }
-            if (pk != null)
-            {
-                SqlQuery q = new SqlQuery();
-                q.Constrain(pk.PropertyName).Equal(key);
-                IList list = new ArrayList(1);
-                Select(session, q, list);
-                if (list.Count > 0)
-                    result = list[0];
-            }
-            return result;
-        }
+        #endregion
 
-        public virtual void Exec(IDb db, string procName, object[] parameters, IList list)
-        {
-            TraceProc(procName, parameters);
-
-            int len = (parameters == null) ? 0 : parameters.Length;
-            string sql = GetExecSql(procName, len);
-            IDbCommand cmd = null;
-            IDataReader reader = null;
-            try
-            {
-                cmd = db.Connection.CreateCommand();
-                cmd.CommandText = sql;
-                cmd.CommandType = CommandType.Text;
-                cmd.Transaction = db.Transaction;
-                for (int i = 0; i < len; i++)
-                {
-                    int j = i + 1;
-                    IDbDataParameter p = cmd.CreateParameter();
-                    p.ParameterName = string.Format("@{0}", j);
-                    SqlUtils.PrepParam(p, parameters[i]);
-                    cmd.Parameters.Add(p);
-                }
-
-                TraceObject.Instance.TraceCommand(cmd);
-
-                reader = cmd.ExecuteReader();
-                FillByName(reader, list);
-            }
-            finally
-            {
-                if (reader != null)
-                {
-                    if (!reader.IsClosed)
-                        reader.Close();
-                    reader.Dispose();
-                    reader = null;
-                }
-                if (cmd != null)
-                {
-                    cmd.Dispose();
-                    cmd = null;
-                }
-            }
-        }
+        #region SQL 生成
 
         protected virtual string GetInsertSql()
         {
-            if (insertSQL == null)
+            if (_insertSQL == null)
             {
                 StringBuilder sql = new StringBuilder("insert into ");
                 StringBuilder values = new StringBuilder();
-                if (schema != null && schema.Length > 0)
-                    sql.Append("[").Append(schema).Append("].");
-                sql.Append("[").Append(name).Append("] (");
+                sql.Append("[").Append(_name).Append("] (");
                 bool comma = false;
-                foreach (SqlColumn column in columns)
+                foreach (SqlColumn column in _columns)
                 {
                     if (column.IsReadable && !column.IsID)
                     {
@@ -467,23 +217,19 @@ namespace OEA.ORM.sqlserver
                     }
                 }
                 sql.Append(") values (").Append(values.ToString()).Append(");");
-                if (identity != null)
-                    sql.Append("set @id=scope_identity();");
-                insertSQL = sql.ToString();
+                _insertSQL = sql.ToString();
             }
-            return insertSQL;
+            return _insertSQL;
         }
 
         protected virtual string GetUpdateSql(IList<string> updateColumns)
         {
-            if ((updateSQL == null) || (null != updateColumns))
+            if ((_updateSQL == null) || (null != updateColumns))
             {
                 StringBuilder sql = new StringBuilder("update ");
-                if (schema != null && schema.Length > 0)
-                    sql.Append("[").Append(schema).Append("].");
-                sql.Append("[").Append(name).Append("] set ");
+                sql.Append("[").Append(_name).Append("] set ");
                 bool comma = false;
-                foreach (SqlColumn column in columns)
+                foreach (SqlColumn column in _columns)
                 {
                     if ((column.IsReadable && !column.IsPK && !column.IsID && ((null == updateColumns) || (updateColumns.Contains(column.Name.ToLower())))))
                     {
@@ -496,7 +242,7 @@ namespace OEA.ORM.sqlserver
                 }
                 sql.Append(" where ");
                 comma = false;
-                foreach (SqlColumn column in columns)
+                foreach (SqlColumn column in _columns)
                 {
                     if (column.IsReadable && column.IsPK)
                     {
@@ -506,36 +252,32 @@ namespace OEA.ORM.sqlserver
                     }
                 }
                 sql.Append(";");
-                updateSQL = sql.ToString();
+                _updateSQL = sql.ToString();
             }
-            return updateSQL;
+            return _updateSQL;
         }
 
         protected virtual string GetDeleteSql()
         {
-            if (deleteSQL == null)
+            if (_deleteSQL == null)
             {
                 StringBuilder sql = new StringBuilder("delete from ");
-                if (schema != null && schema.Length > 0)
-                    sql.Append("[").Append(schema).Append("].");
-                sql.Append("[").Append(name).Append("] where 1=1");
-                foreach (SqlColumn column in columns)
+                sql.Append("[").Append(_name).Append("] where 1=1");
+                foreach (SqlColumn column in _columns)
                 {
                     if (column.IsPK)
                         sql.Append(" and [").Append(column.Name).Append("]=@pk").Append(column.Ordinal);
                 }
                 sql.Append(";");
-                deleteSQL = sql.ToString();
+                _deleteSQL = sql.ToString();
             }
-            return deleteSQL;
+            return _deleteSQL;
         }
 
         protected virtual string GetDeleteSql(SqlQuery query)
         {
             StringBuilder buf = new StringBuilder("delete from ");
-            if (schema != null && schema.Length > 0)
-                buf.Append("[").Append(schema).Append("].");
-            buf.Append("[").Append(name).Append("]");
+            buf.Append("[").Append(_name).Append("]");
             if (query != null)
                 buf.Append(" ").Append(query.GetSql(this));
             buf.Append(";");
@@ -544,11 +286,11 @@ namespace OEA.ORM.sqlserver
 
         protected virtual string GetSelectSql(SqlQuery query)
         {
-            if (selectSQL == null)
+            if (_selectSQL == null)
             {
                 StringBuilder buf = new StringBuilder("select ");
                 bool comma = false;
-                foreach (SqlColumn column in columns)
+                foreach (SqlColumn column in _columns)
                 {
                     if (comma)
                         buf.Append(",");
@@ -557,37 +299,33 @@ namespace OEA.ORM.sqlserver
                     buf.Append("[").Append(column.Name).Append("]");
                 }
                 buf.Append(" from ");
-                if (schema != null && schema.Length > 0)
-                    buf.Append("[").Append(schema).Append("].");
-                buf.Append("[").Append(name).Append("]");
-                selectSQL = buf.ToString();
+                buf.Append("[").Append(_name).Append("]");
+                _selectSQL = buf.ToString();
             }
             if (query != null)
             {
                 //edit by zhoujg
                 string sQL = "";
                 if (null == query.Columns)
-                    sQL = selectSQL;
+                    sQL = _selectSQL;
                 else
                 {
                     StringBuilder sQLBuf = new StringBuilder("select ");
                     bool comma = false;
-                    foreach (SqlColumn column in columns)
+                    foreach (SqlColumn column in _columns)
                     {
                         if (comma)
                             sQLBuf.Append(",");
                         else
                             comma = true;
-                        //add by zhoujg: 如果不包含当前字段,则取空
+
                         if (query.Columns.Contains(column.Name.ToLower()))
                             sQLBuf.Append("[").Append(column.Name).Append("]");
                         else
                             sQLBuf.Append(" null as [").Append(column.Name).Append("]");
                     }
                     sQLBuf.Append(" from ");
-                    if (schema != null && schema.Length > 0)
-                        sQLBuf.Append("[").Append(schema).Append("].");
-                    sQLBuf.Append("[").Append(name).Append("]");
+                    sQLBuf.Append("[").Append(_name).Append("]");
                     sQL = sQLBuf.ToString();
                 }
 
@@ -597,33 +335,18 @@ namespace OEA.ORM.sqlserver
                 return buf.ToString();
             }
             else
-                return string.Format("{0};", selectSQL);
+                return string.Format("{0};", _selectSQL);
         }
 
-        protected virtual string GetExecSql(string proc, int nParams)
-        {
-            StringBuilder buf = new StringBuilder("exec ");
-            buf.Append(proc);
-            if (nParams > 0)
-                buf.Append(" ");
-            for (int i = 0; i < nParams; i++)
-            {
-                int j = i + 1;
-                if (i > 0)
-                    buf.Append(",");
-                buf.Append("@").Append(j);
-            }
-            buf.Append(";");
-            return buf.ToString();
-        }
+        #endregion
 
-        private void FillByIndex(IDataReader reader, IList list)
+        public void FillByIndex(IDataReader reader, IList list)
         {
             while (reader.Read())
             {
                 var entity = CreateEntity();
                 int i = 0;
-                foreach (SqlColumn column in columns)
+                foreach (SqlColumn column in _columns)
                 {
                     object val = reader[i++];
                     column.SetValue(entity, val);
@@ -632,12 +355,12 @@ namespace OEA.ORM.sqlserver
             }
         }
 
-        private void FillByName(IDataReader reader, IList list)
+        public void FillByName(IDataReader reader, IList list)
         {
             while (reader.Read())
             {
                 var entity = CreateEntity();
-                foreach (SqlColumn column in columns)
+                foreach (SqlColumn column in _columns)
                 {
                     object val = reader[column.Name];
                     column.SetValue(entity, val);
@@ -648,48 +371,133 @@ namespace OEA.ORM.sqlserver
 
         private Entity CreateEntity()
         {
-            var entity = Entity.New(type);
+            var entity = Entity.New(this.meta.EntityType);
 
             entity.Status = PersistenceStatus.Unchanged;
 
             return entity;
         }
 
-        #region OEA
-
-        /// <summary>
-        /// 直接把data中的数据读取到entity中。
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <param name="data"></param>
-        public void SetValues(object entity, IResultSet data)
+        internal SqlColumn FindByColumnName(string name)
         {
-            foreach (SqlColumn column in columns)
+            if (name == null || name.Length == 0)
+                return null;
+            string target = name.ToLower();
+            foreach (SqlColumn column in _columns)
             {
-                object val = data[column.Name];
-                column.SetValue(entity, val);
+                if (column.Name.Equals(target))
+                    return column;
             }
+            return null;
         }
 
-        #region 用于测试SQL
-
-        [System.Diagnostics.Conditional("DEBUG")]
-        public static void TraceProc(string proc, object[] parameters)
+        internal SqlColumn FindByPropertyName(string propertyName)
         {
-            if (proc == "sys.sp_sqlexec")
+            if (string.IsNullOrEmpty(propertyName)) return null;
+
+            string target = propertyName.ToLower();
+
+            foreach (SqlColumn column in _columns)
             {
-                Trace(parameters[0] as string);
+                if (column.PropertyName == target) return column;
+                if (column.RefPropertyName == target) return column;
             }
+
+            return null;
         }
 
-        [System.Diagnostics.Conditional("DEBUG")]
-        public static void Trace(string sql)
+        internal string Translate(string propertyName)
         {
-            SQLTrace.Trace(sql);
+            SqlColumn column = FindByPropertyName(propertyName);
+            if (column == null)
+                return null;
+            return column.Name;
         }
 
-        #endregion
+        //存储过程的支持，暂时不需要。
+        //public virtual object Find(IDb session, object key)
+        //{
+        //    
+        //    SqlColumn pk = null;
+        //    object result = null;
+        //    foreach (SqlColumn c in columns)
+        //    {
+        //        if (c.IsPK)
+        //        {
+        //            pk = c;
+        //            break;
+        //        }
+        //    }
+        //    if (pk != null)
+        //    {
+        //        SqlQuery q = new SqlQuery();
+        //        q.Constrain(pk.PropertyName).Equal(key);
+        //        IList list = new ArrayList(1);
+        //        Select(session, q, list);
+        //        if (list.Count > 0)
+        //            result = list[0];
+        //    }
+        //    return result;
+        //}
 
-        #endregion
+        //public virtual void Exec(IDb db, string procName, object[] parameters, IList list)
+        //{
+        //    TraceProc(procName, parameters);
+
+        //    int len = (parameters == null) ? 0 : parameters.Length;
+        //    string sql = GetExecSql(procName, len);
+        //    IDbCommand cmd = null;
+        //    IDataReader reader = null;
+        //    try
+        //    {
+        //        cmd = db.Connection.CreateCommand();
+        //        cmd.CommandText = sql;
+        //        cmd.CommandType = CommandType.Text;
+        //        //cmd.Transaction = db.Transaction;
+        //        for (int i = 0; i < len; i++)
+        //        {
+        //            int j = i + 1;
+        //            IDbDataParameter p = cmd.CreateParameter();
+        //            p.ParameterName = string.Format("@{0}", j);
+        //            SqlUtils.PrepParam(p, parameters[i]);
+        //            cmd.Parameters.Add(p);
+        //        }
+
+        //        reader = cmd.ExecuteReader();
+        //        FillByName(reader, list);
+        //    }
+        //    finally
+        //    {
+        //        if (reader != null)
+        //        {
+        //            if (!reader.IsClosed)
+        //                reader.Close();
+        //            reader.Dispose();
+        //            reader = null;
+        //        }
+        //        if (cmd != null)
+        //        {
+        //            cmd.Dispose();
+        //            cmd = null;
+        //        }
+        //    }
+        //}
+
+        //protected virtual string GetExecSql(string proc, int nParams)
+        //{
+        //    StringBuilder buf = new StringBuilder("exec ");
+        //    buf.Append(proc);
+        //    if (nParams > 0)
+        //        buf.Append(" ");
+        //    for (int i = 0; i < nParams; i++)
+        //    {
+        //        int j = i + 1;
+        //        if (i > 0)
+        //            buf.Append(",");
+        //        buf.Append("@").Append(j);
+        //    }
+        //    buf.Append(";");
+        //    return buf.ToString();
+        //}
     }
 }

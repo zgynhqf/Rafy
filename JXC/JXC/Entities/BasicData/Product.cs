@@ -24,6 +24,7 @@ using OEA.RBAC.Security;
 using OEA;
 using JXC.Commands;
 using JXC.WPF;
+using OEA.Library.Caching;
 
 namespace JXC
 {
@@ -68,6 +69,12 @@ namespace JXC
         {
             get { return this.GetRefEntity(OperatorRefProperty); }
             set { this.SetRefEntity(OperatorRefProperty, value); }
+        }
+
+        public static readonly ListProperty<ProductAttachementList> ProductAttachementListProperty = P<Product>.RegisterList(e => e.ProductAttachementList);
+        public ProductAttachementList ProductAttachementList
+        {
+            get { return this.GetLazyList(ProductAttachementListProperty); }
         }
 
         public static readonly Property<string> BarcodeProperty = P<Product>.Register(e => e.Barcode);
@@ -217,6 +224,9 @@ namespace JXC
             Meta.Property(Product.PictureProperty).MapColumn().IsNullable();
             Meta.Property(Product.SupplierRefProperty).MapColumn().HasColumnName("ClientInfoId");
             Meta.Property(Product.OperatorRefProperty).MapColumn().HasColumnName("UserId");
+
+            //基础数据启用分布式缓存
+            Meta.EnableCache();
         }
 
         protected override void ConfigView()

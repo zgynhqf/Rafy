@@ -13,6 +13,19 @@ namespace JXC
     [RootEntity, Serializable]
     public abstract class StorageInBill : JXCEntity
     {
+        public static readonly RefProperty<Storage> StorageRefProperty =
+            P<StorageInBill>.RegisterRef(e => e.Storage, ReferenceType.Normal);
+        public int StorageId
+        {
+            get { return this.GetRefId(StorageRefProperty); }
+            set { this.SetRefId(StorageRefProperty, value); }
+        }
+        public Storage Storage
+        {
+            get { return this.GetRefEntity(StorageRefProperty); }
+            set { this.SetRefEntity(StorageRefProperty, value); }
+        }
+
         public static readonly ListProperty<StorageInBillItemList> StorageInItemListProperty = P<StorageInBill>.RegisterList(e => e.StorageInItemList);
         public StorageInBillItemList StorageInItemList
         {

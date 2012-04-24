@@ -29,5 +29,10 @@ namespace OEA.Library
         /// </summary>
         /// <returns></returns>
         IDb CreateDb();
+
+        /// <summary>
+        /// 数据库配置名称（每个库有一个唯一的配置名）
+        /// </summary>
+        string ConnectionStringSettingName { get; }
     }
 }

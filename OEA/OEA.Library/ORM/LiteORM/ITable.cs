@@ -8,7 +8,6 @@ namespace OEA.ORM
     {
         Type Class { get; }
         string Name { get; }
-        string Schema { get; }
         IColumn[] Columns { get; }
     }
 
@@ -26,6 +25,20 @@ namespace OEA.ORM
             }
 
             return entity;
+        }
+
+        /// <summary>
+        /// 直接把data中的数据读取到entity中。
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="data"></param>
+        public static void SetValues(this ITable table, object entity, IResultSet data)
+        {
+            foreach (var column in table.Columns)
+            {
+                object val = data[column.Name];
+                column.SetValue(entity, val);
+            }
         }
     }
 }

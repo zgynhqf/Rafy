@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 
 using OEA.ManagedProperty;
+using System.Runtime;
 
 namespace OEA.Library
 {
@@ -130,6 +131,7 @@ namespace OEA.Library
 
         #endregion
 
+        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
         public bool HasAction(CloneActions action)
         {
             return (this._actions & action) == action;

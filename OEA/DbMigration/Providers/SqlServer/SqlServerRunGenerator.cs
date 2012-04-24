@@ -12,12 +12,12 @@
 *******************************************************/
 
 using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using DbMigration.Operations;
-using System.CodeDom.Compiler;
-using System.Data;
 using hxy.Common.Data;
 
 namespace DbMigration.SqlServer
@@ -72,6 +72,11 @@ namespace DbMigration.SqlServer
                 sql.Indent--;
                 sql.Write(")");
 
+                this.AddRun(sql);
+            }
+
+            using (var sql = this.Writer())
+            {
                 this.GenerateAddPKConstraint(sql, op.TableName, op.PKName);
 
                 this.AddRun(sql);

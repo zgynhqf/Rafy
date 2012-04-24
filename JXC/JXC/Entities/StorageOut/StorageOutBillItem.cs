@@ -28,6 +28,17 @@ namespace JXC
             set { this.SetRefEntity(StorageOutBillRefProperty, value); }
         }
 
+        protected override void OnAmountChanging(ManagedPropertyChangingEventArgs<int> e)
+        {
+            base.OnAmountChanging(e);
+
+            //如果出库的数据大于当前库存，应该修改错误的值为当前库存。
+            if (e.Source == ManagedPropertyChangedSource.FromUIOperating && e.Value > this.Product.StorageAmount)
+            {
+                e.CoercedValue = this.Product.StorageAmount;
+            }
+        }
+
         protected override void OnAmountChanged(ManagedPropertyChangedEventArgs<int> e)
         {
             base.OnAmountChanged(e);
@@ -35,7 +46,21 @@ namespace JXC
             this.RaiseRoutedEvent(PriceChangedEvent, e);
         }
 
+        public static readonly Property<int> View_ProductStorageAmountProperty = P<StorageOutBillItem>.RegisterReadOnly(e => e.View_ProductStorageAmount, e => (e as StorageOutBillItem).GetView_ProductStorageAmount(), null);
+        public int View_ProductStorageAmount
+        {
+            get { return this.GetProperty(View_ProductStorageAmountProperty); }
+        }
+        private int GetView_ProductStorageAmount()
+        {
+            return this.Product.StorageAmount;
+        }
+
+        #region 路由事件
+
         public static readonly EntityRoutedEvent PriceChangedEvent = EntityRoutedEvent.Register(EntityRoutedEventType.BubbleToParent);
+
+        #endregion
     }
 
     [Serializable]
@@ -69,6 +94,7 @@ namespace JXC
                 View.Property(StorageOutBillItem.View_ProductNameProperty).HasLabel("商品名称").ShowIn(ShowInWhere.All);
                 View.Property(StorageOutBillItem.View_ProductCategoryNameProperty).HasLabel("商品类别").ShowIn(ShowInWhere.List);
                 View.Property(StorageOutBillItem.View_SpecificationProperty).HasLabel("规格").ShowIn(ShowInWhere.List);
+                View.Property(StorageOutBillItem.View_ProductStorageAmountProperty).HasLabel("当前库存").ShowIn(ShowInWhere.List);
                 View.Property(StorageOutBillItem.AmountProperty).HasLabel("出库数量*").ShowIn(ShowInWhere.List);
             }
         }

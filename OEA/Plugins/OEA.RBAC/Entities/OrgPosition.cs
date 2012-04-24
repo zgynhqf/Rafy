@@ -112,8 +112,10 @@ namespace OEA.RBAC
             {
                 var qUser = db.Query(typeof(OrgPositionUser))
                     .Constrain(OrgPositionUser.UserRefProperty).Equal(userId);
-                var positionIds = db.Select<OrgPositionUser>(qUser)
-                    .Select(e => e.OrgPositionId).ToList();
+                var positionIds = db.Select(qUser)
+                    .Cast<OrgPositionUser>()
+                    .Select(e => e.OrgPositionId)
+                    .ToList();
 
                 this.QueryDb(q => q.Constrain(OrgPosition.IdProperty).In(positionIds));
             }

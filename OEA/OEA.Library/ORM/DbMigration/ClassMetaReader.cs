@@ -167,17 +167,21 @@ namespace OEA.Library.ORM.DbMigration
                         var refProperty = mp.CastTo<IRefProperty>();
                         dataType = refProperty.GetMeta(em.EntityType).Nullable ? typeof(int?) : typeof(int);
 
-                        var refTableMeta = property.ReferenceInfo.RefTypeMeta.TableMeta;
-                        if (refTableMeta != null)
+                        var refTypeMeta = property.ReferenceInfo.RefTypeMeta;
+                        if (refTypeMeta != null)
                         {
-                            this._foreigns.Add(new ForeignConstraintInfo()
+                            var refTableMeta = refTypeMeta.TableMeta;
+                            if (refTableMeta != null)
                             {
-                                FkTableName = tableMeta.TableName,
-                                PkTableName = refTableMeta.TableName,
-                                FkColumn = columnName,
-                                PkColumn = DBConvention.FieldName_Id,
-                                NeedDeleteCascade = property.ReferenceInfo.Type == ReferenceType.Parent
-                            });
+                                this._foreigns.Add(new ForeignConstraintInfo()
+                                {
+                                    FkTableName = tableMeta.TableName,
+                                    PkTableName = refTableMeta.TableName,
+                                    FkColumn = columnName,
+                                    PkColumn = DBConvention.FieldName_Id,
+                                    NeedDeleteCascade = property.ReferenceInfo.Type == ReferenceType.Parent
+                                });
+                            }
                         }
                     }
                     else if (columnName == DBConvention.FieldName_PId || columnName == DBConvention.FieldName_TreePId)

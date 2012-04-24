@@ -25,11 +25,25 @@ namespace JXC
     [RootEntity, Serializable]
     public class ClientCategory : JXCEntity
     {
+        public static readonly string SupplierName = "供应商";
+
+        public static readonly string CustomerName = "客户";
+
         public static readonly Property<string> NameProperty = P<ClientCategory>.Register(e => e.Name);
         public string Name
         {
             get { return this.GetProperty(NameProperty); }
             set { this.SetProperty(NameProperty, value); }
+        }
+
+        protected override void OnDelete()
+        {
+            if (this.Name == SupplierName || this.Name == CustomerName)
+            {
+                throw new InvalidOperationException("不能删除系统内置的客户类型：" + this.Name);
+            }
+
+            base.OnDelete();
         }
     }
 
@@ -48,6 +62,8 @@ namespace JXC
             Meta.SupportTree();
 
             Meta.MapTable().MapAllPropertiesToTable();
+
+            Meta.EnableCache();
         }
 
         protected override void ConfigView()

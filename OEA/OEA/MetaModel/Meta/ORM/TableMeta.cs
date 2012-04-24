@@ -35,5 +35,13 @@ namespace OEA.MetaModel
             get { return this._SupprtMigrating; }
             set { this.SetValue(ref this._SupprtMigrating, value); }
         }
+
+        /// <summary>
+        /// OEA 内部使用!!!
+        /// 
+        /// 这个字段用于存储运行时解析出来的 ORM 信息。
+        /// 本字段只为提升性能。
+        /// </summary>
+        public object ORMRuntime;
     }
 }

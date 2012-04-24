@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OEA;
 using OEA.Library;
 using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
@@ -113,6 +114,27 @@ namespace JXC
     public class ClientInfoRepository : EntityRepository
     {
         protected ClientInfoRepository() { }
+
+        public ClientInfoList GetSuppliers()
+        {
+            return this.GetByCategoryName(ClientCategory.SupplierName);
+        }
+
+        public ClientInfoList GetCustomers()
+        {
+            return this.GetByCategoryName(ClientCategory.CustomerName);
+        }
+
+        public ClientInfoList GetByCategoryName(string name)
+        {
+            var list = this.GetAll()
+                .Where(e => e.CastTo<ClientInfo>().ClientCategory.Name == name);
+
+            var result = this.NewList();
+            result.AddRange(list);
+
+            return result as ClientInfoList;
+        }
     }
 
     internal class ClientInfoConfig : EntityConfig<ClientInfo>
@@ -130,6 +152,8 @@ namespace JXC
                 ClientInfo.YinHangZhangHuProperty,
                 ClientInfo.BeiZhuProperty
                 );
+
+            Meta.EnableCache();
         }
 
         protected override void ConfigView()

@@ -46,7 +46,7 @@ namespace OEA.Library
         [NonSerialized]
         private IRepository _repository;
 
-        internal protected IRepository GetRepository()
+        public IRepository GetRepository()
         {
             if (this._repository == null)
             {
@@ -263,9 +263,9 @@ namespace OEA.Library
         /// </summary>
         public void NotifyCacheVersion()
         {
-            var entityType = this.EntityType;
-            CacheScope scope = null;
-            if (CacheDefinition.Instance.TryGetScope(entityType, out scope))
+            var meta = this.GetRepository().EntityMeta;
+            var scope = meta.CacheDefinition;
+            if (scope != null)
             {
                 string scopeId = null;
                 if (scope.ScopeIdGetter != null)
@@ -277,7 +277,7 @@ namespace OEA.Library
 
                 if (EntityListVersion.Repository != null)
                 {
-                    EntityListVersion.Repository.UpdateVersion(entityType, scope.ScopeClass, scopeId);
+                    EntityListVersion.Repository.UpdateVersion(meta.EntityType, scope.ScopeClass, scopeId);
                 }
             }
         }

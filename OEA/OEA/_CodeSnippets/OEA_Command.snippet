@@ -17,6 +17,10 @@
                     <Default>Label</Default>
                 </Literal>
                 <Literal>
+                    <ID>NAMESPACE</ID>
+                    <Default>OEA</Default>
+                </Literal>
+                <Literal>
                     <ID>CommandName</ID>
                     <Default>***Command</Default>
                 </Literal>
@@ -36,7 +40,7 @@ using OEA.Module.WPF.CommandAutoUI;
 using OEA.Module.WPF.Controls;
 using OEA.WPF.Command;
 
-namespace $NAMESPACE$
+namespace $NAMESPACE$.Commands
 {
     [Command(Label = "$Label$", GroupType = CommandGroupType.Business)]
     public class $CommandName$ : ListViewCommand

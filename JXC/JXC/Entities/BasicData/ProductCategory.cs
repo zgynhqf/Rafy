@@ -50,6 +50,8 @@ namespace JXC
             Meta.MapTable().HasColumns(
                 ProductCategory.NameProperty
                 );
+
+            Meta.EnableCache();
         }
 
         protected override void ConfigView()

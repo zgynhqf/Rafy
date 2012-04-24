@@ -93,8 +93,6 @@ namespace OEA.RBAC
                 };
             };
 
-            app.StartupCompleted += (o, e) => { CacheDefinition.Instance.Enable<Position>(); };
-
             if (OEAEnvironment.Location.IsOnClient())
             {
                 app.Exit += (o, e) =>

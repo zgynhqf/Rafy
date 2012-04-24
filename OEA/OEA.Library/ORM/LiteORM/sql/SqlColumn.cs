@@ -23,6 +23,9 @@ namespace OEA.ORM.sqlserver
             this._data = data;
         }
 
+        /// <summary>
+        /// 顺序号
+        /// </summary>
         public int Ordinal
         {
             get { return _ordinal; }

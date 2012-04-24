@@ -38,7 +38,7 @@ namespace OEA.Library.DbMigrations
                 var list = orgRepository.GetAll();
                 if (list.Count == 0)
                 {
-                    using (var tran = new TransactionScope())
+                    using (var tran = RF.TransactionScope(orgRepository))
                     {
                         //Position
                         var p = new Position();

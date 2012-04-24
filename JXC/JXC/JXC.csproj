@@ -45,20 +45,25 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DbMigrations\_20120418_213000_InitProduct.cs" />
+    <Compile Include="DbMigrations\_20120423_183700_InitStorage.cs" />
     <Compile Include="DbMigrations\_20120417_142100_InitClient.cs" />
     <Compile Include="DbMigrations\DataMigration.cs" />
     <Compile Include="DbMigrations\_20120417_131600_InitProductCategory.cs" />
-    <Compile Include="DbMigrations\_20120418_213000_InitProduct.cs" />
     <Compile Include="Entities\BasicData\ClientCategory.cs" />
     <Compile Include="Entities\BasicData\ClientInfo.cs" />
+    <Compile Include="Entities\BasicData\FileAttachement.cs" />
     <Compile Include="Entities\BasicData\Product.cs" />
+    <Compile Include="Entities\BasicData\ProductAttachement.cs" />
     <Compile Include="Entities\BasicData\ProductCategory.cs" />
     <Compile Include="Entities\BasicData\ProductNavigationCriteria.cs" />
     <Compile Include="Entities\BasicData\Storage.cs" />
+    <Compile Include="Entities\BasicData\StorageProduct.cs" />
     <Compile Include="Entities\BasicData\Unit.cs" />
     <Compile Include="Entities\ProductRefItem.cs" />
     <Compile Include="Entities\Purchase\PurchaseOrder.cs" />
     <Compile Include="Entities\ClientTimeSpanCriteria.cs" />
+    <Compile Include="Entities\Purchase\PurchaseOrderAttachement.cs" />
     <Compile Include="Entities\Purchase\PurchaseOrderItem.cs" />
     <Compile Include="Entities\StorageIn\OrderStorageInBill.cs" />
     <Compile Include="Entities\StorageIn\OtherStorageInBill.cs" />
@@ -98,6 +103,7 @@
     <Compile Include="WPF\Layouts\HorizentalConditionLayout.xaml.cs">
       <DependentUpon>HorizentalConditionLayout.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WPF\Modules\BasicData\FileAttachementCommands.cs" />
     <Compile Include="WPF\Modules\Product\ProductDetailPanel.xaml.cs">
       <DependentUpon>ProductDetailPanel.xaml</DependentUpon>
     </Compile>
@@ -157,11 +163,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="UML\1 基础数据.jpg" />
-    <Content Include="UML\2 库存.jpg" />
-    <Content Include="UML\3 采购订单.jpg" />
-    <Content Include="UML\4 入库单.jpg" />
-    <Content Include="UML\5 出库单.jpg" />
     <Resource Include="Images\Add.bmp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

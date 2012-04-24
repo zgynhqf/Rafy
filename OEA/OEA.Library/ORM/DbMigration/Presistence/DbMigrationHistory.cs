@@ -19,7 +19,6 @@ namespace OEA.Library.ORM.DbMigration.Presistence
         }
 
         public static readonly Property<string> DatabaseProperty = P<DbMigrationHistory>.Register(e => e.Database);
-        [EntityProperty]
         public string Database
         {
             get { return this.GetProperty(DatabaseProperty); }
@@ -27,7 +26,6 @@ namespace OEA.Library.ORM.DbMigration.Presistence
         }
 
         public static readonly Property<DateTime> TimeIdProperty = P<DbMigrationHistory>.Register(e => e.TimeId);
-        [EntityProperty]
         public DateTime TimeId
         {
             get { return this.GetProperty(TimeIdProperty); }
@@ -35,7 +33,6 @@ namespace OEA.Library.ORM.DbMigration.Presistence
         }
 
         public static readonly Property<bool> IsGeneratedProperty = P<DbMigrationHistory>.Register(e => e.IsGenerated);
-        [EntityProperty]
         public bool IsGenerated
         {
             get { return this.GetProperty(IsGeneratedProperty); }
@@ -43,7 +40,6 @@ namespace OEA.Library.ORM.DbMigration.Presistence
         }
 
         public static readonly Property<string> DescriptionProperty = P<DbMigrationHistory>.Register(e => e.Description);
-        [EntityProperty]
         public string Description
         {
             get { return this.GetProperty(DescriptionProperty); }
@@ -51,7 +47,6 @@ namespace OEA.Library.ORM.DbMigration.Presistence
         }
 
         public static readonly Property<string> MigrationClassProperty = P<DbMigrationHistory>.Register(e => e.MigrationClass);
-        [EntityProperty]
         public string MigrationClass
         {
             get { return this.GetProperty(MigrationClassProperty); }
@@ -59,7 +54,6 @@ namespace OEA.Library.ORM.DbMigration.Presistence
         }
 
         public static readonly Property<string> MigrationContentProperty = P<DbMigrationHistory>.Register(e => e.MigrationContent);
-        [EntityProperty]
         public string MigrationContent
         {
             get { return this.GetProperty(MigrationContentProperty); }
@@ -102,6 +96,8 @@ namespace OEA.Library.ORM.DbMigration.Presistence
                 DbMigrationHistory.MigrationClassProperty,
                 DbMigrationHistory.MigrationContentProperty
                 );
+
+            Meta.Property(DbMigrationHistory.DatabaseProperty).MapColumn().HasColumnName("Db");
         }
     }
 }

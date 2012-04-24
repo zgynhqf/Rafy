@@ -13,10 +13,19 @@ namespace OEA.Library.Caching
     {
         private static readonly string CACHE_FILE_NAME = "OEA_Entity_Cache.sdf";
 
+        /// <summary>
+        /// 内存缓存
+        /// </summary>
         public static Cache Memory;
 
+        /// <summary>
+        /// 使用 SqlCe 的硬盘缓存
+        /// </summary>
         public static Cache SqlCe;
 
+        /// <summary>
+        /// 一个先用内存，后用硬盘的二级缓存
+        /// </summary>
         public static Cache MemoryDisk;
 
         static CacheInstance()
@@ -57,6 +66,5 @@ namespace OEA.Library.Caching
                 return Serializer.Deserialize(data);
             }
         }
-
     }
 }
