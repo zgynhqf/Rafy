@@ -19,6 +19,7 @@ using hxy.Common.Data;
 using System.Data.SqlServerCe;
 using System.Diagnostics;
 using System.Threading;
+using System.IO;
 
 namespace DbMigration.SqlServerCe
 {
@@ -29,6 +30,12 @@ namespace DbMigration.SqlServerCe
 
         protected override void RunCore(IDBAccesser db)
         {
+            //保存目录存在。
+            var csb = new SqlCeConnectionStringBuilder(db.Connection.ConnectionString);
+            var dir = Path.GetDirectoryName(csb.DataSource);
+            Directory.CreateDirectory(dir);
+
+            //调用引擎创建数据库
             var engine = new SqlCeEngine(db.Connection.ConnectionString);
             engine.CreateDatabase();
         }
