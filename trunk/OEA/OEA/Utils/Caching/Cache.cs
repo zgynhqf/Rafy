@@ -25,7 +25,7 @@ namespace OEA.Utils.Caching
     /// </summary>
     public class Cache
     {
-        public CacheProvider _cacheProvider;
+        private CacheProvider _cacheProvider;
 
         /// <summary>
         /// 构造函数。

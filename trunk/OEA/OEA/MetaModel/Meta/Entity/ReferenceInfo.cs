@@ -60,7 +60,10 @@ namespace OEA.MetaModel
         }
 
         /// <summary>
-        /// 引用实体的视图元数据
+        /// 引用实体的实体元数据
+        /// 
+        /// 当此引用属性引用的是一个抽象的实体类，这个抽象类并没有对应的实体元数据，可能这个抽象的子类才有实体元数据，
+        /// 在这种情况下，此属性值将为 null。
         /// </summary>
         public EntityMeta RefTypeMeta
         {

@@ -8,6 +8,52 @@
  * 
 *******************************************************/
 
+2.11.589.0
+    ★重要改动
+        * 支持 SQLCE 数据库生成、升级。
+        * 支持 SQLCE 数据库映射。
+        * 同时重构了许多数据层的代码，例如 SQLTable 的映射等。此版本是 OEA 首次实际支持多数据库。
+
+2.10.588.0
+    重构
+        * 缓存内部的 SQLCE 访问 使用 DBAccessor。
+
+2.10.587.0
+    内部修改
+        * SQLCE 修改为 4.0 版本。
+
+2.10.586.0
+    重构
+        * 数据库升级时，不要在调试期接住异常。
+    示例
+        * JXC 添加仓库类。
+
+2.10.585.0
+    BUG修复
+        * 在 CloneEntity 时不能一直把 TreeParent 属性也 Clone。
+    示例
+        * JXC 的基础数据都支持缓存：Product、ProductCategory、ClientInfo、ClientInfoCategory。
+
+2.10.583.0
+    重构、添加接口
+        * 优化缓存系统代码。
+
+2.10.582.0
+    示例
+        * JXC 采购订单中，只能获取经销商的信息。
+
+2.10.581.0
+    示例
+        * JXC 添加附件功能。
+
+2.10.580.0
+    BUG修复
+        * ReferenceInfo.RefTypeMeta 属性应该可以为 null。
+
+2.10.579.0
+    添加功能
+        * Service 支持在本地运行的配置 RunAtLocal。
+
 2.10.578.0
     BUG修复
         * WPFPropertyEditor 的 CreateBinding 中应该给 TwoWay 设置显式值。

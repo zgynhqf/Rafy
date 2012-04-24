@@ -122,6 +122,7 @@ namespace JXC
 
                 View.Property(OrderStorageInBill.PurchaseOrderRefProperty).HasLabel("商品订单").ShowIn(ShowInWhere.ListDetail)
                     .UseLookupDataSource(OrderStorageInBill.PurchaseOrderDataSourceProperty);
+                View.Property(OrderStorageInBill.StorageRefProperty).HasLabel("仓库").ShowIn(ShowInWhere.ListDetail);
                 View.Property(OrderStorageInBill.View_SupplierNameProperty).HasLabel("供应商").ShowIn(ShowInWhere.ListDetail);
 
                 View.Property(StorageInBill.DateProperty).HasLabel("入库日期").ShowIn(ShowInWhere.ListDetail);

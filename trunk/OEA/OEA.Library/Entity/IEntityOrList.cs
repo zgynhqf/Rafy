@@ -30,6 +30,12 @@ namespace OEA.Library
         IEntityOrList Parent { get; }
 
         /// <summary>
+        /// 获取其对应的仓库
+        /// </summary>
+        /// <returns></returns>
+        IRepository GetRepository();
+
+        /// <summary>
         /// 设置父组件
         /// </summary>
         /// <param name="parent"></param>

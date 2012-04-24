@@ -20,13 +20,13 @@ namespace JXC.DbMigrations
             this.RunCode(db =>
             {
                 var ccRepo = RF.Concreate<ClientCategoryRepository>();
-                var cclist = ccRepo.GetAll();
+                var cclist = ccRepo.GetAll(false);
                 if (cclist.Count == 0)
                 {
-                    using (var tran = new TransactionScope())
+                    using (var tran = RF.TransactionScope(ccRepo))
                     {
-                        var supplier = new ClientCategory { Name = "供应商" };
-                        var customer = new ClientCategory { Name = "客户" };
+                        var supplier = new ClientCategory { Name = ClientCategory.SupplierName };
+                        var customer = new ClientCategory { Name = ClientCategory.CustomerName };
                         RF.Save(supplier);
                         RF.Save(customer);
 

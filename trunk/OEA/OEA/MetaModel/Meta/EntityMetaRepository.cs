@@ -99,7 +99,7 @@ namespace OEA.MetaModel
         {
             ReplaceIfOverrided(ref entityType);
 
-            EntityMeta result = this.Find(entityType);
+            EntityMeta result = this.FirstOrDefault(em => em.EntityType == entityType);
 
             if (result == null) throw new ArgumentNullException("没有找到这个类型的实体：" + entityType);
 
@@ -108,6 +108,8 @@ namespace OEA.MetaModel
 
         public EntityMeta Find(Type entityType)
         {
+            ReplaceIfOverrided(ref entityType);
+
             return this.FirstOrDefault(em => em.EntityType == entityType);
         }
 
@@ -308,7 +310,7 @@ namespace OEA.MetaModel
 
             if (ri != null)
             {
-                this.CreateChildReference(ri, entityMeta);
+                this.CreateReference(ri, entityMeta);
 
                 item.ReferenceInfo = ri;
             }
@@ -320,7 +322,7 @@ namespace OEA.MetaModel
             return item;
         }
 
-        private void CreateChildReference(ReferenceInfo ri, EntityMeta entityMeta)
+        private void CreateReference(ReferenceInfo ri, EntityMeta entityMeta)
         {
             if (ri.RefType == null && !string.IsNullOrEmpty(ri.RefEntityProperty))
             {
@@ -339,7 +341,7 @@ namespace OEA.MetaModel
             {
                 this.FireAfterAllPrimesReady(() =>
                 {
-                    ri.RefTypeMeta = this.Get(ri.RefType);
+                    ri.RefTypeMeta = this.Find(ri.RefType);
                 });
             }
         }

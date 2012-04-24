@@ -119,6 +119,46 @@ namespace OEA.Library
             }
         }
 
+        /// <summary>
+        /// 通过数据库配置名构造一个 单连接事务块。
+        /// </summary>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        public static SingleConnectionTrasactionScope TransactionScope(string dbSetting)
+        {
+            return new SingleConnectionTrasactionScope(dbSetting);
+        }
+
+        /// <summary>
+        /// 通过数据库配置名的代理：实体仓库，构造一个 单连接事务块。
+        /// </summary>
+        /// <param name="dbDelegate"></param>
+        /// <returns></returns>
+        public static SingleConnectionTrasactionScope TransactionScope(EntityRepository dbDelegate)
+        {
+            return new SingleConnectionTrasactionScope(dbDelegate.ConnectionStringSettingName);
+        }
+
+        /// <summary>
+        /// 通过数据库配置名的代理：实体，构造一个 单连接事务块。
+        /// </summary>
+        /// <param name="dbDelegate"></param>
+        /// <returns></returns>
+        public static SingleConnectionTrasactionScope TransactionScope(Entity dbDelegate)
+        {
+            return new SingleConnectionTrasactionScope(dbDelegate.ConnectionStringSettingName);
+        }
+
+        /// <summary>
+        /// 通过数据库配置名的代理：实体列表，构造一个 单连接事务块。
+        /// </summary>
+        /// <param name="dbDelegate"></param>
+        /// <returns></returns>
+        public static SingleConnectionTrasactionScope TransactionScope(EntityList dbDelegate)
+        {
+            return new SingleConnectionTrasactionScope(dbDelegate.GetRepository().ConnectionStringSettingName);
+        }
+
         #endregion
 
         #region 聚合SQL

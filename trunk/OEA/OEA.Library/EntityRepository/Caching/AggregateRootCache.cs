@@ -84,13 +84,15 @@ namespace OEA.Library.Caching
         /// 直接设置根对象为缓存
         /// </summary>
         /// <param name="entity"></param>
-        public void ModifyRootEntity(Entity entity)
+        internal void ModifyRootEntity(IRepository repository, Entity entity)
         {
             if (entity == null) return;
 
-            var entityType = entity.GetType();
-            if (CacheDefinition.Instance.IsEnabled(entityType))
+            var sd = repository.EntityMeta.CacheDefinition;
+            if (sd != null)
             {
+                var entityType = repository.EntityType;
+
                 var entityId = entity.Id;
                 var className = entityType.Name;
                 var key = GetCacheKey(entityId);
@@ -109,19 +111,24 @@ namespace OEA.Library.Caching
         /// <param name="entityType"></param>
         /// <param name="ifNotExsits"></param>
         /// <returns></returns>
-        internal Entity CacheById(Type entityType, int id, Func<int, Entity> ifNotExsits = null)
+        internal Entity CacheById(EntityRepository repository, int id)
         {
             Entity result = null;
 
-            if (CacheDefinition.Instance.IsEnabled(entityType))
+            var sd = repository.EntityMeta.CacheDefinition;
+            if (sd != null)
             {
+                var entityType = repository.EntityType;
+
                 var className = entityType.Name;
                 var key = GetCacheKey(id);
+
+                //AggregateChecker 不支持序列化，所以这里只用内在缓存即可。
                 result = CacheInstance.Memory.Get(key, className) as Entity;
 
-                if (result == null && ifNotExsits != null)
+                if (result == null)
                 {
-                    result = ifNotExsits(id);
+                    result = repository.GetByIdCore(id);
                     if (result != null)
                     {
                         var policy = CreatePolicy(entityType, id);
@@ -150,8 +157,8 @@ namespace OEA.Library.Caching
             {
                 var childType = childrenTypes[i];
 
-                CacheScope childScope;
-                if (CacheDefinition.Instance.TryGetScope(childType, out childScope))
+                var childScope = CommonModel.Entities.Get(childType).CacheDefinition;
+                if (childScope != null)
                 {
                     if (childScope.ScopeClass != entityType) throw new InvalidOperationException("此方法暂时只支持“所有的范围定义为根对象”！");
                     checkers.Add(new VersionChecker(childType, childScope.ScopeClass, id.ToString()));

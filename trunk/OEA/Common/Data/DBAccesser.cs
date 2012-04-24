@@ -661,6 +661,30 @@ namespace hxy.Common.Data
         /// <param name="name"></param>
         /// <param name="value"></param>
         /// <returns></returns>
+        public IDbDataParameter CreateParameter()
+        {
+            return _factory.CreateParameter();
+        }
+
+        /// <summary>
+        /// Create a DBParameter
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public IDbDataParameter CreateParameter(string name)
+        {
+            IDbDataParameter para = _factory.CreateParameter();
+            para.ParameterName = name;
+            return para;
+        }
+
+        /// <summary>
+        /// Create a DBParameter
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public IDbDataParameter CreateParameter(string name, object value)
         {
             IDbDataParameter para = _factory.CreateParameter();
@@ -761,20 +785,35 @@ namespace hxy.Common.Data
 
         #region IDisposable Members
 
-        public void Dispose()
+        ~DBAccesser()
         {
-            //if (this._transaction != null)
-            //{
-            //    this._transaction.Dispose();
-            //}
-            if (this._connectionCreatedBySelf && this._connection != null)
+            this.Dispose(false);
+        }
+
+        public virtual void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
             {
-                this._connection.Dispose();
+                //if (this._transaction != null)
+                //{
+                //    this._transaction.Dispose();
+                //}
+                if (this._connectionCreatedBySelf && this._connection != null)
+                {
+                    this._connection.Dispose();
+                }
+                this._connection = null;
+                this._converter = null;
+                this._factory = null;
+
+                //this._transaction = null;
             }
-            this._connection = null;
-            this._converter = null;
-            this._factory = null;
-            //this._transaction = null;
         }
 
         #endregion

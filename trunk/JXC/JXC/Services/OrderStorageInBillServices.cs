@@ -31,7 +31,7 @@ namespace JXC
             if (storageIn == null) throw new ArgumentNullException("storageIn");
 
             var repo = RF.Create<OrderStorageInBill>();
-            using (var tran = new TransactionScope())
+            using (var tran = RF.TransactionScope(repo))
             {
                 repo.Save(ref storageIn);
 

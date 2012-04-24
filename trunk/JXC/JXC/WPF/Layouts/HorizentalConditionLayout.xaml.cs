@@ -44,16 +44,10 @@ namespace JXC.WPF
         public void Arrange(TraditionalComponents components)
         {
             var control = components.Main;
-            if (control != null)
-            {
-                content.Content = control.Control;
-            }
+            if (control != null) { content.Content = control.Control; }
 
             control = components.CommandsContainer;
-            if (control != null)
-            {
-                commands.Content = control.Control;
-            }
+            if (control != null) { commands.Content = control.Control; }
         }
     }
 }

@@ -6,510 +6,200 @@ using System.Text;
 using OEA.ORM;
 using System.Data.SqlClient;
 using System.Data.Common;
+using hxy.Common.Data;
+using OEA.Library;
+using OEA.MetaModel;
 
 namespace OEA.ORM.sqlserver
 {
     public class SqlDb : IDb
     {
-        protected SqlProvider provider;
-        protected IDbConnection connection;
-        protected IDbTransaction transaction;
-        protected bool autocommit = true;
-        private bool adapter = false;
-        private bool closed = false;
+        public IDBAccesser DBA { get; private set; }
 
-        public SqlDb(SqlProvider provider, IDbConnection cn)
+        public SqlDb(IDBAccesser dba)
         {
-            this.provider = provider;
-            this.connection = cn;
+            this.DBA = dba;
         }
 
-        public IDbConnection Connection
-        {
-            get { return connection; }
-            set { connection = value; }
-        }
+        #region Dispose Pattern
 
-        public IDbTransaction Transaction
+        ~SqlDb()
         {
-            get { return transaction; }
-        }
-
-        public bool IsAutoCommit
-        {
-            get { return autocommit; }
-        }
-
-        public bool IsAdapter
-        {
-            get { return adapter; }
-            set { adapter = value; }
+            this.Dispose(false);
         }
 
         public virtual void Dispose()
         {
-            if (!IsClosed)
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
             {
-                RollbackInternal();
-                provider.CloseDb(this);
-                IsClosed = true;
+                this.DBA.Dispose();
             }
         }
 
-        public bool IsClosed
-        {
-            get { return closed; }
-            set { closed = value; }
-        }
+        #endregion
 
-        private void ErrorIfClosed()
-        {
-            if (IsClosed)
-                throw new LightException("db is closed");
-        }
-
-        public virtual ITable GetTable(Type type)
+        public ITable GetTable(Type type)
         {
             return TableFor(type);
         }
 
+        private SqlTable TableFor(IEntity entity)
+        {
+            return entity.GetRepository().EntityMeta.GetORMTable();
+        }
+
         private SqlTable TableFor(Type type)
         {
-            return SqlTableFactory.Instance.Build(type);
+            var em = CommonModel.Entities.Get(type);
+            return em.GetORMTable();
         }
 
-        public virtual int Insert(Type type, ICollection items)
+        public int Insert(IEntity item)
         {
-            ErrorIfClosed();
-            if (items.Count == 0)
-                return 0;
-            int result = 0;
-            try
-            {
-                SqlTable table = TableFor(type);
-                if (autocommit)
-                    BeginInternal();
-                result = table.Insert(this, items);
-                if (autocommit)
-                    CommitInternal();
-            }
-            catch (DbException)
-            {
-                if (autocommit)
-                    RollbackInternal();
-                throw;
-            }
-            return result;
+            SqlTable table = TableFor(item);
+            return table.Insert(this, item);
         }
 
-        public virtual int Insert<T>(ICollection<T> items)
+        public int Update(IEntity item)
         {
-            return Insert(typeof(T), (ICollection)items);
+            SqlTable table = TableFor(item);
+            return table.Update(this, item);
         }
 
-        public virtual int Insert(object item)
+        public int Delete(IEntity item)
         {
-            if (item == null)
-                return 0;
-            object[] items = new object[] { item };
-            int result = Insert(item.GetType(), items);
-            return result;
+            SqlTable table = TableFor(item);
+            return table.Delete(this, item);
         }
 
-        public virtual int Update(Type type, ICollection items)
+        public int Delete(Type type, IQuery query)
         {
-            return Update(type, items, null);
-        }
-
-        //columns param add by zhoujg
-        public virtual int Update(Type type, ICollection items, IList<string> columns)
-        {
-            ErrorIfClosed();
-            if (items.Count == 0)
-                return 0;
-            int result = 0;
-            try
-            {
-                SqlTable table = TableFor(type);
-                if (autocommit)
-                    BeginInternal();
-                result = table.Update(this, items, columns);
-                if (autocommit)
-                    CommitInternal();
-            }
-            catch (Exception)
-            {
-                if (autocommit)
-                    RollbackInternal();
-                throw;
-            }
-            return result;
-        }
-
-        public virtual int Update<T>(ICollection<T> items)
-        {
-            return Update(typeof(T), (ICollection)items, null);
-        }
-
-        public virtual int Update<T>(ICollection<T> items, IList<string> columns)
-        {
-            return Update(typeof(T), (ICollection)items, columns);
-        }
-
-        //columns param add by zhoujg
-        public virtual int Update(object item, IList<string> columns)
-        {
-            if (item == null)
-                return 0;
-            object[] items = new object[] { item };
-            int result = Update(item.GetType(), items, columns);
-            return result;
-        }
-
-        public virtual int Update(object item)
-        {
-            return Update(item, null);
-        }
-
-        public virtual int Delete(Type type, ICollection items)
-        {
-            ErrorIfClosed();
-            if (items.Count == 0)
-                return 0;
-            int result = 0;
-            try
-            {
-                SqlTable table = TableFor(type);
-                if (autocommit)
-                    BeginInternal();
-                result = table.Delete(this, items);
-                if (autocommit)
-                    CommitInternal();
-            }
-            catch (Exception)
-            {
-                if (autocommit)
-                    RollbackInternal();
-                throw;
-            }
-            return result;
-        }
-
-        public virtual int Delete<T>(ICollection<T> items)
-        {
-            return Delete(typeof(T), (ICollection)items);
-        }
-
-        public virtual int Delete(object item)
-        {
-            if (item == null)
-                return 0;
-            object[] items = new object[] { item };
-            int result = Delete(item.GetType(), items);
-            return result;
-        }
-
-        public virtual int Delete(Type type, IQuery query)
-        {
-            ErrorIfClosed();
-            int result = 0;
-            try
-            {
-                SqlTable table = TableFor(type);
-                if (autocommit)
-                    BeginInternal();
-                result = table.Delete(this, query);
-                if (autocommit)
-                    CommitInternal();
-            }
-            catch (Exception)
-            {
-                if (autocommit)
-                    RollbackInternal();
-                throw;
-            }
-            return result;
-        }
-
-        public virtual int Delete<T>(IQuery query)
-        {
-            return Delete(typeof(T), query);
-        }
-
-        protected virtual void DoSelect(Type type, IQuery query, IList list)
-        {
-            ErrorIfClosed();
             SqlTable table = TableFor(type);
-            table.Select(this, query, list);
+            return table.Delete(this, query);
         }
 
         public IList Select(IQuery typedQuery)
         {
-            return this.Select(typedQuery.EntityType, typedQuery);
-        }
-
-        public virtual IList Select(Type type, IQuery query)
-        {
             IList list = new ArrayList();
-            DoSelect(type, query, list);
+            DoSelect(typedQuery.EntityType, typedQuery, list);
             return list;
         }
 
-        public virtual IList<T> Select<T>(IQuery query)
+        protected virtual void DoSelect(Type type, IQuery query, IList list)
         {
-            IList<T> list = new List<T>();
-            var type = typeof(T);
-            DoSelect(typeof(T), query, (IList)list);
-            return list;
-        }
-
-        public virtual object Find(Type type, object key)
-        {
-            ErrorIfClosed();
             SqlTable table = TableFor(type);
-            return table.Find(this, key);
+            table.Select(this, query, list);
         }
 
-        public virtual T Find<T>(object key)
+        public IList Select(Type type, string sql)
         {
-            object result = Find(typeof(T), key);
-            if (result != null)
-                return (T)result;
-            return default(T);
-        }
-
-        public virtual object Call(string procName, object[] parameters)
-        {
-            ErrorIfClosed();
-            StringBuilder buf = new StringBuilder("exec @retval=").Append(procName);
-            IDbCommand cmd = null;
-            IDbDataParameter retval = null;
-            try
-            {
-                cmd = connection.CreateCommand();
-                cmd.CommandType = CommandType.Text;
-                cmd.Transaction = transaction;
-                retval = cmd.CreateParameter();
-                retval.ParameterName = "@retval";
-                retval.DbType = DbType.Object;
-                SqlUtils.SetMaxValues(retval);
-                retval.Direction = ParameterDirection.Output;
-                cmd.Parameters.Add(retval);
-                SetupCommand(cmd, parameters, null, buf);
-                buf.Append(";");
-                cmd.CommandText = buf.ToString();
-                cmd.Prepare();
-
-                TraceObject.Instance.TraceCommand(cmd);
-
-                cmd.ExecuteNonQuery();
-            }
-            finally
-            {
-                if (cmd != null)
-                {
-                    cmd.Dispose();
-                    cmd = null;
-                }
-            }
-            object val = retval.Value;
-            if (DBNull.Value.Equals(val))
-                return null;
-            return val;
-        }
-
-        public virtual IList Exec(Type type, string procName, object[] parameters)
-        {
-            ErrorIfClosed();
             SqlTable table = TableFor(type);
             IList list = new ArrayList();
-            table.Exec(this, procName, parameters, list);
+            using (var reader = this.DBA.QueryDataReaderNormal(sql, CommandType.Text))
+            {
+                table.FillByIndex(reader, list);
+            }
             return list;
         }
 
-        public IResultSet Exec(string procName, object[] parameters)
-        {
-            return Exec(procName, parameters, null);
-        }
+        //public IResultSet Exec(string procName, object[] parameters, int[] outputs)
+        //{
+        //    parameters = parameters ?? new object[0];
 
-        public IResultSet Exec(string procName, object[] parameters, int[] outputs)
-        {
-            ErrorIfClosed();
-            SqlResultSet rs = null;
-            IDbCommand cmd = null;
-            IDataReader reader = null;
-            StringBuilder buf = new StringBuilder("exec ").Append(procName);
-            try
-            {
-                int[] sortedOutputs = null;
-                if (outputs != null)
-                    sortedOutputs = SortedCopy(outputs);
+        //    SqlResultSet rs = null;
 
-                cmd = connection.CreateCommand();
-                cmd.CommandType = CommandType.Text;
-                cmd.Transaction = transaction;
-                IDbDataParameter[] outputParams = SetupCommand(cmd, parameters, sortedOutputs, buf);
-                buf.Append(";");
-                cmd.CommandText = buf.ToString();
-                System.Diagnostics.Debug.WriteLine(connection.State);
-                cmd.Prepare();
+        //    int[] sortedOutputs = null;
+        //    if (outputs != null)
+        //        sortedOutputs = SortedCopy(outputs);
 
-                TraceObject.Instance.TraceCommand(cmd);
-                SqlTable.TraceProc(procName, parameters);
+        //    int size = (outputs == null) ? 0 : outputs.Length;
+        //    IDbDataParameter[] outputParams = new IDbDataParameter[size];
+        //    IDbDataParameter[] dbParameters = new IDbDataParameter[parameters.Length];
+        //    int j = 0;
+        //    if (parameters != null)
+        //    {
+        //        for (int i = 0; i < parameters.Length; i++)
+        //        {
+        //            int x = i + 1;
+        //            if (i > 0)
+        //                buf.Append(",");
+        //            buf.Append("@").Append(x);
 
-                reader = cmd.ExecuteReader();
+        //            IDbDataParameter p = cmd.CreateParameter();
+        //            p.ParameterName = string.Format("@{0}", x);
+        //            SqlUtils.PrepParam(p, parameters[i]);
+        //            if (outputs != null && Array.IndexOf<int>(outputs, i) > -1)
+        //            {
+        //                buf.Append(" output");
+        //                p.Direction = ParameterDirection.InputOutput;
+        //                outputParams[j++] = p;
+        //            }
+        //            dbParameters[i] = p;
+        //        }
+        //    }
 
-                // setup the result set
-                int sz = 0;
-                string[] names = null;
-                DataTable meta = reader.GetSchemaTable();
-                if (meta != null)
-                {
-                    names = new string[meta.Rows.Count];
-                    foreach (DataRow datarow in meta.Rows)
-                    {
-                        // NOTE: this assumes that the name of the column
-                        // is in the first field of the schema table.
-                        // This is the case for .NET 2.0.
-                        names[sz++] = (string)datarow[0];
-                    }
-                    meta.Dispose();
-                    meta = null;
-                }
-                rs = new SqlResultSet(names);
+        //    var reader = this.DBA.QueryDataReaderNormal(
+        //        procName, CommandType.StoredProcedure,
+        //        dbParameters
+        //        );
 
-                while (reader.Read())
-                {
-                    object[] row = new object[sz];
-                    reader.GetValues(row);
-                    rs.AddRow(row);
-                }
-                // this is necessary to get output values
-                reader.Close();
+        //    // setup the result set
+        //    int sz = 0;
+        //    string[] names = null;
+        //    DataTable meta = reader.GetSchemaTable();
+        //    if (meta != null)
+        //    {
+        //        names = new string[meta.Rows.Count];
+        //        foreach (DataRow datarow in meta.Rows)
+        //        {
+        //            // NOTE: this assumes that the name of the column
+        //            // is in the first field of the schema table.
+        //            // This is the case for .NET 2.0.
+        //            names[sz++] = (string)datarow[0];
+        //        }
+        //        meta.Dispose();
+        //        meta = null;
+        //    }
+        //    rs = new SqlResultSet(names);
 
-                if (sortedOutputs != null)
-                {
-                    for (int i = 0; i < sortedOutputs.Length; i++)
-                    {
-                        int index = sortedOutputs[i];
-                        object val = outputParams[i].Value;
-                        if (val == DBNull.Value)
-                            val = null;
-                        parameters[index] = val;
-                    }
-                }
-            }
-            finally
-            {
-                if (reader != null)
-                {
-                    if (!reader.IsClosed)
-                        reader.Close();
-                    reader.Dispose();
-                    reader = null;
-                }
-                if (cmd != null)
-                {
-                    cmd.Dispose();
-                    cmd = null;
-                }
-            }
-            return rs;
-        }
+        //    while (reader.Read())
+        //    {
+        //        object[] row = new object[sz];
+        //        reader.GetValues(row);
+        //        rs.AddRow(row);
+        //    }
+        //    // this is necessary to get output values
+        //    reader.Close();
 
-        private IDbDataParameter[] SetupCommand(IDbCommand cmd,
-            object[] parameters, int[] outputs, StringBuilder buf)
-        {
-            int size = (outputs == null) ? 0 : outputs.Length;
-            IDbDataParameter[] outputParams = new IDbDataParameter[size];
-            int j = 0;
-            if (parameters != null && parameters.Length > 0)
-            {
-                buf.Append(" ");
-                for (int i = 0; i < parameters.Length; i++)
-                {
-                    int x = i + 1;
-                    if (i > 0)
-                        buf.Append(",");
-                    buf.Append("@").Append(x);
+        //    if (sortedOutputs != null)
+        //    {
+        //        for (int i = 0; i < sortedOutputs.Length; i++)
+        //        {
+        //            int index = sortedOutputs[i];
+        //            object val = outputParams[i].Value;
+        //            if (val == DBNull.Value)
+        //                val = null;
+        //            parameters[index] = val;
+        //        }
+        //    }
 
-                    IDbDataParameter p = cmd.CreateParameter();
-                    p.ParameterName = string.Format("@{0}", x);
-                    SqlUtils.PrepParam(p, parameters[i]);
-                    if (outputs != null && Array.IndexOf<int>(outputs, i) > -1)
-                    {
-                        buf.Append(" output");
-                        p.Direction = ParameterDirection.InputOutput;
-                        outputParams[j++] = p;
-                    }
-                    cmd.Parameters.Add(p);
-                }
-            }
-            return outputParams;
-        }
+        //    return rs;
+        //}
 
-        private int[] SortedCopy(int[] src)
-        {
-            int sz = src.Length;
-            int[] dest = new int[sz];
-            Array.Copy(src, 0, dest, 0, sz);
-            Array.Sort<int>(dest);
-            return dest;
-        }
-
-        protected virtual void BeginInternal()
-        {
-            if (transaction == null)
-            {
-                TraceObject.Instance.TraceMessage("begin transaction;");
-                transaction = connection.BeginTransaction();
-            }
-        }
-
-        protected virtual void CommitInternal()
-        {
-            if (transaction != null)
-            {
-                TraceObject.Instance.TraceMessage("commit transaction;");
-                transaction.Commit();
-                transaction.Dispose();
-                transaction = null;
-            }
-        }
-
-        protected virtual void RollbackInternal()
-        {
-            if (transaction != null)
-            {
-                TraceObject.Instance.TraceMessage("rollback transaction;");
-                transaction.Rollback();
-                transaction.Dispose();
-                transaction = null;
-            }
-        }
-
-        public virtual void Begin()
-        {
-            BeginInternal();
-            autocommit = false;
-        }
-
-        public virtual void Commit()
-        {
-            CommitInternal();
-            autocommit = true;
-        }
-
-        public virtual void Rollback()
-        {
-            RollbackInternal();
-            autocommit = true;
-        }
-
-        public IQuery Query()
-        {
-            return new SqlQuery();
-        }
+        //private static int[] SortedCopy(int[] src)
+        //{
+        //    int sz = src.Length;
+        //    int[] dest = new int[sz];
+        //    Array.Copy(src, 0, dest, 0, sz);
+        //    Array.Sort<int>(dest);
+        //    return dest;
+        //}
 
         public IQuery Query(Type entityType)
         {

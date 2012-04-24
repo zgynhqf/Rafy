@@ -11,19 +11,24 @@ namespace hxy.Common.Data.Providers
         public static ISqlProvider Create(string provider)
         {
             //ISqlConverter Factory
-            switch (provider.ToLower())
+            switch (provider)
             {
-                case "system.data.sqlclient":
+                case DbSetting.Provider_SqlClient:
+                case DbSetting.Provider_SqlCe:
                     return new SqlServerProvider();
-                case "system.data.oracleclient":
+                case DbSetting.Provider_Oracle:
                     return new OracleProvider();
-                case "system.data.odbc":
+                case DbSetting.Provider_Odbc:
                     return new ODBCProvider();
                 default:
                     return new SqlServerProvider();
-                    //throw new NotSupportedException("This type of database is not supportted now!");
+                //throw new NotSupportedException("This type of database is not supportted now:" + provider);
             }
         }
+
+        /// <summary>
+        /// 在 FormatSQL 中的参数格式定义。
+        /// </summary>
         internal static readonly Regex ReParameterName = new Regex(@"{(?<number>\d+)}", RegexOptions.Compiled);
     }
 }

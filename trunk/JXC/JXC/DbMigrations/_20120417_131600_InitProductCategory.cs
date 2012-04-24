@@ -22,7 +22,7 @@ namespace JXC.DbMigrations
             {
                 //由于本类没有支持 Down 操作，所以这里面的 Up 需要防止重入。
                 var repo = RF.Concreate<ProductCategoryRepository>();
-                var list = repo.GetAll();
+                var list = repo.GetAll(false);
                 if (list.Count == 0)
                 {
                     list.Add(new ProductCategory
@@ -46,7 +46,7 @@ namespace JXC.DbMigrations
                         }
                     });
 
-                    using (var tran = new TransactionScope())
+                    using (var tran = RF.TransactionScope(repo))
                     {
                         repo.Save(list);
 

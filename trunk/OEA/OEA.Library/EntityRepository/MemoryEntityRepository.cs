@@ -22,7 +22,7 @@ namespace OEA.Library
     /// 本地实体的仓库基类（不用存储到数据库，只存在于客户端）。
     /// 
     /// 提供了为本地实体生成 Id 的功能。
-    /// 本仓库会把所有的生成的实体都存储进来。
+    /// 本仓库会把所有的生成的实体都存储在内存中。
     /// </summary>
     public abstract class MemoryEntityRepository : EntityRepository
     {
@@ -59,7 +59,7 @@ namespace OEA.Library
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        protected override Entity GetByIdCore(int id)
+        internal protected override Entity GetByIdCore(int id)
         {
             if (this._memory == null) { return null; }
 

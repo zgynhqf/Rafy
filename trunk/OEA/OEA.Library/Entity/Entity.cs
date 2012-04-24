@@ -240,7 +240,7 @@ namespace OEA.Library
 
             options.NotifyCloned(target, this);
 
-            this.OnCloneCore(target, options);
+            if (this.SupportTree) { this.OnTreeItemCloned(target, options); }
         }
 
         #endregion
@@ -256,7 +256,7 @@ namespace OEA.Library
             {
                 using (EntityListVersion.Repository.BeginBillSave())
                 {
-                    using (var tran = new TransactionScope())
+                    using (var tran = new SingleConnectionTrasactionScope(this.ConnectionStringSettingName))
                     {
                         this.DoSaveRoot();
 
@@ -268,7 +268,7 @@ namespace OEA.Library
             }
             else
             {
-                using (var tran = new TransactionScope())
+                using (var tran = new SingleConnectionTrasactionScope(this.ConnectionStringSettingName))
                 {
                     this.DoSaveRoot();
 
@@ -352,10 +352,10 @@ namespace OEA.Library
         {
             if (EntityListVersion.Repository != null)
             {
-                var entityType = this.GetType();
-                if (CacheDefinition.Instance.IsEnabled(entityType))
+                var repo = this.GetRepository();
+                if (repo.EntityMeta.CacheDefinition != null)
                 {
-                    EntityListVersion.Repository.UpdateVersion(entityType);
+                    EntityListVersion.Repository.UpdateVersion(repo.EntityType);
                 }
             }
         }

@@ -7,6 +7,8 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Collections;
 using OEA.Library;
+using OEA.ORM.sqlserver;
+using hxy.Common.Data;
 
 namespace OEA.Utils
 {
@@ -101,7 +103,13 @@ namespace OEA.Utils
                 if (this._db == null)
                 {
                     this._connectionManager = ConnectionManager.GetManager(this._connectionStringName);
-                    this._db = DbFactory.Instance.GetDb(this._connectionManager.Connection);
+
+                    var dba = new DBAccesser(
+                        this._connectionManager.Connection,
+                        this._connectionManager.DbSetting.ProviderName
+                        );
+
+                    this._db = new SqlDb(dba);
                 }
                 return this._db;
             }
@@ -109,185 +117,52 @@ namespace OEA.Utils
 
         #region IDb Members
 
-        public void Begin()
+        hxy.Common.Data.IDBAccesser IDb.DBA
         {
-            this.Db.Begin();
+            get { return this.Db.DBA; }
         }
 
-        public object Call(string funcName, object[] parameters)
+        int IDb.Delete(Type type, IQuery query)
         {
-            return this.Db.Call(funcName, parameters);
+            return this._db.Delete(type, query);
         }
 
-        public void Commit()
-        {
-            this.Db.Commit();
-        }
-
-        public IDbConnection Connection
-        {
-            get { return this.Db.Connection; }
-        }
-
-        public int Delete<T>(IQuery query)
-        {
-            return this.Db.Delete<T>(query);
-        }
-
-        public int Delete(Type type, IQuery query)
-        {
-            return this.Db.Delete(type, query);
-        }
-
-        public int Delete(object item)
+        int IDb.Delete(IEntity item)
         {
             return this.Db.Delete(item);
         }
 
-        public int Delete<T>(ICollection<T> items)
-        {
-            return this.Db.Delete<T>(items);
-        }
-
-        public int Delete(Type type, ICollection items)
-        {
-            return this.Db.Delete(type, items);
-        }
-
-        public IResultSet Exec(string procName, object[] parameters, int[] outputs)
-        {
-            return this.Db.Exec(procName, parameters, outputs);
-        }
-
-        public IResultSet Exec(string procName, object[] parameters)
-        {
-            return this.Db.Exec(procName, parameters);
-        }
-
-        public IList Exec(Type type, string procName, object[] parameters)
-        {
-            return this.Db.Exec(type, procName, parameters);
-        }
-
-        public T Find<T>(object key)
-        {
-            return this.Db.Find<T>(key);
-        }
-
-        public object Find(Type type, object key)
-        {
-            return this.Db.Find(type, key);
-        }
-
-        public ITable GetTable(Type type)
+        ITable IDb.GetTable(Type type)
         {
             return this.Db.GetTable(type);
         }
 
-        public int Insert(object item)
+        int IDb.Insert(IEntity item)
         {
             return this.Db.Insert(item);
         }
 
-        public int Insert<T>(ICollection<T> items)
-        {
-            return this.Db.Insert<T>(items);
-        }
-
-        public int Insert(Type type, ICollection items)
-        {
-            return this.Db.Insert(type, items);
-        }
-
-        public bool IsAutoCommit
-        {
-            get
-            {
-                return this.Db.IsAutoCommit;
-            }
-        }
-
-        public bool IsClosed
-        {
-            get
-            {
-                return this.Db.IsClosed;
-            }
-        }
-
-        public IQuery Query(Type entityType)
+        IQuery IDb.Query(Type entityType)
         {
             return this.Db.Query(entityType);
         }
 
-        public IQuery Query()
-        {
-            return this.Db.Query();
-        }
-
-        public void Rollback()
-        {
-            this.Db.Rollback();
-        }
-
-        public IList Select(IQuery typedQuery)
+        IList IDb.Select(IQuery typedQuery)
         {
             return this.Db.Select(typedQuery);
         }
 
-        public IList<T> Select<T>(IQuery query)
+        IList IDb.Select(Type type, string sql)
         {
-            return this.Db.Select<T>(query);
+            return this.Db.Select(type, sql);
         }
 
-        public IList Select(Type type, IQuery query)
-        {
-            return this.Db.Select(type, query);
-        }
-
-        public IDbTransaction Transaction
-        {
-            get
-            {
-                return this.Db.Transaction;
-            }
-        }
-
-        public int Update(object item)
+        int IDb.Update(IEntity item)
         {
             return this.Db.Update(item);
         }
 
-        public int Update<T>(ICollection<T> items)
-        {
-            return this.Db.Update<T>(items);
-        }
-
-        public int Update(Type type, ICollection items)
-        {
-            return this.Db.Update(type, items);
-        }
-
-        public int Update(object item, IList<string> updateColumns)
-        {
-            return this.Db.Update(item, updateColumns);
-        }
-
-        public int Update<T>(ICollection<T> items, IList<string> updateColumns)
-        {
-            return this.Db.Update<T>(items, updateColumns);
-        }
-
-        public int Update(Type type, ICollection items, IList<string> updateColumns)
-        {
-            return this.Db.Update(type, items, updateColumns);
-        }
-
-        #endregion
-
-        #region IDisposable Members
-
-        public void Dispose()
+        void IDisposable.Dispose()
         {
             if (this._connectionManager != null)
             {

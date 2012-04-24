@@ -40,6 +40,11 @@ namespace DbMigration.SqlServer
             this._db = new DBAccesser(dbSetting);
         }
 
+        protected IDBAccesser Db
+        {
+            get { return this._db; }
+        }
+
         public Database Read()
         {
             //string name = Regex.Match(this._db.Connection.ConnectionString, @"Initial Catalog=\s*(?<dbName>\w+)\s*")
@@ -80,30 +85,27 @@ namespace DbMigration.SqlServer
         /// 添加所有表
         /// </summary>
         /// <param name="database"></param>
-        private void LoadAllTables(Database database)
+        protected virtual void LoadAllTables(Database database)
         {
-            using (var reader = this._db.QueryDataReader(@"
-SELECT s.name schema_name, o.name table_name, o.object_id table_id
-FROM sys.schemas s
-    INNER JOIN sys.objects o ON s.schema_id = o.schema_id
-WHERE o.type='u'
-"))
+            using (var reader = this._db.QueryDataReader(@"select * from INFORMATION_SCHEMA.TABLES"))
             {
                 while (reader.Read())
                 {
                     try
                     {
-                        //int tableId = Convert.ToInt32(reader["table_id"]);
-                        string tableName = reader["table_name"].ToString();
-                        if (tableName.EqualsIgnoreCase("sysdiagrams"))
+                        string tableName = reader["TABLE_NAME"].ToString();
+                        string tableType = reader["TABLE_TYPE"].ToString().ToLower();
+
+                        //SqlServer 中是 "BASE TABLE"
+                        //SQLCE 中是 "TABLE"
+                        if (tableType.Contains("table"))
                         {
-                            continue;
+                            //string schemaName = reader["SCHEMA_NAME"].ToString();
+
+                            Table table = new Table(tableName, database);
+
+                            database.Tables.Add(table);
                         }
-                        //string schemaName = reader["schema_name"].ToString();
-
-                        Table table = new Table(tableName, database);
-
-                        database.Tables.Add(table);
                     }
                     catch (Exception ex)
                     {
@@ -117,7 +119,7 @@ WHERE o.type='u'
         /// 加载每个表的所有列
         /// </summary>
         /// <param name="database"></param>
-        private void LoadAllColumns(Database database)
+        protected virtual void LoadAllColumns(Database database)
         {
             foreach (Table table in database.Tables)
             {
@@ -173,7 +175,7 @@ WHERE C.TABLE_NAME = {0}
         /// </summary>
         /// <param name="column"></param>
         /// <param name="allConstraints">所有的约束</param>
-        private void DealColumnConstraints(Column column, IList<Constraint> allConstraints)
+        protected virtual void DealColumnConstraints(Column column, IList<Constraint> allConstraints)
         {
             var database = column.Table.DataBase;
 
@@ -207,7 +209,7 @@ WHERE C.TABLE_NAME = {0}
             }
         }
 
-        private List<Constraint> ReadAllConstrains()
+        protected virtual List<Constraint> ReadAllConstrains()
         {
             List<Constraint> allConstrains = new List<Constraint>();
 
@@ -267,7 +269,7 @@ ON T1.CONSTRAINT_NAME = T2.CONSTRAINT_NAME
             return allConstrains;
         }
 
-        private class Constraint
+        protected class Constraint
         {
             public string CONSTRAINT_NAME;
             public string CONSTRAINT_TYPE;

@@ -17,6 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Data.Common;
 
 namespace hxy.Common.Data
 {
@@ -25,6 +26,11 @@ namespace hxy.Common.Data
     /// </summary>
     public class DbSetting
     {
+        public const string Provider_SqlClient = "System.Data.SqlClient";
+        public const string Provider_SqlCe = "System.Data.SqlServerCe";
+        public const string Provider_Oracle = "System.Data.OracleClient";
+        public const string Provider_Odbc = "System.Data.Odbc";
+
         /// <summary>
         /// 配置名称
         /// </summary>
@@ -76,7 +82,7 @@ namespace hxy.Common.Data
 
                         setting.Name = dbSetting;
 
-                        var factory = System.Data.Common.DbProviderFactories.GetFactory(setting.ProviderName);
+                        var factory = DbProviderFactories.GetFactory(setting.ProviderName);
                         var con = factory.CreateConnection();
                         con.ConnectionString = setting.ConnectionString;
                         setting.Database = con.Database;

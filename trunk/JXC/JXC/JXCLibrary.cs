@@ -9,6 +9,8 @@ using OEA.MetaModel;
 using DbMigration;
 using JXC.WPF;
 using OEA.Module.WPF;
+using OEA.Library;
+using OEA.RBAC;
 
 namespace JXC
 {
@@ -21,8 +23,22 @@ namespace JXC
 
         public void Initialize(IApp app)
         {
-            AutoUI.BlockUIFactory.PropertyEditorFactory.Set("ImageSelector", typeof(ImagePropertyEditor));
+            AddNewPropertyEditors();
 
+            InitModules(app);
+
+            AutoMigrateDb(app);
+
+            InitClient(app);
+        }
+
+        private static void AddNewPropertyEditors()
+        {
+            AutoUI.BlockUIFactory.PropertyEditorFactory.Set("ImageSelector", typeof(ImagePropertyEditor));
+        }
+
+        private static void InitModules(IApp app)
+        {
             app.ModuleOperations += (o, e) =>
             {
                 var moduleBookImport = CommonModel.Modules.AddRoot(new ModuleMeta
@@ -76,7 +92,10 @@ namespace JXC
                     }
                 });
             };
+        }
 
+        private static void AutoMigrateDb(IApp app)
+        {
             app.DbMigratingOperations += (o, e) =>
             {
                 using (var c = new OEADbMigrationContext(JXCEntity.ConnectionString))
@@ -93,19 +112,22 @@ namespace JXC
                     //c.JumpToHistory(DateTime.Parse("2012-01-07 21:27:00.000"));
                 };
             };
+        }
 
+        private static void InitClient(IApp app)
+        {
             var clientApp = app as IClientApp;
             if (clientApp != null)
             {
                 clientApp.MainWindowLoaded += (o, e) =>
                 {
-                    App.Current.OpenModuleOrAlert("商品管理");
+                    //App.Current.OpenModuleOrAlert("商品管理");
                     App.Current.OpenModuleOrAlert("采购订单");
-                    App.Current.OpenModuleOrAlert("采购订单入库");
-                    App.Current.OpenModuleOrAlert("其它入库");
-                    App.Current.OpenModuleOrAlert("其它出库");
+                    //App.Current.OpenModuleOrAlert("采购订单入库");
+                    //App.Current.OpenModuleOrAlert("其它入库");
+                    //App.Current.OpenModuleOrAlert("其它出库");
 
-                    App.Current.OpenModuleOrAlert("商品管理");
+                    //App.Current.OpenModuleOrAlert("商品管理");
                 };
             }
         }

@@ -121,17 +121,22 @@ namespace OEA.Web
             {
                 var child = children[i];
 
-                var childType = child.ChildType.EntityType;
-                var pRef = child.ChildType.FindParentReferenceProperty();
-                if (pRef != null && pRef.ReferenceInfo.RefTypeMeta == em)
+                var listProperty = child.ManagedProperty as IListProperty;
+                var meta = listProperty.GetMeta(em.EntityType);
+                if (meta.HasManyType == HasManyType.Composition)
                 {
-                    var association = new HasManyAssociation
+                    var pRef = child.ChildType.FindParentReferenceProperty();
+                    if (pRef != null)
                     {
-                        name = child.Name,
-                        foreignKey = pRef.Name,
-                        model = ClientEntities.GetClientName(childType),
-                    };
-                    this._model.associations.Add(association);
+                        var childType = child.ChildType.EntityType;
+                        var association = new HasManyAssociation
+                        {
+                            name = child.Name,
+                            foreignKey = pRef.Name,
+                            model = ClientEntities.GetClientName(childType),
+                        };
+                        this._model.associations.Add(association);
+                    }
                 }
             }
         }

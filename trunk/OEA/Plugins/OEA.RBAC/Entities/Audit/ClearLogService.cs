@@ -13,8 +13,7 @@ namespace OEA.Library.Audit
         {
             using (var db = DBHelper.CreateDb(ConnectionStringNames.OEAPlugins))
             {
-                var sql = "DELETE FROM AUDITITEM";
-                db.Exec("sys.sp_sqlexec", new object[] { sql });
+                db.DBA.ExecuteTextNormal("DELETE FROM AUDITITEM");
             }
         }
     }

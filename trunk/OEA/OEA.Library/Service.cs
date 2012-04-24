@@ -27,6 +27,26 @@ namespace OEA
     [Serializable]
     public abstract class Service : IService
     {
+        public Service()
+        {
+            //当在服务端时，默认值为 true，表示直接在服务端运行。
+            this._runAtLocal = OEAEnvironment.Location.IsOnServer();
+        }
+
+        [NonSerialized]
+        private bool _runAtLocal;
+
+        /// <summary>
+        /// 当前服务是否需要在本地运行。
+        /// 
+        /// 当在服务端时，默认值为 true，表示直接在服务端运行。
+        /// </summary>
+        public bool RunAtLocal
+        {
+            get { return this._runAtLocal; }
+            set { this._runAtLocal = value; }
+        }
+
         /// <summary>
         /// 子类重写此方法实现具体的业务逻辑
         /// </summary>
@@ -60,21 +80,28 @@ namespace OEA
         /// <returns></returns>
         public void Invoke()
         {
-            var res = DataPortal.Update(this) as IService;
-
-            //使用反射把返回结果的值修改到当前对象上。
-            var properties = this.GetType().GetProperties();
-            foreach (var property in properties)
+            if (this.RunAtLocal)
             {
-                if (property.HasMarked<ServiceOutputAttribute>())
-                {
-                    var value = property.GetValue(res, null);
+                this.Execute();
+            }
+            else
+            {
+                var res = DataPortal.Update(this) as IService;
 
-                    try
+                //使用反射把返回结果的值修改到当前对象上。
+                var properties = this.GetType().GetProperties();
+                foreach (var property in properties)
+                {
+                    if (property.HasMarked<ServiceOutputAttribute>())
                     {
-                        property.SetValue(this, value, null);
+                        var value = property.GetValue(res, null);
+
+                        try
+                        {
+                            property.SetValue(this, value, null);
+                        }
+                        catch { }
                     }
-                    catch { }
                 }
             }
         }

@@ -14,6 +14,17 @@ namespace hxy.Common.Data
         /// <summary>
         /// Create a DBParameter
         /// </summary>
+        /// <returns></returns>
+        IDbDataParameter CreateParameter();
+        /// <summary>
+        /// Create a DBParameter
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        IDbDataParameter CreateParameter(string name);
+        /// <summary>
+        /// Create a DBParameter
+        /// </summary>
         /// <param name="name"></param>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -61,6 +72,6 @@ namespace hxy.Common.Data
         /// <param name="size"></param>
         /// <param name="direction"></param>
         /// <returns></returns>
-        IDbDataParameter CreateParameter(string name, object value, DbType type, int size, ParameterDirection direction); 
+        IDbDataParameter CreateParameter(string name, object value, DbType type, int size, ParameterDirection direction);
     }
 }

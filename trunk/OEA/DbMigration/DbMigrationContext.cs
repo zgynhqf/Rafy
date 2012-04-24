@@ -13,19 +13,18 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using DbMigration.Model;
-using DbMigration.History;
-using hxy.Common.Data;
 using System.Transactions;
-using DbMigration.SqlServer;
-using hxy.Common.Data.Providers;
-using System.Data.Common;
-using hxy.Common;
+using DbMigration.History;
+using DbMigration.Model;
 using DbMigration.Operations;
-using System.Data;
-using System.Diagnostics;
+using hxy.Common;
+using hxy.Common.Data;
+using hxy.Common.Data.Providers;
 
 namespace DbMigration
 {
@@ -48,16 +47,19 @@ namespace DbMigration
 
         private ManualMigrationsContainer _ManualMigrations;
 
-        private IMetadataReader _DatabaseMetaReader;
-
-        private RunGenerator _RunGenerator;
-
         private IDbBackuper _DbBackuper;
 
         private DbVersionProvider _DbVersionProvider;
 
+        private DbMigrationProvider _dbProvider;
+
         private IDBAccesser _dba;
 
+        private RunGenerator _runGenerator;
+
+        /// <summary>
+        /// 数据库的名称
+        /// </summary>
         protected string DbName
         {
             get { return this.DbSetting.Database; }
@@ -75,6 +77,11 @@ namespace DbMigration
 
             this.RunDataLossOperation = true;
             this.IgnoreDataLoss = true;
+
+            this._dbProvider = DbMigrationProviderFactory.GetProvider(dbSetting);
+
+            this._runGenerator = this._dbProvider.CreateRunGenerator();
+            this.DatabaseMetaReader = this._dbProvider.CreateSchemaReader();
         }
 
         #region Components
@@ -105,19 +112,7 @@ namespace DbMigration
             }
         }
 
-        public IMetadataReader DatabaseMetaReader
-        {
-            get
-            {
-                if (this._DatabaseMetaReader == null)
-                {
-                    this._DatabaseMetaReader = new SqlServerMetaReader(this.DbSetting);
-                }
-
-                return this._DatabaseMetaReader;
-            }
-            set { this._DatabaseMetaReader = value; }
-        }
+        public IMetadataReader DatabaseMetaReader { get; private set; }
 
         public IDbBackuper DbBackuper
         {
@@ -125,26 +120,11 @@ namespace DbMigration
             {
                 if (this._DbBackuper == null)
                 {
-                    this._DbBackuper = new SqlServer2008Backuper(new LongTimeDbAccesser(this.DbSetting));
+                    this._DbBackuper = this._dbProvider.CreateDbBackuper();
                 }
 
                 return this._DbBackuper;
             }
-            set { this._DbBackuper = value; }
-        }
-
-        public RunGenerator RunGenerator
-        {
-            get
-            {
-                if (this._RunGenerator == null)
-                {
-                    this._RunGenerator = new SqlServerRunGenerator();
-                }
-
-                return this._RunGenerator;
-            }
-            set { this._RunGenerator = value; }
         }
 
         /// <summary>
@@ -687,36 +667,72 @@ namespace DbMigration
 
             if (runList.Count == 0) return;
 
-            SqlMigrationRun sqlRun = null;
-
-            try
+            this.ExecuteWithoutDebug(() =>
             {
+                var dba = this.DBA;
                 if (runList.Count > 1)
                 {
-                    using (var tran = new TransactionScope())
+                    /*********************** 代码块解释 *********************************
+                     * 
+                     * 如果执行多句 SQL，则需要主动打开连接，
+                     * 否则 DBA 可能会打开之后再把连接关闭，造成多次打开连接，引起分布式事务。
+                     * 而分布式事务在一些数据库中并不支持，例如 SQLCE。
+                     * 
+                    **********************************************************************/
+                    bool opend = false;
+                    var con = dba.Connection;
+
+                    try
                     {
-                        foreach (var item in runList)
+                        if (con.State != ConnectionState.Open)
                         {
-                            sqlRun = item as SqlMigrationRun;
-                            item.Run(this.DBA);
+                            con.Open();
+                            opend = true;
                         }
 
-                        tran.Complete();
+                        using (var tran = new TransactionScope())
+                        {
+                            foreach (var item in runList)
+                            {
+                                this._currentRun = item as SqlMigrationRun;
+                                item.Run(dba);
+                            }
+
+                            tran.Complete();
+                        }
+                    }
+                    finally
+                    {
+                        if (opend)
+                        {
+                            con.Close();
+                        }
                     }
                 }
                 else
                 {
                     var singleRun = runList[0];
-                    sqlRun = singleRun as SqlMigrationRun;
-                    singleRun.Run(this.DBA);
+                    this._currentRun = singleRun as SqlMigrationRun;
+                    singleRun.Run(dba);
                 }
+            });
+        }
+
+        private SqlMigrationRun _currentRun;
+
+        [DebuggerStepThrough]
+        private void ExecuteWithoutDebug(Action action)
+        {
+            try
+            {
+                action();
             }
             catch (DbException ex)
             {
                 var error = "执行数据库迁移时出错：" + ex.Message;
-                if (sqlRun != null)
+                if (this._currentRun != null)
                 {
-                    error += Environment.NewLine + "对应的 SQL：" + sqlRun.Sql;
+                    error += Environment.NewLine + "对应的 SQL：" + this._currentRun.Sql;
                 }
 
                 throw new DbMigrationException(error, ex);
@@ -736,7 +752,7 @@ namespace DbMigration
                 migration.GenerateDownOperations();
             }
 
-            var runList = this.RunGenerator.Generate(migration.Operations);
+            var runList = this._runGenerator.Generate(migration.Operations);
 
             return runList;
         }

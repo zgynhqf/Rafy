@@ -27,30 +27,6 @@ namespace OEA.MetaModel
     [DebuggerDisplay("{DebuggerDisplay}")]
     public class EntityMeta : Meta
     {
-        #region 字段
-
-        private Type _entityType;
-
-        private EntityMeta _parentEntityInfo;
-
-        private IList<EntityMeta> _aggtChildren = new List<EntityMeta>();
-
-        private IList<EntityPropertyMeta> _entityProperties = new List<EntityPropertyMeta>();
-
-        private IList<ChildrenPropertyMeta> _childrenProperties = new List<ChildrenPropertyMeta>();
-
-        private EntityCategory _EntityCategory;
-
-        private TableMeta _TableMeta;
-
-        private EntityPropertyMeta _DefaultOrderBy;
-
-        private bool _DefaultOrderByAscending = true;
-
-        #endregion
-
-        #region 属性
-
         /// <summary>
         /// 此实体类对应的所有托管属性容器
         /// </summary>
@@ -65,6 +41,7 @@ namespace OEA.MetaModel
             set { throw new NotSupportedException(); }
         }
 
+        private Type _entityType;
         /// <summary>
         /// 当前模型是对应这个类型的。
         /// </summary>
@@ -94,6 +71,7 @@ namespace OEA.MetaModel
             set { this.SetValue(ref this._TreeCodeOption, value); }
         }
 
+        private EntityMeta _parentEntityInfo;
         /// <summary>
         /// 聚合父类的元数据
         /// </summary>
@@ -111,6 +89,7 @@ namespace OEA.MetaModel
             get { return this._parentEntityInfo != null ? this._parentEntityInfo.AggtRoot : this; }
         }
 
+        private IList<EntityMeta> _aggtChildren = new List<EntityMeta>();
         /// <summary>
         /// 所有的聚合子类的元数据
         /// 
@@ -124,6 +103,7 @@ namespace OEA.MetaModel
             get { return this._aggtChildren; }
         }
 
+        private IList<EntityPropertyMeta> _entityProperties = new List<EntityPropertyMeta>();
         /// <summary>
         /// 拥有的实体属性，即标记了：EntityPropertyAttribute
         /// </summary>
@@ -132,6 +112,7 @@ namespace OEA.MetaModel
             get { return this._entityProperties; }
         }
 
+        private IList<ChildrenPropertyMeta> _childrenProperties = new List<ChildrenPropertyMeta>();
         /// <summary>
         /// 拥有的关联属性，即标记了：AssociationAttribute
         /// </summary>
@@ -140,18 +121,21 @@ namespace OEA.MetaModel
             get { return this._childrenProperties; }
         }
 
+        private EntityCategory _EntityCategory;
         public EntityCategory EntityCategory
         {
             get { return this._EntityCategory; }
             set { this.SetValue(ref this._EntityCategory, value); }
         }
 
+        private TableMeta _TableMeta;
         public TableMeta TableMeta
         {
             get { return this._TableMeta; }
             set { this.SetValue(ref this._TableMeta, value); }
         }
 
+        private EntityPropertyMeta _DefaultOrderBy;
         /// <summary>
         /// 实体的数据默认按照某个属性排序。
         /// </summary>
@@ -161,6 +145,7 @@ namespace OEA.MetaModel
             internal set { this.SetValue(ref this._DefaultOrderBy, value); }
         }
 
+        private bool _DefaultOrderByAscending = true;
         /// <summary>
         /// 实体的数据默认按照这个次序排序。
         /// </summary>
@@ -170,7 +155,17 @@ namespace OEA.MetaModel
             internal set { this.SetValue(ref this._DefaultOrderByAscending, value); }
         }
 
-        #endregion
+        private CacheScope _CacheDefinition;
+        /// <summary>
+        /// 缓存子系统元数据
+        /// 
+        /// 如果不为空，表示这个实体正在使用分布式缓存系统。
+        /// </summary>
+        public CacheScope CacheDefinition
+        {
+            get { return this._CacheDefinition; }
+            set { this.SetValue(ref this._CacheDefinition, value); }
+        }
 
         #region 查询方法
 
@@ -247,6 +242,46 @@ namespace OEA.MetaModel
         private string DebuggerDisplay
         {
             get { return string.Format("Name:{0}, Root:{1}", this.Name, this.AggtRoot.Name); }
+        }
+    }
+
+    /// <summary>
+    /// 某个类型所使用的缓存更新范围。
+    /// </summary>
+    public class CacheScope : MetaBase
+    {
+        /// <summary>
+        /// 为这个类型定义的范围。
+        /// </summary>
+        public Type Class { get; set; }
+
+        /// <summary>
+        /// 此属性表示为Class作为范围的类型。
+        /// （注意：应该是在聚合对象树中，Class的上层类型。）
+        /// 如果此属性为null，表示Class以本身作为缓存范围。
+        /// </summary>
+        public Type ScopeClass { get; set; }
+
+        /// <summary>
+        /// 此属性表示为Class作为范围的类型的对象ID。
+        /// 如果此属性为null，表示Class不以某一特定的范围对象作为范围，而是全体对象。
+        /// </summary>
+        public Func<ManagedPropertyObject, string> ScopeIdGetter { get; set; }
+
+        /// <summary>
+        /// 表示Class以本身作为缓存范围。
+        /// </summary>
+        public bool ScopeBySelf
+        {
+            get { return this.ScopeClass == null; }
+        }
+
+        /// <summary>
+        /// 表示Class是否以某一特定的范围对象作为范围。
+        /// </summary>
+        public bool ScopeById
+        {
+            get { return this.ScopeIdGetter != null; }
         }
     }
 }

@@ -195,6 +195,9 @@ namespace OEA.Library
         /// <param name="data"></param>
         internal protected virtual void OnDbLoaded() { }
 
+        /// <summary>
+        /// 数据库配置名称（每个库有一个唯一的配置名）
+        /// </summary>
         internal protected virtual string ConnectionStringSettingName
         {
             get { return ConnectionStringNames.OEAPlugins; }

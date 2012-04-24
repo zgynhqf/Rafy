@@ -30,7 +30,7 @@ namespace JXC
             var po = this.Item as PurchaseOrder;
             var poRepo = RF.Concreate<PurchaseOrderRepository>();
 
-            using (var tran = new TransactionScope())
+            using (var tran = RF.TransactionScope(poRepo))
             {
                 poRepo.Save(ref po);
 

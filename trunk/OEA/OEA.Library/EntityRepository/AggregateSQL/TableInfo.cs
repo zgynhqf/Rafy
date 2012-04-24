@@ -83,14 +83,6 @@ namespace OEA.Library
             }
         }
 
-        public string Schema
-        {
-            get
-            {
-                throw new NotSupportedException();
-            }
-        }
-
         #endregion
     }
 
@@ -122,7 +114,7 @@ namespace OEA.Library
         public void SetValue(object obj, object val)
         {
             if (DBNull.Value.Equals(val))
-                obj.SetPropertyValue(this._name, null);                
+                obj.SetPropertyValue(this._name, null);
             else
                 obj.SetPropertyValue(this._name, val);
         }

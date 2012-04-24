@@ -22,16 +22,16 @@ namespace JXC.DbMigrations
             {
                 //由于本类没有支持 Down 操作，所以这里面的 Up 需要防止重入。
                 var productRepo = RF.Create<Product>();
-                var list = productRepo.GetAll();
+                var list = productRepo.GetAll(false);
                 if (list.Count == 0)
                 {
                     var cateRepo = RF.Create<ProductCategory>();
                     var clientRepo = RF.Create<ClientInfo>();
                     var userRepo = RF.Create<User>();
 
-                    var categories = cateRepo.GetAll();
-                    var clients = clientRepo.GetAll();
-                    var operators = userRepo.GetAll();
+                    var categories = cateRepo.GetAll(false);
+                    var clients = clientRepo.GetAll(false);
+                    var operators = userRepo.GetAll(false);
 
                     var cate1 = categories.Cast<ProductCategory>().First(c => c.Name == "服饰类");
                     var cate2 = categories.Cast<ProductCategory>().First(c => c.Name == "食品类");

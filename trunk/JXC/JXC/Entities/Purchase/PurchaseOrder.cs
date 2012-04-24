@@ -42,11 +42,26 @@ namespace JXC
             get { return this.GetRefEntity(SupplierRefProperty); }
             set { this.SetRefEntity(SupplierRefProperty, value); }
         }
+        public static readonly Property<ClientInfoList> SupplierDataSourceProperty = P<PurchaseOrder>.RegisterReadOnly(e => e.SupplierDataSource, e => (e as PurchaseOrder).GetSupplierDataSource(), null);
+        public ClientInfoList SupplierDataSource
+        {
+            get { return this.GetProperty(SupplierDataSourceProperty); }
+        }
+        private ClientInfoList GetSupplierDataSource()
+        {
+            return RF.Concreate<ClientInfoRepository>().GetSuppliers();
+        }
 
         public static readonly ListProperty<PurchaseOrderItemList> PurchaseOrderItemListProperty = P<PurchaseOrder>.RegisterList(e => e.PurchaseOrderItemList);
         public PurchaseOrderItemList PurchaseOrderItemList
         {
             get { return this.GetLazyList(PurchaseOrderItemListProperty); }
+        }
+
+        public static readonly ListProperty<PurchaseOrderAttachementList> PurchaseOrderAttachementListProperty = P<PurchaseOrder>.RegisterList(e => e.PurchaseOrderAttachementList);
+        public PurchaseOrderAttachementList PurchaseOrderAttachementList
+        {
+            get { return this.GetLazyList(PurchaseOrderAttachementListProperty); }
         }
 
         public static readonly Property<string> CodeProperty = P<PurchaseOrder>.Register(e => e.Code);
@@ -216,12 +231,16 @@ namespace JXC
             {
                 View.Property(PurchaseOrder.CodeProperty).HasLabel("订单编号").ShowIn(ShowInWhere.All);
                 View.Property(PurchaseOrder.DateProperty).HasLabel("订单日期").ShowIn(ShowInWhere.ListDetail);
-                View.Property(PurchaseOrder.SupplierRefProperty).HasLabel("供应商").ShowIn(ShowInWhere.ListDetail);
+                View.Property(PurchaseOrder.SupplierRefProperty).HasLabel("供应商").ShowIn(ShowInWhere.ListDetail)
+                    .UseLookupDataSource(PurchaseOrder.SupplierDataSourceProperty);//只下拉获取经销商的信息
                 View.Property(PurchaseOrder.PlanStorageInDateProperty).HasLabel("计划到货日期").ShowIn(ShowInWhere.ListDetail);
-                View.Property(PurchaseOrder.TotalMoneyProperty).HasLabel("总金额").ShowIn(ShowInWhere.ListDetail).Readonly();
+                View.Property(PurchaseOrder.TotalMoneyProperty).HasLabel("总金额").ShowIn(ShowInWhere.ListDetail)
+                    .Readonly();
                 View.Property(PurchaseOrder.StorageInDirectlyProperty).HasLabel("直接入库").ShowIn(ShowInWhere.Detail);
-                View.Property(PurchaseOrder.StorageInStatusProperty).HasLabel("入库状态").ShowIn(ShowInWhere.List).Readonly();
-                View.Property(PurchaseOrder.TotalAmountLeftProperty).HasLabel("未入库商品数").ShowIn(ShowInWhere.List).Readonly();
+                View.Property(PurchaseOrder.StorageInStatusProperty).HasLabel("入库状态").ShowIn(ShowInWhere.List)
+                    .Readonly();
+                View.Property(PurchaseOrder.TotalAmountLeftProperty).HasLabel("未入库商品数").ShowIn(ShowInWhere.List)
+                    .Readonly();
                 View.Property(PurchaseOrder.CommentProperty).HasLabel("备注").ShowIn(ShowInWhere.ListDetail)
                     .ShowMemoInDetail();
             }

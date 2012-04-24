@@ -26,6 +26,7 @@ using OEA;
 
 using hxy;
 using OEA.Library.Validation;
+using OEA.Utils.Caching;
 
 namespace OEA.Library
 {
@@ -150,7 +151,7 @@ namespace OEA.Library
 
         #region List
 
-        protected virtual EntityList GetAllCore()
+        internal protected virtual EntityList GetAllCore()
         {
             return FetchList(new GetAllCriteria());
         }
@@ -201,7 +202,7 @@ namespace OEA.Library
         /// <returns></returns>
         public EntityList NewList()
         {
-            var list = New(this.ListType);
+            var list = Activator.CreateInstance(this.ListType) as EntityList;
 
             this.NotifyLoaded(list);
 
@@ -228,16 +229,11 @@ namespace OEA.Library
             return newList;
         }
 
-        private static EntityList New(Type listType)
-        {
-            return Activator.CreateInstance(listType) as EntityList;
-        }
-
         #endregion
 
         #region Entity
 
-        protected virtual Entity GetByIdCore(int id)
+        internal protected virtual Entity GetByIdCore(int id)
         {
             var list = FetchList(new GetByIdCriteria() { Id = id });
             return list.Count == 1 ? list[0] : null;
@@ -384,7 +380,7 @@ namespace OEA.Library
             {
                 return EntityListVersion.Repository != null &&
                     OEAEnvironment.Location.IsOnClient() &&
-                    CacheDefinition.Instance.IsEnabled(this.EntityType);
+                    this.EntityMeta.CacheDefinition != null;
             }
         }
 
@@ -425,7 +421,7 @@ namespace OEA.Library
                 //如果是在客户端，则先检测缓存。
                 if (OEAEnvironment.Location.IsOnClient())
                 {
-                    var smallTable = EntityRowCache.Instance.CacheByParent(this.EntityType, parent, this.GetByParentId);
+                    var smallTable = this.GetCachedTable(parent);
                     if (smallTable != null)
                     {
                         children = this.ConvertTable(smallTable);
@@ -465,9 +461,9 @@ namespace OEA.Library
 
             if (this.IsCacheEnabled)
             {
-                if (this.IsRootType())
+                if (this.EntityMeta.EntityCategory == EntityCategory.Root)
                 {
-                    result = AggregateRootCache.Instance.CacheById(this.EntityType, id, this.GetByIdCore);
+                    result = AggregateRootCache.Instance.CacheById(this, id);
                 }
                 else
                 {
@@ -502,31 +498,91 @@ namespace OEA.Library
         {
             if (this.IsCacheEnabled)
             {
-                AggregateRootCache.Instance.ModifyRootEntity(entity);
+                AggregateRootCache.Instance.ModifyRootEntity(this, entity);
             }
         }
 
         /// <summary>
         /// 从缓存中获取整个列表。
+        /// 
+        /// 从缓存中读取指定实体类型的所有数据。
+        /// 如果缓存中不存在，或者缓存数据已经过期，则调用ifNotExsits方法获取数据，并把最终数据加入到缓存中。
         /// </summary>
+        /// <param name="entityType"></param>
+        /// <param name="ifNotExsits"></param>
         /// <returns></returns>
         private IList<Entity> GetCachedTable()
         {
-            return EntityRowCache.Instance.CacheAll(this.EntityType, this.GetAllCore);
+            IList<Entity> result = null;
+
+            //目前只是在客户端使用了缓存。
+            if (OEAEnvironment.Location.IsOnClient())
+            {
+                CacheScope sd = this.EntityMeta.CacheDefinition;
+                if (sd != null)
+                {
+                    var className = sd.Class.Name;
+                    var key = "All";
+
+                    //如果内存不存在此数据，则尝试使用硬盘缓存获取
+                    result = CacheInstance.MemoryDisk.Get(key, className) as IList<Entity>;
+                    if (result == null)
+                    {
+                        result = this.GetAllCore();
+
+                        var policy = new Policy()
+                        {
+                            Checker = new VersionChecker(sd.Class)
+                        };
+                        CacheInstance.MemoryDisk.Add(key, result, policy, className);
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 从缓存中读取指定实体类型的某个父对象下的所有子对象。
+        /// 如果缓存中不存在，或者缓存数据已经过期，则调用ifNotExsits方法获取数据，并把最终数据加入到缓存中。
+        /// </summary>
+        /// <param name="entityType"></param>
+        /// <param name="parent"></param>
+        /// <param name="ifNotExsits"></param>
+        /// <returns></returns>
+        private IList<Entity> GetCachedTable(Entity parent)
+        {
+            IList<Entity> result = null;
+
+            if (OEAEnvironment.Location.IsOnClient())
+            {
+                CacheScope sd = this.EntityMeta.CacheDefinition;
+                if (sd != null)
+                {
+                    var className = sd.Class.Name;
+                    var key = string.Format("ByParentId_{0}", parent.Id);
+                    result = CacheInstance.SqlCe.Get(key, className) as IList<Entity>;
+
+                    if (result == null)
+                    {
+                        result = this.GetByParentId(parent.Id);
+                        var scopeId = sd.ScopeIdGetter(parent);
+                        var policy = new Policy()
+                        {
+                            Checker = new VersionChecker(sd.Class, sd.ScopeClass, scopeId)
+                        };
+
+                        CacheInstance.SqlCe.Add(key, result, policy, className);
+                    }
+                }
+            }
+
+            return result;
         }
 
         #endregion
 
         #region Protected Methods
-
-        /// <summary>
-        /// 判断当前的实体类型是否是根对象
-        /// </summary>
-        /// <returns></returns>
-        public bool IsRootType()
-        {
-            return this.EntityMeta.EntityCategory == EntityCategory.Root;
-        }
 
         /// <summary>
         /// 被本仓库管理的列表类型
@@ -631,7 +687,7 @@ namespace OEA.Library
             if (!OEAEnvironment.Location.IsOnServer()) throw new InvalidOperationException("!OEAEnvironment.IsOnServer() must be false.");
             if (entityList.Count < 1) throw new ArgumentOutOfRangeException();
 
-            var connection = this.CreateDb().Connection;
+            var connection = this.CreateDb().DBA.Connection;
             var tableInfo = this.GetTableInfo();
 
             var sqlCon = connection as SqlConnection;

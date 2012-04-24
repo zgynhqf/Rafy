@@ -84,16 +84,16 @@ namespace OEA.RBAC
         {
             base.ConfigMeta();
 
-            this.Meta.MapTable().HasColumns(
+            Meta.MapTable().HasColumns(
                 Position.CodeProperty,
                 Position.NameProperty
                 );
+
+            Meta.EnableCache(SimpleCacheType.Table);
         }
 
         protected override void ConfigView()
         {
-            base.ConfigView();
-
             View.HasDelegate(Position.NameProperty).DomainName("岗位");
 
             View.Property(Position.CodeProperty).HasLabel("编码").ShowIn(ShowInWhere.All);

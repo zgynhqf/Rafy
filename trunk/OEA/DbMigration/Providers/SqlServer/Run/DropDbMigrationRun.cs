@@ -33,14 +33,12 @@ namespace DbMigration.SqlServer
             //db.Connection.Close();
 
             //连接到 MASTER 数据库
-            var dbConnection = db.Connection;
-            var master = new SqlConnectionStringBuilder(dbConnection.ConnectionString);
-            master.InitialCatalog = "MASTER";
+            var master = new SqlConnectionStringBuilder(db.Connection.ConnectionString) { InitialCatalog = "MASTER" };
 
             //参考 EntityFramework SqlProviderServices.DbDeleteDatabase()
             SqlConnection.ClearPool(db.Connection as SqlConnection);
 
-            using (var db2 = new DBAccesser(master.ConnectionString, "System.Data.SqlClient"))
+            using (var db2 = new DBAccesser(master.ConnectionString, DbSetting.Provider_SqlClient))
             {
                 db2.ExecuteText(string.Format("DROP DATABASE [{0}]", this.Database));
             }

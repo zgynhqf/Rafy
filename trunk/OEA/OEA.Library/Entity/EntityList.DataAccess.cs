@@ -64,7 +64,7 @@ namespace OEA.Library
                 using (var db = this.CreateDb())
                 {
                     //访问数据库
-                    var table = db.ExecSql(this.EntityType, sql);
+                    var table = db.Select(this.EntityType, sql);
 
                     //读取数据
                     this.AddTable(table);
