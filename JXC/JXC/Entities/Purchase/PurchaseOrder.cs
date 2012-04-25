@@ -52,6 +52,19 @@ namespace JXC
             return RF.Concreate<ClientInfoRepository>().GetSuppliers();
         }
 
+        public static readonly RefProperty<Storage> StorageRefProperty =
+            P<PurchaseOrder>.RegisterRef(e => e.Storage, ReferenceType.Normal);
+        public int? StorageId
+        {
+            get { return this.GetRefNullableId(StorageRefProperty); }
+            set { this.SetRefNullableId(StorageRefProperty, value); }
+        }
+        public Storage Storage
+        {
+            get { return this.GetRefEntity(StorageRefProperty); }
+            set { this.SetRefEntity(StorageRefProperty, value); }
+        }
+
         public static readonly ListProperty<PurchaseOrderItemList> PurchaseOrderItemListProperty = P<PurchaseOrder>.RegisterList(e => e.PurchaseOrderItemList);
         public PurchaseOrderItemList PurchaseOrderItemList
         {
@@ -155,6 +168,14 @@ namespace JXC
                     }
                 }
             });
+            rules.AddRule(StorageRefProperty, (e, args) =>
+            {
+                var po = e as PurchaseOrder;
+                if (po.StorageInDirectly && !po.StorageId.HasValue)
+                {
+                    args.BrokenDescription = "请选择需要入库的仓库。";
+                }
+            });
         }
 
         protected override void OnRoutedEvent(object sender, EntityRoutedEventArgs e)
@@ -237,6 +258,8 @@ namespace JXC
                 View.Property(PurchaseOrder.TotalMoneyProperty).HasLabel("总金额").ShowIn(ShowInWhere.ListDetail)
                     .Readonly();
                 View.Property(PurchaseOrder.StorageInDirectlyProperty).HasLabel("直接入库").ShowIn(ShowInWhere.Detail);
+                View.Property(PurchaseOrder.StorageRefProperty).HasLabel("仓库").ShowIn(ShowInWhere.Detail)
+                    .Visibility(PurchaseOrder.StorageInDirectlyProperty);//动态只读//.Readonly(PurchaseOrder.IsStorageReadonlyProperty);//动态只读
                 View.Property(PurchaseOrder.StorageInStatusProperty).HasLabel("入库状态").ShowIn(ShowInWhere.List)
                     .Readonly();
                 View.Property(PurchaseOrder.TotalAmountLeftProperty).HasLabel("未入库商品数").ShowIn(ShowInWhere.List)

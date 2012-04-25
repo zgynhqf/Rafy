@@ -198,6 +198,7 @@
   <ItemGroup>
     <None Include="_CodeSnippets\OEA_Entity_Criteria.snippet" />
     <None Include="_CodeSnippets\OEA_PropertyList_Full.snippet" />
+    <None Include="_CodeSnippets\OEA_PropertyReferenceNullable.snippet" />
     <None Include="_CodeSnippets\UIA_InTab.snippet" />
     <None Include="_CodeSnippets\UIA_InWindow.snippet" />
     <None Include="_CodeSnippets\OEA_PropertyReference_Changed.snippet" />
@@ -212,7 +213,6 @@
     <None Include="_CodeSnippets\OEA_Property.snippet" />
     <None Include="_CodeSnippets\OEA_PropertyList.snippet" />
     <None Include="_CodeSnippets\OEA_PropertyReference.snippet" />
-    <None Include="_CodeSnippets\OEA_PropertyReferenceNullable.snippet" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

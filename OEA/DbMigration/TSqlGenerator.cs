@@ -211,8 +211,9 @@ ALTER TABLE [{0}]
 
             if (isRequired)
             {
-                sql.Write(" NOT NULL");
+                sql.Write(" NOT");
             }
+            sql.Write(" NULL");
         }
 
         protected string Quote(string identifier)

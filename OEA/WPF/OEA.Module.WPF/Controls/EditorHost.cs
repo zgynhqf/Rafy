@@ -22,6 +22,7 @@ using System.Windows.Automation;
 using OEA.ManagedProperty;
 using OEA.Module.WPF.Editors;
 using System.ComponentModel;
+using System.Windows.Data;
 
 namespace OEA.Module.WPF.Controls
 {
@@ -171,6 +172,8 @@ namespace OEA.Module.WPF.Controls
                 return;
             }
 
+            this.BindVisibility(property);
+
             var editor = AutoUI.BlockUIFactory.PropertyEditorFactory.Create(property, false);
 
             var labelContainer = this.Template.FindName("PART_LabelContainer", this) as ContentControl;
@@ -197,6 +200,22 @@ namespace OEA.Module.WPF.Controls
             //支持 UI Test
             var label = property.Label;
             if (label != null) { AutomationProperties.SetName(editor.Control, property.Label); }
+        }
+
+        /// <summary>
+        /// 在所有控件生成后，为他们的可见性进行属性绑定
+        /// </summary>
+        private void BindVisibility(EntityPropertyViewMeta meta)
+        {
+            var visibilityIndicator = meta.VisibilityIndicator;
+            if (visibilityIndicator.IsDynamic)
+            {
+                Binding visibleBinding = new Binding(visibilityIndicator.Property.Name);
+                visibleBinding.Mode = BindingMode.OneWay;
+                visibleBinding.Converter = new BooleanToVisibilityConverter();
+
+                this.SetBinding(UIElement.VisibilityProperty, visibleBinding);
+            }
         }
 
         private void SetLayoutValues(DetailObjectView detailView, EntityPropertyViewMeta property)

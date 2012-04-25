@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OEA.ManagedProperty;
 
 namespace OEA.MetaModel
 {
@@ -24,31 +25,23 @@ namespace OEA.MetaModel
     public class PropertyReadonlyIndicator : Freezable
     {
         private PropertyReadonlyStatus _Status;
-
+        /// <summary>
+        /// 属性只读检测的状态
+        /// </summary>
         public PropertyReadonlyStatus Status
         {
-            get
-            {
-                return this._Status;
-            }
-            set
-            {
-                this.SetValue(ref this._Status, value);
-            }
+            get { return this._Status; }
+            set { this.SetValue(ref this._Status, value); }
         }
 
-        private string _PropertyName;
-
-        public string PropertyName
+        private IManagedProperty _Property;
+        /// <summary>
+        /// 当状态为动态检查时，这个属性表示需要被检查的属性。
+        /// </summary>
+        public IManagedProperty Property
         {
-            get
-            {
-                return this._PropertyName;
-            }
-            set
-            {
-                this.SetValue(ref this._PropertyName, value);
-            }
+            get { return this._Property; }
+            set { this.SetValue(ref this._Property, value); }
         }
     }
 

@@ -43,13 +43,6 @@ namespace OEA.MetaModel.View
             set { throw new NotSupportedException(); }
         }
 
-        private bool _IsReadonly;
-        public bool IsReadonly
-        {
-            get { return this._IsReadonly; }
-            set { this.SetValue(ref this._IsReadonly, value); }
-        }
-
         /// <summary>
         /// 是否为“引用属性”
         /// </summary>
@@ -90,6 +83,16 @@ namespace OEA.MetaModel.View
             set { this.SetValue(ref this._WidthFlex, value); }
         }
 
+        private bool _IsReadonly;
+        /// <summary>
+        /// Web 专用
+        /// </summary>
+        public bool IsReadonly
+        {
+            get { return this._IsReadonly; }
+            set { this.SetValue(ref this._IsReadonly, value); }
+        }
+
         #endregion
 
         #region WPF
@@ -102,6 +105,16 @@ namespace OEA.MetaModel.View
         {
             get { return this._VisibilityIndicator; }
             set { this.SetValue(ref this._VisibilityIndicator, value); }
+        }
+
+        private PropertyReadonlyIndicator _ReadonlyIndicator = new PropertyReadonlyIndicator();
+        /// <summary>
+        /// 用于检测是否只读的属性
+        /// </summary>
+        public PropertyReadonlyIndicator ReadonlyIndicator
+        {
+            get { return this._ReadonlyIndicator; }
+            set { this.SetValue(ref this._ReadonlyIndicator, value); }
         }
 
         private string _StringFormat;

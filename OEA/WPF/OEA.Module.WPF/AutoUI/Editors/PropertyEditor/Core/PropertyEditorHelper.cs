@@ -34,17 +34,14 @@ namespace OEA.Module.WPF.Editors
         public static bool CheckIsReadonly(Entity entity, EntityPropertyViewMeta property)
         {
             //类指明为只读
-            if (property.IsReadonly || property.Owner.NotAllowEdit) { return true; }
+            var indicator = property.ReadonlyIndicator;
+            if (indicator.Status == PropertyReadonlyStatus.Readonly || property.Owner.NotAllowEdit) { return true; }
 
-            ////如果没有标记为检查某一个属性，则表示必须是只读对象。
-            //var readonlyAttri = property.ReadonlyIndicator;
-            //if (readonlyAttri.Status == PropertyReadonlyStatus.Readonly) { return true; }
-
-            ////检测动态属性
-            //if (readonlyAttri.Status == PropertyReadonlyStatus.Dynamic && entity != null)
-            //{
-            //    return entity.GetPropertyValue<bool>(readonlyAttri.PropertyName);
-            //}
+            //检测动态属性
+            if (indicator.Status == PropertyReadonlyStatus.Dynamic && entity != null)
+            {
+                return (bool)entity.GetProperty(indicator.Property);
+            }
 
             return false;
         }
@@ -52,30 +49,23 @@ namespace OEA.Module.WPF.Editors
         public static void BindElementReadOnly(ReadonlyElement matrix, EntityPropertyViewMeta property)
         {
             //类指明为只读
-            if (property.IsReadonly || property.Owner.NotAllowEdit)
+            var indicator = property.ReadonlyIndicator;
+            if (indicator.Status == PropertyReadonlyStatus.Readonly || property.Owner.NotAllowEdit)
             {
                 matrix.SetReadonly();
                 return;
             }
 
-            ////如果没有标记为检查某一个属性，则表示必须是只读对象。
-            //var readonlyAttri = property.ReadonlyIndicator;
-            //if (readonlyAttri.Status == PropertyReadonlyStatus.Readonly)
-            //{
-            //    matrix.SetReadonly();
-            //    return;
-            //}
+            //绑定动态属性
+            if (indicator.Status == PropertyReadonlyStatus.Dynamic)
+            {
+                var rb = new Binding(indicator.Property.Name);
+                rb.Mode = BindingMode.OneWay;
 
-            ////绑定动态属性
-            //if (readonlyAttri.Status == PropertyReadonlyStatus.Dynamic)
-            //{
-            //    var rb = new Binding(readonlyAttri.PropertyName);
-            //    rb.Mode = BindingMode.OneWay;
+                if (!matrix.ReadonlyValue) rb.Converter = new ReverseBooleanConverter();
 
-            //    if (!matrix.ReadonlyValue) rb.Converter = new ReverseBooleanConverter();
-
-            //    matrix.Element.SetBinding(matrix.Property, rb);
-            //}
+                matrix.Element.SetBinding(matrix.Property, rb);
+            }
         }
     }
 
