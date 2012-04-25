@@ -24,6 +24,9 @@ namespace OEA
         /// </summary>
         public string DllRootDirectory { get; set; }
 
+        /// <summary>
+        /// 在程序启动时，设置本属性以指示当前程序是否处于调试状态。
+        /// </summary>
         public bool IsDebuggingEnabled { get; set; }
     }
 }

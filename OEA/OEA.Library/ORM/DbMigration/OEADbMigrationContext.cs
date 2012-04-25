@@ -44,7 +44,9 @@ namespace OEA.Library.ORM.DbMigration
         public OEADbMigrationContext AutoMigrate()
         {
             //如果这个配置为 true，则执行自动升级
-            var enabled = ConfigurationHelper.GetAppSettingOrDefault("DatabaseAutoMigrationEnabled", true);
+            var enabled = ConfigurationHelper.GetAppSettingOrDefault(
+                "DatabaseAutoMigrationEnabled", OEAEnvironment.IsDebuggingEnabled
+                );
 
             if (enabled)
             {
