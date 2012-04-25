@@ -8,6 +8,16 @@
  * 
 *******************************************************/
 
+2.11.593.0
+    示例
+        * JXC 订单添加仓库属性。
+
+2.11.592.0
+    内部修改
+        * WPF 中支持动态的 Readonly、Visiblity 检测。
+    BUG修复
+        * TSqlGenerator.GenerateColumnDeclaration 方法中，如果是 Null 时，需要把 Null 在 SQL 语句中显式加上。
+
 2.11.590.0
     内部修改
         * Web 支持 SQLCE 配置。

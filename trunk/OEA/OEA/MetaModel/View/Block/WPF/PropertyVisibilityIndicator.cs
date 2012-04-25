@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OEA.ManagedProperty;
 
 namespace OEA.MetaModel
 {
@@ -23,10 +24,7 @@ namespace OEA.MetaModel
     /// </summary>
     public class PropertyVisibilityIndicator : Freezable
     {
-        private string _PropertyName;
-
         private VisiblityType _VisiblityType;
-
         /// <summary>
         /// 可见性指示器的类型
         /// </summary>
@@ -44,13 +42,30 @@ namespace OEA.MetaModel
             get { return this._VisiblityType == VisiblityType.Dynamic; }
         }
 
+        private IManagedProperty _Property;
         /// <summary>
-        /// 一个返回 bool 值的属性名。
+        /// 当状态为动态检查时，这个属性表示需要被检查的属性。
+        /// 一个返回 bool 值的属性。
         /// </summary>
-        public string PropertyName
+        public IManagedProperty Property
         {
-            get { return this._PropertyName; }
-            set { this.SetValue(ref this._PropertyName, value); }
+            get { return this._Property; }
+            set { this.SetValue(ref this._Property, value); }
         }
+    }
+
+    /// <summary>
+    /// 可见性指示器的类型
+    /// </summary>
+    public enum VisiblityType
+    {
+        AlwaysShow,
+
+        AlwaysHide,
+
+        /// <summary>
+        /// 动态表示是否需要检测动态属性来获取可见性
+        /// </summary>
+        Dynamic,
     }
 }

@@ -42,6 +42,7 @@ namespace JXC
                         Order = po,
                         Code = po.Code + " - 入库",
                         Date = DateTime.Now,
+                        Storage = po.Storage,
                         Comment = "系统生成"
                     };
 

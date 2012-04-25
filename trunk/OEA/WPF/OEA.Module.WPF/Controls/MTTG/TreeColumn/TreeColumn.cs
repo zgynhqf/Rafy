@@ -268,7 +268,7 @@ namespace OEA.Module.WPF.Controls
 
         #endregion
 
-        internal void UpdateVisibility(object currData)
+        internal void UpdateVisibility(Entity currData)
         {
             if (this._meta != null)
             {
@@ -278,11 +278,9 @@ namespace OEA.Module.WPF.Controls
                 //如果是动态计算，则尝试从数据中获取是否可见的值。
                 if (visibilityIndicator.IsDynamic)
                 {
-                    //实体类型与属性的实体类型一致时，才进行计算。
-                    var propertyOwnerType = this._meta.Owner.EntityType;
-                    if (currData != null && propertyOwnerType.IsAssignableFrom(currData.GetType()))
+                    if (currData != null)
                     {
-                        isVisible = currData.GetPropertyValue<bool>(visibilityIndicator.PropertyName);
+                        isVisible = (bool)currData.GetProperty(visibilityIndicator.Property);
                     }
                     else
                     {

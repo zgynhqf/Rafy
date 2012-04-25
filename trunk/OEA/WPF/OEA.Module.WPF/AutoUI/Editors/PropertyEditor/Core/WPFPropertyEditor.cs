@@ -161,25 +161,6 @@ namespace OEA.Module.WPF.Editors
             base.OnControlsCreated();
 
             this._context.control = this.Control;
-
-            this.BindVisibility();
-        }
-
-        /// <summary>
-        /// 在所有控件生成后，为他们的可见性进行属性绑定
-        /// </summary>
-        private void BindVisibility()
-        {
-            var visibilityIndicator = this.Meta.VisibilityIndicator;
-            if (visibilityIndicator.IsDynamic)
-            {
-                Binding visibleBinding = new Binding(visibilityIndicator.PropertyName);
-                visibleBinding.Mode = BindingMode.OneWay;
-                visibleBinding.Converter = new BooleanToVisibilityConverter();
-
-                this.Control.SetBinding(UIElement.VisibilityProperty, visibleBinding);
-                this.LabelControl.SetBinding(UIElement.VisibilityProperty, visibleBinding);
-            }
         }
 
         #region IsReadOnly

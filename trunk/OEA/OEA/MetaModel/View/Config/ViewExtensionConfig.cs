@@ -279,7 +279,61 @@ namespace OEA.MetaModel.View
         /// <returns></returns>
         public static EntityPropertyViewMeta Readonly(this EntityPropertyViewMeta meta, bool value = true)
         {
-            meta.IsReadonly = value;
+            if (OEAEnvironment.IsWeb)
+            {
+                meta.IsReadonly = value;
+            }
+            else
+            {
+                meta.ReadonlyIndicator.Status = value ? PropertyReadonlyStatus.Readonly : PropertyReadonlyStatus.None;
+            }
+
+            return meta;
+        }
+
+        /// <summary>
+        /// 设置该属性为动态检查是否只读
+        /// 
+        /// WPF Only
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="indicator">动态根据此属性来检查是否只读。</param>
+        /// <returns></returns>
+        public static EntityPropertyViewMeta Readonly(this EntityPropertyViewMeta meta, IManagedProperty indicator)
+        {
+            meta.ReadonlyIndicator.Status = PropertyReadonlyStatus.Dynamic;
+            meta.ReadonlyIndicator.Property = indicator;
+
+            return meta;
+        }
+
+        /// <summary>
+        /// 设置该属性为动态检查是否可见
+        /// 
+        /// WPF Only
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="value">是否可见。</param>
+        /// <returns></returns>
+        public static EntityPropertyViewMeta Visibility(this EntityPropertyViewMeta meta, bool value = false)
+        {
+            meta.VisibilityIndicator.VisiblityType = value ? VisiblityType.AlwaysHide : VisiblityType.AlwaysShow;
+
+            return meta;
+        }
+
+        /// <summary>
+        /// 设置该属性为动态检查是否可见
+        /// 
+        /// WPF Only
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="indicator">动态根据此属性来检查是否可见。</param>
+        /// <returns></returns>
+        public static EntityPropertyViewMeta Visibility(this EntityPropertyViewMeta meta, IManagedProperty indicator)
+        {
+            meta.VisibilityIndicator.VisiblityType = VisiblityType.Dynamic;
+            meta.VisibilityIndicator.Property = indicator;
 
             return meta;
         }

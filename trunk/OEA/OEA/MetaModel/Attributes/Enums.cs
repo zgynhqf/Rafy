@@ -33,19 +33,4 @@ namespace OEA.MetaModel
         /// </summary>
         Multiple
     }
-
-    /// <summary>
-    /// 可见性指示器的类型
-    /// </summary>
-    public enum VisiblityType
-    {
-        AlwaysShow,
-
-        AlwaysHide,
-
-        /// <summary>
-        /// 动态表示是否需要检测动态属性来获取可见性
-        /// </summary>
-        Dynamic,
-    }
 }

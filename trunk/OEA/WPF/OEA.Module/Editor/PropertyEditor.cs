@@ -101,7 +101,7 @@ namespace OEA.Editors
                     var curObj = this.Context.CurrentObject;
                     if (curObj != null)
                     {
-                        return (bool)curObj.GetPropertyValue(visibilityIndicator.PropertyName);
+                        return (bool)curObj.GetProperty(visibilityIndicator.Property);
                     }
                 }
 
