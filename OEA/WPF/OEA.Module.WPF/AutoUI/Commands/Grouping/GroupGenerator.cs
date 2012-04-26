@@ -112,7 +112,7 @@ namespace OEA.Module.WPF.CommandAutoUI
         protected static void TryExcuteCommand(ICommandSource cmdSource)
         {
             var cmd = (cmdSource.Command as CommandAdapter).CoreCommand;
-            CommandRepository.TryExecuteCommand(cmd, cmdSource.CommandParameter);
+            cmd.TryExecute(cmdSource.CommandParameter);
         }
 
         /// <summary>

@@ -21,21 +21,21 @@ using OEA.MetaModel.View;
 using OEA.Module;
 using OEA.Module.WPF;
 using OEA.RBAC.Security;
+using System.ComponentModel;
 
 namespace JXC.WPF
 {
-    public class ProductModule : ModuleBase
+    public class OrderStorageInModule : ConditionQueryModule
     {
         protected override void OnItemCreated(Entity entity)
         {
             base.OnItemCreated(entity);
 
-            var code = RF.Concreate<AutoCodeInfoRepository>().GetOrCreateAutoCode<Product>();
+            var code = RF.Concreate<AutoCodeInfoRepository>().GetOrCreateAutoCode<OrderStorageInBill>();
+            var p = entity as OrderStorageInBill;
+            p.Code = code;
 
-            var p = entity as Product;
-            p.BianMa = code;
-            p.Operator = OEAIdentity.Current.User;
-            p.OperateTime = DateTime.Now;
+            p.Storage = RF.Concreate<StorageRepository>().GetDefault();
         }
     }
 }

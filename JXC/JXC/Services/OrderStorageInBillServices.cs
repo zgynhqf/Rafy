@@ -58,12 +58,20 @@ namespace JXC
                 }
                 RF.Save(order);
 
-                //修改库存
+                //修改所在仓库库存
+                var storage = storageIn.Storage;
                 foreach (StorageInBillItem item in storageIn.StorageInItemList)
                 {
-                    item.Product.StorageAmount += item.Amount;
-                    RF.Save(item.Product);
+                    var product = item.Product;
+
+                    //同时修改该仓库的数量，以及商品的数量
+                    var storageProduct = storage.FindOrCreateItem(product);
+                    storageProduct.Amount += item.Amount;
+                    product.StorageAmount += item.Amount;
+
+                    RF.Save(product);
                 }
+                RF.Save(storage);
 
                 //提交事务
                 tran.Complete();

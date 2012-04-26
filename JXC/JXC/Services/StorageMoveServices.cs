@@ -23,47 +23,45 @@ using hxy.Common;
 namespace JXC
 {
     [Serializable]
-    public class AddOtherStorageOutBillService : AddService
+    public class AddStorageMoveService : AddService
     {
         protected override Result ExecuteCore()
         {
-            var storageOut = this.Item as OtherStorageOutBill;
-            if (storageOut == null) throw new ArgumentNullException("storageIn");
-
-            var repo = RF.Create<OrderStorageInBill>();
-            using (var tran = RF.TransactionScope(repo))
+            var storageMove = this.Item as StorageMove;
+            using (var tran = RF.TransactionScope(storageMove))
             {
-                repo.Save(ref storageOut);
+                var storageFrom = storageMove.StorageFrom;
+                var StorageTo = storageMove.StorageTo;
 
-                //修改所在仓库库存
-                var storage = storageOut.Storage;
-                foreach (StorageOutBillItem item in storageOut.StorageOutBillItemList)
+                //修改两个仓库对应项的库存
+                foreach (StorageMoveItem item in storageMove.StorageMoveItemList)
                 {
                     var product = item.Product;
 
-                    var storageProduct = storage.FindOrCreateItem(product);
-
-                    if (storageProduct.Amount < item.Amount)
+                    var storageProductFrom = storageFrom.FindOrCreateItem(product);
+                    if (storageProductFrom.Amount < item.Amount)
                     {
                         return string.Format(
                             "商品 {0} 在仓库 {1} 中的库存量不够，目前数量为 {2}，出库失败。",
-                            product.MingCheng, storage.Name, storageProduct.Amount
+                            product.MingCheng, storageFrom.Name, storageProductFrom.Amount
                             );
                     }
 
-                    //同时修改该仓库的数量，以及商品的数量
-                    storageProduct.Amount -= item.Amount;
-                    product.StorageAmount -= item.Amount;
+                    var storageProductTo = StorageTo.FindOrCreateItem(product);
 
-                    RF.Save(product);
+                    storageProductFrom.Amount -= item.Amount;
+                    storageProductTo.Amount += item.Amount;
                 }
-                RF.Save(storage);
+
+                RF.Save(storageFrom);
+                RF.Save(StorageTo);
+                RF.Save(storageMove);
 
                 //提交事务
                 tran.Complete();
             }
 
-            this.NewId = storageOut.Id;
+            this.NewId = storageMove.Id;
 
             return true;
         }

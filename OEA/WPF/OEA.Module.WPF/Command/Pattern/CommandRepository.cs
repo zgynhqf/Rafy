@@ -86,20 +86,7 @@ namespace Itenso.Windows.Input
 
             var runtimeCmd = CommandRepository.NewCommand(cmdInfo).CoreCommand;
 
-            return TryExecuteCommand(runtimeCmd, cmdArg);
-        }
-
-        public static bool TryExecuteCommand(IClientCommand runtimeCmd, object cmdArg)
-        {
-            if (runtimeCmd == null) throw new ArgumentNullException("cmdInfo");
-
-            if (runtimeCmd.CanExecute(cmdArg))
-            {
-                runtimeCmd.Execute(cmdArg);
-                return true;
-            }
-
-            return false;
+            return runtimeCmd.TryExecute(cmdArg);
         }
 
         #endregion

@@ -24,15 +24,16 @@ using OEA.RBAC.Security;
 
 namespace JXC.WPF
 {
-    public class OtherStorageInModule : ConditionQueryModule
+    public class StorageMoveModule : ConditionQueryModule
     {
         protected override void OnItemCreated(Entity entity)
         {
             base.OnItemCreated(entity);
 
-            var code = RF.Concreate<AutoCodeInfoRepository>().GetOrCreateAutoCode<OtherStorageInBill>();
-            var p = entity as OtherStorageInBill;
+            var code = RF.Concreate<AutoCodeInfoRepository>().GetOrCreateAutoCode<OtherStorageOutBill>();
+            var p = entity as StorageMove;
             p.Code = code;
+            p.User = OEAIdentity.Current.User.Name;
         }
     }
 }

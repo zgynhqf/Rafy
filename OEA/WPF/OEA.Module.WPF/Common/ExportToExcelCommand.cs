@@ -1,15 +1,30 @@
+/*******************************************************
+ * 
+ * 作者：胡庆访
+ * 创建时间：2009
+ * 说明：此文件只包含一个类，具体内容见类型注释。
+ * 运行环境：.NET 4.0
+ * 版本号：1.0.0
+ * 
+ * 历史记录：
+ * 创建文件 胡庆访 2009
+ * 
+*******************************************************/
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OEA.WPF.Command;
-using OEA.MetaModel;
-using OEA.MetaModel.View;
 using System.Collections;
-using System.Windows.Forms;
+using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
-using System.Data;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+using OEA.Library;
+using OEA.MetaModel;
+using OEA.MetaModel.View;
+using OEA.WPF.Command;
+using OEA.MetaModel.Attributes;
 
 namespace OEA.Module.WPF
 {
@@ -19,13 +34,18 @@ namespace OEA.Module.WPF
     /// <typeparam name="TModel">
     /// 被导出的模型的类型
     /// </typeparam>
-    public abstract class ExportToExcelCommand<TModel> : ListViewCommand
+    [Command(Label = "导出Excel", GroupType = CommandGroupType.View)]
+    public class ExportToExcelCommand : ListViewCommand
     {
+        /// <summary>
+        /// key: 列显示名称
+        /// value：对应的属性名称。可能是跨引用实体对象的。
+        /// </summary>
         private IDictionary<string, string> _columnsToProperties;
 
-        private TModel _currentModel;
+        private Entity _currentModel;
 
-        protected TModel CurrentModel
+        protected Entity CurrentModel
         {
             get { return this._currentModel; }
         }
@@ -45,8 +65,11 @@ namespace OEA.Module.WPF
             this._columnsToProperties = new Dictionary<string, string>();
             this.DefineTable(this._columnsToProperties, view.Meta);
 
-            SaveFileDialog dialog = new SaveFileDialog();
-            dialog.Filter = "excel files (*.xls)|*.xls";
+            var dialog = new SaveFileDialog
+            {
+                FileName = view.Meta.Label + ".xls",
+                Filter = "excel files (*.xls)|*.xls"
+            };
             var result = dialog.ShowDialog();
             if (result == DialogResult.OK)
             {
@@ -55,7 +78,7 @@ namespace OEA.Module.WPF
                     string fileName = dialog.FileName;
                     if (string.Compare(Path.GetExtension(fileName), ".xls", true) != 0)
                     {
-                        System.Windows.Forms.MessageBox.Show("扩展名不对！");
+                        App.MessageBox.Show("扩展名不对！");
                         return;
                     }
 
@@ -68,7 +91,7 @@ namespace OEA.Module.WPF
                 }
                 catch
                 {
-                    System.Windows.Forms.MessageBox.Show("保存出错。");
+                    App.MessageBox.Show("保存出错。");
                 }
             }
         }
@@ -82,20 +105,11 @@ namespace OEA.Module.WPF
         /// </param>
         protected virtual void DefineTable(IDictionary<string, string> columnPropertyMappings, EntityViewMeta evm)
         {
-            var modelType = typeof(TModel);
             foreach (var property in evm.EntityProperties)
             {
                 if (property.CanShowIn(ShowInWhere.List))
                 {
-                    string propertyName = property.Name;
-
-                    //处理外键关系
-                    var rvi = property.ReferenceViewInfo;
-                    if (rvi != null && rvi.ReferenceInfo.Type == ReferenceType.Normal)
-                    {
-                        propertyName = property.BindingPath();
-                    }
-                    columnPropertyMappings.Add(property.Label, propertyName);
+                    columnPropertyMappings.Add(property.Label, property.BindingPath());
                 }
             }
         }
@@ -104,15 +118,17 @@ namespace OEA.Module.WPF
         /// </summary>
         /// <param name="view"></param>
         /// <returns></returns>
-        protected virtual IList FindModels(ListObjectView view)
+        protected virtual IList<Entity> FindModels(ListObjectView view)
         {
-            return view.Data as IList;
+            return view.Data;
         }
+
         protected virtual string ReadDataByColumn(string columnName)
         {
             var propertyName = this._columnsToProperties[columnName];
             return this.ReadDataByProperty(propertyName);
         }
+
         protected virtual string ReadDataByProperty(string propertyName)
         {
             try
@@ -125,6 +141,7 @@ namespace OEA.Module.WPF
                 return string.Empty;
             }
         }
+
         /// <summary>
         /// 从view中把所有实体对象的数据转换为需要导出Excel的表格数据。
         /// </summary>
@@ -141,17 +158,9 @@ namespace OEA.Module.WPF
                 table.Columns.Add(column);
             }
 
-            //the first title row
-            //var titleRow = table.NewRow();
-            //foreach (var column in columns)
-            //{
-            //    titleRow[column] = column;
-            //}
-            //table.Rows.Add(titleRow);
-
             //models' data
             var list = this.FindModels(view);
-            foreach (TModel model in list)
+            foreach (var model in list)
             {
                 this._currentModel = model;
                 var row = table.NewRow();

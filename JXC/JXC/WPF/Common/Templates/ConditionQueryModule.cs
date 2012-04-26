@@ -77,10 +77,7 @@ namespace JXC.WPF.Templates
             listView.MouseDoubleClick += (o, e) =>
             {
                 var cmd = listView.Commands.Find<ShowBill>();
-                if (cmd != null)
-                {
-                    if (cmd.CanExecute(listView)) cmd.Execute(listView);
-                }
+                if (cmd != null) { cmd.TryExecute(listView); }
             };
         }
     }

@@ -47,7 +47,7 @@ namespace OEA.WPF.Command
                             {
                                 var ws = App.Current.Workspace;
                                 var aw = ws.ActiveWindow;
-                                if (ws.TryRemove(aw))
+                                if (aw != null && ws.TryRemove(aw))
                                 {
                                     var title = WorkspaceWindow.GetTitle(aw);
                                     App.Current.OpenModuleOrAlert(title);

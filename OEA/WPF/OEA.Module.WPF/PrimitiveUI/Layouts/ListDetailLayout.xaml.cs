@@ -29,7 +29,7 @@ namespace OEA.Module.WPF.Layout
 
         public void Arrange(TraditionalComponents components)
         {
-            LayoutSlippingAnimation.Initialize(main, resultChildren, components.AggtBlocks.Layout.ParentChildProportion);
+            ResizingPanelSlippingAnimation.Initialize(main, resultChildren, components.AggtBlocks.Layout.ParentChildProportion);
 
             this.TryArrangeMain(components.Main);
             this.TryArrangeCommandsContainer(components.CommandsContainer);
@@ -99,7 +99,6 @@ namespace OEA.Module.WPF.Layout
             }
             else
             {
-                //result.Visibility = Visibility.Collapsed;
                 result.RemoveFromParent(false);
             }
         }
@@ -111,15 +110,18 @@ namespace OEA.Module.WPF.Layout
                 queryPanel.RemoveFromParent(false);
             }
 
+            //如果存在详细面板，就忽略以下逻辑。
             if (result.Parent == null)
             {
-                //如果 resultChildren 中只显示聚合子类的视图
                 if (childrenTab.Parent != null)
                 {
-                    if (childrenTab.Visibility == Visibility.Collapsed)
+                    //DockPanel 和 TabControl 的 Visibility 一致。
+                    resultChildren.SetBinding(VisibilityProperty, new Binding
                     {
-                        ResizingPanelExt.SetStarGridLength(resultChildren, 0);
-                    }
+                        Mode = BindingMode.OneWay,
+                        Path = new PropertyPath(VisibilityProperty),
+                        Source = childrenTab
+                    });
 
                     container.Orientation = components.AggtBlocks.Layout.IsLayoutChildrenHorizonal ?
                         Orientation.Horizontal : Orientation.Vertical;

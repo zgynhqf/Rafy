@@ -277,9 +277,12 @@ namespace OEA.Library
 
         /// <summary>
         /// 把这个组件中的所有改动保存到仓库中。
+        /// 
+        /// 一般场景下，主要使用该方法保存聚合根对象
         /// </summary>
         /// <param name="component">
-        /// 传入的参数以及传出的结果。
+        /// 传入参数：需要保存的实体/实体列表。
+        /// 传出结果：保存完成后的实体/实体列表。注意，它与传入的对象并不是同一个对象。
         /// </param>
         public void Save<T>(ref T component)
             where T : class, IEntityOrList

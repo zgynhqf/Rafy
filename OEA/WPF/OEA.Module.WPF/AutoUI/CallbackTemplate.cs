@@ -26,7 +26,7 @@ namespace OEA.Module.WPF
     /// <summary>
     /// 一个添加了许多系统内置回调的自定义模块基类。
     /// </summary>
-    public abstract class CallbackTemplate : CustomTemplate
+    public abstract class CallbackTemplate : UITemplate
     {
         private ControlResult _ui;
 

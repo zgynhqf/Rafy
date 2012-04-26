@@ -24,15 +24,28 @@ using OEA.RBAC.Security;
 
 namespace JXC.WPF
 {
-    public class PurchaseOrderModule : ConditionQueryModule
+    public class ProductModule : ModuleBase
     {
+        protected override AggtBlocks DefineBlocks()
+        {
+            var blocks = base.DefineBlocks();
+
+            //商品和附件位置 7 3 开。
+            blocks.Layout.ParentChildProportion = new ParentChildProportion(7, 3);
+
+            return blocks;
+        }
+
         protected override void OnItemCreated(Entity entity)
         {
             base.OnItemCreated(entity);
 
-            var code = RF.Concreate<AutoCodeInfoRepository>().GetOrCreateAutoCode<PurchaseOrder>();
-            var p = entity as PurchaseOrder;
-            p.Code = code;
+            var code = RF.Concreate<AutoCodeInfoRepository>().GetOrCreateAutoCode<Product>();
+
+            var p = entity as Product;
+            p.BianMa = code;
+            p.Operator = OEAIdentity.Current.User;
+            p.OperateTime = DateTime.Now;
         }
     }
 }

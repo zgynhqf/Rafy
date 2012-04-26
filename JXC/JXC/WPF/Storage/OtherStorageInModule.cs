@@ -24,15 +24,17 @@ using OEA.RBAC.Security;
 
 namespace JXC.WPF
 {
-    public class OrderStorageInModule : ConditionQueryModule
+    public class OtherStorageInModule : ConditionQueryModule
     {
         protected override void OnItemCreated(Entity entity)
         {
             base.OnItemCreated(entity);
 
-            var code = RF.Concreate<AutoCodeInfoRepository>().GetOrCreateAutoCode<OrderStorageInBill>();
-            var p = entity as OrderStorageInBill;
+            var code = RF.Concreate<AutoCodeInfoRepository>().GetOrCreateAutoCode<OtherStorageInBill>();
+            var p = entity as OtherStorageInBill;
             p.Code = code;
+
+            p.Storage = RF.Concreate<StorageRepository>().GetDefault();
         }
     }
 }

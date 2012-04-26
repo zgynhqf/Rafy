@@ -65,6 +65,7 @@ namespace JXC
             {
                 View.Property(StorageOutBill.CodeProperty).HasLabel("出库单编号").ShowIn(ShowInWhere.All);
                 View.Property(StorageOutBill.DateProperty).HasLabel("出库日期").ShowIn(ShowInWhere.ListDetail);
+                View.Property(OtherStorageOutBill.StorageRefProperty).HasLabel("发出仓库").ShowIn(ShowInWhere.ListDetail);
                 View.Property(OtherStorageOutBill.CustomerRefProperty).HasLabel("收货单位").ShowIn(ShowInWhere.ListDetail)
                     .UseLookupDataSource(OtherStorageOutBill.CustomerDataSourceProperty);//只显示客户，不显示供应商
 

@@ -53,7 +53,7 @@ namespace JXC
                 View.Property(StorageProduct.View_ProductNameProperty).HasLabel("商品名称").ShowIn(ShowInWhere.All);
                 View.Property(StorageProduct.View_ProductCategoryNameProperty).HasLabel("商品类别").ShowIn(ShowInWhere.List);
                 View.Property(StorageProduct.View_SpecificationProperty).HasLabel("规格").ShowIn(ShowInWhere.List);
-                View.Property(StorageProduct.AmountProperty).HasLabel("入库数量").ShowIn(ShowInWhere.List);
+                View.Property(StorageProduct.AmountProperty).HasLabel("当前数量").ShowIn(ShowInWhere.List);
             }
         }
     }

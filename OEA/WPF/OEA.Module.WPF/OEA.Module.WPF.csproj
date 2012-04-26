@@ -151,7 +151,7 @@
     <Compile Include="AutoUI\Editors\PropertyEditor\TiledListReferenceEditor.cs" />
     <Compile Include="AutoUI\ObjectViews\CustomObjectView.cs" />
     <Compile Include="AutoUI\ObjectViews\ViewController\AsyncDataContextHelper.cs" />
-    <Compile Include="CallbackTemplate.cs" />
+    <Compile Include="AutoUI\CallbackTemplate.cs" />
     <Compile Include="CommandCustomParams.cs" />
     <Compile Include="Command\LookupSelectAddCommand.cs" />
     <Compile Include="Command\SysCommand\CustomizeUI\CustomizeUI.cs" />
@@ -181,7 +181,7 @@
     <Compile Include="AutoUI\ObjectViews\ViewController\ViewDataLoader.cs" />
     <Compile Include="Controls\MTTG\TreeColumn\TreeColumnCollection.cs" />
     <Compile Include="Controls\MTTG\_MTTGTestCommands.cs" />
-    <Compile Include="CustomTemplate.cs" />
+    <Compile Include="AutoUI\UITemplate.cs" />
     <Compile Include="PrimitiveUI\EntityModule.cs" />
     <Compile Include="PrimitiveUI\Layouts\ITraditionalLayout.cs" />
     <Compile Include="PrimitiveUI\Layouts\TraditionalComponents.cs" />
@@ -232,7 +232,7 @@
     <Compile Include="Controls\DockPanelSplitter.cs" />
     <Compile Include="Controls\ControlHelper.cs" />
     <Compile Include="Shell\IShell.cs" />
-    <Compile Include="PrimitiveUI\Layouts\LayoutSlippingAnimation.cs" />
+    <Compile Include="PrimitiveUI\Layouts\ResizingPanelSlippingAnimation.cs" />
     <Compile Include="ProcessSourceIndicator.cs" />
     <Compile Include="Themes\ThemeManager.cs" />
     <Compile Include="UIModuleViewModel.cs" />
@@ -345,10 +345,6 @@
     <Compile Include="PrimitiveUI\Layouts\DropDownListDetailLayout.xaml.cs">
       <DependentUpon>DropDownListDetailLayout.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PrimitiveUI\Layouts\NaviListDetailLayout.xaml.cs">
-      <DependentUpon>NaviListDetailLayout.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="PrimitiveUI\Layouts\TraditionalLayoutMethod.cs" />
     <Compile Include="PrimitiveUI\Layouts\TraditionalRegions.cs" />
     <Compile Include="PrimitiveUI\ResizingPanelExt.cs" />
@@ -391,10 +387,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="PrimitiveUI\Layouts\DropDownListDetailLayout.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="PrimitiveUI\Layouts\NaviListDetailLayout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -179,6 +179,21 @@ namespace OEA.Module
         #endregion
 
         /// <summary>
+        /// 尝试执行这个命令
+        /// </summary>
+        /// <param name="param"></param>
+        public bool TryExecute(object cmdArg)
+        {
+            if (this.CanExecute(cmdArg))
+            {
+                this.Execute(cmdArg);
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// 是否这个命令所对应的按钮可以被执行
         /// </summary>
         /// <param name="param"></param>

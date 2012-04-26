@@ -37,7 +37,7 @@ namespace JXC.Commands
             this.Template = new BillTemplate();
         }
 
-        protected CustomTemplate Template;
+        protected UITemplate Template;
 
         protected AddService Service;
 

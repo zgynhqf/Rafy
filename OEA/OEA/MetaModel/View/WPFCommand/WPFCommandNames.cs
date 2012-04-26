@@ -20,6 +20,7 @@ namespace OEA.MetaModel.View
         public static Type Refresh;
         public static Type Delete;
         public static Type Edit;
+        public static Type ExportToExcel;
 
         public static Type MoveUp;
         public static Type MoveDown;
@@ -49,12 +50,12 @@ namespace OEA.MetaModel.View
         public static void InitCommonCommands()
         {
             WPFCommandNames.CommonCommands.AddRange(new Type[]{
-                PopupAdd, Edit, Delete,
+                PopupAdd, Edit, Delete, ExportToExcel
             });
 
             WPFCommandNames.TreeCommands.AddRange(new Type[]{
                 ExpandAll, ExpandOne, ExpandTwo, ExpandThree, ExpandFour,
-                PopupAdd, Edit, Delete,
+                PopupAdd, Edit, Delete, ExportToExcel,
                 MoveUp, MoveDown, LevelUp, LevelDown, InsertBefore, InsertChild,
             });
 

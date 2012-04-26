@@ -169,6 +169,10 @@ namespace JXC
         }
 
         public static readonly Property<int> StorageAmountProperty = P<Product>.Register(e => e.StorageAmount);
+        /// <summary>
+        /// 商品的所有仓库的总数。
+        /// 这个值其实是一个冗余的值。
+        /// </summary>
         public int StorageAmount
         {
             get { return this.GetProperty(StorageAmountProperty); }

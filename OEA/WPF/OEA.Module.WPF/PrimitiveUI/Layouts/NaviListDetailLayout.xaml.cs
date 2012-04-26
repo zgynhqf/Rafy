@@ -27,7 +27,7 @@ namespace OEA.Module.WPF.Layout
 
         public void Arrange(TraditionalComponents components)
         {
-            LayoutSlippingAnimation.Initialize(mainPart, resultChildren, components.AggtBlocks.Layout.ParentChildProportion);
+            ResizingPanelSlippingAnimation.Initialize(mainPart, resultChildren, components.AggtBlocks.Layout.ParentChildProportion);
 
             //Children
             components.ArrangeChildrenByTabControl(childrenTab);

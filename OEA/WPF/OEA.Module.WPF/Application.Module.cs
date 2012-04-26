@@ -197,8 +197,8 @@ namespace OEA.Module.WPF
                     //在 WPF 中，TemplateType 属性应该是继承自 CustomModule 的类，表示使用的自定义实体模块类型
                     if (moduleMeta.TemplateType != null)
                     {
-                        var module = Activator.CreateInstance(moduleMeta.TemplateType) as CustomTemplate;
-                        if (module == null) throw new InvalidProgramException("WPF 中模板类需要从 CustomModule 类继承。");
+                        var module = Activator.CreateInstance(moduleMeta.TemplateType) as UITemplate;
+                        if (module == null) throw new InvalidProgramException("WPF 中模板类需要从 UITemplate 类继承。");
                         var ui = module.CreateUI(moduleMeta.EntityType);
                         window = new EntityModule(ui);
                     }

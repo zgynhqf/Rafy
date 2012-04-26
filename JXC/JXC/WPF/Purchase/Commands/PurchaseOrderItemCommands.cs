@@ -1,13 +1,13 @@
 ﻿/*******************************************************
  * 
  * 作者：胡庆访
- * 创建时间：20120419
+ * 创建时间：20120418
  * 说明：此文件只包含一个类，具体内容见类型注释。
  * 运行环境：.NET 4.0
  * 版本号：1.0.0
  * 
  * 历史记录：
- * 创建文件 胡庆访 20120419
+ * 创建文件 胡庆访 20120418
  * 
 *******************************************************/
 
@@ -27,19 +27,13 @@ using OEA.Library;
 namespace JXC.Commands
 {
     [Command(Label = "选择商品", GroupType = CommandGroupType.Edit)]
-    public class AddStorageOutItem : SelectProductCommand
+    public class AddPurchaseOrderItem : SelectProductCommand
     {
-        public AddStorageOutItem()
-        {
-            this.TargetEntityType = typeof(Product);
-            this.RefProperty = StorageOutBillItem.ProductRefProperty;
-        }
-
         protected override Entity AddSelection(ListObjectView view, Entity src)
         {
-            var e = base.AddSelection(view, src);
+            var e = base.AddSelection(view, src) as PurchaseOrderItem;
 
-            (e as StorageOutBillItem).Amount = 1;
+            e.RawPrice = (src as Product).CaiGouDanjia;
 
             return e;
         }

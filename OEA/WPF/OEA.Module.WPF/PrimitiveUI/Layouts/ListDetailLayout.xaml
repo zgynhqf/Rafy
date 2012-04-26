@@ -24,8 +24,6 @@
                     <ContentControl x:Name="main"/>
                     <DockPanel x:Name="resultChildren">
                         <ContentControl x:Name="result" DockPanel.Dock="Top"/>
-                        <!--当没有 childrenTab 时，result 也不能放到最大，所以加入一个冗余的 ContentControl-->
-                        <ContentControl DockPanel.Dock="Top"/>
                         <TabControl x:Name="childrenTab"/>
                     </DockPanel>
                 </ad:ResizingPanel>

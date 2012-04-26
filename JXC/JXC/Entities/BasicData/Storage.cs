@@ -19,6 +19,7 @@ using OEA.Library;
 using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
 using OEA.MetaModel.View;
+using OEA.ManagedProperty;
 
 namespace JXC
 {
@@ -66,11 +67,32 @@ namespace JXC
             set { this.SetProperty(AreaProperty, value); }
         }
 
-        public static readonly Property<bool> IsDefaultProperty = P<Storage>.Register(e => e.IsDefault);
+        public static readonly Property<bool> IsDefaultProperty = P<Storage>.Register(e => e.IsDefault, new PropertyMetadata<bool>
+        {
+            PropertyChangedCallBack = (o, e) => (o as Storage).OnIsDefaultChanged(e)
+        });
         public bool IsDefault
         {
             get { return this.GetProperty(IsDefaultProperty); }
             set { this.SetProperty(IsDefaultProperty, value); }
+        }
+        protected virtual void OnIsDefaultChanged(ManagedPropertyChangedEventArgs<bool> e)
+        {
+            //整个列表中只有一个默认仓库。
+            if (e.Source == ManagedPropertyChangedSource.FromUIOperating && e.NewValue)
+            {
+                var list = this.ParentList;
+                if (list != null)
+                {
+                    foreach (Storage item in list)
+                    {
+                        if (item != this)
+                        {
+                            item.IsDefault = false;
+                        }
+                    }
+                }
+            }
         }
 
         public static readonly Property<int> TotalAmountProperty = P<Storage>.RegisterReadOnly(e => e.TotalAmount, e => (e as Storage).GetTotalAmount(), null);
@@ -82,6 +104,41 @@ namespace JXC
         {
             return this.StorageProductList.Cast<StorageProduct>().Sum(sp => sp.Amount);
         }
+
+        /// <summary>
+        /// 找到某个商品在这个仓库中的库存项
+        /// 
+        /// 如果不存在，则创建一个对应项。
+        /// </summary>
+        /// <param name="product"></param>
+        /// <returns></returns>
+        public StorageProduct FindOrCreateItem(Product product)
+        {
+            var children = this.StorageProductList;
+            var item = children.Cast<StorageProduct>().FirstOrDefault(e => e.ProductId == product.Id);
+            if (item != null) { return item; }
+
+            item = new StorageProduct
+            {
+                Product = product
+            };
+
+            children.Add(item);
+
+            return item;
+        }
+
+        /// <summary>
+        /// 找到某个商品在这个仓库中的库存项
+        /// </summary>
+        /// <param name="product"></param>
+        /// <returns></returns>
+        public StorageProduct FindItem(Product product)
+        {
+            var children = this.StorageProductList;
+            var item = children.Cast<StorageProduct>().FirstOrDefault(e => e.ProductId == product.Id);
+            return item;
+        }
     }
 
     [Serializable]
@@ -90,6 +147,12 @@ namespace JXC
     public class StorageRepository : EntityRepository
     {
         protected StorageRepository() { }
+
+        public Storage GetDefault()
+        {
+            //有缓存，直接调用全部的列表
+            return this.GetAll().Cast<Storage>().FirstOrDefault(s => s.IsDefault);
+        }
     }
 
     internal class StorageConfig : EntityConfig<Storage>
@@ -114,7 +177,7 @@ namespace JXC
                 View.Property(Storage.AddressProperty).HasLabel("仓库地址").ShowIn(ShowInWhere.ListDetail);
                 View.Property(Storage.ResponsiblePersonProperty).HasLabel("负责人").ShowIn(ShowInWhere.ListDetail);
                 View.Property(Storage.AreaProperty).HasLabel("仓库区域").ShowIn(ShowInWhere.ListDetail);
-                View.Property(Storage.IsDefaultProperty).HasLabel("默认仓库").ShowIn(ShowInWhere.ListDetail);
+                View.Property(Storage.IsDefaultProperty).HasLabel("默认仓库").ShowIn(ShowInWhere.List);
             }
         }
     }

@@ -23,7 +23,7 @@ namespace JXC.WPF.Templates
     /// <summary>
     /// 单据模块
     /// </summary>
-    public class BillTemplate : CustomTemplate
+    public class BillTemplate : UITemplate
     {
         protected override AggtBlocks DefineBlocks()
         {
@@ -53,18 +53,7 @@ namespace JXC.WPF.Templates
             //把所有孩子块上的非查询型命令都删除
             foreach (var child in blocks.Children)
             {
-                var childMeta = child.MainBlock.ViewMeta;
-                childMeta.DisableEditing();
-
-                var commands = childMeta.WPFCommands;
-                for (int i = commands.Count - 1; i >= 0; i--)
-                {
-                    var cmd = commands[i];
-                    if (cmd.GroupType != CommandGroupType.View)
-                    {
-                        commands.Remove(cmd);
-                    }
-                }
+                ModuleBase.MakeBlockReadonly(child);
             }
 
             return blocks;
