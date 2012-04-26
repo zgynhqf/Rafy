@@ -61,7 +61,10 @@ namespace OEA.Library
 
         /// <summary>
         /// 重写此方法添加实体验证。
-        /// </remarks>
+        /// 
+        /// 基类中已经实现了：
+        /// 为所有不可空的引用属性加上 Required 验证规则。
+        /// </summary>
         internal protected virtual void AddValidations()
         {
             var rules = this.ValidationRules;

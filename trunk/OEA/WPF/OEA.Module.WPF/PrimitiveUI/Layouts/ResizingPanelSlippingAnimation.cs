@@ -26,7 +26,7 @@ namespace OEA.Module.WPF.Layout
     /// <summary>
     /// 滑动布局动画定义。
     /// </summary>
-    public static class LayoutSlippingAnimation
+    public static class ResizingPanelSlippingAnimation
     {
         /// <summary>
         /// 初始化整个布局

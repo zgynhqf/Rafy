@@ -20,7 +20,7 @@ using OEA.MetaModel.Attributes;
 namespace OEA.MetaModel.View
 {
     /// <summary>
-    /// 代码结构即是模板结构
+    /// 一个使用代码结构来生成模板结构的模板基类
     /// </summary>
     public class CodeBlocksTemplate : BlocksTemplate
     {

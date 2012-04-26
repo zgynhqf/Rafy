@@ -69,6 +69,8 @@
     <Compile Include="Entities\StorageIn\OtherStorageInBill.cs" />
     <Compile Include="Entities\StorageIn\StorageInBill.cs" />
     <Compile Include="Entities\StorageIn\StorageInBillItem.cs" />
+    <Compile Include="Entities\StorageMove\StorageMove.cs" />
+    <Compile Include="Entities\StorageMove\StorageMoveItem.cs" />
     <Compile Include="Entities\StorageOut\OtherStorageOutBill.cs" />
     <Compile Include="Entities\StorageOut\StorageOutBill.cs" />
     <Compile Include="Entities\StorageOut\StorageOutBillItem.cs" />
@@ -78,51 +80,54 @@
     <Compile Include="JXCLibrary.cs" />
     <Compile Include="MetaExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\StorageMoveServices.cs" />
     <Compile Include="Services\PurchaseOrderServices.cs" />
     <Compile Include="Services\ServiceBase.cs" />
     <Compile Include="Services\OtherStorageOutBillServices.cs" />
     <Compile Include="Services\OtherStorageInBillServices.cs" />
     <Compile Include="Services\OrderStorageInBillServices.cs" />
-    <Compile Include="WPF\Commands\AddBill.cs" />
-    <Compile Include="WPF\Commands\BarcodeSelectProduct.cs" />
-    <Compile Include="WPF\Commands\DeleteBill.cs" />
-    <Compile Include="WPF\Commands\EditBill.cs" />
-    <Compile Include="WPF\Commands\PopupBillCommandBase.cs" />
-    <Compile Include="WPF\Commands\SelectProductCommand.cs" />
-    <Compile Include="WPF\Commands\ShowBill.cs" />
-    <Compile Include="WPF\Editors\ImagePropertyEditor.cs" />
-    <Compile Include="WPF\Editors\ImageSelectorControl.xaml.cs">
+    <Compile Include="WPF\BasicData\StorageModule.cs" />
+    <Compile Include="WPF\Common\Commands\AddBill.cs" />
+    <Compile Include="WPF\Common\Commands\BarcodeSelectProduct.cs" />
+    <Compile Include="WPF\Common\Commands\DeleteBill.cs" />
+    <Compile Include="WPF\Common\Commands\EditBill.cs" />
+    <Compile Include="WPF\Common\Commands\PopupBillCommandBase.cs" />
+    <Compile Include="WPF\Common\Commands\SelectProductCommand.cs" />
+    <Compile Include="WPF\Common\Commands\ShowBill.cs" />
+    <Compile Include="WPF\Common\Editors\ImagePropertyEditor.cs" />
+    <Compile Include="WPF\Common\Editors\ImageSelectorControl.xaml.cs">
       <DependentUpon>ImageSelectorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WPF\Layouts\BillLayout.xaml.cs">
+    <Compile Include="WPF\Common\Layouts\BillLayout.xaml.cs">
       <DependentUpon>BillLayout.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WPF\Layouts\ConditionQueryLayout.xaml.cs">
+    <Compile Include="WPF\Common\Layouts\ConditionQueryLayout.xaml.cs">
       <DependentUpon>ConditionQueryLayout.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WPF\Layouts\HorizentalConditionLayout.xaml.cs">
+    <Compile Include="WPF\Common\Layouts\HorizentalConditionLayout.xaml.cs">
       <DependentUpon>HorizentalConditionLayout.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WPF\Modules\BasicData\FileAttachementCommands.cs" />
-    <Compile Include="WPF\Modules\Product\ProductDetailPanel.xaml.cs">
+    <Compile Include="WPF\BasicData\FileAttachementCommands.cs" />
+    <Compile Include="WPF\BasicData\Product\ProductDetailPanel.xaml.cs">
       <DependentUpon>ProductDetailPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WPF\Modules\Product\ProductModule.cs" />
-    <Compile Include="WPF\Modules\Product\ProductNavigationCommands.cs" />
-    <Compile Include="WPF\Modules\Purchase\Commands\OrderStorageInBillCommands.cs" />
-    <Compile Include="WPF\Modules\Purchase\Commands\PurchaseOrderCommands.cs" />
-    <Compile Include="WPF\Modules\Purchase\Commands\PurchaseOrderItemCommands.cs" />
-    <Compile Include="WPF\Modules\Purchase\Commands\StorageInItemCommands.cs" />
-    <Compile Include="WPF\Modules\Purchase\OrderStorageInModule.cs" />
-    <Compile Include="WPF\Modules\Purchase\PurchaseOrderModule.cs" />
-    <Compile Include="WPF\Modules\Storage\Commands\OtherStorageInBillCommands.cs" />
-    <Compile Include="WPF\Modules\Storage\Commands\OtherStorageOutBillCommands.cs" />
-    <Compile Include="WPF\Modules\Storage\Commands\StorageOutItemCommands.cs" />
-    <Compile Include="WPF\Modules\Storage\OtherStorageInModule.cs" />
-    <Compile Include="WPF\Modules\Storage\OtherStorageOutModule.cs" />
-    <Compile Include="WPF\Templates\BillTemplate.cs" />
-    <Compile Include="WPF\Templates\ConditionQueryModule.cs" />
-    <Compile Include="WPF\Templates\ModuleBase.cs" />
+    <Compile Include="WPF\BasicData\Product\ProductModule.cs" />
+    <Compile Include="WPF\BasicData\Product\ProductNavigationCommands.cs" />
+    <Compile Include="WPF\Purchase\Commands\OrderStorageInBillCommands.cs" />
+    <Compile Include="WPF\Purchase\Commands\PurchaseOrderCommands.cs" />
+    <Compile Include="WPF\Purchase\Commands\PurchaseOrderItemCommands.cs" />
+    <Compile Include="WPF\Purchase\OrderStorageInModule.cs" />
+    <Compile Include="WPF\Purchase\PurchaseOrderModule.cs" />
+    <Compile Include="WPF\Storage\Commands\StorageMoveCommands.cs" />
+    <Compile Include="WPF\Storage\Commands\OtherStorageInBillCommands.cs" />
+    <Compile Include="WPF\Storage\Commands\OtherStorageOutBillCommands.cs" />
+    <Compile Include="WPF\Storage\StorageMoveModule.cs" />
+    <Compile Include="WPF\Storage\OtherStorageInModule.cs" />
+    <Compile Include="WPF\Storage\OtherStorageOutModule.cs" />
+    <Compile Include="WPF\Common\Templates\BillTemplate.cs" />
+    <Compile Include="WPF\Common\Templates\ConditionQueryModule.cs" />
+    <Compile Include="WPF\Common\Templates\ListTemplate.cs" />
+    <Compile Include="WPF\Common\Templates\ModuleBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\OEA\Common\Common.csproj">
@@ -172,23 +177,23 @@
     <Content Include="_ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="WPF\Editors\ImageSelectorControl.xaml">
+    <Page Include="WPF\Common\Editors\ImageSelectorControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="WPF\Layouts\BillLayout.xaml">
+    <Page Include="WPF\Common\Layouts\BillLayout.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="WPF\Layouts\ConditionQueryLayout.xaml">
+    <Page Include="WPF\Common\Layouts\ConditionQueryLayout.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="WPF\Layouts\HorizentalConditionLayout.xaml">
+    <Page Include="WPF\Common\Layouts\HorizentalConditionLayout.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="WPF\Modules\Product\ProductDetailPanel.xaml">
+    <Page Include="WPF\BasicData\Product\ProductDetailPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

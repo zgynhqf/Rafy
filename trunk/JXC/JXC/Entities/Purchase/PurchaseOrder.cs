@@ -255,9 +255,9 @@ namespace JXC
                 View.Property(PurchaseOrder.SupplierRefProperty).HasLabel("供应商").ShowIn(ShowInWhere.ListDetail)
                     .UseLookupDataSource(PurchaseOrder.SupplierDataSourceProperty);//只下拉获取经销商的信息
                 View.Property(PurchaseOrder.PlanStorageInDateProperty).HasLabel("计划到货日期").ShowIn(ShowInWhere.ListDetail);
+                View.Property(PurchaseOrder.StorageInDirectlyProperty).HasLabel("直接入库").ShowIn(ShowInWhere.Detail);
                 View.Property(PurchaseOrder.TotalMoneyProperty).HasLabel("总金额").ShowIn(ShowInWhere.ListDetail)
                     .Readonly();
-                View.Property(PurchaseOrder.StorageInDirectlyProperty).HasLabel("直接入库").ShowIn(ShowInWhere.Detail);
                 View.Property(PurchaseOrder.StorageRefProperty).HasLabel("仓库").ShowIn(ShowInWhere.Detail)
                     .Visibility(PurchaseOrder.StorageInDirectlyProperty);//动态只读//.Readonly(PurchaseOrder.IsStorageReadonlyProperty);//动态只读
                 View.Property(PurchaseOrder.StorageInStatusProperty).HasLabel("入库状态").ShowIn(ShowInWhere.List)

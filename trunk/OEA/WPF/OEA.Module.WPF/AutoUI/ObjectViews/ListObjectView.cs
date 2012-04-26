@@ -317,74 +317,73 @@ namespace OEA.Module.WPF
 
         #endregion
 
-        /// <summary>
-        /// 如果这个ListObjectView是细表生成的，则处理它的可见性。
-        /// </summary>
-        protected override void ResetVisibility()
-        {
-            //暂时不处理 动态可见性
+        //暂时不处理 动态可见性
+        ///// <summary>
+        ///// 如果这个ListObjectView是细表生成的，则处理它的可见性。
+        ///// </summary>
+        //protected override void ResetVisibility()
+        //{
+        //    //如果是细表生成的，先判断是否可见
+        //    if (this.ChildBlock != null)
+        //    {
+        //        var visibilityIndicator = this.ChildBlock.VisibilityIndicator;
+        //        if (visibilityIndicator.IsDynamic)
+        //        {
+        //            //获取当前View所属的TabItem
+        //            TabItem ti = this.Control.GetLogicalParent<TabItem>();
+        //            if (ti != null)
+        //            {
+        //                if (this.CheckParentViewIsEntityParent())
+        //                {
+        //                    //设置Visible的Binding
+        //                    var be = ti.GetBindingExpression(TabItem.VisibilityProperty);
+        //                    if (be == null)
+        //                    {
+        //                        //绑定到IsVisibleAttribute.BindingPath
+        //                        Binding visibleBinding = new Binding(visibilityIndicator.PropertyName);
+        //                        visibleBinding.NotifyOnTargetUpdated = true;
+        //                        Binding.AddTargetUpdatedHandler(ti, (o, e) =>
+        //                        {
+        //                            if (e.Property == UIElement.VisibilityProperty)
+        //                            {
+        //                                //http://ipm.grandsoft.com.cn/issues/247400
+        //                                //当 DataContext 为空时，Binding 会把 ti.Visibility 设置为默认的 Visible，
+        //                                //不需要这样的行为，所以在这里判断如果 DataContext 为空时，直接把可见性设置为元数据中的默认值。
+        //                                if (ti.DataContext == null)
+        //                                {
+        //                                    this.IsVisible = this.ChildBlock.Owner.ChildrenDefaultVisibility;
+        //                                    ti.Visibility = this.IsVisible ? Visibility.Visible : Visibility.Collapsed;
+        //                                }
+        //                                else
+        //                                {
+        //                                    var tabVisible = ti.Visibility == Visibility.Visible;
+        //                                    tabVisible &= this.CheckParentViewIsEntityParent();
+        //                                    this.IsVisible = tabVisible;
+        //                                }
+        //                            }
+        //                        });
 
-            ////如果是细表生成的，先判断是否可见
-            //if (this.ChildBlock != null)
-            //{
-            //    var visibilityIndicator = this.ChildBlock.VisibilityIndicator;
-            //    if (visibilityIndicator.IsDynamic)
-            //    {
-            //        //获取当前View所属的TabItem
-            //        TabItem ti = this.Control.GetLogicalParent<TabItem>();
-            //        if (ti != null)
-            //        {
-            //            if (this.CheckParentViewIsEntityParent())
-            //            {
-            //                //设置Visible的Binding
-            //                var be = ti.GetBindingExpression(TabItem.VisibilityProperty);
-            //                if (be == null)
-            //                {
-            //                    //绑定到IsVisibleAttribute.BindingPath
-            //                    Binding visibleBinding = new Binding(visibilityIndicator.PropertyName);
-            //                    visibleBinding.NotifyOnTargetUpdated = true;
-            //                    Binding.AddTargetUpdatedHandler(ti, (o, e) =>
-            //                    {
-            //                        if (e.Property == UIElement.VisibilityProperty)
-            //                        {
-            //                            //http://ipm.grandsoft.com.cn/issues/247400
-            //                            //当 DataContext 为空时，Binding 会把 ti.Visibility 设置为默认的 Visible，
-            //                            //不需要这样的行为，所以在这里判断如果 DataContext 为空时，直接把可见性设置为元数据中的默认值。
-            //                            if (ti.DataContext == null)
-            //                            {
-            //                                this.IsVisible = this.ChildBlock.Owner.ChildrenDefaultVisibility;
-            //                                ti.Visibility = this.IsVisible ? Visibility.Visible : Visibility.Collapsed;
-            //                            }
-            //                            else
-            //                            {
-            //                                var tabVisible = ti.Visibility == Visibility.Visible;
-            //                                tabVisible &= this.CheckParentViewIsEntityParent();
-            //                                this.IsVisible = tabVisible;
-            //                            }
-            //                        }
-            //                    });
+        //                        visibleBinding.Mode = BindingMode.OneWay;
+        //                        visibleBinding.Converter = new BooleanToVisibilityConverter();
+        //                        ti.SetBinding(TabItem.VisibilityProperty, visibleBinding);
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    this.IsVisible = false;
+        //                }
 
-            //                    visibleBinding.Mode = BindingMode.OneWay;
-            //                    visibleBinding.Converter = new BooleanToVisibilityConverter();
-            //                    ti.SetBinding(TabItem.VisibilityProperty, visibleBinding);
-            //                }
-            //            }
-            //            else
-            //            {
-            //                this.IsVisible = false;
-            //            }
-
-            //            //设置DataContext
-            //            ti.DataContext = this.Parent.Current;
-            //        }
-            //    }
-            //    else
-            //    {
-            //        this.IsVisible = this.ChildBlock.Owner.ChildrenDefaultVisibility ||
-            //            this.Parent.Current != null;
-            //    }
-            //}
-        }
+        //                //设置DataContext
+        //                ti.DataContext = this.Parent.Current;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            this.IsVisible = this.ChildBlock.Owner.ChildrenDefaultVisibility ||
+        //                this.Parent.Current != null;
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// 装载数据，考虑 AssociationOperateType.Selected

@@ -150,7 +150,7 @@ namespace OEA.Module.WPF.CommandAutoUI
 
         protected void TryExecuteCommand(CommandAdapter command)
         {
-            CommandRepository.TryExecuteCommand(command.CoreCommand, this.Context.CommandArg);
+            command.CoreCommand.TryExecute(this.Context.CommandArg);
         }
 
         #endregion

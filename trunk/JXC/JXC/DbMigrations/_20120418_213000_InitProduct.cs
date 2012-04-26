@@ -51,8 +51,7 @@ namespace JXC.DbMigrations
                         PingPai = "安踏",
                         CaiGouDanjia = 85.00,
                         XiaoShouDanJia = 165.00,
-                        OperateTime = DateTime.Now,
-                        StorageAmount = 1000
+                        OperateTime = DateTime.Now
                     });
                     list.Add(new Product
                     {
@@ -66,8 +65,7 @@ namespace JXC.DbMigrations
                         PingPai = "AF",
                         CaiGouDanjia = 35.00,
                         XiaoShouDanJia = 55.00,
-                        OperateTime = DateTime.Now,
-                        StorageAmount = 1000
+                        OperateTime = DateTime.Now
                     });
 
                     list.Add(new Product
@@ -82,8 +80,7 @@ namespace JXC.DbMigrations
                         PingPai = "可口可乐",
                         CaiGouDanjia = 1.50,
                         XiaoShouDanJia = 2.50,
-                        OperateTime = DateTime.Now,
-                        StorageAmount = 1000
+                        OperateTime = DateTime.Now
                     });
                     list.Add(new Product
                     {
@@ -97,8 +94,7 @@ namespace JXC.DbMigrations
                         PingPai = "可口可乐",
                         CaiGouDanjia = 1.00,
                         XiaoShouDanJia = 2.00,
-                        OperateTime = DateTime.Now,
-                        StorageAmount = 1000
+                        OperateTime = DateTime.Now
                     });
                     list.Add(new Product
                     {
@@ -112,8 +108,7 @@ namespace JXC.DbMigrations
                         PingPai = "益力多",
                         CaiGouDanjia = 1.20,
                         XiaoShouDanJia = 2.00,
-                        OperateTime = DateTime.Now,
-                        StorageAmount = 1000
+                        OperateTime = DateTime.Now
                     });
 
                     productRepo.Save(list);

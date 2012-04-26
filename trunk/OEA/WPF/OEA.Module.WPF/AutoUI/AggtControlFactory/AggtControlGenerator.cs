@@ -25,7 +25,6 @@ using AvalonDock;
 using Itenso.Windows.Input;
 using OEA.Library;
 using OEA.MetaModel;
-
 using OEA.MetaModel.View;
 using OEA.Module.WPF.CommandAutoUI;
 using OEA.Module.WPF.Controls;
@@ -228,6 +227,9 @@ namespace OEA.Module.WPF
                 //生成 childView
                 WPFObjectView childView = this._viewFactory.CreateView(childBlock);
                 childView.ChildBlock = childBlock;
+
+                //子视图默认不显示，当选中某个父对象时，再重新计算其可见性。
+                childView.IsVisible = false;
 
                 childView.Parent = mainView;
 

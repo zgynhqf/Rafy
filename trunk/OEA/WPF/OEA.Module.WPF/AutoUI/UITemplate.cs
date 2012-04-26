@@ -21,13 +21,17 @@ using OEA.MetaModel;
 namespace OEA.Module.WPF
 {
     /// <summary>
-    /// 自定义模板
+    /// 自定义界面模板
     /// 
-    /// 本类主要是为了给上层使用者提供一个统一的扩展接口：
+    /// 继承自 CodeBlocksTemplate，默认提供一个通用的 UI 生成方案。
+    /// 
+    /// 本类主要是为了给上层使用者提供一个统一的扩展接口，子类可以：
+    /// 通过 DefineBlocks 方法提供了定义期扩展性、
     /// 通过 CreateUICore 方法提供了生成期扩展性、
-    /// 通过 OnUIGenerated 方法提供了生成期扩展性。
+    /// 通过 OnUIGenerated 方法提供了运行期扩展性。
+    /// 而外部使用者则可以通过相应的事件回调对其进行扩展。
     /// </summary>
-    public abstract class CustomTemplate : CodeBlocksTemplate
+    public class UITemplate : CodeBlocksTemplate
     {
         /// <summary>
         /// 通过本模板生成指定实体类型的 UI 控件。
@@ -89,6 +93,31 @@ namespace OEA.Module.WPF
         /// 当使用自动生成的 UI 时，此方法会被调用。
         /// </summary>
         /// <param name="ui"></param>
-        internal protected virtual void OnUIGenerated(ControlResult ui) { }
+        internal protected virtual void OnUIGenerated(ControlResult ui)
+        {
+            var handler = this.UIGenerated;
+            if (handler != null) handler(this, new UIGeneratedEventArgs(ui));
+        }
+
+        /// <summary>
+        /// 界面生成完成事件
+        /// </summary>
+        public event EventHandler<UIGeneratedEventArgs> UIGenerated;
+    }
+
+    /// <summary>
+    /// 界面生成完成事件参数
+    /// </summary>
+    public class UIGeneratedEventArgs : EventArgs
+    {
+        public UIGeneratedEventArgs(ControlResult ui)
+        {
+            this.UI = ui;
+        }
+
+        /// <summary>
+        /// 生成完毕的界面
+        /// </summary>
+        public ControlResult UI { get; private set; }
     }
 }

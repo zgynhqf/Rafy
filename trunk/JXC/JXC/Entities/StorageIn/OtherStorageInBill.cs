@@ -65,6 +65,7 @@ namespace JXC
                 View.Property(StorageInBill.CodeProperty).HasLabel("商品入库编号").ShowIn(ShowInWhere.All);
                 View.Property(StorageInBill.TotalMoneyProperty).HasLabel("金额").ShowIn(ShowInWhere.ListDetail);
 
+                View.Property(OtherStorageInBill.StorageRefProperty).HasLabel("收入仓库").ShowIn(ShowInWhere.ListDetail);
                 View.Property(OtherStorageInBill.SupplierRefProperty).HasLabel("发货单位").ShowIn(ShowInWhere.ListDetail)
                     .UseLookupDataSource(OtherStorageInBill.SupplierDataSourceProperty);//只下拉获取经销商的信息
 

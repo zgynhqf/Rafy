@@ -34,6 +34,15 @@ namespace JXC.DbMigrations
                         Area = "海淀区",
                         IsDefault = true
                     });
+
+                    repo.Save(new Storage
+                    {
+                        Code = "20120425-0002",
+                        Name = "云南仓库",
+                        Address = "云南省",
+                        ResponsiblePerson = "胡庆访",
+                        Area = "昭通市"
+                    });
                 }
             });
         }

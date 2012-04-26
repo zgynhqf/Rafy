@@ -47,6 +47,7 @@ namespace OEA.Module.WPF
             WPFCommandNames.Refresh = typeof(RefreshCommand);
             WPFCommandNames.Delete = typeof(DeleteListObjectCommand);
             WPFCommandNames.Edit = typeof(EditDetailCommand);
+            WPFCommandNames.ExportToExcel = typeof(ExportToExcelCommand);
 
             WPFCommandNames.MoveUp = typeof(MoveUpCommand);
             WPFCommandNames.MoveDown = typeof(MoveDownCommand);

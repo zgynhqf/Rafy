@@ -84,7 +84,7 @@ namespace JXC
 
             View.ClearWPFCommands(false)
                 .UseWPFCommands(
-                typeof(AddStorageOutItem),
+                typeof(SelectProductCommand),
                 typeof(BarcodeSelectProduct),
                 WPFCommandNames.Delete
                 );

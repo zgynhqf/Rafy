@@ -39,7 +39,11 @@ namespace OEA.MetaModel.View
         {
             if (this.EntityType == null) throw new ArgumentNullException("this.MainType");
 
-            return this.DefineBlocks();
+            var blocks = this.DefineBlocks();
+
+            this.OnBlocksDefined(new BlocksDefinedEventArgs(blocks));
+
+            return blocks;
         }
 
         /// <summary>
@@ -47,5 +51,40 @@ namespace OEA.MetaModel.View
         /// </summary>
         /// <returns></returns>
         protected abstract AggtBlocks DefineBlocks();
+
+        /// <summary>
+        /// 定义完成后的事件。
+        /// </summary>
+        public event EventHandler<BlocksDefinedEventArgs> BlocksDefined;
+
+        protected virtual void OnBlocksDefined(BlocksDefinedEventArgs e)
+        {
+            var handler = this.BlocksDefined;
+            if (handler != null) handler(this, e);
+        }
+
+        /// <summary>
+        /// 由于模块并不是线程安全的，所以提供 Clone 方法，方便复杂模块
+        /// </summary>
+        /// <returns></returns>
+        public BlocksTemplate Clone()
+        {
+            var template = Activator.CreateInstance(this.EntityType) as BlocksTemplate;
+            template.EntityType = this.EntityType;
+            return template;
+        }
+    }
+
+    public class BlocksDefinedEventArgs : EventArgs
+    {
+        public BlocksDefinedEventArgs(AggtBlocks blocks)
+        {
+            this.Blocks = blocks;
+        }
+
+        /// <summary>
+        /// 定义好的聚合块
+        /// </summary>
+        public AggtBlocks Blocks { get; private set; }
     }
 }

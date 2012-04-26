@@ -11,6 +11,7 @@ using JXC.WPF;
 using OEA.Module.WPF;
 using OEA.Library;
 using OEA.RBAC;
+using JXC.WPF.Templates;
 
 namespace JXC
 {
@@ -41,7 +42,7 @@ namespace JXC
         {
             app.ModuleOperations += (o, e) =>
             {
-                var moduleBookImport = CommonModel.Modules.AddRoot(new ModuleMeta
+                var moduleJXC = CommonModel.Modules.AddRoot(new ModuleMeta
                 {
                     Label = "进销存系统示例",
                     Children =
@@ -52,7 +53,7 @@ namespace JXC
                             Children =
                             {
                                 //new ModuleMeta{ Label = "计量单位", EntityType = typeof(Unit)},
-                                //new ModuleMeta{ Label = "仓库管理", EntityType = typeof(Storage)},
+                                new ModuleMeta{ Label = "仓库管理", EntityType = typeof(Storage), TemplateType= typeof(StorageModule)},
                                 new ModuleMeta{ Label = "商品类别", EntityType = typeof(ProductCategory)},
                                 new ModuleMeta{ Label = "商品管理", EntityType = typeof(Product), TemplateType= typeof(ProductModule)},
                                 new ModuleMeta{ Label = "客户类别", EntityType = typeof(ClientCategory)},
@@ -75,6 +76,7 @@ namespace JXC
                             {
                                 new ModuleMeta{ Label = "其它入库", EntityType = typeof(OtherStorageInBill), TemplateType= typeof(OtherStorageInModule)},
                                 new ModuleMeta{ Label = "其它出库", EntityType = typeof(OtherStorageOutBill), TemplateType= typeof(OtherStorageOutModule)},
+                                new ModuleMeta{ Label = "库存调拔", EntityType = typeof(StorageMove), TemplateType= typeof(StorageMoveModule)},
                             }
                         },
                         new ModuleMeta
@@ -122,7 +124,7 @@ namespace JXC
                 clientApp.MainWindowLoaded += (o, e) =>
                 {
                     //App.Current.OpenModuleOrAlert("商品管理");
-                    App.Current.OpenModuleOrAlert("采购订单");
+                    //App.Current.OpenModuleOrAlert("采购订单");
                     //App.Current.OpenModuleOrAlert("采购订单入库");
                     //App.Current.OpenModuleOrAlert("其它入库");
                     //App.Current.OpenModuleOrAlert("其它出库");

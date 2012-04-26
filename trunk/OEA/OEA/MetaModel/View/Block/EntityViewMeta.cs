@@ -246,7 +246,7 @@ namespace OEA.MetaModel.View
         }
 
         /// <summary>
-        /// 根据名字查询实体属性（忽略大小写）
+        /// 根据名字查询实体属性
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>

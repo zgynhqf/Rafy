@@ -33,7 +33,7 @@ namespace JXC.Commands
             this.Template = new ReadonlyBillCommand();
         }
 
-        protected CustomTemplate Template;
+        protected UITemplate Template;
 
         public override bool CanExecute(ListObjectView view)
         {

@@ -101,7 +101,7 @@ namespace OEA.WPF.Command
                 {
                     var itemSelected = (e.OriginalSource as MenuItem).Header.ToString();
                     listSource.SetSelectedItem(itemSelected);
-                    CommandRepository.TryExecuteCommand(cmd.CoreCommand, item.CommandParameter);
+                    cmd.CoreCommand.TryExecute(item.CommandParameter);
                 }
             };
 

@@ -454,7 +454,10 @@ namespace OEA
         /// 根据当前视图的 IsVisible 属性重设控件的可见性。
         /// 当父视图的当前对象改变时，会根据对象的属性值来设置子视图的可见性。
         /// </summary>
-        protected virtual void ResetVisibility() { }
+        protected virtual void ResetVisibility()
+        {
+            this.IsVisible = this.Parent.Current != null;
+        }
 
         #endregion
 

@@ -10,19 +10,27 @@ using JXC.WPF;
 using OEA.Module.WPF.Controls;
 using System.Windows;
 using OEA.WPF.Command;
+using OEA.MetaModel.Attributes;
 
 namespace JXC.Commands
 {
-    public abstract class SelectProductCommand : LookupSelectAddCommand
+    [Command(Label = "选择商品", GroupType = CommandGroupType.Edit)]
+    public class SelectProductCommand : LookupSelectAddCommand
     {
         public SelectProductCommand()
         {
             this.TargetEntityType = typeof(Product);
             this.RefProperty = ProductRefItem.ProductRefProperty;
-            this.Template = new ProductSelectionUI();
+            this.Template = new UITemplate();
+
+            //选择商品界面不需要显示附件
+            this.Template.BlocksDefined += (o, e) =>
+            {
+                e.Blocks.Children.Clear();
+            };
         }
 
-        protected CustomTemplate Template;
+        protected UITemplate Template;
 
         protected override ControlResult GenerateSelectionUI()
         {
@@ -47,6 +55,8 @@ namespace JXC.Commands
 
             this._firstSelection = this._firstSelection ?? result;
 
+            (result as ProductRefItem).Amount = 1;
+
             return result;
         }
 
@@ -70,6 +80,4 @@ namespace JXC.Commands
 
         #endregion
     }
-
-    public class ProductSelectionUI : CustomTemplate { }
 }

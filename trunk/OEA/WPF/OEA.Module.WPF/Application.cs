@@ -25,6 +25,7 @@ using OEA.MetaModel;
 using OEA.MetaModel.View;
 using OEA.Module.WPF.Controls;
 using OEA.Utils;
+using System.Windows.Input;
 
 namespace OEA.Module.WPF
 {
@@ -76,7 +77,28 @@ namespace OEA.Module.WPF
                 throw new InvalidOperationException(msg);
             }
 
+            this._mainWindow.CommandBindings.Add(new CommandBinding(CloseWindowCommand, OnCloseWindowCommandExecuted));
+
             this._mainWindow.Closing += (s, e) => e.Cancel = !this.TryShutdownAllWindows();
+        }
+
+        /// <summary>
+        /// 关闭当前窗口或者指定窗口的命令
+        /// </summary>
+        public static readonly RoutedUICommand CloseWindowCommand = new RoutedUICommand(
+            "CloseWindowCommand", "CloseWindowCommand", typeof(App), new InputGestureCollection
+            {
+                new KeyGesture(Key.W, ModifierKeys.Control)
+            });
+
+        private static void OnCloseWindowCommandExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            //如果是 windows 触发的命令，那么应该关闭当前窗口。
+            //如果是其它界面元素触发的命令，则命令的参数就是需要关闭的窗口元素。
+            var ws = App.Current.Workspace;
+            var window = e.Parameter as FrameworkElement;
+            window = window ?? ws.ActiveWindow;
+            if (window != null) { ws.TryRemove(window); }
         }
 
         /// <summary>

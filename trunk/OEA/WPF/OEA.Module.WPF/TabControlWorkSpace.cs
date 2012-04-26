@@ -28,8 +28,6 @@ namespace OEA.Module.WPF
     {
         private TabControl _tabControl;
 
-        private FrameworkElement _activeWindow;
-
         public TabControlWorkSpace(TabControl tc)
         {
             if (tc == null) throw new ArgumentNullException("tc");
@@ -51,13 +49,9 @@ namespace OEA.Module.WPF
         {
             get
             {
-                if (this._activeWindow == null)
-                {
-                    return this.Windows.LastOrDefault();
-                }
-                return this._activeWindow;
+                var tabItem = this._tabControl.SelectedItem as TabItem;
+                return GetWindow(tabItem);
             }
-            private set { this._activeWindow = value; }
         }
 
         public void Add(FrameworkElement window)
@@ -67,7 +61,6 @@ namespace OEA.Module.WPF
                 Header = WorkspaceWindow.GetTitle(window),
                 Content = window
             };
-            ti.CloseButtonClicked += On_tabItem_CloseButtonClicked;
             ti.AddHandler(TabItem.PreviewMouseLeftButtonDownEvent,
                 new MouseButtonEventHandler(this.On_tabItem_PreviewMouseButtonDown)
                 );
@@ -90,6 +83,13 @@ namespace OEA.Module.WPF
                     if (!args.Cancel)
                     {
                         this._tabControl.Items.Remove(dc);
+
+                        //处理内存泄漏：当没有页签时，清除SelectedItem属性，
+                        //否则仍旧保留了最后一个页面的值在DependencyObject的_effectiveValues中
+                        if (this._tabControl.Items.Count == 0)
+                        {
+                            this._tabControl.SelectedItem = null;
+                        }
 
                         this.OnWindowClosed(new WorkspaceWindowChangedEventArgs(window, null));
 
@@ -117,8 +117,6 @@ namespace OEA.Module.WPF
                 {
                     var oldItem = this._tabControl.SelectedItem as TabItem;
                     if (oldItem == newItem) { return true; }
-
-                    this.ActiveWindow = window;
 
                     var args = new WorkspaceWindowActivingEventArgs(GetWindow(oldItem), window);
                     this.OnWindowActiving(args);
@@ -173,7 +171,9 @@ namespace OEA.Module.WPF
                     }
                     else
                     {
-                        this._tabControl.SelectedItem = newItem;
+                        //由于在 Activing 事件中很可能会让 newItem 失去焦点（例如弹出窗口），所以需要重新让该页签获取焦点，
+                        //否则页签由于没有焦点，就不会发生 SelectedItemChanged 事件。
+                        newItem.Focus();
                     }
                 }
             }
@@ -187,9 +187,7 @@ namespace OEA.Module.WPF
         private void On_tabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //TabControl 内部的小 TabControl 的事件会冒泡到这里，需要进行过滤。
-            if (e.Source != sender) return;
-
-            if (this._suppressEvent) return;
+            if (e.Source != sender || this._suppressEvent) return;
 
             if (e.AddedItems.Count > 0)
             {
@@ -205,50 +203,8 @@ namespace OEA.Module.WPF
                         oldWindow = GetWindow(oldTabItem);
                     }
 
-                    this.ActiveWindow = newWindow;
-
                     this.OnWindowActived(new WorkspaceWindowActivedEventArgs(oldWindow, newWindow));
                 }
-            }
-        }
-
-        /// <summary>
-        /// 发生 WindowClosing WindowClosed 事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void On_tabItem_CloseButtonClicked(object sender, RoutedEventArgs e)
-        {
-            if (this._suppressEvent) return;
-
-            TabItem tabItem = e.Source as TabItem;
-            if (tabItem != null)
-            {
-                var win = GetWindow(tabItem);
-                var args = new WorkspaceWindowClosingEventArgs(win);
-                this.OnWindowClosing(args);
-                if (args.Cancel) { return; }
-
-                this._tabControl.Items.Remove(tabItem);
-
-                #region 内存泄漏
-
-                //当没有页签时，清除SelectedItem属性，否则仍旧保留了最后一个页面的值在DependencyObject的_effectiveValues中
-                if (this._tabControl.Items.Count == 0)
-                {
-                    this._tabControl.SelectedItem = null;
-                }
-                else
-                {
-                    //此处不需要设置SelectedIndex，并且也不需要减一，因为已经发生过Clicked事件，SlectedIndex已经是减过一的
-                    //this._tabControl.SelectedIndex = 0;                    
-                }
-
-                #endregion
-
-                this.OnWindowClosed(
-                    new WorkspaceWindowChangedEventArgs(win, null)
-                    );
             }
         }
 

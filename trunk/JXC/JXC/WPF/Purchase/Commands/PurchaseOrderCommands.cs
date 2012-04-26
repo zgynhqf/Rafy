@@ -13,20 +13,20 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using JXC.WPF.Templates;
 using OEA;
+using OEA.Library;
 using OEA.MetaModel.Attributes;
 using OEA.MetaModel.View;
+using OEA.Module;
 using OEA.Module.WPF;
 using OEA.Module.WPF.Controls;
-using OEA.WPF.Command;
-using OEA.Library;
-using System.ComponentModel;
-using System.Windows;
-using OEA.Module;
 using OEA.Module.WPF.Editors;
+using OEA.WPF.Command;
 
 namespace JXC.Commands
 {
