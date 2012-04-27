@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OEA;
-using OEA.Library.ORM.DbMigration;
 using OEA.Library.Caching;
+using OEA.Module.WPF;
 
 namespace OEA.ClientCachingProvider
 {
@@ -30,14 +30,7 @@ namespace OEA.ClientCachingProvider
 
             app.DbMigratingOperations += (o, e) =>
             {
-                using (var c = new OEADbMigrationContext(ConnectionStringNames.OEAPlugins))
-                {
-                    //由于其它的库可能需要在 OEA 库中添加表，所以这里不要删除表、字段
-                    c.RunDataLossOperation = false;
-
-                    //c.RollbackToHistory(DateTime.Parse("2008-12-31 23:59:58.700"), RollbackAction.DeleteHistory);
-                    c.AutoMigrate();
-                };
+                MigrationWithProgressBar.Do(ConnectionStringNames.OEAPlugins);
             };
         }
     }

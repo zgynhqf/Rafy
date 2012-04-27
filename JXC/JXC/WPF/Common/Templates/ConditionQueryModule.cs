@@ -49,10 +49,9 @@ namespace JXC.WPF.Templates
             {
                 result.Surrounders.Add(new AggtBlocks
                 {
-                    MainBlock = new SurrounderBlock
+                    MainBlock = new ConditionBlock()
                     {
                         EntityType = conAttri.QueryType,
-                        SurrounderType = SurrounderType.Condition
                     },
                     Layout = new LayoutMeta(typeof(TraditionalLayoutMethod<HorizentalConditionLayout>))
                 });

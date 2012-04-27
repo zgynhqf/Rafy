@@ -77,22 +77,6 @@ namespace OEA.RBAC
                 }
             };
 
-            app.DbMigratingOperations += (o, e) =>
-            {
-                using (var c = new OEADbMigrationContext(ConnectionStringNames.OEAPlugins))
-                {
-                    c.AutoMigrate();
-
-                    //其它一些可用的API
-                    //c.ClassMetaReader.IgnoreTables.Add("ReportObjectMetaData");
-                    //c.RollbackToHistory(DateTime.Parse("2008-12-31 23:59:58.700"), RollbackAction.DeleteHistory);
-                    //c.DeleteDatabase();
-                    //c.ResetHistories();
-                    //c.RollbackAll();
-                    //c.JumpToHistory(DateTime.Parse("2012-01-07 21:27:00.000"));
-                };
-            };
-
             if (OEAEnvironment.Location.IsOnClient())
             {
                 app.Exit += (o, e) =>
@@ -101,6 +85,18 @@ namespace OEA.RBAC
                     {
                         UserLoginLogService.NotifyLogout();
                     }
+                };
+            }
+            else
+            {
+                //如果只是在服务端，则在这里升级数据库。
+                //否则，如果是单机版，就在 OEA.RBAC.WPF 中升级，以便弹出进度条。
+                app.DbMigratingOperations += (o, e) =>
+                {
+                    using (var c = new OEADbMigrationContext(ConnectionStringNames.OEAPlugins))
+                    {
+                        c.AutoMigrate();
+                    };
                 };
             }
         }

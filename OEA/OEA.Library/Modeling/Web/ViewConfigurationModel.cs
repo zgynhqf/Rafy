@@ -230,31 +230,8 @@ namespace OEA
             {
                 res.OutputBlockConfigKey.Type = BlockConfigType.Config;
 
-                //ConfigDefaultView
-                if (string.IsNullOrEmpty(viewId.ViewName))
-                {
-                    res.InputView = UIModel.Views.CreateDefaultView(viewId.EntityType, null);
-                }
-                //ConfigExtendView
-                else
-                {
-                    res.InputView = UIModel.Views.CreateDefaultView(viewId.EntityType, BlockConfigType.Config);
-                }
-
-                ////ConfigDefaultView
-                //if (extendViewId == null)
-                //{
-                //    var entityMeta = CommonModel.Entities.Find(id);
-                //    if (entityMeta != null)
-                //    {
-                //        res.InputView = WebModel.Views.GetDefaultView(entityMeta.EntityType, null);
-                //    }
-                //}
-                ////ConfigExtendView
-                //else
-                //{
-                //    res.InputView = WebModel.Views.GetDefaultView(extendViewId.EntityType, BlockConfigType.Config);
-                //}
+                //ConfigDefaultView/ConfigExtendView
+                res.InputView = UIModel.Views.Create(viewId.EntityType, viewId.ViewName, null);
             }
             else
             {
@@ -262,17 +239,6 @@ namespace OEA
 
                 //CustomizeDefaultView，CustomizeExtendView
                 res.InputView = UIModel.Views.Create(viewId.EntityType, viewId.ViewName, BlockConfigType.Config);
-
-                ////CustomizeDefaultView
-                //if (extendViewId == null)
-                //{
-                //    res.InputView = WebModel.Views.GetDefaultView(extendViewId.EntityType, BlockConfigType.Config);
-                //}
-                ////CustomizeExtendView
-                //else
-                //{
-                //    res.InputView = WebModel.Views.GetExtendView(extendViewId.EntityType, extendViewId.ViewName, BlockConfigType.Config);
-                //}
             }
 
             return res;

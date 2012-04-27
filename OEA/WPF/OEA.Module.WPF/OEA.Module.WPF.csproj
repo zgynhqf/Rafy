@@ -175,13 +175,12 @@
     <Compile Include="AutoUI\ObjectViews\ControlResult.cs" />
     <Compile Include="AutoUI\ObjectViews\ExtendEventConvention.cs" />
     <Compile Include="AutoUI\ObjectViews\ObjectViewFactory.cs" />
-    <Compile Include="AutoUI\ObjectViews\Relations\DetailRelationView.cs" />
-    <Compile Include="AutoUI\ObjectViews\Relations\NavigationRelationView.cs" />
     <Compile Include="AutoUI\ObjectViews\ViewController\OEADataProvider.cs" />
     <Compile Include="AutoUI\ObjectViews\ViewController\ViewDataLoader.cs" />
     <Compile Include="Controls\MTTG\TreeColumn\TreeColumnCollection.cs" />
     <Compile Include="Controls\MTTG\_MTTGTestCommands.cs" />
     <Compile Include="AutoUI\UITemplate.cs" />
+    <Compile Include="Controls\WaitProgress\MigrationWithProgressBar.cs" />
     <Compile Include="PrimitiveUI\EntityModule.cs" />
     <Compile Include="PrimitiveUI\Layouts\ITraditionalLayout.cs" />
     <Compile Include="PrimitiveUI\Layouts\TraditionalComponents.cs" />
@@ -447,6 +446,10 @@
     <ProjectReference Include="..\..\Common\Common.csproj">
       <Project>{796B149B-32C9-4BB0-A23F-69C012450DB8}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DbMigration\DbMigration.csproj">
+      <Project>{D7C4F80D-24A4-47F1-985C-CFA55CFA13E9}</Project>
+      <Name>DbMigration</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\ManagedProperty\ManagedProperty.csproj">
       <Project>{66BE29D5-F1CA-4941-A4EB-6B3E8F577166}</Project>

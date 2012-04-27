@@ -64,11 +64,16 @@ namespace OEA.Module.WPF
             var sur = block as SurrounderBlock;
             if (sur != null)
             {
-                if (sur.SurrounderType == SurrounderType.Navigation)
+                var surrounderType = sur.SurrounderType;
+                if (surrounderType == NavigationBlock.Type)
                 {
                     return this.CreateNavigationQueryView(block.ViewMeta);
                 }
-                return this.CreateConditionQueryView(block.ViewMeta);
+
+                if (surrounderType == ConditionBlock.Type)
+                {
+                    return this.CreateConditionQueryView(block.ViewMeta);
+                }
             }
 
             if (block.BlockType == BlockType.List)

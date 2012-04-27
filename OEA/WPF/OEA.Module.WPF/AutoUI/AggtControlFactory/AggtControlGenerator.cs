@@ -148,7 +148,7 @@ namespace OEA.Module.WPF
             {
                 var surBlock = surrounder.MainBlock as SurrounderBlock;
 
-                var surrounderType = surBlock.SurrounderType.GetDescription();
+                var surrounderType = surBlock.SurrounderType;
                 var surrounderView = this.CreateSurrounderView(mainView, surBlock);
 
                 //为 Surrouder 生成它的聚合控件
@@ -161,50 +161,30 @@ namespace OEA.Module.WPF
         protected virtual WPFObjectView CreateSurrounderView(WPFObjectView mainView, SurrounderBlock surrounderBlock)
         {
             var surrounderType = surrounderBlock.SurrounderType;
-            var surrounderVM = surrounderBlock.ViewMeta;
 
-            WPFObjectView surrounderView = null;
-            RelationView relation = null;
-            RelationView reverseRelation = null;//相反的关系类型
-
-            //本类只对以下“认识”的环绕块生成控件
-            if (surrounderType == SurrounderType.Condition)
+            //相反的关系类型
+            RelationView reverseRelation = null;
+            if (surrounderType == ConditionBlock.Type)
             {
-                var result = this._viewFactory.CreateConditionQueryView(surrounderVM);
-
                 //条件面板需要额外添加一个查询按钮。
-                surrounderVM.UseWPFCommands(WPFCommandNames.FireQuery);
+                surrounderBlock.ViewMeta.UseWPFCommands(WPFCommandNames.FireQuery);
 
-                this.CreateCommandsUI(result, surrounderBlock);
-
-                reverseRelation = new RelationView(SurrounderType.Result, mainView);
-                surrounderView = result;
+                reverseRelation = new RelationView(QueryObjectView.ResultSurrounderType, mainView);
             }
-            else if (surrounderType == SurrounderType.Navigation)
+            else if (surrounderType == NavigationBlock.Type)
             {
-                var result = this._viewFactory.CreateNavigationQueryView(surrounderVM);
-                this.CreateCommandsUI(result, surrounderBlock);
-
-                relation = new NavigationRelationView(result);
-                reverseRelation = new RelationView(SurrounderType.Result, mainView);
-                surrounderView = result;
-            }
-            else if (surrounderType == SurrounderType.Result)
-            {
-                surrounderView = this._viewFactory.CreateDetailObjectView(surrounderVM);
-                reverseRelation = new RelationView(SurrounderType.List, mainView);
-            }
-            else
-            {
-                this.CreateUnknownSurrounder(surrounderType.GetDescription(), surrounderBlock, out surrounderView, out reverseRelation);
+                reverseRelation = new RelationView(QueryObjectView.ResultSurrounderType, mainView);
             }
 
-            relation = relation ?? new RelationView(surrounderType, surrounderView);
+            WPFObjectView surrounderView = this._viewFactory.CreateView(surrounderBlock);
+            this.CreateCommandsUI(surrounderView, surrounderBlock);
 
             //直接使用 surrounderType 作为关系的类型，把 surrounderView 添加到 mainView 的关系。
+            var relation = new RelationView(surrounderType, surrounderView);
             mainView.SetRelation(relation);
 
             //相反的关系设置
+            reverseRelation = reverseRelation ?? new RelationView("owner", surrounderView);
             surrounderView.SetRelation(reverseRelation);
 
             return surrounderView;
@@ -272,23 +252,6 @@ namespace OEA.Module.WPF
             var itemsControl = new ItemsControl();
             itemsControl.Style = OEAStyles.CommandsContainer;
             return itemsControl;
-        }
-
-        /// <summary>
-        /// 为不知道的环绕类型生成控件
-        /// 
-        /// 此方法留作扩展使用，子类必须实现此方法。
-        /// </summary>
-        /// <param name="surrounderType"></param>
-        /// <param name="surrounderUIInfo"></param>
-        /// <param name="surrounderView"></param>
-        /// <param name="reverseRelation"></param>
-        protected virtual void CreateUnknownSurrounder(
-            string surrounderType, Block surrounderUIInfo,
-            out WPFObjectView surrounderView, out RelationView reverseRelation
-            )
-        {
-            throw new NotSupportedException("没有实现以下环绕类型的控件生成方案：" + surrounderType);
         }
 
         /// <summary>

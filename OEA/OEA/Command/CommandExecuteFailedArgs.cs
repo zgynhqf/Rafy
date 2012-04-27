@@ -14,7 +14,7 @@
 using System;
 using System.ComponentModel;
 
-namespace OEA.MetaModel.Command
+namespace OEA
 {
     /// <summary>
     /// 命令执行失败时的命令参数
@@ -35,6 +35,22 @@ namespace OEA.MetaModel.Command
 
         /// <summary>
         /// 发生错误时的参数
+        /// </summary>
+        public object Parameter { get; private set; }
+    }
+
+    /// <summary>
+    /// 命令执行失败时的命令参数
+    /// </summary>
+    public class CommandExecutedArgs : CancelEventArgs
+    {
+        public CommandExecutedArgs(object param)
+        {
+            this.Parameter = param;
+        }
+
+        /// <summary>
+        /// 命令参数
         /// </summary>
         public object Parameter { get; private set; }
     }

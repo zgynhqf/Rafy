@@ -26,6 +26,9 @@ namespace OEA.MetaModel.View
         private ReferenceInfo _RefInfo;
         /// <summary>
         /// 对应的引用信息
+        /// 
+        /// 可能为 null，此时表示此属性只是在界面上有引用元数据，
+        /// 但是定义的实体类型却没有相关的引用信息（例如根本没有定义实体引用属性）。
         /// </summary>
         public ReferenceInfo ReferenceInfo
         {
@@ -41,6 +44,16 @@ namespace OEA.MetaModel.View
         {
             get { return this._SelectionMode; }
             set { this.SetValue(ref this._SelectionMode, value); }
+        }
+
+        private string _SplitterIfMulti = ",";
+        /// <summary>
+        /// 多选模式下，返回的值应该根据这个进行分隔
+        /// </summary>
+        public string SplitterIfMulti
+        {
+            get { return this._SplitterIfMulti; }
+            set { this.SetValue(ref this._SplitterIfMulti, value); }
         }
 
         private string _SelectedValuePath;
@@ -91,12 +104,36 @@ namespace OEA.MetaModel.View
             }
         }
 
-        #region 代理到 CoreInfo 上的属性
+        private Type _RefType;
+        /// <summary>
+        /// 引用实体类型
+        /// </summary>
+        public Type RefType
+        {
+            get
+            {
+                if (this._RefInfo != null)
+                {
+                    return this._RefInfo.RefType;
+                }
 
-        public Type RefType { get { return this._RefInfo.RefType; } }
+                if (this._RefType == null) { throw new InvalidOperationException("属性不能为空，请先设置本属性。"); }
+                return this._RefType;
+            }
+            set { this.SetValue(ref this._RefType, value); }
+        }
 
-        public string RefEntityProperty { get { return this._RefInfo.RefEntityProperty; } }
+        public string RefEntityProperty
+        {
+            get
+            {
+                if (this._RefInfo != null)
+                {
+                    return this._RefInfo.RefEntityProperty;
+                }
 
-        #endregion
+                return null;
+            }
+        }
     }
 }

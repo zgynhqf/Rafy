@@ -29,13 +29,12 @@ namespace OEA.Module.WPF.Layout
 
         public void Arrange(TraditionalComponents components)
         {
-            ResizingPanelSlippingAnimation.Initialize(main, resultChildren, components.AggtBlocks.Layout.ParentChildProportion);
+            ResizingPanelSlippingAnimation.Initialize(main, childrenTab, components.AggtBlocks.Layout.ParentChildProportion);
 
             this.TryArrangeMain(components.Main);
             this.TryArrangeCommandsContainer(components.CommandsContainer);
             this.TryArrangeNavigation(components.Navigation);
             this.TryArrangeCondition(components.Condition);
-            this.TryArrangeDetail(components.Detail);
 
             //Children
             components.ArrangeChildrenByTabControl(childrenTab);
@@ -91,18 +90,6 @@ namespace OEA.Module.WPF.Layout
             }
         }
 
-        private void TryArrangeDetail(ControlResult control)
-        {
-            if (control != null)
-            {
-                result.Content = control.Control;
-            }
-            else
-            {
-                result.RemoveFromParent(false);
-            }
-        }
-
         private void OnArrangedCore(TraditionalComponents components)
         {
             if (queryPanel.Items.Count == 0)
@@ -110,26 +97,10 @@ namespace OEA.Module.WPF.Layout
                 queryPanel.RemoveFromParent(false);
             }
 
-            //如果存在详细面板，就忽略以下逻辑。
-            if (result.Parent == null)
+            if (childrenTab.Parent != null)
             {
-                if (childrenTab.Parent != null)
-                {
-                    //DockPanel 和 TabControl 的 Visibility 一致。
-                    resultChildren.SetBinding(VisibilityProperty, new Binding
-                    {
-                        Mode = BindingMode.OneWay,
-                        Path = new PropertyPath(VisibilityProperty),
-                        Source = childrenTab
-                    });
-
-                    container.Orientation = components.AggtBlocks.Layout.IsLayoutChildrenHorizonal ?
-                        Orientation.Horizontal : Orientation.Vertical;
-                }
-                else
-                {
-                    resultChildren.RemoveFromParent(false);
-                }
+                container.Orientation = components.AggtBlocks.Layout.IsLayoutChildrenHorizonal ?
+                    Orientation.Horizontal : Orientation.Vertical;
             }
         }
     }

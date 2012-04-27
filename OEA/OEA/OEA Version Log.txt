@@ -8,6 +8,42 @@
  * 
 *******************************************************/
 
+2.11.606.0
+    BUG添加功能
+        * 客户端升级数据库时，提示进度条。
+
+2.11.605.0
+    BUG修复
+        * RBAC 日志应该显示命令执行完成后的记录。
+
+2.11.604.0
+    添加接口
+        * ReferenceViewInfo 中的 ReferenceInfo 属性可以为空，并添加 SplitterIfMulti 属性。
+    ★删除接口
+        * 删除 CommonRules.StringRequired 方法，合并到 CommonRules.Required 中。
+    示例
+        * FM 多选用户、多先标签功能。
+
+2.11.603.0
+    示例
+        * FM 完善持续添加按钮功能。
+
+2.11.602.0
+    BUG修复
+        * AggtControlGenerator 需要为所有环绕视图生成命令。
+
+2.11.601.0
+    BUG修复
+        * ViewConfigurationModel.GetInputOutput 在配置扩展视图时输入视图有错。
+
+2.11.600.0
+    示例
+        * 开始添加 FinanceManagement 示例。
+
+2.11.599.0
+    重构
+        * 重构 SurrounderType 使其更易用。
+
 2.11.598.0
     添加功能
         * 统一支持导出 Excel。

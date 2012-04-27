@@ -82,8 +82,8 @@ namespace JXC
             base.AddValidations();
 
             var rules = this.ValidationRules;
-            rules.AddRule(CodeProperty, CommonRules.StringRequired);
-            rules.AddRule(UserProperty, CommonRules.StringRequired);
+            rules.AddRule(CodeProperty, CommonRules.Required);
+            rules.AddRule(UserProperty, CommonRules.Required);
             rules.AddRule(StorageToRefProperty, (e, args) =>
             {
                 var move = e as StorageMove;

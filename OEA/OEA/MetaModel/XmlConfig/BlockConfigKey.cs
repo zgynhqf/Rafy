@@ -67,7 +67,7 @@ namespace OEA.MetaModel.XmlConfig
     }
 
     /// <summary>
-    /// 块配置地址
+    /// 块配置文件类型
     /// </summary>
     public enum BlockConfigType
     {

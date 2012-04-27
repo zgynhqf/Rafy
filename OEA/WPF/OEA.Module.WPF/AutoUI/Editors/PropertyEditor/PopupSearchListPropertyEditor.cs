@@ -105,15 +105,13 @@ namespace OEA.Module.WPF.Editors
         {
             var txt = this.TryGetCustomParams<string>(CommandCustomParams.TextBox);
 
-            var titleManagedProperty = view.Meta.TitleProperty.PropertyMeta.ManagedProperty;
-            if (titleManagedProperty == null) throw new InvalidOperationException("标题属性应该使用托管属性进行编写。");
-
             if (string.IsNullOrEmpty(txt))
             {
                 view.Filter = null;
             }
             else
             {
+                var titleManagedProperty = view.Meta.TitleProperty.PropertyMeta.ManagedProperty;
                 view.Filter = e =>
                 {
                     var title = e.GetProperty(titleManagedProperty) as string;
