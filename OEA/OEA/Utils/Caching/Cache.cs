@@ -89,11 +89,11 @@ namespace OEA.Utils.Caching
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
-        /// <param name="regionName"></param>
         /// <param name="ifNotExists"></param>
+        /// <param name="regionName"></param>
         /// <param name="policy"></param>
         /// <returns></returns>
-        public T Get<T>(string key, string regionName, Func<T> ifNotExists, Policy policy = null)
+        public T Get<T>(string key, Func<T> ifNotExists, string regionName = "GlobalCache", Policy policy = null)
             where T : class
         {
             var result = this.Get(key, regionName) as T;

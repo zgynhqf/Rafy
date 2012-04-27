@@ -36,6 +36,20 @@ namespace OEA.MetaModel.View
             set { this.SetValue(ref this._RefInfo, value); }
         }
 
+        #region WPF
+
+        private bool _TextFilterEnabled = true;
+        /// <summary>
+        /// 是否启用文本过滤
+        /// 
+        /// 默认为 true
+        /// </summary>
+        public bool TextFilterEnabled
+        {
+            get { return this._TextFilterEnabled; }
+            set { this.SetValue(ref this._TextFilterEnabled, value); }
+        }
+
         private ReferenceSelectionMode _SelectionMode;
         /// <summary>
         /// 选择模式：多选/单选。
@@ -90,19 +104,7 @@ namespace OEA.MetaModel.View
             set { this.SetValue(ref this._RootPIdProperty, value); }
         }
 
-        private EntityViewMeta _RefTypeDefaultView;
-        public EntityViewMeta RefTypeDefaultView
-        {
-            get
-            {
-                if (this._RefTypeDefaultView == null)
-                {
-                    this._RefTypeDefaultView = UIModel.Views.CreateDefaultView(this.RefType);
-                }
-
-                return this._RefTypeDefaultView;
-            }
-        }
+        #endregion
 
         private Type _RefType;
         /// <summary>
@@ -121,6 +123,20 @@ namespace OEA.MetaModel.View
                 return this._RefType;
             }
             set { this.SetValue(ref this._RefType, value); }
+        }
+
+        private EntityViewMeta _RefTypeDefaultView;
+        public EntityViewMeta RefTypeDefaultView
+        {
+            get
+            {
+                if (this._RefTypeDefaultView == null)
+                {
+                    this._RefTypeDefaultView = UIModel.Views.CreateDefaultView(this.RefType);
+                }
+
+                return this._RefTypeDefaultView;
+            }
         }
 
         public string RefEntityProperty

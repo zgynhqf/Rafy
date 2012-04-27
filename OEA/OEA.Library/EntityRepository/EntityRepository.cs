@@ -216,7 +216,7 @@ namespace OEA.Library
         /// <param name="oldList"></param>
         /// <param name="keySelector"></param>
         /// <returns></returns>
-        public EntityList NewListOrderBy<TKey>(EntityList oldList, Func<Entity, TKey> keySelector)
+        public EntityList NewListOrderBy<TKey>(IEnumerable<Entity> oldList, Func<Entity, TKey> keySelector)
         {
             if (oldList == null) throw new ArgumentNullException("oldList");
 

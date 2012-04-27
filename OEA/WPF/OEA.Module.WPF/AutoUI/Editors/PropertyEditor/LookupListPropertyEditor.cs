@@ -92,7 +92,8 @@ namespace OEA.Module.WPF.Editors
         /// <returns></returns>
         protected override FrameworkElement CreateEditingElement()
         {
-            var refTypeMeta = this.Meta.ReferenceViewInfo.RefTypeDefaultView;
+            var refVI = this.Meta.ReferenceViewInfo;
+            var refTypeMeta = refVI.RefTypeDefaultView;
 
             //创建 ListObjectView
             this._listView = AutoUI.ViewFactory.CreateListObjectView(refTypeMeta, true);
@@ -100,12 +101,14 @@ namespace OEA.Module.WPF.Editors
             this._listView.CurrentObjectChanged += On_ListView_CurrentObjectChanged;
 
             //创建 ComboListControl : 使用下拉控件显示
-            this._cmbList = new ComboListControl(this._listView, this)
+            this._cmbList = new ComboListControl(this._listView)
             {
+                ClearPropertyEditor = this,
                 Name = this.Meta.Name
             };
             this._cmbList.DropDownOpened += On_ComboDataGrid_DropDownOpened;
             this._cmbList.TextPath = refTypeMeta.TitleProperty.Name;
+            if (!refVI.TextFilterEnabled) this._cmbList.TextFilterEnabled = false;
 
             this.BindElementReadOnly(this._cmbList, ComboBox.IsReadOnlyProperty);
 

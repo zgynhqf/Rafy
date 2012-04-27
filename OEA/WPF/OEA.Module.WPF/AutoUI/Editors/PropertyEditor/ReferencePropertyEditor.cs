@@ -139,7 +139,10 @@ namespace OEA.Module.WPF.Editors
                 var targetValue = this.PropertyValue;
                 if (this.IsMultiSelection && targetValue != null)
                 {
-                    var values = targetValue.ToString().Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                    var splitter = this.Meta.ReferenceViewInfo.SplitterIfMulti;
+                    var values = targetValue.ToString().Split(
+                        new string[] { splitter }, StringSplitOptions.RemoveEmptyEntries
+                        );
                     foreach (var selectedValue in values)
                     {
                         AddToListBySelectedValue(items, selectedItems, selectedValue);

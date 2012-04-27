@@ -9,6 +9,7 @@ using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
 using OEA.MetaModel.View;
 using OEA.ManagedProperty;
+using OEA.ORM;
 
 namespace FM
 {
@@ -22,11 +23,11 @@ namespace FM
             set { this.SetProperty(NameProperty, value); }
         }
 
-        public static readonly Property<DateTime> LastUsedTimeProperty = P<Tag>.Register(e => e.LastUsedTime);
-        public DateTime LastUsedTime
+        public static readonly Property<int> OrderNoProperty = P<Tag>.Register(e => e.OrderNo);
+        public int OrderNo
         {
-            get { return this.GetProperty(LastUsedTimeProperty); }
-            set { this.SetProperty(LastUsedTimeProperty, value); }
+            get { return this.GetProperty(OrderNoProperty); }
+            set { this.SetProperty(OrderNoProperty, value); }
         }
 
         public static readonly Property<bool> IsDefaultProperty = P<Tag>.Register(e => e.IsDefault);
@@ -35,14 +36,33 @@ namespace FM
             get { return this.GetProperty(IsDefaultProperty); }
             set { this.SetProperty(IsDefaultProperty, value); }
         }
+
+        public static readonly Property<bool> NotUsedProperty = P<Tag>.Register(e => e.NotUsed);
+        public bool NotUsed
+        {
+            get { return this.GetProperty(NotUsedProperty); }
+            set { this.SetProperty(NotUsedProperty, value); }
+        }
     }
 
     [Serializable]
-    public class TagList : FMEntityList { }
+    public class TagList : FMEntityList
+    {
+        protected override void OnQueryDbOrder(IQuery query)
+        {
+            query.Order(Tag.OrderNoProperty, true).Order(Tag.IdProperty, true);
+        }
+    }
 
     public class TagRepository : EntityRepository
     {
         protected TagRepository() { }
+
+        public TagList GetValidList()
+        {
+            var all = this.GetAll();
+            return this.CreateList(all.Where(e => !e.CastTo<Tag>().NotUsed)) as TagList;
+        }
     }
 
     internal class TagConfig : EntityConfig<Tag>
@@ -51,7 +71,7 @@ namespace FM
         {
             Meta.MapTable().MapAllPropertiesToTable();
 
-            Meta.DataOrderBy(Tag.LastUsedTimeProperty, false);
+            //Meta.DataOrderBy(Tag.OrderNoProperty, false);
 
             Meta.EnableCache();
         }
@@ -64,7 +84,8 @@ namespace FM
             {
                 View.Property(Tag.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
                 View.Property(Tag.IsDefaultProperty).HasLabel("默认").ShowIn(ShowInWhere.ListDetail);
-                //View.Property(Tag.OrderNoProperty).HasLabel("排序号").ShowIn(ShowInWhere.ListDetail);
+                View.Property(Tag.NotUsedProperty).HasLabel("禁用").ShowIn(ShowInWhere.ListDetail);
+                View.Property(Tag.OrderNoProperty).HasLabel("排序号").ShowIn(ShowInWhere.ListDetail);
             }
         }
     }

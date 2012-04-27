@@ -7,10 +7,13 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <ad:ResizingPanel Name="container">
-        <StackPanel ad:ResizingPanel.ResizeWidth="2*">
-            <ContentControl Name="commands"/>
-            <ContentControl Name="main"/>
-        </StackPanel>
+        <Border ad:ResizingPanel.ResizeWidth="2*" 
+                BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,1,0" Padding="0,0,4,0">
+            <StackPanel>
+                <ContentControl Name="commands"/>
+                <ContentControl Name="main"/>
+            </StackPanel>
+        </Border>
         <ContentControl Name="list" ad:ResizingPanel.ResizeWidth="8*"/>
     </ad:ResizingPanel>
 </UserControl>

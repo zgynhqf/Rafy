@@ -49,7 +49,7 @@ namespace OEA.Web
         /// <returns></returns>
         protected static string CacheCompress(HttpContext context, string key, Func<string> producer)
         {
-            if (context.IsDebuggingEnabled) { return producer(); }
+            if (OEAEnvironment.IsDebuggingEnabled) { return producer(); }
 
             //缓存 + 压缩
             return context.Cache.GetOrCreate(key, () =>

@@ -27,6 +27,20 @@ namespace DbMigration.SqlServerCe
     /// </summary>
     public class SqlServerCeRunGenerator : SqlServer.SqlServerRunGenerator
     {
+        protected override string ConvertToTypeString(DbType dataType)
+        {
+            switch (dataType)
+            {
+                case DbType.String:
+                case DbType.AnsiString:
+                    return "NVARCHAR(4000)";
+                case DbType.Binary:
+                    return "VARBINARY(8000)";
+                default:
+                    return base.ConvertToTypeString(dataType);
+            }
+        }
+
         protected override void Generate(CreateDatabase op)
         {
             this.AddRun(new CreateDbMigrationRun { Database = op.Database });
