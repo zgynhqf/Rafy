@@ -19,9 +19,8 @@ namespace JXC.Commands
     {
         public SelectProductCommand()
         {
-            this.TargetEntityType = typeof(Product);
             this.RefProperty = ProductRefItem.ProductRefProperty;
-            this.Template = new UITemplate();
+            this.Template = new ProductModule();
 
             //选择商品界面不需要显示附件
             this.Template.BlocksDefined += (o, e) =>
@@ -35,7 +34,7 @@ namespace JXC.Commands
         protected override ControlResult GenerateSelectionUI()
         {
             if (this.Template == null) throw new ArgumentNullException("this.Template");
-            return this.Template.CreateUI(this.TargetEntityType);
+            return this.Template.CreateUI();
         }
 
         #region 选择商品后，直接定位到数量上。

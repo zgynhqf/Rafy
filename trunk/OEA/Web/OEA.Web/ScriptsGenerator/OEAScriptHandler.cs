@@ -61,7 +61,7 @@ namespace OEA.Web
             var assembly = this.GetType().Assembly;
 
             Func<Assembly, string, Stream> getStream = this.GetStream;
-            if (HttpContext.Current.IsDebuggingEnabled) { getStream = this.GetStream_Debugging; }
+            if (OEAEnvironment.IsDebuggingEnabled) { getStream = this.GetStream_Debugging; }
 
             foreach (var resource in jsFiles)
             {
@@ -90,7 +90,7 @@ namespace OEA.Web
             if (dir != string.Empty)
             {
                 var file = Path.Combine(dir, "OEA/Web/OEA.Web/Scripts/", jsFileName);
-                return File.Open(file, FileMode.Open);
+                if (File.Exists(file)) return File.Open(file, FileMode.Open);
             }
 
             return this.GetStream(assembly, jsFileName);

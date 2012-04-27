@@ -32,7 +32,7 @@ namespace DbMigration.SqlServer
             {
                 case DbType.String:
                 case DbType.AnsiString:
-                    return "NVARCHAR(4000)";
+                    return "NVARCHAR(MAX)";
                 case DbType.Int32:
                     return "INT";
                 case DbType.DateTime:
@@ -42,7 +42,7 @@ namespace DbMigration.SqlServer
                 case DbType.Double:
                     return "FLOAT";
                 case DbType.Binary:
-                    return "VARBINARY(8000)";
+                    return "VARBINARY(MAX)";
                 case DbType.Boolean:
                     return "BIT";
                 case DbType.Byte:

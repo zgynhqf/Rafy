@@ -201,7 +201,7 @@ namespace OEA
             if (!OEAEnvironment.Location.IsOnClient()) throw new InvalidOperationException();
         }
 
-        private static int _maxId = 10000000;// 本地临时 Id 从 这个值开始
+        private static int _maxId = 100000000;// 本地临时 Id 从 这个值开始
         private static object _maxIdLock = new object();
 
         public static int NewLocalId()

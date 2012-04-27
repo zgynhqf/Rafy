@@ -42,7 +42,7 @@ namespace FM
                         new ModuleMeta{ Label = "帐务录入", EntityType = typeof(FinanceLog), TemplateType=typeof(FinanceLogInputModule)},
                         new ModuleMeta{ Label = "相关人", EntityType = typeof(Person)},
                         new ModuleMeta{ Label = "标签", EntityType = typeof(Tag)},
-                        //new ModuleMeta{ Label = "帐务统计", EntityType = typeof(FinanceLog)},
+                        new ModuleMeta{ Label = "帐务统计（未完成）", EntityType = typeof(FinanceLog)},
                     }
                 });
             };

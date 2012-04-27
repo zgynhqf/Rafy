@@ -62,8 +62,6 @@ namespace OEA.Module.WPF.Controls
                 new FrameworkPropertyMetadata(typeof(ComboListControl)));
         }
 
-        private PropertyEditor _clearCmdArg;
-
         /// <summary>
         /// 下拉的弹出框使用的是一个临时的ListObjectView来生成动态Grid。
         /// </summary>
@@ -81,14 +79,11 @@ namespace OEA.Module.WPF.Controls
 
         #region 构造函数
 
-        internal ComboListControl(IListObjectView listObjectView) : this(listObjectView, null) { }
-
         /// <summary>
         /// 
         /// </summary>
         /// <param name="listObjectView">内部界面使用这个 View 所对应的控件</param>
-        /// <param name="clearCmdArg">为这个属性生成的下拉框。</param>
-        internal ComboListControl(IListObjectView listObjectView, PropertyEditor clearCmdArg)
+        internal ComboListControl(IListObjectView listObjectView)
         {
             if (listObjectView == null) throw new ArgumentNullException("listObjectView");
 
@@ -96,7 +91,6 @@ namespace OEA.Module.WPF.Controls
             ////弹出的 DataGrid 是不能编辑的，见：http://ipm.grandsoft.com.cn/issues/114217
             this._listView.IsReadOnly = true;
             this._listView.CurrentObjectChanged += (s, e) => this.CloseDropdownIfSelected();
-            this._clearCmdArg = clearCmdArg;
 
             //构造Timer
             if (!DesignerProperties.GetIsInDesignMode(this)) { this.InitLazyFilter(); }
@@ -133,11 +127,16 @@ namespace OEA.Module.WPF.Controls
         }
 
         /// <summary>
+        /// 为这个属性生成的下拉框
+        /// </summary>
+        public PropertyEditor ClearPropertyEditor { get; set; }
+
+        /// <summary>
         /// 生成一个清空数据的按钮
         /// </summary>
         private void CreateButtons()
         {
-            if (this._clearCmdArg != null)
+            if (this.ClearPropertyEditor != null)
             {
                 Panel buttonPanel = this.Template.FindName("PART_ButtonPanel", this) as Panel;
 
@@ -145,7 +144,7 @@ namespace OEA.Module.WPF.Controls
                 var btnClearValue = new Button();
                 btnClearValue.Content = "清除属性值";
                 btnClearValue.SetValue(DockPanel.DockProperty, Dock.Right);
-                btnClearValue.Click += (o, e) => { this._clearCmdArg.PropertyValue = null; };
+                btnClearValue.Click += (o, e) => { this.ClearPropertyEditor.PropertyValue = null; };
 
                 buttonPanel.Children.Add(btnClearValue);
             }
@@ -186,6 +185,23 @@ namespace OEA.Module.WPF.Controls
 
         #region 文本输入过滤
 
+        #region TextFilterEnabled DependencyProperty
+
+        public static readonly DependencyProperty TextFilterEnabledProperty = DependencyProperty.Register(
+            "TextFilterEnabled", typeof(bool), typeof(ComboListControl)
+            );
+
+        /// <summary>
+        /// 是否启用文本输入过滤功能
+        /// </summary>
+        public bool TextFilterEnabled
+        {
+            get { return (bool)this.GetValue(TextFilterEnabledProperty); }
+            set { this.SetValue(TextFilterEnabledProperty, value); }
+        }
+
+        #endregion
+
         /// <summary>
         /// 控制输入定时器
         /// </summary>
@@ -201,6 +217,8 @@ namespace OEA.Module.WPF.Controls
 
         private void InitLazyFilter()
         {
+            if (!this.TextFilterEnabled) { return; }
+
             //定时器延迟时间 800
             this._lazyFilterInterval = new Timer(800);
             this._lazyFilterInterval.AutoReset = false;
@@ -215,6 +233,8 @@ namespace OEA.Module.WPF.Controls
         /// <param name="e"></param>
         private void On_EditableTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
+            if (!this.TextFilterEnabled) { return; }
+
             this._curProgress = CLCProgress.KeyPressed;
         }
 
@@ -225,6 +245,8 @@ namespace OEA.Module.WPF.Controls
         /// <param name="e"></param>
         private void On_EditableTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            if (!this.TextFilterEnabled) { return; }
+
             if (this._curProgress == CLCProgress.KeyPressed)
             {
                 if (!this._listView.IsShowingTree)
@@ -243,6 +265,8 @@ namespace OEA.Module.WPF.Controls
         protected override void OnDropDownClosed(EventArgs e)
         {
             base.OnDropDownClosed(e);
+
+            if (!this.TextFilterEnabled) { return; }
 
             this._lazyFilterInterval.Stop();
 

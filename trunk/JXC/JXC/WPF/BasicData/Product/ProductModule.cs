@@ -26,6 +26,11 @@ namespace JXC.WPF
 {
     public class ProductModule : ModuleBase
     {
+        public ProductModule()
+        {
+            this.EntityType = typeof(Product);
+        }
+
         protected override AggtBlocks DefineBlocks()
         {
             var blocks = base.DefineBlocks();

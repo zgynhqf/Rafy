@@ -16,11 +16,33 @@ namespace FM
     [RootEntity, Serializable]
     public class FinanceLog : FMEntity
     {
-        public static readonly Property<string> UsersProperty = P<FinanceLog>.Register(e => e.Users);
+        public static readonly Property<string> UsersProperty = P<FinanceLog>.Register(e => e.Users, new PropertyMetadata<string>
+        {
+            PropertyChangingCallBack = (o, e) => (o as FinanceLog).OnUsersTagsChanging(e)
+        });
         public string Users
         {
             get { return this.GetProperty(UsersProperty); }
             set { this.SetProperty(UsersProperty, value); }
+        }
+
+        protected virtual void OnUsersTagsChanging(ManagedPropertyChangingEventArgs<string> e)
+        {
+            var value = e.Value;
+            if (value.Contains("，"))
+            {
+                e.CoercedValue = value.Replace("，", ",");
+            }
+        }
+
+        public static readonly Property<string> TagsProperty = P<FinanceLog>.Register(e => e.Tags, new PropertyMetadata<string>
+        {
+            PropertyChangingCallBack = (o, e) => (o as FinanceLog).OnUsersTagsChanging(e)
+        });
+        public string Tags
+        {
+            get { return this.GetProperty(TagsProperty); }
+            set { this.SetProperty(TagsProperty, value); }
         }
 
         public static readonly Property<DateTime> DateProperty = P<FinanceLog>.Register(e => e.Date);
@@ -44,13 +66,6 @@ namespace FM
             set { this.SetProperty(IsOutProperty, value); }
         }
 
-        public static readonly Property<string> TagsProperty = P<FinanceLog>.Register(e => e.Tags);
-        public string Tags
-        {
-            get { return this.GetProperty(TagsProperty); }
-            set { this.SetProperty(TagsProperty, value); }
-        }
-
         public static readonly Property<string> ReasonProperty = P<FinanceLog>.Register(e => e.Reason);
         public string Reason
         {
@@ -58,17 +73,34 @@ namespace FM
             set { this.SetProperty(ReasonProperty, value); }
         }
 
-        public static readonly Property<string> NameProperty = P<FinanceLog>.RegisterReadOnly(e => e.Name, e => (e as FinanceLog).GetName(), null);
-        public string Name
+        public static readonly Property<string> CommentProperty = P<FinanceLog>.Register(e => e.Comment);
+        public string Comment
         {
-            get { return this.GetProperty(NameProperty); }
+            get { return this.GetProperty(CommentProperty); }
+            set { this.SetProperty(CommentProperty, value); }
         }
-        private string GetName()
+
+        protected override void AddValidations()
         {
-            return string.Format("{0} {1} {2}",
-                this.Users,
-                this.IsOut ? "支出" : "收入",
-                this.Amount
+            base.AddValidations();
+
+            var rules = this.ValidationRules;
+            rules.AddRule(ReasonProperty, CommonRules.Required);
+            rules.AddRule(AmountProperty, CommonRules.Positive);
+            rules.AddRule(UsersProperty, CommonRules.Required);
+        }
+
+        #region 视图属性
+
+        public static readonly Property<string> DescriptionProperty = P<FinanceLog>.RegisterReadOnly(e => e.Description, e => (e as FinanceLog).GetDescription(), null);
+        public string Description
+        {
+            get { return this.GetProperty(DescriptionProperty); }
+        }
+        private string GetDescription()
+        {
+            return string.Format("{0} {1} {2}，事由：{3}",
+                this.Users, this.IsOut ? "支出" : "收入", this.Amount, this.Reason
                 );
         }
 
@@ -82,14 +114,17 @@ namespace FM
             return this.IsOut ? "支出" : "收入";
         }
 
-        protected override void AddValidations()
+        public static readonly Property<TagList> TagDataSourceProperty = P<FinanceLog>.RegisterReadOnly(e => e.TagDataSource, e => (e as FinanceLog).GetTagDataSource(), null);
+        public TagList TagDataSource
         {
-            base.AddValidations();
-
-            var rules = this.ValidationRules;
-            rules.AddRule(UsersProperty, CommonRules.Required);
-            rules.AddRule(AmountProperty, CommonRules.Positive);
+            get { return this.GetProperty(TagDataSourceProperty); }
         }
+        private TagList GetTagDataSource()
+        {
+            return RF.Concreate<TagRepository>().GetValidList();
+        }
+
+        #endregion
     }
 
     [Serializable]
@@ -111,28 +146,29 @@ namespace FM
 
         protected override void ConfigView()
         {
-            View.DomainName("经费记录").HasDelegate(FinanceLog.NameProperty);
+            View.DomainName("经费记录").HasDelegate(FinanceLog.DescriptionProperty);
 
             View.ClearWPFCommands(false)
                 .UseWPFCommands(
-                    WPFCommandNames.Edit,
-                    WPFCommandNames.Delete,
-                    WPFCommandNames.SaveList,
-                    WPFCommandNames.Cancel,
-                    WPFCommandNames.Refresh,
-                    WPFCommandNames.ExportToExcel
+                WPFCommandNames.Edit,
+                WPFCommandNames.Delete,
+                WPFCommandNames.SaveList,
+                WPFCommandNames.Cancel,
+                WPFCommandNames.Refresh,
+                WPFCommandNames.ExportToExcel
                 );
 
             using (View.OrderProperties())
             {
-                View.Property(FinanceLog.NameProperty).HasLabel("简述").ShowIn(ShowInWhere.ListDropDown);
-                View.Property(FinanceLog.UsersProperty).HasLabel("相关人").ShowIn(ShowInWhere.ListDetail);
-                View.Property(FinanceLog.DateProperty).HasLabel("日期").ShowIn(ShowInWhere.ListDetail);
+                View.Property(FinanceLog.DescriptionProperty).HasLabel("简述").ShowIn(ShowInWhere.ListDropDown);
+                View.Property(FinanceLog.ReasonProperty).HasLabel("事由").ShowIn(ShowInWhere.ListDetail);
                 View.Property(FinanceLog.AmountProperty).HasLabel("数量").ShowIn(ShowInWhere.ListDetail);
+                View.Property(FinanceLog.UsersProperty).HasLabel("相关人").ShowIn(ShowInWhere.ListDetail);
                 View.Property(FinanceLog.TagsProperty).HasLabel("标签").ShowIn(ShowInWhere.ListDetail);
+                View.Property(FinanceLog.DateProperty).HasLabel("日期").ShowIn(ShowInWhere.ListDetail);
                 View.Property(FinanceLog.IsOutProperty).HasLabel("支出").ShowIn(ShowInWhere.Detail);
                 View.Property(FinanceLog.View_IsOutProperty).HasLabel("支出").ShowIn(ShowInWhere.List);
-                View.Property(FinanceLog.ReasonProperty).HasLabel("原因").ShowIn(ShowInWhere.ListDetail)
+                View.Property(FinanceLog.CommentProperty).HasLabel("原因").ShowIn(ShowInWhere.ListDetail)
                     .ShowInDetail(columnSpan: 2, height: 100).UseEditor(WPFEditorNames.Memo);
             }
 
@@ -143,13 +179,16 @@ namespace FM
                     SelectedValuePath = Person.NameProperty.Name,
                     SelectionMode = ReferenceSelectionMode.Multiple,
                     RefType = typeof(Person),
+                    TextFilterEnabled = false,
                 };
             View.Property(FinanceLog.TagsProperty).UseEditor(WPFEditorNames.LookupDropDown)
                 .ReferenceViewInfo = new ReferenceViewInfo
                 {
+                    DataSourceProperty = FinanceLog.TagDataSourceProperty.Name,
                     SelectedValuePath = Tag.NameProperty.Name,
                     SelectionMode = ReferenceSelectionMode.Multiple,
                     RefType = typeof(Tag),
+                    TextFilterEnabled = false,
                 };
         }
     }

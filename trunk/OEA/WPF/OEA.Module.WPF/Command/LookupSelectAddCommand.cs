@@ -46,7 +46,6 @@ namespace OEA.WPF.Command
 
         public override void Execute(ListObjectView view)
         {
-            if (this.TargetEntityType == null) throw new ArgumentNullException("this.TargetEntityType");
             if (this.RefProperty == null) throw new ArgumentNullException("this.RefProperty");
 
             var ui = this.GenerateSelectionUI();
@@ -84,6 +83,7 @@ namespace OEA.WPF.Command
         /// <returns></returns>
         protected virtual ControlResult GenerateSelectionUI()
         {
+            if (this.TargetEntityType == null) throw new ArgumentNullException("this.TargetEntityType");
             var listView = AutoUI.ViewFactory.CreateListObjectView(this.TargetEntityType);
             listView.IsReadOnly = true;
             listView.DataLoader.LoadDataAsync();

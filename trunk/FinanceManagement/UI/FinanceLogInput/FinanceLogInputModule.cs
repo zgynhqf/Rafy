@@ -46,7 +46,7 @@ namespace FM.UI
             var defaultPersons = RF.Create<Person>().GetAll().Cast<Person>()
                 .Where(t => t.IsDefault).Select(t => t.Name).ToArray();
             var defaultTags = RF.Create<Tag>().GetAll().Cast<Tag>()
-                .Where(t => t.IsDefault).Select(t => t.Name).ToArray();
+                .Where(t => !t.NotUsed && t.IsDefault).Select(t => t.Name).ToArray();
             var log = new FinanceLog
             {
                 Users = string.Join(",", defaultPersons),
@@ -55,6 +55,7 @@ namespace FM.UI
 
             var main = ui.MainView as DetailObjectView;
             main.Current = log;
+            main.Control.Loaded += (s, e) => (main.PropertyEditors[0].Control as FrameworkElement).Focus();
 
             //暂时通过以下方式为按钮添加键盘事件。
             main.Control.KeyDown += (s, e) =>
