@@ -107,7 +107,7 @@ namespace OEA.Library._Test
 
         protected override void AddValidations()
         {
-            this.ValidationRules.AddRule(NotEmptyCodeProperty, CommonRules.StringRequired);
+            this.ValidationRules.AddRule(NotEmptyCodeProperty, CommonRules.Required);
         }
 
         #region TestTreeTaskList 的路由事件

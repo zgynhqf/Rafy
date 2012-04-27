@@ -38,5 +38,15 @@ namespace OEA
         /// </summary>
         /// <param name="param"></param>
         void Execute(object param);
+
+        /// <summary>
+        /// 执行成功后的事件。
+        /// </summary>
+        event EventHandler<CommandExecutedArgs> Executed;
+
+        /// <summary>
+        /// 执行发生异常后的事件。
+        /// </summary>
+        event EventHandler<CommandExecuteFailedArgs> ExecuteFailed;
     }
 }

@@ -44,6 +44,21 @@ namespace OEA.WPF.Command
         public virtual bool CanExecute(TParamater view) { return true; }
 
         public abstract void Execute(TParamater view);
+
+        protected override void OnExecuteFailed(CommandExecuteFailedArgs e)
+        {
+            base.OnExecuteFailed(e);
+
+            var sqlex = e.Exception.GetBaseException() as SqlException;
+            if (sqlex != null)
+            {
+                var sqlerr = SqlErrorInfo.GetSqlError(sqlex.Number);
+                if (sqlerr == null) return;
+
+                App.MessageBox.Show(sqlerr.ErrorMessage);
+                e.Cancel = true;
+            }
+        }
     }
 
     public abstract class ViewCommand : ClientCommand<ObjectView> { }

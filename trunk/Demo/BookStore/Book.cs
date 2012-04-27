@@ -96,10 +96,10 @@ namespace Demo
 
             //示例属性验证。
             var rules = this.ValidationRules;
-            rules.AddRule(AuthorProperty, CommonRules.StringRequired);
+            rules.AddRule(AuthorProperty, CommonRules.Required);
             rules.AddRule(AuthorProperty, CommonRules.StringMaxLength, new { MaxLength = 3 });
-            rules.AddRule(AmountProperty, CommonRules.IntegerMinValue, new { MinValue = 5 });
-            rules.AddRule(AmountProperty, CommonRules.IntegerMaxValue, new { MaxValue = 50 });
+            rules.AddRule(AmountProperty, CommonRules.MinValue, new { MinValue = 5 });
+            rules.AddRule(AmountProperty, CommonRules.MaxValue, new { MaxValue = 50 });
             rules.AddRule(PublisherProperty, CommonRules.RegexMatch, new
             {
                 Regex = TextFormatter.ReAllChinese,

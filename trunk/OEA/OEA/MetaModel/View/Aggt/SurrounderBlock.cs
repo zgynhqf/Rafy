@@ -25,38 +25,57 @@ namespace OEA.MetaModel.View
     /// </summary>
     public class SurrounderBlock : Block
     {
-        public SurrounderBlock(Type entityType, SurrounderType surrounderType)
-            : this()
+        public SurrounderBlock(Type entityType, string surrounderType)
         {
             this.EntityType = entityType;
             this.SurrounderType = surrounderType;
         }
 
-        public SurrounderBlock()
-        {
-            this.BlockType = BlockType.Detail;
-        }
+        public SurrounderBlock() { }
 
         /// <summary>
         /// 环绕类型
         /// </summary>
-        public SurrounderType SurrounderType { get; set; }
+        public string SurrounderType { get; set; }
     }
 
     /// <summary>
-    /// 默认支持的一些 环绕类型
+    /// 条件面板块
     /// </summary>
-    public enum SurrounderType
+    public class ConditionBlock : SurrounderBlock
     {
-        Navigation, Condition, Result,
-        List, Detail
+        public const string Type = "condition";
+
+        public ConditionBlock(Type entityType)
+            : base(entityType, Type)
+        {
+            this.BlockType = BlockType.Detail;
+        }
+
+        public ConditionBlock()
+        {
+            this.SurrounderType = Type;
+            this.BlockType = BlockType.Detail;
+        }
     }
 
-    public static class SurrounderTypeExtension
+    /// <summary>
+    /// 导航面板块
+    /// </summary>
+    public class NavigationBlock : SurrounderBlock
     {
-        public static string GetDescription(this SurrounderType type)
+        public const string Type = "navigation";
+
+        public NavigationBlock(Type entityType)
+            : base(entityType, Type)
         {
-            return type.ToString().ToLower();
+            this.BlockType = BlockType.Detail;
+        }
+
+        public NavigationBlock()
+        {
+            this.SurrounderType = Type;
+            this.BlockType = BlockType.Detail;
         }
     }
 }

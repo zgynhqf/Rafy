@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="FM.UI.FinanceInputLayout"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:ad="clr-namespace:AvalonDock;assembly=AvalonDock"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <ad:ResizingPanel Name="container">
+        <StackPanel ad:ResizingPanel.ResizeWidth="2*">
+            <ContentControl Name="commands"/>
+            <ContentControl Name="main"/>
+        </StackPanel>
+        <ContentControl Name="list" ad:ResizingPanel.ResizeWidth="8*"/>
+    </ad:ResizingPanel>
+</UserControl>

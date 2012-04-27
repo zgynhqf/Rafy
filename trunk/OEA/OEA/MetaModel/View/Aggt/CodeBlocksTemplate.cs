@@ -58,10 +58,9 @@ namespace OEA.MetaModel.View
             var conAttri = em.EntityType.GetSingleAttribute<ConditionQueryTypeAttribute>();
             if (conAttri != null)
             {
-                var surBlock = new SurrounderBlock
+                var surBlock = new ConditionBlock
                 {
                     EntityType = conAttri.QueryType,
-                    SurrounderType = SurrounderType.Condition
                 };
                 var surEM = CommonModel.Entities.Get(surBlock.EntityType);
                 var surAggt = this.Read(surEM, surBlock);
@@ -71,10 +70,9 @@ namespace OEA.MetaModel.View
             var naviAttri = em.EntityType.GetSingleAttribute<NavigationQueryTypeAttribute>();
             if (naviAttri != null)
             {
-                var surBlock = new SurrounderBlock
+                var surBlock = new NavigationBlock
                 {
                     EntityType = naviAttri.QueryType,
-                    SurrounderType = SurrounderType.Navigation
                 };
                 var surEM = CommonModel.Entities.Get(surBlock.EntityType);
                 var surAggt = this.Read(surEM, surBlock);

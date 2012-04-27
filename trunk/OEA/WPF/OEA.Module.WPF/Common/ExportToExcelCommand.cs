@@ -62,6 +62,8 @@ namespace OEA.Module.WPF
 
         public override void Execute(ListObjectView view)
         {
+            //据说这个也不错，有时间的时候可以尝试下：http://npoi.codeplex.com/
+
             this._columnsToProperties = new Dictionary<string, string>();
             this.DefineTable(this._columnsToProperties, view.Meta);
 

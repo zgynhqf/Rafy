@@ -70,6 +70,14 @@
       <Project>{2AECFBB6-34AC-41A6-AB8C-F52A3F68BA1A}</Project>
       <Name>OEA.Web.Meta</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\WPF\OEA.Module.WPF\OEA.Module.WPF.csproj">
+      <Project>{84399E4E-CC81-4B1F-9953-586B25B29792}</Project>
+      <Name>OEA.Module.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\WPF\OEA.Module\OEA.Module.csproj">
+      <Project>{786446BE-FB56-4281-9CA2-D5B699B0B388}</Project>
+      <Name>OEA.Module</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

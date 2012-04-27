@@ -20,9 +20,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using OEA.MetaModel;
-using OEA.MetaModel.Command;
 using OEA.MetaModel.View;
 using Common;
+using System.Data.SqlClient;
 
 namespace OEA.Module
 {
@@ -226,7 +226,7 @@ namespace OEA.Module
 
                     this.ExecuteCore(param);
 
-                    this.OnExecuted();
+                    this.OnExecuted(new CommandExecutedArgs(param));
                 }
                 catch (Exception ex)
                 {
@@ -243,7 +243,7 @@ namespace OEA.Module
 
                 this.ExecuteCore(param);
 
-                this.OnExecuted();
+                this.OnExecuted(new CommandExecutedArgs(param));
             }
         }
 
@@ -264,12 +264,12 @@ namespace OEA.Module
         /// <summary>
         /// 执行成功后的事件。
         /// </summary>
-        public event EventHandler Executed;
+        public event EventHandler<CommandExecutedArgs> Executed;
 
-        protected virtual void OnExecuted()
+        protected virtual void OnExecuted(CommandExecutedArgs e)
         {
             var handler = this.Executed;
-            if (handler != null) handler(this, EventArgs.Empty);
+            if (handler != null) handler(this, e);
         }
 
         /// <summary>

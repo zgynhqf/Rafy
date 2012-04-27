@@ -28,8 +28,6 @@ namespace OEA.Module.WPF.Editors
     /// </summary>
     public abstract class ReferencePropertyEditor : WPFPropertyEditor
     {
-        private const string MULTI_SELECTION_SPLITTER = ";";
-
         #region 事件
 
         /// <summary>
@@ -117,7 +115,7 @@ namespace OEA.Module.WPF.Editors
                     if (result.Length == 0)
                         result += this.GetSelectedValue(item);
                     else
-                        result += MULTI_SELECTION_SPLITTER + this.GetSelectedValue(item);
+                        result += this.Meta.ReferenceViewInfo.SplitterIfMulti + this.GetSelectedValue(item);
                 }
 
                 //赋值给this.PropertyValue

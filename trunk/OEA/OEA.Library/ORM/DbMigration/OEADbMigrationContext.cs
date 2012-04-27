@@ -43,12 +43,7 @@ namespace OEA.Library.ORM.DbMigration
 
         public OEADbMigrationContext AutoMigrate()
         {
-            //如果这个配置为 true，则执行自动升级
-            var enabled = ConfigurationHelper.GetAppSettingOrDefault(
-                "DatabaseAutoMigrationEnabled", OEAEnvironment.IsDebuggingEnabled
-                );
-
-            if (enabled)
+            if (this.IsEnabled())
             {
                 var classMeta = this.ClassMetaReader.Read();
 
@@ -60,6 +55,14 @@ namespace OEA.Library.ORM.DbMigration
             }
 
             return this;
+        }
+
+        public bool IsEnabled()
+        {
+            //如果这个配置为 true，则执行自动升级
+            return ConfigurationHelper.GetAppSettingOrDefault(
+                "DatabaseAutoMigrationEnabled", OEAEnvironment.IsDebuggingEnabled
+                );
         }
     }
 }

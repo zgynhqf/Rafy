@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OEA;
-using OEA.Library.ORM.DbMigration;
 using OEA.MetaModel.View;
 using OEA.MetaModel;
 using DbMigration;
@@ -100,19 +99,7 @@ namespace JXC
         {
             app.DbMigratingOperations += (o, e) =>
             {
-                using (var c = new OEADbMigrationContext(JXCEntity.ConnectionString))
-                {
-                    //c.DeleteDatabase();
-                    c.AutoMigrate();
-
-                    //其它一些可用的API
-                    //c.ClassMetaReader.IgnoreTables.Add("ReportObjectMetaData");
-                    //c.RollbackToHistory(DateTime.Parse("2008-12-31 23:59:58.700"), RollbackAction.DeleteHistory);
-                    //c.DeleteDatabase();
-                    //c.ResetHistories();
-                    //c.RollbackAll();
-                    //c.JumpToHistory(DateTime.Parse("2012-01-07 21:27:00.000"));
-                };
+                MigrationWithProgressBar.Do(JXCEntity.ConnectionString);
             };
         }
 

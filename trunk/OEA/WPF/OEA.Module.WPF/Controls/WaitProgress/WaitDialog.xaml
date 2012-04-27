@@ -19,11 +19,10 @@
             </LinearGradientBrush>
         </Border.Background>
         <Grid>
-            <!--IsIndeterminate="True"-->
             <TextBlock x:Name="txtTitle" VerticalAlignment="Top" Text="操作执行中，请等待..." FontSize="17" TextAlignment="Center" Margin="0,30,0,0" >
-				<TextBlock.Effect>
-					<DropShadowEffect BlurRadius="15" ShadowDepth="10" Opacity="0.7"/>
-				</TextBlock.Effect></TextBlock>
+                <TextBlock.Effect>
+                    <DropShadowEffect BlurRadius="15" ShadowDepth="10" Opacity="0.7"/>
+                </TextBlock.Effect></TextBlock>
             <ProgressBar Margin="8,75,8,0" x:Name="waitBar" VerticalAlignment="Top" Height="25" Value="0" >
                 <ProgressBar.Effect>
                     <DropShadowEffect BlurRadius="15" ShadowDepth="10" Opacity="0.7"/>

@@ -727,11 +727,6 @@ namespace OEA
             this._relations.Add(relation);
         }
 
-        public ObjectView TryFindRelation(SurrounderType relationType)
-        {
-            return this.TryFindRelation(relationType.GetDescription());
-        }
-
         public ObjectView TryFindRelation(string relationType)
         {
             if (this._relations.Count > 0)

@@ -56,27 +56,17 @@ namespace OEA.Module.WPF
 
         public ControlResult Navigation
         {
-            get { return _regions.TryGetControl(SurrounderType.Navigation.GetDescription()); }
+            get { return _regions.TryGetControl(NavigationBlock.Type); }
         }
 
         public ControlResult Condition
         {
-            get { return _regions.TryGetControl(SurrounderType.Condition.GetDescription()); }
+            get { return _regions.TryGetControl(ConditionBlock.Type); }
         }
 
         public ControlResult Result
         {
-            get { return _regions.TryGetControl(SurrounderType.Result.GetDescription()); }
-        }
-
-        public ControlResult List
-        {
-            get { return _regions.TryGetControl(SurrounderType.List.GetDescription()); }
-        }
-
-        public ControlResult Detail
-        {
-            get { return _regions.TryGetControl(SurrounderType.Detail.GetDescription()); }
+            get { return _regions.TryGetControl(QueryObjectView.ResultSurrounderType); }
         }
 
         public IList<Region> Children
@@ -85,6 +75,17 @@ namespace OEA.Module.WPF
         }
 
         #endregion
+
+        /// <summary>
+        /// 尝试使用名字查找控件。
+        /// 未找到，则返回null。
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public ControlResult FindControl(string name)
+        {
+            return this._regions.TryGetControl(name);
+        }
 
         /// <summary>
         /// 外部可以使用这个辅助方法来实现子页签的摆放

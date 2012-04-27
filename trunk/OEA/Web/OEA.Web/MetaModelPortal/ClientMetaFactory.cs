@@ -65,7 +65,7 @@ namespace OEA.Web.ClientMetaModel
                 var surBlock = surAggt.MainBlock as SurrounderBlock;
                 var surroundMeta = new SurrounderMeta
                 {
-                    surrounderType = surBlock.SurrounderType.GetDescription()
+                    surrounderType = surBlock.SurrounderType
                 };
                 ConvertToAggtMeta(surAggt, surroundMeta);
                 meta.surrounders.Add(surroundMeta);

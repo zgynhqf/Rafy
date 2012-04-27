@@ -43,6 +43,13 @@ namespace OEA.Module.WPF
             };
 
             this.LogSystem(app);
+
+            //如果只是在服务端，则在这里升级数据库。
+            //否则，如果是单机版，就在 OEA.RBAC.WPF 中升级，以便弹出进度条。
+            app.DbMigratingOperations += (o, e) =>
+            {
+                MigrationWithProgressBar.Do(ConnectionStringNames.OEAPlugins);
+            };
         }
 
         #region 记录日志
@@ -53,7 +60,7 @@ namespace OEA.Module.WPF
 
             this.LogLogin(app);
 
-            this.LogCommandException(app);
+            this.LogCommand(app);
         }
 
         private void LogModuleSelected()
@@ -98,30 +105,28 @@ namespace OEA.Module.WPF
 
         #region 记录命令日志
 
-        private void LogCommandException(IClientApp app)
+        private void LogCommand(IClientApp app)
         {
             if (ConfigurationHelper.GetAppSettingOrDefault("LogCommandException", true))
             {
                 CommandRepository.CommandCreated += (o, e) =>
                 {
                     var cmd = e.Instance;
-                    var cmdInfo = cmd.CommandInfo;
-                    cmd.ExecuteFailed += (oo, ee) =>
+
+                    cmd.Executed += (sender, ee) =>
                     {
                         var view = ee.Parameter as ObjectView;
                         if (view == null) return;
 
-                        LogCommandFailed(cmdInfo, view, ee.Exception);
+                        LogCommandSuccess((sender as ClientCommand).CommandInfo, view);
+                    };
 
-                        var sqlex = ee.Exception.GetBaseException() as SqlException;
-                        if (sqlex != null)
-                        {
-                            var sqlerr = SqlErrorInfo.GetSqlError(sqlex.Number);
-                            if (sqlerr == null) return;
+                    cmd.ExecuteFailed += (sender, ee) =>
+                    {
+                        var view = ee.Parameter as ObjectView;
+                        if (view == null) return;
 
-                            App.MessageBox.Show(sqlerr.ErrorMessage);
-                            ee.Cancel = true;
-                        }
+                        LogCommandFailed((sender as ClientCommand).CommandInfo, view, ee.Exception);
                     };
                 };
             }

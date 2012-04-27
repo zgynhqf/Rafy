@@ -22,10 +22,7 @@
             <ContentControl>
                 <ad:ResizingPanel x:Name="container">
                     <ContentControl x:Name="main"/>
-                    <DockPanel x:Name="resultChildren">
-                        <ContentControl x:Name="result" DockPanel.Dock="Top"/>
-                        <TabControl x:Name="childrenTab"/>
-                    </DockPanel>
+                    <TabControl x:Name="childrenTab"/>
                 </ad:ResizingPanel>
             </ContentControl>
         </ad:ResizingPanel>

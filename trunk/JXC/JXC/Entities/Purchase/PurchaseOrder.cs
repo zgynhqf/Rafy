@@ -148,7 +148,7 @@ namespace JXC
             base.AddValidations();
 
             var rules = this.ValidationRules;
-            rules.AddRule(CodeProperty, CommonRules.StringRequired);
+            rules.AddRule(CodeProperty, CommonRules.Required);
             rules.AddRule((e, args) =>
             {
                 var po = e as PurchaseOrder;

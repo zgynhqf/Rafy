@@ -24,8 +24,6 @@ namespace OEA
     /// </summary>
     public class RelationView
     {
-        public RelationView(SurrounderType surrounderType, ObjectView view) : this(surrounderType.GetDescription(), view) { }
-
         public RelationView(string surrounderType, ObjectView view)
         {
             if (string.IsNullOrWhiteSpace(surrounderType)) throw new ArgumentNullException("surrounderType");

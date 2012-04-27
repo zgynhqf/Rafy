@@ -19,10 +19,8 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-
 using OEA.Editors;
 using System.Diagnostics;
-
 using OEA.MetaModel;
 using OEA.MetaModel.View;
 using OEA.Library;

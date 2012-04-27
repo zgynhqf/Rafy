@@ -43,24 +43,17 @@ namespace OEA.Library.Validation
             else
             {
                 var value = target.GetProperty(property);
-                isNull = value == null;
+                if (property.PropertyType == typeof(string))
+                {
+                    isNull = string.IsNullOrEmpty(value as string);
+                }
+                else
+                {
+                    isNull = value == null;
+                }
             }
 
             if (isNull)
-            {
-                e.BrokenDescription = string.Format("{0} 并没有填写。", e.GetPropertyDisplay());
-            }
-        }
-
-        /// <summary>
-        /// 字符串不为空。
-        /// </summary>
-        /// <param name="target"></param>
-        /// <param name="e"></param>
-        public static void StringRequired(Entity target, RuleArgs e)
-        {
-            var value = target.GetProperty(e.Property) as string;
-            if (string.IsNullOrEmpty(value))
             {
                 e.BrokenDescription = string.Format("{0} 并没有填写。", e.GetPropertyDisplay());
             }
@@ -106,14 +99,14 @@ namespace OEA.Library.Validation
         /// 最大的数据限制规则。
         /// 
         /// 注意，此验证需要参数：
-        /// int MaxValue
+        /// double MaxValue
         /// </summary>
         /// <param name="target"></param>
         /// <param name="e"></param>
-        public static void IntegerMaxValue(Entity target, RuleArgs e)
+        public static void MaxValue(Entity target, RuleArgs e)
         {
-            var max = e.TryGetCustomParams<int>("MaxValue");
-            var value = Convert.ToInt32(target.GetProperty(e.Property));
+            var max = e.TryGetCustomParams<double>("MaxValue");
+            var value = Convert.ToDouble(target.GetProperty(e.Property));
 
             if (value > max)
             {
@@ -125,18 +118,33 @@ namespace OEA.Library.Validation
         /// 最小的数据限制规则。
         /// 
         /// 注意，此验证需要参数：
-        /// int MinValue
+        /// double MinValue
         /// </summary>
         /// <param name="target"></param>
         /// <param name="e"></param>
-        public static void IntegerMinValue(Entity target, RuleArgs e)
+        public static void MinValue(Entity target, RuleArgs e)
         {
-            var min = e.TryGetCustomParams<int>("MinValue");
-            var value = Convert.ToInt32(target.GetProperty(e.Property));
+            var min = e.TryGetCustomParams<double>("MinValue");
+            var value = Convert.ToDouble(target.GetProperty(e.Property));
 
             if (value < min)
             {
                 e.BrokenDescription = string.Format("{0} 不能低于 {1}。", e.GetPropertyDisplay(), min);
+            }
+        }
+
+        /// <summary>
+        /// 正数限制规则。
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="e"></param>
+        public static void Positive(Entity target, RuleArgs e)
+        {
+            var value = Convert.ToDouble(target.GetProperty(e.Property));
+
+            if (value <= 0)
+            {
+                e.BrokenDescription = string.Format("{0} 需要是正数。", e.GetPropertyDisplay());
             }
         }
 

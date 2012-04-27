@@ -204,8 +204,8 @@ namespace DbMigration
 
             if (this.SupportHistory) { Must(this.MigrateToHistory(DateTime.MaxValue)); }
 
-            var pendings = this.GetManualPendings();
-            var schemaPending = pendings.Where(m => m.Type == ManualMigrationType.Schema).ToList();
+            var manualPendings = this.GetManualPendings();
+            var schemaPending = manualPendings.Where(m => m.Type == ManualMigrationType.Schema).ToList();
 
             var updating = this.DatabaseExists();
             if (updating)
@@ -216,10 +216,10 @@ namespace DbMigration
             }
             else
             {
-                if (pendings.Count > 0)
+                if (manualPendings.Count > 0)
                 {
                     //此时，自动升级的时间都应该小于所有手工升级
-                    Must(this.AutoMigrate(destination, pendings[0].TimeId));
+                    Must(this.AutoMigrate(destination, manualPendings[0].TimeId));
 
                     if (schemaPending.Count > 0) Must(this.MigrateUpBatch(schemaPending));
                 }
@@ -229,7 +229,7 @@ namespace DbMigration
                 }
             }
 
-            var dataPending = pendings.Where(m => m.Type == ManualMigrationType.Data).ToList();
+            var dataPending = manualPendings.Where(m => m.Type == ManualMigrationType.Data).ToList();
             if (dataPending.Count > 0)
             {
                 /*********************** 代码块解释 *********************************
@@ -613,6 +613,7 @@ namespace DbMigration
             Result res = true;
 
             //对于每一个数据库操作，进行升级操作
+            int i = 0, count = migrations.Count();
             foreach (var migration in migrations)
             {
                 this.MigrateUp(migration);
@@ -644,6 +645,9 @@ namespace DbMigration
                     this.MigrateDown(migration);
                     break;
                 }
+
+                i++;
+                this.OnItemMigrated(new MigratedEventArgs(i, count));
             }
 
             return res;
@@ -762,6 +766,17 @@ namespace DbMigration
             if (this._dba != null) { this._dba.Dispose(); }
         }
 
+        /// <summary>
+        /// 每一个项成功升级后的通知事件。
+        /// </summary>
+        public event EventHandler<MigratedEventArgs> ItemMigrated;
+
+        protected virtual void OnItemMigrated(MigratedEventArgs e)
+        {
+            var handler = this.ItemMigrated;
+            if (handler != null) handler(this, e);
+        }
+
         #endregion
 
         #region Helper
@@ -774,6 +789,18 @@ namespace DbMigration
         }
 
         #endregion
+    }
+
+    public class MigratedEventArgs : EventArgs
+    {
+        public MigratedEventArgs(int index, int totalCount)
+        {
+            this.Index = index;
+            this.TotalCount = totalCount;
+        }
+
+        public int Index { get; private set; }
+        public int TotalCount { get; private set; }
     }
 
     /// <summary>

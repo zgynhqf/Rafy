@@ -101,7 +101,7 @@ namespace hxy.Common.Data
         {
             //查找连接字符串时，根据用户的 LocalSqlServer 来查找。
             var local = ConfigurationManager.ConnectionStrings["LocalSqlServer"];
-            if (local != null && local.ProviderName == "System.Data.SqlClient")
+            if (local != null && local.ProviderName == Provider_SqlClient)
             {
                 var builder = new SqlConnectionStringBuilder(local.ConnectionString);
 
@@ -124,9 +124,15 @@ namespace hxy.Common.Data
 
             return new DbSetting
             {
-                ConnectionString = string.Format(@"Data Source=.\SQLExpress;Initial Catalog={0};Integrated Security=True", dbSetting),
-                ProviderName = "System.Data.SqlClient"
+                ConnectionString = string.Format(@"Data Source={0}.sdf", dbSetting),
+                ProviderName = Provider_SqlCe
             };
+
+            //return new DbSetting
+            //{
+            //    ConnectionString = string.Format(@"Data Source=.\SQLExpress;Initial Catalog={0};Integrated Security=True", dbSetting),
+            //    ProviderName = "System.Data.SqlClient"
+            //};
         }
     }
 }

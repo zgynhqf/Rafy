@@ -41,7 +41,7 @@ namespace OEA.MetaModel.View
 
             var blocks = this.DefineBlocks();
 
-            this.OnBlocksDefined(new BlocksDefinedEventArgs(blocks));
+            this.OnBlocksDefined(blocks);
 
             return blocks;
         }
@@ -57,10 +57,10 @@ namespace OEA.MetaModel.View
         /// </summary>
         public event EventHandler<BlocksDefinedEventArgs> BlocksDefined;
 
-        protected virtual void OnBlocksDefined(BlocksDefinedEventArgs e)
+        protected virtual void OnBlocksDefined(AggtBlocks blocks)
         {
             var handler = this.BlocksDefined;
-            if (handler != null) handler(this, e);
+            if (handler != null) handler(this, new BlocksDefinedEventArgs(blocks));
         }
 
         /// <summary>

@@ -43,7 +43,7 @@ namespace OEA.Module.WPF.Layout
             this.TryArrangeCommandsContainer(components.CommandsContainer);
             this.TryArrangeNavigation(components.Navigation);
             this.TryArrangeCondition(components.Condition);
-            this.TryArrangeDetail(components.Detail);
+            this.TryArrangeDetail(components.FindControl("detail"));
             this.TryArrangeChildren(components.Children);
             this.OnArrangedCore();
         }

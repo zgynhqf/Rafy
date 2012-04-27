@@ -39,13 +39,14 @@ namespace OEA.Module.WPF
         {
             get
             {
-                var res = SurrounderType.Result.GetDescription();
                 foreach (var r in this.Relations)
                 {
-                    if (r.SurrounderType == res) yield return r.View;
+                    if (r.SurrounderType == ResultSurrounderType) yield return r.View;
                 }
             }
         }
+
+        public const string ResultSurrounderType = "result";
 
         public new Criteria Current
         {
