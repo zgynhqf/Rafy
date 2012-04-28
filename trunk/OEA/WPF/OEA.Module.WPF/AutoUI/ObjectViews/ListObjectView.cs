@@ -151,7 +151,7 @@ namespace OEA.Module.WPF
         {
             get
             {
-                return this.TryFindRelation(ConditionBlock.Type) as ConditionQueryObjectView;
+                return this.Relations.Find(ConditionBlock.Type) as ConditionQueryObjectView;
             }
         }
 
@@ -163,7 +163,7 @@ namespace OEA.Module.WPF
         {
             get
             {
-                return this.TryFindRelation(NavigationBlock.Type) as NavigationQueryObjectView;
+                return this.Relations.Find(NavigationBlock.Type) as NavigationQueryObjectView;
             }
         }
 

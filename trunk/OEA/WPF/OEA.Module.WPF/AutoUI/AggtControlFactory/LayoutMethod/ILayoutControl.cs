@@ -28,14 +28,14 @@ namespace OEA.Module.WPF
     /// 传统布局控件
     /// 
     /// 布局是一个 Control，同时，在它里面可以安排以下内容：
-    /// Main, Toolbar, Navigate, Condition, Result, List, Detail, Children
+    /// Main, Toolbar, Navigate, Condition, Result, Children 以及其它自定义块。
     /// </summary>
-    public interface ITraditionalLayoutControl
+    public interface ILayoutControl
     {
         /// <summary>
-        /// 摆放这些传统组件
+        /// 摆放这些组件
         /// </summary>
         /// <param name="components"></param>
-        void Arrange(TraditionalComponents components);
+        void Arrange(UIComponents components);
     }
 }

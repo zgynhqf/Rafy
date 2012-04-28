@@ -18,7 +18,7 @@ namespace FM.UI
         {
             AggtBlocks blocks = new AggtBlocks
             {
-                Layout = new LayoutMeta(typeof(TraditionalLayoutMethod<FinanceInputLayout>)),
+                Layout = new LayoutMeta(typeof(FinanceInputLayout)),
                 MainBlock = new Block(this.EntityType)
                 {
                     BlockType = BlockType.Detail,
@@ -73,7 +73,7 @@ namespace FM.UI
                 }
             };
 
-            var listView = main.TryFindRelation("list") as ListObjectView;
+            var listView = main.Relations["list"] as ListObjectView;
             listView.DataLoader.LoadDataAsync();
             listView.IsReadOnly = true;
 

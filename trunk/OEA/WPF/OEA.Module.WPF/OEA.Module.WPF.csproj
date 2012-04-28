@@ -182,8 +182,8 @@
     <Compile Include="AutoUI\UITemplate.cs" />
     <Compile Include="Controls\WaitProgress\MigrationWithProgressBar.cs" />
     <Compile Include="PrimitiveUI\EntityModule.cs" />
-    <Compile Include="PrimitiveUI\Layouts\ITraditionalLayout.cs" />
-    <Compile Include="PrimitiveUI\Layouts\TraditionalComponents.cs" />
+    <Compile Include="AutoUI\AggtControlFactory\LayoutMethod\ILayoutControl.cs" />
+    <Compile Include="AutoUI\AggtControlFactory\LayoutMethod\UIComponents.cs" />
     <Compile Include="Shell\IEntityWindow.cs" />
     <Compile Include="Shell\IWorkspace.cs" />
     <Compile Include="Shell\WorkspaceWindowActivedEventArgs.cs" />
@@ -344,7 +344,7 @@
     <Compile Include="PrimitiveUI\Layouts\DropDownListDetailLayout.xaml.cs">
       <DependentUpon>DropDownListDetailLayout.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PrimitiveUI\Layouts\TraditionalLayoutMethod.cs" />
+    <Compile Include="AutoUI\AggtControlFactory\LayoutMethod\ControlLayoutMethod.cs" />
     <Compile Include="PrimitiveUI\Layouts\TraditionalRegions.cs" />
     <Compile Include="PrimitiveUI\ResizingPanelExt.cs" />
     <Compile Include="Common\PropertyChangeNotifier.cs" />

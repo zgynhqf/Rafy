@@ -72,6 +72,9 @@ namespace OEA.Module.WPF
 
                 if (surrounderType == ConditionBlock.Type)
                 {
+                    //条件面板需要额外添加一个查询按钮。
+                    block.ViewMeta.UseWPFCommands(WPFCommandNames.FireQuery);
+
                     return this.CreateConditionQueryView(block.ViewMeta);
                 }
             }

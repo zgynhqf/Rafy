@@ -711,34 +711,12 @@ namespace OEA
 
         private RelationViewCollection _relations;
 
-        public IEnumerable<RelationView> Relations
+        /// <summary>
+        /// 该 View 的所有关系
+        /// </summary>
+        public RelationViewCollection Relations
         {
             get { return this._relations; }
-        }
-
-        public void SetRelation(RelationView relation)
-        {
-            var exist = this._relations.FirstOrDefault(r => r.SurrounderType == relation.SurrounderType);
-            if (exist != null)
-            {
-                this._relations.Remove(exist);
-            }
-
-            this._relations.Add(relation);
-        }
-
-        public ObjectView TryFindRelation(string relationType)
-        {
-            if (this._relations.Count > 0)
-            {
-                var surrounder = this._relations.FirstOrDefault(s => s.SurrounderType == relationType);
-                if (surrounder != null)
-                {
-                    return surrounder.View;
-                }
-            }
-
-            return null;
         }
 
         #endregion

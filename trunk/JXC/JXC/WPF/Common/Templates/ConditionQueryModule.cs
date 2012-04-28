@@ -41,7 +41,7 @@ namespace JXC.WPF.Templates
             AggtBlocks result = new AggtBlocks
             {
                 MainBlock = new Block(entityType),
-                Layout = new LayoutMeta(typeof(TraditionalLayoutMethod<ConditionQueryLayout>))
+                Layout = new LayoutMeta(typeof(ConditionQueryLayout))
             };
 
             var conAttri = entityType.GetSingleAttribute<ConditionQueryTypeAttribute>();
@@ -53,7 +53,7 @@ namespace JXC.WPF.Templates
                     {
                         EntityType = conAttri.QueryType,
                     },
-                    Layout = new LayoutMeta(typeof(TraditionalLayoutMethod<HorizentalConditionLayout>))
+                    Layout = new LayoutMeta(typeof(HorizentalConditionLayout))
                 });
             }
 

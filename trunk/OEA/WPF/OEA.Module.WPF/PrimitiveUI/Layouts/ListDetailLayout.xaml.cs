@@ -20,16 +20,16 @@ using OEA.MetaModel.View;
 
 namespace OEA.Module.WPF.Layout
 {
-    public partial class ListDetailLayout : UserControl, ITraditionalLayoutControl
+    public partial class ListDetailLayout : UserControl, ILayoutControl
     {
         public ListDetailLayout()
         {
             InitializeComponent();
         }
 
-        public void Arrange(TraditionalComponents components)
+        public void Arrange(UIComponents components)
         {
-            ResizingPanelSlippingAnimation.Initialize(main, childrenTab, components.AggtBlocks.Layout.ParentChildProportion);
+            ResizingPanelSlippingAnimation.Initialize(main, childrenTab, components.LayoutMeta.ParentChildProportion);
 
             this.TryArrangeMain(components.Main);
             this.TryArrangeCommandsContainer(components.CommandsContainer);
@@ -90,7 +90,7 @@ namespace OEA.Module.WPF.Layout
             }
         }
 
-        private void OnArrangedCore(TraditionalComponents components)
+        private void OnArrangedCore(UIComponents components)
         {
             if (queryPanel.Items.Count == 0)
             {
@@ -99,7 +99,7 @@ namespace OEA.Module.WPF.Layout
 
             if (childrenTab.Parent != null)
             {
-                container.Orientation = components.AggtBlocks.Layout.IsLayoutChildrenHorizonal ?
+                container.Orientation = components.LayoutMeta.IsLayoutChildrenHorizonal ?
                     Orientation.Horizontal : Orientation.Vertical;
             }
         }

@@ -24,23 +24,27 @@ using OEA.MetaModel.View;
 namespace OEA.Module.WPF
 {
     /// <summary>
-    /// 传统的布局方法
+    /// 使用用户自定义控件来布局的布局方法。
     /// 90% 以上的场景都可以通过传统布局实现
     /// </summary>
-    /// <typeparam name="TTraditionalLayoutControl">
-    /// 传统布局控件（用户自定义控件），注意，此控件需要继承自 FrameworkElement
-    /// </typeparam>
-    public class TraditionalLayoutMethod<TTraditionalLayoutControl> : LayoutMethod
-        where TTraditionalLayoutControl : ITraditionalLayoutControl, new()
+    internal class ControlLayoutMethod : LayoutMethod
     {
+        public ControlLayoutMethod(ILayoutControl layoutControl)
+        {
+            this.LayoutControl = layoutControl;
+        }
+
+        /// <summary>
+        /// 传统布局控件（用户自定义控件），注意，此控件需要继承自 FrameworkElement
+        /// </summary>
+        public ILayoutControl LayoutControl { get; private set; }
+
         protected override FrameworkElement ArrageCore(RegionContainer regions)
         {
-            var container = new TTraditionalLayoutControl();
+            var components = new UIComponents(regions);
+            this.LayoutControl.Arrange(components);
 
-            var components = new TraditionalComponents(regions);
-            container.Arrange(components);
-
-            return container.CastTo<FrameworkElement>();
+            return this.LayoutControl.CastTo<FrameworkElement>();
         }
     }
 }

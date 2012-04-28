@@ -33,7 +33,7 @@ namespace JXC.WPF.Templates
             blocks.MainBlock.BlockType = BlockType.Detail;
             blocks.MainBlock.ViewMeta.ClearWPFCommands();
 
-            blocks.Layout = new LayoutMeta(typeof(TraditionalLayoutMethod<BillLayout>));
+            blocks.Layout = new LayoutMeta(typeof(BillLayout));
 
             return blocks;
         }

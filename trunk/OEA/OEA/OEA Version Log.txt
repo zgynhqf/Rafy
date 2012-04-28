@@ -8,6 +8,19 @@
  * 
 *******************************************************/
 
+2.11.613.0
+    重构、★修改接口
+        * 重构 TraditionalComponents、RegionContainer、ITraditionalLayoutControl，使其更易用。
+
+2.11.612.0
+    示例
+        * FM 添加单据查询模块。
+
+2.11.611.0
+    重构
+        * RelationViewCollection 支持添加同名关系视图。
+        * AggtControlGenerator 中主块可以是查询面板。
+
 2.11.610.0
     示例
         * FM 把手动输入的 Tag、Person 添加到数据库中。

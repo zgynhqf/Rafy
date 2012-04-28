@@ -13,11 +13,11 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using OEA.Module.WPF;
 
-namespace FM.UI
+namespace JXC.WPF
 {
-    public partial class FinanceInputLayout : UserControl, ILayoutControl
+    public partial class BillQueryLayout : UserControl, ILayoutControl
     {
-        public FinanceInputLayout()
+        public BillQueryLayout()
         {
             InitializeComponent();
         }
@@ -26,7 +26,15 @@ namespace FM.UI
         {
             commands.Content = components.CommandsContainer.Control;
             main.Content = components.Main.Control;
-            list.Content = components.FindControl("list").Control;
+            var result = components.FindControls(QueryObjectView.ResultSurrounderType);
+            foreach (var ui in result)
+            {
+                queryResult.Items.Add(new TabItem
+                {
+                    Header = ui.MainView.Meta.Label,
+                    Content = ui.Control
+                });
+            }
         }
     }
 }

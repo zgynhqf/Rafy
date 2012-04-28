@@ -21,60 +21,33 @@ using Itenso.Windows.Input;
 using OEA.WPF.Command;
 using System.Windows.Automation;
 using OEA.Module.WPF.Controls;
+using System.Collections;
 
 namespace OEA.Module.WPF
 {
     /// <summary>
-    /// 尝试布局以下内容：
-    /// Main, Toolbar, Navigate, Condition, Result, List, Detail, Children
+    /// 封装 RegionContainer 以提供更易用的接口。
+    /// 
+    /// 默认提供了：
+    /// * 传统组件的查找。
+    /// * 使用 TabControl 摆放子区域的逻辑。
     /// </summary>
-    public class TraditionalComponents
+    public class UIComponents : IEnumerable<Region>
     {
         private RegionContainer _regions;
 
-        public TraditionalComponents(RegionContainer regions)
+        internal UIComponents(RegionContainer regions)
         {
             this._regions = regions;
         }
 
-        public AggtBlocks AggtBlocks
+        /// <summary>
+        /// 描述这些组件如何布局的元数据
+        /// </summary>
+        public LayoutMeta LayoutMeta
         {
-            get { return this._regions.BlocksInfo; }
+            get { return this._regions.BlocksInfo.Layout; }
         }
-
-        #region 传统组件
-
-        public ControlResult Main
-        {
-            get { return _regions.TryGetControl(TraditionalRegions.Main); }
-        }
-
-        public ControlResult CommandsContainer
-        {
-            get { return _regions.TryGetControl(TraditionalRegions.CommandsContainer); }
-        }
-
-        public ControlResult Navigation
-        {
-            get { return _regions.TryGetControl(NavigationBlock.Type); }
-        }
-
-        public ControlResult Condition
-        {
-            get { return _regions.TryGetControl(ConditionBlock.Type); }
-        }
-
-        public ControlResult Result
-        {
-            get { return _regions.TryGetControl(QueryObjectView.ResultSurrounderType); }
-        }
-
-        public IList<Region> Children
-        {
-            get { return _regions.GetChildrenRegions().ToList(); }
-        }
-
-        #endregion
 
         /// <summary>
         /// 尝试使用名字查找控件。
@@ -84,8 +57,54 @@ namespace OEA.Module.WPF
         /// <returns></returns>
         public ControlResult FindControl(string name)
         {
-            return this._regions.TryGetControl(name);
+            return this._regions.FindControl(name);
         }
+
+        /// <summary>
+        /// 尝试使用名字查找一组控件。
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public IEnumerable<ControlResult> FindControls(string name)
+        {
+            return this.Where(r => r.Name == name).Select(r => r.ControlResult);
+        }
+
+        #region 传统组件
+
+        public ControlResult Main
+        {
+            get { return this.FindControl(TraditionalRegions.Main); }
+        }
+
+        public ControlResult CommandsContainer
+        {
+            get { return this.FindControl(TraditionalRegions.CommandsContainer); }
+        }
+
+        public ControlResult Navigation
+        {
+            get { return this.FindControl(NavigationBlock.Type); }
+        }
+
+        public ControlResult Condition
+        {
+            get { return this.FindControl(ConditionBlock.Type); }
+        }
+
+        public ControlResult Result
+        {
+            get { return this.FindControl(QueryObjectView.ResultSurrounderType); }
+        }
+
+        public IList<Region> Children
+        {
+            get { return this._regions.GetChildrenRegions().ToList(); }
+        }
+
+        #endregion
+
+        #region ArrangeChildrenByTabControl
 
         /// <summary>
         /// 外部可以使用这个辅助方法来实现子页签的摆放
@@ -140,5 +159,21 @@ namespace OEA.Module.WPF
 
             return tabItem;
         }
+
+        #endregion
+
+        #region IEnumerable Members
+
+        IEnumerator<Region> IEnumerable<Region>.GetEnumerator()
+        {
+            return this._regions.Regions.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this._regions.Regions.GetEnumerator();
+        }
+
+        #endregion
     }
 }

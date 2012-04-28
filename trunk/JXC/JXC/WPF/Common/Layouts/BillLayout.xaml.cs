@@ -18,14 +18,14 @@ namespace JXC.WPF
     /// <summary>
     /// Interaction logic for BillLayout.xaml
     /// </summary>
-    public partial class BillLayout : UserControl, ITraditionalLayoutControl
+    public partial class BillLayout : UserControl, ILayoutControl
     {
         public BillLayout()
         {
             InitializeComponent();
         }
 
-        public void Arrange(TraditionalComponents components)
+        public void Arrange(UIComponents components)
         {
             var control = components.Main;
             if (control != null) { content.Content = control.Control; }
