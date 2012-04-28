@@ -78,10 +78,7 @@ namespace JXC
                                 new ModuleMeta{ Label = "库存调拔", EntityType = typeof(StorageMove), TemplateType= typeof(StorageMoveModule)},
                             }
                         },
-                        new ModuleMeta
-                        {
-                            Label = "销售管理"
-                        },
+                        new ModuleMeta{ Label = "单据查询", EntityType = typeof(TimeSpanCriteria), TemplateType= typeof(BillQueryModule)},
                         new ModuleMeta
                         {
                             Label = "系统管理",

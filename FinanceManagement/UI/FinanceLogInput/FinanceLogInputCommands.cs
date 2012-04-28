@@ -32,7 +32,7 @@ namespace FM.Commands
 
             RF.Save(log);
 
-            var listView = view.TryFindRelation("list");
+            var listView = view.Relations["list"];
             listView.DataLoader.ReloadDataAsync();
 
             App.MessageBox.Show("添加成功。");

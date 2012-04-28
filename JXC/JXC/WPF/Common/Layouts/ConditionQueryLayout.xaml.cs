@@ -20,14 +20,14 @@ namespace JXC.WPF
     /// <summary>
     /// 使用上下布局来摆放条件面板和主体
     /// </summary>
-    public partial class ConditionQueryLayout : UserControl, ITraditionalLayoutControl
+    public partial class ConditionQueryLayout : UserControl, ILayoutControl
     {
         public ConditionQueryLayout()
         {
             InitializeComponent();
         }
 
-        public void Arrange(TraditionalComponents components)
+        public void Arrange(UIComponents components)
         {
             var control = components.Main;
             if (control != null) { content.Content = control.Control; }

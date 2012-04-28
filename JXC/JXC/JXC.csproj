@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AvalonDock, Version=1.2.2643.0, Culture=neutral, PublicKeyToken=85a1e0ada7ec13e4, processorArchitecture=MSIL">
+      <HintPath>..\..\Lib\AvalonDock.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -118,6 +121,10 @@
     <Compile Include="WPF\Purchase\Commands\PurchaseOrderItemCommands.cs" />
     <Compile Include="WPF\Purchase\OrderStorageInModule.cs" />
     <Compile Include="WPF\Purchase\PurchaseOrderModule.cs" />
+    <Compile Include="WPF\Storage\BillQueryLayout.xaml.cs">
+      <DependentUpon>BillQueryLayout.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WPF\Storage\BillQueryModule.cs" />
     <Compile Include="WPF\Storage\Commands\StorageMoveCommands.cs" />
     <Compile Include="WPF\Storage\Commands\OtherStorageInBillCommands.cs" />
     <Compile Include="WPF\Storage\Commands\OtherStorageOutBillCommands.cs" />
@@ -194,6 +201,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="WPF\BasicData\Product\ProductDetailPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WPF\Storage\BillQueryLayout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -24,7 +24,7 @@ namespace OEA.Module.WPF.Layout
     /// <summary>
     /// 下拉主列表的布局
     /// </summary>
-    public partial class DropDownListDetailLayout : UserControl, ITraditionalLayoutControl
+    public partial class DropDownListDetailLayout : UserControl, ILayoutControl
     {
         public DropDownListDetailLayout()
         {
@@ -33,7 +33,7 @@ namespace OEA.Module.WPF.Layout
 
         private ListObjectView _mainView;
 
-        public void Arrange(TraditionalComponents components)
+        public void Arrange(UIComponents components)
         {
             //使用下拉框显示主区域。
             var control = components.Main;

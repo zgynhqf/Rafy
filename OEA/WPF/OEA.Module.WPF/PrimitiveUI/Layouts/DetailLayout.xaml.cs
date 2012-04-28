@@ -14,14 +14,14 @@ using System.Windows.Shapes;
 
 namespace OEA.Module.WPF.Layout
 {
-    public partial class DetailLayout : UserControl, ITraditionalLayoutControl
+    public partial class DetailLayout : UserControl, ILayoutControl
     {
         public DetailLayout()
         {
             InitializeComponent();
         }
 
-        public void Arrange(TraditionalComponents components)
+        public void Arrange(UIComponents components)
         {
             var control = components.Main;
             if (control != null)
@@ -49,7 +49,7 @@ namespace OEA.Module.WPF.Layout
             ResizingPanelExt.SetStarGridLength(detail, 3);
             ResizingPanelExt.SetStarGridLength(childrenTab, 7);
 
-            if (components.AggtBlocks.Layout.IsLayoutChildrenHorizonal)
+            if (components.LayoutMeta.IsLayoutChildrenHorizonal)
             {
                 container.Orientation = Orientation.Horizontal;
             }

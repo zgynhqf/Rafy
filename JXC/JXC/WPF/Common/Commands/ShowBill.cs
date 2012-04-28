@@ -25,7 +25,7 @@ using OEA.Module.WPF.Controls;
 
 namespace JXC.Commands
 {
-    [Command(Label = "查看", GroupType = CommandGroupType.Edit)]
+    [Command(Label = "查看", GroupType = CommandGroupType.View)]
     public class ShowBill : ListViewCommand
     {
         public ShowBill()

@@ -30,14 +30,14 @@ namespace OEA.Module.WPF.Layout
     /// <summary>
     /// 用弹出窗口显示所有子的布局
     /// </summary>
-    public partial class ListDetailPopupChildrenLayout : UserControl, ITraditionalLayoutControl
+    public partial class ListDetailPopupChildrenLayout : UserControl, ILayoutControl
     {
         public ListDetailPopupChildrenLayout()
         {
             InitializeComponent();
         }
 
-        public void Arrange(TraditionalComponents components)
+        public void Arrange(UIComponents components)
         {
             this.TryArrangeMain(components.Main);
             this.TryArrangeCommandsContainer(components.CommandsContainer);

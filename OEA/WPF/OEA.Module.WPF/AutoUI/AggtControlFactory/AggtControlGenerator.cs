@@ -166,9 +166,6 @@ namespace OEA.Module.WPF
             RelationView reverseRelation = null;
             if (surrounderType == ConditionBlock.Type)
             {
-                //条件面板需要额外添加一个查询按钮。
-                surrounderBlock.ViewMeta.UseWPFCommands(WPFCommandNames.FireQuery);
-
                 reverseRelation = new RelationView(QueryObjectView.ResultSurrounderType, mainView);
             }
             else if (surrounderType == NavigationBlock.Type)
@@ -181,11 +178,11 @@ namespace OEA.Module.WPF
 
             //直接使用 surrounderType 作为关系的类型，把 surrounderView 添加到 mainView 的关系。
             var relation = new RelationView(surrounderType, surrounderView);
-            mainView.SetRelation(relation);
+            mainView.Relations.Add(relation);
 
             //相反的关系设置
-            reverseRelation = reverseRelation ?? new RelationView("owner", surrounderView);
-            surrounderView.SetRelation(reverseRelation);
+            reverseRelation = reverseRelation ?? new RelationView("owner", mainView);
+            surrounderView.Relations.Add(reverseRelation);
 
             return surrounderView;
         }
@@ -264,14 +261,20 @@ namespace OEA.Module.WPF
             if (meta.Layout.Class != null)
             {
                 var type = Type.GetType(meta.Layout.Class);
-                return Activator.CreateInstance(type).CastTo<LayoutMethod>();
+                var instance = Activator.CreateInstance(type);
+                if (instance is ILayoutControl) { return new ControlLayoutMethod(instance as ILayoutControl); }
+                if (instance is LayoutMethod) { return instance as LayoutMethod; }
+
+                throw new InvalidProgramException(string.Format(
+                    "{0} 类型不能用于布局。原因：WPF 中用于布局类型必须实现 ILayoutControl 接口或者继承自 LayoutMethod 类！",
+                    type.FullName));
             }
 
             var mainBlock = meta.MainBlock;
             var generateType = mainBlock.BlockType;
             if (generateType == BlockType.Detail)
             {
-                return new TraditionalLayoutMethod<DetailLayout>();
+                return new ControlLayoutMethod(new DetailLayout());
             }
 
             //var entityViewInfo = mainBlock.EntityViewInfo;
@@ -281,7 +284,7 @@ namespace OEA.Module.WPF
             //    return new TraditionalLayout<NaviListDetailLayoutControl>();
             //}
 
-            return new TraditionalLayoutMethod<ListDetailLayout>();
+            return new ControlLayoutMethod(new ListDetailLayout());
             //return new TraditionalLayout<ListDetailPopupChildrenLayoutControl>();
         }
 

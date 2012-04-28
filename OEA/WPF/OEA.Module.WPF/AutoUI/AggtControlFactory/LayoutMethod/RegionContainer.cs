@@ -43,10 +43,7 @@ namespace OEA
         /// </summary>
         public AggtBlocks BlocksInfo
         {
-            get
-            {
-                return this._aggt;
-            }
+            get { return this._aggt; }
         }
 
         /// <summary>
@@ -54,10 +51,7 @@ namespace OEA
         /// </summary>
         public IList<Region> Regions
         {
-            get
-            {
-                return this._regions;
-            }
+            get { return this._regions; }
         }
 
         /// <summary>
@@ -66,9 +60,9 @@ namespace OEA
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public ControlResult TryGetControl(string name)
+        public ControlResult FindControl(string name)
         {
-            var region = TryGetRegion(name);
+            var region = this.Regions.FirstOrDefault(r => r.Name == name);
 
             if (region != null) return region.ControlResult;
 
@@ -107,15 +101,6 @@ namespace OEA
         public void AddChildren(string label, ControlResult control)
         {
             this._regions.Add(new Region(TraditionalRegions.Children, label, control));
-        }
-
-        private Region TryGetRegion(string name)
-        {
-            var regions = this.Regions;
-
-            if (regions == null) throw new ArgumentNullException("regions");
-
-            return regions.FirstOrDefault(r => r.Name == name);
         }
     }
 }

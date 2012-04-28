@@ -34,14 +34,14 @@ namespace JXC.WPF
     /// <summary>
     /// 使用左右布局来摆放主体和命令框
     /// </summary>
-    public partial class HorizentalConditionLayout : UserControl, ITraditionalLayoutControl
+    public partial class HorizentalConditionLayout : UserControl, ILayoutControl
     {
         public HorizentalConditionLayout()
         {
             InitializeComponent();
         }
 
-        public void Arrange(TraditionalComponents components)
+        public void Arrange(UIComponents components)
         {
             var control = components.Main;
             if (control != null) { content.Content = control.Control; }

@@ -100,7 +100,7 @@ namespace OEA.WPF.Command
         {
             var v = LogicalTreeHelper.GetParent(child);
             if (v == null) return null;
-            if (v is ITraditionalLayoutControl) return v as FrameworkElement;
+            if (v is ILayoutControl) return v as FrameworkElement;
 
             return GetParentLayout(v);
         }

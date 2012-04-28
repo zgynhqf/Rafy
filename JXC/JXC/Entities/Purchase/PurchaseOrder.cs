@@ -216,6 +216,15 @@ namespace JXC
                 }
             });
         }
+
+        protected void QueryBy(TimeSpanCriteria criteria)
+        {
+            this.QueryDb(q =>
+            {
+                q.Constrain(PurchaseOrder.DateProperty).GreaterEqual(criteria.From)
+                    .And().Constrain(PurchaseOrder.DateProperty).LessEqual(criteria.To);
+            });
+        }
     }
 
     public class PurchaseOrderRepository : EntityRepository
