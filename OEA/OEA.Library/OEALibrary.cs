@@ -24,6 +24,7 @@ using OEA.Library.ORM.DbMigration;
 using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
 using OEA.MetaModel.View;
+using Common;
 
 namespace OEA.Library
 {
@@ -75,12 +76,31 @@ namespace OEA.Library
 
             app.DbMigratingOperations += (o, e) =>
             {
-                using (var c = new OEADbMigrationContext(ConnectionStringNames.DbMigrationHistory))
+                //如果不是单机版，只是在服务端，则在这里升级数据库。
+                //否则，如果是单机版，就在 OEA.RBAC.WPF 中升级，以便弹出进度条。
+                if (OEAEnvironment.Location != OEALocation.LocalVersion)
                 {
-                    //对于迁移日志库的构造，无法记录它本身的迁移日志
-                    c.HistoryRepository = null;
+                    var configNames = ConfigurationHelper.GetAppSettingOrDefault("OEA_Migrate_Databases");
+                    if (!string.IsNullOrEmpty(configNames))
+                    {
+                        using (var c = new OEADbMigrationContext(ConnectionStringNames.DbMigrationHistory))
+                        {
+                            //对于迁移日志库的构造，无法记录它本身的迁移日志
+                            c.HistoryRepository = null;
 
-                    c.AutoMigrate();
+                            c.AutoMigrate();
+                        }
+
+                        var configArray = configNames.Replace(ConnectionStringNames.DbMigrationHistory, string.Empty)
+                            .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                        foreach (var config in configArray)
+                        {
+                            using (var c = new OEADbMigrationContext(config))
+                            {
+                                c.AutoMigrate();
+                            }
+                        }
+                    }
                 }
             };
         }

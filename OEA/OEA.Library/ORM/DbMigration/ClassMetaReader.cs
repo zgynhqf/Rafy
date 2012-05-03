@@ -19,9 +19,10 @@ using DbMigration.Model;
 using System.Reflection;
 using OEA.MetaModel;
 using OEA.ManagedProperty;
-using OEA.ORM.sqlserver;
+using OEA.ORM.SqlServer;
 using DbMigration.SqlServer;
 using hxy.Common.Data;
+using DbMigration;
 
 namespace OEA.Library.ORM.DbMigration
 {
@@ -82,7 +83,7 @@ namespace OEA.Library.ORM.DbMigration
                         {
                             if (em.TableMeta != null)
                             {
-                                var entityDb = RF.Create(type).ConnectionStringSettingName;
+                                var entityDb = RF.Create(type).DbSetting.Name;
                                 if (entityDb == this._dbSetting.Name)
                                 {
                                     tableEntityTypes.Add(em);
@@ -198,7 +199,7 @@ namespace OEA.Library.ORM.DbMigration
 
                     var column = new Column(DbTypeHelper.ConvertFromCLRType(dataType), columnName, table)
                     {
-                        IsPrimaryKey = columnMeta.IsPK
+                        IsPrimaryKey = columnMeta.IsPKID
                     };
                     if (columnMeta.IsRequired.HasValue)
                     {
@@ -206,7 +207,9 @@ namespace OEA.Library.ORM.DbMigration
                     }
                     else
                     {
-                        column.IsRequired = !dataType.IsGenericType || dataType.GetGenericTypeDefinition() != typeof(Nullable<>);
+                        //字符串都是可空的。
+                        column.IsRequired = dataType != typeof(string) &&
+                            (!dataType.IsGenericType || dataType.GetGenericTypeDefinition() != typeof(Nullable<>));
                     }
 
                     table.Columns.Add(column);

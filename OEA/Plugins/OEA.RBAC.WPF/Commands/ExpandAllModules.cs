@@ -28,7 +28,16 @@ namespace RBAC.Command
     {
         public override void Execute(OperationSelectionView view)
         {
-            view.Control.ExpandModules();
+            if (this.Label == "展开模块")
+            {
+                view.Control.ExpandModules();
+                this.Label = "折叠模块";
+            }
+            else
+            {
+                view.Control.CollapseModules();
+                this.Label = "展开模块";
+            }
         }
     }
 }

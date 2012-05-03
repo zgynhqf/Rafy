@@ -18,38 +18,19 @@ using System.Text;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Data.Common;
+using System.Text.RegularExpressions;
 
 namespace hxy.Common.Data
 {
     /// <summary>
     /// 数据库配置
     /// </summary>
-    public class DbSetting
+    public class DbSetting : DbConnectionSchema
     {
-        public const string Provider_SqlClient = "System.Data.SqlClient";
-        public const string Provider_SqlCe = "System.Data.SqlServerCe";
-        public const string Provider_Oracle = "System.Data.OracleClient";
-        public const string Provider_Odbc = "System.Data.Odbc";
-
         /// <summary>
         /// 配置名称
         /// </summary>
         public string Name { get; private set; }
-
-        /// <summary>
-        /// 连接字符串
-        /// </summary>
-        public string ConnectionString { get; private set; }
-
-        /// <summary>
-        /// 连接的提供器名称
-        /// </summary>
-        public string ProviderName { get; private set; }
-
-        /// <summary>
-        /// 对应的数据库名称
-        /// </summary>
-        public string Database { get; private set; }
 
         /// <summary>
         /// 查找或者根据约定创建连接字符串
@@ -81,11 +62,6 @@ namespace hxy.Common.Data
                         }
 
                         setting.Name = dbSetting;
-
-                        var factory = DbProviderFactories.GetFactory(setting.ProviderName);
-                        var con = factory.CreateConnection();
-                        con.ConnectionString = setting.ConnectionString;
-                        setting.Database = con.Database;
 
                         _generatedSettings.Add(dbSetting, setting);
                     }

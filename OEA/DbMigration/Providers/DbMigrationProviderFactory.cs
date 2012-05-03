@@ -20,6 +20,7 @@ using hxy.Common.Data;
 using DbMigration.SqlServer;
 using hxy.Common.Data.Providers;
 using DbMigration.SqlServerCe;
+using DbMigration.Oracle;
 
 namespace DbMigration
 {
@@ -32,14 +33,15 @@ namespace DbMigration
             //ISqlConverter Factory
             switch (dbSetting.ProviderName)
             {
-                case "System.Data.SqlClient":
+                case DbSetting.Provider_SqlClient:
                     provider = new SqlServerMigrationProvider();
                     break;
-                case "System.Data.SqlServerCe":
+                case DbSetting.Provider_SqlCe:
                     provider = new SqlServerCeMigrationProvider();
                     break;
-                //case "System.Data.OracleClient":
-                //    return new OracleProvider();
+                case DbSetting.Provider_Oracle:
+                    provider = new OracleMigrationProvider();
+                    break;
                 //case "System.Data.Odbc":
                 //    return new ODBCProvider();
                 default:

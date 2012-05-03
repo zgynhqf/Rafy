@@ -25,8 +25,6 @@ namespace FM
         {
             InitModules(app);
 
-            AutoMigrateDb(app);
-
             InitClient(app);
         }
 
@@ -48,24 +46,16 @@ namespace FM
             };
         }
 
-        private static void AutoMigrateDb(IApp app)
-        {
-            app.DbMigratingOperations += (o, e) =>
-            {
-                MigrationWithProgressBar.Do(FMEntity.ConnectionString);
-            };
-        }
-
         private static void InitClient(IApp app)
         {
-            var clientApp = app as IClientApp;
-            if (clientApp != null)
-            {
-                clientApp.MainWindowLoaded += (o, e) =>
-                {
-                    App.Current.OpenModuleOrAlert("帐务录入");
-                };
-            }
+            //var clientApp = app as IClientApp;
+            //if (clientApp != null)
+            //{
+            //    clientApp.MainWindowLoaded += (o, e) =>
+            //    {
+            //        App.Current.OpenModuleOrAlert("帐务录入");
+            //    };
+            //}
         }
     }
 }

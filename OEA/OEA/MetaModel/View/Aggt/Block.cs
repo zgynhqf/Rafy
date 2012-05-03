@@ -140,10 +140,14 @@ namespace OEA.MetaModel.View
             }
         }
 
+        #region WPF
+
         /// <summary>
         /// 如果该块是自定义界面，则此属性表示这个这个自定义的 UI 界面所对应的 ObjectView 类型
         /// </summary>
         public string CustomViewType { get; set; }
+
+        #endregion
     }
 
     /// <summary>

@@ -8,6 +8,7 @@ using OEA.MetaModel;
 using OEA.MetaModel.View;
 using OEA.MetaModel.Audit;
 using OEA.ManagedProperty;
+using OEA.RBAC;
 
 namespace OEA.Library.Audit
 {

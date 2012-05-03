@@ -276,7 +276,7 @@ namespace OEA.MetaModel
                 item.ColumnMeta = new ColumnMeta
                 {
                     ColumnName = name,
-                    IsPK = runtimeProperty.HasMarked<PKAttribute>()
+                    IsPKID = runtimeProperty.Name == DBConvention.FieldName_Id
                 };
             }
 

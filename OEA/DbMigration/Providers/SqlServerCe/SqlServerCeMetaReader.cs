@@ -1,13 +1,13 @@
 ﻿/*******************************************************
  * 
  * 作者：胡庆访
- * 创建时间：20120102
+ * 创建时间：20120423
  * 说明：此文件只包含一个类，具体内容见类型注释。
  * 运行环境：.NET 4.0
  * 版本号：1.0.0
  * 
  * 历史记录：
- * 创建文件 胡庆访 20120102
+ * 创建文件 胡庆访 20120423
  * 
 *******************************************************/
 
@@ -77,7 +77,6 @@ ON T1.CONSTRAINT_NAME = T2.CONSTRAINT_NAME
                         COLUMN_NAME = constraintReader["COLUMN_NAME"].ToString(),
                         FK_TABLE_NAME = constraintReader["FK_TABLE_NAME"].ToString(),
                         FK_COLUMN_NAME = constraintReader["FK_COLUMN_NAME"].ToString(),
-                        PREP = constraintReader["PREP"].ToString(),
                         PK_TABLE_NAME = constraintReader["PK_TABLE_NAME"].ToString(),
                         PK_COLUMN_NAME = constraintReader["PK_COLUMN_NAME"].ToString(),
                         UNIQUE_CONSTRAINT_NAME = constraintReader["UNIQUE_CONSTRAINT_NAME"].ToString(),

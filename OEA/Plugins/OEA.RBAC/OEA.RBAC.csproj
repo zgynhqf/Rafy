@@ -66,6 +66,7 @@
     <Compile Include="Entities\User.cs" />
     <Compile Include="Entities\UserLoginLog.cs" />
     <Compile Include="Security\UsernameCriteria.cs" />
+    <Compile Include="UI\Templates\OrgTemplate.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Common.csproj">
@@ -94,7 +95,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Scripts\commands\LookupSelectAddOrgPosition.js" />
+    <EmbeddedResource Include="UI\Scripts\commands\LookupSelectAddOrgPosition.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\Scripts\commands\ChoosePermissions.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

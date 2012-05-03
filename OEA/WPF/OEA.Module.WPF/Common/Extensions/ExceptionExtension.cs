@@ -65,6 +65,13 @@ namespace OEA.Module.WPF
 
             //记录异常信息
             Logger.LogError("系统未捕获异常", ex);
+
+            //发生异常后，如果主窗体还没有显示，则直接关闭整个应用程序。
+            var mainWindow = App.Current.MainWindow;
+            if (mainWindow == null || !mainWindow.IsVisible)
+            {
+                App.Current.TryShutdown();
+            }
         }
 
         /// <summary>

@@ -32,40 +32,51 @@ namespace OEA.Web
         {
             var request = context.Request;
 
-            var typeName = request.QueryString["type"];
-            var isAggt = request.GetQueryStringOrDefault("isAggt", 0);
-
             var converter = new ClientMetaFactory();
             var op = converter.Option;
+            op.module = request.GetQueryStringOrDefault("module", string.Empty);
             op.ignoreCommands = request.GetQueryStringOrDefault("ignoreCommands", 0) == 1;
             op.isDetail = request.GetQueryStringOrDefault("isDetail", 0) == 1;
             op.isLookup = request.GetQueryStringOrDefault("isLookup", 0) == 1;
             op.isReadonly = request.GetQueryStringOrDefault("isReadonly", 0) == 1;
-            op.viewName = request.GetQueryStringOrDefault("viewName", "");
-
-            var type = ClientEntities.Find(typeName);
+            op.viewName = request.GetQueryStringOrDefault("viewName", string.Empty);
 
             JsonModel jsonResult = null;
-            if (isAggt == 1)
+
+            //如果指定了 module，则直接返回模块的格式。
+            if (!string.IsNullOrEmpty(op.module))
             {
-                AggtBlocks aggt = null;
-
-                if (!string.IsNullOrEmpty(op.viewName))
-                {
-                    aggt = UIModel.AggtBlocks.GetDefinedBlocks(op.viewName);
-                }
-                else
-                {
-                    aggt = UIModel.AggtBlocks.GetDefaultBlocks(type.EntityType);
-                }
-
+                var module = UIModel.Modules[op.module];
+                var aggt = UIModel.AggtBlocks.GetModuleBlocks(module);
                 jsonResult = converter.ConvertToAggtMeta(aggt);
             }
             else
             {
-                var evm = UIModel.Views.Create(type.EntityType, op.viewName);
+                var typeName = request.QueryString["type"];
+                var isAggt = request.GetQueryStringOrDefault("isAggt", 0);
 
-                jsonResult = converter.ConvertToClientMeta(evm);
+                if (isAggt == 1)
+                {
+                    AggtBlocks aggt = null;
+                    if (!string.IsNullOrEmpty(op.viewName))
+                    {
+                        aggt = UIModel.AggtBlocks.GetDefinedBlocks(op.viewName);
+                    }
+                    else
+                    {
+                        var type = ClientEntities.Find(typeName);
+                        aggt = UIModel.AggtBlocks.GetDefaultBlocks(type.EntityType);
+                    }
+
+                    jsonResult = converter.ConvertToAggtMeta(aggt);
+                }
+                else
+                {
+                    var type = ClientEntities.Find(typeName);
+                    var evm = UIModel.Views.Create(type.EntityType, op.viewName);
+
+                    jsonResult = converter.ConvertToClientMeta(evm);
+                }
             }
 
             var json = LiteJsonWriter.Convert(jsonResult);

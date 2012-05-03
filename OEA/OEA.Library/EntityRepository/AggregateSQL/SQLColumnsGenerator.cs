@@ -18,7 +18,7 @@ using System.Text;
 using System.Data;
 using System.Diagnostics;
 using OEA.ORM;
-using OEA.ORM.sqlserver;
+using OEA.ORM.SqlServer;
 
 namespace OEA.Library
 {
@@ -29,22 +29,13 @@ namespace OEA.Library
     /// </summary>
     public class SQLColumnsGenerator
     {
-        private IDbFactory _dbFactory;
+        private IRepository _repository;
 
-        private ITableInfoHost _tableInfoHost;
-
-        private IEntityInfoHost _entityInfoHost;
-
-        private EntityRepository _repository;
-
-        public SQLColumnsGenerator(EntityRepository repository)
+        public SQLColumnsGenerator(IRepository repository)
         {
             if (repository == null) throw new ArgumentNullException("repository");
 
             this._repository = repository;
-            this._dbFactory = repository;
-            this._tableInfoHost = repository;
-            this._entityInfoHost = repository;
         }
 
         internal Entity ReadDataDirectly(DataRow rowData)
@@ -108,7 +99,7 @@ namespace OEA.Library
 
         private ITable GetTableInfo()
         {
-            return this._tableInfoHost.GetTableInfo();
+            return this._repository.GetORMTable();
         }
     }
 }

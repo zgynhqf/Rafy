@@ -58,6 +58,10 @@ namespace OEA.Library
             {
                 defaultValue = new NumberRange();
             }
+            else if (propertyType == typeof(byte[]) && defaultValue == null)
+            {
+                defaultValue = new byte[0];
+            }
 
             return (TPropertyType)defaultValue;
         }

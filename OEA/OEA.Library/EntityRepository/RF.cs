@@ -13,6 +13,7 @@
 
 using System;
 using System.Data;
+using hxy.Common.Data;
 
 namespace OEA.Library
 {
@@ -126,7 +127,7 @@ namespace OEA.Library
         /// <returns></returns>
         public static SingleConnectionTrasactionScope TransactionScope(string dbSetting)
         {
-            return new SingleConnectionTrasactionScope(dbSetting);
+            return new SingleConnectionTrasactionScope(DbSetting.FindOrCreate(dbSetting));
         }
 
         /// <summary>
@@ -136,27 +137,17 @@ namespace OEA.Library
         /// <returns></returns>
         public static SingleConnectionTrasactionScope TransactionScope(EntityRepository dbDelegate)
         {
-            return new SingleConnectionTrasactionScope(dbDelegate.ConnectionStringSettingName);
+            return new SingleConnectionTrasactionScope(dbDelegate.DbSetting);
         }
 
         /// <summary>
-        /// 通过数据库配置名的代理：实体，构造一个 单连接事务块。
+        /// 通过数据库配置名的代理：实体、实体列表，构造一个 单连接事务块。
         /// </summary>
         /// <param name="dbDelegate"></param>
         /// <returns></returns>
-        public static SingleConnectionTrasactionScope TransactionScope(Entity dbDelegate)
+        public static SingleConnectionTrasactionScope TransactionScope(IEntityOrList dbDelegate)
         {
-            return new SingleConnectionTrasactionScope(dbDelegate.ConnectionStringSettingName);
-        }
-
-        /// <summary>
-        /// 通过数据库配置名的代理：实体列表，构造一个 单连接事务块。
-        /// </summary>
-        /// <param name="dbDelegate"></param>
-        /// <returns></returns>
-        public static SingleConnectionTrasactionScope TransactionScope(EntityList dbDelegate)
-        {
-            return new SingleConnectionTrasactionScope(dbDelegate.GetRepository().ConnectionStringSettingName);
+            return new SingleConnectionTrasactionScope(dbDelegate.GetRepository().DbSetting);
         }
 
         #endregion

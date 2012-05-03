@@ -102,7 +102,7 @@ namespace OEA.Web
 
         private static void SaveList(EntityRepository repo, EntityList list)
         {
-            using (var tran = new SingleConnectionTrasactionScope(repo.ConnectionStringSettingName))
+            using (var tran = new SingleConnectionTrasactionScope(list.GetRepository().DbSetting))
             {
                 repo.Save(list);
 

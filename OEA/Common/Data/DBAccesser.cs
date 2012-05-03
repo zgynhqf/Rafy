@@ -1,4 +1,17 @@
-﻿using System;
+﻿/*******************************************************
+ * 
+ * 作者：胡庆访
+ * 创建时间：2007
+ * 说明：此文件只包含一个类，具体内容见类型注释。
+ * 运行环境：.NET 4.0
+ * 版本号：1.0.0
+ * 
+ * 历史记录：
+ * 创建文件 胡庆访 2007
+ * 
+*******************************************************/
+
+using System;
 using System.Data;
 using System.Configuration;
 using System.Web;
@@ -64,18 +77,18 @@ namespace hxy.Common.Data
         public DBAccesser(string connectionStringSettingName)
         {
             var setting = DbSetting.FindOrCreate(connectionStringSettingName);
-            this.Init(setting.ConnectionString, setting.ProviderName);
+            this.Init(setting);
         }
 
         /// <summary>
         /// Constructor
         /// 
-        /// this accessor uses <see cref="DbSetting"/> class to find its connection string, and creates connection by itself.
+        /// this accessor uses schema to find its connection string, and creates connection by itself.
         /// </summary>
-        /// <param name="DbSetting">the setting name in configuration file.</param>
-        public DBAccesser(DbSetting setting)
+        /// <param name="schema">the setting name in configuration file.</param>
+        public DBAccesser(DbConnectionSchema schema)
         {
-            this.Init(setting.ConnectionString, setting.ProviderName);
+            this.Init(schema);
         }
 
         /// <summary>
@@ -91,11 +104,6 @@ namespace hxy.Common.Data
         /// </param>
         public DBAccesser(string connectionString, string connectionProvider)
         {
-            Init(connectionString, connectionProvider);
-        }
-
-        private void Init(string connectionString, string connectionProvider)
-        {
             if (string.IsNullOrEmpty(connectionString))
             {
                 throw new ArgumentNullException("connectionString");
@@ -105,10 +113,17 @@ namespace hxy.Common.Data
                 throw new ArgumentNullException("connectionProvider");
             }
 
-            this._factory = DbProviderFactories.GetFactory(connectionProvider);
-            this._converter = ConverterFactory.Create(connectionProvider);
+            Init(new DbConnectionSchema(connectionString, connectionProvider));
+        }
+
+        private void Init(DbConnectionSchema schema)
+        {
+            this.ConnectionSchema = schema;
+
+            this._factory = DbProviderFactories.GetFactory(schema.ProviderName);
+            this._converter = ConverterFactory.Create(schema.ProviderName);
             this._connection = this._factory.CreateConnection();
-            this._connection.ConnectionString = connectionString;
+            this._connection.ConnectionString = schema.ConnectionString;
             this._connectionCreatedBySelf = true;
         }
 
@@ -138,6 +153,11 @@ namespace hxy.Common.Data
             this._converter = ConverterFactory.Create(connectionProvider);
             this._connection = dbConnection;
         }
+
+        /// <summary>
+        /// 数据连接结构
+        /// </summary>
+        public DbConnectionSchema ConnectionSchema { get; private set; }
 
         #endregion
 

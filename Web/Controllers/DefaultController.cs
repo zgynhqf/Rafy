@@ -27,6 +27,12 @@ namespace Web.Controllers
             return View();
         }
 
+        public ActionResult Module()
+        {
+            ViewBag.Module = Request.QueryString["module"];
+            return View();
+        }
+
         public ActionResult ExtTest()
         {
             return View();

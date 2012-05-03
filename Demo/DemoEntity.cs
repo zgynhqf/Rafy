@@ -9,7 +9,7 @@ namespace Demo
     [Serializable]
     public abstract class DemoEntity : Entity
     {
-        public static readonly string ConnectionString = "Demo";
+        public static string ConnectionString = "Demo";
 
         protected override string ConnectionStringSettingName
         {

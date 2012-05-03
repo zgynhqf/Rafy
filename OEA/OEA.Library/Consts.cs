@@ -11,9 +11,19 @@ namespace OEA
     /// </summary>
     public static class ConnectionStringNames
     {
-        public const string OEAPlugins = "OEAPlugins";
+        /// <summary>
+        /// 默认情况下 OEA 插件使用的库配置名。
+        /// 
+        /// 外界可以在程序启动时修改这个值以使得它和其它的库使用同一个配置。
+        /// </summary>
+        public static string OEAPlugins = "OEAPlugins";
 
-        public const string DbMigrationHistory = "DbMigrationHistory";
+        /// <summary>
+        /// 默认情况下迁移记录库使用的库配置名。
+        /// 
+        /// 外界可以在程序启动时修改这个值以使得它和其它的库使用同一个配置。
+        /// </summary>
+        public static string DbMigrationHistory = "DbMigrationHistory";
     }
 
     public static class ComposableNames

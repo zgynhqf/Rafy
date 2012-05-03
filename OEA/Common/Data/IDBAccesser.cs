@@ -37,6 +37,11 @@ namespace hxy.Common.Data
         /// </summary>
         IDbConnection Connection { get; }
 
+        /// <summary>
+        /// 数据连接结构
+        /// </summary>
+        DbConnectionSchema ConnectionSchema { get; }
+
         #region NonQuery
 
         /// <summary>

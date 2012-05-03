@@ -89,9 +89,16 @@
     <Compile Include="Entity\MP\DateTimeDescriptorAttribute.cs" />
     <Compile Include="Entity\MP\ListProperty.cs" />
     <Compile Include="Entity\MP\ListPropertyMetadata.cs" />
-    <Compile Include="Utils\DataBase\ConnectionManager.cs" />
-    <Compile Include="Utils\DataBase\SingleConnectionTrasactionScope.cs" />
-    <Compile Include="Utils\ObjectCloner.cs" />
+    <Compile Include="ObjectCloner.cs" />
+    <Compile Include="ORM\LiteORM\Common\DbTable.cs" />
+    <Compile Include="ORM\LiteORM\Common\DbQuery.cs" />
+    <Compile Include="ORM\LiteORM\Common\Db.cs" />
+    <Compile Include="ORM\LiteORM\Common\ManagedPropertyBridge.cs" />
+    <Compile Include="ORM\LiteORM\Common\NullConstraint.cs" />
+    <Compile Include="ORM\LiteORM\Oracle\ManagedPropertyBridge.cs" />
+    <Compile Include="ORM\LiteORM\Oracle\OracleTable.cs" />
+    <Compile Include="ORM\ConnectionManager.cs" />
+    <Compile Include="ORM\SingleConnectionTrasactionScope.cs" />
     <Compile Include="DataPortal\Server\DataPortalContext.cs" />
     <Compile Include="DataPortal\Server\DataPortalFacade.cs" />
     <Compile Include="DataPortal\Server\DataPortalResult.cs" />
@@ -122,7 +129,7 @@
     </Compile>
     <Compile Include="Entity\Validation\ITypeValidationsHost.cs" />
     <Compile Include="Service.cs" />
-    <Compile Include="Utils\DataBase\DbTable.cs" />
+    <Compile Include="EntityRepository\AggregateSQL\DbTable.cs" />
     <Compile Include="EntityRepository\Caching\EntityListVersion.cs" />
     <Compile Include="EntityRepository\IEntityOrListInternal.cs" />
     <Compile Include="Entity\Entity.RoutedEvent.cs">
@@ -152,7 +159,7 @@
     <Compile Include="ORM\DbMigration\OEAUserMigrations.cs" />
     <Compile Include="ORM\DbMigration\Presistence\DbMigrationHistory.cs" />
     <Compile Include="ORM\DbMigration\Presistence\DbVersion.cs" />
-    <Compile Include="ORM\ORMMetaExtension.cs" />
+    <Compile Include="ORM\DbTableFactory.cs" />
     <Compile Include="Entity\TreeEntityHelper.cs" />
     <Compile Include="IServerAppRuntime.cs" />
     <Compile Include="ServerApp.cs" />
@@ -167,9 +174,6 @@
     <Compile Include="EntityRepository\AggregateSQL\AggregateSQLGenerator.cs" />
     <Compile Include="EntityRepository\AggregateSQL\AggregateSQLItem.cs" />
     <Compile Include="EntityRepository\AggregateSQL\API.cs" />
-    <Compile Include="EntityRepository\AggregateSQL\GetTableInfoCommand.cs" />
-    <Compile Include="EntityRepository\AggregateSQL\ITableInfoHost.cs" />
-    <Compile Include="EntityRepository\AggregateSQL\TableInfoFinder.cs" />
     <Compile Include="Entity\Criteria.cs" />
     <Compile Include="Entity\Entity.DataAccess.cs">
       <DependentUpon>Entity.cs</DependentUpon>
@@ -188,7 +192,6 @@
     </Compile>
     <Compile Include="Entity\IDbFactory.cs" />
     <Compile Include="EntityRepository\AggregateSQL\SQLColumnsGenerator.cs" />
-    <Compile Include="EntityRepository\AggregateSQL\TableInfo.cs" />
     <Compile Include="EntityRepository\BatchInsert.cs" />
     <Compile Include="EntityRepository\Caching\AggregateChecker.cs" />
     <Compile Include="EntityRepository\Caching\AggregateRootCache.cs" />
@@ -226,22 +229,15 @@
     <Compile Include="ORM\LiteORM\IResultSet.cs" />
     <Compile Include="ORM\LiteORM\ITable.cs" />
     <Compile Include="ORM\LiteORM\LightException.cs" />
-    <Compile Include="ORM\ManagedPropertyBridge.cs" />
-    <Compile Include="ORM\LiteORM\sql\IDataBridge.cs" />
-    <Compile Include="ORM\LiteORM\sql\InConstraint.cs" />
-    <Compile Include="ORM\LiteORM\sql\NullConstraint.cs" />
-    <Compile Include="ORM\LiteORM\sql\PropertyBridge.cs" />
-    <Compile Include="ORM\LiteORM\sql\SqlColumn.cs" />
-    <Compile Include="ORM\LiteORM\sql\SqlConstraint.cs" />
-    <Compile Include="ORM\LiteORM\sql\SqlDb.cs" />
-    <Compile Include="ORM\LiteORM\sql\SqlOrder.cs" />
-    <Compile Include="ORM\LiteORM\sql\SqlQuery.cs" />
-    <Compile Include="ORM\LiteORM\sql\SqlResultSet.cs" />
+    <Compile Include="ORM\LiteORM\IDataBridge.cs" />
+    <Compile Include="ORM\LiteORM\Common\InConstraint.cs" />
+    <Compile Include="ORM\LiteORM\Common\PropertyBridge.cs" />
+    <Compile Include="ORM\LiteORM\Common\DbColumn.cs" />
+    <Compile Include="ORM\LiteORM\Common\DbConstraint.cs" />
+    <Compile Include="ORM\LiteORM\Common\DbOrder.cs" />
+    <Compile Include="ORM\LiteORM\Common\DbResultSet.cs" />
     <Compile Include="ORM\LiteORM\sql\SqlTable.cs" />
-    <Compile Include="ORM\zzzSqlTableFactory.cs" />
-    <Compile Include="ORM\LiteORM\sql\SqlUtils.cs" />
-    <Compile Include="Utils\DataBase\DbExtension.cs" />
-    <Compile Include="Utils\DataBase\DBHelper.cs" />
+    <Compile Include="EntityRepository\AggregateSQL\DbExtension.cs" />
     <Compile Include="Entity\Validation\BrokenRule.cs" />
     <Compile Include="Entity\Validation\BrokenRulesCollection.cs" />
     <Compile Include="Entity\Validation\CommonRules.cs" />

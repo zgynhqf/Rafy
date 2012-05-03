@@ -29,12 +29,7 @@ namespace DbMigration.SqlServer
     {
         protected override string ConvertToTypeString(DbType dataType)
         {
-            return DbTypeHelper.ConvertToSQLTypeString(dataType);
-        }
-
-        protected override string GetDefaultValue(DbType dataType)
-        {
-            return DbTypeHelper.GetDefaultValue(dataType);
+            return SqlDbTypeHelper.ConvertToSQLTypeString(dataType);
         }
 
         protected override void Generate(CreateDatabase op)
@@ -78,6 +73,54 @@ namespace DbMigration.SqlServer
             using (var sql = this.Writer())
             {
                 this.GenerateAddPKConstraint(sql, op.TableName, op.PKName);
+
+                this.AddRun(sql);
+            }
+        }
+
+        protected override void AddNotNullConstraint(ColumnOperation op)
+        {
+            using (var sql = this.Writer())
+            {
+                sql.Write("ALTER TABLE ");
+                sql.Write(this.Quote(op.TableName));
+                sql.WriteLine();
+
+                sql.Indent++;
+                sql.Write("ALTER COLUMN ");
+                this.GenerateColumnDeclaration(sql, op.ColumnName, op.DataType, true);
+
+                this.AddRun(sql);
+            }
+        }
+
+        protected override void RemoveNotNullConstraint(ColumnOperation op)
+        {
+            using (var sql = this.Writer())
+            {
+                sql.Write("ALTER TABLE ");
+                sql.Write(this.Quote(op.TableName));
+                sql.WriteLine();
+
+                sql.Indent++;
+                sql.Write("ALTER COLUMN ");
+                this.GenerateColumnDeclaration(sql, op.ColumnName, op.DataType, false);
+
+                this.AddRun(sql);
+            }
+        }
+
+        protected override void Generate(AlterColumnType op)
+        {
+            using (var sql = this.Writer())
+            {
+                sql.Write("ALTER TABLE ");
+                sql.Write(this.Quote(op.TableName));
+                sql.WriteLine();
+
+                sql.Indent++;
+                sql.Write("ALTER COLUMN ");
+                this.GenerateColumnDeclaration(sql, op.ColumnName, op.NewType, op.IsRequired);
 
                 this.AddRun(sql);
             }

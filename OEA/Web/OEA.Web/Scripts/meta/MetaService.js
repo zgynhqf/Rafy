@@ -18,6 +18,7 @@
     },
     _url: function (op) {
         var res = Ext.String.format("/OEA_MetaModelPortal.ashx?type={0}", op.model);
+        if (op.module) { res += "&module=" + encodeURIComponent(op.module); }
         if (op.viewName) { res += "&viewName=" + encodeURIComponent(op.viewName); }
         if (op.isAggt) { res += "&isAggt=1"; }
         if (op.isReadonly) { res += "&isReadonly=1"; }

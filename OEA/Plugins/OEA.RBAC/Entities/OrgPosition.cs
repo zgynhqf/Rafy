@@ -157,6 +157,7 @@ namespace OEA.RBAC
                 View.UseWebCommand("LookupSelectAddOrgPosition")
                     .HasLabel("选择岗位")
                     .SetCustomParams("targetClass", ClientEntities.GetClientName(typeof(Position)));
+                View.UseWebCommands("Oea.rbac.cmd.ChoosePermissions");
             }
             else
             {

@@ -34,6 +34,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.OracleClient" />
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <HintPath>..\..\Lib\System.Data.SqlServerCe.dll</HintPath>
     </Reference>
@@ -49,8 +50,14 @@
     <Compile Include="DbMigration.cs" />
     <Compile Include="DbMigrationContext.cs" />
     <Compile Include="DbMigrationException.cs" />
+    <Compile Include="Providers\DbMetaReader.cs" />
     <Compile Include="Providers\DbMigrationProvider.cs" />
     <Compile Include="Providers\DbMigrationProviderFactory.cs" />
+    <Compile Include="Providers\DbTypeHelper.cs" />
+    <Compile Include="Providers\Oracle\OracleDbTypeHelper.cs" />
+    <Compile Include="Providers\Oracle\OracleMetaReader.cs" />
+    <Compile Include="Providers\Oracle\OracleRunGenerator.cs" />
+    <Compile Include="Providers\Oracle\OracleMigrationProvider.cs" />
     <Compile Include="Providers\SqlServerCe\Run\CreateDbMigrationRun.cs" />
     <Compile Include="Providers\SqlServerCe\Run\DropDbMigrationRun.cs" />
     <Compile Include="Providers\SqlServerCe\SqlServerCeMigrationProvider.cs" />
@@ -84,7 +91,7 @@
     <Compile Include="Run\SqlMigrationRun.cs" />
     <Compile Include="Providers\SqlServer\SqlServerMigrationProvider.cs" />
     <Compile Include="TSqlGenerator.cs" />
-    <Compile Include="Providers\SqlServer\DbTypeHelper.cs" />
+    <Compile Include="Providers\SqlServer\SqlDbTypeHelper.cs" />
     <Compile Include="Model\ForeignConstraint.cs" />
     <Compile Include="Model\Table.cs" />
     <Compile Include="Model\Differ\TableChanges.cs" />

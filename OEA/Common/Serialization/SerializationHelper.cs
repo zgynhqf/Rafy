@@ -7,7 +7,7 @@ using System.Xml;
 using System.IO;
 using hxy;
 
-namespace OEA.Utils.Serialization
+namespace hxy
 {
     public static class SerializationHelper
     {

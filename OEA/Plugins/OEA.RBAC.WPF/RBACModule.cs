@@ -43,13 +43,6 @@ namespace OEA.Module.WPF
             };
 
             this.LogSystem(app);
-
-            //如果只是在服务端，则在这里升级数据库。
-            //否则，如果是单机版，就在 OEA.RBAC.WPF 中升级，以便弹出进度条。
-            app.DbMigratingOperations += (o, e) =>
-            {
-                MigrationWithProgressBar.Do(ConnectionStringNames.OEAPlugins);
-            };
         }
 
         #region 记录日志

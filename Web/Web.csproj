@@ -1381,6 +1381,7 @@
     <None Include="ExtJs\resources\themes\templates\resources\sass\my-ext-theme.scss" />
     <Content Include="Views\Default\EntityModule.cshtml" />
     <Content Include="Views\Default\ExtTest.cshtml" />
+    <Content Include="Views\Default\Module.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OEA\Common\Common.csproj">

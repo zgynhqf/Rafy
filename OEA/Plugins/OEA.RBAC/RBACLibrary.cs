@@ -62,7 +62,7 @@ namespace OEA.RBAC
                     {
                         new ModuleMeta{ Label = "人员管理", EntityType = typeof(User)},
                         new ModuleMeta{ Label = "岗位管理", EntityType = typeof(Position)},
-                        new ModuleMeta{ Label = "部门权限管理", EntityType = typeof(Org)},
+                        new ModuleMeta{ Label = "部门权限管理", EntityType = typeof(Org), TemplateType=typeof(OrgModuleTemplate)},
                         new ModuleMeta{ Label = "日志管理", EntityType = typeof(AuditItem)}
                     }
                 });
@@ -85,18 +85,6 @@ namespace OEA.RBAC
                     {
                         UserLoginLogService.NotifyLogout();
                     }
-                };
-            }
-            else
-            {
-                //如果只是在服务端，则在这里升级数据库。
-                //否则，如果是单机版，就在 OEA.RBAC.WPF 中升级，以便弹出进度条。
-                app.DbMigratingOperations += (o, e) =>
-                {
-                    using (var c = new OEADbMigrationContext(ConnectionStringNames.OEAPlugins))
-                    {
-                        c.AutoMigrate();
-                    };
                 };
             }
         }
