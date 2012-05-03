@@ -57,9 +57,8 @@ namespace OEA.Library
             //创建表格式
             DataTable table = new DataTable();
             var columns = this._table.Columns;
-            for (int i = 0, c = columns.Length; i < c; i++)
+            foreach (var column in columns)
             {
-                var column = columns[i];
                 var dataType = column.DataType;
                 if (dataType.IsGenericType && dataType.GetGenericTypeDefinition() == typeof(Nullable<>))
                 {
@@ -74,10 +73,10 @@ namespace OEA.Library
             {
                 var entity = this._entityList[i];
                 var row = table.NewRow();
-                for (int j = 0, c2 = columns.Length; j < c2; j++)
+                var j = 0;
+                foreach (var column in columns)
                 {
-                    var column = columns[j];
-                    row[j] = column.GetValue(entity) ?? DBNull.Value;
+                    row[j++] = column.GetValue(entity) ?? DBNull.Value;
                 }
                 rows.Add(row);
             }

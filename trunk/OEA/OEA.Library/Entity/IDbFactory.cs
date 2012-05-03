@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OEA.ORM;
+using hxy.Common.Data;
 
 namespace OEA.Library
 {
@@ -31,8 +32,14 @@ namespace OEA.Library
         IDb CreateDb();
 
         /// <summary>
-        /// 数据库配置名称（每个库有一个唯一的配置名）
+        /// 数据库配置（每个库有一个唯一的配置名）
         /// </summary>
-        string ConnectionStringSettingName { get; }
+        DbSetting DbSetting { get; }
+
+        /// <summary>
+        /// 获取该实体对应的数据库 映射信息运行时对象。
+        /// </summary>
+        /// <returns></returns>
+        ITable GetORMTable();
     }
 }

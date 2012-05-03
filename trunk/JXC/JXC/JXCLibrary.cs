@@ -27,8 +27,6 @@ namespace JXC
 
             InitModules(app);
 
-            AutoMigrateDb(app);
-
             InitClient(app);
         }
 
@@ -92,30 +90,22 @@ namespace JXC
             };
         }
 
-        private static void AutoMigrateDb(IApp app)
-        {
-            app.DbMigratingOperations += (o, e) =>
-            {
-                MigrationWithProgressBar.Do(JXCEntity.ConnectionString);
-            };
-        }
-
         private static void InitClient(IApp app)
         {
-            var clientApp = app as IClientApp;
-            if (clientApp != null)
-            {
-                clientApp.MainWindowLoaded += (o, e) =>
-                {
-                    //App.Current.OpenModuleOrAlert("商品管理");
-                    //App.Current.OpenModuleOrAlert("采购订单");
-                    //App.Current.OpenModuleOrAlert("采购订单入库");
-                    //App.Current.OpenModuleOrAlert("其它入库");
-                    //App.Current.OpenModuleOrAlert("其它出库");
+            //var clientApp = app as IClientApp;
+            //if (clientApp != null)
+            //{
+            //    clientApp.MainWindowLoaded += (o, e) =>
+            //    {
+            //        App.Current.OpenModuleOrAlert("商品管理");
+            //        App.Current.OpenModuleOrAlert("采购订单");
+            //        App.Current.OpenModuleOrAlert("采购订单入库");
+            //        App.Current.OpenModuleOrAlert("其它入库");
+            //        App.Current.OpenModuleOrAlert("其它出库");
 
-                    //App.Current.OpenModuleOrAlert("商品管理");
-                };
-            }
+            //        App.Current.OpenModuleOrAlert("商品管理");
+            //    };
+            //}
         }
     }
 }

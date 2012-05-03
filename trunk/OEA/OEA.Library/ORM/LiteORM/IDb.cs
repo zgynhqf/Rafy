@@ -8,7 +8,7 @@ using OEA.Library;
 namespace OEA.ORM
 {
     /// <summary>
-    /// ORM 中的数据库操作接口
+    /// ORM 中实体的数据库操作接口
     /// </summary>
     public interface IDb : IDisposable
     {
@@ -53,7 +53,5 @@ namespace OEA.ORM
         /// <param name="entityType"></param>
         /// <returns></returns>
         IQuery Query(Type entityType);
-
-        ITable GetTable(Type type);
     }
 }

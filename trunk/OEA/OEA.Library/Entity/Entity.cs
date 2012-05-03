@@ -113,7 +113,7 @@ namespace OEA.Library
             PropertyChangedCallBack = (o, e) => (o as Entity).OnIdChanged(e),
             DefaultValue = -1
         });
-        [EntityProperty, Column, PK]
+        [EntityProperty, Column]
         public int Id
         {
             get { return this.GetProperty(IdProperty, ref this._idFast); }
@@ -256,7 +256,7 @@ namespace OEA.Library
             {
                 using (EntityListVersion.Repository.BeginBillSave())
                 {
-                    using (var tran = new SingleConnectionTrasactionScope(this.ConnectionStringSettingName))
+                    using (var tran = new SingleConnectionTrasactionScope(this.GetRepository().DbSetting))
                     {
                         this.DoSaveRoot();
 
@@ -268,7 +268,7 @@ namespace OEA.Library
             }
             else
             {
-                using (var tran = new SingleConnectionTrasactionScope(this.ConnectionStringSettingName))
+                using (var tran = new SingleConnectionTrasactionScope(this.GetRepository().DbSetting))
                 {
                     this.DoSaveRoot();
 

@@ -145,13 +145,18 @@ namespace DbMigration
                 {
                     this._DbVersionProvider = new EmbadedDbVersionProvider
                     {
-                        DBA = this.DBA
+                        DBA = this.DBA,
+                        DbSetting = this.DbSetting
                     };
                 }
 
                 return this._DbVersionProvider;
             }
-            set { this._DbVersionProvider = value; }
+            set
+            {
+                this._DbVersionProvider = value;
+                if (value != null) value.DbSetting = this.DbSetting;
+            }
         }
 
         #endregion
@@ -167,7 +172,7 @@ namespace DbMigration
 
         /// <summary>
         /// 是否在自动升级时忽略数据丢失。默认为 true。
-        /// 如果值为 false，则一些操作将无法执行，例如：删除列、删除表。
+        /// 如果值为 true，则一些操作将无法执行，例如：删除列、删除表。
         /// </summary>
         public bool IgnoreDataLoss { get; set; }
 
@@ -206,37 +211,45 @@ namespace DbMigration
 
             var manualPendings = this.GetManualPendings();
             var schemaPending = manualPendings.Where(m => m.Type == ManualMigrationType.Schema).ToList();
+            var dataPending = manualPendings.Where(m => m.Type == ManualMigrationType.Data).ToList();
 
-            var updating = this.DatabaseExists();
+            var dbMeta = this.DatabaseMetaReader.Read();
+            var changeSet = ModelDiffer.Distinguish(dbMeta, destination);
+
+            //判断是否正处于升级阶段。（或者是处于创建阶段。）
+            //不能直接用 dbMeta.Tables.Count > 0 来判断，这是因为里面可能有 IgnoreTables 中指定表。
+            var updating = changeSet.ChangeType == ChangeType.Removed ||
+                changeSet.ChangeType == ChangeType.Modified && changeSet.TablesChanged.Where(t => t.ChangeType == ChangeType.Added).Count() < destination.Tables.Count;
             if (updating)
             {
-                if (schemaPending.Count > 0) Must(this.MigrateUpBatch(schemaPending));
+                Must(this.MigrateUpBatch(schemaPending));
 
-                Must(this.AutoMigrate(destination));
+                Must(this.AutoMigrate(changeSet));
             }
             else
             {
                 if (manualPendings.Count > 0)
                 {
                     //此时，自动升级的时间都应该小于所有手工升级
-                    Must(this.AutoMigrate(destination, manualPendings[0].TimeId));
-
-                    if (schemaPending.Count > 0) Must(this.MigrateUpBatch(schemaPending));
+                    Must(this.AutoMigrate(changeSet, manualPendings[0].TimeId));
                 }
                 else
                 {
-                    Must(this.AutoMigrate(destination));
+                    Must(this.AutoMigrate(changeSet));
                 }
+
+                Must(this.MigrateUpBatch(schemaPending));
             }
 
-            var dataPending = manualPendings.Where(m => m.Type == ManualMigrationType.Data).ToList();
             if (dataPending.Count > 0)
             {
                 /*********************** 代码块解释 *********************************
+                 * 
                  * 由于之前把 结构升级 和 数据升级 分离开了，
                  * 所以有可能出现 数据升级 中的最后时间其实没有之前的 结构升级 或者 自动升级 的时间大，
                  * 这样就会导致 数据升级 后，版本号变得更小了。
                  * 所以这里需要判断如果这种情况发生，则忽略数据升级中的版本号。
+                 * 
                 **********************************************************************/
 
                 var dbVersion = this.GetDbVersion();
@@ -246,7 +259,7 @@ namespace DbMigration
 
                 if (dbVersion > maxDataPending)
                 {
-                    this.DbVersionProvider.SetDbVersion(this.DbName, dbVersion);
+                    this.DbVersionProvider.SetDbVersion(dbVersion);
                 }
             }
         }
@@ -256,11 +269,8 @@ namespace DbMigration
         /// </summary>
         private const double TimeIdSpan = 10d;
 
-        private Result AutoMigrate(DestinationDatabase destination, DateTime? maxTime = null)
+        private Result AutoMigrate(DatabaseChanges changeSet, DateTime? maxTime = null)
         {
-            var dbMeta = this.DatabaseMetaReader.Read();
-            var changeSet = ModelDiffer.Distinguish(dbMeta, destination);
-
             //生成所有自动迁移操作
             var auto = new AutomationMigration() { Context = this };
             auto.GenerateOpertions(changeSet);
@@ -425,7 +435,7 @@ namespace DbMigration
                             this.MigrateDown(migration);
 
                             var version = migration.TimeId.AddMilliseconds(-TimeIdSpan / 2);
-                            Must(this.DbVersionProvider.SetDbVersion(this.DbName, version));
+                            Must(this.DbVersionProvider.SetDbVersion(version));
 
                             if (rollbackAction == RollbackAction.DeleteHistory) { historyRepo.Remove(this.DbName, history); }
                         }
@@ -435,7 +445,7 @@ namespace DbMigration
 
             if (time.HasValue)
             {
-                this.DbVersionProvider.SetDbVersion(this.DbName, time.Value);
+                this.DbVersionProvider.SetDbVersion(time.Value);
             }
         }
 
@@ -481,7 +491,7 @@ namespace DbMigration
         /// <returns></returns>
         public DateTime GetDbVersion()
         {
-            return this.DbVersionProvider.GetDbVersion(this.DbName);
+            return this.DbVersionProvider.GetDbVersion();
         }
 
         /// <summary>
@@ -491,7 +501,7 @@ namespace DbMigration
         /// </summary>
         public void ResetDbVersion()
         {
-            this.DbVersionProvider.SetDbVersion(this.DbName, DbVersionProvider.DefaultMinTime);
+            this.DbVersionProvider.SetDbVersion(DbVersionProvider.DefaultMinTime);
         }
 
         /// <summary>
@@ -634,7 +644,7 @@ namespace DbMigration
                         //EmbadedDbVersionProvider 在删除数据库时就不能再存储版本号信息了。
                         if (!(migration is DropDatabase) || !this.DbVersionProvider.IsEmbaded())
                         {
-                            res = this.DbVersionProvider.SetDbVersion(this.DbName, migration.TimeId);
+                            res = this.DbVersionProvider.SetDbVersion(migration.TimeId);
                         }
                     }
                 }

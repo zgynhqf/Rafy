@@ -85,7 +85,6 @@
     <Compile Include="MetaModel\Attributes\Entity\QueryEntityAttribute.cs" />
     <Compile Include="MetaModel\Attributes\Entity\NavigationQueryTypeAttribute.cs" />
     <Compile Include="MetaModel\Attributes\Entity\ORM\ColumnAttribute.cs" />
-    <Compile Include="MetaModel\Attributes\Entity\ORM\PKAttribute.cs" />
     <Compile Include="MetaModel\Attributes\Entity\ORM\TableAttribute.cs" />
     <Compile Include="MetaModel\Attributes\Entity\Property\AssociationAttribute.cs" />
     <Compile Include="MetaModel\Attributes\Entity\Property\EntityPropertyAttribute.cs" />

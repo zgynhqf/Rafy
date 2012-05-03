@@ -82,7 +82,6 @@ namespace OEA.Library
         #region 临时存储的不可变属性，不用多次查询，提升性能
 
         private Type _propertyEntityType;
-
         /// <summary>
         /// 这个属性对应的实体类型
         /// </summary>
@@ -111,7 +110,6 @@ namespace OEA.Library
         }
 
         private EntityRepository _ownerRepository;
-
         public EntityRepository OwnerRepository
         {
             get
@@ -125,7 +123,6 @@ namespace OEA.Library
         }
 
         private EntityRepository _propertyEntityRepository;
-
         public EntityRepository PropertyEntityRepository
         {
             get
@@ -139,7 +136,6 @@ namespace OEA.Library
         }
 
         private IManagedProperty _cslaPropertyInfo;
-
         public IManagedProperty CslaPropertyInfo
         {
             get

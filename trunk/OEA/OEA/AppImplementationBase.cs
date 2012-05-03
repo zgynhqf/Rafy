@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ComponentModel;
+using Common;
 
 namespace OEA.MetaModel
 {
@@ -50,7 +51,11 @@ namespace OEA.MetaModel
             CommonModel.Entities.Freeze();
             this.OnAppModelCompleted();
 
-            this.RaiseDbMigratingOperations();
+            //只要不是纯客户端，就执行数据库升级
+            if (OEAEnvironment.Location != OEALocation.Client)
+            {
+                this.RaiseDbMigratingOperations();
+            }
 
             this.StartMainProcess();
 

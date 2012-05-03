@@ -69,7 +69,6 @@ namespace OEA
             get
             {
                 IPrincipal current;
-#if !CLIENTONLY
                 if (HttpContext.Current != null)
                     current = HttpContext.Current.User;
                 else if (System.Windows.Application.Current != null)
@@ -85,36 +84,15 @@ namespace OEA
                 }
                 else
                     current = Thread.CurrentPrincipal;
-#else
-        if (System.Windows.Application.Current != null)
-        {
-          if (_principal == null)
-          {
-            if (ApplicationContext.AuthenticationType != "Windows")
-              _principal = new SimpleCsla.Security.UnauthenticatedPrincipal();
-            else
-              _principal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
-          }
-          current = _principal;
-        }
-        else
-          current = Thread.CurrentPrincipal;
-#endif
                 return current;
             }
             set
             {
-#if !CLIENTONLY
                 if (HttpContext.Current != null)
                     HttpContext.Current.User = value;
                 else if (System.Windows.Application.Current != null)
                     _principal = value;
                 Thread.CurrentPrincipal = value;
-#else
-        if (System.Windows.Application.Current != null)
-          _principal = value;
-        Thread.CurrentPrincipal = value;
-#endif
             }
         }
 
@@ -153,32 +131,28 @@ namespace OEA
 
         private static HybridDictionary GetLocalContext()
         {
-#if !CLIENTONLY
             if (HttpContext.Current == null)
             {
-#endif
                 LocalDataStoreSlot slot = Thread.GetNamedDataSlot(_localContextName);
                 return (HybridDictionary)Thread.GetData(slot);
-#if !CLIENTONLY
             }
             else
+            {
                 return (HybridDictionary)HttpContext.Current.Items[_localContextName];
-#endif
+            }
         }
 
         private static void SetLocalContext(HybridDictionary localContext)
         {
-#if !CLIENTONLY
             if (HttpContext.Current == null)
             {
-#endif
                 LocalDataStoreSlot slot = Thread.GetNamedDataSlot(_localContextName);
                 Thread.SetData(slot, localContext);
-#if !CLIENTONLY
             }
             else
+            {
                 HttpContext.Current.Items[_localContextName] = localContext;
-#endif
+            }
         }
 
         #endregion
@@ -255,10 +229,8 @@ namespace OEA
 
         public static HybridDictionary GetClientContext()
         {
-#if !CLIENTONLY
             if (HttpContext.Current == null)
             {
-#endif
                 if (ApplicationContext.ExecutionLocation == ExecutionLocations.Client)
                     lock (_syncClientContext)
                         return (HybridDictionary)AppDomain.CurrentDomain.GetData(_clientContextName);
@@ -268,35 +240,27 @@ namespace OEA
                       Thread.GetNamedDataSlot(_clientContextName);
                     return (HybridDictionary)Thread.GetData(slot);
                 }
-#if !CLIENTONLY
             }
             else
                 return (HybridDictionary)
                   HttpContext.Current.Items[_clientContextName];
-#endif
         }
 
         public static HybridDictionary GetGlobalContext()
         {
-#if !CLIENTONLY
             if (HttpContext.Current == null)
             {
-#endif
                 LocalDataStoreSlot slot = Thread.GetNamedDataSlot(_globalContextName);
                 return (HybridDictionary)Thread.GetData(slot);
-#if !CLIENTONLY
             }
             else
                 return (HybridDictionary)HttpContext.Current.Items[_globalContextName];
-#endif
         }
 
         private static void SetClientContext(HybridDictionary clientContext)
         {
-#if !CLIENTONLY
             if (HttpContext.Current == null)
             {
-#endif
                 if (ApplicationContext.ExecutionLocation == ExecutionLocations.Client)
                     lock (_syncClientContext)
                         AppDomain.CurrentDomain.SetData(_clientContextName, clientContext);
@@ -305,26 +269,20 @@ namespace OEA
                     LocalDataStoreSlot slot = Thread.GetNamedDataSlot(_clientContextName);
                     Thread.SetData(slot, clientContext);
                 }
-#if !CLIENTONLY
             }
             else
                 HttpContext.Current.Items[_clientContextName] = clientContext;
-#endif
         }
 
         public static void SetGlobalContext(HybridDictionary globalContext)
         {
-#if !CLIENTONLY
             if (HttpContext.Current == null)
             {
-#endif
                 LocalDataStoreSlot slot = Thread.GetNamedDataSlot(_globalContextName);
                 Thread.SetData(slot, globalContext);
-#if !CLIENTONLY
             }
             else
                 HttpContext.Current.Items[_globalContextName] = globalContext;
-#endif
         }
 
         public static void SetContext(

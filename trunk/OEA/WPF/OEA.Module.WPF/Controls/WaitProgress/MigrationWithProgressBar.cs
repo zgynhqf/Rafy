@@ -27,16 +27,16 @@ namespace OEA.Module.WPF
     /// </summary>
     public static class MigrationWithProgressBar
     {
-        public static void Do(string dbSetting)
-        {
-            Do(dbSetting, c => c.AutoMigrate());
-        }
-
         public static void Do(string dbSetting, Action<OEADbMigrationContext> action)
         {
+            if (OEAEnvironment.Location != OEALocation.LocalVersion)
+            {
+                throw new NotSupportedException("只支持在单机版中调用此方法。");
+            }
+
             using (var c = new OEADbMigrationContext(dbSetting))
             {
-                if (!c.IsEnabled() || !OEAEnvironment.Location.IsOnClient())
+                if (!c.IsEnabled())
                 {
                     action(c);
 
@@ -57,7 +57,7 @@ namespace OEA.Module.WPF
                     win.Width = 500;
                     win.Opacity = 0;
                     win.ShowInTaskbar = false;
-                    win.txtTitle.Text = string.Format("正在生成 {0} 数据库，请稍等……", dbSetting);
+                    win.txtTitle.Text = string.Format("正在生成 {0} 数据库，请稍侯……", dbSetting);
 
                     Exception exception = null;
 

@@ -23,15 +23,10 @@ namespace OEA.ClientCachingProvider
             EntityListVersion.SetProvider(new EntityListVersionRepository());
 
             //服务端在启动时，需要清空缓存信息库，这会导致所有客户端都重新下载最新的数据。
-            if (OEAEnvironment.Location == OEALocation.WPFServer)
+            if (OEAEnvironment.Location.IsOnServer())
             {
                 app.StartupCompleted += (o, e) => { EntityListVersion.Repository.Clear(); };
             }
-
-            app.DbMigratingOperations += (o, e) =>
-            {
-                MigrationWithProgressBar.Do(ConnectionStringNames.OEAPlugins);
-            };
         }
     }
 }

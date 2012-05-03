@@ -18,6 +18,9 @@ using System.Text;
 using hxy.Common;
 using hxy.Common.Data;
 using System.Data.Common;
+using DbMigration.Oracle;
+using System.Data;
+using DbMigration.SqlServer;
 
 namespace DbMigration.History
 {
@@ -26,13 +29,13 @@ namespace DbMigration.History
     /// </summary>
     public class EmbadedDbVersionProvider : DbVersionProvider
     {
-        public const string TableName = "__DbMigrationVersion";
+        public const string TableName = "zzzDbMigrationVersion";
 
         internal IDBAccesser DBA;
 
-        protected override DateTime GetDbVersionCore(string database)
+        protected override DateTime GetDbVersionCore()
         {
-            if (this.DBA.Connection.Database != database) throw new InvalidOperationException();
+            this.CheckDbValid();
 
             try
             {
@@ -52,9 +55,9 @@ namespace DbMigration.History
             }
         }
 
-        protected override Result SetDbVersionCore(string database, DateTime version)
+        protected override Result SetDbVersionCore(DateTime version)
         {
-            if (this.DBA.Connection.Database != database) throw new InvalidOperationException();
+            this.CheckDbValid();
 
             try
             {
@@ -72,35 +75,47 @@ namespace DbMigration.History
                 }
                 catch (DbException)
                 {
-                    return false;
+                    return "无法存储数据库版本号信息！";
                 }
             }
         }
 
+        private void CheckDbValid()
+        {
+            var conDb = this.DBA.Connection.Database;
+            if (conDb != this.DbSetting.Database && !string.IsNullOrWhiteSpace(conDb)) throw new InvalidOperationException("连接使用的数据库与正在创建的数据不一致！");
+        }
+
         private DateTime Get()
         {
-            var value = this.DBA.QueryValue("SELECT [VALUE] FROM [__DbMigrationVersion] WHERE [ID] = 1");
-            if (value != DBNull.Value) { return (DateTime)value; }
+            var value = this.DBA.QueryValue("SELECT VALUE FROM zzzDbMigrationVersion WHERE ID = 1");
+            if (value != DBNull.Value) { return new DateTime(Convert.ToInt64(value)); }
 
             return DefaultMinTime;
         }
 
         private void Set(DateTime version)
         {
-            this.DBA.ExecuteText("UPDATE [__DbMigrationVersion] SET [VALUE] = {0} WHERE [ID] = 1", version);
+            this.DBA.ExecuteText("UPDATE zzzDbMigrationVersion SET VALUE = {0} WHERE ID = 1", version.Ticks);
         }
 
         private void CreateTable()
         {
-            this.DBA.ExecuteText(@"
-CREATE TABLE [__DbMigrationVersion]
+            //不再使用 Date 类型，因为 Oracle 和 SQLServer 里面的数据的精度不一样。改为使用 LONG
+            //Oracle 中的 DateTime 类型为 Date
+            var timeType = this.DbSetting.ProviderName == DbSetting.Provider_Oracle ?
+                OracleDbTypeHelper.ConvertToOracleTypeString(DbType.Int64) :
+                SqlDbTypeHelper.ConvertToSQLTypeString(DbType.Int64);
+
+            this.DBA.ExecuteTextNormal(string.Format(@"
+CREATE TABLE zzzDbMigrationVersion
 (
-    [ID] INT NOT NULL,
-    [Value] DATETIME NOT NULL,
-    PRIMARY KEY ([ID])
+    ID INT NOT NULL,
+    Value {0} NOT NULL,
+    PRIMARY KEY (ID)
 )
-");
-            this.DBA.ExecuteText("INSERT INTO [__DbMigrationVersion] ([ID],[VALUE]) VALUES (1, {0})", DefaultMinTime);
+", timeType));
+            this.DBA.ExecuteText("INSERT INTO zzzDbMigrationVersion (ID,VALUE) VALUES (1, {0})", DefaultMinTime.Ticks);
         }
 
         protected internal override bool IsEmbaded()

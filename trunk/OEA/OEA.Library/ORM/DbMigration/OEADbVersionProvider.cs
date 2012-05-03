@@ -30,22 +30,22 @@ namespace OEA.Library.ORM.DbMigration
             this._versionRepo = RF.Concreate<DbVersionRepository>();
         }
 
-        protected override DateTime GetDbVersionCore(string database)
+        protected override DateTime GetDbVersionCore()
         {
-            var item = this._versionRepo.GetByDb(database);
+            var item = this._versionRepo.GetByDb(this.DbSetting.Database);
             if (item != null) { return item.Version; }
 
             return DefaultMinTime;
         }
 
-        protected override Result SetDbVersionCore(string database, DateTime version)
+        protected override Result SetDbVersionCore(DateTime version)
         {
-            var item = this._versionRepo.GetByDb(database);
+            var item = this._versionRepo.GetByDb(this.DbSetting.Database);
 
             if (item == null)
             {
                 item = new DbVersion();
-                item.Database = database;
+                item.Database = this.DbSetting.Database;
             }
 
             item.Version = version;

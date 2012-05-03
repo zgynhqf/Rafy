@@ -10,11 +10,13 @@ using System.Text;
 namespace hxy
 {
     /// <summary>
-    /// 一个简单的二进制序列化类    /// </summary>
+    /// 一个简单的二进制序列化类
+    /// </summary>
     public class BinaryFormatter : IStateFormatter
     {
         /// <summary>
-        /// Current Encoding to serialize/deserialize the object.        /// </summary>
+        /// Current Encoding to serialize/deserialize the object.
+        /// </summary>
         public static Encoding NowEncoding
         {
             get { return Encoding.UTF8; }
@@ -30,7 +32,7 @@ namespace hxy
         public BinaryFormatter()
         {
             bf = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-        } 
+        }
 
         #endregion
 

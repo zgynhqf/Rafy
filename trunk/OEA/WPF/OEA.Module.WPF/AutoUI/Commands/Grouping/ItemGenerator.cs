@@ -178,6 +178,6 @@ namespace OEA.Module.WPF.CommandAutoUI
         /// <summary>
         /// 控件所使用的运行时命令
         /// </summary>
-        public IClientCommand Command { get; private set; }
+        public ClientCommand Command { get; private set; }
     }
 }

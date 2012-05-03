@@ -23,10 +23,10 @@ using OEA.MetaModel;
 using OEA.ORM;
 using OEA.Utils;
 using OEA;
-
 using hxy;
 using OEA.Library.Validation;
 using OEA.Utils.Caching;
+using hxy.Common.Data;
 
 namespace OEA.Library
 {
@@ -38,8 +38,7 @@ namespace OEA.Library
     /// 1. 其子类必须是线程安全的！
     /// 2. 子类的构建函数建议使用protected，不要向外界暴露，全部通过仓库工厂获取。
     /// </summary>
-    public abstract class EntityRepository : IRepository,
-        IDbFactory, ITableInfoHost, IEntityInfoHost, ITypeValidationsHost
+    public abstract class EntityRepository : IRepository, IDbFactory, IEntityInfoHost, ITypeValidationsHost
     {
         private Entity _delegate;
 
@@ -691,7 +690,7 @@ namespace OEA.Library
             if (entityList.Count < 1) throw new ArgumentOutOfRangeException();
 
             var connection = this.CreateDb().DBA.Connection;
-            var tableInfo = this.GetTableInfo();
+            var tableInfo = this.GetORMTable();
 
             var sqlCon = connection as SqlConnection;
             if (sqlCon == null) throw new ArgumentNullException("只支持 SqlServer");
@@ -752,37 +751,46 @@ namespace OEA.Library
 
         public IDb CreateDb()
         {
-            return DBHelper.CreateDb(this.ConnectionStringSettingName);
+            return Db.Create(this.DbSetting);
         }
 
-        public string ConnectionStringSettingName
+        private DbSetting _dbSetting;
+        /// <summary>
+        /// 数据库配置（每个库有一个唯一的配置名）
+        /// </summary>
+        public DbSetting DbSetting
         {
-            get { return this.Delegate.ConnectionStringSettingName; }
-        }
-
-        #endregion
-
-        #region ITableInfoHost Members
-
-        private ITable _tableCache;
-
-        public ITable GetTableInfo()
-        {
-            if (this._tableCache == null)
+            get
             {
-                var tiRepo = new TableInfoFinder(this);
-                ITable fromDb = tiRepo.GetTableInfo(this.EntityType);
-
-                lock (this)
+                if (this._dbSetting == null)
                 {
-                    if (this._tableCache == null)
-                    {
-                        this._tableCache = fromDb;
-                    }
+                    var conSetting = this.Delegate.ConnectionStringSettingName;
+                    this._dbSetting = DbSetting.FindOrCreate(conSetting);
                 }
+                return this._dbSetting;
+            }
+        }
+
+        /// <summary>
+        /// OEA 内部使用!!!
+        /// 
+        /// 这个字段用于存储运行时解析出来的 ORM 信息。
+        /// 本字段只为提升性能。
+        /// </summary>
+        private OEA.ORM.DbTable _ormRuntime;
+
+        /// <summary>
+        /// 获取该实体对应的数据库 映射信息运行时对象
+        /// </summary>
+        /// <returns></returns>
+        public ITable GetORMTable()
+        {
+            if (this._ormRuntime == null)
+            {
+                this._ormRuntime = DbTableFactory.CreateORMTable(this);
             }
 
-            return this._tableCache;
+            return this._ormRuntime;
         }
 
         #endregion

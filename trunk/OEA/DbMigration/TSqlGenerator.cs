@@ -15,7 +15,10 @@ namespace DbMigration
     {
         protected abstract string ConvertToTypeString(DbType dataType);
 
-        protected abstract string GetDefaultValue(DbType dataType);
+        protected virtual string GetDefaultValue(DbType dataType)
+        {
+            return DbTypeHelper.GetDefaultValue(dataType);
+        }
 
         protected override void Generate(DropTable op)
         {
@@ -73,21 +76,32 @@ namespace DbMigration
 
         protected void GenerateAddPKConstraint(IndentedTextWriter sql, string tableName, string columnName)
         {
-            var text = string.Format(@"
-ALTER TABLE [{0}]
-    ADD CONSTRAINT [PK_{0}_{1}] 
-    PRIMARY KEY ([{1}])", tableName, columnName);
-            sql.Write(text);
+            sql.Write(@"
+ALTER TABLE ");
+            sql.Write(this.Quote(tableName));
+            sql.Write(@"
+    ADD CONSTRAINT ");
+            sql.Write(this.Quote(string.Format("PK_{0}_{1}",
+                this.Prepare(tableName), this.Prepare(columnName)
+                )));
+            sql.Write(@"
+    PRIMARY KEY (");
+            sql.Write(this.Quote(columnName));
+            sql.Write(")");
         }
 
         protected override void Generate(RemovePKConstraint op)
         {
             using (var sql = this.Writer())
             {
-                var text = string.Format(@"
-ALTER TABLE [{0}]
-    DROP CONSTRAINT [PK_{0}_{1}]", op.TableName, op.ColumnName);
-                sql.Write(text);
+                sql.Write(@"
+ALTER TABLE ");
+                sql.Write(this.Quote(op.TableName));
+                sql.Write(@"
+    DROP CONSTRAINT ");
+                sql.Write(this.Quote(string.Format("PK_{0}_{1}",
+                    this.Prepare(op.TableName), this.Prepare(op.ColumnName)
+                    )));
 
                 this.AddRun(sql);
             }
@@ -99,7 +113,8 @@ ALTER TABLE [{0}]
             {
                 string columnDefaultValue = this.GetDefaultValue(op.DataType);
 
-                var text = string.Format(@"UPDATE [{0}] SET [{1}] = {2} WHERE [{1}] IS NULL", op.TableName, op.ColumnName, columnDefaultValue);
+                var text = string.Format(@"UPDATE {0} SET {1} = {2} WHERE {1} IS NULL",
+                    this.Quote(op.TableName), this.Quote(op.ColumnName), columnDefaultValue);
                 sql.Write(text);
 
                 this.AddRun(sql);
@@ -113,21 +128,7 @@ ALTER TABLE [{0}]
             this.AddNotNullConstraint(op);
         }
 
-        protected void AddNotNullConstraint(ColumnOperation op)
-        {
-            using (var sql = this.Writer())
-            {
-                sql.Write("ALTER TABLE ");
-                sql.Write(this.Quote(op.TableName));
-                sql.WriteLine();
-
-                sql.Indent++;
-                sql.Write("ALTER COLUMN ");
-                this.GenerateColumnDeclaration(sql, op.ColumnName, op.DataType, true);
-
-                this.AddRun(sql);
-            }
-        }
+        protected abstract void AddNotNullConstraint(ColumnOperation op);
 
         protected override void Generate(RemoveNotNullConstraint op)
         {
@@ -139,31 +140,26 @@ ALTER TABLE [{0}]
             this.RemoveNotNullConstraint(op);
         }
 
-        protected void RemoveNotNullConstraint(ColumnOperation op)
-        {
-            using (var sql = this.Writer())
-            {
-                sql.Write("ALTER TABLE ");
-                sql.Write(this.Quote(op.TableName));
-                sql.WriteLine();
-
-                sql.Indent++;
-                sql.Write("ALTER COLUMN ");
-                this.GenerateColumnDeclaration(sql, op.ColumnName, op.DataType, false);
-
-                this.AddRun(sql);
-            }
-        }
+        protected abstract void RemoveNotNullConstraint(ColumnOperation op);
 
         protected override void Generate(AddFKConstraint op)
         {
             using (var sql = this.Writer())
             {
-                var text = string.Format(@"
-ALTER TABLE [{0}]
-    ADD CONSTRAINT [{4}] 
-    FOREIGN KEY ([{1}]) REFERENCES [{2}]([{3}])", op.DependentTable, op.DependentTableColumn, op.PrincipleTable, op.PrincipleTableColumn, op.ConstraintName);
-                sql.Write(text);
+                sql.Write(@"
+ALTER TABLE ");
+                sql.Write(this.Quote(op.DependentTable));
+                sql.Write(@"
+    ADD CONSTRAINT ");
+                sql.Write(this.Quote(op.ConstraintName));
+                sql.Write(@"
+    FOREIGN KEY (");
+                sql.Write(this.Quote(op.DependentTableColumn));
+                sql.Write(") REFERENCES ");
+                sql.Write(this.Quote(op.PrincipleTable));
+                sql.Write("(");
+                sql.Write(this.Quote(op.PrincipleTableColumn));
+                sql.Write(")");
 
                 if (op.NeedDeleteCascade)
                 {
@@ -178,26 +174,12 @@ ALTER TABLE [{0}]
         {
             using (var sql = this.Writer())
             {
-                var text = string.Format(@"
-ALTER TABLE [{0}]
-    DROP CONSTRAINT [{1}]", op.DependentTable, op.ConstraintName);
-                sql.Write(text);
-
-                this.AddRun(sql);
-            }
-        }
-
-        protected override void Generate(AlterColumnType op)
-        {
-            using (var sql = this.Writer())
-            {
-                sql.Write("ALTER TABLE ");
-                sql.Write(this.Quote(op.TableName));
-                sql.WriteLine();
-
-                sql.Indent++;
-                sql.Write("ALTER COLUMN ");
-                this.GenerateColumnDeclaration(sql, op.ColumnName, op.NewType, op.IsRequired);
+                sql.Write(@"
+ALTER TABLE ");
+                sql.Write(this.Quote(op.DependentTable));
+                sql.Write(@"
+    DROP CONSTRAINT ");
+                sql.Write(this.Quote(op.ConstraintName));
 
                 this.AddRun(sql);
             }
@@ -216,9 +198,14 @@ ALTER TABLE [{0}]
             sql.Write(" NULL");
         }
 
-        protected string Quote(string identifier)
+        protected virtual string Quote(string identifier)
         {
-            return "[" + identifier + "]";
+            return "[" + this.Prepare(identifier) + "]";
+        }
+
+        protected virtual string Prepare(string identifier)
+        {
+            return identifier;
         }
     }
 }

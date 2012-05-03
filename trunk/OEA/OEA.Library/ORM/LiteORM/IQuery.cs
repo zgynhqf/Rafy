@@ -28,11 +28,8 @@ namespace OEA.ORM
         IQuery In(IList values);
         IQuery NotIn(IList values);
 
-        IQuery Order(string column, bool ascending);
+        IQuery Order(string property, bool ascending);
         IQuery Order(IManagedProperty property, bool ascending);
-
-        //add by zhoujg 构造语句时选取指定列.考虑附件类似字段不需要获取,加入columns
-        System.Collections.Generic.IList<string> Columns { get; set; }
 
         IConstraint Get(int index);
     }

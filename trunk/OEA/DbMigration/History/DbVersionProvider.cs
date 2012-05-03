@@ -28,19 +28,21 @@ namespace DbMigration.History
     {
         public static readonly DateTime DefaultMinTime = new DateTime(2000, 1, 1);
 
-        internal DateTime GetDbVersion(string database)
+        protected internal DbSetting DbSetting { get; internal set; }
+
+        internal DateTime GetDbVersion()
         {
-            return this.GetDbVersionCore(database);
+            return this.GetDbVersionCore();
         }
 
-        internal Result SetDbVersion(string database, DateTime version)
+        internal Result SetDbVersion(DateTime version)
         {
-            return this.SetDbVersionCore(database, version);
+            return this.SetDbVersionCore(version);
         }
 
-        protected abstract DateTime GetDbVersionCore(string database);
+        protected abstract DateTime GetDbVersionCore();
 
-        protected abstract Result SetDbVersionCore(string database, DateTime version);
+        protected abstract Result SetDbVersionCore(DateTime version);
 
         /// <summary>
         /// 当前的值是否直接存储在当前数据库中。

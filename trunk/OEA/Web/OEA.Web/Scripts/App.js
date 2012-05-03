@@ -6,6 +6,7 @@
             viewName: ""
         }, opt);
         var model = opt.model;
+        var module = opt.module;
         var container = opt.container;
 
         var callBack = null;
@@ -44,9 +45,10 @@
                     container.add(controlResult.getControl());
                     container.setLoading(false);
                 }, 10);
-            }
+            };
         }
         Oea.AutoUI.getMeta({
+            module: module,
             model: model,
             viewName: opt.viewName,
             isAggt: opt.isAggt,

@@ -1,12 +1,22 @@
 ﻿namespace OEA.ORM
 {
-	public interface IConstraint
-	{
-		string Column { get; } //alias
-		string Operator { get; } //=, <>, ...
-		object Value { get; set; }
-		
-		bool HasQuery { get; }
-		IQuery Query { get; }
-	}
+    public interface IConstraint
+    {
+        /// <summary>
+        /// may be null
+        /// </summary>
+        IQuery Query { get; }
+
+        /// <summary>
+        /// alias
+        /// </summary>
+        string Property { get; }
+
+        /// <summary>
+        /// =, <>, ...
+        /// </summary>
+        string Operator { get; }
+
+        object Value { get; set; }
+    }
 }

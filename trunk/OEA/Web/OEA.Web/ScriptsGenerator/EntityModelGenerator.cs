@@ -58,10 +58,13 @@ namespace OEA.Web
                 var pName = property.Name;
                 if (pName != DBConvention.FieldName_Id)
                 {
+                    var serverType = ServerTypeHelper.GetServerType(property.Runtime.PropertyType);
+                    if (serverType.Name == SupportedServerType.Unknown) { continue; }
+
                     var field = new EntityField
                     {
                         name = pName,
-                        type = ServerTypeHelper.GetServerType(property.Runtime.PropertyType),
+                        type = serverType,
                         persist = property.Runtime.CanWrite,
                     };
 

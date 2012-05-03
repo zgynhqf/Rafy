@@ -45,6 +45,7 @@
     <Compile Include="Collection\LRUCache.cs" />
     <Compile Include="Configuration\ConfigurationExtension.cs" />
     <Compile Include="Configuration\ConfigurationHelper.cs" />
+    <Compile Include="Data\DbConnectionSchema.cs" />
     <Compile Include="Data\DbSetting.cs" />
     <Compile Include="Data\DBAccesser.cs" />
     <Compile Include="Data\IDBAccesser.cs" />

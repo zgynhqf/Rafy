@@ -63,6 +63,7 @@ namespace RBAC
             this._naviModulesView.DataLoader.LoadDataAsync();
             //this._naviModulesView.Control.Loaded += (o, e) => this._naviModulesView.ExpandAll();
             this._naviModulesView.CurrentObjectChanged += new EventHandler(_naviModulesView_CurrentObjectChanged);
+            this._naviModulesView.IsReadOnly = true;
             navigation.Content = this._naviModulesView.Control;
 
             //右边的结果列表
@@ -75,6 +76,11 @@ namespace RBAC
         public void ExpandModules()
         {
             this._naviModulesView.ExpandAll();
+        }
+
+        public void CollapseModules()
+        {
+            this._naviModulesView.CollapseAll();
         }
 
         public void BindData(OrgPositionOperationDenyList denyList)

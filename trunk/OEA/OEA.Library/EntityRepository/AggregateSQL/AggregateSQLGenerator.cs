@@ -17,7 +17,7 @@ using System.Linq;
 using System.Text;
 using OEA.ORM;
 using System.Data;
-using OEA.ORM.sqlserver;
+using OEA.ORM.SqlServer;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using OEA.MetaModel;
@@ -118,7 +118,7 @@ namespace OEA.Library
             this._sql.AppendLine("SELECT");
 
             //生成第一个直接查询的表的所有列
-            var directlyQueryTableAlias = this.GetTableAlias(this._directlyQueryRepository.GetTableInfo().Name);
+            var directlyQueryTableAlias = this.GetTableAlias(this._directlyQueryRepository.GetORMTable().Name);
             var directlyQueryTableColumns = new SQLColumnsGenerator(this._directlyQueryRepository)
                 .GetReadableColumnsSql(directlyQueryTableAlias);
             this._sql.Append(directlyQueryTableColumns);
@@ -129,7 +129,7 @@ namespace OEA.Library
             var items = this._aggregateInfo.Items;
             foreach (var item in items)
             {
-                var tableName = item.PropertyEntityRepository.GetTableInfo().Name;
+                var tableName = item.PropertyEntityRepository.GetORMTable().Name;
                 var tableAlias = GetTableAlias(tableName);
                 var columns = new SQLColumnsGenerator(item.PropertyEntityRepository);
                 var sqlColumns = columns.GetReadableColumnsSql(tableAlias);
@@ -146,7 +146,7 @@ namespace OEA.Library
         private void GenerateFrom()
         {
             //From “第一个直接查询的表”
-            var tableName = this._directlyQueryRepository.GetTableInfo().Name;
+            var tableName = this._directlyQueryRepository.GetORMTable().Name;
             var tableAlias = this.GetTableAlias(tableName);
             this._sql.Append("FROM ");
             this._sql.Append(tableName);
@@ -181,19 +181,19 @@ namespace OEA.Library
                 string fkName = null;
                 if (item.LoadType == AggregateLoadType.Children)
                 {
-                    pkTable = item.OwnerRepository.GetTableInfo();
-                    fkTable = item.PropertyEntityRepository.GetTableInfo();
+                    pkTable = item.OwnerRepository.GetORMTable();
+                    fkTable = item.PropertyEntityRepository.GetORMTable();
                     fkName = item.PropertyEntityRepository.FindParentPropertyInfo(true).Name;
                 }
                 else
                 {
-                    pkTable = item.PropertyEntityRepository.GetTableInfo();
-                    fkTable = item.OwnerRepository.GetTableInfo();
+                    pkTable = item.PropertyEntityRepository.GetORMTable();
+                    fkTable = item.OwnerRepository.GetORMTable();
                     fkName = item.PropertyInfo.Name;
                 }
 
                 //当前的关系表的查找方法是固定的，就是属性实体。
-                string propertyTableName = item.PropertyEntityRepository.GetTableInfo().Name;
+                string propertyTableName = item.PropertyEntityRepository.GetORMTable().Name;
 
                 //表所对应的别名
                 string propertyTableAlias = this.GetTableAlias(propertyTableName);
@@ -241,7 +241,7 @@ namespace OEA.Library
                 var parentProperty = this._directlyQueryRepository.FindParentPropertyInfo(true);
                 var rootTypeFKColumn = parentProperty.Name;//属性名就是列名
 
-                var dqTableName = this._directlyQueryRepository.GetTableInfo().Name;
+                var dqTableName = this._directlyQueryRepository.GetORMTable().Name;
                 var dqTableAlias = this.GetTableAlias(dqTableName);
                 this._sql.Append(dqTableAlias);
                 this._sql.Append('.');
@@ -253,7 +253,7 @@ namespace OEA.Library
 
         private void GenerateOrderBy()
         {
-            var directlyQueryTableAlias = this.GetTableAlias(this._directlyQueryRepository.GetTableInfo().Name);
+            var directlyQueryTableAlias = this.GetTableAlias(this._directlyQueryRepository.GetORMTable().Name);
 
             this._sql.Append("ORDER BY ");
             this._sql.Append(directlyQueryTableAlias);
@@ -265,7 +265,7 @@ namespace OEA.Library
             {
                 var item = tmp.Value;
 
-                var propertyTable = item.PropertyEntityRepository.GetTableInfo();
+                var propertyTable = item.PropertyEntityRepository.GetORMTable();
                 var propertyTableAlias = this.GetTableAlias(propertyTable.Name);
 
                 this._sql.Append(", ");

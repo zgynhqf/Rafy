@@ -21,6 +21,7 @@ using OEA.MetaModel;
 using OEA.MetaModel.View;
 using OEA.WPF.Command;
 using OEA.WPF;
+using OEA.Library.ORM.DbMigration;
 
 namespace OEA.Module.WPF
 {
@@ -65,6 +66,36 @@ namespace OEA.Module.WPF
 
             app.Composed += (s, e) => App.Current.InitMainWindow();
             app.LoginSuccessed += (s, e) => App.Current.InitUIModuleList();
+
+            //只有单机版会执行这里的代码
+            app.DbMigratingOperations += (o, e) =>
+            {
+                var configNames = ConfigurationHelper.GetAppSettingOrDefault("OEA_Migrate_Databases");
+                if (!string.IsNullOrEmpty(configNames))
+                {
+                    MigrationWithProgressBar.Do(ConnectionStringNames.DbMigrationHistory, c =>
+                    {
+                        //对于迁移日志库的构造，无法记录它本身的迁移日志
+                        c.HistoryRepository = null;
+
+                        c.AutoMigrate();
+                    });
+
+                    var configArray = configNames.Replace(ConnectionStringNames.DbMigrationHistory, string.Empty)
+                        .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var config in configArray)
+                    {
+                        //using (var c = new OEADbMigrationContext(config))
+                        //{
+                        //    c.RollbackAll();
+                        //    c.ResetHistory();
+                        //    c.ResetDbVersion();
+                        //    c.AutoMigrate();
+                        //}
+                        MigrationWithProgressBar.Do(config, c => c.AutoMigrate());
+                    }
+                }
+            };
         }
     }
 }

@@ -294,6 +294,7 @@ namespace OEA.Web.ClientMetaModel
 
     internal class ConvertOption
     {
+        public string module;
         public bool isReadonly;
         public bool ignoreCommands;
         public bool isDetail;

@@ -19,8 +19,6 @@ using OEA;
 using OEA.Library;
 using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
-
-
 using OEA.MetaModel.View;
 
 namespace OEA.RBAC
@@ -109,6 +107,13 @@ namespace OEA.RBAC
             return list;
         }
 
+        public override EntityList GetByParentId(int parentId)
+        {
+            var moduleAC = RF.Create<ModuleAC>().GetById(parentId);
+
+            return this.GetByParent(moduleAC, false);
+        }
+
         /// <summary>
         /// 获取整个模块可用的的所有功能列表
         /// </summary>
@@ -165,15 +170,36 @@ namespace OEA.RBAC
                 Label = SystemOperationKeys.Edit
             });
 
-            //功能按钮权限
-            foreach (var cmd in mainBlock.ViewMeta.WPFCommands)
+            if (OEAEnvironment.IsWeb)
             {
-                list.Add(new OperationAC
+                //功能按钮权限
+                foreach (var cmd in mainBlock.ViewMeta.WebCommands)
                 {
-                    ScopeKeyLabel = mainBlock.KeyLabel,
-                    OperationKey = cmd.Name,
-                    Label = cmd.Label
-                });
+                    list.Add(new OperationAC
+                    {
+                        ScopeKeyLabel = mainBlock.KeyLabel,
+                        OperationKey = cmd.Name,
+                        Label = cmd.Label
+                    });
+                }
+            }
+            else
+            {
+                //功能按钮权限
+                foreach (var cmd in mainBlock.ViewMeta.WPFCommands)
+                {
+                    list.Add(new OperationAC
+                    {
+                        ScopeKeyLabel = mainBlock.KeyLabel,
+                        OperationKey = cmd.Name,
+                        Label = cmd.Label
+                    });
+                }
+            }
+
+            foreach (var surrounder in blocks.Surrounders)
+            {
+                this.GetByBlocksRecur(surrounder, list);
             }
 
             foreach (var child in blocks.Children)

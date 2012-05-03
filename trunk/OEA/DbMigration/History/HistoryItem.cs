@@ -16,7 +16,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OEA;
-using OEA.Utils.Serialization;
 using System.Diagnostics;
 
 namespace DbMigration.History

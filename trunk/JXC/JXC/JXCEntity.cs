@@ -9,7 +9,7 @@ namespace JXC
     [Serializable]
     public abstract class JXCEntity : Entity
     {
-        public static readonly string ConnectionString = "Demo";
+        public static string ConnectionString = "Demo";
 
         protected override string ConnectionStringSettingName
         {

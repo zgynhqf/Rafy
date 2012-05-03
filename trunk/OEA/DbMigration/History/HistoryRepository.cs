@@ -17,7 +17,7 @@ using System.Linq;
 using System.Text;
 using hxy.Common;
 using OEA;
-using OEA.Utils.Serialization;
+using hxy;
 
 namespace DbMigration.History
 {

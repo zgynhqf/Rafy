@@ -21,5 +21,6 @@ namespace OEA.Web.ClientMetaModel
     public enum SupportedServerType
     {
         Guid, String, Enum, Int32, Double, Boolean, DateTime,
+        Unknown
     }
 }

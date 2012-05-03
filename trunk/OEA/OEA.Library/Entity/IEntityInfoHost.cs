@@ -18,6 +18,9 @@ namespace OEA.Library
         /// <returns></returns>
         IList<IManagedProperty> GetAvailableIndicators();
 
+        /// <summary>
+        /// 实体元数据
+        /// </summary>
         EntityMeta EntityMeta { get; }
 
         /// <summary>

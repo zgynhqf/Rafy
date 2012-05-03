@@ -1,0 +1,12 @@
+﻿@{
+    ViewBag.Title = "实体模块";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section head{
+    <script type="text/javascript">
+        Ext.onReady(function () {
+            Ext.QuickTips.init();
+            Oea.App.showModel({ module: '@this.ViewBag.Module' });
+        });
+    </script>
+}

@@ -30,9 +30,9 @@ namespace OEA.MetaModel
         private string _ColumnName;
 
         /// <summary>
-        /// 是否主键
+        /// 是否 ID 主键
         /// </summary>
-        public bool IsPK
+        public bool IsPKID
         {
             get { return this._IsPK; }
             set { this.SetValue(ref this._IsPK, value); }

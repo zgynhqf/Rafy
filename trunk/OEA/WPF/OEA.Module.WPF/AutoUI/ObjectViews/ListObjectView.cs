@@ -664,16 +664,18 @@ namespace OEA.Module.WPF
             newEntity.ResetParentEntity();
         }
 
-        public void RemoveSelection()
-        {
-            throw new NotImplementedException();//huqf
-        }
-
         public void ExpandAll()
         {
             if (!this.IsShowingTree) { throw new InvalidOperationException("非树型实体不支持使用此方法"); }
 
             (this.Control as MultiTypesTreeGrid).ExpandAll();
+        }
+
+        public void CollapseAll()
+        {
+            if (!this.IsShowingTree) { throw new InvalidOperationException("非树型实体不支持使用此方法"); }
+
+            (this.Control as MultiTypesTreeGrid).CollapseAll();
         }
 
         #endregion

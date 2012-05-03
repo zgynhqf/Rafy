@@ -22,6 +22,7 @@ namespace FM.UI
                 MainBlock = new Block(this.EntityType)
                 {
                     BlockType = BlockType.Detail,
+                    KeyLabel = "经费输入",
                     ExtendView = "FinanceLog 输入视图"
                 },
                 Surrounders =

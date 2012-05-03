@@ -29,12 +29,12 @@ namespace OEA.Web.ClientMetaModel
                 st.IsNullable = true;
                 st.Name = SupportedServerType.String;
             }
-            else if (fieldType == typeof(Guid)) { st.Name = SupportedServerType.Guid; }
-            else if (fieldType.IsEnum) { st.Name = SupportedServerType.Enum; }
             else if (fieldType == typeof(int)) { st.Name = SupportedServerType.Int32; }
+            else if (fieldType.IsEnum) { st.Name = SupportedServerType.Enum; }
             else if (fieldType == typeof(double)) { st.Name = SupportedServerType.Double; }
             else if (fieldType == typeof(bool)) { st.Name = SupportedServerType.Boolean; }
             else if (fieldType == typeof(DateTime)) { st.Name = SupportedServerType.DateTime; }
+            else if (fieldType == typeof(Guid)) { st.Name = SupportedServerType.Guid; }
             else if (fieldType.IsGenericType && fieldType.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
                 var innerType = fieldType.GetGenericArguments()[0];
@@ -42,7 +42,11 @@ namespace OEA.Web.ClientMetaModel
                 st.IsNullable = true;
                 return st;
             }
-            else { st.Name = SupportedServerType.String; }
+            else
+            {
+                st.Name = SupportedServerType.Unknown;
+                return st;
+            }
 
             st.JSType = GetClientType(st);
 

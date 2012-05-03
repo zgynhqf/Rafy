@@ -139,14 +139,6 @@ namespace OEA.Module.WPF.Shell
             base.OnAppModelCompleted();
         }
 
-        protected override void RaiseDbMigratingOperations()
-        {
-            if (OEAEnvironment.Location == OEALocation.LocalVersion)
-            {
-                base.RaiseDbMigratingOperations();
-            }
-        }
-
         protected override void StartMainProcess()
         {
             if (this.TryLogin())

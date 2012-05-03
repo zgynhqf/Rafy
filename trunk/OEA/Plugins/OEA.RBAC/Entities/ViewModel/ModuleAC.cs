@@ -23,7 +23,7 @@ using OEA.ManagedProperty;
 using OEA.MetaModel.View;
 using OEA.RBAC;
 
-namespace OEA.Library
+namespace OEA.RBAC
 {
     /// <summary>
     /// （Module Access Control）
