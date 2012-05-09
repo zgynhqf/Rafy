@@ -1,7 +1,7 @@
 ﻿Ext.define('Oea.cmd.Add', {
     extend: 'Oea.cmd.Command',
     config: {
-        meta: { text: "添加" }
+        meta: { text: "添加", group: "edit" }
     },
     canExecute: function (listView) {
         var p = listView.getParent();

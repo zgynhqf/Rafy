@@ -407,7 +407,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <None Include="AutoUI\ObjectViews\ObjectView.cd" />
     <None Include="Controls\MTTG\ObjectTreeView\Classes.cd" />
     <None Include="AutoUI\Editors\Editor.cd" />
   </ItemGroup>

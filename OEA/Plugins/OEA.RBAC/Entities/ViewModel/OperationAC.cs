@@ -81,10 +81,25 @@ namespace OEA.RBAC
             get { return this.GetProperty(LabelProperty); }
             set { this.SetProperty(LabelProperty, value); }
         }
+
+        /// <summary>
+        /// 判断当前的这个操作是否和指定的禁用操作是同一个操作。
+        /// </summary>
+        /// <param name="deny"></param>
+        /// <returns></returns>
+        public bool IsSame(OrgPositionOperationDeny deny)
+        {
+            //模块名、功能名、所属界面块同时相同
+            return deny.ModuleKey == this.ModuleAC.KeyLabel && deny.OperationKey == this.OperationKey &&
+                                    (string.IsNullOrEmpty(deny.BlockKey) && this.ScopeKeyLabel == OperationAC.ModuleScope || deny.BlockKey == this.ScopeKeyLabel);
+        }
     }
 
     public class OperationACList : EntityList { }
 
+    /// <summary>
+    /// OperationAc 这个类并不映射数据库，所以所有的查询方法都是在 Repository 中实现的。
+    /// </summary>
     public class OperationACRepository : MemoryEntityRepository
     {
         protected OperationACRepository() { }
@@ -93,9 +108,15 @@ namespace OEA.RBAC
         {
             var op = entity as OperationAC;
             if (op.ModuleAC == null) return string.Empty;
-            return op.ModuleAC.KeyName + "_" + op.ScopeKeyLabel + "_" + op.OperationKey;
+            return op.ModuleAC.KeyLabel + "_" + op.ScopeKeyLabel + "_" + op.OperationKey;
         }
 
+        /// <summary>
+        /// 获取某个模块下的所有可用功能列表（WPF 模式下会调用此方法。）
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="withCache"></param>
+        /// <returns></returns>
         public override EntityList GetByParent(Entity parent, bool withCache = true)
         {
             var list = this.GetByModule(parent as ModuleAC);
@@ -107,11 +128,57 @@ namespace OEA.RBAC
             return list;
         }
 
+        /// <summary>
+        /// 获取某个模块下的所有可用功能列表（Web 模式下会调用此方法。）
+        /// </summary>
+        /// <param name="parentId"></param>
+        /// <returns></returns>
         public override EntityList GetByParentId(int parentId)
         {
             var moduleAC = RF.Create<ModuleAC>().GetById(parentId);
 
             return this.GetByParent(moduleAC, false);
+        }
+
+        protected override EntityList GetBy(object criteria)
+        {
+            if (criteria is OperationAC_GetDenyListCriteria)
+            {
+                return this.GetBy(criteria as OperationAC_GetDenyListCriteria);
+            }
+
+            return base.GetBy(criteria);
+        }
+
+        /// <summary>
+        /// 查找某个岗位下某个指定模块的禁用功能。
+        /// </summary>
+        /// <param name="c"></param>
+        /// <returns></returns>
+        private EntityList GetBy(OperationAC_GetDenyListCriteria c)
+        {
+            var opId = c.OrgPositionId;
+
+            var moduleAC = RF.Create<ModuleAC>().GetById(c.ModuleACId);
+            var operations = this.GetByParent(moduleAC, false);
+
+            //把所有已经禁用的功能都加入到列表中去。并把这个返回
+            var list = this.NewList();
+            var op = RF.Create<OrgPosition>().GetById(opId) as OrgPosition;
+            var denyList = op.OrgPositionOperationDenyList;
+            list.AddRange(operations.Cast<OperationAC>().Where(item =>
+            {
+                foreach (OrgPositionOperationDeny deny in denyList)
+                {
+                    if (item.IsSame(deny))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }));
+            return list;
         }
 
         /// <summary>
@@ -209,11 +276,34 @@ namespace OEA.RBAC
         }
     }
 
+    [Criteria, Serializable]
+    public class OperationAC_GetDenyListCriteria : Criteria
+    {
+        public static readonly Property<int> ModuleACIdProperty = P<OperationAC_GetDenyListCriteria>.Register(e => e.ModuleACId);
+        public int ModuleACId
+        {
+            get { return this.GetProperty(ModuleACIdProperty); }
+            set { this.SetProperty(ModuleACIdProperty, value); }
+        }
+
+        public static readonly Property<int> OrgPositionIdProperty = P<OperationAC_GetDenyListCriteria>.Register(e => e.OrgPositionId);
+        public int OrgPositionId
+        {
+            get { return this.GetProperty(OrgPositionIdProperty); }
+            set { this.SetProperty(OrgPositionIdProperty, value); }
+        }
+    }
+
     internal class OperationACConfig : EntityConfig<OperationAC>
     {
         protected override void ConfigView()
         {
-            base.ConfigView();
+            View.DisableEditing();
+
+            if (IsWeb)
+            {
+                View.WithoutPaging();
+            }
 
             View.DomainName("权限控制项")
                 .HasDelegate(OperationAC.OperationKeyProperty)

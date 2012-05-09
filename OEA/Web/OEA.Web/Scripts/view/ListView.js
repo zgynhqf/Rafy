@@ -3,12 +3,18 @@
 
     //private
     _treeStoreInited: false,
+    //最后一次使用的数据加载参数
+    _lastDataArgs: null,
 
-    //internal 
+    //internal
     _pagingBar: null,
+
+    isListView: true,
 
     constructor: function (meta) {
         this.callParent(arguments);
+
+        this.addEvents('itemCreated');
     },
 
     getData: function () {
@@ -20,6 +26,14 @@
         var data = c.getStore();
         if (data != value) {
             if (value != null) {
+
+                //如果原来有分组信息，则新的 store 也需要分组。注意：只支持一级分组。
+                var g = data.groupers;
+                if (g.getCount() > 0) {
+                    var gi = g.getAt(0);
+                    value.group(gi.property, gi.direction);
+                }
+
                 c.reconfigure(value);
                 if (me._pagingBar) { me._pagingBar.bind(value); }
             }
@@ -68,7 +82,15 @@
         this.callParent(arguments);
     },
 
-    //Selection
+    //------------------------------------- Relations -------------------------------------
+    getConditionView: function () {
+        return this.findRelationView(Oea.view.RelationView.condition);
+    },
+    getNavigationView: function () {
+        return this.findRelationView(Oea.view.RelationView.navigation);
+    },
+
+    //------------------------------------- Selection -------------------------------------
     getSelection: function () {
         return this._getSelectionModel().getSelection();
     },
@@ -76,16 +98,36 @@
         return this.getControl().getSelectionModel();
     },
 
-    //以下是方便 CRUD 的方法
+    //------------------------------------- Readonly -------------------------------------
+    //protected override
+    onIsReadonlyChanged: function (value) {
+        var editing = this._getEditing();
+        if (value) {
+            editing.on('beforeedit', this._readonlyHandler, this);
+        }
+        else {
+            editing.un('beforeedit', this._readonlyHandler, this);
+        }
+    },
+    _readonlyHandler: function (editor, e, opt) {
+        e.cancel = true;
+    },
 
+    //------------------------------------- 以下是方便 CRUD 的方法 -------------------------------------
     //在同级添加一个结点
     addNew: function () {
+        /// <summary>
+        /// 为当前列表视图添加一个新的对象，同时设置好它的关系。
+        /// </summary>
+        /// <returns type="Oea.data.Entity">返回新加的实体对象</returns>
+
+        var result = null;
         var me = this;
         if (!me._isTree) {
             var store = me.getData();
             var models = store.add({});
             //            store.insert(0, {}); //调用这个方法可以自动设置父外键
-            return models[0];
+            result = models[0];
         }
         else {
             var parent;
@@ -94,13 +136,22 @@
             parent = parent || me._getTreeRoot();
 
             if (parent.isLeaf()) { parent.set('leaf', false); }
-            var model = parent.appendChild(me._createTreeNode(parent));
+            result = parent.appendChild(me._createTreeNode(parent));
             if (!parent.isExpanded()) { parent.expand(); }
-            return model;
         }
+
+        this.fireEvent('itemCreated', { item: result });
+
+        return result;
     },
     //为当前选择的树型控件添加一个子结点
     insertNewChild: function () {
+        /// <summary>
+        /// 为当前列表视图插入一个新的对象，同时设置好它的关系。
+        ///
+        /// 注意，此方法只能在树型视图中被调用。
+        /// </summary>
+        /// <returns type="Oea.data.Entity">返回新加的实体对象</returns>
         var me = this;
         if (me._isTree) {
             var s = me.getSelection();
@@ -109,6 +160,9 @@
             if (parent.isLeaf()) { parent.set('leaf', false); }
             var model = parent.insertChild(0, me._createTreeNode(parent));
             if (!parent.isExpanded()) { parent.expand(); }
+
+            this.fireEvent('itemCreated', { item: model });
+
             return model;
         }
     },
@@ -137,13 +191,19 @@
                     //                        Oea.each(item.childNodes, function (i) { me._removeTreeNode(i); });
                     //                        item.remove();
                     //                    },
-                });                       
+                });
             }
         }
         return selection;
     },
 
     _serializeData: function (opt) {
+        /// <summary>
+        /// 实现列表类的数据序列化逻辑：
+        /// 把实体列表仓库转换为 ListChangeSet 对象。
+        /// </summary>
+        /// <param name="opt"></param>
+        /// <returns></returns>
         var me = this;
 
         var api = Oea.data.ListChangeSet;
@@ -165,38 +225,51 @@
         return data;
     },
 
+    reloadData: function () {
+        /// <summary>
+        /// 使用最后一次使用的加载参数，重新加载整个列表的数据。
+        /// </summary>
+        this.loadData(this._lastDataArgs);
+    },
     loadData: function (args) {
-        var me = this;
-
-        args = args || {};
+        /// <summary>
+        /// 为这个视图异步加载数据
+        /// </summary>
+        /// <param name="args">
+        /// criteria: 使用这个参数来进行数据查询。
+        /// callback: 加载完成后的回调。（目前此参数只在非树型列表时有用！待修正。）
+        /// </param>
+        args = args || this._lastDataArgs || {};
         if (Ext.isFunction(args)) {
             args = { callback: args };
         }
+        this._lastDataArgs = args;
 
-        var store = me.getData();
+        var store = this.getData();
 
         if (args.criteria) {
             Oea.data.EntityRepository.filterByCriteria(store, args.criteria);
         }
 
         //加载数据，并清空当前选择项。
-        if (me._isTree) {
+        if (this._isTree) {
 
             //由于创建时配置了 root 为已经加载来防止 treePanel 的自动加载数据，
             //所以这里在第一次查询时，需要把该值设置为 false。
-            if (!me._treeStoreInited) {
-                me._treeStoreInited = true;
+            if (!this._treeStoreInited) {
+                this._treeStoreInited = true;
 
                 var root = store.getRootNode();
                 root.set('loaded', false);
             }
 
-            me.setCurrent(null);
+            this.setCurrent(null);
             store.load();
         }
         else {
             store.rejectChanges();
 
+            var me = this;
             store.load(function () {
                 me.setCurrent(null);
                 if (args.callback) args.callback(arguments);
@@ -206,8 +279,7 @@
         //        store.getRemovedRecords().length = 0;
     },
 
-    //Tree Operations
-
+    //------------------------------------- Tree Operations -------------------------------------
     expandSelection: function () {
         var me = this;
         if (me._isTree) {
@@ -235,9 +307,13 @@
         return this._getTreeRoot().childNodes;
     },
 
+    //------------------------------------- Edit -------------------------------------
     startEdit: function (entity, columnHeader) {
-        var grid = this.getControl();
-        grid.getPlugin('editingPlugin').startEdit(entity, columnHeader);
+        this._getEditing().startEdit(entity, columnHeader);
+        //------------------------------------- Tree Operations -------------------------------------
+        //------------------------------------- Tree Operations -------------------------------------
+        //------------------------------------- Tree Operations -------------------------------------
+        //------------------------------------- Tree Operations -------------------------------------
     },
     locateDefault: function () {
         var me = this;
@@ -252,5 +328,10 @@
                 me.setCurrent(item);
             }
         }
+    },
+
+    _getEditing: function () {
+        var res = this.getControl().getPlugin('editingPlugin');
+        return res;
     }
 });

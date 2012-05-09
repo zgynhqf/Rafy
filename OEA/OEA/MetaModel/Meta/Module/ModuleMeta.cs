@@ -125,16 +125,27 @@ namespace OEA.MetaModel
             set { this.SetValue(ref this._AggtBlocksName, value); }
         }
 
+        private string _WebTemplateType;
+        /// <summary>
+        /// Web 界面中本模块使用的界面模板类型。
+        /// 如果指定此属性，则指定的该类型必须继承自 Oea.UITemplate 类。
+        /// </summary>
+        public string WebTemplateType
+        {
+            get { return this._WebTemplateType; }
+            set { this.SetValue(ref this._WebTemplateType, value); }
+        }
+
         #endregion
 
         #region WPF
 
         private Type _TemplateType;
         /// <summary>
-        /// 使用的模板类型。
-        /// 如果指定此属性，则指定的该类型必须继承自 BlocksTemplate 类。
+        /// WPF 界面中本模块使用的界面模板类型。
+        /// 如果指定此属性，则指定的该类型必须继承自 UITemplate 类。
         /// </summary>
-        public Type TemplateType
+        public Type WPFTemplateType
         {
             get { return this._TemplateType; }
             set { this.SetValue(ref this._TemplateType, value); }

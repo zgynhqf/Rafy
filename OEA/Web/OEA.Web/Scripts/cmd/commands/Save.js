@@ -1,7 +1,7 @@
 ﻿Ext.define('Oea.cmd.Save', {
     extend: 'Oea.cmd.Command',
     config: {
-        meta: { text: "保存" }
+        meta: { text: "保存", group: "edit" }
     },
     execute: function (listView) {
         listView.save(function (res) {

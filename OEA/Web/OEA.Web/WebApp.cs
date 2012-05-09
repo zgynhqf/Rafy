@@ -22,7 +22,6 @@ using OEA.Web.ClientMetaModel;
 using System.IO;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
-using OEA.Web.Services;
 using System.ServiceModel;
 using OEA.Server.Hosts;
 

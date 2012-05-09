@@ -91,7 +91,7 @@ namespace OEA.Library.Audit
         {
             var value = e.NewEntity as ModuleAC;
 
-            this.ModuleName = value != null ? value.KeyName : null;
+            this.ModuleName = value != null ? value.KeyLabel : null;
         }
         /// <summary>
         /// 模块名（实际用于传输的数据）

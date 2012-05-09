@@ -26,9 +26,23 @@ namespace OEA.Web.EntityDataPortal
     /// </summary>
     internal abstract class ListReader
     {
-        [DebuggerStepThrough]
-        internal static EntityList JsonToEntity(JObject jEntityList, EntityRepository repository)
+        /// <summary>
+        /// 把实体列表对应的 json 转换为 EntityList 对象。
+        /// </summary>
+        /// <param name="jEntityList"></param>
+        /// <param name="repository">如果没有显式指定 Repository，则会根据 json 中的 _model 属性来查找对应的实体仓库。</param>
+        /// <returns></returns>
+        internal static EntityList JsonToEntity(JObject jEntityList, EntityRepository repository = null)
         {
+            if (repository == null)
+            {
+                var modelProperty = jEntityList.Property("_model");
+                if (modelProperty == null) { throw new NotSupportedException("实体列表对应的 Json 应该有 model 属性。"); }
+                var model = modelProperty.Value.CastTo<JValue>().Value.CastTo<string>();
+                var clientEntity = ClientEntities.Find(model);
+                repository = RF.Create(clientEntity.EntityType);
+            }
+
             ListReader reader = repository.SupportTree ? new TreeEntityListReader() : new EntityListReader() as ListReader;
             reader.Repository = repository;
             reader.ChangeSet = jEntityList;

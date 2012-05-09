@@ -120,10 +120,21 @@ namespace OEA.Library.Audit
                     .And().Constrain(AuditItem.LogTimeProperty).GreaterEqual(startDate)
                     .And().Constrain(AuditItem.LogTimeProperty).LessEqual(endDate);
 
-                if (!string.IsNullOrEmpty(criteria.ModuleName))
+                if (OEAEnvironment.IsWeb)
                 {
-                    q.And().Constrain(AuditItem.ModuleNameProperty).Equal(criteria.ModuleName);
+                    if (criteria.ModuleACId.HasValue)
+                    {
+                        q.And().Constrain(AuditItem.ModuleNameProperty).Equal(criteria.ModuleAC.KeyLabel);
+                    }
                 }
+                else
+                {
+                    if (!string.IsNullOrEmpty(criteria.ModuleName))
+                    {
+                        q.And().Constrain(AuditItem.ModuleNameProperty).Equal(criteria.ModuleName);
+                    }
+                }
+
                 if (criteria.AuditLogType != AuditLogType.None)
                 {
                     q.And().Constrain(AuditItem.TypeProperty).Equal(criteria.AuditLogType);
@@ -164,17 +175,18 @@ namespace OEA.Library.Audit
 
             View.DomainName("日志").DisableEditing();
 
-            if (!OEAEnvironment.IsWeb)
+            if (OEAEnvironment.IsWeb)
+            {
+                View.RemoveWebCommands(WebCommandNames.Edit, WebCommandNames.Add)
+                    .UseWebCommands("Oea.rbac.ClearAuditLogCommand");
+            }
+            else
             {
                 View.ClearWPFCommands(false)
                     .UseWPFCommands(
                     "RBAC.LoginLogStatisticCommand",
                     "RBAC.ClearAuditLogCommand"
                     );
-            }
-            else
-            {
-                View.RemoveWebCommands(WebCommandNames.Add);
             }
 
             View.Property(AuditItem.TitleProperty).ShowIn(ShowInWhere.All).HasLabel("标题");

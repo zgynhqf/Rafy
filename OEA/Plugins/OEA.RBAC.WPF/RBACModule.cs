@@ -39,7 +39,7 @@ namespace OEA.Module.WPF
         {
             app.ModuleOperations += (s, e) =>
             {
-                CommonModel.Modules["部门权限管理"].TemplateType = typeof(OrgModule);
+                CommonModel.Modules["部门权限管理"].WPFTemplateType = typeof(OrgModule);
             };
 
             this.LogSystem(app);
@@ -167,8 +167,6 @@ namespace OEA.Module.WPF
 
         private static void LogAsync(string title, string coderContent, ObjectView view)
         {
-            var evm = view.Meta;
-
             int? entityId = null;
             var entity = view.Current as IEntity;
             if (entity != null)
@@ -179,7 +177,7 @@ namespace OEA.Module.WPF
             AuditLogService.LogAsync(new AuditLogItem()
             {
                 Title = title,
-                FriendlyContent = string.Format(@"对象：{0}", evm.Label),
+                FriendlyContent = string.Format(@"对象：{0}", view.Meta.Label),
                 PrivateContent = coderContent,
                 ModuleName = WorkspaceWindow.GetTitle(App.Current.Workspace.ActiveWindow),
                 Type = AuditLogType.Command,

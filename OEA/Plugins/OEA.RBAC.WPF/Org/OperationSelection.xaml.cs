@@ -148,10 +148,7 @@ namespace RBAC
                 {
                     foreach (OrgPositionOperationDeny deny in this._denyList)
                     {
-                        //模块名、功能名、所属界面块同时相同
-                        if (deny.ModuleKey == item.ModuleAC.KeyName && deny.OperationKey == item.OperationKey &&
-                            (string.IsNullOrEmpty(deny.BlockKey) && item.ScopeKeyLabel == OperationAC.ModuleScope || deny.BlockKey == item.ScopeKeyLabel)
-                            )
+                        if (item.IsSame(deny))
                         {
                             this._opertaionsView.SelectedEntities.Remove(item);
                             break;
@@ -176,7 +173,7 @@ namespace RBAC
             if (!this.IsDataBound || !this._firedByUser || curModule == null) { return; }
 
             //清空当前模块在 denyList 中的数据
-            var moduleKey = curModule.KeyName;
+            var moduleKey = curModule.KeyLabel;
             var moduleOperations = this._denyList.Cast<OrgPositionOperationDeny>().Where(d => d.ModuleKey == moduleKey).ToArray();
             foreach (var item in moduleOperations) { this._denyList.Remove(item); }
 

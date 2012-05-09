@@ -22,7 +22,7 @@ namespace OEA
     /// <summary>
     /// 跨 C/S，B/S 的服务基类
     /// 
-    /// 注意，如果该服务要被使用到 B/S 上，输入和输出参数都应该是基本的数据类型。
+    /// 注意，如果该服务要被使用到 B/S 上，输入和输出参数都应该是基本的数据类型、EntityList 类型。
     /// </summary>
     [Serializable]
     public abstract class Service : IService
@@ -105,6 +105,9 @@ namespace OEA
                 }
             }
         }
+
+        protected bool IsWeb { get { return OEAEnvironment.IsWeb; } }
+        protected bool IsWPF { get { return OEAEnvironment.IsWPF; } }
     }
 
     /// <summary>
@@ -115,12 +118,27 @@ namespace OEA
     [Serializable]
     public abstract class FlowService : Service
     {
-        [ServiceOutput]
+        [ServiceOutput(OutputToWeb = false)]
         public Result Result { get; set; }
+
+        #region Web 服务的参数
+        //这两个参数与 ClientResult 类型的属性名保持一致，方便客户端使用。
+
+        [ServiceOutput]
+        public bool success { get; set; }
+        [ServiceOutput]
+        public string msg { get; set; }
+
+        #endregion
 
         protected override sealed void Execute()
         {
-            this.Result = this.ExecuteCore();
+            var res = this.ExecuteCore();
+
+            this.success = res.Success;
+            this.msg = res.Message;
+
+            this.Result = res;
         }
 
         protected abstract Result ExecuteCore();

@@ -43,7 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClientMetaModel\Aggt\AggtMeta.cs" />
+    <Compile Include="ClientMetaModel\Aggt\ClientAggtMeta.cs" />
     <Compile Include="ClientMetaModel\ClientResult.cs" />
     <Compile Include="ClientMetaModel\Entity\BelongsToAssociation.cs" />
     <Compile Include="ClientMetaModel\Entity\EntityAssociation.cs" />
@@ -74,7 +74,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Entity\ClientEntities.cs" />
     <Compile Include="Services\ClientServiceNameAttribute.cs" />
-    <Compile Include="Services\JsonServiceRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Common.csproj">

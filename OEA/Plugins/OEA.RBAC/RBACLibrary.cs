@@ -62,7 +62,7 @@ namespace OEA.RBAC
                     {
                         new ModuleMeta{ Label = "人员管理", EntityType = typeof(User)},
                         new ModuleMeta{ Label = "岗位管理", EntityType = typeof(Position)},
-                        new ModuleMeta{ Label = "部门权限管理", EntityType = typeof(Org), TemplateType=typeof(OrgModuleTemplate)},
+                        new ModuleMeta{ Label = "部门权限管理", EntityType = typeof(Org), WPFTemplateType=typeof(OrgModuleTemplate)},
                         new ModuleMeta{ Label = "日志管理", EntityType = typeof(AuditItem)}
                     }
                 });

@@ -134,5 +134,10 @@ namespace OEA.MetaModel
         {
             get { return OEAEnvironment.IsWeb; }
         }
+
+        protected bool IsWPF
+        {
+            get { return OEAEnvironment.IsWPF; }
+        }
     }
 }

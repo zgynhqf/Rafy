@@ -44,11 +44,7 @@ namespace OEA.MetaModel.View
 
             foreach (var property in em.ChildrenProperties)
             {
-                var childBlock = new ChildBlock
-                {
-                    ChildrenPropertyName = property.Name,
-                    EntityType = property.ChildType.EntityType
-                };
+                var childBlock = new ChildBlock(property.ManagedProperty as IListProperty);
                 var childAggt = this.Read(property.ChildType, childBlock);
 
                 result.Children.Add(childAggt);

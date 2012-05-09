@@ -62,7 +62,7 @@ namespace OEA.MetaModel.View
         /// <param name="directory">
         /// 这个目录中的每一个文件是一个单独的 jsCommand。
         /// 如果要放多个 jsCommand 到一个文件中，请用以下分隔符分开每一个 jsCommand：
-        /// //command end
+        /// //block end
         /// </param>
         public void AddByDirectory(string directory)
         {
@@ -80,6 +80,7 @@ namespace OEA.MetaModel.View
         /// <param name="assembly"></param>
         public void AddByAssembly(Assembly assembly)
         {
+            //放在 commands 文件夹下的 js 文件都必须是 command。
             var resources = assembly.GetManifestResourceNames()
                 .Where(r => r.ToLower().Contains("commands.") && r.ToLower().Contains(".js"))
                 .ToArray();
@@ -95,42 +96,51 @@ namespace OEA.MetaModel.View
         }
 
         /// <summary>
-        /// 匹配 js 中定义的类名
-        /// </summary>
-        private static readonly Regex ClassRegex = new Regex(@"Ext\.define\(('|"")(?<className>[\w\.]+)('|"").+extend\s*:\s*('|"")(?<extend>[\w\.]+)('|"")", RegexOptions.Singleline);
-        /// <summary>
         /// 匹配 js 中 config 定义中 meta 中的 text 作为标签
         /// </summary>
         private static readonly Regex TextRegex = new Regex(@"\{\s*meta\s*\:.*?text.*?\:\s*('|"")(?<text>[^'""]+)('|"")");
+        /// <summary>
+        /// 匹配 js 中 config 定义中 meta 中的 group 作为标签
+        /// </summary>
+        private static readonly Regex GroupRegex = new Regex(@"\{\s*meta\s*\:.*?group.*?\:\s*('|"")(?<group>[^'""]+)('|"")");
 
+        /// <summary>
+        /// 通过解析 js 代码格式来添加 WebCommand。
+        /// </summary>
+        /// <param name="js"></param>
         private void AddByJs(string js)
         {
-            var codes = js.Split(new string[] { "//command end" }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var code in codes)
+            var jsClasses = new List<JsBlock>();
+            WebJsHelper.LoadJsBlocks(js, jsClasses);
+
+            foreach (var jsClass in jsClasses)
             {
-                var jsCode = code.Trim();
-
-                var match = ClassRegex.Match(jsCode);
-                if (match.Success)
+                //在 JS 代码中匹配出元数据属性。
+                var command = new WebCommand
                 {
-                    var className = match.Groups["className"].Value;
-                    var extend = match.Groups["extend"].Value;
-                    if (string.IsNullOrEmpty(className)) throw new InvalidOperationException();
-                    var command = new WebCommand
-                    {
-                        Name = className,
-                        JavascriptCode = jsCode,
-                        Extend = extend
-                    };
+                    Name = jsClass.ClassName,
+                    Extend = jsClass.Extend,
+                    JavascriptCode = jsClass.JavascriptCode
+                };
 
-                    var textMatch = TextRegex.Match(jsCode);
-                    if (textMatch.Success)
-                    {
-                        command.Label = textMatch.Groups["text"].Value;
-                    }
-
-                    this.AddCommand(command);
+                //text
+                var textMatch = TextRegex.Match(jsClass.JavascriptCode);
+                if (textMatch.Success)
+                {
+                    command.Label = textMatch.Groups["text"].Value;
                 }
+
+                //group
+                var groupMatch = GroupRegex.Match(jsClass.JavascriptCode);
+                if (groupMatch.Success)
+                {
+                    var group = groupMatch.Groups["group"].Value.ToLower();
+                    if (group == "view") { command.Group = CommandGroupType.View; }
+                    else if (group == "edit") { command.Group = CommandGroupType.Edit; }
+                    else if (group == "business") { command.Group = CommandGroupType.Business; }
+                }
+
+                this.AddCommand(command);
             }
         }
 
@@ -146,6 +156,7 @@ namespace OEA.MetaModel.View
                 this._sorted = true;
                 var list = this.GetInnerList();
 
+                //！！！代码拷贝自：WebJsHelper.SortByHierachy
                 for (int i = 0, c = list.Count; i < c; i++)
                 {
                     var a = list[i];

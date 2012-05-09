@@ -48,10 +48,12 @@ namespace OEA.Web
                 "autoUI/layouts/Common.js", "autoUI/layouts/RightChildren.js",
                 "autoUI/ViewFactory.js", "autoUI/ControlResult.js", "autoUI/AggtUIGenerator.js",
                 "control/ComboList.js",
-                "AutoUI.js",
+                "AutoUI.js", "UITemplate.js",
                 "svc/ServiceInvoker.js",
-                "App.js"
+                "ModuleCollection.js", "App.js"
                 );
+
+            buffer.AppendLine("Oea._isDebugging = " + (OEAEnvironment.IsDebuggingEnabled ? "true;" : "false;"));
 
             return buffer.ToString();
         }

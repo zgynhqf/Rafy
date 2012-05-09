@@ -29,5 +29,16 @@ namespace OEA
     public sealed class ServiceInputAttribute : Attribute { }
 
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class ServiceOutputAttribute : Attribute { }
+    public sealed class ServiceOutputAttribute : Attribute
+    {
+        public ServiceOutputAttribute()
+        {
+            this.OutputToWeb = true;
+        }
+
+        /// <summary>
+        /// 输出到 Web，默认为 true
+        /// </summary>
+        public bool OutputToWeb { get; set; }
+    }
 }

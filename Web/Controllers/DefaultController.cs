@@ -14,8 +14,6 @@ namespace Web.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.ModuleRootJson = IndexModuleJsonConverter.GetJson();
-
             return View();
         }
 
@@ -385,72 +383,6 @@ namespace Web.Controllers
     }
 ]}
 ");
-        }
-    }
-
-    internal class IndexModuleJson : JsonModel
-    {
-        public string text, model, url, viewName;
-
-        public bool leaf;
-
-        public List<IndexModuleJson> children = new List<IndexModuleJson>();
-
-        protected override void ToJson(LiteJsonWriter json)
-        {
-            json.WritePropertyIf("url", url);
-            json.WritePropertyIf("model", model);
-            json.WritePropertyIf("viewName", viewName);
-            if (leaf) { json.WritePropertyIf("leaf", true); }
-            if (children.Count > 0) { json.WritePropertyIf("children", children); }
-            json.WriteProperty("text", text, true);
-        }
-    }
-
-    internal static class IndexModuleJsonConverter
-    {
-        public static string GetJson()
-        {
-            var result = new IndexModuleJson();
-
-            var roots = CommonModel.Modules.GetRoots();
-            foreach (var root in roots)
-            {
-                var rootJson = ToJson(root);
-                result.children.Add(rootJson);
-            }
-
-            return result.ToJsonString();
-        }
-
-        private static IndexModuleJson ToJson(ModuleMeta module)
-        {
-            var mJson = new IndexModuleJson
-            {
-                text = module.Label,
-                leaf = module.Children.Count == 0
-            };
-
-            if (module.HasUI)
-            {
-                if (module.IsCustomUI)
-                {
-                    mJson.url = module.CustomUI;
-                }
-                else
-                {
-                    mJson.model = ClientEntities.GetClientName(module.EntityType);
-                    mJson.viewName = module.AggtBlocksName;
-                }
-            }
-
-            foreach (var child in module.Children)
-            {
-                var childJson = ToJson(child);
-                mJson.children.Add(childJson);
-            }
-
-            return mJson;
         }
     }
 }

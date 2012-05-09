@@ -1,8 +1,11 @@
 ﻿Ext.define('Oea.cmd.Edit', {
     extend: 'Oea.cmd.Command',
     config: {
-        meta: { text: "编辑" }
+        meta: { text: "编辑", group: "edit" }
     },
+    //private
+    _meta: null,
+    //public override
     execute: function (listView, source) {
         var me = this;
         var entity = listView.getCurrent();
@@ -21,13 +24,13 @@
             me._showDetailWin(entity, source);
         }
     },
+    //private
     _showDetailWin: function (entity, source) {
         var me = this;
         var view = Oea.AutoUI.createDetailView(me._meta, entity);
         Oea.Window.show({
-            title: '编辑' + me._meta.label,
+            title: '编辑' + me._meta.label, width: 400, animateTarget: source,
             items: view.getControl(),
-            animateTarget: source,
             callback: function (btn) {
                 if (btn == "确定") {
                     var form = view.getControl().getForm();

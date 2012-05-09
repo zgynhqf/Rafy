@@ -34,7 +34,10 @@ namespace OEA.MetaModel.View
         public LayoutMeta(Type layoutMethodType)
             : this()
         {
-            this.Class = layoutMethodType.AssemblyQualifiedName;
+            if (OEAEnvironment.IsWPF)
+            {
+                this.Class = layoutMethodType.AssemblyQualifiedName;
+            }
         }
 
         /// <summary>

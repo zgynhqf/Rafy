@@ -48,7 +48,7 @@ namespace DbMigration.SqlServer
         protected override void RunCore(IDBAccesser db)
         {
             //连接到 MASTER 数据库
-            var builder = new SqlConnectionStringBuilder(db.Connection.ConnectionString) { InitialCatalog = "MASTER" };
+            var builder = new SqlConnectionStringBuilder(db.ConnectionSchema.ConnectionString) { InitialCatalog = "MASTER" };
 
             //手动打开连接，并不关闭，让连接一直处于打开的状态，否则不能立刻连接到新的数据库上
             db.Connection.ConnectionString = builder.ConnectionString;

@@ -30,7 +30,7 @@ namespace JXC.Commands
     {
         public ShowBill()
         {
-            this.Template = new ReadonlyBillCommand();
+            this.Template = new ReadonlyBillTemplate();
         }
 
         protected UITemplate Template;

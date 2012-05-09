@@ -248,14 +248,26 @@ namespace JXC
         {
             View.DomainName("采购订单").HasDelegate(PurchaseOrder.CodeProperty);
 
-            View.ClearWPFCommands(false)
-                .UseWPFCommands(
-                typeof(AddPurchaseOrder),
-                typeof(DeletePurchaseOrder),
-                typeof(ShowBill),
-                WPFCommandNames.Refresh,
-                typeof(CompletePurchaseOrder)
-                );
+            if (IsWeb)
+            {
+                View.ClearWebCommands(false)
+                    .UseWebCommands(
+                    "Jxc.AddPurchaseOrder",
+                    "Jxc.ShowBill",
+                    WebCommandNames.Refresh
+                    );
+            }
+            else
+            {
+                View.ClearWPFCommands(false)
+                    .UseWPFCommands(
+                    typeof(AddPurchaseOrder),
+                    typeof(DeletePurchaseOrder),
+                    typeof(ShowBill),
+                    WPFCommandNames.Refresh,
+                    typeof(CompletePurchaseOrder)
+                    );
+            }
 
             using (View.OrderProperties())
             {
@@ -275,6 +287,11 @@ namespace JXC
                     .Readonly();
                 View.Property(PurchaseOrder.CommentProperty).HasLabel("备注").ShowIn(ShowInWhere.ListDetail)
                     .ShowMemoInDetail();
+            }
+
+            if (IsWeb)
+            {
+                View.Property(PurchaseOrder.TotalMoneyProperty).HasLabel("总金额(点击汇总)");
             }
         }
     }

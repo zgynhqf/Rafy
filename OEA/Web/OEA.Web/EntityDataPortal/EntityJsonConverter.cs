@@ -31,8 +31,14 @@ namespace OEA.Web.EntityDataPortal
     /// </summary>
     internal class EntityJsonConverter
     {
+        /// <summary>
+        /// 把实体列表对应的 json 转换为 EntityList 对象。
+        /// </summary>
+        /// <param name="jEntityList"></param>
+        /// <param name="repository">如果没有显式指定 Repository，则会根据 json 中的 _model 属性来查找对应的实体仓库。</param>
+        /// <returns></returns>
         [DebuggerStepThrough]
-        internal static EntityList JsonToEntity(JObject jEntityList, EntityRepository repository)
+        internal static EntityList JsonToEntityList(JObject jEntityList, EntityRepository repository = null)
         {
             return ListReader.JsonToEntity(jEntityList, repository);
         }

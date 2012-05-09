@@ -8,9 +8,69 @@
  * 
 *******************************************************/
 
-2.11.619.0
+2.11.643.0
+    添加接口、内部修改、Web
+        * Oea 添加 select、sum 方法。
+        * Oea.each 支持遍历 MixedCollection、Store。
+        * Command 添加 getView() 方法。
+        * DetailView 添加 updateControl()、findEditor() 方法。
+        * View 支持 findCmd 方法。
+
+2.11.641.0
+    添加功能、示例、Web
+        * PluginsCode 中的代码需要按照继承关系输出。
+        * ListView 添加 IsReadonly 属性。
+        * 移植 ConditionQueryModule 中的代码到 Web 上。
+    添加接口、Web
+        * View.js 添加 findChild 方法。
+
+2.11.638.0
+    添加功能、示例、Web
+        * 添加采购订单 - 显示完成。
+        * 添加采购订单 - 可以提交数据。
+        * 模块定义从应用层移动到客户端框架中。
+        * 事件使用统一的参数模式。
+        * 查询面板中的时间的默认值。
+        * 添加 Oea.isDebugging() 方法。
+        * 商品等实体类，在客户端自动生成编码。
+        * WebCommand 中也需要定义 GroupType 用以分辨 Edit、View。
+        * 只读的查看采购订单。
+
+2.11.632.0
+    BUG修复
+        * Command.js 需要调用基类的构造函数。
+
+2.11.631.0
+    内部修改
+        * ChildBlock 添加构造函数直接使用该属性对应实体的默认视图中的名称作用本子块的 Label。
+
+2.11.630.0
+    添加功能
+        * Web 添加 UITemplate 类型。
+
+2.11.629.0
+    添加功能
+        * Web 支持清空日志。
+
+2.11.628.0
+    添加功能
+        * Web 支持客户端应用程序生成周期、编写插件脚本。
+        * Web RBAC 支持日志的记录。
+        * Web Json 字符串需要处理转义字符。
+
+2.11.626.0
+    BUG修复
+        * DbMigration.SqlServer.CreateDbMigrationRun 中不要直接使用 DbConnection.ConnectionString 来构造新的连接，因为这个字符串中的数据库密码可能已经失效。
+
+2.11.625.0
+    重构
+        * Web 规范 App.showModule 参数。
+        * 为 Command.js 添加 executed、executeFailed 事件；为 ViewFactory.js 添加 commandCreated 事件。
+
+2.11.623.0
     内部修改
         * Web 修复 RBAC。
+        * Web 支持 EntityList 的提交。
 
 2.11.618.0
     内部修改

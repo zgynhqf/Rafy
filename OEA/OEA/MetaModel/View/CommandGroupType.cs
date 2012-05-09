@@ -19,7 +19,9 @@ using System.Text;
 namespace OEA.MetaModel.View
 {
     /// <summary>
-    /// Command分组类型
+    /// 命令分组类型
+    /// 
+    /// 分辨该命令在是属于哪种逻辑的命令，方便系统控制。
     /// </summary>
     public enum CommandGroupType
     {

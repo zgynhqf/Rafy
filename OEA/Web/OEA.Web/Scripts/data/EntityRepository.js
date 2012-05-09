@@ -2,11 +2,24 @@
     singleton: true,
 
     query: function (opt) {
+        /// <summary>
+        /// 通过一定的查询条件来查询实体列表
+        /// </summary>
+        /// <param name="opt">
+        /// model : 必填。
+        /// pageSize: 25
+        /// isTree: false
+        /// storeConfig : Ext store config.
+        /// id: 如果定义了此参数，则按照 id 查询某个指定的实体
+        /// criteria：如果定义了此参数，则按照此参数在服务端进行过滤。
+        /// callback: 用于查询完成后的回调函数。参数与 store.load 的回调一致。
+        /// </param>
+
         opt = Ext.apply({
             pageSize: 25,
             isTree: false,
             storeConfig: {}
-        }, opt)
+        }, opt);
 
         var store = this.createStore(opt);
 
@@ -20,8 +33,12 @@
         store.load({ callback: opt.callback });
     },
 
-    /// <returns type="Ext.data.Field[]" />
     getPersistFields: function (model) {
+        /// <summary>
+        /// 获取某个实体可以被存储的字段列表
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns type="Ext.data.Field[]"></returns>
         var res = [];
 
         var fields;
@@ -43,8 +60,18 @@
         return res;
     },
 
-    //opt: isTree, model, callback, withUnchanged, entity/store/_changeSetData(internal),
     save: function (opt) {
+        /// <summary>
+        /// 保存实体/实体列表
+        /// </summary>
+        /// <param name="opt">
+        /// model: 必需的。
+        /// isTree: 是否为树型实体，默认为 false。
+        /// callback: 回调函数。
+        /// withUnchanged: 是否需要把未更改的值也提交到服务端，默认为 false。
+        /// entity/store/_changeSetData(internal): 这三个只需要设置其中一个就可以了。
+        /// </param>
+
         opt = Ext.apply({
             isTree: false,
             withUnchanged: false
@@ -66,7 +93,7 @@
 
         if (!csApi._needUpdateToServer(data, opt.isTree)) {
             if (opt.callback) {
-                res = { success: true }
+                res = { success: true };
                 opt.callback(res, true);
             }
             return;
@@ -101,6 +128,11 @@
     },
 
     filterByCriteria: function (store, criteria) {
+        /// <summary>
+        /// 为某个指定的 store 设置过滤条件
+        /// </summary>
+        /// <param name="store">要过滤的 ext store</param>
+        /// <param name="criteria">过滤参数，应该是一个 Criteria 类的实例。</param>
         var f = store.filters;
         f.clear();
         f.addAll([new Ext.util.Filter({
@@ -110,11 +142,18 @@
         })]);
     },
 
-    //opt: model, isTree, storeConfig
     createStore: function (opt) {
+        /// <summary>
+        /// 为指定的实体创建一个 Ext 仓库
+        /// </summary>
+        /// <param name="opt">
+        /// model, isTree, storeConfig
+        /// </param>
+        /// <returns></returns>
+
         opt = Ext.apply({
             isTree: false
-        }, opt)
+        }, opt);
 
         var storeConfig = Ext.apply({ model: opt.model }, opt.storeConfig);
 

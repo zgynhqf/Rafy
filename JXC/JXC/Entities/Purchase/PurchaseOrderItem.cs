@@ -99,11 +99,22 @@ namespace JXC
         {
             View.DomainName("商品订单项").HasDelegate(PurchaseOrderItem.View_ProductNameProperty);
 
-            View.ClearWPFCommands(false)
-                .UseWPFCommands(
-                typeof(AddPurchaseOrderItem),
-                WPFCommandNames.Delete
-                );
+            if (IsWeb)
+            {
+                View.ClearWebCommands(false)
+                    .UseWebCommands(
+                    "Jxc.AddPurchaseOrderItem",
+                    WebCommandNames.Delete
+                    );
+            }
+            else
+            {
+                View.ClearWPFCommands(false)
+                    .UseWPFCommands(
+                    typeof(AddPurchaseOrderItem),
+                    WPFCommandNames.Delete
+                    );
+            }
 
             using (View.OrderProperties())
             {

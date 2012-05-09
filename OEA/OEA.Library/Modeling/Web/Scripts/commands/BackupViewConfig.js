@@ -7,7 +7,8 @@
         }
     },
     constructor: function () {
-        this.svc = 'BackupViewConfigService';
+        this.svc = 'OEA.BackupViewConfigService';
+        this.callParent(arguments);
     },
     execute: function (view) {
         var c = view.getCurrent();
@@ -32,7 +33,7 @@
     }
 });
 
-//command end
+//block end
 
 Ext.define('RestoreViewConfig', {
     extend: 'BackupViewConfig',
@@ -44,11 +45,12 @@ Ext.define('RestoreViewConfig', {
         }
     },
     constructor: function () {
-        this.svc = 'RestoreViewConfigService';
+        this.svc = 'OEA.RestoreViewConfigService';
+        this.callParent(arguments);
     }
 });
 
-//command end
+//block end
 
 Ext.define('OpenConfigFile', {
     extend: 'Oea.cmd.Command',
@@ -62,7 +64,7 @@ Ext.define('OpenConfigFile', {
     execute: function (view) {
         var c = view.getCurrent();
         Oea.invokeSvc({
-            svc: 'GetBlockConfigFileService',
+            svc: 'OEA.GetBlockConfigFileService',
             svcParams: {
                 Model: c.get("EntityType"),
                 ViewName: c.get("ViewName")
