@@ -43,6 +43,18 @@ namespace OEA.MetaModel.View
 
         /// <summary>
         /// 通过一个聚合子实体属性构造一个界面块
+        /// 本构造函数直接使用该属性对应实体的默认视图中的名称作用本子块的 Label
+        /// </summary>
+        /// <param name="childrenProperty"></param>
+        public ChildBlock(IListProperty childrenProperty)
+        {
+            if (childrenProperty == null) throw new ArgumentNullException("childrenProperty");
+
+            this.ChildrenProperty = childrenProperty;
+        }
+
+        /// <summary>
+        /// 通过一个聚合子实体属性构造一个界面块
         /// </summary>
         /// <param name="label"></param>
         /// <param name="childrenProperty"></param>
@@ -54,8 +66,6 @@ namespace OEA.MetaModel.View
             this.Label = label;
             this.ChildrenProperty = childrenProperty;
         }
-
-        internal ChildBlock() { }
 
         /// <summary>
         /// 本子块显示的标题
@@ -86,6 +96,13 @@ namespace OEA.MetaModel.View
                 {
                     this._ChildrenPropertyName = value.Name;
                     this.EntityType = value.ListEntityType;
+
+                    //使用该属性对应实体的默认视图中的名称作用本子块的 Label
+                    if (string.IsNullOrEmpty(this.Label))
+                    {
+                        var defaultView = UIModel.Views.CreateDefaultView(this.EntityType);
+                        this.Label = defaultView.Label;
+                    }
                 }
             }
         }

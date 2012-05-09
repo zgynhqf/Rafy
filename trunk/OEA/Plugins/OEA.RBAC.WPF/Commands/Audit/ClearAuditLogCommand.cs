@@ -24,6 +24,7 @@ using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
 using OEA.MetaModel.View;
 using OEA.Module.WPF;
+using OEA.RBAC;
 using OEA.WPF.Command;
 
 namespace RBAC
@@ -49,8 +50,7 @@ namespace RBAC
             new ClearLogService().Invoke();
 
             //刷新数据
-            var refresh = new RefreshCommand();
-            refresh.Execute(view as ListObjectView);
+            view.DataLoader.ReloadDataAsync();
         }
     }
 }

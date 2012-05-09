@@ -1,11 +1,12 @@
 ﻿Ext.define('Oea.autoUI.AggtUIGenerator', {
+    _vf: null,
     constructor: function (viewFactory) {
         this._vf = viewFactory;
     },
-    /// <summary>创建一个聚合控件</summary>
-    /// <param name="aggtMeta" type="OEA.Web.ClientMetaModel.AggtMeta">服务端生成的元数据对象</param>
-    /// <returns type="Oea.autoUI.ControlResult" />
     generateControl: function (aggtMeta) {
+        /// <summary>创建一个聚合控件</summary>
+        /// <param name="aggtMeta" type="OEA.Web.ClientMetaModel.AggtMeta">服务端生成的元数据对象</param>
+        /// <returns type="Oea.autoUI.ControlResult" />
         var mainView = null;
         var mk = aggtMeta.mainBlock;
         if (mk.gridConfig) {
@@ -31,8 +32,8 @@
 
         return new Oea.autoUI.ControlResult(mainView, control);
     },
-    /// <returns type="Oea.autoUI.ControlResult[]" />
     _generateChildren: function (childrenAggt, regions) {
+        /// <returns type="Oea.autoUI.ControlResult[]" />
         var mainView = regions.main.getView();
 
         for (var i = 0; i < childrenAggt.length; i++) {
@@ -64,8 +65,8 @@
             });
         }
     },
-    /// <returns type="Oea.view.View" />
     _generateSurrounder: function (mainView, surrounderAggt) {
+        /// <returns type="Oea.view.View" />
         var vf = this._vf;
         var cr = Oea.view.RelationView; //common realtion
 
@@ -98,10 +99,13 @@
 
         return surrounderView;
     },
-    /// <param name="aggtMeta" type="OEA.Web.ClientMetaModel.AggtMeta"></param>
-    /// <param name="regions" type="Oea.autoUI.Regions"></param>
-    /// <returns type="Ext.Component" />
     _layout: function (aggtMeta, regions) {
+    	/// <summary>
+    	/// 对所有区域进行布局。
+        /// </summary>
+        /// <param name="aggtMeta" type="OEA.Web.ClientMetaModel.ClientAggtMeta"></param>
+        /// <param name="regions" type="Oea.autoUI.Regions"></param>
+        /// <returns type="Ext.Component" />
         var layout = null;
         if (aggtMeta.layoutClass) {
             layout = Ext.create(aggtMeta.layoutClass);

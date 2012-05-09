@@ -190,6 +190,13 @@ namespace OEA
         {
             get { return Location == OEALocation.WebServer; }
         }
+        /// <summary>
+        /// WPF or Web
+        /// </summary>
+        public static bool IsWPF
+        {
+            get { return Location != OEALocation.WebServer; }
+        }
 
         public static void EnsureOnServer()
         {

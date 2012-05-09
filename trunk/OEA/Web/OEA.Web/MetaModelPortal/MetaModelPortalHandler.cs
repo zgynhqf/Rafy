@@ -34,45 +34,60 @@ namespace OEA.Web
 
             var converter = new ClientMetaFactory();
             var op = converter.Option;
-            op.module = request.GetQueryStringOrDefault("module", string.Empty);
             op.ignoreCommands = request.GetQueryStringOrDefault("ignoreCommands", 0) == 1;
             op.isDetail = request.GetQueryStringOrDefault("isDetail", 0) == 1;
             op.isLookup = request.GetQueryStringOrDefault("isLookup", 0) == 1;
             op.isReadonly = request.GetQueryStringOrDefault("isReadonly", 0) == 1;
             op.viewName = request.GetQueryStringOrDefault("viewName", string.Empty);
+            var moduleName = request.GetQueryStringOrDefault("module", string.Empty);
+            var typeName = request.GetQueryStringOrDefault("type", string.Empty);
+            var templateType = request.GetQueryStringOrDefault("templateType", string.Empty);
+            var isAggt = request.GetQueryStringOrDefault("isAggt", 0) == 1;
 
             JsonModel jsonResult = null;
 
             //如果指定了 module，则直接返回模块的格式。
-            if (!string.IsNullOrEmpty(op.module))
+            if (!string.IsNullOrEmpty(moduleName))
             {
-                var module = UIModel.Modules[op.module];
+                var module = UIModel.Modules[moduleName];
                 var aggt = UIModel.AggtBlocks.GetModuleBlocks(module);
                 jsonResult = converter.ConvertToAggtMeta(aggt);
             }
             else
             {
-                var typeName = request.QueryString["type"];
-                var isAggt = request.GetQueryStringOrDefault("isAggt", 0);
+                var type = ClientEntities.Find(typeName);
 
-                if (isAggt == 1)
+                //需要聚合块
+                if (isAggt)
                 {
                     AggtBlocks aggt = null;
-                    if (!string.IsNullOrEmpty(op.viewName))
+                    //通过定义的模板类来返回模块格式
+                    if (!string.IsNullOrEmpty(templateType))
                     {
-                        aggt = UIModel.AggtBlocks.GetDefinedBlocks(op.viewName);
+                        var uiTemplateType = Type.GetType(templateType);
+                        var template = Activator.CreateInstance(uiTemplateType) as BlocksTemplate;
+                        template.EntityType = type.EntityType;
+                        aggt = template.GetBlocks();
                     }
                     else
                     {
-                        var type = ClientEntities.Find(typeName);
-                        aggt = UIModel.AggtBlocks.GetDefaultBlocks(type.EntityType);
+                        //通过定义的聚合块名称来获取聚合块
+                        if (!string.IsNullOrEmpty(op.viewName))
+                        {
+                            aggt = UIModel.AggtBlocks.GetDefinedBlocks(op.viewName);
+                        }
+                        else
+                        {
+                            //通过默认的聚合块名称来获取聚合块
+                            aggt = UIModel.AggtBlocks.GetDefaultBlocks(type.EntityType);
+                        }
                     }
 
                     jsonResult = converter.ConvertToAggtMeta(aggt);
                 }
                 else
                 {
-                    var type = ClientEntities.Find(typeName);
+                    //获取单块 UI 的元数据
                     var evm = UIModel.Views.Create(type.EntityType, op.viewName);
 
                     jsonResult = converter.ConvertToClientMeta(evm);

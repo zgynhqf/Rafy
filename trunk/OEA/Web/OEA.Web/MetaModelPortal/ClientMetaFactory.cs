@@ -50,11 +50,11 @@ namespace OEA.Web.ClientMetaModel
 
         private void ConvertToAggtMeta(AggtBlocks aggt, ClientAggtMeta meta, string childPropertyName = null)
         {
-            var evm = UIModel.Views.Create(aggt.MainBlock.EntityType, aggt.MainBlock.ExtendView);
-            meta.mainBlock = ConvertToClientMeta(evm, aggt.MainBlock.BlockType == BlockType.Detail);
-            if (aggt.MainBlock is ChildBlock)
+            var mainBlock = aggt.MainBlock;
+            meta.mainBlock = ConvertToClientMeta(mainBlock.ViewMeta, mainBlock.BlockType == BlockType.Detail);
+            if (mainBlock is ChildBlock)
             {
-                meta.mainBlock.label = (aggt.MainBlock as ChildBlock).Label;
+                meta.mainBlock.label = (mainBlock as ChildBlock).Label;
             }
             meta.childProperty = childPropertyName;
             meta.layoutClass = aggt.Layout.Class;
@@ -91,6 +91,7 @@ namespace OEA.Web.ClientMetaModel
             clientMeta.model = ClientEntities.GetClientName(evm.EntityType);
             clientMeta.viewName = evm.ExtendView;
             clientMeta.isTree = isTree;
+            clientMeta.label = evm.Label;
 
             if (isDetail.GetValueOrDefault(this.Option.isDetail))
             {
@@ -203,6 +204,8 @@ namespace OEA.Web.ClientMetaModel
             {
                 if (property.CanShowIn(ShowInWhere.Detail))
                 {
+                    bool isReadonly = this.Option.isReadonly || property.IsReadonly || evm.NotAllowEdit;
+
                     //对于引用属性需要分开来特殊处理
                     if (!property.IsReference)
                     {
@@ -212,7 +215,7 @@ namespace OEA.Web.ClientMetaModel
                         field.name = property.Name;
                         field.fieldLabel = property.Label;
                         field.anchor = "100%";
-                        field.isReadonly = property.IsReadonly;
+                        field.isReadonly = isReadonly;
 
                         form.items.Add(field);
                     }
@@ -225,7 +228,7 @@ namespace OEA.Web.ClientMetaModel
                         field.name = EntityModelGenerator.LabeledRefProperty(property.Name);
                         field.fieldLabel = property.Label;
                         field.anchor = "100%";
-                        field.isReadonly = property.IsReadonly;
+                        field.isReadonly = isReadonly;
 
                         var model = ClientEntities.GetClientName(property.ReferenceViewInfo.RefType);
                         field.SetProperty("model", model);
@@ -245,9 +248,12 @@ namespace OEA.Web.ClientMetaModel
 
         private void AddCommands(EntityViewMeta evm, IList<ToolbarItem> toolbar)
         {
+            //当不需要忽略命令，或者使用了扩展视图时，都需要加入命令列表。
             if (!this.Option.ignoreCommands || !string.IsNullOrEmpty(this.Option.viewName))
             {
                 IEnumerable<WebCommand> commands = evm.WebCommands;
+
+                //当使用了扩展视图时，只需要显示定制 UI 按钮就行了。
                 if (this.Option.ignoreCommands)
                 {
                     var customUI = commands.FirstOrDefault(c => c.Name == WebCommandNames.CustomizeUI);
@@ -294,7 +300,6 @@ namespace OEA.Web.ClientMetaModel
 
     internal class ConvertOption
     {
-        public string module;
         public bool isReadonly;
         public bool ignoreCommands;
         public bool isDetail;

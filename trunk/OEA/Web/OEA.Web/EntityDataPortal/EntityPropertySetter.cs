@@ -69,7 +69,7 @@ namespace OEA.Web.EntityDataPortal
                     var repo = RF.Create(entityType);
                     var list = ListReader.JsonToEntity(value as JObject, repo);
 
-                    e.LoadProperty(mp, list);
+                    e.SetProperty(mp, list, ManagedPropertyChangedSource.FromUIOperating);
                 }
                 else
                 {
@@ -77,7 +77,7 @@ namespace OEA.Web.EntityDataPortal
 
                     rawValue = EntityJsonConverter.ToServerValue(mp.PropertyType, rawValue);
 
-                    e.SetProperty(mp, rawValue);
+                    e.SetProperty(mp, rawValue, ManagedPropertyChangedSource.FromUIOperating);
                 }
             }
             else

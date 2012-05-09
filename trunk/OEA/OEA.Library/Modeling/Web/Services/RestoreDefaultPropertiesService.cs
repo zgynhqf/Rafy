@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OEA.Web.Services;
 using OEA.MetaModel;
 using System.IO;
 using OEA.MetaModel.View;
@@ -13,6 +12,7 @@ using System.Diagnostics;
 namespace OEA.Library.Modeling.Web
 {
     [Serializable]
+    [ClientServiceName("OEA.BackupViewConfigService")]
     public class BackupViewConfigService : Service
     {
         [ServiceInput]
@@ -72,6 +72,7 @@ namespace OEA.Library.Modeling.Web
     }
 
     [Serializable]
+    [ClientServiceName("OEA.RestoreViewConfigService")]
     public class RestoreViewConfigService : BackupViewConfigService
     {
         protected override bool RenameFile(string file, string newFile)
@@ -89,6 +90,7 @@ namespace OEA.Library.Modeling.Web
     }
 
     [Serializable]
+    [ClientServiceName("OEA.GetBlockConfigFileService")]
     public class GetBlockConfigFileService : BackupViewConfigService
     {
         [ServiceOutput]

@@ -66,7 +66,12 @@ namespace JXC
         public string GetOrCreateAutoCode<TTargetType>(string defaultFormat = null, string beiZhu = null)
             where TTargetType : Entity
         {
-            var vm = UIModel.Views.CreateDefaultView(typeof(TTargetType));
+            return GetOrCreateAutoCode(typeof(TTargetType), defaultFormat, beiZhu);
+        }
+
+        public string GetOrCreateAutoCode(Type targetType, string defaultFormat = null, string beiZhu = null)
+        {
+            var vm = UIModel.Views.CreateDefaultView(targetType);
             string name = vm.Label + "-自动编码规则";
 
             var item = this.FetchFirstAs<AutoCodeInfo>(name);
@@ -92,13 +97,13 @@ namespace JXC
             var format = item.CanShuZhi;
 
             var t = DateTime.Today;
-            var code = format.Replace("<YEAR>", t.Year.ToString())
-                .Replace("<MONTH>", t.Month.ToString())
-                .Replace("<DAY>", t.Day.ToString());
+            var code = format.Replace("<YEAR>", t.Year.ToString("0000"))
+                .Replace("<MONTH>", t.Month.ToString("00"))
+                .Replace("<DAY>", t.Day.ToString("00"));
 
             if (code.Contains("***"))
             {
-                var count = RF.Create<TTargetType>().CountAll() + 1;
+                var count = RF.Create(targetType).CountAll() + 1;
                 code = code.Replace("***", count.ToString("0000"));
             }
 

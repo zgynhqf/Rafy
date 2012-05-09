@@ -133,7 +133,8 @@
     <Compile Include="MetaModel\View\Block\EntityViewMeta.cs" />
     <Compile Include="MetaModel\View\Block\ReferenceViewInfo.cs" />
     <Compile Include="MetaModel\View\UIModel.cs" />
-    <Compile Include="MetaModel\View\WPFCommand\CommandGroupType.cs" />
+    <Compile Include="MetaModel\View\CommandGroupType.cs" />
+    <Compile Include="MetaModel\View\WebCommand\WebJsHelper.cs" />
     <Compile Include="MetaModel\View\WPFCommand\CommandLocation.cs" />
     <Compile Include="MetaModel\View\WPFCommand\WPFCommandNames.cs" />
     <Compile Include="MetaModel\View\WPFCommand\WPFCommand.cs" />

@@ -43,9 +43,9 @@ namespace OEA.MetaModel.View
             AggtBlocks blocks = null;
 
             //如果模块自己指定的模板类，则使用模板类生成聚合块。
-            if (moduleMeta.TemplateType != null)
+            if (moduleMeta.WPFTemplateType != null)
             {
-                var template = Activator.CreateInstance(moduleMeta.TemplateType) as BlocksTemplate;
+                var template = Activator.CreateInstance(moduleMeta.WPFTemplateType) as BlocksTemplate;
                 if (template == null) throw new InvalidProgramException("模板类需要从 BlocksTemplate 类继承。");
                 template.EntityType = moduleMeta.EntityType;
                 blocks = template.GetBlocks();

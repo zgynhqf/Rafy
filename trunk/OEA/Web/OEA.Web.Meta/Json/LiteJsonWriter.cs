@@ -143,6 +143,11 @@ namespace OEA.Web.Json
                 return ((bool)value) ? "true" : "false";
             }
 
+            if (value is byte[])
+            {
+                return string.Format("'bytes[{0}]'", (value as Array).Length);
+            }
+
             if (value is Array)
             {
                 var arrayValues = (value as IEnumerable<object>).Select(v => this.JsonValue(v));
@@ -151,14 +156,15 @@ namespace OEA.Web.Json
 
             var strValue = value.ToString();
 
-            if (value is string || value is Enum || value is DateTime || value is Guid)
+            //if (value is string || value is Enum || value is DateTime || value is Guid)
             {
-                strValue = strValue.Replace("\"", "\\\"");
+                //字符串需要处理转义字符。
+                strValue = strValue.Replace("\"", "\\\"")
+                    .Replace("\r", "\\r")
+                    .Replace("\n", "\\n");
 
                 return "\"" + strValue + "\"";
             }
-
-            return strValue;
         }
 
         public static string Convert(JsonModel model)

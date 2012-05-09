@@ -50,6 +50,16 @@ namespace OEA.MetaModel.View
         /// </summary>
         internal string Extend;
 
+        private CommandGroupType _Group;
+        /// <summary>
+        /// 命令的系统分组类型
+        /// </summary>
+        public CommandGroupType Group
+        {
+            get { return this._Group; }
+            set { this.SetValue(ref _Group, value); }
+        }
+
         public WebCommand CloneMutable()
         {
             return this.Clone(new CloneOption()) as WebCommand;

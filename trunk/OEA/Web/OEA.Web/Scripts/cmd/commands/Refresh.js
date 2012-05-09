@@ -1,7 +1,7 @@
 ﻿Ext.define('Oea.cmd.Refresh', {
     extend: 'Oea.cmd.Command',
     config: {
-        meta: { text: "刷新" }
+        meta: { text: "刷新", group: "view" }
     },
     execute: function (listView) {
         listView.loadData();

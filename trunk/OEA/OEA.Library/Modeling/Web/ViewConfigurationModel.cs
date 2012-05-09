@@ -387,7 +387,7 @@ namespace OEA
             base.ConfigView();
 
             View.HasDelegate(ViewConfigurationModel.ViewNameProperty);//.HasLabel("界面配置信息");
-            View.PageSize = 10000;
+            View.WithoutPaging();
 
             View.Property(ViewConfigurationModel.EntityTypeProperty).HasLabel("实体").ShowIn(ShowInWhere.All).Readonly();
             View.Property(ViewConfigurationModel.ViewNameProperty).HasLabel("界面名称").ShowIn(ShowInWhere.All).Readonly();

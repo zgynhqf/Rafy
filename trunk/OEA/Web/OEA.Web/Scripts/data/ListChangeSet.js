@@ -3,14 +3,41 @@ Ext.define('Oea.data.ListChangeSet', {
     statics: {
         //internal
         _getChangeSetData: function (store, isTree, withUnchanged) {
+            /// <summary>
+            /// 获取某个 ExtStore 中需要提交到服务器上的数据
+            /// </summary>
+            /// <param name="store"></param>
+            /// <param name="isTree" type="bool">是否为树型实体</param>
+            /// <param name="withUnchanged" type="bool">是否需要获取未变更的数据</param>
+            /// <returns>返回表示实体列表的纯 json 对象</returns>
             var cs = !isTree ? new Oea.data.EntityListChangeSet(withUnchanged) : new Oea.data.TreeListChangeSet();
             var data = cs._getDataToServer(store);
+
+            //在数据提交到服务端前，我们需要在纯粹的数据上添加一些属性，
+            //用以告诉服务端这个数据应该解析为哪个实体类。
+            data._model = Ext.getClassName(store.model);
+
             return data;
         },
         //internal
-        _getItemData: function (item, isTree, withUnchanged) {
+        _getItemData: function (item, isTree, withUnchanged, model) {
+            /// <summary>
+            /// 获取某个 实体类 中需要提交到服务器上的数据
+            /// </summary>
+            /// <param name="item" type="Oea.data.Entity">需要提交到服务器的实体类</param>
+            /// <param name="isTree" type="bool">是否为树型实体</param>
+            /// <param name="withUnchanged" type="bool">是否需要获取未变更的数据</param>
+            /// <param name="model" type="string">对应的的客户端实体类名</param>
+            /// <returns>返回表示实体的纯 json 对象</returns>
             var cs = !isTree ? new Oea.data.EntityListChangeSet(withUnchanged) : new Oea.data.TreeListChangeSet();
             var data = cs._getItemToServer(item);
+
+            //注意，单个实体的数据，依然是以 EntityList 的方式提交。
+            //这样不但统一了数据的格式，而且还简单用实体列表的集合来分辨当前实体的状态（IsNew、IsDeleted）。
+            //添加属性 _isEntityHost 用于分辨二者。
+            data._model = model;
+            data._isEntityHost = 1;
+
             return data;
         },
         //internal
@@ -54,7 +81,7 @@ Ext.define('Oea.data.ListChangeSet', {
         }
     },
 
-    //private
+    //protected abstract
     _getDataToServer: function (store) { Oea.markAbstract(); },
     //private
     _getItemToServer: function (item) {

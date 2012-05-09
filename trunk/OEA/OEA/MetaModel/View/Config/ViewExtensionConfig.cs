@@ -66,6 +66,19 @@ namespace OEA.MetaModel.View
             return meta;
         }
 
+        /// <summary>
+        /// 不再使用分页。
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static EntityViewMeta WithoutPaging(this EntityViewMeta meta)
+        {
+            meta.PageSize = 10000;
+
+            return meta;
+        }
+
         public static EntityViewMeta ShowInList(this EntityViewMeta meta, params IManagedProperty[] properties)
         {
             foreach (var p in properties)
@@ -252,6 +265,18 @@ namespace OEA.MetaModel.View
         public static EntityViewMeta RemoveWPFCommands(this EntityViewMeta meta, IEnumerable<Type> commands)
         {
             meta.WPFCommands.Remove(commands);
+            return meta;
+        }
+
+        public static EntityViewMeta ClearWebCommands(this EntityViewMeta meta, bool removeCustomizeUI = true)
+        {
+            meta.WebCommands.Clear();
+
+            if (!removeCustomizeUI && OEAEnvironment.IsDebuggingEnabled)
+            {
+                meta.UseWebCommands(WebCommandNames.CustomizeUI);
+            }
+
             return meta;
         }
 

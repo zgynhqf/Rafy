@@ -34,15 +34,15 @@ namespace OEA.RBAC
     {
         public ModuleMeta Core { get; set; }
 
-        public static readonly Property<string> KeyNameProperty = P<ModuleAC>.RegisterReadOnly(e => e.KeyName, e => (e as ModuleAC).GetKeyName(), null);
-        public string KeyName
+        public static readonly Property<string> KeyLabelProperty = P<ModuleAC>.RegisterReadOnly(e => e.KeyLabel, e => (e as ModuleAC).GetKeyLabel(), null);
+        public string KeyLabel
         {
-            get { return this.GetProperty(KeyNameProperty); }
+            get { return this.GetProperty(KeyLabelProperty); }
         }
-        private string GetKeyName()
+        private string GetKeyLabel()
         {
             if (this.Core == null) return string.Empty;
-            return this.Core.Label;
+            return this.Core.KeyLabel;
         }
 
         public static readonly ListProperty<OperationACList> OperationACListProperty = P<ModuleAC>.RegisterList(e => e.OperationACList);
@@ -60,7 +60,7 @@ namespace OEA.RBAC
 
         protected override string GetRealKey(Entity entity)
         {
-            return (entity as ModuleAC).KeyName;
+            return (entity as ModuleAC).KeyLabel;
         }
 
         /// <summary>
@@ -115,9 +115,9 @@ namespace OEA.RBAC
         {
             base.ConfigView();
 
-            View.HasDelegate(ModuleAC.KeyNameProperty).DomainName("界面模块");
+            View.HasDelegate(ModuleAC.KeyLabelProperty).DomainName("界面模块");
 
-            View.Property(ModuleAC.KeyNameProperty).HasLabel("模块").ShowIn(ShowInWhere.ListDropDown);
+            View.Property(ModuleAC.KeyLabelProperty).HasLabel("模块").ShowIn(ShowInWhere.ListDropDown);
         }
     }
 }

@@ -45,7 +45,7 @@ namespace Demo
                         new ModuleMeta{ Label = "类别管理", EntityType = typeof(BookCategory)},
                         new ModuleMeta{ Label = "书籍管理", EntityType = typeof(Book)},
                         new ModuleMeta{ Label = "图书管理员", EntityType = typeof(BookAdministrator)},
-                        new ModuleMeta{ Label = "书籍查询", EntityType = typeof(Book), TemplateType = typeof(BookQueryModule)}
+                        new ModuleMeta{ Label = "书籍查询", EntityType = typeof(Book), WPFTemplateType = typeof(BookQueryModule)}
                     }
                 });
 

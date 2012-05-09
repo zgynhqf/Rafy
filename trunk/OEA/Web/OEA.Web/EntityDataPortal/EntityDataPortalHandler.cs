@@ -71,7 +71,7 @@ namespace OEA.Web
 
                 JObject jEntityList = JObject.Parse(entityListJson);
 
-                var list = EntityJsonConverter.JsonToEntity(jEntityList, repo);
+                var list = EntityJsonConverter.JsonToEntityList(jEntityList, repo);
 
                 if (OEAEnvironment.IsDebuggingEnabled)
                 {

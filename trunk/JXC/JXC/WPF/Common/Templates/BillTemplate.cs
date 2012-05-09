@@ -29,9 +29,11 @@ namespace JXC.WPF.Templates
         {
             var blocks = base.DefineBlocks();
 
+            blocks.Surrounders.Clear();
+
             //只需要把主块的生成方式变为 Detail 就行了。
             blocks.MainBlock.BlockType = BlockType.Detail;
-            blocks.MainBlock.ViewMeta.ClearWPFCommands();
+            blocks.MainBlock.ViewMeta.ClearWPFCommands().ClearWebCommands();
 
             blocks.Layout = new LayoutMeta(typeof(BillLayout));
 
@@ -42,7 +44,7 @@ namespace JXC.WPF.Templates
     /// <summary>
     /// 一个只读的单据模块
     /// </summary>
-    public class ReadonlyBillCommand : BillTemplate
+    public class ReadonlyBillTemplate : BillTemplate
     {
         protected override AggtBlocks DefineBlocks()
         {

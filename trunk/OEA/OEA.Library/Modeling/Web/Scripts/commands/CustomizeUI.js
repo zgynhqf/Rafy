@@ -50,7 +50,7 @@
 
                 //添加一个临时方法供内部的按钮刷新使用
                 v.reloadViewConfiguration = function () {
-                    Oea.queryEntities(this.lastLoadCfg);
+                    Oea.data.EntityRepository.query(this.lastLoadCfg);
                 };
 
                 v.reloadViewConfiguration();

@@ -49,17 +49,19 @@ namespace JXC.WPF
         private void OnImageBytesChanged(DependencyPropertyChangedEventArgs e)
         {
             var value = (byte[])e.NewValue;
+            if (value != null && value.Length > 0)
+            {
+                var source = new BitmapImage();
+                source.BeginInit();
+                source.StreamSource = new MemoryStream(value);
+                source.EndInit();
 
-            var source = new BitmapImage();
-            source.BeginInit();
-            source.StreamSource = new MemoryStream(value);
-            source.EndInit();
+                img.Source = source;
 
-            img.Source = source;
-
-            var binding = BindingOperations.GetBinding(this, ImageBytesProperty);
-            var exp = this.GetBindingExpression(ImageBytesProperty);
-            exp.UpdateSource();
+                var binding = BindingOperations.GetBinding(this, ImageBytesProperty);
+                var exp = this.GetBindingExpression(ImageBytesProperty);
+                exp.UpdateSource();
+            }
         }
 
         #endregion

@@ -120,6 +120,16 @@ namespace OEA.Library
         /// <returns></returns>
         public EntityList __GetListImplicitly(object criteria)
         {
+            return this.GetBy(criteria);
+        }
+
+        /// <summary>
+        /// 子类重写此方法来实现隐式调用的自定义逻辑。
+        /// </summary>
+        /// <param name="criteria"></param>
+        /// <returns></returns>
+        protected virtual EntityList GetBy(object criteria)
+        {
             return this.FetchList(criteria);
         }
 

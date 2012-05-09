@@ -4,16 +4,18 @@
         return this.findRelationView(Oea.view.RelationView.result);
     },
     attachNewEntity: function () {
-        var model = this.getModel();
+        var model = this.getModelClass();
         var entity = Ext.create(model);
         this.setCurrent(entity);
     },
-    executeQuery: function () {
+    tryExecuteQuery: function () {
+        //暂时直接发起查询
+        this._executeQuery();
+    },
+    _executeQuery: function () {
         this.updateEntity();
         var e = this.getCurrent();
-        this.getResultView().loadData({
-            criteria: e
-        });
+        this.getResultView().loadData({ criteria: e });
     }
 });
 

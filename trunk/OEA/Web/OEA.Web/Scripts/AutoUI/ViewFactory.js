@@ -1,4 +1,9 @@
 ﻿Ext.define('Oea.autoUI.ViewFactory', {
+    extend: 'Ext.util.Observable',
+    constructor: function () {
+        this.addEvents('commandCreated');
+    },
+
     //ListView
     createListView: function (block) {
         var view = new Oea.view.ListView(block);
@@ -170,6 +175,12 @@
         }
     },
     _setHandler: function (tbarItemCfg, view) {
+        /// <summary>
+        /// 为某个工具栏项生成客户端命令，并添加事件处理函数
+        /// </summary>
+        /// <param name="tbarItemCfg"></param>
+        /// <param name="view"></param>
+
         tbarItemCfg.id = view._getCmdControlId(tbarItemCfg.command);
 
         var cmd = Ext.create(tbarItemCfg.command, { meta: tbarItemCfg });
@@ -177,8 +188,10 @@
         //在创建 cmd 的过程中，可能会修改 meta 中的数据以生成界面
         cmd._modifyMeta(tbarItemCfg);
 
-        tbarItemCfg.handler = function () {
-            if (cmd.canExecute(view, this)) { cmd.execute(view, this); }
-        };
+        tbarItemCfg.handler = function () { cmd.tryExecute(view, this); };
+
+        view._addCmd(tbarItemCfg.command, cmd);
+
+        this.fireEvent('commandCreated', { command: cmd });
     }
 });

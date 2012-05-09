@@ -17,25 +17,39 @@ using System.Linq;
 using System.Text;
 using OEA.Module.WPF;
 using OEA.MetaModel.View;
+using OEA;
 
 namespace JXC.WPF.Templates
 {
     public abstract class ModuleBase : CallbackTemplate
     {
-        //for extend
-
         public static void MakeBlockReadonly(AggtBlocks block)
         {
             var childMeta = block.MainBlock.ViewMeta;
             childMeta.DisableEditing();
 
-            var commands = childMeta.WPFCommands;
-            for (int i = commands.Count - 1; i >= 0; i--)
+            if (IsWeb)
             {
-                var cmd = commands[i];
-                if (cmd.GroupType != CommandGroupType.View)
+                var commands = childMeta.WebCommands;
+                for (int i = commands.Count - 1; i >= 0; i--)
                 {
-                    commands.Remove(cmd);
+                    var cmd = commands[i];
+                    if (cmd.Group != CommandGroupType.View)
+                    {
+                        commands.Remove(cmd);
+                    }
+                }
+            }
+            else
+            {
+                var commands = childMeta.WPFCommands;
+                for (int i = commands.Count - 1; i >= 0; i--)
+                {
+                    var cmd = commands[i];
+                    if (cmd.GroupType != CommandGroupType.View)
+                    {
+                        commands.Remove(cmd);
+                    }
                 }
             }
         }

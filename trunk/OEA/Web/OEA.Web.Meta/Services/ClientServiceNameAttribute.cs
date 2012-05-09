@@ -21,11 +21,13 @@ using System.ComponentModel;
 using OEA.Web.ClientMetaModel;
 using OEA.Web.Json;
 
-namespace OEA.Web.Services
+namespace OEA.Web
 {
     /// <summary>
     /// 此标记用于标记于 JsonService 之上。
     /// JsonService 用于 Web 时，在客户端对应调用的服务的名称标记。
+    /// 
+    /// 如果没有不标记，则默认以类的全名称为服务名。
     /// </summary>
     [Serializable]
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]

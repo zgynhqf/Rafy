@@ -73,6 +73,9 @@ namespace OEA.MetaModel.View
             template.EntityType = this.EntityType;
             return template;
         }
+
+        protected static bool IsWeb { get { return OEAEnvironment.IsWeb; } }
+        protected static bool IsWPF { get { return OEAEnvironment.IsWPF; } }
     }
 
     public class BlocksDefinedEventArgs : EventArgs

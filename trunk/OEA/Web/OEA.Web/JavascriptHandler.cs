@@ -66,7 +66,8 @@ namespace OEA.Web
         {
             if (OEAEnvironment.IsDebuggingEnabled) { return result; }
 
-            result = Regex.Replace(result, @"//.+$", string.Empty, RegexOptions.Multiline);
+            //以非协议（不是冒号起头）的双斜杠都算是注释
+            result = Regex.Replace(result, @"(?<nonColon>[^:])//.+$", "${nonColon}", RegexOptions.Multiline);
             result = Regex.Replace(result, @"\s+", " ");
 
             //把操作符旁边的空格去除。

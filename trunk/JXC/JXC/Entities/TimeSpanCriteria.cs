@@ -141,8 +141,12 @@ namespace JXC
 
             using (View.OrderProperties())
             {
-                View.Property(TimeSpanCriteria.TimeSpanTypeProperty)
-                    .HasLabel("入库日期").ShowIn(ShowInWhere.Detail);
+                //采购订单的查询面板中入库日期这一属性，只在 CS 界面中起作用。
+                if (IsWPF)
+                {
+                    View.Property(TimeSpanCriteria.TimeSpanTypeProperty)
+                        .HasLabel("入库日期").ShowIn(ShowInWhere.Detail);
+                }
                 View.Property(TimeSpanCriteria.FromProperty)
                     .HasLabel("从").ShowInDetail(labelWidth: 30);
                 View.Property(TimeSpanCriteria.ToProperty)

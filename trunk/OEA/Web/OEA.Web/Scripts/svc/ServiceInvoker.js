@@ -8,12 +8,24 @@
         });
     },
     invoke: function (op) {
+        /// <summary>
+        /// 调用指定的服务
+        /// </summary>
+        /// <param name="op">
+        /// svc: 必选，字符串表示的服务名称。
+        /// svcParams: 可选，服务参数对应的 json 对象。
+        /// callback: 可选，回调。
+        /// async: true。
+        /// </param>
+        op = Ext.apply({ async: true }, op);
+
         var url = this._url(op);
 
         if (!op.svcParams) { op.svcParams = {}; }
 
         Ext.Ajax.request({
             url: url,
+            async: op.async,
             params: { svcParams: Ext.encode(op.svcParams) },
             success: function (response, opts) {
                 if (op.callback) {
@@ -28,4 +40,17 @@
         var res = Ext.String.format("/OEA_ServiceInvoker.ashx?svc={0}", op.svc);
         return res;
     }
+    //,_encodeParams: function (params) {
+    //    for (var p in params) {
+    //        var value = params[p];
+    //        if (Ext.isObject(value)) {
+    //            if (value.isStore) {
+
+    //            }
+    //            else if (value.isModel) {
+
+    //            }
+    //        }
+    //    }
+    //}
 });
