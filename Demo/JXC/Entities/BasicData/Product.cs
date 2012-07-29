@@ -222,27 +222,26 @@ namespace JXC
         {
             this.QueryDb(q =>
             {
-                q.JoinRef(Product.ProductCategoryRefProperty);
-
-                q.Constrain(ProductCategory.TreeCodeProperty);
-                if (criteria.IncludeSub)
-                {
-                    q.Constrain(ProductCategory.TreeCodeProperty).StartWith(criteria.ProductCategory.TreeCode);
-                }
-                else
-                {
-                    q.Constrain(ProductCategory.TreeCodeProperty).Equal(criteria.ProductCategory.TreeCode);
-                }
-
-                //q.Constrain(Product.ProductCategoryRefProperty).Equal(criteria.ProductCategoryId);
+                //q.JoinRef(Product.ProductCategoryRefProperty);
 
                 //if (criteria.IncludeSub)
                 //{
-                //    foreach (var child in criteria.ProductCategory.GetTreeChildrenRecur())
-                //    {
-                //        q.Or().Constrain(Product.ProductCategoryRefProperty).Equal(child.Id);
-                //    }
+                //    q.Constrain(ProductCategory.TreeCodeProperty).StartWith(criteria.ProductCategory.TreeCode);
                 //}
+                //else
+                //{
+                //    q.Constrain(ProductCategory.TreeCodeProperty).Equal(criteria.ProductCategory.TreeCode);
+                //}
+
+                q.Constrain(Product.ProductCategoryRefProperty).Equal(criteria.ProductCategoryId);
+
+                if (criteria.IncludeSub)
+                {
+                    foreach (var child in criteria.ProductCategory.GetTreeChildrenRecur())
+                    {
+                        q.Or().Constrain(Product.ProductCategoryRefProperty).Equal(child.Id);
+                    }
+                }
             });
         }
 
