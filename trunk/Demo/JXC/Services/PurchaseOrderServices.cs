@@ -110,6 +110,9 @@ namespace JXC
                 Comment = "系统生成"
             };
 
+            //默认直接入库第一个仓库
+            storageIn.Storage = RF.Concreate<StorageRepository>().GetAll().First() as Storage;
+
             //调用另外一个服务直接入库
             var siService = new AddOrderStorageInBillService { Item = storageIn };
             siService.Invoke();

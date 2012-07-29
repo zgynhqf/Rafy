@@ -119,19 +119,22 @@ namespace hxy.Common.Data
             if (disposing)
             {
                 //如果在 Dispose 时还没有提交事务，则表示需要把事务回滚。
-                if (!this._completed)
+                var current = Current;
+                if (current != null)
                 {
-                    //把引用设置为负数，这样外层的代码块就不会再提交本事务。
-                    CurrentTransactionRef = -1;
+                    if (!this._completed)
+                    {
+                        //把引用设置为负数，这样外层的代码块就不会再提交本事务。
+                        CurrentTransactionRef = -1;
+                        current.Rollback();
+                    }
 
-                    Current.Rollback();
-                }
-
-                //不论是正常的提交，还是已经被回滚，最外层的事务块都需要把事务进行释放。
-                if (CurrentTransactionRef <= 0)
-                {
-                    Current.Dispose();
-                    Current = null;
+                    //不论是正常的提交，还是已经被回滚，最外层的事务块都需要把事务进行释放。
+                    if (CurrentTransactionRef <= 0)
+                    {
+                        current.Dispose();
+                        Current = null;
+                    }
                 }
             }
         }
