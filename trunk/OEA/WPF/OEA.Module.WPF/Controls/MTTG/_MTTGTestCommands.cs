@@ -27,7 +27,7 @@
 //
 //using OEA.WPF.Command;
 //using OEA.Library;
-//using Itenso.Windows.Input;
+//using OEA.WPF.Command;
 //using System.ComponentModel;
 //using System.Windows.Data;
 //using OEA.ManagedProperty;

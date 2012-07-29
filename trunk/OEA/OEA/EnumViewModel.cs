@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using OEA.MetaModel.Attributes;
+using OEA.Reflection;
 
 namespace OEA.Utils
 {
@@ -19,21 +20,13 @@ namespace OEA.Utils
         public EnumViewModel(Enum value)
         {
             this.EnumValue = value;
+            this.Label = EnumToLabel(value);
+        }
 
-            Type type = value.GetType();
-            FieldInfo fieldInfo = type.GetField(value.ToString());
-            if (null != fieldInfo)
-            {
-                var attri = fieldInfo.GetSingleAttribute<LabelAttribute>();
-                if (attri != null)
-                {
-                    this.Label = attri.Label;
-                }
-                else
-                {
-                    this.Label = value.ToString();
-                }
-            }
+        private EnumViewModel(Enum value, string label)
+        {
+            this.EnumValue = value;
+            this.Label = label;
         }
 
         /// <summary>
@@ -69,15 +62,37 @@ namespace OEA.Utils
             return Label;
         }
 
+        /// <summary>
+        /// 获取某个枚举类型下所有可用的视图值。
+        /// 
+        /// 注意：不加 Label 的枚举不显示。
+        /// </summary>
+        /// <param name="enumType">枚举类型。注意，支持传入 Nullable(Enum)。</param>
+        /// <returns></returns>
         public static List<EnumViewModel> GetByEnumType(Type enumType)
         {
             List<EnumViewModel> result = new List<EnumViewModel>();
 
-            foreach (Enum item in Enum.GetValues(enumType)) { result.Add(new EnumViewModel(item)); }
+            enumType = TypeHelper.IgnoreNullable(enumType);
+
+            foreach (Enum item in Enum.GetValues(enumType))
+            {
+                var label = EnumToLabel(item);
+                if (!string.IsNullOrEmpty(label))
+                {
+                    result.Add(new EnumViewModel(item));
+                }
+            }
 
             return result;
         }
 
+        /// <summary>
+        /// 把 Label 解析为目标枚举类型中对应的枚举值。
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="enumType"></param>
+        /// <returns></returns>
         public static object LabelToEnum(string str, Type enumType)
         {
             FieldInfo[] fieldInfos = enumType.GetFields();
@@ -103,9 +118,26 @@ namespace OEA.Utils
             return null;
         }
 
+        /// <summary>
+        /// 返回一个枚举值对应的 Label。
+        /// 如果该枚举值没有标记 Label，则返回 String.Empty。
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static string EnumToLabel(Enum value)
         {
-            return new EnumViewModel(value).Label;
+            Type type = value.GetType();
+            FieldInfo fieldInfo = type.GetField(value.ToString());
+            if (null != fieldInfo)
+            {
+                var attri = fieldInfo.GetSingleAttribute<LabelAttribute>();
+                if (attri != null)
+                {
+                    return attri.Label;
+                }
+            }
+
+            return null;
         }
     }
 }

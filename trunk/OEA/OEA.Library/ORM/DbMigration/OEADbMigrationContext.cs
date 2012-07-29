@@ -21,7 +21,7 @@ using DbMigration.Model;
 using Common;
 using hxy.Common.Data;
 
-namespace OEA.Library.ORM.DbMigration
+namespace OEA.ORM.DbMigration
 {
     /// <summary>
     /// 在 DbMigrationContext 的基础上实现以下功能：

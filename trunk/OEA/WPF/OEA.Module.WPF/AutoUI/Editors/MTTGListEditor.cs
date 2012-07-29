@@ -32,11 +32,10 @@ namespace OEA.Module.WPF.Editors
 
         private IEnumerable<string> _lastRootGroupDescriptions;
 
-        public MTTGListEditor(IListEditorContext context)
-            : base(context) { }
+        public MTTGListEditor(IListEditorContext context) : base(context) { }
 
         /// <summary>
-        /// 使用的控件
+        /// 使用的 MTTG 控件
         /// </summary>
         public new MultiTypesTreeGrid Control
         {
@@ -105,12 +104,31 @@ namespace OEA.Module.WPF.Editors
 
         public override IList<Entity> SelectedEntities
         {
-            get { return this.Control.SelectedItems; }
+            get
+            {
+                var ctrl = this.Control;
+                if (ctrl.CheckingMode == CheckingMode.CheckingRow)
+                {
+                    return ctrl.CheckingModel.SelectedItems;
+                }
+                else
+                {
+                    return ctrl.SelectionModel.SelectedItems;
+                }
+            }
         }
 
         public override void SelectAll()
         {
-            this.Control.SelectAll();
+            var ctrl = this.Control;
+            if (ctrl.CheckingMode == CheckingMode.CheckingRow)
+            {
+                ctrl.CheckingModel.SelectAll();
+            }
+            else
+            {
+                ctrl.SelectionModel.SelectAll();
+            }
         }
 
         protected override void OnIsReadOnlyChanged()
@@ -213,6 +231,7 @@ namespace OEA.Module.WPF.Editors
             {
                 oldTreeView.SelectedItemChanged -= On_TreeView_SelectedItemChanged;
                 oldTreeView.MouseDoubleClick -= On_TreeView_MouseDoubleClick;
+                oldTreeView.CheckChanged -= On_TreeView_CheckChanged;
             }
 
             var eventReporter = this.Context.EventReporter;
@@ -220,6 +239,7 @@ namespace OEA.Module.WPF.Editors
             {
                 newTreeView.SelectedItemChanged += On_TreeView_SelectedItemChanged;
                 newTreeView.MouseDoubleClick += On_TreeView_MouseDoubleClick;
+                newTreeView.CheckChanged += On_TreeView_CheckChanged;
             }
         }
 
@@ -238,6 +258,15 @@ namespace OEA.Module.WPF.Editors
                 var args = new SelectedEntityChangedEventArgs(e.NewItem, e.OldItem);
                 var eventReporter = this.Context.EventReporter;
                 eventReporter.NotifySelectedItemChanged(sender, args);
+            }
+        }
+
+        private void On_TreeView_CheckChanged(object sender, CheckChangedEventArgs e)
+        {
+            if (this._reportEvents)
+            {
+                var eventReporter = this.Context.EventReporter;
+                eventReporter.NotifyCheckChanged(sender, e);
             }
         }
 

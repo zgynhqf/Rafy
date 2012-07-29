@@ -95,6 +95,9 @@ namespace OEA.Module.WPF.Editors
             var refVI = this.Meta.ReferenceViewInfo;
             var refTypeMeta = refVI.RefTypeDefaultView;
 
+            var title = refTypeMeta.TitleProperty;
+            if (title == null) throw new InvalidProgramException(string.Format("{0} 没有设置代表属性，生成下拉控件时出错。", refTypeMeta.Name));
+
             //创建 ListObjectView
             this._listView = AutoUI.ViewFactory.CreateListObjectView(refTypeMeta, true);
             if (this.IsMultiSelection) { this._listView.CheckingMode = CheckingMode.CheckingRow; }
@@ -104,13 +107,13 @@ namespace OEA.Module.WPF.Editors
             this._cmbList = new ComboListControl(this._listView)
             {
                 ClearPropertyEditor = this,
-                Name = this.Meta.Name
+                Name = this.Meta.Name,
+                TextPath = title.Name,
+                TextFilterEnabled = refVI.TextFilterEnabled,
             };
             this._cmbList.DropDownOpened += On_ComboDataGrid_DropDownOpened;
-            this._cmbList.TextPath = refTypeMeta.TitleProperty.Name;
-            if (!refVI.TextFilterEnabled) this._cmbList.TextFilterEnabled = false;
 
-            this.BindElementReadOnly(this._cmbList, ComboBox.IsReadOnlyProperty);
+            this.BindElementReadOnly(this._cmbList, ComboBox.IsEnabledProperty, false);
 
             this.ResetBinding(this._cmbList);
 
@@ -234,13 +237,13 @@ namespace OEA.Module.WPF.Editors
             //如果设定了DataSourceProperty，则从这个属性中获取下拉对象集合
             var refInfo = this.Meta.ReferenceViewInfo;
             var dataSourceProperty = refInfo.DataSourceProperty;
-            if (string.IsNullOrWhiteSpace(dataSourceProperty)) throw new InvalidOperationException("string.IsNullOrWhiteSpace(dataSourceProperty) must be false.");
+            if (dataSourceProperty == null) throw new ArgumentNullException("DataSourceProperty");
 
             //以一种不会出错的方式来尝试获取数据源属性。
             EntityList values = null;
             try
             {
-                values = this.Context.CurrentObject.GetPropertyValue(dataSourceProperty) as EntityList;
+                values = this.Context.CurrentObject.GetProperty(dataSourceProperty) as EntityList;
             }
             catch { }
 
@@ -308,7 +311,7 @@ namespace OEA.Module.WPF.Editors
 
         private bool IsUseLocalData()
         {
-            return !string.IsNullOrEmpty(this.Meta.ReferenceViewInfo.DataSourceProperty);
+            return this.Meta.ReferenceViewInfo.DataSourceProperty != null;
         }
 
         #endregion

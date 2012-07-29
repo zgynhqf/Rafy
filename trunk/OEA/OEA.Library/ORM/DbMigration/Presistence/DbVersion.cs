@@ -7,7 +7,7 @@ using OEA.Library;
 using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
 
-namespace OEA.Library.ORM.DbMigration.Presistence
+namespace OEA.ORM.DbMigration.Presistence
 {
     [Serializable]
     [RootEntity]
@@ -19,7 +19,6 @@ namespace OEA.Library.ORM.DbMigration.Presistence
         }
 
         public static readonly Property<string> DatabaseProperty = P<DbVersion>.Register(e => e.Database);
-        [EntityProperty]
         public string Database
         {
             get { return this.GetProperty(DatabaseProperty); }
@@ -27,7 +26,6 @@ namespace OEA.Library.ORM.DbMigration.Presistence
         }
 
         public static readonly Property<DateTime> VersionProperty = P<DbVersion>.Register(e => e.Version);
-        [EntityProperty]
         public DateTime Version
         {
             get { return this.GetProperty(VersionProperty); }

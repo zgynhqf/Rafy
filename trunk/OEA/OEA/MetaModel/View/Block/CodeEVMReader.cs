@@ -157,11 +157,9 @@ namespace OEA.MetaModel.View
             var labelAttri = runtimeProperty.GetSingleAttribute<LabelAttribute>();
             if (labelAttri != null) item.Label = labelAttri.Label;
 
-            item.IsReadonly = !runtimeProperty.CanWrite ||
+            item.Readonly(!runtimeProperty.CanWrite ||
                 propertySource.MP != null && propertySource.MP.IsReadOnly ||
-                runtimeProperty.Name == DBConvention.FieldName_TreeCode;
-
-            item.EditorName = FindEditorName(item.PropertyMeta);
+                runtimeProperty.Name == DBConvention.FieldName_TreeCode);
 
             #region 创建 ReferenceViewInfo
 
@@ -170,20 +168,7 @@ namespace OEA.MetaModel.View
             //如果是引用实体的属性
             if (ri != null)
             {
-                var rvi = new ReferenceViewInfo
-                {
-                    ReferenceInfo = ri
-                };
-                item.ReferenceViewInfo = rvi;
-
-                var lookupAttri = runtimeProperty.GetSingleAttribute<LookupAttribute>();
-                if (lookupAttri != null)
-                {
-                    rvi.DataSourceProperty = lookupAttri.DataSourceProperty;
-                    rvi.SelectedValuePath = lookupAttri.SelectedValuePath;
-                    rvi.RootPIdProperty = lookupAttri.RootPIdProperty;
-                    rvi.SelectionMode = lookupAttri.SelectionMode;
-                }
+                item.ReferenceViewInfo = new ReferenceViewInfo { ReferenceInfo = ri };
             }
 
             #endregion
@@ -200,31 +185,12 @@ namespace OEA.MetaModel.View
             var epvm = new EntityPropertyViewMeta()
             {
                 Owner = evm,
-                PropertyMeta = epm,
-                EditorName = FindEditorName(epm)
+                PropertyMeta = epm
             };
 
             evm.EntityProperties.Add(epvm);
 
             return epvm;
-        }
-
-        /// <summary>
-        /// 根据属性的类型，获取编辑器的名称
-        /// </summary>
-        /// <param name="epm"></param>
-        /// <returns></returns>
-        private string FindEditorName(EntityPropertyMeta epm)
-        {
-            if (epm.ReferenceInfo != null)
-            {
-                return WPFEditorNames.LookupDropDown;
-            }
-
-            var propertyType = epm.Runtime.PropertyType;
-            if (propertyType.IsEnum) { return WPFEditorNames.Enum; }
-
-            return propertyType.FullName;
         }
     }
 }

@@ -29,6 +29,11 @@ namespace OEA.Web.EntityDataPortal
             this.entities = new List<EntityJson>();
         }
 
+        /// <summary>
+        /// 实体列表的实际总量。
+        /// 
+        /// 分页时，实际量和当前量是不一致的。
+        /// </summary>
         internal int total { get; set; }
 
         internal List<EntityJson> entities { get; private set; }

@@ -62,7 +62,7 @@ namespace OEA.RBAC
 
         #region 视图属性
 
-        public static readonly Property<string> View_CodeProperty = P<OrgPositionUser>.RegisterReadOnly(e => e.View_Code, e => (e as OrgPositionUser).GetView_Code(), null);
+        public static readonly Property<string> View_CodeProperty = P<OrgPositionUser>.RegisterReadOnly(e => e.View_Code, e => (e as OrgPositionUser).GetView_Code());
         public string View_Code
         {
             get { return this.GetProperty(View_CodeProperty); }
@@ -72,7 +72,7 @@ namespace OEA.RBAC
             return User.Code;
         }
 
-        public static readonly Property<string> View_NameProperty = P<OrgPositionUser>.RegisterReadOnly(e => e.View_Name, e => (e as OrgPositionUser).GetView_Name(), null);
+        public static readonly Property<string> View_NameProperty = P<OrgPositionUser>.RegisterReadOnly(e => e.View_Name, e => (e as OrgPositionUser).GetView_Name());
         public string View_Name
         {
             get { return this.GetProperty(View_NameProperty); }
@@ -99,7 +99,7 @@ namespace OEA.RBAC
         {
             base.ConfigMeta();
 
-            this.Meta.MapTable().HasColumns(
+            this.Meta.MapTable().MapProperties(
                 OrgPositionUser.OrgPositionRefProperty,
                 OrgPositionUser.UserRefProperty
                 );

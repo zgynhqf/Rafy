@@ -30,16 +30,19 @@ namespace OEA.Module.WPF.Editors
         public PropertyEditorFactory()
         {
             this.SetDictionary(new Dictionary<string, Type>() { 
-                { WPFEditorNames.Int32, typeof(NumericUpDownPropertyEditor)},
+                { WPFEditorNames.Int32, typeof(IntegerUpDownPropertyEditor)},
+                { WPFEditorNames.Double, typeof(DoubleUpDownPropertyEditor)},
                 //{ WPFEditorNames.Int32, typeof(NumbericPropertyEditor)},
-                { WPFEditorNames.NumericUpDown, typeof(NumericUpDownPropertyEditor)},
+                { WPFEditorNames.IntegerUpDown, typeof(IntegerUpDownPropertyEditor)},
                 { WPFEditorNames.NumberRange, typeof(NumberRangePropertyEditor)},
                 { WPFEditorNames.Boolean, typeof(BooleanPropertyEditor)},
                 { WPFEditorNames.String, typeof(StringPropertyEditor) },
                 { WPFEditorNames.Enum, typeof(EnumPropertyEditor) },
                 { WPFEditorNames.LookupDropDown, typeof(LookupListPropertyEditor)},
                 { WPFEditorNames.Memo, typeof(MemoPropertyEditor)},
+                { WPFEditorNames.DateTime, typeof(DateTimePropertyEditor)},
                 { WPFEditorNames.Date, typeof(DatePropertyEditor)},
+                { WPFEditorNames.Time, typeof(TimePropertyEditor)},
                 { WPFEditorNames.DateRange, typeof(DateRangePropertyEditor)},
                 { WPFEditorNames.LookDetail, typeof(LookDetailPropertyEditor)},
                 { WPFEditorNames.PopupSearchList, typeof(PopupSearchListPropertyEditor)},
@@ -94,15 +97,15 @@ namespace OEA.Module.WPF.Editors
         /// <summary>
         /// 根据属性元数据中指定的 EditorName 生成属性编辑器
         /// </summary>
-        /// <param name="context"></param>
-        /// <param name="propertyInfo"></param>
+        /// <param name="property"></param>
+        /// <param name="forList"></param>
         /// <returns></returns>
-        public WPFPropertyEditor Create(EntityPropertyViewMeta propertyInfo, bool forList)
+        public WPFPropertyEditor Create(EntityPropertyViewMeta property, bool forList)
         {
-            var result = this.CreateInstance(propertyInfo.EditorName, true) ??
+            var result = this.CreateInstance(property.GetEditorNameOrDefault(), true) ??
                 this.CreateInstance(WPFEditorNames.String, true);
 
-            this.InitPropertyEditor(result, propertyInfo, forList);
+            this.InitPropertyEditor(result, property, forList);
 
             return result;
         }

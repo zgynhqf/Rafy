@@ -28,21 +28,21 @@ namespace OEA.Library
         /// <summary>
         /// 用于创建指定实体的仓库。
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
         /// <returns></returns>
-        public static EntityRepository Create<TEntity>()
-            where TEntity : Entity
+        public static EntityRepository Create(Type entityType)
         {
-            return RepositoryFactory.Instance.Find(typeof(TEntity));
+            return RepositoryFactory.Instance.Find(entityType);
         }
 
         /// <summary>
         /// 用于创建指定实体的仓库。
         /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
         /// <returns></returns>
-        public static EntityRepository Create(Type entityType)
+        public static EntityRepository Create<TEntity>()
+            where TEntity : Entity
         {
-            return RepositoryFactory.Instance.Find(entityType);
+            return HostByEntity<TEntity>.Instance;
         }
 
         /// <summary>
@@ -55,9 +55,49 @@ namespace OEA.Library
         public static TRepository Concreate<TRepository>()
             where TRepository : EntityRepository
         {
-            var entityType = EntityConvention.FindByRepository(typeof(TRepository)).EntityType;
-            return RepositoryFactory.Instance.Find(entityType) as TRepository;
+            return HostByRepo<TRepository>.Instance;
         }
+
+        #region 类型高速键值对
+
+        private class HostByRepo<TRepository>
+            where TRepository : EntityRepository
+        {
+            private static TRepository _instance;
+            public static TRepository Instance
+            {
+                get
+                {
+                    if (_instance == null)
+                    {
+                        var entityType = EntityConvention.FindByRepository(typeof(TRepository)).EntityType;
+                        _instance = RepositoryFactory.Instance.Find(entityType) as TRepository;
+                    }
+
+                    return _instance;
+                }
+            }
+        }
+
+        private class HostByEntity<TEntity>
+            where TEntity : Entity
+        {
+            private static EntityRepository _instance;
+            public static EntityRepository Instance
+            {
+                get
+                {
+                    if (_instance == null)
+                    {
+                        _instance = RepositoryFactory.Instance.Find(typeof(TEntity));
+                    }
+
+                    return _instance;
+                }
+            }
+        }
+
+        #endregion
 
         #region Shortcuts
 
@@ -99,6 +139,21 @@ namespace OEA.Library
         public static void Save(Entity entity)
         {
             Save(entity, EntitySaveType.Normal);
+        }
+
+        /// <summary>
+        /// 把这个组件中的所有改动保存到仓库中。
+        /// 
+        /// 一般场景下，主要使用该方法保存聚合根对象
+        /// </summary>
+        /// <param name="component">
+        /// 传入参数：需要保存的实体/实体列表。
+        /// 传出结果：保存完成后的实体/实体列表。注意，它与传入的对象并不是同一个对象。
+        /// </param>
+        public static void Save<T>(ref T component)
+            where T : class, IEntityOrList
+        {
+            component = component.GetRepository().Save(component) as T;
         }
 
         /// <summary>

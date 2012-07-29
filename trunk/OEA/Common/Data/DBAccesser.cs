@@ -15,10 +15,10 @@ using System;
 using System.Data;
 using System.Configuration;
 using System.Web;
-
 using System.Data.Common;
 using System.Text.RegularExpressions;
 using hxy.Common.Data.Providers;
+using System.Runtime;
 
 namespace hxy.Common.Data
 {
@@ -335,11 +335,24 @@ namespace hxy.Common.Data
         /// Query out a DataTable object from database by the specific sql.
         /// </summary>
         /// <param name="strSql">specific sql</param>
+        /// <param name="parameters">If this sql has some parameters, these are its parameters.</param>
+        /// <returns></returns>
+        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
+        public DataTable QueryDataTableNormal(string strSql, params IDbDataParameter[] parameters)
+        {
+            return this.QueryDataTableNormal(strSql, CommandType.Text, parameters);
+        }
+
+        /// <summary>
+        /// Query out a DataTable object from database by the specific sql.
+        /// </summary>
+        /// <param name="strSql">specific sql</param>
         /// <param name="type">
         /// Indicates or specifies how the System.Data.IDbCommand.CommandText property
         /// is interpreted.
         /// </param>
         /// <param name="parameters">If this sql has some parameters, these are its parameters.</param>
+
         /// <returns></returns>
         public DataTable QueryDataTableNormal(string strSql, CommandType type, params IDbDataParameter[] parameters)
         {
@@ -407,11 +420,25 @@ namespace hxy.Common.Data
         /// If there is not any records, return null.
         /// </summary>
         /// <param name="strSql">specific sql</param>
+        /// <param name="parameters">If this sql has some parameters, these are its parameters.</param>
+        /// <returns></returns>
+        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
+        public DataRow QueryDataRowNormal(string strSql, params IDbDataParameter[] parameters)
+        {
+            return this.QueryDataRowNormal(strSql, CommandType.Text, parameters);
+        }
+
+        /// <summary>
+        /// Query out a row from database.
+        /// If there is not any records, return null.
+        /// </summary>
+        /// <param name="strSql">specific sql</param>
         /// <param name="type">
         /// Indicates or specifies how the System.Data.IDbCommand.CommandText property
         /// is interpreted.
         /// </param>
         /// <param name="parameters">If this sql has some parameters, these are its parameters.</param>
+
         /// <returns></returns>
         public DataRow QueryDataRowNormal(string strSql, CommandType type, params IDbDataParameter[] parameters)
         {
@@ -423,6 +450,19 @@ namespace hxy.Common.Data
                 }
                 return null;
             }
+        }
+
+        /// <summary>
+        /// Query out some data from database.
+        /// </summary>
+        /// <param name="strSql">specific sql</param>
+        /// <param name="closeConnection">Indicates whether to close the corresponding connection when the reader is closed?</param>
+        /// <param name="parameters">If this sql has some parameters, these are its parameters.</param>
+        /// <returns></returns>
+        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
+        public IDataReader QueryDataReaderNormal(string strSql, bool closeConnection, params IDbDataParameter[] parameters)
+        {
+            return this.QueryDataReaderNormal(strSql, CommandType.Text, closeConnection, parameters);
         }
 
         /// <summary>
@@ -460,6 +500,17 @@ namespace hxy.Common.Data
         /// Query out some data from database.
         /// </summary>
         /// <param name="strSql">specific sql</param>
+        /// <param name="parameters">If this sql has some parameters, these are its parameters.</param>
+        /// <returns></returns>
+        public IDataReader QueryDataReaderNormal(string strSql, params IDbDataParameter[] parameters)
+        {
+            return this.QueryDataReaderNormal(strSql, CommandType.Text, parameters);
+        }
+
+        /// <summary>
+        /// Query out some data from database.
+        /// </summary>
+        /// <param name="strSql">specific sql</param>
         /// <param name="type">
         /// Indicates or specifies how the System.Data.IDbCommand.CommandText property
         /// is interpreted.
@@ -484,11 +535,11 @@ namespace hxy.Common.Data
             {
                 formatSql = _converter.ConvertToSpecialDbSql(formatSql);
                 IDbDataParameter[] dbParameters = ConvertFormatParamaters(parameters);
-                return this.QueryDataReaderNormal(formatSql, CommandType.Text, closeConnection, dbParameters);
+                return this.QueryDataReaderNormal(formatSql, closeConnection, dbParameters);
             }
             else
             {
-                return this.QueryDataReaderNormal(formatSql, CommandType.Text, closeConnection);
+                return this.QueryDataReaderNormal(formatSql, closeConnection);
             }
         }
 
@@ -501,6 +552,18 @@ namespace hxy.Common.Data
         public IDataReader QueryDataReader(string formatSql, params object[] parameters)
         {
             return QueryDataReader(formatSql, this._connection.State == ConnectionState.Closed, parameters);
+        }
+
+        /// <summary>
+        /// Execute the sql, and return the element of first row and first column, ignore the other values.
+        /// </summary>
+        /// <param name="strSql">specific sql</param>
+        /// <param name="parameters">If this sql has some parameters, these are its parameters.</param>
+        /// <returns></returns>
+        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
+        public object QueryValueNormal(string strSql, params IDbDataParameter[] parameters)
+        {
+            return this.QueryValueNormal(strSql, CommandType.Text, parameters);
         }
 
         /// <summary>
@@ -845,17 +908,17 @@ namespace hxy.Common.Data
             command.CommandText = strSql;
             command.CommandType = type;
             var pas = command.Parameters;
-            foreach (var p in parameters)
-            {
-                pas.Add(p);
-            }
+            foreach (var p in parameters) { pas.Add(p); }
+
+            var tran = LocalTransactionBlock.Current;
+            if (tran != null) { command.Transaction = tran; }
 
             //if (this._transaction != null)
             //{
             //    command.Transaction = this._transaction;
             //}
 
-            SQLTrace.Trace(strSql);
+            SQLTrace.Trace(strSql, parameters);
 
             return command;
         }

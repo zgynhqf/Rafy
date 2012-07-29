@@ -121,9 +121,7 @@ namespace OEA.Library
             var directlyQueryTableAlias = this.GetTableAlias(this._directlyQueryRepository.GetORMTable().Name);
             var directlyQueryTableColumns = new SQLColumnsGenerator(this._directlyQueryRepository)
                 .GetReadableColumnsSql(directlyQueryTableAlias);
-            this._sql.Append(directlyQueryTableColumns);
-            this._sql.Append(',');
-            this._sql.AppendLine();
+            this._sql.Append(directlyQueryTableColumns).Append(',').AppendLine();
 
             //依次添加其它关系表的所有列
             var items = this._aggregateInfo.Items;
@@ -148,20 +146,14 @@ namespace OEA.Library
             //From “第一个直接查询的表”
             var tableName = this._directlyQueryRepository.GetORMTable().Name;
             var tableAlias = this.GetTableAlias(tableName);
-            this._sql.Append("FROM ");
-            this._sql.Append(tableName);
-            this._sql.Append(" AS ");
-            this._sql.Append(tableAlias);
-            this._sql.AppendLine();
+            this._sql.Append("FROM ").Append(tableName).Append(" ").AppendLine(tableAlias);
 
             //如果有joinFilterCondition，则添加上。
             if (this._joinFilterCondition != null)
             {
                 var joinCondition = this._joinFilterCondition.Replace(tableName + '.', tableAlias + '.');
 
-                this._sql.Append("    ");
-                this._sql.Append(joinCondition);
-                this._sql.AppendLine();
+                this._sql.Append("    ").AppendLine(joinCondition);
             }
         }
 
@@ -201,21 +193,12 @@ namespace OEA.Library
                 string fkTableAlias = this.GetTableAlias(fkTable.Name);
 
                 //组装SQL中的关系表
-                this._sql.Append("    LEFT OUTER JOIN ");
-                this._sql.Append(propertyTableName);
-                this._sql.Append(" AS ");
-                this._sql.Append(propertyTableAlias);
+                this._sql.Append("    LEFT OUTER JOIN ").Append(propertyTableName)
+                    .Append(" ").Append(propertyTableAlias);
 
                 //组装SQL中的关系表的Join条件。
-                this._sql.Append(" ON ");
-                this._sql.Append(fkTableAlias);
-                this._sql.Append('.');
-                this._sql.Append(fkName);
-                this._sql.Append(" = ");
-                this._sql.Append(pkTableAlias);
-                this._sql.Append('.');
-                this._sql.Append(DBConvention.FieldName_Id);
-                this._sql.AppendLine();
+                this._sql.Append(" ON ").Append(fkTableAlias).Append('.').Append(fkName)
+                    .Append(" = ").Append(pkTableAlias).Append('.').AppendLine(DBConvention.FieldName_Id);
 
                 tmp = tmp.Next;
             } while (tmp != null);
@@ -232,8 +215,7 @@ namespace OEA.Library
                 {
                     condition = condition.Replace(kv.Key + '.', kv.Value + '.');
                 }
-                this._sql.Append(condition);
-                this._sql.AppendLine();
+                this._sql.AppendLine(condition);
             }
             else if (this._directlyQueryRepository.EntityMeta.EntityCategory == EntityCategory.Child)
             {
@@ -243,11 +225,8 @@ namespace OEA.Library
 
                 var dqTableName = this._directlyQueryRepository.GetORMTable().Name;
                 var dqTableAlias = this.GetTableAlias(dqTableName);
-                this._sql.Append(dqTableAlias);
-                this._sql.Append('.');
-                this._sql.Append(rootTypeFKColumn);
-                this._sql.Append(" = '{0}'");
-                this._sql.AppendLine();
+                this._sql.Append(dqTableAlias).Append('.').Append(rootTypeFKColumn)
+                    .AppendLine(" = '{0}'");
             }
         }
 
@@ -255,10 +234,8 @@ namespace OEA.Library
         {
             var directlyQueryTableAlias = this.GetTableAlias(this._directlyQueryRepository.GetORMTable().Name);
 
-            this._sql.Append("ORDER BY ");
-            this._sql.Append(directlyQueryTableAlias);
-            this._sql.Append('.');
-            this._sql.Append(DBConvention.FieldName_Id);
+            this._sql.Append("ORDER BY ").Append(directlyQueryTableAlias)
+                .Append('.').Append(DBConvention.FieldName_Id);
 
             var tmp = this._aggregateInfo.Items.First;
             do
@@ -268,10 +245,7 @@ namespace OEA.Library
                 var propertyTable = item.PropertyEntityRepository.GetORMTable();
                 var propertyTableAlias = this.GetTableAlias(propertyTable.Name);
 
-                this._sql.Append(", ");
-                this._sql.Append(propertyTableAlias);
-                this._sql.Append('.');
-                this._sql.Append(DBConvention.FieldName_Id);
+                this._sql.Append(", ").Append(propertyTableAlias).Append('.').Append(DBConvention.FieldName_Id);
 
                 tmp = tmp.Next;
             } while (tmp != null);

@@ -24,7 +24,6 @@ using System;
 using System.ComponentModel;
 using System.Windows.Controls;
 
-
 namespace OEA.WPF.Command
 {
     [Command(ImageName = "Add.bmp", Label = "添加", GroupType = CommandGroupType.Edit)]

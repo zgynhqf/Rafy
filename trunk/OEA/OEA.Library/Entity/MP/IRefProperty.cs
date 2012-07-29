@@ -26,11 +26,6 @@ namespace OEA.Library
     public interface IRefProperty : IManagedProperty, IOEARefProperty
     {
         /// <summary>
-        /// 引用实体的类型
-        /// </summary>
-        Type RefEntityType { get; }
-
-        /// <summary>
         /// 创建某个实体的懒引用外键
         /// </summary>
         /// <param name="owner"></param>

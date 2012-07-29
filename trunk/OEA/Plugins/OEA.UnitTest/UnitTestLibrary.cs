@@ -6,14 +6,14 @@ using OEA;
 
 namespace OEA.UnitTest
 {
-    class UnitTestLibrary : ILibrary
+    class UnitTestLibrary : LibraryPlugin
     {
-        public ReuseLevel ReuseLevel
+        public override ReuseLevel ReuseLevel
         {
             get { return ReuseLevel.Main; }
         }
 
-        public void Initialize(IApp app)
+        public override void Initialize(IApp app)
         {
         }
     }

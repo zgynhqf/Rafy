@@ -25,6 +25,9 @@ namespace OEA
     /// </summary>
     public interface IPropertyMetadata : IManagedPropertyMetadata
     {
-        //for extend
+        /// <summary>
+        /// 如果当前是一个时间类型，则这个属性表示该时间类型正在被使用的部分。
+        /// </summary>
+        DateTimePart DateTimePart { get; }
     }
 }

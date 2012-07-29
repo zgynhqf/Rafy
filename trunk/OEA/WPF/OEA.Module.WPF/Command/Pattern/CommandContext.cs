@@ -1,82 +1,35 @@
-﻿// -- FILE ------------------------------------------------------------------
-// name       : CommandContext.cs
-// created    : Jani Giannoudis - 2008.04.15
-// language   : c#
-// environment: .NET 3.0
-// --------------------------------------------------------------------------
+﻿/*******************************************************
+ * 
+ * 作者：http://www.codeproject.com/Articles/25445/WPF-Command-Pattern-Applied
+ * 创建时间：周金根 2009
+ * 说明：此文件只包含一个类，具体内容见类型注释。
+ * 运行环境：.NET 4.0
+ * 版本号：1.0.0
+ * 
+ * 历史记录：
+ * 创建文件 周金根 2009
+ * 重新整理 胡庆访 20120518
+ * 
+*******************************************************/
+
 using System;
 using System.Windows.Input;
 
-namespace Itenso.Windows.Input
+namespace OEA.WPF.Command
 {
-
-    // ------------------------------------------------------------------------
+    /// <summary>
+    /// 命令执行的上下文
+    /// </summary>
     public class CommandContext : IDisposable
     {
+        public CommandContext() { }
 
-        // ----------------------------------------------------------------------
-        public CommandContext()
-        {
-        } // CommandContext
+        public object BindingSource { get; set; }
 
-        // ----------------------------------------------------------------------
-        public CommandContext(object bindingSource, object commandSource, object commandParameter)
-        {
-            this.commandSource = commandSource;
-            this.bindingSource = bindingSource;
-            this.commandParameter = commandParameter;
-        } // CommandContext
+        public object CommandSource { get; set; }
 
-        // ----------------------------------------------------------------------
-        ~CommandContext()
-        {
-            Dispose(false);
-        } // ~CommandContext
+        public object CommandParameter { get; set; }
 
-        // ----------------------------------------------------------------------
-        public object BindingSource
-        {
-            get { return this.bindingSource; }
-            set { this.bindingSource = value; }
-        } // BindingSource
-
-        // ----------------------------------------------------------------------
-        public object CommandSource
-        {
-            get { return this.commandSource; }
-            set { this.commandSource = value; }
-        } // CommandSource
-
-        // ----------------------------------------------------------------------
-        public object CommandParameter
-        {
-            get { return this.commandParameter; }
-            set { this.commandParameter = value; }
-        } // CommandParameter
-
-        // ----------------------------------------------------------------------
-        public void Dispose()
-        {
-            Dispose(true);
-        } // Dispose
-
-        // ----------------------------------------------------------------------
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!this.disposed)
-            {
-                this.disposed = true;
-            }
-        } // Dispose
-
-        // ----------------------------------------------------------------------
-        // members
-        private object commandSource;
-        private object bindingSource;
-        private object commandParameter;
-        private bool disposed = false;
-
-    } // class CommandContext
-
-} // namespace Itenso.Windows.Input
-// -- EOF -------------------------------------------------------------------
+        void IDisposable.Dispose() { }
+    }
+}

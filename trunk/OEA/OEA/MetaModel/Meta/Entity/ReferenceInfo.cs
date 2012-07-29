@@ -72,6 +72,9 @@ namespace OEA.MetaModel
         }
     }
 
+    /// <summary>
+    /// 引用的类型。
+    /// </summary>
     public enum ReferenceType
     {
         /// <summary>

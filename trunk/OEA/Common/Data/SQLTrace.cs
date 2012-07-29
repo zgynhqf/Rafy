@@ -13,6 +13,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 
@@ -35,7 +36,10 @@ namespace hxy.Common.Data
                     {
                         _sqlTraceEnabled = System.IO.File.Exists(@"C:\OEA_SQL_TRACE_ENABLED");
                     }
-                    catch { }
+                    catch
+                    {
+                        _sqlTraceEnabled = false;
+                    }
                 }
 
                 return _sqlTraceEnabled.Value;
@@ -43,13 +47,22 @@ namespace hxy.Common.Data
         }
 
         [System.Diagnostics.Conditional("DEBUG")]
-        public static void Trace(string sql)
+        public static void Trace(string sql, IDbDataParameter[] parameters)
         {
             if (SqlTraceEnabled)
             {
+                if (parameters.Length > 0)
+                {
+                    sql += Environment.NewLine + "Parameters:" + string.Join(",", parameters.Select(p => p.Value));
+                }
+
                 try
                 {
-                    System.IO.File.AppendAllText(@"C:\SQLTraceLog.txt", DateTime.Now + "  " + sql + Environment.NewLine);
+                    System.IO.File.AppendAllText(
+                        @"C:\SQLTraceLog.txt",
+                        DateTime.Now + "  " + sql + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine,
+                        Encoding.UTF8
+                        );
                 }
                 catch { }
             }

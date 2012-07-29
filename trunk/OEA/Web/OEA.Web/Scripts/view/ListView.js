@@ -1,4 +1,17 @@
-﻿Ext.define('Oea.view.ListView', {
+﻿/*******************************************************
+ * 
+ * 作者：胡庆访
+ * 创建时间：201201
+ * 说明：
+ * 运行环境：.NET 4.0
+ * 版本号：1.0.0
+ * 
+ * 历史记录：
+ * 创建文件 胡庆访 201201
+ * 
+*******************************************************/
+
+Ext.define('Oea.view.ListView', {
     extend: 'Oea.view.View',
 
     //private
@@ -237,7 +250,7 @@
         /// </summary>
         /// <param name="args">
         /// criteria: 使用这个参数来进行数据查询。
-        /// callback: 加载完成后的回调。（目前此参数只在非树型列表时有用！待修正。）
+        /// callback: 加载完成后的回调。（目前此参数只在非树型列表时有用！！！ 待修正。）
         /// </param>
         args = args || this._lastDataArgs || {};
         if (Ext.isFunction(args)) {

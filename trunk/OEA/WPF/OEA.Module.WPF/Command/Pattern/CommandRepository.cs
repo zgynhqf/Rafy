@@ -1,54 +1,57 @@
-// -- FILE ------------------------------------------------------------------
-// name       : CommandRepository.cs
-// created    : Jani Giannoudis - 2008.04.15
-// language   : c#
-// environment: .NET 3.0
-// --------------------------------------------------------------------------
+/*******************************************************
+ * 
+ * 作者：http://www.codeproject.com/Articles/25445/WPF-Command-Pattern-Applied
+ * 创建时间：周金根 2009
+ * 说明：此文件只包含一个类，具体内容见类型注释。
+ * 运行环境：.NET 4.0
+ * 版本号：1.0.0
+ * 
+ * 历史记录：
+ * 创建文件 周金根 2009
+ * 重新整理 胡庆访 20120518
+ * 
+*******************************************************/
+
 using System;
 using System.Windows.Input;
 using System.Collections.Generic;
 using System.Diagnostics;
 using OEA.WPF.Command;
-
 using OEA;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
 using OEA.Module.WPF.Editors;
 using OEA.Module;
 
-namespace Itenso.Windows.Input
+namespace OEA.WPF.Command
 {
-    // ------------------------------------------------------------------------
-    public sealed class CommandRepository
+    public static class CommandRepository
     {
-        #region OEA
-        //这里只是把代码放在这个类中，与本类中的其它成员没有一点关系……
-
-        public static CommandAdapter NewCommand(Type cmdType)
+        public static UICommand NewUICommand(Type cmdType)
         {
             var cmdInfo = UIModel.WPFCommands.Find(cmdType);
-            return NewCommand(cmdInfo);
+            return NewUICommand(cmdInfo);
         }
 
-        public static CommandAdapter NewCommand(string name)
+        public static UICommand NewUICommand(string name)
         {
             var cmdInfo = UIModel.WPFCommands.Find(name);
-            return NewCommand(cmdInfo);
+            return NewUICommand(cmdInfo);
         }
 
         /// <summary>
         /// CreateRuntimeCommand
         /// </summary>
-        /// <param name="commandInfo"></param>
+        /// <param name="meta"></param>
         /// <returns></returns>
-        public static CommandAdapter NewCommand(WPFCommand commandInfo)
+        public static UICommand NewUICommand(WPFCommand meta)
         {
-            ClientCommand coreCommand = Activator.CreateInstance(commandInfo.RuntimeType) as ClientCommand;
+            var coreCommand = Activator.CreateInstance(meta.RuntimeType) as ClientCommand;
 
-            coreCommand.CommandInfo = commandInfo;
+            coreCommand.CommandInfo = meta;
 
-            var des = new CommandDescription(commandInfo.Label ?? string.Empty, string.Empty, string.Empty, commandInfo.ToolTip, string.Empty);
-            var command = new CommandAdapter(coreCommand, typeof(CommandRepository), des);
+            var gestures = InputGestureParser.Parse(meta.Gestures);
+            var command = new UICommand(coreCommand, typeof(CommandRepository), gestures);
 
             OnCommandCreated(coreCommand);
 
@@ -60,19 +63,10 @@ namespace Itenso.Windows.Input
         private static void OnCommandCreated(ClientCommand cmd)
         {
             var handler = CommandCreated;
-            if (handler != null)
-            {
-                handler(null, new InstanceCreatedEventArgs<ClientCommand>(cmd));
-            }
+            if (handler != null) { handler(null, new InstanceCreatedEventArgs<ClientCommand>(cmd)); }
         }
 
-        public static CommandBinding CreateCommandBinding(Command cmd)
-        {
-            return new CommandBinding(
-                cmd,
-                new ExecutedRoutedEventHandler(CommandBindingExecuted),
-                new CanExecuteRoutedEventHandler(CommandBindingCanExecute));
-        }
+        #region 通过命令名称来执行命令
 
         public static bool TryExecuteCommand(Type cmdId, object cmdArg)
         {
@@ -84,160 +78,47 @@ namespace Itenso.Windows.Input
         {
             if (cmdInfo == null) throw new ArgumentNullException("cmdInfo");
 
-            var runtimeCmd = CommandRepository.NewCommand(cmdInfo).CoreCommand;
+            var runtimeCmd = NewUICommand(cmdInfo).CoreCommand;
 
             return runtimeCmd.TryExecute(cmdArg);
         }
 
         #endregion
 
-        #region NotUsed
+        #region CommandBindingCanExecute & CommandBindingExecuted
 
-        //public static CommandAdapter NewCommand(string name)
-        //{
-        //    Command cmd = Commands[name];
-        //    Debug.Assert(cmd is CommandAdapter, "只有OEA的扩展Command才运行通过Repository新增");
-        //    CommandBase coreCommand = Activator.CreateInstance((cmd as CommandAdapter).CoreCommand.GetType()) as CommandBase;
-        //    var command = new CommandAdapter(coreCommand, typeof(CommandRepository), cmd.Description);
-
-        //    return command;
-        //}
-
-        // ----------------------------------------------------------------------
-        private CommandRepository()
+        internal static CommandBinding CreateCommandBinding(UICommand cmd)
         {
-        } // CommandRepository
-
-        // 为了不让直接获取Command，而该为通过NewCommand实例化，把此方法该为私有
-        private static CommandCollection Commands
-        {
-            get { return Instance.commands; }
-        } // Commands
-
-        public static bool Contains(string name)
-        {
-            return Commands.Contains(name);
+            return new CommandBinding(cmd, CommandBindingExecuted, CommandBindingCanExecute);
         }
 
-        // ----------------------------------------------------------------------
-        private static CommandRepository Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (mutex)
-                    {
-                        if (instance == null)
-                        {
-                            instance = new CommandRepository();
-                        }
-                    }
-                }
-                return instance;
-            }
-        } // Instance
-
-        // ----------------------------------------------------------------------
-        public static void AddRange(CommandCollection commands)
-        {
-            Instance.AddCommands(commands);
-        } // AddRange
-
-        // ----------------------------------------------------------------------
-        public static void Add(Command command)
-        {
-            Instance.AddCommand(command);
-        } // Add
-
-        // ----------------------------------------------------------------------
-        private void AddCommands(CommandCollection commands)
-        {
-            if (commands == null)
-            {
-                throw new ArgumentNullException("commands");
-            }
-
-            foreach (Command command in commands)
-            {
-                AddCommand(command);
-            }
-        } // AddCommands
-
-        // ----------------------------------------------------------------------
-        private void AddCommand(Command command)
-        {
-            if (command == null)
-            {
-                throw new ArgumentNullException("command");
-            }
-
-            // command registration
-            this.commands.Add(command);
-        } // AddCommand
-
-        // ----------------------------------------------------------------------
         private static void CommandBindingCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            Command command = e.Command as Command;
-            if (command == null)
-            {
-                return;
-            }
+            UICommand command = e.Command as UICommand;
+            if (command == null) { return; }
 
-            // command can executed without CanExecute check
-            if (!command.HasRequirements)
+            using (var commandContext = command.CreateCanExecuteContext(sender, e.OriginalSource, e.Parameter))
             {
-                e.CanExecute = true;
-                e.Handled = true;
-                return;
-            }
-
-            // command context
-            using (CommandContext commandContext =
-                command.CreateCanExecuteContext(sender, e.OriginalSource, e.Parameter))
-            {
-                if (commandContext == null)
-                {
-                    return;
-                }
-
-                // command can execute check
                 e.CanExecute = command.CanExecute(commandContext);
-                e.Handled = true;
             }
-        } // CommandBindingCanExecute
 
-        // ----------------------------------------------------------------------
+            e.Handled = true;
+        }
+
         private static void CommandBindingExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            Command command = e.Command as Command;
-            if (command == null)
-            {
-                return;
-            }
+            UICommand command = e.Command as UICommand;
+            if (command == null) { return; }
 
-            // command context
             using (CommandContext commandContext =
                 command.CreateCanExecuteContext(sender, e.OriginalSource, e.Parameter))
             {
-                // command execute
                 command.Execute(commandContext);
-                e.Handled = true;
             }
-        } // CommandBindingExecuted
 
-        // ----------------------------------------------------------------------
-        // members
-        private readonly CommandCollection commands = new CommandCollection();
-        private readonly CommandBindingCollection bindings = new CommandBindingCollection();
-
-        private static readonly object mutex = new object();
-        private static CommandRepository instance;
+            e.Handled = true;
+        }
 
         #endregion
-
-    } // class CommandRepository
-
-} // namespace Itenso.Windows.Input
-// -- EOF -------------------------------------------------------------------
+    }
+}

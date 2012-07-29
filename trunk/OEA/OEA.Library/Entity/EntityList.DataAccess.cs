@@ -1,11 +1,24 @@
-﻿using System;
+﻿/*******************************************************
+ * 
+ * 作者：胡庆访
+ * 创建时间：2010
+ * 说明：此文件只包含一个类，具体内容见类型注释。
+ * 运行环境：.NET 4.0
+ * 版本号：1.0.0
+ * 
+ * 历史记录：
+ * 创建文件 胡庆访 2010
+ * 
+*******************************************************/
+
+using System;
 using System.Collections;
 using System.Linq;
 using OEA.ORM;
 using OEA.MetaModel;
 using System.Linq.Expressions;
 using OEA.MetaModel.Attributes;
-
+using System.Collections.Generic;
 
 namespace OEA.Library
 {
@@ -16,34 +29,34 @@ namespace OEA.Library
         /// 本过程与根对象子对象无关。
         /// </summary>
         /// <param name="id"></param>
-        protected virtual void OnGetById(int id)
+        protected virtual void QueryById(int id)
         {
-            this.QueryDb(q => q.Constrain(DBConvention.FieldName_Id).Equal(id));
+            this.QueryDb(q => q.Constrain(Entity.IdProperty).Equal(id));
         }
 
         /// <summary>
         /// 子类重写此方法，来实现自己的GetByParent方法的数据层代码。
         /// </summary>
         /// <param name="parentId"></param>
-        protected virtual void OnGetByParentId(int parentId)
+        protected virtual void QueryByParentId(int parentId)
         {
             var parentProperty = this.GetRepository().FindParentPropertyInfo(true);
 
-            this.QueryDb(q => q.Constrain(parentProperty.Name).Equal(parentId));
+            this.QueryDb(q => q.Constrain(parentProperty.ManagedProperty).Equal(parentId));
         }
 
-        protected virtual void OnGetByTreeParentCode(string treeCode)
+        protected virtual void QueryByTreeParentCode(string treeCode)
         {
             //递归查找所有树型子
-            var childCode = treeCode + "%" + this.GetRepository().TreeCodeOption.Seperator;
+            var childCode = "%" + treeCode + "%" + this.GetRepository().TreeCodeOption.Seperator + "%";
 
-            this.QueryDb(q => q.Constrain(DBConvention.FieldName_TreeCode).Like(childCode));
+            this.QueryDb(q => q.Constrain(Entity.TreeCodeProperty).Like(childCode));
         }
 
         /// <summary>
         /// 子类重写此方法，来实现自己的GetAll方法的数据层代码。
         /// </summary>
-        protected virtual void OnGetAll()
+        protected virtual void QueryAll()
         {
             this.QueryDb(null as Action<IQuery>);
         }
@@ -53,21 +66,39 @@ namespace OEA.Library
         /// <summary>
         /// 使用 sql 语句加载对象
         /// </summary>
-        /// <param name="sql">
-        /// 尽量使用 T-SQL。
+        /// <param name="sql"></param>
+        protected void QueryDb(SqlWriter sql)
+        {
+            this.RaiseListChangedEvents = false;
+            try
+            {
+                string formatSql = sql.ToString();
+
+                using (var db = this.CreateDb())
+                {
+                    db.Select(this.EntityType, this, formatSql, sql.Parameters.ToArray());
+                }
+            }
+            finally
+            {
+                this.RaiseListChangedEvents = true;
+            }
+        }
+
+        /// <summary>
+        /// 使用 sql 语句加载对象
+        /// </summary>
+        /// <param name="formatSql">
+        /// 格式化参数的 T-SQL。
         /// </param>
-        protected void QueryDb(string sql)
+        protected void QueryDb(string formatSql, params object[] parameters)
         {
             this.RaiseListChangedEvents = false;
             try
             {
                 using (var db = this.CreateDb())
                 {
-                    //访问数据库
-                    var table = db.Select(this.EntityType, sql);
-
-                    //读取数据
-                    this.AddTable(table);
+                    db.Select(this.EntityType, this, formatSql, parameters);
                 }
             }
             finally
@@ -79,7 +110,7 @@ namespace OEA.Library
         /// <summary>
         /// 访问数据库，把指定的实体类 entityType 满足 queryBuider 条件的所有实体查询出来，并直接加到本列表中。
         /// </summary>
-        /// <param name="entityType"></param>
+        /// <param name="queryBuider">查询构造函数</param>
         protected void QueryDb(Action<IQuery> queryBuider)
         {
             this.RaiseListChangedEvents = false;
@@ -93,10 +124,7 @@ namespace OEA.Library
                     this.OnQueryDbOrder(query);
 
                     //访问数据库
-                    var table = db.Select(query);
-
-                    //读取数据
-                    this.AddTable(table);
+                    db.Select(query, this);
                 }
             }
             finally
@@ -113,18 +141,40 @@ namespace OEA.Library
                 var em = this.GetRepository().EntityMeta;
                 if (em.DefaultOrderBy != null)
                 {
-                    query = query.Order(em.DefaultOrderBy.Name, em.DefaultOrderByAscending);
+                    query = query.Order(em.DefaultOrderBy.ManagedProperty, em.DefaultOrderByAscending);
                 }
             }
         }
 
-        public void AddTable(IEnumerable entities)
+        protected void QueryBy(CommonPropertiesCriteria criteria)
         {
-            foreach (Entity entity in entities)
+            this.QueryDb(q =>
             {
-                entity.OnDbLoaded();
-                this.Add(entity);
-            }
+                var allProperties = this.GetRepository().GetAvailableIndicators();
+
+                var first = true;
+                foreach (var kv in criteria.Values)
+                {
+                    var property = allProperties.FirstOrDefault(mp => mp.Name == kv.Key);
+                    var value = kv.Value;
+
+                    if (!first)
+                    {
+                        if (criteria.Operator == CommonPropertiesOperator.And)
+                        {
+                            q.And();
+                        }
+                        else
+                        {
+                            q.Or();
+                        }
+                    }
+
+                    q.Constrain(property).Equal(value);
+
+                    first = false;
+                }
+            });
         }
 
         #region QueryBy
@@ -141,22 +191,22 @@ namespace OEA.Library
 
         protected void QueryBy(GetByIdCriteria criteria)
         {
-            this.OnGetById(criteria.Id);
+            this.QueryById(criteria.Id);
         }
 
         protected void QueryBy(GetByParentIdCriteria parentIdCriteria)
         {
-            this.OnGetByParentId(parentIdCriteria.Id);
+            this.QueryByParentId(parentIdCriteria.Id);
         }
 
         protected void QueryBy(GetAllCriteria criteria)
         {
-            this.OnGetAll();
+            this.QueryAll();
         }
 
         protected void QueryBy(GetByTreeParentCodeCriteria criteria)
         {
-            this.OnGetByTreeParentCode(criteria.TreeCode);
+            this.QueryByTreeParentCode(criteria.TreeCode);
         }
 
         void IEntityOrListInternal.NotifySaved()
@@ -164,6 +214,38 @@ namespace OEA.Library
             this.OnSaved();
         }
 
+
         #endregion
+    }
+
+    /// <summary>
+    /// 用于一般性属性查询的条件
+    /// </summary>
+    [Serializable]
+    public class CommonPropertiesCriteria
+    {
+        public CommonPropertiesCriteria()
+        {
+            this.Values = new Dictionary<string, object>();
+            this.Operator = CommonPropertiesOperator.And;
+        }
+
+        /// <summary>
+        /// 键值对
+        /// </summary>
+        public Dictionary<string, object> Values { get; private set; }
+
+        /// <summary>
+        /// 所有属性值使用的连接符
+        /// </summary>
+        public CommonPropertiesOperator Operator { get; set; }
+    }
+
+    /// <summary>
+    /// 所有属性使用的连接符
+    /// </summary>
+    public enum CommonPropertiesOperator
+    {
+        And, Or
     }
 }

@@ -20,7 +20,6 @@ using System.Windows.Data;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
 using OEA.WPF.Command;
-using Itenso.Windows.Input;
 
 namespace OEA.Module.WPF.CommandAutoUI
 {
@@ -132,23 +131,27 @@ namespace OEA.Module.WPF.CommandAutoUI
 
         #region 方便的 API
 
-        public CommandAdapter CreateItemCommand()
+        public UICommand CreateItemUICommand()
         {
-            var runtimeCommand = CommandRepository.NewCommand(this.CommandItem);
+            var uiCommand = CommandRepository.NewUICommand(this.CommandItem);
 
             var args = this.Context.CommandArg;
-            var view = args as ObjectView;
-            if (view != null) { view.Commands.Add(runtimeCommand.CoreCommand); }
+            var view = args as WPFObjectView;
+            if (view != null)
+            {
+                view.Commands.Add(uiCommand.CoreCommand);
+                view.UICommands.Add(uiCommand);
+            }
 
-            return runtimeCommand;
+            return uiCommand;
         }
 
-        protected TextBox CreateTextBox(CommandAdapter command)
+        protected TextBox CreateTextBox(UICommand command)
         {
             return CreateTextBox(command.CoreCommand);
         }
 
-        protected void TryExecuteCommand(CommandAdapter command)
+        protected void TryExecuteCommand(UICommand command)
         {
             command.CoreCommand.TryExecute(this.Context.CommandArg);
         }
@@ -161,7 +164,7 @@ namespace OEA.Module.WPF.CommandAutoUI
     /// </summary>
     public class ItemControlResult
     {
-        public ItemControlResult(FrameworkElement element, CommandAdapter runtimCmd)
+        public ItemControlResult(FrameworkElement element, UICommand runtimCmd)
         {
             if (element == null) throw new ArgumentNullException("element");
             if (runtimCmd == null) throw new ArgumentNullException("runtimCmd");

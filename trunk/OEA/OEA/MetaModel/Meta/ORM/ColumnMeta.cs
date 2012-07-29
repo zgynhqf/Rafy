@@ -23,12 +23,17 @@ namespace OEA.MetaModel
     /// </summary>
     public class ColumnMeta : Freezable
     {
+        private bool _HasFKConstraint = true;
+        /// <summary>
+        /// 如果这是一个引用属性的列，则这个属性表示数据库中是否有对应的外键存在。
+        /// </summary>
+        public bool HasFKConstraint
+        {
+            get { return this._HasFKConstraint; }
+            set { this.SetValue(ref this._HasFKConstraint, value); }
+        }
+
         private bool _IsPK;
-
-        private bool? _IsRequired;
-
-        private string _ColumnName;
-
         /// <summary>
         /// 是否 ID 主键
         /// </summary>
@@ -38,6 +43,7 @@ namespace OEA.MetaModel
             set { this.SetValue(ref this._IsPK, value); }
         }
 
+        private bool? _IsRequired;
         /// <summary>
         /// 是否必须的，如果没有赋值，则按照默认的类型计算方法来计算该值。
         /// </summary>
@@ -47,6 +53,7 @@ namespace OEA.MetaModel
             set { this.SetValue(ref this._IsRequired, value); }
         }
 
+        private string _ColumnName;
         /// <summary>
         /// 映射数据库中的字段名
         /// </summary>

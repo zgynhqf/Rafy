@@ -83,7 +83,7 @@ namespace OEA.RBAC
         {
             Meta.SupportTree();
 
-            Meta.MapTable().HasColumns(
+            Meta.MapTable().MapProperties(
                 Org.NameProperty
                 );
         }

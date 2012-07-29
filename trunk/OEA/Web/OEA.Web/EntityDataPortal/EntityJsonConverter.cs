@@ -23,6 +23,7 @@ using OEA.Utils;
 using OEA.MetaModel.View;
 using OEA.Web.Json;
 using System.Diagnostics;
+using OEA.Web.ClientMetaModel;
 
 namespace OEA.Web.EntityDataPortal
 {
@@ -100,17 +101,27 @@ namespace OEA.Web.EntityDataPortal
                     //一般托管属性
                     else
                     {
-                        var value = entity.GetProperty(mp);
-                        value = ToClientValue(property.Runtime.PropertyType, value);
-                        entityJson.SetProperty(mp.Name, value);
+                        var pRuntimeType = property.Runtime.PropertyType;
+                        var serverType = ServerTypeHelper.GetServerType(pRuntimeType);
+                        if (serverType.Name != SupportedServerType.Unknown)
+                        {
+                            var value = entity.GetProperty(mp);
+                            value = ToClientValue(pRuntimeType, value);
+                            entityJson.SetProperty(mp.Name, value);
+                        }
                     }
                 }
-                //一般属性
+                //一般 CLR 属性
                 else
                 {
-                    var value = entity.GetPropertyValue(property.Name);
-                    value = ToClientValue(property.Runtime.PropertyType, value);
-                    entityJson.SetProperty(property.Name, value);
+                    var pRuntimeType = property.Runtime.PropertyType;
+                    var serverType = ServerTypeHelper.GetServerType(pRuntimeType);
+                    if (serverType.Name != SupportedServerType.Unknown)
+                    {
+                        var value = entity.GetPropertyValue(property.Name);
+                        value = ToClientValue(pRuntimeType, value);
+                        entityJson.SetProperty(property.Name, value);
+                    }
                 }
             }
         }

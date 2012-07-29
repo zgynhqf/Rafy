@@ -53,6 +53,16 @@ namespace OEA.MetaModel.View
             set { this.SetValue(ref _imageName, value); }
         }
 
+        private string _Gestures;
+        /// <summary>
+        /// 快捷键表达式
+        /// </summary>
+        public string Gestures
+        {
+            get { return this._Gestures; }
+            set { this.SetValue(ref this._Gestures, value); }
+        }
+
         private Type _groupAlgorithmType;
         /// <summary>
         /// 为这个Command进行“生成分组”的算法类。

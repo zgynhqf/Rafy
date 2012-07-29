@@ -55,14 +55,14 @@ namespace OEA.Module.WPF.Editors
                 if (!string.IsNullOrWhiteSpace(txtStart.Text) &&
                     !double.TryParse(txtStart.Text, out start))
                 {
-                    OEAMessageBox.Show("只能输入数字");
+                    App.MessageBox.Show("只能输入数字");
                     return;
                 }
 
                 if (!string.IsNullOrWhiteSpace(txtEnd.Text) &&
                     !double.TryParse(txtEnd.Text, out end))
                 {
-                    OEAMessageBox.Show("只能输入数字");
+                    App.MessageBox.Show("只能输入数字");
                     return;
                 }
 

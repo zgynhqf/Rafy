@@ -52,6 +52,7 @@
     <Compile Include="ClientMetaModel\Entity\HasManyAssociation.cs" />
     <Compile Include="ClientMetaModel\UIBlock\ClientEntityMeta.cs" />
     <Compile Include="ClientMetaModel\UIBlock\Form\ComboBoxConfig.cs" />
+    <Compile Include="ClientMetaModel\UIBlock\Form\ComboListConfig.cs" />
     <Compile Include="ClientMetaModel\UIBlock\Form\EnumFieldConfig.cs" />
     <Compile Include="ClientMetaModel\UIBlock\Form\FieldConfig.cs" />
     <Compile Include="ClientMetaModel\UIBlock\Form\FormConfig.cs" />
@@ -63,7 +64,6 @@
     <Compile Include="ClientMetaModel\UIBlock\Store\StoreConfig.cs" />
     <Compile Include="ClientMetaModel\UIBlock\Store\TreeStoreConfig.cs" />
     <Compile Include="ClientMetaModel\UIBlock\Toolbar\ToolbarItem.cs" />
-    <Compile Include="Entity\ClientEntityConverter.cs" />
     <Compile Include="Json\DynamicJsonModel.cs" />
     <Compile Include="Json\JsonModel.cs" />
     <Compile Include="Json\LiteJsonWriter.cs" />

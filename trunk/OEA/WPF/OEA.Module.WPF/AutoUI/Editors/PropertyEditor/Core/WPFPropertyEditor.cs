@@ -97,18 +97,14 @@ namespace OEA.Module.WPF.Editors
 
         protected virtual Binding CreateBinding()
         {
-            var binding = new Binding(this.Meta.Name);
-
-            if (!this.PropertyCanWrite)
+            var binding = new Binding()
             {
-                binding.Mode = BindingMode.OneWay;
-            }
-            else
-            {
-                binding.Mode = BindingMode.TwoWay;
-                binding.ValidatesOnDataErrors = true;
-                //binding.ValidationRules.Add(new DataErrorValidationRule());
-            }
+                Mode = this.PropertyCanWrite ? BindingMode.TwoWay : BindingMode.OneWay,
+                Path = new PropertyPath(this.Meta.Name, this.Meta.PropertyMeta.ManagedProperty),
+                ValidationRules = { ManagedProeprtyValidationRule.Instance },
+            };
+            //binding.ValidatesOnDataErrors = true;
+            //binding.ValidationRules.Add(new DataErrorValidationRule());
 
             return binding;
         }

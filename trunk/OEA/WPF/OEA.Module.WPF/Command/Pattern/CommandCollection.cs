@@ -1,28 +1,27 @@
-﻿// -- FILE ------------------------------------------------------------------
-// name       : CommandCollection.cs
-// created    : Jani Giannoudis - 2008.04.15
-// language   : c#
-// environment: .NET 3.0
-// --------------------------------------------------------------------------
+﻿/*******************************************************
+ * 
+ * 作者：http://www.codeproject.com/Articles/25445/WPF-Command-Pattern-Applied
+ * 创建时间：周金根 2009
+ * 说明：此文件只包含一个类，具体内容见类型注释。
+ * 运行环境：.NET 4.0
+ * 版本号：1.0.0
+ * 
+ * 历史记录：
+ * 创建文件 周金根 2009
+ * 重新整理 胡庆访 20120518
+ * 
+*******************************************************/
+
 using System;
 using System.Windows.Input;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace Itenso.Windows.Input
+namespace OEA.WPF.Command
 {
-
-    // ------------------------------------------------------------------------
-    public class CommandCollection : ObservableCollection<Command>
+    public class CommandCollection : ObservableCollection<UICommand>
     {
-
-        // ----------------------------------------------------------------------
-        public CommandCollection()
-        {
-        } // CommandCollection
-
-        // ----------------------------------------------------------------------
-        public Command this[string name]
+        public UICommand this[string name]
         {
             get
             {
@@ -31,7 +30,7 @@ namespace Itenso.Windows.Input
                     return null;
                 }
 
-                foreach (Command command in this)
+                foreach (UICommand command in this)
                 {
                     if (name.Equals(command.Name))
                     {
@@ -40,15 +39,11 @@ namespace Itenso.Windows.Input
                 }
                 return null;
             }
-        } // this[ string ]
+        }
 
-        // ----------------------------------------------------------------------
         public bool Contains(string name)
         {
             return this[name] != null;
-        } // Contains
-
-    } // class CommandCollection
-
-} // namespace Itenso.Windows.Input
-// -- EOF -------------------------------------------------------------------
+        }
+    }
+}

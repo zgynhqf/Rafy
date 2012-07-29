@@ -23,14 +23,11 @@ namespace OEA.Module.WPF.Editors
     /// </summary>
     public class DatePropertyEditor : WPFPropertyEditor
     {
-        public DatePropertyEditor() { }
+        protected DatePropertyEditor() { }
 
         protected override FrameworkElement CreateEditingElement()
         {
-            var datePicker = new DatePicker()
-            {
-                Name = Meta.Name,
-            };
+            var datePicker = new DatePicker() { Name = this.Meta.Name, };
 
             this.ResetBinding(datePicker);
 
@@ -39,59 +36,9 @@ namespace OEA.Module.WPF.Editors
             return datePicker;
         }
 
-        protected override Binding CreateBinding()
-        {
-            var binding = base.CreateBinding();
-            binding.StringFormat = "yyyy-MM-dd";
-            binding.Converter = new AnyToDateConverter();
-            return binding;
-        }
-
         protected override DependencyProperty BindingProperty()
         {
             return DatePicker.SelectedDateProperty;
-        }
-
-        class AnyToDateConverter : IValueConverter
-        {
-            #region IValueConverter Members
-
-            public object Convert(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture)
-            {
-                DateTime? result = null;
-
-                var strValue = value as string;
-                if (!string.IsNullOrWhiteSpace(strValue))
-                {
-                    DateTime tmp;
-                    if (DateTime.TryParse(strValue, out tmp))
-                    {
-                        result = tmp;
-                    }
-                }
-                else if (value is DateTime)
-                {
-                    result = (DateTime)value;
-                }
-
-                return result;
-            }
-
-            public object ConvertBack(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture)
-            {
-                var time = ((DateTime?)value).GetValueOrDefault(DateTime.Now);
-
-                object targetValue = time;
-
-                if (targetType == typeof(string))
-                {
-                    targetValue = time.ToShortDateString();
-                }
-
-                return targetValue;
-            }
-
-            #endregion
         }
     }
 }

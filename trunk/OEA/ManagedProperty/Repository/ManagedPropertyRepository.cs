@@ -161,8 +161,13 @@ namespace OEA.ManagedProperty
             return this.GetOrCreateTypeProperties(ownerType);
         }
 
+        private Type _lastOwnerType;
+        private TypePropertiesContainer _lastResultCache;
         internal TypePropertiesContainer GetOrCreateTypeProperties(Type ownerType)
         {
+            //由于经常是对同一类型的实体进行大量的构造操作，所以这里对最后一次使用的类型进行缓存
+            if (this._lastOwnerType == ownerType) { return this._lastResultCache; }
+
             TypePropertiesContainer list = null;
 
             if (!this._allProperties.TryGetValue(ownerType, out list))
@@ -170,6 +175,9 @@ namespace OEA.ManagedProperty
                 list = new TypePropertiesContainer(ownerType);
                 this._allProperties.Add(ownerType, list);
             }
+
+            this._lastOwnerType = ownerType;
+            this._lastResultCache = list;
 
             return list;
         }

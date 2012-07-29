@@ -33,14 +33,14 @@ namespace OEA.Web.ClientMetaModel
         /// <summary>
         /// 这个属性不为空，表明是否需要动态根据某个属性来设置本编辑器的显示或者隐藏。
         /// </summary>
-        public string dynamicVisibility { get; set; }
+        public string visibilityIndicator { get; set; }
 
         protected override void ToJson(LiteJsonWriter json)
         {
             json.WritePropertyIf("name", name);
             json.WritePropertyIf("anchor", anchor);
             json.WritePropertyIf("fieldLabel", fieldLabel);
-            json.WritePropertyIf("dynamicVisibility", dynamicVisibility);
+            json.WritePropertyIf("visibilityIndicator", visibilityIndicator);
             if (isReadonly) { json.WriteProperty("readOnly", isReadonly); }
 
             this.SetProperty("xtype", xtype);

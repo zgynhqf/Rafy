@@ -120,7 +120,8 @@ namespace OEA.Module.WPF.Controls
         /// <returns></returns>
         private GridTreeViewRow GetSingleSelectedRow()
         {
-            if (this._selectedItems.Count == 1) { return this.FindRow(this._selectedItems[0]); }
+            var selectedItems = this.SelectionModel.Items;
+            if (selectedItems.Count == 1) { return this.FindRow(selectedItems[0]); }
 
             return null;
         }

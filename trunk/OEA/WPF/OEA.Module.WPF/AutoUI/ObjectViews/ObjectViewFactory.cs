@@ -122,6 +122,18 @@ namespace OEA.Module.WPF
         /// </summary>
         /// <param name="entityViewInfo"></param>
         /// <returns></returns>
+        public DetailObjectView CreateDetailObjectView(Type entityType)
+        {
+            var evm = UIModel.Views.CreateDefaultView(entityType);
+
+            return this.CreateDetailObjectView(evm);
+        }
+
+        /// <summary>
+        /// 为某实体类构建一个详细面板视图
+        /// </summary>
+        /// <param name="entityViewInfo"></param>
+        /// <returns></returns>
         public DetailObjectView CreateDetailObjectView(EntityViewMeta entityViewInfo)
         {
             var view = new DetailObjectView(entityViewInfo);
@@ -188,7 +200,7 @@ namespace OEA.Module.WPF
 
         public event EventHandler<InstanceCreatedEventArgs<ObjectView>> ViewCreated;
 
-        private void OnViewCreated(ObjectView view)
+        private void OnViewCreated(WPFObjectView view)
         {
             var handler = this.ViewCreated;
             if (handler != null) handler(this, new InstanceCreatedEventArgs<ObjectView>(view));

@@ -84,7 +84,7 @@ namespace OEA.RBAC
         {
             base.ConfigMeta();
 
-            Meta.MapTable().HasColumns(
+            Meta.MapTable().MapProperties(
                 Position.CodeProperty,
                 Position.NameProperty
                 );

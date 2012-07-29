@@ -32,33 +32,52 @@ using OEA.Module.WPF.Automation;
 
 namespace OEA.Module.WPF.Controls
 {
+    /// <summary>
+    /// MTTG 控件有两种选择模式，一种是直接选择行，一种是使用勾选框进行选择。
+    /// </summary>
     public partial class MultiTypesTreeGrid
     {
-        #region SelectedItems Property
-
-        /// <summary>
-        /// 当前选中的所有项都存储在这个列表中。
-        /// </summary>
-        private List<Entity> _selectedItems = new List<Entity>();
-
-        private MTTGSelectedItemsCollection _selectedItemsAgent;
-
-        /// <summary>
-        /// 一个选择项的集合
-        /// </summary>
-        public ISelectionItems SelectedItems
+        private void OnSelectionConstruct()
         {
-            get
-            {
-                if (this._selectedItemsAgent == null)
-                {
-                    this._selectedItemsAgent = new MTTGSelectedItemsCollection
-                    {
-                        _owner = this
-                    };
-                }
+            this.CheckingModel = new CheckSelectionModel(this);
+            this.SelectionModel = new NormalSelectionModel(this);
+        }
 
-                return this._selectedItemsAgent;
+        private void OnRebinding_Selection()
+        {
+            this.CheckingModel.ClearSelection();
+            this.SelectionModel.ClearSelection();
+        }
+
+        /// <summary>
+        /// 直接选择行的选择模型。
+        /// </summary>
+        public AbstractSelectionModel SelectionModel { get; private set; }
+
+        /// <summary>
+        /// 在 CheckingMode.Row 模式（勾选行模式）下，勾选的选择模型。
+        /// </summary>
+        public AbstractSelectionModel CheckingModel { get; private set; }
+
+        #region CheckingColumnTemplate DependencyProperty
+
+        public static readonly DependencyProperty CheckingColumnTemplateProperty = DependencyProperty.Register(
+            "CheckingColumnTemplate", typeof(DataTemplate), typeof(MultiTypesTreeGrid),
+            new PropertyMetadata((d, e) => (d as MultiTypesTreeGrid).OnCheckingColumnTemplateChanged(e))
+            );
+
+        public DataTemplate CheckingColumnTemplate
+        {
+            get { return (DataTemplate)this.GetValue(CheckingColumnTemplateProperty); }
+            set { this.SetValue(CheckingColumnTemplateProperty, value); }
+        }
+
+        private void OnCheckingColumnTemplateChanged(DependencyPropertyChangedEventArgs e)
+        {
+            var value = (DataTemplate)e.NewValue;
+            if (this.CheckingMode == CheckingMode.CheckingRow)
+            {
+                this.ResetCheckingTemplate();
             }
         }
 
@@ -88,7 +107,6 @@ namespace OEA.Module.WPF.Controls
                 case CheckingMode.None:
                     this.DisableSelect();
                     break;
-                case CheckingMode.CheckingViewModel:
                 case CheckingMode.CheckingRow:
                     this.EnableChecking(value);
                     break;
@@ -134,55 +152,146 @@ namespace OEA.Module.WPF.Controls
         private void DisableSelect()
         {
             this.Columns.RemoveAt(CHECKING_COLUMN_INDEX);
-
-            this.CheckingMode = CheckingMode.None;
         }
 
         private void EnableChecking(CheckingMode mode)
         {
-            //如果是绑定 ViewModel，则使用 IsSelected 属性；
-            //如果是绑定当前行，则绑定到行对象的 IsMultiSelectedProperty 属性上。
-            var binding = mode == OEA.CheckingMode.CheckingViewModel ?
-                new Binding(PropertyConvention.IsSelected) :
-                new Binding
-                {
-                    Path = new PropertyPath(GridTreeViewRow.IsMultiSelectedProperty),
-                    RelativeSource = new RelativeSource
-                    {
-                        Mode = RelativeSourceMode.FindAncestor,
-                        AncestorType = typeof(GridTreeViewRow)
-                    }
-                };
+            //创建选择列
+            var column = new ReadonlyTreeColumn { Width = 50 };
 
-            var column = CreateCheckingColumnTemplate(binding);
+            TreeColumnFactory.SetColumnHeader(column, "选择");
 
             this.Columns.Insert(CHECKING_COLUMN_INDEX, column);
+
+            this.ResetCheckingTemplate();
         }
 
-        /// <summary>
-        /// 创建选择列的模板
-        /// </summary>
-        /// <param name="checkBinding"></param>
-        /// <returns></returns>
-        private static TreeColumn CreateCheckingColumnTemplate(Binding checkBinding)
+        private void ResetCheckingTemplate()
         {
-            var column = new ReadonlyTreeColumn();
+            var column = this.Columns[CHECKING_COLUMN_INDEX];
 
-            var element = new FrameworkElementFactory(typeof(CheckBox));
-            element.SetBinding(CheckBox.IsCheckedProperty, checkBinding);
-            AutomationHelper.SetEditingElement(element);
-
-            var cell = MTTGCell.Wrap(element, column);
-
-            TreeColumnFactory.CreateCellTemplate(column, "选择", cell);
-            column.Width = 50;
-
-            return column;
+            column.CellTemplate = this.CheckingColumnTemplate ?? OEAResources.OEA_MTTG_SelectionColumnTemplate;
         }
 
         #endregion
 
-        #region Shift / Ctrl 多选
+        #region 勾选行 - 核心方法
+
+        /// <summary>
+        /// 设置某行的选择状态，并级联选择
+        /// </summary>
+        /// <param name="row"></param>
+        /// <param name="value"></param>
+        internal void CheckRowWithCascade(GridTreeViewRow row, bool value)
+        {
+            var argsCache = new CheckChangedEventArgs
+            {
+                RoutedEvent = CheckChangedEvent,
+                Source = this,
+            };
+
+            var entity = GetEntity(row);
+
+            this.CheckingModel.SelectRow(row, value);
+            RaiseEventAsChecked(argsCache, entity, value);
+
+            if (this.CheckingMode == CheckingMode.None) { return; }
+
+            //CascadeParent
+            if (value && this.NeedCascade(CheckingRowCascade.CascadeParent))
+            {
+                Entity parent = this.GetParentItem(entity);
+
+                while (parent != null)
+                {
+                    var parentRow = this.FindRow(parent);
+                    if (parentRow == null || parentRow.IsChecked) { break; }
+
+                    this.CheckingModel.SelectRow(parentRow, true);
+                    RaiseEventAsChecked(argsCache, parent, true);
+
+                    parent = this.GetParentItem(parent);
+                }
+            }
+
+            //CascadeChildren
+            if (this.NeedCascade(CheckingRowCascade.CascadeChildren))
+            {
+                this.CheckChildrenRecur(row, entity, value, argsCache);
+            }
+        }
+
+        /// <summary>
+        /// 迭归设置指定行的子行列表的选择状态
+        /// </summary>
+        /// <param name="row"></param>
+        /// <param name="rowEntity"></param>
+        /// <param name="value"></param>
+        /// <param name="argsCache"></param>
+        private void CheckChildrenRecur(GridTreeViewRow row, Entity rowEntity, bool value, CheckChangedEventArgs argsCache)
+        {
+            var children = this.GetChildItems(rowEntity);
+
+            if (children != null && children.Count > 0)
+            {
+                foreach (var child in children)
+                {
+                    var childRow = this.FindRow(child);
+
+                    //如果该孩子对象对应的行已经生成，则直接选择。
+                    if (childRow != null)
+                    {
+                        this.CheckingModel.SelectRow(childRow, value);
+                    }
+                    else
+                    {
+                        //还没有生成，把它加到选择列表中，下次生成时会继续选中。见 SelectAsCreated 方法。
+                        if (value)
+                        {
+                            this.CheckingModel.AddToItems(child);
+                        }
+                        else
+                        {
+                            this.CheckingModel.Items.Remove(child);
+                        }
+                    }
+
+                    this.RaiseEventAsChecked(argsCache, child, value);
+                    this.CheckChildrenRecur(childRow, child, value, argsCache);
+                }
+            }
+        }
+
+        private void RaiseEventAsChecked(CheckChangedEventArgs e, Entity rowEntity, bool isChecked)
+        {
+            e.Item = rowEntity;
+            e.IsChecked = isChecked;
+
+            this.RaiseEvent(e);
+        }
+
+        public static readonly RoutedEvent CheckChangedEvent = EventManager.RegisterRoutedEvent("CheckChanged", RoutingStrategy.Bubble, typeof(CheckChangedEventHandler), typeof(MultiTypesTreeGrid));
+
+        public event CheckChangedEventHandler CheckChanged
+        {
+            add
+            {
+                this.AddHandler(CheckChangedEvent, value);
+            }
+            remove
+            {
+                this.RemoveHandler(CheckChangedEvent, value);
+            }
+        }
+
+        #endregion
+
+        #region 选择行 - Shift / Ctrl 多选
+
+        /// <summary>
+        /// 使用 SelectedItems 集合添加项时，需要强制进入多选模式。
+        /// </summary>
+        private bool _forceMultiSelect = false;
 
         private GridTreeViewRow _shiftStartItem;
 
@@ -201,14 +310,15 @@ namespace OEA.Module.WPF.Controls
 
         private void OnShiftKeyDown()
         {
-            if (this._selectedItems.Count > 0)
+            var selectedItems = this.SelectionModel.Items;
+            if (selectedItems.Count > 0)
             {
                 if (this._shiftStartItem != null)
                 {
-                    if (this._selectedItems.Contains(GetEntity(this._shiftStartItem))) { return; }
+                    if (selectedItems.Contains(GetEntity(this._shiftStartItem))) { return; }
                 }
 
-                var lastOne = this._selectedItems[this._selectedItems.Count - 1];
+                var lastOne = selectedItems[selectedItems.Count - 1];
                 this._shiftStartItem = this.FindRow(lastOne);
             }
             else
@@ -226,7 +336,7 @@ namespace OEA.Module.WPF.Controls
                 var oldRow = this.FindRow(e.OldItem);
                 if (oldRow != null)
                 {
-                    this.SelectRow(oldRow, false);
+                    this.SelectionModel.SelectRow(oldRow, false);
                 }
             }
 
@@ -237,10 +347,10 @@ namespace OEA.Module.WPF.Controls
                 {
                     //如果没有按住 Ctrl，并且在 CheckRow 的模式下，则清空的选择项。
                     //（在 CheckRow 的模式下，单击某一行并不需要清空历史记录。）
-                    if (!IsCtrlPressed() && this.CheckingMode != CheckingMode.CheckingRow) this.ClearSelectedItems();
+                    if (!IsCtrlPressed() && !this._forceMultiSelect) this.SelectionModel.ClearSelectedItems();
 
                     //反选该行
-                    this.SelectRow(newRow, !newRow.IsMultiSelected);
+                    this.SelectionModel.SelectRow(newRow, !newRow.IsMultiSelected);
 
                     if (this._shiftStartItem != null && IsShiftPressed())
                     {
@@ -253,7 +363,7 @@ namespace OEA.Module.WPF.Controls
             else
             {
                 //在 CheckRow 的模式下，未选中某一行并不需要清空历史记录，其它情况均需要清空。
-                if (this.CheckingMode != CheckingMode.CheckingRow) this.ClearSelectedItems();
+                if (!this._forceMultiSelect) this.SelectionModel.ClearSelectedItems();
             }
         }
 
@@ -277,11 +387,11 @@ namespace OEA.Module.WPF.Controls
             {
                 //由于之前已经有过一次Select操作，所以这个集合并不是空的，
                 //直接添加会导致集合中的数据的顺序不一致。
-                this._selectedItems.Clear();
+                this.SelectionModel.Items.Clear();
 
                 for (int i = start; i <= end; i++)
                 {
-                    this.SelectRow(itemsALayer.GetItemAt(i) as GridTreeViewRow, true);
+                    this.SelectionModel.SelectRow(itemsALayer.GetItemAt(i) as GridTreeViewRow, true);
                 }
             }
         }
@@ -298,155 +408,16 @@ namespace OEA.Module.WPF.Controls
 
         #endregion
 
-        #region 勾选时发生的选择方法
-
-        /// <summary>
-        /// 设置某行的选择状态，并级联选择
-        /// </summary>
-        /// <param name="row"></param>
-        /// <param name="value"></param>
-        internal void CheckRowWithCascade(GridTreeViewRow row, bool value)
-        {
-            var argsCache = new RoutedTreeItemEventArgs<Entity>(this);
-
-            var entity = GetEntity(row);
-
-            this.SelectRow(row, value);
-            RaiseEventAsChecked(argsCache, entity, value);
-
-            if (this.CheckingMode == CheckingMode.None) { return; }
-
-            //CascadeParent
-            if (value && this.NeedCascade(CheckingRowCascade.CascadeParent))
-            {
-                Entity parent = this.GetParentItem(entity);
-
-                while (parent != null)
-                {
-                    var parentRow = this.FindRow(parent);
-                    if (parentRow == null || parentRow.IsMultiSelected) { break; }
-
-                    this.SelectRow(parentRow, true);
-                    RaiseEventAsChecked(argsCache, parent, true);
-
-                    parent = this.GetParentItem(parent);
-                }
-            }
-
-            //CascadeChildren
-            if (this.NeedCascade(CheckingRowCascade.CascadeChildren))
-            {
-                this.SelectChildrenRecur(row, entity, value, argsCache);
-            }
-        }
-
-        /// <summary>
-        /// 迭归设置指定行的子行列表的选择状态
-        /// </summary>
-        /// <param name="row"></param>
-        /// <param name="rowEntity"></param>
-        /// <param name="value"></param>
-        /// <param name="argsCache"></param>
-        private void SelectChildrenRecur(GridTreeViewRow row, Entity rowEntity, bool value, RoutedTreeItemEventArgs<Entity> argsCache)
-        {
-            var children = this.GetChildItems(rowEntity);
-
-            if (children != null && children.Count > 0)
-            {
-                foreach (var child in children)
-                {
-                    var childRow = this.FindRow(child);
-
-                    //如果该孩子对象对应的行已经生成，则直接选择。
-                    if (childRow != null)
-                    {
-                        this.SelectRow(childRow, value);
-                    }
-                    else
-                    {
-                        //还没有生成，把它加到选择列表中，下次生成时会继续选中。见 SelectAsCreated 方法。
-                        if (value)
-                        {
-                            this.AddToSelectedItems(child);
-                        }
-                        else
-                        {
-                            this._selectedItems.Remove(child);
-                        }
-                    }
-
-                    this.RaiseEventAsChecked(argsCache, child, value);
-                    this.SelectChildrenRecur(childRow, child, value, argsCache);
-                }
-            }
-        }
-
-        private void RaiseEventAsChecked(RoutedTreeItemEventArgs<Entity> e, Entity rowEntity, bool isChecked)
-        {
-            if (isChecked)
-            {
-                e.OldItem = null;
-                e.NewItem = rowEntity;
-            }
-            else
-            {
-                e.OldItem = rowEntity;
-                e.NewItem = null;
-            }
-
-            base.OnSelectedItemChanged(e);
-        }
-
-        /// <summary>
-        /// 当重新生成某一行时，如果是已经选中的实体，需要初始化它们的选中状态
-        /// </summary>
-        /// <param name="row"></param>
-        /// <param name="item"></param>
-        private void SelectAsCreated(GridTreeViewRow row, Entity item)
-        {
-            if (this._selectedItems.Contains(item)) { this.SelectRow(row, true); }
-        }
-
-        #endregion
-
-        #region 选择核心方法
+        #region 选择行 - 核心方法
 
         public void SelectAll()
         {
-            this._selectedItems.Clear();
-
-            foreach (Entity entity in this._itemsSource)
-            {
-                this._selectedItems.Add(entity);
-
-                var row = this.FindRow(entity);
-                if (row != null) this.SelectRow(row, true);
-            }
+            this.SelectionModel.SelectAll();
         }
 
         public void ClearSelection()
         {
-            this.ClearSelectedItems();
-
-            this.SelectedItem = null;
-        }
-
-        private void ClearSelectedItems()
-        {
-            for (int i = this._selectedItems.Count - 1; i >= 0; i--)
-            {
-                var item = this._selectedItems[i];
-
-                var viewItem = this.FindRow(item);
-                if (viewItem != null)
-                {
-                    this.SelectRow(viewItem, false);
-                }
-                else
-                {
-                    this._selectedItems.RemoveAt(i);
-                }
-            }
+            this.SelectionModel.ClearSelection();
         }
 
         /// <summary>
@@ -455,12 +426,9 @@ namespace OEA.Module.WPF.Controls
         /// <param name="e"></param>
         protected override void OnTreeViewSelectedItemChanged(RoutedPropertyChangedEventArgs<object> e)
         {
-            //如果处于勾选行的状态中，则忽略所有 TreeView 和事件。这样，用户只能通过勾选来选择行。
-            if (this.CheckingMode == CheckingMode.CheckingRow) return;
-
             //如果 IsSettingInternal值为真，说明是来自于最下层的 SelectRow 方法，则不需要进行任何处理！
-            var newRow = e.NewValue as GridTreeViewRow;
-            if (newRow != null && newRow.IsSettingInternal) { return; }
+            var newRow = (e.NewValue ?? e.OldValue) as GridTreeViewRow;
+            if (newRow.IsSettingInternal) { return; }
 
             base.OnTreeViewSelectedItemChanged(e);
         }
@@ -503,31 +471,160 @@ namespace OEA.Module.WPF.Controls
             (row as GridTreeViewRow).IsMultiSelected = true;
         }
 
+        #endregion
+
+        #region 选择行 - 其它
+
         /// <summary>
-        /// 设置某行的“选中”状态
+        /// 当重新生成某一行时，如果是已经选中的实体，需要初始化它们的选中状态
         /// </summary>
         /// <param name="row"></param>
-        /// <param name="isSelected">是“选中”状态还是“未选中”状态。</param>
-        private void SelectRow(GridTreeViewRow row, bool isSelected)
+        /// <param name="item"></param>
+        private void SelectAsCreated(GridTreeViewRow row, Entity item)
         {
-            /*********************** 代码块解释 *********************************
-             * 同时处理以下几个属性：
-             * this._selectedItems、row.IsMultiSelected、row.IsSelected
-            **********************************************************************/
+            if (this.SelectionModel.Items.Contains(item)) { this.SelectionModel.SelectRow(row, true); }
+        }
 
-            if (isSelected)
+        #endregion
+
+        #region public abstract class AbstractSelectionModel
+
+        /// <summary>
+        /// 选择模型
+        /// 
+        /// 此设计方案来自于 ExtJs
+        /// </summary>
+        public abstract class AbstractSelectionModel
+        {
+            /// <summary>
+            /// 当前选中的所有项都存储在这个列表中。
+            /// </summary>
+            internal List<Entity> Items = new List<Entity>();
+
+            /// <summary>
+            /// 对应的 MTTG 控件
+            /// </summary>
+            internal MultiTypesTreeGrid Owner;
+
+            #region 三个主要的控制接口
+
+            /// <summary>
+            /// 一个选择项的集合
+            /// 
+            /// 可直接使用本集合来控制选中项。(这个集合其实只是一个代理，用于提供方便的 API。）
+            /// </summary>
+            public ISelectionItems SelectedItems { get; protected set; }
+
+            /// <summary>
+            /// 选择全部行。
+            /// </summary>
+            public virtual void SelectAll()
             {
-                this.AddToSelectedItems(GetEntity(row));
+                this.Items.Clear();
+
+                foreach (Entity entity in this.Owner._itemsSource)
+                {
+                    this.Items.Add(entity);
+
+                    var row = this.Owner.FindRow(entity);
+                    if (row != null) this.SelectRow(row, true);
+                }
             }
-            else
+
+            /// <summary>
+            /// 清空所有选择行。
+            /// </summary>
+            public abstract void ClearSelection();
+
+            internal void ClearSelectedItems()
             {
-                this._selectedItems.Remove(GetEntity(row));
+                for (int i = this.Items.Count - 1; i >= 0; i--)
+                {
+                    var item = this.Items[i];
+
+                    var viewItem = this.Owner.FindRow(item);
+                    if (viewItem != null)
+                    {
+                        this.SelectRow(viewItem, false);
+                    }
+                    else
+                    {
+                        this.Items.RemoveAt(i);
+                    }
+                }
             }
 
-            try
-            {
-                row.IsSettingInternal = true;
+            #endregion
 
+            /// <summary>
+            /// 设置某行的“选中”状态
+            /// </summary>
+            /// <param name="row"></param>
+            /// <param name="isSelected">是“选中”状态还是“未选中”状态。</param>
+            internal virtual void SelectRow(GridTreeViewRow row, bool isSelected)
+            {
+                /*********************** 代码块解释 *********************************
+                 * 同时处理以下几个属性：
+                 * this._selectedItems、row.IsMultiSelected、row.IsSelected
+                **********************************************************************/
+
+                if (isSelected)
+                {
+                    this.AddToItems(GetEntity(row));
+                }
+                else
+                {
+                    this.Items.Remove(GetEntity(row));
+                }
+
+                try
+                {
+                    row.IsSettingInternal = true;
+
+                    this.RowSelectedProperty(row, isSelected);
+                }
+                finally
+                {
+                    row.IsSettingInternal = false;
+                }
+            }
+
+            protected abstract void RowSelectedProperty(GridTreeViewRow row, bool isSelected);
+
+            internal bool AddToItems(Entity entity)
+            {
+                if (!this.Items.Contains(entity))
+                {
+                    this.Items.Add(entity);
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+        #endregion
+
+        #region private class NormalSelectionModel
+
+        private class NormalSelectionModel : AbstractSelectionModel
+        {
+            public NormalSelectionModel(MultiTypesTreeGrid owner)
+            {
+                this.Owner = owner;
+
+                this.SelectedItems = new MTTGSelectedItemsCollection { _model = this };
+            }
+
+            public override void ClearSelection()
+            {
+                this.ClearSelectedItems();
+
+                this.Owner.SelectedItem = null;
+            }
+
+            protected override void RowSelectedProperty(GridTreeViewRow row, bool isSelected)
+            {
                 //设置这个属性，皮肤中会绑定此属性来实现界面高亮显示
                 row.IsMultiSelected = isSelected;
 
@@ -538,21 +635,30 @@ namespace OEA.Module.WPF.Controls
                 //具体情况见 bug：http://ipm.grandsoft.com.cn/issues/247260
                 row.IsSelected = isSelected;
             }
-            finally
-            {
-                row.IsSettingInternal = false;
-            }
         }
 
-        private bool AddToSelectedItems(Entity entity)
+        #endregion
+
+        #region private class CheckSelectionModel
+
+        private class CheckSelectionModel : AbstractSelectionModel
         {
-            if (!this._selectedItems.Contains(entity))
+            public CheckSelectionModel(MultiTypesTreeGrid owner)
             {
-                this._selectedItems.Add(entity);
-                return true;
+                this.Owner = owner;
+
+                this.SelectedItems = new MTTGCheckedItemsCollection { _model = this };
             }
 
-            return false;
+            public override void ClearSelection()
+            {
+                this.ClearSelectedItems();
+            }
+
+            protected override void RowSelectedProperty(GridTreeViewRow row, bool isSelected)
+            {
+                row.IsChecked = isSelected;
+            }
         }
 
         #endregion
@@ -565,22 +671,23 @@ namespace OEA.Module.WPF.Controls
         [DebuggerDisplay("Count = {Count}")]
         private class MTTGSelectedItemsCollection : IList<Entity>, IList, ISelectionItems
         {
-            internal MultiTypesTreeGrid _owner;
+            internal AbstractSelectionModel _model;
 
             private bool TryAddSelection(Entity item)
             {
-                var row = this._owner.FindOrGenerateNode(item);
+                var row = this._model.Owner.FindOrGenerateNode(item);
 
                 if (row != null)
                 {
-                    //如果还没有当前选择项，则直接设置当前项，否则直接添加该项到集合中。
-                    if (this._owner.SelectedItem == null)
+                    try
                     {
-                        this._owner.SelectedItem = item;
+                        this._model.Owner._forceMultiSelect = true;
+
+                        TryAddSelectionCore(item, row);
                     }
-                    else
+                    finally
                     {
-                        this._owner.SelectRow(row, true);
+                        this._model.Owner._forceMultiSelect = false;
                     }
 
                     return true;
@@ -589,25 +696,38 @@ namespace OEA.Module.WPF.Controls
                 return false;
             }
 
+            protected virtual void TryAddSelectionCore(Entity item, GridTreeViewRow row)
+            {
+                //如果还没有当前选择项，则直接设置当前项，否则直接添加该项到集合中。
+                if (this._model.Owner.SelectedItem == null)
+                {
+                    this._model.Owner.SelectedItem = item;
+                }
+                else
+                {
+                    this._model.SelectRow(row, true);
+                }
+            }
+
             private bool TryDeselectEntity(Entity item)
             {
-                var row = this._owner.FindRow(item);
+                var row = this._model.Owner.FindRow(item);
 
-                if (row != null) { this._owner.SelectRow(row, false); }
+                if (row != null) { this._model.SelectRow(row, false); }
 
                 return true;
             }
 
             private void TryDeselectAll()
             {
-                this._owner.ClearSelection();
+                this._model.ClearSelection();
             }
 
             #region IList<Entity> Members
 
             public int IndexOf(Entity item)
             {
-                return this._owner._selectedItems.IndexOf(item);
+                return this._model.Items.IndexOf(item);
             }
 
             public void Insert(int index, Entity item)
@@ -617,13 +737,13 @@ namespace OEA.Module.WPF.Controls
 
             public void RemoveAt(int index)
             {
-                throw new NotSupportedException("暂时不支持对选择项进行此操作。");
+                this.Remove(this[index]);
             }
 
             public Entity this[int index]
             {
-                get { return this._owner._selectedItems[index]; }
-                set { this._owner._selectedItems[index] = value; }
+                get { return this._model.Items[index]; }
+                set { this._model.Items[index] = value; }
             }
 
             public void Add(Entity item)
@@ -638,17 +758,17 @@ namespace OEA.Module.WPF.Controls
 
             public bool Contains(Entity item)
             {
-                return this._owner._selectedItems.Contains(item);
+                return this._model.Items.Contains(item);
             }
 
             public void CopyTo(Entity[] array, int arrayIndex)
             {
-                this._owner._selectedItems.CopyTo(array, arrayIndex);
+                this._model.Items.CopyTo(array, arrayIndex);
             }
 
             public int Count
             {
-                get { return this._owner._selectedItems.Count; }
+                get { return this._model.Items.Count; }
             }
 
             public bool IsReadOnly
@@ -663,12 +783,12 @@ namespace OEA.Module.WPF.Controls
 
             public IEnumerator<Entity> GetEnumerator()
             {
-                return this._owner._selectedItems.GetEnumerator();
+                return this._model.Items.GetEnumerator();
             }
 
             IEnumerator IEnumerable.GetEnumerator()
             {
-                return this._owner._selectedItems.GetEnumerator();
+                return this._model.Items.GetEnumerator();
             }
 
             #endregion
@@ -698,7 +818,7 @@ namespace OEA.Module.WPF.Controls
 
             public bool IsFixedSize
             {
-                get { return (this._owner._selectedItems as IList).IsFixedSize; }
+                get { return (this._model.Items as IList).IsFixedSize; }
             }
 
             public void Remove(object value)
@@ -714,20 +834,32 @@ namespace OEA.Module.WPF.Controls
 
             public void CopyTo(Array array, int index)
             {
-                (this._owner._selectedItems as IList).CopyTo(array, index);
+                (this._model.Items as IList).CopyTo(array, index);
             }
 
             public bool IsSynchronized
             {
-                get { return (this._owner._selectedItems as IList).IsSynchronized; }
+                get { return (this._model.Items as IList).IsSynchronized; }
             }
 
             public object SyncRoot
             {
-                get { return (this._owner._selectedItems as IList).SyncRoot; }
+                get { return (this._model.Items as IList).SyncRoot; }
             }
 
             #endregion
+        }
+
+        #endregion
+
+        #region private class MTTGCheckedItemsCollection
+
+        private class MTTGCheckedItemsCollection : MTTGSelectedItemsCollection
+        {
+            protected override void TryAddSelectionCore(Entity item, GridTreeViewRow row)
+            {
+                this._model.SelectRow(row, true);
+            }
         }
 
         #endregion
@@ -737,5 +869,28 @@ namespace OEA.Module.WPF.Controls
     /// 一个选择项的集合
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface ISelectionItems : IList<Entity>, IList { }
+    public interface ISelectionItems : IList<Entity> { }
+
+    /// <summary>
+    /// 勾选项变更事件处理函数
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    public delegate void CheckChangedEventHandler(object sender, CheckChangedEventArgs e);
+
+    /// <summary>
+    /// 勾选项变更事件参数
+    /// </summary>
+    public class CheckChangedEventArgs : RoutedEventArgs
+    {
+        /// <summary>
+        /// 当前被勾选上的对象
+        /// </summary>
+        public Entity Item { get; internal set; }
+
+        /// <summary>
+        /// 当前被反勾选上的对象
+        /// </summary>
+        public bool IsChecked { get; internal set; }
+    }
 }

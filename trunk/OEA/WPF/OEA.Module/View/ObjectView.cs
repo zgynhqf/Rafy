@@ -21,6 +21,7 @@ using OEA.MetaModel;
 using OEA.MetaModel.View;
 using OEA.Module.View;
 using OEA.Module;
+using OEA.Reflection;
 
 namespace OEA
 {
@@ -327,7 +328,7 @@ namespace OEA
         protected EntityList GetRawChildrenData()
         {
             return this._parent.Current.GetLazyList(
-                this._childBlock.ChildrenProperty
+                this._childBlock.ChildrenProperty as IListProperty
                 );
         }
 
@@ -823,7 +824,10 @@ namespace OEA
         {
             object result;
 
-            if (this._customParams.TryGetValue(paramName, out result)) { return (T)result; }
+            if (this._customParams.TryGetValue(paramName, out result))
+            {
+                return (T)TypeHelper.CoerceValue(typeof(T), result);
+            }
 
             return default(T);
         }

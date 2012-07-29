@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using OEA.Library.ORM.DbMigration;
+using OEA.ORM.DbMigration;
 using DbMigration;
 using OEA.Library;
 

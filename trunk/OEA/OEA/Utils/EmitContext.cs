@@ -19,7 +19,7 @@ using System.Reflection.Emit;
 using System.Reflection;
 using System.Threading;
 
-namespace OEA.MetaModel
+namespace OEA.Utils
 {
     /// <summary>
     /// 一个简单的 Emit 上下文。

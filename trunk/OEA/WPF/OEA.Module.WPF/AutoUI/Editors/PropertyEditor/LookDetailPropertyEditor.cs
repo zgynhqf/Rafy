@@ -31,7 +31,7 @@ namespace OEA.Module.WPF.Editors
     {
         private static string imagePath = "Images/";
 
-        public LookDetailPropertyEditor() { }
+        protected LookDetailPropertyEditor() { }
 
         protected override FrameworkElement CreateEditingElement()
         {
@@ -86,7 +86,7 @@ namespace OEA.Module.WPF.Editors
                 w.SizeToContent = SizeToContent.Height;
                 w.MinHeight = 100;
                 w.MinWidth = 200;
-                w.Width = 400 * detailView.ColumnsCount;
+                w.Width = 400 * detailView.CalculateColumnsCount();
             });
         }
 

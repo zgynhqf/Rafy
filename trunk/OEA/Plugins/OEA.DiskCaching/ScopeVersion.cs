@@ -94,16 +94,16 @@ namespace OEA.Library.Caching
     {
         public DateTime ServerTime { get; set; }
 
-        protected override void OnGetAll()
+        protected override void QueryAll()
         {
-            base.OnGetAll();
+            base.QueryAll();
 
             this.ServerTime = DateTime.Now;
         }
 
-        protected override void OnGetByParentId(int parentId)
+        protected override void QueryByParentId(int parentId)
         {
-            base.OnGetByParentId(parentId);
+            base.QueryByParentId(parentId);
 
             this.ServerTime = DateTime.Now;
         }
@@ -165,7 +165,7 @@ namespace OEA.Library.Caching
     {
         protected override void ConfigMeta()
         {
-            Meta.MapTable().HasColumns(
+            Meta.MapTable().MapProperties(
                 ScopeVersion.ClassRegionProperty,
                 ScopeVersion.ScopeClassProperty,
                 ScopeVersion.ScopeIdProperty,

@@ -46,16 +46,19 @@ namespace OEA.Module.WPF.Layout
             //Children
             components.ArrangeChildrenByTabControl(childrenTab);
 
-            ResizingPanelExt.SetStarGridLength(detail, 3);
-            ResizingPanelExt.SetStarGridLength(childrenTab, 7);
+            if (childrenTab.Parent != null)
+            {
+                ResizingPanelExt.SetStarGridLength(detail, 3);
+                ResizingPanelExt.SetStarGridLength(childrenTab, 7);
 
-            if (components.LayoutMeta.IsLayoutChildrenHorizonal)
-            {
-                container.Orientation = Orientation.Horizontal;
-            }
-            else
-            {
-                container.Orientation = Orientation.Vertical;
+                if (components.LayoutMeta.IsLayoutChildrenHorizonal)
+                {
+                    container.Orientation = Orientation.Horizontal;
+                }
+                else
+                {
+                    container.Orientation = Orientation.Vertical;
+                }
             }
         }
     }

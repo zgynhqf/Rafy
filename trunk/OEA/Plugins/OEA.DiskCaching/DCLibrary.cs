@@ -4,21 +4,20 @@ using System.Linq;
 using System.Text;
 using OEA;
 using OEA.Library.Caching;
-using OEA.Module.WPF;
 
 namespace OEA.ClientCachingProvider
 {
     /// <summary>
     /// 本模块主要用于为 OEA 的缓存系统服务端提供一个数据表存放缓存相关的信息。
     /// </summary>
-    internal class DCLibrary : ILibrary
+    internal class DCLibrary : LibraryPlugin
     {
-        public ReuseLevel ReuseLevel
+        public override ReuseLevel ReuseLevel
         {
             get { return ReuseLevel._System; }
         }
 
-        public void Initialize(IApp app)
+        public override void Initialize(IApp app)
         {
             EntityListVersion.SetProvider(new EntityListVersionRepository());
 

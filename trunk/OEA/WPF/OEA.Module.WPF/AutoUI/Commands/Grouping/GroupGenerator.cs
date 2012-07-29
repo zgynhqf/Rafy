@@ -17,12 +17,9 @@ using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using Itenso.Windows.Input;
-
+using OEA.WPF.Command;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
-using OEA.WPF.Command;
-
 
 namespace OEA.Module.WPF.CommandAutoUI
 {
@@ -111,7 +108,7 @@ namespace OEA.Module.WPF.CommandAutoUI
         /// </param>
         protected static void TryExcuteCommand(ICommandSource cmdSource)
         {
-            var cmd = (cmdSource.Command as CommandAdapter).CoreCommand;
+            var cmd = (cmdSource.Command as UICommand).CoreCommand;
             cmd.TryExecute(cmdSource.CommandParameter);
         }
 
@@ -120,10 +117,9 @@ namespace OEA.Module.WPF.CommandAutoUI
         /// </summary>
         /// <param name="runtimeCommand"></param>
         /// <returns></returns>
-        protected Button CreateAButton(CommandAdapter runtimeCommand)
+        protected Button CreateAButton(UICommand runtimeCommand)
         {
             var btn = new Button();
-            btn.Name = "btn" + runtimeCommand.CoreCommand.ProgramingName;
             btn.CommandParameter = this.Context.CommandArg;
             ButtonCommand.SetCommand(btn, runtimeCommand);
 
@@ -135,7 +131,7 @@ namespace OEA.Module.WPF.CommandAutoUI
         /// </summary>
         /// <param name="runtimeCommand"></param>
         /// <returns></returns>
-        protected MenuItem CreateAMenuItem(CommandAdapter runtimeCommand)
+        protected MenuItem CreateAMenuItem(UICommand runtimeCommand)
         {
             MenuItem menuItem = new MenuItem();
             menuItem.CommandParameter = this.Context.CommandArg;

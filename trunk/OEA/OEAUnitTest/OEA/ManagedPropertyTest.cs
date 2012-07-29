@@ -11,7 +11,7 @@ using OEA;
 using OEA.Library;
 using OEA.Library._Test;
 using OEA.Library.Caching;
-using OEA.Library.ORM.DbMigration;
+using OEA.ORM.DbMigration;
 using OEA.ManagedProperty;
 using OEA.MetaModel;
 using OEA.Serialization;
@@ -262,8 +262,8 @@ namespace OEAUnitTest
             var count1 = container.GetAvailableProperties().Count;
 
             //为 TestUser 注册属性
-            var DynamicNameProperty = P<TestUser>.RegisterExtension<string>("DynamicName");
-            var DynamicAgeProperty = P<TestUser>.RegisterExtension("DynamicAge", 10);
+            var DynamicNameProperty = P<TestUser>.RegisterExtension<string>("DynamicName", typeof(ManagedPropertyTest));
+            var DynamicAgeProperty = P<TestUser>.RegisterExtension("DynamicAge", typeof(ManagedPropertyTest), 10);
 
             var count2 = container.GetAvailableProperties().Count;
             Assert.AreEqual(count2, count1 + 2);

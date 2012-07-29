@@ -19,6 +19,7 @@ using System.Collections.Specialized;
 using System.Configuration;
 using System.Web;
 using Common;
+using System.Windows;
 
 namespace OEA
 {
@@ -70,29 +71,55 @@ namespace OEA
             {
                 IPrincipal current;
                 if (HttpContext.Current != null)
+                {
                     current = HttpContext.Current.User;
-                else if (System.Windows.Application.Current != null)
+                    if (current == null)
+                    {
+                        current = new GenericPrincipal(new AnonymousIdentity(), null);
+                        HttpContext.Current.User = current;
+                    }
+                }
+                else if (Application.Current != null)
                 {
                     if (_principal == null)
                     {
                         if (ApplicationContext.AuthenticationType != "Windows")
+                        {
                             _principal = new GenericPrincipal(new AnonymousIdentity(), null);
+                        }
                         else
+                        {
                             _principal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
+                        }
                     }
                     current = _principal;
                 }
                 else
+                {
                     current = Thread.CurrentPrincipal;
+                    if (current == null)
+                    {
+                        current = new GenericPrincipal(new AnonymousIdentity(), null);
+                        Thread.CurrentPrincipal = current;
+                    }
+                }
+
                 return current;
             }
             set
             {
                 if (HttpContext.Current != null)
+                {
                     HttpContext.Current.User = value;
+                }
                 else if (System.Windows.Application.Current != null)
+                {
                     _principal = value;
-                Thread.CurrentPrincipal = value;
+                }
+                else
+                {
+                    Thread.CurrentPrincipal = value;
+                }
             }
         }
 

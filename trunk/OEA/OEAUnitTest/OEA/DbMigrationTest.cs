@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using OEA.Library;
 using DbMigration;
 using DbMigration.Model;
-using OEA.Library.ORM.DbMigration;
+using OEA.ORM.DbMigration;
 using DbMigration.SqlServer;
 using OEA;
 using hxy.Common.Data;

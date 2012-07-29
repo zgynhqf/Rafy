@@ -52,7 +52,7 @@ namespace OEA
     [Serializable]
     public class ViewConfigurationCommandList : EntityList
     {
-        protected override void OnGetByParentId(int parentId)
+        protected override void QueryByParentId(int parentId)
         {
             var evm = ViewConfigurationModel.GetEVMByParentId(parentId);
 

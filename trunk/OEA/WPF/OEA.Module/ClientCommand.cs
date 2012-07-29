@@ -23,6 +23,7 @@ using OEA.MetaModel;
 using OEA.MetaModel.View;
 using Common;
 using System.Data.SqlClient;
+using OEA.Reflection;
 
 namespace OEA.Module
 {
@@ -150,7 +151,7 @@ namespace OEA.Module
 
             if (_customParams.TryGetValue(paramName, out result))
             {
-                return (T)result;
+                return (T)TypeHelper.CoerceValue(typeof(T), result);
             }
 
             return default(T);

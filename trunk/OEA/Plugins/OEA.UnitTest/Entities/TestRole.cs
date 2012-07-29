@@ -17,7 +17,6 @@ namespace OEA.Library._Test
     [Serializable]
     [RootEntity]
     [Label("单元测试 - 角色")]
-    [Table("Role")]
     public class TestRole : UnitTestEntity
     {
         public bool IsLock { get; set; }
@@ -30,7 +29,6 @@ namespace OEA.Library._Test
                 IdChangedCallBack = (o, e) => (o as TestRole).OnTestUserIdChanged(e),
                 RefEntityChangedCallBack = (o, e) => (o as TestRole).OnTestUserChanged(e),
             });
-        [EntityProperty, Lookup("TestUser", ReferenceType.Parent)]
         public int TestUserId
         {
             get { return this.GetRefId(TestUserRefProperty); }
@@ -61,7 +59,6 @@ namespace OEA.Library._Test
         public Entity TestUserChangedInternal { get; private set; }
 
         public static Property<string> NameProperty = P<TestRole>.Register(e => e.Name);
-        [EntityProperty]
         public string Name
         {
             get { return GetProperty(NameProperty); }
@@ -101,8 +98,10 @@ namespace OEA.Library._Test
         {
             base.ConfigMeta();
 
+            Meta.MapTable("Role");
+
             Meta.Property(TestRole.TestUserRefProperty).MapColumn().HasColumnName("UserId");
-            Meta.Property(TestRole.NameProperty).MapColumn(true);
+            Meta.Property(TestRole.NameProperty).MapColumn();
         }
 
         protected override void ConfigView()

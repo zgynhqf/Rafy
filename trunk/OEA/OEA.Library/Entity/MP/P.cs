@@ -81,12 +81,14 @@ namespace OEA.Library
 
         #region RegisterReadOnly
 
-        public static Property<TProperty> RegisterReadOnly<TProperty>(Expression<Func<TEntity, TProperty>> propertyExp, Func<TEntity, TProperty> readOnlyValueProvider, ManagedPropertyChangedCallBack<TProperty> propertyChangedCallBack, params IManagedProperty[] dependencies)
+        public static Property<TProperty> RegisterReadOnly<TProperty>(Expression<Func<TEntity, TProperty>> propertyExp, Func<TEntity, TProperty> readOnlyValueProvider, params IManagedProperty[] dependencies)
         {
-            return RegisterReadOnlyCore(GetPropertyName(propertyExp), readOnlyValueProvider, new PropertyMetadata<TProperty>
-            {
-                PropertyChangedCallBack = propertyChangedCallBack
-            }, dependencies);
+            return RegisterReadOnlyCore(GetPropertyName(propertyExp), readOnlyValueProvider, new PropertyMetadata<TProperty>(), dependencies);
+        }
+
+        public static Property<TProperty> RegisterReadOnly<TProperty>(Expression<Func<TEntity, TProperty>> propertyExp, Func<TEntity, TProperty> readOnlyValueProvider, PropertyMetadata<TProperty> defaultMeta, params IManagedProperty[] dependencies)
+        {
+            return RegisterReadOnlyCore(GetPropertyName(propertyExp), readOnlyValueProvider, defaultMeta, dependencies);
         }
 
         private static Property<TProperty> RegisterReadOnlyCore<TProperty>(string property, Func<TEntity, TProperty> readOnlyValueProvider, PropertyMetadata<TProperty> defaultMeta, params IManagedProperty[] dependencies)
@@ -103,41 +105,46 @@ namespace OEA.Library
 
         #region RegisterExtension
 
-        public static Property<TProperty> RegisterExtension<TProperty>(string propertyName)
+        public static Property<TProperty> RegisterExtension<TProperty>(string propertyName, Type declareType)
         {
-            return RegisterExtension<TProperty>(propertyName, new PropertyMetadata<TProperty>());
+            return RegisterExtension<TProperty>(propertyName, declareType, new PropertyMetadata<TProperty>());
         }
 
-        public static Property<TProperty> RegisterExtension<TProperty>(string propertyName, TProperty defaultValue)
+        public static Property<TProperty> RegisterExtension<TProperty>(string propertyName, Type declareType, TProperty defaultValue)
         {
-            return RegisterExtension<TProperty>(propertyName, new PropertyMetadata<TProperty>
+            return RegisterExtension<TProperty>(propertyName, declareType, new PropertyMetadata<TProperty>
             {
                 DefaultValue = defaultValue
             });
         }
 
-        public static Property<TProperty> RegisterExtension<TProperty>(string propertyName, ManagedPropertyChangedCallBack<TProperty> propertyChangedCallBack)
+        public static Property<TProperty> RegisterExtension<TProperty>(string propertyName, Type declareType, ManagedPropertyChangedCallBack<TProperty> propertyChangedCallBack)
         {
-            return RegisterExtension<TProperty>(propertyName, new PropertyMetadata<TProperty>
+            return RegisterExtension<TProperty>(propertyName, declareType, new PropertyMetadata<TProperty>
             {
                 PropertyChangedCallBack = propertyChangedCallBack
             });
         }
 
-        public static Property<TProperty> RegisterExtension<TProperty>(string propertyName, ManagedPropertyChangedCallBack<TProperty> propertyChangedCallBack, TProperty defaultValue)
+        public static Property<TProperty> RegisterExtension<TProperty>(string propertyName, Type declareType, ManagedPropertyChangedCallBack<TProperty> propertyChangedCallBack, TProperty defaultValue)
         {
-            return RegisterExtension<TProperty>(propertyName, new PropertyMetadata<TProperty>
+            return RegisterExtension<TProperty>(propertyName, declareType, new PropertyMetadata<TProperty>
             {
                 PropertyChangedCallBack = propertyChangedCallBack,
                 DefaultValue = defaultValue
             });
         }
 
-        public static Property<TProperty> RegisterExtension<TProperty>(string propertyName, PropertyMetadata<TProperty> defaultMeta)
+        public static Property<TProperty> RegisterExtension<TProperty>(string propertyName, Type declareType, PropertyMetadata<TProperty> defaultMeta)
         {
-            var mp = RegisterCore(propertyName, defaultMeta);
+            return RegisterExtensionCore(propertyName, declareType, defaultMeta);
+        }
 
-            mp.IsExtension = true;
+        private static Property<TProperty> RegisterExtensionCore<TProperty>(string propertyName, Type declareType, PropertyMetadata<TProperty> defaultMeta)
+        {
+            var mp = new Property<TProperty>(typeof(TEntity), declareType, propertyName, defaultMeta);
+
+            ManagedPropertyRepository.Instance.RegisterProperty(mp);
 
             return mp;
         }
@@ -146,14 +153,27 @@ namespace OEA.Library
 
         #region RegisterExtensionReadOnly
 
-        public static Property<TProperty> RegisterExtensionReadOnly<TProperty>(string property, Func<TEntity, TProperty> readOnlyValueProvider, ManagedPropertyChangedCallBack<TProperty> propertyChangedCallBack, params IManagedProperty[] dependencies)
+        public static Property<TProperty> RegisterExtensionReadOnly<TProperty>(string property, Type declareType, Func<TEntity, TProperty> readOnlyValueProvider, params IManagedProperty[] dependencies)
         {
-            var mp = RegisterReadOnlyCore(property, readOnlyValueProvider, new PropertyMetadata<TProperty>
+            return RegisterExtensionReadOnlyCore(property, declareType, readOnlyValueProvider, new PropertyMetadata<TProperty>(), dependencies);
+        }
+
+        public static Property<TProperty> RegisterExtensionReadOnly<TProperty>(string property, Type declareType, Func<TEntity, TProperty> readOnlyValueProvider, ManagedPropertyChangedCallBack<TProperty> propertyChangedCallBack, params IManagedProperty[] dependencies)
+        {
+            var mp = RegisterExtensionReadOnlyCore(property, declareType, readOnlyValueProvider, new PropertyMetadata<TProperty>
             {
                 PropertyChangedCallBack = propertyChangedCallBack
             }, dependencies);
 
-            mp.IsExtension = true;
+            return mp;
+        }
+
+        private static Property<TProperty> RegisterExtensionReadOnlyCore<TProperty>(string property, Type declareType, Func<TEntity, TProperty> readOnlyValueProvider, PropertyMetadata<TProperty> defaultMeta, params IManagedProperty[] dependencies)
+        {
+            var mp = new Property<TProperty>(typeof(TEntity), declareType, property, defaultMeta);
+            mp.AsReadOnly(mpo => readOnlyValueProvider(mpo as TEntity), dependencies);
+
+            ManagedPropertyRepository.Instance.RegisterProperty(mp);
 
             return mp;
         }
@@ -255,8 +275,8 @@ namespace OEA.Library
         private static bool IsNullable(string refIdProperty)
         {
             var property = typeof(TEntity).GetProperty(refIdProperty);
-            var refIdPropertyType = property.PropertyType;
-            return refIdPropertyType.IsGenericType && refIdPropertyType.GetGenericTypeDefinition() == typeof(Nullable<>);
+            if (property == null) throw new InvalidOperationException(string.Format("没有在类型 {0} 中找到属性：{1}", typeof(TEntity).FullName, refIdProperty));
+            return TypeHelper.IsNullable(property.PropertyType);
         }
 
         #endregion

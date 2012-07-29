@@ -34,7 +34,7 @@ namespace OEA.RBAC
     {
         public ModuleMeta Core { get; set; }
 
-        public static readonly Property<string> KeyLabelProperty = P<ModuleAC>.RegisterReadOnly(e => e.KeyLabel, e => (e as ModuleAC).GetKeyLabel(), null);
+        public static readonly Property<string> KeyLabelProperty = P<ModuleAC>.RegisterReadOnly(e => e.KeyLabel, e => (e as ModuleAC).GetKeyLabel());
         public string KeyLabel
         {
             get { return this.GetProperty(KeyLabelProperty); }

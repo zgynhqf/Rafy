@@ -29,9 +29,8 @@ namespace OEA.WPF.Command
     {
         public override bool CanExecute(ObjectView view)
         {
-            var currentObject = view.Data as IDirtyAware;
-            return currentObject != null &&
-                currentObject.IsDirty;
+            var data = view.Data as IDirtyAware;
+            return data != null && data.IsDirty;
         }
 
         public override void Execute(ObjectView view)

@@ -25,9 +25,6 @@ namespace OEA.MetaModel
     public class EntityPropertyMeta : PropertyMeta
     {
         private ReferenceInfo _ReferenceInfo;
-
-        private ColumnMeta _ColumnMeta;
-
         /// <summary>
         /// 如果此属性是引用实体属性，则这个属性不为空，并表示引用的相关信息。
         /// </summary>
@@ -37,6 +34,7 @@ namespace OEA.MetaModel
             set { this.SetValue(ref this._ReferenceInfo, value); }
         }
 
+        private ColumnMeta _ColumnMeta;
         /// <summary>
         /// 如果这个属性不为 null，表示该属性映射数据库中的某个字段。
         /// </summary>

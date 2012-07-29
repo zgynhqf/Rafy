@@ -22,7 +22,7 @@ namespace OEA.Library
     /// <summary>
     /// 它把自己存储在 ApplicationContext.LocalContext 中，
     /// 以提供一个简单的方式来在一个数据上下文环境中重用单个连接。
-    /// </remarks>
+    /// </summary>
     public class ConnectionManager : IDisposable
     {
         private static object _lock = new object();
@@ -38,21 +38,19 @@ namespace OEA.Library
         /// <returns></returns>
         public static ConnectionManager GetManager(DbSetting dbSetting)
         {
+            var ctxName = GetContextName(dbSetting);
+
             lock (_lock)
             {
-                var ctxName = GetContextName(dbSetting);
-                ConnectionManager mgr = null;
-                if (ApplicationContext.LocalContext.Contains(ctxName))
-                {
-                    mgr = ApplicationContext.LocalContext[ctxName] as ConnectionManager;
-                }
-                else
+                var mgr = ApplicationContext.LocalContext[ctxName] as ConnectionManager;
+                if (mgr == null)
                 {
                     mgr = new ConnectionManager(dbSetting);
-                    ApplicationContext.LocalContext[ctxName] = mgr;
+                    ApplicationContext.LocalContext.Add(ctxName, mgr);
 
                     mgr._connection.Open();
                 }
+
                 mgr.AddRef();
                 return mgr;
             }

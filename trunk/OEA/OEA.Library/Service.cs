@@ -50,7 +50,7 @@ namespace OEA
         /// <summary>
         /// 子类重写此方法实现具体的业务逻辑
         /// </summary>
-        internal void ExecuteInternal()
+        internal void ExecuteByDataPortal()
         {
             this.Execute();
 
@@ -80,31 +80,54 @@ namespace OEA
         /// <returns></returns>
         public void Invoke()
         {
+            this.OnInvoking();
+
             if (this.RunAtLocal)
             {
+                //由于在本地，所以没有必须调用 ExecuteByDataPortal 来清除不用的属性。
                 this.Execute();
             }
             else
             {
                 var res = DataPortal.Update(this) as IService;
 
-                //使用反射把返回结果的值修改到当前对象上。
-                var properties = this.GetType().GetProperties();
-                foreach (var property in properties)
-                {
-                    if (property.HasMarked<ServiceOutputAttribute>())
-                    {
-                        var value = property.GetValue(res, null);
+                this.ReadOutput(res);
+            }
 
-                        try
-                        {
-                            property.SetValue(this, value, null);
-                        }
-                        catch { }
+            this.OnInvoked();
+        }
+
+        /// <summary>
+        /// 使用反射把返回结果的值修改到当前对象上。
+        /// </summary>
+        /// <param name="res"></param>
+        private void ReadOutput(IService res)
+        {
+            var properties = this.GetType().GetProperties();
+            foreach (var property in properties)
+            {
+                if (property.HasMarked<ServiceOutputAttribute>())
+                {
+                    var value = property.GetValue(res, null);
+
+                    try
+                    {
+                        property.SetValue(this, value, null);
                     }
+                    catch { }
                 }
             }
         }
+
+        /// <summary>
+        /// 在服务被调用前发生。
+        /// </summary>
+        protected virtual void OnInvoking() { }
+
+        /// <summary>
+        /// 在服务被调用后发生。
+        /// </summary>
+        protected virtual void OnInvoked() { }
 
         protected bool IsWeb { get { return OEAEnvironment.IsWeb; } }
         protected bool IsWPF { get { return OEAEnvironment.IsWPF; } }

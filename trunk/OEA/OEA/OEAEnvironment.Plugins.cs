@@ -51,7 +51,7 @@ namespace OEA
             foreach (var pluginAssembly in libraries)
             {
                 //调用 ILibrary
-                var library = pluginAssembly.Instance as ILibrary;
+                var library = pluginAssembly.Instance as LibraryPlugin;
                 if (library != null) library.Initialize(_appCore);
             }
         }
@@ -67,7 +67,7 @@ namespace OEA
             foreach (var pluginAssembly in GetAllModules())
             {
                 //调用 IModule
-                var module = pluginAssembly.Instance as IModule;
+                var module = pluginAssembly.Instance as ModulePlugin;
                 if (module != null) module.Initialize(_appCore as IClientApp);
             }
         }
@@ -134,7 +134,7 @@ namespace OEA
         {
             if (Location.IsOnClient())
             {
-                return GetAllLibraries().Union(GetAllModules());
+                return GetAllLibraries().Union(GetAllModules()).OrderBy(a => a.Instance.ReuseLevel);
             }
 
             return GetAllLibraries();
@@ -308,7 +308,7 @@ namespace OEA
                 {
                     foreach (var type in p.Assembly.GetTypes())
                     {
-                        if (entityType.IsAssignableFrom(type))
+                        if (!type.IsGenericTypeDefinition && entityType.IsAssignableFrom(type))
                         {
                             var config = Activator.CreateInstance(type) as EntityConfig;
                             config.ReuseLevel = (int)p.Instance.ReuseLevel;

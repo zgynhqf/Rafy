@@ -8,7 +8,7 @@ using OEA;
 using OEA.Library;
 using OEA.Library._Test;
 using OEA.Reflection;
-using OEA.Library.ORM.DbMigration;
+using OEA.ORM.DbMigration;
 
 namespace OEAUnitTest
 {

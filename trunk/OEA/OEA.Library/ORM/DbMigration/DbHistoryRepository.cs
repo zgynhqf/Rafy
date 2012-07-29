@@ -16,10 +16,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using DbMigration.History;
-using OEA.Library.ORM.DbMigration.Presistence;
+using OEA.ORM.DbMigration.Presistence;
 using hxy.Common;
+using OEA.Library;
 
-namespace OEA.Library.ORM.DbMigration
+namespace OEA.ORM.DbMigration
 {
     public class DbHistoryRepository : HistoryRepository
     {
@@ -42,7 +43,7 @@ namespace OEA.Library.ORM.DbMigration
 
                 items.Add(new HistoryItem
                 {
-                    TimeId = dbItem.TimeId,
+                    TimeId = new DateTime(dbItem.TimeId),
                     Description = dbItem.Description,
                     IsGenerated = dbItem.IsGenerated,
                     MigrationClass = dbItem.MigrationClass,
@@ -60,7 +61,7 @@ namespace OEA.Library.ORM.DbMigration
 
             item.Database = database;
 
-            item.TimeId = history.TimeId;
+            item.TimeId = history.TimeId.Ticks;
             item.Description = history.Description;
             item.IsGenerated = history.IsGenerated;
             item.MigrationClass = history.MigrationClass;

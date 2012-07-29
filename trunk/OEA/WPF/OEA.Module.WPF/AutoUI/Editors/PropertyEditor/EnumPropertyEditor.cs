@@ -16,6 +16,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using OEA.Module.WPF.Converter;
+using OEA.Reflection;
 using OEA.Utils;
 
 namespace OEA.Module.WPF.Editors
@@ -39,24 +40,34 @@ namespace OEA.Module.WPF.Editors
             this.ResetBinding(this._cb);
 
             //cb.Items.Clear();
-            foreach (var item in EnumViewModel.GetByEnumType(this.Meta.PropertyMeta.Runtime.PropertyType))
+            var propertyType = this.Meta.PropertyMeta.Runtime.PropertyType;
+            foreach (var item in EnumViewModel.GetByEnumType(propertyType))
             {
                 this._cb.Items.Add(item);
             }
             this._cb.SelectedValuePath = "EnumValue";
             this._cb.DisplayMemberPath = "Label";
+            if (TypeHelper.IsNullable(propertyType)) { this._cb.IsEditable = true; }
 
             this._cb.SelectionChanged += On_cb_SelectionChanged;
             this._cb.DropDownOpened += On_cb_DropDownOpened;
 
-            this.BindElementReadOnly(this._cb, ComboBox.IsReadOnlyProperty);
+            this.BindElementReadOnly(this._cb, ComboBox.IsEnabledProperty, false);
 
             this._cb.DataContextChanged += (o, e) =>
             {
                 if (this.Context.CurrentObject != null)
                 {
-                    this._cb.SelectedIndex =
-                        this._cb.Items.IndexOf(new EnumViewModel(this.PropertyValue as Enum));
+                    var value = this.PropertyValue;
+                    if (value == null)
+                    {
+                        this._cb.SelectedIndex = -1;
+                    }
+                    else
+                    {
+                        this._cb.SelectedIndex =
+                            this._cb.Items.IndexOf(new EnumViewModel(value as Enum));
+                    }
                 }
             };
 
@@ -87,7 +98,14 @@ namespace OEA.Module.WPF.Editors
             if (e.AddedItems.Count > 0)
             {
                 var item = e.AddedItems[0] as EnumViewModel;
-                if (item != null) { this.PropertyValue = item.EnumValue; }
+                if (item != null)
+                {
+                    this.PropertyValue = item.EnumValue;
+                }
+            }
+            else
+            {
+                this.PropertyValue = null;
             }
 
             e.Handled = true;

@@ -32,51 +32,76 @@ namespace OEA.MetaModel.View
 
             var mainBlock = new Block(entityType);
 
-            return this.Read(em, mainBlock);
+            return this.ReadCode(em, mainBlock);
         }
 
-        private AggtBlocks Read(EntityMeta em, Block mainBlock)
+        protected AggtBlocks ReadCode(EntityMeta em, Block mainBlock, ReadCodeTemplateOptions op = null)
         {
-            var result = new AggtBlocks
+            op = op ?? new ReadCodeTemplateOptions
             {
-                MainBlock = mainBlock
+                ReadChildren = true,
+                ReadQueryPanels = true
             };
 
-            foreach (var property in em.ChildrenProperties)
-            {
-                var childBlock = new ChildBlock(property.ManagedProperty as IListProperty);
-                var childAggt = this.Read(property.ChildType, childBlock);
+            AggtBlocks result = mainBlock;
 
-                result.Children.Add(childAggt);
+            if (op.ReadChildren)
+            {
+                foreach (var property in em.ChildrenProperties)
+                {
+                    var childBlock = new ChildBlock(property.ManagedProperty as IListProperty);
+                    var childAggt = this.ReadCode(property.ChildType, childBlock);
+
+                    result.Children.Add(childAggt);
+                }
             }
 
+            if (op.ReadQueryPanels) { this.ReadQueryPanels(em, result); }
+
+            return result;
+        }
+
+        private void ReadQueryPanels(EntityMeta em, AggtBlocks result)
+        {
             //导航实体的关系对象
-            var conAttri = em.EntityType.GetSingleAttribute<ConditionQueryTypeAttribute>();
-            if (conAttri != null)
+            var queryTypes = em.EntityType.GetCustomAttributes(typeof(ConditionQueryTypeAttribute), false);
+            foreach (ConditionQueryTypeAttribute conAttri in queryTypes)
             {
                 var surBlock = new ConditionBlock
                 {
                     EntityType = conAttri.QueryType,
                 };
                 var surEM = CommonModel.Entities.Get(surBlock.EntityType);
-                var surAggt = this.Read(surEM, surBlock);
+                var surAggt = this.ReadCode(surEM, surBlock);
 
                 result.Surrounders.Add(surAggt);
             }
-            var naviAttri = em.EntityType.GetSingleAttribute<NavigationQueryTypeAttribute>();
-            if (naviAttri != null)
+
+            queryTypes = em.EntityType.GetCustomAttributes(typeof(NavigationQueryTypeAttribute), false);
+            foreach (NavigationQueryTypeAttribute naviAttri in queryTypes)
             {
                 var surBlock = new NavigationBlock
                 {
                     EntityType = naviAttri.QueryType,
                 };
                 var surEM = CommonModel.Entities.Get(surBlock.EntityType);
-                var surAggt = this.Read(surEM, surBlock);
+                var surAggt = this.ReadCode(surEM, surBlock);
 
                 result.Surrounders.Add(surAggt);
             }
-
-            return result;
         }
+    }
+
+    public class ReadCodeTemplateOptions
+    {
+        /// <summary>
+        /// 是否需要读取组合子
+        /// </summary>
+        public bool ReadChildren { get; set; }
+
+        /// <summary>
+        /// 是否需要读取查询面板。
+        /// </summary>
+        public bool ReadQueryPanels { get; set; }
     }
 }

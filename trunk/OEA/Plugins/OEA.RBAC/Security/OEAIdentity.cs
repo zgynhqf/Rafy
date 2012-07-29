@@ -50,6 +50,13 @@ namespace OEA.RBAC.Security
             set { this.SetProperty(NameProperty, value); }
         }
 
+        public static readonly Property<string> CodeProperty = P<OEAIdentity>.Register(e => e.Code);
+        public string Code
+        {
+            get { return this.GetProperty(CodeProperty); }
+            set { this.SetProperty(CodeProperty, value); }
+        }
+
         internal static OEAIdentity GetIdentity(string username, string password)
         {
             var c = new UsernameCriteria()
@@ -86,13 +93,13 @@ namespace OEA.RBAC.Security
         {
             if (this.User != null)
             {
+                this.Code = this.User.Code;
                 this.Name = this.User.Name;
                 this.IsAuthenticated = true;
                 this._roles = (RF.Create<OrgPosition>() as OrgPositionRepository).GetList(User.Id); // list of roles from security store
             }
             else
             {
-                this.Name = string.Empty;
                 this.IsAuthenticated = false;
                 this._roles = null;
             }

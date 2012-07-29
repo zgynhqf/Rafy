@@ -77,6 +77,9 @@ namespace OEA.Module.WPF.Controls
         {
             if (!this._cells.Contains(cell))
             {
+                var index = this._cells.Count;
+                cell.Column = this._treeGrid.Columns[index] as TreeColumn;
+
                 this._cells.Add(cell);
             }
         }
@@ -276,21 +279,39 @@ namespace OEA.Module.WPF.Controls
         private void OnIsMultiSelectedChanged(DependencyPropertyChangedEventArgs e)
         {
             var value = (bool)e.NewValue;
+
+            this.IsUISelected = value;
+        }
+
+        #endregion
+
+        #region IsChecked DependencyProperty
+
+        public static readonly DependencyProperty IsCheckedProperty = DependencyProperty.Register(
+            "IsChecked", typeof(bool), typeof(GridTreeViewRow),
+            new PropertyMetadata((d, e) => (d as GridTreeViewRow).OnIsCheckedChanged(e))
+            );
+        /// <summary>
+        /// 是否被勾选中
+        /// </summary>
+        public bool IsChecked
+        {
+            get { return (bool)this.GetValue(IsCheckedProperty); }
+            set { this.SetValue(IsCheckedProperty, value); }
+        }
+
+        private void OnIsCheckedChanged(DependencyPropertyChangedEventArgs e)
+        {
+            var value = (bool)e.NewValue;
             if (!this.IsSettingInternal)
             {
                 //值改变的来源是：勾选视图时，勾选或者反勾选某一行。
                 this.TreeGrid.CheckRowWithCascade(this, (bool)e.NewValue);
             }
-
-            //在不是 CheckingRow 的模式下，才显示选择状态。否则，只显示 CheckBox 状态就行了。
-            if (this.TreeGrid.CheckingMode != CheckingMode.CheckingRow)
-            {
-                this.IsUISelected = value;
-            }
         }
 
         /// <summary>
-        /// 表明 IsMultiSelected 的值是否正在被内部方法改变。
+        /// 表明 IsChecked 的值是否正在被内部方法改变。
         /// </summary>
         internal bool IsSettingInternal;
 
@@ -422,7 +443,8 @@ namespace OEA.Module.WPF.Controls
         {
             if (this._owner.TreeGrid.CheckingMode == CheckingMode.CheckingRow)
             {
-                return GridTreeViewRow.IsMultiSelectedProperty;
+                return GridTreeViewRow.IsCheckedProperty;
+                //return GridTreeViewRow.IsMultiSelectedProperty;
             }
             else
             {

@@ -49,13 +49,12 @@ namespace OEA.MetaModel
         /// <returns></returns>
         public static EntityMeta MapAllPropertiesToTable(this EntityMeta meta)
         {
-            var properties = meta.ManagedProperties.GetCompiledProperties()
-                .Where(p => !p.IsReadOnly
-                    && !(p is IListProperty)
+            var properties = meta.ManagedProperties.GetNonReadOnlyCompiledProperties()
+                .Where(p => !(p is IListProperty)
                     && p.Name != DBConvention.FieldName_TreeCode
                     && p.Name != DBConvention.FieldName_TreePId
                 ).ToArray();
-            return meta.HasColumns(properties);
+            return meta.MapProperties(properties);
         }
 
         /// <summary>
@@ -69,15 +68,14 @@ namespace OEA.MetaModel
         /// <returns></returns>
         public static EntityMeta MapAllPropertiesToTableExcept(this EntityMeta meta, params IManagedProperty[] exceptProperties)
         {
-            var properties = meta.ManagedProperties.GetCompiledProperties()
-                .Where(p => !p.IsReadOnly
-                    && !(p is IListProperty)
+            var properties = meta.ManagedProperties.GetNonReadOnlyCompiledProperties()
+                .Where(p => !(p is IListProperty)
                     && p.Name != DBConvention.FieldName_TreeCode
                     && p.Name != DBConvention.FieldName_TreePId
                 ).Except(exceptProperties)
                 .ToArray();
 
-            return meta.HasColumns(properties);
+            return meta.MapProperties(properties);
         }
 
         /// <summary>
@@ -86,12 +84,12 @@ namespace OEA.MetaModel
         /// <param name="meta"></param>
         /// <param name="properties"></param>
         /// <returns></returns>
-        public static EntityMeta HasColumns(this EntityMeta meta, params IManagedProperty[] properties)
+        public static EntityMeta MapProperties(this EntityMeta meta, params IManagedProperty[] properties)
         {
             foreach (var p in properties)
             {
                 var ep = meta.Property(p);
-                ep.MapColumn(true);
+                ep.MapColumn();
             }
 
             return meta;
@@ -113,15 +111,13 @@ namespace OEA.MetaModel
 
         /// <summary>
         /// 指定某实体映射某个表。
-        /// 并表明该表是否支持数据库迁移。
         /// </summary>
         /// <param name="meta"></param>
         /// <param name="supprtMigrating"></param>
         /// <returns></returns>
-        public static EntityMeta MapTable(this EntityMeta meta, bool supprtMigrating = true)
+        public static EntityMeta MapTable(this EntityMeta meta)
         {
             meta.TableMeta = new TableMeta(meta.EntityType.Name);
-            meta.TableMeta.SupportMigrating = supprtMigrating;
 
             EnsureTreeColumns(meta);
 
@@ -130,16 +126,31 @@ namespace OEA.MetaModel
 
         /// <summary>
         /// 指定某实体映射某个表，指定表名。
-        /// 并表明该表是否支持数据库迁移。
         /// </summary>
         /// <param name="meta"></param>
         /// <param name="tableName"></param>
         /// <param name="supprtMigrating"></param>
         /// <returns></returns>
-        public static EntityMeta MapTable(this EntityMeta meta, string tableName, bool supprtMigrating = true)
+        public static EntityMeta MapTable(this EntityMeta meta, string tableName)
         {
             meta.TableMeta = new TableMeta(tableName);
-            meta.TableMeta.SupportMigrating = supprtMigrating;
+
+            EnsureTreeColumns(meta);
+
+            return meta;
+        }
+
+        /// <summary>
+        /// 指定某实体映射某个视图 SQL。
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="tableName"></param>
+        /// <param name="supprtMigrating"></param>
+        /// <returns></returns>
+        public static EntityMeta MapView(this EntityMeta meta, string viewSql)
+        {
+            meta.TableMeta = new TableMeta(meta.EntityType.Name);
+            meta.TableMeta.ViewSql = viewSql;
 
             EnsureTreeColumns(meta);
 
@@ -169,19 +180,9 @@ namespace OEA.MetaModel
         /// <param name="meta"></param>
         /// <param name="isMappingColumn"></param>
         /// <returns></returns>
-        public static EntityPropertyMeta MapColumn(this EntityPropertyMeta meta, bool isMappingColumn)
+        public static EntityPropertyMeta DontMapColumn(this EntityPropertyMeta meta)
         {
-            if (isMappingColumn)
-            {
-                if (meta.ColumnMeta == null)
-                {
-                    meta.ColumnMeta = new ColumnMeta();
-                }
-            }
-            else
-            {
-                meta.ColumnMeta = null;
-            }
+            meta.ColumnMeta = null;
 
             return meta;
         }
@@ -234,6 +235,17 @@ namespace OEA.MetaModel
         public static ColumnMeta IsNullable(this ColumnMeta meta)
         {
             meta.IsRequired = false;
+            return meta;
+        }
+
+        /// <summary>
+        /// 如果出现循环引用的外键，则可以使用此方法来忽略某个列的外键，使得数据库生成时不生成该外键引用。
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <returns></returns>
+        public static ColumnMeta IgnoreFK(this ColumnMeta meta)
+        {
+            meta.HasFKConstraint = false;
             return meta;
         }
     }

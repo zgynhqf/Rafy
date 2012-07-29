@@ -12,7 +12,7 @@
 *******************************************************/
 
 using System.Windows.Controls;
-using Itenso.Windows.Input;
+using OEA.WPF.Command;
 
 namespace OEA.Module.WPF.CommandAutoUI
 {
@@ -29,7 +29,7 @@ namespace OEA.Module.WPF.CommandAutoUI
         /// <returns></returns>
         protected override ItemControlResult CreateItemControl()
         {
-            var runtimeCommand = this.CreateItemCommand();
+            var runtimeCommand = this.CreateItemUICommand();
 
             var tb = this.CreateTextBox(runtimeCommand);
 

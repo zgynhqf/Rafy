@@ -30,6 +30,13 @@ namespace OEA.ManagedProperty
         Type OwnerType { get; }
 
         /// <summary>
+        /// 申明这个属性的类型
+        /// 
+        /// 如果这个属性是一个扩展属性，则这个值与 OwnerType 不同。
+        /// </summary>
+        Type DeclareType { get; }
+
+        /// <summary>
         /// 属性名
         /// </summary>
         string Name { get; }
@@ -55,7 +62,7 @@ namespace OEA.ManagedProperty
         bool IsUnregistered { get; }
 
         /// <summary>
-        /// 是否为扩展属性（一个类中为另一个类定义的扩展发展）
+        /// 是否为扩展属性（一个类中为另一个类定义的扩展属性）
         /// </summary>
         bool IsExtension { get; }
 
@@ -68,6 +75,11 @@ namespace OEA.ManagedProperty
         /// 如果此属性即是编译期属性，也不是只读的，则这个值表示该属性在对象中的索引。
         /// </summary>
         int TypeCompiledIndex { get; }
+
+        /// <summary>
+        /// 获取 this.OwnerType 类型所对应的元数据。
+        /// </summary>
+        IManagedPropertyMetadata DefaultMeta { get; }
 
         /// <summary>
         /// 为某个对象获取本属性的元数据
@@ -113,20 +125,39 @@ namespace OEA.ManagedProperty
         private int _typeCompiledIndex;
 
         public ManagedProperty(Type ownerType, string propertyName, ManagedPropertyMetadata<TPropertyType> defaultMeta)
+            : this(ownerType, ownerType, propertyName, defaultMeta) { }
+
+        public ManagedProperty(Type ownerType, Type declareType, string propertyName, ManagedPropertyMetadata<TPropertyType> defaultMeta)
         {
             this._typeCompiledIndex = -1;
             this.GlobalIndex = -1;
             this.LifeCycle = ManagedPropertyLifeCycle.CompileOrSetup;
             this.OwnerType = ownerType;
-            this.Name = propertyName;
+            this.DeclareType = declareType;
             this._defaultMeta = defaultMeta;
             this._defaultMeta.SetProperty(this);
+            if (ownerType != declareType)
+            {
+                this.IsExtension = true;
+                this.Name = declareType.Name + "_" + propertyName;
+            }
+            else
+            {
+                this.Name = propertyName;
+            }
         }
 
         /// <summary>
         /// 定义此属性的类型
         /// </summary>
         public Type OwnerType { get; private set; }
+
+        /// <summary>
+        /// 申明这个属性的类型
+        /// 
+        /// 如果这个属性是一个扩展属性，则这个值与 OwnerType 不同。
+        /// </summary>
+        public Type DeclareType { get; private set; }
 
         /// <summary>
         /// 属性名
@@ -151,7 +182,7 @@ namespace OEA.ManagedProperty
         /// <summary>
         /// 是否为扩展属性（一个类中为另一个类定义的扩展发展）
         /// </summary>
-        public bool IsExtension { get; set; }
+        public bool IsExtension { get; private set; }
 
         /// <summary>
         /// 如果此属性即是编译期属性，也不是只读的，则这个值表示该属性在对象中的索引。
@@ -190,6 +221,8 @@ namespace OEA.ManagedProperty
         /// <param name="dependencies"></param>
         public void AsReadOnly(Func<ManagedPropertyObject, TPropertyType> readOnlyValueProvider, params IManagedProperty[] dependencies)
         {
+            if (this.GlobalIndex >= 0) throw new InvalidOperationException("属性已经注册完毕，不能修改！");
+
             if (readOnlyValueProvider == null) throw new ArgumentNullException("readOnlyValueProvider");
 
             this._readOnlyValueProvider = readOnlyValueProvider;
@@ -226,6 +259,14 @@ namespace OEA.ManagedProperty
         private Dictionary<Type, ManagedPropertyMetadata<TPropertyType>> _overridedMetas;
 
         /// <summary>
+        /// 获取 this.OwnerType 类型所对应的元数据。
+        /// </summary>
+        public ManagedPropertyMetadata<TPropertyType> DefaultMeta
+        {
+            get { return this._defaultMeta; }
+        }
+
+        /// <summary>
         /// 为某个对象获取本属性的元数据
         /// </summary>
         /// <param name="ownerType">
@@ -248,19 +289,21 @@ namespace OEA.ManagedProperty
         {
             ManagedPropertyMetadata<TPropertyType> result = this._defaultMeta;
 
-            var myOwnerType = this.OwnerType;
-
-            if (this._overridedMetas != null && ownerType != myOwnerType)
+            if (this._overridedMetas != null)
             {
-                var t = ownerType;
-                while (t != myOwnerType && t != typeof(ManagedPropertyObject) && t != null)
+                var myOwnerType = this.OwnerType;
+                if (ownerType != myOwnerType)
                 {
-                    if (this._overridedMetas.TryGetValue(t, out result)) { break; }
+                    var t = ownerType;
+                    while (t != myOwnerType && t != typeof(ManagedPropertyObject) && t != null)
+                    {
+                        if (this._overridedMetas.TryGetValue(t, out result)) { break; }
 
-                    t = t.BaseType;
+                        t = t.BaseType;
+                    }
+
+                    result = result ?? this._defaultMeta;
                 }
-
-                result = result ?? this._defaultMeta;
             }
 
             return result;
@@ -280,6 +323,11 @@ namespace OEA.ManagedProperty
 
             this._overridedMetas[ownerSubType] = propertyMeta;
             propertyMeta.SetProperty(this);
+        }
+
+        IManagedPropertyMetadata IManagedProperty.DefaultMeta
+        {
+            get { return this._defaultMeta; }
         }
 
         IManagedPropertyMetadata IManagedProperty.GetMeta(object owner)
@@ -330,7 +378,7 @@ namespace OEA.ManagedProperty
 
         public override bool Equals(object obj)
         {
-            var mp = obj as ManagedProperty<TPropertyType>;
+            var mp = obj as IManagedProperty;
             if (mp != null) return mp.GlobalIndex == this.GlobalIndex;
 
             return base.Equals(obj);

@@ -56,43 +56,42 @@ namespace OEA.Web
             {
                 var property = properties[i];
                 var pName = property.Name;
-                if (pName != DBConvention.FieldName_Id)
+                if (pName == DBConvention.FieldName_Id) { continue; }
+
+                var serverType = ServerTypeHelper.GetServerType(property.Runtime.PropertyType);
+                if (serverType.Name == SupportedServerType.Unknown) { continue; }
+
+                var field = new EntityField
                 {
-                    var serverType = ServerTypeHelper.GetServerType(property.Runtime.PropertyType);
-                    if (serverType.Name == SupportedServerType.Unknown) { continue; }
+                    name = pName,
+                    type = serverType,
+                    persist = property.Runtime.CanWrite,
+                };
 
-                    var field = new EntityField
+                var mp = property.ManagedProperty;
+                if (mp != null)
+                {
+                    //为外键添加一个视图属性
+                    if (mp is IRefProperty)
                     {
-                        name = pName,
-                        type = serverType,
-                        persist = property.Runtime.CanWrite,
-                    };
+                        this._model.fields.Add(field);
 
-                    var mp = property.ManagedProperty;
-                    if (mp != null)
-                    {
-                        //为外键添加一个视图属性
-                        if (mp is IRefProperty)
+                        var refMp = mp as IRefProperty;
+                        field = new EntityField
                         {
-                            this._model.fields.Add(field);
-
-                            var refMp = mp as IRefProperty;
-                            field = new EntityField
-                            {
-                                name = LabeledRefProperty(pName),
-                                type = ServerTypeHelper.GetServerType(typeof(string)),
-                                persist = false,
-                            };
-                        }
-                        else
-                        {
-                            var v = mp.GetMeta(this.EntityMeta.EntityType).DefaultValue;
-                            field.defaultValue = EntityJsonConverter.ToClientValue(mp.PropertyType, v);
-                        }
+                            name = LabeledRefProperty(pName),
+                            type = ServerTypeHelper.GetServerType(typeof(string)),
+                            persist = false,
+                        };
                     }
-
-                    this._model.fields.Add(field);
+                    else
+                    {
+                        var v = mp.GetMeta(this.EntityMeta.EntityType).DefaultValue;
+                        field.defaultValue = EntityJsonConverter.ToClientValue(mp.PropertyType, v);
+                    }
                 }
+
+                this._model.fields.Add(field);
             }
         }
 

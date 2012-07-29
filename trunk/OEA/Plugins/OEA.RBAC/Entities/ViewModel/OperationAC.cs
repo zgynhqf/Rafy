@@ -13,6 +13,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using OEA;
@@ -32,6 +33,7 @@ namespace OEA.RBAC
     /// 
     /// 由 Module + Scope + OperationKey 构成主键
     /// </summary>
+    [DebuggerDisplay("Label:{Label}, OperationKey:{OperationKey}")]
     [ChildEntity]
     public class OperationAC : Entity
     {

@@ -22,7 +22,7 @@ using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using AvalonDock;
-using Itenso.Windows.Input;
+using OEA.WPF.Command;
 using OEA.Library;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
@@ -30,6 +30,7 @@ using OEA.Module.WPF.CommandAutoUI;
 using OEA.Module.WPF.Controls;
 using OEA.Module.WPF.Layout;
 using OEA.WPF;
+using System.Windows.Input;
 
 namespace OEA.Module.WPF
 {
@@ -90,6 +91,8 @@ namespace OEA.Module.WPF
 
         #endregion
 
+        #region 主要逻辑
+
         /// <summary>
         /// 为聚合对象生成组合控件。
         /// </summary>
@@ -133,7 +136,11 @@ namespace OEA.Module.WPF
             }
 
             //返回布局后的整个控件。
-            return new ControlResult(result, mainView);
+            var ui = new ControlResult(result, mainView);
+
+            this.CreateCommandBindings(ui);
+
+            return ui;
         }
 
         /// <summary>
@@ -177,7 +184,17 @@ namespace OEA.Module.WPF
             this.CreateCommandsUI(surrounderView, surrounderBlock);
 
             //直接使用 surrounderType 作为关系的类型，把 surrounderView 添加到 mainView 的关系。
-            var relation = new RelationView(surrounderType, surrounderView);
+            RelationView relation = null;
+            if (surrounderBlock.RelationViewType != null)
+            {
+                relation = Activator.CreateInstance(
+                    surrounderBlock.RelationViewType, surrounderType, surrounderView
+                    ) as RelationView;
+            }
+            else
+            {
+                relation = new RelationView(surrounderType, surrounderView);
+            }
             mainView.Relations.Add(relation);
 
             //相反的关系设置
@@ -218,10 +235,36 @@ namespace OEA.Module.WPF
 
                 //Region
                 regions.AddChildren(childBlock.Label, childControl);
+
+                this.OnChildUICreated(childControl);
             }
         }
 
-        #region 帮助类方法
+        #region ChildUICreated Event
+
+        public event EventHandler<ChildUICreatedEventArgs> ChildUICreated;
+
+        protected virtual void OnChildUICreated(ControlResult childUI)
+        {
+            var handler = this.ChildUICreated;
+            if (handler != null) handler(this, new ChildUICreatedEventArgs(childUI));
+        }
+
+        public class ChildUICreatedEventArgs : EventArgs
+        {
+            public ChildUICreatedEventArgs(ControlResult childUI)
+            {
+                this.ChildUI = childUI;
+            }
+
+            public ControlResult ChildUI { get; private set; }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region 处理命令
 
         private void CreateCommandsUI(WPFObjectView view, Block block)
         {
@@ -244,12 +287,47 @@ namespace OEA.Module.WPF
             }
         }
 
+        /// <summary>
+        /// 把 CommandBinding 都创建在聚合视图上。
+        /// </summary>
+        /// <param name="compoundUI"></param>
+        private void CreateCommandBindings(ControlResult compoundUI)
+        {
+            var view = compoundUI.MainView;
+
+            var iptBindings = compoundUI.Control.InputBindings;
+            var cmdBindings = compoundUI.Control.CommandBindings;
+            foreach (var uiCmd in view.UICommands)
+            {
+                //添加一个 CommandBinding。
+                var binding = CommandRepository.CreateCommandBinding(uiCmd);
+                cmdBindings.Add(binding);
+
+                //同时，添加一个 ImputBinding，并把它的 Parameter 设置为 View。
+                var gestures = uiCmd.InputGestures;
+                if (gestures != null && gestures.Count > 0)
+                {
+                    if (gestures.Count > 1)
+                    {
+                        throw new NotSupportedException("暂时不支持复杂快捷健！");
+                    }
+                    var iptBinding = new InputBinding(uiCmd, gestures[0]);
+                    iptBinding.CommandParameter = view;
+                    iptBindings.Add(iptBinding);
+                }
+            }
+        }
+
         protected virtual ItemsControl CreateCommandsContainer()
         {
             var itemsControl = new ItemsControl();
-            itemsControl.Style = OEAStyles.CommandsContainer;
+            itemsControl.Style = OEAResources.CommandsContainer;
             return itemsControl;
         }
+
+        #endregion
+
+        #region 帮助类方法
 
         /// <summary>
         /// 根据元数据创建一个布局的方案

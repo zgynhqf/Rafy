@@ -17,7 +17,7 @@ using System.Linq;
 using System.Text;
 using OEA;
 using OEA.MetaModel;
-using OEA.Library.ORM.DbMigration;
+using OEA.ORM.DbMigration;
 using OEA.Library.Caching;
 using OEA.Library;
 using OEA.Library.Audit;
@@ -31,14 +31,14 @@ namespace OEA.RBAC
     /// <summary>
     /// 比较简单的通用权限系统。
     /// </summary>
-    internal class RBACLibrary : ILibrary
+    internal class RBACLibrary : LibraryPlugin
     {
-        public ReuseLevel ReuseLevel
+        public override ReuseLevel ReuseLevel
         {
             get { return ReuseLevel._System; }
         }
 
-        public void Initialize(IApp app)
+        public override void Initialize(IApp app)
         {
             //设置权限提供程序为本模块中实体类
             PermissionMgr.Provider = new OEAPermissionMgr();

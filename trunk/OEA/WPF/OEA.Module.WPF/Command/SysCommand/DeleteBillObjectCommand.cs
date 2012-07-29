@@ -35,13 +35,6 @@ namespace OEA.WPF.Command
     {
         public override bool CanExecute(ListObjectView view)
         {
-            if (view == null) { return false; }
-            if (base.CanExecute(view) == false) { return false; }
-
-            var bindingList = view.Data as IBindingList;
-            if (bindingList == null) { return false; }
-            //|| bindingList.AllowRemove == false)
-
             return view.Current != null;
         }
 
@@ -53,7 +46,7 @@ namespace OEA.WPF.Command
             var result = App.MessageBox.Show(content, "确认删除", MessageBoxButton.YesNo);
             if (result == MessageBoxResult.Yes)
             {
-                this.Deletetems(view, isTree);
+                this.DeleteItems(view, isTree);
             }
         }
 
@@ -62,7 +55,7 @@ namespace OEA.WPF.Command
         /// 树形记录需要删除所有的孩子记录，所以在判断删除后定位到一下记录时，需要根据所有删除的记录进行计算
         /// </summary>
         /// <param name="view"></param>
-        private void Deletetems(ListObjectView view, bool isTree)
+        protected virtual void DeleteItems(ListObjectView view, bool isTree)
         {
             var list = view.Data as EntityList;
 
@@ -97,13 +90,27 @@ namespace OEA.WPF.Command
             foreach (var item in deleteList) { list.Remove(item); }
 
             //保存
-            RF.Save(list);
+            var res = this.SaveWholeList(view, list);
 
             if (b != null) b.SuppressSaveAction = false;
 
-            view.RefreshControl();
+            if (res)
+            {
+                view.RefreshControl();
 
-            view.Current = nextFocusItem;
+                view.Current = nextFocusItem;
+            }
+        }
+
+        /// <summary>
+        /// 保存整个列表，返回是否成功。
+        /// </summary>
+        /// <param name="list"></param>
+        protected virtual bool SaveWholeList(ListObjectView view, EntityList list)
+        {
+            RF.Save(list);
+
+            return true;
         }
 
         private static object GetNextFocusItem(IBindingList dataList, IList deleteList)

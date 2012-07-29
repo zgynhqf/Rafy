@@ -67,7 +67,7 @@ namespace OEA
             this.Id = GetRuntimeUniqueId(evm);
             if (evm.GroupBy != null) this.GroupBy = evm.GroupBy.Name;
             this.PageSize = evm.PageSize;
-            this.EntityType = ClientEntityConverter.ToClientName(evm.EntityType);
+            this.EntityType = ClientEntities.GetClientName(evm.EntityType);
             if (!string.IsNullOrEmpty(evm.ExtendView)) this.ViewName = evm.ExtendView;
         }
 
@@ -339,7 +339,7 @@ namespace OEA
         protected void QueryBy(ViewConfigurationModelNameCriteria criteria)
         {
             var viewName = criteria.ViewName;
-            Type entityType = ClientEntityConverter.ToClientType(criteria.EntityType);
+            Type entityType = ClientEntities.Find(criteria.EntityType).EntityType;
 
             var evm = UIModel.Views.Create(entityType, viewName);
 

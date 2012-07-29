@@ -21,12 +21,27 @@ namespace OEA.Module.WPF.Controls
 
         protected override Binding GenerateBindingFormat(string name, string stringformat)
         {
-            var binding = base.GenerateBindingFormat(name, stringformat);
+            //如果 stringformat 是空的，则使用默认的格式化。
             if (string.IsNullOrEmpty(stringformat))
             {
-                binding.StringFormat = "d";
+                var propertyMeta = this.Meta.PropertyMeta;
+                var meta = propertyMeta.ManagedProperty.GetMeta(propertyMeta.Owner.EntityType) as IPropertyMetadata;
+                switch (meta.DateTimePart)
+                {
+                    case DateTimePart.DateTime:
+                        break;
+                    case DateTimePart.Date:
+                        stringformat = "d";
+                        break;
+                    case DateTimePart.Time:
+                        stringformat = "t";
+                        break;
+                    default:
+                        break;
+                }
             }
-            return binding;
+
+            return base.GenerateBindingFormat(name, stringformat);
         }
     }
 }

@@ -43,8 +43,6 @@ namespace OEA.Module.WPF.Controls
 
             cellContainer.AppendChild(element);
 
-            cellContainer.SetValue(MTTGCell.ColumnProperty, column);
-
             return cellContainer;
         }
 
@@ -67,6 +65,7 @@ namespace OEA.Module.WPF.Controls
         public TreeColumn Column
         {
             get { return (TreeColumn)this.GetValue(ColumnProperty); }
+            set { this.SetValue(ColumnProperty, value); }
         }
 
         #endregion

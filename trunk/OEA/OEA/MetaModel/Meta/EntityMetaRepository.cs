@@ -122,7 +122,8 @@ namespace OEA.MetaModel
             var epm = new EntityPropertyMeta()
             {
                 Owner = em,
-                Runtime = new ManagedPropertyRuntime(mp.GetMetaPropertyName(em.EntityType), mp)
+                Runtime = new ManagedPropertyRuntime(mp.GetMetaPropertyName(em.EntityType), mp),
+                ManagedProperty = mp,
             };
             em.EntityProperties.Add(epm);
 
@@ -177,22 +178,6 @@ namespace OEA.MetaModel
             else
             {
                 entityMeta.EntityCategory = EntityCategory.Child;
-            }
-
-            #endregion
-
-            #region TableAttribute
-
-            var tableAttr = entityType.GetSingleAttribute<TableAttribute>();
-            if (tableAttr != null)
-            {
-                string name = tableAttr.Name;
-                if (string.IsNullOrEmpty(name)) name = entityType.Name;
-
-                entityMeta.TableMeta = new TableMeta(name)
-                {
-                    SupportMigrating = tableAttr.SupprtMigrating
-                };
             }
 
             #endregion
@@ -286,7 +271,6 @@ namespace OEA.MetaModel
 
             ReferenceInfo ri = null;
 
-            var lookupAttri = runtimeProperty.GetSingleAttribute<LookupAttribute>();
             var refMP = propertySource.MP as IOEARefProperty;
             if (refMP != null)
             {
@@ -295,16 +279,6 @@ namespace OEA.MetaModel
                 {
                     Type = refMeta.ReferenceType,
                     RefEntityProperty = refMeta.RefEntityProperty
-                };
-                if (lookupAttri != null) { ri.RefType = lookupAttri.LookupType; }
-            }
-            else if (lookupAttri != null)
-            {
-                ri = new ReferenceInfo()
-                {
-                    Type = lookupAttri.ReferenceType,
-                    RefEntityProperty = lookupAttri.LookupPropertyName,
-                    RefType = lookupAttri.LookupType
                 };
             }
 

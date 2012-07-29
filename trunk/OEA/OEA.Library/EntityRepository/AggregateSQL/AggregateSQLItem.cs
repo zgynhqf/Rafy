@@ -135,27 +135,6 @@ namespace OEA.Library
             }
         }
 
-        private IManagedProperty _cslaPropertyInfo;
-        public IManagedProperty CslaPropertyInfo
-        {
-            get
-            {
-                if (this._cslaPropertyInfo == null)
-                {
-                    var propertyName = this.PropertyInfo.Name;
-                    var property = this.OwnerRepository.GetAvailableIndicators()
-                       .FirstOrDefault(p => p.Name == propertyName);
-
-                    if (property == null) throw new NotSupportedException(
-@"没有找到对应的属性。
-可能原因是：只有子对象加载类型的加载选项才支持此属性，引用实体对象不使用CSLA属性进行设计。");
-
-                    this._cslaPropertyInfo = property;
-                }
-                return _cslaPropertyInfo;
-            }
-        }
-
         #endregion
     }
 

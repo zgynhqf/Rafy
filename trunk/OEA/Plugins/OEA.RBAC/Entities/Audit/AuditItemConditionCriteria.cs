@@ -115,6 +115,7 @@ namespace OEA.Library.Audit
         public static readonly Property<DateTime> StartTimeProperty =
             P<AuditItemConditionCriteria>.Register(e => e.StartTime, new PropertyMetadata<DateTime>
             {
+                DateTimePart = OEA.DateTimePart.Date,
                 PropertyChangingCallBack = (o, e) => (o as AuditItemConditionCriteria).OnStartTimeChanging(e)
             });
         public DateTime StartTime
@@ -133,6 +134,7 @@ namespace OEA.Library.Audit
         public static readonly Property<DateTime> EndTimeProperty =
             P<AuditItemConditionCriteria>.Register(e => e.EndTime, new PropertyMetadata<DateTime>
             {
+                DateTimePart = OEA.DateTimePart.Date,
                 PropertyChangingCallBack = (o, e) => (o as AuditItemConditionCriteria).OnEndTimeChanging(e)
             });
         public DateTime EndTime
@@ -152,7 +154,7 @@ namespace OEA.Library.Audit
     {
         protected override void ConfigView()
         {
-            View.ColumnsCountShowInDetail = 1;
+            View.HasDetailColumnsCount(1);
 
             using (View.OrderProperties())
             {

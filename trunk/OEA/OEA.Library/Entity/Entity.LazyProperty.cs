@@ -173,7 +173,7 @@ namespace OEA.Library
 
         bool IReferenceOwner.NotifyIdChanging(LazyEntityRefPropertyInfo refInfo, int newId)
         {
-            var meta = refInfo.CorrespondingManagedPropertyMeta(this);
+            var meta = refInfo.CorrespondingRefPropertyMeta(this);
             if (meta != null)
             {
                 var callBack = meta.IdChangingCallBack;
@@ -190,7 +190,7 @@ namespace OEA.Library
 
         bool IReferenceOwner.NotifyEntityChanging(LazyEntityRefPropertyInfo refInfo, Entity newEntity)
         {
-            var meta = refInfo.CorrespondingManagedPropertyMeta(this);
+            var meta = refInfo.CorrespondingRefPropertyMeta(this);
             if (meta != null)
             {
                 var callBack = meta.EntityChangingCallBack;
@@ -215,14 +215,22 @@ namespace OEA.Library
         {
             this.MarkModified();
 
-            var meta = refInfo.CorrespondingManagedPropertyMeta(this);
-            if (meta != null)
+            var mp = refInfo.CorrespondingRefProperty(this);
+            if (mp != null)
             {
+                var meta = mp.GetMeta(this) as IRefPropertyMetadata;
                 var callBack = meta.IdChangedCallBack;
                 if (callBack != null) callBack(this, new RefIdChangedEventArgs(oldId, newId));
-            }
 
-            this.OnPropertyChanged(refInfo.IdProperty);
+                this.OnPropertyChanged(refInfo.IdProperty);
+
+                //id 变化的时候，直接看作是 RefProperty 在改变。
+                this.OnPropertyChanged(mp);
+            }
+            else
+            {
+                this.OnPropertyChanged(refInfo.IdProperty);
+            }
         }
 
         /// <summary>
@@ -235,7 +243,7 @@ namespace OEA.Library
         {
             if (refInfo.NotifyRefEntityChanged)
             {
-                var meta = refInfo.CorrespondingManagedPropertyMeta(this);
+                var meta = refInfo.CorrespondingRefPropertyMeta(this);
                 if (meta != null)
                 {
                     var callBack = meta.EntityChangedCallBack;

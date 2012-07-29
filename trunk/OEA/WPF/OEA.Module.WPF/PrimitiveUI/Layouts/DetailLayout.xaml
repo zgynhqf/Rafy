@@ -7,10 +7,10 @@
     xmlns:av="http://schemas.codeplex.com/wpfcontrib/xaml/presentation"
     xmlns:ad="clr-namespace:AvalonDock;assembly=AvalonDock">
     <ad:ResizingPanel Name="container">
-        <StackPanel Name="detail">
-            <ContentControl x:Name="toolBarContainer"/>
+        <DockPanel Name="detail">
+            <ContentControl DockPanel.Dock="Top" x:Name="toolBarContainer"/>
             <ContentControl Name="result"/>
-        </StackPanel>
+        </DockPanel>
         <TabControl Name="childrenTab"/>
     </ad:ResizingPanel>
 </UserControl>

@@ -63,13 +63,16 @@ namespace OEA.ManagedProperty
         /// <returns></returns>
         private static IEnumerable<Type> SearchAllDeclaringTypes(IEnumerable<Assembly> assemblies)
         {
-            var baseType = typeof(IManagedPropertyDeclarer);
             foreach (var assembly in assemblies)
             {
-                var configTypes = assembly.GetTypes()
-                    .Where(t => baseType.IsAssignableFrom(t));
-
-                foreach (var configType in configTypes) { yield return configType; }
+                foreach (var configType in assembly.GetTypes())
+                {
+                    if (Attribute.IsDefined(configType,
+                        typeof(CompiledPropertyDeclarerAttribute), true))
+                    {
+                        yield return configType;
+                    }
+                }
             }
         }
 

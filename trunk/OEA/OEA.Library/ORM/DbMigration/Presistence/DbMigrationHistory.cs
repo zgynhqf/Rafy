@@ -7,7 +7,7 @@ using OEA.Library;
 using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
 
-namespace OEA.Library.ORM.DbMigration.Presistence
+namespace OEA.ORM.DbMigration.Presistence
 {
     [Serializable]
     [RootEntity]
@@ -25,8 +25,11 @@ namespace OEA.Library.ORM.DbMigration.Presistence
             set { this.SetProperty(DatabaseProperty, value); }
         }
 
-        public static readonly Property<DateTime> TimeIdProperty = P<DbMigrationHistory>.Register(e => e.TimeId);
-        public DateTime TimeId
+        public static readonly Property<long> TimeIdProperty = P<DbMigrationHistory>.Register(e => e.TimeId);
+        /// <summary>
+        /// SqlCE 数据库的 DateTime 类型的精度不够，会造成数据丢失，使得历史记录的时间对比出错。
+        /// </summary>
+        public long TimeId
         {
             get { return this.GetProperty(TimeIdProperty); }
             set { this.SetProperty(TimeIdProperty, value); }
@@ -88,7 +91,7 @@ namespace OEA.Library.ORM.DbMigration.Presistence
         {
             base.ConfigMeta();
 
-            Meta.MapTable().HasColumns(
+            Meta.MapTable().MapProperties(
                 DbMigrationHistory.DatabaseProperty,
                 DbMigrationHistory.TimeIdProperty,
                 DbMigrationHistory.IsGeneratedProperty,

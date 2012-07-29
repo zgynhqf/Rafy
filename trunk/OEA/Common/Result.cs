@@ -12,6 +12,14 @@ namespace hxy.Common
     [DataContract, Serializable]
     public struct Result
     {
+        public static int SuccessStatusCode = -12345;
+
+        public static int FailedStatusCode = -54321;
+
+        public static string SuccessMessage = "操作成功！";
+
+        public static string FailedMessage = "操作失败！";
+
         /// <summary>
         /// Message=string.Empty
         /// </summary>
@@ -20,13 +28,13 @@ namespace hxy.Common
         {
             if (success)
             {
-                this._statusCode = 1;
-                this._message = "操作成功！";
+                this._statusCode = SuccessStatusCode;
+                this._message = SuccessMessage;
             }
             else
             {
-                this._statusCode = 0;
-                this._message = "操作失败！";
+                this._statusCode = FailedStatusCode;
+                this._message = FailedMessage;
             }
         }
 
@@ -60,6 +68,12 @@ namespace hxy.Common
             this._message = message;
         }
 
+        public Result(Enum statusCode, string message)
+        {
+            this._statusCode = Convert.ToInt32(statusCode);
+            this._message = message;
+        }
+
         private int _statusCode;
 
         private string _message;
@@ -73,11 +87,11 @@ namespace hxy.Common
         {
             get
             {
-                return _statusCode == 1;
+                return _statusCode == SuccessStatusCode;
             }
             set
             {
-                _statusCode = value ? 1 : 0;
+                _statusCode = value ? SuccessStatusCode : FailedStatusCode;
             }
         }
 
@@ -126,6 +140,19 @@ namespace hxy.Common
             return new Result(value);
         }
 
+        public static implicit operator Result(int statusCode)
+        {
+            var msg = statusCode == SuccessStatusCode ? SuccessMessage : FailedMessage;
+            return new Result(statusCode, msg);
+        }
+
+        public static implicit operator Result(Enum statusCode)
+        {
+            var iStatusCode = Convert.ToInt32(statusCode);
+            var msg = iStatusCode == SuccessStatusCode ? SuccessMessage : FailedMessage;
+            return new Result(statusCode, msg);
+        }
+
         public static implicit operator Result(string error)
         {
             return new Result(false, error);
@@ -134,6 +161,16 @@ namespace hxy.Common
         public static implicit operator bool(Result res)
         {
             return res.Success;
+        }
+
+        /// <summary>
+        /// Indicates whether this instance's StatusCode and a specified object's StatusCode are equal.
+        /// </summary>
+        /// <param name="another"></param>
+        /// <returns></returns>
+        public bool StatusEquals(Result another)
+        {
+            return this._statusCode == another._statusCode;
         }
     }
 }

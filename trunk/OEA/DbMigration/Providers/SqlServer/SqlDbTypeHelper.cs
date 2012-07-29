@@ -52,7 +52,7 @@ namespace DbMigration.SqlServer
                 default:
                     break;
             }
-            throw new NotSupportedException();
+            throw new NotSupportedException(string.Format("不支持以下列类型：{0}", fieldType));
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace DbMigration.SqlServer
                 case "money":
                     return DbType.Double;
                 default:
-                    throw new NotSupportedException();
+                    throw new NotSupportedException(string.Format("不支持以下列类型：{0}", sqlType));
             }
         }
     }

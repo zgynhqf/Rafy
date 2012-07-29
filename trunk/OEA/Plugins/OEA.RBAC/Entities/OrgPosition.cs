@@ -51,21 +51,13 @@ namespace OEA.RBAC
         public Position Position
         {
             get { return this.GetRefEntity(PositionRefProperty); }
-            set
-            {
-                this.SetRefEntity(PositionRefProperty, value);
-                this.OnPropertyChanged("Position");
-                this.OnPropertyChanged("View_Code");
-                this.OnPropertyChanged("View_Name");
-                this.OnPropertyChanged("View_UseTime");
-                this.OnPropertyChanged("View_CycleType");
-                this.OnPropertyChanged("View_LoginTotalCount");
-            }
+            set { this.SetRefEntity(PositionRefProperty, value); }
         }
 
         #region 视图属性
 
-        public static readonly Property<string> View_CodeProperty = P<OrgPosition>.RegisterReadOnly(e => e.View_Code, e => (e as OrgPosition).GetView_Code(), null);
+        public static readonly Property<string> View_CodeProperty = P<OrgPosition>.RegisterReadOnly(
+            e => e.View_Code, e => (e as OrgPosition).GetView_Code(), PositionRefProperty);
         public string View_Code
         {
             get { return this.GetProperty(View_CodeProperty); }
@@ -75,7 +67,8 @@ namespace OEA.RBAC
             return this.Position.Code;
         }
 
-        public static readonly Property<string> View_NameProperty = P<OrgPosition>.RegisterReadOnly(e => e.View_Name, e => (e as OrgPosition).GetView_Name(), null);
+        public static readonly Property<string> View_NameProperty = P<OrgPosition>.RegisterReadOnly(
+            e => e.View_Name, e => (e as OrgPosition).GetView_Name(), PositionRefProperty);
         public string View_Name
         {
             get { return this.GetProperty(View_NameProperty); }
@@ -138,7 +131,7 @@ namespace OEA.RBAC
         {
             base.ConfigMeta();
 
-            Meta.MapTable().HasColumns(
+            Meta.MapTable().MapProperties(
                 OrgPosition.PositionRefProperty,
                 OrgPosition.OrgRefProperty
                 );

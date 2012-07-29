@@ -62,6 +62,9 @@ namespace OEA
         /// </summary>
         CheckingMode CheckingMode { get; set; }
 
+        /// <summary>
+        /// 视图的过滤器
+        /// </summary>
         Predicate<Entity> Filter { get; set; }
     }
 
@@ -76,12 +79,7 @@ namespace OEA
         None,
 
         /// <summary>
-        /// 使用 CheckBox 进行选择，并双向绑定到数据的 IsSelected 属性上。
-        /// </summary>
-        CheckingViewModel,
-
-        /// <summary>
-        /// 使用 CheckBox 进行选择，并双向绑定到行的 IsSelected 属性上。
+        /// 使用 CheckBox 进行选择，并双向绑定到行的 IsChecked 属性上。
         /// </summary>
         CheckingRow
     }

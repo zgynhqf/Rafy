@@ -21,6 +21,7 @@ using OEA.Web.Json;
 using OEA.Web.EntityDataPortal;
 using OEA.Library;
 using OEA.Reflection;
+using OEA.MetaModel.View;
 
 namespace OEA.Web
 {
@@ -44,10 +45,38 @@ namespace OEA.Web
             if (serviceType == null) throw new InvalidOperationException();
 
             var service = Activator.CreateInstance(serviceType) as IService;
+            var properties = serviceType.GetProperties();
 
-            //参数输入
+            SetInputProperties(service, jsonInput, properties);
+
+            var res = new DynamicJsonModel();
+            try
+            {
+                //调用服务
+                service.Invoke();
+            }
+            catch (Exception ex)
+            {
+                res.SetProperty("success", false);
+                res.SetProperty("msg", ex.Message);
+                return res.ToJsonString();
+            }
+
+            //结果输出
+            ReadOutputProperties(service, properties, res);
+
+            return res.ToJsonString();
+        }
+
+        /// <summary>
+        /// 参数输入
+        /// </summary>
+        /// <param name="service"></param>
+        /// <param name="jsonInput"></param>
+        /// <param name="properties"></param>
+        private static void SetInputProperties(IService service, string jsonInput, System.Reflection.PropertyInfo[] properties)
+        {
             var jInput = JObject.Parse(jsonInput);
-            var properties = service.GetType().GetProperties();
             foreach (var property in properties)
             {
                 if (property.HasMarked<ServiceInputAttribute>())
@@ -75,8 +104,11 @@ namespace OEA.Web
                             var isEntity = jEntityList.Property("_isEntityHost") != null;
                             if (isEntity)
                             {
-                                var entity = list[0];
-                                property.SetValue(service, entity, null);
+                                if (list.Count > 0)
+                                {
+                                    var entity = list[0];
+                                    property.SetValue(service, entity, null);
+                                }
                             }
                             else
                             {
@@ -86,36 +118,51 @@ namespace OEA.Web
                     }
                 }
             }
+        }
 
-            var res = new DynamicJsonModel();
-            try
-            {
-                //调用服务
-                service.Invoke();
-            }
-            catch (Exception ex)
-            {
-                res.SetProperty("success", false);
-                res.SetProperty("msg", ex.Message);
-                return res.ToJsonString();
-            }
-
-            //结果输出
+        /// <summary>
+        /// 结果输出
+        /// </summary>
+        /// <param name="service"></param>
+        /// <param name="properties"></param>
+        /// <param name="res"></param>
+        private static void ReadOutputProperties(IService service, System.Reflection.PropertyInfo[] properties, DynamicJsonModel res)
+        {
             foreach (var property in properties)
             {
                 var output = property.GetSingleAttribute<ServiceOutputAttribute>();
                 if (output != null && output.OutputToWeb)
                 {
                     var value = property.GetValue(service, null);
+
+                    if (value is EntityList)
+                    {
+                        var list = value as EntityList;
+
+                        //TODO：这里可能存在问题：当一个非默认的视图请求这个服务得到一个默认视图的实体数据时，可能会因为列不一致而出现问题。
+                        var defaultVM = UIModel.Views.CreateDefaultView(list.EntityType);
+
+                        var listRes = new EntityJsonList();
+                        EntityJsonConverter.EntityToJson(defaultVM, list, listRes.entities);
+                        listRes.total = listRes.entities.Count;
+                        value = listRes;
+                    }
+                    else if (value is Entity)
+                    {
+                        throw new NotImplementedException();//huqf
+                    }
+
                     res.SetProperty(property.Name, value);
                 }
             }
-
-            return res.ToJsonString();
         }
+
+        #region 加载所有可用的类型
 
         internal static void LoadAllServices()
         {
+            Add(typeof(GetCustomDataSourceService));
+
             foreach (var lib in OEAEnvironment.GetAllLibraries()) { AddByAssembly(lib.Assembly); }
         }
 
@@ -136,5 +183,7 @@ namespace OEA.Web
 
             _services[name] = serviceType;
         }
+
+        #endregion
     }
 }

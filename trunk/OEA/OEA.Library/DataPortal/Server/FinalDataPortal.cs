@@ -48,7 +48,7 @@ namespace OEA.Server
             }
             else if (obj is Service)
             {
-                (obj as Service).ExecuteInternal();
+                (obj as Service).ExecuteByDataPortal();
             }
             else if (obj is EntityList)
             {

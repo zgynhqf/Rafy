@@ -156,29 +156,15 @@ namespace OEA.Web.ClientMetaModel
                     //对于引用属性需要分开来特殊处理
                     if (!property.IsReference)
                     {
-                        var ct = ServerTypeHelper.GetServerType(property.PropertyMeta.Runtime.PropertyType);
-
                         column.dataIndex = property.Name;
 
-                        if (canEdit) { column.editor = ServerTypeHelper.GetTypeEditor(ct); }
+                        if (canEdit) { column.editor = ServerTypeHelper.GetTypeEditor(property); }
                     }
                     else
                     {
-                        var ct = ServerTypeHelper.GetServerType(typeof(int));
-                        ct.JSType = JavascriptType.Reference;
-
                         column.dataIndex = EntityModelGenerator.LabeledRefProperty(property.Name);
 
-                        if (canEdit)
-                        {
-                            column.editor = ServerTypeHelper.GetTypeEditor(ct);
-
-                            var model = ClientEntities.GetClientName(property.ReferenceViewInfo.RefType);
-                            column.editor.SetProperty("model", model);
-
-                            var title = property.ReferenceViewInfo.RefTypeDefaultView.TitleProperty;
-                            if (title != null) { column.editor.SetProperty("displayField", title.Name); }
-                        }
+                        if (canEdit) { column.editor = ServerTypeHelper.CreateComboList(property); }
                     }
 
                     grid.columns.Add(column);
@@ -206,38 +192,29 @@ namespace OEA.Web.ClientMetaModel
                 {
                     bool isReadonly = this.Option.isReadonly || property.IsReadonly || evm.NotAllowEdit;
 
+                    FieldConfig field = null;
+
                     //对于引用属性需要分开来特殊处理
                     if (!property.IsReference)
                     {
-                        var ct = ServerTypeHelper.GetServerType(property.PropertyMeta.Runtime.PropertyType);
-
-                        var field = ServerTypeHelper.GetTypeEditor(ct);
+                        field = ServerTypeHelper.GetTypeEditor(property);
                         field.name = property.Name;
-                        field.fieldLabel = property.Label;
-                        field.anchor = "100%";
-                        field.isReadonly = isReadonly;
-
-                        form.items.Add(field);
                     }
                     else
                     {
-                        var ct = ServerTypeHelper.GetServerType(typeof(int));
-                        ct.JSType = JavascriptType.Reference;
-
-                        var field = ServerTypeHelper.GetTypeEditor(ct);
+                        field = ServerTypeHelper.CreateComboList(property);
                         field.name = EntityModelGenerator.LabeledRefProperty(property.Name);
-                        field.fieldLabel = property.Label;
-                        field.anchor = "100%";
-                        field.isReadonly = isReadonly;
-
-                        var model = ClientEntities.GetClientName(property.ReferenceViewInfo.RefType);
-                        field.SetProperty("model", model);
-
-                        var title = property.ReferenceViewInfo.RefTypeDefaultView.TitleProperty;
-                        if (title != null) { field.SetProperty("displayField", title.Name); }
-
-                        form.items.Add(field);
                     }
+
+                    field.fieldLabel = property.Label;
+                    field.anchor = "100%";
+                    field.isReadonly = isReadonly;
+                    if (property.VisibilityIndicator.IsDynamic)
+                    {
+                        field.visibilityIndicator = property.VisibilityIndicator.Property.Name;
+                    }
+
+                    form.items.Add(field);
                 }
             }
 

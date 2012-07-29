@@ -20,11 +20,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using Itenso.Windows.Input;
+using OEA.WPF.Command;
 using OEA.Library;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
-using OEA.WPF.Command;
 using Wpf.Controls;
 
 namespace OEA.Module.WPF.CommandAutoUI

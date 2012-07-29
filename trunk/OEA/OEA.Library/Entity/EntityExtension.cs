@@ -33,30 +33,6 @@ namespace OEA.Library
         }
 
         /// <summary>
-        /// 尝试重设 Entity 的 ParentEntity 属性。
-        /// 逻辑如下：
-        /// 尝试把 Entity.ParentList.Parent 属性中的值，调用 SetParentEntity 方法设置为当前对象的父属性。
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        public static bool ResetParentEntity(this Entity entity)
-        {
-            var parentList = entity.ParentList;
-            if (parentList != null)
-            {
-                var parentEntity = parentList.Parent;
-                if (parentEntity != null)
-                {
-                    //有 ParentList.Parent 属性，则必然有 ParentProperty，所以可以直接调用以下方法进行设置。
-                    entity.SetParentEntity(parentEntity);
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
         /// 创建一个列表。
         /// 列表的数据来自于 srcList 中的所有项。
         /// </summary>

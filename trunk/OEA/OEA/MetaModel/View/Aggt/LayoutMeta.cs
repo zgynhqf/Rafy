@@ -8,7 +8,6 @@ namespace OEA.MetaModel.View
     public class LayoutMeta
     {
         public LayoutMeta(string layoutClass)
-            : this()
         {
             this.Class = layoutClass;
         }
@@ -28,15 +27,12 @@ namespace OEA.MetaModel.View
         /// <summary>
         /// 本构造函数是 WPF 专用
         /// </summary>
-        /// <param name="layoutMethodType">
-        /// 该类需要继承自 LayoutMethod，一般情况下，只需要使用 TraditionalLayoutMethod 泛型类即可。
-        /// </param>
-        public LayoutMeta(Type layoutMethodType)
-            : this()
+        /// <param name="layoutControl"> 该类型需要实现 ILayoutControl 接口 </param>
+        public LayoutMeta(Type layoutControl)
         {
             if (OEAEnvironment.IsWPF)
             {
-                this.Class = layoutMethodType.AssemblyQualifiedName;
+                this.Class = layoutControl.AssemblyQualifiedName;
             }
         }
 

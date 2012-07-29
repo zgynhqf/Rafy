@@ -22,7 +22,7 @@ namespace OEA.Web.ClientMetaModel
     /// <summary>
     /// 下拉框编辑器的配置
     /// </summary>
-    internal abstract class ComboBoxConfig : FieldConfig
+    public abstract class ComboBoxConfig : FieldConfig
     {
         public ComboBoxConfig()
         {

@@ -43,9 +43,9 @@ namespace DbMigration.SqlServer
                     string tableName = reader["TABLE_NAME"].ToString();
                     string tableType = reader["TABLE_TYPE"].ToString().ToLower();
 
-                    //SqlServer 中是 "BASE TABLE"
+                    //SqlServer 中是 "BASE TABLE"，同时还会把一些系统表也查询出来，例如：sysdiagrams
                     //SQLCE 中是 "TABLE"
-                    if (tableType.Contains("table"))
+                    if (tableType.Contains("table") && !tableName.StartsWith("sys"))
                     {
                         //string schemaName = reader["SCHEMA_NAME"].ToString();
 

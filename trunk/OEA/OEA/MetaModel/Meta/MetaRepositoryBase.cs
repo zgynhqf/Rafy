@@ -5,6 +5,7 @@ using System.Text;
 using System.Collections;
 using OEA.MetaModel.Attributes;
 using OEA.ManagedProperty;
+using System.Reflection;
 
 namespace OEA.MetaModel
 {
@@ -90,9 +91,7 @@ namespace OEA.MetaModel
             //通过反射属性列表构建属性元数据列表
             var entityType = entityMeta.EntityType;
             var properties = entityType.GetProperties();
-            var list = properties
-                .Where(property => property.HasMarked<EntityPropertyAttribute>())
-                .ToList();
+            var list = new List<PropertyInfo>();
 
             //对于使用托管属性编写，而没有标记 EntityPropertyAttribute 的托管属性，也创建它对应的元数据。
             var managedProperties = entityMeta.ManagedProperties.GetCompiledProperties();
@@ -102,7 +101,7 @@ namespace OEA.MetaModel
                 {
                     var name = mp.GetMetaPropertyName(entityType);
                     var property = properties.FirstOrDefault(i => i.Name == name);
-                    if (!(mp is IListProperty) && property != null && !property.HasMarked<EntityPropertyAttribute>())
+                    if (!(mp is IListProperty) && property != null)
                     {
                         list.Add(property);
                     }
@@ -134,17 +133,17 @@ namespace OEA.MetaModel
         {
             var entityType = entityMeta.EntityType;
             var properties = entityType.GetProperties();
-            var list = properties.Where(property => property.HasMarked<AssociationAttribute>()).ToList();
+            var list = new List<PropertyInfo>();
 
             //对于使用托管属性编写，而没有标记 AssociationAttribute 的托管属性，也创建它对应的元数据。
-            var managedProperties = entityMeta.ManagedProperties.GetCompiledProperties();
+            var managedProperties = entityMeta.ManagedProperties.GetNonReadOnlyCompiledProperties();
             foreach (var mp in managedProperties)
             {
                 if (!mp.IsExtension)
                 {
                     var name = mp.GetMetaPropertyName(entityType);
                     var property = properties.FirstOrDefault(i => i.Name == name);
-                    if ((mp is IListProperty) && property != null && !property.HasMarked<AssociationAttribute>())
+                    if ((mp is IListProperty) && property != null)
                     {
                         list.Add(property);
                     }

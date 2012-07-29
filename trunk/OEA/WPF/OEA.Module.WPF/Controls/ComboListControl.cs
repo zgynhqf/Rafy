@@ -30,7 +30,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using Itenso.Windows.Input;
+using OEA.WPF.Command;
 using OEA.Editors;
 using OEA.Library;
 using OEA.MetaModel;
@@ -217,8 +217,6 @@ namespace OEA.Module.WPF.Controls
 
         private void InitLazyFilter()
         {
-            if (!this.TextFilterEnabled) { return; }
-
             //定时器延迟时间 800
             this._lazyFilterInterval = new Timer(800);
             this._lazyFilterInterval.AutoReset = false;

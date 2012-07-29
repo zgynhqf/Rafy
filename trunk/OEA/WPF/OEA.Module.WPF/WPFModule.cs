@@ -14,28 +14,26 @@
 using System;
 using System.Data.SqlClient;
 using Common;
-using Itenso.Windows.Input;
+using OEA.WPF.Command;
 using OEA.Library;
 using OEA.MetaModel;
-
 using OEA.MetaModel.View;
-using OEA.WPF.Command;
 using OEA.WPF;
-using OEA.Library.ORM.DbMigration;
+using OEA.ORM.DbMigration;
 
 namespace OEA.Module.WPF
 {
     /// <summary>
     /// 当前工程所对应的模块类。
     /// </summary>
-    internal class WPFModule : IModule
+    internal class WPFModule : ModulePlugin
     {
-        public ReuseLevel ReuseLevel
+        public override ReuseLevel ReuseLevel
         {
-            get { return ReuseLevel.Main; }
+            get { return ReuseLevel._System; }
         }
 
-        public void Initialize(IClientApp app)
+        public override void Initialize(IClientApp app)
         {
             //初始化命令列表
             WPFCommandNames.CustomizeUI = typeof(CustomizeUI);
@@ -68,34 +66,50 @@ namespace OEA.Module.WPF
             app.LoginSuccessed += (s, e) => App.Current.InitUIModuleList();
 
             //只有单机版会执行这里的代码
-            app.DbMigratingOperations += (o, e) =>
+            app.DbMigratingOperations += (o, e) => { MigrateDbInProgress(); };
+        }
+
+        private static void MigrateDbInProgress()
+        {
+            //根据两种不同的配置名称来判断是否打开 Drop 功能
+            bool runDataLossOperation = false;
+            var configNames = ConfigurationHelper.GetAppSettingOrDefault("OEA_AutoMigrate_Databases_WithoutDropping");
+            if (string.IsNullOrEmpty(configNames))
             {
-                var configNames = ConfigurationHelper.GetAppSettingOrDefault("OEA_Migrate_Databases");
-                if (!string.IsNullOrEmpty(configNames))
+                configNames = ConfigurationHelper.GetAppSettingOrDefault("OEA_AutoMigrate_Databases");
+                if (!string.IsNullOrEmpty(configNames)) { runDataLossOperation = true; }
+            }
+
+            if (!string.IsNullOrEmpty(configNames))
+            {
+                var configArray = configNames.Replace(ConnectionStringNames.DbMigrationHistory, string.Empty)
+                   .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+                MigrationWithProgressBar.Do(ConnectionStringNames.DbMigrationHistory, c =>
                 {
-                    MigrationWithProgressBar.Do(ConnectionStringNames.DbMigrationHistory, c =>
+                    //对于迁移日志库的构造，无法记录它本身的迁移日志
+                    c.HistoryRepository = null;
+
+                    c.AutoMigrate();
+                });
+
+                foreach (var config in configArray)
+                {
+                    //using (var c = new OEADbMigrationContext(config))
+                    //{
+                    //    c.RollbackAll();
+                    //    c.ResetHistory();
+                    //    c.ResetDbVersion();
+                    //    c.AutoMigrate();
+                    //}
+                    MigrationWithProgressBar.Do(config, c =>
                     {
-                        //对于迁移日志库的构造，无法记录它本身的迁移日志
-                        c.HistoryRepository = null;
+                        c.RunDataLossOperation = runDataLossOperation;
 
                         c.AutoMigrate();
                     });
-
-                    var configArray = configNames.Replace(ConnectionStringNames.DbMigrationHistory, string.Empty)
-                        .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                    foreach (var config in configArray)
-                    {
-                        //using (var c = new OEADbMigrationContext(config))
-                        //{
-                        //    c.RollbackAll();
-                        //    c.ResetHistory();
-                        //    c.ResetDbVersion();
-                        //    c.AutoMigrate();
-                        //}
-                        MigrationWithProgressBar.Do(config, c => c.AutoMigrate());
-                    }
                 }
-            };
+            }
         }
     }
 }

@@ -61,13 +61,14 @@
     <Compile Include="Convensions\IHasViewFilter.cs" />
     <Compile Include="Convensions\MethodConvention.cs" />
     <Compile Include="Convensions\PropertyConvention.cs" />
+    <Compile Include="DateTimePart.cs" />
     <Compile Include="EnumViewModel.cs" />
     <Compile Include="Freezable.cs" />
     <Compile Include="FriendlyMessageException.cs" />
     <Compile Include="EnvironmentProvider.cs" />
     <Compile Include="IClientApp.cs" />
-    <Compile Include="ILibrary.cs" />
-    <Compile Include="IModule.cs" />
+    <Compile Include="LibraryPlugin.cs" />
+    <Compile Include="Module.cs" />
     <Compile Include="IPlugin.cs" />
     <Compile Include="IPropertyMetadata.cs" />
     <Compile Include="IService.cs" />
@@ -76,7 +77,6 @@
     <Compile Include="ManagedProperty\IOEARefProperty.cs" />
     <Compile Include="ManagedProperty\IOEARefPropertyMetadata.cs" />
     <Compile Include="ManagedProperty\OEARefPropertyExtension.cs" />
-    <Compile Include="MetaModel\Attributes\CanAddMethodAttribute.cs" />
     <Compile Include="MetaModel\Attributes\Command\CommandAttribute.cs" />
     <Compile Include="MetaModel\Attributes\Entity\ChildEntityAttribute.cs" />
     <Compile Include="MetaModel\Attributes\Entity\ConditionQueryTypeAttribute.cs" />
@@ -85,10 +85,6 @@
     <Compile Include="MetaModel\Attributes\Entity\QueryEntityAttribute.cs" />
     <Compile Include="MetaModel\Attributes\Entity\NavigationQueryTypeAttribute.cs" />
     <Compile Include="MetaModel\Attributes\Entity\ORM\ColumnAttribute.cs" />
-    <Compile Include="MetaModel\Attributes\Entity\ORM\TableAttribute.cs" />
-    <Compile Include="MetaModel\Attributes\Entity\Property\AssociationAttribute.cs" />
-    <Compile Include="MetaModel\Attributes\Entity\Property\EntityPropertyAttribute.cs" />
-    <Compile Include="MetaModel\Attributes\Entity\Property\LookupAttribute.cs" />
     <Compile Include="MetaModel\Attributes\Entity\RootEntityAttribute.cs" />
     <Compile Include="MetaModel\Attributes\Enums.cs" />
     <Compile Include="MetaModel\Attributes\LabelAttribute.cs" />
@@ -173,9 +169,9 @@
     <Compile Include="Utils\CompactMessageEncoder\CompactMessageEncoderFactory.cs" />
     <Compile Include="Utils\CompactMessageEncoder\CompactMessageEncodingBindingElement.cs" />
     <Compile Include="Utils\CompactMessageEncoder\CompactMessageEncodingElement.cs" />
-    <Compile Include="Utils\DateRange.cs" />
+    <Compile Include="DateRange.cs" />
     <Compile Include="Utils\EmitContext.cs" />
-    <Compile Include="Utils\NumberRange.cs" />
+    <Compile Include="NumberRange.cs" />
     <Compile Include="Utils\PathHelper.cs" />
     <Compile Include="Utils\SDBCConvert.cs" />
     <Compile Include="Utils\StringHelper.cs" />
@@ -196,8 +192,13 @@
     <Content Include="_OEA Version Logs\2.5-2.6.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="_CodeSnippets\OEA_PropertyReferenceNullableFast.snippet" />
+    <None Include="_CodeSnippets\OEA_PropertyExtension.snippet">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="_CodeSnippets\OEA_Entity_Criteria.snippet" />
     <None Include="_CodeSnippets\OEA_PropertyList_Full.snippet" />
+    <None Include="_CodeSnippets\OEA_PropertyReferenceFast.snippet" />
     <None Include="_CodeSnippets\OEA_PropertyReferenceNullable.snippet" />
     <None Include="_CodeSnippets\UIA_InTab.snippet" />
     <None Include="_CodeSnippets\UIA_InWindow.snippet" />

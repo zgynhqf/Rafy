@@ -1,78 +1,42 @@
-﻿// -- FILE ------------------------------------------------------------------
-// name       : CommandImageService.cs
-// created    : Jani Giannoudis - 2008.04.15
-// language   : c#
-// environment: .NET 3.0
-// --------------------------------------------------------------------------
+﻿/*******************************************************
+ * 
+ * 作者：http://www.codeproject.com/Articles/25445/WPF-Command-Pattern-Applied
+ * 创建时间：周金根 2009
+ * 说明：此文件只包含一个类，具体内容见类型注释。
+ * 运行环境：.NET 4.0
+ * 版本号：1.0.0
+ * 
+ * 历史记录：
+ * 创建文件 周金根 2009
+ * 重新整理 胡庆访 20120518
+ * 
+*******************************************************/
+
 using System;
 using System.Windows;
 using System.Windows.Input;
 using OEA.WPF.Command;
 
-namespace Itenso.Windows.Input
+namespace OEA.WPF.Command
 {
-
-    // ------------------------------------------------------------------------
     public static class CommandImageService
     {
-
-        // ----------------------------------------------------------------------
-        public static string ImagePath
+        public static Uri GetCommandImageUri(UICommand command)
         {
-            get { return imagePath; }
-            set { imagePath = value; }
-        } // ImagePath
+            if (command == null) { throw new ArgumentNullException("command"); }
 
-        // ----------------------------------------------------------------------
-        public static string ImageExtension
-        {
-            get { return imageExtension; }
-            set { imageExtension = value; }
-        } // ImageExtension
-
-        // ----------------------------------------------------------------------
-        public static Uri GetCommandImageUri(Command command)
-        {
-            if (command == null)
+            var core = command.CoreCommand;
+            var imgName = core.CommandInfo.ImageName;
+            if (!string.IsNullOrEmpty(imgName))
             {
-                throw new ArgumentNullException("command");
-            }
-
-            if (!command.HasImage)
-            {
-                return null;
-            }
-
-            Uri imageUri = command.ImageUri;
-            if (imageUri != null)
-            {
-                return imageUri;
-            }
-
-            string imageSource = command.GetType().Assembly.GetName().Name;
-            if (command is CommandAdapter)
+                //图片应该是放在 CoreCommand 的程序集的 Images 文件夹中。
+                string cmdAssembly = core.GetType().Assembly.GetName().Name;
                 return new Uri(string.Concat(
-              "pack://application:,,,/",
-              imageSource,
-              ";Component/",
-              imagePath,
-              (command as CommandAdapter).CoreCommand.CommandInfo.ImageName));
-            else
-                return new Uri(string.Concat(
-                  "pack://application:,,,/",
-                  imageSource,
-                  ";Component/",
-                  imagePath,
-                  command.Name,
-                  imageExtension));
-        } // GetCommandImageUri
+                    "pack://application:,,,/", cmdAssembly, ";Component/Images/", imgName
+                    ));
+            }
 
-        // ----------------------------------------------------------------------
-        // members
-        private static string imagePath = "Images/";
-        private static string imageExtension = ".bmp";
-
-    } // class CommandImageService
-
-} // namespace Itenso.Windows.Input
-// -- EOF -------------------------------------------------------------------
+            return null;
+        }
+    }
+}

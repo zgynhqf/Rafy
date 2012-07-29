@@ -293,7 +293,7 @@ namespace OEA.Library
         /// 如果需要把子对象的数据也加入进来，请使用本方法的另一重载。
         /// </summary>
         /// <param name="table"></param>
-        internal protected void ReadFromTable(IDbTable table)
+        internal protected void ReadFromTable(IDataTable table)
         {
             this.ReadFromTable(table, null);
         }
@@ -314,7 +314,7 @@ namespace OEA.Library
         /// IGTable：在这些行中加载所有子对象的数据
         /// 返回TEntity：加载完毕孩子后的实体对象。
         /// </param>
-        internal protected void ReadFromTable(IDbTable table, Action<Entity, IDbTable> relationLoader)
+        internal protected void ReadFromTable(IDataTable table, Action<Entity, IDataTable> relationLoader)
         {
             EntityListHelper.ReadFromTable(this, table, relationLoader);
         }
@@ -404,7 +404,7 @@ namespace OEA.Library
         /// 为每个TEntity调用此方法，从IGTable中加载它对应的孩子对象。
         /// 加载完成后的对象会被加入到list中，所以此方法有可能返回一个全新的TEntity。
         /// </param>
-        public static void ReadFromTable(this EntityList list, IDbTable table, Action<Entity, IDbTable> relationLoader)
+        public static void ReadFromTable(this EntityList list, IDataTable table, Action<Entity, IDataTable> relationLoader)
         {
             list.RaiseListChangedEvents = false;
             var entityType = list.EntityType;
@@ -461,7 +461,7 @@ namespace OEA.Library
         /// <param name="endRow"></param>
         /// <param name="relationLoader"></param>
         /// <returns></returns>
-        private static Entity CreateEntity(Type entityType, IDbTable table, int startRow, int endRow, Action<Entity, IDbTable> relationLoader)
+        private static Entity CreateEntity(Type entityType, IDataTable table, int startRow, int endRow, Action<Entity, IDataTable> relationLoader)
         {
             //新的TEntity
             var entity = RF.Create(entityType).GetFromRow(table[startRow]);

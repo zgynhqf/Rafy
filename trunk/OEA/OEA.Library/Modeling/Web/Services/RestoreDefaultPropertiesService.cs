@@ -43,7 +43,7 @@ namespace OEA.Library.Modeling.Web
             {
                 var key = new BlockConfigKey
                 {
-                    EntityType = ClientEntityConverter.ToClientType(this.Model),
+                    EntityType = ClientEntities.Find(this.Model).EntityType,
                     ExtendView = this.ViewName,
                     Type = OEAEnvironment.CustomerProvider.IsCustomizing ? BlockConfigType.Customization : BlockConfigType.Config
                 };

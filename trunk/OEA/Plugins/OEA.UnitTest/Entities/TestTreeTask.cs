@@ -12,12 +12,10 @@ namespace OEA.Library._Test
 {
     [Serializable]
     [RootEntity, Label("单元测试 - 任务")]
-    [Table("Task")]
     public class TestTreeTask : UnitTestEntity
     {
         public static readonly RefProperty<TestUser> TestUserRefProperty =
             P<TestTreeTask>.RegisterRef(e => e.TestUser, ReferenceType.Parent);
-        [EntityProperty, Lookup("TestUser", ReferenceType.Parent)]
         public int TestUserId
         {
             get { return this.GetRefId(TestUserRefProperty); }
@@ -32,7 +30,6 @@ namespace OEA.Library._Test
         #region 汇总 AllTime
 
         public static Property<int> AllTimeProperty = P<TestTreeTask>.Register(e => e.AllTime, (o, e) => (o as TestTreeTask).OnAllTimeChanged(e));
-        [EntityProperty]
         public int AllTime
         {
             get { return this.GetProperty(AllTimeProperty); }
@@ -70,7 +67,6 @@ namespace OEA.Library._Test
         #region 自动汇总 AllTimeByAutoCollect
 
         public static Property<int> AllTimeByAutoCollectProperty = P<TestTreeTask>.Register(e => e.AllTimeByAutoCollect, (o, e) => (o as TestTreeTask).OnAllTimeByAutoCollectChanged(e));
-        [EntityProperty]
         public int AllTimeByAutoCollect
         {
             get { return this.GetProperty(AllTimeByAutoCollectProperty); }
@@ -93,7 +89,7 @@ namespace OEA.Library._Test
         {
             Meta.SupportTree();
 
-            Meta.HasColumns(
+            Meta.MapTable("Task").MapProperties(
                 TestTreeTask.TestUserRefProperty,
                 TestTreeTask.AllTimeProperty,
                 TestTreeTask.AllTimeByAutoCollectProperty,

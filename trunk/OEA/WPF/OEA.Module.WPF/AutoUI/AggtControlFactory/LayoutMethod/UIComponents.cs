@@ -17,7 +17,6 @@ using System.Linq;
 using System.Text;
 using OEA.MetaModel.View;
 using System.Windows.Controls;
-using Itenso.Windows.Input;
 using OEA.WPF.Command;
 using System.Windows.Automation;
 using OEA.Module.WPF.Controls;
@@ -112,7 +111,7 @@ namespace OEA.Module.WPF
         /// <param name="childrenTab"></param>
         public void ArrangeChildrenByTabControl(TabControl childrenTab)
         {
-            childrenTab.Style = OEAStyles.TabControlHeaderHide;
+            childrenTab.Style = OEAResources.TabControlHeaderHide;
 
             var children = this.Children;
             if (children.Count > 0)

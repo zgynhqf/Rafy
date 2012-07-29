@@ -17,7 +17,6 @@ using System.Linq;
 using System.Text;
 using OEA.MetaModel.View;
 using System.Windows.Controls;
-using Itenso.Windows.Input;
 using OEA.WPF.Command;
 using System.Windows.Automation;
 using OEA.Module.WPF.Controls;
