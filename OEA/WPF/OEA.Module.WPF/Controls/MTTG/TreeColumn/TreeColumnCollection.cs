@@ -31,8 +31,9 @@ namespace OEA.Module.WPF.Controls
         /// <returns></returns>
         public TreeColumn FindByProperty(IManagedProperty property)
         {
+            //选择列上没有 Meta
             return this.Cast<TreeColumn>()
-                .FirstOrDefault(c => c.Meta.PropertyMeta.ManagedProperty == property);
+                .FirstOrDefault(c => c.Meta != null && c.Meta.PropertyMeta.ManagedProperty == property);
         }
 
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)

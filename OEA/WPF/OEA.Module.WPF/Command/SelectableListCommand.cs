@@ -18,7 +18,6 @@ using System.Text;
 using System.Collections.ObjectModel;
 using OEA.WPF.Command;
 using OEA.Module.WPF.CommandAutoUI;
-using Itenso.Windows.Input;
 using System.Windows.Controls;
 
 namespace OEA.WPF.Command
@@ -86,7 +85,7 @@ namespace OEA.WPF.Command
     {
         protected override ItemControlResult CreateItemControl()
         {
-            var cmd = CommandRepository.NewCommand(this.CommandItem);
+            var cmd = CommandRepository.NewUICommand(this.CommandItem);
             var listSource = cmd.CoreCommand as IDataSelectorCommand;
             if (listSource == null) throw new InvalidProgramException("命令必须继承 DataSelectorCommand<T> 类。");
 

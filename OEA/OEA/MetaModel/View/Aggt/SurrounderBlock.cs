@@ -37,6 +37,15 @@ namespace OEA.MetaModel.View
         /// 环绕类型
         /// </summary>
         public string SurrounderType { get; set; }
+
+        #region WPF
+
+        /// <summary>
+        /// 这里可以指定一个 RelationView 的子类，来实现 RelationView 行为的动态扩展。
+        /// </summary>
+        public Type RelationViewType { get; set; }
+
+        #endregion
     }
 
     /// <summary>

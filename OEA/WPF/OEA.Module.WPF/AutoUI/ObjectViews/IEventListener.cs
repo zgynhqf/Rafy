@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OEA.Module.WPF.Controls;
 
 namespace OEA.Module.WPF
 {
@@ -26,17 +27,24 @@ namespace OEA.Module.WPF
     public interface IEventListener
     {
         /// <summary>
-        ///  通知这个ObjectView控件发生了MouseDoubleClick事件
+        ///  通知这个 ObjectView 控件发生了 MouseDoubleClick 事件
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         void NotifyMouseDoubleClick(object sender, EventArgs e);
 
         /// <summary>
-        ///  通知这个ObjectView控件发生了SelectedItemChanged事件
+        ///  通知这个 ObjectView 控件发生了 SelectedItemChanged 事件
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         void NotifySelectedItemChanged(object sender, SelectedEntityChangedEventArgs e);
+
+        /// <summary>
+        ///  通知这个 ObjectView 控件发生了 CheckChanged 事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void NotifyCheckChanged(object sender, CheckChangedEventArgs e);
     }
 }

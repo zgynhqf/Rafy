@@ -57,7 +57,7 @@ namespace OEA.Library
                     {
                         string conventionColumnName = tableInfo.Name + "_" + column.Name;
 
-                        column.SetValue(result, rowData[conventionColumnName]);
+                        column.LoadValue(result, rowData[conventionColumnName]);
                     }
                 }
             }

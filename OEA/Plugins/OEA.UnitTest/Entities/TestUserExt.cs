@@ -12,7 +12,8 @@ namespace OEA.Library._Test
     /// <summary>
     /// 这个类可以写在 721 中 2 的包中。
     /// </summary>
-    public class TestUserExt : IManagedPropertyDeclarer
+    [CompiledPropertyDeclarer]
+    public class TestUserExt
     {
         public static ManagedProperty<string> UserCodeProperty = P<TestUser>.RegisterExtension("UserCode", null, "DefaultUserCode");
         public static string GetUserCode(TestUser entity)
@@ -24,7 +25,7 @@ namespace OEA.Library._Test
             entity.SetProperty(UserCodeProperty, value);
         }
 
-        public static ManagedProperty<string> ReadOnlyUserCodeProperty = P<TestUser>.RegisterExtensionReadOnly("ReadOnlyUserCode", ReadOnlyUserCodeProperty_GetValue, null, UserCodeProperty);
+        public static ManagedProperty<string> ReadOnlyUserCodeProperty = P<TestUser>.RegisterExtensionReadOnly("ReadOnlyUserCode", typeof(TestUserExt), ReadOnlyUserCodeProperty_GetValue, UserCodeProperty);
         public static string GetReadOnlyUserCode(TestUser entity)
         {
             return entity.GetProperty(ReadOnlyUserCodeProperty);
@@ -34,7 +35,7 @@ namespace OEA.Library._Test
             return GetUserCode(user) + " ReadOnly!";
         }
 
-        public static ManagedProperty<string> ReadOnlyUserCodeShadowProperty = P<TestUser>.RegisterExtensionReadOnly("ReadOnlyUserCodeShadow", ReadOnlyUserCodeShadow_GetValue, null, ReadOnlyUserCodeProperty);
+        public static ManagedProperty<string> ReadOnlyUserCodeShadowProperty = P<TestUser>.RegisterExtensionReadOnly("ReadOnlyUserCodeShadow", typeof(TestUserExt), ReadOnlyUserCodeShadow_GetValue, ReadOnlyUserCodeProperty);
         public static string GetReadOnlyUserCodeShadow(TestUser entity)
         {
             return entity.GetProperty(ReadOnlyUserCodeShadowProperty);
@@ -49,16 +50,11 @@ namespace OEA.Library._Test
     {
         protected override void ConfigMeta()
         {
-            base.ConfigMeta();
-
-            Meta.Property(TestUserExt.UserCodeProperty)
-                .MapColumn(true);
+            Meta.Property(TestUserExt.UserCodeProperty).MapColumn();
         }
 
         protected override void ConfigView()
         {
-            base.ConfigView();
-
             View.Property(TestUserExt.UserCodeProperty).ShowIn(ShowInWhere.List).HasLabel("用户扩展编码");
         }
     }

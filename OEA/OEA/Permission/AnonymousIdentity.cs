@@ -26,5 +26,10 @@ namespace OEA
         public AnonymousIdentity() : base(string.Empty) { }
 
         protected AnonymousIdentity(SerializationInfo info, StreamingContext context) : base(string.Empty) { }
+
+        public string Code
+        {
+            get { return string.Empty; }
+        }
     }
 }

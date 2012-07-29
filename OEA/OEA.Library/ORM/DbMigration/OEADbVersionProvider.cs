@@ -16,10 +16,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using DbMigration.History;
-using OEA.Library.ORM.DbMigration.Presistence;
+using OEA.ORM.DbMigration.Presistence;
 using hxy.Common;
+using OEA.Library;
 
-namespace OEA.Library.ORM.DbMigration
+namespace OEA.ORM.DbMigration
 {
     public class OEADbVersionProvider : DbVersionProvider
     {

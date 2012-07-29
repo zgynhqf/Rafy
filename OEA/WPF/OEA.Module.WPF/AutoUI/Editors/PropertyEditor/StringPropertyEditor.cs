@@ -26,12 +26,12 @@ namespace OEA.Module.WPF.Editors
             var textbox = new TextBox()
             {
                 Name = this.Meta.Name,
-                Style = OEAStyles.StringPropertyEditor_TextBox
+                Style = OEAResources.StringPropertyEditor_TextBox
             };
 
             this.ResetBinding(textbox);
 
-            this.BindElementReadOnly(textbox, TextBox.IsReadOnlyProperty);
+            this.BindElementReadOnly(textbox, TextBox.IsEnabledProperty, false);
 
             this.SetAutomationElement(textbox);
 

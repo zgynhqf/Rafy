@@ -13,38 +13,38 @@
         <Snippet>
             <Declarations>
                 <Literal>
-                    <ID>refEntityType</ID>
-                    <ToolTip>外键对象类型</ToolTip>
+                    <ID>RefEntityType</ID>
+                    <ToolTip>引用实体类型</ToolTip>
                     <Default>RefEntity</Default>
                 </Literal>
                 <Literal>
-                    <ID>referenceType</ID>
-                    <ToolTip>是否为父外键</ToolTip>
-                    <!--<Default>Parent</Default>-->
-                    <Default>Normal</Default>
+                    <ID>RefPropertyName</ID>
+                    <ToolTip>引用实体属性名</ToolTip>
+                    <Default>RefPropertyName</Default>
                 </Literal>
                 <Literal>
-                    <ID>Label</ID>
-                    <Default>Label</Default>
+                    <ID>ReferenceType</ID>
+                    <ToolTip>引用类型（是否为组合父引用）</ToolTip>
+                    <Default>Normal</Default>
                 </Literal>
-        <Literal Editable="false">
+                <Literal Editable="false">
                     <ID>ClassName</ID>
                     <Function>ClassName()</Function>
                     <Default>ClassNamePlaceholder</Default>
                 </Literal>
             </Declarations>
             <Code Language="csharp">
-                <![CDATA[public static readonly RefProperty<$refEntityType$> $refEntityType$RefProperty =
-            P<$ClassName$>.RegisterRef(e => e.$refEntityType$, ReferenceType.$referenceType$);
-        public int? $refEntityType$Id
+                <![CDATA[public static readonly RefProperty<$RefEntityType$> $RefPropertyName$RefProperty =
+            P<$ClassName$>.RegisterRef(e => e.$RefPropertyName$, ReferenceType.$ReferenceType$);
+        public int? $RefPropertyName$Id
         {
-            get { return this.GetRefNullableId($refEntityType$RefProperty); }
-            set { this.SetRefNullableId($refEntityType$RefProperty, value); }
+            get { return this.GetRefNullableId($RefPropertyName$RefProperty); }
+            set { this.SetRefNullableId($RefPropertyName$RefProperty, value); }
         }
-        public $refEntityType$ $refEntityType$
+        public $RefEntityType$ $RefPropertyName$
         {
-            get { return this.GetRefEntity($refEntityType$RefProperty); }
-            set { this.SetRefEntity($refEntityType$RefProperty, value); }
+            get { return this.GetRefEntity($RefPropertyName$RefProperty); }
+            set { this.SetRefEntity($RefPropertyName$RefProperty, value); }
         }$end$]]>
             </Code>
         </Snippet>

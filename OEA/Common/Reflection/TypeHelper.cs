@@ -83,6 +83,28 @@ namespace OEA.Reflection
             return null;
         }
 
+        /// <summary>
+        /// 如果是 Nullable 泛型类型，则返回内部的真实类型。
+        /// </summary>
+        /// <param name="targetType"></param>
+        /// <returns></returns>
+        public static Type IgnoreNullable(Type targetType)
+        {
+            if (IsNullable(targetType)) { return targetType.GetGenericArguments()[0]; }
+
+            return targetType;
+        }
+
+        /// <summary>
+        /// 判断某个类型是否为 Nullable 泛型类型。
+        /// </summary>
+        /// <param name="targetType"></param>
+        /// <returns></returns>
+        public static bool IsNullable(Type targetType)
+        {
+            return targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>);
+        }
+
         #region  CoerceValue
 
         /// <summary>
@@ -139,6 +161,8 @@ namespace OEA.Reflection
             // types match, just return value
             if (desiredType.IsAssignableFrom(valueType)) { return value; }
 
+            if (desiredType == typeof(string) && value != null) return value.ToString();
+
             if (desiredType.IsGenericType && desiredType.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
                 desiredType = Nullable.GetUnderlyingType(desiredType);
@@ -147,11 +171,9 @@ namespace OEA.Reflection
                     valueType.Equals(typeof(string)) && Convert.ToString(value) == string.Empty) return null;
             }
 
-            if (desiredType.IsEnum && (valueType.Equals(typeof(string)) || Enum.GetUnderlyingType(desiredType).Equals(valueType)))
-            {
-                return Enum.Parse(desiredType, value.ToString());
-            }
+            if (desiredType.IsEnum) { return Enum.Parse(desiredType, value.ToString()); }
 
+            //空字符串转换为数字 0
             if ((desiredType.IsPrimitive || desiredType.Equals(typeof(decimal))) &&
                 valueType.Equals(typeof(string)) && string.IsNullOrEmpty((string)value))
                 value = 0;
@@ -160,8 +182,6 @@ namespace OEA.Reflection
 
             try
             {
-                if (desiredType.Equals(typeof(string)) && value != null) return value.ToString();
-
                 return Convert.ChangeType(value, desiredType);
             }
             catch

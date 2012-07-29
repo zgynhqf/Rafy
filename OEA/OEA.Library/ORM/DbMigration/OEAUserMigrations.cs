@@ -17,7 +17,7 @@ using System.Linq;
 using System.Text;
 using DbMigration;
 
-namespace OEA.Library.ORM.DbMigration
+namespace OEA.ORM.DbMigration
 {
     internal class OEAUserMigrations : ManualMigrationsContainer
     {

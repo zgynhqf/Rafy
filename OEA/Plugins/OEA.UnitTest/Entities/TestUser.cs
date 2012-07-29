@@ -14,7 +14,6 @@ namespace OEA.Library._Test
 {
     [Serializable]
     [RootEntity, Label("单元测试 - 用户")]
-    [Table("User")]
     public class TestUser : UnitTestEntity
     {
         public static ManagedProperty<string> NameProperty = P<TestUser>.Register(e => e.Name, new PropertyMetadata<string>
@@ -82,7 +81,7 @@ namespace OEA.Library._Test
             get { return this.GetLazyList(TestRoleListProperty); }
         }
 
-        public static ManagedProperty<string> ReadOnlyNameAgeProperty = P<TestUser>.RegisterReadOnly(e => e.ReadOnlyNameAge, ReadOnlyNameAgeProperty_GetValue, null, NameProperty, AgeProperty);
+        public static ManagedProperty<string> ReadOnlyNameAgeProperty = P<TestUser>.RegisterReadOnly(e => e.ReadOnlyNameAge, ReadOnlyNameAgeProperty_GetValue, NameProperty, AgeProperty);
         public string ReadOnlyNameAge
         {
             get { return this.GetProperty(ReadOnlyNameAgeProperty); }
@@ -187,6 +186,7 @@ namespace OEA.Library._Test
         {
             base.ConfigMeta();
 
+            Meta.MapTable("User");
             Meta.Property(TestUser.NameProperty).MapColumn().HasColumnName("UserName");
         }
 

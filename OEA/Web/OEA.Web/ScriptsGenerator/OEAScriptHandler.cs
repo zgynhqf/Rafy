@@ -47,6 +47,7 @@ namespace OEA.Web
                 "autoUI/Layout.js", "autoUI/Regions.js",
                 "autoUI/layouts/Common.js", "autoUI/layouts/RightChildren.js",
                 "autoUI/ViewFactory.js", "autoUI/ControlResult.js", "autoUI/AggtUIGenerator.js",
+                //"control/ComboBoxTest.js",
                 "control/ComboList.js",
                 "AutoUI.js", "UITemplate.js",
                 "svc/ServiceInvoker.js",

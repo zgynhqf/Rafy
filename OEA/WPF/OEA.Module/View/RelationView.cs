@@ -26,13 +26,16 @@ namespace OEA
     {
         public RelationView(string surrounderType, ObjectView view)
         {
-            if (string.IsNullOrWhiteSpace(surrounderType)) throw new ArgumentNullException("surrounderType");
+            if (string.IsNullOrEmpty(surrounderType)) throw new ArgumentNullException("surrounderType");
             if (view == null) throw new ArgumentNullException("view");
 
             this.SurrounderType = surrounderType;
             this.View = view;
         }
 
+        /// <summary>
+        /// 当前所对应的环绕块类型
+        /// </summary>
         public string SurrounderType { get; private set; }
 
         /// <summary>

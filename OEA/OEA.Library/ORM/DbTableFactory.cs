@@ -15,16 +15,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using hxy.Common.Data;
 using OEA.Library;
 using OEA.ManagedProperty;
 using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
 using OEA.ORM;
+using OEA.ORM.Oracle;
 using OEA.ORM.SqlServer;
 using OEA.Utils;
-using hxy.Common.Data;
-using OEA.ORM.Oracle;
-using OEA.Library.ORM;
 
 namespace OEA.ORM
 {
@@ -40,7 +39,7 @@ namespace OEA.ORM
             var em = repo.EntityMeta;
             if (em == null || em.TableMeta == null)
             {
-                throw new LightException("该类型没有映射数据库： " + em.EntityType.FullName);
+                throw new ORMException("该类型没有映射数据库： " + em.EntityType.FullName);
             }
 
             DbTable res = null;
@@ -49,10 +48,10 @@ namespace OEA.ORM
             {
                 case DbSetting.Provider_SqlClient:
                 case DbSetting.Provider_SqlCe:
-                    res = new SqlTable(em, em.TableMeta.TableName);
+                    res = new SqlTable(em);
                     break;
                 case DbSetting.Provider_Oracle:
-                    res = new OracleTable(em, em.TableMeta.TableName);
+                    res = new OracleTable(em);
                     break;
                 default:
                     throw new NotSupportedException();

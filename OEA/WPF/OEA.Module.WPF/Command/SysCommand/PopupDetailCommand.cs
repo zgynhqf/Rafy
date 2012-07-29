@@ -44,7 +44,7 @@ namespace OEA.WPF.Command
                 w.SizeToContent = SizeToContent.Height;
                 w.MinHeight = 200;
                 w.MinWidth = 400;
-                w.Width = 400 * detailView.ColumnsCount;
+                w.Width = 400 * detailView.CalculateColumnsCount();
                 w.ValidateOperations += (o, e) =>
                 {
                     var broken = tmpEntity.ValidationRules.Validate();

@@ -14,7 +14,6 @@
 using System;
 using System.Data.SqlClient;
 using Common;
-using Itenso.Windows.Input;
 using OEA.Library;
 using OEA.MetaModel;
 using OEA.MetaModel.Audit;
@@ -28,14 +27,14 @@ namespace OEA.Module.WPF
     /// <summary>
     /// 当前工程所对应的模块类。
     /// </summary>
-    internal class RBACModule : IModule
+    internal class RBACModule : ModulePlugin
     {
-        public ReuseLevel ReuseLevel
+        public override ReuseLevel ReuseLevel
         {
             get { return ReuseLevel._System; }
         }
 
-        public void Initialize(IClientApp app)
+        public override void Initialize(IClientApp app)
         {
             app.ModuleOperations += (s, e) =>
             {

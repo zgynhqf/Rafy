@@ -135,9 +135,13 @@
     <Compile Include="AutoUI\AggtControlFactory\LayoutMethod\Region.cs" />
     <Compile Include="AutoUI\AggtControlFactory\LayoutMethod\RegionContainer.cs" />
     <Compile Include="AutoUI\Editors\IListEditorContext.cs" />
+    <Compile Include="AutoUI\Editors\PropertyEditor\TimePropertyEditor.cs" />
+    <Compile Include="AutoUI\Editors\PropertyEditor\DateTimePropertyEditor.cs" />
+    <Compile Include="AutoUI\Editors\PropertyEditor\DoubleUpDownPropertyEditor.cs" />
     <Compile Include="AutoUI\Editors\PropertyEditor\Core\EntityDynamicPropertyEditor.cs" />
     <Compile Include="AutoUI\Editors\PropertyEditor\Core\PropertyEditorHelper.cs" />
-    <Compile Include="AutoUI\Editors\PropertyEditor\ReferencePropertyEditor.cs" />
+    <Compile Include="AutoUI\Editors\PropertyEditor\IntegerUpDownPropertyEditor.cs" />
+    <Compile Include="AutoUI\Editors\PropertyEditor\Abstract\ReferencePropertyEditor.cs" />
     <Compile Include="AutoUI\Editors\PropertyEditor\DateRangePropertyEditor.cs" />
     <Compile Include="AutoUI\Editors\PropertyEditor\DateRangePropertyEditorControl.xaml.cs">
       <DependentUpon>DateRangePropertyEditorControl.xaml</DependentUpon>
@@ -149,6 +153,7 @@
     <Compile Include="AutoUI\Editors\PropertyEditor\NumberRangePropertyEditor.cs" />
     <Compile Include="AutoUI\Editors\PropertyEditor\PopupSearchListPropertyEditor.cs" />
     <Compile Include="AutoUI\Editors\PropertyEditor\TiledListReferenceEditor.cs" />
+    <Compile Include="AutoUI\Editors\PropertyEditor\Validation\ManagedProeprtyValidationRule.cs" />
     <Compile Include="AutoUI\ObjectViews\CustomObjectView.cs" />
     <Compile Include="AutoUI\ObjectViews\ViewController\AsyncDataContextHelper.cs" />
     <Compile Include="AutoUI\CallbackTemplate.cs" />
@@ -157,9 +162,12 @@
     <Compile Include="Command\SysCommand\CustomizeUI\CustomizeUI.cs" />
     <Compile Include="Command\SysCommand\CustomizeUI\BackupViewConfig.cs" />
     <Compile Include="Command\SysCommand\PopupDetailCommand.cs" />
+    <Compile Include="Command\SysCommand\SelectAllCommand.cs" />
+    <Compile Include="Command\SysCommand\SelectReverseCommand.cs" />
     <Compile Include="Common\Logger.cs" />
     <Compile Include="Controls\BusyAnimation.cs" />
     <Compile Include="Controls\EditorHost.cs" />
+    <Compile Include="Controls\Form.cs" />
     <Compile Include="Controls\MTTG\GridTreeView\ColumnMeasureState.cs" />
     <Compile Include="Controls\MTTG\GridTreeView\GridTreeViewColumn.cs" />
     <Compile Include="Controls\MTTG\GridTreeView\GridTreeViewColumnCollection.cs" />
@@ -181,6 +189,7 @@
     <Compile Include="Controls\MTTG\_MTTGTestCommands.cs" />
     <Compile Include="AutoUI\UITemplate.cs" />
     <Compile Include="Controls\WaitProgress\MigrationWithProgressBar.cs" />
+    <Compile Include="Helper.cs" />
     <Compile Include="PrimitiveUI\EntityModule.cs" />
     <Compile Include="AutoUI\AggtControlFactory\LayoutMethod\ILayoutControl.cs" />
     <Compile Include="AutoUI\AggtControlFactory\LayoutMethod\UIComponents.cs" />
@@ -190,7 +199,7 @@
     <Compile Include="Shell\WorkspaceWindowActivingEventArgs.cs" />
     <Compile Include="Shell\WorkspaceWindowChangedEventArgs.cs" />
     <Compile Include="Shell\WorkspaceWindowClosingEventArgs.cs" />
-    <Compile Include="Themes\OEAStyles.cs" />
+    <Compile Include="Themes\OEAResources.cs" />
     <Compile Include="Application.cs" />
     <Compile Include="AutoUI\ObjectViews\IEventListener.cs" />
     <Compile Include="AutoUI\BlockUIFactory.cs" />
@@ -255,7 +264,6 @@
     <Compile Include="Command\SysCommand\SaveBillCommand.cs" />
     <Compile Include="Command\SysCommand\SaveListCommand.cs" />
     <Compile Include="Command\SelectableListCommand.cs" />
-    <Compile Include="Common\OEAMessageBox.cs" />
     <Compile Include="Controls\CloseableTabItem.cs" />
     <Compile Include="AutoUI\ObjectViews\ConditionQueryObjectView.cs" />
     <Compile Include="AutoUI\Editors\NamedTypeFactory.cs" />
@@ -274,23 +282,19 @@
     <Compile Include="AutoUI\ObjectViews\WPFObjectView.cs" />
     <Compile Include="Controls\ToolBarExtension.cs" />
     <Compile Include="Command\Pattern\MenuItemCommand.cs" />
-    <Compile Include="Command\Pattern\MenuItemImage.cs" />
     <Compile Include="Command\SysCommand\TreeEditCommands\TreeEditCommand.cs" />
-    <Compile Include="Command\ViewExtCommand.cs" />
+    <Compile Include="Command\SysCommand\MaxShowViewCommand.cs" />
     <Compile Include="Controls\ComboListControl.cs" />
     <Compile Include="Controls\MTTG\MultiTypesTreeGrid.cs" />
     <Compile Include="AutoUI\Editors\EnumConverter.cs" />
     <Compile Include="AutoUI\AutoUI.cs" />
     <Compile Include="AutoUI\ObjectViews\DetailObjectView.cs" />
     <Compile Include="AutoUI\ObjectViews\ListObjectView.cs" />
-    <Compile Include="Command\CommandAdapter.cs" />
     <Compile Include="Command\Pattern\ButtonCommand.cs" />
-    <Compile Include="Command\Pattern\ButtonImage.cs" />
-    <Compile Include="Command\Pattern\Command.cs" />
+    <Compile Include="Command\Pattern\UICommand.cs" />
     <Compile Include="Command\Pattern\CommandCollection.cs" />
     <Compile Include="Command\Pattern\CommandContext.cs" />
-    <Compile Include="Command\Pattern\CommandContextEventArgs.cs" />
-    <Compile Include="Command\Pattern\CommandDescription.cs" />
+    <Compile Include="Command\Pattern\InputGestureParser.cs" />
     <Compile Include="Command\Pattern\CommandImageService.cs" />
     <Compile Include="Command\Pattern\CommandRepository.cs" />
     <Compile Include="Command\Pattern\CommandToolTipService.cs" />
@@ -347,7 +351,6 @@
     <Compile Include="AutoUI\AggtControlFactory\LayoutMethod\ControlLayoutMethod.cs" />
     <Compile Include="PrimitiveUI\Layouts\TraditionalRegions.cs" />
     <Compile Include="PrimitiveUI\ResizingPanelExt.cs" />
-    <Compile Include="Common\PropertyChangeNotifier.cs" />
     <Compile Include="WorkspaceWindow.cs" />
     <Compile Include="WPFModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

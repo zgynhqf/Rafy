@@ -12,6 +12,11 @@ namespace OEA.MetaModel
     public interface IOEARefProperty : IManagedProperty
     {
         /// <summary>
+        /// 引用实体的类型
+        /// </summary>
+        Type RefEntityType { get; }
+
+        /// <summary>
         /// 为某个对象获取本属性的元数据
         /// </summary>
         /// <param name="owner"></param>

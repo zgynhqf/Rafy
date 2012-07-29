@@ -9,6 +9,7 @@ using OEA.WPF.Command;
 using OEA.Library;
 using System.Windows;
 using OEA.MetaModel;
+using OEA.Web;
 
 namespace OEA.WPF.Command
 {
@@ -26,7 +27,7 @@ namespace OEA.WPF.Command
                 var model = RF.Concreate<ViewConfigurationModelRepository>()
                     .GetByName(new ViewConfigurationModelNameCriteria
                     {
-                        EntityType = ClientEntityConverter.ToClientName(view.EntityType),
+                        EntityType = ClientEntities.GetClientName(view.EntityType),
                         ViewName = view.Meta.ExtendView
                     });
 

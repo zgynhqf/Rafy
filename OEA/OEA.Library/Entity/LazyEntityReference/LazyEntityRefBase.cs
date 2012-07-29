@@ -161,7 +161,9 @@ namespace OEA.Library
                     this._settingEntity = true;
 
                     var oldEntity = this._entityField;
-                    if (oldEntity != value)
+
+                    //如果 实体变更 或者 （设置实体为 null 并且 id 不为 null），都需要设置值改变。
+                    if (oldEntity != value || (value == null && !this.IsEmpty))
                     {
                         var cancel = this.OnEntityChanging(value);
                         if (cancel) return;

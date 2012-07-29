@@ -67,6 +67,7 @@
     <Compile Include="ScriptsGenerator\EntityModelGenerator.cs" />
     <Compile Include="ScriptsGenerator\OEAScriptHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\GetCustomDataSourceService.cs" />
     <Compile Include="Services\JsonServiceRepository.cs" />
     <Compile Include="Services\ServiceInvokerHandler.cs" />
     <Compile Include="WebApp.cs" />

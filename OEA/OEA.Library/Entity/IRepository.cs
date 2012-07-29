@@ -39,6 +39,13 @@ namespace OEA.Library
         Entity GetById(int id);
 
         /// <summary>
+        /// 查询所有的实体类
+        /// </summary>
+        /// <param name="withCache">是否优先使用缓存中的数据</param>
+        /// <returns></returns>
+        EntityList GetAll(bool withCache = true);
+
+        /// <summary>
         /// 创建一个全新的实体对象
         /// </summary>
         /// <returns></returns>

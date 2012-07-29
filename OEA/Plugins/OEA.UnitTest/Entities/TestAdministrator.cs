@@ -11,11 +11,9 @@ namespace OEA.Library._Test
 {
     [Serializable]
     [RootEntity, Label("单元测试 - 管理员")]
-    [Table("User")]
     public class TestAdministrator : TestUser
     {
         public static readonly Property<int?> LevelProperty = P<TestAdministrator>.Register(e => e.Level);
-        [EntityProperty]
         public int? Level
         {
             get { return this.GetProperty(LevelProperty); }
@@ -32,7 +30,7 @@ namespace OEA.Library._Test
         {
             base.ConfigMeta();
 
-            Meta.HasColumns(TestAdministrator.LevelProperty);
+            Meta.MapTable("User").MapProperties(TestAdministrator.LevelProperty);
         }
 
         protected override void ConfigView()

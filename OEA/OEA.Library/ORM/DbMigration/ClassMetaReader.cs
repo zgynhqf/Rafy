@@ -23,8 +23,9 @@ using OEA.ORM.SqlServer;
 using DbMigration.SqlServer;
 using hxy.Common.Data;
 using DbMigration;
+using OEA.Library;
 
-namespace OEA.Library.ORM.DbMigration
+namespace OEA.ORM.DbMigration
 {
     /// <summary>
     /// 从 OEA 元数据中读取整个数据库的元数据。
@@ -136,7 +137,9 @@ namespace OEA.Library.ORM.DbMigration
             private void BuildTable(EntityMeta em)
             {
                 var tableMeta = em.TableMeta;
-                if (!tableMeta.SupportMigrating) { this.Database.IgnoreTables.Add(tableMeta.TableName); }
+
+                //视图类不需要支持数据库迁移。
+                if (tableMeta.IsMappingView) { this.Database.IgnoreTables.Add(tableMeta.TableName); }
 
                 var table = new Table(tableMeta.TableName, this.Database);
 
@@ -168,33 +171,39 @@ namespace OEA.Library.ORM.DbMigration
                         var refProperty = mp.CastTo<IRefProperty>();
                         dataType = refProperty.GetMeta(em.EntityType).Nullable ? typeof(int?) : typeof(int);
 
-                        var refTypeMeta = property.ReferenceInfo.RefTypeMeta;
-                        if (refTypeMeta != null)
+                        if (columnMeta.HasFKConstraint)
                         {
-                            var refTableMeta = refTypeMeta.TableMeta;
-                            if (refTableMeta != null)
+                            var refTypeMeta = property.ReferenceInfo.RefTypeMeta;
+                            if (refTypeMeta != null)
                             {
-                                this._foreigns.Add(new ForeignConstraintInfo()
+                                var refTableMeta = refTypeMeta.TableMeta;
+                                if (refTableMeta != null)
                                 {
-                                    FkTableName = tableMeta.TableName,
-                                    PkTableName = refTableMeta.TableName,
-                                    FkColumn = columnName,
-                                    PkColumn = DBConvention.FieldName_Id,
-                                    NeedDeleteCascade = property.ReferenceInfo.Type == ReferenceType.Parent
-                                });
+                                    this._foreigns.Add(new ForeignConstraintInfo()
+                                    {
+                                        FkTableName = tableMeta.TableName,
+                                        PkTableName = refTableMeta.TableName,
+                                        FkColumn = columnName,
+                                        PkColumn = DBConvention.FieldName_Id,
+                                        NeedDeleteCascade = property.ReferenceInfo.Type == ReferenceType.Parent
+                                    });
+                                }
                             }
                         }
                     }
                     else if (columnName == DBConvention.FieldName_PId || columnName == DBConvention.FieldName_TreePId)
                     {
-                        this._foreigns.Add(new ForeignConstraintInfo()
+                        if (columnMeta.HasFKConstraint)
                         {
-                            FkTableName = tableMeta.TableName,
-                            PkTableName = tableMeta.TableName,
-                            FkColumn = columnName,
-                            PkColumn = DBConvention.FieldName_Id,
-                            NeedDeleteCascade = false
-                        });
+                            this._foreigns.Add(new ForeignConstraintInfo()
+                            {
+                                FkTableName = tableMeta.TableName,
+                                PkTableName = tableMeta.TableName,
+                                FkColumn = columnName,
+                                PkColumn = DBConvention.FieldName_Id,
+                                NeedDeleteCascade = false
+                            });
+                        }
                     }
 
                     var column = new Column(DbTypeHelper.ConvertFromCLRType(dataType), columnName, table)

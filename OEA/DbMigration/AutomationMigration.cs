@@ -50,7 +50,16 @@ namespace DbMigration
                     this.DropDatabase(dbChanges);
                     break;
                 case ChangeType.Modified:
-                    foreach (var item in dbChanges.TablesChanged)
+                    //为了保证外键的变化与表的变化不冲突，按照以下顺序生成操作：添加的表、修改的表（外键）、删除的表。
+                    foreach (var item in dbChanges.TablesChanged.Where(t => t.ChangeType == ChangeType.Added))
+                    {
+                        this.GenerateOpertions(item);
+                    }
+                    foreach (var item in dbChanges.TablesChanged.Where(t => t.ChangeType == ChangeType.Modified))
+                    {
+                        this.GenerateOpertions(item);
+                    }
+                    foreach (var item in dbChanges.TablesChanged.Where(t => t.ChangeType == ChangeType.Removed))
                     {
                         this.GenerateOpertions(item);
                     }

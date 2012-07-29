@@ -17,6 +17,7 @@ using System.Dynamic;
 using OEA.MetaModel.View;
 using OEA.MetaModel;
 using System.Collections.Generic;
+using OEA.Reflection;
 
 namespace OEA.Library.Validation
 {
@@ -90,7 +91,7 @@ namespace OEA.Library.Validation
         /// </summary>
         /// <param name="e"></param>
         /// <returns></returns>
-        internal string GetPropertyDisplay()
+        public string GetPropertyDisplay()
         {
             EntityViewMeta safeView = _lastViewMeta;
 
@@ -101,10 +102,12 @@ namespace OEA.Library.Validation
                 _lastViewMeta = safeView;
             }
 
-            var pvm = safeView.Property(this.Property);
-            if (pvm != null) return pvm.Label;
+            string res = null;
 
-            return this.Property.Name;
+            var pvm = safeView.Property(this.Property);
+            if (pvm != null) res = pvm.Label;
+
+            return res ?? this.Property.Name;
         }
 
         #endregion
@@ -125,7 +128,7 @@ namespace OEA.Library.Validation
 
             if (_customParams.TryGetValue(paramName, out result))
             {
-                return (T)result;
+                return (T)TypeHelper.CoerceValue(typeof(T), result);
             }
 
             return default(T);

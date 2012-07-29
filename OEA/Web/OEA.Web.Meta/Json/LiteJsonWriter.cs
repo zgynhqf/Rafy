@@ -28,8 +28,6 @@ namespace OEA.Web.Json
     /// </summary>
     public class LiteJsonWriter
     {
-        private bool ConvertPropertyToField = false;
-
         private IndentedTextWriter _writer;
 
         private void WriteJsonModel(JsonModel model)
@@ -66,38 +64,30 @@ namespace OEA.Web.Json
                 return;
             }
 
-            if (this.ConvertPropertyToField)
-            {
-                name = char.ToLower(name[0]) + name.Substring(1);
-            }
-
-            this.Write("\"");
-            this.Write(name);
-            this.Write("\": ");
-
             if (value is JsonModel)
             {
-                this.WriteJsonModel(value as JsonModel);
+                this.Write("\"").Write(name).Write("\": ")
+                    .WriteJsonModel(value as JsonModel);
+                if (!isLast) { this.Write(","); }
+                this.WriteLine();
             }
             else
             {
                 var jsonValue = this.JsonValue(value);
 
-                this.Write(jsonValue);
+                //如果是不支持的类型数据，则不输出该属性。
+                if (jsonValue != NotSupportedValue)
+                {
+                    this.Write("\"").Write(name).Write("\": ");
+                    this.Write(jsonValue);
+                    if (!isLast) { this.Write(","); }
+                    this.WriteLine();
+                }
             }
-
-            if (!isLast) { this.Write(","); }
-
-            this.WriteLine();
         }
 
         public void WriteProperty(string name, IEnumerable<JsonModel> children, bool isLast = false)
         {
-            if (this.ConvertPropertyToField)
-            {
-                name = char.ToLower(name[0]) + name.Substring(1);
-            }
-
             this.Write("\"");
             this.Write(name);
             this.Write("\":[");
@@ -119,9 +109,10 @@ namespace OEA.Web.Json
             this.WriteLine();
         }
 
-        public void Write(string text)
+        public LiteJsonWriter Write(string text)
         {
             this._writer.Write(text);
+            return this;
         }
 
         public void WriteLine(string text)
@@ -133,6 +124,8 @@ namespace OEA.Web.Json
         {
             this._writer.WriteLine();
         }
+
+        private static readonly string NotSupportedValue = "__OEA_Web_NotSupportedValue";
 
         private string JsonValue(object value)
         {
@@ -155,16 +148,22 @@ namespace OEA.Web.Json
             }
 
             var strValue = value.ToString();
-
-            //if (value is string || value is Enum || value is DateTime || value is Guid)
+            if (value is string || value is Enum || value is DateTime || value is Guid)
             {
                 //字符串需要处理转义字符。
                 strValue = strValue.Replace("\"", "\\\"")
                     .Replace("\r", "\\r")
                     .Replace("\n", "\\n");
 
+                //并添加引号。
                 return "\"" + strValue + "\"";
             }
+            else if (!value.GetType().IsClass)//int double float...
+            {
+                return strValue;
+            }
+
+            return NotSupportedValue;
         }
 
         public static string Convert(JsonModel model)

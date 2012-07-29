@@ -55,7 +55,7 @@ namespace OEA.Module.WPF
             {
                 var label = yLabels[i];
 
-                var mp = P<TEntity>.RegisterExtension<TProperty>("DynamicProperty_" + i);
+                var mp = P<TEntity>.RegisterExtension<TProperty>("DynamicProperty_" + i, this.GetType());
 
                 CommonModel.Entities.CreateExtensionPropertyMeta(mp, evm.EntityMeta);
                 var ep = UIModel.Views.CreateExtensionPropertyViewMeta(mp, evm);

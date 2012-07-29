@@ -21,19 +21,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Transactions;
 using OEA.Library.Caching;
+using OEA.Library.Validation;
 using OEA.ManagedProperty;
 using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
 using OEA.ORM;
 using OEA.Threading;
-
-
-using OEA.Library.Validation;
-using System.Diagnostics;
 
 namespace OEA.Library
 {
@@ -75,7 +73,7 @@ namespace OEA.Library
         [DebuggerStepThrough]
         public static Entity New(Type entityType)
         {
-            //经测试，Activator 创建对象也非常快，这是因为它的内部作了缓存处理。
+            //经测试，Activator 创建对象也非常快，这是因为它的内部作了构造器缓存处理。
             return Activator.CreateInstance(entityType, true) as Entity;
         }
 
@@ -113,7 +111,7 @@ namespace OEA.Library
             PropertyChangedCallBack = (o, e) => (o as Entity).OnIdChanged(e),
             DefaultValue = -1
         });
-        [EntityProperty, Column]
+        [Column]
         public int Id
         {
             get { return this.GetProperty(IdProperty, ref this._idFast); }

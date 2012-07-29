@@ -1,4 +1,17 @@
-﻿Ext.define('Oea.view.View', {
+﻿/*******************************************************
+ *
+ * 作者：胡庆访
+ * 创建时间：201201
+ * 说明：
+ * 运行环境：.NET 4.0
+ * 版本号：1.0.0
+ *
+ * 历史记录：
+ * 创建文件 胡庆访 201201
+ *
+*******************************************************/
+
+Ext.define('Oea.view.View', {
     extend: 'Ext.util.Observable',
 
     statics: {
@@ -66,8 +79,17 @@
     },
     getControl: function () { return this._control; },
     getIsActive: function () { return this._isActive; },
-    //internal
-    _setControl: function (value) { this._control = value; },
+    //internal virtual
+    _setControl: function (value) {
+        var old = this._control;
+        if (old) { delete old.oeaView; }
+
+        this._control = value;
+
+        //为 value 附加一个属性，表明这个控件所对应的 oeaView。
+        //目前，这个值会被 ComboList 使用到。
+        if (value) { value.oeaView = this; }
+    },
 
     //------------------------------------- Data and Current -------------------------------------
     getData: function () { Oea.markAbstract(); },

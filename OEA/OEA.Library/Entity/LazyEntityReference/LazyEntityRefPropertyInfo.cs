@@ -33,11 +33,6 @@ namespace OEA.Library
 
         private string _refEntityProperty;
 
-        [NonSerialized]
-        private bool _hasRefManagedPropertyMeta;
-        [NonSerialized]
-        private IRefPropertyMetadata _refManagedPropertyMeta;
-
         //for serialization
         private LazyEntityRefPropertyInfo() { }
 
@@ -73,9 +68,15 @@ namespace OEA.Library
             get { return this._refEntityProperty; }
         }
 
-        public IRefPropertyMetadata CorrespondingManagedPropertyMeta(Entity owner)
+        [NonSerialized]
+        private bool _hasRefProperty;
+
+        [NonSerialized]
+        private IRefProperty _refProperty;
+
+        internal IRefProperty CorrespondingRefProperty(Entity owner)
         {
-            if (!this._hasRefManagedPropertyMeta)
+            if (!this._hasRefProperty)
             {
                 //由于子类可能会重写父类的实体引用属性并修改名字，所以这里不使用 Property.Name 来查找，
                 //而是使用 IdProperty + RefEntityProperty 的方式来查找。
@@ -89,14 +90,22 @@ namespace OEA.Library
                     }
                     return false;
                 });
-                if (mp != null)
-                {
-                    this._refManagedPropertyMeta = mp.GetMeta(owner) as IRefPropertyMetadata;
-                }
-                this._hasRefManagedPropertyMeta = true;
+                this._refProperty = mp as IRefProperty;
+                this._hasRefProperty = true;
             }
 
-            return this._refManagedPropertyMeta;
+            return this._refProperty;
+        }
+
+        internal IRefPropertyMetadata CorrespondingRefPropertyMeta(Entity owner)
+        {
+            var mp = CorrespondingRefProperty(owner);
+            if (mp != null)
+            {
+                return mp.GetMeta(owner) as IRefPropertyMetadata;
+            }
+
+            return null;
         }
 
         internal static string CorrespondingManagedProperty(string refEntityProperty)

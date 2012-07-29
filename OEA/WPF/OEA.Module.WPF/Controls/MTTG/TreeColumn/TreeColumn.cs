@@ -187,8 +187,8 @@ namespace OEA.Module.WPF.Controls
             var template = this.GenerateDisplayTemplateInCell();
 
             var cellContainer = MTTGCell.Wrap(template, this);
-            var l = this._meta.Label;
-            if (l != null) { cellContainer.SetValue(AutomationProperties.NameProperty, l); }
+            var label = this._meta.Label;
+            if (label != null) { cellContainer.SetValue(AutomationProperties.NameProperty, label); }
 
             return cellContainer;
         }
@@ -240,11 +240,11 @@ namespace OEA.Module.WPF.Controls
             var propertyType = this._meta.PropertyMeta.Runtime.PropertyType;
             if (TypeHelper.IsNumber(propertyType))
             {
-                textBlock.SetValue(TextBlock.StyleProperty, OEAStyles.TreeColumn_TextBlock_Number);
+                textBlock.SetValue(TextBlock.StyleProperty, OEAResources.TreeColumn_TextBlock_Number);
             }
             else
             {
-                textBlock.SetValue(TextBlock.StyleProperty, OEAStyles.TreeColumn_TextBlock);
+                textBlock.SetValue(TextBlock.StyleProperty, OEAResources.TreeColumn_TextBlock);
             }
 
             return textBlock;

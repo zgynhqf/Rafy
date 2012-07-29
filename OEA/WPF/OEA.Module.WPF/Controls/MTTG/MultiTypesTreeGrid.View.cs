@@ -151,7 +151,7 @@ namespace OEA.Module.WPF.Controls
                 {
                     rootControl.GroupStyle.Add(new GroupStyle
                     {
-                        ContainerStyle = OEAStyles.GroupContainerStyle
+                        ContainerStyle = OEAResources.GroupContainerStyle
                     });
                 }
 

@@ -76,67 +76,88 @@ namespace OEA.Module.WPF.Controls
 
         #endregion
 
-        #region LabelWidth DependencyProperty
+        #region Orientation DependencyProperty
 
-        public static readonly DependencyProperty LabelWidthProperty = DependencyProperty.Register(
-            "LabelWidth", typeof(GridLength), typeof(EditorHost)
+        public static readonly DependencyProperty OrientationProperty = DependencyProperty.Register(
+            "Orientation", typeof(Orientation), typeof(EditorHost),
+            new PropertyMetadata((d, e) => (d as EditorHost).OnOrientationChanged(e))
             );
 
-        public GridLength LabelWidth
+        public Orientation Orientation
         {
-            get { return (GridLength)this.GetValue(LabelWidthProperty); }
-            set { this.SetValue(LabelWidthProperty, value); }
+            get { return (Orientation)this.GetValue(OrientationProperty); }
+            set { this.SetValue(OrientationProperty, value); }
+        }
+
+        private void OnOrientationChanged(DependencyPropertyChangedEventArgs e)
+        {
+            var value = (Orientation)e.NewValue;
         }
 
         #endregion
 
-        #region DetailObjectView DependencyProperty
+        #region ContentWidth DependencyProperty
 
-        public static readonly DependencyProperty DetailObjectViewProperty = DependencyProperty.RegisterAttached(
-            "DetailObjectView", typeof(DetailObjectView), typeof(EditorHost)
-            );
-
-        public static DetailObjectView GetDetailObjectView(FrameworkElement element)
-        {
-            //从当前元素往上找，一直到找到为止。
-            //如果到达逻辑树根，还没有找到，则返回 null。
-            var value = (DetailObjectView)element.GetValue(DetailObjectViewProperty);
-
-            if (value == null)
-            {
-                var p = element.Parent as FrameworkElement;
-                if (p != null) { return GetDetailObjectView(p); }
-            }
-
-            return value;
-        }
-
-        public static void SetDetailObjectView(FrameworkElement element, DetailObjectView value)
-        {
-            element.SetValue(DetailObjectViewProperty, value);
-        }
-
-        #endregion
-
-        #region TotalWidth DependencyProperty
-
-        public static readonly DependencyProperty TotalWidthProperty = DependencyProperty.Register(
-            "TotalWidth", typeof(GridLength), typeof(EditorHost),
-            new PropertyMetadata(new GridLength(1000, GridUnitType.Star), (d, e) => (d as EditorHost).OnTotalWidthChanged(e))
+        public static readonly DependencyProperty ContentWidthProperty = DependencyProperty.Register(
+            "ContentWidth", typeof(GridLength), typeof(EditorHost),
+            new PropertyMetadata(new GridLength(1000, GridUnitType.Star), (d, e) => (d as EditorHost).OnContentWidthChanged(e))
             );
 
         /// <summary>
         /// 本属性所占的格子宽度。
+        /// 
+        /// 默认是 1000*
+        /// （它旁边有一列占有 1*。）
         /// </summary>
-        public GridLength TotalWidth
+        public GridLength ContentWidth
         {
-            get { return (GridLength)this.GetValue(TotalWidthProperty); }
-            set { this.SetValue(TotalWidthProperty, value); }
+            get { return (GridLength)this.GetValue(ContentWidthProperty); }
+            set { this.SetValue(ContentWidthProperty, value); }
         }
 
-        private void OnTotalWidthChanged(DependencyPropertyChangedEventArgs e)
+        private void OnContentWidthChanged(DependencyPropertyChangedEventArgs e)
         {
             var value = (GridLength)e.NewValue;
+        }
+
+        #endregion
+
+        #region LabelWidth DependencyProperty
+
+        public static readonly DependencyProperty LabelWidthProperty = DependencyProperty.Register(
+            "LabelWidth", typeof(double), typeof(EditorHost),
+            new PropertyMetadata(double.NaN, (d, e) => (d as EditorHost).OnLabelWidthChanged(e))
+            );
+
+        public double LabelWidth
+        {
+            get { return (double)this.GetValue(LabelWidthProperty); }
+            set { this.SetValue(LabelWidthProperty, value); }
+        }
+
+        private void OnLabelWidthChanged(DependencyPropertyChangedEventArgs e)
+        {
+            var value = (double)e.NewValue;
+        }
+
+        #endregion
+
+        #region LabelHeight DependencyProperty
+
+        public static readonly DependencyProperty LabelHeightProperty = DependencyProperty.Register(
+            "LabelHeight", typeof(double), typeof(EditorHost),
+            new PropertyMetadata(double.NaN, (d, e) => (d as EditorHost).OnLabelHeightChanged(e))
+            );
+
+        public double LabelHeight
+        {
+            get { return (double)this.GetValue(LabelHeightProperty); }
+            set { this.SetValue(LabelHeightProperty, value); }
+        }
+
+        private void OnLabelHeightChanged(DependencyPropertyChangedEventArgs e)
+        {
+            var value = (double)e.NewValue;
         }
 
         #endregion
@@ -159,7 +180,7 @@ namespace OEA.Module.WPF.Controls
 
             base.OnApplyTemplate();
 
-            var detailView = GetDetailObjectView(this);
+            var detailView = Form.GetDetailObjectView(this);
             if (detailView == null) { return; }
 
             var property = this.GetPropertyViewMeta(detailView);
@@ -225,31 +246,38 @@ namespace OEA.Module.WPF.Controls
             {
                 this.SetIfNonLocal(Grid.ColumnSpanProperty, property.DetailColumnsSpan.Value);
             }
-            if (property.DetailWidth != null)
+            if (property.DetailContentWidth != null)
             {
-                var source = DependencyPropertyHelper.GetValueSource(this, TotalWidthProperty);
+                var source = DependencyPropertyHelper.GetValueSource(this, ContentWidthProperty);
                 if (source.BaseValueSource != BaseValueSource.Local)
                 {
-                    var value = property.DetailWidth.Value;
+                    var value = property.DetailContentWidth.Value;
                     if (value > 0 && value < 1)
                     {
                         value = value / (1 - value);
-                        this.TotalWidth = new GridLength(value, GridUnitType.Star);
+                        this.ContentWidth = new GridLength(value, GridUnitType.Star);
                     }
                     else
                     {
-                        this.TotalWidth = new GridLength(value);
+                        this.ContentWidth = new GridLength(value);
                     }
                 }
             }
             if (property.DetailHeight != null)
             {
-                this.SetIfNonLocal(HeightProperty, (double)property.DetailHeight.Value);
+                this.SetIfNonLocal(HeightProperty, property.DetailHeight.Value);
             }
-            var labelWidth = property.DetailLabelWidth ?? detailView.Meta.DetailLabelWidth;
-            if (labelWidth != null)
+            var labelSize = property.DetailLabelSize ?? detailView.Meta.DetailLabelSize;
+            if (labelSize != null)
             {
-                this.SetIfNonLocal(LabelWidthProperty, new GridLength(labelWidth.Value));
+                if (this.Orientation == Orientation.Horizontal)
+                {
+                    this.SetIfNonLocal(LabelWidthProperty, labelSize.Value);
+                }
+                else
+                {
+                    this.SetIfNonLocal(LabelHeightProperty, labelSize.Value);
+                }
             }
         }
 

@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ComponentModel;
+using OEA.Reflection;
 
 namespace OEA.MetaModel
 {
@@ -44,7 +45,7 @@ namespace OEA.MetaModel
 
             if (_customParams.TryGetValue(paramName, out result))
             {
-                return (T)result;
+                return (T)TypeHelper.CoerceValue(typeof(T), result);
             }
 
             return default(T);

@@ -49,18 +49,24 @@ namespace OEA.Module.WPF
         //}
 
         /// <summary>
-        /// 当前生成的控件是几列的？
+        /// 默认当前生成的动态控件应该是几列的？
         /// </summary>
-        public int ColumnsCount
+        /// <param name="properties">如果只显示这些属性，计算需要的列。</param>
+        /// <returns></returns>
+        public int CalculateColumnsCount(IEnumerable<EntityPropertyViewMeta> properties = null)
         {
-            get
-            {
-                var colCount = this.Meta.ColumnsCountShowInDetail;
-                if (colCount != 0) return colCount;
+            var colCount = this.Meta.DetailColumnsCount;
+            if (colCount != 0) return colCount;
 
-                var detailPropertiesCount = this.Meta.EntityProperties.Where(e => e.CanShowIn(ShowInWhere.Detail)).Count();
-                return detailPropertiesCount > 6 ? 2 : 1;
-            }
+            //查询面板动态的列永远只有一列。
+            if (this is QueryObjectView) return 1;
+
+            if (properties == null) properties = this.Meta.EntityProperties.Where(e => e.CanShowIn(ShowInWhere.Detail));
+
+            var detailPropertiesCount = properties.Count();
+            if (detailPropertiesCount <= 6) { return 1; }
+            if (detailPropertiesCount <= 16) { return 2; }
+            return 3;
         }
 
         #endregion

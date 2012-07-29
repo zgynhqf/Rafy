@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OEA.ManagedProperty;
 
 namespace OEA.MetaModel.View
 {
@@ -34,6 +35,18 @@ namespace OEA.MetaModel.View
         {
             get { return this._RefInfo; }
             set { this.SetValue(ref this._RefInfo, value); }
+        }
+
+        private IManagedProperty _DataSourceProperty;
+        /// <summary>
+        /// 查询时，数据来源的属性。在这个属性里面查找值。
+        /// 
+        /// 如果未设置这个值，则会调用数据层方法查询完整的实体列表。
+        /// </summary>
+        public IManagedProperty DataSourceProperty
+        {
+            get { return this._DataSourceProperty; }
+            set { this.SetValue(ref this._DataSourceProperty, value); }
         }
 
         #region WPF
@@ -79,19 +92,6 @@ namespace OEA.MetaModel.View
         {
             get { return this._SelectedValuePath; }
             set { this.SetValue(ref this._SelectedValuePath, value); }
-        }
-
-        private string _DataSourceProperty;
-        /// <summary>
-        /// 查询时，数据来源的属性。在这个属性里面查找值。
-        /// 级联属性过滤串,格式如:属性.子属性.子子属性...
-        /// 
-        /// 如果未设置这个值，则会调用数据层方法查询
-        /// </summary>
-        public string DataSourceProperty
-        {
-            get { return this._DataSourceProperty; }
-            set { this.SetValue(ref this._DataSourceProperty, value); }
         }
 
         private string _RootPIdProperty;

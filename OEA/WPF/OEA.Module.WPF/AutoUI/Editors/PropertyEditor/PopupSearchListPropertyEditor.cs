@@ -40,7 +40,7 @@ namespace OEA.Module.WPF.Editors
             {
                 Name = propertyName,
                 IsReadOnly = true,
-                Style = OEAStyles.StringPropertyEditor_TextBox
+                Style = OEAResources.StringPropertyEditor_TextBox
             };
 
             textbox.PreviewMouseLeftButtonDown += (o, e) =>

@@ -62,23 +62,34 @@ namespace DbMigration.Model
 
         /// <summary>
         /// 根据外键关系为表排序
+        /// 有外键关系的表放在后面，没有关系的表放在前面。（被引用的表放在引用表的前面。）
         /// </summary>
         internal void OrderByRelations()
         {
-            var table = this.Tables;
-            for (int i = 0, l = table.Count; i < l; i++)
+            var count = 0;
+
+            var tables = this.Tables;
+            for (int i = 0, l = tables.Count; i < l; i++)
             {
-                var left = table[i];
+                var left = tables[i];
                 var foreignTables = left.GetForeignTables();
                 for (int j = i + 1; j < l; j++)
                 {
-                    var right = table[j];
+                    var right = tables[j];
                     if (foreignTables.Contains(right))
                     {
-                        table[i] = right;
-                        table[j] = left;
+                        tables[i] = right;
+                        tables[j] = left;
+                        count++;
+                        if (count > 100000)
+                        {
+                            //由于目前本方法很难实现环状外键的排序，所以暂时只有不支持了。
+                            throw new InvalidProgramException(string.Format(
+                                "在表 {0} 的外键链条中出现了环（例如：A->B->C->A），目前不支持此类型的数据库迁移。\r\n你可以使用手工迁移完成。",
+                                left.Name));
+                        }
                         i--;
-                        break; ;
+                        break;
                     }
                 }
             }

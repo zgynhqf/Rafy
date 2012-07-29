@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OEA.MetaModel.View;
 
 namespace OEA.Web.ClientMetaModel
 {
@@ -93,8 +94,10 @@ namespace OEA.Web.ClientMetaModel
             }
         }
 
-        public static FieldConfig GetTypeEditor(ServerType type)
+        public static FieldConfig GetTypeEditor(EntityPropertyViewMeta property)
         {
+            var type = GetServerType(property.PropertyMeta.Runtime.PropertyType);
+
             switch (type.JSType)
             {
                 case JavascriptType.Int:
@@ -114,10 +117,7 @@ namespace OEA.Web.ClientMetaModel
                         xtype = "checkbox"
                     };
                 case JavascriptType.Reference:
-                    return new FieldConfig
-                    {
-                        xtype = "combolist"
-                    };
+                    throw new InvalidOperationException("请调用 CreateComboList 方法。");
                 case JavascriptType.String:
                     if (type.Name == SupportedServerType.Enum)
                     {
@@ -133,6 +133,21 @@ namespace OEA.Web.ClientMetaModel
                 default:
                     return null;
             }
+        }
+
+        public static ComboListConfig CreateComboList(EntityPropertyViewMeta property)
+        {
+            var comboList = new ComboListConfig();
+
+            comboList.model = ClientEntities.GetClientName(property.ReferenceViewInfo.RefType);
+
+            var title = property.ReferenceViewInfo.RefTypeDefaultView.TitleProperty;
+            if (title != null) { comboList.displayField = title.Name; }
+
+            var dsp = property.ReferenceViewInfo.DataSourceProperty;
+            if (dsp != null) { comboList.dataSourceProperty = dsp.Name; }
+
+            return comboList;
         }
 
         public static string GetClientFieldTypeName(ServerType type)

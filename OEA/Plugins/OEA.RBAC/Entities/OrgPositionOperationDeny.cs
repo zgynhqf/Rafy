@@ -92,7 +92,7 @@ namespace OEA.RBAC
         {
             base.ConfigMeta();
 
-            Meta.MapTable().HasColumns(
+            Meta.MapTable().MapProperties(
                 OrgPositionOperationDeny.OrgPositionRefProperty,
                 OrgPositionOperationDeny.ModuleKeyProperty,
                 OrgPositionOperationDeny.BlockKeyProperty,

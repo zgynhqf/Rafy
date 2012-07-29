@@ -40,7 +40,9 @@ namespace OEA.Module.WPF
                 { WPFEditorNames.LookupDropDown, typeof(LookupListTreeColumn)},
                 { WPFEditorNames.Memo, typeof(MemoTreeColumn) },
                 { WPFEditorNames.Boolean, typeof(BooleanTreeColumn) },
-                { WPFEditorNames.Date, typeof(DateTreeColumn)},              
+                { WPFEditorNames.DateTime, typeof(DateTreeColumn)},
+                { WPFEditorNames.Time, typeof(DateTreeColumn)},
+                { WPFEditorNames.Date, typeof(DateTreeColumn)},
             });
         }
 
@@ -52,10 +54,15 @@ namespace OEA.Module.WPF
         public TreeColumn Create(EntityPropertyViewMeta property)
         {
             //根据editorName生成对应的Column
-            var treeColumn = this.CreateInstance(property.EditorName) ?? new CommonTreeColumn();
+            var treeColumn = this.CreateInstance(property.GetEditorNameOrDefault()) ?? new CommonTreeColumn();
             treeColumn.IntializeViewMeta(property, this._propertyEditorFactory);
 
-            CreateCellTemplate(treeColumn, property.Label);
+            SetColumnHeader(treeColumn, property.Label);
+
+            treeColumn.CellTemplate = new DataTemplate
+            {
+                VisualTree = treeColumn.GenerateDisplayTemplate()
+            };
 
             //宽度
             if (property.GridWidth.HasValue)
@@ -66,30 +73,13 @@ namespace OEA.Module.WPF
             return treeColumn;
         }
 
-        internal static void CreateCellTemplate(TreeColumn treeGridColumn, string header, FrameworkElementFactory cellTemplate = null)
+        internal static void SetColumnHeader(TreeColumn treeGridColumn, string header)
         {
             //列头显示
             treeGridColumn.Header = new GridTreeViewColumnHeader
             {
                 Content = header
             };
-
-            //显示内容模板
-            if (cellTemplate != null)
-            {
-                var template = new DataTemplate();
-                template.VisualTree = cellTemplate;
-                template.Seal();
-
-                treeGridColumn.CellTemplate = template;
-            }
-            else
-            {
-                treeGridColumn.CellTemplate = new DataTemplate
-                {
-                    VisualTree = treeGridColumn.GenerateDisplayTemplate()
-                };
-            }
         }
     }
 }

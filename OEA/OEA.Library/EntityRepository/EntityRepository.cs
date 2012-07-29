@@ -309,19 +309,55 @@ namespace OEA.Library
         /// <returns></returns>
         public IEntityOrList Save(IEntityOrList component, bool markOld = true)
         {
-            var e = component as Entity;
-            bool isNewEntity = e != null && e.IsNew;
+            IEntityOrList result = null;
 
-            IEntityOrList result = component.IsDirty ? DataPortal.Update(component) as IEntityOrList : component;
+            if (component is Entity)
+            {
+                var entity = component as Entity;
+                bool isNewEntity = entity != null && entity.IsNew;
+
+                var entity2 = component.IsDirty ? DataPortal.Update(component) as Entity : entity;
+
+                if (markOld)
+                {
+                    if (isNewEntity) { this.MergeIdRecur(entity, entity2 as Entity); }
+
+                    component.MarkOld();
+                }
+
+                result = entity2;
+            }
+            else
+            {
+                var list = component as EntityList;
+
+                //保存实体列表时，需要把所有新加的实体的 Id 都设置好。
+                List<int> newEntitiesIndeces = null;
+                if (markOld)
+                {
+                    newEntitiesIndeces = new List<int>();
+                    for (int i = 0; i < list.Count; i++)
+                    {
+                        if (list[i].IsNew) { newEntitiesIndeces.Add(i); }
+                    }
+                }
+
+                var list2 = component.IsDirty ? DataPortal.Update(component) as EntityList : list;
+
+                if (markOld)
+                {
+                    foreach (var i in newEntitiesIndeces)
+                    {
+                        this.MergeIdRecur(list[i], list2[i]);
+                    }
+
+                    component.MarkOld();
+                }
+
+                result = list2;
+            }
 
             (component as IEntityOrListInternal).NotifySaved();
-
-            if (markOld)
-            {
-                if (isNewEntity) { this.MergeIdRecur(e, result as Entity); }
-
-                component.MarkOld();
-            }
 
             return result;
         }
@@ -709,7 +745,7 @@ namespace OEA.Library
 
         #endregion
 
-        #region 帮助方法
+        #region 获取对象接口方法
 
         protected TEntityList FetchListCast<TEntityList>(object criteria)
             where TEntityList : EntityList
@@ -735,8 +771,46 @@ namespace OEA.Library
         protected Entity FetchFirst(object criteria)
         {
             var list = this.FetchList(criteria);
+
             this.NotifyLoaded(list);
+
             return list.Count > 0 ? list[0] : null;
+        }
+
+        #endregion
+
+        #region 获取对象接口方法 - CommonPropertiesCriteria
+
+        protected TEntityList FetchListCast<TEntityList>(Dictionary<IManagedProperty, object> propertyValues)
+            where TEntityList : EntityList
+        {
+            return this.FetchListCast<TEntityList>(PropertyCriteria(propertyValues));
+        }
+
+        protected TEntity FetchFirstAs<TEntity>(Dictionary<IManagedProperty, object> propertyValues)
+            where TEntity : Entity
+        {
+            return this.FetchFirstAs<TEntity>(PropertyCriteria(propertyValues));
+        }
+
+        protected EntityList FetchList(Dictionary<IManagedProperty, object> propertyValues)
+        {
+            return this.FetchList(PropertyCriteria(propertyValues));
+        }
+
+        protected Entity FetchFirst(Dictionary<IManagedProperty, object> propertyValues)
+        {
+            return this.FetchFirst(PropertyCriteria(propertyValues));
+        }
+
+        private static object PropertyCriteria(Dictionary<IManagedProperty, object> propertyValues)
+        {
+            var c = new CommonPropertiesCriteria();
+            foreach (var kv in propertyValues)
+            {
+                c.Values[kv.Key.Name] = kv.Value;
+            }
+            return c;
         }
 
         #endregion
@@ -830,6 +904,20 @@ namespace OEA.Library
         }
 
         private ConsolidatedTypePropertiesContainer _propertiesContainer;
+        internal ConsolidatedTypePropertiesContainer PropertiesContainer
+        {
+            get
+            {
+                if (this._propertiesContainer == null)
+                {
+                    this._propertiesContainer = ManagedPropertyRepository.Instance
+                        .GetTypePropertiesContainer(this.EntityType);
+                    if (this._propertiesContainer == null) throw new InvalidOperationException();
+                }
+
+                return _propertiesContainer;
+            }
+        }
         /// <summary>
         /// 获取所有的托管属性信息
         /// </summary>
@@ -837,14 +925,7 @@ namespace OEA.Library
         /// <returns></returns>
         public IList<IManagedProperty> GetAvailableIndicators()
         {
-            if (this._propertiesContainer == null)
-            {
-                this._propertiesContainer = ManagedPropertyRepository.Instance
-                    .GetTypePropertiesContainer(this.EntityType);
-                if (this._propertiesContainer == null) throw new InvalidOperationException();
-            }
-
-            return this._propertiesContainer.GetAvailableProperties();
+            return this.PropertiesContainer.GetAvailableProperties();
         }
 
         private EntityMeta _entityInfo;

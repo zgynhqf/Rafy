@@ -1,4 +1,17 @@
-﻿Ext.define('Oea.App', {
+﻿/*******************************************************
+ * 
+ * 作者：胡庆访
+ * 创建时间：201201
+ * 说明：客户端应用程序定义
+ * 运行环境：.NET 4.0
+ * 版本号：1.0.0
+ * 
+ * 历史记录：
+ * 创建文件 胡庆访 201201
+ * 
+*******************************************************/
+
+Ext.define('Oea.App', {
     singleton: true,
     extend: 'Ext.util.Observable',
     _modules: null,
@@ -117,7 +130,7 @@
         if (!container) {
             container = Ext.widget('viewport', {
                 border: 0,
-                layout: 'fit',
+                //layout: 'fit',
                 autoScroll: true
             });
         }

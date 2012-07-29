@@ -17,7 +17,6 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using Itenso.Windows.Input;
 using OEA.WPF.Command;
 using System.Windows.Media;
 using System.Windows.Automation;
@@ -35,7 +34,7 @@ namespace OEA.Module.WPF.CommandAutoUI
     {
         protected override ItemControlResult CreateItemControl()
         {
-            var cmd = this.CreateItemCommand();
+            var cmd = this.CreateItemUICommand();
 
             var textBox = this.CreateTextBox(cmd);
 

@@ -44,7 +44,7 @@ namespace OEA.RBAC
             set { this.SetRefEntity(UserRefProperty, value); }
         }
 
-        public static readonly Property<string> UserNameProperty = P<UserLoginLog>.RegisterReadOnly(e => e.UserName, e => (e as UserLoginLog).GetUserName(), null);
+        public static readonly Property<string> UserNameProperty = P<UserLoginLog>.RegisterReadOnly(e => e.UserName, e => (e as UserLoginLog).GetUserName());
         public string UserName
         {
             get { return this.GetProperty(UserNameProperty); }
@@ -64,7 +64,7 @@ namespace OEA.RBAC
             set { this.SetProperty(IsInProperty, value); }
         }
 
-        public static readonly Property<string> IsInTextProperty = P<UserLoginLog>.RegisterReadOnly(e => e.IsInText, e => (e as UserLoginLog).GetIsInText(), null);
+        public static readonly Property<string> IsInTextProperty = P<UserLoginLog>.RegisterReadOnly(e => e.IsInText, e => (e as UserLoginLog).GetIsInText());
         public string IsInText
         {
             get { return this.GetProperty(IsInTextProperty); }
@@ -99,7 +99,7 @@ namespace OEA.RBAC
         {
             base.ConfigMeta();
 
-            this.Meta.MapTable().HasColumns(
+            this.Meta.MapTable().MapProperties(
                 UserLoginLog.UserRefProperty,
                 UserLoginLog.IsInProperty,
                 UserLoginLog.LogTimeProperty

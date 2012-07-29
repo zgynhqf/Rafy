@@ -29,7 +29,8 @@ namespace OEA.ManagedProperty
     /// 托管属性对象
     /// </summary>
     [Serializable]
-    public abstract partial class ManagedPropertyObject : INotifyPropertyChanged, ICustomTypeDescriptor, IManagedPropertyDeclarer
+    [CompiledPropertyDeclarer]
+    public abstract partial class ManagedPropertyObject : INotifyPropertyChanged, ICustomTypeDescriptor
     {
         #region Fields
 
@@ -158,14 +159,17 @@ namespace OEA.ManagedProperty
         /// <param name="propertyName"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public bool TryGetPropertyValue(string propertyName, out object value)
+        public bool TryGetPropertyValue<T>(string propertyName, out T value)
         {
-            value = null;
+            value = default(T);
+            object objValue = null;
 
             var property = this.FindProperty(propertyName);
             if (property != null)
             {
-                value = this.GetProperty(property);
+                objValue = this.GetProperty(property);
+
+                value = (T)objValue;
                 return true;
             }
 

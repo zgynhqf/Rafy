@@ -868,12 +868,10 @@ namespace Hardcodet.Wpf.GenericTreeView
 
         protected virtual void OnTreeViewSelectedItemChanged(RoutedPropertyChangedEventArgs<object> e)
         {
-            if (e.NewValue != null)
+            var node = e.NewValue as TreeViewItem;
+            if (node != null)
             {
-                var node = e.NewValue as TreeViewItem;
-                var item = GetEntity(node);
-
-                this.SelectedItem = item;
+                this.SelectedItem = GetEntity(node);
             }
             else
             {

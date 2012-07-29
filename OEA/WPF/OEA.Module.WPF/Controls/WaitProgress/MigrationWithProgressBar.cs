@@ -17,7 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Diagnostics;
-using OEA.Library.ORM.DbMigration;
+using OEA.ORM.DbMigration;
 using System.Windows;
 
 namespace OEA.Module.WPF

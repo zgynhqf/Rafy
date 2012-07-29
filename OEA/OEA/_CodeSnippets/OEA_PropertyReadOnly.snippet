@@ -22,6 +22,10 @@
                     <Default>PropertyName</Default>
                 </Literal>
                 <Literal>
+                    <ID>DependencyProperty</ID>
+                    <Default>DependencyProperty</Default>
+                </Literal>
+                <Literal>
                     <ID>Label</ID>
                     <Default>Label</Default>
                 </Literal>
@@ -32,7 +36,8 @@
                 </Literal>
             </Declarations>
             <Code Language="csharp">
-                <![CDATA[public static readonly Property<$PropertyType$> $PropertyName$Property = P<$ClassName$>.RegisterReadOnly(e => e.$PropertyName$, e => (e as $ClassName$).Get$PropertyName$(), null);
+                <![CDATA[public static readonly Property<$PropertyType$> $PropertyName$Property = P<$ClassName$>.RegisterReadOnly(
+            e => e.$PropertyName$, e => (e as $ClassName$).Get$PropertyName$(), $DependencyProperty$);
         public $PropertyType$ $PropertyName$
         {
             get { return this.GetProperty($PropertyName$Property); }

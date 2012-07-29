@@ -1,9 +1,17 @@
-﻿// -- FILE ------------------------------------------------------------------
-// name       : ButtonCommand.cs
-// created    : Jani Giannoudis - 2008.04.15
-// language   : c#
-// environment: .NET 3.0
-// --------------------------------------------------------------------------
+﻿/*******************************************************
+ * 
+ * 作者：http://www.codeproject.com/Articles/25445/WPF-Command-Pattern-Applied
+ * 创建时间：周金根 2009
+ * 说明：此文件只包含一个类，具体内容见类型注释。
+ * 运行环境：.NET 4.0
+ * 版本号：1.0.0
+ * 
+ * 历史记录：
+ * 创建文件 周金根 2009
+ * 重新整理 胡庆访 20120518
+ * 
+*******************************************************/
+
 using System;
 using System.Windows;
 using System.Windows.Media;
@@ -17,169 +25,107 @@ using OEA.WPF;
 using System.Collections.Generic;
 using OEA.Module.WPF;
 
-namespace Itenso.Windows.Input
+namespace OEA.WPF.Command
 {
-
-    // ------------------------------------------------------------------------
     public class ButtonCommand
     {
-        // ----------------------------------------------------------------------
-        public static readonly DependencyProperty CommandProperty =
-            DependencyProperty.RegisterAttached(
-                "Command",
-                typeof(ICommand),
-                typeof(ButtonCommand),
-                new FrameworkPropertyMetadata(new PropertyChangedCallback(OnCommandInvalidated)));
+        #region 静态配置
 
-        // ----------------------------------------------------------------------
-        public static bool UseCommandImage
+        static ButtonCommand()
         {
-            get { return useCommandImage; }
-            set { useCommandImage = value; }
-        } // UseCommandImage
+            UseCommandImage = true;
+            ToolTipStyle = CommandToolTipStyle.EnabledWithKeyGesture;
+            DisabledOpacity = 0.25;
+        }
 
-        // ----------------------------------------------------------------------
-        public static bool ShowDisabledState
-        {
-            get { return showDisabledState; }
-            set { showDisabledState = value; }
-        } // ShowDisabledState
+        public static bool UseCommandImage { get; set; }
 
-        // ----------------------------------------------------------------------
-        public static CommandToolTipStyle ToolTipStyle
-        {
-            get { return toolTipStyle; }
-            set { toolTipStyle = value; }
-        } // ToolTipStyle
+        public static CommandToolTipStyle ToolTipStyle { get; set; }
 
-        // ----------------------------------------------------------------------
-        public static double DisabledOpacity
-        {
-            get { return disabledOpacity; }
-            set { disabledOpacity = value; }
-        } // DisabledOpacity
+        public static double DisabledOpacity { get; set; }
 
-        // ----------------------------------------------------------------------
+        #endregion
+
+        #region CommandProperty
+
+        public static readonly DependencyProperty CommandProperty = DependencyProperty.RegisterAttached(
+                "Command", typeof(ICommand), typeof(ButtonCommand),
+                new FrameworkPropertyMetadata(new PropertyChangedCallback(OnCommandChanged)));
+
         public static ICommand GetCommand(DependencyObject sender)
         {
             return sender.GetValue(CommandProperty) as ICommand;
-        } // GetCommand
+        }
 
-        // ----------------------------------------------------------------------
         public static void SetCommand(DependencyObject sender, ICommand command)
         {
             sender.SetValue(CommandProperty, command);
-        } // SetCommand
+        }
 
-        // ----------------------------------------------------------------------
-        private static void UpdateButton(Button button)
-        {
-            UIElement uiElement = button.Content as UIElement;
-            if (uiElement != null)
-            {
-                uiElement.Opacity = button.IsEnabled ? 1.0 : disabledOpacity;
-            }
-        } // UpdateButton
+        #endregion
 
-        // ----------------------------------------------------------------------
-        private static void OnCommandInvalidated(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+        private static void OnCommandChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
         {
             Button button = dependencyObject as Button;
-            if (button == null)
-            {
-                throw new InvalidOperationException("button required");
-            }
+            if (button == null) { throw new InvalidOperationException("button required"); }
 
-            ICommand newCommand = e.NewValue as ICommand;
-            if (newCommand == null)
-            {
-                throw new InvalidOperationException("command required");
-            }
-            button.Command = newCommand;
+            var command = e.NewValue as UICommand;
+            if (command == null) { throw new InvalidOperationException("CommandAdapter required"); }
 
-            RoutedCommand routedCommand = newCommand as RoutedCommand;
-            Command command = newCommand as Command;
-            //add by zhoujg
-            button.Name = "btn" + command.Name.Replace(".", "_");
-            button.CommandBindings.Add(CommandRepository.CreateCommandBinding(command));
+            button.Name = "btn" + command.CoreCommand.ProgramingName;
+            button.Command = command;
+            AutomationProperties.SetName(button, command.CoreCommand.Label);
 
-            var adapter = newCommand as CommandAdapter;
-            if (adapter != null)
-            {
-                //支持UI Test
-                button.SetValue(AutomationProperties.NameProperty, adapter.CoreCommand.Label);
-                button.SetBinding(ContentControl.ContentProperty, "Label");
-                button.DataContext = adapter.CoreCommand;
-            }
+            SetupContent(button, command);
+
+            CommandToolTipService.SetupTooltip(button, command, ToolTipStyle);
+        }
+
+        private static void SetupContent(Button button, UICommand command)
+        {
+            button.DataContext = command.CoreCommand;
+
+            bool setImage = false;
 
             // image
-            if (useCommandImage && button.Content == null && command != null)
+            if (UseCommandImage)
             {
                 Uri imageUri = CommandImageService.GetCommandImageUri(command);
                 if (imageUri != null)
                 {
                     try
                     {
-                        ButtonImage image = new ButtonImage();
-                        BitmapImage bitmap = new BitmapImage(imageUri);
-                        //if (bitmap.CanFreeze) bitmap.Freeze();    //Freeze bitmap it to avoid memory leak
-                        image.Source = bitmap;
-                        image.Stretch = Stretch.None;  //图形不拉伸
-                        StackPanel p = new StackPanel() { Orientation = Orientation.Horizontal };
-                        button.Content = p;
-                        p.Children.Add(image);
-                        p.Children.Add(new Label() { Content = command.Description.Text, Padding = new Thickness(0) });
+                        Label label = null;
+
+                        button.Content = new StackPanel()
+                        {
+                            Orientation = Orientation.Horizontal,
+                            Children =
+                            {
+                                new Image
+                                {
+                                    //if (bitmap.CanFreeze) bitmap.Freeze();//Freeze bitmap it to avoid memory leak
+                                    Source = new BitmapImage(imageUri),
+                                    Stretch = Stretch.None//图形不拉伸
+                                },
+                                (label = new Label() 
+                                { 
+                                    Padding = new Thickness(0) 
+                                })
+                            }
+                        };
+
+                        label.SetBinding(Label.ContentProperty, "Label");
+                        setImage = true;
                     }
                     catch { }
                 }
             }
 
-            // tooltip
-            if (button.ToolTip == null && command != null)
+            if (!setImage)
             {
-                button.ToolTip = CommandToolTipService.GetCommandToolTip(command, toolTipStyle);
-            }
-            if (button.ToolTip is string && routedCommand != null)
-            {
-                button.ToolTip = CommandToolTipService.FormatToolTip(routedCommand, button.ToolTip as string, toolTipStyle);
-            }
-            CommandToolTipService.SetShowOnDisabled(button, toolTipStyle);
-
-            if (showDisabledState)
-            {
-                UpdateButton(button);
-                //memory leak, use PropertyChangeNotifier
-                //DependencyPropertyDescriptor.FromProperty(
-                //    Button.IsEnabledProperty,
-                //    typeof(Button)).AddValueChanged(button, ButtonIsEnabledChanged);
-                PropertyChangeNotifier notifier = new PropertyChangeNotifier(button, "IsEnabled");
-                notifier.ValueChanged += new EventHandler(ButtonIsEnabledChanged);
-                notifiers.Add(notifier);
+                button.SetBinding(Button.ContentProperty, "Label");
             }
         }
-
-        private static IList<PropertyChangeNotifier> notifiers = new List<PropertyChangeNotifier>();
-
-        // ----------------------------------------------------------------------
-        private static void ButtonIsEnabledChanged(object sender, EventArgs e)
-        {
-            Button button = (sender as PropertyChangeNotifier).PropertySource as Button;
-            //Button button = sender as Button;
-            if (button == null)
-            {
-                return;
-            }
-            UpdateButton(button);
-        } // ButtonIsEnabledChanged
-
-        // ----------------------------------------------------------------------
-        // members
-        private static bool useCommandImage = true;
-        private static bool showDisabledState = true;
-        private static CommandToolTipStyle toolTipStyle = CommandToolTipStyle.Enabled;
-        private static double disabledOpacity = 0.25;
-
-    } // class ButtonCommand
-
-} // namespace Itenso.Windows.Input
-// -- EOF -------------------------------------------------------------------
+    }
+}

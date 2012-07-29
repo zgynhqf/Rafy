@@ -131,15 +131,15 @@ namespace OEA.MetaModel.View
             set { this.SetValue(ref this._DetailPanelType, value); }
         }
 
-        private int? _DetailLabelWidth;
+        private double? _DetailLabelSize;
         /// <summary>
-        /// 在 DetailPanel 中显示的 Label 的宽度。
+        /// 在 DetailPanel 中显示的 Label 的宽度或者高度。
         /// 不指定，则使用系统默认宽度。
         /// </summary>
-        public int? DetailLabelWidth
+        public double? DetailLabelSize
         {
-            get { return this._DetailLabelWidth; }
-            set { this.SetValue(ref this._DetailLabelWidth, value); }
+            get { return this._DetailLabelSize; }
+            set { this.SetValue(ref this._DetailLabelSize, value); }
         }
 
         private bool _DetailAsHorizontal;
@@ -150,6 +150,26 @@ namespace OEA.MetaModel.View
         {
             get { return this._DetailAsHorizontal; }
             set { this.SetValue(ref this._DetailAsHorizontal, value); }
+        }
+
+        private DetailLayoutMode _DetailLayoutMode = DetailLayoutMode.Dynamic;
+        /// <summary>
+        /// 表单布局模式。
+        /// </summary>
+        public DetailLayoutMode DetailLayoutMode
+        {
+            get { return this._DetailLayoutMode; }
+            set { this.SetValue(ref this._DetailLayoutMode, value); }
+        }
+
+        private DetailGroupingMode _DetailGroupingMode = DetailGroupingMode.GroupBox;
+        /// <summary>
+        /// 表单中属性分组的模式
+        /// </summary>
+        public DetailGroupingMode DetailGroupingMode
+        {
+            get { return this._DetailGroupingMode; }
+            set { this.SetValue(ref this._DetailGroupingMode, value); }
         }
 
         private WPFCommandCollection _WPFCommands = new WPFCommandCollection();
@@ -163,14 +183,14 @@ namespace OEA.MetaModel.View
 
         #endregion
 
-        private int _ColumnsCountShowInDetail;
+        private int _DetailColumnsCount;
         /// <summary>
         /// 在Detail里显示为几列
         /// </summary>
-        public int ColumnsCountShowInDetail
+        public int DetailColumnsCount
         {
-            get { return this._ColumnsCountShowInDetail; }
-            set { this.SetValue(ref this._ColumnsCountShowInDetail, value); }
+            get { return this._DetailColumnsCount; }
+            set { this.SetValue(ref this._DetailColumnsCount, value); }
         }
 
         private bool _NotAllowEdit;
@@ -264,39 +284,69 @@ namespace OEA.MetaModel.View
         {
             var res = this.EntityProperties.FirstOrDefault(item => item.Name.EqualsIgnorecase(name));
 
-            if (res != null && this.SetOrder.HasValue)
-            {
-                res.OrderNo = this.SetOrder.Value;
-                this.SetOrder++;
-            }
+            if (res != null) { this.OnPropertyFound(res); }
 
             return res;
         }
 
-        internal int? SetOrder;
-
         /// <summary>
-        /// 使用此方法定义的代码块中，自动根据代码调用的顺序设置属性排列的顺序。
+        /// 当使用 Property 方法查找到某个属性时，发生此事件。
         /// </summary>
-        /// <param name="from"></param>
-        /// <returns></returns>
-        public IDisposable OrderProperties(int from = 1)
-        {
-            this.SetOrder = from;
+        public event EventHandler<PropertyFoundEventArgs> PropertyFound;
 
-            return new ReorderingWrapper { Owner = this };
+        private void OnPropertyFound(EntityPropertyViewMeta property)
+        {
+            var handler = this.PropertyFound;
+            if (handler != null) handler(this, new PropertyFoundEventArgs(property));
         }
 
-        private class ReorderingWrapper : IDisposable
+        public class PropertyFoundEventArgs : EventArgs
         {
-            internal EntityViewMeta Owner;
-
-            public void Dispose()
+            public PropertyFoundEventArgs(EntityPropertyViewMeta property)
             {
-                Owner.SetOrder = null;
+                this.Property = property;
             }
+
+            public EntityPropertyViewMeta Property { get; private set; }
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// 表单布局模式
+    /// </summary>
+    public enum DetailLayoutMode
+    {
+        /// <summary>
+        /// 如果只有少量的属性，只需要显示一行时，使用 AutoGrid。
+        /// 否则使用 Wrapping
+        /// </summary>
+        Dynamic,
+        /// <summary>
+        /// 所有编辑器可自动折行。
+        /// 
+        /// 可以使用 NewLineInDetail 主动使某个编辑器直接折行。
+        /// </summary>
+        Wrapping,
+        /// <summary>
+        /// 根据列数自动为所有编辑器分配到表格中。
+        /// </summary>
+        AutoGrid,
+    }
+
+    /// <summary>
+    /// 表单中属性分组的模式
+    /// </summary>
+    public enum DetailGroupingMode
+    {
+        /// <summary>
+        /// 使用 StackPanel + GroupBox 进行分组。
+        /// </summary>
+        GroupBox,
+        /// <summary>
+        /// 使用 TabControl + TabItem 进行分组。
+        /// </summary>
+        TabItem
     }
 }

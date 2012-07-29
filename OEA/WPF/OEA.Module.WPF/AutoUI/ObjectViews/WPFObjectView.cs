@@ -21,6 +21,7 @@ using System.Windows;
 
 using OEA.MetaModel;
 using OEA.MetaModel.View;
+using OEA.WPF.Command;
 
 namespace OEA.Module.WPF
 {
@@ -35,6 +36,7 @@ namespace OEA.Module.WPF
             : base(meta)
         {
             base.DataLoader = new ViewDataLoader(this);
+            this.UICommands = new List<UICommand>();
         }
 
         public new FrameworkElement Control
@@ -69,5 +71,11 @@ namespace OEA.Module.WPF
                 value.SetServicedControl(this.Control);
             }
         }
+
+        /// <summary>
+        /// 本 View 中所有可用的 UICommand。
+        /// 这里只是把它们缓存起来，为了在界面中统一加入快捷键
+        /// </summary>
+        internal List<UICommand> UICommands { get; private set; }
     }
 }

@@ -9,7 +9,7 @@ namespace OEA.MetaModel.Attributes
     /// <summary>
     /// 对该类进行导航查询的条件
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
     public class NavigationQueryTypeAttribute : Attribute
     {
         /// <summary>

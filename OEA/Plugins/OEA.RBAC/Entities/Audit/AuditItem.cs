@@ -95,7 +95,7 @@ namespace OEA.Library.Audit
     [Serializable]
     public partial class AuditItemList : EntityList
     {
-        protected override void OnGetAll()
+        protected override void QueryAll()
         {
             this.QueryDb(q => q.Order(AuditItem.LogTimeProperty, false));
         }
@@ -112,10 +112,10 @@ namespace OEA.Library.Audit
                 var endDate = criteria.EndTime.AddDays(1d).Date;
 
                 //拼装查询条件
-                q.Constrain(AuditItem.TitleProperty).Like(criteria.TitleKeyWords)
-                    .And().Constrain(AuditItem.ContentProperty).Like(criteria.ContentKeyWords)
-                    .And().Constrain(AuditItem.UserProperty).Like(criteria.UserKeyWords)
-                    .And().Constrain(AuditItem.MachineNameProperty).Like(criteria.MachineKeyWords)
+                q.Constrain(AuditItem.TitleProperty).Contains(criteria.TitleKeyWords)
+                    .And().Constrain(AuditItem.ContentProperty).Contains(criteria.ContentKeyWords)
+                    .And().Constrain(AuditItem.UserProperty).Contains(criteria.UserKeyWords)
+                    .And().Constrain(AuditItem.MachineNameProperty).Contains(criteria.MachineKeyWords)
                     //起始时间和终止时间只精确到日。终止时间往后推一天
                     .And().Constrain(AuditItem.LogTimeProperty).GreaterEqual(startDate)
                     .And().Constrain(AuditItem.LogTimeProperty).LessEqual(endDate);
@@ -156,7 +156,7 @@ namespace OEA.Library.Audit
         {
             base.ConfigMeta();
 
-            Meta.MapTable().HasColumns(
+            Meta.MapTable().MapProperties(
                 AuditItem.TitleProperty,
                 AuditItem.ContentProperty,
                 AuditItem.PrivateContentProperty,

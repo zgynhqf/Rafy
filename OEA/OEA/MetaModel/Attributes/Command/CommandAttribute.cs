@@ -30,12 +30,6 @@ namespace OEA.MetaModel.Attributes
             this.Location = CommandLocation.Toolbar;
         }
 
-        /// <summary>
-        /// 如果使用空构造函数，则Name为null，
-        /// 不再唯一，若想获取唯一标记，请调用方法GetUniqueName
-        /// </summary>
-        public string Id { get; private set; }
-
         public string Label { get; set; }
 
         public string ToolTip
@@ -55,6 +49,17 @@ namespace OEA.MetaModel.Attributes
         }
 
         public string ImageName { get; set; }
+
+        #region WPF
+
+        /// <summary>
+        /// 格式：Ctrl+A，F2
+        /// 
+        /// WPF Only
+        /// </summary>
+        public string Gestures { get; set; }
+
+        #endregion
 
         /// <summary>
         /// 为这个Command进行“生成分组”的算法类。

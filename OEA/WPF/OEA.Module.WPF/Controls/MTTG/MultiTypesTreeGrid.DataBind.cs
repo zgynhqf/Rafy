@@ -110,7 +110,7 @@ namespace OEA.Module.WPF.Controls
         /// </summary>
         private void RebindRoots()
         {
-            this._selectedItems.Clear();
+            this.OnRebinding_Selection();
 
             var roots = new List<Entity>();
 

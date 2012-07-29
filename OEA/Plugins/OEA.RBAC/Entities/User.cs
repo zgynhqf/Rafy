@@ -131,7 +131,7 @@ namespace OEA.RBAC
         {
             base.ConfigMeta();
 
-            this.Meta.MapTable().HasColumns(
+            this.Meta.MapTable().MapProperties(
                 User.CodeProperty,
                 User.NameProperty,
                 User.PasswordProperty,
@@ -154,8 +154,8 @@ namespace OEA.RBAC
                     );
             }
 
-            View.Property(User.CodeProperty).HasLabel("登录代号").ShowIn(ShowInWhere.ListDropDown);
-            View.Property(User.NameProperty).HasLabel("姓名").ShowIn(ShowInWhere.List);
+            View.Property(User.CodeProperty).HasLabel("登录代号").ShowIn(ShowInWhere.All);
+            View.Property(User.NameProperty).HasLabel("姓名").ShowIn(ShowInWhere.ListDetail);
             View.Property(User.PasswordProperty).HasLabel("密码").UseEditor(WPFEditorNames.Password);
             View.Property(User.LastLoginTimeProperty).HasLabel("最后登录时间");
             View.Property(User.LoginCountProperty).HasLabel("剩余登录次数").UseEditor(WPFEditorNames.Password);

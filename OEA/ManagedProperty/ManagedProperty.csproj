@@ -47,7 +47,7 @@
     <Compile Include="Utils\Utilities.cs" />
     <Compile Include="zzzManagedPropertyObjectView.cs" />
     <Compile Include="Repository\ConsolidatedTypePropertiesContainer.cs" />
-    <Compile Include="IManagedPropertyDeclarer.cs" />
+    <Compile Include="CompiledPropertyDeclarerAttribute.cs" />
     <Compile Include="Freezable.cs" />
     <Compile Include="ManagedPropertyInitializer.cs" />
     <Compile Include="ManagedPropertyObject.Serialization.cs">

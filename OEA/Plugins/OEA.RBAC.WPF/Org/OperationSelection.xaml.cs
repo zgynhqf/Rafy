@@ -73,6 +73,8 @@ namespace RBAC
             result.Child = this._opertaionsView.Control;
         }
 
+        #region 公有方法
+
         public void ExpandModules()
         {
             this._naviModulesView.ExpandAll();
@@ -88,10 +90,7 @@ namespace RBAC
             this._denyList = denyList;
         }
 
-        private bool IsDataBound
-        {
-            get { return this._denyList != null; }
-        }
+        #endregion
 
         /// <summary>
         /// 左边导航面板选择时，变更右边的功能列表
@@ -194,6 +193,11 @@ namespace RBAC
 
                 this._denyList.Add(deny);
             }
+        }
+
+        private bool IsDataBound
+        {
+            get { return this._denyList != null; }
         }
     }
 }

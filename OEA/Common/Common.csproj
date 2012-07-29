@@ -61,6 +61,7 @@
     <Compile Include="Data\Providers\SqlServerBackuper.cs" />
     <Compile Include="Data\Providers\SqlServerProvider.cs" />
     <Compile Include="Data\SQLTrace.cs" />
+    <Compile Include="Data\LocalTransactionBlock.cs" />
     <Compile Include="Extensions\ConverterHZToPY.cs" />
     <Compile Include="Extensions\IEnumerableExtension.cs" />
     <Compile Include="Extensions\MemberInfoExtension.cs" />

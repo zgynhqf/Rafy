@@ -102,6 +102,15 @@ namespace hxy.Common.Data
         /// Query out some data from database.
         /// </summary>
         /// <param name="strSql">specific sql</param>
+        /// <param name="closeConnection">Indicates whether to close the corresponding connection when the reader is closed?</param>
+        /// <param name="parameters">If this sql has some parameters, these are its parameters.</param>
+        /// <returns></returns>
+        IDataReader QueryDataReaderNormal(string strSql, bool closeConnection, params IDbDataParameter[] parameters);
+
+        /// <summary>
+        /// Query out some data from database.
+        /// </summary>
+        /// <param name="strSql">specific sql</param>
         /// <param name="type">
         /// Indicates or specifies how the System.Data.IDbCommand.CommandText property
         /// is interpreted.
@@ -110,6 +119,14 @@ namespace hxy.Common.Data
         /// <param name="parameters">If this sql has some parameters, these are its parameters.</param>
         /// <returns></returns>
         IDataReader QueryDataReaderNormal(string strSql, CommandType type, bool closeConnection, params IDbDataParameter[] parameters);
+
+        /// <summary>
+        /// Query out some data from database.
+        /// </summary>
+        /// <param name="strSql">specific sql</param>
+        /// <param name="parameters">If this sql has some parameters, these are its parameters.</param>
+        /// <returns></returns>
+        IDataReader QueryDataReaderNormal(string strSql, params IDbDataParameter[] parameters);
 
         /// <summary>
         /// Query out some data from database.
@@ -137,6 +154,15 @@ namespace hxy.Common.Data
         /// If there is not any records, return null.
         /// </summary>
         /// <param name="strSql">specific sql</param>
+        /// <param name="parameters">If this sql has some parameters, these are its parameters.</param>
+        /// <returns></returns>
+        DataRow QueryDataRowNormal(string strSql, params IDbDataParameter[] parameters);
+
+        /// <summary>
+        /// Query out a row from database.
+        /// If there is not any records, return null.
+        /// </summary>
+        /// <param name="strSql">specific sql</param>
         /// <param name="type">
         /// Indicates or specifies how the System.Data.IDbCommand.CommandText property
         /// is interpreted.
@@ -157,6 +183,14 @@ namespace hxy.Common.Data
         /// Query out a DataTable object from database by the specific sql.
         /// </summary>
         /// <param name="strSql">specific sql</param>
+        /// <param name="parameters">If this sql has some parameters, these are its parameters.</param>
+        /// <returns></returns>
+        DataTable QueryDataTableNormal(string strSql, params IDbDataParameter[] parameters);
+
+        /// <summary>
+        /// Query out a DataTable object from database by the specific sql.
+        /// </summary>
+        /// <param name="strSql">specific sql</param>
         /// <param name="type">
         /// Indicates or specifies how the System.Data.IDbCommand.CommandText property
         /// is interpreted.
@@ -172,6 +206,14 @@ namespace hxy.Common.Data
         /// <param name="parameters">If this sql has some parameters, these are its parameters.</param>
         /// <returns></returns>
         object QueryValue(string formatSql, params object[] parameters);
+
+        /// <summary>
+        /// Execute the sql, and return the element of first row and first column, ignore the other values.
+        /// </summary>
+        /// <param name="strSql">specific sql</param>
+        /// <param name="parameters">If this sql has some parameters, these are its parameters.</param>
+        /// <returns></returns>
+        object QueryValueNormal(string strSql, params IDbDataParameter[] parameters);
 
         /// <summary>
         /// Execute the sql, and return the element of first row and first column, ignore the other values.

@@ -15,7 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Itenso.Windows.Input;
+using OEA.WPF.Command;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
 

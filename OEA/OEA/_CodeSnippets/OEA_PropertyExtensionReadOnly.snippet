@@ -2,7 +2,7 @@
 <CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
     <CodeSnippet Format="1.0.0">
         <Header>
-            <Description>一般属性</Description>
+            <Description>只读扩展属性</Description>
             <Title>OEA_PropertyExtensionReadOnly</Title>
             <Shortcut>OEAPropertyExtensionReadOnly</Shortcut>
             <Author>HuQingfang</Author>
@@ -21,14 +21,23 @@
                     <ID>PropertyName</ID>
                     <Default>PropertyName</Default>
                 </Literal>
-                <Literal Editable="false">
+                <Literal>
+                    <ID>DepencyProperty</ID>
+                    <Default>DepencyProperty</Default>
+                </Literal>
+                <Literal>
                     <ID>ClassName</ID>
                     <Default>Entity</Default>
                 </Literal>
+                <Literal>
+                    <ID>DeclareType</ID>
+                    <Function>ClassName()</Function>
+                </Literal>
             </Declarations>
             <Code Language="csharp">
-                <![CDATA[public static readonly Property<$PropertyType$> $PropertyName$Property = P<$ClassName$>.RegisterExtensionReadOnly(e => e.$PropertyName$, Get$PropertyName$, null);
-        public static $PropertyType$ Get$PropertyName$($ClassName$ $this)
+                <![CDATA[public static readonly Property<$PropertyType$> $PropertyName$Property = P<$ClassName$>.RegisterExtensionReadOnly("$PropertyName$", typeof($DeclareType$),
+            Get$PropertyName$, $ClassName$.$DepencyProperty$);
+        public static $PropertyType$ Get$PropertyName$($ClassName$ me)
         {
             $end$
         }]]>

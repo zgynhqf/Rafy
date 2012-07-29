@@ -82,6 +82,8 @@ namespace OEA.Module.WPF.Controls
             this._rootIsTree = rootEntityViewMeta.EntityMeta.IsTreeEntity;
             this._rootMeta = rootEntityViewMeta;
 
+            this.OnSelectionConstruct();
+
             this.OnDataBindConstruct();
 
             //此行会调用 Refresh 刷新整个控件，此时其它的属性需要被初始化完成。

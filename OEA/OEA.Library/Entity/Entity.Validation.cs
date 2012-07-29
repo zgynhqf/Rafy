@@ -28,7 +28,7 @@ namespace OEA.Library
     /// <summary>
     /// 实体类的一些不太重要的实现代码。
     /// </summary>
-    public partial class Entity : IDataErrorInfo
+    public partial class Entity
     {
         private ValidationRules _validationRules;
 
@@ -76,7 +76,7 @@ namespace OEA.Library
                 if (p is IRefProperty)
                 {
                     var meta = p.GetMeta(this) as IRefPropertyMetadata;
-                    if (meta.ReferenceType == ReferenceType.Normal && !meta.Nullable)
+                    if (!meta.Nullable)
                     {
                         rules.AddRule(p, CommonRules.Required);
                     }
@@ -99,35 +99,5 @@ namespace OEA.Library
 
             this.SetChildrenParent_OnDeserializaion();
         }
-
-        #region IDataErrorInfo Memebers
-
-        string IDataErrorInfo.Error
-        {
-            get
-            {
-                var broken = this.ValidationRules.Validate();
-                if (broken.Count > 0) return broken.ToString();
-                return null;
-            }
-        }
-
-        public string this[string columnName]
-        {
-            get
-            {
-                var allIndicators = this.GetRepository().GetAvailableIndicators();
-                var property = allIndicators.FirstOrDefault(p => p.Name == columnName);
-                if (property != null)
-                {
-                    var broken = this.ValidationRules.Validate(property);
-                    if (broken.Count > 0) return broken.ToString();
-                }
-
-                return null;
-            }
-        }
-
-        #endregion
     }
 }

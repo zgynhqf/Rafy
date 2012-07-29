@@ -11,7 +11,7 @@
  * 
 *******************************************************/
 
-using Itenso.Windows.Input;
+using OEA.WPF.Command;
 using System.Windows;
 
 namespace OEA.Module.WPF.CommandAutoUI
@@ -23,7 +23,7 @@ namespace OEA.Module.WPF.CommandAutoUI
     {
         protected override ItemControlResult CreateItemControl()
         {
-            var cmd = this.CreateItemCommand();
+            var cmd = this.CreateItemUICommand();
             var element = this.CreateAMenuItem(cmd);
             return new ItemControlResult(element, cmd);
         }

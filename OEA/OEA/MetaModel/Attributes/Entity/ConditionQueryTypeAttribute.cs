@@ -21,7 +21,7 @@ namespace OEA.MetaModel.Attributes
     /// <summary>
     /// 对该类进行条件查询的条件
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
     public class ConditionQueryTypeAttribute : Attribute
     {
         public ConditionQueryTypeAttribute(Type queryType)

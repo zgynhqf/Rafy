@@ -35,10 +35,10 @@ namespace DbMigration.History
 
         protected override DateTime GetDbVersionCore()
         {
-            this.CheckDbValid();
-
             try
             {
+                this.CheckDbValid();
+
                 return this.Get();
             }
             catch (DbException)
@@ -57,10 +57,10 @@ namespace DbMigration.History
 
         protected override Result SetDbVersionCore(DateTime version)
         {
-            this.CheckDbValid();
-
             try
             {
+                this.CheckDbValid();
+
                 this.Set(version);
                 return true;
             }

@@ -63,8 +63,7 @@ namespace OEA.Library
         /// <param name="entity"></param>
         private void ReadChildren(Entity entity)
         {
-            var provider = RepositoryFactoryHost.Factory.Create(entity.GetType());
-            var allProperties = provider.GetAvailableIndicators();
+            var allProperties = entity.GetRepository().GetAvailableIndicators();
 
             var childrenList = new List<IList<Entity>>();
 

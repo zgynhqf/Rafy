@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+    <CodeSnippet Format="1.0.0">
+        <Header>
+            <Description>一般外键引用对象属性</Description>
+            <Title>OEA_PropertyReferenceNullableFast</Title>
+            <Shortcut>OEAPropertyReferenceNullableFast</Shortcut>
+            <Author>HuQingfang</Author>
+            <SnippetTypes>
+                <SnippetType>Expansion</SnippetType>
+            </SnippetTypes>
+        </Header>
+        <Snippet>
+            <Declarations>
+                <Literal>
+                    <ID>RefEntityType</ID>
+                    <ToolTip>引用实体类型</ToolTip>
+                    <Default>RefEntity</Default>
+                </Literal>
+                <Literal>
+                    <ID>ReferenceType</ID>
+                    <ToolTip>引用类型（是否为组合父引用）</ToolTip>
+                    <Default>Normal</Default>
+                </Literal>
+                <Literal Editable="false">
+                    <ID>ClassName</ID>
+                    <Function>ClassName()</Function>
+                    <Default>ClassNamePlaceholder</Default>
+                </Literal>
+            </Declarations>
+            <Code Language="csharp">
+                <![CDATA[public static readonly RefProperty<$RefEntityType$> $RefEntityType$RefProperty =
+            P<$ClassName$>.RegisterRef(e => e.$RefEntityType$, ReferenceType.$ReferenceType$);
+        public int? $RefEntityType$Id
+        {
+            get { return this.GetRefNullableId($RefEntityType$RefProperty); }
+            set { this.SetRefNullableId($RefEntityType$RefProperty, value); }
+        }
+        public $RefEntityType$ $RefEntityType$
+        {
+            get { return this.GetRefEntity($RefEntityType$RefProperty); }
+            set { this.SetRefEntity($RefEntityType$RefProperty, value); }
+        }$end$]]>
+            </Code>
+        </Snippet>
+    </CodeSnippet>
+</CodeSnippets>

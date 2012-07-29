@@ -35,6 +35,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OEA;
+using OEA.ORM;
 using OEA.Library;
 using OEA.Library.Validation;
 using OEA.MetaModel;
@@ -44,28 +45,47 @@ using OEA.ManagedProperty;
 
 namespace $NAMESPACE$
 {
+    /// <summary>
+    /// $Label$
+    /// </summary>
     [RootEntity, Serializable]
     //根据是根对象，还是子对象，在上下两行中删除一行！$end$
     [ChildEntity, Serializable]
     public class $EntityName$ : $BaseEntity$Entity
     {
+        #region 引用属性
+        
+        #endregion
+        
+        #region 子属性
+        
+        #endregion
+        
+        #region 一般属性
+        
         public static readonly Property<string> NameProperty = P<$EntityName$>.Register(e => e.Name);
         public string Name
         {
             get { return this.GetProperty(NameProperty); }
             set { this.SetProperty(NameProperty, value); }
         }
+        
+        #endregion
+        
+        #region 只读属性
+        
+        #endregion
     }
 
     [Serializable]
     public class $EntityName$List : $BaseEntity$EntityList { }
 
-    public class $EntityName$Repository : EntityRepository 
+    public class $EntityName$Repository : $BaseEntity$EntityRepository 
     { 
         protected $EntityName$Repository() { }
     }
 
-    internal class $EntityName$Config : EntityConfig<$EntityName$>
+    internal class $EntityName$Config : $BaseEntity$EntityConfig<$EntityName$>
     {
         protected override void ConfigMeta()
         {

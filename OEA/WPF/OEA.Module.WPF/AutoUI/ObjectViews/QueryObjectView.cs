@@ -14,13 +14,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Itenso.Windows.Input;
+using OEA.WPF.Command;
 using OEA.Library;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
-using OEA.WPF.Command;
 using OEA.ManagedProperty;
-
 
 namespace OEA.Module.WPF
 {
@@ -94,11 +92,38 @@ namespace OEA.Module.WPF
 
         private void FireQuery(ObjectView resultView)
         {
+            this.OnQuerying();
+
             //导航面板的查询使用隐式查询。
             resultView.DataLoader.LoadDataAsync(
-                () => RF.Create(resultView.EntityType).__GetListImplicitly(this.Current)
+                () => RF.Create(resultView.EntityType).__GetListImplicitly(this.Current),
+                this.OnQueryCompleted
                 );
         }
+
+        #region 事件
+
+        public event EventHandler Querying;
+        /// <summary>
+        /// 开始异步查询
+        /// </summary>
+        protected virtual void OnQuerying()
+        {
+            var handler = this.Querying;
+            if (handler != null) handler(this, EventArgs.Empty);
+        }
+
+        public event EventHandler QueryCompleted;
+        /// <summary>
+        /// 查询完成，数据已达本地
+        /// </summary>
+        protected virtual void OnQueryCompleted()
+        {
+            var handler = this.QueryCompleted;
+            if (handler != null) handler(this, EventArgs.Empty);
+        }
+
+        #endregion
 
         private bool CanQuery()
         {

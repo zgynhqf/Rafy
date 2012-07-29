@@ -135,8 +135,9 @@ namespace OEA.MetaModel.View
                 result.GroupType = cmdAttri.GroupType;
                 result.Location = cmdAttri.Location;
                 result.GroupAlgorithmType = cmdAttri.UIAlgorithm;
+                result.Gestures = cmdAttri.Gestures;
                 var group = cmdAttri.Group ?? string.Empty;
-                result._groups = group.Split("/".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).ToList();
+                result._groups = group.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries).ToList();
             }
             else
             {

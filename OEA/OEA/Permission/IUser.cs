@@ -23,5 +23,11 @@ namespace OEA
     /// 当前用户的接口定义
     /// 为后期扩展预留的接口。
     /// </summary>
-    public interface IUser : IIdentity { }
+    public interface IUser : IIdentity
+    {
+        /// <summary>
+        /// 用户编码
+        /// </summary>
+        string Code { get; }
+    }
 }

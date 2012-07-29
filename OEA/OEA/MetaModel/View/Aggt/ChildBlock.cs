@@ -75,17 +75,23 @@ namespace OEA.MetaModel.View
         [XmlIgnore]
         public AggtBlocks Owner { get; internal set; }
 
-        private IListProperty _ChildrenProperty;
+        private IManagedProperty _ChildrenProperty;
+        /// <summary>
+        /// 子属性一般情况下是一个 IListProperty，
+        /// 但是也有可能是一个 IRefProperty
+        /// </summary>
         [XmlIgnore]
-        public IListProperty ChildrenProperty
+        public IManagedProperty ChildrenProperty
         {
             get
             {
                 if (this._ChildrenProperty == null && !string.IsNullOrEmpty(this._ChildrenPropertyName))
                 {
-                    this._ChildrenProperty = CommonModel.Entities.Get(this.Owner.MainBlock.EntityType)
-                        .ChildrenProperty(this._ChildrenPropertyName)
-                        .ManagedProperty as IListProperty;
+                    var em = CommonModel.Entities.Get(this.Owner.MainBlock.EntityType);
+                    PropertyMeta cp = em.ChildrenProperty(this._ChildrenPropertyName);
+                    cp = cp ?? em.Property(this._ChildrenPropertyName);
+
+                    this._ChildrenProperty = cp.ManagedProperty;
                 }
                 return this._ChildrenProperty;
             }
@@ -95,7 +101,19 @@ namespace OEA.MetaModel.View
                 if (value != null)
                 {
                     this._ChildrenPropertyName = value.Name;
-                    this.EntityType = value.ListEntityType;
+
+                    var listProperty = value as IListProperty;
+                    if (listProperty != null)
+                    {
+                        this.EntityType = listProperty.ListEntityType;
+                    }
+                    else
+                    {
+                        var refProperty = value as IOEARefProperty;
+                        if (refProperty == null) throw new ArgumentNullException("refProperty");
+
+                        this.EntityType = refProperty.RefEntityType;
+                    }
 
                     //使用该属性对应实体的默认视图中的名称作用本子块的 Label
                     if (string.IsNullOrEmpty(this.Label))

@@ -20,7 +20,7 @@ using DbMigration.SqlServer;
 using hxy.Common.Data;
 using hxy.Common.Data.Providers;
 using OEA.Library.Caching;
-using OEA.Library.ORM.DbMigration;
+using OEA.ORM.DbMigration;
 using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
 using OEA.MetaModel.View;
@@ -28,11 +28,14 @@ using Common;
 
 namespace OEA.Library
 {
-    class OEALibrary : ILibrary
+    class OEALibrary : LibraryPlugin
     {
-        ReuseLevel IPlugin.ReuseLevel { get { return ReuseLevel._System; } }
+        public override ReuseLevel ReuseLevel
+        {
+            get { return ReuseLevel._System; }
+        }
 
-        void ILibrary.Initialize(IApp app)
+        public override void Initialize(IApp app)
         {
             RepositoryFactoryHost.Factory = RepositoryFactory.Instance;
 
@@ -80,9 +83,20 @@ namespace OEA.Library
                 //否则，如果是单机版，就在 OEA.RBAC.WPF 中升级，以便弹出进度条。
                 if (OEAEnvironment.Location != OEALocation.LocalVersion)
                 {
-                    var configNames = ConfigurationHelper.GetAppSettingOrDefault("OEA_Migrate_Databases");
+                    //根据两种不同的配置名称来判断是否打开 Drop 功能
+                    bool runDataLossOperation = false;
+                    var configNames = ConfigurationHelper.GetAppSettingOrDefault("OEA_AutoMigrate_Databases_WithoutDropping");
+                    if (string.IsNullOrEmpty(configNames))
+                    {
+                        configNames = ConfigurationHelper.GetAppSettingOrDefault("OEA_AutoMigrate_Databases");
+                        if (!string.IsNullOrEmpty(configNames)) { runDataLossOperation = true; }
+                    }
+
                     if (!string.IsNullOrEmpty(configNames))
                     {
+                        var configArray = configNames.Replace(ConnectionStringNames.DbMigrationHistory, string.Empty)
+                           .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
                         using (var c = new OEADbMigrationContext(ConnectionStringNames.DbMigrationHistory))
                         {
                             //对于迁移日志库的构造，无法记录它本身的迁移日志
@@ -91,12 +105,11 @@ namespace OEA.Library
                             c.AutoMigrate();
                         }
 
-                        var configArray = configNames.Replace(ConnectionStringNames.DbMigrationHistory, string.Empty)
-                            .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                         foreach (var config in configArray)
                         {
                             using (var c = new OEADbMigrationContext(config))
                             {
+                                c.RunDataLossOperation = runDataLossOperation;
                                 c.AutoMigrate();
                             }
                         }

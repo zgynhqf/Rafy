@@ -13,22 +13,20 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-
 using OEA.Library;
+using OEA.ManagedProperty;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
-
 using OEA.Module.WPF.Controls;
 using OEA.Module.WPF.Editors;
-using System.ComponentModel;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using OEA.ManagedProperty;
 
 namespace OEA.Module.WPF
 {
@@ -315,6 +313,21 @@ namespace OEA.Module.WPF
             this.RaiseRoutedEvent(SelectedItemChangedEvent, e);
         }
 
+        /// <summary>
+        /// 勾选项变更事件
+        /// </summary>
+        public event CheckChangedEventHandler CheckChanged;
+
+        /// <summary>
+        /// 勾选项变更事件
+        /// </summary>
+        /// <param name="e"></param>
+        private void OnCheckChanged(CheckChangedEventArgs e)
+        {
+            var h = this.CheckChanged;
+            if (h != null) h(this, e);
+        }
+
         #endregion
 
         //暂时不处理 动态可见性
@@ -501,6 +514,11 @@ namespace OEA.Module.WPF
             this.OnSelectedItemChanged(e);
         }
 
+        void IEventListener.NotifyCheckChanged(object sender, CheckChangedEventArgs e)
+        {
+            this.OnCheckChanged(e);
+        }
+
         #endregion
 
         #region IListEditorContext Members
@@ -661,7 +679,15 @@ namespace OEA.Module.WPF
             }
 
             //设置父对象
-            newEntity.ResetParentEntity();
+            var pv = this.Parent;
+            if (pv != null)
+            {
+                var parent = pv.Current;
+                if (parent != null)
+                {
+                    newEntity.SetParentEntity(parent);
+                }
+            }
         }
 
         public void ExpandAll()

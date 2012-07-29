@@ -92,32 +92,42 @@ namespace OEA.ManagedProperty
 
         internal object GetProperty(IManagedProperty property)
         {
+            var useDefault = true;
             object result = null;
 
             if (property.IsReadOnly)
             {
                 result = (property as IManagedPropertyInternal).ProvideReadOnlyValue(this._owner);
+                useDefault = false;
             }
             else
             {
                 if (property.LifeCycle == ManagedPropertyLifeCycle.CompileOrSetup)
                 {
                     var field = this._compiledFields[property.TypeCompiledIndex];
-                    if (field != null) { result = field.Value; }
+                    if (field != null)
+                    {
+                        result = field.Value;
+                        useDefault = false;
+                    }
                 }
                 else
                 {
                     if (this._runtimeFields != null)
                     {
                         IManagedPropertyField field;
-                        if (this._runtimeFields.TryGetValue(property, out field)) { result = field.Value; }
+                        if (this._runtimeFields.TryGetValue(property, out field))
+                        {
+                            result = field.Value;
+                            useDefault = false;
+                        }
                     }
                 }
             }
 
             var meta = property.GetMeta(this) as IManagedPropertyMetadataInternal;
 
-            if (result == null) result = meta.DefaultValue;
+            if (useDefault) result = meta.DefaultValue;
 
             result = meta.CoerceGetValue(this._owner, result);
 

@@ -1,0 +1,61 @@
+﻿/*******************************************************
+ * 
+ * 作者：胡庆访
+ * 创建时间：20120607 14:14
+ * 说明：此文件只包含一个类，具体内容见类型注释。
+ * 运行环境：.NET 4.0
+ * 版本号：1.0.0
+ * 
+ * 历史记录：
+ * 创建文件 胡庆访 20120607 14:14
+ * 
+*******************************************************/
+
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using System.Windows.Controls;
+using System.Windows.Data;
+using OEA.Library;
+using OEA.ManagedProperty;
+
+namespace OEA.Module.WPF
+{
+    /// <summary>
+    /// 托管属性的验证规则
+    /// 
+    /// 使用本规则，需要在 Binding.Path 中添加 ManagedProperty 作为参数。
+    /// </summary>
+    internal class ManagedProeprtyValidationRule : ValidationRule
+    {
+        public static readonly ManagedProeprtyValidationRule Instance = new ManagedProeprtyValidationRule();
+
+        private ManagedProeprtyValidationRule() : base(ValidationStep.UpdatedValue, true) { }
+
+        public override ValidationResult Validate(object value, CultureInfo cultureInfo)
+        {
+            var bindingExp = value as BindingExpression;
+            if (bindingExp != null)
+            {
+                var entity = bindingExp.DataItem as Entity;
+                if (entity != null)
+                {
+                    var mp = bindingExp.ParentBinding.Path.PathParameters
+                        .FirstOrDefault(p => p is IManagedProperty) as IManagedProperty;
+                    if (mp != null)
+                    {
+                        var broken = entity.ValidationRules.Validate(mp);
+                        if (broken.Count > 0)
+                        {
+                            return new ValidationResult(false, broken.ToString());
+                        }
+                    }
+                }
+            }
+
+            return ValidationResult.ValidResult;
+        }
+    }
+}

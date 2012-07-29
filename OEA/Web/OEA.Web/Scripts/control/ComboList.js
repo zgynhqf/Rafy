@@ -1,16 +1,32 @@
-﻿Ext.define('Oea.control.ComboList', {
+﻿/*******************************************************
+ *
+ * 作者：胡庆访
+ * 创建时间：201201
+ * 说明：
+ * 运行环境：.NET 4.0
+ * 版本号：1.0.0
+ *
+ * 历史记录：
+ * 创建文件 胡庆访 201201
+ *
+*******************************************************/
+
+Ext.define('Oea.control.ComboList', {
     extend: 'Ext.form.field.ComboBox',
     //extend: 'Oea.control.ComboBoxTest',
     alias: 'widget.combolist',
 
     //override default config
     editable: false,
+    //doAutoSelect 方法中会调用 picker 的一些方法：getNode、hightlightItem 等，
+    //而这些方法并没有在 grid、treeGrid 中实现。
     autoSelect: false,
     pageSize: 10,
     matchFieldWidth: false,
 
     //config
     model: '',
+    dataSourceProperty: '',
 
     //private fields
     _view: null,
@@ -22,83 +38,92 @@
     //    initComponent: function () {
     //        var me = this;
     //        me.callParent();
-    //        
+    //
     //        me._refProperty = me.getName().replace("_Label", "");
     //    },
 
-    /// <summary>重写父类构造控件方法，生成列表控件</summary>
+    //override
     createPicker: function () {
-        var me = this;
-
-        var v = Oea.AutoUI.getMeta({
+        /// <summary>
+        /// 重写父类构造控件方法，生成列表控件
+        /// </summary>
+        /// <returns></returns>
+        var meta = null;
+        Oea.AutoUI.getMeta({
             async: false, //同步
-            model: me.model,
-            isLookup: true,
-            isReadonly: true,
-            ignoreCommands: true,
-            callback: function (meta) {
-                me._isTree = meta.isTree;
-
-                Ext.applyIf(meta.gridConfig, {
-                    floating: true,
-                    hidden: true,
-                    minWidth: 250,
-                    ownerCt: me.up('[floating]')
-                });
-                if (me._isTree) {
-                    meta.gridConfig.useArrows = true;
-                }
-
-                Ext.apply(meta.storeConfig, {
-                    pageSize: me.pageSize
-                });
-
-                var v = Oea.AutoUI.createListView(meta);
-
-                me._view = v;
-
-                //重新设置数据源，这时，picker 还没有值，所以不会造成重复绑定。
-                me.bindStore(v.getData());
-            }
+            model: this.model, isLookup: true, isReadonly: true, ignoreCommands: true,
+            callback: function (res) { meta = res; }
         });
 
-        var grid = me._view.getControl();
+        this._isTree = meta.isTree;
 
-        me.mon(grid.getView(), {
-            itemclick: me.onItemClick,
-            refresh: me.onListRefresh,
-            scope: me
+        Ext.applyIf(meta.gridConfig, {
+            floating: true,
+            hidden: true,
+            minWidth: 250,
+            ownerCt: this.up('[floating]')
         });
-        me.mon(grid.getSelectionModel(), {
-            'beforeselect': me.onBeforeSelect,
-            'beforedeselect': me.onBeforeDeselect,
-            'selectionchange': me.onListSelectionChange,
-            scope: me
+        if (this._isTree) {
+            meta.gridConfig.useArrows = true;
+        }
+        Ext.apply(meta.storeConfig, { pageSize: this.pageSize });
+
+        var v = Oea.AutoUI.createListView(meta);
+        this._view = v;
+
+        //重新设置数据源，这时，picker 还没有值，所以不会造成重复绑定。
+        this.bindStore(v.getData());
+
+        var grid = v.getControl();
+
+        this.mon(grid.getView(), {
+            itemclick: this.onItemClick,
+            refresh: this.onListRefresh,
+            scope: this
+        });
+        this.mon(grid.getSelectionModel(), {
+            'beforeselect': this.onBeforeSelect,
+            'beforedeselect': this.onBeforeDeselect,
+            'selectionchange': this.onListSelectionChange,
+            scope: this
         });
 
         return grid;
     },
-    setValue: function (value, doSelect) {
-        var me = this;
-        me.callParent(arguments);
 
-        var ls = me.lastSelection;
+    //override
+    setValue: function (value, doSelect) {
+        /// <summary>
+        /// 在设置的同时，把选择项的 Id 也获取到，并存储下来。
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="doSelect"></param>
+        this.callParent(arguments);
+
+        var ls = this.lastSelection;
         if (ls.length > 0) {
-            me._refId = ls[0].getId();
+            this._refId = ls[0].getId();
         }
         else {
-            me._refId = '';
+            this._refId = '';
         }
     },
 
-    //重写以下方法处理 Tree 的兼容。（TreeStore 没有的一些方法的问题。）
-
+    //------------------------------------- 重写以下方法处理 Tree 的兼容。（TreeStore 没有的一些方法的问题。） -------------------------------------
+    //override
     findRecord: function (field, value) {
-        var me = this;
-        if (me._isTree) { return false; }
+        /// <summary>
+        /// 在树型状态下，暂时不支持查找某一行数据。
+        /// 这会导致展开时无法直接根据数据选择相应的行。
+        /// </summary>
+        /// <param name="field"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        if (this._isTree) { return false; }
 
-        return me.callParent(arguments);
+        return this.callParent(arguments);
     },
+    //override
     loadPage: function (pageNum) {
         var me = this;
 
@@ -114,37 +139,85 @@
 
         return me.callParent(arguments);
     },
-    //树型控件的滚动条有问题，需要手动设置它的高度。
+    //override
     expand: function () {
-        var me = this;
-        me.callParent(arguments);
+        this.callParent(arguments);
 
-        if (me._isTree) {
-            var tree = me._view.getControl();
+        //如果使用的是自定义数据源，由于已经强制其使用本地模式，
+        //但是又希望每次展开都刷新数据，所以这里在 expand 方法中再次重新设置数据源。
+        this._trySetCustomDataSource();
+
+        //树型控件的滚动条有问题，需要手动设置它的高度。
+        if (this._isTree) {
+            var tree = this._view.getControl();
             if (!tree.height) { tree.setHeight(250); }
         }
     },
 
-    //重写以下两个方法，在数据时把 引用实体的 id 也返回。
+    _trySetCustomDataSource: function () {
+        /// <summary>
+        /// 尝试使用自定义数据源。
+        /// </summary>
 
+        //如果使用自定义数据源，则调用服务获取自定义数据。
+        var dsp = this.dataSourceProperty;
+        if (!dsp || !dsp.length) { return; }
+
+        var form = this.up('form').getForm();;
+        var e = form.getRecord();
+        if (!e) return;
+
+        var dataSource = null;
+
+        //复制一个临时对象，并把当前输入的值都设置到该实体上，
+        //然后向服务端传输数据，并调用它的属性获取列表数据源。
+        e = e.copy();
+        form.updateRecord(e);
+        var contextEntity = Oea.data.ListChangeSet
+            ._getItemData(e, this._isTree, true, Ext.getClassName(e));
+
+        Oea.invokeSvc({
+            async: false,//同步调用
+            svc: 'OEA.Web.GetCustomDataSourceService',
+            svcParams: {
+                Entity: contextEntity,
+                DataSourceProperty: dsp
+            },
+            callback: function (res) { dataSource = res.DataSource; }
+        });
+
+        //下面的 loadRawData 方法使用本地数据源，
+        //它只会发生 onLoad 事件，不会发生 onBeforeLoad 事件。所以这里需要手动调用一下此事件处理。
+        this.onBeforeLoad();
+
+        var data = this._view.getData();;
+        if (this._isTree) {
+            data.setRootNode(dataSource);
+        }
+        else {
+            //只有放在 bindStore 后面，this.onLoad 事件处理函数才会发生。
+            data.loadRawData(dataSource);
+        }
+    },
+
+    //------------------------------------- 重写以下两个方法，在获取数据时把 引用实体的 id 也返回。 -------------------------------------
+    //override
     getModelData: function () {
-        var me = this;
-        var data = me.callParent();
-        me._addRefId(data);
+        var data = this.callParent();
+        this._addRefId(data);
         return data;
     },
+    //override
     getSubmitData: function () {
-        var me = this;
-        var data = me.callParent();
-        me._addRefId(data);
+        var data = this.callParent();
+        this._addRefId(data);
         return data;
     },
     _addRefId: function (data) {
-        var me = this;
-        if (me._refId) {
-            if (!me._refProperty) me._refProperty = me.getName().replace("_Label", "");
+        if (this._refId) {
+            if (!this._refProperty) this._refProperty = this.getName().replace("_Label", "");
 
-            data[me._refProperty] = me._refId;
+            data[this._refProperty] = this._refId;
         }
     }
 });

@@ -47,6 +47,9 @@ namespace OEA.WPF.Command
                 }
 
                 RF.Save(list);
+
+                //列表保存后，新加的实体的 Id 已经变化，需要重新刷新表格控件。
+                listView.RefreshControl();
             }
         }
     }

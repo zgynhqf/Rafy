@@ -18,16 +18,16 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using Microsoft.Windows.Controls;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
 using System.Windows.Automation;
 using System.Windows.Input;
+using Xceed.Wpf.Toolkit;
 
 namespace OEA.Module.WPF.Editors
 {
     /// <summary>
-    /// 整型数字使用的编辑器
+    /// 使用文本框进行录入的数字编辑器
     /// </summary>
     public class NumbericPropertyEditor : StringPropertyEditor
     {
@@ -65,45 +65,6 @@ namespace OEA.Module.WPF.Editors
             }
 
             e.Handled = true;
-        }
-    }
-
-    /// <summary>
-    /// 整型数字使用的带上下箭头的编辑器
-    /// </summary>
-    public class NumericUpDownPropertyEditor : WPFPropertyEditor
-    {
-        protected NumericUpDownPropertyEditor() { }
-
-        protected override FrameworkElement CreateEditingElement()
-        {
-            var updown = new AutomationNumericUpDown() { Name = Meta.Name };
-
-            this.ResetBinding(updown);
-
-            this.SetAutomationElement(updown);
-
-            return updown;
-        }
-
-        protected override DependencyProperty BindingProperty()
-        {
-            return NumericUpDown.ValueProperty;
-        }
-    }
-
-    public class AutomationNumericUpDown : NumericUpDown
-    {
-        public override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-
-            var tb = this.GetTemplateChild("Text") as TextBox;
-
-            if (tb != null)
-            {
-                AutomationProperties.SetName(tb, AutomationProperties.GetName(this));
-            }
         }
     }
 }

@@ -13,6 +13,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 
@@ -40,12 +41,14 @@ namespace OEA.Library
         /// <returns></returns>
         internal void Query(EntityList list, string sql)
         {
-            IDbTable dataTable = null;
+            IDataTable dataTable = null;
 
             IDbFactory dbFactory = this._aggregateInfo.Items.First.Value.OwnerRepository;
             using (var db = dbFactory.CreateDb())
             {
-                dataTable = db.QueryTable(sql);
+                var table = db.DBA.QueryDataTableNormal(sql, CommandType.Text);
+
+                dataTable = new RawTable(table);
             }
 
             //使用dataTable中的数据 和 AggregateDescriptor 中的描述信息，读取整个聚合列表。
@@ -60,7 +63,7 @@ namespace OEA.Library
         /// <param name="table"></param>
         /// <param name="optionNode"></param>
         /// <returns></returns>
-        private void ReadFromTable(EntityList list, IDbTable table, LinkedListNode<LoadOptionItem> optionNode)
+        private void ReadFromTable(EntityList list, IDataTable table, LinkedListNode<LoadOptionItem> optionNode)
         {
             var option = optionNode.Value;
             list.ReadFromTable(table, (entity, subTable) =>
@@ -90,7 +93,7 @@ namespace OEA.Library
                 if (option.LoadType == AggregateLoadType.Children)
                 {
                     listResult.SetParentEntity(entity);
-                    entity.LoadProperty(option.CslaPropertyInfo, listResult);
+                    entity.LoadProperty(option.PropertyInfo.ManagedProperty, listResult);
                 }
                 else
                 {

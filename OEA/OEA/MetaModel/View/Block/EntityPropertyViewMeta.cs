@@ -71,6 +71,16 @@ namespace OEA.MetaModel.View
             set { this.SetValue(ref this._Owner, value); }
         }
 
+        private PropertyVisibilityIndicator _VisibilityIndicator = new PropertyVisibilityIndicator();
+        /// <summary>
+        /// 用于检测是否可见的属性
+        /// </summary>
+        public PropertyVisibilityIndicator VisibilityIndicator
+        {
+            get { return this._VisibilityIndicator; }
+            set { this.SetValue(ref this._VisibilityIndicator, value); }
+        }
+
         #region Web
 
         private int? _WidthFlex;
@@ -96,16 +106,6 @@ namespace OEA.MetaModel.View
         #endregion
 
         #region WPF
-
-        private PropertyVisibilityIndicator _VisibilityIndicator = new PropertyVisibilityIndicator();
-        /// <summary>
-        /// 用于检测是否可见的属性
-        /// </summary>
-        public PropertyVisibilityIndicator VisibilityIndicator
-        {
-            get { return this._VisibilityIndicator; }
-            set { this.SetValue(ref this._VisibilityIndicator, value); }
-        }
 
         private PropertyReadonlyIndicator _ReadonlyIndicator = new PropertyReadonlyIndicator();
         /// <summary>
@@ -150,8 +150,9 @@ namespace OEA.MetaModel.View
 
         private int? _DetailColumnsSpan;
         /// <summary>
-        /// 表单中该属性所占的列数
-        /// 不指定，则使用系统默认宽度。
+        /// 表单中该属性所占的列数。
+        /// 
+        /// 只在 DetailLayoutMode.AutoGrid 模式下有用。
         /// </summary>
         public int? DetailColumnsSpan
         {
@@ -159,40 +160,63 @@ namespace OEA.MetaModel.View
             set { this.SetValue(ref this._DetailColumnsSpan, value); }
         }
 
-        private double? _DetailWidth;
+        private double? _DetailContentWidth;
         /// <summary>
         /// 表单中该属性所占的格子宽度。
         /// 
-        /// 如果值在 0 - 1 之间，表示百分比。否则表示绝对值。
+        /// 如果值在 0 到 1 之间，表示百分比，只有 DetailLayoutMode.AutoGrid 模式下可用。
+        /// 否则表示绝对值。
         /// 
         /// 不指定，则使用系统默认值。
         /// </summary>
-        public double? DetailWidth
+        public double? DetailContentWidth
         {
-            get { return this._DetailWidth; }
-            set { this.SetValue(ref this._DetailWidth, value); }
+            get { return this._DetailContentWidth; }
+            set { this.SetValue(ref this._DetailContentWidth, value); }
         }
 
-        private int? _DetailHeight;
+        private double? _DetailHeight;
         /// <summary>
         /// 表单中该属性所占的总高度
         /// 不指定，则使用系统默认宽度。
         /// </summary>
-        public int? DetailHeight
+        public double? DetailHeight
         {
             get { return this._DetailHeight; }
             set { this.SetValue(ref this._DetailHeight, value); }
         }
 
-        private int? _DetailLabelWidth;
+        private double? _DetailLabelSize;
         /// <summary>
-        /// 在 DetailPanel 中显示的 Label 的宽度。
-        /// 不指定，则使用系统默认宽度。
+        /// 在 DetailPanel 中显示的 Label 的宽度或者高度。
+        /// 不指定，则使用系统默认值。
         /// </summary>
-        public int? DetailLabelWidth
+        public double? DetailLabelSize
         {
-            get { return this._DetailLabelWidth; }
-            set { this.SetValue(ref this._DetailLabelWidth, value); }
+            get { return this._DetailLabelSize; }
+            set { this.SetValue(ref this._DetailLabelSize, value); }
+        }
+
+        private bool _DetailNewLine;
+        /// <summary>
+        /// 指定某个属性在表单中是否需要开启新行。
+        /// 
+        /// 此属性只在 DetailLayoutMode.Wrapping 下有用。
+        /// </summary>
+        public bool DetailNewLine
+        {
+            get { return this._DetailNewLine; }
+            set { this.SetValue(ref this._DetailNewLine, value); }
+        }
+
+        private string _DetailGroupName;
+        /// <summary>
+        /// 在 DetailPanel 中的分组名称
+        /// </summary>
+        public string DetailGroupName
+        {
+            get { return this._DetailGroupName; }
+            set { this.SetValue(ref this._DetailGroupName, value); }
         }
 
         #endregion

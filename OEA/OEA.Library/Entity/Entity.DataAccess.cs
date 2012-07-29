@@ -191,9 +191,17 @@ namespace OEA.Library
 
         /// <summary>
         /// 重写这个方法，用于在从数据库获取出来时，及时地加载一些额外的属性。
+        /// 
+        /// 这些属性可以是一般属性，也可以是引用属性。
         /// </summary>
         /// <param name="data"></param>
         internal protected virtual void OnDbLoaded() { }
+
+        protected void LoadRefProperty(IRefProperty refProperty)
+        {
+            //暂时只是获取 Entity，以后可以使用其它方法优化此实现。
+            var load = this.GetLazyRef(refProperty).Entity;
+        }
 
         /// <summary>
         /// 数据库配置名称（每个库有一个唯一的配置名）
