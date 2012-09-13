@@ -27,6 +27,8 @@ namespace hxy.Common.Data
     /// </summary>
     public class DbSetting : DbConnectionSchema
     {
+        private DbSetting() { }
+
         /// <summary>
         /// 配置名称
         /// </summary>

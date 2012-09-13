@@ -63,10 +63,7 @@ namespace OEA.ORM
 
             this._connectionManager = ConnectionManager.GetManager(dbSetting);
 
-            this.DBA = new DBAccesser(
-                this._connectionManager.Connection,
-                dbSetting.ProviderName
-                );
+            this.DBA = new DBAccesser(dbSetting, this._connectionManager.Connection);
         }
 
         #endregion

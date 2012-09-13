@@ -39,6 +39,8 @@ namespace hxy.Common.Data
     /// <modify>2008-8-7, If any one of the parameters is null, it is converted to DBNull.Value.</modify>
     public class DBAccesser : IDisposable, IDBAccesser, IParameterFactory
     {
+        #region fields
+
         /// <summary>
         /// Was the connection opened by my self.
         /// </summary>
@@ -64,7 +66,9 @@ namespace hxy.Common.Data
         /// </summary>
         private ISqlProvider _converter;
 
-        //private IDbTransaction _transaction;
+        //private IDbTransaction _transaction; 
+
+        #endregion
 
         #region Constructor
 
@@ -78,17 +82,6 @@ namespace hxy.Common.Data
         {
             var setting = DbSetting.FindOrCreate(connectionStringSettingName);
             this.Init(setting);
-        }
-
-        /// <summary>
-        /// Constructor
-        /// 
-        /// this accessor uses schema to find its connection string, and creates connection by itself.
-        /// </summary>
-        /// <param name="schema">the setting name in configuration file.</param>
-        public DBAccesser(DbConnectionSchema schema)
-        {
-            this.Init(schema);
         }
 
         /// <summary>
@@ -113,45 +106,46 @@ namespace hxy.Common.Data
                 throw new ArgumentNullException("connectionProvider");
             }
 
-            Init(new DbConnectionSchema(connectionString, connectionProvider));
+            this.Init(new DbConnectionSchema(connectionString, connectionProvider));
         }
 
-        private void Init(DbConnectionSchema schema)
+        /// <summary>
+        /// Constructor
+        /// 
+        /// this accessor uses schema to find its connection string, and creates connection by itself.
+        /// </summary>
+        /// <param name="schema">the connection schema.</param>
+        public DBAccesser(DbConnectionSchema schema)
         {
-            this.ConnectionSchema = schema;
-
-            this._factory = DbProviderFactories.GetFactory(schema.ProviderName);
-            this._converter = ConverterFactory.Create(schema.ProviderName);
-            this._connection = this._factory.CreateConnection();
-            this._connection.ConnectionString = schema.ConnectionString;
-            this._connectionCreatedBySelf = true;
+            this.Init(schema);
         }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="dbConnection">
-        /// inner connection to used
-        /// </param>
-        /// <param name="connectionProvider">
-        /// The provider.
-        /// eg.
-        /// "System.Data.SqlClient"
-        /// </param>
-        public DBAccesser(IDbConnection dbConnection, string connectionProvider)
+        /// <param name="schema">the connection schema.</param>
+        /// <param name="dbConnection">use a exsiting connection, rather than to create a new one.</param>
+        public DBAccesser(DbConnectionSchema schema, IDbConnection dbConnection)
         {
-            if (dbConnection == null)
-            {
-                throw new ArgumentNullException("dbConnection");
-            }
-            if (string.IsNullOrEmpty(connectionProvider))
-            {
-                throw new ArgumentNullException("connectionProvider");
-            }
+            this.Init(schema, dbConnection);
+        }
 
-            this._factory = DbProviderFactories.GetFactory(connectionProvider);
-            this._converter = ConverterFactory.Create(connectionProvider);
-            this._connection = dbConnection;
+        private void Init(DbConnectionSchema schema, IDbConnection connection = null)
+        {
+            this.ConnectionSchema = schema;
+
+            this._factory = DbProviderFactories.GetFactory(schema.ProviderName);
+            this._converter = ConverterFactory.Create(schema.ProviderName);
+            if (connection == null)
+            {
+                this._connection = this._factory.CreateConnection();
+                this._connection.ConnectionString = schema.ConnectionString;
+                this._connectionCreatedBySelf = true;
+            }
+            else
+            {
+                this._connection = connection;
+            }
         }
 
         /// <summary>
@@ -910,8 +904,11 @@ namespace hxy.Common.Data
             var pas = command.Parameters;
             foreach (var p in parameters) { pas.Add(p); }
 
-            var tran = LocalTransactionBlock.Current;
-            if (tran != null) { command.Transaction = tran; }
+            var tranRef = LocalTransactionBlock.GetTransactionRef(this.ConnectionSchema.Database);
+            if (tranRef != null && tranRef.Transaction.Connection == this._connection)
+            {
+                command.Transaction = tranRef.Transaction;
+            }
 
             //if (this._transaction != null)
             //{
