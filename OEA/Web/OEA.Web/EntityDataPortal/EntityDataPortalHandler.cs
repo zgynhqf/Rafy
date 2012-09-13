@@ -47,7 +47,7 @@ namespace OEA.Web
             JsonModel res = null;
             if (context.Request.HttpMethod == "GET")
             {
-                var evm = UIModel.Views.CreateDefaultView(meta.EntityType);
+                var evm = UIModel.Views.CreateBaseView(meta.EntityType);
                 res = this.QueryEntityList(request, evm);
             }
             else
