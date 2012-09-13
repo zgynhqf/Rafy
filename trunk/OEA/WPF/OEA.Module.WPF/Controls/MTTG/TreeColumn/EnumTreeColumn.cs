@@ -18,12 +18,6 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using OEA.Editors;
-using OEA.MetaModel;
-using OEA.MetaModel.View;
-using OEA.Module.WPF.Converter;
-using OEA.Utils;
-using OEA.Module.WPF.Editors;
 
 namespace OEA.Module.WPF.Controls
 {
@@ -39,15 +33,6 @@ namespace OEA.Module.WPF.Controls
             combo.IsDropDownOpen = true;
 
             return combo;
-        }
-
-        protected override FrameworkElementFactory GenerateDisplayTemplateInCell()
-        {
-            var textBlock = new FrameworkElementFactory(typeof(TextBlock));
-            Binding textBinding = new Binding(this.Meta.Name);
-            textBinding.Converter = new EnumConverter();
-            textBlock.SetValue(TextBlock.TextProperty, textBinding);
-            return textBlock;
         }
     }
 }

@@ -29,6 +29,11 @@ namespace OEA.Library
         public RefProperty(Type ownerType, string refEntityProperty, RefPropertyMetadata<TRefEntity> meta)
             : base(ownerType, refEntityProperty, meta) { }
 
+        public override PropertyCategory Category
+        {
+            get { return PropertyCategory.Reference; }
+        }
+
         /// <summary>
         /// 引用实体的类型
         /// </summary>
@@ -77,16 +82,11 @@ namespace OEA.Library
         /// <param name="refPropertyInfo"></param>
         /// <param name="serializeEntity"></param>
         /// <returns></returns>
-        private static ILazyEntityRef<TRefEntity> CreateReference(Entity owner, Func<int, Entity> loader, LazyEntityRefPropertyInfo refPropertyInfo, bool serializeEntity)
+        private static ILazyEntityRef<TRefEntity> CreateReference(Entity owner, Func<int, Entity> loader, LazyEntityRefPropertyInfo refPropertyInfo, bool? serializeEntity)
         {
-            if (serializeEntity)
-            {
-                return new LazyEntityRef<TRefEntity>(loader, owner, refPropertyInfo);
-            }
-            else
-            {
-                return new NonSerializableEntityLazyEntityRef<TRefEntity>(loader, owner, refPropertyInfo);
-            }
+            var lazyRef = new LazyEntityRef<TRefEntity>(loader, owner, refPropertyInfo);
+            lazyRef.SerializeEntity = serializeEntity;
+            return lazyRef;
         }
 
         /// <summary>
@@ -97,16 +97,11 @@ namespace OEA.Library
         /// <param name="serializeEntity"></param>
         /// <param name="notifyRefEntityChanged"></param>
         /// <returns></returns>
-        private static ILazyEntityRef<TRefEntity> CreateReference(Entity owner, Func<int, object, Entity> instaceLoader, LazyEntityRefPropertyInfo refPropertyInfo, bool serializeEntity)
+        private static ILazyEntityRef<TRefEntity> CreateReference(Entity owner, Func<int, object, Entity> instaceLoader, LazyEntityRefPropertyInfo refPropertyInfo, bool? serializeEntity)
         {
-            if (serializeEntity)
-            {
-                return new LazyEntityRef<TRefEntity>(instaceLoader, owner, refPropertyInfo);
-            }
-            else
-            {
-                return new NonSerializableEntityLazyEntityRef<TRefEntity>(instaceLoader, owner, refPropertyInfo);
-            }
+            var lazyRef = new LazyEntityRef<TRefEntity>(instaceLoader, owner, refPropertyInfo);
+            lazyRef.SerializeEntity = serializeEntity;
+            return lazyRef;
         }
     }
 }

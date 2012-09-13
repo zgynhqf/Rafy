@@ -25,7 +25,7 @@ namespace DbMigration.Oracle
     /// <summary>
     /// Oracle 的执行项生成器
     /// </summary>
-    public class OracleRunGenerator : TSqlGenerator
+    public class OracleRunGenerator : TSqlRunGenerator
     {
         protected override string ConvertToTypeString(DbType dataType)
         {

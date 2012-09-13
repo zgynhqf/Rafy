@@ -15,9 +15,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using Hardcodet.Wpf.GenericTreeView;
 using OEA.Library;
 using OEA.Module.WPF.Controls;
 
@@ -37,15 +37,15 @@ namespace OEA.Module.WPF.Editors
         /// <summary>
         /// 使用的 MTTG 控件
         /// </summary>
-        public new MultiTypesTreeGrid Control
+        public new TreeGrid Control
         {
-            get { return base.Control as MultiTypesTreeGrid; }
+            get { return base.Control as TreeGrid; }
         }
 
         public override CheckingMode CheckingMode
         {
-            get { return this.Control.CheckingMode; }
-            set { this.Control.CheckingMode = value; }
+            get { return this.Control.IsCheckingRow ? CheckingMode.CheckingRow : CheckingMode.None; }
+            set { this.Control.IsCheckingRow = value == CheckingMode.CheckingRow; }
         }
 
         public override CheckingRowCascade CheckingRowCascade
@@ -57,7 +57,7 @@ namespace OEA.Module.WPF.Editors
         public override Predicate<Entity> Filter
         {
             get { return this.Control.ItemFilter; }
-            set { this.Control.ItemFilter = value; }
+            set { this.Control.ItemFilter = e => value(e as Entity); }
         }
 
         /// <summary>
@@ -86,8 +86,8 @@ namespace OEA.Module.WPF.Editors
 
         internal override void SetControl(FrameworkElement value)
         {
-            var newTreeView = value as MultiTypesTreeGrid;
-            if (newTreeView == null) throw new ArgumentException("value 必须继承自 MultiTypesTreeGrid。");
+            var newTreeView = value as TreeGrid;
+            if (newTreeView == null) throw new ArgumentException("value 必须继承自 TreeGrid。");
 
             var oldTreeView = this.Control;
 
@@ -98,7 +98,7 @@ namespace OEA.Module.WPF.Editors
 
         public override Entity Current
         {
-            get { return this.Control.SelectedItem; }
+            get { return this.Control.SelectedItem as Entity; }
             set { this.Control.SelectedItem = value; }
         }
 
@@ -107,13 +107,13 @@ namespace OEA.Module.WPF.Editors
             get
             {
                 var ctrl = this.Control;
-                if (ctrl.CheckingMode == CheckingMode.CheckingRow)
+                if (ctrl.IsCheckingRow)
                 {
-                    return ctrl.CheckingModel.SelectedItems;
+                    return new EntityListAdapter { InnerList = ctrl.CheckingModel.SelectedItems };
                 }
                 else
                 {
-                    return ctrl.SelectionModel.SelectedItems;
+                    return new EntityListAdapter { InnerList = ctrl.SelectionModel.SelectedItems };
                 }
             }
         }
@@ -121,7 +121,7 @@ namespace OEA.Module.WPF.Editors
         public override void SelectAll()
         {
             var ctrl = this.Control;
-            if (ctrl.CheckingMode == CheckingMode.CheckingRow)
+            if (ctrl.IsCheckingRow)
             {
                 ctrl.CheckingModel.SelectAll();
             }
@@ -157,7 +157,7 @@ namespace OEA.Module.WPF.Editors
             if (data != null && data.Count > 0)
             {
                 //重置列隐藏
-                motv.Columns.UpdateVisibilities(data[0]);
+                (motv.Columns as TreeColumnCollection).UpdateVisibilities(data[0]);
 
                 //重置排序：由于用户点击列头等操作可能使得控件本身的排序方案发生改变，所以这里需要还原这个设置。
                 this.SortDescriptions = this._lastSortDescriptions;
@@ -225,7 +225,7 @@ namespace OEA.Module.WPF.Editors
 
         private bool _reportEvents = true;
 
-        private void AdaptEventsToContext(MultiTypesTreeGrid oldTreeView, MultiTypesTreeGrid newTreeView)
+        private void AdaptEventsToContext(TreeGrid oldTreeView, TreeGrid newTreeView)
         {
             if (oldTreeView != null)
             {
@@ -251,11 +251,11 @@ namespace OEA.Module.WPF.Editors
             }
         }
 
-        private void On_TreeView_SelectedItemChanged(object sender, RoutedTreeItemEventArgs<Entity> e)
+        private void On_TreeView_SelectedItemChanged(object sender, SelectedItemChangedEventArgs e)
         {
             if (this._reportEvents)
             {
-                var args = new SelectedEntityChangedEventArgs(e.NewItem, e.OldItem);
+                var args = new SelectedEntityChangedEventArgs(e.NewItem as Entity, e.OldItem as Entity);
                 var eventReporter = this.Context.EventReporter;
                 eventReporter.NotifySelectedItemChanged(sender, args);
             }
@@ -267,6 +267,150 @@ namespace OEA.Module.WPF.Editors
             {
                 var eventReporter = this.Context.EventReporter;
                 eventReporter.NotifyCheckChanged(sender, e);
+            }
+        }
+
+        #endregion
+
+        #region EntityListAdapter
+
+        private class EntityListAdapter : IList<Entity>, IList
+        {
+            internal IList InnerList;
+
+            public int IndexOf(Entity item)
+            {
+                return this.InnerList.IndexOf(item);
+            }
+
+            public void Insert(int index, Entity item)
+            {
+                this.InnerList.Insert(index, item);
+            }
+
+            public void RemoveAt(int index)
+            {
+                this.InnerList.RemoveAt(index);
+            }
+
+            public Entity this[int index]
+            {
+                get
+                {
+                    return this.InnerList[index] as Entity;
+                }
+                set
+                {
+                    this.InnerList[index] = value;
+                }
+            }
+
+            public void Add(Entity item)
+            {
+                this.InnerList.Add(item);
+            }
+
+            public void Clear()
+            {
+                this.InnerList.Clear();
+            }
+
+            public bool Contains(Entity item)
+            {
+                return this.InnerList.Contains(item);
+            }
+
+            public void CopyTo(Entity[] array, int arrayIndex)
+            {
+                this.InnerList.CopyTo(array, arrayIndex);
+            }
+
+            public int Count
+            {
+                get { return this.InnerList.Count; }
+            }
+
+            public bool IsReadOnly
+            {
+                get { return this.InnerList.IsReadOnly; }
+            }
+
+            public bool Remove(Entity item)
+            {
+                var index = this.InnerList.IndexOf(item);
+                if (index >= 0)
+                {
+                    this.InnerList.Remove(item);
+                    return true;
+                }
+                return false;
+            }
+
+            public IEnumerator<Entity> GetEnumerator()
+            {
+                return this.InnerList.Cast<Entity>().GetEnumerator();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return this.InnerList.GetEnumerator();
+            }
+
+            public int Add(object value)
+            {
+                return this.InnerList.Add(value);
+            }
+
+            public bool Contains(object value)
+            {
+                return this.InnerList.Contains(value);
+            }
+
+            public int IndexOf(object value)
+            {
+                return this.InnerList.IndexOf(value);
+            }
+
+            public void Insert(int index, object value)
+            {
+                this.InnerList.Insert(index, value);
+            }
+
+            public bool IsFixedSize
+            {
+                get { return this.InnerList.IsFixedSize; }
+            }
+
+            public void Remove(object value)
+            {
+                this.InnerList.Remove(value);
+            }
+
+            object IList.this[int index]
+            {
+                get
+                {
+                    return this.InnerList[index];
+                }
+                set
+                {
+                    this.InnerList[index] = value;
+                }
+            }
+
+            public void CopyTo(Array array, int index)
+            {
+                this.InnerList.CopyTo(array, index);
+            }
+
+            public bool IsSynchronized
+            {
+                get { return this.InnerList.IsSynchronized; }
+            }
+
+            public object SyncRoot
+            {
+                get { return this.InnerList.SyncRoot; }
             }
         }
 

@@ -22,6 +22,7 @@ using OEA.Serialization;
 using OEA.Library.Validation;
 using System.ComponentModel;
 using OEA.MetaModel;
+using System.Runtime;
 
 namespace OEA.Library
 {
@@ -57,10 +58,17 @@ namespace OEA.Library
             }
         }
 
+        /// <summary>
+        /// 重写此方法添加该实体特定的验证规则。
+        /// 
+        /// 此方法中只能调用<see cref="ValidationRules.AddInstanceRule"/> 方法。
+        /// </summary>
         internal virtual void AddInstanceValidations() { }
 
         /// <summary>
         /// 重写此方法添加实体验证。
+        /// 
+        /// 此方法中只能调用<see cref="ValidationRules.AddRule"/>方法。
         /// 
         /// 基类中已经实现了：
         /// 为所有不可空的引用属性加上 Required 验证规则。
@@ -70,7 +78,7 @@ namespace OEA.Library
             var rules = this.ValidationRules;
 
             //为所有不可空的引用属性加上 Required 验证规则。
-            var properties = this.GetRepository().GetAvailableIndicators();
+            var properties = this.PropertiesContainer.GetAvailableProperties();
             foreach (var p in properties)
             {
                 if (p is IRefProperty)
@@ -98,6 +106,37 @@ namespace OEA.Library
             base.OnDeserialized(context);
 
             this.SetChildrenParent_OnDeserializaion();
+        }
+
+        /// <summary>
+        /// 通知上层应用，需要重新验证某个指定的属性。
+        /// 
+        /// 一般在某个属性变更时调用此方法来通知另一属性需要进行验证。
+        /// </summary>
+        /// <param name="properties"></param>
+        public void Revalidate(params IProperty[] properties)
+        {
+            //目前直接用属性变更事件来通知上层的 Binding 重新
+            if (properties != null)
+            {
+                foreach (var property in properties)
+                {
+                    this.Revalidate(property);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 通知上层应用，需要重新验证某个指定的属性。
+        /// 
+        /// 一般在某个属性变更时调用此方法来通知另一属性需要进行验证。
+        /// </summary>
+        /// <param name="property"></param>
+        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
+        public void Revalidate(IProperty property)
+        {
+            //目前直接用属性变更事件来通知上层的 Binding 重新
+            this.OnPropertyChanged(property.Name);
         }
     }
 }

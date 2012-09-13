@@ -70,17 +70,6 @@ namespace OEA.Module.WPF.Editors
         /// <summary>
         /// 设置一个命名类型
         /// </summary>
-        /// <typeparam name="TSub"></typeparam>
-        /// <param name="key"></param>
-        public void Set<TSub>(string key)
-            where TSub : T
-        {
-            this._map[key] = typeof(TSub);
-        }
-
-        /// <summary>
-        /// 设置一个命名类型
-        /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
         public void Set(string key, Type value)

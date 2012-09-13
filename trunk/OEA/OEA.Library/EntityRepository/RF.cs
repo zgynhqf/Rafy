@@ -13,7 +13,10 @@
 
 using System;
 using System.Data;
+using System.Diagnostics;
+using System.Runtime;
 using hxy.Common.Data;
+using OEA.ORM;
 
 namespace OEA.Library
 {
@@ -52,6 +55,7 @@ namespace OEA.Library
         /// </summary>
         /// <typeparam name="TRepository"></typeparam>
         /// <returns></returns>
+        [DebuggerStepThrough]
         public static TRepository Concreate<TRepository>()
             where TRepository : EntityRepository
         {
@@ -163,7 +167,9 @@ namespace OEA.Library
         /// <param name="saveWay"></param>
         public static void Save(Entity entity, EntitySaveType saveWay)
         {
-            if (saveWay == EntitySaveType.DiffSave)
+            var repo = entity.GetRepository();
+
+            if (repo.DataPortalLocation == DataPortalLocation.Remote && saveWay == EntitySaveType.DiffSave)
             {
                 var isNew = entity.IsNew;
                 var res = DiffSaveService.Execute(entity);
@@ -171,7 +177,7 @@ namespace OEA.Library
             }
             else
             {
-                entity.GetRepository().Save(entity);
+                repo.Save(entity);
             }
         }
 
@@ -180,6 +186,7 @@ namespace OEA.Library
         /// </summary>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
+        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
         public static SingleConnectionTrasactionScope TransactionScope(string dbSetting)
         {
             return new SingleConnectionTrasactionScope(DbSetting.FindOrCreate(dbSetting));
@@ -190,6 +197,7 @@ namespace OEA.Library
         /// </summary>
         /// <param name="dbDelegate"></param>
         /// <returns></returns>
+        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
         public static SingleConnectionTrasactionScope TransactionScope(EntityRepository dbDelegate)
         {
             return new SingleConnectionTrasactionScope(dbDelegate.DbSetting);
@@ -200,9 +208,20 @@ namespace OEA.Library
         /// </summary>
         /// <param name="dbDelegate"></param>
         /// <returns></returns>
+        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
         public static SingleConnectionTrasactionScope TransactionScope(IEntityOrList dbDelegate)
         {
             return new SingleConnectionTrasactionScope(dbDelegate.GetRepository().DbSetting);
+        }
+
+        /// <summary>
+        /// 申明一个实体上下文操作代码块。
+        /// </summary>
+        /// <returns></returns>
+        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
+        public static IDisposable EnterEntityContext()
+        {
+            return EntityContext.Enter();
         }
 
         #endregion

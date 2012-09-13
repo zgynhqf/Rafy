@@ -103,7 +103,10 @@ namespace OEA
 
     public class ViewConfigurationCommandRepository : EntityRepository
     {
-        protected ViewConfigurationCommandRepository() { }
+        protected ViewConfigurationCommandRepository()
+        {
+            this.DataPortalLocation = OEA.DataPortalLocation.Local;
+        }
     }
 
     internal class ViewConfigurationCommandConfig : EntityConfig<ViewConfigurationCommand>

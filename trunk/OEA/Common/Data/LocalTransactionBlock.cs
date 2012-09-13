@@ -98,6 +98,15 @@ namespace hxy.Common.Data
         protected abstract IDbTransaction BeginTransaction();
 
         /// <summary>
+        /// 子类实现此方法释放指定库的事务。
+        /// </summary>
+        /// <returns></returns>
+        protected virtual void DisposeTransaction(IDbTransaction tran)
+        {
+            tran.Dispose();
+        }
+
+        /// <summary>
         /// 提交本事务。
         /// </summary>
         public void Complete()
@@ -132,7 +141,7 @@ namespace hxy.Common.Data
                     //不论是正常的提交，还是已经被回滚，最外层的事务块都需要把事务进行释放。
                     if (CurrentTransactionRef <= 0)
                     {
-                        current.Dispose();
+                        this.DisposeTransaction(current);
                         Current = null;
                     }
                 }

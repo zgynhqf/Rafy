@@ -28,8 +28,13 @@ namespace OEAUnitTest
         {
             ClassInitialize(context, true);
 
-            using (new OEADbMigrationContext(UnitTestEntity.ConnectionString).AutoMigrate()) { }
+            using (var c = new OEADbMigrationContext(UnitTestEntity.DbSetting))
+            {
+                c.AutoMigrate();
+            }
         }
+
+        #region MPT Core
 
         [TestMethod]
         public void MPT_DefaultValue()
@@ -45,7 +50,7 @@ namespace OEAUnitTest
             var user = Get<TestUser>();
             var brokenRules = user.ValidationRules.Validate();
             Assert.AreEqual(brokenRules.Count, 1);
-            Assert.AreEqual(brokenRules[0].Description, "编码 并没有填写。");
+            Assert.AreEqual(brokenRules[0].Description, "“编码”里没有输入值。");
         }
 
         [TestMethod]
@@ -165,7 +170,8 @@ namespace OEAUnitTest
             TestUserExt.SetUserCode(user, "NewCode");
             Assert.AreEqual(TestUserExt.GetUserCode(user), "NewCode");
 
-            var property = TypeDescriptor.GetProperties(user).Find("UserCode", false);
+            var properties = TypeDescriptor.GetProperties(user);
+            var property = properties.Find("TestUserExt_UserCode", false);
             Assert.IsNotNull(property);
             Assert.IsFalse(property.IsReadOnly);
         }
@@ -228,18 +234,18 @@ namespace OEAUnitTest
 
             properties.Clear();
             TestUserExt.SetUserCode(user, "NewCode");
-            Assert.IsTrue(properties.Contains("UserCode"));
-            Assert.IsTrue(properties.Contains("ReadOnlyUserCode"));
-            Assert.IsTrue(properties.Contains("ReadOnlyUserCodeShadow"));
+            Assert.IsTrue(properties.Contains("TestUserExt_UserCode"));
+            Assert.IsTrue(properties.Contains("TestUserExt_ReadOnlyUserCode"));
+            Assert.IsTrue(properties.Contains("TestUserExt_ReadOnlyUserCodeShadow"));
             Assert.AreEqual(TestUserExt.GetUserCode(user), "NewCode");
             Assert.AreEqual(TestUserExt.GetReadOnlyUserCode(user), "NewCode ReadOnly!");
             Assert.AreEqual(TestUserExt.GetReadOnlyUserCodeShadow(user), "NewCode ReadOnly!");
 
             var typeProperties = TypeDescriptor.GetProperties(user);
-            var property = typeProperties.Find("ReadOnlyUserCode", false);
+            var property = typeProperties.Find("TestUserExt_ReadOnlyUserCode", false);
             Assert.IsNotNull(property);
             Assert.IsTrue(property.IsReadOnly);
-            property = typeProperties.Find("ReadOnlyUserCodeShadow", false);
+            property = typeProperties.Find("TestUserExt_ReadOnlyUserCodeShadow", false);
             Assert.IsNotNull(property);
             Assert.IsTrue(property.IsReadOnly);
         }
@@ -284,7 +290,7 @@ namespace OEAUnitTest
             var e1 = Get<TestUser>();
             e1.Age = 15;
             e1._mySelfReference = e1;
-            TestUserExt.SetUserCode(e1, "UserCode");
+            TestUserExt.SetUserCode(e1, "TestUserExt_UserCode");
 
             Assert.AreEqual(e1.ValidationRules.Validate().Count, 1);
 
@@ -334,7 +340,7 @@ namespace OEAUnitTest
             var list = si.States.Keys.ToArray();
 
             Assert.IsTrue(list.Contains("Age"), "Age 是属性值，需要序列化");
-            Assert.IsTrue(list.Contains("UserCode"), "UserCode 是扩展属性值，需要序列化");
+            Assert.IsTrue(list.Contains("TestUserExt_UserCode"), "UserCode 是扩展属性值，需要序列化");
             Assert.IsTrue(!list.Contains("Name"), "Name 是默认值，不需要序列化");
             Assert.IsTrue(!list.Contains("Id"), "Id 是默认值，不需要序列化");
 
@@ -384,6 +390,10 @@ namespace OEAUnitTest
             newUser.Name += "_Modified";
             Assert.IsTrue(namePropertyChanged);
         }
+
+        #endregion
+
+        #region MPT ORM
 
         [TestMethod]
         public void MPT_ORM_PropertiesMapping()
@@ -555,12 +565,182 @@ namespace OEAUnitTest
             repo.Save(user);
         }
 
+        #endregion
+
+        #region MPT Redundancy
+
+        [TestMethod]
+        public void MPT_Redundancy_SetB()
+        {
+            var a = new A { Name = "AName" };
+
+            var b = new B { A = a };
+
+            Assert.AreEqual(a.Name, b.AName);
+        }
+
+        [TestMethod]
+        public void MPT_Redundancy_SetC()
+        {
+            var a = new A { Name = "AName" };
+
+            var b = new B { A = a };
+
+            var c = new C { B = b };
+
+            Assert.AreEqual(a.Name, c.AName);
+        }
+
+        [TestMethod]
+        public void MPT_Redundancy_SetBOfC()
+        {
+            var a1 = new A { Name = "a1" };
+            var a2 = new A { Name = "a2" };
+
+            var b1 = new B { A = a1, Id = 1 };
+            var b2 = new B { A = a2, Id = 2 };
+
+            var c = new C { B = b1 };
+            Assert.AreEqual("a1", c.AName);
+            c.B = b2;
+            Assert.AreEqual("a2", c.AName);
+        }
+
+        [TestMethod]
+        public void MPT_Redundancy_UpdateB()
+        {
+            using (RF.TransactionScope(UnitTestEntity.DbSetting))
+            {
+                var a = new A { Name = "AName" };
+                Save(a);
+
+                var b = new B { A = a };
+                Save(b);
+
+                a.Name = "New Name";
+                Save(a);
+
+                var b2 = RF.Concreate<BRepository>().GetById(b.Id) as B;
+                Assert.AreEqual("New Name", b2.AName);
+            }
+        }
+
+        [TestMethod]
+        public void MPT_Redundancy_UpdateC()
+        {
+            using (RF.TransactionScope(UnitTestEntity.DbSetting))
+            {
+                var a = new A { Name = "AName" };
+                Save(a);
+
+                var b = new B { A = a };
+                Save(b);
+
+                var c = new C { B = b };
+                Save(c);
+
+                a.Name = "New Name";
+                Save(a);
+
+                var b2 = RF.Concreate<BRepository>().GetById(b.Id) as B;
+                Assert.AreEqual("New Name", b2.AName);
+
+                var c2 = RF.Concreate<CRepository>().GetById(c.Id) as C;
+                Assert.AreEqual("New Name", c2.AName);
+            }
+        }
+
+        [TestMethod]
+        public void MPT_Redundancy_UpdateCByRefChanged()
+        {
+            using (RF.TransactionScope(UnitTestEntity.DbSetting))
+            {
+                var a1 = new A { Name = "A1" };
+                var a2 = new A { Name = "A2" };
+                Save(a1, a2);
+
+                var b = new B { A = a1 };
+                Save(b);
+
+                var c = new C { B = b };
+                Save(c);
+
+                Assert.AreEqual(c.AName, "A1");
+
+                b.A = a2;
+                Save(b);
+
+                var cInDb = RF.Concreate<CRepository>().GetById(c.Id) as C;
+                Assert.AreEqual(cInDb.AName, "A2");
+            }
+        }
+
+        [TestMethod]
+        public void MPT_Redundancy_UpdateDEByRefChanged()
+        {
+            using (RF.TransactionScope(UnitTestEntity.DbSetting))
+            {
+                var a1 = new A { Name = "A1" };
+                var a2 = new A { Name = "A2" };
+                Save(a1, a2);
+
+                var b = new B { A = a1 };
+                Save(b);
+
+                var c = new C { B = b };
+                Save(c);
+
+                var d = new D { C = c };
+                Save(d);
+
+                var e = new E { D = d, C = c };
+                Save(e);
+
+                Assert.AreEqual(d.AName, "A1");
+                Assert.AreEqual(e.ANameFromDCBA, "A1");
+                Assert.AreEqual(e.ANameFromCBA, "A1");
+
+                b.A = a2;
+                Save(b);
+
+                var dInDb = RF.Concreate<DRepository>().GetById(d.Id) as D;
+                Assert.AreEqual(dInDb.AName, "A2");
+
+                var eInDb = RF.Concreate<ERepository>().GetById(e.Id) as E;
+                Assert.AreEqual(eInDb.ANameFromDCBA, "A2");
+                Assert.AreEqual(eInDb.ANameFromCBA, "A2");
+            }
+        }
+
+        #endregion
+
+        #region Helpers
+
         private static TEntity Get<TEntity>()
             where TEntity : Entity, new()
         {
             var e = new TEntity();
-            e.Status = PersistenceStatus.Unchanged;
+            e.MarkUnchanged();
             return e;
         }
+
+        private static void Delete(params Entity[] entities)
+        {
+            foreach (var item in entities)
+            {
+                item.MarkDeleted();
+                RF.Save(item);
+            }
+        }
+
+        private static void Save(params Entity[] entities)
+        {
+            foreach (var item in entities)
+            {
+                RF.Save(item);
+            }
+        }
+
+        #endregion
     }
 }

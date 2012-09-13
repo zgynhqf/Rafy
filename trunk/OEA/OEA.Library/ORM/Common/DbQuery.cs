@@ -333,7 +333,6 @@ namespace OEA.ORM
                     DbTable refTable = refItem.RefTable;
                     string fkName = refItem.FKName;
 
-                    sql.AppendLine();
                     if (refItem.RefProperty.GetMeta(refItem.RefProperty.OwnerType).Nullable)
                     {
                         sql.Append("    LEFT OUTER JOIN ");
@@ -345,6 +344,7 @@ namespace OEA.ORM
                     sql.Append(refTable.QuoteName).Append(" ON ")
                         .Append(mainTable.QuoteName).Append(".").Append(mainTable.Prepare(fkName)).Append(" = ")
                         .Append(refTable.QuoteName).Append(".").Append(mainTable.Prepare(mainTable.PKID.Name));
+                    sql.AppendLine();
                 }
 
                 return sql.ToString();
@@ -359,18 +359,18 @@ namespace OEA.ORM
         /// <param name="mainTable">正在被查询的表</param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        internal string GetSqlWhereOrder(DbTable mainTable, FormatSqlParameter parameters)
+        internal string GetSqlWhereOrder(DbTable mainTable, FormatSqlParameters parameters)
         {
             if (!this.IsCompleted)
             {
-                throw new InvalidOperationException("invalid query");
+                throw new InvalidOperationException("查询构造出错！");
             }
 
             var sqlBuf = new StringBuilder();
 
             if (this._constraints.Count > 0)
             {
-                sqlBuf.AppendLine().Append("WHERE");
+                sqlBuf.Append("WHERE");
 
                 //为 constraint 生成 SQL
                 for (int index = 0, cc = this._constraints.Count; index < cc; index++)
@@ -414,13 +414,13 @@ namespace OEA.ORM
         private void ErrorIfPending()
         {
             if (_pending != null)
-                throw new InvalidOperationException("you must finish operation started by Constrain(string)");
+                throw new InvalidOperationException("查询构造出错：你必须在 Constrain 方法之后调用值比较方法。");
         }
 
         private void ErrorIfNotPending()
         {
             if (_pending == null)
-                throw new InvalidOperationException("you must call Constrain(string) first");
+                throw new InvalidOperationException("查询构造出错：你必须先调用方法 Constrain。");
         }
 
         private static void ErrorIfNull(object val)

@@ -30,13 +30,14 @@ namespace OEA.MetaModel.View
     /// </summary>
     public class AggtBlocks
     {
-        private List<AggtBlocks> _Surrounders = new List<AggtBlocks>();
+        private SurrounderCollection _Surrounders;
 
         private AggtChildrenCollection _Children;
 
         public AggtBlocks()
         {
             this.Layout = new LayoutMeta();
+            this._Surrounders = new SurrounderCollection();
             this._Children = new AggtChildrenCollection(this);
         }
 
@@ -44,14 +45,45 @@ namespace OEA.MetaModel.View
 
         public Block MainBlock { get; set; }
 
-        public List<AggtBlocks> Surrounders
+        /// <summary>
+        /// 聚合块中的主块的环绕块。
+        /// 
+        /// 环绕块跟主块没有直接关系。
+        /// </summary>
+        public SurrounderCollection Surrounders
         {
             get { return this._Surrounders; }
         }
 
+        /// <summary>
+        /// 聚合块中主块对应实体的聚合子类的聚合子块。
+        /// 
+        /// 聚合子块对应的实体跟主块对应的实体是聚合父子关系。
+        /// </summary>
         public AggtChildrenCollection Children
         {
             get { return this._Children; }
+        }
+
+        /// <summary>
+        /// 深度递归遍历所有的聚合块。
+        /// 
+        /// 先递归遍历聚合子块，再递归遍历环绕块。
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<AggtBlocks> EnumerateAllBlocks()
+        {
+            yield return this;
+
+            foreach (var child in this.Children)
+            {
+                foreach (var item in child.EnumerateAllBlocks()) { yield return item; }
+            }
+
+            foreach (var surrounder in this.Surrounders)
+            {
+                foreach (var item in surrounder.EnumerateAllBlocks()) { yield return item; }
+            }
         }
 
         public string ToXmlString()
@@ -87,61 +119,5 @@ namespace OEA.MetaModel.View
                 MainBlock = value
             };
         }
-
-        #region 查询 API
-
-        #endregion
-    }
-
-    public class AggtChildrenCollection : Collection<AggtBlocks>
-    {
-        private AggtBlocks _owner;
-
-        public AggtChildrenCollection(AggtBlocks owner)
-        {
-            this._owner = owner;
-        }
-
-        protected override void InsertItem(int index, AggtBlocks item)
-        {
-            base.InsertItem(index, item);
-
-            (item.MainBlock as ChildBlock).Owner = this._owner;
-        }
-
-        protected override void SetItem(int index, AggtBlocks item)
-        {
-            base.SetItem(index, item);
-
-            (item.MainBlock as ChildBlock).Owner = this._owner;
-        }
-
-        #region 查询
-
-        /// <summary>
-        /// 查找某个子块。
-        /// </summary>
-        /// <returns></returns>
-        public AggtBlocks Find(Type childType)
-        {
-            return this.FirstOrDefault(b => b.MainBlock.EntityType == childType);
-        }
-
-        /// <summary>
-        /// 获取某个子块
-        /// </summary>
-        /// <param name="childType"></param>
-        /// <returns></returns>
-        public AggtBlocks this[Type childType]
-        {
-            get
-            {
-                var item = this.Find(childType);
-                if (item == null) throw new ArgumentOutOfRangeException("childType");
-                return item;
-            }
-        }
-
-        #endregion
     }
 }

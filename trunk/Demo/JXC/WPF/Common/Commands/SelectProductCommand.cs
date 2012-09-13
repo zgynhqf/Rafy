@@ -67,7 +67,7 @@ namespace JXC.Commands
 
                 view.Current = this._firstSelection;
 
-                var treeGrid = view.Control.CastTo<MultiTypesTreeGrid>();
+                var treeGrid = view.Control.CastTo<OEATreeGrid>();
                 var amountColumn = treeGrid.Columns.FindByProperty(ProductRefItem.AmountProperty);
                 var row = treeGrid.GetRow(this._firstSelection);
 

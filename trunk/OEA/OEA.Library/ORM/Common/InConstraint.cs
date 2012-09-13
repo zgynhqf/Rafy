@@ -13,7 +13,7 @@ namespace OEA.ORM
     {
         public InConstraint(IManagedProperty property, string op, IList values) : base(property, op, values) { }
 
-        public override string GetSql(FormatSqlParameter parameters)
+        public override string GetSql(FormatSqlParameters parameters)
         {
             DbTable table = this.PropertyTable;
 

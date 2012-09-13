@@ -18,10 +18,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using OEA.Editors;
-using OEA.MetaModel;
-using OEA.MetaModel.View;
-using OEA.Module.WPF.Editors;
+
 
 namespace OEA.Module.WPF.Controls
 {
@@ -44,13 +41,13 @@ namespace OEA.Module.WPF.Controls
 
         protected override FrameworkElementFactory GenerateDisplayTemplateInCell()
         {
-            var refInfo = this.Meta.ReferenceViewInfo;
+            var refInfo = this.Meta.SelectionViewMeta;
 
             //如果是可输入下拉列表,非编辑状态下是绑定到自身属性上
             if (!string.IsNullOrEmpty(refInfo.RefEntityProperty))
             {
                 var textBlock = new FrameworkElementFactory(typeof(TextBlock));
-                var binding = new Binding(this.Meta.BindingPath());
+                var binding = new Binding(this.Meta.DisplayPath());
                 textBlock.SetBinding(TextBlock.TextProperty, binding);
                 return textBlock;
             }

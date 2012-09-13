@@ -54,7 +54,7 @@ namespace OEA.WPF.Command
                     CloneActions.NormalProperties | CloneActions.RefEntities
                     ));
 
-                listEntity.MarkDirty();
+                listEntity.MarkModified();
 
                 view.RefreshControl();
             }

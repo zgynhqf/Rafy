@@ -45,7 +45,10 @@ namespace FM
             set { this.SetProperty(TagsProperty, value); }
         }
 
-        public static readonly Property<DateTime> DateProperty = P<FinanceLog>.Register(e => e.Date);
+        public static readonly Property<DateTime> DateProperty = P<FinanceLog>.Register(e => e.Date, new PropertyMetadata<DateTime>
+        {
+            DateTimePart = DateTimePart.Date
+        });
         public DateTime Date
         {
             get { return this.GetProperty(DateProperty); }
@@ -181,22 +184,20 @@ namespace FM
             }
 
             //两个多选的视图设置
-            View.Property(FinanceLog.UsersProperty).UseEditor(WPFEditorNames.LookupDropDown)
-                .ReferenceViewInfo = new ReferenceViewInfo
+            View.Property(FinanceLog.UsersProperty).UseEditor(WPFEditorNames.EntitySelection_DropDown)
+                .SelectionViewMeta = new SelectionViewMeta
                 {
-                    SelectedValuePath = Person.NameProperty.Name,
-                    SelectionMode = ReferenceSelectionMode.Multiple,
-                    RefType = typeof(Person),
-                    TextFilterEnabled = false,
+                    RefEntityType = typeof(Person),
+                    SelectedValuePath = Person.NameProperty,
+                    SelectionMode = EntitySelectionMode.Multiple,
                 };
-            View.Property(FinanceLog.TagsProperty).UseEditor(WPFEditorNames.LookupDropDown)
-                .ReferenceViewInfo = new ReferenceViewInfo
+            View.Property(FinanceLog.TagsProperty).UseEditor(WPFEditorNames.EntitySelection_DropDown)
+                .SelectionViewMeta = new SelectionViewMeta
                 {
+                    RefEntityType = typeof(Tag),
                     DataSourceProperty = FinanceLog.TagDataSourceProperty,
-                    SelectedValuePath = Tag.NameProperty.Name,
-                    SelectionMode = ReferenceSelectionMode.Multiple,
-                    RefType = typeof(Tag),
-                    TextFilterEnabled = false,
+                    SelectedValuePath = Tag.NameProperty,
+                    SelectionMode = EntitySelectionMode.Multiple,
                 };
         }
     }

@@ -25,6 +25,6 @@ namespace OEA.ORM
         /// </summary>
         /// <param name="offset"></param>
         /// <returns></returns>
-        string GetSql(FormatSqlParameter paramaters);
+        string GetSql(FormatSqlParameters paramaters);
     }
 }

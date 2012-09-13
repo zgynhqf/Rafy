@@ -107,11 +107,11 @@ namespace OEA.Module.WPF
         /// </param>
         protected virtual void DefineTable(IDictionary<string, string> columnPropertyMappings, EntityViewMeta evm)
         {
-            foreach (var property in evm.EntityProperties)
+            foreach (var property in evm.OrderedEntityProperties())
             {
                 if (property.CanShowIn(ShowInWhere.List))
                 {
-                    columnPropertyMappings.Add(property.Label, property.BindingPath());
+                    columnPropertyMappings[property.Label] = property.DisplayPath();
                 }
             }
         }

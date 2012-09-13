@@ -89,7 +89,7 @@ namespace DbMigration.History
         private DateTime Get()
         {
             var value = this.DBA.QueryValue("SELECT VALUE FROM zzzDbMigrationVersion WHERE ID = 1");
-            if (value != DBNull.Value) { return new DateTime(Convert.ToInt64(value)); }
+            if (value != null) { return new DateTime(Convert.ToInt64(value)); }
 
             return DefaultMinTime;
         }

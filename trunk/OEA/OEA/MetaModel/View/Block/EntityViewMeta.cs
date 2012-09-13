@@ -181,6 +181,18 @@ namespace OEA.MetaModel.View
             get { return _WPFCommands; }
         }
 
+        private string _ReportPath;
+        /// <summary>
+        /// RDLC 报表文件的路径。
+        /// 
+        /// 报表 RDLC 文件中默认使用实体作为数据源，数据源的名称必须和实体名相同。
+        /// </summary>
+        public string ReportPath
+        {
+            get { return this._ReportPath; }
+            set { this.SetValue(ref this._ReportPath, value); }
+        }
+
         #endregion
 
         private int _DetailColumnsCount;
@@ -231,7 +243,7 @@ namespace OEA.MetaModel.View
         {
             get
             {
-                var diplayViewName = string.IsNullOrEmpty(this.ExtendView) ? "全局界面" : this.ExtendView;
+                var diplayViewName = string.IsNullOrEmpty(this.ExtendView) ? "基础界面" : this.ExtendView;
                 return this.EntityType.FullName + " " + diplayViewName;
             }
         }

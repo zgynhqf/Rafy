@@ -27,7 +27,7 @@ namespace OEA
             set { this.SetProperty(EntityTypeProperty, value); }
         }
 
-        public static readonly Property<string> ViewNameProperty = P<ViewConfigurationModel>.Register(e => e.ViewName, "全局界面");
+        public static readonly Property<string> ViewNameProperty = P<ViewConfigurationModel>.Register(e => e.ViewName, "基础界面");
         public string ViewName
         {
             get { return this.GetProperty(ViewNameProperty); }
@@ -351,7 +351,10 @@ namespace OEA
 
     public class ViewConfigurationModelRepository : EntityRepository
     {
-        protected ViewConfigurationModelRepository() { }
+        protected ViewConfigurationModelRepository()
+        {
+            this.DataPortalLocation = DataPortalLocation.Local;
+        }
 
         public ViewConfigurationModel GetByName(ViewConfigurationModelNameCriteria c)
         {

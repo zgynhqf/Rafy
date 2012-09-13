@@ -27,6 +27,7 @@ using hxy;
 using OEA.Library.Validation;
 using OEA.Utils.Caching;
 using hxy.Common.Data;
+using System.Runtime;
 
 namespace OEA.Library
 {
@@ -38,14 +39,20 @@ namespace OEA.Library
     /// 1. 其子类必须是线程安全的！
     /// 2. 子类的构建函数建议使用protected，不要向外界暴露，全部通过仓库工厂获取。
     /// </summary>
-    public abstract class EntityRepository : IRepository, IDbFactory, IEntityInfoHost, ITypeValidationsHost
+    public abstract class EntityRepository : IRepository, IDbFactory, IEntityInfoHost, ITypeValidationsHost, IOEARepositoryInternal
     {
         private Entity _delegate;
 
         public EntityRepository()
         {
             this._sqlColumnsGenerator = new SQLColumnsGenerator(this);
+            this.DataPortalLocation = DataPortalLocation.Remote;
         }
+
+        /// <summary>
+        /// 是否声明本仓库为本地仓库（客户端只在客户端查询，服务端在服务端查询）
+        /// </summary>
+        public DataPortalLocation DataPortalLocation { get; protected set; }
 
         private Entity Delegate
         {
@@ -114,16 +121,6 @@ namespace OEA.Library
         }
 
         /// <summary>
-        /// 外界不要使用，OEA 框架自身使用。
-        /// </summary>
-        /// <param name="parameters"></param>
-        /// <returns></returns>
-        public EntityList __GetListImplicitly(object criteria)
-        {
-            return this.GetBy(criteria);
-        }
-
-        /// <summary>
         /// 子类重写此方法来实现隐式调用的自定义逻辑。
         /// </summary>
         /// <param name="criteria"></param>
@@ -131,6 +128,11 @@ namespace OEA.Library
         protected virtual EntityList GetBy(object criteria)
         {
             return this.FetchList(criteria);
+        }
+
+        EntityList IOEARepositoryInternal.GetListImplicitly(object criteria)
+        {
+            return this.GetBy(criteria);
         }
 
         ///// <summary>
@@ -256,7 +258,7 @@ namespace OEA.Library
         public Entity ConvertRow(Entity row)
         {
             var entity = Entity.New(row.GetType());
-            entity.Status = PersistenceStatus.Unchanged;
+            entity.MarkUnchanged();
 
             //返回的子对象的属性只是简单的完全Copy参数data的数据。
             entity.Clone(row, CloneOptions.ReadDbRow());
@@ -316,7 +318,7 @@ namespace OEA.Library
                 var entity = component as Entity;
                 bool isNewEntity = entity != null && entity.IsNew;
 
-                var entity2 = component.IsDirty ? DataPortal.Update(component) as Entity : entity;
+                var entity2 = component.IsDirty ? this.SaveDirty(component) as Entity : entity;
 
                 if (markOld)
                 {
@@ -342,7 +344,7 @@ namespace OEA.Library
                     }
                 }
 
-                var list2 = component.IsDirty ? DataPortal.Update(component) as EntityList : list;
+                var list2 = component.IsDirty ? this.SaveDirty(component) as EntityList : list;
 
                 if (markOld)
                 {
@@ -360,6 +362,12 @@ namespace OEA.Library
             (component as IEntityOrListInternal).NotifySaved();
 
             return result;
+        }
+
+        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
+        private object SaveDirty(IEntityOrList component)
+        {
+            return DataPortal.Update(component, this.DataPortalLocation);
         }
 
         /// <summary>
@@ -427,7 +435,7 @@ namespace OEA.Library
             get
             {
                 return EntityListVersion.Repository != null &&
-                    OEAEnvironment.Location.IsOnClient() &&
+                    OEAEnvironment.IsOnClient() &&
                     this.EntityMeta.CacheDefinition != null;
             }
         }
@@ -467,7 +475,7 @@ namespace OEA.Library
             if (this.IsCacheEnabled)
             {
                 //如果是在客户端，则先检测缓存。
-                if (OEAEnvironment.Location.IsOnClient())
+                if (OEAEnvironment.IsOnClient())
                 {
                     var smallTable = this.GetCachedTable(parent);
                     if (smallTable != null)
@@ -509,7 +517,8 @@ namespace OEA.Library
 
             if (this.IsCacheEnabled)
             {
-                if (this.EntityMeta.EntityCategory == EntityCategory.Root)
+                if (this.EntityMeta.EntityCategory == EntityCategory.Root &&
+                    this.EntityMeta.CacheDefinition.SimpleCacheType == SimpleCacheType.ScopedByRoot)
                 {
                     result = AggregateRootCache.Instance.CacheById(this, id);
                 }
@@ -564,7 +573,7 @@ namespace OEA.Library
             IList<Entity> result = null;
 
             //目前只是在客户端使用了缓存。
-            if (OEAEnvironment.Location.IsOnClient())
+            if (OEAEnvironment.IsOnClient())
             {
                 CacheScope sd = this.EntityMeta.CacheDefinition;
                 if (sd != null)
@@ -602,7 +611,7 @@ namespace OEA.Library
         {
             IList<Entity> result = null;
 
-            if (OEAEnvironment.Location.IsOnClient())
+            if (OEAEnvironment.IsOnClient())
             {
                 CacheScope sd = this.EntityMeta.CacheDefinition;
                 if (sd != null)
@@ -614,12 +623,19 @@ namespace OEA.Library
                     if (result == null)
                     {
                         result = this.GetByParentId(parent.Id);
-                        var scopeId = sd.ScopeIdGetter(parent);
-                        var policy = new Policy()
-                        {
-                            Checker = new VersionChecker(sd.Class, sd.ScopeClass, scopeId)
-                        };
 
+                        VersionChecker checker = null;
+                        if (sd.ScopeById)
+                        {
+                            var scopeId = sd.ScopeIdGetter(parent);
+                            checker = new VersionChecker(sd.Class, sd.ScopeClass, scopeId);
+                        }
+                        else
+                        {
+                            checker = new VersionChecker(sd.Class);
+                        }
+
+                        var policy = new Policy() { Checker = checker };
                         CacheInstance.SqlCe.Add(key, result, policy, className);
                     }
                 }
@@ -732,7 +748,7 @@ namespace OEA.Library
 
         public void AddBatch(IList<Entity> entityList)
         {
-            if (!OEAEnvironment.Location.IsOnServer()) throw new InvalidOperationException("!OEAEnvironment.IsOnServer() must be false.");
+            OEAEnvironment.EnsureOnServer();
             if (entityList.Count < 1) throw new ArgumentOutOfRangeException();
 
             var connection = this.CreateDb().DBA.Connection;
@@ -761,7 +777,7 @@ namespace OEA.Library
 
         protected EntityList FetchList(object criteria)
         {
-            var list = DataPortal.Fetch(this.ListType, criteria) as EntityList;
+            var list = DataPortal.Fetch(this.ListType, criteria, this.DataPortalLocation) as EntityList;
 
             this.NotifyLoaded(list);
 
@@ -904,7 +920,7 @@ namespace OEA.Library
         }
 
         private ConsolidatedTypePropertiesContainer _propertiesContainer;
-        internal ConsolidatedTypePropertiesContainer PropertiesContainer
+        public ConsolidatedTypePropertiesContainer PropertiesContainer
         {
             get
             {
@@ -918,17 +934,29 @@ namespace OEA.Library
                 return _propertiesContainer;
             }
         }
+
+        private IList<IProperty> _redundancies;
         /// <summary>
-        /// 获取所有的托管属性信息
+        /// 所有本实体中所有声明的冗余属性。
         /// </summary>
-        /// <param name="entityType"></param>
         /// <returns></returns>
-        public IList<IManagedProperty> GetAvailableIndicators()
+        public IList<IProperty> GetPropertiesInRedundancyPath()
         {
-            return this.PropertiesContainer.GetAvailableProperties();
+            if (this._redundancies == null)
+            {
+                this._redundancies = this.PropertiesContainer.GetCompiledProperties()
+                    .Cast<IProperty>()
+                    .Where(p => p.IsInRedundantPath)
+                    .ToArray();
+            }
+
+            return this._redundancies;
         }
 
         private EntityMeta _entityInfo;
+        /// <summary>
+        /// 对应的实体元数据
+        /// </summary>
         public EntityMeta EntityMeta
         {
             get

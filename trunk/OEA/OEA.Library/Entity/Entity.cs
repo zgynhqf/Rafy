@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime;
 using System.Runtime.Serialization;
 using System.Transactions;
 using OEA.Library.Caching;
@@ -71,6 +72,7 @@ namespace OEA.Library
         /// <param name="entityType"></param>
         /// <returns></returns>
         [DebuggerStepThrough]
+        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
         public static Entity New(Type entityType)
         {
             //经测试，Activator 创建对象也非常快，这是因为它的内部作了构造器缓存处理。
@@ -130,6 +132,17 @@ namespace OEA.Library
             }
         }
 
+        protected override ConsolidatedTypePropertiesContainer FindPropertiesContainer()
+        {
+            //使用 Repository 中缓存的容器覆盖基类接口，提升性能。
+            if (this._repository != null)
+            {
+                return this._repository.PropertiesContainer;
+            }
+
+            return base.FindPropertiesContainer();
+        }
+
         #endregion
 
         #region 值的复制
@@ -145,7 +158,7 @@ namespace OEA.Library
             //从数据库对象中读取所有的属性，并设置好孩子结点的父指针。
             this.CloneCore(oldEntity.CastTo<Entity>(), CloneOptions.MergeOldEntity());
 
-            this.Status = PersistenceStatus.Unchanged;
+            this.MarkUnchanged();
 
             return this;
         }
@@ -153,15 +166,15 @@ namespace OEA.Library
         /// <summary>
         /// 使用 CloneActions.ReadSingleEntity 来复制目标对象。
         /// </summary>
-        /// <param name="target"></param>
-        public void Clone(Entity target)
+        /// <param name="source"></param>
+        public void Clone(Entity source)
         {
-            this.CloneCore(target, CloneOptions.ReadSingleEntity());
+            this.CloneCore(source, CloneOptions.ReadSingleEntity());
         }
 
-        public void Clone(Entity target, CloneOptions options)
+        public void Clone(Entity source, CloneOptions options)
         {
-            this.CloneCore(target, options);
+            this.CloneCore(source, options);
         }
 
         /// <summary>
@@ -172,11 +185,11 @@ namespace OEA.Library
         /// 2. 如果有延迟加载的外键引用对象 ILazyEntityRef，请调用它的 Clone 方法进行拷贝。
         /// 3. 如果使用了快速字段 FastField 来进行属性的缓存，请在基类完成 Clone 后，调用本类的 ResetFastField 方法来清空缓存。
         /// </summary>
-        /// <param name="target"></param>
+        /// <param name="source"></param>
         /// <param name="cloneChildren">是否复制孩子对象的引用</param>
-        protected virtual void CloneCore(Entity target, CloneOptions options)
+        protected virtual void CloneCore(Entity source, CloneOptions options)
         {
-            if (target == null) throw new ArgumentNullException("target");
+            if (source == null) throw new ArgumentNullException("target");
             if (options == null) throw new ArgumentNullException("options");
 
             var grabChildren = options.HasAction(CloneActions.GrabChildren);
@@ -189,10 +202,10 @@ namespace OEA.Library
             //注意：
             //由于 IdProperty 在 AllProperties 中的位置并不是第一个。所以会出现拷贝其它属性时，再次访问本ID导致缓存重建。
             //所以这里需要单独对 Id 进行一次拷贝。
-            if (copyId) { this.CopyProperty(target, IdProperty); }
+            if (copyId) { this.CopyProperty(source, IdProperty); }
 
             //复制目标对象的所有托管属性。
-            var allProperties = this.GetRepository().GetAvailableIndicators();
+            var allProperties = this.PropertiesContainer.GetAvailableProperties();
             for (int i = 0, c = allProperties.Count; i < c; i++)
             {
                 var property = allProperties[i];
@@ -210,18 +223,18 @@ namespace OEA.Library
                     var listProperty = property as IListProperty;
                     if (childrenRecur)
                     {
-                        var targetList = target.GetLazyList(listProperty);
-                        var srcList = this.GetLazyList(listProperty);
-                        srcList.Clone(targetList, options);
+                        var sourceList = source.GetLazyList(listProperty);
+                        var targetList = this.GetLazyList(listProperty);
+                        targetList.Clone(sourceList, options);
 
-                        var isComposition = srcList.HasManyType == HasManyType.Composition;
-                        if (isComposition) { srcList.SetParentEntity(this); }
+                        var isComposition = targetList.HasManyType == HasManyType.Composition;
+                        if (isComposition) { targetList.SetParentEntity(this); }
                     }
                     else
                     {
                         if (grabChildren)
                         {
-                            var children = target.GetProperty(property) as EntityList;
+                            var children = source.GetProperty(property) as EntityList;
                             this.LoadProperty(property, children);
                             if (children == null) return;
 
@@ -232,13 +245,13 @@ namespace OEA.Library
                 }
                 else
                 {
-                    this.CopyProperty(target, property, options);
+                    this.CopyProperty(source, property, options);
                 }
             }
 
-            options.NotifyCloned(target, this);
+            options.NotifyCloned(source, this);
 
-            if (this.SupportTree) { this.OnTreeItemCloned(target, options); }
+            if (this.SupportTree) { this.OnTreeItemCloned(source, options); }
         }
 
         #endregion
@@ -316,12 +329,9 @@ namespace OEA.Library
 
             if (entity.IsDeleted)
             {
-                if (!entity.IsNew)
-                {
-                    // tell the object to delete itself
-                    entity.OnDelete();
-                    entity.MarkNew();
-                }
+                // tell the object to delete itself
+                entity.OnDelete();
+                entity.MarkNew();
             }
             else
             {

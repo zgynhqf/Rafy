@@ -52,8 +52,6 @@ namespace OEA
 
         internal protected virtual void OnOwnerDataChanged() { }
 
-        internal protected virtual void OnOwnerDataReseting() { }
-
         internal protected virtual void OnOwnerCurrentObjectChanged() { }
 
         //internal protected virtual void OnOwnerEvent(string eventName, EventArgs e)

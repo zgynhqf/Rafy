@@ -25,6 +25,9 @@ using System.Runtime;
 
 namespace OEA.ORM
 {
+    /// <summary>
+    /// 数据表的 ORM 运行时对象
+    /// </summary>
     internal abstract class DbTable : ITable
     {
         #region 私有字段
@@ -89,6 +92,21 @@ namespace OEA.ORM
             get { return this._columns; }
         }
 
+        internal virtual void Add(DbColumn column)
+        {
+            if (column.IsPKID)
+            {
+                if (this._pkId != null)
+                {
+                    throw new ORMException(string.Format(
+                        "cannot add idenity column {0} to table {1}, it already has an identity column {2}",
+                        column.Name, this.Name, this._pkId.Name));
+                }
+                this._pkId = column;
+            }
+            _columns.Add(column);
+        }
+
         #endregion
 
         #region 数据操作 CUD 及相应的 SQL 生成。
@@ -108,6 +126,7 @@ namespace OEA.ORM
             }
 
             var result = db.DBA.ExecuteText(this._insertSQL, parameters.ToArray());
+
             return result;
         }
 
@@ -162,18 +181,18 @@ namespace OEA.ORM
         {
             var dbQuery = query as DbQuery;
 
-            var parameters = new FormatSqlParameter();
+            var parameters = new FormatSqlParameters();
             string sql = this.GenerateDeleteSQL(dbQuery, parameters);
 
             if (dbQuery != null)
             {
-                return db.DBA.ExecuteText(sql, parameters.ToArray());
+                return db.DBA.ExecuteText(sql, parameters);
             }
 
             return db.DBA.ExecuteTextNormal(sql);
         }
 
-        protected virtual string GenerateDeleteSQL(DbQuery query, FormatSqlParameter parameters)
+        protected virtual string GenerateDeleteSQL(DbQuery query, FormatSqlParameters parameters)
         {
             var sql = new StringBuilder("DELETE FROM ")
                 .Append(this.Quote(this._name));
@@ -200,7 +219,8 @@ namespace OEA.ORM
                 }
             }
 
-            return db.DBA.ExecuteText(this._updateSQL, parameters.ToArray());
+            int res = db.DBA.ExecuteText(this._updateSQL, parameters.ToArray());
+            return res;
         }
 
         protected virtual string GenerateUpdateSQL(IList<string> updateColumns)
@@ -236,10 +256,10 @@ namespace OEA.ORM
 
             var dbQuery = query as DbQuery;
 
-            var parameters = new FormatSqlParameter();
+            var parameters = new FormatSqlParameters();
             string sql = GenerateSelectSQL(dbQuery, parameters);
 
-            var reader = dba.QueryDataReader(sql, parameters.ToArray());
+            var reader = dba.QueryDataReader(sql, parameters);
             FastFillByColumnIndex(reader, list, dbQuery);
         }
 
@@ -249,7 +269,7 @@ namespace OEA.ORM
         /// <param name="dbQuery"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        protected virtual string GenerateSelectSQL(DbQuery dbQuery, FormatSqlParameter parameters)
+        protected virtual string GenerateSelectSQL(DbQuery dbQuery, FormatSqlParameters parameters)
         {
             var tableMeta = this._meta.TableMeta;
             if (this._selectSQL == null)
@@ -328,7 +348,7 @@ namespace OEA.ORM
                         int i = 0;
                         var entity = this.CreateByIndex(reader, ref i);
 
-                        entity.Status = PersistenceStatus.Unchanged;
+                        entity.MarkUnchanged();
 
                         allEntities.Add(entity);
                         list.Add(entity);
@@ -373,12 +393,21 @@ namespace OEA.ORM
                 }
             }
 
+            OnDbLoaded(allEntities);
+        }
+
+        /// <summary>
+        /// 通知所有的实体都已经被加载。
+        /// </summary>
+        /// <param name="allEntities"></param>
+        private static void OnDbLoaded(List<Entity> allEntities)
+        {
             for (int i = 0, c = allEntities.Count; i < c; i++)
             {
                 var item = allEntities[i];
-                item.Status = PersistenceStatus.Unchanged;
+                item.MarkUnchanged();
 
-                //由于 OnDbLoaded 中可能会使用到关系，所以不能放在 Reader 中。
+                //由于 OnDbLoaded 中可能会使用到关系，导致再次进行数据访问，所以不能放在 Reader 中。
                 item.OnDbLoaded();
             }
         }
@@ -425,35 +454,30 @@ namespace OEA.ORM
 
         #endregion
 
-        public virtual void Add(DbColumn column)
+        #region 创建实体
+
+        /// <summary>
+        /// 通过名称与 reader 中的数据进行关联来构造对象列表。
+        /// </summary>
+        /// <param name="reader">注意，传入的 Reader 会即刻被释放！</param>
+        /// <param name="list"></param>
+        internal void FillByName(IDataReader reader, ICollection<Entity> list)
         {
-            if (column.IsPKID)
+            var allEntities = new List<Entity>(20);
+
+            using (reader)
             {
-                if (this._pkId != null)
+                while (reader.Read())
                 {
-                    throw new ORMException(string.Format(
-                        "cannot add idenity column {0} to table {1}, it already has an identity column {2}",
-                        column.Name, this.Name, this._pkId.Name));
+                    var entity = CreateByName(reader);
+
+                    list.Add(entity);
+
+                    allEntities.Add(entity);
                 }
-                this._pkId = column;
             }
-            _columns.Add(column);
-        }
 
-        public void FillByName(IDataReader reader, ICollection<Entity> list)
-        {
-            while (reader.Read())
-            {
-                var entity = this.CreateEntity();
-
-                foreach (var column in _columns)
-                {
-                    object val = reader[column.Name];
-                    column.LoadValue(entity, val);
-                }
-
-                list.Add(entity);
-            }
+            OnDbLoaded(allEntities);
         }
 
         /// <summary>
@@ -491,6 +515,23 @@ namespace OEA.ORM
                 column.LoadValue(entity, val);
             }
 
+            entity = this.TryReplaceByContext(entity) as Entity;
+
+            return entity;
+        }
+
+        private Entity CreateByName(IDataReader reader)
+        {
+            var entity = this.CreateEntity();
+
+            foreach (var column in _columns)
+            {
+                object val = reader[column.Name];
+                column.LoadValue(entity, val);
+            }
+
+            entity = this.TryReplaceByContext(entity) as Entity;
+
             return entity;
         }
 
@@ -499,37 +540,69 @@ namespace OEA.ORM
         {
             var entity = Entity.New(this._meta.EntityType);
 
-            entity.Status = PersistenceStatus.Unchanged;
+            entity.MarkUnchanged();
 
             return entity;
         }
 
-        internal DbColumn FindByColumnName(string name)
+        #endregion
+
+        #region EntityContext
+
+        /// <summary>
+        /// 如果目前使用了 EntityContext，则应该使用内存中已经存在的对象。
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        private IEntity TryReplaceByContext(IEntity entity)
         {
-            if (name == null || name.Length == 0)
-                return null;
-            string target = name.ToLower();
-            foreach (DbColumn column in _columns)
+            var current = EntityContext.Current;
+            if (current != null)
             {
-                if (column.Name.Equals(target))
-                    return column;
+                var typeContext = current.GetOrCreateTypeContext(this.Class);
+
+                var id = entity.Id;
+                var item = typeContext.TryGetById(id);
+                if (item != null)
+                {
+                    entity = item;
+                }
+                else
+                {
+                    typeContext.Add(id, entity);
+                }
             }
-            return null;
+
+            return entity;
         }
 
-        internal DbColumn FindByPropertyName(string propertyName)
+        /// <summary>
+        /// 如果目前使用了 EntityContext，则应该把加载好的对象都存储在内存中。
+        /// </summary>
+        /// <param name="entity"></param>
+        internal void NotifyLoaded(IEntity entity)
         {
-            if (string.IsNullOrEmpty(propertyName)) return null;
-
-            string target = propertyName.ToLower();
-
-            foreach (DbColumn column in _columns)
+            var current = EntityContext.Current;
+            if (current != null)
             {
-                if (column.PropertyName == target) return column;
-                if (column.RefPropertyName == target) return column;
+                var typeContext = current.GetOrCreateTypeContext(this.Class);
+                typeContext.Set(entity.Id, entity);
             }
+        }
 
-            return null;
+        #endregion
+
+        #region 其它方法
+
+        /// <summary>
+        /// 把属性名转换为列名
+        /// </summary>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
+        internal string Translate(IManagedProperty property)
+        {
+            return this.Translate(property.GetMetaPropertyName(property.OwnerType));
         }
 
         /// <summary>
@@ -552,15 +625,33 @@ namespace OEA.ORM
             return name;
         }
 
-        /// <summary>
-        /// 把属性名转换为列名
-        /// </summary>
-        /// <param name="property"></param>
-        /// <returns></returns>
-        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
-        internal string Translate(IManagedProperty property)
+        internal DbColumn FindByColumnName(string name)
         {
-            return this.Translate(property.GetMetaPropertyName(property.OwnerType));
+            if (string.IsNullOrEmpty(name)) return null;
+
+            string target = name.ToLower();
+
+            foreach (DbColumn column in _columns)
+            {
+                if (column.Name == target) return column;
+            }
+
+            return null;
+        }
+
+        internal DbColumn FindByPropertyName(string propertyName)
+        {
+            if (string.IsNullOrEmpty(propertyName)) return null;
+
+            string target = propertyName.ToLower();
+
+            foreach (DbColumn column in _columns)
+            {
+                if (column.PropertyName == target) return column;
+                if (column.RefPropertyName == target) return column;
+            }
+
+            return null;
         }
 
         [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
@@ -568,6 +659,8 @@ namespace OEA.ORM
         {
             return new ManagedPropertyBridge(managedProperty);
         }
+
+        #endregion
 
         #region 帮助方法
 

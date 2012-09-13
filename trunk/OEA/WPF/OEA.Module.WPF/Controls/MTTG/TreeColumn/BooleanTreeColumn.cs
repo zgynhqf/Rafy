@@ -19,9 +19,7 @@ using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Data;
-using OEA.MetaModel;
-using OEA.MetaModel.View;
-using OEA.Module.WPF.Editors;
+
 
 namespace OEA.Module.WPF.Controls
 {

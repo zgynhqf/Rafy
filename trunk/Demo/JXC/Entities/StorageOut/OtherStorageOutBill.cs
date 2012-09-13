@@ -26,16 +26,6 @@ namespace JXC
             get { return this.GetRefEntity(CustomerRefProperty); }
             set { this.SetRefEntity(CustomerRefProperty, value); }
         }
-
-        public static readonly Property<ClientInfoList> CustomerDataSourceProperty = P<OtherStorageOutBill>.RegisterReadOnly(e => e.CustomerDataSource, e => (e as OtherStorageOutBill).GetCustomerDataSource());
-        public ClientInfoList CustomerDataSource
-        {
-            get { return this.GetProperty(CustomerDataSourceProperty); }
-        }
-        private ClientInfoList GetCustomerDataSource()
-        {
-            return RF.Concreate<ClientInfoRepository>().GetCustomers();
-        }
     }
 
     [Serializable]
@@ -67,7 +57,7 @@ namespace JXC
                 View.Property(StorageOutBill.DateProperty).HasLabel("出库日期").ShowIn(ShowInWhere.ListDetail);
                 View.Property(OtherStorageOutBill.StorageRefProperty).HasLabel("发出仓库").ShowIn(ShowInWhere.ListDetail);
                 View.Property(OtherStorageOutBill.CustomerRefProperty).HasLabel("收货单位").ShowIn(ShowInWhere.ListDetail)
-                    .UseLookupDataSource(OtherStorageOutBill.CustomerDataSourceProperty);//只显示客户，不显示供应商
+                    .UseDataSource(EntityDataSources.Customers);//只显示客户，不显示供应商
 
                 View.Property(StorageOutBill.TotalAmountProperty).HasLabel("总数量").ShowIn(ShowInWhere.ListDetail)
                     .Readonly();

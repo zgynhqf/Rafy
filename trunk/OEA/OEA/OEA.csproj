@@ -68,6 +68,8 @@
     <Compile Include="EnvironmentProvider.cs" />
     <Compile Include="IClientApp.cs" />
     <Compile Include="LibraryPlugin.cs" />
+    <Compile Include="MetaModel\View\Aggt\AggtBlocksCollection.cs" />
+    <Compile Include="MetaModel\View\Aggt\BlockType.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="IPlugin.cs" />
     <Compile Include="IPropertyMetadata.cs" />
@@ -127,7 +129,7 @@
     <Compile Include="MetaModel\View\Block\EntityViewMetaFactory.cs" />
     <Compile Include="MetaModel\View\Block\EntityPropertyViewMeta.cs" />
     <Compile Include="MetaModel\View\Block\EntityViewMeta.cs" />
-    <Compile Include="MetaModel\View\Block\ReferenceViewInfo.cs" />
+    <Compile Include="MetaModel\View\Block\SelectionViewMeta.cs" />
     <Compile Include="MetaModel\View\UIModel.cs" />
     <Compile Include="MetaModel\View\CommandGroupType.cs" />
     <Compile Include="MetaModel\View\WebCommand\WebJsHelper.cs" />
@@ -190,12 +192,12 @@
     <Content Include="OEA Version Log.txt" />
     <Content Include="_OEA Version Logs\2.0.txt" />
     <Content Include="_OEA Version Logs\2.5-2.6.txt" />
+    <Content Include="_OEA Version Logs\2.9-2.11.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="_CodeSnippets\OEA_PropertyRedundancy.snippet" />
     <None Include="_CodeSnippets\OEA_PropertyReferenceNullableFast.snippet" />
-    <None Include="_CodeSnippets\OEA_PropertyExtension.snippet">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="_CodeSnippets\OEA_PropertyExtension.snippet" />
     <None Include="_CodeSnippets\OEA_Entity_Criteria.snippet" />
     <None Include="_CodeSnippets\OEA_PropertyList_Full.snippet" />
     <None Include="_CodeSnippets\OEA_PropertyReferenceFast.snippet" />

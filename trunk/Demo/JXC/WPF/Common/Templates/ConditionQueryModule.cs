@@ -67,7 +67,7 @@ namespace JXC.WPF.Templates
             var listView = this.ListView;
 
             //默认发起一次查询。
-            var queryView = listView.CondtionQueryView;
+            var queryView = listView.ConditionQueryView;
             if (queryView != null) queryView.TryExecuteQuery();
 
             listView.IsReadOnly = true;

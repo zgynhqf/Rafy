@@ -44,20 +44,18 @@ namespace hxy.Common
         /// <param name="message"></param>
         public Result(string message)
         {
-            this._statusCode = 0;
+            this._statusCode = FailedStatusCode;
             this._message = message;
         }
 
         public Result(bool success, string message)
         {
-            this._statusCode = success ? 1 : 0;
+            this._statusCode = success ? SuccessStatusCode : FailedStatusCode;
             this._message = message;
         }
 
         /// <summary>
         /// status code indecates the result type of this invoking.
-        /// 1:      Success.
-        /// 0:      Failed.
         /// other:  other customized types.
         /// </summary>
         /// <param name="statusCode"></param>
@@ -97,8 +95,6 @@ namespace hxy.Common
 
         /// <summary>
         /// status code indecates the result type of this invoking.
-        /// 1:      Success.
-        /// 0:      Failed.
         /// other:  other customized types.
         /// </summary>
         [DataMember]
@@ -132,7 +128,7 @@ namespace hxy.Common
         public void Reset()
         {
             this._message = string.Empty;
-            this._statusCode = 0;
+            this._statusCode = FailedStatusCode;
         }
 
         public static implicit operator Result(bool value)

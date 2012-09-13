@@ -49,29 +49,29 @@ namespace OEA.MetaModel.View
         {
             if (string.IsNullOrEmpty(extendViewName))
             {
-                return this.CreateDefaultView(entityType, destination);
+                return this.CreateBaseView(entityType, destination);
             }
 
             return this.CreateExtendView(entityType, extendViewName, destination);
         }
 
         /// <summary>
-        /// 查询某个实体类型所对应的默认视图信息
+        /// 查询某个实体类型所对应的基础视图信息
         /// </summary>
         /// <param name="entityType"></param>
         /// <param name="needConfig"></param>
         /// <param name="needCustomization"></param>
         /// <returns></returns>
-        public EntityViewMeta CreateDefaultView(Type entityType, BlockConfigType? destination = BlockConfigType.Customization)
+        public EntityViewMeta CreateBaseView(Type entityType, BlockConfigType? destination = BlockConfigType.Customization)
         {
-            var res = this.CreateDefaultViewCore(entityType, destination);
+            var res = this.CreateBaseViewCore(entityType, destination);
 
             //res.Freeze();
 
             return res;
         }
 
-        private EntityViewMeta CreateDefaultViewCore(Type entityType, BlockConfigType? destination)
+        private EntityViewMeta CreateBaseViewCore(Type entityType, BlockConfigType? destination)
         {
             var meta = CommonModel.Entities.Get(entityType);
 
@@ -120,7 +120,7 @@ namespace OEA.MetaModel.View
         /// <returns></returns>
         public EntityViewMeta CreateExtendView(Type entityType, string extendViewName, BlockConfigType? destination = BlockConfigType.Customization)
         {
-            var raw = this.CreateDefaultViewCore(entityType, destination);
+            var raw = this.CreateBaseViewCore(entityType, destination);
 
             //使用扩展视图配置对象进行配置
             foreach (var config in OEAEnvironment.FindConfigurations(entityType, extendViewName))

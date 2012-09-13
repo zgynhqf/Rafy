@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：201202
@@ -16,7 +16,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Collections.Specialized;
-using OEA.Module.WPF.Editors;
 using OEA.ManagedProperty;
 using OEA.Library;
 
@@ -34,16 +33,6 @@ namespace OEA.Module.WPF.Controls
             //选择列上没有 Meta
             return this.Cast<TreeColumn>()
                 .FirstOrDefault(c => c.Meta != null && c.Meta.PropertyMeta.ManagedProperty == property);
-        }
-
-        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action == NotifyCollectionChangedAction.Add)
-            {
-                foreach (TreeColumn item in e.NewItems) { item.Owner = this.Owner.TreeGrid; }
-            }
-
-            base.OnCollectionChanged(e);
         }
 
         internal void UpdateVisibilities(Entity data)

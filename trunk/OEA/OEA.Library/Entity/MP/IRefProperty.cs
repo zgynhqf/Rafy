@@ -23,7 +23,7 @@ namespace OEA.Library
     /// <summary>
     /// 引用实体属性的静态属性标记
     /// </summary>
-    public interface IRefProperty : IManagedProperty, IOEARefProperty
+    public interface IRefProperty : IProperty, IOEARefProperty
     {
         /// <summary>
         /// 创建某个实体的懒引用外键

@@ -51,7 +51,7 @@ namespace OEA.Library
                 {
                     //利用反射创建对象。
                     result = this._repository.New();
-                    result.Status = PersistenceStatus.Unchanged;
+                    result.MarkUnchanged();
 
                     foreach (IColumn column in tableInfo.Columns)
                     {

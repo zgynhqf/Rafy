@@ -1,3 +1,16 @@
+/*******************************************************
+ * 
+ * 作者：胡庆访
+ * 创建时间：2012
+ * 说明：此文件只包含一个类，具体内容见类型注释。
+ * 运行环境：.NET 4.0
+ * 版本号：1.0.0
+ * 
+ * 历史记录：
+ * 创建文件 胡庆访 2012
+ * 
+*******************************************************/
+
 using System;
 using System.ComponentModel;
 using OEA;
@@ -5,6 +18,7 @@ using OEA.Library;
 using OEA.Reflection;
 using OEA.Server;
 using OEA.DataPortalClient;
+using System.Security.Principal;
 
 namespace OEA
 {
@@ -14,9 +28,16 @@ namespace OEA
     /// </summary>
     public static class DataPortal
     {
-        public static object Fetch(Type objectType, object criteria)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="objectType"></param>
+        /// <param name="criteria"></param>
+        /// <param name="runAtLocal">如果一个数据层方法需要在本地执行，应该在把本参数指明为 true。</param>
+        /// <returns></returns>
+        public static object Fetch(Type objectType, object criteria, DataPortalLocation loc = DataPortalLocation.Remote)
         {
-            var proxy = GetDataPortalProxy();
+            var proxy = GetDataPortalProxy(loc);
 
             var dpContext = new Server.DataPortalContext(GetPrincipal(), proxy.IsServerRemote);
 
@@ -46,16 +67,15 @@ namespace OEA
         /// </remarks>
         /// <param name="obj">A reference to the business object to be updated.</param>
         /// <returns>A reference to the updated business object.</returns>
-        public static object Update(object obj)
+        public static object Update(object obj, DataPortalLocation loc = DataPortalLocation.Remote)
         {
-            var proxy = GetDataPortalProxy();
+            var proxy = GetDataPortalProxy(loc);
 
             var dpContext = new Server.DataPortalContext(GetPrincipal(), proxy.IsServerRemote);
 
             var result = proxy.Update(obj, dpContext);
 
-            if (proxy.IsServerRemote)
-                ApplicationContext.SetGlobalContext(result.GlobalContext);
+            if (proxy.IsServerRemote) ApplicationContext.SetGlobalContext(result.GlobalContext);
 
             return result.ReturnObject;
         }
@@ -64,20 +84,21 @@ namespace OEA
 
         private static Type _proxyType;
 
-        private static DataPortalClient.IDataPortalProxy GetDataPortalProxy()
+        private static IDataPortalProxy GetDataPortalProxy(DataPortalLocation loc)
         {
+            if (loc == DataPortalLocation.Local) return new LocalProxy();
+
             if (_proxyType == null)
             {
                 string proxyTypeName = ApplicationContext.DataPortalProxy;
-                if (proxyTypeName == "Local")
-                    _proxyType = typeof(LocalProxy);
-                else
-                    _proxyType = Type.GetType(proxyTypeName, true, true);
+                if (proxyTypeName == "Local") return new LocalProxy();
+
+                _proxyType = Type.GetType(proxyTypeName, true, true);
             }
-            return (DataPortalClient.IDataPortalProxy)Activator.CreateInstance(_proxyType);
+            return Activator.CreateInstance(_proxyType) as IDataPortalProxy;
         }
 
-        private static System.Security.Principal.IPrincipal GetPrincipal()
+        private static IPrincipal GetPrincipal()
         {
             if (ApplicationContext.AuthenticationType == "Windows")
             {
@@ -92,5 +113,20 @@ namespace OEA
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// 数据访问层执行的地点
+    /// </summary>
+    public enum DataPortalLocation
+    {
+        /// <summary>
+        /// 在远程服务端执行
+        /// </summary>
+        Remote,
+        /// <summary>
+        /// 在本地执行（可能是客户端也可能是服务端）。
+        /// </summary>
+        Local,
     }
 }

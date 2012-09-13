@@ -71,7 +71,7 @@ namespace OEA.ORM
             }
         }
 
-        public virtual string GetSql(FormatSqlParameter paramaters)
+        public virtual string GetSql(FormatSqlParameters paramaters)
         {
             var table = this.PropertyTable;
             string name = table.Translate(this._property);

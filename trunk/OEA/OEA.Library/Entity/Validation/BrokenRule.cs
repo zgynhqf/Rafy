@@ -53,17 +53,13 @@ namespace OEA.Library.Validation
         public string Description { get; private set; }
 
         /// <summary>
-        /// Provides access to the property affected by the broken rule.
+        /// 如果这是某个属性关联的规则参数，则这个属性表示关联的托管属性
         /// </summary>
-        /// <value>The property affected by the rule.</value>
         public IManagedProperty Property { get; private set; }
 
         /// <summary>
         /// Gets the severity of the broken rule.
         /// </summary>
-        /// <value></value>
-        /// <returns></returns>
-        /// <remarks></remarks>
         public RuleLevel Level { get; private set; }
     }
 }

@@ -78,7 +78,7 @@ namespace OEA.Web.EntityDataPortal
                 foreach (JObject item in jsonList)
                 {
                     var e = this.Repository.New();
-                    e.Status = PersistenceStatus.Unchanged;
+                    e.MarkUnchanged();
 
                     this._setter.SetEntity(e, item);
 

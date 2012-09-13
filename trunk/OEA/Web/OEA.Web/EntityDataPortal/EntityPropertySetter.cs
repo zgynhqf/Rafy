@@ -36,7 +36,7 @@ namespace OEA.Web.EntityDataPortal
         {
             this.Repository = repo;
 
-            this._allProperties = this.Repository.GetAvailableIndicators();
+            this._allProperties = this.Repository.PropertiesContainer.GetAvailableProperties();
             this._refProperties = this._allProperties.Where(m => m is IRefProperty).Cast<IRefProperty>().ToArray();
         }
 

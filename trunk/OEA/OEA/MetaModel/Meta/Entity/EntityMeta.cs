@@ -269,6 +269,11 @@ namespace OEA.MetaModel
         public Func<ManagedPropertyObject, string> ScopeIdGetter { get; set; }
 
         /// <summary>
+        /// 如果是使用的简单缓存方案，这个值存储这个方案的值。
+        /// </summary>
+        public SimpleCacheType? SimpleCacheType { get; set; }
+
+        /// <summary>
         /// 表示Class以本身作为缓存范围。
         /// </summary>
         public bool ScopeBySelf
@@ -283,5 +288,21 @@ namespace OEA.MetaModel
         {
             get { return this.ScopeIdGetter != null; }
         }
+    }
+
+    /// <summary>
+    /// 主要会被使用到的两种缓存方案
+    /// </summary>
+    public enum SimpleCacheType
+    {
+        /// <summary>
+        /// 按照表的方案来缓存
+        /// </summary>
+        Table,
+
+        /// <summary>
+        /// 按照聚合树的方案来缓存
+        /// </summary>
+        ScopedByRoot
     }
 }

@@ -118,7 +118,7 @@ namespace OEA.MetaModel.View
                     //使用该属性对应实体的默认视图中的名称作用本子块的 Label
                     if (string.IsNullOrEmpty(this.Label))
                     {
-                        var defaultView = UIModel.Views.CreateDefaultView(this.EntityType);
+                        var defaultView = UIModel.Views.CreateBaseView(this.EntityType);
                         this.Label = defaultView.Label;
                     }
                 }

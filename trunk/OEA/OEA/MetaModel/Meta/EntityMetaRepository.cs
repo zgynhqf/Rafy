@@ -101,7 +101,7 @@ namespace OEA.MetaModel
 
             EntityMeta result = this.FirstOrDefault(em => em.EntityType == entityType);
 
-            if (result == null) throw new ArgumentNullException("没有找到这个类型的实体：" + entityType);
+            if (result == null) throw new ArgumentNullException("没有找到这个类型的实体：" + entityType + "，可能是没有标记 RootEntity/ChildEntity/Criteria 等标记。");
 
             return result;
         }

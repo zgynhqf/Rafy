@@ -98,7 +98,7 @@ namespace OEA.Module.WPF.Controls
             this.AddCommand(UIModel.WPFCommands.Find(commandName), commandArg);
         }
 
-        public void AddCommand(WPFCommand commandInfo, object commandArg = null)
+        public void AddCommand(WPFCommand cmd, object commandArg = null)
         {
             if (commandArg == null)
             {
@@ -111,8 +111,7 @@ namespace OEA.Module.WPF.Controls
             items.Remove(btnConfirm);
             items.Remove(btnCancel);
 
-            var commands = new WPFCommand[] { commandInfo };
-            AutoUI.BlockUIFactory.AppendCommands(commandPanel, commandArg, commands);
+            AutoUI.BlockUIFactory.AppendCommands(commandPanel, commandArg, cmd);
 
             items.Add(btnConfirm);
             items.Add(btnCancel);

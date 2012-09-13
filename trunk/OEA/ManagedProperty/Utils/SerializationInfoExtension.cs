@@ -10,7 +10,9 @@ namespace OEA
     {
         public static T GetValue<T>(this SerializationInfo info, string name)
         {
-            return (T)info.GetValue(name, typeof(T));
+            var value = info.GetValue(name, typeof(T));
+            if (value == null) return default(T);
+            return (T)value;
         }
     }
 }

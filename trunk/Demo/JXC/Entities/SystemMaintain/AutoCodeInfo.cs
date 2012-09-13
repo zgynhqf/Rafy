@@ -71,7 +71,7 @@ namespace JXC
 
         public string GetOrCreateAutoCode(Type targetType, string defaultFormat = null, string beiZhu = null)
         {
-            var vm = UIModel.Views.CreateDefaultView(targetType);
+            var vm = UIModel.Views.CreateBaseView(targetType);
             string name = vm.Label + "-自动编码规则";
 
             var item = this.FetchFirstAs<AutoCodeInfo>(name);

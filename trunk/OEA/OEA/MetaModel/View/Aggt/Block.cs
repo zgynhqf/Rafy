@@ -19,6 +19,7 @@ using OEA.ManagedProperty;
 using System.Xml.Serialization;
 using hxy;
 using System.IO;
+using System.Diagnostics;
 
 namespace OEA.MetaModel.View
 {
@@ -29,9 +30,11 @@ namespace OEA.MetaModel.View
     /// </summary>
     public class Block
     {
+        #region 构造器
+
         public Block(Type entityType)
-            : this()
         {
+            this.BlockType = BlockType.List;
             this.EntityType = entityType;
         }
 
@@ -39,6 +42,8 @@ namespace OEA.MetaModel.View
         {
             this.BlockType = BlockType.List;
         }
+
+        #endregion
 
         #region public string KeyLabel { get; set; }
 
@@ -131,12 +136,16 @@ namespace OEA.MetaModel.View
         {
             get
             {
-                if (this._ViewMeta == null)
-                {
-                    this._ViewMeta = UIModel.Views.Create(this.EntityType, this.ExtendView);
-                }
-
+                this.InitViewMeta();
                 return this._ViewMeta;
+            }
+        }
+
+        internal void InitViewMeta()
+        {
+            if (this._ViewMeta == null)
+            {
+                this._ViewMeta = UIModel.Views.Create(this.EntityType, this.ExtendView);
             }
         }
 
@@ -148,13 +157,5 @@ namespace OEA.MetaModel.View
         public string CustomViewType { get; set; }
 
         #endregion
-    }
-
-    /// <summary>
-    /// 块的类型
-    /// </summary>
-    public enum BlockType
-    {
-        List, Detail
     }
 }

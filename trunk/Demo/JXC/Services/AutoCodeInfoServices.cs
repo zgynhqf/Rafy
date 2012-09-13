@@ -34,7 +34,7 @@ namespace JXC
 
         protected override void Execute()
         {
-            if (IsWPF) throw new InvalidOperationException("IsWPF must be false.");
+            if (OEAEnvironment.IsWPF) throw new InvalidOperationException("IsWPF must be false.");
 
             var entityType = ClientEntities.Find(this.EntityType).EntityType;
 

@@ -44,7 +44,7 @@ namespace OEA.RBAC
             PermissionMgr.Provider = new OEAPermissionMgr();
 
             //依赖注入
-            if (OEAEnvironment.Location.IsOnServer())
+            if (OEAEnvironment.IsOnServer())
             {
                 AuditLogService.SetProvider(new ServerAuditLogProvider());
             }
@@ -77,7 +77,7 @@ namespace OEA.RBAC
                 }
             };
 
-            if (OEAEnvironment.Location.IsOnClient())
+            if (OEAEnvironment.IsOnClient())
             {
                 app.Exit += (o, e) =>
                 {

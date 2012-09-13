@@ -16,15 +16,16 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using AvalonDock;
-using OEA.WPF.Command;
 using OEA.Editors;
 using OEA.Library;
 using OEA.MetaModel;
@@ -33,7 +34,7 @@ using OEA.Module.WPF.Automation;
 using OEA.Module.WPF.CommandAutoUI;
 using OEA.Module.WPF.Controls;
 using OEA.Module.WPF.Editors;
-using System.Runtime;
+using OEA.WPF.Command;
 
 namespace OEA.Module.WPF
 {
@@ -63,28 +64,40 @@ namespace OEA.Module.WPF
         /// <summary>
         /// 自动生成树形列表UI
         /// </summary>
-        /// <param name="vm"></param>
+        /// <param name="evm"></param>
         /// <param name="showInWhere"></param>
         /// <returns></returns>
-        public virtual MultiTypesTreeGrid CreateTreeListControl(EntityViewMeta vm, ShowInWhere showInWhere)
+        public virtual TreeGrid CreateTreeListControl(EntityViewMeta evm, ShowInWhere showInWhere)
         {
-            if (vm == null) throw new ArgumentNullException("vm");
+            if (evm == null) throw new ArgumentNullException("vm");
 
-            //使用MultiTypesTreeGrid作为TreeListControl
-            var treeListControl = new MultiTypesTreeGrid(vm);
+            //使用TreeGrid作为TreeListControl
+            var treeGrid = new OEATreeGrid
+            {
+                IsTree = evm.EntityMeta.IsTreeEntity,
+                GroupingStyle = OEAResources.GroupContainerStyle,
+                CheckingColumnTemplate = OEAResources.OEA_MTTG_SelectionColumnTemplate
+            };
+            if (!string.IsNullOrEmpty(evm.Label))
+            {
+                AutomationProperties.SetName(treeGrid, evm.Label);
+            }
+            GridTreeViewRow.SetAutomationProperty(treeGrid, evm.TryGetPrimayDisplayProperty());
 
             //使用list里面的属性生成每一列
-            foreach (var property in vm.OrderedEntityProperties())
+            foreach (var property in evm.OrderedEntityProperties())
             {
                 if (property.CanShowIn(showInWhere))
                 {
                     var column = this.TreeColumnFactory.Create(property);
 
-                    treeListControl.Columns.Add(column);
+                    treeGrid.Columns.Add(column);
                 }
             }
 
-            return treeListControl;
+            treeGrid.ApplyTemplate();
+
+            return treeGrid;
         }
 
         /// <summary>
@@ -118,7 +131,7 @@ namespace OEA.Module.WPF
 
                 var groups = meta.OrderedEntityProperties().Where(pv => pv.CanShowIn(ShowInWhere.Detail))
                     .GroupBy(pv => pv.DetailGroupName).ToArray();
-                if (groups.Length == 0) throw new InvalidOperationException(meta.EntityType.FullName + " 没有属性时，不能生成表单控件。");
+                if (groups.Length == 0) throw new InvalidOperationException(meta.EntityType.FullName + " 没有属性在表单中显示时，不能生成表单控件。");
 
                 if (groups.Length == 1)
                 {
@@ -135,7 +148,34 @@ namespace OEA.Module.WPF
                 form.Content = Activator.CreateInstance(meta.DetailPanelType) as FrameworkElement;
             }
 
+            //即时调用 EditorHost 的 ApplyTemplate 方法，
+            //可以使 EditorHost 即时生成 PropertyEditor，而不是等到界面 Loaded 时再生成。
+            ApplyEditorHostTemplate(form);
+
             return form;
+        }
+
+        /// <summary>
+        /// 迭归查找某个元素中所有的 EditorHost 子元素，
+        /// 并调用它们的 ApplyTemplate 方法。
+        /// </summary>
+        /// <param name="element"></param>
+        private static void ApplyEditorHostTemplate(DependencyObject element)
+        {
+            if (element is EditorHost)
+            {
+                (element as EditorHost).ApplyTemplate();
+                return;
+            }
+
+            var children = LogicalTreeHelper.GetChildren(element);
+            foreach (var child in children)
+            {
+                if (child is DependencyObject)
+                {
+                    ApplyEditorHostTemplate(child as DependencyObject);
+                }
+            }
         }
 
         /// <summary>
@@ -174,7 +214,11 @@ namespace OEA.Module.WPF
                     tabControl.Items.Add(new TabItem
                     {
                         Header = new Label { Content = group.Key },
-                        Content = panel
+                        //这里需要使用 AdornerDecorator，否则在页签切换后会造成验证状态丢失。
+                        Content = new AdornerDecorator
+                        {
+                            Child = panel
+                        }
                     });
                 }
 

@@ -49,27 +49,198 @@ namespace OEA.Module.WPF.Controls
     /// 所以，外部操作 ListObjectView 的事件时，都应该同步到本对象上。
     /// 
     /// 继承ComboBox。
+    /// 
+    /// 注意，虽然继承自 ComboBox，但是并没有使用到基类中定义的 Selected 机制相关的属性和事件。
     /// </summary>
-    [TemplatePart(Name = "PART_DropDownPanel", Type = typeof(DockPanel))]
-    [TemplatePart(Name = "PART_ButtonPanel", Type = typeof(DockPanel))]
-    public class ComboListControl : System.Windows.Controls.ComboBox
+    [TemplatePart(Name = "PART_DropDownPanel", Type = typeof(Panel))]
+    public class ComboListControl : ComboBox
     {
-        #region 字段 及 静态构造函数
-
         static ComboListControl()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(ComboListControl),
-                new FrameworkPropertyMetadata(typeof(ComboListControl)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(ComboListControl), new FrameworkPropertyMetadata(typeof(ComboListControl)));
+            IsEditableProperty.OverrideMetadata(typeof(ComboListControl), new FrameworkPropertyMetadata(true));
+
+            CommandManager.RegisterClassCommandBinding(typeof(ComboListControl),
+                new CommandBinding(ClearValueCommand, ClearValueCommand_Executed));
         }
+
+        #region 字段
 
         /// <summary>
         /// 下拉的弹出框使用的是一个临时的ListObjectView来生成动态Grid。
         /// </summary>
-        private IListObjectView _listView;
+        private ListObjectView _listView;
+
+        private EntityViewMeta _refViewMeta;
 
         private CLCProgress _curProgress = CLCProgress.NotStarted;
 
+        /// <summary>
+        /// 当前 Text 在数据项中的属性路径。
+        /// </summary>
+        private string _textPath;
+
         #endregion
+
+        /// <summary>
+        /// 清除值的命令。
+        /// </summary>
+        public static RoutedCommand ClearValueCommand = new RoutedCommand("ClearValue", typeof(ComboListControl));
+        private static void ClearValueCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            (sender as ComboListControl).ClearSelection();
+        }
+
+        #region 属性接口
+
+        #region RefEntityType DependencyProperty
+
+        public static readonly DependencyProperty RefEntityTypeProperty = DependencyProperty.Register(
+            "RefEntityType", typeof(Type), typeof(ComboListControl),
+            new PropertyMetadata((d, e) => (d as ComboListControl).OnRefEntityTypeChanged(e))
+            );
+
+        /// <summary>
+        /// 设置引用实体的类型。
+        /// </summary>
+        public Type RefEntityType
+        {
+            get { return (Type)this.GetValue(RefEntityTypeProperty); }
+            set { this.SetValue(RefEntityTypeProperty, value); }
+        }
+
+        private void OnRefEntityTypeChanged(DependencyPropertyChangedEventArgs e)
+        {
+            var value = (Type)e.NewValue;
+            if (value == null)
+            {
+                this._refViewMeta = null;
+            }
+            else
+            {
+                if (this._refViewMeta.EntityType != value)
+                {
+                    this._refViewMeta = UIModel.Views.CreateBaseView(value);
+                }
+            }
+        }
+
+        #endregion
+
+        #region TextFilterEnabled DependencyProperty
+
+        public static readonly DependencyProperty TextFilterEnabledProperty = DependencyProperty.Register(
+            "TextFilterEnabled", typeof(bool), typeof(ComboListControl),
+            new PropertyMetadata((d, e) => (d as ComboListControl).OnTextFilterEnabledChanged(e))
+            );
+
+        /// <summary>
+        /// 是否启用文本输入过滤功能
+        /// </summary>
+        public bool TextFilterEnabled
+        {
+            get { return (bool)this.GetValue(TextFilterEnabledProperty); }
+            set { this.SetValue(TextFilterEnabledProperty, value); }
+        }
+
+        private void OnTextFilterEnabledChanged(DependencyPropertyChangedEventArgs e)
+        {
+            var value = (bool)e.NewValue;
+        }
+
+        #endregion
+
+        #region IsMultiSelection DependencyProperty
+
+        public static readonly DependencyProperty IsMultiSelectionProperty = DependencyProperty.Register(
+            "IsMultiSelection", typeof(bool), typeof(ComboListControl),
+            new PropertyMetadata((d, e) => (d as ComboListControl).OnIsMultiSelectionChanged(e))
+            );
+
+        public bool IsMultiSelection
+        {
+            get { return (bool)this.GetValue(IsMultiSelectionProperty); }
+            set { this.SetValue(IsMultiSelectionProperty, value); }
+        }
+
+        private void OnIsMultiSelectionChanged(DependencyPropertyChangedEventArgs e)
+        {
+            var value = (bool)e.NewValue;
+        }
+
+        #endregion
+
+        #region CanClear DependencyProperty
+
+        public static readonly DependencyProperty CanClearProperty = DependencyProperty.Register(
+            "CanClear", typeof(bool), typeof(ComboListControl),
+            new PropertyMetadata(true, (d, e) => (d as ComboListControl).OnCanClearChanged(e))
+            );
+
+        /// <summary>
+        /// 标记本控件是否支持清空当前选择项。
+        /// </summary>
+        public bool CanClear
+        {
+            get { return (bool)this.GetValue(CanClearProperty); }
+            set { this.SetValue(CanClearProperty, value); }
+        }
+
+        private void OnCanClearChanged(DependencyPropertyChangedEventArgs e)
+        {
+            var value = (bool)e.NewValue;
+        }
+
+        #endregion
+
+        /// <summary>
+        /// 引用实体的视图元数据。
+        /// 
+        /// 本元数据将会被用来生成列表控件。
+        /// </summary>
+        public EntityViewMeta RefViewMeta
+        {
+            get { return this._refViewMeta; }
+            set
+            {
+                this._refViewMeta = value;
+                if (value == null)
+                {
+                    this.RefEntityType = null;
+                }
+                else
+                {
+                    this.RefEntityType = value.EntityType;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 返回内部使用的列表视图。
+        /// </summary>
+        public ListObjectView InnerListView
+        {
+            get
+            {
+                this.InitListView();
+
+                return this._listView;
+            }
+            set
+            {
+                this._listView = value;
+                if (value == null)
+                {
+                    this._refViewMeta = null;
+                    this.RefEntityType = null;
+                }
+                else
+                {
+                    this._refViewMeta = value.Meta;
+                    this.RefEntityType = value.Meta.EntityType;
+                }
+            }
+        }
 
         internal CLCProgress CurrentProgress
         {
@@ -77,40 +248,9 @@ namespace OEA.Module.WPF.Controls
             set { this._curProgress = value; }
         }
 
-        #region 构造函数
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="listObjectView">内部界面使用这个 View 所对应的控件</param>
-        internal ComboListControl(IListObjectView listObjectView)
-        {
-            if (listObjectView == null) throw new ArgumentNullException("listObjectView");
-
-            this._listView = listObjectView;
-            ////弹出的 DataGrid 是不能编辑的，见：http://ipm.grandsoft.com.cn/issues/114217
-            this._listView.IsReadOnly = true;
-            this._listView.CurrentObjectChanged += (s, e) => this.CloseDropdownIfSelected();
-
-            //构造Timer
-            if (!DesignerProperties.GetIsInDesignMode(this)) { this.InitLazyFilter(); }
-
-            this.IsEditable = true;
-            this.StaysOpenOnEdit = true;
-            this.IsTextSearchEnabled = false;
-        }
-
         #endregion
 
         #region 构造 - 界面生成
-
-        /// <summary>
-        /// 获取控件的编辑区域
-        /// </summary>
-        private TextBox EditableTextBox
-        {
-            get { return base.GetTemplateChild("PART_EditableTextBox") as TextBox; }
-        }
 
         /// <summary>
         /// 在应用模板时，在模板中生成一些动态控件。
@@ -119,44 +259,17 @@ namespace OEA.Module.WPF.Controls
         {
             base.OnApplyTemplate();
 
-            this.CreateButtons();
-
             this.CreateTextBox();
 
             this.CreateListControl();
         }
 
-        /// <summary>
-        /// 为这个属性生成的下拉框
-        /// </summary>
-        public PropertyEditor ClearPropertyEditor { get; set; }
-
-        /// <summary>
-        /// 生成一个清空数据的按钮
-        /// </summary>
-        private void CreateButtons()
-        {
-            if (this.ClearPropertyEditor != null)
-            {
-                Panel buttonPanel = this.Template.FindName("PART_ButtonPanel", this) as Panel;
-
-                //清除属性值按钮
-                var btnClearValue = new Button();
-                btnClearValue.Content = "清除属性值";
-                btnClearValue.SetValue(DockPanel.DockProperty, Dock.Right);
-                btnClearValue.Click += (o, e) => { this.ClearPropertyEditor.PropertyValue = null; };
-
-                buttonPanel.Children.Add(btnClearValue);
-            }
-        }
-
         private void CreateTextBox()
         {
-            var txtBox = this.EditableTextBox;
+            var txtBox = this.Template.FindName("PART_EditableTextBox", this) as TextBox;
             if (txtBox != null)
             {
-                txtBox.PreviewKeyDown += new KeyEventHandler(On_EditableTextBox_PreviewKeyDown);
-                txtBox.TextChanged += new TextChangedEventHandler(On_EditableTextBox_TextChanged);
+                txtBox.PreviewKeyDown += On_EditableTextBox_PreviewKeyDown;
                 txtBox.KeyDown += (o, e) =>
                 {
                     if (e.Key == Key.Enter)
@@ -174,33 +287,59 @@ namespace OEA.Module.WPF.Controls
         /// </summary>
         private void CreateListControl()
         {
-            Panel dropDownPanel = this.Template.FindName("PART_DropDownPanel", this) as Panel;
-            this._listControl = this._listView.Control as FrameworkElement;
-            dropDownPanel.Children.Add(this._listControl);
+            Panel ddPanel = this.Template.FindName("PART_DropDownPanel", this) as Panel;
+            if (ddPanel != null) { ddPanel.Children.Add(this.InnerListView.Control); }
         }
 
-        internal FrameworkElement _listControl;
+        private void InitListView()
+        {
+            if (this._listView == null)
+            {
+                var rvm = this._refViewMeta;
+                if (rvm == null) throw new InvalidProgramException("还没有设置控件的 RefViewMeta 或者 RefEntityType 属性。");
+
+                var title = rvm.TitleProperty;
+                if (title == null) throw new InvalidProgramException(string.Format("{0} 没有设置代表属性，无法为其生成下拉控件。", rvm.Name));
+                this._textPath = title.Name;
+
+                //创建一个只读的 ListObjectView
+                var listView = AutoUI.ViewFactory.CreateListObjectView(rvm, true);
+                listView.IsReadOnly = true;
+                if (this.IsMultiSelection) { listView.CheckingMode = CheckingMode.CheckingRow; }
+                listView.CurrentObjectChanged += (s, e) => this.OnListViewSelectionChanged();
+
+                //构造Timer
+                if (!DesignerProperties.GetIsInDesignMode(this)) { this.InitLazyFilter(); }
+
+                this._listView = listView;
+            }
+        }
+
+        private void On_EditableTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (this.TextFilterEnabled)
+            {
+                this.StartFilterTimer();
+            }
+            else
+            {
+                //如果用户在可清空的模式下点击了以下两个按键，则清空选项。
+                if (this.CanClear)
+                {
+                    if (e.Key == Key.Delete || e.Key == Key.Back)
+                    {
+                        this.ClearSelection();
+                    }
+                }
+
+                //非过滤状态下，不让用户输入。
+                e.Handled = true;
+            }
+        }
 
         #endregion
 
         #region 文本输入过滤
-
-        #region TextFilterEnabled DependencyProperty
-
-        public static readonly DependencyProperty TextFilterEnabledProperty = DependencyProperty.Register(
-            "TextFilterEnabled", typeof(bool), typeof(ComboListControl)
-            );
-
-        /// <summary>
-        /// 是否启用文本输入过滤功能
-        /// </summary>
-        public bool TextFilterEnabled
-        {
-            get { return (bool)this.GetValue(TextFilterEnabledProperty); }
-            set { this.SetValue(TextFilterEnabledProperty, value); }
-        }
-
-        #endregion
 
         /// <summary>
         /// 控制输入定时器
@@ -229,31 +368,13 @@ namespace OEA.Module.WPF.Controls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void On_EditableTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        private void StartFilterTimer()
         {
-            if (!this.TextFilterEnabled) { return; }
-
             this._curProgress = CLCProgress.KeyPressed;
-        }
 
-        /// <summary>
-        /// 如果是用户开始输入，则开始计时。
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void On_EditableTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (!this.TextFilterEnabled) { return; }
-
-            if (this._curProgress == CLCProgress.KeyPressed)
-            {
-                if (!this._listView.IsShowingTree)
-                {
-                    //ResetTimer
-                    this._lazyFilterInterval.Stop();
-                    this._lazyFilterInterval.Start();
-                }
-            }
+            //如果是用户开始输入，则开始计时。(ResetTimer)
+            this._lazyFilterInterval.Stop();
+            this._lazyFilterInterval.Start();
         }
 
         /// <summary>
@@ -309,7 +430,31 @@ namespace OEA.Module.WPF.Controls
             }
         }
 
+        private string GetDisplay(object item)
+        {
+            return item.GetPropertyValue<string>(this._textPath);
+        }
+
         #endregion
+
+        /// <summary>
+        /// 外层需要使用此事件来监听选择变更事件。
+        /// （基类的 Selector.SelectionChanged 事件是无法使用的。）
+        /// </summary>
+        public event EventHandler ListViewSelectionChanged;
+
+        protected virtual void OnListViewSelectionChanged()
+        {
+            this.CloseDropdownIfSelected();
+
+            var handler = this.ListViewSelectionChanged;
+            if (handler != null) handler(this, EventArgs.Empty);
+        }
+
+        private void ClearSelection()
+        {
+            this._listView.Current = null;
+        }
 
         private void CloseDropdownIfSelected()
         {
@@ -322,16 +467,6 @@ namespace OEA.Module.WPF.Controls
                 }
             }
         }
-
-        private string GetDisplay(object item)
-        {
-            return item.GetPropertyValue<string>(this.TextPath);
-        }
-
-        /// <summary>
-        /// 当前 Text 在数据项中的属性路径。
-        /// </summary>
-        internal string TextPath { get; set; }
 
         protected override AutomationPeer OnCreateAutomationPeer()
         {
@@ -353,9 +488,10 @@ namespace OEA.Module.WPF.Controls
 
             //需要在子自动化节点列表中加入列表控件，方便自动化进行查找
             var owner = this.Owner as ComboListControl;
-            if (owner._listControl != null)
+            var view = owner.InnerListView;
+            if (view != null)
             {
-                var peer = UIElementAutomationPeer.CreatePeerForElement(owner._listControl);
+                var peer = UIElementAutomationPeer.CreatePeerForElement(view.Control);
                 list.Add(peer);
             }
 

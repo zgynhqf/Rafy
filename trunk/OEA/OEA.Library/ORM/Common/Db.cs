@@ -74,13 +74,22 @@ namespace OEA.ORM
         public int Insert(IEntity item)
         {
             var table = DbTableHost.TableFor(item);
-            return table.Insert(this, item);
+            int res = table.Insert(this, item);
+
+            //插入时需要放到整个 Insert 语句之后，否则 Id 不会有值。
+            table.NotifyLoaded(item);
+
+            return res;
         }
 
         public int Update(IEntity item)
         {
             var table = DbTableHost.TableFor(item);
-            return table.Update(this, item);
+            int res = table.Update(this, item);
+
+            table.NotifyLoaded(item);
+
+            return res;
         }
 
         public int Delete(IEntity item)
@@ -123,10 +132,8 @@ namespace OEA.ORM
         public void Select(Type type, ICollection<Entity> list, string sql, params object[] parameters)
         {
             var table = DbTableHost.TableFor(type);
-            using (var reader = this.DBA.QueryDataReader(sql, parameters))
-            {
-                table.FillByName(reader, list);
-            }
+            var reader = this.DBA.QueryDataReader(sql, parameters);
+            table.FillByName(reader, list);
         }
 
         public IQuery Query(Type entityType)

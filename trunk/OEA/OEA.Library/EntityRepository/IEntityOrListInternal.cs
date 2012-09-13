@@ -22,4 +22,12 @@ namespace OEA.Library
     {
         void NotifySaved();
     }
+
+    /// <summary>
+    /// 外界不要使用，OEA 框架自身使用。
+    /// </summary>
+    public interface IOEARepositoryInternal
+    {
+        EntityList GetListImplicitly(object criteria);
+    }
 }

@@ -90,7 +90,7 @@
     <Compile Include="Run\GenerationExceptionRun.cs" />
     <Compile Include="Run\SqlMigrationRun.cs" />
     <Compile Include="Providers\SqlServer\SqlServerMigrationProvider.cs" />
-    <Compile Include="TSqlGenerator.cs" />
+    <Compile Include="TSqlRunGenerator.cs" />
     <Compile Include="Providers\SqlServer\SqlDbTypeHelper.cs" />
     <Compile Include="Model\ForeignConstraint.cs" />
     <Compile Include="Model\Table.cs" />

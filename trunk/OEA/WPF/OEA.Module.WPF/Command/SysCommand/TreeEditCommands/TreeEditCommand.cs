@@ -57,7 +57,7 @@ namespace OEA.WPF.Command
 
         public override void Execute(ListObjectView view)
         {
-            var tv = view.Control as MultiTypesTreeGrid;
+            var tv = view.Control as TreeGrid;
             foreach (var root in tv.Items)
             {
                 tv.ExpandToDepth(root, this.Depth);
@@ -70,7 +70,7 @@ namespace OEA.WPF.Command
     {
         public override void Execute(ListObjectView view)
         {
-            MultiTypesTreeGrid tv = view.Control as MultiTypesTreeGrid;
+            TreeGrid tv = view.Control as TreeGrid;
             if (tv != null) { tv.ExpandAll(); }
         }
     }
@@ -315,7 +315,7 @@ namespace OEA.WPF.Command
             var list = view.Data;
             if (list == null) throw new ArgumentNullException("list");
 
-            var treeView = view.Control as MultiTypesTreeGrid;
+            var treeView = view.Control as TreeGrid;
             var current = view.Current;
 
             var newEntity = view.CreateNewItem();

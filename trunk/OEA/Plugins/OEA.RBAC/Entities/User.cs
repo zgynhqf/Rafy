@@ -131,7 +131,8 @@ namespace OEA.RBAC
         {
             base.ConfigMeta();
 
-            this.Meta.MapTable().MapProperties(
+            //映射 Users 表，避免和 SQLServer 的 User 关键字冲突。
+            this.Meta.MapTable("Users").MapProperties(
                 User.CodeProperty,
                 User.NameProperty,
                 User.PasswordProperty,

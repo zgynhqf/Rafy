@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Common;
 using OEA.ManagedProperty;
 
 namespace OEA.MetaModel.View
@@ -54,14 +55,27 @@ namespace OEA.MetaModel.View
         }
 
         /// <summary>
-        /// 设置该实体是否可以在界面上进行编辑
+        /// 设置该实体是否可以在界面上不可编辑
         /// </summary>
         /// <param name="meta"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static EntityViewMeta DisableEditing(this EntityViewMeta meta, bool value = true)
+        public static EntityViewMeta DisableEditing(this EntityViewMeta meta)
         {
-            meta.NotAllowEdit = value;
+            meta.NotAllowEdit = true;
+
+            return meta;
+        }
+
+        /// <summary>
+        /// 设置该实体是否可以在界面上可以进行编辑
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static EntityViewMeta EnableEditing(this EntityViewMeta meta)
+        {
+            meta.NotAllowEdit = false;
 
             return meta;
         }
@@ -300,6 +314,24 @@ namespace OEA.MetaModel.View
             return meta;
         }
 
+        /// <summary>
+        /// 指定某个实体元数据使用特定路径的 RDCL 报表文件。
+        /// 
+        /// 报表 RDLC 文件中默认使用实体作为数据源，数据源的名称必须和实体名相同。
+        /// </summary>
+        /// <param name="evm"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static EntityViewMeta UseReport(this EntityViewMeta evm, string path)
+        {
+            //开发期暂时使用的路径，方便开发。
+            var relativePath = ConfigurationHelper.GetAppSettingOrDefault("Developing_ReportRootPath");
+            if (!string.IsNullOrEmpty(relativePath)) { path = System.IO.Path.Combine(relativePath, path); }
+
+            evm.ReportPath = path;
+            return evm;
+        }
+
         #endregion
 
         #region EntityViewMeta Commands
@@ -432,11 +464,19 @@ namespace OEA.MetaModel.View
             return meta;
         }
 
-        public static EntityViewMeta ClearWebCommands(this EntityViewMeta meta, bool removeCustomizeUI = true)
+        /// <summary>
+        /// 清空所有 Web 命令
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="includeSystemCmds">
+        /// 是否在清除的同时，一同删除所有系统级别的命令。
+        /// </param>
+        /// <returns></returns>
+        public static EntityViewMeta ClearWebCommands(this EntityViewMeta meta, bool includeSystemCmds = true)
         {
             meta.WebCommands.Clear();
 
-            if (!removeCustomizeUI && OEAEnvironment.IsDebuggingEnabled)
+            if (!includeSystemCmds && OEAEnvironment.IsDebuggingEnabled)
             {
                 meta.UseWebCommands(WebCommandNames.CustomizeUI);
             }
@@ -445,21 +485,27 @@ namespace OEA.MetaModel.View
         }
 
         /// <summary>
-        /// 
+        /// 清空所有 WPF 命令
         /// </summary>
         /// <param name="meta"></param>
-        /// <param name="removeCustomizeUI">
-        /// 是否在清除的同时，保留“界面配置按钮。”。
-        /// 一般情况下，在 ConfigView 方法内部调用时，此参数需要传入 false，其它情况则使用默认值 true
+        /// <param name="includeSystemCmds">
+        /// 是否在清除的同时，一同删除所有系统级别的命令。
         /// </param>
         /// <returns></returns>
-        public static EntityViewMeta ClearWPFCommands(this EntityViewMeta meta, bool removeCustomizeUI = true)
+        public static EntityViewMeta ClearWPFCommands(this EntityViewMeta meta, bool includeSystemCmds = true)
         {
-            meta.WPFCommands.Clear();
+            var commands = meta.WPFCommands;
 
-            if (!removeCustomizeUI && OEAEnvironment.IsDebuggingEnabled)
+            if (!includeSystemCmds && OEAEnvironment.IsDebuggingEnabled)
             {
-                meta.UseWPFCommands(WPFCommandNames.CustomizeUI);
+                for (int i = commands.Count - 1; i >= 0; i--)
+                {
+                    if (commands[i].GroupType != CommandGroupType.System) commands.RemoveAt(i);
+                }
+            }
+            else
+            {
+                commands.Clear();
             }
 
             return meta;
@@ -648,22 +694,6 @@ namespace OEA.MetaModel.View
         }
 
         /// <summary>
-        /// 设置属性的编辑器
-        /// </summary>
-        /// <param name="meta"></param>
-        /// <param name="editorName"></param>
-        /// <returns></returns>
-        public static EntityPropertyViewMeta UseLookupDataSource(this EntityPropertyViewMeta meta, IManagedProperty property)
-        {
-            var refView = meta.ReferenceViewInfo;
-            if (refView == null) throw new InvalidOperationException("只有引用实体属性才可以为其设置数据源。");
-
-            refView.DataSourceProperty = property;
-
-            return meta;
-        }
-
-        /// <summary>
         /// 设置该属性为导航项。
         /// 此时，如果该属性变更，会自动触发导航查询
         /// </summary>
@@ -688,6 +718,50 @@ namespace OEA.MetaModel.View
         public static EntityPropertyViewMeta HasOrderNo(this EntityPropertyViewMeta meta, double orderNo)
         {
             meta.OrderNo = orderNo;
+            return meta;
+        }
+
+        /// <summary>
+        /// 如果这是一个引用属性，则可以指定一个额外的冗余属性来进行显示。
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="redundancy"></param>
+        /// <returns></returns>
+        public static EntityPropertyViewMeta DisplayRefBy(this EntityPropertyViewMeta meta, IManagedProperty redundancy)
+        {
+            meta.DisplayRedundancy = redundancy;
+            return meta;
+        }
+
+        /// <summary>
+        /// 为某个引用属性直接快速设置数据源
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        public static EntityPropertyViewMeta UseDataSource(this EntityPropertyViewMeta meta, IManagedProperty property)
+        {
+            var svm = meta.SelectionViewMeta;
+            if (svm == null) throw new InvalidOperationException("只有引用实体属性才可以使用本方法为其设置数据源。");
+
+            svm.DataSourceProperty = property;
+
+            return meta;
+        }
+
+        /// <summary>
+        /// 为某个引用属性直接快速设置数据源
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="dataSourceProvier"></param>
+        /// <returns></returns>
+        public static EntityPropertyViewMeta UseDataSource(this EntityPropertyViewMeta meta, Func<object> dataSourceProvier)
+        {
+            var svm = meta.SelectionViewMeta;
+            if (svm == null) throw new InvalidOperationException("只有引用实体属性才可以使用本方法为其设置数据源。");
+
+            svm.DataSourceProvider = dataSourceProvier;
+
             return meta;
         }
 

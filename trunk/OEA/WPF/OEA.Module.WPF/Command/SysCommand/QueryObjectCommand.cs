@@ -38,7 +38,7 @@ namespace OEA.WPF.Command
     /// <summary>
     /// 此命令只能在导航查询面板视图 QueryObjectView 中使用
     /// </summary>
-    [Command(Label = "查询", ToolTip = "查询记录")]
+    [Command(Label = "查询", ToolTip = "查询记录", GroupType = CommandGroupType.System)]
     public class QueryObjectCommand : ClientCommand<QueryObjectView>
     {
         public override void Execute(QueryObjectView queryView)

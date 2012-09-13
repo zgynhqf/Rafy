@@ -19,7 +19,7 @@
 //using System.Windows.Controls;
 //using System.Windows.Data;
 //using OEA.MetaModel;
-using OEA.MetaModel.View;
+//using OEA.MetaModel.View;
 ////using OEA.Module.WPF.Controls;
 //using System.Drawing;
 

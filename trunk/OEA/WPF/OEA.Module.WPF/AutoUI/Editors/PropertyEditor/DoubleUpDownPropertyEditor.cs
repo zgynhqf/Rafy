@@ -35,7 +35,7 @@ namespace OEA.Module.WPF.Editors
 
         protected override FrameworkElement CreateEditingElement()
         {
-            var updown = new AutomationDoubleUpDown() { Name = Meta.Name };
+            var updown = new DoubleUpDown();
 
             this.ResetBinding(updown);
 
@@ -47,21 +47,6 @@ namespace OEA.Module.WPF.Editors
         protected override DependencyProperty BindingProperty()
         {
             return DoubleUpDown.ValueProperty;
-        }
-    }
-
-    public class AutomationDoubleUpDown : DoubleUpDown
-    {
-        public override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-
-            var tb = this.GetTemplateChild("Text") as TextBox;
-
-            if (tb != null)
-            {
-                AutomationProperties.SetName(tb, AutomationProperties.GetName(this));
-            }
         }
     }
 }

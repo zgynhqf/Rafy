@@ -107,6 +107,20 @@ namespace JXC
                     );
             }
         }
+
+        public static readonly Property<string> StorageNameROProperty = P<StorageInBill>.RegisterReadOnly(
+            e => e.StorageNameRO, e => (e as StorageInBill).GetStorageNameRO(), StorageRefProperty);
+        /// <summary>
+        /// 仓库名称（报表使用）
+        /// </summary>
+        public string StorageNameRO
+        {
+            get { return this.GetProperty(StorageNameROProperty); }
+        }
+        private string GetStorageNameRO()
+        {
+            return this.Storage.Name;
+        }
     }
 
     [Serializable]

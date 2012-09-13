@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ComponentModel;
+using System.Runtime;
 
 namespace OEA.Reflection
 {
@@ -100,9 +101,21 @@ namespace OEA.Reflection
         /// </summary>
         /// <param name="targetType"></param>
         /// <returns></returns>
+        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
         public static bool IsNullable(Type targetType)
         {
             return targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>);
+        }
+
+        /// <summary>
+        /// 判断指定的类型是否是一个枚举类型，或者是一个可空的枚举类型。
+        /// </summary>
+        /// <param name="targetType"></param>
+        /// <returns></returns>
+        public static bool IsEnumNullable(Type targetType)
+        {
+            var enumType = TypeHelper.IgnoreNullable(targetType);
+            return enumType.IsEnum;
         }
 
         #region  CoerceValue

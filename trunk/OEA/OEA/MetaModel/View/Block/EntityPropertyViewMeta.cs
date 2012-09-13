@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OEA.ManagedProperty;
 using OEA.MetaModel.Attributes;
 
 namespace OEA.MetaModel.View
@@ -48,17 +49,25 @@ namespace OEA.MetaModel.View
         /// </summary>
         public bool IsReference
         {
-            get { return this._refViewInfo != null; }
+            get { return this.PropertyMeta.ReferenceInfo != null; }
         }
 
-        private ReferenceViewInfo _refViewInfo;
+        private SelectionViewMeta _selectionViewMeta;
         /// <summary>
-        /// 标记的LookupAttribute
+        /// 外键引用实体属性的相关视图信息
         /// </summary>
-        public ReferenceViewInfo ReferenceViewInfo
+        public SelectionViewMeta SelectionViewMeta
         {
-            get { return this._refViewInfo; }
-            set { this._refViewInfo = value; }
+            get { return this._selectionViewMeta; }
+            set
+            {
+                this._selectionViewMeta = value;
+
+                if (value != null && this.IsReference)
+                {
+                    value.RefInfo = this.PropertyMeta.ReferenceInfo;
+                }
+            }
         }
 
         private EntityViewMeta _Owner;
@@ -219,6 +228,16 @@ namespace OEA.MetaModel.View
             set { this.SetValue(ref this._DetailGroupName, value); }
         }
 
+        private IManagedProperty _DisplayRedundancy;
+        /// <summary>
+        /// 如果这是一个引用属性，则可以指定一个额外的冗余属性来进行显示。
+        /// </summary>
+        public IManagedProperty DisplayRedundancy
+        {
+            get { return this._DisplayRedundancy; }
+            set { this.SetValue(ref this._DisplayRedundancy, value); }
+        }
+
         #endregion
 
         private double _OrderNo;
@@ -278,7 +297,7 @@ namespace OEA.MetaModel.View
 
         private bool IsChildReference()
         {
-            return this.IsReference && this._refViewInfo.ReferenceInfo.Type == ReferenceType.Child;
+            return this.IsReference && this.PropertyMeta.ReferenceInfo.Type == ReferenceType.Child;
         }
 
         #region 查询方法
@@ -297,17 +316,22 @@ namespace OEA.MetaModel.View
         /// 用于绑定显示的属性名
         /// </summary>
         /// <returns></returns>
-        public string BindingPath()
+        public string DisplayPath()
         {
             if (this.IsReference)
             {
-                var reference = this.ReferenceViewInfo;
+                if (this.DisplayRedundancy != null)
+                {
+                    return this.DisplayRedundancy.Name;
+                }
+
+                var svm = this.SelectionViewMeta;
 
                 //该引用属性没有对应的引用实体属性
-                var title = reference.RefTypeDefaultView.TitleProperty;
-                if (string.IsNullOrEmpty(reference.RefEntityProperty) || title == null) { return this.Name; }
+                var title = svm.RefTypeDefaultView.TitleProperty;
+                if (string.IsNullOrEmpty(svm.RefEntityProperty) || title == null) { return this.Name; }
 
-                return reference.RefEntityProperty + "." + title.Name;
+                return svm.RefEntityProperty + "." + title.Name;
             }
             else
             {

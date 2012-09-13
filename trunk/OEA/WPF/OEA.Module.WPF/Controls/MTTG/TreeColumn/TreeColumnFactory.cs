@@ -13,12 +13,12 @@
 
 using System;
 using System.Collections.Generic;
-using OEA.MetaModel;
-using OEA.MetaModel.View;
-using System.Windows.Controls;
-using OEA.Module.WPF.Controls;
 using System.Windows;
+using System.Windows.Controls;
+using OEA.MetaModel.View;
+using OEA.Module.WPF.Controls;
 using OEA.Module.WPF.Editors;
+using OEA.Reflection;
 
 namespace OEA.Module.WPF
 {
@@ -37,7 +37,7 @@ namespace OEA.Module.WPF
             //默认的列类型和column编辑器的映射关系
             this.SetDictionary(new Dictionary<string, Type>() { 
                 { WPFEditorNames.Enum, typeof(EnumTreeColumn) },
-                { WPFEditorNames.LookupDropDown, typeof(LookupListTreeColumn)},
+                { WPFEditorNames.EntitySelection_DropDown, typeof(LookupListTreeColumn)},
                 { WPFEditorNames.Memo, typeof(MemoTreeColumn) },
                 { WPFEditorNames.Boolean, typeof(BooleanTreeColumn) },
                 { WPFEditorNames.DateTime, typeof(DateTreeColumn)},
@@ -57,12 +57,19 @@ namespace OEA.Module.WPF
             var treeColumn = this.CreateInstance(property.GetEditorNameOrDefault()) ?? new CommonTreeColumn();
             treeColumn.IntializeViewMeta(property, this._propertyEditorFactory);
 
-            SetColumnHeader(treeColumn, property.Label);
+            SetColumnHeader(treeColumn, property);
 
-            treeColumn.CellTemplate = new DataTemplate
+            treeColumn.CellTemplate = treeColumn.GenerateCellTemplate();
+            treeColumn.SortingProperty = property.Name;
+
+            if (TypeHelper.IsNumber(property.PropertyMeta.Runtime.PropertyType))
             {
-                VisualTree = treeColumn.GenerateDisplayTemplate()
-            };
+                treeColumn.DisplayTextBlockStyle = OEAResources.TreeColumn_TextBlock_Number;
+            }
+            else
+            {
+                treeColumn.DisplayTextBlockStyle = OEAResources.TreeColumn_TextBlock;
+            }
 
             //宽度
             if (property.GridWidth.HasValue)
@@ -73,9 +80,22 @@ namespace OEA.Module.WPF
             return treeColumn;
         }
 
-        internal static void SetColumnHeader(TreeColumn treeGridColumn, string header)
+        private static void SetColumnHeader(TreeColumn treeGridColumn, EntityPropertyViewMeta property)
+        {
+            string header = property.Label ?? property.Name;
+
+            SetColumnHeaderString(treeGridColumn, header);
+
+            //使用 PropertyEditor 来生成 Binding 的原因是：
+            //如果是下拉框、则不能直接使用默认的绑定方案。
+            treeGridColumn.HeaderStringFormat = property.StringFormat;
+            treeGridColumn.Binding = treeGridColumn.Editor.CreateBindingInternal();
+        }
+
+        internal static void SetColumnHeaderString(TreeColumn treeGridColumn, string header)
         {
             //列头显示
+            treeGridColumn.HeaderLabel = header;
             treeGridColumn.Header = new GridTreeViewColumnHeader
             {
                 Content = header

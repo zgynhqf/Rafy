@@ -39,7 +39,7 @@ namespace OEA.Library
         public PersistenceStatus Status
         {
             get { return this._status; }
-            set
+            private set
             {
                 if (value != this._status)
                 {
@@ -68,14 +68,6 @@ namespace OEA.Library
             this.Status = PersistenceStatus.New;
         }
 
-        public void MarkDirty()
-        {
-            if (this.Status != PersistenceStatus.New)
-            {
-                this.Status = PersistenceStatus.Modified;
-            }
-        }
-
         public virtual void MarkDeleted()
         {
             this.Status = PersistenceStatus.Deleted;
@@ -86,9 +78,14 @@ namespace OEA.Library
             this._status = this._previousStatusBeforeDeleted;
         }
 
-        protected void MarkModified()
+        public void MarkModified()
         {
             if (this.Status == PersistenceStatus.Unchanged) { this.Status = PersistenceStatus.Modified; }
+        }
+
+        public void MarkUnchanged()
+        {
+            this.Status = PersistenceStatus.Unchanged;
         }
 
         #endregion
@@ -117,6 +114,9 @@ namespace OEA.Library
             get { return this.Status != PersistenceStatus.Unchanged; }
         }
 
+        /// <summary>
+        /// 跟 MarkUnchanged 的区别在于，此方法会迭代调用组合子对象的 MarkOld 方法。
+        /// </summary>
         public virtual void MarkOld()
         {
             this.Status = PersistenceStatus.Unchanged;
@@ -189,7 +189,14 @@ namespace OEA.Library
                 this.MarkModified();
             }
 
-            base.OnPropertyChanged(e);
+            this.NotifyIfInRedundancyPath(e);
+
+            //不直接触发所有属性的 PropertyChanged 事件，而是只发生非引用属性的其它属性的事件。
+            //base.OnPropertyChanged(e);
+            if (!(e.Property is IRefProperty))
+            {
+                this.OnPropertyChanged(e.Property.Name);
+            }
         }
 
         protected void UpdateChildren()

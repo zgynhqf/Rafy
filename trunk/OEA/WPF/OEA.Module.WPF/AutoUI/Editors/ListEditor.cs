@@ -27,6 +27,7 @@ using OEA.Library;
 using OEA.ManagedProperty;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
+using OEA.Module.WPF.Controls;
 using OEA.Module.WPF.Editors;
 
 namespace OEA.Module.WPF.Editors

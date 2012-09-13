@@ -36,7 +36,7 @@ namespace OEA.Module.WPF
 
             using (var c = new OEADbMigrationContext(dbSetting))
             {
-                if (!c.IsEnabled())
+                if (!OEADbMigrationContext.IsEnabled())
                 {
                     action(c);
 

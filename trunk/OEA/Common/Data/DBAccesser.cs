@@ -904,7 +904,7 @@ namespace hxy.Common.Data
         protected virtual IDbCommand PrepareCommand(string strSql, CommandType type, IDbDataParameter[] parameters)
         {
             IDbCommand command = _factory.CreateCommand();
-            command.Connection = _connection;
+            command.Connection = this._connection;
             command.CommandText = strSql;
             command.CommandType = type;
             var pas = command.Parameters;
@@ -918,7 +918,7 @@ namespace hxy.Common.Data
             //    command.Transaction = this._transaction;
             //}
 
-            SQLTrace.Trace(strSql, parameters);
+            SQLTrace.Trace(strSql, parameters, this._connection);
 
             return command;
         }

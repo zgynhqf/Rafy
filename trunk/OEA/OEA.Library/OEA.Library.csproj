@@ -53,10 +53,6 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Ciloci.Flee, Version=0.9.26.0, Culture=neutral, PublicKeyToken=c8526a021ef298ed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Lib\Ciloci.Flee.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Practices.Unity, Version=2.0.414.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Lib\Microsoft.Practices.Unity.dll</HintPath>
@@ -80,6 +76,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataPortal\DataPortalException.cs" />
     <Compile Include="DataPortal\DataPortal.cs" />
     <Compile Include="DataPortal\DataPortalClient\IDataPortalProxy.cs" />
     <Compile Include="DataPortal\DataPortalClient\LocalProxy.cs" />
@@ -89,12 +86,17 @@
     <Compile Include="Entity\MP\DateTimeDescriptorAttribute.cs" />
     <Compile Include="Entity\MP\ListProperty.cs" />
     <Compile Include="Entity\MP\ListPropertyMetadata.cs" />
+    <Compile Include="Entity\MP\OEAPropertyDescriptor.cs" />
+    <Compile Include="Entity\MP\OEAPropertyDescriptorFactory.cs" />
     <Compile Include="ObjectCloner.cs" />
     <Compile Include="ORM\Common\DbTable.cs" />
     <Compile Include="ORM\Common\DbQuery.cs" />
     <Compile Include="ORM\Common\Db.cs" />
     <Compile Include="ORM\Common\DbTableHost.cs" />
-    <Compile Include="ORM\Common\FormatSqlParameter.cs" />
+    <Compile Include="ORM\Common\EntityContext\EntityContext.cs" />
+    <Compile Include="ORM\Common\EntityContext\EntityContextWrapper.cs" />
+    <Compile Include="ORM\Common\EntityContext\TypedEntityContext.cs" />
+    <Compile Include="ORM\Common\FormatSqlParameters.cs" />
     <Compile Include="ORM\Common\ManagedPropertyBridge.cs" />
     <Compile Include="ORM\Common\NullConstraint.cs" />
     <Compile Include="ORM\Common\RefTableProperty.cs" />
@@ -134,6 +136,7 @@
     </Compile>
     <Compile Include="Entity\Validation\ITypeValidationsHost.cs" />
     <Compile Include="ORM\SqlWriter.cs" />
+    <Compile Include="Entity\MP\RedundantPath.cs" />
     <Compile Include="Service.cs" />
     <Compile Include="EntityRepository\AggregateSQL\RawTable.cs" />
     <Compile Include="EntityRepository\Caching\EntityListVersion.cs" />
@@ -148,9 +151,7 @@
     <Compile Include="Entity\LazyEntityReference\ILazyEntityRef.cs" />
     <Compile Include="Entity\LazyEntityReference\IReferenceOwner.cs" />
     <Compile Include="Entity\LazyEntityReference\LazyEntityRef.cs" />
-    <Compile Include="Entity\LazyEntityReference\LazyEntityRefBase.cs" />
     <Compile Include="Entity\LazyEntityReference\LazyEntityRefPropertyInfo.cs" />
-    <Compile Include="Entity\LazyEntityReference\NonSerializableEntityLazyEntityRef.cs" />
     <Compile Include="Entity\MP\P.cs" />
     <Compile Include="Entity\MP\RefProperty.cs" />
     <Compile Include="Entity\MP\RefPropertyMetadata.cs" />
@@ -167,8 +168,6 @@
     <Compile Include="ORM\DbMigration\Presistence\DbVersion.cs" />
     <Compile Include="ORM\DbTableFactory.cs" />
     <Compile Include="Entity\TreeEntityHelper.cs" />
-    <Compile Include="IServerAppRuntime.cs" />
-    <Compile Include="ServerApp.cs" />
     <Compile Include="EntityRepository\zzzEF\DbContextExtension.cs" />
     <Compile Include="EntityRepository\zzzEF\DbCreationType.cs" />
     <Compile Include="EntityRepository\zzzEF\ORMContext.cs" />

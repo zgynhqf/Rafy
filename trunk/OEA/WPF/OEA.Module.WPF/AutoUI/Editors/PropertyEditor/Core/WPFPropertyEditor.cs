@@ -278,7 +278,13 @@ namespace OEA.Module.WPF.Editors
                 {
                     if (this.control == null) { return null; }
 
-                    return this.control.DataContext as Entity;
+                    if (this.control.CheckAccess())
+                    {
+                        return this.control.DataContext as Entity;
+                    }
+
+                    Func<Entity> action = () => this.control.DataContext as Entity;
+                    return this.control.Dispatcher.Invoke(action) as Entity;
                 }
             }
 

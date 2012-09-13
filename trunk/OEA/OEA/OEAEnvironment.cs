@@ -26,6 +26,7 @@ using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
 using OEA.Utils;
 using System.Collections.ObjectModel;
+using System.Runtime;
 
 namespace OEA
 {
@@ -34,6 +35,8 @@ namespace OEA
     /// </summary>
     public static partial class OEAEnvironment
     {
+        #region Provider
+
         private static EnvironmentProvider _provider;
         public static EnvironmentProvider Provider
         {
@@ -51,10 +54,14 @@ namespace OEA
             }
         }
 
+        #endregion
+
         /// <summary>
         /// 依赖注入容器
         /// </summary>
         public static readonly IUnityContainer UnityContainer = new UnityContainer();
+
+        #region IApp AppCore
 
         private static IApp _appCore;
 
@@ -63,12 +70,14 @@ namespace OEA
             get { return _appCore; }
         }
 
-        public static void InitApp(IApp appCore)
+        internal static void InitApp(IApp appCore)
         {
             if (_appCore != null) throw new InvalidOperationException();
 
             _appCore = appCore;
         }
+
+        #endregion
 
         #region InitCustomizationPath
 
@@ -123,6 +132,8 @@ namespace OEA
 
         #endregion
 
+        #region Path Mapping
+
         /// <summary>
         /// 使用一个相对的路径来计算绝对路径
         /// </summary>
@@ -133,6 +144,11 @@ namespace OEA
             return Path.Combine(Provider.DllRootDirectory, appRootRelative);
         }
 
+        /// <summary>
+        /// 相对路径转换为绝对路径。
+        /// </summary>
+        /// <param name="appRootRelative"></param>
+        /// <returns></returns>
         public static string ToAbsolute(string appRootRelative)
         {
             return Path.Combine(Provider.RootDirectory, appRootRelative);
@@ -148,12 +164,22 @@ namespace OEA
             return absolutePath.Replace(Provider.RootDirectory, string.Empty);
         }
 
+        #endregion
+
+        /// <summary>
+        /// 当前是否正处于调试状态。
+        /// </summary>
         public static bool IsDebuggingEnabled
         {
             get { return Provider.IsDebuggingEnabled; }
         }
 
+        #region Location
+
         private static OEALocation? _Location;
+
+        [ThreadStatic]
+        private static int _threadPortalCount;
 
         /// <summary>
         /// 当前应用程序执行环境的位置。
@@ -177,11 +203,70 @@ namespace OEA
             }
             set
             {
-                if (_Location.HasValue) throw new InvalidOperationException();
+                if (_Location.HasValue) throw new InvalidOperationException("Location 只能被设置一次。");
 
                 _Location = value;
             }
         }
+
+        /// <summary>
+        /// 获取当前线程目前已经进入的数据门户层数。
+        /// 
+        /// Set 方法为 OEA 框架内部调用，外部请不要设置，否则会引起未知的异常。
+        /// </summary>
+        public static int ThreadPortalCount
+        {
+            get { return _threadPortalCount; }
+            set { _threadPortalCount = value; }
+        }
+
+        /// <summary>
+        /// 保证当前代码正在运行在服务端，否则抛出异常。
+        /// </summary>
+        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
+        public static void EnsureOnServer()
+        {
+            if (!IsOnServer()) throw new InvalidOperationException();
+        }
+
+        /// <summary>
+        /// 保证当前代码正在运行在客户端，否则抛出异常。
+        /// </summary>
+        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
+        public static void EnsureOnClient()
+        {
+            if (!IsOnClient()) throw new InvalidOperationException();
+        }
+
+        /// <summary>
+        /// 判断是否在服务端。
+        /// 
+        /// 如果是单机版，则当进入至少一次数据门户后，才能算作服务端，返回true。
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsOnServer()
+        {
+            //当在服务端、或者是单机版模拟服务端时，默认值为直接在服务端运行。
+            var l = Location;
+            return l == OEALocation.WebServer || l == OEALocation.WPFServer ||
+                (l == OEALocation.LocalVersion && _threadPortalCount > 0);
+        }
+
+        /// <summary>
+        /// 判断是否在客户端
+        /// 
+        /// 单机版，同样返回true。
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsOnClient()
+        {
+            var l = Location;
+            return l == OEALocation.Client || l == OEALocation.LocalVersion;
+        }
+
+        #endregion
+
+        #region Web or WPF
 
         /// <summary>
         /// Web or WPF
@@ -190,6 +275,7 @@ namespace OEA
         {
             get { return Location == OEALocation.WebServer; }
         }
+
         /// <summary>
         /// WPF or Web
         /// </summary>
@@ -198,15 +284,32 @@ namespace OEA
             get { return Location != OEALocation.WebServer; }
         }
 
-        public static void EnsureOnServer()
+        /// <summary>
+        /// 是否需要 Web 命令。
+        /// </summary>
+        public static bool NeedWebCommands
         {
-            if (!OEAEnvironment.Location.IsOnServer()) throw new InvalidOperationException();
+            get
+            {
+                return Location == OEALocation.WebServer;
+            }
         }
 
-        public static void EnsureOnClient()
+        /// <summary>
+        /// 是否需要添加 WPF 命令。
+        /// </summary>
+        public static bool NeedWPFCommands
         {
-            if (!OEAEnvironment.Location.IsOnClient()) throw new InvalidOperationException();
+            get
+            {
+                var l = Location;
+                return l == OEALocation.Client && l == OEALocation.LocalVersion;
+            }
         }
+
+        #endregion
+
+        #region NewLocalId
 
         private static int _maxId = 100000000;// 本地临时 Id 从 这个值开始
         private static object _maxIdLock = new object();
@@ -215,5 +318,7 @@ namespace OEA
         {
             lock (_maxIdLock) { return _maxId++; }
         }
+
+        #endregion
     }
 }

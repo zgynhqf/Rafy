@@ -50,5 +50,7 @@ namespace RBAC
 
             this.Control.BindData(this.Data as OrgPositionOperationDenyList);
         }
+
+        protected override void RefreshControlCore() { }
     }
 }

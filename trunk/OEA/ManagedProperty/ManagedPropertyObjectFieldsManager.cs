@@ -19,6 +19,7 @@ using System.Runtime.Serialization;
 using System.ComponentModel;
 using System.Security.Permissions;
 using OEA.Reflection;
+using System.Runtime;
 
 namespace OEA.ManagedProperty
 {
@@ -188,7 +189,7 @@ namespace OEA.ManagedProperty
             value = CoerceType(property, value);
 
             bool isReset = false;
-            if (value == null && property.PropertyType.IsValueType)
+            if (NeedReset(property, value))
             {
                 isReset = true;
                 value = meta.DefaultValue;
@@ -341,8 +342,8 @@ namespace OEA.ManagedProperty
             ForceNotReadOnly(property);
 
             value = CoerceType(property, value);
-            //如果把 null 赋值给一个值类型，则直接还原此属性为默认值。
-            if (value == null && property.PropertyType.IsValueType)
+
+            if (NeedReset(property, value))
             {
                 this.ResetProperty(property);
                 return;
@@ -350,6 +351,26 @@ namespace OEA.ManagedProperty
 
             var field = this.FindOrCreateField(property);
             field.Value = value;
+        }
+
+        /// <summary>
+        /// 如果把 null 赋值给一个值类型，则直接还原此属性为默认值。
+        /// </summary>
+        /// <param name="property"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private static bool NeedReset(IManagedProperty property, object value)
+        {
+            if (value == null)
+            {
+                var propertyType = property.PropertyType;
+                if (propertyType.IsValueType && (!propertyType.IsGenericType || propertyType.GetGenericTypeDefinition() != typeof(Nullable<>)))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -366,6 +387,7 @@ namespace OEA.ManagedProperty
             field.Value = value;
         }
 
+        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
         private static void ForceNotReadOnly(IManagedProperty property)
         {
             if (property.IsReadOnly) throw new InvalidOperationException("属性是只读的！");
@@ -489,14 +511,11 @@ namespace OEA.ManagedProperty
 
         #region 自定义 Serialization / Deserialization
 
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        private ManagedPropertyObjectFieldsManager(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
         protected override void Serialize(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("owner", this._owner, typeof(ManagedPropertyObject));
-
             base.Serialize(info, context);
+
+            info.AddValue("owner", this._owner, typeof(ManagedPropertyObject));
 
             //只序列化非默认值的编译期属性, 不序列化运行时属性
             foreach (var field in this._compiledFields)
@@ -516,23 +535,34 @@ namespace OEA.ManagedProperty
             }
         }
 
-        protected override void Deserialize(SerializationInfo info, StreamingContext context)
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        private ManagedPropertyObjectFieldsManager(SerializationInfo info, StreamingContext context)
+            : base(info, context)
         {
             this._owner = info.GetValue<ManagedPropertyObject>("owner");
 
             this.InitFields();
 
-            base.Deserialize(info, context);
-
             var compiledProperties = this._owner.PropertiesContainer.GetNonReadOnlyCompiledProperties();
+            var c = compiledProperties.Count;
 
+            //遍历所有已经序列化的属性值序列
             var allValues = info.GetEnumerator();
             while (allValues.MoveNext())
             {
                 var cur = allValues.Current;
                 var name = cur.Name;
-                var property = compiledProperties.FirstOrDefault(p => p.Name == name);
-                if (property != null) { this.LoadProperty(property, cur.Value); }
+
+                //找到对应的属性赋值。
+                for (int i = 0; i < c; i++)
+                {
+                    var property = compiledProperties[i];
+                    if (property.Name == name)
+                    {
+                        this.LoadProperty(property, cur.Value);
+                        break;
+                    }
+                }
             }
         }
 

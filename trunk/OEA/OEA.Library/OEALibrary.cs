@@ -25,6 +25,7 @@ using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
 using OEA.MetaModel.View;
 using Common;
+using OEA.ManagedProperty;
 
 namespace OEA.Library
 {
@@ -38,6 +39,7 @@ namespace OEA.Library
         public override void Initialize(IApp app)
         {
             RepositoryFactoryHost.Factory = RepositoryFactory.Instance;
+            PropertyDescriptorFactory.Current = new OEAPropertyDescriptorFactory();
 
             app.AllPluginsMetaIntialized += (o, e) =>
             {

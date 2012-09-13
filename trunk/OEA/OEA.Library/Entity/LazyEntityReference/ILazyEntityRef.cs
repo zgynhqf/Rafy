@@ -18,11 +18,6 @@ using System.Text;
 
 namespace OEA.Library
 {
-    internal interface ILazyEntityRefInternal
-    {
-        void LoadId(int value);
-    }
-
     /// <summary>
     /// 延迟加载的引用实体
     /// （外键等）
@@ -54,9 +49,44 @@ namespace OEA.Library
         /// </summary>
         bool IsEmpty { get; }
 
-        void Clone(ILazyEntityRef target, bool cloneEntity);
+        /// <summary>
+        /// 获取或设置是否需要序列化引用实体对象。
+        /// 
+        /// 默认情况下，引用实体对象只从服务端序列化到客户端。
+        /// </summary>
+        bool? SerializeEntity { get; set; }
 
-        void Clone(ILazyEntityRef target);
+        /// <summary>
+        /// 从目标引用拷贝值到本对象中。
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="cloneEntity">是否需要同时拷贝引用实体。</param>
+        void Clone(ILazyEntityRef source, bool cloneEntity);
+
+        /// <summary>
+        /// 从目标引用拷贝值到本对象中。
+        /// </summary>
+        /// <param name="source"></param>
+        void Clone(ILazyEntityRef source);
+
+        /// <summary>
+        /// 获取或设置是否需要序列化引用实体对象。
+        /// 
+        /// 默认情况下，引用实体对象只从服务端序列化到客户端。
+        /// </summary>
+        bool GetSerializeEntityValue();
+
+        /// <summary>
+        /// 以不变更（MarkDirty）的方式把 id 的数据加载进来。
+        /// </summary>
+        /// <param name="value"></param>
+        void LoadId(int value);
+
+        /// <summary>
+        /// 以不变更（MarkDirty）的方式把 id 的数据加载进来。
+        /// </summary>
+        /// <param name="value"></param>
+        void LoadId(int? value);
 
         ///// <summary>
         ///// 直接加载外键实体。

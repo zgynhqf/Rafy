@@ -38,5 +38,15 @@ namespace OEA.Library
         /// </summary>
         /// <param name="refEntityProperty"></param>
         void NotifyEntityChanged(LazyEntityRefPropertyInfo refInfo, Entity oldEntity, Entity newEntity);
+
+        ///// <summary>
+        ///// 完全变化完成后的回调事件
+        ///// </summary>
+        ///// <param name="?"></param>
+        ///// <param name="oldId"></param>
+        ///// <param name="newId"></param>
+        ///// <param name="oldEntity"></param>
+        ///// <param name="newEntity"></param>
+        //void NotifyLazyChanged(LazyEntityRefPropertyInfo refInfo, int oldId, int newId, Entity oldEntity, Entity newEntity);
     }
 }

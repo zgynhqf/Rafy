@@ -23,10 +23,29 @@ namespace OEA.Library
 {
     public static class CacheMetaExtensionConfig
     {
+        /// <summary>
+        /// 启用缓存，并估计缓存的数量。
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="estimatedDataCount">系统会根据此数量来选择使用的缓存策略。</param>
+        /// <returns></returns>
+        public static EntityMeta EnableCache(this EntityMeta meta, int estimatedDataCount)
+        {
+            meta.EnableCache(SimpleCacheType.Table);
+            return meta;
+        }
+
+        /// <summary>
+        /// 根据简单策略来启用缓存。
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public static EntityMeta EnableCache(this EntityMeta meta, SimpleCacheType type = SimpleCacheType.ScopedByRoot)
         {
             var cs = new CacheScope();
             cs.Class = meta.EntityType;
+            cs.SimpleCacheType = type;
 
             if (type == SimpleCacheType.ScopedByRoot && meta.EntityCategory != EntityCategory.Root)
             {
@@ -64,21 +83,5 @@ namespace OEA.Library
         //    //如果还没有找到对应范围实体类型的实体，则继续往聚合树根方向找。
         //    return GetSpecificParentId(lazyRef.Entity, scopeType);
         //}
-    }
-
-    /// <summary>
-    /// 主要会被使用到的两种缓存方案
-    /// </summary>
-    public enum SimpleCacheType
-    {
-        /// <summary>
-        /// 按照表的方案来缓存
-        /// </summary>
-        Table,
-
-        /// <summary>
-        /// 按照聚合树的方案来缓存
-        /// </summary>
-        ScopedByRoot
     }
 }

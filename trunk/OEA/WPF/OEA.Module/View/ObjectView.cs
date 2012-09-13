@@ -237,10 +237,6 @@ namespace OEA
                     this._data = value;
                     this.OnDataChanged();
                 }
-                else
-                {
-                    this.OnDataReseting();
-                }
             }
         }
 
@@ -257,14 +253,6 @@ namespace OEA
             {
                 this.DataChanged(this, EventArgs.Empty);
             }
-        }
-
-        /// <summary>
-        /// 同一个Data被再次设置
-        /// </summary>
-        protected virtual void OnDataReseting()
-        {
-            foreach (var r in this._relations) r.OnOwnerDataReseting();
         }
 
         #endregion
@@ -285,37 +273,13 @@ namespace OEA
             //这时，子对象可以不进行耗时的数据加载工作，因为父ObjectView对象会紧接着执行ResetChildrenData方法。
             if (this._isResetingVisibility) return false;
 
-            //父视图的当前对象必须不为空
-            if (this._parent == null || this._parent._control == null) return false;
-            var parentObj = this._parent.Current;
-            if (parentObj == null) return false;
-
-            return this.CheckParentViewIsEntityParent();
+            //父视图及其控件、当前对象必须都不为空
+            var p = this._parent;
+            return p != null && p._control != null && p.Current != null;
         }
 
         /// <summary>
-        /// 检测当前视图是否直接挂在和实体类相同结构的聚合父视图下。
-        /// 
-        /// 例如，当 C 类的聚合父类 B 和更上一层的聚合父类 A 显示在同一个树型控件时，导致 C 的视图直接挂接在 A 视图下，这时，应该返回 false。
-        /// </summary>
-        /// <returns></returns>
-        protected bool CheckParentViewIsEntityParent()
-        {
-            bool result = true;
-
-            var parentObj = this._parent.Current;
-            var parentMeta = this.Meta.EntityMeta.AggtParent;
-            if (parentMeta != null && parentObj != null)
-            {
-                var parentType = parentObj.GetType();
-                result = parentMeta.EntityType.IsAssignableFrom(parentType);
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// 加载数据
+        /// 从聚合父视图中通过实体类的列表子属性获取懒加载数据。
         /// </summary>
         public virtual void LoadDataFromParent()
         {
@@ -325,6 +289,10 @@ namespace OEA
             }
         }
 
+        /// <summary>
+        /// 通过实体类的列表子属性获取懒加载数据。
+        /// </summary>
+        /// <returns></returns>
         protected EntityList GetRawChildrenData()
         {
             return this._parent.Current.GetLazyList(
@@ -335,23 +303,19 @@ namespace OEA
         /// <summary>
         /// 绑定这个视图的子视图
         /// 
-        /// 把CurrentObject中对应每个子视图的属性，取值出来，并赋值给子视图
+        /// 清空所有子视图的数据，同时重新加载当前激活的子视图的数据。
         /// </summary>
         /// <param name="view"></param>
         private void ResetChildrenData()
         {
             foreach (var child in this._childrenViews)
             {
-                //把CurrentObject中对应每个子视图的属性，取值出来，并赋值给子视图
-                //child.Data = (this.CurrentObject as BusinessBase).GetPropertyValue(child.PropertyName);
-                //考虑细表大采用懒加载属性时，这里只清空细表，在TabItem可见时更新当前ChildView.Data，以免一次全部装载所有细表
                 child.Data = null;
 
-                //为活动状态时才加载数据
-                if (child._isActive)
-                {
-                    child.LoadDataFromParent();
-                }
+                //为活动状态时才加载数据。
+                //（子属性都是懒加载属性，所以这里只清空细表，在激活（IsActive）时再更新当前 ChildView.Data，
+                //以免一次全部装载所有细表数据。）
+                if (child._isActive) { child.LoadDataFromParent(); }
             }
         }
 
@@ -418,10 +382,8 @@ namespace OEA
 
         protected virtual void OnIsVisibleChanged()
         {
-            if (this.IsVisibleChanged != null)
-            {
-                this.IsVisibleChanged(this, EventArgs.Empty);
-            }
+            var handler = this.IsVisibleChanged;
+            if (handler != null) { handler(this, EventArgs.Empty); }
         }
 
         /// <summary>
@@ -438,15 +400,7 @@ namespace OEA
             {
                 if (childView.EnableResetVisibility)
                 {
-                    try
-                    {
-                        childView._isResetingVisibility = true;
-                        childView.ResetVisibility();
-                    }
-                    finally
-                    {
-                        childView._isResetingVisibility = false;
-                    }
+                    childView.ResetVisibility();
                 }
             }
         }
@@ -455,9 +409,17 @@ namespace OEA
         /// 根据当前视图的 IsVisible 属性重设控件的可见性。
         /// 当父视图的当前对象改变时，会根据对象的属性值来设置子视图的可见性。
         /// </summary>
-        protected virtual void ResetVisibility()
+        private void ResetVisibility()
         {
-            this.IsVisible = this.Parent.Current != null;
+            try
+            {
+                this._isResetingVisibility = true;
+                this.IsVisible = this.Parent.Current != null;
+            }
+            finally
+            {
+                this._isResetingVisibility = false;
+            }
         }
 
         #endregion
@@ -514,13 +476,10 @@ namespace OEA
             {
                 this._isActive = value;
 
-                if (value)
+                //加载数据
+                if (value && this._data == null)
                 {
-                    //加载数据
-                    if (this._data == null)
-                    {
-                        this.LoadDataFromParent();
-                    }
+                    this.LoadDataFromParent();
                 }
 
                 this.OnIsActiveChanged();
@@ -762,6 +721,31 @@ namespace OEA
 
             this._control = control;
         }
+
+        /// <summary>
+        /// 外界调用此方法来刷新整个界面上的控件。
+        /// 此方法刷新后的控件，会保留当前项（Current）。
+        /// 
+        /// 一般使用命令编辑结束，调用此方法来刷新控件。
+        /// </summary>
+        public void RefreshControl()
+        {
+            this.RefreshControlCore();
+
+            var handler = this.Refreshed;
+            if (handler != null) handler(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// 子类重写此方法实现特定控件的逻辑逻辑。
+        /// 此方法需要保留当前项（Current）。
+        /// </summary>
+        protected abstract void RefreshControlCore();
+
+        /// <summary>
+        /// 控件刷新后事件。
+        /// </summary>
+        public event EventHandler Refreshed;
 
         #endregion
 

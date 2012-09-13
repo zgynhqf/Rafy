@@ -25,7 +25,7 @@ namespace OEA.Library
     /// 用于存储特定的懒加载属性的信息
     /// </summary>
     [Serializable]
-    public class LazyEntityRefPropertyInfo : MobileObject
+    public class LazyEntityRefPropertyInfo //: MobileObject
     {
         private bool _notifyRefEntityChanged;
 
@@ -80,7 +80,7 @@ namespace OEA.Library
             {
                 //由于子类可能会重写父类的实体引用属性并修改名字，所以这里不使用 Property.Name 来查找，
                 //而是使用 IdProperty + RefEntityProperty 的方式来查找。
-                var mp = owner.GetRepository().GetAvailableIndicators().FirstOrDefault(p =>
+                var mp = owner.PropertiesContainer.GetNonReadOnlyCompiledProperties().FirstOrDefault(p =>
                 {
                     if (p is IRefProperty)
                     {
@@ -113,22 +113,22 @@ namespace OEA.Library
             return refEntityProperty + "_Ref";
         }
 
-        protected override void OnMobileSerializeState(ISerializationContext info)
-        {
-            base.OnMobileSerializeState(info);
+        //protected override void OnMobileSerializeState(ISerializationContext info)
+        //{
+        //    base.OnMobileSerializeState(info);
 
-            info.AddState("n", this._notifyRefEntityChanged);
-            info.AddState("id", this._idProperty);
-            info.AddState("e", this._refEntityProperty);
-        }
+        //    info.AddState("n", this._notifyRefEntityChanged);
+        //    info.AddState("id", this._idProperty);
+        //    info.AddState("e", this._refEntityProperty);
+        //}
 
-        protected override void OnMobileDeserializeState(ISerializationContext info)
-        {
-            base.OnMobileDeserializeState(info);
+        //protected override void OnMobileDeserializeState(ISerializationContext info)
+        //{
+        //    base.OnMobileDeserializeState(info);
 
-            this._notifyRefEntityChanged = info.GetState<bool>("n");
-            this._idProperty = info.GetState<string>("id");
-            this._refEntityProperty = info.GetState<string>("e");
-        }
+        //    this._notifyRefEntityChanged = info.GetState<bool>("n");
+        //    this._idProperty = info.GetState<string>("id");
+        //    this._refEntityProperty = info.GetState<string>("e");
+        //}
     }
 }

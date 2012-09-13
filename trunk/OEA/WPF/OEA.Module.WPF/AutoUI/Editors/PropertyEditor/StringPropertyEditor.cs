@@ -43,6 +43,16 @@ namespace OEA.Module.WPF.Editors
             return TextBox.TextProperty;
         }
 
+        protected override Binding CreateBinding()
+        {
+            var binding = base.CreateBinding();
+
+            //属性变更即刻生效。
+            binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+
+            return binding;
+        }
+
         #region 以下代码拷贝自：DataGridTextColumn 类。
 
         protected override void PrepareElementForEditCore(FrameworkElement editingElement, RoutedEventArgs editingEventArgs)

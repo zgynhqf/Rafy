@@ -15,6 +15,11 @@ namespace OEA.Library.Modeling.Web
     [ClientServiceName("OEA.BackupViewConfigService")]
     public class BackupViewConfigService : Service
     {
+        public BackupViewConfigService()
+        {
+            this.DataPortalLocation = DataPortalLocation.Local;
+        }
+
         [ServiceInput]
         public string Model { get; set; }
         [ServiceInput]

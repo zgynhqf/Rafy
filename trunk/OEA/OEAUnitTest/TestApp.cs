@@ -18,46 +18,21 @@ using System.Text;
 using OEA.Server;
 using System.Windows;
 using System.Windows.Threading;
+using OEA.MetaModel;
+using OEA;
+using Common;
 
 namespace OEAUnitTest
 {
-    public class TestApp : IServerAppRuntime//, IClientAppRuntime
+    public class TestApp : AppImplementationBase
     {
-        public TestApp()
-        {
-            //ClientApp.Register(this);
-            ServerApp.Register(this);
-        }
-
         internal void Start()
         {
-            var handler = this.AppStartup;
-            if (handler != null) handler(this, EventArgs.Empty);
+            OEAEnvironment.Provider.IsDebuggingEnabled = true;
 
-            var handler2 = this.Startup;
-            if (handler2 != null) handler2(this, null);
+            this.OnAppStartup();
         }
 
-        #region 适配接口实现
-
-        void IServerAppRuntime.Shutdown() { }
-
-        void IServerAppRuntime.ShowMessage(string message, string title) { }
-
-        void IServerAppRuntime.ShowMainWindow() { }
-
-        public event EventHandler AppStartup;
-
-        public event EventHandler AppExit;
-
-        //ShutdownMode IClientAppRuntime.ShutdownMode { get; set; }
-
-        public event StartupEventHandler Startup;
-
-        public event ExitEventHandler Exit;
-
-        public event DispatcherUnhandledExceptionEventHandler DispatcherUnhandledException;
-
-        #endregion
+        protected override void StartMainProcess() { }
     }
 }

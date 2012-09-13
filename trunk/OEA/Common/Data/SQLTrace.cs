@@ -14,8 +14,10 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
+using Common;
 
 namespace hxy.Common.Data
 {
@@ -32,14 +34,7 @@ namespace hxy.Common.Data
             {
                 if (_sqlTraceEnabled == null)
                 {
-                    try
-                    {
-                        _sqlTraceEnabled = System.IO.File.Exists(@"C:\OEA_SQL_TRACE_ENABLED");
-                    }
-                    catch
-                    {
-                        _sqlTraceEnabled = false;
-                    }
+                    _sqlTraceEnabled = ConfigurationHelper.GetAppSettingOrDefault("SQL_TRACE_ENABLED", false);
                 }
 
                 return _sqlTraceEnabled.Value;
@@ -47,22 +42,22 @@ namespace hxy.Common.Data
         }
 
         [System.Diagnostics.Conditional("DEBUG")]
-        public static void Trace(string sql, IDbDataParameter[] parameters)
+        public static void Trace(string sql, IDbDataParameter[] parameters, IDbConnection connection)
         {
             if (SqlTraceEnabled)
             {
+                var content = sql;
+
                 if (parameters.Length > 0)
                 {
-                    sql += Environment.NewLine + "Parameters:" + string.Join(",", parameters.Select(p => p.Value));
+                    content += Environment.NewLine + "Parameters:" + string.Join(",", parameters.Select(p => p.Value));
                 }
+
+                content = DateTime.Now + "\r\nDatabase:  " + connection.Database + "\r\n" + content + "\r\n\r\n\r\n";
 
                 try
                 {
-                    System.IO.File.AppendAllText(
-                        @"C:\SQLTraceLog.txt",
-                        DateTime.Now + "  " + sql + Environment.NewLine + Environment.NewLine + Environment.NewLine + Environment.NewLine,
-                        Encoding.UTF8
-                        );
+                    File.AppendAllText(@"C:\SQLTraceLog.txt", content, Encoding.UTF8);
                 }
                 catch { }
             }

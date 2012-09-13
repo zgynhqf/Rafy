@@ -132,7 +132,7 @@ namespace OEA
 
         public static IEnumerable<PluginAssembly> GetAllPlugins()
         {
-            if (Location.IsOnClient())
+            if (IsOnClient())
             {
                 return GetAllLibraries().Union(GetAllModules()).OrderBy(a => a.Instance.ReuseLevel);
             }

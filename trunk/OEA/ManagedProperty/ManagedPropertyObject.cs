@@ -58,12 +58,15 @@ namespace OEA.ManagedProperty
         {
             get
             {
-                if (this._container == null)
-                {
-                    this._container = ManagedPropertyRepository.Instance.GetTypePropertiesContainer(this.GetType());
-                }
+                if (this._container == null) { this._container = this.FindPropertiesContainer(); }
+
                 return this._container;
             }
+        }
+
+        protected virtual ConsolidatedTypePropertiesContainer FindPropertiesContainer()
+        {
+            return ManagedPropertyRepository.Instance.GetTypePropertiesContainer(this.GetType());
         }
 
         #region GetProperty / SetProperty / ClearProperty
@@ -245,11 +248,20 @@ namespace OEA.ManagedProperty
             }
         }
 
+        /// <summary>
+        /// 子类重写此方法实现某个扩展属性变更后的处理函数
+        /// </summary>
+        /// <param name="e"></param>
         protected virtual void OnPropertyChanged(IManagedPropertyChangedEventArgs e)
         {
             this.OnPropertyChanged(e.Property.Name);
         }
 
+        /// <summary>
+        /// 子类重写此方法实现某个属性变更后的处理函数
+        /// 默认实现中，会触发本对象的 PropertyChanged 事件。
+        /// </summary>
+        /// <param name="propertyName"></param>
         protected virtual void OnPropertyChanged(string propertyName)
         {
             var handler = this._propertyChangedHandlers;
@@ -334,7 +346,7 @@ namespace OEA.ManagedProperty
 
         PropertyDescriptorCollection ICustomTypeDescriptor.GetProperties(Attribute[] attributes)
         {
-            return PropertyDescriptorFactory.GetProperties(this);
+            return PropertyDescriptorFactory.Current.GetProperties(this.PropertiesContainer);
         }
 
         //以下实现复制自 DataRowView

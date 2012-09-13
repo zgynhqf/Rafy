@@ -13,6 +13,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
@@ -39,6 +40,14 @@ namespace OEA.ManagedProperty
         #endregion
 
         internal TypePropertiesContainer SimpleContainer { get; set; }
+
+        /// <summary>
+        /// 为界面层使用反射提供属性描述器集合。
+        /// 
+        /// 直接在此申明一个字段保存该值，提高查询的效率。
+        /// 所有的逻辑都在 PropertyDescriptorFactory 类中。
+        /// </summary>
+        internal PropertyDescriptorCollection PropertyDescriptors;
 
         public Type OwnerType
         {
