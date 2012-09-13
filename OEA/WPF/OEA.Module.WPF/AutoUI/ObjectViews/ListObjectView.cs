@@ -139,45 +139,6 @@ namespace OEA.Module.WPF
 
         #endregion
 
-        #region ObjectView Relations
-
-        /// <summary>
-        /// 这个ListView可能会有一个 查询面板View
-        /// CondtionQueryView 和 NavigateQueryView 只能一个不为空
-        /// </summary>
-        public ConditionQueryObjectView ConditionQueryView
-        {
-            get
-            {
-                return this.Relations.Find(ConditionBlock.Type) as ConditionQueryObjectView;
-            }
-        }
-
-        /// <summary>
-        /// 这个ListView可能会有导航View
-        /// CondtionQueryView 和 NavigateQueryView 只能一个不为空
-        /// </summary>
-        public NavigationQueryObjectView NavigationQueryView
-        {
-            get
-            {
-                return this.Relations.Find(NavigationBlock.Type) as NavigationQueryObjectView;
-            }
-        }
-
-        ///// <summary>
-        ///// 这个ListView可能还会关联一个DetailView用于显示某一行。
-        ///// </summary>
-        //public DetailObjectView DetailView
-        //{
-        //    get
-        //    {
-        //        return this.TryFindRelation(DefaultSurrounderTypes.ListDetail.Detail) as DetailObjectView;
-        //    }
-        //}
-
-        #endregion
-
         #region Data
 
         /// <summary>

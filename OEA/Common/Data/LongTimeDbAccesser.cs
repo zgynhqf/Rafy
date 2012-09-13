@@ -1,4 +1,17 @@
-﻿using System;
+﻿/*******************************************************
+ * 
+ * 作者：胡庆访
+ * 创建时间：2009
+ * 说明：此文件只包含一个类，具体内容见类型注释。
+ * 运行环境：.NET 4.0
+ * 版本号：1.0.0
+ * 
+ * 历史记录：
+ * 创建文件 胡庆访 2009
+ * 
+*******************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,14 +22,6 @@ namespace hxy.Common.Data
     public class LongTimeDbAccesser : DBAccesser
     {
         public LongTimeDbAccesser(DbSetting setting) : base(setting) { }
-
-        public LongTimeDbAccesser(string connectionStringSettingName) : base(connectionStringSettingName) { }
-
-        public LongTimeDbAccesser(string connectionString, string connectionProvider)
-            : base(connectionString, connectionProvider) { }
-
-        public LongTimeDbAccesser(IDbConnection dbConnection, string connectionProvider)
-            : base(dbConnection, connectionProvider) { }
 
         protected override IDbCommand PrepareCommand(string strSql, CommandType type, IDbDataParameter[] parameters)
         {

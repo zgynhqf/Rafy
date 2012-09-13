@@ -20,6 +20,9 @@ using System.Configuration;
 using System.Web;
 using Common;
 using System.Windows;
+using System.Collections;
+using hxy.Common;
+using System.Collections.Generic;
 
 namespace OEA
 {
@@ -125,60 +128,34 @@ namespace OEA
 
         #endregion
 
-        #region LocalContext
+        #region LocalContext : public class WebThreadContextProvider
 
-        private const string _localContextName = "SimpleCsla.LocalContext";
-
-        /// <summary>
-        /// Returns the application-specific context data that
-        /// is local to the current AppDomain.
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// The return value is a HybridDictionary. If one does
-        /// not already exist, and empty one is created and returned.
-        /// </para><para>
-        /// Note that data in this context is NOT transferred to and from
-        /// the client and server.
-        /// </para>
-        /// </remarks>
-        public static HybridDictionary LocalContext
+        public class WebThreadContextProvider : ServerContextProvider
         {
-            get
+            protected const string LocalContextName = "OEA.ApplicationContext.WebThreadContext";
+
+            protected override IDictionary<string, object> GetValueContainer()
             {
-                HybridDictionary ctx = GetLocalContext();
-                if (ctx == null)
+                if (HttpContext.Current == null)
                 {
-                    ctx = new HybridDictionary();
-                    SetLocalContext(ctx);
+                    return base.GetValueContainer();
                 }
-                return ctx;
+                else
+                {
+                    return (IDictionary<string, object>)HttpContext.Current.Items[LocalContextName];
+                }
             }
-        }
 
-        private static HybridDictionary GetLocalContext()
-        {
-            if (HttpContext.Current == null)
+            protected override void SetValueContainer(IDictionary<string, object> localContext)
             {
-                LocalDataStoreSlot slot = Thread.GetNamedDataSlot(_localContextName);
-                return (HybridDictionary)Thread.GetData(slot);
-            }
-            else
-            {
-                return (HybridDictionary)HttpContext.Current.Items[_localContextName];
-            }
-        }
-
-        private static void SetLocalContext(HybridDictionary localContext)
-        {
-            if (HttpContext.Current == null)
-            {
-                LocalDataStoreSlot slot = Thread.GetNamedDataSlot(_localContextName);
-                Thread.SetData(slot, localContext);
-            }
-            else
-            {
-                HttpContext.Current.Items[_localContextName] = localContext;
+                if (HttpContext.Current == null)
+                {
+                    base.SetValueContainer(localContext);
+                }
+                else
+                {
+                    HttpContext.Current.Items[LocalContextName] = localContext;
+                }
             }
         }
 
@@ -326,7 +303,7 @@ namespace OEA
         public static void Clear()
         {
             SetContext(null, null);
-            SetLocalContext(null);
+            ServerContext.Clear();
         }
 
         #endregion

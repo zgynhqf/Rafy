@@ -65,6 +65,9 @@ namespace hxy.Common.Data
             this.ProviderName = providerName;
         }
 
+        /// <summary>
+        /// 子类使用
+        /// </summary>
         internal DbConnectionSchema() { }
 
         private void ParseDbName()

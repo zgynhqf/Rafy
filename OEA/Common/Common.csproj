@@ -85,6 +85,8 @@
     <Compile Include="Serialization\IStateFormatter.cs" />
     <Compile Include="Serialization\SerializationHelper.cs" />
     <Compile Include="Serialization\XmlFormatter.cs" />
+    <Compile Include="Threading\ServerContextProvider.cs" />
+    <Compile Include="Threading\ServerContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="_ReadMe.txt" />

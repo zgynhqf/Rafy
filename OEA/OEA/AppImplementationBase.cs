@@ -17,6 +17,7 @@ using System.Linq;
 using System.Text;
 using System.ComponentModel;
 using Common;
+using hxy.Common;
 
 namespace OEA.MetaModel
 {
@@ -27,6 +28,8 @@ namespace OEA.MetaModel
     {
         protected void OnAppStartup()
         {
+            ServerContext.SetCurrent(new OEA.ApplicationContext.WebThreadContextProvider());
+
             this.InitEnvironment();
 
             this.InitAllPlugins();

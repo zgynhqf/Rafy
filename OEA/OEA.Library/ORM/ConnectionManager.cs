@@ -15,6 +15,7 @@ using System;
 using System.Configuration;
 using System.Data;
 using System.Data.Common;
+using hxy.Common;
 using hxy.Common.Data;
 
 namespace OEA.Library
@@ -42,11 +43,15 @@ namespace OEA.Library
 
             lock (_lock)
             {
-                var mgr = ApplicationContext.LocalContext[ctxName] as ConnectionManager;
+                var items = ServerContext.Items;
+
+                object value = null;
+                items.TryGetValue(ctxName, out    value);
+                var mgr = value as ConnectionManager;
                 if (mgr == null)
                 {
                     mgr = new ConnectionManager(dbSetting);
-                    ApplicationContext.LocalContext.Add(ctxName, mgr);
+                    items.Add(ctxName, mgr);
 
                     mgr._connection.Open();
                 }
@@ -107,7 +112,7 @@ namespace OEA.Library
                 {
                     _connection.Dispose();
                     var name = GetContextName(this._dbSetting);
-                    ApplicationContext.LocalContext.Remove(name);
+                    ServerContext.Items.Remove(name);
                 }
             }
         }
