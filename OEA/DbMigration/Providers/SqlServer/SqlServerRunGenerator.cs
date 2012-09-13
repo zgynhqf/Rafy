@@ -25,7 +25,7 @@ namespace DbMigration.SqlServer
     /// <summary>
     /// SqlServer 的执行项生成器
     /// </summary>
-    public class SqlServerRunGenerator : TSqlGenerator
+    public class SqlServerRunGenerator : TSqlRunGenerator
     {
         protected override string ConvertToTypeString(DbType dataType)
         {

@@ -146,11 +146,12 @@ namespace Demo
             View.Property(BookAdministrator.UserNameProperty).HasLabel("姓名").ShowIn(ShowInWhere.All);
 
             //三级联动示例
-            View.Property(BookAdministrator.ProvinceRefProperty).HasLabel("住址：省").ShowIn(ShowInWhere.All).UseEditor(WPFEditorNames.PopupSearchList);
+            View.Property(BookAdministrator.ProvinceRefProperty).HasLabel("住址：省").ShowIn(ShowInWhere.All)
+                .UseEditor(WPFEditorNames.EntitySelection_Popup);
             View.Property(BookAdministrator.CityRefProperty).HasLabel("住址：市").ShowIn(ShowInWhere.All)
-                .ReferenceViewInfo.DataSourceProperty = BookAdministrator.CityDataSourceProperty;
+                .UseDataSource(BookAdministrator.CityDataSourceProperty);
             View.Property(BookAdministrator.CountryRefProperty).HasLabel("住址：县").ShowIn(ShowInWhere.All)
-                .ReferenceViewInfo.DataSourceProperty = BookAdministrator.CountryDataSourceProperty;
+                .UseDataSource(BookAdministrator.CountryDataSourceProperty);
         }
     }
 }

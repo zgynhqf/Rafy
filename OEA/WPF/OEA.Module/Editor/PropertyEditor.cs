@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using OEA.Library;
+using OEA.ManagedProperty;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
 
@@ -43,7 +45,15 @@ namespace OEA.Editors
             get
             {
                 var currentObject = this.Context.CurrentObject;
-                if (currentObject != null) { return currentObject.GetPropertyValue(this._propertyInfo.Name); }
+                if (currentObject != null)
+                {
+                    var mp = this._propertyInfo.PropertyMeta.ManagedProperty;
+
+                    var rp = mp as IRefProperty;
+                    if (rp != null) { return currentObject.GetLazyRef(rp).NullableId; }
+
+                    return currentObject.GetProperty(mp);
+                }
 
                 return null;
             }
@@ -53,10 +63,19 @@ namespace OEA.Editors
                 //已经选中了，再设置值。
                 if (currentObject != null)
                 {
-                    //if ((PropertyValue != value) && (null != PropertyChanged))
-                    //    PropertyChanged(this, new PropertyChangedEventArgs(_propertyInfo.Name));
                     this.OnPropertyValueChanging();
-                    currentObject.SetPropertyValue(this._propertyInfo.Name, value);
+                    var mp = this._propertyInfo.PropertyMeta.ManagedProperty;
+
+                    var rp = mp as IRefProperty;
+                    if (rp != null)
+                    {
+                        currentObject.GetLazyRef(rp).NullableId = (int?)value;
+                    }
+                    else
+                    {
+                        currentObject.SetProperty(mp, value, ManagedPropertyChangedSource.FromUIOperating);
+                    }
+
                     this.OnPropertyValueChanged();
                 }
             }
@@ -69,19 +88,13 @@ namespace OEA.Editors
         protected virtual void OnPropertyValueChanging()
         {
             var handler = this.PropertyValueChanging;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            if (handler != null) { handler(this, EventArgs.Empty); }
         }
 
         protected virtual void OnPropertyValueChanged()
         {
             var handler = this.PropertyValueChanged;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            if (handler != null) { handler(this, EventArgs.Empty); }
         }
 
         #endregion

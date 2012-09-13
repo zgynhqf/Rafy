@@ -21,7 +21,7 @@ namespace OEA.MetaModel
     /// <summary>
     /// 选择模式：多选/单选。
     /// </summary>
-    public enum ReferenceSelectionMode
+    public enum EntitySelectionMode
     {
         /// <summary>
         /// 单选模式

@@ -54,8 +54,8 @@ namespace OEA.Library.Caching
             var item = new ScopeVersion();
 
             item.ClassRegion = region.FullName;
-            item.ScopeClass = scopeClass == null ? null : scopeClass.FullName;
-            item.ScopeId = scopeId;
+            item.ScopeClass = scopeClass == null ? string.Empty : scopeClass.FullName;
+            item.ScopeId = scopeId ?? string.Empty;
             item.Value = DateTime.Now;
             RF.Save(item);
 
@@ -273,7 +273,7 @@ namespace OEA.Library.Caching
 
         private class ScopeVersionListCache
         {
-            private const int ExpiredSeconds = 10;
+            private const int ExpiredSeconds = 30;
 
             /// <summary>
             /// 类中以字典的形式存储，以提供高速查找。

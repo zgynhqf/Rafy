@@ -139,12 +139,12 @@ namespace OEA.Web.ClientMetaModel
         {
             var comboList = new ComboListConfig();
 
-            comboList.model = ClientEntities.GetClientName(property.ReferenceViewInfo.RefType);
+            comboList.model = ClientEntities.GetClientName(property.SelectionViewMeta.RefEntityType);
 
-            var title = property.ReferenceViewInfo.RefTypeDefaultView.TitleProperty;
+            var title = property.SelectionViewMeta.RefTypeDefaultView.TitleProperty;
             if (title != null) { comboList.displayField = title.Name; }
 
-            var dsp = property.ReferenceViewInfo.DataSourceProperty;
+            var dsp = property.SelectionViewMeta.DataSourceProperty;
             if (dsp != null) { comboList.dataSourceProperty = dsp.Name; }
 
             return comboList;

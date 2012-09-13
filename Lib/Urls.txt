@@ -1,0 +1,2 @@
+http://wpftoolkit.codeplex.com/documentation
+http://avalondock.codeplex.com/documentation

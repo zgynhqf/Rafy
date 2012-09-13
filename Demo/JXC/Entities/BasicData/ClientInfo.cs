@@ -39,6 +39,13 @@ namespace JXC
             set { this.SetRefEntity(ClientCategoryRefProperty, value); }
         }
 
+        public static readonly Property<string> CategoryNameProperty = P<ClientInfo>.RegisterRedundancy(e => e.CategoryName,
+            new RedundantPath(ClientCategoryRefProperty, ClientCategory.NameProperty));
+        public string CategoryName
+        {
+            get { return this.GetProperty(CategoryNameProperty); }
+        }
+
         public static readonly Property<string> NameProperty = P<ClientInfo>.Register(e => e.Name);
         public string Name
         {
@@ -150,7 +157,9 @@ namespace JXC
                 ClientInfo.KaiHuYinHangProperty,
                 ClientInfo.ShouJiaJiBieProperty,
                 ClientInfo.YinHangZhangHuProperty,
-                ClientInfo.BeiZhuProperty
+                ClientInfo.BeiZhuProperty,
+
+                ClientInfo.CategoryNameProperty
                 );
 
             Meta.EnableCache();

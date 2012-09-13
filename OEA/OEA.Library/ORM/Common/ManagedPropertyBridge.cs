@@ -65,7 +65,7 @@ namespace OEA.ORM
             {
                 if (val != null)
                 {
-                    var lazyRef = entity.GetLazyRef(refPropertyInfo).CastTo<ILazyEntityRefInternal>();
+                    var lazyRef = entity.GetLazyRef(refPropertyInfo);
                     var id = TypeHelper.CoerceValue<int>(val);
                     lazyRef.LoadId(id);
                 }

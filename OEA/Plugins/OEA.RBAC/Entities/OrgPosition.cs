@@ -155,10 +155,8 @@ namespace OEA.RBAC
             else
             {
                 View.UseWPFCommands("RBAC.ChoosePositionCommand")
-                    .RemoveWPFCommands(WPFCommandNames.Add, WPFCommandNames.Edit);
+                    .RemoveWPFCommands(WPFCommandNames.PopupAdd, WPFCommandNames.Edit);
             }
-
-
 
             View.Property(OrgPosition.PositionRefProperty).HasLabel("岗位");
             View.Property(OrgPosition.View_CodeProperty).ShowIn(ShowInWhere.List).HasLabel("编码");

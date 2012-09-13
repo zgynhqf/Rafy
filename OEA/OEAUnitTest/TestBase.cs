@@ -12,6 +12,8 @@ using Microsoft.Practices.Unity;
 using System.Configuration;
 using OEA.Server;
 using System.Diagnostics;
+using OEA.ORM.DbMigration;
+using System.Reflection;
 
 namespace OEAUnitTest
 {
@@ -19,6 +21,24 @@ namespace OEAUnitTest
     public class TestBase
     {
         private static bool _appStarted = false;
+
+        protected static readonly FieldInfo LocationField = typeof(OEAEnvironment).GetField("_Location", BindingFlags.NonPublic | BindingFlags.Static);
+
+        protected static void EnterLocation(OEALocation loc, Action action)
+        {
+            var oldLocation = OEAEnvironment.Location;
+
+            try
+            {
+                LocationField.SetValue(null, loc);
+                Assert.IsTrue(OEAEnvironment.Location == loc, "无法进行测试用例需要的目标位置：" + loc);
+                action();
+            }
+            finally
+            {
+                LocationField.SetValue(null, oldLocation);
+            }
+        }
 
         /// <summary>
         /// 
@@ -35,7 +55,7 @@ namespace OEAUnitTest
 
                 Helper.CopyFileAndDir(Helper.MapFilePath(@"OEA\OEAUnitTest\bin\Debug"), AppDomain.CurrentDomain.SetupInformation.ApplicationBase);
 
-                CacheInstance.SetCacheFile(Helper.MapFilePath(@"OEA\OEA.Host.WPF\bin\Debug\Cache.sdf"));
+                CacheInstance.SetCacheFile(Helper.MapFilePath(@"OEA\WPFClient\bin\Debug\OEA_Entity_Cache.sdf"));
 
                 new TestApp().Start();
             }
@@ -44,6 +64,14 @@ namespace OEAUnitTest
             {
                 //根据客户化设置私有程序集
                 ModifyPrivateBinPath();
+            }
+
+            using (var c = new OEADbMigrationContext(ConnectionStringNames.DbMigrationHistory))
+            {
+                //对于迁移日志库的构造，无法记录它本身的迁移日志
+                c.HistoryRepository = null;
+
+                c.AutoMigrate();
             }
         }
 

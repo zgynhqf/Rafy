@@ -27,28 +27,27 @@ namespace OEA
     [Serializable]
     public abstract class Service : IService
     {
+        [NonSerialized]
+        private DataPortalLocation _dataPortalLocation;
+
         public Service()
         {
-            //当在服务端时，默认值为 true，表示直接在服务端运行。
-            this._runAtLocal = OEAEnvironment.Location.IsOnServer();
+            this._dataPortalLocation = OEAEnvironment.IsOnServer() ? DataPortalLocation.Local : DataPortalLocation.Remote;
         }
 
-        [NonSerialized]
-        private bool _runAtLocal;
-
         /// <summary>
-        /// 当前服务是否需要在本地运行。
+        /// 当前服务是否需要在本地运行。（有时需要设置此值来强制服务在客户端运行。）
         /// 
-        /// 当在服务端时，默认值为 true，表示直接在服务端运行。
+        /// 当在服务端时，默认值为 Local，表示直接在服务端运行。
         /// </summary>
-        public bool RunAtLocal
+        public DataPortalLocation DataPortalLocation
         {
-            get { return this._runAtLocal; }
-            set { this._runAtLocal = value; }
+            get { return this._dataPortalLocation; }
+            set { this._dataPortalLocation = value; }
         }
 
         /// <summary>
-        /// 子类重写此方法实现具体的业务逻辑
+        /// 数据门户会调用此方法来实现执行逻辑。
         /// </summary>
         internal void ExecuteByDataPortal()
         {
@@ -72,6 +71,9 @@ namespace OEA
             }
         }
 
+        /// <summary>
+        /// 子类重写此方法实现具体的业务逻辑
+        /// </summary>
         protected abstract void Execute();
 
         /// <summary>
@@ -82,7 +84,7 @@ namespace OEA
         {
             this.OnInvoking();
 
-            if (this.RunAtLocal)
+            if (this.DataPortalLocation == DataPortalLocation.Local)
             {
                 //由于在本地，所以没有必须调用 ExecuteByDataPortal 来清除不用的属性。
                 this.Execute();
@@ -128,9 +130,6 @@ namespace OEA
         /// 在服务被调用后发生。
         /// </summary>
         protected virtual void OnInvoked() { }
-
-        protected bool IsWeb { get { return OEAEnvironment.IsWeb; } }
-        protected bool IsWPF { get { return OEAEnvironment.IsWPF; } }
     }
 
     /// <summary>

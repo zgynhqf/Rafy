@@ -20,7 +20,7 @@ using OEA;
 namespace OEA.Library.Validation
 {
     /// <summary>
-    /// Implements common business rules.
+    /// 一般性的业务规则。
     /// </summary>
     public static class CommonRules
     {
@@ -55,7 +55,7 @@ namespace OEA.Library.Validation
 
             if (isNull)
             {
-                e.BrokenDescription = string.Format("{0} 并没有填写。", e.GetPropertyDisplay());
+                e.BrokenDescription = string.Format("“{0}”里没有输入值。", e.GetPropertyDisplay());
             }
         }
 

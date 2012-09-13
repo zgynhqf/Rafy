@@ -78,27 +78,40 @@ namespace OEA.Module.WPF
 
         #endregion
 
-        ObjectView IAsyncDataLoader.View
-        {
-            get { return this._view; }
-        }
+        #region 数据加载接口
 
+        /// <summary>
+        /// 异步加载该视图对应实体类型的所有实体对象
+        /// </summary>
         public void LoadDataAsync()
         {
             this.LoadDataAsync(null, null);
         }
 
+        /// <summary>
+        /// 异步加载该视图对应实体类型的所有实体对象
+        /// </summary>
+        /// <param name="changedCallback">数据加载返回后的回调函数</param>
         public void LoadDataAsync(Action changedCallback)
         {
             this.LoadDataAsync(null, changedCallback);
         }
 
-        public void LoadDataAsync(Func<object> dataProvider)
+        /// <summary>
+        /// 通过指定的数据获取方法，异步加载该视图对应实体类型的指定实体对象
+        /// </summary>
+        /// <param name="dataProvider">自定义数据提供程序。可以返回 Entity，也可以返回 EntityList。</param>
+        public void LoadDataAsync(Func<IEntityOrList> dataProvider)
         {
             this.LoadDataAsync(dataProvider, null);
         }
 
-        public void LoadDataAsync(Func<object> dataProvider, Action changedCallback)
+        /// <summary>
+        /// 通过指定的数据获取方法，异步加载该视图对应实体类型的指定实体对象
+        /// </summary>
+        /// <param name="dataProvider">自定义数据提供程序。可以返回 Entity，也可以返回 EntityList。</param>
+        /// <param name="changedCallback">数据加载返回后的回调函数</param>
+        public void LoadDataAsync(Func<IEntityOrList> dataProvider, Action changedCallback)
         {
             if (dataProvider == null)
             {
@@ -116,11 +129,18 @@ namespace OEA.Module.WPF
             }
         }
 
+        /// <summary>
+        /// 使用最后一次使用过的数据提供程序重新加载数据。
+        /// </summary>
         public void ReloadDataAsync()
         {
             this.ReloadDataAsync(null);
         }
 
+        /// <summary>
+        /// 使用最后一次使用过的数据提供程序重新加载数据。
+        /// </summary>
+        /// <param name="changedCallback">数据加载返回后的回调函数</param>
         public void ReloadDataAsync(Action changedCallback)
         {
             if (this._dataProvider.DataProducer == null)
@@ -129,14 +149,19 @@ namespace OEA.Module.WPF
             }
             else
             {
-                this.LoadDataAsync(this._dataProvider.DataProducer, changedCallback);
+                this.LoadDataAsync(this._dataProvider.DataProducer as Func<IEntityOrList>, changedCallback);
             }
         }
 
+        /// <summary>
+        /// 如果当前正在数据加载中，则可以使用本方法来取消数据加载过程。
+        /// </summary>
         public void CancelLoading()
         {
             this._dataProvider.CancelAsync();
         }
+
+        #endregion
 
         /// <summary>
         /// 重新绑定View的数据
@@ -169,6 +194,11 @@ namespace OEA.Module.WPF
 
                 this.OnDataChanged(EventArgs.Empty);
             }
+        }
+
+        ObjectView IAsyncDataLoader.View
+        {
+            get { return this._view; }
         }
     }
 }

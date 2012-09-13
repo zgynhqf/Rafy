@@ -121,7 +121,7 @@ namespace OEA.RBAC
             }
             else
             {
-                View.RemoveWPFCommands(WPFCommandNames.Add, WPFCommandNames.Edit)
+                View.RemoveWPFCommands(WPFCommandNames.PopupAdd, WPFCommandNames.Edit)
                     .UseWPFCommands("RBAC.ChooseUserCommand");
             }
 

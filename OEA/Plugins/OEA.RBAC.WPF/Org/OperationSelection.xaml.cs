@@ -49,6 +49,8 @@ namespace RBAC
         /// </summary>
         private OrgPositionOperationDenyList _denyList;
 
+        private bool _isBinding;
+
         public OperationSelection()
         {
             InitializeComponent();
@@ -62,14 +64,14 @@ namespace RBAC
             this._naviModulesView = AutoUI.ViewFactory.CreateListObjectView(typeof(ModuleAC));
             this._naviModulesView.DataLoader.LoadDataAsync();
             //this._naviModulesView.Control.Loaded += (o, e) => this._naviModulesView.ExpandAll();
-            this._naviModulesView.CurrentObjectChanged += new EventHandler(_naviModulesView_CurrentObjectChanged);
+            this._naviModulesView.CurrentObjectChanged += _naviModulesView_CurrentObjectChanged;
             this._naviModulesView.IsReadOnly = true;
             navigation.Content = this._naviModulesView.Control;
 
             //右边的结果列表
             this._opertaionsView = AutoUI.ViewFactory.CreateListObjectView(typeof(OperationAC));
             this._opertaionsView.CheckingMode = CheckingMode.CheckingRow;
-            this._opertaionsView.CurrentObjectChanged += _opertaionsView_CurrentObjectChanged;
+            this._opertaionsView.CheckChanged += _opertaionsView_CheckChanged;
             result.Child = this._opertaionsView.Control;
         }
 
@@ -85,12 +87,19 @@ namespace RBAC
             this._naviModulesView.CollapseAll();
         }
 
-        public void BindData(OrgPositionOperationDenyList denyList)
+        internal void BindData(OrgPositionOperationDenyList denyList)
         {
             this._denyList = denyList;
+
+            this.BindOperations();
         }
 
         #endregion
+
+        private bool IsDataBound
+        {
+            get { return this._denyList != null; }
+        }
 
         /// <summary>
         /// 左边导航面板选择时，变更右边的功能列表
@@ -107,16 +116,19 @@ namespace RBAC
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void _opertaionsView_CurrentObjectChanged(object sender, EventArgs e)
+        private void _opertaionsView_CheckChanged(object sender, CheckChangedEventArgs e)
         {
             this.SyncUnderlyModel();
         }
 
+        /// <summary>
+        /// 界面绑定
+        /// </summary>
         private void BindOperations()
         {
-            var curModule = this._naviModulesView.Current.CastTo<ModuleAC>();
+            var curModule = this._naviModulesView.Current as ModuleAC;
 
-            if (!this.IsDataBound || !curModule.Core.HasUI)
+            if (!this.IsDataBound || curModule == null || !curModule.Core.HasUI)
             {
                 this._opertaionsView.Data = null;
                 return;
@@ -137,7 +149,7 @@ namespace RBAC
         {
             try
             {
-                this._firedByUser = false;
+                this._isBinding = true;
 
                 this._opertaionsView.SelectAll();
 
@@ -157,11 +169,9 @@ namespace RBAC
             }
             finally
             {
-                this._firedByUser = true;
+                this._isBinding = false;
             }
         }
-
-        private bool _firedByUser = true;
 
         /// <summary>
         /// 根据当前的功能列表选择项，更改底层的数据列表。
@@ -169,7 +179,7 @@ namespace RBAC
         private void SyncUnderlyModel()
         {
             var curModule = this._naviModulesView.Current as ModuleAC;
-            if (!this.IsDataBound || !this._firedByUser || curModule == null) { return; }
+            if (!this.IsDataBound || this._isBinding || curModule == null) { return; }
 
             //清空当前模块在 denyList 中的数据
             var moduleKey = curModule.KeyLabel;
@@ -193,11 +203,6 @@ namespace RBAC
 
                 this._denyList.Add(deny);
             }
-        }
-
-        private bool IsDataBound
-        {
-            get { return this._denyList != null; }
         }
     }
 }

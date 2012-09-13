@@ -12,29 +12,4 @@ namespace OEA
     {
         Client, WPFServer, LocalVersion, WebServer
     }
-
-    public static class OEALocationExtension
-    {
-        /// <summary>
-        /// 判断是否在服务端
-        /// 
-        /// 单机版，同样返回true。
-        /// </summary>
-        /// <returns></returns>
-        public static bool IsOnServer(this OEALocation l)
-        {
-            return l != OEALocation.Client;
-        }
-
-        /// <summary>
-        /// 判断是否在客户端
-        /// 
-        /// 单机版，同样返回true。
-        /// </summary>
-        /// <returns></returns>
-        public static bool IsOnClient(this OEALocation l)
-        {
-            return l == OEALocation.Client || l == OEALocation.LocalVersion;
-        }
-    }
 }

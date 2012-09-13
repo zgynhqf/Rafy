@@ -71,8 +71,6 @@ namespace OEA.Module.WPF.Editors
 
         protected override void PrepareElementForEditCore(FrameworkElement editingElement, RoutedEventArgs editingEventArgs)
         {
-            base.PrepareElementForEditCore(editingElement, editingEventArgs);
-
             this._tb.Focus();
         }
 

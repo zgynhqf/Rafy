@@ -25,6 +25,7 @@ using OEA.MetaModel;
 using OEA.MetaModel.View;
 using OEA.Library;
 using OEA.ManagedProperty;
+using OEA.Library.Validation;
 
 namespace OEA.Module.WPF
 {
@@ -168,17 +169,22 @@ namespace OEA.Module.WPF
             RoutedViewEvent.Register(typeof(DetailObjectView), RoutedEventType.ToParent);
 
         /// <summary>
-        /// 属性更改时，更新子视图的值
+        /// 子类重写此方法实现当前对象属性变更处理逻辑。
+        /// 
+        /// 默认逻辑：聚合子属性更改时，更新聚合子视图的数据。
         /// </summary>
         /// <param name="e"></param>
         protected virtual void OnCurrentObjectPropertyChanged(PropertyChangedEventArgs e)
         {
-            //当前属性是明细时,如果更改了属性值,则需要自动刷新细表
+            //当前属性是聚合子属性变更时，则需要自动刷新聚合子视图数据。
             foreach (var view in this.ChildrenViews)
             {
                 if (view.PropertyName == e.PropertyName)
                 {
+                    //先清空属性，
+                    view.Data = null;
                     view.LoadDataFromParent();
+                    break;
                 }
             }
 
@@ -197,6 +203,59 @@ namespace OEA.Module.WPF
         public IList<IPropertyEditor> PropertyEditors
         {
             get { return this._editors.AsReadOnly(); }
+        }
+
+        /// <summary>
+        /// 焦点定位到指定的属性编辑器
+        /// </summary>
+        /// <param name="mp"></param>
+        public void FocusToEditor(IManagedProperty property)
+        {
+            var editor = this.FindPropertyEditor(property);
+            if (editor != null)
+            {
+                var editorControl = editor.Control as FrameworkElement;
+
+                //如果有页签，则定位到某指定的页签后再定位焦点。
+                var tabControl = this.Control.GetVisualChild<TabControl>();
+                if (tabControl != null)
+                {
+                    //找到编辑器对应的 TabItem，设置为选中状态，然后焦点选中。
+                    //方法：编辑器的可视根元素应该与 TabItem 的 Content 属性一致。
+                    var editorRoot = editorControl.GetVisualRoot();
+                    var tabItem = tabControl.Items.Cast<TabItem>().FirstOrDefault(i => i.Content == editorRoot);
+                    if (tabItem != null)
+                    {
+                        tabItem.IsSelected = true;
+                        tabItem.ListenLayoutUpdatedOnce((o, e) => { editorControl.Focus(); });
+                    }
+
+                    #region //代码暂留
+
+                    //通过 DetailGroupName 与 TabItem.Header 对比来查找 TabItem
+                    //var header = item.Header;
+                    //while (header is ContentControl)
+                    //{
+                    //    header = (header as ContentControl).Content;
+                    //}
+
+                    //if (header is string)
+                    //{
+                    //    var strHeader = header as string;
+                    //    if (property.DetailGroupName == strHeader)
+                    //    {
+                    //        item.IsSelected = true;
+                    //        break;
+                    //    }
+                    //} 
+
+                    #endregion
+                }
+                else
+                {
+                    editorControl.Focus();
+                }
+            }
         }
 
         /// <summary>
@@ -232,5 +291,10 @@ namespace OEA.Module.WPF
         }
 
         #endregion
+
+        protected override void RefreshControlCore()
+        {
+            //详细面板（表单）暂时不支持刷新控件。
+        }
     }
 }

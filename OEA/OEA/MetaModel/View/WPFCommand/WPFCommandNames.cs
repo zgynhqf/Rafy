@@ -12,6 +12,9 @@ namespace OEA.MetaModel.View
     {
         public static Type CustomizeUI;
         public static Type FireQuery;
+        public static Type RefreshDataSourceInRDLC;
+        public static Type ShowReportData;
+
         public static Type PopupAdd;
         public static Type Add;
         public static Type SaveBill;

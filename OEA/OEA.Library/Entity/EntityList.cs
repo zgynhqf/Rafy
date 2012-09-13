@@ -16,9 +16,9 @@
 using System;
 using System.Linq;
 using System.Diagnostics;
-
 using OEA.Library.Caching;
 using OEA.MetaModel;
+using System.ComponentModel;
 
 namespace OEA.Library
 {
@@ -140,22 +140,38 @@ namespace OEA.Library
                 if (this.Contains(item)) throw new InvalidOperationException("当前列表中已经存在这个实体，添加操作不可用。");
             }
 
-            var needParent = item != null && !this.SupressSetItemParent;
-            if (needParent) { item.CastTo<IEntityOrList>().SetParent(this); }
-
-            base.InsertItem(index, item);
-            if (item.IsDeleted)
+            bool oldRaiseListChangedEvents = this.RaiseListChangedEvents;
+            try
             {
-                item.RevertDeleted();
-                this._deletedList.Remove(item);
+                this.RaiseListChangedEvents = false;
+
+                var needParent = item != null && !this.SupressSetItemParent;
+                if (needParent) { item.CastTo<IEntityOrList>().SetParent(this); }
+
+                base.InsertItem(index, item);
+
+                if (item.IsDeleted)
+                {
+                    item.RevertDeleted();
+                    this._deletedList.Remove(item);
+                }
+
+                if (needParent && this.HasManyType == HasManyType.Composition)
+                {
+                    item.SetParentEntity(this.Parent);
+                }
+
+                if (this.SupportTree) { this.OnTreeItemInserted(index, item); }
+            }
+            finally
+            {
+                this.RaiseListChangedEvents = oldRaiseListChangedEvents;
             }
 
-            if (needParent && this.HasManyType == HasManyType.Composition)
+            if (this.RaiseListChangedEvents)
             {
-                item.SetParentEntity(this.Parent);
+                this.OnListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, index));
             }
-
-            if (this.SupportTree) { this.OnTreeItemInserted(index, item); }
         }
 
         public Type EntityType
@@ -209,42 +225,46 @@ namespace OEA.Library
             this.RaiseListChangedEvents = false;
             try
             {
-                var deletedNodes = this.DeletedList.ToArray();
-                //父结点肯定要在子结点的前面
-                //暂时不起作用，等等GBusinessListBase.RemoveItem方法重构后生效
-                //for (int i = 0, c = deletedNodes.Length; i < c; i++)
-                //{
-                //    var item = deletedNodes[i];
-                //    var pid = item.Pid;
-                //    if (pid != null)
-                //    {
-                //        for (int j = i + 1; j < c; j++)
-                //        {
-                //            var parent = deletedNodes[j];
-                //            if (parent.Id == pid)
-                //            {
-                //                deletedNodes[i] = parent;
-                //                deletedNodes[j] = item;
-                //                break;
-                //            }
-                //        }
-                //    }
-                //}
-
-                ////先从后面的子结点删除起。
-                //for (int i = deletedNodes.Length - 1; i >= 0; i--)
-                //{
-                //    var child = deletedNodes[i];
-                //    DataPortal.UpdateChild(child, parameters);
-                //}
-
-                for (int i = 0, c = deletedNodes.Length; i < c; i++)
+                var deletedList = this.DeletedList;
+                if (deletedList.Count > 0)
                 {
-                    var child = deletedNodes[i];
-                    child.SaveChild(parent);
-                }
+                    var deletedNodes = deletedList.ToArray();
+                    //父结点肯定要在子结点的前面
+                    //暂时不起作用，等等GBusinessListBase.RemoveItem方法重构后生效
+                    //for (int i = 0, c = deletedNodes.Length; i < c; i++)
+                    //{
+                    //    var item = deletedNodes[i];
+                    //    var pid = item.Pid;
+                    //    if (pid != null)
+                    //    {
+                    //        for (int j = i + 1; j < c; j++)
+                    //        {
+                    //            var parent = deletedNodes[j];
+                    //            if (parent.Id == pid)
+                    //            {
+                    //                deletedNodes[i] = parent;
+                    //                deletedNodes[j] = item;
+                    //                break;
+                    //            }
+                    //        }
+                    //    }
+                    //}
 
-                this.DeletedList.Clear();
+                    ////先从后面的子结点删除起。
+                    //for (int i = deletedNodes.Length - 1; i >= 0; i--)
+                    //{
+                    //    var child = deletedNodes[i];
+                    //    DataPortal.UpdateChild(child, parameters);
+                    //}
+
+                    for (int i = 0, c = deletedNodes.Length; i < c; i++)
+                    {
+                        var child = deletedNodes[i];
+                        child.SaveChild(parent);
+                    }
+
+                    deletedList.Clear();
+                }
 
                 for (int i = 0, c = this.Count; i < c; i++)
                 {

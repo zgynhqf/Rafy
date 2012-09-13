@@ -37,10 +37,10 @@ namespace OEAUnitTest
         [ClassInitialize]
         public static void DbMigrationTest_ClassInitialize(TestContext context)
         {
-            ClassInitialize(context, false);
+            ClassInitialize(context, true);
 
             //运行测试前，这个库升级到最新的内容，同时它的历史记录需要清空
-            using (var c = new OEADbMigrationContext(UnitTestEntity.ConnectionString))
+            using (var c = new OEADbMigrationContext(UnitTestEntity.DbSetting))
             {
                 //c.DeleteDatabase();
 
@@ -54,7 +54,7 @@ namespace OEAUnitTest
         [TestMethod]
         public void DMT_AutoMigrate()
         {
-            using (var c = new OEADbMigrationContext(UnitTestEntity.ConnectionString))
+            using (var c = new OEADbMigrationContext(UnitTestEntity.DbSetting))
             {
                 c.AutoMigrate();
             };
@@ -63,7 +63,7 @@ namespace OEAUnitTest
         [TestMethod]
         public void DMT_RollbackAll()
         {
-            using (var context = new OEADbMigrationContext(UnitTestEntity.ConnectionString))
+            using (var context = new OEADbMigrationContext(UnitTestEntity.DbSetting))
             {
                 context.RollbackAll(RollbackAction.DeleteHistory);
 
@@ -199,7 +199,7 @@ namespace OEAUnitTest
 
         private void Test(Action<Database> action, Action<Database> assertAction)
         {
-            using (var context = new OEADbMigrationContext(UnitTestEntity.ConnectionString))
+            using (var context = new OEADbMigrationContext(UnitTestEntity.DbSetting))
             {
                 var destination = context.ClassMetaReader.Read();
                 action(destination);
@@ -221,7 +221,7 @@ namespace OEAUnitTest
         [TestMethod]
         public void DMT_DataLoss_DropTable()
         {
-            using (var context = new OEADbMigrationContext(UnitTestEntity.ConnectionString))
+            using (var context = new OEADbMigrationContext(UnitTestEntity.DbSetting))
             {
                 context.IgnoreDataLoss = false;
 
@@ -243,7 +243,7 @@ namespace OEAUnitTest
         [TestMethod]
         public void DMT_DataLoss_DropColumn()
         {
-            using (var context = new OEADbMigrationContext(UnitTestEntity.ConnectionString))
+            using (var context = new OEADbMigrationContext(UnitTestEntity.DbSetting))
             {
                 context.IgnoreDataLoss = false;
 
@@ -265,7 +265,7 @@ namespace OEAUnitTest
         [TestMethod]
         public void DMT_ManualMigrate()
         {
-            using (var context = new OEADbMigrationContext(UnitTestEntity.ConnectionString))
+            using (var context = new OEADbMigrationContext(UnitTestEntity.DbSetting))
             {
                 try
                 {
@@ -291,13 +291,13 @@ namespace OEAUnitTest
                     Assert.IsTrue(pk.DataType == DbType.Int32);
 
                     //数据库数据
-                    using (var db = new DBAccesser(UnitTestEntity.ConnectionString))
+                    using (var db = new DBAccesser(UnitTestEntity.DbSetting))
                     {
                         var rows = db.QueryDataTable("select * from TestingTable", CommandType.Text);
                         AssertIsTrue(rows.Rows.Count == 2);
                     }
                     var repo = RF.Create<TestUser>();
-                    AssertIsTrue(repo.GetAll().Count == 10);
+                    AssertIsTrue(repo.CountAll() == 10);
                 }
                 finally
                 {
@@ -316,7 +316,7 @@ namespace OEAUnitTest
         {
             public override string DbSetting
             {
-                get { return UnitTestEntity.ConnectionString; }
+                get { return UnitTestEntity.DbSetting; }
             }
 
             protected override void Up()
@@ -324,8 +324,8 @@ namespace OEAUnitTest
                 this.CreateTable("TestingTable", "Id", DbType.Int32);
                 this.CreateNormalColumn("TestingTable", "Name", DbType.String);
 
-                this.RunSql("insert into [TestingTable] values('TestingName1')");
-                this.RunSql("insert into [TestingTable] values('TestingName2')");
+                this.RunSql("insert into [TestingTable] (Name) values('TestingName1')");
+                this.RunSql("insert into [TestingTable] (Name) values('TestingName2')");
             }
 
             protected override void Down()
@@ -361,7 +361,7 @@ namespace OEAUnitTest
         {
             public override string DbSetting
             {
-                get { return UnitTestEntity.ConnectionString; }
+                get { return UnitTestEntity.DbSetting; }
             }
 
             protected override void Up()

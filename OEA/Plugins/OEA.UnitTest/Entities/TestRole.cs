@@ -64,6 +64,13 @@ namespace OEA.Library._Test
             get { return GetProperty(NameProperty); }
             set { SetProperty(NameProperty, value); }
         }
+
+        public static readonly Property<RoleType> RoleTypeProperty = P<TestRole>.Register(e => e.RoleType, RoleType.Normal);
+        public RoleType RoleType
+        {
+            get { return this.GetProperty(RoleTypeProperty); }
+            set { this.SetProperty(RoleTypeProperty, value); }
+        }
     }
 
     [Serializable]

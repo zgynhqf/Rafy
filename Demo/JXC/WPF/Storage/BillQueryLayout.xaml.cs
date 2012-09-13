@@ -31,7 +31,7 @@ namespace JXC.WPF
             {
                 queryResult.Items.Add(new TabItem
                 {
-                    Header = ui.MainView.Meta.Label,
+                    Header = ui.Blocks.MainBlock.KeyLabel,
                     Content = ui.Control
                 });
             }

@@ -15,7 +15,7 @@ namespace OEA.Library._Test
     [CompiledPropertyDeclarer]
     public class TestUserExt
     {
-        public static ManagedProperty<string> UserCodeProperty = P<TestUser>.RegisterExtension("UserCode", null, "DefaultUserCode");
+        public static ManagedProperty<string> UserCodeProperty = P<TestUser>.RegisterExtension("UserCode", typeof(TestUserExt), "DefaultUserCode");
         public static string GetUserCode(TestUser entity)
         {
             return entity.GetProperty(UserCodeProperty);

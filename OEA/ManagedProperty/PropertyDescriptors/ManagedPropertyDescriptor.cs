@@ -27,10 +27,15 @@ namespace OEA.ManagedProperty
     {
         private IManagedProperty _property;
 
-        internal ManagedPropertyDescriptor(IManagedProperty property)
+        internal protected ManagedPropertyDescriptor(IManagedProperty property)
             : base(property.Name, null)
         {
             this._property = property;
+        }
+
+        public IManagedProperty Property
+        {
+            get { return _property; }
         }
 
         public override void AddValueChanged(object component, EventHandler handler)
@@ -75,8 +80,7 @@ namespace OEA.ManagedProperty
 
         public override void SetValue(object component, object value)
         {
-            //使用 ManagedPropertyDescriptor 来进行操作属性时，默认都是作为 UI 层操作。
-            (component as ManagedPropertyObject).SetProperty(this._property, value, ManagedPropertyChangedSource.FromUIOperating);
+            (component as ManagedPropertyObject).SetProperty(this._property, value);
         }
 
         public void SetValue(object component, object value, ManagedPropertyChangedSource source)

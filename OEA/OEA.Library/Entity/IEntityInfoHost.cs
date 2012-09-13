@@ -13,15 +13,20 @@ namespace OEA.Library
     public interface IEntityInfoHost
     {
         /// <summary>
-        /// 获取所有的静态的托管属性标记器。
+        /// 实体属性容器
         /// </summary>
-        /// <returns></returns>
-        IList<IManagedProperty> GetAvailableIndicators();
+        ConsolidatedTypePropertiesContainer PropertiesContainer { get; }
 
         /// <summary>
         /// 实体元数据
         /// </summary>
         EntityMeta EntityMeta { get; }
+
+        /// <summary>
+        /// 所有本实体中所有声明的冗余属性。
+        /// </summary>
+        /// <returns></returns>
+        IList<IProperty> GetPropertiesInRedundancyPath();
 
         /// <summary>
         /// 找到本对象上层父聚合对象的外键

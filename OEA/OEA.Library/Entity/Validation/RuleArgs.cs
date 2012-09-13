@@ -98,7 +98,7 @@ namespace OEA.Library.Validation
             var ownerType = this.Property.OwnerType;
             if (safeView == null || safeView.EntityType != ownerType)
             {
-                safeView = UIModel.Views.CreateDefaultView(ownerType);
+                safeView = UIModel.Views.CreateBaseView(ownerType);
                 _lastViewMeta = safeView;
             }
 

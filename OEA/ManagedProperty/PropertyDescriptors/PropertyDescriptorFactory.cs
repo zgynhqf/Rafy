@@ -20,31 +20,33 @@ using System.ComponentModel;
 namespace OEA.ManagedProperty
 {
     /// <summary>
-    /// ManagedPropertyObject 的 PropertyDescriptor 容器
+    /// ManagedPropertyObject 的 PropertyDescriptor 工厂
     /// </summary>
-    internal static class PropertyDescriptorFactory
+    public class PropertyDescriptorFactory
     {
-        private static Dictionary<ConsolidatedTypePropertiesContainer, PropertyDescriptorCollection> _allProperties = new Dictionary<ConsolidatedTypePropertiesContainer, PropertyDescriptorCollection>();
+        /// <summary>
+        /// 当前正在被使用的属性描述器工厂
+        /// </summary>
+        public static PropertyDescriptorFactory Current = new PropertyDescriptorFactory();
 
-        internal static PropertyDescriptorCollection GetProperties(ManagedPropertyObject managedObj)
+        internal PropertyDescriptorCollection GetProperties(ConsolidatedTypePropertiesContainer container)
         {
-            PropertyDescriptorCollection result = null;
+            var result = container.PropertyDescriptors;
 
-            var typePropertiesContainer = managedObj.PropertiesContainer;
-            if (!_allProperties.TryGetValue(typePropertiesContainer, out result))
+            if (container.PropertyDescriptors == null)
             {
-                lock (_allProperties)
+                lock (this)
                 {
-                    if (!_allProperties.TryGetValue(typePropertiesContainer, out result))
+                    if (container.PropertyDescriptors == null)
                     {
-                        result = FindProperties(managedObj);
+                        result = CreateDescriptors(container);
 
-                        //添加到集合中。
-                        _allProperties.Add(typePropertiesContainer, result);
+                        //缓存到 container 上。
+                        container.PropertyDescriptors = result;
 
                         //当动态属性变化时，PropertyDescriptorCollection 也不可用。
-                        typePropertiesContainer.RuntimePropertiesChanged -= typePropertiesContainer_RuntimePropertiesChanged;
-                        typePropertiesContainer.RuntimePropertiesChanged += typePropertiesContainer_RuntimePropertiesChanged;
+                        container.RuntimePropertiesChanged -= typePropertiesContainer_RuntimePropertiesChanged;
+                        container.RuntimePropertiesChanged += typePropertiesContainer_RuntimePropertiesChanged;
                     }
                 }
             }
@@ -52,16 +54,16 @@ namespace OEA.ManagedProperty
             return result;
         }
 
-        private static PropertyDescriptorCollection FindProperties(ManagedPropertyObject managedObj)
+        private PropertyDescriptorCollection CreateDescriptors(ConsolidatedTypePropertiesContainer container)
         {
             //加入 ManagedProperty
-            var mpList = managedObj.PropertiesContainer.GetAvailableProperties();
-            var pdList = mpList.Select(mp => new ManagedPropertyDescriptor(mp) as PropertyDescriptor).ToList();
+            var mpList = container.GetAvailableProperties();
+            var pdList = mpList.Select(mp => this.CreateDescriptor(mp)).ToList();
 
             //加入 CLRProperty
             //为了兼容一些直接使用 CLR 属性而没有使用托管属性编写的视图属性。
-            var clr = managedObj.GetType().GetProperties();
-            foreach (var clrProperty in clr)
+            var clrProperties = container.OwnerType.GetProperties();
+            foreach (var clrProperty in clrProperties)
             {
                 if (mpList.All(mp => mp.Name != clrProperty.Name))
                 {
@@ -72,10 +74,20 @@ namespace OEA.ManagedProperty
             return new PropertyDescriptorCollection(pdList.ToArray());
         }
 
-        private static void typePropertiesContainer_RuntimePropertiesChanged(object sender, EventArgs e)
+        private void typePropertiesContainer_RuntimePropertiesChanged(object sender, EventArgs e)
         {
-            var typePropertiesContainer = sender as ConsolidatedTypePropertiesContainer;
-            _allProperties.Remove(typePropertiesContainer);
+            var container = sender as ConsolidatedTypePropertiesContainer;
+            container.PropertyDescriptors = null;
+        }
+
+        /// <summary>
+        /// 子类重写此方法实现新的扩展属性描述器的生成。
+        /// </summary>
+        /// <param name="mp"></param>
+        /// <returns></returns>
+        protected virtual PropertyDescriptor CreateDescriptor(IManagedProperty mp)
+        {
+            return new ManagedPropertyDescriptor(mp);
         }
     }
 }

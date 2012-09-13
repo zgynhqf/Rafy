@@ -161,17 +161,11 @@ namespace OEA.MetaModel.View
                 propertySource.MP != null && propertySource.MP.IsReadOnly ||
                 runtimeProperty.Name == DBConvention.FieldName_TreeCode);
 
-            #region 创建 ReferenceViewInfo
-
-            var ri = item.PropertyMeta.ReferenceInfo;
-
-            //如果是引用实体的属性
-            if (ri != null)
+            //如果是引用实体的属性，创建 SelectionViewMeta
+            if (item.IsReference)
             {
-                item.ReferenceViewInfo = new ReferenceViewInfo { ReferenceInfo = ri };
+                item.SelectionViewMeta = new SelectionViewMeta();
             }
-
-            #endregion
 
             evm.EntityProperties.Add(item);
 

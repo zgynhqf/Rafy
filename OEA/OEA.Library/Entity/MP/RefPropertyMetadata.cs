@@ -29,7 +29,7 @@ namespace OEA.Library
         /// <summary>
         /// 是否需要序列化实体
         /// </summary>
-        bool SerializeEntity { get; }
+        bool? SerializeEntity { get; }
 
         /// <summary>
         /// 是否通知引用实体变更
@@ -91,7 +91,7 @@ namespace OEA.Library
             get { return this.Core.ReferenceType; }
         }
 
-        bool IRefPropertyMetadata.SerializeEntity
+        bool? IRefPropertyMetadata.SerializeEntity
         {
             get { return this.Core.SerializeEntity; }
         }
@@ -132,7 +132,6 @@ namespace OEA.Library
         public RefPropertyMeta()
         {
             this.ReferenceType = ReferenceType.Normal;
-            this.SerializeEntity = true;
             this.NotifyRefEntityChanged = true;
         }
 
@@ -173,8 +172,14 @@ namespace OEA.Library
 
         /// <summary>
         /// 是否需要序列化引用实体
+        /// 
+        /// 如果不设置任何值，默认情况下：引用实体对象只会从服务端序列化到客户端。从客户端传输到服务端时，不会序列化。
+        /// （
+        /// 这是因为服务端可以简单地查询出所有的数据，而不需要客户端传输过来。
+        /// 客户端如何需要把多个实体一同传输到服务端时，应该使用服务把多个实体同时设置为服务的输入。
+        /// ）
         /// </summary>
-        public bool SerializeEntity { get; set; }
+        public bool? SerializeEntity { get; set; }
 
         /// <summary>
         /// 是否通知引用实体变更

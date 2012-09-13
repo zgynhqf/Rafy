@@ -14,7 +14,7 @@ namespace OEA.Utils
     public class EnumViewModel
     {
         /// <summary>
-        /// 
+        /// 构造函数
         /// </summary>
         /// <param name="value">枚举值</param>
         public EnumViewModel(Enum value)
@@ -40,7 +40,7 @@ namespace OEA.Utils
         public string Label { get; private set; }
 
         /// <summary>
-        /// EnumTreeColumn 和其它地方中使用了这个方法来对比实体。
+        /// EnumPropertyEditor 和其它地方中使用了这个方法来对比实体。
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
@@ -91,7 +91,7 @@ namespace OEA.Utils
         /// 把 Label 解析为目标枚举类型中对应的枚举值。
         /// </summary>
         /// <param name="str"></param>
-        /// <param name="enumType"></param>
+        /// <param name="enumType">枚举类型（不接受可空类型）</param>
         /// <returns></returns>
         public static object LabelToEnum(string str, Type enumType)
         {

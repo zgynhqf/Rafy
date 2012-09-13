@@ -79,7 +79,7 @@ namespace OEA.Web.EntityDataPortal
                         //同时写入引用属性的视图属性，如 BookCategoryId_Label
                         if (id.HasValue && propertyVM.CanShowIn(ShowInWhere.List))
                         {
-                            var titleProperty = propertyVM.ReferenceViewInfo.RefTypeDefaultView.TitleProperty;
+                            var titleProperty = propertyVM.SelectionViewMeta.RefTypeDefaultView.TitleProperty;
                             if (titleProperty != null)
                             {
                                 var lazyRefEntity = lazyRef.Entity;

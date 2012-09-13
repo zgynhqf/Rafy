@@ -165,7 +165,7 @@ namespace OEA.Library.Caching
     {
         protected override void ConfigMeta()
         {
-            Meta.MapTable().MapProperties(
+            Meta.MapTable("CacheScopedVersions").MapProperties(
                 ScopeVersion.ClassRegionProperty,
                 ScopeVersion.ScopeClassProperty,
                 ScopeVersion.ScopeIdProperty,

@@ -48,7 +48,7 @@ namespace OEA.Module.WPF
             //如果是个列表，并且没有导航面板，则默认开始查询数据
             var listView = ui.MainView as ListObjectView;
             if (listView != null &&
-                listView.CondtionQueryView == null &&
+                listView.ConditionQueryView == null &&
                 listView.NavigationQueryView == null
                 )
             {

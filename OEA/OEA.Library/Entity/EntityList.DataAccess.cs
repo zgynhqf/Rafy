@@ -67,7 +67,8 @@ namespace OEA.Library
         /// 使用 sql 语句加载对象
         /// </summary>
         /// <param name="sql"></param>
-        protected void QueryDb(SqlWriter sql)
+        /// <param name="filter">对查询出来的对象进行内存级别的过滤器，默认为 null</param>
+        protected void QueryDb(SqlWriter sql, Predicate<Entity> filter = null)
         {
             this.RaiseListChangedEvents = false;
             try
@@ -76,7 +77,8 @@ namespace OEA.Library
 
                 using (var db = this.CreateDb())
                 {
-                    db.Select(this.EntityType, this, formatSql, sql.Parameters.ToArray());
+                    var list = filter == null ? this as ICollection<Entity> : new FilteredList(this, filter);
+                    db.Select(this.EntityType, list, formatSql, sql.Parameters);
                 }
             }
             finally
@@ -93,12 +95,26 @@ namespace OEA.Library
         /// </param>
         protected void QueryDb(string formatSql, params object[] parameters)
         {
+            Predicate<Entity> filter = null;
+            this.QueryDb(formatSql, filter, parameters);
+        }
+
+        /// <summary>
+        /// 使用 sql 语句加载对象
+        /// </summary>
+        /// <param name="formatSql">
+        /// 格式化参数的 T-SQL。
+        /// </param>
+        /// <param name="filter">对查询出来的对象进行内存级别的过滤器，默认为 null</param>
+        protected void QueryDb(string formatSql, Predicate<Entity> filter, params object[] parameters)
+        {
             this.RaiseListChangedEvents = false;
             try
             {
                 using (var db = this.CreateDb())
                 {
-                    db.Select(this.EntityType, this, formatSql, parameters);
+                    var list = filter == null ? this as ICollection<Entity> : new FilteredList(this, filter);
+                    db.Select(this.EntityType, list, formatSql, parameters);
                 }
             }
             finally
@@ -111,7 +127,8 @@ namespace OEA.Library
         /// 访问数据库，把指定的实体类 entityType 满足 queryBuider 条件的所有实体查询出来，并直接加到本列表中。
         /// </summary>
         /// <param name="queryBuider">查询构造函数</param>
-        protected void QueryDb(Action<IQuery> queryBuider)
+        /// <param name="filter">对查询出来的对象进行内存级别的过滤器，默认为 null</param>
+        protected void QueryDb(Action<IQuery> queryBuider, Predicate<Entity> filter = null)
         {
             this.RaiseListChangedEvents = false;
             try
@@ -124,7 +141,8 @@ namespace OEA.Library
                     this.OnQueryDbOrder(query);
 
                     //访问数据库
-                    db.Select(query, this);
+                    var list = filter == null ? this as ICollection<Entity> : new FilteredList(this, filter);
+                    db.Select(query, list);
                 }
             }
             finally
@@ -132,6 +150,71 @@ namespace OEA.Library
                 this.RaiseListChangedEvents = true;
             }
         }
+
+        #region private class FilteredList
+
+        private class FilteredList : ICollection<Entity>
+        {
+            private ICollection<Entity> _innerList;
+
+            private Predicate<Entity> _filter;
+
+            public FilteredList(ICollection<Entity> innerList, Predicate<Entity> filter)
+            {
+                this._innerList = innerList;
+                this._filter = filter;
+            }
+
+            public void Add(Entity item)
+            {
+                if (this._filter == null || this._filter(item))
+                {
+                    this._innerList.Add(item);
+                }
+            }
+
+            public void Clear()
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool Contains(Entity item)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void CopyTo(Entity[] array, int arrayIndex)
+            {
+                throw new NotImplementedException();
+            }
+
+            public int Count
+            {
+                get { throw new NotImplementedException(); }
+            }
+
+            public bool IsReadOnly
+            {
+                get { throw new NotImplementedException(); }
+            }
+
+            public bool Remove(Entity item)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IEnumerator<Entity> GetEnumerator()
+            {
+                throw new NotImplementedException();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        #endregion
 
         protected virtual void OnQueryDbOrder(IQuery query)
         {
@@ -150,7 +233,7 @@ namespace OEA.Library
         {
             this.QueryDb(q =>
             {
-                var allProperties = this.GetRepository().GetAvailableIndicators();
+                var allProperties = this.GetRepository().PropertiesContainer.GetNonReadOnlyCompiledProperties();
 
                 var first = true;
                 foreach (var kv in criteria.Values)

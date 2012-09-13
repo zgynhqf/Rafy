@@ -9,13 +9,13 @@ namespace OEA.Library._Test
     [Serializable]
     public abstract class UnitTestEntity : Entity
     {
-        public const string ConnectionString = "OEAUnitTest";
+        public const string DbSetting = "OEAUnitTest";
 
         protected UnitTestEntity() { }
 
         protected override string ConnectionStringSettingName
         {
-            get { return ConnectionString; }
+            get { return DbSetting; }
         }
     }
 }

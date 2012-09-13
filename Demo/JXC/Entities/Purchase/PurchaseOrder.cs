@@ -42,6 +42,21 @@ namespace JXC
             get { return this.GetRefEntity(SupplierRefProperty); }
             set { this.SetRefEntity(SupplierRefProperty, value); }
         }
+
+        public static readonly Property<string> SupplierNameProperty = P<PurchaseOrder>.RegisterRedundancy(e => e.SupplierName,
+            new RedundantPath(SupplierRefProperty, ClientInfo.NameProperty));
+        public string SupplierName
+        {
+            get { return this.GetProperty(SupplierNameProperty); }
+        }
+
+        public static readonly Property<string> SupplierCategoryNameProperty = P<PurchaseOrder>.RegisterRedundancy(e => e.SupplierCategoryName,
+            new RedundantPath(SupplierRefProperty, ClientInfo.ClientCategoryRefProperty, ClientCategory.NameProperty));
+        public string SupplierCategoryName
+        {
+            get { return this.GetProperty(SupplierCategoryNameProperty); }
+        }
+
         public static readonly Property<ClientInfoList> SupplierDataSourceProperty = P<PurchaseOrder>.RegisterReadOnly(e => e.SupplierDataSource, e => (e as PurchaseOrder).GetSupplierDataSource());
         public ClientInfoList SupplierDataSource
         {
@@ -273,8 +288,10 @@ namespace JXC
             {
                 View.Property(PurchaseOrder.CodeProperty).HasLabel("订单编号").ShowIn(ShowInWhere.All);
                 View.Property(PurchaseOrder.DateProperty).HasLabel("订单日期").ShowIn(ShowInWhere.ListDetail);
-                View.Property(PurchaseOrder.SupplierRefProperty).HasLabel("供应商").ShowIn(ShowInWhere.ListDetail)
-                    .UseLookupDataSource(PurchaseOrder.SupplierDataSourceProperty);//只下拉获取经销商的信息
+                View.Property(PurchaseOrder.SupplierNameProperty).HasLabel("供应商").ShowIn(ShowInWhere.List);
+                View.Property(PurchaseOrder.SupplierCategoryNameProperty).HasLabel("供应商客户类别").ShowIn(ShowInWhere.List);
+                View.Property(PurchaseOrder.SupplierRefProperty).HasLabel("供应商").ShowIn(ShowInWhere.Detail)
+                    .UseDataSource(EntityDataSources.Suppliers);
                 View.Property(PurchaseOrder.PlanStorageInDateProperty).HasLabel("计划到货日期").ShowIn(ShowInWhere.ListDetail);
                 View.Property(PurchaseOrder.StorageInDirectlyProperty).HasLabel("直接入库").ShowIn(ShowInWhere.Detail);
                 View.Property(PurchaseOrder.TotalMoneyProperty).HasLabel("总金额").ShowIn(ShowInWhere.ListDetail)

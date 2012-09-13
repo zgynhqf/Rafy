@@ -28,18 +28,6 @@ namespace OEA.ORM
     /// </summary>
     public class SqlWriter : StringWriter
     {
-        #region 私有字段
-
-        private Dictionary<Type, DbTable> _tables = new Dictionary<Type, DbTable>();
-
-        private FormatSqlParameter _parameters = new FormatSqlParameter();
-
-        private bool _whereBegin = false;
-
-        private SqlStringAutoConcat _autoConcat = SqlStringAutoConcat.And;
-
-        #endregion
-
         #region 构造器
 
         public SqlWriter() { }
@@ -47,6 +35,25 @@ namespace OEA.ORM
         public SqlWriter(StringBuilder sb) : base(sb) { }
 
         #endregion
+
+        #region 条件
+
+        private Dictionary<Type, DbTable> _tables = new Dictionary<Type, DbTable>();
+
+        private bool _hasWhere = false;
+
+        /// <summary>
+        /// 是否当前 SQL 中已经存在了 Where 关键字。
+        /// 
+        /// 如果没有存在 Where，则会在再次添加条件时，自动添加 Where 关键字。
+        /// </summary>
+        public bool HasWhere
+        {
+            get { return _hasWhere; }
+            set { _hasWhere = value; }
+        }
+
+        private SqlStringAutoConcat _autoConcat = SqlStringAutoConcat.And;
 
         /// <summary>
         /// 自动添加的连接符。
@@ -58,14 +65,6 @@ namespace OEA.ORM
             set { this._autoConcat = value; }
         }
 
-        /// <summary>
-        /// 当前可用的参数
-        /// </summary>
-        public FormatSqlParameter Parameters
-        {
-            get { return this._parameters; }
-        }
-
         public void AddTables(params Type[] entityTypes)
         {
             foreach (var type in entityTypes)
@@ -75,9 +74,16 @@ namespace OEA.ORM
             }
         }
 
-        public void StartWhere()
+        public SqlWriter WriteAnd()
         {
-            this._whereBegin = false;
+            this.Write(" AND ");
+            return this;
+        }
+
+        public SqlWriter WriteOr()
+        {
+            this.Write(" OR ");
+            return this;
         }
 
         public void WriteEqual(IManagedProperty property, object value)
@@ -149,6 +155,48 @@ namespace OEA.ORM
             this.WriteInCore(property, values, false);
         }
 
+        public void WriteQuoteColumn(IManagedProperty property)
+        {
+            this.BeginConstrain();
+
+            var table = this.FindDbTable(property);
+            var columnName = table.Translate(property);
+
+            this.Write(table.QuoteName);
+            this.Write('.');
+            this.Write(table.Quote(columnName));
+            this.Write(' ');
+
+            //写完一个列，说明本次条件完毕。
+            this._hasWhere = true;
+        }
+
+        /// <summary>
+        /// 添加自定义 Where 语句 Sql
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        public void WriteWhereSql(string sql, params object[] parameters)
+        {
+            this.BeginConstrain();
+
+            if (parameters != null && parameters.Length > 0)
+            {
+                sql = Regex.Replace(sql, @"\{(?<index>\d+)\}", m =>
+                {
+                    var index = Convert.ToInt32(m.Groups["index"].Value);
+                    var value = parameters[index];
+                    index = this._parameters.AddParameter(value);
+                    return "{" + index + "}";
+                });
+            }
+
+            this.Write(sql);
+
+            //写完一个列，说明本次条件完毕。
+            this._hasWhere = true;
+        }
+
         private void WriteInCore(IManagedProperty property, IList values, bool isIn)
         {
             if (values == null) throw new ArgumentNullException("value");
@@ -164,7 +212,7 @@ namespace OEA.ORM
                 foreach (var value in values)
                 {
                     if (!first) this.Write(',');
-                    this._parameters.AddParameter(this, value);
+                    this.WriteParameter(value);
                     first = false;
                 }
             }
@@ -194,51 +242,9 @@ namespace OEA.ORM
             this.Write("NULL");
         }
 
-        public void WriteQuoteColumn(IManagedProperty property)
-        {
-            this.BeginConstrain();
-
-            var table = this.FindDbTable(property);
-            var columnName = table.Translate(property);
-
-            this.Write(table.QuoteName);
-            this.Write('.');
-            this.Write(table.Quote(columnName));
-            this.Write(' ');
-
-            //写完一个列，说明本次条件完毕。
-            this._whereBegin = true;
-        }
-
-        /// <summary>
-        /// 添加自定义 Where 语句 Sql
-        /// </summary>
-        /// <param name="sql"></param>
-        /// <param name="parameters"></param>
-        public void WriteWhereSql(string sql, params object[] parameters)
-        {
-            this.BeginConstrain();
-
-            if (parameters != null && parameters.Length > 0)
-            {
-                sql = Regex.Replace(sql, @"\{(?<index>\d+)\}", m =>
-                {
-                    var index = Convert.ToInt32(m.Groups["index"].Value);
-                    var value = parameters[index];
-                    index = this._parameters.AddParameter(value);
-                    return "{" + index + "}";
-                });
-            }
-
-            this.Write(sql);
-
-            //写完一个列，说明本次条件完毕。
-            this._whereBegin = true;
-        }
-
         private void BeginConstrain()
         {
-            if (this._whereBegin)
+            if (this._hasWhere)
             {
                 switch (this._autoConcat)
                 {
@@ -258,18 +264,6 @@ namespace OEA.ORM
                 this.WriteLine();
                 this.WriteLine("WHERE");
             }
-        }
-
-        public SqlWriter WriteAnd()
-        {
-            this.Write(" AND ");
-            return this;
-        }
-
-        public SqlWriter WriteOr()
-        {
-            this.Write(" OR ");
-            return this;
         }
 
         private DbTable FindDbTable(IManagedProperty property)
@@ -299,12 +293,37 @@ namespace OEA.ORM
             return result;
         }
 
+        #endregion
+
+        #region 参数
+
+        private FormatSqlParameters _parameters = new FormatSqlParameters();
+
+        /// <summary>
+        /// 当前可用的参数
+        /// </summary>
+        public FormatSqlParameters Parameters
+        {
+            get { return this._parameters; }
+        }
+
+        /// <summary>
+        /// 写入一个参数值。
+        /// </summary>
+        /// <param name="value"></param>
+        public void WriteParameter(object value)
+        {
+            this._parameters.AddParameter(this, value);
+        }
+
+        #endregion
+
         /// <summary>
         /// 判断某个值是否非空。
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static bool IsNotNull(object value)
+        internal static bool IsNotNull(object value)
         {
             bool notNull = false;
 
@@ -319,6 +338,79 @@ namespace OEA.ORM
 
             return notNull;
         }
+
+        #region 方便使用的方法、操作符重载等
+
+        public static SqlWriter operator +(SqlWriter a, string b)
+        {
+            a.Write(b);
+            return a;
+        }
+
+        public static implicit operator string(SqlWriter value)
+        {
+            return value.ToString();
+        }
+
+        public static implicit operator SqlWriter(string value)
+        {
+            var writer = new SqlWriter();
+            writer.Write(value);
+            return writer;
+        }
+
+        public static implicit operator SqlWriter(StringBuilder value)
+        {
+            return new SqlWriter(value);
+        }
+
+        public SqlWriter Append(string value)
+        {
+            this.Write(value);
+            return this;
+        }
+
+        public SqlWriter Append(char value)
+        {
+            this.Write(value);
+            return this;
+        }
+
+        public SqlWriter Append(int value)
+        {
+            this.Write(value);
+            return this;
+        }
+
+        public SqlWriter Append(double value)
+        {
+            this.Write(value);
+            return this;
+        }
+
+        public SqlWriter Append(object value)
+        {
+            this.Write(value);
+            return this;
+        }
+
+        public SqlWriter Append(bool value)
+        {
+            this.Write(value);
+            return this;
+        }
+
+        /// <summary>
+        /// 写入一个参数值。
+        /// </summary>
+        /// <param name="value"></param>
+        public SqlWriter AppendParameter(object value)
+        {
+            this.WriteParameter(value);
+            return this;
+        }
+
+        #endregion
     }
 
     public static class SqlWriterExtension

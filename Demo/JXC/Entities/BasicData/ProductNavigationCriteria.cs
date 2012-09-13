@@ -57,7 +57,7 @@ namespace JXC
 
             View.Property(ProductNavigationCriteria.ProductCategoryRefProperty)
                 .HasLabel("商品类别").ShowInDetail(labelSize: 0)
-                .UseEditor(WPFEditorNames.TiledList)
+                .UseEditor(WPFEditorNames.EntitySelection_TiledList)
                 .FireNavigation();
             View.Property(ProductNavigationCriteria.IncludeSubProperty)
                 .HasLabel("包含下级").ShowInDetail()

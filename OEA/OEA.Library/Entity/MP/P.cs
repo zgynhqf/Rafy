@@ -103,6 +103,30 @@ namespace OEA.Library
 
         #endregion
 
+        #region RegisterRedundancy
+
+        /// <summary>
+        /// 注册一个冗余属性
+        /// </summary>
+        /// <typeparam name="TProperty"></typeparam>
+        /// <param name="propertyExp"></param>
+        /// <param name="path">属性冗余的路径</param>
+        /// <returns></returns>
+        public static Property<TProperty> RegisterRedundancy<TProperty>(
+            Expression<Func<TEntity, TProperty>> propertyExp, RedundantPath path)
+        {
+            var property = GetPropertyName(propertyExp);
+
+            var mp = new Property<TProperty>(typeof(TEntity), property, new PropertyMetadata<TProperty>());
+            mp.AsRedundantOf(path);
+
+            ManagedPropertyRepository.Instance.RegisterProperty(mp);
+
+            return mp;
+        }
+
+        #endregion
+
         #region RegisterExtension
 
         public static Property<TProperty> RegisterExtension<TProperty>(string propertyName, Type declareType)

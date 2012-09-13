@@ -92,20 +92,40 @@ namespace OEA.Module.WPF
 
         private void FireQuery(ObjectView resultView)
         {
+            bool localFilter = false;
+
             this.OnQuerying();
 
-            //导航面板的查询使用隐式查询。
-            resultView.DataLoader.LoadDataAsync(
-                () => RF.Create(resultView.EntityType).__GetListImplicitly(this.Current),
-                this.OnQueryCompleted
-                );
+            //如果是本地查询模式，则尝试为 ListObjectView 进行过滤。
+            var criteria = this.Current;
+            if (criteria.CanLocalFilter)
+            {
+                var listView = resultView as ListObjectView;
+                if (listView != null)
+                {
+                    listView.Filter = criteria.LocalFilter;
+
+                    this.OnQueryCompleted();
+
+                    localFilter = true;
+                }
+            }
+
+            if (!localFilter)
+            {
+                //导航面板的查询使用隐式查询。
+                resultView.DataLoader.LoadDataAsync(
+                    () => (RF.Create(resultView.EntityType) as IOEARepositoryInternal).GetListImplicitly(this.Current),
+                    this.OnQueryCompleted
+                    );
+            }
         }
 
         #region 事件
 
         public event EventHandler Querying;
         /// <summary>
-        /// 开始异步查询
+        /// 查询/过滤前事件
         /// </summary>
         protected virtual void OnQuerying()
         {
@@ -115,7 +135,7 @@ namespace OEA.Module.WPF
 
         public event EventHandler QueryCompleted;
         /// <summary>
-        /// 查询完成，数据已达本地
+        /// 查询/过滤完成，数据已达本地
         /// </summary>
         protected virtual void OnQueryCompleted()
         {
@@ -142,15 +162,14 @@ namespace OEA.Module.WPF
             var criteria = this.Current;
             if (criteria != null)
             {
-                var destIndicators = newEntity.GetRepository().GetAvailableIndicators();
+                var destIndicators = newEntity.PropertiesContainer.GetAvailableProperties();
 
                 //对每一个导航的实体引用属性，都给 referenceEntity 赋相应的值
                 //只有导航查询实体中的引用实体ID属性名和被查询实体的引用实体ID属性名相同时，才能设置
                 foreach (var naviProperty in this.Meta.EntityProperties)
                 {
                     //naviProperty 是一个引用实体属性
-                    var refMeta = naviProperty.ReferenceViewInfo;
-                    if (refMeta != null)
+                    if (naviProperty.PropertyMeta.ManagedProperty is IRefProperty)
                     {
                         //被查询实体的引用实体ID属性名与 naviProperty 的名称相同时，才能设置。
                         foreach (var mp in destIndicators)

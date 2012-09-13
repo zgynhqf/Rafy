@@ -12,16 +12,16 @@
 *******************************************************/
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
-
 using OEA;
 using OEA.ManagedProperty;
-using System.ComponentModel;
-using System.Runtime.Serialization;
-using System.Collections;
-using System.Diagnostics.CodeAnalysis;
+using OEA.MetaModel;
 
 namespace OEA.Library
 {
@@ -63,7 +63,7 @@ namespace OEA.Library
         /// the collection of deleted objects.
         /// </summary>
         /// <param name="index">Index of the item to remove.</param>
-        protected void RemoveItemCsla(int index)
+        private void RemoveItemCsla(int index)
         {
             // when an object is 'removed' it is really
             // being deleted, so do the deletion work
@@ -113,31 +113,28 @@ namespace OEA.Library
             Entity child = null;
             if (this[index] != item) child = this[index];
 
-            // replace the original object with this new
-            // object
             bool oldRaiseListChangedEvents = this.RaiseListChangedEvents;
             try
             {
                 this.RaiseListChangedEvents = false;
 
-                // set parent reference
-                if (!this.SupressSetItemParent) { item.CastTo<IEntityOrList>().SetParent(this); }
-
-                //handle mapping
-                //for mapping purposes, you are removing the thing at the index
-                //var itemWeAreReplacing = this[index];
-                //RemoveFromMap(itemWeAreReplacing);
-                //RemoveFromMap(item);
+                var needParent = item != null && !this.SupressSetItemParent;
+                if (needParent) { item.CastTo<IEntityOrList>().SetParent(this); }
 
                 // add to list
                 base.SetItem(index, item);
+
+                if (child != null) this.DeleteChild(child);
+
+                if (needParent && this.HasManyType == HasManyType.Composition)
+                {
+                    item.SetParentEntity(this.Parent);
+                }
             }
             finally
             {
                 this.RaiseListChangedEvents = oldRaiseListChangedEvents;
             }
-
-            if (child != null) this.DeleteChild(child);
 
             if (this.RaiseListChangedEvents)
             {

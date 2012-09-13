@@ -40,6 +40,11 @@ namespace OEA.MetaModel.View
         /// <summary>
         /// 公用的编辑类型 如增、删等
         /// </summary>
-        Edit = 3
+        Edit = 3,
+
+        /// <summary>
+        /// 公用的编辑类型 如增、删等
+        /// </summary>
+        System = -1
     }
 }

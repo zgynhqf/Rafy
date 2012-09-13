@@ -242,7 +242,7 @@ namespace OEA.Web
                     setter.SetEntity(criteria, jCriteriaValues);
 
                     //查询数据库
-                    entities = repo.__GetListImplicitly(criteria);
+                    entities = (repo as IOEARepositoryInternal).GetListImplicitly(criteria);
                 }
             }
             else

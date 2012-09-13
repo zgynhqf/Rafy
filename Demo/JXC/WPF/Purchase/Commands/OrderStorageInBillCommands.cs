@@ -74,7 +74,7 @@ namespace JXC.Commands
 
                 var itemView = ui.MainView.GetChildView(typeof(StorageInBillItem));
 
-                var treeGrid = itemView.Control.CastTo<MultiTypesTreeGrid>();
+                var treeGrid = itemView.Control.CastTo<OEATreeGrid>();
                 var column = treeGrid.Columns.FindByProperty(StorageInBillItem.UnitPriceProperty);
                 if (column != null)
                 {

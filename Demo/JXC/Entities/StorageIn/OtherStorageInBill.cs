@@ -26,15 +26,6 @@ namespace JXC
             get { return this.GetRefEntity(SupplierRefProperty); }
             set { this.SetRefEntity(SupplierRefProperty, value); }
         }
-        public static readonly Property<ClientInfoList> SupplierDataSourceProperty = P<OtherStorageInBill>.RegisterReadOnly(e => e.SupplierDataSource, e => (e as OtherStorageInBill).GetSupplierDataSource());
-        public ClientInfoList SupplierDataSource
-        {
-            get { return this.GetProperty(SupplierDataSourceProperty); }
-        }
-        private ClientInfoList GetSupplierDataSource()
-        {
-            return RF.Concreate<ClientInfoRepository>().GetSuppliers();
-        }
     }
 
     [Serializable]
@@ -67,7 +58,7 @@ namespace JXC
 
                 View.Property(OtherStorageInBill.StorageRefProperty).HasLabel("收入仓库").ShowIn(ShowInWhere.ListDetail);
                 View.Property(OtherStorageInBill.SupplierRefProperty).HasLabel("发货单位").ShowIn(ShowInWhere.ListDetail)
-                    .UseLookupDataSource(OtherStorageInBill.SupplierDataSourceProperty);//只下拉获取经销商的信息
+                    .UseDataSource(EntityDataSources.Suppliers);//只下拉获取经销商的信息
 
                 View.Property(StorageInBill.DateProperty).HasLabel("入库日期").ShowIn(ShowInWhere.ListDetail);
                 View.Property(StorageInBill.CommentProperty).HasLabel("备注").ShowIn(ShowInWhere.ListDetail)

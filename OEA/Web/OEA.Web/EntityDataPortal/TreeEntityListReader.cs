@@ -59,7 +59,7 @@ namespace OEA.Web.EntityDataPortal
 
             //先把当前对象加入集合中。
             var e = this.Repository.New();
-            if (newEntityMark == null) { e.Status = PersistenceStatus.Unchanged; }
+            if (newEntityMark == null) { e.MarkUnchanged(); }
             this._setter.SetEntity(e, item);
             if (treeParent != null)
             {

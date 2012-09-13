@@ -63,7 +63,7 @@ namespace OEA.Library
         /// <param name="entity"></param>
         private void ReadChildren(Entity entity)
         {
-            var allProperties = entity.GetRepository().GetAvailableIndicators();
+            var allProperties = entity.PropertiesContainer.GetNonReadOnlyCompiledProperties();
 
             var childrenList = new List<IList<Entity>>();
 

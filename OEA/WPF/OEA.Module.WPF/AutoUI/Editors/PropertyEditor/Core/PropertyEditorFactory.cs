@@ -31,22 +31,22 @@ namespace OEA.Module.WPF.Editors
         {
             this.SetDictionary(new Dictionary<string, Type>() { 
                 { WPFEditorNames.Int32, typeof(IntegerUpDownPropertyEditor)},
+                //{ WPFEditorNames.Int32, typeof(NumbericPropertyEditor)},//暂时不用。
                 { WPFEditorNames.Double, typeof(DoubleUpDownPropertyEditor)},
-                //{ WPFEditorNames.Int32, typeof(NumbericPropertyEditor)},
                 { WPFEditorNames.IntegerUpDown, typeof(IntegerUpDownPropertyEditor)},
                 { WPFEditorNames.NumberRange, typeof(NumberRangePropertyEditor)},
                 { WPFEditorNames.Boolean, typeof(BooleanPropertyEditor)},
                 { WPFEditorNames.String, typeof(StringPropertyEditor) },
                 { WPFEditorNames.Enum, typeof(EnumPropertyEditor) },
-                { WPFEditorNames.LookupDropDown, typeof(LookupListPropertyEditor)},
                 { WPFEditorNames.Memo, typeof(MemoPropertyEditor)},
                 { WPFEditorNames.DateTime, typeof(DateTimePropertyEditor)},
                 { WPFEditorNames.Date, typeof(DatePropertyEditor)},
                 { WPFEditorNames.Time, typeof(TimePropertyEditor)},
                 { WPFEditorNames.DateRange, typeof(DateRangePropertyEditor)},
                 { WPFEditorNames.LookDetail, typeof(LookDetailPropertyEditor)},
-                { WPFEditorNames.PopupSearchList, typeof(PopupSearchListPropertyEditor)},
-                { WPFEditorNames.TiledList, typeof(TiledListReferenceEditor)},
+                { WPFEditorNames.EntitySelection_DropDown, typeof(LookupListPropertyEditor)},
+                { WPFEditorNames.EntitySelection_Popup, typeof(PopupSearchListPropertyEditor)},
+                { WPFEditorNames.EntitySelection_TiledList, typeof(TiledListReferenceEditor)},
             });
         }
 
@@ -59,7 +59,7 @@ namespace OEA.Module.WPF.Editors
         /// <returns></returns>
         public WPFPropertyEditor Create<TCurrentEntity>(Expression<Func<TCurrentEntity, object>> property, bool forList)
         {
-            var vm = UIModel.Views.CreateDefaultView(typeof(TCurrentEntity));
+            var vm = UIModel.Views.CreateBaseView(typeof(TCurrentEntity));
             var pvm = vm.Property(ExpressionHelper.GetProperty(property));
             if (pvm == null) throw new InvalidOperationException("没有找到这个属性。");
 

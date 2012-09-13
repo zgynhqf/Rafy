@@ -65,6 +65,26 @@
     <Reference Include="Microsoft.Practices.Unity">
       <HintPath>..\..\..\Lib\Microsoft.Practices.Unity.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.ReportViewer.Common, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Lib\ReportViewer.WinForms 11.0.0.0\Microsoft.ReportViewer.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.DataVisualization, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Lib\ReportViewer.WinForms 11.0.0.0\Microsoft.ReportViewer.DataVisualization.DLL</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.ProcessingObjectModel, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Lib\ReportViewer.WinForms 11.0.0.0\Microsoft.ReportViewer.ProcessingObjectModel.DLL</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.WinForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Lib\ReportViewer.WinForms 11.0.0.0\Microsoft.ReportViewer.WinForms.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Lib\ReportViewer.WinForms 11.0.0.0\Microsoft.SqlServer.Types.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
@@ -99,6 +119,7 @@
     <Reference Include="WindowsBase">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="WindowsFormsIntegration" />
     <Reference Include="Wpf.SplitButton">
       <HintPath>..\..\..\Lib\Wpf.SplitButton.dll</HintPath>
     </Reference>
@@ -141,7 +162,7 @@
     <Compile Include="AutoUI\Editors\PropertyEditor\Core\EntityDynamicPropertyEditor.cs" />
     <Compile Include="AutoUI\Editors\PropertyEditor\Core\PropertyEditorHelper.cs" />
     <Compile Include="AutoUI\Editors\PropertyEditor\IntegerUpDownPropertyEditor.cs" />
-    <Compile Include="AutoUI\Editors\PropertyEditor\Abstract\ReferencePropertyEditor.cs" />
+    <Compile Include="AutoUI\Editors\PropertyEditor\EntitySelection\EntitySelectionPropertyEditor.cs" />
     <Compile Include="AutoUI\Editors\PropertyEditor\DateRangePropertyEditor.cs" />
     <Compile Include="AutoUI\Editors\PropertyEditor\DateRangePropertyEditorControl.xaml.cs">
       <DependentUpon>DateRangePropertyEditorControl.xaml</DependentUpon>
@@ -151,10 +172,12 @@
       <DependentUpon>NumberRangePropertyEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="AutoUI\Editors\PropertyEditor\NumberRangePropertyEditor.cs" />
-    <Compile Include="AutoUI\Editors\PropertyEditor\PopupSearchListPropertyEditor.cs" />
-    <Compile Include="AutoUI\Editors\PropertyEditor\TiledListReferenceEditor.cs" />
+    <Compile Include="AutoUI\Editors\PropertyEditor\EntitySelection\PopupSearchListPropertyEditor.cs" />
+    <Compile Include="AutoUI\Editors\PropertyEditor\EntitySelection\TiledListReferenceEditor.cs" />
     <Compile Include="AutoUI\Editors\PropertyEditor\Validation\ManagedProeprtyValidationRule.cs" />
     <Compile Include="AutoUI\ObjectViews\CustomObjectView.cs" />
+    <Compile Include="AutoUI\ObjectViews\ICustomViewFactory.cs" />
+    <Compile Include="AutoUI\ObjectViews\ReportObjectView.cs" />
     <Compile Include="AutoUI\ObjectViews\ViewController\AsyncDataContextHelper.cs" />
     <Compile Include="AutoUI\CallbackTemplate.cs" />
     <Compile Include="CommandCustomParams.cs" />
@@ -162,32 +185,33 @@
     <Compile Include="Command\SysCommand\CustomizeUI\CustomizeUI.cs" />
     <Compile Include="Command\SysCommand\CustomizeUI\BackupViewConfig.cs" />
     <Compile Include="Command\SysCommand\PopupDetailCommand.cs" />
+    <Compile Include="Command\SysCommand\RefreshDataSourceInRDLC.cs" />
     <Compile Include="Command\SysCommand\SelectAllCommand.cs" />
     <Compile Include="Command\SysCommand\SelectReverseCommand.cs" />
+    <Compile Include="Command\SysCommand\ShowReportData.cs" />
     <Compile Include="Common\Logger.cs" />
     <Compile Include="Controls\BusyAnimation.cs" />
     <Compile Include="Controls\EditorHost.cs" />
     <Compile Include="Controls\Form.cs" />
-    <Compile Include="Controls\MTTG\GridTreeView\ColumnMeasureState.cs" />
-    <Compile Include="Controls\MTTG\GridTreeView\GridTreeViewColumn.cs" />
-    <Compile Include="Controls\MTTG\GridTreeView\GridTreeViewColumnCollection.cs" />
-    <Compile Include="Controls\MTTG\GridTreeView\GridTreeViewColumnHeader.cs" />
-    <Compile Include="Controls\MTTG\GridTreeView\GridTreeViewHeaderRowPresenter.cs" />
-    <Compile Include="Controls\MTTG\GridTreeView\GridViewInternal.cs" />
-    <Compile Include="Controls\MTTG\MTTGCell.cs" />
-    <Compile Include="Controls\MTTG\MultiTypesTreeGrid.View.cs">
-      <DependentUpon>MultiTypesTreeGrid.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\MTTG\TreeColumn\CommonTreeColumn.cs" />
-    <Compile Include="Controls\MTTG\TreeColumn\DateTreeColumn.cs" />
     <Compile Include="AutoUI\ObjectViews\ControlResult.cs" />
     <Compile Include="AutoUI\ObjectViews\ExtendEventConvention.cs" />
     <Compile Include="AutoUI\ObjectViews\ObjectViewFactory.cs" />
     <Compile Include="AutoUI\ObjectViews\ViewController\OEADataProvider.cs" />
     <Compile Include="AutoUI\ObjectViews\ViewController\ViewDataLoader.cs" />
-    <Compile Include="Controls\MTTG\TreeColumn\TreeColumnCollection.cs" />
-    <Compile Include="Controls\MTTG\_MTTGTestCommands.cs" />
     <Compile Include="AutoUI\UITemplate.cs" />
+    <Compile Include="Controls\MTTG\OEATreeGrid.cs" />
+    <Compile Include="Controls\MTTG\TreeColumn\BooleanTreeColumn.cs" />
+    <Compile Include="Controls\MTTG\TreeColumn\CommonTreeColumn.cs" />
+    <Compile Include="Controls\MTTG\TreeColumn\DateTreeColumn.cs" />
+    <Compile Include="Controls\MTTG\TreeColumn\EnumTreeColumn.cs" />
+    <Compile Include="Controls\MTTG\TreeColumn\LookupListTreeColumn.cs" />
+    <Compile Include="Controls\MTTG\TreeColumn\MemoTreeColumn.cs" />
+    <Compile Include="Controls\MTTG\TreeColumn\TreeColumn.cs" />
+    <Compile Include="Controls\MTTG\TreeColumn\TreeColumnCollection.cs" />
+    <Compile Include="Controls\MTTG\TreeColumn\TreeColumnFactory.cs" />
+    <Compile Include="Controls\Reporting\ReportHost.xaml.cs">
+      <DependentUpon>ReportHost.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\WaitProgress\MigrationWithProgressBar.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="PrimitiveUI\EntityModule.cs" />
@@ -204,18 +228,6 @@
     <Compile Include="AutoUI\ObjectViews\IEventListener.cs" />
     <Compile Include="AutoUI\BlockUIFactory.cs" />
     <Compile Include="Common\Extensions\WPFExtension.cs" />
-    <Compile Include="Controls\MTTG\MultiTypesTreeGrid.DataBind.cs">
-      <DependentUpon>MultiTypesTreeGrid.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\MTTG\MultiTypesTreeGrid.Editing.cs">
-      <DependentUpon>MultiTypesTreeGrid.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\MTTG\MultiTypesTreeGrid.Miscellaneous.cs">
-      <DependentUpon>MultiTypesTreeGrid.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\MTTG\MultiTypesTreeGrid.Selection.cs">
-      <DependentUpon>MultiTypesTreeGrid.cs</DependentUpon>
-    </Compile>
     <Compile Include="Controls\zzzSDG\GridColumn\GDataGridBooleanColumn.cs" />
     <Compile Include="Controls\zzzSDG\GridColumn\GDataGridCommonColumn.cs" />
     <Compile Include="Controls\zzzSDG\GridColumn\GDataGridDateColumn.cs" />
@@ -285,8 +297,6 @@
     <Compile Include="Command\SysCommand\TreeEditCommands\TreeEditCommand.cs" />
     <Compile Include="Command\SysCommand\MaxShowViewCommand.cs" />
     <Compile Include="Controls\ComboListControl.cs" />
-    <Compile Include="Controls\MTTG\MultiTypesTreeGrid.cs" />
-    <Compile Include="AutoUI\Editors\EnumConverter.cs" />
     <Compile Include="AutoUI\AutoUI.cs" />
     <Compile Include="AutoUI\ObjectViews\DetailObjectView.cs" />
     <Compile Include="AutoUI\ObjectViews\ListObjectView.cs" />
@@ -300,35 +310,19 @@
     <Compile Include="Command\Pattern\CommandToolTipService.cs" />
     <Compile Include="Command\Pattern\CommandToolTipStyle.cs" />
     <Compile Include="Command\ClientCommand.cs" />
-    <Compile Include="Controls\MTTG\ObjectTreeView\ItemMonitor.cs" />
-    <Compile Include="Controls\MTTG\ObjectTreeView\RoutedTreeItemEventArgs.cs" />
-    <Compile Include="Controls\MTTG\ObjectTreeView\TreeLayout.cs" />
-    <Compile Include="Controls\MTTG\ObjectTreeView\TreeUtil.cs" />
-    <Compile Include="Controls\MTTG\ObjectTreeView\TreeViewBase.cs" />
-    <Compile Include="Controls\MTTG\ObjectTreeView\TreeViewBase.Declarations.cs" />
     <Compile Include="Controls\DataTypeListSelector.cs" />
-    <Compile Include="Controls\MTTG\GridTreeView\LevelToIndentConverter.cs" />
-    <Compile Include="Controls\MTTG\GridTreeView\GridTreeViewRowPresenter.cs" />
-    <Compile Include="Controls\MTTG\GridTreeView\GridTreeView.cs" />
-    <Compile Include="Controls\MTTG\GridTreeView\GridTreeViewRow.cs" />
     <Compile Include="Controls\ViewDialog.xaml.cs">
       <DependentUpon>ViewDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Attached\WPFMeta.cs" />
+    <Compile Include="Common\Extensions\WPFMeta.cs" />
     <Compile Include="AutoUI\Editors\PropertyEditor\Core\IWPFPropertyEditor.cs" />
     <Compile Include="AutoUI\Editors\PropertyEditor\DatePropertyEditor.cs" />
     <Compile Include="AutoUI\Editors\PropertyEditor\EnumPropertyEditor.cs" />
-    <Compile Include="AutoUI\Editors\PropertyEditor\LookupListPropertyEditor.cs" />
+    <Compile Include="AutoUI\Editors\PropertyEditor\EntitySelection\LookupListPropertyEditor.cs" />
     <Compile Include="AutoUI\Editors\PropertyEditor\MemoPropertyEditor.cs" />
     <Compile Include="AutoUI\Editors\PropertyEditor\NumbericPropertyEditor.cs" />
     <Compile Include="AutoUI\Editors\PropertyEditor\Core\PropertyEditorFactory.cs" />
     <Compile Include="AutoUI\Editors\PropertyEditor\StringPropertyEditor.cs" />
-    <Compile Include="Controls\MTTG\TreeColumn\BooleanTreeColumn.cs" />
-    <Compile Include="Controls\MTTG\TreeColumn\EnumTreeColumn.cs" />
-    <Compile Include="Controls\MTTG\TreeColumn\LookupListTreeColumn.cs" />
-    <Compile Include="Controls\MTTG\TreeColumn\MemoTreeColumn.cs" />
-    <Compile Include="Controls\MTTG\TreeColumn\TreeColumn.cs" />
-    <Compile Include="Controls\MTTG\TreeColumn\TreeColumnFactory.cs" />
     <Compile Include="AutoUI\Editors\MTTGListEditor.cs" />
     <Compile Include="AutoUI\Editors\PropertyEditor\Core\WPFPropertyEditor.cs" />
     <Compile Include="Common\Extensions\ExceptionExtension.cs" />
@@ -357,7 +351,6 @@
     <Compile Include="TabControlWorkSpace.cs" />
     <Compile Include="ViewModel.cs" />
     <Compile Include="Zoom.cs" />
-    <Compile Include="Themes\NoDataVisibilityConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="AutoUI\Editors\PropertyEditor\DateRangePropertyEditorControl.xaml">
@@ -365,6 +358,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="AutoUI\Editors\PropertyEditor\NumberRangePropertyEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Reporting\ReportHost.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -408,10 +405,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Controls\MTTG\ObjectTreeView\Classes.cd" />
-    <None Include="AutoUI\Editors\Editor.cd" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\DeleteListObject.bmp">
@@ -472,6 +465,10 @@
     <ProjectReference Include="..\OEA.Module\OEA.Module.csproj">
       <Project>{786446BE-FB56-4281-9CA2-D5B699B0B388}</Project>
       <Name>OEA.Module</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OEA.WPF.Controls\OEA.WPF.Controls.csproj">
+      <Project>{9107e3a0-e18a-49b5-a214-daccd5fe8723}</Project>
+      <Name>OEA.WPF.Controls</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -586,10 +583,10 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Controls\MTTG\MultiTypesTreeGrid SelectionChanged event analysis.png" />
     <Content Include="Controls\zzzSDG\SelectionDataGrid CheckBox 多选功能设计草稿.jpg" />
     <Content Include="Controls\zzzSDG\_ReadMe.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

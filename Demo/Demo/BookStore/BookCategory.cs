@@ -48,8 +48,8 @@ namespace Demo
 
             View.UseWPFCommands("Demo.WPF.Commands.DemoCommand");
 
-            View.Property(BookCategory.TreeCodeProperty).HasLabel("编码").ShowIn(ShowInWhere.List).HasOrderNo(-1);
-            View.Property(BookCategory.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.ListDropDown);
+            View.Property(BookCategory.TreeCodeProperty).HasLabel("编码").ShowIn(ShowInWhere.ListDetail).HasOrderNo(-1);
+            View.Property(BookCategory.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
         }
     }
 }

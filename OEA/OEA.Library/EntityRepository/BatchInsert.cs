@@ -41,7 +41,7 @@ namespace OEA.Library
         /// <param name="table"></param>
         public BatchInsert(IList<Entity> entityList, SqlConnection db, ITable table)
         {
-            if (!OEAEnvironment.Location.IsOnServer()) throw new InvalidOperationException("!OEAEnvironment.IsOnServer() must be false.");
+            OEAEnvironment.EnsureOnServer();
             if (entityList.Count < 1) throw new ArgumentOutOfRangeException();
 
             this._table = table;

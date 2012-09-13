@@ -84,9 +84,7 @@ namespace OEA.Module.WPF
 
             Zoom.EnableZoom(result.Control);
 
-            var aggtControlResult = new ControlResult(result.Control, result.MainView);
-
-            return aggtControlResult;
+            return result;
         }
 
         #endregion
@@ -136,7 +134,7 @@ namespace OEA.Module.WPF
             }
 
             //返回布局后的整个控件。
-            var ui = new ControlResult(result, mainView);
+            var ui = new ControlResult(result, mainView, aggt);
 
             this.CreateCommandBindings(ui);
 

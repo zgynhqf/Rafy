@@ -13,12 +13,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
-
-using OEA.Module.WPF;
 using System.Windows;
-using System.Diagnostics;
+using OEA.MetaModel.View;
+using OEA.Module.WPF;
 
 namespace OEA.Module.WPF
 {
@@ -38,6 +38,16 @@ namespace OEA.Module.WPF
             this.MainView = view;
         }
 
+        public ControlResult(FrameworkElement control, WPFObjectView view, AggtBlocks blocks)
+        {
+            if (control == null) throw new ArgumentNullException("control");
+            if (view == null) throw new ArgumentNullException("control");
+
+            this.Control = control;
+            this.MainView = view;
+            this.Blocks = blocks;
+        }
+
         /// <summary>
         /// 聚合控件块
         /// </summary>
@@ -47,6 +57,11 @@ namespace OEA.Module.WPF
         /// 对应的逻辑主视图
         /// </summary>
         public WPFObjectView MainView { get; private set; }
+
+        /// <summary>
+        /// 本聚合控件对应的聚合块定义
+        /// </summary>
+        public AggtBlocks Blocks { get; private set; }
 
         /// <summary>
         /// 一个简单的块也可以直接转换为一个聚合块。

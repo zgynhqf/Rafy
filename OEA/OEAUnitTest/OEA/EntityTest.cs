@@ -9,6 +9,9 @@ using OEA.Library;
 using OEA.Library._Test;
 using OEA.Reflection;
 using OEA.ORM.DbMigration;
+using OEA.Utils;
+using System.Reflection;
+using System.ComponentModel;
 
 namespace OEAUnitTest
 {
@@ -18,9 +21,9 @@ namespace OEAUnitTest
         [ClassInitialize]
         public static void EntityTest_ClassInitialize(TestContext context)
         {
-            ClassInitialize(context);
+            ClassInitialize(context, true);
 
-            using (new OEADbMigrationContext(UnitTestEntity.ConnectionString).AutoMigrate()) { }
+            using (new OEADbMigrationContext(UnitTestEntity.DbSetting).AutoMigrate()) { }
         }
 
         [TestMethod]
@@ -123,6 +126,155 @@ namespace OEAUnitTest
             Assert.AreEqual(task1.AllTimeByAutoCollect, 1);
             Assert.AreEqual(taskRoot.AllTimeByAutoCollect, 2);
             Assert.AreEqual(user.TasksTimeByAutoCollect, 3);
+        }
+
+        [TestMethod]
+        public void EntityTest_LazyRef_Serialization_OnServer()
+        {
+            EnterLocation(OEALocation.WPFServer, () =>
+            {
+                var role = new TestRole
+                {
+                    TestUser = new TestUser
+                    {
+                        Id = 1,
+                        Name = "TestUser"
+                    }
+                };
+
+                var lazyRef = role.GetLazyRef(TestRole.TestUserRefProperty);
+                Assert.IsTrue(lazyRef.GetSerializeEntityValue(), "默认在服务端，应该是可以序列化实体的。");
+
+                var roleCloned = ObjectCloner.Clone(role);
+                var lazyRefCloned = roleCloned.GetLazyRef(TestRole.TestUserRefProperty);
+                Assert.IsTrue(lazyRefCloned.LoadedOrAssigned, "服务端到客户端，需要序列化实体。");
+            });
+        }
+
+        [TestMethod]
+        public void EntityTest_LazyRef_Serialization_OnClient()
+        {
+            EnterLocation(OEALocation.Client, () =>
+            {
+                var role = new TestRole
+                {
+                    TestUser = new TestUser
+                    {
+                        Id = 1,
+                        Name = "TestUser"
+                    }
+                };
+
+                var lazyRef = role.GetLazyRef(TestRole.TestUserRefProperty);
+                Assert.IsFalse(lazyRef.GetSerializeEntityValue(), "默认在服务端，应该是不可以序列化实体的。");
+
+                var roleCloned = ObjectCloner.Clone(role);
+                var lazyRefCloned = roleCloned.GetLazyRef(TestRole.TestUserRefProperty);
+                Assert.IsFalse(lazyRefCloned.LoadedOrAssigned, "服务端到客户端，不需要序列化实体。");
+            });
+        }
+
+        [TestMethod]
+        public void EntityTest_LazyRef_Serialization_Manual()
+        {
+            var role = new TestRole
+            {
+                TestUser = new TestUser
+                {
+                    Id = 1,
+                    Name = "TestUser"
+                }
+            };
+
+            var lazyRef = role.GetLazyRef(TestRole.TestUserRefProperty);
+
+            lazyRef.SerializeEntity = true;
+            var roleCloned = ObjectCloner.Clone(role);
+            var lazyRefCloned = roleCloned.GetLazyRef(TestRole.TestUserRefProperty);
+            Assert.IsTrue(lazyRefCloned.LoadedOrAssigned, "需要序列化实体。");
+
+            lazyRef.SerializeEntity = false;
+            roleCloned = ObjectCloner.Clone(role);
+            lazyRefCloned = roleCloned.GetLazyRef(TestRole.TestUserRefProperty);
+            Assert.IsFalse(lazyRefCloned.LoadedOrAssigned, "不需要序列化实体。");
+        }
+
+        [TestMethod]
+        public void EntityTest_ORM_EntityContext_Query()
+        {
+            var repo = RF.Concreate<TestUserRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var user = new TestUser();
+                repo.Save(user);
+
+                var user2 = repo.GetById(user.Id);
+                Assert.IsTrue(user != user2, "实体上下文块外，二者应该是不同的对象。");
+
+                using (RF.EnterEntityContext())
+                {
+                    var user3 = repo.GetById(user.Id);
+                    var user4 = repo.GetById(user.Id);
+                    Assert.IsTrue(user3 == user4, "实体上下文块内，二者应该是同一个对象。");
+                }
+            }
+        }
+
+        [TestMethod]
+        public void EntityTest_ORM_EntityContext_Insert()
+        {
+            var repo = RF.Concreate<TestUserRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                using (RF.EnterEntityContext())
+                {
+                    var user = new TestUser();
+                    repo.Save(user);
+
+                    var user2 = repo.GetById(user.Id);
+                    Assert.IsTrue(user == user2, "实体上下文块内，二者应该是同一个对象。");
+                }
+            }
+        }
+
+        [TestMethod]
+        public void EntityTest_ORM_EntityContext_Update()
+        {
+            var repo = RF.Concreate<TestUserRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var user = new TestUser();
+                repo.Save(user);
+
+                using (RF.EnterEntityContext())
+                {
+                    user.MarkModified();
+                    repo.Save(user);
+
+                    var user2 = repo.GetById(user.Id);
+                    Assert.IsTrue(user == user2, "实体上下文块内，二者应该是同一个对象。");
+                }
+            }
+        }
+
+        [TestMethod]
+        public void EntityTest_Property_EnumForUI()
+        {
+            var entity = new TestRole
+            {
+                RoleType = RoleType.Administrator
+            };
+            var properties = (entity as ICustomTypeDescriptor).GetProperties();
+            var enumProperty = properties.Find("RoleType", false);
+            Assert.IsNotNull(enumProperty, "TestRole 类型上没有找到 RoleType 枚举属性。");
+
+            Assert.IsTrue(enumProperty.PropertyType == typeof(string), "枚举属性在界面的返回值类型应该是字符串。");
+
+            var value = enumProperty.GetValue(entity) as string;
+            Assert.IsTrue(value != null && value == "管理员", "枚举属性在界面的返回值应该是枚举在 Label 标签中定义的字符串。");
+
+            enumProperty.SetValue(entity, "一般");
+            Assert.IsTrue(entity.RoleType == RoleType.Normal, "枚举属性被界面设置字符串的值时，应该转换为相应的枚举值。");
         }
 
         //[TestMethod]
@@ -271,7 +423,7 @@ namespace OEAUnitTest
             where TEntity : Entity, new()
         {
             var e = new TEntity();
-            e.Status = PersistenceStatus.Unchanged;
+            e.MarkUnchanged();
             return e;
         }
     }

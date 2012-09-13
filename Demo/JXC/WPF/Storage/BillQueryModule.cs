@@ -6,6 +6,7 @@ using JXC.WPF.Templates;
 using OEA.MetaModel.View;
 using OEA;
 using OEA.Module.WPF;
+using OEA.MetaModel;
 
 namespace JXC.WPF
 {
@@ -26,12 +27,22 @@ namespace JXC.WPF
                 {
                     new SurrounderBlock(typeof(PurchaseOrder), QueryObjectView.ResultSurrounderType),
                     new SurrounderBlock(typeof(OrderStorageInBill), QueryObjectView.ResultSurrounderType),
+                    new SurrounderBlock(typeof(OrderStorageInBill), QueryObjectView.ResultSurrounderType)
+                    {
+                        KeyLabel = "采购入库单 - 报表",
+                        BlockType = BlockType.Report,
+                    },
                     new SurrounderBlock(typeof(OtherStorageInBill), QueryObjectView.ResultSurrounderType),
                     new SurrounderBlock(typeof(OtherStorageOutBill), QueryObjectView.ResultSurrounderType),
                     new SurrounderBlock(typeof(StorageMove), QueryObjectView.ResultSurrounderType),
                 }
             };
 
+            return blocks;
+        }
+
+        protected override void OnBlocksDefined(AggtBlocks blocks)
+        {
             //TimeSpanCriteria 默认是横向排列的，需要修改此数据
             blocks.MainBlock.ViewMeta.DetailAsHorizontal = false;
             foreach (var sur in blocks.Surrounders)
@@ -39,7 +50,7 @@ namespace JXC.WPF
                 ModuleBase.MakeBlockReadonly(sur);
             }
 
-            return blocks;
+            base.OnBlocksDefined(blocks);
         }
 
         protected override void OnUIGenerated(ControlResult ui)

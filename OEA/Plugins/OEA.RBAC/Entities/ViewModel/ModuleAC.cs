@@ -98,7 +98,7 @@ namespace OEA.RBAC
                 childModule.TreeParent = item;
             }
 
-            item.Status = PersistenceStatus.Unchanged;
+            item.MarkUnchanged();
 
             return item;
         }

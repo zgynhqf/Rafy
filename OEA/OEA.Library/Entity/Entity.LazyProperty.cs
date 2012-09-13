@@ -19,6 +19,7 @@ using System.Text;
 using OEA.ManagedProperty;
 using OEA.MetaModel;
 using OEA.MetaModel.Attributes;
+using OEA.ORM;
 using OEA.Utils;
 
 namespace OEA.Library
@@ -213,8 +214,6 @@ namespace OEA.Library
         /// <param name="refIdProperty"></param>
         void IReferenceOwner.NotifyIdChanged(LazyEntityRefPropertyInfo refInfo, int oldId, int newId)
         {
-            this.MarkModified();
-
             var mp = refInfo.CorrespondingRefProperty(this);
             if (mp != null)
             {
@@ -229,6 +228,10 @@ namespace OEA.Library
             }
             else
             {
+                //由于本类只在 OnPropertyChanged(IManagedPropertyChangedEventArgs e) 
+                //方法中把对象标记为修改状态，所以在这个 else 分支中需要主动标记为修改状态。
+                this.MarkModified();
+
                 this.OnPropertyChanged(refInfo.IdProperty);
             }
         }
@@ -253,6 +256,10 @@ namespace OEA.Library
                 this.OnPropertyChanged(refInfo.RefEntityProperty);
             }
         }
+
+        //void IReferenceOwner.NotifyLazyChanged(LazyEntityRefPropertyInfo refInfo, int oldId, int newId, Entity oldEntity, Entity newEntity)
+        //{
+        //}
 
         #endregion
 
@@ -279,16 +286,16 @@ namespace OEA.Library
         /// <summary>
         /// 复制某个属性
         /// </summary>
-        /// <param name="target">从这个对象拷贝</param>
+        /// <param name="source">从这个对象拷贝</param>
         /// <param name="property">拷贝这个属性</param>
-        private void CopyProperty(Entity target, IManagedProperty property, CloneOptions options)
+        private void CopyProperty(Entity source, IManagedProperty property, CloneOptions options)
         {
             if (property.IsReadOnly) { return; }
 
             var refIndicator = property as IRefProperty;
             if (refIndicator != null)
             {
-                var targetRef = target.GetProperty(property) as ILazyEntityRef;
+                var targetRef = source.GetProperty(property) as ILazyEntityRef;
                 if (targetRef == null) return;
 
                 var myRef = this.GetLazyRef(refIndicator);
@@ -304,7 +311,7 @@ namespace OEA.Library
             }
             else
             {
-                this.LoadProperty(property, target.GetProperty(property));
+                this.LoadProperty(property, source.GetProperty(property));
             }
         }
 

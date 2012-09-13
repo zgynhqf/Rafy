@@ -41,22 +41,68 @@ namespace OEA.MetaModel.View
 
             var blocks = this.DefineBlocks();
 
+            this.InitViewMeta(blocks);
+
             this.OnBlocksDefined(blocks);
 
             return blocks;
         }
 
         /// <summary>
+        /// 对于每一个聚合块，生成其主块中的视图元数据。
+        /// 
+        /// 子类可重写此方法，并在基类调用之前定义各 blocks 的 ExtendView。
+        /// </summary>
+        /// <param name="blocks"></param>
+        protected virtual void InitViewMeta(AggtBlocks blocks)
+        {
+            foreach (var item in blocks.EnumerateAllBlocks())
+            {
+                var mainBlock = item.MainBlock;
+                mainBlock.InitViewMeta();
+
+                this.OnViewMetaCreated(mainBlock);
+            }
+        }
+
+        /// <summary>
+        /// 当每一个界面块对应的视图元数据生成完成后发生的事件。
+        /// 
+        /// 基类实现，为条件 Block 添加默认的查询按钮。
+        /// </summary>
+        /// <param name="item"></param>
+        protected virtual void OnViewMetaCreated(Block block)
+        {
+            //如果当前模块是一个条件面板，应该添加上查询按钮。
+            var conditionBlock = block as ConditionBlock;
+            if (conditionBlock != null)
+            {
+                conditionBlock.ViewMeta.UseWPFCommands(WPFCommandNames.FireQuery);
+            }
+
+            if (block.BlockType == BlockType.Report)
+            {
+                block.ViewMeta.UseWPFCommands(WPFCommandNames.RefreshDataSourceInRDLC, WPFCommandNames.ShowReportData);
+            }
+        }
+
+        /// <summary>
         /// 子类实现：获取当前模板的结构定义。
+        /// 结构定义包括：块间的结构、布局、块对应的视图的扩展名。
         /// </summary>
         /// <returns></returns>
         protected abstract AggtBlocks DefineBlocks();
 
         /// <summary>
-        /// 定义完成后的事件。
+        /// 整个聚合块的元数据生成完毕事件。
+        /// 外界可监听此事件，对生成完毕后的视图做最后的修改。
         /// </summary>
         public event EventHandler<BlocksDefinedEventArgs> BlocksDefined;
 
+        /// <summary>
+        /// 整个聚合块的元数据生成完毕后的事件。
+        /// </summary>
+        /// <param name="blocks"></param>
         protected virtual void OnBlocksDefined(AggtBlocks blocks)
         {
             var handler = this.BlocksDefined;
@@ -64,7 +110,7 @@ namespace OEA.MetaModel.View
         }
 
         /// <summary>
-        /// 由于模块并不是线程安全的，所以提供 Clone 方法，方便复杂模块
+        /// 由于模块并不是线程安全的，所以提供 Clone 方法，方便复制模块
         /// </summary>
         /// <returns></returns>
         public BlocksTemplate Clone()
@@ -78,6 +124,9 @@ namespace OEA.MetaModel.View
         protected static bool IsWPF { get { return OEAEnvironment.IsWPF; } }
     }
 
+    /// <summary>
+    /// 整个聚合块的元数据生成完毕事件参数。
+    /// </summary>
     public class BlocksDefinedEventArgs : EventArgs
     {
         public BlocksDefinedEventArgs(AggtBlocks blocks)

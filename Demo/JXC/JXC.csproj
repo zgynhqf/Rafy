@@ -63,6 +63,7 @@
     <Compile Include="Entities\BasicData\Storage.cs" />
     <Compile Include="Entities\BasicData\StorageProduct.cs" />
     <Compile Include="Entities\BasicData\Unit.cs" />
+    <Compile Include="Entities\EntityDataSources.cs" />
     <Compile Include="Entities\ProductRefItem.cs" />
     <Compile Include="Entities\Purchase\PurchaseOrder.cs" />
     <Compile Include="Entities\ClientTimeSpanCriteria.cs" />
@@ -174,6 +175,10 @@
       <Project>{786446BE-FB56-4281-9CA2-D5B699B0B388}</Project>
       <Name>OEA.Module</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\OEA\WPF\OEA.WPF.Controls\OEA.WPF.Controls.csproj">
+      <Project>{9107e3a0-e18a-49b5-a214-daccd5fe8723}</Project>
+      <Name>OEA.WPF.Controls</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Add.bmp">
@@ -182,6 +187,7 @@
     <Resource Include="Images\Delete.bmp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <None Include="Reports\采购入库单报表统计.rdlc" />
     <EmbeddedResource Include="Web\Common\Commands\AddBill.js" />
     <EmbeddedResource Include="Web\Common\Templates\BillTemplate.js" />
     <EmbeddedResource Include="Web\Purchase\Commands\PurchaseOrderCommands.js" />
@@ -223,6 +229,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Properties\DataSources\OrderStorageInBill.datasource" />
     <None Include="UML.7z" />
   </ItemGroup>
   <ItemGroup />

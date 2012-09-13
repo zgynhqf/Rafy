@@ -36,13 +36,13 @@
                 </Literal>
             </Declarations>
             <Code Language="csharp">
-                <![CDATA[public static readonly Property<$PropertyType$> $PropertyName$Property = P<$ClassName$>.RegisterReadOnly(
-            e => e.$PropertyName$, e => (e as $ClassName$).Get$PropertyName$(), $DependencyProperty$);
-        public $PropertyType$ $PropertyName$
+                <![CDATA[public static readonly Property<$PropertyType$> $PropertyName$ROProperty = P<$ClassName$>.RegisterReadOnly(
+            e => e.$PropertyName$RO, e => (e as $ClassName$).Get$PropertyName$RO(), $DependencyProperty$);
+        public $PropertyType$ $PropertyName$RO
         {
-            get { return this.GetProperty($PropertyName$Property); }
+            get { return this.GetProperty($PropertyName$ROProperty); }
         }
-        private $PropertyType$ Get$PropertyName$()
+        private $PropertyType$ Get$PropertyName$RO()
         {
             $end$
         }]]>

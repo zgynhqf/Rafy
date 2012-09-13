@@ -105,6 +105,8 @@ namespace JXC
         {
             View.DomainName("采购入库单").HasDelegate(StorageInBill.CodeProperty);
 
+            View.UseReport("采购入库单报表统计.rdlc");
+
             View.HasDetailColumnsCount(2);
 
             View.ClearWPFCommands(false)
@@ -121,7 +123,7 @@ namespace JXC
                 View.Property(StorageInBill.TotalMoneyProperty).HasLabel("总金额").ShowIn(ShowInWhere.ListDetail).Readonly();
 
                 View.Property(OrderStorageInBill.PurchaseOrderRefProperty).HasLabel("商品订单").ShowIn(ShowInWhere.ListDetail)
-                    .UseLookupDataSource(OrderStorageInBill.PurchaseOrderDataSourceProperty);
+                    .UseDataSource(OrderStorageInBill.PurchaseOrderDataSourceProperty);
                 View.Property(OrderStorageInBill.StorageRefProperty).HasLabel("收入仓库").ShowIn(ShowInWhere.ListDetail);
                 View.Property(OrderStorageInBill.View_SupplierNameProperty).HasLabel("供应商").ShowIn(ShowInWhere.ListDetail);
 

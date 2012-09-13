@@ -34,7 +34,7 @@ namespace OEA.ORM
         /// </summary>
         public object[] Parameters { get; set; }
 
-        public string GetSql(FormatSqlParameter paramaters)
+        public string GetSql(FormatSqlParameters paramaters)
         {
             var sql = this.FormatSql;
 

@@ -18,9 +18,9 @@ namespace OEAUnitTest
         [ClassInitialize]
         public static void TreeEntityTest_ClassInitialize(TestContext context)
         {
-            ClassInitialize(context);
+            ClassInitialize(context, true);
 
-            using (var db = new OEADbMigrationContext(UnitTestEntity.ConnectionString))
+            using (var db = new OEADbMigrationContext(UnitTestEntity.DbSetting))
             {
                 db.AutoMigrate();
             }

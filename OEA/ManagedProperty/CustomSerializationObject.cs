@@ -29,8 +29,6 @@ namespace OEA
     [Serializable]
     public abstract class CustomSerializationObject : ISerializable//, IDeserializationCallback
     {
-        //private SerializationInfo _info;
-
         protected CustomSerializationObject() { }
 
         /// <summary>
@@ -41,12 +39,7 @@ namespace OEA
         /// <param name="info"></param>
         /// <param name="context"></param>
         [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected CustomSerializationObject(SerializationInfo info, StreamingContext context)
-        {
-            //this._info = info;
-
-            this.Deserialize(info, context);
-        }
+        protected CustomSerializationObject(SerializationInfo info, StreamingContext context) { }
 
         /// <summary>
         /// 序列化数据到 info 中。
@@ -54,13 +47,6 @@ namespace OEA
         /// <param name="info"></param>
         /// <param name="context"></param>
         protected virtual void Serialize(SerializationInfo info, StreamingContext context) { }
-
-        /// <summary>
-        /// 从 info 中反序列化数据到对象。
-        /// </summary>
-        /// <param name="info"></param>
-        /// <param name="context"></param>
-        protected virtual void Deserialize(SerializationInfo info, StreamingContext context) { }
 
         /// <summary>
         /// 反序列化完成时，调用此函数。 

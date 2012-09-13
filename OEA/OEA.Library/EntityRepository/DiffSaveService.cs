@@ -13,17 +13,15 @@
 *******************************************************/
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using OEA;
 using System.Collections;
-
-using OEA.MetaModel;
+using System.Collections.Generic;
 using System.ComponentModel;
-using OEA.Library;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Text;
+using OEA;
+using OEA.Library;
+using OEA.MetaModel;
 using OEA.Utils;
 
 namespace OEA.Library
@@ -221,11 +219,8 @@ namespace OEA.Library
                         var child = children[i];
                         if (!child.IsDirty)
                         {
-                            //child.NeedCalc = false;
-                            //(childs as IEditableCollection).RemoveChild(child);
-                            //((childs as IEditableCollection).GetDeletedList() as IList).Remove(child);
-                            //child.NeedCalc = true;
                             children.Remove(child);
+                            children.DeletedList.Remove(child);
                         }
                         else
                         {

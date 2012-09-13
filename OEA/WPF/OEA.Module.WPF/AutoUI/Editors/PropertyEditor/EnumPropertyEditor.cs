@@ -15,7 +15,7 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using OEA.Module.WPF.Converter;
+using System.Linq;
 using OEA.Reflection;
 using OEA.Utils;
 
@@ -76,13 +76,6 @@ namespace OEA.Module.WPF.Editors
             return this._cb;
         }
 
-        protected override Binding CreateBinding()
-        {
-            var textBinding = base.CreateBinding();
-            textBinding.Converter = new EnumConverter();
-            return textBinding;
-        }
-
         protected override DependencyProperty BindingProperty()
         {
             return ComboBox.TextProperty;
@@ -110,5 +103,31 @@ namespace OEA.Module.WPF.Editors
 
             e.Handled = true;
         }
+
+        //public class EnumConverter : IValueConverter
+        //{
+        //    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        //    {
+        //        if (value == null) { return string.Empty; }
+
+        //        return new EnumViewModel((Enum)value).Label;
+        //    }
+
+        //    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        //    {
+        //        var strValue = value.ToString();
+
+        //        if (string.IsNullOrEmpty(strValue)) return null;
+
+        //        return EnumViewModel.LabelToEnum(strValue, targetType);
+        //    }
+        //}
+
+        //protected override Binding CreateBinding()
+        //{
+        //    var textBinding = base.CreateBinding();
+        //    textBinding.Converter = new EnumConverter();
+        //    return textBinding;
+        //}
     }
 }

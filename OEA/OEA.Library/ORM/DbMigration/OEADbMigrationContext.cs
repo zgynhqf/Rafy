@@ -43,7 +43,7 @@ namespace OEA.ORM.DbMigration
 
         public OEADbMigrationContext AutoMigrate()
         {
-            if (this.IsEnabled())
+            if (IsEnabled())
             {
                 var classMeta = this.ClassMetaReader.Read();
 
@@ -57,12 +57,13 @@ namespace OEA.ORM.DbMigration
             return this;
         }
 
-        public bool IsEnabled()
+        public static bool IsEnabled()
         {
-            //如果这个配置为 true，则执行自动升级
-            return ConfigurationHelper.GetAppSettingOrDefault(
-                "DatabaseAutoMigrationEnabled", OEAEnvironment.IsDebuggingEnabled
-                );
+            return true;
+            ////如果这个配置为 true，则执行自动升级
+            //return ConfigurationHelper.GetAppSettingOrDefault(
+            //    "DatabaseAutoMigrationEnabled", OEAEnvironment.IsDebuggingEnabled
+            //    );
         }
     }
 }

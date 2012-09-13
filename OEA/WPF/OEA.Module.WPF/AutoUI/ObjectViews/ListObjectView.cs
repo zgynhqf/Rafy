@@ -145,7 +145,7 @@ namespace OEA.Module.WPF
         /// 这个ListView可能会有一个 查询面板View
         /// CondtionQueryView 和 NavigateQueryView 只能一个不为空
         /// </summary>
-        public ConditionQueryObjectView CondtionQueryView
+        public ConditionQueryObjectView ConditionQueryView
         {
             get
             {
@@ -213,17 +213,6 @@ namespace OEA.Module.WPF
             this._listEditor.NotifyContextDataChanged();
 
             base.OnDataChanged();
-        }
-
-        /// <summary>
-        /// 如果是同一个Data被再次设置，有可能表示此列表中的项有可能被改变，
-        /// 此时，同样需要重新绑定一个实际控制界面ListEditor。
-        /// </summary>
-        protected override void OnDataReseting()
-        {
-            this._listEditor.NotifyContextDataChanged();
-
-            base.OnDataReseting();
         }
 
         /// <summary>
@@ -398,33 +387,15 @@ namespace OEA.Module.WPF
         //    }
         //}
 
-        /// <summary>
-        /// 装载数据，考虑 AssociationOperateType.Selected
-        /// </summary>
-        public override void LoadDataFromParent()
-        {
-            if (this.CouldLoadDataFromParent())
-            {
-                var rawData = this.GetRawChildrenData();
-                this.Data = rawData;
-            }
-        }
-
         #region RefreshControl
 
         /// <summary>
         /// Command 的代码中，对数据操作完毕后，需要调用此方法刷新界面中的控件。
         /// </summary>
-        public void RefreshControl()
+        protected override void RefreshControlCore()
         {
-            //命令编辑结束，刷新控件。
             this._listEditor.RefreshControl();
-
-            var handler = this.Refreshed;
-            if (handler != null) handler(this, EventArgs.Empty);
         }
-
-        public event EventHandler Refreshed;
 
         #endregion
 
@@ -674,7 +645,7 @@ namespace OEA.Module.WPF
             if (navigateView != null) { navigateView.SetReferenceEntity(newEntity); }
             else
             {
-                var conditionView = this.CondtionQueryView;
+                var conditionView = this.ConditionQueryView;
                 if (conditionView != null) { conditionView.SetReferenceEntity(newEntity); }
             }
 
@@ -694,14 +665,14 @@ namespace OEA.Module.WPF
         {
             if (!this.IsShowingTree) { throw new InvalidOperationException("非树型实体不支持使用此方法"); }
 
-            (this.Control as MultiTypesTreeGrid).ExpandAll();
+            (this.Control as TreeGrid).ExpandAll();
         }
 
         public void CollapseAll()
         {
             if (!this.IsShowingTree) { throw new InvalidOperationException("非树型实体不支持使用此方法"); }
 
-            (this.Control as MultiTypesTreeGrid).CollapseAll();
+            (this.Control as TreeGrid).CollapseAll();
         }
 
         #endregion

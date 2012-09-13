@@ -28,5 +28,28 @@ namespace OEA.Library
         //{
         //    this.NotifyLoaded(null);
         //}
+
+        /// <summary>
+        /// 此属性指示当前查询条件类型是否用于本地过滤。
+        /// 
+        /// 默认是 false。
+        /// </summary>
+        public virtual bool CanLocalFilter
+        {
+            get { return false; }
+        }
+
+        /// <summary>
+        /// 如果本查询条件用于本地过滤查询时，子类需要实现此方法以指定过滤逻辑。
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public virtual bool LocalFilter(Entity target)
+        {
+            throw new InvalidOperationException(string.Format(
+                "当类型 {0} 用于本地过滤查询时，需要重写 Filter 方法以实现过滤逻辑。",
+                this.GetType().FullName
+                ));
+        }
     }
 }

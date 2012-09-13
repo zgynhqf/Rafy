@@ -10,7 +10,7 @@ namespace OEA.ORM
     {
         public NullConstraint(IManagedProperty column, bool isNull) : base(column, isNull ? "is" : "is not", null) { }
 
-        public override string GetSql(FormatSqlParameter paramaters)
+        public override string GetSql(FormatSqlParameters paramaters)
         {
             string name = this.PropertyTable.Translate(this.Property);
 

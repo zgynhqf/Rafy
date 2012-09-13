@@ -28,6 +28,7 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 using DbMigration.Operations;
+using DbMigration.History;
 
 namespace OEAUnitTest.OEA
 {
@@ -67,12 +68,12 @@ namespace OEAUnitTest.OEA
         }
 
         [TestMethod]
-        public void DMDBT_DropDatabase_单独运行_可能失败()
+        public void DMDBT_DropDatabase()
         {
             //以下代码不能运行，会提示数据库正在被使用
             using (var context = new OEADbMigrationContext("TestingDataBase"))
             {
-                if (context.DatabaseExists())
+                if (context.DatabaseExists() && !(context.DbVersionProvider is EmbadedDbVersionProvider))
                 {
                     //context.DeleteDatabase();
                     var database = new DestinationDatabase("TestingDataBase") { Removed = true };

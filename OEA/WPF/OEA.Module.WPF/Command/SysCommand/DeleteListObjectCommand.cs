@@ -23,41 +23,21 @@ using OEA.Module.WPF;
 namespace OEA.WPF.Command
 {
     /// <summary>
-    /// 删除列表中所有的根对象
+    /// 删除列表中选中的对象
     /// </summary>
     [Command(ImageName = "Delete.bmp", Label = "删除", GroupType = CommandGroupType.Edit)]
     public class DeleteListObjectCommand : ListViewCommand
     {
-        private string _message = "确定删除当前记录?";
-
-        public string Message
-        {
-            get { return this._message; }
-            set { this._message = value; }
-        }
-
         public override bool CanExecute(ListObjectView view)
         {
-            if (base.CanExecute(view) == false)
-            {
-                return false;
-            }
-            var bindingList = view.Data as IBindingList;
-            if (bindingList == null || bindingList.AllowRemove == false)
-            {
-                return false;
-            }
-            return view.Current != null;
+            return view.Current != null && view.Data.AllowRemove;
         }
 
         public override void Execute(ListObjectView view)
         {
-            //var result = App.MessageBox.Show("确认删除", this.Message, MessageBoxButton.YesNo);
-            //if (result == MessageBoxResult.Yes)
-            //{
-            var dataList = view.Data as EntityList;
+            var dataList = view.Data;
             var dealingTree = dataList.SupportTree;
-            var list = view.SelectedEntities.OfType<Entity>().ToArray();
+            var list = view.SelectedEntities.ToArray();
             for (int i = list.Length - 1; i >= 0; i--)
             {
                 var item = list[i];
@@ -90,7 +70,6 @@ namespace OEA.WPF.Command
             }
 
             view.RefreshControl();
-            //}
         }
     }
 }

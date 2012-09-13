@@ -82,26 +82,28 @@ namespace OEA.DataPortalClient
         /// </param>
         public DataPortalResult Fetch(Type objectType, object criteria, DataPortalContext context)
         {
-            ChannelFactory<IWcfPortal> cf = GetChannelFactory();
-            IWcfPortal svr = GetProxy(cf);
-            WcfResponse response = null;
+            var cf = GetChannelFactory();
+            var proxy = GetProxy(cf);
             try
             {
-                response =
-                       svr.Fetch(new FetchRequest(objectType, criteria, context));
-                if (cf != null)
-                    cf.Close();
+                WcfResponse response = null;
+                try
+                {
+                    OEAEnvironment.ThreadPortalCount++;
+                    response = proxy.Fetch(new FetchRequest(objectType, criteria, context));
+                }
+                finally
+                {
+                    OEAEnvironment.ThreadPortalCount--;
+                }
+                if (cf != null) cf.Close();
+                return ReturnResult(response);
             }
             catch
             {
                 cf.Abort();
                 throw;
             }
-
-            object result = response.Result;
-            if (result is Exception)
-                throw (Exception)result;
-            return (DataPortalResult)result;
         }
 
         /// <summary>
@@ -114,26 +116,37 @@ namespace OEA.DataPortalClient
         /// </param>
         public DataPortalResult Update(object obj, DataPortalContext context)
         {
-            ChannelFactory<IWcfPortal> cf = GetChannelFactory();
-            IWcfPortal svr = GetProxy(cf);
-            WcfResponse response = null;
+            var cf = GetChannelFactory();
+            var proxy = GetProxy(cf);
             try
             {
-                response =
-                      svr.Update(new UpdateRequest(obj, context));
-                if (cf != null)
-                    cf.Close();
+                WcfResponse response = null;
+                try
+                {
+                    OEAEnvironment.ThreadPortalCount++;
+                    response = proxy.Update(new UpdateRequest(obj, context));
+                }
+                finally
+                {
+                    OEAEnvironment.ThreadPortalCount--;
+                }
+                if (cf != null) cf.Close();
+                return ReturnResult(response);
             }
             catch
             {
                 cf.Abort();
                 throw;
             }
+        }
 
-
+        private static DataPortalResult ReturnResult(WcfResponse response)
+        {
             object result = response.Result;
             if (result is Exception)
-                throw (Exception)result;
+            {
+                throw new DataPortalException("发生数据访问异常，请检查 InnerException", result as Exception);
+            }
             return (DataPortalResult)result;
         }
 

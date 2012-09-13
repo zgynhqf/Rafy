@@ -42,6 +42,11 @@ namespace OEA.Library
             return base.GetMeta(ownerType) as IOEAListPropertyMetadata;
         }
 
+        public override PropertyCategory Category
+        {
+            get { return PropertyCategory.List; }
+        }
+
         /// <summary>
         /// 列表对应的实体类型
         /// </summary>

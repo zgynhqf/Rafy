@@ -28,7 +28,7 @@ namespace OEA.Module.WPF
     /// 
     /// 使用本规则，需要在 Binding.Path 中添加 ManagedProperty 作为参数。
     /// </summary>
-    internal class ManagedProeprtyValidationRule : ValidationRule
+    public class ManagedProeprtyValidationRule : ValidationRule
     {
         public static readonly ManagedProeprtyValidationRule Instance = new ManagedProeprtyValidationRule();
 

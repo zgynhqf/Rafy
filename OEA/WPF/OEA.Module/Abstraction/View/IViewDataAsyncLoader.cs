@@ -44,14 +44,14 @@ namespace OEA
         /// 使用自定义数据提供函数来进行异步数据加载
         /// </summary>
         /// <param name="dataProvider"></param>
-        void LoadDataAsync(Func<object> dataProvider);
+        void LoadDataAsync(Func<IEntityOrList> dataProvider);
 
         /// <summary>
         /// 使用自定义数据提供函数来进行异步数据加载
         /// </summary>
         /// <param name="dataProvider"></param>
         /// <param name="changedCallback"></param>
-        void LoadDataAsync(Func<object> dataProvider, Action changedCallback);
+        void LoadDataAsync(Func<IEntityOrList> dataProvider, Action changedCallback);
 
         /// <summary>
         /// 使用最后一次使用的数据提供器重新加载数据。

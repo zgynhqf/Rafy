@@ -20,7 +20,7 @@
 //using System.Windows.Data;
 //using OEA.Editors;
 //using OEA.MetaModel;
-using OEA.MetaModel.View;
+//using OEA.MetaModel.View;
 ////using OEA.Module.WPF;
 
 //namespace OEA.Module.WPF.Editors

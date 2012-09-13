@@ -34,7 +34,7 @@ namespace JXC.WPF.Templates
                 for (int i = commands.Count - 1; i >= 0; i--)
                 {
                     var cmd = commands[i];
-                    if (cmd.Group != CommandGroupType.View)
+                    if (cmd.Group != CommandGroupType.View && cmd.Group != CommandGroupType.System)
                     {
                         commands.Remove(cmd);
                     }
@@ -46,7 +46,7 @@ namespace JXC.WPF.Templates
                 for (int i = commands.Count - 1; i >= 0; i--)
                 {
                     var cmd = commands[i];
-                    if (cmd.GroupType != CommandGroupType.View)
+                    if (cmd.GroupType != CommandGroupType.View && cmd.GroupType != CommandGroupType.System)
                     {
                         commands.Remove(cmd);
                     }

@@ -163,16 +163,16 @@ namespace OEA.Library
             }
         }
 
-        private void OnTreeItemCloned(Entity target, CloneOptions options)
+        private void OnTreeItemCloned(Entity source, CloneOptions options)
         {
             if (options.HasAction(CloneActions.ParentRefEntity))
             {
-                this.TreeParentData = target.TreeParentData;
+                this.TreeParentData = source.TreeParentData;
             }
 
             if (options.HasAction(CloneActions.GrabChildren))
             {
-                this._treeChildren = target._treeChildren;
+                this._treeChildren = source._treeChildren;
             }
         }
 

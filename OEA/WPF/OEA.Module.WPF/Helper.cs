@@ -15,13 +15,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OEA.Library;
 using OEA.MetaModel;
 using OEA.MetaModel.View;
 using OEA.Reflection;
 
 namespace OEA.Module.WPF
 {
-    internal static class Helper
+    public static class Helper
     {
         /// <summary>
         /// 获取属性的编辑器类型
@@ -38,7 +39,7 @@ namespace OEA.Module.WPF
                 var epm = meta.PropertyMeta;
                 if (epm.ReferenceInfo != null)
                 {
-                    return WPFEditorNames.LookupDropDown;
+                    return WPFEditorNames.EntitySelection_DropDown;
                 }
 
                 var propertyType = TypeHelper.IgnoreNullable(epm.Runtime.PropertyType);
@@ -90,6 +91,17 @@ namespace OEA.Module.WPF
             }
 
             return value;
+        }
+
+        /// <summary>
+        /// 根据SelectedValuePath指定的值，获取目标属性值
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public static object GetSelectedValue(this SelectionViewMeta rvi, Entity entity)
+        {
+            var selectedValuePath = rvi.SelectedValuePath ?? Entity.IdProperty;
+            return entity.GetProperty(selectedValuePath);
         }
     }
 }

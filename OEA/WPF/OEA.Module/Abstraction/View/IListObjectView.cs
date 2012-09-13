@@ -83,22 +83,4 @@ namespace OEA
         /// </summary>
         CheckingRow
     }
-
-    /// <summary>
-    /// CheckingRow 模式下的级联勾选行为模式
-    /// </summary>
-    public enum CheckingRowCascade
-    {
-        None = 0,
-
-        /// <summary>
-        /// 级联把父节点勾选上
-        /// </summary>
-        CascadeParent = 1,
-
-        /// <summary>
-        /// 级联把所有孩子节点勾选上
-        /// </summary>
-        CascadeChildren = 2
-    }
 }

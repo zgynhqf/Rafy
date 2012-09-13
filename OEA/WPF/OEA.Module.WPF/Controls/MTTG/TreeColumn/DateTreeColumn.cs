@@ -10,8 +10,9 @@
  * 
 *******************************************************/
 
+using System.Windows;
 using System.Windows.Data;
-using OEA.Module.WPF.Editors;
+
 
 namespace OEA.Module.WPF.Controls
 {
@@ -19,11 +20,15 @@ namespace OEA.Module.WPF.Controls
     {
         protected DateTreeColumn() { }
 
-        protected override Binding GenerateBindingFormat(string name, string stringformat)
+        protected override void OnBindingChanged(DependencyPropertyChangedEventArgs e)
         {
+            base.OnBindingChanged(e);
+
             //如果 stringformat 是空的，则使用默认的格式化。
-            if (string.IsNullOrEmpty(stringformat))
+            if (string.IsNullOrEmpty(this.HeaderStringFormat))
             {
+                var value = (BindingBase)e.NewValue;
+
                 var propertyMeta = this.Meta.PropertyMeta;
                 var meta = propertyMeta.ManagedProperty.GetMeta(propertyMeta.Owner.EntityType) as IPropertyMetadata;
                 switch (meta.DateTimePart)
@@ -31,17 +36,15 @@ namespace OEA.Module.WPF.Controls
                     case DateTimePart.DateTime:
                         break;
                     case DateTimePart.Date:
-                        stringformat = "d";
+                        value.StringFormat = "d";
                         break;
                     case DateTimePart.Time:
-                        stringformat = "t";
+                        value.StringFormat = "t";
                         break;
                     default:
                         break;
                 }
             }
-
-            return base.GenerateBindingFormat(name, stringformat);
         }
     }
 }

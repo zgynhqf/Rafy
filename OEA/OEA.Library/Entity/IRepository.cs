@@ -29,7 +29,15 @@ namespace OEA.Library
     /// </summary>
     public interface IRepository : IDbFactory, IEntityInfoHost
     {
+        /// <summary>
+        /// 该实体的仓库。
+        /// </summary>
         Type EntityType { get; }
+
+        /// <summary>
+        /// 是否声明本仓库为本地仓库（客户端只在客户端查询，服务端在服务端查询）
+        /// </summary>
+        DataPortalLocation DataPortalLocation { get; }
 
         /// <summary>
         /// 通过Id获取指定的实体对象
