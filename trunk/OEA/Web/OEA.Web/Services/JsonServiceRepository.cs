@@ -140,7 +140,7 @@ namespace OEA.Web
                         var list = value as EntityList;
 
                         //TODO：这里可能存在问题：当一个非默认的视图请求这个服务得到一个默认视图的实体数据时，可能会因为列不一致而出现问题。
-                        var defaultVM = UIModel.Views.CreateDefaultView(list.EntityType);
+                        var defaultVM = UIModel.Views.CreateBaseView(list.EntityType);
 
                         var listRes = new EntityJsonList();
                         EntityJsonConverter.EntityToJson(defaultVM, list, listRes.entities);
