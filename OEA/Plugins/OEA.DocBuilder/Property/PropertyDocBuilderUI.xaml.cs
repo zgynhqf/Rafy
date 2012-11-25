@@ -40,7 +40,7 @@ namespace OEA.DocBuilder.Property
         private void btnGenerate_Click(object sender, RoutedEventArgs e)
         {
             var parser = new PropertyDocParser();
-            parser.EntityViewMeta = UIModel.Views.CreateDefaultView(typeof(TestDocument));
+            parser.EntityViewMeta = UIModel.Views.CreateBaseView(typeof(TestDocument));
             parser.ClassContent = System.IO.File.ReadAllText(@"D:\_Code\OEA\OEA\Plugins\OEA.DocBuilder\TestDocument.cs");
             parser.Parse();
 
