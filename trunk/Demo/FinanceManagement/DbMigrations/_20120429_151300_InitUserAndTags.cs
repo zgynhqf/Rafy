@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using DbMigration;
-using OEA.Library;
-using OEA;
+using Rafy.DbMigration;
+using Rafy.Domain;
+using Rafy;
 
 namespace FM.DbMigrations
 {
@@ -20,8 +22,8 @@ namespace FM.DbMigrations
             this.RunCode(db =>
             {
                 //由于本类没有支持 Down 操作，所以这里面的 Up 需要防止重入。
-                var repo = RF.Concreate<PersonRepository>();
-                var list = repo.GetAll(false);
+                var repo = RF.Concrete<PersonRepository>();
+                var list = repo.GetAll();
                 if (list.Count == 0)
                 {
                     list.Add(new Person
@@ -30,7 +32,7 @@ namespace FM.DbMigrations
                         IsDefault = true
                     });
 
-                    var tagRepo = RF.Create<Tag>();
+                    var tagRepo = RF.Find<Tag>();
                     var tagList = tagRepo.NewList();
                     tagList.Add(new Tag { Name = "衣" });
                     tagList.Add(new Tag { Name = "食" });

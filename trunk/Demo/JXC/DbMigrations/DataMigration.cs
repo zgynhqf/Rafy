@@ -14,8 +14,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using DbMigration;
+using Rafy.DbMigration;
 
 namespace JXC.DbMigrations
 {
@@ -23,7 +25,7 @@ namespace JXC.DbMigrations
     {
         public override string DbSetting
         {
-            get { return JXCEntity.ConnectionString; }
+            get { return JXCEntityRepository.DbSettingName; }
         }
 
         public override ManualMigrationType Type

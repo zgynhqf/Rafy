@@ -1,26 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA;
-using OEA.ORM.DbMigration;
-using OEA.MetaModel.View;
-using OEA.MetaModel;
-using DbMigration;
-using OEA.Module.WPF;
-using OEA.Library;
-using OEA.RBAC;
+using Rafy;
+using Rafy.Domain.ORM.DbMigration;
+using Rafy.MetaModel.View;
+using Rafy.MetaModel;
+using Rafy.DbMigration;
+using Rafy.WPF;
+using Rafy.Domain;
+using Rafy.RBAC;
 using FM.UI;
 
 namespace FM
 {
-    class FMLibrary : LibraryPlugin
+    class FMLibrary : UIPlugin
     {
-        public override ReuseLevel ReuseLevel
-        {
-            get { return ReuseLevel.Main; }
-        }
-
         public override void Initialize(IApp app)
         {
             InitModules(app);
@@ -32,15 +29,15 @@ namespace FM
         {
             app.ModuleOperations += (o, e) =>
             {
-                var moduleJXC = CommonModel.Modules.AddRoot(new ModuleMeta
+                var moduleJXC = CommonModel.Modules.AddRoot(new WPFModuleMeta
                 {
                     Label = "个人财务管理",
                     Children =
                     {
-                        new ModuleMeta{ Label = "帐务录入", EntityType = typeof(FinanceLog), WPFTemplateType=typeof(FinanceLogInputModule)},
-                        new ModuleMeta{ Label = "相关人", EntityType = typeof(Person)},
-                        new ModuleMeta{ Label = "标签", EntityType = typeof(Tag)},
-                        new ModuleMeta{ Label = "帐务统计（未完成）", EntityType = typeof(FinanceLog)},
+                        new WPFModuleMeta{ Label = "帐务录入", EntityType = typeof(FinanceLog), BlocksTemplate=typeof(FinanceLogInputModule)},
+                        new WPFModuleMeta{ Label = "相关人", EntityType = typeof(Person)},
+                        new WPFModuleMeta{ Label = "标签", EntityType = typeof(Tag)},
+                        new WPFModuleMeta{ Label = "帐务统计（未完成）", EntityType = typeof(FinanceLog)},
                     }
                 });
             };

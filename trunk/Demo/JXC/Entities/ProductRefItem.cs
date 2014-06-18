@@ -14,32 +14,46 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA;
-using OEA.Library;
-using OEA.Library.Validation;
-using OEA.MetaModel;
-using OEA.MetaModel.Attributes;
-using OEA.MetaModel.View;
-using OEA.ManagedProperty;
+using Rafy;
+using Rafy.Domain;
+using Rafy.Domain.Validation;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
+using Rafy.ManagedProperty;
 using System.ComponentModel;
+using System.Collections.Specialized;
 
 namespace JXC
 {
     [Serializable]
     public abstract class ProductRefItem : JXCEntity
     {
-        public static readonly RefProperty<Product> ProductRefProperty =
-            P<ProductRefItem>.RegisterRef(e => e.Product, ReferenceType.Normal);
+        #region 构造函数
+
+        public ProductRefItem() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected ProductRefItem(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
+
+        public static readonly IRefIdProperty ProductIdProperty =
+            P<ProductRefItem>.RegisterRefId(e => e.ProductId, ReferenceType.Normal);
         public int ProductId
         {
-            get { return this.GetRefId(ProductRefProperty); }
-            set { this.SetRefId(ProductRefProperty, value); }
+            get { return (int)this.GetRefId(ProductIdProperty); }
+            set { this.SetRefId(ProductIdProperty, value); }
         }
+        public static readonly RefEntityProperty<Product> ProductProperty =
+            P<ProductRefItem>.RegisterRef(e => e.Product, ProductIdProperty);
         public Product Product
         {
-            get { return this.GetRefEntity(ProductRefProperty); }
-            set { this.SetRefEntity(ProductRefProperty, value); }
+            get { return this.GetRefEntity(ProductProperty); }
+            set { this.SetRefEntity(ProductProperty, value); }
         }
 
         public static readonly Property<int> AmountProperty = P<ProductRefItem>.Register(e => e.Amount, new PropertyMetadata<int>
@@ -53,7 +67,7 @@ namespace JXC
             set { this.SetProperty(AmountProperty, value); }
         }
         protected virtual void OnAmountChanging(ManagedPropertyChangingEventArgs<int> e) { }
-        protected virtual void OnAmountChanged(ManagedPropertyChangedEventArgs<int> e) { }
+        protected virtual void OnAmountChanged(ManagedPropertyChangedEventArgs e) { }
 
         #region 视图属性
 
@@ -93,9 +107,9 @@ namespace JXC
     [Serializable]
     public class ProductRefItemList : JXCEntityList
     {
-        protected override void OnListChanged(ListChangedEventArgs e)
+        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
-            base.OnListChanged(e);
+            base.OnCollectionChanged(e);
 
             this.RaiseRoutedEvent(ListChangedEvent, e);
         }

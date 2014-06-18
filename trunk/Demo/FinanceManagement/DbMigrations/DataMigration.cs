@@ -15,8 +15,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using DbMigration;
+using Rafy.DbMigration;
 
 namespace FM.DbMigrations
 {
@@ -24,7 +26,7 @@ namespace FM.DbMigrations
     {
         public override string DbSetting
         {
-            get { return FMEntity.ConnectionString; }
+            get { return FMEntityRepository.DbSettingName; }
         }
 
         public override ManualMigrationType Type

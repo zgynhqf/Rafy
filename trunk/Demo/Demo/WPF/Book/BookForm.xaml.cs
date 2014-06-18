@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,13 +13,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Rafy.WPF.Controls;
 
 namespace Demo.WPF
 {
-    /// <summary>
-    /// Interaction logic for BookForm.xaml
-    /// </summary>
-    public partial class BookForm : UserControl
+    public partial class BookForm : Form
     {
         public BookForm()
         {

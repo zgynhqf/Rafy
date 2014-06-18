@@ -1,17 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA.Library;
-using OEA.MetaModel;
-using OEA.MetaModel.Attributes;
-using OEA.MetaModel.View;
+using Rafy.Domain;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
 
 namespace Demo
 {
     [RootEntity, Serializable]
-    public class Province : DemoEntity
+    public partial class Province : DemoEntity
     {
+        #region 构造函数
+
+        public Province() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected Province(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
+
         public static readonly Property<string> NameProperty = P<Province>.Register(e => e.Name);
         public string Name
         {
@@ -27,14 +38,14 @@ namespace Demo
     }
 
     [Serializable]
-    public class ProvinceList : DemoEntityList { }
+    public partial class ProvinceList : DemoEntityList { }
 
-    public class ProvinceRepository : EntityRepository
+    public partial class ProvinceRepository : DemoEntityRepository
     {
         protected ProvinceRepository() { }
     }
 
-    internal class ProvinceConfig : EntityConfig<Province>
+    internal class ProvinceConfig : DemoEntityConfig<Province>
     {
         protected override void ConfigMeta()
         {
@@ -44,12 +55,17 @@ namespace Demo
                 Province.NameProperty
                 );
         }
+    }
 
+    internal class ProvinceWPFViewConfig : DemoEntityWPFViewConfig<Province>
+    {
         protected override void ConfigView()
         {
             base.ConfigView();
 
             View.DomainName("省").HasDelegate(Province.NameProperty);
+
+            View.UseDefaultCommands();
 
             View.Property(Province.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
         }

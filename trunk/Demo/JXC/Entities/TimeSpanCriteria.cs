@@ -14,22 +14,31 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA.Library;
-using OEA.MetaModel.Attributes;
-using OEA.ManagedProperty;
-using OEA.MetaModel;
-using OEA.MetaModel.View;
+using Rafy.Domain;
+using Rafy.MetaModel.Attributes;
+using Rafy.ManagedProperty;
+using Rafy.MetaModel;
+using Rafy.MetaModel.View;
 
 namespace JXC
 {
     [QueryEntity, Serializable]
     public class TimeSpanCriteria : Criteria
     {
+        #region 构造函数
+
         public TimeSpanCriteria()
         {
             this.TimeSpanType = TimeSpanType.LastMonth;
         }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected TimeSpanCriteria(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
 
         public static readonly Property<TimeSpanType> TimeSpanTypeProperty = P<TimeSpanCriteria>.Register(e => e.TimeSpanType, new PropertyMetadata<TimeSpanType>
         {
@@ -40,10 +49,10 @@ namespace JXC
             get { return this.GetProperty(TimeSpanTypeProperty); }
             set { this.SetProperty(TimeSpanTypeProperty, value); }
         }
-        protected virtual void OnTimeSpanTypeChanged(ManagedPropertyChangedEventArgs<TimeSpanType> e)
+        protected virtual void OnTimeSpanTypeChanged(ManagedPropertyChangedEventArgs e)
         {
             var today = DateTime.Today;
-            switch (e.NewValue)
+            switch ((TimeSpanType)e.NewValue)
             {
                 case TimeSpanType.Today:
                     this.From = this.To = today;
@@ -103,7 +112,7 @@ namespace JXC
             set { this.SetProperty(ToProperty, value); }
         }
 
-        private void OnTimeChanged(ManagedPropertyChangedEventArgs<DateTime> e)
+        private void OnTimeChanged(ManagedPropertyChangedEventArgs e)
         {
             if (e.Source == ManagedPropertyChangedSource.FromUIOperating)
             {
@@ -128,30 +137,5 @@ namespace JXC
         Year,
         [Label("全部")]
         All
-    }
-
-    internal class TimeSpanCriteriaConfig : EntityConfig<TimeSpanCriteria>
-    {
-        protected override void ConfigView()
-        {
-            View.DomainName("查询条件");
-
-            //横向显示查询面板。
-            View.DetailAsHorizontal = true;
-
-            using (View.OrderProperties())
-            {
-                //采购订单的查询面板中入库日期这一属性，只在 CS 界面中起作用。
-                if (IsWPF)
-                {
-                    View.Property(TimeSpanCriteria.TimeSpanTypeProperty)
-                        .HasLabel("入库日期").ShowIn(ShowInWhere.Detail);
-                }
-                View.Property(TimeSpanCriteria.FromProperty)
-                    .HasLabel("从").ShowInDetail(labelSize: 30);
-                View.Property(TimeSpanCriteria.ToProperty)
-                    .HasLabel("至").ShowInDetail(labelSize: 30);
-            }
-        }
     }
 }

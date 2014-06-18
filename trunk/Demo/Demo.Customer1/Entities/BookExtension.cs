@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OEA.ManagedProperty;
-using OEA.Library;
-using OEA.MetaModel;
-using OEA.MetaModel.View;
+using Rafy.ManagedProperty;
+using Rafy.Domain;
+using Rafy.MetaModel;
+using Rafy.MetaModel.View;
 
 namespace Demo
 {
@@ -29,7 +29,10 @@ namespace Demo
         {
             Meta.Property(BookExt.StorageInDateProperty).MapColumn().HasColumnName("StorageInDate");
         }
+    }
 
+    class BookExtWPFConfig : WPFViewConfig<Book>
+    {
         protected override void ConfigView()
         {
             View.Property(BookExt.StorageInDateProperty).HasLabel("入库日期").ShowIn(ShowInWhere.List);

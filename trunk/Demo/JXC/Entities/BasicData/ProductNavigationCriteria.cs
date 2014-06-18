@@ -14,28 +14,42 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA.MetaModel;
-using OEA.MetaModel.Attributes;
-using OEA.MetaModel.View;
-using OEA.Library;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
+using Rafy.Domain;
+using Rafy;
 
 namespace JXC
 {
     [QueryEntity, Serializable]
     public class ProductNavigationCriteria : Criteria
     {
-        public static readonly RefProperty<ProductCategory> ProductCategoryRefProperty =
-            P<ProductNavigationCriteria>.RegisterRef(e => e.ProductCategory, ReferenceType.Normal);
+        #region 构造函数
+
+        public ProductNavigationCriteria() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected ProductNavigationCriteria(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
+
+        public static readonly IRefIdProperty ProductCategoryIdProperty =
+            P<ProductNavigationCriteria>.RegisterRefId(e => e.ProductCategoryId, ReferenceType.Normal);
         public int ProductCategoryId
         {
-            get { return this.GetRefId(ProductCategoryRefProperty); }
-            set { this.SetRefId(ProductCategoryRefProperty, value); }
+            get { return (int)this.GetRefId(ProductCategoryIdProperty); }
+            set { this.SetRefId(ProductCategoryIdProperty, value); }
         }
+        public static readonly RefEntityProperty<ProductCategory> ProductCategoryProperty =
+            P<ProductNavigationCriteria>.RegisterRef(e => e.ProductCategory, ProductCategoryIdProperty);
         public ProductCategory ProductCategory
         {
-            get { return this.GetRefEntity(ProductCategoryRefProperty); }
-            set { this.SetRefEntity(ProductCategoryRefProperty, value); }
+            get { return this.GetRefEntity(ProductCategoryProperty); }
+            set { this.SetRefEntity(ProductCategoryProperty, value); }
         }
 
         public static readonly Property<bool> IncludeSubProperty = P<ProductNavigationCriteria>.Register(e => e.IncludeSub, true);
@@ -43,25 +57,6 @@ namespace JXC
         {
             get { return this.GetProperty(IncludeSubProperty); }
             set { this.SetProperty(IncludeSubProperty, value); }
-        }
-    }
-
-    internal class ProductNavigationCriteriaConfig : EntityConfig<ProductNavigationCriteria>
-    {
-        protected override void ConfigView()
-        {
-            View.UseWPFCommands(
-                "JXC.Commands.RefreshProductNavigation",
-                "JXC.Commands.OpenProductCategory"
-                );
-
-            View.Property(ProductNavigationCriteria.ProductCategoryRefProperty)
-                .HasLabel("商品类别").ShowInDetail(labelSize: 0)
-                .UseEditor(WPFEditorNames.EntitySelection_TiledList)
-                .FireNavigation();
-            View.Property(ProductNavigationCriteria.IncludeSubProperty)
-                .HasLabel("包含下级").ShowInDetail()
-                .FireNavigation();
         }
     }
 }

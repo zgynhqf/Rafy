@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OEA;
-using OEA.ORM.DbMigration;
-using OEA.MetaModel.View;
-using OEA.MetaModel;
+using Rafy;
+using Rafy.Domain.ORM.DbMigration;
+using Rafy.MetaModel.View;
+using Rafy.MetaModel;
 using Demo.WPF;
 
 namespace Demo
 {
-    class DemoExtLibrary : LibraryPlugin
+    class DemoExtLibrary : UIPlugin
     {
-        public override ReuseLevel ReuseLevel
+        protected override int SetupLevel
         {
             get { return ReuseLevel.Customized; }
         }

@@ -14,15 +14,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA;
+using Rafy;
 using System.Transactions;
-using OEA.Library;
-using hxy.Common;
+using Rafy.Domain;
 
 namespace JXC
 {
     [Serializable]
+    [Contract, ContractImpl]
     public class AddOtherStorageOutBillService : AddService
     {
         protected override Result ExecuteCore()
@@ -30,10 +32,10 @@ namespace JXC
             var storageOut = this.Item as OtherStorageOutBill;
             if (storageOut == null) throw new ArgumentNullException("storageIn");
 
-            var repo = RF.Create<OrderStorageInBill>();
+            var repo = RF.Concrete<OrderStorageInBillRepository>();
             using (var tran = RF.TransactionScope(repo))
             {
-                repo.Save(ref storageOut);
+                repo.Save(storageOut);
 
                 //修改所在仓库库存
                 var storage = storageOut.Storage;

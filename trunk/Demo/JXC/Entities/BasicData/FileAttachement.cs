@@ -13,23 +13,36 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OEA;
-using OEA.Library;
-using OEA.Library.Validation;
-using OEA.MetaModel;
-using OEA.MetaModel.Attributes;
-using OEA.MetaModel.View;
-using OEA.ManagedProperty;
 using System.IO;
-using JXC.Commands;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
+using System.Text;
+using Rafy;
+using Rafy.Domain;
+using Rafy.Domain.Validation;
+using Rafy.ManagedProperty;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
 
 namespace JXC
 {
+    /// <summary>
+    /// 附件
+    /// </summary>
     [Serializable]
     public abstract class FileAttachement : JXCEntity
     {
+        #region 构造函数
+
+        public FileAttachement() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected FileAttachement(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
+
         public static readonly Property<string> FileNameProperty = P<FileAttachement>.Register(e => e.FileName);
         public string FileName
         {
@@ -65,35 +78,7 @@ namespace JXC
             get { return "FileAttachements\\"; }
         }
 
-        protected override void OnInsert()
-        {
-            base.OnInsert();
-
-            this.SaveToDisk();
-        }
-
-        protected override void OnUpdate()
-        {
-            base.OnUpdate();
-
-            this.SaveToDisk();
-        }
-
-        protected override void OnDelete()
-        {
-            base.OnDelete();
-
-            this.DeleteFromDisk();
-        }
-
-        protected override void OnDbLoaded()
-        {
-            base.OnDbLoaded();
-
-            this.LoadFromDisk();
-        }
-
-        private void SaveToDisk()
+        internal void SaveToDisk()
         {
             var bytes = this.ContentBytes;
             if (bytes == null || bytes.Length == 0)
@@ -101,14 +86,14 @@ namespace JXC
                 throw new InvalidOperationException("附件没有相应的二进制数据。");
             }
 
-            var dir = OEAEnvironment.ToAbsolute(StoreDir);
+            var dir = RafyEnvironment.MapAbsolutePath(StoreDir);
             Directory.CreateDirectory(dir);
 
             var name = this.GetDiskFullName();
             File.WriteAllBytes(name, this.ContentBytes);
         }
 
-        private void LoadFromDisk()
+        internal void LoadFromDisk()
         {
             var name = this.GetDiskFullName();
             if (File.Exists(name))
@@ -117,7 +102,7 @@ namespace JXC
             }
         }
 
-        private void DeleteFromDisk()
+        internal void DeleteFromDisk()
         {
             var name = this.GetDiskFullName();
             File.Delete(name);
@@ -125,7 +110,7 @@ namespace JXC
 
         private string GetDiskFullName()
         {
-            return OEAEnvironment.ToAbsolute(StoreDir + this.Id);
+            return RafyEnvironment.MapAbsolutePath(StoreDir + this.Id);
         }
 
         #endregion
@@ -134,36 +119,37 @@ namespace JXC
     [Serializable]
     public abstract class FileAttachementList : JXCEntityList { }
 
-    public abstract class FileAttachementRepository : EntityRepository
+    public abstract class FileAttachementRepository : JXCEntityRepository
     {
         protected FileAttachementRepository() { }
+    }
+
+    [DataProviderFor(typeof(FileAttachementRepository))]
+    public class FileAttachementDataProvider : RepositoryDataProvider
+    {
+        protected override void Submit(SubmitArgs e)
+        {
+            if (e.Action != SubmitAction.Delete)
+            {
+                (e.Entity as FileAttachement).SaveToDisk();
+            }
+
+            base.Submit(e);
+
+            if (e.Action == SubmitAction.Delete)
+            {
+                (e.Entity as FileAttachement).DeleteFromDisk();
+            }
+        }
     }
 
     internal class FileAttachementConfig : EntityConfig<FileAttachement>
     {
         protected override void ConfigMeta()
         {
-            Meta.MapTable().MapAllPropertiesToTableExcept(
+            Meta.MapTable().MapAllPropertiesExcept(
                 FileAttachement.ContentBytesProperty
                 );
-        }
-
-        protected override void ConfigView()
-        {
-            View.DomainName("附件").HasDelegate(FileAttachement.FileNameProperty);
-
-            View.ClearWPFCommands(false)
-                .UseWPFCommands(
-                typeof(AddFileAttachement),
-                typeof(OpenFileAttachement),
-                WPFCommandNames.Delete
-                );
-
-            using (View.OrderProperties())
-            {
-                View.Property(FileAttachement.FileNameProperty).HasLabel("文件名").ShowIn(ShowInWhere.All);
-                View.Property(FileAttachement.UploadDateProperty).HasLabel("创建日期").ShowIn(ShowInWhere.ListDetail);
-            }
         }
     }
 }

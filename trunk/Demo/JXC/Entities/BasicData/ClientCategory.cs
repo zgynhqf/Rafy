@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20120413
@@ -14,17 +14,31 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA.Library;
-using OEA.MetaModel;
-using OEA.MetaModel.Attributes;
-using OEA.MetaModel.View;
+using Rafy.Domain;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
 
 namespace JXC
 {
+    /// <summary>
+    /// 客户类别
+    /// </summary>
     [RootEntity, Serializable]
-    public class ClientCategory : JXCEntity
+    public partial class ClientCategory : JXCEntity
     {
+        #region 构造函数
+
+        public ClientCategory() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected ClientCategory(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
+
         public static readonly string SupplierName = "供应商";
 
         public static readonly string CustomerName = "客户";
@@ -35,24 +49,32 @@ namespace JXC
             get { return this.GetProperty(NameProperty); }
             set { this.SetProperty(NameProperty, value); }
         }
-
-        protected override void OnDelete()
-        {
-            if (this.Name == SupplierName || this.Name == CustomerName)
-            {
-                throw new InvalidOperationException("不能删除系统内置的客户类型：" + this.Name);
-            }
-
-            base.OnDelete();
-        }
     }
 
     [Serializable]
-    public class ClientCategoryList : JXCEntityList { }
+    public partial class ClientCategoryList : JXCEntityList { }
 
-    public class ClientCategoryRepository : EntityRepository
+    public partial class ClientCategoryRepository : JXCEntityRepository
     {
         protected ClientCategoryRepository() { }
+    }
+
+    [DataProviderFor(typeof(ClientCategoryRepository))]
+    public partial class ClientCategoryDataProvider : RepositoryDataProvider
+    {
+        protected override void Submit(SubmitArgs e)
+        {
+            if (e.Action == SubmitAction.Delete)
+            {
+                var entity = e.Entity as ClientCategory;
+                if (entity.Name == ClientCategory.SupplierName || entity.Name == ClientCategory.CustomerName)
+                {
+                    throw new InvalidOperationException("不能删除系统内置的客户类型：" + entity.Name);
+                }
+            }
+
+            base.Submit(e);
+        }
     }
 
     internal class ClientCategoryConfig : EntityConfig<ClientCategory>
@@ -61,22 +83,9 @@ namespace JXC
         {
             Meta.SupportTree();
 
-            Meta.MapTable().MapAllPropertiesToTable();
+            Meta.MapTable().MapAllProperties();
 
-            Meta.EnableCache();
-        }
-
-        protected override void ConfigView()
-        {
-            base.ConfigView();
-
-            View.DomainName("客户类别").HasDelegate(ClientCategory.NameProperty);
-
-            using (View.OrderProperties())
-            {
-                View.Property(ClientCategory.TreeCodeProperty).HasLabel("编码").ShowIn(ShowInWhere.All).Readonly();
-                View.Property(ClientCategory.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
-            }
+            Meta.EnableClientCache();
         }
     }
 }

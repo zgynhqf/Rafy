@@ -1,38 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA;
-using OEA.Library;
-using OEA.Library.Validation;
-using OEA.MetaModel;
-using OEA.MetaModel.Attributes;
-using OEA.MetaModel.View;
-using OEA.ManagedProperty;
+using Rafy;
+using Rafy.Domain;
+using Rafy.Domain.Validation;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
+using Rafy.ManagedProperty;
 
 namespace JXC
 {
     [ChildEntity, Serializable]
-    public class PurchaseOrderAttachement : FileAttachement
+    public partial class PurchaseOrderAttachement : FileAttachement
     {
-        public static readonly RefProperty<PurchaseOrder> PurchaseOrderRefProperty =
-            P<PurchaseOrderAttachement>.RegisterRef(e => e.PurchaseOrder, ReferenceType.Parent);
+        #region 构造函数
+
+        public PurchaseOrderAttachement() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected PurchaseOrderAttachement(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
+
+        public static readonly IRefIdProperty PurchaseOrderIdProperty =
+            P<PurchaseOrderAttachement>.RegisterRefId(e => e.PurchaseOrderId, ReferenceType.Parent);
         public int PurchaseOrderId
         {
-            get { return this.GetRefId(PurchaseOrderRefProperty); }
-            set { this.SetRefId(PurchaseOrderRefProperty, value); }
+            get { return (int)this.GetRefId(PurchaseOrderIdProperty); }
+            set { this.SetRefId(PurchaseOrderIdProperty, value); }
         }
+        public static readonly RefEntityProperty<PurchaseOrder> PurchaseOrderProperty =
+            P<PurchaseOrderAttachement>.RegisterRef(e => e.PurchaseOrder, PurchaseOrderIdProperty);
         public PurchaseOrder PurchaseOrder
         {
-            get { return this.GetRefEntity(PurchaseOrderRefProperty); }
-            set { this.SetRefEntity(PurchaseOrderRefProperty, value); }
+            get { return this.GetRefEntity(PurchaseOrderProperty); }
+            set { this.SetRefEntity(PurchaseOrderProperty, value); }
         }
     }
 
     [Serializable]
-    public class PurchaseOrderAttachementList : FileAttachementList { }
+    public partial class PurchaseOrderAttachementList : FileAttachementList { }
 
-    public class PurchaseOrderAttachementRepository : FileAttachementRepository
+    public partial class PurchaseOrderAttachementRepository : FileAttachementRepository
     {
         protected PurchaseOrderAttachementRepository() { }
     }

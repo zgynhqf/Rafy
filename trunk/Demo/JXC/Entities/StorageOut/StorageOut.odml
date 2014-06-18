@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<Document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <EntityTypes>
+    <EntityTypeElement FullName="JXC.StorageOutBill" Left="183" Top="101" Width="0" Height="0" HideProperties="true">
+      <Properties>
+        <PropertyElement Name="Code" PropertyType="String" />
+        <PropertyElement Name="Date" PropertyType="DateTime" />
+        <PropertyElement Name="Comment" PropertyType="String" />
+        <PropertyElement Name="TotalAmount" PropertyType="Int" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="JXC.OtherStorageOutBill" Left="49" Top="241" Width="0" Height="0" HideProperties="true">
+      <Properties />
+    </EntityTypeElement>
+    <EntityTypeElement FullName="JXC.StorageOutBillItem" Left="243" Top="286" Width="0" Height="0" HideProperties="true">
+      <Properties>
+        <PropertyElement Name="View_ProductStorageAmount" PropertyType="Int" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="JXC.Storage" Left="426" Top="107" Width="0" Height="0" HideProperties="true">
+      <Properties>
+        <PropertyElement Name="Code" PropertyType="String" />
+        <PropertyElement Name="Name" PropertyType="String" />
+        <PropertyElement Name="Address" PropertyType="String" />
+        <PropertyElement Name="ResponsiblePerson" PropertyType="String" />
+        <PropertyElement Name="Area" PropertyType="String" />
+        <PropertyElement Name="IsDefault" PropertyType="Boolean" />
+        <PropertyElement Name="TotalAmount" PropertyType="Int" />
+      </Properties>
+    </EntityTypeElement>
+  </EntityTypes>
+  <EnumTypes />
+  <Connections>
+    <ConnectionElement From="JXC.OtherStorageOutBill" To="JXC.StorageOutBill" Hidden="false" ConnectionType="Inheritance">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="JXC.StorageOutBillItem" To="JXC.StorageOutBill" Label="StorageOutBillItemList" Hidden="false" ConnectionType="Composition">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="JXC.StorageOutBill" To="JXC.Storage" Label="Storage" Hidden="false" ConnectionType="Reference">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+  </Connections>
+</Document>

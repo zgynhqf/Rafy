@@ -1,30 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA;
-using OEA.Library;
-using OEA.MetaModel;
-using OEA.MetaModel.Attributes;
-using OEA.MetaModel.View;
+using Rafy;
+using Rafy.Domain;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
 
 namespace Demo
 {
-    [Serializable]
-    [ChildEntity]
-    public class Chapter : DemoEntity
+    [ChildEntity, Serializable]
+    public partial class Chapter : DemoEntity
     {
-        public static readonly RefProperty<Book> BookRefProperty =
-            P<Chapter>.RegisterRef(e => e.Book, ReferenceType.Parent);
+        #region 构造函数
+
+        public Chapter() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected Chapter(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
+
+        public static readonly IRefIdProperty BookIdProperty =
+            P<Chapter>.RegisterRefId(e => e.BookId, ReferenceType.Parent);
         public int BookId
         {
-            get { return this.GetRefId(BookRefProperty); }
-            set { this.SetRefId(BookRefProperty, value); }
+            get { return (int)this.GetRefId(BookIdProperty); }
+            set { this.SetRefId(BookIdProperty, value); }
         }
+        public static readonly RefEntityProperty<Book> BookProperty =
+            P<Chapter>.RegisterRef(e => e.Book, BookIdProperty);
         public Book Book
         {
-            get { return this.GetRefEntity(BookRefProperty); }
-            set { this.SetRefEntity(BookRefProperty, value); }
+            get { return this.GetRefEntity(BookProperty); }
+            set { this.SetRefEntity(BookProperty, value); }
         }
 
         public static readonly Property<string> NameProperty = P<Chapter>.Register(e => e.Name);
@@ -36,28 +48,33 @@ namespace Demo
     }
 
     [Serializable]
-    public class ChapterList : DemoEntityList { }
+    public partial class ChapterList : DemoEntityList { }
 
-    public class ChapterRepository : EntityRepository
+    public partial class ChapterRepository : DemoEntityRepository
     {
         protected ChapterRepository() { }
     }
 
-    internal class ChapterConfig : EntityConfig<Chapter>
+    internal class ChapterConfig : DemoEntityConfig<Chapter>
     {
         protected override void ConfigMeta()
         {
             base.ConfigMeta();
 
             Meta.MapTable().MapProperties(
-                Chapter.BookRefProperty,
+                Chapter.BookIdProperty,
                 Chapter.NameProperty
                 );
         }
+    }
 
+    internal class ChapterWPFViewConfig : DemoEntityWPFViewConfig<Chapter>
+    {
         protected override void ConfigView()
         {
             base.ConfigView();
+
+            View.UseDefaultCommands();
 
             View.HasDelegate(Chapter.NameProperty).DomainName("章节");
         }

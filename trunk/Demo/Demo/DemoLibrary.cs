@@ -1,32 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA;
-using OEA.ORM.DbMigration;
-using OEA.MetaModel.View;
-using OEA.MetaModel;
+using Rafy;
+using Rafy.Domain.ORM.DbMigration;
+using Rafy.MetaModel.View;
+using Rafy.MetaModel;
 using Demo.WPF;
 
 namespace Demo
 {
-    class DemoLibrary : LibraryPlugin
+    class DemoLibrary : UIPlugin
     {
-        public override ReuseLevel ReuseLevel
-        {
-            get { return ReuseLevel.Main; }
-        }
-
         public override void Initialize(IApp app)
         {
-            app.AllPluginsMetaIntialized += (o, e) =>
+            app.MetaCompiled += (o, e) =>
             {
                 //定义书籍查询界面的结构
                 UIModel.AggtBlocks.DefineBlocks("书籍查询界面", m => new AggtBlocks
                 {
                     MainBlock = new Block(typeof(Book))
                     {
-                        ExtendView = "书籍查询界面_Book"
+                        //ExtendView = "书籍查询界面_Book"
                     },
                     Surrounders = 
                     {
@@ -37,28 +34,42 @@ namespace Demo
 
             app.ModuleOperations += (o, e) =>
             {
-                var moduleBookImport = CommonModel.Modules.AddRoot(new ModuleMeta
+                if (RafyEnvironment.Location.IsWebUI)
                 {
-                    Label = "书籍管理系统示例",
-                    Children =
+                    var moduleBookImport = CommonModel.Modules.AddRoot(new WebModuleMeta
                     {
-                        new ModuleMeta{ Label = "类别管理", EntityType = typeof(BookCategory)},
-                        new ModuleMeta{ Label = "书籍管理", EntityType = typeof(Book)},
-                        new ModuleMeta{ Label = "图书管理员", EntityType = typeof(BookAdministrator)},
-                        new ModuleMeta{ Label = "书籍查询", EntityType = typeof(Book), WPFTemplateType = typeof(BookQueryModule)}
-                    }
-                });
+                        Label = "书籍管理系统示例",
+                        Children =
+                        {
+                            new WebModuleMeta{ Label = "类别管理", EntityType = typeof(BookCategory)},
+                            new WebModuleMeta{ Label = "书籍管理", EntityType = typeof(Book)},
+                            new WebModuleMeta{ Label = "图书管理员", EntityType = typeof(BookAdministrator)},
+                            new WebModuleMeta{ Label = "书籍查询", EntityType = typeof(Book), BlocksTemplate = typeof(BookQueryModule)}
+                        }
+                    });
 
-                if (OEAEnvironment.IsWeb)
-                {
-                    moduleBookImport.Children.Add(new ModuleMeta { Label = "163", CustomUI = "http://www.163.com" });
+                    moduleBookImport.Children.Add(new WebModuleMeta { Label = "163", Url = "http://www.163.com" });
 
                     var bookQuery = moduleBookImport.Children[3];
                     bookQuery.AggtBlocksName = "书籍查询界面";
-                    bookQuery.Children.Add(new ModuleMeta
+                    bookQuery.Children.Add(new WebModuleMeta
                     {
                         Label = "书籍查询(Url访问)",
-                        CustomUI = "EntityModule?isAggt=1&type=Demo.Book&viewName=书籍查询界面"
+                        Url = "EntityModule?isAggt=1&type=Demo.Book&viewName=书籍查询界面"
+                    });
+                }
+                else
+                {
+                    CommonModel.Modules.AddRoot(new WPFModuleMeta
+                    {
+                        Label = "书籍管理系统示例",
+                        Children =
+                        {
+                            new WPFModuleMeta{ Label = "类别管理", EntityType = typeof(BookCategory)},
+                            new WPFModuleMeta{ Label = "书籍管理", EntityType = typeof(Book)},
+                            new WPFModuleMeta{ Label = "图书管理员", EntityType = typeof(BookAdministrator)},
+                            new WPFModuleMeta{ Label = "书籍查询", EntityType = typeof(Book), BlocksTemplate = typeof(BookQueryModule)}
+                        }
                     });
                 }
             };

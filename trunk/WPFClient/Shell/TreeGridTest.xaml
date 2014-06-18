@@ -1,0 +1,21 @@
+﻿<Window x:Class="WPFClient.Shell.TreeGridTest" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:rafy="clr-namespace:Rafy.WPF.Controls;assembly=Rafy.WPF.Controls"
+        xmlns:local="clr-namespace:WPFClient.Shell" Title="TreeGridTest" Height="300" Width="300">
+    <Grid>
+        <local:EntityTreeGrid x:Name="grid" OnlyGridMode="True">
+            <local:EntityTreeGrid.Columns>
+                <rafy:TextTreeGridColumn HeaderLabel="标题" PropertyName="Title" />
+                <rafy:TextTreeGridColumn HeaderLabel="标题" PropertyName="LogTime" />
+                <rafy:TextTreeGridColumn HeaderLabel="标题" PropertyName="EntityId">
+                    <rafy:TextTreeGridColumn.DisplayTextBlockStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextAlignment" Value="Right" />
+                        </Style>
+                    </rafy:TextTreeGridColumn.DisplayTextBlockStyle>
+                </rafy:TextTreeGridColumn>
+                <rafy:TextTreeGridColumn HeaderLabel="标题" PropertyName="Type" />
+            </local:EntityTreeGrid.Columns>
+        </local:EntityTreeGrid>
+    </Grid>
+</Window>

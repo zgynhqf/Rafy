@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using DbMigration;
-using OEA.Library;
+using Rafy.DbMigration;
+using Rafy.Domain;
 using System.Transactions;
 
 namespace JXC.DbMigrations
@@ -19,8 +21,8 @@ namespace JXC.DbMigrations
         {
             this.RunCode(db =>
             {
-                var ccRepo = RF.Concreate<ClientCategoryRepository>();
-                var cclist = ccRepo.GetAll(false);
+                var ccRepo = RF.Concrete<ClientCategoryRepository>();
+                var cclist = ccRepo.GetAll();
                 if (cclist.Count == 0)
                 {
                     using (var tran = RF.TransactionScope(ccRepo))
@@ -30,7 +32,7 @@ namespace JXC.DbMigrations
                         RF.Save(supplier);
                         RF.Save(customer);
 
-                        var clientRepo = RF.Concreate<ClientInfoRepository>();
+                        var clientRepo = RF.Concrete<ClientInfoRepository>();
                         clientRepo.Save(new ClientInfo
                         {
                             ClientCategory = supplier,

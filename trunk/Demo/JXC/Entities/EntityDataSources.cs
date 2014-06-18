@@ -14,8 +14,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA.Library;
+using Rafy.Domain;
 
 namespace JXC
 {
@@ -26,12 +28,12 @@ namespace JXC
     {
         public static ClientInfoList Suppliers()
         {
-            return RF.Concreate<ClientInfoRepository>().GetSuppliers();
+            return RF.Concrete<ClientInfoRepository>().GetSuppliers();
         }
 
         public static ClientInfoList Customers()
         {
-            return RF.Concreate<ClientInfoRepository>().GetCustomers();
+            return RF.Concrete<ClientInfoRepository>().GetCustomers();
         }
     }
 }

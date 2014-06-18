@@ -1,21 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA;
-using OEA.Library;
-using OEA.Library.Validation;
-using OEA.MetaModel;
-using OEA.MetaModel.Attributes;
-using OEA.MetaModel.View;
-using OEA.ManagedProperty;
-using OEA.ORM;
+using Rafy;
+using Rafy.Domain;
+using Rafy.Domain.ORM;
+using Rafy.Domain.ORM.Query;
+using Rafy.Domain.Validation;
+using Rafy.ManagedProperty;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
 
 namespace FM
 {
     [RootEntity, Serializable]
-    public class Tag : FMEntity
+    public partial class Tag : FMEntity
     {
+        #region 构造函数
+
+        public Tag() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected Tag(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
+
         public static readonly Property<string> NameProperty = P<Tag>.Register(e => e.Name);
         public string Name
         {
@@ -46,39 +58,45 @@ namespace FM
     }
 
     [Serializable]
-    public class TagList : FMEntityList
-    {
-        protected override void OnQueryDbOrder(IQuery query)
-        {
-            query.Order(Tag.OrderNoProperty, true).Order(Tag.IdProperty, true);
-        }
-    }
+    public partial class TagList : FMEntityList { }
 
-    public class TagRepository : EntityRepository
+    public partial class TagRepository : FMEntityRepository
     {
         protected TagRepository() { }
 
         public TagList GetValidList()
         {
-            var all = this.GetAll();
+            var all = this.CacheAll();
             return this.CreateList(all.Where(e => !e.CastTo<Tag>().NotUsed)) as TagList;
+        }
+
+        protected override void OnQuerying(EntityQueryArgs args)
+        {
+            var query = args.Query;
+            query.OrderBy.Add(query.MainTable.Column(Tag.OrderNoProperty));
+            query.OrderBy.Add(query.MainTable.Column(Tag.IdProperty));
+
+            base.OnQuerying(args);
         }
     }
 
-    internal class TagConfig : EntityConfig<Tag>
+    internal class TagConfig : FMEntityConfig<Tag>
     {
         protected override void ConfigMeta()
         {
-            Meta.MapTable().MapAllPropertiesToTable();
+            Meta.MapTable().MapAllProperties();
 
-            //Meta.DataOrderBy(Tag.OrderNoProperty, false);
-
-            Meta.EnableCache();
+            Meta.EnableClientCache();
         }
+    }
 
+    internal class TagWPFViewConfig : WPFViewConfig<Tag>
+    {
         protected override void ConfigView()
         {
             View.DomainName("常用标签").HasDelegate(Tag.NameProperty);
+
+            View.UseDefaultCommands();
 
             using (View.OrderProperties())
             {

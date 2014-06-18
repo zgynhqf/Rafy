@@ -1,6 +1,5 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Configuration;
 using System.Linq;
 using System.Timers;
@@ -9,20 +8,18 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
-using OEA;
-using OEA.Library;
+using Rafy;
+using Rafy.Domain;
+using Rafy.MetaModel;
+using Rafy.MetaModel.View;
+using Rafy.WPF;
 
-using OEA.MetaModel;
-using OEA.MetaModel.View;
-using OEA.Module;
-using OEA.Module.WPF;
-using Common;
-
-namespace OEA.Module.WPF.Shell
+namespace Rafy.WPF.Shell
 {
-    [Export(ComposableNames.MainWindow, typeof(Window))]
     public partial class DefaultShell : Window, IShell
     {
+        public static Type TopBarControlType = typeof(DefaultTopBanner);
+
         private TabControlWorkSpace _workspace;
 
         public DefaultShell()
@@ -32,11 +29,12 @@ namespace OEA.Module.WPF.Shell
             this._workspace = new TabControlWorkSpace(workspace);
 
             //绑定皮肤
-            themes.ItemsSource = ThemeManager.GetThemes();
-
-            //选择皮肤
-            string theme = ConfigurationHelper.GetAppSettingOrDefault("Theme", "Blue");
-            themes.SelectedValue = theme;
+            skins.ItemsSource = SkinManager.GetSkins();
+            skins.SelectedValue = SkinManager.Current;
+            skins.SelectionChanged += (o, e) =>
+            {
+                SkinManager.Apply(skins.SelectedValue as string);
+            };
 
             base.Loaded += new RoutedEventHandler(OnLoaded);
         }
@@ -48,52 +46,26 @@ namespace OEA.Module.WPF.Shell
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            //topBannerContainer
-            var content = App.Current.CompositionContainer
-                .TryGetExportedLastVersionValue<UserControl>(ComposableNames.MainWindow_TopBanner);
-            topBannerContainer.Content = content;
+            this.Title = "管理信息系统".Translate();
 
-            this.ShowModules();
+            //topBannerContainer
+            if (TopBarControlType != null)
+            {
+                topBannerContainer.Content = Activator.CreateInstance(TopBarControlType) as UserControl;
+            }
         }
 
-        private void ShowModules()
+        internal void ShowModules()
         {
-            var modules = App.Current.GetUserRootModules();
+            //绑定数据
+            tvModules.ItemsSource = App.Current.UserRootModules;
 
-            //初始化 TreeView
-            tvModules.ItemsSource = modules;
-            ShellHelper.ForeachItemContainer<TreeViewItem>(tvModules, treeViewItem =>
+            //直接展开所有 TreeView 结点
+            ItemsControlHelper.ForeachItemContainer<TreeViewItem>(tvModules, treeViewItem =>
             {
                 treeViewItem.IsExpanded = true;
                 return false;
             });
-
-            //行为
-            tvModules.SelectedItemChanged += (o, e) =>
-            {
-                var item = e.NewValue as ModuleViewModel;
-                modules.SelectSingle(item);
-            };
-
-            //根据模块页签切换时模块列表自动切换
-            App.Current.Workspace.WindowActived += (s, e) =>
-            {
-                var title = WorkspaceWindow.GetTitle(e.ActiveWindow);
-
-                var vm = modules.FindByLabel(title);
-
-                ShellHelper.ForeachItemContainer<TreeViewItem>(tvModules, tvi =>
-                {
-                    if (tvi.DataContext == vm)
-                    {
-                        tvi.IsSelected = true;
-                        return true;
-                    }
-                    return false;
-                });
-
-                modules.SelectSingle(vm);
-            };
         }
 
         private void sdScale_MouseDoubleClick(object sender, MouseButtonEventArgs e)

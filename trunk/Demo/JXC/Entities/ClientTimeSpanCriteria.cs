@@ -14,43 +14,42 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA.Library;
-using OEA.MetaModel;
-using OEA.MetaModel.Attributes;
-using OEA.MetaModel.View;
+using Rafy;
+using Rafy.Domain;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
 
 namespace JXC
 {
     [QueryEntity, Serializable]
     public class ClientTimeSpanCriteria : TimeSpanCriteria
     {
-        public static readonly RefProperty<ClientInfo> ClientInfoRefProperty =
-            P<ClientTimeSpanCriteria>.RegisterRef(e => e.ClientInfo, ReferenceType.Normal);
+        #region 构造函数
+
+        public ClientTimeSpanCriteria() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected ClientTimeSpanCriteria(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
+
+        public static readonly IRefIdProperty ClientInfoIdProperty =
+            P<ClientTimeSpanCriteria>.RegisterRefId(e => e.ClientInfoId, ReferenceType.Normal);
         public int? ClientInfoId
         {
-            get { return this.GetRefNullableId(ClientInfoRefProperty); }
-            set { this.SetRefNullableId(ClientInfoRefProperty, value); }
+            get { return (int?)this.GetRefNullableId(ClientInfoIdProperty); }
+            set { this.SetRefNullableId(ClientInfoIdProperty, value); }
         }
+        public static readonly RefEntityProperty<ClientInfo> ClientInfoProperty =
+            P<ClientTimeSpanCriteria>.RegisterRef(e => e.ClientInfo, ClientInfoIdProperty);
         public ClientInfo ClientInfo
         {
-            get { return this.GetRefEntity(ClientInfoRefProperty); }
-            set { this.SetRefEntity(ClientInfoRefProperty, value); }
-        }
-    }
-
-    internal class ClientTimeSpanCriteriaConfig : EntityConfig<ClientTimeSpanCriteria>
-    {
-        protected override void ConfigView()
-        {
-            using (View.OrderProperties())
-            {
-                View.Property(TimeSpanCriteria.TimeSpanTypeProperty);
-                View.Property(TimeSpanCriteria.FromProperty);
-                View.Property(TimeSpanCriteria.ToProperty);
-                View.Property(ClientTimeSpanCriteria.ClientInfoRefProperty)
-                    .HasLabel("相关单位：").ShowIn(ShowInWhere.Detail);
-            }
+            get { return this.GetRefEntity(ClientInfoProperty); }
+            set { this.SetRefEntity(ClientInfoProperty, value); }
         }
     }
 }

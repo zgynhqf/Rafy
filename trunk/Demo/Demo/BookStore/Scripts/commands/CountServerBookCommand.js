@@ -1,10 +1,10 @@
 ﻿Ext.define('CountServerBookCommand', {
-    extend: 'Oea.cmd.Command',
+    extend: 'Rafy.cmd.Command',
     config: {
         meta: { text: "统计服务器所有书量" }
     },
     execute: function (listView) {
-        Oea.invokeSvc({
+        Rafy.invokeSvc({
             svc: 'CountServerBookService',
             svcParams: {
                 Books: listView.serializeData({

@@ -1,26 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA.MetaModel.Attributes;
-using OEA.WPF.Command;
-using OEA.Module.WPF;
-using OEA.Library;
+using Rafy.MetaModel.Attributes;
+using Rafy.WPF.Command;
+using Rafy.WPF;
+using Rafy.Domain;
 
 namespace Demo.WPF.Commands
 {
     [Command(Label = "命令测试")]
     public class DemoCommand : ListViewCommand
     {
-        public override bool CanExecute(ListObjectView view)
+        public override bool CanExecute(ListLogicalView view)
         {
             return view.Current != null;
         }
 
-        public override void Execute(ListObjectView view)
+        public override void Execute(ListLogicalView view)
         {
             //调用服务端查询库中的所有书籍量
-            var svc = new CountServerBookJsonService();
+            var svc = ServiceFactory.Create<CountServerBookJsonService>();
             svc.Invoke();
             App.MessageBox.Show("库中一共有书籍：" + svc.BookCount + "本。");
 

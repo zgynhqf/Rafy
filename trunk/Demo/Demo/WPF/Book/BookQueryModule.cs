@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA.Module.WPF;
-using OEA.MetaModel.View;
+using Rafy.WPF;
+using Rafy.MetaModel.View;
 
 namespace Demo.WPF
 {
