@@ -1,0 +1,244 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D226414C-37F6-4618-8B91-7E80E7D2C42E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Rafy.UnitTest</RootNamespace>
+    <AssemblyName>Rafy.UnitTest</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Entities\Blog\Article.cs" />
+    <Compile Include="Entities\Blog\Article.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>Article.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Blog\BlogUser.cs" />
+    <Compile Include="Entities\Blog\BlogUser.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>BlogUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\BookStore\Book.cs" />
+    <Compile Include="Entities\BookStore\Book.g.cs">
+      <DependentUpon>Book.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\BookStore\BookCategory.cs" />
+    <Compile Include="Entities\BookStore\BookCategory.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>BookCategory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\BookStore\BookLoc.cs" />
+    <Compile Include="Entities\BookStore\BookLoc.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>BookLoc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\BookStore\Chapter.cs" />
+    <Compile Include="Entities\BookStore\Chapter.g.cs">
+      <DependentUpon>Chapter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\BookStore\Section.cs" />
+    <Compile Include="Entities\BookStore\Section.g.cs">
+      <DependentUpon>Section.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\BookStore\SectionOwner.cs" />
+    <Compile Include="Entities\BookStore\SectionOwner.g.cs">
+      <DependentUpon>SectionOwner.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\CarStore\Car.cs" />
+    <Compile Include="Entities\CarStore\Car.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>Car.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Customer.cs" />
+    <Compile Include="Entities\Customer.g.cs">
+      <DependentUpon>Customer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DMS\Folder.cs" />
+    <Compile Include="Entities\DMS\Folder.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>Folder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GIX4\Building.cs" />
+    <Compile Include="Entities\GIX4\Building.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>Building.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GIX4\PBS.cs" />
+    <Compile Include="Entities\GIX4\PBS.g.cs">
+      <DependentUpon>PBS.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GIX4\PBSType.cs" />
+    <Compile Include="Entities\GIX4\PBSType.g.cs">
+      <DependentUpon>PBSType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\MemoryCustomer.g.cs">
+      <DependentUpon>MemoryCustomer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Redundancy\A.cs" />
+    <Compile Include="Entities\Redundancy\A.g.cs">
+      <DependentUpon>A.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Redundancy\B.cs" />
+    <Compile Include="Entities\Redundancy\B.g.cs">
+      <DependentUpon>B.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Redundancy\C.cs" />
+    <Compile Include="Entities\Redundancy\C.g.cs">
+      <DependentUpon>C.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Redundancy\D.cs" />
+    <Compile Include="Entities\Redundancy\D.g.cs">
+      <DependentUpon>D.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Redundancy\E.cs" />
+    <Compile Include="Entities\Redundancy\E.g.cs">
+      <DependentUpon>E.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\RoleType.cs" />
+    <Compile Include="Entities\MemoryCustomer.cs" />
+    <Compile Include="Entities\StringTest\HouseMerchant.cs" />
+    <Compile Include="Entities\StringTest\HouseMerchant.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>HouseMerchant.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\StringTest\Lessee.cs" />
+    <Compile Include="Entities\StringTest\Lessee.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>Lessee.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\StringTest\MerchantItem.cs" />
+    <Compile Include="Entities\StringTest\MerchantItem.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>MerchantItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\StringTest\NoRepoEntity.cs" />
+    <Compile Include="Entities\StringTest\NoRepoEntity.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>NoRepoEntity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\StringTest\StringEntityTestEntity.cs" />
+    <Compile Include="Entities\StringTest\House.cs" />
+    <Compile Include="Entities\StringTest\House.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>House.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\TestAdministrator.g.cs">
+      <DependentUpon>TestAdministrator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\TestRole.g.cs">
+      <DependentUpon>TestRole.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\TestTreeTask.g.cs">
+      <DependentUpon>TestTreeTask.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\TestUser.g.cs">
+      <DependentUpon>TestUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\TestUserQueryCriteria.cs" />
+    <Compile Include="Entities\UnitTestEntity2.cs" />
+    <Compile Include="Ext\EntityRepositoryExtension.cs" />
+    <Compile Include="Ext\TestUserRepositoryExt.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Entities\TestAdministrator.cs" />
+    <Compile Include="Entities\TestRole.cs" />
+    <Compile Include="Entities\TestTreeTask.cs" />
+    <Compile Include="Entities\TestUser.cs" />
+    <Compile Include="Ext\TestUserExt.cs" />
+    <Compile Include="Entities\UnitTestEntity.cs" />
+    <Compile Include="Services\AddBookService.cs" />
+    <Compile Include="Services\TestAddService.cs" />
+    <Compile Include="UnitTestPlugin.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Entities\_TestDb.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Rafy\Rafy.Utils\Rafy.Utils.csproj">
+      <Project>{796B149B-32C9-4BB0-A23F-69C012450DB8}</Project>
+      <Name>Rafy.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy\Rafy.DbMigration\Rafy.DbMigration.csproj">
+      <Project>{D7C4F80D-24A4-47F1-985C-CFA55CFA13E9}</Project>
+      <Name>Rafy.DbMigration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy\Rafy.ManagedProperty\Rafy.ManagedProperty.csproj">
+      <Project>{66BE29D5-F1CA-4941-A4EB-6B3E8F577166}</Project>
+      <Name>Rafy.ManagedProperty</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy\Rafy.Domain\Rafy.Domain.csproj">
+      <Project>{9F8BB429-70DE-449A-8A67-5190191E7EE6}</Project>
+      <Name>Rafy.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy\Rafy\Rafy.csproj">
+      <Project>{966A5BF2-D690-426B-AD68-AD868BB8F855}</Project>
+      <Name>Rafy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy\Plugins\Compatibility\Rafy.Domain.OldQuery\Rafy.Compatibility.Domain.OldQuery.csproj">
+      <Project>{d63382c2-8f48-4388-8197-6fc824d77f92}</Project>
+      <Name>Rafy.Compatibility.Domain.OldQuery</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Entities\BookStore\BookStore.odml" />
+    <None Include="Entities\GIX4\GIX4.odml" />
+    <None Include="Entities\Redundancy\Redundancy.odml" />
+    <None Include="Entities\StringTest\StringTest.odml" />
+    <None Include="Entities\TestEntities.odml" />
+    <None Include="Hxy Key.snk" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-16"?>
+<Document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" HideNonsenceLabels="false">
+  <EntityTypes>
+    <EntityTypeElement FullName="UT.House" Left="541" Top="324" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
+      <Properties>
+        <PropertyElement Name="Name" PropertyType="String" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="UT.HouseMerchant" Label="房产商人" Left="182" Top="153" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
+      <Properties>
+        <PropertyElement Name="Name" PropertyType="String" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="UT.MerchantItem" Label="商人的房产" Left="183" Top="325" Width="0" Height="0" HideProperties="true" IsAggtRoot="false">
+      <Properties>
+        <PropertyElement Name="Name" PropertyType="String" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="UT.Lessee" Label="承租人" Left="684" Top="182" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
+      <Properties>
+        <PropertyElement Name="Name" PropertyType="String" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="UT.StringTestEntity" Left="325" Top="4" Width="0" Height="0" HideProperties="true" IsAggtRoot="false">
+      <Properties />
+    </EntityTypeElement>
+    <EntityTypeElement FullName="UT.StringTestIntEntity" Left="544" Top="5" Width="0" Height="0" HideProperties="true" IsAggtRoot="false">
+      <Properties />
+    </EntityTypeElement>
+  </EntityTypes>
+  <EnumTypes />
+  <Connections>
+    <ConnectionElement From="UT.MerchantItem" To="UT.HouseMerchant" Label="MerchantItemList" Hidden="false" LabelVisible="true" ConnectionType="Composition">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="UT.MerchantItem" To="UT.House" Label="House" Hidden="false" LabelVisible="true" ConnectionType="Reference">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="UT.House" To="UT.Lessee" Label="Lessee" Hidden="false" LabelVisible="true" ConnectionType="NullableReference">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="UT.House" To="UT.StringTestEntity" Hidden="false" LabelVisible="true" ConnectionType="Inheritance">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="UT.HouseMerchant" To="UT.StringTestEntity" Hidden="false" LabelVisible="true" ConnectionType="Inheritance">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="UT.MerchantItem" To="UT.StringTestIntEntity" Hidden="false" LabelVisible="true" ConnectionType="Inheritance">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="UT.Lessee" To="UT.StringTestIntEntity" Hidden="false" LabelVisible="true" ConnectionType="Inheritance">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+  </Connections>
+</Document>
