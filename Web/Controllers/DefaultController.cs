@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using OEA.Web;
-using OEA.Web.Json;
-using OEA.MetaModel;
+using Rafy.Web;
+using Rafy.Web.Json;
+using Rafy.MetaModel;
 using System.Reflection;
 
 namespace Web.Controllers
@@ -21,7 +21,7 @@ namespace Web.Controllers
         {
             ViewBag.Type = Request.QueryString["type"];
             ViewBag.ViewName = Request.QueryString["viewName"];
-            ViewBag.IsAggt = Request.GetQueryStringOrDefault("isAggt", 1) == 1;
+            ViewBag.IsAggt = Request.GetQueryStringOrDefault("isAggt", 0) == 1;
             return View();
         }
 

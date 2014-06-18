@@ -61,12 +61,12 @@
             // create the data store
             var store = Ext.create('Ext.data.ArrayStore', {
                 fields: [
-           { name: 'company' },
-           { name: 'price', type: 'float' },
-           { name: 'change', type: 'float' },
-           { name: 'pctChange', type: 'float' },
-           { name: 'lastChange', type: 'date', dateFormat: 'n/j h:ia' }
-        ],
+                   { name: 'company' },
+                   { name: 'price', type: 'float' },
+                   { name: 'change', type: 'float' },
+                   { name: 'pctChange', type: 'float' },
+                   { name: 'lastChange', type: 'date', dateFormat: 'n/j h:ia' }
+                ],
                 data: myData
             });
 
@@ -113,8 +113,6 @@
             });
         });
         Ext.onReady(function () {
-            return;
-
             //            var p23 = {
             //                layout: 'border',
             //                id: 'ddd',
@@ -246,19 +244,19 @@
 
 
             var meta = {
-                "model": "OEA.Library.BookCategory",
+                "model": "Rafy.Library.BookCategory",
                 "label": "书籍类别",
                 "gridConfig": {
                     "tbar": [{
-                        "command": "Oea.cmd.Add"
+                        "command": "Rafy.cmd.Add"
                     }, {
-                        "command": "Oea.cmd.Edit"
+                        "command": "Rafy.cmd.Edit"
                     }, {
-                        "command": "Oea.cmd.Delete"
+                        "command": "Rafy.cmd.Delete"
                     }, {
-                        "command": "Oea.cmd.Save"
+                        "command": "Rafy.cmd.Save"
                     }, {
-                        "command": "Oea.cmd.Refresh"
+                        "command": "Rafy.cmd.Refresh"
                     }],
                     "columns": [{
                         "header": "编码",
@@ -317,6 +315,8 @@
                 }]
             });
 
+        });
+        Ext.onReady(function () {
         });
     </script>
 }

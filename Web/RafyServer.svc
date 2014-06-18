@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Service="Rafy.DataPortal.WCF.ServerPortal" Debug="true"%>

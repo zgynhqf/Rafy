@@ -4,9 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using OEA.MetaModel.View;
+using Rafy.MetaModel.View;
 
-namespace OEA.Web.Site
+namespace Rafy.Web.Site
 {
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
