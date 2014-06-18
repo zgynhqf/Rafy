@@ -1,1 +1,0 @@
-﻿<%@ ServiceHost Service="OEA.Server.Hosts.WcfPortal" Debug="true"%>
