@@ -1,0 +1,170 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:tk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:tkChromes="clr-namespace:Xceed.Wpf.Toolkit.Chromes;assembly=WPFToolkit.Extended"
+        xmlns:rafy="clr-namespace:Rafy.WPF.Controls" xmlns:rafyModuleWPF="clr-namespace:Rafy.WPF"
+        xmlns:rafyControls="clr-namespace:Rafy.WPF.Controls;assembly=Rafy.WPF.Controls"
+        
+        mc:Ignorable="d">
+    <Style TargetType="{x:Type rafy:BusyAnimation}">
+        <Setter Property="Width" Value="30" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Black" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Foreground" Value="Tan" />
+        <Setter Property="StateDuration" Value="0:0:0.125" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type rafy:BusyAnimation}">
+                    <ControlTemplate.Resources>
+                        <Storyboard x:Key="normal">
+                            <DoubleAnimation To="0" Duration="0" Storyboard.TargetName="part1"
+                                    Storyboard.TargetProperty="Opacity" />
+                            <DoubleAnimation To="0" Duration="0" Storyboard.TargetName="part2"
+                                    Storyboard.TargetProperty="Opacity" />
+                            <DoubleAnimation To="0" Duration="0" Storyboard.TargetName="part3"
+                                    Storyboard.TargetProperty="Opacity" />
+                            <DoubleAnimation To="0" Duration="0" Storyboard.TargetName="part4"
+                                    Storyboard.TargetProperty="Opacity" />
+                            <DoubleAnimation To="0" Duration="0" Storyboard.TargetName="part5"
+                                    Storyboard.TargetProperty="Opacity" />
+                            <DoubleAnimation To="0" Duration="0" Storyboard.TargetName="part6"
+                                    Storyboard.TargetProperty="Opacity" />
+                            <DoubleAnimation To="0" Duration="0" Storyboard.TargetName="part7"
+                                    Storyboard.TargetProperty="Opacity" />
+                            <DoubleAnimation To="0" Duration="0" Storyboard.TargetName="part8"
+                                    Storyboard.TargetProperty="Opacity" />
+                        </Storyboard>
+                        <Storyboard x:Key="state1">
+                            <DoubleAnimation Storyboard.TargetName="part5" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To="0" />
+                            <DoubleAnimation Storyboard.TargetName="part6" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To=".25" />
+                            <DoubleAnimation Storyboard.TargetName="part7" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To=".5" />
+                            <DoubleAnimation Storyboard.TargetName="part8" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To=".75" />
+                            <DoubleAnimation Storyboard.TargetName="part1" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To="1" />
+                        </Storyboard>
+                        <Storyboard x:Key="state2">
+                            <DoubleAnimation Storyboard.TargetName="part6" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To="0" />
+                            <DoubleAnimation Storyboard.TargetName="part7" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To=".25" />
+                            <DoubleAnimation Storyboard.TargetName="part8" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To=".5" />
+                            <DoubleAnimation Storyboard.TargetName="part1" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To=".75" />
+                            <DoubleAnimation Storyboard.TargetName="part2" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To="1" />
+                        </Storyboard>
+                        <Storyboard x:Key="state3">
+                            <DoubleAnimation Storyboard.TargetName="part7" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To="0" />
+                            <DoubleAnimation Storyboard.TargetName="part8" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To=".25" />
+                            <DoubleAnimation Storyboard.TargetName="part1" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To=".5" />
+                            <DoubleAnimation Storyboard.TargetName="part2" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To=".75" />
+                            <DoubleAnimation Storyboard.TargetName="part3" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To="1" />
+                        </Storyboard>
+                        <Storyboard x:Key="state4">
+                            <DoubleAnimation Storyboard.TargetName="part8" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To="0" />
+                            <DoubleAnimation Storyboard.TargetName="part1" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To=".25" />
+                            <DoubleAnimation Storyboard.TargetName="part2" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To=".5" />
+                            <DoubleAnimation Storyboard.TargetName="part3" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To=".75" />
+                            <DoubleAnimation Storyboard.TargetName="part4" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To="1" />
+                        </Storyboard>
+                        <Storyboard x:Key="state5">
+                            <DoubleAnimation Storyboard.TargetName="part1" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To="0" />
+                            <DoubleAnimation Storyboard.TargetName="part2" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To=".25" />
+                            <DoubleAnimation Storyboard.TargetName="part3" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To=".5" />
+                            <DoubleAnimation Storyboard.TargetName="part4" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To=".75" />
+                            <DoubleAnimation Storyboard.TargetName="part5" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To="1" />
+                        </Storyboard>
+                        <Storyboard x:Key="state6">
+                            <DoubleAnimation Storyboard.TargetName="part2" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To="0" />
+                            <DoubleAnimation Storyboard.TargetName="part3" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To=".25" />
+                            <DoubleAnimation Storyboard.TargetName="part4" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To=".5" />
+                            <DoubleAnimation Storyboard.TargetName="part5" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To=".75" />
+                            <DoubleAnimation Storyboard.TargetName="part6" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To="1" />
+                        </Storyboard>
+                        <Storyboard x:Key="state7">
+                            <DoubleAnimation Storyboard.TargetName="part3" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To="0" />
+                            <DoubleAnimation Storyboard.TargetName="part4" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To=".25" />
+                            <DoubleAnimation Storyboard.TargetName="part5" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To=".5" />
+                            <DoubleAnimation Storyboard.TargetName="part6" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To=".75" />
+                            <DoubleAnimation Storyboard.TargetName="part7" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To="1" />
+                        </Storyboard>
+                        <Storyboard x:Key="state8">
+                            <DoubleAnimation Storyboard.TargetName="part4" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To="0" />
+                            <DoubleAnimation Storyboard.TargetName="part5" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To=".25" />
+                            <DoubleAnimation Storyboard.TargetName="part6" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To=".5" />
+                            <DoubleAnimation Storyboard.TargetName="part7" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To=".75" />
+                            <DoubleAnimation Storyboard.TargetName="part8" Storyboard.TargetProperty="Opacity"
+                                    Duration="0" To="1" />
+                        </Storyboard>
+                    </ControlTemplate.Resources>
+                    <Canvas x:Name="root" Background="{TemplateBinding Background}"
+                            Visibility="{TemplateBinding Visibility}">
+                        <Ellipse x:Name="part1" Stroke="{TemplateBinding BorderBrush}"
+                                StrokeThickness="{TemplateBinding BorderThickness}" Fill="{TemplateBinding Foreground}"
+                                Opacity="0" Visibility="{TemplateBinding Visibility}" />
+                        <Ellipse x:Name="part2" Stroke="{TemplateBinding BorderBrush}"
+                                StrokeThickness="{TemplateBinding BorderThickness}" Fill="{TemplateBinding Foreground}"
+                                Opacity="0" Visibility="{TemplateBinding Visibility}" />
+                        <Ellipse x:Name="part3" Stroke="{TemplateBinding BorderBrush}"
+                                StrokeThickness="{TemplateBinding BorderThickness}" Fill="{TemplateBinding Foreground}"
+                                Opacity="0" Visibility="{TemplateBinding Visibility}" />
+                        <Ellipse x:Name="part4" Stroke="{TemplateBinding BorderBrush}"
+                                StrokeThickness="{TemplateBinding BorderThickness}" Fill="{TemplateBinding Foreground}"
+                                Opacity="0" Visibility="{TemplateBinding Visibility}" />
+                        <Ellipse x:Name="part5" Stroke="{TemplateBinding BorderBrush}"
+                                StrokeThickness="{TemplateBinding BorderThickness}" Fill="{TemplateBinding Foreground}"
+                                Opacity="0" Visibility="{TemplateBinding Visibility}" />
+                        <Ellipse x:Name="part6" Stroke="{TemplateBinding BorderBrush}"
+                                StrokeThickness="{TemplateBinding BorderThickness}" Fill="{TemplateBinding Foreground}"
+                                Opacity="0" Visibility="{TemplateBinding Visibility}" />
+                        <Ellipse x:Name="part7" Stroke="{TemplateBinding BorderBrush}"
+                                StrokeThickness="{TemplateBinding BorderThickness}" Fill="{TemplateBinding Foreground}"
+                                Opacity="0" Visibility="{TemplateBinding Visibility}" />
+                        <Ellipse x:Name="part8" Stroke="{TemplateBinding BorderBrush}"
+                                StrokeThickness="{TemplateBinding BorderThickness}" Fill="{TemplateBinding Foreground}"
+                                Opacity="0" Visibility="{TemplateBinding Visibility}" />
+                    </Canvas>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+    <CodeSnippet Format="1.0.0">
+        <Header>
+            <Description>大对象属性</Description>
+            <Title>Rafy Property LOB</Title>
+            <Shortcut>RafyPropertyLOB</Shortcut>
+            <Author>HuQingfang</Author>
+            <SnippetTypes>
+                <SnippetType>Expansion</SnippetType>
+            </SnippetTypes>
+        </Header>
+        <Snippet>
+            <Declarations>
+                <Literal>
+                    <ID>PropertyType</ID>
+                    <ToolTip>Property type</ToolTip>
+                    <Default>string</Default>
+                </Literal>
+                <Literal>
+                    <ID>PropertyName</ID>
+                    <Default>Name</Default>
+                </Literal>
+                <Literal Editable="false">
+                    <ID>ClassName</ID>
+                    <Function>ClassName()</Function>
+                    <Default>ClassNamePlaceholder</Default>
+                </Literal>
+            </Declarations>
+            <Code Language="csharp">
+                <![CDATA[public static readonly LOBProperty<$PropertyType$> $PropertyName$Property = P<$ClassName$>.RegisterLOB(e => e.$PropertyName$);
+        public $PropertyType$ $PropertyName$
+        {
+            get { return this.GetLOBProperty($PropertyName$Property); }
+            set { this.SetLOBProperty($PropertyName$Property, value); }
+        }$end$]]>
+            </Code>
+        </Snippet>
+    </CodeSnippet>
+</CodeSnippets>

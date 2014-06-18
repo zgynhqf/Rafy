@@ -1,0 +1,18 @@
+﻿<VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Item">
+    <TemplateData>
+        <DefaultName>DomainEntityRepository.cs</DefaultName>
+        <Name>Rafy Domain Entity Repository</Name>
+        <Description>添加实体仓库类型代码，并生成相应的泛型接口代码。</Description>
+        <ProjectType>CSharp</ProjectType>
+        <SortOrder>10</SortOrder>
+        <Icon>__TemplateIcon.ico</Icon>
+    </TemplateData>
+    <TemplateContent>
+        <ProjectItem SubType="Code" TargetFileName="$safeitemname$.cs" ReplaceParameters="true">DomainEntityRepository.cs</ProjectItem>
+        <ProjectItem SubType="Code" TargetFileName="$safeitemname$.g.cs" ReplaceParameters="true">DomainEntityRepository.g.cs</ProjectItem>
+    </TemplateContent>
+    <WizardExtension>
+        <Assembly>RafySDK.Templates, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f7937325279b37cf</Assembly>
+        <FullClassName>VSTemplates.Wizards.DomainEntityRepositoryItemWizard</FullClassName>
+    </WizardExtension>
+</VSTemplate>

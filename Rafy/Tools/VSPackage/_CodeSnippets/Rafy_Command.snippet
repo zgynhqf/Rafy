@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+    <CodeSnippet Format="1.0.0">
+        <Header>
+            <Description>一般命令</Description>
+            <Title>Rafy Command</Title>
+            <Shortcut>RafyCommand</Shortcut>
+            <Author>HuQingfang</Author>
+            <SnippetTypes>
+                <SnippetType>Expansion</SnippetType>
+            </SnippetTypes>
+        </Header>
+        <Snippet>
+            <Declarations>
+                <Literal>
+                    <ID>Label</ID>
+                    <Default>Label</Default>
+                </Literal>
+                <Literal>
+                    <ID>NAMESPACE</ID>
+                    <Default>Rafy</Default>
+                </Literal>
+                <Literal>
+                    <ID>CommandName</ID>
+                    <Default>***</Default>
+                </Literal>
+            </Declarations>
+            <Code Language="csharp">
+                <![CDATA[using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Rafy;
+using Rafy.Domain;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
+using Rafy.WPF;
+using Rafy.WPF.CommandAutoUI;
+using Rafy.WPF.Controls;
+using Rafy.WPF.Command;
+
+namespace $NAMESPACE$.Commands
+{
+    [Command(Label = "$Label$", GroupType = CommandGroupType.Business)]
+    public class $CommandName$Command : ListViewCommand
+    {
+        public override void Execute(ListLogicalView view)
+        {
+            $end$
+        }
+    }
+}]]>
+            </Code>
+        </Snippet>
+    </CodeSnippet>
+</CodeSnippets>

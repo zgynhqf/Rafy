@@ -1,0 +1,186 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9107E3A0-E18A-49B5-A214-DACCD5FE8723}</ProjectGuid>
+    <OutputType>library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Rafy.WPF.Controls</RootNamespace>
+    <AssemblyName>Rafy.WPF.Controls</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationFramework.Classic" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="SplitButton\Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="SplitButton\Themes\Vista.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BooleanBoxes.cs" />
+    <Compile Include="Converters\FalseToHiddenVisibilityConverter.cs" />
+    <Compile Include="Converters\InverseBooleanConverter.cs" />
+    <Compile Include="DoubleUtil.cs" />
+    <Compile Include="FocusTracker\FocusTrackerAdorner.cs" />
+    <Compile Include="FocusTracker\FocusTrackerControl.cs" />
+    <Compile Include="PropertyChangedEventManager.cs" />
+    <Compile Include="ResourceKeys.cs" />
+    <Compile Include="ProcessSourceIndicator.cs" />
+    <Compile Include="SplitButton\SplitButton.cs" />
+    <Compile Include="SplitButton\SplitButtonMode.cs" />
+    <Compile Include="SplitButton\SplitButtonResources.cs" />
+    <Compile Include="StaticResourceKey.cs" />
+    <Compile Include="TreeGrid\CheckingCascadeMode.cs" />
+    <Compile Include="TreeGrid\ColumnMeasureState.cs" />
+    <Compile Include="TreeGrid\Columns\ReadonlyTreeGridColumn.cs" />
+    <Compile Include="TreeGrid\Columns\TemplateTreeGridColumn.cs" />
+    <Compile Include="TreeGrid\Columns\TextTreeGridColumn.cs" />
+    <Compile Include="TreeGrid\InheritanceContextHelper.cs" />
+    <Compile Include="TreeGrid\InternalCollectionChangedEventManager.cs" />
+    <Compile Include="TreeGrid\Test\TreeGridScrollViewer.cs" />
+    <Compile Include="TreeGrid\TreeGridCellsPanel.cs" />
+    <Compile Include="TreeGrid\TreeGridColumnSummary.cs" />
+    <Compile Include="TreeGrid\TreeGridRowsPanel.cs" />
+    <Compile Include="TreeGrid\MultipleCopiesCollection.cs" />
+    <Compile Include="TreeGrid\TreeGridColumnCollectionChangedEventArgs.cs" />
+    <Compile Include="TreeGrid\TreeGridColumnHeaderRole.cs" />
+    <Compile Include="TreeGrid\TreeGridHeaderRowPresenter.cs" />
+    <Compile Include="TreeGrid\TreeGridRowPresenterBase.cs" />
+    <Compile Include="TreeGrid\TreeGrid.Tree.cs">
+      <DependentUpon>TreeGrid.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TreeGrid\TreeGrid.DataGrid.cs">
+      <DependentUpon>TreeGrid.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TreeGrid\TreeGridColumnCollection.cs" />
+    <Compile Include="TreeGrid\TreeGridColumnHeader.cs" />
+    <Compile Include="TreeGrid\TreeGrid.Expansion.cs">
+      <DependentUpon>TreeGrid.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TreeGrid\TreeGrid.Render.cs">
+      <DependentUpon>TreeGrid.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TreeGrid\TreeGridRow.cs" />
+    <Compile Include="TreeGrid\TreeGridRow.TreeViewItem.cs">
+      <DependentUpon>TreeGridRow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TreeGrid\TreeGridCellsPresenter.cs" />
+    <Compile Include="MSInternal.cs" />
+    <Compile Include="TreeGrid\LevelToIndentConverter.cs" />
+    <Compile Include="TreeGrid\TreeGridCell.cs" />
+    <Compile Include="TreeGrid\NoDataVisibilityConverter.cs" />
+    <Compile Include="TreeGrid\ItemMonitor.cs" />
+    <Compile Include="TreeGrid\SelectedItemChangedEventArgs.cs" />
+    <Compile Include="TreeGrid\TreeGridHelper.cs" />
+    <Compile Include="TreeGrid\TreeGrid.cs" />
+    <Compile Include="TreeGrid\TreeGrid.DataBind.cs">
+      <DependentUpon>TreeGrid.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TreeGrid\TreeGrid.Editing.cs">
+      <DependentUpon>TreeGrid.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TreeGrid\TreeGrid.Miscellaneous.cs">
+      <DependentUpon>TreeGrid.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TreeGrid\TreeGrid.Selection.cs">
+      <DependentUpon>TreeGrid.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TreeGrid\TreeGrid.View.cs">
+      <DependentUpon>TreeGrid.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TreeGrid\TreeGridColumn.cs" />
+    <Compile Include="TreeGrid\Test\_MTTGTestCommands.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="TreeGrid\TreeGridSummaryRowPresenter.cs" />
+    <Compile Include="WPFExtension.cs" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Hxy Key.snk" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="TreeGrid\Test\界面测试用例.txt" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+    <CodeSnippet Format="1.0.0">
+        <Header>
+            <Description>一般属性</Description>
+            <Title>Rafy PropertyReadOnly</Title>
+            <Shortcut>RafyPropertyReadOnly</Shortcut>
+            <Author>HuQingfang</Author>
+            <SnippetTypes>
+                <SnippetType>Expansion</SnippetType>
+            </SnippetTypes>
+        </Header>
+        <Snippet>
+            <Declarations>
+                <Literal>
+                    <ID>PropertyType</ID>
+                    <ToolTip>Property type</ToolTip>
+                    <Default>bool</Default>
+                </Literal>
+                <Literal>
+                    <ID>PropertyName</ID>
+                    <Default>PropertyName</Default>
+                </Literal>
+                <Literal>
+                    <ID>DependencyProperty</ID>
+                    <Default>DependencyProperty</Default>
+                </Literal>
+                <Literal>
+                    <ID>Label</ID>
+                    <Default>Label</Default>
+                </Literal>
+                <Literal Editable="false">
+                    <ID>ClassName</ID>
+                    <Function>ClassName()</Function>
+                    <Default>ClassNamePlaceholder</Default>
+                </Literal>
+            </Declarations>
+            <Code Language="csharp">
+                <![CDATA[public static readonly Property<$PropertyType$> $PropertyName$Property = P<$ClassName$>.RegisterReadOnly(
+            e => e.$PropertyName$, e => e.Get$PropertyName$(), $DependencyProperty$);
+        public $PropertyType$ $PropertyName$
+        {
+            get { return this.GetProperty($PropertyName$Property); }
+        }
+        private $PropertyType$ Get$PropertyName$()
+        {
+            $end$
+        }]]>
+            </Code>
+        </Snippet>
+    </CodeSnippet>
+</CodeSnippets>

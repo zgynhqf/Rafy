@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+    <CodeSnippet Format="1.0.0">
+        <Header>
+            <Description>用于生成 Rafy 查询条件类的模板</Description>
+            <SnippetTypes>
+                <SnippetType>Expansion</SnippetType>
+            </SnippetTypes>
+            <Title>Rafy Criteria</Title>
+            <Author>HuQingfang</Author>
+            <Shortcut>RafyCriteria</Shortcut>
+        </Header>
+        <Snippet>
+            <Declarations>
+                <Literal>
+                    <ID>CriteraName</ID>
+                    <Default>CriteraName</Default>
+                </Literal>
+            </Declarations>
+            <Code Language="csharp">
+                <![CDATA[[Serializable]
+    public class $CriteraName$Criteria : Criteria
+    {
+        #region 构造函数
+
+        public $CriteraName$Criteria() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected $CriteraName$Criteria(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion$end$
+    }]]>
+            </Code>
+        </Snippet>
+    </CodeSnippet>
+</CodeSnippets>

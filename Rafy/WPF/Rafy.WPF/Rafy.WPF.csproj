@@ -1,0 +1,704 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{84399E4E-CC81-4B1F-9953-586B25B29792}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Rafy.WPF</RootNamespace>
+    <AssemblyName>Rafy.WPF</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+    <Utf8Output>true</Utf8Output>
+    <ExpressionBlendVersion>5.2.30810.0</ExpressionBlendVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Office.Interop.Excel">
+      <HintPath>..\..\Lib\Microsoft.Office.Interop.Excel.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.Common, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Lib\ReportViewer.WinForms 11.0.0.0\Microsoft.ReportViewer.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.DataVisualization, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Lib\ReportViewer.WinForms 11.0.0.0\Microsoft.ReportViewer.DataVisualization.DLL</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.ProcessingObjectModel, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Lib\ReportViewer.WinForms 11.0.0.0\Microsoft.ReportViewer.ProcessingObjectModel.DLL</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.WinForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Lib\ReportViewer.WinForms 11.0.0.0\Microsoft.ReportViewer.WinForms.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Lib\ReportViewer.WinForms 11.0.0.0\Microsoft.SqlServer.Types.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="PresentationFramework">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="PresentationFramework.Classic" />
+    <Reference Include="ReachFramework">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UIAutomationProvider">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsFormsIntegration" />
+    <Reference Include="WPFToolkit.Extended">
+      <HintPath>..\..\..\Lib\WPFToolkit.Extended.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Application.Module.cs">
+      <DependentUpon>Application.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\WaitProgress\ProgressValue.cs" />
+    <Compile Include="Helpers\AutomationHelper.cs" />
+    <Compile Include="AutoUI\AutoUIHelper.cs" />
+    <Compile Include="AutoUI\Command\CommandAutoUIComponent.cs" />
+    <Compile Include="AutoUI\Command\CommandAutoUIContext.cs" />
+    <Compile Include="AutoUI\Command\CommandAutoUIManager.cs" />
+    <Compile Include="AutoUI\Command\Grouping\CommandMetaGroup.cs" />
+    <Compile Include="AutoUI\Command\Grouping\GeneratableGroup.cs" />
+    <Compile Include="AutoUI\Command\Grouping\Generators\ButtonItemGenerator.cs" />
+    <Compile Include="AutoUI\Command\Grouping\Generators\CompoundGenerator.cs" />
+    <Compile Include="AutoUI\Command\Grouping\Generators\MenuItemGenerator.cs" />
+    <Compile Include="AutoUI\Command\Grouping\Generators\SplitButtonGroupGenerator.cs" />
+    <Compile Include="AutoUI\Command\Grouping\Generators\TextBoxButtonItemGenerator.cs" />
+    <Compile Include="AutoUI\Command\Grouping\Generators\TextBoxItemGenerator.cs" />
+    <Compile Include="AutoUI\Command\Grouping\Generators\TextBoxMenuItemGenerator.cs" />
+    <Compile Include="AutoUI\Command\Grouping\GroupAlgorithms\DefaultAlgorithm.cs" />
+    <Compile Include="AutoUI\Command\Grouping\GroupAlgorithms\DropDownListAlgorithm.cs" />
+    <Compile Include="AutoUI\Command\Grouping\GroupAlgorithms\GenericItemAlgorithm.cs" />
+    <Compile Include="AutoUI\Command\Grouping\GroupAlgorithms\GroupAlgorithm.cs" />
+    <Compile Include="AutoUI\Command\Grouping\GroupGenerator.cs" />
+    <Compile Include="AutoUI\Command\Grouping\GroupOperation.cs" />
+    <Compile Include="AutoUI\Command\Grouping\ItemGenerator.cs" />
+    <Compile Include="AutoUI\AggtControlFactory\AggtControlGenerator.cs" />
+    <Compile Include="AutoUI\AggtControlFactory\LayoutMethod\LayoutMethod.cs" />
+    <Compile Include="AutoUI\AggtControlFactory\LayoutMethod\Region.cs" />
+    <Compile Include="AutoUI\AggtControlFactory\LayoutMethod\RegionContainer.cs" />
+    <Compile Include="Runtime\Command\CommandExecuteFailedArgs.cs" />
+    <Compile Include="Runtime\Command\IClientCommand.cs" />
+    <Compile Include="Runtime\Editor\ListEditor\IListEditorContext.cs" />
+    <Compile Include="Runtime\Editor\PropertyEditor\Core\IPropertyEditor.cs" />
+    <Compile Include="Runtime\Editor\PropertyEditor\Core\IPropertyEditorContext.cs" />
+    <Compile Include="Runtime\Editor\PropertyEditor\DateTimePropertyEditorBase.cs" />
+    <Compile Include="Runtime\Editor\PropertyEditor\TimePropertyEditor.cs" />
+    <Compile Include="Runtime\Editor\PropertyEditor\DateTimePropertyEditor.cs" />
+    <Compile Include="Runtime\Editor\PropertyEditor\DoubleUpDownPropertyEditor.cs" />
+    <Compile Include="Runtime\Editor\PropertyEditor\Core\EntityDynamicPropertyEditor.cs" />
+    <Compile Include="Runtime\Editor\PropertyEditor\Core\ReadOnlyMatrix.cs" />
+    <Compile Include="Runtime\Editor\PropertyEditor\IntegerUpDownPropertyEditor.cs" />
+    <Compile Include="Runtime\Editor\PropertyEditor\EntitySelection\EntitySelectionPropertyEditor.cs" />
+    <Compile Include="Runtime\Editor\PropertyEditor\DateRangePropertyEditor.cs" />
+    <Compile Include="Runtime\Editor\PropertyEditor\DateRangePropertyEditorControl.xaml.cs">
+      <DependentUpon>DateRangePropertyEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Runtime\Editor\PropertyEditor\LookDetailPropertyEditor.cs" />
+    <Compile Include="Runtime\Editor\PropertyEditor\NumberRangePropertyEditorControl.xaml.cs">
+      <DependentUpon>NumberRangePropertyEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Runtime\Editor\PropertyEditor\NumberRangePropertyEditor.cs" />
+    <Compile Include="Runtime\Editor\PropertyEditor\EntitySelection\PopupSearchListPropertyEditor.cs" />
+    <Compile Include="Runtime\Editor\PropertyEditor\EntitySelection\TiledListReferenceEditor.cs" />
+    <Compile Include="Runtime\Editor\PropertyEditor\Validation\ManagedProeprtyValidationRule.cs" />
+    <Compile Include="Runtime\LogicalView\CheckingMode.cs" />
+    <Compile Include="Runtime\LogicalView\CustomLogicalView.cs" />
+    <Compile Include="Runtime\LogicalView\DataLoadedEventArgs.cs" />
+    <Compile Include="AutoUI\ICustomViewFactory.cs" />
+    <Compile Include="Runtime\LogicalView\IViewDataAsyncLoader.cs" />
+    <Compile Include="Runtime\LogicalView\ListShowInWhere.cs" />
+    <Compile Include="Runtime\LogicalView\ListViewItemCreatedEventArgs.cs" />
+    <Compile Include="Runtime\LogicalView\LogicalView.cs" />
+    <Compile Include="Runtime\LogicalView\LogicalViewCollection.cs" />
+    <Compile Include="Runtime\LogicalView\RelationView.cs" />
+    <Compile Include="Runtime\LogicalView\RelationViewCollection.cs" />
+    <Compile Include="Runtime\LogicalView\ReportLogicalView.cs" />
+    <Compile Include="Runtime\LogicalView\RoutedViewEvent.cs" />
+    <Compile Include="Runtime\LogicalView\SelectedEntityChangedEventArgs.cs" />
+    <Compile Include="Runtime\LogicalView\ViewBehavior.cs" />
+    <Compile Include="Runtime\LogicalView\ViewController\AsyncDataContextHelper.cs" />
+    <Compile Include="AutoUI\CallbackTemplate.cs" />
+    <Compile Include="Runtime\Command\ClientCommand.cs" />
+    <Compile Include="Runtime\Command\ClientCommandCollection.cs" />
+    <Compile Include="SysCommand\LookupSelectAddCommand.cs" />
+    <Compile Include="SysCommand\FilterCommand.cs" />
+    <Compile Include="SysCommand\PopupDetailCommand.cs" />
+    <Compile Include="SysCommand\RefreshDataSourceInRDLC.cs" />
+    <Compile Include="SysCommand\SelectAllCommand.cs" />
+    <Compile Include="SysCommand\SelectReverseCommand.cs" />
+    <Compile Include="SysCommand\ShowReportData.cs" />
+    <Compile Include="Helpers\ISetSaver.cs" />
+    <Compile Include="Controls\BusyAnimation.cs" />
+    <Compile Include="Controls\CommandContentControl.cs" />
+    <Compile Include="Controls\DateTimeInputControl.cs" />
+    <Compile Include="Controls\EditorHost.cs" />
+    <Compile Include="Controls\Form.cs" />
+    <Compile Include="AutoUI\ControlResult.cs" />
+    <Compile Include="Runtime\LogicalView\LogicalViewFactory.cs" />
+    <Compile Include="Runtime\LogicalView\ViewController\RafyDataProvider.cs" />
+    <Compile Include="Runtime\LogicalView\ViewController\ViewDataLoader.cs" />
+    <Compile Include="AutoUI\UITemplate.cs" />
+    <Compile Include="Controls\HelperFunc.cs" />
+    <Compile Include="Controls\MTTG\RafyTreeGrid.cs" />
+    <Compile Include="Controls\MTTG\TreeColumn\BooleanTreeColumn.cs" />
+    <Compile Include="Controls\MTTG\TreeColumn\CommonTreeColumn.cs" />
+    <Compile Include="Controls\MTTG\TreeColumn\zzzDateTreeColumn.cs" />
+    <Compile Include="Controls\MTTG\TreeColumn\zzzComboBoxTreeColumn.cs" />
+    <Compile Include="Controls\MTTG\TreeColumn\MemoTreeColumn.cs" />
+    <Compile Include="Controls\MTTG\TreeColumn\TreeColumn.cs" />
+    <Compile Include="Controls\MTTG\TreeColumn\TreeColumnFactory.cs" />
+    <Compile Include="Controls\Reporting\ReportHost.xaml.cs">
+      <DependentUpon>ReportHost.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Resizer.cs" />
+    <Compile Include="Controls\TranslatingText.cs" />
+    <Compile Include="Helpers\Helper.cs" />
+    <Compile Include="AutoUI\AggtControlFactory\LayoutMethod\ILayoutControl.cs" />
+    <Compile Include="AutoUI\AggtControlFactory\LayoutMethod\UIComponents.cs" />
+    <Compile Include="IAsyncDataContext.cs" />
+    <Compile Include="ICurrentContext.cs" />
+    <Compile Include="IDataContext.cs" />
+    <Compile Include="INotifyDataChanged.cs" />
+    <Compile Include="Controls\ResizingPanel.cs" />
+    <Compile Include="Shell\IWorkspace.cs" />
+    <Compile Include="Shell\ModuleWorkspaceWindow.cs" />
+    <Compile Include="Shell\WorkspaceWindow.cs" />
+    <Compile Include="Shell\WorkspaceWindowActivedEventArgs.cs" />
+    <Compile Include="Shell\WorkspaceWindowActivingEventArgs.cs" />
+    <Compile Include="Shell\WorkspaceWindowChangedEventArgs.cs" />
+    <Compile Include="Shell\WorkspaceWindowClosingEventArgs.cs" />
+    <Compile Include="Resources\RafyResources.cs" />
+    <Compile Include="Application.cs" />
+    <Compile Include="Runtime\LogicalView\IEventListener.cs" />
+    <Compile Include="AutoUI\BlockUIFactory.cs" />
+    <Compile Include="Controls\zzzSDG\GridColumn\GDataGridBooleanColumn.cs" />
+    <Compile Include="Controls\zzzSDG\GridColumn\GDataGridCommonColumn.cs" />
+    <Compile Include="Controls\zzzSDG\GridColumn\GDataGridDateColumn.cs" />
+    <Compile Include="Controls\zzzSDG\GridColumn\GDataGridEnumColumn.cs" />
+    <Compile Include="Controls\zzzSDG\GridColumn\GDataGridLookupListColumn.cs" />
+    <Compile Include="Controls\zzzSDG\GridColumn\GDataGridMemoColumn.cs" />
+    <Compile Include="Controls\zzzSDG\GridColumn\GDataGridStringColumn.cs" />
+    <Compile Include="Controls\zzzSDG\GridColumn\GLookDetailColumn.cs" />
+    <Compile Include="Controls\zzzSDG\GridColumn\GridColumnFactory.cs" />
+    <Compile Include="Controls\zzzSDG\GridColumn\OpenDataGridColumn.cs" />
+    <Compile Include="Controls\zzzSDG\ListEditors\GridEditor.cs" />
+    <Compile Include="Controls\zzzSDG\ListEditors\SelectorEditor.cs" />
+    <Compile Include="Controls\zzzSDG\ListEditors\SortableList.cs" />
+    <Compile Include="Controls\zzzSDG\SelectionDataGrid.cs" />
+    <Compile Include="Helpers\DynamicPropertyHelperBase.cs" />
+    <Compile Include="Controls\ReverseBooleanConverter.cs" />
+    <Compile Include="Shell\ClientApp.cs" />
+    <Compile Include="Helpers\ExcelHelper.cs" />
+    <Compile Include="Helpers\ExportToExcelCommand.cs" />
+    <Compile Include="Helpers\ITableSaver.cs" />
+    <Compile Include="Controls\AutoGrid.cs" />
+    <Compile Include="Controls\DockPanelSplitter.cs" />
+    <Compile Include="Controls\ControlHelper.cs" />
+    <Compile Include="Shell\IShell.cs" />
+    <Compile Include="AutoUI\PrimitiveUI\Layouts\ResizingPanelSlippingAnimation.cs" />
+    <Compile Include="Resources\SkinManager.cs" />
+    <Compile Include="ModuleViewModel.cs" />
+    <Compile Include="Resources\ItemColletionToVisibilityConverter.cs" />
+    <Compile Include="Shell\ItemsControlHelper.cs" />
+    <Compile Include="AutoUI\PrimitiveUI\ViewAdapter.cs" />
+    <Compile Include="Helpers\Behaviors\DoubleCloseViewBehavior.cs" />
+    <Compile Include="Helpers\Behaviors\SaveAsChangedBehavior.cs" />
+    <Compile Include="SysCommand\AddCommand.cs" />
+    <Compile Include="SysCommand\BaseSaveCommand.cs" />
+    <Compile Include="SysCommand\CancelCommand.cs" />
+    <Compile Include="SysCommand\ClearQueryConditionCommand.cs" />
+    <Compile Include="SysCommand\EditDetailCommand.cs" />
+    <Compile Include="SysCommand\CopyAndNewCommand.cs" />
+    <Compile Include="SysCommand\DeleteListObjectCommand.cs" />
+    <Compile Include="SysCommand\PopupAddCommand.cs" />
+    <Compile Include="SysCommand\QueryObjectCommand.cs" />
+    <Compile Include="SysCommand\RefreshCommand.cs" />
+    <Compile Include="SysCommand\SaveBillCommand.cs" />
+    <Compile Include="SysCommand\SaveListCommand.cs" />
+    <Compile Include="Runtime\Command\DataSelectorCommand.cs" />
+    <Compile Include="Controls\CloseableTabItem.cs" />
+    <Compile Include="Runtime\LogicalView\ConditionQueryLogicalView.cs" />
+    <Compile Include="Controls\LeftRightSplitter.cs" />
+    <Compile Include="Helpers\Extensions\LogicalViewExtension.cs" />
+    <Compile Include="Controls\SafeSqlTextBox.cs" />
+    <Compile Include="Controls\TipTextBox.cs" />
+    <Compile Include="Controls\WaitProgress\AsyncAction.cs" />
+    <Compile Include="Controls\WaitProgress\WaitDialog.xaml.cs">
+      <DependentUpon>WaitDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Runtime\Editor\ListEditor\ListEditor.cs" />
+    <Compile Include="Runtime\Editor\PropertyEditor\BooleanPropertyEditor.cs" />
+    <Compile Include="Runtime\LogicalView\NavigationQueryLogicalView.cs" />
+    <Compile Include="Runtime\LogicalView\QueryLogicalView.cs" />
+    <Compile Include="Controls\ToolBarExtension.cs" />
+    <Compile Include="AutoUI\Command\Grouping\Helpers\MenuItemCommand.cs" />
+    <Compile Include="SysCommand\TreeEditCommands\TreeEditCommand.cs" />
+    <Compile Include="SysCommand\MaxShowViewCommand.cs" />
+    <Compile Include="Controls\ComboListControl.cs" />
+    <Compile Include="AutoUI\AutoUI.cs" />
+    <Compile Include="Runtime\LogicalView\DetailLogicalView.cs" />
+    <Compile Include="Runtime\LogicalView\ListLogicalView.cs" />
+    <Compile Include="AutoUI\Command\Grouping\Helpers\ButtonCommand.cs" />
+    <Compile Include="Runtime\Command\UICommand.cs" />
+    <Compile Include="Runtime\Command\InputGestureParser.cs" />
+    <Compile Include="AutoUI\Command\Grouping\Helpers\CommandImageService.cs" />
+    <Compile Include="Runtime\Command\CommandRepository.cs" />
+    <Compile Include="AutoUI\Command\Grouping\Helpers\CommandToolTipService.cs" />
+    <Compile Include="AutoUI\Command\Grouping\Helpers\CommandToolTipStyle.cs" />
+    <Compile Include="Runtime\Command\ViewCommand.cs" />
+    <Compile Include="Controls\DataTypeListSelector.cs" />
+    <Compile Include="Controls\ViewDialog.xaml.cs">
+      <DependentUpon>ViewDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\WPFMeta.cs" />
+    <Compile Include="Runtime\Editor\PropertyEditor\DatePropertyEditor.cs" />
+    <Compile Include="Runtime\Editor\PropertyEditor\EnumPropertyEditor.cs" />
+    <Compile Include="Runtime\Editor\PropertyEditor\EntitySelection\LookupListPropertyEditor.cs" />
+    <Compile Include="Runtime\Editor\PropertyEditor\MemoPropertyEditor.cs" />
+    <Compile Include="Runtime\Editor\PropertyEditor\NumbericPropertyEditor.cs" />
+    <Compile Include="Runtime\Editor\PropertyEditor\Core\PropertyEditorFactory.cs" />
+    <Compile Include="Runtime\Editor\PropertyEditor\StringPropertyEditor.cs" />
+    <Compile Include="Runtime\Editor\ListEditor\TreeGridListEditor.cs" />
+    <Compile Include="Runtime\Editor\PropertyEditor\Core\PropertyEditor.cs" />
+    <Compile Include="Helpers\Extensions\ExceptionExtension.cs" />
+    <Compile Include="AutoUI\PrimitiveUI\Layouts\DetailLayout.xaml.cs">
+      <DependentUpon>DetailLayout.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AutoUI\PrimitiveUI\Layouts\ListDetailLayout.xaml.cs">
+      <DependentUpon>ListDetailLayout.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AutoUI\PrimitiveUI\Layouts\ListDetailPopupChildrenLayout.xaml.cs">
+      <DependentUpon>ListDetailPopupChildrenLayout.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AutoUI\PrimitiveUI\Layouts\DropDownListDetailLayout.xaml.cs">
+      <DependentUpon>DropDownListDetailLayout.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="AutoUI\AggtControlFactory\LayoutMethod\ControlLayoutMethod.cs" />
+    <Compile Include="AutoUI\PrimitiveUI\Layouts\TraditionalRegions.cs" />
+    <Compile Include="Controls\ResizingPanelExt.cs" />
+    <Compile Include="Helpers\SqlErrorInfo.cs" />
+    <Compile Include="WPFHelper.cs" />
+    <Compile Include="WPFMetaExtension.cs" />
+    <Compile Include="RafyWPFPlugin.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shell\TabControlWorkSpace.cs" />
+    <Compile Include="ViewModel.cs" />
+    <Compile Include="Helpers\Zoom.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\SysControls\_ReadMe.txt" />
+    <Resource Include="Images\Data.png" />
+    <Resource Include="Images\Edit.png" />
+    <Resource Include="Images\NewSearch.png" />
+    <Resource Include="Images\Erase.png" />
+    <Resource Include="Images\Setting.png" />
+    <Resource Include="Images\Options.png" />
+    <Page Include="Runtime\Editor\PropertyEditor\DateRangePropertyEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Runtime\Editor\PropertyEditor\NumberRangePropertyEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Reporting\ReportHost.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\WaitProgress\WaitDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Content Include="Controls\zzzSDG\theme.xml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Content>
+    <Page Include="AutoUI\PrimitiveUI\Layouts\DetailLayout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="AutoUI\PrimitiveUI\Layouts\ListDetailLayout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="AutoUI\PrimitiveUI\Layouts\ListDetailPopupChildrenLayout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="AutoUI\PrimitiveUI\Layouts\DropDownListDetailLayout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Colors\Blue.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Colors\Yellow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Colors\Gray.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\ControlsCommon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\RafyControls\ComboBoxComboListControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\RafyControls\CloseableTabItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\RafyControls\ButtonSpinner.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\RafyControls\DateTimeInputControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\RafyControls\NumericUpDown.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\RafyControls\WatermarkTextBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\RafyControls\Form.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\RafyControls\EditorHost.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\RafyControls\DockPanelSplitter.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\RafyControls\LeftRightSplitter.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\RafyControls\SplitButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\RafyControls\MessageBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\RafyControls\OtherRafyControls.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\SysControls\Button.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\SysControls\CheckBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\SysControls\BusyAnimation.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\SysControls\TreeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\SysControls\ProgressBar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\SysControls\ToolTip.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\SysControls\ToolBar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\SysControls\Menu.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\SysControls\OtherSysControls.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\SysControls\TabControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\SysControls\ListBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\SysControls\FlowDocumentScrollViewer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\SysControls\ScrollViewer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\SysControls\ScrollBar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\SysControls\Slider.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\SysControls\Thumb.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\SysControls\RichTextBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\SysControls\PasswordBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\SysControls\TextBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\SysControls\Expander.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\SysControls\RadioButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Controls\ViewDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\DeleteListObject.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Save.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Refresh.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Cancel.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Add.bmp" />
+    <Resource Include="Images\DeleteChildObject.bmp" />
+    <Resource Include="Images\AddChild.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Rafy.Utils\Rafy.Utils.csproj">
+      <Project>{796B149B-32C9-4BB0-A23F-69C012450DB8}</Project>
+      <Name>Rafy.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy.DbMigration\Rafy.DbMigration.csproj">
+      <Project>{D7C4F80D-24A4-47F1-985C-CFA55CFA13E9}</Project>
+      <Name>Rafy.DbMigration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy.ManagedProperty\Rafy.ManagedProperty.csproj">
+      <Project>{66BE29D5-F1CA-4941-A4EB-6B3E8F577166}</Project>
+      <Name>Rafy.ManagedProperty</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy\Rafy.csproj">
+      <Project>{966A5BF2-D690-426B-AD68-AD868BB8F855}</Project>
+      <Name>Rafy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy.Domain\Rafy.Domain.csproj">
+      <Project>{9F8BB429-70DE-449A-8A67-5190191E7EE6}</Project>
+      <Name>Rafy.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rafy.WPF.Controls\Rafy.WPF.Controls.csproj">
+      <Project>{9107e3a0-e18a-49b5-a214-daccd5fe8723}</Project>
+      <Name>Rafy.WPF.Controls</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Collapse.png" />
+    <Resource Include="Images\Expand.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\MoveUp.bmp" />
+    <Resource Include="Images\LevelDown.bmp" />
+    <Resource Include="Images\MoveDown.bmp" />
+    <Resource Include="Images\LevelUp.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Expand.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\AddFile.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\ClearFile.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\OpenFile.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\MaxShowView.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\FileSaveAs.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Delete.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Cleanup.bmp" />
+    <Resource Include="Images\CollapseAll.bmp" />
+    <Resource Include="Images\CopyAndAdd.bmp" />
+    <Resource Include="Images\Excel.bmp" />
+    <Resource Include="Images\ExpandAll.bmp" />
+    <Resource Include="Images\SelectAll.bmp" />
+    <Resource Include="Images\SelectNone.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Calc.bmp" />
+    <Resource Include="Images\Cut.bmp" />
+    <Resource Include="Images\Help.bmp" />
+    <Resource Include="Images\Search.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Controls\zzzSDG\SelectionDataGrid CheckBox 多选功能设计草稿.jpg" />
+    <Content Include="Controls\zzzSDG\_ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Hxy Key.snk" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>
