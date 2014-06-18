@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="41ea1cf8-1763-4b6e-a019-6dc707089e6a" revisionNumber="1">
+    <developerConceptualDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+
+        <introduction>
+            <para>要支持分布式部署，请做以下配置：</para>
+             <autoOutline /> 
+        </introduction>
+
+        <section address="how">
+            <title>分布式传输开关</title>
+            <content>
+                <para>
+                    在应用程序配置文件中，配置 rafy 配置节的属性 <codeInline>dataPortalProxy</codeInline> 为 <codeInline>Rafy.DataPortalClient.WcfProxy, Rafy.Domain</codeInline> 即可支持 WCF 分布式传输。如下：
+                </para>
+                <code language="xml">
+                    <![CDATA[<configuration>
+    <rafy dataPortalProxy="Rafy.DataPortalClient.WcfProxy, Rafy.Domain">
+    ...
+    </rafy>
+</configuration>]]>
+                </code>
+            </content>
+        </section>
+
+        <section address="wcfConfig">
+            <title>WCF 相关配置</title>
+            <content>
+                <para>
+                    由于 dataPortalProxy 只是告诉框架使用 WCF 进行数据传输，所以 WCF 相关的配置也是必须要的。对于客户端而言，我们需要添加名为 WcfDataPortal 的 EndPoint，这样才可以使用 <codeInline>Rafy.DataPortalClient.WcfProxy</codeInline> 作为数据提供器。代码如下：
+                </para>
+                <code language="xml">
+                    <![CDATA[<system.serviceModel>
+    <client>
+        <endpoint name="WcfDataPortal" address="http://localhost.:8000/RafyServer.svc/Binary" 
+                    binding="customBinding" bindingConfiguration="compactBindingConfig"
+                    behaviorConfiguration="enableRemotingBinarySerialization" 
+                    contract="Rafy.Server.Hosts.IWcfPortal"/>
+    </client>
+    ...
+</system.serviceModel>]]>
+                </code>
+                <alert class="note">
+                    <para>以上配置只是打开了 WCF 的传输功能。如果要定制 WCF 传输，则需要修改 WCF 相关的其它配置。</para>
+                </alert>
+            </content>
+        </section>
+
+        <relatedTopics>
+        </relatedTopics>
+    </developerConceptualDocument>
+</topic>

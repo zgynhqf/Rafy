@@ -1,0 +1,425 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9F8BB429-70DE-449A-8A67-5190191E7EE6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Rafy.Domain</RootNamespace>
+    <AssemblyName>Rafy.Domain</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <NoWarn>1591</NoWarn>
+    <DocumentationFile>bin\Debug\Rafy.Domain.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DataPortalLocation.cs" />
+    <Compile Include="DataPortal\DistributionContext.cs" />
+    <Compile Include="DataPortal\DataPortalException.cs" />
+    <Compile Include="DataPortal\DataPortalApi.cs" />
+    <Compile Include="DataPortal\IDataPortalProxy.cs" />
+    <Compile Include="DataPortal\WCF\ClientProxy.cs" />
+    <Compile Include="DataPortal\DataPortalResult.cs" />
+    <Compile Include="EntityRepository\DataProvider\DataProviderComposer.cs" />
+    <Compile Include="EntityRepository\DataProvider\DataProviderForAttribute.cs" />
+    <Compile Include="EntityRepository\QueryArgs\EntityQueryArgs.cs" />
+    <Compile Include="EntityRepository\IEQC.cs" />
+    <Compile Include="DomainApp.cs" />
+    <Compile Include="EntityRepository\Caching\RepositoryCache.cs" />
+    <Compile Include="EntityRepository\Caching\ServerCache.cs" />
+    <Compile Include="EntityRepository\Caching\VersionSyncClientCache\ClientCache.cs" />
+    <Compile Include="EntityRepository\Caching\VersionSyncClientCache\VersionSyncMgr.cs" />
+    <Compile Include="EntityRepository\EntityRepository.CUD.cs">
+      <DependentUpon>EntityRepository.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EntityRepository\EntityRepository.Query.cs">
+      <DependentUpon>EntityRepository.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EntityRepository\EntityRepositoryExt.cs" />
+    <Compile Include="EntityRepository\EntityRepositoryQueryBase.cs" />
+    <Compile Include="EntityRepository\QueryArgs\QueryArgs.cs" />
+    <Compile Include="EntityRepository\DataProvider\IRepositoryDataProvider.cs" />
+    <Compile Include="EntityRepository\DataProvider\RepositoryDataProvider.cs" />
+    <Compile Include="EntityRepository\RepositoryFactory.cs" />
+    <Compile Include="EntityRepository\SqlServer\SqlBatchInsertHelper.cs" />
+    <Compile Include="EntityRepository\SubmitArgs.cs" />
+    <Compile Include="EntityRepository\QueryArgs\TableQueryArgs.cs" />
+    <Compile Include="Entity\AutoCollectHelper.cs" />
+    <Compile Include="Entity\GenericEntity\Entity.Generic.cs" />
+    <Compile Include="Entity\EntitySerializableFlags.cs" />
+    <Compile Include="Entity\ITreeComponent.cs" />
+    <Compile Include="Entity\KeyProviders\GuidKeyProvider.cs" />
+    <Compile Include="Entity\KeyProviders\IntKeyProvider.cs" />
+    <Compile Include="Entity\KeyProviders\KeyProviders.cs" />
+    <Compile Include="Entity\KeyProviders\ObjectKeyProvider.cs" />
+    <Compile Include="Entity\KeyProviders\StringKeyProvider.cs" />
+    <Compile Include="Entity\GenericEntity\StringEntity.cs" />
+    <Compile Include="Entity\GenericEntity\GuidEntity.cs" />
+    <Compile Include="Entity\GenericEntity\IntEntity.cs" />
+    <Compile Include="Entity\MP\LOBProperty.cs" />
+    <Compile Include="Entity\MP\PropertyDefailtValues.cs" />
+    <Compile Include="Entity\PropertiesMatchCriteria.cs" />
+    <Compile Include="Entity\Serialization\SerializationEntityGraph.cs" />
+    <Compile Include="Entity\ValidationHelper.cs" />
+    <Compile Include="Entity\Validation\ValidationDeclarer.cs" />
+    <Compile Include="Entity\Validation\Validator.cs" />
+    <Compile Include="GenericAdapter\EntityListEnumerator.cs" />
+    <Compile Include="GenericAdapter\zzzIRepository.Generic.cs" />
+    <Compile Include="Entity\MP\IProperty.cs" />
+    <Compile Include="Entity\MP\PropertyCategory.cs" />
+    <Compile Include="Entity\MP\RefIdProperty.cs" />
+    <Compile Include="Entity\MP\RegisterRefIdArgs.cs" />
+    <Compile Include="ORM\AggregateSQL\API\AggregateSQL.cs" />
+    <Compile Include="ORM\AggregateSQL\API\LoadOptionSelector.cs" />
+    <Compile Include="ORM\AggregateSQL\API\OrderByLoadOption.cs" />
+    <Compile Include="ORM\AggregateSQL\API\PropertySelector.cs" />
+    <Compile Include="ORM\AggregateSQL\IDataTable.cs" />
+    <Compile Include="ORM\AggregateSQL\SubTable.cs" />
+    <Compile Include="ORM\AggregateSQL\TableEnumerator.cs" />
+    <Compile Include="Entity\MP\zzzDateTimeDescriptorAttribute.cs" />
+    <Compile Include="Entity\MP\ListProperty.cs" />
+    <Compile Include="Entity\MP\ListPropertyMetadata.cs" />
+    <Compile Include="Entity\MP\RafyPropertyDescriptor.cs" />
+    <Compile Include="Entity\MP\RafyPropertyDescriptorFactory.cs" />
+    <Compile Include="ORM\DbAccesserFactory.cs" />
+    <Compile Include="ORM\DbTable.cs" />
+    <Compile Include="ORM\DbTableFinder.cs" />
+    <Compile Include="ORM\ManagedConnectionDbAccesser.cs" />
+    <Compile Include="ORM\EntityContext\DisabledTypedEntityContext.cs" />
+    <Compile Include="ORM\EntityContext\EntityContext.cs" />
+    <Compile Include="ORM\EntityContext\EntityContextWrapper.cs" />
+    <Compile Include="ORM\EntityContext\TypedEntityContext.cs" />
+    <Compile Include="ORM\DbMigration\MigrateService.cs" />
+    <Compile Include="ORM\DbMigration\MigratingOptions.cs" />
+    <Compile Include="ORM\DbMigration\Presistence\DbMigrationHistory.g.cs">
+      <DependentUpon>DbMigrationHistory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ORM\DbMigration\Presistence\DbMigrationHistoryQueryCriteria.cs" />
+    <Compile Include="ORM\DbMigration\Presistence\DbVersion.g.cs">
+      <DependentUpon>DbVersion.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ORM\ISelectArgs.cs" />
+    <Compile Include="ORM\Linq\EntityQueryable.cs" />
+    <Compile Include="ORM\Linq\EntityQueryProvider.cs" />
+    <Compile Include="ORM\Linq\Evaluator.cs" />
+    <Compile Include="ORM\Linq\LinqConsts.cs" />
+    <Compile Include="ORM\Linq\EntityQueryBuilder.cs" />
+    <Compile Include="ORM\Linq\TypeSystem.cs" />
+    <Compile Include="ORM\Sql\Oracle\OracleColumn.cs" />
+    <Compile Include="ORM\Sql\Oracle\OracleTable.cs" />
+    <Compile Include="ORM\ConnectionManager.cs" />
+    <Compile Include="ORM\OrderDirection.cs" />
+    <Compile Include="ORM\ORMHelper.cs" />
+    <Compile Include="ORM\QueryExtensions.cs" />
+    <Compile Include="ORM\Query\Impl\TableSourceFinder.cs" />
+    <Compile Include="ORM\Query\IExistsConstraint.cs" />
+    <Compile Include="ORM\Query\IArray.cs" />
+    <Compile Include="ORM\Query\IBinaryConstraint.cs" />
+    <Compile Include="ORM\Query\IConstraint.cs" />
+    <Compile Include="ORM\Query\ITableSource.cs" />
+    <Compile Include="ORM\Query\IJoin.cs" />
+    <Compile Include="ORM\Query\ILiteral.cs" />
+    <Compile Include="ORM\Query\Impl\ArrayNode.cs" />
+    <Compile Include="ORM\Query\Impl\BinaryConstraint.cs" />
+    <Compile Include="ORM\Query\Impl\TableQuery.cs" />
+    <Compile Include="ORM\Query\Impl\TableSource.cs" />
+    <Compile Include="ORM\Query\Impl\ExistsConstraint.cs" />
+    <Compile Include="ORM\Query\Impl\Join.cs" />
+    <Compile Include="ORM\Query\Impl\Literal.cs" />
+    <Compile Include="ORM\Query\Impl\NotConstraint.cs" />
+    <Compile Include="ORM\Query\Impl\OrderBy.cs" />
+    <Compile Include="ORM\Query\Impl\ColumnConstraint.cs" />
+    <Compile Include="ORM\Query\Impl\ColumnNode.cs" />
+    <Compile Include="ORM\Query\Impl\SelectAll.cs" />
+    <Compile Include="ORM\Query\Impl\SubQueryRef.cs" />
+    <Compile Include="ORM\Query\Impl\ColumnsComparison.cs" />
+    <Compile Include="ORM\Query\INamedSource.cs" />
+    <Compile Include="ORM\Query\INotConstraint.cs" />
+    <Compile Include="ORM\Query\IColumnConstraint.cs" />
+    <Compile Include="ORM\Query\IColumnNode.cs" />
+    <Compile Include="ORM\Query\IQueryNode.cs" />
+    <Compile Include="ORM\Query\IOrderBy.cs" />
+    <Compile Include="ORM\Query\IQuery.cs" />
+    <Compile Include="ORM\Query\ISelectAll.cs" />
+    <Compile Include="ORM\Query\ISource.cs" />
+    <Compile Include="ORM\Query\ISubQuery.cs" />
+    <Compile Include="ORM\Query\IColumnsComparison.cs" />
+    <Compile Include="ORM\Query\QueryExtensions.cs" />
+    <Compile Include="ORM\Query\QueryFactory.cs" />
+    <Compile Include="ORM\Query\QueryNodeVisitor.cs" />
+    <Compile Include="ORM\SingleConnectionTrasactionScope.cs" />
+    <Compile Include="DataPortal\Server\DataPortalContext.cs" />
+    <Compile Include="DataPortal\Server\DataPortalFacade.cs" />
+    <Compile Include="DataPortal\Server\DataPortalResult.cs" />
+    <Compile Include="DataPortal\Server\FinalDataPortal.cs" />
+    <Compile Include="DataPortal\WCF\IWcfPortal.cs" />
+    <Compile Include="DataPortal\WCF\FetchRequest.cs" />
+    <Compile Include="DataPortal\WCF\UpdateRequest.cs" />
+    <Compile Include="DataPortal\WCF\WcfResponse.cs" />
+    <Compile Include="DataPortal\WCF\ServerPortal.cs" />
+    <Compile Include="DataPortal\Server\IDataPortalServer.cs" />
+    <Compile Include="Entity\Entity.Csla.cs">
+      <DependentUpon>Entity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\IDirtyAware.cs" />
+    <Compile Include="Entity\IDomainComponent.cs" />
+    <Compile Include="Entity\PersistenceStatus.cs" />
+    <Compile Include="EntityRepository\MemoryEntityRepository.cs" />
+    <Compile Include="Entity\Entity.Validation.cs">
+      <DependentUpon>Entity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\EntityList.Csla.cs">
+      <DependentUpon>EntityList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\Validation\ITypeValidationsHost.cs" />
+    <Compile Include="ORM\Sql\SqlCe\SqlCeTable.cs" />
+    <Compile Include="ORM\Sql\SqlServer\SqlOraTable.cs" />
+    <Compile Include="ORM\ConditionalSql.cs" />
+    <Compile Include="Entity\MP\RedundantPath.cs" />
+    <Compile Include="ORM\Sql\Oracle\OracleSqlGenerator.cs" />
+    <Compile Include="ORM\Sql\SqlServer\SqlServerSqlGenerator.cs" />
+    <Compile Include="ORM\Sql\Tree\SqlArray.cs" />
+    <Compile Include="ORM\Sql\Tree\SqlBinaryConstraint.cs" />
+    <Compile Include="ORM\Sql\Tree\SqlColumn.cs" />
+    <Compile Include="ORM\Sql\Tree\SqlColumnComparisonConstraint.cs" />
+    <Compile Include="ORM\Sql\Tree\SqlColumnsComparisonConstraint.cs" />
+    <Compile Include="ORM\Sql\Tree\SqlConstraint.cs" />
+    <Compile Include="ORM\Sql\SqlGenerator.cs" />
+    <Compile Include="ORM\Sql\Tree\SqlExistsConstraint.cs" />
+    <Compile Include="ORM\Sql\Tree\SqlJoin.cs" />
+    <Compile Include="ORM\Sql\Tree\SqlLiteral.cs" />
+    <Compile Include="ORM\Sql\Tree\SqlNodeVisitor.cs" />
+    <Compile Include="ORM\Sql\Tree\SqlNotConstraint.cs" />
+    <Compile Include="ORM\Sql\Tree\SqlOrderBy.cs" />
+    <Compile Include="ORM\Sql\Tree\SqlNamedSource.cs" />
+    <Compile Include="ORM\Sql\Tree\SqlSelect.cs" />
+    <Compile Include="ORM\Sql\Tree\SqlNode.cs" />
+    <Compile Include="ORM\Sql\Tree\SqlSubSelect.cs" />
+    <Compile Include="ORM\Sql\Tree\SqlSelectAll.cs" />
+    <Compile Include="ORM\Sql\Tree\SqlSource.cs" />
+    <Compile Include="ORM\Sql\Tree\SqlTable.cs" />
+    <Compile Include="Service\ContractAttribute.cs" />
+    <Compile Include="Service\ServiceLocator.cs" />
+    <Compile Include="Service\FlowService.cs" />
+    <Compile Include="Service\ISaveListService.cs" />
+    <Compile Include="Service\Service.cs" />
+    <Compile Include="ORM\AggregateSQL\RawTable.cs" />
+    <Compile Include="EntityRepository\Caching\VersionSyncClientCache\EntityListVersion.cs" />
+    <Compile Include="Entity\Entity.RoutedEvent.cs">
+      <DependentUpon>Entity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\MP\Property.cs" />
+    <Compile Include="Entity\MP\PropertyMetadata.cs" />
+    <Compile Include="Entity\IHasHame.cs" />
+    <Compile Include="Entity\MP\P.cs" />
+    <Compile Include="Entity\MP\RefEntityProperty.cs" />
+    <Compile Include="Entity\MP\RegisterRefArgs.cs" />
+    <Compile Include="ORM\DbMigration\ClassMetaReader.cs" />
+    <Compile Include="ORM\DbMigration\DbHistoryRepository.cs" />
+    <Compile Include="ORM\DbMigration\RafyDbMigrationContext.cs" />
+    <Compile Include="ORM\DbMigration\RafyDbVersionProvider.cs" />
+    <Compile Include="ORM\DbMigration\RafyUserMigrations.cs" />
+    <Compile Include="ORM\DbMigration\Presistence\DbMigrationHistory.cs" />
+    <Compile Include="ORM\DbMigration\Presistence\DbVersion.cs" />
+    <Compile Include="ORM\DbTableFactory.cs" />
+    <Compile Include="Entity\TreeHelper.cs" />
+    <Compile Include="EntityRepository\zzzEF\DbContextExtension.cs" />
+    <Compile Include="EntityRepository\zzzEF\DbCreationType.cs" />
+    <Compile Include="EntityRepository\zzzEF\ORMContext.cs" />
+    <Compile Include="EntityRepository\DiffSaveService.cs" />
+    <Compile Include="EntityRepository\zzzEF\_DbContextBase.cs" />
+    <Compile Include="EntityRepository\zzzEF\ORMapping.cs" />
+    <Compile Include="ORM\AggregateSQL\AggregateDescriptor.cs" />
+    <Compile Include="ORM\AggregateSQL\AggregateEntityLoader.cs" />
+    <Compile Include="ORM\AggregateSQL\AggregateSQLGenerator.cs" />
+    <Compile Include="ORM\AggregateSQL\LoadOptionItem.cs" />
+    <Compile Include="ORM\AggregateSQL\API\ChildrenSelector.cs" />
+    <Compile Include="Entity\GenericEntity\Criteria.cs" />
+    <Compile Include="Entity\Entity.DataAccess.cs">
+      <DependentUpon>Entity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\Entity.LazyProperty.cs">
+      <DependentUpon>Entity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\Entity.Miscellaneous.cs">
+      <DependentUpon>Entity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\EntityList.BusinessListBase.cs">
+      <DependentUpon>EntityList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\EntityList.DataAccess.cs">
+      <DependentUpon>EntityList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\IDbConnector.cs" />
+    <Compile Include="ORM\AggregateSQL\SQLColumnsGenerator.cs" />
+    <Compile Include="EntityRepository\SqlServer\BatchInsert.cs" />
+    <Compile Include="EntityRepository\Caching\AggregateChecker.cs" />
+    <Compile Include="EntityRepository\Caching\VersionSyncClientCache\AggregateRootCache.cs" />
+    <Compile Include="DomainMetaExtension.cs" />
+    <Compile Include="EntityRepository\Caching\CacheInstance.cs" />
+    <Compile Include="EntityRepository\Caching\VersionSyncClientCache\VersionChecker.cs" />
+    <Compile Include="ConnectionStringNames.cs" />
+    <Compile Include="Entity\IEntityInfoHost.cs" />
+    <Compile Include="EntityRepository\RF.cs" />
+    <Compile Include="Entity\CloneOptions.cs" />
+    <Compile Include="EntityRepository\EntityRepository.cs" />
+    <Compile Include="EntityRepository\DictionaryRepositoryFactory.cs" />
+    <Compile Include="EntityRepository\SqlServer\EntityChldrenBatchReader.cs" />
+    <Compile Include="Entity\IRepository.cs" />
+    <Compile Include="Entity\Entity.Tree.cs">
+      <DependentUpon>Entity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\EntityList.Tree.cs">
+      <DependentUpon>EntityList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\EntityList.cs" />
+    <Compile Include="Entity\EntityCriteria.cs" />
+    <Compile Include="Entity\IEntity.cs" />
+    <Compile Include="Entity\Entity.cs" />
+    <Compile Include="RafyDomainLibrary.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ORM\IColumn.cs" />
+    <Compile Include="ORM\ITable.cs" />
+    <Compile Include="ORM\ORMException.cs" />
+    <Compile Include="ORM\DbColumn.cs" />
+    <Compile Include="ORM\Sql\SqlServer\SqlTable.cs" />
+    <Compile Include="Entity\Validation\BrokenRule.cs" />
+    <Compile Include="Entity\Validation\BrokenRulesCollection.cs" />
+    <Compile Include="Entity\Validation\CommonRules.cs" />
+    <Compile Include="Entity\Validation\IRuleMethod.cs" />
+    <Compile Include="Entity\Validation\RuleMethod.cs" />
+    <Compile Include="Entity\Validation\RulesContainer.cs" />
+    <Compile Include="Entity\Validation\ValidationException.cs" />
+    <Compile Include="Entity\Validation\zzzValidationRules.cs" />
+    <Compile Include="Entity\Validation\ValidationRulesManager.cs" />
+    <Compile Include="Service\ContractImplAttribute.cs" />
+    <Compile Include="Service\ServiceFactory.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Rafy.Utils\Rafy.Utils.csproj">
+      <Project>{796B149B-32C9-4BB0-A23F-69C012450DB8}</Project>
+      <Name>Rafy.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rafy.DbMigration\Rafy.DbMigration.csproj">
+      <Project>{D7C4F80D-24A4-47F1-985C-CFA55CFA13E9}</Project>
+      <Name>Rafy.DbMigration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rafy.ManagedProperty\Rafy.ManagedProperty.csproj">
+      <Project>{66BE29D5-F1CA-4941-A4EB-6B3E8F577166}</Project>
+      <Name>Rafy.ManagedProperty</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rafy\Rafy.csproj">
+      <Project>{966A5BF2-D690-426B-AD68-AD868BB8F855}</Project>
+      <Name>Rafy</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Entity\Validation\_ReadMe.txt" />
+    <Content Include="EntityRepository\zzzEF\如何加载所有 ORM 配置.txt" />
+    <Content Include="ORM\Query\_ReadMe.txt" />
+    <Content Include="ORM\Sql\Tree\_ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Hxy Key.snk" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

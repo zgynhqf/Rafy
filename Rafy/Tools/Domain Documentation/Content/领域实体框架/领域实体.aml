@@ -1,0 +1,231 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="e9998e68-31e8-47d6-9e28-829aade5044e" revisionNumber="1">
+    <developerConceptualDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+
+        <introduction>
+            <!--<para>本节描述领域实体类的相关内容。</para>-->
+            <autoOutline />
+        </introduction>
+
+        <!--<para>必须要有无参数的构造函数。</para>-->
+        <!--<para>如何使用 DomainEntityWindow 添加一个领域实体……</para>-->
+
+        <!--序列化-->
+        <section address="intro">
+            <title>简介</title>
+            <content>
+                <para>领域实体是实体框架中最重要的组件。</para>
+                <para>
+                    系统中所有实体类都必须直接或间接地从 <codeInline>Rafy.Domain.Entity</codeInline> 类继承。该基类的设计支持属性的管理、关系的延迟加载、自动冗余属性、大对象属性、树型关系等。详情见本节下各小节。
+                </para>
+            </content>
+        </section>
+
+        <section address="create">
+            <title>创建实体</title>
+            <content>
+                <para>安装 SDK 后，可以使用模板来创建一个新的实体。在项目中添加项，选中 "Rafy Domain Entity"，命名为 Role.cs，点击确定：</para>
+                <mediaLink>
+                    <image xlink:href="DomainEntity_AddNewItem"/>
+                </mediaLink>
+                <para>在弹出的“添加领域实体”窗口中，填写相应的项：</para>
+                <mediaLink>
+                    <image xlink:href="DomainEntity_AddNewItemWindow"/>
+                </mediaLink>
+                <para>各项说明：</para>
+                <list class="bullet">
+                    <listItem>
+                        <para>类名</para>
+                        <para>该项就是实体的名称。同时会影响实体列表类、实体仓库类的名称。</para>
+                    </listItem>
+                    <listItem>
+                        <para>组合父实体类名</para>
+                        <para>如果该实体不是一个组合根实体，那么需要指定它所属的组合父实体名。这样，可以自动为两个类创建关系属性。</para>
+                    </listItem>
+                    <listItem>
+                        <para>继承实体类名</para>
+                        <para>如果该实体是继承自某个特定实体，那么需要指定它的父实体名。</para>
+                        <para>由于每个实体项目在创建时，都会创建一个统一的基类。所以默认情况下，这里都使用该基类。例如这里是在 JXC 领域实体项目中添加实体，所以使用的默认是自动生成的 JXCEntity 实体基类。</para>
+                    </listItem>
+                    <listItem>
+                        <para>领域名称</para>
+                        <para>实体在领域中的名称。会生成到实体的注释中。</para>
+                        <para>这里填写的名称，也会显示到领域关系图中。见：<link xlink:href="640ac9bb-0090-4b38-9763-bad4fca3adfb" />。</para>
+                    </listItem>
+                </list>
+                <para>经过以下步骤，就编写了一个比较简单的实体类。以下代码是生成的实体类代码文件：</para>
+                <code language="cs">
+<![CDATA[using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
+using System.Text;
+using Hxy;
+using Hxy.Data;
+using Rafy;
+using Rafy.Domain.ORM;
+using Rafy.Domain;
+using Rafy.Domain.Validation;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
+using Rafy.ManagedProperty;
+
+namespace JXC
+{
+    /// <summary>
+    /// 角色
+    /// </summary>
+    [RootEntity, Serializable]
+    public partial class Role : JXCEntity
+    {
+        #region 构造函数
+
+        public Role() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected Role(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
+
+        #region 引用属性
+
+        #endregion
+
+        #region 组合子属性
+
+        #endregion
+
+        #region 一般属性
+
+        public static readonly Property<string> NameProperty = P<Role>.Register(e => e.Name);
+        public string Name
+        {
+            get { return this.GetProperty(NameProperty); }
+            set { this.SetProperty(NameProperty, value); }
+        }
+
+        #endregion
+
+        #region 只读属性
+
+        #endregion
+    }
+
+    /// <summary>
+    /// 角色 列表类。
+    /// </summary>
+    [Serializable]
+    public partial class RoleList : JXCEntityList { }
+
+    /// <summary>
+    /// 角色 仓库类。
+    /// 负责 角色 类的查询、保存。
+    /// </summary>
+    public partial class RoleRepository : JXCEntityRepository
+    {
+        /// <summary>
+        /// 单例模式，外界不可以直接构造本对象。
+        /// </summary>
+        protected RoleRepository() { }
+    }
+
+    /// <summary>
+    /// 角色 配置类。
+    /// 负责 角色 类的实体元数据、界面元数据的配置。
+    /// </summary>
+    internal class RoleConfig : JXCEntityConfig<Role>
+    {
+        /// <summary>
+        /// 配置实体的元数据
+        /// </summary>
+        protected override void ConfigMeta()
+        {
+            //配置实体的所有属性都映射到数据表中。
+            Meta.MapTable().MapAllProperties();
+        }
+    }
+}]]>
+                </code>
+                <para>其中包含四个类型，接下来说明实体的各组成部分。</para>
+            </content>
+        </section>
+
+        <section address="attri">
+            <title>实体特性</title>
+            <content>
+                <para>实体必须标记以下特性：</para>
+                <list class="bullet">
+                    <listItem>
+                        <para>
+                            如果是组合根实体，需要标记 <codeInline>Rafy.MetaModel.Attributes.RootEntityAttribute</codeInline>；非根实体，则标记 <codeInline>Rafy.MetaModel.Attributes.ChildEntityAttribute</codeInline>。
+                        </para>
+                    </listItem>
+                    <listItem>
+                        <para>
+                            标记 <codeInline>System.SerializableAttribute</codeInline> 为可序列化实体，可支持分布式传输。
+                        </para>
+                    </listItem>
+                </list>
+            </content>
+        </section>
+
+        <section address="ctor">
+            <title>构造函数</title>
+            <content>
+                <para>自动生成了两个实体的构造函数，一个用于外部直接构造实体，一个用于序列化。二者都不能被删除。</para>
+            </content>
+        </section>
+
+        <section address="property">
+            <title>实体属性</title>
+            <content>
+                <para>构造函数之后，是属性的代码区域。实体的属性是实体最重要的组成部分，分为四大部分，详见：<link xlink:href="bae4aeb4-e6a9-4d1f-9bbd-1a4199303ba5" />、<link xlink:href="770d700d-acf8-40fd-abc2-a580725a14fb" />、<link xlink:href="3ad175ff-a917-4e84-931f-f845285187ed" />、<link xlink:href="711304c2-d2a3-4ec9-abd8-00edd86fb3ca" />。</para>
+            </content>
+        </section>
+
+        <section address="list">
+            <title>实体列表类型</title>
+            <content>
+                <para>实体列表类是实体的一个集合类型。一般很少在其中编写代码，但是它在框架中起到非常重要的作用。详见：<link xlink:href="865b535e-d23f-45fe-912a-5b7759aa11a8" />。</para>
+            </content>
+        </section>
+
+        <section address="repo">
+            <title>实体仓库类型</title>
+            <content>
+                <para>
+                    实体仓库类的职责是管理实体，并实现实体的持久化保存功能。详见：<link xlink:href="6b377084-3fc9-4bf6-94d7-bc9a42ed82a7" />。</para>
+            </content>
+        </section>
+
+        <section address="config">
+            <title>实体配置类型</title>
+            <content>
+                <para>
+                    实体配置类型的职责是修改实体的元数据。详见：<link xlink:href="4ea5b738-5d08-4646-a263-6c1ae8ee3e8c" />。</para>
+            </content>
+        </section>
+
+        <section address="namingConvention">
+            <title>命名约定</title>
+            <content>
+                <para>实体类、实体列表类、实体仓库类必须满足以下命名约定：</para>
+                <list class="bullet">
+                    <listItem>
+                        <para>实体列表类名 = 实体类名 + "List"。</para>
+                    </listItem>
+                    <listItem>
+                        <para>实体仓库类名 = 实体类名 + "Repository"。</para>
+                    </listItem>
+                </list>
+            </content>
+        </section>
+
+        <relatedTopics>
+        </relatedTopics>
+    </developerConceptualDocument>
+</topic>

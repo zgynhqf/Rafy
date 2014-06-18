@@ -1,0 +1,1336 @@
+﻿2.14.1175.0
+    内部修改
+        * CheckErrorRedundancy 需要放到开发工具中。
+
+2.14.1174.0
+    ★重要改动、内部修改
+        * 实体元数据支持按需加载，而不需要在启动时一次性全部加载好。
+
+2.14.1173.0
+    ！删除接口
+        * 删除实体覆盖的接口。
+
+2.14.1172.0
+    重构、！修改接口
+        * 删除 RafyIdentity.Current 属性，统一使用 RafyEnvironment.Identity。
+
+2.14.1171.0
+    ★★重要改动、内部修改
+        * 不再使用 MEF，优化程序启动速度。
+
+2.14.1170.0
+    ★重要改动
+        * 1. 数据库生成功能，放到开发工具模块中。
+        * 2. 启动时，不再主动自动升级。（如果是第一次安装，可以通过配置项配置在启动时升级。）
+    重构
+        * WaitDialog 添加方便使用的属性。
+
+2.14.1162.0
+    重构
+        * 提取 DbConnectionSchema.DbName_LocalServer 常量。
+
+2.14.1161.0
+    BUG修复
+        * TreeGrid SelectAll 中需要判断当前是否已经有数据源。
+
+2.14.1160.0
+    内部修改
+        * 添加 RuntimeStarting 事件。
+        * 设置 App 的退出模式为 OnExplicitShutdown。
+
+2.14.1159.0
+    内部修改
+        * Logger 中主动记录 BaseException。
+
+2.14.1158.0
+    ！删除接口
+        * 删除 IApp 中无用的 ModelOperations 事件。
+
+2.14.1157.0
+    内部修改
+        * 界面配置的备份文件保存在该目录下，而不是临时文件夹内。
+    重构
+        * 优化 RestoreViewConfigService 中的代码。
+
+2.14.1156.0
+    内部修改
+        * 错误日志的记录，记录最基本的异常，而不是最外层的异常。
+
+2.14.1155.0
+    BUG修复
+        * 属性变更时，应该用一个额外的 bool 值变量来判断是否已经存在旧值。否则如果旧值是 null 时，判断将会失效。
+
+2.14.1154.0
+    内部修改
+        * 记录登录的代码，移动到 RBACLibrary 中。
+
+2.14.1153.0
+    BUG修复
+        * 2.14.1149.0。
+
+2.14.1152.0
+    内部修改
+        * InnerSerializer 功能可以通过配置项关闭。
+
+2.14.1151.0
+    内部修改
+        * AnonymousIdentity 不再从 GenericIdentity 上继承，以免发生因为 .NET 版本不同，而序列化、反序列化失败的问题。
+
+2.14.1150.0
+    内部修改
+        * Sql 跟踪文件的配置改为 SQL_TRACE_FILE，可以配置文件路径。
+
+2.14.1149.0
+    重构
+        * 在清空 SQLCE 缓存时，直接把相应的文件夹删除。
+
+2.14.1148.0
+    内部修改
+        * Block 添加 UseBlockDefaultCommands 方法。
+    BUG修复
+        * 解决“非调试状态下，导出 Excel 按钮不见了、查询面板的界面配置按钮还在。”的问题。
+
+2.14.1147.0
+    添加接口
+        * EntityRepository.GetBy 方法改为 public。
+
+2.14.1146.0
+    BUG修复
+        * 属性编辑器，在设置 PropertyValue 属性时，需要过滤掉只读属性。
+
+2.14.1145.0
+    ★重要改动、重构、添加接口
+        * 添加 ClientCache 类，并提供清空缓存的接口。
+
+2.14.1144.0
+    内部修改
+        * 下拉框中不能输入值。
+
+2.14.1143.0
+    内部修改
+        * 添加 ConcreteProperty 类型。
+        * 冗余属性的实现依赖 ConcreteProperty 中的 ConcreteProperty，而不是直接依赖 IProperty。
+        * 在 WPFModule 中添加 CheckErrorRedundancy 方法。
+
+2.14.1142.0
+    BUG修复
+        * RegisterRef 中的 Seraizable 应该赋值给 PropertyMetadata 中的 Seraizable 属性。
+
+2.14.1141.0
+    BUG修复
+        * 控件输入数字、字母不起作用，应该屏蔽。
+
+2.14.1140.0
+    添加接口
+        * EntityContext 添加禁用的接口。
+
+2.14.1139.0
+    内部修改
+        * 调整界面颜色。
+
+2.14.1138.0
+    BUG修复
+        * 按钮的文字会被多国翻译引擎重复收录。
+
+2.14.1137.0
+    内部修改
+        * 添加 ORMHelper 类。
+
+2.14.1136.0
+    BUG修复
+        * 日期控件中的时间可以被删除。
+
+2.14.1135.0
+    添加接口
+        * EntityList 添加 OnQueryDbCompleted 回调接口。
+        * EntityRepository 添加 CountByParentId 公有接口。
+
+2.14.1134.0
+    内部修改
+        * 控件输入数字不起作用，所以把除了上下箭头以外的键全部屏蔽。
+
+2.14.1133.0
+    BUG修复
+        * DateTimePropertyEditorBase.PrepareElementForEditCore 的可空性错误。
+
+2.14.1132.0
+    BUG修复
+        * IntegerUpDown、DoubleUpDown 中的 Text 不应该使用 PropertyChanged Trigger 模板，否则用户可以在其中录入字母。
+    内部修改
+        * IntegerUpDown、DoubleUpDown 应该使用同一个模板。
+
+2.14.1130.0
+    BUG修复
+        * 导出 Excel 命令中，枚举数据在导出时，应该显示相应的 Label。
+
+2.14.1129.0
+    内部修改
+        * 界面设置界面，点击确定时，直接保存修改结果。
+
+2.14.1128.0
+    内部修改
+        * 修改样式：在 IsEanble = false 时，不显示属性验证信息。
+
+2.14.1127.0
+    内部修改
+        * 删除 ApplicationContext 中一些无用的配置。
+    添加接口
+        * RafyEnvironment 添加属性 User。
+
+2.14.1126.0
+    BUG修复
+        * 实现 TreeGridRowAutomationPeer.CreateItemAutomationPeer 方法，以免出现未实现的异常。
+
+2.14.1125.0
+    重构
+        * 重构 IApp 中的一些方法、事件名。
+        * 为数据库生成的过程提取一些可重用的方法。
+
+2.14.1124.0
+    内部修改
+        * 使用多线程来初始化实体托管属性，提高启动效率。
+
+2.14.1123.0
+    内部修改
+        * 修改 TextBox、WaterMaskTextBox 在 Enabled=false 时的样式。
+
+2.14.1122.0
+    内部修改
+        * 默认情况下，关闭多国语言的删除、添加按钮。
+
+2.14.1121.0
+    ！修改接口
+        * 多国语言中的 TranslatingText 接口改变为附加属性的形式，方便使用。
+
+2.14.1120.0
+    BUG修复
+        * 多国语言发起 http 请求时，应该把 # 号过滤掉。
+
+2.14.1119.0
+    BUG修复
+        * 某语言中的 MappingInfoList 出现了重复的项，应该判断不要多次重复添加，引起 Bug。
+
+2.14.1118.0
+    内部修改
+        * 添加 Rafy_ShowErrorDetail 配置。
+
+2.14.1117.0
+    内部修改
+        * 属性编辑器支持为某个属性配置布局方向为横向、竖向。
+
+2.14.1116.0
+    内部修改
+        * 统一编辑器的边框样式。
+
+2.14.1115.0
+    BUG修复
+        * LocalTransactionBlock 在两重嵌套时，内部出错并回滚时，会引发两次回滚操作，而出现异常。
+
+2.14.1114.0
+    BUG修复
+        * 在新生成数据库时，不应该生成已经被标记为忽略的表。
+
+2.14.1113.0
+    添加接口
+        * IQuery 对应的 Constraint 方法集，都添加 propertyOwnerType 参数。
+
+2.14.1112.0
+    添加接口
+        * ModuleViewModel 添加 OnTranslatedLabelChanged 事件回调。
+
+2.14.1111.0
+    添加接口
+        * WindowWorkspace 类型支持由应用层随意添加。
+
+2.14.1110.0
+    ★重要改动
+        * ClientApp 在启动时，需要做好异常处理。否则应用程序可能会永远不退出内存。
+
+2.14.1108.0
+    修改接口
+        * 重命名 RafyLocation 中的枚举值。
+        * 不论是否为 WCFClient，都需要把界面插件加载到程序中。
+
+2.14.1107.0
+    内部修改
+        修改边框样式。
+
+2.14.1105.0
+    内部修改
+        模块元数据可以被更改。
+
+2.14.1104.0
+    内部修改
+        修改边框样式。
+
+2.14.1103.0
+    内部修改
+        皮肤设计功能。
+
+2.14.1102.0
+    ★重要改动、内部修改
+        Rafy.Library 项目改名为 Rafy.Domain。
+
+2.14.1100.0
+    内部修改
+        为系统按钮添加相应的图标。
+
+2.14.1099.0
+    内部修改
+        * 添加 CommandContentControl 控件用于显示命令。
+        * WaitDialog 的颜色调整。
+
+2.14.1097.0
+    BUG修复
+        TranslatingText 在 Text 变化时需要 InvalidateMeasure。
+
+2.14.1096.0
+    内部修改
+        调整 TabControl Header 的样式。
+
+2.14.1095.0
+    内部修改
+        表格行的样式，放到颜色文件夹中进行配置。
+
+2.14.1094.0
+    内部修改
+        为系统按钮添加相应的图标。
+
+2.14.1093.0
+    内部修改
+        数据库升级异常的抛出时，需要使用 DbMirationException。
+
+2.14.1092.0
+    内部修改
+        简化 CheckBox 的样式。
+
+2.14.1091.0
+    内部修改
+        表单中的分组信息需要多国语言支持。
+
+2.14.1090.0
+    内部修改
+        多国语言支持自动批量更新及退出程序自动更新。
+
+2.14.1089.0
+    内部修改
+        RafyEnvironment.TranslateFormat 方法的参数不会被翻译。
+
+2.14.1088.0
+    添加功能
+        添加 "打开所有模块" 按钮。
+    BUG修复
+        Translate 方法需要在每一批后把 length 清空。
+
+2.14.1087.0
+    内部修改
+        ModuleViewModelType 添加 DisplayOnly 类型。
+
+2.14.1086.0
+    内部修改
+        DataGrid 的 InvalidateSummary 方法需要在本线程中调用。
+
+2.14.1085.0
+    重构
+        使用二进制标记来优化 EntityStatus 的实现。
+
+2.14.1084.0
+    重构
+        优化 EntityStatus 的代码。
+
+2.14.1083.0
+    内部修改
+        在 SetRefId 中添加 box 变量，减少装箱次数。
+
+2.14.1082.0
+    内部修改
+        添加引用实体设置是否成功的检测。
+
+2.14.1081.0
+    ！删除接口
+        删除多余的 CriteriaAttribute 标签。
+
+2.14.1080.0
+    重构
+        添加 EntitySerializableFlags 类型实现内部的实体状态。
+
+2.14.1079.0
+    添加接口
+        添加 IControlableDeletingList 接口控制 DeleteListObjectCommand 命令。
+
+2.14.1078.0
+    BUG修复
+        列表中引用属性的排序有问题。
+
+2.14.1077.0
+    2.14.1072.0 中修改的 GetLoadedChildren 有误。
+
+2.14.1076.0
+    2.14.1072.0 中修改的 ManagedPropertyBridge 有误。
+
+2.14.1075.0
+    BUG修复
+        DataPortal.cs 在 WebServer 模式下也应该使用 LocalProxy。
+
+2.14.1074.0
+    内部修改
+        TreeGridListEditor 在刷新控件时，立刻更新布局，这样可以让控件即刻生成所有的行和单元格。
+
+2.14.1073.0
+    添加接口
+        添加 AggtBlocksCollection.ReOrder 方法。
+
+2.14.1072.0
+    ★重要改动、重构、！修改接口
+        优化引用属性的设计
+            * 托管属性对象的 SetProperty 方法添加返回值表示最终使用的值。
+            * 引用属性拆分为两个基本属性分别表示 Id 和 Entity，懒加载的逻辑移动到实体类中，删除 ILazyEntityRef 相关设计。
+
+2.14.1063.0
+    ★重要改动、重构
+        托管属性
+            * 2.1版本 胡庆访 20121119
+                   为了减少数据传输量，同时为 LazyEntityRef 的重构做准备：删除 FieldManager 类型，代码直接放到 ManagedPropertyObject 中。
+                   同时，由于自定义反序列化函数也被放到本类中，所以所有子类都需要添加反序列化构造函数。
+            * 2.2 胡庆访 20121120
+                PropertyMeta 中支持以 Serializable 属性来配置是否序列化。
+
+2.14.1061.0
+    重构
+        * 修改 Row 样式，IsAlternatingRow 变换行色作用在 Style.Triggers 中。
+
+2.14.1060.0
+    ！修改接口
+        * GetPropertyValue 方法从 object 的扩展方法中移除，移动到 ObjectHelper 中。
+
+2.14.1059.0
+    重构
+        * 移动文件，准备聚合 SQL 重构。
+
+2.14.1058.0
+    BUG修复
+        * EntityList.OnTreeItemRemoving 方法改为 OnTreeItemRemoved。
+
+2.14.1057.0
+    ★重要改动、重构
+        * ManagedProperty 2.0
+            * 修改托管属性存储结构，属性的存储由引用类型 IManagedPropertyField 的数组变为结构体 ManagedPropertyField 的数组。
+            * 属性变更事件参数，从泛型加接口的方式改变为纯结构体。
+
+2.13.1056.0
+    内部修改
+        * DbMigrationHistory 添加 TimeString 字符串，用于显示时间。
+
+2.13.1055.0
+    ★重要改动、重构
+        * ManagedPropertyObjectList 从 ObservableCollection 集合上继承下来，而不再从 BindingList 上继承。
+        * 删除 EntityList.AddNew 方法。
+
+2.13.1053.0
+    ！修改接口
+        * 删除 SqlWriter.AddTables 方法，添加以显式指定具体子类的接口。
+
+2.13.1051.0
+    添加功能
+        * TreeGrid 的合计行支持在项的属性变化时自动更新。
+
+2.13.1050.0
+    内部修改
+        * 把初始化皮肤的工作，放到 ClientApp 中。
+
+2.13.1049.0
+    BUG修复
+        * ClearAuditLogCommand 引用了错误的图片。
+
+2.13.1048.0
+    添加接口
+        * Helper.GetPackUri 支持生成以 pack 起头的绝对 Uri。
+
+2.13.1047.0
+    ！修改接口、内部修改
+        * ModuleViewModel.IsSelected 属性支持公有设置，方便界面绑定。
+
+2.13.1046.0
+    BUG修复
+        * TreeGrid 中应该使用 TreeGridRow 中定义的事件，而不是 TreeViewItem。
+
+2.13.1045.0
+    内部修改
+        * 是否记录日志，支持配置。
+
+2.13.1045.0
+    内部修改
+        托管属性
+            * 在设置属性时，应该检测是否对象的类型与属性的拥有者类型一致。
+    BUG修复
+        托管属性
+            * ManagedPropertyObjectFieldsManager 给 GetMeta 传参时，应该传入 this._owner。
+
+2.13.1044.0
+    BUG修复
+        * 冗余属性在继承情况下，错误地赋值了非本实体的冗余属性的值。
+
+2.13.1043.0
+    BUG修复
+        * 在 WPFServer 环境下，DataPortal 也应该使用 LocalProxy。
+
+2.13.1042.0
+    ★重要改动
+        * 皮肤开始支持换色。
+        * 皮肤支持完整换色，并支持提供三套皮肤：Blue、Gray、Yellow。
+
+2.13.1037.0
+    BUG修复
+        * BooleanTreeColumn 不需要进入编辑状态，否则 ViewConfigurationCommand 中的 IsVisible 属性会出现未知的问题。
+        ！！暂时不知道 bug 产生的原因
+
+2.13.1036.0
+    BUG修复
+        * 当设置 IsReadOnly 为 null 时，需要通过指示器状态，来设置元素的属性。
+
+2.13.1034.0
+    添加接口、添加功能
+        * RafyEnvironment 添加 IgnoreTranslation 方法。
+
+2.13.1033.0
+    内部修改
+        * Bing 翻译可用。
+
+2.13.1032.0
+    添加功能、BUG修复
+        * 多国语言自动翻译，暂时使用 baidu 引擎。因为 bing 需要申请 appId。
+
+2.13.1030.0
+    BUG修复
+        * Exception.Alert 应该放在主线程做。
+
+2.13.1029.0
+    BUG修复
+        * 解决 Rafy.MultiLanguages 包类库不能升级的问题。
+
+2.13.1028.0
+    添加功能
+        * 支持在引用属性上使用 RefEntityType 来弹出其它实体。
+            * SelectionViewMeta.RefEntityType 应该先尝试使用显式设置的值。
+            * SelectionViewMeta.GetSelectedValue 应该支持获取引用属性的值。
+
+2.13.1026.0
+    添加功能
+        * 完善多国语言功能。
+
+2.13.1025.0
+    添加功能
+        * 多国语言功能支持自动翻译。
+    添加接口
+        * 添加 TranslationText 控件。
+
+2.13.1022.0
+    添加接口
+        * 添加 FilterCommand 类型提供简单过滤支持。
+        * 完善多国语言功能：添加过滤功能。
+
+2.13.1020.0
+    ★重要改动、！修改接口
+        * 框架不再为所有实体添加默认的按钮，而是提供 UseDefaultCommands 方法，实体根据自己的需求选择性使用。
+        * 修改相应的实体配置。
+
+2.13.1019.0
+    添加功能
+        * 完善多国语言功能。
+
+2.13.1017.0
+    添加接口
+        * Entity.DataAccess 添加 DeleteRefInDb 方法。
+
+2.13.1016.0
+    ！修改接口
+        * IDb 接口中的 Delete 方法不再需要传入 EntityType。
+
+2.13.1015.0
+    ★重要改动、添加功能
+        * 添加 Rafy.MultiLanguages 插件，支持多语言界面。
+
+2.13.1011.0
+    ★重要改动、添加功能
+        * 框架支持多语言翻译接口。
+        * RafyEnvironment 直接在 string 类型上扩展了 Translate 方法。
+
+2.13.1008.0
+    BUG修复
+        * TreeGridListEditor 在清空过滤条件时没有检测 null。
+
+2.13.1007.0
+    添加功能
+        * 模块窗口在创建时，应该设置默认的焦点。
+
+2.13.1006.0
+    添加接口
+        * WorkspaceWindow 中添加 Template 属性，并添加通过 View 查找的方法。
+
+2.13.1005.0
+    内部修改
+        * CancelCommand 需要手动调用 CommandManager.InvalidateRequerySuggested 方法。
+
+2.13.1004.0
+    内部修改
+        * 表格中，可空类型的数据也应该使用数字的样式。
+
+2.13.1003.0
+    重构
+        * 添加 GetOverridedMeta 方法，优化 GetMeta(object owner) 的调用速度。
+
+2.13.1002.0
+    重构
+        * TreeNodeStyle 重命名为 RowStyle。
+
+2.13.1001.0
+    添加功能
+        * QueryEntityGenerator 支持生成 ViewConfig 代码。
+
+2.13.1000.0
+    添加功能
+        * 添加 Rafy 开发组项目。
+        * 添加 QueryEntityGenerator 工具。
+
+2.13.999.0
+    BUG修复
+        * MergeIdRecur 需要同时 Merge TreePId。
+
+2.13.998.0
+    BUG修复
+        * RequestDataWidthes 需要判断是否当前列为指定的列宽。
+
+2.13.997.0
+    BUG修复
+        * 保存列表实体时，应该递归检测一个实体是否有新添加的实体。
+        * MemoPropertyEditor 应该使用 GetCurrentReadOnly 而不是 IsReadOnly.GetValueOrDefault 来检测只读性。
+
+2.13.996.0
+    BUG修复
+        * EntityList 在删除时，应该整理所有被删除对象的顺序。
+        * SaveListCommand 在刷新控件时，应该刷新所有视图的对应控件。
+    添加接口
+        IRepository 支持 GetByIdList 方法。
+
+2.13.995.0
+    BUG修复
+        EntityList 在删除时，应该整理所有被删除对象的顺序。
+    添加接口
+        Entity 添加 EnableDeleteChildrenInMemory 支持内存中删除数据。
+
+2.13.993.0
+    添加接口
+        添加 WPFHelper.InvokeUntil 方法。
+
+2.13.992.0
+    重构
+        表格控件的 ShowSummaryRow 功能默认为关闭。
+        为元数据添加配置此属性的扩展方法接口。
+
+2.13.991.0
+    重构
+        TreeColumn.Editor 不能为空，删除无用的代码。
+
+2.13.990.0
+    ★重要改动
+        截止目前，TreeGrid 已经支持以 xaml 声明的方式来显示。
+
+2.13.989.0
+    重构
+        删除无用的 TreeColumnCollection，Columns 的赋值放在 TreeGrid 控件内部。
+
+2.13.988.0
+    重构
+        选择列的生成，放到 TreeGrid 中，而不是 RafyTreeGrid。
+
+2.13.987.0
+    重构
+        设置 Binding 的 StringFormat 的值的代码，统一到 TreeColumnFactory 中。
+
+2.13.986.0
+    BUG修复
+        BUG：NeedSummary 需要判断是否存在元数据。
+
+2.13.985.0
+    重构
+        删除无用的 LookupListTreeColumn。
+
+2.13.984.0
+    重构
+        TreeGridColumn 重构。
+
+2.13.983.0
+    BUG修复
+        TreeGrid 虚拟化列在变化宽度应该直接引发重绘。
+
+2.13.982.0
+    重构
+        使用 TypeHelper 来判断是否为数字。
+
+2.13.981.0
+    重构
+        统一元数据扩展类的类名。
+
+2.13.980.0
+    添加接口、添加功能
+        TreeColumn 支持对 EntityPropertyViewMeta 的 NeedSummary 扩展属性。
+
+2.13.979.0
+    BUG修复
+        TreeGrid 数据列需要向右靠齐。
+
+2.13.977.0
+    BUG修复
+        TreeGrid 在树型模式下，双击子行不应该让父行进入编辑状态。
+
+2.13.976.0
+    重构
+        删除多余的 TreeGridColumnHeader 样式。
+
+2.13.975.0
+    重构
+        由于 TreeGridHeaderPresenter 已经放在一个单独的 ScrollViewer 中，所以删除 TreeGridHeaderRowPresenter 中无用的滚动条同步代码。
+
+2.13.974.0
+    BUG修复
+        TreeGrid 在非虚拟化情况下，拖动列头顺序时，内部的单元格没有随着变化。
+
+2.13.973.0
+    ★重要改动、添加功能
+        TreeGrid 添加合计行功能相关逻辑代码。
+        为合计行添加 _paddingSummary 列。
+        为合计行左边加一个“合计”的行标题。
+
+2.13.968.0
+    重构
+        MTTGListEditor 重命名为  TreeGridListEditor。
+
+2.13.967.0
+    重构
+        删除无用的 LogicalExecutionLocation 属性。
+
+2.13.966.0
+    BUG修复
+        ComboListControlAutomationPeer 获取子时，应该判断 null。
+
+2.13.965.0
+    重构
+        修改 MessageBox 实现为 Xceed.Wpf.Toolkit.MessageBox。
+
+2.13.964.0
+    重构
+        重构 TreeGrid 模板：TreeGridHeaderPresenter 不应该放在一个单独的 ScrollViewer 中。
+
+2.13.963.0
+    BUG修复
+        报表的参数传递存储问题。
+
+2.13.962.0
+    ！修改接口、内部修改
+        添加 WorkspaceWindow 类型封装模块对应的窗体控件、元数据等信息。
+
+2.13.961.0
+    添加接口
+        IQuery 添加 TopOnly 方法指定“只获取头几条数据”。
+
+2.13.960.0
+    ！修改接口
+        Count 方法重命名为 FetchCount。
+
+2.13.959.0
+    添加功能
+        支持直接生成 Count 语句来统计数据的行数。
+    添加接口
+        EntityRepository.Count()
+        EntityList.QueryAsCounting()
+        EntityList.TotalCount 属性
+
+2.13.956.0
+    添加功能
+        TreeGrid 在进入行编辑模式时，应该同时设置单元格的焦点。
+
+2.13.955.0
+    内部修改
+        修改样式。
+
+2.13.954.0
+    添加功能
+        TreeGrid 支持行编辑模式。
+        TreeGrid 默认情况下，使用行编辑模式。
+    内部修改
+        LookupListTreeColumn、EnumTreeColumn 进入编辑状态时，不应该直接进入下拉状态。
+
+2.13.952.0
+    重构
+        重构，准备支持整行编辑。
+
+2.13.950.0
+    重构
+        提取 ExitCellEditing 方法。
+
+2.13.949.0
+    BUG修复
+        TreeGridCellsPanel 在分组显示时，RowsPanel 为 null，也不能进行虚拟化操作。
+
+2.13.948.0
+    重构
+        EntityPropertyViewMeta.DisplayRedundancy 改名为 DisplayDelegate。
+
+2.13.947.0
+    BUG修复
+        EntityList 在保存时，应该判断每个实体的 IsDirty 属性后才保存。
+
+2.13.946.0
+    BUG修复
+        TreeGrid 编辑状态下，如果一直按住 Tab 键切换到下一列编辑，可能会因为找不到行而报出异常。
+
+2.13.945.0
+    ★重要改动、内部修改
+        截止目前，整个列虚拟化完成。
+            √ 理解 TreeGridRowPresenter 的 Measure 方法。
+            √ TreeGridRowPresenter 中的 additionalChildren 放在所有 Visual 的前面。
+            √ TreeGridRow 转换为 ItemsControl
+	            √ ItemsSource 应该是什么？
+		            MultipleCopiesCollection
+	            √ Measure InternalChildren 的结构是否需要变更？
+		            不要改变，否则使用 ItemsControl 时不易生成。
+	            √ TreeGridRowPresenter.UpdateVisualTree 方法的调用应该放到 MeasureOverride 中。
+	            实现步骤：
+		            √ 实现 TreeGridCellsPanel，根据最外层 TreeGridRowsPresenter 的 ScrollInfo 来实例化该行的单元格。
+		            √ 实现 TreeGridRowsPresenter，在横向滚动时，通知所有 TreeGridCellsPanel 重新测量。
+		            √ TreeGridRowPresenter 中实现 ItemsControl 基类的约定
+			            √ 实现 ItemsControl 基类的约定方法，使用 TreeGridCell 来作为项容器。
+			            √ 设置 ItemsSource 属性。
+			            √ 使用 TreeGridCellsPanel 来作为项容器的 ItemsHost。
+		            √ 原来 TreeGridRowPresenter 中的布局代码，都需要移动到 TreeGridCellsPanel 类型中。
+		            √ 测试滚动可用性。
+		            √ 树型表格状态下的滚动可用性。
+		            √ TreeGridCellsPanel 在生成单元格时，应该初始化好单元格的状态，主要是编辑状态。
+			            再次生成的编辑控件，焦点位置不准确。
+		            √ 拖动列头顺序时，格子应该跟着变化。
+		            √ 添加依赖属性是否列虚拟化，来控制是否使用 TreeGridCellsPanel 作为 ItemsHost。（已经使用属性来控件虚拟化。）
+		            √ TreeGridRowPresenterBase 与 TreeGridHeaderPresenter 合并。（留作未来合计行的基类，不合并。）
+		            √ 自动编码管理模块的显示有问题。
+		            √ Find/Get 两类方法查找指定行、查找指定单元格。
+			            未实现
+				            TreeGridCellsPanel.BringIndexIntoView
+				            TreeGridRow.ScrollToCell
+		            √ _additionalChildren 应该移到 TreeGridCellsPanel 中。
+		            √ TreeGridRowPresenter 控件模板是否还需要。（需要，不能删除。）
+		            √ TreeGridCellsPresenter.SyncProperties 方法未翻译，可能影响了一开始时的呈现。
+
+2.13.944.0
+    内部修改
+        Header 等可视元素属性，由 TreeGridCellsPresenter 中移动到 TreeGridCellsPanel 中。
+
+2.13.943.0
+    BUG修复
+        删除 GetSingleSelectedRow 方法。
+
+2.13.942.0
+    内部修改
+        TreeGrid 支持 Find/Get 两类方法查找指定行、查找指定单元格。
+    添加功能
+        TreeGrid 完善按 Tab 编辑下一列，同时支持按住 Shift+Tab 编辑上一列。
+
+2.13.941.0
+    BUG修复
+        修复 2.12.871.0 造成的 BUG：最小行高应该在 Cell 上设置，否则会造成 Cell A 过高，而 Cell B 中的内部居中后在界面显示不出来。
+
+2.13.940.0
+    添加接口
+        使用属性来控制列虚拟化功能的开关，根据 Columns 的大小来开启或者关闭列虚拟化。
+
+2.13.939.0
+    重构
+        删除 TreeGrid.GetEntity & SetEntity 方法，直接使用 TreeGridRow.DataContext。
+
+2.13.938.0
+    重构
+        提取 TreeUtil.UpdateDesiredWidthListOnColumnChanged 方法。
+
+2.13.937.0
+    内部修改
+        TreeGrid 使用的列虚拟化应该回收已经生成的单元格，以阻止焦点丢失问题。
+
+2.13.936.0
+    添加接口
+        TreeGridRow 支持查找虚拟化单元格。
+
+2.13.935.0
+    ★重要改动
+        2.7.0 TreeGrid 支持列虚拟化。
+
+2.13.928.0
+    BUG修复
+        TreeGridRowPresenter.UpdateVisualTree 方法的调用应该放到 MeasureOverride 中。
+
+2.13.926.0
+    重构
+        TreeGridRowPresenter.MeasureOverride。
+
+2.13.925.0
+    重构
+        简体 TreeGrid 的行号生成代码。
+        TreeGridRowPresenter 中的 additionalChildren 放在所有 Visual 的前面。
+
+2.13.924.0
+    重构
+        TreeGridCell 的初始化代码，移动到 TreeGridRowPresenter 中。
+
+2.13.923.0
+    重构
+        TreeGrid 中不使用 ContentPresenter 来包装每一个单元格，提高性能。
+
+2.13.922.0
+    重构
+        为 Rafy.WPF.Controls 添加 InternalVisibleToAttribute。
+        其它
+
+2.13.920.0
+    重构
+        重构最大最小宽度限制。
+
+2.13.919.0
+    BUG修复
+        QueryDb 方法的内存过滤器 Filter，应该在释放 DataReader 完成后再进行调用。
+    其它
+        添加 WriteWhereSqlIf 方法。
+
+2.13.918.0
+    重构
+        TreeGrid 2.6.0 重构。
+
+2.13.915.0
+    ★重要改动
+        TreeGrid 2.6.0 TreeGrid 不再依赖 GridView，MS 所有代码全部拷出。
+
+2.13.908.0
+    BUG修复
+        SqlWriter.ToString 方法应该返回可用的 Sql。
+
+2.13.907.0
+    重构
+        重构 TreeGrid 部分代码，为 Xaml 化做准备。
+
+2.13.906.0
+    ！修改接口
+        为了使用上不会混淆，SqlWriter 中的方法区分为两大类，一类是 WriteSth，一类是 AppendSth。
+
+2.13.905.0
+    添加接口
+        ExpandToSelectedItem 方法重构为 ExpandToView，并提升为一个公共 API。
+
+2.13.904.0
+    BUG修复
+        如果之前已经开始了 Shift 选择，并且该起始项和 newItem 并不在同一个父节点下，则重新进行 Shift 多选。
+
+2.13.903.0
+    重构
+        重构 ChangeSelection 方法。
+
+2.13.902.0
+    重构
+        删除 TreeGrid._ignoreTreeViewEvents 字段。
+        重构 ExpandToSelectedItem 方法。
+
+2.13.901.0
+    ！修改接口
+        TreeGrid.IsCheckingRow 属性重命名为 IsCheckingEnabled。
+
+2.13.900.0
+    重构
+        公开 ProcessSourceIndicator 类型，并重构其 API.
+    ！删除接口
+        TreeGridRow 删除 IsMultiSelected 属性，而直接使用 IsSelected 属性来实现多选。
+        删除 TreeGridRow 中一些自动化事件相关代码。
+
+2.13.899.0
+    添加接口
+        TreeGrid 添加 SelectParentOnCollapsed 属性。
+
+2.13.898.0
+    重构
+        删除 TreeGridRow.IsUISelected 属性。
+
+2.13.897.0
+    BUG修复
+        TreeGridRow 中的 Automation 实现有误。
+
+2.13.896.0
+    重构
+        Expand 方法用于展开结点时，没有生成行的数据需要加入到 _renderExpansion 中。
+        TreeGrid.SetEntity 方法不再使用 Header，而是使用一个内部字段。
+
+2.13.895.0
+    ★重要改动、重构
+        TreeGrid 2.5.0
+            不要在初始时，创建所有的 TreeGridRow，而是使用 ItemContainerGenerator 对应的模式来实现行的生成。
+	            √ TreeGridRowPresenter.Columns 是如何被设置值的。使用了绑定，但是无法从 IL 中找到是如何进行绑定的。
+	            √ 关闭 UIV，改为正常的 ItemsControl 模式，不手动生成 TreeGridRow。
+		            √ FindRow 的实现需要变为使用 ItemsControl 本身的机制来实现。
+			            √ 首先，分析 FindRow 目前被使用的场景，看是否都可以被替换。
+			            √ 目前在使用 TraverseRows 时有问题：一些数据对应的行还没有生成时，会造成遍历不全所有的行。
+				            √ 目前在使用 RecursiveRows 时有问题：一些数据对应的行还没有生成时，会造成遍历不全所有的行。
+					            √ 查询到 TreeNodeStyle 属性在被设置时，会主动给当前所有的行设置 Style 属性，这种机制可以通过逻辑树来解决。这时，需要查询一下 ComponentResourceKey 的用法。
+					            √ RefreshRowNo 刷新所有行号的功能，是直接使用 RecursiveRows 来实现的。
+						            √ 行号在排序后未重新刷新，导致显示错误。
+			            √ 显示树型节点时，有子节点的加号显示不出来了。
+			            √ 排序后，按住 Shift 多选出现死循环异常。
+			            √ 由于在刷新树后并不是所有行都立即被生成，所以造成一些代码出现异常，例如在点击插入子按钮时，OnSelectedItemChanged 方法中就直接使用了值为 null 的 SelectedRow 属性而出错。这里有两种处理方法：一种是保持原来的行为，调用 CollectionView 相应的方法来立刻生成所有的行；另一种是所有的代码都不要在与生成的行形成直接的耦合，而只是修改控件的状态，控件在最终渲染时根据控件的状态来渲染。应该是选择后一种方案，这是因为第一种方案，在最终打开 UIV 时还会出现同样的问题。
+				            √ FindOrGenerateNode 无法再保证它本身的功能。
+					            √ SelectedItemsAPI.TryAddSelection 调用了 FindOrGenerateNode，可能无法找到行。
+					            √ EnsureNodeIsVisible 无法再保证它本身的功能。
+					            √ OnSelectedItemChanged 方法中无法先展开所有父行。导致添加子无法直接定位到某一行。
+			            √ 降级按钮出现问题。
+			            √ FindRow 方法的性能可能较差。（考虑后，感觉并不存在较大的性能问题。）
+	            √ 删除 DataItems 属性。
+	            √ 打开 UIV。
+		            √ 按住 Ctrl 多选无用。
+		            √ 在 UIV 的场景下，按住 Shift 多选会因为起始行被 UIV 丢弃而出现异常。
+		            √ 先按 Shift 再选择会出错。
+	            √ _controlSortDescriptions 字段需要删除。
+	            √ 自测。
+		            √ 排序后树节点没有展开按钮了。（TreeGridRowPresenter 在 MeasureOverride 时没有测量子元素的大小）。
+		            √ 全部展开只展开到第一层节点。
+		            √ 部门权限管理模块中，功能选择后保存按钮并不可用。
+
+2.12.885.0
+    BUG修复
+        TreeGridRow 在左键点击时，应该把该事件处理掉，否则会造成它的父行也发生该事件而被选中。
+
+2.12.884.0
+    BUG修复
+        TreeGridRow 与 TreeGrid 解耦。
+
+2.12.883.0
+    BUG修复
+        QueryObjectView 在设置引用属性时使用的约定应该检测实体的类型。
+
+2.12.882.0
+    内部修改
+        TreeGrid 在树型表格时，也应该支持交替行变色。
+
+2.12.881.0
+    BUG修复
+        ClientAuditLogProvider 需要在当前位置为单机版服务端时，直接进行日志插入，否则会造成单机版本没有任何日志。
+        RafyEnvironment.IsOnClient 需要判断单机版本。
+
+2.12.880.0
+    BUG修复
+        AuditItem 的数据层查询使用新的接口，否则会查询不出数据。
+
+2.12.879.0
+    重构
+        属性元数据构建阶段，主要依赖托管属性，而不是 CLR 属性。
+    ！修改接口
+        属性元数据不再按照 CLR 属性的顺序来进行排序。
+        属性元数据的只读性不再受 CLR 属性的 setter 来控制。
+
+2.12.878.0
+    ★重要改动、重构
+        TreeGrid 重构：
+            * TreeGrid 不再继承 TreeView，而是直接从 ItemsControl 上继承下来。
+            * TreeGridRow 不再继承自 TreeViewItem，而是从 HeaderedItemsControl 上继承下来。
+
+2.12.877.0
+    ★重要改动、重构
+        TreeGrid 重构：
+            * TreeGrid 与 CompositeTreeView 合并为一个类。
+            * 所有面向 TreeViewItem 的代码，都改为直接面向 TreeGridRow。
+            * GridTreeView 带着的类型重命名为 TreeGrid 打头。
+
+2.12.873.0
+    ★重要改动、重构
+        TreeGrid 重构：TreeGrid 从 TreeView 类型上继承下来，并与 GridTreeView 合并为一个类。
+            * GridTreeViewRow 改名为 TreeGridRow。
+            * GridTreeView.Data 与 TreeGrid.DataItemsSource 合并。
+            * 调整“没有数据”的上边距。
+    BUG修复
+        修复：“在排序后交替行的颜色出现问题”。
+
+2.12.871.0
+    BUG修复
+        修改样式，给表格的行添加最小高度限制，以防止 UIV 失效。
+    内部修改
+        修改 TreeGrid 边框样式。
+
+2.12.870.0
+    内部修改、添加接口
+        Result 类内部实现为三个字段：bool 值表示是否成功，int 值表示状态码，string 表示消息。
+
+2.12.869.0
+    添加功能、添加功能
+        Form 添加两个属性，用于配置内部的 EditorHost 样式，即：WrppingEditorStyle 与 AutoGridEditorStyle。
+    ！修改接口
+        自定义表单类型需要从 Form 类型上继承。
+
+2.12.868.0
+    添加接口
+        添加 SqlWriter.AddParameter 方法。
+
+2.12.867.0
+    BUG修复
+        TreeGrid：“如果是选择模式下，还应该同步 SelectedItem 的值。”的代码应该放到 SelectedItemsAPI 类中。
+
+2.12.866.0
+    BUG修复
+        TreeGrid：在使用 CheckingModel 来控制选择项时，没有发生对应的 CheckChanged 事件。
+    重构
+        CheckSelectionModel 和 NormalSelectionModel 合并为一个类：TreeGridSelectionModel。
+
+2.12.865.0
+    内部修改
+        删除没必要的 SqlWriterExtension 类。
+
+2.12.864.0
+    内部修改
+        约定中的字符串没有封装好。
+
+2.12.863.0
+    BUG修复
+        RepositoryFactory 不需要为基类创建仓库，这是因为基类声明的仓库类型可能是抽象类型。
+    内部修改
+        SqlWriter 给出良好的提示。
+        EntityRepository 类型中的 EntityMeta 属性及 GetORMTable 方法都允许返回 null.
+
+2.12.862.0
+    BUG修复
+        在 SelectAsCreated 方法前必须把该行的实体设置好。
+        在重新绑定数据时，需要把 SelectionModel.InnerItems 中多余的项清空。
+
+2.12.860.0
+    BUG修复
+        使用 QueryValue 的所有代码都应该判断 DBNull.Value，而不是 null。
+
+2.12.859.0
+    添加接口
+        ReportObjectView 添加 SetParameter 方法。
+    重构
+        重构 ReportObjectView 生成数据源方法。
+
+2.12.858.0
+    内部修改
+        EntitySelectionPropertyEditor 应该在属性变更后调用 OnPropertyChanging，OnPropertyChanged 事件。
+
+2.12.857.0
+    内部修改
+        修改 TreeGrid 行样式，删除一些没有太大意义的样式，减少 Visual 数量。
+        MTTGCell 重命名为 TreeGridCell。
+
+2.12.856.0
+    添加接口
+        TreeGrid 支持 AlternatingRowBackground 属性，以支持交替行不同颜色显示。
+
+2.12.855.0
+    内部修改
+        在创建 WPFPropertyEditor 时，立刻设置好它的 IsReadOnly 属性。
+        FocusFirstEditor 应该尝试设置第一个非只读的编辑器。
+
+2.12.854.0
+    内部修改
+        三个日期时间编辑器控件，都需要对删除作特殊处理：如果属性支持可空，则直接设置为空属性；如果属性不可空，则屏蔽这两个按键。
+
+2.12.853.0
+    内部修改
+        Library 中的客户端界面元素也应该可以被 MEF 框架寻找到。
+        闪屏功能修改为使用定时关闭的功能，其中时间是可以配置的。
+    ！修改接口
+        ShellHelper 类型更名为 ItemsControlHelper。
+    添加接口
+        ModuleViewModel 再次支持自定义行为的构造函数。
+
+2.12.850.0
+    添加接口
+        查询按钮的快捷键设置为 F5。
+        ObjectViewExtension 添加 FocusFirstEditor、TraverseScopeFirst 两个方法。
+    内部修改
+        EntityModule 在加载时，自动定位焦点到第一个编辑器上。
+
+2.12.849.0
+    添加接口
+        IAsyncDataLoader 添加 AnyLoaded 属性。
+    内部修改
+        CancelCommand 需要根据当前数据是否为自定义数据来作出不同的取消行为。
+
+2.12.848.0
+    添加接口
+        ListObjectView 添加 SetCurrentById 方法。
+
+2.12.847.0
+    内部修改
+        DoubleUpDown,IntegerUpDown 两个控件都应该在文本框属性变更时，立刻更新属性值。
+
+2.12.846.0
+    添加接口
+        ModuleMeta 添加属性 TryAutoLoadData。
+
+2.12.845.0
+    ★修改接口
+        ViewCommand 改为从 ClientCommand<WPFObject> 类继承。
+    内部修改
+        "owner" 提取为常量。
+
+2.12.844.0
+    ★修改接口
+        ObjectView.CurrentObjectChanged 更名为 CurrentChanged 事件。
+
+2.12.843.0
+    ★较大改动、添加接口
+        ObjectView 添加 bool? IsReadOnly 属性。同时，实现表单 Form 的只读控制。
+
+2.12.842.0
+    添加接口
+        添加按照指定组移除按钮的方法。
+
+2.12.841.0
+    BUG修复
+        导出 Excel 应该是系统级别的命令，否则会被 ClearWPFCommands 函数给清空。
+
+2.12.840.0
+    添加功能
+        LocalTransactionBlock 应该支持在同一个线程中使用多个库，每个库使用不同的事务。
+
+2.12.839.0
+    重构
+        把 ListObjectView 关系移动到基类 WPFObjectView 中。
+
+2.12.838.0
+    BUG修复
+        在刷新控件时，不能清空 SelectionModel，否则会丢失当前布局而无法保留当前选中行。
+
+2.12.837.0
+    重构
+
+2.12.836.0
+    BUG修复
+        * 修复“因为添加 CheckChanged 事件，导致 RBAC 中原勾选处理代码无效”的问题。
+
+2.12.835.0
+    ★较大改动、重构
+        * 重构 TreeViewBase 类。
+
+2.12.825.0
+    添加接口
+        * Entity.Validation.cs 添加 Revalidate(params IProperty[] properties) 方法。
+
+2.12.824.0
+    内部修改
+        * 为数字、下拉框等控件添加验证规则样式。
+
+2.12.823.0
+    ★修改接口
+        * RDLC 报表文件中不需要使用汉语，而是应该使用英文。
+
+2.12.822.0
+    添加接口
+        * DetailObjectView 添加 FocusToEditor 方法。
+        * WPFExtension 添加 ListenLayoutUpdatedOnce 方法。
+
+2.12.821.0
+    BUG修复
+        * RafyEnvironment.ThreadPortalCount 单机版使用时，需要在 Clone 对象之后才递增。
+
+2.12.820.0
+    BUG修复
+        * Entity.Validation.cs 中添加 Revalidate 方法。
+
+2.12.819.0
+    BUG修复
+        * BlockUIFactory 中需要使用 AdornerDecorator 为每个页签生成 AdornerLayer，否则在页签切换后会造成验证状态丢失。
+
+2.12.818.0
+    内部修改
+        * 优化 ManagedPropertyDescriptor 的获取逻辑。
+
+2.12.816.0
+    BUG修复
+        * DbTable.FillByName 方法需要在 Reader 之外调用 OnDbLoaded 方法。
+
+2.12.815.0
+    BUG修复
+        * TreeColumnFactory.SetColumnHeader 方法需要判断 Label 的可空性。
+
+2.12.814.0
+    BUG修复
+        * RafyPropertyDescriptor 需要考虑到可空的枚举值。
+
+2.12.813.0
+    重构
+        * 提取 AggtBlocksCollection 基类。
+
+2.12.812.0
+    BUG修复
+        * 811 在支持枚举值时，应该检测可空类型。
+
+2.12.811.0
+    ★重要改动
+        * 删除 EnumConverter，在 RafyPropertyDescriptor 中直接向界面层输出字符串。
+        * 添加相应单元测试。
+
+2.12.810.0
+    内部修改
+        * ClearWPFCommands 中不应该删除所有系统级别命令。
+
+2.12.809.0
+    内部修改
+        * Rafy ORM 中 FillByName 方法创建的实体对象也应该发生对应的 OnDbLoaded 方法。
+
+2.12.808.0
+    内部修改
+        * 解决报表数据源刷新时无效的问题（应该支持最新的报表格式2010，否则 VS 设计器会重设 rdlc 中的命名空间）。
+
+2.12.807.0
+    添加功能
+        * 为报表模块添加 显示报表数据 的按钮。
+
+2.12.806.0
+    添加接口
+        * ILazyEntityRef 接口添加 LoadId 接口。
+
+2.12.805.0
+    添加功能
+        * 自动生成报表 rdlc 文件的数据源。
+
+2.12.803.0
+    重构
+        * 重构 ReportObjectView。
+
+2.12.802.0
+    BUG修复
+        * 控件 Xaml 引用问题。
+
+2.12.801.0
+    重构
+        * 条件面板中的查询按钮应该可以被配置。
+
+2.12.800.0
+    ★重要改动
+        * LazyRef 支持使用属性来定义是否可序列化。
+
+2.12.799.0
+    重构
+        * 重构 CustomSerializationObject 的序列化接口。
+
+2.12.798.0
+    BUG修复
+        * 解决删除 ObjectView.OnDataReseting 方法后引起的问题：“入库采购入库单在变化订单时没有刷新下面的列表”。
+    添加接口
+        * ObjectView 添加 RefreshControl 方法及相应事件。
+
+2.12.797.0
+    添加接口
+        * AggtBlocks 中的环绕块集合添加易用的查询接口。
+
+2.12.796.0
+    添加接口
+        * QueryDb 方法应该支持 Predict<Filter> 参数进行内存级别过滤。
+
+2.12.795.0
+    ★重要改动、★较大改动
+        * 添加 RDLC 报表
+            * 添加 ReportObjectView 及相关创建方法。
+            * 支持 CustomBlockType。
+            * ControlResult 类型添加 Blocks 属性。
+    示例
+        在 JXC 中添加报表示例。

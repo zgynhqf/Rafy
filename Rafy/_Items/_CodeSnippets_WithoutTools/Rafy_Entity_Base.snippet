@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+    <CodeSnippet Format="1.0.0">
+        <Header>
+            <Description>用于生成 Rafy 实体基类的模板</Description>
+            <SnippetTypes>
+                <SnippetType>Expansion</SnippetType>
+            </SnippetTypes>
+            <Title>Rafy_Entity_Base</Title>
+            <Author>HuQingfang</Author>
+            <Shortcut>Rafy_Entity_Base</Shortcut>
+        </Header>
+        <Snippet>
+            <Declarations>
+                <Literal>
+                    <ID>Namespace</ID>
+                    <Default>Rafy</Default>
+                </Literal>
+                <Literal>
+                    <ID>BaseEntityPrefix</ID>
+                    <Default>My</Default>
+                </Literal>
+            </Declarations>
+            <Code Language="csharp">
+                <![CDATA[using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
+using System.Text;
+using Hxy;
+using Rafy;
+using Rafy.Domain.ORM;
+using Rafy.Domain;
+using Rafy.Domain.Validation;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
+using Rafy.ManagedProperty;
+
+namespace $Namespace$
+{
+    [Serializable]
+    public abstract class $BaseEntityPrefix$Entity$end$ : Entity
+    {
+        #region 构造函数
+
+        protected $BaseEntityPrefix$Entity() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected $BaseEntityPrefix$Entity(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
+    }
+
+    [Serializable]
+    public abstract class $BaseEntityPrefix$EntityList : EntityList { }
+
+    public abstract class $BaseEntityPrefix$EntityRepository : EntityRepository 
+    { 
+        public static string DbSettingName = "$BaseEntityPrefix$";
+        
+        protected override string ConnectionStringSettingName
+        {
+            get { return DbSettingName; }
+        }
+    }
+    
+    public abstract class $BaseEntityPrefix$EntityConfig<TEntity> : EntityConfig<TEntity> { }
+}]]>
+            </Code>
+        </Snippet>
+    </CodeSnippet>
+</CodeSnippets>

@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="dda8ce30-3c9c-48c6-b162-2c447bf9112e" revisionNumber="1">
+    <developerConceptualDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+
+        <introduction>
+            <para>快速试用</para>
+            <para>本章使用一个完整的进销存示例，来说明如何使用领域实体框架。</para>
+            <!--<para>本章将包含以下内容：</para>
+            <list class="bullet">
+                <listItem>
+                    <para>创建领域项目</para>
+                </listItem>
+                <listItem>
+                    <para>连接到 Sql Server</para>
+                </listItem>
+            </list>-->
+        </introduction>
+
+        <relatedTopics>
+        </relatedTopics>
+    </developerConceptualDocument>
+</topic>

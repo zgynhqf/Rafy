@@ -1,0 +1,328 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="fdbb7d56-393e-4e0b-b69f-995a50f513eb" revisionNumber="1">
+    <developerWalkthroughDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+        <introduction>
+            <para>创建你的第一个 Rafy 应用程序</para>
+            <autoOutline/>
+        </introduction>
+
+        <section address="description">
+            <title>说明</title>
+            <content>
+                <para>
+                    通过完成本示例，你将学会如何建立一个领域实体程序集，并建立一个应用层程序使用这些领域实体，完成数据的增删改查。
+                </para>
+                <para>
+                    本示例使用 SQLCE 作为示例的数据库。你也可以使用其它的数据库，详情参见：
+                    <link xlink:href="ef53c777-dd02-4a01-98c9-7dcc49489cec" />。
+                </para>
+            </content>
+        </section>
+
+        <section address="prerequisites">
+            <title>环境</title>
+            <content>
+                <para>
+                    运行此示例需要安装以下组件：
+                </para>
+                <list class="bullet">
+                    <listItem>
+                        <para>Visual Studio 2012</para>
+                    </listItem>
+                    <listItem>
+                        <para>
+                            <link xlink:href="61dd4914-8d8b-4488-857c-f83b553137d8" >Rafy SDK</link>
+                        </para>
+                    </listItem>
+                </list>
+            </content>
+        </section>
+
+        <section address="createDomainLibrary">
+            <title>建立领域实体程序集</title>
+            <content>
+                <para>本节中，你将会为“进销存”管理系统建立一个对应名为 JXC 的领域实体程序集。</para>
+                <procedure>
+                    <title>步骤</title>
+                    <steps class="ordered">
+                        <step>
+                            <content>
+                                <para>新建项目</para>
+                                <para>点击新建项目，在 Visual C# 项目类型中找到“Rafy Domain Library”，名称中填入："JXC"，选择项目位置后，点击确定。</para>
+                                <mediaLink>
+                                    <image xlink:href="第一个程序01"/>
+                                </mediaLink>
+                            </content>
+                        </step>
+                        <step>
+                            <content>
+                                <para>
+                                    这时，会弹出<ui>添加项目</ui>窗口。在此窗口中，填写实体命名空间为 JXC，点击确定。
+                                </para>
+                                <mediaLink>
+                                    <image xlink:href="第一个程序02"/>
+                                </mediaLink>
+                            </content>
+                        </step>
+                        <step>
+                            <content>
+                                <para>文件检查</para>
+                                <para>至此，VS 会创建一个名为 JXC 的解决方案，其中包含了一个名为 JXC 的 C# 程序集。如图：</para>
+                                <mediaLink>
+                                    <image xlink:href="第一个程序03"/>
+                                </mediaLink>
+
+                                <para>
+                                    JXC 程序集中包含了以下内容： <literal>Entities</literal> 文件夹
+                                </para>
+                                <list class="bullet">
+                                    <listItem>
+                                        <para>
+                                            <literal>/Entities/</literal> 文件夹：用于存放所有实体类。
+                                        </para>
+                                    </listItem>
+                                    <listItem>
+                                        <para>
+                                            <literal>/Entities/JXCEntity.cs</literal> ：将作为 JXC 领域空间下所有实体类的基类。参见：<link xlink:href="e9998e68-31e8-47d6-9e28-829aade5044e" />。
+                                        </para>
+                                    </listItem>
+                                    <listItem>
+                                        <para>
+                                            <literal>/Rafy/</literal> 文件夹：其中将会存放本领域项目需要引用的程序集，一共 5 个 <newTerm>Rafy</newTerm> 程序集及一个微软公司的依赖注入程序集。
+                                        </para>
+                                    </listItem>
+                                    <listItem>
+                                        <para>
+                                            <literal>/Services/</literal> 文件夹：用于存放所有领域服务类。参见：<link xlink:href="d7551c01-4f62-4e6b-8fd7-4de371df6bdf" />。
+                                        </para>
+                                    </listItem>
+                                    <listItem>
+                                        <para>
+                                            <literal>/JXCPlugin.cs</literal> ：领域插件主文件。参见：<link xlink:href="15c790a6-8f5e-44aa-b8c3-74a955004a1e" />。
+                                        </para>
+                                    </listItem>
+                                </list>
+                                <para>编译整个解决方案，提示编译成功。</para>
+                            </content>
+                        </step>
+                    </steps>
+                    <!--<conclusion>
+                        <content>
+                        </content>
+                    </conclusion>-->
+                </procedure>
+            </content>
+        </section>
+
+        <section address="addEntities">
+            <title>添加实体类</title>
+            <content>
+                <para>本节将会在领域项目中添加实体类：仓库实体。</para>
+                <procedure>
+                    <title>步骤</title>
+                    <steps class="ordered">
+                        <step>
+                            <content>
+                                <para>添加领域实体类文件</para>
+                                <para>
+                                    在 <literal>Entities</literal> 文件夹上点击右键，选择添加-添加项，在弹出的 <ui>添加项</ui> 窗口中，选择 <newTerm>Rafy Domain Entity</newTerm> 项，并在名称中输入：“Warehouse"。点击添加。如图：
+                                </para>
+                                <mediaLink>
+                                    <image xlink:href="第一个程序04"/>
+                                </mediaLink>
+                            </content>
+                        </step>
+                        <step>
+                            <content>
+                                <para>
+                                    这时，弹出 <ui>添加领域实体</ui> 窗口。修改 <newTerm>领域名称</newTerm> 项为“仓库”，点击确定。如图：
+                                </para>
+                                <mediaLink>
+                                    <image xlink:href="第一个程序05"/>
+                                </mediaLink>
+                            </content>
+                        </step>
+                        <step>
+                            <content>
+                                <para>
+                                    在打开的 <literal>Warehouse.cs</literal> 代码编辑器中，找到并展开 <literal>一般属性</literal> 代码区域。可以看到，其中已经编写了名称为 <legacyBold>Name</legacyBold> 的属性。
+                                </para>
+                            </content>
+                        </step>
+                        <step>
+                            <content>
+                                <para>在实体中添加一般属性</para>
+                                <para>
+                                    在 <legacyBold>Name</legacyBold> 属性的后面，输入 <legacyBold>RafyP</legacyBold>，VisualStudio 会立刻显示以 RafyP 开头的代码段（相关内容，参见：<link xlink:href="6b3e8163-8516-4065-91f5-194491334343" />。）。如图：
+                                </para>
+                                <mediaLink>
+                                    <image xlink:href="第一个程序06"/>
+                                </mediaLink>
+                                <para>
+                                    选择 RafyProperty，并按下 Tab 键。在生成的代码中录入类型为 <legacyBold>string</legacyBold>、名称为 <legacyBold>Code</legacyBold> 的属性。这时，会生成以下代码：
+                                </para>
+                                <code language="csharp">
+                                    <![CDATA[public static readonly Property<string> CodeProperty = P<Warehouse>.Register(e => e.Code);
+public string Code
+{
+    get { return this.GetProperty(CodeProperty); }
+    set { this.SetProperty(CodeProperty, value); }
+}]]>
+                                </code>
+                            </content>
+                        </step>
+                        <step>
+                            <content>
+                                <para>编译解决方案</para>
+                                <para>这时，编译解决方案，提示成功。</para>
+                            </content>
+                        </step>
+                    </steps>
+                </procedure>
+            </content>
+        </section>
+
+        <section address="addConsoleApp">
+            <title>建立控制台程序集</title>
+            <content>
+                <para>本节中，你将会创建一个控制台应用程序。它使用刚才创建的 JXC 的领域实体程序集，来实现与用户的交互。</para>
+                <procedure>
+                    <title>步骤</title>
+                    <steps class="ordered">
+                        <step>
+                            <content>
+                                <para>新建项目</para>
+                                <para>
+                                    在解决方案中右键，点击添加-新的项目，在弹出的 <ui>新建项目</ui> 窗口中，在 Visual C# 项目类型中找到“Rafy Console App”，名称中填入："ConsoleApp"，点击确定。
+                                </para>
+                                <mediaLink>
+                                    <image xlink:href="第一个程序07"/>
+                                </mediaLink>
+                            </content>
+                        </step>
+                        <step>
+                            <content>
+                                <para>
+                                    这时，会弹出<ui>添加项目</ui>窗口。在此窗口中，填写实体命名空间为 JXC，点击确定。
+                                </para>
+                                <mediaLink>
+                                    <image xlink:href="第一个程序08"/>
+                                </mediaLink>
+                                <para>添加的控制台项目中有以下文件/文件夹：</para>
+                                <list class="bullet">
+                                    <listItem>
+                                        <para>
+                                            <literal>/amd64/</literal> 文件夹：64位机的 SQLCE 程序集。
+                                        </para>
+                                    </listItem>
+                                    <listItem>
+                                        <para>
+                                            <literal>/x86/</literal> 文件夹：32位机的 SQLCE 程序集。
+                                        </para>
+                                    </listItem>
+                                    <listItem>
+                                        <para>
+                                            <literal>/App.config</literal> 文件：应用程序配置文件，其中主要包含了 JXC 空间中领域实体所映射的数据库连接；以及 SQLCE 数据库相关配置。
+                                        </para>
+                                    </listItem>
+                                    <listItem>
+                                        <para>
+                                            <literal>/Program.cs</literal> 文件：应用程序入口文件。
+                                        </para>
+                                    </listItem>
+                                </list>
+                            </content>
+                        </step>
+                        <step>
+                            <content>
+                                <para>修正 Rafy 程序集引用</para>
+                                <para>
+                                    展开 ConsoleApp 项目的引用项，会看到 Rafy 相关的程序集的引用，都出现了警告。这是因为这些程序集并不会注册到电脑的 GAC 中。
+                                </para>
+                                <para>删除这些程序集的引用，重新引用 JXC 领域实体项目中 Rafy 文件夹中的程序集。</para>
+                            </content>
+                        </step>
+                        <step>
+                            <content>
+                                <para>继续在 ConsoleApp 项目中添加 JXC 实体项目的引用。</para>
+                            </content>
+                        </step>
+                        <step>
+                            <content>
+                                <para>编译并运行解决方案</para>
+                                <para>这时编译整个解决方案，会提示编译成功。</para>
+                                <para>设置 ConsoleApp 为启动项目，按 Ctrl+F5 运行程序。程序成功运行。</para>
+                            </content>
+                        </step>
+                    </steps>
+                </procedure>
+                <alert class="note">
+                    <para>
+                        控制台项目只是一个示例，展示如何在应用程序中使用领域实体类。你可以在任意的应用程序中，添加与本项目类似的代码，也可以一样使用领域实体程序集。
+                    </para>
+                    <para>
+                        另外，控制台项目模板是为了方便 SQLCE 数据库的使用而创建的。如果你使用的是 SqlServer，则只需要手动引用 Rafy 程序集，并启动领域项目即可。
+                    </para>
+                </alert>
+            </content>
+        </section>
+
+        <section address="useEntities">
+            <title>使用领域实体</title>
+            <content>
+                <procedure>
+                    <title>步骤</title>
+                    <steps class="ordered">
+                        <step>
+                            <content>
+                                <para>
+                                    在主函数中 new DomainApp().Startup(); 代码行后加入以下代码：
+                                </para>
+                                <code language="csharp">
+                                    <![CDATA[var repo = RF.Concrete<WarehouseRepository>();
+repo.Save(new Warehouse { Name = "Name" });
+var items = repo.CountAll();
+Console.WriteLine("实体存储成功，目前数据库中存在 {0} 条数据。", items);
+var list = repo.GetAll();
+foreach (var item in list)
+{
+    Console.WriteLine(item.Name);
+}]]>
+                                </code>
+                            </content>
+                        </step>
+                        <step>
+                            <content>
+                                <para>运行整个项目</para>
+                                <para>控制台中输出目前数据库中存在的数据条数，以及所有仓库的名称。</para>
+                                <para>多次运行项目，会发现数据库中的数据条数不断添加。</para>
+                            </content>
+                        </step>
+                        <step>
+                            <content>
+                                <para>查看生成的数据库</para>
+                                <para>Rafy 内置了数据库的同步功能，所以在整个研发过程中，可以不需要进行任何数据库的开发。</para>
+                                <para>打开 /ConsoleApp/bin/Debug/Data/ 目录，可以看到已经生成了一个 JXC.sdf 文件，这是一个 SQLCE 4.0 的数据库文件。有关数据库生成的相关内容，参见：<link xlink:href="b40cd779-ec8a-469d-82f5-bd99128561c4" />。</para>
+                            </content>
+                        </step>
+                    </steps>
+                </procedure>
+            </content>
+        </section>
+
+        <!--<nextSteps>
+            <content>
+                <para>你现在已经知道如何建立一个 Rafy 领域实体项目，添加最简单的领域实体及属性。并如何在应用层使用它们。接下来，
+                </para>
+            </content>
+        </nextSteps>-->
+
+        <relatedTopics>
+            <link xlink:href="e9998e68-31e8-47d6-9e28-829aade5044e" />
+            <link xlink:href="ef53c777-dd02-4a01-98c9-7dcc49489cec" />
+            <link xlink:href="6b3e8163-8516-4065-91f5-194491334343" />
+        </relatedTopics>
+    </developerWalkthroughDocument>
+</topic>

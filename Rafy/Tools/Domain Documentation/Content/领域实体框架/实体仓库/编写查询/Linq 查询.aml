@@ -1,0 +1,300 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="c7c6d07b-bb41-4590-a2a6-8b0b49ce1c0b" revisionNumber="1">
+    <developerConceptualDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+        <introduction>
+            <para>Linq 查询是数据层查询中最简单易用的查询，一般情况下，都推荐使用这种查询。</para>
+            <autoOutline />
+        </introduction>
+
+        <section address="demo">
+            <title>代码示例</title>
+            <content>
+                <code language="cs">
+                    <![CDATA[public WarehouseList GetByCode(string warehouseCode, string nameKeywords, PagingInfo pagingInfo)
+{
+    return this.FetchList(r => r.DA_GetByCode(warehouseCode, nameKeywords, pagingInfo));
+}
+private EntityList DA_GetByCode(string warehouseCode, string nameKeywords, PagingInfo pagingInfo)
+{
+    var q = this.CreateLinqQuery();
+
+    //条件对比
+    q = q.Where(e => e.Code == warehouseCode);
+    if (!string.IsNullOrEmpty(nameKeywords))
+    {
+        q = q.Where(e => e.Name.Contains(nameKeywords));
+    }
+
+    //排序
+    q = q.OrderByDescending(w => w.Id);
+
+    //以指定的分页信息分页
+    q = q.JumpToPage(pagingInfo);
+
+    return this.QueryList(q);
+}]]>
+                </code>
+                <para>上面的代码使用 Linq 查询实现了一个较复杂的查询示例。Linq 查询中可使用属性对比，排序，分页等。</para>
+                <alert class="note">
+                    <para>
+                        <codeInline>JumpToPage</codeInline> 是 Rafy 自定义的一个分页方法。详情见：<link xlink:href="ae9a2512-1528-401a-ac4f-502304a7ae03" />
+                    </para>
+                </alert>
+            </content>
+        </section>
+
+        <section address="op">
+            <title>支持的操作符</title>
+            <content>
+                <para>Rafy 并不支持所有的 Linq 标准查询。可以使用的 Linq 标准查询方法如下：</para>
+                <table>
+                    <tableHeader>
+                        <row>
+                            <entry>
+                                <para>方法名</para>
+                            </entry>
+                            <entry>
+                                <para>所属类型</para>
+                            </entry>
+                            <entry>
+                                <para>备注</para>
+                            </entry>
+                        </row>
+                    </tableHeader>
+                    <row>
+                        <entry>
+                            <para>Where</para>
+                        </entry>
+                        <entry>
+                            <para>System.Linq.Queryable</para>
+                        </entry>
+                        <entry>
+                            <para>添加 Where 条件约束。</para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>
+                            <para>OrderBy</para>
+                        </entry>
+                        <entry>
+                            <para>System.Linq.Queryable</para>
+                        </entry>
+                        <entry>
+                            <para>按照指定属性正序排列。</para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>
+                            <para>OrderByDescending</para>
+                        </entry>
+                        <entry>
+                            <para>System.Linq.Queryable</para>
+                        </entry>
+                        <entry>
+                            <para>按照指定属性倒序排列。</para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>
+                            <para>ThenBy</para>
+                        </entry>
+                        <entry>
+                            <para>System.Linq.Queryable</para>
+                        </entry>
+                        <entry>
+                            <para>再次，按照指定属性正序排列。</para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>
+                            <para>ThenByDescending</para>
+                        </entry>
+                        <entry>
+                            <para>System.Linq.Queryable</para>
+                        </entry>
+                        <entry>
+                            <para>再次，按照指定属性倒序排列。</para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>
+                            <para>Count</para>
+                        </entry>
+                        <entry>
+                            <para>System.Linq.Queryable</para>
+                        </entry>
+                        <entry>
+                            <para>直接返回 Linq 查询对应的行数。</para>
+                        </entry>
+                    </row>
+                </table>
+                <para>
+                    而 <codeInline>Where</codeInline> 方法中，对实体的属性进行条件对比时：
+                </para>
+                <list class="bullet">
+                    <listItem>
+                        <para>
+                            支持以下双目操作符：<codeInline><![CDATA[=、!=、>、>=、<、<=]]></codeInline>。
+                        </para>
+                    </listItem>
+                    <listItem>
+                        <para>
+                            支持单目操作符：<codeInline><![CDATA[!]]></codeInline>。
+                        </para>
+                    </listItem>
+                    <listItem>
+                        <para>
+                            支持两个属性条件间的连接条件：<codeInline><![CDATA[&&、||]]></codeInline>。例如：
+                        </para>
+                        <code language="cs">
+                            <![CDATA[q = q.Where(e => e.Code == warehouseCode && e.Name.Contains(nameKeywords) || e.Id > 100);]]>
+                        </code>
+                    </listItem>
+                    <listItem>
+                        <para>
+                            支持引用查询。即间接使用引用实体的属性来进行查询。例如：
+                        </para>
+                        <code language="cs">
+                            <![CDATA[q = q.Where(warehouse => warehouse.Administrator.Name == "admin");]]>
+                        </code>
+                        <para>以上代码将会过滤出所有管理员名称是 "admin" 的仓库。</para>
+                        <para>在生成 Sql 语句时，将会生成 INNER JOIN 语句，连接上这些被使用的引用实体对应的表。</para>
+                    </listItem>
+                    <listItem>
+                        <para>支持在属性对比条件中，使用以下方法对属性进行比较：</para>
+                        <table>
+                            <tableHeader>
+                                <row>
+                                    <entry>
+                                        <para>方法名</para>
+                                    </entry>
+                                    <entry>
+                                        <para>所属类型</para>
+                                    </entry>
+                                    <entry>
+                                        <para>备注</para>
+                                    </entry>
+                                </row>
+                            </tableHeader>
+                            <row>
+                                <entry>
+                                    <para>Contains</para>
+                                </entry>
+                                <entry>
+                                    <para>System.String</para>
+                                </entry>
+                                <entry>
+                                    <para>判断指定属性是否包含指定字符串。例如：</para>
+                                    <code language="cs">
+                                        <![CDATA[q = q.Where(e => e.Name.Contains(nameKeywords));]]>
+                                    </code>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <para>StartsWith</para>
+                                </entry>
+                                <entry>
+                                    <para>System.String</para>
+                                </entry>
+                                <entry>
+                                    <para>判断指定属性是否以指定字符串开头。例如：</para>
+                                    <code language="cs">
+                                        <![CDATA[q = q.Where(e => e.Name.StartsWith(nameKeywords));]]>
+                                    </code>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <para>EndsWith</para>
+                                </entry>
+                                <entry>
+                                    <para>System.String</para>
+                                </entry>
+                                <entry>
+                                    <para>判断指定属性是否以指定字符串结尾。例如：</para>
+                                    <code language="cs">
+                                        <![CDATA[q = q.Where(e => e.Name.EndsWith(nameKeywords));]]>
+                                    </code>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <para>IsNullOrEmpty</para>
+                                </entry>
+                                <entry>
+                                    <para>System.String</para>
+                                </entry>
+                                <entry>
+                                    <para>判断指定属性是否为空字符串。例如：</para>
+                                    <code language="cs">
+                                        <![CDATA[q = q.Where(e => !string.IsNullOrEmpty(e.Name));]]>
+                                    </code>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <para>Contains</para>
+                                </entry>
+                                <entry>
+                                    <para>System.Linq.Enumerable</para>
+                                </entry>
+                                <entry>
+                                    <para>判断指定属性的值是否在指定的列表中。例如：</para>
+                                    <code language="cs">
+                                        <![CDATA[int[] values = new int[] { 1, 2 };
+q = q.Where(e => values.Contains(e.Id));]]>
+                                    </code>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <para>Contains</para>
+                                </entry>
+                                <entry>
+                                    <para><![CDATA[System.Collections.Generic.List<T>]]></para>
+                                </entry>
+                                <entry>
+                                    <para>判断指定属性的值是否在指定的列表中。例如：</para>
+                                    <code language="cs">
+                                        <![CDATA[List<int> values = new List<int> { 1, 2 };
+q = q.Where(e => values.Contains(e.Id));]]>
+                                    </code>
+                                </entry>
+                            </row>
+                        </table>
+                    </listItem>
+                </list>
+            </content>
+        </section>
+        
+        <section address="sni">
+            <title>代码生成</title>
+            <content>
+                <para>
+                    框架为常用的 Linq 查询提供了代码段生成，使用 <codeInline>RafyQuery</codeInline> 即可生成相应代码段：
+                </para>
+                <code language="cs">
+                    <![CDATA[public $EntityList$ $MethodName$(string parameter1, int parameter2)
+{
+    return this.FetchList(r => r.DA_$MethodName$(parameter1, parameter2));
+}
+private EntityList DA_$MethodName$(string parameter1, int parameter2)
+{
+    var q = this.CreateLinqQuery();
+    q = q.Where(e => e.Name == 1);
+    return this.QueryList(q);
+}]]>
+                </code>
+                <para>
+                    详见：<link xlink:href="6b3e8163-8516-4065-91f5-194491334343" />。
+                </para>
+            </content>
+        </section>
+
+        <relatedTopics>
+        </relatedTopics>
+    </developerConceptualDocument>
+</topic>

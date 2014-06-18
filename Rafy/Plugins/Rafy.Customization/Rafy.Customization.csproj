@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{13713B6B-E00D-4B7E-A3C2-67988699EA85}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Rafy.Customization</RootNamespace>
+    <AssemblyName>Rafy.Customization</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CustomizationPlugin.cs" />
+    <Compile Include="Entities\ViewConfigurationCommand.cs" />
+    <Compile Include="Entities\ViewConfigurationCommand.g.cs">
+      <DependentUpon>ViewConfigurationCommand.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ViewConfigurationModel.cs" />
+    <Compile Include="Entities\ViewConfigurationModel.g.cs">
+      <DependentUpon>ViewConfigurationModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ViewConfigurationProperty.cs" />
+    <Compile Include="Entities\ViewConfigurationProperty.g.cs">
+      <DependentUpon>ViewConfigurationProperty.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\BackupViewConfigService.cs" />
+    <Compile Include="Services\GetBlockConfigFileService.cs" />
+    <Compile Include="Services\RestoreViewConfigService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Rafy.Utils\Rafy.Utils.csproj">
+      <Project>{796b149b-32c9-4bb0-a23f-69c012450db8}</Project>
+      <Name>Rafy.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy.DbMigration\Rafy.DbMigration.csproj">
+      <Project>{d7c4f80d-24a4-47f1-985c-cfa55cfa13e9}</Project>
+      <Name>Rafy.DbMigration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy.ManagedProperty\Rafy.ManagedProperty.csproj">
+      <Project>{66be29d5-f1ca-4941-a4eb-6b3e8f577166}</Project>
+      <Name>Rafy.ManagedProperty</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy.Domain\Rafy.Domain.csproj">
+      <Project>{9f8bb429-70de-449a-8a67-5190191e7ee6}</Project>
+      <Name>Rafy.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy\Rafy.csproj">
+      <Project>{966a5bf2-d690-426b-ad68-ad868bb8f855}</Project>
+      <Name>Rafy</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(TargetPath)" "$(SolutionDir)Web\bin\Domain\" /Y
+xcopy "$(TargetPath)" "$(SolutionDir)WPFClient\bin\$(ConfigurationName)\Domain\" /Y</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

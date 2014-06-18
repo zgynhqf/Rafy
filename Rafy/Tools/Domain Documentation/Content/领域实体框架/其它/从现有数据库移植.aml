@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="9bef21e4-86cc-43eb-928b-677ec2563966" revisionNumber="1">
+    <developerConceptualDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+        <introduction>
+        </introduction>
+
+        <section address="intro">
+            <title>简介</title>
+            <content>
+                <para>生成的实体类中，只有一般的引用关系，没有组合关系。如果有组合关系的实体，需要手动修改。</para>
+            </content>
+        </section>
+
+        <relatedTopics>
+        </relatedTopics>
+    </developerConceptualDocument>
+</topic>

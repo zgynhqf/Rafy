@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="bae4aeb4-e6a9-4d1f-9bbd-1a4199303ba5" revisionNumber="1">
+    <developerConceptualDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+
+        <introduction>
+            <para>
+                引用关系是一种常用的多对一关系。Rafy 框架中设计了引用属性来表示这一关系。引用属性包含以下两种：一般引用、组合父引用。
+            </para>
+            <autoOutline />
+        </introduction>
+
+        <section address="ref">
+            <title>一般引用</title>
+            <content>
+                <para>一般引用属性可以表示诸如：“使用”、“按……分类” 等概念。包括可空引用和不可空引用两种类型。在映射数据库时，它们会分别映射为可空及不可空的外键。</para>
+                <para>以下两段代码为 Warehouse （仓库）类声明了一个名称为 Administrator（管理员）、类型为 User （用户）的可空引用属性及不可空引用属性。通过这个属性，我们可以获取或设置该仓库的管理员对象或 Id 标识。</para>
+                <list class="bullet">
+                    <listItem>
+                        <para>可空引用属性</para>
+                        <para>设计为可空引用属性，表示一种弱引用关系。以下代码说明仓库可以有一个管理员，也可以没有管理员。</para>
+                        <code language="cs">
+                            <![CDATA[public static readonly RefIdProperty AdministratorIdProperty =
+    P<Warehouse>.RegisterRefId(e => e.AdministratorId, ReferenceType.Normal);
+public int? AdministratorId
+{
+    get { return this.GetRefNullableId(AdministratorIdProperty); }
+    set { this.SetRefNullableId(AdministratorIdProperty, value); }
+}
+public static readonly RefEntityProperty<User> AdministratorProperty =
+    P<Warehouse>.RegisterRef(e => e.Administrator, AdministratorIdProperty);
+public User Administrator
+{
+    get { return this.GetRefEntity(AdministratorProperty); }
+    set { this.SetRefEntity(AdministratorProperty, value); }
+}]]>
+                        </code>
+                    </listItem>
+                    <listItem>
+                        <para>不可空引用属性</para>
+                        <para>设计为不可空引用属性，表示一种必须存在的引用关系。以下代码说明仓库必须有一个管理员进行管理。</para>
+                        <code language="cs">
+                            <![CDATA[public static readonly RefIdProperty AdministratorIdProperty =
+    P<Warehouse>.RegisterRefId(e => e.AdministratorId, ReferenceType.Normal);
+public int AdministratorId
+{
+    get { return this.GetRefId(AdministratorIdProperty); }
+    set { this.SetRefId(AdministratorIdProperty, value); }
+}
+public static readonly RefEntityProperty<User> AdministratorProperty =
+    P<Warehouse>.RegisterRef(e => e.Administrator, AdministratorIdProperty);
+public User Administrator
+{
+    get { return this.GetRefEntity(AdministratorProperty); }
+    set { this.SetRefEntity(AdministratorProperty, value); }
+}]]>
+                        </code>
+                    </listItem>
+                </list>
+            </content>
+        </section>
+
+        <section address="parentRef">
+            <title>组合父引用</title>
+            <content>
+                <para>在领域模型的设计中，组合是非常重要的关系。组合子类可以通过组合父引用属性获取其对应的组合父的对象或 Id 标识。</para>
+                <para>以下代码为 Wheel （车轮）类声明了一个名称为 Car（车）、类型为 Car 的组合父引用属性。通过 Car 属性，每一个车轮都可以获取其所属的小车。</para>
+                <code language="cs">
+                    <![CDATA[public static readonly RefIdProperty CarIdProperty =
+    P<Wheel>.RegisterRefId(e => e.CarId, ReferenceType.Parent);
+public int CarId
+{
+    get { return this.GetRefId(CarIdProperty); }
+    set { this.SetRefId(CarIdProperty, value); }
+}
+public static readonly RefEntityProperty<Car> CarProperty =
+    P<Wheel>.RegisterRef(e => e.Car, CarIdProperty);
+public Car Car
+{
+    get { return this.GetRefEntity(CarProperty); }
+    set { this.SetRefEntity(CarProperty, value); }
+}]]>
+                </code>
+                <alert class="note">
+                    <para>组合父引用属性都是不可空的引用属性。</para>
+                    <para>
+                        一般情况下，我们只是去获取组合父引用属性对应的对象，不直接通过设置这个属性来组合父对象。要改变父子关系，一般通过组合子属性表示的集合来改变。相关内容，参见：<link xlink:href="770d700d-acf8-40fd-abc2-a580725a14fb" />
+                    </para>
+                </alert>
+            </content>
+        </section>
+
+        <section address="lazy">
+            <title>懒加载</title>
+            <content>
+                <para>引用实体属性的值是被设计为懒加载的。在获取属性的值时，如果实体还没有加载，则框架会根据 Id 属性的值，从引用实体的仓库中中查询出相应的实体，并存储到引用实体属性中。</para>
+                <para>调用仓库的方法是 GetById。</para>
+            </content>
+        </section>
+
+        <section address="analysis">
+            <title>高级</title>
+            <content>
+                <para>
+                    从上面的代码可以看出，不论是一般引用属性还是组合父引用属性，都同时包含两个托管属性：一个引用 Id 属性、一个引用实体属性。由于它们都是托管属性，所以都支持托管属性的三种属性逻辑扩展：属性设置前回调、属性设置后回调、更换属性获取逻辑，详情见：<link xlink:href="3ad175ff-a917-4e84-931f-f845285187ed" />
+                </para>
+                <list class="bullet">
+                    <listItem>
+                        <para>引用 Id 属性</para>
+                        <code language="cs">
+                            <![CDATA[public static readonly RefIdProperty AdministratorIdProperty =
+    P<Warehouse>.RegisterRefId(e => e.AdministratorId, ReferenceType.Normal);
+public int? AdministratorId
+{
+    get { return this.GetRefNullableId(AdministratorIdProperty); }
+    set { this.SetRefNullableId(AdministratorIdProperty, value); }
+}]]>
+                        </code>
+                        <para>Id 属性是引用属性的值的关键。数据传输、数据库映射时，都是以直接操作 Id 属性来完成的。</para>
+                    </listItem>
+                    <listItem>
+                        <para>引用实体属性</para>
+                        <code language="cs">
+                            <![CDATA[public static readonly RefEntityProperty<User> AdministratorProperty =
+    P<Warehouse>.RegisterRef(e => e.Administrator, AdministratorIdProperty);
+public User Administrator
+{
+    get { return this.GetRefEntity(AdministratorProperty); }
+    set { this.SetRefEntity(AdministratorProperty, value); }
+}]]>
+                        </code>
+                        <para>引用实体属性依赖于引用 Id 属性，在使用 Register 方法注册引用实体属性时，需要同时指定它对应的引用 Id 属性。</para>
+                        <para>引用 Id 属性与引用实体属性的值是完全关联的。设置引用实体时，引用 Id 属性也会同时变更为该实体的 Id。而设置 Id 则，则会清空引用实体属性的值，当再次获取引用实体属性值时，会懒加载出对应的实体。</para>
+                    </listItem>
+                </list>
+            </content>
+        </section>
+        
+        <!--暂留-->
+        <!--<section address="parentRef">
+            <title>组合子引用</title>
+            <content>
+                <para>Add one or more sections with content</para>
+            </content>
+        </section>-->
+
+        <relatedTopics>
+        </relatedTopics>
+    </developerConceptualDocument>
+</topic>

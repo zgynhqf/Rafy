@@ -1,0 +1,75 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:DesignerEngine">
+    <Style TargetType="{x:Type s:Connection}">
+        <Style.Resources>
+            <!--连接线两端的端点-->
+            <Style x:Key="ConnectionAdornerThumbStyle" TargetType="{x:Type Thumb}">
+                <Setter Property="Width" Value="12" />
+                <Setter Property="Height" Value="12" />
+                <Setter Property="SnapsToDevicePixels" Value="true" />
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <TranslateTransform X="-6" Y="-6" />
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Thumb}">
+                            <Rectangle Fill="#AADCDCDC" Stroke="DodgerBlue" StrokeThickness="1" RadiusX="0" RadiusY="0" />
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </Style.Resources>
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Stroke" Value="#888" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type s:Connection}">
+                    <Canvas DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
+                        <Canvas.BitmapEffect>
+                            <DropShadowBitmapEffect Color="Gray" Direction="315" ShadowDepth="10" Softness="0"
+                                    Opacity="0.1" />
+                        </Canvas.BitmapEffect>
+                        <!--直线-->
+                        <Path StrokeThickness="2" Stroke="{TemplateBinding Stroke}" StrokeStartLineCap="Round"
+                                StrokeEndLineCap="Round" StrokeLineJoin="Round"
+                                StrokeDashArray="{Binding StrokeDashArray}" SnapsToDevicePixels="True"
+                                Data="{TemplateBinding PathGeometry}">
+                        </Path>
+                        <!--目标箭头-->
+                        <Grid Canvas.Left="{Binding SinkAnchorPosition.X}" Canvas.Top="{Binding SinkAnchorPosition.Y}"
+                                Width="24" Height="16">
+                            <Grid.RenderTransform>
+                                <TransformGroup>
+                                    <!--保证中点在指定的坐标上-->
+                                    <TranslateTransform X="-24" Y="-8" />
+                                    <ScaleTransform ScaleX="{Binding SinkAnchorScale}"
+                                            ScaleY="{Binding SinkAnchorScale}" />
+                                    <RotateTransform Angle="{Binding SinkAnchorAngle}" />
+                                </TransformGroup>
+                            </Grid.RenderTransform>
+                            <Path Style="{TemplateBinding SinkAnchorStyle}" Stroke="{TemplateBinding Stroke}"/>
+                        </Grid>
+                        <!--起始箭头-->
+                        <Grid Canvas.Left="{Binding SourceAnchorPosition.X}"
+                                Canvas.Top="{Binding SourceAnchorPosition.Y}">
+                            <Grid.RenderTransform>
+                                <RotateTransform Angle="{Binding SourceAnchorAngle}" />
+                            </Grid.RenderTransform>
+                            <Path Style="{TemplateBinding SourceAnchorStyle}" Stroke="{TemplateBinding Stroke}"/>
+                        </Grid>
+
+                        <!--Uncomment this to show default label text-->
+                        <TextBlock Text="{TemplateBinding Label}" FontSize="12" Canvas.Left="{Binding LabelPosition.X}"
+                                Canvas.Top="{Binding LabelPosition.Y}" Visibility="{TemplateBinding LabelVisibility}">
+                            <TextBlock.RenderTransform>
+                                <TranslateTransform X="5" Y="5" />
+                            </TextBlock.RenderTransform>
+                        </TextBlock>
+                    </Canvas>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

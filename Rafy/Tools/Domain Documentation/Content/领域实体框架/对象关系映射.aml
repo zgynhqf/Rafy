@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="0f6e3552-029f-4a32-9655-e4b6fb22edcc" revisionNumber="1">
+    <developerConceptualDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+
+
+        <introduction>
+            <!--<para>ORM（对象关系映射）</para>-->
+            <para>本节主要描述领域实体与数据库间的映射关系（ORM），以及如何使用 API 进行配置。</para>
+        </introduction>
+
+        <relatedTopics>
+        </relatedTopics>
+    </developerConceptualDocument>
+</topic>
