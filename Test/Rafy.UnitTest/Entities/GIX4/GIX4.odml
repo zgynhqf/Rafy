@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<Document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" HideNonsenceLabels="true">
+  <EntityTypes>
+    <EntityTypeElement FullName="UT.PBSType" Left="131" Top="43" Width="0" Height="0" HideProperties="true">
+      <Properties>
+        <PropertyElement Name="Name" PropertyType="String" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="UT.PBS" Left="133" Top="236" Width="0" Height="0" HideProperties="true">
+      <Properties>
+        <PropertyElement Name="Name" PropertyType="String" />
+      </Properties>
+    </EntityTypeElement>
+  </EntityTypes>
+  <EnumTypes />
+  <Connections>
+    <ConnectionElement From="UT.PBS" To="UT.PBSType" Label="PBSList" Hidden="false" LabelVisible="true" ConnectionType="Composition">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+  </Connections>
+</Document>

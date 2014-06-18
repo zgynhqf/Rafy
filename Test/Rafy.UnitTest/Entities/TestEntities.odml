@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<Document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" HideNonsenceLabels="false">
+  <EntityTypes>
+    <EntityTypeElement FullName="UT.Customer" Label="客户" Left="82.188465499485119" Top="18" Width="0" Height="0" HideProperties="true">
+      <Properties>
+        <PropertyElement Name="Name" PropertyType="String" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="UT.MemoryCustomer" Label="序列化到 Xml 的用户" Left="42" Top="133" Width="0" Height="0" HideProperties="true">
+      <Properties>
+        <PropertyElement Name="Name" PropertyType="String" />
+        <PropertyElement Name="Age" PropertyType="Int" />
+        <PropertyElement Name="Version" PropertyType="Int" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="UT.TestAdministrator" Left="361" Top="280" Width="0" Height="0" HideProperties="true">
+      <Properties>
+        <PropertyElement Name="Level" PropertyType="Int?" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="UT.TestRole" Left="531" Top="390" Width="0" Height="0" HideProperties="true">
+      <Properties>
+        <PropertyElement Name="Name" PropertyType="String" />
+        <PropertyElement Name="RoleType" PropertyType="RoleType" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="UT.TestTreeTask" Left="711" Top="386" Width="0" Height="0" HideProperties="true">
+      <Properties>
+        <PropertyElement Name="AllTime" PropertyType="Int" />
+        <PropertyElement Name="AllTimeByAutoCollect" PropertyType="Int" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="UT.TestUser" Left="594" Top="181" Width="0" Height="0" HideProperties="true">
+      <Properties>
+        <PropertyElement Name="Name" PropertyType="String" />
+        <PropertyElement Name="Age" PropertyType="Int" />
+        <PropertyElement Name="NotEmptyCode" PropertyType="String" />
+        <PropertyElement Name="ReadOnlyNameAge" PropertyType="String" />
+        <PropertyElement Name="TasksTime" PropertyType="Int" />
+        <PropertyElement Name="TasksTimeByAutoCollect" PropertyType="Int" />
+        <PropertyElement Name="TemporaryName" PropertyType="String" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="UT.UnitTest2Entity" Left="330" Top="18" Width="0" Height="0" HideProperties="true">
+      <Properties />
+    </EntityTypeElement>
+  </EntityTypes>
+  <EnumTypes />
+  <Connections>
+    <ConnectionElement From="UT.TestAdministrator" To="UT.TestUser" Hidden="false" LabelVisible="true" ConnectionType="Inheritance">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="UT.TestRole" To="UT.TestUser" Label="TestRoleList" Hidden="false" LabelVisible="true" ConnectionType="Composition">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="UT.TestTreeTask" To="UT.TestUser" Label="TestTreeTaskList" Hidden="false" LabelVisible="true" ConnectionType="Composition">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="UT.Customer" To="UT.UnitTest2Entity" Hidden="false" LabelVisible="true" ConnectionType="Inheritance">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+  </Connections>
+</Document>

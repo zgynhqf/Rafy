@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F1E214F9-7C72-4C52-B262-A41CE23A3993}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Rafy.UnitTest.WPF</RootNamespace>
+    <AssemblyName>Rafy.UnitTest.WPF</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnitTestWPFPlugin.cs" />
+    <Compile Include="ViewConfig\TestUserConfig.cs" />
+    <Compile Include="ViewConfig\TestTreeTaskConfig.cs" />
+    <Compile Include="ViewConfig\TestRoleConfig.cs" />
+    <Compile Include="ViewConfig\Ext\TestUserExtConfig.cs" />
+    <Compile Include="ViewConfig\Redundancy\AConfig.cs" />
+    <Compile Include="ViewConfig\Redundancy\BConfig.cs" />
+    <Compile Include="ViewConfig\Redundancy\CConfig.cs" />
+    <Compile Include="ViewConfig\Redundancy\EConfig.cs" />
+    <Compile Include="ViewConfig\Redundancy\DConfig.cs" />
+    <Compile Include="ViewConfig\TestAdministratorConfig.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Rafy\Rafy.DbMigration\Rafy.DbMigration.csproj">
+      <Project>{d7c4f80d-24a4-47f1-985c-cfa55cfa13e9}</Project>
+      <Name>Rafy.DbMigration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy\Rafy.Utils\Rafy.Utils.csproj">
+      <Project>{796b149b-32c9-4bb0-a23f-69c012450db8}</Project>
+      <Name>Rafy.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy\Rafy.ManagedProperty\Rafy.ManagedProperty.csproj">
+      <Project>{66be29d5-f1ca-4941-a4eb-6b3e8f577166}</Project>
+      <Name>Rafy.ManagedProperty</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy\Rafy.Domain\Rafy.Domain.csproj">
+      <Project>{9f8bb429-70de-449a-8a67-5190191e7ee6}</Project>
+      <Name>Rafy.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy\Rafy\Rafy.csproj">
+      <Project>{966a5bf2-d690-426b-ad68-ad868bb8f855}</Project>
+      <Name>Rafy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy\WPF\Rafy.WPF.Controls\Rafy.WPF.Controls.csproj">
+      <Project>{9107e3a0-e18a-49b5-a214-daccd5fe8723}</Project>
+      <Name>Rafy.WPF.Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy\WPF\Rafy.WPF\Rafy.WPF.csproj">
+      <Project>{84399e4e-cc81-4b1f-9953-586b25b29792}</Project>
+      <Name>Rafy.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rafy.UnitTest\Rafy.UnitTest.csproj">
+      <Project>{d226414c-37f6-4618-8b91-7e80e7d2c42e}</Project>
+      <Name>Rafy.UnitTest</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Hxy Key.snk" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

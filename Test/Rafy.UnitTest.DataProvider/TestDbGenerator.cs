@@ -1,0 +1,65 @@
+﻿/*******************************************************
+ * 
+ * 作者：胡庆访
+ * 创建日期：20140614
+ * 说明：见类型注释。
+ * 运行环境：.NET 4.0
+ * 版本号：1.0.0
+ * 
+ * 历史记录：
+ * 创建文件 胡庆访 20140614 20:23
+ * 
+*******************************************************/
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Rafy;
+using Rafy.DbMigration;
+using Rafy.Domain;
+using Rafy.Domain.ORM.DbMigration;
+using UT;
+
+namespace Rafy.UnitTest.DataProvider
+{
+    public static class TestDbGenerator
+    {
+        public static void GenerateDb()
+        {
+            if (ConfigurationHelper.GetAppSettingOrDefault("单元测试-生成数据库", false))
+            {
+                using (var c = new RafyDbMigrationContext(ConnectionStringNames.DbMigrationHistory))
+                {
+                    c.RunDataLossOperation = DataLossOperation.All;
+                    c.AutoMigrate();
+                }
+                using (var c = new RafyDbMigrationContext(ConnectionStringNames.RafyPlugins))
+                {
+                    c.HistoryRepository = new DbHistoryRepository();
+                    c.RunDataLossOperation = DataLossOperation.All;
+                    c.AutoMigrate();
+                }
+                using (var c = new RafyDbMigrationContext(UnitTestEntityRepositoryDataProvider.DbSettingName))
+                {
+                    c.HistoryRepository = new DbHistoryRepository();
+                    c.RunDataLossOperation = DataLossOperation.All;
+                    c.AutoMigrate();
+                }
+                using (var c = new RafyDbMigrationContext(UnitTest2EntityRepositoryDataProvider.DbSettingName))
+                {
+                    c.HistoryRepository = new DbHistoryRepository();
+                    c.RunDataLossOperation = DataLossOperation.All;
+                    c.AutoMigrate();
+                }
+                using (var c = new RafyDbMigrationContext(StringTestEntityDataProvider.DbSettingName))
+                {
+                    c.HistoryRepository = new DbHistoryRepository();
+                    c.RunDataLossOperation = DataLossOperation.All;
+                    c.AutoMigrate();
+                }
+            }
+        }
+    }
+}

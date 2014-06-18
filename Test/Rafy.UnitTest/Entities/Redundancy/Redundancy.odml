@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<Document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" HideNonsenceLabels="false">
+  <EntityTypes>
+    <EntityTypeElement FullName="UT.A" Left="118" Top="63" Width="0" Height="0" HideProperties="true">
+      <Properties>
+        <PropertyElement Name="Name" PropertyType="String" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="UT.B" Left="149" Top="231" Width="0" Height="0" HideProperties="true">
+      <Properties>
+        <PropertyElement Name="AName" PropertyType="String" />
+        <PropertyElement Name="Name" PropertyType="String" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="UT.C" Left="319" Top="229" Width="0" Height="0" HideProperties="true">
+      <Properties>
+        <PropertyElement Name="AName" PropertyType="String" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="UT.D" Left="568" Top="373" Width="0" Height="0" HideProperties="true">
+      <Properties>
+        <PropertyElement Name="AName" PropertyType="String" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="UT.E" Left="647" Top="137" Width="0" Height="0" HideProperties="true">
+      <Properties>
+        <PropertyElement Name="ANameFromDCBA" PropertyType="String" />
+        <PropertyElement Name="ANameFromCBA" PropertyType="String" />
+      </Properties>
+    </EntityTypeElement>
+  </EntityTypes>
+  <EnumTypes />
+  <Connections>
+    <ConnectionElement From="UT.B" To="UT.A" Label="A" Hidden="false" LabelVisible="true" ConnectionType="Reference">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="UT.C" To="UT.B" Label="B" Hidden="false" LabelVisible="true" ConnectionType="NullableReference">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="UT.D" To="UT.C" Label="C" Hidden="false" LabelVisible="true" ConnectionType="Reference">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="UT.E" To="UT.D" Label="D" Hidden="false" LabelVisible="true" ConnectionType="NullableReference">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="UT.E" To="UT.C" Label="C" Hidden="false" LabelVisible="true" ConnectionType="Reference">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+  </Connections>
+</Document>
