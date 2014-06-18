@@ -4,94 +4,166 @@
 }
 @section head{
     <script type="text/javascript">
-    function addTab(item) {
-        var tabPanel = Ext.getCmp('centerTab');
-        var tab = tabPanel.getComponent(item.text);
-        if (!tab) {
-            tab = {
-                id: item.text,
-                title: item.text,
-                layout: 'fit',
-                closable: true,
-                autoScroll: true
-            };
-            if (item.url) {
-                tab.html = Ext.String.format('<iframe width="100%" height="99%" scrolling="auto" frameborder="0" src="{0}" ></iframe>', item.url);
-            }
-            else {
-                tab.items = Ext.widget('container', {
-                    border: 0,
+        function addTab(item) {
+            var tabPanel = Ext.getCmp('centerTab');
+            var tab = tabPanel.getComponent(item.text);
+            if (!tab) {
+                tab = {
+                    id: item.text,
+                    title: item.text,
                     layout: 'fit',
+                    closable: true,
                     autoScroll: true
-                });
+                };
+                if (item.url) {
+                    tab.html = Ext.String.format('<iframe width="100%" height="99%" scrolling="auto" frameborder="0" src="{0}" ></iframe>', item.url);
+                }
+                else {
+                    tab.items = Ext.widget('container', {
+                        border: 0,
+                        layout: 'fit',
+                        autoScroll: true
+                    });
 
-                Oea.App.showModule({
-                    module: item.text,
-                    container: tab.items
-                });
+                    //调用 App 的方法来显示某个模块。
+                    Rafy.App.showModule({
+                        module: item.text,
+                        container: tab.items
+                    });
+                }
+
+                tab = tabPanel.add(tab);
+            }
+            tabPanel.setActiveTab(tab);
+        }
+
+        function createModuleStore() {
+            var modules = Rafy.App.getModules();
+
+            for (var i = 0; i < modules.getCount() ; i++) {
+                var m = modules.getAt(i);
+                m.text = m.keyLabel;
+                m.leaf = !m.children;
             }
 
-            tab = tabPanel.add(tab);
-        }
-        tabPanel.setActiveTab(tab);
-    }
-
-    function createModuleStore() {
-        var modules = Oea.App.getModules();
-
-        for (var i = 0; i < modules.getCount(); i++) {
-            var m = modules.getAt(i);
-            m.text = m.keyLabel;
-            m.leaf = !m.children;
+            return Ext.create('Ext.data.TreeStore', { root: modules.getRoot() });
         }
 
-        return Ext.create('Ext.data.TreeStore', { root: modules.getRoot() });
-    }
+        function setWorkspace() {
+            Rafy.App.setWorkspaceProvider({
+                _tab: function () {
+                    return Ext.getCmp('centerTab');
+                },
+                getModules: function () {
+                    var tab = this._tab();
+                    var res = [];
+                    Rafy.each(tab.items, function (tabItem) {
+                        res.push(tabItem.id);
+                    });
+                    return res;
+                },
+                setCurrentModule: function (module) {
+                    var tabPanel = this._tab();
+                    var tab = tabPanel.getComponent(module);
+                    if (tab) {
+                        tabPanel.setActiveTab(tab);
+                    }
+                },
+                addModule: function (module, moduleControl) {
+                    var tabPanel = this._tab();
+                    var container = Ext.widget('container', {
+                        border: 0,
+                        layout: 'fit',
+                        autoScroll: true
+                    });
 
-    Ext.onReady(function () {
+                    //生成的聚合界面可能比较大，所以需要显示“加载中”
+                    container.setLoading(true);
+                    setTimeout(function () {
+                        container.add(moduleControl);
+                        container.setLoading(false);
+                    }, 10);
 
-        var store = createModuleStore();
-
-        Ext.QuickTips.init();
-
-        //左边的模块列表
-        var moduleList = Ext.create('Ext.tree.Panel', {
-            region: 'west',
-            title: '模块列表',
-            split: true,
-            collapsible: true,
-            width: 200,
-            margins: '5',
-            store: store,
-            rootVisible: false,
-            listeners: {
-                'selectionchange': function (view, selection) {
-                    if (selection.length > 0) {
-                        var item = selection[0].raw;
-                        if (item.url || item.model) { addTab(item); }
+                    var tab = tabPanel.add({
+                        id: module,
+                        title: module,
+                        layout: 'fit',
+                        closable: true,
+                        autoScroll: true,
+                        items: container
+                    });
+                    tabPanel.setActiveTab(tab);
+                },
+                removeModule: function (module) {
+                    var tabPanel = this._tab();
+                    var tab = tabPanel.getComponent(module);
+                    if (tab) {
+                        tabPanel.remove(tab);
                     }
                 }
-            }
-        });
-        moduleList.expandAll();
+            });
+        }
 
-        //中间的主叶签体
-        var tab = {
-            xtype: 'tabpanel',
-            id: 'centerTab',
-            region: 'center',
-            activeTab: 0,
-            items: {
-                contentEl: 'center-panel',
-                title: '首页',
-                autoScroll: true
-            }
-        };
+        Ext.onReady(function () {
 
-        //整个布局
-        var viewport = Ext.widget('viewport', {
-            layout: 'border',
-            items: [
+            var store = createModuleStore();
+
+            Ext.QuickTips.init();
+
+            //左边的模块列表
+            var moduleList = Ext.create('Ext.tree.Panel', {
+                region: 'west',
+                title: '模块列表',
+                split: true,
+                collapsible: true,
+                width: 200,
+                margins: '5',
+                store: store,
+                rootVisible: false,
+                listeners: {
+                    'selectionchange': function (view, selection) {
+                        //点击左边的模块列表时，添加新的页签。
+                        if (selection.length > 0) {
+                            var module = selection[0].raw;
+                            if (module.url) {
+                                addTab(module);
+                            }
+                            else {
+                                Rafy.App.showModule(module.text);
+                            }
+                        }
+                    }
+                }
+            });
+            moduleList.expandAll();
+
+            //中间的主叶签体
+            var tab = {
+                xtype: 'tabpanel',
+                id: 'centerTab',
+                region: 'center',
+                activeTab: 0,
+                items: {
+                    contentEl: 'center-panel',
+                    title: '首页',
+                    autoScroll: true
+                },
+                listeners: {
+                    'tabchange': function (tabPanel, newCard, oldCard, eOpts) {
+                        //面签变化时，设计当前的模块。
+                        var id = newCard.id;
+                        var module = Rafy.App.getModules().getByKey(id);
+                        if (module) {
+                            Rafy.App.getWorkspace().setCurrentModule(module);
+                        }
+                    }
+                }
+            };
+
+            //整个布局
+            var viewport = Ext.widget('viewport', {
+                layout: 'border',
+                items: [
                     {
                         region: 'north',
                         contentEl: 'north-panel',
@@ -107,19 +179,21 @@
                         height: 30
                     },
                     moduleList, tab
-            ]
-        });
+                ]
+            });
 
-        Oea.App.startup();
-    });
+            setWorkspace();
+
+            //启动客户端程序
+            Rafy.App.startup();
+        });
     </script>
 }
 <div id="north-panel">
-    <img style="float:right;" src="@Url.Content("~/Content/images/Logo.png")" />
+    Logo
 </div>
 <div id="south-panel" style="text-align: center">
     页脚
 </div>
 <div id="center-panel">
-    <img style="text-align:center; width:100%;" src="@Url.Content("~/Content/images/ProductSplash.jpg")" />
 </div>
