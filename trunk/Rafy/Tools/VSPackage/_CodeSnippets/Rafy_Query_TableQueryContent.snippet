@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+    <CodeSnippet Format="1.0.0">
+        <Header>
+            <Description>使用 IQuery 进行数据查询的数据层代码模板。</Description>
+            <Title>Rafy Query By IQuery</Title>
+            <Shortcut>RafyQuery_TableQueryContent</Shortcut>
+            <Author>HuQingfang</Author>
+            <SnippetTypes>
+                <SnippetType>Expansion</SnippetType>
+            </SnippetTypes>
+        </Header>
+        <Snippet>
+            <Declarations>
+                <Literal>
+                    <ID>EntityName</ID>
+                    <ToolTip>实体列表类名</ToolTip>
+                    <Default>Entity</Default>
+                </Literal>
+                <Literal>
+                    <ID>ConstraintProperty</ID>
+                    <ToolTip>要约束的属性</ToolTip>
+                    <Default>IdProperty</Default>
+                </Literal>
+                <Literal>
+                    <ID>ConstraintValue</ID>
+                    <ToolTip>要约束的属性对应的值</ToolTip>
+                    <Default>1</Default>
+                </Literal>
+            </Declarations>
+            <Code Language="csharp">
+                <![CDATA[var f = QueryFactory.Instance;
+            var q = f.Query<$EntityName$>();
+            q.AddConstraintIf($EntityName$.$ConstraintProperty$, PropertyOperator.Equal, $ConstraintValue$);$end$
+
+            //选择删除上下两种格式中不需要的格式。$end$
+            
+            var f = QueryFactory.Instance;
+            var t = f.Table<$EntityName$>();
+            var q = f.Query(
+                from: t,
+                where: t.Column($EntityName$.$ConstraintProperty$).Equal($ConstraintValue$)
+            );]]>
+            </Code>
+        </Snippet>
+    </CodeSnippet>
+</CodeSnippets>

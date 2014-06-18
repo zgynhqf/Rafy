@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+    <CodeSnippet Format="1.0.0">
+        <Header>
+            <Description>只读扩展属性</Description>
+            <Title>Rafy PropertyExtension</Title>
+            <Shortcut>RafyPropertyExtension</Shortcut>
+            <Author>HuQingfang</Author>
+            <SnippetTypes>
+                <SnippetType>Expansion</SnippetType>
+            </SnippetTypes>
+        </Header>
+        <Snippet>
+            <Declarations>
+                <Literal>
+                    <ID>PropertyType</ID>
+                    <ToolTip>Property type</ToolTip>
+                    <Default>string</Default>
+                </Literal>
+                <Literal>
+                    <ID>PropertyName</ID>
+                    <Default>PropertyName</Default>
+                </Literal>
+                <Literal>
+                    <ID>ClassName</ID>
+                    <Default>Entity</Default>
+                </Literal>
+                <Literal>
+                    <ID>DeclareType</ID>
+                    <Function>ClassName()</Function>
+                </Literal>
+            </Declarations>
+            <Code Language="csharp">
+                <![CDATA[public static readonly Property<$PropertyType$> $PropertyName$Property = 
+            P<$ClassName$>.RegisterExtension<$PropertyType$>("$PropertyName$", typeof($DeclareType$));
+        public static $PropertyType$ Get$PropertyName$($ClassName$ me)
+        {
+            return me.GetProperty($PropertyName$Property);
+        }
+        public static void Set$PropertyName$($ClassName$ me, $PropertyType$ value)
+        {
+            me.SetProperty($PropertyName$Property, value);
+        }
+        $end$]]>
+            </Code>
+        </Snippet>
+    </CodeSnippet>
+</CodeSnippets>

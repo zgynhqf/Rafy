@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+    <CodeSnippet Format="1.0.0">
+        <Header>
+            <Description>数据提供器</Description>
+            <Title>Rafy Data Provider</Title>
+            <Shortcut>RafyDataProvider</Shortcut>
+            <Author>HuQingfang</Author>
+            <SnippetTypes>
+                <SnippetType>Expansion</SnippetType>
+            </SnippetTypes>
+        </Header>
+        <Snippet>
+            <Declarations>
+                <Literal>
+                    <ID>EntityType</ID>
+                    <ToolTip>实体类名</ToolTip>
+                    <Default>Entity</Default>
+                </Literal>
+                <Literal>
+                    <ID>BaseType</ID>
+                    <ToolTip>数据提供器基类</ToolTip>
+                    <Default>RepositoryDataProvider</Default>
+                </Literal>
+            </Declarations>
+            <Code Language="csharp">
+                <![CDATA[[DataProviderFor(typeof($EntityType$Repository))]
+    public class $EntityType$DataProvider : $BaseType$
+    {
+
+    }]]>
+            </Code>
+        </Snippet>
+    </CodeSnippet>
+</CodeSnippets>

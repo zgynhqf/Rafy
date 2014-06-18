@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+    <CodeSnippet Format="1.0.0">
+        <Header>
+            <Description>数据查询</Description>
+            <Title>Rafy Query</Title>
+            <Shortcut>RafyQuery</Shortcut>
+            <Author>HuQingfang</Author>
+            <SnippetTypes>
+                <SnippetType>Expansion</SnippetType>
+            </SnippetTypes>
+        </Header>
+        <Snippet>
+            <Declarations>
+                <Literal>
+                    <ID>EntityListName</ID>
+                    <ToolTip>实体列表类名</ToolTip>
+                    <Default>EntityList</Default>
+                </Literal>
+                <Literal>
+                    <ID>MethodName</ID>
+                    <ToolTip>方法名</ToolTip>
+                    <Default>GetBy</Default>
+                </Literal>
+                <Literal>
+                    <ID>Parameters</ID>
+                    <ToolTip>参数列表</ToolTip>
+                    <Default>string parameter1, int parameter2</Default>
+                </Literal>
+                <Literal>
+                    <ID>InputParameters</ID>
+                    <ToolTip>传入参数列表</ToolTip>
+                    <Default>parameter1, parameter2</Default>
+                </Literal>
+                <Literal>
+                    <ID>WhereExpression</ID>
+                    <ToolTip>Where 表达式</ToolTip>
+                    <Default>Name == 1</Default>
+                </Literal>
+            </Declarations>
+            <Code Language="csharp">
+                <![CDATA[public $EntityListName$ $MethodName$($Parameters$)
+        {
+            return this.FetchList(r => r.DA_$MethodName$($InputParameters$));
+        }
+        private EntityList DA_$MethodName$($Parameters$)
+        {
+            var q = this.CreateLinqQuery();
+            q = q.Where(e => e.$WhereExpression$);$end$
+            return this.QueryList(q);
+        }]]>
+            </Code>
+        </Snippet>
+    </CodeSnippet>
+</CodeSnippets>

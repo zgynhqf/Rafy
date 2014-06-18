@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+    <CodeSnippet Format="1.0.0">
+        <Header>
+            <Description>一般命令</Description>
+            <Title>Rafy Extension</Title>
+            <Shortcut>HxyExtension</Shortcut>
+            <Author>HuQingfang</Author>
+            <SnippetTypes>
+                <SnippetType>Expansion</SnippetType>
+            </SnippetTypes>
+        </Header>
+        <Snippet>
+            <Declarations>
+                <Literal>
+                    <ID>Extendable</ID>
+                    <Default>EntityViewMeta</Default>
+                </Literal>
+                <Literal>
+                    <ID>Property</ID>
+                    <Default>Property</Default>
+                </Literal>
+                <Literal>
+                    <ID>PropertyType</ID>
+                    <Default>string</Default>
+                </Literal>
+                <Literal>
+                    <ID>PropertyComment</ID>
+                    <Default>属性名称</Default>
+                </Literal>
+                <Literal Editable="false">
+                    <ID>ClassName</ID>
+                    <Function>ClassName()</Function>
+                    <Default>ClassNamePlaceholder</Default>
+                </Literal>
+            </Declarations>
+            <Code Language="csharp">
+                <![CDATA[#region $Extendable$.$Property$
+
+        /// <summary>
+        /// '$PropertyComment$'属性在扩展属性中的键。
+        /// </summary>
+        private const string $Property$Key = "$ClassName$.$Property$";
+        
+        /// <summary>
+        /// 设置对象的'$PropertyComment$'属性。
+        /// </summary>
+        /// <param name="ext">扩展属性的对象。</param>
+        /// <param name="value">设置的属性值。</param>
+        /// <returns>扩展属性的对象。</returns>
+        public static $Extendable$ Set$Property$(this $Extendable$ ext, $PropertyType$ value)
+        {
+            ext.SetExtendedProperty($Property$Key, value);
+
+            return ext;
+        }
+        
+        /// <summary>
+        /// 获取对象的'$PropertyComment$'属性。
+        /// </summary>
+        /// <param name="ext">扩展属性的对象。</param>
+        /// <returns>被扩展的属性值，或者该属性的默认值。</returns>
+        public static $PropertyType$ Get$Property$(this $Extendable$ ext)
+        {
+            return ext.GetPropertyOrDefault($Property$Key, default($PropertyType$));
+        }
+
+        #endregion]]>
+            </Code>
+        </Snippet>
+    </CodeSnippet>
+</CodeSnippets>

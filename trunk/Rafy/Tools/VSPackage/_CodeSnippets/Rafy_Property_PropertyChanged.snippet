@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+    <CodeSnippet Format="1.0.0">
+        <Header>
+            <Description>强制获取属性逻辑</Description>
+            <Title>Rafy Property PropertyChanged</Title>
+            <Shortcut>RafyProperty_PropertyChanged</Shortcut>
+            <Author>HuQingfang</Author>
+            <SnippetTypes>
+                <SnippetType>Expansion</SnippetType>
+            </SnippetTypes>
+        </Header>
+        <Snippet>
+            <Declarations>
+                <Literal>
+                    <ID>PropertyType</ID>
+                    <ToolTip>Property type</ToolTip>
+                    <Default>string</Default>
+                </Literal>
+                <Literal>
+                    <ID>PropertyName</ID>
+                    <Default>PropertyName</Default>
+                </Literal>
+                <Literal Editable="false">
+                    <ID>ClassName</ID>
+                    <Function>ClassName()</Function>
+                    <Default>ClassNamePlaceholder</Default>
+                </Literal>
+            </Declarations>
+            <Code Language="csharp">
+                <![CDATA[$end$, new PropertyMetadata<$PropertyType$>
+                        {
+                            PropertyChangedCallBack = (o, e) => (o as $ClassName$).On$PropertyName$Changed(e)
+                        }
+                        protected virtual void On$PropertyName$Changed(ManagedPropertyChangedEventArgs e)
+                        {
+                            
+                        }]]>
+            </Code>
+        </Snippet>
+    </CodeSnippet>
+</CodeSnippets>

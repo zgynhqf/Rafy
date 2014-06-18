@@ -1,0 +1,1511 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Rafy.ManagedProperty</name>
+    </assembly>
+    <members>
+        <member name="T:Rafy.ManagedProperty.ConcreteProperty">
+            <summary>
+            某个具体类型的托管属性。
+            
+            由于 IManagedProperty 中只有 OwnerType、DeclareType，
+            而当想表达该属性是从属于 OwnerType 的子类型时，则需要使用这个类来表达。
+            </summary>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ConcreteProperty.#ctor(Rafy.ManagedProperty.IManagedProperty)">
+            <summary>
+            使用托管属性及它的 OwnerType 作为 ConcreteType 来构造一个 ConcreteProperty。
+            </summary>
+            <param name="property">托管属性</param>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ConcreteProperty.#ctor(Rafy.ManagedProperty.IManagedProperty,System.Type)">
+            <summary>
+            构造器。
+            </summary>
+            <param name="property">托管属性</param>
+            <param name="owner">该属性对应的具体类型。
+            这个具体的类型必须是属性的拥有类型或者它的子类型。
+            </param>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ConcreteProperty.Name">
+            <summary>
+            属性名称。
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ConcreteProperty.FullName">
+            <summary>
+            包含类型的全名称。
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ConcreteProperty.Property">
+            <summary>
+            托管属性
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ConcreteProperty.Owner">
+            <summary>
+            该属性对应的具体类型。
+            这个具体的类型必须是属性的拥有类型或者它的子类型。
+            </summary>
+        </member>
+        <member name="T:Rafy.ManagedProperty.IManagedPropertyChangingEventArgs">
+            <summary>
+            属性变更前事件
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.IManagedPropertyChangingEventArgs.Cancel">
+            <summary>
+            设置本属性的值可以取消本次属性设置操作
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.IManagedPropertyChangingEventArgs.Value">
+            <summary>
+            设置的属性值
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.IManagedPropertyChangingEventArgs.HasCoercedValue">
+            <summary>
+            是否已经变更了 CoercedValue 属性
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.IManagedPropertyChangingEventArgs.CoercedValue">
+            <summary>
+            设置本属性的值可以强制更改本次属性设置的最终值
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.IManagedPropertyChangingEventArgs.Property">
+            <summary>
+            对应的属性
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.IManagedPropertyChangingEventArgs.Source">
+            <summary>
+            变更源
+            </summary>
+        </member>
+        <member name="T:Rafy.ManagedProperty.ManagedPropertyChangingEventArgs`1">
+            <summary>
+            泛型版本的属性变更前事件
+            </summary>
+            <typeparam name="TPropertyType">属性类型</typeparam>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ManagedPropertyChangingEventArgs`1.Value">
+            <summary>
+            设置的属性值
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ManagedPropertyChangingEventArgs`1.CoercedValue">
+            <summary>
+            设置本属性的值可以强制更改本次属性设置的最终值
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ManagedPropertyChangingEventArgs`1.HasCoercedValue">
+            <summary>
+            是否已经变更了 CoercedValue 属性
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ManagedPropertyChangingEventArgs`1.Property">
+            <summary>
+            对应的属性
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ManagedPropertyChangingEventArgs`1.Source">
+            <summary>
+            变更源
+            </summary>
+        </member>
+        <member name="T:Rafy.ManagedProperty.ManagedPropertyObject">
+            <summary>
+            此文件中代码主要处理 ManagedPropertyObject 对象的序列化相关代码。
+            其中包含系统序列化 和 Mobile 序列化
+            
+            ManagedPropertyObject 继承自 MobileObject，使得其支持自定义序列化（JSON等各种格式）
+            </summary>
+            <summary>
+            托管属性对象
+            
+            从此类继承的子类，可以以托管属性的方式声明自己的所有属性。同时，其它的类型可以为其在扩展编译期属性，也可以在运行时动态扩展属性，
+            </summary>
+        </member>
+        <member name="T:Rafy.CustomSerializationObject">
+            <summary>
+            需要自定义序列化的类，都可以直接从此类继承。
+            </summary>
+        </member>
+        <member name="T:Rafy.Serialization.Mobile.MobileObject">
+            <summary>
+            当使用 MobileFormatter 作为序列化时，才会运行此类的代码。
+            也就是说，二进制序列化不会使用以下代码。
+            </summary>
+        </member>
+        <member name="T:Rafy.Serialization.Mobile.IMobileObject">
+            <summary>
+            Interface to be implemented by any object
+            that supports serialization by the
+            MobileFormatter.
+            </summary>
+        </member>
+        <member name="M:Rafy.Serialization.Mobile.IMobileObject.SerializeState(Rafy.Serialization.Mobile.ISerializationContext)">
+            <summary>
+            Method called by MobileFormatter when an object
+            should serialize its data. The data should be
+            serialized into the SerializationInfo parameter.
+            </summary>
+            <param name="info">
+            Object to contain the serialized data.
+            </param>
+        </member>
+        <member name="M:Rafy.Serialization.Mobile.IMobileObject.SerializeRef(Rafy.Serialization.Mobile.ISerializationContext)">
+            <summary>
+            Method called by MobileFormatter when an object
+            should serialize its child references. The data should be
+            serialized into the SerializationInfo parameter.
+            </summary>
+            <param name="info">Object to contain the serialized data.</param>
+        </member>
+        <member name="M:Rafy.Serialization.Mobile.IMobileObject.DeserializeState(Rafy.Serialization.Mobile.ISerializationContext)">
+            <summary>
+            Method called by MobileFormatter when an object
+            should be deserialized. The data should be
+            deserialized from the SerializationInfo parameter.
+            </summary>
+            <param name="info">
+            Object containing the serialized data.
+            </param>
+        </member>
+        <member name="M:Rafy.Serialization.Mobile.IMobileObject.DeserializeRef(Rafy.Serialization.Mobile.ISerializationContext)">
+            <summary>
+            Method called by MobileFormatter when an object
+            should deserialize its child references. The data should be
+            deserialized from the SerializationInfo parameter.
+            </summary>
+            <param name="info">Object containing the serialized data.</param>
+        </member>
+        <member name="M:Rafy.Serialization.Mobile.MobileObject.OnMobileSerializeRef(Rafy.Serialization.Mobile.ISerializationContext)">
+            <summary>
+            Override this method to insert your child object
+            references into the MobileFormatter serialzation stream.
+            </summary>
+            <param name="context">Object containing the data to serialize.</param>
+        </member>
+        <member name="M:Rafy.Serialization.Mobile.MobileObject.OnMobileSerializeState(Rafy.Serialization.Mobile.ISerializationContext)">
+            <summary>
+            Override this method to insert your field values
+            into the MobileFormatter serialzation stream.
+            </summary>
+            <param name="context">Object containing the data to serialize.</param>
+        </member>
+        <member name="M:Rafy.Serialization.Mobile.MobileObject.OnMobileDeserializeState(Rafy.Serialization.Mobile.ISerializationContext)">
+            <summary>
+            Override this method to retrieve your field values
+            from the MobileFormatter serialzation stream.
+            </summary>
+            <param name="context">Object containing the data to serialize.</param>
+        </member>
+        <member name="M:Rafy.Serialization.Mobile.MobileObject.OnMobileDeserializeRef(Rafy.Serialization.Mobile.ISerializationContext)">
+            <summary>
+            Override this method to retrieve your child object
+            references from the MobileFormatter serialzation stream.
+            </summary>
+            <param name="context">Object containing the data to serialize.</param>
+        </member>
+        <member name="M:Rafy.CustomSerializationObject.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            反序列化构造函数。
+            
+            需要更高安全性，加上 SecurityPermissionAttribute 标记。
+            </summary>
+            <param name="info"></param>
+            <param name="context"></param>
+        </member>
+        <member name="M:Rafy.CustomSerializationObject.Serialize(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            序列化数据到 info 中。
+            </summary>
+            <param name="info"></param>
+            <param name="context"></param>
+        </member>
+        <member name="M:Rafy.CustomSerializationObject.OnDeserialized(System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            反序列化完成时，调用此函数。 
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="T:Rafy.Serialization.Mobile.ISerializationNotification">
+            <summary>
+            Interface defining callback methods used
+            by the MobileFormatter.
+            </summary>
+        </member>
+        <member name="M:Rafy.Serialization.Mobile.ISerializationNotification.Deserialized(Rafy.Serialization.Mobile.ISerializationContext)">
+            <summary>
+            Method called on an object after deserialization
+            is complete.
+            </summary>
+            <remarks>
+            This method is called on all objects in an
+            object graph after all the objects have been
+            deserialized.
+            </remarks>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyObject.Serialize(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            序列化数据到 info 中。
+            </summary>
+            <param name="info"></param>
+            <param name="context"></param>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyObject.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Rafy.ManagedProperty.ManagedPropertyObject"/> class.
+            </summary>
+            <param name="info"></param>
+            <param name="context"></param>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyObject.OnDeserialized(System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            反序列化完成时，调用此函数。
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyObject.OnDeserialized(Rafy.Serialization.DesirializedArgs)">
+            <summary>
+            反序列化完成后的回调函数。
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyObject.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Rafy.ManagedProperty.ManagedPropertyObject"/> class.
+            </summary>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyObject.FindPropertiesContainer">
+            <summary>
+            子类重写此方法以使用更高效的属性容器查找方法。
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="F:Rafy.ManagedProperty.ManagedPropertyObject._compiledFields">
+            <summary>
+            编译期属性以数组方式存储，使得检索速度是 O(1)
+            </summary>
+        </member>
+        <member name="F:Rafy.ManagedProperty.ManagedPropertyObject._runtimeFields">
+            <summary>
+            由于运行时属性不会很多，所以使用 Dictionary 类来进行更快速的检索。
+            </summary>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyObject.InitFields(System.Collections.Generic.IList{Rafy.ManagedProperty.IManagedProperty})">
+            <summary>
+            通过编译期属性来初始化字段数组。
+            </summary>
+            <param name="compiledProperties"></param>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyObject._ResetProperty(Rafy.ManagedProperty.IManagedProperty)">
+            <summary>
+            重设为默认值
+            </summary>
+            <param name="property"></param>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyObject._SetProperty(Rafy.ManagedProperty.IManagedProperty,System.Object,Rafy.ManagedProperty.ManagedPropertyChangedSource)">
+            <summary>
+            设置某个属性的值。
+            </summary>
+            <param name="property"></param>
+            <param name="value"></param>
+            <param name="source"></param>
+            <returns>返回最终使用的值。</returns>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyObject._LoadProperty(Rafy.ManagedProperty.IManagedProperty,System.Object)">
+            <summary>
+            LoadProperty 直接设置值，不发生 PropertyChanged 事件。
+            </summary>
+            <param name="property"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyObject.NeedReset(Rafy.ManagedProperty.IManagedProperty,System.Object)">
+            <summary>
+            如果把 null 赋值给一个值类型，则直接还原此属性为默认值。
+            </summary>
+            <param name="property"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyObject.ResetProperty(Rafy.ManagedProperty.IManagedProperty)">
+            <summary>
+            重设属性为默认值
+            </summary>
+            <param name="property"></param>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyObject.GetProperty(Rafy.ManagedProperty.IManagedProperty)">
+            <summary>
+            获取某个托管属性的值。
+            </summary>
+            <param name="property"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyObject.GetProperty``1(Rafy.ManagedProperty.ManagedProperty{``0})">
+            <summary>
+            获取某个托管属性的值。
+            </summary>
+            <typeparam name="TPropertyType"></typeparam>
+            <param name="property"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyObject.SetProperty(Rafy.ManagedProperty.ManagedProperty{System.Boolean},System.Boolean,Rafy.ManagedProperty.ManagedPropertyChangedSource)">
+            <summary>
+            设置某个 bool 类型托管属性的值。
+            </summary>
+            <param name="property"></param>
+            <param name="value"></param>
+            <param name="source">本次值设置的来源。</param>
+            <returns>返回最终使用的值。</returns>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyObject.SetProperty(Rafy.ManagedProperty.IManagedProperty,System.Object,Rafy.ManagedProperty.ManagedPropertyChangedSource)">
+            <summary>
+            设置某个托管属性的值。
+            </summary>
+            <param name="property"></param>
+            <param name="value"></param>
+            <param name="source">本次值设置的来源。</param>
+            <returns>返回最终使用的值。</returns>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyObject.LoadProperty(Rafy.ManagedProperty.IManagedProperty,System.Object)">
+            <summary>
+            LoadProperty 以最快的方式直接加载值，不发生 PropertyChanged 事件。
+            </summary>
+            <param name="property"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyObject.RegisterProperty``2(System.Linq.Expressions.Expression{System.Func{``0,System.Object}},``1)">
+            <summary>
+            Register Property
+            </summary>
+            <typeparam name="T">Type of Target</typeparam>
+            <typeparam name="P">Type of property</typeparam>
+            <param name="propertyLambdaExpression">Property Expression</param>
+            <param name="defaultValue">Default Value for the property</param>
+            <returns></returns>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyObject.NotifyAllPropertiesChanged">
+            <summary>
+            对所有的属性都发生属性变更事件。
+            </summary>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyObject.NotifyPropertyChanged(Rafy.ManagedProperty.IManagedProperty,Rafy.ManagedProperty.ManagedPropertyChangedSource)">
+            <summary>
+            向子类公布一个方法，这样子类可以使用 IManagedProperty 来进行属性变更通知。
+            注意，这个方法发布的事件，NewValue、OldValue 将不可用。
+            </summary>
+            <param name="property"></param>
+            <param name="source"></param>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyObject.OnPropertyChanged(Rafy.ManagedProperty.ManagedPropertyChangedEventArgs)">
+            <summary>
+            子类重写此方法实现某个扩展属性变更后的处理函数
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyObject.OnPropertyChanged(System.String)">
+            <summary>
+            子类重写此方法实现某个属性变更后的处理函数
+            默认实现中，会触发本对象的 PropertyChanged 事件。
+            </summary>
+            <param name="propertyName"></param>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyObject.GetCompiledPropertyValues">
+            <summary>
+            获取编译期属性值集合
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyObject.GetNonDefaultPropertyValues">
+            <summary>
+            获取当前对象所有非默认值的属性值集合。
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyObject.FieldExists(Rafy.ManagedProperty.IManagedProperty)">
+            <summary>
+            是否存在主动设置/加载的字段值（本地值）。
+            </summary>
+            <param name="property">托管属性</param>
+            <returns></returns>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyObject.ToString">
+            <summary>
+            返回 this.DebuggerDisplay。
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents this instance.
+            </returns>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ManagedPropertyObject.PropertiesContainer">
+            <summary>
+            本对象所有的属性容器
+            </summary>
+        </member>
+        <member name="E:Rafy.ManagedProperty.ManagedPropertyObject.PropertyChanged">
+            <summary>
+            属性变更后事件。
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ManagedPropertyObject.DebuggerDisplay">
+            <summary>
+            调试器显示文本
+            </summary>
+        </member>
+        <member name="T:Rafy.ManagedProperty.ManagedPropertyObject.ManagedPropertyObjectTypeProxy">
+            <summary>
+            ManagedPropertyObject 使用这个类型在 Debugger 中显示字段列表。
+            </summary>
+        </member>
+        <member name="T:Rafy.ManagedProperty.CLRPropertyDescriptor">
+            <summary>
+            CLR 属性的描述器
+            </summary>
+        </member>
+        <member name="T:Rafy.ManagedProperty.PropertyDescriptorFactory">
+            <summary>
+            ManagedPropertyObject 的 PropertyDescriptor 工厂
+            </summary>
+        </member>
+        <member name="F:Rafy.ManagedProperty.PropertyDescriptorFactory.Current">
+            <summary>
+            当前正在被使用的属性描述器工厂
+            </summary>
+        </member>
+        <member name="M:Rafy.ManagedProperty.PropertyDescriptorFactory.CreateDescriptor(Rafy.ManagedProperty.IManagedProperty)">
+            <summary>
+            子类重写此方法实现新的扩展属性描述器的生成。
+            </summary>
+            <param name="mp"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Rafy.ManagedProperty.ManagedPropertyList">
+            <summary>
+            一个托管属性的只读列表。
+            </summary>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyList.AddRange(System.Collections.Generic.IEnumerable{Rafy.ManagedProperty.IManagedProperty})">
+            <summary>
+            唯一的，可修改集合内部数据的操作。
+            </summary>
+            <param name="properties"></param>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyList.Find(System.String)">
+            <summary>
+            可以通过属性的名称来查找集合中的托管属性。
+            </summary>
+            <param name="propertyName">托管属性名称</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException">propertyName</exception>
+        </member>
+        <member name="T:Rafy.ManagedProperty.ConsolidatedTypePropertiesContainer">
+            <summary>
+            联合属性容器
+            
+            此容器中存放了类型及其基类的所有托管属性。
+            外部一般使用此类
+            </summary>
+        </member>
+        <member name="F:Rafy.ManagedProperty.ConsolidatedTypePropertiesContainer.PropertyDescriptors">
+            <summary>
+            为界面层使用反射提供属性描述器集合。
+            
+            直接在此申明一个字段保存该值，提高查询的效率。
+            所有的逻辑都在 PropertyDescriptorFactory 类中。
+            </summary>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ConsolidatedTypePropertiesContainer.GetNonReadOnlyCompiledProperties">
+            <summary>
+            获取编译时非只读属性的列表。
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ConsolidatedTypePropertiesContainer.GetCompiledProperties">
+            <summary>
+            获取编译时属性列表。
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ConsolidatedTypePropertiesContainer.GetRuntimeProperties">
+            <summary>
+            获取动态运行时属性列表。
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ConsolidatedTypePropertiesContainer.GetAvailableProperties">
+            <summary>
+            获取当前可用的属性列表，包括编译时属性、动态运行时属性。
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ConsolidatedTypePropertiesContainer.ChangeWithHierarchy">
+            <summary>
+            父类中任何一个在改变时，子类都需要变化。
+            </summary>
+        </member>
+        <member name="E:Rafy.ManagedProperty.ConsolidatedTypePropertiesContainer.RuntimePropertiesChanged">
+            <summary>
+            运行时属性变更事件
+            </summary>
+        </member>
+        <member name="T:Rafy.ManagedProperty.CompiledPropertyDeclarerAttribute">
+            <summary>
+            编译/启动期属性声明器
+            
+            声明了托管属性（包括扩展属性）的类标记这个接口后，
+            框架会在启动期自动查找这些类，并把其中的托管属性都初始化为启动期属性。
+            </summary>
+        </member>
+        <member name="T:Rafy.ManagedProperty.Freezable">
+            <summary>
+            一个可以被冻结的对象
+            </summary>
+        </member>
+        <member name="M:Rafy.ManagedProperty.Freezable.Freeze">
+            <summary>
+            冻结本对象。
+            冻结后，对象变为不可变对象。
+            </summary>
+        </member>
+        <member name="M:Rafy.ManagedProperty.Freezable.Unfreeze">
+            <summary>
+            for unit test
+            </summary>
+        </member>
+        <member name="M:Rafy.ManagedProperty.Freezable.CheckUnFrozen">
+            <summary>
+            调用此方法保证本对象还没有被冻结。否则会抛出异常。
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.Freezable.IsFrozen">
+            <summary>
+            返回当前的对象是否已经被冻结了。
+            子类可以在对状态进行更新时检查此属性。
+            </summary>
+        </member>
+        <member name="T:Rafy.ManagedProperty.ManagedPropertyObjectList`1">
+            <summary>
+            托管属性对象的集合基类
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:Rafy.Serialization.Mobile.MobileCollection`1">
+            <summary>
+            Inherit from this base class to easily
+            create a serializable list class.
+            </summary>
+            <typeparam name="T">
+            Type of the items contained in the list.
+            </typeparam>
+        </member>
+        <member name="M:Rafy.Serialization.Mobile.MobileCollection`1.OnSerializeRef(Rafy.Serialization.Mobile.ISerializationContext)">
+            <summary>
+            Override this method to get custom child object
+            values from the serialization stream.
+            </summary>
+            <param name="info">Serialization info.</param>
+            <exception cref="T:System.InvalidOperationException">CannotSerializeCollectionsNotOfIMobileObject</exception>
+        </member>
+        <member name="M:Rafy.Serialization.Mobile.MobileCollection`1.OnSerializeState(Rafy.Serialization.Mobile.ISerializationContext)">
+            <summary>
+            Override this method to get custom field values
+            from the serialization stream.
+            </summary>
+            <param name="info">Serialization info.</param>
+        </member>
+        <member name="M:Rafy.Serialization.Mobile.MobileCollection`1.OnDeserializeState(Rafy.Serialization.Mobile.ISerializationContext)">
+            <summary>
+            Override this method to set custom field values
+            into the serialization stream.
+            </summary>
+            <param name="info">Serialization info.</param>
+        </member>
+        <member name="M:Rafy.Serialization.Mobile.MobileCollection`1.OnDeserializeRef(Rafy.Serialization.Mobile.ISerializationContext)">
+            <summary>
+            Override this method to set custom child object
+            values into the serialization stream.
+            </summary>
+            <param name="info">Serialization info.</param>
+            <exception cref="T:System.InvalidOperationException">CannotSerializeCollectionsNotOfIMobileObject</exception>
+        </member>
+        <member name="T:Rafy.Serialization.BinaryFormatterWrapper">
+            <summary>
+            Wraps the <see cref="T:System.Runtime.Serialization.Formatters.Binary.BinaryFormatter"/>
+            in the 
+            <see cref="T:Rafy.Serialization.ISerializationFormatter"/>
+            interface so it can be used in a standardized
+            manner.
+            </summary>
+        </member>
+        <member name="T:Rafy.Serialization.ISerializationFormatter">
+            <summary>
+            Defines an object that can serialize and deserialize
+            object graphs.
+            </summary>
+        </member>
+        <member name="M:Rafy.Serialization.ISerializationFormatter.Deserialize(System.IO.Stream)">
+            <summary>
+            Converts a serialization stream into an
+            object graph.
+            </summary>
+            <param name="serializationStream">
+            Byte stream containing the serialized data.</param>
+            <returns>A deserialized object graph.</returns>
+        </member>
+        <member name="M:Rafy.Serialization.ISerializationFormatter.Serialize(System.IO.Stream,System.Object)">
+            <summary>
+            Converts an object graph into a byte stream.
+            </summary>
+            <param name="serializationStream">
+            Stream that will contain the the serialized data.</param>
+            <param name="graph">Object graph to be serialized.</param>
+        </member>
+        <member name="M:Rafy.Serialization.BinaryFormatterWrapper.Deserialize(System.IO.Stream)">
+            <summary>
+            Converts a serialization stream into an
+            object graph.
+            </summary>
+            <param name="serializationStream">
+            Byte stream containing the serialized data.</param>
+            <returns>A deserialized object graph.</returns>
+        </member>
+        <member name="M:Rafy.Serialization.BinaryFormatterWrapper.Serialize(System.IO.Stream,System.Object)">
+            <summary>
+            Converts an object graph into a byte stream.
+            </summary>
+            <param name="serializationStream">
+            Stream that will contain the the serialized data.</param>
+            <param name="graph">Object graph to be serialized.</param>
+        </member>
+        <member name="P:Rafy.Serialization.BinaryFormatterWrapper.Formatter">
+            <summary>
+            Gets a reference to the underlying
+            <see cref="T:System.Runtime.Serialization.Formatters.Binary.BinaryFormatter"/>
+            object.
+            </summary>
+        </member>
+        <member name="T:Rafy.Serialization.MobileAndBinaryFormatter">
+            <summary>
+            为了兼容，主要使用 MobileFormatter，否则使用 BinaryFormatter。
+            </summary>
+        </member>
+        <member name="T:Rafy.Serialization.Mobile.FieldsSerializationHelper">
+            <summary>
+            为了兼容系统的序列化机制，特写此类进行字段的序列化：
+            只要不标记 NonSerialized 的字段都进行序列化。
+            </summary>
+        </member>
+        <member name="T:Rafy.Serialization.Mobile.BitContainer">
+            <summary>
+            低存储空间的多个 Boolean 值序列化器
+            </summary>
+        </member>
+        <member name="T:Rafy.Serialization.Mobile.MobileDictionary`2">
+            <summary>
+            Defines a dictionary that can be serialized through
+            the MobileFormatter.
+            </summary>
+            <typeparam name="K">Key value: any primitive or IMobileObject type.</typeparam>
+            <typeparam name="V">Value: any primitive or IMobileObject type.</typeparam>
+        </member>
+        <member name="M:Rafy.Serialization.Mobile.MobileDictionary`2.#ctor">
+            <summary>
+            Creates an instance of the object.
+            </summary>
+        </member>
+        <member name="M:Rafy.Serialization.Mobile.MobileDictionary`2.#ctor(System.Int32)">
+            <summary>
+            Creates an instance of the object based
+            on the supplied dictionary, whose elements
+            are copied to the new dictionary.
+            </summary>
+            <param name="capacity">The initial number of elements 
+            the dictionary can contain.</param>
+        </member>
+        <member name="M:Rafy.Serialization.Mobile.MobileDictionary`2.#ctor(System.Collections.Generic.IEqualityComparer{`0})">
+            <summary>
+            Creates an instance of the object based
+            on the supplied dictionary, whose elements
+            are copied to the new dictionary.
+            </summary>
+            <param name="comparer">The comparer to use when
+            comparing keys.</param>
+        </member>
+        <member name="M:Rafy.Serialization.Mobile.MobileDictionary`2.#ctor(System.Collections.Generic.Dictionary{`0,`1})">
+            <summary>
+            Creates an instance of the object based
+            on the supplied dictionary, whose elements
+            are copied to the new dictionary.
+            </summary>
+            <param name="dict">Source dictionary.</param>
+        </member>
+        <member name="T:Rafy.Serialization.Mobile.MobileFormatter">
+            <summary>
+            Serializes and deserializes objects
+            at the field level. A Silverlight-
+            compatible facsimile of the
+            BinaryFormatter or NetDataContractSerializer.
+            </summary>
+        </member>
+        <member name="M:Rafy.Serialization.Mobile.MobileFormatter.Serialize(System.Object)">
+            <summary>
+            Serializes the object into a byte array.
+            </summary>
+            <param name="obj">
+            The object to be serialized, which must implement
+            IMobileObject.
+            </param>
+            <returns></returns>
+        </member>
+        <member name="M:Rafy.Serialization.Mobile.MobileFormatter.Deserialize(System.Byte[])">
+            <summary>
+            Deserializes a byte stream into an object.
+            </summary>
+            <param name="data">
+            Byte array containing the object's serialized
+            data.
+            </param>
+            <returns>
+            An object containing the data from the
+            byte stream. The object must implement
+            IMobileObject to be deserialized.
+            </returns>
+        </member>
+        <member name="M:Rafy.Serialization.Mobile.MobileFormatter.SerializeObject(System.Object)">
+            <summary>
+            Serializes an object into a SerializationInfo object.
+            </summary>
+            <param name="obj">Object to be serialized.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Rafy.Serialization.Mobile.MobileFormatter.GetObject(System.Int32)">
+            <summary>
+            Gets a deserialized object based on the object's
+            reference id within the serialization stream.
+            </summary>
+            <param name="referenceId">Id of object in stream.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Rafy.Serialization.Mobile.MobileList`1">
+            <summary>
+            Implements a list that is serializable using
+            the MobileFormatter.
+            </summary>
+            <typeparam name="T">
+            Type of object contained in the list.
+            </typeparam>
+        </member>
+        <member name="M:Rafy.Serialization.Mobile.MobileList`1.#ctor">
+            <summary>
+            Creates an instance of the type.
+            </summary>
+        </member>
+        <member name="M:Rafy.Serialization.Mobile.MobileList`1.#ctor(System.Int32)">
+            <summary>
+            Creates an instance of the type.
+            </summary>
+            <param name="capacity">Capacity of the list.</param>
+        </member>
+        <member name="M:Rafy.Serialization.Mobile.MobileList`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Creates an instance of the type.
+            </summary>
+            <param name="collection">Data to add to list.</param>
+        </member>
+        <member name="M:Rafy.Serialization.Mobile.MobileList`1.OnSerializeRef(Rafy.Serialization.Mobile.ISerializationContext)">
+            <summary>
+            Override this method to manually serialize child objects
+            contained within the current object.
+            </summary>
+            <param name="info">Object containing serialized values.</param>
+        </member>
+        <member name="M:Rafy.Serialization.Mobile.MobileList`1.OnSerializeState(Rafy.Serialization.Mobile.ISerializationContext)">
+            <summary>
+            Override this method to add extra field values to
+            the serialization stream.
+            </summary>
+            <param name="info">Object containing field values.</param>
+        </member>
+        <member name="M:Rafy.Serialization.Mobile.MobileList`1.OnDeserializeState(Rafy.Serialization.Mobile.ISerializationContext)">
+            <summary>
+            Override this method to retrieve extra field values to
+            the serialization stream.
+            </summary>
+            <param name="info">Object containing field values.</param>
+        </member>
+        <member name="M:Rafy.Serialization.Mobile.MobileList`1.OnDeserializeRef(Rafy.Serialization.Mobile.ISerializationContext)">
+            <summary>
+            Override this method to manually deserialize child objects
+            from data in the serialization stream.
+            </summary>
+            <param name="info">Object containing serialized values.</param>
+        </member>
+        <member name="T:Rafy.Serialization.Mobile.MobileNonSerializedAttribute">
+            <summary>
+            类型标记此特性，表示该类型及其父类中的字段都不需要 MobileSerialization 引擎自动序列化。
+            </summary>
+        </member>
+        <member name="T:Rafy.Serialization.Mobile.NullPlaceholder">
+            <summary>
+            Placeholder for null child objects.
+            </summary>
+        </member>
+        <member name="T:Rafy.Serialization.Mobile.ReferenceComparer`1">
+            <summary>
+            Implements an equality comparer for <see cref="T:Rafy.Serialization.Mobile.IMobileObject"/> that compares
+            the objects only on the basis is the reference value.
+            </summary>
+        </member>
+        <member name="M:Rafy.Serialization.Mobile.ReferenceComparer`1.Equals(`0,`0)">
+            <summary>
+            Determines if the two objects are reference-equal.
+            </summary>
+        </member>
+        <member name="P:Rafy.Serialization.Mobile.SerializationContainerContext.IsProcessingState">
+            <summary>
+            是否正在序列/反序列化 State
+            </summary>
+        </member>
+        <member name="T:Rafy.SerializationInfoContainer">
+            <summary>
+            Object containing the serialization
+            data for a specific object.
+            </summary>
+        </member>
+        <member name="M:Rafy.SerializationInfoContainer.AddState(System.String,System.Object)">
+            <summary>
+            Adds a value to the serialization stream.
+            </summary>
+            <param name="name">
+            Name of the field.
+            </param>
+            <param name="state">
+            注意：只能是系统自带的类型
+            Value of the field.
+            </param>
+        </member>
+        <member name="M:Rafy.SerializationInfoContainer.GetState``1(System.String)">
+            <summary>
+            Gets a value from the list of fields.
+            </summary>
+            <typeparam name="T">
+            Type to which the value should be coerced.
+            </typeparam>
+            <param name="name">
+            Name of the field.
+            </param>
+            <returns></returns>
+        </member>
+        <member name="M:Rafy.SerializationInfoContainer.AddDelegate(System.String,System.Delegate)">
+            <summary>
+            Adds a child to the list of child references.
+            </summary>
+            <param name="name">Name of the field.</param>
+            <param name="action">The action.</param>
+            <exception cref="T:System.NotSupportedException">实例对象的代理方法暂时不支持被序列化！</exception>
+        </member>
+        <member name="M:Rafy.SerializationInfoContainer.AddRef(System.String,System.Int32)">
+            <summary>
+            Adds a child to the list of child references.
+            </summary>
+            <param name="name">
+            Name of the field.
+            </param>
+            <param name="referenceId">
+            Reference id for the child object.
+            </param>
+        </member>
+        <member name="M:Rafy.SerializationInfoContainer.IsState(System.Type)">
+            <summary>
+            value type, string, object
+            </summary>
+            <param name="stateType"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Rafy.SerializationInfoContainer.ReferenceId">
+            <summary>
+            Reference number for this object.
+            </summary>
+        </member>
+        <member name="P:Rafy.SerializationInfoContainer.TypeName">
+            <summary>
+            Assembly-qualified type name of the
+            object being serialized.
+            </summary>
+        </member>
+        <member name="P:Rafy.SerializationInfoContainer.References">
+            <summary>
+            Dictionary containing child reference data.
+            </summary>
+        </member>
+        <member name="P:Rafy.SerializationInfoContainer.States">
+            <summary>
+            Dictionary containg field data.
+            </summary>
+        </member>
+        <member name="T:Rafy.SysState">
+            <summary>
+            系统中 PrimitiveType 在使用 Mobile 序列化时，需要使用这个对象来进行封装。
+            </summary>
+        </member>
+        <member name="T:Rafy.Serialization.NetDataContractSerializerWrapper">
+            Wraps the <see cref="T:System.Runtime.Serialization.NetDataContractSerializer"/>
+            in the 
+            <see cref="T:Rafy.Serialization.ISerializationFormatter"/>
+            interface so it can be used in a standardized
+            manner.
+        </member>
+        <member name="M:Rafy.Serialization.NetDataContractSerializerWrapper.Deserialize(System.IO.Stream)">
+            <summary>
+            Converts a serialization stream into an
+            object graph.
+            </summary>
+            <param name="serializationStream">
+            Byte stream containing the serialized data.</param>
+            <returns>A deserialized object graph.</returns>
+        </member>
+        <member name="M:Rafy.Serialization.NetDataContractSerializerWrapper.Serialize(System.IO.Stream,System.Object)">
+            <summary>
+            Converts an object graph into a byte stream.
+            </summary>
+            <param name="serializationStream">
+            Stream that will contain the the serialized data.</param>
+            <param name="graph">Object graph to be serialized.</param>
+        </member>
+        <member name="P:Rafy.Serialization.NetDataContractSerializerWrapper.Formatter">
+            <summary>
+            Gets a reference to the underlying
+            <see cref="T:System.Runtime.Serialization.NetDataContractSerializer"/>
+            object.
+            </summary>
+        </member>
+        <member name="T:Rafy.Serialization.SerializationFormatterFactory">
+            <summary>
+            Factory used to create the appropriate
+            serialization formatter object based
+            on the application configuration.
+            </summary>
+        </member>
+        <member name="M:Rafy.Serialization.SerializationFormatterFactory.GetFormatter">
+            <summary>
+            创建一个序列化器。
+            
+            工厂方法，方便未来统一扩展。
+            </summary>
+        </member>
+        <member name="T:Rafy.Serialization.Serializer">
+            <summary>
+            序列化门户 API
+            </summary>
+        </member>
+        <member name="M:Rafy.Serialization.Serializer.SerializeBytes(System.Object)">
+            <summary>
+            使用二进制序列化对象。
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Rafy.Serialization.Serializer.DeserializeBytes(System.Byte[])">
+            <summary>
+            使用二进制反序列化对象。
+            </summary>
+            <param name="bytes"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Rafy.ManagedProperty.IManagedProperty">
+            <summary>
+            托管属性标记
+            </summary>
+        </member>
+        <member name="M:Rafy.ManagedProperty.IManagedProperty.GetMeta(System.Object)">
+            <summary>
+            为某个对象获取本属性的元数据
+            </summary>
+            <param name="owner"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Rafy.ManagedProperty.IManagedProperty.GetMeta(System.Type)">
+            <summary>
+            为某个类型获取本属性的元数据
+            </summary>
+            <param name="ownerType"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Rafy.ManagedProperty.IManagedProperty.OwnerType">
+            <summary>
+            定义此属性的类型
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.IManagedProperty.DeclareType">
+            <summary>
+            申明这个属性的类型
+            
+            如果这个属性是一个扩展属性，则这个值与 OwnerType 不同。
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.IManagedProperty.PropertyType">
+            <summary>
+            属性类型
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.IManagedProperty.GlobalIndex">
+            <summary>
+            全局索引
+            
+            只在本次运行中有效，每次运行不保证一致。
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.IManagedProperty.LifeCycle">
+            <summary>
+            为本属性所定义的生命周期
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.IManagedProperty.IsUnregistered">
+            <summary>
+            表示当前属性是否已经被注销、不再使用。
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.IManagedProperty.IsExtension">
+            <summary>
+            是否为扩展属性（一个类中为另一个类定义的扩展属性）
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.IManagedProperty.IsReadOnly">
+            <summary>
+            是否只读
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.IManagedProperty.TypeCompiledIndex">
+            <summary>
+            如果此属性即是编译期属性，也不是只读的，则这个值表示该属性在对象中的索引。
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.IManagedProperty.DefaultMeta">
+            <summary>
+            获取 this.OwnerType 类型所对应的元数据。
+            </summary>
+        </member>
+        <member name="T:Rafy.ManagedProperty.IManagedPropertyInternal">
+            <summary>
+            内部使用的接口
+            </summary>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedProperty`1.AsReadOnly(System.Func{Rafy.ManagedProperty.ManagedPropertyObject,`0},Rafy.ManagedProperty.IManagedProperty[])">
+            <summary>
+            声明本属性为只读属性
+            </summary>
+            <param name="readOnlyValueProvider"></param>
+            <param name="dependencies"></param>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedProperty`1.GetMeta(System.Object)">
+            <summary>
+            为某个对象获取本属性的元数据
+            </summary>
+            <param name="owner">
+            当前属性的声明类或者它的子类的实例
+            </param>
+            <returns></returns>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedProperty`1.GetMeta(System.Type)">
+            <summary>
+            为某个类型获取本属性的元数据
+            </summary>
+            <param name="ownerType">
+            当前属性的声明类或者它的子类
+            </param>
+            <returns></returns>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedProperty`1.OverrideMeta``1(System.Type,``0,System.Action{``0})">
+            <summary>
+            为某个子类重写元数据
+            </summary>
+            <typeparam name="TMeta">The type of the meta.</typeparam>
+            <param name="ownerSubType">子类的类型。</param>
+            <param name="overrideMeta">一个全新的元数据对象。</param>
+            <param name="overrideValues">覆盖某些属性的方法。</param>
+            <exception cref="T:System.ArgumentNullException">ownerSubType
+            or
+            overrideValues</exception>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedProperty`1.CloneMeta``1(System.Type,``0)">
+            <summary>
+            把当前的元数据的值全部合并到 overrideMeta 上。
+            </summary>
+            <typeparam name="TMeta"></typeparam>
+            <param name="ownerSubType"></param>
+            <param name="overrideMeta"></param>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ManagedProperty`1.OwnerType">
+            <summary>
+            定义此属性的类型
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ManagedProperty`1.DeclareType">
+            <summary>
+            申明这个属性的类型
+            
+            如果这个属性是一个扩展属性，则这个值与 OwnerType 不同。
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ManagedProperty`1.Name">
+            <summary>
+            属性名
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ManagedProperty`1.IsUnregistered">
+            <summary>
+            表示当前属性是否已经被注销、不再使用。
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ManagedProperty`1.LifeCycle">
+            <summary>
+            为本属性所定义的生命周期
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ManagedProperty`1.GlobalIndex">
+            <summary>
+            全局索引
+            
+            只在本次运行中有效，每次运行不保证一致。
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ManagedProperty`1.IsExtension">
+            <summary>
+            是否为扩展属性（一个类中为另一个类定义的扩展发展）
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ManagedProperty`1.TypeCompiledIndex">
+            <summary>
+            如果此属性即是编译期属性，也不是只读的，则这个值表示该属性在对象中的索引。
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ManagedProperty`1.PropertyType">
+            <summary>
+            属性类型
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ManagedProperty`1.IsReadOnly">
+            <summary>
+            是否只读
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ManagedProperty`1.DefaultMeta">
+            <summary>
+            获取 this.OwnerType 类型所对应的元数据。
+            </summary>
+        </member>
+        <member name="T:Rafy.ManagedProperty.ManagedPropertyChangedEventArgs">
+            <summary>
+            泛型版本的属性变更事件
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ManagedPropertyChangedEventArgs.NewValue">
+            <summary>
+            变更后的值
+            
+            注意，如果是只读属性，则这个值永远是默认值。
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ManagedPropertyChangedEventArgs.OldValue">
+            <summary>
+            变更前的值
+            
+            注意，如果是只读属性，则这个值永远是默认值。
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ManagedPropertyChangedEventArgs.Property">
+            <summary>
+            对应的托管属性
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ManagedPropertyChangedEventArgs.Source">
+            <summary>
+            变更源
+            </summary>
+        </member>
+        <member name="T:Rafy.ManagedProperty.ManagedPropertyChangedSource">
+            <summary>
+            属性变更源
+            </summary>
+        </member>
+        <member name="F:Rafy.ManagedProperty.ManagedPropertyChangedSource.FromProperty">
+            <summary>
+            一般的属性设置（来自代码）
+            </summary>
+        </member>
+        <member name="F:Rafy.ManagedProperty.ManagedPropertyChangedSource.FromUIOperating">
+            <summary>
+            来自界面操作
+            </summary>
+        </member>
+        <member name="T:Rafy.ManagedProperty.ManagedPropertyField">
+            <summary>
+            托管属性的字段值。
+            </summary>
+        </member>
+        <member name="F:Rafy.ManagedProperty.ManagedPropertyField.DefaultValue">
+            <summary>
+            所有字段的默认值。
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ManagedPropertyField.Property">
+            <summary>
+            对应的托管属性
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ManagedPropertyField.Value">
+            <summary>
+            字段的值
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ManagedPropertyField.HasValue">
+            <summary>
+            返回字段是否已经有值，而非使用默认值。
+            此属性不能公布：
+            有时 Value 属性的值会被设置为字段的默认值，虽然这时 HasValue 为真，但是值本身还是默认值，
+            所以不能简单地通过这个属性来判断是否本字段的值是默认值。
+            </summary>
+        </member>
+        <member name="T:Rafy.ManagedProperty.ManagedPropertyLifeCycle">
+            <summary>
+            托管属性生命周期
+            </summary>
+        </member>
+        <member name="F:Rafy.ManagedProperty.ManagedPropertyLifeCycle.Compile">
+            <summary>
+            编译期、启动期
+            </summary>
+        </member>
+        <member name="F:Rafy.ManagedProperty.ManagedPropertyLifeCycle.Runtime">
+            <summary>
+            运行期（动态属性）
+            </summary>
+        </member>
+        <member name="T:Rafy.ManagedProperty.IManagedPropertyMetadata">
+            <summary>
+            托管属性元数据
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.IManagedPropertyMetadata.DefaultValue">
+            <summary>
+            默认值
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.IManagedPropertyMetadata.Serializable">
+            <summary>
+            是否支持序列化
+            </summary>
+        </member>
+        <member name="T:Rafy.ManagedProperty.IManagedPropertyMetadataInternal">
+            <summary>
+            内部使用的 托管属性元数据
+            </summary>
+        </member>
+        <member name="T:Rafy.ManagedProperty.ManagedPropertyMetadata`1">
+            <summary>
+            泛型版本的托管属性元数据
+            </summary>
+            <typeparam name="TPropertyType"></typeparam>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ManagedPropertyMetadata`1.DefaultValue">
+            <summary>
+            默认值
+            get { return (TPropertyType)this._provider.GetDefaultValue(); }
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ManagedPropertyMetadata`1.Serializable">
+            <summary>
+            是否支持序列化。
+            默认为 true。
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ManagedPropertyMetadata`1.CoerceGetValueCallBack">
+            <summary>
+            属性获取时的强制逻辑回调
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ManagedPropertyMetadata`1.PropertyChangingCallBack">
+            <summary>
+            属性变更前回调
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ManagedPropertyMetadata`1.PropertyChangedCallBack">
+            <summary>
+            属性变更后回调
+            </summary>
+        </member>
+        <member name="T:Rafy.ManagedProperty.ManagedPropertyCoerceGetValueCallBack`1">
+            <summary>
+            属性获取时的强制逻辑回调
+            </summary>
+            <typeparam name="TPropertyType"></typeparam>
+            <param name="o"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Rafy.ManagedProperty.ManagedPropertyChangingCallBack`1">
+            <summary>
+            属性变更前回调
+            </summary>
+            <typeparam name="TPropertyType"></typeparam>
+            <param name="o"></param>
+            <param name="e"></param>
+        </member>
+        <member name="T:Rafy.ManagedProperty.ManagedPropertyChangedCallBack">
+            <summary>
+            属性变更后回调
+            </summary>
+            <param name="o">The automatic.</param>
+            <param name="e">The <see cref="T:Rafy.ManagedProperty.ManagedPropertyChangedEventArgs"/> instance containing the event data.</param>
+        </member>
+        <member name="T:Rafy.ManagedProperty.ManagedPropertyRepository">
+            <summary>
+            托管属性仓库
+            </summary>
+        </member>
+        <member name="F:Rafy.ManagedProperty.ManagedPropertyRepository._isRegisteringExtension">
+            <summary>
+            是否正在扩展属性注册过程中。
+            </summary>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyRepository.IntializeExtension(System.Collections.Generic.IEnumerable{System.Reflection.Assembly})">
+            <summary>
+            通过所有包含扩展属性的程序集来初始化所有的扩展属性。
+            
+            注意，扩展属性需要在程序启动时就完全注册完成，否则托管属性类型并不知道自己最终会有哪些属性。
+            </summary>
+            <param name="assemblies"></param>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyRepository.SearchAllExtensionDeclaringTypes(System.Collections.Generic.IEnumerable{System.Reflection.Assembly})">
+            <summary>
+            获取所有 Entity 的子类。
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyRepository.UnRegisterAllRuntimeProperties(System.Type)">
+            <summary>
+            注销某个类型所对应的所有运行时属性
+            </summary>
+            <param name="ownerType"></param>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyRepository.UnRegister(Rafy.ManagedProperty.IManagedProperty[])">
+            <summary>
+            注销指定的属性集合
+            </summary>
+            <param name="properties"></param>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyRepository.RegisterProperty``1(Rafy.ManagedProperty.ManagedProperty{``0})">
+            <summary>
+            注册某个属性到容器中
+            
+            线程安全。
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="property"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyRepository.GetTypePropertiesContainer(System.Type)">
+            <summary>
+            获取某个类型的已经注册的所有可用属性
+            </summary>
+            <param name="ownerType"></param>
+            <returns></returns>
+        </member>
+        <member name="F:Rafy.ManagedProperty.ManagedPropertyRepository._lastResultCache">
+            <summary>
+            最后一次使用的类型缓存，此字段不需要同步锁。
+            </summary>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyRepository.GetOrCreateTypeProperties(System.Type)">
+            <summary>
+            获取某个类型的已经注册的所有可用属性。
+            
+            如果该类型还没有创建相应的容器，则递归为该类型及其基类型创建相应的属性容器。
+            </summary>
+            <param name="ownerType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyRepository.CompleteCompileProperties(Rafy.ManagedProperty.TypePropertiesContainer)">
+            <summary>
+            完成所有编译期属性的注册。此时会变更 container 的对应生成周期，并为其设置 ConsolidatedContainer 属性。
+            </summary>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyRepository.RunPropertyResigtry(System.Type)">
+            <summary>
+            执行某个托管属性声明类型的静态构造函数，以保证其中的所有静态字段都被初始化完成。
+            如果已经执行过，则不会再次执行。
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Rafy.ManagedProperty.ManagedPropertyRepository.DeferSortingCompiledProperties">
+            <summary>
+            在 Using 语句最后释放时，才排序所有字段，提高效率。
+            
+            但是暂时没有使用，没有提高明显的效率。待验证。
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Rafy.ManagedProperty.ManagedPropertyRepository.IsExtensionRegistered">
+            <summary>
+            是否所有扩展属性都已经被注册完成。
+            </summary>
+        </member>
+        <member name="T:Rafy.ManagedProperty.TypePropertiesContainer">
+            <summary>
+            属性容器
+            类型本身的托管属性的容器
+            </summary>
+        </member>
+        <member name="F:Rafy.ManagedProperty.TypePropertiesContainer.Lock">
+            <summary>
+            在变更本容器时，都应该执行加锁操作。
+            </summary>
+        </member>
+        <member name="M:Rafy.ManagedProperty.TypePropertiesContainer.GetCompiledProperties">
+            <summary>
+            当前类型声明的编译期属性
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Rafy.ManagedProperty.TypePropertiesContainer.GetRuntimeProperties">
+            <summary>
+            当前类型声明的运行时属性
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Rafy.ManagedProperty.TypePropertiesContainer.NotifyRuntimeChanged">
+            <summary>
+            使用这个事件，通知本类的子类也应该更新动态属性列表。
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.TypePropertiesContainer.OwnerType">
+            <summary>
+            对应的类型
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.TypePropertiesContainer.BaseType">
+            <summary>
+            基类的属性容器
+            </summary>
+        </member>
+        <member name="P:Rafy.ManagedProperty.TypePropertiesContainer.ConsolidatedContainer">
+            <summary>
+            对应的联合属性容器
+            </summary>
+        </member>
+        <member name="E:Rafy.ManagedProperty.TypePropertiesContainer.RuntimePropertiesChanged">
+            <summary>
+            运行时属性变更事件
+            </summary>
+        </member>
+        <member name="T:Rafy.ManagedProperty.ManagedPropertyDescriptor">
+            <summary>
+            托管属性的描述器
+            </summary>
+        </member>
+    </members>
+</doc>

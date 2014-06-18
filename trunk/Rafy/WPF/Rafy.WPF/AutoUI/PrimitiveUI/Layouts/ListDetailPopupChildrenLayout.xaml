@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="Rafy.WPF.Layout.ListDetailPopupChildrenLayout" 
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:rafy="clr-namespace:Rafy.WPF.Controls" Height="Auto"
+        Width="Auto">
+    <DockPanel>
+        <ContentControl x:Name="toolBarContainer" DockPanel.Dock="Top" />
+        <ContentControl>
+            <rafy:ResizingPanel x:Name="resizingPanel">
+                <TabControl x:Name="queryPane" TabStripPlacement="Bottom" rafy:ResizingPanel.ResizeWidth="300"
+                        Style="{StaticResource Rafy_TabControlHeaderHide}">
+                    <TabItem x:Name="dcNavigate" AutomationProperties.Name="导航查询" Header="导航查询" />
+                    <TabItem x:Name="dcCondition" AutomationProperties.Name="条件查询" Header="条件查询" />
+                </TabControl>
+                <rafy:ResizingPanel>
+                    <ContentControl Name="listRegion" rafy:ResizingPanel.ResizeWidth="3*" />
+                    <ContentControl Name="detailRegion" rafy:ResizingPanel.ResizeWidth="7*" />
+                </rafy:ResizingPanel>
+            </rafy:ResizingPanel>
+        </ContentControl>
+    </DockPanel>
+</UserControl>

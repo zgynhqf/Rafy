@@ -1,0 +1,174 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:tk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:tkChromes="clr-namespace:Xceed.Wpf.Toolkit.Chromes;assembly=WPFToolkit.Extended"
+        xmlns:rafy="clr-namespace:Rafy.WPF.Controls" xmlns:rafyModuleWPF="clr-namespace:Rafy.WPF"
+        xmlns:rafyControls="clr-namespace:Rafy.WPF.Controls;assembly=Rafy.WPF.Controls"
+        mc:Ignorable="d">
+    <Style TargetType="{x:Type rafy:DateTimeInputControl}">
+        <Setter Property="Validation.ErrorTemplate" Value="{x:Null}" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="HorizontalContentAlignment" Value="Right" />
+        <Setter Property="TextAlignment" Value="Right" />
+        <Setter Property="AllowSpin" Value="False" />
+        <Setter Property="ShowButtonSpinner" Value="False" />
+        <Setter Property="TimeWatermarkTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <ContentControl Content="{Binding}" Foreground="Gray" Focusable="False" />
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="WatermarkTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <ContentControl Content="{Binding}" Foreground="Gray" Focusable="False" />
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type rafy:DateTimeInputControl}">
+                    <Border Name="border" Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3" Padding="1">
+                        <DockPanel>
+                            <TextBlock Name="errorContent" DockPanel.Dock="Right" Visibility="Collapsed"
+                                    Foreground="{DynamicResource ValidationErrorBrush}" FontWeight="Bold"
+                                    VerticalAlignment="Center" Text=" * " />
+                            <Grid>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <tk:ButtonSpinner x:Name="Spinner" AllowSpin="{TemplateBinding AllowSpin}"
+                                            IsTabStop="False" ShowButtonSpinner="{TemplateBinding ShowButtonSpinner}">
+                                        <tk:WatermarkTextBox x:Name="PART_TextBox" AcceptsReturn="False"
+                                                BorderThickness="0" Background="Transparent"
+                                                Foreground="{TemplateBinding Foreground}"
+                                                FontWeight="{TemplateBinding FontWeight}"
+                                                FontStyle="{TemplateBinding FontStyle}"
+                                                FontStretch="{TemplateBinding FontStretch}"
+                                                FontSize="{TemplateBinding FontSize}"
+                                                FontFamily="{TemplateBinding FontFamily}"
+                                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                IsReadOnly="{Binding IsReadOnly, RelativeSource={RelativeSource TemplatedParent}}"
+                                                MinWidth="20" Padding="0"
+                                                TextAlignment="{TemplateBinding TextAlignment}" TextWrapping="NoWrap"
+                                                Text="{Binding Text, RelativeSource={RelativeSource TemplatedParent}}"
+                                                TabIndex="{TemplateBinding TabIndex}"
+                                                WatermarkTemplate="{TemplateBinding WatermarkTemplate}"
+                                                Watermark="{TemplateBinding Watermark}" />
+                                    </tk:ButtonSpinner>
+                                    <ToggleButton x:Name="_calendarToggleButton" Background="White" Grid.Column="1"
+                                            IsTabStop="False"
+                                            IsChecked="{Binding IsOpen, RelativeSource={RelativeSource TemplatedParent}}"
+                                            IsEnabled="{Binding IsReadOnly, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource InverseBooleanConverter}}"
+                                            IsHitTestVisible="{Binding IsOpen, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource InverseBooleanConverter}}">
+                                        <ToggleButton.Style>
+                                            <Style TargetType="{x:Type ToggleButton}">
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                                            <Grid SnapsToDevicePixels="True">
+                                                                <tkChromes:ButtonChrome x:Name="ToggleButtonChrome"
+                                                                        CornerRadius="0,2.75,2.75,0"
+                                                                        InnerCornerRadius="0,1.75,1.75,0"
+                                                                        RenderMouseOver="{TemplateBinding IsMouseOver}"
+                                                                        RenderPressed="{TemplateBinding IsPressed}"
+                                                                        RenderChecked="{Binding IsOpen, RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type tk:DateTimePicker}}}"
+                                                                        RenderEnabled="{Binding IsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type tk:DateTimePicker}}}">
+                                                                    <Grid>
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="*" />
+                                                                            <ColumnDefinition Width="Auto" />
+                                                                        </Grid.ColumnDefinitions>
+                                                                        <ContentPresenter
+                                                                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                                                Content="{TemplateBinding Content}"
+                                                                                ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                                                                HorizontalAlignment="Stretch"
+                                                                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                                                                VerticalAlignment="Stretch" />
+                                                                        <Grid x:Name="arrowGlyph" Grid.Column="1"
+                                                                                IsHitTestVisible="False" Margin="5">
+                                                                            <Path
+                                                                                    Data="M0,1C0,1 0,0 0,0 0,0 3,0 3,0 3,0 3,1 3,1 3,1 4,1 4,1 4,1 4,0 4,0 4,0 7,0 7,0 7,0 7,1 7,1 7,1 6,1 6,1 6,1 6,2 6,2 6,2 5,2 5,2 5,2 5,3 5,3 5,3 4,3 4,3 4,3 4,4 4,4 4,4 3,4 3,4 3,4 3,3 3,3 3,3 2,3 2,3 2,3 2,2 2,2 2,2 1,2 1,2 1,2 1,1 1,1 1,1 0,1 0,1z"
+                                                                                    Fill="Black" Height="4" Width="7" />
+                                                                        </Grid>
+                                                                    </Grid>
+                                                                </tkChromes:ButtonChrome>
+                                                            </Grid>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </ToggleButton.Style>
+                                    </ToggleButton>
+                                </Grid>
+                                <Popup IsOpen="{Binding IsChecked, ElementName=_calendarToggleButton}" StaysOpen="False">
+                                    <Border BorderThickness="1" Padding="3">
+                                        <Border.BorderBrush>
+                                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                <GradientStop Color="#FFA3AEB9" Offset="0" />
+                                                <GradientStop Color="#FF8399A9" Offset="0.375" />
+                                                <GradientStop Color="#FF718597" Offset="0.375" />
+                                                <GradientStop Color="#FF617584" Offset="1" />
+                                            </LinearGradientBrush>
+                                        </Border.BorderBrush>
+                                        <Border.Background>
+                                            <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                                                <GradientStop Color="White" Offset="0" />
+                                                <GradientStop Color="#FFE8EBED" Offset="1" />
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <StackPanel>
+                                            <Calendar x:Name="PART_Calendar" BorderThickness="0"
+                                                    DisplayDate="2012-12-10"
+                                                    Visibility="{TemplateBinding CalenderVisibility}" />
+                                            <tk:TimePicker x:Name="PART_TimeUpDown"
+                                                    Visibility="{TemplateBinding TimePickerVisibility}"
+                                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                                    FormatString="{TemplateBinding TimeFormatString}"
+                                                    Format="{TemplateBinding TimeFormat}"
+                                                    Value="{Binding Value, RelativeSource={RelativeSource TemplatedParent}}"
+                                                    WatermarkTemplate="{TemplateBinding TimeWatermarkTemplate}"
+                                                    Watermark="{TemplateBinding TimeWatermark}" />
+                                        </StackPanel>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                        </DockPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Validation.HasError" Value="true" />
+                                <Condition Property="IsEnabled" Value="true" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="ToolTip"
+                                    Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}" />
+                            <Setter TargetName="errorContent" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="border" Property="BorderBrush"
+                                    Value="{DynamicResource ValidationErrorBrush}" />
+                        </MultiTrigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" TargetName="border"
+                                    Value="{DynamicResource ControlBackgroundBrush}" />
+                            <Setter Property="Visibility" TargetName="_calendarToggleButton" Value="Collapsed" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
