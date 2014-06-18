@@ -1,0 +1,48 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:Rafy.DomainModeling.Controls"
+        xmlns:designer="clr-namespace:DesignerEngine;assembly=DesignerEngine">
+    <Style TargetType="{x:Type local:ModelingDesigner}">
+        <Style.Resources>
+            <Style x:Key="AnchorStyle_EmptyArrow" TargetType="Path">
+                <Setter Property="StrokeThickness" Value="2" />
+                <Setter Property="Stretch" Value="Fill" />
+                <Setter Property="Data" Value="M0,0 8,4 0,8 Z" />
+                <Setter Property="Fill" Value="White" />
+            </Style>
+            <Style x:Key="AnchorStyle_FillArrow" TargetType="Path">
+                <Setter Property="StrokeThickness" Value="2" />
+                <Setter Property="Stretch" Value="Fill" />
+                <Setter Property="Data" Value="M0,0 8,4 0,8 Z" />
+                <Setter Property="Fill" Value="#888" />
+            </Style>
+            <Style x:Key="AnchorStyle_EmptyDiamond" TargetType="Path">
+                <Setter Property="StrokeThickness" Value="2" />
+                <Setter Property="Stretch" Value="Fill" />
+                <Setter Property="Data" Value="M-5,0 0,-5 5,0 0,5 Z" />
+                <Setter Property="Fill" Value="White" />
+            </Style>
+            <Style x:Key="AnchorStyle_FillDiamond" TargetType="Path">
+                <Setter Property="StrokeThickness" Value="2" />
+                <Setter Property="Stretch" Value="Fill" />
+                <Setter Property="Data" Value="M-5,0 0,-5 5,0 0,5 Z" />
+                <Setter Property="Fill" Value="#888" />
+            </Style>
+        </Style.Resources>
+        <Setter Property="Background" Value="White" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:ModelingDesigner}">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                            <designer:DesignerCanvas Name="PART_DesignerCanvas"
+                                    CanChangeConnection="{TemplateBinding CanChangeRelation}"
+                                    CanAddConnection="{TemplateBinding CanAddRelation}" Background="Transparent"
+                                    Margin="10" />
+                        </ScrollViewer>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

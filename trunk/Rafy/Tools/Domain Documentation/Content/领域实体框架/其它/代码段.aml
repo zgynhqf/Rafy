@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="6b3e8163-8516-4065-91f5-194491334343" revisionNumber="1">
+    <developerConceptualDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+
+        <introduction>
+            <para>本节简要说明 Rafy 框架中目前提供的所有代码段及使用方法。</para>
+            <autoOutline />
+        </introduction>
+
+        <section address="des">
+            <title>说明</title>
+            <content>
+                <para>代码段是 VisualStudio 提供的辅助开发的功能。使用代码段可以方便地生成小段的代码。</para>
+                <para>Rafy 框架提供了大量的代码段，以方便日常开发。</para>
+            </content>
+        </section>
+        
+        <section address="install">
+            <title>安装</title>
+            <content>
+                <para>安装 SDK 后，在 VisualStudio 菜单栏中点击 工具 -> 安装/卸载代码段，在弹出窗口中点击确定即可。安装完成并重新启动 VisualStudio 后，代码段就会生效了。</para>
+            </content>
+        </section>
+        
+        <section address="property">
+            <title>属性代码段</title>
+            <content>
+                <para>对于开发人最常写的属性代码，提供了以下代码段：</para>
+                <list class="bullet">
+                    <listItem>
+                        <para>Rafy_Property</para>
+                        <para>用于编写实体的一般属性。</para>
+                    </listItem>
+                    <listItem>
+                        <para>Rafy_Property_PropertyChanged</para>
+                        <para>用于编写实体属性的变更后逻辑。</para>
+                        <para>需要注意的是，这个代码段并不生成完整的属性代码，而是只生成差异部分。使用方法如下：</para>
+                        <mediaLink>
+                            <image xlink:href="Snippets_PropertyChangedUsage"/>
+                        </mediaLink>
+                    </listItem>
+                    <listItem>
+                        <para>Rafy_Property_PropertyChanging</para>
+                        <para>用于编写实体属性的变更前逻辑。使用方法同：Rafy_Property_PropertyChanged。</para>
+                    </listItem>
+                    <listItem>
+                        <para>Rafy_Property_CoerceGetValue</para>
+                        <para>用于编写实体属性的强制 Get 逻辑。使用方法同：Rafy_Property_PropertyChanged。</para>
+                    </listItem>
+                    <listItem>
+                        <para>Rafy_PropertyLOB</para>
+                        <para>用于编写实体的大对象属性。</para>
+                    </listItem>
+                    <listItem>
+                        <para>Rafy_PropertyReadOnly</para>
+                        <para>用于编写实体的只读属性。</para>
+                    </listItem>
+                    <listItem>
+                        <para>Rafy_PropertyRedundancy</para>
+                        <para>用于编写实体的冗余属性。</para>
+                    </listItem>
+                    <listItem>
+                        <para>Rafy_PropertyReference</para>
+                        <para>用于编写实体的引用属性。</para>
+                    </listItem>
+                    <listItem>
+                        <para>Rafy_PropertyReferenceNullable</para>
+                        <para>用于编写实体的可空引用属性。</para>
+                    </listItem>
+                    <listItem>
+                        <para>Rafy_PropertyList</para>
+                        <para>用于编写实体的组合子属性。</para>
+                    </listItem>
+                    <listItem>
+                        <para>Rafy_PropertyList_Full</para>
+                        <para>用于编写完整的实体的组合子属性。</para>
+                    </listItem>
+                    <!--<listItem>
+                        <para>Rafy_PropertyExtension</para>
+                    </listItem>
+                    <listItem>
+                        <para>Rafy_PropertyExtensionReadOnly</para>
+                    </listItem>-->
+                </list>
+                <alert class="note">
+                    <para>以上代码段都可以使用缩写来方便调用，例如，Rafy_PropertyReferenceNullable 只需要输入 RPR 即可。</para>
+                </alert>
+            </content>
+        </section>
+        <section address="other">
+            <title>其它代码段</title>
+            <content>
+                <list class="bullet">
+                    <listItem>
+                        <para>Rafy_Query</para>
+                        <para>用于在仓库类中生成简单的查询方法。</para>
+                        <code language="cs">
+                            <![CDATA[public $EntityList$ $MethodName$(string parameter1, int parameter2)
+{
+    return this.FetchList(r => r.DA_$MethodName$(parameter1, parameter2));
+}
+private EntityList DA_$MethodName$(string parameter1, int parameter2)
+{
+    var q = this.CreateLinqQuery();
+    q = q.Where(e => e.Name == 1);
+    return this.QueryList(q);
+}]]>
+                        </code>
+                    </listItem>
+                    <listItem>
+                        <para>Rafy_Query_Match</para>
+                        <para>用于在仓库类中生成一个用于精确匹配每一个属性的查询方法。</para>
+                    </listItem>
+                </list>
+            </content>
+        </section>
+
+        <relatedTopics>
+        </relatedTopics>
+    </developerConceptualDocument>
+</topic>

@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="640ac9bb-0090-4b38-9763-bad4fca3adfb" revisionNumber="1">
+    <developerConceptualDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+
+        <introduction>
+            <para>领域实体关系图以图形的形式来描述指定的部分实体及实体间的关系。</para>
+            <para>要查看或创建领域实体关系图，需要安装 Rafy SDK。</para>
+        </introduction>
+
+        <section address="use">
+            <title>使用领域实体关系图</title>
+            <content>
+                <procedure>
+                    <title>以下步骤显示如何使用领域实体设计器</title>
+                    <steps class="ordered">
+                        <step>
+                            <content>
+                                <para>创建领域实体关系图</para>
+                                <para>在领域实体插件项目中添加新项，选择 Rafy 目录中的 Domain Model Designer 项，添加即可。</para>
+                                <mediaLink>
+                                    <caption>添加新项窗口</caption>
+                                    <image xlink:href="ODML_AddNewItemWindow"/>
+                                </mediaLink>
+                            </content>
+                        </step>
+                        <step>
+                            <content>
+                                <para>添加实体</para>
+                                <para>向图中添加实体可以有两种方式：</para>
+                                <list class="bullet">
+                                    <listItem>
+                                        <para>在解决方案浏览器中把想要显示的实体类直接拖到关系图中。</para>
+                                    </listItem>
+                                    <listItem>
+                                        <para>点击添加实体类按钮，然后选择所需要的类型。</para>
+                                        <mediaLink>
+                                            <image xlink:href="ODML_AddNewEntity"/>
+                                        </mediaLink>
+                                    </listItem>
+                                </list>
+                            </content>
+                        </step>
+                        <step>
+                            <content>
+                                <para>添加关系类</para>
+                                <para>选中添加到图中任意实体，点击“添加关系类”按钮，可以把项目中与该实体有关系的其它的实体也加入到图中来。</para>
+                                <alert class="note">
+                                    <para>注意，建议一张图中，只加入一个组合（聚合）就行了，过多的组合会导致图形复杂、混乱。</para>
+                                </alert>
+                            </content>
+                        </step>
+                        <step>
+                            <content>
+                                <para>删除实体类</para>
+                                <para>选中图中的任意多个实体，按“Delete”键删除。</para>
+                            </content>
+                        </step>
+                        <step>
+                            <content>
+                                <para>从代码更新</para>
+                                <para>领域实体关系图的实体名、关系等信息，完全来自于项目中的 C# 源码。当一张图中的实体类对应的源码发生改变时，可以使用这个功能来更新其对应的关系。</para>
+                            </content>
+                        </step>
+                        <step>
+                            <content>
+                                <para>双击导航</para>
+                                <para>双击图中的任意实体类，可以打开对应的代码文件。</para>
+                            </content>
+                        </step>
+                    </steps>
+                </procedure>
+            </content>
+        </section>
+
+        <section address="other">
+            <title>ODML 文件查看器</title>
+            <content>
+                <para>对于 .odml 文件，可以使用一个独立的“领域模型查看器”应用程序进行查看。这样方便在没有安装 VisualStudio 的电脑上查看领域模型。</para>
+                <mediaLink>
+                    <image xlink:href="ODML_ModelViewer"/>
+                </mediaLink>
+            </content>
+        </section>
+
+        <relatedTopics>
+        </relatedTopics>
+    </developerConceptualDocument>
+</topic>

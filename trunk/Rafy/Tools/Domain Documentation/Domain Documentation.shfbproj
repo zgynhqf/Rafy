@@ -1,0 +1,360 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <!-- The configuration and platform will be used to determine which
+         assemblies to include from solution and project documentation
+         sources -->
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>b3673a48-ef4c-47bc-9450-20d278f16558</ProjectGuid>
+    <SHFBSchemaVersion>1.9.5.0</SHFBSchemaVersion>
+    <!-- AssemblyName, Name, and RootNamespace are not used by SHFB but Visual
+         Studio adds them anyway -->
+    <AssemblyName>Documentation</AssemblyName>
+    <RootNamespace>Documentation</RootNamespace>
+    <Name>Domain Documentation</Name>
+    <!-- SHFB properties -->
+    <FrameworkVersion>.NET Framework 4.0</FrameworkVersion>
+    <OutputPath>.\Help\</OutputPath>
+    <HtmlHelpName>Rafy User Guide</HtmlHelpName>
+    <Language>zh-CN</Language>
+    <DocumentationSources>
+      <DocumentationSource sourceFile="EmptyAssembly.dll" />
+    </DocumentationSources>
+    <SyntaxFilters>CSharp</SyntaxFilters>
+    <SdkLinkTarget>Blank</SdkLinkTarget>
+    <RootNamespaceContainer>False</RootNamespaceContainer>
+    <PresentationStyle>VS2005</PresentationStyle>
+    <Preliminary>False</Preliminary>
+    <NamingMethod>HashedMemberName</NamingMethod>
+    <HelpTitle>Rafy User Guide</HelpTitle>
+    <ContentPlacement>AboveNamespaces</ContentPlacement>
+    <FeedbackEMailLinkText>发送反馈</FeedbackEMailLinkText>
+    <FeedbackEMailAddress>9474649%40qq.com</FeedbackEMailAddress>
+    <FooterText>胡庆访 %40版权所有，有问题请联系 9474649%40qq.com。</FooterText>
+    <VisibleItems>InheritedMembers, InheritedFrameworkMembers, Protected, SealedProtected</VisibleItems>
+    <MissingTags>Summary, Parameter, Returns, AutoDocumentCtors, TypeParameter, AutoDocumentDispose</MissingTags>
+    <BuildAssemblerVerbosity>OnlyWarningsAndErrors</BuildAssemblerVerbosity>
+    <HelpFileFormat>HtmlHelp1</HelpFileFormat>
+    <IndentHtml>False</IndentHtml>
+    <KeepLogFile>False</KeepLogFile>
+    <DisableCodeBlockComponent>False</DisableCodeBlockComponent>
+    <CppCommentsFixup>False</CppCommentsFixup>
+    <CleanIntermediates>True</CleanIntermediates>
+  </PropertyGroup>
+  <!-- There are no properties for these groups.  AnyCPU needs to appear in
+       order for Visual Studio to perform the build.  The others are optional
+       common platform types that may appear. -->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Win32' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Win32' ">
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Content" />
+    <Folder Include="Content\界面生成" />
+    <Folder Include="Content\框架结构" />
+    <Folder Include="Content\界面生成\界面配置\" />
+    <Folder Include="Content\界面生成\界面配置\实体视图配置\" />
+    <Folder Include="Content\领域实体框架" />
+    <Folder Include="Content\领域实体框架\实体仓库\编写查询" />
+    <Folder Include="Content\领域实体框架\部署" />
+    <Folder Include="Content\领域实体框架\快速试用" />
+    <Folder Include="Content\领域实体框架\实体缓存" />
+    <Folder Include="Content\领域实体框架\领域实体\实体属性" />
+    <Folder Include="Content\领域实体框架\领域帮助主题" />
+    <Folder Include="Content\领域实体框架\领域服务" />
+    <Folder Include="Content\领域实体框架\ORM" />
+    <Folder Include="Content\领域实体框架\其它" />
+    <Folder Include="Content\领域实体框架\实体仓库" />
+    <Folder Include="Content\领域实体框架\领域实体" />
+    <Folder Include="Media" />
+    <Folder Include="Media\框架基础" />
+    <Folder Include="Media\框架基础\领域驱动设计" />
+    <Folder Include="Media\框架基础\模型驱动架构" />
+    <Folder Include="Media\框架基础\插件化架构" />
+    <Folder Include="Media\框架基础\产品线工程" />
+    <Folder Include="Media\领域框架" />
+    <Folder Include="Media\领域框架\其它" />
+    <Folder Include="Media\领域框架\其它\代码段" />
+    <Folder Include="Media\领域框架\其它\与经典领域驱动设计的关系" />
+    <Folder Include="Media\领域框架\领域实体" />
+    <Folder Include="Media\领域框架\领域实体\领域实体关系图" />
+    <Folder Include="Media\领域框架\领域实体\实体关系" />
+    <Folder Include="Media\领域框架\快速试用" />
+    <Folder Include="Media\领域框架\ORM" />
+    <Folder Include="Media\领域框架\ORM\继承映射" />
+    <Folder Include="Media\领域框架\安装\" />
+    <Folder Include="Media\领域框架\快速试用\创建第一个程序" />
+  </ItemGroup>
+  <ItemGroup>
+    <ContentLayout Include="Documentation.content" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Content\授权说明.aml" />
+    <None Include="Content\框架结构.aml" />
+    <None Include="Content\框架结构\产品线工程.aml" />
+    <None Include="Content\框架结构\插件化架构.aml" />
+    <None Include="Content\框架结构\模型驱动架构.aml" />
+    <None Include="Content\框架结构\面向服务架构.aml" />
+    <None Include="Content\框架结构\领域驱动设计.aml" />
+    <None Include="Content\框架说明.aml" />
+    <None Include="Content\快速界面生成.aml" />
+    <None Include="Content\界面生成\Web 界面.aml" />
+    <None Include="Content\界面生成\WPF 界面.aml" />
+    <None Include="Content\界面生成\界面配置.aml" />
+    <None Include="Content\界面生成\界面配置\实体视图配置.aml" />
+    <None Include="Content\界面生成\界面配置\实体视图配置\代理属性.aml" />
+    <None Include="Content\界面生成\界面配置\实体视图配置\基础视图配置.aml" />
+    <None Include="Content\界面生成\界面配置\实体视图配置\扩展视图配置.aml" />
+    <None Include="Content\界面生成\界面配置\枚举的显示.aml" />
+    <None Include="Content\领域实体框架.aml" />
+    <None Include="Content\领域实体框架\其它\实体框架常见问题.aml" />
+    <None Include="Content\领域实体框架\对象关系映射.aml" />
+    <None Include="Content\领域实体框架\ORM\SQL 语句日志.aml" />
+    <None Include="Content\领域实体框架\ORM\多数据库支持.aml" />
+    <None Include="Content\领域实体框架\ORM\数据库同步功能.aml" />
+    <None Include="Content\领域实体框架\ORM\继承映射.aml" />
+    <None Include="Content\领域实体框架\ORM\配置映射.aml" />
+    <None Include="Content\领域实体框架\其它.aml" />
+    <None Include="Content\领域实体框架\其它\Rafy 与经典 DDD 的关系.aml" />
+    <None Include="Content\领域实体框架\其它\从现有数据库移植.aml" />
+    <None Include="Content\领域实体框架\其它\代码段.aml" />
+    <None Include="Content\领域实体框架\其它\性能测试.aml" />
+    <None Include="Content\领域实体框架\实体仓库\仓库的扩展.aml" />
+    <None Include="Content\领域实体框架\实体仓库\实体的创建、删除、修改.aml" />
+    <None Include="Content\领域实体框架\实体仓库\编写查询\Linq 查询.aml" />
+    <None Include="Content\领域实体框架\实体仓库\编写查询\Sql 查询.aml" />
+    <None Include="Content\领域实体框架\实体仓库\编写查询\分页查询.aml" />
+    <None Include="Content\领域实体框架\实体仓库\编写查询\托管属性查询.aml" />
+    <None Include="Content\领域实体框架\实体仓库\编写查询\数据行数查询.aml" />
+    <None Include="Content\领域实体框架\实体仓库\编写查询\表格查询.aml" />
+    <None Include="Content\领域实体框架\实体仓库\编写查询\贪婪加载.aml" />
+    <None Include="Content\领域实体框架\快速试用\如何：查看领域实体关系图.aml" />
+    <None Include="Content\领域实体框架\快速试用\如何：连接到 Sql Server 数据库.aml" />
+    <None Include="Content\领域实体框架\快速试用\绘制领域类图.aml" />
+    <None Include="Content\领域实体框架\自动生成代码.aml" />
+    <None Include="Content\领域实体框架\部署.aml" />
+    <None Include="Content\领域实体框架\安装.aml" />
+    <None Include="Content\领域实体框架\部署\分布式部署.aml" />
+    <None Include="Content\领域实体框架\部署\如何：控制数据传输.aml" />
+    <None Include="Content\领域实体框架\部署\直连部署.aml" />
+    <None Include="Content\领域实体框架\领域实体\实体关系.aml" />
+    <None Include="Content\领域实体框架\领域实体\实体属性.aml" />
+    <None Include="Content\领域实体框架\领域实体\实体属性\一般属性.aml" />
+    <None Include="Content\领域实体框架\领域实体\实体属性\冗余属性.aml" />
+    <None Include="Content\领域实体框架\领域实体\实体属性\只读属性.aml" />
+    <None Include="Content\领域实体框架\领域实体\实体属性\大数据属性.aml" />
+    <None Include="Content\领域实体框架\领域实体\实体属性\引用属性.aml" />
+    <None Include="Content\领域实体框架\领域实体\实体属性\扩展属性.aml" />
+    <None Include="Content\领域实体框架\领域实体\实体属性\组合子属性.aml" />
+    <None Include="Content\领域实体框架\领域实体\实体的状态.aml" />
+    <None Include="Content\领域实体框架\领域实体\实体配置.aml" />
+    <None Include="Content\领域实体框架\领域实体\实体集合.aml" />
+    <None Include="Content\领域实体框架\领域实体\实体验证规则.aml" />
+    <None Include="Content\领域实体框架\领域实体\路由事件.aml" />
+    <None Include="Content\领域实体框架\实体仓库.aml" />
+    <None Include="Content\领域实体框架\实体仓库\编写查询.aml" />
+    <None Include="Content\领域实体框架\实体缓存.aml" />
+    <None Include="Content\领域实体框架\实体缓存\客户端缓存.aml" />
+    <None Include="Content\领域实体框架\实体缓存\服务端缓存.aml" />
+    <None Include="Content\领域实体框架\快速试用.aml" />
+    <None Include="Content\领域实体框架\领域实体.aml" />
+    <None Include="Content\领域实体框架\领域实体\树型实体.aml" />
+    <None Include="Content\领域实体框架\快速试用\创建第一个程序.aml" />
+    <None Include="Content\领域实体框架\领域服务.aml" />
+    <None Include="Content\领域实体框架\领域实体\领域实体关系图.aml" />
+    <None Include="Content\领域实体框架\领域帮助主题.aml" />
+    <None Include="Content\领域实体框架\领域帮助主题\如何：手动添加一个领域项目.aml" />
+    <None Include="Content\领域实体框架\领域服务\单连接事务.aml" />
+    <None Include="UML.7z" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Media\框架基础\产品线工程\SPL_2LifeCycle.png">
+      <ImageId>SPL_2LifeCycle</ImageId>
+      <AlternateText>SPL 2 Life Cycle</AlternateText>
+    </Image>
+    <Image Include="Media\框架基础\产品线工程\SPL_3Activities.png">
+      <ImageId>SPL_3Activities</ImageId>
+      <AlternateText>SPL 3 Activities</AlternateText>
+    </Image>
+    <Image Include="Media\框架基础\产品线工程\SPL_Variables1.jpg">
+      <ImageId>SPL_Variables1</ImageId>
+      <AlternateText>SPL Variables 1</AlternateText>
+    </Image>
+    <Image Include="Media\框架基础\产品线工程\SPL_Variables2.jpg">
+      <ImageId>SPL_Variables2</ImageId>
+      <AlternateText>SPL Variables 2</AlternateText>
+    </Image>
+    <Image Include="Media\框架基础\插件化架构\Plugin_Architecture.png">
+      <ImageId>Plugin_Architecture</ImageId>
+      <AlternateText>Plugin Architecture</AlternateText>
+    </Image>
+    <Image Include="Media\框架基础\模型驱动架构\MDA_Generate.png">
+      <ImageId>MDA_Generate</ImageId>
+      <AlternateText>MDA Generate</AlternateText>
+    </Image>
+    <Image Include="Media\框架基础\模型驱动架构\MDA_Overview.png">
+      <ImageId>MDA_Overview</ImageId>
+      <AlternateText>MDA Overview</AlternateText>
+    </Image>
+    <Image Include="Media\框架基础\模型驱动架构\MDA_RafyMDA.png">
+      <ImageId>MDA_RafyMDA</ImageId>
+      <AlternateText>MDA RafyMDA</AlternateText>
+    </Image>
+    <Image Include="Media\框架基础\模型驱动架构\MDA_Transform.png">
+      <ImageId>MDA_Transform</ImageId>
+      <AlternateText>MDA Transform</AlternateText>
+    </Image>
+    <Image Include="Media\框架基础\模型驱动架构\MDA_Transform2.png">
+      <ImageId>MDA_Transform2</ImageId>
+      <AlternateText>MDA Transform 2</AlternateText>
+    </Image>
+    <Image Include="Media\框架基础\领域驱动设计\DDD_Components.png">
+      <ImageId>DDD_Components</ImageId>
+      <AlternateText>DDD Components</AlternateText>
+    </Image>
+    <Image Include="Media\框架基础\领域驱动设计\DDD_Layer1.png">
+      <ImageId>DDD_Layer1</ImageId>
+      <AlternateText>DDD Layer 1</AlternateText>
+    </Image>
+    <Image Include="Media\框架基础\领域驱动设计\DDD_Layer2.png">
+      <ImageId>DDD_Layer2</ImageId>
+      <AlternateText>DDD Layer 2</AlternateText>
+    </Image>
+    <Image Include="Media\框架基础\领域驱动设计\DDD_OnionArchitecture.png">
+      <ImageId>DDD_OnionArchitecture</ImageId>
+      <AlternateText>DDD Onion Architecture</AlternateText>
+    </Image>
+    <Image Include="Media\框架基础\领域驱动设计\DDD_UMLSource.png">
+      <ImageId>DDD_UMLSource</ImageId>
+      <AlternateText>DDD UMLSource</AlternateText>
+    </Image>
+    <Image Include="Media\框架基础\领域驱动设计\DDD_UMLSource_VS.png">
+      <ImageId>DDD_UMLSource_VS</ImageId>
+      <AlternateText>DDD UMLSource VS</AlternateText>
+    </Image>
+    <Image Include="Media\领域框架\ORM\继承映射\EntityDemo.jpeg">
+      <ImageId>继承映射_EntityDemo</ImageId>
+      <AlternateText>Entity Demo</AlternateText>
+    </Image>
+    <Image Include="Media\领域框架\ORM\继承映射\TPH.jpeg">
+      <ImageId>继承映射_TPH</ImageId>
+      <AlternateText>TPH</AlternateText>
+    </Image>
+    <Image Include="Media\领域框架\ORM\继承映射\无关表.jpeg">
+      <ImageId>继承映射_无关表</ImageId>
+      <AlternateText>无关表</AlternateText>
+    </Image>
+    <Image Include="Media\领域框架\其它\与经典领域驱动设计的关系\OnionArchitecture.jpg">
+      <ImageId>OnionArchitecture</ImageId>
+      <AlternateText>Onion Architecture</AlternateText>
+    </Image>
+    <Image Include="Media\领域框架\其它\与经典领域驱动设计的关系\领域驱动设计组成.png">
+      <ImageId>领域驱动设计组成</ImageId>
+      <AlternateText>领域驱动设计组成</AlternateText>
+    </Image>
+    <Image Include="Media\领域框架\其它\代码段\Snippets_PropertyChangedUsage.jpg">
+      <ImageId>Snippets_PropertyChangedUsage</ImageId>
+      <AlternateText>Snippets Property Changed Usage</AlternateText>
+    </Image>
+    <Image Include="Media\领域框架\安装\安装01.png">
+      <ImageId>安装01</ImageId>
+      <AlternateText>安装01</AlternateText>
+    </Image>
+    <Image Include="Media\领域框架\安装\安装02.png">
+      <ImageId>安装02</ImageId>
+      <AlternateText>安装02</AlternateText>
+    </Image>
+    <Image Include="Media\领域框架\安装\安装03.png">
+      <ImageId>安装03</ImageId>
+      <AlternateText>安装03</AlternateText>
+    </Image>
+    <Image Include="Media\领域框架\安装\安装04.png">
+      <ImageId>安装04</ImageId>
+      <AlternateText>安装04</AlternateText>
+    </Image>
+    <Image Include="Media\领域框架\快速试用\创建第一个程序\第一个程序01.png">
+      <ImageId>第一个程序01</ImageId>
+      <AlternateText>第一个程序01</AlternateText>
+    </Image>
+    <Image Include="Media\领域框架\快速试用\创建第一个程序\第一个程序02.png">
+      <ImageId>第一个程序02</ImageId>
+      <AlternateText>第一个程序02</AlternateText>
+    </Image>
+    <Image Include="Media\领域框架\快速试用\创建第一个程序\第一个程序03.png">
+      <ImageId>第一个程序03</ImageId>
+      <AlternateText>第一个程序03</AlternateText>
+    </Image>
+    <Image Include="Media\领域框架\快速试用\创建第一个程序\第一个程序04.png">
+      <ImageId>第一个程序04</ImageId>
+      <AlternateText>第一个程序04</AlternateText>
+    </Image>
+    <Image Include="Media\领域框架\快速试用\创建第一个程序\第一个程序05.png">
+      <ImageId>第一个程序05</ImageId>
+      <AlternateText>第一个程序05</AlternateText>
+    </Image>
+    <Image Include="Media\领域框架\快速试用\创建第一个程序\第一个程序06.png">
+      <ImageId>第一个程序06</ImageId>
+      <AlternateText>第一个程序06</AlternateText>
+    </Image>
+    <Image Include="Media\领域框架\快速试用\创建第一个程序\第一个程序07.png">
+      <ImageId>第一个程序07</ImageId>
+      <AlternateText>第一个程序07</AlternateText>
+    </Image>
+    <Image Include="Media\领域框架\快速试用\创建第一个程序\第一个程序08.png">
+      <ImageId>第一个程序08</ImageId>
+      <AlternateText>第一个程序08</AlternateText>
+    </Image>
+    <Image Include="Media\领域框架\领域实体\DomainEntity_AddNewItem.jpg">
+      <ImageId>DomainEntity_AddNewItem</ImageId>
+      <AlternateText>Domain Entity Add New Item</AlternateText>
+    </Image>
+    <Image Include="Media\领域框架\领域实体\DomainEntity_AddNewItemWindow.jpg">
+      <ImageId>DomainEntity_AddNewItemWindow</ImageId>
+      <AlternateText>Domain Entity Add New Item Window</AlternateText>
+    </Image>
+    <Image Include="Media\领域框架\领域实体\实体关系\实体关系_AllRelations.png">
+      <ImageId>实体关系_AllRelations</ImageId>
+      <AlternateText>实体关系 All Relations</AlternateText>
+    </Image>
+    <Image Include="Media\领域框架\领域实体\实体关系\实体关系_User_Role_Aggregation.png">
+      <ImageId>实体关系_User_Role_Aggregation</ImageId>
+      <AlternateText>实体关系 User Role Aggregation</AlternateText>
+    </Image>
+    <Image Include="Media\领域框架\领域实体\实体关系\实体关系_User_Role_Composition.png">
+      <ImageId>实体关系_User_Role_Composition</ImageId>
+      <AlternateText>实体关系 User Role Composition</AlternateText>
+    </Image>
+    <Image Include="Media\领域框架\领域实体\领域实体关系图\ODML_AddNewEntity.jpg">
+      <ImageId>ODML_AddNewEntity</ImageId>
+      <AlternateText>ODML Add New Entity</AlternateText>
+    </Image>
+    <Image Include="Media\领域框架\领域实体\领域实体关系图\ODML_AddNewItemWindow.jpg">
+      <ImageId>ODML_AddNewItemWindow</ImageId>
+      <AlternateText>ODML Add New Item Window</AlternateText>
+    </Image>
+    <Image Include="Media\领域框架\领域实体\领域实体关系图\ODML_ModelViewer.jpg">
+      <ImageId>ODML_ModelViewer</ImageId>
+      <AlternateText>ODML Model Viewer</AlternateText>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Helper Urls.txt" />
+    <None Include="_To Do List.txt" />
+  </ItemGroup>
+  <!-- Import the SHFB build targets -->
+  <Import Project="$(SHFBROOT)\SandcastleHelpFileBuilder.targets" />
+</Project>

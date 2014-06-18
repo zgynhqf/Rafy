@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="770d700d-acf8-40fd-abc2-a580725a14fb" revisionNumber="1">
+    <developerConceptualDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+
+        <introduction>
+            <autoOutline />
+        </introduction>
+
+        <section address="compoRelation">
+            <title>组合关系</title>
+            <content>
+                <para>
+                    领域实体的关系中，只有引用、组合两种关系。组合关系，又称为父子关系，在领域模型的设计中，是非常重要的。它对应 DDD 中的聚合关系，对应 UML 中的组合关系。它表示一种包含关系，一旦父对象消亡，所有的子对象也同时消亡。例如：一张表单与它的明细项之间的关系，就是一种组合父子关系。一张表单一旦被删除，与它关联的所有明细项也同时没有意义，必须被删除。
+                </para>
+                <alert class="note">
+                    <para>
+                        另外，两个类之间的关系，并不一定是固定的，需要根据领域而变化。例如车和车轮，对于一般的系统而言，它们是一个整体，应该设计为组合关系；但是如果领域是车辆制造管理，那么车轮就没必要设计为车辆的组合子实体了。
+                    </para>
+                </alert>
+            </content>
+        </section>
+
+        <section address="code">
+            <title>示例</title>
+            <content>
+                <para>
+                    组合关系在代码实现时，需要同时声明两个属性：在组合父实体类型中声明一个组合子属性，属性的类型为组合子实体对应的集合类型；同时还需要在组合子实体类型中声明一个组合父引用属性，属性的类型为组合父实体类型。（组合父引用属性，参见：<link xlink:href="bae4aeb4-e6a9-4d1f-9bbd-1a4199303ba5" />。）
+                </para>
+                <para>
+                    以下代码为 Car （车辆）类声明了一个名称为 WheelList 的组合子属性，该属性类型为 WheelList，表示一个车轮的集合。
+                </para>
+                <code language="cs" title="属性声明示例">
+                    <![CDATA[public static readonly ListProperty<WheelList> WheelListProperty = P<Car>.RegisterList(e => e.WheelList);
+public WheelList WheelList
+{
+    get { return this.GetLazyList(WheelListProperty); }
+}]]>
+                </code>
+            </content>
+        </section>
+
+        <section address="lazy">
+            <title>懒加载</title>
+            <content>
+                <para>组合子属性的值是被设计为懒加载的。在获取属性的值时，如果实体集合还没有加载，则框架会根据当前实体的 Id 值，从组合子实体的仓库中中查询出所有的子实体，并装载为一个实体集合。</para>
+                <para>调用仓库的方法是 GetByParentId。</para>
+            </content>
+        </section>
+
+        <relatedTopics>
+        </relatedTopics>
+    </developerConceptualDocument>
+</topic>

@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="f55333b8-3524-4a07-99bc-6a1cdb6be6b4" revisionNumber="1">
+    <developerConceptualDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+
+        <introduction>
+            <!-- <autoOutline /> -->
+            <para>Rafy 支持统一的直连、分布式开发模式。即同一份代码，即可部署为本地程序，直连数据库；也可部署为 C/S 结构程序，使用 WCF 进行分布式数据传输。</para>
+        </introduction>
+
+        <section address="unInter">
+            <title>统一的接口</title>
+            <content>
+                <para>涉及到分布式数据传输的调用列表有以下接口，它们在服务端和客户端都可以直接被调用：</para>
+                <list class="bullet">
+                    <listItem>
+                        <para>仓库的所有公有查询接口</para>
+                        <para>如以下代码，可以在客户端、服务端及单机程序中被直接使用：</para>
+                        <code language="cs">
+                            <![CDATA[var repo = RF.Concrete<WarehouseRepository>();
+Warehouse wh = repo.GetByCode("0001");]]>
+                        </code>
+                        <alert class="note">
+                            <para>由于实体数据的查询都是使用仓库来获取的，所以所有的数据查询都支持分布式。这包括所有间接使用仓库查询作为内部机制的功能。例如，由于所有懒加载属性的实现，在框架内部都是使用仓库来进行数据查询，所以也支持分布式传输。</para>
+                        </alert>
+                    </listItem>
+                    <listItem>
+                        <para>领域服务</para>
+                        <para>所有领域服务也是支持远程调用。如以下代码，可以在客户端、服务端及单机程序中被直接使用：</para>
+                        <code language="cs">
+                            <![CDATA[var svc = ServiceFactory.Create<MigrateService>();
+svc.Invoke();]]>
+                        </code>
+                    </listItem>
+                </list>
+            </content>
+        </section>
+
+        <relatedTopics>
+        </relatedTopics>
+    </developerConceptualDocument>
+</topic>

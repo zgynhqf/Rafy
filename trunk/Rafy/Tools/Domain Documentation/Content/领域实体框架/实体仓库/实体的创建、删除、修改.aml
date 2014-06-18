@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="019647a4-5ae0-4a43-b529-6b2d7c70b46c" revisionNumber="1">
+    <developerConceptualDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+        <introduction>
+            <autoOutline />
+        </introduction>
+
+        <section address="intro">
+            <title>实体状态</title>
+            <content>
+                <para>
+                    实体仓库对实体的创建、删除、修改操作，与实体的状态密切相关。关于实体的状态，参见：<link xlink:href="1a5cb169-0f7c-479a-a854-88cd89478b1d" />
+                </para>
+            </content>
+        </section>
+
+        <section address="add">
+            <title>创建实体</title>
+            <content>
+                <para>
+                    可使用 <codeInline>new</codeInline> 操作符来创建新实体，并直接保存到仓库中。
+                </para>
+                <code language="cs">
+                    <![CDATA[BookRepository repo = RF.Concrete<BookRepository>();
+repo.Save(new Book());]]>
+                </code>
+            </content>
+        </section>
+
+        <section address="del">
+            <title>删除</title>
+            <content>
+                <para>
+                    使用 <codeInline>MarkDeleted</codeInline> 方法把实体标记为需要删除状态后，调用保存即可从仓库中删除该实体。
+                </para>
+                <code language="cs">
+                    <![CDATA[BookRepository repo = RF.Concrete<BookRepository>();
+Book book = repo.GetById(1);
+book.MarkDeleted();
+repo.Save(book);]]>
+                </code>
+                <para>另外，如果把一个实体从实体列表中移除后，再保存该列表，也可以达到删除该实体的效果：</para>
+                <code language="cs">
+                    <![CDATA[BookRepository repo = RF.Concrete<BookRepository>();
+BookList bookList = repo.GetAll();
+if (bookList.Count > 0)
+{
+    bookList.RemoveAt(0);
+}
+repo.Save(bookList);]]>
+                </code>
+                <para>以下代码，则会导致从数据库中删除所有的书籍：</para>
+                <code language="cs">
+                    <![CDATA[BookRepository repo = RF.Concrete<BookRepository>();
+BookList bookList = repo.GetAll();
+bookList.Clear();
+repo.Save(bookList);]]>
+                </code>
+            </content>
+        </section>
+
+        <section address="modi">
+            <title>修改</title>
+            <content>
+                <para>
+                    对于查询出来的实体，在修改其至少一个属性后，可以对其进行保存。
+                </para>
+                <code language="cs">
+                    <![CDATA[BookRepository repo = RF.Concrete<BookRepository>();
+Book book = repo.GetById(1);
+book.Name = "New Name";
+repo.Save(book);]]>
+                </code>
+            </content>
+        </section>
+
+        <section address="addCom">
+            <title>创建组合实体</title>
+            <content>
+                <para>
+                    组合实体的保存，可直接通过组合根保存，即可完成整个组合树中所有实体的保存。（在保存根实体时，框架会调用组合子实体的仓库来保存这些组合子实体。）
+                </para>
+                <code language="cs">
+                    <![CDATA[
+//创建一个有四个轮子的汽车
+Car car = new Car();
+car.WheelList.Add(new Wheel());
+car.WheelList.Add(new Wheel());
+car.WheelList.Add(new Wheel());
+car.WheelList.Add(new Wheel());
+
+var repo = RF.Concrete<CarRepository>();
+repo.Save(car);]]>
+                </code>
+                <para>注意，上例中，也可以直接使用 WheelRepository 来保存每一个 Wheel。</para>
+            </content>
+        </section>
+
+        <section address="delCom">
+            <title>删除组合实体</title>
+            <content>
+                <para>
+                    删除组合根实体时，它组合的所有子实体也都同时被删除。
+                </para>
+                <para>
+                    由于组合实体的生成周期相关性，框架在把组合关系映射到数据库的外键关系时，会自动把该外键设计为级联删除。所以需要删除整个组合实体时，只需要删除其根实体，数据库会自动把与它关联的所有子实体也同时删除。
+                </para>
+                <para>以下代码在删除小车时，也会删除与之对应的四个车轮：</para>
+                <code language="cs">
+                    <![CDATA[CarRepository repo = RF.Concrete<CarRepository>();
+Car car = repo.GetById(1);
+car.MarkDeleted();
+repo.Save(car);]]>
+                </code>
+                <para>另外，框架也支持在内存中递归删除组合实体的子实体。例如，如果组合关系对应的外键在元数据配置时，被手动配置为不级联删除，那么要删除整个组合对象，就需要打开内存删除功能：</para>
+                <code language="cs">
+                    <![CDATA[public partial class CarRepository : JXCEntityRepository
+{
+    /// <summary>
+    /// 打开内存中删除组合子实体的功能
+    /// </summary>
+    protected override bool EnableDeletingChildrenInMemory
+    {
+        get { return true; }
+    }
+}]]>
+                </code>
+                <alert class="note">
+                    <para>注意，打开此功能后，由于框架会在内存中加载所有的组合子实体，而组合子实体较多时，则性能较差。建议不要轻易关闭数据库中组合关系的级联删除功能。</para>
+                </alert>
+            </content>
+        </section>
+
+        <section address="modiCom">
+            <title>修改组合实体</title>
+            <content>
+                <para>
+                    组合实体树中任一实体状态变更，都可以通过直接保存组合根来保存整个组合树。如，以下代码把一个四轮小车改造为一个三轮车：
+                </para>
+                <code language="cs">
+                    <![CDATA[CarRepository repo = RF.Concrete<CarRepository>();
+Car car = repo.GetById(1);
+car.WheelList.RemoveAt(3);//移除第四个轮子
+car.WheelList[0].Weight = 100;//第一个轮子重量改变
+repo.Save(car);]]>
+                </code>
+            </content>
+        </section>
+
+        <section address="com">
+            <title>注意</title>
+            <content>
+                <para>
+                    虽然经典的领域驱动要求，组合实体树中的所有实体都必须通过组合根实体来获取、操作、保存。但是根据大量的实践经验，Rafy 框架决定不强制要求这一点。也就是说，非组合根的实体，也可以直接通过该实体对应的仓库来完成创建、删除、修改的操作。
+                </para>
+            </content>
+        </section>
+
+        <relatedTopics>
+        </relatedTopics>
+    </developerConceptualDocument>
+</topic>

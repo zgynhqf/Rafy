@@ -1,0 +1,14 @@
+﻿初始化：
+加载所有 Mapping
+按照 ConnectionStringSettingName/DbName 分组
+对于每个组：
+	构造 DbContextBase 的子类型。
+	构造“高速对象生成方法”，同时存入 ContextFactoryStore 中。
+	ContextFactoryStore 中，使用 DbName 作为 Key。
+	创建一个临时 DbContext 对象，初始化数据库为首次创建。
+
+运行时：
+Repository 在 CreateDbContext 方法中：
+	每个 Repository 使用懒加载的方式获取并缓存 DbContext。
+	根据 DbName 在 ContextStore 中找到对应的高速方法。
+	使用该方法进行对象生成。

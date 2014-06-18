@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="fbbaceaa-ea81-4d68-8f51-3b41c0113d49" revisionNumber="1">
+    <developerConceptualDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+
+        <introduction>
+            <para>本章将会说明仓库管理系统的基本业务，以及后面示例章节会用到的实体类及其之间的关系。</para>
+            <autoOutline />
+        </introduction>
+
+        <section address="graph">
+            <title>类图</title>
+            <content>
+                <para></para>
+            </content>
+        </section>
+
+        <relatedTopics>
+        </relatedTopics>
+    </developerConceptualDocument>
+</topic>

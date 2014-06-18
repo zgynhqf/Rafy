@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="12520633-1fbf-45dc-aca8-c4089b5c90e0" revisionNumber="1">
+    <developerConceptualDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+        <introduction>
+            <para>
+                使用数据访问类 <codeInline>Hxy.Data.DbAccesser</codeInline> 访问数据库时，系统可以记录所有运行过程中执行的 Sql 语句及相关日志。这对于开发人员做系统调试、性能优化提供了较好的帮助。
+            </para>
+            <para>
+                ORM 框架中所有的数据访问，都是直接或间接地通过 <codeInline>Hxy.Data.DbAccesser</codeInline> 类型来完成的，所以本机制可以显示框架与数据库的所有交互。
+            </para>
+            <autoOutline />
+        </introduction>
+
+        <section address="how">
+            <title>使用文件记录</title>
+            <content>
+                <para>要打开这个功能，需要到应用程序的配置文件中添加名为 SQL_TRACE_FILE 的应用程序配置项，该配置项的值是用于记录日志的文件地址，示例代码如下：</para>
+                <code language="xml">
+                    <![CDATA[<configuration>
+    <appSettings>
+        <!--如果是监听应用程序所有的 SQL 语句，请打开以下配置-->
+        <add key="SQL_TRACE_FILE" value="D:\SQLTraceLog.txt"/>
+    </appSettings>
+</configuration>]]>
+                </code>
+                <para>打开此配置项后，文件即会被自动添加，其中日志的格式如下：</para>
+                <code language="none">
+                    <![CDATA[2013/10/2 16:16:43
+Database:  Test_RafyUnitTest
+SELECT [Book].[Id],[Book].[Author],[Book].[BookCategoryId],[Book].[BookLocId],[Book].[Code],[Book].[Name],[Book].[Price],[Book].[Publisher]
+FROM [Book]
+ORDER BY [Book].[Id] ASC
+
+
+2013/10/2 16:16:43
+Database:  Test_RafyUnitTest
+INSERT INTO [Users] ([Age],[UserName],[TasksTime],[TestUserExt_UserCode]) VALUES (@p0,@p1,@p2,@p3)
+Parameters:10,"QueryExt_User",0,"DefaultUserCode"
+
+
+2013/10/2 16:16:43
+Database:  Test_RafyUnitTest
+SELECT @@IDENTITY;
+
+
+2013/10/2 16:16:43
+Database:  Test_RafyUnitTest
+SELECT [Users].[Id],[Users].[Age],[Users].[UserName],[Users].[TasksTime],[Users].[TestUserExt_UserCode]
+FROM [Users]
+WHERE [Users].[Age] = @p0
+ORDER BY [Users].[Id] ASC
+Parameters:10]]>
+                </code>
+            </content>
+        </section>
+
+        <section address="high">
+            <title>高级</title>
+            <content>
+                <para>
+                    如果不想使用文件记录日志，或者想自定义 Sql 日志格式，请使用 <codeInline>Hxy.Logger.SetImplementation</codeInline> 方法替换为自己的日志实体类型。
+                </para>
+            </content>
+        </section>
+
+        <relatedTopics>
+        </relatedTopics>
+    </developerConceptualDocument>
+</topic>

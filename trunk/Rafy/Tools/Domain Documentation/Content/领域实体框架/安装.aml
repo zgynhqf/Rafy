@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="61dd4914-8d8b-4488-857c-f83b553137d8" revisionNumber="1">
+    <developerConceptualDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+
+        <introduction>
+            <para>安装说明</para>
+            <!--<autoOutline/>-->
+        </introduction>
+        <section address="SDK安装包获取">
+            <title>SDK安装包获取</title>
+            <content>
+                <para>
+                    从在以下地址获取 SDK 安装包：
+                    <externalLink>
+                        <linkText>下载地址</linkText>
+                        <linkUri><![CDATA[http://pan.baidu.com/share/link?shareid=2999003788&uk=2232392329]]></linkUri>
+                    </externalLink>
+                </para>
+            </content>
+        </section>
+        <section address="SDK安装步骤">
+            <title>SDK 安装步骤</title>
+            <content>
+                <procedure>
+                    <title>SDK 安装步骤</title>
+                    <steps class="ordered">
+                        <step>
+                            <content>
+                                <para>安装 VisualStudio 扩展包</para>
+                                <para>双击 RafySDK.vsix，选择“使用 VisualStudio Version Selector” 来进行安装。</para>
+                                <mediaLink>
+                                    <image xlink:href="安装04"/>
+                                </mediaLink>
+                                <mediaLink>
+                                    <image xlink:href="安装02"/>
+                                </mediaLink>
+                                <mediaLink>
+                                    <image xlink:href="安装03"/>
+                                </mediaLink>
+                            </content>
+                        </step>
+                        <step>
+                            <content>
+                                <para>安装开发代码段</para>
+                                <para>
+                                    在安装扩展包完成后，打开 VS2012，点击菜单：工具->安装/卸载代码段。弹出<ui>提示窗口</ui>：
+                                </para>
+                                <mediaLink>
+                                    <image xlink:href="安装01"/>
+                                </mediaLink>
+                                <para>
+                                    点击<ui>是</ui>，弹出提示：“操作完成，可能需要重启 VS 后才能生效，是否打开代码段文件夹检查？”，点击“是”，打开 VS 代码段文件夹，检查是否已经拷贝进代码段，代码段列表见：<link xlink:href="6b3e8163-8516-4065-91f5-194491334343" />。此时，完成代码段安装。
+                                </para>
+                            </content>
+                        </step>
+                        <step>
+                            <content>
+                                <para>重启 VisualStudio</para>
+                                <para>
+                                    重启 VisualStudio 后，代码段才会生效。
+                                </para>
+                            </content>
+                        </step>
+                    </steps>
+                </procedure>
+            </content>
+        </section>
+
+        <relatedTopics>
+        </relatedTopics>
+    </developerConceptualDocument>
+</topic>

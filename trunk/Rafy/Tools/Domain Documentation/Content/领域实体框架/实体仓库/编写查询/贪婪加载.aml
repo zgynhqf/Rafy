@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="3e3ee502-ecbb-417d-8fbf-fa24ec21e2bc" revisionNumber="1">
+    <developerConceptualDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+        <introduction>
+            <para>
+                在使用实体时，往往还需要使用实体的一些关系实体。虽然，Rafy 中的实体关系都支持懒加载，但是过多地使用懒加载会造成 N+1 性能问题（关于 N+1 问题，本文中有相关的介绍：<externalLink>
+                    <linkText>OEA ORM 框架中的冗余属性设计</linkText>
+                    <linkUri>http://www.cnblogs.com/zgynhqf/archive/2012/08/10/2633047.html</linkUri>
+                </externalLink> ）。所以如果需要在查询实体后，使用每一个实体的关系实体，则需要同时查询出实体所拥有的这些关系实体，即贪婪加载。
+            </para>
+        </introduction>
+        <section address="inter">
+            <title>使用方法</title>
+            <content>
+                <para>
+                    Rafy 中的关系有引用关系和组合关系，这些关系都可以声明为贪婪加载。要使用贪婪加载，必须使用托管属性查询（由于 Linq 查询可以转换为托管属性查询，所以也支持使用 Linq 查询）。调用 <codeInline>IPropertyQuery.EagerLoad</codeInline> 方法，传入需要贪婪加载的托管属性即可。
+                </para>
+                <para></para>
+            </content>
+        </section>
+
+        <section address="demo">
+            <title>代码示例</title>
+            <content>
+                <para>以下代码示例如何在加载仓库实体的同时，一并加载出仓库的管理员及仓库下所有的货品信息。其中，管理员是一个引用实体属性，而货品则是仓库的组合子属性：</para>
+                <code language="cs">
+                    <![CDATA[public WarehouseList GetByCode(string warehouseCode)
+{
+    return this.FetchList(r => r.DA_GetByCode(warehouseCode));
+}
+private EntityList DA_GetByCode(string warehouseCode)
+{
+    IPropertyQuery query = this.CreatePropertyQuery();
+
+    query.Constrain(Warehouse.CodeProperty).Equal(warehouseCode);
+
+    //在加载 Warehouse 实体的同时，也加载每一个 Warehouse 的 Administrator 引用实体。
+    query.EagerLoad(Warehouse.AdministratorProperty);
+
+    //在加载 Warehouse 实体的同时，也加载每一个 Warehouse 的 ProductList 组合子实体。
+    query.EagerLoad(Warehouse.ProductListProperty);
+
+    return this.QueryList(query);
+}]]>
+                </code>
+            </content>
+        </section>
+
+        <relatedTopics>
+        </relatedTopics>
+    </developerConceptualDocument>
+</topic>

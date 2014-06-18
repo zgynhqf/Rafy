@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="946c540b-acb0-4531-b99c-85756cb69d4e" revisionNumber="1">
+    <developerConceptualDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+        <introduction>
+            <para>Rafy 框架完全是基于产品线工程方法来构建的。</para>
+        </introduction>
+
+        <section address="rafyPL">
+            <title>Rafy 与产品线工程</title>
+            <content>
+                <para>产品线工程方法要求对产品的可变性进行管理、大规模重用、注重可扩展性。这些点成为 Rafy 框架各组件的一个设计原则，在插件化架构的基础上，我们可以很容易对现有组件进行扩展。所有启动级别更低的插件，都可以对讲较之先启动的插件进行重新配置、扩展。可以在为某个客户定制化的插件程序集中编写代码，对主干版本的程序集进行扩展，而不需要修改主干程序集的代码。可实现的插件级扩展包括：</para>
+                <list class="bullet">
+                    <listItem>
+                        <para>实体属性扩展</para>
+                        <para>可以添加实体属性。</para>
+                    </listItem>
+                    <listItem>
+                        <para>实体配置扩展</para>
+                        <para>可以随意修改主干程序集的实体配置，包括数据库映射。</para>
+                    </listItem>
+                    <listItem>
+                        <para>实体查询扩展</para>
+                        <para>可以添加新的实体查询。可以修改主干程序集中现有的查询的实现。</para>
+                    </listItem>
+                    <listItem>
+                        <para>界面配置的扩展</para>
+                        <para>可以随意修改主干程序集的界面配置，从而生成新的界面。</para>
+                    </listItem>
+                </list>
+            </content>
+        </section>
+
+        <section address="pl">
+            <title>附 - 软件产品线工程方法</title>
+            <content>
+                <mediaLink>
+                    <caption>两阶段生命周期</caption>
+                    <image xlink:href="SPL_2LifeCycle"/>
+                </mediaLink>
+                <mediaLink>
+                    <caption>三大活动</caption>
+                    <image xlink:href="SPL_3Activities"/>
+                </mediaLink>
+                <mediaLink>
+                    <caption>可变性管理</caption>
+                    <image xlink:href="SPL_Variables1"/>
+                </mediaLink>
+                <mediaLink>
+                    <caption>可变性管理</caption>
+                    <image xlink:href="SPL_Variables2"/>
+                </mediaLink>
+
+                <para>
+                    关于软件产品线工程的详细概念，参考：《<externalLink>
+                        <linkText>Software Product Lines | Overview</linkText>
+                        <linkUri>http://www.sei.cmu.edu/productlines/</linkUri>
+                    </externalLink> 》、《<externalLink>
+                        <linkText>产品线工程：软件产品线-规模化产品开发介绍</linkText>
+                        <linkUri>http://www.cnblogs.com/zhoujg/archive/2011/01/13/1934524.html</linkUri>
+                    </externalLink> 》、《<externalLink>
+                        <linkText>软件产品线工程方法 － 四个主要方法原则</linkText>
+                        <linkUri>http://www.cnblogs.com/zhoujg/archive/2009/09/27/1575302.html</linkUri>
+                    </externalLink> 》、《<externalLink>
+                        <linkText>软件产品线工程方法 － 三大基本活动</linkText>
+                        <linkUri>http://www.cnblogs.com/zhoujg/archive/2009/10/18/1585394.html</linkUri>
+                    </externalLink> 》、《<externalLink>
+                        <linkText>规模化产品开发方法－产品线工程.pdf</linkText>
+                        <linkUri>http://www.cnblogs.com/zhoujg/archive/2010/02/24/1672327.html</linkUri>
+                    </externalLink> 》。
+                </para>
+            </content>
+        </section>
+
+        <relatedTopics>
+            <!--<externalLink>
+                <linkText>Software Product Lines | Overview</linkText>
+                <linkUri>http://www.sei.cmu.edu/productlines/</linkUri>
+            </externalLink>
+            <externalLink>
+                <linkText>产品线工程：软件产品线-规模化产品开发介绍</linkText>
+                <linkUri>http://www.cnblogs.com/zhoujg/archive/2011/01/13/1934524.html</linkUri>
+            </externalLink> 
+                <externalLink>
+                <linkText>软件产品线工程方法 － 四个主要方法原则</linkText>
+                <linkUri>http://www.cnblogs.com/zhoujg/archive/2009/09/27/1575302.html</linkUri>
+            </externalLink> 
+            <externalLink>
+                <linkText>软件产品线工程方法 － 三大基本活动</linkText>
+                <linkUri>http://www.cnblogs.com/zhoujg/archive/2009/10/18/1585394.html</linkUri>
+            </externalLink> 
+            <externalLink>
+                <linkText>规模化产品开发方法－产品线工程.pdf</linkText>
+                <linkUri>http://www.cnblogs.com/zhoujg/archive/2010/02/24/1672327.html</linkUri>
+            </externalLink>-->
+        </relatedTopics>
+    </developerConceptualDocument>
+</topic>

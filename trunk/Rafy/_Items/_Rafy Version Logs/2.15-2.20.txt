@@ -1,0 +1,931 @@
+﻿2.20.1768
+    更新自动代码。
+
+2.20.1767
+
+2.20.1764
+    ！修改接口
+        Rafy.ORM 命名空间重命名为 Rafy.Domain.ORM。
+
+2.20.1763
+    内部修改
+
+2.20.1762
+    ★重要、！修改接口
+        QueryDb 重命名为 QueryList。
+        QueryBy 约定重命名为 FetchBy。
+
+2.20.1760
+    ★重要、添加功能
+        实体仓库支持直接查询表格。
+
+2.19.1757
+    内部修改
+        Hxy.Data.LiteDataTable 删除自定义序列化方法。
+        其它 ……
+        单元测试。
+
+2.19.1750
+
+2.19.1748
+    添加接口
+        Hxy.Data.LiteDataTable
+
+2.19.1746
+
+2.19.1745
+    内部修改
+        FillByName：如果 list 列表中已经有数据，那么只能对新添加的实体进行 OnDbLoaded操作通知加载完成。
+
+2.19.1744
+
+2.19.1743
+    内部修改
+        CodeSnippets
+
+2.19.1742
+    内部修改
+        删除 FriendlyMessageException 异常类型。
+        用户、岗位使用服务来提示消息。
+
+2.19.1740
+    内部修改
+        FetchFirst 在数据层只会读取一个实体，传输层也只传输一个实体。
+
+2.19.1735
+    BUG修复
+        由于该模块已经激活，所以不再需要自动触发行为。
+
+2.19.1734
+    内部修改
+        去除对 AvalonDock 的引用。
+
+2.19.1731
+
+2.19.1725
+    内部修改
+        详细面板的 Data 只支持设置单一实体。
+
+2.19.1722
+    添加功能
+        整理 IPropertyEditor 接口。
+    内部修改
+        DetailObjectView.FocusToEditor 方法应该判断是否已经控件生成完毕。
+
+2.19.1718
+    添加功能
+        PropertiesMatchCriteria 支持使用 Contains 操作来对比字符串。
+
+2.19.1716
+    ★重要
+        EntityRepository 支持以显式、强类型的表达式方式，来调用数据层方法。
+
+2.19.1713
+    ！修改接口
+        WebView。
+        删除 DbConvention 类型。
+        BranchPathProvider。
+        IPlugin
+
+2.19.1707
+    添加接口
+        SealableCollection
+    内部修改
+        ManagedPropertyMeta.Freeze。
+        整理 ListObjectView 接口。
+
+2.19.1700
+    ！删除接口
+        删除无用的 IListObjectView、IObjectView、WPFObjectView 等类型。
+        删除 ICustomParamsHolder。
+        IEntityOrList => IDomainComponent。
+        整理 ObjectView 的公有接口。
+
+2.19.1690
+    BUG修复
+        Sql Paging
+    内部修改
+        ReserveHistory 默认值为 false。
+
+2.19.1686
+    ！修改接口
+        PagingInfo：
+            PageIndex 改为 PageNumber，并让其从 1 开始。
+            为其添加 PageCount 等几个方便使用的属性。
+    添加接口
+        Logger 添加 ThreadDbAccessedCount 属性。
+        
+
+2.19.1681
+    添加接口
+        添加 GetLogicalChild 方法。
+
+2.19.1680
+    ★重要、！修改接口
+        DbMigration -> Rafy.DbMigration
+        ManagedProperty -> Rafy.ManagedProperty
+
+2.18.1675.0
+    ！修改接口
+        IDBAccesser 1.5
+
+2.18.1673.0
+    ！修改接口
+        * Command：
+            * GroupType 由枚举变为整形，这样应用层可以随意设置自己的命令类型。
+            * Group 重命名为 Hierarchy。
+        * App
+            * OpenModuleOrAlert。
+    添加接口
+        * App：添加 ModuleTemplateCreated、ModuleBlocksCreated 事件。
+    内部修改
+        * NavigationQueryObjectView
+    重构
+
+2.18.1668.0
+    ！修改接口
+        * TreeGrid：CheckIsReadonly 改名为 CanEnterEditing。
+        * ApplicationContext 命名为 DistributionContext。
+    BUG修复
+        * TreeGrid：把 TreeGrid.IsReadOnly 属性反向绑定到 BooleanTreeColumn 列中显示控件的 IsEanbled 属性上。这是由于这个列直接使用显示的控件作为编辑的控件，所以这个显示控件的只读性，需要与 TreeGrid 的只读性保持同步。
+        * PagingInfo.
+
+2.18.1662.0
+    ！修改接口
+        * LibraryPlugin 重命名为 DomainPlugin。
+    内部修改
+        * 所有使用了 Cache 的类，都需要先尝试使用缓存。
+        * 去除没必要的 Sql 生成。
+
+2.18.1657.0
+    工具
+        * Package 自动注册 Rafy 项目模板。
+        * Package 自动注册代码段。
+
+2.18.1653.0
+    BUG修复
+        * Entity 的子类并不一定有仓库对象，例如 Criteria，所以需要在 LoadedChildrenEnumerator 中处理这种情况。
+
+2.18.1652.0
+    ！修改接口
+        * 实体接口调整：
+            * Get 接口与 Cache 接口分离。
+        * 仓库接口调整。
+        * 分页接口调整。
+
+2.18.1647.0
+    ！修改接口
+        * 实体接口调整，删除不必要的方法。
+        * RafyDbMigrationContext 类型默认不支持数据库历史记录。
+        
+2.18.1630.0
+    ★重要
+        * 添加框架文档生成项目。
+
+2.18.1627.0
+    内部修改
+        * DbQuery.JoinRef 方法应该防止重复添加关联表。
+        * 实体查询：
+            * TreeEntity：树型实体的排序在 OnQueryBuilt 方法前执行。
+            * FetchCount 对应的数据层，自动调用 QueryAsCounting 方法。包括对 Linq 的支持。
+            * PropertiesMatchCriteria 不再需要 IsCounting 属性。
+            * GetById 等常用方法，不再使用反射去调用，提高运行速度。
+    ！修改接口、！删除接口、添加接口
+        * EntityRepository
+            整理仓库类的可重写查询接口：QueryAll 等。
+
+2.18.1640.0
+    ★重要、添加接口、添加功能
+        * ORM-Linq：
+            * 开始支持 Linq 查询。
+            * 支持 Where 单一属性对比。
+            * 支持 And、Or。
+            * 支持连续的 Where。
+            * 支持 OrderBy, OrderByDescending，ThenBy，ThenByDescending。
+            * 实体仓库自动代码模板支持强类型 Linq 方法。
+            * 支持关联查询、以及连续的关联查询（A.B.C.Name == "Name"）。
+            * 支持 Count 操作。
+            * 支持 PagingInfo 分页操作。
+            * 支持 string 类的 Contains,StartWith,EndWith,IsNullOrEmpty（以及加上！的不可空操作) 操作。不支持 Length 属性时，提示错误。
+            * 支持 Enumerable、List 类的 Contains 方法转换为 In、NotIn 操作。
+    *添加接口
+        * 添加 PluginTable.AddPlugin 方法。
+
+2.17.1612.0
+    内部修改
+        * 数据库生成：所有数据库都支持大小写敏感。（SqlServer 使用字符集 Chinese_PRC_CS_AS）
+        * 开发工具：支持“记录更新日志？”的选项。
+        * DbMigration：还原数据库时，类型无法找到的问题。
+
+2.17.1609.0
+    内部修改
+        * ClientCache、SQLCompactProvider：缓存会自动创建缓存库。
+        * Rafy.Domain 中删除 Rafy_Disk_Cache.sdf 文件。
+        * SQLCompactProvider 仓库的数据库是大小写敏感的。
+        * SQLCompactProvider 重命名为 SQLCompactCacheProvider。
+
+2.17.1605.0
+    BUG修复
+        * Repository：在 SubmitChildren 时，需要使用子实体自己的仓库。
+        * DbMigration。
+
+2.17.1604.0
+    内部修改
+        * 所有插件的实体类都不再使用 FetchListAs 方法，而使用强类型接口。
+        * 删除 FetchListAs、FetchFirstAs 泛型方法。
+
+2.17.1602.0
+    BUG修复
+        * EntityRepository：Find 方法的并发问题。
+
+2.17.1601.0
+    添加接口
+        * EntityRepository：SaveWithPortal 方法可以被重写。
+
+2.17.1600.0
+    内部修改
+        * DbMigration：自动升级可以支持不添加数据库历史记录库，直接升级业务库。
+
+2.17.1599.0
+    内部修改
+        * DbMigration：
+            * 已经忽略的表如果被其它的表引用，不应该生成这个外键关系。
+            * 映射视图的表，不生成数据迁移元数据。
+
+2.17.1598.0
+    内部修改
+        * VSPackage：自动代码：如果实体列表的基类中，也定义了 Concrete 方法，则应该在本类的 Concrete 方法上添加 new 字样。
+
+2.17.1596.0
+    内部修改
+        * Rafy.Domain 及自带插件项目，都使用实体自动生成的代码。
+    ★重要、！修改接口
+        * 为防止重写后与强类型接口冲突，EntityRepository 所有公有查询方法标记为非虚方法，并添加相应的受保护的虚方法，并统一命名为 Do……。
+
+2.17.1591.0
+    内部修改
+        * EOMReader.IsEntity。
+
+2.17.1590.0
+    ！删除接口
+        * EntityRepositoyExt.FetchListAs、FetchFirstAs。
+
+2.17.1589.0
+    添加功能
+        * VSPackage：
+            * 生成旧数据库代码时，需要判断 Id 是否为主键。
+            * 生成旧数据库代码时，实体名需要从表名上去除复数。
+    BUG修复
+        * VSPackage：自动生成的代码，不再使用 IList 泛型接口，否则会导致无法使用 LinqToObject。
+
+2.17.1585.0
+    添加功能、添加接口、内部修改
+        * Entity、DbMigration：
+            * 支持自增列（Id）不标记为主键。
+            * 删除数据库必须要有名称为 "Id" 列的约定。
+            * MigrateService，支持指定 IgnoreTables。
+    重构
+        * 删除 DataPortal_Update 约定，改为接口。
+
+2.17.1581.0
+    添加接口
+        * Entity：快速遍历支持 foreach 接口。
+
+2.17.1580.0
+    添加功能
+        * VSPackage：
+            * 添加实体文件时，自动生成 .g.cs 文件，用于显式实现强类型集合的接口，方便上层使用。
+            * "更新实体自动代码"：为老实体添加生成自动代码文件。
+
+2.17.1575.0
+    ★重要、添加功能
+        * VSPackage：添加“ 从数据库生成实体 ” 的功能，帮助迁移历史系统。
+
+2.17.1570.0
+    添加接口
+        * DbMigration
+            * 支持只删除列、不删除表。
+            * SqlServer 数据库的定长字符字段类型，也识别为字符串。
+
+2.17.1569.0
+    ！删除接口
+        * FlowService：删除无用的 msg、success 属性。
+    ！修改接口
+        * ManagedPropertyLifeCycle.Compile
+        * ManagedPropertyObject.FindProperty
+
+2.17.1566.0
+    工具
+        * 添加 Rafy Domain Entity 项模板。
+        * 添加子实体时，也给父实体加上相应的组合子属性。
+        * 建模：友好提示。
+
+2.17.1562.0
+    工具
+        * 添加 Rafy Domain Library 项目模板。
+        * 添加 Rafy Console App 项目模板。
+
+2.17.1557.0
+    添加接口
+        * EntityRepository：添加 GetChildProperties 接口。
+        * SubmitAction：添加 ChildrenOnly 枚举值。
+    内部修改
+        * Entity：支持快速遍历所有子实体。
+        * ManagedPropertyObject：支持快速遍历所有托管属性。
+    ！修改接口
+        * ListProperty：HasManyType 直接移动到列表属性上，而不再放在元数据上。
+
+2.17.1552.0
+    BUG修复
+        * ManagedPropertyRepository：在 GetTypePropertiesContainer 方法中对类型属性容器修改时，需要加锁同步多线程。
+    内部修改
+        * FileLogger：错误日志，需要记录完整的堆栈信息。
+        * AsyncHelper：在外界传入异常处理的情况下，不再自动记录异常日志。
+
+2.17.1548.0
+    ！删除接口
+        * MPO：删除无用的 ManagedPropertyChangedSource.FromPersistence 枚举。
+        * EntityList：删除无用的 EntityList.RaiseListChangedEvents 属性。
+    ！修改接口
+        * Entity：ConnectionStringSettingName 的重写放到 EntityRepository 中，实体与数据库彻底无关。
+    重构
+        * 去除 EntityRepository 中的实体代理字段
+
+2.17.1545.0
+    内部修改
+        * Entity.SubmitRootList 没有事务方法，也没有对分布式缓存的版本号进行批量处理。所以 SaveRootList 与 SaveRoot 统一为 SubmitComponent 方法，统一添加事务控制、版本号控制。
+
+2.17.1544.0
+    内部修改
+        * Entity.SubmitRoot 方法，不需要分是否使用分布式缓存的情况来做事务处理，而是直接使用 SingleConnectionTransactionScope 类来管理不同数据库的事务，这个类会保证不同的库使用不同的事务。
+
+2.17.1543.0
+    内部修改
+        * 分布式缓存版本号批量更新类，继承自 ServerContextScope 类型来实现。
+
+2.17.1542.0
+    内部修改
+        * MemoryEntityRepository 及其相关的单元测试。
+
+2.17.1540.0
+    添加接口
+        * 添加 ServerContextScope 类型。
+    内部修改
+        * 格式化 Entity 调试文本。
+    重构
+        * LocalTransactionBlock 类型基于 ServerContextScope 类型来实现，代码更加内聚。
+        * 单元测试。
+
+2.17.1536.0
+    内部修改、工具
+        * ManagedPropertyObject 使用 ManagedPropertyObjectTypeProxy 来显示在调试环境中。
+        * BUG：遍历字段进行序列化时，不能把基类的字段也同时遍历，否则会造成重复遍历同一字段。
+
+2.17.1534.0
+    ★重要改动、！修改接口、！删除接口、添加接口
+        * Domain：
+            * 所有数据访问的代码，都从 Entity 中移动到 EntityRepository中。
+            * 实体数据层回调，放到 EntityRepository 中。
+
+2.17.1528.0
+    BUG修复
+        * 多国语言：
+            * 应用 TranslatingText.AutoTranslate 后的属性，如果使用了绑定，它的值在页签切换并被弹出窗口阻断时，出现无法翻译的问题。
+            * 应用 TranslatingText.AutoTranslate 后的属性，在变更时，也同样支持更次翻译。
+
+2.17.1527.0
+    ★★重要改动、工具
+        * Modeling 只读模式 1.0 版本：
+            * 支持拖拽类文件到图中。
+            * 编辑类后，可以刷新视图，使得视图中的关系被更新。
+            * 支持显示类型的注释到代码中的Label。
+            * 双击块的边线时，需要恢复为自动计算大小模式。
+            * 拖动块大小时，需要直接绑定到内容元素上。
+            * BUG：连接的属性需要双向绑定到连接线的属性上。
+            * 选择实体窗口支持手动输入过滤。
+            * 添加“添加关系类”的功能。
+            * 添加“隐藏同名连接线”的功能。
+            * 如果是连接，则只需要选中中点就可以了。
+    ！修改接口
+        * Hxy.INotifyChangeCollection 的 ClearItems 属性变为 PopClearItems 方法。
+
+2.17.1513.0
+    BUG修复、内部修改
+        * DbMiration：处理 547 Sql 异常。
+        * ORM: BUG.
+
+2.17.1511.0
+    工具
+        * Modeling：
+            * VSPackage 中可以隐藏连接线。
+            * VSPackage 中可以显示隐藏的连接线。
+            * VSPackage 中双击某一块，可以打开其对应的类文件。
+            * 按住空格键，可以显示所有隐藏线。
+            * 鼠标多选问题。
+            * 切换页，再保存时，数据丢失。
+            * ODMLDocument 添加 Changed 事件，用于通知数据变更。
+            * 全选移动时，总是出现有些块移动更快的问题。
+    添加接口
+        * Hxy.INotifyChangeCollection
+
+2.17.1500.0
+    工具
+        * DbMigration： 友好提示外键修改的异常。
+
+2.17.1499.0
+    工具
+        * Modeling
+            * 支持全选等各种命令及快捷健。
+            * ODMLDocument 支持双向绑定。
+            * 块标题支持格式化。
+            * Name 属性设置器私有化。
+
+2.17.1492.0
+    工具
+        * Modeling： 可以配置是否允许添加新的连接线。
+        * Modeling： 可以配置是否允许变更连接线的两个端点。
+
+2.17.1490.0
+    工具
+        * Modeling： 支持新加连接线。
+
+2.17.1486.0
+    BUG修复
+        * Modeling： BUG:VS 切换页签后，移动块元素时，连接会断开。
+
+2.17.1485.0
+    添加功能
+        * TreeGrid： 表格显示行号时，第一列要适当的缩小宽度。这样可以使得列头显示得比较好看。
+
+2.17.1484.0
+    添加功能
+        * TreeGrid： 在点击排序后，可以显示一个三角符号，用于表示排序的方向。
+
+2.17.1483.0
+    内部修改
+        * NumericPropertyEditor 的属性绑定更新触发使用 PropertyChanged 模式，保证编辑的有效性。
+
+2.17.1482.0
+    工具
+        * odml 文件支持直接使用 ModelingEnv 来打开。
+
+2.17.1480.0
+    工具
+        * 建模：Rafy 插件与 VSPackage 都使用 EOM 来描述文档模型。
+        * 可空类型，显示在属性上时，需要添加"?" 号。
+
+2.17.1475.0
+    ★重要改动、工具
+        * 建模：RafySDK 工具包基本完成，可以在项目中添加 odml 文件，并选择项目中编写的实体来绘制图，并可保存再次打开。
+
+2.17.1470.0
+    内部修改
+        * 建模：可以读取 C# 代码结构。
+
+2.17.1467.0
+    内部修改
+        * 可以添加 odml 文件到 C# 项目中。
+
+2.17.1466.0
+    内部修改
+        * VSPackage 支持 ModelingEditor。
+        * 可以打开文件、保存文件。
+
+2.17.1463.0
+    BUG修复
+        * SqlQueryArgs 需要分辨 EmptyPagingInfo。
+
+2.17.1462.0
+    内部修改
+        * 支持保存建模信息到 odml 文件。
+        * 支持添加多个实体到模型中。
+
+2.17.1459.0
+    添加接口
+        * 添加 DomainApp 类。
+
+2.17.1458.0
+    ！修改接口
+        * Common 程序集，还原名称为 Hxy。
+
+2.17.1456.0
+    内部修改
+        * StartMainProcess 标记为 virtual。
+
+2.17.1455.0
+    ★重要改动、结构
+        * Rafy.Domain 不再依赖 Rafy.Web.Meta。
+        * 添加 Rafy.Customization 插件项目。
+
+2.17.1450.0
+    ★重要改动、工具
+        * Rafy 领域模型查看插件
+            * 截止目前，实体建模工具，已经完成了底层的基础框架。
+            * Rafy 模型查看插件搭建基本可用。
+
+2.16.1296.0
+    工具
+        * EOM。
+
+2.16.1295.0
+    内部修改
+        * EntitySelectionPropertyEditor 需要给子类分辨出设置值失败的情况。
+
+2.16.1294.0
+    内部修改
+        * EagerLoad 优化。
+
+2.16.1293.0
+    内部修改
+        * 优化直接构造实体对象时的管理属性性能。
+
+2.16.1291.0
+    添加接口
+        * 添加 PropertyDefailtValues 类型。
+
+2.16.1290.0
+    BUG修复
+        * 在数据层查询数据时，不应该直接调用列表的 NotifyLoaded，而是等到列表最后要出仓库时，才调用。
+        * 添加排序相关的单元测试。
+
+2.16.1289.0
+    ！修改接口、！删除接口
+        * 删除元数据中的 DataOrderBy 属性。
+        * OrderBy 方法的第二个参数改为枚举，增强可读性。
+
+2.16.1288.0
+    ！修改接口
+        * OnQueryDbOrder 方法名改为 OnQueryBuilt。可用于该仓库统一的查询条件逻辑。
+
+2.16.1287.0
+    内部修改
+        * 整理相关单元测试
+            * 添加客户端测试框架
+
+2.16.1286.0
+    BUG修复
+        * 版本号在数据库中存储时，不应该使用 DateTime 类型，而应该使用 long 类型，否则会造成数据丢失。
+
+2.16.1285.0
+    添加功能
+        * 支持服务端内存缓存。缓存的检测，根据所延位置的不同，分别检测服务端、客户端缓存。
+    内部修改
+        * InnerSerializer 重命名为 WcfInnerSerializer。
+        * 简化 SqlceCompactProvider 的实现，使其直接依赖 AsyncHelper 等类。
+        * 整理相关单元测试
+            * 添加缓存测试。
+            * 每个单元测试可以指定所处的位置。
+
+2.16.1282.0
+    BUG修复
+        * 分页索引查询出错(PageIndex)。
+
+2.16.1281.0
+    添加功能
+        * IQuery 支持 EagerLoad 方法，支持贪婪加载。
+
+2.16.1280.0
+    ！修改接口
+        * IQuery.Order 重命名为 OrderBy。
+
+2.16.1279.0
+    内部修改
+        * 删除无用的接口，单参数的 FetchList 。
+
+2.16.1278.0
+    ★重要改动、添加接口
+        * 数据层查询支持多参数传递，不再需要封装为一个 Criteria。
+
+2.16.1276.0
+    ！修改接口
+        * CommonPropertiesCriteria 改名为 PropertiesMatchCriteria，并实现集合初始化器接口。
+        * FetchListCast 改名为 FetchListAs。
+
+2.16.1274.0
+    内部修改
+        * IObservableActions。
+
+2.16.1272.0
+    内部修改、添加接口
+        * TreeGrid 添加 RowEditingChangeMode 属性，用于指定表格是否在单击时，直接切换编辑行。
+
+2.16.1271.0
+    添加接口
+        * ThreadHelper 改名为 AsyncHelper，并修复一些错误的 API 命名。
+
+2.16.1270.0
+    添加接口
+        * Logger 支持扩展。
+
+2.16.1269.0
+    添加接口
+        * TreeGridColumn 添加属性 CellStyle。
+
+2.16.1268.0
+    添加接口
+        * CloneOptions 添加 CloneValueMethod 属性来指定拷贝时使用的设置值方法。
+
+2.16.1267.0
+    添加接口
+        * ManagedPropertyObject 添加公有方法 NotifyAllPropertiesChanged， 以对所有的属性都发生属性变更事件。
+
+2.16.1266.0
+    ！修改接口
+        * 子类可使用的 ManagedPropertyObject.OnPropertyChanged 方法改为 NotifyPropertyChanged，并标记为公有的。
+
+2.16.1265.0
+    添加接口
+        * 在属性元数据上添加 AffectStatus 属性，用于指定此属性的变更，是否会造成实体状态的变更（变脏）。
+
+2.16.1264.0
+    添加接口
+        * App 类添加 Progress 属性。
+
+2.16.1263.0
+    BUG修复
+        * PopupDetailCommand 中不需要把临时对象标记为 Old。
+
+2.16.1262.0
+    添加接口
+        * 添加 DbSetting.AddSetting 方法，用于手动添加数据库连接配置。
+
+2.16.1259.0
+    添加接口
+        * ListObjectView 添加类型为 RafyTreeGrid 的 Control 属性。
+
+2.16.1258.0
+    ！删除接口
+        * 删除重复的 API TryFindNode，统一使用 FindRow 即可。
+        * 在 TreeGrid 中删除其它重复的 API。
+
+2.16.1256.0
+    内部修改
+        * RafyControls 中的所有控件，都建立独立的 xaml 文件。
+
+2.16.1255.0
+    内部修改
+        * 删除 TreeGrid 上无用的标签。
+
+2.16.1254.0
+    内部修改
+        * 实体仓库扩展，支持在基类上进行扩展，这样所有的仓库子类都直接被扩展。
+
+2.16.1252.0
+    内部修改
+        * 添加 DateTimeInputControl 控件，作为日期、日期时间的输入控件。
+
+2.16.1250.0
+    ★重要改动、重构
+        * 合并 Rafy.Module 及 Rafy.Module.WPF 项目，并重命名为 Rafy.WPF。
+
+2.16.1240.0
+    ★重要改动、添加功能、添加接口
+        * 支持在扩展插件中对仓库查询方法进行扩展。
+            * 添加 EntityRepositoryExt 类型，EntityRepositoryExt 与 EntityRepository 共用一个基类：EntityRepositoryQueryBase。
+            * EntityList 中的数据层访问方法，全部移动到 EntityRepositoryQueryBase 中，不再支持在列表类中写数据层方法。DAL 与查询接口统一全部写在 EntityRepository 中，更加合理。
+            * EntityRepositoryFactory 中会把所有插件中的仓库扩展类都存储进来，并提供相应的查询方法。
+            * EntityRepository 添加属性：Extensions。
+            * EntityRepository.QueryBy(object criteira) 方法的实现，需要检测所有仓库扩展是否已经实现了该参数的方法。
+            * RF 中添加方法：ConcreteExt。
+    重构、！修改接口
+        * RF 中查询仓库的方法名改为 Find、Concrete。
+    内部修改
+        * MethodCaller 中查找类型对应的方法时，使用全继承层次的查询，而不只是单一类型。
+    其它
+        * 添加仓库扩展类的单元测试。
+
+2.15.1237.0
+    内部修改
+        * 查询面板在查询时，为了保持当前正在查询的值，应该把实体中的数据复制出一份，再进行查询。
+
+2.15.1236.0
+    ！修改接口
+        * ReloadDataAsync 方法的逻辑改为：如果还没有进行任何加载，则抛出异常。这样可以保证上次在使用时，主动使用 AnyLoaded 属性来进行检测。
+
+2.15.1235.0
+    添加接口
+        * 添加 AddConstrainSql 方法。
+
+2.15.1234.0
+    添加接口
+        * JoinRef 提供参数 JoinRefType 来判断是否需要在 Join 的同时加载关联的数据。
+
+2.15.1233.0
+    BUG修复
+        * 分页查询的数据计算错误。
+
+2.15.1232.0
+    内部修改
+        * 岗位管理 ‘编码’‘名称’为必填项。
+        * 部门权限管理  添加 部门中 ‘名称’为必填项。
+
+2.15.1231.0
+    内部修改
+        * 在视图的数据发生变化时，应该重新检测按钮的可见性。
+
+2.15.1230.0
+    BUG修复
+        * 导入 Excel 需要处理空列名的情况。
+
+2.15.1229.0
+    添加接口
+        * BrokenRulesCollection 构造函数需要公开。
+        * Entity.GetLoadedChildren 方法需要公开。
+
+2.15.1227.0
+    内部修改
+        * User 类型的编码、名称不能为空。
+
+2.15.1226.0
+    内部修改
+        * Rafy 不再主动建立 Library、Module 两个文件夹。
+
+2.15.1225.0
+    BUG修复
+        * 在网络连接出现问题时，提示出错。
+
+2.15.1224.0
+    内部修改
+        * 在命令执行前，先尝试焦点设置到生成的控件上，这样做的主要原因是：当焦点从输入控件移动到按钮上时，输入控件可以强制进行验证。
+
+2.15.1223.0
+    内部修改
+        * 为 BlockUIFactory 添加 EnableScroller 方法，但是暂时不启用此功能。
+
+2.15.1222.0
+    内部修改
+        * 为 MessageBox 添加样式，以支持按钮的汉字显示。
+
+2.15.1221.0
+    内部修改
+        * BaseSaveCommand 中添加 OnSaveSuccessed 方法，用于通知基类保存成功。这样就不会在保存失败时，也退出该模块。
+
+2.15.1220.0
+    内部修改
+        * 分页时，如果是查询第一页，则尽量使用 TOP 语句进行查询。
+
+2.15.1218.0
+    内部修改
+        * 由于 TopOnly 和“查询第一页”这两种模式冲突，所以删除 TopOnly 模式。
+
+2.15.1217.0
+    内部修改
+        * 优化 DbProviderFactory 的获取流程。
+
+2.15.1216.0
+    内部修改
+        * SqlCeCacheProvider 的路径使用相对路径。
+
+2.15.1215.0
+    内部修改
+        * 多国语言使用本地缓存。
+
+2.15.1214.0
+    内部修改
+        * SelectionViewMeta.RefEntityType 重命名为 SelectionEntityType。
+
+2.15.1213.0
+    BUG修复
+        * 2.15.1210.0 Bug：使用 TypeValidationsHost 存储验证规则时，没有为它添加初始的规则列表。
+
+2.15.1212.0
+    BUG修复
+        * DisableRegionInKey 方法应该处理没有 RegionName 的情况。
+
+2.15.1211.0
+    内部修改
+        * 服务的输入属性可以不做任何标记。
+
+2.15.1210.0
+    内部修改
+        * 修改了 Entity.GetChildProperty 方法，使用更高效的托管属性来实现。
+        * 由于 RafyConfiguration 配置类需要同时支持 Web 端，所以不能使用 OpenExeConfiguration，所以只能改为只读的。
+    ★重要改动、内部修改
+        * 所有的条件类都不再生成仓库类型，以免引起混淆。
+        * 如果一个实体类型没有对应的 Repository 类型，则使用默认的 TypeValidationsHost 来存储验证规则。
+
+2.15.1208.0
+    内部修改
+        * 框架配置文件使用 System.Configuration 规范化。
+    添加接口
+        * 添加类型 RafyConfigurationSection。
+
+2.15.1207.0
+    内部修改
+        * Web 模式下的分页使用数据层分页。
+
+2.15.1206.0
+    BUG修复
+        * 解决 Web 下引用属性 js 输出的错误。
+
+2.15.1205.0
+    ！删除接口
+        * 删除 RF 中不必要的接口。
+
+2.15.1204.0
+    ！修改接口
+        * Hxy.Common 命名空间改为 Hxy。
+
+2.15.1203.0
+    ★重要改动、添加功能
+        * 支持数据分页查询。
+            * 支持以纯 Sql 查询的分页。
+
+2.15.1202.0
+    内部修改
+        * 使用内存过滤器的同时，不支持提供分页参数。
+
+2.15.1201.0
+    ！修改接口
+        * 添加 DbFactory 类型。
+
+2.15.1200.0
+    ★重要改动、！修改接口、添加接口、添加功能
+        * 支持数据分页查询。
+            * SqlServer、Oracle 支持数据库分页，其它数据库支持 DataReader 内存分页。
+            * GetAll、GetByParentId 两个方法分别添加带分页参数的查询接口。
+            * PagerInfo 重命名为 PagingInfo。同时它的 PageIndex 从 0 开始。
+            * Criteria 类型添加属性 PagingInfo。
+            * IQuery 类型添加 Paging 方法及 PagingInfo 属性。
+
+2.15.1197.0
+    内部修改
+        * StringHelper 支持 Sha1 方法加密。
+
+2.15.1196.0
+    ★重要改动、内部修改
+        * 添加 WebApp 异常处理：AppImplementationBase 中的代码应该支持多次运行，否则服务端无法在出现异常时执行重新启动操作。
+
+2.15.1195.0
+    内部修改
+        * EntityMetaRepository 添加 EnsureAllLoaded 方法。
+        * ClientEntities 在使用 CommonModel.Entities 时，必须先加载所有的实体元数据。
+
+2.15.1194.0
+    ！删除接口
+        * 删除无用的 PropertyConvention、MethodConvention 类。
+
+2.15.1193.0
+    内部修改
+        * 为了提升在本地机的数据访问速度，所以使用 if 语句来直接判断本地分支，而不再使用 LocalProxy 本地代理模式。
+    ！删除接口
+        * 删除 LocalProxy，把其代码直接放到 DataPortal 类型中。
+        * 删除 IDataPortalProxy.IsServerRemote 属性，所有 Proxy 都按照远程调用来处理。
+
+2.15.1192.0
+    添加接口
+        * 添加 PluginTable 类型。
+
+2.15.1191.0
+    添加接口
+        * EntityPropertyViewMeta 支持 DisplayPathProperties 方法。
+
+2.15.1190.0
+    添加接口
+        * ListObjectView、TreeGrid 等类添加 CheckItemsChanged 汇总事件。
+
+2.15.1189.0
+    BUG修复
+        * 数据层在 Count 时应该忽略排序的语句。
+
+2.15.1188.0
+    添加功能
+        * 开发工具中添加系统状态模块。
+
+2.15.1187.0
+    内部修改
+        * 多国语言中的 Language 类支持使用 NeedCollect 属性来设置某个语言是否支持收集操作。
+
+2.15.1186.0
+    内部修改
+        * WCF 服务端不支持多国语言，所有语言到了客户端再进行转换，这样，同一个服务端可以支持不同语言的客户端。
+
+2.15.1185.0
+    内部修改
+        * 客户端支持动态显示语言：当前语言的配置修改为使用一个 RafyConfiguration 中的一个运行时属性。
+
+2.15.1184.0
+    内部修改
+        * DbTranslator.AutoSave 方法应该在服务端执行。
+
+2.15.1183.0
+    内部修改
+        * DbSettingItemList 在查询时，需要考虑没有自动生成的数据库连接。
+
+2.15.1182.0
+    内部修改
+        * 注册所有扩展属性
+              由于插件的 Intialize 方法中应用层代码，有可能主动使用实体类而造成实体类的静态构造函数被执行，
+              所以必须在 Intialize 方法执行前，即任何实体被使用前，初始化所有的扩展属性。
+
+2.15.1181.0
+    内部修改、！删除接口
+        * 删除 IApp 中不必要的事件。
+
+2.15.1180.0
+    ★重要改动、内部修改
+        * 托管属性 V2.5
+            修改托管属性的注册行为，不再在程序启动时加载所有属性，而是在运行时按需注册需要的属性。属性注册的顺序是：
+            * 启动时，需要先注册所有的编译期扩展属性。
+            * 注册该类型自身定义的所有编译期正常属性。
+            * 运行时注册的运行期动态属性。

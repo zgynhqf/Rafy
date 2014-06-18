@@ -1,0 +1,340 @@
+﻿/*******************************************************
+ * 
+ * 创建时间：20110726
+ * 说明：本文件用于记录 Rafy 框架版本号及相应的变更记录。格式如下：
+ * 暂时分为以下几类：
+ * ★较大改动、添加接口、★修改接口、★删除接口、添加功能、重构、内部修改、BUG修改。
+ * 
+*******************************************************/
+2.6.0.118
+    BUG修改
+        * 修改CompactMessageEncoder，仅支持一种方式
+
+2.6.0.117
+    添加接口
+        * SPResultAttribute 已经被删除，但是标记了这个属性的类型是不需要生成数据库的，所以这里为 TableMeta 添加 GenerateTable 属性用于判断。
+
+2.6.0.116
+    重构
+        * 修改不规范的托管属性声明
+
+2.6.0.115
+    重构
+        * 表的映射信息添加到 EntityMeta 上作为 TableMeta 属性。
+        * 添加 IQuery.Order(IManagedProperty, bool) 接口。
+        * 添加 IDb.Query(Type entityType) 接口，返回的 IQuery 才可以使用 IManagedProperty 作为查询参数。
+        * AuditItem 不再支持 EF
+
+2.6.0.114
+    内部修改
+        * 如果是聚合子对象发生改变，而当前对象没有改变时，则不需要更新当前对象。
+
+2.6.0.113
+    重构
+        * 内置 ObjectEditCommands 代码中，数据和控件的操作需要分离。
+
+2.6.0.112
+    ★较大改动、添加功能
+        * 添加数据库生成功能。
+
+2.6.0.111
+    BUG修改
+        * 新增、修改按钮复制对象时，都不需要复制 Id。（修改按钮如果使用新的Id，则它下面子对象的父外键都将是错误的值。）
+        * 修改后的对象不能直接 MarkDirty，因为这个对象可能是新增的。
+
+2.6.0.110
+    BUG修改
+        http://ipm/issues/248115
+        复制添加按钮里CloneOptions参数的传递修改
+
+2.6.0.109
+    BUG修改
+        CreateChildrenPropertyViewMeta 时，ChildEntityType 的查询不能简单地使用单参数的 FindViewMeta 方法，而是应该指定具体的聚合根对象类型。
+
+2.6.0.108
+    添加接口
+        添加更易用的接口。
+    
+2.6.0.107
+    BUG修改
+        http://ipm.grandsoft.com.cn/issues/248149
+        小白说，为了发版，先来个不会影响其它界面的解决方案，所以我加了一个属性：EntityViewMeta.Temp_IgnoreDefaultCommand。待版本发布后更正为正式方案。
+
+2.6.0.106
+    添加接口
+         IRefProperty 添加 RefEntityType 属性。
+
+2.6.0.105
+    重构
+        直接使用字段来实现接口方法，使得速度更快。
+
+2.6.0.104
+    BUG修改
+        导航/条件查询的 TabItem 不能被设置为 Collapsed，否则自动化无法识别。
+
+2.6.0.103
+    ★删除接口
+        * 删除 As<T> 接口。
+        * 删除所有配置实体的 FluentAPI。
+    添加接口
+        * 添加相应的 MetaExtensionAPI。
+
+2.6.0.102
+    BUG修改
+        * ServerApp 初始化托管属性时，不应该检查 Module 文件。
+
+2.6.0.101
+    ★删除接口
+        * 删除配置实体的 FluentAPI。
+
+2.6.0.100
+    添加接口
+        * 添加一些元数据的配置 API。
+
+2.6.0.99
+    ★较大改动，添加接口
+        * 添加 EntityConfig 类，支持在此类的子类中进行定义。
+        * 修改 Rafy 中的实体类的配置为使用 EntityConfig。
+
+2.6.0.98
+    ★修改接口
+        * PropertyInfo 类名修改为 Property。简洁，而且和 RefProperty 保持一致。
+
+2.6.0.97
+    添加功能
+        * 注册引用实体属性的方法返回值具体到 RefProperty<TRefEntity>。
+    内部修改
+        * Rafy.Library 中的实体的引用实体属性都修改为 RefProperty<TRefEntity>。
+
+2.6.0.96
+    添加接口
+        * 添加 RafyRefPropertyExtension 扩展类，为 IRefProperty 扩展 GetIdProperty、GetRefEntityProperty 两个方法。
+
+2.6.0.95
+    重构
+        * MamagedPropertyMetadata 中使用字段，而不是属性。
+
+2.6.0.94
+    ★删除接口
+        * 删除兼容的接口 Entity.RP 静态方法。
+
+2.6.0.93
+    ★删除接口
+        * 删除兼容的接口 Entity.ReadProperty。
+
+2.6.0.92
+    ★修改接口
+        * CommandBase 重命名为 ServiceBase。
+
+2.6.0.91
+    内部修改
+        * PropertyInfo 移动到 Rafy.Library 中。
+        
+2.6.0.90
+    ★修改接口
+        * ManagedPropertyObject.NotifyPropertyChanged 修改名字为 OnPropertyChanged，以保持统一的编程体验。
+
+2.6.0.89
+    添加功能
+        * ManagedPropertyChanging 事件，支持 CoercedValue。
+        * 添加相关单元测试。
+
+2.6.0.88
+    添加功能
+        * 属性元数据中添加 CoerceGetValueCallback 支持。
+
+2.6.0.87
+    内部修改
+        * 日志模块导航面板使用单列显示。
+
+2.6.0.86
+    ★修改接口
+        * GetLazyChildren 中不需要 creator 参数。
+
+2.6.0.85
+    添加功能
+        * 添加自动汇总功能。
+
+2.6.0.84
+    内部修改
+        * 把 PropertyMetadata 从 SimpleCsla 中移动到 Library 中。
+
+2.6.0.83
+    添加接口
+        * ManagedPropertyObject 添加保护方法 NotifyPropertyChanged。
+
+2.6.0.82
+    添加功能
+        * Entity 添加路由事件的支持。
+
+2.6.0.81
+    BUG内部修改
+        * 解决 PropertyDescriptorFactory 中可能存在的重复注册事件的问题。
+
+2.6.0.80
+    添加接口
+        * 添加 DynamicPropertyHelperBase 类，方便实现动态列。
+
+2.6.0.79
+    内部修改
+        * Constrain 支持以 RefProperty 作为参数。
+
+2.6.0.78
+    内部修改
+        * LazyEntityRef 需要在 Entity 和 Id 都设置后之后，才发生外部事件，这样外部可以获得一致的 Entity 和 Id 值。
+
+2.6.0.77
+    内部修改
+        * 添加一些 Meta 配置 API。
+
+2.6.0.76
+    内部修改
+        * CslaEntity 在 Source 是数据库时，不设置当前对象为“变更”状态。
+
+2.6.0.75
+    内部修改
+        * 托管属性中 IManagedPropertyMeta.IsUsed 属性换为 IManagedProperty.UnRegisitered.
+        * 当某个类的动态属性改变时，其所有子类的聚合属性容器都应该重新刷新。
+
+2.6.0.74
+    BUG修改
+        * EntityList 在清空列表时应该把所有对象都存入删除列表中。
+        * SortableList 的同步代码需要处理 Clear() 时的视图模型同步。
+
+2.6.0.73
+    添加接口
+        * 托管属性增加 PropertyChangingCallback 回调，用于控制值的设置。
+        * 托管属性支持只读属性的注册。
+
+2.6.0.72
+    BUG修改
+        ManagedPropertyObjectList 不再实现 IListSource 接口以间接构造视图模型，
+            而是直接让 ManagedPropertyObject 来实现 ICustomTypeDescriptor。
+            这样，应用层直接使用 ManagedPropertyObjectList 作为 ItemsControl 的 ItemsSource 时，
+            可以直接使用 ManagedPropertyObject 来使用 ItemsContainer.ContainerFromItem(object item) 等接口。
+
+2.6.0.71
+    BUG修改
+        DetailObject 中的 ColumnsCount 需要考虑不显示在 Detail 中的列。
+
+2.6.0.70
+    BUG修改
+        ManagedPropertyBridge 中写入 Guid 时，需要进行类型转换。
+
+2.6.0.69
+    BUG修改
+        RefPropertyMeta 继承错误。
+
+2.6.0.68
+    内部修改
+        删除 CSLA 中无用的方法，这样就可以不外层截获异常导致无法查看异常信息。
+    重构
+        ORM
+            ColumnMeta 移动到最下层的 MetaModel 中提供，不再由 IPropertyMetadata 提供。这样，SqlTableRafyFactory 中的元数据通过 MetaModel来生成。
+            EntityPropertyMeta 添加属性 ColumnMeta。
+        托管属性
+            IManagedProperty 接口添加属性 IsExtension。
+        IRefProperty 抽取为 IRafyRefProperty，IRefPropertyMetadata 抽取为 IRafyRefPropertyMetadata，并放到 MetaModel 项目中使用。
+        ColumnAttribute.Name 重命名为 ColumnName
+        ManagedProperty.PropertyName 重命名为 Name
+
+2.6.0.67
+    BUG修改
+        OverrideRefMeta 也需要对 ColumnMeta 进行重新设置。
+
+2.6.0.66
+    BUG修改
+        ManagedPropertyBridge 中应该返回 NullableId，否则有些空值无法存储到数据库。
+
+2.6.0.65
+    BUG修改
+        CslaEntity
+            LoadProperty 之后应该把设置的值 MarkOld
+
+2.6.0.64
+    BUG修改
+        2.0.41.0 中，把 IsEFSaving 属性名变为 IsDataAccessing时，不应该把 IsDataAccessing 的激活范围扩大到 UpdateCore 之外，并包含了 UpdateChildre。这样导致孩子集合在被更新时，父对象的外键依然不可用。
+
+2.6.0.63
+    BUG修改
+        CslaEntityList 的 IsDirty 代码移植错误，漏写“不等于”。
+
+2.6.0.62
+    添加功能
+        * 属性视图元数据支持扩展属性。
+        * 添加其相应的单元测试。
+
+2.6.0.61
+    ★修改接口、★删除接口、BUG修改、重构
+        删除 Entity 中的 CreateReference 方法。移动到 RefPropertyInfo 中。
+
+2.6.0.60
+    内部修改
+        移动文件。
+
+2.6.0.59
+    内部修改
+        树形Grid支持自动换行
+
+2.6.0.58
+    BUG修改
+        CslaEntity.LoadProperty 时需要设置 Child 的 Parent 属性。
+
+2.6.0.57
+    内部修改
+        导航查询，条件查询，两者只有其一，需要隐藏Header，通过设置TabItem的Visiblity等于Collapsed来实现
+
+2.6.0.56
+    重构
+        NotifyRuntimeChanged 方法放在外面更加易读。
+
+2.6.0.55
+    修改版本号
+
+2.6.6.0
+    内部修改
+        添加 Rafy, Rafy.Web, Rafy.Web.Site 三个工程。
+
+2.6.5.0
+    内部修改
+        为 IWorkspace 接口添加属性 ActiveWindow 保存当前选中页签的实例。
+        TabControlWorkSpace 中对 ActiveWindow 属性进行实现，分两种操作进行赋值：
+        1、利用 OpenModule 方法或者是第一次打开页签
+        2、切换页签。
+
+2.6.4.0
+    BUG修改
+         http://ipm/issues/247877 因为造成了其他树型列表的界面变形，所以改回原来的默认值
+
+2.6.3.0
+    BUG修改
+        OnPropertyChanged 需要值不相同时发生。
+
+2.6.2.0
+    BUG修改
+        改变树型结构字段默认列宽，暂时用来消除字段破损的BUG http://ipm/issues/247877
+
+2.6.1.0
+    BUG修改
+        在展开节点时，会从该节点的 parentList 去读数据，这个 parentList 是没有经过排序的，导致界面呈现的顺序不正确
+
+2.6.0.0
+    ★删除接口
+        优化序列化数据：实体类的 PropertyChanged 事件不再支持序列化。
+    添加功能
+        支持 JSON(MobileFormatter) 的序列化模式。（使用方法：在 SerializationFormatterFactory 类中进行配置。）
+
+2.5.2.0
+    BUG修改
+        服务端不能直接把初始化的异常全部过滤，否则可能造成各种异常，调试困难。
+
+2.5.1.0
+    内部修改
+        优化序列化数据。
+
+2.5.0.0
+    ★较大版本
+        * 实现自定义扩展属性系统。
+        * 简化 Csla 为 SimpleCsla。
+        * 简化 LiteORM，并加入到 Rafy.ORM 中。
+        * 添加相应的单元测试。

@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="c2eced2c-e434-4d53-a06d-fbc518fbddf5" revisionNumber="1">
+    <developerConceptualDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+
+        <introduction>
+            <!--<autoOutline />-->
+
+            <para>在对实体的编写查询时，除了使用 Linq 查询和托管属性查询，还可以直接传入 Sql 语句来实现一些非常复杂的查询。例如：</para>
+            <code language="cs">
+                <![CDATA[public WarehouseList GetByName(string name)
+{
+    return this.FetchList(r => r.DA_GetByName(name));
+}
+private EntityList DA_GetByName(string name)
+{
+    FormattedSql sql =
+@"SELECT Id, Code, Name 
+FROM .....
+INNER JOIN .....
+WHERE NAME = {0}";
+    sql.Parameters.Add(name);
+
+    return this.QueryList(sql);
+}]]>
+            </code>
+            <para>以上代码编写了一个自定义 Sql 字符串进行查询，这个 Sql 语句的查询结果是一个包含三个字段（Id, Code, Name）的表格。在传递给 QueryList 方法后，框架会执行这个 Sql 语句，并把返回的结果表转换为 Warehouse 实体类的集合，表中的每一行都会转换为一个 Warehouse 实体。</para>
+            <alert class="note">
+                <para>在使用 Sql 查询时，必须保证：实体所有映射数据库的属性，在 Sql 中查询出的表格中都有对应的列。（这包括 Entity 基类的属性 Id。）</para>
+            </alert>
+        </introduction>
+
+        <!--<section address="sqlQuery">
+            <title>Sql 查询</title>
+            <content>
+            </content>
+        </section>-->
+
+        <relatedTopics/>
+    </developerConceptualDocument>
+</topic>

@@ -1,0 +1,11 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:DesignerEngine">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/DesignerEngine;component/Resources/DragThumb.xaml" />
+        <ResourceDictionary Source="/DesignerEngine;component/Resources/DesignerItemContainer.xaml" />
+        <ResourceDictionary Source="/DesignerEngine;component/Resources/ToolboxItem.xaml" />
+        <ResourceDictionary Source="/DesignerEngine;component/Resources/Toolbox.xaml" />
+        <ResourceDictionary Source="/DesignerEngine;component/Resources/Connection.xaml" />
+        <ResourceDictionary Source="/DesignerEngine;component/Resources/Connector.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

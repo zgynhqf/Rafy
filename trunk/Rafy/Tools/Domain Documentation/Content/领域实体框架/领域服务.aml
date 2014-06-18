@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="d7551c01-4f62-4e6b-8fd7-4de371df6bdf" revisionNumber="1">
+    <developerConceptualDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+
+        <introduction>
+            <autoOutline />
+        </introduction>
+
+        <section address="intro">
+            <title>简介</title>
+            <content>
+                <para>Rafy 领域服务是跨组合实体的业务逻辑的封装体。一个领域服务协同一系列领域实体来完成一个独立的业务逻辑。</para>
+                <para>Rafy 领域服务的特点：</para>
+                <list class="bullet">
+                    <listItem>
+                        <para>领域逻辑封装体</para>
+                        <para>Rafy 中的服务与经典 DDD 中的领域服务类似，它们都是业务逻辑的封装体、组织体。</para>
+                    </listItem>
+                    <listItem>
+                        <para>采用命令模式设计</para>
+                        <para>与其它的服务框架不同，Rafy 使用了命令模式来设计领域服务，以单独类来封装每个单独的服务。而 WebService/WCF 等服务框架，则是用方法来表达每一个单独的服务。把服务抽象为单独的类的模式，不但可以保证服务与服务间的相互独立，还能更好地使用面向对象的特性来提供服务的可扩展性。</para>
+                    </listItem>
+                    <listItem>
+                        <para>较高的可扩展性</para>
+                        <para>服务的可替换性：通过服务的工厂来创建服务的实例，使得我们对服务的创建过程进行扩展。例如可以使用新的服务来替换旧的服务，而不需要修改旧的服务调用代码。</para>
+                    </listItem>
+                    <listItem>
+                        <para>无状态</para>
+                        <para>领域服务是无状态的。虽然服务类都有属性，但每一次服务的调用都需要构造新的服务对象，而服务对象的属性只是为了传递服务的输入和输出，是临时的状态，当调用完成后，服务对象即被丢弃、回收。</para>
+                    </listItem>
+                    <listItem>
+                        <para>支持本地调用，也支持分布式调用</para>
+                        <para>
+                            领域服务也是除了仓库查询以外，提供分布式数据传输的另一机制。服务的调用，支持本地调用，也支持分布式调用。详见：<link xlink:href="f55333b8-3524-4a07-99bc-6a1cdb6be6b4" />。
+                        </para>
+                    </listItem>
+                    <listItem>
+                        <para>SOA 架构的基础</para>
+                        <para>在面向服务架构思想的指导下，Rafy 才抽取出领域服务。同时领域服务也是在 Rafy 框架中进行多系统集成的基础组件。</para>
+                    </listItem>
+                </list>
+            </content>
+        </section>
+
+        <section address="demo">
+            <title>代码示例</title>
+            <content>
+                <para>以下代码声明了一个简单的加法逻辑服务：</para>
+                <code language="cs">
+                    <![CDATA[[Serializable]
+public class AddService : Service
+{
+    //服务的两个输入参数
+    public int A { get; set; }
+    public int B { get; set; }
+    
+    //服务的输出参数
+    [ServiceOutput]
+    public int Result { get; set; }
+
+    protected override void Execute()
+    {
+        Result = A + B;
+    }
+}]]>
+                </code>
+                <para>要支持远程调用，必须标记服务为可序列化的。</para>
+                <para>对服务的调用也很简单，直接通过服务工厂服务一个服务对象，设置输入参数，调用服务，即可获取服务的输出：</para>
+                <code language="cs">
+                    <![CDATA[AddService svc = ServiceFactory.Create<AddService>();
+svc.A = 1;
+svc.B = 2;
+svc.Invoke();//自动分辨为远程调用，还是本地调用。
+int result = svc.Result;]]>
+                </code>
+            </content>
+        </section>
+
+        <section address="args">
+            <title>服务的输入与输出</title>
+            <content>
+                <para>以类的形式封装服务后，同样，每个服务需要声明它的输出和输出，形同方法的参数与返回值。领域服务的输入和输出都以服务类的属性的形式编写。例如上面 AddService 中的 A、B 两个属性是输出属性，而 Result 属性则是输出属性。</para>
+                <list class="bullet">
+                    <listItem>
+                        <para>输出属性</para>
+                        <para>
+                            标记了 <codeInline>ServiceOutputAttribute</codeInline> 特性的属性都是服务的输出。
+                        </para>
+                        <para>注意，一个服务可以有多个输出。</para>
+                    </listItem>
+                    <listItem>
+                        <para>输入属性</para>
+                        <para>
+                            没有任何标记、或者标记了 <codeInline>ServiceInputAttribute</codeInline> 特性的属性都是服务的输入。
+                        </para>
+                        <para>一个属性可以即是输入也是输出，这时需要同时标记以上两个特性。</para>
+                    </listItem>
+                </list>
+            </content>
+        </section>
+
+        <section address="ext">
+            <title>服务的扩展</title>
+            <content>
+                <para>在低启动级别的插件中，可以使用 ServiceFactory.Override 方法来替换高启动级别插件中的指定服务。这样，使用工厂创建出的服务，都是替换后的服务。</para>
+            </content>
+        </section>
+
+        <section address="soa">
+            <title>SOA</title>
+            <content>
+                <para>由于使用了单独的类来封装每一个服务，可使用反射更方便地遍历出所有的服务，所以更便于对服务进行管理。框架提供了 API 来完成查询服务、替换服务等功能。</para>
+            </content>
+        </section>
+
+        <relatedTopics>
+        </relatedTopics>
+    </developerConceptualDocument>
+</topic>
