@@ -23,19 +23,15 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using OEA;
-using OEA.Library;
+using Rafy;
+using Rafy.Domain;
+using Rafy.WPF.Controls;
+using Rafy.RBAC;
+using Rafy.RBAC.Security;
+using Rafy.Utils;
 
-using OEA.MetaModel.Audit;
-using OEA.Utils;
-using System.ComponentModel.Composition;
-using Common;
-using OEA.RBAC.Security;
-using OEA.RBAC;
-
-namespace OEA.Module.WPF.Shell
+namespace Rafy.WPF.Shell
 {
-    [Export(ComposableNames.LoginWindow, typeof(Window))]
     public partial class DefaultLoginWindow : Window
     {
         public DefaultLoginWindow()
@@ -44,19 +40,32 @@ namespace OEA.Module.WPF.Shell
 
             title.Content = ConfigurationHelper.GetAppSettingOrDefault("登录窗口标题", "管理信息系统");
 
-            Loaded += (o, e) => btnLogin_Click(null, null);
+            this.Loaded += OnLoaded;
+        }
+
+        void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            txtUserName.Focus();
+
+            //btnLogin_Click(null, null);
         }
 
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
-            if (!OEAPrincipal.Login(txtUserName.Text, StringHelper.MD5(txtPassword.Password)))
+            try
             {
-                MessageBox.Show("用户或密码错误，请重新输入！", "登录失败");
+                if (!RafyPrincipal.Login(txtUserName.Text, StringHelper.MD5(txtPassword.Password)))
+                {
+                    MessageBox.Show("用户或密码错误，请重新输入！", "登录失败");
+                }
+                else
+                {
+                    this.DialogResult = true;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                UserLoginLogService.NotifyLogin(OEAIdentity.Current.User);
-                this.DialogResult = true;
+                ex.Alert();
             }
         }
 

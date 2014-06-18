@@ -14,21 +14,25 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA;
+using Rafy;
 using System.Transactions;
-using OEA.Library;
-using hxy.Common;
+using Rafy.Domain;
 
 namespace JXC
 {
     [Serializable]
+    [Contract, ContractImpl]
     public class AddStorageMoveService : AddService
     {
         protected override Result ExecuteCore()
         {
+            var repo = RF.Concrete<StorageRepository>();
+
             var storageMove = this.Item as StorageMove;
-            using (var tran = RF.TransactionScope(storageMove))
+            using (var tran = RF.TransactionScope(repo))
             {
                 var storageFrom = storageMove.StorageFrom;
                 var StorageTo = storageMove.StorageTo;

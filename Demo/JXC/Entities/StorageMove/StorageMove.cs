@@ -1,46 +1,61 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA;
-using OEA.Library;
-using OEA.Library.Validation;
-using OEA.MetaModel;
-using OEA.MetaModel.Attributes;
-using OEA.MetaModel.View;
-using OEA.ManagedProperty;
-using JXC.Commands;
+using Rafy;
+using Rafy.Domain;
+using Rafy.Domain.Validation;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
+using Rafy.ManagedProperty;
+
 
 namespace JXC
 {
     [RootEntity, Serializable]
     [ConditionQueryType(typeof(TimeSpanCriteria))]
-    public class StorageMove : JXCEntity
+    public partial class StorageMove : JXCEntity
     {
-        public static readonly RefProperty<Storage> StorageFromRefProperty =
-            P<StorageMove>.RegisterRef(e => e.StorageFrom, ReferenceType.Normal);
+        #region 构造函数
+
+        public StorageMove() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected StorageMove(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
+
+        public static readonly IRefIdProperty StorageFromIdProperty =
+            P<StorageMove>.RegisterRefId(e => e.StorageFromId, ReferenceType.Normal);
         public int StorageFromId
         {
-            get { return this.GetRefId(StorageFromRefProperty); }
-            set { this.SetRefId(StorageFromRefProperty, value); }
+            get { return (int)this.GetRefId(StorageFromIdProperty); }
+            set { this.SetRefId(StorageFromIdProperty, value); }
         }
+        public static readonly RefEntityProperty<Storage> StorageFromProperty =
+            P<StorageMove>.RegisterRef(e => e.StorageFrom, StorageFromIdProperty);
         public Storage StorageFrom
         {
-            get { return this.GetRefEntity(StorageFromRefProperty); }
-            set { this.SetRefEntity(StorageFromRefProperty, value); }
+            get { return this.GetRefEntity(StorageFromProperty); }
+            set { this.SetRefEntity(StorageFromProperty, value); }
         }
 
-        public static readonly RefProperty<Storage> StorageToRefProperty =
-            P<StorageMove>.RegisterRef(e => e.StorageTo, ReferenceType.Normal);
+        public static readonly IRefIdProperty StorageToIdProperty =
+            P<StorageMove>.RegisterRefId(e => e.StorageToId, ReferenceType.Normal);
         public int StorageToId
         {
-            get { return this.GetRefId(StorageToRefProperty); }
-            set { this.SetRefId(StorageToRefProperty, value); }
+            get { return (int)this.GetRefId(StorageToIdProperty); }
+            set { this.SetRefId(StorageToIdProperty, value); }
         }
+        public static readonly RefEntityProperty<Storage> StorageToProperty =
+            P<StorageMove>.RegisterRef(e => e.StorageTo, StorageToIdProperty);
         public Storage StorageTo
         {
-            get { return this.GetRefEntity(StorageToRefProperty); }
-            set { this.SetRefEntity(StorageToRefProperty, value); }
+            get { return this.GetRefEntity(StorageToProperty); }
+            set { this.SetRefEntity(StorageToProperty, value); }
         }
 
         public static readonly ListProperty<StorageMoveItemList> StorageMoveItemListProperty = P<StorageMove>.RegisterList(e => e.StorageMoveItemList);
@@ -76,20 +91,39 @@ namespace JXC
             get { return this.GetProperty(CommentProperty); }
             set { this.SetProperty(CommentProperty, value); }
         }
+    }
 
-        protected override void AddValidations()
+    [Serializable]
+    public partial class StorageMoveList : JXCEntityList
+    {
+    }
+
+    public partial class StorageMoveRepository : JXCEntityRepository
+    {
+        protected StorageMoveRepository() { }
+
+        protected EntityList FetchBy(TimeSpanCriteria criteria)
         {
-            base.AddValidations();
+            return this.QueryList(q =>
+            {
+                q.Constrain(StorageMove.DateProperty).GreaterEqual(criteria.From)
+                    .And().Constrain(StorageMove.DateProperty).LessEqual(criteria.To);
+            });
+        }
+    }
 
-            var rules = this.ValidationRules;
-            rules.AddRule(CodeProperty, CommonRules.Required);
-            rules.AddRule(UserProperty, CommonRules.Required);
-            rules.AddRule(StorageToRefProperty, (e, args) =>
+    internal class StorageMoveConfig : EntityConfig<StorageMove>
+    {
+        protected override void AddValidations(IValidationDeclarer rules)
+        {
+            rules.AddRule(StorageMove.CodeProperty, CommonRules.Required);
+            rules.AddRule(StorageMove.UserProperty, CommonRules.Required);
+            rules.AddRule(StorageMove.StorageToProperty, (e, args) =>
             {
                 var move = e as StorageMove;
                 if (move.StorageToId == move.StorageFromId)
                 {
-                    args.BrokenDescription = "出货仓库和入货仓库不能是同一个仓库";
+                    args.BrokenDescription = "出货仓库和入货仓库不能是同一个仓库".Translate();
                 }
             });
             rules.AddRule((e, args) =>
@@ -98,7 +132,7 @@ namespace JXC
                 var children = move.StorageMoveItemList;
                 if (children.Count == 0)
                 {
-                    args.BrokenDescription = "没有需要调拔的商品项。";
+                    args.BrokenDescription = "没有需要调拔的商品项。".Translate();
                     return;
                 }
 
@@ -106,62 +140,16 @@ namespace JXC
                 {
                     if (item.Amount <= 0)
                     {
-                        args.BrokenDescription = "商品项数量必须是正数。";
+                        args.BrokenDescription = "商品项数量必须是正数。".Translate();
                         return;
                     }
                 }
             });
         }
-    }
 
-    [Serializable]
-    public class StorageMoveList : JXCEntityList
-    {
-        protected void QueryBy(TimeSpanCriteria criteria)
-        {
-            this.QueryDb(q =>
-            {
-                q.Constrain(StorageMove.DateProperty).GreaterEqual(criteria.From)
-                    .And().Constrain(StorageMove.DateProperty).LessEqual(criteria.To);
-            });
-        }
-    }
-
-    public class StorageMoveRepository : EntityRepository
-    {
-        protected StorageMoveRepository() { }
-    }
-
-    internal class StorageMoveConfig : EntityConfig<StorageMove>
-    {
         protected override void ConfigMeta()
         {
-            Meta.MapTable().MapAllPropertiesToTable();
-        }
-
-        protected override void ConfigView()
-        {
-            View.DomainName("库存调拔").HasDelegate(StorageMove.CodeProperty);
-
-            View.HasDetailColumnsCount(2);
-
-            View.ClearWPFCommands(false)
-                .UseWPFCommands(
-                typeof(AddStorageMoveBill),
-                typeof(ShowBill),
-                WPFCommandNames.Refresh
-                );
-
-            using (View.OrderProperties())
-            {
-                View.Property(StorageMove.CodeProperty).HasLabel("调拔单编号").ShowIn(ShowInWhere.All);
-                View.Property(StorageMove.UserProperty).HasLabel("发货人").ShowIn(ShowInWhere.ListDetail);
-                View.Property(StorageMove.DateProperty).HasLabel("发货日期").ShowIn(ShowInWhere.ListDetail);
-                View.Property(StorageMove.StorageFromRefProperty).HasLabel("出货仓库").ShowIn(ShowInWhere.ListDetail);
-                View.Property(StorageMove.StorageToRefProperty).HasLabel("收货仓库").ShowIn(ShowInWhere.ListDetail);
-                View.Property(StorageMove.CommentProperty).HasLabel("备注").ShowIn(ShowInWhere.ListDetail)
-                    .ShowMemoInDetail();
-            }
+            Meta.MapTable().MapAllProperties();
         }
     }
 }

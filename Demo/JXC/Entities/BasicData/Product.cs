@@ -14,61 +14,79 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA.Library;
-using OEA.MetaModel;
-using OEA.MetaModel.Attributes;
-using OEA.MetaModel.View;
-using OEA.RBAC;
-using OEA.RBAC.Security;
-using OEA;
-using JXC.Commands;
-using JXC.WPF;
-using OEA.Library.Caching;
+using Rafy;
+using Rafy.Domain;
+using Rafy.Domain.Caching;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
+using Rafy.RBAC;
+using Rafy.RBAC.Security;
 
 namespace JXC
 {
+    /// <summary>
+    /// 产品
+    /// </summary>
     [RootEntity, Serializable]
     [NavigationQueryType(typeof(ProductNavigationCriteria))]
-    public class Product : JXCEntity
+    public partial class Product : JXCEntity
     {
-        public static readonly RefProperty<ProductCategory> ProductCategoryRefProperty =
-            P<Product>.RegisterRef(e => e.ProductCategory, ReferenceType.Normal);
+        #region 构造函数
+
+        public Product() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected Product(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
+
+        public static readonly IRefIdProperty ProductCategoryIdProperty =
+            P<Product>.RegisterRefId(e => e.ProductCategoryId, ReferenceType.Normal);
         public int ProductCategoryId
         {
-            get { return this.GetRefId(ProductCategoryRefProperty); }
-            set { this.SetRefId(ProductCategoryRefProperty, value); }
+            get { return (int)this.GetRefId(ProductCategoryIdProperty); }
+            set { this.SetRefId(ProductCategoryIdProperty, value); }
         }
+        public static readonly RefEntityProperty<ProductCategory> ProductCategoryProperty =
+            P<Product>.RegisterRef(e => e.ProductCategory, ProductCategoryIdProperty);
         public ProductCategory ProductCategory
         {
-            get { return this.GetRefEntity(ProductCategoryRefProperty); }
-            set { this.SetRefEntity(ProductCategoryRefProperty, value); }
+            get { return this.GetRefEntity(ProductCategoryProperty); }
+            set { this.SetRefEntity(ProductCategoryProperty, value); }
         }
 
-        public static readonly RefProperty<ClientInfo> SupplierRefProperty =
-            P<Product>.RegisterRef(e => e.Supplier, ReferenceType.Normal);
+        public static readonly IRefIdProperty SupplierIdProperty =
+            P<Product>.RegisterRefId(e => e.SupplierId, ReferenceType.Normal);
         public int SupplierId
         {
-            get { return this.GetRefId(SupplierRefProperty); }
-            set { this.SetRefId(SupplierRefProperty, value); }
+            get { return (int)this.GetRefId(SupplierIdProperty); }
+            set { this.SetRefId(SupplierIdProperty, value); }
         }
+        public static readonly RefEntityProperty<ClientInfo> SupplierProperty =
+            P<Product>.RegisterRef(e => e.Supplier, SupplierIdProperty);
         public ClientInfo Supplier
         {
-            get { return this.GetRefEntity(SupplierRefProperty); }
-            set { this.SetRefEntity(SupplierRefProperty, value); }
+            get { return this.GetRefEntity(SupplierProperty); }
+            set { this.SetRefEntity(SupplierProperty, value); }
         }
 
-        public static readonly RefProperty<User> OperatorRefProperty =
-            P<Product>.RegisterRef(e => e.Operator, ReferenceType.Normal);
+        public static readonly IRefIdProperty OperatorIdProperty =
+            P<Product>.RegisterRefId(e => e.OperatorId, ReferenceType.Normal);
         public int OperatorId
         {
-            get { return this.GetRefId(OperatorRefProperty); }
-            set { this.SetRefId(OperatorRefProperty, value); }
+            get { return (int)this.GetRefId(OperatorIdProperty); }
+            set { this.SetRefId(OperatorIdProperty, value); }
         }
+        public static readonly RefEntityProperty<User> OperatorProperty =
+            P<Product>.RegisterRef(e => e.Operator, OperatorIdProperty);
         public User Operator
         {
-            get { return this.GetRefEntity(OperatorRefProperty); }
-            set { this.SetRefEntity(OperatorRefProperty, value); }
+            get { return this.GetRefEntity(OperatorProperty); }
+            set { this.SetRefEntity(OperatorProperty, value); }
         }
 
         public static readonly ListProperty<ProductAttachementList> ProductAttachementListProperty = P<Product>.RegisterList(e => e.ProductAttachementList);
@@ -212,52 +230,54 @@ namespace JXC
     }
 
     [Serializable]
-    public class ProductList : JXCEntityList
+    public partial class ProductList : JXCEntityList
     {
-        /// <summary>
-        /// 导航面板查询
-        /// </summary>
-        /// <param name="criteria"></param>
-        protected void QueryBy(ProductNavigationCriteria criteria)
-        {
-            this.QueryDb(q =>
-            {
-                //q.JoinRef(Product.ProductCategoryRefProperty);
-
-                //if (criteria.IncludeSub)
-                //{
-                //    q.Constrain(ProductCategory.TreeCodeProperty).StartWith(criteria.ProductCategory.TreeCode);
-                //}
-                //else
-                //{
-                //    q.Constrain(ProductCategory.TreeCodeProperty).Equal(criteria.ProductCategory.TreeCode);
-                //}
-
-                q.Constrain(Product.ProductCategoryRefProperty).Equal(criteria.ProductCategoryId);
-
-                if (criteria.IncludeSub)
-                {
-                    foreach (var child in criteria.ProductCategory.GetTreeChildrenRecur())
-                    {
-                        q.Or().Constrain(Product.ProductCategoryRefProperty).Equal(child.Id);
-                    }
-                }
-            });
-        }
-
-        protected void QueryBy(string barcode)
-        {
-            this.QueryDb(q => q.Constrain(Product.BarcodeProperty).Equal(barcode));
-        }
     }
 
-    public class ProductRepository : EntityRepository
+    public partial class ProductRepository : JXCEntityRepository
     {
         protected ProductRepository() { }
 
         public Product GetByBarcode(string barcode)
         {
-            return this.FetchFirstAs<Product>(barcode);
+            return this.FetchFirst(barcode);
+        }
+
+        /// <summary>
+        /// 导航面板查询
+        /// </summary>
+        /// <param name="criteria"></param>
+        protected EntityList FetchBy(ProductNavigationCriteria criteria)
+        {
+            return this.QueryList(q =>
+            {
+                //q.JoinRef(Product.ProductCategoryIdProperty));
+
+                //if (criteria.IncludeSub)
+                //{
+                //    q.Constrain(ProductCategory.TreeIndexProperty).StartWith(criteria.ProductCategory.TreeCode);
+                //}
+                //else
+                //{
+                //    q.Constrain(ProductCategory.TreeIndexProperty).Equal(criteria.ProductCategory.TreeCode);
+                //}
+
+                q.Constrain(Product.ProductCategoryIdProperty).Equal(criteria.ProductCategoryId);
+
+                if (criteria.IncludeSub)
+                {
+                    criteria.ProductCategory.TreeChildren.EachNode(child =>
+                    {
+                        q.Or().Constrain(Product.ProductCategoryIdProperty).Equal(child.Id);
+                        return false;
+                    });
+                }
+            });
+        }
+
+        protected EntityList FetchBy(string barcode)
+        {
+            return this.QueryList(q => q.Constrain(Product.BarcodeProperty).Equal(barcode));
         }
     }
 
@@ -265,70 +285,14 @@ namespace JXC
     {
         protected override void ConfigMeta()
         {
-            Meta.MapTable().MapAllPropertiesToTable();
+            Meta.MapTable().MapAllProperties();
 
             Meta.Property(Product.PictureProperty).MapColumn().IsNullable();
-            Meta.Property(Product.SupplierRefProperty).MapColumn().HasColumnName("ClientInfoId");
-            Meta.Property(Product.OperatorRefProperty).MapColumn().HasColumnName("UserId");
+            Meta.Property(Product.SupplierIdProperty).MapColumn().HasColumnName("ClientInfoId");
+            Meta.Property(Product.OperatorIdProperty).MapColumn().HasColumnName("UserId");
 
             //基础数据启用分布式缓存
-            Meta.EnableCache();
-        }
-
-        protected override void ConfigView()
-        {
-            base.ConfigView();
-
-            View.DomainName("商品").HasDelegate(Product.MingChengProperty);
-
-            View.UseWPFCommands(typeof(ResetProductAmountCommand));
-
-            View.UseDetailPanel<ProductDetailPanel>();
-
-            using (View.OrderProperties())
-            {
-                View.Property(Product.BianMaProperty)
-                    .HasLabel("编码").ShowIn(ShowInWhere.All).ShowInDetail(contentWidth: 0.7, columnSpan: 2);
-                View.Property(Product.MingChengProperty)
-                    .HasLabel("名称").ShowIn(ShowInWhere.All).ShowInDetail(contentWidth: 600, columnSpan: 2);
-                View.Property(Product.BarcodeProperty)
-                    .HasLabel("条码").ShowIn(ShowInWhere.ListDetail).ShowInDetail(contentWidth: 0.7, columnSpan: 2);
-                View.Property(Product.PictureProperty)
-                    .HasLabel("图片").ShowIn(ShowInWhere.Detail).UseEditor("ImageSelector");
-                View.Property(Product.ProductCategoryRefProperty)
-                    .HasLabel("商品类别").ShowIn(ShowInWhere.ListDetail);
-                View.Property(Product.GuiGeProperty)
-                    .HasLabel("规格").ShowIn(ShowInWhere.ListDetail);
-                View.Property(Product.PingPaiProperty)
-                    .HasLabel("品牌").ShowIn(ShowInWhere.ListDetail).ShowInDetail(columnSpan: 2);
-                View.Property(Product.StorageAmountProperty)
-                    .HasLabel("库存量").ShowIn(ShowInWhere.ListDetail).Readonly();
-                View.Property(Product.CaiGouDanjiaProperty)
-                    .HasLabel("采购单价").ShowIn(ShowInWhere.ListDetail);
-                View.Property(Product.XiaoShouDanJiaProperty)
-                    .HasLabel("销售单价").ShowIn(ShowInWhere.ListDetail);
-                View.Property(Product.SupplierRefProperty)
-                    .HasLabel("销售商名称").ShowIn(ShowInWhere.ListDetail);
-                View.Property(Product.XiaoShouJia_1Property)
-                    .HasLabel("一级销售价").ShowIn(ShowInWhere.ListDetail);
-                View.Property(Product.XiaoShouJia_2Property)
-                    .HasLabel("二级销售价").ShowIn(ShowInWhere.ListDetail);
-                View.Property(Product.XiaoShouJia_3Property)
-                    .HasLabel("三级销售价").ShowIn(ShowInWhere.ListDetail);
-                View.Property(Product.BeiZhuProperty)
-                    .HasLabel("备注").ShowIn(ShowInWhere.ListDetail).ShowMemoInDetail();
-                View.Property(Product.OperateTimeProperty)
-                    .HasLabel("操作时间").ShowIn(ShowInWhere.Detail).Readonly();
-                View.Property(Product.OperatorRefProperty)
-                    .HasLabel("操作员").ShowIn(ShowInWhere.Detail).Readonly();
-
-                View.Property(Product.Time1Property)
-                    .HasLabel("日期").ShowIn(ShowInWhere.ListDetail);
-                View.Property(Product.Time2Property)
-                    .HasLabel("日期时间").ShowIn(ShowInWhere.ListDetail);
-                View.Property(Product.Time3Property)
-                    .HasLabel("时间").ShowIn(ShowInWhere.ListDetail);
-            }
+            Meta.EnableClientCache();
         }
     }
 }

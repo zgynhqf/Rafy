@@ -14,29 +14,60 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA.Library;
-using OEA.MetaModel;
-using OEA.MetaModel.Attributes;
-using OEA.MetaModel.View;
+using Rafy.Domain;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
 
 namespace JXC
 {
+    /// <summary>
+    /// 产品类别
+    /// </summary>
     [RootEntity, Serializable]
-    public class ProductCategory : JXCEntity
+    public partial class ProductCategory : JXCEntity
     {
+        #region 构造函数
+
+        public ProductCategory() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected ProductCategory(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
+
         public static readonly Property<string> NameProperty = P<ProductCategory>.Register(e => e.Name);
         public string Name
         {
             get { return this.GetProperty(NameProperty); }
             set { this.SetProperty(NameProperty, value); }
         }
+
+        #region 性能测试代码
+
+        //static ProductCategory()
+        //{
+        //    for (int i = 0; i < 100; i++)
+        //    {
+        //        P<ProductCategory>.RegisterExtension("Name" + i, typeof(ProductCategory), "默认数据");
+        //    }
+        //}
+
+        //        for (int i = 0; i < 100; i++)
+        //        {
+        //            View.Property("Name" + i).ShowIn(ShowInWhere.List);
+        //        }
+
+        #endregion
     }
 
     [Serializable]
-    public class ProductCategoryList : JXCEntityList { }
+    public partial class ProductCategoryList : JXCEntityList { }
 
-    public class ProductCategoryRepository : EntityRepository
+    public partial class ProductCategoryRepository : JXCEntityRepository
     {
         protected ProductCategoryRepository() { }
     }
@@ -51,18 +82,7 @@ namespace JXC
                 ProductCategory.NameProperty
                 );
 
-            Meta.EnableCache();
-        }
-
-        protected override void ConfigView()
-        {
-            base.ConfigView();
-
-            View.DomainName("商品类别").HasDelegate(ProductCategory.NameProperty);
-
-            View.Property(ProductCategory.TreeCodeProperty).HasLabel("编码").ShowIn(ShowInWhere.ListDropDown)
-                .HasOrderNo(-1).Readonly();
-            View.Property(ProductCategory.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
+            Meta.EnableClientCache();
         }
     }
 }

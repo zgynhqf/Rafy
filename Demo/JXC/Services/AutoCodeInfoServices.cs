@@ -14,16 +14,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA;
+using Rafy;
 using System.Transactions;
-using OEA.Library;
-using hxy.Common;
-using OEA.Web;
+using Rafy.Domain;
+using Rafy.Web;
 
 namespace JXC
 {
     [Serializable]
+    [JsonService]
+    [Contract, ContractImpl]
     public class AutoCodeService : Service
     {
         [ServiceOutput]
@@ -34,11 +37,11 @@ namespace JXC
 
         protected override void Execute()
         {
-            if (OEAEnvironment.IsWPF) throw new InvalidOperationException("IsWPF must be false.");
+            if (!RafyEnvironment.Location.IsWebUI) throw new InvalidOperationException("此命令只在 Web 模式下可用。");
 
             var entityType = ClientEntities.Find(this.EntityType).EntityType;
 
-            this.code = RF.Concreate<AutoCodeInfoRepository>().GetOrCreateAutoCode(entityType);
+            this.code = RF.Concrete<AutoCodeInfoRepository>().GetOrCreateAutoCode(entityType);
         }
     }
 }

@@ -14,33 +14,49 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA;
-using OEA.Library;
-using OEA.MetaModel;
-using OEA.MetaModel.Attributes;
-using OEA.MetaModel.View;
+using Rafy;
+using Rafy.Domain;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
 
 namespace JXC
 {
+    /// <summary>
+    /// 客户
+    /// </summary>
     [RootEntity, Serializable]
-    public class ClientInfo : JXCEntity
+    public partial class ClientInfo : JXCEntity
     {
-        public static readonly RefProperty<ClientCategory> ClientCategoryRefProperty =
-            P<ClientInfo>.RegisterRef(e => e.ClientCategory, ReferenceType.Normal);
+        #region 构造函数
+
+        public ClientInfo() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected ClientInfo(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
+
+        public static readonly IRefIdProperty ClientCategoryIdProperty =
+            P<ClientInfo>.RegisterRefId(e => e.ClientCategoryId, ReferenceType.Normal);
         public int ClientCategoryId
         {
-            get { return this.GetRefId(ClientCategoryRefProperty); }
-            set { this.SetRefId(ClientCategoryRefProperty, value); }
+            get { return (int)this.GetRefId(ClientCategoryIdProperty); }
+            set { this.SetRefId(ClientCategoryIdProperty, value); }
         }
+        public static readonly RefEntityProperty<ClientCategory> ClientCategoryProperty =
+            P<ClientInfo>.RegisterRef(e => e.ClientCategory, ClientCategoryIdProperty);
         public ClientCategory ClientCategory
         {
-            get { return this.GetRefEntity(ClientCategoryRefProperty); }
-            set { this.SetRefEntity(ClientCategoryRefProperty, value); }
+            get { return this.GetRefEntity(ClientCategoryProperty); }
+            set { this.SetRefEntity(ClientCategoryProperty, value); }
         }
 
         public static readonly Property<string> CategoryNameProperty = P<ClientInfo>.RegisterRedundancy(e => e.CategoryName,
-            new RedundantPath(ClientCategoryRefProperty, ClientCategory.NameProperty));
+            new RedundantPath(ClientCategoryProperty, ClientCategory.NameProperty));
         public string CategoryName
         {
             get { return this.GetProperty(CategoryNameProperty); }
@@ -116,9 +132,9 @@ namespace JXC
     }
 
     [Serializable]
-    public class ClientInfoList : JXCEntityList { }
+    public partial class ClientInfoList : JXCEntityList { }
 
-    public class ClientInfoRepository : EntityRepository
+    public partial class ClientInfoRepository : JXCEntityRepository
     {
         protected ClientInfoRepository() { }
 
@@ -134,7 +150,7 @@ namespace JXC
 
         public ClientInfoList GetByCategoryName(string name)
         {
-            var list = this.GetAll()
+            var list = this.CacheAll()
                 .Where(e => e.CastTo<ClientInfo>().ClientCategory.Name == name);
 
             var result = this.NewList();
@@ -149,7 +165,7 @@ namespace JXC
         protected override void ConfigMeta()
         {
             Meta.MapTable().MapProperties(
-                ClientInfo.ClientCategoryRefProperty,
+                ClientInfo.ClientCategoryIdProperty,
                 ClientInfo.NameProperty,
                 ClientInfo.ZhuJiMaProperty,
                 ClientInfo.FaRenDaiBiaoProperty,
@@ -162,26 +178,7 @@ namespace JXC
                 ClientInfo.CategoryNameProperty
                 );
 
-            Meta.EnableCache();
-        }
-
-        protected override void ConfigView()
-        {
-            View.DomainName("客户").HasDelegate(ClientInfo.NameProperty);
-
-            using (View.OrderProperties())
-            {
-                View.Property(ClientInfo.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
-                View.Property(ClientInfo.ZhuJiMaProperty).HasLabel("助记码").ShowIn(ShowInWhere.ListDetail);
-                View.Property(ClientInfo.FaRenDaiBiaoProperty).HasLabel("法人代表").ShowIn(ShowInWhere.ListDetail);
-                View.Property(ClientInfo.YouXiangProperty).HasLabel("邮箱").ShowIn(ShowInWhere.ListDetail);
-                View.Property(ClientInfo.ClientCategoryRefProperty).HasLabel("客户类别").ShowIn(ShowInWhere.ListDetail);
-                View.Property(ClientInfo.KaiHuYinHangProperty).HasLabel("开户银行").ShowIn(ShowInWhere.ListDetail);
-                View.Property(ClientInfo.ShouJiaJiBieProperty).HasLabel("售价级别").ShowIn(ShowInWhere.ListDetail);
-                View.Property(ClientInfo.YinHangZhangHuProperty).HasLabel("银行帐户").ShowIn(ShowInWhere.ListDetail);
-                View.Property(ClientInfo.BeiZhuProperty).HasLabel("备注").ShowIn(ShowInWhere.ListDetail)
-                    .ShowMemoInDetail();
-            }
+            Meta.EnableClientCache();
         }
     }
 }

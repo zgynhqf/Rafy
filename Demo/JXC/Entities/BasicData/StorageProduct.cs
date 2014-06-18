@@ -1,38 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA;
-using OEA.Library;
-using OEA.Library.Validation;
-using OEA.MetaModel;
-using OEA.MetaModel.Attributes;
-using OEA.MetaModel.View;
-using OEA.ManagedProperty;
+using Rafy;
+using Rafy.Domain;
+using Rafy.Domain.Validation;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
+using Rafy.ManagedProperty;
 
 namespace JXC
 {
+    /// <summary>
+    /// 库存货品
+    /// </summary>
     [ChildEntity, Serializable]
-    public class StorageProduct : ProductRefItem
+    public partial class StorageProduct : ProductRefItem
     {
-        public static readonly RefProperty<Storage> StorageRefProperty =
-            P<StorageProduct>.RegisterRef(e => e.Storage, ReferenceType.Parent);
+        #region 构造函数
+
+        public StorageProduct() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected StorageProduct(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
+
+        public static readonly IRefIdProperty StorageIdProperty =
+            P<StorageProduct>.RegisterRefId(e => e.StorageId, ReferenceType.Parent);
         public int StorageId
         {
-            get { return this.GetRefId(StorageRefProperty); }
-            set { this.SetRefId(StorageRefProperty, value); }
+            get { return (int)this.GetRefId(StorageIdProperty); }
+            set { this.SetRefId(StorageIdProperty, value); }
         }
+        public static readonly RefEntityProperty<Storage> StorageProperty =
+            P<StorageProduct>.RegisterRef(e => e.Storage, StorageIdProperty);
         public Storage Storage
         {
-            get { return this.GetRefEntity(StorageRefProperty); }
-            set { this.SetRefEntity(StorageRefProperty, value); }
+            get { return this.GetRefEntity(StorageProperty); }
+            set { this.SetRefEntity(StorageProperty, value); }
         }
     }
 
     [Serializable]
-    public class StorageProductList : ProductRefItemList { }
+    public partial class StorageProductList : ProductRefItemList { }
 
-    public class StorageProductRepository : EntityRepository
+    public partial class StorageProductRepository : JXCEntityRepository
     {
         protected StorageProductRepository() { }
     }
@@ -41,20 +57,7 @@ namespace JXC
     {
         protected override void ConfigMeta()
         {
-            Meta.MapTable().MapAllPropertiesToTable();
-        }
-
-        protected override void ConfigView()
-        {
-            View.DomainName("库存货品").HasDelegate(StorageProduct.View_ProductNameProperty);
-
-            using (View.OrderProperties())
-            {
-                View.Property(StorageProduct.View_ProductNameProperty).HasLabel("商品名称").ShowIn(ShowInWhere.All);
-                View.Property(StorageProduct.View_ProductCategoryNameProperty).HasLabel("商品类别").ShowIn(ShowInWhere.List);
-                View.Property(StorageProduct.View_SpecificationProperty).HasLabel("规格").ShowIn(ShowInWhere.List);
-                View.Property(StorageProduct.AmountProperty).HasLabel("当前数量").ShowIn(ShowInWhere.List);
-            }
+            Meta.MapTable().MapAllProperties();
         }
     }
 }

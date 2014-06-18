@@ -14,17 +14,30 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA.Library;
-using OEA.MetaModel;
-using OEA.MetaModel.Attributes;
-using OEA.MetaModel.View;
+using Rafy;
+using Rafy.Domain;
+using Rafy.ManagedProperty;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
 
 namespace Demo
 {
     [RootEntity, Serializable]
-    public class BookAdministrator : DemoEntity
+    public partial class BookAdministrator : DemoEntity
     {
+        #region 构造函数
+
+        public BookAdministrator() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected BookAdministrator(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
+
         public static readonly Property<string> UserNameProperty = P<BookAdministrator>.Register(e => e.UserName);
         public string UserName
         {
@@ -32,22 +45,25 @@ namespace Demo
             set { this.SetProperty(UserNameProperty, value); }
         }
 
-        public static readonly RefProperty<Province> ProvinceRefProperty =
-            P<BookAdministrator>.RegisterRef(e => e.Province, new RefPropertyMeta
-            {
-                RefEntityChangedCallBack = (o, e) => (o as BookAdministrator).OnProvinceChanged(e),
-            });
+        public static readonly IRefIdProperty ProvinceIdProperty =
+            P<BookAdministrator>.RegisterRefId(e => e.ProvinceId, ReferenceType.Normal);
         public int? ProvinceId
         {
-            get { return this.GetRefNullableId(ProvinceRefProperty); }
-            set { this.SetRefNullableId(ProvinceRefProperty, value); }
+            get { return (int?)this.GetRefNullableId(ProvinceIdProperty); }
+            set { this.SetRefNullableId(ProvinceIdProperty, value); }
         }
+        public static readonly RefEntityProperty<Province> ProvinceProperty =
+            P<BookAdministrator>.RegisterRef(e => e.Province, new RegisterRefArgs
+            {
+                RefIdProperty = ProvinceIdProperty,
+                PropertyChangedCallBack = (o, e) => (o as BookAdministrator).OnProvinceChanged(e)
+            });
         public Province Province
         {
-            get { return this.GetRefEntity(ProvinceRefProperty); }
-            set { this.SetRefEntity(ProvinceRefProperty, value); }
+            get { return this.GetRefEntity(ProvinceProperty); }
+            set { this.SetRefEntity(ProvinceProperty, value); }
         }
-        protected virtual void OnProvinceChanged(RefEntityChangedEventArgs e)
+        protected virtual void OnProvinceChanged(ManagedPropertyChangedEventArgs e)
         {
             this.City = null;
         }
@@ -63,22 +79,25 @@ namespace Demo
             return this.Province != null ? this.Province.Name : string.Empty;
         }
 
-        public static readonly RefProperty<City> CityRefProperty =
-            P<BookAdministrator>.RegisterRef(e => e.City, new RefPropertyMeta
-            {
-                RefEntityChangedCallBack = (o, e) => (o as BookAdministrator).OnCityChanged(e),
-            });
+        public static readonly IRefIdProperty CityIdProperty =
+            P<BookAdministrator>.RegisterRefId(e => e.CityId, ReferenceType.Normal);
         public int? CityId
         {
-            get { return this.GetRefNullableId(CityRefProperty); }
-            set { this.SetRefNullableId(CityRefProperty, value); }
+            get { return (int?)this.GetRefNullableId(CityIdProperty); }
+            set { this.SetRefNullableId(CityIdProperty, value); }
         }
+        public static readonly RefEntityProperty<City> CityProperty =
+            P<BookAdministrator>.RegisterRef(e => e.City, new RegisterRefArgs
+            {
+                RefIdProperty = CityIdProperty,
+                PropertyChangedCallBack = (o, e) => (o as BookAdministrator).OnCityChanged(e)
+            });
         public City City
         {
-            get { return this.GetRefEntity(CityRefProperty); }
-            set { this.SetRefEntity(CityRefProperty, value); }
+            get { return this.GetRefEntity(CityProperty); }
+            set { this.SetRefEntity(CityProperty, value); }
         }
-        protected virtual void OnCityChanged(RefEntityChangedEventArgs e)
+        protected virtual void OnCityChanged(ManagedPropertyChangedEventArgs e)
         {
             this.Country = null;
         }
@@ -92,17 +111,19 @@ namespace Demo
             return this.Province.CityList;
         }
 
-        public static readonly RefProperty<Country> CountryRefProperty =
-            P<BookAdministrator>.RegisterRef(e => e.Country, ReferenceType.Normal);
+        public static readonly IRefIdProperty CountryIdProperty =
+            P<BookAdministrator>.RegisterRefId(e => e.CountryId, ReferenceType.Normal);
         public int? CountryId
         {
-            get { return this.GetRefNullableId(CountryRefProperty); }
-            set { this.SetRefNullableId(CountryRefProperty, value); }
+            get { return (int?)this.GetRefNullableId(CountryIdProperty); }
+            set { this.SetRefNullableId(CountryIdProperty, value); }
         }
+        public static readonly RefEntityProperty<Country> CountryProperty =
+            P<BookAdministrator>.RegisterRef(e => e.Country, CountryIdProperty);
         public Country Country
         {
-            get { return this.GetRefEntity(CountryRefProperty); }
-            set { this.SetRefEntity(CountryRefProperty, value); }
+            get { return this.GetRefEntity(CountryProperty); }
+            set { this.SetRefEntity(CountryProperty, value); }
         }
         public static readonly Property<CountryList> CountryDataSourceProperty = P<BookAdministrator>.RegisterReadOnly(e => e.CountryDataSource, e => (e as BookAdministrator).GetCountryDataSource());
         public CountryList CountryDataSource
@@ -116,41 +137,46 @@ namespace Demo
     }
 
     [Serializable]
-    public class BookAdministratorList : DemoEntityList { }
+    public partial class BookAdministratorList : DemoEntityList { }
 
-    public class BookAdministratorRepository : EntityRepository
+    public partial class BookAdministratorRepository : DemoEntityRepository
     {
         protected BookAdministratorRepository() { }
     }
 
-    internal class BookAdministratorConfig : EntityConfig<BookAdministrator>
+    internal class BookAdministratorConfig : DemoEntityConfig<BookAdministrator>
     {
         protected override void ConfigMeta()
         {
             base.ConfigMeta();
 
             Meta.MapTable().MapProperties(
-                BookAdministrator.ProvinceRefProperty,
-                BookAdministrator.CityRefProperty,
-                BookAdministrator.CountryRefProperty,
+                BookAdministrator.ProvinceIdProperty,
+                BookAdministrator.CityIdProperty,
+                BookAdministrator.CountryIdProperty,
                 BookAdministrator.UserNameProperty
                 );
         }
+    }
 
+    internal class BookAdministratorWPFConfig : DemoEntityWPFViewConfig<BookAdministrator>
+    {
         protected override void ConfigView()
         {
             base.ConfigView();
 
             View.DomainName("管理员").HasDelegate(BookAdministrator.UserNameProperty);
 
+            View.UseDefaultCommands();
+
             View.Property(BookAdministrator.UserNameProperty).HasLabel("姓名").ShowIn(ShowInWhere.All);
 
             //三级联动示例
-            View.Property(BookAdministrator.ProvinceRefProperty).HasLabel("住址：省").ShowIn(ShowInWhere.All)
+            View.Property(BookAdministrator.ProvinceProperty).HasLabel("住址：省").ShowIn(ShowInWhere.All)
                 .UseEditor(WPFEditorNames.EntitySelection_Popup);
-            View.Property(BookAdministrator.CityRefProperty).HasLabel("住址：市").ShowIn(ShowInWhere.All)
+            View.Property(BookAdministrator.CityProperty).HasLabel("住址：市").ShowIn(ShowInWhere.All)
                 .UseDataSource(BookAdministrator.CityDataSourceProperty);
-            View.Property(BookAdministrator.CountryRefProperty).HasLabel("住址：县").ShowIn(ShowInWhere.All)
+            View.Property(BookAdministrator.CountryProperty).HasLabel("住址：县").ShowIn(ShowInWhere.All)
                 .UseDataSource(BookAdministrator.CountryDataSourceProperty);
         }
     }

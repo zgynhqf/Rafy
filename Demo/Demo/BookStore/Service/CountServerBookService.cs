@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA.Web;
-using OEA.Library;
-using OEA;
+using Rafy.Web;
+using Rafy.Domain;
+using Rafy;
 
 namespace Demo
 {
     [Serializable]
-    [ClientServiceName("CountServerBookService")]
+    [JsonService("CountServerBookService")]
+    [Contract, ContractImpl]
     public class CountServerBookJsonService : Service
     {
         [ServiceOutput]

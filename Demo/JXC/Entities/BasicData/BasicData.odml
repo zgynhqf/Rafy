@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-16"?>
+<Document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" HideNonsenceLabels="false">
+  <EntityTypes>
+    <EntityTypeElement FullName="JXC.ClientCategory" Label="客户类别" Left="463" Top="127" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
+      <Properties>
+        <PropertyElement Name="Name" PropertyType="String" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="JXC.ClientInfo" Label="客户" Left="274" Top="127" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
+      <Properties>
+        <PropertyElement Name="CategoryName" PropertyType="String" />
+        <PropertyElement Name="Name" PropertyType="String" />
+        <PropertyElement Name="ZhuJiMa" PropertyType="String" />
+        <PropertyElement Name="FaRenDaiBiao" PropertyType="String" />
+        <PropertyElement Name="YouXiang" PropertyType="String" />
+        <PropertyElement Name="KaiHuYinHang" PropertyType="String" />
+        <PropertyElement Name="ShouJiaJiBie" PropertyType="ShouJiaJiBie" />
+        <PropertyElement Name="YinHangZhangHu" PropertyType="String" />
+        <PropertyElement Name="BeiZhu" PropertyType="String" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="JXC.FileAttachement" Label="附件" Left="17" Top="300" Width="0" Height="0" HideProperties="true" IsAggtRoot="false">
+      <Properties>
+        <PropertyElement Name="FileName" PropertyType="String" />
+        <PropertyElement Name="ContentBytes" PropertyType="Bytes" />
+        <PropertyElement Name="UploadDate" PropertyType="DateTime" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="JXC.Product" Label="产品" Left="277" Top="269" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
+      <Properties>
+        <PropertyElement Name="Barcode" PropertyType="String" />
+        <PropertyElement Name="Picture" PropertyType="Bytes" />
+        <PropertyElement Name="BianMa" PropertyType="String" />
+        <PropertyElement Name="MingCheng" PropertyType="String" />
+        <PropertyElement Name="GuiGe" PropertyType="String" />
+        <PropertyElement Name="PingPai" PropertyType="String" />
+        <PropertyElement Name="CaiGouDanjia" PropertyType="Double" />
+        <PropertyElement Name="XiaoShouDanJia" PropertyType="Double" />
+        <PropertyElement Name="XiaoShouJia_1" PropertyType="Double" />
+        <PropertyElement Name="XiaoShouJia_2" PropertyType="Double" />
+        <PropertyElement Name="XiaoShouJia_3" PropertyType="Double" />
+        <PropertyElement Name="BeiZhu" PropertyType="String" />
+        <PropertyElement Name="OperateTime" PropertyType="DateTime" />
+        <PropertyElement Name="StorageAmount" PropertyType="Int" />
+        <PropertyElement Name="Time1" PropertyType="DateTime" />
+        <PropertyElement Name="Time2" PropertyType="DateTime" />
+        <PropertyElement Name="Time3" PropertyType="DateTime" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="JXC.ProductAttachement" Label="产品附件" Left="102" Top="439" Width="0" Height="0" HideProperties="true" IsAggtRoot="false">
+      <Properties />
+    </EntityTypeElement>
+    <EntityTypeElement FullName="JXC.ProductCategory" Label="产品类别" Left="12" Top="127" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
+      <Properties>
+        <PropertyElement Name="Name" PropertyType="String" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="JXC.Storage" Label="仓库" Left="757" Top="258" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
+      <Properties>
+        <PropertyElement Name="Code" PropertyType="String" />
+        <PropertyElement Name="Name" PropertyType="String" />
+        <PropertyElement Name="Address" PropertyType="String" />
+        <PropertyElement Name="ResponsiblePerson" PropertyType="String" />
+        <PropertyElement Name="Area" PropertyType="String" />
+        <PropertyElement Name="IsDefault" PropertyType="Boolean" />
+        <PropertyElement Name="TotalAmount" PropertyType="Int" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="JXC.StorageProduct" Label="库存货品" Left="562" Top="400" Width="0" Height="0" HideProperties="true" IsAggtRoot="false">
+      <Properties />
+    </EntityTypeElement>
+    <EntityTypeElement FullName="JXC.JXCEntity" Label="基类" Left="489" Top="1" Width="0" Height="0" HideProperties="true" IsAggtRoot="false">
+      <Properties />
+    </EntityTypeElement>
+    <EntityTypeElement FullName="JXC.ProductRefItem" Left="557" Top="233" Width="0" Height="0" HideProperties="true" IsAggtRoot="false">
+      <Properties>
+        <PropertyElement Name="Amount" PropertyType="Int" />
+        <PropertyElement Name="View_ProductName" PropertyType="String" />
+        <PropertyElement Name="View_ProductCategoryName" PropertyType="String" />
+        <PropertyElement Name="View_Specification" PropertyType="String" />
+      </Properties>
+    </EntityTypeElement>
+  </EntityTypes>
+  <EnumTypes />
+  <Connections>
+    <ConnectionElement From="JXC.ClientCategory" To="JXC.JXCEntity" Hidden="false" LabelVisible="true" ConnectionType="Inheritance">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="JXC.ClientInfo" To="JXC.JXCEntity" Hidden="true" LabelVisible="true" ConnectionType="Inheritance">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="JXC.ClientInfo" To="JXC.ClientCategory" Label="ClientCategory" Hidden="false" LabelVisible="true" ConnectionType="Reference">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="JXC.FileAttachement" To="JXC.JXCEntity" Hidden="true" LabelVisible="true" ConnectionType="Inheritance">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="JXC.Product" To="JXC.JXCEntity" Hidden="true" LabelVisible="true" ConnectionType="Inheritance">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="JXC.Product" To="JXC.ProductCategory" Label="ProductCategory" Hidden="false" LabelVisible="true" ConnectionType="Reference">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="JXC.Product" To="JXC.ClientInfo" Label="Supplier" Hidden="false" LabelVisible="true" ConnectionType="Reference">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="JXC.ProductAttachement" To="JXC.Product" Label="ProductAttachementList" Hidden="false" LabelVisible="true" ConnectionType="Composition">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="JXC.ProductAttachement" To="JXC.FileAttachement" Hidden="false" LabelVisible="true" ConnectionType="Inheritance">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="JXC.ProductCategory" To="JXC.JXCEntity" Hidden="true" LabelVisible="true" ConnectionType="Inheritance">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="JXC.Storage" To="JXC.JXCEntity" Hidden="true" LabelVisible="true" ConnectionType="Inheritance">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="JXC.StorageProduct" To="JXC.Storage" Label="StorageProductList" Hidden="false" LabelVisible="true" ConnectionType="Composition">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="JXC.StorageProduct" To="JXC.ProductRefItem" Hidden="false" LabelVisible="true" ConnectionType="Inheritance">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="JXC.ProductRefItem" To="JXC.JXCEntity" Hidden="false" LabelVisible="true" ConnectionType="Inheritance">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="JXC.ProductRefItem" To="JXC.Product" Label="Product" Hidden="false" LabelVisible="true" ConnectionType="Reference">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+  </Connections>
+</Document>

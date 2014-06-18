@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ConsoleHost</RootNamespace>
     <AssemblyName>ConsoleHost</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -21,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -30,11 +32,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Practices.Unity">
-      <HintPath>..\..\OEAWMS\Lib\Microsoft.Practices.Unity.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -53,34 +53,30 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OEA\Common\Common.csproj">
+    <ProjectReference Include="..\Rafy\Rafy.Utils\Rafy.Utils.csproj">
       <Project>{796b149b-32c9-4bb0-a23f-69c012450db8}</Project>
-      <Name>Common</Name>
+      <Name>Rafy.Utils</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OEA\DbMigration\DbMigration.csproj">
+    <ProjectReference Include="..\Rafy\Rafy.DbMigration\Rafy.DbMigration.csproj">
       <Project>{d7c4f80d-24a4-47f1-985c-cfa55cfa13e9}</Project>
-      <Name>DbMigration</Name>
+      <Name>Rafy.DbMigration</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OEA\ManagedProperty\ManagedProperty.csproj">
+    <ProjectReference Include="..\Rafy\Rafy.ManagedProperty\Rafy.ManagedProperty.csproj">
       <Project>{66be29d5-f1ca-4941-a4eb-6b3e8f577166}</Project>
-      <Name>ManagedProperty</Name>
+      <Name>Rafy.ManagedProperty</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OEA\OEA.Library\OEA.Library.csproj">
+    <ProjectReference Include="..\Rafy\Rafy.Domain\Rafy.Domain.csproj">
       <Project>{9f8bb429-70de-449a-8a67-5190191e7ee6}</Project>
-      <Name>OEA.Library</Name>
+      <Name>Rafy.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OEA\OEA\OEA.csproj">
+    <ProjectReference Include="..\Rafy\Rafy\Rafy.csproj">
       <Project>{966a5bf2-d690-426b-ad68-ad868bb8f855}</Project>
-      <Name>OEA %28OEA\OEA%29</Name>
+      <Name>Rafy</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OEA\Plugins\OEA.RBAC\OEA.RBAC.csproj">
+    <ProjectReference Include="..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.csproj">
       <Project>{03d5a267-c106-42a9-8959-93d7ae3648dd}</Project>
-      <Name>OEA.RBAC</Name>
+      <Name>Rafy.RBAC</Name>
       <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\OEA\Web\OEA.Web.Meta\OEA.Web.Meta.csproj">
-      <Project>{2aecfbb6-34ac-41a6-ab8c-f52a3f68ba1a}</Project>
-      <Name>OEA.Web.Meta</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

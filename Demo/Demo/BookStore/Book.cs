@@ -1,22 +1,33 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA;
-using OEA.Library;
-using OEA.MetaModel;
-using OEA.MetaModel.Attributes;
-using OEA.MetaModel.View;
-using OEA.Library.Validation;
-using hxy;
+using Rafy;
+using Rafy.Domain;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
+using Rafy.Domain.Validation;
 using Demo.WPF.Commands;
 using Demo.WPF;
+using Rafy.ManagedProperty;
 
 namespace Demo
 {
     [RootEntity, Serializable]
-    public class Book : DemoEntity
+    public partial class Book : DemoEntity
     {
+        #region 构造函数
+
+        public Book() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected Book(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
+
         public static readonly Property<string> NameProperty = P<Book>.Register(e => e.Name);
         public string Name
         {
@@ -59,22 +70,25 @@ namespace Demo
             set { this.SetProperty(SubContentProperty, value); }
         }
 
-        public static readonly RefProperty<BookCategory> BookCategoryRefProperty =
-            P<Book>.RegisterRef(e => e.BookCategory, new RefPropertyMeta
-            {
-                RefEntityChangingCallBack = (o, e) => (o as Book).OnBookCategoryChanging(e),
-            });
+        public static readonly IRefIdProperty BookCategoryIdProperty =
+            P<Book>.RegisterRefId(e => e.BookCategoryId, ReferenceType.Normal);
         public int BookCategoryId
         {
-            get { return this.GetRefId(BookCategoryRefProperty); }
-            set { this.SetRefId(BookCategoryRefProperty, value); }
+            get { return (int)this.GetRefId(BookCategoryIdProperty); }
+            set { this.SetRefId(BookCategoryIdProperty, value); }
         }
+        public static readonly RefEntityProperty<BookCategory> BookCategoryProperty =
+            P<Book>.RegisterRef(e => e.BookCategory, new RegisterRefArgs
+            {
+                RefIdProperty = BookCategoryIdProperty,
+                PropertyChangingCallBack = (o, e) => (o as Book).OnBookCategoryChanging(e),
+            });
         public BookCategory BookCategory
         {
-            get { return this.GetRefEntity(BookCategoryRefProperty); }
-            set { this.SetRefEntity(BookCategoryRefProperty, value); }
+            get { return this.GetRefEntity(BookCategoryProperty); }
+            set { this.SetRefEntity(BookCategoryProperty, value); }
         }
-        protected virtual void OnBookCategoryChanging(RefEntityChangingEventArgs e)
+        protected virtual void OnBookCategoryChanging(ManagedPropertyChangingEventArgs<Entity> e)
         {
             //业务逻辑示例：只能选择最末级的图书类别。
             var value = e.Value as BookCategory;
@@ -89,23 +103,71 @@ namespace Demo
         {
             get { return this.GetLazyList(ChapterListProperty); }
         }
+    }
 
-        protected override void AddValidations()
+    [Serializable]
+    public partial class BookList : DemoEntityList
+    {
+    }
+
+    public partial class BookRepository : DemoEntityRepository
+    {
+        protected BookRepository() { }
+
+        /// <summary>
+        /// 查询面板
+        /// </summary>
+        /// <param name="criteria"></param>
+        protected EntityList FetchBy(BookQueryCriteria criteria)
         {
-            base.AddValidations();
+            //自定义查询示例。
+            return this.QueryList(q =>
+            {
+                q.Constrain(Book.BookCategoryIdProperty).Equal(criteria.BookCategoryId)
+                    .And().Constrain(Book.NameProperty).Contains(criteria.BookName);
+            });
 
+            //            //使用 SQL 的自定义查询示例。
+            //            this.QueryDb(new SqlQueryDbArgs
+            //            {
+            //                FormatSql = @"
+            //                Select * from Book
+            //                where BookCategoryId = {0} and Name = '{1}'",
+            //                Parameters = new object[] { criteria.BookCategoryId, criteria.BookName }
+            //            });
+        }
+    }
+
+    [DataProviderFor(typeof(BookRepository))]
+    public partial class BookDataProvider : RepositoryDataProvider
+    {
+        public override EntityList GetAll(PagingInfo pagingInfo)
+        {
+            var list = new BookList();
+
+            //聚合 SQL 示例
+            //为了降低数据库的查询次数，这里使用了聚合加载。
+            AggregateSQL.Instance.LoadEntities<Book>(list, p => p.LoadChildren(b => b.ChapterList));
+
+            return list;
+        }
+    }
+
+    internal class BookConfig : DemoEntityConfig<Book>
+    {
+        protected override void AddValidations(IValidationDeclarer rules)
+        {
             //示例属性验证。
-            var rules = this.ValidationRules;
-            rules.AddRule(AuthorProperty, CommonRules.Required);
-            rules.AddRule(AuthorProperty, CommonRules.StringMaxLength, new { MaxLength = 3 });
-            rules.AddRule(AmountProperty, CommonRules.MinValue, new { MinValue = 5 });
-            rules.AddRule(AmountProperty, CommonRules.MaxValue, new { MaxValue = 50 });
-            rules.AddRule(PublisherProperty, CommonRules.RegexMatch, new
+            rules.AddRule(Book.AuthorProperty, CommonRules.Required);
+            rules.AddRule(Book.AuthorProperty, CommonRules.StringMaxLength, new { MaxLength = 3 });
+            rules.AddRule(Book.AmountProperty, CommonRules.MinValue, new { MinValue = 5 });
+            rules.AddRule(Book.AmountProperty, CommonRules.MaxValue, new { MaxValue = 50 });
+            rules.AddRule(Book.PublisherProperty, CommonRules.RegexMatch, new
             {
                 Regex = TextFormatter.ReAllChinese,
                 RegexLabel = "全中文"
             });
-            rules.AddRule(NameProperty, (e, args) =>
+            rules.AddRule(Book.NameProperty, (e, args) =>
             {
                 var value = e.GetProperty(args.Property) as string;
                 if (string.IsNullOrEmpty(value))
@@ -126,46 +188,7 @@ namespace Demo
             //    }
             //});
         }
-    }
 
-    [Serializable]
-    public class BookList : DemoEntityList
-    {
-        protected override void QueryAll()
-        {
-            //聚合 SQL 示例
-            //为了降低数据库的查询次数，这里使用了聚合加载。
-            AggregateSQL.Instance.LoadEntities<Book>(this, p => p.LoadChildren(b => b.ChapterList));
-        }
-
-        /// <summary>
-        /// 查询面板
-        /// </summary>
-        /// <param name="criteria"></param>
-        protected void QueryBy(BookQueryCriteria criteria)
-        {
-            //自定义查询示例。
-            this.QueryDb(q =>
-            {
-                q.Constrain(Book.BookCategoryRefProperty).Equal(criteria.BookCategoryId)
-                    .And().Constrain(Book.NameProperty).Contains(criteria.BookName);
-            });
-
-            //            //使用 SQL 的自定义查询示例。
-            //            this.QueryDb(string.Format(@"
-            //Select * from Book
-            //where BookCategoryId = {0} and Name = '{1}'
-            //", criteria.BookCategoryId, criteria.BookName));
-        }
-    }
-
-    public class BookRepository : EntityRepository
-    {
-        protected BookRepository() { }
-    }
-
-    internal class BookConfig : EntityConfig<Book>
-    {
         protected override void ConfigMeta()
         {
             base.ConfigMeta();
@@ -177,20 +200,22 @@ namespace Demo
                 Book.PublishTimeProperty,
                 Book.PublisherProperty,
                 Book.SubContentProperty,
-                Book.BookCategoryRefProperty
+                Book.BookCategoryIdProperty
                 );
         }
+    }
 
+    internal class BookWPFConfig : DemoEntityWPFViewConfig<Book>
+    {
         protected override void ConfigView()
         {
             base.ConfigView();
 
             View.DomainName("书籍").HasDelegate(Book.NameProperty);
 
-            View.UseWPFCommands(typeof(BookSearchCommand));
-            View.UseDetailPanel<BookForm>().HasDetailLabelSize(120);
+            //View.UseDetailPanel<BookForm>().HasDetailLabelSize(120);
 
-            View.UseWebCommands("CountLocalBookCommand", "CountServerBookCommand");
+            View.UseDefaultCommands().UseCommands(WPFCommandNames.Filter);
 
             View.Property(Book.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
             View.Property(Book.AuthorProperty).HasLabel("作者").ShowIn(ShowInWhere.All);
@@ -198,7 +223,29 @@ namespace Demo
             View.Property(Book.PublisherProperty).HasLabel("出版社").ShowIn(ShowInWhere.All);
             View.Property(Book.PublishTimeProperty).HasLabel("出版时间").ShowIn(ShowInWhere.All);
             View.Property(Book.SubContentProperty).HasLabel("简要").ShowIn(ShowInWhere.Detail).UseEditor(WPFEditorNames.Memo);
-            View.Property(Book.BookCategoryRefProperty).HasLabel("所属类别").ShowIn(ShowInWhere.All);
+            View.Property(Book.BookCategoryProperty).HasLabel("所属类别").ShowIn(ShowInWhere.All);
+        }
+    }
+
+    internal class BookWebConfig : DemoEntityWebViewConfig<Book>
+    {
+        protected override void ConfigView()
+        {
+            base.ConfigView();
+
+            View.DomainName("书籍").HasDelegate(Book.NameProperty);
+
+            //View.UseDetailPanel<BookForm>().HasDetailLabelSize(120);
+
+            View.UseDefaultCommands().UseCommands("CountLocalBookCommand", "CountServerBookCommand");
+
+            View.Property(Book.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
+            View.Property(Book.AuthorProperty).HasLabel("作者").ShowIn(ShowInWhere.All);
+            View.Property(Book.AmountProperty).HasLabel("剩余数量").ShowIn(ShowInWhere.All);
+            View.Property(Book.PublisherProperty).HasLabel("出版社").ShowIn(ShowInWhere.All);
+            View.Property(Book.PublishTimeProperty).HasLabel("出版时间").ShowIn(ShowInWhere.All);
+            View.Property(Book.SubContentProperty).HasLabel("简要").ShowIn(ShowInWhere.Detail);
+            View.Property(Book.BookCategoryProperty).HasLabel("所属类别").ShowIn(ShowInWhere.All);
         }
     }
 }

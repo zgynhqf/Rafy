@@ -14,18 +14,32 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA.Library;
-using OEA.MetaModel;
-using OEA.MetaModel.Attributes;
-using OEA.MetaModel.View;
-using OEA.ManagedProperty;
+using Rafy.Domain;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
+using Rafy.ManagedProperty;
 
 namespace JXC
 {
+    /// <summary>
+    /// 仓库
+    /// </summary>
     [RootEntity, Serializable]
-    public class Storage : JXCEntity
+    public partial class Storage : JXCEntity
     {
+        #region 构造函数
+
+        public Storage() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected Storage(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
+
         public static readonly ListProperty<StorageProductList> StorageProductListProperty = P<Storage>.RegisterList(e => e.StorageProductList);
         public StorageProductList StorageProductList
         {
@@ -76,10 +90,10 @@ namespace JXC
             get { return this.GetProperty(IsDefaultProperty); }
             set { this.SetProperty(IsDefaultProperty, value); }
         }
-        protected virtual void OnIsDefaultChanged(ManagedPropertyChangedEventArgs<bool> e)
+        protected virtual void OnIsDefaultChanged(ManagedPropertyChangedEventArgs e)
         {
             //整个列表中只有一个默认仓库。
-            if (e.Source == ManagedPropertyChangedSource.FromUIOperating && e.NewValue)
+            if (e.Source == ManagedPropertyChangedSource.FromUIOperating && (bool)e.NewValue)
             {
                 var list = this.ParentList;
                 if (list != null)
@@ -142,16 +156,16 @@ namespace JXC
     }
 
     [Serializable]
-    public class StorageList : JXCEntityList { }
+    public partial class StorageList : JXCEntityList { }
 
-    public class StorageRepository : EntityRepository
+    public partial class StorageRepository : JXCEntityRepository
     {
         protected StorageRepository() { }
 
         public Storage GetDefault()
         {
             //有缓存，直接调用全部的列表
-            return this.GetAll().Cast<Storage>().FirstOrDefault(s => s.IsDefault);
+            return this.CacheAll().Concrete().FirstOrDefault(s => s.IsDefault);
         }
     }
 
@@ -159,26 +173,9 @@ namespace JXC
     {
         protected override void ConfigMeta()
         {
-            Meta.MapTable().MapAllPropertiesToTable();
+            Meta.MapTable().MapAllProperties();
 
-            Meta.EnableCache();
-        }
-
-        protected override void ConfigView()
-        {
-            base.ConfigView();
-
-            View.DomainName("仓库").HasDelegate(Storage.NameProperty);
-
-            using (View.OrderProperties())
-            {
-                View.Property(Storage.CodeProperty).HasLabel("仓库编码").ShowIn(ShowInWhere.All);
-                View.Property(Storage.NameProperty).HasLabel("仓库名称").ShowIn(ShowInWhere.All);
-                View.Property(Storage.AddressProperty).HasLabel("仓库地址").ShowIn(ShowInWhere.ListDetail);
-                View.Property(Storage.ResponsiblePersonProperty).HasLabel("负责人").ShowIn(ShowInWhere.ListDetail);
-                View.Property(Storage.AreaProperty).HasLabel("仓库区域").ShowIn(ShowInWhere.ListDetail);
-                View.Property(Storage.IsDefaultProperty).HasLabel("默认仓库").ShowIn(ShowInWhere.List);
-            }
+            Meta.EnableClientCache();
         }
     }
 }

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using DbMigration;
-using OEA.Library;
+using Rafy.DbMigration;
+using Rafy.Domain;
 using System.Transactions;
-using OEA.RBAC;
+using Rafy.RBAC;
 
 namespace JXC.DbMigrations
 {
@@ -21,17 +23,17 @@ namespace JXC.DbMigrations
             this.RunCode(db =>
             {
                 //由于本类没有支持 Down 操作，所以这里面的 Up 需要防止重入。
-                var productRepo = RF.Create<Product>();
-                var list = productRepo.GetAll(false);
+                var productRepo = RF.Find<Product>();
+                var list = productRepo.GetAll();
                 if (list.Count == 0)
                 {
-                    var cateRepo = RF.Create<ProductCategory>();
-                    var clientRepo = RF.Create<ClientInfo>();
-                    var userRepo = RF.Create<User>();
+                    var cateRepo = RF.Find<ProductCategory>();
+                    var clientRepo = RF.Find<ClientInfo>();
+                    var userRepo = RF.Find<User>();
 
-                    var categories = cateRepo.GetAll(false);
-                    var clients = clientRepo.GetAll(false);
-                    var operators = userRepo.GetAll(false);
+                    var categories = cateRepo.GetAll();
+                    var clients = clientRepo.GetAll();
+                    var operators = userRepo.GetAll();
 
                     var cate1 = categories.Cast<ProductCategory>().First(c => c.Name == "服饰类");
                     var cate2 = categories.Cast<ProductCategory>().First(c => c.Name == "食品类");

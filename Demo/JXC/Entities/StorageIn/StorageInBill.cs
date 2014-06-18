@@ -1,29 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA.Library;
-using OEA.MetaModel;
-using OEA.MetaModel.Attributes;
-using OEA.MetaModel.View;
-using OEA.Library.Validation;
+using Rafy;
+using Rafy.Domain;
+using Rafy.Domain.ORM.Query;
+using Rafy.Domain.Validation;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
 
 namespace JXC
 {
     [RootEntity, Serializable]
     public abstract class StorageInBill : JXCEntity
     {
-        public static readonly RefProperty<Storage> StorageRefProperty =
-            P<StorageInBill>.RegisterRef(e => e.Storage, ReferenceType.Normal);
+        #region 构造函数
+
+        public StorageInBill() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected StorageInBill(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
+
+        public static readonly IRefIdProperty StorageIdProperty =
+            P<StorageInBill>.RegisterRefId(e => e.StorageId, ReferenceType.Normal);
         public int StorageId
         {
-            get { return this.GetRefId(StorageRefProperty); }
-            set { this.SetRefId(StorageRefProperty, value); }
+            get { return (int)this.GetRefId(StorageIdProperty); }
+            set { this.SetRefId(StorageIdProperty, value); }
         }
+        public static readonly RefEntityProperty<Storage> StorageProperty =
+            P<StorageInBill>.RegisterRef(e => e.Storage, StorageIdProperty);
         public Storage Storage
         {
-            get { return this.GetRefEntity(StorageRefProperty); }
-            set { this.SetRefEntity(StorageRefProperty, value); }
+            get { return this.GetRefEntity(StorageProperty); }
+            set { this.SetRefEntity(StorageProperty, value); }
         }
 
         public static readonly ListProperty<StorageInBillItemList> StorageInItemListProperty = P<StorageInBill>.RegisterList(e => e.StorageInItemList);
@@ -60,33 +75,6 @@ namespace JXC
             set { this.SetProperty(CommentProperty, value); }
         }
 
-        protected override void AddValidations()
-        {
-            base.AddValidations();
-
-            var rules = this.ValidationRules;
-            rules.AddRule(CodeProperty, CommonRules.Required);
-            rules.AddRule((e, args) =>
-            {
-                var po = e as StorageInBill;
-                if (po.StorageInItemList.Count == 0)
-                {
-                    args.BrokenDescription = "至少需要一个商品项。";
-                }
-                else
-                {
-                    foreach (StorageInBillItem item in po.StorageInItemList)
-                    {
-                        if (item.View_TotalPrice <= 0)
-                        {
-                            args.BrokenDescription = "商品项金额应该是正数。";
-                            return;
-                        }
-                    }
-                }
-            });
-        }
-
         protected override void OnRoutedEvent(object sender, EntityRoutedEventArgs e)
         {
             if (e.Event == StorageInBillItem.PriceChangedEvent || e.Event == StorageInBillItemList.ListChangedEvent)
@@ -95,21 +83,8 @@ namespace JXC
             }
         }
 
-        protected override void OnDelete()
-        {
-            base.OnDelete();
-
-            //由于本类没有映射数据表，所以在删除的时候需要删除下面的数据
-            using (var db = this.CreateDb())
-            {
-                db.Delete(typeof(StorageInBillItem), db.Query(typeof(StorageInBillItem))
-                    .Constrain(StorageInBillItem.StorageInBillRefProperty).Equal(this.Id)
-                    );
-            }
-        }
-
         public static readonly Property<string> StorageNameROProperty = P<StorageInBill>.RegisterReadOnly(
-            e => e.StorageNameRO, e => (e as StorageInBill).GetStorageNameRO(), StorageRefProperty);
+            e => e.StorageNameRO, e => (e as StorageInBill).GetStorageNameRO(), StorageProperty);
         /// <summary>
         /// 仓库名称（报表使用）
         /// </summary>
@@ -124,28 +99,72 @@ namespace JXC
     }
 
     [Serializable]
-    public abstract class StorageInBillList : JXCEntityList
-    {
-        protected void QueryBy(TimeSpanCriteria criteria)
-        {
-            this.QueryDb(q =>
-            {
-                q.Constrain(StorageInBill.DateProperty).GreaterEqual(criteria.From)
-                    .And().Constrain(StorageInBill.DateProperty).LessEqual(criteria.To);
-            });
-        }
-    }
+    public abstract class StorageInBillList : JXCEntityList { }
 
-    public abstract class StorageInBillRepository : EntityRepository
+    public abstract class StorageInBillRepository : JXCEntityRepository
     {
         protected StorageInBillRepository() { }
     }
 
+    [DataProviderFor(typeof(StorageInBillRepository))]
+    public class StorageInBillDataProvider : RepositoryDataProvider
+    {
+        protected override void Submit(SubmitArgs e)
+        {
+            base.Submit(e);
+
+            if (e.Action == SubmitAction.Delete)
+            {
+                //由于本外键关系没有级联，所以在删除的时候需要删除下面的数据
+                this.DeleteRefInDb(e.Entity, StorageInBillItem.StorageInBillProperty);
+            }
+        }
+
+        protected EntityList FetchBy(TimeSpanCriteria criteria)
+        {
+            var f = QueryFactory.Instance;
+            var t = f.Table(this.Repository);
+            var q = f.Query(
+                selection: t.Star(),
+                from: t,
+                where: f.And(
+                    t.Column(StorageInBill.DateProperty).GreaterEqual(criteria.From),
+                    t.Column(StorageInBill.DateProperty).LessEqual(criteria.To)
+                )
+            );
+            return this.QueryList(q);
+        }
+    }
+
     internal class StorageInBillConfig : EntityConfig<StorageInBill>
     {
+        protected override void AddValidations(IValidationDeclarer rules)
+        {
+            rules.AddRule(StorageInBill.CodeProperty, CommonRules.Required);
+            rules.AddRule((e, args) =>
+            {
+                var po = e as StorageInBill;
+                if (po.StorageInItemList.Count == 0)
+                {
+                    args.BrokenDescription = "至少需要一个商品项。".Translate();
+                }
+                else
+                {
+                    foreach (StorageInBillItem item in po.StorageInItemList)
+                    {
+                        if (item.View_TotalPrice <= 0)
+                        {
+                            args.BrokenDescription = "商品项金额应该是正数。".Translate();
+                            return;
+                        }
+                    }
+                }
+            });
+        }
+
         protected override void ConfigMeta()
         {
-            Meta.MapTable().MapAllPropertiesToTable();
+            Meta.MapTable().MapAllProperties();
         }
     }
 }

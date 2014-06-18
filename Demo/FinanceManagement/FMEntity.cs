@@ -1,20 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA.Library;
+using Rafy;
+using Rafy.Domain.ORM;
+using Rafy.Domain;
+using Rafy.Domain.Validation;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
+using Rafy.ManagedProperty;
 
 namespace FM
 {
     [Serializable]
-    public abstract class FMEntity : Entity
+    public abstract class FMEntity : IntEntity
     {
-        public static readonly string ConnectionString = "FinanceManagement";
+        #region 构造函数
 
-        protected override string ConnectionStringSettingName
-        {
-            get { return ConnectionString; }
-        }
+        protected FMEntity() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected FMEntity(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
 
         #region 扩展字段
 
@@ -44,4 +55,22 @@ namespace FM
 
     [Serializable]
     public abstract class FMEntityList : EntityList { }
+
+    public abstract class FMEntityRepository : PropertyQueryRepository
+    {
+        public static string DbSettingName = "FinanceManagement";
+
+        protected FMEntityRepository() { }
+    }
+
+    [DataProviderFor(typeof(FMEntityRepository))]
+    public class FMEntityDataProvider : RepositoryDataProvider
+    {
+        protected override string ConnectionStringSettingName
+        {
+            get { return FMEntityRepository.DbSettingName; }
+        }
+    }
+
+    public abstract class FMEntityConfig<TEntity> : EntityConfig<TEntity> { }
 }

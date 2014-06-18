@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Common;
-using OEA;
-using OEA.Library;
-using OEA.MetaModel;
-using OEA.RBAC;
-using OEA.Server;
+using Rafy;
+using Rafy.Domain;
+using Rafy.MetaModel;
+using Rafy.RBAC;
 
 namespace ConsoleHost
 {
@@ -15,9 +13,9 @@ namespace ConsoleHost
     {
         static void Main(string[] args)
         {
-            OEAEnvironment.Provider.IsDebuggingEnabled = ConfigurationHelper.GetAppSettingOrDefault("IsDebuggingEnabled", false);
+            RafyEnvironment.Provider.IsDebuggingEnabled = ConfigurationHelper.GetAppSettingOrDefault("IsDebuggingEnabled", false);
 
-            new Program().OnAppStartup();
+            new Program().StartupApplication();
 
             Console.ReadLine();
         }
@@ -27,7 +25,7 @@ namespace ConsoleHost
             //本项目中使用了一个 RBAC 的插件，
             //同时在应用层引用 RBAC.dll 即可使用。
             //（注意，只是简单引用，不拷贝到根目录，还放在插件目录。即引用的 CopyLocal = False。）
-            var users = RF.Concreate<UserRepository>().GetAll();
+            var users = RF.Concrete<UserRepository>().GetAll();
         }
     }
 }

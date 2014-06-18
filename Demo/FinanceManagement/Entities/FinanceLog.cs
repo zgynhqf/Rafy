@@ -1,21 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA;
-using OEA.Library;
-using OEA.Library.Validation;
-using OEA.MetaModel;
-using OEA.MetaModel.Attributes;
-using OEA.MetaModel.View;
-using OEA.ManagedProperty;
 using FM.Commands;
+using Rafy;
+using Rafy.Domain;
+using Rafy.Domain.ORM;
+using Rafy.Domain.ORM.Query;
+using Rafy.Domain.Validation;
+using Rafy.ManagedProperty;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
 
 namespace FM
 {
     [RootEntity, Serializable]
-    public class FinanceLog : FMEntity
+    public partial class FinanceLog : FMEntity
     {
+        #region 构造函数
+
+        public FinanceLog() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected FinanceLog(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
+
         public static readonly Property<string> UsersProperty = P<FinanceLog>.Register(e => e.Users, new PropertyMetadata<string>
         {
             PropertyChangingCallBack = (o, e) => (o as FinanceLog).OnUsersTagsChanging(e)
@@ -83,16 +96,6 @@ namespace FM
             set { this.SetProperty(CommentProperty, value); }
         }
 
-        protected override void AddValidations()
-        {
-            base.AddValidations();
-
-            var rules = this.ValidationRules;
-            rules.AddRule(ReasonProperty, CommonRules.Required);
-            rules.AddRule(AmountProperty, CommonRules.Positive);
-            rules.AddRule(UsersProperty, CommonRules.Required);
-        }
-
         #region 视图属性
 
         public static readonly Property<string> DescriptionProperty = P<FinanceLog>.RegisterReadOnly(e => e.Description, e => (e as FinanceLog).GetDescription());
@@ -124,35 +127,50 @@ namespace FM
         }
         private TagList GetTagDataSource()
         {
-            return RF.Concreate<TagRepository>().GetValidList();
+            return RF.Concrete<TagRepository>().GetValidList();
         }
 
         #endregion
     }
 
     [Serializable]
-    public class FinanceLogList : FMEntityList { }
+    public partial class FinanceLogList : FMEntityList { }
 
-    public class FinanceLogRepository : EntityRepository
+    public partial class FinanceLogRepository : FMEntityRepository
     {
         protected FinanceLogRepository() { }
+
+        protected override void OnQuerying(EntityQueryArgs args)
+        {
+            var query = args.Query;
+            query.OrderBy.Add(query.MainTable.Column(FinanceLog.DateProperty), OrderDirection.Descending);
+
+            base.OnQuerying(args);
+        }
     }
 
-    internal class FinanceLogConfig : EntityConfig<FinanceLog>
+    internal class FinanceLogConfig : FMEntityConfig<FinanceLog>
     {
-        protected override void ConfigMeta()
+        protected override void AddValidations(IValidationDeclarer rules)
         {
-            Meta.MapTable().MapAllPropertiesToTable();
-
-            Meta.DataOrderBy(FinanceLog.DateProperty, false);
+            rules.AddRule(FinanceLog.ReasonProperty, CommonRules.Required);
+            rules.AddRule(FinanceLog.AmountProperty, CommonRules.Positive);
+            rules.AddRule(FinanceLog.UsersProperty, CommonRules.Required);
         }
 
+        protected override void ConfigMeta()
+        {
+            Meta.MapTable().MapAllProperties();
+        }
+    }
+
+    internal class FinanceLogWPFViewConfig : WPFViewConfig<FinanceLog>
+    {
         protected override void ConfigView()
         {
             View.DomainName("经费记录").HasDelegate(FinanceLog.DescriptionProperty);
 
-            View.ClearWPFCommands(false)
-                .UseWPFCommands(
+            View.UseCommands(
                 WPFCommandNames.Edit,
                 WPFCommandNames.Delete,
                 WPFCommandNames.SaveList,
@@ -187,14 +205,14 @@ namespace FM
             View.Property(FinanceLog.UsersProperty).UseEditor(WPFEditorNames.EntitySelection_DropDown)
                 .SelectionViewMeta = new SelectionViewMeta
                 {
-                    RefEntityType = typeof(Person),
+                    SelectionEntityType = typeof(Person),
                     SelectedValuePath = Person.NameProperty,
                     SelectionMode = EntitySelectionMode.Multiple,
                 };
             View.Property(FinanceLog.TagsProperty).UseEditor(WPFEditorNames.EntitySelection_DropDown)
                 .SelectionViewMeta = new SelectionViewMeta
                 {
-                    RefEntityType = typeof(Tag),
+                    SelectionEntityType = typeof(Tag),
                     DataSourceProperty = FinanceLog.TagDataSourceProperty,
                     SelectedValuePath = Tag.NameProperty,
                     SelectionMode = EntitySelectionMode.Multiple,

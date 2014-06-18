@@ -1,39 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA;
-using OEA.Library;
-using OEA.Library.Validation;
-using OEA.MetaModel;
-using OEA.MetaModel.Attributes;
-using OEA.MetaModel.View;
-using OEA.ManagedProperty;
-using JXC.Commands;
+using Rafy;
+using Rafy.Domain;
+using Rafy.Domain.Validation;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
+using Rafy.ManagedProperty;
+
 
 namespace JXC
 {
     [ChildEntity, Serializable]
-    public class StorageMoveItem : ProductRefItem
+    public partial class StorageMoveItem : ProductRefItem
     {
-        public static readonly RefProperty<StorageMove> StorageMoveRefProperty =
-            P<StorageMoveItem>.RegisterRef(e => e.StorageMove, ReferenceType.Parent);
+        #region 构造函数
+
+        public StorageMoveItem() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected StorageMoveItem(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
+
+        public static readonly IRefIdProperty StorageMoveIdProperty =
+            P<StorageMoveItem>.RegisterRefId(e => e.StorageMoveId, ReferenceType.Parent);
         public int StorageMoveId
         {
-            get { return this.GetRefId(StorageMoveRefProperty); }
-            set { this.SetRefId(StorageMoveRefProperty, value); }
+            get { return (int)this.GetRefId(StorageMoveIdProperty); }
+            set { this.SetRefId(StorageMoveIdProperty, value); }
         }
+        public static readonly RefEntityProperty<StorageMove> StorageMoveProperty =
+            P<StorageMoveItem>.RegisterRef(e => e.StorageMove, StorageMoveIdProperty);
         public StorageMove StorageMove
         {
-            get { return this.GetRefEntity(StorageMoveRefProperty); }
-            set { this.SetRefEntity(StorageMoveRefProperty, value); }
+            get { return this.GetRefEntity(StorageMoveProperty); }
+            set { this.SetRefEntity(StorageMoveProperty, value); }
         }
     }
 
     [Serializable]
-    public class StorageMoveItemList : ProductRefItemList { }
+    public partial class StorageMoveItemList : ProductRefItemList { }
 
-    public class StorageMoveItemRepository : EntityRepository
+    public partial class StorageMoveItemRepository : JXCEntityRepository
     {
         protected StorageMoveItemRepository() { }
     }
@@ -42,26 +55,7 @@ namespace JXC
     {
         protected override void ConfigMeta()
         {
-            Meta.MapTable().MapAllPropertiesToTable();
-        }
-
-        protected override void ConfigView()
-        {
-            View.DomainName("库存调拔项").HasDelegate(StorageMoveItem.View_ProductNameProperty);
-
-            View.ClearWPFCommands(false)
-                .UseWPFCommands(
-                typeof(SelectStorageProduct),
-                WPFCommandNames.Delete
-                );
-
-            using (View.OrderProperties())
-            {
-                View.Property(StorageMoveItem.View_ProductNameProperty).HasLabel("商品名称").ShowIn(ShowInWhere.All);
-                View.Property(StorageMoveItem.View_ProductCategoryNameProperty).HasLabel("商品类别").ShowIn(ShowInWhere.List);
-                View.Property(StorageMoveItem.View_SpecificationProperty).HasLabel("规格").ShowIn(ShowInWhere.List);
-                View.Property(StorageMoveItem.AmountProperty).HasLabel("数量*").ShowIn(ShowInWhere.List);
-            }
+            Meta.MapTable().MapAllProperties();
         }
     }
 }

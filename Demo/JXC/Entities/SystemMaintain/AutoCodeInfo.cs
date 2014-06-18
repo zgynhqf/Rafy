@@ -14,17 +14,28 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA.Library;
-using OEA.MetaModel;
-using OEA.MetaModel.Attributes;
-using OEA.MetaModel.View;
+using Rafy.Domain;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
 
 namespace JXC
 {
     [RootEntity, Serializable]
-    public class AutoCodeInfo : JXCEntity
+    public partial class AutoCodeInfo : JXCEntity
     {
+        #region 构造函数
+
+        public AutoCodeInfo() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected AutoCodeInfo(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
+
         public static readonly Property<string> MingChengProperty = P<AutoCodeInfo>.Register(e => e.MingCheng);
         public string MingCheng
         {
@@ -48,18 +59,11 @@ namespace JXC
     }
 
     [Serializable]
-    public class AutoCodeInfoList : JXCEntityList
+    public partial class AutoCodeInfoList : JXCEntityList
     {
-        protected void QueryBy(string name)
-        {
-            this.QueryDb(q =>
-            {
-                q.Constrain(AutoCodeInfo.MingChengProperty).Equal(name);
-            });
-        }
     }
 
-    public class AutoCodeInfoRepository : EntityRepository
+    public partial class AutoCodeInfoRepository : JXCEntityRepository
     {
         protected AutoCodeInfoRepository() { }
 
@@ -74,7 +78,7 @@ namespace JXC
             var vm = UIModel.Views.CreateBaseView(targetType);
             string name = vm.Label + "-自动编码规则";
 
-            var item = this.FetchFirstAs<AutoCodeInfo>(name);
+            var item = this.FetchFirst(name);
 
             if (item == null)
             {
@@ -103,11 +107,19 @@ namespace JXC
 
             if (code.Contains("***"))
             {
-                var count = RF.Create(targetType).CountAll() + 1;
+                var count = RF.Find(targetType).CountAll() + 1;
                 code = code.Replace("***", count.ToString("0000"));
             }
 
             return code;
+        }
+
+        protected EntityList FetchBy(string name)
+        {
+            return this.QueryList(q =>
+            {
+                q.Constrain(AutoCodeInfo.MingChengProperty).Equal(name);
+            });
         }
     }
 
@@ -120,16 +132,6 @@ namespace JXC
                 AutoCodeInfo.CanShuZhiProperty,
                 AutoCodeInfo.BeiZhuProperty
                 );
-        }
-
-        protected override void ConfigView()
-        {
-            View.DomainName("自动编码信息").HasDelegate(AutoCodeInfo.MingChengProperty);
-
-            View.Property(AutoCodeInfo.MingChengProperty).HasLabel("参数名称").ShowIn(ShowInWhere.All);
-            View.Property(AutoCodeInfo.CanShuZhiProperty).HasLabel("参数值").ShowIn(ShowInWhere.ListDetail);
-            View.Property(AutoCodeInfo.BeiZhuProperty).HasLabel("备注").ShowIn(ShowInWhere.ListDetail)
-                .ShowMemoInDetail().Readonly();
         }
     }
 }

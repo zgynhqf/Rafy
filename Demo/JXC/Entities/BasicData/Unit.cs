@@ -15,10 +15,10 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
-//using OEA.Library;
-//using OEA.MetaModel;
-//using OEA.MetaModel.Attributes;
-//using OEA.MetaModel.View;
+//using Rafy.Library;
+//using Rafy.MetaModel;
+//using Rafy.MetaModel.Attributes;
+//using Rafy.MetaModel.View;
 
 //namespace JXC
 //{
@@ -50,7 +50,7 @@
 //    [Serializable]
 //    public class UnitList : JXCEntityList { }
 
-//    public class UnitRepository : EntityRepository
+//    public class UnitRepository : JXCEntityRepository
 //    {
 //        protected UnitRepository() { }
 //    }

@@ -1,28 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA.Library;
-using OEA.MetaModel;
-using OEA.MetaModel.Attributes;
-using OEA.MetaModel.View;
+using Rafy;
+using Rafy.Domain;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
 
 namespace Demo
 {
     [ChildEntity, Serializable]
-    public class Country : DemoEntity
+    public partial class Country : DemoEntity
     {
-        public static readonly RefProperty<City> CityRefProperty =
-            P<Country>.RegisterRef(e => e.City, ReferenceType.Parent);
+        #region 构造函数
+
+        public Country() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected Country(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
+
+        public static readonly IRefIdProperty CityIdProperty =
+            P<Country>.RegisterRefId(e => e.CityId, ReferenceType.Parent);
         public int CityId
         {
-            get { return this.GetRefId(CityRefProperty); }
-            set { this.SetRefId(CityRefProperty, value); }
+            get { return (int)this.GetRefId(CityIdProperty); }
+            set { this.SetRefId(CityIdProperty, value); }
         }
+        public static readonly RefEntityProperty<City> CityProperty =
+            P<Country>.RegisterRef(e => e.City, CityIdProperty);
         public City City
         {
-            get { return this.GetRefEntity(CityRefProperty); }
-            set { this.SetRefEntity(CityRefProperty, value); }
+            get { return this.GetRefEntity(CityProperty); }
+            set { this.SetRefEntity(CityProperty, value); }
         }
 
         public static readonly Property<string> NameProperty = P<Country>.Register(e => e.Name);
@@ -34,30 +48,35 @@ namespace Demo
     }
 
     [Serializable]
-    public class CountryList : DemoEntityList { }
+    public partial class CountryList : DemoEntityList { }
 
-    public class CountryRepository : EntityRepository
+    public partial class CountryRepository : DemoEntityRepository
     {
         protected CountryRepository() { }
     }
 
-    internal class CountryConfig : EntityConfig<Country>
+    internal class CountryConfig : DemoEntityConfig<Country>
     {
         protected override void ConfigMeta()
         {
             base.ConfigMeta();
 
             Meta.MapTable().MapProperties(
-                Country.CityRefProperty,
+                Country.CityIdProperty,
                 Country.NameProperty
                 );
         }
+    }
 
+    internal class CountryWPFConfig : DemoEntityWPFViewConfig<Country>
+    {
         protected override void ConfigView()
         {
             base.ConfigView();
 
             View.DomainName("县").HasDelegate(Country.NameProperty);
+
+            View.UseDefaultCommands();
 
             View.Property(Country.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
         }

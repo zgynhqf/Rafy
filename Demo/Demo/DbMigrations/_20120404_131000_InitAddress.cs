@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using DbMigration;
-using OEA.Library;
+using Rafy.DbMigration;
+using Rafy.Domain;
 
 namespace Demo.DbMigrations
 {
@@ -11,7 +13,7 @@ namespace Demo.DbMigrations
     {
         public override string DbSetting
         {
-            get { return DemoEntity.ConnectionString; }
+            get { return DemoEntityRepository.DbSettingName; }
         }
 
         public override ManualMigrationType Type
@@ -24,8 +26,8 @@ namespace Demo.DbMigrations
             this.RunCode(db =>
             {
                 //由于本类没有支持 Down 操作，所以这里面的 Up 需要防止重入。
-                var pvcRepo = RF.Concreate<ProvinceRepository>();
-                var list = pvcRepo.GetAll(false);
+                var pvcRepo = RF.Concrete<ProvinceRepository>();
+                var list = pvcRepo.GetAll();
                 if (list.Count == 0)
                 {
                     var yn = new Province

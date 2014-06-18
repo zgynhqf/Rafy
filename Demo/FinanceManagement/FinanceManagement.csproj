@@ -10,8 +10,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FM</RootNamespace>
     <AssemblyName>FinanceManagement</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,11 +31,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AvalonDock, Version=1.2.2643.0, Culture=neutral, PublicKeyToken=85a1e0ada7ec13e4, processorArchitecture=MSIL">
-      <HintPath>..\Lib\AvalonDock.dll</HintPath>
-    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -50,8 +50,17 @@
     <Compile Include="DbMigrations\DataMigration.cs" />
     <Compile Include="DbMigrations\_20120429_151300_InitUserAndTags.cs" />
     <Compile Include="Entities\FinanceLog.cs" />
+    <Compile Include="Entities\FinanceLog.g.cs">
+      <DependentUpon>FinanceLog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\Person.cs" />
+    <Compile Include="Entities\Person.g.cs">
+      <DependentUpon>Person.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\Tag.cs" />
+    <Compile Include="Entities\Tag.g.cs">
+      <DependentUpon>Tag.cs</DependentUpon>
+    </Compile>
     <Compile Include="FMEntity.cs" />
     <Compile Include="FMLibrary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -63,45 +72,41 @@
     <Compile Include="UI\FinanceLogInput\FinanceLogInputModule.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\OEA\Common\Common.csproj">
+    <ProjectReference Include="..\..\Rafy\Rafy.Utils\Rafy.Utils.csproj">
       <Project>{796B149B-32C9-4BB0-A23F-69C012450DB8}</Project>
-      <Name>Common</Name>
+      <Name>Rafy.Utils</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\OEA\DbMigration\DbMigration.csproj">
+    <ProjectReference Include="..\..\Rafy\Rafy.DbMigration\Rafy.DbMigration.csproj">
       <Project>{D7C4F80D-24A4-47F1-985C-CFA55CFA13E9}</Project>
-      <Name>DbMigration</Name>
+      <Name>Rafy.DbMigration</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\OEA\ManagedProperty\ManagedProperty.csproj">
+    <ProjectReference Include="..\..\Rafy\Rafy.ManagedProperty\Rafy.ManagedProperty.csproj">
       <Project>{66BE29D5-F1CA-4941-A4EB-6B3E8F577166}</Project>
-      <Name>ManagedProperty</Name>
+      <Name>Rafy.ManagedProperty</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\OEA\OEA.Library\OEA.Library.csproj">
+    <ProjectReference Include="..\..\Rafy\Plugins\Compatibility\Rafy.Domain.OldQuery\Rafy.Compatibility.Domain.OldQuery.csproj">
+      <Project>{d63382c2-8f48-4388-8197-6fc824d77f92}</Project>
+      <Name>Rafy.Compatibility.Domain.OldQuery</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy\Rafy.Domain\Rafy.Domain.csproj">
       <Project>{9F8BB429-70DE-449A-8A67-5190191E7EE6}</Project>
-      <Name>OEA.Library</Name>
+      <Name>Rafy.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\OEA\OEA\OEA.csproj">
+    <ProjectReference Include="..\..\Rafy\Rafy\Rafy.csproj">
       <Project>{966A5BF2-D690-426B-AD68-AD868BB8F855}</Project>
-      <Name>OEA %28OEA\OEA%29</Name>
+      <Name>Rafy</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\OEA\Plugins\OEA.RBAC.WPF\OEA.RBAC.WPF.csproj">
+    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC.WPF\Rafy.RBAC.WPF.csproj">
       <Project>{547364FE-CCBF-4F72-9B72-F7BB272B0988}</Project>
-      <Name>OEA.RBAC.WPF</Name>
+      <Name>Rafy.RBAC.WPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\OEA\Plugins\OEA.RBAC\OEA.RBAC.csproj">
+    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.csproj">
       <Project>{03D5A267-C106-42A9-8959-93D7AE3648DD}</Project>
-      <Name>OEA.RBAC</Name>
+      <Name>Rafy.RBAC</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\OEA\Web\OEA.Web.Meta\OEA.Web.Meta.csproj">
-      <Project>{2AECFBB6-34AC-41A6-AB8C-F52A3F68BA1A}</Project>
-      <Name>OEA.Web.Meta</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\OEA\WPF\OEA.Module.WPF\OEA.Module.WPF.csproj">
+    <ProjectReference Include="..\..\Rafy\WPF\Rafy.WPF\Rafy.WPF.csproj">
       <Project>{84399E4E-CC81-4B1F-9953-586B25B29792}</Project>
-      <Name>OEA.Module.WPF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\OEA\WPF\OEA.Module\OEA.Module.csproj">
-      <Project>{786446BE-FB56-4281-9CA2-D5B699B0B388}</Project>
-      <Name>OEA.Module</Name>
+      <Name>Rafy.WPF</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -116,8 +121,8 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(TargetPath)" "$(SolutionDir)Web\bin\Library\" /Y
-xcopy "$(TargetPath)" "$(SolutionDir)WPFClient\bin\$(ConfigurationName)\Library\" /Y</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(TargetPath)" "$(SolutionDir)Web\bin\UI\" /Y
+xcopy "$(TargetPath)" "$(SolutionDir)WPFClient\bin\$(ConfigurationName)\UI\" /Y</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

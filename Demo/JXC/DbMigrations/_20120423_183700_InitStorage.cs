@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using DbMigration;
-using OEA.Library;
+using Rafy.DbMigration;
+using Rafy.Domain;
 using System.Transactions;
-using OEA.RBAC;
+using Rafy.RBAC;
 
 namespace JXC.DbMigrations
 {
@@ -21,8 +23,8 @@ namespace JXC.DbMigrations
             this.RunCode(db =>
             {
                 //由于本类没有支持 Down 操作，所以这里面的 Up 需要防止重入。
-                var repo = RF.Create<Storage>();
-                var list = repo.GetAll(false);
+                var repo = RF.Find<Storage>();
+                var list = repo.GetAll();
                 if (list.Count == 0)
                 {
                     repo.Save(new Storage

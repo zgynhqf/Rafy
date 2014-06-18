@@ -14,11 +14,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA;
+using Rafy;
 using System.Transactions;
-using OEA.Library;
-using hxy.Common;
+using Rafy.Domain;
 
 namespace JXC
 {

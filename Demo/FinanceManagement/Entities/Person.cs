@@ -1,20 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA;
-using OEA.Library;
-using OEA.Library.Validation;
-using OEA.MetaModel;
-using OEA.MetaModel.Attributes;
-using OEA.MetaModel.View;
-using OEA.ManagedProperty;
+using Rafy;
+using Rafy.Domain;
+using Rafy.Domain.Validation;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
+using Rafy.ManagedProperty;
 
 namespace FM
 {
     [RootEntity, Serializable]
-    public class Person : FMEntity
+    public partial class Person : FMEntity
     {
+        #region 构造函数
+
+        public Person() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected Person(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
+
         public static readonly Property<string> NameProperty = P<Person>.Register(e => e.Name);
         public string Name
         {
@@ -31,25 +42,30 @@ namespace FM
     }
 
     [Serializable]
-    public class PersonList : FMEntityList { }
+    public partial class PersonList : FMEntityList { }
 
-    public class PersonRepository : EntityRepository
+    public partial class PersonRepository : FMEntityRepository
     {
         protected PersonRepository() { }
     }
 
-    internal class PersonConfig : EntityConfig<Person>
+    internal class PersonConfig : FMEntityConfig<Person>
     {
         protected override void ConfigMeta()
         {
-            Meta.MapTable().MapAllPropertiesToTable();
+            Meta.MapTable().MapAllProperties();
 
-            Meta.EnableCache();
+            Meta.EnableClientCache();
         }
+    }
 
+    internal class PersonWPFViewConfig : WPFViewConfig<Person>
+    {
         protected override void ConfigView()
         {
             View.DomainName("相关人").HasDelegate(Person.NameProperty);
+
+            View.UseDefaultCommands();
 
             using (View.OrderProperties())
             {

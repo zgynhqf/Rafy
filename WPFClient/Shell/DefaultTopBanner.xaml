@@ -1,14 +1,17 @@
-﻿<UserControl x:Class="OEA.Module.WPF.Shell.DefaultTopBanner"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+﻿<UserControl x:Class="Rafy.WPF.Shell.DefaultTopBanner"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:rafy="clr-namespace:Rafy.WPF.Controls;assembly=Rafy.WPF" mc:Ignorable="d" d:DesignHeight="300"
+        d:DesignWidth="300">
     <StackPanel Orientation="Horizontal">
-        <Image Stretch="None" HorizontalAlignment="Left" Name="imgLogo"/>
-        <Label Margin="20,0,0,0" VerticalAlignment="Center">当前用户：</Label>
-        <TextBlock x:Name="txtUserName" Foreground="White" VerticalAlignment="Center">未登录</TextBlock>
-        <Button Margin="20,4,4,4" Name="btnModifyPwd" Click="btnModifyPwd_Click">修改密码</Button>
+        <Image Stretch="None" HorizontalAlignment="Left" Name="imgLogo" />
+        <Label x:Name="lblCurrentUser" Margin="20,0,0,0" VerticalAlignment="Center"
+                rafy:TranslatingText.AutoTranslate="True">当前用户：</Label>
+        <TextBlock x:Name="txtUserName" Foreground="White" VerticalAlignment="Center"
+                rafy:TranslatingText.AutoTranslate="True">未登录</TextBlock>
+        <Button Margin="20,4,4,4" Name="btnModifyPwd" Click="btnModifyPwd_Click"
+                rafy:TranslatingText.AutoTranslate="True">修改密码</Button>
     </StackPanel>
 </UserControl>

@@ -1,5 +1,5 @@
 ﻿Ext.define('CountLocalBookCommand', {
-    extend: 'Oea.cmd.Command',
+    extend: 'Rafy.cmd.Command',
     config: {
         meta: { text: "统计" }
     },

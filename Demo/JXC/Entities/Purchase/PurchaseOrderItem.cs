@@ -1,36 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA.Library;
-using OEA.MetaModel;
-using OEA.MetaModel.Attributes;
-using OEA.MetaModel.View;
-using OEA.ManagedProperty;
+using Rafy.Domain;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
+using Rafy.ManagedProperty;
 using System.ComponentModel;
-using JXC.Commands;
+
+using Rafy;
 
 namespace JXC
 {
     [ChildEntity, Serializable]
-    public class PurchaseOrderItem : ProductRefItem
+    public partial class PurchaseOrderItem : ProductRefItem
     {
-        public static readonly RefProperty<PurchaseOrder> PurchaseOrderRefProperty =
-            P<PurchaseOrderItem>.RegisterRef(e => e.PurchaseOrder, ReferenceType.Parent);
+        #region 构造函数
+
+        public PurchaseOrderItem() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected PurchaseOrderItem(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
+
+        public static readonly IRefIdProperty PurchaseOrderIdProperty =
+            P<PurchaseOrderItem>.RegisterRefId(e => e.PurchaseOrderId, ReferenceType.Parent);
         public int PurchaseOrderId
         {
-            get { return this.GetRefId(PurchaseOrderRefProperty); }
-            set { this.SetRefId(PurchaseOrderRefProperty, value); }
+            get { return (int)this.GetRefId(PurchaseOrderIdProperty); }
+            set { this.SetRefId(PurchaseOrderIdProperty, value); }
         }
+        public static readonly RefEntityProperty<PurchaseOrder> PurchaseOrderProperty =
+            P<PurchaseOrderItem>.RegisterRef(e => e.PurchaseOrder, PurchaseOrderIdProperty);
         public PurchaseOrder PurchaseOrder
         {
-            get { return this.GetRefEntity(PurchaseOrderRefProperty); }
-            set { this.SetRefEntity(PurchaseOrderRefProperty, value); }
+            get { return this.GetRefEntity(PurchaseOrderProperty); }
+            set { this.SetRefEntity(PurchaseOrderProperty, value); }
         }
 
-        protected override void OnAmountChanged(ManagedPropertyChangedEventArgs<int> e)
+        protected override void OnAmountChanged(ManagedPropertyChangedEventArgs e)
         {
-            this.AmountLeft = e.NewValue;
+            this.AmountLeft = (int)e.NewValue;
         }
 
         /// <summary>
@@ -67,11 +81,11 @@ namespace JXC
 
         public static readonly EntityRoutedEvent PriceChangedEvent = EntityRoutedEvent.Register(EntityRoutedEventType.BubbleToParent);
 
-        protected override void OnPropertyChanged(IManagedPropertyChangedEventArgs e)
+        protected override void OnPropertyChanged(ManagedPropertyChangedEventArgs e)
         {
             if (e.Property == View_TotalPriceProperty)
             {
-                this.RaiseRoutedEvent(PriceChangedEvent, e as EventArgs);
+                this.RaiseRoutedEvent(PriceChangedEvent, e);
             }
 
             base.OnPropertyChanged(e);
@@ -79,9 +93,9 @@ namespace JXC
     }
 
     [Serializable]
-    public class PurchaseOrderItemList : ProductRefItemList { }
+    public partial class PurchaseOrderItemList : ProductRefItemList { }
 
-    public class PurchaseOrderItemRepository : EntityRepository
+    public partial class PurchaseOrderItemRepository : JXCEntityRepository
     {
         protected PurchaseOrderItemRepository() { }
     }
@@ -90,40 +104,7 @@ namespace JXC
     {
         protected override void ConfigMeta()
         {
-            Meta.MapTable().MapAllPropertiesToTable();
-        }
-
-        protected override void ConfigView()
-        {
-            View.DomainName("商品订单项").HasDelegate(PurchaseOrderItem.View_ProductNameProperty);
-
-            if (IsWeb)
-            {
-                View.ClearWebCommands(false)
-                    .UseWebCommands(
-                    "Jxc.AddPurchaseOrderItem",
-                    WebCommandNames.Delete
-                    );
-            }
-            else
-            {
-                View.ClearWPFCommands(false)
-                    .UseWPFCommands(
-                    typeof(AddPurchaseOrderItem),
-                    WPFCommandNames.Delete
-                    );
-            }
-
-            using (View.OrderProperties())
-            {
-                View.Property(PurchaseOrderItem.View_ProductNameProperty).HasLabel("商品名称").ShowIn(ShowInWhere.List);
-                View.Property(PurchaseOrderItem.View_ProductCategoryNameProperty).HasLabel("商品类别").ShowIn(ShowInWhere.List);
-                View.Property(PurchaseOrderItem.View_SpecificationProperty).HasLabel("规格").ShowIn(ShowInWhere.List);
-                View.Property(PurchaseOrderItem.AmountProperty).HasLabel("数量").ShowIn(ShowInWhere.List);
-                View.Property(PurchaseOrderItem.RawPriceProperty).HasLabel("单价").ShowIn(ShowInWhere.List);
-                View.Property(PurchaseOrderItem.View_TotalPriceProperty).HasLabel("总价").ShowIn(ShowInWhere.List);
-                View.Property(PurchaseOrderItem.AmountLeftProperty).HasLabel("未入库数量").ShowIn(ShowInWhere.List).Readonly();
-            }
+            Meta.MapTable().MapAllProperties();
         }
     }
 }

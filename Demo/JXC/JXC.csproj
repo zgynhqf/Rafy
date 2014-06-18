@@ -10,8 +10,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>JXC</RootNamespace>
     <AssemblyName>JXC</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,11 +31,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AvalonDock, Version=1.2.2643.0, Culture=neutral, PublicKeyToken=85a1e0ada7ec13e4, processorArchitecture=MSIL">
-      <HintPath>..\..\Lib\AvalonDock.dll</HintPath>
-    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -54,35 +54,88 @@
     <Compile Include="DbMigrations\DataMigration.cs" />
     <Compile Include="DbMigrations\_20120417_131600_InitProductCategory.cs" />
     <Compile Include="Entities\BasicData\ClientCategory.cs" />
+    <Compile Include="Entities\BasicData\ClientCategory.g.cs">
+      <DependentUpon>ClientCategory.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\BasicData\ClientInfo.cs" />
+    <Compile Include="Entities\BasicData\ClientInfo.g.cs">
+      <DependentUpon>ClientInfo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\BasicData\FileAttachement.cs" />
     <Compile Include="Entities\BasicData\Product.cs" />
+    <Compile Include="Entities\BasicData\Product.g.cs">
+      <DependentUpon>Product.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\BasicData\ProductAttachement.cs" />
+    <Compile Include="Entities\BasicData\ProductAttachement.g.cs">
+      <DependentUpon>ProductAttachement.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\BasicData\ProductCategory.cs" />
+    <Compile Include="Entities\BasicData\ProductCategory.g.cs">
+      <DependentUpon>ProductCategory.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\BasicData\ProductNavigationCriteria.cs" />
     <Compile Include="Entities\BasicData\Storage.cs" />
+    <Compile Include="Entities\BasicData\Storage.g.cs">
+      <DependentUpon>Storage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\BasicData\StorageProduct.cs" />
+    <Compile Include="Entities\BasicData\StorageProduct.g.cs">
+      <DependentUpon>StorageProduct.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\BasicData\Unit.cs" />
     <Compile Include="Entities\EntityDataSources.cs" />
     <Compile Include="Entities\ProductRefItem.cs" />
     <Compile Include="Entities\Purchase\PurchaseOrder.cs" />
     <Compile Include="Entities\ClientTimeSpanCriteria.cs" />
+    <Compile Include="Entities\Purchase\PurchaseOrder.g.cs">
+      <DependentUpon>PurchaseOrder.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\Purchase\PurchaseOrderAttachement.cs" />
+    <Compile Include="Entities\Purchase\PurchaseOrderAttachement.g.cs">
+      <DependentUpon>PurchaseOrderAttachement.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\Purchase\PurchaseOrderItem.cs" />
+    <Compile Include="Entities\Purchase\PurchaseOrderItem.g.cs">
+      <DependentUpon>PurchaseOrderItem.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\StorageIn\OrderStorageInBill.cs" />
+    <Compile Include="Entities\StorageIn\OrderStorageInBill.g.cs">
+      <DependentUpon>OrderStorageInBill.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\StorageIn\OtherStorageInBill.cs" />
+    <Compile Include="Entities\StorageIn\OtherStorageInBill.g.cs">
+      <DependentUpon>OtherStorageInBill.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\StorageIn\StorageInBill.cs" />
     <Compile Include="Entities\StorageIn\StorageInBillItem.cs" />
+    <Compile Include="Entities\StorageIn\StorageInBillItem.g.cs">
+      <DependentUpon>StorageInBillItem.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\StorageMove\StorageMove.cs" />
+    <Compile Include="Entities\StorageMove\StorageMove.g.cs">
+      <DependentUpon>StorageMove.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\StorageMove\StorageMoveItem.cs" />
+    <Compile Include="Entities\StorageMove\StorageMoveItem.g.cs">
+      <DependentUpon>StorageMoveItem.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\StorageOut\OtherStorageOutBill.cs" />
+    <Compile Include="Entities\StorageOut\OtherStorageOutBill.g.cs">
+      <DependentUpon>OtherStorageOutBill.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\StorageOut\StorageOutBill.cs" />
     <Compile Include="Entities\StorageOut\StorageOutBillItem.cs" />
+    <Compile Include="Entities\StorageOut\StorageOutBillItem.g.cs">
+      <DependentUpon>StorageOutBillItem.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\SystemMaintain\AutoCodeInfo.cs" />
+    <Compile Include="Entities\SystemMaintain\AutoCodeInfo.g.cs">
+      <DependentUpon>AutoCodeInfo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\TimeSpanCriteria.cs" />
     <Compile Include="JXCEntity.cs" />
-    <Compile Include="JXCLibrary.cs" />
-    <Compile Include="MetaExt.cs" />
+    <Compile Include="JXCPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AutoCodeInfoServices.cs" />
     <Compile Include="Services\StorageMoveServices.cs" />
@@ -91,142 +144,52 @@
     <Compile Include="Services\OtherStorageOutBillServices.cs" />
     <Compile Include="Services\OtherStorageInBillServices.cs" />
     <Compile Include="Services\OrderStorageInBillServices.cs" />
-    <Compile Include="WPF\BasicData\StorageModule.cs" />
-    <Compile Include="WPF\Common\Commands\AddBill.cs" />
-    <Compile Include="WPF\Common\Commands\BarcodeSelectProduct.cs" />
-    <Compile Include="WPF\Common\Commands\DeleteBill.cs" />
-    <Compile Include="WPF\Common\Commands\EditBill.cs" />
-    <Compile Include="WPF\Common\Commands\PopupBillCommandBase.cs" />
-    <Compile Include="WPF\Common\Commands\SelectProductCommand.cs" />
-    <Compile Include="WPF\Common\Commands\ShowBill.cs" />
-    <Compile Include="WPF\Common\Editors\ImagePropertyEditor.cs" />
-    <Compile Include="WPF\Common\Editors\ImageSelectorControl.xaml.cs">
-      <DependentUpon>ImageSelectorControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="WPF\Common\Layouts\BillLayout.xaml.cs">
-      <DependentUpon>BillLayout.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="WPF\Common\Layouts\ConditionQueryLayout.xaml.cs">
-      <DependentUpon>ConditionQueryLayout.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="WPF\Common\Layouts\HorizentalConditionLayout.xaml.cs">
-      <DependentUpon>HorizentalConditionLayout.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="WPF\BasicData\FileAttachementCommands.cs" />
-    <Compile Include="WPF\BasicData\Product\ProductDetailPanel.xaml.cs">
-      <DependentUpon>ProductDetailPanel.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="WPF\BasicData\Product\ProductModule.cs" />
-    <Compile Include="WPF\BasicData\Product\ProductNavigationCommands.cs" />
-    <Compile Include="WPF\Purchase\Commands\OrderStorageInBillCommands.cs" />
-    <Compile Include="WPF\Purchase\Commands\PurchaseOrderCommands.cs" />
-    <Compile Include="WPF\Purchase\Commands\PurchaseOrderItemCommands.cs" />
-    <Compile Include="WPF\Purchase\OrderStorageInModule.cs" />
-    <Compile Include="WPF\Purchase\PurchaseOrderModule.cs" />
-    <Compile Include="WPF\Storage\BillQueryLayout.xaml.cs">
-      <DependentUpon>BillQueryLayout.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="WPF\Storage\BillQueryModule.cs" />
-    <Compile Include="WPF\Storage\Commands\StorageMoveCommands.cs" />
-    <Compile Include="WPF\Storage\Commands\OtherStorageInBillCommands.cs" />
-    <Compile Include="WPF\Storage\Commands\OtherStorageOutBillCommands.cs" />
-    <Compile Include="WPF\Storage\StorageMoveModule.cs" />
-    <Compile Include="WPF\Storage\OtherStorageInModule.cs" />
-    <Compile Include="WPF\Storage\OtherStorageOutModule.cs" />
-    <Compile Include="WPF\Common\Templates\BillTemplate.cs" />
-    <Compile Include="WPF\Common\Templates\ConditionQueryModule.cs" />
-    <Compile Include="WPF\Common\Templates\ListTemplate.cs" />
-    <Compile Include="WPF\Common\Templates\ModuleBase.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\OEA\Common\Common.csproj">
+    <ProjectReference Include="..\..\Rafy\Rafy.Utils\Rafy.Utils.csproj">
       <Project>{796B149B-32C9-4BB0-A23F-69C012450DB8}</Project>
-      <Name>Common</Name>
+      <Name>Rafy.Utils</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\OEA\DbMigration\DbMigration.csproj">
+    <ProjectReference Include="..\..\Rafy\Rafy.DbMigration\Rafy.DbMigration.csproj">
       <Project>{D7C4F80D-24A4-47F1-985C-CFA55CFA13E9}</Project>
-      <Name>DbMigration</Name>
+      <Name>Rafy.DbMigration</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\OEA\ManagedProperty\ManagedProperty.csproj">
+    <ProjectReference Include="..\..\Rafy\Rafy.ManagedProperty\Rafy.ManagedProperty.csproj">
       <Project>{66BE29D5-F1CA-4941-A4EB-6B3E8F577166}</Project>
-      <Name>ManagedProperty</Name>
+      <Name>Rafy.ManagedProperty</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\OEA\OEA.Library\OEA.Library.csproj">
+    <ProjectReference Include="..\..\Rafy\Plugins\Compatibility\Rafy.Domain.OldQuery\Rafy.Compatibility.Domain.OldQuery.csproj">
+      <Project>{d63382c2-8f48-4388-8197-6fc824d77f92}</Project>
+      <Name>Rafy.Compatibility.Domain.OldQuery</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy\Rafy.Domain\Rafy.Domain.csproj">
       <Project>{9F8BB429-70DE-449A-8A67-5190191E7EE6}</Project>
-      <Name>OEA.Library</Name>
+      <Name>Rafy.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\OEA\OEA\OEA.csproj">
+    <ProjectReference Include="..\..\Rafy\Rafy\Rafy.csproj">
       <Project>{966A5BF2-D690-426B-AD68-AD868BB8F855}</Project>
-      <Name>OEA %28OEA\OEA%29</Name>
+      <Name>Rafy</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\OEA\Plugins\OEA.RBAC\OEA.RBAC.csproj">
+    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.csproj">
       <Project>{03D5A267-C106-42A9-8959-93D7AE3648DD}</Project>
-      <Name>OEA.RBAC</Name>
+      <Name>Rafy.RBAC</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\OEA\Web\OEA.Web.Meta\OEA.Web.Meta.csproj">
-      <Project>{2AECFBB6-34AC-41A6-AB8C-F52A3F68BA1A}</Project>
-      <Name>OEA.Web.Meta</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\OEA\WPF\OEA.Module.WPF\OEA.Module.WPF.csproj">
+    <ProjectReference Include="..\..\Rafy\WPF\Rafy.WPF\Rafy.WPF.csproj">
       <Project>{84399E4E-CC81-4B1F-9953-586B25B29792}</Project>
-      <Name>OEA.Module.WPF</Name>
+      <Name>Rafy.WPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\OEA\WPF\OEA.Module\OEA.Module.csproj">
-      <Project>{786446BE-FB56-4281-9CA2-D5B699B0B388}</Project>
-      <Name>OEA.Module</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\OEA\WPF\OEA.WPF.Controls\OEA.WPF.Controls.csproj">
+    <ProjectReference Include="..\..\Rafy\WPF\Rafy.WPF.Controls\Rafy.WPF.Controls.csproj">
       <Project>{9107e3a0-e18a-49b5-a214-daccd5fe8723}</Project>
-      <Name>OEA.WPF.Controls</Name>
+      <Name>Rafy.WPF.Controls</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\Add.bmp">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Images\Delete.bmp">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <None Include="Reports\采购入库单报表统计.rdlc" />
-    <EmbeddedResource Include="Web\Common\Commands\AddBill.js" />
-    <EmbeddedResource Include="Web\Common\Templates\BillTemplate.js" />
-    <EmbeddedResource Include="Web\Purchase\Commands\PurchaseOrderCommands.js" />
-    <EmbeddedResource Include="Web\Purchase\Commands\PurchaseOrderItemCommands.js" />
-    <EmbeddedResource Include="Web\Common\Commands\SelectProductCommand.js" />
-    <EmbeddedResource Include="Web\BasicData\Product\ProductModule.js" />
-    <EmbeddedResource Include="Web\Common\Commands\ShowBill.js" />
-    <EmbeddedResource Include="Web\Common\TimeSpanCriteria.js" />
-    <EmbeddedResource Include="Web\Purchase\PurchaseOrderModule.js" />
-    <EmbeddedResource Include="Web\Common\AutoCodeHelper.js" />
-    <EmbeddedResource Include="Web\Common\Templates\ConditionQueryModule.js" />
-    <EmbeddedResource Include="Web\Purchase\Entities\PurchaseOrderItem.js" />
+    <None Include="Entities\BasicData\BasicData.odml" />
+    <None Include="Entities\Purchase\Purchase.odml" />
+    <None Include="Entities\StorageIn\StorageIn.odml" />
+    <None Include="Entities\StorageMove\StorageMove.odml" />
+    <None Include="Entities\StorageOut\StorageOut.odml" />
     <Content Include="_ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="WPF\Common\Editors\ImageSelectorControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="WPF\Common\Layouts\BillLayout.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="WPF\Common\Layouts\ConditionQueryLayout.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="WPF\Common\Layouts\HorizentalConditionLayout.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="WPF\BasicData\Product\ProductDetailPanel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="WPF\Storage\BillQueryLayout.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\DataSources\OrderStorageInBill.datasource" />
@@ -235,8 +198,8 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(TargetPath)" "$(SolutionDir)Web\bin\Library\" /Y
-xcopy "$(TargetPath)" "$(SolutionDir)WPFClient\bin\$(ConfigurationName)\Library\" /Y</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(TargetPath)" "$(SolutionDir)Web\bin\Domain\" /Y
+xcopy "$(TargetPath)" "$(SolutionDir)WPFClient\bin\$(ConfigurationName)\Domain\" /Y</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

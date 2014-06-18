@@ -4,11 +4,10 @@ using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Windows;
-using OEA.Module.WPF;
-using OEA.Module.WPF.Shell;
 using System.Windows.Threading;
-using OEA;
-using Common;
+using Rafy;
+using Rafy.WPF;
+using Rafy.WPF.Shell;
 
 namespace WPFClient
 {
@@ -16,9 +15,20 @@ namespace WPFClient
     {
         public App()
         {
-            OEAEnvironment.Provider.IsDebuggingEnabled = ConfigurationHelper.GetAppSettingOrDefault("IsDebuggingEnabled", false);
+            Rafy.WPF.App.MainWindowType = typeof(DefaultShell);
+            ClientApp.LoginWindowType = typeof(DefaultLoginWindow);
+            ClientApp.SplashScreen = new SplashScreen("Shell/ProductSplash.jpg");
 
-            ClientApp.Register(this);
+            RafyEnvironment.Provider.IsDebuggingEnabled = ConfigurationHelper.GetAppSettingOrDefault("IsDebuggingEnabled", false);
+
+            var app = ClientApp.Register(this);
+
+            //登录成功时，需要绑定主窗口的模块列表。
+            app.LoginSuccessed += (o, e) =>
+            {
+                var mainWin = App.Current.MainWindow as DefaultShell;
+                mainWin.ShowModules();
+            };
 
             this.DispatcherUnhandledException += OnDispatcherUnhandledException;
         }

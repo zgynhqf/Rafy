@@ -1,29 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA;
-using OEA.Library;
-using OEA.MetaModel;
-using OEA.MetaModel.Attributes;
-using OEA.MetaModel.View;
-using OEA.Module.WPF;
-using OEA.Module.WPF.CommandAutoUI;
-using OEA.Module.WPF.Controls;
-using OEA.WPF.Command;
 using System.Windows;
-using OEA.Threading;
+using Rafy;
+using Rafy.Domain;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
+using Rafy.Threading;
+using Rafy.WPF;
+using Rafy.WPF.Command;
+using Rafy.WPF.Command.UI;
+using Rafy.WPF.Controls;
 
 namespace FM.Commands
 {
     [Command(Label = "添加", ToolTip = "Ctrl+回车 直接添加", GroupType = CommandGroupType.Business)]
-    public class ContinueAddFinanceLog : ClientCommand<DetailObjectView>
+    public class ContinueAddFinanceLog : ClientCommand<DetailLogicalView>
     {
-        public override void Execute(DetailObjectView view)
+        public override void Execute(DetailLogicalView view)
         {
             var log = view.Current.CastTo<FinanceLog>();
 
-            var brokenRules = log.ValidationRules.Validate();
+            var brokenRules = log.Validate();
             if (brokenRules.Count > 0)
             {
                 App.MessageBox.Show(brokenRules.ToString(), "添加出错");
@@ -55,10 +57,10 @@ namespace FM.Commands
         {
             var userArray = log.Users.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             var tagArray = log.Tags.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            ThreadHelper.SafeInvoke(() =>
+            AsyncHelper.InvokeSafe(() =>
             {
-                var userRepo = RF.Concreate<PersonRepository>();
-                var users = userRepo.GetAll().Cast<Person>();
+                var userRepo = RF.Concrete<PersonRepository>();
+                var users = userRepo.CacheAll().Concrete();
                 foreach (var userName in userArray)
                 {
                     var user = users.FirstOrDefault(u => u.Name == userName);
@@ -72,8 +74,8 @@ namespace FM.Commands
                     }
                 }
 
-                var tagRepo = RF.Concreate<TagRepository>();
-                var tags = tagRepo.GetAll().Cast<Tag>();
+                var tagRepo = RF.Concrete<TagRepository>();
+                var tags = tagRepo.CacheAll().Concrete();
                 foreach (var tagName in tagArray)
                 {
                     var tag = tags.FirstOrDefault(u => u.Name == tagName);

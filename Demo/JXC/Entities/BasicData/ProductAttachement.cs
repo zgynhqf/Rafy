@@ -1,38 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA;
-using OEA.Library;
-using OEA.Library.Validation;
-using OEA.MetaModel;
-using OEA.MetaModel.Attributes;
-using OEA.MetaModel.View;
-using OEA.ManagedProperty;
+using Rafy;
+using Rafy.Domain;
+using Rafy.Domain.Validation;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
+using Rafy.ManagedProperty;
 
 namespace JXC
 {
+    /// <summary>
+    /// 产品附件
+    /// </summary>
     [ChildEntity, Serializable]
-    public class ProductAttachement : FileAttachement
+    public partial class ProductAttachement : FileAttachement
     {
-        public static readonly RefProperty<Product> ProductRefProperty =
-            P<ProductAttachement>.RegisterRef(e => e.Product, ReferenceType.Parent);
+        #region 构造函数
+
+        public ProductAttachement() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected ProductAttachement(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
+
+        public static readonly IRefIdProperty ProductIdProperty =
+            P<ProductAttachement>.RegisterRefId(e => e.ProductId, ReferenceType.Parent);
         public int ProductId
         {
-            get { return this.GetRefId(ProductRefProperty); }
-            set { this.SetRefId(ProductRefProperty, value); }
+            get { return (int)this.GetRefId(ProductIdProperty); }
+            set { this.SetRefId(ProductIdProperty, value); }
         }
+        public static readonly RefEntityProperty<Product> ProductProperty =
+            P<ProductAttachement>.RegisterRef(e => e.Product, ProductIdProperty);
         public Product Product
         {
-            get { return this.GetRefEntity(ProductRefProperty); }
-            set { this.SetRefEntity(ProductRefProperty, value); }
+            get { return this.GetRefEntity(ProductProperty); }
+            set { this.SetRefEntity(ProductProperty, value); }
         }
     }
 
     [Serializable]
-    public class ProductAttachementList : FileAttachementList { }
+    public partial class ProductAttachementList : FileAttachementList { }
 
-    public class ProductAttachementRepository : FileAttachementRepository
+    public partial class ProductAttachementRepository : FileAttachementRepository
     {
         protected ProductAttachementRepository() { }
     }
@@ -41,7 +57,7 @@ namespace JXC
     {
         protected override void ConfigMeta()
         {
-            Meta.EnableCache();
+            Meta.EnableClientCache();
         }
 
         //    protected override void ConfigView()

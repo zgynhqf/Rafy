@@ -24,15 +24,13 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Rafy.WPF.Controls;
 
-using System.ComponentModel.Composition;
-
-namespace OEA.Module.WPF.Shell
+namespace Rafy.WPF.Shell
 {
     /// <summary>
     /// 默认的主窗体顶栏
     /// </summary>
-    [Export(ComposableNames.MainWindow_TopBanner, typeof(UserControl))]
     public partial class DefaultTopBanner : UserControl
     {
         public DefaultTopBanner()
@@ -40,17 +38,18 @@ namespace OEA.Module.WPF.Shell
             InitializeComponent();
 
             //Logo地址
-            var logo = OEAEnvironment.CustomerProvider.GetCustomerFile("Images/Logo.png");
+            var logo = RafyEnvironment.BranchProvider.GetCustomerFile("Images/Logo.png");
             imgLogo.Source = new BitmapImage(new Uri(logo));
 
             //用户名
-            this.txtUserName.Text = OEA.ApplicationContext.User.Identity.Name;
+            txtUserName.Text = RafyEnvironment.Identity.Name;
         }
 
         private void btnModifyPwd_Click(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();//huqf
-            //ModifyUserPasswordDialog.Execute(OEAIdentity.Current.User);
+            var win = new WPFClient.Shell.TreeGridTest();
+            win.Show();
+            //ModifyUserPasswordDialog.Execute(RafyIdentity.Current.User);
         }
     }
 }

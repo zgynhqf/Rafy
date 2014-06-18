@@ -1,31 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA.Library;
-using OEA.MetaModel;
-using OEA.MetaModel.Attributes;
-using OEA.MetaModel.View;
-using OEA.ManagedProperty;
+using Rafy.Domain;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
+using Rafy.ManagedProperty;
 using System.ComponentModel;
-using JXC.Commands;
+
+using Rafy;
 
 namespace JXC
 {
     [ChildEntity, Serializable]
-    public class StorageOutBillItem : ProductRefItem
+    public partial class StorageOutBillItem : ProductRefItem
     {
-        public static readonly RefProperty<StorageOutBill> StorageOutBillRefProperty =
-            P<StorageOutBillItem>.RegisterRef(e => e.StorageOutBill, ReferenceType.Parent);
+        #region 构造函数
+
+        public StorageOutBillItem() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected StorageOutBillItem(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
+
+        public static readonly IRefIdProperty StorageOutBillIdProperty =
+            P<StorageOutBillItem>.RegisterRefId(e => e.StorageOutBillId, ReferenceType.Parent);
         public int StorageOutBillId
         {
-            get { return this.GetRefId(StorageOutBillRefProperty); }
-            set { this.SetRefId(StorageOutBillRefProperty, value); }
+            get { return (int)this.GetRefId(StorageOutBillIdProperty); }
+            set { this.SetRefId(StorageOutBillIdProperty, value); }
         }
+        public static readonly RefEntityProperty<StorageOutBill> StorageOutBillProperty =
+            P<StorageOutBillItem>.RegisterRef(e => e.StorageOutBill, StorageOutBillIdProperty);
         public StorageOutBill StorageOutBill
         {
-            get { return this.GetRefEntity(StorageOutBillRefProperty); }
-            set { this.SetRefEntity(StorageOutBillRefProperty, value); }
+            get { return this.GetRefEntity(StorageOutBillProperty); }
+            set { this.SetRefEntity(StorageOutBillProperty, value); }
         }
 
         protected override void OnAmountChanging(ManagedPropertyChangingEventArgs<int> e)
@@ -39,7 +53,7 @@ namespace JXC
             }
         }
 
-        protected override void OnAmountChanged(ManagedPropertyChangedEventArgs<int> e)
+        protected override void OnAmountChanged(ManagedPropertyChangedEventArgs e)
         {
             base.OnAmountChanged(e);
 
@@ -64,9 +78,9 @@ namespace JXC
     }
 
     [Serializable]
-    public class StorageOutBillItemList : ProductRefItemList { }
+    public partial class StorageOutBillItemList : ProductRefItemList { }
 
-    public class StorageOutBillItemRepository : EntityRepository
+    public partial class StorageOutBillItemRepository : JXCEntityRepository
     {
         protected StorageOutBillItemRepository() { }
     }
@@ -75,28 +89,7 @@ namespace JXC
     {
         protected override void ConfigMeta()
         {
-            Meta.MapTable().MapAllPropertiesToTable();
-        }
-
-        protected override void ConfigView()
-        {
-            View.DomainName("出库单项").HasDelegate(StorageOutBillItem.View_ProductNameProperty);
-
-            View.ClearWPFCommands(false)
-                .UseWPFCommands(
-                typeof(SelectProductCommand),
-                typeof(BarcodeSelectProduct),
-                WPFCommandNames.Delete
-                );
-
-            using (View.OrderProperties())
-            {
-                View.Property(StorageOutBillItem.View_ProductNameProperty).HasLabel("商品名称").ShowIn(ShowInWhere.All);
-                View.Property(StorageOutBillItem.View_ProductCategoryNameProperty).HasLabel("商品类别").ShowIn(ShowInWhere.List);
-                View.Property(StorageOutBillItem.View_SpecificationProperty).HasLabel("规格").ShowIn(ShowInWhere.List);
-                View.Property(StorageOutBillItem.View_ProductStorageAmountProperty).HasLabel("当前库存").ShowIn(ShowInWhere.List);
-                View.Property(StorageOutBillItem.AmountProperty).HasLabel("出库数量*").ShowIn(ShowInWhere.List);
-            }
+            Meta.MapTable().MapAllProperties();
         }
     }
 }

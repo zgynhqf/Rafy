@@ -14,71 +14,71 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA;
-using OEA.Library;
-using OEA.Library.Validation;
-using OEA.MetaModel;
-using OEA.MetaModel.Attributes;
-using OEA.MetaModel.View;
-using OEA.ManagedProperty;
-using JXC.Commands;
+using Rafy;
+using Rafy.Domain;
+using Rafy.Domain.Validation;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
+using Rafy.ManagedProperty;
+
 
 namespace JXC
 {
+    /// <summary>
+    /// 采购订单
+    /// </summary>
     [RootEntity, Serializable]
     [ConditionQueryType(typeof(ClientTimeSpanCriteria))]
-    public class PurchaseOrder : JXCEntity
+    public partial class PurchaseOrder : JXCEntity
     {
-        public static readonly RefProperty<ClientInfo> SupplierRefProperty =
-            P<PurchaseOrder>.RegisterRef(e => e.Supplier, ReferenceType.Normal);
+        #region 构造函数
+
+        public PurchaseOrder() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected PurchaseOrder(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
+
+        #region 引用属性
+
+        public static readonly IRefIdProperty SupplierIdProperty =
+            P<PurchaseOrder>.RegisterRefId(e => e.SupplierId, ReferenceType.Normal);
         public int SupplierId
         {
-            get { return this.GetRefId(SupplierRefProperty); }
-            set { this.SetRefId(SupplierRefProperty, value); }
+            get { return (int)this.GetRefId(SupplierIdProperty); }
+            set { this.SetRefId(SupplierIdProperty, value); }
         }
+        public static readonly RefEntityProperty<ClientInfo> SupplierProperty =
+            P<PurchaseOrder>.RegisterRef(e => e.Supplier, SupplierIdProperty);
         public ClientInfo Supplier
         {
-            get { return this.GetRefEntity(SupplierRefProperty); }
-            set { this.SetRefEntity(SupplierRefProperty, value); }
+            get { return this.GetRefEntity(SupplierProperty); }
+            set { this.SetRefEntity(SupplierProperty, value); }
         }
 
-        public static readonly Property<string> SupplierNameProperty = P<PurchaseOrder>.RegisterRedundancy(e => e.SupplierName,
-            new RedundantPath(SupplierRefProperty, ClientInfo.NameProperty));
-        public string SupplierName
-        {
-            get { return this.GetProperty(SupplierNameProperty); }
-        }
-
-        public static readonly Property<string> SupplierCategoryNameProperty = P<PurchaseOrder>.RegisterRedundancy(e => e.SupplierCategoryName,
-            new RedundantPath(SupplierRefProperty, ClientInfo.ClientCategoryRefProperty, ClientCategory.NameProperty));
-        public string SupplierCategoryName
-        {
-            get { return this.GetProperty(SupplierCategoryNameProperty); }
-        }
-
-        public static readonly Property<ClientInfoList> SupplierDataSourceProperty = P<PurchaseOrder>.RegisterReadOnly(e => e.SupplierDataSource, e => (e as PurchaseOrder).GetSupplierDataSource());
-        public ClientInfoList SupplierDataSource
-        {
-            get { return this.GetProperty(SupplierDataSourceProperty); }
-        }
-        private ClientInfoList GetSupplierDataSource()
-        {
-            return RF.Concreate<ClientInfoRepository>().GetSuppliers();
-        }
-
-        public static readonly RefProperty<Storage> StorageRefProperty =
-            P<PurchaseOrder>.RegisterRef(e => e.Storage, ReferenceType.Normal);
+        public static readonly IRefIdProperty StorageIdProperty =
+            P<PurchaseOrder>.RegisterRefId(e => e.StorageId, ReferenceType.Normal);
         public int? StorageId
         {
-            get { return this.GetRefNullableId(StorageRefProperty); }
-            set { this.SetRefNullableId(StorageRefProperty, value); }
+            get { return (int?)this.GetRefNullableId(StorageIdProperty); }
+            set { this.SetRefNullableId(StorageIdProperty, value); }
         }
+        public static readonly RefEntityProperty<Storage> StorageProperty =
+            P<PurchaseOrder>.RegisterRef(e => e.Storage, StorageIdProperty);
         public Storage Storage
         {
-            get { return this.GetRefEntity(StorageRefProperty); }
-            set { this.SetRefEntity(StorageRefProperty, value); }
+            get { return this.GetRefEntity(StorageProperty); }
+            set { this.SetRefEntity(StorageProperty, value); }
         }
+
+        #endregion
+
+        #region 子属性
 
         public static readonly ListProperty<PurchaseOrderItemList> PurchaseOrderItemListProperty = P<PurchaseOrder>.RegisterList(e => e.PurchaseOrderItemList);
         public PurchaseOrderItemList PurchaseOrderItemList
@@ -91,6 +91,10 @@ namespace JXC
         {
             get { return this.GetLazyList(PurchaseOrderAttachementListProperty); }
         }
+
+        #endregion
+
+        #region 一般属性
 
         public static readonly Property<string> CodeProperty = P<PurchaseOrder>.Register(e => e.Code);
         public string Code
@@ -129,9 +133,9 @@ namespace JXC
             get { return this.GetProperty(StorageInDirectlyProperty); }
             set { this.SetProperty(StorageInDirectlyProperty, value); }
         }
-        protected virtual void OnStorageInDirectlyChanged(ManagedPropertyChangedEventArgs<bool> e)
+        protected virtual void OnStorageInDirectlyChanged(ManagedPropertyChangedEventArgs e)
         {
-            if (e.NewValue) { this.StorageInStatus = OrderStorageInStatus.Completed; }
+            if ((bool)e.NewValue) { this.StorageInStatus = OrderStorageInStatus.Completed; }
         }
 
         public static readonly Property<string> CommentProperty = P<PurchaseOrder>.Register(e => e.Comment);
@@ -139,6 +143,31 @@ namespace JXC
         {
             get { return this.GetProperty(CommentProperty); }
             set { this.SetProperty(CommentProperty, value); }
+        }
+
+        public static readonly Property<OrderStorageInStatus> StorageInStatusProperty = P<PurchaseOrder>.Register(e => e.StorageInStatus, OrderStorageInStatus.Waiting);
+        public OrderStorageInStatus StorageInStatus
+        {
+            get { return this.GetProperty(StorageInStatusProperty); }
+            set { this.SetProperty(StorageInStatusProperty, value); }
+        }
+
+        #endregion
+
+        #region 只读属性
+
+        public static readonly Property<string> SupplierNameProperty = P<PurchaseOrder>.RegisterRedundancy(e => e.SupplierName,
+            new RedundantPath(SupplierProperty, ClientInfo.NameProperty));
+        public string SupplierName
+        {
+            get { return this.GetProperty(SupplierNameProperty); }
+        }
+
+        public static readonly Property<string> SupplierCategoryNameProperty = P<PurchaseOrder>.RegisterRedundancy(e => e.SupplierCategoryName,
+            new RedundantPath(SupplierProperty, ClientInfo.ClientCategoryIdProperty, ClientCategory.NameProperty));
+        public string SupplierCategoryName
+        {
+            get { return this.GetProperty(SupplierCategoryNameProperty); }
         }
 
         public static readonly Property<int> TotalAmountLeftProperty = P<PurchaseOrder>.RegisterReadOnly(e => e.TotalAmountLeft, e => (e as PurchaseOrder).GetTotalAmountLeft());
@@ -151,47 +180,17 @@ namespace JXC
             return this.PurchaseOrderItemList.Cast<PurchaseOrderItem>().Sum(e => e.AmountLeft);
         }
 
-        public static readonly Property<OrderStorageInStatus> StorageInStatusProperty = P<PurchaseOrder>.Register(e => e.StorageInStatus, OrderStorageInStatus.Waiting);
-        public OrderStorageInStatus StorageInStatus
+        public static readonly Property<ClientInfoList> SupplierDataSourceProperty = P<PurchaseOrder>.RegisterReadOnly(e => e.SupplierDataSource, e => (e as PurchaseOrder).GetSupplierDataSource());
+        public ClientInfoList SupplierDataSource
         {
-            get { return this.GetProperty(StorageInStatusProperty); }
-            set { this.SetProperty(StorageInStatusProperty, value); }
+            get { return this.GetProperty(SupplierDataSourceProperty); }
+        }
+        private ClientInfoList GetSupplierDataSource()
+        {
+            return RF.Concrete<ClientInfoRepository>().GetSuppliers();
         }
 
-        protected override void AddValidations()
-        {
-            base.AddValidations();
-
-            var rules = this.ValidationRules;
-            rules.AddRule(CodeProperty, CommonRules.Required);
-            rules.AddRule((e, args) =>
-            {
-                var po = e as PurchaseOrder;
-                if (po.PurchaseOrderItemList.Count == 0)
-                {
-                    args.BrokenDescription = "订单至少需要一个订单项。";
-                }
-                else
-                {
-                    foreach (PurchaseOrderItem item in po.PurchaseOrderItemList)
-                    {
-                        if (item.View_TotalPrice <= 0)
-                        {
-                            args.BrokenDescription = "商品项金额应该是正数。";
-                            return;
-                        }
-                    }
-                }
-            });
-            rules.AddRule(StorageRefProperty, (e, args) =>
-            {
-                var po = e as PurchaseOrder;
-                if (po.StorageInDirectly && !po.StorageId.HasValue)
-                {
-                    args.BrokenDescription = "请选择需要入库的仓库。";
-                }
-            });
-        }
+        #endregion
 
         protected override void OnRoutedEvent(object sender, EntityRoutedEventArgs e)
         {
@@ -211,30 +210,39 @@ namespace JXC
     }
 
     [Serializable]
-    public class PurchaseOrderList : JXCEntityList
+    public partial class PurchaseOrderList : JXCEntityList { }
+
+    public partial class PurchaseOrderRepository : JXCEntityRepository
     {
-        protected void QueryBy(OrderStorageInStatus status)
+        protected PurchaseOrderRepository() { }
+
+        public PurchaseOrderList GetByStatus(OrderStorageInStatus status)
         {
-            this.QueryDb(q => q.Constrain(PurchaseOrder.StorageInStatusProperty).Equal(status));
+            return this.FetchList(status);
         }
 
-        protected void QueryBy(ClientTimeSpanCriteria criteria)
+        protected EntityList FetchBy(OrderStorageInStatus status)
         {
-            this.QueryDb(q =>
+            return this.QueryList(q => q.Constrain(PurchaseOrder.StorageInStatusProperty).Equal(status));
+        }
+
+        protected EntityList FetchBy(ClientTimeSpanCriteria criteria)
+        {
+            return this.QueryList(q =>
             {
                 q.Constrain(PurchaseOrder.DateProperty).GreaterEqual(criteria.From)
                     .And().Constrain(PurchaseOrder.DateProperty).LessEqual(criteria.To);
 
                 if (criteria.ClientInfoId.HasValue)
                 {
-                    q.And().Constrain(PurchaseOrder.SupplierRefProperty).Equal(criteria.ClientInfoId.Value);
+                    q.And().Constrain(PurchaseOrder.SupplierIdProperty).Equal(criteria.ClientInfoId.Value);
                 }
             });
         }
 
-        protected void QueryBy(TimeSpanCriteria criteria)
+        protected EntityList FetchBy(TimeSpanCriteria criteria)
         {
-            this.QueryDb(q =>
+            return this.QueryList(q =>
             {
                 q.Constrain(PurchaseOrder.DateProperty).GreaterEqual(criteria.From)
                     .And().Constrain(PurchaseOrder.DateProperty).LessEqual(criteria.To);
@@ -242,74 +250,43 @@ namespace JXC
         }
     }
 
-    public class PurchaseOrderRepository : EntityRepository
-    {
-        protected PurchaseOrderRepository() { }
-
-        public PurchaseOrderList GetByStatus(OrderStorageInStatus status)
-        {
-            return this.FetchListCast<PurchaseOrderList>(status);
-        }
-    }
-
     internal class PurchaseOrderConfig : EntityConfig<PurchaseOrder>
     {
-        protected override void ConfigMeta()
+        protected override void AddValidations(IValidationDeclarer rules)
         {
-            Meta.MapTable().MapAllPropertiesToTable();
+            rules.AddRule(PurchaseOrder.CodeProperty, CommonRules.Required);
+            rules.AddRule((e, args) =>
+            {
+                var po = e as PurchaseOrder;
+                if (po.PurchaseOrderItemList.Count == 0)
+                {
+                    args.BrokenDescription = "订单至少需要一个订单项。".Translate();
+                }
+                else
+                {
+                    foreach (PurchaseOrderItem item in po.PurchaseOrderItemList)
+                    {
+                        if (item.View_TotalPrice <= 0)
+                        {
+                            args.BrokenDescription = "商品项金额应该是正数。".Translate();
+                            return;
+                        }
+                    }
+                }
+            });
+            rules.AddRule(PurchaseOrder.StorageProperty, (e, args) =>
+            {
+                var po = e as PurchaseOrder;
+                if (po.StorageInDirectly && !po.StorageId.HasValue)
+                {
+                    args.BrokenDescription = "请选择需要入库的仓库。".Translate();
+                }
+            });
         }
 
-        protected override void ConfigView()
+        protected override void ConfigMeta()
         {
-            View.DomainName("采购订单").HasDelegate(PurchaseOrder.CodeProperty);
-
-            if (IsWeb)
-            {
-                View.ClearWebCommands(false)
-                    .UseWebCommands(
-                    "Jxc.AddPurchaseOrder",
-                    "Jxc.ShowBill",
-                    WebCommandNames.Refresh
-                    );
-            }
-            else
-            {
-                View.ClearWPFCommands(false)
-                    .UseWPFCommands(
-                    typeof(AddPurchaseOrder),
-                    typeof(DeletePurchaseOrder),
-                    typeof(ShowBill),
-                    WPFCommandNames.Refresh,
-                    typeof(CompletePurchaseOrder)
-                    );
-            }
-
-            using (View.OrderProperties())
-            {
-                View.Property(PurchaseOrder.CodeProperty).HasLabel("订单编号").ShowIn(ShowInWhere.All);
-                View.Property(PurchaseOrder.DateProperty).HasLabel("订单日期").ShowIn(ShowInWhere.ListDetail);
-                View.Property(PurchaseOrder.SupplierNameProperty).HasLabel("供应商").ShowIn(ShowInWhere.List);
-                View.Property(PurchaseOrder.SupplierCategoryNameProperty).HasLabel("供应商客户类别").ShowIn(ShowInWhere.List);
-                View.Property(PurchaseOrder.SupplierRefProperty).HasLabel("供应商").ShowIn(ShowInWhere.Detail)
-                    .UseDataSource(EntityDataSources.Suppliers);
-                View.Property(PurchaseOrder.PlanStorageInDateProperty).HasLabel("计划到货日期").ShowIn(ShowInWhere.ListDetail);
-                View.Property(PurchaseOrder.StorageInDirectlyProperty).HasLabel("直接入库").ShowIn(ShowInWhere.Detail);
-                View.Property(PurchaseOrder.TotalMoneyProperty).HasLabel("总金额").ShowIn(ShowInWhere.ListDetail)
-                    .Readonly();
-                View.Property(PurchaseOrder.StorageRefProperty).HasLabel("仓库").ShowIn(ShowInWhere.Detail)
-                    .Visibility(PurchaseOrder.StorageInDirectlyProperty);//动态只读//.Readonly(PurchaseOrder.IsStorageReadonlyProperty);//动态只读
-                View.Property(PurchaseOrder.StorageInStatusProperty).HasLabel("入库状态").ShowIn(ShowInWhere.List)
-                    .Readonly();
-                View.Property(PurchaseOrder.TotalAmountLeftProperty).HasLabel("未入库商品数").ShowIn(ShowInWhere.List)
-                    .Readonly();
-                View.Property(PurchaseOrder.CommentProperty).HasLabel("备注").ShowIn(ShowInWhere.ListDetail)
-                    .ShowMemoInDetail();
-            }
-
-            if (IsWeb)
-            {
-                View.Property(PurchaseOrder.TotalMoneyProperty).HasLabel("总金额(点击汇总)");
-            }
+            Meta.MapTable().MapAllProperties();
         }
     }
 }

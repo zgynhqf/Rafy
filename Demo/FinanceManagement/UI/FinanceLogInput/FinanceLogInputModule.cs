@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA.MetaModel.View;
-using OEA.Module.WPF;
-using OEA.Library;
-using OEA.MetaModel;
+using Rafy.MetaModel.View;
+using Rafy.WPF;
+using Rafy.Domain;
+using Rafy.MetaModel;
 using FM.Commands;
 using System.Windows.Input;
 using System.Windows;
@@ -23,7 +25,7 @@ namespace FM.UI
                 {
                     BlockType = BlockType.Detail,
                     KeyLabel = "经费输入",
-                    ExtendView = "FinanceLog 输入视图"
+                    ExtendView = typeof(FinanceLogInputDetailWPFViewConfig)
                 },
                 Surrounders =
                 {
@@ -44,9 +46,9 @@ namespace FM.UI
 
         protected override void OnUIGenerated(ControlResult ui)
         {
-            var defaultPersons = RF.Create<Person>().GetAll().Cast<Person>()
+            var defaultPersons = RF.Find<Person>().GetAll().Cast<Person>()
                 .Where(t => t.IsDefault).Select(t => t.Name).ToArray();
-            var defaultTags = RF.Create<Tag>().GetAll().Cast<Tag>()
+            var defaultTags = RF.Find<Tag>().GetAll().Cast<Tag>()
                 .Where(t => !t.NotUsed && t.IsDefault).Select(t => t.Name).ToArray();
             var log = new FinanceLog
             {
@@ -54,7 +56,7 @@ namespace FM.UI
                 Tags = string.Join(",", defaultTags)
             };
 
-            var main = ui.MainView as DetailObjectView;
+            var main = ui.MainView as DetailLogicalView;
             main.Current = log;
             main.Control.Loaded += (s, e) => (main.PropertyEditors[0].Control as FrameworkElement).Focus();
 
@@ -70,31 +72,31 @@ namespace FM.UI
                         element.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
                     }
 
-                    main.Commands[typeof(ContinueAddFinanceLog)].TryExecute(main);
+                    main.Commands[typeof(ContinueAddFinanceLog)].TryExecute();
                 }
             };
 
-            var listView = main.Relations["list"] as ListObjectView;
+            var listView = main.Relations["list"] as ListLogicalView;
             listView.DataLoader.LoadDataAsync();
-            listView.IsReadOnly = true;
+            listView.IsReadOnly = ReadOnlyStatus.ReadOnly;
 
             base.OnUIGenerated(ui);
         }
     }
 
-    internal class FinanceLogInputDetailViewConfig : EntityConfig<FinanceLog>
+    internal class FinanceLogInputDetailWPFViewConfig : WPFViewConfig<FinanceLog>
     {
-        protected override string ExtendView
-        {
-            get { return "FinanceLog 输入视图"; }
-        }
-
+        /// <summary>
+        /// 子类重写此方法，并完成对 Meta 属性的配置。
+        /// 注意：
+        /// * 为了给当前类的子类也运行同样的配置，这个方法可能会被调用多次。
+        /// </summary>
         protected override void ConfigView()
         {
-            View.HasDetailColumnsCount(1).HasDetailLabelSize(50);
+            View.HasDetailLabelSize(50).HasDetailColumnsCount(1);
 
-            View.ClearWPFCommands(false)
-                .UseWPFCommands(
+            View.ClearCommands(false)
+                .UseCommands(
                 typeof(ContinueAddFinanceLog)
                 );
         }

@@ -1,28 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using OEA.Library;
-using OEA.MetaModel;
-using OEA.MetaModel.Attributes;
-using OEA.MetaModel.View;
+using Rafy;
+using Rafy.Domain;
+using Rafy.Domain.ORM.Query;
+using Rafy.MetaModel;
+using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
 
 namespace JXC
 {
     [RootEntity, Serializable]
     public abstract class StorageOutBill : JXCEntity
     {
-        public static readonly RefProperty<Storage> StorageRefProperty =
-            P<StorageOutBill>.RegisterRef(e => e.Storage, ReferenceType.Normal);
+        #region 构造函数
+
+        public StorageOutBill() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected StorageOutBill(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
+
+        public static readonly IRefIdProperty StorageIdProperty =
+            P<StorageOutBill>.RegisterRefId(e => e.StorageId, ReferenceType.Normal);
         public int StorageId
         {
-            get { return this.GetRefId(StorageRefProperty); }
-            set { this.SetRefId(StorageRefProperty, value); }
+            get { return (int)this.GetRefId(StorageIdProperty); }
+            set { this.SetRefId(StorageIdProperty, value); }
         }
+        public static readonly RefEntityProperty<Storage> StorageProperty =
+            P<StorageOutBill>.RegisterRef(e => e.Storage, StorageIdProperty);
         public Storage Storage
         {
-            get { return this.GetRefEntity(StorageRefProperty); }
-            set { this.SetRefEntity(StorageRefProperty, value); }
+            get { return this.GetRefEntity(StorageProperty); }
+            set { this.SetRefEntity(StorageProperty, value); }
         }
 
         public static readonly ListProperty<StorageOutBillItemList> StorageOutBillItemListProperty = P<StorageOutBill>.RegisterList(e => e.StorageOutBillItemList);
@@ -66,44 +81,51 @@ namespace JXC
                 this.TotalAmount = this.StorageOutBillItemList.Sum(poi => (poi as StorageOutBillItem).Amount);
             }
         }
-
-        protected override void OnDelete()
-        {
-            base.OnDelete();
-
-            //由于本类没有映射数据表，所以在删除的时候需要删除下面的数据
-            using (var db = this.CreateDb())
-            {
-                db.Delete(typeof(StorageOutBillItem), db.Query(typeof(StorageOutBillItem))
-                    .Constrain(StorageOutBillItem.StorageOutBillRefProperty).Equal(this.Id)
-                    );
-            }
-        }
     }
 
     [Serializable]
-    public abstract class StorageOutBillList : JXCEntityList
-    {
-        protected void QueryBy(TimeSpanCriteria criteria)
-        {
-            this.QueryDb(q =>
-            {
-                q.Constrain(StorageOutBill.DateProperty).GreaterEqual(criteria.From)
-                    .And().Constrain(StorageOutBill.DateProperty).LessEqual(criteria.To);
-            });
-        }
-    }
+    public abstract class StorageOutBillList : JXCEntityList { }
 
-    public abstract class StorageOutBillRepository : EntityRepository
+    public abstract class StorageOutBillRepository : JXCEntityRepository
     {
         protected StorageOutBillRepository() { }
+    }
+
+    [DataProviderFor(typeof(StorageOutBillRepository))]
+    public class StorageOutBillDataProvider : RepositoryDataProvider
+    {
+        protected override void Submit(SubmitArgs e)
+        {
+            base.Submit(e);
+
+            if (e.Action == SubmitAction.Delete)
+            {
+                //由于本外键关系没有级联，所以在删除的时候需要删除下面的数据
+                this.DeleteRefInDb(e.Entity, StorageOutBillItem.StorageOutBillProperty);
+            }
+        }
+
+        protected EntityList FetchBy(TimeSpanCriteria criteria)
+        {
+            var f = QueryFactory.Instance;
+            var t = f.Table(this.Repository);
+            var q = f.Query(
+                selection: t.Star(),
+                from: t,
+                where: f.And(
+                    t.Column(StorageOutBill.DateProperty).GreaterEqual(criteria.From),
+                    t.Column(StorageOutBill.DateProperty).LessEqual(criteria.To)
+                )
+            );
+            return this.QueryList(q);
+        }
     }
 
     internal class StorageOutBillConfig : EntityConfig<StorageOutBill>
     {
         protected override void ConfigMeta()
         {
-            Meta.MapTable().MapAllPropertiesToTable();
+            Meta.MapTable().MapAllProperties();
         }
     }
 }
