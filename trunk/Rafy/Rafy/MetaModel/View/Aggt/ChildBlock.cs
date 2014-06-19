@@ -146,7 +146,10 @@ namespace Rafy.MetaModel.View
             {
                 if (this._ChildrePropertyMeta == null)
                 {
-                    this._ChildrePropertyMeta = this.ViewMeta.EntityMeta.FindProperty(this.ChildrenProperty);
+                    var em = this.ViewMeta.EntityMeta;
+                    this._ChildrePropertyMeta =
+                        em.Property(this.ChildrenProperty) as PropertyMeta ??
+                        em.ChildrenProperty(this.ChildrenProperty);
                 }
 
                 return this._ChildrePropertyMeta;
