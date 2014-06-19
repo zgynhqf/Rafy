@@ -55,7 +55,8 @@ namespace Rafy.Web.EntityDataPortal
             //有些小写的客户端数据被传输到了服务端，需要被过滤掉。
             if (char.IsLower(pName[0])) { return; }
 
-            var pm = _entityMeta.FindProperty(pName);
+            var pm = _entityMeta.Property(pName) as PropertyMeta ??
+                _entityMeta.ChildrenProperty(pName);
             if (pm != null)
             {
                 var mp = pm.ManagedProperty;

@@ -117,7 +117,7 @@ namespace Rafy.MetaModel
 
         private IList<EntityPropertyMeta> _entityProperties = new List<EntityPropertyMeta>();
         /// <summary>
-        /// 拥有的实体属性，即标记了：EntityPropertyAttribute
+        /// 拥有的实体属性。
         /// </summary>
         public IList<EntityPropertyMeta> EntityProperties
         {
@@ -126,7 +126,7 @@ namespace Rafy.MetaModel
 
         private IList<ChildrenPropertyMeta> _childrenProperties = new List<ChildrenPropertyMeta>();
         /// <summary>
-        /// 拥有的关联属性，即标记了：AssociationAttribute
+        /// 拥有的关联属性。
         /// </summary>
         public IList<ChildrenPropertyMeta> ChildrenProperties
         {
@@ -191,34 +191,6 @@ namespace Rafy.MetaModel
             if (result.Length > 1) throw new InvalidOperationException("一个类中只能定义一个父引用属性。");
 
             return result.Length > 0 ? result[0] : null;
-        }
-
-        /// <summary>
-        /// 根据托管属性查询属性。
-        /// 如果没有找到，则返回 null。
-        /// </summary>
-        /// <param name="property"></param>
-        /// <returns></returns>
-        public PropertyMeta FindProperty(IManagedProperty property)
-        {
-            var ep = this.Property(property);
-            if (ep != null) return ep;
-
-            return this.ChildrenProperty(property);
-        }
-
-        /// <summary>
-        /// 根据名字查询属性（忽略大小写）
-        /// 如果没有找到，则返回 null。
-        /// </summary>
-        /// <param name="property"></param>
-        /// <returns></returns>
-        public PropertyMeta FindProperty(string property)
-        {
-            var ep = this.Property(property);
-            if (ep != null) return ep;
-
-            return this.ChildrenProperty(property);
         }
 
         /// <summary>
