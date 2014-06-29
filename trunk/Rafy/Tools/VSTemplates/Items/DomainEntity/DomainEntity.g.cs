@@ -14,6 +14,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using Rafy;
+using Rafy.ComponentModel;
 using Rafy.Data;
 using Rafy.Domain;
 using Rafy.Domain.ORM;

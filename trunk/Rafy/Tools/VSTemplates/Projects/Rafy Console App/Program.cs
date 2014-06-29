@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Rafy;
+using Rafy.ComponentModel;
 using Rafy.Domain;
 
 namespace $domainNamespace$
