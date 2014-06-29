@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Rafy.Domain;
 using Rafy.ManagedProperty;
 using Rafy.MetaModel.Attributes;
 using Rafy.MetaModel.View;
