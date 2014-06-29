@@ -21,6 +21,7 @@ using Rafy.Reflection;
 using Rafy.ManagedProperty;
 using Rafy.MetaModel.Attributes;
 using Rafy.MetaModel.View;
+using Rafy.Domain;
 
 namespace Rafy.MetaModel.View
 {
