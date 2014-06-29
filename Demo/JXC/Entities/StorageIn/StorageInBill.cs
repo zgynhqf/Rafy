@@ -8,6 +8,7 @@ using Rafy;
 using Rafy.Domain;
 using Rafy.Domain.ORM.Query;
 using Rafy.Domain.Validation;
+using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
 using Rafy.MetaModel.View;

@@ -22,6 +22,7 @@ using Rafy.MetaModel.Attributes;
 using Rafy.MetaModel.View;
 using Rafy.Domain;
 using Rafy;
+using Rafy.ManagedProperty;
 
 namespace JXC
 {

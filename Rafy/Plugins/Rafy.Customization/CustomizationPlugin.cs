@@ -15,6 +15,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Rafy.ComponentModel;
+using Rafy.Domain;
 using Rafy.MetaModel.View;
 
 namespace Rafy.Customization

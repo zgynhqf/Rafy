@@ -61,7 +61,7 @@
     <Compile Include="zzzManagedPropertyObjectView.cs" />
     <Compile Include="Repository\ConsolidatedTypePropertiesContainer.cs" />
     <Compile Include="CompiledPropertyDeclarerAttribute.cs" />
-    <Compile Include="Freezable.cs" />
+    <Compile Include="FreezableMeta.cs" />
     <Compile Include="ManagedPropertyObject.Serialization.cs">
       <DependentUpon>ManagedPropertyObject.cs</DependentUpon>
     </Compile>

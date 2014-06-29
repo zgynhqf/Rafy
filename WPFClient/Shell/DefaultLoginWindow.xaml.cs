@@ -54,7 +54,7 @@ namespace Rafy.WPF.Shell
         {
             try
             {
-                if (!RafyPrincipal.Login(txtUserName.Text, StringHelper.MD5(txtPassword.Password)))
+                if (!RafyPrincipal.Login(txtUserName.Text, CryptographyHelper.MD5(txtPassword.Password)))
                 {
                     MessageBox.Show("用户或密码错误，请重新输入！", "登录失败");
                 }

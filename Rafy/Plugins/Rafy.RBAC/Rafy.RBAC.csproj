@@ -106,6 +106,7 @@
     <Compile Include="Services\QueryModelLabelService.cs" />
     <Compile Include="Services\SavePositionService.cs" />
     <Compile Include="Services\SaveUserService.cs" />
+    <Compile Include="StringHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Rafy.Utils\Rafy.Utils.csproj">

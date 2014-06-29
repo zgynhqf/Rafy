@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Rafy
+namespace Rafy.ManagedProperty
 {
     /// <summary>
     /// 列表属性的元数据

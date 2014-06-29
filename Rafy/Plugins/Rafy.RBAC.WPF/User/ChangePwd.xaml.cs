@@ -35,7 +35,7 @@ namespace Rafy.RBAC.WPF
 
         private void btnOK_Click(object sender, RoutedEventArgs e)
         {
-            if (StringHelper.MD5(txtOldPassword.Password) != user.Password)
+            if (CryptographyHelper.MD5(txtOldPassword.Password) != user.Password)
             {
                 App.MessageBox.Show("旧密码输入错误，请重新输入!".Translate(), "错误".Translate());
                 return;
@@ -45,7 +45,7 @@ namespace Rafy.RBAC.WPF
                 App.MessageBox.Show("两次输入的新密码不一致，请重新输入!".Translate(), "错误".Translate());
                 return;
             }
-            user.Password = StringHelper.MD5(txtNewPassword1.Password);
+            user.Password = CryptographyHelper.MD5(txtNewPassword1.Password);
 
             RF.Save(user);
 

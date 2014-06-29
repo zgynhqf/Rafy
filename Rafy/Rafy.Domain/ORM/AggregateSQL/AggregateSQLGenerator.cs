@@ -21,6 +21,7 @@ using Rafy.Domain.ORM.SqlServer;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using Rafy.MetaModel;
+using Rafy.ManagedProperty;
 
 namespace Rafy.Domain
 {

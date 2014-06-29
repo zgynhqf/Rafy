@@ -13,6 +13,7 @@
 using System;
 using System.Data.SqlClient;
 using Rafy;
+using Rafy.ComponentModel;
 using Rafy.Domain;
 using Rafy.MetaModel;
 using Rafy.MetaModel.View;

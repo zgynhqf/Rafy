@@ -21,6 +21,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using Rafy;
 using Rafy.Domain;
+using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.Utils;
 

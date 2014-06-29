@@ -17,6 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using Rafy;
+using Rafy.ComponentModel;
 using Rafy.DbMigration;
 using Rafy.Domain;
 using Rafy.Domain.Caching;
@@ -49,7 +50,7 @@ namespace RafyUnitTest
             PluginTable.DomainLibraries.AddPlugin<UnitTestDataProviderPlugin>();
             PluginTable.DomainLibraries.AddPlugin<UnitTestIDataProviderPlugin>();
             PluginTable.DomainLibraries.AddPlugin<UnitTestRepoPlugin>();
-            PluginTable.DomainLibraries.AddPlugin<DCLibrary>();
+            PluginTable.DomainLibraries.AddPlugin<DCPlugin>();
 
             ////为了多次修改 Location 值，需要把修改值的操作放到 InitEnvironment 中。
             //RafyEnvironment.Location.IsWebUI = false;

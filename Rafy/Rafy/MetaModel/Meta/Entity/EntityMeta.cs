@@ -19,6 +19,7 @@ using System.Linq;
 using Rafy.MetaModel.Attributes;
 using Rafy.ManagedProperty;
 using Rafy;
+using Rafy.Utils;
 
 namespace Rafy.MetaModel
 {

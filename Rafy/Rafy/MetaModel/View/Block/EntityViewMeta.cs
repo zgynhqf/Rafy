@@ -22,6 +22,7 @@ using System.Reflection;
 using Rafy;
 using Rafy.MetaModel.Attributes;
 using Rafy.ManagedProperty;
+using Rafy.Utils;
 
 namespace Rafy.MetaModel.View
 {

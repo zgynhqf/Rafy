@@ -20,7 +20,7 @@ using System.Reflection;
 
 namespace Rafy.Utils
 {
-    public static class PathHelper
+    internal static class PathHelper
     {
         /// <summary>
         /// 修改当前程序的私有路径

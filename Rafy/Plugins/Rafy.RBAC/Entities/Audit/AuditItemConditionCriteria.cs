@@ -25,6 +25,7 @@ using Rafy.MetaModel.Attributes;
 using Rafy.RBAC.Audit;
 using Rafy.MetaModel.View;
 using Rafy.RBAC;
+using Rafy.Utils;
 
 namespace Rafy.RBAC.Audit
 {
@@ -142,7 +143,7 @@ namespace Rafy.RBAC.Audit
         public static readonly Property<DateTime> StartTimeProperty =
             P<AuditItemConditionCriteria>.Register(e => e.StartTime, new PropertyMetadata<DateTime>
             {
-                DateTimePart = Rafy.DateTimePart.Date,
+                DateTimePart = DateTimePart.Date,
                 PropertyChangingCallBack = (o, e) => (o as AuditItemConditionCriteria).OnStartTimeChanging(e)
             });
         public DateTime StartTime
@@ -161,7 +162,7 @@ namespace Rafy.RBAC.Audit
         public static readonly Property<DateTime> EndTimeProperty =
             P<AuditItemConditionCriteria>.Register(e => e.EndTime, new PropertyMetadata<DateTime>
             {
-                DateTimePart = Rafy.DateTimePart.Date,
+                DateTimePart = DateTimePart.Date,
                 PropertyChangingCallBack = (o, e) => (o as AuditItemConditionCriteria).OnEndTimeChanging(e)
             });
         public DateTime EndTime

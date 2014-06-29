@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Rafy;
+using Rafy.ComponentModel;
 using Rafy.Domain;
 using Rafy.Domain.Caching;
 using Rafy.Domain.ORM.DbMigration;

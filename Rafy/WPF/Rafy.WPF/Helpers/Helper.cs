@@ -17,9 +17,11 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Rafy.Domain;
+using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.MetaModel.View;
 using Rafy.Reflection;
+using Rafy.Utils;
 
 namespace Rafy.WPF
 {

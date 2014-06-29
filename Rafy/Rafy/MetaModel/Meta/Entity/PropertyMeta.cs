@@ -17,6 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using Rafy.ManagedProperty;
+using Rafy.Utils;
 
 namespace Rafy.MetaModel
 {

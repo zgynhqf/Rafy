@@ -27,6 +27,7 @@ using System.Windows.Markup;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Rafy;
+using Rafy.ComponentModel;
 using Rafy.Domain;
 using Rafy.ManagedProperty;
 using Rafy.MetaModel;
@@ -135,10 +136,10 @@ namespace Rafy.WPF.Shell
         {
             base.CompileMeta();
 
-            this.InitCommandMetas();
+            this.InitCommandMeta();
         }
 
-        private void InitCommandMetas()
+        private void InitCommandMeta()
         {
             UIModel.WPFCommands.AddByAssembly(typeof(ClientApp).Assembly);
 
@@ -150,11 +151,11 @@ namespace Rafy.WPF.Shell
             this.OnCommandMetasIntialized();
         }
 
-        protected override void OnAppModelCompleted()
+        protected override void OnAppMetaCompleted()
         {
             UIModel.Freeze();
 
-            base.OnAppModelCompleted();
+            base.OnAppMetaCompleted();
         }
 
         protected override void OnRuntimeStarting()

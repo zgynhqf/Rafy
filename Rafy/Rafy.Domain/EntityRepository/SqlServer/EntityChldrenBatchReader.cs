@@ -13,6 +13,7 @@
 
 using System;
 using System.Collections.Generic;
+using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 
 namespace Rafy.Domain.ORM.SqlServer

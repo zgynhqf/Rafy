@@ -13,6 +13,7 @@ using Rafy.UnitTest.Repository;
 using Rafy.UnitTest.WPF;
 using Rafy.Utils.Caching;
 using Rafy.WPF.Shell;
+using Rafy.ComponentModel;
 
 namespace RafyUnitTest.ClientTest
 {
@@ -39,7 +40,7 @@ namespace RafyUnitTest.ClientTest
             PluginTable.DomainLibraries.AddPlugin<UnitTestDataProviderPlugin>();
             PluginTable.DomainLibraries.AddPlugin<UnitTestIDataProviderPlugin>();
             PluginTable.DomainLibraries.AddPlugin<UnitTestRepoPlugin>();
-            PluginTable.DomainLibraries.AddPlugin<DCLibrary>();
+            PluginTable.DomainLibraries.AddPlugin<DCPlugin>();
             PluginTable.UILibraries.AddPlugin<UnitTestWPFPlugin>();
 
             base.InitEnvironment();

@@ -19,6 +19,7 @@ using System.Security.Permissions;
 using System.Text;
 using Rafy;
 using Rafy.Domain;
+using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
 using Rafy.MetaModel.View;

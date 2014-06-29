@@ -19,6 +19,7 @@ using Rafy;
 using Rafy.Domain.ORM.Query;
 using Rafy.Domain.ORM.Query.Impl;
 using Rafy.Domain.ORM.SqlTree;
+using Rafy.ManagedProperty;
 
 namespace Rafy.Domain.ORM.Query
 {

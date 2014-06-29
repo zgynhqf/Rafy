@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Rafy;
-using Rafy.MetaModel;
+using Rafy.ComponentModel;
 
 namespace Rafy.Domain
 {

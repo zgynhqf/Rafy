@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Rafy;
+using Rafy.ComponentModel;
+using Rafy.Domain;
 using Rafy.Domain.Caching;
 
 namespace Rafy.Domain.Caching
@@ -10,7 +12,7 @@ namespace Rafy.Domain.Caching
     /// <summary>
     /// 本模块主要用于为 Rafy 的缓存系统服务端提供一个数据表存放缓存相关的信息。
     /// </summary>
-    public class DCLibrary : DomainPlugin
+    public class DCPlugin : DomainPlugin
     {
         public static int CacheExpiredSeconds = 30;
 
