@@ -17,6 +17,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using Rafy.MetaModel.Attributes;
+using Rafy.Utils;
 
 namespace Rafy.MetaModel.View
 {

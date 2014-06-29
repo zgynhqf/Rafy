@@ -16,6 +16,7 @@ using System.Data.SqlClient;
 using System.Windows;
 using System.Windows.Threading;
 using Rafy;
+using Rafy.ComponentModel;
 using Rafy.Domain;
 using Rafy.ManagedProperty;
 using Rafy.MetaModel;

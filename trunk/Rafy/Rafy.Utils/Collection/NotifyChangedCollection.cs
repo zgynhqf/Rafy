@@ -67,20 +67,4 @@ namespace Rafy
             base.ClearItems();
         }
     }
-
-    /// <summary>
-    /// 这个类解决了基类在 Clear 时，不提供所有 OldItems 的问题。
-    /// </summary>
-    public interface INotifyChangedCollection : IList, ICollection, IEnumerable, INotifyCollectionChanged
-    {
-        ///// <summary>
-        ///// 被清空的项
-        ///// </summary>
-        //IList ClearedItems { get; }
-
-        /// <summary>
-        /// 获取被清空的项，并清空这个缓存。
-        /// </summary>
-        IList PopClearedItems();
-    }
 }

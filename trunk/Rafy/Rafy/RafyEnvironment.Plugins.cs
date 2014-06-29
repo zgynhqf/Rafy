@@ -25,6 +25,7 @@ using Rafy.MetaModel.Attributes;
 using Rafy.Utils;
 using Rafy;
 using Rafy.Reflection;
+using Rafy.ComponentModel;
 
 namespace Rafy
 {

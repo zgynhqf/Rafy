@@ -20,6 +20,7 @@ using System.ServiceModel;
 using System.Text;
 using System.Web;
 using Rafy;
+using Rafy.ComponentModel;
 using Rafy.MetaModel;
 using Rafy.MetaModel.View;
 using Rafy.Web.ClientMetaModel;
@@ -104,11 +105,11 @@ namespace Rafy.Web
             this.OnCommandMetasIntialized();
         }
 
-        protected override void OnAppModelCompleted()
+        protected override void OnAppMetaCompleted()
         {
             UIModel.Freeze();
 
-            base.OnAppModelCompleted();
+            base.OnAppMetaCompleted();
         }
 
         public override void Shutdown()

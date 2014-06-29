@@ -13,12 +13,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
 using Rafy;
 using Rafy.Reflection;
-using System.Runtime.CompilerServices;
+using Rafy.Utils;
 
 namespace Rafy.MetaModel
 {

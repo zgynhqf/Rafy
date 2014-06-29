@@ -390,7 +390,7 @@ namespace Rafy.ManagedProperty
 
             //对于当前元数据的所有字段，进行复制。
             //获取字段时，不能通过 GetFields 方法一次性获取到所有的字段，所以只能由基类到子类，逐个类型进行遍历。
-            var hierachy = TypeHelper.GetHierarchy(baseMetaType, typeof(Freezable)).Reverse();
+            var hierachy = TypeHelper.GetHierarchy(baseMetaType, typeof(FreezableMeta)).Reverse();
             foreach (var type in hierachy)
             {
                 var fields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);

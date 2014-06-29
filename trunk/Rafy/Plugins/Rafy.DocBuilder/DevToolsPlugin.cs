@@ -32,6 +32,7 @@ using Rafy.MultiLanguages;
 using Rafy.MultiLanguages.WPF;
 using Rafy.Domain.ORM.DbMigration.Presistence;
 using Rafy.DevTools.Modeling;
+using Rafy.ComponentModel;
 
 namespace Rafy.DevTools
 {

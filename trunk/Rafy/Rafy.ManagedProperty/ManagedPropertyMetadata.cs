@@ -50,7 +50,7 @@ namespace Rafy.ManagedProperty
     /// 泛型版本的托管属性元数据
     /// </summary>
     /// <typeparam name="TPropertyType"></typeparam>
-    public class ManagedPropertyMetadata<TPropertyType> : Freezable, IManagedPropertyMetadata, IManagedPropertyMetadataInternal
+    public class ManagedPropertyMetadata<TPropertyType> : FreezableMeta, IManagedPropertyMetadata, IManagedPropertyMetadataInternal
     {
         #region 字段
 

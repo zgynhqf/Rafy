@@ -16,6 +16,7 @@ using System.Linq;
 using System.Text;
 using JXC.Web.Templates;
 using Rafy;
+using Rafy.ComponentModel;
 using Rafy.MetaModel;
 
 namespace JXC.Web

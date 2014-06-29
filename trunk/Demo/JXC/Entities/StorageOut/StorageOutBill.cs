@@ -7,6 +7,7 @@ using System.Text;
 using Rafy;
 using Rafy.Domain;
 using Rafy.Domain.ORM.Query;
+using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
 using Rafy.MetaModel.View;

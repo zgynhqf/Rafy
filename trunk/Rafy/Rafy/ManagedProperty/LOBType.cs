@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Rafy
+namespace Rafy.ManagedProperty
 {
     /// <summary>
     /// LOB属性的类型

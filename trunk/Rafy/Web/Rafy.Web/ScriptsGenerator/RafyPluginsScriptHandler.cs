@@ -17,6 +17,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
+using Rafy.ComponentModel;
 using Rafy.MetaModel;
 using Rafy.MetaModel.View;
 using Rafy.Web.Json;

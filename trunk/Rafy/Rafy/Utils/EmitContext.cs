@@ -25,7 +25,7 @@ namespace Rafy.Utils
     /// 一个简单的 Emit 上下文。
     /// 目前只是提供了一个基本的 ModuleBuilder。
     /// </summary>
-    public class EmitContext
+    internal class EmitContext
     {
         public static readonly EmitContext Instance = new EmitContext();
 

@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Text;
 using Rafy;
+using Rafy.ComponentModel;
 using Rafy.DbMigration;
 using Rafy.Domain;
 using Rafy.Domain.ORM.DbMigration;

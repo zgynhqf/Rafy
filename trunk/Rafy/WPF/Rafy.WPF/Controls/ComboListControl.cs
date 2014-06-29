@@ -31,14 +31,13 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using Rafy;
-using Rafy.Reflection;
 using Rafy.Domain;
 using Rafy.MetaModel;
 using Rafy.MetaModel.View;
+using Rafy.Reflection;
 using Rafy.Utils;
 using Rafy.WPF.Automation;
 using Rafy.WPF.Command;
-using Rafy.WPF.Controls;
 using Rafy.WPF.Editors;
 
 namespace Rafy.WPF.Controls

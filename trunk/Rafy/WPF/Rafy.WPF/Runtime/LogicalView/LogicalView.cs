@@ -26,6 +26,7 @@ using Rafy.WPF;
 using Rafy.WPF.Command;
 using Rafy;
 using Rafy.Reflection;
+using Rafy.ManagedProperty;
 
 namespace Rafy.WPF
 {

@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Rafy
+namespace Rafy.ManagedProperty
 {
     /// <summary>
     /// 引用的类型。

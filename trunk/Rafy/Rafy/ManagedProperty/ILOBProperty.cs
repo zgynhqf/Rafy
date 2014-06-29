@@ -15,9 +15,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Rafy.ManagedProperty;
 
-namespace Rafy
+namespace Rafy.ManagedProperty
 {
     /// <summary>
     /// 大对象属性

@@ -30,6 +30,7 @@ namespace Rafy
     /// Don't use null to indicates a empty paging information, use PagingInfo.Empty instead.
     /// </summary>
     [Serializable]
+    [DataContract]
     public class PagingInfo
     {
         private int _pageNumber;
@@ -87,6 +88,7 @@ namespace Rafy
         /// Whether need to retrieve count of all records
         /// (if it's true, it means the DAL should retrieve count info from database.)
         /// </summary>
+        [DataMember]
         public bool IsNeedCount
         {
             get { return this._totalCount < 0; }
@@ -133,6 +135,7 @@ namespace Rafy
         /// <summary>
         /// size of a page
         /// </summary>
+        [DataMember]
         public int PageSize
         {
             get { return this._pageSize; }
@@ -148,6 +151,7 @@ namespace Rafy
         /// current page number.
         /// start from 1.
         /// </summary>
+        [DataMember]
         public int PageNumber
         {
             get { return this._pageNumber; }

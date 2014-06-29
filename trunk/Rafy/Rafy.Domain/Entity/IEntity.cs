@@ -5,6 +5,7 @@ using System.Text;
 using System.ComponentModel;
 using Rafy.MetaModel;
 using System.Collections;
+using Rafy.ManagedProperty;
 
 namespace Rafy.Domain
 {

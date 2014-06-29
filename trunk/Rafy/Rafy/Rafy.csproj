@@ -59,7 +59,18 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppImplementationBase.cs" />
+    <Compile Include="ComponentModel\AppImplementationBase.cs" />
+    <Compile Include="ComponentModel\Composer.cs" />
+    <Compile Include="ComponentModel\ContainerItemAttribute.cs" />
+    <Compile Include="ComponentModel\EventBus.cs" />
+    <Compile Include="ComponentModel\IEventBus.cs" />
+    <Compile Include="ComponentModel\IObjectContainer.cs" />
+    <Compile Include="ComponentModel\IServiceContainer.cs" />
+    <Compile Include="ComponentModel\IObjectContainerFactory.cs" />
+    <Compile Include="ComponentModel\CompositionExtension.cs" />
+    <Compile Include="ComponentModel\ObjectContainerFactory.cs" />
+    <Compile Include="ComponentModel\ObjectContainerToServiceConatinerAdapter.cs" />
+    <Compile Include="ComponentModel\SimpleObjectContainer.cs" />
     <Compile Include="Configuration\DynamicBoolean.cs" />
     <Compile Include="Configuration\WebConfigurationElement.cs" />
     <Compile Include="Configuration\WPFConfigurationElement.cs" />
@@ -68,16 +79,17 @@
     <Compile Include="Convensions\EntityMatrix.cs" />
     <Compile Include="Convensions\IHasViewFilter.cs" />
     <Compile Include="Convensions\RepositoryForAttribute.cs" />
-    <Compile Include="DateTimePart.cs" />
-    <Compile Include="EnumViewModel.cs" />
-    <Compile Include="Freezable.cs" />
+    <Compile Include="Utils\DateTimePart.cs" />
+    <Compile Include="Utils\EnumViewModel.cs" />
+    <Compile Include="Utils\Freezable.cs" />
     <Compile Include="EnvironmentProvider.cs" />
-    <Compile Include="IClientApp.cs" />
+    <Compile Include="ComponentModel\IApp.cs" />
+    <Compile Include="ComponentModel\IClientApp.cs" />
     <Compile Include="Configuration\RafyConfiguration.cs" />
     <Compile Include="Configuration\RafyConfigurationSection.cs" />
-    <Compile Include="ManagedProperty\IKeyProvider.cs" />
+    <Compile Include="Domain\IKeyProvider.cs" />
     <Compile Include="ManagedProperty\ILOBProperty.cs" />
-    <Compile Include="ManagedProperty\IRafyEntity.cs" />
+    <Compile Include="Domain\IRafyEntity.cs" />
     <Compile Include="ManagedProperty\LOBType.cs" />
     <Compile Include="ManagedProperty\ReferenceType.cs" />
     <Compile Include="MetaModel\Meta\Validation\IValidationDeclarer.cs" />
@@ -93,16 +105,16 @@
     <Compile Include="MetaModel\View\WPFCommandCollection.cs" />
     <Compile Include="Permission\AnonymousPrincipal.cs" />
     <Compile Include="Permission\PermissionProvider.cs" />
-    <Compile Include="PluginTable.cs" />
+    <Compile Include="ComponentModel\PluginTable.cs" />
     <Compile Include="Translation\EmptyTranslator.cs" />
     <Compile Include="Translation\Translator.cs" />
-    <Compile Include="DomainPlugin.cs" />
+    <Compile Include="ComponentModel\DomainPlugin.cs" />
     <Compile Include="MetaModel\View\Aggt\AggtBlocksCollection.cs" />
     <Compile Include="MetaModel\View\Aggt\BlockType.cs" />
-    <Compile Include="UIPlugin.cs" />
-    <Compile Include="IPlugin.cs" />
-    <Compile Include="IPropertyMetadata.cs" />
-    <Compile Include="IService.cs" />
+    <Compile Include="ComponentModel\UIPlugin.cs" />
+    <Compile Include="ComponentModel\IPlugin.cs" />
+    <Compile Include="ManagedProperty\IPropertyMetadata.cs" />
+    <Compile Include="Domain\IService.cs" />
     <Compile Include="ManagedProperty\IListProperty.cs" />
     <Compile Include="ManagedProperty\IRafyListPropertyMetadata.cs" />
     <Compile Include="ManagedProperty\IRefProperty.cs" />
@@ -180,9 +192,9 @@
     <Compile Include="Permission\IRafyIdentity.cs" />
     <Compile Include="Permission\PermissionMgr.cs" />
     <Compile Include="Permission\SystemOperationKeys.cs" />
-    <Compile Include="PluginAssembly.cs" />
+    <Compile Include="ComponentModel\PluginAssembly.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReuseLevel.cs" />
+    <Compile Include="ComponentModel\ReuseLevel.cs" />
     <Compile Include="Utils\Caching\Cache.cs" />
     <Compile Include="Utils\Caching\CacheProvider\CacheProvider.cs" />
     <Compile Include="Utils\Caching\CacheProvider\HybirdCacheProvider.cs" />
@@ -196,13 +208,11 @@
     <Compile Include="WCF\CompactMessageEncoder\CompactMessageEncoderFactory.cs" />
     <Compile Include="WCF\CompactMessageEncoder\CompactMessageEncodingBindingElement.cs" />
     <Compile Include="WCF\CompactMessageEncoder\CompactMessageEncodingElement.cs" />
-    <Compile Include="DateRange.cs" />
+    <Compile Include="Utils\DateRange.cs" />
     <Compile Include="Utils\EmitContext.cs" />
-    <Compile Include="NumberRange.cs" />
+    <Compile Include="Utils\NumberRange.cs" />
     <Compile Include="Utils\ObjectCloner.cs" />
     <Compile Include="Utils\PathHelper.cs" />
-    <Compile Include="Utils\SDBCConvert.cs" />
-    <Compile Include="Utils\StringHelper.cs" />
     <Compile Include="Utils\Threading\AsyncMultiActions.cs" />
     <Compile Include="Utils\Threading\ForeAsyncLoader.cs" />
     <Compile Include="Utils\Threading\IObservableActions.cs" />
@@ -216,7 +226,7 @@
     <Compile Include="WCF\BinaryFormatter\EnableBinaryFormatterBehaviorElement.cs" />
     <Compile Include="WCF\NetDataContract\NetDataContractOperationBehavior.cs" />
     <Compile Include="WCF\NetDataContract\UseNetDataContractAttribute.cs" />
-    <Compile Include="WebThreadContextProvider.cs" />
+    <Compile Include="ComponentModel\WebThreadContextProvider.cs" />
     <Compile Include="Web\ClientEntities.cs" />
     <Compile Include="Web\JsonServiceAttribute.cs" />
   </ItemGroup>
@@ -241,6 +251,7 @@
   <ItemGroup>
     <None Include="Hxy Key.snk" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

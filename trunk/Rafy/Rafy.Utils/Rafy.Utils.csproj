@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BooleanBoxes.cs" />
+    <Compile Include="Collection\INotifyChangedCollection.cs" />
     <Compile Include="Collection\NotifyChangedCollection.cs" />
     <Compile Include="Collection\SealableCollection.cs" />
     <Compile Include="Configuration\ConfigurationExtension.cs" />
@@ -87,9 +88,6 @@
     <Compile Include="Data\Providers\SqlServerProvider.cs" />
     <Compile Include="Data\LocalTransactionBlock.cs" />
     <Compile Include="Extendable.cs" />
-    <Compile Include="Utils\InstanceEventArgs.cs" />
-    <Compile Include="Utils\NamedTypeFactory.cs" />
-    <Compile Include="Utils\PinYinConverter.cs" />
     <Compile Include="Extensions\IEnumerableExtension.cs" />
     <Compile Include="Reflection\MemberInfoExtension.cs" />
     <Compile Include="Extensions\SystemExtension.cs" />
@@ -99,7 +97,7 @@
     <Compile Include="Log\Logger.cs" />
     <Compile Include="PagingInfo.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
-    <Compile Include="Utils\TextFormatter.cs" />
+    <Compile Include="TextFormatter.cs" />
     <Compile Include="Reflection\DynamicMemberHandle.cs" />
     <Compile Include="Reflection\DynamicMethodHandle.cs" />
     <Compile Include="Reflection\DynamicMethodHandlerFactory.cs" />

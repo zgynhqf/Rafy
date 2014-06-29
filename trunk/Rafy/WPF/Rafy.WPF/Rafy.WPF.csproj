@@ -129,6 +129,7 @@
     <Compile Include="Application.Module.cs">
       <DependentUpon>Application.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\PinYinConverter.cs" />
     <Compile Include="Controls\WaitProgress\ProgressValue.cs" />
     <Compile Include="Helpers\AutomationHelper.cs" />
     <Compile Include="AutoUI\AutoUIHelper.cs" />
@@ -155,6 +156,8 @@
     <Compile Include="AutoUI\AggtControlFactory\LayoutMethod\LayoutMethod.cs" />
     <Compile Include="AutoUI\AggtControlFactory\LayoutMethod\Region.cs" />
     <Compile Include="AutoUI\AggtControlFactory\LayoutMethod\RegionContainer.cs" />
+    <Compile Include="InstanceEventArgs.cs" />
+    <Compile Include="NamedTypeFactory.cs" />
     <Compile Include="Runtime\Command\CommandExecuteFailedArgs.cs" />
     <Compile Include="Runtime\Command\IClientCommand.cs" />
     <Compile Include="Runtime\Editor\ListEditor\IListEditorContext.cs" />

@@ -15,9 +15,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Rafy.ManagedProperty;
+using Rafy.Domain;
 
-namespace Rafy
+namespace Rafy.ManagedProperty
 {
     /// <summary>
     /// 引用 Id 属性或者是引用实体属性。
