@@ -212,13 +212,6 @@ namespace Rafy.WPF.Editors
                         this.RootGroupDescriptions = new string[] { g.Name };
                     }
                 }
-
-                //设置过滤
-                var hasFilter = data as IHasViewFilter;
-                if (hasFilter != null)
-                {
-                    grid.ItemFilter = e => hasFilter.ViewModelFilter(e);
-                }
             }
 
             //在设置为 Dynamic 时，控件也应该是实现为直接设置为 false

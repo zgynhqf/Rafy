@@ -133,8 +133,8 @@
     <Compile Include="Entity\ValidationHelper.cs" />
     <Compile Include="Entity\Validation\ValidationDeclarer.cs" />
     <Compile Include="Entity\Validation\Validator.cs" />
-    <Compile Include="GenericAdapter\EntityListEnumerator.cs" />
-    <Compile Include="GenericAdapter\zzzIRepository.Generic.cs" />
+    <Compile Include="Utils\EntityListEnumerator.cs" />
+    <Compile Include="Utils\zzzIRepository.Generic.cs" />
     <Compile Include="Entity\MP\IProperty.cs" />
     <Compile Include="Entity\MP\PropertyCategory.cs" />
     <Compile Include="Entity\MP\RefIdProperty.cs" />

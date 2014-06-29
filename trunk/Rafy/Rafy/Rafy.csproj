@@ -74,11 +74,10 @@
     <Compile Include="Configuration\DynamicBoolean.cs" />
     <Compile Include="Configuration\WebConfigurationElement.cs" />
     <Compile Include="Configuration\WPFConfigurationElement.cs" />
-    <Compile Include="Convensions\Consts.cs" />
-    <Compile Include="Convensions\EntityConvention.cs" />
-    <Compile Include="Convensions\EntityMatrix.cs" />
-    <Compile Include="Convensions\IHasViewFilter.cs" />
-    <Compile Include="Convensions\RepositoryForAttribute.cs" />
+    <Compile Include="Domain\EntityConvention.cs" />
+    <Compile Include="Domain\EntityMatrix.cs" />
+    <Compile Include="Domain\RepositoryForAttribute.cs" />
+    <Compile Include="MetaModel\View\WPFEditorNames.cs" />
     <Compile Include="Utils\DateTimePart.cs" />
     <Compile Include="Utils\EnumViewModel.cs" />
     <Compile Include="Utils\Freezable.cs" />
