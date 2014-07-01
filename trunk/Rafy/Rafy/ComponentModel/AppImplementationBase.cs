@@ -28,7 +28,7 @@ namespace Rafy.ComponentModel
     /// <summary>
     /// 这个类为 ClientApp、ServerApp、WebApp 等类提供了一致的基类。
     /// </summary>
-    public abstract class AppImplementationBase : IServerApp, IClientApp
+    public abstract class AppImplementationBase : IServerApp
     {
         /// <summary>
         /// 子类在合适的时间调用此方法来启动整个 Rafy 应用程序。
@@ -241,15 +241,7 @@ namespace Rafy.ComponentModel
         /// </summary>
         protected virtual void StartMainProcess() { }
 
-        #region IClientApp IServerApp 的方法
-
-        public virtual void ShowMessage(string message, string title) { }
-
-        public virtual void Shutdown() { }
-
-        #endregion
-
-        #region IClientApp IServerApp 的事件
+        #region IServerApp 事件
 
         public event EventHandler AllPluginsIntialized;
 
@@ -264,14 +256,6 @@ namespace Rafy.ComponentModel
         protected virtual void OnMetaCompiled()
         {
             var handler = this.MetaCompiled;
-            if (handler != null) handler(this, EventArgs.Empty);
-        }
-
-        public event EventHandler CommandMetaIntialized;
-
-        protected virtual void OnCommandMetasIntialized()
-        {
-            var handler = this.CommandMetaIntialized;
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
@@ -336,22 +320,6 @@ namespace Rafy.ComponentModel
         protected virtual void OnExit()
         {
             var handler = this.Exit;
-            if (handler != null) handler(this, EventArgs.Empty);
-        }
-
-        public event EventHandler LoginSuccessed;
-
-        protected virtual void OnLoginSuccessed()
-        {
-            var handler = this.LoginSuccessed;
-            if (handler != null) handler(this, EventArgs.Empty);
-        }
-
-        public event EventHandler LoginFailed;
-
-        protected virtual void OnLoginFailed()
-        {
-            var handler = this.LoginFailed;
             if (handler != null) handler(this, EventArgs.Empty);
         }
 

@@ -25,7 +25,7 @@ namespace Rafy.ComponentModel
     public interface IClientApp : IApp
     {
         /// <summary>
-        /// 各模块初始化完成
+        /// 所有命令元数据初始化完成
         /// </summary>
         event EventHandler CommandMetaIntialized;
 
@@ -45,6 +45,11 @@ namespace Rafy.ComponentModel
         /// <param name="message"></param>
         /// <param name="title"></param>
         void ShowMessage(string message, string title);
+
+        /// <summary>
+        /// 关闭应用程序
+        /// </summary>
+        void Shutdown();
     }
 
     /// <summary>

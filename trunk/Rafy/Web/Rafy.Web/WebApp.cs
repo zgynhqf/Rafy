@@ -102,7 +102,7 @@ namespace Rafy.Web
             //UIModel.Commands.SortByName(CommandNames.CommonCommands);
             //UIModel.Commands.SortByLabel("添加", "编辑", "删除", "保存", "刷新");
 
-            this.OnCommandMetasIntialized();
+            //this.OnCommandMetasIntialized();
         }
 
         protected override void OnAppMetaCompleted()
@@ -110,11 +110,6 @@ namespace Rafy.Web
             UIModel.Freeze();
 
             base.OnAppMetaCompleted();
-        }
-
-        public override void Shutdown()
-        {
-            throw new InvalidOperationException("Web 服务器不支持关闭操作。");
         }
     }
 }
