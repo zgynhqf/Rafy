@@ -13,6 +13,7 @@ using Rafy.WPF;
 using Rafy.Domain;
 using Rafy.RBAC;
 using FM.UI;
+using Rafy.ComponentModel;
 
 namespace FM
 {

@@ -25,6 +25,7 @@ using Rafy.WPF.Shell;
 using Rafy.Domain.ORM.DbMigration;
 using Rafy.DbMigration;
 using Rafy.Domain;
+using Rafy.ComponentModel;
 
 namespace MP
 {
