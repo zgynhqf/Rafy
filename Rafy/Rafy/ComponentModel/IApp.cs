@@ -78,10 +78,5 @@ namespace Rafy.ComponentModel
         /// 主过程开始前事件。
         /// </summary>
         event EventHandler MainProcessStarting;
-
-        /// <summary>
-        /// 关闭应用程序
-        /// </summary>
-        void Shutdown();
     }
 }

@@ -39,7 +39,7 @@ using Rafy.WPF.Controls;
 
 namespace Rafy.WPF.Shell
 {
-    public class ClientApp : AppImplementationBase
+    public class ClientApp : AppImplementationBase, IClientApp
     {
         #region 构造函数 & 注册
 
@@ -334,14 +334,42 @@ namespace Rafy.WPF.Shell
 
         #region 其它方法
 
-        public override void Shutdown()
-        {
-            this._wpfApp.Shutdown();
-        }
-
-        public override void ShowMessage(string message, string title)
+        public void ShowMessage(string message, string title)
         {
             App.MessageBox.Show(message, title);
+        }
+
+        public void Shutdown()
+        {
+            _wpfApp.Shutdown();
+        }
+
+        #endregion
+
+        #region IClientApp 成员
+
+        public event EventHandler CommandMetaIntialized;
+
+        protected virtual void OnCommandMetasIntialized()
+        {
+            var handler = this.CommandMetaIntialized;
+            if (handler != null) handler(this, EventArgs.Empty);
+        }
+
+        public event EventHandler LoginSuccessed;
+
+        protected virtual void OnLoginSuccessed()
+        {
+            var handler = this.LoginSuccessed;
+            if (handler != null) handler(this, EventArgs.Empty);
+        }
+
+        public event EventHandler LoginFailed;
+
+        protected virtual void OnLoginFailed()
+        {
+            var handler = this.LoginFailed;
+            if (handler != null) handler(this, EventArgs.Empty);
         }
 
         #endregion
