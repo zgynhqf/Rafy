@@ -7,6 +7,7 @@ using Rafy.Domain.ORM.DbMigration;
 using Rafy.MetaModel.View;
 using Rafy.MetaModel;
 using Demo.WPF;
+using Rafy.ComponentModel;
 
 namespace Demo
 {
