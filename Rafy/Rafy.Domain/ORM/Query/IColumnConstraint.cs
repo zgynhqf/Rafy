@@ -39,25 +39,4 @@ namespace Rafy.Domain.ORM.Query
         /// </summary>
         object Value { get; set; }
     }
-
-    /// <summary>
-    /// 对比操作符
-    /// </summary>
-    public enum PropertyOperator
-    {
-        Equal = SqlColumnConstraintOperator.Equal,
-        NotEqual = SqlColumnConstraintOperator.NotEqual,
-        Greater = SqlColumnConstraintOperator.Greater,
-        GreaterEqual = SqlColumnConstraintOperator.GreaterEqual,
-        Less = SqlColumnConstraintOperator.Less,
-        LessEqual = SqlColumnConstraintOperator.LessEqual,
-
-        Like = SqlColumnConstraintOperator.Like,
-        Contains = SqlColumnConstraintOperator.Contains,
-        StartWith = SqlColumnConstraintOperator.StartWith,
-        EndWith = SqlColumnConstraintOperator.EndWith,
-
-        In = SqlColumnConstraintOperator.In,
-        NotIn = SqlColumnConstraintOperator.NotIn,
-    }
 }

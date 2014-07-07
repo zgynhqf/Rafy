@@ -27,8 +27,6 @@ namespace Rafy.ComponentModel
     [DebuggerDisplay("{Assembly.FullName}")]
     public class PluginAssembly
     {
-        public static readonly IPlugin EmptyPlugin = new _EmptyPlugin();
-
         public PluginAssembly(Assembly assembly, IPlugin instance)
         {
             this.Instance = instance;
@@ -45,12 +43,27 @@ namespace Rafy.ComponentModel
         /// 程序集本身
         /// </summary>
         public Assembly Assembly { get; private set; }
+    }
 
-        private class _EmptyPlugin : IPlugin
+    internal class EmptyPlugin : IPlugin
+    {
+        private Assembly _assembly;
+
+        public EmptyPlugin(Assembly assembly)
         {
-            int IPlugin.SetupLevel { get { return ReuseLevel.Main; } }
-
-            public void Initialize(IApp app) { }
+            _assembly = assembly;
         }
+
+        /// <summary>
+        /// 插件对应的程序集。
+        /// </summary>
+        public Assembly Assembly
+        {
+            get { return _assembly; }
+        }
+
+        int IPlugin.SetupLevel { get { return ReuseLevel.Main; } }
+
+        public void Initialize(IApp app) { }
     }
 }

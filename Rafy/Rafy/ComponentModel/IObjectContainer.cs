@@ -47,6 +47,14 @@ namespace Rafy.ComponentModel
         void RegisterInstance(Type type, object instance, string key = null);
 
         /// <summary>
+        /// 注册唯一实例
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="instanceType">唯一实例的类型，该类型的实例会在第一次使用时被创建。</param>
+        /// <param name="key">如果有必须，则传入实例的键。</param>
+        void RegisterInstance(Type type, Type instanceType, string key = null);
+
+        /// <summary>
         /// 注册类型
         /// </summary>
         /// <param name="from"></param>

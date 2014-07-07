@@ -33,7 +33,7 @@ namespace Rafy.Domain
     /// <summary>
     /// Rafy Domain 本身也是一个 DomainPlugin
     /// </summary>
-    public class RafyDomainLibrary : DomainPlugin
+    internal class RafyDomainLibrary : DomainPlugin
     {
         protected override int SetupLevel
         {
