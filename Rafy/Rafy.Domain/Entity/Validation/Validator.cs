@@ -91,6 +91,13 @@ namespace Rafy.Domain
 
             var res = new BrokenRulesCollection();
 
+            Validate(target, res);
+
+            return res;
+        }
+
+        private static void Validate(Entity target, BrokenRulesCollection res)
+        {
             var rules = ValidationHelper.GetTypeRules(target.FindRepository() as ITypeValidationsHost, target.GetType());
             if (rules != null)
             {
@@ -99,7 +106,22 @@ namespace Rafy.Domain
                 CheckRules(target, rules.TypeRules, res);
             }
 
-            return res;
+            foreach (var child in target.GetLoadedChildren())
+            {
+                var list = child.Value as EntityList;
+                if (list != null)
+                {
+                    list.EachNode(childEntity =>
+                    {
+                        Validate(childEntity, res);
+                        return false;
+                    });
+                }
+                else
+                {
+                    Validate(child.Value as Entity, res);
+                }
+            }
         }
 
         private static void CheckRules(Entity target, ValidationRulesManager rules, IManagedProperty property, BrokenRulesCollection brokenRulesList)

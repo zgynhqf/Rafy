@@ -34,11 +34,16 @@ namespace Rafy.DbMigration
             return MigrationType.AutoMigration;
         }
 
-        internal new DateTime TimeId { get; set; }
+        internal DateTime RuntimeTimeId { get; set; }
 
-        protected override sealed DateTime GetTimeId()
+        public override string Description
         {
-            return this.TimeId;
+            get { return this.GetType().Name; }
+        }
+
+        public override DateTime TimeId
+        {
+            get { return this.RuntimeTimeId; }
         }
 
         /// <summary>
@@ -47,11 +52,6 @@ namespace Rafy.DbMigration
         protected override sealed void Up()
         {
             this.AddOperation(this);
-        }
-
-        protected override string GetDescription()
-        {
-            return this.GetType().Name;
         }
     }
 }

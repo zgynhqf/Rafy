@@ -22,9 +22,12 @@ namespace Rafy.DbMigration.Operations
     {
         public string Database { get; set; }
 
-        protected override string GetDescription()
+        public override string Description
         {
-            return string.Format("{0}: {1}", base.GetDescription(), this.Database);
+            get
+            {
+                return string.Format("{0}: {1}", base.Description, this.Database);
+            }
         }
     }
 

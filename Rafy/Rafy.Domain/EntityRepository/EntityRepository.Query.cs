@@ -117,31 +117,24 @@ namespace Rafy.Domain
         }
 
         /// <summary>
-        /// 查询所有的实体类
-        /// </summary>
-        /// <returns></returns>
-        public EntityList GetAll()
-        {
-            return this.DoGetAll(PagingInfo.Empty);
-        }
-
-        /// <summary>
         /// 分页查询所有的实体类
         /// </summary>
-        /// <param name="pagingInfo"></param>
+        /// <param name="paging">分页信息。</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        public EntityList GetAll(PagingInfo pagingInfo)
+        public EntityList GetAll(PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
         {
-            return this.DoGetAll(pagingInfo);
+            return this.DoGetAll(paging, eagerLoad);
         }
 
         /// <summary>
         /// 查询第一个实体。
         /// </summary>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        public Entity GetFirst()
+        public Entity GetFirst(EagerLoadOptions eagerLoad = null)
         {
-            return this.DoGetFirst();
+            return this.DoGetFirst(eagerLoad);
         }
 
         /// <summary>
@@ -166,72 +159,67 @@ namespace Rafy.Domain
         /// 通过Id在数据层中查询指定的对象
         /// </summary>
         /// <param name="id">The unique identifier.</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        public Entity GetById(object id)
+        public Entity GetById(object id, EagerLoadOptions eagerLoad = null)
         {
-            return this.DoGetById(id);
+            return this.DoGetById(id, eagerLoad);
         }
 
         /// <summary>
         /// 获取指定 id 集合的实体列表。
         /// </summary>
         /// <param name="idList"></param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        public EntityList GetByIdList(params object[] idList)
+        public EntityList GetByIdList(object[] idList, EagerLoadOptions eagerLoad = null)
         {
-            return this.DoGetByIdList(idList);
+            return this.DoGetByIdList(idList, eagerLoad);
         }
 
         /// <summary>
         /// 通过组合父对象的 Id 列表，查找所有的组合子对象的集合。
         /// </summary>
         /// <param name="parentIdList">The parent identifier list.</param>
+        /// <param name="paging">分页信息。</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        public EntityList GetByParentIdList(object[] parentIdList)
+        public EntityList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
         {
-            return this.DoGetByParentIdList(parentIdList, PagingInfo.Empty);
-        }
-
-        /// <summary>
-        /// 通过组合父对象的 Id 列表，查找所有的组合子对象的集合。
-        /// </summary>
-        /// <param name="parentIdList">The parent identifier list.</param>
-        /// <param name="pagingInfo">The paging information.</param>
-        /// <returns></returns>
-        public EntityList GetByParentIdList(object[] parentIdList, PagingInfo pagingInfo)
-        {
-            return this.DoGetByParentIdList(parentIdList, pagingInfo);
-        }
-
-        /// <summary>
-        /// 查询某个父对象下的子对象
-        /// </summary>
-        /// <param name="parentId"></param>
-        /// <returns></returns>
-        public EntityList GetByParentId(object parentId)
-        {
-            return this.DoGetByParentId(parentId, PagingInfo.Empty);
+            return this.DoGetByParentIdList(parentIdList, paging, eagerLoad);
         }
 
         /// <summary>
         /// 通过父对象 Id 分页查询子对象的集合。
         /// </summary>
         /// <param name="parentId"></param>
-        /// <param name="pagingInfo"></param>
+        /// <param name="paging">分页信息。</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        public EntityList GetByParentId(object parentId, PagingInfo pagingInfo)
+        public EntityList GetByParentId(object parentId, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
         {
-            return this.DoGetByParentId(parentId, pagingInfo);
+            return this.DoGetByParentId(parentId, paging, eagerLoad);
+        }
+
+        /// <summary>
+        /// 通过 CommonQueryCriteria 来查询实体列表。
+        /// </summary>
+        /// <param name="criteria">常用查询条件。</param>
+        /// <returns></returns>
+        public EntityList GetBy(CommonQueryCriteria criteria)
+        {
+            return this.DoGetBy(criteria);
         }
 
         /// <summary>
         /// 递归查找所有树型子
         /// </summary>
         /// <param name="treeIndex"></param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        public EntityList GetByTreeParentIndex(string treeIndex)
+        public EntityList GetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad = null)
         {
-            return this.DoGetByTreeParentIndex(treeIndex);
+            return this.DoGetByTreeParentIndex(treeIndex, eagerLoad);
         }
 
         /// <summary>
@@ -239,29 +227,32 @@ namespace Rafy.Domain
         /// 查询出的父节点同样以一个部分树的形式返回。
         /// </summary>
         /// <param name="treeIndex"></param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        public EntityList GetAllTreeParents(string treeIndex)
+        public EntityList GetAllTreeParents(string treeIndex, EagerLoadOptions eagerLoad = null)
         {
-            return this.FetchList<EntityRepository>(r => r.__FetchAllTreeParents(treeIndex));
+            return this.FetchList<EntityRepository>(r => r.__FetchAllTreeParents(treeIndex, eagerLoad));
         }
 
         /// <summary>
         /// 查找指定树节点的直接子节点。
         /// </summary>
         /// <param name="treePId">需要查找的树节点的Id.</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        public EntityList GetByTreePId(object treePId)
+        public EntityList GetByTreePId(object treePId, EagerLoadOptions eagerLoad = null)
         {
-            return this.DoGetByTreePId(treePId);
+            return this.DoGetByTreePId(treePId, eagerLoad);
         }
 
         /// <summary>
         /// 查询所有的根节点。
         /// </summary>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        public EntityList GetTreeRoots()
+        public EntityList GetTreeRoots(EagerLoadOptions eagerLoad = null)
         {
-            return this.DoGetTreeRoots();
+            return this.DoGetTreeRoots(eagerLoad);
         }
 
         /// <summary>
@@ -298,6 +289,8 @@ namespace Rafy.Domain
 
         #region 可重写的 Do 接口
 
+        //这类接口必须保留，不能直接把公有方法标记为 virtual，否则子类重写时，会跟 .g.cs 文件中的方法冲突。
+
         /// <summary>
         /// 使用Cache获取所有对象。
         /// 
@@ -330,7 +323,7 @@ namespace Rafy.Domain
             }
             else
             {
-                result = this.DoGetAll(PagingInfo.Empty);
+                result = this.DoGetAll(null, null);
             }
 
             return result;
@@ -408,7 +401,7 @@ namespace Rafy.Domain
             }
             else
             {
-                result = this.DoGetById(id);
+                result = this.DoGetById(id, null);
             }
 
             return result;
@@ -431,21 +424,24 @@ namespace Rafy.Domain
         /// <summary>
         /// 分页查询所有实体
         /// </summary>
-        /// <param name="pagingInfo"></param>
+        /// <param name="paging">分页信息。</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        protected virtual EntityList DoGetAll(PagingInfo pagingInfo)
+        protected virtual EntityList DoGetAll(PagingInfo paging, EagerLoadOptions eagerLoad)
         {
             return this.FetchList(new GetAllCriteria
             {
-                PagingInfo = pagingInfo
+                PagingInfo = paging,
+                EagerLoad = eagerLoad
             });
         }
 
         /// <summary>
         /// 查询第一个实体
         /// </summary>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        protected virtual Entity DoGetFirst()
+        protected virtual Entity DoGetFirst(EagerLoadOptions eagerLoad)
         {
             return this.FetchFirst(new GetAllCriteria());
         }
@@ -454,8 +450,9 @@ namespace Rafy.Domain
         /// 通过 Id 查询某个实体
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        protected virtual Entity DoGetById(object id)
+        protected virtual Entity DoGetById(object id, EagerLoadOptions eagerLoad)
         {
             var list = FetchList(new GetByIdCriteria() { IdValue = id });
             return list.Count == 1 ? list[0] : null;
@@ -464,10 +461,11 @@ namespace Rafy.Domain
         /// <summary>
         /// 查询所有的根节点。
         /// </summary>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        protected virtual EntityList DoGetTreeRoots()
+        protected virtual EntityList DoGetTreeRoots(EagerLoadOptions eagerLoad)
         {
-            return this.FetchList<EntityRepository>(r => r.__FetchTreeRoots());
+            return this.FetchList<EntityRepository>(r => r.__FetchTreeRoots(eagerLoad));
         }
 
         /// <summary>
@@ -476,15 +474,16 @@ namespace Rafy.Domain
         /// <returns></returns>
         protected virtual int DoCountTreeRoots()
         {
-            return this.FetchCount<EntityRepository>(r => r.__FetchTreeRoots());
+            return this.FetchCount<EntityRepository>(r => r.__FetchTreeRoots(null));
         }
 
         /// <summary>
         /// 通过 Id 列表查询实体列表。
         /// </summary>
         /// <param name="idList"></param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        protected virtual EntityList DoGetByIdList(object[] idList)
+        protected virtual EntityList DoGetByIdList(object[] idList, EagerLoadOptions eagerLoad)
         {
             return this.FetchList(new GetByIdListCriteria
             {
@@ -496,14 +495,15 @@ namespace Rafy.Domain
         /// 通过组合父对象的 Id 列表，查找所有的组合子对象的集合。
         /// </summary>
         /// <param name="parentIdList">The parent identifier list.</param>
-        /// <param name="pagingInfo">The paging information.</param>
+        /// <param name="paging">The paging information.</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        protected virtual EntityList DoGetByParentIdList(object[] parentIdList, PagingInfo pagingInfo)
+        protected virtual EntityList DoGetByParentIdList(object[] parentIdList, PagingInfo paging, EagerLoadOptions eagerLoad)
         {
             return this.FetchList(new GetByParentIdListCriteria
             {
                 ParentIdList = parentIdList,
-                PagingInfo = pagingInfo
+                PagingInfo = paging
             });
         }
 
@@ -511,35 +511,48 @@ namespace Rafy.Domain
         /// 通过父对象 Id 分页查询子对象的集合。
         /// </summary>
         /// <param name="parentId"></param>
-        /// <param name="pagingInfo"></param>
+        /// <param name="paging"></param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        protected virtual EntityList DoGetByParentId(object parentId, PagingInfo pagingInfo)
+        protected virtual EntityList DoGetByParentId(object parentId, PagingInfo paging, EagerLoadOptions eagerLoad)
         {
             return this.FetchList(new GetByParentIdCriteria()
             {
                 ParentId = parentId,
-                PagingInfo = pagingInfo
+                PagingInfo = paging
             });
+        }
+
+        /// <summary>
+        /// 通过 CommonQueryCriteria 来查询实体列表。
+        /// </summary>
+        /// <param name="criteria">常用查询条件。</param>
+        /// <returns></returns>
+        protected virtual EntityList DoGetBy(CommonQueryCriteria criteria)
+        {
+            return this.FetchList(criteria);
         }
 
         /// <summary>
         /// 递归查找所有树型子
         /// </summary>
         /// <param name="treeIndex"></param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        protected virtual EntityList DoGetByTreeParentIndex(string treeIndex)
+        protected virtual EntityList DoGetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad)
         {
-            return this.FetchList(new GetByTreeParentCodeCriteria() { TreeIndex = treeIndex });
+            return this.FetchList(new GetByTreeParentIndexCriteria() { TreeIndex = treeIndex });
         }
 
         /// <summary>
         /// 查找指定树节点的直接子节点。
         /// </summary>
         /// <param name="treePId">需要查找的树节点的Id.</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        protected virtual EntityList DoGetByTreePId(object treePId)
+        protected virtual EntityList DoGetByTreePId(object treePId, EagerLoadOptions eagerLoad)
         {
-            return this.FetchList<EntityRepository>(r => r.__FetchByTreePId(treePId));
+            return this.FetchList<EntityRepository>(r => r.__FetchByTreePId(treePId, eagerLoad));
         }
 
         /// <summary>
@@ -649,7 +662,7 @@ namespace Rafy.Domain
                 if (p is GetByIdCriteria) { return this.FetchBy(p as GetByIdCriteria); }
                 if (p is GetByParentIdCriteria) { return this.FetchBy(p as GetByParentIdCriteria); }
                 if (p is GetAllCriteria) { return this.FetchBy(p as GetAllCriteria); }
-                if (p is GetByTreeParentCodeCriteria) { return this.FetchBy(p as GetByTreeParentCodeCriteria); }
+                if (p is GetByTreeParentIndexCriteria) { return this.FetchBy(p as GetByTreeParentIndexCriteria); }
             }
 
             //如果方法名为空，则使用约定的方法名。
@@ -683,31 +696,31 @@ namespace Rafy.Domain
         [Obfuscation]
         private EntityList FetchBy(GetByIdCriteria criteria)
         {
-            return _dataProvider.GetById(criteria.IdValue);
+            return _dataProvider.GetById(criteria.IdValue, null);
         }
 
         [Obfuscation]
         private EntityList FetchBy(GetByParentIdListCriteria criteria)
         {
-            return _dataProvider.GetByParentIdList(criteria.ParentIdList, criteria.PagingInfo);
+            return _dataProvider.GetByParentIdList(criteria.ParentIdList, criteria.PagingInfo, criteria.EagerLoad);
         }
 
         [Obfuscation]
         private EntityList FetchBy(GetByParentIdCriteria criteria)
         {
-            return _dataProvider.GetByParentId(criteria.ParentId, criteria.PagingInfo);
+            return _dataProvider.GetByParentId(criteria.ParentId, criteria.PagingInfo, criteria.EagerLoad);
         }
 
         [Obfuscation]
         private EntityList FetchBy(GetAllCriteria criteria)
         {
-            return _dataProvider.GetAll(criteria.PagingInfo);
+            return _dataProvider.GetAll(criteria.PagingInfo, criteria.EagerLoad);
         }
 
         [Obfuscation]
         private EntityList FetchBy(GetByIdListCriteria criteria)
         {
-            return _dataProvider.GetByIdList(criteria.IdList);
+            return _dataProvider.GetByIdList(criteria.IdList, criteria.EagerLoad);
         }
 
         [Obfuscation]
@@ -717,9 +730,9 @@ namespace Rafy.Domain
         }
 
         [Obfuscation]
-        private EntityList FetchBy(GetByTreeParentCodeCriteria criteria)
+        private EntityList FetchBy(GetByTreeParentIndexCriteria criteria)
         {
-            return _dataProvider.GetByTreeParentIndex(criteria.TreeIndex);
+            return _dataProvider.GetByTreeParentIndex(criteria.TreeIndex, criteria.EagerLoad);
         }
 
         [Obfuscation]
@@ -729,21 +742,21 @@ namespace Rafy.Domain
         }
 
         [Obfuscation]
-        private EntityList __FetchByTreePId(object treePId)
+        private EntityList __FetchByTreePId(object treePId, EagerLoadOptions eagerLoad)
         {
-            return _dataProvider.GetByTreePId(treePId);
+            return _dataProvider.GetByTreePId(treePId, eagerLoad);
         }
 
         [Obfuscation]
-        private EntityList __FetchAllTreeParents(string treeIndex)
+        private EntityList __FetchAllTreeParents(string treeIndex, EagerLoadOptions eagerLoad)
         {
-            return _dataProvider.GetAllTreeParents(treeIndex);
+            return _dataProvider.GetAllTreeParents(treeIndex, eagerLoad);
         }
 
         [Obfuscation]
-        private EntityList __FetchTreeRoots()
+        private EntityList __FetchTreeRoots(EagerLoadOptions eagerLoad)
         {
-            return _dataProvider.GetTreeRoots();
+            return _dataProvider.GetTreeRoots(eagerLoad);
         }
 
         [Obfuscation]

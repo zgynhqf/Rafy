@@ -102,9 +102,9 @@ namespace Rafy.Domain.DbMigrations
 
         protected override void Down() { }
 
-        protected override string GetDescription()
+        public override string Description
         {
-            return "添加 RBAC 库中的初始数据。";
+            get { return "添加 RBAC 库中的初始数据。"; }
         }
 
         public override ManualMigrationType Type

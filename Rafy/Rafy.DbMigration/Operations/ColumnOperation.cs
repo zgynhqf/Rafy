@@ -63,9 +63,12 @@ namespace Rafy.DbMigration.Operations
             }
         }
 
-        protected override string GetDescription()
+        public override string Description
         {
-            return string.Format("{0}: {1}.{2}", base.GetDescription(), this.TableName, this.ColumnName);
+            get
+            {
+                return string.Format("{0}: {1}.{2}", base.Description, this.TableName, this.ColumnName);
+            }
         }
     }
 
@@ -184,9 +187,12 @@ namespace Rafy.DbMigration.Operations
             });
         }
 
-        protected override string GetDescription()
+        public override string Description
         {
-            return base.GetDescription() + " From " + this.DataType + " To " + this.NewType;
+            get
+            {
+                return base.Description + " From " + this.DataType + " To " + this.NewType;
+            }
         }
     }
 }

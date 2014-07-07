@@ -104,7 +104,7 @@ namespace Rafy.DbMigration.History
             {
                 migration = SerializationHelper.XmlDeserialize(type, history.MigrationContent).CastTo<DbMigration>();
 
-                (migration as MigrationOperation).TimeId = history.TimeId;
+                (migration as MigrationOperation).RuntimeTimeId = history.TimeId;
             }
             else
             {

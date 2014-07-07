@@ -182,7 +182,7 @@ namespace Rafy.DevTools.SysInfo
     [DataProviderFor(typeof(FrameworkInfoItemRepository))]
     public partial class FrameworkInfoItemDataProvider : RepositoryDataProvider
     {
-        public override EntityList GetAll(PagingInfo pagingInfo)
+        public override EntityList GetAll(PagingInfo paging, EagerLoadOptions eagerLoad)
         {
             var list = new FrameworkInfoItemList();
 

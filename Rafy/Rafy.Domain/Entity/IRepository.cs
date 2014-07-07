@@ -28,7 +28,6 @@ namespace Rafy.Domain
 {
     /// <summary>
     /// 实体类模块使用的抽象的懒加载提供器。
-    /// 
     /// 实体类只依赖这个抽象类，而不依赖具体的提供方案。
     /// </summary>
     public interface IRepository : IEntityInfoHost
@@ -59,6 +58,11 @@ namespace Rafy.Domain
         ClientCache ClientCache { get; }
 
         /// <summary>
+        /// 服务端内存缓存 API
+        /// </summary>
+        ServerCache ServerCache { get; }
+
+        /// <summary>
         /// 是否声明本仓库为本地仓库（客户端只在客户端查询，服务端在服务端查询）
         /// </summary>
         DataPortalLocation DataPortalLocation { get; }
@@ -68,6 +72,36 @@ namespace Rafy.Domain
         /// 默认情况下，这个
         /// </summary>
         IRepositoryDataProvider DataProvider { get; }
+
+        /// <summary>
+        /// 创建一个全新的实体对象
+        /// </summary>
+        /// <returns></returns>
+        Entity New();
+
+        /// <summary>
+        /// 创建一个全新的实体列表对象
+        /// </summary>
+        /// <returns></returns>
+        EntityList NewList();
+
+        /// <summary>
+        /// 统计仓库中所有的实体数量
+        /// </summary>
+        /// <returns></returns>
+        int CountAll();
+
+        /// <summary>
+        /// 统计某个父对象下的子对象条数
+        /// </summary>
+        /// <returns></returns>
+        int CountByParentId(object parentId);
+
+        /// <summary>
+        /// 查询所有的根节点数量。
+        /// </summary>
+        /// <returns></returns>
+        int CountTreeRoots();
 
         /// <summary>
         /// 优先使用缓存中的数据来通过 Id 获取指定的实体对象
@@ -89,73 +123,53 @@ namespace Rafy.Domain
         EntityList CacheAll();
 
         /// <summary>
-        /// 创建一个全新的实体对象
-        /// </summary>
-        /// <returns></returns>
-        Entity New();
-
-        /// <summary>
-        /// 创建一个全新的实体列表对象
-        /// </summary>
-        /// <returns></returns>
-        EntityList NewList();
-
-        /// <summary>
         /// 通过Id获取指定的实体对象
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">The identifier.</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        Entity GetById(object id);
-
-        /// <summary>
-        /// 查询所有的实体类
-        /// </summary>
-        /// <returns></returns>
-        EntityList GetAll();
+        Entity GetById(object id, EagerLoadOptions eagerLoad = null);
 
         /// <summary>
         /// 以分页的方式查询所有实体。
         /// </summary>
-        /// <param name="pagingInfo">分页条件</param>
+        /// <param name="paging">分页信息。</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        EntityList GetAll(PagingInfo pagingInfo);
+        EntityList GetAll(PagingInfo paging = null, EagerLoadOptions eagerLoad = null);
 
         /// <summary>
         /// 获取指定 id 集合的实体列表。
         /// </summary>
-        /// <param name="idList"></param>
+        /// <param name="idList">The identifier list.</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        EntityList GetByIdList(params object[] idList);
+        EntityList GetByIdList(object[] idList, EagerLoadOptions eagerLoad = null);
 
         /// <summary>
         /// 通过父对象的 Id 列表查询所有的实体。
         /// </summary>
         /// <param name="parentIdList">The parent identifier list.</param>
-        /// <param name="pagingInfo">The paging information.</param>
+        /// <param name="paging">分页信息。</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        EntityList GetByParentIdList(object[] parentIdList, PagingInfo pagingInfo);
-
-        /// <summary>
-        /// 通过父对象 Id 获取子对象的集合。
-        /// </summary>
-        /// <param name="parentId"></param>
-        /// <returns></returns>
-        EntityList GetByParentId(object parentId);
+        EntityList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, EagerLoadOptions eagerLoad = null);
 
         /// <summary>
         /// 通过父对象 Id 分页查询子对象的集合。
         /// </summary>
         /// <param name="parentId"></param>
-        /// <param name="pagingInfo"></param>
+        /// <param name="paging">分页信息。</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        EntityList GetByParentId(object parentId, PagingInfo pagingInfo);
+        EntityList GetByParentId(object parentId, PagingInfo paging = null, EagerLoadOptions eagerLoad = null);
 
         /// <summary>
-        /// 递归查找指定父索引的所有子节点。
+        /// 通过 CommonQueryCriteria 来查询实体列表。
         /// </summary>
-        /// <param name="treeIndex"></param>
+        /// <param name="criteria">常用查询条件。</param>
         /// <returns></returns>
-        EntityList GetByTreeParentIndex(string treeIndex);
+        EntityList GetBy(CommonQueryCriteria criteria);
 
         ///// <summary>
         ///// 递归统计所有树型子节点的个数。
@@ -163,13 +177,6 @@ namespace Rafy.Domain
         ///// <param name="treeIndex"></param>
         ///// <returns></returns>
         //int CountByTreeParentIndex(string treeIndex);
-
-        /// <summary>
-        /// 获取指定节点的直接子节点。
-        /// </summary>
-        /// <param name="treePId"></param>
-        /// <returns></returns>
-        EntityList GetByTreePId(object treePId);
 
         ///// <summary>
         ///// 统计指定节点的直接子节点的个数。
@@ -179,12 +186,29 @@ namespace Rafy.Domain
         //int CountByTreePId(object treePId);
 
         /// <summary>
+        /// 递归查找指定父索引的所有子节点。
+        /// </summary>
+        /// <param name="treeIndex"></param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <returns></returns>
+        EntityList GetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad = null);
+
+        /// <summary>
+        /// 获取指定节点的直接子节点。
+        /// </summary>
+        /// <param name="treePId"></param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <returns></returns>
+        EntityList GetByTreePId(object treePId, EagerLoadOptions eagerLoad = null);
+
+        /// <summary>
         /// 查询所有的根节点。
         /// 
         /// 与 GetAll 的区别在于：只查询所有的根节点，不查询子节点。
         /// </summary>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        EntityList GetTreeRoots();
+        EntityList GetTreeRoots(EagerLoadOptions eagerLoad = null);
 
         /// <summary>
         /// 查询某个实体的某个属性的值。

@@ -77,9 +77,12 @@ namespace Rafy.DbMigration.Operations
             }
         }
 
-        protected override string GetDescription()
+        public override string Description
         {
-            return string.Format("{0}: {1}", base.GetDescription(), this.ConstraintName);
+            get
+            {
+                return string.Format("{0}: {1}", base.Description, this.ConstraintName);
+            }
         }
     }
 

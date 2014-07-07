@@ -48,9 +48,12 @@ namespace Rafy.DbMigration.Operations
         /// </summary>
         public bool PKIdentity { get; set; }
 
-        protected override string GetDescription()
+        public override string Description
         {
-            return string.Format("{0}: {1}", base.GetDescription(), this.TableName);
+            get
+            {
+                return string.Format("{0}: {1}", base.Description, this.TableName);
+            }
         }
 
         internal Table CopyFromTable

@@ -947,13 +947,14 @@ namespace Rafy.Domain
         /// <summary>
         /// 子类可以重写这个方法，用于实现 GetAll 的数据层查询逻辑。
         /// </summary>
-        /// <param name="pagingInfo">The paging information.</param>
+        /// <param name="paging">The paging information.</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        public virtual EntityList GetAll(PagingInfo pagingInfo)
+        public virtual EntityList GetAll(PagingInfo paging, EagerLoadOptions eagerLoad)
         {
             var query = qf.Query(_repository);
 
-            var list = this.QueryList(query, pagingInfo);
+            var list = this.QueryList(query, paging, eagerLoad);
 
             MarkTreeFullLoaded(list);
 
@@ -963,21 +964,24 @@ namespace Rafy.Domain
         /// <summary>
         /// 子类可以重写这个方法，用于实现 GetTreeRoots 的数据层查询逻辑。
         /// </summary>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        public virtual EntityList GetTreeRoots()
+        public virtual EntityList GetTreeRoots(EagerLoadOptions eagerLoad)
         {
             var query = qf.Query(_repository);
             query.AddConstraint(Entity.TreePIdProperty, PropertyOperator.Equal, null);
 
-            return this.QueryList(query);
+            return this.QueryList(query, null, eagerLoad);
         }
 
         /// <summary>
         /// 子类可以重写这个方法，用于实现 GetById 的数据层查询逻辑。
         /// </summary>
-        /// <param name="id"></param>
-        public virtual EntityList GetById(object id)
+        /// <param name="id">The unique identifier.</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <returns></returns>
+        public virtual EntityList GetById(object id, EagerLoadOptions eagerLoad)
         {
             var table = qf.Table(_repository);
             var q = qf.Query(
@@ -985,13 +989,16 @@ namespace Rafy.Domain
                 where: qf.Constraint(table.IdColumn, id)
             );
 
-            return this.QueryList(q);
+            return this.QueryList(q, null, eagerLoad);
         }
 
         /// <summary>
         /// 子类重写此方法，来实现自己的 GetByIdList 方法的数据层代码。
         /// </summary>
-        public virtual EntityList GetByIdList(object[] idList)
+        /// <param name="idList"></param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <returns></returns>
+        public virtual EntityList GetByIdList(object[] idList, EagerLoadOptions eagerLoad)
         {
             var table = qf.Table(_repository);
             var q = qf.Query(
@@ -999,16 +1006,17 @@ namespace Rafy.Domain
                 where: qf.Constraint(table.IdColumn, PropertyOperator.In, idList)
             );
 
-            return this.QueryList(q);
+            return this.QueryList(q, null, eagerLoad);
         }
 
         /// <summary>
         /// 子类重写此方法，来实现自己的 GetByParentId 方法的数据层代码。
         /// </summary>
         /// <param name="parentId"></param>
-        /// <param name="pagingInfo"></param>
+        /// <param name="paging">分页信息。</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        public virtual EntityList GetByParentId(object parentId, PagingInfo pagingInfo)
+        public virtual EntityList GetByParentId(object parentId, PagingInfo paging, EagerLoadOptions eagerLoad)
         {
             var parentProperty = _repository.FindParentPropertyInfo(true);
             var mp = (parentProperty.ManagedProperty as IRefEntityProperty).RefIdProperty;
@@ -1019,7 +1027,7 @@ namespace Rafy.Domain
                 where: qf.Constraint(table.Column(mp), parentId)
             );
 
-            var list = this.QueryList(q, pagingInfo);
+            var list = this.QueryList(q, paging, eagerLoad);
 
             MarkTreeFullLoaded(list);
 
@@ -1029,10 +1037,11 @@ namespace Rafy.Domain
         /// <summary>
         /// 子类重写此方法来实现通过父 Id 列表来获取所有组合子对象的列表
         /// </summary>
-        /// <param name="parentIdList"></param>
-        /// <param name="pagingInfo"></param>
+        /// <param name="parentIdList">The parent identifier list.</param>
+        /// <param name="paging">分页信息。</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        public virtual EntityList GetByParentIdList(object[] parentIdList, PagingInfo pagingInfo)
+        public virtual EntityList GetByParentIdList(object[] parentIdList, PagingInfo paging, EagerLoadOptions eagerLoad)
         {
             var parentProperty = _repository.FindParentPropertyInfo(true);
             var mp = (parentProperty.ManagedProperty as IRefEntityProperty).RefIdProperty;
@@ -1043,7 +1052,7 @@ namespace Rafy.Domain
                 where: qf.Constraint(table.Column(mp), PropertyOperator.In, parentIdList)
             );
 
-            var list = this.QueryList(q);
+            var list = this.QueryList(q, paging, eagerLoad);
 
             MarkTreeFullLoaded(list);
 
@@ -1054,7 +1063,9 @@ namespace Rafy.Domain
         /// 通过树型编码，找到所有对应的子节点。
         /// </summary>
         /// <param name="treeIndex"></param>
-        public virtual EntityList GetByTreeParentIndex(string treeIndex)
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <returns></returns>
+        public virtual EntityList GetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad)
         {
             //递归查找所有树型子
             var childCode = treeIndex + "%" + _repository.TreeIndexOption.Seperator + "%";
@@ -1065,7 +1076,7 @@ namespace Rafy.Domain
                 where: qf.Constraint(table.Column(Entity.TreeIndexProperty), PropertyOperator.Like, childCode)
             );
 
-            var list = this.QueryList(q);
+            var list = this.QueryList(q, null, eagerLoad);
 
             MarkTreeFullLoaded(list);
 
@@ -1076,8 +1087,9 @@ namespace Rafy.Domain
         /// 查找指定树节点的直接子节点。
         /// </summary>
         /// <param name="treePId">需要查找的树节点的Id.</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        public virtual EntityList GetByTreePId(object treePId)
+        public virtual EntityList GetByTreePId(object treePId, EagerLoadOptions eagerLoad)
         {
             var table = qf.Table(_repository);
             var q = qf.Query(
@@ -1085,15 +1097,16 @@ namespace Rafy.Domain
                 where: table.Column(Entity.TreePIdProperty).Equal(treePId)
             );
 
-            return this.QueryList(q);
+            return this.QueryList(q, null, eagerLoad);
         }
 
         /// <summary>
         /// 获取指定树节点的所有父节点。
         /// </summary>
-        /// <param name="treeIndex"></param>
+        /// <param name="treeIndex">Index of the tree.</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        public virtual EntityList GetAllTreeParents(string treeIndex)
+        public virtual EntityList GetAllTreeParents(string treeIndex, EagerLoadOptions eagerLoad)
         {
             var parentIndeces = new List<string>();
             var option = _repository.TreeIndexOption;
@@ -1117,86 +1130,91 @@ namespace Rafy.Domain
                 where: table.Column(Entity.TreeIndexProperty).In(parentIndeces)
             );
 
-            return this.QueryList(q);
+            return this.QueryList(q, null, eagerLoad);
         }
 
         [Obfuscation]
-        private EntityList FetchBy(PropertiesMatchCriteria criteria)
+        private EntityList FetchBy(CommonQueryCriteria criteria)
         {
             return this.GetBy(criteria);
         }
 
         /// <summary>
-        /// 精确匹配查询的数据层实现。
+        /// 常用查询的数据层实现。
         /// </summary>
         /// <param name="criteria"></param>
-        public virtual EntityList GetBy(PropertiesMatchCriteria criteria)
+        public virtual EntityList GetBy(CommonQueryCriteria criteria)
         {
             var table = qf.Table(_repository);
             var q = qf.Query(table);
 
             var allProperties = _repository.EntityMeta.ManagedProperties.GetNonReadOnlyCompiledProperties();
-            bool ignoreNull = (criteria.Actions & PropertiesMatchAction.IgnoreNull) != 0;
-            bool useContains = (criteria.Actions & PropertiesMatchAction.StringAsContains) != 0;
-            var op = useContains ? PropertyOperator.Contains : PropertyOperator.Equal;
 
-            foreach (var kv in criteria.Values)
+            //拼装所有 Where 条件。
+            bool ignoreNull = criteria.IgnoreNull;
+            foreach (var group in criteria.Groups)
             {
-                var property = allProperties.Find(kv.Key);
-                var value = kv.Value;
-
-                if (value is string || (value == null && property.PropertyType == typeof(string)))
+                IConstraint groupRes = null;
+                foreach (var pm in group)
                 {
-                    var strValue = value as string;
-                    if (ignoreNull)
+                    var property = allProperties.Find(pm.PropertyName);
+                    if (property != null)
                     {
-                        q.AddConstraintIf(property, op, strValue, table);
-                    }
-                    else
-                    {
+                        var op = pm.Operator;
+                        var value = pm.Value;
                         bool ignored = false;
-
-                        #region 如果是对空字符串进行模糊匹配，那么这个条件需要被忽略。
-
-                        if (string.IsNullOrEmpty(strValue))
+                        if (ignoreNull)
                         {
-                            switch (op)
+                            ignored = !ConditionalSql.IsNotEmpty(value);
+                        }
+                        else
+                        {
+                            if (value is string || (value == null && property.PropertyType == typeof(string)))
                             {
-                                case PropertyOperator.Like:
-                                case PropertyOperator.Contains:
-                                case PropertyOperator.StartWith:
-                                case PropertyOperator.EndWith:
-                                    ignored = true;
-                                    break;
-                                default:
-                                    break;
+                                #region 如果是对空字符串进行模糊匹配，那么这个条件需要被忽略。
+
+                                var strValue = value as string;
+                                if (string.IsNullOrEmpty(strValue))
+                                {
+                                    switch (op)
+                                    {
+                                        case PropertyOperator.Like:
+                                        case PropertyOperator.Contains:
+                                        case PropertyOperator.StartWith:
+                                        case PropertyOperator.EndWith:
+                                            ignored = true;
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                }
+
+                                #endregion
                             }
                         }
-
-                        #endregion
-
                         if (!ignored)
                         {
-                            var where = qf.Constraint(table.Column(property), op, strValue);
-                            q.Where = qf.And(q.Where, where);
+                            var propertyRes = qf.Constraint(table.Column(property), op, value);
+                            groupRes = qf.Binary(groupRes, group.Concat, propertyRes);
                         }
                     }
                 }
-                else
+
+                q.Where = qf.Binary(groupRes, criteria.Concat, q.Where);
+            }
+
+            //OrderBy
+            if (!string.IsNullOrWhiteSpace(criteria.OrderBy))
+            {
+                var orderBy = allProperties.Find(criteria.OrderBy);
+                if (orderBy != null)
                 {
-                    if (ignoreNull)
-                    {
-                        q.AddConstraintIf(property, PropertyOperator.Equal, value, table);
-                    }
-                    else
-                    {
-                        var where = qf.Constraint(table.Column(property), PropertyOperator.Equal, value);
-                        q.Where = qf.And(q.Where, where);
-                    }
+                    var dir = criteria.OrderByAscending ? OrderDirection.Ascending : OrderDirection.Descending;
+                    q.OrderBy.Add(table.Column(orderBy), dir);
                 }
             }
 
-            return this.QueryList(q);
+            return this.QueryList(q, criteria.PagingInfo, criteria.EagerLoad);
         }
 
         /// <summary>
