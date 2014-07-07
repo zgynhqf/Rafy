@@ -13,9 +13,9 @@ namespace JXC.DbMigrations
 {
     public class _20120423_183700_InitStorage : DataMigration
     {
-        protected override string GetDescription()
+        public override string Description
         {
-            return "添加 仓库 的初始数据。";
+            get { return "添加 仓库 的初始数据。"; }
         }
 
         protected override void Up()

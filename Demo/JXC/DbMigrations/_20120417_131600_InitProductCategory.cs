@@ -13,9 +13,9 @@ namespace JXC.DbMigrations
 {
     public class _20120417_131600_InitProduct : DataMigration
     {
-        protected override string GetDescription()
+        public override string Description
         {
-            return "添加 商品类别 的初始数据。";
+            get { return "添加 商品类别 的初始数据。"; }
         }
 
         protected override void Up()

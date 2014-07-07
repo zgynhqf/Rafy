@@ -21,6 +21,11 @@ namespace Demo.DbMigrations
             get { return ManualMigrationType.Data; }
         }
 
+        public override string Description
+        {
+            get { return "添加 省市县 的初始数据。"; }
+        }
+
         protected override void Up()
         {
             this.RunCode(db =>
@@ -69,10 +74,5 @@ namespace Demo.DbMigrations
         }
 
         protected override void Down() { }
-
-        protected override string GetDescription()
-        {
-            return "添加 省市县 的初始数据。";
-        }
     }
 }
