@@ -19,16 +19,17 @@ using System.Security.Permissions;
 using System.Text;
 using Rafy;
 using Rafy.Domain.ORM;
+using Rafy.ManagedProperty;
 
 namespace Rafy.Domain
 {
     /// <summary>
-    /// 所有查询对象的基类
+    /// 查询对象的基类
     /// 
     /// 如果不使用这个类做基类的查询条件类，也可以在 WPF 下运行正常。但是无法在 Web 下运行。
     /// </summary>
     [Serializable]
-    public abstract class Criteria : Entity, IPagingCriteria
+    public abstract class Criteria : Entity, ILoadOptionsCriteria
     {
         private static IKeyProvider KeyProviderField = KeyProviders.Get(typeof(object));
 
@@ -56,6 +57,11 @@ namespace Rafy.Domain
             get { return _p; }
             set { _p = value; }
         }
+
+        /// <summary>
+        /// 需要贪婪加载的属性列表。默认为 null 表示不进行贪婪加载。
+        /// </summary>
+        public EagerLoadOptions EagerLoad { get; set; }
 
         /// <summary>
         /// 此属性指示当前查询条件类型是否用于本地过滤。
@@ -87,9 +93,9 @@ namespace Rafy.Domain
     }
 
     /// <summary>
-    /// 一个可以进行分页的查询条件
+    /// 一个可以进行数据加载定义的查询条件
     /// </summary>
-    public interface IPagingCriteria
+    public interface ILoadOptionsCriteria
     {
         /// <summary>
         /// 分页条件
@@ -97,5 +103,10 @@ namespace Rafy.Domain
         /// 如果这个属性为 null 或者是<see cref="Rafy.PagingInfo.Empty"/>，表示不需要进行分页查询，直接返回整个结果集。
         /// </summary>
         PagingInfo PagingInfo { get; set; }
+
+        /// <summary>
+        /// 需要贪婪加载的属性列表。默认为 null 表示不进行贪婪加载。
+        /// </summary>
+        EagerLoadOptions EagerLoad { get; set; }
     }
 }

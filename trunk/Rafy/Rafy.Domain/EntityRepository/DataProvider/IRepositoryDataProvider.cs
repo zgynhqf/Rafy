@@ -17,6 +17,7 @@ using System.Linq;
 using System.Text;
 using Rafy;
 using Rafy.Data;
+using Rafy.ManagedProperty;
 
 namespace Rafy.Domain
 {
@@ -37,43 +38,60 @@ namespace Rafy.Domain
         /// 通过Id在数据层中查询指定的对象
         /// </summary>
         /// <param name="id">The unique identifier.</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        EntityList GetById(object id);
+        EntityList GetById(object id, EagerLoadOptions eagerLoad);
 
         /// <summary>
         /// 分页查询所有的实体类
         /// </summary>
-        /// <param name="pagingInfo"></param>
+        /// <param name="paging">分页信息。</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        EntityList GetAll(PagingInfo pagingInfo);
+        EntityList GetAll(PagingInfo paging, EagerLoadOptions eagerLoad);
         /// <summary>
         /// 通过父对象 Id 分页查询子对象的集合。
         /// </summary>
         /// <param name="parentIdList">The parent identifier list.</param>
-        /// <param name="pagingInfo">The paging information.</param>
+        /// <param name="paging">分页信息。</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        EntityList GetByParentIdList(object[] parentIdList, PagingInfo pagingInfo);
+        EntityList GetByParentIdList(object[] parentIdList, PagingInfo paging, EagerLoadOptions eagerLoad);
         /// <summary>
         /// 通过父对象 Id 分页查询子对象的集合。
         /// </summary>
         /// <param name="parentId"></param>
-        /// <param name="pagingInfo"></param>
+        /// <param name="paging">分页信息。</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        EntityList GetByParentId(object parentId, PagingInfo pagingInfo);
+        EntityList GetByParentId(object parentId, PagingInfo paging, EagerLoadOptions eagerLoad);
         /// <summary>
         /// 获取指定 id 集合的实体列表。
         /// </summary>
         /// <param name="idList"></param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        EntityList GetByIdList(object[] idList);
+        EntityList GetByIdList(object[] idList, EagerLoadOptions eagerLoad);
         /// <summary>
         /// 递归查找所有树型子
         /// </summary>
         /// <param name="treeIndex"></param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        EntityList GetByTreeParentIndex(string treeIndex);
+        EntityList GetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad);
+        /// <summary>
+        /// 通过 CommonQueryCriteria 来查询实体列表。
+        /// </summary>
+        /// <param name="criteria">常用查询条件。</param>
+        /// <returns></returns>
+        EntityList GetBy(CommonQueryCriteria criteria);
 
-        EntityList GetTreeRoots();
+        /// <summary>
+        /// 查询所有的根节点。
+        /// </summary>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <returns></returns>
+        EntityList GetTreeRoots(EagerLoadOptions eagerLoad);
 
         /// <summary>
         /// 统计仓库中所有的实体数量
@@ -88,18 +106,5 @@ namespace Rafy.Domain
         /// <param name="property">The property.</param>
         /// <returns></returns>
         LiteDataTable GetEntityValue(object entityId, string property);
-
-        //Entity GetById(object id);
-
-        //EntityList GetAll(PagingInfo pagingInfo);
-        //EntityList GetByParentIdList(object[] parentIdList, PagingInfo pagingInfo);
-        //EntityList GetByParentId(object parentId, PagingInfo pagingInfo);
-        //EntityList GetByIdList(object[] idList);
-        //EntityList GetByTreeParentIndex(string treeIndex);
-
-        //object GetEntityValue(object entityId, string property);
-
-        //object CountAll();
-        //object CountByParentId(object parentId);
     }
 }

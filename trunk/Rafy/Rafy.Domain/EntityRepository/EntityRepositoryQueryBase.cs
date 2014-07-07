@@ -53,26 +53,16 @@ namespace Rafy.Domain
         /// <summary>
         /// 通过 linq 来查询实体。
         /// </summary>
-        /// <param name="queryable">The queryable.</param>
+        /// <param name="queryable">linq 查询对象。</param>
+        /// <param name="paging">分页信息。</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         /// <exception cref="System.InvalidProgramException"></exception>
-        protected EntityList QueryList(IQueryable queryable)
-        {
-            return this.QueryList(queryable, PagingInfo.Empty);
-        }
-
-        /// <summary>
-        /// 通过 linq 来查询实体。
-        /// </summary>
-        /// <param name="queryable">The queryable.</param>
-        /// <param name="pagingInfo">The paging information.</param>
-        /// <returns></returns>
-        /// <exception cref="System.InvalidProgramException"></exception>
-        protected EntityList QueryList(IQueryable queryable, PagingInfo pagingInfo)
+        protected EntityList QueryList(IQueryable queryable, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
         {
             var query = ConvertToQuery(queryable);
 
-            return this.QueryList(query, pagingInfo);
+            return this.QueryList(query, paging, eagerLoad);
         }
 
         /// <summary>
@@ -106,26 +96,16 @@ namespace Rafy.Domain
         /// <summary>
         /// 通过 IQuery 对象来查询实体。
         /// </summary>
-        /// <param name="query">The query.</param>
+        /// <param name="query">查询对象。</param>
+        /// <param name="paging">分页信息。</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        protected EntityList QueryList(IQuery query)
+        protected EntityList QueryList(IQuery query, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
         {
-            return this.QueryList(query, PagingInfo.Empty);
-        }
+            var args = new EntityQueryArgs(query);
 
-        /// <summary>
-        /// 通过 IQuery 对象来查询实体。
-        /// </summary>
-        /// <param name="query">The query.</param>
-        /// <param name="pagingInfo">The paging information.</param>
-        /// <returns></returns>
-        protected EntityList QueryList(IQuery query, PagingInfo pagingInfo)
-        {
-            var args = new EntityQueryArgs
-            {
-                Query = query,
-                PagingInfo = pagingInfo,
-            };
+            args.SetDataLoadOptions(paging, eagerLoad);
+
             return this.QueryList(args);
         }
 
@@ -202,15 +182,7 @@ namespace Rafy.Domain
                 entityList.AutoTreeIndexEnabled = autoIndexEnabled;
             }
 
-            if (args.EagerLoadProperties != null)
-            {
-                this.EagerLoad(entityList, args.EagerLoadProperties);
-            }
-
-            //如果 entityList 列表中已经有数据，那么只能对新添加的实体进行 OnDbLoaded操作通知加载完成。
-            this.OnDbLoaded(entityList, oldCount);
-
-            this.OnEntityQueryed(args);
+            this.EagerLoadOnCompleted(args, entityList, oldCount);
 
             return entityList;
         }
@@ -251,15 +223,35 @@ namespace Rafy.Domain
             }
 
             //默认对分页进行处理。
-            if (args.Filter == null)
+            var pList = CurrentIEQC.Parameters;
+            if (pList.Length == 1)
             {
-                var pList = CurrentIEQC.Parameters;
-                if (pList.Length == 1)
+                var userCriteria = pList[0] as ILoadOptionsCriteria;
+                if (userCriteria != null)
                 {
-                    var userCriteria = pList[0] as IPagingCriteria;
-                    if (userCriteria != null) { args.PagingInfo = userCriteria.PagingInfo; }
+                    if (args.Filter == null)
+                    {
+                        args.PagingInfo = userCriteria.PagingInfo;
+                    }
+                    args.EagerLoadOptions = userCriteria.EagerLoad;
                 }
             }
+        }
+
+        private void EagerLoadOnCompleted(EntityQueryArgsBase args, EntityList entityList, int oldCount)
+        {
+            if (args.FetchType == FetchType.First || args.FetchType == FetchType.List)
+            {
+                if (args.EagerLoadOptions != null)
+                {
+                    this.EagerLoad(entityList, args.EagerLoadOptions.CoreList);
+                }
+
+                //如果 entityList 列表中已经有数据，那么只能对新添加的实体进行 OnDbLoaded操作通知加载完成。
+                this.OnDbLoaded(entityList, oldCount);
+            }
+
+            this.OnEntityQueryed(args);
         }
 
         /// <summary>
@@ -287,25 +279,15 @@ namespace Rafy.Domain
         /// <summary>
         /// 使用 sql 语句来查询实体。
         /// </summary>
-        /// <param name="sql">The SQL.</param>
+        /// <param name="sql">sql 语句，返回的结果集的字段，需要保证与属性映射的字段名相同。</param>
+        /// <param name="paging">分页信息。</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        protected EntityList QueryList(FormattedSql sql)
+        protected EntityList QueryList(FormattedSql sql, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
         {
-            return this.QueryList(sql, PagingInfo.Empty);
-        }
-
-        /// <summary>
-        /// 使用 sql 语句来查询实体。
-        /// </summary>
-        /// <param name="sql">The SQL.</param>
-        /// <param name="pagingInfo">The paging information.</param>
-        /// <returns></returns>
-        protected EntityList QueryList(FormattedSql sql, PagingInfo pagingInfo)
-        {
-            return this.QueryList(new SqlQueryArgs(sql)
-            {
-                PagingInfo = pagingInfo
-            });
+            var args = new SqlQueryArgs(sql);
+            args.SetDataLoadOptions(paging, eagerLoad);
+            return this.QueryList(args);
         }
 
         /// <summary>
@@ -376,10 +358,7 @@ namespace Rafy.Domain
                 entityList.AutoTreeIndexEnabled = autoIndexEnabled;
             }
 
-            //如果 entityList 列表中已经有数据，那么只能对新添加的实体进行 OnDbLoaded操作通知加载完成。
-            this.OnDbLoaded(entityList, oldCount);
-
-            this.OnEntityQueryed(args);
+            this.EagerLoadOnCompleted(args, entityList, oldCount);
 
             return entityList;
         }
@@ -387,47 +366,27 @@ namespace Rafy.Domain
         /// <summary>
         /// 通过 IQuery 对象来查询数据表。
         /// </summary>
-        /// <param name="query">The query.</param>
+        /// <param name="query">查询条件。</param>
+        /// <param name="paging">分页信息。</param>
         /// <returns></returns>
-        protected LiteDataTable QueryTable(IQuery query)
-        {
-            return this.QueryTable(query, PagingInfo.Empty);
-        }
-
-        /// <summary>
-        /// 通过 IQuery 对象来查询数据表。
-        /// </summary>
-        /// <param name="query">The query.</param>
-        /// <param name="pagingInfo">The paging information.</param>
-        /// <returns></returns>
-        protected LiteDataTable QueryTable(IQuery query, PagingInfo pagingInfo)
+        protected LiteDataTable QueryTable(IQuery query, PagingInfo paging = null)
         {
             var generator = this.Repo.RdbDataProvider.DbTable.CreateSqlGenerator();
             generator.Generate(query as SqlNode);
             var sql = generator.Sql;
 
-            return this.QueryTable(sql, pagingInfo);
+            return this.QueryTable(sql, paging);
         }
 
         /// <summary>
         /// 使用 sql 语句来查询数据表。
         /// </summary>
-        /// <param name="sql">The SQL.</param>
+        /// <param name="sql">Sql 语句.</param>
+        /// <param name="paging">分页信息。</param>
         /// <returns></returns>
-        protected LiteDataTable QueryTable(FormattedSql sql)
+        protected LiteDataTable QueryTable(FormattedSql sql, PagingInfo paging = null)
         {
-            return this.QueryTable(sql, PagingInfo.Empty);
-        }
-
-        /// <summary>
-        /// 使用 sql 语句来查询数据表。
-        /// </summary>
-        /// <param name="sql">The SQL.</param>
-        /// <param name="pagingInfo">The paging information.</param>
-        /// <returns></returns>
-        protected LiteDataTable QueryTable(FormattedSql sql, PagingInfo pagingInfo)
-        {
-            return this.QueryTable(new TableQueryArgs(sql, pagingInfo));
+            return this.QueryTable(new TableQueryArgs(sql, paging));
         }
 
         /// <summary>
@@ -518,21 +477,22 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="list"></param>
         /// <param name="eagerLoadProperties">所有需要贪婪加载的属性。</param>
-        private void EagerLoad(EntityList list, List<ConcreteProperty> eagerLoadProperties)
+        private void EagerLoad(EntityList list, IList<ConcreteProperty> eagerLoadProperties)
         {
             if (list.Count > 0 && eagerLoadProperties.Count > 0)
             {
-                eagerLoadProperties = eagerLoadProperties.ToList();
+                //为了不修改外面传入的列表，这里缓存一个新的列表。
+                var eagerCache = eagerLoadProperties.ToList();
 
                 //找到这个列表需要加载的所有贪婪加载属性。
                 var listEagerProperties = new List<ConcreteProperty>();
-                for (int i = eagerLoadProperties.Count - 1; i >= 0; i--)
+                for (int i = eagerCache.Count - 1; i >= 0; i--)
                 {
-                    var item = eagerLoadProperties[i];
+                    var item = eagerCache[i];
                     if (item.Owner.IsAssignableFrom(list.EntityType))
                     {
                         listEagerProperties.Add(item);
-                        eagerLoadProperties.RemoveAt(i);
+                        eagerCache.RemoveAt(i);
                     }
                 }
 
@@ -543,14 +503,14 @@ namespace Rafy.Domain
                     var listProperty = mp as IListProperty;
                     if (listProperty != null)
                     {
-                        this.EagerLoadChildren(list, listProperty, eagerLoadProperties);
+                        this.EagerLoadChildren(list, listProperty, eagerCache);
                     }
                     else
                     {
                         var refProperty = mp as IRefProperty;
                         if (refProperty != null)
                         {
-                            this.EagerLoadRef(list, refProperty, eagerLoadProperties);
+                            this.EagerLoadRef(list, refProperty, eagerCache);
                         }
                         else
                         {

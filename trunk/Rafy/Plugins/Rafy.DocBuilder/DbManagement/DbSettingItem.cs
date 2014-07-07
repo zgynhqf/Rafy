@@ -75,7 +75,7 @@ namespace Rafy.DevTools.DbManagement
             ConnectionStringNames.DbMigrationHistory
         };
 
-        public override EntityList GetAll(PagingInfo pagingInfo)
+        public override EntityList GetAll(PagingInfo paging, EagerLoadOptions eagerLoad)
         {
             var list = new DbSettingItemList();
 

@@ -101,9 +101,9 @@ namespace Rafy.RBAC
 
         public User GetByCode(string code)
         {
-            return this.FetchFirst(new PropertiesMatchCriteria
+            return this.FetchFirst(new CommonQueryCriteria
             {
-                { User.CodeProperty, code },
+                new PropertyMatch(User.CodeProperty, code)
             });
         }
     }

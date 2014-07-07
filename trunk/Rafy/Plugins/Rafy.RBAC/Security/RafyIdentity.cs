@@ -120,7 +120,7 @@ namespace Rafy.RBAC.Security
             return res;
         }
 
-        protected override Entity DoGetById(object id)
+        protected override Entity DoGetById(object id, EagerLoadOptions eagerLoad)
         {
             var res = new RafyIdentity
             {

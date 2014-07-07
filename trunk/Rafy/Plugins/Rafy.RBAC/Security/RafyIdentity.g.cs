@@ -14,6 +14,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using Rafy;
+using Rafy.ComponentModel;
 using Rafy.Data;
 using Rafy.Domain;
 using Rafy.Domain.ORM;
@@ -248,109 +249,108 @@ namespace Rafy.RBAC.Security
         /// 通过Id在数据层中查询指定的对象
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new RafyIdentity GetById(object id)
+        public new RafyIdentity GetById(object id, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetById(id) as RafyIdentity;
+            return base.GetById(id, eagerLoad) as RafyIdentity;
         }
 
         /// <summary>
         /// 查询第一个实体类
         /// </summary>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new RafyIdentity GetFirst()
+        public new RafyIdentity GetFirst(EagerLoadOptions eagerLoad = null)
         {
-            return base.GetFirst() as RafyIdentity;
-        }
-
-        /// <summary>
-        /// 查询所有的实体类
-        /// </summary>
-        /// <returns></returns>
-        [DebuggerStepThrough]
-        public new RafyIdentityList GetAll()
-        {
-            return base.GetAll() as RafyIdentityList;
+            return base.GetFirst(eagerLoad) as RafyIdentity;
         }
 
         /// <summary>
         /// 分页查询所有的实体类
         /// </summary>
-        /// <param name="pagingInfo"></param>
+        /// <param name="paging"></param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new RafyIdentityList GetAll(PagingInfo pagingInfo)
+        public new RafyIdentityList GetAll(PagingInfo paging= null, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetAll(pagingInfo) as RafyIdentityList;
+            return base.GetAll(paging, eagerLoad) as RafyIdentityList;
         }
 
         /// <summary>
         /// 获取指定 id 集合的实体列表。
         /// </summary>
         /// <param name="idList"></param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new RafyIdentityList GetByIdList(params object[] idList)
+        public new RafyIdentityList GetByIdList(object[] idList, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetByIdList(idList) as RafyIdentityList;
+            return base.GetByIdList(idList, eagerLoad) as RafyIdentityList;
         }
 
         /// <summary>
         /// 通过组合父对象的 Id 列表，查找所有的组合子对象的集合。
         /// </summary>
         /// <param name="parentIdList"></param>
+        /// <param name="paging">分页信息。</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new RafyIdentityList GetByParentIdList(params object[] parentIdList)
+        public new RafyIdentityList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetByParentIdList(parentIdList) as RafyIdentityList;
-        }
-
-        /// <summary>
-        /// 查询某个父对象下的子对象
-        /// </summary>
-        /// <param name="parentId"></param>
-        /// <returns></returns>
-        [DebuggerStepThrough]
-        public new RafyIdentityList GetByParentId(object parentId)
-        {
-            return base.GetByParentId(parentId) as RafyIdentityList;
+            return base.GetByParentIdList(parentIdList, paging, eagerLoad) as RafyIdentityList;
         }
 
         /// <summary>
         /// 通过父对象 Id 分页查询子对象的集合。
         /// </summary>
         /// <param name="parentId"></param>
-        /// <param name="pagingInfo"></param>
+        /// <param name="paging">分页信息。</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new RafyIdentityList GetByParentId(object parentId, PagingInfo pagingInfo)
+        public new RafyIdentityList GetByParentId(object parentId, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetByParentId(parentId, pagingInfo) as RafyIdentityList;
+            return base.GetByParentId(parentId, paging, eagerLoad) as RafyIdentityList;
+        }
+    
+        /// <summary>
+        /// 通过 CommonQueryCriteria 来查询实体列表。
+        /// </summary>
+        /// <param name="criteria">常用查询条件。</param>
+        /// <returns></returns>
+        [DebuggerStepThrough]
+        public new RafyIdentityList GetBy(CommonQueryCriteria criteria)
+        {
+            return base.GetBy(criteria) as RafyIdentityList;
         }
 
         /// <summary>
         /// 递归查找所有树型子
         /// </summary>
         /// <param name="treeIndex"></param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new RafyIdentityList GetByTreeParentIndex(string treeIndex)
+        public new RafyIdentityList GetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetByTreeParentIndex(treeIndex) as RafyIdentityList;
+            return base.GetByTreeParentIndex(treeIndex, eagerLoad) as RafyIdentityList;
         }
 
         /// <summary>
         /// 查找指定树节点的直接子节点。
         /// </summary>
         /// <param name="treePId">需要查找的树节点的Id.</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new RafyIdentityList GetByTreePId(object treePId)
+        public new RafyIdentityList GetByTreePId(object treePId, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetByTreePId(treePId) as RafyIdentityList;
+            return base.GetByTreePId(treePId, eagerLoad) as RafyIdentityList;
         }
 
         #endregion

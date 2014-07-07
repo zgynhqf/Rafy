@@ -153,7 +153,15 @@ namespace Rafy.Domain
                         var repo = this.GetRepository() as IRepositoryInternal;
                         //var count = repo.CountByTreePId(newValue);
                         //this.TreeIndex = repo.TreeIndexOption.CalculateCode()
+                        //在查询父节点时，同时把父节点的一级子节点也查询出来，这样可以防止多次查询。
                         var tree = repo.GetByIdOrTreePId(newValue);
+                        if (tree.Count == 0)
+                        {
+                            throw new InvalidOperationException(string.Format(
+                                "设置 TreePId 失败：设置的 TreePId 的值是：{0}，在仓库中没有找到 Id 是这个值的节点。",
+                                newValue
+                                ));
+                        }
                         this.TreeParent = tree[0];
                     }
                 }

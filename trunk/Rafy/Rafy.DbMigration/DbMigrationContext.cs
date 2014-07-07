@@ -294,7 +294,7 @@ namespace Rafy.DbMigration
                 for (int i = autoMigrations.Count - 1; i >= 0; i--)
                 {
                     timeId = timeId.AddMilliseconds(-TimeIdSpan);
-                    autoMigrations[i].TimeId = timeId;
+                    autoMigrations[i].RuntimeTimeId = timeId;
                 }
             }
             else
@@ -302,7 +302,7 @@ namespace Rafy.DbMigration
                 var timeId = DateTime.Now;
                 foreach (var m in autoMigrations)
                 {
-                    m.TimeId = timeId;
+                    m.RuntimeTimeId = timeId;
                     timeId = timeId.AddMilliseconds(TimeIdSpan);
                 }
             }

@@ -150,7 +150,7 @@ namespace Rafy.RBAC
         /// </summary>
         /// <param name="parentId"></param>
         /// <returns></returns>
-        protected override EntityList DoGetByParentId(object parentId, PagingInfo pagingInfo)
+        protected override EntityList DoGetByParentId(object parentId, PagingInfo paging, EagerLoadOptions eagerLoad)
         {
             var moduleAC = RF.Find<ModuleAC>().GetById(parentId);
 

@@ -225,55 +225,57 @@ namespace Rafy.Domain
                 }
 
                 var all = repository.GetAll();
-
-                //如果加载的过程中，第一个节点刚好是根节点，
-                //则加载完成后是一棵完整的树，Index 也生成完毕，不需要再次处理。
-                if (all.IsTreeRootList)
+                if (all.Count > 0)
                 {
-                    all.ResetTreeIndex();
-                    repository.Save(all);
-                }
-                else
-                {
-                    var cloneOptions = CloneOptions.ReadSingleEntity();
-                    var oldList = new List<Entity>();
-                    all.EachNode(e =>
+                    //如果加载的过程中，第一个节点刚好是根节点，
+                    //则加载完成后是一棵完整的树，Index 也生成完毕，不需要再次处理。
+                    if (all.IsTreeRootList)
                     {
-                        var cloned = repository.New();
-                        cloned.Clone(e, cloneOptions);
-                        cloned.MarkUnchanged();
-
-                        oldList.Add(cloned);
-                        return false;
-                    });
-
-                    var newList = repository.NewList();
-                    while (oldList.Count > 0)
+                        all.ResetTreeIndex();
+                        repository.Save(all);
+                    }
+                    else
                     {
-                        foreach (var item in oldList)
+                        var cloneOptions = CloneOptions.ReadSingleEntity();
+                        var oldList = new List<Entity>();
+                        all.EachNode(e =>
                         {
-                            var treePId = item.TreePId;
-                            if (treePId == null)
+                            var cloned = repository.New();
+                            cloned.Clone(e, cloneOptions);
+                            cloned.MarkUnchanged();
+
+                            oldList.Add(cloned);
+                            return false;
+                        });
+
+                        var newList = repository.NewList();
+                        while (oldList.Count > 0)
+                        {
+                            foreach (var item in oldList)
                             {
-                                newList.Add(item);
-                                oldList.Remove(item);
-                                break;
-                            }
-                            else
-                            {
-                                var parent = newList.EachNode(e => e.Id.Equals(treePId));
-                                if (parent != null)
+                                var treePId = item.TreePId;
+                                if (treePId == null)
                                 {
-                                    parent.TreeChildren.LoadAdd(item);
+                                    newList.Add(item);
                                     oldList.Remove(item);
                                     break;
                                 }
+                                else
+                                {
+                                    var parent = newList.EachNode(e => e.Id.Equals(treePId));
+                                    if (parent != null)
+                                    {
+                                        parent.TreeChildren.LoadAdd(item);
+                                        oldList.Remove(item);
+                                        break;
+                                    }
+                                }
                             }
                         }
+                        TreeHelper.MarkTreeFullLoaded(newList);
+                        newList.ResetTreeIndex();
+                        repository.Save(newList);
                     }
-                    TreeHelper.MarkTreeFullLoaded(newList);
-                    newList.ResetTreeIndex();
-                    repository.Save(newList);
                 }
 
                 tran.Complete();

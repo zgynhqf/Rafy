@@ -41,10 +41,7 @@ namespace Rafy.DbMigration
         /// <value>
         /// The time unique identifier.
         /// </value>
-        public DateTime TimeId
-        {
-            get { return this.GetTimeId(); }
-        }
+        public abstract DateTime TimeId { get; }
 
         /// <summary>
         /// 迁移描述。
@@ -52,10 +49,7 @@ namespace Rafy.DbMigration
         /// <value>
         /// The description.
         /// </value>
-        public string Description
-        {
-            get { return this.GetDescription(); }
-        }
+        public abstract string Description { get; }
 
         internal void GenerateUpOperations()
         {
@@ -100,18 +94,6 @@ namespace Rafy.DbMigration
         /// 数据库回滚
         /// </summary>
         protected abstract void Down();
-
-        /// <summary>
-        /// 用户自定义迁移实现此方法返回本次迁移的 时间点
-        /// </summary>
-        /// <returns></returns>
-        protected abstract DateTime GetTimeId();
-
-        /// <summary>
-        /// 用户自定义迁移实现此方法返回本次迁移的 描述
-        /// </summary>
-        /// <returns></returns>
-        protected abstract string GetDescription();
 
         /// <summary>
         /// 在 Up/Down 方法中调用此方法来添加迁移操作。

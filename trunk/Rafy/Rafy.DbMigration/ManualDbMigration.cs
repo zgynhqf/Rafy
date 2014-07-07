@@ -29,15 +29,6 @@ namespace Rafy.DbMigration
     /// </summary>
     public abstract class ManualDbMigration : DbMigration
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ManualDbMigration"/> class.
-        /// </summary>
-        public ManualDbMigration()
-        {
-            //测试 Id 可正确获取
-            this.GetTimeId();
-        }
-
         internal override MigrationType GetMigrationType()
         {
             return MigrationType.ManualMigration;
@@ -58,19 +49,22 @@ namespace Rafy.DbMigration
         /// </summary>
         /// <returns></returns>
         /// <exception cref="System.InvalidOperationException">手工更新必须使用以下格式命名类：“_20110107_093040_ClassName”。</exception>
-        protected override DateTime GetTimeId()
+        public override DateTime TimeId
         {
-            var name = this.GetType().Name;
-            var m = Regex.Match(name, @"^(?<time>_\d{8}_\d{6}_)");
-            if (!m.Success)
+            get
             {
-                throw new InvalidOperationException("手工更新必须使用以下格式命名类：“_20110107_093040_ClassName”。");
+                var name = this.GetType().Name;
+                var m = Regex.Match(name, @"^(?<time>_\d{8}_\d{6}_)");
+                if (!m.Success)
+                {
+                    throw new InvalidOperationException("手工更新必须使用以下格式命名类：“_20110107_093040_ClassName”。");
+                }
+                var time = m.Groups["time"].Value;
+
+                var value = DateTime.ParseExact(time, "_yyyyMMdd_HHmmss_", null);
+
+                return value;
             }
-            var time = m.Groups["time"].Value;
-
-            var value = DateTime.ParseExact(time, "_yyyyMMdd_HHmmss_", null);
-
-            return value;
         }
 
         #region 方便的 API
