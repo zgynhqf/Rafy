@@ -17,6 +17,7 @@ using System.ComponentModel.Design;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using EnvDTE;
@@ -31,6 +32,8 @@ namespace Rafy.VSPackage.Commands.RefreshAutoCode
     /// </summary>
     class RefreshAutoCodeFileCommand : Command
     {
+        #region 外部接口
+
         public RefreshAutoCodeFileCommand()
         {
             this.CommandID = new CommandID(GuidList.guidVSPackageCmdSet, PkgCmdIDList.cmdidAddGenericInterfaceFileCommand);
@@ -51,45 +54,49 @@ namespace Rafy.VSPackage.Commands.RefreshAutoCode
             this.Execute(selectedItem);
         }
 
+        #endregion
+
         private void Execute(object selectedItem)
         {
+            #region 提示
+
             string selectedType = "项目";
             if (selectedItem is ProjectItem) selectedType = "文件";
-
             var res = MessageBox.Show(
                 string.Format("执行前请先保存所有的代码文件。将为当前选中的{0}中所有实体生成最新的泛型接口代码。确定执行吗？", selectedType),
                 "提示", MessageBoxButton.OKCancel
                 );
-            if (res == MessageBoxResult.OK)
+            if (res != MessageBoxResult.OK) return;
+
+            #endregion
+
+            //查找文件。
+            var entities = EntityFileFinder.FindFiles(selectedItem).Where(e => !e.IsAbstract).ToList();
+            var repositories = RepoFileFinder.FindFiles(selectedItem).Where(e => !e.IsAbstract).ToList();
+            if (entities.Count == 0 && repositories.Count == 0)
             {
-                var finder = new EntityFileFinder();
-                finder.Find(selectedItem);
-                var entities = finder.Result;
-
-                if (entities.Count <= 0)
-                {
-                    MessageBox.Show("无法生成：选中的项中没有找到任何实体。");
-                    return;
-                }
-
-                int count = 0;
-
-                foreach (var entity in entities)
-                {
-                    //所有抽象类都不生成自动代码。
-                    if (entity.IsAbstract) continue;
-
-                    var item = entity.ProjectItem;
-                    RefreshAutoCodeForEntity(entity, item);
-
-                    count++;
-                }
-
-                MessageBox.Show(string.Format("生成完毕。一共生成 {0} 个文件。", count));
+                MessageBox.Show("无法生成：选中的项中没有找到任何有自动生成代码的文件。");
+                return;
             }
+
+            //替换文件。
+            foreach (var entity in entities)
+            {
+                var item = entity.ProjectItem;
+                RefreshAutoCodeForClass(entity, item, this.RenderEntityByTemplate);
+            }
+            foreach (var repo in repositories)
+            {
+                var item = repo.ProjectItem;
+                RefreshAutoCodeForClass(repo, item, this.RenderRepoByTemplate);
+            }
+
+            MessageBox.Show(string.Format("生成完毕。一共生成 {0} 个实体文件，{1} 个仓库文件。", entities.Count, repositories.Count));
         }
 
-        private void RefreshAutoCodeForEntity(CodeClass entity, ProjectItem item)
+        #region 处理文件
+
+        private void RefreshAutoCodeForClass(CodeClass codeClass, ProjectItem item, Func<CodeClass, string> renderer)
         {
             var fileName = item.get_FileNames(1);
 
@@ -101,7 +108,7 @@ namespace Rafy.VSPackage.Commands.RefreshAutoCode
             var gFile = Path.Combine(Path.GetDirectoryName(fileName), gFileName);
 
             //生成代码，写入文件。
-            var code = RenderByTemplate(entity);
+            var code = renderer(codeClass);
             File.WriteAllText(gFile, code);
 
             //添加到项目中
@@ -123,16 +130,18 @@ namespace Rafy.VSPackage.Commands.RefreshAutoCode
             }
         }
 
-        #region RenderByTemplate
+        #endregion
 
-        private string RenderByTemplate(CodeClass entity)
+        #region RenderEntityByTemplate
+
+        private string RenderEntityByTemplate(CodeClass entity)
         {
             string concreteNew = AddNewToConcrete(entity);
 
             //如果实体类文件中还包含了仓库的文件，则需要同时在自动代码中加入仓库的自动代码。
             bool renderRepository = HasRepository(entity);
 
-            var res = ItemCodeTemplate.GetDomainEntityAutoCode(
+            var res = ItemCodeTemplate.GetEntityFileCode(
                 entity.Namespace.Name, concreteNew, entity.Name, renderRepository
                 );
 
@@ -266,14 +275,10 @@ namespace Rafy.VSPackage.Commands.RefreshAutoCode
 
             protected override void VisitClass(CodeClass codeClass)
             {
-                if (codeClass.Name.EndsWith(Consts.RepositorySuffix))
+                if (Helper.IsRepository(codeClass))
                 {
-                    var baseClass = Helper.GetBaseClass(codeClass);
-                    if (baseClass != null && baseClass.Name.EndsWith(Consts.RepositorySuffix))
-                    {
-                        _repository = codeClass;
-                        return;
-                    }
+                    _repository = codeClass;
+                    return;
                 }
 
                 base.VisitClass(codeClass);
@@ -288,6 +293,40 @@ namespace Rafy.VSPackage.Commands.RefreshAutoCode
         }
 
         #endregion
+
+        #endregion
+
+        #region RenderRepoByTemplate
+
+        private string RenderRepoByTemplate(CodeClass repo)
+        {
+            var domainNamespace = ParseDomainNamespace(repo);
+            var entity = Helper.GetEntityNameForRepository(repo);
+
+            var res = ItemCodeTemplate.GetRepositoryFileCode(
+                domainNamespace, repo.Namespace.Name, entity
+                );
+
+            return res;
+        }
+
+        /// <summary>
+        /// 解析出实体的命令空间。
+        /// </summary>
+        /// <param name="repo"></param>
+        /// <returns></returns>
+        private static string ParseDomainNamespace(CodeClass repo)
+        {
+            //约定：Repository.g.cs 文件中的最后一个命名空间，即是实体的命名空间。
+            var item = repo.ProjectItem;
+            var fileName = item.get_FileNames(1);
+            var gFileName = Path.GetFileNameWithoutExtension(fileName) + ".g.cs";
+            var gFile = Path.Combine(Path.GetDirectoryName(fileName), gFileName);
+            var code = File.ReadAllText(gFile);
+            var match = Regex.Match(code, @"using (?<domainNamespace>\S+?);\s+namespace");
+            var domainNamespace = match.Groups["domainNamespace"].Value;
+            return domainNamespace;
+        }
 
         #endregion
     }

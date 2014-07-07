@@ -14,6 +14,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using Rafy;
+using Rafy.ComponentModel;
 using Rafy.Data;
 using Rafy.Domain;
 using Rafy.Domain.ORM;
@@ -248,109 +249,108 @@ namespace UT
         /// 通过Id在数据层中查询指定的对象
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new PBS GetById(object id)
+        public new PBS GetById(object id, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetById(id) as PBS;
+            return base.GetById(id, eagerLoad) as PBS;
         }
 
         /// <summary>
         /// 查询第一个实体类
         /// </summary>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new PBS GetFirst()
+        public new PBS GetFirst(EagerLoadOptions eagerLoad = null)
         {
-            return base.GetFirst() as PBS;
-        }
-
-        /// <summary>
-        /// 查询所有的实体类
-        /// </summary>
-        /// <returns></returns>
-        [DebuggerStepThrough]
-        public new PBSList GetAll()
-        {
-            return base.GetAll() as PBSList;
+            return base.GetFirst(eagerLoad) as PBS;
         }
 
         /// <summary>
         /// 分页查询所有的实体类
         /// </summary>
-        /// <param name="pagingInfo"></param>
+        /// <param name="paging"></param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new PBSList GetAll(PagingInfo pagingInfo)
+        public new PBSList GetAll(PagingInfo paging= null, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetAll(pagingInfo) as PBSList;
+            return base.GetAll(paging, eagerLoad) as PBSList;
         }
 
         /// <summary>
         /// 获取指定 id 集合的实体列表。
         /// </summary>
         /// <param name="idList"></param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new PBSList GetByIdList(params object[] idList)
+        public new PBSList GetByIdList(object[] idList, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetByIdList(idList) as PBSList;
+            return base.GetByIdList(idList, eagerLoad) as PBSList;
         }
 
         /// <summary>
         /// 通过组合父对象的 Id 列表，查找所有的组合子对象的集合。
         /// </summary>
         /// <param name="parentIdList"></param>
+        /// <param name="paging">分页信息。</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new PBSList GetByParentIdList(params object[] parentIdList)
+        public new PBSList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetByParentIdList(parentIdList) as PBSList;
-        }
-
-        /// <summary>
-        /// 查询某个父对象下的子对象
-        /// </summary>
-        /// <param name="parentId"></param>
-        /// <returns></returns>
-        [DebuggerStepThrough]
-        public new PBSList GetByParentId(object parentId)
-        {
-            return base.GetByParentId(parentId) as PBSList;
+            return base.GetByParentIdList(parentIdList, paging, eagerLoad) as PBSList;
         }
 
         /// <summary>
         /// 通过父对象 Id 分页查询子对象的集合。
         /// </summary>
         /// <param name="parentId"></param>
-        /// <param name="pagingInfo"></param>
+        /// <param name="paging">分页信息。</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new PBSList GetByParentId(object parentId, PagingInfo pagingInfo)
+        public new PBSList GetByParentId(object parentId, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetByParentId(parentId, pagingInfo) as PBSList;
+            return base.GetByParentId(parentId, paging, eagerLoad) as PBSList;
+        }
+    
+        /// <summary>
+        /// 通过 CommonQueryCriteria 来查询实体列表。
+        /// </summary>
+        /// <param name="criteria">常用查询条件。</param>
+        /// <returns></returns>
+        [DebuggerStepThrough]
+        public new PBSList GetBy(CommonQueryCriteria criteria)
+        {
+            return base.GetBy(criteria) as PBSList;
         }
 
         /// <summary>
         /// 递归查找所有树型子
         /// </summary>
         /// <param name="treeIndex"></param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new PBSList GetByTreeParentIndex(string treeIndex)
+        public new PBSList GetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetByTreeParentIndex(treeIndex) as PBSList;
+            return base.GetByTreeParentIndex(treeIndex, eagerLoad) as PBSList;
         }
 
         /// <summary>
         /// 查找指定树节点的直接子节点。
         /// </summary>
         /// <param name="treePId">需要查找的树节点的Id.</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new PBSList GetByTreePId(object treePId)
+        public new PBSList GetByTreePId(object treePId, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetByTreePId(treePId) as PBSList;
+            return base.GetByTreePId(treePId, eagerLoad) as PBSList;
         }
 
         #endregion

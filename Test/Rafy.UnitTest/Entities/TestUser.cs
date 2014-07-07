@@ -207,10 +207,36 @@ namespace UT
 
         public TestUserList GetByNameAge(string name, int age)
         {
-            return this.FetchList(new PropertiesMatchCriteria
+            return this.FetchList(new CommonQueryCriteria
             {
-                { TestUser.NameProperty, name },
-                { TestUser.AgeProperty, age },
+                new PropertyMatch(TestUser.NameProperty, name),
+                new PropertyMatch(TestUser.AgeProperty, age),
+            });
+        }
+        public TestUserList GetByNameAge_PropertyQuery(string name, int age)
+        {
+            return this.FetchList(r => r.DA_GetByNameAge_PropertyQuery(name, age));
+        }
+        private EntityList DA_GetByNameAge_PropertyQuery(string name, int age)
+        {
+            var q = this.CreatePropertyQuery();
+            q.AddConstrain(TestUser.NameProperty).Equal(name);
+            q.AddConstrain(TestUser.AgeProperty).Equal(age);
+            return this.QueryList(q);
+        }
+
+        public TestUserList GetByNameOrAge(string name, int age)
+        {
+            return this.FetchList(new CommonQueryCriteria
+            {
+                new PropertyMatchCollection
+                {
+                    new PropertyMatch(TestUser.NameProperty, name)
+                },
+                new PropertyMatchCollection
+                {
+                    new PropertyMatch(TestUser.AgeProperty, age)
+                }
             });
         }
 

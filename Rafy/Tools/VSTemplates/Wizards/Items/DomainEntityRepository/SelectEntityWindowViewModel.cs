@@ -78,9 +78,7 @@ namespace RafySDK.Templates.Wizards.Items.DomainEntityRepository
                 if (_types == null)
                 {
                     //查找其中的所有实体类的全名称。
-                    var finder = new EntityFileFinder();
-                    finder.Find(this.Project);
-                    _types = finder.Result.OrderBy(c => c.FullName).ToList();
+                    _types = EntityFileFinder.FindFiles(this.Project).OrderBy(c => c.FullName).ToList();
                 }
 
                 return _types;

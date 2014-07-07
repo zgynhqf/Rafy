@@ -96,7 +96,7 @@ namespace Rafy.VSPackage.Commands.RefreshCodeSnippets
                 "Rafy_PropertyReference",
                 "Rafy_PropertyReferenceNullable",
                 "Rafy_Query",
-                "Rafy_Query_Match",
+                "Rafy_Query_Common",
                 "Rafy_Query_TableQueryContent",
                 "Hxy_Extension",
             };

@@ -27,7 +27,10 @@ namespace VSTemplates.Wizards
             Helper.GetResourceContent("RafySDK.Templates.Items.DomainEntity.DomainEntity.g.cs");
 
         private static string DomainEntityRepositoryAutoCodeTemplate = 
-            Helper.GetResourceContent("RafySDK.Templates.Items.DomainEntity.DomainEntityRepositoryTemplate.cs");
+            Helper.GetResourceContent("RafySDK.Templates.Items.DomainEntityRepository.DomainEntityRepository.g.cs");
+
+        private static string DomainEntityRepositoryAutoCodeTemplateCore = 
+            Helper.GetResourceContent("RafySDK.Templates.Items.DomainEntityRepository.DomainEntityRepositoryTemplate.cs");
 
         /// <summary>
         /// Gets the domain entity automatic code.
@@ -39,7 +42,7 @@ namespace VSTemplates.Wizards
         /// 如果实体类文件中还包含了仓库的文件，则需要同时在自动代码中加入仓库的自动代码。
         /// </param>
         /// <returns></returns>
-        public static string GetDomainEntityAutoCode(
+        public static string GetEntityFileCode(
             string domainNamespace, string concreteNew, string entity,
             bool renderRepository
             )
@@ -47,7 +50,7 @@ namespace VSTemplates.Wizards
             var repositoryAutoCode = string.Empty;
             if (renderRepository)
             {
-                repositoryAutoCode = GetDomainEntityRepository(entity);
+                repositoryAutoCode = GetRepositoryCoreCode(entity);
             }
 
             return DomainEntityAutoCodeTemplate
@@ -59,9 +62,21 @@ namespace VSTemplates.Wizards
             //_template = _template.Replace("$time$", DateTime.Now.ToString());
         }
 
-        public static string GetDomainEntityRepository(string entity)
+        public static string GetRepositoryFileCode(
+            string domainNamespace, string rootnamespace, string entity
+            )
         {
-            return DomainEntityRepositoryAutoCodeTemplate.Replace("$domainEntityName$", entity);
+            var repositoryAutoCode = GetRepositoryCoreCode(entity);
+
+            return DomainEntityRepositoryAutoCodeTemplate
+                .Replace("$domainNamespace$", domainNamespace)
+                .Replace("$rootnamespace$", rootnamespace)
+                .Replace("$repositoryAutoCode$", repositoryAutoCode);
+        }
+
+        public static string GetRepositoryCoreCode(string entity)
+        {
+            return DomainEntityRepositoryAutoCodeTemplateCore.Replace("$domainEntityName$", entity);
         }
     }
 }
