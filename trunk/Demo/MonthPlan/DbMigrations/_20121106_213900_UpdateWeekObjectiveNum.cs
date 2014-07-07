@@ -11,9 +11,9 @@ namespace MP.DbMigrations
 {
     public class _20121106_213900_UpdateWeekObjectiveNum : DataMigration
     {
-        protected override string GetDescription()
+        public override string Description
         {
-            return "更新周目标量字段。";
+            get { return "更新周目标量字段。"; }
         }
 
         protected override void Up()

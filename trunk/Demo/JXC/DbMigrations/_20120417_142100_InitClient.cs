@@ -12,9 +12,9 @@ namespace JXC.DbMigrations
 {
     public class _20120417_142100_InitClient : DataMigration
     {
-        protected override string GetDescription()
+        public override string Description
         {
-            return "添加 用户 的初始数据。";
+            get { return "添加 用户 的初始数据。"; }
         }
 
         protected override void Up()

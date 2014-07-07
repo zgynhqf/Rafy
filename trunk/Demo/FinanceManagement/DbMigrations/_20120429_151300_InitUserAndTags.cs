@@ -12,9 +12,9 @@ namespace FM.DbMigrations
 {
     public class _20120429_151300_InitUserAndTags : DataMigration
     {
-        protected override string GetDescription()
+        public override string Description
         {
-            return "添加 用户、标签 的初始数据。";
+            get { return "添加 用户、标签 的初始数据。"; }
         }
 
         protected override void Up()

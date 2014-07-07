@@ -11,9 +11,9 @@ namespace MP.DbMigrations
 {
     public class _20121104_093600_UpdateData : DataMigration
     {
-        protected override string GetDescription()
+        public override string Description
         {
-            return "更新类别、任务的可空字段。";
+            get { return "更新类别、任务的可空字段。"; }
         }
 
         protected override void Up()
