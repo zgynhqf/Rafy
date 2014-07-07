@@ -141,7 +141,7 @@ namespace Demo
     [DataProviderFor(typeof(BookRepository))]
     public partial class BookDataProvider : RepositoryDataProvider
     {
-        public override EntityList GetAll(PagingInfo pagingInfo)
+        public override EntityList GetAll(PagingInfo paging, EagerLoadOptions eagerLoad)
         {
             var list = new BookList();
 

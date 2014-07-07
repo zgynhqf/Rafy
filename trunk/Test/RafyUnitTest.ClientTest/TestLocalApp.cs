@@ -14,6 +14,7 @@ using Rafy.UnitTest.WPF;
 using Rafy.Utils.Caching;
 using Rafy.WPF.Shell;
 using Rafy.ComponentModel;
+using Rafy.ComponentModel.UnityAdapter;
 
 namespace RafyUnitTest.ClientTest
 {
@@ -36,6 +37,7 @@ namespace RafyUnitTest.ClientTest
             CacheInstance.MemoryDisk = new Cache(new HybirdCacheProvider(sqlceFile));
 
             RafyEnvironment.Provider.IsDebuggingEnabled = true;
+            PluginTable.DomainLibraries.AddPlugin<UnityAdapterPlugin>();
             PluginTable.DomainLibraries.AddPlugin<UnitTestPlugin>();
             PluginTable.DomainLibraries.AddPlugin<UnitTestDataProviderPlugin>();
             PluginTable.DomainLibraries.AddPlugin<UnitTestIDataProviderPlugin>();

@@ -44,6 +44,34 @@ namespace Rafy.VSPackage
             return InheritesEntityNotCriteria(codeClass);
         }
 
+        internal static bool IsRepository(CodeClass codeClass)
+        {
+            if (codeClass.Name.EndsWith(Consts.RepositorySuffix))
+            {
+                var baseClass = Helper.GetBaseClass(codeClass);
+                if (baseClass != null && baseClass.Name.EndsWith(Consts.RepositorySuffix))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        internal static string GetEntityNameForRepository(CodeClass repo)
+        {
+            ////使用 Attribute 来进行获取实体类名。
+            //foreach (CodeAttribute attri in repo.Attributes)
+            //{
+            //    //RootEntity or ChildEntity
+            //    if (attri.FullName == Consts.RepositoryForAttributeClassFullName)
+            //    {
+            //    }
+            //}
+
+            return repo.Name.Substring(0, repo.Name.Length - Consts.RepositorySuffix.Length);
+        }
+
         private static bool InheritesEntityNotCriteria(CodeClass codeClass)
         {
             var baseClass = Helper.GetBaseClass(codeClass);

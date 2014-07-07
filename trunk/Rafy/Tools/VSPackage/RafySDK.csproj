@@ -234,7 +234,9 @@
     <EmbeddedResource Include="_CodeSnippets\Rafy_Property_PropertyChanged.snippet" />
     <EmbeddedResource Include="_CodeSnippets\Rafy_Property_PropertyChanging.snippet" />
     <EmbeddedResource Include="_CodeSnippets\Rafy_Query.snippet" />
-    <EmbeddedResource Include="_CodeSnippets\Rafy_Query_Match.snippet" />
+    <EmbeddedResource Include="_CodeSnippets\Rafy_Query_Common.snippet">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>

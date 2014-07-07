@@ -117,7 +117,7 @@ namespace VSTemplates.Wizards
                     .Replace("$domainEntityName$", _domainEntityName)
                     .Replace("$domainBaseEntityName$", _domainBaseEntityName);
 
-                repositoryAutoCode = ItemCodeTemplate.GetDomainEntityRepository(_domainEntityName);
+                repositoryAutoCode = ItemCodeTemplate.GetRepositoryCoreCode(_domainEntityName);
             }
             _replacementsDictionary.Add("$repositoryCode$", repositoryCode);
             _replacementsDictionary.Add("$repositoryAutoCode$", repositoryAutoCode);

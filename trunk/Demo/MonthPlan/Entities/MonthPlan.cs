@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20121102 16:03
@@ -228,7 +228,7 @@ namespace MP
     }
 
     [DataProviderFor(typeof(MonthPlanRepository))]
-    public class MonthPlanDataProvider : RepositoryDataProvider
+    public partial class MonthPlanDataProvider : RepositoryDataProvider
     {
         protected override bool EnableDeletingChildrenInMemory
         {

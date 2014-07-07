@@ -9,6 +9,7 @@ namespace RafySDK
     {
         public const string RootEntityAttributeClassFullName = "Rafy.MetaModel.Attributes.RootEntityAttribute";
         public const string ChildEntityAttributeClassFullName = "Rafy.MetaModel.Attributes.ChildEntityAttribute";
+        public const string RepositoryForAttributeClassFullName = "Rafy.Domain.RepositoryForAttribute";
         public const string RepositorySuffix = "Repository";
         public const string EntityRepositorySuffix = "EntityRepository";
     }

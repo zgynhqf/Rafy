@@ -3,8 +3,8 @@
     <CodeSnippet Format="1.0.0">
         <Header>
             <Description>属性匹配数据查询</Description>
-            <Title>Rafy Query By PropertiesMatch</Title>
-            <Shortcut>RafyQuery_Match</Shortcut>
+            <Title>Rafy Query By CommonQueryCriteria</Title>
+            <Shortcut>RafyQuery_Common</Shortcut>
             <Author>HuQingfang</Author>
             <SnippetTypes>
                 <SnippetType>Expansion</SnippetType>
@@ -41,10 +41,10 @@
             <Code Language="csharp">
                 <![CDATA[public $EntityName$List $MethodName$($Parameters$)
         {
-            return this.FetchList(new PropertiesMatchCriteria
+            return this.FetchList(new CommonQueryCriteria
             {
-                { $EntityName$.$Property1$, $InputParameters$ },
-                //{ $EntityName$.Property2Property, parameter2 },$end$
+                new PropertyMatch($EntityName$.$Property1$, $InputParameters$),
+                //new PropertyMatch($EntityName$.Property2Property, PropertyMatchOperator.Equal, parameter2),$end$
             });
         }]]>
             </Code>

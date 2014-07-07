@@ -70,10 +70,15 @@
     <Compile Include="ClientTestHelper.cs" />
     <Compile Include="RafyClient\CacheTest_Client.cs" />
     <Compile Include="RafyClient\EntityTest_Client.cs" />
+    <Compile Include="RafyClient\EnvTest_UnityContainer.cs" />
     <Compile Include="TestLocalApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.ComponentModel.UnityAdapter\Rafy.ComponentModel.UnityAdapter.csproj">
+      <Project>{be8c3cd6-f314-453d-a0ed-fcfec0deadbc}</Project>
+      <Name>Rafy.ComponentModel.UnityAdapter</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Rafy\Rafy.DbMigration\Rafy.DbMigration.csproj">
       <Project>{d7c4f80d-24a4-47f1-985c-cfa55cfa13e9}</Project>
       <Name>Rafy.DbMigration</Name>

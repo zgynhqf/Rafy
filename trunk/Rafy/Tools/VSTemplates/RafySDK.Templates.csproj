@@ -61,7 +61,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Items\DomainEntity\DomainEntity.g.cs" />
     <None Include="Items\DomainEntity\DomainEntity.v1_1_0.g.cs" />
-    <EmbeddedResource Include="Items\DomainEntity\DomainEntityRepositoryTemplate.cs" />
+    <EmbeddedResource Include="Items\DomainEntityRepository\DomainEntityRepositoryTemplate.cs" />
     <None Include="Items\DomainEntityRepository\DomainEntityRepository.cs" />
     <EmbeddedResource Include="Items\DomainEntityRepository\DomainEntityRepository.g.cs" />
     <Compile Include="Common\CodeElementVisitor.cs" />
@@ -69,6 +69,7 @@
     <Compile Include="Common\EntityFileFinder.cs" />
     <Compile Include="Common\Helper.cs" />
     <Compile Include="Common\ProjectHelper.cs" />
+    <Compile Include="Common\RepoFileFinder.cs" />
     <Compile Include="Wizards\Items\DomainEntityRepository\DomainEntityRepositoryItemWizard.cs" />
     <Compile Include="Wizards\Items\DomainEntityRepository\DomainEntityRepositoryWizardWindow.xaml.cs">
       <DependentUpon>DomainEntityRepositoryWizardWindow.xaml</DependentUpon>
@@ -112,7 +113,9 @@
     <None Include="Items\DomainEntityRepository\DomainEntityRepositoryTemplate.vstemplate" />
     <Content Include="Projects\Rafy Domain Library\Rafy\Rafy.ManagedProperty.xml" />
     <Content Include="Projects\Rafy Domain Library\Rafy\Rafy.xml" />
-    <None Include="Items\DomainEntity\DomainEntityTemplate.vstemplate" />
+    <None Include="Items\DomainEntity\DomainEntityTemplate.vstemplate">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Items\DomainEntity\__TemplateIcon.ico" />
     <Content Include="Projects\Rafy Domain Library\Rafy\Rafy.Utils.xml" />
     <Content Include="Projects\Rafy Domain Library\Rafy\Rafy.DbMigration.dll" />

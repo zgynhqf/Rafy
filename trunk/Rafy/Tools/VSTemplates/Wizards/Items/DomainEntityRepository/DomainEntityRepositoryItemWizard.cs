@@ -71,7 +71,7 @@ namespace VSTemplates.Wizards
             }
 
             //输出
-            var repositoryAutoCode = ItemCodeTemplate.GetDomainEntityRepository(vm.EntityTypeName);
+            var repositoryAutoCode = ItemCodeTemplate.GetRepositoryCoreCode(vm.EntityTypeName);
             _replacementsDictionary.Add("$repositoryAutoCode$", repositoryAutoCode);
             _replacementsDictionary.Add("$domainNamespace$", vm.DomainNamespace);
             _replacementsDictionary.Add("$domainEntityName$", vm.EntityTypeName);

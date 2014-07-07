@@ -188,13 +188,13 @@ namespace RafyUnitTest
                 repo.Save(new TestUser { Age = 1, Name = "user2" });
                 repo.Save(new TestUser { Age = 1, Name = "user2" });
 
-                var list = repo.GetByNameAge("user1", 1);
+                var list = repo.GetByNameAge_PropertyQuery("user1", 1);
                 Assert.IsTrue(list.Count == 1);
 
-                list = repo.GetByNameAge("user2", 1);
+                list = repo.GetByNameAge_PropertyQuery("user2", 1);
                 Assert.IsTrue(list.Count == 2);
 
-                list = repo.GetByNameAge("user2", 2);
+                list = repo.GetByNameAge_PropertyQuery("user2", 2);
                 Assert.IsTrue(list.Count == 0);
             }
         }
@@ -216,6 +216,49 @@ namespace RafyUnitTest
                 Assert.IsTrue(list.Count == 2);
 
                 list = repo.GetByNameAge("user2", 2);
+                Assert.IsTrue(list.Count == 0);
+            }
+        }
+
+        [TestMethod]
+        public void ORM_Query_CommonQueryCriteria()
+        {
+            var repo = RF.Concrete<TestUserRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                repo.Save(new TestUser { Age = 1, Name = "user1" });
+                repo.Save(new TestUser { Age = 1, Name = "user2" });
+                repo.Save(new TestUser { Age = 1, Name = "user2" });
+
+                var list = repo.GetByNameOrAge("2", 2);
+                Assert.IsTrue(list.Count == 2);
+
+                list = repo.GetByNameOrAge("3", 1);
+                Assert.IsTrue(list.Count == 3);
+            }
+        }
+
+        [TestMethod]
+        public void ORM_Query_CommonQueryCriteria_getBy()
+        {
+            var repo = RF.Concrete<TestUserRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                repo.Save(new TestUser { Age = 1, Name = "user1" });
+                repo.Save(new TestUser { Age = 1, Name = "user2" });
+                repo.Save(new TestUser { Age = 1, Name = "user2" });
+
+                var list = repo.GetBy(new CommonQueryCriteria
+                {
+                    new PropertyMatchCollection
+                    {
+                        new PropertyMatch(TestUser.NameProperty, "3")
+                    },
+                    new PropertyMatchCollection
+                    {
+                        new PropertyMatch(TestUser.AgeProperty, 2)
+                    }
+                });
                 Assert.IsTrue(list.Count == 0);
             }
         }
@@ -606,7 +649,7 @@ namespace RafyUnitTest
                 repo.Save(book2);
                 repo.Save(new Book { Name = "3" });
 
-                var list = repo.GetByIdList(book.Id, book2.Id);
+                var list = repo.GetByIdList(new object[] { book.Id, book2.Id });
                 Assert.IsTrue(list.Count == 2);
                 Assert.IsTrue(list[0].Name == "1");
                 Assert.IsTrue(list[1].Name == "2");
@@ -650,7 +693,7 @@ namespace RafyUnitTest
                 };
                 repo.Save(book3);
 
-                var list = RF.Concrete<ChapterRepository>().GetByParentIdList(book.Id, book2.Id);
+                var list = RF.Concrete<ChapterRepository>().GetByParentIdList(new object[] { book.Id, book2.Id });
                 Assert.IsTrue(list.Count == 6);
                 Assert.IsTrue(list[0].Name == "1.1");
                 Assert.IsTrue(list[1].Name == "1.2");

@@ -12,17 +12,17 @@
 *******************************************************/
 
 using System;
-using System.Text;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rafy;
-using Rafy.MetaModel;
+using Rafy.Domain;
 using Rafy.Domain.Caching;
+using Rafy.Domain.ORM.DbMigration;
+using Rafy.MetaModel;
 using Rafy.Utils.Caching;
 using UT;
-using Rafy.Domain;
-using Rafy.Domain.ORM.DbMigration;
 
 namespace RafyUnitTest.ClientTest
 {

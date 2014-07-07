@@ -384,15 +384,17 @@ namespace RafyUnitTest
                 this.DropTable("TestingTable", "Id", DbType.Int32, null, true);
             }
 
-            protected override DateTime GetTimeId()
+            public override DateTime TimeId
             {
-                return DateTime.Now;
-                //return new DateTime(2012, 1, 6, 22, 20, 00);
+                get
+                {
+                    return DateTime.Now;
+                }
             }
 
-            protected override string GetDescription()
+            public override string Description
             {
-                return "单元测试 - 数据库手工升级 - 建立一张表，一个字段，两行数据";
+                get { return "单元测试 - 数据库手工升级 - 建立一张表，一个字段，两行数据"; }
             }
 
             public override ManualMigrationType Type
@@ -436,15 +438,17 @@ namespace RafyUnitTest
                 });
             }
 
-            protected override DateTime GetTimeId()
+            public override DateTime TimeId
             {
-                return DateTime.Now;
-                //return new DateTime(2012, 1, 6, 22, 25, 00);
+                get
+                {
+                    return DateTime.Now;
+                }
             }
 
-            protected override string GetDescription()
+            public override string Description
             {
-                return "单元测试 - 数据库手工升级 - 使用实体类创建数据";
+                get { return "单元测试 - 数据库手工升级 - 使用实体类创建数据"; }
             }
 
             public override ManualMigrationType Type

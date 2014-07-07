@@ -159,12 +159,16 @@ namespace Rafy
             return assemblies.Select(assembly =>
             {
                 var pluginType = assembly.GetTypes().FirstOrDefault(t => typeof(IPlugin).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
-                IPlugin pluginInstance = PluginAssembly.EmptyPlugin;
 
+                IPlugin pluginInstance = null;
                 if (pluginType != null)
                 {
                     pluginInstance = Activator.CreateInstance(pluginType) as IPlugin;
                     //throw new NotSupportedException("所有插件包中必须有且仅有一个实现 IPlugin 接口的类型！" + Environment.NewLine + "文件路径：" + file);
+                }
+                else
+                {
+                    pluginInstance = new EmptyPlugin(assembly);
                 }
 
                 return new PluginAssembly(assembly, pluginInstance);

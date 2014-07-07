@@ -1,17 +1,4 @@
-﻿/*******************************************************
- * 
- * 作者：胡庆访
- * 创建日期：20130423
- * 说明：此文件只包含一个类，具体内容见类型注释。
- * 运行环境：.NET 4.0
- * 版本号：1.0.0
- * 
- * 历史记录：
- * 创建文件 胡庆访 20130423 13:45
- * 
-*******************************************************/
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,16 +7,19 @@ using EnvDTE;
 
 namespace Rafy.VSPackage
 {
-    class EntityFileFinder : CodeElementVisitor
+    /// <summary>
+    /// 查找某一个只写了 Repository 代码的文件。
+    /// </summary>
+    class RepoFileFinder : CodeElementVisitor
     {
         public static List<CodeClass> FindFiles(object selectedItem)
         {
-            var finder = new EntityFileFinder();
+            var finder = new RepoFileFinder();
             finder.Find(selectedItem);
             return finder.Result;
         }
 
-        private bool _currentIsEntity = false;
+        private bool _fileFinised = false;
         private List<CodeClass> _result = new List<CodeClass>();
 
         public List<CodeClass> Result
@@ -50,7 +40,7 @@ namespace Rafy.VSPackage
                     //忽略自动生成的文件。
                     if (!item.Name.Contains(".g.cs"))
                     {
-                        _currentIsEntity = false;
+                        _fileFinised = false;
                         this.Visit(item.FileCodeModel.CodeElements);
                     }
                 }
@@ -61,7 +51,7 @@ namespace Rafy.VSPackage
                 var item = selectedItem as ProjectItem;
                 if (!item.Name.Contains(".g.cs"))
                 {
-                    _currentIsEntity = false;
+                    _fileFinised = false;
                     this.Visit(item.FileCodeModel.CodeElements);
                 }
             }
@@ -71,14 +61,18 @@ namespace Rafy.VSPackage
         {
             if (Helper.IsEntity(codeClass))
             {
+                _fileFinised = true;
+            }
+            else if (Helper.IsRepository(codeClass))
+            {
                 _result.Add(codeClass);
-                _currentIsEntity = true;
+                _fileFinised = true;
             }
         }
 
         protected override void Visit(CodeElement element)
         {
-            if (_currentIsEntity) return;
+            if (_fileFinised) return;
             base.Visit(element);
         }
 
