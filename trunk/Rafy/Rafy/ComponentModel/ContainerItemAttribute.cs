@@ -22,7 +22,7 @@ namespace Rafy.ComponentModel
     /// 在某个类型上指定的标记，说明该类型将会注册到 IOC 默认容器中。
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
-    public sealed class ContainerItemAttribute : Attribute
+    public class ContainerItemAttribute : Attribute
     {
         /// <summary>
         /// 构造器。
@@ -33,7 +33,7 @@ namespace Rafy.ComponentModel
             if (provideFor == null) throw new ArgumentNullException("provideFor");
             this.ProvideFor = provideFor;
 
-            this.RegisterWay = RegisterWay.Instance;
+            this.RegisterWay = RegisterWay.Type;
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Rafy.ComponentModel
         public Type ProvideFor { get; private set; }
 
         /// <summary>
-        /// 注册到 IOC 容器中的方式。
+        /// 注册到 IOC 容器中的方式。默认值为 <see cref="Rafy.ComponentModel.RegisterWay.Type"/>。
         /// </summary>
         public RegisterWay RegisterWay { get; set; }
 
@@ -50,13 +50,6 @@ namespace Rafy.ComponentModel
         /// 注册时使用的键。
         /// </summary>
         public string Key { get; set; }
-
-        /// <summary>
-        /// 注册的优先级，值越低优先级越高。
-        /// 这个选项只在 RegisterWay.Instance 时有用。
-        /// 内部通过这个优先级的顺序来进行实例的注册。可以解决实例 A 需要使用先注册的实例 B 的场景。
-        /// </summary>
-        public double Priority { get; set; }
     }
 
     /// <summary>

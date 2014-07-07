@@ -86,7 +86,7 @@ namespace Rafy.Domain
             get { return this.MemoryList ?? this.EntityList; }
         }
 
-        internal List<ConcreteProperty> EagerLoadProperties;
+        internal EagerLoadOptions EagerLoadOptions;
 
         /// <summary>
         /// 贪婪加载某个属性
@@ -95,14 +95,45 @@ namespace Rafy.Domain
         /// <param name="propertyOwner">这个属性的拥有者类型。</param>
         public void EagerLoad(IProperty property, Type propertyOwner = null)
         {
-            propertyOwner = propertyOwner ?? property.OwnerType;
+            this.EagerLoad(new ConcreteProperty(property, propertyOwner ?? property.OwnerType));
+        }
 
-            if (this.EagerLoadProperties == null)
+        /// <summary>
+        /// 贪婪加载某个属性
+        /// </summary>
+        /// <param name="property">需要贪婪加载的托管属性。可以是一个引用属性，也可以是一个组合子属性。</param>
+        private void EagerLoad(ConcreteProperty property)
+        {
+            if (this.EagerLoadOptions == null)
             {
-                this.EagerLoadProperties = new List<ConcreteProperty>();
+                this.EagerLoadOptions = new EagerLoadOptions();
             }
 
-            this.EagerLoadProperties.Add(new ConcreteProperty(property, propertyOwner));
+            this.EagerLoadOptions.CoreList.Add(property);
+        }
+
+        internal void SetDataLoadOptions(PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        {
+            if (!PagingInfo.IsNullOrEmpty(paging))
+            {
+                this.PagingInfo = paging;
+            }
+
+            if (eagerLoad != null && eagerLoad.CoreList.Count > 0)
+            {
+                if (this.EagerLoadOptions != null)
+                {
+                    for (int i = 0, c = eagerLoad.CoreList.Count; i < c; i++)
+                    {
+                        var item = eagerLoad.CoreList[i];
+                        this.EagerLoad(item);
+                    }
+                }
+                else
+                {
+                    this.EagerLoadOptions = eagerLoad;
+                }
+            }
         }
     }
 

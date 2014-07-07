@@ -26,6 +26,11 @@ namespace Rafy.ComponentModel
         private readonly Dictionary<Type, Dictionary<string, Type>> _types = new Dictionary<Type, Dictionary<string, Type>>();
         private readonly Dictionary<Type, Dictionary<string, object>> _instances = new Dictionary<Type, Dictionary<string, object>>();
 
+        public void RegisterInstance(Type type, Type instanceType, string key = null)
+        {
+            this.RegisterInstance(type, instanceType as object, key);
+        }
+
         public void RegisterInstance(Type type, object instance, string key = null)
         {
             if (type == null) throw new ArgumentNullException("type");
@@ -82,20 +87,17 @@ namespace Rafy.ComponentModel
             if (type == null) throw new ArgumentNullException("type");
             if (key == null) { key = string.Empty; }
 
-            try
-            {
-                _lock.EnterReadLock();
-
-                return ResolveInstance(type, key);
-            }
-            finally
-            {
-                _lock.ExitReadLock();
-            }
+            return ResolveInstance(type, key);
         }
 
         public IEnumerable<object> ResolveAll(Type type)
         {
+            var list = new List<object>();
+
+            //以下代码为了与 UnityContainer 保持兼容，当注册了有名字的项时，无名字的项需要被忽略。
+
+            #region _instances
+
             try
             {
                 _lock.EnterReadLock();
@@ -103,18 +105,22 @@ namespace Rafy.ComponentModel
                 Dictionary<string, object> instances = null;
                 if (_instances.TryGetValue(type, out instances))
                 {
-                    foreach (var kv in instances)
+                    if (instances.Count > 1)
                     {
-                        yield return kv.Value;
+                        foreach (var kv in instances)
+                        {
+                            if (!string.IsNullOrEmpty(kv.Key))
+                            {
+                                list.Add(kv.Value);
+                            }
+                        }
                     }
-                }
-
-                Dictionary<string, Type> types = null;
-                if (_types.TryGetValue(type, out types))
-                {
-                    foreach (var kv in types)
+                    else
                     {
-                        yield return this.CreateInstance(kv.Value);
+                        foreach (var kv in instances)
+                        {
+                            list.Add(kv.Value);
+                        }
                     }
                 }
             }
@@ -122,29 +128,154 @@ namespace Rafy.ComponentModel
             {
                 _lock.ExitReadLock();
             }
+
+            #endregion
+
+            var instanceResultCount = list.Count;
+
+            #region _types
+
+            try
+            {
+                _lock.EnterReadLock();
+
+                Dictionary<string, Type> types = null;
+                if (_types.TryGetValue(type, out types))
+                {
+                    if (types.Count > 1)
+                    {
+                        foreach (var kv in types)
+                        {
+                            if (!string.IsNullOrEmpty(kv.Key))
+                            {
+                                list.Add(kv.Value);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var kv in types)
+                        {
+                            list.Add(kv.Value);
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                _lock.ExitReadLock();
+            }
+
+            #endregion
+
+            //如果使用 RegisterInstance 方法时使用的是 Type 类型，则需要创建新的实例，并替换 Dic 中的值。
+            bool hasInstanceType = false;
+            for (int i = 0, c = list.Count; i < c; i++)
+            {
+                var itemType = list[i] as Type;
+                if (itemType != null)
+                {
+                    if (i < instanceResultCount)
+                    {
+                        hasInstanceType = true;
+                    }
+                    list[i] = this.CreateInstance(itemType);
+                }
+            }
+            if (hasInstanceType)
+            {
+                try
+                {
+                    _lock.EnterWriteLock();
+
+                    var indexInList = 0;
+                    var instances = _instances[type];
+                    if (instances.Count > 1)
+                    {
+                        foreach (var kv in instances)
+                        {
+                            if (!string.IsNullOrEmpty(kv.Key))
+                            {
+                                indexInList++;
+                                if (kv.Value is Type)
+                                {
+                                    var item = list[indexInList];
+                                    instances[kv.Key] = item;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var kv in instances)
+                        {
+                            indexInList++;
+                            if (kv.Value is Type)
+                            {
+                                var item = list[indexInList];
+                                instances[kv.Key] = item;
+                            }
+                        }
+                    }
+                }
+                finally
+                {
+                    _lock.ExitWriteLock();
+                }
+            }
+
+            return list;
         }
 
         private object ResolveInstance(Type type, string key)
         {
-            //先尝试从 _instances 集合中获取
-            Dictionary<string, object> instances = null;
-            if (_instances.TryGetValue(type, out instances))
+            object instanceResult = null;
+            try
             {
-                object res = null;
-                if (instances.TryGetValue(key, out res))
+                _lock.EnterReadLock();
+
+                //先尝试从 _instances 集合中获取
+                Dictionary<string, object> instances = null;
+                if (_instances.TryGetValue(type, out instances))
                 {
-                    return res;
+                    instances.TryGetValue(key, out instanceResult);
                 }
             }
-
-            Dictionary<string, Type> types = null;
-            if (_types.TryGetValue(type, out types))
+            finally
             {
-                Type typeResult = null;
-                if (types.TryGetValue(key, out typeResult))
+                _lock.ExitReadLock();
+            }
+            if (instanceResult != null)
+            {
+                if (instanceResult is Type)
                 {
-                    return this.CreateInstance(typeResult);
+                    instanceResult = this.CreateInstance(instanceResult as Type);
+                    this.RegisterInstance(type, instanceResult, key);
                 }
+                return instanceResult;
+            }
+
+            Type typeResult = null;
+            try
+            {
+                _lock.EnterReadLock();
+
+                if (instanceResult == null)
+                {
+                    Dictionary<string, Type> types = null;
+                    if (_types.TryGetValue(type, out types))
+                    {
+                        types.TryGetValue(key, out typeResult);
+                    }
+                }
+            }
+            finally
+            {
+                _lock.ExitReadLock();
+            }
+            if (typeResult != null)
+            {
+                return this.CreateInstance(typeResult);
             }
 
             return this.CreateInstance(type);
@@ -152,7 +283,13 @@ namespace Rafy.ComponentModel
 
         private object CreateInstance(Type type)
         {
-            var constructor = type.GetConstructors()[0];
+            var construtors = type.GetConstructors();
+            if (construtors.Length == 0)
+            {
+                throw new InvalidProgramException(string.Format("{0} 类型没有构造函数，无法构造它的实例。", type));
+            }
+
+            var constructor = construtors[0];
             var parameterInfos = constructor.GetParameters();
             if (parameterInfos.Length == 0)
             {

@@ -27,8 +27,14 @@ namespace Rafy
     [DebuggerDisplay("Success:{Success}, StatusCode:{StatusCode}, Message:{Message}")]
     public struct Result
     {
+        /// <summary>
+        /// A string message used by the success result.
+        /// </summary>
         public static string SuccessMessage = "操作成功！";
 
+        /// <summary>
+        /// A string message used by the failed result.
+        /// </summary>
         public static string FailedMessage = "操作失败！";
 
         #region fields

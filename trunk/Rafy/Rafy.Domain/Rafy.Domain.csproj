@@ -83,6 +83,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BinaryOperator.cs" />
     <Compile Include="DataPortalLocation.cs" />
     <Compile Include="DataPortal\DistributionContext.cs" />
     <Compile Include="DataPortal\DataPortalException.cs" />
@@ -90,10 +91,12 @@
     <Compile Include="DataPortal\IDataPortalProxy.cs" />
     <Compile Include="DataPortal\WCF\ClientProxy.cs" />
     <Compile Include="DataPortal\DataPortalResult.cs" />
+    <Compile Include="EntityRepository\Criteria\CommonQueryCriteria.cs" />
     <Compile Include="EntityRepository\DataProvider\DataProviderComposer.cs" />
     <Compile Include="EntityRepository\DataProvider\DataProviderForAttribute.cs" />
+    <Compile Include="EntityRepository\EagerLoadOptions.cs" />
     <Compile Include="EntityRepository\QueryArgs\EntityQueryArgs.cs" />
-    <Compile Include="EntityRepository\IEQC.cs" />
+    <Compile Include="EntityRepository\Criteria\IEQC.cs" />
     <Compile Include="DomainApp.cs" />
     <Compile Include="EntityRepository\Caching\RepositoryCache.cs" />
     <Compile Include="EntityRepository\Caching\ServerCache.cs" />
@@ -128,11 +131,11 @@
     <Compile Include="Entity\GenericEntity\IntEntity.cs" />
     <Compile Include="Entity\MP\LOBProperty.cs" />
     <Compile Include="Entity\MP\PropertyDefailtValues.cs" />
-    <Compile Include="Entity\PropertiesMatchCriteria.cs" />
     <Compile Include="Entity\Serialization\SerializationEntityGraph.cs" />
     <Compile Include="Entity\ValidationHelper.cs" />
     <Compile Include="Entity\Validation\ValidationDeclarer.cs" />
     <Compile Include="Entity\Validation\Validator.cs" />
+    <Compile Include="PropertyOperator.cs" />
     <Compile Include="Utils\EntityListEnumerator.cs" />
     <Compile Include="Utils\zzzIRepository.Generic.cs" />
     <Compile Include="Entity\MP\IProperty.cs" />
@@ -343,7 +346,7 @@
       <DependentUpon>EntityList.cs</DependentUpon>
     </Compile>
     <Compile Include="Entity\EntityList.cs" />
-    <Compile Include="Entity\EntityCriteria.cs" />
+    <Compile Include="EntityRepository\Criteria\EntityCriteria.cs" />
     <Compile Include="Entity\IEntity.cs" />
     <Compile Include="Entity\Entity.cs" />
     <Compile Include="RafyDomainLibrary.cs" />

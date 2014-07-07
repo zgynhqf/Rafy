@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Rafy;
+using Rafy.ManagedProperty;
 
 namespace Rafy.Domain
 {
@@ -52,9 +53,9 @@ namespace Rafy.Domain
             return DataProvider._memoryRows.Count;
         }
 
-        protected sealed override EntityList DoGetAll(PagingInfo pagingInfo)
+        protected sealed override EntityList DoGetAll(PagingInfo paging, EagerLoadOptions eagerLoad)
         {
-            if (!PagingInfo.IsNullOrEmpty(pagingInfo)) { throw new NotSupportedException(); }
+            if (!PagingInfo.IsNullOrEmpty(paging)) { throw new NotSupportedException(); }
 
             DataProvider.EnsureStore();
             var items = DataProvider._memoryRows.Values.Select(v => DataProvider.FromRow(v));
@@ -68,8 +69,9 @@ namespace Rafy.Domain
         /// 通过本地 Id 查找实体。
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        protected sealed override Entity DoGetById(object id)
+        protected sealed override Entity DoGetById(object id, EagerLoadOptions eagerLoad)
         {
             DataProvider.EnsureStore();
 

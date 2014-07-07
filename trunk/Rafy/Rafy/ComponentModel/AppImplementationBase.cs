@@ -65,7 +65,6 @@ namespace Rafy.ComponentModel
             this.OnAppMetaCompleted();
 
             //组合所有模块的 IOC、事件、
-            this.Compose();
             this.RaiseComposeOperations();
             this.OnComposed();
 
@@ -84,17 +83,24 @@ namespace Rafy.ComponentModel
         }
 
         /// <summary>
-        /// 注意，以下代码应该保证可以多次运行。
-        /// 这是因为如果一旦出现异常，程序可以尝试再次使用此方法以重新启动。
+        /// 此方法中会重置整个 Rafy 环境。这样可以保证各插件的注册机制能再次运行。
+        /// 例如，当启动过程中出现异常时，可以重新使用 Startup 来启动应用程序开始全新的启动流程。
         /// </summary>
         protected virtual void PrepareToStartup()
         {
+            PluginTable.DomainLibraries.Unlock();
+            PluginTable.UILibraries.Unlock();
+
             RafyEnvironment.Reset();
             CommonModel.Reset();
             UIModel.Reset();
             WPFCommandNames.Clear();
         }
 
+        /// <summary>
+        /// 初始化应用程序的环境。
+        /// 子类可在此方法中添加所需的插件、设置 RafyEnvironment.Location 等。
+        /// </summary>
         protected virtual void InitEnvironment()
         {
             //如果配置了文化，则修改 UI 文化。否则使用系统默认的文化。
@@ -170,71 +176,6 @@ namespace Rafy.ComponentModel
         /// 初始化必须在初始化期定义的各种元数据。
         /// </summary>
         protected virtual void CompileMeta() { }
-
-        /// <summary>
-        /// 组合所有的组件。
-        /// </summary>
-        protected virtual void Compose()
-        {
-            ComposeObjectContainer();
-        }
-
-        #region ComposeObjectContainer
-
-        /// <summary>
-        /// 组合所有组件中标记了 ContainerItemAttribute 的类型到 IOC 容器中。
-        /// </summary>
-        protected virtual void ComposeObjectContainer()
-        {
-            //处理 ContainerItemAttribute
-            var iocContainer = Composer.ObjectContainer;
-            var instancesRegistry = new List<InstanceContainerItem>(100);
-            foreach (var plugin in RafyEnvironment.GetAllPlugins())
-            {
-                var types = plugin.Assembly.GetTypes();
-                for (int i = 0, c = types.Length; i < c; i++)
-                {
-                    var type = types[i];
-                    if (!type.IsAbstract && !type.IsGenericTypeDefinition)
-                    {
-                        var attriList = type.GetCustomAttributes(typeof(ContainerItemAttribute), false);
-                        if (attriList.Length > 0)
-                        {
-                            foreach (ContainerItemAttribute attri in attriList)
-                            {
-                                if (attri.RegisterWay == RegisterWay.Type)
-                                {
-                                    iocContainer.RegisterType(attri.ProvideFor, type, attri.Key);
-                                }
-                                else
-                                {
-                                    instancesRegistry.Add(new InstanceContainerItem
-                                    {
-                                        RegisterType = type,
-                                        Attribute = attri
-                                    });
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            //实例的注册放到最后，而且按照优先级进行排序后，再注册。
-            instancesRegistry = instancesRegistry.OrderBy(i => i.Attribute.Priority).ToList();
-            foreach (var item in instancesRegistry)
-            {
-                var instance = iocContainer.Resolve(item.RegisterType);
-                iocContainer.RegisterInstance(item.Attribute.ProvideFor, instance, item.Attribute.Key);
-            }
-        }
-
-        private class InstanceContainerItem
-        {
-            public Type RegisterType;
-            public ContainerItemAttribute Attribute;
-        }
-
-        #endregion
 
         /// <summary>
         /// 子类重写此方法实现启动主逻辑。

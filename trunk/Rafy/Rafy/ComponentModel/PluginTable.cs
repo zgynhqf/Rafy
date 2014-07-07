@@ -97,6 +97,11 @@ namespace Rafy.ComponentModel
             this._locked = true;
         }
 
+        internal void Unlock()
+        {
+            this._locked = false;
+        }
+
         private void EnsureWritable()
         {
             if (this._locked) throw new InvalidOperationException("集合不可再变更。");

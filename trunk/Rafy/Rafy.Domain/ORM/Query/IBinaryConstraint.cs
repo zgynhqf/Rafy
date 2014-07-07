@@ -39,13 +39,4 @@ namespace Rafy.Domain.ORM.Query
         /// </summary>
         IConstraint Right { get; set; }
     }
-
-    /// <summary>
-    /// 二位运算类型
-    /// </summary>
-    public enum BinaryOperator
-    {
-        And = SqlBinaryConstraintType.And,
-        Or = SqlBinaryConstraintType.Or
-    }
 }

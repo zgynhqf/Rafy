@@ -43,12 +43,12 @@ namespace Rafy.ManagedProperty
         /// </summary>
         /// <param name="property">托管属性</param>
         /// <param name="owner">该属性对应的具体类型。
-        /// 这个具体的类型必须是属性的拥有类型或者它的子类型。
-        /// </param>
+        /// 这个具体的类型必须是属性的拥有类型或者它的子类型。如果传入 null，则默认为属性的拥有类型。</param>
+        /// <exception cref="System.ArgumentNullException">property</exception>
         public ConcreteProperty(IManagedProperty property, Type owner)
         {
             if (property == null) throw new ArgumentNullException("property");
-            if (owner == null) throw new ArgumentNullException("concreteType");
+            if (owner == null) owner = property.OwnerType;
 
             this._property = property;
             this._owner = owner;

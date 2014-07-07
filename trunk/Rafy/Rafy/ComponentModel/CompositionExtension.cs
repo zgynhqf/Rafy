@@ -112,13 +112,14 @@ namespace Rafy.ComponentModel
         /// <summary>
         /// 注册类型
         /// </summary>
-        /// <typeparam name="TInterface">The type of the interface.</typeparam>
-        /// <typeparam name="TClass">The type of the class.</typeparam>
+        /// <typeparam name="TFrom">The type of the interface.</typeparam>
+        /// <typeparam name="TTo">The type of the class.</typeparam>
         /// <param name="container">The container.</param>
         /// <param name="key">The key.</param>
-        public static void RegisterType<TInterface, TClass>(this IObjectContainer container, string key = null)
+        public static void RegisterType<TFrom, TTo>(this IObjectContainer container, string key = null)
+            where TTo : TFrom
         {
-            container.RegisterType(typeof(TInterface), typeof(TClass), key);
+            container.RegisterType(typeof(TFrom), typeof(TTo), key);
         }
     }
 }

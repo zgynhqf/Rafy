@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace Rafy.ComponentModel
@@ -24,6 +25,14 @@ namespace Rafy.ComponentModel
     /// </summary>
     public abstract class UIPlugin : IPlugin
     {
+        /// <summary>
+        /// 插件对应的程序集。
+        /// </summary>
+        public Assembly Assembly
+        {
+            get { return this.GetType().Assembly; }
+        }
+
         /// <summary>
         /// 插件的启动级别。
         /// </summary>
