@@ -80,7 +80,7 @@ namespace Rafy.Domain
     /// </example>
     /// </summary>
     [Serializable]
-    public class CommonQueryCriteria : Criteria, IEnumerable
+    public class CommonQueryCriteria : Criteria, IEnumerable<PropertyMatchCollection>, IEnumerable
     {
         private List<PropertyMatchCollection> _groups = new List<PropertyMatchCollection>();
 
@@ -181,6 +181,11 @@ namespace Rafy.Domain
         }
 
         IEnumerator IEnumerable.GetEnumerator()
+        {
+            return _groups.GetEnumerator();
+        }
+
+        IEnumerator<PropertyMatchCollection> IEnumerable<PropertyMatchCollection>.GetEnumerator()
         {
             return _groups.GetEnumerator();
         }
