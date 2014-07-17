@@ -80,9 +80,9 @@ namespace Rafy.Domain
     /// </example>
     /// </summary>
     [Serializable]
-    public class CommonQueryCriteria : Criteria, IEnumerable<PropertyMatchCollection>, IEnumerable
+    public class CommonQueryCriteria : Criteria, IEnumerable<PropertyMatchGroup>, IEnumerable
     {
-        private List<PropertyMatchCollection> _groups = new List<PropertyMatchCollection>();
+        private List<PropertyMatchGroup> _groups = new List<PropertyMatchGroup>();
 
         #region 构造器
 
@@ -110,7 +110,7 @@ namespace Rafy.Domain
         /// <summary>
         /// 所有进行 Or 连接查询的组。每个组中的属性使用 And 进行连接。
         /// </summary>
-        internal IList<PropertyMatchCollection> Groups
+        internal IList<PropertyMatchGroup> Groups
         {
             get { return _groups; }
         }
@@ -142,7 +142,7 @@ namespace Rafy.Domain
         /// 添加一个 And 连接的属性匹配组。
         /// </summary>
         /// <param name="group"></param>
-        public void Add(PropertyMatchCollection group)
+        public void Add(PropertyMatchGroup group)
         {
             _groups.Add(group);
         }
@@ -168,14 +168,14 @@ namespace Rafy.Domain
             this.Add(new PropertyMatch(property, op, value));
         }
 
-        private PropertyMatchCollection FindOrCreateGroup()
+        private PropertyMatchGroup FindOrCreateGroup()
         {
             if (_groups.Count > 0)
             {
                 return _groups[_groups.Count - 1];
             }
 
-            var group = new PropertyMatchCollection();
+            var group = new PropertyMatchGroup();
             _groups.Add(group);
             return group;
         }
@@ -185,7 +185,7 @@ namespace Rafy.Domain
             return _groups.GetEnumerator();
         }
 
-        IEnumerator<PropertyMatchCollection> IEnumerable<PropertyMatchCollection>.GetEnumerator()
+        IEnumerator<PropertyMatchGroup> IEnumerable<PropertyMatchGroup>.GetEnumerator()
         {
             return _groups.GetEnumerator();
         }
@@ -212,24 +212,27 @@ namespace Rafy.Domain
         //}
     }
 
+    /// <summary>
+    /// 一组属性匹配。
+    /// </summary>
     [Serializable]
-    public class PropertyMatchCollection : Collection<PropertyMatch>
+    public class PropertyMatchGroup : Collection<PropertyMatch>
     {
         #region 构造器
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PropertyMatchCollection"/> class.
+        /// Initializes a new instance of the <see cref="PropertyMatchGroup"/> class.
         /// </summary>
-        public PropertyMatchCollection()
+        public PropertyMatchGroup()
         {
             this.Concat = BinaryOperator.And;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PropertyMatchCollection"/> class.
+        /// Initializes a new instance of the <see cref="PropertyMatchGroup"/> class.
         /// </summary>
         /// <param name="concat">属性条件之间的连接符。</param>
-        public PropertyMatchCollection(BinaryOperator concat)
+        public PropertyMatchGroup(BinaryOperator concat)
         {
             this.Concat = concat;
         }
