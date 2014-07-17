@@ -227,7 +227,7 @@ namespace UT
 
         public TestUserList GetByNameOrAge(string name, int age)
         {
-            return this.FetchList(new CommonQueryCriteria
+            return this.FetchList(new CommonQueryCriteria(BinaryOperator.Or)
             {
                 new PropertyMatchGroup
                 {
