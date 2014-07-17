@@ -229,11 +229,11 @@ namespace UT
         {
             return this.FetchList(new CommonQueryCriteria
             {
-                new PropertyMatchCollection
+                new PropertyMatchGroup
                 {
                     new PropertyMatch(TestUser.NameProperty, name)
                 },
-                new PropertyMatchCollection
+                new PropertyMatchGroup
                 {
                     new PropertyMatch(TestUser.AgeProperty, age)
                 }

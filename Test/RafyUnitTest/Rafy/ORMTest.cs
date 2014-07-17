@@ -250,11 +250,11 @@ namespace RafyUnitTest
 
                 var list = repo.GetBy(new CommonQueryCriteria
                 {
-                    new PropertyMatchCollection
+                    new PropertyMatchGroup
                     {
                         new PropertyMatch(TestUser.NameProperty, "3")
                     },
-                    new PropertyMatchCollection
+                    new PropertyMatchGroup
                     {
                         new PropertyMatch(TestUser.AgeProperty, 2)
                     }
