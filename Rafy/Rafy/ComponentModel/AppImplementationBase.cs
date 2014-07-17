@@ -184,88 +184,155 @@ namespace Rafy.ComponentModel
 
         #region IServerApp 事件
 
+        /// <summary>
+        /// 所有实体元数据初始化完毕，包括实体元数据之间的关系。
+        /// </summary>
         public event EventHandler AllPluginsIntialized;
 
+        /// <summary>
+        /// 触发 AllPluginsIntialized 事件。
+        /// </summary>
         protected virtual void OnAllPluginsIntialized()
         {
             var handler = this.AllPluginsIntialized;
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// 所有初始化期定义的元数据初始化完成时事件。
+        /// </summary>
         public event EventHandler MetaCompiled;
 
+        /// <summary>
+        /// 触发 MetaCompiled 事件。
+        /// </summary>
         protected virtual void OnMetaCompiled()
         {
             var handler = this.MetaCompiled;
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// 模块的定义先于其它模型的操作。这样可以先设置好模板默认的按钮。
+        /// </summary>
         public event EventHandler ModuleOperations;
 
+        /// <summary>
+        /// 触发 ModuleOperations 事件。
+        /// </summary>
         protected virtual void RaiseModuleOpertions()
         {
             var handler = this.ModuleOperations;
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// 模块的定义完成
+        /// </summary>
         public event EventHandler ModuleOperationsCompleted;
 
+        /// <summary>
+        /// 触发 ModuleOperationsCompleted 事件。
+        /// </summary>
         protected virtual void OnModuleOpertionsCompleted()
         {
             var handler = this.ModuleOperationsCompleted;
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// 所有初始化工作完成
+        /// </summary>
         public event EventHandler AppMetaCompleted;
 
+        /// <summary>
+        /// 触发 AppMetaCompleted 事件。
+        /// </summary>
         protected virtual void OnAppMetaCompleted()
         {
             var handler = this.AppMetaCompleted;
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// 组件的组合操作。
+        /// 组合可以在此事件中添加自己的组合逻辑，例如 A 订阅 B 的某个事件。
+        /// </summary>
         public event EventHandler ComposeOperations;
 
+        /// <summary>
+        /// 触发 ComposeOperations 事件。
+        /// </summary>
         protected virtual void RaiseComposeOperations()
         {
             var handler = this.ComposeOperations;
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// 所有组件组合完毕。
+        /// </summary>
         public event EventHandler Composed;
 
+        /// <summary>
+        /// 触发 Composed 事件。
+        /// </summary>
         protected virtual void OnComposed()
         {
             var handler = this.Composed;
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// 应用程序运行时行为开始。
+        /// </summary>
         public event EventHandler RuntimeStarting;
 
+        /// <summary>
+        /// 触发 RuntimeStarting 事件。
+        /// </summary>
         protected virtual void OnRuntimeStarting()
         {
             var handler = this.RuntimeStarting;
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// 主过程开始前事件。
+        /// </summary>
         public event EventHandler MainProcessStarting;
 
+        /// <summary>
+        /// 触发 MainProcessStarting 事件。
+        /// </summary>
         protected virtual void OnMainProcessStarting()
         {
             var handler = this.MainProcessStarting;
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// 应用程序完全退出
+        /// </summary>
         public event EventHandler Exit;
 
+        /// <summary>
+        /// 触发 Exit 事件。
+        /// </summary>
         protected virtual void OnExit()
         {
             var handler = this.Exit;
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// AppStartup 完毕
+        /// </summary>
         public event EventHandler StartupCompleted;
 
+        /// <summary>
+        /// 触发 StartupCompleted 事件。
+        /// </summary>
         protected virtual void OnStartupCompleted()
         {
             var handler = this.StartupCompleted;
