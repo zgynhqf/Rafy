@@ -34,7 +34,7 @@ namespace Rafy.ComponentModel
         }
 
         /// <summary>
-        /// 插件的启动级别。
+        /// 插件的启动级别。默认值为 <see cref="Rafy.ComponentModel.ReuseLevel.Main"/>。
         /// </summary>
         protected virtual int SetupLevel
         {
