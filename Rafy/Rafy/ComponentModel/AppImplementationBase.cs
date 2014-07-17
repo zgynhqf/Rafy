@@ -125,7 +125,7 @@ namespace Rafy.ComponentModel
         /// <summary>
         /// 初始化所有Plugins
         /// </summary>
-        protected void InitAllPlugins()
+        private void InitAllPlugins()
         {
             //先初始化实体插件
             RafyEnvironment.StartupDomainPlugins();
