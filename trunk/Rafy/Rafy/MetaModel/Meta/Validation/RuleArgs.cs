@@ -27,22 +27,25 @@ namespace Rafy.MetaModel
     /// 
     /// 该类继承自动态类型，意味着定义时可动态定义属性。
     /// </summary>
-    public sealed class RuleArgs : Extendable
+    public sealed class RuleArgs
     {
+        internal RuleArgs(IRule rule)
+        {
+            this.Rule = rule;
+        }
+
+        /// <summary>
+        /// 对应的规则。
+        /// </summary>
+        public IRule Rule { get; private set; }
+
         /// <summary>
         /// 如果这是某个属性关联的规则参数，则这个属性表示关联的托管属性
         /// </summary>
-        public IManagedProperty Property { get; internal set; }
-
-        /// <summary>
-        /// Gets or sets the severity of the broken rule.
-        /// </summary>
-        /// <value>The severity of the broken rule.</value>
-        /// <remarks>
-        /// Setting this property only has an effect if
-        /// the rule method returns <see langword="false" />.
-        /// </remarks>
-        public RuleLevel Level { get; internal set; }
+        public IManagedProperty Property
+        {
+            get { return this.Rule.Property; }
+        }
 
         /// <summary>
         /// 返回是否执行打破了规则。
