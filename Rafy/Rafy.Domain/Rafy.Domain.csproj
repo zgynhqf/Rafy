@@ -133,6 +133,7 @@
     <Compile Include="Entity\MP\PropertyDefailtValues.cs" />
     <Compile Include="Entity\Serialization\SerializationEntityGraph.cs" />
     <Compile Include="Entity\ValidationHelper.cs" />
+    <Compile Include="Validation\CommonRules\HandlerRule.cs" />
     <Compile Include="Validation\CommonRules\NumberRangeRule.cs" />
     <Compile Include="Validation\CommonRules\PositiveNumberRule.cs" />
     <Compile Include="Validation\CommonRules\NotExistsRule.cs" />
@@ -365,8 +366,7 @@
     <Compile Include="ORM\Sql\SqlServer\SqlTable.cs" />
     <Compile Include="Validation\BrokenRule.cs" />
     <Compile Include="Validation\BrokenRulesCollection.cs" />
-    <Compile Include="Validation\IRuleMethod.cs" />
-    <Compile Include="Validation\RuleMethod.cs" />
+    <Compile Include="Validation\Rule.cs" />
     <Compile Include="Validation\RulesContainer.cs" />
     <Compile Include="Validation\ValidationException.cs" />
     <Compile Include="Validation\ValidationRulesManager.cs" />

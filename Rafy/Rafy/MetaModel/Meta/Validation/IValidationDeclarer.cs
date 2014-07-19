@@ -32,11 +32,10 @@ namespace Rafy.MetaModel
         /// 为整个实体添加一个业务验证规则。
         /// </summary>
         /// <param name="handler">The handler.</param>
-        /// <param name="parameters">The parameters.</param>
         /// <param name="level">The level.</param>
         /// <param name="priority">The priority.</param>
         void AddRule(RuleHandler handler,
-           object parameters = null, RuleLevel level = RuleLevel.Error, int priority = 0
+           RuleLevel level = RuleLevel.Error, int priority = 0
            );
 
         /// <summary>
@@ -44,11 +43,10 @@ namespace Rafy.MetaModel
         /// </summary>
         /// <param name="property">The property.</param>
         /// <param name="handler">The handler.</param>
-        /// <param name="parameters">The parameters.</param>
         /// <param name="level">The level.</param>
         /// <param name="priority">The priority.</param>
         void AddRule(IManagedProperty property, RuleHandler handler,
-           object parameters = null, RuleLevel level = RuleLevel.Error, int priority = 0
+           RuleLevel level = RuleLevel.Error, int priority = 0
            );
 
         /// <summary>
