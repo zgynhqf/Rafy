@@ -141,7 +141,7 @@ namespace JXC
     {
         protected override void AddValidations(IValidationDeclarer rules)
         {
-            rules.AddRule(StorageInBill.CodeProperty, CommonRules.Required);
+            rules.AddRule(StorageInBill.CodeProperty, RequiredRule.Instance);
             rules.AddRule((e, args) =>
             {
                 var po = e as StorageInBill;

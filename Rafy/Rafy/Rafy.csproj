@@ -77,6 +77,7 @@
     <Compile Include="Domain\EntityConvention.cs" />
     <Compile Include="Domain\EntityMatrix.cs" />
     <Compile Include="Domain\RepositoryForAttribute.cs" />
+    <Compile Include="MetaModel\Meta\Validation\IValidationRule.cs" />
     <Compile Include="MetaModel\View\WPFEditorNames.cs" />
     <Compile Include="Utils\DateTimePart.cs" />
     <Compile Include="Utils\EnumViewModel.cs" />

@@ -212,6 +212,16 @@ namespace Rafy.Domain
         }
 
         /// <summary>
+        /// 通过 CommonQueryCriteria 来查询实体的个数。
+        /// </summary>
+        /// <param name="criteria">常用查询条件。</param>
+        /// <returns></returns>
+        public int CountBy(CommonQueryCriteria criteria)
+        {
+            return this.DoCountBy(criteria);
+        }
+
+        /// <summary>
         /// 递归查找所有树型子
         /// </summary>
         /// <param name="treeIndex"></param>
@@ -531,6 +541,16 @@ namespace Rafy.Domain
         protected virtual EntityList DoGetBy(CommonQueryCriteria criteria)
         {
             return this.FetchList(criteria);
+        }
+
+        /// <summary>
+        /// 通过 CommonQueryCriteria 来查询实体个数。
+        /// </summary>
+        /// <param name="criteria">常用查询条件。</param>
+        /// <returns></returns>
+        protected virtual int DoCountBy(CommonQueryCriteria criteria)
+        {
+            return this.FetchCount(criteria);
         }
 
         /// <summary>

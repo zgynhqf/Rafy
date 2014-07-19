@@ -136,6 +136,14 @@ namespace Rafy.Domain
         /// </summary>
         public bool OrderByAscending { get; set; }
 
+        /// <summary>
+        /// 返回当前已经拥有的组的个数。
+        /// </summary>
+        public int GroupsCount
+        {
+            get { return _groups.Count; }
+        }
+
         #region 集合初始化器
 
         /// <summary>
@@ -154,6 +162,16 @@ namespace Rafy.Domain
         public void Add(PropertyMatch propertyMatch)
         {
             _groups.Add(new PropertyMatchGroup() { propertyMatch });
+        }
+
+        /// <summary>
+        /// 添加一个属性匹配条件到本组中。使用 Equal 进行对比。
+        /// </summary>
+        /// <param name="property">The property.</param>
+        /// <param name="value">The value.</param>
+        public void Add(IManagedProperty property, object value)
+        {
+            this.Add(property, PropertyOperator.Equal, value);
         }
 
         /// <summary>
@@ -280,7 +298,17 @@ namespace Rafy.Domain
         public BinaryOperator Concat { get; set; }
 
         /// <summary>
-        /// 添加一个属性匹配条件到最后一个组中。
+        /// 添加一个属性匹配条件到本组中。使用 Equal 进行对比。
+        /// </summary>
+        /// <param name="property">The property.</param>
+        /// <param name="value">The value.</param>
+        public void Add(IManagedProperty property, object value)
+        {
+            this.Add(property, PropertyOperator.Equal, value);
+        }
+
+        /// <summary>
+        /// 添加一个属性匹配条件到本组中。
         /// </summary>
         /// <param name="property">The property.</param>
         /// <param name="op">The op.</param>
@@ -315,7 +343,7 @@ namespace Rafy.Domain
         public PropertyMatch(string property, PropertyOperator op, object value)
         {
             this.PropertyName = property;
-            this.Operator = value is string ? PropertyOperator.Contains : PropertyOperator.Equal;
+            this.Operator = op;
             this.Value = value;
         }
 

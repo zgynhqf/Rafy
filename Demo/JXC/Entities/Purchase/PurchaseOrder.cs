@@ -254,7 +254,7 @@ namespace JXC
     {
         protected override void AddValidations(IValidationDeclarer rules)
         {
-            rules.AddRule(PurchaseOrder.CodeProperty, CommonRules.Required);
+            rules.AddRule(PurchaseOrder.CodeProperty, RequiredRule.Instance);
             rules.AddRule((e, args) =>
             {
                 var po = e as PurchaseOrder;

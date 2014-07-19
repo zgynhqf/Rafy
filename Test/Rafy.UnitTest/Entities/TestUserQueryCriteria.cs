@@ -55,10 +55,10 @@ namespace UT
     {
         protected override void AddValidations(IValidationDeclarer rules)
         {
-            rules.AddRule(TestUserQueryCriteria.NameProperty, CommonRules.Required);
+            rules.AddRule(TestUserQueryCriteria.NameProperty, RequiredRule.Instance);
 
             //测试规则的清空。
-            rules.AddRule(TestUserQueryCriteria.CodeProperty, CommonRules.Required);
+            rules.AddRule(TestUserQueryCriteria.CodeProperty, RequiredRule.Instance);
             rules.ClearRules(TestUserQueryCriteria.CodeProperty);
         }
     }

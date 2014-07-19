@@ -104,6 +104,13 @@ namespace Rafy.Domain
         int CountTreeRoots();
 
         /// <summary>
+        /// 通过 CommonQueryCriteria 来查询实体的个数。
+        /// </summary>
+        /// <param name="criteria">常用查询条件。</param>
+        /// <returns></returns>
+        int CountBy(CommonQueryCriteria criteria);
+
+        /// <summary>
         /// 优先使用缓存中的数据来通过 Id 获取指定的实体对象
         /// 
         /// 如果该实体的缓存没有打开，则本方法会直接调用 GetById 并返回结果。

@@ -71,7 +71,7 @@ namespace Rafy.MetaModel
             return "TypeRules";
         }
 
-        #region DisplayProperty
+        #region Display
 
         private static EntityViewMeta _lastViewMeta;
 
@@ -82,11 +82,22 @@ namespace Rafy.MetaModel
         /// <returns></returns>
         public string DisplayProperty()
         {
+            return Display(this.Property);
+        }
+
+        /// <summary>
+        /// 如果当前 Rafy 运行时环境中，已经拥有 UI 层界面的元数据，则获取属性对应的的显示名称，并进行翻译后返回。
+        /// 否则，直接返回以下格式的字符串，方便替换：[属性名称]。（服务端一般都没有 UI 层元数据。）
+        /// </summary>
+        /// <param name="property">The property.</param>
+        /// <returns></returns>
+        public static string Display(IManagedProperty property)
+        {
             if (RafyEnvironment.Location.IsWebUI || RafyEnvironment.Location.IsWPFUI)
             {
                 //以线程安全的方式获取最后一次缓存的 View。
                 EntityViewMeta safeView = _lastViewMeta;
-                var ownerType = this.Property.OwnerType;
+                var ownerType = property.OwnerType;
                 if (safeView == null || safeView.EntityType != ownerType)
                 {
                     safeView = UIModel.Views.CreateBaseView(ownerType);
@@ -95,13 +106,13 @@ namespace Rafy.MetaModel
 
                 string res = null;
 
-                var pvm = safeView.Property(this.Property);
+                var pvm = safeView.Property(property);
                 if (pvm != null) res = pvm.Label;
 
                 //如果是引用 Id 属性没有配置 Label，则尝试使用它对应的引用实体属性的 Label 来显示。
                 if (string.IsNullOrEmpty(res))
                 {
-                    var refMP = this.Property as IRefIdProperty;
+                    var refMP = property as IRefIdProperty;
                     if (refMP != null)
                     {
                         pvm = safeView.Property(refMP.RefEntityProperty);
@@ -115,7 +126,36 @@ namespace Rafy.MetaModel
                 }
             }
 
-            return '[' + this.Property.Name + ']';
+            return '[' + property.Name + ']';
+        }
+
+        /// <summary>
+        /// 如果当前 Rafy 运行时环境中，已经拥有 UI 层界面的元数据，则获取实体对应的的显示名称，并进行翻译后返回。
+        /// 否则，直接返回以下格式的字符串，方便替换：[实体类型名称]。（服务端一般都没有 UI 层元数据。）
+        /// </summary>
+        /// <param name="entityType">Type of the entity.</param>
+        /// <returns></returns>
+        public static string Display(Type entityType)
+        {
+            if (RafyEnvironment.Location.IsWebUI || RafyEnvironment.Location.IsWPFUI)
+            {
+                //以线程安全的方式获取最后一次缓存的 View。
+                EntityViewMeta safeView = _lastViewMeta;
+                var ownerType = entityType;
+                if (safeView == null || safeView.EntityType != ownerType)
+                {
+                    safeView = UIModel.Views.CreateBaseView(ownerType);
+                    _lastViewMeta = safeView;
+                }
+
+                string res = safeView.Label;
+                if (!string.IsNullOrEmpty(res))
+                {
+                    return res.Translate();
+                }
+            }
+
+            return '[' + entityType.FullName + ']';
         }
 
         #endregion

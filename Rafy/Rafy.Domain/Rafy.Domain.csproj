@@ -133,8 +133,15 @@
     <Compile Include="Entity\MP\PropertyDefailtValues.cs" />
     <Compile Include="Entity\Serialization\SerializationEntityGraph.cs" />
     <Compile Include="Entity\ValidationHelper.cs" />
-    <Compile Include="Entity\Validation\ValidationDeclarer.cs" />
-    <Compile Include="Entity\Validation\Validator.cs" />
+    <Compile Include="Validation\CommonRules\NumberRangeRule.cs" />
+    <Compile Include="Validation\CommonRules\PositiveNumberRule.cs" />
+    <Compile Include="Validation\CommonRules\NotExistsRule.cs" />
+    <Compile Include="Validation\CommonRules\RegexMatchRule.cs" />
+    <Compile Include="Validation\CommonRules\RequiredRule.cs" />
+    <Compile Include="Validation\CommonRules\StringLengthRangeRule.cs" />
+    <Compile Include="Validation\CommonRules\ValidationRule.cs" />
+    <Compile Include="Validation\ValidationDeclarer.cs" />
+    <Compile Include="Validation\Validator.cs" />
     <Compile Include="PropertyOperator.cs" />
     <Compile Include="Utils\EntityListEnumerator.cs" />
     <Compile Include="Utils\zzzIRepository.Generic.cs" />
@@ -244,7 +251,7 @@
     <Compile Include="Entity\EntityList.Csla.cs">
       <DependentUpon>EntityList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Entity\Validation\ITypeValidationsHost.cs" />
+    <Compile Include="Validation\ITypeValidationsHost.cs" />
     <Compile Include="ORM\Sql\SqlCe\SqlCeTable.cs" />
     <Compile Include="ORM\Sql\SqlServer\SqlOraTable.cs" />
     <Compile Include="ORM\ConditionalSql.cs" />
@@ -356,15 +363,13 @@
     <Compile Include="ORM\ORMException.cs" />
     <Compile Include="ORM\DbColumn.cs" />
     <Compile Include="ORM\Sql\SqlServer\SqlTable.cs" />
-    <Compile Include="Entity\Validation\BrokenRule.cs" />
-    <Compile Include="Entity\Validation\BrokenRulesCollection.cs" />
-    <Compile Include="Entity\Validation\CommonRules.cs" />
-    <Compile Include="Entity\Validation\IRuleMethod.cs" />
-    <Compile Include="Entity\Validation\RuleMethod.cs" />
-    <Compile Include="Entity\Validation\RulesContainer.cs" />
-    <Compile Include="Entity\Validation\ValidationException.cs" />
-    <Compile Include="Entity\Validation\zzzValidationRules.cs" />
-    <Compile Include="Entity\Validation\ValidationRulesManager.cs" />
+    <Compile Include="Validation\BrokenRule.cs" />
+    <Compile Include="Validation\BrokenRulesCollection.cs" />
+    <Compile Include="Validation\IRuleMethod.cs" />
+    <Compile Include="Validation\RuleMethod.cs" />
+    <Compile Include="Validation\RulesContainer.cs" />
+    <Compile Include="Validation\ValidationException.cs" />
+    <Compile Include="Validation\ValidationRulesManager.cs" />
     <Compile Include="Service\ContractImplAttribute.cs" />
     <Compile Include="Service\ServiceFactory.cs" />
   </ItemGroup>
@@ -404,7 +409,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Entity\Validation\_ReadMe.txt" />
+    <Content Include="Validation\_ReadMe.txt" />
     <Content Include="EntityRepository\zzzEF\如何加载所有 ORM 配置.txt" />
     <Content Include="ORM\Query\_ReadMe.txt" />
     <Content Include="ORM\Sql\Tree\_ReadMe.txt" />

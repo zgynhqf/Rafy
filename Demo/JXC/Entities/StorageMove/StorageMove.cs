@@ -116,8 +116,8 @@ namespace JXC
     {
         protected override void AddValidations(IValidationDeclarer rules)
         {
-            rules.AddRule(StorageMove.CodeProperty, CommonRules.Required);
-            rules.AddRule(StorageMove.UserProperty, CommonRules.Required);
+            rules.AddRule(StorageMove.CodeProperty, RequiredRule.Instance);
+            rules.AddRule(StorageMove.UserProperty, RequiredRule.Instance);
             rules.AddRule(StorageMove.StorageToProperty, (e, args) =>
             {
                 var move = e as StorageMove;
