@@ -1279,6 +1279,59 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void ET_Validation_PropertyNotExists()
+        {
+            var repo = RF.Concrete<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var user = new Book { Code = "01" };
+                repo.Save(user);
+
+                var user2 = new Book { Code = "01" };
+                var brokenRules = user2.Validate();
+                Assert.AreEqual(brokenRules.Count, 1, "[Code] 的值必须唯一。");
+            }
+        }
+
+        [TestMethod]
+        public void ET_Validation_PropertyNotExists_MultiProperties()
+        {
+            var repo = RF.Concrete<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var user = new Book { Name = "IT秘籍", Author = "胡庆访" };
+                repo.Save(user);
+
+                var user2 = new Book { Name = "IT秘籍", Author = "胡庆访" };
+                var brokenRules = user2.Validate();
+                Assert.AreEqual(brokenRules.Count, 1, "Name 和 Author 的值必须唯一。");
+
+                user2 = new Book { Name = "IT秘籍", Author = "徐丹丹" };
+                brokenRules = user2.Validate();
+                Assert.AreEqual(brokenRules.Count, 0, "Name 和 Author 的值必须唯一。");
+            }
+        }
+
+        [TestMethod]
+        public void ET_Validation_PropertyNotExists_Deleted()
+        {
+            var repo = RF.Concrete<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var user = new Book { Code = "01" };
+                repo.Save(user);
+
+                var user2 = repo.GetById(user.Id);
+                var error = user2.Validate();
+                Assert.AreEqual(error.Count, 0, "刚查询出来的实体可以直接通过 PropertyNotExists 的验证。");
+
+                user2.MarkDeleted();
+                error = user2.Validate();
+                Assert.AreEqual(error.Count, 0, "删除状态的实体可以直接通过 PropertyNotExists 的验证。");
+            }
+        }
+
+        [TestMethod]
         public void ET_Validation_Clear()
         {
             var entity = new TestUserQueryCriteria();

@@ -523,6 +523,17 @@ namespace UT
 
     internal class BookConfig : UnitTestEntityConfig<Book>
     {
+        protected override void AddValidations(IValidationDeclarer rules)
+        {
+            rules.AddRule(Book.CodeProperty, new NotExistsRule());
+
+            //书名和作者名不能同时一致。
+            rules.AddRule(new NotExistsRule
+            {
+                Properties = { Book.AuthorProperty, Book.NameProperty }
+            });
+        }
+
         protected override void ConfigMeta()
         {
             Meta.MapTable().MapAllProperties();

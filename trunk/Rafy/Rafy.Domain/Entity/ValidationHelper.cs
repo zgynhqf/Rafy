@@ -126,7 +126,7 @@ namespace Rafy.Domain.Validation
                 {
                     if (!(p as IRefIdProperty).Nullable)
                     {
-                        declarer.AddRule(p, CommonRules.Required);
+                        declarer.AddRule(p, RequiredRule.Instance);
                     }
                 }
             }

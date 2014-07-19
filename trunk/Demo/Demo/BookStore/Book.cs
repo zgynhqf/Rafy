@@ -158,11 +158,10 @@ namespace Demo
         protected override void AddValidations(IValidationDeclarer rules)
         {
             //示例属性验证。
-            rules.AddRule(Book.AuthorProperty, CommonRules.Required);
-            rules.AddRule(Book.AuthorProperty, CommonRules.StringMaxLength, new { MaxLength = 3 });
-            rules.AddRule(Book.AmountProperty, CommonRules.MinValue, new { MinValue = 5 });
-            rules.AddRule(Book.AmountProperty, CommonRules.MaxValue, new { MaxValue = 50 });
-            rules.AddRule(Book.PublisherProperty, CommonRules.RegexMatch, new
+            rules.AddRule(Book.AuthorProperty, RequiredRule.Instance);
+            rules.AddRule(Book.AuthorProperty, new StringLengthRangeRule { Max = 3 });
+            rules.AddRule(Book.AmountProperty, new NumberRangeRule { Min = 5, Max = 50 });
+            rules.AddRule(Book.PublisherProperty, new RegexMatchRule
             {
                 Regex = TextFormatter.ReAllChinese,
                 RegexLabel = "全中文"

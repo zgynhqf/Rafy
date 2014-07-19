@@ -154,9 +154,9 @@ namespace FM
     {
         protected override void AddValidations(IValidationDeclarer rules)
         {
-            rules.AddRule(FinanceLog.ReasonProperty, CommonRules.Required);
-            rules.AddRule(FinanceLog.AmountProperty, CommonRules.Positive);
-            rules.AddRule(FinanceLog.UsersProperty, CommonRules.Required);
+            rules.AddRule(FinanceLog.ReasonProperty, RequiredRule.Instance);
+            rules.AddRule(FinanceLog.AmountProperty, PositiveNumberRule.Instance);
+            rules.AddRule(FinanceLog.UsersProperty, RequiredRule.Instance);
         }
 
         protected override void ConfigMeta()

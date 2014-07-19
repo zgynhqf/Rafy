@@ -381,7 +381,7 @@ namespace UT
     {
         protected override void AddValidations(IValidationDeclarer rules)
         {
-            rules.AddRule(TestUser.NotEmptyCodeProperty, CommonRules.Required);
+            rules.AddRule(TestUser.NotEmptyCodeProperty, RequiredRule.Instance);
         }
 
         protected override void ConfigMeta()

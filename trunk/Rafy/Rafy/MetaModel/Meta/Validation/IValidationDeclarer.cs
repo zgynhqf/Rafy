@@ -51,6 +51,26 @@ namespace Rafy.MetaModel
            object parameters = null, RuleLevel level = RuleLevel.Error, int priority = 0
            );
 
+        /// <summary>
+        /// 为整个实体添加一个业务验证规则。
+        /// </summary>
+        /// <param name="rule">The rule.</param>
+        /// <param name="level">The level.</param>
+        /// <param name="priority">The priority.</param>
+        void AddRule(IValidationRule rule,
+            RuleLevel level = RuleLevel.Error, int priority = 0
+           );
+
+        /// <summary>
+        /// 为某个属性添加一个业务验证规则。
+        /// </summary>
+        /// <param name="property">The property.</param>
+        /// <param name="rule">The rule.</param>
+        /// <param name="level">The level.</param>
+        /// <param name="priority">The priority.</param>
+        void AddRule(IManagedProperty property, IValidationRule rule,
+            RuleLevel level = RuleLevel.Error, int priority = 0
+           );
 
         /// <summary>
         /// 清空所有规则。
