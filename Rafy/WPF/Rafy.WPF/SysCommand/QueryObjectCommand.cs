@@ -24,10 +24,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 using Rafy.Domain;
+using Rafy.Domain.Validation;
 using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
 using Rafy.MetaModel.View;
-
 using Rafy.WPF;
 using Rafy.WPF.Controls;
 using Rafy.WPF.Editors;

@@ -13,6 +13,7 @@
 
 using System.Windows;
 using Rafy.Domain;
+using Rafy.Domain.Validation;
 using Rafy.MetaModel;
 using Rafy.MetaModel.View;
 using Rafy.MetaModel.Attributes;

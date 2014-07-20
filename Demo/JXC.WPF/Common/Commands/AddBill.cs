@@ -13,6 +13,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
@@ -22,13 +23,13 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using JXC.WPF.Templates;
 using Rafy;
+using Rafy.Domain;
+using Rafy.Domain.Validation;
 using Rafy.MetaModel.Attributes;
 using Rafy.MetaModel.View;
 using Rafy.WPF;
-using Rafy.WPF.Controls;
 using Rafy.WPF.Command;
-using Rafy.Domain;
-using System.ComponentModel;
+using Rafy.WPF.Controls;
 
 namespace JXC.Commands
 {

@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rafy;
 using Rafy.Domain;
+using Rafy.Domain.Validation;
 using UT;
 
 namespace RafyUnitTest.ClientTest

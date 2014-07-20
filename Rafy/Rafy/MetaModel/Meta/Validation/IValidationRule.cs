@@ -27,6 +27,11 @@ namespace Rafy.MetaModel
     public interface IValidationRule
     {
         /// <summary>
+        /// 此属性指示本规则中是否需要连接数据源。
+        /// </summary>
+        bool ConnectToDataSource { get; }
+
+        /// <summary>
         /// 对某个实体进行验证。
         /// </summary>
         /// <param name="entity">The entity.</param>

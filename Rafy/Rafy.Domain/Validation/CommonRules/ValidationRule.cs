@@ -29,6 +29,14 @@ namespace Rafy.Domain.Validation
     public abstract class ValidationRule : IValidationRule
     {
         /// <summary>
+        /// 子类重写此属性指示本规则中是否需要连接数据仓库。
+        /// </summary>
+        protected virtual bool ConnectToDataSource
+        {
+            get { return false; }
+        }
+
+        /// <summary>
         /// 子类重写此方法实现验证规则逻辑。
         /// 当验证出错时，需要设置 e.BrokenDescription。
         /// </summary>
@@ -63,6 +71,11 @@ namespace Rafy.Domain.Validation
         void IValidationRule.Validate(ManagedPropertyObject entity, RuleArgs e)
         {
             this.Validate(entity as Entity, e);
+        }
+
+        bool IValidationRule.ConnectToDataSource
+        {
+            get { return this.ConnectToDataSource; }
         }
 
         #endregion

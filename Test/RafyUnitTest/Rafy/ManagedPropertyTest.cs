@@ -12,6 +12,7 @@ using Rafy;
 using Rafy.Domain;
 using Rafy.Domain.Caching;
 using Rafy.Domain.ORM.DbMigration;
+using Rafy.Domain.Validation;
 using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.Serialization;
