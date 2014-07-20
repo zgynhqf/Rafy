@@ -27,19 +27,15 @@ namespace Rafy.Domain
     /// </summary>
     internal class ValidationDeclarer : IValidationDeclarer
     {
+        private ValidationRulesManager _rules;
+
         /// <summary>
         /// 获取指定实体类型对应的验证规则声明器。
         /// </summary>
-        /// <param name="entityType"></param>
-        /// <returns></returns>
-        internal static ValidationDeclarer For(Type entityType)
+        internal ValidationDeclarer(Type entityType)
         {
-            return new ValidationDeclarer { EntityType = entityType };
+            this.EntityType = entityType;
         }
-
-        private ValidationRulesManager _rules;
-
-        private ValidationDeclarer() { }
 
         /// <summary>
         /// 对应的实体类型。
