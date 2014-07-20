@@ -20,7 +20,7 @@ namespace Rafy.Domain.Validation
     /// <summary>
     /// Tracks all information for a rule.
     /// </summary>
-    internal class Rule : IRule//, IComparable, IComparable<IRule>
+    internal class Rule : IRule
     {
         private IValidationRule _validationRule;
 
@@ -50,19 +50,5 @@ namespace Rafy.Domain.Validation
         {
             get { return _validationRule; }
         }
-
-        #region IComparable
-
-        //int IComparable.CompareTo(object obj)
-        //{
-        //    return Priority.CompareTo(((IRule)obj).Priority);
-        //}
-
-        //int IComparable<IRule>.CompareTo(IRule other)
-        //{
-        //    return Priority.CompareTo(other.Priority);
-        //}
-
-        #endregion
     }
 }
