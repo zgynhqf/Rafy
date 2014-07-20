@@ -115,7 +115,7 @@ namespace Rafy.Domain.Validation
 
         internal static void InitializeValidations(Type entityType)
         {
-            var declarer = ValidationDeclarer.For(entityType);
+            var declarer = new ValidationDeclarer(entityType);
 
             //为所有不可空的引用属性加上 Required 验证规则。
             var container = ManagedPropertyRepository.Instance.GetTypePropertiesContainer(entityType);
