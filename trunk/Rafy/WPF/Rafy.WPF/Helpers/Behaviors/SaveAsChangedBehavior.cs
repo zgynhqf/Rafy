@@ -17,8 +17,8 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using Rafy.Domain;
+using Rafy.Domain.Validation;
 using Rafy.Domain.Caching;
-
 
 namespace Rafy.WPF.Behaviors
 {

@@ -14,11 +14,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Rafy.WPF.Command;
 using Rafy.Domain;
+using Rafy.Domain.Validation;
+using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.MetaModel.View;
-using Rafy.ManagedProperty;
+using Rafy.WPF.Command;
 
 namespace Rafy.WPF
 {

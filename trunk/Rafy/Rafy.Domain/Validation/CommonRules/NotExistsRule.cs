@@ -19,6 +19,11 @@ namespace Rafy.Domain.Validation
             this.Properties = new List<IProperty>();
         }
 
+        protected override bool ConnectToDataSource
+        {
+            get { return true; }
+        }
+
         /// <summary>
         /// 可以设置多个属性进行验证。
         /// </summary>

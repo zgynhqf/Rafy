@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-2.31.2442
+2.31.2445
     ★重要、添加接口
         添加 Rafy.ComponentModel.UnityAdapter 插件。
         IOC 在注册单一实例时，可以通过该实例的类型来完成。
@@ -18,6 +18,8 @@
         ValidationRule
             PropertyNotExistsRule。
             删除 CommonRules，全部替换为 ValidationRule 的子类。
+            添加 ValidationRule.ConnectToDataSource 属性。
+            为 Validate 方法添加 ValidatorActions 参数。
     内部修改
         DbMigration
         修改 CommonQueryCriteria 中 Add 方法的逻辑。

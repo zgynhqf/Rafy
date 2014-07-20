@@ -19,6 +19,7 @@ using System.Text;
 using System.Windows.Controls;
 using System.Windows.Data;
 using Rafy.Domain;
+using Rafy.Domain.Validation;
 using Rafy.ManagedProperty;
 
 namespace Rafy.WPF
@@ -28,11 +29,20 @@ namespace Rafy.WPF
     /// 
     /// 使用本规则，需要在 Binding.Path 中添加 ManagedProperty 作为参数。
     /// </summary>
-    public class ManagedProeprtyValidationRule : ValidationRule
+    public class ManagedProeprtyValidationRule : System.Windows.Controls.ValidationRule
     {
         public static readonly ManagedProeprtyValidationRule Instance = new ManagedProeprtyValidationRule();
 
-        private ManagedProeprtyValidationRule() : base(ValidationStep.UpdatedValue, true) { }
+        private ManagedProeprtyValidationRule()
+            : base(ValidationStep.UpdatedValue, true)
+        {
+            this.ValidatorActions = ValidatorActions.IgnoreDataSourceValidations;
+        }
+
+        /// <summary>
+        /// 默认值为 ValidatorActions.IgnoreDataSourceValidations。
+        /// </summary>
+        public ValidatorActions ValidatorActions { get; set; }
 
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
@@ -46,7 +56,7 @@ namespace Rafy.WPF
                         .FirstOrDefault(p => p is IManagedProperty) as IManagedProperty;
                     if (mp != null)
                     {
-                        var broken = entity.Validate(mp);
+                        var broken = entity.Validate(mp, this.ValidatorActions);
                         if (broken.Count > 0)
                         {
                             return new ValidationResult(false, broken.ToString());

@@ -11,14 +11,15 @@
  * 
 *******************************************************/
 
+using System;
 using System.Linq;
 using Rafy;
 using Rafy.Domain;
+using Rafy.Domain.Validation;
 using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
 using Rafy.MetaModel.View;
 using Rafy.WPF;
-using System;
 
 namespace Rafy.WPF.Command
 {
