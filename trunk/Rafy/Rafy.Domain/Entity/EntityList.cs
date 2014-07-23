@@ -240,7 +240,7 @@ namespace Rafy.Domain
             {
                 (item as ITreeComponent).EachNode(i =>
                 {
-                    i.RevertDeleted();
+                    i.RevertDeletedStatus();
                     return false;
                 });
 
@@ -265,7 +265,7 @@ namespace Rafy.Domain
             {
                 (item as ITreeComponent).EachNode(i =>
                 {
-                    i.MarkDeleted();
+                    i.PersistenceStatus = PersistenceStatus.Deleted;
                     return false;
                 });
 

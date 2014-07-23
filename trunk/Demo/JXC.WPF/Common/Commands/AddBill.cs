@@ -99,7 +99,7 @@ namespace JXC.Commands
                             this.OnServiceInvoking(detailView, e);
                             if (e.Cancel) return;
 
-                            tmpEntity.MarkNew();
+                            tmpEntity.PersistenceStatus = PersistenceStatus.New;
 
                             this.Service.Item = tmpEntity;
                             this.Service.Invoke();

@@ -86,7 +86,7 @@ namespace Rafy.Web.EntityDataPortal
                 foreach (JObject item in jsonList)
                 {
                     var e = this.Repository.New();
-                    e.MarkUnchanged();
+                    e.PersistenceStatus = PersistenceStatus.Unchanged;
 
                     this._setter.SetEntity(e, item);
 

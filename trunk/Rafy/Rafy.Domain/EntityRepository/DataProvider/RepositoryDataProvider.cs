@@ -343,7 +343,7 @@ namespace Rafy.Domain
             for (int i = 0, c = mergedDeletedList.Count; i < c; i++)
             {
                 var item = mergedDeletedList[i];
-                item.MarkDeleted();
+                item.PersistenceStatus = PersistenceStatus.Deleted;
                 this.SubmitItem(item, false, false);
             }
 
@@ -405,7 +405,7 @@ namespace Rafy.Domain
             {
                 case SubmitAction.Delete:
                     //在删除后，标记对象的状态到“新对象”。
-                    entity.MarkNew();
+                    entity.PersistenceStatus = PersistenceStatus.New;
                     break;
                 case SubmitAction.Update:
                 case SubmitAction.Insert:
@@ -455,21 +455,17 @@ namespace Rafy.Domain
 
         private static SubmitAction GetAction(Entity entity)
         {
-            if (entity.IsDeleted)
+            switch (entity.PersistenceStatus)
             {
-                return SubmitAction.Delete;
-            }
-            else if (entity.IsNew)
-            {
-                return SubmitAction.Insert;
-            }
-            else if (entity.IsSelfDirty)
-            {
-                return SubmitAction.Update;
-            }
-            else
-            {
-                return SubmitAction.ChildrenOnly;
+                case PersistenceStatus.Deleted:
+                    return SubmitAction.Delete;
+                case PersistenceStatus.New:
+                    return SubmitAction.Insert;
+                case PersistenceStatus.Modified:
+                    return SubmitAction.Update;
+                case PersistenceStatus.Unchanged:
+                default:
+                    return SubmitAction.ChildrenOnly;
             }
         }
 
@@ -674,7 +670,7 @@ namespace Rafy.Domain
         //    for (int i = 0, c = treeChildren.Count; i < c; i++)
         //    {
         //        var treeChild = treeChildren[i];
-        //        treeChild.MarkDeleted();
+        //        treeChild.PersistenceStatus = PersistenceStatus.Deleted;
 
         //        this.SubmitChild(treeChild, true);
         //    }

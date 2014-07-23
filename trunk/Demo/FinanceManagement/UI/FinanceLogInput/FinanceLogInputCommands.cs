@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows;
 using Rafy;
 using Rafy.Domain;
+using Rafy.Domain.Validation;
 using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
 using Rafy.MetaModel.View;
@@ -39,7 +40,7 @@ namespace FM.Commands
 
             App.MessageBox.Show("添加成功。");
 
-            log.MarkNew();
+            log.PersistenceStatus = PersistenceStatus.New;
             log.Amount = 0;
 
             //定位焦点到数量上

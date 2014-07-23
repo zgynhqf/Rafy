@@ -710,7 +710,7 @@ namespace Rafy.Domain.ORM
         {
             var entity = Entity.New(this._meta.EntityType);
 
-            entity.MarkUnchanged();
+            entity.PersistenceStatus = PersistenceStatus.Unchanged;
 
             return entity;
         }

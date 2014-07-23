@@ -103,7 +103,7 @@ namespace JXC
     //        //}
 
     //        //var order = RF.Create<PurchaseOrder>().GetById(orderId);
-    //        //order.MarkDeleted();
+    //        //order.PersistenceStatus = PersistenceStatus.Deleted;
     //        //RF.Save(order);
 
     //        return true;

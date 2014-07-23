@@ -56,7 +56,7 @@ namespace Rafy.Domain
                 {
                     //利用反射创建对象。
                     result = this._repository.New();
-                    result.MarkUnchanged();
+                    result.PersistenceStatus = PersistenceStatus.Unchanged;
 
                     foreach (IColumn column in tableInfo.Columns)
                     {

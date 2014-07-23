@@ -81,11 +81,11 @@ namespace Rafy.Web.EntityDataPortal
             //最后再清空节点的 IsNew 状态，使得节点在添加它的子节点时，TreeChildren 集合不会执行懒加载。
             if (newEntityMark == null)
             {
-                e.MarkUnchanged();
+                e.PersistenceStatus = PersistenceStatus.Unchanged;
 
                 //暂时是把所有的实体都标记为需要删除。
                 //未来可以从客户端传输一个 isSelfDirty 的属性过来，有这个属性才标记、更新。
-                e.MarkSelfDirty();
+                e.MarkModifiedIfUnchanged();
             }
         }
 

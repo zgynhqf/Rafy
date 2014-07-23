@@ -1092,7 +1092,7 @@ namespace Rafy.Domain
         Entity IRepositoryInternal.ConvertRow(Entity row)
         {
             var entity = Entity.New(row.GetType());
-            entity.MarkUnchanged();
+            entity.PersistenceStatus = PersistenceStatus.Unchanged;
 
             //返回的子对象的属性只是简单的完全Copy参数data的数据。
             entity.Clone(row, CloneOptions.ReadDbRow());

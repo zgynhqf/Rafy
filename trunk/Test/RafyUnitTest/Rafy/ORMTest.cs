@@ -78,7 +78,7 @@ namespace RafyUnitTest
 
                 using (RF.EnterEntityContext())
                 {
-                    user.MarkSelfDirty();
+                    user.MarkModifiedIfUnchanged();
                     repo.Save(user);
 
                     var user2 = repo.GetById(user.Id);
@@ -252,7 +252,7 @@ namespace RafyUnitTest
                 {
                     new PropertyMatchGroup
                     {
-                        new PropertyMatch(TestUser.NameProperty, "3")
+                        new PropertyMatch(TestUser.NameProperty, PropertyOperator.Contains, "3")
                     },
                     new PropertyMatchGroup
                     {
