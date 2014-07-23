@@ -242,7 +242,7 @@ namespace Rafy.Domain
                         {
                             var cloned = repository.New();
                             cloned.Clone(e, cloneOptions);
-                            cloned.MarkUnchanged();
+                            cloned.PersistenceStatus = PersistenceStatus.Unchanged;
 
                             oldList.Add(cloned);
                             return false;

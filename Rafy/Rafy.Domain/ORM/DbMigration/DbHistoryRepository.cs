@@ -85,7 +85,7 @@ namespace Rafy.Domain.ORM.DbMigration
         {
             var item = history.DataObject.CastTo<DbMigrationHistory>();
 
-            item.MarkDeleted();
+            item.PersistenceStatus = PersistenceStatus.Deleted;
 
             try
             {

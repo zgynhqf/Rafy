@@ -200,7 +200,7 @@ namespace Rafy.Domain
 
                 this.MemoryClone(row, entity);
 
-                entity.MarkUnchanged();
+                entity.PersistenceStatus = PersistenceStatus.Unchanged;
 
                 return entity;
 

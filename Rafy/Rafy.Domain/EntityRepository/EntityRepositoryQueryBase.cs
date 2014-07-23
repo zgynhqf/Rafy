@@ -265,7 +265,7 @@ namespace Rafy.Domain
             {
                 Entity item = allEntities[i];
 
-                item.MarkUnchanged();
+                item.PersistenceStatus = PersistenceStatus.Unchanged;
 
                 //由于 OnDbLoaded 中可能会使用到关系，导致再次进行数据访问，所以不能放在 Reader 中。
                 this.Repo.RdbDataProvider.NotifyDbLoaded(item);

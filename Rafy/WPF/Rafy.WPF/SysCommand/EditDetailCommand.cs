@@ -54,7 +54,7 @@ namespace Rafy.WPF.Command
                     CloneActions.NormalProperties | CloneActions.RefEntities
                     ));
 
-                listEntity.MarkSelfDirty();
+                listEntity.MarkModifiedIfUnchanged();
 
                 view.RefreshControl();
             }

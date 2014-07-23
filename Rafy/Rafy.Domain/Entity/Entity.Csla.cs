@@ -74,11 +74,38 @@ namespace Rafy.Domain
         }
 
         /// <summary>
-        /// 实体当前的状态。
+        /// 获取或设置实体当前的状态。
         /// </summary>
         public PersistenceStatus PersistenceStatus
         {
-            get { return this._status; }
+            get { return _status; }
+            set
+            {
+                switch (value)
+                {
+                    case PersistenceStatus.Unchanged:
+                        //把当前对象标记为未更改状态。（即刚从仓库中取出的状态。）
+                        SetFlags(EntitySerializableFlags.PersistenceAll, false);
+                        break;
+                    case PersistenceStatus.Modified:
+                        //把当前对象标记为已经被更改的状态。
+                        //该状态的对象的所有数据，将会被更新到仓库中。
+                        SetFlags(EntitySerializableFlags.DeletedOrNew, false);
+                        SetFlags(EntitySerializableFlags.IsModified, true);
+                        break;
+                    case PersistenceStatus.New:
+                        //把当前对象标记为一个全新的刚创建的对象。
+                        SetFlags(EntitySerializableFlags.IsDeleted, false);
+                        SetFlags(EntitySerializableFlags.IsNew, true);
+                        break;
+                    case PersistenceStatus.Deleted:
+                        //把当前对象标记为需要删除状态。
+                        SetFlags(EntitySerializableFlags.IsDeleted, true);
+                        break;
+                    default:
+                        throw new NotSupportedException();
+                }
+            }
         }
 
         /// <summary>
@@ -86,86 +113,47 @@ namespace Rafy.Domain
         /// 
         /// 标记为删除的对象，在仓库中保存时，会被永久删除。
         /// </summary>
-        public bool IsDeleted
+        internal bool IsDeleted
         {
-            get { return this._status == PersistenceStatus.Deleted; }
+            get { return _status == PersistenceStatus.Deleted; }
         }
 
         /// <summary>
         /// 判断本对象是否是刚构造出来的。
         /// </summary>
-        public bool IsNew
+        internal bool IsNew
         {
-            get { return this._status == PersistenceStatus.New; }
-        }
-
-        /// <summary>
-        /// 判断本对象是否被修改了属性。
-        /// </summary>
-        public bool IsModified
-        {
-            get { return this._status == PersistenceStatus.Modified; }
-        }
-
-        /// <summary>
-        /// 返回当前对象（非组合）是否本身需要保存。
-        /// </summary>
-        public bool IsSelfDirty
-        {
-            get { return this._status != PersistenceStatus.Unchanged; }
+            get { return _status == PersistenceStatus.New; }
         }
 
         /// <summary>
         /// 标记当前对象为需要保存的状态。
-        /// 只有<see cref="PersistenceStatus"/> 为 Unchanged 状态时，才会调用 MarkModified 进行标记。这是因为其它状态已经算是 Dirty 了。
+        /// 
+        /// 只有实体的状态是 Unchanged 状态时（其它状态已经算是 Dirty 了），调用本方法才会把实体的状态改为 Modified。
         /// </summary>
-        public void MarkSelfDirty()
+        public void MarkModifiedIfUnchanged()
         {
             //只有 Unchanged 状态时，才需要标记，这是因为其它状态已经算是 Dirty 了。
-            if (this._status == PersistenceStatus.Unchanged) { this.MarkModified(); }
+            if (_status == PersistenceStatus.Unchanged)
+            {
+                this.PersistenceStatus = PersistenceStatus.Modified;
+            }
         }
 
         /// <summary>
-        /// 把当前对象标记为需要删除状态。
+        /// 清空实体的 IsDeleted 状态，使其还原到删除之前的状态。
         /// </summary>
-        public void MarkDeleted()
-        {
-            SetFlags(EntitySerializableFlags.IsDeleted, true);
-        }
-
-        /// <summary>
-        /// 清空实体的删除状态，使其还原到删除之前的状态。
-        /// </summary>
-        public void RevertDeleted()
+        public void RevertDeletedStatus()
         {
             SetFlags(EntitySerializableFlags.IsDeleted, false);
         }
 
         /// <summary>
-        /// 把当前对象标记为一个全新的刚创建的对象。
+        /// 清空实体的 IsNew 状态，使其还原到之前的状态。
         /// </summary>
-        public void MarkNew()
+        public void RevertNewStatus()
         {
-            SetFlags(EntitySerializableFlags.IsDeleted, false);
-            SetFlags(EntitySerializableFlags.IsNew, true);
-        }
-
-        /// <summary>
-        /// 把当前对象标记为已经被更改的状态。
-        /// 该状态的对象的所有数据，将会被更新到仓库中。
-        /// </summary>
-        private void MarkModified()
-        {
-            SetFlags(EntitySerializableFlags.DeletedOrNew, false);
-            SetFlags(EntitySerializableFlags.IsModified, true);
-        }
-
-        /// <summary>
-        /// 把当前对象标记为未更改状态。（即刚从仓库中取出的状态。）
-        /// </summary>
-        public void MarkUnchanged()
-        {
-            SetFlags(EntitySerializableFlags.PersistenceAll, false);
+            SetFlags(EntitySerializableFlags.IsNew, false);
         }
 
         #endregion
@@ -179,7 +167,7 @@ namespace Rafy.Domain
         {
             get
             {
-                if (this.IsSelfDirty) return true;
+                if (this.PersistenceStatus != PersistenceStatus.Unchanged) return true;
 
                 foreach (var field in this.GetLoadedChildren())
                 {
@@ -199,7 +187,7 @@ namespace Rafy.Domain
         /// </summary>
         public void MarkSaved()
         {
-            this.MarkUnchanged();
+            this.PersistenceStatus = PersistenceStatus.Unchanged;
 
             var enumerator = this.GetLoadedChildren();
             while (enumerator.MoveNext())
@@ -256,7 +244,7 @@ namespace Rafy.Domain
             var meta = e.Property.DefaultMeta as IPropertyMetadata;
             if (meta.AffectStatus)
             {
-                this.MarkSelfDirty();
+                this.MarkModifiedIfUnchanged();
 
                 this.NotifyIfInRedundancyPath(e);
             }
@@ -439,7 +427,7 @@ namespace Rafy.Domain
         //{
         //    base.OnGetObjectData(info, context);
 
-        //    info.AddValue("_status", this._status);
+        //    info.AddValue("_status", _status);
         //    info.AddValue("_lastStatus", this._lastStatus);
         //    info.AddValue("_isChild", this._isChild);
         //    info.AddValue("_validationRules", this._validationRules);
@@ -449,7 +437,7 @@ namespace Rafy.Domain
         //{
         //    base.OnSetObjectData(info, context);
 
-        //    this._status = info.GetValue<PersistenceStatus>("_status");
+        //    _status = info.GetValue<PersistenceStatus>("_status");
         //    this._lastStatus = info.GetValue<PersistenceStatus?>("_lastStatus");
         //    this._isChild = info.GetBoolean("_isChild");
         //    this._validationRules = info.GetValue<ValidationRules>("_validationRules");

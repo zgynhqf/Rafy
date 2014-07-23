@@ -145,7 +145,7 @@ namespace Rafy.Domain.Caching
                 var item = GetDbEntity(region, scopeClass, scopeId);
                 if (item != null)
                 {
-                    item.MarkSelfDirty();
+                    item.MarkModifiedIfUnchanged();
                     RF.Save(item);
 
                     _versionListCache.Expire();
@@ -213,7 +213,7 @@ namespace Rafy.Domain.Caching
                         var item = GetDbEntity(saveItem.Region, saveItem.ScopeClass, saveItem.ScopeId);
                         if (item != null)
                         {
-                            item.MarkSelfDirty();
+                            item.MarkModifiedIfUnchanged();
                             RF.Save(item);
                         }
                     }

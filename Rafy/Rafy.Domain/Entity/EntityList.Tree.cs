@@ -99,7 +99,7 @@ namespace Rafy.Domain
                 {
                     item.TreeChildrenField.EachNode(c =>
                     {
-                        c.MarkDeleted();
+                        c.PersistenceStatus = PersistenceStatus.Deleted;
                         return false;
                     });
                 }

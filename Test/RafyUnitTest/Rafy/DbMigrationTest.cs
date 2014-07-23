@@ -433,7 +433,7 @@ namespace RafyUnitTest
                 {
                     var repo = RF.Find<TestUser>();
                     var all = repo.GetAll();
-                    foreach (var user in all) { user.MarkDeleted(); }
+                    foreach (var user in all) { user.PersistenceStatus = PersistenceStatus.Deleted; }
                     repo.Save(all);
                 });
             }

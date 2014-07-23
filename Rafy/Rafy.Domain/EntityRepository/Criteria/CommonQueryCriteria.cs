@@ -336,7 +336,7 @@ namespace Rafy.Domain
         public PropertyMatch(string property, object value)
         {
             this.PropertyName = property;
-            this.Operator = value is string ? PropertyOperator.Contains : PropertyOperator.Equal;
+            this.Operator = PropertyOperator.Equal;
             this.Value = value;
         }
 

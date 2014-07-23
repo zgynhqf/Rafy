@@ -38,13 +38,13 @@ namespace RafyUnitTest
             var entity = new TestUser();
             Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.New, "刚创建的对象的状态应该是 New。");
 
-            entity.MarkUnchanged();
+            entity.PersistenceStatus = PersistenceStatus.Unchanged;
             Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.Unchanged);
 
-            entity.MarkSelfDirty();
+            entity.MarkModifiedIfUnchanged();
             Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.Modified);
 
-            entity.MarkDeleted();
+            entity.PersistenceStatus = PersistenceStatus.Deleted;
             Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.Deleted);
         }
 
@@ -52,22 +52,22 @@ namespace RafyUnitTest
         public void ET_PersistenceStatus_Delete()
         {
             var entity = new TestUser();
-            entity.MarkUnchanged();
+            entity.PersistenceStatus = PersistenceStatus.Unchanged;
             Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.Unchanged);
 
-            entity.MarkDeleted();
+            entity.PersistenceStatus = PersistenceStatus.Deleted;
             Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.Deleted);
 
-            entity.RevertDeleted();
+            entity.RevertDeletedStatus();
             Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.Unchanged, "之前的状态是 Unchanged");
 
-            entity.MarkSelfDirty();
+            entity.MarkModifiedIfUnchanged();
             Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.Modified);
 
-            entity.MarkDeleted();
+            entity.PersistenceStatus = PersistenceStatus.Deleted;
             Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.Deleted);
 
-            entity.RevertDeleted();
+            entity.RevertDeletedStatus();
             Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.Modified, "之前的状态是 Modified");
         }
 
@@ -297,7 +297,7 @@ namespace RafyUnitTest
         public void ET_Property_AffectStatus()
         {
             var user = new TestUser();
-            user.MarkUnchanged();
+            user.PersistenceStatus = PersistenceStatus.Unchanged;
 
             user.TemporaryName = "ET_Property_AffectStatus";
             Assert.IsTrue(user.PersistenceStatus == PersistenceStatus.Unchanged, "TemporaryName 不能引起实体状态的变更。");
@@ -555,7 +555,7 @@ namespace RafyUnitTest
                 repo.Save(book);
                 Assert.IsTrue(repo.CountAll() == 1);
 
-                book.MarkDeleted();
+                book.PersistenceStatus = PersistenceStatus.Deleted;
                 repo.Save(book);
                 Assert.IsTrue(repo.CountAll() == 0);
             }
@@ -811,7 +811,7 @@ namespace RafyUnitTest
             Assert.IsTrue(customer != customer2);
             Assert.IsTrue(customer2.Version == 4, "第二个版本号的添加，在保存之后才会发生。");
 
-            customer.MarkDeleted();
+            customer.PersistenceStatus = PersistenceStatus.Deleted;
             repo.Save(customer);
             Assert.IsTrue(customer.Version == 7);
         }
@@ -1326,7 +1326,7 @@ namespace RafyUnitTest
                 var error = user2.Validate();
                 Assert.AreEqual(error.Count, 0, "刚查询出来的实体可以直接通过 PropertyNotExists 的验证。");
 
-                user2.MarkDeleted();
+                user2.PersistenceStatus = PersistenceStatus.Deleted;
                 error = user2.Validate();
                 Assert.AreEqual(error.Count, 0, "删除状态的实体可以直接通过 PropertyNotExists 的验证。");
             }

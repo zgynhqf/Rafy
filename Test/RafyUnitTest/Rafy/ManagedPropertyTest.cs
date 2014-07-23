@@ -435,7 +435,7 @@ namespace RafyUnitTest
             var user = repo.GetByName("huqf");
             if (user != null)
             {
-                user.MarkDeleted();
+                user.PersistenceStatus = PersistenceStatus.Deleted;
                 repo.Save(user);
             }
 
@@ -470,7 +470,7 @@ namespace RafyUnitTest
             Assert.IsNotNull(role2.TestUser);
 
             //删除用户
-            user1.MarkDeleted();
+            user1.PersistenceStatus = PersistenceStatus.Deleted;
             repo.Save(user1);
             var users = repo.GetAll();
             Assert.IsTrue(!users.Cast<TestUser>().Any(u => u.Name == "huqf"));
@@ -485,7 +485,7 @@ namespace RafyUnitTest
             var user = repo.GetByName("huqf");
             if (user != null)
             {
-                user.MarkDeleted();
+                user.PersistenceStatus = PersistenceStatus.Deleted;
                 repo.Save(user);
             }
 
@@ -522,7 +522,7 @@ namespace RafyUnitTest
             Assert.IsNotNull(role2.TestUser);
 
             //删除用户
-            user1.MarkDeleted();
+            user1.PersistenceStatus = PersistenceStatus.Deleted;
             repo.Save(user1);
             var users = repo.GetAll();
             Assert.IsTrue(!users.Cast<TestUser>().Any(u => u.Name == "huqf"));
@@ -537,7 +537,7 @@ namespace RafyUnitTest
             var e = repo.GetByName("huqf");
             if (e != null)
             {
-                e.MarkDeleted();
+                e.PersistenceStatus = PersistenceStatus.Deleted;
                 repo.Save(e);
             }
 
@@ -552,7 +552,7 @@ namespace RafyUnitTest
             Assert.IsTrue(!user.IsNew);
             Assert.IsTrue(!user.IsDirty);
 
-            user.MarkDeleted();
+            user.PersistenceStatus = PersistenceStatus.Deleted;
             Assert.IsTrue(user.IsDeleted);
 
             repo.Save(user);
@@ -569,7 +569,7 @@ namespace RafyUnitTest
             var e = repo.GetByName("huqf");
             if (e != null)
             {
-                e.MarkDeleted();
+                e.PersistenceStatus = PersistenceStatus.Deleted;
                 repo.Save(e);
             }
 
@@ -595,7 +595,7 @@ namespace RafyUnitTest
             Assert.AreEqual(roles[0].CastTo<TestRole>().Name, role.Name);
 
             //clear
-            user.MarkDeleted();
+            user.PersistenceStatus = PersistenceStatus.Deleted;
             repo.Save(user);
         }
 
@@ -853,7 +853,7 @@ namespace RafyUnitTest
             where TEntity : Entity, new()
         {
             var e = new TEntity();
-            e.MarkUnchanged();
+            e.PersistenceStatus = PersistenceStatus.Unchanged;
             return e;
         }
 
@@ -861,7 +861,7 @@ namespace RafyUnitTest
         {
             foreach (var item in entities)
             {
-                item.MarkDeleted();
+                item.PersistenceStatus = PersistenceStatus.Deleted;
                 RF.Save(item);
             }
         }

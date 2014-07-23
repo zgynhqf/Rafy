@@ -1017,7 +1017,7 @@ namespace Rafy.Domain
                 {
                     (item as ITreeComponent).EachNode(e =>
                     {
-                        e.RevertDeleted();
+                        e.RevertDeletedStatus();
                         return false;
                     });
                 }
@@ -1170,7 +1170,7 @@ namespace Rafy.Domain
                     _deleted.Add(item);
                     (item as ITreeComponent).EachNode(e =>
                     {
-                        e.MarkDeleted();
+                        e.PersistenceStatus = PersistenceStatus.Deleted;
                         return false;
                     });
                 }

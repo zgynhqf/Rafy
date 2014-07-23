@@ -67,7 +67,7 @@ namespace Rafy.RBAC
         {
             return this.FetchFirst(new CommonQueryCriteria
             {
-                new PropertyMatch(Position.CodeProperty, code)
+                new PropertyMatch(Position.CodeProperty, PropertyOperator.Contains, code)
             });
         }
     }

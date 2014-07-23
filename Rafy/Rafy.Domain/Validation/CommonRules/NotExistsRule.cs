@@ -10,7 +10,7 @@ using Rafy.MetaModel;
 namespace Rafy.Domain.Validation
 {
     /// <summary>
-    /// 限制某个实体的某一个或几个属性的值在数据库中不存在的规则。
+    /// 限制实体的某一个或几个属性的值在数据库中不存在的规则。
     /// </summary>
     public class NotExistsRule : ValidationRule
     {
@@ -19,6 +19,9 @@ namespace Rafy.Domain.Validation
             this.Properties = new List<IProperty>();
         }
 
+        /// <summary>
+        /// 本规则需要连接数据源。
+        /// </summary>
         protected override bool ConnectToDataSource
         {
             get { return true; }
@@ -29,6 +32,11 @@ namespace Rafy.Domain.Validation
         /// </summary>
         public List<IProperty> Properties { get; private set; }
 
+        /// <summary>
+        /// 限制实体的某一个或几个属性的值在数据库中不存在的规则。
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="e"></param>
         protected override void Validate(Entity entity, RuleArgs e)
         {
             if (entity.PersistenceStatus == PersistenceStatus.New ||
