@@ -255,31 +255,37 @@ namespace JXC
         protected override void AddValidations(IValidationDeclarer rules)
         {
             rules.AddRule(PurchaseOrder.CodeProperty, RequiredRule.Instance);
-            rules.AddRule((e, args) =>
+            rules.AddRule(new HandlerRule
             {
-                var po = e as PurchaseOrder;
-                if (po.PurchaseOrderItemList.Count == 0)
+                Handler = (e, args) =>
                 {
-                    args.BrokenDescription = "订单至少需要一个订单项。".Translate();
-                }
-                else
-                {
-                    foreach (PurchaseOrderItem item in po.PurchaseOrderItemList)
+                    var po = e as PurchaseOrder;
+                    if (po.PurchaseOrderItemList.Count == 0)
                     {
-                        if (item.View_TotalPrice <= 0)
+                        args.BrokenDescription = "订单至少需要一个订单项。".Translate();
+                    }
+                    else
+                    {
+                        foreach (PurchaseOrderItem item in po.PurchaseOrderItemList)
                         {
-                            args.BrokenDescription = "商品项金额应该是正数。".Translate();
-                            return;
+                            if (item.View_TotalPrice <= 0)
+                            {
+                                args.BrokenDescription = "商品项金额应该是正数。".Translate();
+                                return;
+                            }
                         }
                     }
                 }
             });
-            rules.AddRule(PurchaseOrder.StorageProperty, (e, args) =>
+            rules.AddRule(PurchaseOrder.StorageProperty, new HandlerRule
             {
-                var po = e as PurchaseOrder;
-                if (po.StorageInDirectly && !po.StorageId.HasValue)
+                Handler = (e, args) =>
                 {
-                    args.BrokenDescription = "请选择需要入库的仓库。".Translate();
+                    var po = e as PurchaseOrder;
+                    if (po.StorageInDirectly && !po.StorageId.HasValue)
+                    {
+                        args.BrokenDescription = "请选择需要入库的仓库。".Translate();
+                    }
                 }
             });
         }

@@ -49,7 +49,7 @@ namespace Rafy.Domain.Validation
                     {
                         _list.Sort((t1, t2) =>
                         {
-                            return t1.Priority.CompareTo(t2.Priority);
+                            return t1.Meta.Priority.CompareTo(t2.Meta.Priority);
                         });
                         _sorted = true;
                     }

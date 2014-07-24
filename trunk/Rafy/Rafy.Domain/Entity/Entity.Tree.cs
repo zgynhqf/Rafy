@@ -133,6 +133,11 @@ namespace Rafy.Domain
             get { return this.GetProperty(TreePIdProperty); }
             set { this.SetProperty(TreePIdProperty, value); }
         }
+        /// <summary>
+        /// 子类重写此方法实现 TreePId 属性变更逻辑。
+        /// </summary>
+        /// <param name="e">The <see cref="ManagedPropertyChangedEventArgs"/> instance containing the event data.</param>
+        /// <exception cref="System.InvalidOperationException"></exception>
         protected virtual void OnTreePIdChanged(ManagedPropertyChangedEventArgs e)
         {
             var newValue = e.NewValue;
@@ -661,10 +666,14 @@ namespace Rafy.Domain
                 if (!this.IsFullLoaded)
                 {
                     var repo = _owner.GetRepository();
-                    var dbOwner = repo.GetById(_owner.Id);
-                    if (dbOwner == null)
+                    var dbOwner = _owner;
+                    if (_owner._status != PersistenceStatus.Unchanged)
                     {
-                        throw new InvalidProgramException("还没有存储到数据库中的节点，它的 IsFullLoaded 属性应该返回 true。");
+                        dbOwner = repo.GetById(_owner.Id);
+                        if (dbOwner == null)
+                        {
+                            throw new InvalidProgramException("还没有存储到数据库中的节点，它的 IsFullLoaded 属性应该返回 true。");
+                        }
                     }
                     var children = repo.GetByTreeParentIndex(dbOwner.TreeIndex);
                     this.MergeFullTree(children.ToList());

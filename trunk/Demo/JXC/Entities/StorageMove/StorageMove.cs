@@ -118,30 +118,36 @@ namespace JXC
         {
             rules.AddRule(StorageMove.CodeProperty, RequiredRule.Instance);
             rules.AddRule(StorageMove.UserProperty, RequiredRule.Instance);
-            rules.AddRule(StorageMove.StorageToProperty, (e, args) =>
+            rules.AddRule(StorageMove.StorageToProperty, new HandlerRule
             {
-                var move = e as StorageMove;
-                if (move.StorageToId == move.StorageFromId)
+                Handler = (e, args) =>
                 {
-                    args.BrokenDescription = "出货仓库和入货仓库不能是同一个仓库".Translate();
+                    var move = e as StorageMove;
+                    if (move.StorageToId == move.StorageFromId)
+                    {
+                        args.BrokenDescription = "出货仓库和入货仓库不能是同一个仓库".Translate();
+                    }
                 }
             });
-            rules.AddRule((e, args) =>
+            rules.AddRule(new HandlerRule
             {
-                var move = e as StorageMove;
-                var children = move.StorageMoveItemList;
-                if (children.Count == 0)
+                Handler = (e, args) =>
                 {
-                    args.BrokenDescription = "没有需要调拔的商品项。".Translate();
-                    return;
-                }
-
-                foreach (StorageMoveItem item in move.StorageMoveItemList)
-                {
-                    if (item.Amount <= 0)
+                    var move = e as StorageMove;
+                    var children = move.StorageMoveItemList;
+                    if (children.Count == 0)
                     {
-                        args.BrokenDescription = "商品项数量必须是正数。".Translate();
+                        args.BrokenDescription = "没有需要调拔的商品项。".Translate();
                         return;
+                    }
+
+                    foreach (StorageMoveItem item in move.StorageMoveItemList)
+                    {
+                        if (item.Amount <= 0)
+                        {
+                            args.BrokenDescription = "商品项数量必须是正数。".Translate();
+                            return;
+                        }
                     }
                 }
             });

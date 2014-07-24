@@ -237,8 +237,15 @@ namespace Rafy.Domain
             //如果要提交的树节点是一个根节点，而且它的索引还没有生成，则需要主动为其生成索引。
             if (tree.TreePId == null && string.IsNullOrEmpty(tree.TreeIndex))
             {
-                var count = _repository.CountTreeRoots();
-                tree.TreeIndex = _repository.TreeIndexOption.CalculateChildIndex(null, count);
+                var maxIndex = _repository.GetMaxTreeIndex();
+                if (!string.IsNullOrEmpty(maxIndex))
+                {
+                    tree.TreeIndex = _repository.TreeIndexOption.GetNextRootTreeIndex(maxIndex);
+                }
+                else
+                {
+                    tree.TreeIndex = _repository.TreeIndexOption.CalculateChildIndex(null, 0);
+                }
 
                 var treeChildren = tree.TreeChildren;
                 treeChildren.LoadAllNodes();
@@ -734,7 +741,7 @@ namespace Rafy.Domain
                 {
                     if (!isChanged)
                     {
-                        if (dbEntity == null) dbEntity = _repository.GetById(entity.Id);
+                        if (dbEntity == null) { dbEntity = ForceGetById(entity); }
                         var dbId = dbEntity.GetRefId(refProperty);
                         var newId = entity.GetRefId(refProperty);
                         isChanged = !object.Equals(dbId, newId);
@@ -764,7 +771,7 @@ namespace Rafy.Domain
 
                     if (!isChanged)
                     {
-                        if (dbEntity == null) dbEntity = _repository.GetById(entity.Id);
+                        if (dbEntity == null) { dbEntity = ForceGetById(entity); }
                         var dbValue = dbEntity.GetProperty(property);
                         isChanged = !object.Equals(dbValue, newValue);
                     }
@@ -780,6 +787,16 @@ namespace Rafy.Domain
             }
 
             entity.UpdateRedundancies = false;
+        }
+
+        private Entity ForceGetById(Entity entity)
+        {
+            var dbEntity = _repository.GetById(entity.Id);
+            if (dbEntity == null)
+            {
+                throw new InvalidOperationException(string.Format(@"{1} 类型对应的仓库中不存在 Id 为 {0} 的实体，更新冗余属性失败！", entity.Id, entity.GetType()));
+            }
+            return dbEntity;
         }
 
         /// <summary>

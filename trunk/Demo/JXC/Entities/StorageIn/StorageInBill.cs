@@ -142,21 +142,24 @@ namespace JXC
         protected override void AddValidations(IValidationDeclarer rules)
         {
             rules.AddRule(StorageInBill.CodeProperty, RequiredRule.Instance);
-            rules.AddRule((e, args) =>
+            rules.AddRule(new HandlerRule
             {
-                var po = e as StorageInBill;
-                if (po.StorageInItemList.Count == 0)
+                Handler = (e, args) =>
                 {
-                    args.BrokenDescription = "至少需要一个商品项。".Translate();
-                }
-                else
-                {
-                    foreach (StorageInBillItem item in po.StorageInItemList)
+                    var po = e as StorageInBill;
+                    if (po.StorageInItemList.Count == 0)
                     {
-                        if (item.View_TotalPrice <= 0)
+                        args.BrokenDescription = "至少需要一个商品项。".Translate();
+                    }
+                    else
+                    {
+                        foreach (StorageInBillItem item in po.StorageInItemList)
                         {
-                            args.BrokenDescription = "商品项金额应该是正数。".Translate();
-                            return;
+                            if (item.View_TotalPrice <= 0)
+                            {
+                                args.BrokenDescription = "商品项金额应该是正数。".Translate();
+                                return;
+                            }
                         }
                     }
                 }

@@ -21,6 +21,7 @@ using System.Windows.Data;
 using Rafy.Domain;
 using Rafy.Domain.Validation;
 using Rafy.ManagedProperty;
+using Rafy.MetaModel;
 
 namespace Rafy.WPF
 {
@@ -36,13 +37,16 @@ namespace Rafy.WPF
         private ManagedProeprtyValidationRule()
             : base(ValidationStep.UpdatedValue, true)
         {
-            this.ValidatorActions = ValidatorActions.IgnoreDataSourceValidations;
+            this.RuleFilter = r =>
+            {
+                return !r.ValidationRule.ConnectToDataSource;
+            };
         }
 
         /// <summary>
-        /// 默认值为 ValidatorActions.IgnoreDataSourceValidations。
+        /// 默认值为 !r.ValidationRule.ConnectToDataSource。
         /// </summary>
-        public ValidatorActions ValidatorActions { get; set; }
+        public Func<IRule, bool> RuleFilter { get; set; }
 
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
@@ -56,7 +60,7 @@ namespace Rafy.WPF
                         .FirstOrDefault(p => p is IManagedProperty) as IManagedProperty;
                     if (mp != null)
                     {
-                        var broken = entity.Validate(mp, this.ValidatorActions);
+                        var broken = entity.Validate(mp, this.RuleFilter);
                         if (broken.Count > 0)
                         {
                             return new ValidationResult(false, broken.ToString());

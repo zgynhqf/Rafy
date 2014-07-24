@@ -166,16 +166,19 @@ namespace Demo
                 Regex = TextFormatter.ReAllChinese,
                 RegexLabel = "全中文"
             });
-            rules.AddRule(Book.NameProperty, (e, args) =>
+            rules.AddRule(Book.NameProperty, new HandlerRule
             {
-                var value = e.GetProperty(args.Property) as string;
-                if (string.IsNullOrEmpty(value))
+                Handler = (e, args) =>
                 {
-                    args.BrokenDescription = "书籍的名称不能为空。";
-                }
-                else if (!value.Contains("《") || !value.Contains("》"))
-                {
-                    args.BrokenDescription = "书籍的名称需要带上书名号：《》";
+                    var value = e.GetProperty(args.Property) as string;
+                    if (string.IsNullOrEmpty(value))
+                    {
+                        args.BrokenDescription = "书籍的名称不能为空。";
+                    }
+                    else if (!value.Contains("《") || !value.Contains("》"))
+                    {
+                        args.BrokenDescription = "书籍的名称需要带上书名号：《》";
+                    }
                 }
             });
             //rules.AddRule(AmountProperty, (e, args) =>

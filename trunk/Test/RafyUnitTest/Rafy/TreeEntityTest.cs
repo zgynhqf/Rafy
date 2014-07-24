@@ -1333,6 +1333,47 @@ namespace RafyUnitTest
         }
 
         /// <summary>
+        /// 当根节点出现断码时，直接添加根节点时，也应该自动生成不重复的 TreeIndex。
+        /// </summary>
+        [TestMethod]
+        public void TET_Struc_TreeIndex_InsertRootItem_WhileIndexCollapsed()
+        {
+            var repo = RF.Concrete<FolderRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var list = new FolderList
+                {
+                    new Folder(),//001.
+                    new Folder//002.
+                    {
+                        TreeChildren = 
+                        {
+                            new Folder()//002.001.
+                        }
+                    },
+                    new Folder(),//003.
+                };
+                repo.Save(list);
+
+                //删除 001
+                var root1 = list[0];
+                root1.PersistenceStatus = PersistenceStatus.Deleted;
+                repo.Save(root1);
+
+                var root2 = new Folder();
+                repo.Save(root2);
+                Assert.IsTrue(root2.TreeIndex == "004.");
+
+                var tree = repo.GetAll();
+                Assert.IsTrue(tree.Count == 3);
+                Assert.IsTrue(tree[0].TreeIndex == "002.");
+                Assert.IsTrue(tree[0].TreeChildren[0].TreeIndex == "002.001.");
+                Assert.IsTrue(tree[1].TreeIndex == "003.");
+                Assert.IsTrue(tree[2].TreeIndex == "004.");
+            }
+        }
+
+        /// <summary>
         /// 统一关闭整个列表的自动编码生成行为
         /// </summary>
         [TestMethod]

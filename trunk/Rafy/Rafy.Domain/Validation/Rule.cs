@@ -38,17 +38,15 @@ namespace Rafy.Domain.Validation
             }
         }
 
-        public string Key { get; private set; }
-
-        public IManagedProperty Property { get; internal set; }
-
-        public int Priority { get; internal set; }
-
-        public RuleLevel Level { get; internal set; }
-
         public IValidationRule ValidationRule
         {
             get { return _validationRule; }
         }
+
+        public string Key { get; private set; }
+
+        public IManagedProperty Property { get; internal set; }
+
+        public RuleMeta Meta { get; internal set; }
     }
 }
