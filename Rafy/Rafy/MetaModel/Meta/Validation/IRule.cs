@@ -37,18 +37,38 @@ namespace Rafy.MetaModel
         string Key { get; }
 
         /// <summary>
-        /// 优先级。
+        /// 规则对应的元数据。
         /// </summary>
-        int Priority { get; }
-
-        /// <summary>
-        /// 规则的级别。
-        /// </summary>
-        RuleLevel Level { get; }
+        RuleMeta Meta { get; }
 
         /// <summary>
         /// 用于执行验证的规则逻辑。
         /// </summary>
         IValidationRule ValidationRule { get; }
+    }
+
+    /// <summary>
+    /// 表示规则的作用范围
+    /// </summary>
+    [Flags]
+    public enum RuleScope
+    {
+        /// <summary>
+        /// 作用于数据的插入操作。
+        /// </summary>
+        Add = 1,
+        /// <summary>
+        /// 作用于数据的更新操作。
+        /// </summary>
+        Update = 2,
+        /// <summary>
+        /// 作用于数据的插入、更新操作。
+        /// </summary>
+        AddOrUpdate = Add | Update,
+        /// <summary>
+        /// 作用于数据的插入、更新操作。
+        /// </summary>
+        Delete = 4,
+        All = Add | Update | Delete
     }
 }

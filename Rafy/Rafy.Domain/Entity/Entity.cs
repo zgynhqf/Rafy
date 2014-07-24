@@ -58,6 +58,11 @@ namespace Rafy.Domain
     {
         #region 构造函数
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Entity"/> class.
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
         [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
         protected Entity(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
@@ -210,7 +215,7 @@ namespace Rafy.Domain
         }
 
         /// <summary>
-        /// 判断本实体是否已经拥有了唯一的 Id
+        /// 判断本实体是否已经拥有了可用的 Id 值。
         /// </summary>
         public bool HasId
         {

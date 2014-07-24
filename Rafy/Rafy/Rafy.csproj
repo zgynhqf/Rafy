@@ -79,6 +79,7 @@
     <Compile Include="Domain\RepositoryForAttribute.cs" />
     <Compile Include="MetaModel\Meta\Validation\IRule.cs" />
     <Compile Include="MetaModel\Meta\Validation\IValidationRule.cs" />
+    <Compile Include="MetaModel\Meta\Validation\RuleMeta.cs" />
     <Compile Include="MetaModel\View\WPFEditorNames.cs" />
     <Compile Include="Utils\DateTimePart.cs" />
     <Compile Include="Utils\EnumViewModel.cs" />

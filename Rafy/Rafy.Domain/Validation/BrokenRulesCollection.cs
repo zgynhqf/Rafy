@@ -104,7 +104,7 @@ namespace Rafy.Domain.Validation
         /// matching the specified severtiy.</returns>
         public string ToString(string separator, RuleLevel level)
         {
-            return string.Join(Environment.NewLine, this.Where(r => r.Rule.Level == level).Select(r => r.Description));
+            return string.Join(Environment.NewLine, this.Where(r => r.Rule.Meta.Level == level).Select(r => r.Description));
         }
 
         #endregion

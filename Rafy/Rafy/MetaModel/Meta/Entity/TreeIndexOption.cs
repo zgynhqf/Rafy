@@ -149,5 +149,37 @@ namespace Rafy.MetaModel
 
             return layer[layer.Length - 1];
         }
+
+        internal string GetNextRootTreeIndex(string treeIndex)
+        {
+            var seperatorIndex = -1;
+            for (int i = 0, c = treeIndex.Length; i < c; i++)
+            {
+                var item = treeIndex[i];
+                if (item == Seperator)
+                {
+                    seperatorIndex = i;
+                    break;
+                }
+            }
+            if (seperatorIndex < 0)
+            {
+                throw new InvalidOperationException(string.Format("树索引 {0} 中应该包含分隔符，格式有误！", treeIndex));
+            }
+
+            var indexCode = treeIndex.Substring(0, seperatorIndex);
+
+            var rootLayer = this.GetLayer(0);
+            for (int i = 0, c = rootLayer.Length; i < c; i++)
+            {
+                var item = rootLayer[i];
+                if (item == indexCode)
+                {
+                    return this.CalculateChildIndex(null, i + 1);
+                }
+            }
+
+            throw new InvalidOperationException(string.Format("没有找到 {0} 的树索引，数据有误。", indexCode));
+        }
     }
 }

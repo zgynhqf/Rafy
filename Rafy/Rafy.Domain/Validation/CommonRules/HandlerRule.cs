@@ -20,7 +20,10 @@ using Rafy.MetaModel;
 
 namespace Rafy.Domain.Validation
 {
-    internal class HandlerRule : ValidationRule
+    /// <summary>
+    /// 一个使用指定代理方法的验证器。
+    /// </summary>
+    public class HandlerRule : ValidationRule
     {
         public RuleHandler Handler { get; set; }
 

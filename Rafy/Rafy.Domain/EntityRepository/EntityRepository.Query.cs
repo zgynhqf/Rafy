@@ -265,6 +265,28 @@ namespace Rafy.Domain
             return this.DoGetTreeRoots(eagerLoad);
         }
 
+        internal string GetMaxTreeIndex()
+        {
+            var table  = this.FetchTable<EntityRepository>(r => r.DA_GetMaxTreeIndex());
+            if (table.Rows.Count > 0)
+            {
+                return table.Rows[0].GetString(0);
+            }
+            return null;
+        }
+        [Obfuscation]
+        private LiteDataTable DA_GetMaxTreeIndex()
+        {
+            var f = QueryFactory.Instance;
+            var t = f.Table(this);
+            var q = f.Query(
+                selection: t.Column(Entity.TreeIndexProperty),
+                from: t,
+                orderBy: new List<IOrderBy> { f.OrderBy(t.Column(Entity.TreeIndexProperty), OrderDirection.Descending) }
+            );
+            return this.QueryTable(q);
+        }
+
         /// <summary>
         /// 查询所有的根节点数量。
         /// </summary>

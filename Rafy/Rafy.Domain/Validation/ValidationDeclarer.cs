@@ -66,51 +66,7 @@ namespace Rafy.Domain
             }
         }
 
-        /// <summary>
-        /// 为整个实体添加一个业务验证规则。
-        /// </summary>
-        /// <param name="handler">The handler.</param>
-        /// <param name="level">The level.</param>
-        /// <param name="priority">The priority.</param>
-        /// <exception cref="System.ArgumentNullException">handler</exception>
-        public void AddRule(RuleHandler handler,
-           RuleLevel level = RuleLevel.Error, int priority = 0
-           )
-        {
-            if (handler == null) throw new ArgumentNullException("handler");
-
-            var valiRule = new HandlerRule { Handler = handler };
-
-            this.AddRule(valiRule, level, priority);
-        }
-
-        /// <summary>
-        /// 为某个属性添加一个业务验证规则。
-        /// </summary>
-        /// <param name="property">The property.</param>
-        /// <param name="handler">The handler.</param>
-        /// <param name="level">The level.</param>
-        /// <param name="priority">The priority.</param>
-        /// <exception cref="System.ArgumentNullException">handler</exception>
-        public void AddRule(IManagedProperty property, RuleHandler handler,
-           RuleLevel level = RuleLevel.Error, int priority = 0
-           )
-        {
-            if (handler == null) throw new ArgumentNullException("handler");
-
-            var valiRule = new HandlerRule { Handler = handler };
-
-            this.AddRule(property, valiRule, level, priority);
-        }
-
-        /// <summary>
-        /// 为整个实体添加一个业务验证规则。
-        /// </summary>
-        /// <param name="rule">The rule.</param>
-        /// <param name="level">The level.</param>
-        /// <param name="priority">The priority.</param>
-        /// <exception cref="System.NotSupportedException">验证规则必须从 ValidationRule 类型继承。</exception>
-        public void AddRule(IValidationRule rule, RuleLevel level = RuleLevel.Error, int priority = 0)
+        public void AddRule(IValidationRule rule, RuleMeta meta = null)
         {
             //var internalRule = rule as ValidationRule;
             //if (internalRule == null) throw new NotSupportedException("验证规则必须从 ValidationRule 类型继承。");
@@ -130,29 +86,19 @@ namespace Rafy.Domain
             if (rule == null) throw new ArgumentNullException("rule");
 
             var innerRule = new Rule(rule);
-            innerRule.Level = level;
-            innerRule.Priority = priority;
+            innerRule.Meta = meta ?? new RuleMeta();
 
             Rules.AddRule(innerRule);
         }
 
-        /// <summary>
-        /// 为某个属性添加一个业务验证规则。
-        /// </summary>
-        /// <param name="property">The property.</param>
-        /// <param name="rule">The rule.</param>
-        /// <param name="level">The level.</param>
-        /// <param name="priority">The priority.</param>
-        /// <exception cref="System.NotSupportedException">验证规则必须从 ValidationRule 类型继承。</exception>
-        public void AddRule(IManagedProperty property, IValidationRule rule, RuleLevel level = RuleLevel.Error, int priority = 0)
+        public void AddRule(IManagedProperty property, IValidationRule rule, RuleMeta meta = null)
         {
             if (property == null) throw new ArgumentNullException("property");
             if (rule == null) throw new ArgumentNullException("rule");
 
             var innerRule = new Rule(rule);
             innerRule.Property = property;
-            innerRule.Level = level;
-            innerRule.Priority = priority;
+            innerRule.Meta = meta ?? new RuleMeta();
 
             Rules.AddRule(innerRule);
         }
