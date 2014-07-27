@@ -99,11 +99,12 @@ namespace Rafy.Domain
         /// <param name="query">查询对象。</param>
         /// <param name="paging">分页信息。</param>
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="markTreeFullLoaded">如果某次查询结果是一棵完整的子树，那么必须设置此参数为 true ，才可以把整个树标记为完整加载。</param>
         /// <returns></returns>
-        protected EntityList QueryList(IQuery query, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        protected EntityList QueryList(IQuery query, PagingInfo paging = null, EagerLoadOptions eagerLoad = null, bool markTreeFullLoaded = false)
         {
             var args = new EntityQueryArgs(query);
-
+            args.MarkTreeFullLoaded = markTreeFullLoaded;
             args.SetDataLoadOptions(paging, eagerLoad);
 
             return this.QueryList(args);
@@ -244,15 +245,39 @@ namespace Rafy.Domain
 
         private void EagerLoadOnCompleted(EntityQueryArgsBase args, EntityList entityList, int oldCount)
         {
-            if (args.FetchType == FetchType.First || args.FetchType == FetchType.List)
+            if (entityList.Count > 0)
             {
-                if (args.EagerLoadOptions != null)
+                if (args.FetchType == FetchType.First || args.FetchType == FetchType.List)
                 {
-                    this.EagerLoad(entityList, args.EagerLoadOptions.CoreList);
-                }
+                    var elOptions = args.EagerLoadOptions;
+                    if (elOptions != null)
+                    {
+                        //先加载树子节点。
+                        if (elOptions.LoadTreeChildren)
+                        {
+                            /*********************** 代码块解释 *********************************
+                             * 加载树时，EntityList.LoadAllNodes 方法只加载根节点的子节点。
+                             * 如果使用了 GetAll 方法，那么默认是已经加载了子节点的，不需要再调用 EntityList.LoadAllNodes。
+                             * 所以下面只能对于每一个节点，
+                            **********************************************************************/
+                            var tree = entityList as ITreeComponent;
+                            if (!tree.IsFullLoaded)
+                            {
+                                for (int i = 0, c = entityList.Count; i < c; i++)
+                                {
+                                    var item = entityList[i] as ITreeComponent;
+                                    item.LoadAllNodes();
+                                }
+                            }
+                        }
 
-                //如果 entityList 列表中已经有数据，那么只能对新添加的实体进行 OnDbLoaded操作通知加载完成。
-                this.OnDbLoaded(entityList, oldCount);
+                        //再加载实体的属性。
+                        this.EagerLoad(entityList, elOptions.CoreList);
+                    }
+
+                    //如果 entityList 列表中已经有数据，那么只能对新添加的实体进行 OnDbLoaded操作通知加载完成。
+                    this.OnDbLoaded(entityList, oldCount);
+                }
             }
 
             this.OnEntityQueryed(args);
@@ -534,12 +559,17 @@ namespace Rafy.Domain
         private void EagerLoadChildren(EntityList list, IListProperty listProperty, List<ConcreteProperty> eagerLoadProperties)
         {
             //查询一个大的实体集合，包含列表中所有实体所需要的所有子实体。
-            var idList = list.Select(e => e.Id).ToArray();
-            if (idList.Length > 0)
+            var idList = new List<object>(10);
+            list.EachNode(e =>
+            {
+                idList.Add(e.Id);
+                return false;
+            });
+            if (idList.Count > 0)
             {
                 var targetRepo = RepositoryFactoryHost.Factory.FindByEntity(listProperty.ListEntityType);
 
-                var allChildren = targetRepo.GetByParentIdList(idList, PagingInfo.Empty);
+                var allChildren = targetRepo.GetByParentIdList(idList.ToArray(), PagingInfo.Empty);
 
                 //继续递归加载它的贪婪属性。
                 this.EagerLoad(allChildren, eagerLoadProperties);
@@ -547,7 +577,7 @@ namespace Rafy.Domain
                 //把大的实体集合，根据父实体 Id，分拆到每一个父实体的子集合中。
                 var parentProperty = targetRepo.FindParentPropertyInfo(true).ManagedProperty as IRefProperty;
                 var parentIdProperty = parentProperty.RefIdProperty;
-                foreach (var parent in list)
+                list.EachNode(parent =>
                 {
                     var children = targetRepo.NewList();
                     foreach (var child in allChildren)
@@ -558,7 +588,8 @@ namespace Rafy.Domain
                     children.SetParentEntity(parent);
 
                     parent.LoadProperty(listProperty, children);
-                }
+                    return false;
+                });
             }
         }
 
@@ -572,18 +603,27 @@ namespace Rafy.Domain
         {
             var refIdProperty = refProperty.RefIdProperty;
             //查询一个大的实体集合，包含列表中所有实体所需要的所有引用实体。
-            var idList = list.Select(e => e.GetRefNullableId(refIdProperty)).Where(id => id != null).Distinct().ToArray();
-            if (idList.Length > 0)
+            var idList = new List<object>(10);
+            list.EachNode(e =>
+            {
+                var refId = e.GetRefNullableId(refIdProperty);
+                if (refId != null && idList.All(id => !id.Equals(refId)))
+                {
+                    idList.Add(refId);
+                }
+                return false;
+            });
+            if (idList.Count > 0)
             {
                 var targetRepo = RepositoryFactoryHost.Factory.FindByEntity(refProperty.RefEntityType);
-                var allRefList = targetRepo.GetByIdList(idList);
+                var allRefList = targetRepo.GetByIdList(idList.ToArray());
 
                 //继续递归加载它的贪婪属性。
                 this.EagerLoad(allRefList, eagerLoadProperties);
 
                 //把大的实体集合，根据 Id，设置到每一个实体上。
                 var refEntityProperty = refProperty.RefEntityProperty;
-                foreach (var entity in list)
+                list.EachNode(entity =>
                 {
                     var refId = entity.GetRefNullableId(refIdProperty);
                     if (refId != null)
@@ -591,24 +631,12 @@ namespace Rafy.Domain
                         var refEntity = allRefList.Find(refId);
                         entity.LoadProperty(refEntityProperty, refEntity);
                     }
-                }
+                    return false;
+                });
             }
         }
 
         #endregion
-
-        /// <summary>
-        /// 如果某次查询结果是一棵完整的子树，那么必须调用此方法来把整个树标记为完整加载。
-        /// 如果不调用此方法，所有节点的子节点集合 TreeChildren 处在未加载完全的状态（IsLoaded = false）。
-        /// </summary>
-        /// <param name="tree"></param>
-        protected void MarkTreeFullLoaded(ITreeComponent tree)
-        {
-            if (this.Repo.SupportTree)
-            {
-                TreeHelper.MarkTreeFullLoaded(tree);
-            }
-        }
 
         /// <summary>
         /// 当前正在使用的查询参数

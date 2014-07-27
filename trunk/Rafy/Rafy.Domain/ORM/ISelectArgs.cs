@@ -53,6 +53,12 @@ namespace Rafy.Domain.ORM
         PagingInfo PagingInfo { get; }
 
         /// <summary>
+        /// 如果某次查询结果是一棵完整的子树，那么必须设置此属性为 true ，才可以把整个树标记为完整加载。
+        /// 否则，所有节点的子节点集合 TreeChildren 处在未加载完全的状态（IsLoaded = false）。
+        /// </summary>
+        bool MarkTreeFullLoaded { get; }
+
+        /// <summary>
         /// 贪婪加载某个属性
         /// </summary>
         /// <param name="property">需要贪婪加载的托管属性。可以是一个引用属性，也可以是一个组合子属性。</param>

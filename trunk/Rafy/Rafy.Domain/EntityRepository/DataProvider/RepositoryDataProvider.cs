@@ -983,9 +983,7 @@ namespace Rafy.Domain
         {
             var query = qf.Query(_repository);
 
-            var list = this.QueryList(query, paging, eagerLoad);
-
-            MarkTreeFullLoaded(list);
+            var list = this.QueryList(query, paging, eagerLoad, true);
 
             return list;
         }
@@ -1056,9 +1054,7 @@ namespace Rafy.Domain
                 where: qf.Constraint(table.Column(mp), parentId)
             );
 
-            var list = this.QueryList(q, paging, eagerLoad);
-
-            MarkTreeFullLoaded(list);
+            var list = this.QueryList(q, paging, eagerLoad, true);
 
             return list;
         }
@@ -1081,9 +1077,7 @@ namespace Rafy.Domain
                 where: qf.Constraint(table.Column(mp), PropertyOperator.In, parentIdList)
             );
 
-            var list = this.QueryList(q, paging, eagerLoad);
-
-            MarkTreeFullLoaded(list);
+            var list = this.QueryList(q, paging, eagerLoad, true);
 
             return list;
         }
@@ -1105,9 +1099,7 @@ namespace Rafy.Domain
                 where: qf.Constraint(table.Column(Entity.TreeIndexProperty), PropertyOperator.Like, childCode)
             );
 
-            var list = this.QueryList(q, null, eagerLoad);
-
-            MarkTreeFullLoaded(list);
+            var list = this.QueryList(q, null, eagerLoad, true);
 
             return list;
         }

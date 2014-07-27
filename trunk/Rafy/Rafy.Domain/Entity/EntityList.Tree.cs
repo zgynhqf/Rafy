@@ -228,6 +228,11 @@ namespace Rafy.Domain
 
         void ITreeComponent.LoadAllNodes()
         {
+            if (!this.IsTreeRootList)
+            {
+                throw new InvalidOperationException("只有根节点的集合，才能调用本方法。");
+            }
+
             var all = this.GetRepository().GetAll();
             for (int i = 0, c = this.Count; i < c; i++)
             {

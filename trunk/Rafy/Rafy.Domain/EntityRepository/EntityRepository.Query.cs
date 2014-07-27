@@ -475,7 +475,7 @@ namespace Rafy.Domain
         /// <returns></returns>
         protected virtual Entity DoGetFirst(EagerLoadOptions eagerLoad)
         {
-            return this.FetchFirst(new GetAllCriteria());
+            return this.FetchFirst(new GetAllCriteria { EagerLoad = eagerLoad });
         }
 
         /// <summary>
@@ -486,7 +486,11 @@ namespace Rafy.Domain
         /// <returns></returns>
         protected virtual Entity DoGetById(object id, EagerLoadOptions eagerLoad)
         {
-            var list = FetchList(new GetByIdCriteria() { IdValue = id });
+            var list = FetchList(new GetByIdCriteria()
+            {
+                IdValue = id,
+                EagerLoad = eagerLoad
+            });
             return list.Count == 1 ? list[0] : null;
         }
 
@@ -519,7 +523,8 @@ namespace Rafy.Domain
         {
             return this.FetchList(new GetByIdListCriteria
             {
-                IdList = idList
+                IdList = idList,
+                EagerLoad = eagerLoad
             });
         }
 
@@ -535,7 +540,8 @@ namespace Rafy.Domain
             return this.FetchList(new GetByParentIdListCriteria
             {
                 ParentIdList = parentIdList,
-                PagingInfo = paging
+                PagingInfo = paging,
+                EagerLoad = eagerLoad
             });
         }
 
@@ -551,7 +557,8 @@ namespace Rafy.Domain
             return this.FetchList(new GetByParentIdCriteria()
             {
                 ParentId = parentId,
-                PagingInfo = paging
+                PagingInfo = paging,
+                EagerLoad = eagerLoad
             });
         }
 
@@ -583,7 +590,7 @@ namespace Rafy.Domain
         /// <returns></returns>
         protected virtual EntityList DoGetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad)
         {
-            return this.FetchList(new GetByTreeParentIndexCriteria() { TreeIndex = treeIndex });
+            return this.FetchList(new GetByTreeParentIndexCriteria() { TreeIndex = treeIndex, EagerLoad = eagerLoad });
         }
 
         /// <summary>

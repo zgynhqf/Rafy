@@ -1,12 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-16"?>
-<Document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" HideNonsenceLabels="true">
+<?xml version="1.0" encoding="utf-16"?>
+<Document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" HideNonsenceLabels="false">
   <EntityTypes>
-    <EntityTypeElement FullName="UT.PBSType" Left="131" Top="43" Width="0" Height="0" HideProperties="true">
+    <EntityTypeElement FullName="UT.PBSType" Left="131" Top="43" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
+      <Properties>
+        <PropertyElement Name="Name" PropertyType="String" />
+        <PropertyElement Name="Code" PropertyType="String" />
+        <PropertyElement Name="Amount" PropertyType="Int" />
+        <PropertyElement Name="CreateTime" PropertyType="DateTime" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="UT.PBS" Left="133" Top="236" Width="0" Height="0" HideProperties="true" IsAggtRoot="false">
       <Properties>
         <PropertyElement Name="Name" PropertyType="String" />
       </Properties>
     </EntityTypeElement>
-    <EntityTypeElement FullName="UT.PBS" Left="133" Top="236" Width="0" Height="0" HideProperties="true">
+    <EntityTypeElement FullName="UT.Building" Label="建筑" Left="340" Top="39" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
       <Properties>
         <PropertyElement Name="Name" PropertyType="String" />
       </Properties>

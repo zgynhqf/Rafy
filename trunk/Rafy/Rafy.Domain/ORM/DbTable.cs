@@ -405,7 +405,7 @@ namespace Rafy.Domain.ORM
             //填充到列表中。
             this.FillDataIntoList(
                 reader, autoSelection ? ReadDataType.ByIndex : ReadDataType.ByName,
-                args.List, args.FetchingFirst, args.PagingInfo
+                args.List, args.FetchingFirst, args.PagingInfo, args.MarkTreeFullLoaded
                 );
         }
 
@@ -443,7 +443,10 @@ namespace Rafy.Domain.ORM
             }
 
             var reader = dba.QueryDataReader(args.FormattedSql, args.Parameters);
-            this.FillDataIntoList(reader, ReadDataType.ByName, args.List, args.FetchingFirst, args.PagingInfo);
+            this.FillDataIntoList(
+                reader, ReadDataType.ByName,
+                args.List, args.FetchingFirst, args.PagingInfo, args.MarkTreeFullLoaded
+                );
         }
 
         /// <summary>
@@ -596,14 +599,15 @@ namespace Rafy.Domain.ORM
         /// <param name="list">需要把读取的实体，加入到这个列表中。</param>
         /// <param name="fetchingFirst">是否只读取一条数据即返回。</param>
         /// <param name="pagingInfo">如果不是只取一行数据，则这个参数表示列表内存分页的信息。</param>
+        /// <param name="markTreeFullLoaded">如果某次查询结果是一棵完整的子树，那么必须设置此参数为 true ，才可以把整个树标记为完整加载。</param>
         protected void FillDataIntoList(
             IDataReader reader, ReadDataType readType,
-            IList<Entity> list, bool fetchingFirst, PagingInfo pagingInfo
+            IList<Entity> list, bool fetchingFirst, PagingInfo pagingInfo, bool markTreeFullLoaded
             )
         {
             if (_repository.SupportTree)
             {
-                this.FillTreeIntoList(reader, readType, list);
+                this.FillTreeIntoList(reader, readType, list, markTreeFullLoaded);
                 return;
             }
 
@@ -641,10 +645,15 @@ namespace Rafy.Domain.ORM
         /// <param name="reader">表格类数据。</param>
         /// <param name="readType">是否索引还是名称去读取 IDataReader。</param>
         /// <param name="list">需要把读取的实体中的第一级的节点，加入到这个列表中。</param>
-        private void FillTreeIntoList(IDataReader reader, ReadDataType readType, IList<Entity> list)
+        /// <param name="markTreeFullLoaded">如果某次查询结果是一棵完整的子树，那么必须设置此参数为 true ，才可以把整个树标记为完整加载。</param>
+        private void FillTreeIntoList(IDataReader reader, ReadDataType readType, IList<Entity> list, bool markTreeFullLoaded)
         {
             var entities = this.ReadToEntity(reader, readType);
             TreeHelper.LoadTreeData(list, entities);
+            if (markTreeFullLoaded)
+            {
+                TreeHelper.MarkTreeFullLoaded(list);
+            }
         }
 
         private IEnumerable<Entity> ReadToEntity(IDataReader reader, ReadDataType readType)
