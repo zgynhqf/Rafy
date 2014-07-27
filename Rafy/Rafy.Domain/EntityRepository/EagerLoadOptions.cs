@@ -30,9 +30,23 @@ namespace Rafy.Domain
     {
         private List<ConcreteProperty> _eagerList = new List<ConcreteProperty>();
 
+        internal bool LoadTreeChildren;
+
         internal List<ConcreteProperty> CoreList
         {
             get { return _eagerList; }
+        }
+
+        /// <summary>
+        /// 贪婪加载树型子。
+        /// 
+        /// 如果设置了此选项，那么会先加载所有的树子节点，然后再加载属性。
+        /// </summary>
+        /// <returns></returns>
+        public EagerLoadOptions LoadWithTreeChildren()
+        {
+            this.LoadTreeChildren = true;
+            return this;
         }
 
         /// <summary>

@@ -20,21 +20,25 @@ namespace Rafy.Domain
             return count;
         }
 
-        internal static void MarkTreeFullLoaded(ITreeComponent component)
+        internal static void MarkTreeFullLoaded(IList<Entity> nodes)
         {
-            component.EachNode(e =>
+            for (int i = 0, c = nodes.Count; i < c; i++)
             {
-                var tc = e.TreeChildrenField;
-                if (tc == null)
+                var item = nodes[i] as ITreeComponent;
+                item.EachNode(e =>
                 {
-                    e.IsTreeLeafSure = true;
-                }
-                else
-                {
-                    tc.MarkLoaded();
-                }
-                return false;
-            });
+                    var tc = e.TreeChildrenField;
+                    if (tc == null)
+                    {
+                        e.IsTreeLeafSure = true;
+                    }
+                    else
+                    {
+                        tc.MarkLoaded();
+                    }
+                    return false;
+                });
+            }
         }
 
         /// <summary>

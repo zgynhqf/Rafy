@@ -60,7 +60,7 @@ namespace Rafy.Domain
             DataProvider.EnsureStore();
             var items = DataProvider._memoryRows.Values.Select(v => DataProvider.FromRow(v));
             var list = this.CreateList(items, false);
-            this.MarkTreeFullLoaded(list);
+            TreeHelper.MarkTreeFullLoaded(list);
 
             return list;
         }

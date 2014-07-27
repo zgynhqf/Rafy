@@ -38,6 +38,12 @@ namespace UT
 
         #region 组合子属性
 
+        public static readonly ListProperty<FileList> FileListProperty = P<Folder>.RegisterList(e => e.FileList);
+        public FileList FileList
+        {
+            get { return this.GetLazyList(FileListProperty); }
+        }
+
         #endregion
 
         #region 一般属性

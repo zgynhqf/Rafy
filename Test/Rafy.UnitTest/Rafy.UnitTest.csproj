@@ -96,6 +96,11 @@
     <Compile Include="Entities\Customer.g.cs">
       <DependentUpon>Customer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Entities\DMS\File.cs" />
+    <Compile Include="Entities\DMS\File.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>File.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\DMS\Folder.cs" />
     <Compile Include="Entities\DMS\Folder.g.cs">
       <SubType>Code</SubType>
