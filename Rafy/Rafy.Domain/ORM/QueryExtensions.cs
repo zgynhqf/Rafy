@@ -26,10 +26,17 @@ namespace Rafy.Domain.ORM.Query
     /// </summary>
     public static partial class QueryExtensions
     {
-        //public static IQuery AddConstraintIf(this IQuery query, IManagedProperty property, object value)
-        //{
-        //    return AddConstraintIf(query, property, PropertyOperator.Equal, value);
-        //}
+        /// <summary>
+        /// 如果提供的值是不可空的，则为查询添加一个对应的约束条件，并以 And 与原条件进行连接。
+        /// </summary>
+        /// <param name="query">查询.</param>
+        /// <param name="property">要约束的属性.</param>
+        /// <param name="value">当 value 不可空时，才添加这个对比约束条件。</param>
+        /// <returns></returns>
+        public static IQuery AddConstraintIf(this IQuery query, IManagedProperty property, object value)
+        {
+            return AddConstraintIf(query, property, PropertyOperator.Equal, value);
+        }
 
         /// <summary>
         /// 如果提供的值是不可空的，则为查询添加一个对应的约束条件，并以 And 与原条件进行连接。
@@ -65,6 +72,18 @@ namespace Rafy.Domain.ORM.Query
             }
 
             return query;
+        }
+
+        /// <summary>
+        /// 为查询添加一个对应的约束条件，并以 And 与原条件进行连接。
+        /// </summary>
+        /// <param name="query">查询.</param>
+        /// <param name="property">要约束的属性.</param>
+        /// <param name="value">对比的值。</param>
+        /// <returns></returns>
+        public static IQuery AddConstraint(this IQuery query, IManagedProperty property, object value)
+        {
+            return AddConstraint(query, property, PropertyOperator.Equal, value);
         }
 
         /// <summary>

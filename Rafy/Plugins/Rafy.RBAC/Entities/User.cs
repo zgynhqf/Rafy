@@ -114,7 +114,7 @@ namespace Rafy.RBAC
         {
             rules.AddRule(User.CodeProperty, RequiredRule.Instance);
             rules.AddRule(User.NameProperty, RequiredRule.Instance);
-            rules.AddRule(User.CodeProperty, new NotExistsRule());
+            rules.AddRule(User.CodeProperty, new NotDuplicateRule());
         }
 
         protected override void ConfigMeta()

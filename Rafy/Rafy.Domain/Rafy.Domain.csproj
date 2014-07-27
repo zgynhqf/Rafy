@@ -133,10 +133,11 @@
     <Compile Include="Entity\MP\PropertyDefailtValues.cs" />
     <Compile Include="Entity\Serialization\SerializationEntityGraph.cs" />
     <Compile Include="Entity\ValidationHelper.cs" />
+    <Compile Include="Validation\CommonRules\NotUsedByReferenceRule.cs" />
     <Compile Include="Validation\CommonRules\HandlerRule.cs" />
     <Compile Include="Validation\CommonRules\NumberRangeRule.cs" />
     <Compile Include="Validation\CommonRules\PositiveNumberRule.cs" />
-    <Compile Include="Validation\CommonRules\NotExistsRule.cs" />
+    <Compile Include="Validation\CommonRules\NotDuplicateRule.cs" />
     <Compile Include="Validation\CommonRules\RegexMatchRule.cs" />
     <Compile Include="Validation\CommonRules\RequiredRule.cs" />
     <Compile Include="Validation\CommonRules\StringLengthRangeRule.cs" />

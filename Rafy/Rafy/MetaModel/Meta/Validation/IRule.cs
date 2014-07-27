@@ -62,13 +62,16 @@ namespace Rafy.MetaModel
         /// </summary>
         Update = 2,
         /// <summary>
-        /// 作用于数据的插入、更新操作。
+        /// Add | Update
         /// </summary>
         AddOrUpdate = Add | Update,
         /// <summary>
         /// 作用于数据的插入、更新操作。
         /// </summary>
         Delete = 4,
+        /// <summary>
+        /// Add | Update | Delete
+        /// </summary>
         All = Add | Update | Delete
     }
 }

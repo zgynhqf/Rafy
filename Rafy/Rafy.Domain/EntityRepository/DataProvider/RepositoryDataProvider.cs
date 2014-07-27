@@ -254,10 +254,19 @@ namespace Rafy.Domain
 
             //先保存所有添加、变更的节点。
             //这里的 markSaved 传入的应该是 false，否则会把待删除列表中的元素清空。
-            this.SubmitItem(tree, false, true);
+            if (!tree.IsDeleted)
+            {
+                this.SubmitItem(tree, false, true);
 
-            //然后再保存所有删除的节点。
-            this.SubmitTreeDeletedItems(tree, markSaved);
+                //然后再保存所有删除的节点。
+                this.SubmitTreeDeletedItems(tree, markSaved);
+            }
+            else
+            {
+                this.DeleteTreeChildren(tree);
+
+                this.SubmitItem(tree, false, true);
+            }
         }
 
         /// <summary>
@@ -292,10 +301,9 @@ namespace Rafy.Domain
             //整合所有要删除的节点。
             var mergedDeletedList = new List<Entity>();
 
-            var list = tree as EntityList;
-
             #region 加入列表的待删除节点。
 
+            var list = tree as EntityList;
             if (list != null)
             {
                 var toDeletedList = list.DeletedListField;
@@ -662,26 +670,34 @@ namespace Rafy.Domain
             }
         }
 
-        ///// <summary>
-        ///// 删除所有的子节点。
-        ///// 
-        ///// 子类重写此方法来实现新的删除逻辑。
-        ///// </summary>
-        //protected virtual void DeleteTreeChildren(Entity entity)
-        //{
-        //    var treeChildren = entity.TreeChildren;
+        /// <summary>
+        /// 删除所有的子节点。
+        /// 
+        /// 子类重写此方法来实现新的删除逻辑。
+        /// </summary>
+        protected virtual void DeleteTreeChildren(Entity entity)
+        {
+            //删除节点时，需要先保证所有的结点都已经加到了集合中。
+            var treeChildren = entity.TreeChildren;
+            treeChildren.LoadAllNodes();
 
-        //    //删除节点时，需要先保证所有的结点都已经加到了集合中。
-        //    treeChildren.LoadAllNodes();
+            //整合所有要删除的节点。
+            var mergedDeletedList = new List<Entity>();
+            treeChildren.EachNode(e =>
+            {
+                mergedDeletedList.Add(e);
+                return false;
+            });
 
-        //    for (int i = 0, c = treeChildren.Count; i < c; i++)
-        //    {
-        //        var treeChild = treeChildren[i];
-        //        treeChild.PersistenceStatus = PersistenceStatus.Deleted;
-
-        //        this.SubmitChild(treeChild, true);
-        //    }
-        //}
+            //反转顺序后再保存。
+            mergedDeletedList.Reverse();
+            for (int i = 0, c = mergedDeletedList.Count; i < c; i++)
+            {
+                var item = mergedDeletedList[i];
+                item.PersistenceStatus = PersistenceStatus.Deleted;
+                this.SubmitItem(item, false, false);
+            }
+        }
 
         /// <summary>
         /// 通过引用关系，来删除引用表中引用本对象的所有对象。

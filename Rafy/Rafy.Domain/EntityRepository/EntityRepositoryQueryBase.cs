@@ -194,8 +194,12 @@ namespace Rafy.Domain
             //树型实体不支持修改排序规则！此逻辑不能放到 OnQueryBuilt 虚方法中，以免被重写。
             if (Repo.SupportTree)
             {
+                if (query.OrderBy.Count > 0)
+                {
+                    throw new InvalidOperationException(string.Format("树状实体 {0} 只不支持自定义排序，必须使用索引排序。", Repo.EntityType));
+                }
+
                 var f = QueryFactory.Instance;
-                query.OrderBy.Clear();
                 query.OrderBy.Add(
                     f.OrderBy(query.From.FindTable(Repo).Column(Entity.TreeIndexProperty))
                     );

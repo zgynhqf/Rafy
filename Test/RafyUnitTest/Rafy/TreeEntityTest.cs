@@ -193,6 +193,45 @@ namespace RafyUnitTest
         }
 
         /// <summary>
+        /// 在直接删除一个实体时，不论它的子节点加载没有加载，都应该被删除。
+        /// </summary>
+        [TestMethod]
+        public void TET_Save_Remove_ByEntity_WithUnloadedTreeChildren()
+        {
+            var repo = RF.Concrete<FolderRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                repo.Save(new FolderList
+                {
+                    new Folder
+                    {
+                        TreeChildren = 
+                        {
+                            new Folder
+                            {
+                                TreeChildren = 
+                                {
+                                    new Folder()
+                                }
+                            },
+                            new Folder()
+                        }
+                    }
+                });
+
+                var list = repo.GetAll();
+                Assert.IsTrue(list.Count == 1);
+
+                var item = repo.GetById(list[0].Id);
+                item.PersistenceStatus = PersistenceStatus.Deleted;
+                repo.Save(item);
+
+                var list2 = repo.GetAll();
+                Assert.IsTrue(list2.Count == 0);
+            }
+        }
+
+        /// <summary>
         /// 在 EntityList 中删除的节点，可以被保存。
         /// </summary>
         [TestMethod]
@@ -429,7 +468,7 @@ namespace RafyUnitTest
         }
 
         /// <summary>
-        /// B 是 A 的子节点，先移动 A 使其 TreeCode 变更，然后升级 B，再删除 A，最后保存。
+        /// B 是 A 的子节点，先移动 A 使其 TreeIndex 变更，然后升级 B，再删除 A，最后保存。
         /// </summary>
         [TestMethod]
         public void TET_Save_Combine_MoveAndLevelUpAndDelete()
@@ -741,17 +780,18 @@ namespace RafyUnitTest
                 {
                     var item1 = list[i - 1];
                     var item2 = list[i];
-                    Assert.IsTrue(string.Compare(item1.TreeIndex, item2.TreeIndex) == -1, "默认应该按照 TreeCode 正序排列。");
+                    Assert.IsTrue(string.Compare(item1.TreeIndex, item2.TreeIndex) == -1, "默认应该按照 TreeIndex 正序排列。");
                 }
 
-                //按照 Id 排序的功能应该无效，结果会依然按照 TreeCode 排序。
-                list = repo.GetAndOrderByIdDesc();
-                for (int i = 1, c = list.Count; i < c; i++)
+                //按照 Id 排序的功能应该无效。
+                var success = false;
+                try
                 {
-                    var item1 = list[i - 1];
-                    var item2 = list[i];
-                    Assert.IsTrue(string.Compare(item1.TreeIndex, item2.TreeIndex) == -1, "默认应该按照 TreeCode 正序排列。");
+                    list = repo.GetAndOrderByIdDesc();
+                    success = true;
                 }
+                catch { }
+                Assert.IsFalse(success, "默认应该按照 TreeIndex 正 序排列。");
             }
         }
 
@@ -790,17 +830,18 @@ namespace RafyUnitTest
                 {
                     var item1 = list[i - 1];
                     var item2 = list[i];
-                    Assert.IsTrue(string.Compare(item1.TreeIndex, item2.TreeIndex) == -1, "默认应该按照 TreeCode 正序排列。");
+                    Assert.IsTrue(string.Compare(item1.TreeIndex, item2.TreeIndex) == -1, "默认应该按照 TreeIndex 正序排列。");
                 }
 
-                //按照 Id 排序的功能应该无效，结果会依然按照 TreeCode 排序。
-                list = repo.GetAndOrderByIdDesc2();
-                for (int i = 1, c = list.Count; i < c; i++)
+                //按照 Id 排序的功能应该无效。
+                var success = false;
+                try
                 {
-                    var item1 = list[i - 1];
-                    var item2 = list[i];
-                    Assert.IsTrue(string.Compare(item1.TreeIndex, item2.TreeIndex) == -1, "默认应该按照 TreeCode 正序排列。");
+                    list = repo.GetAndOrderByIdDesc2();
+                    success = true;
                 }
+                catch { }
+                Assert.IsFalse(success, "默认应该按照 TreeIndex 正序排列。");
             }
         }
 
@@ -982,7 +1023,7 @@ namespace RafyUnitTest
         }
 
         /// <summary>
-        /// 设置 A.TreePId 为 B.Id 时，由于要加载 TreeCode，所以 A.IsTreeParentLoaded 返回 true。
+        /// 设置 A.TreePId 为 B.Id 时，由于要加载 TreeIndex，所以 A.IsTreeParentLoaded 返回 true。
         /// A.TreeParent 应该返回 B 的同质对象。
         /// </summary>
         [TestMethod]
@@ -1021,7 +1062,7 @@ namespace RafyUnitTest
         #region 结构 - 索引 TreeIndex
 
         /// <summary>
-        /// 在 EntityList 中添加节点，节点生成相应的 TreeCode。
+        /// 在 EntityList 中添加节点，节点生成相应的 TreeIndex。
         /// </summary>
         [TestMethod]
         public void TET_Struc_TreeIndex_EntityList_RootListAdd()
@@ -1038,7 +1079,7 @@ namespace RafyUnitTest
         }
 
         /// <summary>
-        /// 在非根节点的 EntityList 中添加节点，不会修改添加节点的 TreeCode。
+        /// 在非根节点的 EntityList 中添加节点，不会修改添加节点的 TreeIndex。
         /// </summary>
         [TestMethod]
         public void TET_Struc_TreeIndex_EntityList_LeafListAdd()
@@ -1066,7 +1107,7 @@ namespace RafyUnitTest
         }
 
         /// <summary>
-        /// 在 EntityList 中某位置插入节点，节点之后的所有节点的 TreeCode 变更。
+        /// 在 EntityList 中某位置插入节点，节点之后的所有节点的 TreeIndex 变更。
         /// </summary>
         [TestMethod]
         public void TET_Struc_TreeIndex_EntityList_Insert()
@@ -1086,7 +1127,7 @@ namespace RafyUnitTest
         }
 
         /// <summary>
-        /// 在 EntityList 中删除节点，节点之后的所有节点的 TreeCode 变更。
+        /// 在 EntityList 中删除节点，节点之后的所有节点的 TreeIndex 变更。
         /// </summary>
         [TestMethod]
         public void TET_Struc_TreeIndex_EntityList_Remove()
@@ -1105,7 +1146,7 @@ namespace RafyUnitTest
         }
 
         /// <summary>
-        /// 在 TreeChildren 中添加节点，节点生成相应的 TreeCode。
+        /// 在 TreeChildren 中添加节点，节点生成相应的 TreeIndex。
         /// </summary>
         [TestMethod]
         public void TET_Struc_TreeIndex_TreeChildren_Add()
@@ -1164,7 +1205,7 @@ namespace RafyUnitTest
         }
 
         /// <summary>
-        /// 在 TreeChildren 中某位置插入节点，节点之后的所有节点的 TreeCode 变更。
+        /// 在 TreeChildren 中某位置插入节点，节点之后的所有节点的 TreeIndex 变更。
         /// </summary>
         [TestMethod]
         public void TET_Struc_TreeIndex_TreeChildren_Insert()
@@ -1187,7 +1228,7 @@ namespace RafyUnitTest
         }
 
         /// <summary>
-        /// 在 TreeChildren 中删除节点，节点之后的所有节点的 TreeCode 变更。
+        /// 在 TreeChildren 中删除节点，节点之后的所有节点的 TreeIndex 变更。
         /// </summary>
         [TestMethod]
         public void TET_Struc_TreeIndex_TreeChildren_Remove()
@@ -1211,7 +1252,7 @@ namespace RafyUnitTest
         }
 
         /// <summary>
-        /// 通过 TreeParent 设置上关系后，节点的 TreeCode 设置正确。
+        /// 通过 TreeParent 设置上关系后，节点的 TreeIndex 设置正确。
         /// </summary>
         [TestMethod]
         public void TET_Struc_TreeIndex_TreeParent_Set()
@@ -1224,7 +1265,7 @@ namespace RafyUnitTest
         }
 
         /// <summary>
-        /// 通过 TreePId 设置上关系后，节点的 TreeCode 设置正确。
+        /// 通过 TreePId 设置上关系后，节点的 TreeIndex 设置正确。
         /// </summary>
         [TestMethod]
         public void TET_Struc_TreeIndex_TreePId_Set()

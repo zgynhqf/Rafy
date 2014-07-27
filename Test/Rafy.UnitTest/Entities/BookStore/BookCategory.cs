@@ -104,5 +104,11 @@ namespace UT
             //配置实体的所有属性都映射到数据表中。
             Meta.MapTable().MapAllProperties();
         }
+
+        protected override void AddValidations(IValidationDeclarer rules)
+        {
+            rules.AddRule(new NotUsedByReferenceRule(Book.BookCategoryIdProperty));
+            base.AddValidations(rules);
+        }
     }
 }

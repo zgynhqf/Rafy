@@ -525,10 +525,10 @@ namespace UT
     {
         protected override void AddValidations(IValidationDeclarer rules)
         {
-            rules.AddRule(Book.CodeProperty, new NotExistsRule());
+            rules.AddRule(Book.CodeProperty, new NotDuplicateRule());
 
             //书名和作者名不能同时一致。
-            rules.AddRule(new NotExistsRule
+            rules.AddRule(new NotDuplicateRule
             {
                 Properties = { Book.AuthorProperty, Book.NameProperty }
             });

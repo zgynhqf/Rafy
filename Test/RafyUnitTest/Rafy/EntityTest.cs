@@ -1280,55 +1280,73 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ET_Validation_PropertyNotExists()
+        public void ET_Validation_NotDuplicateRule()
         {
             var repo = RF.Concrete<BookRepository>();
             using (RF.TransactionScope(repo))
             {
-                var user = new Book { Code = "01" };
-                repo.Save(user);
+                var entity = new Book { Code = "01" };
+                repo.Save(entity);
 
-                var user2 = new Book { Code = "01" };
-                var brokenRules = user2.Validate();
+                var entity2 = new Book { Code = "01" };
+                var brokenRules = entity2.Validate();
                 Assert.AreEqual(brokenRules.Count, 1, "[Code] 的值必须唯一。");
             }
         }
 
         [TestMethod]
-        public void ET_Validation_PropertyNotExists_MultiProperties()
+        public void ET_Validation_NotDuplicateRule_MultiProperties()
         {
             var repo = RF.Concrete<BookRepository>();
             using (RF.TransactionScope(repo))
             {
-                var user = new Book { Name = "IT秘籍", Author = "胡庆访" };
-                repo.Save(user);
+                var entity = new Book { Name = "IT秘籍", Author = "胡庆访" };
+                repo.Save(entity);
 
-                var user2 = new Book { Name = "IT秘籍", Author = "胡庆访" };
-                var brokenRules = user2.Validate();
+                var entity2 = new Book { Name = "IT秘籍", Author = "胡庆访" };
+                var brokenRules = entity2.Validate();
                 Assert.AreEqual(brokenRules.Count, 1, "Name 和 Author 的值必须唯一。");
 
-                user2 = new Book { Name = "IT秘籍", Author = "徐丹丹" };
-                brokenRules = user2.Validate();
+                entity2 = new Book { Name = "IT秘籍", Author = "徐丹丹" };
+                brokenRules = entity2.Validate();
                 Assert.AreEqual(brokenRules.Count, 0, "Name 和 Author 的值必须唯一。");
             }
         }
 
         [TestMethod]
-        public void ET_Validation_PropertyNotExists_Deleted()
+        public void ET_Validation_NotDuplicateRule_Deleted()
         {
             var repo = RF.Concrete<BookRepository>();
             using (RF.TransactionScope(repo))
             {
-                var user = new Book { Code = "01" };
-                repo.Save(user);
+                var entity = new Book { Code = "01" };
+                repo.Save(entity);
 
-                var user2 = repo.GetById(user.Id);
-                var error = user2.Validate();
-                Assert.AreEqual(error.Count, 0, "刚查询出来的实体可以直接通过 PropertyNotExists 的验证。");
+                var entity2 = repo.GetById(entity.Id);
+                var error = entity2.Validate();
+                Assert.AreEqual(error.Count, 0, "刚查询出来的实体可以直接通过 NotDuplicateRule 的验证。");
 
-                user2.PersistenceStatus = PersistenceStatus.Deleted;
-                error = user2.Validate();
-                Assert.AreEqual(error.Count, 0, "删除状态的实体可以直接通过 PropertyNotExists 的验证。");
+                entity2.PersistenceStatus = PersistenceStatus.Deleted;
+                error = entity2.Validate();
+                Assert.AreEqual(error.Count, 0, "删除状态的实体可以直接通过 NotDuplicateRule 的验证。");
+            }
+        }
+
+        [TestMethod]
+        public void ET_Validation_NotUsedByReferenceRule()
+        {
+            var repo = RF.Concrete<BookCategoryRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var cate = new BookCategory { Code = "01" };
+                repo.Save(cate);
+
+                var book = new Book { BookCategory = cate };
+                RF.Save(book);
+
+                var rules = cate.Validate();
+                Assert.IsTrue(rules.Count == 1);
+                Assert.IsTrue(rules[0].Rule.ValidationRule is NotUsedByReferenceRule);
             }
         }
 
