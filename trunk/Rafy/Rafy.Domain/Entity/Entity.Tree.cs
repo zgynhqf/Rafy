@@ -892,6 +892,13 @@ namespace Rafy.Domain
                 return null;
             }
 
+            /// <summary>
+            /// Determines the index of a specific item in the <see cref="T:System.Collections.Generic.IList`1" />.
+            /// </summary>
+            /// <param name="item">The object to locate in the <see cref="T:System.Collections.Generic.IList`1" />.</param>
+            /// <returns>
+            /// The index of <paramref name="item" /> if found in the list; otherwise, -1.
+            /// </returns>
             public int IndexOf(Entity item)
             {
                 this.Load();
@@ -899,6 +906,13 @@ namespace Rafy.Domain
                 return _nodes.IndexOf(item);
             }
 
+            /// <summary>
+            /// Determines whether the <see cref="T:System.Collections.Generic.ICollection`1" /> contains a specific value.
+            /// </summary>
+            /// <param name="item">The object to locate in the <see cref="T:System.Collections.Generic.ICollection`1" />.</param>
+            /// <returns>
+            /// true if <paramref name="item" /> is found in the <see cref="T:System.Collections.Generic.ICollection`1" />; otherwise, false.
+            /// </returns>
             public bool Contains(Entity item)
             {
                 this.Load();
@@ -906,6 +920,11 @@ namespace Rafy.Domain
                 return _nodes.Contains(item);
             }
 
+            /// <summary>
+            /// Copies to specific array.
+            /// </summary>
+            /// <param name="array">The array.</param>
+            /// <param name="arrayIndex">Index of the array.</param>
             public void CopyTo(Entity[] array, int arrayIndex)
             {
                 this.Load();
@@ -913,6 +932,10 @@ namespace Rafy.Domain
                 _nodes.CopyTo(array, arrayIndex);
             }
 
+            /// <summary>
+            /// Gets the number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1" />.
+            /// </summary>
+            /// <returns>The number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1" />.</returns>
             public int Count
             {
                 get
@@ -922,6 +945,10 @@ namespace Rafy.Domain
                 }
             }
 
+            /// <summary>
+            /// Gets a value indicating whether the <see cref="T:System.Collections.Generic.ICollection`1" /> is read-only.
+            /// </summary>
+            /// <returns>true if the <see cref="T:System.Collections.Generic.ICollection`1" /> is read-only; otherwise, false.</returns>
             public bool IsReadOnly
             {
                 get { return false; }
@@ -1238,6 +1265,12 @@ namespace Rafy.Domain
 
             #region 其它接口实现
 
+            /// <summary>
+            /// Returns an enumerator that iterates through the collection.
+            /// </summary>
+            /// <returns>
+            /// A <see cref="T:System.Collections.Generic.IEnumerator`1" /> that can be used to iterate through the collection.
+            /// </returns>
             public IEnumerator<Entity> GetEnumerator()
             {
                 this.Load();

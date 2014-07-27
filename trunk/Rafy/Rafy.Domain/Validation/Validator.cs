@@ -27,6 +27,11 @@ namespace Rafy.Domain.Validation
     public static class Validator
     {
         /// <summary>
+        /// 默认的验证行为：ValidatorActions.ValidateChildren | ValidatorActions.StopOnFirstBroken。
+        /// </summary>
+        public static ValidatorActions DefaultActions = ValidatorActions.ValidateChildren | ValidatorActions.StopOnFirstBroken;
+
+        /// <summary>
         /// 检查某个属性是否满足规则
         /// </summary>
         /// <param name="target">要验证的实体。</param>
@@ -67,7 +72,7 @@ namespace Rafy.Domain.Validation
         /// property</exception>
         public static BrokenRulesCollection Validate(this Entity target, IManagedProperty property, Func<IRule, bool> ruleFilter = null)
         {
-            return Validate(target, property, ValidatorActions.None, ruleFilter);
+            return Validate(target, property, DefaultActions, ruleFilter);
         }
 
         /// <summary>
@@ -116,7 +121,7 @@ namespace Rafy.Domain.Validation
         /// <exception cref="System.ArgumentNullException">target</exception>
         public static BrokenRulesCollection Validate(this Entity target)
         {
-            return Validate(target, ValidatorActions.None);
+            return Validate(target, DefaultActions);
         }
 
         /// <summary>
@@ -140,7 +145,7 @@ namespace Rafy.Domain.Validation
         /// <exception cref="System.ArgumentNullException">target</exception>
         public static BrokenRulesCollection Validate(this Entity target, Func<IRule, bool> ruleFilter)
         {
-            return Validate(target, ValidatorActions.None, ruleFilter);
+            return Validate(target, DefaultActions, ruleFilter);
         }
 
         /// <summary>
@@ -168,6 +173,8 @@ namespace Rafy.Domain.Validation
 
         private static void ValidateEntity(Entity target, BrokenRulesCollection res, ValidatorActions actions, Func<IRule, bool> filter)
         {
+            var stopOnFirst = HasAction(actions, ValidatorActions.StopOnFirstBroken);
+
             var rules = ValidationHelper.GetTypeRules(target.FindRepository() as ITypeValidationsHost, target.GetType());
             if (rules != null)
             {
@@ -175,10 +182,12 @@ namespace Rafy.Domain.Validation
                 foreach (var de in rules.PropertyRules)
                 {
                     CheckRules(target, de.Value, res, actions, filter);
+                    if (stopOnFirst && res.Count > 0) return;
                 }
 
                 //再验证整个实体。
                 CheckRules(target, rules.TypeRules, res, actions, filter);
+                if (stopOnFirst && res.Count > 0) return;
             }
 
             if (HasAction(actions, ValidatorActions.ValidateChildren))
@@ -191,12 +200,15 @@ namespace Rafy.Domain.Validation
                         list.EachNode(childEntity =>
                         {
                             ValidateEntity(childEntity, res, actions, filter);
+                            if (stopOnFirst && res.Count > 0) return true;
                             return false;
                         });
+                        if (stopOnFirst && res.Count > 0) return;
                     }
                     else
                     {
                         ValidateEntity(child.Value as Entity, res, actions, filter);
+                        if (stopOnFirst && res.Count > 0) return;
                     }
                 }
             }
