@@ -61,6 +61,7 @@ namespace VSTemplates.Wizards
             win.txtClassName.Text = _replacementsDictionary["$safeitemname$"];
             win.txtBaseEntityName.Text = dnsItems[dnsItems.Length - 1] + "Entity";
             win.txtDomainName.Text = "实体的领域名称";
+            win.txtEntityKeyType.Text = "int";
             var res = win.ShowDialog();
             if (res != true)
             {
@@ -72,6 +73,7 @@ namespace VSTemplates.Wizards
             _domainEntityName = win.txtClassName.Text;
             _parentEntityName = win.txtParentEntityName.Text;
             _domainBaseEntityName = win.txtBaseEntityName.Text;
+            string entityKeyType = win.txtEntityKeyType.Text;
             var domainEntityLabel = win.txtDomainName.Text;
             var hasRepository = win.cbGenerateRepository.IsChecked.Value;
             var isConfigView = false;
@@ -80,7 +82,7 @@ namespace VSTemplates.Wizards
             _isChild = !string.IsNullOrWhiteSpace(_parentEntityName);
             var entityAttributes = _isChild ? "[ChildEntity, Serializable]" : "[RootEntity, Serializable]";
 
-            RenderParentRefProperty();
+            RenderParentRefProperty(entityKeyType);
 
             RenderRepository(hasRepository, domainEntityLabel);
 
@@ -147,7 +149,7 @@ namespace VSTemplates.Wizards
             _replacementsDictionary.Add("$viewConfiguration$", viewConfiguration);
         }
 
-        private void RenderParentRefProperty()
+        private void RenderParentRefProperty(string entityKeyType)
         {
             var parentRefPropertyCode = string.Empty;
             if (_isChild)
@@ -155,9 +157,9 @@ namespace VSTemplates.Wizards
                 var template = @"
         public static readonly IRefIdProperty $parentEntityName$IdProperty =
             P<$domainEntityName$>.RegisterRefId(e => e.$parentEntityName$Id, ReferenceType.Parent);
-        public _Key_ $parentEntityName$Id
+        public $Key$ $parentEntityName$Id
         {
-            get { return (_Key_)this.GetRefId($parentEntityName$IdProperty); }
+            get { return ($Key$)this.GetRefId($parentEntityName$IdProperty); }
             set { this.SetRefId($parentEntityName$IdProperty, value); }
         }
         public static readonly RefEntityProperty<$parentEntityName$> $parentEntityName$Property =
@@ -168,7 +170,8 @@ namespace VSTemplates.Wizards
             set { this.SetRefEntity($parentEntityName$Property, value); }
         }
 ";
-                parentRefPropertyCode = template.Replace("$parentEntityName$", _parentEntityName);
+                parentRefPropertyCode = template.Replace("$parentEntityName$", _parentEntityName)
+                    .Replace("$Key$", entityKeyType);
             }
             _replacementsDictionary.Add("$parentRefProperty$", parentRefPropertyCode);
         }

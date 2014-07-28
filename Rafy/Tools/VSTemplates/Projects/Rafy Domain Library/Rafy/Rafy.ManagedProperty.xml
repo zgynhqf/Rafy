@@ -24,8 +24,8 @@
             </summary>
             <param name="property">托管属性</param>
             <param name="owner">该属性对应的具体类型。
-            这个具体的类型必须是属性的拥有类型或者它的子类型。
-            </param>
+            这个具体的类型必须是属性的拥有类型或者它的子类型。如果传入 null，则默认为属性的拥有类型。</param>
+            <exception cref="T:System.ArgumentNullException">property</exception>
         </member>
         <member name="P:Rafy.ManagedProperty.ConcreteProperty.Name">
             <summary>
@@ -559,28 +559,28 @@
             框架会在启动期自动查找这些类，并把其中的托管属性都初始化为启动期属性。
             </summary>
         </member>
-        <member name="T:Rafy.ManagedProperty.Freezable">
+        <member name="T:Rafy.ManagedProperty.FreezableMeta">
             <summary>
             一个可以被冻结的对象
             </summary>
         </member>
-        <member name="M:Rafy.ManagedProperty.Freezable.Freeze">
+        <member name="M:Rafy.ManagedProperty.FreezableMeta.Freeze">
             <summary>
             冻结本对象。
             冻结后，对象变为不可变对象。
             </summary>
         </member>
-        <member name="M:Rafy.ManagedProperty.Freezable.Unfreeze">
+        <member name="M:Rafy.ManagedProperty.FreezableMeta.Unfreeze">
             <summary>
             for unit test
             </summary>
         </member>
-        <member name="M:Rafy.ManagedProperty.Freezable.CheckUnFrozen">
+        <member name="M:Rafy.ManagedProperty.FreezableMeta.CheckUnFrozen">
             <summary>
             调用此方法保证本对象还没有被冻结。否则会抛出异常。
             </summary>
         </member>
-        <member name="P:Rafy.ManagedProperty.Freezable.IsFrozen">
+        <member name="P:Rafy.ManagedProperty.FreezableMeta.IsFrozen">
             <summary>
             返回当前的对象是否已经被冻结了。
             子类可以在对状态进行更新时检查此属性。
