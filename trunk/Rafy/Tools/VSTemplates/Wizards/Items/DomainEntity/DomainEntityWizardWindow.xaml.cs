@@ -27,6 +27,7 @@ namespace VSTemplates.Wizards.Items.DomainEntity
 
         void DomainEntityWizardWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            InitEntityKeyRowHeight();
             txtClassName.Focus();
         }
 
@@ -53,6 +54,17 @@ namespace VSTemplates.Wizards.Items.DomainEntity
         private void btnContinue_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = true;
+        }
+
+        private void txtParentEntityName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            InitEntityKeyRowHeight();
+        }
+
+        private void InitEntityKeyRowHeight()
+        {
+            entityKeyRow.Height = txtParentEntityName.Text.Length > 0 ?
+                GridLength.Auto : new GridLength(0);
         }
     }
 }
