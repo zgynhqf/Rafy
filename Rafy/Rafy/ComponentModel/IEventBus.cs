@@ -39,15 +39,30 @@ namespace Rafy.ComponentModel
         /// <summary>
         /// 向总线订阅一个指定的事件。
         /// </summary>
-        /// <typeparam name="TEvent"></typeparam>
-        /// <param name="handler"></param>
-        void Subscribe<TEvent>(Action<TEvent> handler);
+        /// <typeparam name="TEvent">事件类型。</typeparam>
+        /// <param name="owner">事件的监听者。</param>
+        /// <param name="handler">监听函数。</param>
+        void Subscribe<TEvent>(object owner, Action<TEvent> handler);
+
+        /// <summary>
+        /// 向总线取消一个指定的事件的订阅。
+        /// </summary>
+        /// <typeparam name="TEvent">事件类型。</typeparam>
+        /// <param name="owner">事件的监听者。</param>
+        void Unsubscribe<TEvent>(object owner);
+
+        /// <summary>
+        /// 获取指定事件的所有监听者。
+        /// </summary>
+        /// <typeparam name="TEvent">指定的事件类型。</typeparam>
+        /// <returns></returns>
+        IEventSubscribers GetSubscribers<TEvent>();
 
         ///// <summary>
-        ///// 向总线取消一个指定的事件的订阅。
+        ///// 获取指定事件的所有监听者。
         ///// </summary>
-        ///// <typeparam name="TEvent"></typeparam>
-        ///// <param name="handler"></param>
-        //void Unsubscribe<TEvent>(Action<TEvent> handler);
+        ///// <param name="eventType">指定的事件类型。</param>
+        ///// <returns></returns>
+        //IEventSubscribers GetSubscribers(Type eventType);
     }
 }

@@ -94,13 +94,30 @@ namespace RafyUnitTest
         public void EnvTest_EventBus()
         {
             string name = null;
-            Composer.EventBus.Subscribe<EventBusArgs>(e =>
+            Composer.EventBus.Subscribe<EventBusArgs>(this, e =>
             {
                 name = e.Name;
             });
 
             Composer.EventBus.Publish(new EventBusArgs { Name = "HaHa" });
             Assert.AreEqual(name, "HaHa");
+        }
+
+        [TestMethod]
+        public void EnvTest_EventBus_EventSubscribers()
+        {
+            string name = null;
+            Composer.EventBus.Subscribe<EventBusArgs>(this, e =>
+            {
+                name = e.Name;
+            });
+
+            var subscribers = Composer.EventBus.GetSubscribers<EventBusArgs>();
+            if (subscribers.Count > 0)
+            {
+                subscribers.Publish(new EventBusArgs { Name = "HaHa" });
+                Assert.AreEqual(name, "HaHa");
+            }
         }
 
         private class EventBusArgs
