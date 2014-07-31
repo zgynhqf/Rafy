@@ -64,6 +64,7 @@
     <Compile Include="ComponentModel\ContainerItemAttribute.cs" />
     <Compile Include="ComponentModel\EventBus.cs" />
     <Compile Include="ComponentModel\IEventBus.cs" />
+    <Compile Include="ComponentModel\IEventSubscribers.cs" />
     <Compile Include="ComponentModel\IObjectContainer.cs" />
     <Compile Include="ComponentModel\IServiceContainer.cs" />
     <Compile Include="ComponentModel\IObjectContainerFactory.cs" />

@@ -20,7 +20,7 @@ namespace Rafy.ComponentModel
 {
     internal class EventBus : IEventBus
     {
-        private Dictionary<Type, List<Action<object>>> _handlers = new Dictionary<Type, List<Action<object>>>();
+        private Dictionary<Type, IEventSubscribers> _subscribers = new Dictionary<Type, IEventSubscribers>();
 
         public void Publish(object eventModel)
         {
@@ -36,29 +36,106 @@ namespace Rafy.ComponentModel
 
         private void PublishCore(Type type, object eventModel)
         {
-            List<Action<object>> res = null;
-            if (_handlers.TryGetValue(type, out res))
+            IEventSubscribers subscribers = null;
+            if (_subscribers.TryGetValue(type, out subscribers))
             {
-                for (int i = 0, c = res.Count; i < c; i++)
+                subscribers.Publish(eventModel);
+            }
+        }
+
+        public void Subscribe<TEvent>(object owner, Action<TEvent> handler)
+        {
+            var type = typeof(TEvent);
+
+            IEventSubscribers subscribers = null;
+            if (!_subscribers.TryGetValue(type, out subscribers))
+            {
+                subscribers = new EventSubscribers<TEvent>();
+                _subscribers.Add(type, subscribers);
+            }
+
+            var concrete = subscribers as EventSubscribers<TEvent>;
+
+            concrete.Add(new EventSubscriberItem<TEvent>
+            {
+                Owner = owner,
+                Handler = handler
+            });
+        }
+
+        public void Unsubscribe<TEvent>(object owner)
+        {
+            var type = typeof(TEvent);
+
+            IEventSubscribers subscribers = null;
+            if (_subscribers.TryGetValue(type, out subscribers))
+            {
+                var concrete = subscribers as EventSubscribers<TEvent>;
+
+                concrete.RemoveByOwner(owner);
+            }
+        }
+
+        public IEventSubscribers GetSubscribers<TEvent>()
+        {
+            var type = typeof(TEvent);
+
+            IEventSubscribers subscribers = null;
+            _subscribers.TryGetValue(type, out subscribers);
+
+            return subscribers;
+        }
+
+        private class EventSubscribers<TEvent> : IEventSubscribers
+        {
+            private List<EventSubscriberItem<TEvent>> _items = new List<EventSubscriberItem<TEvent>>();
+
+            internal void Add(EventSubscriberItem<TEvent> item)
+            {
+                _items.Add(item);
+            }
+
+            internal void RemoveByOwner(object owner)
+            {
+                for (int i = _items.Count - 1; i >= 0; i--)
                 {
-                    var action = res[i];
-                    action(eventModel);
+                    var item = _items[i];
+                    if (item.Owner == owner)
+                    {
+                        _items.RemoveAt(i);
+                    }
+                }
+            }
+
+            public Type EventType
+            {
+                get { return typeof(TEvent); }
+            }
+
+            public int Count
+            {
+                get { return _items.Count; }
+            }
+
+            public void Publish(object eventModel)
+            {
+                for (int i = 0, c = _items.Count; i < c; i++)
+                {
+                    var item = _items[i];
+                    item.Handle(eventModel);
                 }
             }
         }
 
-        public void Subscribe<TEvent>(Action<TEvent> handler)
+        class EventSubscriberItem<TEvent>
         {
-            var type = typeof(TEvent);
+            public object Owner;
+            public Action<TEvent> Handler;
 
-            List<Action<object>> res = null;
-            if (!_handlers.TryGetValue(type, out res))
+            public void Handle(object eventModel)
             {
-                res = new List<Action<object>>();
-                _handlers.Add(type, res);
+                Handler((TEvent)eventModel);
             }
-
-            res.Add(e => handler((TEvent)e));
         }
     }
 }

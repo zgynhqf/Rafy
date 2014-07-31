@@ -10,12 +10,14 @@
  * 
 *******************************************************/
 
-2.32.2466
+2.32.2468
     ★重要、！删除接口
         简化 Entity 的状态接口：Status 属性可直接设置，Mark 方法被删除。
         ValidationRule
         NotUsedByReferenceRule
         EagerLoadOptions 支持 LoadWithTreeChildren 方法。
+    添加接口
+        添加 IEventSubscribers 类型，支持更高效的事件发布。
     内部修改
         当根节点出现断码时，直接添加根节点时，也应该自动生成不重复的 TreeIndex。
         在直接删除一个树实体时，不论它的子节点加载没有加载，都应该被删除。
