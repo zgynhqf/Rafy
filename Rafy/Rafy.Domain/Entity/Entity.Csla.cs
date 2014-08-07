@@ -368,6 +368,17 @@ namespace Rafy.Domain
 
         #region IEntityOrList Members
 
+        /// <summary>
+        /// 实体所在的当前所在的列表对象。
+        /// 
+        /// 虽然一个实体可以存在于多个集合中，但是，它只保留一个主要集合的引用。
+        /// <see cref="EntityList.SupressSetItemParent"/>
+        /// </summary>
+        public EntityList ParentList
+        {
+            get { return (this as IDomainComponent).Parent as EntityList; }
+        }
+
         [NonSerialized]
         private IDomainComponent _parent;
 

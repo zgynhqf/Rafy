@@ -40,7 +40,7 @@ namespace Rafy.Domain
     /// 
     /// 注意：
     /// 1. 其子类必须是线程安全的！
-    /// 2. 子类的构建函数建议使用protected，不要向外界暴露，全部通过仓库工厂获取。
+    /// 2. 子类的构建函数建议使用protected，不要向外界暴露。使用者只能全部通过仓库工厂获取。
     /// </summary>
     /// <threadsafety static="true" instance="true"/>
     public abstract partial class EntityRepository : EntityRepositoryQueryBase,

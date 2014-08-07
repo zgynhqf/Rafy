@@ -43,6 +43,17 @@ namespace Rafy.ComponentModel
         /// 程序集本身
         /// </summary>
         public Assembly Assembly { get; private set; }
+
+        /// <summary>
+        /// 本属性表示插件在所有插件中的启动索引号。
+        /// 索引号表示了插件的启动优先级，索引号越小，越先被启动。
+        /// 该优先级的计算方式为：
+        /// 
+        /// 1. 所有 DomainPlugin 的索引号全部少于所有的 UIPlugin 的索引号；
+        /// 2. 接着按照 SetupLevel 进行排序，越小的 SetupLevel 对应越小的索引号。
+        /// 3. 对于 SetupLevel 相同的插件，则根据引用关系对插件进行排序，引用其它插件越少的插件，对应的索引号更小。
+        /// </summary>
+        public int SetupIndex { get; internal set; }
     }
 
     internal class EmptyPlugin : IPlugin
