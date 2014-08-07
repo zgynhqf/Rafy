@@ -45,15 +45,10 @@ namespace Rafy.Domain
             }
         }
 
-        /// <summary>
-        /// 实体所在的当前所在的列表对象。
-        /// 
-        /// 虽然一个实体可以存在于多个集合中，但是，它只保留一个主要集合的引用。
-        /// <see cref="EntityList.SupressSetItemParent"/>
-        /// </summary>
-        public EntityList ParentList
+        internal void NotifyRevalidate(IProperty property)
         {
-            get { return (this as IDomainComponent).Parent as EntityList; }
+            //目前直接用属性变更事件来通知上层的 Binding 重新
+            this.OnPropertyChanged(property.Name);
         }
 
         //获取Id属性太慢，去除以下属性。

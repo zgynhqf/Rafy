@@ -38,15 +38,6 @@ using Rafy.Utils.Caching;
 
 namespace Rafy.Domain
 {
-    /// <summary>
-    /// 仓库类
-    /// 用于某个实体类型及其实体列表类的管理
-    /// 
-    /// 注意：
-    /// 1. 其子类必须是线程安全的！
-    /// 2. 子类的构建函数建议使用protected，不要向外界暴露，全部通过仓库工厂获取。
-    /// </summary>
-    /// <threadsafety static="true" instance="true"/>
     partial class EntityRepository
     {
         protected EntityRepository()
@@ -209,6 +200,16 @@ namespace Rafy.Domain
         public EntityList GetBy(CommonQueryCriteria criteria)
         {
             return this.DoGetBy(criteria);
+        }
+
+        /// <summary>
+        /// 通过 CommonQueryCriteria 来查询实体列表。
+        /// </summary>
+        /// <param name="criteria">常用查询条件。</param>
+        /// <returns></returns>
+        public Entity GetFirstBy(CommonQueryCriteria criteria)
+        {
+            return this.DoGetFirstBy(criteria);
         }
 
         /// <summary>
@@ -570,6 +571,16 @@ namespace Rafy.Domain
         protected virtual EntityList DoGetBy(CommonQueryCriteria criteria)
         {
             return this.FetchList(criteria);
+        }
+
+        /// <summary>
+        /// 通过 CommonQueryCriteria 来查询单一实体。
+        /// </summary>
+        /// <param name="criteria">常用查询条件。</param>
+        /// <returns></returns>
+        protected virtual Entity DoGetFirstBy(CommonQueryCriteria criteria)
+        {
+            return this.FetchFirst(criteria);
         }
 
         /// <summary>

@@ -43,7 +43,7 @@ namespace Rafy.ComponentModel
             }
         }
 
-        public void Subscribe<TEvent>(object owner, Action<TEvent> handler)
+        public void Subscribe<TEvent>(object subscriber, Action<TEvent> handler)
         {
             var type = typeof(TEvent);
 
@@ -58,12 +58,12 @@ namespace Rafy.ComponentModel
 
             concrete.Add(new EventSubscriberItem<TEvent>
             {
-                Owner = owner,
+                Subscriber = subscriber,
                 Handler = handler
             });
         }
 
-        public void Unsubscribe<TEvent>(object owner)
+        public void Unsubscribe<TEvent>(object subscriber)
         {
             var type = typeof(TEvent);
 
@@ -72,7 +72,12 @@ namespace Rafy.ComponentModel
             {
                 var concrete = subscribers as EventSubscribers<TEvent>;
 
-                concrete.RemoveByOwner(owner);
+                concrete.RemoveByOwner(subscriber);
+
+                if (concrete.Count == 0)
+                {
+                    _subscribers.Remove(type);
+                }
             }
         }
 
@@ -95,12 +100,12 @@ namespace Rafy.ComponentModel
                 _items.Add(item);
             }
 
-            internal void RemoveByOwner(object owner)
+            internal void RemoveByOwner(object subscriber)
             {
                 for (int i = _items.Count - 1; i >= 0; i--)
                 {
                     var item = _items[i];
-                    if (item.Owner == owner)
+                    if (item.Subscriber == subscriber)
                     {
                         _items.RemoveAt(i);
                     }
@@ -129,7 +134,7 @@ namespace Rafy.ComponentModel
 
         class EventSubscriberItem<TEvent>
         {
-            public object Owner;
+            public object Subscriber;
             public Action<TEvent> Handler;
 
             public void Handle(object eventModel)

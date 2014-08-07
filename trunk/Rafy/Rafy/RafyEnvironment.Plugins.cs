@@ -89,9 +89,17 @@ namespace Rafy
 
         #region 获取所有 Plugins
 
-        private static IEnumerable<PluginAssembly> _libraries;
+        private static object _librariesLock = new object();
 
-        private static IEnumerable<PluginAssembly> _modules;
+        private static object _modulesLock = new object();
+
+        private static object _allPluginsLock = new object();
+
+        private static IList<PluginAssembly> _libraries;
+
+        private static IList<PluginAssembly> _modules;
+
+        private static IList<PluginAssembly> _allPlugins;
 
         /// <summary>
         /// 找到当前程序所有可运行的领域实体插件。
@@ -101,10 +109,16 @@ namespace Rafy
         {
             if (_libraries == null)
             {
-                var assemblies = EnumerateAllDomainAssemblies().Union(PluginTable.DomainLibraries).ToArray();
-                _libraries = LoadPlugins(assemblies);
+                lock (_librariesLock)
+                {
+                    if (_libraries == null)
+                    {
+                        var assemblies = EnumerateAllDomainAssemblies().Union(PluginTable.DomainLibraries).ToArray();
+                        _libraries = LoadSortedPlugins(assemblies);
 
-                PluginTable.DomainLibraries.Lock();
+                        PluginTable.DomainLibraries.Lock();
+                    }
+                }
             }
             return _libraries;
         }
@@ -117,17 +131,23 @@ namespace Rafy
         {
             if (_modules == null)
             {
-                //如果是界面应用程序，则加载所有的 UI 文件。否则返回空集合。
-                if (_location.IsWebUI || _location.IsWPFUI)
+                lock (_modulesLock)
                 {
-                    var assemblies = EnumerateAllUIAssemblies().Union(PluginTable.UILibraries).ToList();
-                    _modules = LoadPlugins(assemblies);
+                    if (_modules == null)
+                    {
+                        //如果是界面应用程序，则加载所有的 UI 文件。否则返回空集合。
+                        if (_location.IsWebUI || _location.IsWPFUI)
+                        {
+                            var assemblies = EnumerateAllUIAssemblies().Union(PluginTable.UILibraries).ToList();
+                            _modules = LoadSortedPlugins(assemblies);
 
-                    PluginTable.UILibraries.Lock();
-                }
-                else
-                {
-                    _modules = Enumerable.Empty<PluginAssembly>();
+                            PluginTable.UILibraries.Lock();
+                        }
+                        else
+                        {
+                            _modules = new PluginAssembly[0];
+                        }
+                    }
                 }
             }
             return _modules;
@@ -139,24 +159,44 @@ namespace Rafy
         /// <returns></returns>
         public static IEnumerable<PluginAssembly> GetAllPlugins()
         {
-            if (_location.IsWPFUI || _location.IsWebUI)
+            if (_allPlugins == null)
             {
-                return GetDomainPlugins().Union(GetUIPlugins()).OrderBy(a => a.Instance.SetupLevel);
-            }
+                lock (_allPluginsLock)
+                {
+                    if (_allPlugins == null)
+                    {
+                        GetDomainPlugins();
+                        _allPlugins = _libraries;
 
-            return GetDomainPlugins();
+                        if (_location.IsWPFUI || _location.IsWebUI)
+                        {
+                            _allPlugins = _allPlugins
+                                .Union(GetUIPlugins())
+                                .ToList();
+
+                            //对于整合后的集合，再重新设置它们的 FinalIndex。
+                            for (int i = 0, c = _allPlugins.Count; i < c; i++)
+                            {
+                                _allPlugins[i].SetupIndex = i;
+                            }
+                        }
+                    }
+                }
+            }
+            return _allPlugins;
         }
 
         internal static void Reset()
         {
             _libraries = null;
             _modules = null;
+            _allPlugins = null;
             ResetLocation();
         }
 
-        private static List<PluginAssembly> LoadPlugins(IEnumerable<Assembly> assemblies)
+        private static List<PluginAssembly> LoadSortedPlugins(IEnumerable<Assembly> assemblies)
         {
-            return assemblies.Select(assembly =>
+            var list = assemblies.Select(assembly =>
             {
                 var pluginType = assembly.GetTypes().FirstOrDefault(t => typeof(IPlugin).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
 
@@ -173,9 +213,64 @@ namespace Rafy
 
                 return new PluginAssembly(assembly, pluginInstance);
             })
-                //这里按照产品 721 进行排序。
-            .OrderBy(a => a.Instance.SetupLevel)
             .ToList();
+
+            //将 list 中集合中的元素，先按照 SetupLevel 排序；
+            //然后同一个启动级别中的插件，再按照引用关系来排序。
+            var sorted = new List<PluginAssembly>(list.Count);
+            var groups = list.GroupBy(a => a.Instance.SetupLevel).OrderBy(g => g.Key);
+            var index = 0;
+            foreach (var group in groups)
+            {
+                var sortedItems = SortByReference(group);
+                for (int i = 0, c = sortedItems.Count; i < c; i++)
+                {
+                    var item = sortedItems[i];
+                    item.SetupIndex = index++;
+                    sorted.Add(item);
+                }
+            }
+
+            return sorted;
+        }
+
+        private static List<PluginAssembly> SortByReference(IEnumerable<PluginAssembly> list)
+        {
+            //items 表示待处理列表。
+            var items = list.ToList();
+            var sorted = new List<PluginAssembly>(items.Count);
+
+            while (items.Count > 0)
+            {
+                for (int i = 0, c = items.Count; i < c; i++)
+                {
+                    var item = items[i];
+                    bool referencesOther = false;
+                    var refItems = item.Assembly.GetReferencedAssemblies();
+                    for (int j = 0, c2 = items.Count; j < c2; j++)
+                    {
+                        if (i != j)
+                        {
+                            if (refItems.Any(ri => ri.FullName == items[j].Assembly.FullName))
+                            {
+                                referencesOther = true;
+                                break;
+                            }
+                        }
+                    }
+                    //没有被任何一个程序集引用，则把这个加入到结果列表中，并从待处理列表中删除。
+                    if (!referencesOther)
+                    {
+                        sorted.Add(item);
+                        items.RemoveAt(i);
+
+                        //跳出循环，从新开始。
+                        break;
+                    }
+                }
+            }
+
+            return sorted;
         }
 
         private static IEnumerable<Assembly> EnumerateAllDomainAssemblies()
@@ -359,7 +454,7 @@ namespace Rafy
                         if (!type.IsGenericTypeDefinition && entityType.IsAssignableFrom(type))
                         {
                             var config = Activator.CreateInstance(type) as EntityConfig;
-                            config.PluginSetupLevel = p.Instance.SetupLevel;
+                            config.PluginIndex = p.SetupIndex;
                             config.InheritanceCount = TypeHelper.GetHierarchy(type, typeof(ManagedPropertyObject)).Count();
 
                             List<EntityConfig> typeList = null;
@@ -394,7 +489,7 @@ namespace Rafy
                 List<EntityConfig> configList = null;
                 if (_typeConfigurations.TryGetValue(type, out configList))
                 {
-                    var orderedList = configList.OrderBy(o => o.PluginSetupLevel).ThenBy(o => o.InheritanceCount);
+                    var orderedList = configList.OrderBy(o => o.PluginIndex).ThenBy(o => o.InheritanceCount);
                     foreach (var config in orderedList) { yield return config; }
                 }
             }
@@ -436,7 +531,7 @@ namespace Rafy
                             if (!type.IsGenericTypeDefinition && entityType.IsAssignableFrom(type))
                             {
                                 var config = Activator.CreateInstance(type) as TViewConfig;
-                                config.PluginSetupLevel = p.Instance.SetupLevel;
+                                config.PluginIndex = p.SetupIndex;
                                 config.InheritanceCount = TypeHelper.GetHierarchy(type, typeof(ManagedPropertyObject)).Count();
 
                                 List<TViewConfig> typeList = null;
@@ -487,7 +582,7 @@ namespace Rafy
                         List<TViewConfig> configList = null;
                         if (_configurations.TryGetValue(type, out configList))
                         {
-                            var orderedList = configList.OrderBy(o => o.PluginSetupLevel).ThenBy(o => o.InheritanceCount);
+                            var orderedList = configList.OrderBy(o => o.PluginIndex).ThenBy(o => o.InheritanceCount);
                             foreach (var config in orderedList) { yield return config; }
                         }
                     }
@@ -501,7 +596,7 @@ namespace Rafy
                         List<TViewConfig> configList = null;
                         if (_extendConfigurations.TryGetValue(key, out configList))
                         {
-                            var orderedList = configList.OrderBy(o => o.PluginSetupLevel).ThenBy(o => o.InheritanceCount);
+                            var orderedList = configList.OrderBy(o => o.PluginIndex).ThenBy(o => o.InheritanceCount);
                             foreach (var config in orderedList) { yield return config; }
                         }
                     }

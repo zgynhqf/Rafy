@@ -247,9 +247,6 @@
     <Compile Include="Entity\IDomainComponent.cs" />
     <Compile Include="Entity\PersistenceStatus.cs" />
     <Compile Include="EntityRepository\MemoryEntityRepository.cs" />
-    <Compile Include="Entity\Entity.Validation.cs">
-      <DependentUpon>Entity.cs</DependentUpon>
-    </Compile>
     <Compile Include="Entity\EntityList.Csla.cs">
       <DependentUpon>EntityList.cs</DependentUpon>
     </Compile>

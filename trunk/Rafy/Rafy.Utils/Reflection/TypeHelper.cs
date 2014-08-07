@@ -20,6 +20,9 @@ using System.Runtime;
 
 namespace Rafy.Reflection
 {
+    /// <summary>
+    /// 类型的一些帮助方法。
+    /// </summary>
     public static class TypeHelper
     {
         /// <summary>
@@ -78,6 +81,11 @@ namespace Rafy.Reflection
                 type == typeof(sbyte);
         }
 
+        /// <summary>
+        /// 获取指定类型的默认值。
+        /// </summary>
+        /// <param name="targetType">Type of the target.</param>
+        /// <returns></returns>
         public static object GetDefaultValue(Type targetType)
         {
             if (targetType.IsValueType) return Activator.CreateInstance(targetType);
@@ -240,6 +248,29 @@ namespace Rafy.Reflection
             return (T)(CoerceValue(typeof(T), valueType, value));
         }
 
+        /// <summary>
+        /// Attempts to coerce a value of one type into
+        /// a value of a different type.
+        /// </summary>
+        /// <typeparam name="T">Type to which the value should be coerced.</typeparam>
+        /// <param name="value">The value to coerce.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">value</exception>
+        /// <remarks>
+        ///   <para>
+        /// If the desired type is a primitive type or Decimal,
+        /// empty string and null values will result in a 0
+        /// or equivalent.
+        ///   </para>
+        ///   <para>
+        /// If the desired type is a Nullable type, empty string
+        /// and null values will result in a null result.
+        ///   </para>
+        ///   <para>
+        /// If the desired type is an enum the value's ToString()
+        /// result is parsed to convert into the enum value.
+        ///   </para>
+        /// </remarks>
         public static T CoerceValue<T>(object value)
         {
             if (value == null) throw new ArgumentNullException("value");

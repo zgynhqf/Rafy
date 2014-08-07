@@ -109,14 +109,17 @@ namespace Rafy.VSPackage.Commands.RefreshAutoCode
 
             //生成代码，写入文件。
             var code = renderer(codeClass);
-            File.WriteAllText(gFile, code);
-
-            //添加到项目中
-            var children = item.ProjectItems;
-            var gFileItem = children.FindByName(gFileName);
-            if (gFileItem == null)
+            if (string.IsNullOrEmpty(code))
             {
-                children.AddFromFile(gFile);
+                File.WriteAllText(gFile, code);
+
+                //添加到项目中
+                var children = item.ProjectItems;
+                var gFileItem = children.FindByName(gFileName);
+                if (gFileItem == null)
+                {
+                    children.AddFromFile(gFile);
+                }
             }
         }
 
@@ -300,14 +303,19 @@ namespace Rafy.VSPackage.Commands.RefreshAutoCode
 
         private string RenderRepoByTemplate(CodeClass repo)
         {
-            var domainNamespace = ParseDomainNamespace(repo);
-            var entity = Helper.GetEntityNameForRepository(repo);
+            string domainNamespace = null;
+            if (ParseDomainNamespace(repo, out domainNamespace))
+            {
+                var entity = Helper.GetEntityNameForRepository(repo);
 
-            var res = ItemCodeTemplate.GetRepositoryFileCode(
-                domainNamespace, repo.Namespace.Name, entity
-                );
+                var res = ItemCodeTemplate.GetRepositoryFileCode(
+                    domainNamespace, repo.Namespace.Name, entity
+                    );
 
-            return res;
+                return res;
+            }
+
+            return string.Empty;
         }
 
         /// <summary>
@@ -315,17 +323,25 @@ namespace Rafy.VSPackage.Commands.RefreshAutoCode
         /// </summary>
         /// <param name="repo"></param>
         /// <returns></returns>
-        private static string ParseDomainNamespace(CodeClass repo)
+        private static bool ParseDomainNamespace(CodeClass repo, out string domainNamespace)
         {
+            domainNamespace = null;
+
             //约定：Repository.g.cs 文件中的最后一个命名空间，即是实体的命名空间。
             var item = repo.ProjectItem;
             var fileName = item.get_FileNames(1);
             var gFileName = Path.GetFileNameWithoutExtension(fileName) + ".g.cs";
             var gFile = Path.Combine(Path.GetDirectoryName(fileName), gFileName);
-            var code = File.ReadAllText(gFile);
-            var match = Regex.Match(code, @"using (?<domainNamespace>\S+?);\s+namespace");
-            var domainNamespace = match.Groups["domainNamespace"].Value;
-            return domainNamespace;
+
+            //Repository 的层基类是没有 .g.cs 文件的，这时不需要为它生成。
+            if (File.Exists(gFile))
+            {
+                var code = File.ReadAllText(gFile);
+                var match = Regex.Match(code, @"using (?<domainNamespace>\S+?);\s+namespace");
+                domainNamespace = match.Groups["domainNamespace"].Value;
+                return true;
+            }
+            return false;
         }
 
         #endregion

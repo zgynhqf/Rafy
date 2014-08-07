@@ -26,7 +26,7 @@ namespace Rafy.MetaModel
         /// <summary>
         /// 所处插件的启动级别。
         /// </summary>
-        internal int PluginSetupLevel { get; set; }
+        internal int PluginIndex { get; set; }
 
         /// <summary>
         /// 继承层次

@@ -214,6 +214,17 @@
         {
             return base.GetBy(criteria) as $domainEntityName$List;
         }
+    
+        /// <summary>
+        /// 通过 CommonQueryCriteria 来查询单一实体。
+        /// </summary>
+        /// <param name="criteria">常用查询条件。</param>
+        /// <returns></returns>
+        [DebuggerStepThrough]
+        public new $domainEntityName$ GetFirstBy(CommonQueryCriteria criteria)
+        {
+            return base.GetFirstBy(criteria) as $domainEntityName$;
+        }
 
         /// <summary>
         /// 递归查找所有树型子
