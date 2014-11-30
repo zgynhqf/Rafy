@@ -25,9 +25,7 @@ using Rafy.MetaModel;
 
 namespace Rafy.Domain
 {
-    /// <summary>
-    /// 原来 Csla 中的 BusinessBase 中的代码，都移动到这个类中。
-    /// </summary>
+    //原来 Csla 中的 BusinessBase 中的代码，都移动到这个类中。
     public abstract partial class Entity : IDirtyAware, IDomainComponent
     {
         #region Status

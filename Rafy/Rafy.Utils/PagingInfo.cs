@@ -24,10 +24,10 @@ namespace Rafy
 {
     /// <summary>
     /// this indicates a pager info,
-    /// include page index, page size, and total count;
+    /// includes page number, page size, and total count;
     /// 
     /// Note!
-    /// Don't use null to indicates a empty paging information, use PagingInfo.Empty instead.
+    /// Don't use null to indicates a empty paging information, use <see cref="PagingInfo.Empty"/> instead.
     /// </summary>
     [Serializable]
     [DataContract]

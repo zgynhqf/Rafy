@@ -5,7 +5,7 @@
       xmlns:xlink="http://www.w3.org/1999/xlink">
 
         <introduction>
-            <para>树型实体，也叫自关联实体，是一种常用的层次的、树状结构的实体类型。这种实体类型的每一个对象都可以包含多个本实体类型的对象作为它的树子结点，而树子结点还可以继续包含更多的树子结点。</para>
+            <para>树型实体，也叫自关联实体，是一种常用的层次的、树状结构的实体类型。这种实体类型的每一个对象都可以包含多个本实体类型的对象作为它的树子节点，而树子节点还可以继续包含更多的树子节点。</para>
             <para>例如，有时某种分类可以设计为树型实体，这是因为类别下可以有更小的类别，而小类下还可以有更小的类别，这种包含关系可以是无极限的。</para>
             <autoOutline/>
         </introduction>
@@ -32,23 +32,23 @@ protected override void ConfigMeta()
             <content>
                 <list class="bullet">
                     <listItem>
-                        <para>配置为树型实体后，实体的两个属性 TreeCode、TreePId 将会在数据库中映射为同名的两个字段。（未配置时，这两个属性会被忽略。）</para>
+                        <para>配置为树型实体后，实体的两个属性 TreeIndex、TreePId 将会在数据库中映射为同名的两个字段。（未配置时，这两个属性会被忽略。）</para>
                     </listItem>
                     <listItem>
-                        <para>TreePId 属性用于存在该对象在树型关系中的父对象 Id。</para>
+                        <para>TreePId 属性用于存储该对象在树型关系中的父对象 Id。</para>
                     </listItem>
                     <listItem>
-                        <para>TreeCode 是树结点的系统编号，由框架自动维护。</para>
+                        <para>TreeIndex 是树节点的系统编号，由框架自动维护。</para>
                     </listItem>
                     <listItem>
                         <para>
-                            <codeInline>EntityRepository</codeInline> 类中一些查询方法是面向树型实体的，例如查询某个结点下的所有子结点。这些功能，主要通过 TreeCode 来做模糊匹配。所以 TreeCode 不能被随意设置。
+                            <codeInline>EntityRepository</codeInline> 类中一些查询方法是面向树型实体的，例如查询某个节点下的所有子节点。这些功能，主要通过 TreeIndex 来做模糊匹配。所以 TreeIndex 不能被随意设置。
                         </para>
                     </listItem>
                     <listItem>
-                        <para>可以通过 Entity.TreeParent 来获取或设置实体的树型父结点实体；通过 Entity.TreeChildren 来获取或设置实体的树型子结点集合。</para>
-                        <para>需要注意的是，这两个属性并不是懒加载属性，它们需要配合 EntityList 来使用。只有把一组有关系的树结点全部加载到 EntityList 集合中时，这两个属性的值才会被框架自动设置。</para>
-                        <para>一般情况下，开发人员主要是通过设置 TreeParent 或者维护 TreeChildren 集合来达到维护树结点间的父子关系。</para>
+                        <para>可以通过 Entity.TreeParent 来获取或设置实体的树型父节点实体；通过 Entity.TreeChildren 来获取或设置实体的树型子节点集合。</para>
+                        <!--<para>需要注意的是，这两个属性并不是懒加载属性，它们需要配合 EntityList 来使用。只有把一组有关系的树节点全部加载到 EntityList 集合中时，这两个属性的值才会被框架自动设置。</para>-->
+                        <!--<para>一般情况下，开发人员主要是通过设置 TreeParent 或者维护 TreeChildren 集合来达到维护树节点间的父子关系。</para>-->
                     </listItem>
                 </list>
             </content>
@@ -56,10 +56,10 @@ protected override void ConfigMeta()
         <section address="autoCode">
             <title>如何使用自动编码</title>
             <content>
-                <para>默认情况下，框架为树型实体使用数字进行层次编码，例如一级结点编码为："1.","2.",...，二级结点编码为："1.1.","1.2.",...。如果期望使用其它形式的自动编码，可以使用以下代码在元数据中进行如下配置：</para>
+                <para>默认情况下，框架为树型实体使用数字进行层次编码，例如一级节点编码为："1.","2.",...，二级节点编码为："1.1.","1.2.",...。如果期望使用其它形式的自动编码，可以使用以下代码在元数据中进行如下配置：</para>
                 <code language="cs">
                     <![CDATA[
-Meta.TreeCodeOption = new TreeCodeOption
+Meta.TreeIndexOption = new TreeIndexOption
 {
     Seperator = '.',
     Layers = new string[][] {

@@ -25,9 +25,7 @@ using Rafy.Reflection;
 
 namespace Rafy.Domain
 {
-    /// <summary>
-    /// 懒加载引用实体的相关实现
-    /// </summary>
+    //懒加载引用实体的相关实现
     public partial class Entity
     {
         #region 延迟加载 - 子集合

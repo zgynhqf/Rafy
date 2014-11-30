@@ -65,6 +65,11 @@ namespace Rafy.ComponentModel
         event EventHandler RuntimeStarting;
 
         /// <summary>
+        /// 主过程开始前事件。
+        /// </summary>
+        event EventHandler MainProcessStarting;
+
+        /// <summary>
         /// AppStartup 完毕
         /// </summary>
         event EventHandler StartupCompleted;
@@ -73,10 +78,5 @@ namespace Rafy.ComponentModel
         /// 应用程序完全退出
         /// </summary>
         event EventHandler Exit;
-
-        /// <summary>
-        /// 主过程开始前事件。
-        /// </summary>
-        event EventHandler MainProcessStarting;
     }
 }

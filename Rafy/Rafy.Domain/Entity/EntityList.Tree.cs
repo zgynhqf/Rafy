@@ -19,9 +19,7 @@ using System.Linq;
 
 namespace Rafy.Domain
 {
-    /// <summary>
-    /// 所有树型实体集合类的基类
-    /// /// </summary>
+    //所有树型实体集合类的基类
     partial class EntityList : ITreeComponent
     {
         #region 配置属性

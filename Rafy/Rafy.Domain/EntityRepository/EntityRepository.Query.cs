@@ -223,7 +223,7 @@ namespace Rafy.Domain
         }
 
         /// <summary>
-        /// 递归查找所有树型子
+        /// 递归查找指定父索引号的节点下的所有子节点。
         /// </summary>
         /// <param name="treeIndex"></param>
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>

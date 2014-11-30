@@ -15,7 +15,8 @@ using System;
 namespace Rafy.Domain
 {
     /// <summary>
-    /// 整树中的
+    /// 树结构中的组成元素。
+    /// 目前有三个实现该接口的类型：Entity、EntityList、EntityTreeChildren。
     /// </summary>
     public interface ITreeComponent : IDirtyAware
     {

@@ -29,9 +29,7 @@ using Rafy.ManagedProperty;
 
 namespace Rafy.Domain
 {
-    /// <summary>
-    /// 树型实体相关的代码。
-    /// </summary>
+    //树型实体相关的代码。
     public partial class Entity : ITreeComponent
     {
         [NonSerialized]
@@ -1010,7 +1008,7 @@ namespace Rafy.Domain
                     if (_deleted == null || !_deleted.Remove(item))
                     {
                         throw new InvalidProgramException(string.Format(
-                            "节点 {0} 在本集合中只能出现一次。", item
+                            "节点 {0} 在父节点的树子集合中只能出现一次。", item
                             ));
                     }
                 }

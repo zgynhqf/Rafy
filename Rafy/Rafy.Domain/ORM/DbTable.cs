@@ -607,7 +607,7 @@ namespace Rafy.Domain.ORM
         {
             if (_repository.SupportTree)
             {
-                this.FillTreeIntoList(reader, readType, list, markTreeFullLoaded);
+                this.FillTreeIntoList(reader, readType, list, markTreeFullLoaded, pagingInfo);
                 return;
             }
 
@@ -646,10 +646,24 @@ namespace Rafy.Domain.ORM
         /// <param name="readType">是否索引还是名称去读取 IDataReader。</param>
         /// <param name="list">需要把读取的实体中的第一级的节点，加入到这个列表中。</param>
         /// <param name="markTreeFullLoaded">如果某次查询结果是一棵完整的子树，那么必须设置此参数为 true ，才可以把整个树标记为完整加载。</param>
-        private void FillTreeIntoList(IDataReader reader, ReadDataType readType, IList<Entity> list, bool markTreeFullLoaded)
+        /// <param name="pagingInfo">对根节点进行分页的信息。</param>
+        private void FillTreeIntoList(
+            IDataReader reader, ReadDataType readType, IList<Entity> list,
+            bool markTreeFullLoaded, PagingInfo pagingInfo)
         {
             var entities = this.ReadToEntity(reader, readType);
-            TreeHelper.LoadTreeData(list, entities);
+            if (PagingInfo.IsNullOrEmpty(pagingInfo))
+            {
+                TreeHelper.LoadTreeData(list, entities);
+            }
+            else
+            {
+                //在内存中分页。
+                var tempList =new List<Entity>();
+                TreeHelper.LoadTreeData(tempList, entities);
+                var paged = tempList.JumpToPage(pagingInfo);
+                foreach (var item in paged) { list.Add(item); }
+            }
             if (markTreeFullLoaded)
             {
                 TreeHelper.MarkTreeFullLoaded(list);

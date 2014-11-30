@@ -24,9 +24,7 @@ using System.Runtime.Serialization;
 
 namespace Rafy.Domain
 {
-    /// <summary>
-    /// 实体类的一些不太重要的实现代码。
-    /// </summary>
+    //实体类的一些不太重要的实现代码。
     public partial class Entity
     {
         /// <summary>

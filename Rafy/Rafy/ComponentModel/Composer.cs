@@ -48,27 +48,27 @@ namespace Rafy.ComponentModel
 
         #region ServiceContainer
 
-        //private static IServiceContainer _serviceContainer;
+        private static IServiceContainer _serviceContainer;
 
-        ///// <summary>
-        ///// 组件的服务容器。
-        ///// </summary>
-        //public static IServiceContainer ServiceContainer
-        //{
-        //    get
-        //    {
-        //        if (_serviceContainer == null)
-        //        {
-        //            _serviceContainer = ObjectContainer.ResolveAll<IServiceContainer>().FirstOrDefault();
-        //            if (_serviceContainer == null)
-        //            {
-        //                //var objContainer = ObjectContainerFactory.CreateContainer();
-        //                _serviceContainer = new ObjectContainerToServiceConatinerAdapter(ObjectContainer);
-        //            }
-        //        }
-        //        return _serviceContainer;
-        //    }
-        //}
+        /// <summary>
+        /// 组件的服务容器。
+        /// </summary>
+        public static IServiceContainer ServiceContainer
+        {
+            get
+            {
+                if (_serviceContainer == null)
+                {
+                    _serviceContainer = ObjectContainer.ResolveAll<IServiceContainer>().FirstOrDefault();
+                    if (_serviceContainer == null)
+                    {
+                        //var objContainer = ObjectContainerFactory.CreateContainer();
+                        _serviceContainer = new ObjectContainerToServiceConatinerAdapter(ObjectContainer);
+                    }
+                }
+                return _serviceContainer;
+            }
+        }
 
         #endregion
 
@@ -101,17 +101,17 @@ namespace Rafy.ComponentModel
 
         #region RegisterByAttribute
 
-        ///// <summary>
-        ///// 组合所有组件中标记了 <see cref="ContainerItemAttribute"/> 的类型到 IOC 容器中。
-        ///// 
-        ///// 此方法只能调用一次，
-        ///// 而且应该重写 <see cref="AppImplementationBase.RaiseComposeOperations"/> 方法中调用。
-        ///// </summary>
-        //public static void AutoRegisterByContainerItemAttribute()
-        //{
-        //    var assemblies = RafyEnvironment.GetAllPlugins().Select(p => p.Assembly);
-        //    AutoRegisterByContainerItemAttribute(assemblies);
-        //}
+        /// <summary>
+        /// 组合所有组件中标记了 <see cref="ContainerItemAttribute"/> 的类型到 IOC 容器中。
+        /// 
+        /// 此方法只能调用一次，
+        /// 而且应该重写 <see cref="AppImplementationBase.RaiseComposeOperations"/> 方法中调用。
+        /// </summary>
+        public static void RegisterAllPluginsByAttribute()
+        {
+            var assemblies = RafyEnvironment.GetAllPlugins().Select(p => p.Assembly);
+            RegisterByAttribute(assemblies);
+        }
 
         /// <summary>
         /// 注册指定插件中标记了 <see cref="ContainerItemAttribute" /> 的类型到 IOC 容器中。
@@ -142,10 +142,10 @@ namespace Rafy.ComponentModel
         public static void RegisterByAttribute(IPlugin plugin)
         {
             if (plugin == null) throw new ArgumentNullException("plugin");
-            RegisterByContainerItemAttribute(new Assembly[] { plugin.Assembly });
+            RegisterByAttribute(new Assembly[] { plugin.Assembly });
         }
 
-        private static void RegisterByContainerItemAttribute(IEnumerable<Assembly> assemblies)
+        private static void RegisterByAttribute(IEnumerable<Assembly> assemblies)
         {
             //处理 ContainerItemAttribute
             var iocContainer = ObjectContainer;

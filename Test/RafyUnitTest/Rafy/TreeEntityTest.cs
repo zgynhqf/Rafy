@@ -509,6 +509,48 @@ namespace RafyUnitTest
             }
         }
 
+        //以下这种场景可以不支持直接更新新实体。需要把旧实体查询出来后，再设置实体属性。
+        ///// <summary>
+        ///// 对已经保存在数据库中的实体，直接设置所有值来更新所有字段。
+        ///// 场景：MVC 中直接把实体作为视图模型传入到界面中时，会出现 TreePId 设置时导致 TreeIndex 出错的问题。
+        ///// </summary>
+        //[TestMethod]
+        //public void TET_Save_UpdateEntityBySetProperty()
+        //{
+        //    var repo = RF.Concrete<FolderRepository>();
+        //    using (RF.TransactionScope(repo))
+        //    {
+        //        var node = new Folder
+        //        {
+        //            TreeIndex = "001.",
+        //            Name = "001.",
+        //            TreeChildren = 
+        //            {
+        //                new Folder
+        //                {
+        //                    Name = "002."
+        //                }
+        //            }
+        //        };
+        //        repo.Save(node);
+
+        //        var root = repo.GetAll()[0];
+        //        var oldNode = root.TreeChildren[0] as Folder;
+
+        //        var mvcModel = new Folder();
+        //        mvcModel.Id = oldNode.Id;
+        //        mvcModel.TreePId = oldNode.TreePId;
+        //        mvcModel.Name = "New Name";
+        //        mvcModel.PersistenceStatus = PersistenceStatus.Modified;
+        //        Assert.AreEqual(mvcModel.TreeIndex, oldNode.TreeIndex);
+        //        repo.Save(mvcModel);
+
+        //        var root2 = repo.GetAll()[0];
+        //        var newNode = root2.TreeChildren[0] as Folder;
+        //        Assert.AreEqual(newNode.Name, "New Name");
+        //    }
+        //}
+
         #endregion
 
         #region 序列化
