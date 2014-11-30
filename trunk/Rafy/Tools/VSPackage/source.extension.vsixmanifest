@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="cdb6f500-d128-47fc-9455-4ab43a33a426" Version="1.14.102" Language="en-US" Publisher="Rafy" />
+        <Identity Id="cdb6f500-d128-47fc-9455-4ab43a33a426" Version="1.14.105" Language="en-US" Publisher="Rafy" />
         <DisplayName>RafySDK</DisplayName>
         <Description xml:space="preserve">Rafy Development Environment</Description>
+        <Icon>Resources\Logo.gif</Icon>
     </Metadata>
     <Installation InstalledByMsi="false">
         <InstallationTarget Version="[11.0,13.0)" Id="Microsoft.VisualStudio.Pro" />

@@ -2193,6 +2193,53 @@ namespace RafyUnitTest
             }
         }
 
+        /// <summary>
+        /// 对树状实体查询时，分页信息只对根节点起作用。
+        /// </summary>
+        [TestMethod]
+        public void ORM_PagingQuery_Tree()
+        {
+            var taskRepo = RF.Concrete<TestTreeTaskRepository>();
+            var userRepo = RF.Concrete<TestUserRepository>();
+            using (RF.TransactionScope(userRepo))
+            {
+                var user = new TestUser
+                {
+                    TestTreeTaskList =
+                    {
+                        new TestTreeTask(),
+                        new TestTreeTask
+                        {
+                            TreeChildren =
+                            {
+                                new TestTreeTask(),
+                                new TestTreeTask(),
+                            }
+                        },
+                        new TestTreeTask
+                        {
+                            TreeChildren =
+                            {
+                                new TestTreeTask(),
+                                new TestTreeTask(),
+                            }
+                        },
+                        new TestTreeTask(),
+                        new TestTreeTask(),
+                        new TestTreeTask(),
+                    }
+                };
+                userRepo.Save(user);
+
+                //第二页，每页两条。
+                var pagingInfo = new PagingInfo(2, 2, true);
+                var items = taskRepo.GetByParentId(user.Id, pagingInfo);
+                Assert.IsTrue(items.Count == 2, "分页查询的结果应该只有两条。");
+                Assert.IsTrue(pagingInfo.TotalCount == 6, "分页的 TotalCount 只对根节点起作用。");
+                Assert.IsTrue(items.TotalCount == 6, "EntityList.TotalCount 总条数不一致。");
+            }
+        }
+
         [TestMethod]
         public void ORM_PagingQuery_ByRawSql()
         {

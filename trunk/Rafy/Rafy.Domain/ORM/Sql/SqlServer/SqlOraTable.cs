@@ -126,9 +126,11 @@ namespace Rafy.Domain.ORM
              * 
             **********************************************************************/
 
-            //检查分页条件
+            //检查分页条件。（如果是树状实体，也不支持在数据库中进行分页。）
             var pagingInfo = args.PagingInfo;
-            bool isPaging = !PagingInfo.IsNullOrEmpty(pagingInfo);
+            bool isPaging = !PagingInfo.IsNullOrEmpty(pagingInfo) &&
+                this.GetPagingLocation(pagingInfo) == PagingLocation.Database &&
+                !Repository.SupportTree;
             if (isPaging)
             {
                 var query = args.Query;
@@ -149,7 +151,7 @@ namespace Rafy.Domain.ORM
                 //填充到列表中。
                 this.FillDataIntoList(
                     reader, autoSelection ? ReadDataType.ByIndex : ReadDataType.ByName,
-                    args.List, false, null, args.MarkTreeFullLoaded
+                    args.List, false, pagingInfo, args.MarkTreeFullLoaded
                     );
 
                 //最后，如果需要，则统计一下总行数。

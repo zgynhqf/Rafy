@@ -238,6 +238,7 @@ namespace Rafy.Domain
 
         /// <summary>
         /// 递归加载某个节点的所有父节点。
+        /// 使用此方法后，指定节点的父节点将被赋值到它的 TreeParent 属性上。
         /// </summary>
         /// <param name="node"></param>
         public void LoadAllTreeParents(Entity node)

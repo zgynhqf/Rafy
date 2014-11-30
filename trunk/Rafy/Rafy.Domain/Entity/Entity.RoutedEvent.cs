@@ -5,9 +5,7 @@ using System.Text;
 
 namespace Rafy.Domain
 {
-    /// <summary>
-    /// 路由事件
-    /// </summary>
+    //路由事件
     public abstract partial class Entity
     {
         /// <summary>

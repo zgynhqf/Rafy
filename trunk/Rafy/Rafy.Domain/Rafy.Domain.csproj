@@ -132,6 +132,7 @@
     <Compile Include="Entity\MP\LOBProperty.cs" />
     <Compile Include="Entity\MP\PropertyDefailtValues.cs" />
     <Compile Include="Entity\Serialization\SerializationEntityGraph.cs" />
+    <Compile Include="Entity\TreeIndexHelper.cs" />
     <Compile Include="Entity\ValidationHelper.cs" />
     <Compile Include="Validation\CommonRules\NotUsedByReferenceRule.cs" />
     <Compile Include="Validation\CommonRules\HandlerRule.cs" />
