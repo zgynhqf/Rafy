@@ -114,9 +114,11 @@
     <Compile Include="Serialization\IStateFormatter.cs" />
     <Compile Include="Serialization\SerializationHelper.cs" />
     <Compile Include="Serialization\XmlFormatter.cs" />
-    <Compile Include="Threading\ServerContextProvider.cs" />
-    <Compile Include="Threading\ServerContext.cs" />
-    <Compile Include="Threading\ServerContextScope.cs" />
+    <Compile Include="Context\IAppContextProvider.cs" />
+    <Compile Include="Context\ThreadStaticAppContextProvider.cs" />
+    <Compile Include="Context\StaticAppContextProvider.cs" />
+    <Compile Include="Context\AppContext.cs" />
+    <Compile Include="Context\AppContextScope.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="_ReadMe.txt" />

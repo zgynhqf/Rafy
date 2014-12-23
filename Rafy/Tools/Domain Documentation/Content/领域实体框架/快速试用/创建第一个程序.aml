@@ -90,11 +90,6 @@
                                     </listItem>
                                     <listItem>
                                         <para>
-                                            <literal>/Rafy/</literal> 文件夹：其中将会存放本领域项目需要引用的程序集，一共 5 个 <newTerm>Rafy</newTerm> 程序集及一个微软公司的依赖注入程序集。
-                                        </para>
-                                    </listItem>
-                                    <listItem>
-                                        <para>
                                             <literal>/Services/</literal> 文件夹：用于存放所有领域服务类。参见：<link xlink:href="d7551c01-4f62-4e6b-8fd7-4de371df6bdf" />。
                                         </para>
                                     </listItem>
@@ -105,6 +100,16 @@
                                     </listItem>
                                 </list>
                                 <para>编译整个解决方案，提示编译成功。</para>
+                            </content>
+                        </step>
+                        <step>
+                            <content>
+                                <para>添加程序集引用</para>
+                                <para>使用 NuGet 来添加 Rafy 程序集的引用，如下图：</para>
+                                <mediaLink>
+                                    <image xlink:href="第一个程序09"/>
+                                </mediaLink>
+                                <para>在 NuGet 中搜索 “Rafy”，安装第一个 “Rafy.Domain” 包即可。</para>
                             </content>
                         </step>
                     </steps>
@@ -238,10 +243,7 @@ public string Code
                         <step>
                             <content>
                                 <para>修正 Rafy 程序集引用</para>
-                                <para>
-                                    展开 ConsoleApp 项目的引用项，会看到 Rafy 相关的程序集的引用，都出现了警告。这是因为这些程序集并不会注册到电脑的 GAC 中。
-                                </para>
-                                <para>删除这些程序集的引用，重新引用 JXC 领域实体项目中 Rafy 文件夹中的程序集。</para>
+                                <para>与实体程序集相同，使用 NuGet 来引用 Rafy.Domain 包。</para>
                             </content>
                         </step>
                         <step>

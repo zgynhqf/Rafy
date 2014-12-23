@@ -49,7 +49,8 @@ namespace Rafy.ManagedProperty
         }
 
         /// <summary>
-        /// 可以通过属性的名称来查找集合中的托管属性。
+        /// 可以通过属性的名称来快速查找集合中的托管属性。
+        /// 复杂度：Log(n)
         /// </summary>
         /// <param name="propertyName">托管属性名称</param>
         /// <returns></returns>
@@ -65,6 +66,33 @@ namespace Rafy.ManagedProperty
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// 可以通过属性的名称来快速查找集合中的托管属性。
+        /// 复杂度：Log(n)
+        /// </summary>
+        /// <param name="propertyName">托管属性名称</param>
+        /// <param name="ignoreCase">是否忽略大小写。
+        /// 注意，如果是忽略大小写的方式，那么是按顺序在集合中进行查询。</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">propertyName</exception>
+        public IManagedProperty Find(string propertyName, bool ignoreCase)
+        {
+            if (ignoreCase)
+            {
+                for (int i = 0, c = _list.Count; i < c; i++)
+                {
+                    var item = _list[i];
+                    if (item.Name.EqualsIgnoreCase(propertyName))
+                    {
+                        return item;
+                    }
+                }
+                return null;
+            }
+
+            return this.Find(propertyName);
         }
 
         public ManagedPropertyListEnumerator GetEnumerator()

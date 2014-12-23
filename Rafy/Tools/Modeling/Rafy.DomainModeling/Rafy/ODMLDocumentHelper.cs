@@ -25,16 +25,16 @@ namespace Rafy.DomainModeling
     /// </summary>
     public class ODMLDocumentHelper
     {
-        #region EntityType.DomainName
+        #region EOMObject.DomainName
 
-        private const string DomainNameProperty = "EntityType_DomainNameProperty";
+        private const string DomainNameProperty = "EOMObject_DomainNameProperty";
 
-        public static string GetDomainName(EntityType type)
+        public static string GetDomainName(EOMObject type)
         {
-            return type[DomainNameProperty] as string;
+            return type.GetPropertyOrDefault<string>(DomainNameProperty, null);
         }
 
-        public static void SetDomainName(EntityType type, string value)
+        public static void SetDomainName(EOMObject type, string value)
         {
             type[DomainNameProperty] = value;
         }
@@ -74,6 +74,7 @@ namespace Rafy.DomainModeling
                     foreach (var vp in type.ValueProperties)
                     {
                         var propertyEl = new PropertyElement(vp.Name);
+                        propertyEl.Label = GetDomainName(vp);
 
                         if (vp.PropertyType == ValuePropertyType.Enum)
                         {

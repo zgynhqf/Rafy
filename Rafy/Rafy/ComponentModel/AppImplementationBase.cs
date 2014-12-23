@@ -99,7 +99,7 @@ namespace Rafy.ComponentModel
 
         /// <summary>
         /// 初始化应用程序的环境。
-        /// 子类可在此方法中添加所需的插件、设置 RafyEnvironment.Location 等。
+        /// 子类可在此方法中添加所需的插件、设置 <see cref="RafyEnvironment.Location"/> 等。
         /// </summary>
         protected virtual void InitEnvironment()
         {
@@ -115,7 +115,15 @@ namespace Rafy.ComponentModel
                 catch (CultureNotFoundException) { }
             }
 
-            ServerContext.SetCurrent(new WebThreadContextProvider());
+            //如果是客户端，则所有线程使用一个身份；如果是服务端，则每个线程使用一个单独的身份。
+            if (RafyEnvironment.Location.IsWPFUI)
+            {
+                AppContext.SetProvider(new StaticAppContextProvider());
+            }
+            else
+            {
+                AppContext.SetProvider(new WebOrThreadStaticAppContextProvider());
+            }
 
             RafyEnvironment.InitCustomizationPath();
 

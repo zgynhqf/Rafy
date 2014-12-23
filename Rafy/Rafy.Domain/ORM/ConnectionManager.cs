@@ -43,7 +43,7 @@ namespace Rafy.Domain.ORM
 
             lock (_lock)
             {
-                var items = ServerContext.Items;
+                var items = AppContext.Items;
 
                 object value = null;
                 items.TryGetValue(ctxName, out value);
@@ -112,7 +112,7 @@ namespace Rafy.Domain.ORM
                 {
                     _connection.Dispose();
                     var name = GetContextName(this._dbSetting);
-                    ServerContext.Items.Remove(name);
+                    AppContext.Items.Remove(name);
                 }
             }
         }

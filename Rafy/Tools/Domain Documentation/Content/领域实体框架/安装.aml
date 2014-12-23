@@ -8,7 +8,7 @@
             <para>安装说明</para>
             <!--<autoOutline/>-->
         </introduction>
-        <section address="SDK安装包获取">
+        <!--<section address="SDK安装包获取">
             <title>SDK安装包获取</title>
             <content>
                 <para>
@@ -19,25 +19,19 @@
                     </externalLink>
                 </para>
             </content>
-        </section>
+        </section>-->
         <section address="SDK安装步骤">
             <title>SDK 安装步骤</title>
             <content>
                 <procedure>
-                    <title>SDK 安装步骤</title>
+                    <title></title>
                     <steps class="ordered">
                         <step>
                             <content>
-                                <para>安装 VisualStudio 扩展包</para>
-                                <para>双击 RafySDK.vsix，选择“使用 VisualStudio Version Selector” 来进行安装。</para>
-                                <mediaLink>
-                                    <image xlink:href="安装04"/>
-                                </mediaLink>
+                                <para>安装 Rafy SDK</para>
+                                <para>在 VisualStudio 中打开扩展管理器（Tools -> Extensions and Updates），选择在线项目，并搜索 “Rafy” 安装即可。如下图：</para>
                                 <mediaLink>
                                     <image xlink:href="安装02"/>
-                                </mediaLink>
-                                <mediaLink>
-                                    <image xlink:href="安装03"/>
                                 </mediaLink>
                             </content>
                         </step>

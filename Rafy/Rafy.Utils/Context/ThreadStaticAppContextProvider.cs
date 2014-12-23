@@ -14,7 +14,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
+using System.Threading;
 
 namespace Rafy
 {
@@ -22,19 +24,21 @@ namespace Rafy
     /// 服务器端上下文提供器。
     /// 默认实现：一个标记了 ThreadStatic 的字段。
     /// </summary>
-    public class ServerContextProvider
+    public class ThreadStaticAppContextProvider : IAppContextProvider
     {
         [ThreadStatic]
         private static IDictionary<string, object> _items;
 
-        protected internal virtual IDictionary<string, object> GetValueContainer()
+        public virtual IPrincipal CurrentPrincipal
         {
-            return _items;
+            get { return Thread.CurrentPrincipal; }
+            set { Thread.CurrentPrincipal = value; }
         }
 
-        protected internal virtual void SetValueContainer(IDictionary<string, object> value)
+        public virtual IDictionary<string, object> DataContainer
         {
-            _items = value;
+            get { return _items; }
+            set { _items = value; }
         }
 
         //protected virtual IDictionary GetLocalContext()

@@ -163,7 +163,7 @@ namespace Rafy.Domain.Caching
             return new BatchSaveOperationScope();
         }
 
-        private class BatchSaveOperationScope : ServerContextScope<BatchSaveOperationScope>
+        private class BatchSaveOperationScope : AppContextScope<BatchSaveOperationScope>
         {
             private List<SaveItem> _items;
 

@@ -42,12 +42,12 @@ namespace Rafy.Domain
     /// 示例二，多个 Or 组，使用 And 进行连接：
     /// var criteria = new CommonQueryCriteria
     /// {
-    ///     new PropertyMatchCollection
+    ///     new PropertyMatchGroup
     ///     {
     ///         new PropertyMatch(Entity.TreeIndexProperty, PropertyOperator.StartWith, "1."),
     ///         new PropertyMatch(Entity.TreePIdProperty, "1."),
     ///     },
-    ///     new PropertyMatchCollection
+    ///     new PropertyMatchGroup
     ///     {
     ///         new PropertyMatch(Entity.TreeIndexProperty, PropertyOperator.StartWith, "2."),
     ///         new PropertyMatch(Entity.TreePIdProperty, "2."),};
@@ -62,12 +62,12 @@ namespace Rafy.Domain
     /// {
     ///     new PropertyMatch(Entity.TreeIndexProperty, "1."),
     ///     new PropertyMatch(Entity.IdProperty, 1),
-    ///     new PropertyMatchCollection(BinaryOperator.And)
+    ///     new PropertyMatchGroup(BinaryOperator.And)
     ///     {
     ///         new PropertyMatch(Entity.TreeIndexProperty, PropertyOperator.StartWith, "1."),
     ///         new PropertyMatch(Entity.TreePIdProperty, "1."),
     ///     },
-    ///     new PropertyMatchCollection(BinaryOperator.And)
+    ///     new PropertyMatchGroup(BinaryOperator.And)
     ///     {
     ///         new PropertyMatch(Entity.TreeIndexProperty, PropertyOperator.StartWith, "2."),
     ///         new PropertyMatch(Entity.TreePIdProperty, "2."),};
@@ -251,12 +251,12 @@ namespace Rafy.Domain
         //    {
         //        new PropertyMatch(Entity.TreeIndexProperty, "1."),
         //        new PropertyMatch(Entity.IdProperty, 1),
-        //        new PropertyMatchCollection
+        //        new PropertyMatchGroup
         //        {
         //            new PropertyMatch(Entity.TreeIndexProperty, PropertyOperator.StartWith, "1."),
         //            new PropertyMatch(Entity.TreePIdProperty, "1."),
         //        },
-        //        new PropertyMatchCollection
+        //        new PropertyMatchGroup
         //        {
         //            new PropertyMatch(Entity.TreeIndexProperty, PropertyOperator.StartWith, "2."),
         //            new PropertyMatch(Entity.TreePIdProperty, "2."),

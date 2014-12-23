@@ -229,7 +229,7 @@
     <Compile Include="WCF\BinaryFormatter\EnableBinaryFormatterBehaviorElement.cs" />
     <Compile Include="WCF\NetDataContract\NetDataContractOperationBehavior.cs" />
     <Compile Include="WCF\NetDataContract\UseNetDataContractAttribute.cs" />
-    <Compile Include="ComponentModel\WebThreadContextProvider.cs" />
+    <Compile Include="ComponentModel\WebOrThreadStaticAppContextProvider.cs" />
     <Compile Include="Web\ClientEntities.cs" />
     <Compile Include="Web\JsonServiceAttribute.cs" />
   </ItemGroup>

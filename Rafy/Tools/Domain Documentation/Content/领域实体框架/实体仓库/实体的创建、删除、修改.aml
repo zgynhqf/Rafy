@@ -38,7 +38,7 @@ repo.Save(new Book());]]>
                 <code language="cs">
                     <![CDATA[BookRepository repo = RF.Concrete<BookRepository>();
 Book book = repo.GetById(1);
-book.MarkDeleted();
+book.Status = PersistenceStatus.Deleted;
 repo.Save(book);]]>
                 </code>
                 <para>另外，如果把一个实体从实体列表中移除后，再保存该列表，也可以达到删除该实体的效果：</para>
@@ -111,7 +111,7 @@ repo.Save(car);]]>
                 <code language="cs">
                     <![CDATA[CarRepository repo = RF.Concrete<CarRepository>();
 Car car = repo.GetById(1);
-car.MarkDeleted();
+car.Status = PersistenceStatus.Deleted;
 repo.Save(car);]]>
                 </code>
                 <para>另外，框架也支持在内存中递归删除组合实体的子实体。例如，如果组合关系对应的外键在元数据配置时，被手动配置为不级联删除，那么要删除整个组合对象，就需要打开内存删除功能：</para>

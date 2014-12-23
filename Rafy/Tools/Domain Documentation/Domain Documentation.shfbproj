@@ -278,14 +278,6 @@
       <ImageId>安装02</ImageId>
       <AlternateText>安装02</AlternateText>
     </Image>
-    <Image Include="Media\领域框架\安装\安装03.png">
-      <ImageId>安装03</ImageId>
-      <AlternateText>安装03</AlternateText>
-    </Image>
-    <Image Include="Media\领域框架\安装\安装04.png">
-      <ImageId>安装04</ImageId>
-      <AlternateText>安装04</AlternateText>
-    </Image>
     <Image Include="Media\领域框架\快速试用\创建第一个程序\第一个程序01.png">
       <ImageId>第一个程序01</ImageId>
       <AlternateText>第一个程序01</AlternateText>
@@ -317,6 +309,10 @@
     <Image Include="Media\领域框架\快速试用\创建第一个程序\第一个程序08.png">
       <ImageId>第一个程序08</ImageId>
       <AlternateText>第一个程序08</AlternateText>
+    </Image>
+    <Image Include="Media\领域框架\快速试用\创建第一个程序\第一个程序09.png">
+      <ImageId>第一个程序09</ImageId>
+      <AlternateText>第一个程序09</AlternateText>
     </Image>
     <Image Include="Media\领域框架\领域实体\DomainEntity_AddNewItem.jpg">
       <ImageId>DomainEntity_AddNewItem</ImageId>

@@ -149,7 +149,7 @@ namespace Rafy.Domain
     /// <summary>
     /// 数据清理器
     /// </summary>
-    public interface IDataClear
+    internal interface IDataClear
     {
         /// <summary>
         /// 删除不必要的对象，只留下需要保存的数据
@@ -167,7 +167,7 @@ namespace Rafy.Domain
     /// <summary>
     /// 把未修改的数据都清除的清理器
     /// </summary>
-    public class CleanDataClear : IDataClear
+    internal class CleanDataClear : IDataClear
     {
         public void ClearData(Entity diffEntity)
         {

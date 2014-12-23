@@ -16,30 +16,41 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading;
 
 namespace Rafy
 {
     /// <summary>
-    /// 本类只有一个静态属性，该属性提供一个当前上下文可直接访问 KV 对。
+    /// 本类型表示执行的上下文环境。
+    /// 其中包含：自定义数据集合、当前身份。
     /// 
-    /// 上下文是指：
-    /// 分布式应用程序的服务端中，某一线程在为一个请求运行服务程序时所有的上下文数据。
-    /// 
-    /// 当在 Web 模式下时，可以构造一个新的 ServerContextProvider 子类，以 HttpContext.Current.Items 来作为实现。
+    /// 一般可用的上下文有：
+    /// 单线程共用数据的执行环境、进程共用数据的执行环境、一次请求（如 Web）共用数据的执行环境。
+    /// 默认使用单线程上下文，如果要使用其它上下文，请使用 <see cref="SetProvider"/> 方法替换提供算法。
     /// </summary>
-    public class ServerContext
+    public class AppContext
     {
-        private static ServerContextProvider _provider = new ServerContextProvider();
+        private static IAppContextProvider _provider = new ThreadStaticAppContextProvider();
 
         /// <summary>
         /// 设置上下文提供程序。
+        /// 默认使用 <see cref="ThreadStaticAppContextProvider"/>。
         /// </summary>
         /// <param name="context"></param>
-        public static void SetCurrent(ServerContextProvider context)
+        public static void SetProvider(IAppContextProvider context)
         {
             _provider = context;
+        }
+
+        /// <summary>
+        /// 可获取或设置当前的身份。
+        /// </summary>
+        public static IPrincipal CurrentPrincipal
+        {
+            get { return _provider.CurrentPrincipal; }
+            set { _provider.CurrentPrincipal = value; }
         }
 
         /// <summary>
@@ -49,11 +60,11 @@ namespace Rafy
         {
             get
             {
-                var ctx = _provider.GetValueContainer();
+                var ctx = _provider.DataContainer;
                 if (ctx == null)
                 {
                     ctx = new Dictionary<string, object>();
-                    _provider.SetValueContainer(ctx);
+                    _provider.DataContainer = ctx;
                 }
 
                 return ctx;
@@ -65,7 +76,7 @@ namespace Rafy
         /// </summary>
         public static void Clear()
         {
-            _provider.SetValueContainer(null);
+            _provider.DataContainer = null;
         }
     }
 }

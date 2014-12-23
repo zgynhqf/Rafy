@@ -91,79 +91,20 @@ namespace Rafy
         {
             get
             {
-                IPrincipal current;
-                if (HttpContext.Current != null)
+                var current = AppContext.CurrentPrincipal;
+                if (current == null)
                 {
-                    current = HttpContext.Current.User;
-                    if (current == null)
-                    {
-                        current = new AnonymousPrincipal();
-                        HttpContext.Current.User = current;
-                    }
-                }
-                else if (Application.Current != null)
-                {
-                    if (_principal == null)
-                    {
-                        _principal = new AnonymousPrincipal();
-                        //如果想启用 windows 验证，可以使用以下代码。
-                        //_principal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
-                    }
-                    current = _principal;
-                }
-                else
-                {
-                    current = Thread.CurrentPrincipal;
-                    if (current == null)
-                    {
-                        current = new AnonymousPrincipal();
-                        Thread.CurrentPrincipal = current;
-                    }
-                }
+                    current = new AnonymousPrincipal();
+                    ////如果想启用 windows 验证，可以使用以下代码。
+                    //current = new WindowsPrincipal(WindowsIdentity.GetCurrent());
 
+                    AppContext.CurrentPrincipal = current;
+                }
                 return current;
             }
             set
             {
-                if (HttpContext.Current != null)
-                {
-                    HttpContext.Current.User = value;
-                }
-                else if (Application.Current != null)
-                {
-                    _principal = value;
-                }
-                else
-                {
-                    Thread.CurrentPrincipal = value;
-                }
-            }
-        }
-
-        [ThreadStatic]
-        private static IPrincipal __principalThreadSafe;
-        private static IPrincipal __principal;
-
-        /// <summary>
-        /// 当前线程使用的身份。
-        /// 如果是客户端，则所有线程使用一个身份；如果是服务端，则每个线程使用一个单独的身份。
-        /// </summary>
-        private static IPrincipal _principal
-        {
-            get
-            {
-                return RafyEnvironment.Location.IsWPFUI ? __principal : __principalThreadSafe;
-            }
-            set
-            {
-                if (RafyEnvironment.Location.IsWPFUI)
-                {
-                    __principal = value;
-                }
-                else
-                {
-                    __principalThreadSafe = value;
-                }
+                AppContext.CurrentPrincipal = value;
             }
         }
 

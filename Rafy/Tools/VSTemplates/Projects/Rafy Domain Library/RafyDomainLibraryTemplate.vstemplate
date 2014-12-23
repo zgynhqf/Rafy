@@ -22,18 +22,6 @@
             <Folder Name="Properties" TargetFolderName="Properties">
                 <ProjectItem ReplaceParameters="true" TargetFileName="AssemblyInfo.cs">AssemblyInfo.cs</ProjectItem>
             </Folder>
-            <Folder Name="Rafy" TargetFolderName="Rafy">
-                <ProjectItem ReplaceParameters="false" TargetFileName="Rafy.Utils.dll">Rafy.Utils.dll</ProjectItem>
-                <ProjectItem ReplaceParameters="false" TargetFileName="Rafy.dll">Rafy.dll</ProjectItem>
-                <ProjectItem ReplaceParameters="false" TargetFileName="Rafy.Domain.dll">Rafy.Domain.dll</ProjectItem>
-                <ProjectItem ReplaceParameters="false" TargetFileName="Rafy.DbMigration.dll">Rafy.DbMigration.dll</ProjectItem>
-                <ProjectItem ReplaceParameters="false" TargetFileName="Rafy.ManagedProperty.dll">Rafy.ManagedProperty.dll</ProjectItem>
-                <ProjectItem ReplaceParameters="false" TargetFileName="Rafy.Utils.xml">Rafy.Utils.xml</ProjectItem>
-                <ProjectItem ReplaceParameters="false" TargetFileName="Rafy.xml">Rafy.xml</ProjectItem>
-                <ProjectItem ReplaceParameters="false" TargetFileName="Rafy.Domain.xml">Rafy.Domain.xml</ProjectItem>
-                <ProjectItem ReplaceParameters="false" TargetFileName="Rafy.DbMigration.xml">Rafy.DbMigration.xml</ProjectItem>
-                <ProjectItem ReplaceParameters="false" TargetFileName="Rafy.ManagedProperty.xml">Rafy.ManagedProperty.xml</ProjectItem>
-            </Folder>
             <Folder Name="Services" TargetFolderName="Services" />
         </Project>
     </TemplateContent>

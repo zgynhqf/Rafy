@@ -170,6 +170,19 @@ namespace UT
             get { return this.GetProperty(TemporaryNameProperty); }
             set { this.SetProperty(TemporaryNameProperty, value); }
         }
+
+        public static readonly Property<string> LoginNameProperty = P<TestUser>.Register(e => e.LoginName);
+        public string LoginName
+        {
+            get { return this.GetProperty(LoginNameProperty); }
+            set { this.SetProperty(LoginNameProperty, value); }
+        }
+        public static readonly Property<DateTime> AddedTimeProperty = P<TestUser>.Register(e => e.AddedTime);
+        public DateTime AddedTime
+        {
+            get { return this.GetProperty(AddedTimeProperty); }
+            set { this.SetProperty(AddedTimeProperty, value); }
+        }
     }
 
     [Serializable]
@@ -390,6 +403,11 @@ namespace UT
 
             Meta.MapTable("Users");
             Meta.Property(TestUser.NameProperty).MapColumn().HasColumnName("UserName");
+            Meta.MapProperties(
+                TestUser.LoginNameProperty,
+                TestUser.AddedTimeProperty,
+                TestUser.AgeProperty
+                );
         }
     }
 

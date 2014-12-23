@@ -92,6 +92,8 @@
     <Compile Include="DataPortal\WCF\ClientProxy.cs" />
     <Compile Include="DataPortal\DataPortalResult.cs" />
     <Compile Include="EntityRepository\Criteria\CommonQueryCriteria.cs" />
+    <Compile Include="EntityRepository\Criteria\ODataFilterParser.cs" />
+    <Compile Include="EntityRepository\Criteria\ODataQueryCriteria.cs" />
     <Compile Include="EntityRepository\DataProvider\DataProviderComposer.cs" />
     <Compile Include="EntityRepository\DataProvider\DataProviderForAttribute.cs" />
     <Compile Include="EntityRepository\EagerLoadOptions.cs" />
@@ -134,6 +136,7 @@
     <Compile Include="Entity\Serialization\SerializationEntityGraph.cs" />
     <Compile Include="Entity\TreeIndexHelper.cs" />
     <Compile Include="Entity\ValidationHelper.cs" />
+    <Compile Include="ORM\Query\QueryNodeTester.cs" />
     <Compile Include="Validation\CommonRules\NotUsedByReferenceRule.cs" />
     <Compile Include="Validation\CommonRules\HandlerRule.cs" />
     <Compile Include="Validation\CommonRules\NumberRangeRule.cs" />

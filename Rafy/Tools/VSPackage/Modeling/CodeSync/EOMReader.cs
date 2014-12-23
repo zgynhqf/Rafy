@@ -198,7 +198,12 @@ namespace Rafy.VSPackage.Modeling.CodeSync
 
         protected override void VisitProperty(CodeProperty codeProperty)
         {
-            SetNullableReference(codeProperty);
+            if (_currentType != null)
+            {
+                ParseValuePropertyDomainName(codeProperty);
+
+                SetNullableReference(codeProperty);
+            }
 
             base.VisitProperty(codeProperty);
         }
@@ -240,32 +245,7 @@ namespace Rafy.VSPackage.Modeling.CodeSync
             }
 
             //获取模型的注释。
-            var cmt = codeClass.DocComment;
-            if (!string.IsNullOrEmpty(cmt))
-            {
-                var xmlDoc = XDocument.Parse(cmt);
-                var summary = xmlDoc.Root.Element("summary");
-                if (summary != null)
-                {
-                    var value = summary.Value.Trim();
-
-                    //只获取非空的第一行。
-                    var reader = new StringReader(value);
-                    while (true)
-                    {
-                        value = reader.ReadLine();
-
-                        if (value == null) { break; }
-
-                        value = value.Trim();
-                        if (value.Length > 1) { break; }
-                    }
-                    if (value != null)
-                    {
-                        ODMLDocumentHelper.SetDomainName(_currentType, value);
-                    }
-                }
-            }
+            TryParseDomainName(_currentType, codeClass.DocComment);
 
             base.VisitClass(codeClass);
 
@@ -421,6 +401,18 @@ namespace Rafy.VSPackage.Modeling.CodeSync
             _currentType.ValueProperties.Add(property);
         }
 
+        private void ParseValuePropertyDomainName(CodeProperty codeProperty)
+        {
+            if (!string.IsNullOrWhiteSpace(codeProperty.DocComment))
+            {
+                var valueProperty = _currentType.ValueProperties.FirstOrDefault(vp => vp.Name == codeProperty.Name);
+                if (valueProperty != null)
+                {
+                    TryParseDomainName(valueProperty, codeProperty.DocComment);
+                }
+            }
+        }
+
         #endregion
 
         #region 解析枚举
@@ -476,6 +468,40 @@ namespace Rafy.VSPackage.Modeling.CodeSync
             }
 
             return res;
+        }
+
+        /// <summary>
+        /// 获取模型的注释。
+        /// </summary>
+        /// <param name="comment"></param>
+        /// <returns></returns>
+        private static void TryParseDomainName(EOMObject type, string comment)
+        {
+            if (!string.IsNullOrEmpty(comment))
+            {
+                var xmlDoc = XDocument.Parse(comment);
+                var summary = xmlDoc.Root.Element("summary");
+                if (summary != null)
+                {
+                    var value = summary.Value.Trim();
+
+                    //只获取非空的第一行。
+                    var reader = new StringReader(value);
+                    while (true)
+                    {
+                        value = reader.ReadLine();
+
+                        if (value == null) { break; }
+
+                        value = value.Trim();
+                        if (value.Length > 1) { break; }
+                    }
+                    if (value != null)
+                    {
+                        ODMLDocumentHelper.SetDomainName(type, value);
+                    }
+                }
+            }
         }
     }
 }
