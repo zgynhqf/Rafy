@@ -193,11 +193,21 @@ namespace Rafy.Domain
         }
 
         /// <summary>
-        /// 通过 CommonQueryCriteria 来查询实体列表。
+        /// 通过 <see cref="CommonQueryCriteria"/> 来查询实体列表。
         /// </summary>
         /// <param name="criteria">常用查询条件。</param>
         /// <returns></returns>
         public EntityList GetBy(CommonQueryCriteria criteria)
+        {
+            return this.DoGetBy(criteria);
+        }
+
+        /// <summary>
+        /// 通过 <see cref="ODataQueryCriteria"/> 来查询实体列表。
+        /// </summary>
+        /// <param name="criteria">常用查询条件。</param>
+        /// <returns></returns>
+        public EntityList GetBy(ODataQueryCriteria criteria)
         {
             return this.DoGetBy(criteria);
         }
@@ -564,11 +574,21 @@ namespace Rafy.Domain
         }
 
         /// <summary>
-        /// 通过 CommonQueryCriteria 来查询实体列表。
+        /// 通过 <see cref="CommonQueryCriteria"/> 来查询实体列表。
         /// </summary>
         /// <param name="criteria">常用查询条件。</param>
         /// <returns></returns>
         protected virtual EntityList DoGetBy(CommonQueryCriteria criteria)
+        {
+            return this.FetchList(criteria);
+        }
+
+        /// <summary>
+        /// 通过 <see cref="ODataQueryCriteria"/> 来查询实体列表。
+        /// </summary>
+        /// <param name="criteria">常用查询条件。</param>
+        /// <returns></returns>
+        protected virtual EntityList DoGetBy(ODataQueryCriteria criteria)
         {
             return this.FetchList(criteria);
         }

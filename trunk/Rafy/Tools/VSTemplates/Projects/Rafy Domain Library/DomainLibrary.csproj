@@ -36,40 +36,19 @@
         <Reference Include="System.Core" />
         <Reference Include="System.Xml.Linq" />
         <Reference Include="System.Data.DataSetExtensions" />
-        <Reference Include="Microsoft.CSharp" />
         <Reference Include="System.Data" />
         <Reference Include="System.Xml" />
-
-        <Reference Include="Rafy.Utils">
-            <HintPath>Rafy\Rafy.Utils.dll</HintPath>
-        </Reference>
-        <Reference Include="Rafy">
-            <HintPath>Rafy\Rafy.dll</HintPath>
-        </Reference>
-        <Reference Include="Rafy.DbMigration">
-            <HintPath>Rafy\Rafy.DbMigration.dll</HintPath>
-        </Reference>
-        <Reference Include="Rafy.ManagedProperty">
-            <HintPath>Rafy\Rafy.ManagedProperty.dll</HintPath>
-        </Reference>
-        <Reference Include="Rafy.Domain">
-            <HintPath>Rafy\Rafy.Domain.dll</HintPath>
-        </Reference>
+        <Reference Include="Microsoft.CSharp" />
+        <Reference Include="Rafy"/>
+        <Reference Include="Rafy.Utils"/>
+        <Reference Include="Rafy.DbMigration"/>
+        <Reference Include="Rafy.ManagedProperty"/>
+        <Reference Include="Rafy.Domain"/>
     </ItemGroup>
     <ItemGroup>
         <Compile Include="DomainLibraryPlugin.cs" />
         <Compile Include="Entities\DomainLibraryEntity.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
-        <Content Include="Rafy\Rafy.dll" />
-        <Content Include="Rafy\Rafy.Utils.dll" />
-        <Content Include="Rafy\Rafy.Domain.dll" />
-        <Content Include="Rafy\Rafy.DbMigration.dll" />
-        <Content Include="Rafy\Rafy.ManagedProperty.dll" />
-        <Content Include="Rafy\Rafy.xml" />
-        <Content Include="Rafy\Rafy.Utils.xml" />
-        <Content Include="Rafy\Rafy.Domain.xml" />
-        <Content Include="Rafy\Rafy.DbMigration.xml" />
-        <Content Include="Rafy\Rafy.ManagedProperty.xml" />
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Services\" />

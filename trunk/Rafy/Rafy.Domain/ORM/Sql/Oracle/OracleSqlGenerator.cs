@@ -19,6 +19,8 @@ using Rafy.Domain.ORM.SqlTree;
 
 namespace Rafy.Domain.ORM.Oracle
 {
+    //暂时没有处理：
+    //TOP、!=、
     class OracleSqlGenerator : SqlGenerator
     {
         protected override void QuoteAppend(string identifier)

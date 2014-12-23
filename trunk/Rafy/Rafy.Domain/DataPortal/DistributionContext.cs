@@ -161,7 +161,7 @@ namespace Rafy.DataPortal
         {
             SetClientContext(null);
             SetGlobalContext(null);
-            ServerContext.Clear();
+            AppContext.Clear();
         }
     }
 }

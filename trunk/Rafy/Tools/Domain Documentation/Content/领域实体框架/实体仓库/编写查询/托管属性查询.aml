@@ -4,6 +4,7 @@
       xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
       xmlns:xlink="http://www.w3.org/1999/xlink">
         <introduction>
+            <para>注意，本查询方式（基于 CreatePropertyQuery 方法）已经过时，不再可用！！！新的文档正在更新中……</para>
             <autoOutline />
         </introduction>
 

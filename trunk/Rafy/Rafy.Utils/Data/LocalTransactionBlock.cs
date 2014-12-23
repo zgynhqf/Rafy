@@ -25,7 +25,7 @@ namespace Rafy.Data
     /// 表示一个使用单数据库连接的事务代码块（版本 2.0）
     /// Local 的意思是本地事务（即非分布式事务）
     /// </summary>
-    public abstract class LocalTransactionBlock : ServerContextScope
+    public abstract class LocalTransactionBlock : AppContextScope
     {
         #region 字段 - 所有范围对象
 

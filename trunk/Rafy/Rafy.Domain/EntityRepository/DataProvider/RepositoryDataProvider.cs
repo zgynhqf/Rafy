@@ -1160,8 +1160,14 @@ namespace Rafy.Domain
             return this.GetBy(criteria);
         }
 
+        [Obfuscation]
+        private EntityList FetchBy(ODataQueryCriteria criteria)
+        {
+            return this.GetBy(criteria);
+        }
+
         /// <summary>
-        /// 常用查询的数据层实现。
+        /// <see cref="CommonQueryCriteria"/> 查询的数据层实现。
         /// </summary>
         /// <param name="criteria"></param>
         public virtual EntityList GetBy(CommonQueryCriteria criteria)
@@ -1232,6 +1238,73 @@ namespace Rafy.Domain
                 {
                     var dir = criteria.OrderByAscending ? OrderDirection.Ascending : OrderDirection.Descending;
                     q.OrderBy.Add(table.Column(orderBy), dir);
+                }
+            }
+
+            return this.QueryList(q, criteria.PagingInfo, criteria.EagerLoad);
+        }
+
+        /// <summary>
+        /// <see cref="ODataQueryCriteria"/> 查询的数据层实现。
+        /// </summary>
+        /// <param name="criteria"></param>
+        public virtual EntityList GetBy(ODataQueryCriteria criteria)
+        {
+            var f = QueryFactory.Instance;
+            var t = f.Table(this.Repository);
+
+            var q = f.Query(from: t);
+
+            var properties = this.Repository.EntityMeta.ManagedProperties.GetCompiledProperties();
+
+            //filter
+            if (!string.IsNullOrWhiteSpace(criteria.Filter))
+            {
+                var parser = new ODataFilterParser
+                {
+                    _mainTable = t,
+                    _properties = properties
+                };
+                q.Where = parser.Parse(criteria.Filter);
+            }
+
+            //order by
+            if (!string.IsNullOrWhiteSpace(criteria.OrderBy))
+            {
+                var orderByProperties = criteria.OrderBy.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var orderByExp in orderByProperties)
+                {
+                    var values = orderByExp.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    var property = values[0];
+                    var orderBy = properties.Find(property, true);
+                    if (orderBy != null)
+                    {
+                        var dir = values.Length == 1 || values[1].ToLower() == "asc" ? OrderDirection.Ascending : OrderDirection.Descending;
+                        q.OrderBy.Add(f.OrderBy(t.Column(orderBy), dir));
+                    }
+                }
+            }
+
+            //expand
+            if (!string.IsNullOrWhiteSpace(criteria.Expand))
+            {
+                criteria.EagerLoad = new EagerLoadOptions();
+
+                var expandProperties = criteria.Expand.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var expand in expandProperties)
+                {
+                    var mp = properties.Find(expand, true);
+                    if (mp != null)
+                    {
+                        if (mp is IListProperty)
+                        {
+                            criteria.EagerLoad.LoadWith(mp as IListProperty);
+                        }
+                        else if (mp is IRefEntityProperty)
+                        {
+                            criteria.EagerLoad.LoadWith(mp as IRefEntityProperty);
+                        }
+                    }
                 }
             }
 

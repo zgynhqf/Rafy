@@ -24,7 +24,7 @@ namespace Rafy
     /// 
     /// 注意：必须使用 using 来构造此类型的子类，否则会出现未知的问题。
     /// </summary>
-    public abstract class ServerContextScope : IDisposable
+    public abstract class AppContextScope : IDisposable
     {
         /// <summary>
         /// 是否已经进入本对象声明的代码范围。
@@ -41,7 +41,7 @@ namespace Rafy
         /// <summary>
         /// 最外层的范围对象缓存。
         /// </summary>
-        private ServerContextScope _wholeScope;
+        private AppContextScope _wholeScope;
         /// <summary>
         /// 目前进入到了第几个代码范围。
         /// 这个字段只在最外层范围上有用。
@@ -52,7 +52,7 @@ namespace Rafy
         /// 获取最外层的范围对象。
         /// </summary>
         /// <returns></returns>
-        protected ServerContextScope WholeScope
+        protected AppContextScope WholeScope
         {
             get
             {
@@ -60,7 +60,7 @@ namespace Rafy
                 {
                     //从上下文中中查找最外层的范围对象，如果还没有，则直接添加本对象为最外层的范围对象。
                     object res = null;
-                    var items = ServerContext.Items;
+                    var items = AppContext.Items;
                     if (!items.TryGetValue(_contextKey, out res))
                     {
                         res = this;
@@ -68,7 +68,7 @@ namespace Rafy
                         items.Add(_contextKey, res);
                     }
 
-                    _wholeScope = res as ServerContextScope;
+                    _wholeScope = res as AppContextScope;
                 }
 
                 return _wholeScope;
@@ -110,12 +110,12 @@ namespace Rafy
         {
             if (!_disposed)
             {
-                var context = ServerContext.Items;
+                var context = AppContext.Items;
 
                 object res = null;
                 context.TryGetValue(_contextKey, out res);
 
-                var item = res as ServerContextScope;
+                var item = res as AppContextScope;
                 if (item != null)//其实这里，必须不为空。
                 {
                     //只是把引用次数减一
@@ -140,7 +140,7 @@ namespace Rafy
 
         #region Dispose Pattern
 
-        ~ServerContextScope()
+        ~AppContextScope()
         {
             this.Dispose(false);
         }
@@ -158,11 +158,11 @@ namespace Rafy
         /// </summary>
         /// <param name="contextKey"></param>
         /// <returns></returns>
-        protected static ServerContextScope GetWholeScope(string contextKey)
+        protected static AppContextScope GetWholeScope(string contextKey)
         {
             object res = null;
-            ServerContext.Items.TryGetValue(contextKey, out res);
-            return res as ServerContextScope;
+            AppContext.Items.TryGetValue(contextKey, out res);
+            return res as AppContextScope;
         }
     }
 
@@ -172,12 +172,12 @@ namespace Rafy
     /// 它封装了 ContextKey 的构造，提升易用性。如果要定制 ContextKey，请继承非泛型版本。
     /// </summary>
     /// <typeparam name="TSub"></typeparam>
-    public abstract class ServerContextScope<TSub> : ServerContextScope where TSub : ServerContextScope
+    public abstract class AppContextScope<TSub> : AppContextScope where TSub : AppContextScope
     {
         /// <summary>
         /// 构造器。
         /// </summary>
-        public ServerContextScope()
+        public AppContextScope()
         {
             this.EnterScope(typeof(TSub).FullName);
         }
@@ -197,7 +197,7 @@ namespace Rafy
         /// <returns></returns>
         public static TSub GetWholeScope()
         {
-            return ServerContextScope.GetWholeScope(typeof(TSub).FullName) as TSub;
+            return AppContextScope.GetWholeScope(typeof(TSub).FullName) as TSub;
         }
     }
 }

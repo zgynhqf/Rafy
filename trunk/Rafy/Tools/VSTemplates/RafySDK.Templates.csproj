@@ -111,20 +111,10 @@
     <Content Include="zipTools\zip.txt" />
     <None Include="Items\DomainEntityRepository\__TemplateIcon.ico" />
     <None Include="Items\DomainEntityRepository\DomainEntityRepositoryTemplate.vstemplate" />
-    <Content Include="Projects\Rafy Domain Library\Rafy\Rafy.ManagedProperty.xml" />
-    <Content Include="Projects\Rafy Domain Library\Rafy\Rafy.xml" />
     <None Include="Items\DomainEntity\DomainEntityTemplate.vstemplate">
       <SubType>Designer</SubType>
     </None>
     <None Include="Items\DomainEntity\__TemplateIcon.ico" />
-    <Content Include="Projects\Rafy Domain Library\Rafy\Rafy.Utils.xml" />
-    <Content Include="Projects\Rafy Domain Library\Rafy\Rafy.DbMigration.dll" />
-    <Content Include="Projects\Rafy Domain Library\Rafy\Rafy.DbMigration.xml" />
-    <Content Include="Projects\Rafy Domain Library\Rafy\Rafy.Domain.XML" />
-    <Content Include="Projects\Rafy Domain Library\Rafy\Rafy.ManagedProperty.dll" />
-    <Content Include="Projects\Rafy Domain Library\Rafy\Rafy.Utils.dll" />
-    <Content Include="Projects\Rafy Domain Library\Rafy\Rafy.dll" />
-    <Content Include="Projects\Rafy Domain Library\Rafy\Rafy.Domain.dll" />
     <None Include="Projects\Rafy Console App\amd64\Microsoft.VC90.CRT\msvcr90.dll" />
     <None Include="Projects\Rafy Console App\amd64\Microsoft.VC90.CRT\README_CHS.txt" />
     <None Include="Projects\Rafy Console App\amd64\sqlceca40.dll" />
@@ -172,19 +162,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>rem copy dll
-xcopy "$(SolutionDir)Rafy\Rafy.Domain\bin\Debug\Rafy.Utils.dll" "$(ProjectDir)Projects\Rafy Domain Library\Rafy\" /Y
-xcopy "$(SolutionDir)Rafy\Rafy.Domain\bin\Debug\Rafy.DbMigration.dll" "$(ProjectDir)Projects\Rafy Domain Library\Rafy\" /Y
-xcopy "$(SolutionDir)Rafy\Rafy.Domain\bin\Debug\Rafy.dll" "$(ProjectDir)Projects\Rafy Domain Library\Rafy\" /Y
-xcopy "$(SolutionDir)Rafy\Rafy.Domain\bin\Debug\Rafy.Domain.dll" "$(ProjectDir)Projects\Rafy Domain Library\Rafy\" /Y
-xcopy "$(SolutionDir)Rafy\Rafy.Domain\bin\Debug\Rafy.ManagedProperty.dll" "$(ProjectDir)Projects\Rafy Domain Library\Rafy\" /Y
-xcopy "$(SolutionDir)Rafy\Rafy.Domain\bin\Debug\Rafy.Utils.xml" "$(ProjectDir)Projects\Rafy Domain Library\Rafy\" /Y
-xcopy "$(SolutionDir)Rafy\Rafy.Domain\bin\Debug\Rafy.DbMigration.xml" "$(ProjectDir)Projects\Rafy Domain Library\Rafy\" /Y
-xcopy "$(SolutionDir)Rafy\Rafy.Domain\bin\Debug\Rafy.xml" "$(ProjectDir)Projects\Rafy Domain Library\Rafy\" /Y
-xcopy "$(SolutionDir)Rafy\Rafy.Domain\bin\Debug\Rafy.Domain.xml" "$(ProjectDir)Projects\Rafy Domain Library\Rafy\" /Y
-xcopy "$(SolutionDir)Rafy\Rafy.Domain\bin\Debug\Rafy.ManagedProperty.xml" "$(ProjectDir)Projects\Rafy Domain Library\Rafy\" /Y
-
-rem zip projects
+    <PostBuildEvent>rem zip projects
 $(ProjectDir)zipTools\zip.exe -r -j $(ProjectDir)..\VSPackage\ItemTemplates\DomainEntity.zip $(ProjectDir)Items\DomainEntity
 $(ProjectDir)zipTools\zip.exe -r -j $(ProjectDir)..\VSPackage\ItemTemplates\DomainEntityRepository.zip $(ProjectDir)Items\DomainEntityRepository
 

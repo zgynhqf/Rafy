@@ -275,7 +275,11 @@ namespace Rafy.Domain
                 entityType = listType.Assembly.GetType(entityTypeName);
             }
 
-            if (entityType == null) throw new ArgumentException("没有找到与listType对应的实体类型");
+            if (entityType == null) throw new ArgumentException(@"没有找到与实体列表类型对应的实体类型。
+实体类型与实体列表类型必须满足以下约定：
+1.二者必须在同一个程序集中。
+2.二者必须使用相同的命名空间。
+3.实体列表类型的名称必须是 实体类型+List。");
 
             return entityType;
         }
@@ -297,7 +301,7 @@ namespace Rafy.Domain
                 entityType = repositoryType.Assembly.GetType(entityTypeName);
             }
 
-            if (entityType == null) throw new ArgumentException(string.Format("没有找到与 {0} 对应的实体类型", repositoryType));
+            if (entityType == null) throw new ArgumentException(string.Format(@"没有找到与 {0} 对应的实体类型。请在仓库类型上标记：RepositoryForAttribute。", repositoryType));
 
             return entityType;
         }

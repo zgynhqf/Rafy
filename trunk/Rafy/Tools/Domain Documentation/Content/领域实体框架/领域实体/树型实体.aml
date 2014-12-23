@@ -73,6 +73,10 @@ Meta.TreeIndexOption = new TreeIndexOption
         </section>
 
         <relatedTopics>
+            <externalLink>
+                <linkText>Rafy 领域实体框架 - 树型实体功能（自关联表）</linkText>
+                <linkUri>http://www.cnblogs.com/zgynhqf/p/4133511.html</linkUri>
+            </externalLink>
         </relatedTopics>
     </developerConceptualDocument>
 </topic>

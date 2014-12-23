@@ -5,8 +5,8 @@
       xmlns:xlink="http://www.w3.org/1999/xlink">
 
         <introduction>
-            <para>Rafy 2.23.7155 帮助文档</para>
-            <!--<para>文档版本号：1.1</para>-->
+            <para>Rafy 帮助文档</para>
+            <para>文档版本号：0.5.519</para>
         </introduction>
 
         <section address="intro">
@@ -95,7 +95,7 @@
                         <para>包含以下程序集：</para>
                         <list class="bullet">
                             <listItem>
-                                <para>Hxy.dll</para>
+                                <para>Rafy.Utils.dll</para>
                             </listItem>
                             <listItem>
                                 <para>Rafy.dll</para>
