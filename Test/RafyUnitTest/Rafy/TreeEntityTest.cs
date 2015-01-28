@@ -755,6 +755,46 @@ namespace RafyUnitTest
         }
 
         /// <summary>
+        /// 在查询时加载树节点，如果数据中有不属于这棵树的节点，
+        /// 或者某些节点的父节点被过滤了，那么不应该加到这个列表中。
+        /// </summary>
+        [TestMethod]
+        public void TET_Query_LoadSubTreeIgnoreOtherNodes()
+        {
+            var repo = RF.Concrete<FolderRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var list = new FolderList
+                {
+                    new Folder
+                    {
+                        Name = "1",
+                        TreeChildren =
+                        {
+                            new Folder
+                            {
+                                Name = "1.1",
+                                TreeChildren =
+                                {
+                                    new Folder{ Name = "1.1.1" },
+                                    new Folder{ Name = "1.1.2" },
+                                }
+                            },
+                            new Folder{Name = "1.2"},
+                        }
+                    },
+                };
+                repo.Save(list);
+
+                var root = list[0];
+
+                list = repo.GetForIgnoreTest();
+                Assert.IsTrue(list.Count == 1);
+                Assert.IsTrue((list as ITreeComponent).CountNodes() == 2, "内存中只有 1 和 1.2 两个节点。");
+            }
+        }
+
+        /// <summary>
         /// GetAll 查询出来的树中的所有节点的 IsFullLoaded 都是真的。
         /// </summary>
         [TestMethod]

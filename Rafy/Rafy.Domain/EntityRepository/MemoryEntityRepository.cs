@@ -96,9 +96,9 @@ namespace Rafy.Domain
 
         public abstract class MemoryRepositoryDataProvider : RepositoryDataProvider
         {
-            private MemoryEntityRepository _repository
+            private MemoryEntityRepository _Repository
             {
-                get { return base.Repo as MemoryEntityRepository; }
+                get { return base.Repository as MemoryEntityRepository; }
             }
 
             /// <summary>
@@ -135,7 +135,7 @@ namespace Rafy.Domain
 
             private string GetRealKey(Entity entity)
             {
-                return _repository.GetRealKey(entity);
+                return _Repository.GetRealKey(entity);
             }
 
             #region 重写数据访问方法

@@ -55,6 +55,8 @@ namespace Rafy.Domain.ORM.SqlTree
                     return this.VisitSqlNotConstraint(node as SqlNotConstraint);
                 case SqlNodeType.SqlSubSelect:
                     return this.VisitSqlSubSelect(node as SqlSubSelect);
+                case SqlNodeType.SqlOrderBy:
+                    return this.VisitSqlOrderBy(node as SqlOrderBy);
                 default:
                     break;
             }
@@ -157,6 +159,11 @@ namespace Rafy.Domain.ORM.SqlTree
         {
             this.Visit(subSelect.Select);
             return subSelect;
+        }
+
+        protected virtual SqlOrderBy VisitSqlOrderBy(SqlOrderBy sqlOrderBy)
+        {
+            return sqlOrderBy;
         }
     }
 }

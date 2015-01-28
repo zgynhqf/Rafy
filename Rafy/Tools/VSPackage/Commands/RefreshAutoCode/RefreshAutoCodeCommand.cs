@@ -63,7 +63,7 @@ namespace Rafy.VSPackage.Commands.RefreshAutoCode
             string selectedType = "项目";
             if (selectedItem is ProjectItem) selectedType = "文件";
             var res = MessageBox.Show(
-                string.Format("执行前请先保存所有的代码文件。将为当前选中的{0}中所有实体生成最新的泛型接口代码。确定执行吗？", selectedType),
+                string.Format("执行前请先保存所有的代码文件。将为当前选中的{0}中所有实体/仓库生成最新的泛型接口代码。确定执行吗？", selectedType),
                 "提示", MessageBoxButton.OKCancel
                 );
             if (res != MessageBoxResult.OK) return;
@@ -109,7 +109,7 @@ namespace Rafy.VSPackage.Commands.RefreshAutoCode
 
             //生成代码，写入文件。
             var code = renderer(codeClass);
-            if (string.IsNullOrEmpty(code))
+            if (!string.IsNullOrEmpty(code))
             {
                 File.WriteAllText(gFile, code);
 
@@ -339,7 +339,7 @@ namespace Rafy.VSPackage.Commands.RefreshAutoCode
                 var code = File.ReadAllText(gFile);
                 var match = Regex.Match(code, @"using (?<domainNamespace>\S+?);\s+namespace");
                 domainNamespace = match.Groups["domainNamespace"].Value;
-                return true;
+                return !string.IsNullOrWhiteSpace(domainNamespace);
             }
             return false;
         }

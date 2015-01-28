@@ -10,9 +10,25 @@
  * 
 *******************************************************/
 
-2.34.2490
+2.35.2505
+    添加接口
+        OData 支持模糊匹配。
+        OData 中 filter 查询支持使用引用属性来进行关联表查询。
+    内部修改
+        不完整树节点的加载。
+
+2.35.2497
+    重构、★重要
+        重构 Repository、DataProvider 与 RepsitoryQueryBase 的关系。使得只需要在 DataProvider 中重写一次数据层代码即可。
+    BUG修复
+        QueryNodeVisitor 遗漏了对 OrderBy 的处理。
+
+2.34.2492
     ！删除接口、添加接口
         添加 AppContext 类型，更好地支持数据上下文。
+    内部修改
+        $expand 支持 TreeChildren。
+        $expand 支持多级级联引用属性，例如 "Section.Chapter.Book,SectionOwner"。
 
 2.33.2487
     添加接口

@@ -13,6 +13,7 @@ using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
 using Rafy.MetaModel.View;
 using Rafy.ManagedProperty;
+using Rafy.Domain.ORM.Query;
 
 namespace UT
 {
@@ -55,6 +56,16 @@ namespace UT
             set { this.SetProperty(NameProperty, value); }
         }
 
+        public static readonly Property<int> LengthProperty = P<BookLoc>.Register(e => e.Length);
+        /// <summary>
+        /// 长度。
+        /// </summary>
+        public int Length
+        {
+            get { return this.GetProperty(LengthProperty); }
+            set { this.SetProperty(LengthProperty, value); }
+        }
+
         #endregion
 
         #region 只读属性
@@ -78,12 +89,40 @@ namespace UT
         /// 单例模式，外界不可以直接构造本对象。
         /// </summary>
         protected BookLocRepository() { }
+
+        public BookLocList Get_DAInRepository(string name)
+        {
+            return this.FetchList(r => r.DA_Get_DAInRepository(name));
+        }
+        private EntityList DA_Get_DAInRepository(string name)
+        {
+            var q = this.CreateLinqQuery();
+            q = q.Where(e => e.Name == name);
+            return this.QueryList(q);
+        }
+
+        public BookLocList Get_DAInDataProvider(string name)
+        {
+            return this.FetchList(r => r.DataProvider.Get_DAInDataProvider(name));
+        }
+
+        private new BookLocRepositoryDataProvider DataProvider
+        {
+            get { return base.DataProvider as BookLocRepositoryDataProvider; }
+        }
     }
 
     [DataProviderFor(typeof(BookLocRepository))]
     public partial class BookLocRepositoryDataProvider : UnitTestEntityRepositoryDataProvider
     {
         public int TestSaveListTransactionItemCount = -1;
+
+        public EntityList Get_DAInDataProvider(string name)
+        {
+            var q = this.CreateLinqQuery<BookLoc>();
+            q = q.Where(e => e.Name == name);
+            return this.QueryList(q);
+        }
 
         protected override void Submit(SubmitArgs e)
         {
@@ -97,6 +136,15 @@ namespace UT
             }
 
             base.Submit(e);
+        }
+
+        protected override void OnQuerying(EntityQueryArgs args)
+        {
+            var f = QueryFactory.Instance;
+            var q = args.Query;
+            q.Where = f.And(q.MainTable.Column(BookLoc.LengthProperty).GreaterEqual(0), q.Where);
+
+            base.OnQuerying(args);
         }
     }
 

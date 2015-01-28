@@ -78,6 +78,17 @@ namespace UT
         /// 单例模式，外界不可以直接构造本对象。
         /// </summary>
         protected FolderRepository() { }
+
+        public FolderList GetForIgnoreTest()
+        {
+            return this.FetchList(r => r.DA_GetForIgnoreTest());
+        }
+        private EntityList DA_GetForIgnoreTest()
+        {
+            var q = this.CreateLinqQuery();
+            q = q.Where(e => e.Name != "1.1");
+            return this.QueryList(q);
+        }
     }
 
     /// <summary>

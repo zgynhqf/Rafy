@@ -138,6 +138,28 @@ namespace Rafy.MetaModel
             return null;
         }
 
+        /// <summary>
+        /// 计算指定索引中表示的级别。
+        /// （内部为统计分隔符的个数。）
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        internal int CountLevel(string index)
+        {
+            if (string.IsNullOrWhiteSpace(index))
+            {
+                return 0;
+            }
+
+            var res = 0;
+            for (int i = 0, c = index.Length; i < c; i++)
+            {
+                var cItem = index[i];
+                if (cItem == Seperator) res++;
+            }
+            return res;
+        }
+
         private string GetSingleIndex(int layerIndex, int nodeIndex)
         {
             var layer = this.GetLayer(layerIndex);

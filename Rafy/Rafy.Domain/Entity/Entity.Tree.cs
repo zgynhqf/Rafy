@@ -292,6 +292,27 @@ namespace Rafy.Domain
         }
 
         /// <summary>
+        /// 此节点在树中的级别。
+        /// 根节点是第一级。
+        /// 此级别是完全根据 <see cref="TreeIndex"/> 计算出来的。
+        /// 
+        /// 如果此实体不是一个树实体，则返回 -1。
+        /// </summary>
+        public int TreeLevel
+        {
+            get
+            {
+                var repo = this.FindRepository();
+                if (repo != null && repo.SupportTree)
+                {
+                    var option = repo.TreeIndexOption;
+                    return option.CountLevel(this.TreeIndex);
+                }
+                return -1;
+            }
+        }
+
+        /// <summary>
         /// 树中的子对象集合。
         /// <remarks>
         /// 操作此属性，同样引起 TreeParent、EntityList 的变化。

@@ -43,16 +43,9 @@ namespace Rafy.Domain.ORM.Linq
         /// </summary>
         private Stack<QueryMethod> _queryMethod = new Stack<QueryMethod>();
 
-        private int _tableAliasIndex = 0;
-
-        private string NextTableAlias()
-        {
-            return "T" + _tableAliasIndex++;
-        }
-
         internal void BuildQuery(Expression exp)
         {
-            var mainTable = f.Table(_repo, NextTableAlias());
+            var mainTable = f.Table(_repo, "T0");
 
             _query = f.Query(mainTable);
 
@@ -306,7 +299,7 @@ namespace Rafy.Domain.ORM.Linq
             {
                 //如果是引用属性，说明需要使用关联查询。
                 var refProperty = mp as IRefEntityProperty;
-                var refTable = FindOrCreateJoinTable(ownerTable, refProperty);
+                var refTable = f.FindOrCreateJoinTable(_query, ownerTable, refProperty);
 
                 //存储到字段中，最后的值属性会使用这个引用属性对应的引用实体类型来查找对应仓库。
                 _lastJoinRefResult = refProperty;
@@ -476,40 +469,6 @@ namespace Rafy.Domain.ORM.Linq
             _hasValueResult = true;
 
             return node;
-        }
-
-        #endregion
-
-        #region 表缓存
-
-        private ITableSource FindOrCreateJoinTable(ITableSource ownerTable, IRefEntityProperty refProperty)
-        {
-            var entityQuery = _query as TableQuery;
-            var refTableSource = entityQuery.AllJoinTables.FirstOrDefault(
-                ts => ts.OwnerTable == ownerTable && ts.Property == refProperty
-                );
-            if (refTableSource == null)
-            {
-                var refEntityType = refProperty.RefEntityType;
-                var refRepo = RepositoryFactoryHost.Factory.FindByEntity(refEntityType);
-                var refTable = f.Table(refRepo, NextTableAlias());
-
-                var joinType = refProperty.Nullable ? JoinType.LeftOuter : JoinType.Inner;
-                _query.From = f.Join(_query.From, refTable, f.Constraint(
-                    ownerTable.Column(refProperty.RefIdProperty),
-                    refTable.Column(Entity.IdProperty)
-                    ), joinType);
-
-                refTableSource = new SqlTableSource
-                {
-                    OwnerTable = ownerTable,
-                    Property = refProperty,
-                    RefTable = refTable,
-                };
-                entityQuery.AllJoinTables.Add(refTableSource);
-            }
-
-            return refTableSource.RefTable;
         }
 
         #endregion

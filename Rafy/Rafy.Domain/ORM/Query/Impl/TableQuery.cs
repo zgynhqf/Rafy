@@ -139,7 +139,50 @@ namespace Rafy.Domain.ORM.Query.Impl
         /// <summary>
         /// 除基础表外，所有连接的表。
         /// </summary>
-        internal List<SqlTableSource> AllJoinTables = new List<SqlTableSource>();
+        private List<SqlTableSource> _allJoinTables = new List<SqlTableSource>();
+
+        private string NextJoinTableAlias()
+        {
+            return "T" + (_allJoinTables.Count + 1);
+        }
+
+        /// <summary>
+        /// 在查询对象中查找或者创建指定引用属性对应的连接表对象。
+        /// </summary>
+        /// <param name="ownerTable">引用属性对应外键所在的表。</param>
+        /// <param name="refProperty">指定的引用属性。</param>
+        /// <returns></returns>
+        internal ITableSource FindOrCreateJoinTable(ITableSource ownerTable, IRefEntityProperty refProperty)
+        {
+            var query = this as IQuery;
+            var refTableSource = _allJoinTables.FirstOrDefault(
+                ts => ts.OwnerTable == ownerTable && ts.Property == refProperty
+                );
+            if (refTableSource == null)
+            {
+                var f = QueryFactory.Instance;
+
+                var refEntityType = refProperty.RefEntityType;
+                var refRepo = RepositoryFactoryHost.Factory.FindByEntity(refEntityType);
+                var refTable = f.Table(refRepo, this.NextJoinTableAlias());
+
+                var joinType = refProperty.Nullable ? JoinType.LeftOuter : JoinType.Inner;
+                query.From = f.Join(query.From, refTable, f.Constraint(
+                    ownerTable.Column(refProperty.RefIdProperty),
+                    refTable.Column(Entity.IdProperty)
+                    ), joinType);
+
+                refTableSource = new SqlTableSource
+                {
+                    OwnerTable = ownerTable,
+                    Property = refProperty,
+                    RefTable = refTable,
+                };
+                _allJoinTables.Add(refTableSource);
+            }
+
+            return refTableSource.RefTable;
+        }
 
         /// <summary>
         /// 本查询所对应的基础表。

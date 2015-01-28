@@ -654,13 +654,13 @@ namespace Rafy.Domain.ORM
             var entities = this.ReadToEntity(reader, readType);
             if (PagingInfo.IsNullOrEmpty(pagingInfo))
             {
-                TreeHelper.LoadTreeData(list, entities);
+                TreeHelper.LoadTreeData(list, entities, _repository.TreeIndexOption);
             }
             else
             {
                 //在内存中分页。
                 var tempList =new List<Entity>();
-                TreeHelper.LoadTreeData(tempList, entities);
+                TreeHelper.LoadTreeData(tempList, entities, _repository.TreeIndexOption);
                 var paged = tempList.JumpToPage(pagingInfo);
                 foreach (var item in paged) { list.Add(item); }
             }

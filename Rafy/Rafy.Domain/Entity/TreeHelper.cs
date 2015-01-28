@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using Rafy.Domain.ORM;
+using Rafy.MetaModel;
 
 namespace Rafy.Domain
 {
@@ -59,9 +60,10 @@ namespace Rafy.Domain
         /// <summary>
         /// 以树节点加载算法加载数据。
         /// </summary>
-        /// <param name="list"></param>
-        /// <param name="nodes"></param>
-        internal static void LoadTreeData(IList<Entity> list, IEnumerable nodes)
+        /// <param name="list">The list.</param>
+        /// <param name="nodes">The nodes.</param>
+        /// <param name="indexOption">The index option.</param>
+        internal static void LoadTreeData(IList<Entity> list, IEnumerable nodes, TreeIndexOption indexOption)
         {
             /*********************** 代码块解释 *********************************
              * 树节点加载算法：
@@ -78,7 +80,8 @@ namespace Rafy.Domain
                 var treePId = entity.TreePId;
                 if (treePId == null)
                 {
-                    list.Add(entity);
+                    var added = TryAddToList(list, entity, indexOption);
+                    if (added) lastNode = entity;
                 }
                 else
                 {
@@ -92,16 +95,44 @@ namespace Rafy.Domain
                     //如果没有找到 parentNode，则加入到列表中。否则，加入到 parentNode 下。
                     if (parentNode == null)
                     {
-                        list.Add(entity);
+                        var added = TryAddToList(list, entity, indexOption);
+                        if (added) lastNode = entity;
                     }
                     else
                     {
                         parentNode.TreeChildren.LoadAdd(entity);
+                        lastNode = entity;
                     }
                 }
-
-                lastNode = entity;
             }
+        }
+
+        /// <summary>
+        /// 必须要同一级的节点才能加入到实体列表中。
+        /// Test：TET_Query_LoadSubTreeIgnoreOtherNodes
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="node"></param>
+        /// <param name="indexOption"></param>
+        private static bool TryAddToList(IList<Entity> list, Entity node, TreeIndexOption indexOption)
+        {
+            if (list.Count > 0)
+            {
+                var listLevel = indexOption.CountLevel(list[0].TreeIndex);
+                var level = indexOption.CountLevel(node.TreeIndex);
+                if (listLevel == level)
+                {
+                    list.Add(node);
+                    return true;
+                }
+            }
+            else
+            {
+                list.Add(node);
+                return true;
+            }
+
+            return false;
         }
 
         ///// <summary>

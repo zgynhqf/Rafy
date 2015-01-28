@@ -142,14 +142,6 @@ namespace Rafy.RBAC.Audit
     {
         protected AuditItemRepository() { }
 
-        protected override void OnQuerying(EntityQueryArgs args)
-        {
-            var query = args.Query;
-            query.OrderBy.Add(query.MainTable.Column(AuditItem.LogTimeProperty), OrderDirection.Descending);
-
-            base.OnQuerying(args);
-        }
-
         /// <summary>
         /// 条件面板查询
         /// </summary>
@@ -193,6 +185,19 @@ namespace Rafy.RBAC.Audit
             return this.QueryList(q);
         }
     }
+
+    [DataProviderFor(typeof(AuditItemRepository))]
+    public partial class AuditItemRepositoryDataProvider : RepositoryDataProvider
+    {
+        protected override void OnQuerying(EntityQueryArgs args)
+        {
+            var query = args.Query;
+            query.OrderBy.Add(query.MainTable.Column(AuditItem.LogTimeProperty), OrderDirection.Descending);
+
+            base.OnQuerying(args);
+        }
+    }
+
 
     internal class AuditItemConfig : EntityConfig<AuditItem>
     {

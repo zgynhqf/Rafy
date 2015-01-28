@@ -37,7 +37,7 @@ namespace RafyUnitTest
         {
             var filter = "Name eq 'huqf'";
 
-            var sql = Parse(filter);
+            var sql = ParseWhere(filter);
 
             Assert.IsTrue(sql.ToString() == @"Users.UserName = {0}");
             Assert.IsTrue(sql.Parameters.Count == 1);
@@ -49,7 +49,7 @@ namespace RafyUnitTest
         {
             var filter = "Name ne 'huqf'";
 
-            var sql = Parse(filter);
+            var sql = ParseWhere(filter);
 
             Assert.IsTrue(sql.ToString() == @"Users.UserName != {0}");
         }
@@ -59,7 +59,7 @@ namespace RafyUnitTest
         {
             var filter = "Name le 'huqf'";
 
-            var sql = Parse(filter);
+            var sql = ParseWhere(filter);
 
             Assert.IsTrue(sql.ToString() == @"Users.UserName <= {0}");
         }
@@ -69,7 +69,7 @@ namespace RafyUnitTest
         {
             var filter = "Name lt 'huqf'";
 
-            var sql = Parse(filter);
+            var sql = ParseWhere(filter);
 
             Assert.IsTrue(sql.ToString() == @"Users.UserName < {0}");
         }
@@ -79,7 +79,7 @@ namespace RafyUnitTest
         {
             var filter = "Name gt 'huqf'";
 
-            var sql = Parse(filter);
+            var sql = ParseWhere(filter);
 
             Assert.IsTrue(sql.ToString() == @"Users.UserName > {0}");
         }
@@ -89,9 +89,42 @@ namespace RafyUnitTest
         {
             var filter = "Name ge 'huqf'";
 
-            var sql = Parse(filter);
+            var sql = ParseWhere(filter);
 
             Assert.IsTrue(sql.ToString() == @"Users.UserName >= {0}");
+        }
+
+        [TestMethod]
+        public void ODT_Filter_startwith()
+        {
+            var filter = "Name startwith 'huqf'";
+
+            var sql = ParseWhere(filter);
+
+            Assert.IsTrue(sql.ToString() == @"Users.UserName LIKE {0}");
+            Assert.IsTrue(sql.Parameters[0].ToString() == "huqf%");
+        }
+
+        [TestMethod]
+        public void ODT_Filter_endwith()
+        {
+            var filter = "Name endwith 'huqf'";
+
+            var sql = ParseWhere(filter);
+
+            Assert.IsTrue(sql.ToString() == @"Users.UserName LIKE {0}");
+            Assert.IsTrue(sql.Parameters[0].ToString() == "%huqf");
+        }
+
+        [TestMethod]
+        public void ODT_Filter_contains()
+        {
+            var filter = "Name contains 'huqf'";
+
+            var sql = ParseWhere(filter);
+
+            Assert.IsTrue(sql.ToString() == @"Users.UserName LIKE {0}");
+            Assert.IsTrue(sql.Parameters[0].ToString() == "%huqf%");
         }
 
         [TestMethod]
@@ -99,7 +132,7 @@ namespace RafyUnitTest
         {
             var filter = "Name eq 'huqf' and LoginName eq 'huqf'";
 
-            var sql = Parse(filter);
+            var sql = ParseWhere(filter);
 
             Assert.IsTrue(sql.ToString() == @"Users.UserName = {0} AND Users.LoginName = {1}");
             Assert.IsTrue(sql.Parameters.Count == 2);
@@ -112,7 +145,7 @@ namespace RafyUnitTest
         {
             var filter = "Name eq 'huqf' or LoginName eq 'huqf'";
 
-            var sql = Parse(filter);
+            var sql = ParseWhere(filter);
 
             Assert.IsTrue(sql.ToString() == @"Users.UserName = {0} OR Users.LoginName = {1}");
             Assert.IsTrue(sql.Parameters.Count == 2);
@@ -128,7 +161,7 @@ namespace RafyUnitTest
         {
             var filter = "Name eq 'huqf' or LoginName eq 'huqf' and AddedTime lt '2014-12-17 19:00'";
 
-            var sql = Parse(filter);
+            var sql = ParseWhere(filter);
 
             Assert.IsTrue(sql.ToString() == @"(Users.UserName = {0} OR Users.LoginName = {1}) AND Users.AddedTime < {2}");
             Assert.IsTrue(sql.Parameters.Count == 3);
@@ -141,7 +174,7 @@ namespace RafyUnitTest
         {
             var filter = "Name eq 'huqf' and LoginName eq 'huqf' or AddedTime lt '2014-12-17 19:00'";
 
-            var sql = Parse(filter);
+            var sql = ParseWhere(filter);
 
             Assert.IsTrue(sql.ToString() == @"Users.UserName = {0} AND Users.LoginName = {1} OR Users.AddedTime < {2}");
         }
@@ -151,7 +184,7 @@ namespace RafyUnitTest
         {
             var filter = "AddedTime lt '2014-12-17 19:00' and (Name eq 'huqf' or LoginName eq 'huqf')";
 
-            var sql = Parse(filter);
+            var sql = ParseWhere(filter);
 
             Assert.IsTrue(sql.ToString() == @"Users.AddedTime < {0} AND (Users.UserName = {1} OR Users.LoginName = {2})");
         }
@@ -161,7 +194,7 @@ namespace RafyUnitTest
         {
             var filter = "(Name eq 'huqf' or LoginName eq 'huqf') and (Age eq 10 or AddedTime lt '2014-12-17 19:00')";
 
-            var sql = Parse(filter);
+            var sql = ParseWhere(filter);
 
             Assert.IsTrue(sql.ToString() == @"(Users.UserName = {0} OR Users.LoginName = {1}) AND (Users.Age = {2} OR Users.AddedTime < {3})");
         }
@@ -171,7 +204,7 @@ namespace RafyUnitTest
         {
             var filter = "(Name eq 'huqf' or LoginName eq 'huqf')";
 
-            var sql = Parse(filter);
+            var sql = ParseWhere(filter);
 
             Assert.IsTrue(sql.ToString() == @"Users.UserName = {0} OR Users.LoginName = {1}");
         }
@@ -181,7 +214,7 @@ namespace RafyUnitTest
         {
             var filter = "(Name eq 'huqf')";
 
-            var sql = Parse(filter);
+            var sql = ParseWhere(filter);
 
             Assert.IsTrue(sql.ToString() == @"Users.UserName = {0}");
         }
@@ -191,7 +224,7 @@ namespace RafyUnitTest
         {
             var filter = "(AddedTime lt '2014-12-17 19:00') and (((Name eq 'huqf' or LoginName eq 'huqf')))";
 
-            var sql = Parse(filter);
+            var sql = ParseWhere(filter);
 
             Assert.IsTrue(sql.ToString() == @"Users.AddedTime < {0} AND (Users.UserName = {1} OR Users.LoginName = {2})");
         }
@@ -201,9 +234,44 @@ namespace RafyUnitTest
         {
             var filter = "(Name eq 'huqf' or (Age eq 10 or AddedTime lt '2014-12-17 19:00')) and LoginName eq 'huqf'";
 
-            var sql = Parse(filter);
+            var sql = ParseWhere(filter);
 
             Assert.IsTrue(sql.ToString() == @"(Users.UserName = {0} OR Users.Age = {1} OR Users.AddedTime < {2}) AND Users.LoginName = {3}");
+        }
+
+        /// <summary>
+        /// 引用属性也可以使用在 Filter 中。
+        /// </summary>
+        [TestMethod]
+        public void ODT_Filter_ReferenceProperty()
+        {
+            var filter = "TestUser.Name contains 'huqf'";
+
+            var sql = ParseFull(filter, RF.Concrete<TestRoleRepository>());
+
+            Assert.IsTrue(sql.ToString() ==
+@"SELECT *
+FROM Roles
+    INNER JOIN Users AS T1 ON Roles.UserId = T1.Id
+WHERE T1.UserName LIKE {0}");
+            Assert.IsTrue(sql.Parameters[0].ToString() == "%huqf%");
+        }
+
+        /// <summary>
+        /// 引用属性也可以使用在 Filter 中。
+        /// </summary>
+        [TestMethod]
+        public void ODT_Filter_ReferenceProperty_Complicated()
+        {
+            var filter = "(Name eq 'huqf' or (TestUser.Age eq 10 or TestUser.AddedTime lt '2014-12-17 19:00')) and TestUser.Name contains 'huqf'";
+
+            var sql = ParseFull(filter, RF.Concrete<TestRoleRepository>());
+
+            Assert.IsTrue(sql.ToString() ==
+@"SELECT *
+FROM Roles
+    INNER JOIN Users AS T1 ON Roles.UserId = T1.Id
+WHERE (Roles.Name = {0} OR T1.Age = {1} OR T1.AddedTime < {2}) AND T1.UserName LIKE {3}");
         }
 
         [TestMethod]
@@ -266,19 +334,179 @@ namespace RafyUnitTest
             }
         }
 
-        private static FormattedSql Parse(string filter)
+        [TestMethod]
+        public void ODT_EagerLoad()
+        {
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            {
+                RF.Save(new Book
+                {
+                    Name = "book",
+                    ChapterList =
+                    {
+                        new Chapter
+                        {
+                            Name = "chapter",
+                            SectionList = 
+                            {
+                                new Section { Name = "Section1" },
+                                new Section { Name = "Section2" },
+                            }
+                        }
+                    }
+                });
+
+                var list = RF.Concrete<SectionRepository>().GetBy(new ODataQueryCriteria
+                {
+                    Expand = "Chapter"
+                }) as SectionList;
+
+                Assert.AreEqual(list.Count, 2);
+                Assert.IsTrue(list[0].FieldExists(Section.ChapterProperty));
+                Assert.IsTrue(list[1].FieldExists(Section.ChapterProperty));
+                Assert.IsTrue(list[0].Chapter == list[1].Chapter);
+            }
+        }
+
+        [TestMethod]
+        public void ODT_EagerLoad_Multi()
+        {
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            {
+                var so = new SectionOwner { Name = "SO1" };
+                RF.Save(so);
+                RF.Save(new Book
+                {
+                    Name = "book",
+                    ChapterList =
+                    {
+                        new Chapter
+                        {
+                            Name = "chapter",
+                            SectionList = 
+                            {
+                                new Section { Name = "Section1", SectionOwner = so },
+                                new Section { Name = "Section2", SectionOwner = so },
+                            }
+                        }
+                    }
+                });
+
+                var list = RF.Concrete<SectionRepository>().GetBy(new ODataQueryCriteria
+                {
+                    Expand = "Chapter,SectionOwner"
+                }) as SectionList;
+
+                Assert.AreEqual(list.Count, 2);
+                Assert.IsTrue(list[0].FieldExists(Section.ChapterProperty));
+                Assert.IsTrue(list[1].FieldExists(Section.ChapterProperty));
+                Assert.IsTrue(list[0].Chapter == list[1].Chapter);
+                Assert.IsTrue(list[0].FieldExists(Section.SectionOwnerProperty));
+                Assert.IsTrue(list[1].FieldExists(Section.SectionOwnerProperty));
+                Assert.IsTrue(list[0].SectionOwner == list[1].SectionOwner);
+            }
+        }
+
+        [TestMethod]
+        public void ODT_EagerLoad_Cascade()
+        {
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            {
+                RF.Save(new Book
+                {
+                    Name = "book",
+                    ChapterList =
+                    {
+                        new Chapter
+                        {
+                            Name = "chapter",
+                            SectionList = 
+                            {
+                                new Section { Name = "Section1" },
+                                new Section { Name = "Section2" },
+                            }
+                        }
+                    }
+                });
+
+                var list = RF.Concrete<SectionRepository>().GetBy(new ODataQueryCriteria
+                {
+                    Expand = "Chapter.Book"
+                }) as SectionList;
+
+                Assert.AreEqual(list.Count, 2);
+                Assert.IsTrue(list[0].FieldExists(Section.ChapterProperty));
+                Assert.IsTrue(list[1].FieldExists(Section.ChapterProperty));
+                Assert.IsTrue(list[0].Chapter == list[1].Chapter);
+                Assert.IsTrue(list[0].Chapter.FieldExists(Chapter.BookProperty), "Chapter.Book 也已经加载");
+            }
+        }
+
+        [TestMethod]
+        public void ODT_EagerLoad_CascadeAndMulti()
+        {
+            var so = new SectionOwner { Name = "SO1" };
+            RF.Save(so);
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            {
+                RF.Save(new Book
+                {
+                    Name = "book",
+                    ChapterList =
+                    {
+                        new Chapter
+                        {
+                            Name = "chapter",
+                            SectionList = 
+                            {
+                                new Section { Name = "Section1", SectionOwner = so },
+                                new Section { Name = "Section2", SectionOwner = so },
+                            }
+                        }
+                    }
+                });
+
+                var list = RF.Concrete<SectionRepository>().GetBy(new ODataQueryCriteria
+                {
+                    Expand = "Chapter.Book,SectionOwner"
+                }) as SectionList;
+
+                Assert.AreEqual(list.Count, 2);
+                Assert.IsTrue(list[0].FieldExists(Section.ChapterProperty));
+                Assert.IsTrue(list[1].FieldExists(Section.ChapterProperty));
+                Assert.IsTrue(list[0].Chapter == list[1].Chapter);
+                Assert.IsTrue(list[0].FieldExists(Section.SectionOwnerProperty));
+                Assert.IsTrue(list[1].FieldExists(Section.SectionOwnerProperty));
+                Assert.IsTrue(list[0].SectionOwner == list[1].SectionOwner);
+                Assert.IsTrue(list[0].Chapter.FieldExists(Chapter.BookProperty), "Chapter.Book 也已经加载");
+            }
+        }
+
+        private static FormattedSql ParseWhere(string filter)
         {
             var repo = RF.Concrete<TestUserRepository>();
+            var q = Parse(filter, repo);
+            return QueryNodeTester.GenerateTestSql(q.Where);
+        }
+
+        private static FormattedSql ParseFull(string filter, IRepository repo)
+        {
+            var q = Parse(filter, repo);
+            return QueryNodeTester.GenerateTestSql(q);
+        }
+
+        private static IQuery Parse(string filter, IRepository repo)
+        {
             var f = QueryFactory.Instance;
-            var t = f.Table(repo);
+            //var t = f.Table(repo, "T0");
+            var q = f.Query(repo);
             var parser = new ODataFilterParser
             {
-                _mainTable = t,
                 _properties = repo.EntityMeta.ManagedProperties.GetCompiledProperties()
             };
 
-            var constraint = parser.Parse(filter);
-            return QueryNodeTester.GenerateTestSql(constraint);
+            parser.Parse(filter, q);
+            return q;
         }
 
         private static TestUserList QueryUserList(ODataQueryCriteria criteria)

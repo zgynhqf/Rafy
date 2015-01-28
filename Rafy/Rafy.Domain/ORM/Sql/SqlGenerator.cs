@@ -254,14 +254,11 @@ namespace Rafy.Domain.ORM
 
                 for (int i = 0, c = sqlSelect.OrderBy.Count; i < c; i++)
                 {
-                    var item = sqlSelect.OrderBy[i] as SqlOrderBy;
                     if (i > 0)
                     {
                         _sql.Append(", ");
                     }
-                    this.AppendColumnUsage(item.Column);
-                    _sql.Append(" ");
-                    _sql.Append(item.Direction == OrderDirection.Ascending ? "ASC" : "DESC");
+                    this.Visit(sqlSelect.OrderBy[i] as SqlOrderBy);
                 }
             }
 
@@ -270,7 +267,7 @@ namespace Rafy.Domain.ORM
 
         protected override SqlColumn VisitSqlColumn(SqlColumn sqlColumn)
         {
-            this.AppendColumn(sqlColumn);
+            this.AppendColumnDeclaration(sqlColumn);
 
             return sqlColumn;
         }
@@ -564,6 +561,15 @@ namespace Rafy.Domain.ORM
             return sqlSelectRef;
         }
 
+        protected override SqlOrderBy VisitSqlOrderBy(SqlOrderBy sqlOrderBy)
+        {
+            this.AppendColumnUsage(sqlOrderBy.Column);
+            _sql.Append(" ");
+            _sql.Append(sqlOrderBy.Direction == OrderDirection.Ascending ? "ASC" : "DESC");
+
+            return sqlOrderBy;
+        }
+
         /// <summary>
         /// 把标识符添加到 Sql 语句中。
         /// 子类可重写此方法来为每一个标识符添加引用符。
@@ -588,7 +594,7 @@ namespace Rafy.Domain.ORM
             return identifier;
         }
 
-        private void AppendColumn(SqlColumn sqlColumn)
+        private void AppendColumnDeclaration(SqlColumn sqlColumn)
         {
             this.QuoteAppend(sqlColumn.Table.GetName());
 

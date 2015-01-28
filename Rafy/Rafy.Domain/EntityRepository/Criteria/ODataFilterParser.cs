@@ -26,13 +26,16 @@ namespace Rafy.Domain
     /// </summary>
     internal class ODataFilterParser
     {
-        internal ITableSource _mainTable;
         internal ManagedPropertyList _properties;
 
+        private IQuery _query;
+        private ITableSource _mainTable;
+        private StringReader _reader;
         private QueryFactory _f;
         private IConstraint _current;
         private BinaryOperator? _concat;
-        private string _property, _comparison;
+        private IColumnNode _column;
+        private string _comparison;
         private Stack<StackItem> _bracketStack;
         struct StackItem
         {
@@ -40,9 +43,11 @@ namespace Rafy.Domain
             public BinaryOperator Concat;
         }
 
-        public IConstraint Parse(string filter)
+        public void Parse(string filter, IQuery query)
         {
-            _property = null;
+            _query = query;
+            _mainTable = query.MainTable;
+            _column = null;
             _comparison = null;
             _concat = null;
             _current = null;
@@ -59,7 +64,7 @@ namespace Rafy.Domain
                 }
             }
 
-            return _current;
+            query.Where = _current;
         }
 
         private void DealPart(string part)
@@ -105,11 +110,45 @@ namespace Rafy.Domain
 
         private void DealConstraintWord(string part)
         {
-            if (_property == null) _property = part;
-            else if (_comparison == null) _comparison = part;
+            if (_column == null)
+            {
+                //可以使用了引用属性，例如表达式：User.Name eq 'huqf'
+                var properties = part.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+                if (properties.Length > 1)
+                {
+                    ITableSource lastTable = _mainTable;
+                    for (int i = 0; i < properties.Length; i++)
+                    {
+                        var property = properties[i];
+                        var mp = lastTable.EntityRepository.EntityMeta.ManagedProperties.GetCompiledProperties().Find(property);
+                        if (mp == null) throw new InvalidProgramException(string.Format("查询条件解析出错，没有找到名称为 {0} 的属性。", property));
+
+                        var refProperty = mp as IRefEntityProperty;
+                        if (refProperty != null)
+                        {
+                            lastTable = _f.FindOrCreateJoinTable(_query, lastTable, refProperty);
+                        }
+                        else
+                        {
+                            _column = lastTable.Column(mp);
+                        }
+                    }
+                    if (_column == null) { throw new InvalidProgramException(string.Format("{0} 查询条件出错：属性表达式不能以引用实体属性结尾。", part)); }
+                }
+                else
+                {
+                    var mp = _properties.Find(part, true);
+                    if (mp == null) throw new InvalidProgramException(string.Format("查询条件解析出错，没有找到名称为 {0} 的属性。", part));
+                    _column = _mainTable.Column(mp);
+                }
+            }
+            else if (_comparison == null)
+            {
+                _comparison = part;
+            }
             else
             {
-                var propertyConstraint = CreatePropertyConstraint(_property, _comparison, part);
+                var propertyConstraint = CreateColumnConstraint(_comparison, part);
                 if (_concat.HasValue && _current != null)
                 {
                     _current = _f.Binary(_current, _concat.Value, propertyConstraint);
@@ -120,18 +159,13 @@ namespace Rafy.Domain
                     _current = propertyConstraint;
                 }
 
-                _property = null;
+                _column = null;
                 _comparison = null;
             }
         }
 
-        private IConstraint CreatePropertyConstraint(string property, string comparison, string value)
+        private IConstraint CreateColumnConstraint(string comparison, string value)
         {
-            var mp = _properties.Find(property, true);
-            if (mp == null) throw new InvalidProgramException(string.Format("查询条件解析出错，没有找到名称为 {0} 的属性。", property));
-
-            var column = _mainTable.Column(mp);
-
             var op = PropertyOperator.Equal;
             switch (comparison.ToLower())
             {
@@ -153,17 +187,26 @@ namespace Rafy.Domain
                 case "le":
                     op = PropertyOperator.LessEqual;
                     break;
+                case "contains":
+                    op = PropertyOperator.Contains;
+                    break;
+                case "startwith":
+                    op = PropertyOperator.StartWith;
+                    break;
+                case "endwith":
+                    op = PropertyOperator.EndWith;
+                    break;
                 default:
                     throw new NotSupportedException("不支持这个操作符：" + comparison + "。");
             }
 
-            return _f.Constraint(column, op, value);
+            return _f.Constraint(_column, op, value);
         }
 
         #region ReadPart
 
-        private StringReader _reader;
         private StringBuilder _wordBuffer = new StringBuilder();
+
         /// <summary>
         /// Part 有以下类型：括号、单词。
         /// </summary>

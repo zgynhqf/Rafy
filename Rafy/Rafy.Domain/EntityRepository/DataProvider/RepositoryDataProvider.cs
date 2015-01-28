@@ -21,11 +21,14 @@ using System.Runtime;
 using System.Text;
 using Rafy;
 using Rafy.Data;
+using Rafy.DataPortal;
 using Rafy.Domain.Caching;
 using Rafy.Domain.ORM;
 using Rafy.Domain.ORM.Linq;
 using Rafy.Domain.ORM.Query;
+using Rafy.Domain.ORM.SqlTree;
 using Rafy.ManagedProperty;
+using Rafy.MetaModel;
 
 namespace Rafy.Domain
 {
@@ -33,21 +36,14 @@ namespace Rafy.Domain
     /// 本类是为关系型数据库设计的数据提供器。
     /// IRepositoryDataProvider 则是更通用的接口。
     /// </summary>
-    public class RepositoryDataProvider : EntityRepositoryQueryBase,
+    public class RepositoryDataProvider : DataQueryBase,
         IDbConnector,
         IRepositoryDataProvider
     {
-        private EntityRepository _repository;
-
         internal void InitRepository(EntityRepository repository)
         {
             _repository = repository;
             _linqProvider = new EntityQueryProvider { _repository = repository };
-        }
-
-        internal override EntityRepository Repo
-        {
-            get { return _repository; }
         }
 
         /// <summary>
@@ -1251,24 +1247,27 @@ namespace Rafy.Domain
         public virtual EntityList GetBy(ODataQueryCriteria criteria)
         {
             var f = QueryFactory.Instance;
-            var t = f.Table(this.Repository);
+            var t = f.Table(this.Repository, "T0");
 
             var q = f.Query(from: t);
 
             var properties = this.Repository.EntityMeta.ManagedProperties.GetCompiledProperties();
 
-            //filter
+            #region Filter
+
             if (!string.IsNullOrWhiteSpace(criteria.Filter))
             {
                 var parser = new ODataFilterParser
                 {
-                    _mainTable = t,
                     _properties = properties
                 };
-                q.Where = parser.Parse(criteria.Filter);
+                parser.Parse(criteria.Filter, q);
             }
 
-            //order by
+            #endregion
+
+            #region OrderBy
+
             if (!string.IsNullOrWhiteSpace(criteria.OrderBy))
             {
                 var orderByProperties = criteria.OrderBy.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
@@ -1285,28 +1284,75 @@ namespace Rafy.Domain
                 }
             }
 
-            //expand
+            #endregion
+
+            #region Expand
+
             if (!string.IsNullOrWhiteSpace(criteria.Expand))
             {
-                criteria.EagerLoad = new EagerLoadOptions();
+                var eagerLoad = new EagerLoadOptions();
 
                 var expandProperties = criteria.Expand.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                var splitter = new char[] { '.' };
                 foreach (var expand in expandProperties)
                 {
-                    var mp = properties.Find(expand, true);
-                    if (mp != null)
+                    //如果有'.'，表示类似于 Section.Chapter.Book 这种表达式。
+                    if (expand.Contains('.'))
                     {
-                        if (mp is IListProperty)
+                        Type nextEntityType = null;//下一个需要使用的实体类型
+
+                        var cascadeProperties = expand.Split(splitter, StringSplitOptions.RemoveEmptyEntries);
+                        foreach (var property in cascadeProperties)
                         {
-                            criteria.EagerLoad.LoadWith(mp as IListProperty);
-                        }
-                        else if (mp is IRefEntityProperty)
-                        {
-                            criteria.EagerLoad.LoadWith(mp as IRefEntityProperty);
+                            var container = properties;
+                            if (nextEntityType != null)
+                            {
+                                var meta = CommonModel.Entities.Find(nextEntityType);
+                                container = meta.ManagedProperties.GetCompiledProperties();
+                            }
+
+                            var mp = container.Find(property, true);
+                            if (mp != null)
+                            {
+                                var refProperty = mp as IRefEntityProperty;
+                                if (refProperty != null)
+                                {
+                                    eagerLoad.LoadWith(refProperty);
+                                    nextEntityType = refProperty.RefEntityType;
+                                }
+                                else if (mp is IListProperty)
+                                {
+                                    eagerLoad.LoadWith(mp as IListProperty);
+                                    nextEntityType = (mp as IListProperty).ListEntityType;
+                                }
+                            }
                         }
                     }
+                    else
+                    {
+                        var mp = properties.Find(expand, true);
+                        if (mp != null)
+                        {
+                            if (mp is IListProperty)
+                            {
+                                eagerLoad.LoadWith(mp as IListProperty);
+                            }
+                            else if (mp is IRefEntityProperty)
+                            {
+                                eagerLoad.LoadWith(mp as IRefEntityProperty);
+                            }
+                        }
+                        else if (expand == EntityConvention.TreeChildrenPropertyName)
+                        {
+                            eagerLoad.LoadWithTreeChildren();
+                        }
+                    }
+
+                    criteria.EagerLoad = eagerLoad;
                 }
             }
+
+            #endregion
 
             return this.QueryList(q, criteria.PagingInfo, criteria.EagerLoad);
         }

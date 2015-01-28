@@ -38,9 +38,9 @@ namespace Rafy.Domain
         }
 
         /// <summary>
-        /// 贪婪加载树型子。
+        /// 贪婪加载树实体的子节点。
         /// 
-        /// 如果设置了此选项，那么会先加载所有的树子节点，然后再加载属性。
+        /// 如果设置了此选项，那么会先加载所有的树子节点，然后再加载其它的贪婪属性。
         /// </summary>
         /// <returns></returns>
         public EagerLoadOptions LoadWithTreeChildren()

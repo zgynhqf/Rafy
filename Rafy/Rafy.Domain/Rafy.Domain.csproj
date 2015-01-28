@@ -96,7 +96,9 @@
     <Compile Include="EntityRepository\Criteria\ODataQueryCriteria.cs" />
     <Compile Include="EntityRepository\DataProvider\DataProviderComposer.cs" />
     <Compile Include="EntityRepository\DataProvider\DataProviderForAttribute.cs" />
+    <Compile Include="EntityRepository\DataProvider\DataQueryBase.cs" />
     <Compile Include="EntityRepository\EagerLoadOptions.cs" />
+    <Compile Include="EntityRepository\IRepositoryDataQueryAPI.cs" />
     <Compile Include="EntityRepository\QueryArgs\EntityQueryArgs.cs" />
     <Compile Include="EntityRepository\Criteria\IEQC.cs" />
     <Compile Include="DomainApp.cs" />

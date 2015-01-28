@@ -195,6 +195,17 @@ namespace Rafy.Domain.ORM.Query
         }
 
         /// <summary>
+        /// 在查询对象中查找或者创建指定引用属性对应的连接表对象。
+        /// </summary>
+        /// <param name="ownerTable">引用属性对应外键所在的表。</param>
+        /// <param name="refProperty">指定的引用属性。</param>
+        /// <returns></returns>
+        public ITableSource FindOrCreateJoinTable(IQuery query, ITableSource ownerTable, IRefEntityProperty refProperty)
+        {
+            return (query as TableQuery).FindOrCreateJoinTable(ownerTable, refProperty);
+        }
+
+        /// <summary>
         /// 构造一个属性与指定值"相等"的约束条件节点。
         /// </summary>
         /// <param name="column">要对比的属性。</param>

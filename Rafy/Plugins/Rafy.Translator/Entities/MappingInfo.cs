@@ -139,7 +139,11 @@ namespace Rafy.MultiLanguages
     public partial class MappingInfoRepository : MLEntityRepository
     {
         protected MappingInfoRepository() { }
+    }
 
+    [DataProviderFor(typeof(MappingInfoRepository))]
+    public partial class MappingInfoRepositoryDataProvider : RepositoryDataProvider
+    {
         protected override void OnQuerying(EntityQueryArgs args)
         {
             var query = args.Query;

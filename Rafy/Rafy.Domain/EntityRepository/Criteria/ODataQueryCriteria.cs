@@ -29,9 +29,11 @@ namespace Rafy.Domain
     /// 新操作符：
     ///     $pageNumber：从 1 开始的页码；
     ///     $pageSize：一页中的数据量。
-    ///     
+    /// $expand 说明：
+    ///     除了可以需要贪婪加载的属性列表，还可以指定属性名为 TreeChildren，表示贪婪加载树节点的所有子节点。
     /// $filter 说明：
     ///     * 支持的对比操作符：eq,ne,lt,le,gt,ge。
+    ///     * 支持字符串的模糊匹配操作符：contains、startwith、endwith。
     ///     * 对时间类型进行比较时，直接使用字符串来表示时间值，如：CreateTime lt '2014-12-18 10:30'。
     ///     * Or 与 And 没有优先级之分。
     ///     示例（详见源码单元测试）：

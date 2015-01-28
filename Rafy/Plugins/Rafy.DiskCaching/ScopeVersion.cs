@@ -132,14 +132,6 @@ namespace Rafy.Domain.Caching
             return FetchList(lastTime);
         }
 
-        protected override void OnEntityQueryed(EntityQueryArgsBase args)
-        {
-            base.OnEntityQueryed(args);
-
-            var list = args.EntityList as ScopeVersionList;
-            list.ServerTime = DateTime.Now;
-        }
-
         protected EntityList FetchBy(DateTime lastTime)
         {
             var q = QueryFactory.Instance.Query(this);
@@ -182,6 +174,14 @@ namespace Rafy.Domain.Caching
         {
             var sv = entity as ScopeVersion;
             sv.LoadProperty(ScopeVersion.ValueProperty, new DateTime(sv.AccurateValue));
+        }
+
+        protected override void OnEntityQueryed(EntityQueryArgsBase args)
+        {
+            base.OnEntityQueryed(args);
+
+            var list = args.EntityList as ScopeVersionList;
+            list.ServerTime = DateTime.Now;
         }
     }
 

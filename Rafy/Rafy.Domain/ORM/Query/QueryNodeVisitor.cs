@@ -30,32 +30,34 @@ namespace Rafy.Domain.ORM.Query
         {
             switch (node.NodeType)
             {
-                case QueryNodeType.Literal:
-                    return this.VisitLiteral(node as ILiteral);
                 case QueryNodeType.Query:
                     return this.VisitQuery(node as IQuery);
-                case QueryNodeType.Column:
-                    return this.VisitProperty(node as IColumnNode);
-                case QueryNodeType.TableSource:
-                    return this.VisitEntitySource(node as ITableSource);
-                case QueryNodeType.ColumnConstraint:
-                    return this.VisitPropertyConstraint(node as IColumnConstraint);
-                case QueryNodeType.BinaryConstraint:
-                    return this.VisitBinaryConstraint(node as IBinaryConstraint);
-                case QueryNodeType.Join:
-                    return this.VisitJoin(node as IJoin);
+                case QueryNodeType.SubQuery:
+                    return this.VisitSubQueryRef(node as ISubQuery);
                 case QueryNodeType.Array:
                     return this.VisitArray(node as IArray);
+                case QueryNodeType.TableSource:
+                    return this.VisitEntitySource(node as ITableSource);
                 case QueryNodeType.SelectAll:
                     return this.VisitSelectAll(node as ISelectAll);
+                case QueryNodeType.Join:
+                    return this.VisitJoin(node as IJoin);
+                case QueryNodeType.OrderBy:
+                    return this.VisitOrderBy(node as IOrderBy);
+                case QueryNodeType.Column:
+                    return this.VisitProperty(node as IColumnNode);
+                case QueryNodeType.ColumnConstraint:
+                    return this.VisitPropertyConstraint(node as IColumnConstraint);
                 case QueryNodeType.ColumnsComparisonConstraint:
                     return this.VisitTwoPropertiesConstraint(node as IColumnsComparison);
+                case QueryNodeType.BinaryConstraint:
+                    return this.VisitBinaryConstraint(node as IBinaryConstraint);
                 case QueryNodeType.ExistsConstraint:
                     return this.VisitExistsConstraint(node as IExistsConstraint);
                 case QueryNodeType.NotConstraint:
                     return this.VisitNotConstraint(node as INotConstraint);
-                case QueryNodeType.SubQuery:
-                    return this.VisitSubQueryRef(node as ISubQuery);
+                case QueryNodeType.Literal:
+                    return this.VisitLiteral(node as ILiteral);
                 default:
                     throw new NotSupportedException();
             }
@@ -157,6 +159,12 @@ namespace Rafy.Domain.ORM.Query
         protected virtual ISubQuery VisitSubQueryRef(ISubQuery node)
         {
             this.Visit(node.Query);
+            return node;
+        }
+
+        protected virtual IQueryNode VisitOrderBy(IOrderBy node)
+        {
+            this.Visit(node.Column);
             return node;
         }
     }

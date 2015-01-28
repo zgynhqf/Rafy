@@ -76,7 +76,7 @@ namespace Rafy.Domain
                     //在加载数据时，自动索引功能都不可用。
                     this.AutoTreeIndexEnabled = false;
 
-                    TreeHelper.LoadTreeData(this, srcList);
+                    TreeHelper.LoadTreeData(this, srcList, this.GetRepository().TreeIndexOption);
                 }
                 finally
                 {

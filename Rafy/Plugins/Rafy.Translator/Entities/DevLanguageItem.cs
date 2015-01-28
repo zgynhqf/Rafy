@@ -96,7 +96,11 @@ namespace Rafy.MultiLanguages
     public partial class DevLanguageItemRepository : MLEntityRepository
     {
         protected DevLanguageItemRepository() { }
+    }
 
+    [DataProviderFor(typeof(DevLanguageItemRepository))]
+    public partial class DevLanguageItemDataProvider : RepositoryDataProvider
+    {
         protected override void OnQuerying(EntityQueryArgs args)
         {
             var query = args.Query;
@@ -104,11 +108,7 @@ namespace Rafy.MultiLanguages
 
             base.OnQuerying(args);
         }
-    }
 
-    [DataProviderFor(typeof(DevLanguageItemRepository))]
-    public partial class DevLanguageItemDataProvider : RepositoryDataProvider
-    {
         protected override void Submit(SubmitArgs e)
         {
             if (e.Action == SubmitAction.Delete)

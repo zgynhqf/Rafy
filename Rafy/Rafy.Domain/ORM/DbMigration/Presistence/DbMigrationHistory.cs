@@ -111,16 +111,6 @@ namespace Rafy.Domain.ORM.DbMigration.Presistence
     {
         protected DbMigrationHistoryRepository() { }
 
-        protected override void OnQuerying(EntityQueryArgs args)
-        {
-            var q = args.Query;
-            q.OrderBy.Add(
-                qf.OrderBy(q.MainTable.Column(DbMigrationHistory.TimeIdProperty), OrderDirection.Descending)
-                );
-
-            base.OnQuerying(args);
-        }
-
         public DbMigrationHistoryList GetByDb(string database)
         {
             return this.FetchList(database) as DbMigrationHistoryList;
@@ -159,6 +149,16 @@ namespace Rafy.Domain.ORM.DbMigration.Presistence
             protected override string ConnectionStringSettingName
             {
                 get { return ConnectionStringNames.DbMigrationHistory; }
+            }
+
+            protected override void OnQuerying(EntityQueryArgs args)
+            {
+                var q = args.Query;
+                q.OrderBy.Add(
+                    qf.OrderBy(q.MainTable.Column(DbMigrationHistory.TimeIdProperty), OrderDirection.Descending)
+                    );
+
+                base.OnQuerying(args);
             }
         }
     }

@@ -55,6 +55,8 @@ namespace Rafy.Domain
         /// </summary>
         internal static IManagedProperty Property_TreeIndex;
 
+        internal static string TreeChildrenPropertyName = "TreeChildren";
+
         ///// <summary>
         ///// 目前实体使用的主键属性的名称。Id。
         ///// </summary>

@@ -984,6 +984,41 @@ namespace RafyUnitTest
             }
         }
 
+        [TestMethod]
+        public void ORM_Query_DataProvider()
+        {
+            var repo = RF.Concrete<BookLocRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                repo.Save(new BookLoc { Name = "1" });
+                repo.Save(new BookLoc { Name = "2" });
+
+                var list = repo.Get_DAInDataProvider("1");
+                Assert.IsTrue(list.Count == 1);
+            }
+        }
+
+        /// <summary>
+        /// 对于编写在 Repository 和 DataProvider 中的数据层代码，都可以直接在 DataProvider 中进行重写。
+        /// </summary>
+        [TestMethod]
+        public void ORM_Query_DataProvider_OnQuerying_SameOverrideToRepo()
+        {
+            var repo = RF.Concrete<BookLocRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                repo.Save(new BookLoc { Name = "1", Length = -1 });
+                repo.Save(new BookLoc { Name = "1" });
+                repo.Save(new BookLoc { Name = "2" });
+
+                var list = repo.Get_DAInRepository("1");
+                Assert.IsTrue(list.Count == 1);
+
+                list = repo.Get_DAInDataProvider("1");
+                Assert.IsTrue(list.Count == 1);
+            }
+        }
+
         #endregion
 
         #region Linq Query
