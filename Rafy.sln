@@ -132,10 +132,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.ComponentModel.UnityAdapter", "Rafy\Plugins\Rafy.ComponentModel.UnityAdapter\Rafy.ComponentModel.UnityAdapter.csproj", "{BE8C3CD6-F314-453D-A0ED-FCFEC0DEADBC}"
 EndProject
 Global
-	GlobalSection(SubversionScc) = preSolution
-		Svn-Managed = True
-		Manager = AnkhSVN - Subversion Support for Visual Studio
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		D_UIA_Standard|Any CPU = D_UIA_Standard|Any CPU
 		D_Web|Any CPU = D_Web|Any CPU
