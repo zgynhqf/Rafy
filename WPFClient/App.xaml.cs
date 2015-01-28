@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Threading;
 using Rafy;
 using Rafy.WPF;
-using Rafy.WPF.Shell;;
+using Rafy.WPF.Shell;
 
 namespace WPFClient
 {
