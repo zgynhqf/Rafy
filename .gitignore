@@ -1,0 +1,20 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Rafy/Rafy.Domain/obj/Debug
+/Rafy/Rafy.Domain/bin/Debug
+/Rafy/Rafy.ManagedProperty/bin/Debug
+/Rafy/Rafy.ManagedProperty/obj/Debug
+/Rafy/Rafy.Utils/bin/Debug
+/Rafy/Rafy.Utils/obj/Debug
+/ConsoleHost/bin/Debug/Domain
+/Demo
+/Rafy/Plugins
+/Rafy/Rafy
+/Rafy/Tools
+/Rafy/Rafy.DbMigration
+/Rafy
+/Test
+/Web/bin
+/WPFClient
