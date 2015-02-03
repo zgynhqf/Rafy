@@ -138,6 +138,8 @@
     <Compile Include="Entity\Serialization\SerializationEntityGraph.cs" />
     <Compile Include="Entity\TreeIndexHelper.cs" />
     <Compile Include="Entity\ValidationHelper.cs" />
+    <Compile Include="ORM\Linq\SubEntityQueryBuilder.cs" />
+    <Compile Include="ORM\Query\Impl\QueryGenerationContext.cs" />
     <Compile Include="ORM\Query\QueryNodeTester.cs" />
     <Compile Include="Validation\CommonRules\NotUsedByReferenceRule.cs" />
     <Compile Include="Validation\CommonRules\HandlerRule.cs" />

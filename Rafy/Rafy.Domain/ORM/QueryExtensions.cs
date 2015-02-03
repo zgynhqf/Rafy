@@ -178,17 +178,33 @@ namespace Rafy.Domain.ORM.Query
         {
             return QueryFactory.Instance.Constraint(column, PropertyOperator.Like, value);
         }
+        public static IConstraint NotLike(this IColumnNode column, object value)
+        {
+            return QueryFactory.Instance.Constraint(column, PropertyOperator.NotLike, value);
+        }
         public static IConstraint Contains(this IColumnNode column, object value)
         {
             return QueryFactory.Instance.Constraint(column, PropertyOperator.Contains, value);
+        }
+        public static IConstraint NotContains(this IColumnNode column, object value)
+        {
+            return QueryFactory.Instance.Constraint(column, PropertyOperator.NotContains, value);
         }
         public static IConstraint StartWith(this IColumnNode column, object value)
         {
             return QueryFactory.Instance.Constraint(column, PropertyOperator.StartWith, value);
         }
+        public static IConstraint NotStartWith(this IColumnNode column, object value)
+        {
+            return QueryFactory.Instance.Constraint(column, PropertyOperator.NotStartWith, value);
+        }
         public static IConstraint EndWith(this IColumnNode column, object value)
         {
             return QueryFactory.Instance.Constraint(column, PropertyOperator.EndWith, value);
+        }
+        public static IConstraint NotEndWith(this IColumnNode column, object value)
+        {
+            return QueryFactory.Instance.Constraint(column, PropertyOperator.NotEndWith, value);
         }
         public static IConstraint In(this IColumnNode column, object value)
         {
@@ -227,17 +243,33 @@ namespace Rafy.Domain.ORM.Query
         {
             return QueryFactory.Instance.Constraint(column, PropertyOperator.Like, rightColumn);
         }
+        public static IConstraint NotLike(this IColumnNode column, IColumnNode rightColumn)
+        {
+            return QueryFactory.Instance.Constraint(column, PropertyOperator.NotLike, rightColumn);
+        }
         public static IConstraint Contains(this IColumnNode column, IColumnNode rightColumn)
         {
             return QueryFactory.Instance.Constraint(column, PropertyOperator.Contains, rightColumn);
+        }
+        public static IConstraint NotContains(this IColumnNode column, IColumnNode rightColumn)
+        {
+            return QueryFactory.Instance.Constraint(column, PropertyOperator.NotContains, rightColumn);
         }
         public static IConstraint StartWith(this IColumnNode column, IColumnNode rightColumn)
         {
             return QueryFactory.Instance.Constraint(column, PropertyOperator.StartWith, rightColumn);
         }
+        public static IConstraint NotStartWith(this IColumnNode column, IColumnNode rightColumn)
+        {
+            return QueryFactory.Instance.Constraint(column, PropertyOperator.NotStartWith, rightColumn);
+        }
         public static IConstraint EndWith(this IColumnNode column, IColumnNode rightColumn)
         {
             return QueryFactory.Instance.Constraint(column, PropertyOperator.EndWith, rightColumn);
+        }
+        public static IConstraint NotEndWith(this IColumnNode column, IColumnNode rightColumn)
+        {
+            return QueryFactory.Instance.Constraint(column, PropertyOperator.NotEndWith, rightColumn);
         }
         public static IConstraint In(this IColumnNode column, IColumnNode rightColumn)
         {

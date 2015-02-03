@@ -252,8 +252,8 @@ namespace RafyUnitTest
             Assert.IsTrue(sql.ToString() ==
 @"SELECT *
 FROM Roles
-    INNER JOIN Users AS T1 ON Roles.UserId = T1.Id
-WHERE T1.UserName LIKE {0}");
+    INNER JOIN Users AS T0 ON Roles.UserId = T0.Id
+WHERE T0.UserName LIKE {0}");
             Assert.IsTrue(sql.Parameters[0].ToString() == "%huqf%");
         }
 
@@ -270,8 +270,8 @@ WHERE T1.UserName LIKE {0}");
             Assert.IsTrue(sql.ToString() ==
 @"SELECT *
 FROM Roles
-    INNER JOIN Users AS T1 ON Roles.UserId = T1.Id
-WHERE (Roles.Name = {0} OR T1.Age = {1} OR T1.AddedTime < {2}) AND T1.UserName LIKE {3}");
+    INNER JOIN Users AS T0 ON Roles.UserId = T0.Id
+WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName LIKE {3}");
         }
 
         [TestMethod]

@@ -228,11 +228,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Entities\BookStore\BookStore.odml" />
-    <None Include="Entities\GIX4\GIX4.odml" />
-    <None Include="Entities\Redundancy\Redundancy.odml" />
-    <None Include="Entities\StringTest\StringTest.odml" />
-    <None Include="Entities\TestEntities.odml" />
+    <None Include="Entities\BookStore\_BookStore.odml" />
+    <None Include="Entities\GIX4\_GIX4.odml" />
+    <None Include="Entities\Redundancy\_Redundancy.odml" />
+    <None Include="Entities\StringTest\_StringTest.odml" />
+    <None Include="Entities\_TestEntities.odml" />
     <None Include="Hxy Key.snk" />
   </ItemGroup>
   <ItemGroup />

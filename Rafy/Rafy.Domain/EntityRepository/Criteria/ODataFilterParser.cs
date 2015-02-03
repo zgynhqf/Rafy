@@ -196,6 +196,15 @@ namespace Rafy.Domain
                 case "endwith":
                     op = PropertyOperator.EndWith;
                     break;
+                case "notcontains":
+                    op = PropertyOperator.NotContains;
+                    break;
+                case "notstartwith":
+                    op = PropertyOperator.NotStartWith;
+                    break;
+                case "notendwith":
+                    op = PropertyOperator.NotEndWith;
+                    break;
                 default:
                     throw new NotSupportedException("不支持这个操作符：" + comparison + "。");
             }

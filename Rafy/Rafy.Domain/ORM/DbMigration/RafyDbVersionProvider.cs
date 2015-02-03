@@ -62,7 +62,7 @@ namespace Rafy.Domain.ORM.DbMigration
             }
         }
 
-        protected override bool IsEmbaded()
+        protected internal override bool IsEmbaded()
         {
             return false;
         }

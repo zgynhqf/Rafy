@@ -19,33 +19,33 @@ using System.Data;
 
 namespace Rafy.DbMigration
 {
-    public static class DbTypeHelper
+    internal static class DbTypeHelper
     {
-        public static DbType ConvertFromCLRType(Type fieldRuntimeType)
+        public static DbType ConvertFromCLRType(Type clrType)
         {
-            if (fieldRuntimeType.IsEnum) { return DbType.Int32; }
-            if (fieldRuntimeType == typeof(string)) { return DbType.String; }
-            if (fieldRuntimeType == typeof(int)) { return DbType.Int32; }
-            if (fieldRuntimeType == typeof(bool)) { return DbType.Boolean; }
-            if (fieldRuntimeType == typeof(DateTime)) { return DbType.DateTime; }
-            if (fieldRuntimeType == typeof(Guid)) { return DbType.Guid; }
-            if (fieldRuntimeType == typeof(double)) { return DbType.Double; }
-            if (fieldRuntimeType == typeof(byte)) { return DbType.Byte; }
-            if (fieldRuntimeType == typeof(short)) { return DbType.Int16; }
-            if (fieldRuntimeType == typeof(char)) { return DbType.StringFixedLength; }
-            if (fieldRuntimeType == typeof(decimal)) { return DbType.Decimal; }
-            if (fieldRuntimeType == typeof(float)) { return DbType.Single; }
-            if (fieldRuntimeType == typeof(uint)) { return DbType.UInt32; }
-            if (fieldRuntimeType == typeof(ulong)) { return DbType.UInt64; }
-            if (fieldRuntimeType == typeof(ushort)) { return DbType.UInt16; }
-            if (fieldRuntimeType == typeof(sbyte)) { return DbType.SByte; }
-            if (fieldRuntimeType == typeof(float)) { return DbType.Single; }
-            if (fieldRuntimeType == typeof(byte[])) { return DbType.Binary; }
+            if (clrType.IsEnum) { return DbType.Int32; }
+            if (clrType == typeof(string)) { return DbType.String; }
+            if (clrType == typeof(int)) { return DbType.Int32; }
+            if (clrType == typeof(bool)) { return DbType.Boolean; }
+            if (clrType == typeof(DateTime)) { return DbType.DateTime; }
+            if (clrType == typeof(Guid)) { return DbType.Guid; }
+            if (clrType == typeof(double)) { return DbType.Double; }
+            if (clrType == typeof(byte)) { return DbType.Byte; }
+            if (clrType == typeof(short)) { return DbType.Int16; }
+            if (clrType == typeof(char)) { return DbType.StringFixedLength; }
+            if (clrType == typeof(decimal)) { return DbType.Decimal; }
+            if (clrType == typeof(float)) { return DbType.Single; }
+            if (clrType == typeof(uint)) { return DbType.UInt32; }
+            if (clrType == typeof(ulong)) { return DbType.UInt64; }
+            if (clrType == typeof(ushort)) { return DbType.UInt16; }
+            if (clrType == typeof(sbyte)) { return DbType.SByte; }
+            if (clrType == typeof(float)) { return DbType.Single; }
+            if (clrType == typeof(byte[])) { return DbType.Binary; }
 
-            if (fieldRuntimeType.IsGenericType &&
-                fieldRuntimeType.GetGenericTypeDefinition() == typeof(Nullable<>))
+            if (clrType.IsGenericType &&
+                clrType.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
-                return ConvertFromCLRType(fieldRuntimeType.GetGenericArguments()[0]);
+                return ConvertFromCLRType(clrType.GetGenericArguments()[0]);
             }
 
             return DbType.String;

@@ -55,7 +55,7 @@ namespace Rafy.DbMigration.Oracle
                 default:
                     break;
             }
-            throw new NotSupportedException();
+            throw new NotSupportedException(string.Format("不支持生成列类型：{0}。", fieldType));
         }
 
         /// <summary>
@@ -84,8 +84,9 @@ namespace Rafy.DbMigration.Oracle
                 case "date":
                     return DbType.DateTime;
                 default:
-                    throw new NotSupportedException();
+                    break;
             }
+            throw new NotSupportedException(string.Format("不支持读取数据库中的列类型：{0}。", lowerSqlType));
         }
     }
 }

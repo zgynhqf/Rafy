@@ -57,9 +57,13 @@ namespace Rafy.Domain.ORM.SqlTree
         LessEqual,
 
         Like,
+        NotLike,
         Contains,
+        NotContains,
         StartWith,
+        NotStartWith,
         EndWith,
+        NotEndWith,
 
         In,
         NotIn,

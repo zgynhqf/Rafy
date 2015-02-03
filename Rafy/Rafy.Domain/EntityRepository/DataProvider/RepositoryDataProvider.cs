@@ -1205,6 +1205,10 @@ namespace Rafy.Domain
                                         case PropertyOperator.Contains:
                                         case PropertyOperator.StartWith:
                                         case PropertyOperator.EndWith:
+                                        case PropertyOperator.NotLike:
+                                        case PropertyOperator.NotContains:
+                                        case PropertyOperator.NotStartWith:
+                                        case PropertyOperator.NotEndWith:
                                             ignored = true;
                                             break;
                                         default:

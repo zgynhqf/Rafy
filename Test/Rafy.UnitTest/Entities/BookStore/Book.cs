@@ -484,7 +484,24 @@ namespace UT
         private EntityList DA_LinqGetIfChildrenExists(string chapterName)
         {
             var q = this.CreateLinqQuery();
-            q = q.Where(e => e.ChapterList.Concrete().Any(c => c.Name == chapterName));
+            q = q.Where(book => book.ChapterList.Concrete().Any(c => c.Name == chapterName));
+            q = q.OrderBy(b => b.Name);
+            return this.QueryList(q);
+        }
+
+        /// <summary>
+        /// 查找包含任意章节的书籍
+        /// </summary>
+        /// <returns></returns>
+        public BookList LinqGetIfChildrenExistsSectionName(string sectionName)
+        {
+            return this.FetchList(r => r.DA_LinqGetIfChildrenExistsSectionName(sectionName));
+        }
+        private EntityList DA_LinqGetIfChildrenExistsSectionName(string sectionName)
+        {
+            var q = this.CreateLinqQuery();
+            q = q.Where(book => book.ChapterList.Concrete().Any(c => c.SectionList.Cast<Section>().Any(s => s.Name.Contains(sectionName))));
+            q = q.OrderBy(b => b.Name);
             return this.QueryList(q);
         }
 
@@ -500,7 +517,25 @@ namespace UT
         private EntityList DA_LinqGetIfChildrenAll(string chapterName)
         {
             var q = this.CreateLinqQuery();
-            q = q.Where(e => e.ChapterList.Concrete().All(c => c.Name == chapterName));
+            q = q.Where(e => e.ChapterList.Cast<Chapter>().All(c => c.Name == chapterName));
+            q = q.OrderBy(e => e.Name);
+            return this.QueryList(q);
+        }
+
+        /// <summary>
+        /// 查找包含任意章节的书籍
+        /// </summary>
+        /// <returns></returns>
+        public BookList LinqGetIfChildren_Complicated()
+        {
+            return this.FetchList(r => r.DA_LinqGetIfChildren_Complicated());
+        }
+        private EntityList DA_LinqGetIfChildren_Complicated()
+        {
+            var q = this.CreateLinqQuery();
+            q = q.Where(book => book.Name != "1" && book.ChapterList.Concrete().Any(c => c.Name == "1.2"));
+            q = q.Where(b => b.ChapterList.Concrete().Any(c => c.Name == "chapterNeed" && c.SectionList.Cast<Section>().All(s => s.Name.Contains("need"))));
+            q = q.OrderBy(b => b.Name);
             return this.QueryList(q);
         }
     }

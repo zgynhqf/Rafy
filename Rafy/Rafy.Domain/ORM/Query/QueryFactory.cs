@@ -88,31 +88,23 @@ namespace Rafy.Domain.ORM.Query
         {
             if (from == null) throw new ArgumentNullException("from");
 
-            IQuery query = new TableQuery();
+            var tableQuery = new TableQuery();
+            IQuery query = tableQuery;
             query.IsCounting = isCounting;
             query.IsDistinct = isDistinct;
             query.Top = top;
             query.Selection = selection;
             query.From = from;
             query.Where = where;
-            (query as TableQuery).SetOrderBy(orderBy);
+            tableQuery.SetOrderBy(orderBy);
             if (from.NodeType == QueryNodeType.TableSource)
             {
-                (query as TableQuery).MainTable = from as ITableSource;
+                tableQuery.MainTable = from as ITableSource;
             }
             else
             {
-                (query as TableQuery).MainTable = from.FindTable();
+                tableQuery.MainTable = from.FindTable();
             }
-            //if (orderBy != null)
-            //{
-            //    var ob = query.OrderBy;
-            //    for (int i = 0, c = orderBy.Count; i < c; i++)
-            //    {
-            //        var item = orderBy[i];
-            //        ob.Add(item);
-            //    }
-            //}
             return query;
         }
 
@@ -197,12 +189,25 @@ namespace Rafy.Domain.ORM.Query
         /// <summary>
         /// 在查询对象中查找或者创建指定引用属性对应的连接表对象。
         /// </summary>
-        /// <param name="ownerTable">引用属性对应外键所在的表。</param>
+        /// <param name="query">需要在这个查询对象中查找或创建连接表。</param>
+        /// <param name="propertyOwner">引用属性对应外键所在的表。</param>
         /// <param name="refProperty">指定的引用属性。</param>
         /// <returns></returns>
-        public ITableSource FindOrCreateJoinTable(IQuery query, ITableSource ownerTable, IRefEntityProperty refProperty)
+        public ITableSource FindOrCreateJoinTable(IQuery query, ITableSource propertyOwner, IRefEntityProperty refProperty)
         {
-            return (query as TableQuery).FindOrCreateJoinTable(ownerTable, refProperty);
+            return (query as TableQuery).FindOrCreateJoinTable(propertyOwner, refProperty);
+        }
+
+        /// <summary>
+        /// 在查询对象中查找或者创建指定引用属性对应的连接表对象。
+        /// </summary>
+        /// <param name="query">需要在这个查询对象中查找或创建连接表。</param>
+        /// <param name="propertyOwner">聚合子属性所在的实体对应的表。也是外键关系中主键表所在的表。</param>
+        /// <param name="childrenProperty">指定的聚合子属性。</param>
+        /// <returns></returns>
+        public ITableSource FindOrCreateJoinTable(IQuery query, ITableSource propertyOwner, IListProperty childrenProperty)
+        {
+            return (query as TableQuery).FindOrCreateJoinTable(propertyOwner, childrenProperty);
         }
 
         /// <summary>

@@ -12,6 +12,7 @@ using Rafy.MetaModel.View;
 using Rafy.Domain.ORM;
 using Rafy.Domain.ORM.Query;
 using Rafy;
+using System.Data;
 
 namespace UT
 {
@@ -101,6 +102,13 @@ namespace UT
         }
 
         #endregion
+
+        public static readonly Property<string> XmlContentProperty = P<TestTreeTask>.Register(e => e.XmlContent);
+        public string XmlContent
+        {
+            get { return this.GetProperty(XmlContentProperty); }
+            set { this.SetProperty(XmlContentProperty, value); }
+        }
     }
 
     [Serializable]
@@ -161,8 +169,11 @@ namespace UT
                 TestTreeTask.AllTimeByAutoCollectProperty,
                 TestTreeTask.NameProperty,
                 TestTreeTask.TreeIndexProperty,
-                TestTreeTask.TreePIdProperty
+                TestTreeTask.TreePIdProperty,
+                TestTreeTask.XmlContentProperty
                 );
+
+            Meta.Property(TestTreeTask.XmlContentProperty).MapColumn().HasDataType(DbType.Xml);
         }
     }
 }

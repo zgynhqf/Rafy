@@ -35,10 +35,6 @@ namespace Rafy.Domain.ORM.Linq
         /// </summary>
         internal PropertyQuery _query;
         /// <summary>
-        /// 查询方法所在的类型
-        /// </summary>
-        private Stack<QueryMethod> _queryMethod = new Stack<QueryMethod>();
-        /// <summary>
         /// 当前操作计算出来的约束
         /// </summary>
         private Constraint _whereResult;
@@ -66,28 +62,23 @@ namespace Rafy.Domain.ORM.Linq
             //处理 Queryable 上的方法
             if (methodType == typeof(Queryable))
             {
-                _queryMethod.Push(QueryMethod.Queryable);
                 processed = VisitMethod_Queryable(exp);
             }
             //处理 string 上的方法
             else if (methodType == typeof(string))
             {
-                _queryMethod.Push(QueryMethod.String);
                 processed = VisitMethod_String(exp);
             }
             else if (methodType == typeof(Enumerable))
             {
-                _queryMethod.Push(QueryMethod.Enumerable);
                 processed = VisitMethod_Enumerable(exp);
             }
             else if (methodType.IsGenericType && methodType.GetGenericTypeDefinition() == typeof(List<>))
             {
-                _queryMethod.Push(QueryMethod.ListGeneric);
                 processed = VisitMethod_List(exp);
             }
 
             if (!processed) throw OperationNotSupported(method);
-            _queryMethod.Pop();
 
             return exp;
         }
@@ -390,35 +381,31 @@ namespace Rafy.Domain.ORM.Linq
 
         private void MakeOperator(BinaryExpression binaryExp)
         {
-            var method = _queryMethod.Peek();
-            if (method == QueryMethod.Queryable)
-            {
-                if (_hasNot) throw OperationNotSupported("不支持操作符：'!'，请使用相反的操作符。");
+            if (_hasNot) throw OperationNotSupported("不支持操作符：'!'，请使用相反的操作符。");
 
-                switch (binaryExp.NodeType)
-                {
-                    case ExpressionType.Equal:
-                        _operator = PropertyCompareOperator.Equal;
-                        break;
-                    case ExpressionType.NotEqual:
-                        _operator = PropertyCompareOperator.NotEqual;
-                        break;
-                    case ExpressionType.LessThan:
-                        _operator = PropertyCompareOperator.Less;
-                        break;
-                    case ExpressionType.LessThanOrEqual:
-                        _operator = PropertyCompareOperator.LessEqual;
-                        break;
-                    case ExpressionType.GreaterThan:
-                        _operator = PropertyCompareOperator.Greater;
-                        break;
-                    case ExpressionType.GreaterThanOrEqual:
-                        _operator = PropertyCompareOperator.GreaterEqual;
-                        break;
-                    default:
-                        //throw new InvalidProgramException("两个属性间的比较只支持以下操作：=、!=、>、>=、<、<=。");
-                        throw OperationNotSupported(binaryExp);
-                }
+            switch (binaryExp.NodeType)
+            {
+                case ExpressionType.Equal:
+                    _operator = PropertyCompareOperator.Equal;
+                    break;
+                case ExpressionType.NotEqual:
+                    _operator = PropertyCompareOperator.NotEqual;
+                    break;
+                case ExpressionType.LessThan:
+                    _operator = PropertyCompareOperator.Less;
+                    break;
+                case ExpressionType.LessThanOrEqual:
+                    _operator = PropertyCompareOperator.LessEqual;
+                    break;
+                case ExpressionType.GreaterThan:
+                    _operator = PropertyCompareOperator.Greater;
+                    break;
+                case ExpressionType.GreaterThanOrEqual:
+                    _operator = PropertyCompareOperator.GreaterEqual;
+                    break;
+                default:
+                    //throw new InvalidProgramException("两个属性间的比较只支持以下操作：=、!=、>、>=、<、<=。");
+                    throw OperationNotSupported(binaryExp);
             }
         }
 

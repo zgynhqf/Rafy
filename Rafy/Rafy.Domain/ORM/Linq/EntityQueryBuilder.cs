@@ -35,26 +35,44 @@ namespace Rafy.Domain.ORM.Linq
         /// 正在组织的查询对象。
         /// </summary>
         private IQuery _query;
-
-        internal IRepositoryInternal _repo;
+        private IRepositoryInternal _repo;
         private QueryFactory f = QueryFactory.Instance;
-        /// <summary>
-        /// 查询方法所在的类型
-        /// </summary>
-        private Stack<QueryMethod> _queryMethod = new Stack<QueryMethod>();
 
-        internal void BuildQuery(Expression exp)
+        private bool _reverseOperator = false;
+
+        public EntityQueryBuilder(IRepositoryInternal repo)
         {
-            var mainTable = f.Table(_repo, "T0");
+            _repo = repo;
+        }
+
+        /// <summary>
+        /// 是否需要反转查询中的所有条件操作符。
+        /// 场景：当转换 Linq 表达式中的 All 方法到 Sql 的 NotExsits 时，需要把内部的条件都转换为反向操作符。
+        /// </summary>
+        internal bool ReverseOperator
+        {
+            get { return _reverseOperator; }
+            set { _reverseOperator = value; }
+        }
+
+        internal IQuery BuildQuery(Expression exp)
+        {
+            var mainTable = f.Table(_repo);
 
             _query = f.Query(mainTable);
 
+            mainTable.Alias = QueryGenerationContext.Get(_query).NextTableAlias();
+
             this.Visit(exp);
+
+            return _query;
         }
 
-        internal IQuery Result
+        internal void BuildQuery(Expression exp, IQuery query)
         {
-            get { return _query; }
+            _query = query;
+
+            this.Visit(exp);
         }
 
         #region 处理方法调用
@@ -68,28 +86,23 @@ namespace Rafy.Domain.ORM.Linq
             //处理 Queryable 上的方法
             if (methodType == typeof(Queryable))
             {
-                _queryMethod.Push(QueryMethod.Queryable);
                 processed = VisitMethod_Queryable(exp);
             }
             //处理 string 上的方法
             else if (methodType == typeof(string))
             {
-                _queryMethod.Push(QueryMethod.String);
                 processed = VisitMethod_String(exp);
             }
             else if (methodType == typeof(Enumerable))
             {
-                _queryMethod.Push(QueryMethod.Enumerable);
                 processed = VisitMethod_Enumerable(exp);
             }
             else if (methodType.IsGenericType && methodType.GetGenericTypeDefinition() == typeof(List<>))
             {
-                _queryMethod.Push(QueryMethod.ListGeneric);
                 processed = VisitMethod_List(exp);
             }
 
             if (!processed) throw OperationNotSupported(method);
-            _queryMethod.Pop();
 
             return exp;
         }
@@ -148,20 +161,17 @@ namespace Rafy.Domain.ORM.Linq
             switch (exp.Method.Name)
             {
                 case LinqConsts.StringMethod_Contains:
-                    if (_hasNot) throw OperationNotSupported("字符串操作不支持操作符：'!'。");
-                    _operator = PropertyOperator.Contains;
+                    _operator = _hasNot ? PropertyOperator.NotContains : PropertyOperator.Contains;
                     this.Visit(exp.Object);
                     this.Visit(args[0]);
                     break;
                 case LinqConsts.StringMethod_StartWith:
-                    if (_hasNot) throw OperationNotSupported("字符串操作不支持操作符：'!'。");
-                    _operator = PropertyOperator.StartWith;
+                    _operator = _hasNot ? PropertyOperator.NotStartWith : PropertyOperator.StartWith;
                     this.Visit(exp.Object);
                     this.Visit(args[0]);
                     break;
                 case LinqConsts.StringMethod_EndWith:
-                    if (_hasNot) throw OperationNotSupported("字符串操作不支持操作符：'!'。");
-                    _operator = PropertyOperator.EndWith;
+                    _operator = _hasNot ? PropertyOperator.NotEndWith : PropertyOperator.EndWith;
                     this.Visit(exp.Object);
                     this.Visit(args[0]);
                     break;
@@ -183,19 +193,26 @@ namespace Rafy.Domain.ORM.Linq
         private bool VisitMethod_Enumerable(MethodCallExpression exp)
         {
             var args = exp.Arguments;
-            if (args.Count == 2)
+            switch (exp.Method.Name)
             {
-                switch (exp.Method.Name)
-                {
-                    case LinqConsts.EnumerableMethod_Contains:
+                case LinqConsts.EnumerableMethod_Contains:
+                    if (args.Count == 2)
+                    {
                         _operator = _hasNot ? PropertyOperator.NotIn : PropertyOperator.In;
                         this.Visit(args[1]);//先访问属性
                         this.Visit(args[0]);//再访问列表常量
                         this.MakeConstraint();
                         return true;
-                    default:
-                        break;
-                }
+                    }
+                    break;
+                case LinqConsts.EnumerableMethod_Any:
+                case LinqConsts.EnumerableMethod_All:
+                    var subQueryBuilder = new SubEntityQueryBuilder();
+                    var subQueryConstriant = subQueryBuilder.Build(exp, _query);
+                    _query.Where = subQueryConstriant;
+                    return true;
+                default:
+                    break;
             }
             return false;
         }
@@ -385,8 +402,8 @@ namespace Rafy.Domain.ORM.Linq
 
         private void MakeOperator(BinaryExpression binaryExp)
         {
-            var method = _queryMethod.Peek();
-            if (method == QueryMethod.Queryable)
+            //var method = _queryMethod.Peek();
+            //if (method == QueryMethod.Queryable)
             {
                 if (_hasNot) throw OperationNotSupported("不支持操作符：'!'，请使用相反的操作符。");
 
@@ -425,14 +442,17 @@ namespace Rafy.Domain.ORM.Linq
         {
             if (_propertyResult != null && _operator.HasValue)
             {
+                var op =  _operator.Value;
+                if (_reverseOperator) op = PropertyOperatorHelper.Reverse(op);
+
                 if (_hasValueResult)
                 {
-                    _query.Where = f.Constraint(_propertyResult, _operator.Value, _valueResult);
+                    _query.Where = f.Constraint(_propertyResult, op, _valueResult);
                     _hasValueResult = false;
                 }
                 else
                 {
-                    _query.Where = f.Constraint(_propertyResult, _operator.Value, _rightPropertyResult);
+                    _query.Where = f.Constraint(_propertyResult, op, _rightPropertyResult);
                     _rightPropertyResult = null;
                 }
                 _propertyResult = null;
@@ -484,7 +504,7 @@ namespace Rafy.Domain.ORM.Linq
             return e;
         }
 
-        private static IManagedProperty FindProperty(IEntityInfoHost info, PropertyInfo clrProperty)
+        internal static IManagedProperty FindProperty(IEntityInfoHost info, PropertyInfo clrProperty)
         {
             return info.EntityMeta.ManagedProperties.GetCompiledProperties().Find(clrProperty.Name);
         }
@@ -494,26 +514,17 @@ namespace Rafy.Domain.ORM.Linq
             return new NotSupportedException(string.Format("不支持这个成员调用：'{1}'.'{0}'。", member.Name, member.DeclaringType.Name));
         }
 
-        private static Exception OperationNotSupported(Expression node)
+        internal static Exception OperationNotSupported(Expression node)
         {
             return new NotSupportedException(string.Format("不支持类型为 {1} 的表达式：'{0}'。", node, node.NodeType));
         }
 
-        private static Exception OperationNotSupported(string msg)
+        internal static Exception OperationNotSupported(string msg)
         {
             return new NotSupportedException(msg);
             //return new NotSupportedException(string.Format("不支持这个操作：'{0}'。", action));
         }
 
         #endregion
-    }
-
-    /// <summary>
-    /// 所有支持的方法调用。
-    /// </summary>
-    enum QueryMethod
-    {
-        None,
-        Queryable, String, Enumerable, ListGeneric
     }
 }

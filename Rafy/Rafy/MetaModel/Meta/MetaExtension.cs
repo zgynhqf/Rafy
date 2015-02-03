@@ -13,6 +13,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using Rafy.Domain;
@@ -237,6 +238,18 @@ namespace Rafy.MetaModel
         public static ColumnMeta HasColumnName(this ColumnMeta meta, string columnName)
         {
             meta.ColumnName = columnName;
+            return meta;
+        }
+
+        /// <summary>
+        /// 指定某个属性映射字段时的数据列类型
+        /// </summary>
+        /// <param name="meta">The meta.</param>
+        /// <param name="dataType">Type of the data.</param>
+        /// <returns></returns>
+        public static ColumnMeta HasDataType(this ColumnMeta meta, DbType dataType)
+        {
+            meta.DataType = dataType;
             return meta;
         }
 

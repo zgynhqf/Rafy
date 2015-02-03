@@ -61,7 +61,7 @@ namespace RafyUnitTest
                 c.HistoryRepository = new DbHistoryRepository();
                 c.RunDataLossOperation = DataLossOperation.All;
                 c.AutoMigrate();
-            };
+            }
         }
 
         [TestMethod]
@@ -161,6 +161,37 @@ namespace RafyUnitTest
                 Assert.IsTrue(taskTable2.FindColumn("OrderNo") == null);
                 Assert.IsTrue(taskTable2.FindColumn("PId") == null);
                 Assert.IsTrue(taskTable2.FindColumn("TestUserId") == null);
+            });
+        }
+
+        [TestMethod]
+        public void DMT_AutoMigrate_AlterColumn_DataType()
+        {
+            this.Test(destination =>
+            {
+            }, result =>
+            {
+                var table = result.FindTable("Task");
+                var column = table.FindColumn("XmlContent");
+                Assert.IsTrue(column != null);
+                Assert.IsTrue(column.DataType == DbType.Xml);
+            });
+        }
+
+        [TestMethod]
+        public void DMT_AlterColumn_DataType()
+        {
+            this.Test(destination =>
+            {
+                var taskTable = destination.FindTable("Task");
+                taskTable.Columns.Remove(taskTable.FindColumn("Name"));
+                taskTable.AddColumn("Name", DbType.Xml);
+            }, result =>
+            {
+                var table = result.FindTable("Task");
+                var column = table.FindColumn("Name");
+                Assert.IsTrue(column != null);
+                Assert.IsTrue(column.DataType == DbType.Xml);
             });
         }
 

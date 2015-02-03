@@ -1845,107 +1845,263 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ___ORM_LinqQuery_WhereChildrenExists()
+        public void ORM_LinqQuery_WhereChildrenExists()
         {
-            //var repo = RF.Concrete<BookRepository>();
-            //using (RF.TransactionScope(repo))
-            //{
-            //    repo.Save(new Book { });
-            //    repo.Save(new Book { });
-            //    repo.Save(new Book
-            //    {
-            //        Name = "1",
-            //        ChapterList =
-            //        {
-            //            new Chapter { Name = "1.1"},
-            //        }
-            //    });
+            var repo = RF.Concrete<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                repo.Save(new Book { });
+                repo.Save(new Book { });
+                repo.Save(new Book
+                {
+                    Name = "1",
+                    ChapterList =
+                    {
+                        new Chapter { Name = "1.1"},
+                    }
+                });
 
-            //    var list = repo.LinqGetIfChildrenExists();
-            //    Assert.IsTrue(list.Count == 1);
-            //    var book = list[0];
-            //    Assert.IsTrue(book.Name == "1");
-            //}
+                var list = repo.LinqGetIfChildrenExists();
+                Assert.IsTrue(list.Count == 1);
+                var book = list[0];
+                Assert.IsTrue(book.Name == "1");
+            }
         }
 
         [TestMethod]
-        public void ___ORM_LinqQuery_WhereChildrenExistsChapterName()
+        public void ORM_LinqQuery_WhereChildrenExistsChapterName()
         {
-            //var repo = RF.Concrete<BookRepository>();
-            //using (RF.TransactionScope(repo))
-            //{
-            //    repo.Save(new Book { });
-            //    repo.Save(new Book
-            //    {
-            //        Name = "1",
-            //        ChapterList =
-            //        {
-            //            new Chapter { Name = "1.1"},
-            //        }
-            //    });
-            //    repo.Save(new Book
-            //    {
-            //        Name = "2",
-            //        ChapterList =
-            //        {
-            //            new Chapter { Name = "1.1"},
-            //            new Chapter { Name = "2.1"},
-            //        }
-            //    });
-            //    repo.Save(new Book
-            //    {
-            //        Name = "3",
-            //        ChapterList =
-            //        {
-            //            new Chapter { Name = "2.1"},
-            //            new Chapter { Name = "2.2"},
-            //        }
-            //    });
+            var repo = RF.Concrete<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                repo.Save(new Book { });
+                repo.Save(new Book
+                {
+                    Name = "1",
+                    ChapterList =
+                    {
+                        new Chapter { Name = "1.1"},
+                    }
+                });
+                repo.Save(new Book
+                {
+                    Name = "2",
+                    ChapterList =
+                    {
+                        new Chapter { Name = "1.1"},
+                        new Chapter { Name = "2.1"},
+                    }
+                });
+                repo.Save(new Book
+                {
+                    Name = "3",
+                    ChapterList =
+                    {
+                        new Chapter { Name = "2.1"},
+                        new Chapter { Name = "2.2"},
+                    }
+                });
 
-            //    var list = repo.LinqGetIfChildrenExists("1.1");
-            //    Assert.IsTrue(list.Count == 2);
-            //}
+                var list = repo.LinqGetIfChildrenExists("1.1");
+                Assert.IsTrue(list.Count == 2);
+                Assert.IsTrue(list[0].Name == "1");
+                Assert.IsTrue(list[1].Name == "2");
+            }
         }
 
         [TestMethod]
-        public void ___ORM_LinqQuery_WhereChildrenAllChapterName()
+        public void ORM_LinqQuery_WhereChildrenExistsSectionName()
         {
-            //var repo = RF.Concrete<BookRepository>();
-            //using (RF.TransactionScope(repo))
-            //{
-            //    repo.Save(new Book { });
-            //    repo.Save(new Book
-            //    {
-            //        Name = "1",
-            //        ChapterList =
-            //        {
-            //            new Chapter { Name = "1.1"},
-            //        }
-            //    });
-            //    repo.Save(new Book
-            //    {
-            //        Name = "2",
-            //        ChapterList =
-            //        {
-            //            new Chapter { Name = "1.1"},
-            //            new Chapter { Name = "1.1"},
-            //        }
-            //    });
-            //    repo.Save(new Book
-            //    {
-            //        Name = "3",
-            //        ChapterList =
-            //        {
-            //            new Chapter { Name = "2.1"},
-            //            new Chapter { Name = "2.2"},
-            //        }
-            //    });
+            var repo = RF.Concrete<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                repo.Save(new Book { });
+                repo.Save(new Book
+                {
+                    Name = "1",
+                    ChapterList =
+                    {
+                        new Chapter 
+                        {
+                            SectionList = 
+                            {
+                                new Section { Name = "need" }
+                            }
+                        },
+                    }
+                });
+                repo.Save(new Book
+                {
+                    Name = "2",
+                    ChapterList =
+                    {
+                        new Chapter 
+                        {
+                            SectionList = 
+                            {
+                                new Section { Name = "need too" }
+                            }
+                        },
+                    }
+                });
+                repo.Save(new Book
+                {
+                    Name = "3",
+                    ChapterList =
+                    {
+                        new Chapter 
+                        {
+                            SectionList = 
+                            {
+                                new Section { Name = "not contained" }
+                            }
+                        },
+                    }
+                });
 
-            //    var list = repo.LinqGetIfChildrenAll("1.1");
-            //    Assert.IsTrue(list.Count == 1);
-            //    Assert.IsTrue(list[1].Name == "1");
-            //    Assert.IsTrue(list[2].Name == "2");
-            //}
+                var list = repo.LinqGetIfChildrenExistsSectionName("need");
+                Assert.IsTrue(list.Count == 2);
+                Assert.IsTrue(list[0].Name == "1");
+                Assert.IsTrue(list[1].Name == "2");
+            }
+        }
+
+        [TestMethod]
+        public void ORM_LinqQuery_WhereChildrenAllChapterName()
+        {
+            var repo = RF.Concrete<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                repo.Save(new Book { Name = "0" });
+                repo.Save(new Book
+                {
+                    Name = "1",
+                    ChapterList =
+                    {
+                        new Chapter { Name = "1.1"},
+                    }
+                });
+                repo.Save(new Book
+                {
+                    Name = "2",
+                    ChapterList =
+                    {
+                        new Chapter { Name = "1.1"},
+                        new Chapter { Name = "1.1"},
+                    }
+                });
+                repo.Save(new Book
+                {
+                    Name = "3",
+                    ChapterList =
+                    {
+                        new Chapter { Name = "1.1"},
+                        new Chapter { Name = "2.2"},
+                    }
+                });
+
+                var list = repo.LinqGetIfChildrenAll("1.1");
+                Assert.IsTrue(list.Count == 3);
+                Assert.IsTrue(list[0].Name == "0");
+                Assert.IsTrue(list[1].Name == "1");
+                Assert.IsTrue(list[2].Name == "2");
+            }
+        }
+
+        [TestMethod]
+        public void ORM_LinqQuery_WhereChildren_Complicated()
+        {
+            var repo = RF.Concrete<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                repo.Save(new Book
+                {
+                    Name = "1",//not match
+                    ChapterList =
+                    {
+                        new Chapter
+                        {
+                            Name = "chapterNeed",
+                            SectionList = 
+                            {
+                                new Section { Name = "need" }
+                            }
+                        },
+                        new Chapter { Name = "1.2"}
+                    }
+                });
+                repo.Save(new Book
+                {
+                    Name = "2",
+                    ChapterList =
+                    {
+                        new Chapter
+                        {
+                            Name = "chapterNeed",
+                            SectionList = 
+                            {
+                                new Section { Name = "need" }
+                            }
+                        },
+                        //new Chapter { Name = "1.2"}//not match
+                    }
+                });
+                repo.Save(new Book
+                {
+                    Name = "3",
+                    ChapterList =
+                    {
+                        new Chapter
+                        {
+                            Name = "3.1",//not match
+                            SectionList = 
+                            {
+                                new Section { Name = "need" }
+                            }
+                        },
+                        new Chapter { Name = "1.2"}
+                    }
+                });
+                repo.Save(new Book
+                {
+                    Name = "4",
+                    ChapterList =
+                    {
+                        new Chapter
+                        {
+                            Name = "chapterNeed",
+                            SectionList = 
+                            {
+                                new Section { Name = "section need" },
+                                new Section { Name = "section" }//not match
+                            }
+                        },
+                        new Chapter { Name = "1.2"}
+                    }
+                });
+                repo.Save(new Book
+                {
+                    Name = "5",
+                    ChapterList =
+                    {
+                        new Chapter
+                        {
+                            Name = "chapterNeed",
+                            SectionList = 
+                            {
+                                new Section { Name = "section need" },
+                                new Section { Name = "need section" }
+                            }
+                        },
+                        new Chapter { Name = "1.2"},
+                        new Chapter { Name = "1.3"},
+                    }
+                });
+
+                var list = repo.LinqGetIfChildren_Complicated();
+                Assert.IsTrue(list.Count == 1);
+                Assert.IsTrue(list[0].Name == "5");
+            }
         }
 
         #endregion

@@ -13,6 +13,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using Rafy.Utils;
@@ -90,6 +91,17 @@ namespace Rafy.MetaModel
         {
             get { return this._ColumnName; }
             set { this.SetValue(ref this._ColumnName, value); }
+        }
+
+        private DbType? _DataType;
+        /// <summary>
+        /// 映射数据库中的字段的类型。
+        /// 如果没有设置，则使用默认的映射规则。
+        /// </summary>
+        public DbType? DataType
+        {
+            get { return this._DataType; }
+            set { this.SetValue(ref this._DataType, value); }
         }
 
         private string _DataTypeLength;

@@ -15,6 +15,7 @@ using System;
 using Rafy.Reflection;
 using Rafy.Domain;
 using Rafy;
+using System.Diagnostics;
 
 namespace Rafy.DataPortal
 {
@@ -69,6 +70,7 @@ namespace Rafy.DataPortal
         /// <param name="objectType"></param>
         /// <param name="criteria"></param>
         /// <returns></returns>
+        [DebuggerStepThrough]
         internal static object Fetch(Type objectType, object criteria)
         {
             object res = null;

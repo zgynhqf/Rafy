@@ -231,7 +231,8 @@ namespace Rafy.Domain.ORM.DbMigration
                     {
                         dataType = em.IdType;
                     }
-                    var column = new Column(DbTypeHelper.ConvertFromCLRType(dataType), columnMeta.DataTypeLength, columnName, table);
+                    var dbType = columnMeta.DataType.GetValueOrDefault(DbTypeHelper.ConvertFromCLRType(dataType));
+                    var column = new Column(dbType, columnMeta.DataTypeLength, columnName, table);
                     if (columnMeta.IsRequired.HasValue)
                     {
                         column.IsRequired = columnMeta.IsRequired.Value;

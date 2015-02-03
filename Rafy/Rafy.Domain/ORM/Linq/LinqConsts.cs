@@ -28,6 +28,9 @@ namespace Rafy.Domain.ORM.Linq
         public const string QueryableMethod_Count = "Count";
 
         public const string EnumerableMethod_Contains = "Contains";
+        public const string EnumerableMethod_Any = "Any";
+        public const string EnumerableMethod_All = "All";
+
         public const string ListGenericMethod_Contains = "Contains";
 
         public const string StringMethod_Contains = "Contains";

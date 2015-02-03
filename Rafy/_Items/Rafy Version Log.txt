@@ -10,10 +10,25 @@
  * 
 *******************************************************/
 
-2.35.2505
+2.35.2520
+    ★★公布、添加功能
+        支持在 Linq 中使用聚合子的条件表达式来查询聚合父实体。
+            支持 Any 表达式：q = q.Where(book => book.ChapterList.Cast<Chapter>().Any(c => c.Name == chapterName));
+            支持 All 表达式。
+            支持嵌套的 Any 表达式：q = q.Where(book => book.ChapterList.Concrete().Any(c => c.SectionList.Cast<Section>().Any(s => s.Name.Contains(sectionName))));
     添加接口
-        OData 支持模糊匹配。
-        OData 中 filter 查询支持使用引用属性来进行关联表查询。
+        PropertyOperator 添加字符串匹配的反向操作符：NotLike、NotContains、NotStartWith、NotEndWith。
+        OData 也支持这几个操作符。
+    内部修改
+        删除 EntityQueryBuilder 中的 QueryMethod 类型，不再跟踪当前表达式所在的方法。
+
+2.35.2508
+    ★★公布、添加接口
+        OData：
+            支持模糊匹配。
+            filter 查询支持使用引用属性来进行关联表查询。
+        数据库映射：
+            字符串类型的属性支持映射到 DbType.Xml 类型上。
     内部修改
         不完整树节点的加载。
 

@@ -54,10 +54,12 @@ namespace Rafy.DbMigration.SqlServer
                     return "BIT";
                 case DbType.Byte:
                     return "BYTE";
+                case DbType.Xml:
+                    return "XML";
                 default:
                     break;
             }
-            throw new NotSupportedException(string.Format("不支持以下列类型：{0}", fieldType));
+            throw new NotSupportedException(string.Format("不支持生成列类型：{0}。", fieldType));
         }
 
         /// <summary>
@@ -79,6 +81,8 @@ namespace Rafy.DbMigration.SqlServer
                 case "ntext":
                 case "text":
                     return DbType.String;
+                case "xml":
+                    return DbType.Xml;
                 case "smallint":
                 case "int":
                     return DbType.Int32;
@@ -104,7 +108,7 @@ namespace Rafy.DbMigration.SqlServer
                 case "time":
                     return DbType.DateTime;
                 default:
-                    throw new NotSupportedException(string.Format("不支持以下列类型：{0}", sqlType));
+                    throw new NotSupportedException(string.Format("不支持读取数据库中的列类型：{0}。", sqlType));
             }
         }
     }

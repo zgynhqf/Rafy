@@ -141,22 +141,49 @@ namespace Rafy.Domain.ORM.Query.Impl
         /// </summary>
         private List<SqlTableSource> _allJoinTables = new List<SqlTableSource>();
 
-        private string NextJoinTableAlias()
+        internal QueryGenerationContext GenerationContext;
+
+        /// <summary>
+        /// 在查询对象中查找或者创建指定引用属性对应的连接表对象。
+        /// </summary>
+        /// <param name="propertyOwner">聚合子属性所在的实体对应的表。也是外键关系中主键表所在的表。</param>
+        /// <param name="childrenProperty">指定的聚合子属性。</param>
+        /// <returns></returns>
+        internal ITableSource FindOrCreateJoinTable(ITableSource propertyOwner, IListProperty childrenProperty)
         {
-            return "T" + (_allJoinTables.Count + 1);
+            if (childrenProperty.HasManyType != HasManyType.Composition) throw new InvalidProgramException("只能对聚合子属性使用此方法。");
+
+            //先找到这个关系对应的引用属性。
+            var refEntityType = childrenProperty.ListEntityType;
+            var refRepo = RepositoryFactoryHost.Factory.FindByEntity(refEntityType);
+            var parentProperty = refRepo.FindParentPropertyInfo(true);
+            var parentRef = (parentProperty.ManagedProperty as IRefProperty).RefIdProperty;
+
+            var refTableSource = _allJoinTables.FirstOrDefault(
+                ts => ts.RefProperty == parentRef && ts.PrimaryKeyTable == propertyOwner
+                );
+            if (refTableSource == null)
+            {
+                var f = QueryFactory.Instance;
+
+                var fkTable = f.Table(refRepo, QueryGenerationContext.Get(this).NextTableAlias());
+
+                refTableSource = AddJoinTable(fkTable, parentRef, propertyOwner, fkTable);
+            }
+
+            return refTableSource.ForeignKeyTable;
         }
 
         /// <summary>
         /// 在查询对象中查找或者创建指定引用属性对应的连接表对象。
         /// </summary>
-        /// <param name="ownerTable">引用属性对应外键所在的表。</param>
+        /// <param name="propertyOwner">引用属性所在的实体对应的表。也是外键关系中外键列所在的表。</param>
         /// <param name="refProperty">指定的引用属性。</param>
         /// <returns></returns>
-        internal ITableSource FindOrCreateJoinTable(ITableSource ownerTable, IRefEntityProperty refProperty)
+        internal ITableSource FindOrCreateJoinTable(ITableSource propertyOwner, IRefEntityProperty refProperty)
         {
-            var query = this as IQuery;
             var refTableSource = _allJoinTables.FirstOrDefault(
-                ts => ts.OwnerTable == ownerTable && ts.Property == refProperty
+                ts => ts.ForeignKeyTable == propertyOwner && ts.RefProperty == refProperty
                 );
             if (refTableSource == null)
             {
@@ -164,24 +191,34 @@ namespace Rafy.Domain.ORM.Query.Impl
 
                 var refEntityType = refProperty.RefEntityType;
                 var refRepo = RepositoryFactoryHost.Factory.FindByEntity(refEntityType);
-                var refTable = f.Table(refRepo, this.NextJoinTableAlias());
+                var pkTable = f.Table(refRepo, QueryGenerationContext.Get(this).NextTableAlias());
 
-                var joinType = refProperty.Nullable ? JoinType.LeftOuter : JoinType.Inner;
-                query.From = f.Join(query.From, refTable, f.Constraint(
-                    ownerTable.Column(refProperty.RefIdProperty),
-                    refTable.Column(Entity.IdProperty)
-                    ), joinType);
-
-                refTableSource = new SqlTableSource
-                {
-                    OwnerTable = ownerTable,
-                    Property = refProperty,
-                    RefTable = refTable,
-                };
-                _allJoinTables.Add(refTableSource);
+                refTableSource = AddJoinTable(propertyOwner, refProperty, pkTable, pkTable);
             }
 
-            return refTableSource.RefTable;
+            return refTableSource.PrimaryKeyTable;
+        }
+
+        private SqlTableSource AddJoinTable(ITableSource fkTable, IRefProperty parentRef, ITableSource pkTable, ITableSource joinTo)
+        {
+            var f = QueryFactory.Instance;
+
+            var joinType = parentRef.Nullable ? JoinType.LeftOuter : JoinType.Inner;
+            var query = this as IQuery;
+            query.From = f.Join(query.From, joinTo, f.Constraint(
+                fkTable.Column(parentRef.RefIdProperty),
+                pkTable.IdColumn
+                ), joinType);
+
+            var refTableSource = new SqlTableSource
+            {
+                ForeignKeyTable = fkTable,
+                RefProperty = parentRef,
+                PrimaryKeyTable = pkTable,
+            };
+            _allJoinTables.Add(refTableSource);
+
+            return refTableSource;
         }
 
         /// <summary>
@@ -198,8 +235,21 @@ namespace Rafy.Domain.ORM.Query.Impl
     /// </summary>
     class SqlTableSource
     {
-        internal ITableSource OwnerTable;
-        internal IManagedProperty Property;
-        internal ITableSource RefTable;
+        /// <summary>
+        /// 外键所在表。
+        /// 引用属性所在的实体对应的表。
+        /// </summary>
+        internal ITableSource ForeignKeyTable;
+
+        /// <summary>
+        /// 引用属性
+        /// </summary>
+        internal IManagedProperty RefProperty;
+
+        /// <summary>
+        /// 主键所在的表。
+        /// 被引用的表。
+        /// </summary>
+        internal ITableSource PrimaryKeyTable;
     }
 }

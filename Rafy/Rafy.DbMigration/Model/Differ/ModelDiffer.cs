@@ -19,7 +19,7 @@ using Rafy;
 
 namespace Rafy.DbMigration.Model
 {
-    public static class ModelDiffer
+    internal static class ModelDiffer
     {
         /// <summary>
         /// 计算出两个数据库元数据的所有表差别
