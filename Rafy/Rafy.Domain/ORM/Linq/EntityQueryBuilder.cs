@@ -38,7 +38,7 @@ namespace Rafy.Domain.ORM.Linq
         private IRepositoryInternal _repo;
         private QueryFactory f = QueryFactory.Instance;
 
-        private bool _reverseOperator = false;
+        private bool _reverseWhere = false;
 
         public EntityQueryBuilder(IRepositoryInternal repo)
         {
@@ -49,10 +49,10 @@ namespace Rafy.Domain.ORM.Linq
         /// 是否需要反转查询中的所有条件操作符。
         /// 场景：当转换 Linq 表达式中的 All 方法到 Sql 的 NotExsits 时，需要把内部的条件都转换为反向操作符。
         /// </summary>
-        internal bool ReverseOperator
+        internal bool ReverseWhere
         {
-            get { return _reverseOperator; }
-            set { _reverseOperator = value; }
+            get { return _reverseWhere; }
+            set { _reverseWhere = value; }
         }
 
         internal IQuery BuildQuery(Expression exp)
@@ -166,12 +166,12 @@ namespace Rafy.Domain.ORM.Linq
                     this.Visit(args[0]);
                     break;
                 case LinqConsts.StringMethod_StartWith:
-                    _operator = _hasNot ? PropertyOperator.NotStartWith : PropertyOperator.StartWith;
+                    _operator = _hasNot ? PropertyOperator.NotStartsWith : PropertyOperator.StartsWith;
                     this.Visit(exp.Object);
                     this.Visit(args[0]);
                     break;
                 case LinqConsts.StringMethod_EndWith:
-                    _operator = _hasNot ? PropertyOperator.NotEndWith : PropertyOperator.EndWith;
+                    _operator = _hasNot ? PropertyOperator.NotEndsWith : PropertyOperator.EndsWith;
                     this.Visit(exp.Object);
                     this.Visit(args[0]);
                     break;
@@ -377,6 +377,10 @@ namespace Rafy.Domain.ORM.Linq
                 //使用 AndOrConstraint 合并约束的结果。
                 var op = binaryExp.NodeType == ExpressionType.AndAlso ?
                     BinaryOperator.And : BinaryOperator.Or;
+                if (_reverseWhere)
+                {
+                    op = binaryExp.NodeType == ExpressionType.AndAlso ? BinaryOperator.Or : BinaryOperator.And;
+                }
                 _query.Where = f.Binary(left, op, right);
             }
             else
@@ -443,7 +447,7 @@ namespace Rafy.Domain.ORM.Linq
             if (_propertyResult != null && _operator.HasValue)
             {
                 var op =  _operator.Value;
-                if (_reverseOperator) op = PropertyOperatorHelper.Reverse(op);
+                if (_reverseWhere) op = PropertyOperatorHelper.Reverse(op);
 
                 if (_hasValueResult)
                 {

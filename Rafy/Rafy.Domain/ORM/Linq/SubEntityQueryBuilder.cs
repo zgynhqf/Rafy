@@ -97,7 +97,7 @@ namespace Rafy.Domain.ORM.Linq
             if (exp.Arguments.Count == 2)
             {
                 var queryBuilder = new EntityQueryBuilder(childRepo);
-                queryBuilder.ReverseOperator = !_isAny;//如果是 All，则需要反转里面的所有操作符。
+                queryBuilder.ReverseWhere = !_isAny;//如果是 All，则需要反转里面的所有操作符。
                 queryBuilder.BuildQuery(exp.Arguments[1], _query);
             }
 

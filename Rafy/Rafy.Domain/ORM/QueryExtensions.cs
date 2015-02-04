@@ -192,19 +192,19 @@ namespace Rafy.Domain.ORM.Query
         }
         public static IConstraint StartWith(this IColumnNode column, object value)
         {
-            return QueryFactory.Instance.Constraint(column, PropertyOperator.StartWith, value);
+            return QueryFactory.Instance.Constraint(column, PropertyOperator.StartsWith, value);
         }
         public static IConstraint NotStartWith(this IColumnNode column, object value)
         {
-            return QueryFactory.Instance.Constraint(column, PropertyOperator.NotStartWith, value);
+            return QueryFactory.Instance.Constraint(column, PropertyOperator.NotStartsWith, value);
         }
         public static IConstraint EndWith(this IColumnNode column, object value)
         {
-            return QueryFactory.Instance.Constraint(column, PropertyOperator.EndWith, value);
+            return QueryFactory.Instance.Constraint(column, PropertyOperator.EndsWith, value);
         }
         public static IConstraint NotEndWith(this IColumnNode column, object value)
         {
-            return QueryFactory.Instance.Constraint(column, PropertyOperator.NotEndWith, value);
+            return QueryFactory.Instance.Constraint(column, PropertyOperator.NotEndsWith, value);
         }
         public static IConstraint In(this IColumnNode column, object value)
         {
@@ -257,19 +257,19 @@ namespace Rafy.Domain.ORM.Query
         }
         public static IConstraint StartWith(this IColumnNode column, IColumnNode rightColumn)
         {
-            return QueryFactory.Instance.Constraint(column, PropertyOperator.StartWith, rightColumn);
+            return QueryFactory.Instance.Constraint(column, PropertyOperator.StartsWith, rightColumn);
         }
         public static IConstraint NotStartWith(this IColumnNode column, IColumnNode rightColumn)
         {
-            return QueryFactory.Instance.Constraint(column, PropertyOperator.NotStartWith, rightColumn);
+            return QueryFactory.Instance.Constraint(column, PropertyOperator.NotStartsWith, rightColumn);
         }
         public static IConstraint EndWith(this IColumnNode column, IColumnNode rightColumn)
         {
-            return QueryFactory.Instance.Constraint(column, PropertyOperator.EndWith, rightColumn);
+            return QueryFactory.Instance.Constraint(column, PropertyOperator.EndsWith, rightColumn);
         }
         public static IConstraint NotEndWith(this IColumnNode column, IColumnNode rightColumn)
         {
-            return QueryFactory.Instance.Constraint(column, PropertyOperator.NotEndWith, rightColumn);
+            return QueryFactory.Instance.Constraint(column, PropertyOperator.NotEndsWith, rightColumn);
         }
         public static IConstraint In(this IColumnNode column, IColumnNode rightColumn)
         {

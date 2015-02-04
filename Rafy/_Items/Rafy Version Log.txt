@@ -10,15 +10,19 @@
  * 
 *******************************************************/
 
-2.35.2520
+2.35.2527
     ★★公布、添加功能
         支持在 Linq 中使用聚合子的条件表达式来查询聚合父实体。
             支持 Any 表达式：q = q.Where(book => book.ChapterList.Cast<Chapter>().Any(c => c.Name == chapterName));
             支持 All 表达式。
             支持嵌套的 Any 表达式：q = q.Where(book => book.ChapterList.Concrete().Any(c => c.SectionList.Cast<Section>().Any(s => s.Name.Contains(sectionName))));
+            完成最复杂的查询，其中包含：聚合属性的Any、All、嵌套、引用属性、分页。
     添加接口
         PropertyOperator 添加字符串匹配的反向操作符：NotLike、NotContains、NotStartWith、NotEndWith。
         OData 也支持这几个操作符。
+    修改接口
+        重命名：StartWith 改为 StartsWith；EndWith 改为 EndsWith。
+        DbMigrationContext 改为非抽象类。
     内部修改
         删除 EntityQueryBuilder 中的 QueryMethod 类型，不再跟踪当前表达式所在的方法。
 

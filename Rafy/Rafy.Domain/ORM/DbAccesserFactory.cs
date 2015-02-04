@@ -26,18 +26,18 @@ namespace Rafy.Domain.ORM
         /// <summary>
         /// 根据配置文件，构造一个数据库访问器。
         /// </summary>
-        /// <param name="connectionStringSettingName"></param>
+        /// <param name="dbSettingName">数据库配置的名称。</param>
         /// <returns></returns>
-        public static IDbAccesser Create(string connectionStringSettingName)
+        public static IDbAccesser Create(string dbSettingName)
         {
-            var setting = DbSetting.FindOrCreate(connectionStringSettingName);
+            var setting = DbSetting.FindOrCreate(dbSettingName);
             return Create(setting);
         }
 
         /// <summary>
         /// 根据配置文件，构造一个数据库访问器。
         /// </summary>
-        /// <param name="dbSetting">The database setting.</param>
+        /// <param name="dbSetting">数据库配置。</param>
         /// <returns></returns>
         public static IDbAccesser Create(DbSetting dbSetting)
         {

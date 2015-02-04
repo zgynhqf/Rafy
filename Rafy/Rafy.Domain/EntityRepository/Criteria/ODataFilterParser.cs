@@ -190,20 +190,20 @@ namespace Rafy.Domain
                 case "contains":
                     op = PropertyOperator.Contains;
                     break;
-                case "startwith":
-                    op = PropertyOperator.StartWith;
+                case "startswith":
+                    op = PropertyOperator.StartsWith;
                     break;
-                case "endwith":
-                    op = PropertyOperator.EndWith;
+                case "endswith":
+                    op = PropertyOperator.EndsWith;
                     break;
                 case "notcontains":
                     op = PropertyOperator.NotContains;
                     break;
-                case "notstartwith":
-                    op = PropertyOperator.NotStartWith;
+                case "notstartswith":
+                    op = PropertyOperator.NotStartsWith;
                     break;
-                case "notendwith":
-                    op = PropertyOperator.NotEndWith;
+                case "notendswith":
+                    op = PropertyOperator.NotEndsWith;
                     break;
                 default:
                     throw new NotSupportedException("不支持这个操作符：" + comparison + "。");

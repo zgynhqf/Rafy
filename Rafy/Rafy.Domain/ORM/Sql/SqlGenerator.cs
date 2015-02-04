@@ -344,8 +344,8 @@ namespace Rafy.Domain.ORM
             {
                 case SqlColumnConstraintOperator.Like:
                 case SqlColumnConstraintOperator.Contains:
-                case SqlColumnConstraintOperator.StartWith:
-                case SqlColumnConstraintOperator.EndWith:
+                case SqlColumnConstraintOperator.StartsWith:
+                case SqlColumnConstraintOperator.EndsWith:
                     //如果是空字符串的模糊对比操作，直接认为是真。
                     var strValue = value as string;
                     if (string.IsNullOrEmpty(strValue))
@@ -356,8 +356,8 @@ namespace Rafy.Domain.ORM
                     break;
                 case SqlColumnConstraintOperator.NotLike:
                 case SqlColumnConstraintOperator.NotContains:
-                case SqlColumnConstraintOperator.NotStartWith:
-                case SqlColumnConstraintOperator.NotEndWith:
+                case SqlColumnConstraintOperator.NotStartsWith:
+                case SqlColumnConstraintOperator.NotEndsWith:
                     //如果是空字符串的模糊对比操作，直接认为是假。
                     var strValue2 = value as string;
                     if (string.IsNullOrEmpty(strValue2))
@@ -458,19 +458,19 @@ namespace Rafy.Domain.ORM
                     _sql.Append(" NOT LIKE ");
                     _sql.AppendParameter("%" + value + "%");
                     break;
-                case SqlColumnConstraintOperator.StartWith:
+                case SqlColumnConstraintOperator.StartsWith:
                     _sql.Append(" LIKE ");
                     _sql.AppendParameter(value + "%");
                     break;
-                case SqlColumnConstraintOperator.NotStartWith:
+                case SqlColumnConstraintOperator.NotStartsWith:
                     _sql.Append(" NOT LIKE ");
                     _sql.AppendParameter(value + "%");
                     break;
-                case SqlColumnConstraintOperator.EndWith:
+                case SqlColumnConstraintOperator.EndsWith:
                     _sql.Append(" LIKE ");
                     _sql.AppendParameter("%" + value);
                     break;
-                case SqlColumnConstraintOperator.NotEndWith:
+                case SqlColumnConstraintOperator.NotEndsWith:
                     _sql.Append(" NOT LIKE ");
                     _sql.AppendParameter("%" + value);
                     break;
