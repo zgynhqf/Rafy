@@ -43,6 +43,11 @@ namespace Rafy.Domain.Validation
         /// </summary>
         public int Max { get; set; }
 
+        /// <summary>
+        /// 设置此属性可以自定义要显示的错误信息。
+        /// </summary>
+        public Func<Entity, string> MessageBuilder { get; set; }
+
         protected override void Validate(Entity entity, RuleArgs e)
         {
             var value = entity.GetProperty(e.Property) as string;
@@ -51,20 +56,34 @@ namespace Rafy.Domain.Validation
                 var min = this.Min;
                 if (value.Length < min)
                 {
-                    e.BrokenDescription = string.Format(
-                        "{0} 不能低于 {1} 个字符。".Translate(),
-                        e.DisplayProperty(), min
-                        );
+                    if (this.MessageBuilder != null)
+                    {
+                        e.BrokenDescription = this.MessageBuilder(entity);
+                    }
+                    else
+                    {
+                        e.BrokenDescription = string.Format(
+                            "{0} 不能低于 {1} 个字符。".Translate(),
+                            e.DisplayProperty(), min
+                            );
+                    }
                 }
                 else
                 {
                     var max = this.Max;
                     if (value.Length > max)
                     {
-                        e.BrokenDescription = string.Format(
-                            "{0} 不能超过 {1} 个字符。".Translate(),
-                            e.DisplayProperty(), max
-                            );
+                        if (this.MessageBuilder != null)
+                        {
+                            e.BrokenDescription = this.MessageBuilder(entity);
+                        }
+                        else
+                        {
+                            e.BrokenDescription = string.Format(
+                                "{0} 不能超过 {1} 个字符。".Translate(),
+                                e.DisplayProperty(), max
+                                );
+                        }
                     }
                 }
             }

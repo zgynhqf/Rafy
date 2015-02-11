@@ -88,3 +88,8 @@
 /Test/Rafy.UnitTest.WCFPortal/obj/Debug
 /Web/obj/Debug
 /Rafy.v12.suo
+/ConsoleHost/bin/Debug
+/Demo/Demo/bin/Debug
+/Demo/Demo.Customer1/bin/Debug
+/Rafy/Tools/Domain Documentation/Help
+*.user

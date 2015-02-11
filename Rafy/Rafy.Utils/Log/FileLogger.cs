@@ -87,7 +87,10 @@ namespace Rafy
                     content += Environment.NewLine + "Parameters:" + string.Join(",", pValues);
                 }
 
-                content = DateTime.Now + "\r\nDatabase:  " + connectionSchema.Database + "\r\n" + content + "\r\n\r\n\r\n";
+                content = DateTime.Now +
+                    "\r\nDatabase:  " + connectionSchema.Database +
+                    "\r\nConnectionString:  " + connectionSchema.ConnectionString +
+                    "\r\n" + content + "\r\n\r\n\r\n";
 
                 File.AppendAllText(_sqlTraceFile, content, Encoding.UTF8);
             }

@@ -32,7 +32,7 @@ namespace Rafy.Domain.Validation
             this.Handler(entity, e);
         }
 
-        public string GetKeyString()
+        internal string GetKeyString()
         {
             return string.Format(@"rule://{0}/{1}",
                 Handler.Method.DeclaringType.FullName,

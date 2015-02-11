@@ -27,9 +27,10 @@ namespace Rafy.Domain.Validation
     /// </summary>
     public class RequiredRule : ValidationRule
     {
-        public static readonly RequiredRule Instance = new RequiredRule();
-
-        private RequiredRule() { }
+        /// <summary>
+        /// 设置此属性可以自定义要显示的错误信息。
+        /// </summary>
+        public Func<Entity, string> MessageBuilder { get; set; }
 
         protected override void Validate(Entity entity, RuleArgs e)
         {
@@ -57,7 +58,14 @@ namespace Rafy.Domain.Validation
 
             if (isNull)
             {
-                e.BrokenDescription = string.Format("{0} 里没有输入值。".Translate(), e.DisplayProperty());
+                if (this.MessageBuilder != null)
+                {
+                    e.BrokenDescription = this.MessageBuilder(entity);
+                }
+                else
+                {
+                    e.BrokenDescription = string.Format("{0} 里没有输入值。".Translate(), e.DisplayProperty());
+                }
             }
         }
     }

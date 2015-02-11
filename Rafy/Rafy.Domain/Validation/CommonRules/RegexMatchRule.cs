@@ -36,16 +36,28 @@ namespace Rafy.Domain.Validation
         /// </summary>
         public string RegexLabel { get; set; }
 
+        /// <summary>
+        /// 设置此属性可以自定义要显示的错误信息。
+        /// </summary>
+        public Func<Entity, string> MessageBuilder { get; set; }
+
         protected override void Validate(Entity entity, RuleArgs e)
         {
             var value = (string)entity.GetProperty(e.Property) ?? string.Empty;
             if (!this.Regex.IsMatch(value))
             {
-                e.BrokenDescription = string.Format(
-                    "{0} 必须是 {1}。".Translate(),
-                    e.DisplayProperty(),
-                    this.RegexLabel.Translate()
-                    );
+                if (this.MessageBuilder != null)
+                {
+                    e.BrokenDescription = this.MessageBuilder(entity);
+                }
+                else
+                {
+                    e.BrokenDescription = string.Format(
+                        "{0} 必须是 {1}。".Translate(),
+                        e.DisplayProperty(),
+                        this.RegexLabel.Translate()
+                        );
+                }
             }
         }
     }

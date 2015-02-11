@@ -1851,7 +1851,6 @@ namespace RafyUnitTest
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new Book { });
-                repo.Save(new Book { });
                 repo.Save(new Book
                 {
                     Name = "1",
@@ -1967,6 +1966,83 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void ORM_LinqQuery_WhereChildrenExistsSectionAndOwner()
+        {
+            var repo = RF.Concrete<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var so = new SectionOwner { Name = "huqf" };
+                RF.Save(so);
+                var category = new BookCategory { Name = "category" };
+                RF.Save(category);
+
+                repo.Save(new Book
+                {
+                    Name = "1",
+                    BookCategory = category,
+                    ChapterList =
+                    {
+                        new Chapter 
+                        {
+                            SectionList = 
+                            {
+                                new Section { Name = "need", SectionOwner = so }
+                            }
+                        },
+                    }
+                });
+                repo.Save(new Book
+                {
+                    Name = "2",
+                    BookCategory = category,
+                    ChapterList =
+                    {
+                        new Chapter 
+                        {
+                            SectionList = 
+                            {
+                                new Section { Name = "need too" }// sectionOwner not match
+                            }
+                        },
+                    }
+                });
+                repo.Save(new Book
+                {
+                    Name = "3",
+                    //BookCategory = category,// not match
+                    ChapterList =
+                    {
+                        new Chapter 
+                        {
+                            SectionList = 
+                            {
+                                new Section { Name = "need", SectionOwner = so }
+                            }
+                        },
+                    }
+                });
+                repo.Save(new Book
+                {
+                    Name = "4",
+                    ChapterList =
+                    {
+                        new Chapter 
+                        {
+                            SectionList = 
+                            {
+                                new Section { Name = "not contained" }//section name not match.
+                            }
+                        },
+                    }
+                });
+
+                var list = repo.LinqGetIfChildrenExistsSectionAndOwner(category.Name, "need", so.Name);
+                Assert.IsTrue(list.Count == 1);
+                Assert.IsTrue(list[0].Name == "1");
+            }
+        }
+
+        [TestMethod]
         public void ORM_LinqQuery_WhereChildrenAllChapterName()
         {
             var repo = RF.Concrete<BookRepository>();
@@ -2014,9 +2090,153 @@ namespace RafyUnitTest
             var repo = RF.Concrete<BookRepository>();
             using (RF.TransactionScope(repo))
             {
+                AddBookForAggtQuery(repo);
+
+                var list = repo.LinqGetIfChildren_Complicated();
+                Assert.IsTrue(list.Count == 10);
+                Assert.IsTrue(list[0].Name == "11");
+            }
+        }
+
+        [TestMethod]
+        public void ORM_LinqQuery_WhereChildren_Complicated_WithPaging()
+        {
+            var repo = RF.Concrete<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                AddBookForAggtQuery(repo);
+
+                var list = repo.LinqGetIfChildren_Complicated(new PagingInfo(3, 2));
+                Assert.IsTrue(list.Count == 2);
+                Assert.IsTrue(list[0].Name == "15");
+                Assert.IsTrue(list[1].Name == "16");
+            }
+        }
+
+        private static void AddBookForAggtQuery(BookRepository repo)
+        {
+            var so = new SectionOwner { Name = "huqf" };
+            RF.Save(so);
+            var category = new BookCategory { Name = "category" };
+            RF.Save(category);
+
+            repo.Save(new Book
+            {
+                Name = "1",//not match
+                BookCategory = category,
+                ChapterList =
+                {
+                    new Chapter
+                    {
+                        Name = "chapterNeed",
+                        SectionList = 
+                        {
+                            new Section { Name = "section need", SectionOwner = so },
+                            new Section { Name = "need section", SectionOwner = so }
+                        }
+                    },
+                    new Chapter { Name = "1.2"}
+                }
+            });
+            repo.Save(new Book
+            {
+                Name = "2",
+                //BookCategory = category,//not match
+                ChapterList =
+                {
+                    new Chapter
+                    {
+                        Name = "chapterNeed",
+                        SectionList = 
+                        {
+                            new Section { Name = "section need", SectionOwner = so },
+                            new Section { Name = "need section", SectionOwner = so }
+                        }
+                    },
+                    new Chapter { Name = "1.2"},
+                    new Chapter { Name = "1.3"},
+                }
+            });
+            repo.Save(new Book
+            {
+                Name = "3",
+                BookCategory = category,
+                ChapterList =
+                {
+                    new Chapter
+                    {
+                        Name = "chapterNeed",
+                        SectionList = 
+                        {
+                            new Section { Name = "section need", SectionOwner = so },
+                            new Section { Name = "need section", SectionOwner = so }
+                        }
+                    },
+                    //new Chapter { Name = "1.2"}//not match
+                }
+            });
+            repo.Save(new Book
+            {
+                Name = "4",
+                BookCategory = category,
+                ChapterList =
+                {
+                    new Chapter
+                    {
+                        Name = "4.1",//not match
+                        SectionList = 
+                        {
+                            new Section { Name = "section need", SectionOwner = so },
+                            new Section { Name = "need section", SectionOwner = so }
+                        }
+                    },
+                    new Chapter { Name = "1.2"},
+                }
+            });
+            repo.Save(new Book
+            {
+                Name = "5",
+                BookCategory = category,
+                ChapterList =
+                {
+                    new Chapter
+                    {
+                        Name = "chapterNeed",
+                        SectionList = 
+                        {
+                            new Section { Name = "section need", SectionOwner = so },
+                            new Section { Name = "section", SectionOwner = so }//not match
+                        }
+                    },
+                    new Chapter { Name = "1.2"},
+                }
+            });
+            repo.Save(new Book
+            {
+                Name = "6",
+                BookCategory = category,
+                ChapterList =
+                {
+                    new Chapter
+                    {
+                        Name = "chapterNeed",
+                        SectionList = 
+                        {
+                            new Section { Name = "section need", SectionOwner = so },
+                            new Section { Name = "need section" }//not match
+                        }
+                    },
+                    new Chapter { Name = "1.2"},
+                }
+            });
+
+            //添加 10 个满足条件的数据。
+            for (int i = 11; i <= 20; i++)
+            {
                 repo.Save(new Book
                 {
-                    Name = "1",//not match
+                    Name = i.ToString(),
+                    BookCategory = category,
                     ChapterList =
                     {
                         new Chapter
@@ -2024,83 +2244,50 @@ namespace RafyUnitTest
                             Name = "chapterNeed",
                             SectionList = 
                             {
-                                new Section { Name = "need" }
-                            }
-                        },
-                        new Chapter { Name = "1.2"}
-                    }
-                });
-                repo.Save(new Book
-                {
-                    Name = "2",
-                    ChapterList =
-                    {
-                        new Chapter
-                        {
-                            Name = "chapterNeed",
-                            SectionList = 
-                            {
-                                new Section { Name = "need" }
-                            }
-                        },
-                        //new Chapter { Name = "1.2"}//not match
-                    }
-                });
-                repo.Save(new Book
-                {
-                    Name = "3",
-                    ChapterList =
-                    {
-                        new Chapter
-                        {
-                            Name = "3.1",//not match
-                            SectionList = 
-                            {
-                                new Section { Name = "need" }
-                            }
-                        },
-                        new Chapter { Name = "1.2"}
-                    }
-                });
-                repo.Save(new Book
-                {
-                    Name = "4",
-                    ChapterList =
-                    {
-                        new Chapter
-                        {
-                            Name = "chapterNeed",
-                            SectionList = 
-                            {
-                                new Section { Name = "section need" },
-                                new Section { Name = "section" }//not match
-                            }
-                        },
-                        new Chapter { Name = "1.2"}
-                    }
-                });
-                repo.Save(new Book
-                {
-                    Name = "5",
-                    ChapterList =
-                    {
-                        new Chapter
-                        {
-                            Name = "chapterNeed",
-                            SectionList = 
-                            {
-                                new Section { Name = "section need" },
-                                new Section { Name = "need section" }
+                                new Section { Name = "section need", SectionOwner = so },
+                                new Section { Name = "need section", SectionOwner = so }
                             }
                         },
                         new Chapter { Name = "1.2"},
                         new Chapter { Name = "1.3"},
                     }
                 });
+            }
+        }
 
-                var list = repo.LinqGetIfChildren_Complicated();
+        [TestMethod]
+        public void ORM_LinqQuery_WhereRefChildrenExists()
+        {
+            var repo = RF.Concrete<FavorateRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var b1 = new Book();
+                var b2 = new Book
+                {
+                    ChapterList =
+                    {
+                        new Chapter { Name = "1.1" },
+                    }
+                };
+                var b3 = new Book
+                {
+                    ChapterList =
+                    {
+                        new Chapter { Name = "1.1" },
+                        new Chapter { Name = "1.2" },
+                    }
+                };
+                RF.Save(b1);
+                RF.Save(b2);
+                RF.Save(b3);
+
+                RF.Save(new Favorate { Book = b1, Name = "1" });
+                RF.Save(new Favorate { Book = b2, Name = "2" });
+                RF.Save(new Favorate { Book = b3, Name = "3" });
+
+                var list = repo.GetByChapterName("1.2");
                 Assert.IsTrue(list.Count == 1);
-                Assert.IsTrue(list[0].Name == "5");
+                Assert.IsTrue(list[0].Name == "3");
             }
         }
 

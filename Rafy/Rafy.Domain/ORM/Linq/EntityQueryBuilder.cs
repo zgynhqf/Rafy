@@ -38,7 +38,7 @@ namespace Rafy.Domain.ORM.Linq
         private IRepositoryInternal _repo;
         private QueryFactory f = QueryFactory.Instance;
 
-        private bool _reverseOperator = false;
+        private bool _reverseWhere = false;
 
         public EntityQueryBuilder(IRepositoryInternal repo)
         {
@@ -49,10 +49,10 @@ namespace Rafy.Domain.ORM.Linq
         /// 是否需要反转查询中的所有条件操作符。
         /// 场景：当转换 Linq 表达式中的 All 方法到 Sql 的 NotExsits 时，需要把内部的条件都转换为反向操作符。
         /// </summary>
-        internal bool ReverseOperator
+        internal bool ReverseWhere
         {
-            get { return _reverseOperator; }
-            set { _reverseOperator = value; }
+            get { return _reverseWhere; }
+            set { _reverseWhere = value; }
         }
 
         internal IQuery BuildQuery(Expression exp)
@@ -166,12 +166,12 @@ namespace Rafy.Domain.ORM.Linq
                     this.Visit(args[0]);
                     break;
                 case LinqConsts.StringMethod_StartWith:
-                    _operator = _hasNot ? PropertyOperator.NotStartWith : PropertyOperator.StartWith;
+                    _operator = _hasNot ? PropertyOperator.NotStartsWith : PropertyOperator.StartsWith;
                     this.Visit(exp.Object);
                     this.Visit(args[0]);
                     break;
                 case LinqConsts.StringMethod_EndWith:
-                    _operator = _hasNot ? PropertyOperator.NotEndWith : PropertyOperator.EndWith;
+                    _operator = _hasNot ? PropertyOperator.NotEndsWith : PropertyOperator.EndsWith;
                     this.Visit(exp.Object);
                     this.Visit(args[0]);
                     break;
@@ -208,7 +208,7 @@ namespace Rafy.Domain.ORM.Linq
                 case LinqConsts.EnumerableMethod_Any:
                 case LinqConsts.EnumerableMethod_All:
                     var subQueryBuilder = new SubEntityQueryBuilder();
-                    var subQueryConstriant = subQueryBuilder.Build(exp, _query);
+                    var subQueryConstriant = subQueryBuilder.Build(exp, _query, this.PropertyFinder);
                     _query.Where = subQueryConstriant;
                     return true;
                 default:
@@ -266,85 +266,29 @@ namespace Rafy.Domain.ORM.Linq
 
         #region 属性访问
 
-        /// <summary>
-        /// 关联操作的最后一个引用属性。
-        /// 用于在访问 A.B.C.Name 时记录 C；在访问完成后，值回归到 null。
-        /// </summary>
-        private IRefEntityProperty _lastJoinRefResult;
-        private ITableSource _lastJoinTable;
+        private PropertyFinder _propertyFinder;
 
-        /// <summary>
-        /// 是否当前正在访问引用对象中的属性。
-        /// 主要用于错误提示，引用属性不能进行对比。
-        /// </summary>
-        private bool _visitRefProperties;
+        private PropertyFinder PropertyFinder
+        {
+            get
+            {
+                if (_propertyFinder == null)
+                {
+                    _propertyFinder = new PropertyFinder(_query, _repo);
+                }
+                return _propertyFinder;
+            }
+        }
 
         protected override Expression VisitMember(MemberExpression m)
         {
-            //只能访问属性
-            var clrProperty = m.Member as PropertyInfo;
-            if (clrProperty == null) throw OperationNotSupported(m.Member);
-            var ownerExp = m.Expression;
-            if (ownerExp == null) throw OperationNotSupported(m.Member);
-
-            //exp 如果是: A 或者 A.B.C，都可以作为属性查询。
-            var nodeType = ownerExp.NodeType;
-            if (nodeType != ExpressionType.Parameter && nodeType != ExpressionType.MemberAccess) throw OperationNotSupported(m.Member);
-
-            //如果是 A.B.C.Name，则先读取 A.B.C，记录最后一个引用实体类型 C；剩下 .Name 给本行后面的代码读取。
-            VisitRefEntity(ownerExp);
-
-            //属性的拥有类型对应的仓库。
-            //获取当前正在查询的实体对应的仓库对象。如果是级联引用表达式，则使用最后一个实体即可。
-            var ownerTable = _query.MainTable;
-            var ownerRepo = _repo;
-            if (_lastJoinRefResult != null)
-            {
-                //如果已经有引用属性在列表中，说明上层使用了 A.B.C.Name 这样的语法。
-                //这时，Name 应该是 C 这个实体的值属性。
-                ownerRepo = RepositoryFactoryHost.Factory.FindByEntity(_lastJoinRefResult.RefEntityType);
-                ownerTable = _lastJoinTable;
-                _lastJoinRefResult = null;
-                _lastJoinTable = null;
-            }
-
-            //查询托管属性
-            var mp = FindProperty(ownerRepo, clrProperty);
-            if (mp == null) throw OperationNotSupported("Linq 查询的属性必须是一个托管属性。");
-            if (mp is IListProperty) throw OperationNotSupported("暂时不支持面向组合子对象的查询。");
-            if (mp is IRefEntityProperty)
-            {
-                //如果是引用属性，说明需要使用关联查询。
-                var refProperty = mp as IRefEntityProperty;
-                var refTable = f.FindOrCreateJoinTable(_query, ownerTable, refProperty);
-
-                //存储到字段中，最后的值属性会使用这个引用属性对应的引用实体类型来查找对应仓库。
-                _lastJoinRefResult = refProperty;
-                _lastJoinTable = refTable;
-                return m;
-            }
+            var pf = this.PropertyFinder;
+            pf.Visit(m);
 
             //访问值属性
-            VisitValueProperty(mp, ownerTable);
+            VisitValueProperty(pf.Property, pf.PropertyOwnerTable);
 
             return m;
-        }
-
-        /// <summary>
-        /// 如果是 A.B.C.Name，则先读取 A.B.C
-        /// </summary>
-        /// <param name="exp"></param>
-        private void VisitRefEntity(Expression exp)
-        {
-            if (exp.NodeType == ExpressionType.MemberAccess)
-            {
-                var oldValue = _visitRefProperties;
-                _visitRefProperties = true;
-
-                this.Visit(exp);
-
-                _visitRefProperties = oldValue;
-            }
         }
 
         #endregion
@@ -377,6 +321,10 @@ namespace Rafy.Domain.ORM.Linq
                 //使用 AndOrConstraint 合并约束的结果。
                 var op = binaryExp.NodeType == ExpressionType.AndAlso ?
                     BinaryOperator.And : BinaryOperator.Or;
+                if (_reverseWhere)
+                {
+                    op = binaryExp.NodeType == ExpressionType.AndAlso ? BinaryOperator.Or : BinaryOperator.And;
+                }
                 _query.Where = f.Binary(left, op, right);
             }
             else
@@ -442,8 +390,8 @@ namespace Rafy.Domain.ORM.Linq
         {
             if (_propertyResult != null && _operator.HasValue)
             {
-                var op =  _operator.Value;
-                if (_reverseOperator) op = PropertyOperatorHelper.Reverse(op);
+                var op = _operator.Value;
+                if (_reverseWhere) op = PropertyOperatorHelper.Reverse(op);
 
                 if (_hasValueResult)
                 {
@@ -462,12 +410,6 @@ namespace Rafy.Domain.ORM.Linq
 
         private void VisitValueProperty(IManagedProperty mp, ITableSource mpOwnerTable)
         {
-            //接下来，是一般属性的处理
-            if (_visitRefProperties)
-            {
-                throw OperationNotSupported(string.Format("不支持使用属性：{0}。这是因为它的拥有者是一个值属性，值属性只支持直接对比。", mp.Name));
-            }
-
             //如果已经记录了条件的属性，那么当前的 mp 就是用于对比的第二个属性。（A.Code = A.Name 中的 Name）
             if (_propertyResult != null)
             {

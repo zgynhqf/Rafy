@@ -96,7 +96,7 @@ namespace Rafy.RBAC
     {
         protected override void AddValidations(IValidationDeclarer rules)
         {
-            rules.AddRule(Org.NameProperty, RequiredRule.Instance);
+            rules.AddRule(Org.NameProperty, new RequiredRule());
         }
 
         protected override void ConfigMeta()

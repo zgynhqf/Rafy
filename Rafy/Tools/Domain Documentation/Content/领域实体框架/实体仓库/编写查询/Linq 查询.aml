@@ -28,18 +28,15 @@ private EntityList DA_GetByCode(string warehouseCode, string nameKeywords, Pagin
     }
 
     //排序
-    q = q.OrderByDescending(w => w.Id);
+    q = q.OrderByDescending(w => w.Name);
 
-    //以指定的分页信息分页
-    q = q.JumpToPage(pagingInfo);
-
-    return this.QueryList(q);
+    return this.QueryList(q, pagingInfo);//以指定的分页信息 pagingInfo 分页
 }]]>
                 </code>
                 <para>上面的代码使用 Linq 查询实现了一个较复杂的查询示例。Linq 查询中可使用属性对比，排序，分页等。</para>
                 <alert class="note">
                     <para>
-                        <codeInline>JumpToPage</codeInline> 是 Rafy 自定义的一个分页方法。详情见：<link xlink:href="ae9a2512-1528-401a-ac4f-502304a7ae03" />
+                        <codeInline>PagingInfo</codeInline> 是 Rafy 中为分布设计的一个类型。详情见：<link xlink:href="ae9a2512-1528-401a-ac4f-502304a7ae03" />
                     </para>
                 </alert>
             </content>
@@ -261,6 +258,35 @@ q = q.Where(e => values.Contains(e.Id));]]>
                                     <code language="cs">
                                         <![CDATA[List<int> values = new List<int> { 1, 2 };
 q = q.Where(e => values.Contains(e.Id));]]>
+                                    </code>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <para>Any</para>
+                                </entry>
+                                <entry>
+                                    <para>Rafy.Domain.EntityList</para>
+                                </entry>
+                                <entry>
+                                    <para><![CDATA[用于判断某个实体的聚合子实体中是否存在一个实体满足某个条件，在使用前，需要使用 Cast<T> 方法把非泛型的 EntityList 转换为具体实体的集合类型 IEnumerable<T>。例如：]]></para>
+                                    <code language="cs">
+                                        <![CDATA[q = q.Where(book => book.ChapterList.Cast<Chapter>().Any(c => c.Name == chapterName));
+q = q.Where(book => book.ChapterList.Concrete().Any(c => c.SectionList.Cast<Section>().Any(s => s.Name.Contains(sectionName))));]]>
+                                    </code>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <para>All</para>
+                                </entry>
+                                <entry>
+                                    <para>Rafy.Domain.EntityList</para>
+                                </entry>
+                                <entry>
+                                    <para><![CDATA[用于判断某个实体的聚合子实体中是否所有实体满足某个条件，在使用前，需要使用 Cast<T> 方法把非泛型的 EntityList 转换为具体实体的集合类型 IEnumerable<T>。例如：]]></para>
+                                    <code language="cs">
+                                        <![CDATA[q = q.Where(book => book.ChapterList.Cast<Chapter>().All(c => c.Name == chapterName));]]>
                                     </code>
                                 </entry>
                             </row>

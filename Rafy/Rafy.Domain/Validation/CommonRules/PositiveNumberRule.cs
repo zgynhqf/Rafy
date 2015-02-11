@@ -25,9 +25,10 @@ namespace Rafy.Domain.Validation
     /// </summary>
     public class PositiveNumberRule : ValidationRule
     {
-        public static readonly PositiveNumberRule Instance = new PositiveNumberRule();
-
-        private PositiveNumberRule() { }
+        /// <summary>
+        /// 设置此属性可以自定义要显示的错误信息。
+        /// </summary>
+        public Func<Entity, string> MessageBuilder { get; set; }
 
         protected override void Validate(Entity entity, RuleArgs e)
         {
@@ -35,7 +36,14 @@ namespace Rafy.Domain.Validation
 
             if (value <= 0)
             {
-                e.BrokenDescription = string.Format("{0} 需要是正数。".Translate(), e.DisplayProperty());
+                if (this.MessageBuilder != null)
+                {
+                    e.BrokenDescription = this.MessageBuilder(entity);
+                }
+                else
+                {
+                    e.BrokenDescription = string.Format("{0} 需要是正数。".Translate(), e.DisplayProperty());
+                }
             }
         }
     }

@@ -112,8 +112,8 @@ namespace Rafy.RBAC
     {
         protected override void AddValidations(IValidationDeclarer rules)
         {
-            rules.AddRule(User.CodeProperty, RequiredRule.Instance);
-            rules.AddRule(User.NameProperty, RequiredRule.Instance);
+            rules.AddRule(User.CodeProperty, new RequiredRule());
+            rules.AddRule(User.NameProperty, new RequiredRule());
             rules.AddRule(User.CodeProperty, new NotDuplicateRule());
         }
 

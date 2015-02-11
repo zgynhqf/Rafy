@@ -41,6 +41,11 @@ namespace Rafy.Domain.Validation
         /// </summary>
         public double Max { get; set; }
 
+        /// <summary>
+        /// 设置此属性可以自定义要显示的错误信息。
+        /// </summary>
+        public Func<Entity, string> MessageBuilder { get; set; }
+
         protected override void Validate(Entity entity, RuleArgs e)
         {
             var value = Convert.ToDouble(entity.GetProperty(e.Property));
@@ -48,14 +53,28 @@ namespace Rafy.Domain.Validation
             var min = this.Min;
             if (value < min)
             {
-                e.BrokenDescription = string.Format("{0} 不能低于 {1}。".Translate(), e.DisplayProperty(), min);
+                if (this.MessageBuilder != null)
+                {
+                    e.BrokenDescription = this.MessageBuilder(entity);
+                }
+                else
+                {
+                    e.BrokenDescription = string.Format("{0} 不能低于 {1}。".Translate(), e.DisplayProperty(), min);
+                }
             }
             else
             {
                 var max = this.Max;
                 if (value > max)
                 {
-                    e.BrokenDescription = string.Format("{0} 不能超过 {1}。".Translate(), e.DisplayProperty(), max);
+                    if (this.MessageBuilder != null)
+                    {
+                        e.BrokenDescription = this.MessageBuilder(entity);
+                    }
+                    else
+                    {
+                        e.BrokenDescription = string.Format("{0} 不能超过 {1}。".Translate(), e.DisplayProperty(), max);
+                    }
                 }
             }
         }

@@ -97,7 +97,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ODT_Filter_startwith()
         {
-            var filter = "Name startwith 'huqf'";
+            var filter = "Name startswith 'huqf'";
 
             var sql = ParseWhere(filter);
 
@@ -108,7 +108,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ODT_Filter_endwith()
         {
-            var filter = "Name endwith 'huqf'";
+            var filter = "Name endswith 'huqf'";
 
             var sql = ParseWhere(filter);
 
@@ -445,10 +445,11 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
         [TestMethod]
         public void ODT_EagerLoad_CascadeAndMulti()
         {
-            var so = new SectionOwner { Name = "SO1" };
-            RF.Save(so);
             using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
             {
+                var so = new SectionOwner { Name = "SO1" };
+                RF.Save(so);
+
                 RF.Save(new Book
                 {
                     Name = "book",

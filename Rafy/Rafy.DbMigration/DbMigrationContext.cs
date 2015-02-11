@@ -41,7 +41,7 @@ namespace Rafy.DbMigration
     ///     配置是否忽略数据丢失。
     /// * 数据库删除、备份、还原
     /// </summary>
-    public abstract class DbMigrationContext : IDisposable
+    public class DbMigrationContext : IDisposable
     {
         #region Fields
 

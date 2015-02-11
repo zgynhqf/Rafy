@@ -37,21 +37,21 @@ namespace Rafy.Data
         /// <summary>
         /// 查找或者根据约定创建连接字符串
         /// </summary>
-        /// <param name="dbSetting"></param>
+        /// <param name="dbSettingName"></param>
         /// <returns></returns>
-        public static DbSetting FindOrCreate(string dbSetting)
+        public static DbSetting FindOrCreate(string dbSettingName)
         {
-            if (dbSetting == null) throw new ArgumentNullException("dbSetting");//可以是空字符串。
+            if (dbSettingName == null) throw new ArgumentNullException("dbSetting");//可以是空字符串。
 
             DbSetting setting = null;
 
-            if (!_generatedSettings.TryGetValue(dbSetting, out setting))
+            if (!_generatedSettings.TryGetValue(dbSettingName, out setting))
             {
                 lock (_generatedSettings)
                 {
-                    if (!_generatedSettings.TryGetValue(dbSetting, out setting))
+                    if (!_generatedSettings.TryGetValue(dbSettingName, out setting))
                     {
-                        var config = ConfigurationManager.ConnectionStrings[dbSetting];
+                        var config = ConfigurationManager.ConnectionStrings[dbSettingName];
                         if (config != null)
                         {
                             setting = new DbSetting
@@ -62,12 +62,12 @@ namespace Rafy.Data
                         }
                         else
                         {
-                            setting = Create(dbSetting);
+                            setting = Create(dbSettingName);
                         }
 
-                        setting.Name = dbSetting;
+                        setting.Name = dbSettingName;
 
-                        _generatedSettings.Add(dbSetting, setting);
+                        _generatedSettings.Add(dbSettingName, setting);
                     }
                 }
             }
@@ -113,7 +113,7 @@ namespace Rafy.Data
 
         private static Dictionary<string, DbSetting> _generatedSettings = new Dictionary<string, DbSetting>();
 
-        private static DbSetting Create(string dbSetting)
+        private static DbSetting Create(string dbSettingName)
         {
             //查找连接字符串时，根据用户的 LocalSqlServer 来查找。
             var local = ConfigurationManager.ConnectionStrings[DbName_LocalServer];
@@ -123,7 +123,7 @@ namespace Rafy.Data
 
                 var newCon = new SqlConnectionStringBuilder();
                 newCon.DataSource = builder.DataSource;
-                newCon.InitialCatalog = dbSetting;
+                newCon.InitialCatalog = dbSettingName;
                 newCon.IntegratedSecurity = builder.IntegratedSecurity;
                 if (!newCon.IntegratedSecurity)
                 {
@@ -140,7 +140,7 @@ namespace Rafy.Data
 
             return new DbSetting
             {
-                ConnectionString = string.Format(@"Data Source={0}.sdf", dbSetting),
+                ConnectionString = string.Format(@"Data Source={0}.sdf", dbSettingName),
                 ProviderName = Provider_SqlCe
             };
 

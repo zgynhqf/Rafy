@@ -79,6 +79,11 @@
     <Compile Include="Entities\BookStore\Chapter.g.cs">
       <DependentUpon>Chapter.cs</DependentUpon>
     </Compile>
+    <Compile Include="Entities\BookStore\Favorate.cs" />
+    <Compile Include="Entities\BookStore\Favorate.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>Favorate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\BookStore\Section.cs" />
     <Compile Include="Entities\BookStore\Section.g.cs">
       <DependentUpon>Section.cs</DependentUpon>

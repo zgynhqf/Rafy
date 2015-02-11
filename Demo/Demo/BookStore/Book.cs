@@ -158,7 +158,7 @@ namespace Demo
         protected override void AddValidations(IValidationDeclarer rules)
         {
             //示例属性验证。
-            rules.AddRule(Book.AuthorProperty, RequiredRule.Instance);
+            rules.AddRule(Book.AuthorProperty, new RequiredRule());
             rules.AddRule(Book.AuthorProperty, new StringLengthRangeRule { Max = 3 });
             rules.AddRule(Book.AmountProperty, new NumberRangeRule { Min = 5, Max = 50 });
             rules.AddRule(Book.PublisherProperty, new RegexMatchRule

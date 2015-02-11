@@ -490,7 +490,7 @@ namespace UT
         }
 
         /// <summary>
-        /// 查找包含任意章节的书籍
+        /// 查找包含任意节名称为 sectionName 的书籍
         /// </summary>
         /// <returns></returns>
         public BookList LinqGetIfChildrenExistsSectionName(string sectionName)
@@ -501,6 +501,24 @@ namespace UT
         {
             var q = this.CreateLinqQuery();
             q = q.Where(book => book.ChapterList.Concrete().Any(c => c.SectionList.Cast<Section>().Any(s => s.Name.Contains(sectionName))));
+            q = q.OrderBy(b => b.Name);
+            return this.QueryList(q);
+        }
+
+        /// <summary>
+        /// 查找包含任意节名称为 sectionName 且同时拥有者为 sectionOwner 的书籍。
+        /// </summary>
+        /// <returns></returns>
+        public BookList LinqGetIfChildrenExistsSectionAndOwner(string category, string sectionName, string sectionOwner)
+        {
+            return this.FetchList(r => r.DA_LinqGetIfChildrenExistsSectionName(category, sectionName, sectionOwner));
+        }
+        private EntityList DA_LinqGetIfChildrenExistsSectionName(string category, string sectionName, string sectionOwner)
+        {
+            var q = this.CreateLinqQuery();
+            q = q.Where(book => book.BookCategory.Name == category && book.ChapterList.Concrete().Any(
+                c => c.SectionList.Cast<Section>().Any(s => s.Name.Contains(sectionName) && s.SectionOwner.Name == sectionOwner)
+                ));
             q = q.OrderBy(b => b.Name);
             return this.QueryList(q);
         }
@@ -526,17 +544,17 @@ namespace UT
         /// 查找包含任意章节的书籍
         /// </summary>
         /// <returns></returns>
-        public BookList LinqGetIfChildren_Complicated()
+        public BookList LinqGetIfChildren_Complicated(PagingInfo pi = null)
         {
-            return this.FetchList(r => r.DA_LinqGetIfChildren_Complicated());
+            return this.FetchList(r => r.DA_LinqGetIfChildren_Complicated(pi));
         }
-        private EntityList DA_LinqGetIfChildren_Complicated()
+        private EntityList DA_LinqGetIfChildren_Complicated(PagingInfo pi)
         {
             var q = this.CreateLinqQuery();
-            q = q.Where(book => book.Name != "1" && book.ChapterList.Concrete().Any(c => c.Name == "1.2"));
-            q = q.Where(b => b.ChapterList.Concrete().Any(c => c.Name == "chapterNeed" && c.SectionList.Cast<Section>().All(s => s.Name.Contains("need"))));
+            q = q.Where(book => book.Name != "1" && book.BookCategory.Name == "category" && book.ChapterList.Concrete().Any(c => c.Name == "1.2"));
+            q = q.Where(b => b.ChapterList.Concrete().Any(c => c.Name == "chapterNeed" && c.SectionList.Cast<Section>().All(s => s.Name.Contains("need") && s.SectionOwnerId != null && s.SectionOwner.Name == "huqf")));
             q = q.OrderBy(b => b.Name);
-            return this.QueryList(q);
+            return this.QueryList(q, pi);
         }
     }
 

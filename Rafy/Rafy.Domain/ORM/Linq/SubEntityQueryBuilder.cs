@@ -27,6 +27,7 @@ namespace Rafy.Domain.ORM.Linq
     {
         private QueryFactory f = QueryFactory.Instance;
         private IQuery _parentQuery;
+        private PropertyFinder _parentPropertyFinder;
         private IQuery _query;
         private bool _isAny;
 
@@ -54,9 +55,11 @@ namespace Rafy.Domain.ORM.Linq
         /// </summary>
         /// <param name="exp">需要解析的表达式</param>
         /// <param name="parentQuery"></param>
-        internal IConstraint Build(Expression exp, IQuery parentQuery)
+        /// <param name="propertyFinder">The property finder.</param>
+        internal IConstraint Build(Expression exp, IQuery parentQuery, PropertyFinder propertyFinder)
         {
             _parentQuery = parentQuery;
+            _parentPropertyFinder = propertyFinder;
 
             this.Visit(exp);
 
@@ -72,14 +75,12 @@ namespace Rafy.Domain.ORM.Linq
         {
             var method = exp.Method;
             _isAny = method.Name == LinqConsts.EnumerableMethod_Any;
-            var pkTable = _parentQuery.MainTable;
-            var ownerRepo = pkTable.EntityRepository;//Book
 
             //先访问表达式 book.ChapterList.Cast<Chapter>()，获取列表属性。
             var invoker = exp.Arguments[0];
-            var lpFinder = new ListPropertyFinder();
-            lpFinder.Visit(invoker);
-            var listProperty = EntityQueryBuilder.FindProperty(ownerRepo, lpFinder.ListProperty) as IListProperty;
+            _parentPropertyFinder.Visit(invoker);
+            var listPropertyTable = _parentPropertyFinder.PropertyOwnerTable;
+            var listProperty = _parentPropertyFinder.Property as IListProperty;
             if (listProperty == null) throw EntityQueryBuilder.OperationNotSupported(invoker);
 
             //为该列表对应的实体创建表对象、查询对象。
@@ -97,46 +98,17 @@ namespace Rafy.Domain.ORM.Linq
             if (exp.Arguments.Count == 2)
             {
                 var queryBuilder = new EntityQueryBuilder(childRepo);
-                queryBuilder.ReverseOperator = !_isAny;//如果是 All，则需要反转里面的所有操作符。
+                queryBuilder.ReverseWhere = !_isAny;//如果是 All，则需要反转里面的所有操作符。
                 queryBuilder.BuildQuery(exp.Arguments[1], _query);
             }
 
             //添加子表查询与父实体的关系条件：WHERE c.BookId = b.Id
             var parentProperty = childRepo.FindParentPropertyInfo(true);
             var parentRefIdProperty = (parentProperty.ManagedProperty as IRefProperty).RefIdProperty;
-            var toParentConstraint = f.Constraint(childTable.Column(parentRefIdProperty), pkTable.IdColumn);
+            var toParentConstraint = f.Constraint(childTable.Column(parentRefIdProperty), listPropertyTable.IdColumn);
             _query.Where = f.And(toParentConstraint, _query.Where);
 
             return exp;
-        }
-
-        private class ListPropertyFinder : ExpressionVisitor
-        {
-            internal PropertyInfo ListProperty;
-
-            /// <summary>
-            /// <![CDATA[
-            /// 负责解析：
-            /// book.ChapterList.Cast<Chapter>()
-            /// 获取 book 的类型与表、获取 ChapterList 对应的列表
-            /// ]]>
-            /// </summary>
-            /// <param name="m"></param>
-            /// <returns></returns>
-            protected override Expression VisitMember(MemberExpression m)
-            {
-                //只能访问属性
-                var clrProperty = m.Member as PropertyInfo;
-                if (clrProperty == null) throw EntityQueryBuilder.OperationNotSupported(m.Member);
-                var ownerExp = m.Expression;
-                if (ownerExp == null) throw EntityQueryBuilder.OperationNotSupported(m.Member);
-                if (ownerExp.NodeType != ExpressionType.Parameter)
-                    throw EntityQueryBuilder.OperationNotSupported(string.Format("只支持直接对表的直接聚合子表进行查询，不支持这个表达式：{0}", ownerExp));
-
-                ListProperty = clrProperty;
-
-                return m;
-            }
         }
     }
 }

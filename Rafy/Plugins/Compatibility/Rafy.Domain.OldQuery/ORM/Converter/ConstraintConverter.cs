@@ -83,10 +83,10 @@ namespace Rafy.Domain.ORM.Converter
                     op = PropertyOperator.Contains;
                     break;
                 case PropertyCompareOperator.StartWith:
-                    op = PropertyOperator.StartWith;
+                    op = PropertyOperator.StartsWith;
                     break;
                 case PropertyCompareOperator.EndWith:
-                    op = PropertyOperator.EndWith;
+                    op = PropertyOperator.EndsWith;
                     break;
                 case PropertyCompareOperator.In:
                     op = PropertyOperator.In;

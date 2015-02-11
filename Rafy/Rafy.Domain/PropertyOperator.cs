@@ -35,10 +35,10 @@ namespace Rafy.Domain
         NotLike = SqlColumnConstraintOperator.NotLike,
         Contains = SqlColumnConstraintOperator.Contains,
         NotContains = SqlColumnConstraintOperator.NotContains,
-        StartWith = SqlColumnConstraintOperator.StartWith,
-        NotStartWith = SqlColumnConstraintOperator.NotStartWith,
-        EndWith = SqlColumnConstraintOperator.EndWith,
-        NotEndWith = SqlColumnConstraintOperator.NotEndWith,
+        StartsWith = SqlColumnConstraintOperator.StartsWith,
+        NotStartsWith = SqlColumnConstraintOperator.NotStartsWith,
+        EndsWith = SqlColumnConstraintOperator.EndsWith,
+        NotEndsWith = SqlColumnConstraintOperator.NotEndsWith,
 
         In = SqlColumnConstraintOperator.In,
         NotIn = SqlColumnConstraintOperator.NotIn,
@@ -70,14 +70,14 @@ namespace Rafy.Domain
                     return PropertyOperator.NotContains;
                 case PropertyOperator.NotContains:
                     return PropertyOperator.Contains;
-                case PropertyOperator.StartWith:
-                    return PropertyOperator.NotStartWith;
-                case PropertyOperator.NotStartWith:
-                    return PropertyOperator.StartWith;
-                case PropertyOperator.EndWith:
-                    return PropertyOperator.NotEndWith;
-                case PropertyOperator.NotEndWith:
-                    return PropertyOperator.EndWith;
+                case PropertyOperator.StartsWith:
+                    return PropertyOperator.NotStartsWith;
+                case PropertyOperator.NotStartsWith:
+                    return PropertyOperator.StartsWith;
+                case PropertyOperator.EndsWith:
+                    return PropertyOperator.NotEndsWith;
+                case PropertyOperator.NotEndsWith:
+                    return PropertyOperator.EndsWith;
                 case PropertyOperator.In:
                     return PropertyOperator.NotIn;
                 case PropertyOperator.NotIn:

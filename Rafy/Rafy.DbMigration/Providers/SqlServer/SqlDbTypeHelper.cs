@@ -35,7 +35,7 @@ namespace Rafy.DbMigration.SqlServer
                 case DbType.String:
                 case DbType.AnsiString:
                     if (string.IsNullOrEmpty(length)) { length = "MAX"; }
-                    return "NVARCHAR(" + length + ") COLLATE Chinese_PRC_CS_AS";//需要大小写区分
+                    return "NVARCHAR(" + length + ")";
                 case DbType.Int32:
                     return "INT";
                 case DbType.Int64:
