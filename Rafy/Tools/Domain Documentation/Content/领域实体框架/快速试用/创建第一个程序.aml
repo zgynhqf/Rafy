@@ -88,11 +88,11 @@
                                             <literal>/Entities/JXCEntity.cs</literal> ：将作为 JXC 领域空间下所有实体类的基类。参见：<link xlink:href="e9998e68-31e8-47d6-9e28-829aade5044e" />。
                                         </para>
                                     </listItem>
-                                    <listItem>
+                                    <!--<listItem>
                                         <para>
                                             <literal>/Services/</literal> 文件夹：用于存放所有领域服务类。参见：<link xlink:href="d7551c01-4f62-4e6b-8fd7-4de371df6bdf" />。
                                         </para>
-                                    </listItem>
+                                    </listItem>-->
                                     <listItem>
                                         <para>
                                             <literal>/JXCPlugin.cs</literal> ：领域插件主文件。参见：<link xlink:href="15c790a6-8f5e-44aa-b8c3-74a955004a1e" />。
@@ -102,21 +102,7 @@
                                 <para>编译整个解决方案，提示编译成功。</para>
                             </content>
                         </step>
-                        <step>
-                            <content>
-                                <para>添加程序集引用</para>
-                                <para>使用 NuGet 来添加 Rafy 程序集的引用，如下图：</para>
-                                <mediaLink>
-                                    <image xlink:href="第一个程序09"/>
-                                </mediaLink>
-                                <para>在 NuGet 中搜索 “Rafy”，安装第一个 “Rafy.Domain” 包即可。</para>
-                            </content>
-                        </step>
                     </steps>
-                    <!--<conclusion>
-                        <content>
-                        </content>
-                    </conclusion>-->
                 </procedure>
             </content>
         </section>
@@ -151,29 +137,27 @@
                         </step>
                         <step>
                             <content>
-                                <para>
-                                    在打开的 <literal>Warehouse.cs</literal> 代码编辑器中，找到并展开 <literal>一般属性</literal> 代码区域。可以看到，其中已经编写了名称为 <legacyBold>Name</legacyBold> 的属性。
-                                </para>
-                            </content>
-                        </step>
-                        <step>
-                            <content>
                                 <para>在实体中添加一般属性</para>
                                 <para>
-                                    在 <legacyBold>Name</legacyBold> 属性的后面，输入 <legacyBold>RafyP</legacyBold>，VisualStudio 会立刻显示以 RafyP 开头的代码段（相关内容，参见：<link xlink:href="6b3e8163-8516-4065-91f5-194491334343" />。）。如图：
+                                    在打开的 <literal>Warehouse.cs</literal> 代码编辑器中，找到并展开 <literal>一般属性</literal> 代码区域。
+                                    在这个区域块中，输入 <legacyBold>RafyP</legacyBold>，VisualStudio 会立刻显示以 RafyP 开头的代码段（相关内容，参见：<link xlink:href="6b3e8163-8516-4065-91f5-194491334343" />。）。
+                                    如下图：
                                 </para>
                                 <mediaLink>
                                     <image xlink:href="第一个程序06"/>
                                 </mediaLink>
                                 <para>
-                                    选择 RafyProperty，并按下 Tab 键。在生成的代码中录入类型为 <legacyBold>string</legacyBold>、名称为 <legacyBold>Code</legacyBold> 的属性。这时，会生成以下代码：
+                                    选择 RafyProperty，并按下 Tab 键。在生成的代码中录入类型为 <legacyBold>string</legacyBold>、名称为 <legacyBold>Name</legacyBold> 的属性。这时，会生成以下代码：
                                 </para>
                                 <code language="csharp">
-                                    <![CDATA[public static readonly Property<string> CodeProperty = P<Warehouse>.Register(e => e.Code);
-public string Code
+                                    <![CDATA[public static readonly Property<string> NameProperty = P<Warehouse>.Register(e => e.Name);
+/// <summary>
+/// 名称
+/// </summary>
+public string Name
 {
-    get { return this.GetProperty(CodeProperty); }
-    set { this.SetProperty(CodeProperty, value); }
+    get { return this.GetProperty(NameProperty); }
+    set { this.SetProperty(NameProperty, value); }
 }]]>
                                 </code>
                             </content>
@@ -240,15 +224,15 @@ public string Code
                                 </list>
                             </content>
                         </step>
-                        <step>
+                        <!--<step>
                             <content>
                                 <para>修正 Rafy 程序集引用</para>
                                 <para>与实体程序集相同，使用 NuGet 来引用 Rafy.Domain 包。</para>
                             </content>
-                        </step>
+                        </step>-->
                         <step>
                             <content>
-                                <para>继续在 ConsoleApp 项目中添加 JXC 实体项目的引用。</para>
+                                <para>在 ConsoleApp 项目中添加 JXC 实体项目的引用。</para>
                             </content>
                         </step>
                         <step>
@@ -306,7 +290,9 @@ foreach (var item in list)
                             <content>
                                 <para>查看生成的数据库</para>
                                 <para>Rafy 内置了数据库的同步功能，所以在整个研发过程中，可以不需要进行任何数据库的开发。</para>
-                                <para>打开 /ConsoleApp/bin/Debug/Data/ 目录，可以看到已经生成了一个 JXC.sdf 文件，这是一个 SQLCE 4.0 的数据库文件。有关数据库生成的相关内容，参见：<link xlink:href="b40cd779-ec8a-469d-82f5-bd99128561c4" />。</para>
+                                <para>打开 /ConsoleApp/bin/Debug/Data/ 目录，可以看到已经生成了一个 JXC.sdf 文件，这是一个 SQLCE 4.0 的数据库文件。</para>
+                                <para>有关数据库生成的相关内容，参见：<link xlink:href="b40cd779-ec8a-469d-82f5-bd99128561c4" />。</para>
+                                <para>关于如何切换为使用 Sql Server 的相关内容，参见：<link xlink:href="e62ba2ed-ba69-46d8-8f23-6111c25215f0" />。</para>
                             </content>
                         </step>
                     </steps>

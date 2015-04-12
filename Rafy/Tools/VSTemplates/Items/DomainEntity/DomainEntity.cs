@@ -34,7 +34,7 @@ namespace $domainNamespace$
         #endregion
 
         #region 引用属性
-        $parentRefProperty$
+        $refProperties$
         #endregion
 
         #region 组合子属性
@@ -42,14 +42,7 @@ namespace $domainNamespace$
         #endregion
 
         #region 一般属性
-
-        public static readonly Property<string> NameProperty = P<$domainEntityName$>.Register(e => e.Name);
-        public string Name
-        {
-            get { return this.GetProperty(NameProperty); }
-            set { this.SetProperty(NameProperty, value); }
-        }
-
+        $normalProperties$
         #endregion
 
         #region 只读属性
@@ -74,8 +67,7 @@ namespace $domainNamespace$
         /// </summary>
         protected override void ConfigMeta()
         {
-            //配置实体的所有属性都映射到数据表中。
-            Meta.MapTable().MapAllProperties();
+            $tableConfig$$columnConfig$
         }$viewConfiguration$
     }
 }

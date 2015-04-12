@@ -24,6 +24,7 @@ using Rafy.MetaModel.View;
 using Rafy.ManagedProperty;
 using System.Security.Permissions;
 using System.Runtime.Serialization;
+using Rafy.Domain.ORM;
 
 namespace Rafy.DevTools
 {
@@ -90,7 +91,7 @@ namespace Rafy.DevTools
     }
 
     [DataProviderFor(typeof(TestDocumentRepository))]
-    public partial class TestDocumentDataProvider : RepositoryDataProvider
+    public partial class TestDocumentDataProvider : RdbDataProvider
     {
         protected override string ConnectionStringSettingName
         {

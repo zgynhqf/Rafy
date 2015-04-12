@@ -181,25 +181,14 @@ namespace Rafy.Domain.ORM
         /// <returns></returns>
         public static bool IsNotEmpty(object value)
         {
-            bool notNull = false;
-
-            if (value is string)
-            {
-                notNull = !string.IsNullOrEmpty(value as string);
-            }
-            else if (value != null)
-            {
-                notNull = true;
-            }
-
-            return notNull;
+            return DomainHelper.IsNotEmpty(value);
         }
 
         #endregion
 
         #region 添加条件
 
-        private Dictionary<Type, DbTable> _tablesCache = new Dictionary<Type, DbTable>();
+        private Dictionary<Type, RdbTable> _tablesCache = new Dictionary<Type, RdbTable>();
 
         private bool _hasWhere = false;
 
@@ -473,7 +462,7 @@ namespace Rafy.Domain.ORM
         /// <param name="property">The property.</param>
         /// <param name="propertyOwner">The property owner.</param>
         /// <returns></returns>
-        private DbTable GetDbTable(IManagedProperty property, Type propertyOwner)
+        private RdbTable GetDbTable(IManagedProperty property, Type propertyOwner)
         {
             return GetPropertyTable(property, propertyOwner, this._tablesCache);
         }
@@ -529,9 +518,9 @@ namespace Rafy.Domain.ORM
         /// <param name="propertyOwner"></param>
         /// <param name="tablesCache"></param>
         /// <returns></returns>
-        internal static DbTable GetPropertyTable(IManagedProperty property, Type propertyOwner, Dictionary<Type, DbTable> tablesCache)
+        internal static RdbTable GetPropertyTable(IManagedProperty property, Type propertyOwner, Dictionary<Type, RdbTable> tablesCache)
         {
-            DbTable result = null;
+            RdbTable result = null;
 
             if (propertyOwner == null) propertyOwner = property.OwnerType;
 
@@ -539,7 +528,7 @@ namespace Rafy.Domain.ORM
             {
                 if (!propertyOwner.IsAbstract)
                 {
-                    result = DbTableFinder.TableFor(propertyOwner);
+                    result = RdbTableFinder.TableFor(propertyOwner);
                 }
 
                 if (result == null)

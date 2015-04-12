@@ -374,7 +374,7 @@ namespace Rafy.Domain
         /// </summary>
         public EntityList ParentList
         {
-            get { return (this as IDomainComponent).Parent as EntityList; }
+            get { return _parent as EntityList; }
         }
 
         [NonSerialized]

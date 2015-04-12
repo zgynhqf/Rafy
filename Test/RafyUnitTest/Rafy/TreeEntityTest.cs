@@ -593,7 +593,7 @@ namespace RafyUnitTest
         /// WCF 正反序列化后，数据对比正确。
         /// </summary>
         [TestMethod]
-        public void ___TET_Serialization_ByWCF()
+        public void zzzTET_Serialization_ByWCF()
         {
         }
 
@@ -601,7 +601,7 @@ namespace RafyUnitTest
         /// Web 正反序列化后，数据对比正确。
         /// </summary>
         [TestMethod]
-        public void ___TET_Serialization_ByWeb()
+        public void zzzTET_Serialization_ByWeb()
         {
         }
 
@@ -931,7 +931,7 @@ namespace RafyUnitTest
         /// 使用 EntityContext 后，再次查询树时，应该查出同一棵树。
         /// </summary>
         [TestMethod]
-        public void ___TET_Query_EntityContext()
+        public void zzzTET_Query_EntityContext()
         {
         }
 

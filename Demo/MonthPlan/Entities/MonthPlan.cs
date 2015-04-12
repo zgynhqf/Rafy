@@ -218,21 +218,25 @@ namespace MP
     {
         protected MonthPlanRepository() { }
 
-        protected override void OnQuerying(EntityQueryArgs args)
+        [DataProviderFor(typeof(MonthPlanRepository))]
+        private class MonthPlanRepositoryDataProvider : RdbDataProvider
         {
-            var query = args.Query;
-            query.OrderBy.Add(query.MainTable.Column(MonthPlan.MonthProperty), OrderDirection.Descending);
+            protected override void OnQuerying(EntityQueryArgs args)
+            {
+                var query = args.Query;
+                query.OrderBy.Add(query.MainTable.Column(MonthPlan.MonthProperty), OrderDirection.Descending);
 
-            base.OnQuerying(args);
+                base.OnQuerying(args);
+            }
         }
     }
 
     [DataProviderFor(typeof(MonthPlanRepository))]
-    public partial class MonthPlanDataProvider : RepositoryDataProvider
+    public partial class MonthPlanDataProvider : RdbDataProvider
     {
-        protected override bool EnableDeletingChildrenInMemory
+        public MonthPlanDataProvider()
         {
-            get { return true; }
+            this.DataSaver.EnableDeletingChildrenInMemory = true;
         }
     }
 

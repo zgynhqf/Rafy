@@ -10,15 +10,46 @@
  * 
 *******************************************************/
 
-2.36.2534
+2.37.2600
+    ★★公布、★重要、！修改接口、重构
+        重构实体框架中的数据层，完全解耦仓库与关系数据层的实现代码，为 MongoDB、EF 等第三方实现做准备。
+            解除 EntityRepositoryQueryBase 对 EntityRepository 的直接耦合。
+            IRepositoryInternal 不应该引用 RdbDataProvider。
+                EntityList 中不能使用 IRepositoryInternal.RdbDataProvider。
+                IQuery 接口体系需要与 DbTable 体系解除耦合。
+                    DbTable 体系需要分为运行时元数据信息，以及执行逻辑。（IPersistanceTableInfo）
+            EntityRepository 不能引用 RdbDataProvider。
+                添加新的 DataProvider 基类。
+                    添加 DataSaver、DataQueryer、RedundanciesUpdater 几大类型。子类要重写保存、查询时，必须从这两个类继承。
+                    RdbDataProvider 继承自 DataProvider。提取与关系数据库无关的代码到 DataProvider 中。同时，添加 RdbDataSaver、RdbDataQueryer、RdbRedundanciesUpdater。
+                IDataQueryer 不需要支持 FormattedSql。
+            ------------------------------ todo ------------------------------
+            修改 DataProvider Code Snippets
+            Rafy.Domain 命令空间规划。
+    内部修改
+        decimal 类型默认使用 2 个小数点。
+
+2.36.2555
+    添加接口
+        EntityList 添加 MovingItems 方法。
+    添加功能
+        支持在 Linq 查询中直接对 Boolean 类型属性进行判断，如 e=>e.IsDefault 或 e=>e.!IsDefault。
+        OData 支持使用空值 NULL 进行判断。
+    BUG修复
+        FocusTrackerAdorner 的空引用 BUG。
+        EntityRepository.FetchBy 方法不能被重写。
+        MemoPropertyEditor 自动折行。
+
+2.36.2544
     ★★公布、添加功能
         支持在 Linq 语法中，使用聚合子的条件表达式来查询聚合父实体。
         （意义：1.Linq 查询已完整，可以处理所有的查询了。2.复杂查询，不再必须使用关系数据库查询 API，而导致无法使用非关系数据库。）
             支持 Any 表达式：q = q.Where(book => book.ChapterList.Cast<Chapter>().Any(c => c.Name == chapterName));
-            支持 All 表达式。
+            支持 All 表达式，并支持 All 中嵌套 All/Any。
             支持嵌套的 Any 表达式：q = q.Where(book => book.ChapterList.Concrete().Any(c => c.SectionList.Cast<Section>().Any(s => s.Name.Contains(sectionName))));
             完成最复杂的查询，该查询同时包含：聚合属性的Any、All、嵌套、引用属性、分页。
             支持使用引用实体的聚合子进行查询。
+            Linq 中使用可空引用实体的属性来进行判断时，在 SQL 中强制自动生成该列不为空的查询条件。
     添加接口
         PropertyOperator 添加字符串匹配的反向操作符：NotLike、NotContains、NotStartWith、NotEndWith。
         OData 也支持这几个操作符。

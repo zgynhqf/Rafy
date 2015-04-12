@@ -93,7 +93,12 @@ namespace VSTemplates.Wizards
             _replacementsDictionary.Add("$entityAttributes$", entityAttributes);
             _replacementsDictionary.Add("$domainEntityName$", _domainEntityName);
             _replacementsDictionary.Add("$domainBaseEntityName$", _domainBaseEntityName);
-            _replacementsDictionary.Add("$concreteNew$", string.Empty);//这个替换字符由自动生成的命令使用，这里不使用。
+            _replacementsDictionary.Add("$tableConfig$", @"//配置实体的所有属性都映射到数据表中。
+            Meta.MapTable().MapAllProperties();");
+            //以下替换字符，由自动生成的命令使用，这里不使用。
+            _replacementsDictionary.Add("$normalProperties$", string.Empty);
+            _replacementsDictionary.Add("$concreteNew$", string.Empty);
+            _replacementsDictionary.Add("$columnConfig$", string.Empty);
         }
 
         private void RenderRepository(bool hasRepository, string domainEntityLabel)
@@ -102,24 +107,8 @@ namespace VSTemplates.Wizards
             var repositoryAutoCode = string.Empty;
             if (hasRepository)
             {
-                repositoryCode = @"
-
-    /// <summary>
-    /// $domainEntityLabel$ 仓库类。
-    /// 负责 $domainEntityLabel$ 类的查询、保存。
-    /// </summary>
-    public partial class $domainEntityName$Repository : $domainBaseEntityName$Repository
-    {
-        /// <summary>
-        /// 单例模式，外界不可以直接构造本对象。
-        /// </summary>
-        protected $domainEntityName$Repository() { }
-    }"
-                    .Replace("$domainEntityLabel$", domainEntityLabel)
-                    .Replace("$domainEntityName$", _domainEntityName)
-                    .Replace("$domainBaseEntityName$", _domainBaseEntityName);
-
-                repositoryAutoCode = ItemCodeTemplate.GetRepositoryCoreCode(_domainEntityName);
+                repositoryCode = ItemCodeTemplate.GetRepositoryCodeInEntityFile(_domainEntityName, domainEntityLabel, _domainBaseEntityName);
+                repositoryAutoCode = ItemCodeTemplate.GetRepositoryFileCoreAutoCode(_domainEntityName);
             }
             _replacementsDictionary.Add("$repositoryCode$", repositoryCode);
             _replacementsDictionary.Add("$repositoryAutoCode$", repositoryAutoCode);
@@ -128,23 +117,9 @@ namespace VSTemplates.Wizards
         private void RenderViewConfiguration(bool isConfigView, string domainEntityLabel)
         {
             var viewConfiguration = string.Empty;
-
             if (isConfigView)
             {
-                var template = @"
-
-        protected override void ConfigView()
-        {
-            View.DomainName(""$domainEntityLabel$"").HasDelegate($domainEntityName$.NameProperty);
-
-            using (View.OrderProperties())
-            {
-                View.Property($domainEntityName$.NameProperty).HasLabel(""名称"").ShowIn(ShowInWhere.All);
-            }
-        }";
-                viewConfiguration = template
-                    .Replace("$domainEntityLabel$", domainEntityLabel)
-                    .Replace("$domainEntityName$", _domainEntityName);
+                viewConfiguration = ItemCodeTemplate.GetViewConfigurationCode(domainEntityLabel, _domainEntityName);
             }
             _replacementsDictionary.Add("$viewConfiguration$", viewConfiguration);
         }
@@ -154,26 +129,11 @@ namespace VSTemplates.Wizards
             var parentRefPropertyCode = string.Empty;
             if (_isChild)
             {
-                var template = @"
-        public static readonly IRefIdProperty $parentEntityName$IdProperty =
-            P<$domainEntityName$>.RegisterRefId(e => e.$parentEntityName$Id, ReferenceType.Parent);
-        public $Key$ $parentEntityName$Id
-        {
-            get { return ($Key$)this.GetRefId($parentEntityName$IdProperty); }
-            set { this.SetRefId($parentEntityName$IdProperty, value); }
-        }
-        public static readonly RefEntityProperty<$parentEntityName$> $parentEntityName$Property =
-            P<$domainEntityName$>.RegisterRef(e => e.$parentEntityName$, $parentEntityName$IdProperty);
-        public $parentEntityName$ $parentEntityName$
-        {
-            get { return this.GetRefEntity($parentEntityName$Property); }
-            set { this.SetRefEntity($parentEntityName$Property, value); }
-        }
-";
-                parentRefPropertyCode = template.Replace("$parentEntityName$", _parentEntityName)
-                    .Replace("$Key$", entityKeyType);
+                parentRefPropertyCode = ItemCodeTemplate.GetRefPropertyCode(
+                    _domainEntityName, _parentEntityName, _parentEntityName, entityKeyType, true, true
+                    );
             }
-            _replacementsDictionary.Add("$parentRefProperty$", parentRefPropertyCode);
+            _replacementsDictionary.Add("$refProperties$", parentRefPropertyCode);
         }
 
         #region 重写基类属性
@@ -235,16 +195,7 @@ namespace VSTemplates.Wizards
                 var found = textSelection.FindText("#region 子属性") || textSelection.FindText("#region 组合子属性");
                 if (found)
                 {
-                    var template = @"#region 组合子属性
-
-        public static readonly ListProperty<$domainEntityName$List> $domainEntityName$ListProperty = P<$parentEntityName$>.RegisterList(e => e.$domainEntityName$List);
-        public $domainEntityName$List $domainEntityName$List
-        {
-            get { return this.GetLazyList($domainEntityName$ListProperty); }
-        }";
-
-                    var childrenPropertyCode = template.Replace("$domainEntityName$", _domainEntityName)
-                        .Replace("$parentEntityName$", _parentEntityName);
+                    var childrenPropertyCode = @"#region 组合子属性" + ItemCodeTemplate.GetChildrenPropertyCode(_parentEntityName, _domainEntityName);
                     textSelection.Insert(childrenPropertyCode);
                 }
             }

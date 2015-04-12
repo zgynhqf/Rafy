@@ -99,25 +99,37 @@ namespace Rafy.MultiLanguages
     }
 
     [DataProviderFor(typeof(DevLanguageItemRepository))]
-    public partial class DevLanguageItemDataProvider : RepositoryDataProvider
+    public partial class DevLanguageItemDataProvider : RdbDataProvider
     {
-        protected override void OnQuerying(EntityQueryArgs args)
+        public DevLanguageItemDataProvider()
         {
-            var query = args.Query;
-            query.OrderBy.Add(query.MainTable.Column(DevLanguageItem.ContentProperty));
-
-            base.OnQuerying(args);
+            this.DataSaver = new DevLanguageItemSaver();
+            this.DataQueryer = new DevLanguageItemQueryer();
         }
 
-        protected override void Submit(SubmitArgs e)
+        private class DevLanguageItemQueryer : RdbDataQueryer
         {
-            if (e.Action == SubmitAction.Delete)
+            protected override void OnQuerying(EntityQueryArgs args)
             {
-                //在删除前需要删除所有语言中的映射项。
-                this.DeleteRefInDb(e.Entity, MappingInfo.DevLanguageItemProperty);
-            }
+                var query = args.Query;
+                query.OrderBy.Add(query.MainTable.Column(DevLanguageItem.ContentProperty));
 
-            base.Submit(e);
+                base.OnQuerying(args);
+            }
+        }
+
+        private class DevLanguageItemSaver : RdbDataSaver
+        {
+            protected override void Submit(SubmitArgs e)
+            {
+                if (e.Action == SubmitAction.Delete)
+                {
+                    //在删除前需要删除所有语言中的映射项。
+                    this.DeleteRef(e.Entity, MappingInfo.DevLanguageItemProperty);
+                }
+
+                base.Submit(e);
+            }
         }
     }
 

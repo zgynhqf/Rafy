@@ -16,9 +16,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Rafy;
+using Rafy.Data;
+using Rafy.Domain.ORM;
 using Rafy.ManagedProperty;
 
-namespace Rafy.Domain
+namespace Rafy.Domain.ORM
 {
     /// <summary>
     /// 本地实体的仓库基类。
@@ -91,15 +93,24 @@ namespace Rafy.Domain
         {
             base.NotifyLoadedIfMemory(entity);
 
-            this.DataProvider.InsertInternal(entity);
+            (this.DataProvider as MemoryRepositoryDataProvider).Saver.InsertInternal(entity);
         }
 
         public abstract class MemoryRepositoryDataProvider : RepositoryDataProvider
         {
+            public MemoryRepositoryDataProvider()
+            {
+                this.Saver = new MemorySaver();
+
+                this.DataSaver = this.Saver;
+            }
+
             private MemoryEntityRepository _Repository
             {
                 get { return base.Repository as MemoryEntityRepository; }
             }
+
+            internal MemorySaver Saver { get; private set; }
 
             /// <summary>
             /// 当前已经生成 Id
@@ -138,62 +149,6 @@ namespace Rafy.Domain
                 return _Repository.GetRealKey(entity);
             }
 
-            #region 重写数据访问方法
-
-            protected override void Submit(SubmitArgs e)
-            {
-                EnsureStore();
-
-                base.Submit(e);
-            }
-
-            internal void InsertInternal(Entity entity)
-            {
-                this.Insert(entity);
-            }
-
-            protected override void Insert(Entity entity)
-            {
-                EnsureStore();
-
-                string key = this.GetRealKey(entity);
-
-                //在生成 Id 时，为某个模型生成临时使用的本地 Id。
-                if (!entity.HasId)
-                {
-                    var found = this.FindByRealKey(key);
-                    if (found != null)
-                    {
-                        //如果这个实体已经存在于内存中，则更新新对象的 Id，并在最后把新对象的数据存储起来即可。
-                        entity.LoadProperty(Entity.IdProperty, found.Id);
-                    }
-                    else
-                    {
-                        var newId = entity.KeyProvider.NewLocalId();
-                        entity.LoadProperty(Entity.IdProperty, newId);
-                    }
-                }
-
-                //有些实体并不一定通过 CDU 接口保存到 _memoryRows 中，而是在查询时临时生成。
-                //这时，也需要把这些实体都加入到 _memoryRows 中。
-                _memoryRows[key] = ToRow(entity);
-            }
-
-            protected override void Update(Entity entity)
-            {
-                entity = ToRow(entity);
-                _memoryRows[GetRealKey(entity)] = entity;
-            }
-
-            protected override void Delete(Entity entity)
-            {
-                _memoryRows.Remove(GetRealKey(entity));
-            }
-
-            //…… 其它查询方法的重写暂缓 
-
-            #endregion
-
             internal Entity FromRow(Entity row)
             {
                 var entity = Entity.New(row.GetType());
@@ -223,7 +178,7 @@ namespace Rafy.Domain
 
                     foreach (var item in items)
                     {
-                        this.Insert(item);
+                        this.Saver.InsertInternal(item);
                     }
                 }
             }
@@ -233,6 +188,11 @@ namespace Rafy.Domain
             /// </summary>
             /// <returns></returns>
             protected abstract IEnumerable<Entity> LoadAll();
+
+            public override LiteDataTable GetEntityValue(object entityId, string property)
+            {
+                throw new NotImplementedException();
+            }
 
             /// <summary>
             /// 从指定的对象中拷贝所有数据到另一对象中。
@@ -248,6 +208,84 @@ namespace Rafy.Domain
 
                 //返回的子对象的属性只是简单的完全Copy参数data的数据。
                 dst.Clone(src, CloneOptions.ReadDbRow());
+            }
+
+            public class MemorySaver : DataSaver
+            {
+                private MemoryRepositoryDataProvider _dp;
+
+                protected internal override void Init(RepositoryDataProvider dataProvider)
+                {
+                    base.Init(dataProvider);
+
+                    _dp = dataProvider as MemoryRepositoryDataProvider;
+                }
+
+                #region 重写数据访问方法
+
+                internal protected override void Submit(SubmitArgs e)
+                {
+                    _dp.EnsureStore();
+
+                    base.Submit(e);
+                }
+
+                internal void InsertInternal(Entity entity)
+                {
+                    _dp.Insert(entity);
+                }
+
+                internal protected override void Insert(Entity entity)
+                {
+                    _dp.EnsureStore();
+
+                    string key = _dp.GetRealKey(entity);
+
+                    //在生成 Id 时，为某个模型生成临时使用的本地 Id。
+                    if (!entity.HasId)
+                    {
+                        var found = _dp.FindByRealKey(key);
+                        if (found != null)
+                        {
+                            //如果这个实体已经存在于内存中，则更新新对象的 Id，并在最后把新对象的数据存储起来即可。
+                            entity.LoadProperty(Entity.IdProperty, found.Id);
+                        }
+                        else
+                        {
+                            var newId = entity.KeyProvider.NewLocalId();
+                            entity.LoadProperty(Entity.IdProperty, newId);
+                        }
+                    }
+
+                    //有些实体并不一定通过 CDU 接口保存到 _memoryRows 中，而是在查询时临时生成。
+                    //这时，也需要把这些实体都加入到 _memoryRows 中。
+                    _dp._memoryRows[key] = _dp.ToRow(entity);
+                }
+
+                internal protected override void Update(Entity entity)
+                {
+                    entity = _dp.ToRow(entity);
+                    _dp._memoryRows[_dp.GetRealKey(entity)] = entity;
+                }
+
+                internal protected override void Delete(Entity entity)
+                {
+                    _dp._memoryRows.Remove(_dp.GetRealKey(entity));
+                }
+
+                //…… 其它查询方法的重写暂缓 
+
+                #endregion
+
+                protected override RedundanciesUpdater CreateRedundanciesUpdater()
+                {
+                    throw new NotImplementedException();
+                }
+
+                protected override void DeleteRefCore(Entity entity, IRefProperty refProperty)
+                {
+                    throw new NotImplementedException();
+                }
             }
         }
     }

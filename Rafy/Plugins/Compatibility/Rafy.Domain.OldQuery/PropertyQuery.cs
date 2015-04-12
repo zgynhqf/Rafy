@@ -582,7 +582,7 @@ namespace Rafy.Domain.ORM
         /// <summary>
         /// 在查询时，对所有用到的表进行缓存。
         /// </summary>
-        private Dictionary<Type, DbTable> _tablesCache = new Dictionary<Type, DbTable>();
+        private Dictionary<Type, RdbTable> _tablesCache = new Dictionary<Type, RdbTable>();
 
         internal void ErrorIfNotCompleted()
         {
@@ -595,7 +595,7 @@ namespace Rafy.Domain.ORM
         /// <param name="property"></param>
         /// <param name="propertyOwner"></param>
         /// <returns></returns>
-        internal DbTable GetPropertyTable(IManagedProperty property, Type propertyOwner)
+        internal RdbTable GetPropertyTable(IManagedProperty property, Type propertyOwner)
         {
             return ConditionalSql.GetPropertyTable(property, propertyOwner, this._tablesCache);
         }

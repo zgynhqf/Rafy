@@ -47,7 +47,11 @@ namespace Rafy.DbMigration.SqlServer
                 case DbType.Double:
                     return "FLOAT";
                 case DbType.Decimal:
-                    return "DECIMAL";
+                    if (!string.IsNullOrWhiteSpace(length))
+                    {
+                        return "DECIMAL(" + length + ")";
+                    }
+                    return "DECIMAL(18,2)";
                 case DbType.Binary:
                     return "VARBINARY(MAX)";
                 case DbType.Boolean:
@@ -91,6 +95,7 @@ namespace Rafy.DbMigration.SqlServer
                 case "bit":
                     return DbType.Boolean;
                 case "float":
+                case "real":
                     return DbType.Double;
                 case "numeric":
                 case "decimal":

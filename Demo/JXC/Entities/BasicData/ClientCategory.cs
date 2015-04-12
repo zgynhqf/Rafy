@@ -18,6 +18,7 @@ using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Text;
 using Rafy.Domain;
+using Rafy.Domain.ORM;
 using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
 using Rafy.MetaModel.View;
@@ -60,7 +61,7 @@ namespace JXC
     }
 
     [DataProviderFor(typeof(ClientCategoryRepository))]
-    public partial class ClientCategoryDataProvider : RepositoryDataProvider
+    public partial class ClientCategoryDataProvider : RdbDataProvider
     {
         protected override void Submit(SubmitArgs e)
         {

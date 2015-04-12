@@ -63,7 +63,7 @@ namespace UT
     }
 
     [DataProviderFor(typeof(StringTestEntityRepository))]
-    public class StringTestEntityDataProvider : RepositoryDataProvider
+    public class StringTestEntityDataProvider : RdbDataProvider
     {
         public static readonly string DbSettingName = "Test_StringEntityTest";
 

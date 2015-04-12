@@ -37,7 +37,7 @@ namespace RafyUnitTest
                 int count = 0;
                 EventHandler<Logger.DbAccessedEventArgs> handler = (o, e) =>
                 {
-                    if (e.ConnectionSchema == repo.RdbDataProvider.DbSetting) count++;
+                    if (e.ConnectionSchema == RdbDataProvider.Get(repo).DbSetting) count++;
                 };
                 Logger.DbAccessed += handler;
 
@@ -58,7 +58,7 @@ namespace RafyUnitTest
                 int count = 0;
                 EventHandler<Logger.DbAccessedEventArgs> handler = (o, e) =>
                 {
-                    if (e.ConnectionSchema == repo.RdbDataProvider.DbSetting) count++;
+                    if (e.ConnectionSchema == RdbDataProvider.Get(repo).DbSetting) count++;
                 };
                 Logger.ThreadDbAccessed += handler;
 

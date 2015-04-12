@@ -36,6 +36,7 @@ namespace Rafy.Domain
     ///     * 支持字符串的模糊匹配操作符：contains、startsWith、endsWith、notContains、notStartsWith、notEndsWith。
     ///     * 对时间类型进行比较时，直接使用字符串来表示时间值，如：CreateTime lt '2014-12-18 10:30'。
     ///     * Or 与 And 没有优先级之分。
+    ///     * 可以使用空值 null。注意：null 表示空值，而 'null' 则表示字符串值。
     ///     示例（详见源码单元测试）：
     ///         NickName eq 'huqf'
     ///         NickName eq 'huqf' and UserName eq 'huqf'

@@ -20,7 +20,7 @@
         <TextBox x:Name="txtDomainName" Grid.Column="1" TextWrapping="Wrap" VerticalAlignment="Top" Height="23" Grid.Row="1"
                 Margin="4" />
         <TextBlock Grid.Row="3" TextWrapping="Wrap" Text="本功能用于为历史数据库生成实体类。
-为拥有自增长、以 Id 结尾命名的列的表来生成对应的实体。这个列会被映射到实体类的 Id 上。目前只支持 SqlServer 数据库。" Margin="4,4,200,4" HorizontalAlignment="Left"
+为拥有自增长、以 Id 结尾命名的列的表来生成对应的实体，这个列会被映射到实体类的 Id 上。目前只支持 SqlServer 数据库。" Margin="4,4,200,4" HorizontalAlignment="Left"
                 VerticalAlignment="Center" Grid.ColumnSpan="2" />
         <Button x:Name="btnContinue" Content="确定" Grid.Column="1" HorizontalAlignment="Right" Grid.Row="3"
                 VerticalAlignment="Center" Margin="0,0,5,0" Width="80" Click="btnContinue_Click" IsDefault="True" />

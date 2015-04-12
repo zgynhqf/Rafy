@@ -69,7 +69,6 @@ namespace Rafy.Domain
 
         /// <summary>
         /// 数据提供程序。
-        /// 默认情况下，这个
         /// </summary>
         IRepositoryDataProvider DataProvider { get; }
 
@@ -302,9 +301,9 @@ namespace Rafy.Domain
     internal interface IRepositoryInternal : IRepository, IEntityInfoHost
     {
         /// <summary>
-        /// 数据提供程序。
+        /// 实体对应的数据表的信息。
         /// </summary>
-        RepositoryDataProvider RdbDataProvider { get; }
+        IPersistanceTableInfo TableInfo { get; }
 
         /// <summary>
         /// 通过父对象获取子对象的集合。

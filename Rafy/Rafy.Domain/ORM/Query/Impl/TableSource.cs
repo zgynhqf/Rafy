@@ -74,7 +74,7 @@ namespace Rafy.Domain.ORM.Query.Impl
         /// <summary>
         /// 对应 ORM 中的运行时表。
         /// </summary>
-        internal DbTable _dbTable;
+        internal IPersistanceTableInfo _tableInfo;
 
         /// <summary>
         /// 这个表中的所有可用的列。
@@ -84,14 +84,14 @@ namespace Rafy.Domain.ORM.Query.Impl
 
         public IColumnNode FindColumn(IManagedProperty property)
         {
-            for (int i = 0, c = _dbTable._columns.Count; i < c; i++)
+            for (int i = 0, c = _tableInfo.Columns.Count; i < c; i++)
             {
-                var dbColumn = _dbTable._columns[i];
+                var dbColumn = _tableInfo.Columns[i];
                 if (dbColumn.Property == property)
                 {
                     if (_columns == null)
                     {
-                        _columns = new ColumnNode[c];
+                        _columns = new ColumnNode[_tableInfo.Columns.Count];
                     }
 
                     var res = _columns[i];
@@ -117,7 +117,7 @@ namespace Rafy.Domain.ORM.Query.Impl
         /// <returns></returns>
         internal IList<ColumnNode> LoadAllColumns()
         {
-            var c = _dbTable._columns.Count;
+            var c = _tableInfo.Columns.Count;
 
             if (_columns == null)
             {
@@ -126,7 +126,7 @@ namespace Rafy.Domain.ORM.Query.Impl
 
             for (int i = 0; i < c; i++)
             {
-                var dbColumn = _dbTable._columns[i];
+                var dbColumn = _tableInfo.Columns[i];
 
                 //如果该位置的列还没有生成，则即刻生成一个该列的对象，并插入到数组对应的位置中。
                 if (_columns[i] == null)
@@ -139,7 +139,7 @@ namespace Rafy.Domain.ORM.Query.Impl
             return _columns;
         }
 
-        private ColumnNode NewColumn(DbColumn dbColumn)
+        private ColumnNode NewColumn(IPersistanceColumnInfo dbColumn)
         {
             var res = new ColumnNode();
             res.Table = this;

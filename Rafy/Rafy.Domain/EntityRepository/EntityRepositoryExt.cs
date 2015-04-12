@@ -33,12 +33,12 @@ namespace Rafy.Domain
 
         public EntityRepository Repository
         {
-            get { return Repo; }
+            get { return Repo as EntityRepository; }
         }
 
         IRepository IRepositoryExt.Repository
         {
-            get { return Repo; }
+            get { return Repo as EntityRepository; }
         }
     }
 
@@ -60,7 +60,7 @@ namespace Rafy.Domain
             get { return typeof(TRepository); }
         }
 
-        internal override EntityRepository Repo
+        internal override IRepositoryInternal Repo
         {
             get { return _repo; }
         }

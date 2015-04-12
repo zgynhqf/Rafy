@@ -133,14 +133,12 @@
   <ItemGroup>
     <Compile Include="Commands\RefreshAutoCode\RefreshAutoCodeCommand.cs" />
     <Compile Include="Commands\Command.cs" />
-    <EmbeddedResource Include="Commands\MigrateOldDatabase\DomainEntityTemplate.cs" />
-    <Compile Include="Commands\MigrateOldDatabase\EntityGenerator.cs" />
+    <Compile Include="Commands\MigrateOldDatabase\CodeFileGenerator.cs" />
     <Compile Include="Commands\MigrateOldDatabase\MigerateDatabaseWizardWindow.xaml.cs">
       <DependentUpon>MigerateDatabaseWizardWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Commands\MigrateOldDatabase\MigrateOldDatabaseCommand.cs" />
     <Compile Include="Commands\RefreshCodeSnippets\InstallCodeSnippetsCommand.cs" />
-    <Compile Include="Commands\SelectedProjectsCommand.cs" />
     <Compile Include="Commands\VSContext.cs" />
     <Compile Include="Modeling\ChooseTypesWindow.xaml.cs">
       <DependentUpon>ChooseTypesWindow.xaml</DependentUpon>

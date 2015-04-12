@@ -142,14 +142,22 @@ namespace Rafy.MultiLanguages
     }
 
     [DataProviderFor(typeof(MappingInfoRepository))]
-    public partial class MappingInfoRepositoryDataProvider : RepositoryDataProvider
+    public partial class MappingInfoRepositoryDataProvider : RdbDataProvider
     {
-        protected override void OnQuerying(EntityQueryArgs args)
+        public MappingInfoRepositoryDataProvider()
         {
-            var query = args.Query;
-            query.OrderBy.Add(query.MainTable.Column(MappingInfo.DevLanguageRDProperty));
+            this.DataQueryer = new MappingInfoQueryer();
+        }
 
-            base.OnQuerying(args);
+        private class MappingInfoQueryer : RdbDataQueryer
+        {
+            protected override void OnQuerying(EntityQueryArgs args)
+            {
+                var query = args.Query;
+                query.OrderBy.Add(query.MainTable.Column(MappingInfo.DevLanguageRDProperty));
+
+                base.OnQuerying(args);
+            }
         }
     }
 

@@ -187,14 +187,22 @@ namespace Rafy.RBAC.Audit
     }
 
     [DataProviderFor(typeof(AuditItemRepository))]
-    public partial class AuditItemRepositoryDataProvider : RepositoryDataProvider
+    public partial class AuditItemRepositoryDataProvider : RdbDataProvider
     {
-        protected override void OnQuerying(EntityQueryArgs args)
+        public AuditItemRepositoryDataProvider()
         {
-            var query = args.Query;
-            query.OrderBy.Add(query.MainTable.Column(AuditItem.LogTimeProperty), OrderDirection.Descending);
+            this.DataQueryer = new AuditItemRepositoryQueryer();
+        }
 
-            base.OnQuerying(args);
+        private class AuditItemRepositoryQueryer : RdbDataQueryer
+        {
+            protected override void OnQuerying(EntityQueryArgs args)
+            {
+                var query = args.Query;
+                query.OrderBy.Add(query.MainTable.Column(AuditItem.LogTimeProperty), OrderDirection.Descending);
+
+                base.OnQuerying(args);
+            }
         }
     }
 

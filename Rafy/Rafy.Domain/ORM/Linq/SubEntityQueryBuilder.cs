@@ -63,12 +63,23 @@ namespace Rafy.Domain.ORM.Linq
 
             this.Visit(exp);
 
-            if (_isAny)
+            var res = f.Exists(_query);
+            if (!_isAny) res = f.Not(res);
+
+            //如果父查询中需要反转条件，则返回 NOT 语句。
+            if (propertyFinder.ReverseConstraint)
             {
-                return f.Exists(_query);
+                res = f.Not(res);
             }
 
-            return f.Not(f.Exists(_query));
+            //把可空外键的不可空条件，与 Exists 条件合并后返回。
+            if (propertyFinder.NullableRefConstraint != null)
+            {
+                var op = propertyFinder.ReverseConstraint ? BinaryOperator.Or : BinaryOperator.And;
+                res = f.Binary(propertyFinder.NullableRefConstraint, op, res);
+            }
+
+            return res;
         }
 
         protected override Expression VisitMethodCall(MethodCallExpression exp)
@@ -78,7 +89,7 @@ namespace Rafy.Domain.ORM.Linq
 
             //先访问表达式 book.ChapterList.Cast<Chapter>()，获取列表属性。
             var invoker = exp.Arguments[0];
-            _parentPropertyFinder.Visit(invoker);
+            _parentPropertyFinder.Find(invoker);
             var listPropertyTable = _parentPropertyFinder.PropertyOwnerTable;
             var listProperty = _parentPropertyFinder.Property as IListProperty;
             if (listProperty == null) throw EntityQueryBuilder.OperationNotSupported(invoker);
@@ -97,8 +108,8 @@ namespace Rafy.Domain.ORM.Linq
             //Any、All 方法如果有第二个参数，那么第二个参数就是条件表达式。如：c => c.Name == chapterName
             if (exp.Arguments.Count == 2)
             {
-                var queryBuilder = new EntityQueryBuilder(childRepo);
-                queryBuilder.ReverseWhere = !_isAny;//如果是 All，则需要反转里面的所有操作符。
+                var reverseWhere = !_isAny;//如果是 All，则需要反转里面的所有操作符。
+                var queryBuilder = new EntityQueryBuilder(childRepo, reverseWhere);
                 queryBuilder.BuildQuery(exp.Arguments[1], _query);
             }
 

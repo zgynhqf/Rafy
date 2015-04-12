@@ -25,7 +25,7 @@ namespace Rafy.Domain.ORM
             get { return _asc; }
         }
 
-        public void GetSql(TextWriter sql, DbTable table)
+        public void GetSql(TextWriter sql, RdbTable table)
         {
             string name = table.Translate(this._property);
             string dir = _asc ? "ASC" : "DESC";

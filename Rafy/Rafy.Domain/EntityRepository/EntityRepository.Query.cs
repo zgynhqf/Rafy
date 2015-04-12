@@ -52,7 +52,7 @@ namespace Rafy.Domain
         /// </summary>
         public DataPortalLocation DataPortalLocation { get; protected set; }
 
-        internal override EntityRepository Repo
+        internal override IRepositoryInternal Repo
         {
             get { return this; }
         }
@@ -691,18 +691,9 @@ namespace Rafy.Domain
         private RepositoryDataProvider _dataProvider;
 
         /// <summary>
-        /// 数据提供器
+        /// 数据层提供程序。
         /// </summary>
-        internal protected IRepositoryDataProvider DataProvider
-        {
-            get { return _dataProvider; }
-        }
-
-        /// <summary>
-        /// 关系数据库的数据提供器。
-        /// 未来一旦支持非关系型数据库，这个属性将返回 null。
-        /// </summary>
-        internal RepositoryDataProvider RdbDataProvider
+        internal protected RepositoryDataProvider DataProvider
         {
             get { return _dataProvider; }
         }
@@ -863,7 +854,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="criteria"></param>
         /// <returns></returns>
-        protected virtual EntityList FetchBy(object criteria)
+        protected EntityList FetchBy(object criteria)
         {
             //先尝试使用仓库扩展来满足提供查询结果。
             var result = this.FetchByExtensions(criteria);
@@ -1160,11 +1151,6 @@ namespace Rafy.Domain
             this.NotifyLoaded(entity);
 
             return entity;
-        }
-
-        RepositoryDataProvider IRepositoryInternal.RdbDataProvider
-        {
-            get { return _dataProvider as RepositoryDataProvider; }
         }
 
         EntityList IRepositoryInternal.GetByIdOrTreePId(object id)

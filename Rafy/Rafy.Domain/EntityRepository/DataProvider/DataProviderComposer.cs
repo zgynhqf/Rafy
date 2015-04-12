@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Rafy.Domain.ORM;
 using Rafy.Reflection;
 
 namespace Rafy.Domain
@@ -37,7 +38,7 @@ namespace Rafy.Domain
             }
 
             //如果子类都没有创建相应的 dp，则直接使用默认的 dp。
-            return new RepositoryDataProvider();
+            return new RdbDataProvider();
         }
 
         //internal static void Compose()

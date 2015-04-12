@@ -106,7 +106,7 @@ namespace Rafy.MetaModel
 
         private string _DataTypeLength;
         /// <summary>
-        /// 映射数据库中的字段的长度。
+        /// 映射数据库中的字段的长度、精度等信息。
         /// 可以是数字，也可以是 MAX 等字符串。
         /// 如果是空，则表示使用默认的长度。
         /// </summary>

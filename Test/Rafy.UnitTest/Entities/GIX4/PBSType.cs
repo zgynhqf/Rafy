@@ -86,6 +86,13 @@ namespace UT
             set { this.SetProperty(CreateTimeProperty, value); }
         }
 
+        public static readonly Property<bool> IsDefaultProperty = P<PBSType>.Register(e => e.IsDefault);
+        public bool IsDefault
+        {
+            get { return this.GetProperty(IsDefaultProperty); }
+            set { this.SetProperty(IsDefaultProperty, value); }
+        }
+
         #endregion
 
         #region 只读属性
@@ -184,6 +191,53 @@ namespace UT
                 }
             }
 
+            return this.QueryList(q);
+        }
+
+        public PBSTypeList LinqByBoolean(bool isDefault)
+        {
+            return this.FetchList(r => r.DA_LinqByBoolean(isDefault));
+        }
+        private EntityList DA_LinqByBoolean(bool isDefault)
+        {
+            var q = this.CreateLinqQuery();
+            if (isDefault)
+            {
+                q = q.Where(e => e.IsDefault);
+            }
+            else
+            {
+                q = q.Where(e => !e.IsDefault);
+            }
+            return this.QueryList(q);
+        }
+
+        public PBSTypeList LinqByBoolean_Raw(bool isDefault)
+        {
+            return this.FetchList(r => r.DA_LinqByBoolean_Raw(isDefault));
+        }
+        private EntityList DA_LinqByBoolean_Raw(bool isDefault)
+        {
+            var q = this.CreateLinqQuery();
+            q = q.Where(e => e.IsDefault == isDefault);
+            return this.QueryList(q);
+        }
+
+        public PBSTypeList LinqByBoolean_InBinary(string name, bool isDefault)
+        {
+            return this.FetchList(r => r.DA_LinqByBoolean_InBinary(name, isDefault));
+        }
+        private EntityList DA_LinqByBoolean_InBinary(string name, bool isDefault)
+        {
+            var q = this.CreateLinqQuery();
+            if (isDefault)
+            {
+                q = q.Where(e => e.IsDefault && e.Name == name);
+            }
+            else
+            {
+                q = q.Where(e => !e.IsDefault && e.Name == name);
+            }
             return this.QueryList(q);
         }
     }

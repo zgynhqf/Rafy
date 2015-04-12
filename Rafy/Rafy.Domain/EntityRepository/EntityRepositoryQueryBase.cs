@@ -35,14 +35,30 @@ namespace Rafy.Domain
     /// </summary>
     public abstract class EntityRepositoryQueryBase
     {
-        internal abstract EntityRepository Repo { get; }
+        internal abstract IRepositoryInternal Repo { get; }
 
-        private IRepositoryDataQueryAPI Queryer
+        public EntityRepositoryQueryBase()
         {
-            get { return Repo.RdbDataProvider; }
+            _linqProvider = new EntityQueryProvider(this);
+        }
+
+        /// <summary>
+        /// 本仓库使用的数据查询器。
+        /// 如果在仓库中直接实现数据层代码，则可以使用该查询器来查询数据。
+        /// </summary>
+        protected DataQueryer DataQueryer
+        {
+            get { return (Repo.DataProvider as IRepositoryDataProviderInternal).DataQueryer as DataQueryer; }
         }
 
         #region 数据层查询接口 - Linq
+
+        private EntityQueryProvider _linqProvider;
+
+        internal EntityQueryProvider LinqProvider
+        {
+            get { return _linqProvider; }
+        }
 
         /// <summary>
         /// 创建一个实体 Linq 查询对象。
@@ -52,7 +68,7 @@ namespace Rafy.Domain
         /// <returns></returns>
         protected IQueryable<TEntity> CreateLinqQuery<TEntity>()
         {
-            return Queryer.CreateLinqQuery<TEntity>();
+            return DataQueryer.CreateLinqQuery<TEntity>();
         }
 
         /// <summary>
@@ -65,7 +81,7 @@ namespace Rafy.Domain
         /// <exception cref="System.InvalidProgramException"></exception>
         protected EntityList QueryList(IQueryable queryable, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
         {
-            return Queryer.QueryList(queryable, paging, eagerLoad);
+            return DataQueryer.QueryList(queryable, paging, eagerLoad);
         }
 
         /// <summary>
@@ -75,7 +91,12 @@ namespace Rafy.Domain
         /// <returns></returns>
         protected IQuery ConvertToQuery(IQueryable queryable)
         {
-            return Queryer.ConvertToQuery(queryable);
+            return DataQueryer.ConvertToQuery(queryable);
+        }
+
+        internal EntityList QueryListByLinq(IQueryable queryable)
+        {
+            return DataQueryer.QueryList(queryable);
         }
 
         #endregion
@@ -92,7 +113,7 @@ namespace Rafy.Domain
         /// <returns></returns>
         protected EntityList QueryList(IQuery query, PagingInfo paging = null, EagerLoadOptions eagerLoad = null, bool markTreeFullLoaded = false)
         {
-            return Queryer.QueryList(query, paging, eagerLoad, markTreeFullLoaded);
+            return DataQueryer.QueryList(query, paging, eagerLoad, markTreeFullLoaded);
         }
 
         /// <summary>
@@ -104,34 +125,7 @@ namespace Rafy.Domain
         /// <exception cref="System.InvalidProgramException"></exception>
         protected EntityList QueryList(EntityQueryArgs args)
         {
-            return Queryer.QueryList(args);
-        }
-
-        #endregion
-
-        #region 数据层查询接口 - FormattedSql
-
-        /// <summary>
-        /// 使用 sql 语句来查询实体。
-        /// </summary>
-        /// <param name="sql">sql 语句，返回的结果集的字段，需要保证与属性映射的字段名相同。</param>
-        /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
-        /// <returns></returns>
-        protected EntityList QueryList(FormattedSql sql, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
-        {
-            return Queryer.QueryList(sql, paging, eagerLoad);
-        }
-
-        /// <summary>
-        /// 使用 sql 语句来查询实体。
-        /// </summary>
-        /// <param name="args">The arguments.</param>
-        /// <returns></returns>
-        /// <exception cref="System.NotSupportedException">使用内存过滤器的同时，不支持提供分页参数。</exception>
-        protected EntityList QueryList(SqlQueryArgs args)
-        {
-            return Queryer.QueryList(args);
+            return DataQueryer.QueryList(args);
         }
 
         /// <summary>
@@ -142,29 +136,56 @@ namespace Rafy.Domain
         /// <returns></returns>
         protected LiteDataTable QueryTable(IQuery query, PagingInfo paging = null)
         {
-            return Queryer.QueryTable(query, paging);
+            return DataQueryer.QueryTable(query, paging);
         }
 
-        /// <summary>
-        /// 使用 sql 语句来查询数据表。
-        /// </summary>
-        /// <param name="sql">Sql 语句.</param>
-        /// <param name="paging">分页信息。</param>
-        /// <returns></returns>
-        protected LiteDataTable QueryTable(FormattedSql sql, PagingInfo paging = null)
-        {
-            return Queryer.QueryTable(sql, paging);
-        }
+        #endregion
 
-        /// <summary>
-        /// 使用 sql 语句查询数据表。
-        /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        protected LiteDataTable QueryTable(TableQueryArgs args)
-        {
-            return Queryer.QueryTable(args);
-        }
+        #region 数据层查询接口 - FormattedSql
+
+        ///// <summary>
+        ///// 使用 sql 语句来查询实体。
+        ///// </summary>
+        ///// <param name="sql">sql 语句，返回的结果集的字段，需要保证与属性映射的字段名相同。</param>
+        ///// <param name="paging">分页信息。</param>
+        ///// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        ///// <returns></returns>
+        //protected EntityList QueryList(FormattedSql sql, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        //{
+        //    return Queryer.QueryList(sql, paging, eagerLoad);
+        //}
+
+        ///// <summary>
+        ///// 使用 sql 语句来查询实体。
+        ///// </summary>
+        ///// <param name="args">The arguments.</param>
+        ///// <returns></returns>
+        ///// <exception cref="System.NotSupportedException">使用内存过滤器的同时，不支持提供分页参数。</exception>
+        //protected EntityList QueryList(SqlQueryArgs args)
+        //{
+        //    return Queryer.QueryList(args);
+        //}
+
+        ///// <summary>
+        ///// 使用 sql 语句来查询数据表。
+        ///// </summary>
+        ///// <param name="sql">Sql 语句.</param>
+        ///// <param name="paging">分页信息。</param>
+        ///// <returns></returns>
+        //protected LiteDataTable QueryTable(FormattedSql sql, PagingInfo paging = null)
+        //{
+        //    return Queryer.QueryTable(sql, paging);
+        //}
+
+        ///// <summary>
+        ///// 使用 sql 语句查询数据表。
+        ///// </summary>
+        ///// <param name="args"></param>
+        ///// <returns></returns>
+        //protected LiteDataTable QueryTable(TableQueryArgs args)
+        //{
+        //    return Queryer.QueryTable(args);
+        //}
 
         #endregion
 

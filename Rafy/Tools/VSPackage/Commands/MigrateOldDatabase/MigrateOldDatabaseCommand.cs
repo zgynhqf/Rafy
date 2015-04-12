@@ -26,15 +26,27 @@ namespace Rafy.VSPackage.Commands.MigrateOldDatabase
     /// <summary>
     /// 从旧数据库生成实体代码的命令。
     /// </summary>
-    class MigrateOldDatabaseCommand : SelectedProjectsCommand
+    class MigrateOldDatabaseCommand : Command
     {
         public MigrateOldDatabaseCommand()
         {
             this.CommandID = new CommandID(GuidList.guidVSPackageCmdSet, PkgCmdIDList.cmdidMigrateOldDatabaseCommand);
         }
 
-        protected override void ExecuteOnProject(IList<Project> projects)
+        protected override void OnQueryStatus()
         {
+            this.MenuCommand.Enabled = this.GetSelectedProjects().Count == 1;
+        }
+
+        protected override void ExecuteCore()
+        {
+            var projects = this.GetSelectedProjects();
+            if (projects.Count != 1)
+            {
+                MessageBox.Show("请选择要生成实体的项目，再执行本命令。");
+                return;
+            }
+
             var win = new MigerateDatabaseWizardWindow();
             win.txtConnectionString.Text = @"server=.\SQLExpress;database=XXX;uid=XXX;pwd=XXX";
             win.txtDomainName.Text = projects[0].Properties.Item("RootNamespace").Value.ToString();
@@ -45,7 +57,7 @@ namespace Rafy.VSPackage.Commands.MigrateOldDatabase
                 var domainName = win.txtDomainName.Text;
 
                 //构造实体代码生成器。
-                var generator = new EntityGenerator();
+                var generator = new CodeFileGenerator();
                 generator.DomainName = domainName;
                 generator.DbSetting = DbSetting.SetSetting(
                     domainName, connectionString,
@@ -54,12 +66,8 @@ namespace Rafy.VSPackage.Commands.MigrateOldDatabase
 
                 //默认生成在 Entities 文件夹内。
                 var items = projects[0].ProjectItems;
-                var item = items.FindByName("Entities");
-                if (item == null)
-                {
-                    item = items.AddFolder("Entities");
-                }
-                generator.Directory = item;
+                generator.Directory = items.FindByName("Entities") ?? items.AddFolder("Entities");
+                generator.RepoDirectory = items.FindByName("Repositories") ?? items.AddFolder("Repositories");
 
                 //开始生成代码。
                 try

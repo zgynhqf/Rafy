@@ -38,21 +38,18 @@ namespace Rafy.Domain.ORM.Linq
         private IRepositoryInternal _repo;
         private QueryFactory f = QueryFactory.Instance;
 
-        private bool _reverseWhere = false;
-
-        public EntityQueryBuilder(IRepositoryInternal repo)
-        {
-            _repo = repo;
-        }
-
         /// <summary>
         /// 是否需要反转查询中的所有条件操作符。
         /// 场景：当转换 Linq 表达式中的 All 方法到 Sql 的 NotExsits 时，需要把内部的条件都转换为反向操作符。
         /// </summary>
-        internal bool ReverseWhere
+        private bool _reverseWhere = false;
+
+        public EntityQueryBuilder(IRepositoryInternal repo) : this(repo, false) { }
+
+        internal EntityQueryBuilder(IRepositoryInternal repo, bool reverseWhere)
         {
-            get { return _reverseWhere; }
-            set { _reverseWhere = value; }
+            _repo = repo;
+            _reverseWhere = reverseWhere;
         }
 
         internal IQuery BuildQuery(Expression exp)
@@ -124,6 +121,7 @@ namespace Rafy.Domain.ORM.Linq
                 {
                     case LinqConsts.QueryableMethod_Where:
                         //如果现在不是第一次调用 Where 方法，那么需要把本次的约束和之前的约束进行 And 合并。
+                        this.MakeBooleanConstraintIfNoValue();
                         if (_query.Where != null && previousWhere != null)
                         {
                             _query.Where = f.And(previousWhere, _query.Where);
@@ -208,8 +206,8 @@ namespace Rafy.Domain.ORM.Linq
                 case LinqConsts.EnumerableMethod_Any:
                 case LinqConsts.EnumerableMethod_All:
                     var subQueryBuilder = new SubEntityQueryBuilder();
-                    var subQueryConstriant = subQueryBuilder.Build(exp, _query, this.PropertyFinder);
-                    _query.Where = subQueryConstriant;
+                    _constraintResult = subQueryBuilder.Build(exp, _query, this.PropertyFinder);
+                    this.MakeConstraint();
                     return true;
                 default:
                     break;
@@ -250,6 +248,7 @@ namespace Rafy.Domain.ORM.Linq
                 case ExpressionType.Not:
                     _hasNot = true;
                     this.Visit(node.Operand);
+                    this.MakeBooleanConstraintIfNoValue();
                     _hasNot = false;
                     break;
                 case ExpressionType.Convert:
@@ -274,16 +273,19 @@ namespace Rafy.Domain.ORM.Linq
             {
                 if (_propertyFinder == null)
                 {
-                    _propertyFinder = new PropertyFinder(_query, _repo);
+                    _propertyFinder = new PropertyFinder(_query, _repo, _reverseWhere);
                 }
                 return _propertyFinder;
             }
         }
 
+        private IConstraint _nullableRefConstraint;
+
         protected override Expression VisitMember(MemberExpression m)
         {
             var pf = this.PropertyFinder;
-            pf.Visit(m);
+            pf.Find(m);
+            _nullableRefConstraint = pf.NullableRefConstraint;
 
             //访问值属性
             VisitValueProperty(pf.Property, pf.PropertyOwnerTable);
@@ -302,9 +304,11 @@ namespace Rafy.Domain.ORM.Linq
         private PropertyOperator? _operator;
 
         //对比的目标值或属性
-        private bool _hasValueResult;
+        private bool _hasValueResult;//由于 _valueResult 可以表示 null，所以需要一个额外的字段来判断当前是否有值。
         private object _valueResult;
         private IColumnNode _rightPropertyResult;
+
+        private IConstraint _constraintResult;
 
         protected override Expression VisitBinary(BinaryExpression binaryExp)
         {
@@ -312,10 +316,12 @@ namespace Rafy.Domain.ORM.Linq
             {
                 //先计算左边的约束结果
                 this.Visit(binaryExp.Left);
+                this.MakeBooleanConstraintIfNoValue();
                 var left = _query.Where;
 
                 //再计算右边的约束结果
                 this.Visit(binaryExp.Right);
+                this.MakeBooleanConstraintIfNoValue();
                 var right = _query.Where;
 
                 //使用 AndOrConstraint 合并约束的结果。
@@ -386,7 +392,7 @@ namespace Rafy.Domain.ORM.Linq
         /// 通过目前已经收集到的属性、操作符、值，来生成一个属性条件结果。
         /// 并清空已经收集的信息。
         /// </summary>
-        private void MakeConstraint()
+        private bool MakeConstraint()
         {
             if (_propertyResult != null && _operator.HasValue)
             {
@@ -395,16 +401,51 @@ namespace Rafy.Domain.ORM.Linq
 
                 if (_hasValueResult)
                 {
-                    _query.Where = f.Constraint(_propertyResult, op, _valueResult);
+                    _constraintResult = f.Constraint(_propertyResult, op, _valueResult);
+                    _valueResult = null;
                     _hasValueResult = false;
                 }
                 else
                 {
-                    _query.Where = f.Constraint(_propertyResult, op, _rightPropertyResult);
+                    _constraintResult = f.Constraint(_propertyResult, op, _rightPropertyResult);
                     _rightPropertyResult = null;
                 }
                 _propertyResult = null;
                 _operator = null;
+            }
+
+            if (_constraintResult != null)
+            {
+                if (_nullableRefConstraint != null)
+                {
+                    var concat = _reverseWhere ? BinaryOperator.Or : BinaryOperator.And;
+                    _constraintResult = f.Binary(_nullableRefConstraint, concat, _constraintResult);
+                    _nullableRefConstraint = null;
+                }
+
+                _query.Where = _constraintResult;
+                _constraintResult = null;
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 如果只读取到了一个 Boolean 属性，没有读取到操作符、对比值，
+        /// 而这时已经完成了条件的组装，那么必须把这个属性变成一个对判断条件。
+        /// </summary>
+        private void MakeBooleanConstraintIfNoValue()
+        {
+            if (_propertyResult != null && _propertyResult.Property.PropertyType == typeof(bool) &&
+                !_operator.HasValue &&
+                _valueResult == null && _rightPropertyResult == null
+                )
+            {
+                _operator = PropertyOperator.Equal;
+                _valueResult = _hasNot ? BooleanBoxes.False : BooleanBoxes.True;
+                _hasValueResult = true;
+                this.MakeConstraint();
             }
         }
 

@@ -70,13 +70,17 @@ namespace FM
             return this.CreateList(all.Where(e => !e.CastTo<Tag>().NotUsed)) as TagList;
         }
 
-        protected override void OnQuerying(EntityQueryArgs args)
+        [DataProviderFor(typeof(TagRepository))]
+        private class TagRepositoryDataProvider : RdbDataProvider
         {
-            var query = args.Query;
-            query.OrderBy.Add(query.MainTable.Column(Tag.OrderNoProperty));
-            query.OrderBy.Add(query.MainTable.Column(Tag.IdProperty));
+            protected override void OnQuerying(EntityQueryArgs args)
+            {
+                var query = args.Query;
+                query.OrderBy.Add(query.MainTable.Column(Tag.OrderNoProperty));
+                query.OrderBy.Add(query.MainTable.Column(Tag.IdProperty));
 
-            base.OnQuerying(args);
+                base.OnQuerying(args);
+            }
         }
     }
 

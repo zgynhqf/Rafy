@@ -146,7 +146,7 @@ namespace Rafy.Domain
         /// <returns></returns>
         public static SingleConnectionTrasactionScope TransactionScope(EntityRepository dbDelegate)
         {
-            return new SingleConnectionTrasactionScope(dbDelegate.RdbDataProvider.DbSetting);
+            return new SingleConnectionTrasactionScope(RdbDataProvider.Get(dbDelegate).DbSetting);
         }
 
         /// <summary>

@@ -38,7 +38,7 @@ namespace $domainNamespace$
     }
 
     [DataProviderFor(typeof($domainName$EntityRepository))]
-    public class $domainName$EntityRepositoryDataProvider : RepositoryDataProvider
+    public class $domainName$EntityRepositoryDataProvider : RdbDataProvider
     {
         public static readonly string DbSettingName = "$domainName$";
 

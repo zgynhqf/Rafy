@@ -3,7 +3,7 @@
  * 作者：胡庆访
  * 创建日期：20141201
  * 运行环境：.NET 4.0
- * 版本号：1.0.0
+ * 版本号：1.1.15
  * 
  * 历史记录：
  * 创建文件 胡庆访 20141201 21:03
@@ -41,6 +41,9 @@ namespace iWS.Web.Http
         public EntityAwareJsonMediaTypeFormatter()
         {
             this.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/json"));
+            base.SupportedEncodings.Add(new UTF8Encoding(false, true));
+            base.SupportedEncodings.Add(new UnicodeEncoding(false, true, true));
+            base.MediaTypeMappings.Add(new XmlHttpRequestHeaderMapping());
         }
 
         public override bool CanReadType(Type type)
@@ -92,11 +95,11 @@ namespace iWS.Web.Http
             object result = null;
             try
             {
-                var strContent = await content.ReadAsStringAsync();
-
                 //对实体的属性进行特殊的处理。
                 if (type.IsSubclassOf(typeof(Entity)))
                 {
+                    var strContent = await content.ReadAsStringAsync();
+
                     var jObject = JObject.Parse(strContent);
 
                     result = DesrializeEntity(type, jObject);
@@ -122,53 +125,6 @@ namespace iWS.Web.Http
 
             return result;
         }
-
-        #region CommonQueryCriteria
-
-        //private CommonQueryCriteria DesrializeCommonQueryCriteria(string strContent)
-        //{
-        //    var criteria = new CommonQueryCriteria();
-
-        //    var json = JObject.Parse(strContent);
-
-        //    var orderBy = json.Property("$orderby");
-        //    if (orderBy != null)
-        //    {
-        //        criteria.OrderBy = orderBy.Value.Value<string>();
-        //    }
-
-        //    var jPageNumber = json.Property("$pageNumber");
-        //    if (jPageNumber != null)
-        //    {
-        //        int pageNumber = jPageNumber.Value.Value<int>();
-        //        int pageSize = 10;
-        //        var jPageSize = json.Property("$pageSize");
-        //        if (jPageSize != null)
-        //        {
-        //            pageSize = jPageSize.Value.Value<int>();
-        //        }
-
-        //        var pagingInfo = new PagingInfo(pageNumber, pageSize);
-        //        criteria.PagingInfo = pagingInfo;
-        //    }
-
-        //    //filter
-        //    var jFilter = json.Property("$filter");
-        //    if (jFilter != null)
-        //    {
-        //        var filter = jFilter.Value.Value<string>();
-        //        ParseFilter(criteria, filter);
-        //    }
-
-        //    return criteria;
-        //}
-
-        //private void ParseFilter(CommonQueryCriteria criteria, string filter)
-        //{
-        //    //to do
-        //}
-
-        #endregion
 
         #region Entity
 
@@ -223,6 +179,10 @@ namespace iWS.Web.Http
                         else
                         {
                             var value = (jValue as JValue).Value;
+                            if (value is string && mp.PropertyType == typeof(byte[]))
+                            {
+                                value = Encoding.UTF8.GetBytes(value as string);
+                            }
                             entity.SetProperty(mp, value, ManagedPropertyChangedSource.FromUIOperating);
                         }
                     }
@@ -270,6 +230,53 @@ namespace iWS.Web.Http
                 }
             }
         }
+
+        #endregion
+
+        #region CommonQueryCriteria
+
+        //private CommonQueryCriteria DesrializeCommonQueryCriteria(string strContent)
+        //{
+        //    var criteria = new CommonQueryCriteria();
+
+        //    var json = JObject.Parse(strContent);
+
+        //    var orderBy = json.Property("$orderby");
+        //    if (orderBy != null)
+        //    {
+        //        criteria.OrderBy = orderBy.Value.Value<string>();
+        //    }
+
+        //    var jPageNumber = json.Property("$pageNumber");
+        //    if (jPageNumber != null)
+        //    {
+        //        int pageNumber = jPageNumber.Value.Value<int>();
+        //        int pageSize = 10;
+        //        var jPageSize = json.Property("$pageSize");
+        //        if (jPageSize != null)
+        //        {
+        //            pageSize = jPageSize.Value.Value<int>();
+        //        }
+
+        //        var pagingInfo = new PagingInfo(pageNumber, pageSize);
+        //        criteria.PagingInfo = pagingInfo;
+        //    }
+
+        //    //filter
+        //    var jFilter = json.Property("$filter");
+        //    if (jFilter != null)
+        //    {
+        //        var filter = jFilter.Value.Value<string>();
+        //        ParseFilter(criteria, filter);
+        //    }
+
+        //    return criteria;
+        //}
+
+        //private void ParseFilter(CommonQueryCriteria criteria, string filter)
+        //{
+        //    //to do
+        //}
 
         #endregion
 

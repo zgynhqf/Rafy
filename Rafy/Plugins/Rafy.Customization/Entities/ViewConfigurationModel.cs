@@ -12,6 +12,7 @@ using Rafy.MetaModel.XmlConfig;
 using Rafy.MetaModel.XmlConfig.Web;
 using System.Security.Permissions;
 using System.Runtime.Serialization;
+using Rafy.Domain.ORM;
 
 namespace Rafy.Customization
 {
@@ -405,17 +406,25 @@ namespace Rafy.Customization
     }
 
     [DataProviderFor(typeof(ViewConfigurationModelRepository))]
-    public partial class ViewConfigurationModelDataProvider : RepositoryDataProvider
+    public partial class ViewConfigurationModelDataProvider : RdbDataProvider
     {
-        protected override void Submit(SubmitArgs e)
+        public ViewConfigurationModelDataProvider()
         {
-            if (e.Action == SubmitAction.Update || e.Action == SubmitAction.ChildrenOnly)
+            this.DataSaver = new ViewConfigurationModelSaver();
+        }
+
+        private class ViewConfigurationModelSaver : RdbDataSaver
+        {
+            protected override void Submit(SubmitArgs e)
             {
-                (e.Entity as ViewConfigurationModel).SaveToXml();
-            }
-            else
-            {
-                base.Submit(e);
+                if (e.Action == SubmitAction.Update || e.Action == SubmitAction.ChildrenOnly)
+                {
+                    (e.Entity as ViewConfigurationModel).SaveToXml();
+                }
+                else
+                {
+                    base.Submit(e);
+                }
             }
         }
     }

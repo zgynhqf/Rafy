@@ -123,6 +123,14 @@ namespace Rafy.Domain
             }
         }
 
+        private void OnTreeItemsMoved()
+        {
+            if (this.IsTreeRootList)
+            {
+                this.TryAutoIndex();
+            }
+        }
+
         /// <summary>
         /// 对从指定的索引开始的根节点进行自动索引。
         /// </summary>

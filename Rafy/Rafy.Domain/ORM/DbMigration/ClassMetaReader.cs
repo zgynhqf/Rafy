@@ -82,7 +82,7 @@ namespace Rafy.Domain.ORM.DbMigration
                         var em = CommonModel.Entities.Find(type);
                         if (em != null && em.TableMeta != null)
                         {
-                            var entityDb = RF.Find(type).RdbDataProvider.DbSetting.Name;
+                            var entityDb = RF.Find(type).DataProvider.ConnectionStringSettingName;
                             if (entityDb == this._dbSetting.Name)
                             {
                                 tableEntityTypes.Add(em);

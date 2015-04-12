@@ -128,6 +128,52 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void ODT_Filter_Null()
+        {
+            var filter = "Name eq null";
+
+            var sql = ParseWhere(filter);
+
+            Assert.IsTrue(sql.ToString() == @"Users.UserName IS NULL");
+            Assert.IsTrue(sql.Parameters.Count == 0);
+        }
+
+        [TestMethod]
+        public void ODT_Filter_Null_Not()
+        {
+            var filter = "Name ne null";
+
+            var sql = ParseWhere(filter);
+
+            Assert.IsTrue(sql.ToString() == @"Users.UserName IS NOT NULL");
+            Assert.IsTrue(sql.Parameters.Count == 0);
+        }
+
+        [TestMethod]
+        public void ODT_Filter_Null_String()
+        {
+            var filter = "Name eq 'null'";
+
+            var sql = ParseWhere(filter);
+
+            Assert.IsTrue(sql.ToString() == @"Users.UserName = {0}");
+            Assert.IsTrue(sql.Parameters.Count == 1);
+            Assert.IsTrue(sql.Parameters[0].ToString() == "null");
+        }
+
+        [TestMethod]
+        public void ODT_Filter_Null_String_Not()
+        {
+            var filter = "Name ne 'null'";
+
+            var sql = ParseWhere(filter);
+
+            Assert.IsTrue(sql.ToString() == @"Users.UserName != {0}");
+            Assert.IsTrue(sql.Parameters.Count == 1);
+            Assert.IsTrue(sql.Parameters[0].ToString() == "null");
+        }
+
+        [TestMethod]
         public void ODT_Filter_And()
         {
             var filter = "Name eq 'huqf' and LoginName eq 'huqf'";
@@ -255,6 +301,56 @@ FROM Roles
     INNER JOIN Users AS T0 ON Roles.UserId = T0.Id
 WHERE T0.UserName LIKE {0}");
             Assert.IsTrue(sql.Parameters[0].ToString() == "%huqf%");
+        }
+
+        /// <summary>
+        /// 贾文广 CWS 系统中出现异常：
+        /// 在 FROM 子句中多次指定了相关名称 'T0'。
+        /// 
+        /// 后查明原因是因为 GetBy(ODataQueryCriteria criteria) 中指定了 T0。
+        /// </summary>
+        [TestMethod]
+        public void ODT_Filter_ReferenceProperty_ConflictTableName()
+        {
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            {
+                RF.Save(new Book
+                {
+                    ChapterList =
+                    {
+                        new Chapter
+                        {
+                            Name = "c1",
+                            SectionList = 
+                            {
+                                new Section { Name = "1" },
+                                new Section { Name = "2" },
+                            }
+                        },
+                        new Chapter
+                        {
+                            Name = "c2",
+                            SectionList = 
+                            {
+                                new Section { Name = "3" },
+                                new Section { Name = "4" },
+                            }
+                        }
+                    }
+                });
+
+                var list = RF.Concrete<SectionRepository>().GetBy(new ODataQueryCriteria
+                {
+                    Expand = "Chapter",
+                    Filter = "Chapter.Name eq 'c1'"
+                }) as SectionList;
+
+                Assert.AreEqual(list.Count, 2);
+                Assert.IsTrue(list[0].FieldExists(Section.ChapterProperty));
+                Assert.IsTrue(list[1].FieldExists(Section.ChapterProperty));
+                Assert.IsTrue(list[0].Chapter == list[1].Chapter);
+                Assert.IsTrue(list[0].Chapter.Name == "c1");
+            }
         }
 
         /// <summary>

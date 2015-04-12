@@ -28,7 +28,14 @@ namespace Rafy.Domain.ORM.Linq
     /// </summary>
     class EntityQueryProvider : IQueryProvider
     {
-        internal IRepositoryInternal _repository;
+        public EntityQueryProvider(EntityRepositoryQueryBase queryBase)
+        {
+            _queryBase = queryBase;
+            _repository = queryBase.Repo;
+        }
+
+        private IRepositoryInternal _repository;
+        private EntityRepositoryQueryBase _queryBase;
 
         #region 兼容一般性遍历的接口
 
@@ -109,7 +116,7 @@ namespace Rafy.Domain.ORM.Linq
 
                 var queryable = this.CreateQuery(expression);
 
-                return _repository.RdbDataProvider.QueryListByLinq(queryable);
+                return _queryBase.QueryListByLinq(queryable);
             }
             finally
             {

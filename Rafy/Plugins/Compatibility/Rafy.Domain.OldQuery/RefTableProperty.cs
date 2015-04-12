@@ -30,8 +30,8 @@ namespace Rafy.Domain.ORM
         {
             this.PropertyOwner = propertyOwner;
             this.RefProperty = refProperty;
-            var mainTable = DbTableFinder.TableFor(propertyOwner);
-            var refTable = DbTableFinder.TableFor(refProperty.RefEntityType);
+            var mainTable = RdbTableFinder.TableFor(propertyOwner);
+            var refTable = RdbTableFinder.TableFor(refProperty.RefEntityType);
 
             this.OwnerTable = mainTable;
             this.RefTable = refTable;
@@ -58,13 +58,13 @@ namespace Rafy.Domain.ORM
         /// <summary>
         /// A.B 中的 A，主表。
         /// </summary>
-        internal DbTable OwnerTable { get; private set; }
+        internal RdbTable OwnerTable { get; private set; }
 
         /// <summary>
         /// A.B 中的 B。
         /// 引用实体对应的表信息
         /// </summary>
-        internal DbTable RefTable { get; private set; }
+        internal RdbTable RefTable { get; private set; }
 
         /// <summary>
         /// 该实体属性对应的数据库外键名

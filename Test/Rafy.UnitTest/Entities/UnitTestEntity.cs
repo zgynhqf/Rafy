@@ -79,7 +79,7 @@ namespace UT
     }
 
     [DataProviderFor(typeof(UnitTestEntityRepository))]
-    public class UnitTestEntityRepositoryDataProvider : RepositoryDataProvider
+    public class UnitTestEntityRepositoryDataProvider : RdbDataProvider
     {
         public static string DbSettingName = "Test_RafyUnitTest";
 

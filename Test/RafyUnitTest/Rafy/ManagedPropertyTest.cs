@@ -198,7 +198,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ___MPT_ExtensionProperties_CreateListControl()
+        public void zzzMPT_ExtensionProperties_CreateListControl()
         {
             //var grid = AutoUI.BlockUIFactory.CreateTreeListControl(
             //    AppModel.EntityViews.FindViewMeta(typeof(TestUser)), ShowInWhere.List

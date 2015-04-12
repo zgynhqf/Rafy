@@ -26,6 +26,9 @@ using UT;
 
 namespace RafyUnitTest.ClientTest
 {
+    /// <summary>
+    /// 这个测试虽然是测试客户端的缓存，但是由于没有真正的服务端，所以同样需要直接连接数据库。
+    /// </summary>
     [TestClass]
     public class CacheTest_Client
     {

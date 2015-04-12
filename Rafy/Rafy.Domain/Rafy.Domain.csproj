@@ -94,11 +94,22 @@
     <Compile Include="EntityRepository\Criteria\CommonQueryCriteria.cs" />
     <Compile Include="EntityRepository\Criteria\ODataFilterParser.cs" />
     <Compile Include="EntityRepository\Criteria\ODataQueryCriteria.cs" />
+    <Compile Include="EntityRepository\DataProvider\DataQueryer.cs" />
+    <Compile Include="EntityRepository\DataProvider\DataSaver.cs" />
+    <Compile Include="EntityRepository\DataProvider\RedundanciesUpdater.cs" />
+    <Compile Include="EntityRepository\DataProvider\RepositoryDataProvider.cs" />
     <Compile Include="EntityRepository\DataProvider\DataProviderComposer.cs" />
     <Compile Include="EntityRepository\DataProvider\DataProviderForAttribute.cs" />
-    <Compile Include="EntityRepository\DataProvider\DataQueryBase.cs" />
+    <Compile Include="EntityRepository\DataProvider\RepositoryDataProvider.Query.cs">
+      <DependentUpon>RepositoryDataProvider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EntityRepository\QueryArgs\IEntitySelectArgs.cs" />
+    <Compile Include="EntityRepository\QueryArgs\IQueryArgs.cs" />
+    <Compile Include="ORM\Rdb\DataProvider\QueryArgs\ISqlSelectArgs.cs" />
+    <Compile Include="ORM\Rdb\DataProvider\QueryArgs\ITableQueryArgs.cs" />
+    <Compile Include="ORM\Rdb\DataProvider\QueryArgs\SqlQueryArgs.cs" />
+    <Compile Include="ORM\Rdb\DataProvider\RdbDataQueryer.cs" />
     <Compile Include="EntityRepository\EagerLoadOptions.cs" />
-    <Compile Include="EntityRepository\IRepositoryDataQueryAPI.cs" />
     <Compile Include="EntityRepository\QueryArgs\EntityQueryArgs.cs" />
     <Compile Include="EntityRepository\Criteria\IEQC.cs" />
     <Compile Include="DomainApp.cs" />
@@ -116,11 +127,15 @@
     <Compile Include="EntityRepository\EntityRepositoryQueryBase.cs" />
     <Compile Include="EntityRepository\QueryArgs\QueryArgs.cs" />
     <Compile Include="EntityRepository\DataProvider\IRepositoryDataProvider.cs" />
-    <Compile Include="EntityRepository\DataProvider\RepositoryDataProvider.cs" />
     <Compile Include="EntityRepository\RepositoryFactory.cs" />
-    <Compile Include="EntityRepository\SqlServer\SqlBatchInsertHelper.cs" />
+    <Compile Include="ORM\Rdb\DataProvider\RdbDataProvider.cs" />
+    <Compile Include="ORM\Rdb\DataProvider\RdbDataSaver.cs" />
+    <Compile Include="ORM\Rdb\DataProvider\RdbRedundanciesUpdater.cs" />
+    <Compile Include="ORM\PersistanceTableInfo\PersistanceColumnInfo.cs" />
+    <Compile Include="ORM\PersistanceTableInfo\PersistanceTableInfoFactory.cs" />
+    <Compile Include="ORM\Rdb\SqlServer\SqlBatchInsertHelper.cs" />
     <Compile Include="EntityRepository\SubmitArgs.cs" />
-    <Compile Include="EntityRepository\QueryArgs\TableQueryArgs.cs" />
+    <Compile Include="ORM\Rdb\DataProvider\QueryArgs\TableQueryArgs.cs" />
     <Compile Include="Entity\AutoCollectHelper.cs" />
     <Compile Include="Entity\GenericEntity\Entity.Generic.cs" />
     <Compile Include="Entity\EntitySerializableFlags.cs" />
@@ -136,12 +151,14 @@
     <Compile Include="Entity\MP\LOBProperty.cs" />
     <Compile Include="Entity\MP\PropertyDefailtValues.cs" />
     <Compile Include="Entity\Serialization\SerializationEntityGraph.cs" />
-    <Compile Include="Entity\TreeIndexHelper.cs" />
+    <Compile Include="ORM\Rdb\TreeIndexHelper.cs" />
     <Compile Include="Entity\ValidationHelper.cs" />
     <Compile Include="ORM\Linq\PropertyFinder.cs" />
     <Compile Include="ORM\Linq\SubEntityQueryBuilder.cs" />
     <Compile Include="ORM\Query\Impl\QueryGenerationContext.cs" />
     <Compile Include="ORM\Query\QueryNodeTester.cs" />
+    <Compile Include="ORM\PersistanceTableInfo\PersistanceTableInfo.cs" />
+    <Compile Include="Utils\DomainHelper.cs" />
     <Compile Include="Validation\CommonRules\NotUsedByReferenceRule.cs" />
     <Compile Include="Validation\CommonRules\HandlerRule.cs" />
     <Compile Include="Validation\CommonRules\NumberRangeRule.cs" />
@@ -160,22 +177,22 @@
     <Compile Include="Entity\MP\PropertyCategory.cs" />
     <Compile Include="Entity\MP\RefIdProperty.cs" />
     <Compile Include="Entity\MP\RegisterRefIdArgs.cs" />
-    <Compile Include="ORM\AggregateSQL\API\AggregateSQL.cs" />
-    <Compile Include="ORM\AggregateSQL\API\LoadOptionSelector.cs" />
-    <Compile Include="ORM\AggregateSQL\API\OrderByLoadOption.cs" />
-    <Compile Include="ORM\AggregateSQL\API\PropertySelector.cs" />
-    <Compile Include="ORM\AggregateSQL\IDataTable.cs" />
-    <Compile Include="ORM\AggregateSQL\SubTable.cs" />
-    <Compile Include="ORM\AggregateSQL\TableEnumerator.cs" />
+    <Compile Include="ORM\Rdb\AggregateSQL\API\AggregateSQL.cs" />
+    <Compile Include="ORM\Rdb\AggregateSQL\API\LoadOptionSelector.cs" />
+    <Compile Include="ORM\Rdb\AggregateSQL\API\OrderByLoadOption.cs" />
+    <Compile Include="ORM\Rdb\AggregateSQL\API\PropertySelector.cs" />
+    <Compile Include="ORM\Rdb\AggregateSQL\IDataTable.cs" />
+    <Compile Include="ORM\Rdb\AggregateSQL\SubTable.cs" />
+    <Compile Include="ORM\Rdb\AggregateSQL\TableEnumerator.cs" />
     <Compile Include="Entity\MP\zzzDateTimeDescriptorAttribute.cs" />
     <Compile Include="Entity\MP\ListProperty.cs" />
     <Compile Include="Entity\MP\ListPropertyMetadata.cs" />
     <Compile Include="Entity\MP\RafyPropertyDescriptor.cs" />
     <Compile Include="Entity\MP\RafyPropertyDescriptorFactory.cs" />
-    <Compile Include="ORM\DbAccesserFactory.cs" />
-    <Compile Include="ORM\DbTable.cs" />
-    <Compile Include="ORM\DbTableFinder.cs" />
-    <Compile Include="ORM\ManagedConnectionDbAccesser.cs" />
+    <Compile Include="ORM\Rdb\DbAccesser\DbAccesserFactory.cs" />
+    <Compile Include="ORM\Rdb\RdbTable\RdbTable.cs" />
+    <Compile Include="ORM\Rdb\RdbTable\RdbTableFinder.cs" />
+    <Compile Include="ORM\Rdb\DbAccesser\ManagedConnectionDbAccesser.cs" />
     <Compile Include="ORM\EntityContext\DisabledTypedEntityContext.cs" />
     <Compile Include="ORM\EntityContext\EntityContext.cs" />
     <Compile Include="ORM\EntityContext\EntityContextWrapper.cs" />
@@ -189,16 +206,16 @@
     <Compile Include="ORM\DbMigration\Presistence\DbVersion.g.cs">
       <DependentUpon>DbVersion.cs</DependentUpon>
     </Compile>
-    <Compile Include="ORM\ISelectArgs.cs" />
+    <Compile Include="EntityRepository\QueryArgs\ISelectArgs.cs" />
     <Compile Include="ORM\Linq\EntityQueryable.cs" />
     <Compile Include="ORM\Linq\EntityQueryProvider.cs" />
     <Compile Include="ORM\Linq\Evaluator.cs" />
     <Compile Include="ORM\Linq\LinqConsts.cs" />
     <Compile Include="ORM\Linq\EntityQueryBuilder.cs" />
     <Compile Include="ORM\Linq\TypeSystem.cs" />
-    <Compile Include="ORM\Sql\Oracle\OracleColumn.cs" />
-    <Compile Include="ORM\Sql\Oracle\OracleTable.cs" />
-    <Compile Include="ORM\ConnectionManager.cs" />
+    <Compile Include="ORM\Rdb\Sql\Oracle\OracleColumn.cs" />
+    <Compile Include="ORM\Rdb\Sql\Oracle\OracleTable.cs" />
+    <Compile Include="ORM\Rdb\DbAccesser\ConnectionManager.cs" />
     <Compile Include="ORM\OrderDirection.cs" />
     <Compile Include="ORM\ORMHelper.cs" />
     <Compile Include="ORM\QueryExtensions.cs" />
@@ -238,7 +255,7 @@
     <Compile Include="ORM\Query\QueryExtensions.cs" />
     <Compile Include="ORM\Query\QueryFactory.cs" />
     <Compile Include="ORM\Query\QueryNodeVisitor.cs" />
-    <Compile Include="ORM\SingleConnectionTrasactionScope.cs" />
+    <Compile Include="ORM\Rdb\SingleConnectionTrasactionScope.cs" />
     <Compile Include="DataPortal\Server\DataPortalContext.cs" />
     <Compile Include="DataPortal\Server\DataPortalFacade.cs" />
     <Compile Include="DataPortal\Server\DataPortalResult.cs" />
@@ -260,38 +277,38 @@
       <DependentUpon>EntityList.cs</DependentUpon>
     </Compile>
     <Compile Include="Validation\ITypeValidationsHost.cs" />
-    <Compile Include="ORM\Sql\SqlCe\SqlCeTable.cs" />
-    <Compile Include="ORM\Sql\SqlServer\SqlOraTable.cs" />
+    <Compile Include="ORM\Rdb\Sql\SqlCe\SqlCeTable.cs" />
+    <Compile Include="ORM\Rdb\Sql\SqlServer\SqlOraTable.cs" />
     <Compile Include="ORM\ConditionalSql.cs" />
     <Compile Include="Entity\MP\RedundantPath.cs" />
-    <Compile Include="ORM\Sql\Oracle\OracleSqlGenerator.cs" />
-    <Compile Include="ORM\Sql\SqlServer\SqlServerSqlGenerator.cs" />
-    <Compile Include="ORM\Sql\Tree\SqlArray.cs" />
-    <Compile Include="ORM\Sql\Tree\SqlBinaryConstraint.cs" />
-    <Compile Include="ORM\Sql\Tree\SqlColumn.cs" />
-    <Compile Include="ORM\Sql\Tree\SqlColumnComparisonConstraint.cs" />
-    <Compile Include="ORM\Sql\Tree\SqlColumnsComparisonConstraint.cs" />
-    <Compile Include="ORM\Sql\Tree\SqlConstraint.cs" />
-    <Compile Include="ORM\Sql\SqlGenerator.cs" />
-    <Compile Include="ORM\Sql\Tree\SqlExistsConstraint.cs" />
-    <Compile Include="ORM\Sql\Tree\SqlJoin.cs" />
-    <Compile Include="ORM\Sql\Tree\SqlLiteral.cs" />
-    <Compile Include="ORM\Sql\Tree\SqlNodeVisitor.cs" />
-    <Compile Include="ORM\Sql\Tree\SqlNotConstraint.cs" />
-    <Compile Include="ORM\Sql\Tree\SqlOrderBy.cs" />
-    <Compile Include="ORM\Sql\Tree\SqlNamedSource.cs" />
-    <Compile Include="ORM\Sql\Tree\SqlSelect.cs" />
-    <Compile Include="ORM\Sql\Tree\SqlNode.cs" />
-    <Compile Include="ORM\Sql\Tree\SqlSubSelect.cs" />
-    <Compile Include="ORM\Sql\Tree\SqlSelectAll.cs" />
-    <Compile Include="ORM\Sql\Tree\SqlSource.cs" />
-    <Compile Include="ORM\Sql\Tree\SqlTable.cs" />
+    <Compile Include="ORM\Rdb\Sql\Oracle\OracleSqlGenerator.cs" />
+    <Compile Include="ORM\Rdb\Sql\SqlServer\SqlServerSqlGenerator.cs" />
+    <Compile Include="ORM\Rdb\Sql\Tree\SqlArray.cs" />
+    <Compile Include="ORM\Rdb\Sql\Tree\SqlBinaryConstraint.cs" />
+    <Compile Include="ORM\Rdb\Sql\Tree\SqlColumn.cs" />
+    <Compile Include="ORM\Rdb\Sql\Tree\SqlColumnComparisonConstraint.cs" />
+    <Compile Include="ORM\Rdb\Sql\Tree\SqlColumnsComparisonConstraint.cs" />
+    <Compile Include="ORM\Rdb\Sql\Tree\SqlConstraint.cs" />
+    <Compile Include="ORM\Rdb\Sql\SqlGenerator.cs" />
+    <Compile Include="ORM\Rdb\Sql\Tree\SqlExistsConstraint.cs" />
+    <Compile Include="ORM\Rdb\Sql\Tree\SqlJoin.cs" />
+    <Compile Include="ORM\Rdb\Sql\Tree\SqlLiteral.cs" />
+    <Compile Include="ORM\Rdb\Sql\Tree\SqlNodeVisitor.cs" />
+    <Compile Include="ORM\Rdb\Sql\Tree\SqlNotConstraint.cs" />
+    <Compile Include="ORM\Rdb\Sql\Tree\SqlOrderBy.cs" />
+    <Compile Include="ORM\Rdb\Sql\Tree\SqlNamedSource.cs" />
+    <Compile Include="ORM\Rdb\Sql\Tree\SqlSelect.cs" />
+    <Compile Include="ORM\Rdb\Sql\Tree\SqlNode.cs" />
+    <Compile Include="ORM\Rdb\Sql\Tree\SqlSubSelect.cs" />
+    <Compile Include="ORM\Rdb\Sql\Tree\SqlSelectAll.cs" />
+    <Compile Include="ORM\Rdb\Sql\Tree\SqlSource.cs" />
+    <Compile Include="ORM\Rdb\Sql\Tree\SqlTable.cs" />
     <Compile Include="Service\ContractAttribute.cs" />
     <Compile Include="Service\ServiceLocator.cs" />
     <Compile Include="Service\FlowService.cs" />
     <Compile Include="Service\ISaveListService.cs" />
     <Compile Include="Service\Service.cs" />
-    <Compile Include="ORM\AggregateSQL\RawTable.cs" />
+    <Compile Include="ORM\Rdb\AggregateSQL\RawTable.cs" />
     <Compile Include="EntityRepository\Caching\VersionSyncClientCache\EntityListVersion.cs" />
     <Compile Include="Entity\Entity.RoutedEvent.cs">
       <DependentUpon>Entity.cs</DependentUpon>
@@ -309,7 +326,7 @@
     <Compile Include="ORM\DbMigration\RafyUserMigrations.cs" />
     <Compile Include="ORM\DbMigration\Presistence\DbMigrationHistory.cs" />
     <Compile Include="ORM\DbMigration\Presistence\DbVersion.cs" />
-    <Compile Include="ORM\DbTableFactory.cs" />
+    <Compile Include="ORM\Rdb\RdbTable\RdbTableFactory.cs" />
     <Compile Include="Entity\TreeHelper.cs" />
     <Compile Include="EntityRepository\zzzEF\DbContextExtension.cs" />
     <Compile Include="EntityRepository\zzzEF\DbCreationType.cs" />
@@ -317,11 +334,11 @@
     <Compile Include="EntityRepository\DiffSaveService.cs" />
     <Compile Include="EntityRepository\zzzEF\_DbContextBase.cs" />
     <Compile Include="EntityRepository\zzzEF\ORMapping.cs" />
-    <Compile Include="ORM\AggregateSQL\AggregateDescriptor.cs" />
-    <Compile Include="ORM\AggregateSQL\AggregateEntityLoader.cs" />
-    <Compile Include="ORM\AggregateSQL\AggregateSQLGenerator.cs" />
-    <Compile Include="ORM\AggregateSQL\LoadOptionItem.cs" />
-    <Compile Include="ORM\AggregateSQL\API\ChildrenSelector.cs" />
+    <Compile Include="ORM\Rdb\AggregateSQL\AggregateDescriptor.cs" />
+    <Compile Include="ORM\Rdb\AggregateSQL\AggregateEntityLoader.cs" />
+    <Compile Include="ORM\Rdb\AggregateSQL\AggregateSQLGenerator.cs" />
+    <Compile Include="ORM\Rdb\AggregateSQL\LoadOptionItem.cs" />
+    <Compile Include="ORM\Rdb\AggregateSQL\API\ChildrenSelector.cs" />
     <Compile Include="Entity\GenericEntity\Criteria.cs" />
     <Compile Include="Entity\Entity.DataAccess.cs">
       <DependentUpon>Entity.cs</DependentUpon>
@@ -339,8 +356,8 @@
       <DependentUpon>EntityList.cs</DependentUpon>
     </Compile>
     <Compile Include="Entity\IDbConnector.cs" />
-    <Compile Include="ORM\AggregateSQL\SQLColumnsGenerator.cs" />
-    <Compile Include="EntityRepository\SqlServer\BatchInsert.cs" />
+    <Compile Include="ORM\Rdb\AggregateSQL\SQLColumnsGenerator.cs" />
+    <Compile Include="ORM\Rdb\SqlServer\BatchInsert.cs" />
     <Compile Include="EntityRepository\Caching\AggregateChecker.cs" />
     <Compile Include="EntityRepository\Caching\VersionSyncClientCache\AggregateRootCache.cs" />
     <Compile Include="DomainMetaExtension.cs" />
@@ -352,7 +369,7 @@
     <Compile Include="Entity\CloneOptions.cs" />
     <Compile Include="EntityRepository\EntityRepository.cs" />
     <Compile Include="EntityRepository\DictionaryRepositoryFactory.cs" />
-    <Compile Include="EntityRepository\SqlServer\EntityChldrenBatchReader.cs" />
+    <Compile Include="ORM\Rdb\SqlServer\EntityChldrenBatchReader.cs" />
     <Compile Include="Entity\IRepository.cs" />
     <Compile Include="Entity\Entity.Tree.cs">
       <DependentUpon>Entity.cs</DependentUpon>
@@ -366,11 +383,11 @@
     <Compile Include="Entity\Entity.cs" />
     <Compile Include="RafyDomainLibrary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ORM\IColumn.cs" />
-    <Compile Include="ORM\ITable.cs" />
+    <Compile Include="ORM\PersistanceTableInfo\IPersistanceColumnInfo.cs" />
+    <Compile Include="ORM\PersistanceTableInfo\IPersistanceTableInfo.cs" />
     <Compile Include="ORM\ORMException.cs" />
-    <Compile Include="ORM\DbColumn.cs" />
-    <Compile Include="ORM\Sql\SqlServer\SqlTable.cs" />
+    <Compile Include="ORM\Rdb\RdbTable\RdbColumn.cs" />
+    <Compile Include="ORM\Rdb\Sql\SqlServer\SqlTable.cs" />
     <Compile Include="Validation\BrokenRule.cs" />
     <Compile Include="Validation\BrokenRulesCollection.cs" />
     <Compile Include="Validation\Rule.cs" />
@@ -419,7 +436,7 @@
     <Content Include="Validation\_ReadMe.txt" />
     <Content Include="EntityRepository\zzzEF\如何加载所有 ORM 配置.txt" />
     <Content Include="ORM\Query\_ReadMe.txt" />
-    <Content Include="ORM\Sql\Tree\_ReadMe.txt" />
+    <Content Include="ORM\Rdb\Sql\Tree\_ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Hxy Key.snk" />

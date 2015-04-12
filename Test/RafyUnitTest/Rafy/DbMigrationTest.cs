@@ -164,8 +164,11 @@ namespace RafyUnitTest
             });
         }
 
+        /// <summary>
+        /// 在自动升级时，可以升级使用 HasDataType 定义的数据类型。
+        /// </summary>
         [TestMethod]
-        public void DMT_AutoMigrate_AlterColumn_DataType()
+        public void DMT_AlterColumn_DataType_AutoMigrate()
         {
             this.Test(destination =>
             {

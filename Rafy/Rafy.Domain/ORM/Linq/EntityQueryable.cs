@@ -31,9 +31,9 @@ namespace Rafy.Domain.ORM.Linq
         /// 为指定的仓库进行查询
         /// </summary>
         /// <param name="repo"></param>
-        public EntityQueryable(IRepository repo)
+        public EntityQueryable(EntityRepository repo)
         {
-            this.Provider = (repo as IRepositoryInternal).RdbDataProvider.LinqProvider;
+            this.Provider = repo.LinqProvider;
             this.Expression = Expression.Constant(this);
         }
 

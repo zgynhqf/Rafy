@@ -59,7 +59,7 @@ namespace Rafy.Domain
                 while (true)
                 {
                     var part = this.ReadPart();
-                    if (part == null) break;
+                    if (part == string.Empty) break;
                     this.DealPart(part);
                 }
             }
@@ -110,9 +110,10 @@ namespace Rafy.Domain
 
         private void DealConstraintWord(string part)
         {
+            //part 表示列名
             if (_column == null)
             {
-                //可以使用了引用属性，例如表达式：User.Name eq 'huqf'
+                //可能使用了引用属性，例如表达式：User.Name eq 'huqf'
                 var properties = part.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
                 if (properties.Length > 1)
                 {
@@ -142,10 +143,12 @@ namespace Rafy.Domain
                     _column = _mainTable.Column(mp);
                 }
             }
+            //part 表示操作符
             else if (_comparison == null)
             {
                 _comparison = part;
             }
+            //part 表示值
             else
             {
                 var propertyConstraint = CreateColumnConstraint(_comparison, part);
@@ -219,7 +222,10 @@ namespace Rafy.Domain
         /// <summary>
         /// Part 有以下类型：括号、单词。
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// 空字符串：表示没有字符，无法读取。
+        /// null：表示读取到空值。
+        /// </returns>
         private string ReadPart()
         {
             _wordBuffer.Clear();
@@ -267,7 +273,14 @@ namespace Rafy.Domain
                 }
             }
 
-            return _wordBuffer.Length > 0 ? _wordBuffer.ToString() : null;
+            var res = _wordBuffer.ToString();
+
+            if (!hasString && res.EqualsIgnoreCase("null"))
+            {
+                res = null;
+            }
+
+            return res;
         }
 
         #endregion

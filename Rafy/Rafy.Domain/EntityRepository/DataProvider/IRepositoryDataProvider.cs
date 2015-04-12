@@ -27,14 +27,6 @@ namespace Rafy.Domain
     public interface IRepositoryDataProvider
     {
         /// <summary>
-        /// 数据门户调用本接口来保存组合中的所有数据。
-        /// </summary>
-        /// <param name="component">
-        /// 一个组合实体、或组合实体的列表。
-        /// </param>
-        void SubmitComposition(IDomainComponent component);
-
-        /// <summary>
         /// 通过Id在数据层中查询指定的对象
         /// </summary>
         /// <param name="id">The unique identifier.</param>
@@ -106,5 +98,22 @@ namespace Rafy.Domain
         /// <param name="property">The property.</param>
         /// <returns></returns>
         LiteDataTable GetEntityValue(object entityId, string property);
+    }
+
+    internal interface IRepositoryDataProviderInternal : IRepositoryDataProvider
+    {
+        ///// <summary>
+        ///// 数据门户调用本接口来保存组合中的所有数据。
+        ///// </summary>
+        ///// <param name="component">
+        ///// 一个组合实体、或组合实体的列表。
+        ///// </param>
+        //void SubmitComposition(IDomainComponent component);
+
+        DataSaver DataSaver { get; }
+
+        DataQueryer DataQueryer { get; }
+
+        //void NotifyDbLoaded(Entity item);
     }
 }

@@ -143,36 +143,37 @@ namespace Rafy.Domain.ORM.Query.Impl
 
         internal QueryGenerationContext GenerationContext;
 
-        /// <summary>
-        /// 在查询对象中查找或者创建指定引用属性对应的连接表对象。
-        /// </summary>
-        /// <param name="propertyOwner">聚合子属性所在的实体对应的表。也是外键关系中主键表所在的表。</param>
-        /// <param name="childrenProperty">指定的聚合子属性。</param>
-        /// <returns></returns>
-        internal ITableSource FindOrCreateJoinTable(ITableSource propertyOwner, IListProperty childrenProperty)
-        {
-            if (childrenProperty.HasManyType != HasManyType.Composition) throw new InvalidProgramException("只能对聚合子属性使用此方法。");
+        //暂时去除
+        ///// <summary>
+        ///// 在查询对象中查找或者创建指定引用属性对应的连接表对象。
+        ///// </summary>
+        ///// <param name="propertyOwner">聚合子属性所在的实体对应的表。也是外键关系中主键表所在的表。</param>
+        ///// <param name="childrenProperty">指定的聚合子属性。</param>
+        ///// <returns></returns>
+        //internal ITableSource FindOrCreateJoinTable(ITableSource propertyOwner, IListProperty childrenProperty)
+        //{
+        //    if (childrenProperty.HasManyType != HasManyType.Composition) throw new InvalidProgramException("只能对聚合子属性使用此方法。");
 
-            //先找到这个关系对应的引用属性。
-            var refEntityType = childrenProperty.ListEntityType;
-            var refRepo = RepositoryFactoryHost.Factory.FindByEntity(refEntityType);
-            var parentProperty = refRepo.FindParentPropertyInfo(true);
-            var parentRef = (parentProperty.ManagedProperty as IRefProperty).RefIdProperty;
+        //    //先找到这个关系对应的引用属性。
+        //    var refEntityType = childrenProperty.ListEntityType;
+        //    var refRepo = RepositoryFactoryHost.Factory.FindByEntity(refEntityType);
+        //    var parentProperty = refRepo.FindParentPropertyInfo(true);
+        //    var parentRef = (parentProperty.ManagedProperty as IRefProperty).RefIdProperty;
 
-            var refTableSource = _allJoinTables.FirstOrDefault(
-                ts => ts.RefProperty == parentRef && ts.PrimaryKeyTable == propertyOwner
-                );
-            if (refTableSource == null)
-            {
-                var f = QueryFactory.Instance;
+        //    var refTableSource = _allJoinTables.FirstOrDefault(
+        //        ts => ts.RefProperty == parentRef && ts.PrimaryKeyTable == propertyOwner
+        //        );
+        //    if (refTableSource == null)
+        //    {
+        //        var f = QueryFactory.Instance;
 
-                var fkTable = f.Table(refRepo, QueryGenerationContext.Get(this).NextTableAlias());
+        //        var fkTable = f.Table(refRepo, QueryGenerationContext.Get(this).NextTableAlias());
 
-                refTableSource = AddJoinTable(fkTable, parentRef, propertyOwner, fkTable);
-            }
+        //        refTableSource = AddJoinTable(fkTable, parentRef, propertyOwner, fkTable);
+        //    }
 
-            return refTableSource.ForeignKeyTable;
-        }
+        //    return refTableSource.ForeignKeyTable;
+        //}
 
         /// <summary>
         /// 在查询对象中查找或者创建指定引用属性对应的连接表对象。

@@ -46,7 +46,8 @@ namespace Rafy.WPF.Shell
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            this.Title = "管理信息系统".Translate();
+            this.Title = ConfigurationHelper.GetAppSettingOrDefault("主窗口标题", "管理信息系统")
+                .Translate();
 
             //topBannerContainer
             if (TopBarControlType != null)

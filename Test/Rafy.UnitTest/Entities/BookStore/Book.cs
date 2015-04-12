@@ -239,7 +239,7 @@ namespace UT
             {
                 sql = @"select * from book";
             }
-            return this.QueryTable(sql);
+            return (this.DataQueryer as RdbDataQueryer).QueryTable(sql);
         }
 
         protected EntityList FetchBy(BookContainesNameCriteria criteria)
@@ -552,9 +552,41 @@ namespace UT
         {
             var q = this.CreateLinqQuery();
             q = q.Where(book => book.Name != "1" && book.BookCategory.Name == "category" && book.ChapterList.Concrete().Any(c => c.Name == "1.2"));
-            q = q.Where(b => b.ChapterList.Concrete().Any(c => c.Name == "chapterNeed" && c.SectionList.Cast<Section>().All(s => s.Name.Contains("need") && s.SectionOwnerId != null && s.SectionOwner.Name == "huqf")));
+            q = q.Where(b => b.ChapterList.Concrete().Any(c => c.Name == "chapterNeed"
+                && c.SectionList.Cast<Section>().All(s =>
+                    s.Name.Contains("need")
+                    && s.SectionOwner.Name == "huqf")
+                ));
             q = q.OrderBy(b => b.Name);
             return this.QueryList(q, pi);
+        }
+
+        public BookList LinqGetIfChildren_All_Any()
+        {
+            return this.FetchList(r => r.DA_LinqGetIfChildren_All_Any());
+        }
+        private EntityList DA_LinqGetIfChildren_All_Any()
+        {
+            var q = this.CreateLinqQuery();
+            q = q.Where(b => b.ChapterList.Concrete().All(c =>
+                c.SectionList.Cast<Section>().Any(s => s.SectionOwnerId != null)
+                ));
+            q = q.OrderBy(b => b.Name);
+            return this.QueryList(q);
+        }
+
+        public BookList LinqGetIfChildren_All_All()
+        {
+            return this.FetchList(r => r.DA_LinqGetIfChildren_All_All());
+        }
+        private EntityList DA_LinqGetIfChildren_All_All()
+        {
+            var q = this.CreateLinqQuery();
+            q = q.Where(b => b.ChapterList.Concrete().All(c =>
+                c.SectionList.Cast<Section>().All(s => s.SectionOwnerId != null)
+                ));
+            q = q.OrderBy(b => b.Name);
+            return this.QueryList(q);
         }
     }
 

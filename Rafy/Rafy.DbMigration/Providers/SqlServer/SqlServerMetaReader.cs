@@ -75,15 +75,17 @@ WHERE C.TABLE_NAME = {0}
                     {
                         string columnName = columnsReader["COLUMN_NAME"].ToString();
                         string sqlType = columnsReader["DATA_TYPE"].ToString();
-                        string length = null;
-                        var lengthObj = columnsReader["CHARACTER_MAXIMUM_LENGTH"];
-                        if (lengthObj != null && !DBNull.Value.Equals(lengthObj) && lengthObj.ToString() != "-1")
-                        {
-                            length = lengthObj.ToString();
-                        }
+
+                        //不再读取 Length
+                        //string length = null;
+                        //var lengthObj = columnsReader["CHARACTER_MAXIMUM_LENGTH"];
+                        //if (lengthObj != null && !DBNull.Value.Equals(lengthObj) && lengthObj.ToString() != "-1")
+                        //{
+                        //    length = lengthObj.ToString();
+                        //}
 
                         DbType dbType = SqlDbTypeHelper.ConvertFromSQLTypeString(sqlType);
-                        Column column = new Column(dbType, length, columnName, table);
+                        Column column = new Column(dbType, null, columnName, table);
 
                         column.IsRequired = string.Compare(columnsReader["IS_NULLABLE"].ToString(), "no", true) == 0;
 

@@ -48,7 +48,7 @@ namespace Rafy.Domain.ORM.Query
         /// <returns></returns>
         public static IQuery AddConstraintIf(this IQuery query, IManagedProperty property, PropertyOperator op, object value)
         {
-            if (ConditionalSql.IsNotEmpty(value))
+            if (DomainHelper.IsNotEmpty(value))
             {
                 return AddConstraint(query, property, op, value);
             }
@@ -66,7 +66,7 @@ namespace Rafy.Domain.ORM.Query
         /// <returns></returns>
         public static IQuery AddConstraintIf(this IQuery query, IManagedProperty property, PropertyOperator op, object value, ITableSource propertySource)
         {
-            if (ConditionalSql.IsNotEmpty(value))
+            if (DomainHelper.IsNotEmpty(value))
             {
                 return AddConstraint(query, property, op, value, propertySource);
             }

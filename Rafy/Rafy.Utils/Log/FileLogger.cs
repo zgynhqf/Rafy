@@ -88,7 +88,7 @@ namespace Rafy
                 }
 
                 content = DateTime.Now +
-                    "\r\nDatabase:  " + connectionSchema.Database +
+                    //"\r\nDatabase:  " + connectionSchema.Database +
                     "\r\nConnectionString:  " + connectionSchema.ConnectionString +
                     "\r\n" + content + "\r\n\r\n\r\n";
 

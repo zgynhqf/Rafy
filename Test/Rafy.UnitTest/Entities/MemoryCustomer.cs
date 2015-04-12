@@ -81,49 +81,57 @@ namespace UT
         protected MemoryCustomerRepository() { }
 
         [DataProviderFor(typeof(MemoryCustomerRepository))]
-        private class MemoryCustomerRepositoryDataProvider : MemoryRepositoryDataProvider
+        private class MemoryCustomerRepositoryDataProvider : MemoryEntityRepository.MemoryRepositoryDataProvider
         {
+            public MemoryCustomerRepositoryDataProvider()
+            {
+                this.DataSaver = new MemoryCustomerSaver();
+            }
+
             protected override IEnumerable<Entity> LoadAll()
             {
                 return Enumerable.Empty<Entity>();
             }
 
-            protected override void Submit(SubmitArgs e)
+            private class MemoryCustomerSaver : MemoryEntityRepository.MemoryRepositoryDataProvider.MemorySaver
             {
-                if (e.Action != SubmitAction.Delete)
+                protected override void Submit(SubmitArgs e)
                 {
-                    (e.Entity as MemoryCustomer).Version++;
+                    if (e.Action != SubmitAction.Delete)
+                    {
+                        (e.Entity as MemoryCustomer).Version++;
+                    }
+
+                    base.Submit(e);
+
+                    if (e.Action == SubmitAction.Delete)
+                    {
+                        var item = e.Entity as MemoryCustomer;
+                        item.LoadProperty(MemoryCustomer.VersionProperty, item.Version + 1);
+                    }
                 }
 
-                base.Submit(e);
-
-                if (e.Action == SubmitAction.Delete)
+                protected override void Insert(Entity entity)
                 {
-                    var item = e.Entity as MemoryCustomer;
+                    (entity as MemoryCustomer).Version++;
+
+                    base.Insert(entity);
+                }
+
+                protected override void Update(Entity entity)
+                {
+                    base.Update(entity);
+
+                    var item = entity as MemoryCustomer;
                     item.LoadProperty(MemoryCustomer.VersionProperty, item.Version + 1);
                 }
-            }
 
-            protected override void Insert(Entity entity)
-            {
-                (entity as MemoryCustomer).Version++;
+                protected override void Delete(Entity entity)
+                {
+                    (entity as MemoryCustomer).Version++;
 
-                base.Insert(entity);
-            }
-
-            protected override void Update(Entity entity)
-            {
-                base.Update(entity);
-
-                var item = entity as MemoryCustomer;
-                item.LoadProperty(MemoryCustomer.VersionProperty, item.Version + 1);
-            }
-
-            protected override void Delete(Entity entity)
-            {
-                (entity as MemoryCustomer).Version++;
-
-                base.Delete(entity);
+                    base.Delete(entity);
+                }
             }
         }
     }

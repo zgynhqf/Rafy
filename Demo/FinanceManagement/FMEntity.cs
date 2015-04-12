@@ -64,7 +64,7 @@ namespace FM
     }
 
     [DataProviderFor(typeof(FMEntityRepository))]
-    public class FMEntityDataProvider : RepositoryDataProvider
+    public class FMEntityDataProvider : RdbDataProvider
     {
         protected override string ConnectionStringSettingName
         {

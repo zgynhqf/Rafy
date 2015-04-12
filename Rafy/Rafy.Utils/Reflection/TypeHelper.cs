@@ -126,7 +126,7 @@ namespace Rafy.Reflection
             return enumType.IsEnum;
         }
 
-        #region  CoerceValue
+        #region CoerceValue
 
         /// <summary>
         /// 强制把 value 的值变换为 desiredType

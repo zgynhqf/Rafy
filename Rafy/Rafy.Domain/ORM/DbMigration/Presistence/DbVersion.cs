@@ -65,9 +65,9 @@ namespace Rafy.Domain.ORM.DbMigration.Presistence
         }
 
         [DataProviderFor(typeof(DbVersionRepository))]
-        private class DbVersionRepositoryDataProvider : RepositoryDataProvider
+        private class DbVersionRepositoryDataProvider : RdbDataProvider
         {
-            protected override string ConnectionStringSettingName
+            internal protected override string ConnectionStringSettingName
             {
                 get { return ConnectionStringNames.DbMigrationHistory; }
             }

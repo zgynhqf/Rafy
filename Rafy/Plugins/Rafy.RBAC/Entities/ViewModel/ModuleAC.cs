@@ -22,6 +22,7 @@ using Rafy.MetaModel.Attributes;
 using Rafy.ManagedProperty;
 using Rafy.MetaModel.View;
 using Rafy.RBAC;
+using Rafy.Domain.ORM;
 
 namespace Rafy.RBAC
 {

@@ -37,12 +37,11 @@ namespace Rafy.Domain
     /// <summary>
     /// 仓库类
     /// 用于某个实体类型及其实体列表类的管理
-    /// 
     /// 注意：
     /// 1. 其子类必须是线程安全的！
     /// 2. 子类的构建函数建议使用protected，不要向外界暴露。使用者只能全部通过仓库工厂获取。
     /// </summary>
-    /// <threadsafety static="true" instance="true"/>
+    /// <threadsafety static="true" instance="true" />
     public abstract partial class EntityRepository : EntityRepositoryQueryBase,
         IRepository, IRepositoryInternal, IEntityInfoHost, ITypeValidationsHost
     {
@@ -377,6 +376,29 @@ namespace Rafy.Domain
             }
 
             return _childProperties;
+        }
+
+        /// <summary>
+        /// 这个字段用于存储运行时解析出来的表的信息。
+        /// </summary>
+        private IPersistanceTableInfo _tableInfo;
+
+        internal IPersistanceTableInfo TableInfo
+        {
+            get
+            {
+                if (_tableInfo == null && this.EntityMeta != null)
+                {
+                    _tableInfo = PersistanceTableInfoFactory.CreateTableInfo(this);
+                }
+
+                return _tableInfo;
+            }
+        }
+
+        IPersistanceTableInfo IRepositoryInternal.TableInfo
+        {
+            get { return this.TableInfo; }
         }
 
         #endregion

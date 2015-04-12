@@ -167,8 +167,8 @@ namespace Rafy.Domain.ORM.Query
         {
             if (repository == null) throw new ArgumentNullException("entityRepository");
 
-            var dbTable = (repository as IRepositoryInternal).RdbDataProvider.DbTable;
-            if (dbTable == null)
+            var tableInfo = (repository as IRepositoryInternal).TableInfo;
+            if (tableInfo == null)
             {
                 ORMHelper.ThrowBasePropertyNotMappedException(repository.EntityType);
             }
@@ -176,11 +176,11 @@ namespace Rafy.Domain.ORM.Query
             //构造一个 EntitySource 对象。
             //在构造 TableSource 时，不必立刻为所有属性生成相应的列。必须使用懒加载。
             var table = new TableSource();
-            table._dbTable = dbTable;
+            table._tableInfo = tableInfo;
 
             var res = table as ITableSource;
             res.EntityRepository = repository;
-            table.TableName = dbTable.Name;
+            table.TableName = tableInfo.Name;
             table.Alias = alias;
 
             return table;
@@ -198,17 +198,18 @@ namespace Rafy.Domain.ORM.Query
             return (query as TableQuery).FindOrCreateJoinTable(propertyOwner, refProperty);
         }
 
-        /// <summary>
-        /// 在查询对象中查找或者创建指定引用属性对应的连接表对象。
-        /// </summary>
-        /// <param name="query">需要在这个查询对象中查找或创建连接表。</param>
-        /// <param name="propertyOwner">聚合子属性所在的实体对应的表。也是外键关系中主键表所在的表。</param>
-        /// <param name="childrenProperty">指定的聚合子属性。</param>
-        /// <returns></returns>
-        public ITableSource FindOrCreateJoinTable(IQuery query, ITableSource propertyOwner, IListProperty childrenProperty)
-        {
-            return (query as TableQuery).FindOrCreateJoinTable(propertyOwner, childrenProperty);
-        }
+        //暂时去除
+        ///// <summary>
+        ///// 在查询对象中查找或者创建指定引用属性对应的连接表对象。
+        ///// </summary>
+        ///// <param name="query">需要在这个查询对象中查找或创建连接表。</param>
+        ///// <param name="propertyOwner">聚合子属性所在的实体对应的表。也是外键关系中主键表所在的表。</param>
+        ///// <param name="childrenProperty">指定的聚合子属性。</param>
+        ///// <returns></returns>
+        //public ITableSource FindOrCreateJoinTable(IQuery query, ITableSource propertyOwner, IListProperty childrenProperty)
+        //{
+        //    return (query as TableQuery).FindOrCreateJoinTable(propertyOwner, childrenProperty);
+        //}
 
         /// <summary>
         /// 构造一个属性与指定值"相等"的约束条件节点。
@@ -311,7 +312,12 @@ namespace Rafy.Domain.ORM.Query
         {
             if (constraint == null) throw new ArgumentNullException("constraint");
 
-            INotConstraint res = new Impl.NotConstraint();
+            if (constraint is NotConstraint)
+            {
+                return (constraint as NotConstraint).Constraint as IConstraint;
+            }
+
+            INotConstraint res = new NotConstraint();
             res.Constraint = constraint;
             return res;
         }

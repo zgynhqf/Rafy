@@ -86,7 +86,6 @@ namespace iWS.Web.Http
             using (_writer = new JsonTextWriter(textWriter))
             {
                 _writer.CloseOutput = false;
-                _writer.QuoteChar = '\'';
                 if (this.Indent)
                 {
                     _writer.Formatting = Formatting.Indented;

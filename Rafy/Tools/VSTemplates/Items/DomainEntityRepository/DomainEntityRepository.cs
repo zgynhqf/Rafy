@@ -24,7 +24,7 @@ namespace $rootnamespace$
     public partial class $domainEntityName$Repository : $baseRepositoryName$
     {
         /// <summary>
-        /// 单例模式，外界不可以直接构造本对象。
+        /// 单例模式，由框架中的工厂构建。外界不可以直接构造本对象。
         /// </summary>
         protected $domainEntityName$Repository() { }
     }

@@ -65,7 +65,7 @@
                 <Parent guid="guidVSPackageCmdSet" id="MyMenuGroup" />
                 <Icon guid="guidImages" id="bmpPic1" />
                 <Strings>
-                    <ButtonText>从数据库生成实体（选中项目）</ButtonText>
+                    <ButtonText>从数据库生成实体</ButtonText>
                 </Strings>
             </Button>
 

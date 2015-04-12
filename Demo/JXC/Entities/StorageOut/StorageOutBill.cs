@@ -6,6 +6,7 @@ using System.Security.Permissions;
 using System.Text;
 using Rafy;
 using Rafy.Domain;
+using Rafy.Domain.ORM;
 using Rafy.Domain.ORM.Query;
 using Rafy.ManagedProperty;
 using Rafy.MetaModel;
@@ -93,17 +94,11 @@ namespace JXC
     }
 
     [DataProviderFor(typeof(StorageOutBillRepository))]
-    public class StorageOutBillDataProvider : RepositoryDataProvider
+    public class StorageOutBillDataProvider : RdbDataProvider
     {
-        protected override void Submit(SubmitArgs e)
+        public StorageOutBillDataProvider()
         {
-            base.Submit(e);
-
-            if (e.Action == SubmitAction.Delete)
-            {
-                //由于本外键关系没有级联，所以在删除的时候需要删除下面的数据
-                this.DeleteRefInDb(e.Entity, StorageOutBillItem.StorageOutBillProperty);
-            }
+            this.DataSaver = new StorageOutBillSaver();
         }
 
         protected EntityList FetchBy(TimeSpanCriteria criteria)
@@ -119,6 +114,20 @@ namespace JXC
                 )
             );
             return this.QueryList(q);
+        }
+
+        private class StorageOutBillSaver : RdbDataSaver
+        {
+            protected override void Submit(SubmitArgs e)
+            {
+                base.Submit(e);
+
+                if (e.Action == SubmitAction.Delete)
+                {
+                    //由于本外键关系没有级联，所以在删除的时候需要删除下面的数据
+                    this.DeleteRef(e.Entity, StorageOutBillItem.StorageOutBillProperty);
+                }
+            }
         }
     }
 

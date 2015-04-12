@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Rafy.Domain;
+using Rafy.Domain.ORM;
 using Rafy.UnitTest.IDataProvider;
 using Rafy.UnitTest.Repository;
 using UT;
@@ -23,7 +24,7 @@ using UT;
 namespace Rafy.UnitTest.DataProvider
 {
     [DataProviderFor(typeof(CarRepository))]
-    public class CarDataProvider : RepositoryDataProvider, ICarDataProvider
+    public class CarDataProvider : RdbDataProvider, ICarDataProvider
     {
         public CarList GetByStartDate(DateTime time)
         {

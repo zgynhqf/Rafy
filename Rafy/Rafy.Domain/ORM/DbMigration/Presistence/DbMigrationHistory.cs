@@ -144,21 +144,31 @@ namespace Rafy.Domain.ORM.DbMigration.Presistence
         }
 
         [DataProviderFor(typeof(DbMigrationHistoryRepository))]
-        private class DbMigrationHistoryRepositoryDataProvider : RepositoryDataProvider
+        private class DbMigrationHistoryRepositoryDataProvider : RdbDataProvider
         {
-            protected override string ConnectionStringSettingName
+            internal protected override string ConnectionStringSettingName
             {
                 get { return ConnectionStringNames.DbMigrationHistory; }
             }
 
-            protected override void OnQuerying(EntityQueryArgs args)
+            public DbMigrationHistoryRepositoryDataProvider()
             {
-                var q = args.Query;
-                q.OrderBy.Add(
-                    qf.OrderBy(q.MainTable.Column(DbMigrationHistory.TimeIdProperty), OrderDirection.Descending)
-                    );
+                this.DataQueryer = new DbMigrationHistoryQueryer();
+            }
 
-                base.OnQuerying(args);
+            private class DbMigrationHistoryQueryer : RdbDataQueryer
+            {
+                internal protected override void OnQuerying(EntityQueryArgs args)
+                {
+                    var f = QueryFactory.Instance;
+
+                    var q = args.Query;
+                    q.OrderBy.Add(
+                        f.OrderBy(q.MainTable.Column(DbMigrationHistory.TimeIdProperty), OrderDirection.Descending)
+                        );
+
+                    base.OnQuerying(args);
+                }
             }
         }
     }

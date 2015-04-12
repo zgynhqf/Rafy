@@ -32,6 +32,21 @@
         <Prefer32Bit>false</Prefer32Bit>
     </PropertyGroup>
     <ItemGroup>
+        <Reference Include="Rafy">
+            <HintPath>..\packages\Rafy.Domain.2.37.2599\lib\net45\Rafy.dll</HintPath>
+        </Reference>
+        <Reference Include="Rafy.DbMigration">
+            <HintPath>..\packages\Rafy.Domain.2.37.2599\lib\net45\Rafy.DbMigration.dll</HintPath>
+        </Reference>
+        <Reference Include="Rafy.Domain">
+            <HintPath>..\packages\Rafy.Domain.2.37.2599\lib\net45\Rafy.Domain.dll</HintPath>
+        </Reference>
+        <Reference Include="Rafy.ManagedProperty">
+            <HintPath>..\packages\Rafy.Domain.2.37.2599\lib\net45\Rafy.ManagedProperty.dll</HintPath>
+        </Reference>
+        <Reference Include="Rafy.Utils">
+            <HintPath>..\packages\Rafy.Domain.2.37.2599\lib\net45\Rafy.Utils.dll</HintPath>
+        </Reference>
         <Reference Include="System" />
         <Reference Include="System.Core" />
         <Reference Include="System.Xml.Linq" />
@@ -39,11 +54,6 @@
         <Reference Include="System.Data" />
         <Reference Include="System.Xml" />
         <Reference Include="Microsoft.CSharp" />
-        <Reference Include="Rafy"/>
-        <Reference Include="Rafy.Utils"/>
-        <Reference Include="Rafy.DbMigration"/>
-        <Reference Include="Rafy.ManagedProperty"/>
-        <Reference Include="Rafy.Domain"/>
     </ItemGroup>
     <ItemGroup>
         <Compile Include="DomainLibraryPlugin.cs" />
@@ -51,8 +61,11 @@
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>
-        <Folder Include="Services\" />
+        <None Include="packages.config" />
     </ItemGroup>
+    <!--<ItemGroup>
+        <Folder Include="Services\" />
+    </ItemGroup>-->
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

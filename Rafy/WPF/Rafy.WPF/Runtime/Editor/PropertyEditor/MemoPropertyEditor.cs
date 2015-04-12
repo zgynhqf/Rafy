@@ -18,7 +18,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-
+using System.Windows.Input;
 using Rafy.MetaModel;
 using Rafy.MetaModel.View;
 using Rafy.WPF;
@@ -49,12 +49,15 @@ namespace Rafy.WPF.Editors
             Button btnPop = new Button() { Content = "..." };
             btnPop.SetValue(DockPanel.DockProperty, Dock.Right);
             btnPop.Click += new RoutedEventHandler(btnPop_Click);
+            KeyboardNavigation.SetIsTabStop(btnPop, false);
             this._panel.Children.Add(btnPop);
 
             //create a textbox
             this._txt = new TextBox()
             {
                 AcceptsReturn = true,
+                TextWrapping = TextWrapping.Wrap,
+                VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
                 Name = this.Meta.Name,
             };
 
@@ -101,6 +104,7 @@ namespace Rafy.WPF.Editors
                 AcceptsReturn = true,
                 TextWrapping = TextWrapping.Wrap,
                 Text = (string)this.PropertyValue,
+                VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
                 IsReadOnly = isReadOnly
             };
 

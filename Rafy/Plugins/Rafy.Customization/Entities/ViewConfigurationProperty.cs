@@ -6,6 +6,7 @@ using System.Security.Permissions;
 using System.Text;
 using Rafy;
 using Rafy.Domain;
+using Rafy.Domain.ORM;
 using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
@@ -105,7 +106,7 @@ namespace Rafy.Customization
     }
 
     [DataProviderFor(typeof(ViewConfigurationPropertyRepository))]
-    public partial class ViewConfigurationPropertyDataProvider : RepositoryDataProvider
+    public partial class ViewConfigurationPropertyDataProvider : RdbDataProvider
     {
         public override EntityList GetByParentId(object pId, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
         {

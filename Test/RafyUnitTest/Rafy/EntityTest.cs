@@ -532,6 +532,53 @@ namespace RafyUnitTest
 
         #endregion
 
+        #region 列表
+
+        /// <summary>
+        /// 当置换元素时，不能把元素的状态改变了。
+        /// </summary>
+        [TestMethod]
+        public void ET_EntityList_SetItem()
+        {
+            var list = new TestUserList
+            {
+                new TestUser{ Name = "1" },
+                new TestUser{ Name = "2" },
+            };
+            list.MarkSaved();
+            Assert.IsTrue(list[0].PersistenceStatus == PersistenceStatus.Unchanged);
+            Assert.IsTrue(list[1].PersistenceStatus == PersistenceStatus.Unchanged);
+
+            using (list.MovingItems())
+            {
+                var tmp = list[0];
+                list[0] = list[1];
+                list[1] = tmp;
+            }
+            Assert.IsTrue(list[0].PersistenceStatus == PersistenceStatus.Unchanged);
+            Assert.IsTrue(list[1].PersistenceStatus == PersistenceStatus.Unchanged);
+            Assert.IsTrue(list[0].Name == "2");
+            Assert.IsTrue(list[1].Name == "1");
+        }
+
+        /// <summary>
+        /// 在列表中移除实体时，实体的 ParentList 属性应该是空。
+        /// </summary>
+        [TestMethod]
+        public void ET_EntityList_ParentList_Remove()
+        {
+            var item = new TestUser();
+            Assert.IsTrue(item.ParentList == null);
+
+            var list = new TestUserList { item };
+            Assert.IsTrue(item.ParentList == list);
+
+            list.RemoveAt(0);
+            Assert.IsTrue(item.ParentList == null);
+        }
+
+        #endregion
+
         #region 仓库
 
         [TestMethod]
@@ -833,7 +880,7 @@ namespace RafyUnitTest
                 int count = 0;
                 EventHandler<Rafy.Logger.DbAccessedEventArgs> handler = (o, e) =>
                 {
-                    if (e.ConnectionSchema == repo.RdbDataProvider.DbSetting) count++;
+                    if (e.ConnectionSchema == RdbDataProvider.Get(repo).DbSetting) count++;
                 };
                 Logger.DbAccessed += handler;
 

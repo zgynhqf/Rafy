@@ -62,7 +62,7 @@
     <EmbeddedResource Include="Items\DomainEntity\DomainEntity.g.cs" />
     <None Include="Items\DomainEntity\DomainEntity.v1_1_0.g.cs" />
     <EmbeddedResource Include="Items\DomainEntityRepository\DomainEntityRepositoryTemplate.cs" />
-    <None Include="Items\DomainEntityRepository\DomainEntityRepository.cs" />
+    <EmbeddedResource Include="Items\DomainEntityRepository\DomainEntityRepository.cs" />
     <EmbeddedResource Include="Items\DomainEntityRepository\DomainEntityRepository.g.cs" />
     <Compile Include="Common\CodeElementVisitor.cs" />
     <Compile Include="Common\Consts.cs" />
@@ -87,9 +87,10 @@
     <Compile Include="Wizards\Items\ViewModel.cs" />
     <Compile Include="Wizards\Projects\ConsoleAppProjectWizard.cs" />
     <Compile Include="Wizards\Wizard.cs" />
+    <None Include="Projects\Rafy Console App\packages.config" />
     <None Include="Projects\Rafy Console App\Program.cs" />
     <None Include="Projects\Rafy Console App\Properties\AssemblyInfo.cs" />
-    <None Include="Items\DomainEntity\DomainEntity.cs" />
+    <EmbeddedResource Include="Items\DomainEntity\DomainEntity.cs" />
     <Compile Include="Wizards\Projects\DomainLibraryProjectWindow.xaml.cs">
       <DependentUpon>DomainLibraryProjectWindow.xaml</DependentUpon>
     </Compile>
@@ -100,6 +101,7 @@
     <None Include="Projects\Rafy Console App\x86\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest" />
     <None Include="Projects\Rafy Domain Library\DomainLibraryPlugin.cs" />
     <None Include="Projects\Rafy Domain Library\Entities\DomainLibraryEntity.cs" />
+    <None Include="Projects\Rafy Domain Library\packages.config" />
     <None Include="Projects\Rafy Domain Library\Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

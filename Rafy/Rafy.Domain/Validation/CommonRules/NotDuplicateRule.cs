@@ -99,7 +99,7 @@ namespace Rafy.Domain.Validation
                 EnsurePropertyCategory(property);
 
                 var value = entity.GetProperty(property);
-                if (ConditionalSql.IsNotEmpty(value))
+                if (DomainHelper.IsNotEmpty(value))
                 {
                     hasValue = true;
                     criteria.Add(property, value);

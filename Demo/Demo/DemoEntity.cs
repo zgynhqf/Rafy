@@ -51,7 +51,7 @@ namespace Demo
     }
 
     [DataProviderFor(typeof(DemoEntityRepository))]
-    public class DemoEntityDataProvider : RepositoryDataProvider
+    public class DemoEntityDataProvider : RdbDataProvider
     {
         protected override string ConnectionStringSettingName
         {

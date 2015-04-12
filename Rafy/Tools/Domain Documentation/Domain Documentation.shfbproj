@@ -310,10 +310,6 @@
       <ImageId>第一个程序08</ImageId>
       <AlternateText>第一个程序08</AlternateText>
     </Image>
-    <Image Include="Media\领域框架\快速试用\创建第一个程序\第一个程序09.png">
-      <ImageId>第一个程序09</ImageId>
-      <AlternateText>第一个程序09</AlternateText>
-    </Image>
     <Image Include="Media\领域框架\领域实体\DomainEntity_AddNewItem.jpg">
       <ImageId>DomainEntity_AddNewItem</ImageId>
       <AlternateText>Domain Entity Add New Item</AlternateText>

@@ -118,7 +118,7 @@ namespace UT
 
         protected EntityList FetchBy(GetByRawSqlCriteria criteria)
         {
-            return this.QueryList(new SqlQueryArgs
+            return (this.DataQueryer as RdbDataQueryer).QueryList(new SqlQueryArgs
             {
                 FormattedSql = criteria.FormatSql,
                 Parameters = criteria.Parameters,

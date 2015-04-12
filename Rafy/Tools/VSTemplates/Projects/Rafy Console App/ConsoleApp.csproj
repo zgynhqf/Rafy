@@ -34,11 +34,21 @@
         <Prefer32Bit>false</Prefer32Bit>
     </PropertyGroup>
     <ItemGroup>
-        <Reference Include="Rafy"/>
-        <Reference Include="Rafy.Utils"/>
-        <Reference Include="Rafy.DbMigration"/>
-        <Reference Include="Rafy.ManagedProperty"/>
-        <Reference Include="Rafy.Domain"/>
+        <Reference Include="Rafy">
+            <HintPath>..\packages\Rafy.Domain.2.37.2599\lib\net45\Rafy.dll</HintPath>
+        </Reference>
+        <Reference Include="Rafy.DbMigration">
+            <HintPath>..\packages\Rafy.Domain.2.37.2599\lib\net45\Rafy.DbMigration.dll</HintPath>
+        </Reference>
+        <Reference Include="Rafy.Domain">
+            <HintPath>..\packages\Rafy.Domain.2.37.2599\lib\net45\Rafy.Domain.dll</HintPath>
+        </Reference>
+        <Reference Include="Rafy.ManagedProperty">
+            <HintPath>..\packages\Rafy.Domain.2.37.2599\lib\net45\Rafy.ManagedProperty.dll</HintPath>
+        </Reference>
+        <Reference Include="Rafy.Utils">
+            <HintPath>..\packages\Rafy.Domain.2.37.2599\lib\net45\Rafy.Utils.dll</HintPath>
+        </Reference>
         <Reference Include="System" />
         <Reference Include="System.Core" />
         <Reference Include="System.Data" />
@@ -109,6 +119,7 @@
     </ItemGroup>
     <ItemGroup>
         <None Include="App.config" />
+        <None Include="packages.config" />
         <None Include="amd64\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>

@@ -153,7 +153,7 @@ namespace UT
         }
         private LiteDataTable DA_GetAllInTable()
         {
-            return this.QueryTable(@"
+            return (this.DataQueryer as RdbDataQueryer).QueryTable(@"
 select * from Article
 ");
         }

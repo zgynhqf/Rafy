@@ -153,15 +153,47 @@ namespace Rafy.Domain
 
         #region Insert, Remove, Clear
 
+        #region public IDisposable MovingItems
+
+        [NonSerialized]
+        private bool _movingItems;
+
+        /// <summary>
+        /// 设置本列表是否正在调整元素的位置。
+        /// 为使得排序性能更好，可使用此方法声明一个只变更元素顺序的代码块，
+        /// 此代码块中，列表会认为所有的 Remove、Add、Set 操作，都只是在维护元素顺序，而不会添加新元素、删除旧元素。
+        /// </summary>
+        /// <returns></returns>
+        public IDisposable MovingItems()
+        {
+            _movingItems = true;
+            return new MovingItemsDisposable { Owner = this };
+        }
+
+        private class MovingItemsDisposable : IDisposable
+        {
+            internal EntityList Owner;
+            public void Dispose()
+            {
+                Owner._movingItems = false;
+                Owner.OnTreeItemsMoved();
+            }
+        }
+
+        #endregion
+
         /// <summary>
         /// 清空所有项。
         /// </summary>
         protected override void ClearItems()
         {
-            for (int i = 0, c = this.Count; i < c; i++)
+            if (!_movingItems)
             {
-                var item = this[i];
-                this.OnItemRemoving(item);
+                for (int i = 0, c = this.Count; i < c; i++)
+                {
+                    var item = this[i];
+                    this.OnItemRemoving(i, item);
+                }
             }
 
             base.ClearItems();
@@ -174,16 +206,23 @@ namespace Rafy.Domain
         /// <param name="item">The item.</param>
         protected override void SetItem(int index, Entity item)
         {
-            var toDelete = this[index];
-            if (toDelete != item)
+            if (!_movingItems)
             {
-                this.OnItemRemoving(toDelete);
-                this.OnItemAdding(index, item);
+                var toDelete = this[index];
+                if (toDelete != item)
+                {
+                    this.OnItemRemoving(index, toDelete);
+                    this.OnItemAdding(index, item);
 
+                    base.SetItem(index, item);
+
+                    this.OnItemRemoved(index, item);
+                    this.OnItemAdded(index, item);
+                }
+            }
+            else
+            {
                 base.SetItem(index, item);
-
-                this.OnItemRemoved(index, item);
-                this.OnItemAdded(index, item);
             }
         }
 
@@ -195,11 +234,17 @@ namespace Rafy.Domain
         {
             var item = this[index];
 
-            this.OnItemRemoving(item);
+            if (!_movingItems)
+            {
+                this.OnItemRemoving(index, item);
+            }
 
             base.RemoveItem(index);
 
-            this.OnItemRemoved(index, item);
+            if (!_movingItems)
+            {
+                this.OnItemRemoved(index, item);
+            }
         }
 
         /// <summary>
@@ -212,11 +257,17 @@ namespace Rafy.Domain
         {
             if (item == null) throw new ArgumentNullException("item");
 
-            this.OnItemAdding(index, item);
+            if (!_movingItems)
+            {
+                this.OnItemAdding(index, item);
+            }
 
             base.InsertItem(index, item);
 
-            this.OnItemAdded(index, item);
+            if (!_movingItems)
+            {
+                this.OnItemAdded(index, item);
+            }
         }
 
         private void OnItemAdding(int index, Entity item)
@@ -258,7 +309,7 @@ namespace Rafy.Domain
             this.OnTreeItemInserted(index, item);
         }
 
-        private void OnItemRemoving(Entity item)
+        private void OnItemRemoving(int index, Entity item)
         {
             //如果是新的对象，则不需要加入到 DeletedList 列表中。
             if (!item.IsNew)
@@ -271,6 +322,8 @@ namespace Rafy.Domain
 
                 this.DeletedList.Add(item);
             }
+
+            this.ClearItemParent(item);
 
             this.OnTreeItemRemoving(item);
         }
@@ -290,6 +343,20 @@ namespace Rafy.Domain
                 if (this.HasManyType == HasManyType.Composition)
                 {
                     item.SetParentEntity(this.Parent);
+                }
+            }
+        }
+
+        private void ClearItemParent(Entity item)
+        {
+            var needParent = item != null && !this.SupressSetItemParent;
+            if (needParent)
+            {
+                (item as IDomainComponent).SetParent(null);
+
+                if (this.HasManyType == HasManyType.Composition)
+                {
+                    item.SetParentEntity(null);
                 }
             }
         }
@@ -347,39 +414,6 @@ namespace Rafy.Domain
         }
 
         #region ReadRowDirectly
-
-        /// <summary>
-        /// 直接从table中读取列表对象的所有数据。
-        /// 
-        /// 注意：
-        /// 如果需要把子对象的数据也加入进来，请使用本方法的另一重载。
-        /// </summary>
-        /// <param name="table"></param>
-        internal void ReadFromTable(IDataTable table)
-        {
-            this.ReadFromTable(table, null);
-        }
-
-        /// <summary>
-        /// 直接从table中读取列表对象的所有数据。
-        /// </summary>
-        /// <param name="table"></param>
-        /// <param name="relationLoader">
-        /// 为聚合对象item从table中加载其所有子对象的数据。
-        /// 
-        /// 注意：
-        /// 默认不加载。
-        /// 子类重写这个方法，手工调用TEntity的方法为其加载。
-        /// 
-        /// 参数：
-        /// TEntity：需要加载孩子属性的实体对象
-        /// IGTable：在这些行中加载所有子对象的数据
-        /// 返回TEntity：加载完毕孩子后的实体对象。
-        /// </param>
-        internal void ReadFromTable(IDataTable table, Action<Entity, IDataTable> relationLoader)
-        {
-            EntityListHelper.ReadFromTable(this, table, relationLoader);
-        }
 
         #endregion
 
@@ -453,98 +487,6 @@ namespace Rafy.Domain
         public void AddRange(IEnumerable<Entity> list)
         {
             foreach (var item in list) { this.Add(item); }
-        }
-    }
-
-    /// <summary>
-    /// 由于GEntityList和GEntityTreeList这两个类不能同时从一个类继承下来，
-    /// 所以这个Helper类主要用于为它们共享一些代码。
-    /// </summary>
-    internal static class EntityListHelper
-    {
-        /// <summary>
-        /// 这个方法把table中的数据全部读取并转换为对象存入对象列表中。
-        /// 
-        /// 算法简介：
-        /// 由于子对象的数据都是存储在这个IGTable中，所以每一个TEntity可能对应多个行，
-        /// 每一行数据其实就是一个子对象的数据，而TEntity的属性值是重复的。
-        /// 所以这里找到每个TEntity对应的第一行和最后一行，把它封装为一个子表格，传给子对象集合进行加载。
-        /// 这样的设计是为了实现重用这个方法：集合加载IGTable中的数据。
-        /// </summary>
-        /// <param name="list">转换的对象存入这个列表中</param>
-        /// <param name="table">表格数据，数据类型于以下形式：
-        /// TableA  TableB  TableC  TableD...
-        /// a1      b1      c1
-        /// a1      b1      c2
-        /// a2      b2      NULL
-        /// a3      NULL    NULL
-        /// ...</param>
-        /// <param name="relationLoader">为每个TEntity调用此方法，从IGTable中加载它对应的孩子对象。
-        /// 加载完成后的对象会被加入到list中，所以此方法有可能返回一个全新的TEntity。</param>
-        internal static void ReadFromTable(this EntityList list, IDataTable table, Action<Entity, IDataTable> relationLoader)
-        {
-            var entityType = list.EntityType;
-            var repo = RepositoryFactoryHost.Factory.FindByEntity(entityType);
-            string idName = repo.RdbDataProvider.SQLColumnsGenerator.GetReadableIdColumnSql();
-
-            object lastId = null;
-            //每个TEntity对象对应的第一行数据
-            int startRow = 0;
-            for (int i = 0, c = table.Count; i < c; i++)
-            {
-                var row = table[i];
-
-                var objId = row[idName];
-                object id = objId != DBNull.Value ? objId : null;
-
-                //如果 id 改变，表示已经进入到下一个 TEntity 对象的开始行了。
-                if (id != lastId)
-                {
-                    //不是第一次 或者 全是NULL值
-                    if (lastId != null)
-                    {
-                        //前一行就是最后一行。
-                        int endRow = i - 1;
-
-                        Entity item = CreateEntity(entityType, table, startRow, endRow, relationLoader);
-
-                        list.Add(item);
-                    }
-
-                    //重置 startRow 为下一个 TEntity
-                    startRow = i;
-                }
-
-                lastId = id;
-            }
-
-            //加入最后一个 Entity
-            if (lastId != null)
-            {
-                Entity lastEntity = CreateEntity(entityType, table, startRow, table.Count - 1, relationLoader);
-                list.Add(lastEntity);
-            }
-        }
-
-        /// <summary>
-        /// 把 table 从 startRow 到 endRow 之间的数据，都转换为一个 TEntity 并返回。
-        /// </summary>
-        /// <param name="entityType">Type of the entity.</param>
-        /// <param name="table">The table.</param>
-        /// <param name="startRow">The start row.</param>
-        /// <param name="endRow">The end row.</param>
-        /// <param name="relationLoader">The relation loader.</param>
-        /// <returns></returns>
-        private static Entity CreateEntity(Type entityType, IDataTable table, int startRow, int endRow, Action<Entity, IDataTable> relationLoader)
-        {
-            //新的TEntity
-            var repo = RepositoryFactoryHost.Factory.FindByEntity(entityType);
-            var entity = repo.RdbDataProvider.SQLColumnsGenerator.ReadDataDirectly(table[startRow]);
-            Debug.Assert(entity != null, "id不为空，对象也不应该为空。");
-
-            var childTable = new SubTable(table, startRow, endRow);
-            if (relationLoader != null) { relationLoader(entity, childTable); }
-            return entity;
         }
     }
 }

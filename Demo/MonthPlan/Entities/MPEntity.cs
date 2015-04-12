@@ -19,6 +19,7 @@ using System.Security.Permissions;
 using System.Text;
 using Rafy;
 using Rafy.Domain;
+using Rafy.Domain.ORM;
 using Rafy.MetaModel;
 using Rafy.MetaModel.View;
 
@@ -51,7 +52,7 @@ namespace MP
     }
 
     [DataProviderFor(typeof(MPEntityRepository))]
-    public class MPEntityDataProvider : RepositoryDataProvider
+    public class MPEntityDataProvider : RdbDataProvider
     {
         protected override string ConnectionStringSettingName
         {

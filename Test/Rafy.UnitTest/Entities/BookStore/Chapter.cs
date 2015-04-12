@@ -248,7 +248,7 @@ order by chapter.name desc
                 throw new NotSupportedException();
             }
 
-            return this.QueryTable(sql, pi);
+            return (this.DataQueryer as RdbDataQueryer).QueryTable(sql, pi);
         }
 
         public LiteDataTable QueryChapterBySqlTree(string name, PagingInfo pi)

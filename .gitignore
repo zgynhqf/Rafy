@@ -93,3 +93,7 @@
 /Demo/Demo.Customer1/bin/Debug
 /Rafy/Tools/Domain Documentation/Help
 *.user
+/Demo/FinanceManagement/bin/Debug
+/Demo/FinanceManagement/obj/Debug
+/Demo/MonthPlan/bin/Debug
+/Demo/MonthPlan/obj/Debug

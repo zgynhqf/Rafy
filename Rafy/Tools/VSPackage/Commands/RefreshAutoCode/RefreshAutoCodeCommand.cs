@@ -88,7 +88,7 @@ namespace Rafy.VSPackage.Commands.RefreshAutoCode
             foreach (var repo in repositories)
             {
                 var item = repo.ProjectItem;
-                RefreshAutoCodeForClass(repo, item, this.RenderRepoByTemplate);
+                RefreshAutoCodeForClass(repo, item, r => this.RenderRepoByTemplate(r, entities));
             }
 
             MessageBox.Show(string.Format("生成完毕。一共生成 {0} 个实体文件，{1} 个仓库文件。", entities.Count, repositories.Count));
@@ -144,7 +144,7 @@ namespace Rafy.VSPackage.Commands.RefreshAutoCode
             //如果实体类文件中还包含了仓库的文件，则需要同时在自动代码中加入仓库的自动代码。
             bool renderRepository = HasRepository(entity);
 
-            var res = ItemCodeTemplate.GetEntityFileCode(
+            var res = ItemCodeTemplate.GetEntityFileAutoCode(
                 entity.Namespace.Name, concreteNew, entity.Name, renderRepository
                 );
 
@@ -301,14 +301,13 @@ namespace Rafy.VSPackage.Commands.RefreshAutoCode
 
         #region RenderRepoByTemplate
 
-        private string RenderRepoByTemplate(CodeClass repo)
+        private string RenderRepoByTemplate(CodeClass repo, IList<CodeClass> entities)
         {
             string domainNamespace = null;
-            if (ParseDomainNamespace(repo, out domainNamespace))
+            var entity = Helper.GetEntityNameForRepository(repo);
+            if (ParseDomainNamespace(repo, entity, entities, out domainNamespace))
             {
-                var entity = Helper.GetEntityNameForRepository(repo);
-
-                var res = ItemCodeTemplate.GetRepositoryFileCode(
+                var res = ItemCodeTemplate.GetRepositoryFileAutoCode(
                     domainNamespace, repo.Namespace.Name, entity
                     );
 
@@ -323,11 +322,23 @@ namespace Rafy.VSPackage.Commands.RefreshAutoCode
         /// </summary>
         /// <param name="repo"></param>
         /// <returns></returns>
-        private static bool ParseDomainNamespace(CodeClass repo, out string domainNamespace)
+        private static bool ParseDomainNamespace(CodeClass repo, string entityName, IList<CodeClass> entities, out string domainNamespace)
         {
             domainNamespace = null;
 
-            //约定：Repository.g.cs 文件中的最后一个命名空间，即是实体的命名空间。
+            //如果实体和仓库都是在这同一个项目中时，直接在实体列表中找到对应实体的命令空间。
+            if (entities.Count > 0)
+            {
+                var entity = entities.FirstOrDefault(c => c.Name == entityName);
+                if (entity != null)
+                {
+                    domainNamespace = entity.Namespace.FullName;
+                    return true;
+                }
+            }
+
+            //实体不在同一个项目中，则通过约定查找实体的命名空间：
+            //Repository.g.cs 文件中的最后一个命名空间，即是实体的命名空间。
             var item = repo.ProjectItem;
             var fileName = item.get_FileNames(1);
             var gFileName = Path.GetFileNameWithoutExtension(fileName) + ".g.cs";

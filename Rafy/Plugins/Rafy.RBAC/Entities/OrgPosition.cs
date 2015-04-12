@@ -139,7 +139,7 @@ where OrgPositionUser.UserId = {0}
 ";
             sql.Parameters.Add(userId);
 
-            return this.QueryList(sql);
+            return (this.DataQueryer as RdbDataQueryer).QueryList(sql);
         }
     }
 

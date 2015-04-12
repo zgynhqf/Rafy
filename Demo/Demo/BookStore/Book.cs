@@ -13,6 +13,7 @@ using Rafy.Domain.Validation;
 using Demo.WPF.Commands;
 using Demo.WPF;
 using Rafy.ManagedProperty;
+using Rafy.Domain.ORM;
 
 namespace Demo
 {
@@ -139,7 +140,7 @@ namespace Demo
     }
 
     [DataProviderFor(typeof(BookRepository))]
-    public partial class BookDataProvider : RepositoryDataProvider
+    public partial class BookDataProvider : RdbDataProvider
     {
         public override EntityList GetAll(PagingInfo paging, EagerLoadOptions eagerLoad)
         {

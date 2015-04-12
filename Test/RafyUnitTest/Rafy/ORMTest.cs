@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -1056,8 +1057,96 @@ namespace RafyUnitTest
             }
         }
 
+        /// <summary>
+        /// Bool 值属性的判断，可以没有值属性。
+        /// </summary>
         [TestMethod]
-        public void ORM_LinqQuery_And()
+        public void ORM_LinqQuery_Where_Boolean()
+        {
+            var repo = RF.Concrete<PBSTypeRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                repo.Save(new PBSType { Name = "1", IsDefault = true });
+                repo.Save(new PBSType { Name = "2", IsDefault = false });
+
+                var list = repo.LinqByBoolean(true);
+                Assert.IsTrue(list.Count == 1);
+                Assert.IsTrue(list[0].Name == "1" && list[0].IsDefault);
+            }
+        }
+
+        /// <summary>
+        /// Bool 值属性的判断，可以有值属性。
+        /// </summary>
+        [TestMethod]
+        public void ORM_LinqQuery_Where_Boolean_Raw()
+        {
+            var repo = RF.Concrete<PBSTypeRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                repo.Save(new PBSType { Name = "1", IsDefault = true });
+                repo.Save(new PBSType { Name = "2", IsDefault = false });
+
+                var list = repo.LinqByBoolean_Raw(true);
+                Assert.IsTrue(list.Count == 1);
+                Assert.IsTrue(list[0].Name == "1" && list[0].IsDefault);
+            }
+        }
+
+        [TestMethod]
+        public void ORM_LinqQuery_Where_Boolean_Not()
+        {
+            var repo = RF.Concrete<PBSTypeRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                repo.Save(new PBSType { Name = "1", IsDefault = true });
+                repo.Save(new PBSType { Name = "2", IsDefault = false });
+
+                var list = repo.LinqByBoolean(false);
+                Assert.IsTrue(list.Count == 1);
+                Assert.IsTrue(list[0].Name == "2" && !list[0].IsDefault);
+            }
+        }
+
+        /// <summary>
+        /// Bool 值属性的判断，可以没有值属性。
+        /// </summary>
+        [TestMethod]
+        public void ORM_LinqQuery_Where_Boolean_InBinary()
+        {
+            var repo = RF.Concrete<PBSTypeRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                repo.Save(new PBSType { Name = "1", IsDefault = true });
+                repo.Save(new PBSType { Name = "1", IsDefault = false });
+                repo.Save(new PBSType { Name = "2", IsDefault = true });
+                repo.Save(new PBSType { Name = "2", IsDefault = false });
+
+                var list = repo.LinqByBoolean_InBinary("1", true);
+                Assert.IsTrue(list.Count == 1);
+                Assert.IsTrue(list[0].Name == "1" && list[0].IsDefault);
+            }
+        }
+
+        [TestMethod]
+        public void ORM_LinqQuery_Where_Boolean_InBinary_Not()
+        {
+            var repo = RF.Concrete<PBSTypeRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                repo.Save(new PBSType { Name = "1", IsDefault = true });
+                repo.Save(new PBSType { Name = "1", IsDefault = false });
+                repo.Save(new PBSType { Name = "2", IsDefault = true });
+                repo.Save(new PBSType { Name = "2", IsDefault = false });
+
+                var list = repo.LinqByBoolean_InBinary("2", false);
+                Assert.IsTrue(list.Count == 1);
+                Assert.IsTrue(list[0].Name == "2" && !list[0].IsDefault);
+            }
+        }
+
+        [TestMethod]
+        public void ORM_LinqQuery_Where_And()
         {
             var repo = RF.Concrete<PBSTypeRepository>();
             using (RF.TransactionScope(repo))
@@ -1077,7 +1166,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ORM_LinqQuery_Or()
+        public void ORM_LinqQuery_Where_Or()
         {
             var repo = RF.Concrete<PBSTypeRepository>();
             using (RF.TransactionScope(repo))
@@ -1309,6 +1398,57 @@ namespace RafyUnitTest
                 Assert.IsTrue(list.Count == 4);
                 list = repo.GetByBookNameOwner("2", 0);
                 Assert.IsTrue(list.Count == 3);
+            }
+        }
+
+        /// <summary>
+        /// 可空引用也需要能够正常使用。
+        /// 同时，
+        /// 在使用可空引用实体的属性进行判断时，SQL 必须要生成 NullableRef IS NOT NULL 的附加语句。
+        /// </summary>
+        [TestMethod]
+        public void ORM_LinqQuery_WhereNullableRef()
+        {
+            var repo = RF.Concrete<FavorateRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var book1 = new Book { Name = "Book1", };
+                RF.Save(book1);
+                var book2 = new Book { Name = "Book2" };
+                RF.Save(book2);
+                repo.Save(new Favorate { Name = "f1", Book = book1 });
+                repo.Save(new Favorate { Name = "f2", Book = book2 });
+                repo.Save(new Favorate { Name = "f3" });
+
+
+                var list = repo.GetByBookName(book1.Name);
+                Assert.IsTrue(list.Count == 1);
+                Assert.IsTrue(list[0].Name == "f1");
+            }
+        }
+
+        /// <summary>
+        /// 在使用可空引用实体的属性进行判断时，SQL 必须要生成 NullableRef IS NOT NULL 的附加语句。
+        /// 同时，不能影响外部的 IS NULL 的判断。
+        /// </summary>
+        [TestMethod]
+        public void ORM_LinqQuery_WhereNullableRef_AutoGenerateNullableRefConstraint()
+        {
+            var repo = RF.Concrete<FavorateRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var book1 = new Book { Name = "Book1", };
+                RF.Save(book1);
+                var book2 = new Book { Name = "Book2" };
+                RF.Save(book2);
+                repo.Save(new Favorate { Name = "f1", Book = book1 });
+                repo.Save(new Favorate { Name = "f2", Book = book2 });
+                repo.Save(new Favorate { Name = "f3" });
+
+                var list = repo.GetByBookNameNotOrNull(book1.Name);
+                Assert.IsTrue(list.Count == 2);
+                Assert.IsTrue(list[0].Name == "f2");
+                Assert.IsTrue(list[1].Name == "f3");
             }
         }
 
@@ -1845,7 +1985,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ORM_LinqQuery_WhereChildrenExists()
+        public void ORM_LinqQuery_WhereChildren_Any()
         {
             var repo = RF.Concrete<BookRepository>();
             using (RF.TransactionScope(repo))
@@ -1868,7 +2008,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ORM_LinqQuery_WhereChildrenExistsChapterName()
+        public void ORM_LinqQuery_WhereChildren_Any_ChapterName()
         {
             var repo = RF.Concrete<BookRepository>();
             using (RF.TransactionScope(repo))
@@ -1909,7 +2049,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ORM_LinqQuery_WhereChildrenExistsSectionName()
+        public void ORM_LinqQuery_WhereChildren_Any_SectionName()
         {
             var repo = RF.Concrete<BookRepository>();
             using (RF.TransactionScope(repo))
@@ -1966,7 +2106,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ORM_LinqQuery_WhereChildrenExistsSectionAndOwner()
+        public void ORM_LinqQuery_WhereChildren_Any_SectionAndOwner()
         {
             var repo = RF.Concrete<BookRepository>();
             using (RF.TransactionScope(repo))
@@ -2042,8 +2182,47 @@ namespace RafyUnitTest
             }
         }
 
+        /// <summary>
+        /// 在 Where 中使用引用实体的聚合子属性来进行查询。
+        /// </summary>
         [TestMethod]
-        public void ORM_LinqQuery_WhereChildrenAllChapterName()
+        public void ORM_LinqQuery_WhereChildren_Any_RefChildren()
+        {
+            var repo = RF.Concrete<FavorateRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var b1 = new Book();
+                var b2 = new Book
+                {
+                    ChapterList =
+                    {
+                        new Chapter { Name = "1.1" },
+                    }
+                };
+                var b3 = new Book
+                {
+                    ChapterList =
+                    {
+                        new Chapter { Name = "1.1" },
+                        new Chapter { Name = "1.2" },
+                    }
+                };
+                RF.Save(b1);
+                RF.Save(b2);
+                RF.Save(b3);
+
+                RF.Save(new Favorate { Book = b1, Name = "1" });
+                RF.Save(new Favorate { Book = b2, Name = "2" });
+                RF.Save(new Favorate { Book = b3, Name = "3" });
+
+                var list = repo.GetByChapterName("1.2");
+                Assert.IsTrue(list.Count == 1);
+                Assert.IsTrue(list[0].Name == "3");
+            }
+        }
+
+        [TestMethod]
+        public void ORM_LinqQuery_WhereChildren_All_ChapterName()
         {
             var repo = RF.Concrete<BookRepository>();
             using (RF.TransactionScope(repo))
@@ -2084,8 +2263,187 @@ namespace RafyUnitTest
             }
         }
 
+        /// <summary>
+        /// 外层查询是 All，内层查询是 Any。
+        /// 主要测试 All 里面的 Any 条件在转换为 Exists 时，是否会添加 NOT 操作符来反转条件。
+        /// </summary>
         [TestMethod]
-        public void ORM_LinqQuery_WhereChildren_Complicated()
+        public void ORM_LinqQuery_WhereChildren_All_Any()
+        {
+            var repo = RF.Concrete<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var so = new SectionOwner { Name = "huqf" };
+                RF.Save(so);
+
+                repo.Save(new Book
+                {
+                    Name = "1",
+                    ChapterList =
+                    {
+                        new Chapter
+                        {
+                            SectionList = 
+                            {
+                                new Section { SectionOwner = so },
+                            }
+                        },
+                        new Chapter
+                        {
+                            SectionList = 
+                            {
+                                new Section { SectionOwner = so },
+                            }
+                        }
+                    }
+                });
+                repo.Save(new Book
+                {
+                    Name = "2",
+                    ChapterList =
+                    {
+                        new Chapter
+                        {
+                            SectionList = 
+                            {
+                                new Section { SectionOwner = so },
+                                new Section { },
+                            }
+                        }
+                    }
+                });
+                repo.Save(new Book
+                {
+                    Name = "3",
+                });
+                repo.Save(new Book
+                {
+                    Name = "4",
+                    ChapterList =
+                    {
+                        new Chapter
+                        {
+                            SectionList = 
+                            {
+                                new Section { SectionOwner = so },
+                            }
+                        },
+                        new Chapter
+                        {
+                            SectionList = 
+                            {
+                                new Section { },//not match
+                            }
+                        }
+                    }
+                });
+
+                var list = repo.LinqGetIfChildren_All_Any();
+                Assert.IsTrue(list.Count == 3);
+                Assert.IsTrue(list[0].Name == "1");
+                Assert.IsTrue(list[1].Name == "2");
+                Assert.IsTrue(list[2].Name == "3");
+            }
+        }
+
+        /// <summary>
+        /// 外层查询是 All，内层查询是 All。
+        /// 主要测试 All 里面的 All 条件在转换为 NOT Exists 时，是否会删除 NOT 操作符来反转条件。
+        /// </summary>
+        [TestMethod]
+        public void ORM_LinqQuery_WhereChildren_All_All()
+        {
+            var repo = RF.Concrete<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var so = new SectionOwner { Name = "huqf" };
+                RF.Save(so);
+
+                repo.Save(new Book { Name = "1" });
+                repo.Save(new Book
+                {
+                    Name = "2",
+                    ChapterList =
+                    {
+                        new Chapter()
+                    }
+                });
+                repo.Save(new Book
+                {
+                    Name = "3",
+                    ChapterList =
+                    {
+                        new Chapter
+                        {
+                            SectionList = 
+                            {
+                                new Section { SectionOwner = so },
+                                new Section { SectionOwner = so },
+                            }
+                        }
+                    }
+                });
+                repo.Save(new Book
+                {
+                    Name = "4",
+                    ChapterList =
+                    {
+                        new Chapter
+                        {
+                            SectionList = 
+                            {
+                                new Section { SectionOwner = so },
+                                new Section { SectionOwner = so },
+                            }
+                        },
+                        new Chapter
+                        {
+                            SectionList = 
+                            {
+                                new Section { SectionOwner = so },
+                                new Section { SectionOwner = so },
+                            }
+                        }
+                    }
+                });
+                repo.Save(new Book
+                {
+                    Name = "5",
+                    ChapterList =
+                    {
+                        new Chapter
+                        {
+                            SectionList = 
+                            {
+                                new Section { SectionOwner = so },
+                                new Section { SectionOwner = so },
+                            }
+                        },
+                        new Chapter
+                        {
+                            SectionList = 
+                            {
+                                new Section { SectionOwner = so },
+                                new Section { },//not match
+                            }
+                        }
+                    }
+                });
+
+                var list = repo.LinqGetIfChildren_All_All();
+                Assert.IsTrue(list.Count == 4);
+                Assert.IsTrue(list[0].Name == "1");
+                Assert.IsTrue(list[1].Name == "2");
+                Assert.IsTrue(list[2].Name == "3");
+                Assert.IsTrue(list[3].Name == "4");
+            }
+        }
+
+        /// <summary>
+        /// 一个复杂的，同时包含各种方法查询的测试。
+        /// </summary>
+        [TestMethod]
+        public void ORM_LinqQuery_WhereChildren_Complicated_Any_All()
         {
             var repo = RF.Concrete<BookRepository>();
             using (RF.TransactionScope(repo))
@@ -2098,8 +2456,12 @@ namespace RafyUnitTest
             }
         }
 
+        /// <summary>
+        /// 一个复杂的，同时包含各种方法查询的测试。
+        /// 同时支持分页。
+        /// </summary>
         [TestMethod]
-        public void ORM_LinqQuery_WhereChildren_Complicated_WithPaging()
+        public void ORM_LinqQuery_WhereChildren_Complicated_Any_All_WithPaging()
         {
             var repo = RF.Concrete<BookRepository>();
             using (RF.TransactionScope(repo))
@@ -2252,42 +2614,6 @@ namespace RafyUnitTest
                         new Chapter { Name = "1.3"},
                     }
                 });
-            }
-        }
-
-        [TestMethod]
-        public void ORM_LinqQuery_WhereRefChildrenExists()
-        {
-            var repo = RF.Concrete<FavorateRepository>();
-            using (RF.TransactionScope(repo))
-            {
-                var b1 = new Book();
-                var b2 = new Book
-                {
-                    ChapterList =
-                    {
-                        new Chapter { Name = "1.1" },
-                    }
-                };
-                var b3 = new Book
-                {
-                    ChapterList =
-                    {
-                        new Chapter { Name = "1.1" },
-                        new Chapter { Name = "1.2" },
-                    }
-                };
-                RF.Save(b1);
-                RF.Save(b2);
-                RF.Save(b3);
-
-                RF.Save(new Favorate { Book = b1, Name = "1" });
-                RF.Save(new Favorate { Book = b2, Name = "2" });
-                RF.Save(new Favorate { Book = b3, Name = "3" });
-
-                var list = repo.GetByChapterName("1.2");
-                Assert.IsTrue(list.Count == 1);
-                Assert.IsTrue(list[0].Name == "3");
             }
         }
 
@@ -4196,6 +4522,47 @@ ORDER BY Article.Code ASC");
 FROM Article
 WHERE Article.Id > {0}
 ORDER BY Article.Code ASC");
+        }
+
+        #endregion
+
+        #region 数据库映射
+
+        [TestMethod]
+        public void ORM_DbMigrate_Column_Decimal()
+        {
+            using (var context = new RafyDbMigrationContext(UnitTest2EntityRepositoryDataProvider.DbSettingName))
+            {
+                var db = context.DatabaseMetaReader.Read();
+                var table = db.FindTable("Customer");
+                var c1 = table.FindColumn("DecimalProperty1");
+                Assert.IsTrue(c1.DataType == DbType.Decimal);
+            }
+        }
+
+        [TestMethod]
+        public void ORM_DbMigrate_Column_Decimal_SpecifyLength()
+        {
+            using (var context = new RafyDbMigrationContext(UnitTest2EntityRepositoryDataProvider.DbSettingName))
+            {
+                var db = context.DatabaseMetaReader.Read();
+                var table = db.FindTable("Customer");
+                var c1 = table.FindColumn("DecimalProperty2");
+                Assert.IsTrue(c1.DataType == DbType.Decimal);
+                //Assert.IsTrue(c1.Length == "18,4");
+            }
+        }
+
+        [TestMethod]
+        public void ORM_DbMigrate_Column_Decimal_MaptoDouble()
+        {
+            using (var context = new RafyDbMigrationContext(UnitTest2EntityRepositoryDataProvider.DbSettingName))
+            {
+                var db = context.DatabaseMetaReader.Read();
+                var table = db.FindTable("Customer");
+                var c1 = table.FindColumn("DecimalProperty3");
+                Assert.IsTrue(c1.DataType == DbType.Double);
+            }
         }
 
         #endregion

@@ -472,7 +472,7 @@ namespace Rafy.WPF.Controls
         {
             //如果焦点元素所在的 Layer 不同，则在新的层上生成一个新的 Adorner
             var targetLayer = AdornerLayer.GetAdornerLayer(_focusedElement);
-            if (targetLayer != _layer)
+            if (targetLayer != _layer && targetLayer != null)
             {
                 this.MoveToInnerLayer(targetLayer);
             }

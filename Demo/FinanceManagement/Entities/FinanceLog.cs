@@ -141,12 +141,16 @@ namespace FM
     {
         protected FinanceLogRepository() { }
 
-        protected override void OnQuerying(EntityQueryArgs args)
+        [DataProviderFor(typeof(FinanceLogRepository))]
+        private class FinanceLogRepositoryDataProvider : RdbDataProvider
         {
-            var query = args.Query;
-            query.OrderBy.Add(query.MainTable.Column(FinanceLog.DateProperty), OrderDirection.Descending);
+            protected override void OnQuerying(EntityQueryArgs args)
+            {
+                var query = args.Query;
+                query.OrderBy.Add(query.MainTable.Column(FinanceLog.DateProperty), OrderDirection.Descending);
 
-            base.OnQuerying(args);
+                base.OnQuerying(args);
+            }
         }
     }
 
@@ -154,9 +158,9 @@ namespace FM
     {
         protected override void AddValidations(IValidationDeclarer rules)
         {
-            rules.AddRule(FinanceLog.ReasonProperty, RequiredRule.Instance);
-            rules.AddRule(FinanceLog.AmountProperty, PositiveNumberRule.Instance);
-            rules.AddRule(FinanceLog.UsersProperty, RequiredRule.Instance);
+            rules.AddRule(FinanceLog.ReasonProperty, new RequiredRule());
+            rules.AddRule(FinanceLog.AmountProperty, new PositiveNumberRule());
+            rules.AddRule(FinanceLog.UsersProperty, new RequiredRule());
         }
 
         protected override void ConfigMeta()

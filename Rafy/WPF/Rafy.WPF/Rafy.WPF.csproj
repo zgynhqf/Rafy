@@ -64,28 +64,28 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Office.Interop.Excel">
-      <HintPath>..\..\Lib\Microsoft.Office.Interop.Excel.dll</HintPath>
+      <HintPath>..\..\packages\Lib\Microsoft.Office.Interop.Excel.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.ReportViewer.Common, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Lib\ReportViewer.WinForms 11.0.0.0\Microsoft.ReportViewer.Common.dll</HintPath>
+      <HintPath>..\..\..\packages\Lib\ReportViewer.WinForms 11.0.0.0\Microsoft.ReportViewer.Common.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.ReportViewer.DataVisualization, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Lib\ReportViewer.WinForms 11.0.0.0\Microsoft.ReportViewer.DataVisualization.DLL</HintPath>
+      <HintPath>..\..\..\packages\Lib\ReportViewer.WinForms 11.0.0.0\Microsoft.ReportViewer.DataVisualization.DLL</HintPath>
     </Reference>
     <Reference Include="Microsoft.ReportViewer.ProcessingObjectModel, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Lib\ReportViewer.WinForms 11.0.0.0\Microsoft.ReportViewer.ProcessingObjectModel.DLL</HintPath>
+      <HintPath>..\..\..\packages\Lib\ReportViewer.WinForms 11.0.0.0\Microsoft.ReportViewer.ProcessingObjectModel.DLL</HintPath>
     </Reference>
     <Reference Include="Microsoft.ReportViewer.WinForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Lib\ReportViewer.WinForms 11.0.0.0\Microsoft.ReportViewer.WinForms.dll</HintPath>
+      <HintPath>..\..\..\packages\Lib\ReportViewer.WinForms 11.0.0.0\Microsoft.ReportViewer.WinForms.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Lib\ReportViewer.WinForms 11.0.0.0\Microsoft.SqlServer.Types.dll</HintPath>
+      <HintPath>..\..\..\packages\Lib\ReportViewer.WinForms 11.0.0.0\Microsoft.SqlServer.Types.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>

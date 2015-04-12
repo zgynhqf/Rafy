@@ -20,6 +20,7 @@ using System.Security.Permissions;
 using System.Text;
 using Rafy;
 using Rafy.Domain;
+using Rafy.Domain.ORM;
 using Rafy.Domain.Validation;
 using Rafy.ManagedProperty;
 using Rafy.MetaModel;
@@ -125,7 +126,7 @@ namespace JXC
     }
 
     [DataProviderFor(typeof(FileAttachementRepository))]
-    public class FileAttachementDataProvider : RepositoryDataProvider
+    public class FileAttachementDataProvider : RdbDataProvider
     {
         protected override void Submit(SubmitArgs e)
         {

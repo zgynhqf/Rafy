@@ -68,7 +68,7 @@ namespace Rafy.DevTools.DbManagement
     }
 
     [DataProviderFor(typeof(DbSettingItemRepository))]
-    public partial class DbSettingItemDataProvider : RepositoryDataProvider
+    public partial class DbSettingItemDataProvider : RdbDataProvider
     {
         private static readonly string[] IgnoreDatabases = new string[]{
             DbConnectionSchema.DbName_LocalServer,

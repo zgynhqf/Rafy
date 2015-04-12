@@ -254,7 +254,8 @@ namespace Rafy.MetaModel
         }
 
         /// <summary>
-        /// 指定某个属性映射字段时的列的长度
+        /// 指定某个属性映射字段时的列的长度、精度等信息。
+        /// 注意，这个属性的变化，不会自动同步到数据库上。
         /// </summary>
         /// <param name="meta">The meta.</param>
         /// <param name="length">

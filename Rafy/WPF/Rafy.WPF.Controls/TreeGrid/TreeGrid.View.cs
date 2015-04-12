@@ -177,14 +177,9 @@ namespace Rafy.WPF.Controls
 
         #region 过滤
 
-        private Predicate<object> _viewFilter;
-
         protected virtual void OnItemFilterChanged(DependencyPropertyChangedEventArgs e)
         {
             if (!this.IsInitialized) return;
-
-            this._viewFilter = null;
-            if (e.NewValue != null) this._viewFilter = o => this.ItemFilter(o as object);
 
             //整颗树也需要过滤。
             this.ApplyFilter(this);

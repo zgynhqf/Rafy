@@ -160,28 +160,40 @@ namespace Rafy.Domain.Caching
     }
 
     [DataProviderFor(typeof(ScopeVersionRepository))]
-    public partial class ScopeVersionRepositoryDataProvider : RepositoryDataProvider
+    public partial class ScopeVersionRepositoryDataProvider : RdbDataProvider
     {
-        protected override void Submit(SubmitArgs e)
+        public ScopeVersionRepositoryDataProvider()
         {
-            //把Value更新为服务端时间，再保存到库中。
-            (e.Entity as ScopeVersion).Value = DateTime.Now;
-
-            base.Submit(e);
+            this.DataSaver = new ScopeVersionSaver();
+            this.DataQueryer = new ScopeVersionQueryer();
         }
 
-        protected override void OnDbLoaded(Entity entity)
+        private class ScopeVersionSaver : RdbDataSaver
         {
-            var sv = entity as ScopeVersion;
-            sv.LoadProperty(ScopeVersion.ValueProperty, new DateTime(sv.AccurateValue));
+            protected override void Submit(SubmitArgs e)
+            {
+                //把Value更新为服务端时间，再保存到库中。
+                (e.Entity as ScopeVersion).Value = DateTime.Now;
+
+                base.Submit(e);
+            }
         }
 
-        protected override void OnEntityQueryed(EntityQueryArgsBase args)
+        private class ScopeVersionQueryer : RdbDataQueryer
         {
-            base.OnEntityQueryed(args);
+            protected override void OnDbLoaded(Entity entity)
+            {
+                var sv = entity as ScopeVersion;
+                sv.LoadProperty(ScopeVersion.ValueProperty, new DateTime(sv.AccurateValue));
+            }
 
-            var list = args.EntityList as ScopeVersionList;
-            list.ServerTime = DateTime.Now;
+            protected override void OnEntityQueryed(EntityQueryArgsBase args)
+            {
+                base.OnEntityQueryed(args);
+
+                var list = args.EntityList as ScopeVersionList;
+                list.ServerTime = DateTime.Now;
+            }
         }
     }
 

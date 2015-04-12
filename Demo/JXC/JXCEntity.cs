@@ -57,7 +57,7 @@ namespace JXC
     }
 
     [DataProviderFor(typeof(JXCEntityRepository))]
-    public class JXCEntityDataProvider : RepositoryDataProvider
+    public class JXCEntityDataProvider : RdbDataProvider
     {
         protected override string ConnectionStringSettingName
         {

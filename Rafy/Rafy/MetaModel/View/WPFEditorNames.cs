@@ -18,8 +18,17 @@ namespace Rafy.MetaModel.View
         public const string DateRange = "Rafy_DateRange";
 
         public const string Enum = "Rafy_Enum";
+        /// <summary>
+        /// 列表选择属性编辑器
+        /// </summary>
         public const string EntitySelection_DropDown = "Rafy_EntitySelection_DropDown";
+        /// <summary>
+        /// 一个使用弹出列表界面并进行搜索的引用实体属性编辑器。
+        /// </summary>
         public const string EntitySelection_Popup = "Rafy_EntitySelection_Popup";
+        /// <summary>
+        /// 一个使用平铺的列表来实现的引用实体属性编辑器。
+        /// </summary>
         public const string EntitySelection_TiledList = "Rafy_EntitySelection_TiledList";
         public const string Password = "Rafy_Password";
         /// <summary>

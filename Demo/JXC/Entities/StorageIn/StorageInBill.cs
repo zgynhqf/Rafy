@@ -6,6 +6,7 @@ using System.Security.Permissions;
 using System.Text;
 using Rafy;
 using Rafy.Domain;
+using Rafy.Domain.ORM;
 using Rafy.Domain.ORM.Query;
 using Rafy.Domain.Validation;
 using Rafy.ManagedProperty;
@@ -108,17 +109,11 @@ namespace JXC
     }
 
     [DataProviderFor(typeof(StorageInBillRepository))]
-    public class StorageInBillDataProvider : RepositoryDataProvider
+    public class StorageInBillDataProvider : RdbDataProvider
     {
-        protected override void Submit(SubmitArgs e)
+        public StorageInBillDataProvider()
         {
-            base.Submit(e);
-
-            if (e.Action == SubmitAction.Delete)
-            {
-                //由于本外键关系没有级联，所以在删除的时候需要删除下面的数据
-                this.DeleteRefInDb(e.Entity, StorageInBillItem.StorageInBillProperty);
-            }
+            this.DataSaver = new StorageInBillSaver();
         }
 
         protected EntityList FetchBy(TimeSpanCriteria criteria)
@@ -134,6 +129,20 @@ namespace JXC
                 )
             );
             return this.QueryList(q);
+        }
+
+        private class StorageInBillSaver : RdbDataSaver
+        {
+            protected override void Submit(SubmitArgs e)
+            {
+                base.Submit(e);
+
+                if (e.Action == SubmitAction.Delete)
+                {
+                    //由于本外键关系没有级联，所以在删除的时候需要删除下面的数据
+                    this.DeleteRef(e.Entity, StorageInBillItem.StorageInBillProperty);
+                }
+            }
         }
     }
 
