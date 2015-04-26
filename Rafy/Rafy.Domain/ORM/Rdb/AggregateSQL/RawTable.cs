@@ -17,7 +17,7 @@ using System.Text;
 using System.Data;
 using System.Collections;
 
-namespace Rafy.Domain
+namespace Rafy.Domain.ORM
 {
     /// <summary>
     /// 封装了DataRowCollection的一般Table

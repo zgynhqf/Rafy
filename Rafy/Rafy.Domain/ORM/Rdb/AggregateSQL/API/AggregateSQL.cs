@@ -18,7 +18,7 @@ using System.Reflection;
 using Rafy.MetaModel;
 using Linq = System.Linq.Expressions;
 
-namespace Rafy.Domain
+namespace Rafy.Domain.ORM
 {
     /// <summary>
     /// 聚合SQL的简单API。

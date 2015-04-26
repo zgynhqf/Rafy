@@ -16,7 +16,7 @@ using System.Collections.Specialized;
 using System.Runtime.Serialization;
 using System.Threading;
 
-namespace Rafy.DataPortal
+namespace Rafy.Domain.DataPortal
 {
     /// <summary>
     /// Provides consistent context information between the client

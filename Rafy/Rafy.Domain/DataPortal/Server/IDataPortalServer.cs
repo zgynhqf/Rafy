@@ -12,7 +12,7 @@
 
 using System;
 
-namespace Rafy.DataPortal
+namespace Rafy.Domain.DataPortal
 {
     /// <summary>
     /// Interface implemented by server-side data portal

@@ -10,7 +10,14 @@
  * 
 *******************************************************/
 
-2.37.2600
+2.38.2655
+    ★★公布、★重要、添加接口
+        Rafy.Domain 决定引用 Json.NET。
+        提供 AggtSerializer、AggtDesiralizer 两个类型来完成聚合实体与 JSON 对象的转换。
+    重构
+        整理 Rafy.Domain 中的命名空间。
+
+2.37.2602
     ★★公布、★重要、！修改接口、重构
         重构实体框架中的数据层，完全解耦仓库与关系数据层的实现代码，为 MongoDB、EF 等第三方实现做准备。
             解除 EntityRepositoryQueryBase 对 EntityRepository 的直接耦合。
@@ -23,9 +30,6 @@
                     添加 DataSaver、DataQueryer、RedundanciesUpdater 几大类型。子类要重写保存、查询时，必须从这两个类继承。
                     RdbDataProvider 继承自 DataProvider。提取与关系数据库无关的代码到 DataProvider 中。同时，添加 RdbDataSaver、RdbDataQueryer、RdbRedundanciesUpdater。
                 IDataQueryer 不需要支持 FormattedSql。
-            ------------------------------ todo ------------------------------
-            修改 DataProvider Code Snippets
-            Rafy.Domain 命令空间规划。
     内部修改
         decimal 类型默认使用 2 个小数点。
 
@@ -300,7 +304,7 @@
         RafyEnvironment.Location 属性的类型变更为 LocationInformation，删除原来的 RafyLocation类型。
         Entity.Status 改名为 PersistenceStatus，把 Status 留给应用层，方便开发。
     内部修改
-        整理 Rafy.DataPortal.WCF 命名空间。
+        整理 Rafy.Domain.DataPortal.WCF 命名空间。
         Rafy.Result.Message 属性可以接受空值。
     内部修改
         如果是界面应用程序，则加载所有的 UI 文件。否则返回空集合。

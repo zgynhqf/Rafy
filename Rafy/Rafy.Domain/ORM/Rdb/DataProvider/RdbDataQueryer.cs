@@ -16,7 +16,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Rafy.Data;
-using Rafy.DataPortal;
+using Rafy.Domain.DataPortal;
 using Rafy.Domain.ORM;
 using Rafy.Domain.ORM.Linq;
 using Rafy.Domain.ORM.Query;

@@ -13,11 +13,11 @@
             <title>分布式传输开关</title>
             <content>
                 <para>
-                    在应用程序配置文件中，配置 rafy 配置节的属性 <codeInline>dataPortalProxy</codeInline> 为 <codeInline>Rafy.DataPortalClient.WcfProxy, Rafy.Domain</codeInline> 即可支持 WCF 分布式传输。如下：
+                    在应用程序配置文件中，配置 rafy 配置节的属性 <codeInline>dataPortalProxy</codeInline> 为 <codeInline>Rafy.Domain.DataPortalClient.WcfProxy, Rafy.Domain</codeInline> 即可支持 WCF 分布式传输。如下：
                 </para>
                 <code language="xml">
                     <![CDATA[<configuration>
-    <rafy dataPortalProxy="Rafy.DataPortalClient.WcfProxy, Rafy.Domain">
+    <rafy dataPortalProxy="Rafy.Domain.DataPortalClient.WcfProxy, Rafy.Domain">
     ...
     </rafy>
 </configuration>]]>
@@ -29,7 +29,7 @@
             <title>WCF 相关配置</title>
             <content>
                 <para>
-                    由于 dataPortalProxy 只是告诉框架使用 WCF 进行数据传输，所以 WCF 相关的配置也是必须要的。对于客户端而言，我们需要添加名为 WcfDataPortal 的 EndPoint，这样才可以使用 <codeInline>Rafy.DataPortalClient.WcfProxy</codeInline> 作为数据提供器。代码如下：
+                    由于 dataPortalProxy 只是告诉框架使用 WCF 进行数据传输，所以 WCF 相关的配置也是必须要的。对于客户端而言，我们需要添加名为 WcfDataPortal 的 EndPoint，这样才可以使用 <codeInline>Rafy.Domain.DataPortalClient.WcfProxy</codeInline> 作为数据提供器。代码如下：
                 </para>
                 <code language="xml">
                     <![CDATA[<system.serviceModel>

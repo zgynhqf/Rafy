@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ServiceModel;
 
-namespace Rafy.DataPortal.WCF
+namespace Rafy.Domain.DataPortal.WCF
 {
     /// <summary>
     /// Implements a data portal proxy to relay data portal

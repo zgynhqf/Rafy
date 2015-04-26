@@ -1,0 +1,13 @@
+﻿目前只能出现以下几个命名空间。
+Rafy.Domain
+Rafy.Domain.Validation
+Rafy.Domain.DataPortal
+Rafy.Domain.DataPortal.WCF
+Rafy.Domain.Serialization
+Rafy.Domain.Serialization.Json
+Rafy.Domain.Caching
+Rafy.Domain.ORM
+Rafy.Domain.ORM.Linq
+Rafy.Domain.ORM.Query
+Rafy.Domain.ORM.DbMigration
+Rafy.Domain.ORM.DbMigration.Persistence

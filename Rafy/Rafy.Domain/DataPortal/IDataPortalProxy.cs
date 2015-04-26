@@ -13,7 +13,7 @@
 
 using System;
 
-namespace Rafy.DataPortal
+namespace Rafy.Domain.DataPortal
 {
     /// <summary>
     /// 客户端的代理

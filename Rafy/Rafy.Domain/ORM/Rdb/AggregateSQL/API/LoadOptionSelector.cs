@@ -18,7 +18,7 @@ using System.Reflection;
 using Rafy.MetaModel;
 using Linq = System.Linq.Expressions;
 
-namespace Rafy.Domain
+namespace Rafy.Domain.ORM
 {
     /// <summary>
     /// 存储了加载的项

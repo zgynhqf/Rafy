@@ -17,7 +17,6 @@ using System.Linq;
 using System.Text;
 using Rafy.DbMigration;
 using Rafy;
-using Rafy.Domain.ORM.DbMigration;
 using Rafy.Domain;
 
 namespace Rafy.Domain.ORM.DbMigration

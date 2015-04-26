@@ -15,9 +15,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Rafy.Domain.ORM;
 
-namespace Rafy.Domain
+namespace Rafy.Domain.ORM
 {
     internal class ORMHelper
     {

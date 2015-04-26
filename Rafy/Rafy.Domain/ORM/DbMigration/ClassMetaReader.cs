@@ -14,16 +14,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Rafy.DbMigration.Model;
 using System.Reflection;
-using Rafy.MetaModel;
-using Rafy.ManagedProperty;
-using Rafy.Domain.ORM.SqlServer;
-using Rafy.DbMigration.SqlServer;
+using System.Text;
 using Rafy.Data;
 using Rafy.DbMigration;
+using Rafy.DbMigration.Model;
+using Rafy.DbMigration.SqlServer;
 using Rafy.Domain;
+using Rafy.Domain.ORM.SqlServer;
+using Rafy.ManagedProperty;
+using Rafy.MetaModel;
 using Rafy.Reflection;
 
 namespace Rafy.Domain.ORM.DbMigration

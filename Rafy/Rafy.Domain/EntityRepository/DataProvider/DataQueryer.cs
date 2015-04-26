@@ -16,7 +16,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Rafy.Data;
-using Rafy.DataPortal;
+using Rafy.Domain.DataPortal;
 using Rafy.Domain.ORM.Linq;
 using Rafy.Domain.ORM.Query;
 using Rafy.Domain.ORM.SqlTree;
@@ -54,7 +54,7 @@ namespace Rafy.Domain
         /// <summary>
         /// 对应的仓库数据提供程序
         /// </summary>
-        protected RepositoryDataProvider DataProvider
+        public RepositoryDataProvider DataProvider
         {
             get { return _dataProvider; }
         }

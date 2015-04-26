@@ -19,7 +19,7 @@ using System.Text;
 using Rafy.Domain.ORM;
 using Rafy.Data;
 
-namespace Rafy.Domain
+namespace Rafy.Domain.ORM
 {
     /// <summary>
     /// 单连接事务块。

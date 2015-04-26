@@ -17,10 +17,9 @@ using System.Linq;
 using System.Text;
 using System.Data;
 using System.Diagnostics;
-using Rafy.Domain.ORM;
 using Rafy.Domain.ORM.SqlServer;
 
-namespace Rafy.Domain
+namespace Rafy.Domain.ORM
 {
     /// <summary>
     /// 聚合SQL列名的生成器

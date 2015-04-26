@@ -25,7 +25,7 @@ using System.Text;
 using Rafy;
 using Rafy.Data;
 using Rafy.Reflection;
-using Rafy.DataPortal;
+using Rafy.Domain.DataPortal;
 using Rafy.Domain.Caching;
 using Rafy.Domain.ORM;
 using Rafy.Domain.ORM.Linq;

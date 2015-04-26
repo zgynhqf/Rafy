@@ -14,7 +14,7 @@ using System;
 using System.ServiceModel;
 using Rafy.WCF;
 
-namespace Rafy.DataPortal.WCF
+namespace Rafy.Domain.DataPortal.WCF
 {
     /// <summary>
     /// Defines the service contract for the WCF data

@@ -17,7 +17,7 @@ using Rafy.Domain;
 using Rafy;
 using System.Diagnostics;
 
-namespace Rafy.DataPortal
+namespace Rafy.Domain.DataPortal
 {
     /// <summary>
     /// 最终调用实体的 IDataPortalServer 门户实现。

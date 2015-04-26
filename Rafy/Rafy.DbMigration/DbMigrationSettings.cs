@@ -24,7 +24,7 @@ namespace Rafy.DbMigration
     public static class DbMigrationSettings
     {
         /// <summary>
-        /// 可设置所有主键及外键的长度。
+        /// 可设置所有主键及外键的长度。 默认为 40。
         /// http://stackoverflow.com/questions/2863993/is-of-a-type-that-is-invalid-for-use-as-a-key-column-in-an-index
         /// SqlServer 主键最大 450、Oracle 主键最大 400。
         /// </summary>

@@ -22,7 +22,7 @@ using Rafy.MetaModel;
 using Rafy.Domain.ORM;
 using Rafy.Domain.ORM.Linq;
 using Rafy.Data;
-using Rafy.DataPortal;
+using Rafy.Domain.DataPortal;
 using Rafy.Domain.ORM.SqlTree;
 using Rafy.Domain.ORM.Query;
 using Rafy.Domain.ORM.Query.Impl;

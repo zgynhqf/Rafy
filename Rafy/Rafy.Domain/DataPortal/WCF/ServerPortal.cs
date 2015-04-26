@@ -14,7 +14,7 @@ using System;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 
-namespace Rafy.DataPortal.WCF
+namespace Rafy.Domain.DataPortal.WCF
 {
     /// <summary>
     /// 使用 WCF 实现的统一的数据门户。

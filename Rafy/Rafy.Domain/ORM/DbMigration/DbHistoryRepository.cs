@@ -15,10 +15,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Rafy.DbMigration.History;
-using Rafy.Domain.ORM.DbMigration.Presistence;
 using Rafy;
+using Rafy.DbMigration.History;
 using Rafy.Domain;
+using Rafy.Domain.ORM.DbMigration.Presistence;
 
 namespace Rafy.Domain.ORM.DbMigration
 {

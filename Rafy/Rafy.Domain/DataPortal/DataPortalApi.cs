@@ -13,15 +13,14 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Security.Principal;
 using System.Threading;
-using Rafy.Reflection;
 using Rafy;
-using Rafy.Domain;
+using Rafy.Reflection;
 using Rafy.Utils;
-using System.Diagnostics;
 
-namespace Rafy.DataPortal
+namespace Rafy.Domain.DataPortal
 {
     /// <summary>
     /// 数据门户。

@@ -15,10 +15,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Rafy.Domain.ORM;
 
-namespace Rafy.Domain
+namespace Rafy.Domain.ORM
 {
+    /// <summary>
+    /// 目前本类只支持 Rdb。
+    /// </summary>
     public static class TreeIndexHelper
     {
         /// <summary>

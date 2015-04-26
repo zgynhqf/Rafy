@@ -18,7 +18,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using Rafy.ManagedProperty;
 
-namespace Rafy.Domain
+namespace Rafy.Domain.Serialization
 {
     internal class SerializationEntityGraph
     {

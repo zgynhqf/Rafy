@@ -19,7 +19,7 @@ using System.Diagnostics;
 using Rafy.MetaModel;
 using Rafy.ManagedProperty;
 
-namespace Rafy.Domain
+namespace Rafy.Domain.ORM
 {
     /// <summary>
     /// 生成聚合SQL的加载项中的某一项

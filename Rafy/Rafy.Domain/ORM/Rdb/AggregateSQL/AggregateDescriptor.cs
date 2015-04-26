@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Rafy.Domain
+namespace Rafy.Domain.ORM
 {
     /// <summary>
     /// 聚合加载描述器。

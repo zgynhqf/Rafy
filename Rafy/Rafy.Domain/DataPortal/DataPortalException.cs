@@ -17,7 +17,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace Rafy.DataPortal
+namespace Rafy.Domain.DataPortal
 {
     /// <summary>
     /// 数据访问异常

@@ -23,6 +23,7 @@ namespace Rafy.Domain.Validation
 {
     /// <summary>
     /// 限制某数值类型属性最小的数据限制规则。
+    /// 注意：此规则不对空字符串作判断。如果需要值非空的约束，请使用 RequiredRule。
     /// </summary>
     public class RegexMatchRule : ValidationRule
     {
@@ -44,19 +45,23 @@ namespace Rafy.Domain.Validation
         protected override void Validate(Entity entity, RuleArgs e)
         {
             var value = (string)entity.GetProperty(e.Property) ?? string.Empty;
-            if (!this.Regex.IsMatch(value))
+
+            if (!string.IsNullOrEmpty(value))
             {
-                if (this.MessageBuilder != null)
+                if (!this.Regex.IsMatch(value))
                 {
-                    e.BrokenDescription = this.MessageBuilder(entity);
-                }
-                else
-                {
-                    e.BrokenDescription = string.Format(
-                        "{0} 必须是 {1}。".Translate(),
-                        e.DisplayProperty(),
-                        this.RegexLabel.Translate()
-                        );
+                    if (this.MessageBuilder != null)
+                    {
+                        e.BrokenDescription = this.MessageBuilder(entity);
+                    }
+                    else
+                    {
+                        e.BrokenDescription = string.Format(
+                            "{0} 必须是 {1}。".Translate(),
+                            e.DisplayProperty(),
+                            this.RegexLabel.Translate()
+                            );
+                    }
                 }
             }
         }

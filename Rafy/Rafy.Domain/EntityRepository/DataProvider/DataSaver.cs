@@ -53,7 +53,7 @@ namespace Rafy.Domain
         /// <summary>
         /// 对应的数据提供程序。
         /// </summary>
-        protected RepositoryDataProvider DataProvider
+        public RepositoryDataProvider DataProvider
         {
             get { return _dataProvider; }
         }
@@ -369,6 +369,9 @@ namespace Rafy.Domain
         /// 
         /// 子类重写此方法实现整个聚合对象保存到非关系型数据库的逻辑。
         /// 如果只想重写单个对象的 CUD 逻辑，请重写 Insert、Update、Delete 方法。
+        /// 
+        /// 注意，不论是聚合父对象，还是聚合子对象，还是没有聚合子的对象，都会执行该方法。
+        /// 它与 Insert、Update、Delete 等方法的区别在于，重写此方法可以同时阻止对聚合子对象的默认保存逻辑。
         /// </summary>
         /// <param name="e"></param>
         internal protected virtual void Submit(SubmitArgs e)

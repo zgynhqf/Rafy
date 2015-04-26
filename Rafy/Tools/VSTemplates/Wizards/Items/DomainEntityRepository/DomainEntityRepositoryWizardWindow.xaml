@@ -17,7 +17,7 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Label Content="仓库类名" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4,4,0,4" />
-        <Label x:Name="txtClassName" Content="实体类名" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4,4,0,4" Grid.Row="1" />
+        <Label Content="实体类名" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4,4,0,4" Grid.Row="1" />
         <Label Content="实体命名空间" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="2" Margin="4,4,0,4" />
         <Label Content="基类名" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="3" Margin="4,4,0,4" />
         <TextBox Grid.Column="1" TextWrapping="Wrap" VerticalAlignment="Center" Margin="4" Height="23"
@@ -27,10 +27,10 @@
                 <ColumnDefinition />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBox TextWrapping="Wrap" VerticalAlignment="Center" Grid.Row="0" Margin="4,6" Height="22"
+            <TextBox x:Name="txtClassName" TextWrapping="Wrap" VerticalAlignment="Center" Grid.Row="0" Margin="4,6" Height="22"
                     Text="{Binding EntityTypeName, UpdateSourceTrigger=PropertyChanged}" />
             <Button x:Name="btnSelectTypes" Content="？" Grid.Column="1" Margin="4" Width="26"
-                    Click="btnSelectTypes_Click" ToolTip="选择实体类" />
+                    Click="btnSelectTypes_Click" ToolTip="重新选择实体类" />
         </Grid>
         <TextBox Grid.Column="1" TextWrapping="Wrap" VerticalAlignment="Center" Grid.Row="2" Height="22"
                 Text="{Binding DomainNamespace}" Margin="4" />

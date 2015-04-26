@@ -18,7 +18,7 @@ using System.Reflection;
 using Rafy.MetaModel;
 using Linq = System.Linq.Expressions;
 
-namespace Rafy.Domain
+namespace Rafy.Domain.ORM
 {
     /// <summary>
     /// 属性选择器
@@ -47,11 +47,11 @@ namespace Rafy.Domain
             var propertyInfo = entityInfo.EntityProperties.FirstOrDefault(p => p.Name == propertyName);
 
             //构造一个临时代理方法，实现：TEntity.EntityProperty = TFKEntity
-            var pE = Linq.Expression.Parameter(typeof(TEntity), "e");
-            var pEFK = Linq.Expression.Parameter(typeof(TFKEntity), "efk");
-            var propertyExp = Linq.Expression.Property(pE, entityPropertyName);
-            var body = Linq.Expression.Assign(propertyExp, pEFK);
-            var result = Linq.Expression.Lambda<Action<TEntity, TFKEntity>>(body, pE, pEFK);
+            var pE = Expression.Parameter(typeof(TEntity), "e");
+            var pEFK = Expression.Parameter(typeof(TFKEntity), "efk");
+            var propertyExp = Expression.Property(pE, entityPropertyName);
+            var body = Expression.Assign(propertyExp, pEFK);
+            var result = Expression.Lambda<Action<TEntity, TFKEntity>>(body, pE, pEFK);
             var fkSetter = result.Compile();
 
             var option = new LoadOptionItem(propertyInfo, (e, eFK) => fkSetter(e as TEntity, eFK as TFKEntity));

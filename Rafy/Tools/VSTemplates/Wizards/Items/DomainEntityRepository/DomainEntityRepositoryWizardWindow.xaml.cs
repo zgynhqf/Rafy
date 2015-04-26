@@ -43,9 +43,16 @@ namespace VSTemplates.Wizards
             this.AddHandler(UIElement.GotKeyboardFocusEvent, new KeyboardFocusChangedEventHandler(UIElement_GotKeyboardFocus));
         }
 
+        private DomainEntityRepositoryWizardWindowViewModel VM
+        {
+            get { return this.DataContext as DomainEntityRepositoryWizardWindowViewModel; }
+        }
+
         void OnLoaded(object sender, RoutedEventArgs e)
         {
             txtClassName.Focus();
+
+            this.TrySelectType();
         }
 
         void UIElement_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
@@ -70,25 +77,69 @@ namespace VSTemplates.Wizards
 
         private void btnContinue_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = true;
+            if (string.IsNullOrWhiteSpace(this.VM.DomainNamespace))
+            {
+                MessageBox.Show("没有填写实体的命名空间。");
+            }
+            else
+            {
+                this.DialogResult = true;
+            }
         }
 
         private void btnSelectTypes_Click(object sender, RoutedEventArgs e)
         {
-            var vm = this.DataContext as DomainEntityRepositoryWizardWindowViewModel;
-
-            var sewVM = new SelectEntityWindowViewModel(vm.DTE);
             var win = new SelectEntityWindow();
-            win.DataContext = sewVM;
+            win.DataContext = this.SelectEntityWindowViewModel;
             var res = win.ShowDialog();
             if (res.GetValueOrDefault())
             {
                 //ListBox.SelectedItem 属性无法双向绑定。原因不祥？
                 //var type = sewVM.SelectedProject.SelectedEntityType;
                 var type = win.lbTypes.SelectedItem as CodeClass;
-                vm.DomainNamespace = type.Namespace.FullName;
-                vm.EntityTypeName = type.Name;
-                vm.BaseTypeName = Helper.GetBaseClass(type).Name + Consts.RepositorySuffix;
+                SelectType(type);
+            }
+        }
+
+        private void TrySelectType()
+        {
+            var typeName = this.VM.EntityTypeName;
+            if (!string.IsNullOrWhiteSpace(typeName))
+            {
+                var projects = this.SelectEntityWindowViewModel.Projects;
+                foreach (var project in projects)
+                {
+                    foreach (var item in project.EntityTypes)
+                    {
+                        if (item.Name == typeName)
+                        {
+                            this.SelectType(item);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void SelectType(CodeClass type)
+        {
+            this.VM.DomainNamespace = type.Namespace.FullName;
+            this.VM.EntityTypeName = type.Name;
+            this.VM.BaseTypeName = Helper.GetBaseClass(type).Name + Consts.RepositorySuffix;
+        }
+
+        private SelectEntityWindowViewModel _selectEntityWindowViewModel;
+
+        private SelectEntityWindowViewModel SelectEntityWindowViewModel
+        {
+            get
+            {
+                if (_selectEntityWindowViewModel == null)
+                {
+                    _selectEntityWindowViewModel = new SelectEntityWindowViewModel(this.VM.DTE);
+                }
+
+                return _selectEntityWindowViewModel;
             }
         }
     }

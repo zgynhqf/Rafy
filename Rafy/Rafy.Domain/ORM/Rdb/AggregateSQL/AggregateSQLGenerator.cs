@@ -13,17 +13,16 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Rafy.Domain.ORM;
 using System.Data;
-using Rafy.Domain.ORM.SqlServer;
 using System.Diagnostics;
+using System.Linq;
 using System.Linq.Expressions;
-using Rafy.MetaModel;
+using System.Text;
+using Rafy.Domain.ORM.SqlServer;
 using Rafy.ManagedProperty;
+using Rafy.MetaModel;
 
-namespace Rafy.Domain
+namespace Rafy.Domain.ORM
 {
     /// <summary>
     /// 聚合SQL的生成器

@@ -14,6 +14,7 @@ using Rafy.Data;
 using Rafy.Domain;
 using Rafy.Domain.ORM;
 using Rafy.Domain.ORM.DbMigration;
+using Rafy.Domain.Serialization;
 using Rafy.Domain.Validation;
 using Rafy.Reflection;
 using Rafy.UnitTest.IDataProvider;

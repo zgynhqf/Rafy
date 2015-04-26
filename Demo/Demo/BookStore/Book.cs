@@ -140,7 +140,7 @@ namespace Demo
     }
 
     [DataProviderFor(typeof(BookRepository))]
-    public partial class BookDataProvider : RdbDataProvider
+    public partial class BookDataProvider : DemoEntityDataProvider
     {
         public override EntityList GetAll(PagingInfo paging, EagerLoadOptions eagerLoad)
         {
@@ -216,7 +216,7 @@ namespace Demo
 
             View.DomainName("书籍").HasDelegate(Book.NameProperty);
 
-            //View.UseDetailPanel<BookForm>().HasDetailLabelSize(120);
+            View.UseDetailPanel<BookForm>().HasDetailLabelSize(120);
 
             View.UseDefaultCommands().UseCommands(WPFCommandNames.Filter);
 

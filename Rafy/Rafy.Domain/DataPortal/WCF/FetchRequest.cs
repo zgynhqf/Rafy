@@ -13,7 +13,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Rafy.DataPortal.WCF
+namespace Rafy.Domain.DataPortal.WCF
 {
     /// <summary>
     /// Request message for retrieving

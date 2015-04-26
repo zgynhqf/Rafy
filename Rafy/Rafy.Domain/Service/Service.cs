@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Rafy;
 using Rafy.Reflection;
-using Rafy.DataPortal;
+using Rafy.Domain.DataPortal;
 using Rafy.ManagedProperty;
 
 namespace Rafy.Domain

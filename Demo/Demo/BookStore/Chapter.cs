@@ -78,6 +78,8 @@ namespace Demo
             View.UseDefaultCommands();
 
             View.HasDelegate(Chapter.NameProperty).DomainName("章节");
+
+            View.Property(Chapter.NameProperty).HasLabel("名称").ShowIn(ShowInWhere.All);
         }
     }
 }

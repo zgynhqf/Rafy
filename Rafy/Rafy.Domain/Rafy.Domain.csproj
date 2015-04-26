@@ -63,6 +63,10 @@
     <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
@@ -105,6 +109,8 @@
     </Compile>
     <Compile Include="EntityRepository\QueryArgs\IEntitySelectArgs.cs" />
     <Compile Include="EntityRepository\QueryArgs\IQueryArgs.cs" />
+    <Compile Include="Entity\Serialization\Json\AggtDeserializer.cs" />
+    <Compile Include="Entity\Serialization\Json\AggtSerializer.cs" />
     <Compile Include="ORM\Rdb\DataProvider\QueryArgs\ISqlSelectArgs.cs" />
     <Compile Include="ORM\Rdb\DataProvider\QueryArgs\ITableQueryArgs.cs" />
     <Compile Include="ORM\Rdb\DataProvider\QueryArgs\SqlQueryArgs.cs" />
@@ -437,9 +443,11 @@
     <Content Include="EntityRepository\zzzEF\如何加载所有 ORM 配置.txt" />
     <Content Include="ORM\Query\_ReadMe.txt" />
     <Content Include="ORM\Rdb\Sql\Tree\_ReadMe.txt" />
+    <Content Include="_命名空间规划.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Hxy Key.snk" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

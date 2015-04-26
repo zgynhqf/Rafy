@@ -20,7 +20,7 @@ using Rafy.Domain.Caching;
 using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.Domain.ORM;
-using Rafy.DataPortal;
+using Rafy.Domain.DataPortal;
 using Rafy.Domain.ORM.Query;
 
 namespace Rafy.Domain

@@ -10,6 +10,7 @@ using UT;
 using Rafy.Reflection;
 using Rafy.Domain.ORM.DbMigration;
 using Rafy.Utils;
+using Rafy.Domain.ORM;
 
 namespace RafyUnitTest
 {

@@ -16,10 +16,8 @@ using System.Configuration;
 using System.Globalization;
 using System.Security.Principal;
 using System.Threading;
-using Rafy;
-using Rafy.Domain;
 
-namespace Rafy.DataPortal
+namespace Rafy.Domain.DataPortal
 {
     /// <summary>
     /// Implements the server-side DataPortal 

@@ -21,9 +21,8 @@ using System.Configuration;
 using System.Security.Principal;
 using System.Threading;
 using System.Web;
-using Rafy;
 
-namespace Rafy.DataPortal
+namespace Rafy.Domain.DataPortal
 {
     /// <summary>
     /// 分布式数据上下文。
