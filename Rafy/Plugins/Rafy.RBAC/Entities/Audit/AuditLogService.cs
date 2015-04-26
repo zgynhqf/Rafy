@@ -56,14 +56,20 @@ namespace Rafy.RBAC.Audit
         /// <param name="logItem"></param>
         public static void LogAsync(AuditLogItem logItem)
         {
-            if (_provider == null) return;
+            /*********************** 代码块解释 *********************************
+             * 暂时不支持直接使用多线程进行日志记录操作。
+             * 否则会与主线程的数据库访问操作因共享连接而产生冲突。
+            **********************************************************************/
+            Log(logItem);
 
-            if (logItem == null) throw new ArgumentNullException("logItem");
+            //if (_provider == null) return;
 
-            AsyncHelper.InvokeSafe(() =>
-            {
-                _provider.Log(logItem);
-            });
+            //if (logItem == null) throw new ArgumentNullException("logItem");
+
+            //AsyncHelper.InvokeSafe(() =>
+            //{
+            //    _provider.Log(logItem);
+            //});
         }
     }
 }

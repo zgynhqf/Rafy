@@ -166,15 +166,15 @@ namespace Rafy.RBAC
         /// </param>
         private static void Log(User user, bool isIn)
         {
-            AsyncHelper.InvokeSafe(() =>
+            //AsyncHelper.InvokeSafe(() =>
+            //{
+            RF.Save(new UserLoginLog()
             {
-                RF.Save(new UserLoginLog()
-                {
-                    User = user,
-                    IsIn = isIn,
-                    LogTime = DateTime.Now
-                });
+                User = user,
+                IsIn = isIn,
+                LogTime = DateTime.Now
             });
+            //});
         }
     }
 }

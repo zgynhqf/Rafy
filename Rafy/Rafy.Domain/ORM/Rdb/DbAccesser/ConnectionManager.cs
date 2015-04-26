@@ -21,8 +21,12 @@ using Rafy.Data;
 namespace Rafy.Domain.ORM
 {
     /// <summary>
-    /// 它把自己存储在 ServerContext.Items 中，
+    /// 它把自己存储在 <see cref="AppContext.Items"/> 中，
     /// 以提供一个简单的方式来在一个数据上下文环境中重用单个连接。
+    /// 
+    /// 分析：
+    /// 多个线程使用多个连接，会造成分布式事务的情况。
+    /// 多个线程使用同一个连接，可以解决大部分不需要分布式事务的情况，但是连接变为共享资源，混用会出错（如线程A在读取数据时，线程B想写数据则会报错）。
     /// </summary>
     internal class ConnectionManager : IDisposable
     {

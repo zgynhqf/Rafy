@@ -19,7 +19,7 @@ using System.Text;
 namespace Rafy
 {
     /// <summary>
-    /// 基于 ServerContext 服务上下文的一个范围类型。
+    /// 基于 <see cref="AppContext"/> 服务上下文的一个范围类型。
     /// 继承此类的子类都拥有多层嵌套声明范围的功能，只有最外层的范围对象的 ExitWholeScope 方法会被调用。
     /// 
     /// 注意：必须使用 using 来构造此类型的子类，否则会出现未知的问题。
@@ -35,7 +35,7 @@ namespace Rafy
         /// </summary>
         private bool _disposed;
         /// <summary>
-        /// 在 ServerContext 中的名称。
+        /// 在 <see cref="AppContext"/> 中的名称。
         /// </summary>
         private string _contextKey;
         /// <summary>

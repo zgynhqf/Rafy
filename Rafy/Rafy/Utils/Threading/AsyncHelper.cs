@@ -47,7 +47,7 @@ namespace Rafy.Threading
         /// <summary>
         /// 安全地对任务进行异步调用。
         /// 
-        /// 原因：在异步线程中调用任务，如果出现异常，往往会使整个应用程序死机。
+        /// 原因：在异步线程中调用任务，如果任务执行过程中出现异常，往往会使整个应用程序死机。
         /// </summary>
         /// <param name="action"></param>
         /// <param name="errorHandler"></param>
