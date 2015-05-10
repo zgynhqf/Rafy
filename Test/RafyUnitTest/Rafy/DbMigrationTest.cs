@@ -198,6 +198,27 @@ namespace RafyUnitTest
             });
         }
 
+        /// <summary>
+        /// 测试从可空的字符串类型变到不可空的数值类型时的迁移。
+        /// </summary>
+        [TestMethod]
+        public void DMT_AlterColumn_DataType_NullStringToDouble()
+        {
+            this.Test(destination =>
+            {
+                var taskTable = destination.FindTable("Task");
+                taskTable.Columns.Remove(taskTable.FindColumn("Name"));
+                taskTable.AddColumn("Name", DbType.Double, isRequired: true);
+            }, result =>
+            {
+                var table = result.FindTable("Task");
+                var column = table.FindColumn("Name");
+                Assert.IsTrue(column != null);
+                Assert.IsTrue(column.DataType == DbType.Double);
+                Assert.IsTrue(column.IsRequired);
+            });
+        }
+
         [TestMethod]
         public void DMT_AddFK()
         {

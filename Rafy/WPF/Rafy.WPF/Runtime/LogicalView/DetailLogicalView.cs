@@ -60,7 +60,7 @@ namespace Rafy.WPF
             if (properties == null) properties = this.Meta.EntityProperties.Cast<WPFEntityPropertyViewMeta>().Where(e => e.CanShowIn(ShowInWhere.Detail));
 
             var detailPropertiesCount = properties.Count();
-            if (detailPropertiesCount <= 6) { return 1; }
+            if (detailPropertiesCount <= 8) { return 1; }
             if (detailPropertiesCount <= 16) { return 2; }
             return 3;
         }

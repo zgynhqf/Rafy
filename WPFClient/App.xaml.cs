@@ -17,7 +17,7 @@ namespace WPFClient
         {
             Rafy.WPF.App.MainWindowType = typeof(DefaultShell);
             ClientApp.LoginWindowType = typeof(DefaultLoginWindow);
-            ClientApp.SplashScreen = new SplashScreen("Shell/ProductSplash.jpg");
+            //ClientApp.SplashScreen = new SplashScreen("Shell/ProductSplash.jpg");
 
             RafyEnvironment.Provider.IsDebuggingEnabled = ConfigurationHelper.GetAppSettingOrDefault("IsDebuggingEnabled", false);
 
@@ -27,7 +27,10 @@ namespace WPFClient
             app.LoginSuccessed += (o, e) =>
             {
                 var mainWin = App.Current.MainWindow as DefaultShell;
-                mainWin.ShowModules();
+                if (mainWin != null)
+                {
+                    mainWin.ShowModules();
+                }
             };
 
             this.DispatcherUnhandledException += OnDispatcherUnhandledException;

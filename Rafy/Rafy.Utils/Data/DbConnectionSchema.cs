@@ -17,6 +17,8 @@ using System.Linq;
 using System.Text;
 using System.Data.Common;
 using System.Text.RegularExpressions;
+using System.Data;
+using Rafy.Data.Providers;
 
 namespace Rafy.Data
 {
@@ -92,6 +94,20 @@ namespace Rafy.Data
             }
 
             this._database = database;
+        }
+
+        /// <summary>
+        /// 使用当前的结构来创建一个连接。
+        /// </summary>
+        /// <returns></returns>
+        public IDbConnection CreateConnection()
+        {
+            var factory = ConverterFactory.GetFactory(this.ProviderName);
+
+            var connection = factory.CreateConnection();
+            connection.ConnectionString = this.ConnectionString;
+
+            return connection;
         }
     }
 }

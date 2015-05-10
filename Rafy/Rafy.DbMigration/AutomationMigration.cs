@@ -290,14 +290,14 @@ namespace Rafy.DbMigration
                 {
                     this.AddOperation(new AddNotNullConstraintFK
                     {
-                        CopyFromColumn = columnChanges.OldColumn
+                        CopyFromColumn = columnChanges.NewColumn
                     });
                 }
                 else
                 {
                     this.AddOperation(new AddNotNullConstraint
                     {
-                        CopyFromColumn = columnChanges.OldColumn
+                        CopyFromColumn = columnChanges.NewColumn
                     });
                 }
             }
@@ -307,14 +307,14 @@ namespace Rafy.DbMigration
                 {
                     this.AddOperation(new RemoveNotNullConstraintFK
                     {
-                        CopyFromColumn = columnChanges.OldColumn
+                        CopyFromColumn = columnChanges.NewColumn
                     });
                 }
                 else
                 {
                     this.AddOperation(new RemoveNotNullConstraint
                     {
-                        CopyFromColumn = columnChanges.OldColumn
+                        CopyFromColumn = columnChanges.NewColumn
                     });
                 }
             }

@@ -29,6 +29,21 @@ namespace Rafy
         [ThreadStatic]
         private static IDictionary<string, object> _items;
 
+        /// <summary>
+        /// 当前线程所使用的项的集合。
+        /// </summary>
+        public static IDictionary<string, object> Items
+        {
+            get
+            {
+                if (_items == null)
+                {
+                    _items = new Dictionary<string, object>();
+                }
+                return _items;
+            }
+        }
+
         public virtual IPrincipal CurrentPrincipal
         {
             get { return Thread.CurrentPrincipal; }

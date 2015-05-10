@@ -25,7 +25,7 @@ namespace Rafy.Domain.ORM
     /// </summary>
     internal class ManagedConnectionDbAccesser : IDbAccesser
     {
-        private ConnectionManager _connectionManager;
+        private IConnectionManager _connectionManager;
 
         private DbAccesser _dba;
 
@@ -33,7 +33,7 @@ namespace Rafy.Domain.ORM
         {
             if (dbSetting == null) throw new ArgumentNullException("dbSetting");
 
-            _connectionManager = ConnectionManager.GetManager(dbSetting);
+            _connectionManager = TransactionDependentConnectionManager.GetManager(dbSetting);
 
             _dba = new DbAccesser(dbSetting, _connectionManager.Connection);
         }

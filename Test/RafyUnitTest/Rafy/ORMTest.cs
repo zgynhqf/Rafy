@@ -6,6 +6,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rafy;
 using Rafy.Data;
@@ -4562,6 +4564,60 @@ ORDER BY Article.Code ASC");
                 var table = db.FindTable("Customer");
                 var c1 = table.FindColumn("DecimalProperty3");
                 Assert.IsTrue(c1.DataType == DbType.Double);
+            }
+        }
+
+        #endregion
+
+        #region 数据库连接
+
+        /// <summary>
+        /// 多线程查询
+        /// </summary>
+        [TestMethod]
+        public void ORM_MultiThread_Query()
+        {
+            var p = AppContext.GetProvider();
+            AppContext.SetProvider(new StaticAppContextProvider());
+
+            /*********************** 代码块解释 *********************************
+             * 模拟：线程 1 在查找的同时，线程 2 也开始查询。
+             * 这时，这两个线程应该使用不同的连接。
+             * （
+             * 如果两个线程共用一个连接，会提示：
+             * There is already an open DataReader associated with this Command which must be closed first.
+             * ）
+            **********************************************************************/
+
+            var thread2Start = new AutoResetEvent(false);
+            var thread1End = new AutoResetEvent(false);
+
+            Task.Run(() =>
+            {
+                using (var dba = DbAccesserFactory.Create(UnitTestEntityRepositoryDataProvider.DbSettingName))
+                {
+                    using (var reader = dba.QueryDataReader("SELECT * FROM Task"))
+                    {
+                        thread2Start.Set();
+                        thread1End.WaitOne();
+                    }
+                }
+            });
+
+            try
+            {
+                thread2Start.WaitOne();
+                using (var dba = DbAccesserFactory.Create(UnitTestEntityRepositoryDataProvider.DbSettingName))
+                {
+                    using (var reader = dba.QueryDataReader("SELECT * FROM Task"))
+                    {
+                    }
+                }
+            }
+            finally
+            {
+                thread1End.Set();
+                AppContext.SetProvider(p);
             }
         }
 

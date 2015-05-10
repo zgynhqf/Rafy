@@ -24,15 +24,17 @@ namespace Rafy.Domain.ORM
     /// <summary>
     /// 单连接事务块。
     /// 
-    /// 可用于声明一个事务块，在这个事务块中，如果是访问同一个数据库，则整个代码块中只会用到同一个数据库连接。
+    /// 可用于声明一个事务块，在这个事务块中，同一个线程执行的代码，如果是访问同一个数据库，则只会用到同一个数据库连接。
     /// 这样也就不会造成为分布式事务。（分布式事务在一些数据库中并不支持，例如 SQLCE。）
     /// 
-    /// 注意，多个数据库之间的事务，将会完全独立，互不干扰！
-    /// 如果想主动使用分布式事务，请在最外层使用 ADO.NET 的 TransactionScope 类。
+    /// 注意：
+    /// -多个数据库之间的事务，将会完全独立，互不干扰！
+    /// -如果想主动使用分布式事务，请在最外层使用 ADO.NET 的 TransactionScope 类。
+    /// -一个事务的代码只能在同一个线程中执行。（事务是存储在当前线程中的。多线程不共享事务。）
     /// </summary>
     public class SingleConnectionTrasactionScope : LocalTransactionBlock
     {
-        private ConnectionManager _conMgr;
+        private IConnectionManager _conMgr;
 
         /// <summary>
         /// 构造一个事务块
@@ -54,8 +56,8 @@ namespace Rafy.Domain.ORM
             //只要找到一个当前数据库的连接管理对象，直到发生 Dispose 前，
             //这个连接都一直不会被关闭，那么代码块中的数据访问方法都是使用同一个打开的连接。
             //这样就不会升级为分布式事务。
-            this._conMgr = ConnectionManager.GetManager(this.DbSetting);
-            return this._conMgr.Connection.BeginTransaction(this.IsolationLevel);
+            _conMgr = TransactionDependentConnectionManager.GetManager(this.DbSetting);
+            return _conMgr.Connection.BeginTransaction(this.IsolationLevel);
         }
 
         protected override void Dispose(bool disposing)
@@ -64,9 +66,9 @@ namespace Rafy.Domain.ORM
 
             if (disposing)
             {
-                if (this._conMgr != null)
+                if (_conMgr != null)
                 {
-                    this._conMgr.Dispose();
+                    _conMgr.Dispose();
                 }
             }
         }

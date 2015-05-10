@@ -59,11 +59,13 @@ namespace Rafy.Domain.ORM
                 CreatePagingSql(ref parts, pagingInfo);
 
                 //读取分页的实体
-                var reader = dba.QueryDataReader(parts.PagingSql, args.Parameters);
-                this.FillDataIntoList(
-                    reader, ReadDataType.ByName,
-                    args.List, args.FetchingFirst, PagingInfo.Empty, args.MarkTreeFullLoaded
-                    );
+                using (var reader = dba.QueryDataReader(parts.PagingSql, args.Parameters))
+                {
+                    this.FillDataIntoList(
+                        reader, ReadDataType.ByName,
+                        args.List, args.FetchingFirst, PagingInfo.Empty, args.MarkTreeFullLoaded
+                        );
+                }
 
                 QueryTotalCountIf(dba, pagingInfo, parts, args.Parameters);
             }
@@ -84,8 +86,7 @@ namespace Rafy.Domain.ORM
 
                 //读取分页的数据
                 var table = args.ResultTable;
-                var reader = dba.QueryDataReader(parts.PagingSql, args.Parameters);
-                using (reader)
+                using (var reader = dba.QueryDataReader(parts.PagingSql, args.Parameters))
                 {
                     LiteDataTableAdapter.Fill(table, reader);
                 }
@@ -146,13 +147,14 @@ namespace Rafy.Domain.ORM
                 var pagingSql = generator.Sql;
 
                 //查询数据库
-                var reader = dba.QueryDataReader(pagingSql, pagingSql.Parameters);
-
-                //填充到列表中。
-                this.FillDataIntoList(
-                    reader, autoSelection ? ReadDataType.ByIndex : ReadDataType.ByName,
-                    args.List, false, pagingInfo, args.MarkTreeFullLoaded
-                    );
+                using (var reader = dba.QueryDataReader(pagingSql, pagingSql.Parameters))
+                {
+                    //填充到列表中。
+                    this.FillDataIntoList(
+                        reader, autoSelection ? ReadDataType.ByIndex : ReadDataType.ByName,
+                        args.List, false, pagingInfo, args.MarkTreeFullLoaded
+                        );
+                }
 
                 //最后，如果需要，则统计一下总行数。
                 if (pagingInfo.IsNeedCount)

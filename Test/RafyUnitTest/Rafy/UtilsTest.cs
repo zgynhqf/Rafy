@@ -45,7 +45,7 @@ namespace RafyUnitTest
 
                 Logger.DbAccessed -= handler;
 
-                Assert.IsTrue(count == 2);
+                Assert.IsTrue(count == 1);
             }
         }
 
@@ -66,7 +66,7 @@ namespace RafyUnitTest
 
                 Logger.ThreadDbAccessed -= handler;
 
-                Assert.IsTrue(count == 2);
+                Assert.IsTrue(count == 1);
             }
         }
 
@@ -78,7 +78,7 @@ namespace RafyUnitTest
             {
                 var c1 = Logger.DbAccessedCount;
                 repo.Save(new TestUser());
-                Assert.IsTrue(Logger.DbAccessedCount == c1 + 2);
+                Assert.IsTrue(Logger.DbAccessedCount == c1 + 1);
             }
         }
 
@@ -90,7 +90,7 @@ namespace RafyUnitTest
             {
                 var c1 = Logger.ThreadDbAccessedCount;
                 repo.Save(new TestUser());
-                Assert.IsTrue(Logger.ThreadDbAccessedCount == c1 + 2);
+                Assert.IsTrue(Logger.ThreadDbAccessedCount == c1 + 1);
             }
         }
 

@@ -55,7 +55,7 @@ namespace Rafy.MetaModel.View
             set { this.SetValue(ref this._DetailAsHorizontal, value); }
         }
 
-        private DetailLayoutMode _DetailLayoutMode = DetailLayoutMode.Dynamic;
+        private DetailLayoutMode _DetailLayoutMode = DetailLayoutMode.AutoGrid;
         /// <summary>
         /// 表单布局模式。
         /// </summary>

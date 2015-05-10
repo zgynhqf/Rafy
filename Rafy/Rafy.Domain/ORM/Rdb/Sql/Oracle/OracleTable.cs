@@ -37,7 +37,7 @@ namespace Rafy.Domain.ORM.Oracle
 
         private string _selectSEQSql;
 
-        public override int Insert(IDbAccesser dba, Entity item)
+        public override void Insert(IDbAccesser dba, Entity item)
         {
             var idColumn = this.IdentityColumn;
             if (idColumn != null)
@@ -64,9 +64,7 @@ namespace Rafy.Domain.ORM.Oracle
                 item.SyncIdToChildren();
             }
 
-            var result = base.Insert(dba, item);
-
-            return result;
+            base.Insert(dba, item);
         }
 
         protected override bool CanInsert(RdbColumn column)

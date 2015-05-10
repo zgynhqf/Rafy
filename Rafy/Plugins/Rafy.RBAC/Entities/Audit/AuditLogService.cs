@@ -60,16 +60,14 @@ namespace Rafy.RBAC.Audit
              * 暂时不支持直接使用多线程进行日志记录操作。
              * 否则会与主线程的数据库访问操作因共享连接而产生冲突。
             **********************************************************************/
-            Log(logItem);
+            if (_provider == null) return;
 
-            //if (_provider == null) return;
+            if (logItem == null) throw new ArgumentNullException("logItem");
 
-            //if (logItem == null) throw new ArgumentNullException("logItem");
-
-            //AsyncHelper.InvokeSafe(() =>
-            //{
-            //    _provider.Log(logItem);
-            //});
+            AsyncHelper.InvokeSafe(() =>
+            {
+                _provider.Log(logItem);
+            });
         }
     }
 }

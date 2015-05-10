@@ -139,6 +139,8 @@
     <Compile Include="ORM\Rdb\DataProvider\RdbRedundanciesUpdater.cs" />
     <Compile Include="ORM\PersistanceTableInfo\PersistanceColumnInfo.cs" />
     <Compile Include="ORM\PersistanceTableInfo\PersistanceTableInfoFactory.cs" />
+    <Compile Include="ORM\Rdb\DbAccesser\IConnectionManager.cs" />
+    <Compile Include="ORM\Rdb\DbAccesser\TransactionDependentConnectionManager.cs" />
     <Compile Include="ORM\Rdb\SqlServer\SqlBatchInsertHelper.cs" />
     <Compile Include="EntityRepository\SubmitArgs.cs" />
     <Compile Include="ORM\Rdb\DataProvider\QueryArgs\TableQueryArgs.cs" />

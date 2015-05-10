@@ -46,11 +46,11 @@ namespace Rafy.WPF.Shell
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            this.Title = ConfigurationHelper.GetAppSettingOrDefault("主窗口标题", "管理信息系统")
+            this.Title = ConfigurationHelper.GetAppSettingOrDefault("WPFClient_主窗口标题", "管理信息系统")
                 .Translate();
 
             //topBannerContainer
-            if (TopBarControlType != null)
+            if (TopBarControlType != null && ConfigurationHelper.GetAppSettingOrDefault("WPFClient_主窗口顶栏是否显示", true))
             {
                 topBannerContainer.Content = Activator.CreateInstance(TopBarControlType) as UserControl;
             }

@@ -157,7 +157,7 @@ namespace Rafy.Domain.ORM
         private bool _hasLOB;
         private string _updateSQL;
 
-        public virtual int Insert(IDbAccesser dba, Entity item)
+        public virtual void Insert(IDbAccesser dba, Entity item)
         {
             EnsureMappingTable();
 
@@ -173,12 +173,10 @@ namespace Rafy.Domain.ORM
                 }
             }
 
-            var result = dba.ExecuteText(this._insertSQL, parameters.ToArray());
-
-            return result;
+            dba.ExecuteText(this._insertSQL, parameters.ToArray());
         }
 
-        private string GenerateInsertSQL()
+        internal string GenerateInsertSQL()
         {
             var sql = new StringWriter();
             sql.Write("INSERT INTO ");
@@ -401,13 +399,14 @@ namespace Rafy.Domain.ORM
             var sql = generator.Sql;
 
             //查询数据库
-            var reader = dba.QueryDataReader(sql, sql.Parameters);
-
-            //填充到列表中。
-            this.FillDataIntoList(
-                reader, autoSelection ? ReadDataType.ByIndex : ReadDataType.ByName,
-                args.List, args.FetchingFirst, args.PagingInfo, args.MarkTreeFullLoaded
-                );
+            using (var reader = dba.QueryDataReader(sql, sql.Parameters))
+            {
+                //填充到列表中。
+                this.FillDataIntoList(
+                    reader, autoSelection ? ReadDataType.ByIndex : ReadDataType.ByName,
+                    args.List, args.FetchingFirst, args.PagingInfo, args.MarkTreeFullLoaded
+                    );
+            }
         }
 
         /// <summary>
@@ -443,11 +442,13 @@ namespace Rafy.Domain.ORM
                 args.FormattedSql = this.ReplaceLOBColumns(args.FormattedSql);
             }
 
-            var reader = dba.QueryDataReader(args.FormattedSql, args.Parameters);
-            this.FillDataIntoList(
-                reader, ReadDataType.ByName,
-                args.List, args.FetchingFirst, args.PagingInfo, args.MarkTreeFullLoaded
-                );
+            using (var reader = dba.QueryDataReader(args.FormattedSql, args.Parameters))
+            {
+                this.FillDataIntoList(
+                    reader, ReadDataType.ByName,
+                    args.List, args.FetchingFirst, args.PagingInfo, args.MarkTreeFullLoaded
+                    );
+            }
         }
 
         /// <summary>
@@ -463,8 +464,7 @@ namespace Rafy.Domain.ORM
                 args.FormattedSql = this.ReplaceLOBColumns(args.FormattedSql);
             }
 
-            var reader = dba.QueryDataReader(args.FormattedSql, args.Parameters);
-            using (reader)
+            using (var reader = dba.QueryDataReader(args.FormattedSql, args.Parameters))
             {
                 var table = args.ResultTable;
                 if (table.Columns.Count == 0)
@@ -624,19 +624,16 @@ namespace Rafy.Domain.ORM
                 var entity = readByIndex ? this.CreateByIndex(dr) : this.CreateByName(dr);
                 list.Add(entity);
             };
-            using (reader)
+            if (fetchingFirst)
             {
-                if (fetchingFirst)
+                if (reader.Read())
                 {
-                    if (reader.Read())
-                    {
-                        rowReader(reader);
-                    }
+                    rowReader(reader);
                 }
-                else
-                {
-                    PagingHelper.MemoryPaging(reader, rowReader, pagingInfo);
-                }
+            }
+            else
+            {
+                PagingHelper.MemoryPaging(reader, rowReader, pagingInfo);
             }
         }
 
@@ -673,16 +670,13 @@ namespace Rafy.Domain.ORM
 
         private IEnumerable<Entity> ReadToEntity(IDataReader reader, ReadDataType readType)
         {
-            using (reader)
-            {
-                var readByIndex = readType == ReadDataType.ByIndex;
+            var readByIndex = readType == ReadDataType.ByIndex;
 
-                //最后一次添加的节点。
-                while (reader.Read())
-                {
-                    var entity = readByIndex ? this.CreateByIndex(reader) : this.CreateByName(reader);
-                    yield return entity;
-                }
+            //最后一次添加的节点。
+            while (reader.Read())
+            {
+                var entity = readByIndex ? this.CreateByIndex(reader) : this.CreateByName(reader);
+                yield return entity;
             }
         }
 

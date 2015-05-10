@@ -11,6 +11,11 @@ namespace Rafy.Data.Providers
     {
         private static DbProviderFactory _sql, _sqlCe, _oracle;
 
+        /// <summary>
+        /// 以快速键值对照来获取 DbProviderFactory。
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <returns></returns>
         public static DbProviderFactory GetFactory(string provider)
         {
             //ISqlConverter Factory

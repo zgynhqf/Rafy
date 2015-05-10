@@ -333,8 +333,10 @@ namespace Rafy.Data
         /// <returns></returns>
         public LiteDataTable QueryLiteDataTable(string formattedSql, params object[] parameters)
         {
-            var reader = this.QueryDataReader(formattedSql, parameters);
-            return ConvertToLiteDataTable(reader);
+            using (var reader = this.QueryDataReader(formattedSql, parameters))
+            {
+                return ConvertToLiteDataTable(reader);
+            }
         }
 
         /// <summary>
@@ -346,8 +348,10 @@ namespace Rafy.Data
         /// <returns></returns>
         public LiteDataRow QueryLiteDataRow(string formattedSql, params object[] parameters)
         {
-            var reader = this.QueryDataReader(formattedSql, parameters);
-            return ConvertToLiteDataRow(reader);
+            using (var reader = this.QueryDataReader(formattedSql, parameters))
+            {
+                return ConvertToLiteDataRow(reader);
+            }
         }
 
         /// <summary>
@@ -591,10 +595,7 @@ namespace Rafy.Data
         private static LiteDataTable ConvertToLiteDataTable(IDataReader reader)
         {
             var table = new LiteDataTable();
-            using (reader)
-            {
-                LiteDataTableAdapter.Fill(table, reader);
-            }
+            LiteDataTableAdapter.Fill(table, reader);
             return table;
         }
 
@@ -751,8 +752,10 @@ namespace Rafy.Data
         /// <returns></returns>
         LiteDataTable IRawDbAccesser.QueryLiteDataTable(string sql, params IDbDataParameter[] parameters)
         {
-            var reader = (this as IRawDbAccesser).QueryDataReader(sql, parameters);
-            return ConvertToLiteDataTable(reader);
+            using (var reader = (this as IRawDbAccesser).QueryDataReader(sql, parameters))
+            {
+                return ConvertToLiteDataTable(reader);
+            }
         }
 
         /// <summary>
@@ -767,8 +770,10 @@ namespace Rafy.Data
         /// <returns></returns>
         LiteDataTable IRawDbAccesser.QueryLiteDataTable(string sql, CommandType type, params IDbDataParameter[] parameters)
         {
-            var reader = (this as IRawDbAccesser).QueryDataReader(sql, type, parameters);
-            return ConvertToLiteDataTable(reader);
+            using (var reader = (this as IRawDbAccesser).QueryDataReader(sql, type, parameters))
+            {
+                return ConvertToLiteDataTable(reader);
+            }
         }
 
         /// <summary>
@@ -780,8 +785,10 @@ namespace Rafy.Data
         /// <returns></returns>
         LiteDataRow IRawDbAccesser.QueryLiteDataRow(string sql, params IDbDataParameter[] parameters)
         {
-            var reader = (this as IRawDbAccesser).QueryDataReader(sql, parameters);
-            return ConvertToLiteDataRow(reader);
+            using (var reader = (this as IRawDbAccesser).QueryDataReader(sql, parameters))
+            {
+                return ConvertToLiteDataRow(reader);
+            }
         }
 
         /// <summary>
@@ -797,8 +804,10 @@ namespace Rafy.Data
         /// <returns></returns>
         LiteDataRow IRawDbAccesser.QueryLiteDataRow(string sql, CommandType type, params IDbDataParameter[] parameters)
         {
-            var reader = (this as IRawDbAccesser).QueryDataReader(sql, type, parameters);
-            return ConvertToLiteDataRow(reader);
+            using (var reader = (this as IRawDbAccesser).QueryDataReader(sql, type, parameters))
+            {
+                return ConvertToLiteDataRow(reader);
+            }
         }
 
         /// <summary>

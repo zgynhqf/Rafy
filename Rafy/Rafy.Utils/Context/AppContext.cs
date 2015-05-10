@@ -44,6 +44,11 @@ namespace Rafy
             _provider = context;
         }
 
+        internal static IAppContextProvider GetProvider()
+        {
+            return _provider;
+        }
+
         /// <summary>
         /// 可获取或设置当前的身份。
         /// </summary>
