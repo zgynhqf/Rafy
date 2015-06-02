@@ -35,6 +35,7 @@ namespace Rafy.Domain.Serialization.Json
         public AggtSerializer()
         {
             this.SerializeAggt = true;
+            this.SerializeReference = true;
             this.UseCamelProperty = true;
         }
 
@@ -43,6 +44,12 @@ namespace Rafy.Domain.Serialization.Json
         /// 默认为 true。
         /// </summary>
         public bool SerializeAggt { get; set; }
+
+        /// <summary>
+        /// 是否需要同时序列化相关的引用属性。
+        /// 默认为 true。
+        /// </summary>
+        public bool SerializeReference { get; set; }
 
         /// <summary>
         /// 是否使用舵峰式。
@@ -91,16 +98,31 @@ namespace Rafy.Domain.Serialization.Json
                     _writer.Formatting = Formatting.Indented;
                 }
 
-                if (entityOrList is Entity)
-                {
-                    this.SerializeEntity(entityOrList as Entity);
-                }
-                else
-                {
-                    this.SerializeList(entityOrList as EntityList);
-                }
+                this.Serialize(entityOrList, _writer);
 
                 _writer.Flush();
+            }
+        }
+
+        /// <summary>
+        /// 序列化指定的实体元素到指定的 JsonTextWriter 中。
+        /// </summary>
+        /// <param name="entityOrList">The entity or list.</param>
+        /// <param name="jsonWriter">The json writer.</param>
+        /// <exception cref="System.ArgumentNullException">jsonWriter</exception>
+        public void Serialize(IDomainComponent entityOrList, JsonTextWriter jsonWriter)
+        {
+            if (jsonWriter == null) throw new ArgumentNullException("jsonWriter");
+
+            _writer = jsonWriter;
+
+            if (entityOrList is Entity)
+            {
+                this.SerializeEntity(entityOrList as Entity);
+            }
+            else
+            {
+                this.SerializeList(entityOrList as EntityList);
             }
         }
 
@@ -166,12 +188,11 @@ namespace Rafy.Domain.Serialization.Json
                     }
                     break;
                 case PropertyCategory.ReferenceEntity:
-                    //所有引用属性需要被忽略。
-                    //var refProperty = property as IRefProperty;
-                    //if (refProperty.ReferenceType == ReferenceType.Child)
-                    //{
-                    //    throw new NotSupportedException("不支持引用类型为聚合子的引用属性的序列化。");
-                    //}
+                    if (this.SerializeReference && value != null && (property as IRefProperty).ReferenceType != ReferenceType.Parent)
+                    {
+                        this.WritePropertyName(property.Name);
+                        this.SerializeEntity(value as Entity);
+                    }
                     break;
                 default:
                     throw new NotSupportedException();

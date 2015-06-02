@@ -45,6 +45,8 @@ namespace Rafy
 
         private string _message;
 
+        private object _data;
+
         #endregion
 
         #region Constructors
@@ -58,6 +60,7 @@ namespace Rafy
             _success = success;
             _statusCode = 0;
             _message = success ? SuccessMessage : FailedMessage;
+            _data = null;
         }
 
         /// <summary>
@@ -69,6 +72,7 @@ namespace Rafy
             _success = false;
             _statusCode = 0;
             _message = message;
+            _data = null;
         }
 
         /// <summary>
@@ -80,6 +84,19 @@ namespace Rafy
             _success = false;
             _statusCode = statusCode;
             _message = FailedMessage;
+            _data = null;
+        }
+
+        /// <summary>
+        /// create a successful result with corresponding data.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        public Result(object data)
+        {
+            _success = true;
+            _statusCode = 0;
+            _message = SuccessMessage;
+            _data = data;
         }
 
         /// <summary>
@@ -92,6 +109,7 @@ namespace Rafy
             _success = success;
             _statusCode = 0;
             _message = message;
+            _data = null;
         }
 
         /// <summary>
@@ -104,6 +122,7 @@ namespace Rafy
             _success = success;
             _statusCode = statusCode;
             _message = success ? SuccessMessage : FailedMessage;
+            _data = null;
         }
 
         /// <summary>
@@ -116,6 +135,7 @@ namespace Rafy
             _success = false;
             _statusCode = statusCode;
             _message = message;
+            _data = null;
         }
 
         /// <summary>
@@ -129,6 +149,7 @@ namespace Rafy
             _success = success;
             _statusCode = statusCode;
             _message = message;
+            _data = null;
         }
 
         #endregion
@@ -175,6 +196,16 @@ namespace Rafy
                 if (value == null) value = string.Empty;
                 _message = value;
             }
+        }
+
+        /// <summary>
+        /// the data result.
+        /// </summary>
+        [DataMember]
+        public object Data
+        {
+            get { return _data; }
+            set { _data = value; }
         }
 
         /// <summary>

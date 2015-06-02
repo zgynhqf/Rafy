@@ -244,7 +244,7 @@ namespace Rafy.Domain
             {
                 this.MarkModifiedIfUnchanged();
 
-                this.NotifyIfInRedundancyPath(e);
+                this.NotifyIfInRedundancyPath(e.Property as IProperty);
             }
 
             base.OnPropertyChanged(e);

@@ -54,10 +54,9 @@ namespace Rafy.Domain
         /// <summary>
         /// 在属性变更时，如果该属性在某个冗余路径中，则应该使用冗余更新策略。
         /// </summary>
-        /// <param name="e"></param>
-        private void NotifyIfInRedundancyPath(ManagedPropertyChangedEventArgs e)
+        /// <param name="property">变更的属性.</param>
+        private void NotifyIfInRedundancyPath(IProperty property)
         {
-            var property = e.Property as IProperty;
             if (property.IsInRedundantPath)
             {
                 var refProperty = property as IRefIdProperty;

@@ -57,11 +57,23 @@ namespace Rafy.Domain.Serialization.Json
         /// <param name="type">The type.</param>
         /// <param name="jObject">The j object.</param>
         /// <returns></returns>
-        private Entity DeserializeEntity(Type type, JObject jObject)
+        public Entity DeserializeEntity(Type type, JObject jObject)
+        {
+            var id = TryGetId(jObject);
+
+            return DeserializeEntity(type, jObject, id);
+        }
+
+        /// <summary>
+        /// 实体的自定义反序列化方法。
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="jObject">The j object.</param>
+        /// <param name="id">实体的标识。如果已经在 jObject 中指定时，此参数可以传入 null。</param>
+        /// <returns></returns>
+        public Entity DeserializeEntity(Type type, JObject jObject, object id)
         {
             Entity entity = null;
-
-            var id = TryGetId(jObject);
             if (id != null)
             {
                 var repository = RF.Find(type);
@@ -76,6 +88,33 @@ namespace Rafy.Domain.Serialization.Json
             DeserializeProperties(jObject, entity);
 
             return entity;
+        }
+
+        /// <summary>
+        /// 反序列化指定的数组为一个实体的列表。
+        /// </summary>
+        /// <param name="listType"></param>
+        /// <param name="jArray"></param>
+        /// <returns></returns>
+        public EntityList DeserializeList(Type listType, JArray jArray)
+        {
+            var entityType = EntityMatrix.FindByList(listType).EntityType;
+            var repo = RF.Find(entityType);
+
+            //先从数据库中找出所有提供了 Id 的实体。
+            var idList = jArray.Cast<JObject>().Select(item => TryGetId(item))
+                .Where(id => id != null).ToArray();
+            var list = repo.GetByIdList(idList);
+
+            //依次反序列化数组中的实体：
+            //如果有 Id，则在数据库中查询出的列表 list 中查找出对应的实体，然后反序列化值。否则，直接构造新实体。
+            foreach (JObject jEntity in jArray)
+            {
+                var child = FindOrCreate(list, jEntity);
+                DeserializeProperties(jEntity, child);
+            }
+
+            return list;
         }
 
         /// <summary>
@@ -152,27 +191,6 @@ namespace Rafy.Domain.Serialization.Json
                     DeserializeProperties(jChild, child);
                 }
             }
-        }
-
-        private EntityList DeserializeList(Type listType, JArray jArray)
-        {
-            var entityType = EntityMatrix.FindByList(listType).EntityType;
-            var repo = RF.Find(entityType);
-
-            //先从数据库中找出所有提供了 Id 的实体。
-            var idList = jArray.Cast<JObject>().Select(item => TryGetId(item))
-                .Where(id => id != null).ToArray();
-            var list = repo.GetByIdList(idList);
-
-            //依次反序列化数组中的实体：
-            //如果有 Id，则在数据库中查询出的列表 list 中查找出对应的实体，然后反序列化值。否则，直接构造新实体。
-            foreach (JObject jEntity in jArray)
-            {
-                var child = FindOrCreate(list, jEntity);
-                DeserializeProperties(jEntity, child);
-            }
-
-            return list;
         }
 
         private static Entity FindOrCreate(EntityList list, JObject jEntity)

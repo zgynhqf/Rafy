@@ -158,8 +158,8 @@ namespace Rafy.Domain
 
                 //在设置 RefId 前先清空实体值，这样在回调 RefId 的外部 Changed 事件处理函数时，
                 //外部看到的 RefEntity 也已经改变了，外部可以获得一致的 Entity 和 Id 值。
-                var entity = base.GetProperty(entityProperty);
-                if (entity != null) { base.ResetProperty(entityProperty); }
+                var entity = base.GetProperty(entityProperty) as Entity;
+                if (entity != null && !object.Equals(entity.Id, value)) { base.ResetProperty(entityProperty); }
                 try
                 {
                     //此时发生 OnIdChanged 事件。
@@ -429,6 +429,13 @@ namespace Rafy.Domain
         {
             var property = this.GetRepository().FindParentPropertyInfo(true).ManagedProperty as IRefEntityProperty;
             this.SetRefEntity(property, parent);
+
+            //由于新的父实体可以还没有 Id，这时需要主动通知冗余属性变更。
+            //见测试：MPT_Redundancy_AddNewAggt
+            if (parent != null && parent._status == PersistenceStatus.New)
+            {
+                this.NotifyIfInRedundancyPath(property.RefIdProperty as IProperty);
+            }
         }
 
         /// <summary>
