@@ -11,6 +11,7 @@
 *******************************************************/
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,6 +20,7 @@ using Newtonsoft.Json.Linq;
 using Rafy;
 using Rafy.Domain;
 using Rafy.ManagedProperty;
+using Rafy.Reflection;
 
 namespace Rafy.Domain.Serialization.Json
 {
@@ -47,8 +49,13 @@ namespace Rafy.Domain.Serialization.Json
                 return this.DeserializeEntity(type, jObject);
             }
 
-            var jArray = JArray.Parse(json);
-            return this.DeserializeList(type, jArray);
+            if (type.IsSubclassOf(typeof(EntityList)))
+            {
+                var jArray = JArray.Parse(json);
+                return this.DeserializeList(type, jArray);
+            }
+
+            throw new ArgumentOutOfRangeException("type", "只支持实体和实体列表类型的反序列化。");
         }
 
         /// <summary>
@@ -108,8 +115,9 @@ namespace Rafy.Domain.Serialization.Json
 
             //依次反序列化数组中的实体：
             //如果有 Id，则在数据库中查询出的列表 list 中查找出对应的实体，然后反序列化值。否则，直接构造新实体。
-            foreach (JObject jEntity in jArray)
+            for (int i = 0, c = jArray.Count; i < c; i++)
             {
+                var jEntity = jArray[i] as JObject;
                 var child = FindOrCreate(list, jEntity);
                 DeserializeProperties(jEntity, child);
             }
@@ -132,22 +140,66 @@ namespace Rafy.Domain.Serialization.Json
                 var mp = properties.Find(propertyName, true);
                 if (mp != null)
                 {
-                    if (mp != Entity.IdProperty)
+                    //id 属性需要提前处理，而不需要在这里直接反序列化。
+                    if (mp == Entity.IdProperty) continue;
+
+                    if (mp is IListProperty)
                     {
-                        if (mp is IListProperty)
+                        DeserializeList(entity, mp as IListProperty, jValue as JArray);
+                    }
+                    else if (mp is IRefEntityProperty)
+                    {
+                        //一般引用属性不支持反序列化。
+                    }
+                    //一般属性。
+                    else
+                    {
+                        object value = null;
+
+                        //对于数组的泛型列表类型，需要进行特殊的处理。
+                        if (jValue is JArray)
                         {
-                            DeserializeList(entity, mp as IListProperty, jValue as JArray);
+                            var jArray = jValue as JArray;
+                            var propertyType = mp.PropertyType;
+                            if (propertyType.IsArray)
+                            {
+                                var elementType = propertyType.GetElementType();
+                                var array = Array.CreateInstance(elementType, jArray.Count);
+                                for (int i = 0, c = jArray.Count; i < c; i++)
+                                {
+                                    var itemTyped = TypeHelper.CoerceValue(elementType, jArray[i]);
+                                    array.SetValue(itemTyped, i);
+                                }
+                                value = array;
+                            }
+                            else if (TypeHelper.IsGenericType(propertyType, typeof(List<>)))//List<string>
+                            {
+                                var elementType = propertyType.GetGenericArguments()[0];
+                                var list = Activator.CreateInstance(propertyType) as IList;
+                                for (int i = 0, c = jArray.Count; i < c; i++)
+                                {
+                                    var itemTyped = TypeHelper.CoerceValue(elementType, jArray[i]);
+                                    list.Add(itemTyped);
+                                }
+                                value = list;
+                            }
+                            else
+                            {
+                                //如果不是数组类型或者泛型列表类型的属性，则不支持反序列化。
+                                //do nothing;
+                            }
                         }
-                        //一般属性。
                         else
                         {
-                            var value = (jValue as JValue).Value;
+                            value = (jValue as JValue).Value;
+
                             if (value is string && mp.PropertyType == typeof(byte[]))
                             {
-                                value = Encoding.UTF8.GetBytes(value as string);
+                                value = Convert.FromBase64String(value as string);
                             }
-                            entity.SetProperty(mp, value, ManagedPropertyChangedSource.FromUIOperating);
                         }
+
+                        entity.SetProperty(mp, value, ManagedPropertyChangedSource.FromUIOperating);
                     }
                 }
                 else
@@ -162,6 +214,7 @@ namespace Rafy.Domain.Serialization.Json
                 }
             }
 
+            //可以使用 Json.NET 来遍历给实体属性赋值。
             //using (var jsonTextReader = new StringReader(strContent))
             //{
             //    var jsonSerializer = JsonSerializer.Create(this.SerializerSettings);
@@ -185,8 +238,9 @@ namespace Rafy.Domain.Serialization.Json
             else
             {
                 //这里会发起查询，获取当前在数据库中的实体。
-                foreach (JObject jChild in jArray)
+                for (int i = 0, c = jArray.Count; i < c; i++)
                 {
+                    var jChild = jArray[i] as JObject;
                     var child = FindOrCreate(list, jChild);
                     DeserializeProperties(jChild, child);
                 }

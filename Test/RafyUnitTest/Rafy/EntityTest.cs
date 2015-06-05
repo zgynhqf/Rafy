@@ -15,6 +15,7 @@ using Rafy.Domain;
 using Rafy.Domain.ORM;
 using Rafy.Domain.ORM.DbMigration;
 using Rafy.Domain.Serialization;
+using Rafy.Domain.Serialization.Json;
 using Rafy.Domain.Validation;
 using Rafy.Reflection;
 using Rafy.UnitTest.IDataProvider;
@@ -1144,7 +1145,7 @@ namespace RafyUnitTest
         /// 序列化及反序列化
         /// </summary>
         [TestMethod]
-        public void ET_Serialization_WCF()
+        public void ET_WCF_Serialization()
         {
             var model = new Article
             {
@@ -1173,7 +1174,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ET_Serialization_WCF_RefId()
+        public void ET_WCF_Serialization_RefId()
         {
             var model = new Article
             {
@@ -1199,7 +1200,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ET_Serialization_WCF_Ref()
+        public void ET_WCF_Serialization_Ref()
         {
             var model = new Article
             {
@@ -1235,7 +1236,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ET_Serialization_WCF_List()
+        public void ET_WCF_Serialization_List()
         {
             var model = new Book
             {
@@ -1275,6 +1276,370 @@ namespace RafyUnitTest
             Assert.IsTrue(model2.ChapterList.Count == 2);
             Assert.IsTrue(model2.ChapterList[0].Id == 111);
             Assert.IsTrue(model2.ChapterList[0].Name == "Chapter1");
+        }
+
+        #endregion
+
+        #region Json 序列化
+
+        [TestMethod]
+        public void ET_Json_Serialization()
+        {
+            var entity = new Favorate
+            {
+                Name = "name"
+            };
+            var serializer = new AggtSerializer();
+            serializer.Indent = true;
+            serializer.IgnoreDefault = true;
+            var json = serializer.Serialize(entity);
+            Assert.AreEqual(json,
+@"{
+  ""name"": ""name""
+}");
+        }
+
+        [TestMethod]
+        public void ET_Json_Serialization_Aggt()
+        {
+            var entity = new Book
+            {
+                Name = "book",
+                ChapterList = 
+                {
+                    new Chapter
+                    {
+                        Name = "chapter1"
+                    },
+                    new Chapter
+                    {
+                        Name = "chapter2",
+                        SectionList = 
+                        {
+                            new Section
+                            {
+                                Name = "section"
+                            }
+                        }
+                    },
+                }
+            };
+            var serializer = new AggtSerializer();
+            serializer.Indent = true;
+            serializer.IgnoreDefault = true;
+            var json = serializer.Serialize(entity);
+            Assert.AreEqual(json,
+@"{
+  ""chapterList"": [
+    {
+      ""name"": ""chapter1""
+    },
+    {
+      ""name"": ""chapter2"",
+      ""sectionList"": [
+        {
+          ""name"": ""section""
+        }
+      ]
+    }
+  ],
+  ""name"": ""book""
+}");
+        }
+
+        [TestMethod]
+        public void ET_Json_Serialization_Ref()
+        {
+            var entity = new Favorate
+            {
+                Name = "name",
+                Book = new Book { Id = 100, Name = "book" }
+            };
+
+            var serializer = new AggtSerializer();
+            serializer.Indent = true;
+            serializer.IgnoreDefault = true;
+            var json = serializer.Serialize(entity);
+
+            Assert.AreEqual(json,
+@"{
+  ""book"": {
+    ""id"": 100,
+    ""name"": ""book""
+  },
+  ""bookId"": 100,
+  ""name"": ""name""
+}");
+        }
+
+        [TestMethod]
+        public void ET_Json_Serialization_EntityList()
+        {
+            var list = new FavorateList
+            {
+                new Favorate { Name = "f1" },
+                new Favorate { Name = "f2" },
+            };
+
+            var serializer = new AggtSerializer();
+            serializer.Indent = true;
+            serializer.IgnoreDefault = true;
+            var json = serializer.Serialize(list);
+
+            Assert.AreEqual(json,
+@"[
+  {
+    ""name"": ""f1""
+  },
+  {
+    ""name"": ""f2""
+  }
+]");
+        }
+
+        [TestMethod]
+        public void ET_Json_Serialization_NoCamel()
+        {
+            var entity = new Favorate
+            {
+                Name = "name"
+            };
+
+            var serializer = new AggtSerializer();
+            serializer.Indent = true;
+            serializer.IgnoreDefault = true;
+            serializer.UseCamelProperty = false;
+            var json = serializer.Serialize(entity);
+
+            Assert.AreEqual(json,
+@"{
+  ""Name"": ""name""
+}");
+        }
+
+        [TestMethod]
+        public void ET_Json_Serialization_IgnoreDefault()
+        {
+            var entity = new Favorate
+            {
+                Name = "name"
+            };
+
+            var serializer = new AggtSerializer();
+            serializer.Indent = true;
+            serializer.IgnoreDefault = false;
+            var json = serializer.Serialize(entity);
+
+            Assert.AreEqual(json,
+@"{
+  ""id"": 0,
+  ""arrayValue"": null,
+  ""bookId"": 0,
+  ""bytesContent"": """",
+  ""listValue"": null,
+  ""name"": ""name""
+}");
+        }
+
+        [TestMethod]
+        public void ET_Json_Serialization_ArrayValue()
+        {
+            var entity = new Favorate
+            {
+                ListValue = new List<string> { "1", "2", "3" },
+                ArrayValue = new int[] { 1, 2, 3 },
+            };
+
+            var serializer = new AggtSerializer();
+            serializer.Indent = true;
+            serializer.IgnoreDefault = true;
+            var json = serializer.Serialize(entity);
+
+            Assert.AreEqual(json,
+@"{
+  ""arrayValue"": [
+    1,
+    2,
+    3
+  ],
+  ""listValue"": [
+    ""1"",
+    ""2"",
+    ""3""
+  ]
+}");
+        }
+
+        [TestMethod]
+        public void ET_Json_Serialization_Bytes()
+        {
+            var entity = new Favorate
+            {
+                BytesContent = Encoding.UTF8.GetBytes("test content")
+            };
+
+            var serializer = new AggtSerializer();
+            serializer.Indent = true;
+            serializer.IgnoreDefault = true;
+            var json = serializer.Serialize(entity);
+
+            Assert.AreEqual(json,
+@"{
+  ""bytesContent"": ""dGVzdCBjb250ZW50""
+}");
+        }
+
+        [TestMethod]
+        public void ET_Json_Deserialization()
+        {
+            var json = 
+@"{
+    name : 'name'
+}";
+            var deserializer = new AggtDeserializer();
+            var entity = deserializer.Deserialize(typeof(Favorate), json) as Favorate;
+            Assert.AreEqual(entity.Name, "name");
+        }
+
+        [TestMethod]
+        public void ET_Json_Deserialization_Ref()
+        {
+            var json = 
+@"{
+    name : 'name',
+    book : {
+        id : 100,
+        name: 'book'
+    }
+}";
+            var deserializer = new AggtDeserializer();
+            var entity = deserializer.Deserialize(typeof(Favorate), json) as Favorate;
+
+            Assert.AreEqual(entity.Name, "name");
+            Assert.IsNull(entity.BookId);
+            Assert.IsNull(entity.Book, "一般引用属性不支持反序列化。");
+        }
+
+        [TestMethod]
+        public void ET_Json_Deserialization_Aggt()
+        {
+            var json = @"{
+  ""chapterList"": [
+    {
+      ""name"": ""chapter1""
+    },
+    {
+      ""name"": ""chapter2"",
+      ""sectionList"": [
+        {
+          ""name"": ""section""
+        }
+      ]
+    }
+  ],
+  ""name"": ""book""
+}";
+
+            var deserializer = new AggtDeserializer();
+            var entity = deserializer.Deserialize(typeof(Book), json) as Book;
+
+            Assert.AreEqual(entity.Name, "book");
+            Assert.AreEqual(entity.ChapterList.Count, 2);
+            Assert.AreEqual(entity.ChapterList[0].Name, "chapter1");
+            Assert.AreEqual(entity.ChapterList[1].Name, "chapter2");
+            Assert.AreEqual(entity.ChapterList[1].SectionList.Count, 1);
+            Assert.AreEqual(entity.ChapterList[1].SectionList[0].Name, "section");
+        }
+
+        [TestMethod]
+        public void ET_Json_Deserialization_EntityList()
+        {
+            var json = @"[
+  {
+    ""name"": ""f1""
+  },
+  {
+    ""name"": ""f2""
+  }
+]";
+
+            var deserializer = new AggtDeserializer();
+            var list = deserializer.Deserialize(typeof(FavorateList), json) as FavorateList;
+
+            Assert.AreEqual(list.Count, 2);
+            Assert.AreEqual(list[0].Name, "f1");
+            Assert.AreEqual(list[1].Name, "f2");
+        }
+
+        [TestMethod]
+        public void ET_Json_Deserialization_Status()
+        {
+            var repo = RF.Concrete<FavorateRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var f1 = new Favorate();
+                f1.Name = "n1";
+                repo.Save(f1);
+                var f2 = new Favorate();
+                repo.Save(f2);
+
+                var json = @"[
+  {
+    ""persistenceStatus"": ""new""
+  },
+  {
+  },
+  {
+    ""id"": " + f2.Id + @",
+    ""persistenceStatus"": ""Deleted""
+  },
+  {
+    ""id"": " + f1.Id + @",
+    ""name"": ""n2""
+  },
+  {
+    ""persistenceStatus"": ""modified""
+  }
+]";
+
+                var deserializer = new AggtDeserializer();
+                var list = deserializer.Deserialize(typeof(FavorateList), json) as FavorateList;
+
+                Assert.AreEqual(list.Count, 5);
+                Assert.AreEqual(list.Concrete().Count(c => c.PersistenceStatus == PersistenceStatus.New), 2);
+                Assert.AreEqual(list.Concrete().Count(c => c.PersistenceStatus == PersistenceStatus.Deleted), 1);
+                Assert.AreEqual(list.Concrete().Count(c => c.PersistenceStatus == PersistenceStatus.Modified), 2);
+            }
+        }
+
+        [TestMethod]
+        public void ET_Json_Deserialization_ArrayValue()
+        {
+            var json = @"
+{
+    arrayValue : [1, 2, 3],
+    listValue : [""1"", ""2"", ""3""]
+}
+";
+            var deserializer = new AggtDeserializer();
+            var entity = deserializer.Deserialize(typeof(Favorate), json) as Favorate;
+            Assert.AreEqual(entity.ArrayValue.Length, 3);
+            Assert.AreEqual(entity.ListValue.Count, 3);
+        }
+
+        [TestMethod]
+        public void ET_Json_Deserialization_Bytes()
+        {
+            var json = @"
+{
+  ""bytesContent"": ""dGVzdCBjb250ZW50""
+}
+";
+            var deserializer = new AggtDeserializer();
+            var entity = deserializer.Deserialize(typeof(Favorate), json) as Favorate;
+
+            Assert.IsNotNull(entity.BytesContent);
+            Assert.AreEqual(Encoding.UTF8.GetString(entity.BytesContent), "test content");
         }
 
         #endregion

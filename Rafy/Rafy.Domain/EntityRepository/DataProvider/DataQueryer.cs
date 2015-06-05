@@ -188,14 +188,33 @@ namespace Rafy.Domain
             //树型实体不支持修改排序规则！此逻辑不能放到 OnQueryBuilt 虚方法中，以免被重写。
             if (Repo.SupportTree)
             {
-                if (query.OrderBy.Count > 0)
+                //if (query.OrderBy.Count > 0)
+                //{
+                //    throw new InvalidOperationException(string.Format("树状实体 {0} 只不支持自定义排序，必须使用索引排序。", Repo.EntityType));
+                //}
+                var c = query.OrderBy.Count;
+                if (c > 0)
                 {
-                    throw new InvalidOperationException(string.Format("树状实体 {0} 只不支持自定义排序，必须使用索引排序。", Repo.EntityType));
+                    bool error = true;
+                    //如果只有一个排序时，允许使用聚合父属性进行排序。
+                    if (c == 1)
+                    {
+                        var parentProperty = _repository.FindParentPropertyInfo(false);
+                        if (parentProperty != null)
+                        {
+                            var property = query.OrderBy[0].Column.Property;
+                            var pProperty = (parentProperty.ManagedProperty as IRefProperty).RefIdProperty;
+                            error = property != pProperty;
+                        }
+                    }
+                    if (error)
+                    {
+                        throw new InvalidOperationException(string.Format("树状实体 {0} 只不支持自定义排序，必须使用索引排序。", Repo.EntityType));
+                    }
                 }
 
-                var f = QueryFactory.Instance;
                 query.OrderBy.Add(
-                    f.OrderBy(query.From.FindTable(Repo).Column(Entity.TreeIndexProperty))
+                    QueryFactory.Instance.OrderBy(query.From.FindTable(Repo).Column(Entity.TreeIndexProperty))
                     );
             }
         }
@@ -439,19 +458,85 @@ namespace Rafy.Domain
                 //把大的实体集合，根据父实体 Id，分拆到每一个父实体的子集合中。
                 var parentProperty = targetRepo.FindParentPropertyInfo(true).ManagedProperty as IRefProperty;
                 var parentIdProperty = parentProperty.RefIdProperty;
-                list.EachNode(parent =>
-                {
-                    var children = targetRepo.NewList();
-                    foreach (var child in allChildren)
-                    {
-                        var pId = child.GetRefId(parentIdProperty);
-                        if (object.Equals(pId, parent.Id)) { children.Add(child); }
-                    }
-                    children.SetParentEntity(parent);
 
-                    parent.LoadProperty(listProperty, children);
-                    return false;
-                });
+                #region 把父实体全部放到排序列表中
+
+                //由于数据量可能较大，所以需要进行排序后再顺序加载。
+                IList<Entity> sortedList = null;
+
+                if (_repository.SupportTree)
+                {
+                    var sortedParents = new List<Entity>(list.Count);
+                    list.EachNode(p =>
+                    {
+                        sortedParents.Add(p);
+                        return false;
+                    });
+                    sortedList = sortedParents.OrderBy(e => e.Id).ToList();
+                }
+                else
+                {
+                    sortedList = list.OrderBy(e => e.Id).ToList();
+                }
+
+                #endregion
+
+                #region 使用一次主循环就把所有的子实体都加载到父实体中。
+                //一次循环就能完全加载的前提是因为父集合按照 Id 排序，子集合按照父 Id 排序。
+
+                int pIndex = 0, pLength = sortedList.Count;
+                var parent = sortedList[pIndex];
+                var children = targetRepo.NewList();
+                for (int i = 0, c = allChildren.Count; i < c; i++)
+                {
+                    var child = allChildren[i];
+                    var childPId = child.GetRefId(parentIdProperty);
+
+                    //必须把该子对象处理完成后，才能跳出下面的循环。
+                    while (true)
+                    {
+                        if (object.Equals(childPId, parent.Id))
+                        {
+                            children.Add(child);
+                            break;
+                        }
+                        else
+                        {
+                            //检测下一个父实体。
+                            pIndex++;
+
+                            //所有父集合已经加载完毕，退出整个循环。
+                            if (pIndex >= pLength)
+                            {
+                                i = c;
+                                break;
+                            }
+
+                            //把整理好的子集合，加载到父实体中。
+                            children.SetParentEntity(parent);
+                            parent.LoadProperty(listProperty, children);
+
+                            //并同时更新变量。
+                            parent = sortedList[pIndex];
+                            children = targetRepo.NewList();
+                        }
+                    }
+                }
+                if (children.Count > 0)
+                {
+                    children.SetParentEntity(parent);
+                }
+                parent.LoadProperty(listProperty, children);
+
+                //如果子集合处理完了，父集合还没有循环到最后，那么需要把余下的父实体的子集合都加载好。
+                pIndex++;
+                while (pIndex < pLength)
+                {
+                    parent.LoadProperty(listProperty, targetRepo.NewList());
+                    pIndex++;
+                }
+
+                #endregion
             }
         }
 
@@ -478,23 +563,74 @@ namespace Rafy.Domain
             if (idList.Count > 0)
             {
                 var targetRepo = RepositoryFactoryHost.Factory.FindByEntity(refProperty.RefEntityType);
-                var allRefList = targetRepo.GetByIdList(idList.ToArray());
+                var refList = targetRepo.GetByIdList(idList.ToArray());
 
                 //继续递归加载它的贪婪属性。
-                this.EagerLoad(allRefList, eagerLoadProperties);
+                this.EagerLoad(refList, eagerLoadProperties);
+
+                #region 把实体全部放到排序列表中
+
+                //由于数据量可能较大，所以需要进行排序后再顺序加载。
+                IList<Entity> sortedList = null;
+
+                if (_repository.SupportTree)
+                {
+                    var tmp = new List<Entity>(list.Count);
+                    list.EachNode(p =>
+                    {
+                        tmp.Add(p);
+                        return false;
+                    });
+                    sortedList = tmp.OrderBy(e => e.GetRefNullableId(refIdProperty)).ToList();
+                }
+                else
+                {
+                    sortedList = list.OrderBy(e => e.GetRefNullableId(refIdProperty)).ToList();
+                }
+
+                #endregion
+
+                #region 使用一次主循环就把所有的子实体都加载到父实体中。
+                //一次循环就能完全加载的前提是因为父集合按照 Id 排序，子集合按照父 Id 排序。
 
                 //把大的实体集合，根据 Id，设置到每一个实体上。
                 var refEntityProperty = refProperty.RefEntityProperty;
-                list.EachNode(entity =>
+                int refListIndex = 0, refListCount = refList.Count;
+                var refEntity = refList[refListIndex];
+                for (int i = 0, c = sortedList.Count; i < c; i++)
                 {
+                    var entity = sortedList[i];
+
                     var refId = entity.GetRefNullableId(refIdProperty);
                     if (refId != null)
                     {
-                        var refEntity = allRefList.Find(refId);
-                        entity.LoadProperty(refEntityProperty, refEntity);
+                        //必须把该对象处理完成后，才能跳出下面的循环。
+                        while (true)
+                        {
+                            if (object.Equals(refId, refEntity.Id))
+                            {
+                                entity.LoadProperty(refEntityProperty, refEntity);
+                                break;
+                            }
+                            else
+                            {
+                                //检测下一个引用实体。
+                                refListIndex++;
+
+                                //所有父集合已经加载完毕，退出整个循环。
+                                if (refListIndex >= refListCount)
+                                {
+                                    i = c;
+                                    break;
+                                }
+
+                                refEntity = refList[refListIndex];
+                            }
+                        }
                     }
-                    return false;
-                });
+                }
+
+                #endregion
             }
         }
 

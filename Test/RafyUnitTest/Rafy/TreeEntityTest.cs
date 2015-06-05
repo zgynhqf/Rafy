@@ -2247,7 +2247,7 @@ namespace RafyUnitTest
         /// 贪婪加载子列表时，需要处理子列表是一棵树的情况。&测试。
         /// </summary>
         [TestMethod]
-        public void TET_Query_EagerLoadAChildTree()
+        public void TET_Query_EagerLoadChildrenTree()
         {
             var repo  = RF.Concrete<TestUserRepository>();
             using (RF.TransactionScope(repo))

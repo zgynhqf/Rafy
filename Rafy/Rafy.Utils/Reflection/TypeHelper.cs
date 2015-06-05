@@ -107,12 +107,24 @@ namespace Rafy.Reflection
         /// <summary>
         /// 判断某个类型是否为 Nullable 泛型类型。
         /// </summary>
-        /// <param name="targetType"></param>
+        /// <param name="targetType">需要判断的目标类型。</param>
         /// <returns></returns>
         [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
         public static bool IsNullable(Type targetType)
         {
             return targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>);
+        }
+
+        /// <summary>
+        /// 判断指定的类型是否是一个指定的泛型类型。
+        /// </summary>
+        /// <param name="targetType">需要判断的目标类型。</param>
+        /// <param name="genericType">泛型类型。</param>
+        /// <returns></returns>
+        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
+        public static bool IsGenericType(Type targetType, Type genericType)
+        {
+            return targetType.IsGenericType && targetType.GetGenericTypeDefinition() == genericType;
         }
 
         /// <summary>

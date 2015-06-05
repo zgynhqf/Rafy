@@ -125,9 +125,12 @@ namespace Rafy.Domain
             var mp = (parentProperty.ManagedProperty as IRefEntityProperty).RefIdProperty;
 
             var table = f.Table(_repository);
+            var parentColumn = table.Column(mp);
             var q = f.Query(
                 table,
-                where: f.Constraint(table.Column(mp), PropertyOperator.In, parentIdList)
+                where: f.Constraint(parentColumn, PropertyOperator.In, parentIdList),
+                orderBy: new List<IOrderBy> { f.OrderBy(parentColumn) }
+                //orderBy: _repository.SupportTree ? null : new List<IOrderBy> { f.OrderBy(parentColumn) }
             );
 
             var list = this.QueryList(q, paging, eagerLoad, true);

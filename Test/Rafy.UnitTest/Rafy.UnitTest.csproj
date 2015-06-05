@@ -131,6 +131,11 @@
     <Compile Include="Entities\Redundancy\A.g.cs">
       <DependentUpon>A.cs</DependentUpon>
     </Compile>
+    <Compile Include="Entities\Redundancy\AChild.cs" />
+    <Compile Include="Entities\Redundancy\AChild.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>AChild.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\Redundancy\B.cs" />
     <Compile Include="Entities\Redundancy\B.g.cs">
       <DependentUpon>B.cs</DependentUpon>

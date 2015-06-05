@@ -798,6 +798,54 @@ namespace RafyUnitTest
             }
         }
 
+        [TestMethod]
+        public void MPT_Redundancy_AddNewAggt()
+        {
+            var repo = RF.Concrete<ARepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var a = new A { Name = "A1" };
+                var ac = new AChild();
+
+                a.AChildList.Add(ac);
+                Assert.AreEqual(ac.RD_AName, a.Name);
+
+                Save(a);
+
+                a = repo.GetById(a.Id);
+                Assert.AreEqual(a.AChildList[0].RD_AName, a.Name);
+            }
+        }
+
+        /// <summary>
+        /// 在新建整个聚合时：
+        /// 当聚合构建完成后，再改变父实体的 Id，这时不应该影响子实体的冗余属性。
+        /// 
+        /// 场景：
+        /// iWS 框架在保存整个聚合时，会在数据层为聚合根生成一个新的 Id，这时导致冗余属性的值丢了。
+        /// </summary>
+        [TestMethod]
+        public void MPT_Redundancy_AddNewAggt_StringEntity()
+        {
+            var repo = RF.Concrete<HouseMerchantRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var r = new HouseMerchant { Name = "A1" };
+                var c = new MerchantItem();
+
+                r.MerchantItemList.Add(c);
+                Assert.AreEqual(c.RD_MerchantName, r.Name);
+
+                r.Id = Guid.NewGuid().ToString();
+                Assert.AreEqual(c.RD_MerchantName, r.Name);
+
+                Save(r);
+
+                r = repo.GetById(r.Id);
+                Assert.AreEqual(r.MerchantItemList[0].RD_MerchantName, r.Name);
+            }
+        }
+
         #endregion
 
         #region Id\RefId Field Type

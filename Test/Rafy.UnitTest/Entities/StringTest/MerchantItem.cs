@@ -86,6 +86,13 @@ namespace UT
 
         #region 只读属性
 
+        public static readonly Property<string> RD_MerchantNameProperty = P<MerchantItem>.RegisterRedundancy(e => e.RD_MerchantName,
+            new RedundantPath(HouseMerchantProperty, HouseMerchant.NameProperty));
+        public string RD_MerchantName
+        {
+            get { return this.GetProperty(RD_MerchantNameProperty); }
+        }
+
         #endregion
     }
 

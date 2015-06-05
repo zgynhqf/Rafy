@@ -68,6 +68,27 @@ namespace UT
             set { this.SetProperty(NameProperty, value); }
         }
 
+        public static readonly Property<int[]> ArrayValueProperty = P<Favorate>.Register(e => e.ArrayValue);
+        public int[] ArrayValue
+        {
+            get { return this.GetProperty(ArrayValueProperty); }
+            set { this.SetProperty(ArrayValueProperty, value); }
+        }
+
+        public static readonly Property<List<string>> ListValueProperty = P<Favorate>.Register(e => e.ListValue);
+        public List<string> ListValue
+        {
+            get { return this.GetProperty(ListValueProperty); }
+            set { this.SetProperty(ListValueProperty, value); }
+        }
+
+        public static readonly Property<byte[]> BytesContentProperty = P<Favorate>.Register(e => e.BytesContent);
+        public byte[] BytesContent
+        {
+            get { return this.GetProperty(BytesContentProperty); }
+            set { this.SetProperty(BytesContentProperty, value); }
+        }
+
         #endregion
 
         #region 只读属性
@@ -138,7 +159,11 @@ namespace UT
         protected override void ConfigMeta()
         {
             //配置实体的所有属性都映射到数据表中。
-            Meta.MapTable().MapAllProperties();
+            Meta.MapTable().MapAllPropertiesExcept(
+                Favorate.ArrayValueProperty,
+                Favorate.ListValueProperty,
+                Favorate.BytesContentProperty
+                );
         }
     }
 }

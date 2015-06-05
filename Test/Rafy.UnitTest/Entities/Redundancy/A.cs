@@ -27,12 +27,37 @@ namespace UT
 
         #endregion
 
+        #region 引用属性
+
+        #endregion
+
+        #region 组合子属性
+
+        public static readonly ListProperty<AChildList> AChildListProperty = P<A>.RegisterList(e => e.AChildList);
+        public AChildList AChildList
+        {
+            get { return this.GetLazyList(AChildListProperty); }
+        }
+
+        #endregion
+
+        #region 一般属性
+
         public static readonly Property<string> NameProperty = P<A>.Register(e => e.Name);
+        /// <summary>
+        /// 名称
+        /// </summary>
         public string Name
         {
             get { return this.GetProperty(NameProperty); }
             set { this.SetProperty(NameProperty, value); }
         }
+
+        #endregion
+
+        #region 只读属性
+
+        #endregion
     }
 
     [Serializable]

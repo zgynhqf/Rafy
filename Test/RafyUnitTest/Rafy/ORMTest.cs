@@ -482,7 +482,7 @@ namespace RafyUnitTest
         /// 用例一：查询时直接查出整个树，此时 LoadTreeChildren 不会再有数据加载。
         /// </summary>
         [TestMethod]
-        public void ORM_Query_EagerLoad_TreeChildrenFirst_GetAll()
+        public void ORM_Query_EagerLoad_LoadWithTreeChildren_GetAll()
         {
             var repo = RF.Concrete<FolderRepository>();
             using (RF.TransactionScope(repo))
@@ -532,7 +532,7 @@ namespace RafyUnitTest
         /// 用例二：查询时直接查出某个节点（部分树），此时 LoadTreeChildren 会根据节点数再发起。
         /// </summary>
         [TestMethod]
-        public void ORM_Query_EagerLoad_TreeChildrenFirst_GetById()
+        public void ORM_Query_EagerLoad_LoadWithTreeChildren_GetById()
         {
             var repo = RF.Concrete<FolderRepository>();
             using (RF.TransactionScope(repo))
@@ -759,6 +759,26 @@ namespace RafyUnitTest
             }
         }
 
+        /// <summary>
+        /// 如果数据过多时，也必须能够执行。
+        /// System.Data.SqlClient.SqlException: The incoming request has too many parameters. The server supports a maximum of 2100 parameters. Reduce the number of parameters and resend the request.
+        /// </summary>
+        [TestMethod]
+        public void ORM_Query_GetByIdList_5000()
+        {
+            var repo = RF.Concrete<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var idList = new object[5000];
+                for (int i = 1; i <= 5000; i++)
+                {
+                    idList[i - 1] = i;
+                }
+
+                repo.GetByIdList(idList);
+            }
+        }
+
         [TestMethod]
         public void ORM_Query_GetByParentIdList()
         {
@@ -804,6 +824,22 @@ namespace RafyUnitTest
                 Assert.IsTrue(list[3].Name == "2.1");
                 Assert.IsTrue(list[4].Name == "2.2");
                 Assert.IsTrue(list[5].Name == "2.3");
+            }
+        }
+
+        [TestMethod]
+        public void ORM_Query_GetByParentIdList_5000()
+        {
+            var repo = RF.Concrete<ChapterRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var idList = new object[5000];
+                for (int i = 1; i <= 5000; i++)
+                {
+                    idList[i - 1] = i;
+                }
+
+                repo.GetByParentIdList(idList);
             }
         }
 
@@ -4619,6 +4655,290 @@ ORDER BY Article.Code ASC");
                 thread1End.Set();
                 AppContext.SetProvider(p);
             }
+        }
+
+        #endregion
+
+        #region 性能测试
+
+        /// <summary>
+        /// 是否需要把性能检测结果写到 D 盘，方便查询。
+        /// </summary>
+        public static bool FlushResultToFile = false;
+
+        [TestMethod]
+        public void ORM_Performance_Insert()
+        {
+            var repo = RF.Concrete<BookRepository>();
+            try
+            {
+                var bookList = new BookList();
+                for (int i = 0; i < 100; i++)
+                {
+                    bookList.Add(new Book { Name = i.ToString() });
+                }
+
+                var watch = new System.Diagnostics.Stopwatch();
+                watch.Start();
+
+                repo.Save(bookList);
+
+                watch.Stop();
+
+                if (FlushResultToFile)
+                {
+                    System.IO.File.WriteAllText(@"D:\1.1 添加 100 行数据耗时(ms)：" + watch.Elapsed.TotalMilliseconds + "，平均一行需要：" + watch.Elapsed.TotalMilliseconds / 100, "1");
+                }
+                Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 200, "添加一行数据，不能超过 2 ms。");
+            }
+            finally
+            {
+                this.DeleteAllBooks();
+            }
+        }
+
+        [TestMethod]
+        public void ORM_Performance_Update()
+        {
+            var repo = RF.Concrete<BookRepository>();
+            try
+            {
+                this.InsertBooks();
+
+                var list = repo.GetAll();
+                foreach (var item in list)
+                {
+                    item.Name = "DDDDDDD";
+                }
+
+                var watch = new System.Diagnostics.Stopwatch();
+                watch.Start();
+
+                repo.Save(list);
+
+                watch.Stop();
+
+                if (FlushResultToFile)
+                {
+                    System.IO.File.WriteAllText(@"D:\1.2 更新 100 行数据耗时(ms)：" + watch.Elapsed.TotalMilliseconds + "，平均一行需要：" + watch.Elapsed.TotalMilliseconds / 100, "1");
+                }
+                Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 100, "更新一行数据，不能超过 1 ms。");
+            }
+            finally
+            {
+                this.DeleteAllBooks();
+            }
+        }
+
+        [TestMethod]
+        public void ORM_Performance_Query()
+        {
+            var repo = RF.Concrete<BookRepository>();
+            try
+            {
+                this.InsertBooks();
+
+                var watch = new System.Diagnostics.Stopwatch();
+                watch.Start();
+
+                var list = repo.GetAll();
+
+                watch.Stop();
+
+                if (FlushResultToFile)
+                {
+                    System.IO.File.WriteAllText(@"D:\1.3 查询 1000 行数据耗时(ms)：" + watch.Elapsed.TotalMilliseconds * 10, "1");
+                }
+                Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 2, "查询 100 行数据，不能超过 2 ms。");
+            }
+            finally
+            {
+                this.DeleteAllBooks();
+            }
+        }
+
+        [TestMethod]
+        public void ORM_Performance_Delete()
+        {
+            var repo = RF.Concrete<BookRepository>();
+            try
+            {
+                this.InsertBooks();
+
+                var list = repo.GetAll();
+                list.Clear();
+
+                var watch = new System.Diagnostics.Stopwatch();
+                watch.Start();
+
+                repo.Save(list);
+
+                watch.Stop();
+
+                if (FlushResultToFile)
+                {
+                    System.IO.File.WriteAllText(@"D:\1.4 删除 100 行数据耗时(ms)：" + watch.Elapsed.TotalMilliseconds + "，平均一行需要：" + watch.Elapsed.TotalMilliseconds / 100, "1");
+                }
+                Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 150, "删除一行数据，不能超过 1.5 ms。");
+            }
+            finally
+            {
+                this.DeleteAllBooks();
+            }
+        }
+
+        [TestMethod]
+        public void ORM_Performance_Insert_Transaction()
+        {
+            var repo = RF.Concrete<BookRepository>();
+            try
+            {
+                var bookList = new BookList();
+                for (int i = 0; i < 100; i++)
+                {
+                    bookList.Add(new Book { Name = i.ToString() });
+                }
+
+                var watch = new System.Diagnostics.Stopwatch();
+                watch.Start();
+
+                using (var tran = RF.TransactionScope(repo))
+                {
+                    repo.Save(bookList);
+                    tran.Complete();
+                }
+
+                watch.Stop();
+
+                if (FlushResultToFile)
+                {
+                    System.IO.File.WriteAllText(@"D:\2.1 事务中 添加 100 行数据耗时(ms)：" + watch.Elapsed.TotalMilliseconds + "，平均一行需要：" + watch.Elapsed.TotalMilliseconds / 100, "1");
+                }
+                Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 200, "添加一行数据，不能超过 2 ms。");
+            }
+            finally
+            {
+                this.DeleteAllBooks();
+            }
+        }
+
+        [TestMethod]
+        public void ORM_Performance_Update_Transaction()
+        {
+            var repo = RF.Concrete<BookRepository>();
+            try
+            {
+                this.InsertBooks();
+
+                var list = repo.GetAll();
+                foreach (var item in list)
+                {
+                    item.Name = "DDDDDDD";
+                }
+
+                var watch = new System.Diagnostics.Stopwatch();
+                watch.Start();
+
+                using (var tran = RF.TransactionScope(repo))
+                {
+                    repo.Save(list);
+                    tran.Complete();
+                }
+
+                watch.Stop();
+
+                if (FlushResultToFile)
+                {
+                    System.IO.File.WriteAllText(@"D:\2.2 事务中 更新 100 行数据耗时(ms)：" + watch.Elapsed.TotalMilliseconds + "，平均一行需要：" + watch.Elapsed.TotalMilliseconds / 100, "1");
+                }
+                Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 100, "更新一行数据，不能超过 1 ms。");
+            }
+            finally
+            {
+                this.DeleteAllBooks();
+            }
+        }
+
+        [TestMethod]
+        public void ORM_Performance_Query_Transaction()
+        {
+            var repo = RF.Concrete<BookRepository>();
+            try
+            {
+                this.InsertBooks();
+
+                var watch = new System.Diagnostics.Stopwatch();
+                watch.Start();
+
+                using (var tran = RF.TransactionScope(repo))
+                {
+                    var list = repo.GetAll();
+                    tran.Complete();
+                }
+
+                watch.Stop();
+
+                if (FlushResultToFile)
+                {
+                    System.IO.File.WriteAllText(@"D:\2.3 事务中 查询 1000 行数据耗时(ms)：" + watch.Elapsed.TotalMilliseconds * 10, "1");
+                }
+                Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 2, "查询 100 行数据，不能超过 20 ms。");
+            }
+            finally
+            {
+                this.DeleteAllBooks();
+            }
+        }
+
+        [TestMethod]
+        public void ORM_Performance_Delete_Transaction()
+        {
+            var repo = RF.Concrete<BookRepository>();
+            try
+            {
+                this.InsertBooks();
+
+                var list = repo.GetAll();
+                list.Clear();
+
+                var watch = new System.Diagnostics.Stopwatch();
+                watch.Start();
+
+                using (var tran = RF.TransactionScope(repo))
+                {
+                    repo.Save(list);
+                    tran.Complete();
+                }
+
+                watch.Stop();
+
+                if (FlushResultToFile)
+                {
+                    System.IO.File.WriteAllText(@"D:\2.4 事务中 删除 100 行数据耗时(ms)：" + watch.Elapsed.TotalMilliseconds + "，平均一行需要：" + watch.Elapsed.TotalMilliseconds / 100, "1");
+                }
+                Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 150, "删除一行数据，不能超过 1.5 ms。");
+            }
+            finally
+            {
+                this.DeleteAllBooks();
+            }
+        }
+
+        private void InsertBooks()
+        {
+            var repo = RF.Concrete<BookRepository>();
+            for (int i = 0; i < 100; i++)
+            {
+                repo.Save(new Book { Name = i.ToString() });
+            }
+        }
+
+        private void DeleteAllBooks()
+        {
+            var repo = RF.Concrete<BookRepository>();
+            var all = repo.GetAll();
+            all.Clear();
+            repo.Save(all);
         }
 
         #endregion

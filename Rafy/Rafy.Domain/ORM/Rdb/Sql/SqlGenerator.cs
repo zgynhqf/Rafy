@@ -481,11 +481,27 @@ namespace Rafy.Domain.ORM
                     if (value is IEnumerable)
                     {
                         bool first = true;
+                        bool needDelimiter = false;
                         foreach (var item in value as IEnumerable)
                         {
-                            if (!first) _sql.Append(',');
-                            _sql.AppendParameter(item);
-                            first = false;
+                            if (first)
+                            {
+                                first = false;
+                                needDelimiter = item is string || item is DateTime;
+                            }
+                            else { _sql.Append(','); }
+
+                            //由于集合中的数据可能过多，所以这里不要使用参数化的查询。
+                            //_sql.AppendParameter(item);
+
+                            if (needDelimiter)
+                            {
+                                _sql.Append('\'').Append(item).Append('\'');
+                            }
+                            else
+                            {
+                                _sql.Append(item);
+                            }
                         }
                     }
                     else if (value is SqlNode)

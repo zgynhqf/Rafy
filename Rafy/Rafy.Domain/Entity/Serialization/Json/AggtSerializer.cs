@@ -11,6 +11,7 @@
 *******************************************************/
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -135,20 +136,23 @@ namespace Rafy.Domain.Serialization.Json
             foreach (var field in entity.GetCompiledPropertyValues())
             {
                 var property = field.Property as IProperty;
+
                 if (!isTree && (property == Entity.TreePIdProperty || property == Entity.TreeIndexProperty))
                 {
                     continue;
                 }
+
+                var value = field.Value;
                 if (this.IgnoreDefault)
                 {
                     var defaultValue = property.GetMeta(entity).DefaultValue;
-                    if (object.Equals(defaultValue, field.Value))
+                    if (object.Equals(defaultValue, value))
                     {
                         continue;
                     }
                 }
 
-                this.SerializeProperty(property, field.Value);
+                this.SerializeProperty(property, value);
             }
 
             _writer.WriteEndObject();
@@ -170,7 +174,27 @@ namespace Rafy.Domain.Serialization.Json
                 case PropertyCategory.Readonly:
                 case PropertyCategory.Redundancy:
                     this.WritePropertyName(property.Name);
-                    _writer.WriteValue(value);
+                    //if (value is byte[])
+                    //{
+                    //    var base64 = Convert.ToBase64String(value as byte[]);
+                    //    _writer.WriteValue(base64);
+                    //}
+                    //else
+                    if (value is IList && !(value is byte[]))
+                    {
+                        _writer.WriteStartArray();
+                        var list = value as IList;
+                        for (int i = 0, c = list.Count; i < c; i++)
+                        {
+                            var item = list[i];
+                            _writer.WriteValue(item);
+                        }
+                        _writer.WriteEndArray();
+                    }
+                    else
+                    {
+                        _writer.WriteValue(value);
+                    }
                     break;
                 case PropertyCategory.ReferenceId:
                     var refProperty = property as IRefProperty;
@@ -205,8 +229,10 @@ namespace Rafy.Domain.Serialization.Json
             if (totalCount > 0)
             {
                 _writer.WriteStartObject();
+
                 this.WritePropertyName(TotalCountProperty);
                 _writer.WriteValue(totalCount);
+
                 this.WritePropertyName(EntityListProperty);
             }
 
