@@ -104,7 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\授权说明.aml" />
-    <None Include="Content\框架结构.aml" />
+    <None Include="Content\设计理念.aml" />
     <None Include="Content\框架结构\产品线工程.aml" />
     <None Include="Content\框架结构\插件化架构.aml" />
     <None Include="Content\框架结构\模型驱动架构.aml" />

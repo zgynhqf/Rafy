@@ -25,9 +25,8 @@ namespace Rafy
     /// <summary>
     /// this indicates a pager info,
     /// includes page number, page size, and total count;
-    /// 
     /// Note!
-    /// Don't use null to indicates a empty paging information, use <see cref="PagingInfo.Empty"/> instead.
+    /// Don't use null to indicates a empty paging information, use <see cref="PagingInfo.Empty" /> instead.
     /// </summary>
     [Serializable]
     [DataContract]
@@ -42,18 +41,26 @@ namespace Rafy
         private int _totalCount;
 
         /// <summary>
-        /// this constructor indicate that no need to retrieve count information from database
+        /// Initializes a new instance of the <see cref="PagingInfo"/> class.
+        /// Its pageNumber will be set to 1, and pageSize will be set to 10.
+        /// </summary>
+        public PagingInfo() : this(1, 10) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PagingInfo"/> class.
+        /// this constructor indicates that does not retrieve count information from persistence.
         /// </summary>
         /// <param name="pageNumber"></param>
         /// <param name="pageSize"></param>
         public PagingInfo(int pageNumber, int pageSize) : this(pageNumber, pageSize, false) { }
 
         /// <summary>
-        /// this constructor indicate whether to retrieve count information from database
+        /// Initializes a new instance of the <see cref="PagingInfo"/> class.
+        /// this constructor indicates whether to retrieve count information from persistence.
         /// </summary>
         /// <param name="pageNumber"></param>
         /// <param name="pageSize"></param>
-        /// <param name="isNeedCount">is need retrieve count of all records(if it is true,it will retrieve count info from database)</param>
+        /// <param name="isNeedCount">is need retrieve count of all records(if it is true,it will retrieve count info from persistence)</param>
         public PagingInfo(int pageNumber, int pageSize, bool isNeedCount)
         {
             this.PageNumber = pageNumber;

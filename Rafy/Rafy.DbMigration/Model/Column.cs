@@ -30,7 +30,19 @@ namespace Rafy.DbMigration.Model
 
         private ForeignConstraint _foreignConstraint;
 
-        public Column(DbType dataType, string length, string name, Table table)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Column"/> class.
+        /// </summary>
+        /// <param name="name">列名.</param>
+        /// <param name="dataType">数据类型.</param>
+        /// <param name="length">见 <see cref="Length"/> 属性.</param>
+        /// <param name="table">所在表.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// DataTable
+        /// or
+        /// name
+        /// </exception>
+        public Column(string name, DbType dataType, string length, Table table)
         {
             if (table == null) throw new ArgumentNullException("DataTable");
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException("name");

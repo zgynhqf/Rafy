@@ -168,8 +168,8 @@
 $(ProjectDir)zipTools\zip.exe -r -j $(ProjectDir)..\VSPackage\ItemTemplates\DomainEntity.zip $(ProjectDir)Items\DomainEntity
 $(ProjectDir)zipTools\zip.exe -r -j $(ProjectDir)..\VSPackage\ItemTemplates\DomainEntityRepository.zip $(ProjectDir)Items\DomainEntityRepository
 
-"C:\Program Files\HaoZip\HaoZipC.exe" a -tzip "$(ProjectDir)..\VSPackage\ProjectTemplates\Rafy Domain Library.zip" "$(ProjectDir)Projects\Rafy Domain Library\*"
-"C:\Program Files\HaoZip\HaoZipC.exe" a -tzip "$(ProjectDir)..\VSPackage\ProjectTemplates\Rafy Console App.zip" "$(ProjectDir)Projects\Rafy Console App\*"</PostBuildEvent>
+"C:\Program Files\2345Soft\HaoZip\HaoZipC.exe" a -tzip "$(ProjectDir)..\VSPackage\ProjectTemplates\Rafy Domain Library.zip" "$(ProjectDir)Projects\Rafy Domain Library\*"
+"C:\Program Files\2345Soft\HaoZip\HaoZipC.exe" a -tzip "$(ProjectDir)..\VSPackage\ProjectTemplates\Rafy Console App.zip" "$(ProjectDir)Projects\Rafy Console App\*"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

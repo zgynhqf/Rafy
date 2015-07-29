@@ -4664,7 +4664,90 @@ ORDER BY Article.Code ASC");
         /// <summary>
         /// 是否需要把性能检测结果写到 D 盘，方便查询。
         /// </summary>
-        public static bool FlushResultToFile = false;
+        private static readonly bool Config_FlushResultToFile = false;
+
+        /// <summary>
+        /// 需要测试多少条数据。
+        /// </summary>
+        private static readonly int Config_LineCount = 100;
+
+        [TestMethod]
+        public void ORM_Performance_Insert_DBA_Raw()
+        {
+            var repo = RF.Concrete<BookRepository>();
+            try
+            {
+                var watch = new System.Diagnostics.Stopwatch();
+
+                using (var dba = DbAccesserFactory.Create(BookRepositoryDataProvider.DbSettingName))
+                {
+                    watch.Start();
+
+                    for (int i = 0; i < Config_LineCount; i++)
+                    {
+                        dba.RawAccesser.ExecuteText(
+                            "INSERT INTO [Book] ([Author],[BookCategoryId],[BookLocId],[Code],[Content],[Name],[Price],[Publisher]) VALUES ('',NULL,NULL,'','',@p0,NULL,'')",
+                            dba.RawAccesser.ParameterFactory.CreateParameter("p0", i)
+                            );
+
+                        //不用参数化的查询会更慢。
+                        //dba.RawAccesser.ExecuteText("INSERT INTO [Book] ([Author],[BookCategoryId],[BookLocId],[Code],[Content],[Name],[Price],[Publisher]) VALUES ('',NULL,NULL,'','','" + i + "',NULL,'')");
+                    }
+
+                    watch.Stop();
+                }
+
+                if (Config_FlushResultToFile)
+                {
+                    System.IO.File.WriteAllText(@"D:\1.1.2 使用 DbAccesser 添加 " + Config_LineCount + " 行数据耗时(ms)：" + watch.Elapsed.TotalMilliseconds + "，平均一行需要：" + watch.Elapsed.TotalMilliseconds / Config_LineCount, "1");
+                }
+            }
+            finally
+            {
+                this.DeleteAllBooks();
+            }
+        }
+
+        [TestMethod]
+        public void ORM_Performance_Insert_DBA()
+        {
+            var repo = RF.Concrete<BookRepository>();
+            try
+            {
+                var watch = new System.Diagnostics.Stopwatch();
+
+                using (var dba = DbAccesserFactory.Create(BookRepositoryDataProvider.DbSettingName))
+                {
+                    watch.Start();
+
+                    for (int i = 0; i < Config_LineCount; i++)
+                    {
+                        dba.ExecuteText(
+                            "INSERT INTO [Book] ([Author],[BookCategoryId],[BookLocId],[Code],[Content],[Name],[Price],[Publisher]) VALUES ({0},{1},{2},{3},{4},{5},{6},{7})",
+                            string.Empty,
+                            null,
+                            null,
+                            string.Empty,
+                            string.Empty,
+                            i.ToString(),
+                            null,
+                            string.Empty
+                            );
+                    }
+
+                    watch.Stop();
+                }
+
+                if (Config_FlushResultToFile)
+                {
+                    System.IO.File.WriteAllText(@"D:\1.1.1 使用 DbAccesser 添加 " + Config_LineCount + " 行数据耗时(ms)：" + watch.Elapsed.TotalMilliseconds + "，平均一行需要：" + watch.Elapsed.TotalMilliseconds / Config_LineCount, "1");
+                }
+            }
+            finally
+            {
+                this.DeleteAllBooks();
+            }
+        }
 
         [TestMethod]
         public void ORM_Performance_Insert()
@@ -4673,7 +4756,7 @@ ORDER BY Article.Code ASC");
             try
             {
                 var bookList = new BookList();
-                for (int i = 0; i < 100; i++)
+                for (int i = 0; i < Config_LineCount; i++)
                 {
                     bookList.Add(new Book { Name = i.ToString() });
                 }
@@ -4685,11 +4768,11 @@ ORDER BY Article.Code ASC");
 
                 watch.Stop();
 
-                if (FlushResultToFile)
+                if (Config_FlushResultToFile)
                 {
-                    System.IO.File.WriteAllText(@"D:\1.1 添加 100 行数据耗时(ms)：" + watch.Elapsed.TotalMilliseconds + "，平均一行需要：" + watch.Elapsed.TotalMilliseconds / 100, "1");
+                    System.IO.File.WriteAllText(@"D:\1.1 添加 " + Config_LineCount + " 行数据耗时(ms)：" + watch.Elapsed.TotalMilliseconds + "，平均一行需要：" + watch.Elapsed.TotalMilliseconds / Config_LineCount, "1");
                 }
-                Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 200, "添加一行数据，不能超过 2 ms。");
+                Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 2 * Config_LineCount, "添加一行数据，不能超过 2 ms。");
             }
             finally
             {
@@ -4718,11 +4801,20 @@ ORDER BY Article.Code ASC");
 
                 watch.Stop();
 
-                if (FlushResultToFile)
+                if (Config_FlushResultToFile)
                 {
-                    System.IO.File.WriteAllText(@"D:\1.2 更新 100 行数据耗时(ms)：" + watch.Elapsed.TotalMilliseconds + "，平均一行需要：" + watch.Elapsed.TotalMilliseconds / 100, "1");
+                    System.IO.File.WriteAllText(@"D:\1.2 更新 " + Config_LineCount + " 行数据耗时(ms)：" + watch.Elapsed.TotalMilliseconds + "，平均一行需要：" + watch.Elapsed.TotalMilliseconds / Config_LineCount, "1");
                 }
-                Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 100, "更新一行数据，不能超过 1 ms。");
+
+                var p = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName).ProviderName;
+                if (p == DbSetting.Provider_SqlCe)
+                {
+                    Assert.IsTrue(watch.Elapsed.TotalMilliseconds < Config_LineCount * 10, "更新一行数据，不能超过 10 ms。");
+                }
+                else
+                {
+                    Assert.IsTrue(watch.Elapsed.TotalMilliseconds < Config_LineCount, "更新一行数据，不能超过 1 ms。");
+                }
             }
             finally
             {
@@ -4745,11 +4837,20 @@ ORDER BY Article.Code ASC");
 
                 watch.Stop();
 
-                if (FlushResultToFile)
+                if (Config_FlushResultToFile)
                 {
-                    System.IO.File.WriteAllText(@"D:\1.3 查询 1000 行数据耗时(ms)：" + watch.Elapsed.TotalMilliseconds * 10, "1");
+                    System.IO.File.WriteAllText(@"D:\1.3 查询 " + Config_LineCount + " 行数据耗时(ms)：" + watch.Elapsed.TotalMilliseconds, "1");
                 }
-                Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 2, "查询 100 行数据，不能超过 2 ms。");
+
+                var p = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName).ProviderName;
+                if (p == DbSetting.Provider_SqlCe)
+                {
+                    Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 100 * (Config_LineCount / 100), "查询 100 行数据，不能超过 100 ms。");
+                }
+                else
+                {
+                    Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 10 * (Config_LineCount / 100), "查询 100 行数据，不能超过 10 ms。");
+                }
             }
             finally
             {
@@ -4775,11 +4876,11 @@ ORDER BY Article.Code ASC");
 
                 watch.Stop();
 
-                if (FlushResultToFile)
+                if (Config_FlushResultToFile)
                 {
-                    System.IO.File.WriteAllText(@"D:\1.4 删除 100 行数据耗时(ms)：" + watch.Elapsed.TotalMilliseconds + "，平均一行需要：" + watch.Elapsed.TotalMilliseconds / 100, "1");
+                    System.IO.File.WriteAllText(@"D:\1.4 删除 " + Config_LineCount + " 行数据耗时(ms)：" + watch.Elapsed.TotalMilliseconds + "，平均一行需要：" + watch.Elapsed.TotalMilliseconds / Config_LineCount, "1");
                 }
-                Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 150, "删除一行数据，不能超过 1.5 ms。");
+                Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 1.5 * Config_LineCount, "删除一行数据，不能超过 1.5 ms。");
             }
             finally
             {
@@ -4794,7 +4895,7 @@ ORDER BY Article.Code ASC");
             try
             {
                 var bookList = new BookList();
-                for (int i = 0; i < 100; i++)
+                for (int i = 0; i < Config_LineCount; i++)
                 {
                     bookList.Add(new Book { Name = i.ToString() });
                 }
@@ -4810,11 +4911,11 @@ ORDER BY Article.Code ASC");
 
                 watch.Stop();
 
-                if (FlushResultToFile)
+                if (Config_FlushResultToFile)
                 {
-                    System.IO.File.WriteAllText(@"D:\2.1 事务中 添加 100 行数据耗时(ms)：" + watch.Elapsed.TotalMilliseconds + "，平均一行需要：" + watch.Elapsed.TotalMilliseconds / 100, "1");
+                    System.IO.File.WriteAllText(@"D:\2.1 事务中 添加 " + Config_LineCount + " 行数据耗时(ms)：" + watch.Elapsed.TotalMilliseconds + "，平均一行需要：" + watch.Elapsed.TotalMilliseconds / Config_LineCount, "1");
                 }
-                Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 200, "添加一行数据，不能超过 2 ms。");
+                Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 2 * Config_LineCount, "添加一行数据，不能超过 2 ms。");
             }
             finally
             {
@@ -4847,11 +4948,20 @@ ORDER BY Article.Code ASC");
 
                 watch.Stop();
 
-                if (FlushResultToFile)
+                if (Config_FlushResultToFile)
                 {
-                    System.IO.File.WriteAllText(@"D:\2.2 事务中 更新 100 行数据耗时(ms)：" + watch.Elapsed.TotalMilliseconds + "，平均一行需要：" + watch.Elapsed.TotalMilliseconds / 100, "1");
+                    System.IO.File.WriteAllText(@"D:\2.2 事务中 更新 " + Config_LineCount + " 行数据耗时(ms)：" + watch.Elapsed.TotalMilliseconds + "，平均一行需要：" + watch.Elapsed.TotalMilliseconds / Config_LineCount, "1");
                 }
-                Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 100, "更新一行数据，不能超过 1 ms。");
+
+                var p = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName).ProviderName;
+                if (p == DbSetting.Provider_SqlCe)
+                {
+                    Assert.IsTrue(watch.Elapsed.TotalMilliseconds < Config_LineCount * 10, "更新一行数据，不能超过 10 ms。");
+                }
+                else
+                {
+                    Assert.IsTrue(watch.Elapsed.TotalMilliseconds < Config_LineCount, "更新一行数据，不能超过 1 ms。");
+                }
             }
             finally
             {
@@ -4878,11 +4988,20 @@ ORDER BY Article.Code ASC");
 
                 watch.Stop();
 
-                if (FlushResultToFile)
+                if (Config_FlushResultToFile)
                 {
-                    System.IO.File.WriteAllText(@"D:\2.3 事务中 查询 1000 行数据耗时(ms)：" + watch.Elapsed.TotalMilliseconds * 10, "1");
+                    System.IO.File.WriteAllText(@"D:\2.3 事务中 查询 " + Config_LineCount + " 行数据耗时(ms)：" + watch.Elapsed.TotalMilliseconds, "1");
                 }
-                Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 2, "查询 100 行数据，不能超过 20 ms。");
+
+                var p = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName).ProviderName;
+                if (p == DbSetting.Provider_SqlCe)
+                {
+                    Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 100 * (Config_LineCount / 100), "查询 100 行数据，不能超过 100 ms。");
+                }
+                else
+                {
+                    Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 10 * (Config_LineCount / 100), "查询 100 行数据，不能超过 10 ms。");
+                }
             }
             finally
             {
@@ -4912,11 +5031,11 @@ ORDER BY Article.Code ASC");
 
                 watch.Stop();
 
-                if (FlushResultToFile)
+                if (Config_FlushResultToFile)
                 {
-                    System.IO.File.WriteAllText(@"D:\2.4 事务中 删除 100 行数据耗时(ms)：" + watch.Elapsed.TotalMilliseconds + "，平均一行需要：" + watch.Elapsed.TotalMilliseconds / 100, "1");
+                    System.IO.File.WriteAllText(@"D:\2.4 事务中 删除 " + Config_LineCount + " 行数据耗时(ms)：" + watch.Elapsed.TotalMilliseconds + "，平均一行需要：" + watch.Elapsed.TotalMilliseconds / Config_LineCount, "1");
                 }
-                Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 150, "删除一行数据，不能超过 1.5 ms。");
+                Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 1.5 * Config_LineCount, "删除一行数据，不能超过 1.5 ms。");
             }
             finally
             {
@@ -4927,7 +5046,7 @@ ORDER BY Article.Code ASC");
         private void InsertBooks()
         {
             var repo = RF.Concrete<BookRepository>();
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < Config_LineCount; i++)
             {
                 repo.Save(new Book { Name = i.ToString() });
             }
@@ -4935,10 +5054,14 @@ ORDER BY Article.Code ASC");
 
         private void DeleteAllBooks()
         {
-            var repo = RF.Concrete<BookRepository>();
-            var all = repo.GetAll();
-            all.Clear();
-            repo.Save(all);
+            using (var dba = DbAccesserFactory.Create(BookRepositoryDataProvider.DbSettingName))
+            {
+                dba.ExecuteText("DELETE FROM [Book]");
+            }
+            //var repo = RF.Concrete<BookRepository>();
+            //var all = repo.GetAll();
+            //all.Clear();
+            //repo.Save(all);
         }
 
         #endregion

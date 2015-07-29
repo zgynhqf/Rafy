@@ -85,7 +85,7 @@ WHERE C.TABLE_NAME = {0}
                         //}
 
                         DbType dbType = SqlDbTypeHelper.ConvertFromSQLTypeString(sqlType);
-                        Column column = new Column(dbType, null, columnName, table);
+                        Column column = new Column(columnName, dbType, null, table);
 
                         column.IsRequired = string.Compare(columnsReader["IS_NULLABLE"].ToString(), "no", true) == 0;
 

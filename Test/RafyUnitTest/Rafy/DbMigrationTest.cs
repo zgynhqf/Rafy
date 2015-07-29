@@ -177,7 +177,16 @@ namespace RafyUnitTest
                 var table = result.FindTable("Task");
                 var column = table.FindColumn("XmlContent");
                 Assert.IsTrue(column != null);
-                Assert.IsTrue(column.DataType == DbType.Xml);
+
+                var p = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName).ProviderName;
+                if (p == DbSetting.Provider_SqlCe)
+                {
+                    Assert.IsTrue(column.DataType == DbType.String);
+                }
+                else
+                {
+                    Assert.IsTrue(column.DataType == DbType.Xml);
+                }
             });
         }
 
@@ -194,7 +203,16 @@ namespace RafyUnitTest
                 var table = result.FindTable("Task");
                 var column = table.FindColumn("Name");
                 Assert.IsTrue(column != null);
-                Assert.IsTrue(column.DataType == DbType.Xml);
+
+                var p = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName).ProviderName;
+                if (p == DbSetting.Provider_SqlCe)
+                {
+                    Assert.IsTrue(column.DataType == DbType.String);
+                }
+                else
+                {
+                    Assert.IsTrue(column.DataType == DbType.Xml);
+                }
             });
         }
 

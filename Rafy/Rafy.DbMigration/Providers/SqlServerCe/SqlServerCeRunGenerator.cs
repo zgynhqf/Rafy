@@ -33,6 +33,7 @@ namespace Rafy.DbMigration.SqlServerCe
             {
                 case DbType.String:
                 case DbType.AnsiString:
+                case DbType.Xml:
                     if (!string.IsNullOrEmpty(length))
                     {
                         return "NVARCHAR(" + length + ')';

@@ -22,7 +22,7 @@ INNER JOIN .....
 WHERE NAME = {0}";
     sql.Parameters.Add(name);
 
-    return this.QueryList(sql);
+    return (this.DataQueryer as RdbDataQueryer).QueryList(sql);
 }]]>
             </code>
             <para>以上代码编写了一个自定义 Sql 字符串进行查询，这个 Sql 语句的查询结果是一个包含三个字段（Id, Code, Name）的表格。在传递给 QueryList 方法后，框架会执行这个 Sql 语句，并把返回的结果表转换为 Warehouse 实体类的集合，表中的每一行都会转换为一个 Warehouse 实体。</para>

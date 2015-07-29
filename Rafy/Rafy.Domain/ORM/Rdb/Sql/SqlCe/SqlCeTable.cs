@@ -24,12 +24,31 @@ using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.Domain.ORM.SqlServer;
 using Rafy.Utils;
+using Rafy.Reflection;
 
 namespace Rafy.Domain.ORM.SqlCe
 {
     internal class SqlCeTable : SqlTable
     {
         public SqlCeTable(IRepositoryInternal repository) : base(repository) { }
+
+        public override void Insert(IDbAccesser dba, Entity item)
+        {
+            base.Insert(dba, item);
+
+            var idColumn = this.IdentityColumn;
+            if (idColumn != null)
+            {
+                //由于默认是 decimal 类型，所以需要类型转换。
+                var value = dba.RawAccesser.QueryValue("SELECT @@IDENTITY;");
+                value = TypeHelper.CoerceValue(item.KeyProvider.KeyType, value);
+                idColumn.LoadValue(item, value);
+
+                //如果实体的 Id 是在插入的过程中生成的，
+                //那么需要在插入组合子对象前，先把新生成的父对象 Id 都同步到子列表中。
+                item.SyncIdToChildren();
+            }
+        }
 
         /// <summary>
         /// 在 sqlce 下，不支持 rowNumber 方案，但是支持 not in 方案。

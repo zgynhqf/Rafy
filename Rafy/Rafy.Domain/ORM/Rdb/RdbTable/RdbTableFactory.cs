@@ -42,7 +42,7 @@ namespace Rafy.Domain.ORM
             switch (RdbDataProvider.Get(repo).DbSetting.ProviderName)
             {
                 case DbSetting.Provider_SqlClient:
-                    table = new SqlTable(repo);
+                    table = new SqlServerTable(repo);
                     break;
                 case DbSetting.Provider_SqlCe:
                     table = new SqlCeTable(repo);

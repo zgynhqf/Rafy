@@ -45,7 +45,15 @@ namespace RafyUnitTest
 
                 Logger.DbAccessed -= handler;
 
-                Assert.IsTrue(count == 1);
+                var p = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName).ProviderName;
+                if (p == DbSetting.Provider_SqlClient)
+                {
+                    Assert.IsTrue(count == 1);//sqlServer= 1
+                }
+                else
+                {
+                    Assert.IsTrue(count == 2);//sqlce oracle=2
+                }
             }
         }
 
@@ -66,7 +74,15 @@ namespace RafyUnitTest
 
                 Logger.ThreadDbAccessed -= handler;
 
-                Assert.IsTrue(count == 1);
+                var p = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName).ProviderName;
+                if (p == DbSetting.Provider_SqlClient)
+                {
+                    Assert.IsTrue(count == 1);//sqlServer= 1
+                }
+                else
+                {
+                    Assert.IsTrue(count == 2);//sqlce oracle=2
+                }
             }
         }
 
@@ -78,7 +94,16 @@ namespace RafyUnitTest
             {
                 var c1 = Logger.DbAccessedCount;
                 repo.Save(new TestUser());
-                Assert.IsTrue(Logger.DbAccessedCount == c1 + 1);
+
+                var p = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName).ProviderName;
+                if (p == DbSetting.Provider_SqlClient)
+                {
+                    Assert.IsTrue(Logger.DbAccessedCount == c1 + 1);
+                }
+                else
+                {
+                    Assert.IsTrue(Logger.DbAccessedCount == c1 + 2);
+                }
             }
         }
 
@@ -90,7 +115,16 @@ namespace RafyUnitTest
             {
                 var c1 = Logger.ThreadDbAccessedCount;
                 repo.Save(new TestUser());
-                Assert.IsTrue(Logger.ThreadDbAccessedCount == c1 + 1);
+
+                var p = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName).ProviderName;
+                if (p == DbSetting.Provider_SqlClient)
+                {
+                    Assert.IsTrue(Logger.ThreadDbAccessedCount == c1 + 1);
+                }
+                else
+                {
+                    Assert.IsTrue(Logger.ThreadDbAccessedCount == c1 + 2);
+                }
             }
         }
 

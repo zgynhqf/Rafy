@@ -389,6 +389,27 @@ namespace RafyUnitTest
             }
         }
 
+        [TestMethod]
+        public void ET_Property_ToDataTable()
+        {
+            var list = new BookList
+            {
+                new Book{Name = "book1", Code = "001"},
+                new Book{Name = "book2", Code = "002"},
+                new Book{Name = "book3", Code = "003"},
+            };
+
+            var table = list.ToDataTable();
+
+            Assert.AreEqual(table.Rows.Count, 3);
+            Assert.AreEqual(table.Rows[0]["Name"], "book1");
+            Assert.AreEqual(table.Rows[0]["Code"], "001");
+            Assert.AreEqual(table.Rows[1]["Name"], "book2");
+            Assert.AreEqual(table.Rows[1]["Code"], "002");
+            Assert.AreEqual(table.Rows[2]["Name"], "book3");
+            Assert.AreEqual(table.Rows[2]["Code"], "003");
+        }
+
         #endregion
 
         #region 属性 LOB

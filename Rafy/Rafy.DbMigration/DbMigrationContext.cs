@@ -65,6 +65,9 @@ namespace Rafy.DbMigration
             get { return this.DbSetting.Database; }
         }
 
+        /// <summary>
+        /// 对应的数据库配置。
+        /// </summary>
         protected DbSetting DbSetting { get; private set; }
 
         #endregion
@@ -111,8 +114,14 @@ namespace Rafy.DbMigration
             }
         }
 
+        /// <summary>
+        /// 数据库元数据读取器。
+        /// </summary>
         public IMetadataReader DatabaseMetaReader { get; private set; }
 
+        /// <summary>
+        /// 数据库备份工具
+        /// </summary>
         public IDbBackuper DbBackuper
         {
             get
@@ -129,6 +138,7 @@ namespace Rafy.DbMigration
         /// <summary>
         /// 此属性如果为 null，表示不需要记录更新日志。
         /// 也就是说每次都是根据数据库当前版本号来进行完整对比升级。
+        /// 默认值为 null。
         /// </summary>
         public HistoryRepository HistoryRepository { get; set; }
 
@@ -757,6 +767,9 @@ namespace Rafy.DbMigration
             return runList;
         }
 
+        /// <summary>
+        /// 释放资源。
+        /// </summary>
         public void Dispose()
         {
             if (this._dba != null) { this._dba.Dispose(); }
@@ -767,7 +780,7 @@ namespace Rafy.DbMigration
         /// </summary>
         public event EventHandler<MigratedEventArgs> ItemMigrated;
 
-        protected virtual void OnItemMigrated(MigratedEventArgs e)
+        private void OnItemMigrated(MigratedEventArgs e)
         {
             var handler = this.ItemMigrated;
             if (handler != null) handler(this, e);

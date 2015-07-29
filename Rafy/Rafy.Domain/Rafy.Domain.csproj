@@ -109,6 +109,7 @@
     </Compile>
     <Compile Include="EntityRepository\QueryArgs\IEntitySelectArgs.cs" />
     <Compile Include="EntityRepository\QueryArgs\IQueryArgs.cs" />
+    <Compile Include="Entity\EntityListExtension.cs" />
     <Compile Include="Entity\Serialization\Json\AggtDeserializer.cs" />
     <Compile Include="Entity\Serialization\Json\AggtSerializer.cs" />
     <Compile Include="ORM\Rdb\DataProvider\QueryArgs\ISqlSelectArgs.cs" />
@@ -159,6 +160,7 @@
     <Compile Include="Entity\MP\LOBProperty.cs" />
     <Compile Include="Entity\MP\PropertyDefailtValues.cs" />
     <Compile Include="Entity\Serialization\SerializationEntityGraph.cs" />
+    <Compile Include="ORM\Rdb\Sql\SqlServer\SqlServerTable.cs" />
     <Compile Include="ORM\Rdb\TreeIndexHelper.cs" />
     <Compile Include="Entity\ValidationHelper.cs" />
     <Compile Include="ORM\Linq\PropertyFinder.cs" />

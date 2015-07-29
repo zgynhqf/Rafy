@@ -95,10 +95,20 @@ namespace Rafy.ManagedProperty
             return this.Find(propertyName);
         }
 
+        /// <summary>
+        /// 列表的枚举器。
+        /// </summary>
+        /// <returns></returns>
         public ManagedPropertyListEnumerator GetEnumerator()
         {
-            return new ManagedPropertyListEnumerator { _list = this, _index = 1 };
+            return new ManagedPropertyListEnumerator { _list = _list, _index = -1 };
         }
+
+        //其实，完全可以 List 直接实现：
+        //public List<IManagedProperty>.Enumerator GetEnumerator()
+        //{
+        //    return _list.GetEnumerator();
+        //}
 
         #region IList<IManagedProperty>
 
@@ -183,7 +193,7 @@ namespace Rafy.ManagedProperty
 
     public struct ManagedPropertyListEnumerator : IEnumerator<IManagedProperty>
     {
-        internal ManagedPropertyList _list;
+        internal List<IManagedProperty> _list;
         internal int _index;
 
         public IManagedProperty Current

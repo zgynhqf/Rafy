@@ -64,7 +64,7 @@ SELECT * FROM user_tab_columns WHERE TABLE_NAME = {0}
                         }
 
                         DbType dbType = OracleDbTypeHelper.ConvertFromOracleTypeString(sqlType);
-                        Column column = new Column(dbType, null, columnName, table);
+                        Column column = new Column(columnName, dbType, null, table);
                         column.IsRequired = columnsReader["NULLABLE"].ToString() == "N";
 
                         table.Columns.Add(column);

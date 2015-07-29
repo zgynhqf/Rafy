@@ -157,6 +157,12 @@ namespace Rafy.Domain.ORM
         private bool _hasLOB;
         private string _updateSQL;
 
+        /// <summary>
+        /// 执行 sql 插入一个实体到数据库中。
+        /// 基类的默认实现中，只是简单地实现了 sql 语句的生成和执行。
+        /// </summary>
+        /// <param name="dba"></param>
+        /// <param name="item"></param>
         public virtual void Insert(IDbAccesser dba, Entity item)
         {
             EnsureMappingTable();

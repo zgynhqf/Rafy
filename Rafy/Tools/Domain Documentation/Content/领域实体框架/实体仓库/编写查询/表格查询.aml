@@ -20,7 +20,7 @@ private LiteDataTable DA_GetTableByName(string name)
 {
     FormattedSql sql = "SELECT * FROM WAREHOUSE WHERE NAME = {0}";
     sql.Parameters.Add(name);
-    return this.QueryTable(sql);
+    return (this.DataQueryer as RdbDataQueryer).QueryTable(sql);
 }]]>
                 </code>
             </content>

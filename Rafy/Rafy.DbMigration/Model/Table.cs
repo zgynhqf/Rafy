@@ -124,7 +124,7 @@ namespace Rafy.DbMigration.Model
             ForeignConstraint foreignConstraint = null
             )
         {
-            var column = new Column(type, length, name, this)
+            var column = new Column(name, type, length, this)
             {
                 IsRequired = isRequired,
                 IsPrimaryKey = isPrimaryKey,

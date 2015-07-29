@@ -293,12 +293,11 @@ namespace Rafy.Domain
             //OrderBy
             if (!string.IsNullOrWhiteSpace(criteria.OrderBy))
             {
-                var orderBy = allProperties.Find(criteria.OrderBy);
-                if (orderBy != null)
-                {
-                    var dir = criteria.OrderByAscending ? OrderDirection.Ascending : OrderDirection.Descending;
-                    q.OrderBy.Add(table.Column(orderBy), dir);
-                }
+                var orderBy = allProperties.Find(criteria.OrderBy, true);
+                if (orderBy == null) throw new InvalidProgramException(string.Format("在实体 {0} 中没有找到名为 {1} 的属性。",_repository.EntityType.FullName, criteria.OrderBy));
+
+                var dir = criteria.OrderByAscending ? OrderDirection.Ascending : OrderDirection.Descending;
+                q.OrderBy.Add(table.Column(orderBy), dir);
             }
 
             return this.QueryList(q, criteria.PagingInfo, criteria.EagerLoad);
