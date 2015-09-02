@@ -34,14 +34,17 @@ namespace Rafy.DbMigration.Oracle
 
         protected override void Generate(CreateDatabase op)
         {
-            this.AddRun(new GenerationExceptionRun { Message = "Oracle 数据不支持数据库生成，请使用 DCA 工具手工完成。" });
+            this.AddRun(new GenerationExceptionRun
+            {
+                Message = "由于未连接上指定的数据库，所以需要创建数据库。由于 Rafy 不支持对 Oracle 数据库进行生成，请使用 DCA 工具手工创建指定库。"
+            });
         }
 
         protected override void Generate(CreateNormalColumn op)
         {
             if (op.IsIdentity)
             {
-                throw new NotImplementedException("Oracle 自增列的创建功能还没有完成。");
+                throw new NotImplementedException("Oracle 数据库暂时不支持创建自增列。");
             }
 
             using (var sql = this.Writer())
@@ -99,19 +102,49 @@ namespace Rafy.DbMigration.Oracle
 
             if (op.PKIdentity)
             {
-                var sql = string.Format(@"CREATE SEQUENCE {0}
-MINVALUE 1
-MAXVALUE 99999999999999999
-START WITH 1
-INCREMENT BY 1
-NOCACHE
-ORDER", this.SEQName(op));
+                //var seqName = this.SEQName(op);
+                //var existsSql= string.Format("SELECT {0}.CURRVAL FROM DUAL", seqName);
+
+                var sql = string.Format(@"DECLARE T_COUNT NUMBER;
+BEGIN
+    SELECT COUNT(*) INTO T_COUNT FROM DUAL WHERE EXISTS(SELECT * FROM ALL_SEQUENCES WHERE SEQUENCE_NAME='{0}');
+    IF T_COUNT = 0 THEN
+        EXECUTE IMMEDIATE '
+        CREATE SEQUENCE {0}
+        MINVALUE 1
+        MAXVALUE 99999999999999999
+        START WITH 1
+        INCREMENT BY 1
+        NOCACHE
+        ORDER
+        ';
+    END IF;
+END;", this.SEQName(op));
 
                 this.AddRun(new SqlMigrationRun
                 {
                     Sql = sql
                 });
             }
+        }
+
+        protected override void GenerateAddPKConstraint(IndentedTextWriter sql, string tableName, string columnName)
+        {
+            var pkName = string.Format("PK_{0}_{1}",
+                this.Prepare(tableName), this.Prepare(columnName)
+                );
+            pkName = OracleMigrationProvider.LimitOracleIdentifier(pkName);
+
+            sql.Write(@"
+ALTER TABLE ");
+            sql.Write(this.Quote(tableName));
+            sql.Write(@"
+    ADD CONSTRAINT ");
+            sql.Write(this.Quote(pkName));
+            sql.Write(@"
+    PRIMARY KEY (");
+            sql.Write(this.Quote(columnName));
+            sql.Write(")");
         }
 
         protected override void Generate(DropTable op)
@@ -127,13 +160,6 @@ ORDER", this.SEQName(op));
             }
         }
 
-        private string SEQName(TableOperation op)
-        {
-            var name = string.Format("SEQ_{0}_{1}", this.Prepare(op.TableName), this.Prepare(op.PKName));
-            name = OracleMigrationProvider.LimitOracleIdentifier(name);
-            return name;
-        }
-
         protected override void Generate(AlterColumnType op)
         {
             using (var sql = this.Writer())
@@ -143,8 +169,11 @@ ORDER", this.SEQName(op));
                 sql.WriteLine();
 
                 sql.Indent++;
-                sql.Write("MODIFY COLUMN ");
-                this.GenerateColumnDeclaration(sql, op.ColumnName, op.NewType, op.Length, op.IsRequired, op.IsForeignKey);
+                sql.Write("MODIFY ");//ORACLE 中，MODIFY 关键字后没有 COLUMN 关键字。
+
+                //Oracle 中如果可空性没有变化时，不能加到 Modify Column 之后。
+                bool? isRequired = null;
+                this.GenerateColumnDeclaration(sql, op.ColumnName, op.NewType, op.Length, isRequired, op.IsForeignKey);
 
                 this.AddRun(sql);
             }
@@ -227,7 +256,12 @@ ORDER", this.SEQName(op));
 
         protected override string Prepare(string identifier)
         {
-            return identifier.ToUpper();
+            return OracleMigrationProvider.PrepareIdentifier(identifier);
+        }
+
+        private string SEQName(TableOperation op)
+        {
+            return OracleMigrationProvider.SequenceName(op.TableName, op.PKName);
         }
     }
 }

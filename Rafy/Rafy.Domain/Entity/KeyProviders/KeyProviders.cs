@@ -28,6 +28,7 @@ namespace Rafy.Domain
         {
             new IntKeyProvider(),
             new StringKeyProvider(),
+            new LongKeyProvider(),
             new ObjectKeyProvider(),
             new GuidKeyProvider()
         };

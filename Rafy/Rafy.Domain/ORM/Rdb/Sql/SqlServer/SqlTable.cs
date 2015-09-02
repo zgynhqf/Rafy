@@ -29,8 +29,6 @@ namespace Rafy.Domain.ORM.SqlServer
 {
     internal abstract class SqlTable : SqlOraTable
     {
-        private string _insertSQL;
-
         public SqlTable(IRepositoryInternal repository) : base(repository) { }
 
         internal override void AppendQuote(TextWriter sql, string identifier)

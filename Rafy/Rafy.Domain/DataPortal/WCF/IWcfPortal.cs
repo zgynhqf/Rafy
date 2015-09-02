@@ -21,7 +21,6 @@ namespace Rafy.Domain.DataPortal.WCF
     /// portal.
     /// </summary>
     [ServiceContract]
-    //[ServiceContract(Namespace = "http://ws.lhotka.net/WcfDataPortal")]
     public interface IWcfPortal
     {
         /// <summary>
@@ -39,5 +38,8 @@ namespace Rafy.Domain.DataPortal.WCF
         [OperationContract]
         [UseNetDataContract]
         WcfResponse Update(UpdateRequest request);
+
+        [OperationContract]
+        string Test(string msg);
     }
 }

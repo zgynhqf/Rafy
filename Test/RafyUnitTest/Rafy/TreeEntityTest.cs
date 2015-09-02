@@ -1401,16 +1401,18 @@ namespace RafyUnitTest
                 {
                     new Folder
                     {
+                        Name = "1.",//方便调试
                         TreeChildren= 
                         {
                             new Folder
                             {
+                                Name = "1.1.",//方便调试
                                 TreeChildren= 
                                 {
-                                    new Folder(),
+                                    new Folder { Name = "1.1.1." },
                                 }
                             },
-                            new Folder(),
+                            new Folder { Name = "1.2." },
                         }
                     }
                 };

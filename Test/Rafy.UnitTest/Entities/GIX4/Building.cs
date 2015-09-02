@@ -88,8 +88,17 @@ namespace UT
             Meta.MapTable().MapAllProperties();
 
             //Id 属性不再是主键，主键改为 Name 属性。
-            Meta.Property(Building.IdProperty).MapColumn().IsPrimaryKey(false);
-            Meta.Property(Building.NameProperty).MapColumn().IsPrimaryKey(true);
+            var setting = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName);
+            if (DbSetting.IsOracleProvider(setting))
+            {
+                Meta.Property(Building.IdProperty).MapColumn().IsPrimaryKey(false).IsIdentity = false;
+                Meta.Property(Building.NameProperty).MapColumn().IsPrimaryKey(true);
+            }
+            else
+            {
+                Meta.Property(Building.IdProperty).MapColumn().IsPrimaryKey(false);
+                Meta.Property(Building.NameProperty).MapColumn().IsPrimaryKey(true);
+            }
         }
     }
 }

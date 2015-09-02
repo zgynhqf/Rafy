@@ -13,10 +13,12 @@ using Rafy;
 using Rafy.Data;
 using Rafy.Domain;
 using Rafy.Domain.ORM;
+using Rafy.Domain.ORM.BatchSubmit;
 using Rafy.Domain.ORM.DbMigration;
 using Rafy.Domain.Serialization;
 using Rafy.Domain.Serialization.Json;
 using Rafy.Domain.Validation;
+using Rafy.MetaModel;
 using Rafy.Reflection;
 using Rafy.UnitTest.IDataProvider;
 using Rafy.UnitTest.Repository;
@@ -241,7 +243,28 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ET_Property_EnumForUI()
+        public void ET_Property_Enum()
+        {
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            {
+                var user = new TestUser { Name = "DDDDD" };
+                RF.Save(user);
+
+                var repo = RF.Concrete<TestRoleRepository>();
+                var entity = new TestRole
+                {
+                    TestUser = user,
+                    RoleType = RoleType.Administrator
+                };
+                repo.Save(entity);
+
+                var entity2 = repo.GetById(entity.Id);
+                Assert.AreEqual(entity.RoleType, entity2.RoleType);
+            }
+        }
+
+        [TestMethod]
+        public void ET_Property_Enum_ForUI()
         {
             var entity = new TestRole
             {
@@ -1047,6 +1070,490 @@ namespace RafyUnitTest
 
         #endregion
 
+        #region 批量导入
+
+        private const int BATCH_IMPORT_DATA_SIZE = 100;
+
+        /// <summary>
+        /// 批量导入需要支持事务回滚
+        /// </summary>
+        [TestMethod]
+        public void ET_Repository_BatchImport_Transaction()
+        {
+            int size = BATCH_IMPORT_DATA_SIZE;
+
+            var bookRepo = RF.Concrete<BookRepository>();
+            var chapterRepo = RF.Concrete<ChapterRepository>();
+            Assert.AreEqual(0, bookRepo.CountAll());
+            using (RF.TransactionScope(bookRepo))
+            {
+                var books = new BookList();
+                for (int i = 0; i < size; i++)
+                {
+                    var book = new Book
+                    {
+                        ChapterList =
+                        {
+                            new Chapter(),
+                            new Chapter(),
+                        }
+                    };
+                    books.Add(book);
+                }
+
+                var importer = bookRepo.CreateImporter();
+                importer.Save(books);
+
+                Assert.AreEqual(size, bookRepo.CountAll());
+                Assert.AreEqual(size * 2, chapterRepo.CountAll());
+            }
+            Assert.AreEqual(0, chapterRepo.CountAll());
+            Assert.AreEqual(0, bookRepo.CountAll());
+        }
+
+        /// <summary>
+        /// 支持设置批量的大小
+        /// </summary>
+        [TestMethod]
+        public void ET_Repository_BatchImport_BatchSize()
+        {
+            int size = (int)(2.345 * BATCH_IMPORT_DATA_SIZE);
+
+            var repo = RF.Concrete<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var books = new BookList();
+                for (int i = 0; i < size; i++)
+                {
+                    var book = new Book();
+                    books.Add(book);
+                }
+
+                var importer = repo.CreateImporter();
+                importer.BatchSize = 1000;
+                importer.Save(books);
+
+                Assert.AreEqual(size, repo.CountAll());
+            }
+        }
+
+        [TestMethod]
+        public void ET_Repository_BatchImport_CDU_C()
+        {
+            int size = BATCH_IMPORT_DATA_SIZE;
+
+            var repo = RF.Concrete<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var books = new BookList();
+                for (int i = 0; i < size; i++)
+                {
+                    var book = new Book();
+                    books.Add(book);
+                }
+
+                var importer = repo.CreateImporter();
+                importer.Save(books);
+
+                Assert.AreEqual(size, repo.CountAll());
+            }
+        }
+
+        [TestMethod]
+        public void ET_Repository_BatchImport_CDU_C_Aggt()
+        {
+            int size = BATCH_IMPORT_DATA_SIZE;
+
+            var repo = RF.Concrete<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var books = new BookList();
+                for (int i = 0; i < size; i++)
+                {
+                    var book = new Book
+                    {
+                        ChapterList =
+                        {
+                            new Chapter(),
+                            new Chapter(),
+                        }
+                    };
+                    books.Add(book);
+                }
+
+                var importer = repo.CreateImporter();
+                importer.Save(books);
+
+                Assert.AreEqual(size, repo.CountAll());
+                Assert.AreEqual(size * 2, RF.Concrete<ChapterRepository>().CountAll());
+            }
+        }
+
+        [TestMethod]
+        public void ET_Repository_BatchImport_CDU_C_Status()
+        {
+            int size = BATCH_IMPORT_DATA_SIZE;
+
+            var repo = RF.Concrete<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var books = new BookList();
+                for (int i = 0; i < size; i++)
+                {
+                    var book = new Book();
+                    books.Add(book);
+                }
+
+                repo.CreateImporter().Save(books);
+
+                for (int i = 0, c = books.Count; i < c; i++)
+                {
+                    var book = books[i];
+                    Assert.AreEqual(PersistenceStatus.Unchanged, book.PersistenceStatus);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ET_Repository_BatchImport_CDU_C_Status_Aggt()
+        {
+            int size = BATCH_IMPORT_DATA_SIZE;
+
+            var repo = RF.Concrete<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var books = new BookList();
+                for (int i = 0; i < size; i++)
+                {
+                    var book = new Book
+                    {
+                        ChapterList =
+                        {
+                            new Chapter(),
+                            new Chapter(),
+                        }
+                    };
+                    books.Add(book);
+                }
+
+                repo.CreateImporter().Save(books);
+
+                for (int i = 0, c = books.Count; i < c; i++)
+                {
+                    var book = books[i];
+                    Assert.AreEqual(PersistenceStatus.Unchanged, book.PersistenceStatus);
+                    foreach (var chapter in book.ChapterList)
+                    {
+                        Assert.AreEqual(PersistenceStatus.Unchanged, book.PersistenceStatus);
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ET_Repository_BatchImport_CDU_U()
+        {
+            int size = BATCH_IMPORT_DATA_SIZE;
+
+            var repo = RF.Concrete<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var books = new BookList();
+                for (int i = 0; i < size; i++)
+                {
+                    var book = new Book();
+                    books.Add(book);
+                }
+
+                var importer = repo.CreateImporter();
+                importer.Save(books);
+
+                Assert.AreEqual(size, repo.CountAll());
+
+                for (int i = 0; i < size; i++)
+                {
+                    books[i].Code = i.ToString();
+                }
+                importer.Save(books);
+
+                var res = repo.GetByIdList(new object[] { books[0].Id, books[books.Count - 1].Id });
+                Assert.AreEqual("0", res[0].Code);
+                Assert.AreEqual((size - 1).ToString(), res[res.Count - 1].Code);
+            }
+        }
+
+        [TestMethod]
+        public void ET_Repository_BatchImport_CDU_U_Aggt()
+        {
+            int size = BATCH_IMPORT_DATA_SIZE;
+
+            var repo = RF.Concrete<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var books = new BookList();
+                for (int i = 0; i < size; i++)
+                {
+                    var book = new Book
+                    {
+                        ChapterList =
+                        {
+                            new Chapter(),
+                            new Chapter(),
+                        }
+                    };
+                    books.Add(book);
+                }
+
+                var importer = repo.CreateImporter();
+                importer.Save(books);
+
+                Assert.AreEqual(size, repo.CountAll());
+                Assert.AreEqual(size * 2, RF.Concrete<ChapterRepository>().CountAll());
+
+                for (int i = 0; i < size; i++)
+                {
+                    books[i].Code = i.ToString();
+                    books[i].ChapterList[0].Name = i.ToString();
+                }
+                importer.Save(books);
+
+                var res = repo.GetByIdList(new object[] { books[0].Id, books[books.Count - 1].Id });
+                Assert.AreEqual("0", res[0].Code);
+                Assert.AreEqual("0", res[0].ChapterList[0].Name);
+                Assert.AreEqual((size - 1).ToString(), res[res.Count - 1].Code);
+                Assert.AreEqual((size - 1).ToString(), res[res.Count - 1].ChapterList[0].Name);
+            }
+        }
+
+        [TestMethod]
+        public void ET_Repository_BatchImport_CDU_U_Status()
+        {
+            int size = BATCH_IMPORT_DATA_SIZE;
+
+            var repo = RF.Concrete<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var books = new BookList();
+                for (int i = 0; i < size; i++)
+                {
+                    var book = new Book();
+                    books.Add(book);
+                }
+
+                var importer = repo.CreateImporter();
+                importer.Save(books);
+                for (int i = 0, c = books.Count; i < c; i++)
+                {
+                    var book = books[i];
+                    Assert.AreEqual(PersistenceStatus.Unchanged, book.PersistenceStatus);
+                }
+
+                for (int i = 0; i < size; i++)
+                {
+                    books[i].Code = i.ToString();
+                }
+                for (int i = 0, c = books.Count; i < c; i++)
+                {
+                    var book = books[i];
+                    Assert.AreEqual(PersistenceStatus.Modified, book.PersistenceStatus);
+                }
+
+                importer.Save(books);
+                for (int i = 0, c = books.Count; i < c; i++)
+                {
+                    var book = books[i];
+                    Assert.AreEqual(PersistenceStatus.Unchanged, book.PersistenceStatus);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ET_Repository_BatchImport_CDU_U_Status_Aggt()
+        {
+            int size = BATCH_IMPORT_DATA_SIZE;
+
+            var repo = RF.Concrete<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var books = new BookList();
+                for (int i = 0; i < size; i++)
+                {
+                    var book = new Book
+                    {
+                        ChapterList =
+                        {
+                            new Chapter(),
+                            new Chapter(),
+                        }
+                    };
+                    books.Add(book);
+                }
+                var importer = repo.CreateImporter();
+                importer.Save(books);
+                for (int i = 0, c = books.Count; i < c; i++)
+                {
+                    var book = books[i];
+                    Assert.AreEqual(PersistenceStatus.Unchanged, book.PersistenceStatus);
+                    foreach (var chapter in book.ChapterList)
+                    {
+                        Assert.AreEqual(PersistenceStatus.Unchanged, book.PersistenceStatus);
+                    }
+                }
+
+                for (int i = 0; i < size; i++)
+                {
+                    books[i].Code = i.ToString();
+                    books[i].ChapterList[0].Name = i.ToString();
+                }
+                for (int i = 0, c = books.Count; i < c; i++)
+                {
+                    var book = books[i];
+                    Assert.AreEqual(PersistenceStatus.Modified, book.PersistenceStatus);
+                    Assert.AreEqual(PersistenceStatus.Modified, book.ChapterList[0].PersistenceStatus);
+                }
+
+                importer.Save(books);
+                for (int i = 0, c = books.Count; i < c; i++)
+                {
+                    var book = books[i];
+                    Assert.AreEqual(PersistenceStatus.Unchanged, book.PersistenceStatus);
+                    Assert.AreEqual(PersistenceStatus.Unchanged, book.ChapterList[0].PersistenceStatus);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ET_Repository_BatchImport_CDU_U_Redundancy_UpdateB()
+        {
+            int size = BATCH_IMPORT_DATA_SIZE;
+
+            var repo = RF.Concrete<ARepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var list = new AList();
+                for (int i = 0; i < size; i++)
+                {
+                    var item = new A { Name = i.ToString() };
+                    list.Add(item);
+                }
+
+                var importer = repo.CreateImporter();
+                importer.Save(list);
+
+                var a = list[0];
+                var b = new B { A = a };
+                RF.Save(b);
+
+                for (int i = 0; i < size; i++)
+                {
+                    list[i].Name = "New Name";
+                }
+                importer.Save(list);
+
+                var res = repo.GetByIdList(new object[] { list[0].Id, list[list.Count - 1].Id });
+                Assert.AreEqual("New Name", res[0].Name);
+                Assert.AreEqual("New Name", res[res.Count - 1].Name);
+
+                var b2 = RF.Concrete<BRepository>().GetById(b.Id);
+                Assert.AreEqual("New Name", b2.AName);
+            }
+        }
+
+        [TestMethod]
+        public void ET_Repository_BatchImport_CDU_U_Redundancy_UpdateC()
+        {
+            int size = BATCH_IMPORT_DATA_SIZE;
+
+            var repo = RF.Concrete<ARepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var list = new AList();
+                for (int i = 0; i < size; i++)
+                {
+                    var item = new A { Name = i.ToString() };
+                    list.Add(item);
+                }
+
+                var importer = repo.CreateImporter();
+                importer.Save(list);
+
+                var a = list[0];
+                var b = new B { A = a };
+                RF.Save(b);
+
+                var c = new C { B = b };
+                RF.Save(c);
+
+                for (int i = 0; i < size; i++)
+                {
+                    list[i].Name = "New Name";
+                }
+                importer.Save(list);
+
+                var res = repo.GetByIdList(new object[] { list[0].Id, list[list.Count - 1].Id });
+                Assert.AreEqual("New Name", res[0].Name);
+                Assert.AreEqual("New Name", res[res.Count - 1].Name);
+
+                var b2 = RF.Concrete<BRepository>().GetById(b.Id);
+                Assert.AreEqual("New Name", b2.AName);
+
+                var c2 = RF.Concrete<CRepository>().GetById(c.Id) as C;
+                Assert.AreEqual("New Name", c2.AName);
+            }
+        }
+
+        [TestMethod]
+        public void ET_Repository_BatchImport_CDU_D()
+        {
+            int size = BATCH_IMPORT_DATA_SIZE;
+
+            var repo = RF.Concrete<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var books = new BookList();
+                for (int i = 0; i < size; i++)
+                {
+                    var book = new Book();
+                    books.Add(book);
+                }
+                repo.CreateImporter().Save(books);
+
+                books.Clear();
+                repo.CreateImporter().Save(books);
+
+                Assert.AreEqual(0, repo.CountAll());
+            }
+        }
+
+        [TestMethod]
+        public void ET_Repository_BatchImport_CDU_D_Status()
+        {
+            int size = BATCH_IMPORT_DATA_SIZE;
+
+            var repo = RF.Concrete<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var books = new BookList();
+                for (int i = 0; i < size; i++)
+                {
+                    var book = new Book();
+                    books.Add(book);
+                }
+                repo.CreateImporter().Save(books);
+
+                books.Clear();
+                repo.CreateImporter().Save(books);
+
+                for (int i = 0, c = books.Count; i < c; i++)
+                {
+                    var book = books[i];
+                    Assert.AreEqual(PersistenceStatus.New, book.PersistenceStatus);
+                }
+            }
+        }
+
+        #endregion
+
         #region 仓库 - 扩展
 
         [TestMethod]
@@ -1673,6 +2180,12 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Id_NotPrimaryKey()
         {
+            var setting = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName);
+            if (DbSetting.IsOracleProvider(setting))
+            {
+                return;
+            }
+
             var repo = RF.Concrete<BuildingRepository>();
             using (RF.TransactionScope(repo))
             {
@@ -1711,6 +2224,23 @@ namespace RafyUnitTest
             Assert.AreEqual(brokenRules.Count, 1);
             //由于当前没有界面层元数据，所以错误字符串中应该是属性的名称。
             Assert.AreEqual(brokenRules[0].Description, "[NotEmptyCode] 里没有输入值。");
+        }
+
+        [TestMethod]
+        public void ET_Validation_Criteria()
+        {
+            var entity = new TestUserQueryCriteria();
+            var brokenRules = entity.Validate();
+            Assert.AreEqual(brokenRules.Count, 1);
+        }
+
+        [TestMethod]
+        public void ET_Validation_Criteria_Message()
+        {
+            var entity = new TestUserQueryCriteria();
+            var brokenRules = entity.Validate();
+            Assert.AreEqual(brokenRules.Count, 1);
+            Assert.AreEqual(brokenRules[0].Description, "[Name] 里没有输入值。");
         }
 
         [TestMethod]
@@ -1767,7 +2297,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ET_Validation_NotUsedByReferenceRule()
+        public void ET_Validation_NotUsedByReferenceRule_EntityStatusScope_Delete()
         {
             var repo = RF.Concrete<BookCategoryRepository>();
             using (RF.TransactionScope(repo))
@@ -1779,26 +2309,13 @@ namespace RafyUnitTest
                 RF.Save(book);
 
                 var rules = cate.Validate();
+                Assert.IsTrue(rules.Count == 0);
+
+                cate.PersistenceStatus = PersistenceStatus.Deleted;
+                rules = cate.Validate();
                 Assert.IsTrue(rules.Count == 1);
                 Assert.IsTrue(rules[0].Rule.ValidationRule is NotUsedByReferenceRule);
             }
-        }
-
-        [TestMethod]
-        public void ET_Validation_Clear()
-        {
-            var entity = new TestUserQueryCriteria();
-            var brokenRules = entity.Validate();
-            Assert.AreEqual(brokenRules.Count, 1);
-        }
-
-        [TestMethod]
-        public void ET_Validation_Criteria()
-        {
-            var entity = new TestUserQueryCriteria();
-            var brokenRules = entity.Validate();
-            Assert.AreEqual(brokenRules.Count, 1);
-            Assert.AreEqual(brokenRules[0].Description, "[Name] 里没有输入值。");
         }
 
         #endregion

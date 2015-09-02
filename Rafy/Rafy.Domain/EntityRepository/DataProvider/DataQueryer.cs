@@ -213,8 +213,19 @@ namespace Rafy.Domain
                     }
                 }
 
+                /*********************** 代码块解释 *********************************
+                 * 以下，默认使用 TreeIndex 进行排序。
+                 * 同时，在使用 TreeIndex 排序的基础上，还需要使用 Id 进行排序。
+                 * TreeIndexHelper.ResetTreeIndex 在整理数据时，会把 TreeIndex 清空，此时数据可能无序。
+                 * 而 Oracle 中查询时，返回的结果中 Id 可能是乱的，这会影响数据的加载。
+                **********************************************************************/
+                var f = QueryFactory.Instance;
+                var table = query.From.FindTable(Repo);
                 query.OrderBy.Add(
-                    QueryFactory.Instance.OrderBy(query.From.FindTable(Repo).Column(Entity.TreeIndexProperty))
+                    f.OrderBy(table.Column(Entity.TreeIndexProperty))
+                    );
+                query.OrderBy.Add(
+                    f.OrderBy(table.IdColumn)
                     );
             }
         }
@@ -235,7 +246,7 @@ namespace Rafy.Domain
             if (args.FetchType != FetchType.Count && !(args.Query as SqlSelect).HasOrdered())
             {
                 args.Query.OrderBy.Add(
-                    QueryFactory.Instance.OrderBy(args.Query.From.FindTable(Repo).Column(Entity.IdProperty))
+                    QueryFactory.Instance.OrderBy(args.Query.From.FindTable(Repo).IdColumn)
                     );
             }
 
@@ -450,7 +461,7 @@ namespace Rafy.Domain
             {
                 var targetRepo = RepositoryFactoryHost.Factory.FindByEntity(listProperty.ListEntityType);
 
-                var allChildren = targetRepo.GetByParentIdList(idList.ToArray(), PagingInfo.Empty);
+                var allChildren = targetRepo.GetByParentIdList(idList.ToArray());
 
                 //继续递归加载它的贪婪属性。
                 this.EagerLoad(allChildren, eagerLoadProperties);

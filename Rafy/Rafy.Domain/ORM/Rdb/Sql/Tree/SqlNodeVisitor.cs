@@ -25,12 +25,14 @@ namespace Rafy.Domain.ORM.SqlTree
     /// </summary>
     abstract class SqlNodeVisitor
     {
-        protected SqlNode Visit(SqlNode node)
+        protected virtual ISqlNode Visit(ISqlNode node)
         {
             switch (node.NodeType)
             {
                 case SqlNodeType.SqlLiteral:
                     return this.VisitSqlLiteral(node as SqlLiteral);
+                case SqlNodeType.SqlNodeList:
+                    return this.VisitSqlNodeList(node as SqlNodeList);
                 case SqlNodeType.SqlSelect:
                     return this.VisitSqlSelect(node as SqlSelect);
                 case SqlNodeType.SqlColumn:
@@ -57,10 +59,25 @@ namespace Rafy.Domain.ORM.SqlTree
                     return this.VisitSqlSubSelect(node as SqlSubSelect);
                 case SqlNodeType.SqlOrderBy:
                     return this.VisitSqlOrderBy(node as SqlOrderBy);
+                case SqlNodeType.SqlOrderByList:
+                    return this.VisitSqlOrderByList(node as SqlOrderByList);
                 default:
                     break;
             }
             throw new NotImplementedException();
+        }
+
+        protected virtual SqlNode VisitSqlNodeList(SqlNodeList sqlNodeList)
+        {
+            for (int i = 0, c = sqlNodeList.Items.Count; i < c; i++)
+            {
+                var item = sqlNodeList.Items[i];
+                if (item != null)
+                {
+                    this.Visit(item);
+                }
+            }
+            return sqlNodeList;
         }
 
         protected virtual SqlJoin VisitSqlJoin(SqlJoin sqlJoin)
@@ -93,7 +110,7 @@ namespace Rafy.Domain.ORM.SqlTree
             {
                 for (int i = 0, c = sqlSelect.OrderBy.Count; i < c; i++)
                 {
-                    var item = sqlSelect.OrderBy[i] as SqlNode;
+                    var item = sqlSelect.OrderBy.Items[i] as SqlNode;
                     this.Visit(item);
                 }
             }
@@ -164,6 +181,15 @@ namespace Rafy.Domain.ORM.SqlTree
         protected virtual SqlOrderBy VisitSqlOrderBy(SqlOrderBy sqlOrderBy)
         {
             return sqlOrderBy;
+        }
+
+        protected virtual SqlOrderByList VisitSqlOrderByList(SqlOrderByList sqlOrderByList)
+        {
+            foreach (SqlOrderBy item in sqlOrderByList.Items)
+            {
+                this.Visit(item);
+            }
+            return sqlOrderByList;
         }
     }
 }

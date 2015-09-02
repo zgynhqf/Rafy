@@ -62,5 +62,10 @@ namespace Rafy.Domain.DataPortal.WCF
             }
             return new WcfResponse { Result = result };
         }
+
+        public string Test(string msg)
+        {
+            return msg + " recieved";
+        }
     }
 }

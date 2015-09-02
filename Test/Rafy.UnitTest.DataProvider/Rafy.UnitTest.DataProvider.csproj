@@ -54,6 +54,10 @@
     <Compile Include="UnitTestDataProviderPlugin.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.ORM.BatchSubmit\Rafy.Domain.ORM.BatchSubmit.csproj">
+      <Project>{f0533889-be2c-4a21-90b0-26765833270e}</Project>
+      <Name>Rafy.Domain.ORM.BatchSubmit</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Rafy\Rafy.DbMigration\Rafy.DbMigration.csproj">
       <Project>{d7c4f80d-24a4-47f1-985c-cfa55cfa13e9}</Project>
       <Name>Rafy.DbMigration</Name>

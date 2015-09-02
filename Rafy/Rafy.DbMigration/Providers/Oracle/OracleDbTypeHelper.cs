@@ -21,6 +21,27 @@ namespace Rafy.DbMigration.Oracle
 {
     internal static class OracleDbTypeHelper
     {
+        public static string ToDbBoolean(bool value)
+        {
+            //数据库使用 CHAR(1) 来存储 Boolean 类型数据。
+            return value ? "1" : "0";
+        }
+
+        public static bool ToCLRBoolean(object value)
+        {
+            return value.ToString() == "1" ? true : false;
+        }
+
+        public static DbType ConvertFromCLRType(Type clrType)
+        {
+            var value = DbTypeHelper.ConvertFromCLRType(clrType);
+            if (value == DbType.Boolean)
+            {
+                value = DbType.String;
+            }
+            return value;
+        }
+
         /// <summary>
         /// 把 DbType 转换为 Oracle 中的数据类型
         /// </summary>
@@ -39,12 +60,15 @@ namespace Rafy.DbMigration.Oracle
                         return "VARCHAR2(" + length + ')';
                     }
                     return "VARCHAR2(4000)";
+                case DbType.Xml:
+                    return "XMLTYPE";
                 case DbType.Int32:
                     return "INTEGER";
                 case DbType.DateTime:
                     return "DATE";
                 case DbType.Int64:
                 case DbType.Double:
+                case DbType.Decimal:
                     return "NUMBER";
                 case DbType.Binary:
                     return "BLOB";
@@ -71,6 +95,8 @@ namespace Rafy.DbMigration.Oracle
                 case "nvarchar2":
                 case "varchar2":
                     return DbType.String;
+                case "xmltype":
+                    return DbType.Xml;
                 case "integer":
                     return DbType.Int32;
                 case "number":

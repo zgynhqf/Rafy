@@ -46,6 +46,9 @@
     <Reference Include="Moq">
       <HintPath>..\..\packages\Moq.4.2.1409.1722\lib\net40\Moq.dll</HintPath>
     </Reference>
+    <Reference Include="Oracle.ManagedDataAccess">
+      <HintPath>..\..\packages\Oracle.ManagedDataAccess.12.1.022\lib\net40\Oracle.ManagedDataAccess.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -75,7 +78,7 @@
     <Compile Include="Rafy\DomainTest.cs" />
     <Compile Include="Rafy\ORMTest.cs" />
     <Compile Include="Rafy\UtilsTest.cs" />
-    <Compile Include="Rafy\StringEntityTest.cs" />
+    <Compile Include="Rafy\EntityIdTest.cs" />
     <Compile Include="Rafy\zzzAutoUITest.cs" />
     <Compile Include="Rafy\CacheTest_Server.cs" />
     <Compile Include="Rafy\zzzSundryTest.cs" />
@@ -96,6 +99,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.ORM.BatchSubmit\Rafy.Domain.ORM.BatchSubmit.csproj">
+      <Project>{f0533889-be2c-4a21-90b0-26765833270e}</Project>
+      <Name>Rafy.Domain.ORM.BatchSubmit</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Rafy\Rafy.Utils\Rafy.Utils.csproj">
       <Project>{796B149B-32C9-4BB0-A23F-69C012450DB8}</Project>
       <Name>Rafy.Utils</Name>

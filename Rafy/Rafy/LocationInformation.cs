@@ -9,10 +9,10 @@ namespace Rafy
     /// 当前应用程序执行环境的位置信息。
     /// 
     /// 对应旧的 RafyLocation：
-    /// 单机版：IsWPFUI = true, DataPortalMode = DirectConnect；
+    /// 单机版：IsWPFUI = true, DataPortalMode = ConnectDirectly；
     /// C/S 客户端：IsWPFUI = true, DataPortalMode = ThroughService；
-    /// C/S 服务端：IsWPFUI = flase, DataPortalMode = DirectConnect；
-    /// Web 服务器：IsWebUI = true, DataPortalMode = DirectConnect；
+    /// C/S 服务端：IsWPFUI = flase, DataPortalMode = ConnectDirectly；
+    /// Web 服务器：IsWebUI = true, DataPortalMode = ConnectDirectly；
     /// </summary>
     public class LocationInformation
     {
@@ -41,6 +41,11 @@ namespace Rafy
         {
             get { return this.DataPortalMode == DataPortalMode.ConnectDirectly; }
         }
+
+        /// <summary>
+        /// 当前应用程序是否是一个 UI 应用程序。
+        /// </summary>
+        public bool IsUI { get { return this.IsWebUI || this.IsWPFUI; } }
     }
 
     /// <summary>

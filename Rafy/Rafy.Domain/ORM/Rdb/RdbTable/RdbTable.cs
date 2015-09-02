@@ -169,10 +169,11 @@ namespace Rafy.Domain.ORM
 
             if (this._insertSQL == null) { this._insertSQL = this.GenerateInsertSQL(); }
 
-            var parameters = new List<object>();
-            foreach (RdbColumn column in _columns)
+            var parameters = new List<object>(10);
+            for (int i = 0, c = _columns.Count; i < c; i++)
             {
-                if (this.CanInsert(column))
+                var column = _columns[i];
+                if (column.CanInsert)
                 {
                     var value = column.ReadParameterValue(item);
                     parameters.Add(value);
@@ -187,12 +188,14 @@ namespace Rafy.Domain.ORM
             var sql = new StringWriter();
             sql.Write("INSERT INTO ");
             sql.AppendQuote(this, this.Name).Write(" (");
+
             var values = new StringBuilder();
             bool comma = false;
             var index = 0;
-            foreach (RdbColumn column in _columns)
+            for (int i = 0, c = _columns.Count; i < c; i++)
             {
-                if (this.CanInsert(column))
+                var column = _columns[i];
+                if (column.CanInsert)
                 {
                     if (comma)
                     {
@@ -205,17 +208,12 @@ namespace Rafy.Domain.ORM
                     values.Append('{').Append(index++).Append('}');
                 }
             }
+
             sql.Write(") VALUES (");
             sql.Write(values.ToString());
             sql.Write(")");
 
             return sql.ToString();
-        }
-
-        protected virtual bool CanInsert(RdbColumn column)
-        {
-            //Sql Server 中的 Identity 列是不需要插入的。
-            return !column.Info.IsIdentity;
         }
 
         internal int Delete(IDbAccesser dba, Entity item)
@@ -262,7 +260,7 @@ namespace Rafy.Domain.ORM
         {
             EnsureMappingTable();
 
-            var parameters = new List<object> { item.Id };
+            var parameters = new List<object>(10);
             string updateSql = null;
 
             //是否有需要更新的 lob 字段。
@@ -322,6 +320,9 @@ namespace Rafy.Domain.ORM
                 }
             }
 
+            //Id 最后加入
+            parameters.Add(item.Id);
+
             int res = dba.ExecuteText(updateSql, parameters.ToArray());
             return res;
         }
@@ -334,13 +335,13 @@ namespace Rafy.Domain.ORM
             sql.Write(" SET ");
 
             bool comma = false;
-            var paramIndex = 1;//从 1 开始，0 留给 Id
+            var paramIndex = 0;
 
             //先更新所有非 lob 字段。
             for (int i = 0, c = _columns.Count; i < c; i++)
             {
                 var column = _columns[i];
-                if (!column.Info.IsPrimaryKey && !column.IsLOB)//
+                if (!column.Info.IsPrimaryKey && !column.IsLOB)
                 {
                     if (comma) { sql.Write(','); }
                     else { comma = true; }
@@ -367,7 +368,9 @@ namespace Rafy.Domain.ORM
             }
             sql.Write(" WHERE ");
             sql.AppendQuote(this, _pkColumn.Name);
-            sql.Write(" = {0}");
+            sql.Write(" = {");
+            sql.Write(paramIndex);
+            sql.Write('}');
 
             return sql.ToString();
         }
@@ -404,13 +407,29 @@ namespace Rafy.Domain.ORM
             QueryFactory.Instance.Generate(generator, query);
             var sql = generator.Sql;
 
+            this.QueryDataReader(dba, args, autoSelection ? ReadDataType.ByIndex : ReadDataType.ByName, sql);
+        }
+
+        /// <summary>
+        /// 执行 Sql 并读取 DataReader 中的值到实体。
+        /// </summary>
+        /// <param name="dba">The dba.</param>
+        /// <param name="args">The arguments.</param>
+        /// <param name="readType">Type of the read.</param>
+        /// <param name="sql">The SQL.</param>
+        protected void QueryDataReader(IDbAccesser dba, IEntitySelectArgs args, ReadDataType readType, FormattedSql sql)
+        {
             //查询数据库
             using (var reader = dba.QueryDataReader(sql, sql.Parameters))
             {
                 //填充到列表中。
                 this.FillDataIntoList(
-                    reader, autoSelection ? ReadDataType.ByIndex : ReadDataType.ByName,
-                    args.List, args.FetchingFirst, args.PagingInfo, args.MarkTreeFullLoaded
+                    reader,
+                    readType,
+                    args.List,
+                    args.FetchingFirst,
+                    args.PagingInfo,
+                    args.MarkTreeFullLoaded
                     );
             }
         }
@@ -422,13 +441,15 @@ namespace Rafy.Domain.ORM
         /// <returns></returns>
         protected bool AutoSelectionForLOB(IQuery query)
         {
+            if (query.Selection is AutoSelectionColumns) return true;
+
             if (query.Selection == null && !query.IsCounting && _hasLOB)
             {
                 //加载所有不是 LOB 的列。
                 var allColumns = (query.From.FindTable(_repository) as TableSource).LoadAllColumns();
                 var columns = allColumns.Where(n => (n as ColumnNode).DbColumn.Property.Category != PropertyCategory.LOB);
 
-                query.Selection = QueryFactory.Instance.Array(columns);
+                query.Selection = QueryFactory.Instance.AutoSelectionColumns(columns);
                 return true;
             }
 

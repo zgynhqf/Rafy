@@ -96,7 +96,7 @@ namespace Rafy.MetaModel
         /// <returns></returns>
         public static string Display(IManagedProperty property)
         {
-            if (RafyEnvironment.Location.IsWebUI || RafyEnvironment.Location.IsWPFUI)
+            if (RafyEnvironment.Location.IsUI)
             {
                 //以线程安全的方式获取最后一次缓存的 View。
                 EntityViewMeta safeView = _lastViewMeta;
@@ -140,7 +140,7 @@ namespace Rafy.MetaModel
         /// <returns></returns>
         public static string Display(Type entityType)
         {
-            if (RafyEnvironment.Location.IsWebUI || RafyEnvironment.Location.IsWPFUI)
+            if (RafyEnvironment.Location.IsUI)
             {
                 //以线程安全的方式获取最后一次缓存的 View。
                 EntityViewMeta safeView = _lastViewMeta;

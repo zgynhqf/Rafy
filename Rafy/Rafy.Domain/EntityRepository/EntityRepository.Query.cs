@@ -837,7 +837,7 @@ namespace Rafy.Domain
             var query = qf.Query(
                 from: table,
                 where: qf.Or(
-                    table.Column(Entity.IdProperty).Equal(id),
+                    table.IdColumn.Equal(id),
                     table.Column(Entity.TreePIdProperty).Equal(id)
                 ));
 

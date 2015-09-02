@@ -10,13 +10,61 @@
  * 
 *******************************************************/
 
-2.38.2712
+2.40.2792
+    ★★公布、添加功能
+        批量导入大量实体
+            实现 Oracle 中的批量插入大量新实体。
+            实现 SqlServer 的批量插入大量新实体。
+            支持设置每批次多少数据。
+            支持批量删除数据。
+            支持批量更新数据。
+            准备更新冗余属性。
+            可以配置是否在更新的同时，一同更新所有大对象属性。
+            批量更新支持远程调用。
+            支持 Long 为实体的 Id 主键类型，以支持真正大数据量。
+
+2.39.2760
+    ★★公布、添加功能、BUG修复
+        ORACLE 支持
+            使用全新的 ODP.NET（Oracle.ManagedDataAccess），为批量导入做准备。
+            DbConnectionSchema 不再指定 Oracle Provider 名称。
+            ORACLE 兼容性
+                Sql 生成时，ORACLE 数据库不支持 TOP 语句。重新使用新的分页 SQL 生成方案。
+                修复 Oracle 表名过长的问题。
+                ORACLE 中，使用 Linq 查询时不能生成 AS 关键字。
+                ORACLE 中，MODIFY 关键字后没有 COLUMN 关键字。
+            UPDATE 语句中 Id 参数的值需要加入参数列表的最后。（这是因为 ORACLE 的参数是按照顺序绑定的：http://www.oseye.net/question/44）
+            ORACLE 中的数字类型其实是 Decimal，加载进 TreePId 时需要进行类型的转换。
+            IN 语句中参数过多时，如果是简单的查询（GetByIdList、GetByParentIdList 等），则可以分批进行查询。
+            添加 Oracle Sql 生成的单元测试。
+            枚举值在映射数据库时，应该读取为 Int32 类型的数据。
+            ORACLE SEQUENCE 在创建时进行判断。
+            支持 ORACLE XMLTYPE 类型。
+        解决 TreeIndex 没有值时，查询所有行时，加载到列表报表的问题。
+        解决 AggtSerializer 中没有序列化 TotalCount 属性的值的问题。
+
+2.38.2736
+    重构
+        把 SqlServer 的批量插入代码提取到单独的项目中，准备添加 Oracle 的批量处理。
+    新功能
+        添加 Rafy.Domain.ORM.BatchSubmit 项目，并添加默认的项目文件结构。
+    BUG修复
+        GetCompiledPropertyValues 调用了错误的 MPO 方法。
+        GetCompiledPropertyValues 输出只读属性时，有逻辑错误。
+        AggtSeraizlier 中 ReferenceId 也都全部直接输出。
+
+2.38.2724
     重构
         重构事务、数据库连接的创建逻辑：
             事务不再存储在上下文中，而是存储在线程中。
             数据库连接先依赖线程中是事务。如果代码没有在事务中时，则每次都构建新的连接，不再进行连接的共享。
             见 SingleConnectionTrasactionScope 类型注释。
         重构贪婪加载时，把子集合加载到父集合中的逻辑。110万行数据，修改前需要 750 秒，修改后只需要 13 秒。
+        LocationInformation 类型添加 IsUI 属性。
+        TypeHelper.CoerceType 方法内部重构。
+        OracleTable 中的 Sequence Sql 语句。
+        RF 改为继承自 RepositoryFactory。
+        Entity.Validate 扩展方法，会自动根据实体的状态来过滤不需要的规则。
     BUG修复
         修复部分代码，在使用 DataReader 时，没有调用 Dispose。
         在为 SQL Server 插入数据时，执行 Insert 的同时，必须同时执行 SELECT @@IDENTITY。否则会有多线程问题。
@@ -24,6 +72,8 @@
             同时解决 Xml 字段类型无法映射到 SqlCE 上的问题。
         引用属性：设置 RefId 时，如果 RefId 与 RefEntity.Id 值相同，那么不需要清空 RefEntity 的值。
         AggtSerializer 不支持引用实体的序列化。
+        CommonQueryCriteria 没有反序列化构造器。
+        LoadProperty 处理 Id 时，需要对 Id 类型进行强制转换。
     添加接口
         Result 类型添加 Data 属性。
         AggtDeserializer 公开 DeserializeEntity、DeserializeList 两个方法。
@@ -34,6 +84,11 @@
         AggtSerializer、AggtDeserializer 支持数组、列表的序列化。
         ORM:In、NotIn 操作符，由于数据库有最大参数的限制，所以不再使用参数化查询。
         添加 EntityListExtension.ToDataTable 方法。
+    ！修改接口
+        配置文件中的 Sql 语句记录文件的配置名，由 SQL_TRACE_FILE 改为 Rafy.FileLogger.SqlTraceFileName。
+        AggtSerializer 在输出实体列表时，不再根据 TotalCount 来变更动态的结构，而是固定输出结构。并添加 OutputListTotalCount 属性。
+    ！删除接口
+        删除 RuleScope.AddOrUpdate 及 RuleScope.All。
 
 2.38.2660
     ★★公布、★重要、添加接口

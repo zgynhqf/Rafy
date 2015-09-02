@@ -83,5 +83,28 @@ namespace Rafy.DbMigration.Oracle
 
             return identifier;
         }
+
+        /// <summary>
+        /// 返回指定的表对应的序列的名称。
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="pkName"></param>
+        /// <returns></returns>
+        public static string SequenceName(string tableName, string pkName)
+        {
+            var name = string.Format("SEQ_{0}_{1}", PrepareIdentifier(tableName), PrepareIdentifier(pkName));
+            name = LimitOracleIdentifier(name);
+            return name;
+        }
+
+        /// <summary>
+        /// 准备标识符名。
+        /// </summary>
+        /// <param name="identifier"></param>
+        /// <returns></returns>
+        public static string PrepareIdentifier(string identifier)
+        {
+            return identifier.ToUpper();
+        }
     }
 }

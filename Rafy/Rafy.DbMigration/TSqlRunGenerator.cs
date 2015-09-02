@@ -70,16 +70,18 @@ namespace Rafy.DbMigration
             }
         }
 
-        protected void GenerateAddPKConstraint(IndentedTextWriter sql, string tableName, string columnName)
+        protected virtual void GenerateAddPKConstraint(IndentedTextWriter sql, string tableName, string columnName)
         {
+            var pkName = string.Format("PK_{0}_{1}",
+                this.Prepare(tableName), this.Prepare(columnName)
+                );
+
             sql.Write(@"
 ALTER TABLE ");
             sql.Write(this.Quote(tableName));
             sql.Write(@"
     ADD CONSTRAINT ");
-            sql.Write(this.Quote(string.Format("PK_{0}_{1}",
-                this.Prepare(tableName), this.Prepare(columnName)
-                )));
+            sql.Write(this.Quote(pkName));
             sql.Write(@"
     PRIMARY KEY (");
             sql.Write(this.Quote(columnName));
@@ -192,7 +194,7 @@ ALTER TABLE ");
         /// <param name="isPKorFK">在没有给出字段长度的情况下，如果这个字段是一个主键或外键，则需要自动限制它的长度。</param>
         protected void GenerateColumnDeclaration(
             IndentedTextWriter sql,
-            string columnName, DbType dataType, string length, bool isRequired, bool isPKorFK
+            string columnName, DbType dataType, string length, bool? isRequired, bool isPKorFK
             )
         {
             if (isPKorFK && string.IsNullOrEmpty(length))
@@ -205,11 +207,14 @@ ALTER TABLE ");
             sql.Write(" ");
             sql.Write(this.ConvertToTypeString(dataType, length));
 
-            if (isRequired)
+            if (isRequired.HasValue)
             {
-                sql.Write(" NOT");
+                if (isRequired.Value)
+                {
+                    sql.Write(" NOT");
+                }
+                sql.Write(" NULL");
             }
-            sql.Write(" NULL");
         }
 
         protected virtual string Quote(string identifier)

@@ -93,7 +93,20 @@
 /Demo/Demo.Customer1/bin/Debug
 /Rafy/Tools/Domain Documentation/Help
 *.user
-/Demo/FinanceManagement/bin/Debug
-/Demo/FinanceManagement/obj/Debug
-/Demo/MonthPlan/bin/Debug
+/Demo/Evaluation/bin/Debug
+/Demo/Evaluation/obj/Debug
+/Demo/Evaluation.WPF/bin/Debug
+/Demo/Evaluation.WPF/obj/Debug
 /Demo/MonthPlan/obj/Debug
+/.gitattributes
+/Demo/FinanceManagement/obj/Debug
+/Demo/P2PEvaluation/bin/Debug
+/Demo/P2PEvaluation/obj/Debug
+/Demo/FinanceManagement/bin/Debug
+/Demo/MonthPlan/bin/Debug
+/Demo/FundMng/bin/Debug
+/Demo/FundMng/obj/Debug
+/Rafy/Plugins/Rafy.BatchSubmit/Rafy.BatchSubmit.SqlServer/bin/Debug
+/Rafy/Plugins/Rafy.BatchSubmit/Rafy.BatchSubmit.SqlServer/obj/Debug
+/Rafy/Plugins/Rafy.Domain.ORM.BatchSubmit/bin/Debug
+/Rafy/Plugins/Rafy.Domain.ORM.BatchSubmit/obj/Debug

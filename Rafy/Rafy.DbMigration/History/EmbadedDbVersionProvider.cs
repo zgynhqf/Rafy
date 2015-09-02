@@ -88,7 +88,7 @@ namespace Rafy.DbMigration.History
 
         private DateTime Get()
         {
-            var value = this.DBA.QueryValue("SELECT VALUE FROM zzzDbMigrationVersion WHERE ID = 1");
+            var value = this.DBA.QueryValue("SELECT VALUE FROM " + TableName + " WHERE ID = 1");
             if (value != DBNull.Value) { return new DateTime(Convert.ToInt64(value)); }
 
             return DefaultMinTime;
@@ -96,26 +96,26 @@ namespace Rafy.DbMigration.History
 
         private void Set(DateTime version)
         {
-            this.DBA.ExecuteText("UPDATE zzzDbMigrationVersion SET VALUE = {0} WHERE ID = 1", version.Ticks);
+            this.DBA.ExecuteText("UPDATE " + TableName + " SET VALUE = {0} WHERE ID = 1", version.Ticks);
         }
 
         private void CreateTable()
         {
             //不再使用 Date 类型，因为 Oracle 和 SQLServer 里面的数据的精度不一样。改为使用 LONG
             //Oracle 中的 DateTime 类型为 Date
-            var timeType = this.DbSetting.ProviderName == DbSetting.Provider_Oracle ?
+            var timeType = DbSetting.IsOracleProvider(this.DbSetting) ?
                 OracleDbTypeHelper.ConvertToOracleTypeString(DbType.Int64) :
                 SqlDbTypeHelper.ConvertToSQLTypeString(DbType.Int64);
 
             this.DBA.RawAccesser.ExecuteText(string.Format(@"
-CREATE TABLE zzzDbMigrationVersion
+CREATE TABLE {1}
 (
     ID INT NOT NULL,
     Value {0} NOT NULL,
     PRIMARY KEY (ID)
 )
-", timeType));
-            this.DBA.ExecuteText("INSERT INTO zzzDbMigrationVersion (ID,VALUE) VALUES (1, {0})", DefaultMinTime.Ticks);
+", timeType, TableName));
+            this.DBA.ExecuteText("INSERT INTO " + TableName + " (ID,VALUE) VALUES (1, {0})", DefaultMinTime.Ticks);
         }
 
         protected internal override bool IsEmbaded()

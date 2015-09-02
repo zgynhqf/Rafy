@@ -16,7 +16,7 @@
         <PropertyElement Name="Name" PropertyType="String" />
       </Properties>
     </EntityTypeElement>
-    <EntityTypeElement FullName="UT.Lessee" Label="承租人" Left="684" Top="182" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
+    <EntityTypeElement FullName="UT.Lessee" Label="承租人" Left="655" Top="195" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
       <Properties>
         <PropertyElement Name="Name" PropertyType="String" />
       </Properties>
@@ -24,7 +24,10 @@
     <EntityTypeElement FullName="UT.StringTestEntity" Left="325" Top="4" Width="0" Height="0" HideProperties="true" IsAggtRoot="false">
       <Properties />
     </EntityTypeElement>
-    <EntityTypeElement FullName="UT.StringTestIntEntity" Left="544" Top="5" Width="0" Height="0" HideProperties="true" IsAggtRoot="false">
+    <EntityTypeElement FullName="UT.StringTestLongEntity" Left="717" Top="30" Width="0" Height="0" HideProperties="true" IsAggtRoot="false">
+      <Properties />
+    </EntityTypeElement>
+    <EntityTypeElement FullName="UT.StringTestIntEntity" Left="-6" Top="120" Width="0" Height="0" HideProperties="true" IsAggtRoot="false">
       <Properties />
     </EntityTypeElement>
   </EntityTypes>
@@ -60,13 +63,13 @@
       <ToPointX xsi:nil="true" />
       <ToPointY xsi:nil="true" />
     </ConnectionElement>
-    <ConnectionElement From="UT.MerchantItem" To="UT.StringTestIntEntity" Hidden="false" LabelVisible="true" ConnectionType="Inheritance">
+    <ConnectionElement From="UT.Lessee" To="UT.StringTestLongEntity" Hidden="false" LabelVisible="true" ConnectionType="Inheritance">
       <FromPointX xsi:nil="true" />
       <FromPointY xsi:nil="true" />
       <ToPointX xsi:nil="true" />
       <ToPointY xsi:nil="true" />
     </ConnectionElement>
-    <ConnectionElement From="UT.Lessee" To="UT.StringTestIntEntity" Hidden="false" LabelVisible="true" ConnectionType="Inheritance">
+    <ConnectionElement From="UT.MerchantItem" To="UT.StringTestIntEntity" Hidden="false" LabelVisible="true" ConnectionType="Inheritance">
       <FromPointX xsi:nil="true" />
       <FromPointY xsi:nil="true" />
       <ToPointX xsi:nil="true" />

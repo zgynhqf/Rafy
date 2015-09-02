@@ -137,6 +137,7 @@ namespace UT
 
             Meta.Property(TestRole.TestUserIdProperty).MapColumn().HasColumnName("UserId");
             Meta.Property(TestRole.NameProperty).MapColumn();
+            Meta.Property(TestRole.RoleTypeProperty).MapColumn();
         }
     }
 

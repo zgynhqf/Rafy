@@ -29,9 +29,10 @@ namespace Rafy.Data
     {
         public const string Provider_SqlClient = "System.Data.SqlClient";
         public const string Provider_SqlCe = "System.Data.SqlServerCe";
-        public const string Provider_Oracle = "System.Data.OracleClient";
-        //public const string Provider_Oracle = "Oracle.DataAccess.Client";
         public const string Provider_Odbc = "System.Data.Odbc";
+        //public const string Provider_Oracle = "System.Data.OracleClient";
+        //public const string Provider_Oracle = "Oracle.DataAccess.Client";
+        //public const string Provider_Oracle = "Oracle.ManagedDataAccess.Client";
 
         public const string DbName_LocalServer = "LocalSqlServer";
 
@@ -108,6 +109,30 @@ namespace Rafy.Data
             connection.ConnectionString = this.ConnectionString;
 
             return connection;
+        }
+
+        /// <summary>
+        /// 判断指定的提供程序是否为 Oracle 提供程序。
+        /// 目前已知的 Oracle 提供程序有：
+        /// System.Data.OracleClient、Oracle.DataAccess.Client、Oracle.ManagedDataAccess.Client
+        /// </summary>
+        /// <param name="schema">The schema.</param>
+        /// <returns></returns>
+        public static bool IsOracleProvider(DbConnectionSchema schema)
+        {
+            return IsOracleProvider(schema.ProviderName);
+        }
+
+        /// <summary>
+        /// 判断指定的提供程序是否为 Oracle 提供程序。
+        /// 目前已知的 Oracle 提供程序有：
+        /// System.Data.OracleClient、Oracle.DataAccess.Client、Oracle.ManagedDataAccess.Client
+        /// </summary>
+        /// <param name="providerName"></param>
+        /// <returns></returns>
+        public static bool IsOracleProvider(string providerName)
+        {
+            return providerName.Contains("Oracle");
         }
     }
 }

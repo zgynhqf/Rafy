@@ -44,7 +44,7 @@ namespace Rafy.Domain.ORM.SqlServer
                 var parameters = new List<object>();
                 foreach (RdbColumn column in this.Columns)
                 {
-                    if (this.CanInsert(column))
+                    if (column.CanInsert)
                     {
                         var value = column.ReadParameterValue(item);
                         parameters.Add(value);

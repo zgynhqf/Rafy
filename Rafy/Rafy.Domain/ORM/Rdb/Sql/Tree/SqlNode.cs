@@ -24,7 +24,7 @@ namespace Rafy.Domain.ORM.SqlTree
     /// 表示 Sql 语法树中的一个节点。
     /// </summary>
     [DebuggerDisplay("{DebuggerDisplay}")]
-    abstract class SqlNode
+    abstract class SqlNode : ISqlNode
     {
         /// <summary>
         /// 返回当前树节点的类型。
@@ -50,6 +50,7 @@ namespace Rafy.Domain.ORM.SqlTree
     /// </summary>
     enum SqlNodeType
     {
+        SqlNodeList,
         SqlLiteral,
         SqlArray,
         SqlSelect,
@@ -57,6 +58,7 @@ namespace Rafy.Domain.ORM.SqlTree
         SqlColumn,
         SqlJoin,
         SqlOrderBy,
+        SqlOrderByList,
         SqlSelectAll,
         SqlSubSelect,
         SqlColumnConstraint,

@@ -110,6 +110,8 @@
     <Compile Include="EntityRepository\QueryArgs\IEntitySelectArgs.cs" />
     <Compile Include="EntityRepository\QueryArgs\IQueryArgs.cs" />
     <Compile Include="Entity\EntityListExtension.cs" />
+    <Compile Include="Entity\GenericEntity\LongEntity.cs" />
+    <Compile Include="Entity\KeyProviders\LongKeyProvider.cs" />
     <Compile Include="Entity\Serialization\Json\AggtDeserializer.cs" />
     <Compile Include="Entity\Serialization\Json\AggtSerializer.cs" />
     <Compile Include="ORM\Rdb\DataProvider\QueryArgs\ISqlSelectArgs.cs" />
@@ -134,7 +136,6 @@
     <Compile Include="EntityRepository\EntityRepositoryQueryBase.cs" />
     <Compile Include="EntityRepository\QueryArgs\QueryArgs.cs" />
     <Compile Include="EntityRepository\DataProvider\IRepositoryDataProvider.cs" />
-    <Compile Include="EntityRepository\RepositoryFactory.cs" />
     <Compile Include="ORM\Rdb\DataProvider\RdbDataProvider.cs" />
     <Compile Include="ORM\Rdb\DataProvider\RdbDataSaver.cs" />
     <Compile Include="ORM\Rdb\DataProvider\RdbRedundanciesUpdater.cs" />
@@ -142,7 +143,6 @@
     <Compile Include="ORM\PersistanceTableInfo\PersistanceTableInfoFactory.cs" />
     <Compile Include="ORM\Rdb\DbAccesser\IConnectionManager.cs" />
     <Compile Include="ORM\Rdb\DbAccesser\TransactionDependentConnectionManager.cs" />
-    <Compile Include="ORM\Rdb\SqlServer\SqlBatchInsertHelper.cs" />
     <Compile Include="EntityRepository\SubmitArgs.cs" />
     <Compile Include="ORM\Rdb\DataProvider\QueryArgs\TableQueryArgs.cs" />
     <Compile Include="Entity\AutoCollectHelper.cs" />
@@ -160,7 +160,11 @@
     <Compile Include="Entity\MP\LOBProperty.cs" />
     <Compile Include="Entity\MP\PropertyDefailtValues.cs" />
     <Compile Include="Entity\Serialization\SerializationEntityGraph.cs" />
+    <Compile Include="ORM\Rdb\Sql\FirstTableFinder.cs" />
     <Compile Include="ORM\Rdb\Sql\SqlServer\SqlServerTable.cs" />
+    <Compile Include="ORM\Rdb\Sql\Tree\Interfaces.cs" />
+    <Compile Include="ORM\Rdb\Sql\Tree\SqlNodeList.cs" />
+    <Compile Include="ORM\Rdb\Sql\Tree\SqlOrderByList.cs" />
     <Compile Include="ORM\Rdb\TreeIndexHelper.cs" />
     <Compile Include="Entity\ValidationHelper.cs" />
     <Compile Include="ORM\Linq\PropertyFinder.cs" />
@@ -367,7 +371,6 @@
     </Compile>
     <Compile Include="Entity\IDbConnector.cs" />
     <Compile Include="ORM\Rdb\AggregateSQL\SQLColumnsGenerator.cs" />
-    <Compile Include="ORM\Rdb\SqlServer\BatchInsert.cs" />
     <Compile Include="EntityRepository\Caching\AggregateChecker.cs" />
     <Compile Include="EntityRepository\Caching\VersionSyncClientCache\AggregateRootCache.cs" />
     <Compile Include="DomainMetaExtension.cs" />
@@ -379,7 +382,6 @@
     <Compile Include="Entity\CloneOptions.cs" />
     <Compile Include="EntityRepository\EntityRepository.cs" />
     <Compile Include="EntityRepository\DictionaryRepositoryFactory.cs" />
-    <Compile Include="ORM\Rdb\SqlServer\EntityChldrenBatchReader.cs" />
     <Compile Include="Entity\IRepository.cs" />
     <Compile Include="Entity\Entity.Tree.cs">
       <DependentUpon>Entity.cs</DependentUpon>

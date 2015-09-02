@@ -57,7 +57,7 @@ namespace Rafy
         /// <summary>
         /// 记录 Sql 执行过程。
         /// 
-        /// 把 SQL 语句及参数，写到 SQL_TRACE_FILE 配置所对应的文件中。
+        /// 把 SQL 语句及参数，写到 'Rafy.FileLogger.SqlTraceFileName' 配置所对应的文件中。
         /// </summary>
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
@@ -66,7 +66,11 @@ namespace Rafy
         {
             if (_sqlTraceFile == null)
             {
-                _sqlTraceFile = ConfigurationHelper.GetAppSettingOrDefault("SQL_TRACE_FILE", string.Empty);
+                _sqlTraceFile = ConfigurationHelper.GetAppSettingOrDefault("Rafy.FileLogger.SqlTraceFileName", string.Empty);
+                if (_sqlTraceFile.Length == 0)
+                {
+                    _sqlTraceFile = ConfigurationHelper.GetAppSettingOrDefault("SQL_TRACE_FILE", string.Empty);
+                }
             }
 
             if (_sqlTraceFile.Length > 0)

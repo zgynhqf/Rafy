@@ -21,6 +21,7 @@ namespace Rafy.Domain.ORM.SqlTree
 {
     /// <summary>
     /// 表示一组树结点合成的一个集合结点。
+    /// 这些结点之间，需要用逗号分隔开。
     /// </summary>
     class SqlArray : SqlNode
     {

@@ -854,7 +854,7 @@ namespace RafyUnitTest
         /// 对 Id 属性设置一个数值类型时，内部应该转换为一个 int 型。
         /// </summary>
         [TestMethod]
-        public void MPT_Id_CoerceType()
+        public void MPT_SetProperty_Id_CoerceType()
         {
             var user = Get<TestUser>();
 
@@ -891,6 +891,55 @@ namespace RafyUnitTest
             model.SetRefId(Book.BookCategoryIdProperty, null);
             value = model.GetProperty(Book.BookCategoryIdProperty);
             Assert.AreEqual(value, 0);
+        }
+
+        #endregion
+
+        #region Other
+
+        [TestMethod]
+        public void MPT_GetCompiledPropertyValues()
+        {
+            var a = new A { Id = 1 };
+            var properties =new List<IManagedProperty>();
+            foreach (var pv in a.GetCompiledPropertyValues())
+            {
+                properties.Add(pv.Property);
+            }
+            Assert.IsTrue(properties.Contains(Entity.IdProperty));
+            Assert.IsTrue(properties.Contains(Entity.TreePIdProperty));
+            Assert.IsTrue(properties.Contains(Entity.TreeIndexProperty));
+            Assert.IsTrue(properties.Contains(A.NameProperty));
+            Assert.IsTrue(properties.Contains(A.AChildListProperty));
+        }
+
+        [TestMethod]
+        public void MPT_GetCompiledPropertyValues_ReadOnly()
+        {
+            var user = Get<TestUser>();
+
+            foreach (var pv in user.GetCompiledPropertyValues())
+            {
+                if (pv.Property == TestUser.ReadOnlyNameAgeProperty)
+                {
+                    Assert.AreEqual(pv.Value, "DefaultName 的年龄是 10");
+                    return;
+                }
+            }
+
+            Assert.IsTrue(false, "没有找到只读属性。");
+        }
+
+        [TestMethod]
+        public void MPT_GetNonDefaultPropertyValues()
+        {
+            var a = new A { Id = 1 };
+            var properties =new List<string>();
+            foreach (var pv in a.GetNonDefaultPropertyValues())
+            {
+                properties.Add(pv.Property.Name);
+            }
+            Assert.AreEqual(properties.Count, 1);
         }
 
         #endregion

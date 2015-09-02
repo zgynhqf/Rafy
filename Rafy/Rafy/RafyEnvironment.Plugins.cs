@@ -136,7 +136,7 @@ namespace Rafy
                     if (_modules == null)
                     {
                         //如果是界面应用程序，则加载所有的 UI 文件。否则返回空集合。
-                        if (_location.IsWebUI || _location.IsWPFUI)
+                        if (_location.IsUI)
                         {
                             var assemblies = EnumerateAllUIAssemblies().Union(PluginTable.UILibraries).ToList();
                             _modules = LoadSortedPlugins(assemblies);
@@ -168,7 +168,7 @@ namespace Rafy
                         GetDomainPlugins();
                         _allPlugins = _libraries;
 
-                        if (_location.IsWPFUI || _location.IsWebUI)
+                        if (_location.IsUI)
                         {
                             _allPlugins = _allPlugins
                                 .Union(GetUIPlugins())

@@ -65,6 +65,12 @@ namespace Rafy.Domain.Serialization.Json
         public bool IgnoreDefault { get; set; }
 
         /// <summary>
+        /// 是否输出实体列表的 TotalCount 的值，而把列表的值放到一个名为 Data 的属性值中。
+        /// 但是，如果 TotalCount 中没有值时，则不会输出 TotalCount，而只输出 Data 属性。
+        /// </summary>
+        public bool OutputListTotalCount { get; set; }
+
+        /// <summary>
         /// 是否采用缩进的格式。
         /// 默认为 false。
         /// </summary>
@@ -173,6 +179,7 @@ namespace Rafy.Domain.Serialization.Json
                 case PropertyCategory.Normal:
                 case PropertyCategory.Readonly:
                 case PropertyCategory.Redundancy:
+                case PropertyCategory.ReferenceId:
                     this.WritePropertyName(property.Name);
                     //if (value is byte[])
                     //{
@@ -196,21 +203,22 @@ namespace Rafy.Domain.Serialization.Json
                         _writer.WriteValue(value);
                     }
                     break;
-                case PropertyCategory.ReferenceId:
-                    var refProperty = property as IRefProperty;
-                    switch (refProperty.ReferenceType)
-                    {
-                        case ReferenceType.Child:
-                        case ReferenceType.Normal:
-                            this.WritePropertyName(property.Name);
-                            _writer.WriteValue(value);
-                            break;
-                        case ReferenceType.Parent:
-                            break;
-                        default:
-                            throw new NotSupportedException();
-                    }
-                    break;
+                //ReferenceId 也都全部直接输出。
+                //case PropertyCategory.ReferenceId:
+                //    var refProperty = property as IRefProperty;
+                //    switch (refProperty.ReferenceType)
+                //    {
+                //        case ReferenceType.Child:
+                //        case ReferenceType.Normal:
+                //            this.WritePropertyName(property.Name);
+                //            _writer.WriteValue(value);
+                //            break;
+                //        case ReferenceType.Parent:
+                //            break;
+                //        default:
+                //            throw new NotSupportedException();
+                //    }
+                //    break;
                 case PropertyCategory.ReferenceEntity:
                     if (this.SerializeReference && value != null && (property as IRefProperty).ReferenceType != ReferenceType.Parent)
                     {
@@ -225,27 +233,29 @@ namespace Rafy.Domain.Serialization.Json
 
         private void SerializeList(EntityList entityList)
         {
-            var totalCount = entityList.TotalCount;
-            if (totalCount > 0)
+            if (this.OutputListTotalCount)
             {
                 _writer.WriteStartObject();
 
-                this.WritePropertyName(TotalCountProperty);
-                _writer.WriteValue(totalCount);
+                var tc = entityList.TotalCount;
+                if (tc >= 0)
+                {
+                    this.WritePropertyName(TotalCountProperty);
+
+                    _writer.WriteValue(entityList.TotalCount);
+                }
 
                 this.WritePropertyName(EntityListProperty);
             }
 
             _writer.WriteStartArray();
-
             foreach (var entity in entityList)
             {
                 this.SerializeEntity(entity);
             }
-
             _writer.WriteEndArray();
 
-            if (totalCount > 0)
+            if (this.OutputListTotalCount)
             {
                 _writer.WriteEndObject();
             }

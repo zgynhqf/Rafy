@@ -21,7 +21,7 @@ namespace UT
     /// 承租人
     /// </summary>
     [RootEntity, Serializable]
-    public partial class Lessee : StringTestIntEntity
+    public partial class Lessee : StringTestLongEntity
     {
         #region 构造函数
 

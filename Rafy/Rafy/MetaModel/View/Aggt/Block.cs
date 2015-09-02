@@ -156,7 +156,7 @@ namespace Rafy.MetaModel.View
         /// </summary>
         protected virtual void UseBlockDefaultCommands(EntityViewMeta meta)
         {
-            if (!RafyEnvironment.Location.IsWebUI)
+            if (RafyEnvironment.Location.IsWPFUI)
             {
                 if (this.BlockType == BlockType.Report)
                 {

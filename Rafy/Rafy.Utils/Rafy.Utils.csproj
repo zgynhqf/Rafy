@@ -62,6 +62,7 @@
     <Compile Include="Context\AppContextScope.cs" />
     <Compile Include="Data\FormattedSql.cs" />
     <Compile Include="Data\FormattedSqlParameters.cs" />
+    <Compile Include="Data\IDbCommandFactory.cs" />
     <Compile Include="IHasName.cs" />
     <Compile Include="Data\LiteDataTable\LiteDataColumn.cs" />
     <Compile Include="Data\LiteDataTable\LiteDataColumnCollection.cs" />

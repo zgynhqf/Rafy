@@ -101,7 +101,7 @@ namespace UT
         protected override void ConfigMeta()
         {
             //配置实体的所有属性都映射到数据表中。
-            Meta.MapTable().MapAllProperties();
+            Meta.MapTable("Files").MapAllProperties();
         }
     }
 }

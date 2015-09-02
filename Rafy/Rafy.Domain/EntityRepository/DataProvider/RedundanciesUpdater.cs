@@ -25,21 +25,18 @@ namespace Rafy.Domain
     /// </summary>
     public abstract class RedundanciesUpdater
     {
-        private EntityRepository _repository;
-
-        protected RedundanciesUpdater(RepositoryDataProvider dataProvier)
-        {
-            _repository = dataProvier.Repository;
-        }
-
         /// <summary>
-        /// 尝试更新冗余属性值。
+        /// 尝试更新依赖指定实体的值的冗余属性的值。
         /// </summary>
-        internal void UpdateRedundancies(Entity entity)
+        /// <param name="entity">变更了值属性的实体。依赖该实体的所有冗余属性都需要被更新。</param>
+        /// <param name="repository">实体对应的仓库。</param>
+        public void UpdateRedundancies(Entity entity, IRepository repository)
         {
+            if (repository == null) { repository = entity.GetRepository(); }
+
             //如果有一些在冗余属性路径中的属性的值改变了，则开始更新数据库的中的所有冗余字段的值。
             Entity dbEntity = null;
-            var propertiesInPath = _repository.GetPropertiesInRedundancyPath();
+            var propertiesInPath = repository.GetPropertiesInRedundancyPath();
             for (int i = 0, c = propertiesInPath.Count; i < c; i++)
             {
                 var property = propertiesInPath[i];
@@ -53,7 +50,7 @@ namespace Rafy.Domain
                 {
                     if (!isChanged)
                     {
-                        if (dbEntity == null) { dbEntity = ForceGetById(entity); }
+                        if (dbEntity == null) { dbEntity = ForceGetById(entity, repository); }
                         var dbId = dbEntity.GetRefId(refProperty);
                         var newId = entity.GetRefId(refProperty);
                         isChanged = !object.Equals(dbId, newId);
@@ -83,7 +80,7 @@ namespace Rafy.Domain
 
                     if (!isChanged)
                     {
-                        if (dbEntity == null) { dbEntity = ForceGetById(entity); }
+                        if (dbEntity == null) { dbEntity = ForceGetById(entity, repository); }
                         var dbValue = dbEntity.GetProperty(property);
                         isChanged = !object.Equals(dbValue, newValue);
                     }
@@ -101,9 +98,9 @@ namespace Rafy.Domain
             entity.UpdateRedundancies = false;
         }
 
-        private Entity ForceGetById(Entity entity)
+        private Entity ForceGetById(Entity entity, IRepository repository)
         {
-            var dbEntity = _repository.GetById(entity.Id);
+            var dbEntity = repository.GetById(entity.Id);
             if (dbEntity == null)
             {
                 throw new InvalidOperationException(string.Format(@"{1} 类型对应的仓库中不存在 Id 为 {0} 的实体，更新冗余属性失败！", entity.Id, entity.GetType()));
@@ -120,7 +117,7 @@ namespace Rafy.Domain
         [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
         private void UpdateRedundancyByValue(Entity entity, RedundantPath path, object newValue)
         {
-            UpdateRedundancy(entity, path.Redundancy, newValue, path.RefPathes, entity.Id);
+            this.UpdateRedundancy(entity, path.Redundancy, newValue, path.RefPathes, entity.Id);
         }
 
         /// <summary>
@@ -167,5 +164,11 @@ namespace Rafy.Domain
         /// 将会为这个集合路径生成更新的 Where 条件。</param>
         /// <param name="lastRefId">引用路径中最后一个引用属性对应的值。这个值将会作为 Where 条件的值。</param>
         protected abstract void UpdateRedundancy(Entity entity, ConcreteProperty redundancy, object newValue, IList<ConcreteProperty> refPathes, object lastRefId);
+
+        /// <summary>
+        /// 完整刷新指定的冗余属性。
+        /// </summary>
+        /// <param name="redundancy">The redundancy.</param>
+        public abstract void RefreshRedundancy(ConcreteProperty redundancy);
     }
 }

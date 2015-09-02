@@ -55,6 +55,11 @@ namespace Rafy.Domain
         /// </summary>
         internal static IManagedProperty Property_TreeIndex;
 
+        internal static string IdColumnName
+        {
+            get { return Property_Id.Name; }
+        }
+
         internal static string TreeChildrenPropertyName = "TreeChildren";
 
         ///// <summary>

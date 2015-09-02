@@ -17,6 +17,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
 using Rafy;
@@ -37,6 +38,7 @@ namespace Rafy.Domain.ORM
             _sql = new FormattedSql();
             _sql.InnerWriter = new IndentedTextWriter(_sql.InnerWriter);
             this.AutoQuota = true;
+            this.MaxItemsInInClause = int.MaxValue;
         }
 
         /// <summary>
@@ -61,86 +63,87 @@ namespace Rafy.Domain.ORM
             get { return _sql; }
         }
 
+        /// <summary>
+        /// In 语句中可以承受的最大的个数。
+        /// 如果超出这个个数，则会抛出
+        /// </summary>
+        internal int MaxItemsInInClause;
+
         #region 分页支持
 
         /// <summary>
         /// 为指定的原始查询生成指定分页效果的新查询。
         /// </summary>
         /// <param name="raw">原始查询</param>
-        /// <param name="pkColumn">需要指定主键列</param>
         /// <param name="pagingInfo">分页信息。</param>
         /// <returns></returns>
-        public virtual SqlSelect ModifyToPagingTree(SqlSelect raw, SqlColumn pkColumn, PagingInfo pagingInfo)
+        /// <exception cref="System.ArgumentNullException">pagingInfo</exception>
+        /// <exception cref="System.InvalidProgramException">必须排序后才能使用分页功能。</exception>
+        protected virtual ISqlSelect ModifyToPagingTree(SqlSelect raw, PagingInfo pagingInfo)
         {
             if (PagingInfo.IsNullOrEmpty(pagingInfo)) { throw new ArgumentNullException("pagingInfo"); }
             if (!raw.HasOrdered()) { throw new InvalidProgramException("必须排序后才能使用分页功能。"); }
 
-            //如果是第一页，则只需要使用 TOP 语句即可。
-            if (pagingInfo.PageNumber == 1)
-            {
-                raw.Top = pagingInfo.PageSize;
-                return raw;
-            }
-
             /*********************** 代码块解释 *********************************
              * 
-             * 转换方案：
+             * 使用 ROW_NUMBER() 函数，此函数 SqlServer、Oracle 都可使用。
+             * 注意，这个方法只支持不太复杂 SQL 的转换。
+             *
+             * 源格式：
+             * select ...... from ...... order by xxxx asc, yyyy desc
+             * 不限于以上格式，只要满足没有复杂的嵌套查询，最外层是一个 Select 和 From 语句即可。
              * 
-             * SELECT * 
-             * FROM ASN
-             * WHERE ASN.Id > 0
-             * ORDER BY ASN.AsnCode ASC
-             * 
-             * SELECT TOP 10 * 
-             * FROM ASN
-             * WHERE ASN.Id > 0 AND ASN.Id NOT IN(
-             *     SELECT TOP 20 Id
-             *     FROM ASN
-             *     WHERE ASN.Id > 0 
-             *     ORDER BY ASN.AsnCode ASC
-             * )
-             * ORDER BY ASN.AsnCode ASC
-             * 
+             * 目标格式：
+             * select * from (select ......, row_number() over(order by xxxx asc, yyyy desc) _rowNumber from ......) x where x._rowNumber<10 and x._rowNumber>5;
             **********************************************************************/
 
-            var excludeSelect = new SqlSelect
-            {
-                Top = (pagingInfo.PageNumber - 1) * pagingInfo.PageSize,
-                Selection = pkColumn,
-                From = raw.From,
-                Where = raw.Where,
-                OrderBy = raw.OrderBy,
-            };
+            var startRow = pagingInfo.PageSize * (pagingInfo.PageNumber - 1) + 1;
+            var endRow = startRow + pagingInfo.PageSize - 1;
 
-            var res = new SqlSelect
+            var innerSelect = new SqlSelect();
+            var selection = new SqlArray();
+            if (raw.Selection != null)
             {
-                Top = pagingInfo.PageSize,
-                Selection = raw.Selection,
-                From = raw.From,
-                OrderBy = raw.OrderBy,
-            };
+                selection.Items.Add(raw.Selection);
+            }
+            selection.Items.Add(new SqlNodeList
+            {
+                new SqlLiteral { FormattedSql = "row_number() over (" },
+                raw.OrderBy,
+                new SqlLiteral { FormattedSql = ") _rowNumber" }
+            });
+            innerSelect.Selection = selection;
 
-            var newWhere = new SqlColumnConstraint
+            var subSelect = new SqlSubSelect
             {
-                Column = pkColumn,
-                Operator = SqlColumnConstraintOperator.NotIn,
-                Value = excludeSelect
+                Select = innerSelect,
+                Alias = "x"
             };
-            if (raw.Where != null)
+            var rowNumberColumn = new SqlTree.SqlColumn
             {
-                res.Where = new SqlBinaryConstraint
+                Table = subSelect,
+                ColumnName = "_rowNumber"
+            };
+            var pagingSelect = new SqlSelect();
+            pagingSelect.From = subSelect;
+            pagingSelect.Where = new SqlTree.SqlBinaryConstraint
+            {
+                Left = new SqlTree.SqlColumnConstraint
                 {
-                    Left = raw.Where,
-                    Opeartor = SqlBinaryConstraintType.And,
-                    Right = newWhere
-                };
-            }
-            else
-            {
-                res.Where = newWhere;
-            }
+                    Column = rowNumberColumn,
+                    Operator = SqlColumnConstraintOperator.GreaterEqual,
+                    Value = startRow
+                },
+                Opeartor = SqlBinaryConstraintType.And,
+                Right = new SqlTree.SqlColumnConstraint
+                {
+                    Column = rowNumberColumn,
+                    Operator = SqlColumnConstraintOperator.LessEqual,
+                    Value = endRow
+                }
+            };
 
-            return res;
+            return pagingSelect;
         }
 
         #endregion
@@ -148,7 +151,23 @@ namespace Rafy.Domain.ORM
         /// <summary>
         /// 访问 sql 语法树中的每一个结点，并生成相应的 Sql 语句。
         /// </summary>
-        /// <param name="tree"></param>
+        /// <param name="tree">The tree.</param>
+        /// <param name="pagingInfo">The paging information.</param>
+        public void Generate(SqlSelect tree, PagingInfo pagingInfo = null)
+        {
+            ISqlSelect res = tree;
+            if (!PagingInfo.IsNullOrEmpty(pagingInfo))
+            {
+                res = ModifyToPagingTree(tree, pagingInfo);
+            }
+
+            base.Visit(res);
+        }
+
+        /// <summary>
+        /// 访问 sql 语法树中的每一个结点，并生成相应的 Sql 语句。
+        /// </summary>
+        /// <param name="tree">The tree.</param>
         public void Generate(SqlNode tree)
         {
             base.Visit(tree);
@@ -205,33 +224,8 @@ namespace Rafy.Domain.ORM
         {
             _sql.Append("SELECT ");
 
-            if (sqlSelect.IsCounting)
-            {
-                _sql.Append("COUNT(0)");
-            }
-            else
-            {
-                if (sqlSelect.IsDistinct)
-                {
-                    _sql.Append("DISTINCT ");
-                }
-                else if (sqlSelect.Top.HasValue)
-                {
-                    _sql.Append("TOP ");
-                    _sql.Append(sqlSelect.Top.Value);
-                    _sql.Append(" ");
-                }
-
-                //选择的列
-                if (sqlSelect.Selection == null)
-                {
-                    _sql.Append("*");
-                }
-                else
-                {
-                    this.Visit(sqlSelect.Selection);
-                }
-            }
+            //SELECT
+            this.GenerateSelection(sqlSelect);
 
             //FROM
             _sql.AppendLine();
@@ -250,19 +244,38 @@ namespace Rafy.Domain.ORM
             if (!sqlSelect.IsCounting && sqlSelect.OrderBy != null && sqlSelect.OrderBy.Count > 0)
             {
                 _sql.AppendLine();
-                _sql.Append("ORDER BY ");
-
-                for (int i = 0, c = sqlSelect.OrderBy.Count; i < c; i++)
-                {
-                    if (i > 0)
-                    {
-                        _sql.Append(", ");
-                    }
-                    this.Visit(sqlSelect.OrderBy[i] as SqlOrderBy);
-                }
+                this.Visit(sqlSelect.OrderBy);
             }
 
             return sqlSelect;
+        }
+
+        /// <summary>
+        /// 生成 Selection 中的语句
+        /// </summary>
+        /// <param name="sqlSelect"></param>
+        protected virtual void GenerateSelection(SqlSelect sqlSelect)
+        {
+            if (sqlSelect.IsCounting)
+            {
+                _sql.Append("COUNT(0)");
+            }
+            else
+            {
+                if (sqlSelect.IsDistinct)
+                {
+                    _sql.Append("DISTINCT ");
+                }
+
+                if (sqlSelect.Selection == null)
+                {
+                    _sql.Append("*");
+                }
+                else
+                {
+                    this.Visit(sqlSelect.Selection);
+                }
+            }
         }
 
         protected override SqlColumn VisitSqlColumn(SqlColumn sqlColumn)
@@ -277,7 +290,7 @@ namespace Rafy.Domain.ORM
             this.QuoteAppend(sqlTable.TableName);
             if (!string.IsNullOrEmpty(sqlTable.Alias))
             {
-                _sql.Append(" AS ");
+                this.AppendNameCast();
                 this.QuoteAppend(sqlTable.Alias);
             }
 
@@ -337,6 +350,8 @@ namespace Rafy.Domain.ORM
         {
             var op = node.Operator;
             var value = node.Value;
+
+            value = this.PrepareConstraintValue(value);
 
             #region 处理一些特殊的值
 
@@ -482,17 +497,17 @@ namespace Rafy.Domain.ORM
                     {
                         bool first = true;
                         bool needDelimiter = false;
+                        int i = 0;
                         foreach (var item in value as IEnumerable)
                         {
+                            if (++i > this.MaxItemsInInClause) throw new TooManyItemsInInClauseException();
+
                             if (first)
                             {
                                 first = false;
-                                needDelimiter = item is string || item is DateTime;
+                                needDelimiter = item is string || item is DateTime || item is Guid;
                             }
                             else { _sql.Append(','); }
-
-                            //由于集合中的数据可能过多，所以这里不要使用参数化的查询。
-                            //_sql.AppendParameter(item);
 
                             if (needDelimiter)
                             {
@@ -502,6 +517,9 @@ namespace Rafy.Domain.ORM
                             {
                                 _sql.Append(item);
                             }
+
+                            //由于集合中的数据可能过多，所以这里不要使用参数化的查询。
+                            //_sql.AppendParameter(item);
                         }
                     }
                     else if (value is SqlNode)
@@ -519,6 +537,11 @@ namespace Rafy.Domain.ORM
             }
 
             return node;
+        }
+
+        protected virtual object PrepareConstraintValue(object value)
+        {
+            return value;
         }
 
         protected override SqlSelectAll VisitSqlSelectAll(SqlSelectAll sqlSelectStar)
@@ -599,7 +622,8 @@ namespace Rafy.Domain.ORM
             this.Visit(sqlSelectRef.Select);
             this.Indent--;
             _sql.AppendLine();
-            _sql.Append(") AS ");
+            _sql.Append(")");
+            this.AppendNameCast();
             _sql.Append(sqlSelectRef.Alias);
 
             return sqlSelectRef;
@@ -612,6 +636,22 @@ namespace Rafy.Domain.ORM
             _sql.Append(sqlOrderBy.Direction == OrderDirection.Ascending ? "ASC" : "DESC");
 
             return sqlOrderBy;
+        }
+
+        protected override SqlOrderByList VisitSqlOrderByList(SqlOrderByList sqlOrderByList)
+        {
+            _sql.Append("ORDER BY ");
+
+            for (int i = 0, c = sqlOrderByList.Items.Count; i < c; i++)
+            {
+                if (i > 0)
+                {
+                    _sql.Append(", ");
+                }
+                this.Visit(sqlOrderByList.Items[i] as SqlOrderBy);
+            }
+
+            return sqlOrderByList;
         }
 
         /// <summary>
@@ -640,23 +680,48 @@ namespace Rafy.Domain.ORM
 
         private void AppendColumnDeclaration(SqlColumn sqlColumn)
         {
-            this.QuoteAppend(sqlColumn.Table.GetName());
-
-            _sql.Append(".");
-            this.QuoteAppend(sqlColumn.ColumnName);
+            this.AppendColumnUsage(sqlColumn);
 
             if (!string.IsNullOrEmpty(sqlColumn.Alias))
             {
-                _sql.Append(" AS ");
+                this.AppendNameCast();
                 this.QuoteAppend(sqlColumn.Alias);
             }
         }
 
         private void AppendColumnUsage(SqlColumn sqlColumn)
         {
-            this.QuoteAppend(sqlColumn.Table.GetName());
-            _sql.Append(".");
+            var table = sqlColumn.Table;
+            if (table != null)
+            {
+                this.QuoteAppend(table.GetName());
+                _sql.Append(".");
+            }
             this.QuoteAppend(sqlColumn.ColumnName);
         }
+
+        protected virtual void AppendNameCast()
+        {
+            _sql.Append(" ");
+        }
+    }
+
+    /// <summary>
+    /// 表示在 In 语句中使用了过多的参数。
+    /// </summary>
+    [Serializable]
+    public class TooManyItemsInInClauseException : Exception
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TooManyItemsInInClauseException"/> class.
+        /// </summary>
+        public TooManyItemsInInClauseException() : base("在 In 语句中使用了过多的参数") { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TooManyItemsInInClauseException"/> class.
+        /// </summary>
+        /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> that holds the serialized object data about the exception being thrown.</param>
+        /// <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext" /> that contains contextual information about the source or destination.</param>
+        protected TooManyItemsInInClauseException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }

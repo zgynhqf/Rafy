@@ -39,12 +39,14 @@ namespace Rafy.DbMigration
                 case DbConnectionSchema.Provider_SqlCe:
                     provider = new SqlServerCeMigrationProvider();
                     break;
-                case DbConnectionSchema.Provider_Oracle:
-                    provider = new OracleMigrationProvider();
-                    break;
                 //case "System.Data.Odbc":
                 //    return new ODBCProvider();
                 default:
+                    if (DbConnectionSchema.IsOracleProvider(dbSetting))
+                    {
+                        provider = new OracleMigrationProvider();
+                        break;
+                    }
                     throw new NotSupportedException("This type of database is not supportted now:" + dbSetting.ProviderName);
             }
 

@@ -3,8 +3,8 @@
     首次生成数据库时，由于无法登录并进入开发工具模块，请添加以下配置以支持启动时生成数据库：
     <add key="Rafy_DevTools_GenerateDbOnStartup" value="true"/>
     
-SQL_TRACE_FILE 设置的文件路径，会为其创建 SQL 监听文件。
-    <add key="SQL_TRACE_FILE" value="C:\SQLTraceLog.txt"/>
+'Rafy.FileLogger.SqlTraceFileName' 设置的文件路径，会为其创建 SQL 监听文件。
+    <add key="Rafy.FileLogger.SqlTraceFileName" value="C:\SQLTraceLog.txt"/>
 
 数据库配置：
     当使用 SQLCE 4 时，修改连接字符串配置如下：

@@ -74,7 +74,6 @@ namespace Rafy.Domain.ORM.Query
         /// 如果这个属性为真，那么不再需要使用 Selection。
         /// </param>
         /// <param name="isDistinct">是否需要查询不同的结果。</param>
-        /// <param name="top">如果指定此属性，表示需要查询的条数。</param>
         /// <returns></returns>
         public IQuery Query(
             ISource from,
@@ -82,8 +81,7 @@ namespace Rafy.Domain.ORM.Query
             IConstraint where = null,
             List<IOrderBy> orderBy = null,
             bool isCounting = false,
-            bool isDistinct = false,
-            int? top = null
+            bool isDistinct = false
             )
         {
             if (from == null) throw new ArgumentNullException("from");
@@ -92,7 +90,6 @@ namespace Rafy.Domain.ORM.Query
             IQuery query = tableQuery;
             query.IsCounting = isCounting;
             query.IsDistinct = isDistinct;
-            query.Top = top;
             query.Selection = selection;
             query.From = from;
             query.Where = where;
@@ -126,6 +123,20 @@ namespace Rafy.Domain.ORM.Query
         public IArray Array(IEnumerable<IQueryNode> nodes)
         {
             IArray array = new ArrayNode();
+
+            array.Items = new List<IQueryNode>(nodes);
+
+            return array;
+        }
+
+        /// <summary>
+        /// 构造一个数组节点。
+        /// </summary>
+        /// <param name="nodes">所有数组中的项。</param>
+        /// <returns></returns>
+        internal IArray AutoSelectionColumns(IEnumerable<IQueryNode> nodes)
+        {
+            IArray array = new AutoSelectionColumns();
 
             array.Items = new List<IQueryNode>(nodes);
 
@@ -580,9 +591,9 @@ namespace Rafy.Domain.ORM.Query
             return res;
         }
 
-        internal void Generate(SqlGenerator generator, IQuery query)
+        internal void Generate(SqlGenerator generator, IQuery query, PagingInfo pi = null)
         {
-            generator.Generate(query as TableQuery);
+            generator.Generate(query as TableQuery, pi);
         }
     }
 }

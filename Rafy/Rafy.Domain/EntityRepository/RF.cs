@@ -21,12 +21,12 @@ using Rafy.Domain.ORM;
 namespace Rafy.Domain
 {
     /// <summary>
-    /// Repository Factory的API门户
+    /// 仓库工厂 API（快捷方式：RF 类型）
     /// 
     /// 封装了一些静态代理方法的实体分为代理类。
     /// 主要是方便上层的调用。
     /// </summary>
-    public static class RF
+    public abstract class RepositoryFactory
     {
         /// <summary>
         /// 用于查找指定实体的仓库。
@@ -169,6 +169,12 @@ namespace Rafy.Domain
 
         #endregion
 
+        #region 私有化构造器
+
+        internal RepositoryFactory() { }
+
+        #endregion
+
         //#region 聚合SQL
 
         //public static TEntity ReadDataDirectly<TEntity>(DataRow rowData)
@@ -203,18 +209,26 @@ namespace Rafy.Domain
     }
 
     /// <summary>
+    /// 仓库工厂 API
+    /// RepositoryFactory 的缩写（快捷写法）
+    /// </summary>
+    public abstract class RF : RepositoryFactory
+    {
+        internal RF() { }
+    }
+
+    /// <summary>
     /// 实体保存时的类型
     /// </summary>
     public enum EntitySaveType
     {
         /// <summary>
-        /// 差异保存
-        /// </summary>
-        DiffSave,
-
-        /// <summary>
         /// 一般保存
         /// </summary>
-        Normal
+        Normal,
+        /// <summary>
+        /// 差异保存
+        /// </summary>
+        DiffSave
     }
 }

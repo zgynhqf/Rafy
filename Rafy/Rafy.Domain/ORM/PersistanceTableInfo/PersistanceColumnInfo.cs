@@ -20,11 +20,34 @@ namespace Rafy.Domain.ORM
 {
     class PersistanceColumnInfo : IPersistanceColumnInfo
     {
+        private Type _dataType;
+        private bool _isBooleanType;
+        private bool _isStringType;
+
         public PersistanceTableInfo Table { get; set; }
 
         public string Name { get; set; }
 
-        public Type DataType { get; set; }
+        public Type DataType
+        {
+            get { return _dataType; }
+            set
+            {
+                _dataType = value;
+                _isBooleanType = _dataType == typeof(bool);
+                _isStringType = _dataType == typeof(string);
+            }
+        }
+
+        public bool IsBooleanType
+        {
+            get { return _isBooleanType; }
+        }
+
+        public bool IsStringType
+        {
+            get { return _isStringType; }
+        }
 
         public bool IsIdentity { get; set; }
 

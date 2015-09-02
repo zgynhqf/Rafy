@@ -39,7 +39,8 @@ namespace Rafy.Domain.ORM
         {
             RdbTable table = null;
 
-            switch (RdbDataProvider.Get(repo).DbSetting.ProviderName)
+            var provider = RdbDataProvider.Get(repo).DbSetting.ProviderName;
+            switch (provider)
             {
                 case DbSetting.Provider_SqlClient:
                     table = new SqlServerTable(repo);
@@ -47,10 +48,12 @@ namespace Rafy.Domain.ORM
                 case DbSetting.Provider_SqlCe:
                     table = new SqlCeTable(repo);
                     break;
-                case DbSetting.Provider_Oracle:
-                    table = new OracleTable(repo);
-                    break;
                 default:
+                    if (DbConnectionSchema.IsOracleProvider(provider))
+                    {
+                        table = new OracleTable(repo);
+                        break;
+                    }
                     throw new NotSupportedException();
             }
 

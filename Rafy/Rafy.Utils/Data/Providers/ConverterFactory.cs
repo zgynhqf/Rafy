@@ -27,10 +27,12 @@ namespace Rafy.Data.Providers
                 case DbSetting.Provider_SqlCe:
                     if (_sqlCe == null) { _sqlCe = DbProviderFactories.GetFactory(DbSetting.Provider_SqlCe); }
                     return _sqlCe;
-                case DbSetting.Provider_Oracle:
-                    if (_oracle == null) { _oracle = DbProviderFactories.GetFactory(DbSetting.Provider_Oracle); }
-                    return _oracle;
                 default:
+                    if (DbSetting.IsOracleProvider(provider))
+                    {
+                        if (_oracle == null) { _oracle = DbProviderFactories.GetFactory(provider); }
+                        return _oracle;
+                    }
                     return DbProviderFactories.GetFactory(provider);
                 //throw new NotSupportedException("This type of database is not supportted now:" + provider);
             }
@@ -42,20 +44,24 @@ namespace Rafy.Data.Providers
             //ISqlConverter Factory
             switch (provider)
             {
-                case DbSetting.Provider_Oracle:
-                    if (_oracleConverter == null) _oracleConverter = new OracleProvider();
-                    return _oracleConverter;
-
                 case DbSetting.Provider_Odbc:
                     if (_odbcConverter == null) _odbcConverter = new ODBCProvider();
                     return _odbcConverter;
 
                 case DbSetting.Provider_SqlClient:
                 case DbSetting.Provider_SqlCe:
-                default:
                     if (_sqlConverter == null) _sqlConverter = new SqlServerProvider();
                     return _sqlConverter;
-                //throw new NotSupportedException("This type of database is not supportted now:" + provider);
+
+                default:
+                    if (DbSetting.IsOracleProvider(provider))
+                    {
+                        if (_oracleConverter == null) _oracleConverter = new OracleProvider();
+                        return _oracleConverter;
+                    }
+
+                    if (_sqlConverter == null) _sqlConverter = new SqlServerProvider();
+                    return _sqlConverter;
             }
         }
 

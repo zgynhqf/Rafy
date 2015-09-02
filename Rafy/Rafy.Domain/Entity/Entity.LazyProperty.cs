@@ -357,7 +357,7 @@ namespace Rafy.Domain
             {
                 throw new InvalidOperationException(string.Format("{0} 是列表属性，不能使用 SetProperty 方法直接设置。请使用 GetLazyList 方法获取，或使用 LoadProperty 方法进行加载。", property));
             }
-            else if (property == IdProperty)
+            else if (property == IdProperty || property == TreePIdProperty && value != null)
             {
                 //由于 Id 属性的托管属性类型是 object，这里需要强制为具体的主键类型。
                 value = TypeHelper.CoerceValue(this.KeyProvider.KeyType, value);

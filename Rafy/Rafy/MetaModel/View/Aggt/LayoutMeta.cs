@@ -30,7 +30,7 @@ namespace Rafy.MetaModel.View
         /// <param name="layoutControl"> 该类型需要实现 ILayoutControl 接口 </param>
         public LayoutMeta(Type layoutControl)
         {
-            if (!RafyEnvironment.Location.IsWebUI)
+            if (RafyEnvironment.Location.IsWPFUI)
             {
                 this.Class = layoutControl.AssemblyQualifiedName;
             }

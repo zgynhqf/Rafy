@@ -23,10 +23,8 @@ namespace Rafy.Domain.ORM.SqlTree
     /// <summary>
     /// 表示一个 Sql 查询语句。
     /// </summary>
-    class SqlSelect : SqlNode
+    class SqlSelect : SqlNode, ISqlSelect
     {
-        private IList _orderBy;
-
         public override SqlNodeType NodeType
         {
             get { return SqlNodeType.SqlSelect; }
@@ -45,46 +43,30 @@ namespace Rafy.Domain.ORM.SqlTree
         public bool IsDistinct { get; set; }
 
         /// <summary>
-        /// 如果指定此属性，表示需要查询的条数。
-        /// </summary>
-        public int? Top { get; set; }
-
-        /// <summary>
         /// 要查询的内容。
         /// 如果本属性为空，表示要查询所有列。
         /// </summary>
-        public SqlNode Selection { get; set; }
+        public ISqlNode Selection { get; set; }
 
         /// <summary>
         /// 要查询的数据源。
         /// </summary>
-        public SqlSource From { get; set; }
+        public ISqlSource From { get; set; }
 
         /// <summary>
         /// 查询的过滤条件。
         /// </summary>
-        public SqlConstraint Where { get; set; }
+        public ISqlConstraint Where { get; set; }
 
         /// <summary>
         /// 查询的排序规则。
         /// 可以指定多个排序条件，其中每一项都必须是一个 SqlOrderBy 对象。
         /// </summary>
-        public IList OrderBy
-        {
-            get
-            {
-                if (_orderBy == null)
-                {
-                    _orderBy = new ArrayList();
-                }
-                return _orderBy;
-            }
-            internal set { _orderBy = value; }
-        }
+        public SqlOrderByList OrderBy { get; set; }
 
         internal bool HasOrdered()
         {
-            return _orderBy != null && _orderBy.Count > 0;
+            return OrderBy != null && OrderBy.Count > 0;
         }
     }
 }

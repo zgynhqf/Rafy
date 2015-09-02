@@ -207,7 +207,7 @@ namespace Rafy.ManagedProperty
             {
                 if (!this._isRegisteringExtension)
                 {
-                    throw new InvalidProgramException("在注册所有扩展属性前，不能使用 RegisterProperty 方法注册任何其它属性。");
+                    throw new InvalidProgramException("在注册所有扩展属性前，不能使用 RegisterProperty 方法注册任何其它属性。(请查看代码是否在托管属性初始化完成之前，就已经开始使用托管属性了。)");
                 }
             }
 

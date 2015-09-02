@@ -41,7 +41,7 @@ namespace Rafy.Data
     /// <createDate>2008-7-6, 20:19:08</createDate>
     /// <modify>2008-7-22，add ConvertParamaters method，and change the interface，use a common formatted sql to search database</modify>
     /// <modify>2008-8-7, If any one of the parameters is null, it is converted to DBNull.Value.</modify>
-    public class DbAccesser : IDisposable, IDbAccesser, IRawDbAccesser, IDbParameterFactory
+    public class DbAccesser : IDisposable, IDbAccesser, IRawDbAccesser, IDbParameterFactory, IDbCommandFactory
     {
         #region fields
 
@@ -174,6 +174,24 @@ namespace Rafy.Data
             get
             {
                 return this._connection;
+            }
+        }
+
+        /// <summary>
+        /// current avaiable transaction.
+        /// this transaction is retrieved from <see cref="LocalTransactionBlock"/> class, and it is created by current connection.
+        /// </summary>
+        public IDbTransaction Transaction
+        {
+            get
+            {
+                var tran = LocalTransactionBlock.GetCurrentTransaction(_connectionSchema.Database);
+                if (tran != null && tran.Connection == _connection)
+                {
+                    return tran;
+                }
+
+                return null;
             }
         }
 
@@ -452,6 +470,11 @@ namespace Rafy.Data
 
         #region Do Query/Execute
 
+        public IDbCommand CreateCommand(string sql, CommandType type, params IDbDataParameter[] parameters)
+        {
+            return this.PrepareCommand(sql, type, parameters);
+        }
+
         /// <summary>
         /// Prepare a command for communicate with database.
         /// </summary>
@@ -462,24 +485,21 @@ namespace Rafy.Data
         protected virtual IDbCommand PrepareCommand(string sql, CommandType type, IDbDataParameter[] parameters)
         {
             IDbCommand command = _factory.CreateCommand();
-            command.Connection = this._connection;
+            command.Connection = _connection;
             command.CommandText = sql;
             command.CommandType = type;
-            var pas = command.Parameters;
-            foreach (var p in parameters) { pas.Add(p); }
 
-            var tran = LocalTransactionBlock.GetCurrentTransaction(this._connectionSchema.Database);
-            if (tran != null && tran.Connection == this._connection)
+            var tran = this.Transaction;
+            if (tran != null) command.Transaction = tran;
+
+            var pas = command.Parameters;
+            for (int i = 0, c = parameters.Length; i < c; i++)
             {
-                command.Transaction = tran;
+                var p = parameters[i];
+                pas.Add(p);
             }
 
-            //if (this._transaction != null)
-            //{
-            //    command.Transaction = this._transaction;
-            //}
-
-            Logger.LogDbAccessed(sql, parameters, this._connectionSchema);
+            Logger.LogDbAccessed(sql, parameters, _connectionSchema);
 
             return command;
         }
@@ -740,6 +760,14 @@ namespace Rafy.Data
         /// A factory to create parameters.
         /// </summary>
         IDbParameterFactory IRawDbAccesser.ParameterFactory
+        {
+            get { return this; }
+        }
+
+        /// <summary>
+        /// A factory to create IDbCommand.
+        /// </summary>
+        IDbCommandFactory IRawDbAccesser.CommandFactory
         {
             get { return this; }
         }

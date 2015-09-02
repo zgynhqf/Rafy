@@ -12,7 +12,7 @@ using Rafy.RBAC;
 
 namespace ConsoleHost
 {
-    class Program : AppImplementationBase
+    class Program
     {
         static void Main(string[] args)
         {

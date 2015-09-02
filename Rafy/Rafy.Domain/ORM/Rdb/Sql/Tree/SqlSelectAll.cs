@@ -23,6 +23,8 @@ namespace Rafy.Domain.ORM.SqlTree
     /// </summary>
     class SqlSelectAll : SqlNode
     {
+        public static readonly SqlSelectAll Default = new SqlSelectAll();
+
         public override SqlNodeType NodeType
         {
             get { return SqlNodeType.SqlSelectAll; }

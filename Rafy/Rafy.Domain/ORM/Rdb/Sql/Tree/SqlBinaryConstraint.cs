@@ -23,6 +23,8 @@ namespace Rafy.Domain.ORM.SqlTree
     /// </summary>
     class SqlBinaryConstraint : SqlConstraint
     {
+        private ISqlConstraint _left,_right;
+
         public override SqlNodeType NodeType
         {
             get { return SqlNodeType.SqlBinaryConstraint; }
@@ -31,7 +33,15 @@ namespace Rafy.Domain.ORM.SqlTree
         /// <summary>
         /// 二位运算的左操作节点。
         /// </summary>
-        public SqlConstraint Left { get; set; }
+        public ISqlConstraint Left
+        {
+            get { return _left; }
+            set
+            {
+                if (value == null) throw new ArgumentNullException("value");
+                _left = value;
+            }
+        }
 
         /// <summary>
         /// 二位运算类型
@@ -41,7 +51,15 @@ namespace Rafy.Domain.ORM.SqlTree
         /// <summary>
         /// 二位运算的右操作节点。
         /// </summary>
-        public SqlConstraint Right { get; set; }
+        public ISqlConstraint Right
+        {
+            get { return _right; }
+            set
+            {
+                if (value == null) throw new ArgumentNullException("value");
+                _right = value;
+            }
+        }
     }
 
     /// <summary>

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rafy;
 using Rafy.Data;
+using Rafy.DbMigration;
 using Rafy.Domain;
 using Rafy.Domain.ORM;
 using Rafy.Domain.ORM.DbMigration;
@@ -514,7 +515,7 @@ namespace RafyUnitTest
                 //查询的数据访问次数测试。
                 var oldCount = Logger.DbAccessedCount;
                 var eagerLoad = new EagerLoadOptions().LoadWithTreeChildren().LoadWith(Folder.FileListProperty);
-                var all = repo.GetAll(null, eagerLoad);
+                var all = repo.GetAll(PagingInfo.Empty, eagerLoad);
                 var newCount = Logger.DbAccessedCount;
                 Assert.IsTrue(newCount - oldCount == 2, "应该只进行了 2 次数据库查询。查询时直接查出整个树，此时 LoadTreeChildren 不会再有数据加载。");
 
@@ -762,6 +763,7 @@ namespace RafyUnitTest
         /// <summary>
         /// 如果数据过多时，也必须能够执行。
         /// System.Data.SqlClient.SqlException: The incoming request has too many parameters. The server supports a maximum of 2100 parameters. Reduce the number of parameters and resend the request.
+        /// ORACLE: In 语句中最多只能 1000 项。
         /// </summary>
         [TestMethod]
         public void ORM_Query_GetByIdList_5000()
@@ -769,13 +771,25 @@ namespace RafyUnitTest
             var repo = RF.Concrete<BookRepository>();
             using (RF.TransactionScope(repo))
             {
-                var idList = new object[5000];
-                for (int i = 1; i <= 5000; i++)
+                var books = new BookList();
+                for (int i = 0; i < 6000; i++)
                 {
-                    idList[i - 1] = i;
+                    var book = new Book();
+                    books.Add(book);
                 }
 
-                repo.GetByIdList(idList);
+                repo.CreateImporter().Save(books);
+
+                var idList = new object[5500];
+                for (int i = 0; i < 5500; i++)
+                {
+                    idList[i] = books[i].Id;
+                }
+
+                var bookList = repo.GetByIdList(idList);
+                Assert.AreEqual(bookList.Count, idList.Length);
+                Assert.AreEqual(books[0].Id, bookList[0].Id);
+                Assert.AreEqual(books[bookList.Count - 1].Id, bookList[bookList.Count - 1].Id);
             }
         }
 
@@ -3077,7 +3091,7 @@ ORDER BY Roles.Id DESC, Roles.name DESC";
         /// 生成可用于 SqlServer 数据库的一个简单的条件查询语句。
         /// </summary>
         [TestMethod]
-        public void ORM_SqlTree_Select_SqlServer()
+        public void ORM_SqlTree_Select()
         {
             var select = new SqlSelect();
             var table = new SqlTable { TableName = "Table1" };
@@ -3111,7 +3125,7 @@ WHERE [Table1].[Column2] = {0}");
         /// 生成可用于 Oracle 数据库的一个简单的条件查询语句。
         /// </summary>
         [TestMethod]
-        public void ORM_SqlTree_Select_Oracle()
+        public void ORM_SqlTree_Select_ORA()
         {
             var select = new SqlSelect();
             var table = new SqlTable { TableName = "Table1" };
@@ -3155,6 +3169,20 @@ FROM Table1");
         }
 
         [TestMethod]
+        public void ORM_SqlTree_Select_Simplest_ORA()
+        {
+            var select = new SqlSelect();
+            select.Selection = new SqlSelectAll();
+            select.From = new SqlTable { TableName = "Table1" };
+
+            var generator = new OracleSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+            Assert.IsTrue(sql.ToString() == @"SELECT *
+FROM TABLE1");
+        }
+
+        [TestMethod]
         public void ORM_SqlTree_Select_Star()
         {
             var select = new SqlSelect();
@@ -3169,18 +3197,80 @@ FROM Table1");
         }
 
         [TestMethod]
-        public void ORM_SqlTree_Select_Top()
+        public void ORM_SqlTree_Select_Star_ORA()
         {
             var select = new SqlSelect();
-            select.Top = 10;
             select.Selection = new SqlSelectAll();
             select.From = new SqlTable { TableName = "Table1" };
 
-            var generator = new SqlServerSqlGenerator { AutoQuota = false };
+            var generator = new OracleSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
+            Assert.IsTrue(sql.ToString() == @"SELECT *
+FROM TABLE1");
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_Top()
+        {
+            var select = new SqlSelect();
+            select.Selection = new SqlSelectAll();
+            var t = new SqlTable { TableName = "Table1" }; ;
+            select.From = t;
+            select.OrderBy = new SqlOrderByList
+            {
+                new SqlOrderBy 
+                {
+                    Column = new SqlColumn
+                    {
+                        Table = t,
+                        ColumnName = "Id",
+                    }
+                }
+            };
+
+            var generator = new SqlServerSqlGenerator { AutoQuota = false };
+            generator.Generate(select, new PagingInfo(1, 10));
+            var sql = generator.Sql;
             Assert.IsTrue(sql.ToString() == @"SELECT TOP 10 *
-FROM Table1");
+FROM Table1
+ORDER BY Table1.Id ASC");
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_Top_ORA()
+        {
+            var select = new SqlSelect();
+            select.Selection = new SqlSelectAll();
+            var t = new SqlTable { TableName = "Table1" }; ;
+            select.From = t;
+            select.OrderBy = new SqlOrderByList
+            {
+                new SqlOrderBy 
+                {
+                    Column = new SqlColumn
+                    {
+                        Table = t,
+                        ColumnName = "Id",
+                    }
+                }
+            };
+
+            var generator = new OracleSqlGenerator { AutoQuota = false };
+            generator.Generate(select, new PagingInfo(1, 10));
+            var sql = generator.Sql;
+            Assert.IsTrue(sql.ToString() == @"SELECT * FROM
+(
+    SELECT T.*, ROWNUM RN
+    FROM 
+    (
+SELECT *
+FROM TABLE1
+ORDER BY TABLE1.ID ASC
+    ) T
+    WHERE ROWNUM <= 10
+)
+WHERE RN >= 1");
         }
 
         [TestMethod]
@@ -3198,6 +3288,20 @@ FROM Table1");
         }
 
         [TestMethod]
+        public void ORM_SqlTree_Select_Distinct_ORA()
+        {
+            var select = new SqlSelect();
+            select.IsDistinct = true;
+            select.Selection = new SqlSelectAll();
+            select.From = new SqlTable { TableName = "Table1" };
+
+            var generator = new OracleSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            Assert.IsTrue(generator.Sql.ToString() == @"SELECT DISTINCT *
+FROM TABLE1");
+        }
+
+        [TestMethod]
         public void ORM_SqlTree_Select_Count()
         {
             var select = new SqlSelect();
@@ -3208,6 +3312,19 @@ FROM Table1");
             generator.Generate(select);
             Assert.IsTrue(generator.Sql.ToString() == @"SELECT COUNT(0)
 FROM Table1");
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_Count_ORA()
+        {
+            var select = new SqlSelect();
+            select.IsCounting = true;
+            select.From = new SqlTable { TableName = "Table1" };
+
+            var generator = new OracleSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            Assert.IsTrue(generator.Sql.ToString() == @"SELECT COUNT(0)
+FROM TABLE1");
         }
 
         [TestMethod]
@@ -3235,6 +3352,35 @@ FROM Table1");
             Assert.IsTrue(sql.ToString() == @"SELECT Table1.Column1, Table1.Column2
 FROM Table1
 WHERE Table1.Column2 = {0}");
+            Assert.IsTrue(sql.Parameters.Count == 1);
+            Assert.IsTrue(sql.Parameters[0].ToString() == "Column2Value");
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_WithoutQuota_ORA()
+        {
+            var select = new SqlSelect();
+            var table = new SqlTable { TableName = "Table1" };
+            var column1 = new SqlColumn { Table = table, ColumnName = "Column1" };
+            var column2 = new SqlColumn { Table = table, ColumnName = "Column2" };
+            select.Selection = new SqlArray
+            {
+                Items = { column1, column2 }
+            };
+            select.From = table;
+            select.Where = new SqlColumnConstraint
+            {
+                Column = column2,
+                Operator = SqlColumnConstraintOperator.Equal,
+                Value = "Column2Value"
+            };
+
+            var generator = new OracleSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+            Assert.IsTrue(sql.ToString() == @"SELECT TABLE1.COLUMN1, TABLE1.COLUMN2
+FROM TABLE1
+WHERE TABLE1.COLUMN2 = {0}");
             Assert.IsTrue(sql.Parameters.Count == 1);
             Assert.IsTrue(sql.Parameters[0].ToString() == "Column2Value");
         }
@@ -3297,6 +3443,63 @@ WHERE Table1.Column1 = {0} OR (Table1.Column2 = {1} OR Table1.Column2 = {2}) AND
         }
 
         [TestMethod]
+        public void ORM_SqlTree_Select_Where_AndOr_ORA()
+        {
+            var select = new SqlSelect();
+            var table = new SqlTable { TableName = "Table1" };
+            select.Selection = new SqlSelectAll();
+            select.From = table;
+            select.Where = new SqlBinaryConstraint
+            {
+                Left = new SqlColumnConstraint
+                {
+                    Column = new SqlColumn { Table = table, ColumnName = "Column1" },
+                    Operator = SqlColumnConstraintOperator.Equal,
+                    Value = "A"
+                },
+                Opeartor = SqlBinaryConstraintType.Or,
+                Right = new SqlBinaryConstraint
+                {
+                    Left = new SqlBinaryConstraint
+                    {
+                        Left = new SqlColumnConstraint
+                        {
+                            Column = new SqlColumn { Table = table, ColumnName = "Column2" },
+                            Operator = SqlColumnConstraintOperator.Equal,
+                            Value = "A2"
+                        },
+                        Opeartor = SqlBinaryConstraintType.Or,
+                        Right = new SqlColumnConstraint
+                        {
+                            Column = new SqlColumn { Table = table, ColumnName = "Column2" },
+                            Operator = SqlColumnConstraintOperator.Equal,
+                            Value = "B2"
+                        }
+                    },
+                    Opeartor = SqlBinaryConstraintType.And,
+                    Right = new SqlColumnConstraint
+                    {
+                        Column = new SqlColumn { Table = table, ColumnName = "Column1" },
+                        Operator = SqlColumnConstraintOperator.Equal,
+                        Value = "B"
+                    }
+                }
+            };
+
+            var generator = new OracleSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+            Assert.IsTrue(sql.ToString() == @"SELECT *
+FROM TABLE1
+WHERE TABLE1.COLUMN1 = {0} OR (TABLE1.COLUMN2 = {1} OR TABLE1.COLUMN2 = {2}) AND TABLE1.COLUMN1 = {3}");
+            Assert.IsTrue(sql.Parameters.Count == 4);
+            Assert.IsTrue(sql.Parameters[0].ToString() == "A");
+            Assert.IsTrue(sql.Parameters[1].ToString() == "A2");
+            Assert.IsTrue(sql.Parameters[2].ToString() == "B2");
+            Assert.IsTrue(sql.Parameters[3].ToString() == "B");
+        }
+
+        [TestMethod]
         public void ORM_SqlTree_Select_Alias()
         {
             var select = new SqlSelect();
@@ -3326,6 +3529,35 @@ WHERE t1.Column2 = {0}");
         }
 
         [TestMethod]
+        public void ORM_SqlTree_Select_Alias_ORA()
+        {
+            var select = new SqlSelect();
+            var table = new SqlTable { TableName = "Table1", Alias = "t1" };
+            var column1 = new SqlColumn { Table = table, ColumnName = "Column1", Alias = "c1" };
+            var column2 = new SqlColumn { Table = table, ColumnName = "Column2", Alias = "c2" };
+            select.Selection = new SqlArray
+            {
+                Items = { column1, column2 }
+            };
+            select.From = table;
+            select.Where = new SqlColumnConstraint
+            {
+                Column = column2,
+                Operator = SqlColumnConstraintOperator.Equal,
+                Value = "Column2Value"
+            };
+
+            var generator = new OracleSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+            Assert.IsTrue(sql.ToString() == @"SELECT T1.COLUMN1 C1, T1.COLUMN2 C2
+FROM TABLE1 T1
+WHERE T1.COLUMN2 = {0}");
+            Assert.IsTrue(sql.Parameters.Count == 1);
+            Assert.IsTrue(sql.Parameters[0].ToString() == "Column2Value");
+        }
+
+        [TestMethod]
         public void ORM_SqlTree_Select_OrderBy()
         {
             var select = new SqlSelect();
@@ -3343,11 +3575,14 @@ WHERE t1.Column2 = {0}");
                 Operator = SqlColumnConstraintOperator.Equal,
                 Value = "Column2Value"
             };
-            select.OrderBy.Add(new SqlOrderBy
+            select.OrderBy = new SqlOrderByList
             {
-                Column = column2,
-                Direction = OrderDirection.Descending
-            });
+                new SqlOrderBy
+                {
+                    Column = column2,
+                    Direction = OrderDirection.Descending
+                }
+            };
 
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             generator.Generate(select);
@@ -3356,6 +3591,44 @@ WHERE t1.Column2 = {0}");
 FROM Table1 AS t1
 WHERE t1.Column2 = {0}
 ORDER BY t1.Column2 DESC");
+            Assert.IsTrue(sql.Parameters.Count == 1);
+            Assert.IsTrue(sql.Parameters[0].ToString() == "Column2Value");
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_OrderBy_ORA()
+        {
+            var select = new SqlSelect();
+            var table = new SqlTable { TableName = "Table1", Alias = "t1" };
+            var column1 = new SqlColumn { Table = table, ColumnName = "Column1", Alias = "c1" };
+            var column2 = new SqlColumn { Table = table, ColumnName = "Column2", Alias = "c2" };
+            select.Selection = new SqlArray
+            {
+                Items = { column1, column2 }
+            };
+            select.From = table;
+            select.Where = new SqlColumnConstraint
+            {
+                Column = column2,
+                Operator = SqlColumnConstraintOperator.Equal,
+                Value = "Column2Value"
+            };
+            select.OrderBy = new SqlOrderByList
+            {
+                new SqlOrderBy
+                {
+                    Column = column2,
+                    Direction = OrderDirection.Descending
+                }
+            };
+
+            var generator = new OracleSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+            Assert.IsTrue(sql.ToString() == @"SELECT T1.COLUMN1 C1, T1.COLUMN2 C2
+FROM TABLE1 T1
+WHERE T1.COLUMN2 = {0}
+ORDER BY T1.COLUMN2 DESC");
             Assert.IsTrue(sql.Parameters.Count == 1);
             Assert.IsTrue(sql.Parameters[0].ToString() == "Column2Value");
         }
@@ -3378,16 +3651,19 @@ ORDER BY t1.Column2 DESC");
                 Operator = SqlColumnConstraintOperator.Equal,
                 Value = "Column2Value"
             };
-            select.OrderBy.Add(new SqlOrderBy
+            select.OrderBy = new SqlOrderByList
             {
-                Column = column1,
-                Direction = OrderDirection.Ascending
-            });
-            select.OrderBy.Add(new SqlOrderBy
-            {
-                Column = column2,
-                Direction = OrderDirection.Descending
-            });
+                new SqlOrderBy
+                {
+                    Column = column1,
+                    Direction = OrderDirection.Ascending
+                },
+                new SqlOrderBy
+                {
+                    Column = column2,
+                    Direction = OrderDirection.Descending
+                }
+            };
 
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             generator.Generate(select);
@@ -3396,6 +3672,49 @@ ORDER BY t1.Column2 DESC");
 FROM Table1 AS t1
 WHERE t1.Column2 = {0}
 ORDER BY t1.Column1 ASC, t1.Column2 DESC");
+            Assert.IsTrue(sql.Parameters.Count == 1);
+            Assert.IsTrue(sql.Parameters[0].ToString() == "Column2Value");
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_OrderBy2_ORA()
+        {
+            var select = new SqlSelect();
+            var table = new SqlTable { TableName = "Table1", Alias = "t1" };
+            var column1 = new SqlColumn { Table = table, ColumnName = "Column1", Alias = "c1" };
+            var column2 = new SqlColumn { Table = table, ColumnName = "Column2", Alias = "c2" };
+            select.Selection = new SqlArray
+            {
+                Items = { column1, column2 }
+            };
+            select.From = table;
+            select.Where = new SqlColumnConstraint
+            {
+                Column = column2,
+                Operator = SqlColumnConstraintOperator.Equal,
+                Value = "Column2Value"
+            };
+            select.OrderBy = new SqlOrderByList
+            {
+                new SqlOrderBy
+                {
+                    Column = column1,
+                    Direction = OrderDirection.Ascending
+                },
+                new SqlOrderBy
+                {
+                    Column = column2,
+                    Direction = OrderDirection.Descending
+                }
+            };
+
+            var generator = new OracleSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+            Assert.IsTrue(sql.ToString() == @"SELECT T1.COLUMN1 C1, T1.COLUMN2 C2
+FROM TABLE1 T1
+WHERE T1.COLUMN2 = {0}
+ORDER BY T1.COLUMN1 ASC, T1.COLUMN2 DESC");
             Assert.IsTrue(sql.Parameters.Count == 1);
             Assert.IsTrue(sql.Parameters[0].ToString() == "Column2Value");
         }
@@ -3439,6 +3758,49 @@ ORDER BY t1.Column1 ASC, t1.Column2 DESC");
 FROM Article AS a
     INNER JOIN User AS u ON a.UserId = u.Id
 WHERE u.UserName = {0}");
+            Assert.IsTrue(sql.Parameters.Count == 1);
+            Assert.IsTrue(sql.Parameters[0].ToString() == "HuQingfang");
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_InnerJoin_ORA()
+        {
+            var select = new SqlSelect();
+            var table = new SqlTable { TableName = "Article", Alias = "a" };
+            var userTable = new SqlTable { TableName = "User", Alias = "u" };
+            select.Selection = new SqlArray
+            {
+                Items =
+                {
+                    new SqlSelectAll{ Table = table },
+                    new SqlSelectAll{ Table = userTable },
+                }
+            };
+            select.From = new SqlJoin
+            {
+                Left = table,
+                JoinType = SqlJoinType.Inner,
+                Right = userTable,
+                Condition = new SqlColumnsComparisonConstraint
+                {
+                    LeftColumn = new SqlColumn { Table = table, ColumnName = "UserId" },
+                    RightColumn = new SqlColumn { Table = userTable, ColumnName = "Id" },
+                }
+            };
+            select.Where = new SqlColumnConstraint
+            {
+                Column = new SqlColumn { Table = userTable, ColumnName = "UserName" },
+                Operator = SqlColumnConstraintOperator.Equal,
+                Value = "HuQingfang"
+            };
+
+            var generator = new OracleSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+            Assert.IsTrue(sql.ToString() == @"SELECT A.*, U.*
+FROM ARTICLE A
+    INNER JOIN USER U ON A.USERID = U.ID
+WHERE U.USERNAME = {0}");
             Assert.IsTrue(sql.Parameters.Count == 1);
             Assert.IsTrue(sql.Parameters[0].ToString() == "HuQingfang");
         }
@@ -3492,6 +3854,54 @@ WHERE u2.UserName = {0}");
         }
 
         [TestMethod]
+        public void ORM_SqlTree_Select_InnerJoin_TwoToSingleTable_ORA()
+        {
+            var select = new SqlSelect();
+            var table = new SqlTable { TableName = "Article", Alias = "a" };
+            var userTable1 = new SqlTable { TableName = "User", Alias = "u1" };
+            var userTable2 = new SqlTable { TableName = "User", Alias = "u2" };
+            select.Selection = new SqlSelectAll { Table = table };
+            select.From = new SqlJoin
+            {
+                Left = new SqlJoin
+                {
+                    Left = table,
+                    JoinType = SqlJoinType.Inner,
+                    Right = userTable1,
+                    Condition = new SqlColumnsComparisonConstraint
+                    {
+                        LeftColumn = new SqlColumn { Table = table, ColumnName = "UserId" },
+                        RightColumn = new SqlColumn { Table = userTable1, ColumnName = "Id" },
+                    }
+                },
+                JoinType = SqlJoinType.Inner,
+                Right = userTable2,
+                Condition = new SqlColumnsComparisonConstraint
+                {
+                    LeftColumn = new SqlColumn { Table = table, ColumnName = "AdministratorId" },
+                    RightColumn = new SqlColumn { Table = userTable2, ColumnName = "Id" },
+                }
+            };
+            select.Where = new SqlColumnConstraint
+            {
+                Column = new SqlColumn { Table = userTable2, ColumnName = "UserName" },
+                Operator = SqlColumnConstraintOperator.Equal,
+                Value = "HuQingfang"
+            };
+
+            var generator = new OracleSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+            Assert.IsTrue(sql.ToString() == @"SELECT A.*
+FROM ARTICLE A
+    INNER JOIN USER U1 ON A.USERID = U1.ID
+    INNER JOIN USER U2 ON A.ADMINISTRATORID = U2.ID
+WHERE U2.USERNAME = {0}");
+            Assert.IsTrue(sql.Parameters.Count == 1);
+            Assert.IsTrue(sql.Parameters[0].ToString() == "HuQingfang");
+        }
+
+        [TestMethod]
         public void ORM_SqlTree_Select_OuterJoin()
         {
             var select = new SqlSelect();
@@ -3523,6 +3933,42 @@ WHERE u2.UserName = {0}");
 FROM Article AS a
     LEFT OUTER JOIN User AS u ON a.UserId = u.Id
 WHERE u.UserName = {0}");
+            Assert.IsTrue(sql.Parameters.Count == 1);
+            Assert.IsTrue(sql.Parameters[0].ToString() == "HuQingfang");
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_OuterJoin_ORA()
+        {
+            var select = new SqlSelect();
+            var table = new SqlTable { TableName = "Article", Alias = "a" };
+            var userTable = new SqlTable { TableName = "User", Alias = "u" };
+            select.Selection = new SqlSelectAll { Table = table };
+            select.From = new SqlJoin
+            {
+                Left = table,
+                JoinType = SqlJoinType.LeftOuter,
+                Right = userTable,
+                Condition = new SqlColumnsComparisonConstraint
+                {
+                    LeftColumn = new SqlColumn { Table = table, ColumnName = "UserId" },
+                    RightColumn = new SqlColumn { Table = userTable, ColumnName = "Id" },
+                }
+            };
+            select.Where = new SqlColumnConstraint
+            {
+                Column = new SqlColumn { Table = userTable, ColumnName = "UserName" },
+                Operator = SqlColumnConstraintOperator.Equal,
+                Value = "HuQingfang"
+            };
+
+            var generator = new OracleSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+            Assert.IsTrue(sql.ToString() == @"SELECT A.*
+FROM ARTICLE A
+    LEFT OUTER JOIN USER U ON A.USERID = U.ID
+WHERE U.USERNAME = {0}");
             Assert.IsTrue(sql.Parameters.Count == 1);
             Assert.IsTrue(sql.Parameters[0].ToString() == "HuQingfang");
         }
@@ -3563,6 +4009,47 @@ WHERE User.Id IN (
     SELECT Article.UserId
     FROM Article
     WHERE Article.CreateDate = {0}
+)");
+            Assert.IsTrue(sql.Parameters.Count == 1);
+            Assert.IsTrue(sql.Parameters[0].Equals(DateTime.Today));
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_InSubSelect_ORA()
+        {
+            var select = new SqlSelect();
+            var articleTable = new SqlTable { TableName = "Article" };
+            var subSelect = new SqlSelect
+            {
+                Selection = new SqlColumn { Table = articleTable, ColumnName = "UserId" },
+                From = articleTable,
+                Where = new SqlColumnConstraint
+                {
+                    Column = new SqlColumn { Table = articleTable, ColumnName = "CreateDate" },
+                    Operator = SqlColumnConstraintOperator.Equal,
+                    Value = DateTime.Today
+                }
+            };
+
+            var userTable = new SqlTable { TableName = "User" };
+            select.Selection = new SqlSelectAll();
+            select.From = userTable;
+            select.Where = new SqlColumnConstraint
+            {
+                Column = new SqlColumn { Table = userTable, ColumnName = "Id" },
+                Operator = SqlColumnConstraintOperator.In,
+                Value = subSelect
+            };
+
+            var generator = new OracleSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+            Assert.IsTrue(sql.ToString() == @"SELECT *
+FROM USER
+WHERE USER.ID IN (
+    SELECT ARTICLE.USERID
+    FROM ARTICLE
+    WHERE ARTICLE.CREATEDATE = {0}
 )");
             Assert.IsTrue(sql.Parameters.Count == 1);
             Assert.IsTrue(sql.Parameters[0].Equals(DateTime.Today));
@@ -3622,6 +4109,59 @@ WHERE User.Id IN (
         }
 
         [TestMethod]
+        public void ORM_SqlTree_Select_InSubSelect_Join_ORA()
+        {
+            var select = new SqlSelect();
+            var adminTable = new SqlTable { TableName = "User", Alias = "Administrator" };
+            var articleTable = new SqlTable { TableName = "Article" };
+            var subSelect = new SqlSelect
+            {
+                Selection = new SqlColumn { Table = articleTable, ColumnName = "UserId" },
+                From = new SqlJoin
+                {
+                    Left = articleTable,
+                    JoinType = SqlJoinType.Inner,
+                    Right = adminTable,
+                    Condition = new SqlColumnsComparisonConstraint
+                    {
+                        LeftColumn = new SqlColumn { Table = articleTable, ColumnName = "AdministratorId" },
+                        RightColumn = new SqlColumn { Table = adminTable, ColumnName = "Id" },
+                    }
+                },
+                Where = new SqlColumnConstraint
+                {
+                    Column = new SqlColumn { Table = adminTable, ColumnName = "Id" },
+                    Operator = SqlColumnConstraintOperator.Equal,
+                    Value = 1
+                }
+            };
+
+            var userTable = new SqlTable { TableName = "User" };
+            select.Selection = new SqlSelectAll();
+            select.From = userTable;
+            select.Where = new SqlColumnConstraint
+            {
+                Column = new SqlColumn { Table = userTable, ColumnName = "Id" },
+                Operator = SqlColumnConstraintOperator.In,
+                Value = subSelect
+            };
+
+            var generator = new OracleSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+            Assert.IsTrue(sql.ToString() == @"SELECT *
+FROM USER
+WHERE USER.ID IN (
+    SELECT ARTICLE.USERID
+    FROM ARTICLE
+        INNER JOIN USER ADMINISTRATOR ON ARTICLE.ADMINISTRATORID = ADMINISTRATOR.ID
+    WHERE ADMINISTRATOR.ID = {0}
+)");
+            Assert.IsTrue(sql.Parameters.Count == 1);
+            Assert.IsTrue(sql.Parameters[0].Equals(1));
+        }
+
+        [TestMethod]
         public void ORM_SqlTree_Select_ChildrenExists()
         {
             var articleTable = new SqlTable { TableName = "Article" };
@@ -3662,6 +4202,50 @@ WHERE u.Id > {0} AND EXISTS (
     SELECT 0
     FROM Article
     WHERE Article.UserId = u.Id
+)");
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_ChildrenExists_ORA()
+        {
+            var articleTable = new SqlTable { TableName = "Article" };
+            var userTable = new SqlTable { TableName = "User", Alias = "u" };
+            var select = new SqlSelect();
+            select.Selection = new SqlSelectAll();
+            select.From = userTable;
+            select.Where = new SqlBinaryConstraint
+            {
+                Left = new SqlColumnConstraint
+                {
+                    Column = new SqlColumn { Table = userTable, ColumnName = "Id" },
+                    Operator = SqlColumnConstraintOperator.Greater,
+                    Value = 0
+                },
+                Opeartor = SqlBinaryConstraintType.And,
+                Right = new SqlExistsConstraint
+                {
+                    Select = new SqlSelect
+                    {
+                        Selection = new SqlLiteral { FormattedSql = "0" },
+                        From = articleTable,
+                        Where = new SqlColumnsComparisonConstraint
+                        {
+                            LeftColumn = new SqlColumn { Table = articleTable, ColumnName = "UserId" },
+                            RightColumn = new SqlColumn { Table = userTable, ColumnName = "Id" }
+                        }
+                    }
+                }
+            };
+
+            var generator = new OracleSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+            Assert.IsTrue(sql.ToString() == @"SELECT *
+FROM USER U
+WHERE U.ID > {0} AND EXISTS (
+    SELECT 0
+    FROM ARTICLE
+    WHERE ARTICLE.USERID = U.ID
 )");
         }
 
@@ -3725,6 +4309,65 @@ WHERE u.Id > {0} AND NOT (EXISTS (
         }
 
         [TestMethod]
+        public void ORM_SqlTree_Select_ChildrenAll_ORA()
+        {
+            var articleTable = new SqlTable { TableName = "Article" };
+            var userTable = new SqlTable { TableName = "User", Alias = "u" };
+            var select = new SqlSelect
+            {
+                Selection = new SqlSelectAll(),
+                From = userTable,
+                Where = new SqlBinaryConstraint
+                {
+                    Left = new SqlColumnConstraint
+                    {
+                        Column = new SqlColumn { Table = userTable, ColumnName = "Id" },
+                        Operator = SqlColumnConstraintOperator.Greater,
+                        Value = 0
+                    },
+                    Opeartor = SqlBinaryConstraintType.And,
+                    Right = new SqlNotConstraint
+                    {
+                        Constraint = new SqlExistsConstraint
+                        {
+                            Select = new SqlSelect
+                            {
+                                Selection = new SqlLiteral { FormattedSql = "0" },
+                                From = articleTable,
+                                Where = new SqlBinaryConstraint
+                                {
+                                    Left = new SqlColumnsComparisonConstraint
+                                    {
+                                        LeftColumn = new SqlColumn { Table = articleTable, ColumnName = "UserId" },
+                                        RightColumn = new SqlColumn { Table = userTable, ColumnName = "Id" }
+                                    },
+                                    Opeartor = SqlBinaryConstraintType.And,
+                                    Right = new SqlColumnConstraint
+                                    {
+                                        Column = new SqlColumn { Table = articleTable, ColumnName = "Id" },
+                                        Operator = SqlColumnConstraintOperator.Greater,
+                                        Value = 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var generator = new OracleSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+            Assert.IsTrue(sql.ToString() == @"SELECT *
+FROM USER U
+WHERE U.ID > {0} AND NOT (EXISTS (
+    SELECT 0
+    FROM ARTICLE
+    WHERE ARTICLE.USERID = U.ID AND ARTICLE.ID > {1}
+))");
+        }
+
+        [TestMethod]
         public void ORM_SqlTree_Select_SelectFromSelectResult()
         {
             var userTable = new SqlTable { TableName = "User" };
@@ -3768,10 +4411,52 @@ WHERE T.Id < {1}");
         }
 
         [TestMethod]
+        public void ORM_SqlTree_Select_SelectFromSelectResult_ORA()
+        {
+            var userTable = new SqlTable { TableName = "User" };
+            var subSelectRef = new SqlSubSelect
+            {
+                Select = new SqlSelect
+                {
+                    Selection = new SqlSelectAll(),
+                    From = userTable,
+                    Where = new SqlColumnConstraint
+                    {
+                        Column = new SqlColumn { Table = userTable, ColumnName = "Id" },
+                        Operator = SqlColumnConstraintOperator.Greater,
+                        Value = 0
+                    }
+                },
+                Alias = "T"
+            };
+
+            var select = new SqlSelect();
+            select.Selection = new SqlSelectAll();
+            select.From = subSelectRef;
+            select.Where = new SqlColumnConstraint
+            {
+                Column = new SqlColumn { Table = subSelectRef, ColumnName = "Id" },
+                Operator = SqlColumnConstraintOperator.Less,
+                Value = 100
+            };
+
+            var generator = new OracleSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+
+            Assert.IsTrue(sql.ToString() == @"SELECT *
+FROM (
+    SELECT *
+    FROM USER
+    WHERE USER.ID > {0}
+) T
+WHERE T.ID < {1}");
+        }
+
+        [TestMethod]
         public void ORM_SqlTree_Select_Paging()
         {
             var table = new SqlTable { TableName = "ASN" };
-            var pk = new SqlColumn { Table = table, ColumnName = "Id" };
 
             var select = new SqlSelect
             {
@@ -3779,16 +4464,19 @@ WHERE T.Id < {1}");
                 From = table,
                 Where = new SqlColumnConstraint
                 {
-                    Column = pk,
+                    Column = new SqlColumn { Table = table, ColumnName = Entity.IdProperty.Name },
                     Operator = SqlColumnConstraintOperator.Greater,
                     Value = 0
                 },
-                OrderBy = new List<SqlOrderBy>
+                OrderBy = new SqlOrderByList
                 {
-                    new SqlOrderBy
-                    { 
-                        Column = new SqlColumn{ Table = table, ColumnName = "AsnCode" },
-                        Direction = OrderDirection.Ascending
+                    Items = 
+                    {
+                        new SqlOrderBy
+                        { 
+                            Column = new SqlColumn{ Table = table, ColumnName = "AsnCode" },
+                            Direction = OrderDirection.Ascending
+                        }
                     }
                 }
             };
@@ -3801,10 +4489,8 @@ FROM ASN
 WHERE ASN.Id > {0}
 ORDER BY ASN.AsnCode ASC");
 
-            var pagedSelect = generator.ModifyToPagingTree(select, pk, new PagingInfo(3, 10));
-
             generator = new SqlServerSqlGenerator { AutoQuota = false };
-            generator.Generate(pagedSelect);
+            generator.Generate(select, new PagingInfo(3, 10));
             var pagingSql = generator.Sql;
             Assert.IsTrue(pagingSql.ToString() ==
 @"SELECT TOP 10 *
@@ -3819,10 +4505,9 @@ ORDER BY ASN.AsnCode ASC");
         }
 
         [TestMethod]
-        public void ORM_SqlTree_Select_Paging_PageNumer1()
+        public void ORM_SqlTree_Select_Paging_ORA()
         {
             var table = new SqlTable { TableName = "ASN" };
-            var pk = new SqlColumn { Table = table, ColumnName = "Id" };
 
             var select = new SqlSelect
             {
@@ -3830,16 +4515,74 @@ ORDER BY ASN.AsnCode ASC");
                 From = table,
                 Where = new SqlColumnConstraint
                 {
-                    Column = pk,
+                    Column = new SqlColumn { Table = table, ColumnName = Entity.IdProperty.Name },
                     Operator = SqlColumnConstraintOperator.Greater,
                     Value = 0
                 },
-                OrderBy = new List<SqlOrderBy>
+                OrderBy = new SqlOrderByList
                 {
-                    new SqlOrderBy
-                    { 
-                        Column = new SqlColumn{ Table = table, ColumnName = "AsnCode" },
-                        Direction = OrderDirection.Ascending
+                    Items = 
+                    {
+                        new SqlOrderBy
+                        { 
+                            Column = new SqlColumn{ Table = table, ColumnName = "AsnCode" },
+                            Direction = OrderDirection.Ascending
+                        }
+                    }
+                }
+            };
+            var generator = new OracleSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+            Assert.IsTrue(sql.ToString() ==
+@"SELECT *
+FROM ASN
+WHERE ASN.ID > {0}
+ORDER BY ASN.ASNCODE ASC");
+
+            generator = new OracleSqlGenerator { AutoQuota = false };
+            generator.Generate(select, new PagingInfo(3, 10));
+            var pagingSql = generator.Sql;
+            Assert.IsTrue(pagingSql.ToString() ==
+@"SELECT * FROM
+(
+    SELECT T.*, ROWNUM RN
+    FROM 
+    (
+SELECT *
+FROM ASN
+WHERE ASN.ID > {0}
+ORDER BY ASN.ASNCODE ASC
+    ) T
+    WHERE ROWNUM <= 30
+)
+WHERE RN >= 21");
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_Paging_PageNumer1()
+        {
+            var table = new SqlTable { TableName = "ASN" };
+
+            var select = new SqlSelect
+            {
+                Selection = new SqlSelectAll(),
+                From = table,
+                Where = new SqlColumnConstraint
+                {
+                    Column = new SqlColumn { Table = table, ColumnName = Entity.IdProperty.Name },
+                    Operator = SqlColumnConstraintOperator.Greater,
+                    Value = 0
+                },
+                OrderBy = new SqlOrderByList
+                {
+                    Items = 
+                    {
+                        new SqlOrderBy
+                        { 
+                            Column = new SqlColumn{ Table = table, ColumnName = "AsnCode" },
+                            Direction = OrderDirection.Ascending
+                        }
                     }
                 }
             };
@@ -3852,16 +4595,69 @@ FROM ASN
 WHERE ASN.Id > {0}
 ORDER BY ASN.AsnCode ASC");
 
-            var pagedSelect = generator.ModifyToPagingTree(select, pk, new PagingInfo(1, 10));
-
             generator = new SqlServerSqlGenerator { AutoQuota = false };
-            generator.Generate(pagedSelect);
+            generator.Generate(select, new PagingInfo(1, 10));
             var pagingSql = generator.Sql;
             Assert.IsTrue(pagingSql.ToString() ==
 @"SELECT TOP 10 *
 FROM ASN
 WHERE ASN.Id > {0}
 ORDER BY ASN.AsnCode ASC");
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_Paging_PageNumer1_ORA()
+        {
+            var table = new SqlTable { TableName = "ASN" };
+
+            var select = new SqlSelect
+            {
+                Selection = new SqlSelectAll(),
+                From = table,
+                Where = new SqlColumnConstraint
+                {
+                    Column = new SqlColumn { Table = table, ColumnName = Entity.IdProperty.Name },
+                    Operator = SqlColumnConstraintOperator.Greater,
+                    Value = 0
+                },
+                OrderBy = new SqlOrderByList
+                {
+                    Items = 
+                    {
+                        new SqlOrderBy
+                        { 
+                            Column = new SqlColumn{ Table = table, ColumnName = "AsnCode" },
+                            Direction = OrderDirection.Ascending
+                        }
+                    }
+                }
+            };
+            var generator = new OracleSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+            Assert.IsTrue(sql.ToString() ==
+@"SELECT *
+FROM ASN
+WHERE ASN.ID > {0}
+ORDER BY ASN.ASNCODE ASC");
+
+            generator = new OracleSqlGenerator { AutoQuota = false };
+            generator.Generate(select, new PagingInfo(1, 10));
+            var pagingSql = generator.Sql;
+            Assert.IsTrue(pagingSql.ToString() ==
+@"SELECT * FROM
+(
+    SELECT T.*, ROWNUM RN
+    FROM 
+    (
+SELECT *
+FROM ASN
+WHERE ASN.ID > {0}
+ORDER BY ASN.ASNCODE ASC
+    ) T
+    WHERE ROWNUM <= 10
+)
+WHERE RN >= 1");
         }
 
         #endregion
@@ -4012,16 +4808,21 @@ FROM Book");
         public void ORM_TableQuery_Top()
         {
             var f = QueryFactory.Instance;
+            var table = f.Table<Book>();
             var query = f.Query(
-                top: 10,
-                from: f.Table<Book>()
+                from: table,
+                orderBy: new List<IOrderBy>
+                {
+                    f.OrderBy(table.IdColumn)
+                }
             );
 
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
-            f.Generate(generator, query);
+            f.Generate(generator, query, new PagingInfo(1, 10));
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT TOP 10 *
-FROM Book");
+            Assert.IsTrue(sql.ToString().StartsWith(@"SELECT TOP 10 *
+FROM Book
+ORDER BY Book.Id ASC"));
         }
 
         [TestMethod]
@@ -4507,11 +5308,8 @@ FROM Article
 WHERE Article.Id > {0}
 ORDER BY Article.Code ASC");
 
-            //对于已经组装完成的 IQuery 对象，ModifyToPagingTree 方法同样可以为其生成相应的分页 SqlSelect 语句。
-            var pagedSelect = generator.ModifyToPagingTree(query as SqlSelect, pk as SqlColumn, new PagingInfo(3, 10));
-
             generator = new SqlServerSqlGenerator { AutoQuota = false };
-            generator.Generate(pagedSelect);
+            generator.Generate(query as SqlSelect, new PagingInfo(3, 10));
             var pagingSql = generator.Sql;
             Assert.IsTrue(pagingSql.ToString() ==
 @"SELECT TOP 10 *
@@ -4530,10 +5328,9 @@ ORDER BY Article.Code ASC");
         {
             var f = QueryFactory.Instance;
             var source = f.Table(RF.Concrete<ArticleRepository>());
-            var pk = source.Column(Entity.IdProperty);
             var query = f.Query(
                 from: source,
-                where: f.Constraint(pk, PropertyOperator.Greater, 0),
+                where: f.Constraint(source.Column(Entity.IdProperty), PropertyOperator.Greater, 0),
                 orderBy: new List<IOrderBy>
                 {
                     f.OrderBy(source.Column(Article.CodeProperty))
@@ -4550,10 +5347,8 @@ WHERE Article.Id > {0}
 ORDER BY Article.Code ASC");
 
             //对于已经组装完成的 IQuery 对象，ModifyToPagingTree 方法同样可以为其生成相应的分页 SqlSelect 语句。
-            var pagedSelect = generator.ModifyToPagingTree(query as SqlSelect, pk as SqlColumn, new PagingInfo(1, 10));
-
             generator = new SqlServerSqlGenerator { AutoQuota = false };
-            generator.Generate(pagedSelect);
+            generator.Generate(query as SqlSelect, new PagingInfo(1, 10));
             var pagingSql = generator.Sql;
             Assert.IsTrue(pagingSql.ToString() ==
 @"SELECT TOP 10 *
@@ -4574,7 +5369,7 @@ ORDER BY Article.Code ASC");
                 var db = context.DatabaseMetaReader.Read();
                 var table = db.FindTable("Customer");
                 var c1 = table.FindColumn("DecimalProperty1");
-                Assert.IsTrue(c1.DataType == DbType.Decimal);
+                Assert.IsTrue(DbTypeHelper.IsCompatible(c1.DataType, DbType.Decimal));
             }
         }
 
@@ -4586,7 +5381,7 @@ ORDER BY Article.Code ASC");
                 var db = context.DatabaseMetaReader.Read();
                 var table = db.FindTable("Customer");
                 var c1 = table.FindColumn("DecimalProperty2");
-                Assert.IsTrue(c1.DataType == DbType.Decimal);
+                Assert.IsTrue(DbTypeHelper.IsCompatible(c1.DataType, DbType.Decimal));
                 //Assert.IsTrue(c1.Length == "18,4");
             }
         }
@@ -4599,7 +5394,7 @@ ORDER BY Article.Code ASC");
                 var db = context.DatabaseMetaReader.Read();
                 var table = db.FindTable("Customer");
                 var c1 = table.FindColumn("DecimalProperty3");
-                Assert.IsTrue(c1.DataType == DbType.Double);
+                Assert.IsTrue(DbTypeHelper.IsCompatible(c1.DataType, DbType.Double));
             }
         }
 
@@ -4681,17 +5476,36 @@ ORDER BY Article.Code ASC");
 
                 using (var dba = DbAccesserFactory.Create(BookRepositoryDataProvider.DbSettingName))
                 {
+                    var isOracle = DbSetting.IsOracleProvider(dba.ConnectionSchema);
+
                     watch.Start();
 
-                    for (int i = 0; i < Config_LineCount; i++)
+                    if (!isOracle)
                     {
-                        dba.RawAccesser.ExecuteText(
-                            "INSERT INTO [Book] ([Author],[BookCategoryId],[BookLocId],[Code],[Content],[Name],[Price],[Publisher]) VALUES ('',NULL,NULL,'','',@p0,NULL,'')",
-                            dba.RawAccesser.ParameterFactory.CreateParameter("p0", i)
-                            );
+                        for (int i = 0; i < Config_LineCount; i++)
+                        {
+                            dba.RawAccesser.ExecuteText(
+                                "INSERT INTO Book (Author,BookCategoryId,BookLocId,Code,Content,Name,Price,Publisher) VALUES ('',NULL,NULL,'','',@p0,NULL,'')",
+                                dba.RawAccesser.ParameterFactory.CreateParameter("p0", i)
+                                );
 
-                        //不用参数化的查询会更慢。
-                        //dba.RawAccesser.ExecuteText("INSERT INTO [Book] ([Author],[BookCategoryId],[BookLocId],[Code],[Content],[Name],[Price],[Publisher]) VALUES ('',NULL,NULL,'','','" + i + "',NULL,'')");
+                            //不用参数化的查询会更慢。
+                            //dba.RawAccesser.ExecuteText("INSERT INTO Book (Author,BookCategoryId,BookLocId,Code,Content,Name,Price,Publisher) VALUES ('',NULL,NULL,'','','" + i + "',NULL,'')");
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i < Config_LineCount; i++)
+                        {
+                            dba.RawAccesser.ExecuteText(
+                                "INSERT INTO Book (Author,BookCategoryId,BookLocId,Code,Content,Name,Price,Publisher,Id) VALUES ('',NULL,NULL,'','',:p0,NULL,'',:p1)",
+                                dba.RawAccesser.ParameterFactory.CreateParameter("p0", i),
+                                dba.RawAccesser.ParameterFactory.CreateParameter("p1", i)
+                                );
+
+                            //不用参数化的查询会更慢。
+                            //dba.RawAccesser.ExecuteText("INSERT INTO Book (Author,BookCategoryId,BookLocId,Code,Content,Name,Price,Publisher) VALUES ('',NULL,NULL,'','','" + i + "',NULL,'')");
+                        }
                     }
 
                     watch.Stop();
@@ -4701,6 +5515,7 @@ ORDER BY Article.Code ASC");
                 {
                     System.IO.File.WriteAllText(@"D:\1.1.2 使用 DbAccesser 添加 " + Config_LineCount + " 行数据耗时(ms)：" + watch.Elapsed.TotalMilliseconds + "，平均一行需要：" + watch.Elapsed.TotalMilliseconds / Config_LineCount, "1");
                 }
+                Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 1 * Config_LineCount, "添加一行数据，不能超过 1 ms。");
             }
             finally
             {
@@ -4718,21 +5533,44 @@ ORDER BY Article.Code ASC");
 
                 using (var dba = DbAccesserFactory.Create(BookRepositoryDataProvider.DbSettingName))
                 {
+                    var isOracle = DbSetting.IsOracleProvider(dba.ConnectionSchema);
+
                     watch.Start();
 
-                    for (int i = 0; i < Config_LineCount; i++)
+                    if (!isOracle)
                     {
-                        dba.ExecuteText(
-                            "INSERT INTO [Book] ([Author],[BookCategoryId],[BookLocId],[Code],[Content],[Name],[Price],[Publisher]) VALUES ({0},{1},{2},{3},{4},{5},{6},{7})",
-                            string.Empty,
-                            null,
-                            null,
-                            string.Empty,
-                            string.Empty,
-                            i.ToString(),
-                            null,
-                            string.Empty
-                            );
+                        for (int i = 0; i < Config_LineCount; i++)
+                        {
+                            dba.ExecuteText(
+                                "INSERT INTO Book (Author,BookCategoryId,BookLocId,Code,Content,Name,Price,Publisher) VALUES ({0},{1},{2},{3},{4},{5},{6},{7})",
+                                string.Empty,
+                                null,
+                                null,
+                                string.Empty,
+                                string.Empty,
+                                i.ToString(),
+                                null,
+                                string.Empty
+                                );
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i < Config_LineCount; i++)
+                        {
+                            dba.ExecuteText(
+                                "INSERT INTO Book (Author,BookCategoryId,BookLocId,Code,Content,Name,Price,Publisher,Id) VALUES ({0},{1},{2},{3},{4},{5},{6},{7},{8})",
+                                string.Empty,
+                                null,
+                                null,
+                                string.Empty,
+                                string.Empty,
+                                i.ToString(),
+                                null,
+                                string.Empty,
+                                i.ToString()
+                                );
+                        }
                     }
 
                     watch.Stop();
@@ -4742,6 +5580,7 @@ ORDER BY Article.Code ASC");
                 {
                     System.IO.File.WriteAllText(@"D:\1.1.1 使用 DbAccesser 添加 " + Config_LineCount + " 行数据耗时(ms)：" + watch.Elapsed.TotalMilliseconds + "，平均一行需要：" + watch.Elapsed.TotalMilliseconds / Config_LineCount, "1");
                 }
+                Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 1 * Config_LineCount, "添加一行数据，不能超过 1 ms。");
             }
             finally
             {
@@ -5056,7 +5895,7 @@ ORDER BY Article.Code ASC");
         {
             using (var dba = DbAccesserFactory.Create(BookRepositoryDataProvider.DbSettingName))
             {
-                dba.ExecuteText("DELETE FROM [Book]");
+                dba.ExecuteText("DELETE FROM BOOK");
             }
             //var repo = RF.Concrete<BookRepository>();
             //var all = repo.GetAll();

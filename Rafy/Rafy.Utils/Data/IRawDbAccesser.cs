@@ -57,6 +57,12 @@ namespace Rafy.Data
         IDbConnection Connection { get; }
 
         /// <summary>
+        /// current avaiable transaction.
+        /// this transaction is retrieved from <see cref="LocalTransactionBlock"/> class, and it is created by current connection.
+        /// </summary>
+        IDbTransaction Transaction { get; }
+
+        /// <summary>
         /// 数据连接结构
         /// </summary>
         DbConnectionSchema ConnectionSchema { get; }
@@ -65,6 +71,11 @@ namespace Rafy.Data
         /// A factory to create parameters.
         /// </summary>
         IDbParameterFactory ParameterFactory { get; }
+
+        /// <summary>
+        /// A factory to create database command.
+        /// </summary>
+        IDbCommandFactory CommandFactory { get; }
 
         #region NonQuery
 

@@ -50,22 +50,35 @@ namespace Rafy.Domain.ORM
             get { return _columnInfo.Property.IsReadOnly; }
         }
 
-        public object ReadParameterValue(Entity entity)
+        public virtual bool CanInsert
         {
-            object val = this.Read(entity);
-            return val == null ? DBNull.Value : val;
+            get
+            {
+                //Sql Server 中的 Identity 列是不需要插入的。
+                return !_columnInfo.IsIdentity;
+            }
         }
 
+        /// <summary>
+        /// 读取实体中本列对应的属性的值，该值将被写入到数据库中对应的列。
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public virtual object ReadParameterValue(Entity entity)
+        {
+            object val = this.Read(entity);
+            return val ?? DBNull.Value;
+        }
+
+        /// <summary>
+        /// 把数据库中列的值写入到实体对应的属性中。
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="val"></param>
         public void LoadValue(Entity entity, object val)
         {
             if (val == DBNull.Value) { val = null; }
             this.Write(entity, val);
-        }
-
-        public object GetValue(Entity entity)
-        {
-            object val = this.Read(entity);
-            return val == null ? DBNull.Value : val;
         }
 
         private object Read(Entity entity)

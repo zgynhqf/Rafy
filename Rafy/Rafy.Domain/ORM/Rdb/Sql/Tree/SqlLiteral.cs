@@ -20,17 +20,15 @@ namespace Rafy.Domain.ORM.SqlTree
 {
     /// <summary>
     /// 表示一个文本
-    /// 
-    /// SqlLiteral 需要从 SqlConstraint 上继承，否则将不可用于 Where 语句。
     /// </summary>
-    class SqlLiteral : SqlConstraint
+    class SqlLiteral : SqlNode, ISqlLiteral
     {
-        //private static object[] EmptyParameters = new object[0];
+        public SqlLiteral() { }
 
-        //public SqlLiteral()
-        //{
-        //    this.Parameters = EmptyParameters;
-        //}
+        public SqlLiteral(string formattedSql)
+        {
+            this.FormattedSql = formattedSql;
+        }
 
         public override SqlNodeType NodeType
         {

@@ -30,9 +30,7 @@ namespace Rafy.MetaModel
         /// 获取用于表示规则名称。
         /// </summary>
         /// <remarks>
-        /// The rule's name must be unique and is used
-        /// to identify a broken rule in the BrokenRules
-        /// collection.
+        /// 这个名称必须是唯一的，因为它会被用于在 BrokenRules 集合中标识唯一项。
         /// </remarks>
         string Key { get; }
 
@@ -48,10 +46,10 @@ namespace Rafy.MetaModel
     }
 
     /// <summary>
-    /// 表示规则的作用范围
+    /// 表示规则作用于实体的状态的作用范围
     /// </summary>
     [Flags]
-    public enum RuleScope
+    public enum EntityStatusScopes
     {
         /// <summary>
         /// 作用于数据的插入操作。
@@ -62,16 +60,8 @@ namespace Rafy.MetaModel
         /// </summary>
         Update = 2,
         /// <summary>
-        /// Add | Update
-        /// </summary>
-        AddOrUpdate = Add | Update,
-        /// <summary>
         /// 作用于数据的插入、更新操作。
         /// </summary>
-        Delete = 4,
-        /// <summary>
-        /// Add | Update | Delete
-        /// </summary>
-        All = Add | Update | Delete
+        Delete = 4
     }
 }

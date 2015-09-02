@@ -13,6 +13,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using Rafy;
@@ -134,7 +135,7 @@ namespace Rafy.DbMigration.Model
 
                 if (newColumn.IsPrimaryKey != oldColumn.IsPrimaryKey) { columnChanged.IsPrimaryKeyChanged = true; }
 
-                if (newColumn.DataType != oldColumn.DataType) { columnChanged.IsDbTypeChanged = true; }
+                if (!DbTypeHelper.IsCompatible(newColumn.DataType, oldColumn.DataType)) { columnChanged.IsDbTypeChanged = true; }
 
                 //ForeignRelationChangeType
                 columnChanged.ForeignRelationChangeType = ChangeType.UnChanged;
@@ -170,7 +171,7 @@ namespace Rafy.DbMigration.Model
                 //判断外键是否相等
                 //暂时不考虑NeedDeleteCascade是否相同的问题
                 if (a.IsForeignKey &&
-                    !a.ForeignConstraint.PKColumn.Table.Name.Equals(b.ForeignConstraint.PKColumn.Table.Name))
+                    !a.ForeignConstraint.PKColumn.Table.Name.EqualsIgnoreCase(b.ForeignConstraint.PKColumn.Table.Name))
                 {
                     return false;
                 }

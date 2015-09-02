@@ -174,7 +174,7 @@
       <SubType>Code</SubType>
       <DependentUpon>NoRepoEntity.cs</DependentUpon>
     </Compile>
-    <Compile Include="Entities\StringTest\StringEntityTestEntity.cs" />
+    <Compile Include="Entities\StringTest\StringTestEntity.cs" />
     <Compile Include="Entities\StringTest\House.cs" />
     <Compile Include="Entities\StringTest\House.g.cs">
       <SubType>Code</SubType>

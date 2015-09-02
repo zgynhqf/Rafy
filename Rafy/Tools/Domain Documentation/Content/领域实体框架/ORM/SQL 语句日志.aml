@@ -16,12 +16,12 @@
         <section address="how">
             <title>使用文件记录</title>
             <content>
-                <para>要打开这个功能，需要到应用程序的配置文件中添加名为 SQL_TRACE_FILE 的应用程序配置项，该配置项的值是用于记录日志的文件地址，示例代码如下：</para>
+                <para>要打开这个功能，需要到应用程序的配置文件中添加名为 Rafy.FileLogger.SqlTraceFileName 的应用程序配置项，该配置项的值是用于记录日志的文件地址，示例代码如下：</para>
                 <code language="xml">
                     <![CDATA[<configuration>
     <appSettings>
         <!--如果是监听应用程序所有的 SQL 语句，请打开以下配置-->
-        <add key="SQL_TRACE_FILE" value="D:\SQLTraceLog.txt"/>
+        <add key="Rafy.FileLogger.SqlTraceFileName" value="D:\SQLTraceLog.txt"/>
     </appSettings>
 </configuration>]]>
                 </code>

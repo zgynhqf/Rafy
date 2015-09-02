@@ -18,7 +18,7 @@ namespace RafyUnitTest
 
         public static long GetSqlTraceLength()
         {
-            var file = ConfigurationHelper.GetAppSettingOrDefault("SQL_TRACE_FILE");
+            var file = ConfigurationHelper.GetAppSettingOrDefault("Rafy.FileLogger.SqlTraceFileName");
             var fileInfo = new FileInfo(file);
             if (fileInfo.Exists)
             {

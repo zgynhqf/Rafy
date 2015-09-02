@@ -43,11 +43,11 @@ namespace Rafy.MetaModel
             set { this.SetValue(ref this._Level, value); }
         }
 
-        private RuleScope _Scope = RuleScope.AddOrUpdate;
+        private EntityStatusScopes _Scope = EntityStatusScopes.Add | EntityStatusScopes.Update;
         /// <summary>
         /// 表示规则的作用范围。默认值为：AddOrUpdate。
         /// </summary>
-        public RuleScope Scope
+        public EntityStatusScopes Scope
         {
             get { return this._Scope; }
             set { this.SetValue(ref this._Scope, value); }
@@ -58,7 +58,7 @@ namespace Rafy.MetaModel
         /// </summary>
         /// <param name="scope"></param>
         /// <returns></returns>
-        public bool HasScope(RuleScope scope)
+        public bool HasScope(EntityStatusScopes scope)
         {
             return (this.Scope & scope) != 0;
         }

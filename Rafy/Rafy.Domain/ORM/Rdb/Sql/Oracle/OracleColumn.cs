@@ -13,9 +13,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
+using Rafy.DbMigration.Oracle;
 using Rafy.MetaModel;
+using Rafy.Reflection;
 
 namespace Rafy.Domain.ORM.Oracle
 {
@@ -23,14 +26,36 @@ namespace Rafy.Domain.ORM.Oracle
     {
         internal OracleColumn(RdbTable table, IPersistanceColumnInfo columnInfo) : base(table, columnInfo) { }
 
+        public override bool CanInsert
+        {
+            get
+            {
+                return true;//&& !this.IsPKID
+            }
+        }
+
+        public override object ReadParameterValue(Entity entity)
+        {
+            var value = base.ReadParameterValue(entity);
+            if (this.Info.IsBooleanType)
+            {
+                value = OracleDbTypeHelper.ToDbBoolean((bool)value);
+            }
+            else if (this.Info.DataType.IsEnum)
+            {
+                value = TypeHelper.CoerceValue(typeof(int), value);
+            }
+            return value;
+        }
+
         internal override void Write(Entity entity, object value)
         {
-            var type = this.Info.DataType;
-            if (type == typeof(bool))
+            var info = this.Info;
+            if (info.IsBooleanType)
             {
-                value = value.ToString() == "1" ? true : false;
+                value = OracleDbTypeHelper.ToCLRBoolean(value);
             }
-            else if (value == null && type == typeof(string))//null 转换为空字符串
+            else if (value == null && info.IsStringType)//null 转换为空字符串
             {
                 value = string.Empty;
             }

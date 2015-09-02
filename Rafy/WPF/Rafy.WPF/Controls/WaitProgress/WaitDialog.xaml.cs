@@ -35,7 +35,8 @@ namespace Rafy.WPF
         {
             InitializeComponent();
 
-            this.Topmost = true;
+            //设置这个属性为真后，如果数据库升级较慢，那么窗口会一直在最前端显示，很崩溃！所以去除。
+            //this.Topmost = true;
         }
 
         /// <summary>

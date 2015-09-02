@@ -599,7 +599,7 @@ namespace Rafy.ManagedProperty
                 _index = -1;
                 _mpo = mpo;
                 _current = new ManagedPropertyField();
-                _properties = mpo.PropertiesContainer.GetNonReadOnlyCompiledProperties();
+                _properties = mpo.PropertiesContainer.GetCompiledProperties();
             }
 
             public ManagedPropertyField Current
@@ -612,14 +612,25 @@ namespace Rafy.ManagedProperty
                 if (++_index >= _properties.Count) return false;
 
                 var property = _properties[_index];
-                _current = _mpo._compiledFields[property.TypeCompiledIndex];
-                if (!_current.HasValue)
+                if (property.IsReadOnly)
                 {
                     _current = new ManagedPropertyField
                     {
                         _property = property,
-                        _value = property.GetMeta(_mpo).DefaultValue
+                        _value = (property as IManagedPropertyInternal).ProvideReadOnlyValue(_mpo)
                     };
+                }
+                else
+                {
+                    _current = _mpo._compiledFields[property.TypeCompiledIndex];
+                    if (!_current.HasValue)
+                    {
+                        _current = new ManagedPropertyField
+                        {
+                            _property = property,
+                            _value = property.GetMeta(_mpo).DefaultValue
+                        };
+                    }
                 }
 
                 return true;

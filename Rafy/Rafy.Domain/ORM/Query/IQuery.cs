@@ -36,11 +36,6 @@ namespace Rafy.Domain.ORM.Query
         bool IsDistinct { get; set; }
 
         /// <summary>
-        /// 如果指定此属性，表示需要查询的条数。
-        /// </summary>
-        int? Top { get; set; }
-
-        /// <summary>
         /// 要查询的内容。
         /// 如果本属性为空，表示要查询所有数据源的所有属性。
         /// </summary>

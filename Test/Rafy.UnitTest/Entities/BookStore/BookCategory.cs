@@ -107,7 +107,10 @@ namespace UT
 
         protected override void AddValidations(IValidationDeclarer rules)
         {
-            rules.AddRule(new NotUsedByReferenceRule(Book.BookCategoryIdProperty));
+            rules.AddRule(new NotUsedByReferenceRule(Book.BookCategoryIdProperty), new RuleMeta
+            {
+                Scope = EntityStatusScopes.Delete
+            });
             base.AddValidations(rules);
         }
     }

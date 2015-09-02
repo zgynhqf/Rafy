@@ -55,18 +55,6 @@ namespace Rafy.Domain.ORM.Query.Impl
             }
         }
 
-        int? IQuery.Top
-        {
-            get
-            {
-                return base.Top;
-            }
-            set
-            {
-                base.Top = value;
-            }
-        }
-
         IQueryNode IQuery.Selection
         {
             get
@@ -107,13 +95,14 @@ namespace Rafy.Domain.ORM.Query.Impl
         {
             get
             {
-                if (!base.HasOrdered())
+                if (base.OrderBy == null)
                 {
-                    base.OrderBy = new List<IOrderBy>();
+                    base.OrderBy = new SqlOrderByList();
+                    base.OrderBy.Items = new List<IOrderBy>();
                 }
 
                 //如果集合是一个弱类型的集合，则需要使用强类型集合来替换。
-                var res = base.OrderBy as IList<IOrderBy>;
+                var res = base.OrderBy.Items as IList<IOrderBy>;
                 if (res == null)
                 {
                     var list = new List<IOrderBy>();
@@ -125,15 +114,20 @@ namespace Rafy.Domain.ORM.Query.Impl
                         }
                     }
                     res = list;
-                    base.OrderBy = list;
+                    base.OrderBy.Items = list;
                 }
 
                 return res;
             }
         }
+
         internal void SetOrderBy(List<IOrderBy> value)
         {
-            base.OrderBy = value;
+            if (base.OrderBy == null)
+            {
+                base.OrderBy = new SqlOrderByList();
+            }
+            base.OrderBy.Items = value;
         }
 
         /// <summary>

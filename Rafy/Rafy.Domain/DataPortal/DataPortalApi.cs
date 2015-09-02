@@ -35,7 +35,6 @@ namespace Rafy.Domain.DataPortal
         /// <param name="criteria"></param>
         /// <param name="loc">如果一个数据层方法需要在本地执行，应该在把本参数指明为 Local。</param>
         /// <returns></returns>
-        [DebuggerStepThrough]
         public static object Fetch(Type objectType, object criteria, DataPortalLocation loc = DataPortalLocation.Dynamic)
         {
             try

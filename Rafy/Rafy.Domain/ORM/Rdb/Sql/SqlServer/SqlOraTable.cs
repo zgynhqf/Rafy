@@ -140,10 +140,8 @@ namespace Rafy.Domain.ORM
                 var autoSelection = AutoSelectionForLOB(query);
 
                 //生成分页 Sql
-                var pk = query.From.FindTable(Repository).Column(Entity.IdProperty);
                 var generator = this.CreateSqlGenerator();
-                var pagedSelect = generator.ModifyToPagingTree(query as SqlSelect, pk as SqlColumn, pagingInfo);
-                generator.Generate(pagedSelect);
+                generator.Generate(query as SqlSelect, pagingInfo);
                 var pagingSql = generator.Sql;
 
                 //查询数据库

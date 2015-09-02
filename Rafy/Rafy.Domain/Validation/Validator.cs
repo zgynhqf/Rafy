@@ -133,7 +133,7 @@ namespace Rafy.Domain.Validation
         /// <exception cref="System.ArgumentNullException">target</exception>
         public static BrokenRulesCollection Validate(this Entity target, ValidatorActions actions)
         {
-            return Validate(target, actions, null);
+            return Validate(target, null as Func<IRule, bool>, actions);
         }
 
         /// <summary>
@@ -145,33 +145,54 @@ namespace Rafy.Domain.Validation
         /// <exception cref="System.ArgumentNullException">target</exception>
         public static BrokenRulesCollection Validate(this Entity target, Func<IRule, bool> ruleFilter)
         {
-            return Validate(target, DefaultActions, ruleFilter);
+            return Validate(target, ruleFilter, DefaultActions);
         }
+
+        ///// <summary>
+        ///// 检查整个实体对象是否满足规则
+        ///// </summary>
+        ///// <param name="target">要验证的实体。</param>
+        ///// <param name="scope">要验证的实体的状态范围。</param>
+        ///// <returns></returns>
+        ///// <exception cref="System.ArgumentNullException">target</exception>
+        //public static BrokenRulesCollection Validate(this Entity target, EntityStatusScopes scope)
+        //{
+        //    return Validate(target, r => r.Meta.HasScope(scope), DefaultActions);
+        //}
+
+        ///// <summary>
+        ///// 检查整个实体对象是否满足规则
+        ///// </summary>
+        ///// <param name="target">要验证的实体。</param>
+        ///// <param name="scope">要验证的实体的状态范围。</param>
+        ///// <param name="actions">要验证的行为.</param>
+        ///// <returns></returns>
+        ///// <exception cref="System.ArgumentNullException">target</exception>
+        //public static BrokenRulesCollection Validate(this Entity target, EntityStatusScopes scope, ValidatorActions actions)
+        //{
+        //    return Validate(target, r => r.Meta.HasScope(scope), actions);
+        //}
 
         /// <summary>
         /// 检查整个实体对象是否满足规则
         /// </summary>
         /// <param name="target">要验证的实体。</param>
-        /// <param name="actions">验证时的行为。</param>
         /// <param name="ruleFilter">要验证的规则的过滤器。</param>
+        /// <param name="actions">验证时的行为。</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">target</exception>
-        public static BrokenRulesCollection Validate(
-            this Entity target,
-            ValidatorActions actions,
-            Func<IRule, bool> ruleFilter
-            )
+        public static BrokenRulesCollection Validate(this Entity target, Func<IRule, bool> ruleFilter, ValidatorActions actions)
         {
             if (target == null) throw new ArgumentNullException("target");
 
             var res = new BrokenRulesCollection();
 
-            ValidateEntity(target, res, actions, ruleFilter);
+            ValidateEntity(target, res, ruleFilter, actions);
 
             return res;
         }
 
-        private static void ValidateEntity(Entity target, BrokenRulesCollection res, ValidatorActions actions, Func<IRule, bool> filter)
+        private static void ValidateEntity(Entity target, BrokenRulesCollection res, Func<IRule, bool> filter, ValidatorActions actions)
         {
             var stopOnFirst = HasAction(actions, ValidatorActions.StopOnFirstBroken);
 
@@ -199,7 +220,7 @@ namespace Rafy.Domain.Validation
                     {
                         list.EachNode(childEntity =>
                         {
-                            ValidateEntity(childEntity, res, actions, filter);
+                            ValidateEntity(childEntity, res, filter, actions);
                             if (stopOnFirst && res.Count > 0) return true;
                             return false;
                         });
@@ -207,7 +228,7 @@ namespace Rafy.Domain.Validation
                     }
                     else
                     {
-                        ValidateEntity(child.Value as Entity, res, actions, filter);
+                        ValidateEntity(child.Value as Entity, res, filter, actions);
                         if (stopOnFirst && res.Count > 0) return;
                     }
                 }
@@ -235,6 +256,9 @@ namespace Rafy.Domain.Validation
                 //如果与指定的范围不符合，也需要过滤掉。
                 if (ruleFilter != null && !ruleFilter(rule)) { continue; }
 
+                //如果规则不适用于当前实体的状态，则也自动过滤掉。
+                if (!IsMatchEntityStatus(target, rule.Meta)) { continue; }
+
                 var args = new RuleArgs(rule);
 
                 try
@@ -259,6 +283,23 @@ namespace Rafy.Domain.Validation
         private static bool HasAction(ValidatorActions actions, ValidatorActions toCheck)
         {
             return (actions & toCheck) == toCheck;
+        }
+
+        private static bool IsMatchEntityStatus(Entity entity, RuleMeta meta)
+        {
+            switch (entity.PersistenceStatus)
+            {
+                case PersistenceStatus.Unchanged:
+                    return meta.HasScope(EntityStatusScopes.Add) || meta.HasScope(EntityStatusScopes.Update);
+                case PersistenceStatus.Modified:
+                    return meta.HasScope(EntityStatusScopes.Update);
+                case PersistenceStatus.New:
+                    return meta.HasScope(EntityStatusScopes.Add);
+                case PersistenceStatus.Deleted:
+                    return meta.HasScope(EntityStatusScopes.Delete);
+                default:
+                    throw new NotSupportedException();
+            }
         }
     }
 

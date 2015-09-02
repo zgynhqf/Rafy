@@ -17,8 +17,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Rafy;
+using Rafy.Data;
 using Rafy.DbMigration;
 using Rafy.Domain;
+using Rafy.Domain.ORM.BatchSubmit.Oracle;
 using Rafy.Domain.ORM.DbMigration;
 using UT;
 
@@ -58,6 +60,13 @@ namespace Rafy.UnitTest.DataProvider
                     c.HistoryRepository = new DbHistoryRepository();
                     c.RunDataLossOperation = DataLossOperation.All;
                     c.AutoMigrate();
+                }
+
+                //启用批量更新
+                var dbSetting = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName);
+                if (DbSetting.IsOracleProvider(dbSetting))
+                {
+                    OracleBatchImporter.EnableBatchSequence(RF.Concrete<BookRepository>());
                 }
             }
         }

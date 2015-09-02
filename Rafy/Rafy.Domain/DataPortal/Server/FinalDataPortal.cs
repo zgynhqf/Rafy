@@ -70,7 +70,6 @@ namespace Rafy.Domain.DataPortal
         /// <param name="objectType"></param>
         /// <param name="criteria"></param>
         /// <returns></returns>
-        [DebuggerStepThrough]
         internal static object Fetch(Type objectType, object criteria)
         {
             object res = null;

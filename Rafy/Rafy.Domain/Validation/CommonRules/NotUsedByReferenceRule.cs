@@ -21,10 +21,13 @@ using Rafy.MetaModel;
 namespace Rafy.Domain.Validation
 {
     /// <summary>
-    /// 限制实体的键没有被指定的引用属性对应的表所使用的规则。
+    /// 限制规则：实体的键必须没有被指定的引用属性对应的主表中的行所使用。
     /// </summary>
     public class NotUsedByReferenceRule : ValidationRule
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NotUsedByReferenceRule"/> class.
+        /// </summary>
         public NotUsedByReferenceRule() { }
 
         /// <summary>

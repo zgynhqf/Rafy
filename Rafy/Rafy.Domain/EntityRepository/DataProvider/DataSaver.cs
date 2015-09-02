@@ -60,13 +60,11 @@ namespace Rafy.Domain
 
         #region 冗余属性更新处理
 
-        private RedundanciesUpdater _redundanciesUpdater;
-
         /// <summary>
         /// 子类重写此方法实现冗余属性更新器的实现。
         /// </summary>
         /// <returns></returns>
-        protected abstract RedundanciesUpdater CreateRedundanciesUpdater();
+        public abstract RedundanciesUpdater CreateRedundanciesUpdater();
 
         /// <summary>
         /// 尝试更新冗余属性值。
@@ -75,12 +73,8 @@ namespace Rafy.Domain
         {
             if (entity.UpdateRedundancies)
             {
-                if (_redundanciesUpdater == null)
-                {
-                    _redundanciesUpdater = this.CreateRedundanciesUpdater();
-                }
-
-                _redundanciesUpdater.UpdateRedundancies(entity);
+                var redundanciesUpdater = this.CreateRedundanciesUpdater();
+                redundanciesUpdater.UpdateRedundancies(entity, _repository);
             }
         }
 

@@ -277,7 +277,11 @@ namespace Rafy.Domain.ORM
 
                 #endregion
 
-                protected override RedundanciesUpdater CreateRedundanciesUpdater()
+                /// <summary>
+                /// 未实现
+                /// </summary>
+                /// <returns></returns>
+                public override RedundanciesUpdater CreateRedundanciesUpdater()
                 {
                     throw new NotImplementedException();
                 }

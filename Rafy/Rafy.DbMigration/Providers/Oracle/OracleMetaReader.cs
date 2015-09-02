@@ -49,9 +49,9 @@ namespace Rafy.DbMigration.Oracle
         {
             foreach (Table table in database.Tables)
             {
-                using (var columnsReader = this.Db.QueryDataReader(@"
-SELECT * FROM user_tab_columns WHERE TABLE_NAME = {0}
-", table.Name))
+                using (var columnsReader = this.Db.QueryDataReader(
+@"SELECT * FROM user_tab_columns WHERE TABLE_NAME = {0}",
+table.Name))
                 {
                     while (columnsReader.Read())
                     {
@@ -81,8 +81,8 @@ SELECT * FROM user_tab_columns WHERE TABLE_NAME = {0}
 
             #region 缓存数据库中的所有约束
 
-            using (var constraintReader = this.Db.QueryDataReader(@"
-SELECT 
+            using (var constraintReader = this.Db.QueryDataReader(
+@"SELECT 
 C.CONSTRAINT_NAME, C.CONSTRAINT_TYPE, C.TABLE_NAME, C.COLUMN_NAME, CR.TABLE_NAME FK_TABLE_NAME, CR.COLUMN_NAME FK_COLUMN_NAME,
 CR.PREP, CR.TABLE_NAME PK_TABLE_NAME, CR.COLUMN_NAME PK_COLUMN_NAME, CR.CONSTRAINT_NAME UNIQUE_CONSTRAINT_NAME, C.DELETE_RULE
 FROM 
@@ -97,8 +97,7 @@ WHERE (C.CONSTRAINT_TYPE = 'P' OR C.CONSTRAINT_TYPE= 'R') AND INSTR(C.CONSTRAINT
 SELECT C.CONSTRAINT_NAME, C.TABLE_NAME, COL.COLUMN_NAME, 'TO' PREP
 FROM USER_CONSTRAINTS C INNER JOIN USER_CONS_COLUMNS COL ON C.CONSTRAINT_NAME = COL.CONSTRAINT_NAME
 WHERE C.CONSTRAINT_TYPE = 'P' AND INSTR(C.CONSTRAINT_NAME, '$') = 0
-) CR ON C.R_CONSTRAINT_NAME = CR.CONSTRAINT_NAME
-"))
+) CR ON C.R_CONSTRAINT_NAME = CR.CONSTRAINT_NAME"))
             {
                 while (constraintReader.Read())
                 {

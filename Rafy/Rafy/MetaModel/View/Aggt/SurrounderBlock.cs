@@ -71,7 +71,7 @@ namespace Rafy.MetaModel.View
 
         protected override void UseBlockDefaultCommands(EntityViewMeta meta)
         {
-            if (!RafyEnvironment.Location.IsWebUI)
+            if (RafyEnvironment.Location.IsWPFUI)
             {
                 //如果当前模块是一个条件面板，应该添加上查询按钮。
                 meta.AsWPFView().UseCommands(WPFCommandNames.FireQuery);

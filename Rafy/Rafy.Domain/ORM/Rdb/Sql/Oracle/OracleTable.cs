@@ -15,19 +15,26 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
+using System.Linq;
 using System.Text;
 using Rafy.Data;
 using Rafy.Domain;
-using Rafy.MetaModel;
-using Rafy.Utils;
+using Rafy.Domain.ORM.Query;
 using Rafy.ManagedProperty;
-using System.IO;
+using Rafy.MetaModel;
 using Rafy.Reflection;
+using Rafy.Utils;
 
 namespace Rafy.Domain.ORM.Oracle
 {
     internal class OracleTable : SqlOraTable
     {
+        /// <summary>
+        /// ORACLE 中 IN 语句的最大参数个数是 1000 个。
+        /// </summary>
+        private const int MAX_ITEMS_IN_INCLAUSE = 1000;
+
         public OracleTable(IRepositoryInternal repository) : base(repository) { }
 
         internal override RdbColumn CreateColumn(IPersistanceColumnInfo columnInfo)
@@ -52,7 +59,7 @@ namespace Rafy.Domain.ORM.Oracle
                     var seqNameValue = Rafy.DbMigration.Oracle.OracleMigrationProvider.LimitOracleIdentifier(seqName.ToString());
 
                     //此序列是由 DbMigration 中自动生成的。
-                    _selectSEQSql = string.Format(@"SELECT {0} .nextval from dual", seqNameValue);
+                    _selectSEQSql = string.Format(@"SELECT {0}.NEXTVAL FROM DUAL", seqNameValue);
                 }
                 //由于默认可能不是 int 类型，所以需要类型转换。
                 var value = dba.RawAccesser.QueryValue(_selectSEQSql);
@@ -65,11 +72,6 @@ namespace Rafy.Domain.ORM.Oracle
             }
 
             base.Insert(dba, item);
-        }
-
-        protected override bool CanInsert(RdbColumn column)
-        {
-            return true;//&& !column.IsPKID
         }
 
         internal override void AppendQuote(TextWriter sql, string identifier)
@@ -86,7 +88,83 @@ namespace Rafy.Domain.ORM.Oracle
 
         public override SqlGenerator CreateSqlGenerator()
         {
-            return new OracleSqlGenerator();
+            var generator =  new OracleSqlGenerator();
+            generator.MaxItemsInInClause = MAX_ITEMS_IN_INCLAUSE;
+            return generator;
+        }
+
+        public override void QueryList(IDbAccesser dba, IEntitySelectArgs args)
+        {
+            try
+            {
+                base.QueryList(dba, args);
+            }
+            catch (TooManyItemsInInClauseException)
+            {
+                /*********************** 代码块解释 *********************************
+                 * 如果参数的个数过多，而当前的查询比较简单，那么就尝试分批使用参数进行查询。
+                 * 这种情况主要出现在使用贪婪加载时，In 语句中的参数过多，但是查询本身非常简单，所以可以分批查询。
+                **********************************************************************/
+                if (!TryBatchQuery(dba, args))
+                {
+                    throw;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 只有一些特定的查询，可以进行分批查询。
+        /// </summary>
+        /// <param name="dba">The dba.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns></returns>
+        private bool TryBatchQuery(IDbAccesser dba, IEntitySelectArgs args)
+        {
+            if (!PagingInfo.IsNullOrEmpty(args.PagingInfo)) { return false; }
+
+            //分批查询的条件：WHERE 条件中只有 IN 或 NOT IN 语句。
+            var query = args.Query;
+            var inClause = query.Where as IColumnConstraint;
+            if (inClause == null || inClause.Operator != PropertyOperator.In && inClause.Operator != PropertyOperator.NotIn)
+            {
+                return false;
+            }
+
+            var values = inClause.Value as IEnumerable;
+            var parameters = values as IList ?? values.Cast<object>().ToArray();
+
+            var autoSelection = AutoSelectionForLOB(query);
+
+            var readType = autoSelection ? ReadDataType.ByIndex : ReadDataType.ByName;
+
+            /*********************** 代码块解释 *********************************
+             * 以下分批进行查询。算法：
+             * 先临时把树中的条件中的值改成子集合，
+             * 然后使用新的树生成对应的 Sql 语句并查询实体。
+             * 所有查询完成后，再把树中的集合还原为原始的大集合。
+            **********************************************************************/
+            var start = 0;
+            var paramSection = new List<object>(MAX_ITEMS_IN_INCLAUSE);
+            inClause.Value = paramSection;//临时把树中的条件中的值改成子集合。
+            while (start < parameters.Count)
+            {
+                var end = Math.Min(start + MAX_ITEMS_IN_INCLAUSE - 1, parameters.Count - 1);
+                paramSection.Clear();
+                for (int i = start; i <= end; i++)
+                {
+                    paramSection.Add(parameters[i]);
+                }
+
+                //生成 Sql
+                var generator = this.CreateSqlGenerator();
+                QueryFactory.Instance.Generate(generator, query);
+                var sql = generator.Sql;
+                base.QueryDataReader(dba, args, readType, sql);
+
+                start += paramSection.Count;
+            }
+
+            return true;
         }
     }
 }

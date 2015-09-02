@@ -36,6 +36,16 @@ namespace Rafy.Domain.ORM
         Type DataType { get; }
 
         /// <summary>
+        /// 返回本列是否为一个 Boolean 类型的属性（专为 Oracle 特制）
+        /// </summary>
+        bool IsBooleanType { get; }
+
+        /// <summary>
+        /// 返回本列是否为一个 String 类型的属性（专为 Oracle 特制）
+        /// </summary>
+        bool IsStringType { get; }
+
+        /// <summary>
         /// 是否为自增长主键列。
         /// </summary>
         bool IsIdentity { get; }

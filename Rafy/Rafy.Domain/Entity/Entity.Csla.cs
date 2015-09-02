@@ -22,6 +22,7 @@ using Rafy.ManagedProperty;
 using Rafy.Serialization;
 using Rafy.Serialization.Mobile;
 using Rafy.MetaModel;
+using Rafy.Reflection;
 
 namespace Rafy.Domain
 {
@@ -211,6 +212,12 @@ namespace Rafy.Domain
         /// <param name="value"></param>
         public override void LoadProperty(IManagedProperty property, object value)
         {
+            if (property == IdProperty || property == TreePIdProperty && value != null)
+            {
+                //由于 Id 属性的托管属性类型是 object，这里需要强制为具体的主键类型。
+                value = TypeHelper.CoerceValue(this.KeyProvider.KeyType, value);
+            }
+
             base.LoadProperty(property, value);
 
             this.OnChildLoaded(property, value);

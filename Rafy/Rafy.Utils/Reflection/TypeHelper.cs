@@ -191,26 +191,36 @@ namespace Rafy.Reflection
         /// </remarks>
         public static object CoerceValue(Type desiredType, Type valueType, object value)
         {
-            // types match, just return value
+            //类型匹配时，直接返回值。
             if (desiredType.IsAssignableFrom(valueType)) { return value; }
 
-            if (desiredType == typeof(string) && value != null) return value.ToString();
+            //字符串类型，直接使用 ToString 进行转换。
+            if (desiredType == typeof(string))
+            {
+                return value != null ? value.ToString() : null;
+            }
 
+            //处理 Nullable 类型。
             if (desiredType.IsGenericType && desiredType.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
                 desiredType = Nullable.GetUnderlyingType(desiredType);
 
+                //空字符串转换为 null。
                 if (value == null ||
-                    valueType.Equals(typeof(string)) && Convert.ToString(value) == string.Empty) return null;
+                    value is string && value as string == string.Empty) return null;
             }
 
+            //处理枚举类型
             if (desiredType.IsEnum) { return Enum.Parse(desiredType, value.ToString()); }
 
-            //空字符串转换为数字 0
-            if ((desiredType.IsPrimitive || desiredType.Equals(typeof(decimal))) &&
-                valueType.Equals(typeof(string)) && string.IsNullOrEmpty((string)value))
+            //处理数字类型。（空字符串转换为数字 0）
+            if ((desiredType.IsPrimitive || desiredType == typeof(decimal)) &&
+                value is string && string.IsNullOrEmpty(value as string))
+            {
                 value = 0;
+            }
 
+            //处理 Guid
             if (desiredType == typeof(Guid) && value is string) { return Guid.Parse(value as string); }
 
             try

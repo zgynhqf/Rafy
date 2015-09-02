@@ -49,9 +49,9 @@ namespace UT
 
         public static readonly IRefIdProperty LesseeIdProperty =
             P<House>.RegisterRefId(e => e.LesseeId, ReferenceType.Normal);
-        public int? LesseeId
+        public long? LesseeId
         {
-            get { return (int?)this.GetRefNullableId(LesseeIdProperty); }
+            get { return (long?)this.GetRefNullableId(LesseeIdProperty); }
             set { this.SetRefNullableId(LesseeIdProperty, value); }
         }
         public static readonly RefEntityProperty<Lessee> LesseeProperty =

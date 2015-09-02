@@ -48,7 +48,11 @@ namespace Rafy.Domain.ORM
             }
         }
 
-        protected override RedundanciesUpdater CreateRedundanciesUpdater()
+        /// <summary>
+        /// 创建一个关系数据库的冗余属性更新器。
+        /// </summary>
+        /// <returns></returns>
+        public override RedundanciesUpdater CreateRedundanciesUpdater()
         {
             return new RdbRedundanciesUpdater(_dataProvider);
         }
