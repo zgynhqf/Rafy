@@ -1,6 +1,0 @@
-﻿gacutil -u VSTemplates
-gacutil -i bin\Debug\VSTemplates.dll
-编译完成后，需要执行以上命令。
-
-C:\Program Files (x86)\Microsoft SDKs\Windows\v8.0A\bin\NETFX 4.0 Tools\gacutil.exe
-C:\Program Files (x86)\Microsoft SDKs\Windows\v8.0A\bin\NETFX 4.0 Tools\x64\gacutil.exe
