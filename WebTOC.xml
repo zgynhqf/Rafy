@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <HelpTOC>
 
-  <HelpTOCNode Id="c413b695-d35a-42ed-ad4e-44e80123a923" Title="Rafy框架" Url="html/69b641cf-d1fe-4f06-877f-b479d268a3fc.htm">
-    <HelpTOCNode Id="9804eb64-8a5b-48dd-a1e0-44883dc2afd3" Title="领域实体框架" Url="html/c8e6cd25-c674-4cd1-9880-816d11f58eb8.htm">
+  <HelpTOCNode Id="5ef770de-4817-4b87-9a80-52d4a82d8760" Title="Rafy框架" Url="html/69b641cf-d1fe-4f06-877f-b479d268a3fc.htm">
+    <HelpTOCNode Id="27e3d164-d72b-4ec6-a59b-2ef8767d1ec5" Title="领域实体框架" Url="html/c8e6cd25-c674-4cd1-9880-816d11f58eb8.htm">
       <HelpTOCNode Title="安装" Url="html/61dd4914-8d8b-4488-857c-f83b553137d8.htm" />
-      <HelpTOCNode Id="393643f8-f4f5-4686-bc46-0a18e7a3c7bb" Title="快速试用" Url="html/dda8ce30-3c9c-48c6-b162-2c447bf9112e.htm">
+      <HelpTOCNode Id="5ab8476f-471f-4029-8784-d5355fb66a6f" Title="快速试用" Url="html/dda8ce30-3c9c-48c6-b162-2c447bf9112e.htm">
         <HelpTOCNode Title="创建第一个程序" Url="html/fdbb7d56-393e-4e0b-b69f-995a50f513eb.htm" />
         <HelpTOCNode Title="如何：连接到 Sql Server 数据库" Url="html/e62ba2ed-ba69-46d8-8f23-6111c25215f0.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="1ad0366d-61c5-4c47-af11-a4405f42375c" Title="领域实体" Url="html/e9998e68-31e8-47d6-9e28-829aade5044e.htm">
+      <HelpTOCNode Id="10e2ba4a-4106-4800-8689-a365d82b743c" Title="领域实体" Url="html/e9998e68-31e8-47d6-9e28-829aade5044e.htm">
         <HelpTOCNode Title="实体的状态" Url="html/1a5cb169-0f7c-479a-a854-88cd89478b1d.htm" />
         <HelpTOCNode Title="实体关系" Url="html/e0e55ab2-1e48-4acd-96ef-c889774bfecc.htm" />
-        <HelpTOCNode Id="41f6b218-e00b-48b7-aeca-8ad476736dbb" Title="实体属性" Url="html/8c0065bc-f165-4c69-81f4-9c3c57bd9ab9.htm">
+        <HelpTOCNode Id="27504fa6-bcc5-4cf8-a178-919b5e24e4f7" Title="实体属性" Url="html/8c0065bc-f165-4c69-81f4-9c3c57bd9ab9.htm">
           <HelpTOCNode Title="一般属性" Url="html/3ad175ff-a917-4e84-931f-f845285187ed.htm" />
           <HelpTOCNode Title="引用属性" Url="html/bae4aeb4-e6a9-4d1f-9bbd-1a4199303ba5.htm" />
           <HelpTOCNode Title="组合子属性" Url="html/770d700d-acf8-40fd-abc2-a580725a14fb.htm" />
@@ -22,9 +22,9 @@
         <HelpTOCNode Title="领域实体关系图" Url="html/640ac9bb-0090-4b38-9763-bad4fca3adfb.htm" />
         <HelpTOCNode Title="树型实体" Url="html/6b1f358e-0590-4d63-8697-b0a80349c4b0.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="fbd953db-d778-4a6c-ae27-bcefea7f57a8" Title="实体仓库" Url="html/6b377084-3fc9-4bf6-94d7-bc9a42ed82a7.htm">
+      <HelpTOCNode Id="cf60b3db-f5f7-49a8-94f9-01bbd7924bdf" Title="实体仓库" Url="html/6b377084-3fc9-4bf6-94d7-bc9a42ed82a7.htm">
         <HelpTOCNode Title="实体的创建、删除、修改" Url="html/019647a4-5ae0-4a43-b529-6b2d7c70b46c.htm" />
-        <HelpTOCNode Id="e24a3bae-1dde-44eb-bcdd-8d25cfd8cfbd" Title="编写查询" Url="html/59c80aec-c910-4880-b165-c3495ed5eb3e.htm">
+        <HelpTOCNode Id="9eedb10c-6e04-4474-a5ec-c3042231b692" Title="编写查询" Url="html/59c80aec-c910-4880-b165-c3495ed5eb3e.htm">
           <HelpTOCNode Title="Linq 查询" Url="html/c7c6d07b-bb41-4590-a2a6-8b0b49ce1c0b.htm" />
           <HelpTOCNode Title="Sql 查询" Url="html/c2eced2c-e434-4d53-a06d-fbc518fbddf5.htm" />
           <HelpTOCNode Title="分页查询" Url="html/ae9a2512-1528-401a-ac4f-502304a7ae03.htm" />
@@ -32,12 +32,13 @@
           <HelpTOCNode Title="表格查询" Url="html/55180b16-9fda-42a1-8c4f-27d037aeae76.htm" />
           <HelpTOCNode Title="贪婪加载" Url="html/3e3ee502-ecbb-417d-8fbf-fa24ec21e2bc.htm" />
         </HelpTOCNode>
+        <HelpTOCNode Title="大批量导入实体" Url="html/c70274b4-8afc-4bd4-82d9-6e43ae7562ee.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="cba4a40f-107b-4d45-8e6e-54a542429464" Title="领域服务" Url="html/d7551c01-4f62-4e6b-8fd7-4de371df6bdf.htm">
+      <HelpTOCNode Id="845d6a1d-748c-4fdf-bd44-d00816a376ef" Title="领域服务" Url="html/d7551c01-4f62-4e6b-8fd7-4de371df6bdf.htm">
         <HelpTOCNode Title="单连接事务" Url="html/acc34fac-b431-4db9-a86b-83f40c812b97.htm" />
         <HelpTOCNode Title="执行SQL或存储过程" Url="html/21a4d8a5-c34d-4725-adfe-ed5f95b22977.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="0425c5e0-240a-4567-a245-0a33c2a28486" Title="对象关系映射" Url="html/0f6e3552-029f-4a32-9655-e4b6fb22edcc.htm">
+      <HelpTOCNode Id="98c8356a-b1b4-4db2-a7bd-2af4c179b5ff" Title="对象关系映射" Url="html/0f6e3552-029f-4a32-9655-e4b6fb22edcc.htm">
         <HelpTOCNode Title="配置映射" Url="html/eba03db2-2a71-4499-9dcd-99e0c37fe10e.htm" />
         <HelpTOCNode Title="继承映射" Url="html/8b3a3b78-9e6a-4558-938d-7692ae6aaa8f.htm" />
         <HelpTOCNode Title="SQL 语句日志" Url="html/12520633-1fbf-45dc-aca8-c4089b5c90e0.htm" />
@@ -45,29 +46,29 @@
         <HelpTOCNode Title="为数据库生成注释" Url="html/99366b1b-7583-4c95-9f78-3178b0bd50f9.htm" />
         <HelpTOCNode Title="多数据库支持" Url="html/ef53c777-dd02-4a01-98c9-7dcc49489cec.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="d6e88bd5-3096-4f03-96b3-c7b2d145a35b" Title="部署" Url="html/f55333b8-3524-4a07-99bc-6a1cdb6be6b4.htm">
+      <HelpTOCNode Id="bcf43774-e85b-4a5c-a1b9-774d6cdbfcdb" Title="部署" Url="html/f55333b8-3524-4a07-99bc-6a1cdb6be6b4.htm">
         <HelpTOCNode Title="分布式部署" Url="html/41ea1cf8-1763-4b6e-a019-6dc707089e6a.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="04faddbb-750c-4fa6-9804-8bdb60bc9080" Title="其它" Url="html/2599e4bb-d313-4b78-892d-654f3e9acba8.htm">
+      <HelpTOCNode Id="af52f7fc-443c-4ecd-870a-00815731a3df" Title="其它" Url="html/2599e4bb-d313-4b78-892d-654f3e9acba8.htm">
         <HelpTOCNode Title="代码段" Url="html/6b3e8163-8516-4065-91f5-194491334343.htm" />
         <HelpTOCNode Title="Rafy 与经典 DDD 的关系" Url="html/f4f5c2f5-638a-456a-9c8d-1e1854c63002.htm" />
         <HelpTOCNode Title="常见问题(FAQ)" Url="html/50a5c6a3-1336-4ec3-8c6d-fedb0b93cc37.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
-    <HelpTOCNode Id="40c1a115-01d0-4181-8ccd-97e6e902aecf" Title="设计理念" Url="html/3ebafad8-73e3-431f-9e49-9a0d9b23c786.htm">
+    <HelpTOCNode Id="a235c955-c805-4876-bca0-0bab462db333" Title="设计理念" Url="html/3ebafad8-73e3-431f-9e49-9a0d9b23c786.htm">
       <HelpTOCNode Title="领域驱动设计" Url="html/853673c9-7c40-4679-b139-a3e7e3cec8ef.htm" />
       <HelpTOCNode Title="面向服务架构" Url="html/e1014057-fd62-4810-8f1f-333d54564e91.htm" />
       <HelpTOCNode Title="插件化架构" Url="html/15c790a6-8f5e-44aa-b8c3-74a955004a1e.htm" />
       <HelpTOCNode Title="模型驱动架构" Url="html/813981b5-3631-4d47-84ee-314aed1346ff.htm" />
       <HelpTOCNode Title="产品线工程" Url="html/946c540b-acb0-4531-b99c-85756cb69d4e.htm" />
     </HelpTOCNode>
-    <HelpTOCNode Id="972def49-5c4e-4720-a1da-236004f590a4" Title="快速界面生成" Url="html/789f6408-a67c-4122-9986-63d05a573910.htm">
+    <HelpTOCNode Id="c6465373-d186-422e-a603-152a2d0f5057" Title="快速界面生成" Url="html/789f6408-a67c-4122-9986-63d05a573910.htm">
       <HelpTOCNode Title="WPF 界面" Url="html/3ef85916-d173-4752-be35-73190e0588be.htm" />
       <HelpTOCNode Title="Web 界面" Url="html/64894803-b4ea-4170-a6f5-9a8c304d560a.htm" />
     </HelpTOCNode>
   </HelpTOCNode>
-  <HelpTOCNode Id="b3e262ae-7afe-4bb8-994d-971903b92743" Title="EmptyAssembly" Url="html/1234690D.htm">
-    <HelpTOCNode Id="44b068f0-6973-44c9-85bd-d6752e2d4ab6" Title="Class1 Class" Url="html/2368570A.htm">
+  <HelpTOCNode Id="b53e26f6-1f7b-4b89-b558-583d9aa7fe9e" Title="EmptyAssembly" Url="html/1234690D.htm">
+    <HelpTOCNode Id="8b0ce080-f1af-4234-a6f6-4aabfd88ac89" Title="Class1 Class" Url="html/2368570A.htm">
       <HelpTOCNode Title="Class1 Constructor " Url="html/923C26D2.htm" />
       <HelpTOCNode Title="Class1 Methods" Url="html/795CD906.htm" />
     </HelpTOCNode>
