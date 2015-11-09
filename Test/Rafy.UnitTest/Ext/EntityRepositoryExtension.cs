@@ -14,6 +14,7 @@ namespace UT
         /// <summary>
         /// 通过一个属性与它对应的属性值，来查询一个实体。
         /// </summary>
+        /// <param name="repo">The repo.</param>
         /// <param name="property">需要查询的属性。</param>
         /// <param name="value">对应的属性值，如果是字符串属性，会使用包含查询。</param>
         /// <returns></returns>

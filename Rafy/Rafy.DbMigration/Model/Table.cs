@@ -43,6 +43,11 @@ namespace Rafy.DbMigration.Model
         public string Name { get; private set; }
 
         /// <summary>
+        /// 表的注释。
+        /// </summary>
+        public string Comment { get; set; }
+
+        /// <summary>
         /// 所在的数据库 Schema
         /// </summary>
         public Database DataBase { get; private set; }

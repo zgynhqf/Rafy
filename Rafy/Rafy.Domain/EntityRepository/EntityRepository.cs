@@ -379,6 +379,24 @@ namespace Rafy.Domain
         }
 
         /// <summary>
+        /// 把指定实体的所有组合子实体都加载到内存中。（非递归）
+        /// </summary>
+        /// <param name="entity"></param>
+        public void LoadAllChildren(Entity entity)
+        {
+            var childProperties = this.GetChildProperties();
+            for (int i = 0, c = childProperties.Count; i < c; i++)
+            {
+                var childProperty = childProperties[i] as IListProperty;
+                if (childProperty != null)
+                {
+                    //不论这个列表属性是否已经加载，都必须获取其所有的数据行，并标记为删除。
+                    entity.GetLazyList(childProperty);
+                }
+            }
+        }
+
+        /// <summary>
         /// 这个字段用于存储运行时解析出来的表的信息。
         /// </summary>
         private IPersistanceTableInfo _tableInfo;

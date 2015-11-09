@@ -12,6 +12,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Runtime;
@@ -114,7 +115,33 @@ namespace Rafy.Domain
 
         /*********************** 代码块解释 *********************************
          * 把所有常用的扩展点方法聚合在 DataProvider 中，方便开发者重写。
+         * 对于简单的重写逻辑来说，只需要重写此类的方法即可。
+         * 对于框架级大型的重写逻辑来说，则需要重写 DataSaver、DataQueryer 中的方法。
         **********************************************************************/
+
+        /// <summary>
+        /// 某个实体增加前事件。
+        /// 静态事件，不能经常修改此列表。建议在插件初始化时使用。
+        /// </summary>
+        public static event EventHandler<EntityCUDEventArgs> Inserting;
+
+        /// <summary>
+        /// 某个实体修改前事件。
+        /// 静态事件，不能经常修改此列表。建议在插件初始化时使用。
+        /// </summary>
+        public static event EventHandler<EntityCUDEventArgs> Updating;
+
+        /// <summary>
+        /// 某个实体删除前事件。
+        /// 静态事件，不能经常修改此列表。建议在插件初始化时使用。
+        /// </summary>
+        public static event EventHandler<EntityCUDEventArgs> Deleting;
+
+        /// <summary>
+        /// 查询实体的事件。
+        /// 静态事件，不能经常修改此列表。建议在插件初始化时使用。
+        /// </summary>
+        public static event EventHandler<QueryingEventArgs> Querying;
 
         /// <summary>
         /// 子类重写这个方法，用于在从数据库获取出来时，及时地加载一些额外的属性。
@@ -150,6 +177,9 @@ namespace Rafy.Domain
         /// <param name="args"></param>
         internal protected virtual void OnQuerying(EntityQueryArgs args)
         {
+            var h = Querying;
+            if (h != null) { h(this, new QueryingEventArgs { Args = args }); }
+
             _dataQueryer.OnQuerying(args);
         }
 
@@ -175,7 +205,15 @@ namespace Rafy.Domain
         /// <param name="entity"></param>
         internal protected virtual void Insert(Entity entity)
         {
-            _dataSaver.Insert(entity);
+            var handler = Inserting;
+            if (handler != null)
+            {
+                var args = new EntityCUDEventArgs(entity);
+                handler(this, args);
+                if (args.Cancel) return;
+            }
+
+            _dataSaver.InsertToPersistence(entity);
         }
 
         /// <summary>
@@ -186,7 +224,15 @@ namespace Rafy.Domain
         /// <param name="entity"></param>
         internal protected virtual void Update(Entity entity)
         {
-            _dataSaver.Update(entity);
+            var handler = Updating;
+            if (handler != null)
+            {
+                var args = new EntityCUDEventArgs(entity);
+                handler(this, args);
+                if (args.Cancel) return;
+            }
+
+            _dataSaver.UpdateToPersistence(entity);
         }
 
         /// <summary>
@@ -197,9 +243,48 @@ namespace Rafy.Domain
         /// <param name="entity"></param>
         internal protected virtual void Delete(Entity entity)
         {
-            _dataSaver.Delete(entity);
+            var handler = Deleting;
+            if (handler != null)
+            {
+                var args = new EntityCUDEventArgs(entity);
+                handler(this, args);
+                if (args.Cancel) return;
+            }
+
+            _dataSaver.DeleteFromPersistence(entity);
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// 某个实体被在数据层执行增加、删除、修改前的事件的参数。
+    /// </summary>
+    public class EntityCUDEventArgs : CancelEventArgs
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EntityCUDEventArgs"/> class.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        public EntityCUDEventArgs(Entity entity)
+        {
+            this.Entity = entity;
+        }
+
+        /// <summary>
+        /// 被操作的实体。
+        /// </summary>
+        public Entity Entity { get; private set; }
+    }
+
+    /// <summary>
+    /// 查询实体前的事件的参数。
+    /// </summary>
+    public class QueryingEventArgs : EventArgs
+    {
+        /// <summary>
+        /// 查询参数
+        /// </summary>
+        public EntityQueryArgs Args { get; internal set; }
     }
 }

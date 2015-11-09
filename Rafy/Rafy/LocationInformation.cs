@@ -45,7 +45,10 @@ namespace Rafy
         /// <summary>
         /// 当前应用程序是否是一个 UI 应用程序。
         /// </summary>
-        public bool IsUI { get { return this.IsWebUI || this.IsWPFUI; } }
+        public bool IsUI
+        {
+            get { return this.IsWebUI || this.IsWPFUI; }
+        }
     }
 
     /// <summary>

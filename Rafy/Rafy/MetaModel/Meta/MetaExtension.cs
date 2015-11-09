@@ -36,12 +36,7 @@ namespace Rafy.MetaModel
         /// <returns></returns>
         public static EntityMeta MapAllProperties(this EntityMeta meta)
         {
-            var properties = meta.ManagedProperties.GetNonReadOnlyCompiledProperties()
-                .Where(p => !(p is IListProperty) && !(p is IRefEntityProperty)
-                    && p != EntityConvention.Property_TreeIndex
-                    && p != EntityConvention.Property_TreePId
-                ).ToArray();
-            return meta.MapProperties(properties);
+            return MapAllPropertiesExcept(meta, null);
         }
 
         /// <summary>
@@ -55,14 +50,18 @@ namespace Rafy.MetaModel
         /// <returns></returns>
         public static EntityMeta MapAllPropertiesExcept(this EntityMeta meta, params IManagedProperty[] exceptProperties)
         {
-            var properties = meta.ManagedProperties.GetNonReadOnlyCompiledProperties()
+            IEnumerable<IManagedProperty> properties = meta.ManagedProperties.GetNonReadOnlyCompiledProperties()
                 .Where(p => !(p is IListProperty) && !(p is IRefEntityProperty)
                     && p != EntityConvention.Property_TreeIndex
                     && p != EntityConvention.Property_TreePId
-                ).Except(exceptProperties)
-                .ToArray();
+                    && p != EntityConvention.Property_IsPhantom
+                );
+            if (exceptProperties != null)
+            {
+                properties = properties.Except(exceptProperties);
+            }
 
-            return meta.MapProperties(properties);
+            return meta.MapProperties(properties.ToArray());
         }
 
         /// <summary>

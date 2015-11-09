@@ -26,6 +26,7 @@ using Rafy.DbMigration.Model;
 using Rafy.DbMigration.Operations;
 using Rafy.DbMigration.SqlServer;
 using Rafy.Domain;
+using Rafy.Domain.ORM;
 using Rafy.Domain.ORM.DbMigration;
 using UT;
 
@@ -388,7 +389,7 @@ namespace RafyUnitTest
                     Assert.IsTrue(pk.DataType == DbType.Int32);
 
                     //数据库数据
-                    using (var db = new DbAccesser(UnitTestEntityRepositoryDataProvider.DbSettingName))
+                    using (var db = DbAccesserFactory.Create(context.DbSetting))
                     {
                         var rows = db.QueryDataTable("select * from TestingTable");
                         Assert.IsTrue(rows.Rows.Count == 2);
@@ -403,6 +404,27 @@ namespace RafyUnitTest
 
                     var database = context.DatabaseMetaReader.Read();
                     Assert.IsTrue(database.FindTable("TestingTable") == null);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void DMT_RefreshComments()
+        {
+            using (var context = new RafyDbMigrationContext(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            {
+                context.RefreshComments();
+
+                if (!DbSetting.IsOracleProvider(context.DbSetting))
+                {
+                    //数据库数据
+                    using (var db = DbAccesserFactory.Create(context.DbSetting))
+                    {
+                        var rowsCount = Convert.ToInt32(db.QueryValue(
+@"select COUNT(0) from sys.extended_properties p
+    join sys.tables t on p.major_id = t.object_id where t.name = 'ARTICLE'"));
+                        Assert.IsTrue(rowsCount > 0);
+                    }
                 }
             }
         }

@@ -111,26 +111,26 @@ namespace UT
                     }
                 }
 
-                protected override void Insert(Entity entity)
+                public override void InsertToPersistence(Entity entity)
                 {
                     (entity as MemoryCustomer).Version++;
 
-                    base.Insert(entity);
+                    base.InsertToPersistence(entity);
                 }
 
-                protected override void Update(Entity entity)
+                public override void UpdateToPersistence(Entity entity)
                 {
-                    base.Update(entity);
+                    base.UpdateToPersistence(entity);
 
                     var item = entity as MemoryCustomer;
                     item.LoadProperty(MemoryCustomer.VersionProperty, item.Version + 1);
                 }
 
-                protected override void Delete(Entity entity)
+                public override void DeleteFromPersistence(Entity entity)
                 {
                     (entity as MemoryCustomer).Version++;
 
-                    base.Delete(entity);
+                    base.DeleteFromPersistence(entity);
                 }
             }
         }

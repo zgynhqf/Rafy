@@ -63,6 +63,26 @@ namespace Rafy.EntityObjectModel
         /// </summary>
         public ChildCollection Children { get; private set; }
 
+        /// <summary>
+        /// 判断当前类型是否是指定类型的子类。
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public bool IsSubclassOf(EntityType type)
+        {
+            var baseType = this.BaseType;
+            if (baseType != null)
+            {
+                return type == baseType || baseType.IsSubclassOf(type);
+            }
+            return false;
+        }
+
+        public override string ToString()
+        {
+            return this.FullName;
+        }
+
         ///// <summary>
         ///// 遍历所有的值属性，包括继承下来的属性。
         ///// </summary>
@@ -89,10 +109,5 @@ namespace Rafy.EntityObjectModel
         //{
         //    throw new NotImplementedException();//huqf
         //}
-
-        public override string ToString()
-        {
-            return this.FullName;
-        }
     }
 }

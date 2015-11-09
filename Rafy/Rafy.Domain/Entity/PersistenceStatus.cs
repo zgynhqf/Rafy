@@ -19,7 +19,8 @@ using System.Text;
 namespace Rafy.Domain
 {
     /// <summary>
-    /// 实体状态
+    /// 实体的持久化状态。
+    /// 保存实体时，会根据这个状态来进行对应的增、删、改的操作。
     /// </summary>
     public enum PersistenceStatus
     {

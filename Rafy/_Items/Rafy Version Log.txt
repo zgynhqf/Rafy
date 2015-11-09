@@ -4,15 +4,42 @@
  * 说明：本文件用于记录 Rafy 框架版本号及相应的变更记录。格式如下：
  * 暂时分为以下几类：
  * 等级：★★公布、★重要
- * 外部：！修改接口、！删除接口、添加接口、添加功能、BUG修复、示例、工具
+ * 外部：！修改接口、！删除接口、添加接口、添加功能、BUG修复、示例、RafySDK
  * 内部：结构、重构、内部修改。
  * （重构与内部修改相比，是不会造成任何功能变动的。）
  * 
 *******************************************************/
 
-2.40.2792
+2.43.3016
     ★★公布、添加功能
-        批量导入大量实体
+        添加 Rafy.Web.Http、Rafy.Web.Mvc 两个命名空间。（代码移植自历史项目）。
+    添加接口
+        AggtSerializer 在序列化枚举时，可以选择使用 字符串 或 Label 进行输出。
+        OData 支持枚举属性的查询。
+        添加 CloneOptions.NewSingleEntity();
+    添加功能
+        在输出 Sql 日志时，如果是 SQLServer 数据库，还同时输出对应的连接的客户端 Id。
+    BUG修复
+        Oracle 支持问题。
+        解决 WebOrThreadStaticAppContextProvider 中的代码引发 ThreadStaticAppContextProvider.Items 集合出错的问题。
+        解决‘无法更新枚举类型的冗余属性。’的 BUG。
+
+2.42.2840
+    ★★公布、添加功能
+        添加幽灵实体插件，实现实体的假删除功能。
+    添加接口
+        为 RepositoryDataProvider 添加删除前、查询前两个事件扩展点。
+        添加 WebAppStarter。
+        添加 ExtensionPropertiesRegister。
+    重构
+        DataSaver.Delete 改为 DeleteFromPersistence。
+
+2.41.2815
+    ★★公布、添加功能
+        支持使用实体类中的注释来更新数据库中的相关注释内容。
+            实现在 SqlServer 中生成注释。
+            实现在 Oracle 中生成注释。
+        支持批量导入大量实体
             实现 Oracle 中的批量插入大量新实体。
             实现 SqlServer 的批量插入大量新实体。
             支持设置每批次多少数据。
@@ -22,6 +49,11 @@
             可以配置是否在更新的同时，一同更新所有大对象属性。
             批量更新支持远程调用。
             支持 Long 为实体的 Id 主键类型，以支持真正大数据量。
+        Json.AggtSerializer 支持序列化、反序列化树型实体。
+        DbAccesserFactory 支持从仓库创建 IDbAccesser。
+    BUG修复
+        解决使用 Like 语句模糊查询时，参数值中有通配符 % 及 _ 时无效的问题。
+        解决 ORACLE 中把列从可空变为不可空时，更新空列的默认时间时使用字符串，导致语法错误的问题。
 
 2.39.2760
     ★★公布、添加功能、BUG修复
@@ -181,7 +213,7 @@
 2.32.2477
     添加接口
         添加 QueryNodeTester。
-    工具
+    RafySDK
         领域模型设计器支持在属性上显示注释。
 
 2.32.2474

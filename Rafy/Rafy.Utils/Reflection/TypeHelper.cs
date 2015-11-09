@@ -112,7 +112,8 @@ namespace Rafy.Reflection
         [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
         public static bool IsNullable(Type targetType)
         {
-            return targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>);
+            //本代码拷贝自：Nullable.GetUnderlyingType.
+            return targetType.IsGenericType && !targetType.IsGenericTypeDefinition && targetType.GetGenericTypeDefinition() == typeof(Nullable<>);
         }
 
         /// <summary>
@@ -207,7 +208,8 @@ namespace Rafy.Reflection
 
                 //空字符串转换为 null。
                 if (value == null ||
-                    value is string && value as string == string.Empty) return null;
+                    value is string && value as string == string.Empty)
+                    return null;
             }
 
             //处理枚举类型

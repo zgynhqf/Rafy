@@ -49,6 +49,7 @@
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Lib\SQLCE\System.Data.SqlServerCe.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Transactions" />
@@ -64,6 +65,7 @@
     <Compile Include="DbMigrationException.cs" />
     <Compile Include="DbMigrationExceptionMessageFormatter.cs" />
     <Compile Include="DbMigrationSettings.cs" />
+    <Compile Include="Operations\UpdateCommentOperation.cs" />
     <Compile Include="Providers\DbMetaReader.cs" />
     <Compile Include="Providers\DbMigrationProvider.cs" />
     <Compile Include="Providers\DbMigrationProviderFactory.cs" />

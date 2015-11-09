@@ -183,7 +183,7 @@ namespace Rafy.Web
 
         internal static string LabeledRefProperty(string refProperty)
         {
-            return refProperty + "_Label";
+            return refProperty + "_Display";
         }
     }
 }

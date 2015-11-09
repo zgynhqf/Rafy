@@ -122,6 +122,11 @@ namespace Rafy.DbMigration.Model
         public bool IsIdentity { get; set; }
 
         /// <summary>
+        /// 列的注释。
+        /// </summary>
+        public string Comment { get; set; }
+
+        /// <summary>
         /// 如果是外键，这表示外键表
         /// </summary>
         public ForeignConstraint ForeignConstraint

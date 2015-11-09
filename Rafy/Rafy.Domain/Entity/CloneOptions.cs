@@ -28,7 +28,8 @@ namespace Rafy.Domain
         #region Actions
 
         /// <summary>
-        /// 读取数据行的数据
+        /// 读取单个实体的数据
+        /// CloneActions.NormalProperties | CloneActions.IdProperty | CloneActions.RefEntities | CloneActions.ParentRefEntity
         /// </summary>
         public static CloneOptions ReadSingleEntity()
         {
@@ -37,6 +38,7 @@ namespace Rafy.Domain
 
         /// <summary>
         /// 读取数据行的数据
+        /// CloneActions.NormalProperties | CloneActions.IdProperty
         /// </summary>
         public static CloneOptions ReadDbRow()
         {
@@ -44,8 +46,18 @@ namespace Rafy.Domain
         }
 
         /// <summary>
+        /// 拷贝新的实体的数据（不含 Id）。
+        /// CloneActions.NormalProperties | CloneActions.RefEntities | CloneActions.ParentRefEntity
+        /// </summary>
+        public static CloneOptions NewSingleEntity()
+        {
+            return new CloneOptions(CloneActions.NormalProperties | CloneActions.RefEntities | CloneActions.ParentRefEntity);
+        }
+
+        /// <summary>
         /// 组合克隆。
         /// 会克隆其所有的孩子对象。
+        /// CloneActions.NormalProperties | CloneActions.RefEntities | CloneActions.ChildrenRecur
         /// </summary>
         public static CloneOptions NewComposition()
         {
@@ -56,6 +68,8 @@ namespace Rafy.Domain
         /// 从旧实体中合并值。
         /// 
         /// 复制完成后，旧实体不再可用。
+        /// 
+        /// CloneActions.NormalProperties | CloneActions.GrabChildren
         /// </summary>
         public static CloneOptions MergeOldEntity()
         {
@@ -89,6 +103,7 @@ namespace Rafy.Domain
 
         /// <summary>
         /// 值在复制时使用的方法。
+        /// 默认值：LoadProperty。
         /// </summary>
         public CloneValueMethod Method { get; set; }
 
@@ -125,7 +140,7 @@ namespace Rafy.Domain
         private List<IManagedProperty> _ignoreList;
 
         /// <summary>
-        /// 调用此方法，通知框架在复制CSLA值时，过滤掉一些无用的属性。
+        /// 调用此方法，通知框架在复制属性值时，过滤掉一些无用的属性。
         /// </summary>
         /// <param name="property"></param>
         public void IgnoreProperty(IManagedProperty property)

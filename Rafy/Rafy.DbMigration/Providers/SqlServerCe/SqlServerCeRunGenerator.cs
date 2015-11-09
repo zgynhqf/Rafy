@@ -57,5 +57,10 @@ namespace Rafy.DbMigration.SqlServerCe
             //不需要传入 DataBase 的值，因为 CreateDbMigrationRun 会直接使用连接中指定的数据库名称。
             this.AddRun(new DropDbMigrationRun());
         }
+
+        protected override void Generate(UpdateComment op)
+        {
+            this.AddRun(new GenerationExceptionRun { Message = "不支持为 SQL CE 数据库自动生成注释。" });
+        }
     }
 }

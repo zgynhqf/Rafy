@@ -321,7 +321,7 @@ WHERE T0.UserName LIKE {0}");
                         new Chapter
                         {
                             Name = "c1",
-                            SectionList = 
+                            SectionList =
                             {
                                 new Section { Name = "1" },
                                 new Section { Name = "2" },
@@ -330,7 +330,7 @@ WHERE T0.UserName LIKE {0}");
                         new Chapter
                         {
                             Name = "c2",
-                            SectionList = 
+                            SectionList =
                             {
                                 new Section { Name = "3" },
                                 new Section { Name = "4" },
@@ -368,6 +368,46 @@ WHERE T0.UserName LIKE {0}");
 FROM Roles
     INNER JOIN Users AS T0 ON Roles.UserId = T0.Id
 WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName LIKE {3}");
+        }
+
+        [TestMethod]
+        public void ODT_Filter_EnumValue()
+        {
+            var repo = RF.Concrete<TestRoleRepository>();
+            var q = Parse("RoleType ne Administrator", repo);
+            var sql = QueryNodeTester.GenerateTestSql(q.Where);
+
+            Assert.IsTrue(sql.ToString() == @"Roles.RoleType != {0}");
+        }
+
+        [TestMethod]
+        public void ODT_Filter_EnumValueWithBracket()
+        {
+            var repo = RF.Concrete<TestRoleRepository>();
+            var q = Parse("(RoleType ne Administrator or RoleType ne Normal)", repo);
+            var sql = QueryNodeTester.GenerateTestSql(q.Where);
+
+            Assert.IsTrue(sql.ToString() == @"Roles.RoleType != {0} OR Roles.RoleType != {1}", "枚举值后紧跟括号时，需要能解析出枚举的值。");
+        }
+
+        [TestMethod]
+        public void ODT_Filter_EnumValue_WithQuote()
+        {
+            var repo = RF.Concrete<TestRoleRepository>();
+            var q = Parse("RoleType ne 'Administrator'", repo);
+            var sql = QueryNodeTester.GenerateTestSql(q.Where);
+
+            Assert.IsTrue(sql.ToString() == @"Roles.RoleType != {0}");
+        }
+
+        [TestMethod]
+        public void ODT_Filter_EnumValue_Nullable()
+        {
+            var repo = RF.Concrete<TestRoleRepository>();
+            var q = Parse("RoleType2 ne Administrator", repo);
+            var sql = QueryNodeTester.GenerateTestSql(q.Where);
+
+            Assert.IsTrue(sql.ToString() == @"Roles.RoleType2 != {0}");
         }
 
         [TestMethod]
@@ -443,7 +483,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
                         new Chapter
                         {
                             Name = "chapter",
-                            SectionList = 
+                            SectionList =
                             {
                                 new Section { Name = "Section1" },
                                 new Section { Name = "Section2" },
@@ -479,7 +519,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
                         new Chapter
                         {
                             Name = "chapter",
-                            SectionList = 
+                            SectionList =
                             {
                                 new Section { Name = "Section1", SectionOwner = so },
                                 new Section { Name = "Section2", SectionOwner = so },
@@ -516,7 +556,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
                         new Chapter
                         {
                             Name = "chapter",
-                            SectionList = 
+                            SectionList =
                             {
                                 new Section { Name = "Section1" },
                                 new Section { Name = "Section2" },
@@ -554,7 +594,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
                         new Chapter
                         {
                             Name = "chapter",
-                            SectionList = 
+                            SectionList =
                             {
                                 new Section { Name = "Section1", SectionOwner = so },
                                 new Section { Name = "Section2", SectionOwner = so },

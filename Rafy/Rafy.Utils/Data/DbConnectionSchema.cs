@@ -77,9 +77,7 @@ namespace Rafy.Data
 
         private void ParseDbName()
         {
-            var factory = DbProviderFactories.GetFactory(this.ProviderName);
-            var con = factory.CreateConnection();
-            con.ConnectionString = this.ConnectionString;
+            var con = this.CreateConnection();
             var database = con.Database;
 
             //System.Data.OracleClient 解析不出这个值，需要特殊处理。

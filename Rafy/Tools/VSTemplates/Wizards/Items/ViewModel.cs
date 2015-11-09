@@ -17,7 +17,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
-namespace RafySDK.Templates.Wizards.Items
+namespace RafySDK.Templates.Wizards
 {
     public abstract class ViewModel : INotifyPropertyChanged
     {

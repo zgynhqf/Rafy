@@ -18,6 +18,7 @@ using System.Text;
 using System.Web;
 using Rafy.Domain.ORM.Query;
 using Rafy.ManagedProperty;
+using Rafy.Reflection;
 
 namespace Rafy.Domain
 {
@@ -30,7 +31,6 @@ namespace Rafy.Domain
 
         private IQuery _query;
         private ITableSource _mainTable;
-        private StringReader _reader;
         private QueryFactory _f;
         private IConstraint _current;
         private BinaryOperator? _concat;
@@ -54,14 +54,13 @@ namespace Rafy.Domain
             _f = QueryFactory.Instance;
             _bracketStack = new Stack<StackItem>();
 
-            using (_reader = new StringReader(filter))
+            _filter = filter;
+            _filterIndex = 0;
+            while (true)
             {
-                while (true)
-                {
-                    var part = this.ReadPart();
-                    if (part == string.Empty) break;
-                    this.DealPart(part);
-                }
+                var part = this.ReadPart();
+                if (part == string.Empty) break;
+                this.DealPart(part);
             }
 
             query.Where = _current;
@@ -212,10 +211,14 @@ namespace Rafy.Domain
                     throw new NotSupportedException("不支持这个操作符：" + comparison + "。");
             }
 
-            return _f.Constraint(_column, op, value);
+            var objValue = TypeHelper.CoerceValue(_column.Property.PropertyType, value);
+            return _f.Constraint(_column, op, objValue);
         }
 
         #region ReadPart
+
+        private string _filter;
+        private int _filterIndex;
 
         private StringBuilder _wordBuffer = new StringBuilder();
 
@@ -229,14 +232,15 @@ namespace Rafy.Domain
         private string ReadPart()
         {
             _wordBuffer.Clear();
-            bool hasString = false;
+            bool stringStarted = false;
+
+            var length = _filter.Length;
 
             while (true)
             {
-                var cValue = _reader.Read();
-                if (cValue < 0) break;
+                if (_filterIndex >= length) break;
 
-                var c = (char)cValue;
+                var c = _filter[_filterIndex++];
 
                 //括号直接返回。
                 if (c == '(' || c == ')')
@@ -248,16 +252,23 @@ namespace Rafy.Domain
                 if (c == '\'' || c == '"')
                 {
                     //如果是结尾的字符串，则表示结束。
-                    if (hasString) { break; }
+                    if (stringStarted) { break; }
 
-                    hasString = true;
+                    stringStarted = true;
                     continue;
                 }
 
-                if (!char.IsWhiteSpace(c) || hasString)
+                if (!char.IsWhiteSpace(c) || stringStarted)
                 {
-                    //非括号、非空白，或者正在处理包含在字符串中的字符时，需要添加到单词中。
+                    //非括号、非空白，或者正在处理包含在字符串中的空白字符时，需要添加到单词中。
                     _wordBuffer.Append(c);
+
+                    //如果单词后面紧跟括号，那么单词也必须结束。
+                    if (_filterIndex < length)
+                    {
+                        var next = _filter[_filterIndex];
+                        if (next == '(' || next == ')') { break; }
+                    }
                 }
                 else
                 {
@@ -275,7 +286,7 @@ namespace Rafy.Domain
 
             var res = _wordBuffer.ToString();
 
-            if (!hasString && res.EqualsIgnoreCase("null"))
+            if (!stringStarted && res.EqualsIgnoreCase("null"))
             {
                 res = null;
             }

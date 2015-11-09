@@ -66,8 +66,13 @@ namespace Rafy.Domain.ORM
         /// <returns></returns>
         public virtual object ReadParameterValue(Entity entity)
         {
-            object val = this.Read(entity);
-            return val ?? DBNull.Value;
+            object value = this.Read(entity);
+            return this.ConvertToParameterValue(value);
+        }
+
+        public virtual object ConvertToParameterValue(object value)
+        {
+            return value ?? DBNull.Value;
         }
 
         /// <summary>

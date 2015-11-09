@@ -17,11 +17,11 @@ namespace Rafy.VSPackage.Modeling
     [Guid(GuidList.guidVSPackageEditorFactoryString)]
     public sealed class EditorFactory : IVsEditorFactory, IDisposable
     {
-        private VSPackagePackage editorPackage;
+        private RafySDKPackage editorPackage;
         private ServiceProvider vsServiceProvider;
 
 
-        public EditorFactory(VSPackagePackage package)
+        public EditorFactory(RafySDKPackage package)
         {
             Debug.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering {0} constructor", this.ToString()));
 

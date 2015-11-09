@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="99366b1b-7583-4c95-9f78-3178b0bd50f9" revisionNumber="1">
+    <developerConceptualDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+        <introduction>
+            <para>当开发者使用 CodeFirst 开发模式，编写了大量的实体类，在代码中编写了完整的类型注释和属性注释，并自动生成数据库后，往往需要把实体类型和实体属性上的注释同时生成到对应的数据库表及字段上。这样，即方便在查看数据库时能清晰地看到每一个表及字段的含义，也方便使用一些第三方的工具（如 PowerDesigner 等）为数据库生成较为全面的文档。</para>
+            <!--<autoOutline />-->
+        </introduction>
+
+        <section address="howto">
+            <title>使用方法</title>
+            <content>
+                <procedure>
+                    <title>步骤</title>
+                    <steps class="ordered">
+                        <step>
+                            <content>
+                                <para>在为数据库生成注释之前，需要保证数据库已经全部生成成功（即和实体保持一致）。否则更新字段的注释时，可能因为字段不存在而导致执行失败。</para>
+                            </content>
+                        </step>
+                        <step>
+                            <content>
+                                <para>需要在编译领域实体所在的程序集时，同时生成对应的 XML 注释文件。否则，程序会找不到需要编写的注释。</para>
+                                <para>打开方法：在领域实体项目上点击右键->属性->编译->输出->在“XML document file”前打勾。</para>
+                            </content>
+                        </step>
+                        <step>
+                            <content>
+                                <para>打开后，重新编译整个解决方案。</para>
+                            </content>
+                        </step>
+                        <step>
+                            <content>
+                                <para>编写以下代码来生成数据库的注释。（只需要执行一次即可）</para>
+                                <code language="cs">
+                                    using (var context = new RafyDbMigrationContext(JXCEntityRepositoryDataProvider.DbSettingName))
+                                    {
+                                        context.RefreshComments();
+                                    }
+                                </code>
+                            </content>
+                        </step>
+                    </steps>
+                </procedure>
+            </content>
+        </section>
+
+        <section address="caution">
+            <title>注意</title>
+            <content>
+                <para>目前为数据库生成注释的功能，只支持 Oracle 和 SqlServer 两个数据库。</para>
+            </content>
+        </section>
+
+        <relatedTopics>
+        </relatedTopics>
+    </developerConceptualDocument>
+</topic>

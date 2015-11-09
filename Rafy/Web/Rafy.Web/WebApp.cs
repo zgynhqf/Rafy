@@ -21,6 +21,7 @@ using System.Text;
 using System.Web;
 using Rafy;
 using Rafy.ComponentModel;
+using Rafy.Domain;
 using Rafy.MetaModel;
 using Rafy.MetaModel.View;
 using Rafy.Web.ClientMetaModel;
@@ -30,34 +31,8 @@ namespace Rafy.Web
     /// <summary>
     /// WebApp 启动环境
     /// </summary>
-    public class WebApp : AppImplementationBase
+    public class WebApp : DomainApp
     {
-        public void Startup()
-        {
-            try
-            {
-                this.StartupApplication();
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError("Web 项目启动时发生异常", ex);
-                throw;
-            }
-        }
-
-        public void NotifyExit()
-        {
-            try
-            {
-                this.OnExit();
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError("Web 项目退出时发生异常", ex);
-                throw;
-            }
-        }
-
         protected override void PrepareToStartup()
         {
             base.PrepareToStartup();
@@ -68,8 +43,7 @@ namespace Rafy.Web
         protected override void InitEnvironment()
         {
             //如果在初始化时发生异常，则会引发再次启动。这时应该保证之前的所有的初始化工作归零。
-            var isWcfServer = ConfigurationHelper.GetAppSettingOrDefault("Rafy_IsWCFServer", false);
-            RafyEnvironment.Location.IsWebUI = !isWcfServer;
+            RafyEnvironment.Location.IsWebUI = true;
             RafyEnvironment.Location.IsWPFUI = false;
             RafyEnvironment.Location.DataPortalMode = DataPortalMode.ConnectDirectly;
 

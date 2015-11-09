@@ -89,6 +89,20 @@ namespace UT
             set { this.SetProperty(BytesContentProperty, value); }
         }
 
+        public static readonly Property<FavorateType> FavorateTypeProperty = P<Favorate>.Register(e => e.FavorateType);
+        public FavorateType FavorateType
+        {
+            get { return this.GetProperty(FavorateTypeProperty); }
+            set { this.SetProperty(FavorateTypeProperty, value); }
+        }
+
+        public static readonly Property<FavorateTypeWithLabel> FavorateTypeWithLabelProperty = P<Favorate>.Register(e => e.FavorateTypeWithLabel);
+        public FavorateTypeWithLabel FavorateTypeWithLabel
+        {
+            get { return this.GetProperty(FavorateTypeWithLabelProperty); }
+            set { this.SetProperty(FavorateTypeWithLabelProperty, value); }
+        }
+
         #endregion
 
         #region 只读属性
@@ -165,5 +179,14 @@ namespace UT
                 Favorate.BytesContentProperty
                 );
         }
+    }
+
+    public enum FavorateType { A, B }
+    public enum FavorateTypeWithLabel
+    {
+        [Label("第一个")]
+        A,
+        [Label("第二个")]
+        B
     }
 }

@@ -55,6 +55,20 @@ namespace Rafy.Domain
         /// </summary>
         internal static IManagedProperty Property_TreeIndex;
 
+        /// <summary>
+        /// 实体的假删除标识。
+        /// 如果没有使用假删除插件，那么这个属性为 null。
+        /// </summary>
+        internal static IManagedProperty Property_IsPhantom;
+
+        /// <summary>
+        /// 是否添加了数据的假删除功能插件。
+        /// </summary>
+        internal static bool IsPhantomPluginEnabled
+        {
+            get { return Property_IsPhantom != null; }
+        }
+
         internal static string IdColumnName
         {
             get { return Property_Id.Name; }

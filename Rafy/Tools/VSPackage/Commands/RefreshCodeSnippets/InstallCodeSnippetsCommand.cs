@@ -51,7 +51,7 @@ namespace Rafy.VSPackage.Commands.RefreshCodeSnippets
                     foreach (var name in files)
                     {
                         var resource = string.Format("Rafy.VSPackage._CodeSnippets.{0}.snippet", name);
-                        var content = Helper.GetResourceContent(typeof(VSPackagePackage).Assembly, resource);
+                        var content = Helper.GetResourceContent(typeof(RafySDKPackage).Assembly, resource);
 
                         var path = Path.Combine(dir, name + ".snippet");
                         File.WriteAllText(path, content);

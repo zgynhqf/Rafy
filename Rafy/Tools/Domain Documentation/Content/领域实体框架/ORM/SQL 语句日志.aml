@@ -5,10 +5,10 @@
       xmlns:xlink="http://www.w3.org/1999/xlink">
         <introduction>
             <para>
-                使用数据访问类 <codeInline>Hxy.Data.DbAccesser</codeInline> 访问数据库时，系统可以记录所有运行过程中执行的 Sql 语句及相关日志。这对于开发人员做系统调试、性能优化提供了较好的帮助。
+                使用数据访问接口 <codeInline>IDbAccesser</codeInline> 访问数据库时，系统可以记录所有运行过程中执行的 Sql 语句及相关日志。这对于开发人员做系统调试、性能优化提供了较好的帮助。
             </para>
             <para>
-                ORM 框架中所有的数据访问，都是直接或间接地通过 <codeInline>Hxy.Data.DbAccesser</codeInline> 类型来完成的，所以本机制可以显示框架与数据库的所有交互。
+                ORM 框架中所有的数据访问，都是直接或间接地通过 <codeInline>IDbAccesser</codeInline> 类型来完成的，所以本机制可以显示框架与数据库的所有交互。
             </para>
             <autoOutline />
         </introduction>
@@ -60,7 +60,7 @@ Parameters:10]]>
             <title>高级</title>
             <content>
                 <para>
-                    如果不想使用文件记录日志，或者想自定义 Sql 日志格式，请使用 <codeInline>Hxy.Logger.SetImplementation</codeInline> 方法替换为自己的日志实体类型。
+                    如果不想使用文件记录日志，或者想自定义 Sql 日志格式，请使用 <codeInline>Rafy.Logger.SetImplementation</codeInline> 方法替换为自己的日志实体类型。
                 </para>
             </content>
         </section>

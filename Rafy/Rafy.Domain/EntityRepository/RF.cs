@@ -150,6 +150,16 @@ namespace Rafy.Domain
         }
 
         /// <summary>
+        /// 通过数据库配置名的代理：实体仓库，构造一个 单连接事务块。
+        /// </summary>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        public static SingleConnectionTrasactionScope TransactionScope(DbSetting dbSetting)
+        {
+            return new SingleConnectionTrasactionScope(dbSetting);
+        }
+
+        /// <summary>
         /// 申明一个实体上下文操作代码块。
         /// </summary>
         /// <returns></returns>

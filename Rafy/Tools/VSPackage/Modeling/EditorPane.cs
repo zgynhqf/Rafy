@@ -85,7 +85,7 @@ namespace Rafy.VSPackage.Modeling
         private const string MyExtension = ".odml";
         private static string[] fontSizeArray = { "8", "9", "10", "11", "12", "14", "16", "18", "20", "22", "24", "26", "28", "36", "48", "72" };
 
-        private VSPackagePackage _package;
+        private RafySDKPackage _package;
 
         private string _fileName = string.Empty;
         /// <summary>
@@ -118,7 +118,7 @@ namespace Rafy.VSPackage.Modeling
         /// our initialization functions.
         /// </summary>
         /// <param name="package">Our Package instance.</param>
-        public EditorPane(VSPackagePackage package)
+        public EditorPane(RafySDKPackage package)
             : base(null)
         {
             PrivateInit(package);
@@ -129,7 +129,7 @@ namespace Rafy.VSPackage.Modeling
         /// which will show up in the properties window 
         /// </summary>
         /// <param name="package"></param>
-        private void PrivateInit(VSPackagePackage package)
+        private void PrivateInit(RafySDKPackage package)
         {
             _package = package;
             _trackSel = null;

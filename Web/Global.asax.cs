@@ -4,6 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Rafy.DbMigration;
+using Rafy.Domain;
+using Rafy.Domain.ORM.DbMigration;
 using Rafy.MetaModel.View;
 
 namespace Rafy.Web.Site
@@ -20,6 +23,13 @@ namespace Rafy.Web.Site
             RegisterGlobalFilters(GlobalFilters.Filters);
 
             RegisterRoutes(RouteTable.Routes);
+        }
+
+        public override void Init()
+        {
+            base.Init();
+
+            new WebAppStarter(this).Start(new DemoWebApp());
         }
 
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
@@ -59,6 +69,26 @@ namespace Rafy.Web.Site
             //    "{controller}/{action}/{id}", // URL with parameters
             //    new { controller = "Default", action = "Index", id = UrlParameter.Optional } // Parameter defaults
             //);
+        }
+
+        private class DemoWebApp : WebApp
+        {
+            protected override void OnRuntimeStarting()
+            {
+                base.OnRuntimeStarting();
+
+                var svc = ServiceFactory.Create<MigrateService>();
+                svc.Options = new MigratingOptions
+                {
+                    //ReserveHistory = true,//ReserveHistory 表示是否需要保存所有数据库升级的历史记录
+                    RunDataLossOperation = DataLossOperation.All,//要支持数据库表、字段的删除操作，取消本行注释。
+                    Databases = new string[] {
+                        ConnectionStringNames.RafyPlugins,
+                        "JXC"
+                    }
+                };
+                svc.Invoke();
+            }
         }
     }
 }

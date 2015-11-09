@@ -33,16 +33,16 @@ public string Name
                 <para>一般属性可以声明为任何类型。但是只支持以下类型属性类型（如果该类型是值类型，则包含相应的可空类型。）到数据库的映射：</para>
                 <list class="bullet">
                     <listItem>
-                        <para>String</para>
+                        <para>string</para>
                     </listItem>
                     <listItem>
-                        <para>Boolean、bool?</para>
+                        <para>bool、bool?</para>
                     </listItem>
                     <listItem>
-                        <para>Int32、int?</para>
+                        <para>int、int?, long, long?</para>
                     </listItem>
                     <listItem>
-                        <para>Double、double?</para>
+                        <para>double、double?</para>
                     </listItem>
                     <listItem>
                         <para>DateTime、DateTime?</para>

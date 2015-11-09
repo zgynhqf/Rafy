@@ -488,6 +488,10 @@ namespace Rafy.Domain
                 _loaded = owner.IsNew || owner.IsTreeLeafSure;
             }
 
+            /// <summary>
+            /// 在二进制反序列化后调用此方法，来重建父子节点之间的关系。
+            /// </summary>
+            /// <param name="owner"></param>
             internal void NotifyDeserialized(Entity owner)
             {
                 _owner = owner;
@@ -550,6 +554,31 @@ namespace Rafy.Domain
                 get { return _deleted; }
                 set { _deleted = value; }
             }
+
+            #region 加载节点数据
+
+            /// <summary>
+            /// 从数据库中查询时，使用此方法来为集合快速添加元素。
+            /// </summary>
+            /// <param name="item"></param>
+            internal void LoadAdd(Entity item)
+            {
+                if (_nodes == null) { _nodes = new List<Entity>(); }
+
+                _nodes.Add(item);
+
+                item._treeParent = _owner;
+            }
+
+            /// <summary>
+            /// 当从数据库中添加完毕时，使用此方法标记集合中的节点已经加载完全。
+            /// </summary>
+            internal void MarkLoaded()
+            {
+                _loaded = true;
+            }
+
+            #endregion
 
             #region IDirtyAware
 
@@ -1104,27 +1133,6 @@ namespace Rafy.Domain
                     //断开父子关系。
                     child._treeParent = null;
                 }
-            }
-
-            /// <summary>
-            /// 从数据库中查询时，使用此方法来为集合快速添加元素。
-            /// </summary>
-            /// <param name="item"></param>
-            internal void LoadAdd(Entity item)
-            {
-                if (_nodes == null) { _nodes = new List<Entity>(); }
-
-                _nodes.Add(item);
-
-                item._treeParent = _owner;
-            }
-
-            /// <summary>
-            /// 当从数据库中添加完毕时，使用此方法标记集合中的节点已经加载完全。
-            /// </summary>
-            internal void MarkLoaded()
-            {
-                _loaded = true;
             }
 
             #endregion

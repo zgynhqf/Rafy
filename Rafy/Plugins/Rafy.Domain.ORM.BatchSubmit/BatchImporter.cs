@@ -17,6 +17,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Rafy.Data;
 using Rafy.Domain.Caching;
 
 namespace Rafy.Domain.ORM.BatchSubmit
@@ -140,12 +141,20 @@ namespace Rafy.Domain.ORM.BatchSubmit
         /// <param name="batch"></param>
         protected virtual void ImportDelete(EntityBatch batch)
         {
-            string sql = "DELETE FROM " + batch.Table.Name + " WHERE ID IN (";
-            bool needDelimiter = false;
-
             foreach (var section in this.EnumerateAllBatches(batch.DeleteBatch, 1000))
             {
-                var sqlDelete = new StringBuilder(sql);
+                FormattedSql sqlDelete = null;
+                if (batch.Repository.EntityMeta.IsPhantomEnabled)
+                {
+                    sqlDelete = "UPDATE " + batch.Table.Name + " SET ISPHANTOM = {0} WHERE ID IN (";
+                    sqlDelete.Parameters.Add(BooleanBoxes.True);
+                }
+                else
+                {
+                    sqlDelete = "DELETE FROM " + batch.Table.Name + " WHERE ID IN (";
+                }
+
+                bool needDelimiter = false;
                 for (int i = 0, c = section.Count; i < c; i++)
                 {
                     var item = section[i];
@@ -167,7 +176,7 @@ namespace Rafy.Domain.ORM.BatchSubmit
                 }
                 sqlDelete.Append(')');
 
-                batch.DBA.ExecuteText(sqlDelete.ToString());
+                batch.DBA.ExecuteText(sqlDelete, sqlDelete.Parameters);
             }
         }
 

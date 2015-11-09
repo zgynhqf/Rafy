@@ -77,10 +77,17 @@ namespace Rafy.ManagedProperty
             {
                 this._isRegisteringExtension = true;
 
-                var entityTypes = SearchAllExtensionDeclaringTypes(assemblies);
+                var entityTypes = SearchAllExtensionDeclarers(assemblies);
                 foreach (var type in entityTypes)
                 {
                     RunPropertyResigtry(type);
+                }
+
+                var extRegisterTypes = SearchAllExtensionRegisters(assemblies);
+                foreach (var type in extRegisterTypes)
+                {
+                    var register = Activator.CreateInstance(type) as ExtensionPropertiesRegister;
+                    register.Register();
                 }
             }
             finally
@@ -91,10 +98,10 @@ namespace Rafy.ManagedProperty
         }
 
         /// <summary>
-        /// 获取所有 Entity 的子类。
+        /// 获取所有标记了 CompiledPropertyDeclarerAttribute 的类型。
         /// </summary>
         /// <returns></returns>
-        private static IEnumerable<Type> SearchAllExtensionDeclaringTypes(IEnumerable<Assembly> assemblies)
+        private static IEnumerable<Type> SearchAllExtensionDeclarers(IEnumerable<Assembly> assemblies)
         {
             foreach (var assembly in assemblies)
             {
@@ -108,6 +115,24 @@ namespace Rafy.ManagedProperty
                         {
                             yield return type;
                         }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获取所有 ExtensionPropertiesRegister 的子类型。
+        /// </summary>
+        /// <returns></returns>
+        private static IEnumerable<Type> SearchAllExtensionRegisters(IEnumerable<Assembly> assemblies)
+        {
+            foreach (var assembly in assemblies)
+            {
+                foreach (var type in assembly.GetTypes())
+                {
+                    if (type.IsSubclassOf(typeof(ExtensionPropertiesRegister)))
+                    {
+                        yield return type;
                     }
                 }
             }

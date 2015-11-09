@@ -44,6 +44,9 @@
     <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Oracle.ManagedDataAccess">
+      <HintPath>..\..\packages\Oracle.ManagedDataAccess.12.1.022\lib\net40\Oracle.ManagedDataAccess.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -78,6 +81,10 @@
     <ProjectReference Include="..\..\Rafy\Plugins\Rafy.ComponentModel.UnityAdapter\Rafy.ComponentModel.UnityAdapter.csproj">
       <Project>{be8c3cd6-f314-453d-a0ed-fcfec0deadbc}</Project>
       <Name>Rafy.ComponentModel.UnityAdapter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.EntityPhantom\Rafy.Domain.EntityPhantom.csproj">
+      <Project>{0b6df92b-0248-422d-a9c2-1604d4cb7bc9}</Project>
+      <Name>Rafy.Domain.EntityPhantom</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Rafy\Rafy.DbMigration\Rafy.DbMigration.csproj">
       <Project>{d7c4f80d-24a4-47f1-985c-cfa55cfa13e9}</Project>
@@ -141,6 +148,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Hxy Key.snk" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="amd64\sqlceer40EN.dll">

@@ -97,7 +97,21 @@ namespace Rafy.Domain.ORM.BatchSubmit
                     batch.InsertBatch.Add(entity);
                     break;
                 case PersistenceStatus.Deleted:
+
                     batch.DeleteBatch.Add(entity);
+
+                    //如果本类启用了假删除，那么它下面的所有实体都需要加载到内存中，这样在读取聚合时，它的聚合子也会读取到待删除列表中。
+                    if (batch.Repository.EntityMeta.IsPhantomEnabled)
+                    {
+                        //不论这个列表属性是否已经加载，都必须获取其所有的数据行，并标记为删除。
+                        batch.Repository.LoadAllChildren(entity);
+
+                        foreach (var child in entity.GetLoadedChildren())
+                        {
+                            var list = child.Value as EntityList;
+                            if (list != null && list.Count > 0) { list.Clear(); }
+                        }
+                    }
                     break;
                 default:
                     break;
@@ -113,23 +127,14 @@ namespace Rafy.Domain.ORM.BatchSubmit
         /// <param name="batch">The batch.</param>
         private void ReadChildrenRecur(Entity entity, EntityBatch batch)
         {
-            var childrenProperties = batch.Repository.EntityMeta.ChildrenProperties;
-
             //遍历所有子属性，读取孩子列表
-            for (int i = 0, c = childrenProperties.Count; i < c; i++)
+            foreach (var child in entity.GetLoadedChildren())
             {
-                var cp = childrenProperties[i];
-                var listProperty = cp.ManagedProperty as IListProperty;
-
-                var children = entity.GetLazyList(listProperty);
-                if (children.Count > 0)
-                {
-                    //所有孩子列表中的实体，都加入到对应的实体列表中。
-                    //并递归读取孩子的孩子实体。
-                    var entityType = children[0].GetType();
-                    var childBatch = this.FindBatch(entityType);
-                    ReadToBatchRecur(children, childBatch);
-                }
+                var children = child.Value as EntityList;
+                //所有孩子列表中的实体，都加入到对应的实体列表中。
+                //并递归读取孩子的孩子实体。
+                var childBatch = this.FindBatch(children.EntityType);
+                ReadToBatchRecur(children, childBatch);
             }
         }
 

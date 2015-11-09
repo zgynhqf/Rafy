@@ -64,17 +64,17 @@ namespace Rafy.Domain.ORM
         /// 重写时，注意：
         /// 在插入完成后，把为实体新生成的 Id 赋值到实体中。否则组合子将插入失败。
         /// </summary>
-        /// <param name="entity"></param>
-        internal protected override void Insert(Entity entity)
+        /// <param name="data"></param>
+        public override void InsertToPersistence(Entity data)
         {
             using (var dba = _dataProvider.CreateDbAccesser())
             {
                 var table = _dataProvider.DbTable;
 
-                table.Insert(dba, entity);
+                table.Insert(dba, data);
 
                 //放到 Insert 语句之后，否则 Id 不会有值。
-                table.NotifyLoaded(entity);
+                table.NotifyLoaded(data);
             }
         }
 
@@ -83,14 +83,14 @@ namespace Rafy.Domain.ORM
         /// 
         /// 子类重写此方法来实现非关系型数据库的更新逻辑。
         /// </summary>
-        /// <param name="entity"></param>
-        internal protected override void Update(Entity entity)
+        /// <param name="data"></param>
+        public override void UpdateToPersistence(Entity data)
         {
             using (var dba = _dataProvider.CreateDbAccesser())
             {
                 var table = _dataProvider.DbTable;
-                table.Update(dba, entity);
-                table.NotifyLoaded(entity);
+                table.Update(dba, data);
+                table.NotifyLoaded(data);
             }
         }
 
@@ -99,15 +99,20 @@ namespace Rafy.Domain.ORM
         /// 
         /// 子类重写此方法来实现非关系型数据库的删除逻辑。
         /// </summary>
-        /// <param name="entity"></param>
-        internal protected override void Delete(Entity entity)
+        /// <param name="data"></param>
+        public override void DeleteFromPersistence(Entity data)
         {
             using (var dba = _dataProvider.CreateDbAccesser())
             {
-                _dataProvider.DbTable.Delete(dba, entity);
+                _dataProvider.DbTable.Delete(dba, data);
             }
         }
 
+        /// <summary>
+        /// 实现删除关联数据的逻辑。
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="refProperty"></param>
         protected override void DeleteRefCore(Entity entity, IRefProperty refProperty)
         {
             var f = QueryFactory.Instance;

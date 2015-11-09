@@ -39,7 +39,7 @@ Ext.define('Rafy.control.ComboList', {
     //        var me = this;
     //        me.callParent();
     //
-    //        me._refProperty = me.getName().replace("_Label", "");
+    //        me._refProperty = me.getName().replace("_Display", "");
     //    },
 
     createPicker: function () {
@@ -213,7 +213,7 @@ Ext.define('Rafy.control.ComboList', {
     },
     _addRefId: function (data) {
         if (this._refId) {
-            if (!this._refProperty) this._refProperty = this.getName().replace("_Label", "");
+            if (!this._refProperty) this._refProperty = this.getName().replace("_Display", "");
 
             data[this._refProperty] = this._refId;
         }

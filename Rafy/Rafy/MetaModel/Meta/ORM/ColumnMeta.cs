@@ -27,7 +27,7 @@ namespace Rafy.MetaModel
     {
         private bool _HasFKConstraint = true;
         /// <summary>
-        /// 如果这是一个引用属性的列，则这个属性表示数据库中是否有对应的外键存在。
+        /// 如果这是一个引用属性的列，则这个属性表示数据库中是否有对应的外键存在（引用属性也可以不映射外键）。
         /// </summary>
         public bool HasFKConstraint
         {

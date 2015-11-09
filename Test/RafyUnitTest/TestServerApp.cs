@@ -21,6 +21,7 @@ using Rafy.ComponentModel;
 using Rafy.DbMigration;
 using Rafy.Domain;
 using Rafy.Domain.Caching;
+using Rafy.Domain.EntityPhantom;
 using Rafy.Domain.ORM.DbMigration;
 using Rafy.MetaModel;
 using Rafy.UnitTest;
@@ -46,6 +47,9 @@ namespace RafyUnitTest
             ConnectionStringNames.DbMigrationHistory = "Test_DbMigrationHistory";
 
             RafyEnvironment.Provider.IsDebuggingEnabled = true;
+
+            PluginTable.DomainLibraries.AddPlugin<EntityPhantomPlugin>();
+
             PluginTable.DomainLibraries.AddPlugin<UnitTestPlugin>();
             PluginTable.DomainLibraries.AddPlugin<UnitTestDataProviderPlugin>();
             PluginTable.DomainLibraries.AddPlugin<UnitTestIDataProviderPlugin>();

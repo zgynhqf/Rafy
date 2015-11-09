@@ -54,7 +54,8 @@ namespace Rafy.Utils.Caching
 
         internal void Clear()
         {
-            foreach (var kv in this._innerCache)
+            var dic = _innerCache as IEnumerable<KeyValuePair<string, object>>;
+            foreach (var kv in dic)
             {
                 this._innerCache.Remove(kv.Key);
             }
@@ -62,7 +63,8 @@ namespace Rafy.Utils.Caching
 
         internal void RemoveRegion(string regionName)
         {
-            foreach (var kv in this._innerCache)
+            var dic = _innerCache as IEnumerable<KeyValuePair<string, object>>;
+            foreach (var kv in dic)
             {
                 string key = kv.Key;
                 string region = null;

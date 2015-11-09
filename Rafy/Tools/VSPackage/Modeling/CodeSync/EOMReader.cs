@@ -18,6 +18,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Xml.Linq;
 using EnvDTE;
 using EnvDTE80;
@@ -479,27 +480,33 @@ namespace Rafy.VSPackage.Modeling.CodeSync
         {
             if (!string.IsNullOrEmpty(comment))
             {
-                var xmlDoc = XDocument.Parse(comment);
-                var summary = xmlDoc.Root.Element("summary");
-                if (summary != null)
+                try
                 {
-                    var value = summary.Value.Trim();
-
-                    //只获取非空的第一行。
-                    var reader = new StringReader(value);
-                    while (true)
+                    var xmlDoc = XDocument.Parse(comment);
+                    var summary = xmlDoc.Root.Element("summary");
+                    if (summary != null)
                     {
-                        value = reader.ReadLine();
+                        var value = summary.Value.Trim();
 
-                        if (value == null) { break; }
+                        //只获取非空的第一行。
+                        var reader = new StringReader(value);
+                        while (true)
+                        {
+                            value = reader.ReadLine();
+                            if (value == null) { break; }
 
-                        value = value.Trim();
-                        if (value.Length > 1) { break; }
+                            value = value.Trim();
+                            if (value.Length > 1) { break; }
+                        }
+                        if (value != null)
+                        {
+                            ODMLDocumentHelper.SetDomainName(type, value);
+                        }
                     }
-                    if (value != null)
-                    {
-                        ODMLDocumentHelper.SetDomainName(type, value);
-                    }
+                }
+                catch
+                {
+                    MessageBox.Show("无法解析以下文本：" + comment, "解析注释内容时出错");
                 }
             }
         }

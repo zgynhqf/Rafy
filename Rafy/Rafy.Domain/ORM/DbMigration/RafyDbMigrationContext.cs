@@ -30,13 +30,22 @@ namespace Rafy.Domain.ORM.DbMigration
     /// </summary>
     public class RafyDbMigrationContext : DbMigrationContext
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RafyDbMigrationContext"/> class.
+        /// </summary>
+        /// <param name="dbSetting">The database setting.</param>
         public RafyDbMigrationContext(string dbSetting) : this(DbSetting.FindOrCreate(dbSetting)) { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RafyDbMigrationContext"/> class.
+        /// </summary>
+        /// <param name="dbSetting">The database setting.</param>
         public RafyDbMigrationContext(DbSetting dbSetting)
             : base(dbSetting)
         {
             this.ManualMigrations = new RafyUserMigrations();
             this.ClassMetaReader = new ClassMetaReader(this.DbSetting);
+
             //this.DbVersionProvider = new RafyDbVersionProvider();
 
             //如果需要使用 DbHistoryHistory 库来记录升级日志，可使用以下代码。
@@ -48,29 +57,26 @@ namespace Rafy.Domain.ORM.DbMigration
         /// </summary>
         public ClassMetaReader ClassMetaReader { get; private set; }
 
-        public RafyDbMigrationContext AutoMigrate()
+        /// <summary>
+        /// 使用实体类型的数据库映射元数据来自动更新数据库。
+        /// </summary>
+        /// <returns></returns>
+        public void AutoMigrate()
         {
-            if (IsEnabled())
-            {
-                var classMeta = this.ClassMetaReader.Read();
+            var dbInClassMeta = this.ClassMetaReader.Read(false);
 
-                this.MigrateTo(classMeta);
-            }
-            else
-            {
-                this.MigrateManually();
-            }
-
-            return this;
+            this.MigrateTo(dbInClassMeta);
         }
 
-        public static bool IsEnabled()
+        /// <summary>
+        /// 使用实体类中的注释来更新数据库中的相关注释内容。
+        /// 注意，要成功使用此方法，需要在编译领域实体所在的程序集时，同时生成对应的 XML 注释文件。
+        /// </summary>
+        public void RefreshComments()
         {
-            return true;
-            ////如果这个配置为 true，则执行自动升级
-            //return ConfigurationHelper.GetAppSettingOrDefault(
-            //    "DatabaseAutoMigrationEnabled", RafyEnvironment.IsDebuggingEnabled
-            //    );
+            var dbInClassMeta = this.ClassMetaReader.Read(true);
+
+            this.RefreshComments(dbInClassMeta);
         }
     }
 }

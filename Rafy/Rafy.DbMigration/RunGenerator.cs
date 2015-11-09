@@ -67,6 +67,7 @@ namespace Rafy.DbMigration
             else if (op is DropDatabase) { this.Generate(op as DropDatabase); }
             else if (op is RunSql) { this.Generate(op as RunSql); }
             else if (op is RunAction) { this.Generate(op as RunAction); }
+            else if (op is UpdateComment) { this.Generate(op as UpdateComment); }
             else { this.Generate(op); }
         }
 
@@ -87,6 +88,7 @@ namespace Rafy.DbMigration
         protected abstract void Generate(DropTable op);
         protected abstract void Generate(CreateDatabase op);
         protected abstract void Generate(DropDatabase op);
+        protected abstract void Generate(UpdateComment op);
         protected virtual void Generate(MigrationOperation op)
         {
             throw new NotSupportedException();

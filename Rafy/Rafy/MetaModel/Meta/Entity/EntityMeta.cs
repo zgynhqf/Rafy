@@ -176,6 +176,26 @@ namespace Rafy.MetaModel
             set { this.SetValue(ref this._ServerCacheDefinition, value); }
         }
 
+        private bool _DeletingChildrenInMemory;
+        /// <summary>
+        /// 强制该实体删除都使用内存中的级联删除。
+        /// </summary>
+        public bool DeletingChildrenInMemory
+        {
+            get { return this._DeletingChildrenInMemory; }
+            set { this.SetValue(ref this._DeletingChildrenInMemory, value); }
+        }
+
+        private bool _IsPhantomEnabled;
+        /// <summary>
+        /// 是否启用了该实体的假删除功能。（假删除功能需要引用独立的插件：Rafy.Domain.EntityPhantom。）
+        /// </summary>
+        public bool IsPhantomEnabled
+        {
+            get { return this._IsPhantomEnabled; }
+            internal set { this.SetValue(ref this._IsPhantomEnabled, value); }
+        }
+
         #region 查询方法
 
         /// <summary>
@@ -189,7 +209,7 @@ namespace Rafy.MetaModel
             var result = this.EntityProperties
                 .Where(p => p.ReferenceInfo != null && p.ReferenceInfo.Type == ReferenceType.Parent).ToArray();
 
-            if (result.Length > 1) throw new InvalidOperationException("一个类中只能定义一个父引用属性。");
+            if (result.Length > 1) throw new InvalidOperationException(string.Format("类 {0} 中定义了两个父引用属性。（一个类中只能定义一个父引用属性。）", this.Name));
 
             return result.Length > 0 ? result[0] : null;
         }

@@ -24,7 +24,7 @@ namespace Rafy.MetaModel
 
         private string _TableName;
         /// <summary>
-        /// 映射数据库中的字段名
+        /// 映射数据库中的表名
         /// </summary>
         public string TableName
         {

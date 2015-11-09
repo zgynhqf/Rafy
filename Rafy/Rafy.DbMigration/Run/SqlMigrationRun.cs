@@ -30,4 +30,28 @@ namespace Rafy.DbMigration
             db.RawAccesser.ExecuteText(this.Sql);
         }
     }
+
+    [DebuggerDisplay("RunSql : {Sql}")]
+    public class FormattedSqlMigrationRun : MigrationRun
+    {
+        public FormattedSql Sql { get; set; }
+
+        protected override void RunCore(IDbAccesser db)
+        {
+            db.ExecuteText(this.Sql, this.Sql.Parameters);
+        }
+    }
+
+    [DebuggerDisplay("SafeRunSql : {Sql}")]
+    public class SafeSqlMigrationRun : SqlMigrationRun
+    {
+        protected override void RunCore(IDbAccesser db)
+        {
+            try
+            {
+                base.RunCore(db);
+            }
+            catch { }
+        }
+    }
 }

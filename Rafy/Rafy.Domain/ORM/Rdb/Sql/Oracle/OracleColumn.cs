@@ -34,17 +34,12 @@ namespace Rafy.Domain.ORM.Oracle
             }
         }
 
-        public override object ReadParameterValue(Entity entity)
+        public override object ConvertToParameterValue(object value)
         {
-            var value = base.ReadParameterValue(entity);
-            if (this.Info.IsBooleanType)
-            {
-                value = OracleDbTypeHelper.ToDbBoolean((bool)value);
-            }
-            else if (this.Info.DataType.IsEnum)
-            {
-                value = TypeHelper.CoerceValue(typeof(int), value);
-            }
+            value = base.ConvertToParameterValue(value);
+
+            value = OracleSqlGenerator.PrepareConstraintValueInternal(value);
+
             return value;
         }
 

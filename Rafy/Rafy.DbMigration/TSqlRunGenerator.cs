@@ -18,6 +18,7 @@ using System.Text;
 using Rafy.DbMigration.Operations;
 using System.CodeDom.Compiler;
 using System.Data;
+using Rafy.Data;
 
 namespace Rafy.DbMigration
 {
@@ -27,11 +28,6 @@ namespace Rafy.DbMigration
     public abstract class TSqlRunGenerator : RunGenerator
     {
         protected abstract string ConvertToTypeString(DbType dataType, string length);
-
-        protected virtual string GetDefaultValue(DbType dataType)
-        {
-            return DbTypeHelper.GetDefaultValue(dataType);
-        }
 
         protected override void Generate(DropTable op)
         {
@@ -107,16 +103,14 @@ ALTER TABLE ");
 
         protected override void Generate(AddNotNullConstraint op)
         {
-            using (var sql = this.Writer())
+            FormattedSql sql = string.Format(@"UPDATE {0} SET {1} = {2} WHERE {1} IS NULL",
+                    this.Quote(op.TableName), this.Quote(op.ColumnName), "{0}");
+            sql.Parameters.Add(DbTypeHelper.GetDefaultValue(op.DataType));
+
+            this.AddRun(new FormattedSqlMigrationRun
             {
-                string columnDefaultValue = this.GetDefaultValue(op.DataType);
-
-                var text = string.Format(@"UPDATE {0} SET {1} = {2} WHERE {1} IS NULL",
-                    this.Quote(op.TableName), this.Quote(op.ColumnName), columnDefaultValue);
-                sql.Write(text);
-
-                this.AddRun(sql);
-            }
+                Sql = sql
+            });
 
             this.AddNotNullConstraint(op);
         }

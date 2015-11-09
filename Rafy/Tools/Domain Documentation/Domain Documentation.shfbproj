@@ -8,7 +8,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>b3673a48-ef4c-47bc-9450-20d278f16558</ProjectGuid>
-    <SHFBSchemaVersion>1.9.5.0</SHFBSchemaVersion>
+    <SHFBSchemaVersion>2015.6.5.0</SHFBSchemaVersion>
     <!-- AssemblyName, Name, and RootNamespace are not used by SHFB but Visual
          Studio adds them anyway -->
     <AssemblyName>Documentation</AssemblyName>
@@ -22,10 +22,10 @@
     <DocumentationSources>
       <DocumentationSource sourceFile="EmptyAssembly.dll" />
     </DocumentationSources>
-    <SyntaxFilters>CSharp</SyntaxFilters>
+    <SyntaxFilters>C#</SyntaxFilters>
     <SdkLinkTarget>Blank</SdkLinkTarget>
     <RootNamespaceContainer>False</RootNamespaceContainer>
-    <PresentationStyle>VS2005</PresentationStyle>
+    <PresentationStyle>VS2013</PresentationStyle>
     <Preliminary>False</Preliminary>
     <NamingMethod>HashedMemberName</NamingMethod>
     <HelpTitle>Rafy User Guide</HelpTitle>
@@ -36,12 +36,15 @@
     <VisibleItems>InheritedMembers, InheritedFrameworkMembers, Protected, SealedProtected</VisibleItems>
     <MissingTags>Summary, Parameter, Returns, AutoDocumentCtors, TypeParameter, AutoDocumentDispose</MissingTags>
     <BuildAssemblerVerbosity>OnlyWarningsAndErrors</BuildAssemblerVerbosity>
-    <HelpFileFormat>HtmlHelp1</HelpFileFormat>
+    <HelpFileFormat>Website</HelpFileFormat>
     <IndentHtml>False</IndentHtml>
     <KeepLogFile>False</KeepLogFile>
     <DisableCodeBlockComponent>False</DisableCodeBlockComponent>
     <CppCommentsFixup>False</CppCommentsFixup>
     <CleanIntermediates>True</CleanIntermediates>
+    <HelpFileVersion>1.0.0.0</HelpFileVersion>
+    <MaximumGroupParts>2</MaximumGroupParts>
+    <NamespaceGrouping>False</NamespaceGrouping>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in
        order for Visual Studio to perform the build.  The others are optional
@@ -121,7 +124,9 @@
     <None Include="Content\界面生成\界面配置\实体视图配置\扩展视图配置.aml" />
     <None Include="Content\界面生成\界面配置\枚举的显示.aml" />
     <None Include="Content\领域实体框架.aml" />
+    <None Include="Content\领域实体框架\ORM\为数据库生成注释.aml" />
     <None Include="Content\领域实体框架\其它\实体框架常见问题.aml" />
+    <None Include="Content\领域实体框架\实体仓库\大批量导入实体.aml" />
     <None Include="Content\领域实体框架\对象关系映射.aml" />
     <None Include="Content\领域实体框架\ORM\SQL 语句日志.aml" />
     <None Include="Content\领域实体框架\ORM\多数据库支持.aml" />
@@ -179,6 +184,7 @@
     <None Include="Content\领域实体框架\领域帮助主题.aml" />
     <None Include="Content\领域实体框架\领域帮助主题\如何：手动添加一个领域项目.aml" />
     <None Include="Content\领域实体框架\领域服务\单连接事务.aml" />
+    <None Include="Content\领域实体框架\领域服务\执行SQL或存储过程.aml" />
     <None Include="UML.7z" />
   </ItemGroup>
   <ItemGroup>

@@ -343,7 +343,7 @@ namespace Rafy.Domain.ORM
         /// </param>
         public void WriteContains(IManagedProperty property, string value, Type propertyOwner = null)
         {
-            this.WriteConstrain(property, "like", '%' + value + '%', propertyOwner);
+            this.WriteConstrain(property, "LIKE", SqlGenerator.WILDCARD_ALL + value + SqlGenerator.WILDCARD_ALL, propertyOwner);
         }
 
         /// <summary>
@@ -356,7 +356,7 @@ namespace Rafy.Domain.ORM
         /// </param>
         public void WriteStartWith(IManagedProperty property, string value, Type propertyOwner = null)
         {
-            this.WriteConstrain(property, "like", value + '%', propertyOwner);
+            this.WriteConstrain(property, "LIKE", value + SqlGenerator.WILDCARD_ALL, propertyOwner);
         }
 
         /// <summary>
@@ -369,7 +369,7 @@ namespace Rafy.Domain.ORM
         /// </param>
         public void WriteLike(IManagedProperty property, string value, Type propertyOwner = null)
         {
-            this.WriteConstrain(property, "like", value, propertyOwner);
+            this.WriteConstrain(property, "LIKE", value, propertyOwner);
         }
 
         /// <summary>

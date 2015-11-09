@@ -499,7 +499,7 @@ namespace Rafy.Data
                 pas.Add(p);
             }
 
-            Logger.LogDbAccessed(sql, parameters, _connectionSchema);
+            Logger.LogDbAccessed(sql, parameters, _connectionSchema, _connection);
 
             return command;
         }

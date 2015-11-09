@@ -493,18 +493,18 @@ namespace RafyUnitTest
                     new Folder(),
                     new Folder
                     {
-                        TreeChildren = 
+                        TreeChildren =
                         {
                             new Folder
                             {
-                                FileList = 
+                                FileList =
                                 {
                                     new File { Name = "1.1" },
                                     new File { Name = "1.2" },
                                 }
                             }
                         },
-                        FileList = 
+                        FileList =
                         {
                             new File { Name = "2.1" },
                             new File { Name = "2.2" },
@@ -544,18 +544,18 @@ namespace RafyUnitTest
                     new Folder(),
                     new Folder
                     {
-                        TreeChildren = 
+                        TreeChildren =
                         {
                             (folder = new Folder
                             {
-                                FileList = 
+                                FileList =
                                 {
                                     new File { Name = "1.1" },
                                     new File { Name = "1.2" },
                                 }
                             })
                         },
-                        FileList = 
+                        FileList =
                         {
                             new File { Name = "2.1" },
                             new File { Name = "2.2" },
@@ -769,7 +769,7 @@ namespace RafyUnitTest
         public void ORM_Query_GetByIdList_5000()
         {
             var repo = RF.Concrete<BookRepository>();
-            using (RF.TransactionScope(repo))
+            using (var tran = RF.TransactionScope(repo))
             {
                 var books = new BookList();
                 for (int i = 0; i < 6000; i++)
@@ -778,7 +778,14 @@ namespace RafyUnitTest
                     books.Add(book);
                 }
 
-                repo.CreateImporter().Save(books);
+                if (DbSetting.Provider_SqlCe == tran.DbSetting.ProviderName)
+                {
+                    repo.Save(books);
+                }
+                else
+                {
+                    repo.CreateImporter().Save(books);
+                }
 
                 var idList = new object[5500];
                 for (int i = 0; i < 5500; i++)
@@ -1403,20 +1410,20 @@ namespace RafyUnitTest
                     Name = "1",
                     ChapterList =
                     {
-                        new Chapter 
-                        { 
+                        new Chapter
+                        {
                             Name = "1.1",
-                            SectionList = 
+                            SectionList =
                             {
                                 new Section { Name = "1.1.1", SectionOwner = sectionOwner },
                                 new Section { Name = "1.1.2", SectionOwner = sectionOwner },
                                 new Section { Name = "1.1.3" },
                             }
                         },
-                        new Chapter 
-                        { 
+                        new Chapter
+                        {
                             Name = "1.2",
-                            SectionList = 
+                            SectionList =
                             {
                                 new Section { Name = "1.1.1", SectionOwner = sectionOwner },
                                 new Section { Name = "1.1.2" },
@@ -1431,10 +1438,10 @@ namespace RafyUnitTest
                     Name = "2",
                     ChapterList =
                     {
-                        new Chapter 
-                        { 
+                        new Chapter
+                        {
                             Name = "2.1",
-                            SectionList = 
+                            SectionList =
                             {
                                 new Section { Name = "2.1.1", SectionOwner = sectionOwner },
                                 new Section { Name = "2.1.2", SectionOwner = sectionOwner },
@@ -1655,7 +1662,53 @@ namespace RafyUnitTest
                 });
 
                 var list = repo.LinqGetByNameStringAction(StringAction.Contains, "1");
-                Assert.IsTrue(list.Count == 3);
+                Assert.AreEqual(list.Count, 3);
+            }
+        }
+
+        [TestMethod]
+        public void ORM_LinqQuery_StringContains_Escape1()
+        {
+            var repo = RF.Concrete<ChapterRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                RF.Save(new Book
+                {
+                    Name = "1",
+                    ChapterList =
+                    {
+                        new Chapter { Name = "1%0"},
+                        new Chapter { Name = "1.%"},
+                        new Chapter { Name = "%.1"},
+                        new Chapter { Name = "2.3"},
+                    }
+                });
+
+                var list = repo.LinqGetByNameStringAction(StringAction.Contains, "%");
+                Assert.AreEqual(list.Count, 3);
+            }
+        }
+
+        [TestMethod]
+        public void ORM_LinqQuery_StringContains_Escape2()
+        {
+            var repo = RF.Concrete<ChapterRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                RF.Save(new Book
+                {
+                    Name = "1",
+                    ChapterList =
+                    {
+                        new Chapter { Name = "1_0"},
+                        new Chapter { Name = "1._"},
+                        new Chapter { Name = "_.1"},
+                        new Chapter { Name = "2.3"},
+                    }
+                });
+
+                var list = repo.LinqGetByNameStringAction(StringAction.Contains, "_");
+                Assert.AreEqual(list.Count, 3);
             }
         }
 
@@ -2112,9 +2165,9 @@ namespace RafyUnitTest
                     Name = "1",
                     ChapterList =
                     {
-                        new Chapter 
+                        new Chapter
                         {
-                            SectionList = 
+                            SectionList =
                             {
                                 new Section { Name = "need" }
                             }
@@ -2126,9 +2179,9 @@ namespace RafyUnitTest
                     Name = "2",
                     ChapterList =
                     {
-                        new Chapter 
+                        new Chapter
                         {
-                            SectionList = 
+                            SectionList =
                             {
                                 new Section { Name = "need too" }
                             }
@@ -2140,9 +2193,9 @@ namespace RafyUnitTest
                     Name = "3",
                     ChapterList =
                     {
-                        new Chapter 
+                        new Chapter
                         {
-                            SectionList = 
+                            SectionList =
                             {
                                 new Section { Name = "not contained" }
                             }
@@ -2174,9 +2227,9 @@ namespace RafyUnitTest
                     BookCategory = category,
                     ChapterList =
                     {
-                        new Chapter 
+                        new Chapter
                         {
-                            SectionList = 
+                            SectionList =
                             {
                                 new Section { Name = "need", SectionOwner = so }
                             }
@@ -2189,9 +2242,9 @@ namespace RafyUnitTest
                     BookCategory = category,
                     ChapterList =
                     {
-                        new Chapter 
+                        new Chapter
                         {
-                            SectionList = 
+                            SectionList =
                             {
                                 new Section { Name = "need too" }// sectionOwner not match
                             }
@@ -2204,9 +2257,9 @@ namespace RafyUnitTest
                     //BookCategory = category,// not match
                     ChapterList =
                     {
-                        new Chapter 
+                        new Chapter
                         {
-                            SectionList = 
+                            SectionList =
                             {
                                 new Section { Name = "need", SectionOwner = so }
                             }
@@ -2218,9 +2271,9 @@ namespace RafyUnitTest
                     Name = "4",
                     ChapterList =
                     {
-                        new Chapter 
+                        new Chapter
                         {
-                            SectionList = 
+                            SectionList =
                             {
                                 new Section { Name = "not contained" }//section name not match.
                             }
@@ -2335,14 +2388,14 @@ namespace RafyUnitTest
                     {
                         new Chapter
                         {
-                            SectionList = 
+                            SectionList =
                             {
                                 new Section { SectionOwner = so },
                             }
                         },
                         new Chapter
                         {
-                            SectionList = 
+                            SectionList =
                             {
                                 new Section { SectionOwner = so },
                             }
@@ -2356,7 +2409,7 @@ namespace RafyUnitTest
                     {
                         new Chapter
                         {
-                            SectionList = 
+                            SectionList =
                             {
                                 new Section { SectionOwner = so },
                                 new Section { },
@@ -2375,14 +2428,14 @@ namespace RafyUnitTest
                     {
                         new Chapter
                         {
-                            SectionList = 
+                            SectionList =
                             {
                                 new Section { SectionOwner = so },
                             }
                         },
                         new Chapter
                         {
-                            SectionList = 
+                            SectionList =
                             {
                                 new Section { },//not match
                             }
@@ -2427,7 +2480,7 @@ namespace RafyUnitTest
                     {
                         new Chapter
                         {
-                            SectionList = 
+                            SectionList =
                             {
                                 new Section { SectionOwner = so },
                                 new Section { SectionOwner = so },
@@ -2442,7 +2495,7 @@ namespace RafyUnitTest
                     {
                         new Chapter
                         {
-                            SectionList = 
+                            SectionList =
                             {
                                 new Section { SectionOwner = so },
                                 new Section { SectionOwner = so },
@@ -2450,7 +2503,7 @@ namespace RafyUnitTest
                         },
                         new Chapter
                         {
-                            SectionList = 
+                            SectionList =
                             {
                                 new Section { SectionOwner = so },
                                 new Section { SectionOwner = so },
@@ -2465,7 +2518,7 @@ namespace RafyUnitTest
                     {
                         new Chapter
                         {
-                            SectionList = 
+                            SectionList =
                             {
                                 new Section { SectionOwner = so },
                                 new Section { SectionOwner = so },
@@ -2473,7 +2526,7 @@ namespace RafyUnitTest
                         },
                         new Chapter
                         {
-                            SectionList = 
+                            SectionList =
                             {
                                 new Section { SectionOwner = so },
                                 new Section { },//not match
@@ -2543,7 +2596,7 @@ namespace RafyUnitTest
                     new Chapter
                     {
                         Name = "chapterNeed",
-                        SectionList = 
+                        SectionList =
                         {
                             new Section { Name = "section need", SectionOwner = so },
                             new Section { Name = "need section", SectionOwner = so }
@@ -2561,7 +2614,7 @@ namespace RafyUnitTest
                     new Chapter
                     {
                         Name = "chapterNeed",
-                        SectionList = 
+                        SectionList =
                         {
                             new Section { Name = "section need", SectionOwner = so },
                             new Section { Name = "need section", SectionOwner = so }
@@ -2580,7 +2633,7 @@ namespace RafyUnitTest
                     new Chapter
                     {
                         Name = "chapterNeed",
-                        SectionList = 
+                        SectionList =
                         {
                             new Section { Name = "section need", SectionOwner = so },
                             new Section { Name = "need section", SectionOwner = so }
@@ -2598,7 +2651,7 @@ namespace RafyUnitTest
                     new Chapter
                     {
                         Name = "4.1",//not match
-                        SectionList = 
+                        SectionList =
                         {
                             new Section { Name = "section need", SectionOwner = so },
                             new Section { Name = "need section", SectionOwner = so }
@@ -2616,7 +2669,7 @@ namespace RafyUnitTest
                     new Chapter
                     {
                         Name = "chapterNeed",
-                        SectionList = 
+                        SectionList =
                         {
                             new Section { Name = "section need", SectionOwner = so },
                             new Section { Name = "section", SectionOwner = so }//not match
@@ -2634,7 +2687,7 @@ namespace RafyUnitTest
                     new Chapter
                     {
                         Name = "chapterNeed",
-                        SectionList = 
+                        SectionList =
                         {
                             new Section { Name = "section need", SectionOwner = so },
                             new Section { Name = "need section" }//not match
@@ -2656,7 +2709,7 @@ namespace RafyUnitTest
                         new Chapter
                         {
                             Name = "chapterNeed",
-                            SectionList = 
+                            SectionList =
                             {
                                 new Section { Name = "section need", SectionOwner = so },
                                 new Section { Name = "need section", SectionOwner = so }
@@ -2789,7 +2842,7 @@ namespace RafyUnitTest
                 {
                     new Chapter
                     {
-                        SectionList = 
+                        SectionList =
                         {
                             new Section{ SectionOwner = so },
                             new Section{ SectionOwner = so },
@@ -2799,7 +2852,7 @@ namespace RafyUnitTest
                     },
                     new Chapter
                     {
-                        SectionList = 
+                        SectionList =
                         {
                             new Section{ SectionOwner = so },
                             new Section{ SectionOwner = so },
@@ -2809,7 +2862,7 @@ namespace RafyUnitTest
                     },
                     new Chapter
                     {
-                        SectionList = 
+                        SectionList =
                         {
                             new Section{ SectionOwner = so },
                             new Section{ SectionOwner = so },
@@ -3219,7 +3272,7 @@ FROM TABLE1");
             select.From = t;
             select.OrderBy = new SqlOrderByList
             {
-                new SqlOrderBy 
+                new SqlOrderBy
                 {
                     Column = new SqlColumn
                     {
@@ -3246,7 +3299,7 @@ ORDER BY Table1.Id ASC");
             select.From = t;
             select.OrderBy = new SqlOrderByList
             {
-                new SqlOrderBy 
+                new SqlOrderBy
                 {
                     Column = new SqlColumn
                     {
@@ -4470,10 +4523,10 @@ WHERE T.ID < {1}");
                 },
                 OrderBy = new SqlOrderByList
                 {
-                    Items = 
+                    Items =
                     {
                         new SqlOrderBy
-                        { 
+                        {
                             Column = new SqlColumn{ Table = table, ColumnName = "AsnCode" },
                             Direction = OrderDirection.Ascending
                         }
@@ -4521,10 +4574,10 @@ ORDER BY ASN.AsnCode ASC");
                 },
                 OrderBy = new SqlOrderByList
                 {
-                    Items = 
+                    Items =
                     {
                         new SqlOrderBy
-                        { 
+                        {
                             Column = new SqlColumn{ Table = table, ColumnName = "AsnCode" },
                             Direction = OrderDirection.Ascending
                         }
@@ -4576,10 +4629,10 @@ WHERE RN >= 21");
                 },
                 OrderBy = new SqlOrderByList
                 {
-                    Items = 
+                    Items =
                     {
                         new SqlOrderBy
-                        { 
+                        {
                             Column = new SqlColumn{ Table = table, ColumnName = "AsnCode" },
                             Direction = OrderDirection.Ascending
                         }
@@ -4622,10 +4675,10 @@ ORDER BY ASN.AsnCode ASC");
                 },
                 OrderBy = new SqlOrderByList
                 {
-                    Items = 
+                    Items =
                     {
                         new SqlOrderBy
-                        { 
+                        {
                             Column = new SqlColumn{ Table = table, ColumnName = "AsnCode" },
                             Direction = OrderDirection.Ascending
                         }
@@ -5474,7 +5527,7 @@ ORDER BY Article.Code ASC");
             {
                 var watch = new System.Diagnostics.Stopwatch();
 
-                using (var dba = DbAccesserFactory.Create(BookRepositoryDataProvider.DbSettingName))
+                using (var dba = DbAccesserFactory.Create(repo))
                 {
                     var isOracle = DbSetting.IsOracleProvider(dba.ConnectionSchema);
 
@@ -5485,7 +5538,7 @@ ORDER BY Article.Code ASC");
                         for (int i = 0; i < Config_LineCount; i++)
                         {
                             dba.RawAccesser.ExecuteText(
-                                "INSERT INTO Book (Author,BookCategoryId,BookLocId,Code,Content,Name,Price,Publisher) VALUES ('',NULL,NULL,'','',@p0,NULL,'')",
+                                "INSERT INTO Book (Author,BookCategoryId,BookLocId,Code,Content,Name,Price,Publisher) VALUES ('', NULL, NULL, '', '', @p0, NULL, '')",
                                 dba.RawAccesser.ParameterFactory.CreateParameter("p0", i)
                                 );
 
@@ -5498,7 +5551,7 @@ ORDER BY Article.Code ASC");
                         for (int i = 0; i < Config_LineCount; i++)
                         {
                             dba.RawAccesser.ExecuteText(
-                                "INSERT INTO Book (Author,BookCategoryId,BookLocId,Code,Content,Name,Price,Publisher,Id) VALUES ('',NULL,NULL,'','',:p0,NULL,'',:p1)",
+                                "INSERT INTO Book (Author,BookCategoryId,BookLocId,Code,Content,Name,Price,Publisher,Id) VALUES ('', NULL, NULL, '', '', :p0, NULL, '', :p1)",
                                 dba.RawAccesser.ParameterFactory.CreateParameter("p0", i),
                                 dba.RawAccesser.ParameterFactory.CreateParameter("p1", i)
                                 );
@@ -5531,7 +5584,7 @@ ORDER BY Article.Code ASC");
             {
                 var watch = new System.Diagnostics.Stopwatch();
 
-                using (var dba = DbAccesserFactory.Create(BookRepositoryDataProvider.DbSettingName))
+                using (var dba = DbAccesserFactory.Create(repo))
                 {
                     var isOracle = DbSetting.IsOracleProvider(dba.ConnectionSchema);
 

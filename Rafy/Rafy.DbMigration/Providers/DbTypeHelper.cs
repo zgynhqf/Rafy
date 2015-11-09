@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data;
+using Rafy.Reflection;
 
 namespace Rafy.DbMigration
 {
@@ -43,10 +44,9 @@ namespace Rafy.DbMigration
             if (clrType == typeof(float)) { return DbType.Single; }
             if (clrType == typeof(byte[])) { return DbType.Binary; }
 
-            if (clrType.IsGenericType &&
-                clrType.GetGenericTypeDefinition() == typeof(Nullable<>))
+            if (TypeHelper.IsNullable(clrType))
             {
-                return ConvertFromCLRType(clrType.GetGenericArguments()[0]);
+                return ConvertFromCLRType(TypeHelper.IgnoreNullable(clrType));
             }
 
             return DbType.String;
@@ -57,18 +57,18 @@ namespace Rafy.DbMigration
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        internal static string GetDefaultValue(DbType type)
+        internal static object GetDefaultValue(DbType type)
         {
             switch (type)
             {
                 case DbType.String:
                 case DbType.AnsiString:
                 case DbType.AnsiStringFixedLength:
-                    return "''";
+                    return string.Empty;
                 case DbType.DateTime:
-                    return "'2000-1-1 0:0:0'";
+                    return new DateTime(2000, 1, 1, 0, 0, 0);
                 case DbType.Guid:
-                    return "'" + Guid.Empty + "'";
+                    return Guid.Empty.ToString();
                 case DbType.Int32:
                 case DbType.Int64:
                 case DbType.Binary:
@@ -76,7 +76,7 @@ namespace Rafy.DbMigration
                 case DbType.Boolean:
                 case DbType.Byte:
                 case DbType.Decimal:
-                    return "0";
+                    return 0;
                 default:
                     throw new NotSupportedException();
             }

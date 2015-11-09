@@ -33,12 +33,12 @@ repo.Save(new Book());]]>
             <title>删除</title>
             <content>
                 <para>
-                    使用 <codeInline>MarkDeleted</codeInline> 方法把实体标记为需要删除状态后，调用保存即可从仓库中删除该实体。
+                    通过 <codeInline>PersistenceStatus</codeInline> 属性把实体的状态标记为需要删除后，调用保存即可从仓库中删除该实体。
                 </para>
                 <code language="cs">
                     <![CDATA[BookRepository repo = RF.Concrete<BookRepository>();
 Book book = repo.GetById(1);
-book.Status = PersistenceStatus.Deleted;
+book.PersistenceStatus = PersistenceStatus.Deleted;
 repo.Save(book);]]>
                 </code>
                 <para>另外，如果把一个实体从实体列表中移除后，再保存该列表，也可以达到删除该实体的效果：</para>

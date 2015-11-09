@@ -199,6 +199,24 @@ ALTER TABLE ");
             op.ConstraintName = oldName;
         }
 
+        protected override void Generate(UpdateComment op)
+        {
+            if (string.IsNullOrEmpty(op.ColumnName))
+            {
+                this.AddRun(new SqlMigrationRun
+                {
+                    Sql = string.Format(@"COMMENT ON TABLE ""{0}"" IS '{1}'", this.Prepare(op.TableName), op.Comment)
+                });
+            }
+            else
+            {
+                this.AddRun(new SqlMigrationRun
+                {
+                    Sql = string.Format(@"COMMENT ON COLUMN ""{0}"".""{1}"" IS '{2}'", this.Prepare(op.TableName), this.Prepare(op.ColumnName), op.Comment)
+                });
+            }
+        }
+
         /// <summary>
         /// 由于 Oracle 中 FK 最长是 30 个字符，所以这里需要对多余的字符串做截取操作。
         /// </summary>

@@ -29,8 +29,14 @@ namespace Rafy.Domain.ORM
     /// <summary>
     /// 为 SqlNode 语法树生成相应 Sql 的生成器。
     /// </summary>
-    abstract class SqlGenerator : SqlNodeVisitor
+    internal abstract class SqlGenerator : SqlNodeVisitor
     {
+        internal const string WILDCARD_ALL = "%";
+        internal const string WILDCARD_SINGLE = "_";
+        internal const string ESCAPE_CHAR = "\\";
+        internal static readonly string WILDCARD_ALL_ESCAPED = ESCAPE_CHAR  + WILDCARD_ALL;
+        internal static readonly string WILDCARD_SINGLE_ESCAPED = ESCAPE_CHAR  + WILDCARD_SINGLE;
+
         private FormattedSql _sql;
 
         public SqlGenerator()
@@ -467,27 +473,33 @@ namespace Rafy.Domain.ORM
                     break;
                 case SqlColumnConstraintOperator.Contains:
                     _sql.Append(" LIKE ");
-                    _sql.AppendParameter("%" + value + "%");
+                    _sql.AppendParameter(WILDCARD_ALL + this.Escape(value) + WILDCARD_ALL);
+                    this.AppendEscapePlause(value);
                     break;
                 case SqlColumnConstraintOperator.NotContains:
                     _sql.Append(" NOT LIKE ");
-                    _sql.AppendParameter("%" + value + "%");
+                    _sql.AppendParameter(WILDCARD_ALL + this.Escape(value) + WILDCARD_ALL);
+                    this.AppendEscapePlause(value);
                     break;
                 case SqlColumnConstraintOperator.StartsWith:
                     _sql.Append(" LIKE ");
-                    _sql.AppendParameter(value + "%");
+                    _sql.AppendParameter(this.Escape(value) + WILDCARD_ALL);
+                    this.AppendEscapePlause(value);
                     break;
                 case SqlColumnConstraintOperator.NotStartsWith:
                     _sql.Append(" NOT LIKE ");
-                    _sql.AppendParameter(value + "%");
+                    _sql.AppendParameter(this.Escape(value) + WILDCARD_ALL);
+                    this.AppendEscapePlause(value);
                     break;
                 case SqlColumnConstraintOperator.EndsWith:
                     _sql.Append(" LIKE ");
-                    _sql.AppendParameter("%" + value);
+                    _sql.AppendParameter(WILDCARD_ALL + this.Escape(value));
+                    this.AppendEscapePlause(value);
                     break;
                 case SqlColumnConstraintOperator.NotEndsWith:
                     _sql.Append(" NOT LIKE ");
-                    _sql.AppendParameter("%" + value);
+                    _sql.AppendParameter(WILDCARD_ALL + this.Escape(value));
+                    this.AppendEscapePlause(value);
                     break;
                 case SqlColumnConstraintOperator.In:
                 case SqlColumnConstraintOperator.NotIn:
@@ -539,9 +551,28 @@ namespace Rafy.Domain.ORM
             return node;
         }
 
-        protected virtual object PrepareConstraintValue(object value)
+        private string Escape(object value)
         {
-            return value;
+            return value.ToString()
+                .Replace(WILDCARD_ALL, WILDCARD_ALL_ESCAPED)
+                .Replace(WILDCARD_SINGLE, WILDCARD_SINGLE_ESCAPED);
+        }
+
+        private void AppendEscapePlause(object value)
+        {
+            //http://blog.sina.com.cn/s/blog_415bd707010006qv.html
+            var strValue = value as string;
+            if (!string.IsNullOrWhiteSpace(strValue) &&
+                (strValue.Contains(WILDCARD_ALL) || strValue.Contains(WILDCARD_SINGLE))
+                )
+            {
+                _sql.Append(" ESCAPE '").Append(ESCAPE_CHAR).Append('\'');
+            }
+        }
+
+        public virtual object PrepareConstraintValue(object value)
+        {
+            return value ?? DBNull.Value;
         }
 
         protected override SqlSelectAll VisitSqlSelectAll(SqlSelectAll sqlSelectStar)

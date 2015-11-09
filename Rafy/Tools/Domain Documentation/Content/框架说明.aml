@@ -6,7 +6,7 @@
 
         <introduction>
             <para>Rafy 帮助文档</para>
-            <para>文档版本号：0.5.542</para>
+            <para>文档版本号：0.5.543</para>
         </introduction>
 
         <section address="intro">
@@ -147,7 +147,13 @@
         <section address="important">
             <title>框架发布记录</title>
             <content>
-                <list class="bullet">
+                <para>
+                    详见：<externalLink>
+                        <linkText>Rafy(原OEA)领域实体框架发布主页</linkText>
+                        <linkUri>http://www.cnblogs.com/zgynhqf/p/3356692.html</linkUri>
+                    </externalLink>
+                </para>
+                <!--<list class="bullet">
                     <listItem>
                         <para>
                             200909：发布了 1.0 版本，《<externalLink>
@@ -180,7 +186,7 @@
                             201310：更名为 Rafy、发布领域实体框架 2.22.2067 版本、帮助文档 1.0、建立“Rafy 框架”小组。
                         </para>
                     </listItem>
-                </list>
+                </list>-->
             </content>
         </section>
 

@@ -18,7 +18,7 @@ namespace Rafy.Domain.ORM
     /// <summary>
     /// 数据表列
     /// </summary>
-    public interface IPersistanceColumnInfo
+    internal interface IPersistanceColumnInfo
     {
         /// <summary>
         /// 对应的表
@@ -49,6 +49,11 @@ namespace Rafy.Domain.ORM
         /// 是否为自增长主键列。
         /// </summary>
         bool IsIdentity { get; }
+
+        /// <summary>
+        /// 是否可空列。
+        /// </summary>
+        bool IsNullable { get; }
 
         /// <summary>
         /// 是否主键列

@@ -57,7 +57,7 @@ namespace VSTemplates.Wizards
             var dnsItems= domainNamespace.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
 
             //显示向导窗口
-            var win = new DomainEntityWizardWindow();
+            var win = new DomainEntityWizardWindow(automationObject as DTE);
             win.txtClassName.Text = _replacementsDictionary["$safeitemname$"];
             win.txtBaseEntityName.Text = dnsItems[dnsItems.Length - 1] + "Entity";
             win.txtDomainName.Text = "实体的领域名称";

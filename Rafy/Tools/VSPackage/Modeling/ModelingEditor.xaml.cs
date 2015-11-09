@@ -380,7 +380,7 @@ namespace Rafy.VSPackage.Modeling
             var types = new List<EntityType>();
             foreach (var item in selectedTypes)
             {
-                if (item.BaseType != null)
+                if (item.BaseType != null && !this.IsVeryBaseType(item.BaseType))
                 {
                     types.Add(item.BaseType);
                 }
@@ -397,6 +397,24 @@ namespace Rafy.VSPackage.Modeling
             }
 
             AddTypesInDocument(types);
+        }
+
+        /// <summary>
+        /// 判断指定的基类是否是其它所有实体类型的基类。
+        /// </summary>
+        /// <param name="baseType"></param>
+        /// <returns></returns>
+        private bool IsVeryBaseType(EntityType baseType)
+        {
+            var count = 0;
+            foreach (var type in this.EOM.EntityTypes)
+            {
+                if (type.IsSubclassOf(baseType))
+                {
+                    count++;
+                }
+            }
+            return count == this.EOM.EntityTypes.Count - 1;
         }
 
         #endregion

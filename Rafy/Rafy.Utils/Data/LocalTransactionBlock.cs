@@ -22,8 +22,12 @@ using System.Text;
 namespace Rafy.Data
 {
     /// <summary>
-    /// 表示一个使用单数据库连接的事务代码块（版本 2.0）
-    /// Local 的意思是本地事务（即非分布式事务）
+    /// 表示一个本地数据库事务代码块。（Local 的意思是本地事务，不使用分布式事务。）
+    /// 
+    /// 注意：
+    /// * 多个数据库之间的事务，将会完全独立，互不干扰。
+    /// * 一个事务的代码只能在同一个线程中执行。（事务是存储在当前线程中的。多线程之间不共享事务。）
+    /// * 如果想主动使用分布式事务，请在最外层使用 ADO.NET 的 TransactionScope 类。
     /// </summary>
     public abstract class LocalTransactionBlock : ContextScope
     {
@@ -51,9 +55,17 @@ namespace Rafy.Data
         /// <summary>
         /// 所使用的存储位置
         /// </summary>
-        internal static IDictionary<string, object> Context
+        private static IDictionary<string, object> ContextItems
         {
-            get { return ThreadStaticAppContextProvider.Items; }
+            get
+            {
+                //事务不再存储在上下文中，而是存储在线程中。
+                //同一上下文（如：HttpContext）不同线程之间，不共享事务。
+                //原因：多个线程使用同一个连接，可以解决大部分不需要分布式事务的情况，但是连接变为共享资源，混用会出错（如线程A在读取数据时，线程B想写数据则会报错）。
+                //return AppContext.Items;
+
+                return ThreadStaticAppContextProvider.Items;
+            }
         }
 
         /// <summary>
@@ -64,7 +76,7 @@ namespace Rafy.Data
         /// 此级别只在最外层的代码块中有效。
         /// </param>
         public LocalTransactionBlock(DbSetting dbSetting, IsolationLevel level)
-            : base(Context)
+            : base(ContextItems)
         {
             this._dbSetting = dbSetting;
             this._level = level;
@@ -172,7 +184,7 @@ namespace Rafy.Data
         internal static LocalTransactionBlock GetWholeScope(string database)
         {
             var name = LocalContextName(database);
-            var ws = GetWholeScope(name, Context) as LocalTransactionBlock;
+            var ws = GetWholeScope(name, ContextItems) as LocalTransactionBlock;
             return ws;
         }
 

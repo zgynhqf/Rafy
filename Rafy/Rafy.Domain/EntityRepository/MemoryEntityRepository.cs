@@ -235,7 +235,7 @@ namespace Rafy.Domain.ORM
                     _dp.Insert(entity);
                 }
 
-                internal protected override void Insert(Entity entity)
+                public override void InsertToPersistence(Entity entity)
                 {
                     _dp.EnsureStore();
 
@@ -262,13 +262,13 @@ namespace Rafy.Domain.ORM
                     _dp._memoryRows[key] = _dp.ToRow(entity);
                 }
 
-                internal protected override void Update(Entity entity)
+                public override void UpdateToPersistence(Entity entity)
                 {
                     entity = _dp.ToRow(entity);
                     _dp._memoryRows[_dp.GetRealKey(entity)] = entity;
                 }
 
-                internal protected override void Delete(Entity entity)
+                public override void DeleteFromPersistence(Entity entity)
                 {
                     _dp._memoryRows.Remove(_dp.GetRealKey(entity));
                 }

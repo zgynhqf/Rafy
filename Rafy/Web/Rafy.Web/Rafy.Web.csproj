@@ -40,6 +40,10 @@
     <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -47,10 +51,43 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -64,6 +101,12 @@
     <Compile Include="EntityDataPortal\EntityJsonConverter.cs" />
     <Compile Include="EntityDataPortal\EntityPropertySetter.cs" />
     <Compile Include="EntityDataPortal\TreeEntityListReader.cs" />
+    <Compile Include="Http\EntityAwareBodyModelValidator.cs" />
+    <Compile Include="Http\EntityAwareJsonMediaTypeFormatter.cs" />
+    <Compile Include="Http\IdFromRouteFormatterParameterBinding.cs" />
+    <Compile Include="Http\IdFromRouteHttpContent.cs" />
+    <Compile Include="Http\HttpRegister.cs" />
+    <Compile Include="Http\ODataQueryCriteriaBinder.cs" />
     <Compile Include="Json\DynamicJsonModel.cs" />
     <Compile Include="Json\JsonModel.cs" />
     <Compile Include="Json\LiteJsonWriter.cs" />
@@ -78,6 +121,8 @@
     <Compile Include="MetaModelPortal\MetaModel\ServerType.cs" />
     <Compile Include="MetaModelPortal\MetaModel\ServerTypeHelper.cs" />
     <Compile Include="MetaModelPortal\MetaModel\SupportedServerType.cs" />
+    <Compile Include="Mvc\CommonQueryCriteriaBinder.cs" />
+    <Compile Include="Mvc\EntityAwareBinder.cs" />
     <Compile Include="Services\ClientResult.cs" />
     <Compile Include="MetaModelPortal\ClientMetaModel\Entity\BelongsToAssociation.cs" />
     <Compile Include="MetaModelPortal\ClientMetaModel\Entity\EntityAssociation.cs" />
@@ -110,7 +155,7 @@
     <Compile Include="Services\JsonServiceRepository.cs" />
     <Compile Include="Services\ServiceInvokerHandler.cs" />
     <Compile Include="WebApp.cs" />
-    <Compile Include="WebAppStartupModule.cs" />
+    <Compile Include="WebAppStarter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Rafy.Utils\Rafy.Utils.csproj">
@@ -136,7 +181,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Hxy Key.snk" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Scripts\Extension.js" />
@@ -180,6 +227,7 @@
     <Content Include="Scripts\control\ComboBoxTest.js" />
     <EmbeddedResource Include="Scripts\svc\ServiceInvoker.js" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="c70274b4-8afc-4bd4-82d9-6e43ae7562ee" revisionNumber="1">
+    <developerConceptualDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+
+        <introduction>
+            <para>
+                某些场景下，开发者希望能够大批量地把实体的数据导入到数据库中。虽然使用实体仓库保存实体列表非常方便，但是其内部实现机制是一条一条的保存到数据库，当实体的个数较多时，效率就会很低。所以 Rafy 设计了批量导入插件程序，其内部使用 ADO.NET 及 ODP.NET 中的批量导入机制来把大量数据一次性导入到数据库中。
+            </para>
+            <autoOutline />
+        </introduction>
+
+        <section address="howToUse">
+            <title>使用方法</title>
+            <content>
+                <para></para>
+                <procedure>
+                    <title>步骤</title>
+                    <steps class="ordered">
+                        <step>
+                            <content>
+                                <para>由于批量导入功能是一个额外的程序集，所以在使用该功能时，需要先使用 NuGet 引用最新版本的 Rafy.Domain.ORM.BatchSubmit 程序集。</para>
+                            </content>
+                        </step>
+                        <step>
+                            <content>
+                                <para>如果准备导入 ORACLE 数据库，则也需要引用 Oracle.ManagedDataAccess(12.1.022 以上版本) 程序集。</para>
+                            </content>
+                        </step>
+                        <step>
+                            <content>
+                                <para>修改需要保存大量实体的代码，例如，原代码如下：</para>
+                                <code language="cs">
+                                    <![CDATA[
+                var books = new BookList();
+                for (int i = 0; i < 1000000; i++)
+                {
+                    var book = new Book
+                    {
+                        ChapterList =
+                        {
+                            new Chapter(),
+                            new Chapter(),
+                        }
+                    };
+                    books.Add(book);
+                }
+
+                //直接使用实体仓库进行保存。
+                repo.Save(books);
+                ]]>
+                                </code>
+                                <para>需要把最后一行使用仓库保存实体列表，修改为创建导入器来保存实体列表：</para>
+                                <code language="cs">
+                                    <![CDATA[
+                //创建一个批量导入器进行保存。
+                repo.CreateImporter().Save(books);
+                ]]>
+                                </code>
+                            </content>
+                        </step>
+                    </steps>
+                </procedure>
+            </content>
+        </section>
+
+        <section address="caution">
+            <title>注意</title>
+            <content>
+                <list class="bullet">
+                    <listItem>
+                        <para>从上面的代码可以看出，批量导入程序是面向整个聚合的。也就是说，批量导入父实体时，同时也会批量导入父实体下的所有子实体。</para>
+                    </listItem>
+                    <listItem>
+                        <para>批量导入不但支持添加新实体，同时也支持批量更新、批量删除。使用方法与使用仓库保持一致。</para>
+                    </listItem>
+                    <listItem>
+                        <para>对于大批量的数据，使用批量导入，比直接使用仓库来保存实体，速度要快两个数据级左右。</para>
+                    </listItem>
+                    <listItem>
+                        <para>目前批量导入实体的功能，只支持 Oracle 和 SqlServer 两个数据库。</para>
+                    </listItem>
+                    <listItem>
+                        <para>在使用 Oracle 数据库时，还需要在数据库生成完成后，特别地调用以下代码以启用某个聚合实体的批量导入功能，否则导入过程中会抛出异常（原因请见后面的实现原理章节）。代码如下：</para>
+                        <code language="cs">
+                            <![CDATA[
+            Rafy.Domain.ORM.BatchSubmit.Oracle.OracleBatchImporter.EnableBatchSequence(
+                RF.Concrete<OriginalDataRepository>()
+                );
+                            ]]>
+                        </code>
+                    </listItem>
+                </list>
+            </content>
+        </section>
+
+        <section address="inner">
+            <title>实现原理</title>
+            <content>
+                <para>下面简要介绍批量导入的原理。</para>
+            </content>
+            <sections>
+                <section>
+                    <title>Sql Server</title>
+                    <content>
+                        <para>对于 Sql Server 数据库的批量保存：</para>
+                        <list class="bullet">
+                            <listItem>
+                                <para>
+                                    批量新增数据，是使用 <codeInline>System.Data.SqlClient.SqlBulkCopy</codeInline> 来实现的。
+                                </para>
+                            </listItem>
+                            <listItem>
+                                <para>
+                                    批量更新数据，是使用 <codeInline>System.Data.SqlClient.SqlDataAdapter</codeInline> 来实现的。
+                                </para>
+                            </listItem>
+                            <listItem>
+                                <para>批量删除数据，则是直接拼接 SQL 语句，把需要删除的实体的 Id 放到 In 语句中进行删除。例如：</para>
+                                <code language="sql">
+                                    DELETE FROM Books WHERE Id IN (1,3,5,7......);
+                                </code>
+                            </listItem>
+                        </list>
+                    </content>
+                </section>
+                <section>
+                    <title>Oracle</title>
+                    <content>
+                        <para>对于 Oracle 数据库的批量保存：</para>
+                        <list class="bullet">
+                            <listItem>
+                                <para>新增数据、更新数据都是使用 ODP.NET 中原生的批量导入功能。</para>
+                                <para>
+                                    参见：<codeInline>Oracle.ManagedDataAccess.Client.OracleCommand.ArrayBindCount</codeInline> 属性。
+                                </para>
+                            </listItem>
+                            <listItem>
+                                <para>而删除数据的实现则和 SQLServer 的实现一致，均是拼接 DELETE 语句。</para>
+                            </listItem>
+                        </list>
+                    </content>
+                </section>
+                <section>
+                    <title>新增大量实体时，实体的 Id 生成</title>
+                    <content>
+                        <para>一般情况下，使用仓库保存一个新增的实体时，仓库会使用数据库本身的机制来为实体生成 Id，在 SQLServer 中是使用 IDENTITY 列，在 ORACLE 中则是使用每个表对应的 SEQUENCE 来生成。但是，批量导入大量新实体时，为了性能上的考虑，则需要一次性为需要保存的所有新实体统一生成 Id。</para>
+                        <para>在 SQLServer 中，可以方便地使用 SQL 语句调整表中 IDENTITY 下一次的值，所以实现比较简单。只需要设置 IDENTITY 下一次的值 + 100000，并使用中间跳过的这些值来作为实体的 Id 即可。</para>
+                        <para>但是在 ORACLE 中，如果去调整 SEQUENCE 的值，则属于 DDL 语句，会隐式自动提交事务，会造成数据的错误。所以我们最终决定：如果在 ORACLE 中要使用批量导入功能，数据表对应的 SEQUENCE 必须以较大的数字为步距（如 ALTER SEQUENCE "SEQ_TABLE_ID" INCREMENT BY 100000 NOCACHE）。这样，在批量导入时，就不再需要增修改 SEQUENCE 的步距，而直接使用中间跳过的这些值作为实体的 Id。这样做也比较方便，但是负面效果则是使用仓库保存单一实体时，两次保存不同实体生成的 Id 会相差 100000，不再是连续的。</para>
+                    </content>
+                </section>
+            </sections>
+        </section>
+        <relatedTopics>
+        </relatedTopics>
+    </developerConceptualDocument>
+</topic>

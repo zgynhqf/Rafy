@@ -28,7 +28,6 @@ using EnvDTE;
 using Rafy.VSPackage;
 using RafySDK;
 using RafySDK.Templates.Wizards;
-using RafySDK.Templates.Wizards.Items.DomainEntityRepository;
 
 namespace VSTemplates.Wizards
 {
@@ -52,7 +51,7 @@ namespace VSTemplates.Wizards
         {
             txtClassName.Focus();
 
-            this.TrySelectType();
+            this.TryAutoSelectType();
         }
 
         void UIElement_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
@@ -89,23 +88,19 @@ namespace VSTemplates.Wizards
 
         private void btnSelectTypes_Click(object sender, RoutedEventArgs e)
         {
-            var win = new SelectEntityWindow();
-            win.DataContext = this.SelectEntityWindowViewModel;
-            var res = win.ShowDialog();
-            if (res.GetValueOrDefault())
+            var type = SelectEntityWindow.SelectTypeInIDE(this.SelectEntityWindowViewModel);
+            if (type != null)
             {
-                //ListBox.SelectedItem 属性无法双向绑定。原因不祥？
-                //var type = sewVM.SelectedProject.SelectedEntityType;
-                var type = win.lbTypes.SelectedItem as CodeClass;
                 SelectType(type);
             }
         }
 
-        private void TrySelectType()
+        private void TryAutoSelectType()
         {
             var typeName = this.VM.EntityTypeName;
             if (!string.IsNullOrWhiteSpace(typeName))
             {
+                bool found = false;
                 var projects = this.SelectEntityWindowViewModel.Projects;
                 foreach (var project in projects)
                 {
@@ -114,9 +109,11 @@ namespace VSTemplates.Wizards
                         if (item.Name == typeName)
                         {
                             this.SelectType(item);
+                            found = true;
                             break;
                         }
                     }
+                    if (found) break;
                 }
             }
         }

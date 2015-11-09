@@ -19,6 +19,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using Rafy;
 using Rafy.MetaModel;
 using Rafy.MetaModel.View;
@@ -44,7 +45,7 @@ namespace Rafy.ComponentModel
             this.InitEnvironment();
 
             //注册所有扩展属性
-            //由于插件的 Intialize 方法中应用层代码，有可能主动使用实体类而造成实体类的静态构造函数被执行，
+            //由于插件的 Intialize 方法中的应用层代码，有可能主动使用实体类而造成实体类的静态构造函数被执行，
             //所以必须在 Intialize 方法执行前，即任何实体被使用前，初始化所有的扩展属性。
             RafyEnvironment.InitExtensionProperties();
 
@@ -115,14 +116,15 @@ namespace Rafy.ComponentModel
                 catch (CultureNotFoundException) { }
             }
 
-            //如果是客户端，则所有线程使用一个身份；如果是服务端，则每个线程使用一个单独的身份。
+            //如果是客户端，则所有线程使用一个身份（上下文）；
             if (RafyEnvironment.Location.IsWPFUI)
             {
                 AppContext.SetProvider(new StaticAppContextProvider());
             }
-            else
+            //如果是网站，则一个 HttpContext 使用一个身份（上下文）；否则，每个线程使用一个单独的身份（上下文）。
+            else if (HttpContext.Current != null)
             {
-                AppContext.SetProvider(new WebOrThreadStaticAppContextProvider());
+                AppContext.SetProvider(new WebAppContextProvider());
             }
 
             RafyEnvironment.InitCustomizationPath();

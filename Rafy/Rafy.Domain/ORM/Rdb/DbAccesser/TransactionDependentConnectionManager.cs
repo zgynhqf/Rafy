@@ -22,6 +22,8 @@ using Rafy.Data;
 namespace Rafy.Domain.ORM
 {
     /// <summary>
+    /// 数据库连接的管理只是依赖当前线程中的事务。
+    /// 如果代码没有在事务中时，则每次都构建新的连接，不再进行连接对象的共享。
     /// 依赖于 <see cref="LocalTransactionBlock"/> 的连接管理器。
     /// </summary>
     internal class TransactionDependentConnectionManager : IConnectionManager

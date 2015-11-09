@@ -107,65 +107,47 @@ namespace Rafy.DevTools.DbManagement
             {
                 c.RunDataLossOperation = DataLossOperation.All;
 
-                if (!RafyDbMigrationContext.IsEnabled())
+                var win = new WaitDialog();
+                win.Width = 500;
+                win.Opacity = 0;
+                win.ShowInTaskbar = false;
+                win.Text = string.Format("正在生成 {0} 数据库，请稍侯……", dbSetting);
+
+                Exception exception = null;
+
+                ThreadPool.QueueUserWorkItem(oo =>
                 {
-                    action(c);
-
-                    //c.DeleteDatabase();
-                    //c.AutoMigrate();
-
-                    //其它一些可用的API
-                    //c.ClassMetaReader.IgnoreTables.Add("ReportObjectMetaData");
-                    //c.RollbackToHistory(DateTime.Parse("2008-12-31 23:59:58.700"), RollbackAction.DeleteHistory);
-                    //c.DeleteDatabase();
-                    //c.ResetHistories();
-                    //c.RollbackAll();
-                    //c.JumpToHistory(DateTime.Parse("2012-01-07 21:27:00.000"));
-                }
-                else
-                {
-                    var win = new WaitDialog();
-                    win.Width = 500;
-                    win.Opacity = 0;
-                    win.ShowInTaskbar = false;
-                    win.Text = string.Format("正在生成 {0} 数据库，请稍侯……", dbSetting);
-
-                    Exception exception = null;
-
-                    ThreadPool.QueueUserWorkItem(oo =>
+                    try
                     {
-                        try
+                        bool first = false;
+                        c.ItemMigrated += (o, e) =>
                         {
-                            bool first = false;
-                            c.ItemMigrated += (o, e) =>
+                            if (!first)
                             {
-                                if (!first)
-                                {
-                                    Action setVisible = () => win.Opacity = 1;
-                                    win.Dispatcher.Invoke(setVisible);
-                                    first = true;
-                                }
-                                win.ProgressValue = new ProgressValue
-                                {
-                                    Percent = 100 * e.Index / (double)e.TotalCount
-                                };
+                                Action setVisible = () => win.Opacity = 1;
+                                win.Dispatcher.Invoke(setVisible);
+                                first = true;
+                            }
+                            win.ProgressValue = new ProgressValue
+                            {
+                                Percent = 100 * e.Index / (double)e.TotalCount
                             };
+                        };
 
-                            action(c);
-                        }
-                        catch (Exception ex)
-                        {
-                            exception = ex;
-                        }
+                        action(c);
+                    }
+                    catch (Exception ex)
+                    {
+                        exception = ex;
+                    }
 
-                        Action ac = () => win.DialogResult = true;
-                        win.Dispatcher.BeginInvoke(ac);
-                    });
+                    Action ac = () => win.DialogResult = true;
+                    win.Dispatcher.BeginInvoke(ac);
+                });
 
-                    win.ShowDialog();
+                win.ShowDialog();
 
-                    if (exception != null) { throw new Rafy.DbMigration.DbMigrationException("数据库升级时出错，请查看 InnerException。", exception); }
-                }
+                if (exception != null) { throw new Rafy.DbMigration.DbMigrationException("数据库升级时出错，请查看 InnerException。", exception); }
             }
         }
 

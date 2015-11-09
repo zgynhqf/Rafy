@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConcreteProperty.cs" />
+    <Compile Include="ExtensionPropertiesRegister.cs" />
     <Compile Include="ManagedPropertyChangingEventArgs.cs" />
     <Compile Include="ManagedPropertyObjectTypeProxy.cs" />
     <Compile Include="PropertyDescriptors\CLRPropertyDescriptor.cs" />

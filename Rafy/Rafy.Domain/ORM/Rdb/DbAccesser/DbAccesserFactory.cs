@@ -43,5 +43,16 @@ namespace Rafy.Domain.ORM
         {
             return new ManagedConnectionDbAccesser(dbSetting);
         }
+
+        /// <summary>
+        /// 根据配置文件，构造一个数据库访问器。
+        /// </summary>
+        /// <param name="repository">实体仓库所代表的数据库配置。</param>
+        /// <returns></returns>
+        public static IDbAccesser Create(IRepository repository)
+        {
+            var setting = RdbDataProvider.Get(repository).DbSetting;
+            return new ManagedConnectionDbAccesser(setting);
+        }
     }
 }

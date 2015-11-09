@@ -80,7 +80,7 @@ namespace Rafy
 
         /// <summary>
         /// 是否启用 Sql 查询监听。 默认为 false。
-        /// 打开后，DbAccessed、ThreadDbAccessed 两个事件才会发生。
+        /// 打开后，DbAccessed、ThreadDbAccessed 两个事件才会发生。这样才可以监听每一个被执行 Sql。
         /// </summary>
         public static bool EnableSqlObervation { get; set; }
 
@@ -112,7 +112,8 @@ namespace Rafy
         /// <param name="sql">The SQL.</param>
         /// <param name="parameters">The parameters.</param>
         /// <param name="connectionSchema">The connection schema.</param>
-        public static void LogDbAccessed(string sql, IDbDataParameter[] parameters, DbConnectionSchema connectionSchema)
+        /// <param name="connection">The connection.</param>
+        public static void LogDbAccessed(string sql, IDbDataParameter[] parameters, DbConnectionSchema connectionSchema, IDbConnection connection)
         {
             _dbAccessedCount++;
             _threadDbAccessedCount++;
@@ -121,7 +122,7 @@ namespace Rafy
             {
                 try
                 {
-                    _impl.LogDbAccessed(sql, parameters, connectionSchema);
+                    _impl.LogDbAccessed(sql, parameters, connectionSchema, connection);
                 }
                 catch { }
             }

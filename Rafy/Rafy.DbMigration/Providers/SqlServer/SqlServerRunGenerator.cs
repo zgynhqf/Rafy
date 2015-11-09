@@ -148,5 +148,36 @@ namespace Rafy.DbMigration.SqlServer
                 this.AddRun(sql);
             }
         }
+
+        protected override void Generate(UpdateComment op)
+        {
+            //参考：
+            //http://www.cnblogs.com/xdp-gacl/p/3506099.html
+            //http://blog.sina.com.cn/s/blog_8b7263d10101d7ak.html
+            //http://blog.sina.com.cn/s/blog_8fe8076e01019ik7.html
+
+            if (string.IsNullOrEmpty(op.ColumnName))
+            {
+                this.AddRun(new SafeSqlMigrationRun
+                {
+                    Sql = string.Format(@"EXEC sys.sp_dropextendedproperty @name=N'MS_Description', @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'{0}'", op.TableName)
+                });
+                this.AddRun(new SqlMigrationRun
+                {
+                    Sql = string.Format(@"EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'{1}', @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'{0}'", op.TableName, op.Comment)
+                });
+            }
+            else
+            {
+                this.AddRun(new SafeSqlMigrationRun
+                {
+                    Sql = string.Format(@"EXEC sys.sp_dropextendedproperty @name=N'MS_Description', @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'{0}', @level2type=N'COLUMN', @level2name=N'{1}'", op.TableName, op.ColumnName)
+                });
+                this.AddRun(new SqlMigrationRun
+                {
+                    Sql = string.Format(@"EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'{2}', @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'{0}', @level2type=N'COLUMN', @level2name=N'{1}'", op.TableName, op.ColumnName, op.Comment, op.Comment)
+                });
+            }
+        }
     }
 }

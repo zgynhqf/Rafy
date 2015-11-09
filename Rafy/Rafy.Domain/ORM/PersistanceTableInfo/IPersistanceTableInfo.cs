@@ -22,7 +22,7 @@ namespace Rafy.Domain.ORM
     /// 某个实体类型对应的‘逻辑表’的元数据。
     /// 这个表并不一定就是数据库中的表，而可能是 MongoDb 中的表、一个 XML 文档等。
     /// </summary>
-    public interface IPersistanceTableInfo
+    internal interface IPersistanceTableInfo
     {
         /// <summary>
         /// 对应的实体类型

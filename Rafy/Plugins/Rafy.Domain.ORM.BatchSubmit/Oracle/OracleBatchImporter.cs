@@ -89,7 +89,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
             //如果批量生成 Id 使用的序列号太低，则需要抛出异常。
             var seqName = OracleMigrationProvider.SequenceName(batch.Table.Name, batch.Table.IdentityColumn.Name);
             var incrementBy = Convert.ToInt32(dba.QueryValue("SELECT INCREMENT_BY FROM ALL_SEQUENCES WHERE SEQUENCE_NAME = {0}", seqName));
-            if (incrementBy < 100) { throw new InvalidOperationException(string.Format("使用批量保存，表 {0} 的序列 {1} 的每次递增数不能少于 100。建议在数据库生成完成后使用 Rafy.Domain.ORM.BatchSubmit.Oracle.OracleBatchImporter.EnableBatchSequence() 来变更序列的每次递增数以启用聚合的批量生成。", batch.Table.Name, seqName)); }
+            if (incrementBy < 100) { throw new InvalidOperationException(string.Format("使用批量保存，表 {0} 的序列 {1} 的每次递增数不能少于 100。建议在数据库生成完成后使用 Rafy.Domain.ORM.BatchSubmit.Oracle.OracleBatchImporter.EnableBatchSequence() 来变更序列的每次递增数以批量生成实体聚合中的所有 Id 标识。", batch.Table.Name, seqName)); }
 
             //由于每次生成的 Id 号数有限，所以需要分批生成 Id
             var nextSeqValueSql = string.Format("SELECT {0}.NEXTVAL FROM DUAL", seqName);

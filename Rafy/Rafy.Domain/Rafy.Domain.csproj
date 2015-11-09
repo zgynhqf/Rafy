@@ -114,6 +114,8 @@
     <Compile Include="Entity\KeyProviders\LongKeyProvider.cs" />
     <Compile Include="Entity\Serialization\Json\AggtDeserializer.cs" />
     <Compile Include="Entity\Serialization\Json\AggtSerializer.cs" />
+    <Compile Include="ORM\DbMigration\CommentFinder.cs" />
+    <Compile Include="ORM\Query\MainTableWhereAppender.cs" />
     <Compile Include="ORM\Rdb\DataProvider\QueryArgs\ISqlSelectArgs.cs" />
     <Compile Include="ORM\Rdb\DataProvider\QueryArgs\ITableQueryArgs.cs" />
     <Compile Include="ORM\Rdb\DataProvider\QueryArgs\SqlQueryArgs.cs" />
@@ -229,7 +231,7 @@
     <Compile Include="ORM\Linq\TypeSystem.cs" />
     <Compile Include="ORM\Rdb\Sql\Oracle\OracleColumn.cs" />
     <Compile Include="ORM\Rdb\Sql\Oracle\OracleTable.cs" />
-    <Compile Include="ORM\Rdb\DbAccesser\ConnectionManager.cs" />
+    <Compile Include="ORM\Rdb\DbAccesser\AppContextDependentConnectionManager.cs" />
     <Compile Include="ORM\OrderDirection.cs" />
     <Compile Include="ORM\ORMHelper.cs" />
     <Compile Include="ORM\QueryExtensions.cs" />

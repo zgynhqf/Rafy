@@ -43,7 +43,7 @@ namespace Rafy.Domain.ORM.DbMigration
 
         public List<string> IgnoreTables { get; private set; }
 
-        public DestinationDatabase Read()
+        public DestinationDatabase Read(bool readComment = false)
         {
             var tableEntityTypes = this.GetMappingEntityTypes();
 
@@ -59,7 +59,8 @@ namespace Rafy.Domain.ORM.DbMigration
                 var reader = new TypesMetaReader
                 {
                     Database = result,
-                    Entities = tableEntityTypes
+                    Entities = tableEntityTypes,
+                    ReadComment = readComment
                 };
                 reader.Read();
             }
@@ -95,6 +96,11 @@ namespace Rafy.Domain.ORM.DbMigration
             return tableEntityTypes;
         }
 
+        DestinationDatabase IDestinationDatabaseReader.Read()
+        {
+            return this.Read();
+        }
+
         Database IMetadataReader.Read()
         {
             return this.Read();
@@ -102,19 +108,24 @@ namespace Rafy.Domain.ORM.DbMigration
 
         private class TypesMetaReader
         {
+            private bool _readComment;
+
+            private CommentFinder _commentFinder = new CommentFinder();
+
             internal DestinationDatabase Database;
 
             internal List<EntityMeta> Entities;
+
+            internal bool ReadComment
+            {
+                get { return _readComment; }
+                set { _readComment = value; }
+            }
 
             /// <summary>
             /// 临时存储在这个列表中，最后再整合到 Database 中。
             /// </summary>
             private IList<ForeignConstraintInfo> _foreigns = new List<ForeignConstraintInfo>();
-
-            internal DestinationDatabase Result
-            {
-                get { return this.Database; }
-            }
 
             internal void Read()
             {
@@ -141,6 +152,12 @@ namespace Rafy.Domain.ORM.DbMigration
                 if (tableMeta.IsMappingView) { return; }
 
                 var table = new Table(tableMeta.TableName, this.Database);
+
+                //读取实体的注释
+                if (_readComment)
+                {
+                    table.Comment = _commentFinder.TryFindComment(em.EntityType);
+                }
 
                 var metaProperties = em.EntityProperties;
 
@@ -246,6 +263,18 @@ namespace Rafy.Domain.ORM.DbMigration
                     column.IsIdentity = columnMeta.IsIdentity;
 
                     table.Columns.Add(column);
+
+                    //读取属性的注释。
+                    if (_readComment)
+                    {
+                        var cmtPropertyName = propertyName;
+                        var refProperty = mp as IRefProperty;
+                        if (refProperty != null)
+                        {
+                            cmtPropertyName = refProperty.RefEntityProperty.Name;
+                        }
+                        column.Comment = _commentFinder.TryFindComment(em.EntityType, cmtPropertyName);
+                    }
                 }
 
                 table.SortColumns();
@@ -267,7 +296,12 @@ namespace Rafy.Domain.ORM.DbMigration
                     {
                         if (existingTable.FindColumn(newColumn.Name) == null)
                         {
-                            existingTable.Columns.Add(newColumn);
+                            existingTable.Columns.Add(new Column(newColumn.Name, newColumn.DataType, newColumn.Length, existingTable)
+                            {
+                                IsRequired = newColumn.IsRequired,
+                                IsPrimaryKey = newColumn.IsPrimaryKey,
+                                IsIdentity = newColumn.IsIdentity
+                            });
                         }
                     }
                 }

@@ -23,6 +23,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>bin\Debug\Rafy.UnitTest.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -100,6 +102,16 @@
     <Compile Include="Entities\Customer.cs" />
     <Compile Include="Entities\Customer.g.cs">
       <DependentUpon>Customer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DBI\Invoice.cs" />
+    <Compile Include="Entities\DBI\Invoice.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>Invoice.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DBI\InvoiceItem.cs" />
+    <Compile Include="Entities\DBI\InvoiceItem.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>InvoiceItem.cs</DependentUpon>
     </Compile>
     <Compile Include="Entities\DMS\File.cs" />
     <Compile Include="Entities\DMS\File.g.cs">
@@ -212,6 +224,10 @@
     <Content Include="Entities\_TestDb.sql" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.EntityPhantom\Rafy.Domain.EntityPhantom.csproj">
+      <Project>{0b6df92b-0248-422d-a9c2-1604d4cb7bc9}</Project>
+      <Name>Rafy.Domain.EntityPhantom</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Rafy\Rafy.Utils\Rafy.Utils.csproj">
       <Project>{796B149B-32C9-4BB0-A23F-69C012450DB8}</Project>
       <Name>Rafy.Utils</Name>

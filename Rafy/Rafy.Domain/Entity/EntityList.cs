@@ -281,9 +281,10 @@ namespace Rafy.Domain
                     ));
                 }
 
-                if (this.Contains(item)) throw new InvalidOperationException(string.Format(
-                    "树的列表中已经存在实体 {0}，不能重复添加。", item
-                    ));
+                if (this.Contains(item))
+                    throw new InvalidOperationException(string.Format(
+"树的列表中已经存在实体 {0}，不能重复添加。", item
+));
             }
 
             //从已删除列表中删除。
@@ -354,10 +355,15 @@ namespace Rafy.Domain
             {
                 (item as IDomainComponent).SetParent(null);
 
-                if (this.HasManyType == HasManyType.Composition)
-                {
-                    item.SetParentEntity(null);
-                }
+                //20151024 1551 移除下面的代码
+                //在从列表中移除某个实体时，不能把这个实体的父引用实体也改变，
+                //否则，这个实体的父引用是空的，这时假删除功能在更新实体时，会因为外键值不正确，而导致无法更新。
+                //另外，所有单元测试跑过后，发现下面这段代码没有用到。
+                //而且在删除子实体时去清空它的父引用，也没有什么意义。
+                //if (this.HasManyType == HasManyType.Composition)
+                //{
+                //    item.SetParentEntity(null);
+                //}
             }
         }
 

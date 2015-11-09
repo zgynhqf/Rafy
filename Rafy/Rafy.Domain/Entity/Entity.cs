@@ -42,49 +42,49 @@ using Rafy.Threading;
 namespace Rafy.Domain
 {
     /// <summary>
-    /// 对象实体
-    /// 继承此类，可以获得以下功能：
-    /// * 自动管理托管属性，可以通过属性 FindRepository().GetAvailableIndicators() 获取到所有的托管属性。
-    /// * 默认实现了所有数据库访问的方法：CDUQ。
-    /// * 提供了延迟加载子对象集合的方法。
-    /// * 提供了创建延迟外键对象的方法。
-    /// * 提供实体验证规则框架。
-    /// * 提供树型实体支持。
-    /// * 支持聚合对象的路由事件。
-    /// 
-    /// 
-    /// 
-    /// 树型实体功能说明：
-    /// 使用时，可调用 Meta.SupportTree 方法，来使得实体支持树型操作（即自关联）：
-    /// * 数据表：
-    ///     * 数据库的表中添加 TreePId、TreeIndex 两个字段。
-    ///     * TreePId 生成可空的自关联外键。
-    ///     * TreeIndex 则是一个用于查询、排序的全功能字符串编码属性。（可通过 TreeIndexOption 来调整 TreeIndex 的生成规则。）
-    /// * 树结构：
-    ///     * 使用 EntityList 来装载整棵树或部分树。
-    ///     * 树可以只有一个根节点，也可以有多个根节点。当是多个根节点时，也同样表示一棵树，所以它们的编码会是顺序的。
-    ///     * 列表中只能存储同级节点。
-    ///     * 每一个节点的 TreeChildren 列表存储自己的直接子节点。
-    ///     * 可以表达部分树的概念：即 EntityList 中的根节点并不一定完全、TreeChildren 集合也可以后期再懒加载。
-    /// * 自动维护 TreeIndex。
-    ///     * 设计限制：一个树型实体类型对应的数据表中，只能存储一棵树。
-    ///     * 由于一个表中，只会存储一棵树，所以 TreeIndex 在一个表中将会是唯一的。
-    ///         （开发人员在使用时，应该要小心，不要造成重复 TreeIndex 的根节点。子节点则使用 ResetTreeIndex 方法自动生成。）
-    ///     * 当在 EntityList、TreeChildren 集合中添加/删除节点时，系统会自动变化其后所有节点的 TreeIndex。
-    ///     * 调用 Entity.TreeChildren.ResetTreeIndex 可主动生成节点下子树的所有 TreeIndex。
-    /// * 节点间的关系属性：
-    ///     * Entity.TreeChildren、Entity.TreeParent、Entity.TreePId、EntityList 将自动同步。
-    ///     * 一般情况下，都是从顶至下地遍历节点，即使用 TreeChildren 集合。较少的场景是先获取子节点，再由下至上遍历节点。
-    ///         （在由下至上的场景下，如果使用 Child.Parent.Children 这样的语法，会导致 Child 并不在 Children 集合中。其本质与一对多关联的懒加载外键所遇的问题是一样的。）
-    /// * 查询：
-    ///     * 所有树的查询，都将使用 TreeIndex 进行排序！其它排序规则无效。在使用 Sql 查询时，需要注意！
-    ///     * 如果查询出的树是加载完整的，数据层需要手动调用 MarkTreeFullLoaded 方法对结果列表进行标记。
-    ///     * 仓库自带的查询：
-    ///         * GetAll。
-    ///         * GetTreeRoots。
-    ///         * GetByTreePId。
-    ///         * GetByTreeParentIndex。
-    ///         * LoadAllTreeParents、GetAllTreeParents。
+    /// <para>对象实体                                                                                                                                                          </para>
+    /// <para>继承此类，可以获得以下功能：                                                                                                                                        </para>
+    /// <para>* 自动管理托管属性，可以通过属性 FindRepository().GetAvailableIndicators() 获取到所有的托管属性。                                                                     </para>
+    /// <para>* 默认实现了所有数据库访问的方法：CDUQ。                                                                                                                             </para>
+    /// <para>* 提供了延迟加载子对象集合的方法。                                                                                                                                   </para>
+    /// <para>* 提供了创建延迟外键对象的方法。                                                                                                                                    </para>
+    /// <para>* 提供实体验证规则框架。                                                                                                                                            </para>
+    /// <para>* 提供树型实体支持。                                                                                                                                               </para>
+    /// <para>* 支持聚合对象的路由事件。                                                                                                                                          </para>
+    /// <para>                                                                                                                                                                  </para>
+    /// <para>                                                                                                                                                                  </para>
+    /// <para>                                                                                                                                                                  </para>
+    /// <para>树型实体功能说明：                                                                                                                                                 </para>
+    /// <para>使用时，可调用 Meta.SupportTree 方法，来使得实体支持树型操作（即自关联）：                                                                                             </para>
+    /// <para>* 数据表：                                                                                                                                                        </para>
+    /// <para>    * 数据库的表中添加 TreePId、TreeIndex 两个字段。                                                                                                                </para>
+    /// <para>    * TreePId 生成可空的自关联外键。                                                                                                                                </para>
+    /// <para>    * TreeIndex 则是一个用于查询、排序的全功能字符串编码属性。（可通过 TreeIndexOption 来调整 TreeIndex 的生成规则。）                                                  </para>
+    /// <para>* 树结构：                                                                                                                                                        </para>
+    /// <para>    * 使用 EntityList 来装载整棵树或部分树。                                                                                                                        </para>
+    /// <para>    * 树可以只有一个根节点，也可以有多个根节点。当是多个根节点时，也同样表示一棵树，所以它们的编码会是顺序的。                                                             </para>
+    /// <para>    * 列表中只能存储同级节点。                                                                                                                                      </para>
+    /// <para>    * 每一个节点的 TreeChildren 列表存储自己的直接子节点。                                                                                                           </para>
+    /// <para>    * 可以表达部分树的概念：即 EntityList 中的根节点并不一定完全、TreeChildren 集合也可以后期再懒加载。                                                                 </para>
+    /// <para>* 自动维护 TreeIndex。                                                                                                                                             </para>
+    /// <para>    * 设计限制：一个树型实体类型对应的数据表中，只能存储一棵树。                                                                                                       </para>
+    /// <para>    * 由于一个表中，只会存储一棵树，所以 TreeIndex 在一个表中将会是唯一的。                                                                                            </para>
+    /// <para>        （开发人员在使用时，应该要小心，不要造成重复 TreeIndex 的根节点。子节点则使用 ResetTreeIndex 方法自动生成。）                                                    </para>
+    /// <para>    * 当在 EntityList、TreeChildren 集合中添加/删除节点时，系统会自动变化其后所有节点的 TreeIndex。                                                                    </para>
+    /// <para>    * 调用 Entity.TreeChildren.ResetTreeIndex 可主动生成节点下子树的所有 TreeIndex。                                                                                 </para>
+    /// <para>* 节点间的关系属性：                                                                                                                                               </para>
+    /// <para>    * Entity.TreeChildren、Entity.TreeParent、Entity.TreePId、EntityList 将自动同步。                                                                              </para>
+    /// <para>    * 一般情况下，都是从顶至下地遍历节点，即使用 TreeChildren 集合。较少的场景是先获取子节点，再由下至上遍历节点。                                                        </para>
+    /// <para>        （在由下至上的场景下，如果使用 Child.Parent.Children 这样的语法，会导致 Child 并不在 Children 集合中。其本质与一对多关联的懒加载外键所遇的问题是一样的。）          </para>
+    /// <para>* 查询：                                                                                                                                                          </para>
+    /// <para>    * 所有树的查询，都将使用 TreeIndex 进行排序！其它排序规则无效。在使用 Sql 查询时，需要注意！                                                                        </para>
+    /// <para>    * 如果查询出的树是加载完整的，数据层需要手动调用 MarkTreeFullLoaded 方法对结果列表进行标记。                                                                        </para>
+    /// <para>    * 仓库自带的查询：                                                                                                                                             </para>
+    /// <para>        * GetAll。                                                                                                                                                </para>
+    /// <para>        * GetTreeRoots。                                                                                                                                          </para>
+    /// <para>        * GetByTreePId。                                                                                                                                          </para>
+    /// <para>        * GetByTreeParentIndex。                                                                                                                                  </para>
+    /// <para>        * LoadAllTreeParents、GetAllTreeParents。                                                                                                                 </para>
     /// </summary>
     /// <threadsafety static="true" instance="false" />
     [Serializable]
@@ -284,12 +284,12 @@ namespace Rafy.Domain
         #region 值的复制
 
         /// <summary>
-        /// 使用 <see cref="CloneOptions.ReadSingleEntity"/> 来复制目标对象。
+        /// 使用 <see cref="CloneOptions.NewSingleEntity"/> 来复制目标对象。
         /// </summary>
         /// <param name="source"></param>
         public void Clone(Entity source)
         {
-            this.CloneCore(source, CloneOptions.ReadSingleEntity());
+            this.CloneCore(source, CloneOptions.NewSingleEntity());
         }
 
         /// <summary>

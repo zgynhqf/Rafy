@@ -110,3 +110,9 @@
 /Rafy/Plugins/Rafy.BatchSubmit/Rafy.BatchSubmit.SqlServer/obj/Debug
 /Rafy/Plugins/Rafy.Domain.ORM.BatchSubmit/bin/Debug
 /Rafy/Plugins/Rafy.Domain.ORM.BatchSubmit/obj/Debug
+/.vs
+/Rafy/Plugins/Rafy.Domain.EntityPhantom/bin/Debug
+/Rafy/Plugins/Rafy.Domain.EntityPhantom/obj/Debug
+/Rafy/Rafy.DbMigration/obj/Release
+/Rafy/Tools/Rafy.EntityObjectModel/obj/Release
+/Rafy/Rafy.Utils/obj/Release

@@ -38,8 +38,8 @@ namespace Rafy.Domain.Serialization.Json
         /// <summary>
         /// 实体或实体列表的自定义反序列化方法。
         /// </summary>
-        /// <param name="type">The type.</param>
-        /// <param name="json">The json.</param>
+        /// <param name="type">传入实体类型或实体列表类型。</param>
+        /// <param name="json">要反序列化的 Json。</param>
         /// <returns></returns>
         public IDomainComponent Deserialize(Type type, string json)
         {
@@ -142,6 +142,8 @@ namespace Rafy.Domain.Serialization.Json
                 {
                     //id 属性需要提前处理，而不需要在这里直接反序列化。
                     if (mp == Entity.IdProperty) continue;
+                    //幽灵属性也不需要处理。
+                    if (mp == EntityConvention.Property_IsPhantom) continue;
 
                     if (mp is IListProperty)
                     {
@@ -156,12 +158,13 @@ namespace Rafy.Domain.Serialization.Json
                     {
                         object value = null;
 
-                        //对于数组的泛型列表类型，需要进行特殊的处理。
                         if (jValue is JArray)
                         {
+                            #region 对于数组的泛型列表类型，需要进行特殊的处理。
+
                             var jArray = jValue as JArray;
                             var propertyType = mp.PropertyType;
-                            if (propertyType.IsArray)
+                            if (propertyType.IsArray)//string[]
                             {
                                 var elementType = propertyType.GetElementType();
                                 var array = Array.CreateInstance(elementType, jArray.Count);
@@ -188,6 +191,8 @@ namespace Rafy.Domain.Serialization.Json
                                 //如果不是数组类型或者泛型列表类型的属性，则不支持反序列化。
                                 //do nothing;
                             }
+
+                            #endregion
                         }
                         else
                         {
@@ -204,13 +209,32 @@ namespace Rafy.Domain.Serialization.Json
                 }
                 else
                 {
-                    //如果指定了状态，则主动设置该实体的状态。
+                    #region 处理：PersistenceStatus、TreeChildren
+
+                    //PersistenceStatus:如果指定了状态，则主动设置该实体的状态。
                     if (propertyName.EqualsIgnoreCase(PersistenceStatusProperty))
                     {
                         var value = (jValue as JValue).Value;
                         var status = (PersistenceStatus)Enum.Parse(typeof(PersistenceStatus), value.ToString(), true);
                         entity.PersistenceStatus = status;
                     }
+                    //TreeChildren:如果指定了树子节点列表，则也需要加载进来。
+                    else if (propertyName.EqualsIgnoreCase(AggtSerializer.TreeChildrenProperty))
+                    {
+                        var jArray = jValue as JArray;
+                        if (jArray != null)
+                        {
+                            var treeChildren = entity.TreeChildren;
+                            for (int i = 0, c = jArray.Count; i < c; i++)
+                            {
+                                var child = this.DeserializeEntity(entity.GetType(), jArray[i] as JObject);
+                                treeChildren.LoadAdd(child);
+                            }
+                            treeChildren.MarkLoaded();
+                        }
+                    }
+
+                    #endregion
                 }
             }
 

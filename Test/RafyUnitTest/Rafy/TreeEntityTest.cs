@@ -61,7 +61,7 @@ namespace RafyUnitTest
                     new Folder
                     {
                         Name = "001.",
-                        TreeChildren = 
+                        TreeChildren =
                         {
                             new Folder()
                         }
@@ -92,11 +92,11 @@ namespace RafyUnitTest
                 {
                     TreeIndex = "001.",
                     Name = "001.",
-                    TreeChildren = 
+                    TreeChildren =
                     {
                         new Folder
                         {
-                            TreeChildren = 
+                            TreeChildren =
                             {
                                 new Folder()
                             }
@@ -128,7 +128,7 @@ namespace RafyUnitTest
                 {
                     new Folder
                     {
-                        TreeChildren = 
+                        TreeChildren =
                         {
                             new Folder()
                         }
@@ -139,7 +139,7 @@ namespace RafyUnitTest
                 Assert.IsTrue(list.Count == 1);
                 list.Add(new Folder
                 {
-                    TreeChildren = 
+                    TreeChildren =
                     {
                         new Folder()
                     }
@@ -166,7 +166,7 @@ namespace RafyUnitTest
                 {
                     new Folder
                     {
-                        TreeChildren = 
+                        TreeChildren =
                         {
                             new Folder()
                         }
@@ -177,7 +177,7 @@ namespace RafyUnitTest
                 var root = list[0];
                 root.TreeChildren.Add(new Folder
                 {
-                    TreeChildren = 
+                    TreeChildren =
                     {
                         new Folder()
                     }
@@ -206,11 +206,11 @@ namespace RafyUnitTest
                 {
                     new Folder
                     {
-                        TreeChildren = 
+                        TreeChildren =
                         {
                             new Folder
                             {
-                                TreeChildren = 
+                                TreeChildren =
                                 {
                                     new Folder()
                                 }
@@ -245,7 +245,7 @@ namespace RafyUnitTest
                 {
                     new Folder
                     {
-                        TreeChildren = 
+                        TreeChildren =
                         {
                             new Folder()
                         }
@@ -277,7 +277,7 @@ namespace RafyUnitTest
                 {
                     new Folder
                     {
-                        TreeChildren = 
+                        TreeChildren =
                         {
                             new Folder()
                         }
@@ -340,7 +340,7 @@ namespace RafyUnitTest
                 {
                     new Folder
                     {
-                        TreeChildren = 
+                        TreeChildren =
                         {
                             new Folder(),
                         }
@@ -408,7 +408,7 @@ namespace RafyUnitTest
                 {
                     new Folder
                     {
-                        TreeChildren = 
+                        TreeChildren =
                         {
                             new Folder()
                         }
@@ -446,7 +446,7 @@ namespace RafyUnitTest
                 {
                     new Folder
                     {
-                        TreeChildren = 
+                        TreeChildren =
                         {
                             new Folder()
                         }
@@ -481,7 +481,7 @@ namespace RafyUnitTest
                 {
                     new Folder
                     {
-                        TreeChildren = 
+                        TreeChildren =
                         {
                             new Folder()
                         }
@@ -623,7 +623,7 @@ namespace RafyUnitTest
                 {
                     new Folder
                     {
-                        TreeChildren = 
+                        TreeChildren =
                         {
                             new Folder()
                         }
@@ -652,11 +652,11 @@ namespace RafyUnitTest
                 {
                     new Folder
                     {
-                        TreeChildren = 
+                        TreeChildren =
                         {
                             new Folder
                             {
-                                TreeChildren = 
+                                TreeChildren =
                                 {
                                     veryChild
                                 }
@@ -808,11 +808,11 @@ namespace RafyUnitTest
                 {
                     new Folder
                     {
-                        TreeChildren = 
+                        TreeChildren =
                         {
                             new Folder
                             {
-                                TreeChildren = 
+                                TreeChildren =
                                 {
                                     new Folder(),
                                 }
@@ -950,7 +950,7 @@ namespace RafyUnitTest
             {
                 new Folder
                 {
-                    TreeChildren = 
+                    TreeChildren =
                     {
                         new Folder()
                     }
@@ -1261,11 +1261,11 @@ namespace RafyUnitTest
             {
                 new Folder
                 {
-                    TreeChildren= 
+                    TreeChildren=
                     {
                         new Folder
                         {
-                            TreeChildren= 
+                            TreeChildren=
                             {
                                 new Folder(),
                             }
@@ -1320,7 +1320,7 @@ namespace RafyUnitTest
             {
                 new Folder
                 {
-                    TreeChildren= 
+                    TreeChildren=
                     {
                         new Folder(),
                         new Folder(),
@@ -1402,12 +1402,12 @@ namespace RafyUnitTest
                     new Folder
                     {
                         Name = "1.",//方便调试
-                        TreeChildren= 
+                        TreeChildren=
                         {
                             new Folder
                             {
                                 Name = "1.1.",//方便调试
-                                TreeChildren= 
+                                TreeChildren=
                                 {
                                     new Folder { Name = "1.1.1." },
                                 }
@@ -1472,7 +1472,7 @@ namespace RafyUnitTest
                     new Folder(),//001.
                     new Folder//002.
                     {
-                        TreeChildren = 
+                        TreeChildren =
                         {
                             new Folder()//002.001.
                         }
@@ -1535,11 +1535,11 @@ namespace RafyUnitTest
                 {
                     new Folder
                     {
-                        TreeChildren = 
+                        TreeChildren =
                         {
                             new Folder
                             {
-                                TreeChildren = 
+                                TreeChildren =
                                 {
                                     new Folder(),
                                 }
@@ -1574,11 +1574,11 @@ namespace RafyUnitTest
                 {
                     new Folder
                     {
-                        TreeChildren = 
+                        TreeChildren =
                         {
                             new Folder
                             {
-                                TreeChildren = 
+                                TreeChildren =
                                 {
                                     new Folder(),
                                 }
@@ -1610,11 +1610,11 @@ namespace RafyUnitTest
                 {
                     new Folder
                     {
-                        TreeChildren = 
+                        TreeChildren =
                         {
                             new Folder
                             {
-                                TreeChildren = 
+                                TreeChildren =
                                 {
                                     new Folder(),
                                 }
@@ -1643,11 +1643,11 @@ namespace RafyUnitTest
                 {
                     new Folder
                     {
-                        TreeChildren = 
+                        TreeChildren =
                         {
                             new Folder
                             {
-                                TreeChildren = 
+                                TreeChildren =
                                 {
                                     new Folder(),
                                 }
@@ -1676,11 +1676,11 @@ namespace RafyUnitTest
                 {
                     new Folder
                     {
-                        TreeChildren = 
+                        TreeChildren =
                         {
                             new Folder
                             {
-                                TreeChildren = 
+                                TreeChildren =
                                 {
                                     new Folder(),
                                 }
@@ -1709,11 +1709,11 @@ namespace RafyUnitTest
                 {
                     new Folder
                     {
-                        TreeChildren = 
+                        TreeChildren =
                         {
                             new Folder
                             {
-                                TreeChildren = 
+                                TreeChildren =
                                 {
                                     new Folder(),
                                 }
@@ -1742,11 +1742,11 @@ namespace RafyUnitTest
                 {
                     new Folder
                     {
-                        TreeChildren = 
+                        TreeChildren =
                         {
                             new Folder
                             {
-                                TreeChildren = 
+                                TreeChildren =
                                 {
                                     new Folder(),
                                 }
@@ -1775,11 +1775,11 @@ namespace RafyUnitTest
                 {
                     new Folder
                     {
-                        TreeChildren = 
+                        TreeChildren =
                         {
                             new Folder
                             {
-                                TreeChildren = 
+                                TreeChildren =
                                 {
                                     new Folder(),
                                 }
@@ -1812,11 +1812,11 @@ namespace RafyUnitTest
                 {
                     new Folder
                     {
-                        TreeChildren = 
+                        TreeChildren =
                         {
                             new Folder
                             {
-                                TreeChildren = 
+                                TreeChildren =
                                 {
                                     veryChild,
                                 }
@@ -1888,11 +1888,11 @@ namespace RafyUnitTest
                 {
                     new Folder
                     {
-                        TreeChildren = 
+                        TreeChildren =
                         {
                             new Folder
                             {
-                                TreeChildren = 
+                                TreeChildren =
                                 {
                                     new Folder(),
                                 }
@@ -1919,11 +1919,11 @@ namespace RafyUnitTest
                 {
                     new Folder
                     {
-                        TreeChildren = 
+                        TreeChildren =
                         {
                             new Folder
                             {
-                                TreeChildren = 
+                                TreeChildren =
                                 {
                                     new Folder(),
                                 }
@@ -1949,15 +1949,15 @@ namespace RafyUnitTest
                 {
                     new Folder
                     {
-                        TreeChildren = 
+                        TreeChildren =
                         {
                             new Folder
                             {
-                                TreeChildren = 
+                                TreeChildren =
                                 {
                                     new Folder
                                     {
-                                        TreeChildren = 
+                                        TreeChildren =
                                         {
                                             new Folder(),
                                         }
@@ -1986,25 +1986,25 @@ namespace RafyUnitTest
             //调用 LoadAllNodes 查询整个树后，统计该节点的个数应该正确。
             //此时，调用 EachNode 遍历出的个数，应该正确。
 
-            Assert.IsTrue(component.CountNodes() == countBefore, "只查询一级节点，统计该节点的个数应该正确。");
-            Assert.IsTrue(!component.IsFullLoaded, "同时，它的 IsFullLoaded 返回假。");
+            Assert.AreEqual(countBefore, component.CountNodes(), "只查询一级节点，统计该节点的个数应该正确。");
+            Assert.AreEqual(false, component.IsFullLoaded, "同时，它的 IsFullLoaded 返回假。");
             int count = 0;
             component.EachNode(e =>
             {
                 count++;
                 return false;
             });
-            Assert.IsTrue(count == countBefore, "此时，调用 EachNode 遍历出的个数，应该正确。");
+            Assert.AreEqual(countBefore, count, "此时，调用 EachNode 遍历出的个数，应该正确。");
 
             component.LoadAllNodes();
-            Assert.IsTrue(component.CountNodes() == countAfter, "调用 LoadAllNodes 查询整个树后，统计该节点的个数应该正确。");
+            Assert.AreEqual(countAfter, component.CountNodes(), "调用 LoadAllNodes 查询整个树后，统计该节点的个数应该正确。");
             count = 0;
             component.EachNode(e =>
             {
                 count++;
                 return false;
             });
-            Assert.IsTrue(count == countAfter, "此时，调用 EachNode 遍历出的个数，应该正确。");
+            Assert.AreEqual(countAfter, count, "此时，调用 EachNode 遍历出的个数，应该正确。");
         }
 
         #endregion
@@ -2105,11 +2105,11 @@ namespace RafyUnitTest
             {
                 new Folder
                 {
-                    TreeChildren = 
+                    TreeChildren =
                     {
                         new Folder
                         {
-                            TreeChildren = 
+                            TreeChildren =
                             {
                                     new Folder(),
                                     new Folder(),
@@ -2209,11 +2209,11 @@ namespace RafyUnitTest
             {
                 new Folder
                 {
-                    TreeChildren = 
+                    TreeChildren =
                     {
                         new Folder
                         {
-                            TreeChildren = 
+                            TreeChildren =
                             {
                                 new Folder(),
                                 new Folder(),

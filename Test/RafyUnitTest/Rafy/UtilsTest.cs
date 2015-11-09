@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -274,7 +275,7 @@ namespace RafyUnitTest
                 repoUser.Save(new TestUser() { Age = 1 });
                 repoUser.Save(new TestUser() { Age = 1 });
 
-                using (var dba = DbAccesserFactory.Create(UnitTestEntityRepositoryDataProvider.DbSettingName))
+                using (var dba = DbAccesserFactory.Create(repoUser))
                 {
                     var table = dba.QueryLiteDataTable("Select * from Users where id > {0}", 0);
                     var columns = table.Columns;

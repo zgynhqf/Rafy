@@ -11,13 +11,19 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using EnvDTE;
+using RafySDK.Templates.Wizards;
 
 namespace VSTemplates.Wizards.Items.DomainEntity
 {
-    public partial class DomainEntityWizardWindow : Window
+    public partial class DomainEntityWizardWindow : System.Windows.Window
     {
-        public DomainEntityWizardWindow()
+        private DTE _dte;
+
+        public DomainEntityWizardWindow(DTE dte)
         {
+            _dte = dte;
+
             InitializeComponent();
 
             this.Loaded += DomainEntityWizardWindow_Loaded;
@@ -65,6 +71,24 @@ namespace VSTemplates.Wizards.Items.DomainEntity
         {
             entityKeyRow.Height = txtParentEntityName.Text.Length > 0 ?
                 GridLength.Auto : new GridLength(0);
+        }
+
+        private void btnSelectParentEntity_Click(object sender, RoutedEventArgs e)
+        {
+            var type = SelectEntityWindow.SelectTypeInIDE(_dte);
+            if (type != null)
+            {
+                txtParentEntityName.Text = type.Name;
+            }
+        }
+
+        private void btnSelectBaseType_Click(object sender, RoutedEventArgs e)
+        {
+            var type = SelectEntityWindow.SelectTypeInIDE(_dte);
+            if (type != null)
+            {
+                txtBaseEntityName.Text = type.Name;
+            }
         }
     }
 }

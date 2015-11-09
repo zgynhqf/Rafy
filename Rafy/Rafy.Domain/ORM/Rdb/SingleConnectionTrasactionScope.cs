@@ -27,10 +27,8 @@ namespace Rafy.Domain.ORM
     /// 可用于声明一个事务块，在这个事务块中，同一个线程执行的代码，如果是访问同一个数据库，则只会用到同一个数据库连接。
     /// 这样也就不会造成为分布式事务。（分布式事务在一些数据库中并不支持，例如 SQLCE。）
     /// 
-    /// 注意：
-    /// -多个数据库之间的事务，将会完全独立，互不干扰！
-    /// -如果想主动使用分布式事务，请在最外层使用 ADO.NET 的 TransactionScope 类。
-    /// -一个事务的代码只能在同一个线程中执行。（事务是存储在当前线程中的。多线程不共享事务。）
+    /// 连接与事务的关系，见：<see cref="TransactionDependentConnectionManager"/>。
+    /// 事务与线程及上下文的关系，见：<see cref="LocalTransactionBlock"/>。
     /// </summary>
     public class SingleConnectionTrasactionScope : LocalTransactionBlock
     {
@@ -40,16 +38,14 @@ namespace Rafy.Domain.ORM
         /// 构造一个事务块
         /// </summary>
         /// <param name="dbSetting">整个数据库的配置名</param>
-        public SingleConnectionTrasactionScope(DbSetting dbSetting)
-            : base(dbSetting, IsolationLevel.Unspecified) { }
+        public SingleConnectionTrasactionScope(DbSetting dbSetting) : base(dbSetting, IsolationLevel.Unspecified) { }
 
         /// <summary>
         /// 构造一个事务块
         /// </summary>
         /// <param name="dbSetting">整个数据库的配置名</param>
         /// <param name="level">事务的孤立级别</param>
-        public SingleConnectionTrasactionScope(DbSetting dbSetting, IsolationLevel level)
-            : base(dbSetting, level) { }
+        public SingleConnectionTrasactionScope(DbSetting dbSetting, IsolationLevel level) : base(dbSetting, level) { }
 
         protected override IDbTransaction BeginTransaction()
         {

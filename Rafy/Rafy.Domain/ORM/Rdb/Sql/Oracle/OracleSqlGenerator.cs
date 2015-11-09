@@ -17,6 +17,7 @@ using System.Linq;
 using System.Text;
 using Rafy.DbMigration.Oracle;
 using Rafy.Domain.ORM.SqlTree;
+using Rafy.Reflection;
 
 namespace Rafy.Domain.ORM.Oracle
 {
@@ -42,15 +43,6 @@ namespace Rafy.Domain.ORM.Oracle
             return identifier.ToUpper();
         }
 
-        protected override object PrepareConstraintValue(object value)
-        {
-            if (value is bool)
-            {
-                return OracleDbTypeHelper.ToDbBoolean((bool)value);
-            }
-            return base.PrepareConstraintValue(value);
-        }
-
         protected override SqlColumnConstraint VisitSqlColumnConstraint(SqlColumnConstraint node)
         {
             switch (node.Operator)
@@ -69,6 +61,32 @@ namespace Rafy.Domain.ORM.Oracle
             }
 
             return base.VisitSqlColumnConstraint(node);
+        }
+
+        public override object PrepareConstraintValue(object value)
+        {
+            value = base.PrepareConstraintValue(value);
+
+            value = PrepareConstraintValueInternal(value);
+
+            return value;
+        }
+
+        internal static object PrepareConstraintValueInternal(object value)
+        {
+            if (value != DBNull.Value)
+            {
+                if (value is bool)
+                {
+                    value = OracleDbTypeHelper.ToDbBoolean((bool)value);
+                }
+                else if (value.GetType().IsEnum)
+                {
+                    value = TypeHelper.CoerceValue(typeof(int), value);
+                }
+            }
+
+            return value;
         }
 
         /// <summary>

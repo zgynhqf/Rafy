@@ -73,7 +73,8 @@ namespace Rafy.Domain
         }
 
         /// <summary>
-        /// 获取或设置实体当前的状态。
+        /// 获取或设置实体当前的持久化状态。
+        /// 保存实体时，会根据这个状态来进行对应的增、删、改的操作。
         /// </summary>
         public PersistenceStatus PersistenceStatus
         {

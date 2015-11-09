@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Rafy.Reflection;
 
 namespace Rafy.Domain.ORM
 {
@@ -23,6 +24,7 @@ namespace Rafy.Domain.ORM
         private Type _dataType;
         private bool _isBooleanType;
         private bool _isStringType;
+        private bool _isNullable;
 
         public PersistanceTableInfo Table { get; set; }
 
@@ -33,9 +35,12 @@ namespace Rafy.Domain.ORM
             get { return _dataType; }
             set
             {
-                _dataType = value;
+                var raw = TypeHelper.IgnoreNullable(value);
+
+                _dataType = raw;
                 _isBooleanType = _dataType == typeof(bool);
                 _isStringType = _dataType == typeof(string);
+                _isNullable = raw == value;
             }
         }
 
@@ -47,6 +52,11 @@ namespace Rafy.Domain.ORM
         public bool IsStringType
         {
             get { return _isStringType; }
+        }
+
+        public bool IsNullable
+        {
+            get { return _isNullable; }
         }
 
         public bool IsIdentity { get; set; }

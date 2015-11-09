@@ -18,7 +18,7 @@ using System.Linq;
 using System.Text;
 using EnvDTE;
 using RafySDK;
-using RafySDK.Templates.Wizards.Items;
+using RafySDK.Templates.Wizards;
 
 namespace VSTemplates.Wizards
 {

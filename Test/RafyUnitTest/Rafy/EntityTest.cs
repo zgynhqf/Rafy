@@ -76,6 +76,23 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void ET_PersistenceStatus_Delete_SavedAsNew()
+        {
+            var repo = RF.Concrete<TestUserRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var item = new TestUser();
+                repo.Save(item);
+                Assert.IsTrue(repo.CountAll() == 1);
+
+                item.PersistenceStatus = PersistenceStatus.Deleted;
+                repo.Save(item);
+
+                Assert.AreEqual(item.PersistenceStatus, PersistenceStatus.New, "实体被删除后，状态应该为 New。");
+            }
+        }
+
+        [TestMethod]
         public void ET_RoutedEvent()
         {
             //创建对象
@@ -660,8 +677,8 @@ namespace RafyUnitTest
             var repo = RF.Concrete<BookRepository>();
             using (RF.TransactionScope(repo))
             {
-                var bookList = new BookList 
-                { 
+                var bookList = new BookList
+                {
                     new Book(),
                     new Book(),
                     new Book()
@@ -1072,7 +1089,7 @@ namespace RafyUnitTest
 
         #region 批量导入
 
-        private const int BATCH_IMPORT_DATA_SIZE = 100;
+        internal const int BATCH_IMPORT_DATA_SIZE = 100;
 
         /// <summary>
         /// 批量导入需要支持事务回滚
@@ -1828,12 +1845,66 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void ET_Json_Serialization_Enum()
+        {
+            var entity = new Favorate
+            {
+                FavorateType = FavorateType.B
+            };
+            var serializer = new AggtSerializer();
+            serializer.Indent = true;
+            serializer.IgnoreDefault = true;
+            serializer.EnumSerializationMode = EnumSerializationMode.Integer;
+            var json = serializer.Serialize(entity);
+            Assert.AreEqual(json,
+@"{
+  ""favorateType"": 1
+}");
+        }
+
+        [TestMethod]
+        public void ET_Json_Serialization_EnumString()
+        {
+            var entity = new Favorate
+            {
+                FavorateType = FavorateType.B
+            };
+            var serializer = new AggtSerializer();
+            serializer.Indent = true;
+            serializer.IgnoreDefault = true;
+            serializer.EnumSerializationMode = EnumSerializationMode.String;
+            var json = serializer.Serialize(entity);
+            Assert.AreEqual(json,
+@"{
+  ""favorateType"": ""B""
+}");
+        }
+
+        [TestMethod]
+        public void ET_Json_Serialization_EnumWithLabel()
+        {
+            var entity = new Favorate
+            {
+                FavorateTypeWithLabel = FavorateTypeWithLabel.B
+            };
+            var serializer = new AggtSerializer();
+            serializer.Indent = true;
+            serializer.IgnoreDefault = true;
+            serializer.EnumSerializationMode = EnumSerializationMode.EnumLabel;
+            var json = serializer.Serialize(entity);
+            Assert.AreEqual(json,
+@"{
+  ""favorateTypeWithLabel"": ""第二个""
+}");
+        }
+
+        [TestMethod]
         public void ET_Json_Serialization_Aggt()
         {
             var entity = new Book
             {
                 Name = "book",
-                ChapterList = 
+                ChapterList =
                 {
                     new Chapter
                     {
@@ -1842,7 +1913,7 @@ namespace RafyUnitTest
                     new Chapter
                     {
                         Name = "chapter2",
-                        SectionList = 
+                        SectionList =
                         {
                             new Section
                             {
@@ -1964,6 +2035,8 @@ namespace RafyUnitTest
   ""arrayValue"": null,
   ""bookId"": 0,
   ""bytesContent"": """",
+  ""favorateType"": 0,
+  ""favorateTypeWithLabel"": 0,
   ""listValue"": null,
   ""name"": ""name""
 }");
@@ -2018,9 +2091,67 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void ET_Json_Serialization_TreeEntity()
+        {
+            var list = new FolderList
+            {
+                new Folder
+                {
+                    TreeChildren =
+                    {
+                        new Folder
+                        {
+                            TreeChildren =
+                            {
+                                new Folder(),
+                                new Folder(),
+                            }
+                        },
+                        new Folder(),
+                    }
+                }
+            };
+
+            var serializer = new AggtSerializer();
+            serializer.Indent = true;
+            serializer.IgnoreDefault = true;
+            var json = serializer.Serialize(list);
+
+            Assert.AreEqual(json,
+@"[
+  {
+    ""treeIndex"": ""001."",
+    ""treeChildren"": [
+      {
+        ""treeIndex"": ""001.001."",
+        ""treePId"": 0,
+        ""treeChildren"": [
+          {
+            ""treeIndex"": ""001.001.001."",
+            ""treePId"": 0,
+            ""treeChildren"": []
+          },
+          {
+            ""treeIndex"": ""001.001.002."",
+            ""treePId"": 0,
+            ""treeChildren"": []
+          }
+        ]
+      },
+      {
+        ""treeIndex"": ""001.002."",
+        ""treePId"": 0,
+        ""treeChildren"": []
+      }
+    ]
+  }
+]");
+        }
+
+        [TestMethod]
         public void ET_Json_Deserialization()
         {
-            var json = 
+            var json =
 @"{
     name : 'name'
 }";
@@ -2030,9 +2161,27 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void ET_Json_Deserialization_Enum()
+        {
+            throw new NotImplementedException();//huqf
+        }
+
+        [TestMethod]
+        public void ET_Json_Deserialization_EnumString()
+        {
+            throw new NotImplementedException();//huqf
+        }
+
+        [TestMethod]
+        public void ET_Json_Deserialization_EnumWithLabel()
+        {
+            throw new NotImplementedException();//huqf
+        }
+
+        [TestMethod]
         public void ET_Json_Deserialization_Ref()
         {
-            var json = 
+            var json =
 @"{
     name : 'name',
     book : {
@@ -2168,6 +2317,53 @@ namespace RafyUnitTest
 
             Assert.IsNotNull(entity.BytesContent);
             Assert.AreEqual(Encoding.UTF8.GetString(entity.BytesContent), "test content");
+        }
+
+        [TestMethod]
+        public void ET_Json_Deserialization_TreeEntity()
+        {
+            var json = @"[
+  {
+    ""treeIndex"": ""001."",
+    ""treeChildren"": [
+      {
+        ""treeIndex"": ""001.001."",
+        ""treePId"": 0,
+        ""treeChildren"": [
+          {
+            ""treeIndex"": ""001.001.001."",
+            ""treePId"": 0,
+            ""treeChildren"": []
+          },
+          {
+            ""treeIndex"": ""001.001.002."",
+            ""treePId"": 0,
+            ""treeChildren"": []
+          }
+        ]
+      },
+      {
+        ""treeIndex"": ""001.002."",
+        ""treePId"": 0,
+        ""treeChildren"": []
+      }
+    ]
+  }
+]";
+            var deserializer = new AggtDeserializer();
+            var list = deserializer.Deserialize(typeof(FolderList), json) as FolderList;
+
+            var root = list[0];
+            Assert.AreEqual(root.TreeIndex, "001.");
+            Assert.AreEqual(root.TreeChildren.Count, 2);
+            Assert.AreEqual(root.TreeChildren[0].TreeIndex, "001.001.");
+            Assert.AreEqual(root.TreeChildren[0].TreeChildren.Count, 2);
+            Assert.AreEqual(root.TreeChildren[0].TreeChildren[0].TreeIndex, "001.001.001.");
+            Assert.AreEqual(root.TreeChildren[0].TreeChildren[0].TreeChildren.Count, 0);
+            Assert.AreEqual(root.TreeChildren[0].TreeChildren[1].TreeIndex, "001.001.002.");
+            Assert.AreEqual(root.TreeChildren[0].TreeChildren[1].TreeChildren.Count, 0);
+            Assert.AreEqual(root.TreeChildren[1].TreeIndex, "001.002.");
+            Assert.AreEqual(root.TreeChildren[1].TreeChildren.Count, 0);
         }
 
         #endregion

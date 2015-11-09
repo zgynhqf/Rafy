@@ -35,9 +35,10 @@ namespace Rafy
         /// <summary>
         /// 记录 Sql 执行过程。
         /// </summary>
-        /// <param name="sql"></param>
-        /// <param name="parameters"></param>
-        /// <param name="connectionSchema"></param>
-        public virtual void LogDbAccessed(string sql, IDbDataParameter[] parameters, DbConnectionSchema connectionSchema) { }
+        /// <param name="sql">The SQL.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <param name="connectionSchema">The connection schema.</param>
+        /// <param name="connection">The connection.</param>
+        public virtual void LogDbAccessed(string sql, IDbDataParameter[] parameters, DbConnectionSchema connectionSchema, IDbConnection connection) { }
     }
 }

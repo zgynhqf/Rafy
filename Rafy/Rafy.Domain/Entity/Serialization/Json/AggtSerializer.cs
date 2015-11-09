@@ -20,6 +20,7 @@ using System.Web;
 using Newtonsoft.Json;
 using Rafy.Domain;
 using Rafy.ManagedProperty;
+using Rafy.Utils;
 
 namespace Rafy.Domain.Serialization.Json
 {
@@ -31,7 +32,9 @@ namespace Rafy.Domain.Serialization.Json
     {
         private const string TotalCountProperty = "TotalCount";
         private const string EntityListProperty ="Data";
+        internal const string TreeChildrenProperty ="TreeChildren";
         private JsonTextWriter _writer;
+        private EnumSerializationMode _enumSerializationMode;
 
         public AggtSerializer()
         {
@@ -53,10 +56,26 @@ namespace Rafy.Domain.Serialization.Json
         public bool SerializeReference { get; set; }
 
         /// <summary>
+        /// 如果使用了幽灵框架，那么此属性表示是否需要同时序列化幽灵属性。
+        /// 默认为 false。
+        /// </summary>
+        public bool SerializeIsPhantom { get; set; }
+
+        /// <summary>
         /// 是否使用舵峰式。
         /// 默认为 true。
         /// </summary>
         public bool UseCamelProperty { get; set; }
+
+        /// <summary>
+        /// 是把在序列化枚举时，把值输出为字符串。
+        /// 默认为 <see cref="EnumSerializationMode.Integer"/>。
+        /// </summary>
+        public EnumSerializationMode EnumSerializationMode
+        {
+            get { return _enumSerializationMode; }
+            set { _enumSerializationMode = value; }
+        }
 
         /// <summary>
         /// 是否需要在序列化时忽略默认值的属性。
@@ -147,6 +166,7 @@ namespace Rafy.Domain.Serialization.Json
                 {
                     continue;
                 }
+                if (!this.SerializeIsPhantom && property == EntityConvention.Property_IsPhantom) continue;
 
                 var value = field.Value;
                 if (this.IgnoreDefault)
@@ -159,6 +179,23 @@ namespace Rafy.Domain.Serialization.Json
                 }
 
                 this.SerializeProperty(property, value);
+            }
+
+            //如果是树实体，还需要输出树实体下的所有树子节点。
+            if (isTree)
+            {
+                var treeChildren = entity.TreeChildrenField;
+                if (treeChildren != null)
+                {
+                    this.WritePropertyName(TreeChildrenProperty);
+                    _writer.WriteStartArray();
+                    for (int i = 0, c = treeChildren.Count; i < c; i++)
+                    {
+                        var treeChild = treeChildren[i];
+                        this.SerializeEntity(treeChild);
+                    }
+                    _writer.WriteEndArray();
+                }
             }
 
             _writer.WriteEndObject();
@@ -200,6 +237,20 @@ namespace Rafy.Domain.Serialization.Json
                     }
                     else
                     {
+                        if (value != null && value.GetType().IsEnum)
+                        {
+                            switch (_enumSerializationMode)
+                            {
+                                case EnumSerializationMode.String:
+                                    value = value.ToString();
+                                    break;
+                                case EnumSerializationMode.EnumLabel:
+                                    value = EnumViewModel.EnumToLabel((Enum)value) ?? value.ToString();
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
                         _writer.WriteValue(value);
                     }
                     break;
@@ -249,8 +300,9 @@ namespace Rafy.Domain.Serialization.Json
             }
 
             _writer.WriteStartArray();
-            foreach (var entity in entityList)
+            for (int i = 0, c = entityList.Count; i < c; i++)
             {
+                var entity = entityList[i];
                 this.SerializeEntity(entity);
             }
             _writer.WriteEndArray();
@@ -279,5 +331,25 @@ namespace Rafy.Domain.Serialization.Json
 
             return char.ToLower(property[0]) + property.Substring(1);
         }
+    }
+
+    /// <summary>
+    /// 枚举的输出模式。
+    /// </summary>
+    public enum EnumSerializationMode
+    {
+        /// <summary>
+        /// 输出整形。
+        /// </summary>
+        Integer,
+        /// <summary>
+        /// 以字符串的形式输出。
+        /// </summary>
+        String,
+        /// <summary>
+        /// 在枚举上标记的 Label。
+        /// 如果枚举没有标记 <see cref="Rafy.MetaModel.Attributes.LabelAttribute"/>，则直接输出名字。
+        /// </summary>
+        EnumLabel
     }
 }

@@ -44,10 +44,22 @@
         <section address="Oracle">
             <title>Oracle 10G</title>
             <content>
-                <para>由于 Oracle 数据库的特殊性，目前并不支持创建 Oracle 数据库。但是手工创建数据库，并配置正确的连接字符串后，即可自动更新数据库中的表结构。Oracle 使用以下连接字符串：</para>
+                <para>Rafy 使用纯托管的 ODP.NET 来访问 Oracle。</para>
+                <para>首先，需要使用 NuGet 来引用最新的纯托管 ODP.NET：Oracle.ManagedDataAccess，版本在 12.1.022 以上即可。</para>
+                <para>接着，配置正确的连接字符串后，即可自动更新数据库中的表结构。Oracle 使用以下连接字符串：</para>
                 <code language="xml">
-                    <![CDATA[<add name="JXC" connectionString="Data Source=ORCL;User Id=hqf;Password=***;" providerName="System.Data.OracleClient" />]]>
+                    <![CDATA[<connectionStrings>
+    <add name="JXC" connectionString="Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=localhost)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=ORCL)));User Id=hqf;Password=***;" providerName="Oracle.ManagedDataAccess.Client"/>
+</connectionStrings>
+<system.data>
+    <DbProviderFactories>
+        <remove invariant="Oracle.ManagedDataAccess.Client"/>
+        <add name="ODP.NET, Managed Driver" invariant="Oracle.ManagedDataAccess.Client" description="Oracle Data Provider for .NET, Managed Driver"
+             type="Oracle.ManagedDataAccess.Client.OracleClientFactory, Oracle.ManagedDataAccess, Version=4.121.2.0, Culture=neutral, PublicKeyToken=89b483f429c47342"/>
+    </DbProviderFactories>
+</system.data>]]>
                 </code>
+                <para>由于 Oracle 数据库的特殊性，目前并不支持创建 Oracle 数据库，需要手工创建好数据库和用户后，才可以在指定的库中生成所有的表和字段。</para>
             </content>
         </section>
         <section address="SqlCe">

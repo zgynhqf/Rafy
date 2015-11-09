@@ -162,9 +162,10 @@ namespace Rafy.Domain.ORM
 
             var sql = new ConditionalSql();
             //SQL: UPDATE D SET AName = {0} WHERE
+            var rdColumn = table.FindByPropertyName(redundancy.Property.Name);
             sql.Append("UPDATE ").AppendQuoteName(table)
-                .Append(" SET ").AppendQuote(table, table.Translate(redundancy.Property))
-                .Append(" = ").AppendParameter(newValue).Append(" WHERE ");
+                .Append(" SET ").AppendQuote(table, rdColumn.Name)
+                .Append(" = ").AppendParameter(rdColumn.ConvertToParameterValue(newValue)).Append(" WHERE ");
 
             int quoteNeeded = 0;
             if (refTables.Length > 1)
@@ -192,8 +193,9 @@ namespace Rafy.Domain.ORM
 
             //最后一个，生成SQL: BId = {1}
             var lastRef = refTables[refTables.Length - 1];
-            sql.AppendQuote(table, lastRef.OwnerTable.Translate(lastRef.RefProperty.Property))
-                .Append(" = ").AppendParameter(lastRefId);
+            var refColumn = lastRef.OwnerTable.FindByPropertyName(lastRef.RefProperty.Property.Name);
+            sql.AppendQuote(lastRef.OwnerTable, refColumn.Name)
+                .Append(" = ").AppendParameter(refColumn.ConvertToParameterValue(lastRefId));
 
             while (quoteNeeded > 0)
             {

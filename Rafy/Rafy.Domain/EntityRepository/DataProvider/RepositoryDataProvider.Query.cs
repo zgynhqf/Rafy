@@ -147,7 +147,8 @@ namespace Rafy.Domain
         public virtual EntityList GetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad)
         {
             //递归查找所有树型子
-            var childCode = treeIndex + "%" + _repository.TreeIndexOption.Seperator + "%";
+            var childCode = treeIndex + SqlGenerator.WILDCARD_ALL +
+                _repository.TreeIndexOption.Seperator + SqlGenerator.WILDCARD_ALL;
 
             var table = f.Table(_repository);
             var q = f.Query(
@@ -294,7 +295,7 @@ namespace Rafy.Domain
             if (!string.IsNullOrWhiteSpace(criteria.OrderBy))
             {
                 var orderBy = allProperties.Find(criteria.OrderBy, true);
-                if (orderBy == null) throw new InvalidProgramException(string.Format("在实体 {0} 中没有找到名为 {1} 的属性。",_repository.EntityType.FullName, criteria.OrderBy));
+                if (orderBy == null) throw new InvalidProgramException(string.Format("在实体 {0} 中没有找到名为 {1} 的属性。", _repository.EntityType.FullName, criteria.OrderBy));
 
                 var dir = criteria.OrderByAscending ? OrderDirection.Ascending : OrderDirection.Descending;
                 q.OrderBy.Add(table.Column(orderBy), dir);

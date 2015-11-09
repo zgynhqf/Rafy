@@ -44,13 +44,13 @@ namespace Rafy
             }
         }
 
-        public virtual IPrincipal CurrentPrincipal
+        public IPrincipal CurrentPrincipal
         {
             get { return Thread.CurrentPrincipal; }
             set { Thread.CurrentPrincipal = value; }
         }
 
-        public virtual IDictionary<string, object> DataContainer
+        public IDictionary<string, object> DataContainer
         {
             get { return _items; }
             set { _items = value; }

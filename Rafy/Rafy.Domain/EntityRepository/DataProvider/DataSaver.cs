@@ -40,15 +40,26 @@ namespace Rafy.Domain
             _repository = dataProvider.Repository;
         }
 
+        #region DeletingChildrenInMemory
+
+        private bool _enableDeletingChildrenInMemory;
+
         /// <summary>
-        /// 是否需要在内在中进行删除。
+        /// 是否需要在内存中进行删除。
         /// 
         /// SqlCe 的数据库，常常需要打开这个选项。
         /// 因为 SqlCe 的级联删除在遇到组合子对象是 TreeEntity 时，会出现无法成功级联删除的问题。
         /// 
         /// 默认情况下，对象使用级联删除，所以不需要在内存中更新组合子，本值返回 false。
+        /// 
+        /// 此功能只能打开，打开后不能再关闭。
         /// </summary>
-        public bool EnableDeletingChildrenInMemory { get; set; }
+        public void EnableDeletingChildrenInMemory()
+        {
+            _enableDeletingChildrenInMemory = true;
+        }
+
+        #endregion
 
         /// <summary>
         /// 对应的数据提供程序。
@@ -442,22 +453,22 @@ namespace Rafy.Domain
         }
 
         /// <summary>
-        /// 插入这个实体到仓库中。
+        /// 插入这个数据到持久层中。
         /// 
-        /// 子类重写此方法来实现非关系型数据库的插入逻辑。
+        /// 子类重写此方法来实现持久层的插入逻辑。
         /// 重写时，注意：
         /// 在插入完成后，把为实体新生成的 Id 赋值到实体中。否则组合子将插入失败。
         /// </summary>
-        /// <param name="entity"></param>
-        internal protected abstract void Insert(Entity entity);
+        /// <param name="data"></param>
+        public abstract void InsertToPersistence(Entity data);
 
         /// <summary>
-        /// 更新这个实体到仓库中。
+        /// 更新这个这个数据到持久层中。
         /// 
-        /// 子类重写此方法来实现非关系型数据库的更新逻辑。
+        /// 子类重写此方法来实现持久层的更新逻辑。
         /// </summary>
-        /// <param name="entity"></param>
-        internal protected abstract void Update(Entity entity);
+        /// <param name="data"></param>
+        public abstract void UpdateToPersistence(Entity data);
 
         /// <summary>
         /// 提交更新指定实体的组合子列表。
@@ -527,12 +538,12 @@ namespace Rafy.Domain
         private void DoDelete(Entity entity)
         {
             //如果需要在内存中删除组合子，则应该先删除这些子对象。
-            if (this.EnableDeletingChildrenInMemory)
+            if (_enableDeletingChildrenInMemory || _repository.EntityMeta.DeletingChildrenInMemory)
             {
                 this.DeleteChildren(entity);
             }
 
-            //所有节点的删除，都在最外层完成。
+            //所有节点的删除，都在最外层完成。而不是使用递归。
             //if (withTreeChildren && _repository.SupportTree)
             //{
             //    this.DeleteTreeChildren(entity);
@@ -542,12 +553,12 @@ namespace Rafy.Domain
         }
 
         /// <summary>
-        /// 从仓库中删除这个实体。
+        /// 从持久层中删除这个数据。
         /// 
-        /// 子类重写此方法来实现非关系型数据库的删除逻辑。
+        /// 子类重写此方法来实现持久层的删除逻辑。
         /// </summary>
-        /// <param name="entity"></param>
-        internal protected abstract void Delete(Entity entity);
+        /// <param name="data"></param>
+        public abstract void DeleteFromPersistence(Entity data);
 
         /// <summary>
         /// 删除所有组合子。
@@ -557,20 +568,16 @@ namespace Rafy.Domain
         /// </summary>
         protected virtual void DeleteChildren(Entity entity)
         {
-            foreach (var mp in _repository.EntityMeta.ManagedProperties.GetNonReadOnlyCompiledProperties())
-            {
-                var listProperty = mp as IListProperty;
-                if (listProperty != null && listProperty.HasManyType == HasManyType.Composition)
-                {
-                    //不论这个列表属性是否已经加载，都必须获取其所有的数据行，并标记为删除。
-                    var list = entity.GetLazyList(listProperty);
-                    if (list.Count > 0)
-                    {
-                        list.Clear();
+            _repository.LoadAllChildren(entity);
 
-                        //删除所有子。
-                        SaveRecur(list, entity);
-                    }
+            foreach (var childField in entity.GetLoadedChildren())
+            {
+                var children = childField.Value as EntityList;
+                if (children != null && children.Count > 0)
+                {
+                    //删除所有子。
+                    children.Clear();
+                    SaveRecur(children, entity);
                 }
             }
         }
@@ -624,7 +631,7 @@ namespace Rafy.Domain
         }
 
         /// <summary>
-        /// 子类重写此方法，实现 <see cref="DeleteRef"/> 的具体逻辑。
+        /// 子类重写此方法，实现 <see cref="DeleteRef(Entity, IRefProperty, Type)" /> 的具体逻辑。
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="refProperty"></param>

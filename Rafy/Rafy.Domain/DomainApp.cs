@@ -21,7 +21,7 @@ using Rafy.ComponentModel;
 namespace Rafy.Domain
 {
     /// <summary>
-    /// 领域模型启动环境
+    /// 领域应用程序（用于启动领域实体框架）
     /// </summary>
     public class DomainApp : AppImplementationBase
     {
@@ -33,7 +33,23 @@ namespace Rafy.Domain
             }
             catch (Exception ex)
             {
-                Logger.LogError("领域模型启动时发生异常", ex);
+                Logger.LogError("领域应用程序在启动时发生异常", ex);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// 当外部程序在完全退出时，通过领域应用程序也同时退出。
+        /// </summary>
+        public void NotifyExit()
+        {
+            try
+            {
+                this.OnExit();
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError("领域应用程序退出时发生异常", ex);
                 throw;
             }
         }

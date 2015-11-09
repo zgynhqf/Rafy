@@ -21,7 +21,7 @@ using Rafy.Data;
 namespace Rafy.DbMigration
 {
     /// <summary>
-    /// 在 Generate 的过程中最好不要出现异常，可以使用此类来延迟异常出现在运行过程中。
+    /// 在 Generate 的过程中最好不要出现异常，可以使用此类来延迟异常的抛出，在真正开始执行 Sql（Run） 时才抛出异常。
     /// </summary>
     [DebuggerDisplay("Generation Exception : {Message}")]
     public class GenerationExceptionRun : MigrationRun

@@ -86,6 +86,13 @@ namespace UT
             get { return this.GetProperty(RoleTypeProperty); }
             set { this.SetProperty(RoleTypeProperty, value); }
         }
+
+        public static readonly Property<RoleType?> RoleType2Property = P<TestRole>.Register(e => e.RoleType2);
+        public RoleType? RoleType2
+        {
+            get { return this.GetProperty(RoleType2Property); }
+            set { this.SetProperty(RoleType2Property, value); }
+        }
     }
 
     [Serializable]
@@ -138,6 +145,7 @@ namespace UT
             Meta.Property(TestRole.TestUserIdProperty).MapColumn().HasColumnName("UserId");
             Meta.Property(TestRole.NameProperty).MapColumn();
             Meta.Property(TestRole.RoleTypeProperty).MapColumn();
+            Meta.Property(TestRole.RoleType2Property).MapColumn();
         }
     }
 

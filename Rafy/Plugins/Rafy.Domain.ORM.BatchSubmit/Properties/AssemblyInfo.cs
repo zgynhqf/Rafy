@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Rafy.Domain.ORM.BatchSubmit.SqlServer")]
+[assembly: AssemblyTitle("Rafy.Domain.ORM.BatchSubmit")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Rafy.Domain.ORM.BatchSubmit.SqlServer")]
+[assembly: AssemblyProduct("Rafy.Domain.ORM.BatchSubmit")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -32,4 +32,4 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.40.2770")]
+[assembly: AssemblyVersion("2.42.2825")]

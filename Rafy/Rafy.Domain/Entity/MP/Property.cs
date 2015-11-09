@@ -27,10 +27,26 @@ namespace Rafy.Domain
     /// <typeparam name="TPropertyType"></typeparam>
     public class Property<TPropertyType> : ManagedProperty<TPropertyType>, IPropertyInternal, IProperty, IManagedProperty
     {
-        internal Property(Type ownerType, Type declareType, string propertyName, ManagedPropertyMetadata<TPropertyType> defaultMeta) : base(ownerType, declareType, propertyName, defaultMeta) { }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Property{TPropertyType}"/> class.
+        /// </summary>
+        /// <param name="ownerType">Type of the owner.</param>
+        /// <param name="declareType">Type of the declare.</param>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <param name="defaultMeta">The default meta.</param>
+        public Property(Type ownerType, Type declareType, string propertyName, ManagedPropertyMetadata<TPropertyType> defaultMeta) : base(ownerType, declareType, propertyName, defaultMeta) { }
 
-        internal Property(Type ownerType, string propertyName, ManagedPropertyMetadata<TPropertyType> defaultMeta) : base(ownerType, propertyName, defaultMeta) { }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Property{TPropertyType}"/> class.
+        /// </summary>
+        /// <param name="ownerType">Type of the owner.</param>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <param name="defaultMeta">The default meta.</param>
+        public Property(Type ownerType, string propertyName, ManagedPropertyMetadata<TPropertyType> defaultMeta) : base(ownerType, propertyName, defaultMeta) { }
 
+        /// <summary>
+        /// Rafy 属性的类型
+        /// </summary>
         public virtual PropertyCategory Category
         {
             get

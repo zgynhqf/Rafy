@@ -68,10 +68,15 @@ namespace Rafy.DbMigration
         /// <summary>
         /// 对应的数据库配置。
         /// </summary>
-        protected DbSetting DbSetting { get; private set; }
+        public DbSetting DbSetting { get; private set; }
 
         #endregion
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbMigrationContext"/> class.
+        /// </summary>
+        /// <param name="dbSetting">The database setting.</param>
+        /// <exception cref="System.ArgumentNullException">dbSetting</exception>
         public DbMigrationContext(DbSetting dbSetting)
         {
             if (dbSetting == null) throw new ArgumentNullException("dbSetting");
@@ -346,6 +351,37 @@ namespace Rafy.DbMigration
 
         #endregion
 
+        #region RefreshComments
+
+        /// <summary>
+        /// 使用指定的注释来更新数据库中的相关注释内容。
+        /// 更新注释前，请保证真实数据库中的包含了指定的库中的所有表和字段。
+        /// </summary>
+        public void RefreshComments(Database database)
+        {
+            var operations = new List<MigrationOperation>(1000);
+
+            foreach (var table in database.Tables)
+            {
+                if (!string.IsNullOrWhiteSpace(table.Comment))
+                {
+                    operations.Add(new UpdateComment { TableName = table.Name, Comment = table.Comment });
+                }
+
+                foreach (var column in table.Columns)
+                {
+                    if (!string.IsNullOrWhiteSpace(column.Comment))
+                    {
+                        operations.Add(new UpdateComment { TableName = table.Name, ColumnName = column.Name, Comment = column.Comment });
+                    }
+                }
+            }
+
+            Must(this.MigrateUpBatch(operations));
+        }
+
+        #endregion
+
         #region Migrate/Rollback by history
 
         /*********************** 代码块解释 *********************************
@@ -361,6 +397,8 @@ namespace Rafy.DbMigration
         /// <returns></returns>
         public Result JumpToHistory(DateTime time)
         {
+            if (!this.SupportHistory) throw new InvalidOperationException("当前迁移操作不支持历史记录功能。");
+
             var version = this.GetDbVersion();
             if (version < time)
             {
@@ -638,7 +676,7 @@ namespace Rafy.DbMigration
                 //如果如果前面执行成功，那么刷新版本号
                 if (res)
                 {
-                    //手工更新、自动更新同时支持历史记录、客户端被动升级
+                    //以下三种情况需要记录版本号：手工更新、自动更新且同时支持历史记录、客户端被动升级
                     if (migration.MigrationType == MigrationType.ManualMigration
                         || this.SupportHistory || addByDeveloperHistory)
                     {
@@ -762,7 +800,7 @@ namespace Rafy.DbMigration
                 migration.GenerateDownOperations();
             }
 
-            var runList = this._runGenerator.Generate(migration.Operations);
+            var runList = _runGenerator.Generate(migration.Operations);
 
             return runList;
         }

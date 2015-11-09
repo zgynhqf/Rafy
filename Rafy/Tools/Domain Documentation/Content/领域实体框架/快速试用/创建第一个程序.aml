@@ -128,7 +128,7 @@
                         <step>
                             <content>
                                 <para>
-                                    这时，弹出 <ui>添加领域实体</ui> 窗口。修改 <newTerm>领域名称</newTerm> 项为“仓库”，点击确定。如图：
+                                    这时，弹出 <ui>添加领域实体</ui> 窗口。修改 <newTerm>领域名称</newTerm> 项为“仓库”，勾选：“同时生成仓库”（该选项会把实体的仓库也生成在同一个文件中），点击确定。如图：
                                 </para>
                                 <mediaLink>
                                     <image xlink:href="第一个程序05"/>

@@ -25,6 +25,10 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>
+    </DocumentationFile>
+    <NoWarn>
+    </NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -72,6 +76,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Rafy\EntityPhantomTest.cs" />
     <Compile Include="Rafy\EnvironmentTest.cs" />
     <Compile Include="Rafy\ODataTest.cs" />
     <Compile Include="ServerTestHelper.cs" />
@@ -99,6 +104,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.EntityPhantom\Rafy.Domain.EntityPhantom.csproj">
+      <Project>{0b6df92b-0248-422d-a9c2-1604d4cb7bc9}</Project>
+      <Name>Rafy.Domain.EntityPhantom</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.ORM.BatchSubmit\Rafy.Domain.ORM.BatchSubmit.csproj">
       <Project>{f0533889-be2c-4a21-90b0-26765833270e}</Project>
       <Name>Rafy.Domain.ORM.BatchSubmit</Name>

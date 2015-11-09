@@ -75,10 +75,10 @@
       <DependentUpon>DomainEntityRepositoryWizardWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Wizards\Items\DomainEntityRepository\DomainEntityRepositoryWizardWindowViewModel.cs" />
-    <Compile Include="Wizards\Items\DomainEntityRepository\SelectEntityWindow.xaml.cs">
+    <Compile Include="Wizards\Items\SelectEntityWindow.xaml.cs">
       <DependentUpon>SelectEntityWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Wizards\Items\DomainEntityRepository\SelectEntityWindowViewModel.cs" />
+    <Compile Include="Wizards\Items\SelectEntityWindowViewModel.cs" />
     <Compile Include="Wizards\Items\DomainEntity\DomainEntityItemWizard.cs" />
     <Compile Include="Wizards\Items\DomainEntity\DomainEntityWizardWindow.xaml.cs">
       <DependentUpon>DomainEntityWizardWindow.xaml</DependentUpon>
@@ -148,7 +148,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Wizards\Items\DomainEntityRepository\SelectEntityWindow.xaml">
+    <Page Include="Wizards\Items\SelectEntityWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -81,7 +81,7 @@ namespace Rafy.Web.EntityDataPortal
                         var idName = refMp.RefIdProperty.Name;
                         entityJson.SetProperty(idName, value);
 
-                        //同时写入引用属性的视图属性，如 BookCategoryId_Label
+                        //同时写入引用属性的视图属性，如 BookCategoryId_Display
                         if (id != null && propertyVM.CanShowIn(ShowInWhere.List))
                         {
                             var titleProperty = propertyVM.SelectionViewMeta.RefTypeDefaultView.TitleProperty;

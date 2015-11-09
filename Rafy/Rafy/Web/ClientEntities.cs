@@ -59,15 +59,17 @@ namespace Rafy.Web
                 {
                     if (_entities == null)
                     {
-                        _entities = new Dictionary<string, EntityMeta>();
+                        var dic = new Dictionary<string, EntityMeta>();
 
                         CommonModel.Entities.EnsureAllLoaded();
 
                         foreach (var em in CommonModel.Entities)
                         {
-                            _entities.Add(GetClientName(em.EntityType), em);
+                            dic.Add(GetClientName(em.EntityType), em);
                             //throw new InvalidOperationException(string.Format("存在生成两个同名客户端类型的类型：{0}、{1}。", em.EntityType.FullName, t.FullName));
                         }
+
+                        _entities = dic;
                     }
                 }
             }
