@@ -15,6 +15,7 @@ using System.Security.Principal;
 using System.Collections.Specialized;
 using System.Runtime.Serialization;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace Rafy.Domain.DataPortal
 {
@@ -47,9 +48,9 @@ namespace Rafy.Domain.DataPortal
         public string ClientUICulture { get; set; }
 
         [DataMember]
-        public HybridDictionary ClientContext { get; set; }
+        public Dictionary<string, object> ClientContext { get; set; }
 
         [DataMember]
-        public HybridDictionary GlobalContext { get; set; }
+        public Dictionary<string, object> GlobalContext { get; set; }
     }
 }

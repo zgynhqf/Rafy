@@ -6,6 +6,9 @@ using Rafy.Utils;
 
 namespace Rafy.MetaModel
 {
+    /// <summary>
+    /// 实体映射表的元数据。
+    /// </summary>
     public class TableMeta : Freezable
     {
         /// <summary>
@@ -29,6 +32,7 @@ namespace Rafy.MetaModel
         public string TableName
         {
             get { return this._TableName; }
+            set { this.SetValue(ref this._TableName, value); }
         }
 
         private string _ViewSql;
@@ -39,10 +43,7 @@ namespace Rafy.MetaModel
         public string ViewSql
         {
             get { return this._ViewSql; }
-            set
-            {
-                this.SetValue(ref this._ViewSql, value);
-            }
+            set { this.SetValue(ref this._ViewSql, value); }
         }
 
         /// <summary>

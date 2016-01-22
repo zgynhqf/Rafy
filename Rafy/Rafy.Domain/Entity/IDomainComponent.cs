@@ -20,7 +20,7 @@ using System.Text;
 namespace Rafy.Domain
 {
     /// <summary>
-    /// 实体模块组件（Entity Or EntityList）
+    /// 实体模块组件（<see cref="Entity"/> Or <see cref="EntityList"/>）
     /// </summary>
     public interface IDomainComponent : IDirtyAware
     {

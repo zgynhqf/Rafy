@@ -28,8 +28,16 @@ namespace Rafy.Domain
 {
     /// <summary>
     /// 所有实体集合类的基类。
-    /// 
-    /// 仓库的所有数据查询，都是通过 EntityList 来完成的。包括：FetchCount、FetchFirst、FetchList。
+    /// <para>使用 <see cref="EntityList"/> 与使用 <see cref="List{T}"/> 的区别在于：</para>
+    /// <para>在 <see cref="EntityList"/> 中移除的实体，都会被此列表记住在 <see cref="DeletedList"/> 中，在最终保存列表时，这些被移除的实体会被从持久层删除。</para>
+    /// <para>在 <see cref="EntityList"/> 中添加实体时：</para>
+    /// <para>* 列表会把该实体的父列表设计为本列表（见：<see cref="Parent"/> 属性）；</para>
+    /// <para>* 列表会把该实体的组合父实体设置为本列表的父实体；</para>
+    /// <para>* 如果实体是树型实体，那么还会为实体生成相应的 <see cref="Entity.TreeIndex"/>。</para>
+    /// <para>
+    /// 另外，需要注意的是：仓库的所有数据查询，都是通过 EntityList 来实现数据传输的。包括：FetchCount（查询数据条数，见：<see cref="EntityList.TotalCount"/>属性）、FetchFirst（查询单条数据）、FetchList（查询数据列表）。
+    /// </para>
+    /// <para>综上，<see cref="EntityList"/> 主要用于实现领域实体的列表行为、树列表行为以及数据的传输；如果需要对大量数据进行简单的列表操作，请使用更简单的 <see cref="List{T}"/> 泛型即可。把任意列表转换为<see cref="EntityList"/>，可使用 <see cref="EntityRepository.CreateList(System.Collections.IEnumerable, bool)"/> 方法。</para>
     /// </summary>
     [Serializable]
     public abstract partial class EntityList : ManagedPropertyObjectList<Entity>,
@@ -146,10 +154,9 @@ namespace Rafy.Domain
         #endregion
 
         /// <summary>
-        /// 是否需要关闭此行为：
-        /// 在添加每一项时，设置父列表为当前列表，并设置它的父对象为本列表对象的父对象。
+        /// 是否：在添加每一项时，设置实体的 <see cref="Entity.ParentList"/> 为当前列表，并设置它的父对象为本列表对象的父对象。
         /// </summary>
-        public bool SupressSetItemParent { get; set; }
+        internal bool ResetItemParent;
 
         #region Insert, Remove, Clear
 
@@ -336,7 +343,7 @@ namespace Rafy.Domain
 
         private void SetItemParent(Entity item)
         {
-            var needParent = item != null && !this.SupressSetItemParent;
+            var needParent = item != null && this.ResetItemParent;
             if (needParent)
             {
                 (item as IDomainComponent).SetParent(this);
@@ -350,7 +357,7 @@ namespace Rafy.Domain
 
         private void ClearItemParent(Entity item)
         {
-            var needParent = item != null && !this.SupressSetItemParent;
+            var needParent = item != null && this.ResetItemParent;
             if (needParent)
             {
                 (item as IDomainComponent).SetParent(null);
@@ -405,18 +412,18 @@ namespace Rafy.Domain
         {
             //调用此方法的方法，必须保证这个列表是指定实体的组合子集合。
             //if (this.HasManyType == HasManyType.Composition)
+            //{
+            var property = this.GetRepository().FindParentPropertyInfo(true).ManagedProperty as IRefEntityProperty;
+            this.EachNode(child =>
             {
-                var property = this.GetRepository().FindParentPropertyInfo(true).ManagedProperty as IRefEntityProperty;
-                this.EachNode(child =>
-                {
-                    //注意，由于实体可能并没有发生改变，而只是 Id 变了，
-                    //所以在设置的时候，先设置 Id，然后设置 Entity。
-                    child.SetRefId(property.RefIdProperty, parent.Id);
-                    child.SetRefEntity(property, parent);
+                //注意，由于实体可能并没有发生改变，而只是 Id 变了，
+                //所以在设置的时候，先设置 Id，然后设置 Entity。
+                child.SetRefId(property.RefIdProperty, parent.Id);
+                child.SetRefEntity(property, parent);
 
-                    return false;
-                });
-            }
+                return false;
+            });
+            //}
         }
 
         #region ReadRowDirectly

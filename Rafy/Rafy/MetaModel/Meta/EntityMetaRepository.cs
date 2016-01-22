@@ -143,6 +143,11 @@ namespace Rafy.MetaModel
         #region CreateEntityMeta
 
         /// <summary>
+        /// 元数据创建完成的事件。
+        /// </summary>
+        public event EventHandler<EntityMetaCreatedEventArgs> EntityMetaCreated;
+
+        /// <summary>
         /// 创建一个实体类型的元数据信息。
         /// </summary>
         /// <param name="entityType"></param>
@@ -204,6 +209,9 @@ namespace Rafy.MetaModel
             this.CreatePropertiesMeta(entityMeta);
 
             this.Config(entityMeta);
+
+            var handler = this.EntityMetaCreated;
+            if (handler != null) handler(this, new EntityMetaCreatedEventArgs(entityMeta));
 
             this.AddPrime(entityMeta);
 
@@ -360,5 +368,25 @@ namespace Rafy.MetaModel
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// 元数据创建完成的事件。
+    /// </summary>
+    public class EntityMetaCreatedEventArgs : EventArgs
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EntityMetaCreatedEventArgs"/> class.
+        /// </summary>
+        /// <param name="meta">The meta.</param>
+        internal EntityMetaCreatedEventArgs(EntityMeta meta)
+        {
+            this.EntityMeta = meta;
+        }
+
+        /// <summary>
+        /// 创建完成的实体元数据。
+        /// </summary>
+        public EntityMeta EntityMeta { get; private set; }
     }
 }

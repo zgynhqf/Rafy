@@ -33,7 +33,7 @@ namespace Rafy.Domain
     /// <summary>
     /// Rafy Domain 本身也是一个 DomainPlugin
     /// </summary>
-    internal class RafyDomainLibrary : DomainPlugin
+    internal class RafyDomainPlugin : DomainPlugin
     {
         protected override int SetupLevel
         {
@@ -50,7 +50,7 @@ namespace Rafy.Domain
 
         private void OnMetaCompiled(object sender, EventArgs e)
         {
-            var plugins = RafyEnvironment.GetAllPlugins();
+            var plugins = RafyEnvironment.AllPlugins;
             foreach (var plugin in plugins)
             {
                 foreach (var type in plugin.Assembly.GetTypes())

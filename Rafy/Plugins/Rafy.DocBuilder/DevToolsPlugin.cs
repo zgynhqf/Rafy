@@ -85,7 +85,7 @@ namespace Rafy.DevTools
         private static void OnMainProcessStarting(object sender, EventArgs e)
         {
             //配置了以下配置项时，才在启动时升级数据库。
-            if (ConfigurationHelper.GetAppSettingOrDefault("Rafy_DevTools_GenerateDbOnStartup", false))
+            if (ConfigurationHelper.GetAppSettingOrDefault("Rafy.DevTools.GenerateDbOnStartup", false))
             {
                 ClientMigrationHelper.MigrateOnClient();
             }

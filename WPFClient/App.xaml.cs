@@ -19,7 +19,7 @@ namespace WPFClient
             ClientApp.LoginWindowType = typeof(DefaultLoginWindow);
             //ClientApp.SplashScreen = new SplashScreen("Shell/ProductSplash.jpg");
 
-            RafyEnvironment.Provider.IsDebuggingEnabled = ConfigurationHelper.GetAppSettingOrDefault("IsDebuggingEnabled", false);
+            RafyEnvironment.Provider.IsDebuggingEnabled = ConfigurationHelper.GetAppSettingOrDefault("WPFClient.IsDebuggingEnabled", false);
 
             var app = ClientApp.Register(this);
 

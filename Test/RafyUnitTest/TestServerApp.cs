@@ -23,6 +23,7 @@ using Rafy.Domain;
 using Rafy.Domain.Caching;
 using Rafy.Domain.EntityPhantom;
 using Rafy.Domain.ORM.DbMigration;
+using Rafy.Domain.Stamp;
 using Rafy.MetaModel;
 using Rafy.UnitTest;
 using Rafy.UnitTest.DataProvider;
@@ -43,23 +44,27 @@ namespace RafyUnitTest
         {
             Logger.EnableSqlObervation = true;
 
-            ConnectionStringNames.RafyPlugins = "Test_RafyPlugins";
-            ConnectionStringNames.DbMigrationHistory = "Test_DbMigrationHistory";
+            DbSettingNames.RafyPlugins = "Test_RafyPlugins";
+            DbSettingNames.DbMigrationHistory = "Test_DbMigrationHistory";
 
             RafyEnvironment.Provider.IsDebuggingEnabled = true;
 
-            PluginTable.DomainLibraries.AddPlugin<EntityPhantomPlugin>();
+            //故意把下面两个插件的位置放反。测试 Config 中配置插件的顺序是否成功。
+            RafyEnvironment.DomainPlugins.Add(new EntityPhantomPlugin());
+            RafyEnvironment.DomainPlugins.Add(new StampPlugin());
 
-            PluginTable.DomainLibraries.AddPlugin<UnitTestPlugin>();
-            PluginTable.DomainLibraries.AddPlugin<UnitTestDataProviderPlugin>();
-            PluginTable.DomainLibraries.AddPlugin<UnitTestIDataProviderPlugin>();
-            PluginTable.DomainLibraries.AddPlugin<UnitTestRepoPlugin>();
-            PluginTable.DomainLibraries.AddPlugin<DCPlugin>();
+            RafyEnvironment.DomainPlugins.Add(new UnitTestPlugin());
+            RafyEnvironment.DomainPlugins.Add(new UnitTestDataProviderPlugin());
+            RafyEnvironment.DomainPlugins.Add(new UnitTestIDataProviderPlugin());
+            RafyEnvironment.DomainPlugins.Add(new UnitTestRepoPlugin());
+            RafyEnvironment.DomainPlugins.Add(new DCPlugin());
 
             ////为了多次修改 Location 值，需要把修改值的操作放到 InitEnvironment 中。
             //RafyEnvironment.Location.IsWebUI = false;
             //RafyEnvironment.Location.IsWPFUI = false;
             //RafyEnvironment.Location.DataPortalMode = DataPortalMode.ConnectDirectly;
+
+            DataSaver.SubmitInterceptors.Add(typeof(Rafy.Domain.Stamp.StampSubmitInterceptor));
 
             base.InitEnvironment();
         }

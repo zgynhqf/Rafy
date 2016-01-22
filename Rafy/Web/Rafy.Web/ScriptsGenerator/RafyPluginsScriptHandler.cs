@@ -38,7 +38,7 @@ namespace Rafy.Web
         {
             var js = new StringBuilder();
             //按照 721 顺序加入所有 Library 中的 js Resource。
-            foreach (var plugin in RafyEnvironment.GetAllPlugins())
+            foreach (var plugin in RafyEnvironment.AllPlugins)
             {
                 this.WritePluginJs(plugin, js);
             }
@@ -49,7 +49,7 @@ namespace Rafy.Web
             return js.ToString();
         }
 
-        private void WritePluginJs(PluginAssembly plugin, StringBuilder js)
+        private void WritePluginJs(IPlugin plugin, StringBuilder js)
         {
             var jsBlocks = new List<JsBlock>();
 

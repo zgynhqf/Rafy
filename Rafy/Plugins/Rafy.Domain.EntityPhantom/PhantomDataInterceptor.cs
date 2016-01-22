@@ -55,9 +55,9 @@ namespace Rafy.Domain.EntityPhantom
         private static void RepositoryDataProvider_Querying(object sender, QueryingEventArgs e)
         {
             var dp = sender as RepositoryDataProvider;
-            if (dp.Repository.EntityMeta.IsPhantomEnabled && !PhantomQueryContext.NeedPhantomData)
+            if (dp.Repository.EntityMeta.IsPhantomEnabled && !PhantomQueryContext.NeedPhantomData.Value)
             {
-                //为查询中的 Where 条件添加 "IsPhantom = 'true'" 条件
+                //为查询中的 Where 条件添加 "IsPhantom = 'false'" 条件
                 var appender = new PhantomWhereAppender();
                 appender.AddConditionToLast = true;
                 appender.Append(e.Args.Query);
@@ -67,7 +67,7 @@ namespace Rafy.Domain.EntityPhantom
         #region class PhantomWhereAppender
 
         /// <summary>
-        /// 为查询中的 Where 条件添加 "IsPhantom = 'true'" 条件的类。
+        /// 为查询中的 Where 条件添加 "IsPhantom = 'false'" 条件的类。
         /// </summary>
         class PhantomWhereAppender : MainTableWhereAppender
         {

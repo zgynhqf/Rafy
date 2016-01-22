@@ -17,6 +17,7 @@ using System.Linq;
 using System.Text;
 using System.ComponentModel;
 using System.Runtime;
+using System.Reflection;
 
 namespace Rafy.Reflection
 {
@@ -137,6 +138,50 @@ namespace Rafy.Reflection
         {
             var enumType = TypeHelper.IgnoreNullable(targetType);
             return enumType.IsEnum;
+        }
+
+        /// <summary>
+        /// 根据引用关系来排列程序集。
+        /// </summary>
+        /// <param name="assemblies"></param>
+        /// <returns></returns>
+        public static List<Assembly> SortByReference(IEnumerable<Assembly> assemblies)
+        {
+            //items 表示待处理列表。
+            var items = assemblies.ToList();
+            var sorted = new List<Assembly>(items.Count);
+
+            while (items.Count > 0)
+            {
+                for (int i = 0, c = items.Count; i < c; i++)
+                {
+                    var item = items[i];
+                    bool referencesOther = false;
+                    var refItems = item.GetReferencedAssemblies();
+                    for (int j = 0, c2 = items.Count; j < c2; j++)
+                    {
+                        if (i != j)
+                        {
+                            if (refItems.Any(ri => ri.FullName == items[j].FullName))
+                            {
+                                referencesOther = true;
+                                break;
+                            }
+                        }
+                    }
+                    //没有被任何一个程序集引用，则把这个加入到结果列表中，并从待处理列表中删除。
+                    if (!referencesOther)
+                    {
+                        sorted.Add(item);
+                        items.RemoveAt(i);
+
+                        //跳出循环，从新开始。
+                        break;
+                    }
+                }
+            }
+
+            return sorted;
         }
 
         #region CoerceValue

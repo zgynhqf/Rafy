@@ -26,7 +26,7 @@ namespace Rafy.Domain.DbMigrations
     {
         public override string DbSetting
         {
-            get { return ConnectionStringNames.RafyPlugins; }
+            get { return DbSettingNames.RafyPlugins; }
         }
 
         protected override void Up()

@@ -209,9 +209,9 @@ namespace Rafy.Web
             //这个类型没有定义在插件程序集中，所以这里需要手动加入到仓库中。
             Add(typeof(GetCustomDataSourceService));
 
-            foreach (var lib in RafyEnvironment.GetDomainPlugins())
+            foreach (var plugin in RafyEnvironment.DomainPlugins)
             {
-                foreach (var type in lib.Assembly.GetTypes())
+                foreach (var type in plugin.Assembly.GetTypes())
                 {
                     if (!type.IsGenericType && !type.IsAbstract &&
                         typeof(IService).IsAssignableFrom(type) &&

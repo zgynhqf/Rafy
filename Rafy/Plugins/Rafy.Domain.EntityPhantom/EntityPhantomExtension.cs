@@ -24,8 +24,11 @@ namespace Rafy.Domain
     /// 此类会为所有的实体都添加一个 IsPhantom 的运行时属性。
     /// </summary>
     [CompiledPropertyDeclarer]
-    public class EntityPhantomExtension
+    public static class EntityPhantomExtension
     {
+        /// <summary>
+        /// 实体的幽灵扩展属性。
+        /// </summary>
         public static readonly Property<bool> IsPhantomProperty =
             P<Entity>.RegisterExtension<bool>("IsPhantom", typeof(EntityPhantomExtension));
         /// <summary>
@@ -33,16 +36,16 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="me"></param>
         /// <returns></returns>
-        public static bool GetIsPhantom(Entity me)
+        public static bool GetIsPhantom(this Entity me)
         {
             return me.GetProperty(IsPhantomProperty);
         }
         /// <summary>
         /// 设置当前实体是否为一个‘幽灵’（即已经删除不再使用的数据）。
         /// </summary>
-        /// <param name="me"></param>
-        /// <returns></returns>
-        public static void SetIsPhantom(Entity me, bool value)
+        /// <param name="me">Me.</param>
+        /// <param name="value">if set to <c>true</c> [value].</param>
+        public static void SetIsPhantom(this Entity me, bool value)
         {
             me.SetProperty(IsPhantomProperty, value);
         }

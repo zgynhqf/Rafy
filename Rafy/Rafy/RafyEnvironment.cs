@@ -63,29 +63,25 @@ namespace Rafy
         #region 身份
 
         /// <summary>
-        /// 返回当前用户。
+        /// 返回当前上下文中的当前用户。
         /// 
         /// 本属性不会为 null，请使用 IsAuthenticated 属性来判断是否已经登录。
+        /// 
+        /// 如果想使用实体的 Id 属性，可尝试将此属性转换为 <see cref="IRafyIdentity"/> 接口。
         /// </summary>
-        public static IRafyIdentity Identity
+        public static IIdentity Identity
         {
             get
             {
-                var principal = Principal;
-                if (principal != null)
-                {
-                    var user = principal.Identity as IRafyIdentity;
-                    if (user != null) return user;
-                }
+                var user = Principal.Identity;
+                if (user != null) return user;
 
                 return new AnonymousIdentity();
             }
         }
 
         /// <summary>
-        /// 返回当前身份。
-        /// 
-        /// 可能返回 null。如果不想判断 null，请使用 Identity 属性。
+        /// 返回当前上下文中的当前身份。
         /// </summary>
         public static IPrincipal Principal
         {
@@ -95,9 +91,6 @@ namespace Rafy
                 if (current == null)
                 {
                     current = new AnonymousPrincipal();
-                    ////如果想启用 windows 验证，可以使用以下代码。
-                    //current = new WindowsPrincipal(WindowsIdentity.GetCurrent());
-
                     AppContext.CurrentPrincipal = current;
                 }
                 return current;
@@ -189,6 +182,9 @@ namespace Rafy
                 }
             }
         }
+
+        private const string DomainPluginFolder = "Domain";
+        private const string UIPluginFolder = "UI";
 
         /// <summary>
         /// 获取所有此版本中需要加载的实体类Dll集合。

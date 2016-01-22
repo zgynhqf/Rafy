@@ -22,6 +22,7 @@ using Rafy.ManagedProperty;
 using Rafy.MetaModel.Attributes;
 using Rafy.MetaModel.View;
 using Rafy.Domain;
+using System.ComponentModel;
 
 namespace Rafy.MetaModel.View
 {
@@ -88,8 +89,8 @@ namespace Rafy.MetaModel.View
             var runtimeProperty = item.PropertyMeta.CLRProperty;
             if (runtimeProperty != null)
             {
-                var labelAttri = runtimeProperty.GetSingleAttribute<LabelAttribute>();
-                if (labelAttri != null) item.Label = labelAttri.Label;
+                var labelAttri = runtimeProperty.GetSingleAttribute<DisplayNameAttribute>();
+                if (labelAttri != null) item.Label = labelAttri.DisplayName;
             }
 
             item.Readonly(mp.IsReadOnly || mp == EntityConvention.Property_TreeIndex);

@@ -26,38 +26,36 @@ namespace Rafy.Domain.DataPortal
 {
     /// <summary>
     /// 分布式数据上下文。
-    /// 在客户端与服务端间提供范围性的数据传输。
+    /// 在这个类中控制：调用者端（客户端）与被调用者端（服务端）之间的范围性数据的传输。
     /// </summary>
     public static class DistributionContext
     {
-        private static object _syncClientContext = new object();
+        private static object _clientContextLock = new object();
 
-        private const string _clientContextName = "Rafy.ClientContext";
+        internal static readonly AppContextItem<Dictionary<string, object>> ClientContextItem =
+            new AppContextItem<Dictionary<string, object>>("Rafy.Domain.DataPortal.ClientContext");
 
-        private const string _globalContextName = "Rafy.GlobalContext";
+        internal static readonly AppContextItem<Dictionary<string, object>> GlobalContextItem =
+            new AppContextItem<Dictionary<string, object>>("Rafy.Domain.DataPortal.GlobalContext");
 
         /// <summary>
         /// 客户端提供的范围数据。
+        /// 这些数据只会从客户端向服务端传输。
         /// </summary>
-        /// <remarks>
-        /// <para>
-        /// 此数据只会从客户端向服务端传输。
-        /// </para>
-        /// </remarks>
-        public static HybridDictionary ClientContext
+        public static Dictionary<string, object> ClientContext
         {
             get
             {
-                var ctx = GetClientContext();
+                var ctx = ClientContextItem.Value;
                 if (ctx == null)
                 {
-                    lock (_syncClientContext)
+                    lock (_clientContextLock)
                     {
-                        ctx = GetClientContext();
+                        ctx = ClientContextItem.Value;
                         if (ctx == null)
                         {
-                            ctx = new HybridDictionary();
-                            SetClientContext(ctx);
+                            ctx = new Dictionary<string, object>();
+                            ClientContextItem.Value = ctx;
                         }
                     }
                 }
@@ -67,100 +65,20 @@ namespace Rafy.Domain.DataPortal
 
         /// <summary>
         /// 伴随每次传输的上下文数据。
-        /// </summary>
-        /// <remarks>
-        /// <para>
         /// 这些数据会伴随客户端到服务端、服务端到客户端的双向传输。
-        /// </para>
-        /// </remarks>
-        public static HybridDictionary GlobalContext
+        /// </summary>
+        public static Dictionary<string, object> GlobalContext
         {
             get
             {
-                var ctx = GetGlobalContext();
+                var ctx = GlobalContextItem.Value;
                 if (ctx == null)
                 {
-                    ctx = new HybridDictionary();
-                    SetGlobalContext(ctx);
+                    ctx = new Dictionary<string, object>();
+                    GlobalContextItem.Value = ctx;
                 }
                 return ctx;
             }
-        }
-
-        internal static HybridDictionary GetClientContext()
-        {
-            if (HttpContext.Current == null)
-            {
-                if (RafyEnvironment.Location.IsWPFUI)
-                {
-                    return (HybridDictionary)AppDomain.CurrentDomain.GetData(_clientContextName);
-                }
-                else
-                {
-                    var slot = Thread.GetNamedDataSlot(_clientContextName);
-                    return (HybridDictionary)Thread.GetData(slot);
-                }
-            }
-            else
-            {
-                return (HybridDictionary)HttpContext.Current.Items[_clientContextName];
-            }
-        }
-
-        internal static HybridDictionary GetGlobalContext()
-        {
-            if (HttpContext.Current == null)
-            {
-                var slot = Thread.GetNamedDataSlot(_globalContextName);
-                return (HybridDictionary)Thread.GetData(slot);
-            }
-            else
-            {
-                return (HybridDictionary)HttpContext.Current.Items[_globalContextName];
-            }
-        }
-
-        internal static void SetClientContext(HybridDictionary clientContext)
-        {
-            if (HttpContext.Current == null)
-            {
-                if (RafyEnvironment.Location.IsWPFUI)
-                {
-                    AppDomain.CurrentDomain.SetData(_clientContextName, clientContext);
-                }
-                else
-                {
-                    var slot = Thread.GetNamedDataSlot(_clientContextName);
-                    Thread.SetData(slot, clientContext);
-                }
-            }
-            else
-            {
-                HttpContext.Current.Items[_clientContextName] = clientContext;
-            }
-        }
-
-        internal static void SetGlobalContext(HybridDictionary globalContext)
-        {
-            if (HttpContext.Current == null)
-            {
-                var slot = Thread.GetNamedDataSlot(_globalContextName);
-                Thread.SetData(slot, globalContext);
-            }
-            else
-            {
-                HttpContext.Current.Items[_globalContextName] = globalContext;
-            }
-        }
-
-        /// <summary>
-        /// Clears all context collections.
-        /// </summary>
-        internal static void Clear()
-        {
-            SetClientContext(null);
-            SetGlobalContext(null);
-            AppContext.Clear();
         }
     }
 }

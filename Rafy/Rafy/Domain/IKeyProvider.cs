@@ -38,7 +38,7 @@ namespace Rafy.Domain
         /// 获取一个用于表示空引用的 Id 值。
         /// 
         /// 值类型返回空值：
-        /// int: 0
+        /// int、long: 0
         /// Guid: Guid.Empty
         /// 引用类型返回 null：
         /// String: null
@@ -48,13 +48,15 @@ namespace Rafy.Domain
 
         /// <summary>
         /// 判断给的 Id 值是否表示‘有值’的状态。
+        /// 参照：<see cref="GetEmptyIdForRefIdProperty"/>。
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         bool HasId(object id);
 
         /// <summary>
-        /// 构造一个不会重复的本地值。
+        /// 构造一个在本应用程序域中不会重复的主键值。
+        /// 这个值只保证在内存中是唯一的，并不保证与持久层中的数据不会重复。
         /// </summary>
         /// <returns></returns>
         object NewLocalId();

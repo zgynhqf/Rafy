@@ -155,7 +155,7 @@ namespace Rafy.Domain.DataPortal
         private static object ReadServerResult(DataPortalResult result)
         {
             //同步服务端返回的统一的上下文，到本地的上下文对象中。
-            DistributionContext.SetGlobalContext(result.GlobalContext);
+            DistributionContext.GlobalContextItem.Value = result.GlobalContext;
 
             return result.ReturnObject;
         }
@@ -171,8 +171,8 @@ namespace Rafy.Domain.DataPortal
             res.Principal = RafyEnvironment.Principal;
             res.ClientCulture = Thread.CurrentThread.CurrentCulture.Name;
             res.ClientUICulture = Thread.CurrentThread.CurrentUICulture.Name;
-            res.ClientContext = DistributionContext.GetClientContext();
-            res.GlobalContext = DistributionContext.GetGlobalContext();
+            res.ClientContext = DistributionContext.ClientContextItem.Value;
+            res.GlobalContext = DistributionContext.GlobalContextItem.Value;
 
             return res;
         }

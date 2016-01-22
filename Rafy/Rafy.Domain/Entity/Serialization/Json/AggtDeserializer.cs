@@ -21,6 +21,7 @@ using Rafy;
 using Rafy.Domain;
 using Rafy.ManagedProperty;
 using Rafy.Reflection;
+using Rafy.Utils;
 
 namespace Rafy.Domain.Serialization.Json
 {
@@ -198,9 +199,22 @@ namespace Rafy.Domain.Serialization.Json
                         {
                             value = (jValue as JValue).Value;
 
-                            if (value is string && mp.PropertyType == typeof(byte[]))
+                            if (value is string)
                             {
-                                value = Convert.FromBase64String(value as string);
+                                var propertyType = mp.PropertyType;
+                                if (propertyType == typeof(byte[]))
+                                {
+                                    value = Convert.FromBase64String(value as string);
+                                }
+                                else
+                                {
+                                    //兼容处理枚举的 Label 值。
+                                    var innerType = TypeHelper.IgnoreNullable(propertyType);
+                                    if (innerType.IsEnum)
+                                    {
+                                        value = EnumViewModel.LabelToEnum(value.ToString(), innerType);
+                                    }
+                                }
                             }
                         }
 

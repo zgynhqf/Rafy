@@ -24,7 +24,7 @@ using UT;
 namespace Rafy.UnitTest.DataProvider
 {
     [DataProviderFor(typeof(CarRepository))]
-    public class CarDataProvider : RdbDataProvider, ICarDataProvider
+    public class CarDataProvider : UnitTestEntityRepositoryDataProvider, ICarDataProvider
     {
         public CarList GetByStartDate(DateTime time)
         {

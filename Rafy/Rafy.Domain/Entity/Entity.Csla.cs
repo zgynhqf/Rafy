@@ -234,7 +234,9 @@ namespace Rafy.Domain
 
                 if (property is IListProperty)
                 {
-                    (value as EntityList).InitListProperty(property as IListProperty);
+                    var list = value as EntityList;
+                    list.ResetItemParent = true;
+                    list.InitListProperty(property as IListProperty);
                 }
             }
         }
@@ -375,10 +377,9 @@ namespace Rafy.Domain
         #region IEntityOrList Members
 
         /// <summary>
-        /// 实体所在的当前所在的列表对象。
+        /// 实体所在的当前列表对象。
         /// 
-        /// 虽然一个实体可以存在于多个集合中，但是，它只保留一个主要集合的引用。
-        /// <see cref="EntityList.SupressSetItemParent"/>
+        /// 虽然一个实体可以存在于多个集合中，但是，它只保留一个主要集合的引用，见：<see cref="EntityList.ResetItemParent"/>。
         /// </summary>
         public EntityList ParentList
         {

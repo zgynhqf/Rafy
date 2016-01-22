@@ -67,6 +67,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Content" />
+    <Folder Include="Content\插件" />
     <Folder Include="Content\界面生成" />
     <Folder Include="Content\框架结构" />
     <Folder Include="Content\界面生成\界面配置\" />
@@ -84,6 +85,8 @@
     <Folder Include="Content\领域实体框架\实体仓库" />
     <Folder Include="Content\领域实体框架\领域实体" />
     <Folder Include="Media" />
+    <Folder Include="Media\插件" />
+    <Folder Include="Media\插件\幽灵插件" />
     <Folder Include="Media\框架基础" />
     <Folder Include="Media\框架基础\领域驱动设计" />
     <Folder Include="Media\框架基础\模型驱动架构" />
@@ -106,7 +109,9 @@
     <ContentLayout Include="Documentation.content" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Content\插件\幽灵插件.aml" />
     <None Include="Content\授权说明.aml" />
+    <None Include="Content\插件.aml" />
     <None Include="Content\设计理念.aml" />
     <None Include="Content\框架结构\产品线工程.aml" />
     <None Include="Content\框架结构\插件化架构.aml" />
@@ -188,6 +193,14 @@
     <None Include="UML.7z" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Media\插件\幽灵插件\幽灵插件01.png">
+      <ImageId>幽灵插件01</ImageId>
+      <AlternateText>幽灵插件01</AlternateText>
+    </Image>
+    <Image Include="Media\插件\幽灵插件\幽灵插件02.png">
+      <ImageId>幽灵插件02</ImageId>
+      <AlternateText>幽灵插件02</AlternateText>
+    </Image>
     <Image Include="Media\框架基础\产品线工程\SPL_2LifeCycle.png">
       <ImageId>SPL_2LifeCycle</ImageId>
       <AlternateText>SPL 2 Life Cycle</AlternateText>

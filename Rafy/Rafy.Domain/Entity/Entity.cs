@@ -237,7 +237,10 @@ namespace Rafy.Domain
         /// Id 变更后事件。
         /// </summary>
         /// <param name="e">The <see cref="ManagedPropertyChangedEventArgs" /> instance containing the event data.</param>
-        protected virtual void OnIdChanged(ManagedPropertyChangedEventArgs e) { }
+        protected virtual void OnIdChanged(ManagedPropertyChangedEventArgs e)
+        {
+            this.SyncIdToChildren();
+        }
 
         /// <summary>
         /// 实体的标识属性。
@@ -358,17 +361,14 @@ namespace Rafy.Domain
                         var isComposition = targetList.HasManyType == HasManyType.Composition;
                         if (isComposition) { targetList.SetParentEntity(this); }
                     }
-                    else
+                    else if (grabChildren)
                     {
-                        if (grabChildren)
-                        {
-                            var children = source.GetProperty(property) as EntityList;
-                            this.LoadProperty(property, children);
-                            if (children == null) return;
+                        var children = source.GetProperty(property) as EntityList;
+                        this.LoadProperty(property, children);
+                        if (children == null) return;
 
-                            var isComposition = children.HasManyType == HasManyType.Composition;
-                            if (isComposition) { children.SetParentEntity(this); }
-                        }
+                        var isComposition = children.HasManyType == HasManyType.Composition;
+                        if (isComposition) { children.SetParentEntity(this); }
                     }
                 }
                 else

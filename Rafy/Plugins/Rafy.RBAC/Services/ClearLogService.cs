@@ -29,7 +29,7 @@ namespace Rafy.RBAC
     {
         protected override void Execute()
         {
-            using (var dba = DbAccesserFactory.Create(ConnectionStringNames.RafyPlugins))
+            using (var dba = DbAccesserFactory.Create(DbSettingNames.RafyPlugins))
             {
                 dba.RawAccesser.ExecuteText("DELETE FROM AUDITITEM");
             }

@@ -61,7 +61,7 @@ namespace Rafy.Domain.ORM
 
             DataProvider.EnsureStore();
             var items = DataProvider._memoryRows.Values.Select(v => DataProvider.FromRow(v));
-            var list = this.CreateList(items, false);
+            var list = this.CreateList(items);
             TreeHelper.MarkTreeFullLoaded(list);
 
             return list;
@@ -207,7 +207,9 @@ namespace Rafy.Domain.ORM
                 //同时由于以下代码只是对托管属性进行了拷贝，会导致一些一般字段无法复制。（参见 Rafy.RBAC.ModuleAC 实体类型。）
 
                 //返回的子对象的属性只是简单的完全Copy参数data的数据。
-                dst.Clone(src, CloneOptions.ReadDbRow());
+                var opt = CloneOptions.ReadDbRow();
+                opt.Method = CloneValueMethod.LoadProperty;
+                dst.Clone(src, opt);
             }
 
             public class MemorySaver : DataSaver

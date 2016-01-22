@@ -22,6 +22,10 @@ using Rafy.MetaModel.Attributes;
 
 namespace Rafy.Domain
 {
+    /// <summary>
+    /// 一个指定的实体的主键类型的实体基类。
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
     public abstract class Entity<TKey> : Entity, IEntity, IRafyEntity
     {
         #region 构造函数
@@ -68,19 +72,14 @@ namespace Rafy.Domain
             set { this.SetProperty(IdProperty, ref this._idFast, value); }
         }
 
-        private void OnPropertyLoaded(IManagedProperty property)
-        {
-            if (property == IdProperty)
-            {
-                this.ResetFastField(_idFast);
-            }
-        }
-
         public override void LoadProperty(IManagedProperty property, object value)
         {
             base.LoadProperty(property, value);
 
-            this.OnPropertyLoaded(property);
+            if (property == IdProperty)
+            {
+                this.ResetFastField(_idFast);
+            }
         }
 
         /// <summary>
@@ -90,8 +89,6 @@ namespace Rafy.Domain
         protected override void OnIdChanged(ManagedPropertyChangedEventArgs e)
         {
             this.ResetFastField(_idFast);
-
-            this.SyncIdToChildren();
 
             base.OnIdChanged(e);
         }

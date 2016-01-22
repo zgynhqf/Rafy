@@ -40,7 +40,7 @@ namespace Rafy.Domain
         /// </param>
         public RedundantPath(params object[] pathes)
         {
-            this.ValueProperty = ConvertParameter(pathes[pathes.Length - 1]);
+            this.ValueProperty = ConvertParameter(pathes[pathes.Length - 1], false);
 
             this.RefPathes = new ReadOnlyCollection<ConcreteProperty>(
                 pathes.Take(pathes.Length - 1)
@@ -89,21 +89,55 @@ namespace Rafy.Domain
             return res;
         }
 
-        private static ConcreteProperty ConvertParameter(object pathParameter)
+        private static ConcreteProperty ConvertParameter(object pathParameter, bool checkOwnerType = true)
         {
+            if (pathParameter == null) throw new ArgumentNullException("pathParameter");
+
+            ConcreteProperty res = null;
+
             var property = pathParameter as IProperty;
             if (property != null)
             {
                 var refProperty = property as IRefProperty;
-                if (refProperty != null) { return new ConcreteProperty(refProperty.RefIdProperty); }
-
-                return new ConcreteProperty(property);
+                if (refProperty != null)
+                {
+                    res = new ConcreteProperty(refProperty.RefIdProperty);
+                }
+                else
+                {
+                    res = new ConcreteProperty(property);
+                }
+            }
+            else
+            {
+                res = pathParameter as ConcreteProperty;
+                if (res == null)
+                {
+                    throw new InvalidProgramException(string.Format(
+                        "参数 {0} 的类型 {1} 不符合规定。原因：RedundantPath 构造函数中的参数必须是 Rafy.Domain.IProperty 类型或者 Rafy.ManagedProperty.ConcreteProperty 类型。",
+                        pathParameter, pathParameter.GetType()
+                        ));
+                }
+                else
+                {
+                    //如果给定的 ConcreteProperty 中使用的引用实体属性，那么需要转换为引用 Id 属性。
+                    var refProperty = res.Property as IRefProperty;
+                    if (refProperty is IRefEntityProperty)
+                    {
+                        res = new ConcreteProperty(refProperty.RefIdProperty, res.Owner);
+                    }
+                }
             }
 
-            var concreteProperty = pathParameter as ConcreteProperty;
-            if (concreteProperty != null) { return concreteProperty; }
+            if (checkOwnerType && res.Owner.IsAbstract)
+            {
+                throw new InvalidProgramException(string.Format(
+                    "冗余属性路径中的引用属性 {0}.{1} 定义在抽象的父类中，不能被直接使用。请使用 Rafy.ManagedProperty.ConcreteProperty 类型为该引用属性指定具体的子类型。",
+                    res.Owner.Name, res.Property.Name
+                    ));
+            }
 
-            throw new InvalidOperationException(string.Format("RedundantPath 构造函数中的参数必须是 IProperty 类型或者 ConcreteProperty 类型，参数 {0} 不符合规定。", pathParameter));
+            return res;
         }
     }
 }

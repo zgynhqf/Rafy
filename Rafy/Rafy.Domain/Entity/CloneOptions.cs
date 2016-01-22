@@ -64,17 +64,17 @@ namespace Rafy.Domain
             return new CloneOptions(CloneActions.NormalProperties | CloneActions.RefEntities | CloneActions.ChildrenRecur);
         }
 
-        /// <summary>
-        /// 从旧实体中合并值。
-        /// 
-        /// 复制完成后，旧实体不再可用。
-        /// 
-        /// CloneActions.NormalProperties | CloneActions.GrabChildren
-        /// </summary>
-        public static CloneOptions MergeOldEntity()
-        {
-            return new CloneOptions(CloneActions.NormalProperties | CloneActions.GrabChildren);
-        }
+        ///// <summary>
+        ///// 从旧实体中合并值。
+        ///// 
+        ///// 复制完成后，旧实体不再可用。
+        ///// 
+        ///// CloneActions.NormalProperties | CloneActions.GrabChildren
+        ///// </summary>
+        //public static CloneOptions MergeOldEntity()
+        //{
+        //    return new CloneOptions(CloneActions.NormalProperties | CloneActions.GrabChildren);
+        //}
 
         private CloneActions _actions;
 
@@ -98,12 +98,14 @@ namespace Rafy.Domain
         public CloneOptions(CloneActions cloneActions)
         {
             this._actions = cloneActions;
-            this.Method = CloneValueMethod.LoadProperty;
+            this.Method = CloneValueMethod.SetProperty;
         }
 
         /// <summary>
         /// 值在复制时使用的方法。
-        /// 默认值：LoadProperty。
+        /// 默认值：<see cref="CloneValueMethod.SetProperty"/>。
+        /// 
+        /// <note type="note">使用设置属性的方式来拷贝值，这样可以使得冗余属性知道自己变更了。</note>
         /// </summary>
         public CloneValueMethod Method { get; set; }
 
@@ -179,13 +181,13 @@ namespace Rafy.Domain
     public enum CloneActions
     {
         /// <summary>
-        /// 拷贝一般的属性
-        /// </summary>
-        NormalProperties = 1,
-        /// <summary>
         /// 拷贝Id
         /// </summary>
-        IdProperty = 2,
+        IdProperty = 1,
+        /// <summary>
+        /// 拷贝一般的属性
+        /// </summary>
+        NormalProperties = 2,
         /// <summary>
         /// 拷贝引用的对象
         /// </summary>
@@ -195,14 +197,14 @@ namespace Rafy.Domain
         /// </summary>
         ParentRefEntity = 8,
         /// <summary>
+        /// 使用相同的拷贝方案，递归拷贝子对象及树的子节点。
+        /// </summary>
+        ChildrenRecur = 16,
+        /// <summary>
         /// 抢夺对方的组合子。
         /// 组合子集合属性中的所有孩子对象的父指针也已经被更改为新实体。
         /// </summary>
-        GrabChildren = 16,
-        /// <summary>
-        /// 使用相同的拷贝方案，递归拷贝子对象及树的子节点。
-        /// </summary>
-        ChildrenRecur = 32
+        GrabChildren = 32
     }
 
     /// <summary>

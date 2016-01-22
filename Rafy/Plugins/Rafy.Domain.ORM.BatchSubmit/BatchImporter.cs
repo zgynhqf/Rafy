@@ -143,15 +143,17 @@ namespace Rafy.Domain.ORM.BatchSubmit
         {
             foreach (var section in this.EnumerateAllBatches(batch.DeleteBatch, 1000))
             {
-                FormattedSql sqlDelete = null;
+                var sqlDelete = new FormattedSql();
                 if (batch.Repository.EntityMeta.IsPhantomEnabled)
                 {
-                    sqlDelete = "UPDATE " + batch.Table.Name + " SET ISPHANTOM = {0} WHERE ID IN (";
-                    sqlDelete.Parameters.Add(BooleanBoxes.True);
+                    var isPhantomColumn = batch.Table.FindByPropertyName(EntityConvention.Property_IsPhantom.Name).Name;
+                    sqlDelete.Append("UPDATE ").Append(batch.Table.Name).Append(" SET ")
+                        .Append(isPhantomColumn).Append(" = ").AppendParameter(BooleanBoxes.True)
+                        .Append(" WHERE ID IN (");
                 }
                 else
                 {
-                    sqlDelete = "DELETE FROM " + batch.Table.Name + " WHERE ID IN (";
+                    sqlDelete.Append("DELETE FROM ").Append(batch.Table.Name).Append(" WHERE ID IN (");
                 }
 
                 bool needDelimiter = false;

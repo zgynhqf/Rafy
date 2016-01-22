@@ -182,6 +182,7 @@ namespace Rafy.Data
             {
                 var dtRow = table.NewRow();
                 dtRow.ItemArray = row.Values;
+                table.Rows.Add(dtRow);
             }
 
             return table;

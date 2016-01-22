@@ -5527,6 +5527,7 @@ ORDER BY Article.Code ASC");
             {
                 var watch = new System.Diagnostics.Stopwatch();
 
+                var now = (object)DateTime.Now;
                 using (var dba = DbAccesserFactory.Create(repo))
                 {
                     var isOracle = DbSetting.IsOracleProvider(dba.ConnectionSchema);
@@ -5538,8 +5539,10 @@ ORDER BY Article.Code ASC");
                         for (int i = 0; i < Config_LineCount; i++)
                         {
                             dba.RawAccesser.ExecuteText(
-                                "INSERT INTO Book (Author,BookCategoryId,BookLocId,Code,Content,Name,Price,Publisher) VALUES ('', NULL, NULL, '', '', @p0, NULL, '')",
-                                dba.RawAccesser.ParameterFactory.CreateParameter("p0", i)
+                                "INSERT INTO Book (Author,BookCategoryId,BookLocId,Code,Content,Name,Price,Publisher,CreatedTime,UpdatedTime) VALUES ('', NULL, NULL, '', '', @p0, NULL, '', @p1, @p2)",
+                                dba.RawAccesser.ParameterFactory.CreateParameter("p0", i),
+                                dba.RawAccesser.ParameterFactory.CreateParameter("p1", now),
+                                dba.RawAccesser.ParameterFactory.CreateParameter("p2", now)
                                 );
 
                             //不用参数化的查询会更慢。
@@ -5551,9 +5554,11 @@ ORDER BY Article.Code ASC");
                         for (int i = 0; i < Config_LineCount; i++)
                         {
                             dba.RawAccesser.ExecuteText(
-                                "INSERT INTO Book (Author,BookCategoryId,BookLocId,Code,Content,Name,Price,Publisher,Id) VALUES ('', NULL, NULL, '', '', :p0, NULL, '', :p1)",
+                                "INSERT INTO Book (Author,BookCategoryId,BookLocId,Code,Content,Name,Price,Publisher,Id,CreatedTime,UpdatedTime) VALUES ('', NULL, NULL, '', '', :p0, NULL, '', :p1, :p2, :p3)",
                                 dba.RawAccesser.ParameterFactory.CreateParameter("p0", i),
-                                dba.RawAccesser.ParameterFactory.CreateParameter("p1", i)
+                                dba.RawAccesser.ParameterFactory.CreateParameter("p1", i),
+                                dba.RawAccesser.ParameterFactory.CreateParameter("p2", now),
+                                dba.RawAccesser.ParameterFactory.CreateParameter("p3", now)
                                 );
 
                             //不用参数化的查询会更慢。
@@ -5584,6 +5589,7 @@ ORDER BY Article.Code ASC");
             {
                 var watch = new System.Diagnostics.Stopwatch();
 
+                var now = (object)DateTime.Now;
                 using (var dba = DbAccesserFactory.Create(repo))
                 {
                     var isOracle = DbSetting.IsOracleProvider(dba.ConnectionSchema);
@@ -5595,7 +5601,7 @@ ORDER BY Article.Code ASC");
                         for (int i = 0; i < Config_LineCount; i++)
                         {
                             dba.ExecuteText(
-                                "INSERT INTO Book (Author,BookCategoryId,BookLocId,Code,Content,Name,Price,Publisher) VALUES ({0},{1},{2},{3},{4},{5},{6},{7})",
+                                "INSERT INTO Book (Author,BookCategoryId,BookLocId,Code,Content,Name,Price,Publisher,CreatedTime,UpdatedTime) VALUES ({0},{1},{2},{3},{4},{5},{6},{7},{8},{9})",
                                 string.Empty,
                                 null,
                                 null,
@@ -5603,7 +5609,9 @@ ORDER BY Article.Code ASC");
                                 string.Empty,
                                 i.ToString(),
                                 null,
-                                string.Empty
+                                string.Empty,
+                                now,
+                                now
                                 );
                         }
                     }
@@ -5612,7 +5620,7 @@ ORDER BY Article.Code ASC");
                         for (int i = 0; i < Config_LineCount; i++)
                         {
                             dba.ExecuteText(
-                                "INSERT INTO Book (Author,BookCategoryId,BookLocId,Code,Content,Name,Price,Publisher,Id) VALUES ({0},{1},{2},{3},{4},{5},{6},{7},{8})",
+                                "INSERT INTO Book (Author,BookCategoryId,BookLocId,Code,Content,Name,Price,Publisher,Id,CreatedTime,UpdatedTime) VALUES ({0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10})",
                                 string.Empty,
                                 null,
                                 null,
@@ -5621,7 +5629,9 @@ ORDER BY Article.Code ASC");
                                 i.ToString(),
                                 null,
                                 string.Empty,
-                                i.ToString()
+                                i.ToString(),
+                                now,
+                                now
                                 );
                         }
                     }

@@ -20,6 +20,9 @@ using Rafy.MetaModel;
 
 namespace Rafy.Domain
 {
+    /// <summary>
+    /// 实体元数据的扩展。
+    /// </summary>
     public static class EntityMetaPhantomExtension
     {
         /// <summary>

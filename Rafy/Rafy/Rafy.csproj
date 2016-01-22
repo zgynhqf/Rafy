@@ -73,6 +73,7 @@
     <Compile Include="ComponentModel\ObjectContainerToServiceConatinerAdapter.cs" />
     <Compile Include="ComponentModel\SimpleObjectContainer.cs" />
     <Compile Include="Configuration\DynamicBoolean.cs" />
+    <Compile Include="Configuration\PluginsConfigurationElement.cs" />
     <Compile Include="Configuration\WebConfigurationElement.cs" />
     <Compile Include="Configuration\WPFConfigurationElement.cs" />
     <Compile Include="Domain\EntityConvention.cs" />
@@ -108,7 +109,7 @@
     <Compile Include="MetaModel\View\WPFCommandCollection.cs" />
     <Compile Include="Permission\AnonymousPrincipal.cs" />
     <Compile Include="Permission\PermissionProvider.cs" />
-    <Compile Include="ComponentModel\PluginTable.cs" />
+    <Compile Include="ComponentModel\PluginCollection.cs" />
     <Compile Include="Translation\EmptyTranslator.cs" />
     <Compile Include="Translation\Translator.cs" />
     <Compile Include="ComponentModel\DomainPlugin.cs" />
@@ -195,7 +196,6 @@
     <Compile Include="Permission\IRafyIdentity.cs" />
     <Compile Include="Permission\PermissionMgr.cs" />
     <Compile Include="Permission\SystemOperationKeys.cs" />
-    <Compile Include="ComponentModel\PluginAssembly.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ComponentModel\ReuseLevel.cs" />
     <Compile Include="Utils\Caching\Cache.cs" />
@@ -229,7 +229,7 @@
     <Compile Include="WCF\BinaryFormatter\EnableBinaryFormatterBehaviorElement.cs" />
     <Compile Include="WCF\NetDataContract\NetDataContractOperationBehavior.cs" />
     <Compile Include="WCF\NetDataContract\UseNetDataContractAttribute.cs" />
-    <Compile Include="ComponentModel\WebAppContextProvider.cs" />
+    <Compile Include="ComponentModel\WebOrThreadAppContextProvider.cs" />
     <Compile Include="Web\ClientEntities.cs" />
     <Compile Include="Web\JsonServiceAttribute.cs" />
   </ItemGroup>

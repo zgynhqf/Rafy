@@ -24,48 +24,20 @@ namespace Rafy.Domain.EntityPhantom
     /// </summary>
     public static class PhantomQueryContext
     {
-        private const string NeedPhantomDataKey = "Rafy.Domain.EntityPhantom.PhantomQueryContext.NeedPhantomData";
-
         /// <summary>
         /// 是否需要同时查询幽灵实体。
         /// </summary>
-        internal static bool NeedPhantomData
-        {
-            get
-            {
-                object value = null;
-                AppContext.Items.TryGetValue(NeedPhantomDataKey, out value);
-                return value == null ? false : (bool)value;
-            }
-            private set { AppContext.Items[NeedPhantomDataKey] = BooleanBoxes.Box(value); }
-        }
+        internal static readonly AppContextItem<bool> NeedPhantomData =
+            new AppContextItem<bool>("Rafy.Domain.EntityPhantom.PhantomQueryContext.NeedPhantomData");
 
         /// <summary>
         /// 关闭不自动过滤幽灵数据。
         /// 调用此方法来声明一个需要查询幽灵实体的代码段。
         /// </summary>
-        /// <param name="tenantId"></param>
         /// <returns></returns>
         public static IDisposable DontFilterPhantoms()
         {
-            var scope = new PhantomDataScopeAgent
-            {
-                OldValue = NeedPhantomData
-            };
-
-            NeedPhantomData = true;
-
-            return scope;
-        }
-
-        private class PhantomDataScopeAgent : IDisposable
-        {
-            internal bool OldValue;
-
-            public void Dispose()
-            {
-                PhantomQueryContext.NeedPhantomData = OldValue;
-            }
+            return NeedPhantomData.UseScopeValue(true);
         }
     }
 }

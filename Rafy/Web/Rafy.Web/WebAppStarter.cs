@@ -47,7 +47,8 @@ namespace Rafy.Web
         /// <summary>
         /// 把指定的领域应用程序启动。
         /// </summary>
-        /// <param name="context"></param>
+        /// <param name="app">The application.</param>
+        /// <exception cref="System.ArgumentNullException">app</exception>
         public void Start(DomainApp app)
         {
             if (app == null) throw new ArgumentNullException("app");

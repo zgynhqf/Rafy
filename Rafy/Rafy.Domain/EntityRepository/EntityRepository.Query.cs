@@ -1057,7 +1057,7 @@ namespace Rafy.Domain
 
                 //把参数的值设置到数组中，如果值是 null，则需要使用参数的类型。
                 ieqc.Parameters[i] = argumentExp.Value ??
-                    new MethodCaller.NullParameter { ParameterType = argumentExp.Type };
+                    new NullParameter { ParameterType = argumentExp.Type };
             }
 
             //方法转换
@@ -1143,10 +1143,12 @@ namespace Rafy.Domain
         Entity IRepositoryInternal.ConvertRow(Entity row)
         {
             var entity = Entity.New(row.GetType());
-            entity.PersistenceStatus = PersistenceStatus.Unchanged;
 
             //返回的子对象的属性只是简单的完全Copy参数data的数据。
-            entity.Clone(row, CloneOptions.ReadDbRow());
+            var opt = CloneOptions.ReadDbRow();
+            opt.Method = CloneValueMethod.LoadProperty;
+            entity.Clone(row, opt);
+            entity.PersistenceStatus = PersistenceStatus.Unchanged;
 
             this.NotifyLoaded(entity);
 

@@ -35,26 +35,24 @@ namespace ConsoleHost
         {
             RafyEnvironment.Provider.IsDebuggingEnabled = ConfigurationHelper.GetAppSettingOrDefault("IsDebuggingEnabled", false);
 
-            //PluginTable.DomainLibraries.AddPlugin<FundMngPlugin>();
-
             base.InitEnvironment();
         }
 
-        protected override void OnRuntimeStarting()
-        {
-            base.OnRuntimeStarting();
+        //protected override void OnRuntimeStarting()
+        //{
+        //    base.OnRuntimeStarting();
 
-            //if (ConfigurationHelper.GetAppSettingOrDefault("ConsoleHost_AutoUpdateDb", true))
-            //{
-            //    var svc = ServiceFactory.Create<MigrateService>();
-            //    svc.Options = new MigratingOptions
-            //    {
-            //        //ReserveHistory = true,//ReserveHistory 表示是否需要保存所有数据库升级的历史记录
-            //        RunDataLossOperation = DataLossOperation.All,//要支持数据库表、字段的删除操作，取消本行注释。
-            //        Databases = new string[] { FundMngEntityRepositoryDataProvider.DbSettingName }
-            //    };
-            //    svc.Invoke();
-            //}
-        }
+        //    if (ConfigurationHelper.GetAppSettingOrDefault("ConsoleHost_AutoUpdateDb", true))
+        //    {
+        //        var svc = ServiceFactory.Create<MigrateService>();
+        //        svc.Options = new MigratingOptions
+        //        {
+        //            //ReserveHistory = true,//ReserveHistory 表示是否需要保存所有数据库升级的历史记录
+        //            RunDataLossOperation = DataLossOperation.All,//要支持数据库表、字段的删除操作，取消本行注释。
+        //            Databases = new string[] { "FundMng" }
+        //        };
+        //        svc.Invoke();
+        //    }
+        //}
     }
 }

@@ -18,7 +18,7 @@ namespace Rafy.UnitTest.WCFPortal
             RafyEnvironment.Provider.IsDebuggingEnabled = HttpContext.Current.IsDebuggingEnabled;
             RafyEnvironment.Provider.DllRootDirectory = Path.Combine(RafyEnvironment.Provider.RootDirectory, "Bin");
 
-            PluginTable.DomainLibraries.AddPlugin<UnitTestPlugin>();
+            RafyEnvironment.DomainPlugins.Add(new UnitTestPlugin());
 
             var app = new DomainApp();
             app.Startup();

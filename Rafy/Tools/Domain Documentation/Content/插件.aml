@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="2a81b03d-24b4-4463-9e57-34cbaa105adf" revisionNumber="1">
+    <developerConceptualDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+
+
+        <introduction>
+            <para>插件</para>
+            <para>本章包含一些相关的 Rafy 插件。</para>
+            <!--<para>本章将包含以下内容：</para>
+            <list class="bullet">
+                <listItem>
+                    <para>创建领域项目</para>
+                </listItem>
+                <listItem>
+                    <para>连接到 Sql Server</para>
+                </listItem>
+            </list>-->
+        </introduction>
+
+        <relatedTopics>
+        </relatedTopics>
+    </developerConceptualDocument>
+</topic>

@@ -37,6 +37,20 @@ namespace Rafy.Configuration
             set { this["web"] = value; }
         }
 
+        [ConfigurationProperty("domainPlugins")]
+        public PluginsConfigurationElement DomainPlugins
+        {
+            get { return (PluginsConfigurationElement)this["domainPlugins"]; }
+            set { this["domainPlugins"] = value; }
+        }
+
+        [ConfigurationProperty("uiPlugins")]
+        public PluginsConfigurationElement UIPlugins
+        {
+            get { return (PluginsConfigurationElement)this["uiPlugins"]; }
+            set { this["uiPlugins"] = value; }
+        }
+
         #endregion
 
         /// <summary>

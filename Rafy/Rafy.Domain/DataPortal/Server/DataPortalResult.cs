@@ -11,6 +11,7 @@
 *******************************************************/
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using Rafy.Serialization.Mobile;
 
@@ -26,7 +27,7 @@ namespace Rafy.Domain.DataPortal
     {
         private object _returnObject;
 
-        private HybridDictionary _globalContext;
+        private Dictionary<string,object> _globalContext;
 
         /// <summary>
         /// The business object being returned from
@@ -41,7 +42,7 @@ namespace Rafy.Domain.DataPortal
         /// The global context being returned from
         /// the server.
         /// </summary>
-        public HybridDictionary GlobalContext
+        public Dictionary<string, object> GlobalContext
         {
             get { return _globalContext; }
         }
@@ -51,7 +52,7 @@ namespace Rafy.Domain.DataPortal
         /// </summary>
         public DataPortalResult()
         {
-            _globalContext = DistributionContext.GetGlobalContext();
+            _globalContext = DistributionContext.GlobalContextItem.Value;
         }
 
         /// <summary>
@@ -62,7 +63,7 @@ namespace Rafy.Domain.DataPortal
         public DataPortalResult(object returnObject)
         {
             _returnObject = returnObject;
-            _globalContext = DistributionContext.GetGlobalContext();
+            _globalContext = DistributionContext.GlobalContextItem.Value;
         }
     }
 }

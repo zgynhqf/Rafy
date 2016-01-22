@@ -30,6 +30,19 @@ namespace Rafy.Domain
 
         private RepositoryDataProvider _dataProvider;
 
+        private SubmitInterceptorList _submitter;
+
+        private static IList<Type> _submitInterceptors = new List<Type>();
+
+        /// <summary>
+        /// 提交功能的拦截器类型列表。
+        /// </summary>
+        public static IList<Type> SubmitInterceptors
+        {
+            get { return _submitInterceptors; }
+            internal set { _submitInterceptors = value; }
+        }
+
         /// <summary>
         /// Initializes the specified data provider.
         /// </summary>
@@ -38,6 +51,14 @@ namespace Rafy.Domain
         {
             _dataProvider = dataProvider;
             _repository = dataProvider.Repository;
+
+            //创建提交的拦截器列表。
+            _submitter = new SubmitInterceptorList();
+            _submitter.Add(dataProvider);
+            foreach (var type in _submitInterceptors)
+            {
+                _submitter.Add(type);
+            }
         }
 
         #region DeletingChildrenInMemory
@@ -341,13 +362,14 @@ namespace Rafy.Domain
             //创建提交数据的参数。
             var args = new SubmitArgs
             {
+                DataProvider = _dataProvider,
                 Entity = entity,
                 WithTreeChildren = withTreeChildren,
                 Action = GetAction(entity)
             };
 
             //提交更改。
-            _dataProvider.Submit(args);
+            _submitter.Submit(args);
 
             //保存完毕，修改实体的状态
             switch (args.Action)

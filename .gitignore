@@ -2,6 +2,9 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
+*.user
+/.gitattributes
+/.vs
 /Rafy/Rafy.Domain/obj/Debug
 /Rafy/Rafy.Domain/bin/Debug
 /Rafy/Rafy.ManagedProperty/bin/Debug
@@ -92,13 +95,11 @@
 /Demo/Demo/bin/Debug
 /Demo/Demo.Customer1/bin/Debug
 /Rafy/Tools/Domain Documentation/Help
-*.user
 /Demo/Evaluation/bin/Debug
 /Demo/Evaluation/obj/Debug
 /Demo/Evaluation.WPF/bin/Debug
 /Demo/Evaluation.WPF/obj/Debug
 /Demo/MonthPlan/obj/Debug
-/.gitattributes
 /Demo/FinanceManagement/obj/Debug
 /Demo/P2PEvaluation/bin/Debug
 /Demo/P2PEvaluation/obj/Debug
@@ -110,9 +111,11 @@
 /Rafy/Plugins/Rafy.BatchSubmit/Rafy.BatchSubmit.SqlServer/obj/Debug
 /Rafy/Plugins/Rafy.Domain.ORM.BatchSubmit/bin/Debug
 /Rafy/Plugins/Rafy.Domain.ORM.BatchSubmit/obj/Debug
-/.vs
+/Rafy/Rafy.DbMigration/obj/Release
+/Rafy/Rafy.Utils/obj/Release
 /Rafy/Plugins/Rafy.Domain.EntityPhantom/bin/Debug
 /Rafy/Plugins/Rafy.Domain.EntityPhantom/obj/Debug
-/Rafy/Rafy.DbMigration/obj/Release
-/Rafy/Tools/Rafy.EntityObjectModel/obj/Release
-/Rafy/Rafy.Utils/obj/Release
+/Rafy/Plugins/Rafy.Domain.Stamp/bin/Debug
+/Rafy/Plugins/Rafy.Domain.Stamp/obj/Debug
+/Rafy/Plugins/Rafy.Accounts/bin/Debug
+/Rafy/Plugins/Rafy.Accounts/obj/Debug

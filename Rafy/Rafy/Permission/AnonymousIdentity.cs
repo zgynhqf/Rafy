@@ -26,7 +26,7 @@ namespace Rafy
     [Serializable]
     public class AnonymousIdentity : IIdentity, IRafyIdentity
     {
-        int IRafyIdentity.Id
+        object IRafyIdentity.Id
         {
             get { return 0; }
         }
@@ -48,7 +48,7 @@ namespace Rafy
 
         string IIdentity.Name
         {
-            get { return string.Empty; }
+            get { return "Anonymous User"; }
         }
     }
 }

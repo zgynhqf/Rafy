@@ -41,11 +41,12 @@ namespace Rafy.Web
 
             this.WriteFields();
 
-            this.WriteReference();
+            //以下代码与 EXTJS 5 有冲突。
+            //this.WriteReference();
 
-            this.WriteChildren();
+            //this.WriteChildren();
 
-            this.WriteTreeAssociations();
+            //this.WriteTreeAssociations();
 
             return _entityModel;
         }
@@ -67,7 +68,18 @@ namespace Rafy.Web
                     }
                 }
 
-                var serverType = ServerTypeHelper.GetServerType(property.PropertyType);
+                var propertyType = mp.PropertyType;
+                if (mp is IRefProperty)
+                {
+                    var refProperty = mp as IRefProperty;
+                    propertyType = refProperty.RefIdProperty.KeyProvider.KeyType;
+                }
+                else if (mp == Entity.TreePIdProperty)
+                {
+                    propertyType = this.EntityMeta.IdType;
+                }
+
+                var serverType = ServerTypeHelper.GetServerType(propertyType);
                 if (serverType.Name == SupportedServerType.Unknown) { continue; }
 
                 var pName = property.Name;
@@ -78,26 +90,24 @@ namespace Rafy.Web
                     persist = property.Runtime.CanWrite,
                 };
 
-                if (mp != null)
+                if (mp is IRefProperty)
                 {
+                    //暂时去除。
                     //为外键添加一个视图属性
-                    if (mp is IRefProperty)
-                    {
-                        _entityModel.fields.Add(field);
+                    //_entityModel.fields.Add(field);
 
-                        var refMp = mp as IRefProperty;
-                        field = new EntityField
-                        {
-                            name = LabeledRefProperty(pName),
-                            type = ServerTypeHelper.GetServerType(typeof(string)),
-                            persist = false,
-                        };
-                    }
-                    else
-                    {
-                        var v = mp.GetMeta(this.EntityMeta.EntityType).DefaultValue;
-                        field.defaultValue = EntityJsonConverter.ToClientValue(property.PropertyType, v);
-                    }
+                    //var refMp = mp as IRefProperty;
+                    //field = new EntityField
+                    //{
+                    //    name = LabeledRefProperty(pName),
+                    //    type = ServerTypeHelper.GetServerType(typeof(string)),
+                    //    persist = false,
+                    //};
+                }
+                else
+                {
+                    var v = mp.GetMeta(this.EntityMeta.EntityType).DefaultValue;
+                    field.defaultValue = EntityJsonConverter.ToClientValue(property.PropertyType, v);
                 }
 
                 _entityModel.fields.Add(field);

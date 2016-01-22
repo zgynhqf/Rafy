@@ -436,17 +436,26 @@ namespace Rafy.Domain
         /// 列表的数据来自于 srcList 中的所有项。
         /// </summary>
         /// <param name="srcList"></param>
-        /// <param name="resetParent">此参数表示是否需要把 srcList 中的每一项的父列表对象都设置为返回的新列表。</param>
         /// <returns></returns>
-        public EntityList CreateList(IEnumerable srcList, bool resetParent = true)
+        public EntityList CreateList(IEnumerable srcList)
+        {
+            return this.CreateList(srcList, false);
+        }
+
+        /// <summary>
+        /// 创建一个列表。
+        /// 列表的数据来自于 srcList 中的所有项。
+        /// </summary>
+        /// <param name="srcList"></param>
+        /// <param name="resetParent">此参数表示是否需要把 srcList 中的每一个实体的 <see cref="Entity.ParentList"/> 属性设置为新列表，并把实体的 ParentEntity 也设置为新列表的父实体。</param>
+        /// <returns></returns>
+        public EntityList CreateList(IEnumerable srcList, bool resetParent)
         {
             var list = NewListFast();
 
-            list.SupressSetItemParent = !resetParent;
+            list.ResetItemParent = resetParent;
 
             list.LoadData(srcList);
-
-            list.SupressSetItemParent = false;
 
             this.NotifyLoaded(list);
 

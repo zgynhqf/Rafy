@@ -69,7 +69,7 @@ namespace Rafy.Domain.ORM.DbMigration.Presistence
         {
             internal protected override string ConnectionStringSettingName
             {
-                get { return ConnectionStringNames.DbMigrationHistory; }
+                get { return DbSettingNames.DbMigrationHistory; }
             }
         }
     }

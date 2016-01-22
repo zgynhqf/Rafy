@@ -409,7 +409,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void UtilsTest_Reflection_MethodCaller_ArgumentMatch3()
         {
-            var res = (int)MethodCaller.CallMethod(this, "TestArguments", 1, new MethodCaller.NullParameter { ParameterType = typeof(string) });
+            var res = (int)MethodCaller.CallMethod(this, "TestArguments", 1, new NullParameter { ParameterType = typeof(string) });
             Assert.IsTrue(res == 2);
         }
 

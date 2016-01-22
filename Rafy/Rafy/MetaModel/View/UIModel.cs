@@ -85,7 +85,7 @@ namespace Rafy.MetaModel.View
                 if (Directory.Exists(dir)) { WebCommands.AddByDirectory(dir); }
 
                 //加入所有 Library 中 Commands 文件夹下的 js Resource。
-                foreach (var plugin in RafyEnvironment.GetAllPlugins())
+                foreach (var plugin in RafyEnvironment.AllPlugins)
                 {
                     WebCommands.AddByAssembly(plugin.Assembly);
                 }
@@ -93,7 +93,7 @@ namespace Rafy.MetaModel.View
             else
             {
                 //加入所有 Module 中 Commands。
-                foreach (var plugin in RafyEnvironment.GetAllPlugins())
+                foreach (var plugin in RafyEnvironment.AllPlugins)
                 {
                     WPFCommands.AddByAssembly(plugin.Assembly);
                 }

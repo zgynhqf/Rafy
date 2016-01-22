@@ -43,6 +43,7 @@ namespace Rafy.ComponentModel
             this.PrepareToStartup();
 
             this.InitEnvironment();
+            RafyEnvironment.LockPlugins();
 
             //注册所有扩展属性
             //由于插件的 Intialize 方法中的应用层代码，有可能主动使用实体类而造成实体类的静态构造函数被执行，
@@ -50,7 +51,7 @@ namespace Rafy.ComponentModel
             RafyEnvironment.InitExtensionProperties();
 
             //调用所有插件的 Initialize 方法。
-            this.InitAllPlugins();
+            RafyEnvironment.InitPlugins();
             this.OnAllPluginsIntialized();
 
             //初始化编译期元数据
@@ -89,9 +90,6 @@ namespace Rafy.ComponentModel
         /// </summary>
         protected virtual void PrepareToStartup()
         {
-            PluginTable.DomainLibraries.Unlock();
-            PluginTable.UILibraries.Unlock();
-
             RafyEnvironment.Reset();
             CommonModel.Reset();
             UIModel.Reset();
@@ -124,44 +122,12 @@ namespace Rafy.ComponentModel
             //如果是网站，则一个 HttpContext 使用一个身份（上下文）；否则，每个线程使用一个单独的身份（上下文）。
             else if (HttpContext.Current != null)
             {
-                AppContext.SetProvider(new WebAppContextProvider());
+                AppContext.SetProvider(new WebOrThreadAppContextProvider());
             }
 
             RafyEnvironment.InitCustomizationPath();
 
             RafyEnvironment.SetApp(this);
-        }
-
-        /// <summary>
-        /// 初始化所有Plugins
-        /// </summary>
-        private void InitAllPlugins()
-        {
-            //先初始化实体插件
-            RafyEnvironment.StartupDomainPlugins();
-
-            //初始化界面插件。
-            RafyEnvironment.StartupUIPlugins();
-
-            //switch (RafyEnvironment.Location)
-            //{
-            //    case RafyLocation.WPFClient:
-            //    case RafyLocation.LocalVersion:
-            //        //初始化界面插件。
-            //        RafyEnvironment.StartupUIPlugins();
-            //        break;
-
-            //    case RafyLocation.WCFServer:
-            //    case RafyLocation.WebServer:
-            //    default:
-
-            //        //在配置文件中配置好 <probing privatePath="bin/Library;bin/Module"/> 即可，不需要使用代码加载。
-            //        ////虽然服务端不需要初始化所有 Module 插件，但是也需要把它们的 dll 加载到程序中，
-            //        ////这是因为有一些实体插件并没有按照严格的分层，是直接把 WPF 界面层代码也放在其中的。
-            //        ////这种情况下，如果不加载这些 Module 对应的 dll，则这些插件无法正常启动。
-            //        //foreach (var m in RafyEnvironment.GetAllModules()) { }
-            //        break;
-            //}
         }
 
         /// <summary>

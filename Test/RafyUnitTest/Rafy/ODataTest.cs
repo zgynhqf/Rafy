@@ -401,6 +401,26 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
         }
 
         [TestMethod]
+        public void ODT_Filter_EnumValue_UseLabel()
+        {
+            var repo = RF.Concrete<TestRoleRepository>();
+            var q = Parse("RoleType ne 管理员", repo);
+            var sql = QueryNodeTester.GenerateTestSql(q.Where);
+
+            Assert.IsTrue(sql.ToString() == @"Roles.RoleType != {0}");
+        }
+
+        [TestMethod]
+        public void ODT_Filter_EnumValue_UseLabel_WithQuote()
+        {
+            var repo = RF.Concrete<TestRoleRepository>();
+            var q = Parse("RoleType ne '管理员'", repo);
+            var sql = QueryNodeTester.GenerateTestSql(q.Where);
+
+            Assert.IsTrue(sql.ToString() == @"Roles.RoleType != {0}");
+        }
+
+        [TestMethod]
         public void ODT_Filter_EnumValue_Nullable()
         {
             var repo = RF.Concrete<TestRoleRepository>();

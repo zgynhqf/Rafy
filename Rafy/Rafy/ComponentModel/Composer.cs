@@ -109,7 +109,7 @@ namespace Rafy.ComponentModel
         /// </summary>
         public static void RegisterAllPluginsByAttribute()
         {
-            var assemblies = RafyEnvironment.GetAllPlugins().Select(p => p.Assembly);
+            var assemblies = RafyEnvironment.AllPlugins.Select(p => p.Assembly);
             RegisterByAttribute(assemblies);
         }
 

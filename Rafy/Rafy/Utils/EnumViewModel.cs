@@ -6,6 +6,7 @@ using System.Reflection;
 using Rafy.MetaModel.Attributes;
 using Rafy;
 using Rafy.Reflection;
+using System.ComponentModel;
 
 namespace Rafy.Utils
 {
@@ -96,30 +97,22 @@ namespace Rafy.Utils
         }
 
         /// <summary>
-        /// 把 Label 解析为目标枚举类型中对应的枚举值。
+        /// 把 Label 或 Name 解析为目标枚举类型中对应的枚举值。
         /// </summary>
-        /// <param name="str"></param>
+        /// <param name="labelOrName"></param>
         /// <param name="enumType">枚举类型（不接受可空类型）</param>
         /// <returns></returns>
-        public static object LabelToEnum(string str, Type enumType)
+        public static object LabelToEnum(string labelOrName, Type enumType)
         {
-            FieldInfo[] fieldInfos = enumType.GetFields();
+            FieldInfo[] fields = enumType.GetFields();
 
-            foreach (var item in fieldInfos)
+            for (int i = 0; i < fields.Length; i++)
             {
-                var attr = item.GetSingleAttribute<LabelAttribute>();
-                if (attr != null && attr.Label == str)
+                var field = fields[i];
+                var attr = field.GetSingleAttribute<DisplayNameAttribute>();
+                if (attr != null && attr.DisplayName == labelOrName || field.Name == labelOrName)
                 {
-                    return Enum.Parse(enumType, item.Name, true);
-                }
-            }
-
-            //如果在 Label 中没有找到，那这个 label 其实就是枚举本身的名称。
-            foreach (var item in fieldInfos)
-            {
-                if (item.Name == str)
-                {
-                    return Enum.Parse(enumType, item.Name, true);
+                    return Enum.Parse(enumType, field.Name, true);
                 }
             }
 
@@ -138,10 +131,10 @@ namespace Rafy.Utils
             FieldInfo fieldInfo = type.GetField(value.ToString());
             if (null != fieldInfo)
             {
-                var attri = fieldInfo.GetSingleAttribute<LabelAttribute>();
+                var attri = fieldInfo.GetSingleAttribute<DisplayNameAttribute>();
                 if (attri != null)
                 {
-                    return attri.Label;
+                    return attri.DisplayName;
                 }
             }
 

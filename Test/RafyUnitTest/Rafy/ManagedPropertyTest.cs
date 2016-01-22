@@ -641,7 +641,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void MPT_Redundancy_UpdateB()
+        public void MPT_Redundancy_AutoUpdateB()
         {
             using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
             {
@@ -660,7 +660,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void MPT_Redundancy_UpdateC()
+        public void MPT_Redundancy_AutoUpdateC()
         {
             using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
             {
@@ -685,7 +685,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void MPT_Redundancy_UpdateCByRefChanged()
+        public void MPT_Redundancy_AutoUpdateCByRefChanged()
         {
             using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
             {
@@ -710,7 +710,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void MPT_Redundancy_UpdateDEByRefChanged()
+        public void MPT_Redundancy_AutoUpdateDEByRefChanged()
         {
             using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
             {
@@ -743,6 +743,25 @@ namespace RafyUnitTest
                 var eInDb = RF.Concrete<ERepository>().GetById(e.Id) as E;
                 Assert.AreEqual(eInDb.ANameFromDCBA, "A2");
                 Assert.AreEqual(eInDb.ANameFromCBA, "A2");
+            }
+        }
+
+        [TestMethod]
+        public void MPT_Redundancy_Enum()
+        {
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            {
+                var a = new A { Type = AType.Y };
+                Save(a);
+
+                var b = new B { A = a };
+                Save(b);
+
+                a.Type = AType.X;
+                Save(a);
+
+                var b2 = RF.Concrete<BRepository>().GetById(b.Id) as B;
+                Assert.AreEqual(AType.X, b2.AType);
             }
         }
 

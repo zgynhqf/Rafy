@@ -13,6 +13,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using Rafy;
@@ -25,6 +26,21 @@ namespace Rafy.Domain
     /// </summary>
     public class DomainApp : AppImplementationBase
     {
+        protected override void PrepareToStartup()
+        {
+            base.PrepareToStartup();
+
+            DataSaver.SubmitInterceptors = new List<Type>();
+        }
+
+        protected override void OnAllPluginsIntialized()
+        {
+            base.OnAllPluginsIntialized();
+
+            //锁定该集合。
+            DataSaver.SubmitInterceptors = new ReadOnlyCollection<Type>(DataSaver.SubmitInterceptors);
+        }
+
         public void Startup()
         {
             try

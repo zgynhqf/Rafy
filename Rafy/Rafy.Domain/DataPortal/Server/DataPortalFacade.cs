@@ -78,8 +78,8 @@ namespace Rafy.Domain.DataPortal
         {
             // set the app context to the value we got from the
             // client
-            DistributionContext.SetClientContext(context.ClientContext);
-            DistributionContext.SetGlobalContext(context.GlobalContext);
+            DistributionContext.ClientContextItem.Value = context.ClientContext;
+            DistributionContext.GlobalContextItem.Value = context.GlobalContext;
 
             // set the thread's culture to match the client
             Thread.CurrentThread.CurrentCulture = new CultureInfo(context.ClientCulture);
@@ -100,7 +100,8 @@ namespace Rafy.Domain.DataPortal
 
         private static void ClearContext(DataPortalContext context)
         {
-            DistributionContext.Clear();
+            DistributionContext.ClientContextItem.Value = null;
+            DistributionContext.GlobalContextItem.Value = null;
             RafyEnvironment.Principal = null;
         }
     }

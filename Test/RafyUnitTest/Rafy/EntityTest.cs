@@ -2031,7 +2031,11 @@ namespace RafyUnitTest
 
             Assert.AreEqual(json,
 @"{
+  ""createdTime"": ""2000-01-01T00:00:00"",
+  ""createdUser"": """",
   ""id"": 0,
+  ""updatedTime"": ""2000-01-01T00:00:00"",
+  ""updatedUser"": """",
   ""arrayValue"": null,
   ""bookId"": 0,
   ""bytesContent"": """",
@@ -2163,19 +2167,37 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Json_Deserialization_Enum()
         {
-            throw new NotImplementedException();//huqf
+            var json =
+@"{
+  ""favorateType"": 1
+}";
+            var deserializer = new AggtDeserializer();
+            var entity = deserializer.Deserialize(typeof(Favorate), json) as Favorate;
+            Assert.AreEqual(entity.FavorateType, FavorateType.B);
         }
 
         [TestMethod]
         public void ET_Json_Deserialization_EnumString()
         {
-            throw new NotImplementedException();//huqf
+            var json =
+@"{
+  ""favorateType"": ""B""
+}";
+            var deserializer = new AggtDeserializer();
+            var entity = deserializer.Deserialize(typeof(Favorate), json) as Favorate;
+            Assert.AreEqual(entity.FavorateType, FavorateType.B);
         }
 
         [TestMethod]
         public void ET_Json_Deserialization_EnumWithLabel()
         {
-            throw new NotImplementedException();//huqf
+            var json =
+@"{
+  ""favorateTypeWithLabel"": ""第二个""
+}";
+            var deserializer = new AggtDeserializer();
+            var entity = deserializer.Deserialize(typeof(Favorate), json) as Favorate;
+            Assert.AreEqual(entity.FavorateTypeWithLabel, FavorateTypeWithLabel.B);
         }
 
         [TestMethod]

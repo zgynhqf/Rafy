@@ -31,7 +31,7 @@ namespace Rafy.Domain.ORM.DbMigration
         public DataLossOperation RunDataLossOperation { get; set; }
 
         /// <summary>
-        /// 是否需要保存数据库的升级记录到 <see cref="ConnectionStringNames.DbMigrationHistory"/> 的库中。
+        /// 是否需要保存数据库的升级记录到 <see cref="DbSettingNames.DbMigrationHistory"/> 的库中。
         /// 如果本属性为 true，需要在连接字符串配置中添加该库对应的连接配置。
         /// 默认为 false。
         /// </summary>

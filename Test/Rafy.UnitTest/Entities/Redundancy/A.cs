@@ -53,6 +53,16 @@ namespace UT
             set { this.SetProperty(NameProperty, value); }
         }
 
+        public static readonly Property<AType> TypeProperty = P<A>.Register(e => e.Type);
+        /// <summary>
+        /// AType
+        /// </summary>
+        public AType Type
+        {
+            get { return this.GetProperty(TypeProperty); }
+            set { this.SetProperty(TypeProperty, value); }
+        }
+
         #endregion
 
         #region 只读属性
@@ -74,5 +84,10 @@ namespace UT
         {
             Meta.MapTable().MapAllProperties();
         }
+    }
+
+    public enum AType
+    {
+        X, Y
     }
 }

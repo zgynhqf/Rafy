@@ -19,6 +19,7 @@ using System.Web;
 using Rafy.Domain.ORM.Query;
 using Rafy.ManagedProperty;
 using Rafy.Reflection;
+using Rafy.Utils;
 
 namespace Rafy.Domain
 {
@@ -168,6 +169,8 @@ namespace Rafy.Domain
 
         private IConstraint CreateColumnConstraint(string comparison, string value)
         {
+            #region 转换操作符
+
             var op = PropertyOperator.Equal;
             switch (comparison.ToLower())
             {
@@ -211,8 +214,25 @@ namespace Rafy.Domain
                     throw new NotSupportedException("不支持这个操作符：" + comparison + "。");
             }
 
-            var objValue = TypeHelper.CoerceValue(_column.Property.PropertyType, value);
-            return _f.Constraint(_column, op, objValue);
+            #endregion
+
+            #region 把表达式中的值转换为列的类型对应的值。（同时，兼容处理枚举的 Label 值。）
+
+            object columnValue = null;
+            var propertyType = _column.Property.PropertyType;
+            var innerType = TypeHelper.IgnoreNullable(propertyType);
+            if (innerType.IsEnum)
+            {
+                columnValue = EnumViewModel.LabelToEnum(value, innerType);
+            }
+            else
+            {
+                columnValue = TypeHelper.CoerceValue(_column.Property.PropertyType, value);
+            }
+
+            #endregion
+
+            return _f.Constraint(_column, op, columnValue);
         }
 
         #region ReadPart

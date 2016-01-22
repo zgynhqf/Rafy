@@ -40,7 +40,7 @@ namespace Rafy.Domain.ORM
                 _dataType = raw;
                 _isBooleanType = _dataType == typeof(bool);
                 _isStringType = _dataType == typeof(string);
-                _isNullable = raw == value;
+                _isNullable = raw != value;
             }
         }
 

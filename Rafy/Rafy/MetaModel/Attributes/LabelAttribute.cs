@@ -13,6 +13,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
@@ -21,13 +22,13 @@ namespace Rafy.MetaModel.Attributes
     /// <summary>
     /// 用于描述某个类型或成员在界面上显示的字符
     /// </summary>
-    public class LabelAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Event | AttributeTargets.Enum | AttributeTargets.Field)]
+    public class LabelAttribute : DisplayNameAttribute
     {
-        public LabelAttribute(string label)
-        {
-            Label = label;
-        }
-
-        public string Label { get; private set; }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LabelAttribute"/> class.
+        /// </summary>
+        /// <param name="label">The label.</param>
+        public LabelAttribute(string label) : base(label) { }
     }
 }

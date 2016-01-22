@@ -30,11 +30,6 @@ namespace Rafy
         /// 
         /// 如果未被验证，则此值返回 0。
         /// </summary>
-        int Id { get; }
-
-        ///// <summary>
-        ///// 用户编码
-        ///// </summary>
-        //string Code { get; }
+        object Id { get; }
     }
 }

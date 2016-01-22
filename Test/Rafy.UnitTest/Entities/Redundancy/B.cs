@@ -27,6 +27,8 @@ namespace UT
 
         #endregion
 
+        #region 引用属性
+
         public static readonly IRefIdProperty AIdProperty =
             P<B>.RegisterRefId(e => e.AId, ReferenceType.Normal);
         public int AId
@@ -42,12 +44,9 @@ namespace UT
             set { this.SetRefEntity(AProperty, value); }
         }
 
-        public static readonly Property<string> ANameProperty = P<B>.RegisterRedundancy(
-            e => e.AName, new RedundantPath(AProperty, A.NameProperty));
-        public string AName
-        {
-            get { return this.GetProperty(ANameProperty); }
-        }
+        #endregion
+
+        #region 一般属性
 
         public static readonly Property<string> NameProperty = P<B>.Register(e => e.Name);
         public string Name
@@ -55,6 +54,26 @@ namespace UT
             get { return this.GetProperty(NameProperty); }
             set { this.SetProperty(NameProperty, value); }
         }
+
+        #endregion
+
+        #region 只读属性
+
+        public static readonly Property<string> ANameProperty = P<B>.RegisterRedundancy(
+            e => e.AName, new RedundantPath(AProperty, A.NameProperty));
+        public string AName
+        {
+            get { return this.GetProperty(ANameProperty); }
+        }
+
+        public static readonly Property<AType> ATypeProperty = P<B>.RegisterRedundancy(e => e.AType,
+            new RedundantPath(AProperty, A.TypeProperty));
+        public AType AType
+        {
+            get { return this.GetProperty(ATypeProperty); }
+        }
+
+        #endregion
     }
 
     [Serializable]

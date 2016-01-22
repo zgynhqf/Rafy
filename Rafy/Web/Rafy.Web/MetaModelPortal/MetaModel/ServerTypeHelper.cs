@@ -18,6 +18,7 @@ using System.Text;
 using Rafy.Domain;
 using Rafy.ManagedProperty;
 using Rafy.MetaModel.View;
+using Rafy.Reflection;
 
 namespace Rafy.Web.ClientMetaModel
 {
@@ -33,14 +34,15 @@ namespace Rafy.Web.ClientMetaModel
                 st.Name = SupportedServerType.String;
             }
             else if (propertyType == typeof(int)) { st.Name = SupportedServerType.Int32; }
+            else if (propertyType == typeof(long)) { st.Name = SupportedServerType.Int64; }
             else if (propertyType.IsEnum) { st.Name = SupportedServerType.Enum; }
             else if (propertyType == typeof(double)) { st.Name = SupportedServerType.Double; }
             else if (propertyType == typeof(bool)) { st.Name = SupportedServerType.Boolean; }
             else if (propertyType == typeof(DateTime)) { st.Name = SupportedServerType.DateTime; }
             else if (propertyType == typeof(Guid)) { st.Name = SupportedServerType.Guid; }
-            else if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+            else if (TypeHelper.IsNullable(propertyType))
             {
-                var innerType = propertyType.GetGenericArguments()[0];
+                var innerType = TypeHelper.IgnoreNullable(propertyType);
                 st = GetServerType(innerType);
                 st.IsNullable = true;
                 return st;
@@ -64,6 +66,7 @@ namespace Rafy.Web.ClientMetaModel
                 case SupportedServerType.Enum:
                     return JavascriptType.String;
                 case SupportedServerType.Int32:
+                case SupportedServerType.Int64:
                     return JavascriptType.Int;
                 case SupportedServerType.Double:
                     return JavascriptType.Float;

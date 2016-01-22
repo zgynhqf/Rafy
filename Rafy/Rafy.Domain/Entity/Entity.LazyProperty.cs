@@ -337,20 +337,14 @@ namespace Rafy.Domain
             //防止外界使用 SetProperty 方法来操作引用属性。
             if (property is IRefProperty)
             {
-                //如果是界面操作引用属性，则调用相关的方法。否则应该抛出异常。
-                if (source == ManagedPropertyChangedSource.FromUIOperating)
+                if (property is IRefIdProperty)
                 {
-                    if (property is IRefIdProperty)
-                    {
-                        return this.SetRefId(property as IRefIdProperty, value, source);
-                    }
-                    else
-                    {
-                        return this.SetRefEntity(property as IRefEntityProperty, value as Entity, source);
-                    }
+                    return this.SetRefId(property as IRefIdProperty, value, source);
                 }
-
-                throw new InvalidOperationException(string.Format("{0} 是引用属性，请使用 SetRefId/SetRefEntity 方法进行设置。", property));
+                else
+                {
+                    return this.SetRefEntity(property as IRefEntityProperty, value as Entity, source);
+                }
             }
             //防止外界使用 SetProperty 方法来操作列表属性。
             else if (property is IListProperty)

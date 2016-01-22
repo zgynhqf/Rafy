@@ -86,6 +86,10 @@
       <Project>{0b6df92b-0248-422d-a9c2-1604d4cb7bc9}</Project>
       <Name>Rafy.Domain.EntityPhantom</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.Stamp\Rafy.Domain.Stamp.csproj">
+      <Project>{6a13f732-1658-4636-8113-338b398cf328}</Project>
+      <Name>Rafy.Domain.Stamp</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Rafy\Rafy.DbMigration\Rafy.DbMigration.csproj">
       <Project>{d7c4f80d-24a4-47f1-985c-cfa55cfa13e9}</Project>
       <Name>Rafy.DbMigration</Name>

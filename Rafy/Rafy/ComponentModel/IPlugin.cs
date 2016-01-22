@@ -29,10 +29,10 @@ namespace Rafy.ComponentModel
         /// </summary>
         Assembly Assembly { get; }
 
-        /// <summary>
-        /// 插件的启动级别
-        /// </summary>
-        int SetupLevel { get; }
+        ///// <summary>
+        ///// 插件的启动级别
+        ///// </summary>
+        //int SetupLevel { get; }
 
         /// <summary>
         /// 插件的初始化方法。

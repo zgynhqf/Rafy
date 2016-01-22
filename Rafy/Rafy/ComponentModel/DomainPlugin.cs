@@ -52,9 +52,9 @@ namespace Rafy.ComponentModel
         /// <param name="app">应用程序对象。</param>
         public abstract void Initialize(IApp app);
 
-        int IPlugin.SetupLevel
-        {
-            get { return this.SetupLevel; }
-        }
+        //int IPlugin.SetupLevel
+        //{
+        //    get { return this.SetupLevel; }
+        //}
     }
 }

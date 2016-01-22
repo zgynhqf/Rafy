@@ -16,6 +16,7 @@ using Rafy.WPF.Shell;
 using Rafy.ComponentModel;
 using Rafy.ComponentModel.UnityAdapter;
 using Rafy.Domain.EntityPhantom;
+using Rafy.Domain.Stamp;
 
 namespace RafyUnitTest.ClientTest
 {
@@ -30,8 +31,8 @@ namespace RafyUnitTest.ClientTest
         {
             Logger.EnableSqlObervation = true;
 
-            ConnectionStringNames.RafyPlugins = "Test_RafyPlugins";
-            ConnectionStringNames.DbMigrationHistory = "Test_DbMigrationHistory";
+            DbSettingNames.RafyPlugins = "Test_RafyPlugins";
+            DbSettingNames.DbMigrationHistory = "Test_DbMigrationHistory";
 
             var sqlceFile = @"Rafy_Disk_Cache.sdf";
             CacheInstance.Disk = new Cache(new SQLCompactCacheProvider(sqlceFile));
@@ -39,15 +40,19 @@ namespace RafyUnitTest.ClientTest
 
             RafyEnvironment.Provider.IsDebuggingEnabled = true;
 
-            PluginTable.DomainLibraries.AddPlugin<EntityPhantomPlugin>();
-            PluginTable.DomainLibraries.AddPlugin<UnityAdapterPlugin>();
+            RafyEnvironment.DomainPlugins.Add(new StampPlugin());
+            RafyEnvironment.DomainPlugins.Add(new EntityPhantomPlugin());
+            RafyEnvironment.DomainPlugins.Add(new UnityAdapterPlugin());
 
-            PluginTable.DomainLibraries.AddPlugin<UnitTestPlugin>();
-            PluginTable.DomainLibraries.AddPlugin<UnitTestDataProviderPlugin>();
-            PluginTable.DomainLibraries.AddPlugin<UnitTestIDataProviderPlugin>();
-            PluginTable.DomainLibraries.AddPlugin<UnitTestRepoPlugin>();
-            PluginTable.DomainLibraries.AddPlugin<DCPlugin>();
-            PluginTable.UILibraries.AddPlugin<UnitTestWPFPlugin>();
+            RafyEnvironment.DomainPlugins.Add(new UnitTestPlugin());
+            RafyEnvironment.DomainPlugins.Add(new UnitTestDataProviderPlugin());
+            RafyEnvironment.DomainPlugins.Add(new UnitTestIDataProviderPlugin());
+            RafyEnvironment.DomainPlugins.Add(new UnitTestRepoPlugin());
+            RafyEnvironment.DomainPlugins.Add(new DCPlugin());
+
+            RafyEnvironment.DomainPlugins.Add(new UnitTestWPFPlugin());
+
+            DataSaver.SubmitInterceptors.Add(typeof(Rafy.Domain.Stamp.StampSubmitInterceptor));
 
             base.InitEnvironment();
         }

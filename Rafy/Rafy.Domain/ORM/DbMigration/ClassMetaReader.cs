@@ -73,7 +73,7 @@ namespace Rafy.Domain.ORM.DbMigration
             var tableEntityTypes = new List<EntityMeta>();
 
             //程序集列表，生成数据库会反射找到程序集内的实体类型进行数据库映射
-            foreach (var assembly in RafyEnvironment.GetAllPlugins())
+            foreach (var assembly in RafyEnvironment.AllPlugins)
             {
                 foreach (var type in assembly.Assembly.GetTypes())
                 {
@@ -83,7 +83,7 @@ namespace Rafy.Domain.ORM.DbMigration
                         var em = CommonModel.Entities.Find(type);
                         if (em != null && em.TableMeta != null)
                         {
-                            var entityDb = RF.Find(type).DataProvider.ConnectionStringSettingName;
+                            var entityDb = RdbDataProvider.Get(RF.Find(type)).ConnectionStringSettingName;
                             if (entityDb == this._dbSetting.Name)
                             {
                                 tableEntityTypes.Add(em);

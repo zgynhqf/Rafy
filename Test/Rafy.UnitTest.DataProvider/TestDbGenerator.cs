@@ -32,12 +32,12 @@ namespace Rafy.UnitTest.DataProvider
         {
             if (ConfigurationHelper.GetAppSettingOrDefault("单元测试-生成数据库", false))
             {
-                using (var c = new RafyDbMigrationContext(ConnectionStringNames.DbMigrationHistory))
+                using (var c = new RafyDbMigrationContext(DbSettingNames.DbMigrationHistory))
                 {
                     c.RunDataLossOperation = DataLossOperation.All;
                     c.AutoMigrate();
                 }
-                using (var c = new RafyDbMigrationContext(ConnectionStringNames.RafyPlugins))
+                using (var c = new RafyDbMigrationContext(DbSettingNames.RafyPlugins))
                 {
                     c.HistoryRepository = new DbHistoryRepository();
                     c.RunDataLossOperation = DataLossOperation.All;

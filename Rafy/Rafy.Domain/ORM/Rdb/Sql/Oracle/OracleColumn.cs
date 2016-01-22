@@ -46,7 +46,7 @@ namespace Rafy.Domain.ORM.Oracle
         internal override void Write(Entity entity, object value)
         {
             var info = this.Info;
-            if (info.IsBooleanType)
+            if (value != null && info.IsBooleanType)
             {
                 value = OracleDbTypeHelper.ToCLRBoolean(value);
             }

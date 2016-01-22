@@ -59,9 +59,7 @@ namespace Rafy.WPF.Command
                     oldTreePId = curEntity.TreePId;
                 }
 
-                curEntity.Clone(tmp, new CloneOptions(
-                    CloneActions.NormalProperties | CloneActions.RefEntities
-                    ));
+                curEntity.Clone(tmp);
 
                 //如果用户没有设置树型编码，则把树型编码还原到 Clone 之前系统自动生成的编码
                 if (!string.IsNullOrEmpty(oldTreeCode) &&

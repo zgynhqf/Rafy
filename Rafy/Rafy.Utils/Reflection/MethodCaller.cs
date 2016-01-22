@@ -724,13 +724,14 @@ namespace Rafy.Reflection
         //        }
         //    return result;
         //}
+    }
 
-        /// <summary>
-        /// 表示一个空参数。
-        /// </summary>
-        public class NullParameter
-        {
-            public Type ParameterType { get; set; }
-        }
+    /// <summary>
+    /// 表示一个空参数。
+    /// </summary>
+    [Serializable]
+    internal class NullParameter
+    {
+        public Type ParameterType { get; set; }
     }
 }

@@ -215,7 +215,7 @@ namespace Rafy.Domain
         {
             try
             {
-                _rwLock.EnterReadLock();
+                _rwLock.EnterWriteLock();
 
                 if (!_entityIndex.ContainsKey(item.EntityType))
                 {
@@ -232,7 +232,7 @@ namespace Rafy.Domain
             }
             finally
             {
-                _rwLock.ExitReadLock();
+                _rwLock.ExitWriteLock();
             }
         }
 

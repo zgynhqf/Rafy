@@ -40,6 +40,11 @@ namespace Rafy.Domain
         }
 
         /// <summary>
+        /// 对应的数据提供器。
+        /// </summary>
+        public RepositoryDataProvider DataProvider { get; internal set; }
+
+        /// <summary>
         /// 标记本次操作，不但要保存所有的子实体，也要保存当前对象。
         /// 场景：
         /// 子类重写 Submit 方法后，在当前实体数据不脏、只更新组合子实体（ChildrenOnly）的模式下，
@@ -87,7 +92,7 @@ namespace Rafy.Domain
         Delete,
         /// <summary>
         /// 当前对象未变更，只提交其中的子对象。
-        /// 将会执行 UpdateChildren、UpdateTreeChildren。
+        /// 将会执行 SubmitChildren、SubmitTreeChildren。
         /// </summary>
         ChildrenOnly
     }

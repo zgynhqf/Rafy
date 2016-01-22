@@ -37,7 +37,7 @@ namespace Rafy.Domain.ORM.DbMigration
             {
                 if (Options.ReserveHistory)
                 {
-                    using (var c = new RafyDbMigrationContext(ConnectionStringNames.DbMigrationHistory))
+                    using (var c = new RafyDbMigrationContext(DbSettingNames.DbMigrationHistory))
                     {
                         c.RunDataLossOperation = DataLossOperation.All;
 

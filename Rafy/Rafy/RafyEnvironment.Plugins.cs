@@ -26,6 +26,7 @@ using Rafy.Utils;
 using Rafy;
 using Rafy.Reflection;
 using Rafy.ComponentModel;
+using Rafy.Configuration;
 
 namespace Rafy
 {
@@ -34,42 +35,6 @@ namespace Rafy
     /// </summary>
     public partial class RafyEnvironment
     {
-        private const string DomainPluginFolder = "Domain";
-        private const string UIPluginFolder = "UI";
-
-        #region 启动 Plugins
-
-        /// <summary>
-        /// 启动所有的 实体插件
-        /// </summary>
-        internal static void StartupDomainPlugins()
-        {
-            var libraries = GetDomainPlugins();
-
-            foreach (var pluginAssembly in libraries)
-            {
-                //调用 ILibrary
-                var library = pluginAssembly.Instance as DomainPlugin;
-                if (library != null) library.Initialize(_appCore);
-            }
-        }
-
-        /// <summary>
-        /// 启动所有的 模块插件
-        /// </summary>
-        internal static void StartupUIPlugins()
-        {
-            var libraries = GetUIPlugins();
-            foreach (var pluginAssembly in libraries)
-            {
-                //调用 IModule
-                var module = pluginAssembly.Instance as UIPlugin;
-                if (module != null) module.Initialize(_appCore);
-            }
-        }
-
-        #endregion
-
         #region 初始化托管属性
 
         /// <summary>
@@ -79,7 +44,7 @@ namespace Rafy
         {
             if (!ManagedPropertyRepository.Instance.IsExtensionRegistered)
             {
-                var allAssemblies = RafyEnvironment.GetAllPlugins().Select(p => p.Assembly);
+                var allAssemblies = RafyEnvironment.AllPlugins.Select(p => p.Assembly);
 
                 ManagedPropertyRepository.Instance.IntializeExtension(allAssemblies);
             }
@@ -89,273 +54,185 @@ namespace Rafy
 
         #region 获取所有 Plugins
 
-        private static object _librariesLock = new object();
-
-        private static object _modulesLock = new object();
-
-        private static object _allPluginsLock = new object();
-
-        private static IList<PluginAssembly> _libraries;
-
-        private static IList<PluginAssembly> _modules;
-
-        private static IList<PluginAssembly> _allPlugins;
+        private static PluginCollection _domainPlugins;
+        private static PluginCollection _uiPlugins;
+        private static PluginCollection _allPlugins;
 
         /// <summary>
-        /// 找到当前程序所有可运行的领域实体插件。
+        /// 当前程序所有可运行的领域实体插件。
         /// </summary>
-        /// <returns></returns>
-        public static IEnumerable<PluginAssembly> GetDomainPlugins()
+        public static PluginCollection DomainPlugins
         {
-            if (_libraries == null)
-            {
-                lock (_librariesLock)
-                {
-                    if (_libraries == null)
-                    {
-                        var assemblies = EnumerateAllDomainAssemblies().Union(PluginTable.DomainLibraries).ToArray();
-                        _libraries = LoadSortedPlugins(assemblies);
-
-                        PluginTable.DomainLibraries.Lock();
-                    }
-                }
-            }
-            return _libraries;
+            get { return _domainPlugins; }
         }
 
         /// <summary>
-        /// 找到当前程序所有可运行的界面插件程序集。
+        /// 当前程序所有可运行的界面插件程序集。
         /// </summary>
-        /// <returns></returns>
-        public static IEnumerable<PluginAssembly> GetUIPlugins()
+        public static PluginCollection UIPlugins
         {
-            if (_modules == null)
-            {
-                lock (_modulesLock)
-                {
-                    if (_modules == null)
-                    {
-                        //如果是界面应用程序，则加载所有的 UI 文件。否则返回空集合。
-                        if (_location.IsUI)
-                        {
-                            var assemblies = EnumerateAllUIAssemblies().Union(PluginTable.UILibraries).ToList();
-                            _modules = LoadSortedPlugins(assemblies);
-
-                            PluginTable.UILibraries.Lock();
-                        }
-                        else
-                        {
-                            _modules = new PluginAssembly[0];
-                        }
-                    }
-                }
-            }
-            return _modules;
+            get { return _uiPlugins; }
         }
 
         /// <summary>
         /// 获取当前环境被初始化的所有插件。
         /// </summary>
-        /// <returns></returns>
-        public static IEnumerable<PluginAssembly> GetAllPlugins()
+        public static PluginCollection AllPlugins
         {
-            if (_allPlugins == null)
-            {
-                lock (_allPluginsLock)
-                {
-                    if (_allPlugins == null)
-                    {
-                        GetDomainPlugins();
-                        _allPlugins = _libraries;
-
-                        if (_location.IsUI)
-                        {
-                            _allPlugins = _allPlugins
-                                .Union(GetUIPlugins())
-                                .ToList();
-
-                            //对于整合后的集合，再重新设置它们的 FinalIndex。
-                            for (int i = 0, c = _allPlugins.Count; i < c; i++)
-                            {
-                                _allPlugins[i].SetupIndex = i;
-                            }
-                        }
-                    }
-                }
-            }
-            return _allPlugins;
+            get { return _allPlugins; }
         }
 
         internal static void Reset()
         {
-            _libraries = null;
-            _modules = null;
+            _domainPlugins = new PluginCollection();
+            _uiPlugins = new PluginCollection();
             _allPlugins = null;
+
             ResetLocation();
         }
 
-        private static List<PluginAssembly> LoadSortedPlugins(IEnumerable<Assembly> assemblies)
+        /// <summary>
+        /// 启动所有的插件
+        /// </summary>
+        internal static void InitPlugins()
         {
-            var list = assemblies.Select(assembly =>
+            //先初始化实体插件，再初始化界面插件。
+            foreach (var plugin in _allPlugins)
             {
-                var pluginType = assembly.GetTypes().FirstOrDefault(t => typeof(IPlugin).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
-
-                IPlugin pluginInstance = null;
-                if (pluginType != null)
-                {
-                    pluginInstance = Activator.CreateInstance(pluginType) as IPlugin;
-                    //throw new NotSupportedException("所有插件包中必须有且仅有一个实现 IPlugin 接口的类型！" + Environment.NewLine + "文件路径：" + file);
-                }
-                else
-                {
-                    pluginInstance = new EmptyPlugin(assembly);
-                }
-
-                return new PluginAssembly(assembly, pluginInstance);
-            })
-            .ToList();
-
-            //将 list 中集合中的元素，先按照 SetupLevel 排序；
-            //然后同一个启动级别中的插件，再按照引用关系来排序。
-            var sorted = new List<PluginAssembly>(list.Count);
-            var groups = list.GroupBy(a => a.Instance.SetupLevel).OrderBy(g => g.Key);
-            var index = 0;
-            foreach (var group in groups)
-            {
-                var sortedItems = SortByReference(group);
-                for (int i = 0, c = sortedItems.Count; i < c; i++)
-                {
-                    var item = sortedItems[i];
-                    item.SetupIndex = index++;
-                    sorted.Add(item);
-                }
+                plugin.Initialize(_appCore);
             }
 
-            return sorted;
-        }
-
-        private static List<PluginAssembly> SortByReference(IEnumerable<PluginAssembly> list)
-        {
-            //items 表示待处理列表。
-            var items = list.ToList();
-            var sorted = new List<PluginAssembly>(items.Count);
-
-            while (items.Count > 0)
-            {
-                for (int i = 0, c = items.Count; i < c; i++)
-                {
-                    var item = items[i];
-                    bool referencesOther = false;
-                    var refItems = item.Assembly.GetReferencedAssemblies();
-                    for (int j = 0, c2 = items.Count; j < c2; j++)
-                    {
-                        if (i != j)
-                        {
-                            if (refItems.Any(ri => ri.FullName == items[j].Assembly.FullName))
-                            {
-                                referencesOther = true;
-                                break;
-                            }
-                        }
-                    }
-                    //没有被任何一个程序集引用，则把这个加入到结果列表中，并从待处理列表中删除。
-                    if (!referencesOther)
-                    {
-                        sorted.Add(item);
-                        items.RemoveAt(i);
-
-                        //跳出循环，从新开始。
-                        break;
-                    }
-                }
-            }
-
-            return sorted;
-        }
-
-        private static IEnumerable<Assembly> EnumerateAllDomainAssemblies()
-        {
-            yield return LoadRafyAssembly("Rafy.Domain");
-
-            foreach (var file in EnumerateAllDomainPluginFiles())
-            {
-                yield return Assembly.LoadFrom(file);
-            }
-        }
-
-        private static IEnumerable<string> EnumerateAllDomainPluginFiles()
-        {
-            //查找Library目录下的所有程序集
-            string libraryPath = MapDllPath(DomainPluginFolder + "\\");
-            if (Directory.Exists(libraryPath))
-            {
-                foreach (var dll in Directory.GetFiles(libraryPath, "*.dll"))
-                {
-                    yield return dll;
-                }
-            }
-
-            //加入所有客户化的DLL
-            foreach (var dir in GetCustomerEntityDlls())
-            {
-                if (Directory.Exists(dir))
-                {
-                    foreach (var file in Directory.GetFiles(dir, "*.dll"))
-                    {
-                        yield return file;
-                    }
-                }
-            }
-        }
-
-        private static IEnumerable<Assembly> EnumerateAllUIAssemblies()
-        {
-            //如果是 WPF 客户端，则需要添加 Rafy.WPF 程序集。
-            if (_location.IsWPFUI)
-            {
-                yield return LoadRafyAssembly("Rafy.WPF");
-            }
-            //else if (_locInfo.IsWebUI)
+            //switch (RafyEnvironment.Location)
             //{
-            //    yield return LoadRafyAssembly("Rafy.Web");
+            //    case RafyLocation.WPFClient:
+            //    case RafyLocation.LocalVersion:
+            //        //初始化界面插件。
+            //        StartupUIPlugins();
+            //        break;
+
+            //    case RafyLocation.WCFServer:
+            //    case RafyLocation.WebServer:
+            //    default:
+
+            //        //在配置文件中配置好 <probing privatePath="bin/Library;bin/Module"/> 即可，不需要使用代码加载。
+            //        ////虽然服务端不需要初始化所有 Module 插件，但是也需要把它们的 dll 加载到程序中，
+            //        ////这是因为有一些实体插件并没有按照严格的分层，是直接把 WPF 界面层代码也放在其中的。
+            //        ////这种情况下，如果不加载这些 Module 对应的 dll，则这些插件无法正常启动。
+            //        //foreach (var m in RafyEnvironment.GetAllModules()) { }
+            //        break;
             //}
-
-            foreach (var file in EnumerateAllUIPluginFiles())
-            {
-                yield return Assembly.LoadFrom(file);
-            }
         }
 
-        private static IEnumerable<string> EnumerateAllUIPluginFiles()
+        internal static void LockPlugins()
         {
-            //查找 Module 目录下的所有程序集
-            string modulePath = MapDllPath(UIPluginFolder + "\\");
-            if (Directory.Exists(modulePath))
+            //所有插件（其中，DomainPlugins 在列表的前面，UIPlugins 在列表的后面。）
+            _allPlugins = new PluginCollection();
+
+            //domain plugins.
+            var configPlugins = Configuration.Section.DomainPlugins.OfType<PluginElement>().Select(e => e.Plugin).ToArray();
+            if (configPlugins.Length > 0)
             {
-                foreach (var dll in Directory.GetFiles(modulePath, "*.dll"))
+                InitPluginsByConfig(_domainPlugins, configPlugins);
+            }
+            _domainPlugins.Insert(0, LoadRafyPlugin("Rafy.Domain"));
+            _domainPlugins.Lock();
+
+            foreach (var item in _domainPlugins) { _allPlugins.Add(item); }
+
+            //ui plugins.
+            if (_location.IsUI)
+            {
+                configPlugins = Configuration.Section.UIPlugins.OfType<PluginElement>().Select(e => e.Plugin).ToArray();
+                if (configPlugins.Length > 0)
                 {
-                    yield return dll;
+                    InitPluginsByConfig(_uiPlugins, configPlugins);
                 }
+                if (_location.IsWPFUI)
+                {
+                    _uiPlugins.Insert(0, LoadRafyPlugin("Rafy.WPF"));
+                }
+                _uiPlugins.Lock();
+
+                foreach (var item in _uiPlugins) { _allPlugins.Add(item); }
             }
 
-            //加入所有客户化的 DLL
-            foreach (var dir in GetCustomerModuleDlls())
-            {
-                if (Directory.Exists(dir))
-                {
-                    foreach (var file in Directory.GetFiles(dir, "*.dll"))
-                    {
-                        yield return file;
-                    }
-                }
-            }
+            _allPlugins.Lock();
         }
 
-        private static Assembly LoadRafyAssembly(string name)
+        private static IPlugin LoadRafyPlugin(string name)
         {
             var aName = typeof(RafyEnvironment).Assembly.GetName();
             aName.Name = name;
-            return Assembly.Load(aName);
+            var assembly = Assembly.Load(aName);
+            return CreatePluginFromAssembly(assembly);
+        }
+
+        private static IPlugin CreatePluginFromAssembly(Assembly assembly)
+        {
+            var pluginType = assembly.GetTypes().FirstOrDefault(t => typeof(IPlugin).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
+
+            if (pluginType == null)
+            {
+                throw new NotSupportedException("所有插件包中必须有且仅有一个实现 IPlugin 接口的类型！" + Environment.NewLine + "程序集：" + assembly);
+            }
+            var pluginInstance = Activator.CreateInstance(pluginType) as IPlugin;
+
+            return pluginInstance;
+        }
+
+        private static void InitPluginsByConfig(PluginCollection pluginList, string[] sortedPlugins)
+        {
+            if (sortedPlugins.Length == 0) return;
+
+            //如果提供了配置信息，则完成按照配置中的插件列表来初始化，所以先清空该列表。
+            pluginList.Clear();
+
+            for (int i = 0, c = sortedPlugins.Length; i < c; i++)
+            {
+                var name = sortedPlugins[i];
+
+                IPlugin plugin = null;
+
+                //可以只填写程序集名称，也可以写出插件类型的全名称。
+                if (!name.Contains(','))
+                {
+                    #region 按照程序集名称来加载插件
+
+                    Assembly assembly = null;
+                    try
+                    {
+                        assembly = Assembly.Load(sortedPlugins[i]);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new InvalidProgramException(string.Format("无法加载配置文件中指定的插件：{0}。", sortedPlugins[i]), ex);
+                    }
+                    plugin = CreatePluginFromAssembly(assembly);
+
+                    #endregion
+                }
+                else
+                {
+                    #region 按照插件类型名称来加载插件
+
+                    Type pluginType = null;
+                    try
+                    {
+                        pluginType = Type.GetType(sortedPlugins[i]);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new InvalidProgramException(string.Format("无法加载配置文件中指定的插件类型：{0}。", sortedPlugins[i]), ex);
+                    }
+                    if (pluginType == null) { throw new InvalidProgramException(string.Format("无法加载配置文件中指定的插件类型：{0}。", sortedPlugins[i])); }
+
+                    plugin = Activator.CreateInstance(pluginType, true) as IPlugin;
+
+                    #endregion
+                }
+
+                pluginList.Add(plugin);
+            }
         }
 
         #endregion
@@ -370,7 +247,7 @@ namespace Rafy
         {
             var result = new List<Type>();
 
-            foreach (var plugin in GetAllPlugins())
+            foreach (var plugin in _allPlugins)
             {
                 foreach (var type in plugin.Assembly.GetTypes())
                 {
@@ -447,14 +324,15 @@ namespace Rafy
                 var entityType = typeof(EntityConfig);
 
                 //实体配置一般只放在领域插件中。但是，一些只存在于客户端的实体，则会放到界面插件中，所以这里需要检查所有的插件。
-                foreach (var p in RafyEnvironment.GetAllPlugins())
+                for (int index = 0, c = RafyEnvironment.AllPlugins.Count; index < c; index++)
                 {
-                    foreach (var type in p.Assembly.GetTypes())
+                    var plugin = RafyEnvironment.AllPlugins[index];
+                    foreach (var type in plugin.Assembly.GetTypes())
                     {
                         if (!type.IsGenericTypeDefinition && entityType.IsAssignableFrom(type))
                         {
                             var config = Activator.CreateInstance(type) as EntityConfig;
-                            config.PluginIndex = p.SetupIndex;
+                            config.PluginIndex = index;
                             config.InheritanceCount = TypeHelper.GetHierarchy(type, typeof(ManagedPropertyObject)).Count();
 
                             List<EntityConfig> typeList = null;
@@ -524,14 +402,15 @@ namespace Rafy
                     var entityType = typeof(TViewConfig);
 
                     //视图配置可以放在所有插件中。
-                    foreach (var p in RafyEnvironment.GetAllPlugins())
+                    for (int index = 0, c = RafyEnvironment.AllPlugins.Count; index < c; index++)
                     {
-                        foreach (var type in p.Assembly.GetTypes())
+                        var plugin = RafyEnvironment.AllPlugins[index];
+                        foreach (var type in plugin.Assembly.GetTypes())
                         {
                             if (!type.IsGenericTypeDefinition && entityType.IsAssignableFrom(type))
                             {
                                 var config = Activator.CreateInstance(type) as TViewConfig;
-                                config.PluginIndex = p.SetupIndex;
+                                config.PluginIndex = index;
                                 config.InheritanceCount = TypeHelper.GetHierarchy(type, typeof(ManagedPropertyObject)).Count();
 
                                 List<TViewConfig> typeList = null;

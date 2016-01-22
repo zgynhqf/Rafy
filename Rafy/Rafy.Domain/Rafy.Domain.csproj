@@ -89,9 +89,11 @@
   <ItemGroup>
     <Compile Include="BinaryOperator.cs" />
     <Compile Include="DataPortalLocation.cs" />
+    <Compile Include="DataPortal\ClientContextItem.cs" />
     <Compile Include="DataPortal\DistributionContext.cs" />
     <Compile Include="DataPortal\DataPortalException.cs" />
     <Compile Include="DataPortal\DataPortalApi.cs" />
+    <Compile Include="DataPortal\GlobalContextItem.cs" />
     <Compile Include="DataPortal\IDataPortalProxy.cs" />
     <Compile Include="DataPortal\WCF\ClientProxy.cs" />
     <Compile Include="DataPortal\DataPortalResult.cs" />
@@ -100,6 +102,7 @@
     <Compile Include="EntityRepository\Criteria\ODataQueryCriteria.cs" />
     <Compile Include="EntityRepository\DataProvider\DataQueryer.cs" />
     <Compile Include="EntityRepository\DataProvider\DataSaver.cs" />
+    <Compile Include="EntityRepository\DataProvider\SubmitInterceptor.cs" />
     <Compile Include="EntityRepository\DataProvider\RedundanciesUpdater.cs" />
     <Compile Include="EntityRepository\DataProvider\RepositoryDataProvider.cs" />
     <Compile Include="EntityRepository\DataProvider\DataProviderComposer.cs" />
@@ -174,6 +177,9 @@
     <Compile Include="ORM\Query\Impl\QueryGenerationContext.cs" />
     <Compile Include="ORM\Query\QueryNodeTester.cs" />
     <Compile Include="ORM\PersistanceTableInfo\PersistanceTableInfo.cs" />
+    <Compile Include="Service\Controllers\DomainController.cs" />
+    <Compile Include="Service\Controllers\DomainControllerFactory.cs" />
+    <Compile Include="Service\Controllers\DomainException.cs" />
     <Compile Include="Utils\DomainHelper.cs" />
     <Compile Include="Validation\CommonRules\NotUsedByReferenceRule.cs" />
     <Compile Include="Validation\CommonRules\HandlerRule.cs" />
@@ -378,7 +384,7 @@
     <Compile Include="DomainMetaExtension.cs" />
     <Compile Include="EntityRepository\Caching\CacheInstance.cs" />
     <Compile Include="EntityRepository\Caching\VersionSyncClientCache\VersionChecker.cs" />
-    <Compile Include="ConnectionStringNames.cs" />
+    <Compile Include="DbSettingNames.cs" />
     <Compile Include="Entity\IEntityInfoHost.cs" />
     <Compile Include="EntityRepository\RF.cs" />
     <Compile Include="Entity\CloneOptions.cs" />

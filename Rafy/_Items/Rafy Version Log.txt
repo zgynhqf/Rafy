@@ -10,19 +10,44 @@
  * 
 *******************************************************/
 
-2.43.3016
+2.46.3077
+    ★★公布、添加功能
+        添加 Rafy.Domain.Stamp 插件。
+        添加 Rafy.Accounts 插件。
+        添加 DomainController 和 DomainControllerFactory。
+    ★★公布、！修改接口
+        重构插件环境：
+            PluginTable.DomainLibraries 移动到 RafyEnvironment.DomainPlugins。
+            RafyEnvironment.DomainPlugins 支持配置文件的方式来配置。
+    ！修改接口
+        ConnectionStringNames 重命名为：DbSettingNames。
+
+2.43.3050
     ★★公布、添加功能
         添加 Rafy.Web.Http、Rafy.Web.Mvc 两个命名空间。（代码移植自历史项目）。
-    添加接口
+    ★★公布、！删除接口
+        删除 EntityList.SupressSetItemParent 属性。同时，列表默认不再改变新加项的父列表、父实体。
+    ★★公布、添加接口
         AggtSerializer 在序列化枚举时，可以选择使用 字符串 或 Label 进行输出。
         OData 支持枚举属性的查询。
         添加 CloneOptions.NewSingleEntity();
-    添加功能
+        添加 AppContextItem、ClientContextItem 等泛型类型，方便使用 AppContext 对象。
+        添加 DataSaver.SubmitInterceptors 来配置提交数据时的扩展点（以拦截器的方式扩展）。
+    ★★公布、添加功能
         在输出 Sql 日志时，如果是 SQLServer 数据库，还同时输出对应的连接的客户端 Id。
     BUG修复
         Oracle 支持问题。
         解决 WebOrThreadStaticAppContextProvider 中的代码引发 ThreadStaticAppContextProvider.Items 集合出错的问题。
         解决‘无法更新枚举类型的冗余属性。’的 BUG。
+        在 WebApi 等一些框架中，会开启异步线程去执行一些序列化的代码，这时会找不到 HttpContext.Current 对象，所以只能退而求其次使用线程中的数据。
+        NullParameter 没有标记可序列化。
+        冗余属性无法更新的问题。
+        解决 Clone 对象时，引用属性无法复制的问题。
+        解决 bool? 在映射 Oracle 列时无法转换 Null 值的 BUG。
+        RafyEntity.js 中输出实体时，外键、主键支持 long 类型。
+    内部修改
+        EnumViewMode.LabelToEnum。
+        反序列化时，也需要支持 EnumViewModel 的反序列化。
 
 2.42.2840
     ★★公布、添加功能

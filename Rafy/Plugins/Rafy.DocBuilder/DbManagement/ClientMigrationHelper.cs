@@ -79,7 +79,7 @@ namespace Rafy.DevTools.DbManagement
         /// </summary>
         private static void MigrateDbInProgress(MigratingOptions options)
         {
-            MigrateInProgressBar(ConnectionStringNames.DbMigrationHistory, c =>
+            MigrateInProgressBar(DbSettingNames.DbMigrationHistory, c =>
             {
                 c.AutoMigrate();
             });

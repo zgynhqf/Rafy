@@ -30,7 +30,7 @@ namespace Rafy.Domain
     /// <summary>
     /// 通用的仓库数据层实现。
     /// </summary>
-    public abstract partial class RepositoryDataProvider :
+    public abstract partial class RepositoryDataProvider : SubmitInterceptor,
         IRepositoryDataProvider,
         IRepositoryDataProviderInternal
     {
@@ -82,16 +82,6 @@ namespace Rafy.Domain
                 _dataQueryer = value;
                 value.Init(this);
             }
-        }
-
-        /// <summary>
-        /// 数据库配置名称（每个库有一个唯一的配置名）
-        /// 
-        /// 默认使用 ConnectionStringNames.RafyPlugins 中配置的数据库。
-        /// </summary>
-        internal protected virtual string ConnectionStringSettingName
-        {
-            get { return ConnectionStringNames.RafyPlugins; }
         }
 
         internal void InitRepository(EntityRepository repository)
@@ -181,6 +171,16 @@ namespace Rafy.Domain
             if (h != null) { h(this, new QueryingEventArgs { Args = args }); }
 
             _dataQueryer.OnQuerying(args);
+        }
+
+        /// <summary>
+        /// DataProvider 提交拦截器中的最后一个拦截器。
+        /// </summary>
+        /// <param name="e">The e.</param>
+        /// <param name="locator">The locator.</param>
+        internal protected sealed override void Submit(SubmitArgs e, ISubmitInterceptorLink locator)
+        {
+            this.Submit(e);
         }
 
         /// <summary>

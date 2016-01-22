@@ -72,7 +72,7 @@ namespace Rafy.DevTools.DbManagement
     {
         private static readonly string[] IgnoreDatabases = new string[]{
             DbConnectionSchema.DbName_LocalServer,
-            ConnectionStringNames.DbMigrationHistory
+            DbSettingNames.DbMigrationHistory
         };
 
         public override EntityList GetAll(PagingInfo paging, EagerLoadOptions eagerLoad)

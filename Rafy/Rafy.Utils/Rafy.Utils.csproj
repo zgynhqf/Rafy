@@ -59,7 +59,9 @@
     <Compile Include="Collection\SealableCollection.cs" />
     <Compile Include="Configuration\ConfigurationExtension.cs" />
     <Compile Include="Configuration\ConfigurationHelper.cs" />
+    <Compile Include="Context\AppContextItem.cs" />
     <Compile Include="Context\AppContextScope.cs" />
+    <Compile Include="Context\ContextItem.cs" />
     <Compile Include="Data\FormattedSql.cs" />
     <Compile Include="Data\FormattedSqlParameters.cs" />
     <Compile Include="Data\IDbCommandFactory.cs" />

@@ -85,6 +85,16 @@ namespace Rafy.Domain.ORM
             }
         }
 
+        /// <summary>
+        /// 数据库配置名称（每个库有一个唯一的配置名）
+        /// 
+        /// 默认使用 ConnectionStringNames.RafyPlugins 中配置的数据库。
+        /// </summary>
+        internal protected virtual string ConnectionStringSettingName
+        {
+            get { return DbSettingNames.RafyPlugins; }
+        }
+
         ///// <summary>
         ///// 获取该实体对应的 ORM 运行时对象。
         ///// 

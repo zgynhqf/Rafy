@@ -50,9 +50,7 @@ namespace Rafy.WPF.Command
             if (res == WindowButton.Yes)
             {
                 //修改按钮如果使用新的 Id，则它下面子对象的父外键都将是错误的值。
-                listEntity.Clone(tmp, new CloneOptions(
-                    CloneActions.NormalProperties | CloneActions.RefEntities
-                    ));
+                listEntity.Clone(tmp);
 
                 listEntity.MarkModifiedIfUnchanged();
 

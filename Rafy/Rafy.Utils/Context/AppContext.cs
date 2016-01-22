@@ -23,12 +23,12 @@ using System.Threading;
 namespace Rafy
 {
     /// <summary>
-    /// 本类型表示执行的上下文环境。
-    /// 其中包含：自定义数据集合、当前身份。
+    /// <para>本类型表示执行的上下文环境。</para>
+    /// <para>其中包含：自定义数据集合、当前身份。</para>
     /// 
-    /// 一般可用的上下文有：
-    /// 单线程共用数据的执行环境、进程共用数据的执行环境、一次请求（如 Web）共用数据的执行环境。
-    /// 默认使用单线程上下文，如果要使用其它上下文，请使用 <see cref="SetProvider"/> 方法替换提供算法。
+    /// <para>一般可用的上下文有：</para>
+    /// <para>单线程共用数据的执行环境、进程共用数据的执行环境、一次请求（如 Web）共用数据的执行环境。</para>
+    /// <para>默认使用单线程上下文，如果要使用其它上下文，请使用 <see cref="SetProvider"/> 方法替换提供算法。</para>
     /// </summary>
     public class AppContext
     {
@@ -74,14 +74,6 @@ namespace Rafy
 
                 return ctx;
             }
-        }
-
-        /// <summary>
-        /// 清空上下文数据
-        /// </summary>
-        public static void Clear()
-        {
-            _provider.DataContainer = null;
         }
     }
 }

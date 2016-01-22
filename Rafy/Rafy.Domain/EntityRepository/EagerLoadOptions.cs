@@ -97,10 +97,5 @@ namespace Rafy.Domain
             _eagerList.Add(new ConcreteProperty(refProperty, owner));
             return this;
         }
-
-        //public void LoadWith<TEntity>(Expression<Func<TEntity, object>> property)
-        //{
-
-        //}
     }
 }
