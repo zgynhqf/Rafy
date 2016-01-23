@@ -39,6 +39,7 @@ namespace Rafy.Data
         /// 是否已经提交完成。
         /// </summary>
         private bool _rollback = true;
+        private LocalTransactionBlock _parent;
 
         #endregion
 
@@ -81,8 +82,10 @@ namespace Rafy.Data
             this._dbSetting = dbSetting;
             this._level = level;
 
-            var name = LocalContextName(_dbSetting.Database);
+            var name = ContextWholeScopeKey(_dbSetting.Database);
             this.EnterScope(name);
+            _parent = GetCurrentTransactionBlock(dbSetting);
+            SetCurrentTransactionBlock(DbSetting, this);
         }
 
         /// <summary>
@@ -144,6 +147,8 @@ namespace Rafy.Data
                 ws._wholeRoolback |= this._rollback;
             }
 
+            SetCurrentTransactionBlock(_dbSetting, _parent);
+
             base.Dispose(disposing);
         }
 
@@ -183,15 +188,53 @@ namespace Rafy.Data
 
         internal static LocalTransactionBlock GetWholeScope(string database)
         {
-            var name = LocalContextName(database);
+            var name = ContextWholeScopeKey(database);
             var ws = GetWholeScope(name, ContextItems) as LocalTransactionBlock;
             return ws;
         }
 
-        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
-        private static string LocalContextName(string databse)
+        /// <summary>
+        /// 获取指定数据库对应的当前最内部的 <see cref="LocalTransactionBlock"/>。
+        /// </summary>
+        /// <param name="dbSetting">The database setting.</param>
+        /// <returns></returns>
+        public static LocalTransactionBlock GetCurrentTransactionBlock(DbSetting dbSetting)
         {
-            return "LocalTransactionBlock:" + databse;
+            var currentScopeItemKey = ContextCurrentScopeKey(dbSetting.Database);
+
+            object res = null;
+            if (ContextItems.TryGetValue(currentScopeItemKey, out res))
+            {
+                return res as LocalTransactionBlock;
+            }
+
+            return null;
+        }
+
+        private static void SetCurrentTransactionBlock(DbSetting dbSetting, LocalTransactionBlock value)
+        {
+            var currentScopeItemKey = ContextCurrentScopeKey(dbSetting.Database);
+
+            if (value == null)
+            {
+                ContextItems.Remove(currentScopeItemKey);
+            }
+            else
+            {
+                ContextItems[currentScopeItemKey] = value;
+            }
+        }
+
+        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
+        private static string ContextWholeScopeKey(string databse)
+        {
+            return "LocalTransactionBlock_WholeScope_" + databse;
+        }
+
+        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
+        private static string ContextCurrentScopeKey(string databse)
+        {
+            return "LocalTransactionBlock_CurrentScope_" + databse;
         }
 
         #endregion

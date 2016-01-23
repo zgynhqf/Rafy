@@ -78,6 +78,7 @@
   <ItemGroup>
     <Compile Include="Rafy\EntityPhantomTest.cs" />
     <Compile Include="Rafy\EnvironmentTest.cs" />
+    <Compile Include="Rafy\MiscellaneousTest.cs" />
     <Compile Include="Rafy\ODataTest.cs" />
     <Compile Include="Rafy\StampTest.cs" />
     <Compile Include="ServerTestHelper.cs" />

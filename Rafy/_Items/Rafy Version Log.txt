@@ -10,9 +10,11 @@
  * 
 *******************************************************/
 
-2.47.3079
+2.47.3081
     ！删除接口
         删除 DomainPlugin.SetupLevel、UIPlugin.SetupLevel。
+    添加接口
+        添加 LocalTransactionBlock.GetCurrentTransactionBlock 方法。
 
 2.47.3078
     ★★公布
