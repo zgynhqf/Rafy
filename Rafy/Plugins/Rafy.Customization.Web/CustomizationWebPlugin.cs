@@ -21,11 +21,6 @@ namespace Rafy.Customization.Web
 {
     public class CustomizationWebPlugin : UIPlugin
     {
-        protected override int SetupLevel
-        {
-            get { return PluginSetupLevel.System; }
-        }
-
         public override void Initialize(IApp app)
         {
             var customeUICmd = "Rafy.customization.cmd.CustomizeUI";
@@ -48,7 +43,7 @@ namespace Rafy.Customization.Web
                         {
                             BlockType = BlockType.Detail
                         },
-                        Children = 
+                        Children =
                         {
                             new ChildBlock("属性", ViewConfigurationModel.ViewConfigurationPropertyListProperty),
                             new ChildBlock("命令", ViewConfigurationModel.ViewConfigurationCommandListProperty)

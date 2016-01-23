@@ -34,17 +34,6 @@ namespace Rafy.Domain.EntityPhantom
     public class EntityPhantomPlugin : DomainPlugin
     {
         /// <summary>
-        /// Gets the setup level.
-        /// </summary>
-        /// <value>
-        /// The setup level.
-        /// </value>
-        protected override int SetupLevel
-        {
-            get { return PluginSetupLevel.System; }
-        }
-
-        /// <summary>
         /// Initializes the specified application.
         /// </summary>
         /// <param name="app">The application.</param>

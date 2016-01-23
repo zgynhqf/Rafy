@@ -34,14 +34,6 @@ namespace Rafy.ComponentModel
         }
 
         /// <summary>
-        /// 插件的启动级别。
-        /// </summary>
-        protected virtual int SetupLevel
-        {
-            get { return ReuseLevel.Main; }
-        }
-
-        /// <summary>
         /// 插件的初始化方法。
         /// 框架会在启动时根据启动级别顺序调用本方法。
         /// 
@@ -51,10 +43,5 @@ namespace Rafy.ComponentModel
         /// </summary>
         /// <param name="app">应用程序对象。</param>
         public abstract void Initialize(IApp app);
-
-        //int IPlugin.SetupLevel
-        //{
-        //    get { return this.SetupLevel; }
-        //}
     }
 }

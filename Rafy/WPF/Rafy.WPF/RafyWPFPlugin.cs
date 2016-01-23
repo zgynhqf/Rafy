@@ -33,11 +33,6 @@ namespace Rafy.WPF
     /// </summary>
     internal class RafyWPFPlugin : UIPlugin
     {
-        protected override int SetupLevel
-        {
-            get { return PluginSetupLevel.System; }
-        }
-
         public override void Initialize(IApp app)
         {
             AddResources();

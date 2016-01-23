@@ -27,11 +27,6 @@ namespace Rafy.RBAC.WPF
     /// </summary>
     internal class RBACWebPlugin : UIPlugin
     {
-        protected override int SetupLevel
-        {
-            get { return PluginSetupLevel.System; }
-        }
-
         public override void Initialize(IApp app)
         {
             app.ModuleOperations += (o, e) =>

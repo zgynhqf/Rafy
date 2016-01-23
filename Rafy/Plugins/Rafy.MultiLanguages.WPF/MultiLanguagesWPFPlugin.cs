@@ -21,11 +21,6 @@ namespace Rafy.MultiLanguages.WPF
 {
     internal class MultiLanguagesWPFPlugin : UIPlugin
     {
-        protected override int SetupLevel
-        {
-            get { return PluginSetupLevel.System; }
-        }
-
         public override void Initialize(IApp app)
         {
             (app as IClientApp).LoginSuccessed += OnLoginSuccessed;

@@ -22,11 +22,6 @@ namespace Rafy.Customization.WPF
 {
     internal class CustomizationWPFPlugin : UIPlugin
     {
-        protected override int SetupLevel
-        {
-            get { return PluginSetupLevel.System; }
-        }
-
         public override void Initialize(IApp app)
         {
             WPFCommandNames.CustomizeUI = typeof(CustomizeUI);
@@ -46,7 +41,7 @@ namespace Rafy.Customization.WPF
                         {
                             BlockType = BlockType.Detail
                         },
-                        Children = 
+                        Children =
                         {
                             new ChildBlock("属性", ViewConfigurationModel.ViewConfigurationPropertyListProperty),
                             new ChildBlock("命令", ViewConfigurationModel.ViewConfigurationCommandListProperty)

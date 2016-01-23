@@ -35,11 +35,6 @@ namespace Rafy.Domain
     /// </summary>
     internal class RafyDomainPlugin : DomainPlugin
     {
-        protected override int SetupLevel
-        {
-            get { return PluginSetupLevel.System; }
-        }
-
         public override void Initialize(IApp app)
         {
             RepositoryFactoryHost.Factory = DictionaryRepositoryFactory.Instance;

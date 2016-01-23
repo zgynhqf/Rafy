@@ -33,11 +33,6 @@ namespace Rafy.RBAC
     /// </summary>
     internal class RBACPlugin : DomainPlugin
     {
-        protected override int SetupLevel
-        {
-            get { return PluginSetupLevel.System; }
-        }
-
         public override void Initialize(IApp app)
         {
             //设置权限提供程序为本模块中实体类

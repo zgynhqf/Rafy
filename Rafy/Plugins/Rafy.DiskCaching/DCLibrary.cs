@@ -16,11 +16,6 @@ namespace Rafy.Domain.Caching
     {
         public static int CacheExpiredSeconds = 30;
 
-        protected override int SetupLevel
-        {
-            get { return PluginSetupLevel.System; }
-        }
-
         public override void Initialize(IApp app)
         {
             VersionSyncMgr.SetProvider(new EntityListVersionRepository());

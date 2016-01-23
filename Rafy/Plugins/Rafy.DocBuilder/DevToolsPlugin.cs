@@ -38,11 +38,6 @@ namespace Rafy.DevTools
 {
     class DevToolsPlugin : UIPlugin
     {
-        protected override int SetupLevel
-        {
-            get { return PluginSetupLevel.System; }
-        }
-
         public override void Initialize(IApp app)
         {
             //必须是在调试期才起作用。

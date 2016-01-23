@@ -26,17 +26,6 @@ namespace Rafy.ComponentModel.UnityAdapter
     public class UnityAdapterPlugin : DomainPlugin
     {
         /// <summary>
-        /// 启动级别：系统级。
-        /// </summary>
-        protected override int SetupLevel
-        {
-            get
-            {
-                return PluginSetupLevel.System;
-            }
-        }
-
-        /// <summary>
         /// 插件的初始化方法。
         /// </summary>
         /// <param name="app">应用程序对象。</param>

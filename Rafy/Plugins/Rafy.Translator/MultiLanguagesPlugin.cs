@@ -22,11 +22,6 @@ namespace Rafy.MultiLanguages
 {
     public class MultiLanguagesPlugin : DomainPlugin
     {
-        protected override int SetupLevel
-        {
-            get { return PluginSetupLevel.System; }
-        }
-
         public override void Initialize(IApp app)
         {
             RafyEnvironment.Provider.Translator = DbTranslator.Instance;
