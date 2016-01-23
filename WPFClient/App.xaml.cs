@@ -15,25 +15,36 @@ namespace WPFClient
     {
         public App()
         {
-            Rafy.WPF.App.MainWindowType = typeof(DefaultShell);
-            ClientApp.LoginWindowType = typeof(DefaultLoginWindow);
-            //ClientApp.SplashScreen = new SplashScreen("Shell/ProductSplash.jpg");
+            var app = new WPFClientApp();
+            app.AttachTo(this);
 
-            RafyEnvironment.Provider.IsDebuggingEnabled = ConfigurationHelper.GetAppSettingOrDefault("WPFClient.IsDebuggingEnabled", false);
+            this.DispatcherUnhandledException += OnDispatcherUnhandledException;
+        }
 
-            var app = ClientApp.Register(this);
-
-            //登录成功时，需要绑定主窗口的模块列表。
-            app.LoginSuccessed += (o, e) =>
+        class WPFClientApp : ClientApp
+        {
+            protected override void InitEnvironment()
             {
+                Rafy.WPF.App.MainWindowType = typeof(DefaultShell);
+                ClientApp.LoginWindowType = typeof(DefaultLoginWindow);
+                //ClientApp.SplashScreen = new SplashScreen("Shell/ProductSplash.jpg");
+
+                RafyEnvironment.Provider.IsDebuggingEnabled = ConfigurationHelper.GetAppSettingOrDefault("WPFClient.IsDebuggingEnabled", false);
+
+                base.InitEnvironment();
+            }
+
+            protected override void OnLoginSuccessed()
+            {
+                base.OnLoginSuccessed();
+
+                //登录成功时，需要绑定主窗口的模块列表。
                 var mainWin = App.Current.MainWindow as DefaultShell;
                 if (mainWin != null)
                 {
                     mainWin.ShowModules();
                 }
-            };
-
-            this.DispatcherUnhandledException += OnDispatcherUnhandledException;
+            }
         }
 
         #region 处理异常

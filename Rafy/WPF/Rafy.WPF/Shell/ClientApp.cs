@@ -45,21 +45,14 @@ namespace Rafy.WPF.Shell
 
         private IClientAppRuntime _wpfApp;
 
-        protected ClientApp() { }
+        public ClientApp() { }
 
         /// <summary>
         /// 注册客户端应用程序。
         /// 在 WPF Application 类的构造函数中调用此法。
         /// </summary>
-        /// <param name="wpfClientApp"></param>
-        public static ClientApp Register(IClientAppRuntime wpfClientApp)
-        {
-            var app = new ClientApp();
-            app.AttachTo(wpfClientApp);
-            return app;
-        }
-
-        private void AttachTo(IClientAppRuntime wpfApp)
+        /// <param name="wpfApp"></param>
+        public void AttachTo(IClientAppRuntime wpfApp)
         {
             if (wpfApp == null) throw new ArgumentNullException("wpfApp");
 
@@ -207,7 +200,7 @@ namespace Rafy.WPF.Shell
             var dlls = RafyEnvironment.GetCustomerEntityDlls(false);
             if (dlls.Length > 0)
             {
-                var pathes = new List<string> { 
+                var pathes = new List<string> {
                     "Library", "Module", "Files", Path.GetDirectoryName(dlls[0]) + @"\Library"
                 };
 
