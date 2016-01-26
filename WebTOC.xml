@@ -70,10 +70,4 @@
       <HelpTOCNode Title="幽灵插件" Url="html/f662f88a-8221-49f4-bc38-901134ea893e.htm" />
     </HelpTOCNode>
   </HelpTOCNode>
-  <HelpTOCNode Id="ea014576-8a28-4a0f-b82b-0bded1c8439d" Title="EmptyAssembly" Url="html/1234690D.htm">
-    <HelpTOCNode Id="1e03d6a7-d5f9-462d-8f9a-2f9e858c37ad" Title="Class1 Class" Url="html/2368570A.htm">
-      <HelpTOCNode Title="Class1 Constructor " Url="html/923C26D2.htm" />
-      <HelpTOCNode Title="Class1 Methods" Url="html/795CD906.htm" />
-    </HelpTOCNode>
-  </HelpTOCNode>
 </HelpTOC>
