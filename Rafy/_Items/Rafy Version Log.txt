@@ -10,11 +10,15 @@
  * 
 *******************************************************/
 
-2.47.3081
+2.47.3082
     ！删除接口
         删除 DomainPlugin.SetupLevel、UIPlugin.SetupLevel。
     添加接口
         添加 LocalTransactionBlock.GetCurrentTransactionBlock 方法。
+    BUG修复
+        修复 EagerLoadOptions 无法序列化的 BUG。
+    添加功能
+        ConcreteProperty 支持序列化。
 
 2.47.3078
     ★★公布

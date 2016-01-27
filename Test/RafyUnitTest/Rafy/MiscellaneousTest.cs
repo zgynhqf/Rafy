@@ -81,5 +81,25 @@ namespace RafyUnitTest
         }
 
         #endregion
+
+        #region Serialization
+
+        [TestMethod]
+        public void MT_Serialization_EagerLoadOptions()
+        {
+            var elo = new EagerLoadOptions();
+            elo.LoadWith(Book.ChapterListProperty);
+            elo.LoadWith(Chapter.SectionListProperty);
+            elo.LoadWith(Section.SectionOwnerProperty);
+
+            var elo2 = ObjectCloner.Clone(elo);
+
+            Assert.AreEqual(elo.CoreList.Count, 3);
+            Assert.AreEqual(elo.CoreList[0].Property, Book.ChapterListProperty);
+            Assert.AreEqual(elo.CoreList[1].Property, Chapter.SectionListProperty);
+            Assert.AreEqual(elo.CoreList[2].Property, Section.SectionOwnerProperty);
+        }
+
+        #endregion
     }
 }
