@@ -4,7 +4,7 @@
     P&lt;Warehouse&gt;.RegisterRefId(e =&gt; e.AdministratorId, ReferenceType.Normal);
 <span class="highlight-keyword">public</span> <span class="highlight-keyword">int</span>? AdministratorId
 {
-    <span class="highlight-keyword">get</span> { <span class="highlight-keyword">return</span> <span class="highlight-keyword">this</span>.GetRefNullableId(AdministratorIdProperty); }
+    <span class="highlight-keyword">get</span> { (<span class="highlight-keyword">int</span>?)<span class="highlight-keyword">return</span> <span class="highlight-keyword">this</span>.GetRefNullableId(AdministratorIdProperty); }
     <span class="highlight-keyword">set</span> { <span class="highlight-keyword">this</span>.SetRefNullableId(AdministratorIdProperty, <span class="highlight-keyword">value</span>); }
 }
 <span class="highlight-keyword">public</span> <span class="highlight-keyword">static</span> <span class="highlight-keyword">readonly</span> RefEntityProperty&lt;User&gt; AdministratorProperty =
@@ -17,7 +17,7 @@
     P&lt;Warehouse&gt;.RegisterRefId(e =&gt; e.AdministratorId, ReferenceType.Normal);
 <span class="highlight-keyword">public</span> <span class="highlight-keyword">int</span> AdministratorId
 {
-    <span class="highlight-keyword">get</span> { <span class="highlight-keyword">return</span> <span class="highlight-keyword">this</span>.GetRefId(AdministratorIdProperty); }
+    <span class="highlight-keyword">get</span> { <span class="highlight-keyword">return</span> (<span class="highlight-keyword">int</span>)<span class="highlight-keyword">this</span>.GetRefId(AdministratorIdProperty); }
     <span class="highlight-keyword">set</span> { <span class="highlight-keyword">this</span>.SetRefId(AdministratorIdProperty, <span class="highlight-keyword">value</span>); }
 }
 <span class="highlight-keyword">public</span> <span class="highlight-keyword">static</span> <span class="highlight-keyword">readonly</span> RefEntityProperty&lt;User&gt; AdministratorProperty =
@@ -30,7 +30,7 @@
     P&lt;Wheel&gt;.RegisterRefId(e =&gt; e.CarId, ReferenceType.Parent);
 <span class="highlight-keyword">public</span> <span class="highlight-keyword">int</span> CarId
 {
-    <span class="highlight-keyword">get</span> { <span class="highlight-keyword">return</span> <span class="highlight-keyword">this</span>.GetRefId(CarIdProperty); }
+    <span class="highlight-keyword">get</span> { <span class="highlight-keyword">return</span> (<span class="highlight-keyword">int</span>)<span class="highlight-keyword">this</span>.GetRefId(CarIdProperty); }
     <span class="highlight-keyword">set</span> { <span class="highlight-keyword">this</span>.SetRefId(CarIdProperty, <span class="highlight-keyword">value</span>); }
 }
 <span class="highlight-keyword">public</span> <span class="highlight-keyword">static</span> <span class="highlight-keyword">readonly</span> RefEntityProperty&lt;Car&gt; CarProperty =
@@ -45,7 +45,7 @@
     P&lt;Warehouse&gt;.RegisterRefId(e =&gt; e.AdministratorId, ReferenceType.Normal);
 <span class="highlight-keyword">public</span> <span class="highlight-keyword">int</span>? AdministratorId
 {
-    <span class="highlight-keyword">get</span> { <span class="highlight-keyword">return</span> <span class="highlight-keyword">this</span>.GetRefNullableId(AdministratorIdProperty); }
+    <span class="highlight-keyword">get</span> { <span class="highlight-keyword">return</span> (<span class="highlight-keyword">int</span>?)<span class="highlight-keyword">this</span>.GetRefNullableId(AdministratorIdProperty); }
     <span class="highlight-keyword">set</span> { <span class="highlight-keyword">this</span>.SetRefNullableId(AdministratorIdProperty, <span class="highlight-keyword">value</span>); }
 }</pre></div></div></div><script type="text/javascript">AddLanguageTabSet("ID0EABBAADAAA");</script><p>Id 属性是引用属性的值的关键。数据传输、数据库映射时，都是以直接操作 Id 属性来完成的。</p></li><li><p>引用实体属性</p><div class="codeSnippetContainer"><div class="codeSnippetContainerTabs"><div id="ID0EACAAADAAA_tab1" class="codeSnippetContainerTabSingle">C#</div></div><div class="codeSnippetContainerCodeContainer"><div class="codeSnippetToolBar"><div class="codeSnippetToolBarText"><a id="ID0EACAAADAAA_copyCode" href="#" onclick="javascript:CopyToClipboard('ID0EACAAADAAA');return false;" title="Copy">Copy</a></div></div><div id="ID0EACAAADAAA_code_Div1" class="codeSnippetContainerCode" style="display: block"><pre xml:space="preserve"><span class="highlight-keyword">public</span> <span class="highlight-keyword">static</span> <span class="highlight-keyword">readonly</span> RefEntityProperty&lt;User&gt; AdministratorProperty =
     P&lt;Warehouse&gt;.RegisterRef(e =&gt; e.Administrator, AdministratorIdProperty);
