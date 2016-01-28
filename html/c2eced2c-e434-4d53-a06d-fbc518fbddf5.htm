@@ -12,7 +12,7 @@ WHERE NAME = {0}"</span>;
     sql.Parameters.Add(name);
 
     <span class="highlight-keyword">return</span> (<span class="highlight-keyword">this</span>.DataQueryer <span class="highlight-keyword">as</span> RdbDataQueryer).QueryList(sql);
-}</pre></div></div></div><script type="text/javascript">AddLanguageTabSet("ID0EACCAAA");</script><p>以上代码编写了一个自定义 Sql 字符串进行查询，这个 Sql 语句的查询结果是一个包含三个字段（Id, Code, Name）的表格。在传递给 QueryList 方法后，框架会执行这个 Sql 语句，并把返回的结果表转换为 Warehouse 实体类的集合，表中的每一行都会转换为一个 Warehouse 实体。</p><div class="alert"><table><tr><th><img src="../icons/AlertNote.png" alt="Note" /> Note</th></tr><tr><td><p>在使用 Sql 查询时，必须保证：实体所有映射数据库的属性，在 Sql 中查询出的表格中都有对应的列。（这包括 Entity 基类的属性 Id。）</p></td></tr></table></div></div></div></div><div id="pageFooter" class="pageFooter">胡庆访 @版权所有，有问题请联系 9474649@qq.com。<div class="feedbackLink">有关这个主题的评论请发邮件到
+}</pre></div></div></div><script type="text/javascript">AddLanguageTabSet("ID0EACCAAA");</script><p>以上代码编写了一个自定义 Sql 字符串进行查询，这个 Sql 语句的查询结果是一个包含三个字段（Id, Code, Name）的表格。在传递给 QueryList 方法后，框架会执行这个 Sql 语句，并把返回的结果表转换为 Warehouse 实体类的集合，表中的每一行都会转换为一个 Warehouse 实体。</p><div class="alert"><table><tr><th><img src="../icons/AlertNote.png" alt="Note" /> Note</th></tr><tr><td><p>在使用 Sql 查询时，必须保证：实体所有映射数据库的属性，在 Sql 中查询出的表格中都有对应的列。（这包括 Entity 基类的属性 Id。）</p></td></tr></table></div></div></div></div><div id="pageFooter" class="pageFooter">有问题请联系 9474649@qq.com。<div class="feedbackLink">有关这个主题的评论请发邮件到
         <a id="HT_MailLink" href="mailto:9474649%40qq.com?Subject=Rafy User Guide">发送反馈</a></div><script type="text/javascript">
         var HT_mailLink = document.getElementById("HT_MailLink");
         var HT_mailLinkText = HT_mailLink.innerHTML;

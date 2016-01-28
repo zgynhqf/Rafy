@@ -7,7 +7,7 @@
 <span class="highlight-keyword">public</span> <span class="highlight-keyword">string</span> AdministratorName
 {
     <span class="highlight-keyword">get</span> { <span class="highlight-keyword">return</span> <span class="highlight-keyword">this</span>.GetProperty(AdministratorNameProperty); }
-}</pre></div></div></div><script type="text/javascript">AddLanguageTabSet("ID1EACABAAA");</script><p>特点</p><ul><li><p>声明冗余属性时，需要声明出完整的冗余路径。冗余路径由一串实体属性组成：一个以上的引用属性 + 一个一般值属性。冗余路径说明了需要把当前对象引用的某个对象的值冗余到本对象中。</p></li><li><p>只读：冗余属性是只读的，不能直接设置冗余属性值，由框架本身来维护冗余属性的值。当改变路径中任意一个引用对象、或者路径终点的属性的值时，冗余属性值自动更新。</p></li><li><p>冗余属性需要映射到数据库中，否则不能起到优化查询性能的作用。</p></li></ul></div></div></div><div id="pageFooter" class="pageFooter">胡庆访 @版权所有，有问题请联系 9474649@qq.com。<div class="feedbackLink">有关这个主题的评论请发邮件到
+}</pre></div></div></div><script type="text/javascript">AddLanguageTabSet("ID1EACABAAA");</script><p>特点</p><ul><li><p>声明冗余属性时，需要声明出完整的冗余路径。冗余路径由一串实体属性组成：一个以上的引用属性 + 一个一般值属性。冗余路径说明了需要把当前对象引用的某个对象的值冗余到本对象中。</p></li><li><p>只读：冗余属性是只读的，不能直接设置冗余属性值，由框架本身来维护冗余属性的值。当改变路径中任意一个引用对象、或者路径终点的属性的值时，冗余属性值自动更新。</p></li><li><p>冗余属性需要映射到数据库中，否则不能起到优化查询性能的作用。</p></li></ul></div></div></div><div id="pageFooter" class="pageFooter">有问题请联系 9474649@qq.com。<div class="feedbackLink">有关这个主题的评论请发邮件到
         <a id="HT_MailLink" href="mailto:9474649%40qq.com?Subject=Rafy User Guide">发送反馈</a></div><script type="text/javascript">
         var HT_mailLink = document.getElementById("HT_MailLink");
         var HT_mailLinkText = HT_mailLink.innerHTML;

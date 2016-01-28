@@ -12,7 +12,7 @@
                     聚合关系是另一种一对多关系。相对于组合关系来说，聚合关系更加松散。 在 Rafy 中，这种关系并不直接被实现，而是把聚合转换为由组合和引用构成的。以下以用户与角色的关系设计为例说明。
                 </p><p>用户与角色是多对多的，一个用户拥有很多角色，一个角色下也有很多的用户。 对于这两个一对多关系，在实体关系的设计上，我们需要先分辨两个实体间的依赖关系。这里，假设我们认为用户依赖角色，也就是先存在用户，才会存在角色。那么，我们认为是用户聚合了角色。UML 图如下：</p><div class="mediaNear"><img alt="实体关系 User Role Aggregation" src="../media/实体关系_User_Role_Aggregation.png" /></div><p>在 Rafy 中，我们把聚合关系实体化：</p><div class="mediaNear"><img alt="实体关系 User Role Composition" src="../media/实体关系_User_Role_Composition.png" /></div><p>用户组合了实体：UserRole，而 UserRole 非空引用了一个 Role。一旦删除用户，这个用户对应的 UserRole 组合子实体也将被删除。如果角色还被某个用户使用时，则不能删除这个角色。同时，我们可以为这个 UserRole 实体添加许多的属性，表示这个关系的属性。例如可以添加一个“添加时间”属性，用于表示为用户添加这个角色的时间。</p><div class="alert"><table><tr><th><img src="../icons/AlertNote.png" alt="Note" /> Note</th></tr><tr><td><p>
                         由于我们设计角色不依赖用户，所以不需要修改角色的实体结构。如果需要查找某个角色下的所有用户，则可以在角色的仓库类中添加相应的查询方法。应用层使用该方法来进行查询即可。仓库查询方法的编写，参见：<a href="59c80aec-c910-4880-b165-c3495ed5eb3e.htm">编写查询</a>。
-                    </p></td></tr></table></div></div></div></div><div id="pageFooter" class="pageFooter">胡庆访 @版权所有，有问题请联系 9474649@qq.com。<div class="feedbackLink">有关这个主题的评论请发邮件到
+                    </p></td></tr></table></div></div></div></div><div id="pageFooter" class="pageFooter">有问题请联系 9474649@qq.com。<div class="feedbackLink">有关这个主题的评论请发邮件到
         <a id="HT_MailLink" href="mailto:9474649%40qq.com?Subject=Rafy User Guide">发送反馈</a></div><script type="text/javascript">
         var HT_mailLink = document.getElementById("HT_MailLink");
         var HT_mailLinkText = HT_mailLink.innerHTML;
