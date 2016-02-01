@@ -5,45 +5,70 @@
       xmlns:xlink="http://www.w3.org/1999/xlink">
         <introduction>
             <para>
-                在使用实体时，往往还需要使用实体的一些关系实体。虽然，Rafy 中的实体关系都支持懒加载，但是过多地使用懒加载会造成 N+1 性能问题（关于 N+1 问题，本文中有相关的介绍：<externalLink>
+                通过仓库查询出实体，在使用这些实体时，除了使用实体自身的一般属性，往往还需要使用它的一些关系实体。虽然，实体关系都支持懒加载，使用者可以在真正使用这些关系属性时才从数据库中加载相应的数据，但是过多地使用懒加载会造成 N+1 性能问题（关于 N+1 问题，本文中有相关的介绍：<externalLink>
                     <linkText>OEA ORM 框架中的冗余属性设计</linkText>
                     <linkUri>http://www.cnblogs.com/zgynhqf/archive/2012/08/10/2633047.html</linkUri>
-                </externalLink> ）。所以如果需要在查询实体后，使用每一个实体的关系实体，则需要同时查询出实体所拥有的这些关系实体，即贪婪加载。
+                </externalLink> ）。为了解决 N+1 问题，除了使用上文中提到了定义冗余属性的方法，还可以使用本文将介绍的贪婪加载方法：在查询一个或一组实体的同时，一并查询出实体所拥有的这些关系属性所对应的实体。
             </para>
         </introduction>
-        <section address="inter">
-            <title>使用方法</title>
+        <section address="define">
+            <title>定义查询</title>
             <content>
                 <para>
-                    Rafy 中的关系有引用关系和组合关系，这些关系都可以声明为贪婪加载。要使用贪婪加载，必须使用托管属性查询（由于 Linq 查询可以转换为托管属性查询，所以也支持使用 Linq 查询）。调用 <codeInline>IPropertyQuery.EagerLoad</codeInline> 方法，传入需要贪婪加载的托管属性即可。
+                    Rafy 中的关系有引用关系和组合关系，这些关系都可以声明为贪婪加载。
                 </para>
-                <para></para>
+                <para>
+                    在仓库中编写的查询时，如果该查询需要支持贪婪加载，那么需要为查询添加一个额外的参数，类型为 <codeInline>EagerLoadOptions</codeInline>。并将其从公有接口层一直传递给数据层，并由数据层传递给底层框架的查询 API，最终框架会根据其中的内容，来加载相应的实体关系。
+                </para>
+                <para>
+                    以下代码示例通过添加 <codeInline>EagerLoadOptions eagerLoad</codeInline> 可选参数，使得 <codeInline>SearchByCode</codeInline> 方法支持贪婪加载：
+                </para>
+                <code language="cs">
+                    <![CDATA[public WarehouseList SearchByCode(string code, EagerLoadOptions eagerLoad = null)
+{
+    return this.FetchList(r => r.DA_SearchByCode(code, eagerLoad));
+}
+private EntityList DA_SearchByCode(string code, EagerLoadOptions eagerLoad = null)
+{
+    var q = this.CreateLinqQuery();
+    q = q.Where(e => e.Code.Contains(code));
+    return this.QueryList(q, eagerLoad: eagerLoad);
+}]]>
+                </code>
             </content>
         </section>
 
-        <section address="demo">
-            <title>代码示例</title>
+        <section address="use">
+            <title>如何使用</title>
             <content>
-                <para>以下代码示例如何在加载仓库实体的同时，一并加载出仓库的管理员及仓库下所有的货品信息。其中，管理员是一个引用实体属性，而货品则是仓库的组合子属性：</para>
+                <para>
+                    使用者在使用查询时，可以通过 <codeInline>EagerLoadOptions</codeInline> 参数来定义该查询所需要同时贪婪加载的实体的关系列表。
+                </para>
+                <para>以下代码示例如何在搜索编码中含有"001"的仓库实体的同时，一并加载出仓库的管理员及仓库下所有的货品信息、货品类别信息（其中，管理员是仓库的引用属性；货品是仓库的组合子属性；货品类别是货品的引用属性）：</para>
                 <code language="cs">
-                    <![CDATA[public WarehouseList GetByCode(string warehouseCode)
+                    <![CDATA[//定义加载仓库时，需要同时加载的所有关系属性。
+var eagerLoad = new EagerLoadOptions()
+    .LoadWith(Warehouse.AdministratorProperty)
+    .LoadWith(Warehouse.ProductListProperty)
+    .LoadWith(Product.ProductCategoryProperty);
+
+//一次性将数据全部加载到内存中。
+var repo = RF.Concrete<WarehouseRepository>();
+var warehouseList = repo.SearchByCode("001", eagerLoad);
+
+//由于已经使用贪婪加载，所以数据都已经查询到内存中。下面的循环将不会再触发懒加载。
+foreach(var warehouse in warehouseList)
 {
-    return this.FetchList(r => r.DA_GetByCode(warehouseCode));
+    var administrator = warehouse.Administrator;
+    foreach(var product in warehouse.ProductList)
+    {
+        var productCategory = product.ProductCategory;
+        
+        //使用 warehouse、administrator、product、productCategory
+        doSomething(warehouse, administrator, product, productCategory);
+    }
 }
-private EntityList DA_GetByCode(string warehouseCode)
-{
-    IPropertyQuery query = this.CreatePropertyQuery();
-
-    query.Constrain(Warehouse.CodeProperty).Equal(warehouseCode);
-
-    //在加载 Warehouse 实体的同时，也加载每一个 Warehouse 的 Administrator 引用实体。
-    query.EagerLoad(Warehouse.AdministratorProperty);
-
-    //在加载 Warehouse 实体的同时，也加载每一个 Warehouse 的 ProductList 组合子实体。
-    query.EagerLoad(Warehouse.ProductListProperty);
-
-    return this.QueryList(query);
-}]]>
+]]>
                 </code>
             </content>
         </section>

@@ -32,7 +32,7 @@
     <ContentPlacement>AboveNamespaces</ContentPlacement>
     <FeedbackEMailLinkText>发送反馈</FeedbackEMailLinkText>
     <FeedbackEMailAddress>9474649%40qq.com</FeedbackEMailAddress>
-    <FooterText>胡庆访 %40版权所有，有问题请联系 9474649%40qq.com。</FooterText>
+    <FooterText>有问题请联系 9474649%40qq.com。</FooterText>
     <VisibleItems>InheritedMembers, InheritedFrameworkMembers, Protected, SealedProtected</VisibleItems>
     <MissingTags>Summary, Parameter, Returns, AutoDocumentCtors, TypeParameter, AutoDocumentDispose</MissingTags>
     <BuildAssemblerVerbosity>OnlyWarningsAndErrors</BuildAssemblerVerbosity>

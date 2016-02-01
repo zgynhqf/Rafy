@@ -10,11 +10,12 @@
  * 
 *******************************************************/
 
-2.47.3082
+2.47.3083
     ！删除接口
         删除 DomainPlugin.SetupLevel、UIPlugin.SetupLevel。
     添加接口
         添加 LocalTransactionBlock.GetCurrentTransactionBlock 方法。
+        添加 DbMigrationSettings.StringColumnDataTypeLength 属性。
     BUG修复
         修复 EagerLoadOptions 无法序列化的 BUG。
     添加功能

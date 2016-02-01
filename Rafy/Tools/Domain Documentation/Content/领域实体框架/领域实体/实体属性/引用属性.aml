@@ -25,7 +25,7 @@
     P<Warehouse>.RegisterRefId(e => e.AdministratorId, ReferenceType.Normal);
 public int? AdministratorId
 {
-    get { return this.GetRefNullableId(AdministratorIdProperty); }
+    get { (int?)return this.GetRefNullableId(AdministratorIdProperty); }
     set { this.SetRefNullableId(AdministratorIdProperty, value); }
 }
 public static readonly RefEntityProperty<User> AdministratorProperty =
@@ -45,7 +45,7 @@ public User Administrator
     P<Warehouse>.RegisterRefId(e => e.AdministratorId, ReferenceType.Normal);
 public int AdministratorId
 {
-    get { return this.GetRefId(AdministratorIdProperty); }
+    get { return (int)this.GetRefId(AdministratorIdProperty); }
     set { this.SetRefId(AdministratorIdProperty, value); }
 }
 public static readonly RefEntityProperty<User> AdministratorProperty =
@@ -71,7 +71,7 @@ public User Administrator
     P<Wheel>.RegisterRefId(e => e.CarId, ReferenceType.Parent);
 public int CarId
 {
-    get { return this.GetRefId(CarIdProperty); }
+    get { return (int)this.GetRefId(CarIdProperty); }
     set { this.SetRefId(CarIdProperty, value); }
 }
 public static readonly RefEntityProperty<Car> CarProperty =
@@ -113,7 +113,7 @@ public Car Car
     P<Warehouse>.RegisterRefId(e => e.AdministratorId, ReferenceType.Normal);
 public int? AdministratorId
 {
-    get { return this.GetRefNullableId(AdministratorIdProperty); }
+    get { return (int?)this.GetRefNullableId(AdministratorIdProperty); }
     set { this.SetRefNullableId(AdministratorIdProperty, value); }
 }]]>
                         </code>

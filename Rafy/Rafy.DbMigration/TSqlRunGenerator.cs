@@ -191,10 +191,17 @@ ALTER TABLE ");
             string columnName, DbType dataType, string length, bool? isRequired, bool isPKorFK
             )
         {
-            if (isPKorFK && string.IsNullOrEmpty(length))
+            if (string.IsNullOrEmpty(length))
             {
-                //http://stackoverflow.com/questions/2863993/is-of-a-type-that-is-invalid-for-use-as-a-key-column-in-an-index
-                length = DbMigrationSettings.PKFKDataTypeLength;
+                if (isPKorFK)
+                {
+                    //http://stackoverflow.com/questions/2863993/is-of-a-type-that-is-invalid-for-use-as-a-key-column-in-an-index
+                    length = DbMigrationSettings.PKFKDataTypeLength;
+                }
+                else if (dataType == DbType.String)
+                {
+                    length = DbMigrationSettings.StringColumnDataTypeLength;
+                }
             }
 
             sql.Write(this.Quote(columnName));

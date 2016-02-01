@@ -19,15 +19,22 @@ using System.Text;
 namespace Rafy.DbMigration
 {
     /// <summary>
-    /// 数据
+    /// 数据迁移的一些默认配置。
     /// </summary>
     public static class DbMigrationSettings
     {
         /// <summary>
-        /// 可设置所有主键及外键的长度。 默认为 40。
+        /// 可设置所有主键及外键的长度。默认为 40。
+        /// </summary>
+        /// <remarks>
         /// http://stackoverflow.com/questions/2863993/is-of-a-type-that-is-invalid-for-use-as-a-key-column-in-an-index
         /// SqlServer 主键最大 450、Oracle 主键最大 400。
-        /// </summary>
+        /// </remarks>
         public static string PKFKDataTypeLength = "40";
+
+        /// <summary>
+        /// 可设置所有一般字符串字段的默认长度。默认为 4000。
+        /// </summary>
+        public static string StringColumnDataTypeLength = "4000";
     }
 }
