@@ -49,7 +49,7 @@
             <content>
                 <para>以下代码声明了一个简单的加法逻辑服务：</para>
                 <code language="cs">
-                    <![CDATA[[Serializable]
+                    <![CDATA[[Serializable, Contract, ContractImpl]
 public class AddService : Service
 {
     //服务的两个输入参数
