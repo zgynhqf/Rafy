@@ -28,7 +28,7 @@
             <title>代码示例</title>
             <content>
                 <para>
-                    以下代码为 Warehouse （仓库）类声明了一个名称为 AdministratorName 的冗余属性。这个属性把 Warehouse.Administrator.Name 的值冗余到 Warehouse 实体中。
+                    假设 Warehouse （仓库）类型中拥有一个类型为 User（用户）、属性名为 Administrator（管理员）的引用属性，以下代码示例如何为 Warehouse 类声明了一个名称为 AdministratorName 的冗余属性，该冗余属性把 Warehouse.Administrator.Name 的值自动冗余到 Warehouse 实体中。
                 </para>
                 <code language="cs" title="属性声明示例">
                     <![CDATA[public static readonly Property<string> AdministratorNameProperty = P<Warehouse>.RegisterRedundancy(e => e.AdministratorName,
