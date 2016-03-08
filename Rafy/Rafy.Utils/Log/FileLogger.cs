@@ -32,8 +32,13 @@ namespace Rafy
         /// <summary>
         /// 错误日志的文件名。
         /// </summary>
-        public static readonly string FileName = "ExceptionLog.txt";
+        public string FileName = "ExceptionLog.txt";
 
+        /// <summary>
+        /// 记录某个已经生成的异常到文件中。
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="e"></param>
         public override void LogError(string title, Exception e)
         {
             var stackTrace = e.StackTrace;//需要记录完整的堆栈信息。
@@ -50,7 +55,7 @@ namespace Rafy
 {2}
 
 ", title, e.Message, stackTrace, Thread.CurrentThread.ManagedThreadId, DateTime.Now);
-            File.AppendAllText(FileName, message);
+            File.AppendAllText(this.FileName, message);
         }
 
         private string _sqlTraceFile;
