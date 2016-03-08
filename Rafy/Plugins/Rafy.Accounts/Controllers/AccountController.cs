@@ -45,7 +45,7 @@ namespace Rafy.Accounts
         /// <param name="password">用户密码。</param>
         /// <param name="user">登录成功后的用户。</param>
         /// <returns></returns>
-        public Result Login(string userName, string password, out User user)
+        public virtual Result Login(string userName, string password, out User user)
         {
             user = null;
 
@@ -106,7 +106,7 @@ namespace Rafy.Accounts
         /// </summary>
         /// <param name="password"></param>
         /// <returns></returns>
-        public string EncodePassword(string password)
+        public virtual string EncodePassword(string password)
         {
             //创建一个计算md5的对象
             byte[] bytes = this.Encoding.GetBytes(password);

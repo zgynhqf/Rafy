@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-2.47.3084
+2.47.3085
     ！删除接口
         删除 DomainPlugin.SetupLevel、UIPlugin.SetupLevel。
     添加接口
@@ -22,6 +22,7 @@
         ConcreteProperty 支持序列化。
     内部修改
         FileLogger 支持路径的设置。
+        AccountsController 支持重写默认逻辑。
 
 2.47.3078
     ★★公布
