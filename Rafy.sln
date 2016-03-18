@@ -148,6 +148,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.Domain.Stamp", "Rafy\P
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.Accounts", "Rafy\Plugins\Rafy.Accounts\Rafy.Accounts.csproj", "{4D6467E4-D1CE-4FA8-A1FE-92B1BA549A4A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.SerialNumber", "Rafy\Plugins\Rafy.SerialNumber\Rafy.SerialNumber.csproj", "{9FF37989-33E7-4D67-8E81-0A443EAEE510}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		D_UIA_Standard|Any CPU = D_UIA_Standard|Any CPU
@@ -540,6 +542,14 @@ Global
 		{4D6467E4-D1CE-4FA8-A1FE-92B1BA549A4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D6467E4-D1CE-4FA8-A1FE-92B1BA549A4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D6467E4-D1CE-4FA8-A1FE-92B1BA549A4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FF37989-33E7-4D67-8E81-0A443EAEE510}.D_UIA_Standard|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FF37989-33E7-4D67-8E81-0A443EAEE510}.D_UIA_Standard|Any CPU.Build.0 = Debug|Any CPU
+		{9FF37989-33E7-4D67-8E81-0A443EAEE510}.D_Web|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FF37989-33E7-4D67-8E81-0A443EAEE510}.D_Web|Any CPU.Build.0 = Debug|Any CPU
+		{9FF37989-33E7-4D67-8E81-0A443EAEE510}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FF37989-33E7-4D67-8E81-0A443EAEE510}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FF37989-33E7-4D67-8E81-0A443EAEE510}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FF37989-33E7-4D67-8E81-0A443EAEE510}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -608,6 +618,7 @@ Global
 		{0B6DF92B-0248-422D-A9C2-1604D4CB7BC9} = {DC52A572-512A-4D70-81C0-F0EF8B6FFC85}
 		{6A13F732-1658-4636-8113-338B398CF328} = {DC52A572-512A-4D70-81C0-F0EF8B6FFC85}
 		{4D6467E4-D1CE-4FA8-A1FE-92B1BA549A4A} = {DC52A572-512A-4D70-81C0-F0EF8B6FFC85}
+		{9FF37989-33E7-4D67-8E81-0A443EAEE510} = {DC52A572-512A-4D70-81C0-F0EF8B6FFC85}
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = GIX4_ExpressApp.vsmdi
