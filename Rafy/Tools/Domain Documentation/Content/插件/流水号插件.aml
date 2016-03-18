@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="1ce3c19a-3de6-4956-afd0-a7fc6e577768" revisionNumber="1">
+    <developerConceptualDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+
+        <introduction>
+            <para>本文将解释 Rafy 框架中的流水插件的场景、使用方法。</para>
+            <autoOutline />
+        </introduction>
+
+        <section address="senarios">
+            <title>场景</title>
+            <content>
+                <para>在开发各类数据库应用系统时，往往需要生成从一开始的流水号，有时还需要按月或者按日进行独立生成，如下面的格式：2016031800000001、2016031800000002……。</para>
+                <para>设计本插件用于生成上述相应格式的编号。</para>
+            </content>
+        </section>
+
+        <section address="howto">
+            <title>使用方法</title>
+            <content>
+                <procedure>
+                    <title>添加插件</title>
+                    <steps class="ordered">
+                        <step>
+                            <content>
+                                <para>通过 Nuget Package Manager 搜索并安装 Rafy.SerialNumber 插件。</para>
+                            </content>
+                        </step>
+                        <step>
+                            <content>
+                                <para>在 DomainApp 中添加该插件；同时，设置该插件所对应的数据库配置名：</para>
+                                <code language="cs">
+                                    <![CDATA[class JXCApp : DomainApp
+{
+    protected override void InitEnvironment()
+    {
+        //配置插件所对应的数据库配置名。
+        Rafy.SerialNumber.SerialNumberPlugin.DbSettingName = "TestDb";
+
+        //添加流水号插件到 Rafy 应用程序集中。
+        RafyEnvironment.DomainPlugins.Add(new Rafy.SerialNumber.SerialNumberPlugin());
+
+        base.InitEnvironment();
+    }
+}]]>
+                                </code>
+                            </content>
+                        </step>
+                    </steps>
+                </procedure>
+                <procedure>
+                    <title>使用插件</title>
+                    <steps class="ordered">
+                        <step>
+                            <content>
+                                <para>
+                                    生成数据库。
+                                </para>
+                                <para>
+                                    该插件中自带两个实体：<codeInline>SerialNumberInfo</codeInline> 、<codeInline>SerialNumberValue</codeInline> ，所以 Rafy 会为其在数据库中添加相应的两张表。
+                                </para>
+                            </content>
+                        </step>
+                        <step>
+                            <content>
+                                <para>
+                                    添加流水号生成规则。
+                                </para>
+                                <para>
+                                    <codeInline>SerialNumberInfo</codeInline> 表示定义的流水号生成规则信息。而 <codeInline>SerialNumberValue</codeInline> 则表示生成的流水号的具体值。所以要生成流水号，必须先为其定义生成规则。可以使用 <codeInline>SerialNumberController</codeInline> 进行简单的每日规则创建，示例如下：
+                                </para>
+                                <code language="cs">
+                                    <![CDATA[var controller = DomainControllerFactory.Create<SerialNumberController>();
+var sni = controller.CreateDailySerialNumberInfo("流水号规则-1");]]>
+                                </code>
+                                <para>CreateDailySerialNumberInfo 方法内部其实非常简单，开发者可以参考以下代码创建新的生成规则，如下：</para>
+                                <code language="cs">
+                                    <![CDATA[/// <summary>
+/// 创建一个以日期进行分组生成编号的规则，存储到仓库中，并返回。
+/// 性能-仓库访问次数：1。
+/// </summary>
+/// <param name="name"></param>
+/// <returns></returns>
+public SerialNumberInfo CreateDailySerialNumberInfo(string name, string format = "yyyyMMdd********")
+{
+    var sni = new SerialNumberInfo
+    {
+        Name = name,
+        TimeGroupFormat = "yyyyMMdd",
+        Format = format,
+        RollValueStart = 1,
+        RollValueStep = 1,
+    };
+
+    var infoRepo = RF.Concrete<SerialNumberInfoRepository>();
+    infoRepo.Save(sni);
+
+    return sni;
+});]]>
+                                </code>
+                            </content>
+                        </step>
+                        <step>
+                            <content>
+                                <para>
+                                    生成流水号。
+                                </para>
+                                <para>
+                                    使用以下代码生成流水号即可：
+                                </para>
+                                <code language="cs">
+                                    <![CDATA[var next = controller.GenerateNext("流水号规则-1");
+Assert.AreEqual("2016031800000001", next);
+next = controller.GenerateNext("流水号规则-1");
+Assert.AreEqual("2016031800000002", next);
+next = controller.GenerateNext(sni);
+Assert.AreEqual("2016031800000002", next);]]>
+                                </code>
+                            </content>
+                        </step>
+                    </steps>
+                </procedure>
+            </content>
+        </section>
+
+        <relatedTopics>
+        </relatedTopics>
+    </developerConceptualDocument>
+</topic>

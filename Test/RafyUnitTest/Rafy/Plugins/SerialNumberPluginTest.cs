@@ -59,7 +59,7 @@ namespace RafyUnitTest
             {
                 var name = "testACP";
                 var controller = DomainControllerFactory.Create<SerialNumberController>();
-                var aci = controller.CreateDailySerialNumberInfo(name);
+                var sni = controller.CreateDailySerialNumberInfo(name);
 
                 var today = DateTime.Today.ToString("yyyyMMdd");
 
@@ -67,7 +67,7 @@ namespace RafyUnitTest
                 Assert.AreEqual(today + "00000001", next);
                 next = controller.GenerateNext(name);
                 Assert.AreEqual(today + "00000002", next);
-                next = controller.GenerateNext(aci);
+                next = controller.GenerateNext(sni);
                 Assert.AreEqual(today + "00000003", next);
             }
         }

@@ -31,7 +31,7 @@ using Rafy.MetaModel.View;
 namespace Rafy.SerialNumber
 {
     /// <summary>
-    /// 自动编码规则信息
+    /// 流水号生成规则信息
     /// </summary>
     [RootEntity, Serializable]
     public partial class SerialNumberInfo : SerialNumberEntity
@@ -136,14 +136,14 @@ namespace Rafy.SerialNumber
     }
 
     /// <summary>
-    /// 自动编码规则信息 列表类。
+    /// 流水号生成规则信息 列表类。
     /// </summary>
     [Serializable]
     public partial class SerialNumberInfoList : SerialNumberEntityList { }
 
     /// <summary>
-    /// 自动编码规则信息 仓库类。
-    /// 负责 自动编码规则信息 类的查询、保存。
+    /// 流水号生成规则信息 仓库类。
+    /// 负责 流水号生成规则信息 类的查询、保存。
     /// </summary>
     public partial class SerialNumberInfoRepository : SerialNumberEntityRepository
     {
@@ -167,8 +167,8 @@ namespace Rafy.SerialNumber
     }
 
     /// <summary>
-    /// 自动编码规则信息 配置类。
-    /// 负责 自动编码规则信息 类的实体元数据的配置。
+    /// 流水号生成规则信息 配置类。
+    /// 负责 流水号生成规则信息 类的实体元数据的配置。
     /// </summary>
     internal class SerialNumberInfoConfig : SerialNumberEntityConfig<SerialNumberInfo>
     {

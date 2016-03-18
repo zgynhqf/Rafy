@@ -112,6 +112,7 @@
     <None Include="Content\插件\幽灵插件.aml" />
     <None Include="Content\授权说明.aml" />
     <None Include="Content\插件.aml" />
+    <None Include="Content\插件\流水号插件.aml" />
     <None Include="Content\设计理念.aml" />
     <None Include="Content\框架结构\产品线工程.aml" />
     <None Include="Content\框架结构\插件化架构.aml" />
