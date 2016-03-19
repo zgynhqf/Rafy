@@ -76,7 +76,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ET_PersistenceStatus_Delete_SavedAsNew()
+        public void __ET_PersistenceStatus_Delete_SavedAsNew()
         {
             var repo = RF.Concrete<TestUserRepository>();
             using (RF.TransactionScope(repo))
@@ -628,7 +628,7 @@ namespace RafyUnitTest
         /// 在列表中移除实体时，实体的 ParentList 属性应该是空。
         /// </summary>
         [TestMethod]
-        public void ET_EntityList_ParentList_Remove()
+        public void __ET_EntityList_ParentList_Remove()
         {
             var item = new TestUser();
             Assert.IsTrue(item.ParentList == null);
@@ -1440,7 +1440,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ET_Repository_BatchImport_CDU_U_Redundancy_UpdateB()
+        public void __ET_Repository_BatchImport_CDU_U_Redundancy_UpdateB()
         {
             int size = BATCH_IMPORT_DATA_SIZE;
 
@@ -1477,7 +1477,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ET_Repository_BatchImport_CDU_U_Redundancy_UpdateC()
+        public void __ET_Repository_BatchImport_CDU_U_Redundancy_UpdateC()
         {
             int size = BATCH_IMPORT_DATA_SIZE;
 

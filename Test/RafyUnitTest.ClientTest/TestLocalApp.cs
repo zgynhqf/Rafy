@@ -52,8 +52,6 @@ namespace RafyUnitTest.ClientTest
 
             RafyEnvironment.DomainPlugins.Add(new UnitTestWPFPlugin());
 
-            DataSaver.SubmitInterceptors.Add(typeof(Rafy.Domain.Stamp.StampSubmitInterceptor));
-
             base.InitEnvironment();
         }
 

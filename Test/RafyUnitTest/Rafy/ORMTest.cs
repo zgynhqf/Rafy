@@ -5512,7 +5512,7 @@ ORDER BY Article.Code ASC");
         /// <summary>
         /// 是否需要把性能检测结果写到 D 盘，方便查询。
         /// </summary>
-        private static readonly bool Config_FlushResultToFile = false;
+        private static readonly bool Config_FlushResultToFile = true;
 
         /// <summary>
         /// 需要测试多少条数据。

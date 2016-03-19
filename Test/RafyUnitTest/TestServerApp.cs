@@ -66,8 +66,6 @@ namespace RafyUnitTest
             //RafyEnvironment.Location.IsWPFUI = false;
             //RafyEnvironment.Location.DataPortalMode = DataPortalMode.ConnectDirectly;
 
-            DataSaver.SubmitInterceptors.Add(typeof(Rafy.Domain.Stamp.StampSubmitInterceptor));
-
             base.InitEnvironment();
         }
 
