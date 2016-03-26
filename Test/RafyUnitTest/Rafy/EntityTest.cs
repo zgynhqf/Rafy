@@ -2165,6 +2165,56 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void ET_Json_Deserialization_Update_CreateNewInstance()
+        {
+            var repo = RF.Concrete<FavorateRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var f1 = new Favorate();
+                f1.Name = "n1";
+                f1.FavorateType = FavorateType.B;
+                repo.Save(f1);
+
+                var json = @"{
+""id"": " + f1.Id + @",
+""name"": ""n2""
+}";
+
+                var deserializer = new AggtDeserializer();
+                deserializer.UpdatedEntityCreationMode = UpdatedEntityCreationMode.CreateNewInstance;
+                var entity = deserializer.Deserialize(typeof(Favorate), json) as Favorate;
+
+                Assert.AreEqual(entity.Name, "n2");
+                Assert.AreEqual(entity.FavorateType, FavorateType.A, "CreateNewInstance 导致原有的值丢失。");
+            }
+        }
+
+        [TestMethod]
+        public void ET_Json_Deserialization_Update_RequeryFromRepository()
+        {
+            var repo = RF.Concrete<FavorateRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var f1 = new Favorate();
+                f1.Name = "n1";
+                f1.FavorateType = FavorateType.B;
+                repo.Save(f1);
+
+                var json = @"{
+""id"": " + f1.Id + @",
+""name"": ""n2""
+}";
+
+                var deserializer = new AggtDeserializer();
+                deserializer.UpdatedEntityCreationMode = UpdatedEntityCreationMode.RequeryFromRepository;
+                var entity = deserializer.Deserialize(typeof(Favorate), json) as Favorate;
+
+                Assert.AreEqual(entity.Name, "n2");
+                Assert.AreEqual(entity.FavorateType, FavorateType.B, "RequeryFromRepository 导致原有的值不会丢失。");
+            }
+        }
+
+        [TestMethod]
         public void ET_Json_Deserialization_Enum()
         {
             var json =

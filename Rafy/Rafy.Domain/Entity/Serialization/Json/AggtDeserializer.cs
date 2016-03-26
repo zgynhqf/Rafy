@@ -36,6 +36,18 @@ namespace Rafy.Domain.Serialization.Json
         /// </summary>
         public const string PersistenceStatusProperty = "persistenceStatus";
 
+        private UpdatedEntityCreationMode _creationMode = UpdatedEntityCreationMode.CreateNewInstance;
+
+        /// <summary>
+        /// 更新实体时，实体的创建模式。
+        /// 默认值：<see cref="UpdatedEntityCreationMode.CreateNewInstance"/>。
+        /// </summary>
+        public UpdatedEntityCreationMode UpdatedEntityCreationMode
+        {
+            get { return _creationMode; }
+            set { _creationMode = value; }
+        }
+
         /// <summary>
         /// 实体或实体列表的自定义反序列化方法。
         /// </summary>
@@ -84,8 +96,16 @@ namespace Rafy.Domain.Serialization.Json
             Entity entity = null;
             if (id != null)
             {
-                var repository = RF.Find(type);
-                entity = repository.GetById(id);
+                if (_creationMode == UpdatedEntityCreationMode.RequeryFromRepository)
+                {
+                    var repository = RF.Find(type);
+                    entity = repository.GetById(id);
+                }
+                else
+                {
+                    entity = Activator.CreateInstance(type) as Entity;
+                    entity.PersistenceStatus = PersistenceStatus.Unchanged;
+                }
             }
             if (entity == null)
             {
@@ -109,10 +129,19 @@ namespace Rafy.Domain.Serialization.Json
             var entityType = EntityMatrix.FindByList(listType).EntityType;
             var repo = RF.Find(entityType);
 
-            //先从数据库中找出所有提供了 Id 的实体。
-            var idList = jArray.Cast<JObject>().Select(item => TryGetId(item))
+            //构造或查询出数据对应的实体列表。
+            EntityList list = null;
+            if (_creationMode == UpdatedEntityCreationMode.RequeryFromRepository)
+            {
+                //先从数据库中找出所有提供了 Id 的实体。
+                var idList = jArray.Cast<JObject>().Select(item => TryGetId(item))
                 .Where(id => id != null).ToArray();
-            var list = repo.GetByIdList(idList);
+                list = repo.GetByIdList(idList);
+            }
+            else
+            {
+                list = repo.NewList();
+            }
 
             //依次反序列化数组中的实体：
             //如果有 Id，则在数据库中查询出的列表 list 中查找出对应的实体，然后反序列化值。否则，直接构造新实体。
@@ -262,13 +291,33 @@ namespace Rafy.Domain.Serialization.Json
 
         private void DeserializeList(Entity entity, IListProperty listProperty, JArray jArray)
         {
-            var list = entity.GetLazyList(listProperty);
-            var isNew = entity.PersistenceStatus == PersistenceStatus.New;
-            if (isNew)
+            //构造 List 对象
+            EntityList list = null;
+            if (entity.FieldExists(listProperty) || entity.IsNew)
             {
+                list = entity.GetLazyList(listProperty);
+            }
+            else
+            {
+                if (_creationMode == UpdatedEntityCreationMode.RequeryFromRepository)
+                {
+                    list = entity.GetLazyList(listProperty);
+                }
+                else
+                {
+                    var listRepository = RepositoryFactoryHost.Factory.FindByEntity(listProperty.ListEntityType);
+                    list = listRepository.NewList();
+                    entity.LoadProperty(listProperty, list);
+                }
+            }
+
+            //反序列化其中的每一个元素。
+            if (entity.IsNew)
+            {
+                var listRepository = list.GetRepository();
                 foreach (JObject jChild in jArray)
                 {
-                    var child = list.GetRepository().New();
+                    var child = listRepository.New();
                     DeserializeProperties(jChild, child);
                     list.Add(child);
                 }
@@ -297,6 +346,12 @@ namespace Rafy.Domain.Serialization.Json
             {
                 child = list.GetRepository().New();
                 list.Add(child);
+
+                //在创建实体时，如果有 Id，表示是更新，这时创建的实体的初始状态应该是   
+                if (id != null)
+                {
+                    child.PersistenceStatus = PersistenceStatus.Unchanged;
+                }
             }
             return child;
         }
@@ -310,5 +365,23 @@ namespace Rafy.Domain.Serialization.Json
             }
             return null;
         }
+    }
+
+    /// <summary>
+    /// 更新实体时，实体的创建模式。
+    /// 更新时是否需要把实体从仓库中查询出来。
+    /// </summary>
+    public enum UpdatedEntityCreationMode
+    {
+        /// <summary>
+        /// 直接创建一个新的实体实例，然后在这个实例上进行属性的反序列化。
+        /// 如果反序列化时，JSON 中给出了所有的实体属性，则可以需要使用此配置。这样可以减少数据库访问次数。
+        /// </summary>
+        CreateNewInstance,
+        /// <summary>
+        /// 根据 Id 从仓库中把旧实体查询出来，然后在这个实例上进行属性的反序列化。
+        /// 如果反序列化时，JSON 中没有给出所有的实体属性，则需要使用此配置，否则会导致一些属性值丢失。
+        /// </summary>
+        RequeryFromRepository
     }
 }
