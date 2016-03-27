@@ -27,7 +27,7 @@ Rafy.defineCommand('Rafy.rbac.cmd.ChoosePermissions', {
 
         //以下代码连续生成两个视图，拼接后显示。
         Rafy.AutoUI.getMeta({
-            model: 'Rafy.RBAC.ModuleAC',
+            model: 'Rafy.RBAC.Old.ModuleAC',
             ignoreCommands: true,
             callback: function (block) {
                 //模块视图
@@ -36,7 +36,7 @@ Rafy.defineCommand('Rafy.rbac.cmd.ChoosePermissions', {
                 me._moduleView.loadData();
 
                 Rafy.AutoUI.getMeta({
-                    model: 'Rafy.RBAC.OperationAC',
+                    model: 'Rafy.RBAC.Old.OperationAC',
                     ignoreCommands: true,
                     callback: function (oacBlock) {
                         //勾选的操作列表视图
@@ -115,7 +115,7 @@ Rafy.defineCommand('Rafy.rbac.cmd.ChoosePermissions', {
         /// </summary>
         var me = this;
 
-        var c = Ext.create('Rafy.RBAC.OperationAC_GetDenyListCriteria', {
+        var c = Ext.create('Rafy.RBAC.Old.OperationAC_GetDenyListCriteria', {
             ModuleACId: me._moduleView.getCurrent().getId(),
             OrgPositionId: me._curPositionId
         });
@@ -160,7 +160,7 @@ Rafy.defineCommand('Rafy.rbac.cmd.ChoosePermissions', {
         //调用服务保存结果
         var me = this;
         Rafy.invokeService({
-            svc: 'Rafy.RBAC.DenyOperationService',
+            svc: 'Rafy.RBAC.Old.DenyOperationService',
             svcInput: {
                 DenyOperationIds: ids,
                 ModuleId: this._moduleView.getCurrent().get("Id"),

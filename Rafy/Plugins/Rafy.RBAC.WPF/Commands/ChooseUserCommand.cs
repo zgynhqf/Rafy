@@ -20,7 +20,7 @@ using Rafy.WPF.Command;
 using Rafy.WPF;
 using Rafy.Domain;
 
-namespace Rafy.RBAC.WPF
+namespace Rafy.RBAC.Old.WPF
 {
     [Command(Label = "选择用户")]
     class ChooseUserCommand : LookupSelectAddCommand

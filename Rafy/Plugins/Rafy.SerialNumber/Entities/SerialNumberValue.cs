@@ -76,7 +76,7 @@ namespace Rafy.SerialNumber
         public static readonly Property<string> TimeKeyProperty = P<SerialNumberValue>.Register(e => e.TimeKey);
         /// <summary>
         /// 根据所属规则中定义的时间格式来生成的时间键。
-        /// 如果 <see cref="iWS.IS.BasicData.Domain.DomainModels.AutoCodeInfo.TimeKeyFormat"/> 中定义的是 yyyyMM，那么这里就是存储具体的时间值：201408。
+        /// 如果 <see cref="SerialNumberInfo.TimeGroupFormat"/> 中定义的是 yyyyMM，那么这里就是存储具体的时间值：201408。
         /// </summary>
         public string TimeKey
         {

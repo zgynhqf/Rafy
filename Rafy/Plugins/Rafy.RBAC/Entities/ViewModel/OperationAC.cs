@@ -26,7 +26,7 @@ using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
 using Rafy.MetaModel.View;
 
-namespace Rafy.RBAC
+namespace Rafy.RBAC.Old
 {
     /// <summary>
     /// 操作控制

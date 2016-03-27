@@ -16,7 +16,7 @@ using System.Security.Cryptography;
 using Rafy.Utils;
 using Rafy.WPF;
 
-namespace Rafy.RBAC.WPF
+namespace Rafy.RBAC.Old.WPF
 {
     public partial class ChangePwd : Window
     {

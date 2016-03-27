@@ -30,7 +30,7 @@ using Rafy.Web;
 using Rafy.Domain;
 using System.Security.Permissions;
 
-namespace Rafy.RBAC
+namespace Rafy.RBAC.Old
 {
     /// <summary>
     /// 部门岗位用户

@@ -17,11 +17,11 @@ using System.Linq;
 using System.Text;
 using Rafy;
 using Rafy.Domain;
-using Rafy.RBAC.Audit;
+using Rafy.RBAC.Old.Audit;
 using Rafy.Web;
 using Rafy.MetaModel.View;
 
-namespace Rafy.RBAC
+namespace Rafy.RBAC.Old
 {
     /// <summary>
     /// 记录系统日志的服务

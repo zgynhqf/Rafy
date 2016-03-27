@@ -15,7 +15,7 @@ Rafy.defineCommand('Rafy.rbac.cmd.SaveUser', {
     meta: { text: "保存" },
     execute: function (listView, source) {
         Rafy.invokeService({
-            svc: 'Rafy.RBAC.SaveUserService',
+            svc: 'Rafy.RBAC.Old.SaveUserService',
             svcInput: {
                 EntityList: listView.getData()
             },

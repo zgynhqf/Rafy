@@ -18,7 +18,7 @@ using System.Text;
 using Rafy.DbMigration;
 using Rafy;
 using System.Transactions;
-using Rafy.RBAC;
+using Rafy.RBAC.Old;
 
 namespace Rafy.Domain.DbMigrations
 {

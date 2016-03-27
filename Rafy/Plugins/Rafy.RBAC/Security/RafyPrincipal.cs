@@ -19,7 +19,7 @@ using System.Security.Principal;
 using Rafy;
 using Rafy.Domain;
 
-namespace Rafy.RBAC.Security
+namespace Rafy.RBAC.Old.Security
 {
     [Serializable]
     public class RafyPrincipal : IPrincipal

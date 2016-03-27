@@ -16,9 +16,9 @@ using System.Linq;
 using System.Text;
 using Rafy.MetaModel;
 using Rafy.MetaModel.View;
-using Rafy.RBAC.Audit;
+using Rafy.RBAC.Old.Audit;
 
-namespace Rafy.RBAC.WPF.ViewConfig
+namespace Rafy.RBAC.Old.WPF.ViewConfig
 {
     internal class OrgConfig : WPFViewConfig<Org>
     {

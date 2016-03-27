@@ -12,7 +12,7 @@
 *******************************************************/
 
 using Rafy.Domain;
-namespace Rafy.RBAC.Audit
+namespace Rafy.RBAC.Old.Audit
 {
     /// <summary>
     /// 所有“非服务端”节点，都使用这个类作为Provider

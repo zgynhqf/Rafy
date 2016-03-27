@@ -37,7 +37,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "Web\Web.csproj", "{F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo", "Demo\Demo\Demo.csproj", "{BBC530FC-0B10-4DA9-9360-FFF250415EB5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.RBAC", "Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.csproj", "{03D5A267-C106-42A9-8959-93D7AE3648DD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.RBAC.Old", "Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.Old.csproj", "{03D5A267-C106-42A9-8959-93D7AE3648DD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.UnitTest", "Test\Rafy.UnitTest\Rafy.UnitTest.csproj", "{D226414C-37F6-4618-8B91-7E80E7D2C42E}"
 EndProject
@@ -45,7 +45,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.DiskCaching", "Rafy\Pl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFClient", "WPFClient\WPFClient.csproj", "{257BF7C4-07DE-4E76-B2E2-443E2200B1E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.RBAC.WPF", "Rafy\Plugins\Rafy.RBAC.WPF\Rafy.RBAC.WPF.csproj", "{547364FE-CCBF-4F72-9B72-F7BB272B0988}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.RBAC.Old.WPF", "Rafy\Plugins\Rafy.RBAC.WPF\Rafy.RBAC.Old.WPF.csproj", "{547364FE-CCBF-4F72-9B72-F7BB272B0988}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JXC", "Demo\JXC\JXC.csproj", "{70AB9A4D-27E0-4F3C-9A7D-1A33F0FA4E73}"
 EndProject
@@ -88,7 +88,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{5E7AD9
 EndProject
 Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "Domain Documentation", "Rafy\Tools\Domain Documentation\Domain Documentation.shfbproj", "{B3673A48-EF4C-47BC-9450-20D278F16558}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.RBAC.Web", "Rafy\Plugins\Rafy.RBAC.Web\Rafy.RBAC.Web.csproj", "{DF358672-DBA8-4ACF-84DF-AD61E8AB811E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.RBAC.Old.Web", "Rafy\Plugins\Rafy.RBAC.Web\Rafy.RBAC.Old.Web.csproj", "{DF358672-DBA8-4ACF-84DF-AD61E8AB811E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.Customization.Web", "Rafy\Plugins\Rafy.Customization.Web\Rafy.Customization.Web.csproj", "{15ABC304-2DD3-4302-9C44-E75F86DD2FA5}"
 EndProject
@@ -102,7 +102,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JXC", "JXC", "{002B7A81-10D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Rafy.Customization", "Rafy.Customization", "{621953C1-D6E5-4E67-9755-484FBA498F39}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Rafy.RBAC", "Rafy.RBAC", "{AB601A10-BB0E-4176-B074-DB7194EFD3C7}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Rafy.RBAC.Old", "Rafy.RBAC.Old", "{AB601A10-BB0E-4176-B074-DB7194EFD3C7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Rafy.MultiLanguages", "Rafy.MultiLanguages", "{62D3A1DE-2A85-4ACD-B353-42C6A1D056E6}"
 EndProject

@@ -27,7 +27,7 @@ using System.Runtime.Serialization;
 using System.Security.Permissions;
 using Rafy.Threading;
 
-namespace Rafy.RBAC
+namespace Rafy.RBAC.Old
 {
     /// <summary>
     /// 用户登录日志

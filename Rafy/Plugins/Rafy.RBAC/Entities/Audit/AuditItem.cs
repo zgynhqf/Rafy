@@ -22,9 +22,9 @@ using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
 using Rafy.MetaModel.View;
-using Rafy.RBAC.Audit;
+using Rafy.RBAC.Old.Audit;
 
-namespace Rafy.RBAC.Audit
+namespace Rafy.RBAC.Old.Audit
 {
     /// <summary>
     /// 审查日志项

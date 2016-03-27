@@ -19,7 +19,7 @@ using Rafy.Data;
 using Rafy.Domain;
 using Rafy.Domain.ORM;
 
-namespace Rafy.RBAC.Security
+namespace Rafy.RBAC.Old.Security
 {
     partial class RafyIdentityList
     {

@@ -24,7 +24,7 @@ using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
 using Rafy.MetaModel.View;
 
-namespace Rafy.RBAC
+namespace Rafy.RBAC.Old
 {
     /// <summary>
     /// 岗位下的被禁用的每一个功能（命令）的权限

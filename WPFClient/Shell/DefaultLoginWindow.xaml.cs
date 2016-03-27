@@ -26,8 +26,8 @@ using System.Windows.Shapes;
 using Rafy;
 using Rafy.Domain;
 using Rafy.WPF.Controls;
-using Rafy.RBAC;
-using Rafy.RBAC.Security;
+using Rafy.RBAC.Old;
+using Rafy.RBAC.Old.Security;
 using Rafy.Utils;
 
 namespace Rafy.WPF.Shell

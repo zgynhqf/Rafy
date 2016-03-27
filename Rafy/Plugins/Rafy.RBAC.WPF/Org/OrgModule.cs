@@ -18,7 +18,7 @@ using System.Text;
 using Rafy.WPF;
 using Rafy.MetaModel.View;
 
-namespace Rafy.RBAC.WPF
+namespace Rafy.RBAC.Old.WPF
 {
     /// <summary>
     /// 组织权限模块

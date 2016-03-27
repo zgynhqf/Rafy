@@ -19,7 +19,7 @@ using Rafy.Data;
 using Rafy.Domain;
 using Rafy.Domain.ORM;
 
-namespace Rafy.RBAC.Audit
+namespace Rafy.RBAC.Old.Audit
 {
     partial class AuditItemList
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Rafy.Domain;
 
-namespace Rafy.RBAC.Audit
+namespace Rafy.RBAC.Old.Audit
 {
     /// <summary>
     /// 客户端使用这个类来和服务端通信

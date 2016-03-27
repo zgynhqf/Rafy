@@ -27,7 +27,7 @@ using Rafy.Domain.ORM;
 using Rafy.Serialization.Mobile;
 using Rafy.Utils;
 
-namespace Rafy.RBAC.Security
+namespace Rafy.RBAC.Old.Security
 {
     /// <summary>
     /// 注意：防止重名，User增加Code区分唯一性，查询时通过Code查询，同时返回Code和Name

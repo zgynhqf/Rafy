@@ -7,7 +7,7 @@ using System.Text;
 using Rafy.DbMigration;
 using Rafy.Domain;
 using System.Transactions;
-using Rafy.RBAC;
+using Rafy.RBAC.Old;
 
 namespace JXC.DbMigrations
 {

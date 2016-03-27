@@ -1,4 +1,4 @@
-﻿<Window x:Class="Rafy.RBAC.WPF.ChangePwd" Background="Transparent"
+﻿<Window x:Class="Rafy.RBAC.Old.WPF.ChangePwd" Background="Transparent"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" SizeToContent="WidthAndHeight"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="修改密码"  
     WindowStartupLocation="CenterScreen" WindowStyle="None" AllowsTransparency="True" ResizeMode="NoResize" 

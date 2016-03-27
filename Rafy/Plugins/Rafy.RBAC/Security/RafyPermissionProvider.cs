@@ -18,7 +18,7 @@ using System.Text;
 using Rafy.MetaModel;
 using Rafy.MetaModel.View;
 
-namespace Rafy.RBAC.Security
+namespace Rafy.RBAC.Old.Security
 {
     /// <summary>
     /// 为底层的 Rafy 提供权限实现方案

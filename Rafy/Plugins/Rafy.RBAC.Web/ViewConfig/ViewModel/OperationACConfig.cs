@@ -17,7 +17,7 @@ using System.Text;
 using Rafy.MetaModel;
 using Rafy.MetaModel.View;
 
-namespace Rafy.RBAC.Web.ViewConfig.ViewModel
+namespace Rafy.RBAC.Old.Web.ViewConfig.ViewModel
 {
     internal class OperationACConfig : WebViewConfig<OperationAC>
     {

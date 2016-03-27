@@ -24,8 +24,8 @@ using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
 using Rafy.MetaModel.View;
-using Rafy.RBAC;
-using Rafy.RBAC.Security;
+using Rafy.RBAC.Old;
+using Rafy.RBAC.Old.Security;
 using Rafy.Utils;
 
 namespace JXC

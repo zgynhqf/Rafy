@@ -10,11 +10,13 @@
  * 
 *******************************************************/
 
-2.48.3092
+2.48.3095
     ★★公布、添加功能
         添加 Rafy.SerialNumber 流水号插件，用于生成流水号。
     ★重要、添加接口
         AggtDeserializer 添加 UpdatedEntityCreationMode 属性。表示更新时是否需要把实体从仓库中查询出来。
+    ★重要、！修改接口
+        Rafy.RBAC 插件重命名为 Rafy.RBAC.Old。准备签入新版本、更具重用性的 RBAC 插件。
 
 2.47.3085
     ！删除接口
@@ -535,7 +537,7 @@
         ！修改接口
             Library,Module 文件夹名变为 Domain,UI。
             界面层，Web 开发和 WPF 开发需要分成两个不同的 dll，这样就不会互相影响！
-                添加 Rafy.RBAC.Web 程序集。
+                添加 Rafy.RBAC.Old.Web 程序集。
                 添加 Rafy.Customization.Web 程序集。
                 添加 Rafy.Customization.WPF 程序集。
 

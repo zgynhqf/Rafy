@@ -1,4 +1,4 @@
-﻿Rafy.definePlugin('Rafy.RBAC', {
+﻿Rafy.definePlugin('Rafy.RBAC.Old', {
     init: function (app) {
         this._logSystem(app);
         //app.on('startupCompleted', function () {
@@ -80,7 +80,7 @@
         }
 
         Rafy.invokeService({
-            svc: 'Rafy.RBAC.LogService',
+            svc: 'Rafy.RBAC.Old.LogService',
             svcInput: {
                 Title: opt.title,
                 Type: opt.type,
@@ -95,7 +95,7 @@
     _queryLabel: function (view, callback) {
         var model = Rafy.getModelName(view.getModel());
         Rafy.invokeService({
-            svc: 'Rafy.RBAC.QueryModelLabelService',
+            svc: 'Rafy.RBAC.Old.QueryModelLabelService',
             svcInput: {
                 ClientEntity: model
             },

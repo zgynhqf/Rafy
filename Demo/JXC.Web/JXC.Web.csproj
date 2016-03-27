@@ -79,9 +79,9 @@
       <Project>{66be29d5-f1ca-4941-a4eb-6b3e8f577166}</Project>
       <Name>Rafy.ManagedProperty</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.csproj">
+    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.Old.csproj">
       <Project>{03d5a267-c106-42a9-8959-93d7ae3648dd}</Project>
-      <Name>Rafy.RBAC</Name>
+      <Name>Rafy.RBAC.Old</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Rafy\Rafy.Domain\Rafy.Domain.csproj">
       <Project>{9f8bb429-70de-449a-8a67-5190191e7ee6}</Project>

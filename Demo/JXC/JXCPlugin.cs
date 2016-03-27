@@ -11,7 +11,7 @@ using Rafy.Domain;
 using Rafy.Domain.ORM.DbMigration;
 using Rafy.MetaModel;
 using Rafy.MetaModel.View;
-using Rafy.RBAC;
+using Rafy.RBAC.Old;
 using Rafy.WPF;
 
 namespace JXC

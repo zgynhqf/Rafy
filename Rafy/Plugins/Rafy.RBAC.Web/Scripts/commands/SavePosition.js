@@ -15,7 +15,7 @@ Rafy.defineCommand('Rafy.rbac.cmd.SavePosition', {
     meta: { text: "保存" },
     execute: function (listView, source) {
         Rafy.invokeService({
-            svc: 'Rafy.RBAC.SavePositionService',
+            svc: 'Rafy.RBAC.Old.SavePositionService',
             svcInput: {
                 EntityList: listView.getData()
             },

@@ -23,7 +23,7 @@ using Rafy;
 using System.Security.Permissions;
 using Rafy.Domain.Validation;
 
-namespace Rafy.RBAC
+namespace Rafy.RBAC.Old
 {
     /// <summary>
     /// 用户

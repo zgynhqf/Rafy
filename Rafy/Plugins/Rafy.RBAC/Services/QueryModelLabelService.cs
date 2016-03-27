@@ -6,7 +6,7 @@ using Rafy.Domain;
 using Rafy.MetaModel.View;
 using Rafy.Web;
 
-namespace Rafy.RBAC
+namespace Rafy.RBAC.Old
 {
     /// <summary>
     /// 查询某个客户端实体对应的显示名称。

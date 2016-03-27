@@ -21,7 +21,7 @@ using JXC.WPF.Templates;
 using Rafy;
 using Rafy.Domain;
 using Rafy.MetaModel.View;
-using Rafy.RBAC.Security;
+using Rafy.RBAC.Old.Security;
 using Rafy.WPF;
 
 namespace JXC.WPF

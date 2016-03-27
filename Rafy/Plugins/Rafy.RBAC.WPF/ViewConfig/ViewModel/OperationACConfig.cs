@@ -17,7 +17,7 @@ using System.Text;
 using Rafy.MetaModel;
 using Rafy.MetaModel.View;
 
-namespace Rafy.RBAC.WPF.ViewConfig.ViewModel
+namespace Rafy.RBAC.Old.WPF.ViewConfig.ViewModel
 {
     internal class OperationACConfig : WPFViewConfig<OperationAC>
     {

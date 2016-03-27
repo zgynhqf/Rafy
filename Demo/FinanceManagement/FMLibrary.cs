@@ -11,7 +11,7 @@ using Rafy.MetaModel;
 using Rafy.DbMigration;
 using Rafy.WPF;
 using Rafy.Domain;
-using Rafy.RBAC;
+using Rafy.RBAC.Old;
 using FM.UI;
 using Rafy.ComponentModel;
 

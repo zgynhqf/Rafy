@@ -10,7 +10,7 @@ using Rafy.MetaModel.View;
 using Rafy.WPF;
 using Rafy.WPF.Command;
 
-namespace Rafy.RBAC.WPF
+namespace Rafy.RBAC.Old.WPF
 {
     /// <summary>
     /// 修改用户密码

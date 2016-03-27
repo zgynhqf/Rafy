@@ -26,7 +26,7 @@ using System.Security.Permissions;
 using System.Runtime.Serialization;
 using Rafy.Data;
 
-namespace Rafy.RBAC
+namespace Rafy.RBAC.Old
 {
     /// <summary>
     /// 部门岗位

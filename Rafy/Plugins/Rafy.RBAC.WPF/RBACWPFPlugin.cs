@@ -18,11 +18,11 @@ using Rafy.ComponentModel;
 using Rafy.Domain;
 using Rafy.MetaModel;
 using Rafy.MetaModel.View;
-using Rafy.RBAC.Audit;
+using Rafy.RBAC.Old.Audit;
 using Rafy.WPF;
 using Rafy.WPF.Command;
 
-namespace Rafy.RBAC.WPF
+namespace Rafy.RBAC.Old.WPF
 {
     /// <summary>
     /// 当前工程所对应的模块类。

@@ -21,10 +21,10 @@ using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
 using Rafy.ManagedProperty;
 using Rafy.MetaModel.View;
-using Rafy.RBAC;
+using Rafy.RBAC.Old;
 using Rafy.Domain.ORM;
 
-namespace Rafy.RBAC
+namespace Rafy.RBAC.Old
 {
     /// <summary>
     /// （Module Access Control）

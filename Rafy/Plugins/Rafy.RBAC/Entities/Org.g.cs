@@ -19,7 +19,7 @@ using Rafy.Data;
 using Rafy.Domain;
 using Rafy.Domain.ORM;
 
-namespace Rafy.RBAC
+namespace Rafy.RBAC.Old
 {
     partial class OrgList
     {

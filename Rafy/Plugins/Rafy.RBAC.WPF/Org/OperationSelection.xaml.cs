@@ -26,13 +26,13 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Rafy.WPF;
 using Rafy.Domain;
-using Rafy.RBAC;
+using Rafy.RBAC.Old;
 using Rafy.MetaModel.View;
 using Rafy;
 using Rafy.WPF.Controls;
 using Rafy.MetaModel;
 
-namespace Rafy.RBAC.WPF
+namespace Rafy.RBAC.Old.WPF
 {
     /// <summary>
     /// 由于操作列表需要显示所有可用的操作，并按模块、界面块分组，并使用勾选视图显示黑名单中的操作。

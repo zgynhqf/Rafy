@@ -18,7 +18,7 @@ using Rafy.Domain;
 using Rafy;
 using Rafy.Web;
 
-namespace Rafy.RBAC
+namespace Rafy.RBAC.Old
 {
     [Serializable, JsonService]
     [Contract, ContractImpl]

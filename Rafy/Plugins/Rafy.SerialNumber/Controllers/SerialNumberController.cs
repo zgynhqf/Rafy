@@ -28,7 +28,8 @@ namespace Rafy.SerialNumber
         /// 创建一个以日期进行分组生成编号的规则，存储到仓库中，并返回。
         /// 性能-仓库访问次数：1。
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">The name.</param>
+        /// <param name="format">The format.</param>
         /// <returns></returns>
         public SerialNumberInfo CreateDailySerialNumberInfo(string name, string format = "yyyyMMdd********")
         {

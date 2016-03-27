@@ -28,7 +28,7 @@ using Rafy.WPF;
 using Rafy.Domain;
 using Rafy.MetaModel.View;
 
-namespace Rafy.RBAC.WPF
+namespace Rafy.RBAC.Old.WPF
 {
     public class OperationSelectionView : CustomLogicalView
     {

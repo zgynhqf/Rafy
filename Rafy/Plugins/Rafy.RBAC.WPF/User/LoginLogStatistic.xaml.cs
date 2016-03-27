@@ -15,7 +15,7 @@ using System.Windows.Shapes;
 using Rafy.Domain;
 using Rafy.Threading;
 
-namespace Rafy.RBAC.WPF
+namespace Rafy.RBAC.Old.WPF
 {
     /// <summary>
     /// 统计登录记录的窗口

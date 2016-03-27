@@ -18,7 +18,7 @@ using System.Text;
 using System.Threading;
 using Rafy.Domain;
 
-namespace Rafy.RBAC.Audit
+namespace Rafy.RBAC.Old.Audit
 {
     public class ServerAuditLogProvider : IAuditLogProvider
     {

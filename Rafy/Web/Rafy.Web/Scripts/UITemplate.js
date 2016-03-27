@@ -35,7 +35,7 @@ Ext.define('Rafy.UITemplate', {
         /// 设置对应的服务端模板类
         /// </summary>
         /// <param name="value">
-        /// value 是该类在服务端的 AssemblyQuanifyName，如："Rafy.Library.Audit.AuditItem, Rafy.RBAC"
+        /// value 是该类在服务端的 AssemblyQuanifyName，如："Rafy.Library.Audit.AuditItem, Rafy.RBAC.Old"
         /// </param>
         this._serverTemplateType = value;
     },

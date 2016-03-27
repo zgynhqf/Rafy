@@ -16,9 +16,9 @@ using System.Linq;
 using System.Text;
 using Rafy.MetaModel;
 using Rafy.MetaModel.View;
-using Rafy.RBAC.Audit;
+using Rafy.RBAC.Old.Audit;
 
-namespace Rafy.RBAC.Web.ViewConfig
+namespace Rafy.RBAC.Old.Web.ViewConfig
 {
     internal class AuditItemConditionCriteriaConfig : WPFViewConfig<AuditItemConditionCriteria>
     {

@@ -19,7 +19,7 @@ using System.Threading;
 using System.Diagnostics;
 using Rafy.Threading;
 
-namespace Rafy.RBAC.Audit
+namespace Rafy.RBAC.Old.Audit
 {
     /// <summary>
     /// 审核功能

@@ -17,7 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Security.Cryptography;
 
-namespace Rafy.RBAC
+namespace Rafy.RBAC.Old
 {
     /// <summary>
     /// 字符串的一些帮助方法。

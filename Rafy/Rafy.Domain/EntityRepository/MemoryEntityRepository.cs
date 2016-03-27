@@ -204,7 +204,7 @@ namespace Rafy.Domain.ORM
             /// <param name="dst">目标对象。</param>
             protected virtual void MemoryClone(Entity src, Entity dst)
             {
-                //同时由于以下代码只是对托管属性进行了拷贝，会导致一些一般字段无法复制。（参见 Rafy.RBAC.ModuleAC 实体类型。）
+                //同时由于以下代码只是对托管属性进行了拷贝，会导致一些一般字段无法复制。（参见 Rafy.RBAC.Old.ModuleAC 实体类型。）
 
                 //返回的子对象的属性只是简单的完全Copy参数data的数据。
                 var opt = CloneOptions.ReadDbRow();

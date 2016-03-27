@@ -22,11 +22,11 @@ using Rafy.Domain.Caching;
 using Rafy.Domain.ORM.DbMigration;
 using Rafy.MetaModel;
 using Rafy.MetaModel.View;
-using Rafy.RBAC.Audit;
-using Rafy.RBAC.Security;
+using Rafy.RBAC.Old.Audit;
+using Rafy.RBAC.Old.Security;
 using Rafy.Web;
 
-namespace Rafy.RBAC
+namespace Rafy.RBAC.Old
 {
     /// <summary>
     /// 比较简单的通用权限系统。

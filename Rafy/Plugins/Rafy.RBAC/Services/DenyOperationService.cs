@@ -19,7 +19,7 @@ using Rafy;
 using Rafy.Domain;
 using Rafy.Web;
 
-namespace Rafy.RBAC
+namespace Rafy.RBAC.Old
 {
     /// <summary>
     /// 为某个指定岗位禁用一系列操作列表的服务

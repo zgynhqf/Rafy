@@ -16,9 +16,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Rafy.MetaModel.View;
-using Rafy.RBAC;
+using Rafy.RBAC.Old;
 
-namespace Rafy.RBAC
+namespace Rafy.RBAC.Old
 {
     /// <summary>
     /// 组织权限模块

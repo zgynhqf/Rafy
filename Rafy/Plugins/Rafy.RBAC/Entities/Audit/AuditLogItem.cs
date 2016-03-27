@@ -17,7 +17,7 @@ using System.Linq;
 using System.Text;
 using Rafy.MetaModel.Attributes;
 
-namespace Rafy.RBAC.Audit
+namespace Rafy.RBAC.Old.Audit
 {
     /// <summary>
     /// 日志项

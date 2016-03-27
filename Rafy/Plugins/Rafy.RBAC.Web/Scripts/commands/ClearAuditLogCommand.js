@@ -20,7 +20,7 @@ Rafy.defineCommand('Rafy.rbac.cmd.ClearAuditLogCommand', {
             fn: function (btn) {
                 if (btn == 'ok') {
                     Rafy.invokeService({
-                        svc: 'Rafy.RBAC.ClearLogService',
+                        svc: 'Rafy.RBAC.Old.ClearLogService',
                         callback: function () {
                             listView.reloadData();
                         }

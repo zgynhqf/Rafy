@@ -22,12 +22,12 @@ using Rafy.Domain;
 using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
-using Rafy.RBAC.Audit;
+using Rafy.RBAC.Old.Audit;
 using Rafy.MetaModel.View;
-using Rafy.RBAC;
+using Rafy.RBAC.Old;
 using Rafy.Utils;
 
-namespace Rafy.RBAC.Audit
+namespace Rafy.RBAC.Old.Audit
 {
     [QueryEntity, Serializable]
     public partial class AuditItemConditionCriteria : Criteria

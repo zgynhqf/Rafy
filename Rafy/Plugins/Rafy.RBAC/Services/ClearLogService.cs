@@ -20,7 +20,7 @@ using Rafy.Domain.ORM;
 using Rafy.Domain;
 using Rafy.Web;
 
-namespace Rafy.RBAC
+namespace Rafy.RBAC.Old
 {
     [Serializable]
     [JsonService]

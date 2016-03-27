@@ -24,7 +24,7 @@ using System.Security.Permissions;
 using System.Runtime.Serialization;
 using Rafy.Domain.Validation;
 
-namespace Rafy.RBAC
+namespace Rafy.RBAC.Old
 {
     /// <summary>
     /// 部门
