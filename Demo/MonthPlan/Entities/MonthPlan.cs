@@ -236,7 +236,7 @@ namespace MP
     {
         public MonthPlanDataProvider()
         {
-            this.DataSaver.EnableDeletingChildrenInMemory = true;
+            this.DataSaver.EnableDeletingChildrenInMemory();
         }
     }
 

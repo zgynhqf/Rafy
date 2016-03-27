@@ -13,11 +13,6 @@ namespace Demo
 {
     class DemoExtLibrary : UIPlugin
     {
-        protected override int SetupLevel
-        {
-            get { return ReuseLevel.Customized; }
-        }
-
         public override void Initialize(IApp app)
         {
         }
