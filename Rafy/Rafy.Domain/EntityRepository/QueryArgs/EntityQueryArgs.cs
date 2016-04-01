@@ -29,27 +29,27 @@ namespace Rafy.Domain
     /// </summary>
     public abstract class EntityQueryArgsBase : QueryArgs, ISelectArgs
     {
-        #region FetchType
+        #region QueryType
 
-        private FetchType _fetchType = FetchType.List;
+        private RepositoryQueryType _queryType = RepositoryQueryType.List;
 
         /// <summary>
         /// 当前查询数据的类型。
-        /// 实体查询时，不会对应 <see cref="Rafy.Domain.FetchType.Table" /> 类型。
+        /// 实体查询时，不会对应 <see cref="Rafy.Domain.RepositoryQueryType.Table" /> 类型。
         /// </summary>
-        public override FetchType FetchType
+        public override RepositoryQueryType QueryType
         {
-            get { return _fetchType; }
+            get { return _queryType; }
         }
 
-        internal void SetFetchType(FetchType value)
+        internal void SetQueryType(RepositoryQueryType value)
         {
-            _fetchType = value;
+            _queryType = value;
         }
 
         bool ISelectArgs.FetchingFirst
         {
-            get { return this.FetchType == FetchType.First; }
+            get { return this.QueryType == RepositoryQueryType.First; }
         }
 
         #endregion

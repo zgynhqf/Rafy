@@ -28,6 +28,6 @@ namespace Rafy.Domain
         /// <summary>
         /// 本次查询的类型。
         /// </summary>
-        public abstract FetchType FetchType { get; }
+        public abstract RepositoryQueryType QueryType { get; }
     }
 }

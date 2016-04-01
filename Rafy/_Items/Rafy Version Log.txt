@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.49.3095
+3.49.3110
     ★★公布、添加功能、！删除接口
         引入 Castle.DynamicProxy 动态代理来实现分布式调用，将仓库中同时出现的两个方法减为一个方法。
             EntityRepository 中删除 FetchList、FetchFirst、FetchCount、FetchTable 等方法。

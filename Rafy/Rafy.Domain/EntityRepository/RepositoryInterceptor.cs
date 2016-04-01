@@ -43,26 +43,26 @@ namespace Rafy.Domain
             //    return;
             //}
 
-            var fetchType = FetchType.List;
+            var fetchType = RepositoryQueryType.List;
             var returnType = invocation.Method.ReturnType;
             if (returnType.IsClass)
             {
                 if (typeof(EntityList).IsAssignableFrom(returnType))
                 {
-                    fetchType = FetchType.List;
+                    fetchType = RepositoryQueryType.List;
                 }
                 else if (typeof(Entity).IsAssignableFrom(returnType))
                 {
-                    fetchType = FetchType.First;
+                    fetchType = RepositoryQueryType.First;
                 }
                 if (returnType == typeof(LiteDataTable))
                 {
-                    fetchType = FetchType.Table;
+                    fetchType = RepositoryQueryType.Table;
                 }
             }
             else
             {
-                fetchType = FetchType.Count;
+                fetchType = RepositoryQueryType.Count;
             }
 
             #endregion
@@ -71,7 +71,7 @@ namespace Rafy.Domain
             {
                 MethodName = invocation.Method.Name,
                 Parameters = invocation.Arguments,
-                FetchType = fetchType
+                QueryType = fetchType
             };
 
             var repoExt = invocation.InvocationTarget as IRepositoryExt;
@@ -125,16 +125,16 @@ namespace Rafy.Domain
 
             switch (fetchType)
             {
-                case FetchType.List:
+                case RepositoryQueryType.List:
                     var list = invocation.ReturnValue as EntityList;
                     repo.NotifyLoaded(list);
                     break;
-                case FetchType.First:
+                case RepositoryQueryType.First:
                     var entity = invocation.ReturnValue as Entity;
                     repo.NotifyLoaded(entity);
                     break;
-                case FetchType.Count:
-                case FetchType.Table:
+                case RepositoryQueryType.Count:
+                case RepositoryQueryType.Table:
                 default:
                     break;
             }

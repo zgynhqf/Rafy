@@ -37,7 +37,7 @@ namespace Rafy.Domain.ORM
         /// <param name="args">The arguments.</param>
         /// <param name="entityList">The entity list.</param>
         /// <exception cref="System.NotSupportedException">使用内存过滤器的同时，不支持提供分页参数。</exception>
-        protected override void QueryListCore(EntityQueryArgs args, EntityList entityList)
+        protected override void QueryDataCore(EntityQueryArgs args, EntityList entityList)
         {
             var dp = RdbDataProvider.Get(this.Repo);
             using (var dba = dp.CreateDbAccesser())
@@ -58,7 +58,7 @@ namespace Rafy.Domain.ORM
                 }
                 else
                 {
-                    if (args.FetchType == FetchType.Count)
+                    if (args.QueryType == RepositoryQueryType.Count)
                     {
                         #region 查询 Count
 
@@ -88,7 +88,7 @@ namespace Rafy.Domain.ORM
         /// </summary>
         /// <param name="args">The arguments.</param>
         /// <param name="entityList">The entity list.</param>
-        protected virtual void QueryListCore(SqlQueryArgs args, EntityList entityList)
+        protected virtual void QueryDataCore(SqlQueryArgs args, EntityList entityList)
         {
             var dataProvider = RdbDataProvider.Get(Repo);
             using (var dba = dataProvider.CreateDbAccesser())
@@ -109,7 +109,7 @@ namespace Rafy.Domain.ORM
                 }
                 else
                 {
-                    if (args.FetchType == FetchType.Count)
+                    if (args.QueryType == RepositoryQueryType.Count)
                     {
                         #region 查询 Count
 
@@ -174,8 +174,9 @@ namespace Rafy.Domain.ORM
         /// <returns></returns>
         public object QueryData(FormattedSql sql, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
         {
-            var list = this.QueryList(sql, paging, eagerLoad);
-            return ReturnForRepository(list);
+            var args = new SqlQueryArgs(sql);
+            args.SetDataLoadOptions(paging, eagerLoad);
+            return this.QueryData(args);
         }
 
         /// <summary>
@@ -186,32 +187,6 @@ namespace Rafy.Domain.ORM
         /// <param name="args"></param>
         /// <returns></returns>
         public object QueryData(SqlQueryArgs args)
-        {
-            var list = this.QueryList(args);
-            return ReturnForRepository(list);
-        }
-
-        /// <summary>
-        /// 使用 sql 语句来查询实体。
-        /// </summary>
-        /// <param name="sql">sql 语句，返回的结果集的字段，需要保证与属性映射的字段名相同。</param>
-        /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
-        /// <returns></returns>
-        public EntityList QueryList(FormattedSql sql, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
-        {
-            var args = new SqlQueryArgs(sql);
-            args.SetDataLoadOptions(paging, eagerLoad);
-            return this.QueryList(args);
-        }
-
-        /// <summary>
-        /// 使用 sql 语句来查询实体。
-        /// </summary>
-        /// <param name="args">The arguments.</param>
-        /// <returns></returns>
-        /// <exception cref="System.NotSupportedException">使用内存过滤器的同时，不支持提供分页参数。</exception>
-        public EntityList QueryList(SqlQueryArgs args)
         {
             this.PrepareArgs(args);
 
@@ -224,7 +199,7 @@ namespace Rafy.Domain.ORM
                 //在加载数据时，自动索引功能都不可用。
                 entityList.AutoTreeIndexEnabled = false;
 
-                QueryListCore(args, entityList);
+                QueryDataCore(args, entityList);
             }
             finally
             {
@@ -233,7 +208,7 @@ namespace Rafy.Domain.ORM
 
             this.EagerLoadOnCompleted(args, entityList, oldCount);
 
-            return entityList;
+            return ReturnForRepository(entityList);
         }
 
         /// <summary>

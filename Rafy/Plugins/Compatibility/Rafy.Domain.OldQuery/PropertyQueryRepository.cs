@@ -84,7 +84,7 @@ namespace Rafy.Domain
                 PagingInfo = args.PropertyQuery.PagingInfo,
                 Query = query
             };
-            entityArgs.SetFetchType(args.FetchType);
+            entityArgs.SetQueryType(args.QueryType);
             if (dbQuery.EagerLoadProperties != null)
             {
                 for (int i = 0, c = dbQuery.EagerLoadProperties.Count; i < c; i++)
@@ -94,7 +94,7 @@ namespace Rafy.Domain
                 }
             }
 
-            return base.QueryList(entityArgs);
+            return (EntityList)base.QueryData(entityArgs);
         }
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace Rafy.Domain
                 args.EntityList = (Repo as EntityRepository).NewListFast();
             }
 
-            args.SetFetchType(CurrentIEQC.FetchType);
+            args.SetQueryType(CurrentIEQC.QueryType);
         }
 
         private static IEQC CurrentIEQC

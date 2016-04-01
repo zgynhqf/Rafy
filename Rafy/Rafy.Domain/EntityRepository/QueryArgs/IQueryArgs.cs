@@ -26,6 +26,6 @@ namespace Rafy.Domain
         /// <summary>
         /// 本次查询的类型。
         /// </summary>
-        FetchType FetchType { get; }
+        RepositoryQueryType QueryType { get; }
     }
 }

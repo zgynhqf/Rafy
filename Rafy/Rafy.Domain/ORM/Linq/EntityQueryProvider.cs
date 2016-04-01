@@ -86,10 +86,11 @@ namespace Rafy.Domain.ORM.Linq
                 }
             }
 
-            var list = this.QueryEntityList(expression, forceCounting);
+            var res = this.QueryEntityList(expression, forceCounting);
 
-            if (forceCounting) { return list.TotalCount; }
-            return list;
+            //if (forceCounting) { return list.TotalCount; }
+
+            return res;
         }
 
         #endregion
@@ -100,14 +101,14 @@ namespace Rafy.Domain.ORM.Linq
         /// <param name="expression">The expression.</param>
         /// <param name="counting">if set to <c>true</c> [counting].</param>
         /// <returns></returns>
-        private EntityList QueryEntityList(Expression expression, bool counting)
+        private object QueryEntityList(Expression expression, bool counting)
         {
             //一般来说，直接使用 Linq 查询，都是在数据层，这时 FinalDataPortal.CurrentCriteria 已经被设置为当前的查询的条件了；
             //这时，如果接下来调用 _repository.QueryDbByLinq 方法，会导致这个查询使用外部的条件来检测是否需要分页、统计等。
             //所以，这里需要把这个条件先暂时清空。
             var iqec =new IEQC
             {
-                FetchType = counting ? FetchType.Count : FetchType.List,
+                QueryType = counting ? RepositoryQueryType.Count : RepositoryQueryType.List,
                 Parameters = new object[0]
             };
             using (FinalDataPortal.CurrentQueryCriteriaItem.UseScopeValue(iqec))

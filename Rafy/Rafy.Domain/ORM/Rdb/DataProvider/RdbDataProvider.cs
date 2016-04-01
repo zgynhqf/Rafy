@@ -168,26 +168,29 @@ namespace Rafy.Domain.ORM
         #region 提供给子类的查询接口
 
         /// <summary>
-        /// 使用 sql 语句来查询实体。
+        /// 从持久层中查询数据。
+        /// 本方法只能由仓库中的方法来调用。本方法的返回值的类型将与仓库中方法的返回值保持一致。
+        /// 支持的返回值：EntityList、Entity、int、LiteDataTable。
         /// </summary>
-        /// <param name="sql">sql 语句，返回的结果集的字段，需要保证与属性映射的字段名相同。</param>
-        /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="sql"></param>
+        /// <param name="paging"></param>
+        /// <param name="eagerLoad"></param>
         /// <returns></returns>
-        protected EntityList QueryList(FormattedSql sql, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public object QueryData(FormattedSql sql, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
         {
-            return this.DataQueryer.QueryList(sql, paging, eagerLoad);
+            return this.DataQueryer.QueryData(sql, paging, eagerLoad);
         }
 
         /// <summary>
-        /// 使用 sql 语句来查询实体。
+        /// 从持久层中查询数据。
+        /// 本方法只能由仓库中的方法来调用。本方法的返回值的类型将与仓库中方法的返回值保持一致。
+        /// 支持的返回值：EntityList、Entity、int、LiteDataTable。
         /// </summary>
-        /// <param name="args">The arguments.</param>
+        /// <param name="args"></param>
         /// <returns></returns>
-        /// <exception cref="System.NotSupportedException">使用内存过滤器的同时，不支持提供分页参数。</exception>
-        protected EntityList QueryList(SqlQueryArgs args)
+        public object QueryData(SqlQueryArgs args)
         {
-            return this.DataQueryer.QueryList(args);
+            return this.DataQueryer.QueryData(args);
         }
 
         /// <summary>

@@ -119,7 +119,7 @@ namespace UT
         {
             var q = this.CreateLinqQuery<BookLoc>();
             q = q.Where(e => e.Name == name);
-            return (BookLocList)this.QueryList(q);
+            return (BookLocList)this.QueryData(q);
         }
 
         protected override void Submit(SubmitArgs e)

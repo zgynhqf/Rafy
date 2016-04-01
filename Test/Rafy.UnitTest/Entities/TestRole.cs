@@ -112,7 +112,7 @@ namespace UT
         [RepositoryQuery]
         public virtual TestRoleList GetByRawSql(string rawSql, object[] parameters, PagingInfo pi)
         {
-            return (TestRoleList)(this.DataQueryer as RdbDataQueryer).QueryList(new SqlQueryArgs
+            return (TestRoleList)(this.DataQueryer as RdbDataQueryer).QueryData(new SqlQueryArgs
             {
                 FormattedSql = rawSql,
                 Parameters = parameters,

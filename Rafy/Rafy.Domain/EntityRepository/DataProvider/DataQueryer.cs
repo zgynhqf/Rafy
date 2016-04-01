@@ -83,23 +83,9 @@ namespace Rafy.Domain
         /// <returns></returns>
         public object QueryData(IQueryable queryable, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
         {
-            var list = this.QueryList(queryable, paging, eagerLoad);
-            return ReturnForRepository(list);
-        }
-
-        /// <summary>
-        /// 通过 linq 来查询实体。
-        /// </summary>
-        /// <param name="queryable">linq 查询对象。</param>
-        /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
-        /// <returns></returns>
-        /// <exception cref="System.InvalidProgramException"></exception>
-        public EntityList QueryList(IQueryable queryable, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
-        {
             var query = ConvertToQuery(queryable);
 
-            return this.QueryList(query, paging, eagerLoad);
+            return this.QueryData(query, paging, eagerLoad);
         }
 
         /// <summary>
@@ -138,14 +124,17 @@ namespace Rafy.Domain
         /// <returns></returns>
         public object QueryData(IQuery query, PagingInfo paging = null, EagerLoadOptions eagerLoad = null, bool markTreeFullLoaded = false)
         {
-            var returnType = FinalDataPortal.CurrentIEQC.FetchType;
-            if (returnType == FetchType.Table)
+            var queryType = FinalDataPortal.CurrentIEQC.QueryType;
+            if (queryType == RepositoryQueryType.Table)
             {
                 return this.QueryTable(query, paging);
             }
 
-            var list = this.QueryList(query, paging, eagerLoad, markTreeFullLoaded);
-            return ReturnForRepository(list, returnType);
+            var args = new EntityQueryArgs(query);
+            args.MarkTreeFullLoaded = markTreeFullLoaded;
+            args.SetDataLoadOptions(paging, eagerLoad);
+
+            return this.QueryData(args);
         }
 
         /// <summary>
@@ -156,36 +145,6 @@ namespace Rafy.Domain
         /// <param name="args">The arguments.</param>
         /// <returns></returns>
         public object QueryData(EntityQueryArgs args)
-        {
-            var list = this.QueryList(args);
-            return ReturnForRepository(list, args.FetchType);
-        }
-
-        /// <summary>
-        /// 通过 IQuery 对象来查询实体。
-        /// </summary>
-        /// <param name="query">查询对象。</param>
-        /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
-        /// <param name="markTreeFullLoaded">如果某次查询结果是一棵完整的子树，那么必须设置此参数为 true ，才可以把整个树标记为完整加载。</param>
-        /// <returns></returns>
-        public EntityList QueryList(IQuery query, PagingInfo paging = null, EagerLoadOptions eagerLoad = null, bool markTreeFullLoaded = false)
-        {
-            var args = new EntityQueryArgs(query);
-            args.MarkTreeFullLoaded = markTreeFullLoaded;
-            args.SetDataLoadOptions(paging, eagerLoad);
-
-            return this.QueryList(args);
-        }
-
-        /// <summary>
-        /// 通过 IQuery 对象来查询实体。
-        /// </summary>
-        /// <param name="args">The arguments.</param>
-        /// <returns></returns>
-        /// <exception cref="System.NotSupportedException">使用内存过滤器的同时，不支持提供分页参数。</exception>
-        /// <exception cref="System.InvalidProgramException"></exception>
-        public EntityList QueryList(EntityQueryArgs args)
         {
             if (args.Query == null) throw new ArgumentException("EntityQueryArgs.Query 属性不能为空。");
 
@@ -204,7 +163,7 @@ namespace Rafy.Domain
                 //在加载数据时，自动索引功能都不可用。
                 entityList.AutoTreeIndexEnabled = false;
 
-                QueryListCore(args, entityList);
+                QueryDataCore(args, entityList);
             }
             finally
             {
@@ -213,7 +172,7 @@ namespace Rafy.Domain
 
             this.EagerLoadOnCompleted(args, entityList, oldCount);
 
-            return entityList;
+            return ReturnForRepository(entityList, args.QueryType);
         }
 
         /// <summary>
@@ -229,7 +188,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="args">The arguments.</param>
         /// <param name="entityList">The entity list.</param>
-        protected abstract void QueryListCore(EntityQueryArgs args, EntityList entityList);
+        protected abstract void QueryDataCore(EntityQueryArgs args, EntityList entityList);
 
         private void BuildDefaultQuerying(EntityQueryArgs args)
         {
@@ -293,7 +252,7 @@ namespace Rafy.Domain
         internal protected virtual void OnQuerying(EntityQueryArgs args)
         {
             //如果没有指定 OrderNo 字段，则按照Id 排序。
-            if (args.FetchType != FetchType.Count && !(args.Query as SqlSelect).HasOrdered())
+            if (args.QueryType != RepositoryQueryType.Count && !(args.Query as SqlSelect).HasOrdered())
             {
                 args.Query.OrderBy.Add(
                     QueryFactory.Instance.OrderBy(args.Query.From.FindTable(Repo).IdColumn)
@@ -326,7 +285,7 @@ namespace Rafy.Domain
         {
             if (entityList.Count > 0)
             {
-                if (args.FetchType == FetchType.First || args.FetchType == FetchType.List)
+                if (args.QueryType == RepositoryQueryType.First || args.QueryType == RepositoryQueryType.List)
                 {
                     var elOptions = args.EagerLoadOptions;
                     if (elOptions != null)
@@ -409,7 +368,7 @@ namespace Rafy.Domain
                 args.EntityList = Repo.NewListFast();
             }
 
-            args.SetFetchType(FinalDataPortal.CurrentIEQC.FetchType);
+            args.SetQueryType(FinalDataPortal.CurrentIEQC.QueryType);
         }
 
         internal void LoadByFilter(EntityQueryArgsBase args)
@@ -418,7 +377,7 @@ namespace Rafy.Domain
             var filter = args.Filter;
 
             //如果存储过滤器，则说明 list 是一个内存中的临时对象。这时需要重新把数据加载进 List 中来。
-            if (args.FetchType == FetchType.Count)
+            if (args.QueryType == RepositoryQueryType.Count)
             {
                 entityList.SetTotalCount(args.MemoryList.Count(e => filter(e)));
             }
@@ -704,20 +663,20 @@ namespace Rafy.Domain
         /// <returns></returns>
         protected static object ReturnForRepository(EntityList list)
         {
-            return ReturnForRepository(list, FinalDataPortal.CurrentIEQC.FetchType);
+            return ReturnForRepository(list, FinalDataPortal.CurrentIEQC.QueryType);
         }
 
-        private static object ReturnForRepository(EntityList list, FetchType returnType)
+        private static object ReturnForRepository(EntityList list, RepositoryQueryType queryType)
         {
-            switch (returnType)
+            switch (queryType)
             {
-                case FetchType.First:
+                case RepositoryQueryType.First:
                     return DisconnectFirst(list);
-                case FetchType.Count:
+                case RepositoryQueryType.Count:
                     return list.TotalCount;
-                case FetchType.Table:
+                case RepositoryQueryType.Table:
                     throw new InvalidOperationException();
-                case FetchType.List:
+                case RepositoryQueryType.List:
                 default:
                     return list;
             }

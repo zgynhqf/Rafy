@@ -24,7 +24,7 @@ namespace UT
             var op = property.PropertyType == typeof(string) ? PropertyOperator.Contains : PropertyOperator.Equal;
             q.AddConstraintIf(property, op, value);
 
-            return this.QueryList(q);
+            return (EntityList)this.QueryData(q);
         }
 
         [RepositoryQuery]
@@ -39,7 +39,7 @@ namespace UT
                 var op = property.PropertyType == typeof(string) ? PropertyOperator.Contains : PropertyOperator.Equal;
                 q.AddConstraintIf(property, op, criteria.Value);
 
-                return this.QueryList(q);
+                return (EntityList)this.QueryData(q);
             }
 
             return Repository.NewList();

@@ -86,19 +86,6 @@ namespace Rafy.Domain
         }
 
         /// <summary>
-        /// 通过 linq 来查询实体。
-        /// </summary>
-        /// <param name="queryable">linq 查询对象。</param>
-        /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
-        /// <returns></returns>
-        /// <exception cref="System.InvalidProgramException"></exception>
-        protected EntityList QueryList(IQueryable queryable, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
-        {
-            return DataQueryer.QueryList(queryable, paging, eagerLoad);
-        }
-
-        /// <summary>
         /// 把一个 Linq 查询转换为 IQuery 查询。
         /// </summary>
         /// <param name="queryable"></param>
@@ -108,9 +95,9 @@ namespace Rafy.Domain
             return DataQueryer.ConvertToQuery(queryable);
         }
 
-        internal EntityList QueryListByLinq(IQueryable queryable)
+        internal object QueryListByLinq(IQueryable queryable)
         {
-            return DataQueryer.QueryList(queryable);
+            return DataQueryer.QueryData(queryable);
         }
 
         #endregion
@@ -142,29 +129,6 @@ namespace Rafy.Domain
         protected object QueryData(EntityQueryArgs args)
         {
             return this.DataQueryer.QueryData(args);
-        }
-
-        /// <summary>
-        /// 通过 IQuery 对象来查询实体。
-        /// </summary>
-        /// <param name="query">查询对象。</param>
-        /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
-        /// <param name="markTreeFullLoaded">如果某次查询结果是一棵完整的子树，那么必须设置此参数为 true ，才可以把整个树标记为完整加载。</param>
-        /// <returns></returns>
-        protected EntityList QueryList(IQuery query, PagingInfo paging = null, EagerLoadOptions eagerLoad = null, bool markTreeFullLoaded = false)
-        {
-            return this.DataQueryer.QueryList(query, paging, eagerLoad, markTreeFullLoaded);
-        }
-
-        /// <summary>
-        /// 通过 IQuery 对象来查询实体。
-        /// </summary>
-        /// <param name="args">The arguments.</param>
-        /// <returns></returns>
-        protected EntityList QueryList(EntityQueryArgs args)
-        {
-            return this.DataQueryer.QueryList(args);
         }
 
         /// <summary>

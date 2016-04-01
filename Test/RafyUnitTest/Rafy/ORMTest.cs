@@ -1408,9 +1408,9 @@ namespace RafyUnitTest
                     }
                 });
 
-                var count = repo.LinqCountByBookName_RealLinqCount("1");
+                var count = repo.LinqByBookName_RealLinqCount("1");
                 Assert.IsTrue(count == 2);
-                count = repo.LinqCountByBookName_RealLinqCount("2");
+                count = repo.LinqByBookName_RealLinqCount("2");
                 Assert.IsTrue(count == 3);
             }
         }

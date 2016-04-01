@@ -84,7 +84,7 @@ namespace Rafy.Domain
                 where: f.Constraint(table.IdColumn, PropertyOperator.In, idList)
             );
 
-            return this.QueryList(q, null, eagerLoad);
+            return (EntityList)this.QueryData(q, null, eagerLoad);
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace Rafy.Domain
                 //orderBy: _repository.SupportTree ? null : new List<IOrderBy> { f.OrderBy(parentColumn) }
             );
 
-            var list = this.QueryList(q, paging, eagerLoad, true);
+            var list = (EntityList)this.QueryData(q, paging, eagerLoad, true);
 
             return list;
         }
@@ -154,7 +154,7 @@ namespace Rafy.Domain
                 where: f.Constraint(table.Column(Entity.TreeIndexProperty), PropertyOperator.Like, childCode)
             );
 
-            var list = this.QueryList(q, null, eagerLoad, true);
+            var list = (EntityList)this.QueryData(q, null, eagerLoad, true);
 
             return list;
         }
@@ -173,7 +173,7 @@ namespace Rafy.Domain
                 where: table.Column(Entity.TreePIdProperty).Equal(treePId)
             );
 
-            return this.QueryList(q, null, eagerLoad);
+            return (EntityList)this.QueryData(q, null, eagerLoad);
         }
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace Rafy.Domain
                 where: table.Column(Entity.TreeIndexProperty).In(parentIndeces)
             );
 
-            return this.QueryList(q, null, eagerLoad);
+            return (EntityList)this.QueryData(q, null, eagerLoad);
         }
 
         /// <summary>
@@ -458,6 +458,17 @@ namespace Rafy.Domain
         }
 
         /// <summary>
+        /// 通过 IQuery 对象来查询数据表。
+        /// </summary>
+        /// <param name="query">查询条件。</param>
+        /// <param name="paging">分页信息。</param>
+        /// <returns></returns>
+        protected LiteDataTable QueryTable(IQuery query, PagingInfo paging = null)
+        {
+            return this.DataQueryer.QueryTable(query, paging);
+        }
+
+        /// <summary>
         /// 创建一个实体 Linq 查询对象。
         /// 只能在服务端调用此方法。
         /// </summary>
@@ -469,19 +480,6 @@ namespace Rafy.Domain
         }
 
         /// <summary>
-        /// 通过 linq 来查询实体。
-        /// </summary>
-        /// <param name="queryable">linq 查询对象。</param>
-        /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
-        /// <returns></returns>
-        /// <exception cref="System.InvalidProgramException"></exception>
-        protected EntityList QueryList(IQueryable queryable, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
-        {
-            return this.DataQueryer.QueryList(queryable, paging, eagerLoad);
-        }
-
-        /// <summary>
         /// 把一个 Linq 查询转换为 IQuery 查询。
         /// </summary>
         /// <param name="queryable"></param>
@@ -489,42 +487,6 @@ namespace Rafy.Domain
         protected IQuery ConvertToQuery(IQueryable queryable)
         {
             return this.DataQueryer.ConvertToQuery(queryable);
-        }
-
-        /// <summary>
-        /// 通过 IQuery 对象来查询实体。
-        /// </summary>
-        /// <param name="query">查询对象。</param>
-        /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
-        /// <param name="markTreeFullLoaded">如果某次查询结果是一棵完整的子树，那么必须设置此参数为 true ，才可以把整个树标记为完整加载。</param>
-        /// <returns></returns>
-        protected EntityList QueryList(IQuery query, PagingInfo paging = null, EagerLoadOptions eagerLoad = null, bool markTreeFullLoaded = false)
-        {
-            return this.DataQueryer.QueryList(query, paging, eagerLoad, markTreeFullLoaded);
-        }
-
-        /// <summary>
-        /// 通过 IQuery 对象来查询实体。
-        /// </summary>
-        /// <param name="args">The arguments.</param>
-        /// <returns></returns>
-        /// <exception cref="System.NotSupportedException">使用内存过滤器的同时，不支持提供分页参数。</exception>
-        /// <exception cref="System.InvalidProgramException"></exception>
-        protected EntityList QueryList(EntityQueryArgs args)
-        {
-            return this.DataQueryer.QueryList(args);
-        }
-
-        /// <summary>
-        /// 通过 IQuery 对象来查询数据表。
-        /// </summary>
-        /// <param name="query">查询条件。</param>
-        /// <param name="paging">分页信息。</param>
-        /// <returns></returns>
-        protected LiteDataTable QueryTable(IQuery query, PagingInfo paging = null)
-        {
-            return this.DataQueryer.QueryTable(query, paging);
         }
 
         #endregion

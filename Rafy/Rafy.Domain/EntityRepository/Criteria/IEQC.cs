@@ -26,7 +26,7 @@ namespace Rafy.Domain
     {
         private object[] _p;
         private string _m;
-        private byte _f = (byte)FetchType.List;
+        private byte _f = (byte)RepositoryQueryType.List;
 
         /// <summary>
         /// 所有的参数。
@@ -49,9 +49,9 @@ namespace Rafy.Domain
         /// <summary>
         /// 获取数据的类型。
         /// </summary>
-        public FetchType FetchType
+        public RepositoryQueryType QueryType
         {
-            get { return (FetchType)_f; }
+            get { return (RepositoryQueryType)_f; }
             set { _f = (byte)value; }
         }
 
@@ -79,13 +79,13 @@ namespace Rafy.Domain
         /// <summary>
         /// 获取数据的类型
         /// </summary>
-        FetchType FetchType { get; }
+        RepositoryQueryType QueryType { get; }
     }
 
     /// <summary>
     /// 仓库返回数据的类型
     /// </summary>
-    public enum FetchType
+    public enum RepositoryQueryType
     {
         /// <summary>
         /// 查询实体列表

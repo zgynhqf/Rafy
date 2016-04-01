@@ -70,11 +70,11 @@ namespace Rafy.Domain.ORM
 
         /// <summary>
         /// 获取数据的类型。
-        /// 返回 <see cref="Rafy.Domain.FetchType.Table" />
+        /// 返回 <see cref="Rafy.Domain.RepositoryQueryType.Table" />
         /// </summary>
-        public override FetchType FetchType
+        public override RepositoryQueryType QueryType
         {
-            get { return FetchType.Table; }
+            get { return RepositoryQueryType.Table; }
         }
 
         /// <summary>

@@ -122,7 +122,7 @@ namespace UT
         }
 
         [RepositoryQuery]
-        public virtual int LinqCountByBookName_RealLinqCount(string name)
+        public virtual int LinqByBookName_RealLinqCount(string name)
         {
             var q = this.CreateLinqQuery();
 
