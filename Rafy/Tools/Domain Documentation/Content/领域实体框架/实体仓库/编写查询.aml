@@ -11,53 +11,48 @@
         <section address="query">
             <title>查询模式</title>
             <content>
-                <para>框架要求以一种统一的开发模式来编写实体仓库的查询方法，来兼顾本地应用、分布式应用程序的开发。不论在客户端，还是在服务端，都可以直接调用这种查询接口。这种开发模式需要两个方法：一个公有的外部接口方法，以及一个数据层查询实体方法。如下：</para>
+                <para>框架要求以一种统一的开发模式来编写实体仓库的查询方法，来兼顾本地应用、分布式应用程序的开发。不论在客户端，还是在服务端，都可以直接调用这种查询接口。这种开发模式如下：</para>
                 <code language="cs">
-                    <![CDATA[public WarehouseList GetByCode(string warehouseCode)
-{
-    return this.FetchList(r => r.DA_GetByCode(warehouseCode));
-}
-private EntityList DA_GetByCode(string warehouseCode)
+                    <![CDATA[[RepositoryQuery]
+public virtual WarehouseList GetByCode(string warehouseCode)
 {
     var q = this.CreateLinqQuery();
     q = q.Where(e => e.Code == warehouseCode);
-    return this.QueryList(q);
+    return (WarehouseList)this.QueryData(q);
 }]]>
                 </code>
                 <list class="bullet">
                     <listItem>
-                        <para>公有外部接口</para>
+                        <para>必须标记为虚方法。</para>
+                        <para>这是因为框架需要对仓库生成代码，并对该方法进行拦截。</para>
+                    </listItem>
+                    <listItem>
+                        <para>方法需要标记：[RepositoryQuery]。</para>
+                        <para>不是所有的虚方法都会被拦截，所以需要显式标记来区分公有数据方法。</para>
+                        <para>添加此标记后的方法拥有以下的功能：</para>
                         <para>
-                            这个方法是提供给外部使用的，客户端、服务都都可直接调用此方法。方法体内部使用 <codeInline>FetchList</codeInline> 方法来间接调用数据层查询方法。<codeInline>FetchList</codeInline> 方法的内部逻辑会自动判断当前位置是在服务端还是客户端。如果是客户端调用，则它会使用 WCF 服务来通过远程服务端执行数据层并提供数据；如果是在服务端，则会直接执行数据层查询方法。
+                            1.判断是需要在本地、还是服务端来执行此方法。如果需要在服务端执行，则框架会转而调用 WCF 数据门户。（如果需要分布式调用，所有参数需要支持可序列化。）
                         </para>
                         <para>
-                            本接口返回值只可以是以下几类：具体实体列表类型、具体的实体类型、<codeInline>int</codeInline>（查询数据条数）、<codeInline>LiteDataTable</codeInline>（轻量级数据表格类型）。它们各自对应的 Fetch 方法调用为：<codeInline>FetchList，FetchFirst，FetchCount，FetchTable</codeInline>。
+                            2.根据方法的返回值，来确定底层查询时应该返回的类型（EntityList、Entity、int、LiteDataTable）。
+                        </para>
+                        <para>
+                            3.查询完成后，调整查询结果的类型，与需要的类型一致。
                         </para>
                     </listItem>
                     <listItem>
-                        <para>数据层查询方法</para>
-                        <para>该方法应该设计为非公有的。命名推荐以"DA_"开头，并以外部接口方法名结尾，表明这是该外部接口方法对应的数据层查询方法。</para>
                         <para>
-                            虽然外部接口可以返回四种类型，但是数据层方法只能返回两种类型：<codeInline>EntityList、LiteDataTable</codeInline> 。它们对应两类查询：实体、表格。当外部接口调用 <codeInline>FetchList，FetchFirst，FetchCount </codeInline> 三个方法查询实体列表、实体、数据行数时，属于实体类查询，数据层方法的返回值是 <codeInline>EntityList</codeInline>；而当外部接口调用 <codeInline>FetchTable</codeInline> 方法时，则对应表格类查询，数据层返回轻量级表格 <codeInline>LiteDataTable</codeInline>。
+                            返回值
                         </para>
-                        <para>数据层的返回值，是直接用于传输的值。即实体查询传输的是 <codeInline>EntityList</codeInline>，而表格查询传输的是 <codeInline>LiteDataTable</codeInline>。
-                    </para>
                         <para>
-                            由于实体类查询传输的都是 <codeInline>EntityList</codeInline> ，所以当实体列表传输到达客户端后，这三个接口分别返回不同的数据：</para>
-                        <list class="bullet">
-                            <listItem>
-                                <para>FetchList</para>
-                                <para>直接返回整个实体列表对象。</para>
-                            </listItem>
-                            <listItem>
-                                <para>FetchFirst</para>
-                                <para>只返回整个实体列表中的第一个实体对象。</para>
-                            </listItem>
-                            <listItem>
-                                <para>FetchCount</para>
-                                <para>返回 <codeInline>EntityList.TotalCount</codeInline> 属性。（此时，传输的实体列表中并没有实体对象。）</para>
-                            </listItem>
-                        </list>
+                            方法的返回值只可以是以下几类，具体实体列表类型、具体的实体类型、<codeInline>int</codeInline>（查询数据条数）、<codeInline>LiteDataTable</codeInline>（轻量级数据表格类型）。
+                        </para>
+                    </listItem>
+                    <listItem>
+                        <para>方法体</para>
+                        <para>
+                            方法体中需要构造查询，并最终使用<codeInline>QueryData()</codeInline>来查询数据。<codeInline>QueryData()</codeInline>方法会根据当前查询方法的返回值，而决定底层需要执行的查询的类型（查全部实体、查单个实体、查数据条数），并返回相应类型的数据。
+                        </para>
                     </listItem>
                 </list>
             </content>
@@ -66,12 +61,12 @@ private EntityList DA_GetByCode(string warehouseCode)
         <section address="demo">
             <title>四种查询示例</title>
             <content>
-                <para>四种查询对应枚举 <codeInline>Rafy.Domain.FetchType</codeInline>：</para>
+                <para>四种查询对应枚举 <codeInline>Rafy.Domain.RepositoryQueryType</codeInline>：</para>
                 <code language="cs">
 <![CDATA[/// <summary>
 /// 仓库返回数据的类型
 /// </summary>
-public enum FetchType
+public enum RepositoryQueryType
 {
     /// <summary>
     /// 查询实体列表
@@ -94,51 +89,42 @@ public enum FetchType
                 <list class="bullet">
                     <listItem>
                         <para>查询实体列表</para>
-                        <para>外部接口调用 FetchList 方法，返回具体实体列表类型。</para>
+                        <para>返回具体实体列表类型。</para>
                         <code language="cs">
-                            <![CDATA[public WarehouseList GetByCode(string warehouseCode)
-{
-    return this.FetchList(r => r.DA_GetByCode(warehouseCode));
-}
-private EntityList DA_GetByCode(string warehouseCode)
+                            <![CDATA[[RepositoryQuery]
+public virtual WarehouseList GetByCode(string warehouseCode)
 {
     var q = this.CreateLinqQuery();
     q = q.Where(e => e.Code == warehouseCode);
-    return this.QueryList(q);
+    return (WarehouseList)this.QueryData(q);
 }]]>
                         </code>
                     </listItem>
                     <listItem>
                         <para>查询单个实体</para>
-                        <para>外部接口调用 FetchFirst 方法，返回具体实体类型。</para>
+                        <para>返回具体实体类型。</para>
                         <para>查询实体个数的数据层实现中，与查询实体列表的实体层实现保持一致。如果查询出多条实体，则框架只会返回第一个实体。</para>
                         <code language="cs">
-                            <![CDATA[public Warehouse GetByName(string name)
-{
-    return this.FetchFirst(r => r.DA_GetByName(name));
-}
-private EntityList DA_GetByName(string name)
+                            <![CDATA[[RepositoryQuery]
+public virtual Warehouse GetByName(string name)
 {
     var q = this.CreateLinqQuery();
     q = q.Where(e => e.Name == name).OrderByDescending(e => e.CreateTime);
-    return this.QueryList(q);
+    return (Warehouse)this.QueryData(q);
 }]]>
                         </code>
                     </listItem>
                     <listItem>
                         <para>查询实体个数</para>
-                        <para>外部接口调用 FetchCount 方法，返回整型。</para>
+                        <para>返回整型。</para>
                         <para>查询实体个数的数据层实现中，与查询实体列表的实体层实现保持一致。框架内部会自动转换为数据行数的查询。</para>
                         <code language="cs">
-                            <![CDATA[public int CountByDate(DateTime date)
-{
-    return this.FetchCount(r => r.DA_CountByDate(date));
-}
-private EntityList DA_CountByDate(DateTime date)
+                            <![CDATA[[RepositoryQuery]
+public virtual int CountByDate(DateTime date)
 {
     var q = this.CreateLinqQuery();
     q = q.Where(e => e.CreateTime >= date);
-    return this.QueryList(q);
+    return (int)this.QueryData(q);
 }]]>
                         </code>
                     </listItem>
@@ -147,15 +133,12 @@ private EntityList DA_CountByDate(DateTime date)
                         <para>可返回一个简单的表格类型数据。LiteDataTable 类型是一个可直接用于网络传输的数据表格。</para>
                         <para>根据 Command Query Responsibility Segregation（命令查询职责分离，简称 CQRS）模式，复杂查询一般使用表格查询，但是返回的数据只做只读查看，不支持修改。</para>
                         <code language="cs">
-                            <![CDATA[public LiteDataTable GetTableByName(string name)
-{
-    return this.FetchTable(r => r.DA_GetTableByName(name));
-}
-private LiteDataTable DA_GetTableByName(string name)
+                            <![CDATA[[RepositoryQuery]
+public virtual LiteDataTable GetTableByName(string name)
 {
     FormattedSql sql = "SELECT * FROM WAREHOUSE WHERE NAME = {0}";
     sql.Parameters.Add(name);
-    return this.QueryTable(sql);
+    return (this.DataQueryer as RdbDataQueryer).QueryTable(sql);
 }]]>
                         </code>
                         <alert class="note">
