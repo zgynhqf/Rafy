@@ -281,8 +281,6 @@ namespace Rafy
 
         /// <summary>
         /// 获取当前线程目前已经进入的数据门户层数。
-        /// 
-        /// Set 方法为 Rafy 框架内部调用，外部请不要设置，否则会引起未知的异常。
         /// </summary>
         public static int ThreadPortalCount
         {

@@ -184,7 +184,23 @@ namespace Rafy.Domain
         /// </summary>
         public IList<IRepositoryExt> Extensions { get; internal set; }
 
-        private EntityList FetchByExtensions(object criteria)
+        /// <summary>
+        /// 获取指定类型的仓库扩展。
+        /// </summary>
+        /// <typeparam name="TRepositoryExt"></typeparam>
+        /// <returns></returns>
+        public TRepositoryExt Extension<TRepositoryExt>() where TRepositoryExt : class, IRepositoryExt
+        {
+            var list = this.Extensions;
+            for (int i = 0; i < list.Count; i++)
+            {
+                var ext = list[i];
+                if (ext is TRepositoryExt) return ext as TRepositoryExt;
+            }
+            return null;
+        }
+
+        private EntityList GetByExtensions(object criteria)
         {
             var criteriaType = criteria.GetType();
 
@@ -195,7 +211,7 @@ namespace Rafy.Domain
                 var methods = type.GetMethods(_oneLevelFlags);
                 foreach (var method in methods)
                 {
-                    if (method.Name == EntityConvention.QueryMethod)
+                    if (method.Name == EntityConvention.GetByCriteriaMethod)
                     {
                         var parameters = method.GetParameters();
                         if (parameters.Length == 1)

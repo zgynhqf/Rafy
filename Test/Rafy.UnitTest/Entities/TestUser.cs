@@ -13,6 +13,7 @@ using Rafy.MetaModel.Attributes;
 using Rafy.MetaModel.View;
 using Rafy.Domain.ORM;
 using Rafy.Domain.ORM.Query;
+using Rafy.Data;
 
 namespace UT
 {
@@ -190,57 +191,29 @@ namespace UT
 
     public partial class TestUserRepository : UnitTestEntityRepository
     {
-        public TestUser GetByName(string name)
+        [RepositoryQuery]
+        public virtual TestUser GetByName(string name)
         {
-            return this.FetchFirst(new TestUserGetByNameCriteria()
+            return (TestUser)this.DataProvider.GetBy(new CommonQueryCriteria
             {
-                UserName = name
+                new PropertyMatch(TestUser.NameProperty, name),
             });
         }
 
-        public TestUserList GetByName_Expression(string name, PagingInfo pagingInfo)
+        [RepositoryQuery]
+        public virtual TestUserList GetByNameAge(string name, int age)
         {
-            return this.FetchList(r => r.FetchByCustom(name, pagingInfo));
-        }
-
-        public int CountByName_Expression(string name, PagingInfo pagingInfo)
-        {
-            return this.FetchCount(r => r.FetchByCustom(name, pagingInfo));
-        }
-
-        public TestUserList GetByEmptyArgument()
-        {
-            return this.FetchList();
-        }
-
-        public TestUserList GetByOrder(bool nameAscending)
-        {
-            return this.FetchList(nameAscending);
-        }
-
-        public TestUserList GetByNameAge(string name, int age)
-        {
-            return this.FetchList(new CommonQueryCriteria
+            return (TestUserList)this.DataProvider.GetBy(new CommonQueryCriteria
             {
                 new PropertyMatch(TestUser.NameProperty, PropertyOperator.Contains, name),
                 new PropertyMatch(TestUser.AgeProperty, age),
             });
         }
-        public TestUserList GetByNameAge_PropertyQuery(string name, int age)
-        {
-            return this.FetchList(r => r.DA_GetByNameAge_PropertyQuery(name, age));
-        }
-        private EntityList DA_GetByNameAge_PropertyQuery(string name, int age)
-        {
-            var q = this.CreatePropertyQuery();
-            q.AddConstrain(TestUser.NameProperty).Equal(name);
-            q.AddConstrain(TestUser.AgeProperty).Equal(age);
-            return this.QueryList(q);
-        }
 
-        public TestUserList GetByNameOrAge(string name, int age)
+        [RepositoryQuery]
+        public virtual TestUserList GetByNameOrAge(string name, int age)
         {
-            return this.FetchList(new CommonQueryCriteria(BinaryOperator.Or)
+            return (TestUserList)this.DataProvider.GetBy(new CommonQueryCriteria(BinaryOperator.Or)
             {
                 new PropertyMatchGroup
                 {
@@ -253,68 +226,19 @@ namespace UT
             });
         }
 
-        public TestUserList GetByNameAgeByMultiParameters(string name, int age)
+        [RepositoryQuery]
+        public virtual TestUserList GetByNameAgeByMultiParameters2(string name, int age, PagingInfo pi = null)
         {
-            return this.FetchList(name, age);
+            var f = QueryFactory.Instance;
+            var q = f.Query(this);
+            q.AddConstraintIf(TestUser.NameProperty, PropertyOperator.Equal, name);
+            q.AddConstraintIf(TestUser.AgeProperty, PropertyOperator.Equal, age);
+
+            return (TestUserList)this.QueryData(q, pi);
         }
 
-        public TestUserList GetByNameAgeByMultiParameters(string name, int age, PagingInfo pagingInfo)
-        {
-            return this.FetchList(name, age, pagingInfo);
-        }
-
-        protected EntityList FetchBy()
-        {
-            return this.QueryList(null as Action<IPropertyQuery>);
-        }
-
-        protected EntityList FetchBy(bool nameAscending)
-        {
-            return this.QueryList(q =>
-            {
-                q.OrderBy(TestUser.NameProperty, nameAscending ? OrderDirection.Ascending : OrderDirection.Descending);
-            });
-        }
-
-        protected EntityList FetchBy(TestUserGetByNameCriteria criteria)
-        {
-            return this.QueryList(q => q.Constrain(TestUser.NameProperty).Equal(criteria.UserName));
-        }
-
-        protected EntityList FetchBy(string name, int age)
-        {
-            return this.QueryList(q =>
-            {
-                q.AddConstrainEqualIf(TestUser.NameProperty, name);
-                q.AddConstrain(TestUser.AgeProperty).Equal(age);
-            });
-        }
-
-        protected EntityList FetchBy(string name, int age, PagingInfo pagingInfo)
-        {
-            return this.QueryList(q =>
-            {
-                q.Paging(pagingInfo);
-
-                q.Constrain(TestUser.NameProperty).Equal(name);
-                q.AddConstrain(TestUser.AgeProperty).Equal(age);
-            });
-        }
-
-        private EntityList FetchByCustom(string name, PagingInfo pagingInfo)
-        {
-            return this.QueryList(q =>
-            {
-                q.Constrain(TestUser.NameProperty).Equal(name);
-                q.Paging(pagingInfo);
-            });
-        }
-
-        public TestUserList GetByOrder2(bool nameAscending)
-        {
-            return this.FetchList(r => r.DA_GetByOrder2(nameAscending));
-        }
-        private EntityList DA_GetByOrder2(bool nameAscending)
+        [RepositoryQuery]
+        public virtual TestUserList GetByOrder2(bool nameAscending)
         {
             var f = QueryFactory.Instance;
             var source = f.Table(this);
@@ -324,60 +248,34 @@ namespace UT
                     f.OrderBy(source.Column(TestUser.NameProperty), nameAscending ? OrderDirection.Ascending : OrderDirection.Descending)
                 }
             );
-            return this.QueryList(q);
+            return (TestUserList)this.QueryData(q);
         }
 
-        public TestUserList GetByEmptyArgument2()
-        {
-            return this.FetchList(r => r.DA_GetByEmptyArgument2());
-        }
-        private EntityList DA_GetByEmptyArgument2()
+        [RepositoryQuery]
+        public virtual TestUserList GetByEmptyArgument2()
         {
             var q = QueryFactory.Instance.Query(this);
-            return this.QueryList(q);
+            return (TestUserList)this.QueryData(q);
         }
 
-        public TestUserList GetByNameAgeByMultiParameters2(string name, int age)
-        {
-            return this.FetchList(r => r.DA_GetByNameAgeByMultiParameters2(name, age));
-        }
-        private EntityList DA_GetByNameAgeByMultiParameters2(string name, int age)
-        {
-            var f = QueryFactory.Instance;
-            var q = f.Query(this);
-            q.AddConstraintIf(TestUser.NameProperty, PropertyOperator.Equal, name);
-            q.AddConstraintIf(TestUser.AgeProperty, PropertyOperator.Equal, age);
-
-            return this.QueryList(q);
-        }
-
-        public TestUserList GetByIds(int[] ids)
-        {
-            return this.FetchList(r => r.DA_GetByIds(ids));
-        }
-        private EntityList DA_GetByIds(int[] ids)
+        [RepositoryQuery]
+        public virtual TestUserList GetByIds(int[] ids)
         {
             var q = this.CreateLinqQuery();
             q = q.Where(e => ids.Contains(e.Id));
-            return this.QueryList(q);
+            return (TestUserList)this.QueryData(q);
         }
 
-        public TestUserList GetByIds2(string userName, params int[] ids)
-        {
-            return this.FetchList(r => r.DA_GetByIds2(userName, ids));
-        }
-        private EntityList DA_GetByIds2(string userName, params int[] ids)
+        [RepositoryQuery]
+        public virtual TestUserList GetByIds2(string userName, params int[] ids)
         {
             var q = this.CreateLinqQuery();
             q = q.Where(e => ids.Contains(e.Id) && e.Name.Contains(userName));
-            return this.QueryList(q);
+            return (TestUserList)this.QueryData(q);
         }
 
-        public TestUser GetWithTasks(int userId)
-        {
-            return this.FetchFirst(r => r.DA_GetWithTasks(userId));
-        }
-        private EntityList DA_GetWithTasks(int userId)
+        [RepositoryQuery]
+        public virtual TestUser GetWithTasks(int userId)
         {
             var q = this.CreateLinqQuery();
             q = q.Where(e => e.Id == userId);
@@ -386,8 +284,91 @@ namespace UT
                 Query = this.ConvertToQuery(q),
             };
             args.EagerLoad(TestUser.TestTreeTaskListProperty);
-            return this.QueryList(args);
+            return (TestUser)this.QueryData(args);
         }
+
+        //public TestUserList GetByName_Expression(string name, PagingInfo pagingInfo)
+        //{
+        //    return this.FetchList(r => r.FetchByCustom(name, pagingInfo));
+        //}
+
+        //public int CountByName_Expression(string name, PagingInfo pagingInfo)
+        //{
+        //    return this.FetchCount(r => r.FetchByCustom(name, pagingInfo));
+        //}
+
+        //private EntityList FetchByCustom(string name, PagingInfo pagingInfo)
+        //{
+        //    return this.QueryList(q =>
+        //    {
+        //        q.Constrain(TestUser.NameProperty).Equal(name);
+        //        q.Paging(pagingInfo);
+        //    });
+        //}
+
+        //public override Entity GetById(object id, EagerLoadOptions eagerLoad = null)
+        //{
+        //    return base.GetById(id, eagerLoad);
+        //}
+
+        //public TestUserList GetByEmptyArgument()
+        //{
+        //    return this.FetchList();
+        //}
+        //protected EntityList FetchBy()
+        //{
+        //    return this.QueryList(null as Action<IPropertyQuery>);
+        //}
+
+        //public TestUserList GetByOrder(bool nameAscending)
+        //{
+        //    return this.FetchList(nameAscending);
+        //}
+        //protected EntityList FetchBy(bool nameAscending)
+        //{
+        //    return this.QueryList(q =>
+        //    {
+        //        q.OrderBy(TestUser.NameProperty, nameAscending ? OrderDirection.Ascending : OrderDirection.Descending);
+        //    });
+        //}
+
+        //[RepositoryQuery]
+        //public virtual TestUserList GetByNameAge_PropertyQuery(string name, int age)
+        //{
+        //    var q = this.CreatePropertyQuery();
+        //    q.AddConstrain(TestUser.NameProperty).Equal(name);
+        //    q.AddConstrain(TestUser.AgeProperty).Equal(age);
+        //    return (TestUserList)this.QueryList(q);
+        //}
+
+        //public TestUserList GetByNameAgeByMultiParameters(string name, int age)
+        //{
+        //    return this.FetchList(name, age);
+        //}
+        //protected EntityList FetchBy(string name, int age)
+        //{
+        //    return this.QueryList(q =>
+        //    {
+        //        q.AddConstrainEqualIf(TestUser.NameProperty, name);
+        //        q.AddConstrain(TestUser.AgeProperty).Equal(age);
+        //    });
+        //}
+
+        //public TestUserList GetByNameAgeByMultiParameters(string name, int age, PagingInfo pagingInfo)
+        //{
+        //    return this.FetchList(name, age, pagingInfo);
+        //}
+
+        //protected EntityList FetchBy(string name, int age, PagingInfo pagingInfo)
+        //{
+        //    return this.QueryList(q =>
+        //    {
+        //        q.Paging(pagingInfo);
+
+        //        q.Constrain(TestUser.NameProperty).Equal(name);
+        //        q.AddConstrain(TestUser.AgeProperty).Equal(age);
+        //    });
+        //}
     }
 
     internal class TestUserConfig : UnitTestEntityConfig<TestUser>

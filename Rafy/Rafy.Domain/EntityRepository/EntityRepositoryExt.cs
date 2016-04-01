@@ -73,49 +73,6 @@ namespace Rafy.Domain
             get { return _repo as TRepository; }
         }
 
-        #region 扩展的 Fetch 接口
-
-        /// <summary>
-        /// 子类调用此方法来导向服务端执行 EntityList 对应的数据层方法。
-        /// </summary>
-        /// <param name="repository">The repository.</param>
-        /// <param name="parameters">The parameters.</param>
-        /// <returns>
-        /// 返回统计的行数。
-        /// </returns>
-        protected static int FetchCount(TRepository repository, params object[] parameters)
-        {
-            return repository.FetchCount(parameters);
-        }
-
-        /// <summary>
-        /// 子类调用此方法来导向服务端执行 EntityList 对应的数据层方法。
-        /// </summary>
-        /// <param name="repository">The repository.</param>
-        /// <param name="parameters">The parameters.</param>
-        /// <returns>
-        /// 返回加载好数据的实体列表。
-        /// </returns>
-        protected static EntityList FetchList(TRepository repository, params object[] parameters)
-        {
-            return repository.FetchList(parameters);
-        }
-
-        /// <summary>
-        /// 子类调用此方法来导向服务端执行 EntityList 对应的数据层方法。
-        /// </summary>
-        /// <param name="repository">The repository.</param>
-        /// <param name="parameters">The parameters.</param>
-        /// <returns>
-        /// 返回加载好数据的实体。
-        /// </returns>
-        protected static Entity FetchFirst(TRepository repository, params object[] parameters)
-        {
-            return repository.FetchFirst(parameters);
-        }
-
-        #endregion
-
         #region IRepositoryExtInternal 成员
 
         bool IRepositoryExtInternal.IsExtending(IRepository repository)

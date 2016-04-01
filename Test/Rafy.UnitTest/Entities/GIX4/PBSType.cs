@@ -107,33 +107,24 @@ namespace UT
     {
         protected PBSTypeRepository() { }
 
-        public PBSTypeList LinqBySingleName(string name)
+        [RepositoryQuery]
+        public virtual PBSTypeList LinqBySingleName(string name)
         {
-            return this.FetchList(name);
-        }
-        protected EntityList FetchBy(string name)
-        {
-            var queryable = this.CreateLinqQuery()
+            var q = this.CreateLinqQuery()
                 .Where(t => t.Name == name);
-            return this.QueryList(queryable);
+            return (PBSTypeList)this.QueryData(q);
         }
 
-        public PBSTypeList LinqBySingleNameReverse(string name)
-        {
-            return this.FetchList(r => r.DA_LinqBySingleNameReverse(name));
-        }
-        private EntityList DA_LinqBySingleNameReverse(string name)
+        [RepositoryQuery]
+        public virtual PBSTypeList LinqBySingleNameReverse(string name)
         {
             var q = this.CreateLinqQuery();
             q = q.Where(e => name == e.Name);
-            return this.QueryList(q);
+            return (PBSTypeList)this.QueryData(q);
         }
 
-        public PBSTypeList LinqByCodeAndName(string code, string name, bool andOr)
-        {
-            return this.FetchList(code, name, andOr);
-        }
-        protected EntityList FetchBy(string code, string name, bool andOr)
+        [RepositoryQuery]
+        public virtual PBSTypeList LinqByCodeAndName(string code, string name, bool andOr)
         {
             var queryable = this.CreateLinqQuery();
             if (andOr)
@@ -144,33 +135,29 @@ namespace UT
             {
                 queryable = queryable.Where(t => t.Code == code || t.Name == name);
             }
-            return this.QueryList(queryable);
+
+            return (PBSTypeList)this.QueryData(queryable);
         }
 
-        public PBSTypeList LinqByWhereOnWHere(string code, string name)
-        {
-            return this.FetchList(new LinqByWhereOnWhereCriteira { Code = code, Name = name });
-        }
-        protected EntityList FetchBy(LinqByWhereOnWhereCriteira c)
+        [RepositoryQuery]
+        public virtual PBSTypeList LinqByWhereOnWHere(string code, string name)
         {
             var q = this.CreateLinqQuery();
-            q = q.Where(e => e.Code == c.Code);
-            if (!string.IsNullOrEmpty(c.Name))
+            q = q.Where(e => e.Code == code);
+            if (!string.IsNullOrEmpty(name))
             {
-                q = q.Where(e => e.Name == c.Name);
+                q = q.Where(e => e.Name == name);
             }
-            return this.QueryList(q);
+
+            return (PBSTypeList)this.QueryData(q);
         }
 
-        public PBSTypeList LinqOrderByCode(OrderDirection dir, OrderDirection? thenByName = null)
-        {
-            return this.FetchList(new LinqOrderByCodeCriteira { Direction = dir, ThenByNameDirection = thenByName });
-        }
-        protected EntityList FetchBy(LinqOrderByCodeCriteira c)
+        [RepositoryQuery]
+        public virtual PBSTypeList LinqOrderByCode(OrderDirection dir, OrderDirection? thenByName = null)
         {
             var q = this.CreateLinqQuery() as IOrderedQueryable<PBSType>;
 
-            if (c.Direction == OrderDirection.Ascending)
+            if (dir == OrderDirection.Ascending)
             {
                 q = q.OrderBy(t => t.Code);
             }
@@ -179,9 +166,9 @@ namespace UT
                 q = q.OrderByDescending(t => t.Code);
             }
 
-            if (c.ThenByNameDirection.HasValue)
+            if (thenByName.HasValue)
             {
-                if (c.ThenByNameDirection.Value == OrderDirection.Ascending)
+                if (thenByName.Value == OrderDirection.Ascending)
                 {
                     q = q.ThenBy(t => t.Name);
                 }
@@ -191,14 +178,11 @@ namespace UT
                 }
             }
 
-            return this.QueryList(q);
+            return (PBSTypeList)this.QueryData(q);
         }
 
-        public PBSTypeList LinqByBoolean(bool isDefault)
-        {
-            return this.FetchList(r => r.DA_LinqByBoolean(isDefault));
-        }
-        private EntityList DA_LinqByBoolean(bool isDefault)
+        [RepositoryQuery]
+        public virtual PBSTypeList LinqByBoolean(bool isDefault)
         {
             var q = this.CreateLinqQuery();
             if (isDefault)
@@ -209,25 +193,19 @@ namespace UT
             {
                 q = q.Where(e => !e.IsDefault);
             }
-            return this.QueryList(q);
+            return (PBSTypeList)this.QueryData(q);
         }
 
-        public PBSTypeList LinqByBoolean_Raw(bool isDefault)
-        {
-            return this.FetchList(r => r.DA_LinqByBoolean_Raw(isDefault));
-        }
-        private EntityList DA_LinqByBoolean_Raw(bool isDefault)
+        [RepositoryQuery]
+        public virtual PBSTypeList LinqByBoolean_Raw(bool isDefault)
         {
             var q = this.CreateLinqQuery();
             q = q.Where(e => e.IsDefault == isDefault);
-            return this.QueryList(q);
+            return (PBSTypeList)this.QueryData(q);
         }
 
-        public PBSTypeList LinqByBoolean_InBinary(string name, bool isDefault)
-        {
-            return this.FetchList(r => r.DA_LinqByBoolean_InBinary(name, isDefault));
-        }
-        private EntityList DA_LinqByBoolean_InBinary(string name, bool isDefault)
+        [RepositoryQuery]
+        public virtual PBSTypeList LinqByBoolean_InBinary(string name, bool isDefault)
         {
             var q = this.CreateLinqQuery();
             if (isDefault)
@@ -238,7 +216,7 @@ namespace UT
             {
                 q = q.Where(e => !e.IsDefault && e.Name == name);
             }
-            return this.QueryList(q);
+            return (PBSTypeList)this.QueryData(q);
         }
     }
 

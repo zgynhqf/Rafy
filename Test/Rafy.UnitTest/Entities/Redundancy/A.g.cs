@@ -119,72 +119,6 @@ namespace UT
         #region 私有方法，本类内部使用
 
         /// <summary>
-        /// 在查询接口方法中，调用此方法来向服务端执行对应参数的 FetchBy 数据层方法，并返回第一个实体。
-        /// </summary>
-        /// <param name="parameters">可传递多个参数。</param>
-        /// <returns>返回服务端返回的列表中的第一个实体。</returns>
-        [DebuggerStepThrough]
-        private new A FetchFirst(params object[] parameters)
-        {
-            return base.FetchFirst(parameters) as A;
-        }
-
-        /// <summary>
-        /// 在查询接口方法中，调用此方法来向服务端执行对应参数的 FetchBy 数据层方法，并返回满足条件的实体列表。
-        /// </summary>
-        /// <param name="parameters">可传递多个参数。</param>
-        /// <returns>返回满足条件的实体列表。</returns>
-        [DebuggerStepThrough]
-        private new AList FetchList(params object[] parameters)
-        {
-            return base.FetchList(parameters) as AList;
-        }
-
-        /// <summary>
-        /// 在查询接口方法中，调用此方法来导向服务端执行指定的数据层查询方法，并返回统计的行数。
-        /// </summary>
-        /// <param name="dataQueryExp">调用子仓库类中定义的数据查询方法的表达式。</param>
-        /// <returns>返回统计的行数。</returns>
-        [DebuggerStepThrough]
-        protected int FetchCount(Expression<Func<ARepository, EntityList>> dataQueryExp)
-        {
-            return this.FetchCount<ARepository>(dataQueryExp);
-        }
-
-        /// <summary>
-        /// 在查询接口方法中，调用此方法来导向服务端执行指定的数据层查询方法，并返回第一个满足条件的实体。
-        /// </summary>
-        /// <param name="dataQueryExp">调用仓库类中定义的数据查询方法的表达式。</param>
-        /// <returns>返回第一个满足条件的实体。</returns>
-        [DebuggerStepThrough]
-        private A FetchFirst(Expression<Func<ARepository, EntityList>> dataQueryExp)
-        {
-            return this.FetchFirst<ARepository>(dataQueryExp) as A;
-        }
-
-        /// <summary>
-        /// 在查询接口方法中，调用此方法来向服务端执行指定的数据层查询方法，并返回满足条件的实体列表。
-        /// </summary>
-        /// <param name="dataQueryExp">调用仓库类中定义的数据查询方法的表达式。</param>
-        /// <returns>返回满足条件的实体列表。</returns>
-        [DebuggerStepThrough]
-        private AList FetchList(Expression<Func<ARepository, EntityList>> dataQueryExp)
-        {
-            return this.FetchList<ARepository>(dataQueryExp) as AList;
-        }
-
-        /// <summary>
-        /// 在查询接口方法中，调用此方法来向服务端执行指定的数据层查询方法，并返回满足条件的数据表格。
-        /// </summary>
-        /// <param name="dataQueryExp">调用仓库类中定义的数据查询方法的表达式。</param>
-        /// <returns>返回满足条件的数据表格。</returns>
-        [DebuggerStepThrough]
-        private LiteDataTable FetchTable(Expression<Func<ARepository, LiteDataTable>> dataQueryExp)
-        {
-            return this.FetchTable<ARepository>(dataQueryExp);
-        }
-
-        /// <summary>
         /// 创建一个实体类的 Linq 查询器
         /// </summary>
         /// <returns></returns>
@@ -275,7 +209,7 @@ namespace UT
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new AList GetAll(PagingInfo paging= null, EagerLoadOptions eagerLoad = null)
+        public new AList GetAll(PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
         {
             return base.GetAll(paging, eagerLoad) as AList;
         }
@@ -327,6 +261,17 @@ namespace UT
         public new AList GetBy(CommonQueryCriteria criteria)
         {
             return base.GetBy(criteria) as AList;
+        }
+    
+        /// <summary>
+        /// 通过 CommonQueryCriteria 来查询单一实体。
+        /// </summary>
+        /// <param name="criteria">常用查询条件。</param>
+        /// <returns></returns>
+        [DebuggerStepThrough]
+        public new A GetFirstBy(CommonQueryCriteria criteria)
+        {
+            return base.GetFirstBy(criteria) as A;
         }
 
         /// <summary>

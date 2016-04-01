@@ -146,7 +146,8 @@ namespace Rafy.RBAC.Old.Audit
         /// 条件面板查询
         /// </summary>
         /// <param name="criteria"></param>
-        protected EntityList FetchBy(AuditItemConditionCriteria criteria)
+        [RepositoryQuery]
+        public virtual AuditItemList GetBy(AuditItemConditionCriteria criteria)
         {
             //起始时间和终止时间只精确到日。终止时间往后推一天
             var startDate = criteria.StartTime.Date;
@@ -182,7 +183,7 @@ namespace Rafy.RBAC.Old.Audit
                 q.AddConstraintIf(AuditItem.TypeProperty, PropertyOperator.Equal, criteria.AuditLogType);
             }
 
-            return this.QueryList(q);
+            return (AuditItemList)this.QueryData(q);
         }
     }
 

@@ -63,11 +63,13 @@ namespace Rafy.RBAC.Old
     {
         protected PositionRepository() { }
 
-        public Position GetByCode(string code)
+        [RepositoryQuery]
+        public virtual Position GetByCode(string code)
         {
-            return this.FetchFirst(new CommonQueryCriteria
+            return (Position)this.DataProvider.GetBy(new CommonQueryCriteria
             {
-                new PropertyMatch(Position.CodeProperty, PropertyOperator.Contains, code)
+                new PropertyMatch(Position.CodeProperty, PropertyOperator.Contains, code),
+                //new PropertyMatch(Entity.Property2Property, PropertyMatchOperator.Equal, parameter2),
             });
         }
     }

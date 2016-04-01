@@ -203,16 +203,6 @@ namespace Rafy.Domain
         }
 
         /// <summary>
-        /// 通过 <see cref="ODataQueryCriteria"/> 来查询实体列表。
-        /// </summary>
-        /// <param name="criteria">常用查询条件。</param>
-        /// <returns></returns>
-        public EntityList GetBy(ODataQueryCriteria criteria)
-        {
-            return this.DoGetBy(criteria);
-        }
-
-        /// <summary>
         /// 通过 CommonQueryCriteria 来查询实体列表。
         /// </summary>
         /// <param name="criteria">常用查询条件。</param>
@@ -228,6 +218,36 @@ namespace Rafy.Domain
         /// <param name="criteria">常用查询条件。</param>
         /// <returns></returns>
         public int CountBy(CommonQueryCriteria criteria)
+        {
+            return this.DoCountBy(criteria);
+        }
+
+        /// <summary>
+        /// 通过 <see cref="ODataQueryCriteria"/> 来查询实体列表。
+        /// </summary>
+        /// <param name="criteria">常用查询条件。</param>
+        /// <returns></returns>
+        public EntityList GetBy(ODataQueryCriteria criteria)
+        {
+            return this.DoGetBy(criteria);
+        }
+
+        /// <summary>
+        /// 通过 <see cref="ODataQueryCriteria"/> 来查询某个实体。
+        /// </summary>
+        /// <param name="criteria">常用查询条件。</param>
+        /// <returns></returns>
+        public Entity GetFirstBy(ODataQueryCriteria criteria)
+        {
+            return this.DoGetFirstBy(criteria);
+        }
+
+        /// <summary>
+        /// 通过 <see cref="ODataQueryCriteria"/> 来查询实体的个数。
+        /// </summary>
+        /// <param name="criteria">常用查询条件。</param>
+        /// <returns></returns>
+        public int CountBy(ODataQueryCriteria criteria)
         {
             return this.DoCountBy(criteria);
         }
@@ -252,7 +272,7 @@ namespace Rafy.Domain
         /// <returns></returns>
         public EntityList GetAllTreeParents(string treeIndex, EagerLoadOptions eagerLoad = null)
         {
-            return this.FetchList<EntityRepository>(r => r.__FetchAllTreeParents(treeIndex, eagerLoad));
+            return this.DoGetAllTreeParents(treeIndex, eagerLoad);
         }
 
         /// <summary>
@@ -278,24 +298,12 @@ namespace Rafy.Domain
 
         internal string GetMaxTreeIndex()
         {
-            var table  = this.FetchTable<EntityRepository>(r => r.DA_GetMaxTreeIndex());
+            var table  = this.DoGetMaxTreeIndex();
             if (table.Rows.Count > 0)
             {
                 return table.Rows[0].GetString(0);
             }
             return null;
-        }
-        [Obfuscation]
-        private LiteDataTable DA_GetMaxTreeIndex()
-        {
-            var f = QueryFactory.Instance;
-            var t = f.Table(this);
-            var q = f.Query(
-                selection: t.Column(Entity.TreeIndexProperty),
-                from: t,
-                orderBy: new List<IOrderBy> { f.OrderBy(t.Column(Entity.TreeIndexProperty), OrderDirection.Descending) }
-            );
-            return this.QueryTable(q);
         }
 
         /// <summary>
@@ -325,7 +333,8 @@ namespace Rafy.Domain
         /// <returns></returns>
         public object GetEntityValue(object id, string property)
         {
-            return this.DoGetEntityValue(id, property);
+            var table = this.DoGetEntityValue(id, property);
+            return table[0, 0];
         }
 
         #endregion
@@ -470,13 +479,10 @@ namespace Rafy.Domain
         /// <param name="paging">分页信息。</param>
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
+        [RepositoryQuery]
         protected virtual EntityList DoGetAll(PagingInfo paging, EagerLoadOptions eagerLoad)
         {
-            return this.FetchList(new GetAllCriteria
-            {
-                PagingInfo = paging,
-                EagerLoad = eagerLoad
-            });
+            return (EntityList)_dataProvider.GetAll(paging, eagerLoad);
         }
 
         /// <summary>
@@ -484,9 +490,10 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
+        [RepositoryQuery]
         protected virtual Entity DoGetFirst(EagerLoadOptions eagerLoad)
         {
-            return this.FetchFirst(new GetAllCriteria { EagerLoad = eagerLoad });
+            return (Entity)_dataProvider.GetAll(null, eagerLoad);
         }
 
         /// <summary>
@@ -495,33 +502,31 @@ namespace Rafy.Domain
         /// <param name="id"></param>
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
+        [RepositoryQuery]
         protected virtual Entity DoGetById(object id, EagerLoadOptions eagerLoad)
         {
-            var list = FetchList(new GetByIdCriteria()
-            {
-                IdValue = id,
-                EagerLoad = eagerLoad
-            });
-            return list.Count == 1 ? list[0] : null;
+            return _dataProvider.GetById(id, eagerLoad);
         }
 
         /// <summary>
-        /// 查询所有的根节点。
+        /// 查询所有的根节点、数量。
         /// </summary>
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
+        [RepositoryQuery]
         protected virtual EntityList DoGetTreeRoots(EagerLoadOptions eagerLoad)
         {
-            return this.FetchList<EntityRepository>(r => r.__FetchTreeRoots(eagerLoad));
+            return (EntityList)_dataProvider.GetTreeRoots(eagerLoad);
         }
 
         /// <summary>
         /// 查询所有的根节点数量。
         /// </summary>
         /// <returns></returns>
+        [RepositoryQuery]
         protected virtual int DoCountTreeRoots()
         {
-            return this.FetchCount<EntityRepository>(r => r.__FetchTreeRoots(null));
+            return (int)_dataProvider.GetTreeRoots(null);
         }
 
         /// <summary>
@@ -530,13 +535,10 @@ namespace Rafy.Domain
         /// <param name="idList"></param>
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
+        [RepositoryQuery]
         protected virtual EntityList DoGetByIdList(object[] idList, EagerLoadOptions eagerLoad)
         {
-            return this.FetchList(new GetByIdListCriteria
-            {
-                IdList = idList,
-                EagerLoad = eagerLoad
-            });
+            return _dataProvider.GetByIdList(idList, eagerLoad);
         }
 
         /// <summary>
@@ -546,14 +548,10 @@ namespace Rafy.Domain
         /// <param name="paging">The paging information.</param>
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
+        [RepositoryQuery]
         protected virtual EntityList DoGetByParentIdList(object[] parentIdList, PagingInfo paging, EagerLoadOptions eagerLoad)
         {
-            return this.FetchList(new GetByParentIdListCriteria
-            {
-                ParentIdList = parentIdList,
-                PagingInfo = paging,
-                EagerLoad = eagerLoad
-            });
+            return _dataProvider.GetByParentIdList(parentIdList, paging, eagerLoad);
         }
 
         /// <summary>
@@ -563,14 +561,10 @@ namespace Rafy.Domain
         /// <param name="paging"></param>
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
+        [RepositoryQuery]
         protected virtual EntityList DoGetByParentId(object parentId, PagingInfo paging, EagerLoadOptions eagerLoad)
         {
-            return this.FetchList(new GetByParentIdCriteria()
-            {
-                ParentId = parentId,
-                PagingInfo = paging,
-                EagerLoad = eagerLoad
-            });
+            return (EntityList)_dataProvider.GetByParentId(parentId, paging, eagerLoad);
         }
 
         /// <summary>
@@ -578,9 +572,32 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="criteria">常用查询条件。</param>
         /// <returns></returns>
+        [RepositoryQuery]
         protected virtual EntityList DoGetBy(CommonQueryCriteria criteria)
         {
-            return this.FetchList(criteria);
+            return (EntityList)_dataProvider.GetBy(criteria);
+        }
+
+        /// <summary>
+        /// 通过 <see cref="CommonQueryCriteria"/> 来查询单一实体。
+        /// </summary>
+        /// <param name="criteria">常用查询条件。</param>
+        /// <returns></returns>
+        [RepositoryQuery]
+        protected virtual Entity DoGetFirstBy(CommonQueryCriteria criteria)
+        {
+            return (Entity)_dataProvider.GetBy(criteria);
+        }
+
+        /// <summary>
+        /// 通过 <see cref="CommonQueryCriteria"/> 来查询实体个数。
+        /// </summary>
+        /// <param name="criteria">常用查询条件。</param>
+        /// <returns></returns>
+        [RepositoryQuery]
+        protected virtual int DoCountBy(CommonQueryCriteria criteria)
+        {
+            return (int)_dataProvider.GetBy(criteria);
         }
 
         /// <summary>
@@ -588,29 +605,32 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="criteria">常用查询条件。</param>
         /// <returns></returns>
+        [RepositoryQuery]
         protected virtual EntityList DoGetBy(ODataQueryCriteria criteria)
         {
-            return this.FetchList(criteria);
+            return (EntityList)_dataProvider.GetBy(criteria);
         }
 
         /// <summary>
-        /// 通过 CommonQueryCriteria 来查询单一实体。
+        /// 通过 <see cref="ODataQueryCriteria"/> 来查询单一实体。
         /// </summary>
         /// <param name="criteria">常用查询条件。</param>
         /// <returns></returns>
-        protected virtual Entity DoGetFirstBy(CommonQueryCriteria criteria)
+        [RepositoryQuery]
+        protected virtual Entity DoGetFirstBy(ODataQueryCriteria criteria)
         {
-            return this.FetchFirst(criteria);
+            return (Entity)_dataProvider.GetBy(criteria);
         }
 
         /// <summary>
-        /// 通过 CommonQueryCriteria 来查询实体个数。
+        /// 通过 <see cref="ODataQueryCriteria"/> 来查询实体的个数。
         /// </summary>
         /// <param name="criteria">常用查询条件。</param>
         /// <returns></returns>
-        protected virtual int DoCountBy(CommonQueryCriteria criteria)
+        [RepositoryQuery]
+        protected virtual int DoCountBy(ODataQueryCriteria criteria)
         {
-            return this.FetchCount(criteria);
+            return (int)_dataProvider.GetBy(criteria);
         }
 
         /// <summary>
@@ -619,9 +639,10 @@ namespace Rafy.Domain
         /// <param name="treeIndex"></param>
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
+        [RepositoryQuery]
         protected virtual EntityList DoGetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad)
         {
-            return this.FetchList(new GetByTreeParentIndexCriteria() { TreeIndex = treeIndex, EagerLoad = eagerLoad });
+            return _dataProvider.GetByTreeParentIndex(treeIndex, eagerLoad);
         }
 
         /// <summary>
@@ -630,18 +651,20 @@ namespace Rafy.Domain
         /// <param name="treePId">需要查找的树节点的Id.</param>
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
+        [RepositoryQuery]
         protected virtual EntityList DoGetByTreePId(object treePId, EagerLoadOptions eagerLoad)
         {
-            return this.FetchList<EntityRepository>(r => r.__FetchByTreePId(treePId, eagerLoad));
+            return _dataProvider.GetByTreePId(treePId, eagerLoad);
         }
 
         /// <summary>
         /// 统计仓库中所有的实体数量
         /// </summary>
         /// <returns></returns>
+        [RepositoryQuery]
         protected virtual int DoCountAll()
         {
-            return this.FetchCount(new CountAllCriteria());
+            return (int)_dataProvider.GetAll(null, null);
         }
 
         /// <summary>
@@ -649,9 +672,10 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="parentId"></param>
         /// <returns></returns>
+        [RepositoryQuery]
         protected virtual int DoCountByParentId(object parentId)
         {
-            return this.FetchCount(new GetByParentIdCriteria() { ParentId = parentId });
+            return (int)_dataProvider.GetByParentId(parentId, null, null);
         }
 
         /// <summary>
@@ -661,9 +685,21 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="criteria"></param>
         /// <returns></returns>
+        [RepositoryQuery]
         protected virtual EntityList DoGetBy(object criteria)
         {
-            return this.FetchList(criteria);
+            //所有无法找到对应单一参数的查询，都会调用此方法。
+            //此方法会尝试使用仓库扩展类中编写的查询来响应本次查询。
+            //先尝试使用仓库扩展来满足提供查询结果。
+            var result = this.GetByExtensions(criteria);
+            if (result != null) return result;
+
+            //所有扩展检查完毕，直接抛出异常。
+            throw new NotImplementedException(string.Format(
+                "{1} 类需要编写一个单一参数类型为 {0} 的查询方法以实现数据层查询。格式如下：public virtual object GetBy({0} criteira) {{...}}。",
+                criteria.GetType().Name,
+                this.GetType().FullName
+                ));
         }
 
         /// <summary>
@@ -673,20 +709,55 @@ namespace Rafy.Domain
         /// <param name="id">The unique identifier.</param>
         /// <param name="property">The property.</param>
         /// <returns></returns>
-        protected virtual object DoGetEntityValue(object id, string property)
+        [RepositoryQuery]
+        protected virtual LiteDataTable DoGetEntityValue(object id, string property)
         {
-            var table = this.FetchTable(new GetEntityValueCriteria()
-            {
-                EntityId = id,
-                Property = property
-            });
+            return _dataProvider.GetEntityValue(id, property);
+        }
 
-            return table[0, 0];
+        [RepositoryQuery]
+        protected virtual EntityList GetByIdOrTreePId(object id)
+        {
+            var table = qf.Table(this);
+            var query = qf.Query(
+                from: table,
+                where: qf.Or(
+                    table.IdColumn.Equal(id),
+                    table.Column(Entity.TreePIdProperty).Equal(id)
+                ));
+
+            return (EntityList)this.QueryData(query);
+        }
+
+        [RepositoryQuery]
+        protected virtual LiteDataTable DoGetMaxTreeIndex()
+        {
+            var f = QueryFactory.Instance;
+            var t = f.Table(this);
+            var q = f.Query(
+                selection: t.Column(Entity.TreeIndexProperty),
+                from: t,
+                orderBy: new List<IOrderBy> { f.OrderBy(t.Column(Entity.TreeIndexProperty), OrderDirection.Descending) }
+            );
+            return this.QueryTable(q);
+        }
+
+        /// <summary>
+        /// 获取指定索引对应的树节点的所有父节点。
+        /// 查询出的父节点同样以一个部分树的形式返回。
+        /// </summary>
+        /// <param name="treeIndex"></param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <returns></returns>
+        [RepositoryQuery]
+        protected virtual EntityList DoGetAllTreeParents(string treeIndex, EagerLoadOptions eagerLoad)
+        {
+            return _dataProvider.GetAllTreeParents(treeIndex, eagerLoad);
         }
 
         #endregion
 
-        #region FetchBy 一些通用数据层实现
+        #region PortalFetch
 
         private RepositoryDataProvider _dataProvider;
 
@@ -708,45 +779,12 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="criteria">The criteria.</param>
         /// <returns></returns>
-        /// <exception cref="System.InvalidProgramException">
-        /// </exception>
         internal object PortalFetch(IEQC criteria)
         {
-            var methodName = criteria.MethodName;
+            //如果方法名为空，则使用约定的方法名。
+            var methodName = criteria.MethodName ?? EntityConvention.GetByCriteriaMethod;
             var parameters = criteria.Parameters;
 
-            //对表格类查询进行处理。
-            if (criteria.FetchType == FetchType.Table)
-            {
-                //如果方法名为空，则使用约定的方法名。
-                if (methodName == null) methodName = EntityConvention.QueryMethod;
-
-                var table = ProvideData(methodName, parameters) as LiteDataTable;
-                if (table == null) { throw new InvalidProgramException(string.Format("仓库 {0} 的数据层方法：'{1}'，必须返回一个 LiteDataTable 对象。", this.GetType(), methodName)); }
-                return table;
-            }
-
-            //最常用的一些查询，不使用反射：
-            if (methodName == null && parameters.Length == 1)
-            {
-                var p = parameters[0];
-                if (p is GetByIdCriteria) { return this.FetchBy(p as GetByIdCriteria); }
-                if (p is GetByParentIdCriteria) { return this.FetchBy(p as GetByParentIdCriteria); }
-                if (p is GetAllCriteria) { return this.FetchBy(p as GetAllCriteria); }
-                if (p is GetByTreeParentIndexCriteria) { return this.FetchBy(p as GetByTreeParentIndexCriteria); }
-            }
-
-            //如果方法名为空，则使用约定的方法名。
-            if (methodName == null) methodName = EntityConvention.QueryMethod;
-
-            var list = ProvideData(methodName, parameters) as EntityList;
-            if (list == null) { throw new InvalidProgramException(string.Format("仓库 {0} 的数据层方法：'{1}'，必须返回一个 EntityList 或者其子类的对象。", this.GetType(), methodName)); }
-
-            return list;
-        }
-
-        private object ProvideData(string methodName, object[] parameters)
-        {
             object result = null;
 
             //先尝试在 DataProvider 中调用指定的方法，如果没有找到，才会调用 Repository 中的方法。
@@ -762,329 +800,9 @@ namespace Rafy.Domain
             return result;
         }
 
-        #region FetchBy 接口
-
-        [Obfuscation]
-        private EntityList FetchBy(GetByIdCriteria criteria)
-        {
-            return _dataProvider.GetById(criteria.IdValue, null);
-        }
-
-        [Obfuscation]
-        private EntityList FetchBy(GetByParentIdListCriteria criteria)
-        {
-            return _dataProvider.GetByParentIdList(criteria.ParentIdList, criteria.PagingInfo, criteria.EagerLoad);
-        }
-
-        [Obfuscation]
-        private EntityList FetchBy(GetByParentIdCriteria criteria)
-        {
-            return _dataProvider.GetByParentId(criteria.ParentId, criteria.PagingInfo, criteria.EagerLoad);
-        }
-
-        [Obfuscation]
-        private EntityList FetchBy(GetAllCriteria criteria)
-        {
-            return _dataProvider.GetAll(criteria.PagingInfo, criteria.EagerLoad);
-        }
-
-        [Obfuscation]
-        private EntityList FetchBy(GetByIdListCriteria criteria)
-        {
-            return _dataProvider.GetByIdList(criteria.IdList, criteria.EagerLoad);
-        }
-
-        [Obfuscation]
-        private EntityList FetchBy(CountAllCriteria criteria)
-        {
-            return _dataProvider.CountAll();
-        }
-
-        [Obfuscation]
-        private EntityList FetchBy(GetByTreeParentIndexCriteria criteria)
-        {
-            return _dataProvider.GetByTreeParentIndex(criteria.TreeIndex, criteria.EagerLoad);
-        }
-
-        [Obfuscation]
-        private LiteDataTable FetchBy(GetEntityValueCriteria criteria)
-        {
-            return _dataProvider.GetEntityValue(criteria.EntityId, criteria.Property);
-        }
-
-        [Obfuscation]
-        private EntityList __FetchByTreePId(object treePId, EagerLoadOptions eagerLoad)
-        {
-            return _dataProvider.GetByTreePId(treePId, eagerLoad);
-        }
-
-        [Obfuscation]
-        private EntityList __FetchAllTreeParents(string treeIndex, EagerLoadOptions eagerLoad)
-        {
-            return _dataProvider.GetAllTreeParents(treeIndex, eagerLoad);
-        }
-
-        [Obfuscation]
-        private EntityList __FetchTreeRoots(EagerLoadOptions eagerLoad)
-        {
-            return _dataProvider.GetTreeRoots(eagerLoad);
-        }
-
-        [Obfuscation]
-        private EntityList __FetchByIdOrTreePId(object id)
-        {
-            var table = qf.Table(this);
-            var query = qf.Query(
-                from: table,
-                where: qf.Or(
-                    table.IdColumn.Equal(id),
-                    table.Column(Entity.TreePIdProperty).Equal(id)
-                ));
-
-            return this.QueryList(query);
-        }
-
-        #endregion
-
-        /// <summary>
-        /// 所有无法找到对应单一参数的查询，都会调用此方法。
-        /// 此方法会尝试使用仓库扩展类中编写的查询来响应本次查询。
-        /// 
-        /// 子类重写此方法来实现对所有未实现的查询。
-        /// </summary>
-        /// <param name="criteria"></param>
-        /// <returns></returns>
-        protected EntityList FetchBy(object criteria)
-        {
-            //先尝试使用仓库扩展来满足提供查询结果。
-            var result = this.FetchByExtensions(criteria);
-            if (result != null) return result;
-
-            //所有扩展检查完毕，直接抛出异常。
-            throw new NotImplementedException(string.Format(
-                "{1} 类需要编写一个单一参数类型为 {0} 的 FetchBy 方法并返回 EntityList 以实现数据层查询。格式如下：protected EntityList FetchBy({0} criteira) {{...}}。",
-                criteria.GetType().Name,
-                this.GetType().FullName
-                ));
-        }
-
         IRepositoryDataProvider IRepository.DataProvider
         {
             get { return _dataProvider; }
-        }
-
-        #endregion
-
-        #region Fetch 接口
-
-        /// <summary>
-        /// 子类调用此方法来导向服务端执行仓库中对应参数的 FetchBy 数据层方法。
-        /// </summary>
-        /// <param name="parameters">对应数据层 FetchBy 方法的多个参数。</param>
-        /// <returns>返回统计的行数。</returns>
-        internal protected int FetchCount(params object[] parameters)
-        {
-            var list = DataPortalFetchList(new IEQC { FetchType = FetchType.Count, Parameters = parameters });
-
-            var count = list.TotalCount;
-
-            //由于自动调用 QueryAsCounting 方法，所以不需要再检测了。
-            //if (count == EntityList.TotalCountInitValue)
-            //{
-            //    throw new InvalidProgramException(string.Format(
-            //        "{0}.FetchBy({1}) 数据层方法统计行数无效！必须在调用 QueryDb 方法前先调用 QueryAsCounting 方法。",
-            //        list.GetType().Name,
-            //        string.Join(",", parameters.Select(c => c.GetType().Name))
-            //        ));
-            //}
-
-            return count;
-        }
-
-        /// <summary>
-        /// 子类在查询接口方法中，调用此方法来向服务端执行对应参数的 FetchBy 数据层方法，并返回第一个实体。
-        /// </summary>
-        /// <param name="parameters">对应数据层 FetchBy 方法的多个参数。</param>
-        /// <returns>返回第一个满足条件的实体。</returns>
-        internal protected Entity FetchFirst(params object[] parameters)
-        {
-            var list = DataPortalFetchList(new IEQC { FetchType = FetchType.First, Parameters = parameters });
-
-            return DisconnectFirst(list);
-        }
-
-        /// <summary>
-        /// 子类在查询接口方法中，调用此方法来向服务端执行对应参数的 FetchBy 数据层方法，并返回满足条件的实体列表。
-        /// </summary>
-        /// <param name="parameters">对应数据层 FetchBy 方法的多个参数。</param>
-        /// <returns>返回满足条件的实体列表。</returns>
-        internal protected EntityList FetchList(params object[] parameters)
-        {
-            return DataPortalFetchList(new IEQC { Parameters = parameters });
-        }
-
-        /// <summary>
-        /// 子类在查询接口方法中，调用此方法来向服务端执行对应参数的 FetchBy 数据层方法，并返回满足条件的数据表格。
-        /// </summary>
-        /// <param name="parameters">对应数据层 FetchBy 方法的多个参数。</param>
-        /// <returns>返回满足条件的数据表格。</returns>
-        internal protected LiteDataTable FetchTable(params object[] parameters)
-        {
-            var ieqc = new IEQC { Parameters = parameters };
-
-            return DataPortalFetchTable(ieqc);
-        }
-
-        /// <summary>
-        /// 子类在查询接口方法中，调用此方法来导向服务端执行指定的数据层查询方法，并返回统计的行数。
-        /// </summary>
-        /// <typeparam name="TRepository">子仓库的类型</typeparam>
-        /// <param name="dataQueryExp">调用子仓库类中定义的数据查询方法的表达式。</param>
-        /// <returns>返回统计的行数。</returns>
-        protected int FetchCount<TRepository>(Expression<Func<TRepository, EntityList>> dataQueryExp)
-            where TRepository : EntityRepository
-        {
-            var ieqc = new IEQC { FetchType = FetchType.Count };
-
-            ParseExpToIEQC(dataQueryExp, ieqc);
-
-            return DataPortalFetchList(ieqc).TotalCount;
-        }
-
-        /// <summary>
-        /// 子类在查询接口方法中，调用此方法来导向服务端执行指定的数据层查询方法，并返回第一个满足条件的实体。
-        /// </summary>
-        /// <typeparam name="TRepository">子仓库的类型</typeparam>
-        /// <param name="dataQueryExp">调用子仓库类中定义的数据查询方法的表达式。</param>
-        /// <returns>返回第一个满足条件的实体。</returns>
-        protected Entity FetchFirst<TRepository>(Expression<Func<TRepository, EntityList>> dataQueryExp)
-            where TRepository : EntityRepository
-        {
-            var ieqc = new IEQC { FetchType = FetchType.First };
-
-            ParseExpToIEQC(dataQueryExp, ieqc);
-
-            var list = DataPortalFetchList(ieqc);
-
-            return DisconnectFirst(list);
-        }
-
-        /// <summary>
-        /// 子类在查询接口方法中，调用此方法来向服务端执行指定的数据层查询方法，并返回满足条件的实体列表。
-        /// </summary>
-        /// <typeparam name="TRepository">子仓库的类型</typeparam>
-        /// <param name="dataQueryExp">调用子仓库类中定义的数据查询方法的表达式。</param>
-        /// <returns>返回满足条件的实体列表。</returns>
-        protected EntityList FetchList<TRepository>(Expression<Func<TRepository, EntityList>> dataQueryExp)
-            where TRepository : EntityRepository
-        {
-            var ieqc = new IEQC();
-
-            ParseExpToIEQC(dataQueryExp, ieqc);
-
-            return DataPortalFetchList(ieqc);
-        }
-
-        /// <summary>
-        /// 子类在查询接口方法中，调用此方法来向服务端执行指定的数据层查询方法，并返回满足条件的数据表格。
-        /// </summary>
-        /// <typeparam name="TRepository">子仓库的类型</typeparam>
-        /// <param name="dataQueryExp">调用子仓库类中定义的数据查询方法的表达式。</param>
-        /// <returns>返回满足条件的数据表格。</returns>
-        protected LiteDataTable FetchTable<TRepository>(Expression<Func<TRepository, LiteDataTable>> dataQueryExp)
-            where TRepository : EntityRepository
-        {
-            var ieqc = new IEQC();
-
-            ParseExpToIEQC(dataQueryExp, ieqc);
-
-            return DataPortalFetchTable(ieqc);
-        }
-
-        private EntityList DataPortalFetchList(IEQC ieqc)
-        {
-            this.OnFetching(ieqc);
-
-            var list = DataPortalApi.Fetch(this.GetType(), ieqc, this.DataPortalLocation) as EntityList;
-
-            this.NotifyLoaded(list);
-
-            return list;
-        }
-
-        private LiteDataTable DataPortalFetchTable(IEQC ieqc)
-        {
-            ieqc.FetchType = FetchType.Table;
-
-            this.OnFetching(ieqc);
-
-            return DataPortalApi.Fetch(this.GetType(), ieqc, this.DataPortalLocation) as LiteDataTable;
-        }
-
-        /// <summary>
-        /// 在所有接口调用数据门户查询时调用此方法。
-        /// <remarks>
-        /// 子类可重写此方法实现一些查询门户方法的检查。
-        /// 例如，一些仓库只允许在客户端进行调用时，可以在方法中判断，如果当前处在服务端，则抛出异常的逻辑。
-        /// </remarks>
-        /// </summary>
-        /// <param name="criteria">当前查询的条件。</param>
-        protected virtual void OnFetching(IEntityQueryCriteria criteria) { }
-
-        /// <summary>
-        /// 解析方法调用表达式，获取方法名及参数列表，存入到 IEQC 对象中。
-        /// </summary>
-        /// <param name="dataQueryExp"></param>
-        /// <param name="ieqc"></param>
-        private void ParseExpToIEQC(LambdaExpression dataQueryExp, IEQC ieqc)
-        {
-            dataQueryExp = Evaluator.PartialEval(dataQueryExp) as LambdaExpression;
-
-            var methodCallExp = dataQueryExp.Body as MethodCallExpression;
-            if (methodCallExp == null) ExpressionNotSupported(dataQueryExp);
-
-            //repoExp 可以是仓库本身，也可以是 DataProvider，所以以下检测不再需要。
-            //var repoExp = methodCallExp.Object as ParameterExpression;
-            //if (repoExp == null || !repoExp.Type.IsInstanceOfType(this)) ExpressionNotSupported(dataQueryExp);
-
-            //参数转换
-            var arguments = methodCallExp.Arguments;
-            ieqc.Parameters = new object[arguments.Count];
-            for (int i = 0, c = arguments.Count; i < c; i++)
-            {
-                var argumentExp = arguments[i] as ConstantExpression;
-                if (argumentExp == null) ExpressionNotSupported(dataQueryExp);
-
-                //把参数的值设置到数组中，如果值是 null，则需要使用参数的类型。
-                ieqc.Parameters[i] = argumentExp.Value ??
-                    new NullParameter { ParameterType = argumentExp.Type };
-            }
-
-            //方法转换
-            ieqc.MethodName = methodCallExp.Method.Name;
-        }
-
-        private static void ExpressionNotSupported(LambdaExpression dataQueryExp)
-        {
-            throw new NotSupportedException(string.Format("表达式 {0} 的格式不满足规范，只支持对仓库实例方法的简单调用。", dataQueryExp));
-        }
-
-        /// <summary>
-        /// 只返回列表中的唯一实体时，使用此方法。可防止 EntityList 内存泄漏。
-        /// </summary>
-        /// <param name="list"></param>
-        /// <returns></returns>
-        private static Entity DisconnectFirst(EntityList list)
-        {
-            Entity res = null;
-
-            if (list.Count > 0)
-            {
-                res = list[0];
-                res.DisconnectFromParent();
-            }
-
-            return res;
         }
 
         #endregion
@@ -1157,7 +875,7 @@ namespace Rafy.Domain
 
         EntityList IRepositoryInternal.GetByIdOrTreePId(object id)
         {
-            var list =  this.FetchList<EntityRepository>(r => r.__FetchByIdOrTreePId(id));
+            var list =  this.GetByIdOrTreePId(id);
             if (list.Count > 0)
             {
                 list[0].TreeChildren.MarkLoaded();
@@ -1165,6 +883,48 @@ namespace Rafy.Domain
 
             return list;
         }
+
+        #endregion
+
+        #region //解析 LambdaExpression
+
+        ///// <summary>
+        ///// 解析方法调用表达式，获取方法名及参数列表，存入到 IEQC 对象中。
+        ///// </summary>
+        ///// <param name="dataQueryExp"></param>
+        ///// <param name="ieqc"></param>
+        //private void ParseExpToIEQC(LambdaExpression dataQueryExp, IEQC ieqc)
+        //{
+        //    dataQueryExp = Evaluator.PartialEval(dataQueryExp) as LambdaExpression;
+
+        //    var methodCallExp = dataQueryExp.Body as MethodCallExpression;
+        //    if (methodCallExp == null) ExpressionNotSupported(dataQueryExp);
+
+        //    //repoExp 可以是仓库本身，也可以是 DataProvider，所以以下检测不再需要。
+        //    //var repoExp = methodCallExp.Object as ParameterExpression;
+        //    //if (repoExp == null || !repoExp.Type.IsInstanceOfType(this)) ExpressionNotSupported(dataQueryExp);
+
+        //    //参数转换
+        //    var arguments = methodCallExp.Arguments;
+        //    ieqc.Parameters = new object[arguments.Count];
+        //    for (int i = 0, c = arguments.Count; i < c; i++)
+        //    {
+        //        var argumentExp = arguments[i] as ConstantExpression;
+        //        if (argumentExp == null) ExpressionNotSupported(dataQueryExp);
+
+        //        //把参数的值设置到数组中，如果值是 null，则需要使用参数的类型。
+        //        ieqc.Parameters[i] = argumentExp.Value ??
+        //            new NullParameter { ParameterType = argumentExp.Type };
+        //    }
+
+        //    //方法转换
+        //    ieqc.MethodName = methodCallExp.Method.Name;
+        //}
+
+        //private static void ExpressionNotSupported(LambdaExpression dataQueryExp)
+        //{
+        //    throw new NotSupportedException(string.Format("表达式 {0} 的格式不满足规范，只支持对仓库实例方法的简单调用。", dataQueryExp));
+        //} 
 
         #endregion
     }

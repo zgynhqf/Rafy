@@ -48,20 +48,13 @@ namespace Rafy.Domain.ORM.DbMigration.Presistence
     {
         protected DbVersionRepository() { }
 
-        public DbVersion GetByDb(string database)
+        [RepositoryQuery]
+        public virtual DbVersion GetByDb(string database)
         {
-            return this.FetchFirst(database) as DbVersion;
-        }
-
-        protected EntityList FetchBy(string database)
-        {
-            var table = qf.Table(this);
-            var q = qf.Query(
-                table,
-                where: qf.Constraint(table.Column(DbVersion.DatabaseProperty), database)
-            );
-
-            return this.QueryList(q);
+            return (DbVersion)this.DataProvider.GetBy(new CommonQueryCriteria
+            {
+                new PropertyMatch(DbVersion.DatabaseProperty, database)
+            });
         }
 
         [DataProviderFor(typeof(DbVersionRepository))]

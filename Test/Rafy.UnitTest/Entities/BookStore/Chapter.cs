@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20130318 15:12
@@ -94,24 +94,8 @@ namespace UT
     {
         protected ChapterRepository() { }
 
-        public int CountByBookName(string name)
-        {
-            return this.FetchCount(new CountByBookNameCriteria { Name = name });
-        }
-        protected EntityList FetchBy(CountByBookNameCriteria c)
-        {
-            return this.QueryList(q =>
-            {
-                q.JoinRef(Chapter.BookIdProperty);
-                q.Constrain(Book.NameProperty).Equal(c.Name);
-            });
-        }
-
-        public int CountByBookName2(string name)
-        {
-            return this.FetchCount(r => r.DA_CountByBookName2(name));
-        }
-        private EntityList DA_CountByBookName2(string name)
+        [RepositoryQuery]
+        public virtual int CountByBookName2(string name)
         {
             var source = f.Table(this);
             var bookSource = f.Table<Book>();
@@ -119,72 +103,59 @@ namespace UT
                 from: f.Join(source, bookSource)
             );
             q.AddConstraintIf(Book.NameProperty, PropertyOperator.Equal, name);
-            return this.QueryList(q);
+            return (int)this.QueryData(q);
         }
 
-        public ChapterList LinqGetByBookName(string name)
-        {
-            return this.FetchList(r => r.DA_LinqCountByBookName(name));
-        }
-        public int LinqCountByBookName(string name)
-        {
-            return this.FetchCount(r => r.DA_LinqCountByBookName(name));
-        }
-        private EntityList DA_LinqCountByBookName(string name)
+        [RepositoryQuery]
+        public virtual ChapterList LinqGetByBookName(string name)
         {
             var q = this.CreateLinqQuery();
             q = q.Where(c => c.Book.Name == name);
-            return this.QueryList(q);
+            return (ChapterList)this.QueryData(q);
+        }
+        [RepositoryQuery]
+        public virtual int LinqCountByBookName(string name)
+        {
+            var q = this.CreateLinqQuery();
+            q = q.Where(c => c.Book.Name == name);
+            return (int)this.QueryData(q);
         }
 
-        public int LinqCountByBookName_RealLinqCount(string name)
-        {
-            return this.FetchCount(new LinqCountByBookNameCriteria { Name = name });
-        }
-        protected EntityList FetchBy(LinqCountByBookNameCriteria criteria)
+        [RepositoryQuery]
+        public virtual int LinqCountByBookName_RealLinqCount(string name)
         {
             var q = this.CreateLinqQuery();
 
-            q = q.Where(c => c.Book.Name == criteria.Name);
+            q = q.Where(c => c.Book.Name == name);
 
             var count = q.Count();
-            var list = new ChapterList();
-            list.SetTotalCount(count);
 
-            return list;
+            return count;
         }
 
-        public ChapterList LinqGetByBookNamePaging(string name, PagingInfo pagingInfo)
-        {
-            return this.FetchList(name, pagingInfo);
-        }
-        protected EntityList FetchBy(string name, PagingInfo pagingInfo)
+        [RepositoryQuery]
+        public virtual ChapterList LinqGetByBookNamePaging(string name, PagingInfo pagingInfo)
         {
             var q = this.CreateLinqQuery();
-
             q = q.Where(c => c.Book.Name == name).OrderBy(c => c.Name);
-
-            return this.QueryList(q, pagingInfo);
+            return (ChapterList)this.QueryData(q, pagingInfo);
         }
 
-        public ChapterList LinqGetByNameStringAction(StringAction stringAction, string name = null)
-        {
-            return this.FetchList(new LinqGetByNameContainsCriteria { Name = name, StringAction = stringAction });
-        }
-        protected EntityList FetchBy(LinqGetByNameContainsCriteria criteria)
+        [RepositoryQuery]
+        public virtual ChapterList LinqGetByNameStringAction(StringAction stringAction, string name = null)
         {
             var q = this.CreateLinqQuery();
 
-            switch (criteria.StringAction)
+            switch (stringAction)
             {
                 case StringAction.Contains:
-                    q = q.Where(c => c.Name.Contains(criteria.Name) && c.BookId > 0);
+                    q = q.Where(c => c.Name.Contains(name) && c.BookId > 0);
                     break;
                 case StringAction.StartsWith:
-                    q = q.Where(c => c.Name.StartsWith(criteria.Name) && c.BookId > 0);
+                    q = q.Where(c => c.Name.StartsWith(name) && c.BookId > 0);
                     break;
                 case StringAction.EndsWith:
-                    q = q.Where(c => c.Name.EndsWith(criteria.Name) && c.BookId > 0);
+                    q = q.Where(c => c.Name.EndsWith(name) && c.BookId > 0);
                     break;
                 case StringAction.NotEmpty:
                     q = q.Where(c => !string.IsNullOrEmpty(c.Name) && c.BookId > 0);
@@ -193,33 +164,25 @@ namespace UT
                     q = q.Where(c => c.Name.Length > 0 && c.BookId > 0);
                     break;
                 case StringAction.RefContains:
-                    q = q.Where(c => c.Book.Name.Contains(criteria.Name) && c.BookId > 0);
+                    q = q.Where(c => c.Book.Name.Contains(name) && c.BookId > 0);
                     break;
                 default:
                     break;
             }
 
-            return this.QueryList(q);
+            return (ChapterList)this.QueryData(q);
         }
 
-        public ChapterList LinqGetByBookNameIn(string[] names)
-        {
-            return this.FetchList(new object[] { names });
-        }
-        protected EntityList FetchBy(string[] names)
+        [RepositoryQuery]
+        public virtual ChapterList LinqGetByBookNameIn(string[] names)
         {
             var q = this.CreateLinqQuery();
-
             q = q.Where(c => names.Contains(c.Book.Name));
-
-            return this.QueryList(q);
+            return (ChapterList)this.QueryData(q);
         }
 
-        public LiteDataTable QueryChapterTable(int queryType, PagingInfo pi)
-        {
-            return this.FetchTable(r => r.DA_QueryChapterTable(queryType, pi));
-        }
-        private LiteDataTable DA_QueryChapterTable(int queryType, PagingInfo pi)
+        [RepositoryQuery]
+        public virtual LiteDataTable QueryChapterTable(int queryType, PagingInfo pi)
         {
             ConditionalSql sql = null;
             if (queryType == 0)
@@ -251,11 +214,8 @@ order by chapter.name desc
             return (this.DataQueryer as RdbDataQueryer).QueryTable(sql, pi);
         }
 
-        public LiteDataTable QueryChapterBySqlTree(string name, PagingInfo pi)
-        {
-            return this.FetchTable(r => r.DA_QueryChapterBySqlTree(name, pi));
-        }
-        private LiteDataTable DA_QueryChapterBySqlTree(string name, PagingInfo pi)
+        [RepositoryQuery]
+        public virtual LiteDataTable QueryChapterBySqlTree(string name, PagingInfo pi)
         {
             var f = QueryFactory.Instance;
             var t = f.Table<Chapter>();
@@ -276,22 +236,6 @@ order by chapter.name desc
         }
     }
 
-    [Serializable]
-    public partial class CountByBookNameCriteria
-    {
-        public string Name;
-    }
-    [Serializable]
-    public partial class LinqCountByBookNameCriteria
-    {
-        public string Name;
-    }
-    [Serializable]
-    public partial class LinqGetByNameContainsCriteria
-    {
-        public string Name;
-        public StringAction StringAction;
-    }
     public enum StringAction
     {
         Contains, StartsWith, EndsWith,

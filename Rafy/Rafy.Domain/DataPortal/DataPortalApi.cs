@@ -37,34 +37,25 @@ namespace Rafy.Domain.DataPortal
         /// <returns></returns>
         public static object Fetch(Type objectType, object criteria, DataPortalLocation loc = DataPortalLocation.Dynamic)
         {
-            try
-            {
-                RafyEnvironment.ThreadPortalCount++;
+            object res = null;
 
-                object res = null;
+            ////只是不要纯客户端，都直接使用本地访问
+            //if (loc == DataPortalLocation.Local || RafyEnvironment.Location.ConnectDataDirectly)
+            //{
+            //    res = FinalDataPortal.Fetch(objectType, criteria);
+            //}
+            //else
+            //{
+            var proxy = GetDataPortalProxy();
 
-                //只是不要纯客户端，都直接使用本地访问
-                if (loc == DataPortalLocation.Local || RafyEnvironment.Location.ConnectDataDirectly)
-                {
-                    res = FinalDataPortal.Fetch(objectType, criteria);
-                }
-                else
-                {
-                    var proxy = GetDataPortalProxy();
+            var dpContext = CreateDataPortalContext();
 
-                    var dpContext = CreateDataPortalContext();
+            var result = proxy.Fetch(objectType, criteria, dpContext);
 
-                    var result = proxy.Fetch(objectType, criteria, dpContext);
+            res = ReadServerResult(result);
+            //}
 
-                    res = ReadServerResult(result);
-                }
-
-                return res;
-            }
-            finally
-            {
-                RafyEnvironment.ThreadPortalCount--;
-            }
+            return res;
         }
 
         /// <summary>
@@ -84,29 +75,29 @@ namespace Rafy.Domain.DataPortal
         /// </remarks>
         public static object Update(object obj, DataPortalLocation loc = DataPortalLocation.Dynamic)
         {
-            try
+            object res = null;
+
+            //只是不要纯客户端，都直接使用本地访问
+            if (loc == DataPortalLocation.Local || RafyEnvironment.Location.ConnectDataDirectly)
             {
-                RafyEnvironment.ThreadPortalCount++;
+                /*********************** 代码块解释 *********************************
+                 * 
+                 * 由于开发人员平时会使用单机版本开发，而正式部署时，又会选用 C/S 架构。
+                 * 所以需要保证单机版本和 C/S 架构版本的模式是一样的。也就是说，在单机模式下，
+                 * 在通过门户访问时，模拟网络版，clone 出一个新的对象。
+                 * 这样，在底层 Update 更改 obj 时，不会影响上层的实体。
+                 * 而是以返回值的形式把这个被修改的实体返回给上层。
+                 * 
+                 * 20120828 
+                 * 但是，当在服务端本地调用时，不需要此模拟功能。
+                 * 这是因为在服务端本地调用时（例如服务端本地调用 RF.Save），
+                 * 在开发体验上，数据层和上层使用的实体应该是同一个，数据层的修改应该能够带回到上层，不需要克隆。
+                 * 
+                **********************************************************************/
 
-                object res = null;
-
-                //只是不要纯客户端，都直接使用本地访问
-                if (loc == DataPortalLocation.Local || RafyEnvironment.Location.ConnectDataDirectly)
+                try
                 {
-                    /*********************** 代码块解释 *********************************
-                     * 
-                     * 由于开发人员平时会使用单机版本开发，而正式部署时，又会选用 C/S 架构。
-                     * 所以需要保证单机版本和 C/S 架构版本的模式是一样的。也就是说，在单机模式下，
-                     * 在通过门户访问时，模拟网络版，clone 出一个新的对象。
-                     * 这样，在底层 Update 更改 obj 时，不会影响上层的实体。
-                     * 而是以返回值的形式把这个被修改的实体返回给上层。
-                     * 
-                     * 20120828 
-                     * 但是，当在服务端本地调用时，不需要此模拟功能。
-                     * 这是因为在服务端本地调用时（例如服务端本地调用 RF.Save），
-                     * 在开发体验上，数据层和上层使用的实体应该是同一个，数据层的修改应该能够带回到上层，不需要克隆。
-                     * 
-                    **********************************************************************/
+                    RafyEnvironment.ThreadPortalCount++;
 
                     //ThreadPortalCount == 1 表示第一次进入数据门户
                     if (RafyEnvironment.Location.IsWPFUI && RafyEnvironment.Location.ConnectDataDirectly && RafyEnvironment.ThreadPortalCount == 1)
@@ -120,23 +111,23 @@ namespace Rafy.Domain.DataPortal
 
                     FinalDataPortal.Update(res);
                 }
-                else
+                finally
                 {
-                    var proxy = GetDataPortalProxy();
-
-                    var dpContext = CreateDataPortalContext();
-
-                    var result = proxy.Update(obj, dpContext);
-
-                    res = ReadServerResult(result);
+                    RafyEnvironment.ThreadPortalCount--;
                 }
-
-                return res;
             }
-            finally
+            else
             {
-                RafyEnvironment.ThreadPortalCount--;
+                var proxy = GetDataPortalProxy();
+
+                var dpContext = CreateDataPortalContext();
+
+                var result = proxy.Update(obj, dpContext);
+
+                res = ReadServerResult(result);
             }
+
+            return res;
         }
 
         #region Helpers

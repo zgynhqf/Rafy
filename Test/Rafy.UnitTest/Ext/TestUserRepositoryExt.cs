@@ -22,33 +22,34 @@ namespace UT
 {
     public class TestUserRepositoryExt : EntityRepositoryExt<TestUserRepository>
     {
-        public static TestUserList GetByAge(TestUserRepository repository, int age)
+        [RepositoryQuery]
+        public virtual TestUserList GetByAge(int age)
         {
-            return FetchList(repository, new GetByAgeCriteria { Age = age }) as TestUserList;
+            var q = QueryFactory.Instance.Query(this.Repository);
+            q.AddConstraintIf(TestUser.AgeProperty, PropertyOperator.Equal, age);
+
+            return (TestUserList)this.QueryData(q);
         }
 
-        protected EntityList FetchBy(GetByAgeCriteria criteria)
+        [RepositoryQuery]
+        public virtual TestUserList GetBy(GetByAgeCriteria criteria)
         {
             var q = QueryFactory.Instance.Query(this.Repository);
             q.AddConstraintIf(TestUser.AgeProperty, PropertyOperator.Equal, criteria.Age);
 
-            return this.QueryList(q);
+            return (TestUserList)this.QueryData(q);
         }
     }
 
     public class TestUserRepositoryExt2 : EntityRepositoryExt<TestUserRepository>
     {
-        public static TestUserList GetByAge(TestUserRepository repository, int age)
-        {
-            return FetchList(repository, new GetByAge2Criteria { Age = age }) as TestUserList;
-        }
-
-        protected EntityList FetchBy(GetByAge2Criteria criteria)
+        [RepositoryQuery]
+        public virtual TestUserList GetBy(GetByAge2Criteria criteria)
         {
             var q = QueryFactory.Instance.Query(this.Repository);
             q.AddConstraintIf(TestUser.AgeProperty, PropertyOperator.Equal, criteria.Age);
 
-            return this.QueryList(q);
+            return (TestUserList)this.QueryData(q);
         }
     }
 

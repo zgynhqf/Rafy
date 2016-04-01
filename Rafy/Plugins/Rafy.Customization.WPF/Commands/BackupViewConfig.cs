@@ -39,7 +39,7 @@ namespace Rafy.Customization.WPF.Commands
             svc.Invoke();
 
             view.Current = RF.Concrete<ViewConfigurationModelRepository>()
-                .GetByName(new ViewConfigurationModelNameCriteria
+                .GetBy(new ViewConfigurationModelNameCriteria
                 {
                     EntityType = c.EntityType,
                     ViewName = c.ViewName

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -127,37 +127,28 @@ namespace UT
         /// </summary>
         protected FavorateRepository() { }
 
-        public FavorateList GetByBookName(string bookName)
-        {
-            return this.FetchList(r => r.DA_GetByBookName(bookName));
-        }
-        private EntityList DA_GetByBookName(string bookName)
+        [RepositoryQuery]
+        public virtual FavorateList GetByBookName(string bookName)
         {
             var q = this.CreateLinqQuery();
             q = q.Where(e => e.Book.Name == bookName);
-            return this.QueryList(q);
+            return (FavorateList)this.QueryData(q);
         }
 
-        public FavorateList GetByBookNameNotOrNull(string bookName)
-        {
-            return this.FetchList(r => r.DA_GetByBookNameNotOrNull(bookName));
-        }
-        private EntityList DA_GetByBookNameNotOrNull(string bookName)
+        [RepositoryQuery]
+        public virtual FavorateList GetByBookNameNotOrNull(string bookName)
         {
             var q = this.CreateLinqQuery();
             q = q.Where(e => e.Book.Name != bookName || e.BookId == null);
-            return this.QueryList(q);
+            return (FavorateList)this.QueryData(q);
         }
 
-        public FavorateList GetByChapterName(string chapterName)
-        {
-            return this.FetchList(r => r.DA_GetByChapterName(chapterName));
-        }
-        private EntityList DA_GetByChapterName(string chapterName)
+        [RepositoryQuery]
+        public virtual FavorateList GetByChapterName(string chapterName)
         {
             var q = this.CreateLinqQuery();
             q = q.Where(e => e.Book.ChapterList.Cast<Chapter>().Any(c => c.Name == chapterName));
-            return this.QueryList(q);
+            return (FavorateList)this.QueryData(q);
         }
     }
 

@@ -124,12 +124,8 @@ namespace Rafy.RBAC.Old
     {
         protected OrgPositionRepository() { }
 
-        public OrgPositionList GetList(int userId)
-        {
-            return this.FetchList(userId);
-        }
-
-        protected EntityList FetchBy(int userId)
+        [RepositoryQuery]
+        public virtual OrgPositionList GetList(int userId)
         {
             FormattedSql sql = @"
 SELECT *
@@ -139,7 +135,7 @@ where OrgPositionUser.UserId = {0}
 ";
             sql.Parameters.Add(userId);
 
-            return (this.DataQueryer as RdbDataQueryer).QueryList(sql);
+            return (OrgPositionList)(this.DataQueryer as RdbDataQueryer).QueryData(sql);
         }
     }
 

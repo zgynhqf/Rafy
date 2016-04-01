@@ -100,36 +100,23 @@ namespace UT
 
     public partial class TestRoleRepository : UnitTestEntityRepository
     {
-        public TestRoleList GetByUserId(int userId)
+        [RepositoryQuery]
+        public virtual TestRoleList GetByUserId(int userId)
         {
-            return this.FetchList(new GetByUserIdCriteria()
+            return (TestRoleList)this.DataProvider.GetBy(new CommonQueryCriteria
             {
-                UserId = userId
+                new PropertyMatch(TestRole.TestUserIdProperty, userId),
             });
         }
 
-        public EntityList GetByRawSql(string rawSql, object[] parameters, PagingInfo pi)
+        [RepositoryQuery]
+        public virtual TestRoleList GetByRawSql(string rawSql, object[] parameters, PagingInfo pi)
         {
-            return this.FetchList(new GetByRawSqlCriteria
+            return (TestRoleList)(this.DataQueryer as RdbDataQueryer).QueryList(new SqlQueryArgs
             {
-                FormatSql = rawSql,
+                FormattedSql = rawSql,
                 Parameters = parameters,
                 PagingInfo = pi
-            });
-        }
-
-        protected EntityList FetchBy(GetByUserIdCriteria criteria)
-        {
-            return this.QueryList(q => q.Constrain(TestRole.TestUserIdProperty).Equal(criteria.UserId));
-        }
-
-        protected EntityList FetchBy(GetByRawSqlCriteria criteria)
-        {
-            return (this.DataQueryer as RdbDataQueryer).QueryList(new SqlQueryArgs
-            {
-                FormattedSql = criteria.FormatSql,
-                Parameters = criteria.Parameters,
-                PagingInfo = criteria.PagingInfo
             });
         }
     }
@@ -147,12 +134,6 @@ namespace UT
             Meta.Property(TestRole.RoleTypeProperty).MapColumn();
             Meta.Property(TestRole.RoleType2Property).MapColumn();
         }
-    }
-
-    [Serializable]
-    public partial class GetByUserIdCriteria
-    {
-        public int UserId { get; set; }
     }
 
     [Serializable]

@@ -32,13 +32,11 @@ namespace Rafy.Domain
         /// <param name="paging">The paging information.</param>
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        public virtual EntityList GetAll(PagingInfo paging, EagerLoadOptions eagerLoad)
+        public virtual object GetAll(PagingInfo paging, EagerLoadOptions eagerLoad)
         {
             var query = f.Query(_repository);
 
-            var list = this.QueryList(query, paging, eagerLoad, true);
-
-            return list;
+            return this.QueryData(query, paging, eagerLoad, true);
         }
 
         /// <summary>
@@ -47,12 +45,12 @@ namespace Rafy.Domain
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        public virtual EntityList GetTreeRoots(EagerLoadOptions eagerLoad)
+        public virtual object GetTreeRoots(EagerLoadOptions eagerLoad)
         {
             var query = f.Query(_repository);
             query.AddConstraint(Entity.TreePIdProperty, PropertyOperator.Equal, null);
 
-            return this.QueryList(query, null, eagerLoad);
+            return this.QueryData(query, null, eagerLoad);
         }
 
         /// <summary>
@@ -61,7 +59,7 @@ namespace Rafy.Domain
         /// <param name="id">The unique identifier.</param>
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        public virtual EntityList GetById(object id, EagerLoadOptions eagerLoad)
+        public virtual Entity GetById(object id, EagerLoadOptions eagerLoad)
         {
             var table = f.Table(_repository);
             var q = f.Query(
@@ -69,7 +67,7 @@ namespace Rafy.Domain
                 where: f.Constraint(table.IdColumn, id)
             );
 
-            return this.QueryList(q, null, eagerLoad);
+            return (Entity)this.QueryData(q, null, eagerLoad);
         }
 
         /// <summary>
@@ -96,7 +94,7 @@ namespace Rafy.Domain
         /// <param name="paging">分页信息。</param>
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        public virtual EntityList GetByParentId(object parentId, PagingInfo paging, EagerLoadOptions eagerLoad)
+        public virtual object GetByParentId(object parentId, PagingInfo paging, EagerLoadOptions eagerLoad)
         {
             var parentProperty = _repository.FindParentPropertyInfo(true);
             var mp = (parentProperty.ManagedProperty as IRefEntityProperty).RefIdProperty;
@@ -107,7 +105,7 @@ namespace Rafy.Domain
                 where: f.Constraint(table.Column(mp), parentId)
             );
 
-            var list = this.QueryList(q, paging, eagerLoad, true);
+            var list = this.QueryData(q, paging, eagerLoad, true);
 
             return list;
         }
@@ -211,23 +209,11 @@ namespace Rafy.Domain
             return this.QueryList(q, null, eagerLoad);
         }
 
-        [Obfuscation]
-        private EntityList FetchBy(CommonQueryCriteria criteria)
-        {
-            return this.GetBy(criteria);
-        }
-
-        [Obfuscation]
-        private EntityList FetchBy(ODataQueryCriteria criteria)
-        {
-            return this.GetBy(criteria);
-        }
-
         /// <summary>
         /// <see cref="CommonQueryCriteria"/> 查询的数据层实现。
         /// </summary>
         /// <param name="criteria"></param>
-        public virtual EntityList GetBy(CommonQueryCriteria criteria)
+        public virtual object GetBy(CommonQueryCriteria criteria)
         {
             var table = f.Table(_repository);
             var q = f.Query(table);
@@ -301,14 +287,14 @@ namespace Rafy.Domain
                 q.OrderBy.Add(table.Column(orderBy), dir);
             }
 
-            return this.QueryList(q, criteria.PagingInfo, criteria.EagerLoad);
+            return this.QueryData(q, criteria.PagingInfo, criteria.EagerLoad);
         }
 
         /// <summary>
         /// <see cref="ODataQueryCriteria"/> 查询的数据层实现。
         /// </summary>
         /// <param name="criteria"></param>
-        public virtual EntityList GetBy(ODataQueryCriteria criteria)
+        public virtual object GetBy(ODataQueryCriteria criteria)
         {
             var t = f.Table(this.Repository);
 
@@ -417,16 +403,7 @@ namespace Rafy.Domain
 
             #endregion
 
-            return this.QueryList(q, criteria.PagingInfo, criteria.EagerLoad);
-        }
-
-        /// <summary>
-        /// 子类重写此方法，来实现自己的 CountAll 方法的数据层代码。
-        /// </summary>
-        public virtual EntityList CountAll()
-        {
-            var q = f.Query(_repository);
-            return this.QueryList(q);
+            return this.QueryData(q, criteria.PagingInfo, criteria.EagerLoad);
         }
 
         /// <summary>
@@ -438,6 +415,47 @@ namespace Rafy.Domain
         public abstract LiteDataTable GetEntityValue(object entityId, string property);
 
         #region 提供给子类的查询接口
+
+        /// <summary>
+        /// 通过 IQuery 对象从持久层中查询数据。
+        /// 本方法只能由仓库中的方法来调用。本方法的返回值的类型将与仓库中方法的返回值保持一致。
+        /// 支持的返回值：EntityList、Entity、int、LiteDataTable。
+        /// </summary>
+        /// <param name="query">查询对象。</param>
+        /// <param name="paging">分页信息。</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="markTreeFullLoaded">如果某次查询结果是一棵完整的子树，那么必须设置此参数为 true ，才可以把整个树标记为完整加载。</param>
+        /// <returns></returns>
+        protected object QueryData(IQuery query, PagingInfo paging = null, EagerLoadOptions eagerLoad = null, bool markTreeFullLoaded = false)
+        {
+            return this.DataQueryer.QueryData(query, paging, eagerLoad, markTreeFullLoaded);
+        }
+
+        /// <summary>
+        /// 通过 IQuery 对象从持久层中查询数据。
+        /// 本方法只能由仓库中的方法来调用。本方法的返回值的类型将与仓库中方法的返回值保持一致。
+        /// 支持的返回值：EntityList、Entity、int。
+        /// </summary>
+        /// <param name="args">The arguments.</param>
+        /// <returns></returns>
+        protected object QueryData(EntityQueryArgs args)
+        {
+            return this.DataQueryer.QueryData(args);
+        }
+
+        /// <summary>
+        /// 从持久层中查询数据。
+        /// 本方法只能由仓库中的方法来调用。本方法的返回值的类型将与仓库中方法的返回值保持一致。
+        /// 支持的返回值：EntityList、Entity、int。
+        /// </summary>
+        /// <param name="queryable"></param>
+        /// <param name="paging"></param>
+        /// <param name="eagerLoad"></param>
+        /// <returns></returns>
+        protected object QueryData(IQueryable queryable, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        {
+            return this.DataQueryer.QueryData(queryable, paging, eagerLoad);
+        }
 
         /// <summary>
         /// 创建一个实体 Linq 查询对象。

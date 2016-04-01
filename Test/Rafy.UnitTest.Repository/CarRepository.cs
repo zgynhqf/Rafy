@@ -33,25 +33,22 @@ namespace Rafy.UnitTest.Repository
             get { return base.DataProvider as ICarDataProvider; }
         }
 
-        public CarList GetByStartDate(DateTime startTime)
+        [RepositoryQuery]
+        public virtual CarList GetByStartDate(DateTime startTime)
         {
-            return this.FetchList(r => r.DataProvider.GetByStartDate(startTime));
-        }
-        public int CountByStartDate(DateTime startTime)
-        {
-            return this.FetchCount(r => r.DataProvider.GetByStartDate(startTime));
+            return (CarList)this.DataProvider.GetByStartDate(startTime);
         }
 
-        public Car GetByReplacableDAL()
+        [RepositoryQuery]
+        public virtual int CountByStartDate(DateTime startTime)
         {
-            return this.FetchFirst(r => r.DA_GetByReplacableDAL());
+            return (int)this.DataProvider.GetByStartDate(startTime);
         }
-        private EntityList DA_GetByReplacableDAL()
+
+        [RepositoryQuery]
+        public virtual Car GetByReplacableDAL()
         {
-            return new CarList
-            {
-                new Car { Name = "RawImplementation" }
-            };
+            return new Car { Name = "RawImplementation" };
         }
     }
 }

@@ -78,7 +78,7 @@ namespace JXC
             var vm = UIModel.Views.CreateBaseView(targetType);
             string name = vm.Label + "-自动编码规则";
 
-            var item = this.FetchFirst(name);
+            var item = this.GetBy(name);
 
             if (item == null)
             {
@@ -114,11 +114,12 @@ namespace JXC
             return code;
         }
 
-        protected EntityList FetchBy(string name)
+        [RepositoryQuery]
+        public virtual AutoCodeInfo GetBy(string name)
         {
-            return this.QueryList(q =>
+            return (AutoCodeInfo)this.DataProvider.GetBy(new CommonQueryCriteria
             {
-                q.Constrain(AutoCodeInfo.MingChengProperty).Equal(name);
+                new PropertyMatch(AutoCodeInfo.MingChengProperty, name),
             });
         }
     }

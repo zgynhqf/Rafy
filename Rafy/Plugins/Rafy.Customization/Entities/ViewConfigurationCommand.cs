@@ -117,7 +117,8 @@ namespace Rafy.Customization
     [DataProviderFor(typeof(ViewConfigurationCommandRepository))]
     public partial class ViewConfigurationCommandDataProvider : RdbDataProvider
     {
-        public override EntityList GetByParentId(object pId, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        [RepositoryQuery]
+        public override object GetByParentId(object pId, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
         {
             int parentId = (int)pId;
 

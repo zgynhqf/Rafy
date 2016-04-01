@@ -26,19 +26,16 @@ namespace Rafy.UnitTest.DataProvider
     [DataProviderFor(typeof(CarRepository))]
     public class CarDataProvider : UnitTestEntityRepositoryDataProvider, ICarDataProvider
     {
-        public CarList GetByStartDate(DateTime time)
+        public object GetByStartDate(DateTime time)
         {
             var q = this.CreateLinqQuery<Car>();
             q = q.Where(e => e.AddTime > time);
-            return this.QueryList(q) as CarList;
+            return this.QueryData(q);
         }
 
-        public CarList DA_GetByReplacableDAL()
+        public object GetByReplacableDAL()
         {
-            return new CarList
-            {
-                new Car { Name = "ImplementationReplaced" }
-            };
+            return new Car { Name = "ImplementationReplaced" };
         }
     }
 }

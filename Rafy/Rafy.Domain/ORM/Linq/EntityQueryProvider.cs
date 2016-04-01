@@ -105,22 +105,16 @@ namespace Rafy.Domain.ORM.Linq
             //一般来说，直接使用 Linq 查询，都是在数据层，这时 FinalDataPortal.CurrentCriteria 已经被设置为当前的查询的条件了；
             //这时，如果接下来调用 _repository.QueryDbByLinq 方法，会导致这个查询使用外部的条件来检测是否需要分页、统计等。
             //所以，这里需要把这个条件先暂时清空。
-            var oldValue = FinalDataPortal.CurrentCriteria;
-            try
+            var iqec =new IEQC
             {
-                FinalDataPortal.CurrentCriteria = new IEQC
-                {
-                    FetchType = counting ? FetchType.Count : FetchType.List,
-                    Parameters = new object[0]
-                };
-
+                FetchType = counting ? FetchType.Count : FetchType.List,
+                Parameters = new object[0]
+            };
+            using (FinalDataPortal.CurrentQueryCriteriaItem.UseScopeValue(iqec))
+            {
                 var queryable = this.CreateQuery(expression);
 
                 return _queryBase.QueryListByLinq(queryable);
-            }
-            finally
-            {
-                FinalDataPortal.CurrentCriteria = oldValue;
             }
         }
     }

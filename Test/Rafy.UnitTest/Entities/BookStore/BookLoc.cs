@@ -90,20 +90,18 @@ namespace UT
         /// </summary>
         protected BookLocRepository() { }
 
-        public BookLocList Get_DAInRepository(string name)
-        {
-            return this.FetchList(r => r.DA_Get_DAInRepository(name));
-        }
-        private EntityList DA_Get_DAInRepository(string name)
+        [RepositoryQuery]
+        public virtual BookLocList Get_DAInRepository(string name)
         {
             var q = this.CreateLinqQuery();
             q = q.Where(e => e.Name == name);
-            return this.QueryList(q);
+            return (BookLocList)this.QueryData(q);
         }
 
-        public BookLocList Get_DAInDataProvider(string name)
+        [RepositoryQuery]
+        public virtual BookLocList Get_DAInDataProvider(string name)
         {
-            return this.FetchList(r => r.DataProvider.Get_DAInDataProvider(name));
+            return this.DataProvider.Get_DAInDataProvider(name);
         }
 
         private new BookLocRepositoryDataProvider DataProvider
@@ -117,11 +115,11 @@ namespace UT
     {
         public int TestSaveListTransactionItemCount = -1;
 
-        public EntityList Get_DAInDataProvider(string name)
+        public BookLocList Get_DAInDataProvider(string name)
         {
             var q = this.CreateLinqQuery<BookLoc>();
             q = q.Where(e => e.Name == name);
-            return this.QueryList(q);
+            return (BookLocList)this.QueryList(q);
         }
 
         protected override void Submit(SubmitArgs e)

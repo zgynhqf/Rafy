@@ -14,20 +14,21 @@ namespace UT
         /// <summary>
         /// 通过一个属性与它对应的属性值，来查询一个实体。
         /// </summary>
-        /// <param name="repo">The repo.</param>
         /// <param name="property">需要查询的属性。</param>
         /// <param name="value">对应的属性值，如果是字符串属性，会使用包含查询。</param>
         /// <returns></returns>
-        public static EntityList GetBySingleProperty(EntityRepository repo, IManagedProperty property, object value)
+        [RepositoryQuery]
+        public virtual EntityList GetBySingleProperty(IManagedProperty property, object value)
         {
-            return FetchList(repo, new SinglePropertyCriteira
-            {
-                PropertyName = property.Name,
-                Value = value
-            });
+            var q = QueryFactory.Instance.Query(this.Repository);
+            var op = property.PropertyType == typeof(string) ? PropertyOperator.Contains : PropertyOperator.Equal;
+            q.AddConstraintIf(property, op, value);
+
+            return this.QueryList(q);
         }
 
-        protected EntityList FetchBy(SinglePropertyCriteira criteria)
+        [RepositoryQuery]
+        public virtual EntityList GetBy(SinglePropertyCriteira criteria)
         {
             var property = Repository.EntityMeta.ManagedProperties
                 .GetCompiledProperties()

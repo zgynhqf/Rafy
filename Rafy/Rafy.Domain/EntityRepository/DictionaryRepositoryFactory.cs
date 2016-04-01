@@ -25,6 +25,8 @@ using Rafy.Reflection;
 using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
 using Rafy.Utils;
+using Castle.DynamicProxy;
+using Rafy.Domain.ORM;
 
 namespace Rafy.Domain
 {
@@ -37,14 +39,6 @@ namespace Rafy.Domain
     /// </summary>
     internal class DictionaryRepositoryFactory : IRepositoryFactory
     {
-        #region SingleTon
-
-        public static readonly DictionaryRepositoryFactory Instance = new DictionaryRepositoryFactory();
-
-        private DictionaryRepositoryFactory() { }
-
-        #endregion
-
         /// <summary>
         /// 使用 EntityType 作为查询键的字典。
         /// </summary>
@@ -154,14 +148,21 @@ namespace Rafy.Domain
             {
                 if (repoType.IsAbstract) throw new InvalidProgramException(repoType.FullName + " 仓库类型是抽象的，无法创建。");
 
-                var repo = Activator.CreateInstance(repoType, true) as EntityRepository;
-                if (repo == null)
-                {
-                    throw new InvalidProgramException(string.Format(
-                        "{0} 类型必须继承自 EntityRepository 类型。",
-                        repoType
-                        ));
-                }
+                var repo = this.CreateInstanceProxy(repoType) as EntityRepository;
+                //EntityRepository repo;
+                //if (RafyEnvironment.Location.ConnectDataDirectly || repoType.IsSubclassOf(typeof(MemoryEntityRepository)))
+                //{
+                //    repo = Activator.CreateInstance(repoType, true) as EntityRepository;
+
+                //    if (repo == null)
+                //    {
+                //        throw new InvalidProgramException("{0} 类型必须继承自 EntityRepository 类型。".FormatArgs(repoType));
+                //    }
+                //}
+                //else
+                //{
+                //    repo = _proxyGenerator.CreateClassProxy(repoType, RepositoryInterceptor.Instance) as EntityRepository;
+                //}
 
                 var repoDataProvider = DataProviderComposer.CreateDataProvider(repoType);
 
@@ -212,7 +213,7 @@ namespace Rafy.Domain
                 {
                     foreach (var extType in extList)
                     {
-                        var ext = CreateExt(extType);
+                        var ext = this.CreateInstanceProxy(extType) as IRepositoryExt;
                         list.Add(ext);
 
                         (ext as IRepositoryExtInternal).BindRepository(repository);
@@ -244,7 +245,7 @@ namespace Rafy.Domain
                                 //所有继承自 baseClass 都是仓库扩展类。
                                 if (type.IsSubclassOf(baseClass) && !type.IsAbstract && !type.IsGenericTypeDefinition)
                                 {
-                                    var instance = CreateExt(type);
+                                    var instance = Activator.CreateInstance(type, true) as IRepositoryExt;
 
                                     List<Type> list = null;
                                     if (!this._extByType.TryGetValue(instance.RepositoryType, out list))
@@ -263,76 +264,126 @@ namespace Rafy.Domain
             }
         }
 
-        private static IRepositoryExt CreateExt(Type type)
+        #endregion
+
+        #region 生成代理、方法拦截
+
+        private ProxyGenerator _proxyGenerator = new ProxyGenerator();
+
+        /// <summary>
+        /// 生成仓库、仓库扩展的代理类型。
+        /// </summary>
+        /// <param name="instanceType"></param>
+        /// <returns></returns>
+        private object CreateInstanceProxy(Type instanceType)
         {
-            return Activator.CreateInstance(type, true) as IRepositoryExt;
+            var options = new ProxyGenerationOptions(RepoQueryMethodDeterminationHook.Instance);
+            var instance = _proxyGenerator.CreateClassProxy(instanceType, options, RepositoryInterceptor.Instance) ;
+            return instance;
+        }
+
+        //private void CheckVirtualMethods(Type type)
+        //{
+        //    var methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Public );
+        //    foreach (var m in methods)
+        //    {
+        //        if (m.IsPublic && !m.IsVirtual)
+        //        {
+        //            if (m.DeclaringType != typeof(EntityRepository) &&
+        //                m.DeclaringType != typeof(EntityRepositoryQueryBase) &&
+        //                m.DeclaringType != typeof(object))
+        //            {
+        //                throw new InvalidProgramException("仓库{0}方法{1}必须是virtual".FormatArgs(type.FullName, m.Name));
+        //            }
+        //        }
+        //    }
+        //}
+
+        /// <summary>
+        /// 只有标记了 RepositoryQueryMethodAttribute 标记的方法，才需要进行拦截。
+        /// </summary>
+        private class RepoQueryMethodDeterminationHook : AllMethodsHook
+        {
+            public static readonly RepoQueryMethodDeterminationHook Instance = new RepoQueryMethodDeterminationHook();
+
+            private RepoQueryMethodDeterminationHook() { }
+
+            public override bool ShouldInterceptMethod(Type type, MethodInfo methodInfo)
+            {
+                var res = base.ShouldInterceptMethod(type, methodInfo);
+                if (res)
+                {
+                    res = methodInfo.HasMarked<RepositoryQueryAttribute>();
+                }
+                return res;
+            }
         }
 
         #endregion
 
         #region 生成默认Repository类（暂不使用）
 
-        /// <summary>
-        /// 如果上面在约定中没有找到，则直接生成一个默认的实体仓库。
-        /// </summary>
-        /// <param name="entityType"></param>
-        /// <returns></returns>
-        private EntityRepository CreateDefaultRepository(Type entityType)
-        {
-            var dynamicType = this.GenerateDefaultRepositoryType(entityType);
+        ///// <summary>
+        ///// 如果上面在约定中没有找到（开发者没有编写仓库类型），则直接生成一个默认的实体仓库。
+        ///// </summary>
+        ///// <param name="entityType"></param>
+        ///// <returns></returns>
+        //private EntityRepository CreateDefaultRepository(Type entityType)
+        //{
+        //    var dynamicType = this.GenerateDefaultRepositoryType(entityType);
 
-            var result = Activator.CreateInstance(dynamicType) as EntityRepository;
-            //result.RealEntityType = entityType;
-            return result;
-        }
+        //    var result = Activator.CreateInstance(dynamicType) as EntityRepository;
+        //    //result.RealEntityType = entityType;
+        //    return result;
+        //}
 
-        /// <summary>
-        /// 为实体类型生成一个默认的实体类。
-        /// </summary>
-        /// <param name="entityType"></param>
-        /// <returns></returns>
-        private Type GenerateDefaultRepositoryType(Type entityType)
-        {
-            var baseType = entityType.BaseType;
+        ///// <summary>
+        ///// 为实体类型生成一个默认的实体类。
+        ///// </summary>
+        ///// <param name="entityType"></param>
+        ///// <returns></returns>
+        //private Type GenerateDefaultRepositoryType(Type entityType)
+        //{
+        //    var baseType = entityType.BaseType;
 
-            //找到继承链条上，最近的一个非泛型父类的仓库类型
-            Type baseRepositoryType = null;
-            while (baseType != typeof(Entity))
-            {
-                if (baseType == null) throw new InvalidProgramException("此类并没有继承 Entity 类，不能创建 Repository。");
-                if (!baseType.IsGenericType)
-                {
-                    //不需要为基类创建仓库，这是因为基类声明的仓库类型可能是抽象类型。
-                    //var repository = this.FindWithoutLock(baseType);
-                    //baseRepositoryType = repository.GetType();
+        //    //找到继承链条上，最近的一个非泛型父类的仓库类型
+        //    Type baseRepositoryType = null;
+        //    while (baseType != typeof(Entity))
+        //    {
+        //        if (baseType == null) throw new InvalidProgramException("此类并没有继承 Entity 类，不能创建 Repository。");
+        //        if (!baseType.IsGenericType)
+        //        {
+        //            //不需要为基类创建仓库，这是因为基类声明的仓库类型可能是抽象类型。
+        //            //var repository = this.FindWithoutLock(baseType);
+        //            //baseRepositoryType = repository.GetType();
 
-                    var convention = EntityMatrix.FindByEntity(baseType);
-                    baseRepositoryType = convention.RepositoryType;
-                    break;
-                }
+        //            var convention = EntityMatrix.FindByEntity(baseType);
+        //            baseRepositoryType = convention.RepositoryType;
+        //            break;
+        //        }
 
-                baseType = baseType.BaseType;
-            }
+        //        baseType = baseType.BaseType;
+        //    }
 
-            //如果没有，则直接从DefaultEntityRepository上继承。
-            if (baseRepositoryType == null) { baseRepositoryType = typeof(EntityRepository); }
+        //    //如果没有，则直接从DefaultEntityRepository上继承。
+        //    if (baseRepositoryType == null) { baseRepositoryType = typeof(EntityRepository); }
 
-            //查找这个类型
-            var module = EmitContext.Instance.GetDynamicModule();
-            var className = EntityMatrix.RepositoryFullName(entityType);
+        //    //查找这个类型
+        //    var module = EmitContext.Instance.GetDynamicModule();
+        //    var className = EntityMatrix.RepositoryFullName(entityType);
 
-            //尝试查找这个类型
-            var exsitType = module.GetType(className, false);
-            if (exsitType != null) return exsitType;
+        //    //尝试查找这个类型
+        //    var exsitType = module.GetType(className, false);
+        //    if (exsitType != null) return exsitType;
 
-            //构造一个新的类型。
-            var newType = module.DefineType(
-                className,
-                TypeAttributes.Public | TypeAttributes.Class,
-                baseRepositoryType
-                );
-            return newType.CreateType();
-        }
+        //    //构造一个新的类型。
+        //    var newType = module.DefineType(
+        //        className,
+        //        TypeAttributes.Public | TypeAttributes.Class,
+        //        baseRepositoryType
+        //        );
+        //    return newType.CreateType();
+        //}
 
         #endregion
     }

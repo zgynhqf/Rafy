@@ -39,7 +39,7 @@ namespace Rafy.Customization.WPF.Commands
             ui.MainView.DataLoader.LoadDataAsync(() =>
             {
                 var model = RF.Concrete<ViewConfigurationModelRepository>()
-                    .GetByName(new ViewConfigurationModelNameCriteria
+                    .GetBy(new ViewConfigurationModelNameCriteria
                     {
                         EntityType = ClientEntities.GetClientName(view.EntityType),
                         ViewName = view.Meta.ExtendView

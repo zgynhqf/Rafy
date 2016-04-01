@@ -115,14 +115,11 @@ namespace Demo
     {
         protected BookRepository() { }
 
-        /// <summary>
-        /// 查询面板
-        /// </summary>
-        /// <param name="criteria"></param>
-        protected EntityList FetchBy(BookQueryCriteria criteria)
+        [RepositoryQuery]
+        public virtual BookList GetBy(BookQueryCriteria criteria)
         {
             //自定义查询示例。
-            return this.QueryList(q =>
+            return (BookList)this.QueryList(q =>
             {
                 q.Constrain(Book.BookCategoryIdProperty).Equal(criteria.BookCategoryId)
                     .And().Constrain(Book.NameProperty).Contains(criteria.BookName);
@@ -142,7 +139,7 @@ namespace Demo
     [DataProviderFor(typeof(BookRepository))]
     public partial class BookDataProvider : DemoEntityDataProvider
     {
-        public override EntityList GetAll(PagingInfo paging, EagerLoadOptions eagerLoad)
+        public override object GetAll(PagingInfo paging, EagerLoadOptions eagerLoad)
         {
             var list = new BookList();
 

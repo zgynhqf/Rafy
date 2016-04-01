@@ -21,6 +21,6 @@ namespace Rafy.UnitTest.IDataProvider
 {
     public interface ICarDataProvider
     {
-        CarList GetByStartDate(DateTime time);
+        object GetByStartDate(DateTime time);
     }
 }

@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建日期：20160318
@@ -165,15 +165,12 @@ namespace Rafy.SerialNumber
         /// <param name="autoCodeName"></param>
         /// <param name="timeKey"></param>
         /// <returns></returns>
-        public SerialNumberValue GetByKey(string autoCodeName, string timeKey)
-        {
-            return this.FetchFirst(r => r.DA_GetByKey(autoCodeName, timeKey));
-        }
-        private EntityList DA_GetByKey(string autoCodeName, string timeKey)
+        [RepositoryQuery]
+        public virtual SerialNumberValue GetByKey(string autoCodeName, string timeKey)
         {
             var q = this.CreateLinqQuery();
             q = q.Where(e => e.AutoCodeInfo.Name == autoCodeName && e.TimeKey == timeKey);
-            return this.QueryList(q);
+            return (SerialNumberValue)this.QueryData(q);
         }
 
         /// <summary>
@@ -181,11 +178,8 @@ namespace Rafy.SerialNumber
         /// </summary>
         /// <param name="autoCodeName"></param>
         /// <returns></returns>
-        public SerialNumberValue GetLastValue(string autoCodeName)
-        {
-            return this.FetchFirst(r => r.DA_GetLastValue(autoCodeName));
-        }
-        private EntityList DA_GetLastValue(string autoCodeName)
+        [RepositoryQuery]
+        public virtual SerialNumberValue GetLastValue(string autoCodeName)
         {
             var f = QueryFactory.Instance;
             var t = f.Table<SerialNumberValue>();
@@ -196,12 +190,12 @@ namespace Rafy.SerialNumber
                 orderBy: new List<IOrderBy> { f.OrderBy(t.Column(SerialNumberValue.LastUpdatedTimeProperty), OrderDirection.Descending) }
             );
 
-            return this.QueryList(q);
+            return (SerialNumberValue)this.QueryData(q);
         }
     }
 
     [DataProviderFor(typeof(SerialNumberValueRepository))]
-    public class SerialNumberValueRepositoryDataProvider : SerialNumberEntityRepositoryDataProvider
+    public partial class SerialNumberValueRepositoryDataProvider : SerialNumberEntityRepositoryDataProvider
     {
         protected override void Insert(Entity entity)
         {

@@ -103,23 +103,33 @@ namespace Rafy.Domain.Caching
     }
 
     [Serializable]
-    internal partial class ScopeVersionList : EntityList
+    public partial class ScopeVersionList : EntityList
     {
         public DateTime ServerTime { get; set; }
     }
 
-    internal partial class ScopeVersionRepository : EntityRepository
+    public partial class ScopeVersionRepository : EntityRepository
     {
         public ScopeVersionRepository() { }
 
-        public ScopeVersionList GetList(string classRegion)
+        [RepositoryQuery]
+        public virtual ScopeVersionList GetList(string classRegion)
         {
-            return FetchList(classRegion);
+            var q = QueryFactory.Instance.Query(this);
+            q.AddConstraint(ScopeVersion.ClassRegionProperty, PropertyOperator.Equal, classRegion);
+
+            return (ScopeVersionList)this.QueryData(q);
         }
 
-        public ScopeVersionList GetList(string classRegion, string scopeClass, string scopeId)
+        [RepositoryQuery]
+        public virtual ScopeVersionList GetList(string classRegion, string scopeClass, string scopeId)
         {
-            return FetchList(classRegion, scopeClass ?? string.Empty, scopeId ?? string.Empty);
+            var q = QueryFactory.Instance.Query(this);
+            q.AddConstraint(ScopeVersion.ClassRegionProperty, PropertyOperator.Equal, classRegion);
+            q.AddConstraint(ScopeVersion.ScopeClassProperty, PropertyOperator.Equal, scopeClass);
+            q.AddConstraint(ScopeVersion.ScopeIdProperty, PropertyOperator.Equal, scopeId);
+
+            return (ScopeVersionList)this.QueryData(q);
         }
 
         /// <summary>
@@ -127,35 +137,13 @@ namespace Rafy.Domain.Caching
         /// </summary>
         /// <param name="lastTime"></param>
         /// <returns></returns>
-        public ScopeVersionList GetList(DateTime lastTime)
-        {
-            return FetchList(lastTime);
-        }
-
-        protected EntityList FetchBy(DateTime lastTime)
+        [RepositoryQuery]
+        public virtual ScopeVersionList GetList(DateTime lastTime)
         {
             var q = QueryFactory.Instance.Query(this);
             q.AddConstraint(ScopeVersion.AccurateValueProperty, PropertyOperator.Greater, lastTime.Ticks);
 
-            return this.QueryList(q);
-        }
-
-        protected EntityList FetchBy(string classRegion)
-        {
-            var q = QueryFactory.Instance.Query(this);
-            q.AddConstraint(ScopeVersion.ClassRegionProperty, PropertyOperator.Equal, classRegion);
-
-            return this.QueryList(q);
-        }
-
-        protected EntityList FetchBy(string classRegion, string scopeClass, string scopeId)
-        {
-            var q = QueryFactory.Instance.Query(this);
-            q.AddConstraint(ScopeVersion.ClassRegionProperty, PropertyOperator.Equal, classRegion);
-            q.AddConstraint(ScopeVersion.ScopeClassProperty, PropertyOperator.Equal, scopeClass);
-            q.AddConstraint(ScopeVersion.ScopeIdProperty, PropertyOperator.Equal, scopeId);
-
-            return this.QueryList(q);
+            return (ScopeVersionList)this.QueryData(q);
         }
     }
 

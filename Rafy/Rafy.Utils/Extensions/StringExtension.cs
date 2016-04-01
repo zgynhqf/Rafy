@@ -224,6 +224,26 @@ namespace Rafy
             return length <= maxLength && length >= minLength;
         }
 
+        public static string FormatArgs(this string str, object arg0)
+        {
+            return string.Format(str, arg0);
+        }
+
+        public static string FormatArgs(this string str, object arg0, object arg1)
+        {
+            return string.Format(str, arg0, arg1);
+        }
+
+        public static string FormatArgs(this string str, object arg0, object arg1, object arg2)
+        {
+            return string.Format(str, arg0, arg1, arg2);
+        }
+
+        public static string FormatArgs(this string str, params object[] args)
+        {
+            return string.Format(str, args);
+        }
+
         /// <summary>
         /// Removes all leading and trailing white-space characters from the current System.String object.
         /// if it is null, return the string.Empty.

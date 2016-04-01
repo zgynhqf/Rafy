@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -126,35 +126,24 @@ namespace UT
     {
         protected TestTreeTaskRepository() { }
 
-        public TestTreeTaskList GetAndOrderByIdDesc()
-        {
-            return this.FetchList("GetByOrder");
-        }
-        protected EntityList FetchBy(string criteria)
-        {
-            if (criteria == "GetByOrder")
-            {
-                return this.QueryList(q =>
-                {
-                    q.OrderBy(TestTreeTask.IdProperty, OrderDirection.Descending);
-                });
-            }
-
-            return base.FetchBy(criteria);
-        }
-
-        public TestTreeTaskList GetAndOrderByIdDesc2()
-        {
-            return this.FetchList(r => r.DA_GetAndOrderByIdDesc());
-        }
-        private EntityList DA_GetAndOrderByIdDesc()
+        [RepositoryQuery]
+        public virtual TestTreeTaskList GetAndOrderByIdDesc2()
         {
             var source = f.Table(this);
             var q = f.Query(source);
             q.OrderBy.Add(source.Column(TestTreeTask.IdProperty), OrderDirection.Descending);
 
-            return this.QueryList(q);
+            return (TestTreeTaskList)this.QueryData(q);
         }
+
+        //[RepositoryQuery]
+        //public virtual TestTreeTaskList GetAndOrderByIdDesc()
+        //{
+        //    return (TestTreeTaskList)this.QueryList(q =>
+        //    {
+        //        q.OrderBy(TestTreeTask.IdProperty, OrderDirection.Descending);
+        //    });
+        //}
     }
 
     internal class TestTreeTaskConfig : UnitTestEntityConfig<TestTreeTask>

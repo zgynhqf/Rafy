@@ -62,6 +62,8 @@ namespace Rafy.Domain
 
         internal static void TryAddRepository(Type repositoryType)
         {
+            IgnoreProxyRepository(ref repositoryType);
+
             var attri = repositoryType.GetSingleAttribute<RepositoryForAttribute>();
             if (attri != null)
             {
@@ -124,6 +126,8 @@ namespace Rafy.Domain
         public static EntityMatrix FindByRepository(Type repositoryType)
         {
             if (repositoryType == null) return null;
+
+            IgnoreProxyRepository(ref repositoryType);
 
             var item = FastFindByRepositoryType(repositoryType);
 
@@ -295,6 +299,8 @@ namespace Rafy.Domain
         {
             Type entityType = null;
 
+            IgnoreProxyRepository(ref repositoryType);
+
             if (repositoryType.Name.EndsWith("Repository"))
             {
                 var entityTypeName = repositoryType.FullName.Substring(0, repositoryType.FullName.Length - "Repository".Length);
@@ -307,5 +313,13 @@ namespace Rafy.Domain
         }
 
         #endregion
+
+        private static void IgnoreProxyRepository(ref Type repositoryType)
+        {
+            if (repositoryType != null && repositoryType.FullName.StartsWith("Castle.Proxies"))
+            {
+                repositoryType = repositoryType.BaseType;
+            }
+        }
     }
 }

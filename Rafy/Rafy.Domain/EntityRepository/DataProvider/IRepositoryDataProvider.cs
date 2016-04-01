@@ -32,15 +32,22 @@ namespace Rafy.Domain
         /// <param name="id">The unique identifier.</param>
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        EntityList GetById(object id, EagerLoadOptions eagerLoad);
-
+        Entity GetById(object id, EagerLoadOptions eagerLoad);
         /// <summary>
         /// 分页查询所有的实体类
         /// </summary>
         /// <param name="paging">分页信息。</param>
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        EntityList GetAll(PagingInfo paging, EagerLoadOptions eagerLoad);
+        object GetAll(PagingInfo paging, EagerLoadOptions eagerLoad);
+        /// <summary>
+        /// 通过父对象 Id 分页查询子对象的集合。
+        /// </summary>
+        /// <param name="parentId"></param>
+        /// <param name="paging">分页信息。</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <returns></returns>
+        object GetByParentId(object parentId, PagingInfo paging, EagerLoadOptions eagerLoad);
         /// <summary>
         /// 通过父对象 Id 分页查询子对象的集合。
         /// </summary>
@@ -50,20 +57,13 @@ namespace Rafy.Domain
         /// <returns></returns>
         EntityList GetByParentIdList(object[] parentIdList, PagingInfo paging, EagerLoadOptions eagerLoad);
         /// <summary>
-        /// 通过父对象 Id 分页查询子对象的集合。
-        /// </summary>
-        /// <param name="parentId"></param>
-        /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
-        /// <returns></returns>
-        EntityList GetByParentId(object parentId, PagingInfo paging, EagerLoadOptions eagerLoad);
-        /// <summary>
         /// 获取指定 id 集合的实体列表。
         /// </summary>
         /// <param name="idList"></param>
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         EntityList GetByIdList(object[] idList, EagerLoadOptions eagerLoad);
+
         /// <summary>
         /// 递归查找所有树型子
         /// </summary>
@@ -72,24 +72,24 @@ namespace Rafy.Domain
         /// <returns></returns>
         EntityList GetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad);
         /// <summary>
-        /// 通过 CommonQueryCriteria 来查询实体列表。
-        /// </summary>
-        /// <param name="criteria">常用查询条件。</param>
-        /// <returns></returns>
-        EntityList GetBy(CommonQueryCriteria criteria);
-
-        /// <summary>
         /// 查询所有的根节点。
         /// </summary>
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
-        EntityList GetTreeRoots(EagerLoadOptions eagerLoad);
+        object GetTreeRoots(EagerLoadOptions eagerLoad);
 
         /// <summary>
-        /// 统计仓库中所有的实体数量
+        /// 通过 <see cref="CommonQueryCriteria"/> 来查询数据。
         /// </summary>
+        /// <param name="criteria">常用查询条件。</param>
         /// <returns></returns>
-        EntityList CountAll();
+        object GetBy(CommonQueryCriteria criteria);
+        /// <summary>
+        /// 通过 <see cref="ODataQueryCriteria"/> 来查询数据。
+        /// </summary>
+        /// <param name="criteria">常用查询条件。</param>
+        /// <returns></returns>
+        object GetBy(ODataQueryCriteria criteria);
 
         /// <summary>
         /// 查询某个实体的某个属性的值。

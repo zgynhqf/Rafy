@@ -73,6 +73,21 @@ namespace Rafy.Domain
         }
 
         /// <summary>
+        /// 从持久层中查询数据。
+        /// 本方法只能由仓库中的方法来调用。本方法的返回值的类型将与仓库中方法的返回值保持一致。
+        /// 支持的返回值：EntityList、Entity、int、LiteDataTable。
+        /// </summary>
+        /// <param name="queryable"></param>
+        /// <param name="paging"></param>
+        /// <param name="eagerLoad"></param>
+        /// <returns></returns>
+        public object QueryData(IQueryable queryable, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        {
+            var list = this.QueryList(queryable, paging, eagerLoad);
+            return ReturnForRepository(list);
+        }
+
+        /// <summary>
         /// 通过 linq 来查询实体。
         /// </summary>
         /// <param name="queryable">linq 查询对象。</param>
@@ -110,6 +125,41 @@ namespace Rafy.Domain
         #endregion
 
         #region 数据层查询接口 - IQuery
+
+        /// <summary>
+        /// 通过 IQuery 对象从持久层中查询数据。
+        /// 本方法只能由仓库中的方法来调用。本方法的返回值的类型将与仓库中方法的返回值保持一致。
+        /// 支持的返回值：EntityList、Entity、int、LiteDataTable。
+        /// </summary>
+        /// <param name="query">查询对象。</param>
+        /// <param name="paging">分页信息。</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="markTreeFullLoaded">如果某次查询结果是一棵完整的子树，那么必须设置此参数为 true ，才可以把整个树标记为完整加载。</param>
+        /// <returns></returns>
+        public object QueryData(IQuery query, PagingInfo paging = null, EagerLoadOptions eagerLoad = null, bool markTreeFullLoaded = false)
+        {
+            var returnType = FinalDataPortal.CurrentIEQC.FetchType;
+            if (returnType == FetchType.Table)
+            {
+                return this.QueryTable(query, paging);
+            }
+
+            var list = this.QueryList(query, paging, eagerLoad, markTreeFullLoaded);
+            return ReturnForRepository(list, returnType);
+        }
+
+        /// <summary>
+        /// 通过 IQuery 对象从持久层中查询数据。
+        /// 本方法只能由仓库中的方法来调用。本方法的返回值的类型将与仓库中方法的返回值保持一致。
+        /// 支持的返回值：EntityList、Entity、int。
+        /// </summary>
+        /// <param name="args">The arguments.</param>
+        /// <returns></returns>
+        public object QueryData(EntityQueryArgs args)
+        {
+            var list = this.QueryList(args);
+            return ReturnForRepository(list, args.FetchType);
+        }
 
         /// <summary>
         /// 通过 IQuery 对象来查询实体。
@@ -251,7 +301,7 @@ namespace Rafy.Domain
             }
 
             //默认对分页进行处理。
-            var pList = CurrentIEQC.Parameters;
+            var pList = FinalDataPortal.CurrentIEQC.Parameters;
             if (pList.Length == 1)
             {
                 var userCriteria = pList[0] as ILoadOptionsCriteria;
@@ -359,7 +409,7 @@ namespace Rafy.Domain
                 args.EntityList = Repo.NewListFast();
             }
 
-            args.SetFetchType(CurrentIEQC.FetchType);
+            args.SetFetchType(FinalDataPortal.CurrentIEQC.FetchType);
         }
 
         internal void LoadByFilter(EntityQueryArgsBase args)
@@ -648,16 +698,48 @@ namespace Rafy.Domain
         #endregion
 
         /// <summary>
-        /// 当前正在使用的查询参数
+        /// 将查询出来的实体列表类型转换为与仓库查询方法返回值一致的类型。
         /// </summary>
-        private static IEQC CurrentIEQC
+        /// <param name="list"></param>
+        /// <returns></returns>
+        protected static object ReturnForRepository(EntityList list)
         {
-            get
+            return ReturnForRepository(list, FinalDataPortal.CurrentIEQC.FetchType);
+        }
+
+        private static object ReturnForRepository(EntityList list, FetchType returnType)
+        {
+            switch (returnType)
             {
-                var ieqc = FinalDataPortal.CurrentCriteria as IEQC;
-                if (ieqc == null) throw new NotSupportedException("实体查询必须使用 FetchCount、FetchFirst、FetchList、FetchTable 等方法。");
-                return ieqc;
+                case FetchType.First:
+                    return DisconnectFirst(list);
+                case FetchType.Count:
+                    return list.TotalCount;
+                case FetchType.Table:
+                    throw new InvalidOperationException();
+                case FetchType.List:
+                default:
+                    return list;
             }
+        }
+
+        /// <summary>
+        /// 只返回列表中的唯一实体时，使用此方法。
+        /// 断开 Entity 与 EntityList 之间的关系，可防止 EntityList 内存泄漏。
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        private static Entity DisconnectFirst(EntityList list)
+        {
+            Entity res = null;
+
+            if (list.Count > 0)
+            {
+                res = list[0];
+                res.DisconnectFromParent();
+            }
+
+            return res;
         }
     }
 }

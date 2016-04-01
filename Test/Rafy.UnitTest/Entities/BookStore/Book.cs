@@ -154,30 +154,8 @@ namespace UT
     {
         protected BookRepository() { }
 
-        public BookList GetWithEager()
-        {
-            return this.FetchList("WithEager");
-        }
-        protected EntityList FetchBy(string criteria)
-        {
-            if (criteria == "WithEager")
-            {
-                return this.QueryList(q =>
-                {
-                    q.EagerLoad(Book.ChapterListProperty);
-                    q.EagerLoad(Chapter.SectionListProperty);
-                    q.EagerLoad(Section.SectionOwnerProperty);
-                });
-            }
-
-            return this.NewList();
-        }
-
-        public BookList GetWithEager2()
-        {
-            return this.FetchList(r => r.DA_GetWithEager2());
-        }
-        private EntityList DA_GetWithEager2()
+        [RepositoryQuery]
+        public virtual BookList GetWithEager2()
         {
             var args = new EntityQueryArgs
             {
@@ -188,40 +166,27 @@ namespace UT
             args.EagerLoad(Chapter.SectionListProperty);
             args.EagerLoad(Section.SectionOwnerProperty);
 
-            return this.QueryList(args);
+            return (BookList)this.QueryData(args);
         }
 
-        public BookList LinqGetByBookNameInArray(string[] names)
-        {
-            return this.FetchList(new object[] { names });
-        }
-        protected EntityList FetchBy(string[] names)
+        [RepositoryQuery]
+        public virtual BookList LinqGetByBookNameInArray(string[] names)
         {
             var q = this.CreateLinqQuery();
-
             q = q.Where(c => names.Contains(c.Name));
-
-            return this.QueryList(q);
+            return (BookList)this.QueryData(q);
         }
 
-        public BookList LinqGetByBookNameInList(List<string> names)
-        {
-            return this.FetchList(names);
-        }
-        protected EntityList FetchBy(List<string> names)
+        [RepositoryQuery]
+        public virtual BookList LinqGetByBookNameInList(List<string> names)
         {
             var q = this.CreateLinqQuery();
-
             q = q.Where(c => names.Contains(c.Name));
-
-            return this.QueryList(q);
+            return (BookList)this.QueryData(q);
         }
 
-        public LiteDataTable GetLOB(bool withLOB, bool hasTablePrefix)
-        {
-            return this.FetchTable(r => r.DA_GetLOB(withLOB, hasTablePrefix));
-        }
-        private LiteDataTable DA_GetLOB(bool withLOB, bool hasTablePrefix)
+        [RepositoryQuery]
+        public virtual LiteDataTable GetLOB(bool withLOB, bool hasTablePrefix)
         {
             ConditionalSql sql = null;
             if (!withLOB)
@@ -242,20 +207,16 @@ namespace UT
             return (this.DataQueryer as RdbDataQueryer).QueryTable(sql);
         }
 
-        protected EntityList FetchBy(BookContainesNameCriteria criteria)
+        [RepositoryQuery]
+        public virtual BookList GetBy(BookContainesNameCriteria criteria)
         {
             var q = this.CreateLinqQuery();
-
             q = q.Where(b => b.Name.Contains(criteria.Name));
-
-            return this.QueryList(q);
+            return (BookList)this.QueryData(q);
         }
 
-        public BookList LinqGet_BracketOrAndOr(string code1, string code2, string code3, string name1, string name2, string name3)
-        {
-            return this.FetchList(r => r.DA_LinqGet_BracketOrAndOr(code1, code2, code3, name1, name2, name3));
-        }
-        private EntityList DA_LinqGet_BracketOrAndOr(string code1, string code2, string code3, string name1, string name2, string name3)
+        [RepositoryQuery]
+        public virtual BookList LinqGet_BracketOrAndOr(string code1, string code2, string code3, string name1, string name2, string name3)
         {
             var query = this.CreateLinqQuery();
 
@@ -264,136 +225,86 @@ namespace UT
                 (e.Name == name1 || e.Name == name2 || e.Name == name3)
                 );
 
-            return this.QueryList(query);
-
-            //var query = this.CreatePropertyQuery();
-
-            //var q1 = query.ConstraintFactory.New(Book.CodeProperty == code1)
-            //    .Or(Book.CodeProperty == code2)
-            //    .Or(Book.CodeProperty == code3);
-
-            //var q2 = query.ConstraintFactory.New(Book.NameProperty == name1)
-            //    .Or(Book.NameProperty == name2)
-            //    .Or(Book.NameProperty == name3);
-
-            //query.Where = query.ConstraintFactory.New().And(q1).And(q2);
-
-            //return this.QueryList(query);
+            return (BookList)this.QueryData(query);
         }
 
-        public BookList LinqGet_WithPropertyQuery(string code1, string code2, string code3, string name1, string name2, string name3)
-        {
-            return this.FetchList(r => r.DA_LinqGet_WithPropertyQuery(code1, code2, code3, name1, name2, name3));
-        }
-        private EntityList DA_LinqGet_WithPropertyQuery(string code1, string code2, string code3, string name1, string name2, string name3)
-        {
-            var query = this.CreatePropertyQuery();
+        //[RepositoryQuery]
+        //public virtual BookList LinqGet_WithPropertyQuery(string code1, string code2, string code3, string name1, string name2, string name3)
+        //{
+        //    var query = this.CreatePropertyQuery();
 
-            query.AddConstrainEqualIf(Book.CodeProperty, "c3");
+        //    query.AddConstrainEqualIf(Book.CodeProperty, "c3");
 
-            var linqQuery = this.CreateLinqQuery();
+        //    var linqQuery = this.CreateLinqQuery();
 
-            linqQuery = linqQuery.Where(e =>
-                (e.Code == code1 || e.Code == code2 || e.Code == code3) &&
-                (e.Name == name1 || e.Name == name2 || e.Name == name3)
-                );
+        //    linqQuery = linqQuery.Where(e =>
+        //        (e.Code == code1 || e.Code == code2 || e.Code == code3) &&
+        //        (e.Name == name1 || e.Name == name2 || e.Name == name3)
+        //        );
 
-            query.CombineLinq(linqQuery);
+        //    query.CombineLinq(linqQuery);
 
-            return this.QueryList(query);
-        }
+        //    return (BookList)this.QueryList(query);
+        //}
 
-        public BookList Get_NameEqualsCode()
-        {
-            return this.FetchList(r => r.DA_Get_NameEqualsCode());
-        }
-        private EntityList DA_Get_NameEqualsCode()
-        {
-            var q = this.CreatePropertyQuery();
-            q.AddConstrain(Book.NameProperty).Equal(Book.CodeProperty);
-            return this.QueryList(q);
-        }
+        //[RepositoryQuery]
+        //public virtual BookList Get_NameEqualsCode()
+        //{
+        //    var q = this.CreatePropertyQuery();
+        //    q.AddConstrain(Book.NameProperty).Equal(Book.CodeProperty);
+        //    return (BookList)this.QueryList(q);
+        //}
 
-        public BookList Get_NameEqualsCode2()
-        {
-            return this.FetchList(r => r.DA_Get_NameEqualsCode2());
-        }
-        private EntityList DA_Get_NameEqualsCode2()
+        [RepositoryQuery]
+        public virtual BookList Get_NameEqualsCode2()
         {
             var source = f.Table(this);
             var q = f.Query(source, where: f.Constraint(
                 leftColumn: source.Column(Book.NameProperty),
                 rightColumn: source.Column(Book.CodeProperty)
             ));
-            return this.QueryList(q);
+            return (BookList)this.QueryData(q);
         }
 
-        public BookList LinqGet_NameEqualsCode()
-        {
-            return this.FetchList(r => r.DA_LinqGet_NameEqualsCode());
-        }
-        private EntityList DA_LinqGet_NameEqualsCode()
+        [RepositoryQuery]
+        public virtual BookList LinqGet_NameEqualsCode()
         {
             var q = this.CreateLinqQuery();
             q = q.Where(e => e.Name == e.Code);
-            return this.QueryList(q);
+            return (BookList)this.QueryData(q);
         }
 
-        public BookList LinqGet_BCIdEqualsRefBCId()
-        {
-            return this.FetchList(r => r.DA_LinqGet_BCIdEqualsRefBCId());
-        }
-        private EntityList DA_LinqGet_BCIdEqualsRefBCId()
+        [RepositoryQuery]
+        public virtual BookList LinqGet_BCIdEqualsRefBCId()
         {
             var q = this.CreateLinqQuery();
             q = q.Where(e => e.BookCategoryId != null ||
                 e.BookCategoryId == e.BookCategory.Id && e.Code == e.BookCategory.Code);
-            return this.QueryList(q);
+            return (BookList)this.QueryData(q);
         }
 
-        public BookList LinqGet_RefBCEqualsRefBC()
-        {
-            return this.FetchList(r => r.DA_LinqGet_RefBCEqualsRefBC());
-        }
-        private EntityList DA_LinqGet_RefBCEqualsRefBC()
+        [RepositoryQuery]
+        public virtual BookList LinqGet_RefBCEqualsRefBC()
         {
             var q = this.CreateLinqQuery();
             q = q.Where(e => e.BookLoc.Code == e.BookCategory.Code && e.BookCategory.Code == e.BookCategory.Name);
-            return this.QueryList(q);
+            return (BookList)this.QueryData(q);
         }
 
-        public BookList LinqGetByNullable(double? price)
-        {
-            return this.FetchList(r => r.DA_LinqGetByNullable(price));
-        }
-        private EntityList DA_LinqGetByNullable(double? price)
+        [RepositoryQuery]
+        public virtual BookList LinqGetByNullable(double? price)
         {
             var q = this.CreateLinqQuery();
             if (price.HasValue) q = q.Where(e => e.Price == price.Value);
-            return this.QueryList(q);
+            return (BookList)this.QueryData(q);
         }
-
-        //不再支持没有参数类型的模糊查找。
-        //public BookList LinqGetByNullableFetchBy(double? price)
-        //{
-        //    return this.FetchList(price);
-        //}
-        //private EntityList FetchBy(double? price)
-        //{
-        //    var q = this.CreateLinqQuery();
-        //    q = q.Where(e => e.Price == price);
-        //    return this.QueryList(q);
-        //}
 
         /// <summary>
         /// 查找包含任意章节的书籍
         /// </summary>
         /// <returns></returns>
-        public BookList GetIfChildrenExists()
-        {
-            return this.FetchList(r => r.DA_GetIfChildrenExists());
-        }
-        private EntityList DA_GetIfChildrenExists()
+        [RepositoryQuery]
+        public virtual BookList GetIfChildrenExists()
         {
             var bookTable = f.Table(this);
             var chapterTable = f.Table<Chapter>();
@@ -404,7 +315,7 @@ namespace UT
                     where: f.Constraint(chapterTable.Column(Chapter.BookIdProperty), bookTable.IdColumn)
                 ))
             );
-            return this.QueryList(q);
+            return (BookList)this.QueryData(q);
         }
 
         /// <summary>
@@ -412,11 +323,8 @@ namespace UT
         /// </summary>
         /// <param name="chapterName"></param>
         /// <returns></returns>
-        public BookList GetIfChildrenExists(string chapterName)
-        {
-            return this.FetchList(r => r.DA_GetIfChildrenExists(chapterName));
-        }
-        private EntityList DA_GetIfChildrenExists(string chapterName)
+        [RepositoryQuery]
+        public virtual BookList GetIfChildrenExists(string chapterName)
         {
             var book = f.Table(this);
             var chapter = f.Table<Chapter>();
@@ -429,7 +337,7 @@ namespace UT
                     )
                 ))
             );
-            return this.QueryList(q);
+            return (BookList)this.QueryData(q);
         }
 
         /// <summary>
@@ -437,15 +345,12 @@ namespace UT
         /// </summary>
         /// <param name="chapterName"></param>
         /// <returns></returns>
-        public BookList GetIfChildrenAll(string chapterName)
-        {
-            return this.FetchList(r => r.DA_GetIfChildrenAll(chapterName));
-        }
-        private EntityList DA_GetIfChildrenAll(string chapterName)
+        [RepositoryQuery]
+        public virtual BookList GetIfChildrenAll(string chapterName)
         {
             var book = f.Table(this);
             var chapter = f.Table<Chapter>();
-            return this.QueryList(f.Query(
+            return (BookList)this.QueryData(f.Query(
                 from: book,
                 where: f.Not(f.Exists(f.Query(
                     from: chapter,
@@ -461,15 +366,12 @@ namespace UT
         /// 查找包含任意章节的书籍
         /// </summary>
         /// <returns></returns>
-        public BookList LinqGetIfChildrenExists()
-        {
-            return this.FetchList(r => r.DA_LinqGetIfChildrenExists());
-        }
-        private EntityList DA_LinqGetIfChildrenExists()
+        [RepositoryQuery]
+        public virtual BookList LinqGetIfChildrenExists()
         {
             var q = this.CreateLinqQuery();
             q = q.Where(e => e.ChapterList.Any());
-            return this.QueryList(q);
+            return (BookList)this.QueryData(q);
         }
 
         /// <summary>
@@ -477,50 +379,41 @@ namespace UT
         /// </summary>
         /// <param name="chapterName"></param>
         /// <returns></returns>
-        public BookList LinqGetIfChildrenExists(string chapterName)
-        {
-            return this.FetchList(r => r.DA_LinqGetIfChildrenExists(chapterName));
-        }
-        private EntityList DA_LinqGetIfChildrenExists(string chapterName)
+        [RepositoryQuery]
+        public virtual BookList LinqGetIfChildrenExists(string chapterName)
         {
             var q = this.CreateLinqQuery();
             q = q.Where(book => book.ChapterList.Concrete().Any(c => c.Name == chapterName));
             q = q.OrderBy(b => b.Name);
-            return this.QueryList(q);
+            return (BookList)this.QueryData(q);
         }
 
         /// <summary>
         /// 查找包含任意节名称为 sectionName 的书籍
         /// </summary>
         /// <returns></returns>
-        public BookList LinqGetIfChildrenExistsSectionName(string sectionName)
-        {
-            return this.FetchList(r => r.DA_LinqGetIfChildrenExistsSectionName(sectionName));
-        }
-        private EntityList DA_LinqGetIfChildrenExistsSectionName(string sectionName)
+        [RepositoryQuery]
+        public virtual BookList LinqGetIfChildrenExistsSectionName(string sectionName)
         {
             var q = this.CreateLinqQuery();
             q = q.Where(book => book.ChapterList.Concrete().Any(c => c.SectionList.Cast<Section>().Any(s => s.Name.Contains(sectionName))));
             q = q.OrderBy(b => b.Name);
-            return this.QueryList(q);
+            return (BookList)this.QueryData(q);
         }
 
         /// <summary>
         /// 查找包含任意节名称为 sectionName 且同时拥有者为 sectionOwner 的书籍。
         /// </summary>
         /// <returns></returns>
-        public BookList LinqGetIfChildrenExistsSectionAndOwner(string category, string sectionName, string sectionOwner)
-        {
-            return this.FetchList(r => r.DA_LinqGetIfChildrenExistsSectionName(category, sectionName, sectionOwner));
-        }
-        private EntityList DA_LinqGetIfChildrenExistsSectionName(string category, string sectionName, string sectionOwner)
+        [RepositoryQuery]
+        public virtual BookList LinqGetIfChildrenExistsSectionAndOwner(string category, string sectionName, string sectionOwner)
         {
             var q = this.CreateLinqQuery();
             q = q.Where(book => book.BookCategory.Name == category && book.ChapterList.Concrete().Any(
                 c => c.SectionList.Cast<Section>().Any(s => s.Name.Contains(sectionName) && s.SectionOwner.Name == sectionOwner)
                 ));
             q = q.OrderBy(b => b.Name);
-            return this.QueryList(q);
+            return (BookList)this.QueryData(q);
         }
 
         /// <summary>
@@ -528,27 +421,21 @@ namespace UT
         /// </summary>
         /// <param name="chapterName"></param>
         /// <returns></returns>
-        public BookList LinqGetIfChildrenAll(string chapterName)
-        {
-            return this.FetchList(r => r.DA_LinqGetIfChildrenAll(chapterName));
-        }
-        private EntityList DA_LinqGetIfChildrenAll(string chapterName)
+        [RepositoryQuery]
+        public virtual BookList LinqGetIfChildrenAll(string chapterName)
         {
             var q = this.CreateLinqQuery();
             q = q.Where(e => e.ChapterList.Cast<Chapter>().All(c => c.Name == chapterName));
             q = q.OrderBy(e => e.Name);
-            return this.QueryList(q);
+            return (BookList)this.QueryData(q);
         }
 
         /// <summary>
         /// 查找包含任意章节的书籍
         /// </summary>
         /// <returns></returns>
-        public BookList LinqGetIfChildren_Complicated(PagingInfo pi = null)
-        {
-            return this.FetchList(r => r.DA_LinqGetIfChildren_Complicated(pi));
-        }
-        private EntityList DA_LinqGetIfChildren_Complicated(PagingInfo pi)
+        [RepositoryQuery]
+        public virtual BookList LinqGetIfChildren_Complicated(PagingInfo pi = null)
         {
             var q = this.CreateLinqQuery();
             q = q.Where(book => book.Name != "1" && book.BookCategory.Name == "category" && book.ChapterList.Concrete().Any(c => c.Name == "1.2"));
@@ -558,36 +445,53 @@ namespace UT
                     && s.SectionOwner.Name == "huqf")
                 ));
             q = q.OrderBy(b => b.Name);
-            return this.QueryList(q, pi);
+            return (BookList)this.QueryData(q, pi);
         }
 
-        public BookList LinqGetIfChildren_All_Any()
-        {
-            return this.FetchList(r => r.DA_LinqGetIfChildren_All_Any());
-        }
-        private EntityList DA_LinqGetIfChildren_All_Any()
+        [RepositoryQuery]
+        public virtual BookList LinqGetIfChildren_All_Any()
         {
             var q = this.CreateLinqQuery();
             q = q.Where(b => b.ChapterList.Concrete().All(c =>
                 c.SectionList.Cast<Section>().Any(s => s.SectionOwnerId != null)
                 ));
             q = q.OrderBy(b => b.Name);
-            return this.QueryList(q);
+            return (BookList)this.QueryData(q);
         }
 
-        public BookList LinqGetIfChildren_All_All()
-        {
-            return this.FetchList(r => r.DA_LinqGetIfChildren_All_All());
-        }
-        private EntityList DA_LinqGetIfChildren_All_All()
+        [RepositoryQuery]
+        public virtual BookList LinqGetIfChildren_All_All()
         {
             var q = this.CreateLinqQuery();
             q = q.Where(b => b.ChapterList.Concrete().All(c =>
                 c.SectionList.Cast<Section>().All(s => s.SectionOwnerId != null)
                 ));
             q = q.OrderBy(b => b.Name);
-            return this.QueryList(q);
+            return (BookList)this.QueryData(q);
         }
+
+        //不再支持没有参数类型的模糊查找。
+        //public BookList LinqGetByNullableFetchBy(double? price)
+        //{
+        //    return this.FetchList(price);
+        //}
+        //private EntityList FetchBy(double? price)
+        //{
+        //    var q = this.CreateLinqQuery();
+        //    q = q.Where(e => e.Price == price);
+        //    return this.QueryList(q);
+        //}
+
+        //[RepositoryQuery]
+        //public virtual BookList GetWithEager()
+        //{
+        //    return (BookList)this.QueryList(q =>
+        //    {
+        //        q.EagerLoad(Book.ChapterListProperty);
+        //        q.EagerLoad(Chapter.SectionListProperty);
+        //        q.EagerLoad(Section.SectionOwnerProperty);
+        //    });
+        //}
     }
 
     [DataProviderFor(typeof(BookRepository))]

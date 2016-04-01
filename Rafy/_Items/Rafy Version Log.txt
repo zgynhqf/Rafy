@@ -10,6 +10,21 @@
  * 
 *******************************************************/
 
+3.49.3095
+    ★★公布、添加功能、！删除接口
+        引入 Castle.DynamicProxy 动态代理来实现分布式调用，将仓库中同时出现的两个方法减为一个方法。
+            EntityRepository 中删除 FetchList、FetchFirst、FetchCount、FetchTable 等方法。
+            仓库扩展类型中的查询实现方法降低了编写难度，与仓库中的查询编写模式保持一致。
+            使用新的仓库编写模式，修改了所有实体仓库中的查询方法，
+            单元测试：修复所有单元测试，并在单元测试中删除了 IPropertyQuery 相关的测试。
+        旧代码升级：
+            1.要升级到此版本，需要对旧的代码进行升级，可以使用以下正则表达式来对原有仓库中的查询方法代码进行升级：
+                查找：@"public (?<return>(?!LiteDataTable)\w+) (?<methodName>\w+)\((?<parameters>[\w\[\]\?,= ]*)\)(?<beforeReturn>\s+{((?!public).)+?)return this.Fetch\w+\(\w+ =>((?!public).)+?\)((?!public).)+?}((?!public).)+?private EntityList .+?{\s+(?<body2>.+?)return this.QueryList\((?<final>.+?;\s+})"
+                替换：@"[RepositoryQuery]
+        public virtual ${return} ${methodName}(${parameters})${beforeReturn}${body2}return (${return})this.QueryData(${final}"
+            2.更新 RafySDK，并更新代码段。
+            3.使用"工具"->"更新实体自动代码"来更新仓库的自动代码。
+
 2.48.3095
     ★★公布、添加功能
         添加 Rafy.SerialNumber 流水号插件，用于生成流水号。

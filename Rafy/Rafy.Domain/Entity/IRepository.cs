@@ -249,6 +249,13 @@ namespace Rafy.Domain
         /// 返回在仓库中保存后的实体。
         /// </returns>
         IDomainComponent Save(IDomainComponent component);
+
+        /// <summary>
+        /// 获取指定类型的仓库扩展。
+        /// </summary>
+        /// <typeparam name="TRepositoryExt"></typeparam>
+        /// <returns></returns>
+        TRepositoryExt Extension<TRepositoryExt>() where TRepositoryExt : class, IRepositoryExt;
     }
 
     /// <summary>

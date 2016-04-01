@@ -56,7 +56,7 @@ namespace UT
     [Serializable]
     public abstract class UnitTestEntityList : EntityList { }
 
-    public abstract class UnitTestEntityRepository : PropertyQueryRepository
+    public abstract class UnitTestEntityRepository : EntityRepository//PropertyQueryRepository
     {
         protected UnitTestEntityRepository() { }
 
@@ -65,17 +65,17 @@ namespace UT
             get { return QueryFactory.Instance; }
         }
 
-        internal EntityList QueryList(Action<IPropertyQuery> queryBuider, Predicate<Entity> filter = null, EntityList entityList = null)
-        {
-            var query = this.CreatePropertyQuery();
-            if (queryBuider != null) queryBuider(query);
-            return this.QueryList(new PropertyQueryArgs
-            {
-                PropertyQuery = query,
-                Filter = filter,
-                EntityList = entityList
-            });
-        }
+        //internal EntityList QueryList(Action<IPropertyQuery> queryBuider, Predicate<Entity> filter = null, EntityList entityList = null)
+        //{
+        //    var query = this.CreatePropertyQuery();
+        //    if (queryBuider != null) queryBuider(query);
+        //    return this.QueryList(new PropertyQueryArgs
+        //    {
+        //        PropertyQuery = query,
+        //        Filter = filter,
+        //        EntityList = entityList
+        //    });
+        //}
     }
 
     [DataProviderFor(typeof(UnitTestEntityRepository))]

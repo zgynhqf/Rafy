@@ -164,6 +164,34 @@ namespace Rafy.Domain.ORM
         }
 
         /// <summary>
+        /// 从持久层中查询数据。
+        /// 本方法只能由仓库中的方法来调用。本方法的返回值的类型将与仓库中方法的返回值保持一致。
+        /// 支持的返回值：EntityList、Entity、int、LiteDataTable。
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="paging"></param>
+        /// <param name="eagerLoad"></param>
+        /// <returns></returns>
+        public object QueryData(FormattedSql sql, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        {
+            var list = this.QueryList(sql, paging, eagerLoad);
+            return ReturnForRepository(list);
+        }
+
+        /// <summary>
+        /// 从持久层中查询数据。
+        /// 本方法只能由仓库中的方法来调用。本方法的返回值的类型将与仓库中方法的返回值保持一致。
+        /// 支持的返回值：EntityList、Entity、int、LiteDataTable。
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public object QueryData(SqlQueryArgs args)
+        {
+            var list = this.QueryList(args);
+            return ReturnForRepository(list);
+        }
+
+        /// <summary>
         /// 使用 sql 语句来查询实体。
         /// </summary>
         /// <param name="sql">sql 语句，返回的结果集的字段，需要保证与属性映射的字段名相同。</param>

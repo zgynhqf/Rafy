@@ -111,12 +111,8 @@ namespace Rafy.Domain.ORM.DbMigration.Presistence
     {
         protected DbMigrationHistoryRepository() { }
 
-        public DbMigrationHistoryList GetByDb(string database)
-        {
-            return this.FetchList(database) as DbMigrationHistoryList;
-        }
-
-        protected EntityList FetchBy(string database)
+        [RepositoryQuery]
+        public virtual DbMigrationHistoryList GetByDb(string database)
         {
             var table = qf.Table(this);
             var q = qf.Query(
@@ -124,10 +120,11 @@ namespace Rafy.Domain.ORM.DbMigration.Presistence
                 where: qf.Constraint(table.Column(DbMigrationHistory.DatabaseProperty), database)
             );
 
-            return this.QueryList(q);
+            return (DbMigrationHistoryList)this.QueryData(q);
         }
 
-        protected EntityList FetchBy(DbMigrationHistoryQueryCriteria criteria)
+        [RepositoryQuery]
+        public virtual DbMigrationHistoryList GetBy(DbMigrationHistoryQueryCriteria criteria)
         {
             var q = qf.Query(this);
             q.AddConstraintIf(DbMigrationHistory.DatabaseProperty, PropertyOperator.Contains, criteria.Database);
@@ -140,7 +137,7 @@ namespace Rafy.Domain.ORM.DbMigration.Presistence
                 q.AddConstraintIf(DbMigrationHistory.TimeIdProperty, PropertyOperator.LessEqual, criteria.EndTime.Value.Ticks);
             }
 
-            return this.QueryList(q);
+            return (DbMigrationHistoryList)this.QueryData(q);
         }
 
         [DataProviderFor(typeof(DbMigrationHistoryRepository))]

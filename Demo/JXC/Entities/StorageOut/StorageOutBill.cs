@@ -101,7 +101,8 @@ namespace JXC
             this.DataSaver = new StorageOutBillSaver();
         }
 
-        protected EntityList FetchBy(TimeSpanCriteria criteria)
+        [RepositoryQuery]
+        public virtual StorageOutBillList GetBy(TimeSpanCriteria criteria)
         {
             var f = QueryFactory.Instance;
             var t = f.Table(this.Repository);
@@ -113,7 +114,7 @@ namespace JXC
                     t.Column(StorageOutBill.DateProperty).LessEqual(criteria.To)
                 )
             );
-            return this.QueryList(q);
+            return (StorageOutBillList)this.QueryData(q);
         }
 
         private class StorageOutBillSaver : RdbDataSaver

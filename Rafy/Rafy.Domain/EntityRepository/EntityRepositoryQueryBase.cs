@@ -72,6 +72,20 @@ namespace Rafy.Domain
         }
 
         /// <summary>
+        /// 从持久层中查询数据。
+        /// 本方法只能由仓库中的方法来调用。本方法的返回值的类型将与仓库中方法的返回值保持一致。
+        /// 支持的返回值：EntityList、Entity、int、LiteDataTable。
+        /// </summary>
+        /// <param name="queryable"></param>
+        /// <param name="paging"></param>
+        /// <param name="eagerLoad"></param>
+        /// <returns></returns>
+        protected object QueryData(IQueryable queryable, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        {
+            return this.DataQueryer.QueryData(queryable, paging, eagerLoad);
+        }
+
+        /// <summary>
         /// 通过 linq 来查询实体。
         /// </summary>
         /// <param name="queryable">linq 查询对象。</param>
@@ -104,6 +118,33 @@ namespace Rafy.Domain
         #region 数据层查询接口 - IQuery
 
         /// <summary>
+        /// 通过 IQuery 对象从持久层中查询数据。
+        /// 本方法只能由仓库中的方法来调用。本方法的返回值的类型将与仓库中方法的返回值保持一致。
+        /// 支持的返回值：EntityList、Entity、int、LiteDataTable。
+        /// </summary>
+        /// <param name="query">查询对象。</param>
+        /// <param name="paging">分页信息。</param>
+        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="markTreeFullLoaded">如果某次查询结果是一棵完整的子树，那么必须设置此参数为 true ，才可以把整个树标记为完整加载。</param>
+        /// <returns></returns>
+        protected object QueryData(IQuery query, PagingInfo paging = null, EagerLoadOptions eagerLoad = null, bool markTreeFullLoaded = false)
+        {
+            return this.DataQueryer.QueryData(query, paging, eagerLoad, markTreeFullLoaded);
+        }
+
+        /// <summary>
+        /// 通过 IQuery 对象从持久层中查询数据。
+        /// 本方法只能由仓库中的方法来调用。本方法的返回值的类型将与仓库中方法的返回值保持一致。
+        /// 支持的返回值：EntityList、Entity、int。
+        /// </summary>
+        /// <param name="args">The arguments.</param>
+        /// <returns></returns>
+        protected object QueryData(EntityQueryArgs args)
+        {
+            return this.DataQueryer.QueryData(args);
+        }
+
+        /// <summary>
         /// 通过 IQuery 对象来查询实体。
         /// </summary>
         /// <param name="query">查询对象。</param>
@@ -113,7 +154,7 @@ namespace Rafy.Domain
         /// <returns></returns>
         protected EntityList QueryList(IQuery query, PagingInfo paging = null, EagerLoadOptions eagerLoad = null, bool markTreeFullLoaded = false)
         {
-            return DataQueryer.QueryList(query, paging, eagerLoad, markTreeFullLoaded);
+            return this.DataQueryer.QueryList(query, paging, eagerLoad, markTreeFullLoaded);
         }
 
         /// <summary>
@@ -121,11 +162,9 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="args">The arguments.</param>
         /// <returns></returns>
-        /// <exception cref="System.NotSupportedException">使用内存过滤器的同时，不支持提供分页参数。</exception>
-        /// <exception cref="System.InvalidProgramException"></exception>
         protected EntityList QueryList(EntityQueryArgs args)
         {
-            return DataQueryer.QueryList(args);
+            return this.DataQueryer.QueryList(args);
         }
 
         /// <summary>
@@ -136,7 +175,7 @@ namespace Rafy.Domain
         /// <returns></returns>
         protected LiteDataTable QueryTable(IQuery query, PagingInfo paging = null)
         {
-            return DataQueryer.QueryTable(query, paging);
+            return this.DataQueryer.QueryTable(query, paging);
         }
 
         #endregion

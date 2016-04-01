@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建日期：20131212
@@ -135,23 +135,17 @@ namespace UT
         /// </summary>
         protected ArticleRepository() { }
 
-        public ArticleList GetForTwoJoinTest()
-        {
-            return this.FetchList(r => r.DA_GetForTwoJoinTest());
-        }
-        private EntityList DA_GetForTwoJoinTest()
+        [RepositoryQuery]
+        public virtual ArticleList GetForTwoJoinTest()
         {
             var q = this.CreateLinqQuery();
             //对同时引用 BlogUser 表的两个引用实体（一个可空，一个非空），进行查询。
             q = q.Where(e => (e.Administrator.UserName == "admin" || e.AdministratorId == null) && e.User.UserName == "huqf");
-            return this.QueryList(q);
+            return (ArticleList)this.QueryData(q);
         }
 
-        public LiteDataTable GetAllInTable()
-        {
-            return this.FetchTable(r => r.DA_GetAllInTable());
-        }
-        private LiteDataTable DA_GetAllInTable()
+        [RepositoryQuery]
+        public virtual LiteDataTable GetAllInTable()
         {
             return (this.DataQueryer as RdbDataQueryer).QueryTable(@"
 select * from Article

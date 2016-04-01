@@ -105,14 +105,10 @@ namespace JXC
     {
         protected OrderStorageInBillRepository() { }
 
-        public OrderStorageInBillList GetByOrderId(int orderId)
+        [RepositoryQuery]
+        public virtual OrderStorageInBillList GetByOrderId(int orderId)
         {
-            return this.FetchList(orderId);
-        }
-
-        protected EntityList FetchBy(int orderId)
-        {
-            return this.QueryList(q => q.Constrain(OrderStorageInBill.OrderIdProperty).Equal(orderId));
+            return (OrderStorageInBillList)this.QueryList(q => q.Constrain(OrderStorageInBill.OrderIdProperty).Equal(orderId));
         }
     }
 }

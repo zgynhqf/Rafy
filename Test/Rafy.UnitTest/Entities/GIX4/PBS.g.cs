@@ -119,72 +119,6 @@ namespace UT
         #region 私有方法，本类内部使用
 
         /// <summary>
-        /// 在查询接口方法中，调用此方法来向服务端执行对应参数的 FetchBy 数据层方法，并返回第一个实体。
-        /// </summary>
-        /// <param name="parameters">可传递多个参数。</param>
-        /// <returns>返回服务端返回的列表中的第一个实体。</returns>
-        [DebuggerStepThrough]
-        private new PBS FetchFirst(params object[] parameters)
-        {
-            return base.FetchFirst(parameters) as PBS;
-        }
-
-        /// <summary>
-        /// 在查询接口方法中，调用此方法来向服务端执行对应参数的 FetchBy 数据层方法，并返回满足条件的实体列表。
-        /// </summary>
-        /// <param name="parameters">可传递多个参数。</param>
-        /// <returns>返回满足条件的实体列表。</returns>
-        [DebuggerStepThrough]
-        private new PBSList FetchList(params object[] parameters)
-        {
-            return base.FetchList(parameters) as PBSList;
-        }
-
-        /// <summary>
-        /// 在查询接口方法中，调用此方法来导向服务端执行指定的数据层查询方法，并返回统计的行数。
-        /// </summary>
-        /// <param name="dataQueryExp">调用子仓库类中定义的数据查询方法的表达式。</param>
-        /// <returns>返回统计的行数。</returns>
-        [DebuggerStepThrough]
-        protected int FetchCount(Expression<Func<PBSRepository, EntityList>> dataQueryExp)
-        {
-            return this.FetchCount<PBSRepository>(dataQueryExp);
-        }
-
-        /// <summary>
-        /// 在查询接口方法中，调用此方法来导向服务端执行指定的数据层查询方法，并返回第一个满足条件的实体。
-        /// </summary>
-        /// <param name="dataQueryExp">调用仓库类中定义的数据查询方法的表达式。</param>
-        /// <returns>返回第一个满足条件的实体。</returns>
-        [DebuggerStepThrough]
-        private PBS FetchFirst(Expression<Func<PBSRepository, EntityList>> dataQueryExp)
-        {
-            return this.FetchFirst<PBSRepository>(dataQueryExp) as PBS;
-        }
-
-        /// <summary>
-        /// 在查询接口方法中，调用此方法来向服务端执行指定的数据层查询方法，并返回满足条件的实体列表。
-        /// </summary>
-        /// <param name="dataQueryExp">调用仓库类中定义的数据查询方法的表达式。</param>
-        /// <returns>返回满足条件的实体列表。</returns>
-        [DebuggerStepThrough]
-        private PBSList FetchList(Expression<Func<PBSRepository, EntityList>> dataQueryExp)
-        {
-            return this.FetchList<PBSRepository>(dataQueryExp) as PBSList;
-        }
-
-        /// <summary>
-        /// 在查询接口方法中，调用此方法来向服务端执行指定的数据层查询方法，并返回满足条件的数据表格。
-        /// </summary>
-        /// <param name="dataQueryExp">调用仓库类中定义的数据查询方法的表达式。</param>
-        /// <returns>返回满足条件的数据表格。</returns>
-        [DebuggerStepThrough]
-        private LiteDataTable FetchTable(Expression<Func<PBSRepository, LiteDataTable>> dataQueryExp)
-        {
-            return this.FetchTable<PBSRepository>(dataQueryExp);
-        }
-
-        /// <summary>
         /// 创建一个实体类的 Linq 查询器
         /// </summary>
         /// <returns></returns>
@@ -275,7 +209,7 @@ namespace UT
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new PBSList GetAll(PagingInfo paging= null, EagerLoadOptions eagerLoad = null)
+        public new PBSList GetAll(PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
         {
             return base.GetAll(paging, eagerLoad) as PBSList;
         }
@@ -327,6 +261,17 @@ namespace UT
         public new PBSList GetBy(CommonQueryCriteria criteria)
         {
             return base.GetBy(criteria) as PBSList;
+        }
+    
+        /// <summary>
+        /// 通过 CommonQueryCriteria 来查询单一实体。
+        /// </summary>
+        /// <param name="criteria">常用查询条件。</param>
+        /// <returns></returns>
+        [DebuggerStepThrough]
+        public new PBS GetFirstBy(CommonQueryCriteria criteria)
+        {
+            return base.GetFirstBy(criteria) as PBS;
         }
 
         /// <summary>

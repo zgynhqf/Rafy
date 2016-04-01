@@ -31,9 +31,9 @@ namespace Rafy.Domain
     public static class EntityConvention
     {
         /// <summary>
-        /// 实体仓库数据层查询方法的约定名称。
+        /// 实体仓库数据层查询根据参数类型进行定位时的方法的约定名称。
         /// </summary>
-        public const string QueryMethod = "FetchBy";
+        public const string GetByCriteriaMethod = "GetBy";
 
         ///// <summary>
         ///// 目前实体使用的主键类型。Int。

@@ -200,9 +200,7 @@ namespace Rafy.Domain
         {
             get
             {
-                var ieqc = FinalDataPortal.CurrentCriteria as IEQC;
-                if (ieqc == null) throw new NotSupportedException("实体查询必须使用 FetchCount、FetchFirst、FetchList、FetchTable 等方法。");
-                return ieqc;
+                return FinalDataPortal.CurrentIEQC;
             }
         }
     }

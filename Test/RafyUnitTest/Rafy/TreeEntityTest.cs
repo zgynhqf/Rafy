@@ -829,56 +829,6 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void TET_Query_DefaultOrderBy_TreeIndex_IPropertyQuery()
-        {
-            var user = new TestUser
-            {
-                TestTreeTaskList =
-                {
-                    new TestTreeTask
-                    {
-                        TreeChildren =
-                        {
-                            new TestTreeTask
-                            {
-                                TreeChildren =
-                                {
-                                    new TestTreeTask(),
-                                    new TestTreeTask(),
-                                }
-                            },
-                            new TestTreeTask(),
-                        }
-                    }
-                }
-            };
-
-            var repo = RF.Concrete<TestTreeTaskRepository>();
-            using (RF.TransactionScope(repo))
-            {
-                RF.Save(user);
-
-                var list = repo.GetByParentId(user.Id);
-                for (int i = 1, c = list.Count; i < c; i++)
-                {
-                    var item1 = list[i - 1];
-                    var item2 = list[i];
-                    Assert.IsTrue(string.Compare(item1.TreeIndex, item2.TreeIndex) == -1, "默认应该按照 TreeIndex 正序排列。");
-                }
-
-                //按照 Id 排序的功能应该无效。
-                var success = false;
-                try
-                {
-                    list = repo.GetAndOrderByIdDesc();
-                    success = true;
-                }
-                catch { }
-                Assert.IsFalse(success, "默认应该按照 TreeIndex 正 序排列。");
-            }
-        }
-
-        [TestMethod]
         public void TET_Query_DefaultOrderBy_TreeIndex()
         {
             var user = new TestUser
@@ -2293,5 +2243,55 @@ namespace RafyUnitTest
                 Assert.AreEqual(tasks[0].TreeChildren[1].TreeIndex, "001.002.");
             }
         }
+
+        //[TestMethod]
+        //public void TET_Query_DefaultOrderBy_TreeIndex_IPropertyQuery()
+        //{
+        //    var user = new TestUser
+        //    {
+        //        TestTreeTaskList =
+        //        {
+        //            new TestTreeTask
+        //            {
+        //                TreeChildren =
+        //                {
+        //                    new TestTreeTask
+        //                    {
+        //                        TreeChildren =
+        //                        {
+        //                            new TestTreeTask(),
+        //                            new TestTreeTask(),
+        //                        }
+        //                    },
+        //                    new TestTreeTask(),
+        //                }
+        //            }
+        //        }
+        //    };
+
+        //    var repo = RF.Concrete<TestTreeTaskRepository>();
+        //    using (RF.TransactionScope(repo))
+        //    {
+        //        RF.Save(user);
+
+        //        var list = repo.GetByParentId(user.Id);
+        //        for (int i = 1, c = list.Count; i < c; i++)
+        //        {
+        //            var item1 = list[i - 1];
+        //            var item2 = list[i];
+        //            Assert.IsTrue(string.Compare(item1.TreeIndex, item2.TreeIndex) == -1, "默认应该按照 TreeIndex 正序排列。");
+        //        }
+
+        //        //按照 Id 排序的功能应该无效。
+        //        var success = false;
+        //        try
+        //        {
+        //            list = repo.GetAndOrderByIdDesc();
+        //            success = true;
+        //        }
+        //        catch { }
+        //        Assert.IsFalse(success, "默认应该按照 TreeIndex 正 序排列。");
+        //    }
+        //}
     }
 }

@@ -13,9 +13,9 @@
         <Snippet>
             <Declarations>
                 <Literal>
-                    <ID>EntityName</ID>
-                    <ToolTip>实体类名</ToolTip>
-                    <Default>EntityName</Default>
+                    <ID>ReturnValue</ID>
+                    <ToolTip>返回值</ToolTip>
+                    <Default>EntityList</Default>
                 </Literal>
                 <Literal>
                     <ID>MethodName</ID>
@@ -37,11 +37,17 @@
                     <ToolTip>传入参数</ToolTip>
                     <Default>parameter1</Default>
                 </Literal>
+                <Literal>
+                    <ID>EntityName</ID>
+                    <ToolTip>实体类型</ToolTip>
+                    <Default>Entity</Default>
+                </Literal>
             </Declarations>
             <Code Language="csharp">
-                <![CDATA[public $EntityName$List $MethodName$($Parameters$)
+                <![CDATA[[RepositoryQuery]
+        public virtual $ReturnValue$ $MethodName$($Parameters$)
         {
-            return this.FetchList(new CommonQueryCriteria
+            return ($ReturnValue$)this.DataProvider.GetBy(new CommonQueryCriteria
             {
                 new PropertyMatch($EntityName$.$Property1$, $InputParameters$),
                 //new PropertyMatch($EntityName$.Property2Property, PropertyMatchOperator.Equal, parameter2),$end$

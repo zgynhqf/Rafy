@@ -27,8 +27,21 @@ namespace Rafy.Domain.DataPortal
         /// <summary>
         /// 当前查询正在使用的单一条件。
         /// </summary>
-        [ThreadStatic]
-        internal static object CurrentCriteria;
+        internal static readonly AppContextItem<object> CurrentQueryCriteriaItem =
+            new AppContextItem<object>("Rafy.Domain.DataPortal.FinalDataPortal.CurrentCriteria");
+
+        /// <summary>
+        /// 当前正在使用的查询参数
+        /// </summary>
+        internal static IEQC CurrentIEQC
+        {
+            get
+            {
+                var ieqc = CurrentQueryCriteriaItem.Value as IEQC;
+                if (ieqc == null) throw new InvalidProgramException("实体查询时必须使用正确的格式，查询方法必须标记为虚方法，否则无法判断查询中的返回值。");
+                return ieqc;
+            }
+        }
 
         /// <summary>
         /// Get an existing business object.
@@ -39,10 +52,16 @@ namespace Rafy.Domain.DataPortal
         /// <returns></returns>
         public DataPortalResult Fetch(Type objectType, object criteria, DataPortalContext context)
         {
-            var obj = Fetch(objectType, criteria);
+            using (CurrentQueryCriteriaItem.UseScopeValue(criteria))
+            {
+                var instance = RepositoryFactoryHost.Factory.Find(objectType) as EntityRepository;
 
-            // return the populated business object as a result
-            return new DataPortalResult(obj);
+                //如果是实体查询，则应该用其中的 Parameters 数组来查找对应的数据层方法。
+                var res = instance.PortalFetch(criteria as IEQC);
+
+                // return the populated business object as a result
+                return new DataPortalResult(res);
+            }
         }
 
         /// <summary>
@@ -60,56 +79,11 @@ namespace Rafy.Domain.DataPortal
         }
 
         /// <summary>
-        /// 非仓库类在使用 Fetch 时的回调方法名。
-        /// </summary>
-        private const string FetchMethod = "PortalFetch";
-
-        /// <summary>
-        /// 调用某个类型的查询方法以返回它的数据。
-        /// </summary>
-        /// <param name="objectType"></param>
-        /// <param name="criteria"></param>
-        /// <returns></returns>
-        internal static object Fetch(Type objectType, object criteria)
-        {
-            object res = null;
-
-            //为了防止在查询内部再次发起查询，需要存储旧的值。
-            object oldValue = CurrentCriteria;
-
-            try
-            {
-                CurrentCriteria = criteria;
-
-                if (objectType.IsSubclassOf(typeof(EntityRepository)))
-                {
-                    var instance = RepositoryFactoryHost.Factory.Find(objectType) as EntityRepository;
-                    //如果是实体查询，则应该用其中的 Parameters 数组来查找对应的数据层方法。
-                    res = instance.PortalFetch(criteria as IEQC);
-                }
-                else
-                {
-                    //创建一个对象。
-                    var instance = Activator.CreateInstance(objectType, true);
-                    MethodCaller.CallMethodIfImplemented(instance, FetchMethod, new object[] { criteria }, out res);
-                }
-            }
-            finally
-            {
-                CurrentCriteria = oldValue;
-            }
-
-            //直接返回该方法的返回值。
-            return res;
-        }
-
-        /// <summary>
         /// 直接更新某个对象
         /// </summary>
         /// <param name="obj"></param>
         internal static void Update(object obj)
         {
-            // tell the business object to update itself
             var component = obj as IDomainComponent;
             if (component != null)
             {
@@ -128,6 +102,7 @@ namespace Rafy.Domain.DataPortal
             //{
             //    void DataPortal_Update();
             //}
+            //// tell the business object to update itself
             //var updatable = obj as IDataPortalUpdatable;
             //if (updatable != null)
             //{

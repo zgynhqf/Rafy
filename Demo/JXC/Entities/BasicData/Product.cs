@@ -240,18 +240,23 @@ namespace JXC
     {
         protected ProductRepository() { }
 
-        public Product GetByBarcode(string barcode)
+        [RepositoryQuery]
+        public virtual Product GetByBarcode(string barcode)
         {
-            return this.FetchFirst(barcode);
+            return (Product)this.DataProvider.GetBy(new CommonQueryCriteria
+            {
+                new PropertyMatch(Product.BarcodeProperty, barcode),
+            });
         }
 
         /// <summary>
         /// 导航面板查询
         /// </summary>
         /// <param name="criteria"></param>
-        protected EntityList FetchBy(ProductNavigationCriteria criteria)
+        [RepositoryQuery]
+        public virtual ProductList GetBy(ProductNavigationCriteria criteria)
         {
-            return this.QueryList(q =>
+            return (ProductList)this.QueryList(q =>
             {
                 //q.JoinRef(Product.ProductCategoryIdProperty));
 
@@ -275,11 +280,6 @@ namespace JXC
                     });
                 }
             });
-        }
-
-        protected EntityList FetchBy(string barcode)
-        {
-            return this.QueryList(q => q.Constrain(Product.BarcodeProperty).Equal(barcode));
         }
     }
 

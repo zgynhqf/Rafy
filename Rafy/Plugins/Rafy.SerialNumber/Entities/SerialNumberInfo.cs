@@ -157,9 +157,10 @@ namespace Rafy.SerialNumber
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns></returns>
-        public SerialNumberInfo GetByName(string name)
+        [RepositoryQuery]
+        public virtual SerialNumberInfo GetByName(string name)
         {
-            return this.FetchFirst(new CommonQueryCriteria
+            return (SerialNumberInfo)this.DataProvider.GetBy(new CommonQueryCriteria
             {
                 new PropertyMatch(SerialNumberInfo.NameProperty, name)
             });

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -79,15 +79,12 @@ namespace UT
         /// </summary>
         protected FolderRepository() { }
 
-        public FolderList GetForIgnoreTest()
-        {
-            return this.FetchList(r => r.DA_GetForIgnoreTest());
-        }
-        private EntityList DA_GetForIgnoreTest()
+        [RepositoryQuery]
+        public virtual FolderList GetForIgnoreTest()
         {
             var q = this.CreateLinqQuery();
             q = q.Where(e => e.Name != "1.1");
-            return this.QueryList(q);
+            return (FolderList)this.QueryData(q);
         }
     }
 

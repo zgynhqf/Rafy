@@ -372,11 +372,8 @@ namespace Rafy.Customization
             this.DataPortalLocation = DataPortalLocation.Local;
         }
 
-        public ViewConfigurationModelList GetByEntity(Type entityType, string viewName)
-        {
-            return this.FetchList(r => r.DA_GetByEntity(entityType, viewName));
-        }
-        private EntityList DA_GetByEntity(Type entityType, string viewName)
+        [RepositoryQuery]
+        public virtual ViewConfigurationModelList GetByEntity(Type entityType, string viewName)
         {
             var list = this.NewList();
 
@@ -390,18 +387,22 @@ namespace Rafy.Customization
             return list;
         }
 
-        public ViewConfigurationModel GetByName(ViewConfigurationModelNameCriteria c)
-        {
-            return this.FetchFirst(c);
-        }
         /// <summary>
         /// 导航面板查询
         /// </summary>
         /// <param name="criteria"></param>
-        protected EntityList FetchBy(ViewConfigurationModelNameCriteria criteria)
+        [RepositoryQuery]
+        public virtual ViewConfigurationModel GetBy(ViewConfigurationModelNameCriteria criteria)
         {
             Type entityType = ClientEntities.Find(criteria.EntityType).EntityType;
-            return this.DA_GetByEntity(entityType, criteria.ViewName);
+
+            var evm = UIModel.Views.Create(entityType, criteria.ViewName);
+
+            var m = new ViewConfigurationModel();
+            m.Read(evm);
+            m.MarkSaved();
+
+            return m;
         }
     }
 

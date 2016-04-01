@@ -216,19 +216,16 @@ namespace JXC
     {
         protected PurchaseOrderRepository() { }
 
-        public PurchaseOrderList GetByStatus(OrderStorageInStatus status)
+        [RepositoryQuery]
+        public virtual PurchaseOrderList GetByStatus(OrderStorageInStatus status)
         {
-            return this.FetchList(status);
+            return (PurchaseOrderList)this.QueryList(q => q.Constrain(PurchaseOrder.StorageInStatusProperty).Equal(status));
         }
 
-        protected EntityList FetchBy(OrderStorageInStatus status)
+        [RepositoryQuery]
+        public virtual PurchaseOrderList GetBy(ClientTimeSpanCriteria criteria)
         {
-            return this.QueryList(q => q.Constrain(PurchaseOrder.StorageInStatusProperty).Equal(status));
-        }
-
-        protected EntityList FetchBy(ClientTimeSpanCriteria criteria)
-        {
-            return this.QueryList(q =>
+            return (PurchaseOrderList)this.QueryList(q =>
             {
                 q.Constrain(PurchaseOrder.DateProperty).GreaterEqual(criteria.From)
                     .And().Constrain(PurchaseOrder.DateProperty).LessEqual(criteria.To);
@@ -240,9 +237,10 @@ namespace JXC
             });
         }
 
-        protected EntityList FetchBy(TimeSpanCriteria criteria)
+        [RepositoryQuery]
+        public virtual PurchaseOrderList GetBy(TimeSpanCriteria criteria)
         {
-            return this.QueryList(q =>
+            return (PurchaseOrderList)this.QueryList(q =>
             {
                 q.Constrain(PurchaseOrder.DateProperty).GreaterEqual(criteria.From)
                     .And().Constrain(PurchaseOrder.DateProperty).LessEqual(criteria.To);

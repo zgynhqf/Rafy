@@ -312,7 +312,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Property_Id_Default_Object()
         {
-            var user = new GetAllCriteria();
+            var user = new CommonQueryCriteria();
             Assert.IsTrue(user.Id == null);
         }
 
@@ -743,31 +743,31 @@ namespace RafyUnitTest
             }
         }
 
-        [TestMethod]
-        public void ET_Repository_Query_Lambda()
-        {
-            var repository = RF.Concrete<TestUserRepository>();
-            using (RF.TransactionScope(repository))
-            {
-                repository.Save(new TestUser { Name = "AAA" });
+        //[TestMethod]
+        //public void ET_Repository_Query_Lambda()
+        //{
+        //    var repository = RF.Concrete<TestUserRepository>();
+        //    using (RF.TransactionScope(repository))
+        //    {
+        //        repository.Save(new TestUser { Name = "AAA" });
 
-                var list = repository.GetByName_Expression("AAA", PagingInfo.Empty);
-                Assert.IsTrue(list.Count == 1);
-            }
-        }
+        //        var list = repository.GetByName_Expression("AAA", PagingInfo.Empty);
+        //        Assert.IsTrue(list.Count == 1);
+        //    }
+        //}
 
-        [TestMethod]
-        public void ET_Repository_Query_Lambda_Count()
-        {
-            var repository = RF.Concrete<TestUserRepository>();
-            using (RF.TransactionScope(repository))
-            {
-                repository.Save(new TestUser { Name = "AAA" });
+        //[TestMethod]
+        //public void ET_Repository_Query_Lambda_Count()
+        //{
+        //    var repository = RF.Concrete<TestUserRepository>();
+        //    using (RF.TransactionScope(repository))
+        //    {
+        //        repository.Save(new TestUser { Name = "AAA" });
 
-                var count = repository.CountByName_Expression("AAA", PagingInfo.Empty);
-                Assert.IsTrue(count == 1);
-            }
-        }
+        //        var count = repository.CountByName_Expression("AAA", PagingInfo.Empty);
+        //        Assert.IsTrue(count == 1);
+        //    }
+        //}
 
         [TestMethod]
         public void ET_Repository_TableQuery_ColumnConflict()
@@ -983,7 +983,7 @@ namespace RafyUnitTest
                     dp.UpdateCurrent = true;
                     var c = Logger.ThreadDbAccessedCount;
                     repo.Save(book);
-                    Assert.IsTrue(Logger.ThreadDbAccessedCount == c + 2);
+                    Assert.AreEqual(Logger.ThreadDbAccessedCount, c + 2);
                 }
                 finally
                 {
@@ -1584,7 +1584,7 @@ namespace RafyUnitTest
                 var user = new TestUser { Age = 10, Name = name };
                 repo.Save(user);
 
-                var userList = TestUserRepositoryExt.GetByAge(repo, 10);
+                var userList = repo.Extension<TestUserRepositoryExt>().GetByAge(10);
 
                 var exsit = userList.Cast<TestUser>().Any(u => u.Age == 10 && u.Name == name);
                 Assert.IsTrue(exsit, "通过仓库扩展也可以查询到对应的实体。");
@@ -1657,7 +1657,7 @@ namespace RafyUnitTest
                 var user = new TestUser { Age = 100 };
                 repo.Save(user);
 
-                var userList = EntityRepositoryExtension.GetBySingleProperty(repo, TestUser.AgeProperty, 100);
+                var userList = repo.Extension<EntityRepositoryExtension>().GetBySingleProperty(TestUser.AgeProperty, 100);
                 Assert.IsTrue(userList.Count > 0);
 
                 var userList2 = repo.GetBy(new SinglePropertyCriteira
@@ -1672,12 +1672,12 @@ namespace RafyUnitTest
                 RF.Save(task);
 
                 var taskRepo = RF.Concrete<TestTreeTaskRepository>();
-                var taskList = EntityRepositoryExtension.GetBySingleProperty(taskRepo, TestTreeTask.TestUserIdProperty, user.Id);
+                var taskList = taskRepo.Extension<EntityRepositoryExtension>().GetBySingleProperty(TestTreeTask.TestUserIdProperty, user.Id);
                 Assert.IsTrue(taskList.Count > 0);
 
                 //查询 TestAdministrator
                 var adminRepo = RF.Concrete<TestAdministratorRepository>();
-                var adminList = EntityRepositoryExtension.GetBySingleProperty(adminRepo, TestUser.AgeProperty, 100);
+                var adminList = adminRepo.Extension<EntityRepositoryExtension>().GetBySingleProperty(TestUser.AgeProperty, 100);
                 Assert.IsTrue(adminList.Count > 0);
             }
         }

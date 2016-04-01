@@ -103,28 +103,6 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ORM_Query_OrderBy_IPropertyQuery()
-        {
-            var repo = RF.Concrete<TestUserRepository>();
-            using (RF.TransactionScope(repo))
-            {
-                repo.Save(new TestUser { Name = "1" });
-                repo.Save(new TestUser { Name = "2" });
-                repo.Save(new TestUser { Name = "3" });
-
-                var list = repo.GetByOrder(true);
-                Assert.IsTrue((list[0] as TestUser).Name == "1", "排序出错");
-                Assert.IsTrue((list[1] as TestUser).Name == "2", "排序出错");
-                Assert.IsTrue((list[2] as TestUser).Name == "3", "排序出错");
-
-                list = repo.GetByOrder(false);
-                Assert.IsTrue((list[0] as TestUser).Name == "3", "排序出错");
-                Assert.IsTrue((list[1] as TestUser).Name == "2", "排序出错");
-                Assert.IsTrue((list[2] as TestUser).Name == "1", "排序出错");
-            }
-        }
-
-        [TestMethod]
         public void ORM_Query_OrderBy()
         {
             var repo = RF.Concrete<TestUserRepository>();
@@ -147,24 +125,6 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ORM_Query_DefaultOrderBy_Id_IPropertyQuery()
-        {
-            var repo = RF.Concrete<TestUserRepository>();
-            using (RF.TransactionScope(repo))
-            {
-                for (int i = 0; i < 10; i++) { repo.Save(new TestUser()); }
-
-                var list = repo.GetByEmptyArgument();
-                for (int i = 1, c = list.Count; i < c; i++)
-                {
-                    var item2 = list[i];
-                    var item1 = list[i - 1];
-                    Assert.IsTrue(item1.Id < item2.Id, "默认应该按照 Id 正序排列。");
-                }
-            }
-        }
-
-        [TestMethod]
         public void ORM_Query_DefaultOrderBy_Id()
         {
             var repo = RF.Concrete<TestUserRepository>();
@@ -179,27 +139,6 @@ namespace RafyUnitTest
                     var item1 = list[i - 1];
                     Assert.IsTrue(item1.Id < item2.Id, "默认应该按照 Id 正序排列。");
                 }
-            }
-        }
-
-        [TestMethod]
-        public void ORM_Query_MatchCriteria_IPropertyQuery()
-        {
-            var repo = RF.Concrete<TestUserRepository>();
-            using (RF.TransactionScope(repo))
-            {
-                repo.Save(new TestUser { Age = 1, Name = "user1" });
-                repo.Save(new TestUser { Age = 1, Name = "user2" });
-                repo.Save(new TestUser { Age = 1, Name = "user2" });
-
-                var list = repo.GetByNameAge_PropertyQuery("user1", 1);
-                Assert.IsTrue(list.Count == 1);
-
-                list = repo.GetByNameAge_PropertyQuery("user2", 1);
-                Assert.IsTrue(list.Count == 2);
-
-                list = repo.GetByNameAge_PropertyQuery("user2", 2);
-                Assert.IsTrue(list.Count == 0);
             }
         }
 
@@ -268,27 +207,6 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ORM_Query_ByMultiParameters_IPropertyQuery()
-        {
-            var repo = RF.Concrete<TestUserRepository>();
-            using (RF.TransactionScope(repo))
-            {
-                repo.Save(new TestUser { Age = 1, Name = "user1" });
-                repo.Save(new TestUser { Age = 1, Name = "user2" });
-                repo.Save(new TestUser { Age = 1, Name = "user2" });
-
-                var list = repo.GetByNameAgeByMultiParameters("user1", 1);
-                Assert.IsTrue(list.Count == 1);
-
-                list = repo.GetByNameAgeByMultiParameters("user2", 1);
-                Assert.IsTrue(list.Count == 2);
-
-                list = repo.GetByNameAgeByMultiParameters("user2", 2);
-                Assert.IsTrue(list.Count == 0);
-            }
-        }
-
-        [TestMethod]
         public void ORM_Query_ByMultiParameters()
         {
             var repo = RF.Concrete<TestUserRepository>();
@@ -310,24 +228,6 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ORM_Query_ByMultiParameters_Null_IPropertyQuery()
-        {
-            var repo = RF.Concrete<TestUserRepository>();
-            using (RF.TransactionScope(repo))
-            {
-                repo.Save(new TestUser { Age = 1, Name = "user1" });
-                repo.Save(new TestUser { Age = 1, Name = "user2" });
-                repo.Save(new TestUser { Age = 1, Name = "user2" });
-
-                var list2 = repo.GetByNameAgeByMultiParameters(null, 1);
-                Assert.IsTrue(list2.Count == 3);
-
-                var list = repo.GetByNameAgeByMultiParameters(string.Empty, 1);
-                Assert.IsTrue(list.Count == 3);
-            }
-        }
-
-        [TestMethod]
         public void ORM_Query_ByMultiParameters_Null()
         {
             var repo = RF.Concrete<TestUserRepository>();
@@ -341,21 +241,6 @@ namespace RafyUnitTest
                 Assert.IsTrue(list2.Count == 3);
 
                 var list = repo.GetByNameAgeByMultiParameters2(string.Empty, 1);
-                Assert.IsTrue(list.Count == 3);
-            }
-        }
-
-        [TestMethod]
-        public void ORM_Query_ByMultiParameters_Empty_IPropertyQuery()
-        {
-            var repo = RF.Concrete<TestUserRepository>();
-            using (RF.TransactionScope(repo))
-            {
-                repo.Save(new TestUser { Age = 1, Name = "user1" });
-                repo.Save(new TestUser { Age = 1, Name = "user2" });
-                repo.Save(new TestUser { Age = 1, Name = "user2" });
-
-                var list = repo.GetByEmptyArgument();
                 Assert.IsTrue(list.Count == 3);
             }
         }
@@ -406,39 +291,6 @@ namespace RafyUnitTest
 
                 var list = repo.GetByIds2("user", a1.Id, a2.Id);
                 Assert.IsTrue(list.Count == 2);
-            }
-        }
-
-        [TestMethod]
-        public void ORM_Query_EagerLoad_IPropertyQuery()
-        {
-            var repo = RF.Concrete<BookRepository>();
-            using (RF.TransactionScope(repo))
-            {
-                var so = new SectionOwner();
-                RF.Save(so);
-
-                var book = CreateAggtBook(so);
-                RF.Save(book);
-
-                //查询的数据访问测试。
-                var oldCount = Logger.DbAccessedCount;
-                var all = repo.GetWithEager();
-                var newCount = Logger.DbAccessedCount;
-                Assert.IsTrue(newCount - oldCount == 4, "应该只进行了 4 次数据库查询。");
-
-                //无懒加载测试。
-                foreach (Book book2 in all)
-                {
-                    foreach (Chapter chapter in book2.ChapterList)
-                    {
-                        foreach (Section section in chapter.SectionList)
-                        {
-                            var so2 = section.SectionOwner;
-                        }
-                    }
-                }
-                Assert.IsTrue(Logger.DbAccessedCount == newCount, "由于数据已经全部加载完成，所以这里不会发生懒加载。");
             }
         }
 
@@ -578,38 +430,38 @@ namespace RafyUnitTest
             }
         }
 
-        [TestMethod]
-        public void ORM_Query_Count_IPropertyQuery()
-        {
-            var repo = RF.Concrete<ChapterRepository>();
-            using (RF.TransactionScope(repo))
-            {
-                RF.Save(new Book
-                {
-                    Name = "1",
-                    ChapterList =
-                    {
-                        new Chapter { Name = "1.1"},
-                        new Chapter { Name = "1.2"}
-                    }
-                });
-                RF.Save(new Book
-                {
-                    Name = "2",
-                    ChapterList =
-                    {
-                        new Chapter { Name = "2.1"},
-                        new Chapter { Name = "2.2"},
-                        new Chapter { Name = "2.3"}
-                    }
-                });
+        //[TestMethod]
+        //public void ORM_Query_Count_IPropertyQuery()
+        //{
+        //    var repo = RF.Concrete<ChapterRepository>();
+        //    using (RF.TransactionScope(repo))
+        //    {
+        //        RF.Save(new Book
+        //        {
+        //            Name = "1",
+        //            ChapterList =
+        //            {
+        //                new Chapter { Name = "1.1"},
+        //                new Chapter { Name = "1.2"}
+        //            }
+        //        });
+        //        RF.Save(new Book
+        //        {
+        //            Name = "2",
+        //            ChapterList =
+        //            {
+        //                new Chapter { Name = "2.1"},
+        //                new Chapter { Name = "2.2"},
+        //                new Chapter { Name = "2.3"}
+        //            }
+        //        });
 
-                var count = repo.CountByBookName("1");
-                Assert.IsTrue(count == 2);
-                count = repo.CountByBookName("2");
-                Assert.IsTrue(count == 3);
-            }
-        }
+        //        var count = repo.CountByBookName("1");
+        //        Assert.IsTrue(count == 2);
+        //        count = repo.CountByBookName("2");
+        //        Assert.IsTrue(count == 3);
+        //    }
+        //}
 
         [TestMethod]
         public void ORM_Query_Count()
@@ -905,22 +757,6 @@ namespace RafyUnitTest
                 Assert.IsTrue((list[0] as Book).Name == "123");
                 Assert.IsTrue((list[1] as Book).Name == "234");
                 Assert.IsTrue((list[2] as Book).Name == "345");
-            }
-        }
-
-        [TestMethod]
-        public void ORM_Query_TwoPropertiesConstraint_IPropertyQuery()
-        {
-            var repo = RF.Concrete<BookRepository>();
-            using (RF.TransactionScope(repo))
-            {
-                repo.Save(new Book { Code = "1", Name = "2" });
-                repo.Save(new Book { Code = "2", Name = "2" });
-                repo.Save(new Book { Code = "3", Name = "1" });
-                repo.Save(new Book { Code = "4", Name = "4" });
-
-                var list = repo.Get_NameEqualsCode();
-                Assert.IsTrue(list.Count == 2);
             }
         }
 
@@ -1920,27 +1756,6 @@ namespace RafyUnitTest
                 repo.Save(new Book { Code = "c6", Name = "n6" });
 
                 var list = repo.LinqGet_BracketOrAndOr("c1", "c2", "c3", "n3", "n4", "n5");
-                Assert.IsTrue(list.Count == 1);
-            }
-        }
-
-        /// <summary>
-        /// Linq 混合 IPropertyQuery 使用。
-        /// </summary>
-        [TestMethod]
-        public void ORM_LinqQuery_WithPropertyQuery()
-        {
-            var repo = RF.Concrete<BookRepository>();
-            using (RF.TransactionScope(repo))
-            {
-                repo.Save(new Book { Code = "c1", Name = "n1" });
-                repo.Save(new Book { Code = "c2", Name = "n2" });
-                repo.Save(new Book { Code = "c3", Name = "n3" });
-                repo.Save(new Book { Code = "c4", Name = "n4" });
-                repo.Save(new Book { Code = "c5", Name = "n5" });
-                repo.Save(new Book { Code = "c6", Name = "n6" });
-
-                var list = repo.LinqGet_WithPropertyQuery("c2", "c3", "c4", "n3", "n4", "n5");
                 Assert.IsTrue(list.Count == 1);
             }
         }
@@ -3124,14 +2939,14 @@ ORDER BY Roles.Id DESC, Roles.name DESC";
                 repo.Save(new TestUser { Age = 1, Name = "user" });
 
                 var pagingInfo = new PagingInfo(2, 1, true);
-                var list = repo.GetByNameAgeByMultiParameters("user", 1, pagingInfo);
+                var list = repo.GetByNameAgeByMultiParameters2("user", 1, pagingInfo);
                 Assert.IsTrue(list.Count == 1);
                 Assert.IsTrue(pagingInfo.TotalCount == 3);
 
-                list = repo.GetByNameAgeByMultiParameters("user", 1, PagingInfo.Empty);
+                list = repo.GetByNameAgeByMultiParameters2("user", 1, PagingInfo.Empty);
                 Assert.IsTrue(list.Count == 3);
 
-                list = repo.GetByNameAgeByMultiParameters("user", 1, null);
+                list = repo.GetByNameAgeByMultiParameters2("user", 1, null);
                 Assert.IsTrue(list.Count == 3);
             }
         }
@@ -5573,7 +5388,7 @@ ORDER BY Article.Code ASC");
                 {
                     System.IO.File.WriteAllText(@"D:\1.1.2 使用 DbAccesser 添加 " + Config_LineCount + " 行数据耗时(ms)：" + watch.Elapsed.TotalMilliseconds + "，平均一行需要：" + watch.Elapsed.TotalMilliseconds / Config_LineCount, "1");
                 }
-                Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 1 * Config_LineCount, "添加一行数据，不能超过 1 ms。");
+                Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 10 * Config_LineCount, "添加一行数据，不能超过 10 ms。");
             }
             finally
             {
@@ -5643,7 +5458,7 @@ ORDER BY Article.Code ASC");
                 {
                     System.IO.File.WriteAllText(@"D:\1.1.1 使用 DbAccesser 添加 " + Config_LineCount + " 行数据耗时(ms)：" + watch.Elapsed.TotalMilliseconds + "，平均一行需要：" + watch.Elapsed.TotalMilliseconds / Config_LineCount, "1");
                 }
-                Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 1 * Config_LineCount, "添加一行数据，不能超过 1 ms。");
+                Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 10 * Config_LineCount, "添加一行数据，不能超过 10 ms。");
             }
             finally
             {
@@ -5965,6 +5780,195 @@ ORDER BY Article.Code ASC");
             //all.Clear();
             //repo.Save(all);
         }
+
+        #endregion
+
+        #region IPropertyQuery
+
+        //[TestMethod]
+        //public void ORM_Query_OrderBy_IPropertyQuery()
+        //{
+        //    var repo = RF.Concrete<TestUserRepository>();
+        //    using (RF.TransactionScope(repo))
+        //    {
+        //        repo.Save(new TestUser { Name = "1" });
+        //        repo.Save(new TestUser { Name = "2" });
+        //        repo.Save(new TestUser { Name = "3" });
+
+        //        var list = repo.GetByOrder(true);
+        //        Assert.IsTrue((list[0] as TestUser).Name == "1", "排序出错");
+        //        Assert.IsTrue((list[1] as TestUser).Name == "2", "排序出错");
+        //        Assert.IsTrue((list[2] as TestUser).Name == "3", "排序出错");
+
+        //        list = repo.GetByOrder(false);
+        //        Assert.IsTrue((list[0] as TestUser).Name == "3", "排序出错");
+        //        Assert.IsTrue((list[1] as TestUser).Name == "2", "排序出错");
+        //        Assert.IsTrue((list[2] as TestUser).Name == "1", "排序出错");
+        //    }
+        //}
+
+        //[TestMethod]
+        //public void ORM_Query_DefaultOrderBy_Id_IPropertyQuery()
+        //{
+        //    var repo = RF.Concrete<TestUserRepository>();
+        //    using (RF.TransactionScope(repo))
+        //    {
+        //        for (int i = 0; i < 10; i++) { repo.Save(new TestUser()); }
+
+        //        var list = repo.GetByEmptyArgument();
+        //        for (int i = 1, c = list.Count; i < c; i++)
+        //        {
+        //            var item2 = list[i];
+        //            var item1 = list[i - 1];
+        //            Assert.IsTrue(item1.Id < item2.Id, "默认应该按照 Id 正序排列。");
+        //        }
+        //    }
+        //}
+
+        //[TestMethod]
+        //public void ORM_Query_MatchCriteria_IPropertyQuery()
+        //{
+        //    var repo = RF.Concrete<TestUserRepository>();
+        //    using (RF.TransactionScope(repo))
+        //    {
+        //        repo.Save(new TestUser { Age = 1, Name = "user1" });
+        //        repo.Save(new TestUser { Age = 1, Name = "user2" });
+        //        repo.Save(new TestUser { Age = 1, Name = "user2" });
+
+        //        var list = repo.GetByNameAge_PropertyQuery("user1", 1);
+        //        Assert.IsTrue(list.Count == 1);
+
+        //        list = repo.GetByNameAge_PropertyQuery("user2", 1);
+        //        Assert.IsTrue(list.Count == 2);
+
+        //        list = repo.GetByNameAge_PropertyQuery("user2", 2);
+        //        Assert.IsTrue(list.Count == 0);
+        //    }
+        //}
+
+        //[TestMethod]
+        //public void ORM_Query_ByMultiParameters_IPropertyQuery()
+        //{
+        //    var repo = RF.Concrete<TestUserRepository>();
+        //    using (RF.TransactionScope(repo))
+        //    {
+        //        repo.Save(new TestUser { Age = 1, Name = "user1" });
+        //        repo.Save(new TestUser { Age = 1, Name = "user2" });
+        //        repo.Save(new TestUser { Age = 1, Name = "user2" });
+
+        //        var list = repo.GetByNameAgeByMultiParameters("user1", 1);
+        //        Assert.IsTrue(list.Count == 1);
+
+        //        list = repo.GetByNameAgeByMultiParameters("user2", 1);
+        //        Assert.IsTrue(list.Count == 2);
+
+        //        list = repo.GetByNameAgeByMultiParameters("user2", 2);
+        //        Assert.IsTrue(list.Count == 0);
+        //    }
+        //}
+
+        //[TestMethod]
+        //public void ORM_Query_ByMultiParameters_Null_IPropertyQuery()
+        //{
+        //    var repo = RF.Concrete<TestUserRepository>();
+        //    using (RF.TransactionScope(repo))
+        //    {
+        //        repo.Save(new TestUser { Age = 1, Name = "user1" });
+        //        repo.Save(new TestUser { Age = 1, Name = "user2" });
+        //        repo.Save(new TestUser { Age = 1, Name = "user2" });
+
+        //        var list2 = repo.GetByNameAgeByMultiParameters(null, 1);
+        //        Assert.IsTrue(list2.Count == 3);
+
+        //        var list = repo.GetByNameAgeByMultiParameters(string.Empty, 1);
+        //        Assert.IsTrue(list.Count == 3);
+        //    }
+        //}
+
+        //[TestMethod]
+        //public void ORM_Query_ByMultiParameters_Empty_IPropertyQuery()
+        //{
+        //    var repo = RF.Concrete<TestUserRepository>();
+        //    using (RF.TransactionScope(repo))
+        //    {
+        //        repo.Save(new TestUser { Age = 1, Name = "user1" });
+        //        repo.Save(new TestUser { Age = 1, Name = "user2" });
+        //        repo.Save(new TestUser { Age = 1, Name = "user2" });
+
+        //        var list = repo.GetByEmptyArgument();
+        //        Assert.IsTrue(list.Count == 3);
+        //    }
+        //}
+
+        //[TestMethod]
+        //public void ORM_Query_EagerLoad_IPropertyQuery()
+        //{
+        //    var repo = RF.Concrete<BookRepository>();
+        //    using (RF.TransactionScope(repo))
+        //    {
+        //        var so = new SectionOwner();
+        //        RF.Save(so);
+
+        //        var book = CreateAggtBook(so);
+        //        RF.Save(book);
+
+        //        //查询的数据访问测试。
+        //        var oldCount = Logger.DbAccessedCount;
+        //        var all = repo.GetWithEager();
+        //        var newCount = Logger.DbAccessedCount;
+        //        Assert.IsTrue(newCount - oldCount == 4, "应该只进行了 4 次数据库查询。");
+
+        //        //无懒加载测试。
+        //        foreach (Book book2 in all)
+        //        {
+        //            foreach (Chapter chapter in book2.ChapterList)
+        //            {
+        //                foreach (Section section in chapter.SectionList)
+        //                {
+        //                    var so2 = section.SectionOwner;
+        //                }
+        //            }
+        //        }
+        //        Assert.IsTrue(Logger.DbAccessedCount == newCount, "由于数据已经全部加载完成，所以这里不会发生懒加载。");
+        //    }
+        //}
+
+        ///// <summary>
+        ///// Linq 混合 IPropertyQuery 使用。
+        ///// </summary>
+        //[TestMethod]
+        //public void ORM_LinqQuery_WithPropertyQuery()
+        //{
+        //    var repo = RF.Concrete<BookRepository>();
+        //    using (RF.TransactionScope(repo))
+        //    {
+        //        repo.Save(new Book { Code = "c1", Name = "n1" });
+        //        repo.Save(new Book { Code = "c2", Name = "n2" });
+        //        repo.Save(new Book { Code = "c3", Name = "n3" });
+        //        repo.Save(new Book { Code = "c4", Name = "n4" });
+        //        repo.Save(new Book { Code = "c5", Name = "n5" });
+        //        repo.Save(new Book { Code = "c6", Name = "n6" });
+
+        //        var list = repo.LinqGet_WithPropertyQuery("c2", "c3", "c4", "n3", "n4", "n5");
+        //        Assert.IsTrue(list.Count == 1);
+        //    }
+        //}
+
+        //[TestMethod]
+        //public void ORM_Query_TwoPropertiesConstraint_IPropertyQuery()
+        //{
+        //    var repo = RF.Concrete<BookRepository>();
+        //    using (RF.TransactionScope(repo))
+        //    {
+        //        repo.Save(new Book { Code = "1", Name = "2" });
+        //        repo.Save(new Book { Code = "2", Name = "2" });
+        //        repo.Save(new Book { Code = "3", Name = "1" });
+        //        repo.Save(new Book { Code = "4", Name = "4" });
+
+        //        var list = repo.Get_NameEqualsCode();
+        //        Assert.IsTrue(list.Count == 2);
+        //    }
+        //}
 
         #endregion
     }

@@ -99,11 +99,12 @@ namespace Rafy.RBAC.Old
             return null;
         }
 
-        public User GetByCode(string code)
+        [RepositoryQuery]
+        public virtual User GetByCode(string code)
         {
-            return this.FetchFirst(new CommonQueryCriteria
+            return (User)this.DataProvider.GetBy(new CommonQueryCriteria
             {
-                new PropertyMatch(User.CodeProperty, PropertyOperator.Contains, code)
+                new PropertyMatch(User.CodeProperty, PropertyOperator.Contains, code),
             });
         }
     }

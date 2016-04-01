@@ -101,11 +101,8 @@ namespace UT
     {
         protected SectionRepository() { }
 
-        public SectionList GetByBookNameOwner(string name, int hasOwner)
-        {
-            return this.FetchList(name, hasOwner);
-        }
-        protected EntityList FetchBy(string name, int hasOwner)
+        [RepositoryQuery]
+        public virtual SectionList GetByBookNameOwner(string name, int hasOwner)
         {
             var q = this.CreateLinqQuery();
 
@@ -123,7 +120,7 @@ namespace UT
                 q = q.Where(e => e.Chapter.Book.Name == name);
             }
 
-            return this.QueryList(q);
+            return (SectionList)this.QueryData(q);
         }
     }
 
