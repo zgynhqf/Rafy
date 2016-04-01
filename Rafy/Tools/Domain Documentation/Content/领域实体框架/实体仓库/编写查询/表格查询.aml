@@ -12,11 +12,8 @@
             <title>示例</title>
             <content>
                 <code language="cs">
-                    <![CDATA[public LiteDataTable GetTableByName(string name)
-{
-    return this.FetchTable(r => r.DA_GetTableByName(name));
-}
-private LiteDataTable DA_GetTableByName(string name)
+                    <![CDATA[[RepositoryQuery]
+public virtual LiteDataTable GetTableByName(string name)
 {
     FormattedSql sql = "SELECT * FROM WAREHOUSE WHERE NAME = {0}";
     sql.Parameters.Add(name);

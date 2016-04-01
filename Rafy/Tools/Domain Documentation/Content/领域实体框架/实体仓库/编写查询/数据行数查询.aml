@@ -15,20 +15,22 @@
                 <para>以下是一个简单的数据行统计查询示例，其中还包含了一个实体查询方法：</para>
                 <code language="cs">
                     <![CDATA[//查询实体
-public WarehouseList GetByCode(string warehouseCode)
+[RepositoryQuery]
+public virtual WarehouseList GetByCode(string warehouseCode)
 {
-    return this.FetchList(r => r.DA_GetByCode(warehouseCode));
+    return (WarehouseList)this.DA_GetByCode(warehouseCode);
 }
 //查询行数
-public int CountByCode(string warehouseCode)
+[RepositoryQuery]
+public virtual int CountByCode(string warehouseCode)
 {
-    return this.FetchCount(r => r.DA_GetByCode(warehouseCode));
+    return (int)this.DA_GetByCode(warehouseCode);
 }
-private EntityList DA_GetByCode(string warehouseCode)
+private object DA_GetByCode(string warehouseCode)
 {
     var q = this.CreateLinqQuery();
     q = q.Where(e => e.Code == warehouseCode);
-    return this.QueryList(q);
+    return this.QueryData(q);
 }]]>
                 </code>
                 <alert class="note">

@@ -15,24 +15,24 @@
                 <code language="cs">
                     <![CDATA[public class PagingInfo
 {
-	public static readonly PagingInfo Empty;
-	
-	public PagingInfo(int pageNumber, int pageSize);
-	protected PagingInfo(SerializationInfo info, StreamingContext context);
-	public PagingInfo(int pageNumber, int pageSize, bool isNeedCount);
-	public PagingInfo(int pageNumber, int pageSize, int totalCount);
+    public static readonly PagingInfo Empty;
+    
+    public PagingInfo(int pageNumber, int pageSize);
+    protected PagingInfo(SerializationInfo info, StreamingContext context);
+    public PagingInfo(int pageNumber, int pageSize, bool isNeedCount);
+    public PagingInfo(int pageNumber, int pageSize, int totalCount);
 
-	public bool HasNextPage { get; }
-	public bool HasPreviousPage { get; }
-	public bool IsNeedCount { get; set; }
-	public int PageCount { get; }
-	public int PageNumber { get; set; }
-	public int PageSize { get; set; }
-	public int TotalCount { get; set; }
-	
-	public bool IsEmpty();
-	
-	public static bool IsNullOrEmpty(PagingInfo pagingInfo);
+    public bool HasNextPage { get; }
+    public bool HasPreviousPage { get; }
+    public bool IsNeedCount { get; set; }
+    public int PageCount { get; }
+    public int PageNumber { get; set; }
+    public int PageSize { get; set; }
+    public int TotalCount { get; set; }
+    
+    public bool IsEmpty();
+    
+    public static bool IsNullOrEmpty(PagingInfo pagingInfo);
 }]]>
                 </code>
             </content>

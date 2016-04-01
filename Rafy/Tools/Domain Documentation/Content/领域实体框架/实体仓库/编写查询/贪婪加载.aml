@@ -24,15 +24,12 @@
                     以下代码示例通过添加 <codeInline>EagerLoadOptions eagerLoad</codeInline> 可选参数，使得 <codeInline>SearchByCode</codeInline> 方法支持贪婪加载：
                 </para>
                 <code language="cs">
-                    <![CDATA[public WarehouseList SearchByCode(string code, EagerLoadOptions eagerLoad = null)
-{
-    return this.FetchList(r => r.DA_SearchByCode(code, eagerLoad));
-}
-private EntityList DA_SearchByCode(string code, EagerLoadOptions eagerLoad = null)
+                    <![CDATA[[RepositoryQuery]
+public virtual WarehouseList SearchByCode(string code, EagerLoadOptions eagerLoad = null)
 {
     var q = this.CreateLinqQuery();
     q = q.Where(e => e.Code.Contains(code));
-    return this.QueryList(q, eagerLoad: eagerLoad);
+    return (WarehouseList)this.QueryData(q, eagerLoad: eagerLoad);
 }]]>
                 </code>
             </content>
