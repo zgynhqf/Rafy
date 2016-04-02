@@ -55,9 +55,13 @@ namespace Rafy.Domain
                 {
                     fetchType = RepositoryQueryType.First;
                 }
-                if (returnType == typeof(LiteDataTable))
+                else if (returnType == typeof(LiteDataTable))
                 {
                     fetchType = RepositoryQueryType.Table;
+                }
+                else
+                {
+                    throw new NotSupportedException("仓库查询不支持返回 {0} 类型。".FormatArgs(returnType));
                 }
             }
             else
