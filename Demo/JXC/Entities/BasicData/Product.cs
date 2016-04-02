@@ -240,10 +240,9 @@ namespace JXC
     {
         protected ProductRepository() { }
 
-        [RepositoryQuery]
-        public virtual Product GetByBarcode(string barcode)
+        public Product GetByBarcode(string barcode)
         {
-            return (Product)this.DataProvider.GetBy(new CommonQueryCriteria
+            return this.GetFirstBy(new CommonQueryCriteria
             {
                 new PropertyMatch(Product.BarcodeProperty, barcode),
             });

@@ -191,29 +191,26 @@ namespace UT
 
     public partial class TestUserRepository : UnitTestEntityRepository
     {
-        [RepositoryQuery]
-        public virtual TestUser GetByName(string name)
+        public TestUser GetByName(string name)
         {
-            return (TestUser)this.DataProvider.GetBy(new CommonQueryCriteria
+            return this.GetFirstBy(new CommonQueryCriteria
             {
                 new PropertyMatch(TestUser.NameProperty, name),
             });
         }
 
-        [RepositoryQuery]
-        public virtual TestUserList GetByNameAge(string name, int age)
+        public TestUserList GetByNameAge(string name, int age)
         {
-            return (TestUserList)this.DataProvider.GetBy(new CommonQueryCriteria
+            return this.GetBy(new CommonQueryCriteria
             {
                 new PropertyMatch(TestUser.NameProperty, PropertyOperator.Contains, name),
                 new PropertyMatch(TestUser.AgeProperty, age),
             });
         }
 
-        [RepositoryQuery]
-        public virtual TestUserList GetByNameOrAge(string name, int age)
+        public TestUserList GetByNameOrAge(string name, int age)
         {
-            return (TestUserList)this.DataProvider.GetBy(new CommonQueryCriteria(BinaryOperator.Or)
+            return this.GetBy(new CommonQueryCriteria(BinaryOperator.Or)
             {
                 new PropertyMatchGroup
                 {

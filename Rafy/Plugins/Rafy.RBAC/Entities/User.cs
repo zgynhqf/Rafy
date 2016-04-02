@@ -99,10 +99,9 @@ namespace Rafy.RBAC.Old
             return null;
         }
 
-        [RepositoryQuery]
-        public virtual User GetByCode(string code)
+        public User GetByCode(string code)
         {
-            return (User)this.DataProvider.GetBy(new CommonQueryCriteria
+            return this.GetFirstBy(new CommonQueryCriteria
             {
                 new PropertyMatch(User.CodeProperty, PropertyOperator.Contains, code),
             });

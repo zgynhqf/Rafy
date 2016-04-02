@@ -100,10 +100,9 @@ namespace UT
 
     public partial class TestRoleRepository : UnitTestEntityRepository
     {
-        [RepositoryQuery]
-        public virtual TestRoleList GetByUserId(int userId)
+        public TestRoleList GetByUserId(int userId)
         {
-            return (TestRoleList)this.DataProvider.GetBy(new CommonQueryCriteria
+            return this.GetBy(new CommonQueryCriteria
             {
                 new PropertyMatch(TestRole.TestUserIdProperty, userId),
             });

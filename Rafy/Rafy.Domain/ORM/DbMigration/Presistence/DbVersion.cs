@@ -48,10 +48,9 @@ namespace Rafy.Domain.ORM.DbMigration.Presistence
     {
         protected DbVersionRepository() { }
 
-        [RepositoryQuery]
-        public virtual DbVersion GetByDb(string database)
+        public DbVersion GetByDb(string database)
         {
-            return (DbVersion)this.DataProvider.GetBy(new CommonQueryCriteria
+            return this.GetFirstBy(new CommonQueryCriteria
             {
                 new PropertyMatch(DbVersion.DatabaseProperty, database)
             });

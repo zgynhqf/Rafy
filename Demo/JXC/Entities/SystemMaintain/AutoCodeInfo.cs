@@ -114,10 +114,9 @@ namespace JXC
             return code;
         }
 
-        [RepositoryQuery]
-        public virtual AutoCodeInfo GetBy(string name)
+        public AutoCodeInfo GetBy(string name)
         {
-            return (AutoCodeInfo)this.DataProvider.GetBy(new CommonQueryCriteria
+            return this.GetFirstBy(new CommonQueryCriteria
             {
                 new PropertyMatch(AutoCodeInfo.MingChengProperty, name),
             });

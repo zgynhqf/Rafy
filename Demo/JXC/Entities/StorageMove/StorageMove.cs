@@ -102,10 +102,9 @@ namespace JXC
     {
         protected StorageMoveRepository() { }
 
-        [RepositoryQuery]
-        public virtual StorageMoveList GetBy(TimeSpanCriteria criteria)
+        public StorageMoveList GetBy(TimeSpanCriteria criteria)
         {
-            return (StorageMoveList)this.DataProvider.GetBy(new CommonQueryCriteria
+            return this.GetBy(new CommonQueryCriteria
             {
                 new PropertyMatch(StorageMove.DateProperty, PropertyOperator.GreaterEqual, criteria.From),
                 new PropertyMatch(StorageMove.DateProperty, PropertyOperator.LessEqual, criteria.To),

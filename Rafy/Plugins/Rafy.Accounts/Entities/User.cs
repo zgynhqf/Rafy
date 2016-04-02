@@ -144,10 +144,9 @@ namespace Rafy.Accounts
         /// </summary>
         /// <param name="userName"></param>
         /// <returns></returns>
-        [RepositoryQuery]
-        public virtual User GetByUserName(string userName)
+        public User GetByUserName(string userName)
         {
-            return (User)this.DataProvider.GetBy(new CommonQueryCriteria
+            return this.GetFirstBy(new CommonQueryCriteria
             {
                 new PropertyMatch(User.UserNameProperty, userName)
             });

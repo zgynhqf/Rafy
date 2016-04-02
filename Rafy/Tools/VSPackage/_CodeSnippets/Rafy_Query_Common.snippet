@@ -44,10 +44,9 @@
                 </Literal>
             </Declarations>
             <Code Language="csharp">
-                <![CDATA[[RepositoryQuery]
-        public virtual $ReturnValue$ $MethodName$($Parameters$)
+                <![CDATA[public $ReturnValue$ $MethodName$($Parameters$)
         {
-            return ($ReturnValue$)this.DataProvider.GetBy(new CommonQueryCriteria
+            return ($ReturnValue$)this.GetBy(new CommonQueryCriteria
             {
                 new PropertyMatch($EntityName$.$Property1$, $InputParameters$),
                 //new PropertyMatch($EntityName$.Property2Property, PropertyMatchOperator.Equal, parameter2),$end$
