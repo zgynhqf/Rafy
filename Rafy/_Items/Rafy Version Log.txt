@@ -16,7 +16,7 @@
             降低了开发者对 GetAll、QueryList、FetchList 等方法的理解难度。
                 EntityRepository 中删除 FetchList、FetchFirst、FetchCount、FetchTable 等方法。
                 EntityRepository 中删除 QueryList 相关所有方法，只保留 QueryData 方法。
-            仓库扩展类型中的查询实现方法降低了编写难度，与仓库中的查询编写模式保持一致。
+            仓库扩展类型中的查询实现方法降低了编写难度，与仓库中的查询编写模式保持一致，使扩展查询更易编写。
             使用新的仓库编写模式，修改了所有实体仓库中的查询方法，
             单元测试：修复所有单元测试，并在单元测试中删除了 IPropertyQuery 相关的测试。
         旧代码升级：
