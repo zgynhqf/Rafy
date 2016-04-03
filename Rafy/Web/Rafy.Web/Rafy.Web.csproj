@@ -160,22 +160,6 @@
     <Compile Include="WebAppStarter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Rafy.Utils\Rafy.Utils.csproj">
-      <Project>{796B149B-32C9-4BB0-A23F-69C012450DB8}</Project>
-      <Name>Rafy.Utils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Rafy.DbMigration\Rafy.DbMigration.csproj">
-      <Project>{D7C4F80D-24A4-47F1-985C-CFA55CFA13E9}</Project>
-      <Name>Rafy.DbMigration</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Rafy.ManagedProperty\Rafy.ManagedProperty.csproj">
-      <Project>{66BE29D5-F1CA-4941-A4EB-6B3E8F577166}</Project>
-      <Name>Rafy.ManagedProperty</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Rafy.Domain\Rafy.Domain.csproj">
-      <Project>{9F8BB429-70DE-449A-8A67-5190191E7EE6}</Project>
-      <Name>Rafy.Domain</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Rafy\Rafy.csproj">
       <Project>{966A5BF2-D690-426B-AD68-AD868BB8F855}</Project>
       <Name>Rafy</Name>

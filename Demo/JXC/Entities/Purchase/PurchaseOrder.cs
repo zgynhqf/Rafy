@@ -216,34 +216,35 @@ namespace JXC
     {
         protected PurchaseOrderRepository() { }
 
-        [RepositoryQuery]
-        public virtual PurchaseOrderList GetByStatus(OrderStorageInStatus status)
+        public PurchaseOrderList GetByStatus(OrderStorageInStatus status)
         {
-            return (PurchaseOrderList)this.QueryList(q => q.Constrain(PurchaseOrder.StorageInStatusProperty).Equal(status));
-        }
-
-        [RepositoryQuery]
-        public virtual PurchaseOrderList GetBy(ClientTimeSpanCriteria criteria)
-        {
-            return (PurchaseOrderList)this.QueryList(q =>
+            return (PurchaseOrderList)this.GetBy(new CommonQueryCriteria
             {
-                q.Constrain(PurchaseOrder.DateProperty).GreaterEqual(criteria.From)
-                    .And().Constrain(PurchaseOrder.DateProperty).LessEqual(criteria.To);
-
-                if (criteria.ClientInfoId.HasValue)
-                {
-                    q.And().Constrain(PurchaseOrder.SupplierIdProperty).Equal(criteria.ClientInfoId.Value);
-                }
+                new PropertyMatch(PurchaseOrder.StorageInStatusProperty, status),
             });
         }
 
-        [RepositoryQuery]
-        public virtual PurchaseOrderList GetBy(TimeSpanCriteria criteria)
+        public PurchaseOrderList GetBy(ClientTimeSpanCriteria criteria)
         {
-            return (PurchaseOrderList)this.QueryList(q =>
+            var c = new CommonQueryCriteria
             {
-                q.Constrain(PurchaseOrder.DateProperty).GreaterEqual(criteria.From)
-                    .And().Constrain(PurchaseOrder.DateProperty).LessEqual(criteria.To);
+                new PropertyMatch(PurchaseOrder.DateProperty, PropertyOperator.GreaterEqual, criteria.From),
+                new PropertyMatch(PurchaseOrder.DateProperty, PropertyOperator.LessEqual, criteria.To),
+            };
+            if (criteria.ClientInfoId.HasValue)
+            {
+                c.Add(new PropertyMatch(PurchaseOrder.SupplierIdProperty, criteria.ClientInfoId.Value));
+            }
+
+            return this.GetBy(c);
+        }
+
+        public PurchaseOrderList GetBy(TimeSpanCriteria criteria)
+        {
+            return (PurchaseOrderList)this.GetBy(new CommonQueryCriteria
+            {
+                new PropertyMatch(PurchaseOrder.DateProperty, PropertyOperator.GreaterEqual, criteria.From),
+                new PropertyMatch(PurchaseOrder.DateProperty, PropertyOperator.LessEqual, criteria.To),
             });
         }
     }

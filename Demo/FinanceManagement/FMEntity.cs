@@ -56,7 +56,7 @@ namespace FM
     [Serializable]
     public abstract class FMEntityList : EntityList { }
 
-    public abstract class FMEntityRepository : PropertyQueryRepository
+    public abstract class FMEntityRepository : EntityRepository
     {
         public static string DbSettingName = "FinanceManagement";
 

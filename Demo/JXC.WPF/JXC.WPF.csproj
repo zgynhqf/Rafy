@@ -118,29 +118,9 @@
     <Compile Include="ViewConfig\TimeSpanCriteriaConfig.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Rafy\Rafy.DbMigration\Rafy.DbMigration.csproj">
-      <Project>{d7c4f80d-24a4-47f1-985c-cfa55cfa13e9}</Project>
-      <Name>Rafy.DbMigration</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Rafy\Rafy.Utils\Rafy.Utils.csproj">
-      <Project>{796b149b-32c9-4bb0-a23f-69c012450db8}</Project>
-      <Name>Rafy.Utils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Rafy\Rafy.ManagedProperty\Rafy.ManagedProperty.csproj">
-      <Project>{66be29d5-f1ca-4941-a4eb-6b3e8f577166}</Project>
-      <Name>Rafy.ManagedProperty</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Rafy\Plugins\Compatibility\Rafy.Domain.OldQuery\Rafy.Compatibility.Domain.OldQuery.csproj">
-      <Project>{d63382c2-8f48-4388-8197-6fc824d77f92}</Project>
-      <Name>Rafy.Compatibility.Domain.OldQuery</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.Old.csproj">
       <Project>{03d5a267-c106-42a9-8959-93d7ae3648dd}</Project>
       <Name>Rafy.RBAC.Old</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Rafy\Rafy.Domain\Rafy.Domain.csproj">
-      <Project>{9f8bb429-70de-449a-8a67-5190191e7ee6}</Project>
-      <Name>Rafy.Domain</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Rafy\Rafy\Rafy.csproj">
       <Project>{966a5bf2-d690-426b-ad68-ad868bb8f855}</Project>

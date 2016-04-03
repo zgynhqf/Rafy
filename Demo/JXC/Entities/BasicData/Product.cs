@@ -255,30 +255,22 @@ namespace JXC
         [RepositoryQuery]
         public virtual ProductList GetBy(ProductNavigationCriteria criteria)
         {
-            return (ProductList)this.QueryList(q =>
+            var ids = new List<object>();
+            ids.Add(criteria.ProductCategoryId);
+            if (criteria.IncludeSub)
             {
-                //q.JoinRef(Product.ProductCategoryIdProperty));
-
-                //if (criteria.IncludeSub)
-                //{
-                //    q.Constrain(ProductCategory.TreeIndexProperty).StartWith(criteria.ProductCategory.TreeCode);
-                //}
-                //else
-                //{
-                //    q.Constrain(ProductCategory.TreeIndexProperty).Equal(criteria.ProductCategory.TreeCode);
-                //}
-
-                q.Constrain(Product.ProductCategoryIdProperty).Equal(criteria.ProductCategoryId);
-
-                if (criteria.IncludeSub)
+                criteria.ProductCategory.TreeChildren.EachNode(child =>
                 {
-                    criteria.ProductCategory.TreeChildren.EachNode(child =>
-                    {
-                        q.Or().Constrain(Product.ProductCategoryIdProperty).Equal(child.Id);
-                        return false;
-                    });
-                }
-            });
+                    ids.Add(child.Id);
+                    return false;
+                });
+            }
+
+            var q = this.CreateLinqQuery();
+
+            q = q.Where(e => ids.Contains(e.ProductCategoryId));
+
+            return (ProductList)this.QueryData(q);
         }
     }
 

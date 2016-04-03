@@ -46,17 +46,16 @@ namespace MP
     public abstract class MPEntityList : EntityList { }
 
     [Serializable]
-    public abstract class MPEntityRepository : PropertyQueryRepository
-    {
-        public static string DbSettingName = "MonthPlan";
-    }
+    public abstract class MPEntityRepository : EntityRepository { }
 
     [DataProviderFor(typeof(MPEntityRepository))]
     public class MPEntityDataProvider : RdbDataProvider
     {
+        public static string DbSettingName = "MonthPlan";
+
         protected override string ConnectionStringSettingName
         {
-            get { return MPEntityRepository.DbSettingName; }
+            get { return DbSettingName; }
         }
     }
 

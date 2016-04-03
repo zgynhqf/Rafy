@@ -25,7 +25,7 @@ namespace JXC.DbMigrations
     {
         public override string DbSetting
         {
-            get { return JXCEntityRepository.DbSettingName; }
+            get { return JXCEntityDataProvider.DbSettingName; }
         }
 
         public override ManualMigrationType Type

@@ -31,23 +31,11 @@ namespace Demo
     [Serializable]
     public abstract class DemoEntityList : EntityList { }
 
-    public abstract class DemoEntityRepository : PropertyQueryRepository
+    public abstract class DemoEntityRepository : EntityRepository
     {
         public static string DbSettingName = "Demo";
 
         protected DemoEntityRepository() { }
-
-        internal EntityList QueryList(Action<IPropertyQuery> queryBuider, Predicate<Entity> filter = null, EntityList entityList = null)
-        {
-            var query = this.CreatePropertyQuery();
-            if (queryBuider != null) queryBuider(query);
-            return this.QueryList(new PropertyQueryArgs
-            {
-                PropertyQuery = query,
-                Filter = filter,
-                EntityList = entityList
-            });
-        }
     }
 
     [DataProviderFor(typeof(DemoEntityRepository))]

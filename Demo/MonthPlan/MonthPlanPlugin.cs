@@ -71,7 +71,7 @@ namespace MP
             svc.Options = new MigratingOptions
             {
                 RunDataLossOperation = Rafy.DbMigration.DataLossOperation.All,
-                Databases = new string[] { MPEntityRepository.DbSettingName }
+                Databases = new string[] { MPEntityDataProvider.DbSettingName }
             };
             svc.Invoke();
         }

@@ -39,29 +39,16 @@ namespace JXC
     [Serializable]
     public abstract class JXCEntityList : EntityList { }
 
-    public abstract class JXCEntityRepository : PropertyQueryRepository
-    {
-        public static string DbSettingName = "JXC";
-
-        internal EntityList QueryList(Action<IPropertyQuery> queryBuider, Predicate<Entity> filter = null, EntityList entityList = null)
-        {
-            var query = this.CreatePropertyQuery();
-            if (queryBuider != null) queryBuider(query);
-            return this.QueryList(new PropertyQueryArgs
-            {
-                PropertyQuery = query,
-                Filter = filter,
-                EntityList = entityList
-            });
-        }
-    }
+    public abstract class JXCEntityRepository : EntityRepository { }
 
     [DataProviderFor(typeof(JXCEntityRepository))]
     public class JXCEntityDataProvider : RdbDataProvider
     {
+        public static string DbSettingName = "JXC";
+
         protected override string ConnectionStringSettingName
         {
-            get { return JXCEntityRepository.DbSettingName; }
+            get { return DbSettingName; }
         }
     }
 }

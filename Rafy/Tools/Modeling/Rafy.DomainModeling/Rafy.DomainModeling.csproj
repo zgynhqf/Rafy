@@ -165,9 +165,9 @@
     <Resource Include="_ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Rafy.Utils\Rafy.Utils.csproj">
-      <Project>{796b149b-32c9-4bb0-a23f-69c012450db8}</Project>
-      <Name>Rafy.Utils</Name>
+    <ProjectReference Include="..\..\..\Rafy\Rafy.csproj">
+      <Project>{966a5bf2-d690-426b-ad68-ad868bb8f855}</Project>
+      <Name>Rafy</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Rafy.EntityObjectModel\Rafy.EntityObjectModel.csproj">
       <Project>{fcece939-5a33-44ba-b0fb-799d8efca7bf}</Project>

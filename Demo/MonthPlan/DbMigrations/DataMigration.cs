@@ -25,7 +25,7 @@ namespace MP.DbMigrations
     {
         public override string DbSetting
         {
-            get { return MPEntityRepository.DbSettingName; }
+            get { return MPEntityDataProvider.DbSettingName; }
         }
 
         public override ManualMigrationType Type

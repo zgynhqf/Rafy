@@ -291,13 +291,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Rafy.DbMigration\Rafy.DbMigration.csproj">
-      <Project>{d7c4f80d-24a4-47f1-985c-cfa55cfa13e9}</Project>
-      <Name>Rafy.DbMigration</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Rafy.Utils\Rafy.Utils.csproj">
-      <Project>{796b149b-32c9-4bb0-a23f-69c012450db8}</Project>
-      <Name>Rafy.Utils</Name>
+    <ProjectReference Include="..\..\Rafy\Rafy.csproj">
+      <Project>{966a5bf2-d690-426b-ad68-ad868bb8f855}</Project>
+      <Name>Rafy</Name>
     </ProjectReference>
     <ProjectReference Include="..\Modeling\DesignerEngine\DesignerEngine.csproj">
       <Project>{27c8a770-42fe-4bb4-9c2a-63a2df354958}</Project>

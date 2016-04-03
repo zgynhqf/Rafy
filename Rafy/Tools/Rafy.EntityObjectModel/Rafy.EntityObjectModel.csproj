@@ -70,13 +70,13 @@
     <Compile Include="ValuePropertyType.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Rafy.Utils\Rafy.Utils.csproj">
-      <Project>{796b149b-32c9-4bb0-a23f-69c012450db8}</Project>
-      <Name>Rafy.Utils</Name>
-    </ProjectReference>
+    <None Include="Hxy Key.snk" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Hxy Key.snk" />
+    <ProjectReference Include="..\..\Rafy\Rafy.csproj">
+      <Project>{966a5bf2-d690-426b-ad68-ad868bb8f855}</Project>
+      <Name>Rafy</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

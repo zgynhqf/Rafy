@@ -115,14 +115,23 @@ namespace Demo
     {
         protected BookRepository() { }
 
-        [RepositoryQuery]
-        public virtual BookList GetBy(BookQueryCriteria criteria)
+        //[RepositoryQuery]
+        //public virtual BookList GetBy(BookQueryCriteria criteria)
+        //{
+        //    //自定义查询示例。
+        //    return (BookList)this.QueryList(q =>
+        //    {
+        //        q.Constrain(Book.BookCategoryIdProperty).Equal(criteria.BookCategoryId)
+        //            .And().Constrain(Book.NameProperty).Contains(criteria.BookName);
+        //    });
+        //}
+
+        public BookList GetBy(BookQueryCriteria criteria)
         {
-            //自定义查询示例。
-            return (BookList)this.QueryList(q =>
+            return (BookList)this.GetBy(new CommonQueryCriteria
             {
-                q.Constrain(Book.BookCategoryIdProperty).Equal(criteria.BookCategoryId)
-                    .And().Constrain(Book.NameProperty).Contains(criteria.BookName);
+                new PropertyMatch(Book.BookCategoryIdProperty, criteria.BookCategoryId),
+                new PropertyMatch(Book.NameProperty, criteria.BookName),
             });
 
             //            //使用 SQL 的自定义查询示例。

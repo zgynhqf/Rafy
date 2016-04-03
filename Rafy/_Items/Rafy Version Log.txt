@@ -10,6 +10,10 @@
  * 
 *******************************************************/
 
+3.50.3115
+    ★★公布、结构
+        将 Rafy,Rafy.Domain,Rafy.Utils,Rafy.DbMigration,Rafy.ManagedProperty 合并为一个程序集：Rafy。简化使用者的理解负担。
+
 3.49.3112
     ★★公布、添加功能、！删除接口
         引入 Castle.DynamicProxy 动态代理来实现分布式调用，将仓库中同时出现的两个方法减为一个方法。

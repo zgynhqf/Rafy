@@ -87,22 +87,6 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\..\Rafy.DbMigration\Rafy.DbMigration.csproj">
-      <Project>{d7c4f80d-24a4-47f1-985c-cfa55cfa13e9}</Project>
-      <Name>Rafy.DbMigration</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Rafy.Utils\Rafy.Utils.csproj">
-      <Project>{796b149b-32c9-4bb0-a23f-69c012450db8}</Project>
-      <Name>Rafy.Utils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Rafy.ManagedProperty\Rafy.ManagedProperty.csproj">
-      <Project>{66be29d5-f1ca-4941-a4eb-6b3e8f577166}</Project>
-      <Name>Rafy.ManagedProperty</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Rafy.Domain\Rafy.Domain.csproj">
-      <Project>{9f8bb429-70de-449a-8a67-5190191e7ee6}</Project>
-      <Name>Rafy.Domain</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Rafy\Rafy.csproj">
       <Project>{966a5bf2-d690-426b-ad68-ad868bb8f855}</Project>
       <Name>Rafy</Name>
