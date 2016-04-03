@@ -20,7 +20,6 @@
     <HtmlHelpName>Rafy User Guide</HtmlHelpName>
     <Language>zh-CN</Language>
     <DocumentationSources>
-      <DocumentationSource sourceFile="EmptyAssembly.dll" />
     </DocumentationSources>
     <SyntaxFilters>C#</SyntaxFilters>
     <SdkLinkTarget>Blank</SdkLinkTarget>
@@ -45,6 +44,11 @@
     <HelpFileVersion>1.0.0.0</HelpFileVersion>
     <MaximumGroupParts>2</MaximumGroupParts>
     <NamespaceGrouping>False</NamespaceGrouping>
+    <PlugInConfigurations>
+      <PlugInConfig id="Additional Content Only" enabled="True">
+        <configuration />
+      </PlugInConfig>
+    </PlugInConfigurations>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in
        order for Visual Studio to perform the build.  The others are optional
@@ -365,7 +369,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Helper Urls.txt" />
-    <None Include="_To Do List.txt" />
   </ItemGroup>
   <!-- Import the SHFB build targets -->
   <Import Project="$(SHFBROOT)\SandcastleHelpFileBuilder.targets" />
