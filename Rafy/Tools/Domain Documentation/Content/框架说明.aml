@@ -95,10 +95,10 @@
                         <para>包含以下程序集：</para>
                         <list class="bullet">
                             <listItem>
-                                <para>Rafy.Utils.dll</para>
-                            </listItem>
-                            <listItem>
                                 <para>Rafy.dll</para>
+                            </listItem>
+                            <!--<listItem>
+                                <para>Rafy.Utils.dll</para>
                             </listItem>
                             <listItem>
                                 <para>Rafy.DbMigration.dll</para>
@@ -108,7 +108,7 @@
                             </listItem>
                             <listItem>
                                 <para>Rafy.ManagedProperty.dll</para>
-                            </listItem>
+                            </listItem>-->
                         </list>
                     </listItem>
                     <listItem>
