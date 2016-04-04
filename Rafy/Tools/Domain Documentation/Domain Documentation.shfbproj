@@ -120,6 +120,7 @@
     <None Include="Content\插件\幽灵插件.aml" />
     <None Include="Content\授权说明.aml" />
     <None Include="Content\插件\时间戳插件.aml" />
+    <None Include="Content\插件\附件插件.aml" />
     <None Include="Content\现有插件.aml" />
     <None Include="Content\插件\流水号插件.aml" />
     <None Include="Content\设计理念.aml" />
