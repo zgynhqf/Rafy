@@ -96,10 +96,11 @@
     <Topic id="2a81b03d-24b4-4463-9e57-34cbaa105adf" visible="True" isExpanded="true">
       <Topic id="f662f88a-8221-49f4-bc38-901134ea893e" visible="True" />
       <Topic id="1ce3c19a-3de6-4956-afd0-a7fc6e577768" visible="True" />
-      <Topic id="e13240fe-3c80-47e1-9645-f154e8b72a83" visible="True" isSelected="true" />
+      <Topic id="e13240fe-3c80-47e1-9645-f154e8b72a83" visible="True" />
       <Topic id="507d98b9-f88c-48bf-a12b-dded5e021340" visible="True" />
       <Topic id="c4919121-bad5-4b1d-b3c2-6a889590af53" visible="True" />
       <Topic id="87a44564-2ce0-4065-8174-ce612bc1583b" visible="True" />
+      <Topic id="5554eab4-a79f-473c-ac64-d028e7e39145" visible="True" isSelected="true" />
     </Topic>
     <Topic id="fcbf2471-6f51-4f20-9fda-fbcd06e14f91" visible="False" />
   </Topic>

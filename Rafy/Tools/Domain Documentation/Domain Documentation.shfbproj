@@ -114,6 +114,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\插件\RBAC 插件.aml" />
+    <None Include="Content\插件\多国语言插件.aml" />
     <None Include="Content\插件\大批量导入实体插件.aml" />
     <None Include="Content\插件\帐户插件.aml" />
     <None Include="Content\插件\幽灵插件.aml" />
