@@ -1,0 +1,236 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="15c790a6-8f5e-44aa-b8c3-74a955004a1e" revisionNumber="1">
+    <developerConceptualDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+
+        <introduction>
+            <para>插件化架构是产品线可变性管理的基础。每一个独立的业务，都应该在一个单独的插件程序集内开发。</para>
+            <mediaLink>
+                <caption>两阶段生命周期</caption>
+                <image xlink:href="Plugin_Architecture"/>
+            </mediaLink>
+            <autoOutline />
+        </introduction>
+
+        <section address="ca">
+            <title>插件的分类</title>
+            <content>
+                <para>插件分为领域插件和界面插件：领域插件中包含所涉及到的领域实体、领域服务；界面插件则包含需要显示的界面元素（界面插件又分两类：WPF 界面插件、Web 界面插件）。</para>
+                <list class="bullet">
+                    <listItem>
+                        <para>领域插件</para>
+                        <para>
+                            领域插件类型需要从 <codeInline>Rafy.DomainPlugin</codeInline> 类继承。
+                        </para>
+                    </listItem>
+                    <listItem>
+                        <para>界面插件</para>
+                        <para>
+                            界面插件类型需要从 <codeInline>Rafy.UIPlugin</codeInline> 类继承。
+                        </para>
+                    </listItem>
+                </list>
+            </content>
+        </section>
+
+        <section address="install">
+            <title>插件的加载</title>
+            <content>
+                <para>一个开发完成的插件，要加载到主程序中，有两种方式：</para>
+                <list class="bullet">
+                    <listItem>
+                        <para>运行时加载方式</para>
+                        <para>这是一般的插件加载方式，需要把插件程序集放到指定的文件夹中，系统在启动时会自动加载该目录下的所有插件。</para>
+                        <para>领域插件程序集需要放到 /Domain/ 文件夹中。如果是 C/S 程序，则客户端和服务端都需要部署。</para>
+                        <para>界面插件程序集需要放到 /UI/ 文件夹中。如果是 C/S 程序，只需要部署到客户端；如果是 Web 开发，只需要部署到网站目录中。</para>
+                    </listItem>
+                    <listItem>
+                        <para>强制加载方式</para>
+                        <para>一些对于系统来说，必须加载的插件程序集，可以使用强制加载方式。这种方式只需要在程序启动时，通过集合添加指定的插件即可。以下代码强制加载 JXCPlugin 插件：</para>
+                        <code language="cs">
+                            <![CDATA[PluginTable.DomainLibraries.AddPlugin<JXCPlugin>();]]>
+                        </code>
+                    </listItem>
+                </list>
+            </content>
+        </section>
+
+        <section address="pluCode">
+            <title>IPlugin 类型</title>
+            <content>
+                <para>在 Rafy 中，每个插件由一个单独的程序集来表示。而每个插件程序集中，必须有唯一一个插件类型，该类必须实现 IPlugin 接口：</para>
+                <code language="cs">
+                    <![CDATA[namespace Rafy
+{
+    /// <summary>
+    /// 插件定义。
+    /// </summary>
+    public interface IPlugin
+    {
+        /// <summary>
+        /// 插件的启动级别
+        /// </summary>
+        int SetupLevel { get; }
+
+        /// <summary>
+        /// 插件的初始化方法。
+        /// 框架会在启动时根据启动级别顺序调用本方法。
+        /// 
+        /// 方法有两个职责：
+        /// 1.依赖注入。
+        /// 2.注册 app 生命周期中事件，进行特定的初始化工作。
+        /// </summary>
+        /// <param name="app">应用程序对象。</param>
+        void Initialize(IApp app);
+    }
+}
+]]>
+                </code>
+            </content>
+        </section>
+
+        <section address="plu">
+            <title>插件的启动级别</title>
+            <content>
+                <para></para>
+                <para>每一个插件程序集，都有它对应的重用级别：主版本重用、部分版本重用、定制化。例如，领域插件程序集中必须有一个从 DomainPlugin 类继承的插件类，该类指定了整个插件的启动级别（启动级别越高，重用级别越高）：</para>
+                <code language="cs">
+                    <![CDATA[/// <summary>
+/// 领域实体插件程序集基类。
+/// </summary>
+public abstract class DomainPlugin : IPlugin
+{
+    /// <summary>
+    /// 插件的启动级别。
+    /// </summary>
+    protected virtual int SetupLevel
+    {
+        get { return ReuseLevel.Main; }
+    }
+}
+
+/// <summary>
+/// 产品的 “721” 重用级别
+/// </summary>
+public static class ReuseLevel
+{
+    /// <summary>
+    /// 主版本（7）
+    /// </summary>
+    public const int Main = 100;
+
+    /// <summary>
+    /// 部分版本（2）
+    /// </summary>
+    public const int Part = 200;
+
+    /// <summary>
+    /// 客户化版本（1）
+    /// </summary>
+    public const int Customized = 300;
+}]]>
+                </code>
+                <para>、可扩展性</para>
+            </content>
+        </section>
+
+        <section address="lifeCycle">
+            <title>应用程序生命周期</title>
+            <content>
+                <para>插件的 Initialize 方法会在启动时根据启动级别顺序被调用。在该方法中，需要注册 app 生命周期中事件，进行特定的初始化工作。以下代码示例如果在运行时启动时，自动升级数据库：</para>
+                <code language="cs">
+                    <![CDATA[public class JXCPlugin : DomainPlugin
+{
+    public override void Initialize(IApp app)
+    {
+        //在运行时启动时，自动升级数据库。
+        app.RuntimeStarting += (o, e) => AutoUpdateDb();
+    }
+
+    /// <summary>
+    /// 自动升级数据库。
+    /// </summary>
+    private static void AutoUpdateDb()
+    {
+        //...
+    }
+}]]>
+                </code>
+                <para>IApp 应用程序对象的生命周期如下：</para>
+                <code language="cs">
+                    <![CDATA[/// <summary>
+/// 应用程序生成周期定义
+/// </summary>
+public interface IApp
+{
+    /// <summary>
+    /// 所有实体元数据初始化完毕，包括实体元数据之间的关系。
+    /// </summary>
+    event EventHandler AllPluginsIntialized;
+
+    /// <summary>
+    /// 所有初始化期定义的元数据初始化完成时事件。
+    /// </summary>
+    event EventHandler MetaCompiled;
+
+    /// <summary>
+    /// 模块的定义先于其它模型的操作。这样可以先设置好模板默认的按钮。
+    /// </summary>
+    event EventHandler ModuleOperations;
+
+    /// <summary>
+    /// 模块的定义完成
+    /// </summary>
+    event EventHandler ModuleOperationsCompleted;
+
+    /// <summary>
+    /// 所有初始化工作完成
+    /// </summary>
+    event EventHandler AppModelCompleted;
+
+    /// <summary>
+    /// 应用程序运行时行为开始。
+    /// </summary>
+    event EventHandler RuntimeStarting;
+
+    /// <summary>
+    /// AppStartup 完毕
+    /// </summary>
+    event EventHandler StartupCompleted;
+
+    /// <summary>
+    /// 应用程序完全退出
+    /// </summary>
+    event EventHandler Exit;
+
+    /// <summary>
+    /// 主过程开始前事件。
+    /// </summary>
+    event EventHandler MainProcessStarting;
+
+    /// <summary>
+    /// 关闭应用程序
+    /// </summary>
+    void Shutdown();
+}]]>
+                </code>
+            </content>
+        </section>
+
+        <section address="other">
+            <title>其它</title>
+            <content>
+                <para>
+                    关于插件生命周期的设计，参见：<externalLink>
+                        <linkText>使用“管道”与“应用程序生命周期”重构：可插拔模块</linkText>
+                        <linkUri>http://www.cnblogs.com/zgynhqf/archive/2011/02/22/1961081.html</linkUri>
+                    </externalLink>。
+                </para>
+            </content>
+        </section>
+
+        <relatedTopics>
+        </relatedTopics>
+    </developerConceptualDocument>
+</topic>

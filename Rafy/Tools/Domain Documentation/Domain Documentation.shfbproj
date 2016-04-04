@@ -73,7 +73,7 @@
     <Folder Include="Content" />
     <Folder Include="Content\插件" />
     <Folder Include="Content\界面生成" />
-    <Folder Include="Content\框架结构" />
+    <Folder Include="Content\设计理念" />
     <Folder Include="Content\界面生成\界面配置\" />
     <Folder Include="Content\界面生成\界面配置\实体视图配置\" />
     <Folder Include="Content\领域实体框架" />
@@ -113,16 +113,20 @@
     <ContentLayout Include="Documentation.content" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Content\插件\RBAC 插件.aml" />
+    <None Include="Content\插件\大批量导入实体插件.aml" />
+    <None Include="Content\插件\帐户插件.aml" />
     <None Include="Content\插件\幽灵插件.aml" />
     <None Include="Content\授权说明.aml" />
+    <None Include="Content\插件\时间戳插件.aml" />
     <None Include="Content\现有插件.aml" />
     <None Include="Content\插件\流水号插件.aml" />
     <None Include="Content\设计理念.aml" />
-    <None Include="Content\框架结构\产品线工程.aml" />
-    <None Include="Content\框架结构\插件化架构.aml" />
-    <None Include="Content\框架结构\模型驱动架构.aml" />
-    <None Include="Content\框架结构\面向服务架构.aml" />
-    <None Include="Content\框架结构\领域驱动设计.aml" />
+    <None Include="Content\设计理念\产品线工程.aml" />
+    <None Include="Content\设计理念\插件化架构.aml" />
+    <None Include="Content\设计理念\模型驱动架构.aml" />
+    <None Include="Content\设计理念\面向服务架构.aml" />
+    <None Include="Content\设计理念\领域驱动设计.aml" />
     <None Include="Content\框架说明.aml" />
     <None Include="Content\快速界面生成.aml" />
     <None Include="Content\界面生成\Web 界面.aml" />
