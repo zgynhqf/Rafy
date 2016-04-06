@@ -116,7 +116,7 @@ Assert.AreEqual("2016031800000001", next);
 next = controller.GenerateNext("流水号规则-1");
 Assert.AreEqual("2016031800000002", next);
 next = controller.GenerateNext(sni);
-Assert.AreEqual("2016031800000002", next);]]>
+Assert.AreEqual("2016031800000003", next);]]>
                                 </code>
                             </content>
                         </step>

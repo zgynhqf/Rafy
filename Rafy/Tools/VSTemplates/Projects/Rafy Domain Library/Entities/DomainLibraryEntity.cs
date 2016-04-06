@@ -17,7 +17,7 @@ using Rafy.ManagedProperty;
 namespace $domainNamespace$
 {
     [Serializable]
-    public abstract class $domainName$Entity : IntEntity
+    public abstract class $domainName$Entity : LongEntity
     {
         #region 构造函数
 
