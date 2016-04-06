@@ -40,11 +40,9 @@ namespace $domainNamespace$
     [DataProviderFor(typeof($domainName$EntityRepository))]
     public class $domainName$EntityRepositoryDataProvider : RdbDataProvider
     {
-        public static string DbSettingName = "$domainName$";
-
         protected override string ConnectionStringSettingName
         {
-            get { return DbSettingName; }
+            get { return $domainName$Plugin.DbSettingName; }
         }
     }
 

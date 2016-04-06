@@ -12,6 +12,8 @@ namespace $domainNamespace$
 {
     public class $domainName$Plugin : DomainPlugin
     {
+        public static string DbSettingName = "$domainName$";
+
         public override void Initialize(IApp app)
         {
         }
