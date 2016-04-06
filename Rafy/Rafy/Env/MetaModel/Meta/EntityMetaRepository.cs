@@ -53,6 +53,7 @@ namespace Rafy.MetaModel
 
         /// <summary>
         /// 查询某个实体类型所对应的实体信息。
+        /// 如果当前是第一次获取该实体的元数据，则会为它创建元数据。
         /// </summary>
         /// <param name="entityType"></param>
         /// <returns></returns>

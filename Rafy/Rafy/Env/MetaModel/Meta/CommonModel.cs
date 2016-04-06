@@ -35,12 +35,18 @@ namespace Rafy.MetaModel
         /// <summary>
         /// 所有实体元数据
         /// </summary>
-        public static EntityMetaRepository Entities { get { return _entities; } }
+        public static EntityMetaRepository Entities
+        {
+            get { return _entities; }
+        }
 
         /// <summary>
         /// 所有模块的元数据
         /// </summary>
-        public static ModulesContainer Modules { get { return _modules; } }
+        public static ModulesContainer Modules
+        {
+            get { return _modules; }
+        }
 
         internal static void Reset()
         {
