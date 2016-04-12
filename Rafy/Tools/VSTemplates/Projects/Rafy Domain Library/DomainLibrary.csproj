@@ -41,7 +41,7 @@
             <Private>True</Private>
         </Reference>
         <Reference Include="Rafy">
-            <HintPath>..\packages\Rafy.Domain.3.50.3115\lib\net45\Rafy.dll</HintPath>
+            <HintPath>..\packages\Rafy.Domain.3.50.3117\lib\net45\Rafy.dll</HintPath>
             <Private>True</Private>
         </Reference>
         <Reference Include="System" />

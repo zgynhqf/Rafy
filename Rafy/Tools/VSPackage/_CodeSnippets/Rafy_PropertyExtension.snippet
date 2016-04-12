@@ -22,6 +22,10 @@
                     <Default>PropertyName</Default>
                 </Literal>
                 <Literal>
+                    <ID>Comment</ID>
+                    <Default>属性注释</Default>
+                </Literal>
+                <Literal>
                     <ID>ClassName</ID>
                     <Default>Entity</Default>
                 </Literal>
@@ -31,16 +35,29 @@
                 </Literal>
             </Declarations>
             <Code Language="csharp">
-                <![CDATA[public static readonly Property<$PropertyType$> $PropertyName$Property = 
+                <![CDATA[#region $PropertyType$ $PropertyName$ ($Comment$)
+
+        /// <summary>
+        /// $Comment$ 扩展属性。
+        /// </summary>
+        public static readonly Property<$PropertyType$> $PropertyName$Property = 
             P<$ClassName$>.RegisterExtension<$PropertyType$>("$PropertyName$", typeof($DeclareType$));
-        public static $PropertyType$ Get$PropertyName$($ClassName$ me)
+        /// <summary>
+        /// 获取 $Comment$ 属性的值。
+        /// </summary>
+        public static $PropertyType$ Get$PropertyName$(this $ClassName$ me)
         {
             return me.GetProperty($PropertyName$Property);
         }
-        public static void Set$PropertyName$($ClassName$ me, $PropertyType$ value)
+        /// <summary>
+        /// 设置 $Comment$ 属性的值。
+        /// </summary>
+        public static void Set$PropertyName$(this $ClassName$ me, $PropertyType$ value)
         {
             me.SetProperty($PropertyName$Property, value);
-        }$end$]]>
+        }
+
+        #endregion$end$]]>
             </Code>
         </Snippet>
     </CodeSnippet>
