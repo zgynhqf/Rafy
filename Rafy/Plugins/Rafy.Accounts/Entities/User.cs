@@ -88,12 +88,23 @@ namespace Rafy.Accounts
 
         public static readonly Property<DateTime> LastLoginTimeProperty = P<User>.Register(e => e.LastLoginTime);
         /// <summary>
-        /// 最后一次登录的时间。
+        /// 最后一次尝试登录或登录成功的时间。
         /// </summary>
         public DateTime LastLoginTime
         {
             get { return this.GetProperty(LastLoginTimeProperty); }
             set { this.SetProperty(LastLoginTimeProperty, value); }
+        }
+
+        public static readonly Property<int> LoginFailedTimesProperty = P<User>.Register(e => e.LoginFailedTimes);
+        /// <summary>
+        /// 尝试登录失败的次数。
+        /// 登录成功后，归0。
+        /// </summary>
+        public int LoginFailedTimes
+        {
+            get { return this.GetProperty(LoginFailedTimesProperty); }
+            set { this.SetProperty(LoginFailedTimesProperty, value); }
         }
 
         #endregion
@@ -165,7 +176,7 @@ namespace Rafy.Accounts
         protected override void ConfigMeta()
         {
             //配置实体的所有属性都映射到数据表中。
-            Meta.MapTable().MapAllProperties();
+            Meta.MapTable("Users").MapAllProperties();
         }
     }
 }

@@ -59,6 +59,7 @@ namespace RafyUnitTest
             RafyEnvironment.DomainPlugins.Add(new UnitTestRepoPlugin());
             RafyEnvironment.DomainPlugins.Add(new DCPlugin());
 
+            RafyEnvironment.DomainPlugins.Add(new Rafy.Accounts.AccountsPlugin());
             RafyEnvironment.DomainPlugins.Add(new Rafy.SerialNumber.SerialNumberPlugin());
 
             ////为了多次修改 Location 值，需要把修改值的操作放到 InitEnvironment 中。

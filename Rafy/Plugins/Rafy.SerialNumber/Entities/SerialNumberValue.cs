@@ -49,9 +49,9 @@ namespace Rafy.SerialNumber
 
         public static readonly IRefIdProperty AutoCodeInfoIdProperty =
             P<SerialNumberValue>.RegisterRefId(e => e.AutoCodeInfoId, ReferenceType.Parent);
-        public int AutoCodeInfoId
+        public long AutoCodeInfoId
         {
-            get { return (int)this.GetRefId(AutoCodeInfoIdProperty); }
+            get { return (long)this.GetRefId(AutoCodeInfoIdProperty); }
             set { this.SetRefId(AutoCodeInfoIdProperty, value); }
         }
         public static readonly RefEntityProperty<SerialNumberInfo> AutoCodeInfoProperty =

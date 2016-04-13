@@ -19,7 +19,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Rafy.Domain;
 
-namespace Rafy.Accounts
+namespace Rafy.Accounts.Controllers
 {
     /// <summary>
     /// 帐户插件的领域控制器。
@@ -29,13 +29,26 @@ namespace Rafy.Accounts
         /// <summary>
         /// Initializes a new instance of the <see cref="AccountController"/> class.
         /// </summary>
-        public AccountController()
+        protected AccountController()
         {
             this.HashAlgorithm = SHA1.Create();
             this.Encoding = Encoding.UTF8;
+            this.LoginFailedTimeSpan = new TimeSpan(TimeSpan.TicksPerHour);
         }
 
         #region Login
+
+        /// <summary>
+        /// 一个时间间隔，表示当用户在这个时间间隔内的失败次数达到 <see cref="MaxLoginFailedTimes"/> 时，用户将不再能继续登录，直到时间过期。
+        /// 默认值：一个小时。
+        /// </summary>
+        public TimeSpan LoginFailedTimeSpan { get; set; }
+
+        /// <summary>
+        /// 在指定时间间隔 <see cref="LoginFailedTimeSpan"/> 内，最多尝试登录失败的次数。
+        /// 默认值：0，表示不需要检测。
+        /// </summary>
+        public int MaxLoginFailedTimes { get; set; }
 
         /// <summary>
         /// 尝试使用指定的用户名和密码进行登录操作。
@@ -43,29 +56,50 @@ namespace Rafy.Accounts
         /// </summary>
         /// <param name="userName">用户名。</param>
         /// <param name="password">用户密码。</param>
-        /// <param name="user">登录成功后的用户。</param>
+        /// <param name="user">不论登录是否成功，都返回对应的用户。（如果找不到，则返回 null。）</param>
         /// <returns></returns>
         public virtual Result Login(string userName, string password, out User user)
         {
-            user = null;
-
             var repo = RF.Concrete<UserRepository>();
-            var u = repo.GetByUserName(userName);
-            if (u == null) return string.Format("没有找到用户名为：{0} 的用户。", userName);
+            user = repo.GetByUserName(userName);
+            if (user == null)
+            {
+                return new Result(ResultCodes.UserNotExists, string.Format("登录失败，用户名或密码不正确。没有找到用户名为：{0} 的用户。", userName));
+            }
 
+            //最大登录失败次数限制。
+            var maxLoginTimes = this.MaxLoginFailedTimes;
+            if (maxLoginTimes > 0 && user.LoginFailedTimes >= maxLoginTimes && (DateTime.Now - user.LastLoginTime <= this.LoginFailedTimeSpan))
+            {
+                user.LastLoginTime = DateTime.Now;
+                repo.Save(user);
+
+                this.OnLoginFailed(user);
+                return new Result(ResultCodes.LoginExceedMaxFailedTimes, "登录失败，在指定时间内，已经超过用户最大的登录次数。");
+            }
+
+            //检查用户密码。
             var passwordHashed = this.EncodePassword(password);
-            if (u.Password != passwordHashed) return "密码不正确。";
+            if (user.Password != passwordHashed)
+            {
+                user.LastLoginTime = DateTime.Now;
+                user.LoginFailedTimes++;
+                repo.Save(user);
+
+                this.OnLoginFailed(user);
+                return new Result(ResultCodes.LoginPasswordError, "登录失败，用户名或密码不正确。");
+            }
 
             //更新用户的最后登录时间。
-            u.LastLoginTime = DateTime.Now;
-            repo.Save(u);
+            user.LastLoginTime = DateTime.Now;
+            user.LoginFailedTimes = 0;
+
+            repo.Save(user);
 
             //更新环境中的用户。
-            RafyEnvironment.Principal = new GenericPrincipal(u, null);
+            RafyEnvironment.Principal = new GenericPrincipal(user, null);
 
-            this.OnLoginSuccessed(u);
-
-            user = u;
+            this.OnLoginSuccessed(user);
 
             return true;
         }
@@ -73,7 +107,7 @@ namespace Rafy.Accounts
         /// <summary>
         /// 登录成功的事件。
         /// </summary>
-        public event EventHandler<LoginSuccessedEventArgs> LoginSuccessed;
+        public event EventHandler<UserLoginEventArgs> LoginSuccessed;
 
         /// <summary>
         /// 登录成功的事件。
@@ -82,7 +116,22 @@ namespace Rafy.Accounts
         protected virtual void OnLoginSuccessed(User user)
         {
             var handler = this.LoginSuccessed;
-            if (handler != null) handler(this, new LoginSuccessedEventArgs(user));
+            if (handler != null) handler(this, new UserLoginEventArgs(user));
+        }
+
+        /// <summary>
+        /// 登录成功的事件。
+        /// </summary>
+        public event EventHandler<UserLoginEventArgs> LoginFailed;
+
+        /// <summary>
+        /// 登录失败的事件。
+        /// </summary>
+        /// <param name="user"></param>
+        protected virtual void OnLoginFailed(User user)
+        {
+            var handler = this.LoginFailed;
+            if (handler != null) handler(this, new UserLoginEventArgs(user));
         }
 
         #endregion
@@ -154,13 +203,13 @@ namespace Rafy.Accounts
     /// <summary>
     /// 登录成功的事件参数。
     /// </summary>
-    public class LoginSuccessedEventArgs : EventArgs
+    public class UserLoginEventArgs : EventArgs
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="LoginSuccessedEventArgs"/> class.
+        /// Initializes a new instance of the <see cref="UserLoginEventArgs"/> class.
         /// </summary>
         /// <param name="user">The user.</param>
-        public LoginSuccessedEventArgs(User user)
+        public UserLoginEventArgs(User user)
         {
             this.User = user;
         }

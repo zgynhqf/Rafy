@@ -80,6 +80,7 @@
     <Compile Include="Rafy\EnvironmentTest.cs" />
     <Compile Include="Rafy\MiscellaneousTest.cs" />
     <Compile Include="Rafy\ODataTest.cs" />
+    <Compile Include="Rafy\Plugins\AccountsPluginTest.cs" />
     <Compile Include="Rafy\Plugins\SerialNumberPluginTest.cs" />
     <Compile Include="Rafy\StampTest.cs" />
     <Compile Include="ServerTestHelper.cs" />
@@ -107,6 +108,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Accounts\Rafy.Accounts.csproj">
+      <Project>{4d6467e4-d1ce-4fa8-a1fe-92b1ba549a4a}</Project>
+      <Name>Rafy.Accounts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.EntityPhantom\Rafy.Domain.EntityPhantom.csproj">
       <Project>{0b6df92b-0248-422d-a9c2-1604d4cb7bc9}</Project>
       <Name>Rafy.Domain.EntityPhantom</Name>

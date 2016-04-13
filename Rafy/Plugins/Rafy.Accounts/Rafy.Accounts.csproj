@@ -52,6 +52,7 @@
     <Compile Include="AccountContext.cs" />
     <Compile Include="AccountsPlugin.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ResultCodes.cs" />
     <Compile Include="Entities\AccountsEntity.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Entities\User.g.cs">

@@ -53,7 +53,7 @@ namespace Rafy.Domain
 
             controllerType = GetOverride(controllerType);
 
-            var instance = Activator.CreateInstance(controllerType) as DomainController;
+            var instance = Activator.CreateInstance(controllerType, true) as DomainController;
 
             CreateDependee(instance, controllerType);
 
