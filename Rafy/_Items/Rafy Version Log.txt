@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.50.3118
+3.50.3119
     ★★公布、结构
         将 Rafy,Rafy.Domain,Rafy.Utils,Rafy.DbMigration,Rafy.ManagedProperty 合并为一个程序集：Rafy。简化使用者的理解负担。
 

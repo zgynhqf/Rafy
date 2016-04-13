@@ -41,8 +41,9 @@ namespace Rafy.SerialNumber
 
         /// <summary>
         /// 帐户插件中实体的主键的类型提供程序。
+        /// 默认是 Long 型。
         /// </summary>
-        public static IKeyProvider KeyProvider = KeyProviders.Get(typeof(int));
+        public static IKeyProvider KeyProvider = KeyProviders.Get(typeof(long));
 
         public override void Initialize(IApp app)
         {

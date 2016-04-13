@@ -49,7 +49,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccountHelper.cs" />
+    <Compile Include="AccountContext.cs" />
     <Compile Include="AccountsPlugin.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Entities\AccountsEntity.cs" />

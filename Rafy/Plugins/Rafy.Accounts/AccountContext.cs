@@ -21,9 +21,9 @@ using Rafy.Domain;
 namespace Rafy.Accounts
 {
     /// <summary>
-    /// 帐户帮助类型。
+    /// 帐户插件的上下文数据。
     /// </summary>
-    public static class AccountHelper
+    public abstract class AccountContext
     {
         /// <summary>
         /// 应用程序执行上下文中的数据项：当前用户实体。
@@ -32,17 +32,11 @@ namespace Rafy.Accounts
             new AppContextItem<User>("Rafy.Accounts.AccountHelper.CurrentUserACI");
 
         /// <summary>
-        /// 获取或设置是否当前用户的用户名可以从 <see cref="RafyEnvironment.Identity"/> 中的 <see cref="IIdentity.Name"/> 属性获取。
-        /// 默认为 true。
-        /// </summary>
-        public static bool IsUserNameInIdentity { get; set; } = true;
-
-        /// <summary>
         /// 获取当前登录的用户。如果没有登录，则此属性返回 null。
         /// <para>（获取逻辑：</para>
         /// <para>先尝试从 AppContext 中获取；</para>
         /// <para>如果没有找到，再尝试从 <see cref="RafyEnvironment.Identity"/> 中对应的身份来解析用户对象；</para>
-        /// <para>如果没有找到，如果<see cref="IsUserNameInIdentity"/> 为真，则会使用用户名来查询数据库中的用户对象。</para>
+        /// <para>如果没有找到，如果<see cref="AccountsPlugin.IsUserNameInIdentity"/> 为真，则会使用用户名来查询数据库中的用户对象。</para>
         /// <para>最终，如果找到用户，则会把用户对象存储在 AppContext 中缓存起来。方便下次使用。）</para>
         /// 开发者也可以直接设置本属性的值来指定当前的登录的用户。
         /// </summary>
@@ -60,7 +54,7 @@ namespace Rafy.Accounts
                     {
                         CurrentUserACI.Value = user;
                     }
-                    else if (IsUserNameInIdentity)
+                    else if (AccountsPlugin.IsUserNameInIdentity)
                     {
                         user = RF.Concrete<UserRepository>().GetByUserName(identity.Name);
                         if (user != null)

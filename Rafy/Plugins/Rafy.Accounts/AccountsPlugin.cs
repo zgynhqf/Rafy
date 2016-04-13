@@ -13,6 +13,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using Rafy;
 using Rafy.ComponentModel;
@@ -44,6 +45,12 @@ namespace Rafy.Accounts
         /// 默认是 Long 型。
         /// </summary>
         public static IKeyProvider KeyProvider = KeyProviders.Get(typeof(long));
+
+        /// <summary>
+        /// 获取或设置是否当前用户的用户名可以从 <see cref="RafyEnvironment.Identity"/> 中的 <see cref="IIdentity.Name"/> 属性获取。
+        /// 默认为 true。
+        /// </summary>
+        public static bool IsUserNameInIdentity { get; set; } = true;
 
         /// <summary>
         /// Initializes the specified application.
