@@ -29,10 +29,20 @@ namespace Rafy.Accounts.Controllers
         /// </summary>
         public static int BaseCode = 100000;
 
-        public static int LoginPasswordError { get { return BaseCode + 1; } }
+        public static int RegisterEmailDuplicated { get { return BaseCode + 1; } }
 
-        public static int LoginExceedMaxFailedTimes { get { return BaseCode + 2; } }
+        public static int RegisterEmailInvalid { get { return BaseCode + 2; } }
 
-        public static int UserNotExists { get { return BaseCode + 3; } }
+        public static int RegisterUserNameDuplicated { get { return BaseCode + 3; } }
+
+        public static int RegisterUserNameInvalid { get { return BaseCode + 4; } }
+
+        public static int RegisterPropertiesInvalid { get { return BaseCode + 5; } }
+
+        public static int LoginPasswordError { get { return BaseCode + 11; } }
+
+        public static int LoginExceedMaxFailedTimes { get { return BaseCode + 12; } }
+
+        public static int LoginUserNotExists { get { return BaseCode + 13; } }
     }
 }

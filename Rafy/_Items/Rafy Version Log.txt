@@ -10,10 +10,13 @@
  * 
 *******************************************************/
 
-3.50.3121
+3.50.3125
     添加接口
         Accounts 插件
             User 添加 LoginFailedTimes、LastLoginTime 属性。并添加登录次数限制的逻辑。
+            User 添加 Email 可以作为标识并登录。
+            AccountController 中添加 Register 方法，实现注册逻辑。
+            User 添加一些其它属性。
 
 3.50.3119
     ★★公布、结构

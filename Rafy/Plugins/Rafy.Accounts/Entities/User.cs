@@ -66,6 +66,16 @@ namespace Rafy.Accounts
             set { this.SetProperty(UserNameProperty, value); }
         }
 
+        public static readonly Property<string> EmailProperty = P<User>.Register(e => e.Email);
+        /// <summary>
+        /// 邮件地址。
+        /// </summary>
+        public string Email
+        {
+            get { return this.GetProperty(EmailProperty); }
+            set { this.SetProperty(EmailProperty, value); }
+        }
+
         public static readonly Property<string> RealNameProperty = P<User>.Register(e => e.RealName);
         /// <summary>
         /// 真实姓名。
@@ -105,6 +115,16 @@ namespace Rafy.Accounts
         {
             get { return this.GetProperty(LoginFailedTimesProperty); }
             set { this.SetProperty(LoginFailedTimesProperty, value); }
+        }
+
+        public static readonly Property<string> PhoneNumberProperty = P<User>.Register(e => e.PhoneNumber);
+        /// <summary>
+        /// 手机号
+        /// </summary>
+        public string PhoneNumber
+        {
+            get { return this.GetProperty(PhoneNumberProperty); }
+            set { this.SetProperty(PhoneNumberProperty, value); }
         }
 
         #endregion
@@ -162,6 +182,19 @@ namespace Rafy.Accounts
                 new PropertyMatch(User.UserNameProperty, userName)
             });
         }
+
+        /// <summary>
+        /// 通过邮箱精确匹配指定的某个用户。
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        public User GetByEmail(string email)
+        {
+            return this.GetFirstBy(new CommonQueryCriteria
+            {
+                new PropertyMatch(User.EmailProperty, email)
+            });
+        }
     }
 
     /// <summary>
@@ -177,6 +210,22 @@ namespace Rafy.Accounts
         {
             //配置实体的所有属性都映射到数据表中。
             Meta.MapTable("Users").MapAllProperties();
+        }
+
+        protected override void AddValidations(IValidationDeclarer rules)
+        {
+            base.AddValidations(rules);
+
+            rules.AddRule(User.PasswordProperty, new RequiredRule());
+
+            //以下属性需要动态进行检测。
+            //rules.AddRule(User.UserNameProperty, new RequiredRule());
+            //rules.AddRule(User.EmailProperty, new RequiredRule());
+            //rules.AddRule(User.EmailProperty, new RegexMatchRule
+            //{
+            //    Regex = TextFormatter.ReEmail,
+            //    MessageBuilder = (e) => "邮箱格式不正确。"
+            //});
         }
     }
 }

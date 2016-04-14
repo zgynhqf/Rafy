@@ -25,6 +25,11 @@ namespace Rafy.SerialNumber
     public class SerialNumberController : DomainController
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="SerialNumberController"/> class.
+        /// </summary>
+        protected SerialNumberController() { }
+
+        /// <summary>
         /// 创建一个以日期进行分组生成编号的规则，存储到仓库中，并返回。
         /// 性能-仓库访问次数：1。
         /// </summary>
