@@ -30,9 +30,11 @@ namespace Rafy.Domain.Serialization.Json
     /// </summary>
     public class AggtSerializer
     {
+        internal const string TreeChildrenProperty ="TreeChildren";
         private const string TotalCountProperty = "TotalCount";
         private const string EntityListProperty ="Data";
-        internal const string TreeChildrenProperty ="TreeChildren";
+
+        private bool _ignoreROProperties;
         private JsonTextWriter _writer;
         private EnumSerializationMode _enumSerializationMode;
 
@@ -82,6 +84,16 @@ namespace Rafy.Domain.Serialization.Json
         /// 默认为 false。
         /// </summary>
         public bool IgnoreDefault { get; set; }
+
+        /// <summary>
+        /// 是否需要在序列化时忽略只读属性。
+        /// 默认为 false。
+        /// </summary>
+        public bool IgnoreROProperties
+        {
+            get { return _ignoreROProperties; }
+            set { _ignoreROProperties = value; }
+        }
 
         /// <summary>
         /// 是否输出实体列表的 TotalCount 的值，而把列表的值放到一个名为 Data 的属性值中。
@@ -162,6 +174,7 @@ namespace Rafy.Domain.Serialization.Json
             {
                 var property = field.Property as IProperty;
 
+                if (property.IsReadOnly && _ignoreROProperties) continue;
                 if (!isTree && (property == Entity.TreePIdProperty || property == Entity.TreeIndexProperty))
                 {
                     continue;

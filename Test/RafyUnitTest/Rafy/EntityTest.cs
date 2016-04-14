@@ -1837,6 +1837,7 @@ namespace RafyUnitTest
             var serializer = new AggtSerializer();
             serializer.Indent = true;
             serializer.IgnoreDefault = true;
+            serializer.IgnoreROProperties = true;
             var json = serializer.Serialize(entity);
             Assert.AreEqual(json,
 @"{
@@ -1854,6 +1855,7 @@ namespace RafyUnitTest
             var serializer = new AggtSerializer();
             serializer.Indent = true;
             serializer.IgnoreDefault = true;
+            serializer.IgnoreROProperties = true;
             serializer.EnumSerializationMode = EnumSerializationMode.Integer;
             var json = serializer.Serialize(entity);
             Assert.AreEqual(json,
@@ -1872,6 +1874,7 @@ namespace RafyUnitTest
             var serializer = new AggtSerializer();
             serializer.Indent = true;
             serializer.IgnoreDefault = true;
+            serializer.IgnoreROProperties = true;
             serializer.EnumSerializationMode = EnumSerializationMode.String;
             var json = serializer.Serialize(entity);
             Assert.AreEqual(json,
@@ -1890,6 +1893,7 @@ namespace RafyUnitTest
             var serializer = new AggtSerializer();
             serializer.Indent = true;
             serializer.IgnoreDefault = true;
+            serializer.IgnoreROProperties = true;
             serializer.EnumSerializationMode = EnumSerializationMode.EnumLabel;
             var json = serializer.Serialize(entity);
             Assert.AreEqual(json,
@@ -1926,6 +1930,7 @@ namespace RafyUnitTest
             var serializer = new AggtSerializer();
             serializer.Indent = true;
             serializer.IgnoreDefault = true;
+            serializer.IgnoreROProperties = true;
             var json = serializer.Serialize(entity);
             Assert.AreEqual(json,
 @"{
@@ -1958,6 +1963,7 @@ namespace RafyUnitTest
             var serializer = new AggtSerializer();
             serializer.Indent = true;
             serializer.IgnoreDefault = true;
+            serializer.IgnoreROProperties = true;
             var json = serializer.Serialize(entity);
 
             Assert.AreEqual(json,
@@ -1983,6 +1989,7 @@ namespace RafyUnitTest
             var serializer = new AggtSerializer();
             serializer.Indent = true;
             serializer.IgnoreDefault = true;
+            serializer.IgnoreROProperties = true;
             var json = serializer.Serialize(list);
 
             Assert.AreEqual(json,
@@ -2007,6 +2014,7 @@ namespace RafyUnitTest
             var serializer = new AggtSerializer();
             serializer.Indent = true;
             serializer.IgnoreDefault = true;
+            serializer.IgnoreROProperties = true;
             serializer.UseCamelProperty = false;
             var json = serializer.Serialize(entity);
 
@@ -2027,6 +2035,7 @@ namespace RafyUnitTest
             var serializer = new AggtSerializer();
             serializer.Indent = true;
             serializer.IgnoreDefault = false;
+            serializer.IgnoreROProperties = true;
             var json = serializer.Serialize(entity);
 
             Assert.AreEqual(json,
@@ -2058,6 +2067,7 @@ namespace RafyUnitTest
             var serializer = new AggtSerializer();
             serializer.Indent = true;
             serializer.IgnoreDefault = true;
+            serializer.IgnoreROProperties = true;
             var json = serializer.Serialize(entity);
 
             Assert.AreEqual(json,
@@ -2086,6 +2096,7 @@ namespace RafyUnitTest
             var serializer = new AggtSerializer();
             serializer.Indent = true;
             serializer.IgnoreDefault = true;
+            serializer.IgnoreROProperties = true;
             var json = serializer.Serialize(entity);
 
             Assert.AreEqual(json,
@@ -2119,6 +2130,7 @@ namespace RafyUnitTest
             var serializer = new AggtSerializer();
             serializer.Indent = true;
             serializer.IgnoreDefault = true;
+            serializer.IgnoreROProperties = true;
             var json = serializer.Serialize(list);
 
             Assert.AreEqual(json,
@@ -2167,26 +2179,18 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Json_Deserialization_Update_CreateNewInstance()
         {
-            var repo = RF.Concrete<FavorateRepository>();
-            using (RF.TransactionScope(repo))
-            {
-                var f1 = new Favorate();
-                f1.Name = "n1";
-                f1.FavorateType = FavorateType.B;
-                repo.Save(f1);
-
-                var json = @"{
-""id"": " + f1.Id + @",
+            var json = @"{
+""id"": 1,
 ""name"": ""n2""
 }";
 
-                var deserializer = new AggtDeserializer();
-                deserializer.UpdatedEntityCreationMode = UpdatedEntityCreationMode.CreateNewInstance;
-                var entity = deserializer.Deserialize(typeof(Favorate), json) as Favorate;
+            var deserializer = new AggtDeserializer();
+            deserializer.UpdatedEntityCreationMode = UpdatedEntityCreationMode.CreateNewInstance;
+            var entity = deserializer.Deserialize(typeof(Favorate), json) as Favorate;
 
-                Assert.AreEqual(entity.Name, "n2");
-                Assert.AreEqual(entity.FavorateType, FavorateType.A, "CreateNewInstance 导致原有的值丢失。");
-            }
+            Assert.AreEqual(1, entity.Id);
+            Assert.AreEqual(entity.Name, "n2");
+            Assert.AreEqual(entity.FavorateType, FavorateType.A, "CreateNewInstance 导致原有的值丢失。");
         }
 
         [TestMethod]
@@ -2209,9 +2213,26 @@ namespace RafyUnitTest
                 deserializer.UpdatedEntityCreationMode = UpdatedEntityCreationMode.RequeryFromRepository;
                 var entity = deserializer.Deserialize(typeof(Favorate), json) as Favorate;
 
+                Assert.AreEqual(f1.Id, entity.Id);
                 Assert.AreEqual(entity.Name, "n2");
                 Assert.AreEqual(entity.FavorateType, FavorateType.B, "RequeryFromRepository 导致原有的值不会丢失。");
             }
+        }
+
+        [TestMethod]
+        public void ET_Json_Deserialization_ROProperty()
+        {
+            var json = @"{
+""favorateType"": ""B"",
+""RO_FavorateTypeString"": ""XXXXXXXXXXXX""
+}";
+
+            var deserializer = new AggtDeserializer();
+            deserializer.UpdatedEntityCreationMode = UpdatedEntityCreationMode.CreateNewInstance;
+            var entity = deserializer.Deserialize(typeof(Favorate), json) as Favorate;
+
+            Assert.AreEqual(entity.FavorateType, FavorateType.B);
+            Assert.AreEqual(entity.RO_FavorateTypeString, "B", "只读属性的反序列化需要被忽略。");
         }
 
         [TestMethod]
@@ -2219,7 +2240,7 @@ namespace RafyUnitTest
         {
             var json =
 @"{
-  ""favorateType"": 1
+""favorateType"": 1
 }";
             var deserializer = new AggtDeserializer();
             var entity = deserializer.Deserialize(typeof(Favorate), json) as Favorate;
@@ -2231,7 +2252,7 @@ namespace RafyUnitTest
         {
             var json =
 @"{
-  ""favorateType"": ""B""
+""favorateType"": ""B""
 }";
             var deserializer = new AggtDeserializer();
             var entity = deserializer.Deserialize(typeof(Favorate), json) as Favorate;

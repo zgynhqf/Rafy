@@ -107,6 +107,17 @@ namespace UT
 
         #region 只读属性
 
+        public static readonly Property<string> RO_FavorateTypeStringProperty = P<Favorate>.RegisterReadOnly(
+            e => e.RO_FavorateTypeString, e => e.GetRO_FavorateTypeString(), FavorateTypeProperty);
+        public string RO_FavorateTypeString
+        {
+            get { return this.GetProperty(RO_FavorateTypeStringProperty); }
+        }
+        private string GetRO_FavorateTypeString()
+        {
+            return this.FavorateType.ToString();
+        }
+
         #endregion
     }
 

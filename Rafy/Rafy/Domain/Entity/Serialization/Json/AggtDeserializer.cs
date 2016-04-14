@@ -105,6 +105,7 @@ namespace Rafy.Domain.Serialization.Json
                 {
                     entity = Activator.CreateInstance(type) as Entity;
                     entity.PersistenceStatus = PersistenceStatus.Unchanged;
+                    entity.Id = id;
                 }
             }
             if (entity == null)
@@ -170,6 +171,8 @@ namespace Rafy.Domain.Serialization.Json
                 var mp = properties.Find(propertyName, true);
                 if (mp != null)
                 {
+                    //只读属性不需要反序列化。
+                    if (mp.IsReadOnly) continue;
                     //id 属性需要提前处理，而不需要在这里直接反序列化。
                     if (mp == Entity.IdProperty) continue;
                     //幽灵属性也不需要处理。
