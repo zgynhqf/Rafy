@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{96BE2240-F243-41C6-B050-CDD83504633B}"
+	ProjectSection(SolutionItems) = preProject
+		Rafy\_Items\UI 框架说明（必看）.txt = Rafy\_Items\UI 框架说明（必看）.txt
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{88EAF8AF-E139-4254-9BDF-5DB3F48C12B2}"
 EndProject
