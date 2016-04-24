@@ -95,6 +95,18 @@
             </content>
         </section>
 
+        <section address="bad">
+            <title>缺点</title>
+            <content>
+                <para>
+                    目前，大批量导入实体的功能是由一个单独的插件以新的方式完成的。虽然性能非常好，但是它只是简单地把数据快速地导入数据库中，并不能支持仓库、仓库数据提供器中许多内置的功能和扩展点（例如 RepositoryDataProvider 中的 Inserting、Updating、Deleting、Querying 等事件以及相应的虚方法等都不会发生）。这将会导致一些功能失效，如：更新实体时冗余属性不会自动更新、时间戳插件的功能无效。
+                </para>
+                <para>
+                    较好的性能往往与更多的功能和扩展性冲突。为了应对大数据的导入，在使用本插件的同时，开发者不得不额外地人工处理这些缺失的功能；所以，除了对性能非常敏感的应用场景以外，为了保证更好的扩展性与强大的功能，尽量不要使用大数据批量导入功能。
+                </para>
+            </content>
+        </section>
+
         <section address="inner">
             <title>实现原理</title>
             <content>

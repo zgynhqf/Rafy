@@ -6,7 +6,10 @@
 
       <introduction>
           <!-- <autoOutline /> -->
-          <para>本文档正在整理中，敬请期待。</para>
+          <para>本插件的相关文档请见：</para>
+          <para>
+              <link xlink:href="c70274b4-8afc-4bd4-82d9-6e43ae7562ee"/>
+          </para>
       </introduction>
 
       <relatedTopics>
