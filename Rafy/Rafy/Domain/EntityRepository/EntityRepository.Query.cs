@@ -688,6 +688,14 @@ namespace Rafy.Domain
         [RepositoryQuery]
         protected virtual EntityList DoGetBy(object criteria)
         {
+            object list = null;
+            if (MethodCaller.CallMethodIfImplemented(
+                this, EntityConvention.GetByCriteriaMethod, new object[] { criteria }, out list
+                ))
+            {
+                return list as EntityList;
+            }
+
             //所有无法找到对应单一参数的查询，都会调用此方法。
             //此方法会尝试使用仓库扩展类中编写的查询来响应本次查询。
             //先尝试使用仓库扩展来满足提供查询结果。
