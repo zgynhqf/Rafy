@@ -23,7 +23,7 @@
     BUG修复
         JSON 反序列化时没有反序列化 Id 的问题。
         JSON 反序列化时没有忽略只读属性的问题。
-        GetBy(object criteria)
+        GetBy(object criteria) 没有导向具体类型参数的问题。
 
 3.50.3119
     ★★公布、结构
