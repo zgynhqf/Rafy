@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.50.3129
+3.50.3130
     添加接口
         Accounts 插件
             User 添加 LoginFailedTimes、LastLoginTime 属性。并添加登录次数限制的逻辑。
@@ -19,6 +19,7 @@
             User 添加一些其它属性。
         JSON 序列化
             可以控制是否需要序列化只读属性。
+            Result 的序列化支持 SerializeAsCamelProperty 属性的配置。
     BUG修复
         JSON 反序列化时没有反序列化 Id 的问题。
         JSON 反序列化时没有忽略只读属性的问题。

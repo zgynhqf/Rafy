@@ -105,14 +105,14 @@ namespace Rafy.Web.Http
                     using (var jw = this.CreateJsonWriter(writeStream, content))
                     {
                         jw.WriteStartObject();
-                        jw.WritePropertyName("success");
+                        jw.WritePropertyName(this.SerializeAsCamelProperty ? "success" : "Success");
                         jw.WriteValue(res.Success);
-                        jw.WritePropertyName("message");
+                        jw.WritePropertyName(this.SerializeAsCamelProperty ? "message" : "Message");
                         jw.WriteValue(res.Message);
-                        jw.WritePropertyName("statusCode");
+                        jw.WritePropertyName(this.SerializeAsCamelProperty ? "statusCode" : "StatusCode");
                         jw.WriteValue(res.StatusCode);
 
-                        jw.WritePropertyName("data");
+                        jw.WritePropertyName(this.SerializeAsCamelProperty ? "data" : "Data");
                         this.SerializeAggt(res.Data as IDomainComponent, jw);
 
                         jw.WriteEndObject();
