@@ -121,7 +121,7 @@ namespace Rafy.Utils
 
         /// <summary>
         /// 返回一个枚举值对应的 Label。
-        /// 如果该枚举值没有标记 Label，则返回 String.Empty。
+        /// 如果该枚举值没有标记 Label，则返回 null。
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>

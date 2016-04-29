@@ -138,8 +138,7 @@ ALTER TABLE ");
         {
             using (var sql = this.Writer())
             {
-                sql.Write(@"
-ALTER TABLE ");
+                sql.Write("ALTER TABLE ");
                 sql.Write(this.Quote(op.DependentTable));
                 sql.Write(@"
     ADD CONSTRAINT ");
