@@ -60,10 +60,10 @@ namespace Rafy.Domain
         /// {
         ///     static RecieveController()
         ///     {
-        ///         ListenerFor<RecieveController>().AlwaysListen(typeof(StockController));
+        ///         Depend<RecieveController>().On<StockController>();
         ///     }
         /// 
-        ///     protected override void AlwaysListen(DomainController controller)
+        ///     protected override void OnAlwaysDependon(DomainController controller)
         ///     {
         ///         var sc = controller as StockController;
         ///         if (sc != null)
