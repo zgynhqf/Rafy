@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="acc34fac-b431-4db9-a86b-83f40c812b97" revisionNumber="1">
+    <developerConceptualDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+        <introduction>
+            <!-- <autoOutline /> -->
+        </introduction>
+
+        <section address="intro">
+            <title>单连接事务介绍</title>
+            <content>
+                <para>
+                    在服务的执行逻辑代码中（Execute 方法内部），可以使用 <codeInline>System.Transation.TransactionScope</codeInline> 类来控制事务。但是如果使用了多个连接，该类会自动把事务提升为分布式事务。为了解决这个问题，Rafy 提供了类型 <codeInline>SingleConnectionTrasactionScope</codeInline> ，用于声明单连接事务代码块。在该类声明的代码块中，所有仓库使用的都是同一个打开的连接。
+                </para>
+                <para>该类的使用方法与 .NET 自带的 TransactionScope 类一致：使用 using 声明代码块，使用 Complete 方法提交整个事务。另外，建议使用 RF 类提供了方便构建单连接事务块的接口。</para>
+                <para>代码示例如下：</para>
+                <code language="cs">
+                    <![CDATA[using (var tran = RF.TransactionScope(JXCEntityRepository.DbSettingName))
+{
+    //以下两个查询使用的都是同一个数据库连接。
+    var whRepo = RF.Concrete<WarehouseRepository>();
+    var warehouses = whRepo.GetAll();
+    var userRepo = RF.Concrete<UserRepository>();
+    var users = userRepo.GetAll();
+    
+    //do transaction...
+
+    tran.Complete();
+}]]>
+                </code>
+            </content>
+        </section>
+
+        <relatedTopics>
+        </relatedTopics>
+    </developerConceptualDocument>
+</topic>

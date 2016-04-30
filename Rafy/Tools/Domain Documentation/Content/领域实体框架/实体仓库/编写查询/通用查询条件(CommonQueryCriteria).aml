@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="02f40bcc-1ff3-4abc-b4a9-2dea57d516ce" revisionNumber="1">
+    <developerConceptualDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+        <introduction>
+            <para>注意，本查询方式（基于 CreatePropertyQuery 方法）已经过时，不再可用！！！新的文档正在更新中……</para>
+            <autoOutline />
+        </introduction>
+
+        <section address="PropertiesMatchCriteria">
+            <title>使用 PropertiesMatchCriteria 进行精确属性匹配</title>
+            <content>
+                <para>在查询时，我们常常期望对实体的一组属性中的每一个都进行精确匹配，这时可以使用 <codeInline>PropertiesMatchCriteria</codeInline> 类型来快速实现查询。例如，以下查询实现了同时通过编码和名称来查询指定的仓库：</para>
+                <code language="cs">
+                    <![CDATA[public Warehouse GetByCodeAndName(string warehouseCode, string warehouseName)
+{
+    return this.FetchFirst(new PropertiesMatchCriteria
+    {
+        { Warehouse.CodeProperty, warehouseCode },
+        { Warehouse.NameProperty, warehouseName },
+    });
+}]]>
+                </code>
+                <para>以上代码，功能上完全等同于下面的查询：</para>
+                <code language="cs">
+                    <![CDATA[public Warehouse GetByCodeAndName(string warehouseCode, string warehouseName)
+{
+    return this.FetchFirst(r => r.DA_GetByCodeAndName(warehouseCode, warehouseName));
+}
+private EntityList DA_GetByCodeAndName(string warehouseCode, string warehouseName)
+{
+    IPropertyQuery q = this.CreatePropertyQuery();
+
+    q.Constrain(Warehouse.CodeProperty).Equal(warehouseCode);
+    q.And().Constrain(Warehouse.NameProperty).Contains(warehouseName);
+
+    return this.QueryList(q);
+}]]>
+                </code>
+            </content>
+        </section>
+
+        <relatedTopics>
+        </relatedTopics>
+    </developerConceptualDocument>
+</topic>

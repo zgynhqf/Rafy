@@ -97,21 +97,22 @@
                         <para>Rafy_Query</para>
                         <para>用于在仓库类中生成简单的查询方法。</para>
                         <code language="cs">
-                            <![CDATA[public $EntityList$ $MethodName$(string parameter1, int parameter2)
-{
-    return this.FetchList(r => r.DA_$MethodName$(parameter1, parameter2));
-}
-private EntityList DA_$MethodName$(string parameter1, int parameter2)
+                            <![CDATA[[RepositoryQuery]
+public virtual $EntityListName$ $MethodName$($Parameters$)
 {
     var q = this.CreateLinqQuery();
-    q = q.Where(e => e.Name == 1);
-    return this.QueryList(q);
+    q = q.Where(e => e.$WhereExpression$);$end$
+    return ($EntityListName$)this.QueryData(q);
 }]]>
                         </code>
                     </listItem>
                     <listItem>
-                        <para>Rafy_Query_Match</para>
+                        <para>Rafy_Query_Common</para>
                         <para>用于在仓库类中生成一个用于精确匹配每一个属性的查询方法。</para>
+                    </listItem>
+                    <listItem>
+                        <para>Rafy_Query_TableQueryContent</para>
+                        <para>用于在 Rafy_Query 生成的查询方法中，再生成一个使用 SqlTree 进行查询的查询实现代码。</para>
                     </listItem>
                 </list>
             </content>

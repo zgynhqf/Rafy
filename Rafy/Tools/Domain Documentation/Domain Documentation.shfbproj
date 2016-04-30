@@ -83,7 +83,7 @@
     <Folder Include="Content\领域实体框架\实体缓存" />
     <Folder Include="Content\领域实体框架\领域实体\实体属性" />
     <Folder Include="Content\领域实体框架\领域帮助主题" />
-    <Folder Include="Content\领域实体框架\领域服务" />
+    <Folder Include="Content\领域实体框架\领域逻辑" />
     <Folder Include="Content\领域实体框架\ORM" />
     <Folder Include="Content\领域实体框架\其它" />
     <Folder Include="Content\领域实体框架\实体仓库" />
@@ -143,6 +143,8 @@
     <None Include="Content\领域实体框架\ORM\为数据库生成注释.aml" />
     <None Include="Content\领域实体框架\其它\实体框架常见问题.aml" />
     <None Include="Content\领域实体框架\实体仓库\大批量导入实体.aml" />
+    <None Include="Content\领域实体框架\实体仓库\编写查询\OData 查询条件(ODataQueryCriteria).aml" />
+    <None Include="Content\领域实体框架\实体仓库\编写查询\SqlTree 查询.aml" />
     <None Include="Content\领域实体框架\对象关系映射.aml" />
     <None Include="Content\领域实体框架\ORM\SQL 语句日志.aml" />
     <None Include="Content\领域实体框架\ORM\多数据库支持.aml" />
@@ -159,13 +161,14 @@
     <None Include="Content\领域实体框架\实体仓库\编写查询\Linq 查询.aml" />
     <None Include="Content\领域实体框架\实体仓库\编写查询\Sql 查询.aml" />
     <None Include="Content\领域实体框架\实体仓库\编写查询\分页查询.aml" />
-    <None Include="Content\领域实体框架\实体仓库\编写查询\托管属性查询.aml" />
+    <None Include="Content\领域实体框架\实体仓库\编写查询\通用查询条件(CommonQueryCriteria).aml" />
     <None Include="Content\领域实体框架\实体仓库\编写查询\数据行数查询.aml" />
     <None Include="Content\领域实体框架\实体仓库\编写查询\表格查询.aml" />
     <None Include="Content\领域实体框架\实体仓库\编写查询\贪婪加载.aml" />
     <None Include="Content\领域实体框架\快速试用\如何：查看领域实体关系图.aml" />
     <None Include="Content\领域实体框架\快速试用\如何：连接到 Sql Server 数据库.aml" />
     <None Include="Content\领域实体框架\快速试用\绘制领域类图.aml" />
+    <None Include="Content\领域实体框架\插件级扩展.aml" />
     <None Include="Content\领域实体框架\自动生成代码.aml" />
     <None Include="Content\领域实体框架\部署.aml" />
     <None Include="Content\领域实体框架\安装.aml" />
@@ -195,12 +198,14 @@
     <None Include="Content\领域实体框架\领域实体.aml" />
     <None Include="Content\领域实体框架\领域实体\树型实体.aml" />
     <None Include="Content\领域实体框架\快速试用\创建第一个程序.aml" />
-    <None Include="Content\领域实体框架\领域服务.aml" />
     <None Include="Content\领域实体框架\领域实体\领域实体关系图.aml" />
     <None Include="Content\领域实体框架\领域帮助主题.aml" />
     <None Include="Content\领域实体框架\领域帮助主题\如何：手动添加一个领域项目.aml" />
-    <None Include="Content\领域实体框架\领域服务\单连接事务.aml" />
-    <None Include="Content\领域实体框架\领域服务\执行SQL或存储过程.aml" />
+    <None Include="Content\领域实体框架\领域逻辑\单连接事务.aml" />
+    <None Include="Content\领域实体框架\领域逻辑\执行SQL或存储过程.aml" />
+    <None Include="Content\领域实体框架\领域逻辑.aml" />
+    <None Include="Content\领域实体框架\领域逻辑\领域控制器.aml" />
+    <None Include="Content\领域实体框架\领域逻辑\领域服务.aml" />
     <None Include="UML.7z" />
   </ItemGroup>
   <ItemGroup>
