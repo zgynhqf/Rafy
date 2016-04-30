@@ -18,8 +18,8 @@
             AccountController 中添加 Register 方法，实现注册逻辑。
             User 添加一些其它属性。
         JSON 序列化
-            可以控制是否需要序列化只读属性。
             Result 的序列化支持 SerializeAsCamelProperty 属性的配置。
+            EntityAwareJsonMediaTypeFormatter 支持一定的扩展点。
     BUG修复
         JSON 反序列化时没有反序列化 Id 的问题。
         JSON 反序列化时没有忽略只读属性的问题。
