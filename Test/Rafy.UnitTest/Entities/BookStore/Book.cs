@@ -258,11 +258,11 @@ namespace UT
         [RepositoryQuery]
         public virtual BookList Get_NameEqualsCode2()
         {
-            var source = f.Table(this);
-            var q = f.Query(source, where: f.Constraint(
-                leftColumn: source.Column(Book.NameProperty),
-                rightColumn: source.Column(Book.CodeProperty)
-            ));
+            var table = f.Table(this);
+            var q = f.Query(
+                from :table,
+                where: table.Column(Book.NameProperty).Equal(table.Column(Book.CodeProperty))
+            );
             return (BookList)this.QueryData(q);
         }
 
@@ -312,7 +312,7 @@ namespace UT
                 from: bookTable,
                 where: f.Exists(f.Query(
                     from: chapterTable,
-                    where: f.Constraint(chapterTable.Column(Chapter.BookIdProperty), bookTable.IdColumn)
+                    where: chapterTable.Column(Chapter.BookIdProperty).Equal(bookTable.IdColumn)
                 ))
             );
             return (BookList)this.QueryData(q);
@@ -330,10 +330,11 @@ namespace UT
             var chapter = f.Table<Chapter>();
             var q = f.Query(
                 from: book,
-                where: f.Exists(f.Query(chapter,
+                where: f.Exists(f.Query(
+                    from: chapter,
                     where: f.And(
-                        f.Constraint(chapter.Column(Chapter.BookIdProperty), book.IdColumn),
-                        f.Constraint(chapter.Column(Chapter.NameProperty), chapterName)
+                        chapter.Column(Chapter.BookIdProperty).Equal(book.IdColumn),
+                        chapter.Column(Chapter.NameProperty).Equal(chapterName)
                     )
                 ))
             );
@@ -350,7 +351,7 @@ namespace UT
         {
             var book = f.Table(this);
             var chapter = f.Table<Chapter>();
-            return (BookList)this.QueryData(f.Query(
+            var q = f.Query(
                 from: book,
                 where: f.Not(f.Exists(f.Query(
                     from: chapter,
@@ -359,7 +360,8 @@ namespace UT
                         f.Constraint(chapter.Column(Chapter.NameProperty), PropertyOperator.NotEqual, chapterName)
                     )
                 )))
-            ));
+            );
+            return (BookList)this.QueryData(q);
         }
 
         /// <summary>

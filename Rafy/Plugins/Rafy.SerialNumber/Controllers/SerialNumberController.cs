@@ -111,7 +111,7 @@ namespace Rafy.SerialNumber
                     //如果当前值还不存在，则直接添加一个到库中。
                     currentValue = new SerialNumberValue
                     {
-                        AutoCodeInfo = info,
+                        SerialNumberInfo = info,
                         TimeKey = timeKey,
                         RollValue = info.RollValueStart
                     };
@@ -149,7 +149,7 @@ namespace Rafy.SerialNumber
             }
             else
             {
-                return this.GenerateNext(currentValue.AutoCodeInfo);
+                return this.GenerateNext(currentValue.SerialNumberInfo);
             }
         }
 

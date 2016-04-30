@@ -47,19 +47,19 @@ namespace Rafy.SerialNumber
 
         #region 引用属性
 
-        public static readonly IRefIdProperty AutoCodeInfoIdProperty =
-            P<SerialNumberValue>.RegisterRefId(e => e.AutoCodeInfoId, ReferenceType.Parent);
-        public long AutoCodeInfoId
+        public static readonly IRefIdProperty SerialNumberInfoIdProperty =
+            P<SerialNumberValue>.RegisterRefId(e => e.SerialNumberInfoId, ReferenceType.Parent);
+        public long SerialNumberInfoId
         {
-            get { return (long)this.GetRefId(AutoCodeInfoIdProperty); }
-            set { this.SetRefId(AutoCodeInfoIdProperty, value); }
+            get { return (long)this.GetRefId(SerialNumberInfoIdProperty); }
+            set { this.SetRefId(SerialNumberInfoIdProperty, value); }
         }
         public static readonly RefEntityProperty<SerialNumberInfo> AutoCodeInfoProperty =
-            P<SerialNumberValue>.RegisterRef(e => e.AutoCodeInfo, AutoCodeInfoIdProperty);
+            P<SerialNumberValue>.RegisterRef(e => e.SerialNumberInfo, SerialNumberInfoIdProperty);
         /// <summary>
         /// 所使用的自动编码规则
         /// </summary>
-        public SerialNumberInfo AutoCodeInfo
+        public SerialNumberInfo SerialNumberInfo
         {
             get { return this.GetRefEntity(AutoCodeInfoProperty); }
             set { this.SetRefEntity(AutoCodeInfoProperty, value); }
@@ -169,7 +169,7 @@ namespace Rafy.SerialNumber
         public virtual SerialNumberValue GetByKey(string autoCodeName, string timeKey)
         {
             var q = this.CreateLinqQuery();
-            q = q.Where(e => e.AutoCodeInfo.Name == autoCodeName && e.TimeKey == timeKey);
+            q = q.Where(e => e.SerialNumberInfo.Name == autoCodeName && e.TimeKey == timeKey);
             return (SerialNumberValue)this.QueryData(q);
         }
 
