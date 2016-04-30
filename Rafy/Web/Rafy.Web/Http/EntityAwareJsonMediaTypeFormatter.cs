@@ -100,27 +100,14 @@ namespace Rafy.Web.Http
             if (value is Result)
             {
                 var res = (Result)value;
-                if (res.Data is IDomainComponent)
+                using (var jw = this.CreateJsonWriter(writeStream, content))
                 {
-                    using (var jw = this.CreateJsonWriter(writeStream, content))
-                    {
-                        jw.WriteStartObject();
-                        jw.WritePropertyName(this.SerializeAsCamelProperty ? "success" : "Success");
-                        jw.WriteValue(res.Success);
-                        jw.WritePropertyName(this.SerializeAsCamelProperty ? "message" : "Message");
-                        jw.WriteValue(res.Message);
-                        jw.WritePropertyName(this.SerializeAsCamelProperty ? "statusCode" : "StatusCode");
-                        jw.WriteValue(res.StatusCode);
+                    this.SerializeResult(res, jw);
 
-                        jw.WritePropertyName(this.SerializeAsCamelProperty ? "data" : "Data");
-                        this.SerializeAggt(res.Data as IDomainComponent, jw);
-
-                        jw.WriteEndObject();
-                        jw.Flush();
-                    }
-
-                    handled = true;
+                    jw.Flush();
                 }
+
+                handled = true;
             }
             //对实体进行特殊的处理。
             else if (value is IDomainComponent)
@@ -139,7 +126,40 @@ namespace Rafy.Web.Http
             }
         }
 
-        private void SerializeAggt(IDomainComponent value, JsonTextWriter jw)
+        /// <summary>
+        /// 使用指定的 JsonTextWriter 来序列化 Result 类型。
+        /// </summary>
+        /// <param name="res"></param>
+        /// <param name="jw"></param>
+        protected virtual void SerializeResult(Result res, JsonTextWriter jw)
+        {
+            jw.WriteStartObject();
+            jw.WritePropertyName(this.SerializeAsCamelProperty ? "success" : "Success");
+            jw.WriteValue(res.Success);
+            jw.WritePropertyName(this.SerializeAsCamelProperty ? "message" : "Message");
+            jw.WriteValue(res.Message);
+            jw.WritePropertyName(this.SerializeAsCamelProperty ? "statusCode" : "StatusCode");
+            jw.WriteValue(res.StatusCode);
+
+            jw.WritePropertyName(this.SerializeAsCamelProperty ? "data" : "Data");
+            if (res.Data is IDomainComponent)
+            {
+                this.SerializeAggt(res.Data as IDomainComponent, jw);
+            }
+            else
+            {
+                this.SerializeByJsonSerializer(res.Data, jw);
+            }
+
+            jw.WriteEndObject();
+        }
+
+        /// <summary>
+        /// 使用指定的 JsonTextWriter 来序列化 IDomainComponent 类型。
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="jw"></param>
+        protected virtual void SerializeAggt(IDomainComponent value, JsonTextWriter jw)
         {
             var serializer = new AggtSerializer();
             serializer.UseCamelProperty = this.SerializeAsCamelProperty;
@@ -217,7 +237,7 @@ namespace Rafy.Web.Http
             return jw;
         }
 
-        #region CommonQueryCriteria
+        #region //CommonQueryCriteria
 
         //private CommonQueryCriteria DesrializeCommonQueryCriteria(string strContent)
         //{
@@ -303,15 +323,25 @@ namespace Rafy.Web.Http
             using (var jsonTextWriter = new JsonTextWriter(new StreamWriter(writeStream, encoding)))
             {
                 jsonTextWriter.CloseOutput = false;
-                JsonSerializer jsonSerializer = JsonSerializer.Create();
-                if (this.SerializeAsCamelProperty)
-                {
-                    jsonSerializer.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                }
-
-                jsonSerializer.Serialize(jsonTextWriter, value);
+                SerializeByJsonSerializer(value, jsonTextWriter);
                 jsonTextWriter.Flush();
             }
+        }
+
+        /// <summary>
+        /// 使用 <see cref="JsonSerializer"/> 来进行序列化。
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="jsonTextWriter"></param>
+        protected void SerializeByJsonSerializer(object value, JsonTextWriter jsonTextWriter)
+        {
+            JsonSerializer jsonSerializer = JsonSerializer.Create();
+            if (this.SerializeAsCamelProperty)
+            {
+                jsonSerializer.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            }
+
+            jsonSerializer.Serialize(jsonTextWriter, value);
         }
 
         #endregion

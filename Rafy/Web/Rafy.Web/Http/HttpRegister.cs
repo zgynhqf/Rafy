@@ -35,7 +35,7 @@ namespace Rafy.Web.Http
         /// 负责完成实体的序列化、反序列化。
         /// 同时使用 JSON.NET 完成其它对象的序列化、反序列化。
         /// </summary>
-        public EntityAwareJsonMediaTypeFormatter Formatter { get; private set; }
+        public EntityAwareJsonMediaTypeFormatter Formatter { get; set; }
 
         /// <summary>
         /// 在 HttpConfiguration 中注册一些必要的绑定器。
