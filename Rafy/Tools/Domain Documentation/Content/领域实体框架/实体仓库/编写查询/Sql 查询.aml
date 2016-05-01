@@ -7,7 +7,7 @@
         <introduction>
             <!--<autoOutline />-->
 
-            <para>在对实体的编写查询时，除了使用 Linq 查询和托管属性查询，还可以直接传入 Sql 语句来实现一些非常复杂的查询。例如：</para>
+            <para>在对实体的编写查询时，除了使用 Linq 查询和 SqlTree 查询，还可以直接传入 Sql 语句来实现一些非常复杂的查询。例如：</para>
             <code language="cs">
                 <![CDATA[[RepositoryQuery]
 public virtual WarehouseList GetByName(string name)
