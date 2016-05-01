@@ -172,7 +172,7 @@ public virtual LiteDataTable GetBy(string name, PagingInfo pi)
                         <code language="cs">
                             <![CDATA[var table = f.Table<Chapter>();
 var q = f.Query(
-    from :table,
+    from: table,
     where: table.Column(Chapter.NameProperty).Equal(table.Column(Chapter.CodeProperty))//两个列相等
 );]]>
                         </code>
@@ -182,7 +182,7 @@ var q = f.Query(
                         <code language="cs">
                             <![CDATA[var table = f.Table(this);
 var q = f.Query(
-    from :table,
+    from: table,
     where: f.And(
         table.Column(Chapter.NameProperty).Equal(name),
         f.Or(
@@ -234,7 +234,7 @@ var q = f.Query(
                         </code>
                     </listItem>
                     <listItem>
-                        <para>Exists：</para>
+                        <para>嵌套子查询（Exists）：</para>
                         <code language="cs">
                             <![CDATA[var bookTable = f.Table(this);
 var chapterTable = f.Table<Chapter>();
@@ -257,19 +257,36 @@ var q = f.Query(
     where: f.Not(f.Exists(f.Query(
         from: chapter,
         where: f.And(
-            f.Constraint(chapter.Column(Chapter.BookIdProperty), book.IdColumn),
-            f.Constraint(chapter.Column(Chapter.NameProperty), PropertyOperator.NotEqual, chapterName)
+            chapter.Column(Chapter.BookIdProperty).Equal(bookTable.IdColumn),
+            chapter.Column(Chapter.NameProperty).NotEqual("chapterName")
         )
     )))
 );]]>
                         </code>
                     </listItem>
-                    <!--<listItem>
+                    <listItem>
+                        <para>Linq 查询与 SqlTree 混合使用</para>
                         <para>
-                            注意：Linq 查询与 SqlTree 查询是可以混用的。您可以先使用 Linq 查询来
-                            可以通过 <codeInline>IPropertyQuery.CombineLinq(IQueryable queryable)</codeInline> 方法，传入 Linq 查询对象把 Linq 查询转换为托管属性查询。
+                            Linq 查询与 SqlTree 查询是可以混用的。您可以先使用 Linq 查询来快速构造简单的查询条件，然后再通过 <codeInline>IQuery ConvertToQuery(IQueryable queryable)</codeInline> 方法，传入 Linq 查询对象 IQueryable 并转换为 SqlTree 查询对象 IQuery，然后再修改 SqlTree 中的对象节点。
                         </para>
-                    </listItem>-->
+                        <code language="cs">
+                            <![CDATA[[RepositoryQuery]
+public virtual ChapterList GetByBookName(string name)
+{
+    var q = this.CreateLinqQuery();
+    q = q.Where(c => c.Book.Name == name);
+
+    var tree = this.ConvertToQuery(q);//从 IQueryable 转换为 IQuery
+
+    var f = QueryFactory.Instance;
+    var t = tree.MainTable;
+
+    tree.Where = f.And(tree.Where, t.Column(Chapter.NameProperty).Equal(name));
+
+    return (ChapterList)this.QueryData(tree);
+}]]>
+                        </code>
+                    </listItem>
                 </list>
                 <para>更多示例，请参照源码中单元测试的 ORMTest 中的 TableQuery 相关方法。</para>
             </content>
