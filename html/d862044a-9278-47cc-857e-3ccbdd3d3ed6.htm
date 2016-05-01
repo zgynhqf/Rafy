@@ -6,7 +6,7 @@
         Rafy.FileStorage.FileStoragePlugin.DbSettingName = <span class="highlight-literal">"TestDb"</span>;
 
         <span class="highlight-comment">//添加流水号插件到 Rafy 应用程序集中。</span>
-        RafyEnvironment.DomainPlugins.Add(<span class="highlight-keyword">new</span> Rafy.FileStorage.SerialNumberPlFileStorageugin());
+        RafyEnvironment.DomainPlugins.Add(<span class="highlight-keyword">new</span> Rafy.FileStorage.FileStoragePlugin());
 
         <span class="highlight-keyword">base</span>.InitEnvironment();
     }
