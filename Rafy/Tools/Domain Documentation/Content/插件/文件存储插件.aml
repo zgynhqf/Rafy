@@ -85,7 +85,7 @@ repo.Save(file);]]>
                                 <code language="cs">
                                     <![CDATA[var repo = RF.Concrete<FileInfoRepository>();
 var file = repo.GetById(file.Id);
-var content = Encoding.UTF8.GetString(file.Content);]]>
+var content = Encoding.UTF8.GetString(file.Content);//Content 属性使用懒加载设计，不到使用时是不会加载到内存中的。]]>
                                 </code>
                             </content>
                         </step>
