@@ -317,6 +317,10 @@ namespace Rafy.Domain
 
         /// <summary>
         /// 通过某个具体的参数来调用数据层查询。
+        /// <para>调用逻辑：                                                                 </para>
+        /// <para>1.尝试调用子类的 <see cref="DoGetBy(object)"/> 方法逻辑。                   </para>
+        /// <para>2.尝试通过反射来调用仓库扩展类型中的名为 GetBy，参数为具体参数的查询方法。     </para>
+        /// <para>3.如果上述都没有实现，则抛出异常。                                           </para>
         /// </summary>
         /// <param name="criteria"></param>
         /// <returns></returns>
@@ -688,14 +692,6 @@ namespace Rafy.Domain
         [RepositoryQuery]
         protected virtual EntityList DoGetBy(object criteria)
         {
-            object list = null;
-            if (MethodCaller.CallMethodIfImplemented(
-                this, EntityConvention.GetByCriteriaMethod, new object[] { criteria }, out list
-                ))
-            {
-                return list as EntityList;
-            }
-
             //所有无法找到对应单一参数的查询，都会调用此方法。
             //此方法会尝试使用仓库扩展类中编写的查询来响应本次查询。
             //先尝试使用仓库扩展来满足提供查询结果。
@@ -703,7 +699,7 @@ namespace Rafy.Domain
             if (result != null) return result;
 
             //所有扩展检查完毕，直接抛出异常。
-            throw new NotImplementedException(string.Format(
+            throw new InvalidProgramException(string.Format(
                 "{1} 类需要编写一个单一参数类型为 {0} 的查询方法以实现数据层查询。格式如下：public virtual object GetBy({0} criteira) {{...}}。",
                 criteria.GetType().Name,
                 this.GetType().FullName

@@ -91,18 +91,24 @@ namespace JXC
     public abstract class StorageOutBillRepository : JXCEntityRepository
     {
         protected StorageOutBillRepository() { }
+
+        [RepositoryQuery]
+        public virtual StorageOutBillList GetBy(TimeSpanCriteria criteria)
+        {
+            throw new NotSupportedException();
+            //return (this.DataProvider as StorageInBillDataProvider).GetBy(criteria);
+        }
     }
 
     [DataProviderFor(typeof(StorageOutBillRepository))]
-    public class StorageOutBillDataProvider : RdbDataProvider
+    public class StorageOutBillDataProvider : JXCEntityDataProvider
     {
         public StorageOutBillDataProvider()
         {
             this.DataSaver = new StorageOutBillSaver();
         }
 
-        [RepositoryQuery]
-        public virtual StorageOutBillList GetBy(TimeSpanCriteria criteria)
+        public StorageOutBillList GetBy(TimeSpanCriteria criteria)
         {
             var f = QueryFactory.Instance;
             var t = f.Table(this.Repository);

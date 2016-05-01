@@ -24,7 +24,7 @@ public virtual ChapterList GetBy(string name, PagingInfo pi)
     var t = f.Table<Chapter>();
 
     var q = f.Query(
-        selection: f.SelectAll(),//查询所有列
+        selection: t.Star(),//查询所有列
         from: t,//要查询的实体的表
         where: t.Column(Chapter.NameProperty).Contains(name)//where 条件,
         orderBy: new List<IOrderBy> {//排序

@@ -19,6 +19,7 @@ using Rafy.Domain.Validation;
 using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.MetaModel.View;
+using Rafy.Reflection;
 using Rafy.WPF.Command;
 
 namespace Rafy.WPF
@@ -126,7 +127,12 @@ namespace Rafy.WPF
 
             //导航面板的查询使用隐式查询。
             resultView.DataLoader.LoadDataAsync(
-                () => RF.Find(resultView.EntityType).GetBy(queryCriteria),
+                () =>
+                {
+                    var repo = RF.Find(resultView.EntityType);
+
+                    return MethodCaller.CallMethod(repo, EntityConvention.GetByCriteriaMethod, criteria) as IDomainComponent;
+                },
                 () => this.OnQueryCompleted(args)
                 );
         }

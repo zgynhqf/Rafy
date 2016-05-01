@@ -126,7 +126,7 @@ namespace JXC
     }
 
     [DataProviderFor(typeof(FileAttachementRepository))]
-    public class FileAttachementDataProvider : RdbDataProvider
+    public class FileAttachementDataProvider : JXCEntityDataProvider
     {
         protected override void Submit(SubmitArgs e)
         {

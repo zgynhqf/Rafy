@@ -1085,25 +1085,6 @@ namespace RafyUnitTest
             Assert.IsFalse(success, "没有编写仓库类型的实体，获取其相应的仓库时应该报错。");
         }
 
-        [TestMethod]
-        public void ET_Repository_Query_GetByObjectCriteria()
-        {
-            var repo = RF.Concrete<BookRepository>();
-            using (RF.TransactionScope(repo))
-            {
-                repo.Save(new Book { Name = "111" });
-                repo.Save(new Book { Name = "112" });
-
-                var criteria = new CommonQueryCriteria
-                {
-                    new PropertyMatch(Book.NameProperty, PropertyOperator.Contains, "2")
-                };
-                var objCriteria = (object)criteria;
-                var list = repo.GetBy(objCriteria);
-                Assert.AreEqual(1, list.Count);
-            }
-        }
-
         #endregion
 
         #region 批量导入
@@ -1699,6 +1680,18 @@ namespace RafyUnitTest
                 var adminList = adminRepo.Extension<EntityRepositoryExtension>().GetBySingleProperty(TestUser.AgeProperty, 100);
                 Assert.IsTrue(adminList.Count > 0);
             }
+        }
+
+        [TestMethod]
+        public void ET_Repository_QueryExt_GetByObjectCriteria_Exception()
+        {
+            var repo = RF.Concrete<BookRepository>();
+            try
+            {
+                repo.GetBy(new { });
+                Assert.IsFalse(true, "这里需要发生异常，因为给定的参数并没有在仓库中找到对应的方法。");
+            }
+            catch (InvalidProgramException) { }
         }
 
         #endregion

@@ -101,7 +101,8 @@ namespace UT
         [RepositoryQuery]
         public virtual BookLocList Get_DAInDataProvider(string name)
         {
-            return this.DataProvider.Get_DAInDataProvider(name);
+            throw new NotImplementedException("这个方法会在数据层中以同名方法实现。");
+            //return this.DataProvider.Get_DAInDataProvider(name);
         }
 
         private new BookLocRepositoryDataProvider DataProvider

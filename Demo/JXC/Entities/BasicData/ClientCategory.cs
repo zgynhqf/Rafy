@@ -61,7 +61,7 @@ namespace JXC
     }
 
     [DataProviderFor(typeof(ClientCategoryRepository))]
-    public partial class ClientCategoryDataProvider : RdbDataProvider
+    public partial class ClientCategoryDataProvider : JXCEntityDataProvider
     {
         protected override void Submit(SubmitArgs e)
         {

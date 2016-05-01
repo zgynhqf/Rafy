@@ -245,7 +245,8 @@ namespace Rafy.Web
                         case "_useCriteria":
                             //使用 Criteria 查询数据库
                             var criteria = ParseCriteria(filters, pagingInfo);
-                            entities = repo.GetBy(criteria);
+
+                            entities = MethodCaller.CallMethod(repo, EntityConvention.GetByCriteriaMethod, criteria) as EntityList;
                             break;
                         default:
                             break;
