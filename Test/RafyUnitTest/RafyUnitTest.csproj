@@ -81,6 +81,7 @@
     <Compile Include="Rafy\MiscellaneousTest.cs" />
     <Compile Include="Rafy\ODataTest.cs" />
     <Compile Include="Rafy\Plugins\AccountsPluginTest.cs" />
+    <Compile Include="Rafy\Plugins\FileStoragePluginTest.cs" />
     <Compile Include="Rafy\Plugins\SerialNumberPluginTest.cs" />
     <Compile Include="Rafy\StampTest.cs" />
     <Compile Include="ServerTestHelper.cs" />
@@ -123,6 +124,10 @@
     <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.Stamp\Rafy.Domain.Stamp.csproj">
       <Project>{6a13f732-1658-4636-8113-338b398cf328}</Project>
       <Name>Rafy.Domain.Stamp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.FileStorage\Rafy.FileStorage.csproj">
+      <Project>{143febb0-b41c-4e47-9325-f656cced2fa6}</Project>
+      <Name>Rafy.FileStorage</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Rafy\Plugins\Rafy.SerialNumber\Rafy.SerialNumber.csproj">
       <Project>{9ff37989-33e7-4d67-8e81-0a443eaee510}</Project>

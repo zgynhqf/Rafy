@@ -123,3 +123,5 @@
 /Rafy/Plugins/Rafy.SerialNumber/obj/Debug
 *.suo
 /TestResults
+/Rafy/Plugins/Rafy.FileStorage/obj/Debug
+/Rafy/Plugins/Rafy.FileStorage/bin/Debug

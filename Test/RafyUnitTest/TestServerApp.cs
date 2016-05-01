@@ -61,6 +61,7 @@ namespace RafyUnitTest
 
             RafyEnvironment.DomainPlugins.Add(new Rafy.Accounts.AccountsPlugin());
             RafyEnvironment.DomainPlugins.Add(new Rafy.SerialNumber.SerialNumberPlugin());
+            RafyEnvironment.DomainPlugins.Add(new Rafy.FileStorage.FileStoragePlugin());
 
             ////为了多次修改 Location 值，需要把修改值的操作放到 InitEnvironment 中。
             //RafyEnvironment.Location.IsWebUI = false;

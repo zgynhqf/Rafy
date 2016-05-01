@@ -29,7 +29,7 @@ using Rafy.ManagedProperty;
 namespace Rafy.Accounts
 {
     [Serializable]
-    public abstract class AccountsEntity : Entity
+    public abstract class AccountsEntity : LongEntity
     {
         #region 构造函数
 
@@ -40,22 +40,22 @@ namespace Rafy.Accounts
 
         #endregion
 
-        #region 动态提供 AccountsEntity 的主键的类型
+        //#region 动态提供 AccountsEntity 的主键的类型
 
-        static AccountsEntity()
-        {
-            IdProperty.OverrideMeta(typeof(AccountsEntity), new PropertyMetadata<object>(), m =>
-            {
-                m.DefaultValue = AccountsPlugin.KeyProvider.DefaultValue;
-            });
-        }
+        //static AccountsEntity()
+        //{
+        //    IdProperty.OverrideMeta(typeof(AccountsEntity), new PropertyMetadata<object>(), m =>
+        //    {
+        //        m.DefaultValue = AccountsPlugin.KeyProvider.DefaultValue;
+        //    });
+        //}
 
-        public override IKeyProvider KeyProvider
-        {
-            get { return AccountsPlugin.KeyProvider; }
-        }
+        //public override IKeyProvider KeyProvider
+        //{
+        //    get { return AccountsPlugin.KeyProvider; }
+        //}
 
-        #endregion
+        //#endregion
     }
 
     [Serializable]

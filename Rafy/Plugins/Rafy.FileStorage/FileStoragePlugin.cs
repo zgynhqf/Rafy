@@ -1,12 +1,12 @@
 ﻿/*******************************************************
  * 
  * 作者：胡庆访
- * 创建日期：20160318
+ * 创建日期：20160502
  * 说明：此文件只包含一个类，具体内容见类型注释。
  * 版本号：1.0.0
  * 
  * 历史记录：
- * 创建文件 胡庆访 20160318 09:22
+ * 创建文件 胡庆访 20160502 01:50
  * 
 *******************************************************/
 
@@ -19,14 +19,20 @@ using Rafy.ComponentModel;
 using Rafy.DbMigration;
 using Rafy.Domain;
 using Rafy.Domain.ORM.DbMigration;
+using Rafy.FileStorage.Controllers;
 
-namespace Rafy.SerialNumber
+namespace Rafy.FileStorage
 {
     /// <summary>
-    /// 自动流水号生成器插件。
-    /// 可以按照指定规则生成流水号。例如如下格式：2016031800000001,2016031800000002
+    /// 文件存储插件。
+    /// 用于将文件存储到各种不同的位置，并以 <see cref="FileInfo"/> 实体来表示存储的文件。
+    /// 通过引用这个实体，其它插件将非常方便地找到对应的文件和文件中的数据。
+    /// <para>
+    /// 使用方法：
+    /// 设置 <see cref="ContentProvider"/> 属性后，直接保存和读取 <see cref="FileInfo"/> 类型即可。
+    /// </para>
     /// </summary>
-    public class SerialNumberPlugin : DomainPlugin
+    public class FileStoragePlugin : DomainPlugin
     {
         private static string _dbSettingName;
         /// <summary>
@@ -39,11 +45,10 @@ namespace Rafy.SerialNumber
             set { _dbSettingName = value; }
         }
 
-        ///// <summary>
-        ///// 帐户插件中实体的主键的类型提供程序。
-        ///// 默认是 Long 型。
-        ///// </summary>
-        //public static IKeyProvider KeyProvider = KeyProviders.Get(typeof(long));
+        /// <summary>
+        /// 文件内容的提供程序。默认实现为 <see cref="DiskFileContentProvider"/>。
+        /// </summary>
+        public static IFileInfoContentProvider ContentProvider { get; set; } = new DiskFileContentProvider();
 
         public override void Initialize(IApp app)
         {

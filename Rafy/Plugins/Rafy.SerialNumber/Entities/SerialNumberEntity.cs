@@ -29,7 +29,7 @@ using Rafy.ManagedProperty;
 namespace Rafy.SerialNumber
 {
     [Serializable]
-    public abstract class SerialNumberEntity : Entity
+    public abstract class SerialNumberEntity : LongEntity
     {
         #region 构造函数
 
@@ -40,22 +40,22 @@ namespace Rafy.SerialNumber
 
         #endregion
 
-        #region 动态提供 AutoCoderEntity 的主键的类型
+        //#region 动态提供 SerialNumber 的主键的类型
 
-        static SerialNumberEntity()
-        {
-            IdProperty.OverrideMeta(typeof(SerialNumberEntity), new PropertyMetadata<object>(), m =>
-            {
-                m.DefaultValue = SerialNumberPlugin.KeyProvider.DefaultValue;
-            });
-        }
+        //static SerialNumberEntity()
+        //{
+        //    IdProperty.OverrideMeta(typeof(SerialNumberEntity), new PropertyMetadata<object>(), m =>
+        //    {
+        //        m.DefaultValue = SerialNumberPlugin.KeyProvider.DefaultValue;
+        //    });
+        //}
 
-        public override IKeyProvider KeyProvider
-        {
-            get { return SerialNumberPlugin.KeyProvider; }
-        }
+        //public override IKeyProvider KeyProvider
+        //{
+        //    get { return SerialNumberPlugin.KeyProvider; }
+        //}
 
-        #endregion
+        //#endregion
     }
 
     [Serializable]
