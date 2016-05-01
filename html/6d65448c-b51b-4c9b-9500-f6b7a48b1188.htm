@@ -60,7 +60,7 @@
 {
     <span class="highlight-keyword">var</span> f = QueryFactory.Instance;
 
-    <span class="highlight-keyword">var</span> t = f.Table&lt;Chapter&gt;();
+    <span class="highlight-keyword">var</span> t = f.Table(<span class="highlight-keyword">this</span>);<span class="highlight-comment">//使用当前的仓库来表示当前的表</span>
 
     <span class="highlight-keyword">var</span> q = f.Query(
         <span class="highlight-keyword">from</span>: t,
@@ -68,13 +68,13 @@
     );
 
     <span class="highlight-keyword">return</span> <span class="highlight-keyword">this</span>.QueryTable(q, pi);<span class="highlight-comment">//由查询实体变为查询数据表格，只是更换了这一行代码。</span>
-}</pre></div></div></div><script type="text/javascript">AddLanguageTabSet("ID0EAAHBABAAA");</script></li><li><p>两个条件的条件进行比较：</p><div class="codeSnippetContainer"><div class="codeSnippetContainerTabs"><div id="ID0EAAGBABAAA_tab1" class="codeSnippetContainerTabSingle">C#</div></div><div class="codeSnippetContainerCodeContainer"><div class="codeSnippetToolBar"><div class="codeSnippetToolBarText"><a id="ID0EAAGBABAAA_copyCode" href="#" onclick="javascript:CopyToClipboard('ID0EAAGBABAAA');return false;" title="Copy">Copy</a></div></div><div id="ID0EAAGBABAAA_code_Div1" class="codeSnippetContainerCode" style="display: block"><pre xml:space="preserve"><span class="highlight-keyword">var</span> table = f.Table(<span class="highlight-keyword">this</span>);<span class="highlight-comment">//使用当前的仓库来表示当前的表</span>
+}</pre></div></div></div><script type="text/javascript">AddLanguageTabSet("ID0EAAHBABAAA");</script></li><li><p>两个列的条件进行比较：</p><div class="codeSnippetContainer"><div class="codeSnippetContainerTabs"><div id="ID0EAAGBABAAA_tab1" class="codeSnippetContainerTabSingle">C#</div></div><div class="codeSnippetContainerCodeContainer"><div class="codeSnippetToolBar"><div class="codeSnippetToolBarText"><a id="ID0EAAGBABAAA_copyCode" href="#" onclick="javascript:CopyToClipboard('ID0EAAGBABAAA');return false;" title="Copy">Copy</a></div></div><div id="ID0EAAGBABAAA_code_Div1" class="codeSnippetContainerCode" style="display: block"><pre xml:space="preserve"><span class="highlight-keyword">var</span> table = f.Table&lt;Chapter&gt;();
 <span class="highlight-keyword">var</span> q = f.Query(
-    <span class="highlight-keyword">from</span> :table,
+    <span class="highlight-keyword">from</span>: table,
     <span class="highlight-keyword">where</span>: table.Column(Chapter.NameProperty).Equal(table.Column(Chapter.CodeProperty))<span class="highlight-comment">//两个列相等</span>
 );</pre></div></div></div><script type="text/javascript">AddLanguageTabSet("ID0EAAGBABAAA");</script></li><li><p>使用 And、Or：</p><div class="codeSnippetContainer"><div class="codeSnippetContainerTabs"><div id="ID0EAAFBABAAA_tab1" class="codeSnippetContainerTabSingle">C#</div></div><div class="codeSnippetContainerCodeContainer"><div class="codeSnippetToolBar"><div class="codeSnippetToolBarText"><a id="ID0EAAFBABAAA_copyCode" href="#" onclick="javascript:CopyToClipboard('ID0EAAFBABAAA');return false;" title="Copy">Copy</a></div></div><div id="ID0EAAFBABAAA_code_Div1" class="codeSnippetContainerCode" style="display: block"><pre xml:space="preserve"><span class="highlight-keyword">var</span> table = f.Table(<span class="highlight-keyword">this</span>);
 <span class="highlight-keyword">var</span> q = f.Query(
-    <span class="highlight-keyword">from</span> :table,
+    <span class="highlight-keyword">from</span>: table,
     <span class="highlight-keyword">where</span>: f.And(
         table.Column(Chapter.NameProperty).Equal(name),
         f.Or(
@@ -110,7 +110,7 @@
     <span class="highlight-keyword">from</span>: t.Join(t2, t.Column(SerialNumberValue.SerialNumberInfoIdProperty).Equal(t2.Column(SerialNumberInfo.IdProperty)), JoinType.Inner),<span class="highlight-comment">//不但可以给出具体的 Join 条件，还可以给出 Join 类型。</span>
     <span class="highlight-keyword">where</span>: t2.Column(SerialNumberInfo.NameProperty).Equal(autoCodeName),
     orderBy: <span class="highlight-keyword">new</span> List&lt;IOrderBy&gt; { f.OrderBy(t.Column(SerialNumberValue.LastUpdatedTimeProperty), OrderDirection.Descending) }
-);</pre></div></div></div><script type="text/javascript">AddLanguageTabSet("ID0EAADBABAAA");</script></li><li><p>Exists：</p><div class="codeSnippetContainer"><div class="codeSnippetContainerTabs"><div id="ID0EAACBABAAA_tab1" class="codeSnippetContainerTabSingle">C#</div></div><div class="codeSnippetContainerCodeContainer"><div class="codeSnippetToolBar"><div class="codeSnippetToolBarText"><a id="ID0EAACBABAAA_copyCode" href="#" onclick="javascript:CopyToClipboard('ID0EAACBABAAA');return false;" title="Copy">Copy</a></div></div><div id="ID0EAACBABAAA_code_Div1" class="codeSnippetContainerCode" style="display: block"><pre xml:space="preserve"><span class="highlight-keyword">var</span> bookTable = f.Table(<span class="highlight-keyword">this</span>);
+);</pre></div></div></div><script type="text/javascript">AddLanguageTabSet("ID0EAADBABAAA");</script></li><li><p>嵌套子查询（Exists）：</p><div class="codeSnippetContainer"><div class="codeSnippetContainerTabs"><div id="ID0EAACBABAAA_tab1" class="codeSnippetContainerTabSingle">C#</div></div><div class="codeSnippetContainerCodeContainer"><div class="codeSnippetToolBar"><div class="codeSnippetToolBarText"><a id="ID0EAACBABAAA_copyCode" href="#" onclick="javascript:CopyToClipboard('ID0EAACBABAAA');return false;" title="Copy">Copy</a></div></div><div id="ID0EAACBABAAA_code_Div1" class="codeSnippetContainerCode" style="display: block"><pre xml:space="preserve"><span class="highlight-keyword">var</span> bookTable = f.Table(<span class="highlight-keyword">this</span>);
 <span class="highlight-keyword">var</span> chapterTable = f.Table&lt;Chapter&gt;();
 <span class="highlight-keyword">var</span> q = f.Query(
     <span class="highlight-keyword">from</span>: bookTable,
@@ -125,11 +125,27 @@
     <span class="highlight-keyword">where</span>: f.Not(f.Exists(f.Query(
         <span class="highlight-keyword">from</span>: chapter,
         <span class="highlight-keyword">where</span>: f.And(
-            f.Constraint(chapter.Column(Chapter.BookIdProperty), book.IdColumn),
-            f.Constraint(chapter.Column(Chapter.NameProperty), PropertyOperator.NotEqual, chapterName)
+            chapter.Column(Chapter.BookIdProperty).Equal(bookTable.IdColumn),
+            chapter.Column(Chapter.NameProperty).NotEqual(<span class="highlight-literal">"chapterName"</span>)
         )
     )))
-);</pre></div></div></div><script type="text/javascript">AddLanguageTabSet("ID0EAABBABAAA");</script></li></ul><p>更多示例，请参照源码中单元测试的 ORMTest 中的 TableQuery 相关方法。</p></div></div></div><div id="pageFooter" class="pageFooter">有问题请联系 9474649@qq.com。<div class="feedbackLink">有关这个主题的评论请发邮件到
+);</pre></div></div></div><script type="text/javascript">AddLanguageTabSet("ID0EAABBABAAA");</script></li><li><p>Linq 查询与 SqlTree 混合使用</p><p>
+                            Linq 查询与 SqlTree 查询是可以混用的。您可以先使用 Linq 查询来快速构造简单的查询条件，然后再通过 <span class="code">IQuery ConvertToQuery(IQueryable queryable)</span> 方法，传入 Linq 查询对象 IQueryable 并转换为 SqlTree 查询对象 IQuery，然后再修改 SqlTree 中的对象节点。
+                        </p><div class="codeSnippetContainer"><div class="codeSnippetContainerTabs"><div id="ID0EAAABABAAA_tab1" class="codeSnippetContainerTabSingle">C#</div></div><div class="codeSnippetContainerCodeContainer"><div class="codeSnippetToolBar"><div class="codeSnippetToolBarText"><a id="ID0EAAABABAAA_copyCode" href="#" onclick="javascript:CopyToClipboard('ID0EAAABABAAA');return false;" title="Copy">Copy</a></div></div><div id="ID0EAAABABAAA_code_Div1" class="codeSnippetContainerCode" style="display: block"><pre xml:space="preserve">[RepositoryQuery]
+<span class="highlight-keyword">public</span> <span class="highlight-keyword">virtual</span> ChapterList GetByBookName(<span class="highlight-keyword">string</span> name)
+{
+    <span class="highlight-keyword">var</span> q = <span class="highlight-keyword">this</span>.CreateLinqQuery();
+    q = q.Where(c =&gt; c.Book.Name == name);
+
+    <span class="highlight-keyword">var</span> tree = <span class="highlight-keyword">this</span>.ConvertToQuery(q);<span class="highlight-comment">//从 IQueryable 转换为 IQuery</span>
+
+    <span class="highlight-keyword">var</span> f = QueryFactory.Instance;
+    <span class="highlight-keyword">var</span> t = tree.MainTable;
+
+    tree.Where = f.And(tree.Where, t.Column(Chapter.NameProperty).Equal(name));
+
+    <span class="highlight-keyword">return</span> (ChapterList)<span class="highlight-keyword">this</span>.QueryData(tree);
+}</pre></div></div></div><script type="text/javascript">AddLanguageTabSet("ID0EAAABABAAA");</script></li></ul><p>更多示例，请参照源码中单元测试的 ORMTest 中的 TableQuery 相关方法。</p></div></div></div><div id="pageFooter" class="pageFooter">有问题请联系 9474649@qq.com。<div class="feedbackLink">有关这个主题的评论请发邮件到
         <a id="HT_MailLink" href="mailto:9474649%40qq.com?Subject=Rafy User Guide">发送反馈</a></div><script type="text/javascript">
         var HT_mailLink = document.getElementById("HT_MailLink");
         var HT_mailLinkText = HT_mailLink.innerHTML;
