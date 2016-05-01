@@ -82,7 +82,6 @@
     <Folder Include="Content\领域实体框架\快速试用" />
     <Folder Include="Content\领域实体框架\实体缓存" />
     <Folder Include="Content\领域实体框架\领域实体\实体属性" />
-    <Folder Include="Content\领域实体框架\领域帮助主题" />
     <Folder Include="Content\领域实体框架\领域逻辑" />
     <Folder Include="Content\领域实体框架\ORM" />
     <Folder Include="Content\领域实体框架\其它" />
@@ -199,8 +198,6 @@
     <None Include="Content\领域实体框架\领域实体\树型实体.aml" />
     <None Include="Content\领域实体框架\快速试用\创建第一个程序.aml" />
     <None Include="Content\领域实体框架\领域实体\领域实体关系图.aml" />
-    <None Include="Content\领域实体框架\领域帮助主题.aml" />
-    <None Include="Content\领域实体框架\领域帮助主题\如何：手动添加一个领域项目.aml" />
     <None Include="Content\领域实体框架\领域逻辑\单连接事务.aml" />
     <None Include="Content\领域实体框架\领域逻辑\执行SQL或存储过程.aml" />
     <None Include="Content\领域实体框架\领域逻辑.aml" />
