@@ -5,9 +5,101 @@
       xmlns:xlink="http://www.w3.org/1999/xlink">
 
         <introduction>
-            <!-- <autoOutline /> -->
-            <para>本文档正在整理中，敬请期待。</para>
+            <para>本文介绍 Rafy.FileStorage 插件的场景、使用方法。</para>
+            <autoOutline />
         </introduction>
+
+        <section address="senarios">
+            <title>场景</title>
+            <content>
+                <para>在开发各类数据库应用系统时，往往需要存储大量的文件。一般情况下，开发者并不会把文件存储到数据库中，而是把文件存储在本地文件夹、文件服务器、云端，同时，在数据库中存储这个文件相关的信息到一个统一的表中，方便管理与查找。所有使用到文件（如附件）的其它实体，都外键关联这个表来对应相应的文件。</para>
+                <para>
+                    本插件专用于上述场景。使用本插件后，开发者只需要简单地保存、查询 <codeInline>FileInfo</codeInline> 实体，即可自动完成实体中文件数据的保存。
+                </para>
+            </content>
+        </section>
+
+        <section address="howto">
+            <title>使用方法</title>
+            <content>
+                <procedure>
+                    <title>添加插件</title>
+                    <steps class="ordered">
+                        <step>
+                            <content>
+                                <para>通过 Nuget Package Manager 搜索并安装 Rafy.FileStorage 插件。</para>
+                            </content>
+                        </step>
+                        <step>
+                            <content>
+                                <para>在 DomainApp 中添加该插件；同时，设置该插件所对应的数据库配置名：</para>
+                                <code language="cs">
+                                    <![CDATA[class JXCApp : DomainApp
+{
+    protected override void InitEnvironment()
+    {
+        //配置插件所对应的数据库配置名。
+        Rafy.FileStorage.FileStoragePlugin.DbSettingName = "TestDb";
+
+        //添加流水号插件到 Rafy 应用程序集中。
+        RafyEnvironment.DomainPlugins.Add(new Rafy.FileStorage.FileStoragePlugin());
+
+        base.InitEnvironment();
+    }
+}]]>
+                                </code>
+                            </content>
+                        </step>
+                    </steps>
+                </procedure>
+                <procedure>
+                    <title>使用插件</title>
+                    <steps class="ordered">
+                        <step>
+                            <content>
+                                <para>
+                                    生成数据库。
+                                </para>
+                                <para>
+                                    该插件中自带一个实体：<codeInline>FileInfo</codeInline> ，所以 Rafy 会为其在数据库中添加相应的一张表。
+                                </para>
+                            </content>
+                        </step>
+                        <step>
+                            <content>
+                                <para>
+                                    直接使用 FileInfo 对象来保存和读取文件的内容即可。如下：
+                                </para>
+                                <para>保存文件及文件内容：</para>
+                                <code language="cs">
+                                    <![CDATA[var repo = RF.Concrete<FileInfoRepository>();
+var file = new FileInfo
+{
+    Name = "1.txt",
+    Description = "Nothing",
+    Content = Encoding.UTF8.GetBytes("File Content")
+};
+repo.Save(file);]]>
+                                </code>
+                                <para>读取文件及文件内容：</para>
+                                <code language="cs">
+                                    <![CDATA[var repo = RF.Concrete<FileInfoRepository>();
+var file = repo.GetById(file.Id);
+var content = Encoding.UTF8.GetString(file.Content);]]>
+                                </code>
+                            </content>
+                        </step>
+                    </steps>
+                </procedure>
+            </content>
+        </section>
+
+        <section address="explain">
+            <title>说明</title>
+            <content>
+                <para>本插件默认使用了 <codeInline>DiskFileContentProvider</codeInline> 提供程序来保存文件的内容（即保存在本地文件夹中）。开发者如果想要更换保存文件的逻辑，请实现 <codeInline>IFileInfoContentProvider</codeInline> 接口，并设置到 <codeInline>FileStoragePlugin.ContentProvider</codeInline>中。</para>
+            </content>
+        </section>
 
         <relatedTopics>
         </relatedTopics>

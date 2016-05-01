@@ -104,6 +104,7 @@ namespace Rafy.FileStorage
         });
         /// <summary>
         /// 文件内容
+        /// 注意：使用这个属性会自动懒加载文件的内容到内存中。如果是使用大文件，请使用 <see cref="Controllers.FileStorageController"/> 来完成相关操作。
         /// </summary>
         public byte[] Content
         {
