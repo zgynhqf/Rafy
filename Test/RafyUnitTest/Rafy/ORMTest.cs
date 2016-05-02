@@ -618,7 +618,7 @@ namespace RafyUnitTest
         /// ORACLE: In 语句中最多只能 1000 项。
         /// </summary>
         [TestMethod]
-        public void ORM_Query_GetByIdList_5000()
+        public void ORM_Query_GetByLargeIn()
         {
             var repo = RF.Concrete<BookRepository>();
             using (var tran = RF.TransactionScope(repo))
@@ -646,6 +646,38 @@ namespace RafyUnitTest
                 }
 
                 var bookList = repo.GetByIdList(idList);
+                Assert.AreEqual(bookList.Count, idList.Length);
+                Assert.AreEqual(books[0].Id, bookList[0].Id);
+                Assert.AreEqual(books[bookList.Count - 1].Id, bookList[bookList.Count - 1].Id);
+            }
+        }
+
+        /// <summary>
+        /// 如果数据过多时，也必须能够执行。
+        /// 由于 <see cref="OracleTable.TryBatchQuery"/> 只能处理简单的 In 语句，所以这里必须要特殊处理。
+        /// </summary>
+        [TestMethod]
+        public void ORM_Query_GetByLargeIn_QueryInBatches_ComplicateInClause()
+        {
+            var repo = RF.Concrete<BookRepository>();
+            using (var tran = RF.TransactionScope(repo))
+            {
+                var books = new BookList();
+                for (int i = 0; i < 6000; i++)
+                {
+                    var book = new Book();
+                    books.Add(book);
+                }
+
+                repo.CreateImporter().Save(books);
+
+                var idList = new object[5500];
+                for (int i = 0; i < 5500; i++)
+                {
+                    idList[i] = books[i].Id;
+                }
+
+                var bookList = repo.QueryInBatches(idList, ids => repo.GetByComplicateIn(ids));
                 Assert.AreEqual(bookList.Count, idList.Length);
                 Assert.AreEqual(books[0].Id, bookList[0].Id);
                 Assert.AreEqual(books[bookList.Count - 1].Id, bookList[bookList.Count - 1].Id);

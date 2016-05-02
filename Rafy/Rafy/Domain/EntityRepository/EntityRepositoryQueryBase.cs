@@ -192,6 +192,39 @@ namespace Rafy.Domain
 
         #endregion
 
+        /// <summary>
+        /// 由于使用数据库的 In 语句有个数的限制。所以当 In 的参数个数比较多时，需要进行分批查询并汇总最后的列表。
+        /// 本方法用于帮助实现这种场景。
+        /// </summary>
+        /// <param name="inParameters">In 语句的参数列表。</param>
+        /// <param name="batchQueryer">分批进行查询的查询实现。</param>
+        /// <param name="batchSize">每一个批次的大小。</param>
+        /// <returns></returns>
+        public EntityList QueryInBatches(object[] inParameters, Func<object[], EntityList> batchQueryer, int batchSize = 1000)
+        {
+            var all = inParameters.Length;
+
+            if (all <= batchSize)
+            {
+                return batchQueryer(inParameters);
+            }
+
+            //分批进行查询。
+            var res = this.Repo.NewList();
+            for (int i = 0; i < all; i += batchSize)
+            {
+                var length = i + batchSize > all ? all - i : batchSize;
+                var array = new object[length];
+                Array.Copy(inParameters, i, array, 0, length);
+
+                var batchList = batchQueryer(array);
+
+                res.AddRange(batchList);
+            }
+
+            return res;
+        }
+
         internal static QueryFactory qf
         {
             get { return QueryFactory.Instance; }

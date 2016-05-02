@@ -178,6 +178,14 @@ namespace UT
         }
 
         [RepositoryQuery]
+        public virtual BookList GetByComplicateIn(object[] idList)
+        {
+            var q = this.CreateLinqQuery();
+            q = q.Where(e => e.Id > 0 && idList.Contains(e.Id));
+            return (BookList)this.QueryData(q);
+        }
+
+        [RepositoryQuery]
         public virtual BookList LinqGetByBookNameInList(List<string> names)
         {
             var q = this.CreateLinqQuery();
