@@ -33,6 +33,8 @@ namespace Rafy.Domain.EntityPhantom
     /// </summary>
     public class EntityPhantomPlugin : DomainPlugin
     {
+        private static bool _added = false;
+
         /// <summary>
         /// Initializes the specified application.
         /// </summary>
@@ -42,8 +44,13 @@ namespace Rafy.Domain.EntityPhantom
             //设置约定的属性。
             EntityConvention.Property_IsPhantom = EntityPhantomExtension.IsPhantomProperty;
 
-            //数据的删除、查询的拦截器。
-            PhantomDataInterceptor.Intercept();
+            if (!_added)
+            {
+                //数据的删除、查询的拦截器。
+                PhantomDataInterceptor.Intercept();
+
+                _added = true;
+            }
         }
     }
 }

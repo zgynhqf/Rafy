@@ -28,13 +28,19 @@ namespace Rafy.Domain.Stamp
     /// </summary>
     public class StampPlugin : DomainPlugin
     {
+        private static bool _added = false;
+
         /// <summary>
         /// Initializes the specified application.
         /// </summary>
         /// <param name="app">The application.</param>
         public override void Initialize(IApp app)
         {
-            DataSaver.SubmitInterceptors.Add(typeof(StampSubmitInterceptor));
+            if (!_added)
+            {
+                DataSaver.SubmitInterceptors.Add(typeof(StampSubmitInterceptor));
+                _added = true;
+            }
         }
     }
 }

@@ -37,8 +37,14 @@ namespace Rafy.Domain
     {
         public override void Initialize(IApp app)
         {
-            RepositoryFactoryHost.Factory = new DictionaryRepositoryFactory();
-            PropertyDescriptorFactory.Current = new RafyPropertyDescriptorFactory();
+            if (RepositoryFactoryHost.Factory == null)
+            {
+                RepositoryFactoryHost.Factory = new DictionaryRepositoryFactory();
+            }
+            if (!(PropertyDescriptorFactory.Current is RafyPropertyDescriptorFactory))
+            {
+                PropertyDescriptorFactory.Current = new RafyPropertyDescriptorFactory();
+            }
 
             app.MetaCompiled += OnMetaCompiled;
         }

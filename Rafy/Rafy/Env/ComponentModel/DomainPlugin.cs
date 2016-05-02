@@ -34,12 +34,15 @@ namespace Rafy.ComponentModel
         }
 
         /// <summary>
-        /// 插件的初始化方法。
-        /// 框架会在启动时根据启动级别顺序调用本方法。
-        /// 
-        /// 方法有两个职责：
-        /// 1.依赖注入。
-        /// 2.注册 app 生命周期中事件，进行特定的初始化工作。
+        /// <para>插件的初始化方法。                                                                             </para>
+        /// <para>框架会在启动时根据启动级别顺序调用本方法。                                                       </para>
+        /// <para>                                                                                              </para>
+        /// <para>方法有两个职责：                                                                               </para>
+        /// <para>1.依赖注入。                                                                                   </para>
+        /// <para>2.注册 app 生命周期中事件，进行特定的初始化工作。                                                </para>
+        /// <para>                                                                                              </para>
+        /// <para>注意，由于应用程序可能会多次启动，所以相应的插件对象也不是单例的，所以这个方法也可能会被调用多次。   </para>
+        /// <para>在实体这个方法时，开发者应该注意保持这个方法的可重入性。                                          </para>
         /// </summary>
         /// <param name="app">应用程序对象。</param>
         public abstract void Initialize(IApp app);
