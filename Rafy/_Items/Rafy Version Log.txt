@@ -10,13 +10,15 @@
  * 
 *******************************************************/
 
-3.51.3142
+3.51.3143
     添加接口
         添加 EntityRepositoryQueryBase.QueryInBatches 方法，帮助开发者处理 In 参数过多无法查询的场景。
     添加功能
         添加新的 Rafy.FileStorage 插件。
     内部修改
         添加 Rafy.FileStorage 相关的单元测试。
+    BUG修复
+        Oracle 中的一些 BUG。
 
 3.50.3138
     添加接口

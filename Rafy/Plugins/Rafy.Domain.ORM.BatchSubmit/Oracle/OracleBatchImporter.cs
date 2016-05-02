@@ -40,6 +40,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
         public OracleBatchImporter()
         {
             this.BatchSize = 100000;
+            this.SqlGenerator = new OracleSqlGenerator();
         }
 
         /// <summary>

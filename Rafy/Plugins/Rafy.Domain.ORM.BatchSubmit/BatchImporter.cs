@@ -32,6 +32,8 @@ namespace Rafy.Domain.ORM.BatchSubmit
 
         private int _batchSize = int.MaxValue;
 
+        internal SqlGenerator SqlGenerator;
+
         /// <summary>
         /// 每次导入时，一批最多同时导入多少条数据。
         /// </summary>
@@ -148,7 +150,7 @@ namespace Rafy.Domain.ORM.BatchSubmit
                 {
                     var isPhantomColumn = batch.Table.FindByPropertyName(EntityConvention.Property_IsPhantom.Name).Name;
                     sqlDelete.Append("UPDATE ").Append(batch.Table.Name).Append(" SET ")
-                        .Append(isPhantomColumn).Append(" = ").AppendParameter(BooleanBoxes.True)
+                        .Append(isPhantomColumn).Append(" = ").AppendParameter(this.SqlGenerator.PrepareConstraintValue(BooleanBoxes.True))
                         .Append(" WHERE ID IN (");
                 }
                 else

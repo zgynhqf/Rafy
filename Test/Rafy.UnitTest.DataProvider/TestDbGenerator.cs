@@ -67,6 +67,7 @@ namespace Rafy.UnitTest.DataProvider
                 if (DbSetting.IsOracleProvider(dbSetting))
                 {
                     OracleBatchImporter.EnableBatchSequence(RF.Concrete<BookRepository>());
+                    OracleBatchImporter.EnableBatchSequence(RF.Concrete<InvoiceRepository>());
                 }
             }
         }

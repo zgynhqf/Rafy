@@ -36,6 +36,14 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
     [Serializable]
     public class SqlBatchImporter : BatchImporter
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SqlBatchImporter"/> class.
+        /// </summary>
+        public SqlBatchImporter()
+        {
+            this.SqlGenerator = new SqlServerSqlGenerator();
+        }
+
         #region ImportInsert
 
         /// <summary>
