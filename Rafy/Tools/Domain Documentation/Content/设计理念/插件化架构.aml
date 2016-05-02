@@ -66,7 +66,7 @@
                         </code>
                         <alert class="note">
                             <para>对于领域插件：如果是 C/S 程序，则客户端和服务端都需要部署。</para>
-                            <para>对于界面插件：如果是 C/S 程序，只需要部署到客户端；如果是 Web 开发，只需要部署到网站目录中。</para>
+                            <para>对于界面插件：如果是 C/S 程序，只需要部署到客户端；如果是 Web 开发，只需要部署到网站服务端。</para>
                         </alert>
                     </listItem>
                     <listItem>
