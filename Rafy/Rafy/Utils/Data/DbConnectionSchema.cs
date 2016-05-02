@@ -81,7 +81,7 @@ namespace Rafy.Data
             var database = con.Database;
 
             //System.Data.OracleClient 解析不出这个值，需要特殊处理。
-            if (string.IsNullOrWhiteSpace(database))
+            if (string.IsNullOrWhiteSpace(database) && IsOracleProvider(this))
             {
                 //Oracle 中，把用户名（Schema）认为数据库名。
                 var match = Regex.Match(this.ConnectionString, @"User Id=\s*(?<dbName>\w+)\s*");

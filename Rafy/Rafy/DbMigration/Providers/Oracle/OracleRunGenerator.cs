@@ -102,28 +102,10 @@ namespace Rafy.DbMigration.Oracle
 
             if (op.PKIdentity)
             {
-                //var seqName = this.SEQName(op);
-                //var existsSql= string.Format("SELECT {0}.CURRVAL FROM DUAL", seqName);
-
-                var sql = string.Format(@"DECLARE T_COUNT NUMBER;
-BEGIN
-    SELECT COUNT(*) INTO T_COUNT FROM DUAL WHERE EXISTS(SELECT * FROM ALL_SEQUENCES WHERE SEQUENCE_NAME='{0}');
-    IF T_COUNT = 0 THEN
-        EXECUTE IMMEDIATE '
-        CREATE SEQUENCE {0}
-        MINVALUE 1
-        MAXVALUE 99999999999999999
-        START WITH 1
-        INCREMENT BY 1
-        NOCACHE
-        ORDER
-        ';
-    END IF;
-END;", this.SEQName(op));
-
-                this.AddRun(new SqlMigrationRun
+                this.AddRun(new TryCreateTableSequenceRun
                 {
-                    Sql = sql
+                    SequenceName = this.SEQName(op)
+                    //Sql = sql
                 });
             }
         }

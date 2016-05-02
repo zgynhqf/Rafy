@@ -23,7 +23,7 @@
             </content>
         </section>
 
-        <section address="oracleGenerationSeq">
+        <!--<section address="oracleGenerationSeq">
             <title>在生成 ORACLE 数据库时，为什么总是无法生成一部分表的 Sequence？进而导致插入数据时，提示 Sequence 无效。</title>
             <content>
                 <para>
@@ -31,7 +31,7 @@
                 </para>
                 <para>这是 Rafy 的一个 BUG，目前暂时无法修复。如果您确实需要在不同的用户下使用同名的 Sequence，那么只能手工创建这些 Sequence 了。</para>
             </content>
-        </section>
+        </section>-->
 
         <relatedTopics>
         </relatedTopics>

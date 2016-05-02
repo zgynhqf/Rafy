@@ -66,11 +66,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-      <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>..\..\packages\Lib\SQLCE\System.Data.SqlServerCe.dll</HintPath>
-          <Private>False</Private>
-      </Reference>
+    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Lib\SQLCE\System.Data.SqlServerCe.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbMigration\AutomationMigration.cs" />
@@ -128,6 +128,7 @@
     <Compile Include="DbMigration\RunGenerator.cs" />
     <Compile Include="DbMigration\Run\ActionMigrationRun.cs" />
     <Compile Include="DbMigration\Run\GenerationExceptionRun.cs" />
+    <Compile Include="DbMigration\Run\Oracle\TryCreateTableSequenceRun.cs" />
     <Compile Include="DbMigration\Run\SqlMigrationRun.cs" />
     <Compile Include="DbMigration\TSqlRunGenerator.cs" />
     <Compile Include="Domain\BinaryOperator.cs" />
