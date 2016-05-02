@@ -70,7 +70,7 @@
                         </alert>
                     </listItem>
                     <listItem>
-                        <para>程序加载方式</para>
+                        <para>强制加载方式</para>
                         <para>一些对于系统来说，必须加载的插件程序集，可以使用程序加载方式。这种方式只需要在程序启动时，通过集合添加指定的插件即可。以下代码强制加载 JXCPlugin 插件：</para>
                         <para>另外，如果使用代码加载的方式，那么集合中的顺序则表示了插件的启动顺序。如下：</para>
                         <code language="cs">
