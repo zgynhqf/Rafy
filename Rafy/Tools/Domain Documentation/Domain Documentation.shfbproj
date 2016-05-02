@@ -96,6 +96,7 @@
     <Folder Include="Media\框架基础\插件化架构" />
     <Folder Include="Media\框架基础\产品线工程" />
     <Folder Include="Media\领域框架" />
+    <Folder Include="Media\领域框架\插件级扩展" />
     <Folder Include="Media\领域框架\其它" />
     <Folder Include="Media\领域框架\其它\代码段" />
     <Folder Include="Media\领域框架\其它\与经典领域驱动设计的关系" />
@@ -145,6 +146,10 @@
     <None Include="Content\领域实体框架\实体仓库\大批量导入实体.aml" />
     <None Include="Content\领域实体框架\实体仓库\编写查询\OData 查询条件(ODataQueryCriteria).aml" />
     <None Include="Content\领域实体框架\实体仓库\编写查询\SqlTree 查询.aml" />
+    <None Include="Content\领域实体框架\实体保存扩展（仓库数据层）.aml" />
+    <None Include="Content\领域实体框架\实体属性扩展.aml" />
+    <None Include="Content\领域实体框架\实体查询扩展（仓库扩展）.aml" />
+    <None Include="Content\领域实体框架\实体配置扩展.aml" />
     <None Include="Content\领域实体框架\对象关系映射.aml" />
     <None Include="Content\领域实体框架\ORM\SQL 语句日志.aml" />
     <None Include="Content\领域实体框架\ORM\多数据库支持.aml" />
@@ -204,6 +209,7 @@
     <None Include="Content\领域实体框架\领域逻辑.aml" />
     <None Include="Content\领域实体框架\领域逻辑\领域控制器.aml" />
     <None Include="Content\领域实体框架\领域逻辑\领域服务.aml" />
+    <None Include="Content\领域实体框架\领域逻辑扩展（领域控制器）.aml" />
     <None Include="UML.7z" />
   </ItemGroup>
   <ItemGroup>
@@ -342,6 +348,10 @@
     <Image Include="Media\领域框架\快速试用\创建第一个程序\第一个程序08.png">
       <ImageId>第一个程序08</ImageId>
       <AlternateText>第一个程序08</AlternateText>
+    </Image>
+    <Image Include="Media\领域框架\插件级扩展\领域插件的扩展点.png">
+      <ImageId>领域插件的扩展点</ImageId>
+      <AlternateText>领域插件的扩展点</AlternateText>
     </Image>
     <Image Include="Media\领域框架\领域实体\DomainEntity_AddNewItem.jpg">
       <ImageId>DomainEntity_AddNewItem</ImageId>

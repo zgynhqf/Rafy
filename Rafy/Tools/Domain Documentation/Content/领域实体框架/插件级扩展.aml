@@ -5,9 +5,58 @@
       xmlns:xlink="http://www.w3.org/1999/xlink">
 
         <introduction>
-            <para>本节说明如何使用额外的插件 B 对插件 A 内部的实体、查询、处理逻辑等进行扩展。</para>
+            <para>本章说明如何使用额外的插件（如客户化插件）对另一插件（如产品插件）进行扩展。</para>
         </introduction>
+        
+        <section address="senarios">
+            <title>使用场景</title>
+            <content>
+                <para>
+                    在 <link xlink:href="946c540b-acb0-4531-b99c-85756cb69d4e"/> 中，项目的研发分为领域工程和应用工程。这个过程中会需要对领域工程中的内容进行大量的扩展。
+                </para>
+            </content>
+        </section>
 
+        <section address="layers">
+            <title>分层与扩展点</title>
+            <content>
+                <para>
+                    下图中显示了一个产品插件的逻辑分层，以及各层对应的扩展点。
+                </para>
+                <mediaLink>
+                    <image xlink:href="领域插件的扩展点"/>
+                </mediaLink>
+            </content>
+        </section>
+
+        <section address="content">
+            <title>可扩展的内容</title>
+            <content>
+                <list class="bullet">
+                    <listItem>
+                        <para>实体属性扩展</para>
+                        <para>可以为产品插件的实体添加新的实体属性，也可以修改现有属性的一些元数据。</para>
+                    </listItem>
+                    <listItem>
+                        <para>实体配置扩展</para>
+                        <para>可以随意修改产品插件中的实体配置，如实体的数据库映射。</para>
+                    </listItem>
+                    <listItem>
+                        <para>实体查询的扩展</para>
+                        <para>可以添加新的实体查询。可以修改、替换产品插件中现有的查询的实现。</para>
+                    </listItem>
+                    <listItem>
+                        <para>实体保存的扩展</para>
+                        <para>可以扩展产品插件实体在保存时的行为。</para>
+                    </listItem>
+                    <listItem>
+                        <para>领域逻辑的扩展</para>
+                        <para>可以添加新的领域逻辑，也可以修改、替换产品插件中现有的领域逻辑。</para>
+                    </listItem>
+                </list>
+            </content>
+        </section>
+        
         <relatedTopics>
         </relatedTopics>
     </developerConceptualDocument>

@@ -95,7 +95,7 @@ var content = Encoding.UTF8.GetString(file.Content);//Content 属性使用懒加
         </section>
 
         <section address="explain">
-            <title>说明</title>
+            <title>扩展</title>
             <content>
                 <para>本插件默认使用了 <codeInline>DiskFileContentProvider</codeInline> 提供程序来保存文件的内容（即保存在本地文件夹中）。开发者如果想要更换保存文件的逻辑，请实现 <codeInline>IFileInfoContentProvider</codeInline> 接口，并设置到 <codeInline>FileStoragePlugin.ContentProvider</codeInline> 属性中。</para>
             </content>
