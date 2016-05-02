@@ -32,7 +32,7 @@ namespace Rafy
         /// <summary>
         /// 错误日志的文件名。
         /// </summary>
-        public string FileName = "ExceptionLog.txt";
+        public string FileName { get; set; } = "ExceptionLog.txt";
 
         /// <summary>
         /// 记录某个已经生成的异常到文件中。
