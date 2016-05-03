@@ -275,7 +275,6 @@ namespace Rafy.Accounts.Controllers
         /// <returns></returns>
         public virtual string EncodePassword(string password)
         {
-            //创建一个计算md5的对象
             byte[] bytes = this.Encoding.GetBytes(password);
             byte[] hashBytes = this.HashAlgorithm.ComputeHash(bytes);
             var res = this.Encoding.GetString(hashBytes);
