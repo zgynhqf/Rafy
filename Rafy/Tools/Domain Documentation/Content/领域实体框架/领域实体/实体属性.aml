@@ -38,7 +38,7 @@ public string Name
                     <listItem>
                         <para>支持动态属性扩展</para>
                         <para>
-                            实体在编写并生成程序集之后，属性依然可以很方便地进行扩展。只需要在其它程序集中，为该实体定义扩展属性即可。详见：<link xlink:href="760ddc4e-6b70-4713-b173-c855a00e25d0" />
+                            实体在编写并生成程序集之后，属性依然可以很方便地进行扩展。只需要在其它程序集中，为该实体定义扩展属性即可。详见：<link xlink:href="5a705045-b57e-46ab-be03-18183495d690" />。
                         </para>
                     </listItem>
                     <listItem>
@@ -62,6 +62,18 @@ public string Name
         </section>
 
         <relatedTopics>
+            <externalLink>
+                <linkText>OEA 扩展属性系统 - 主要设计类图</linkText>
+                <linkUri>http://www.cnblogs.com/zgynhqf/archive/2011/10/30/2229163.html</linkUri>
+            </externalLink>
+            <externalLink>
+                <linkText>《OEA - 实体扩展属性系统 - 设计方案说明书.pdf》</linkText>
+                <linkUri>http://www.cnblogs.com/zgynhqf/archive/2012/01/11/2319888.html</linkUri>
+            </externalLink>
+            <externalLink>
+                <linkText>.NET ORM框架设计(利用抽象、多态实现无反射的绿色环保ORM框架)（参考本文中描述为何需要一个托管属性系统）</linkText>
+                <linkUri>http://www.cnblogs.com/wangiqngpei557/archive/2012/05/06/2486620.html</linkUri>
+            </externalLink>
         </relatedTopics>
     </developerConceptualDocument>
 </topic>

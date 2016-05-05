@@ -77,6 +77,7 @@
     <Folder Include="Content\界面生成\界面配置\" />
     <Folder Include="Content\界面生成\界面配置\实体视图配置\" />
     <Folder Include="Content\领域实体框架" />
+    <Folder Include="Content\领域实体框架\插件级扩展" />
     <Folder Include="Content\领域实体框架\实体仓库\编写查询" />
     <Folder Include="Content\领域实体框架\部署" />
     <Folder Include="Content\领域实体框架\快速试用" />
@@ -146,10 +147,6 @@
     <None Include="Content\领域实体框架\实体仓库\大批量导入实体.aml" />
     <None Include="Content\领域实体框架\实体仓库\编写查询\OData 查询条件(ODataQueryCriteria).aml" />
     <None Include="Content\领域实体框架\实体仓库\编写查询\SqlTree 查询.aml" />
-    <None Include="Content\领域实体框架\实体保存扩展（仓库数据层）.aml" />
-    <None Include="Content\领域实体框架\实体属性扩展.aml" />
-    <None Include="Content\领域实体框架\实体查询扩展（仓库扩展）.aml" />
-    <None Include="Content\领域实体框架\实体配置扩展.aml" />
     <None Include="Content\领域实体框架\对象关系映射.aml" />
     <None Include="Content\领域实体框架\ORM\SQL 语句日志.aml" />
     <None Include="Content\领域实体框架\ORM\多数据库支持.aml" />
@@ -174,6 +171,11 @@
     <None Include="Content\领域实体框架\快速试用\如何：连接到 Sql Server 数据库.aml" />
     <None Include="Content\领域实体框架\快速试用\绘制领域类图.aml" />
     <None Include="Content\领域实体框架\插件级扩展.aml" />
+    <None Include="Content\领域实体框架\插件级扩展\实体保存扩展（仓库数据层）.aml" />
+    <None Include="Content\领域实体框架\插件级扩展\实体属性扩展.aml" />
+    <None Include="Content\领域实体框架\插件级扩展\实体查询扩展（仓库扩展）.aml" />
+    <None Include="Content\领域实体框架\插件级扩展\实体配置扩展.aml" />
+    <None Include="Content\领域实体框架\插件级扩展\领域逻辑扩展（领域控制器）.aml" />
     <None Include="Content\领域实体框架\自动生成代码.aml" />
     <None Include="Content\领域实体框架\部署.aml" />
     <None Include="Content\领域实体框架\安装.aml" />
@@ -187,7 +189,6 @@
     <None Include="Content\领域实体框架\领域实体\实体属性\只读属性.aml" />
     <None Include="Content\领域实体框架\领域实体\实体属性\大数据属性.aml" />
     <None Include="Content\领域实体框架\领域实体\实体属性\引用属性.aml" />
-    <None Include="Content\领域实体框架\领域实体\实体属性\扩展属性.aml" />
     <None Include="Content\领域实体框架\领域实体\实体属性\组合子属性.aml" />
     <None Include="Content\领域实体框架\领域实体\实体的状态.aml" />
     <None Include="Content\领域实体框架\领域实体\实体配置.aml" />
@@ -209,7 +210,6 @@
     <None Include="Content\领域实体框架\领域逻辑.aml" />
     <None Include="Content\领域实体框架\领域逻辑\领域控制器.aml" />
     <None Include="Content\领域实体框架\领域逻辑\领域服务.aml" />
-    <None Include="Content\领域实体框架\领域逻辑扩展（领域控制器）.aml" />
     <None Include="UML.7z" />
   </ItemGroup>
   <ItemGroup>

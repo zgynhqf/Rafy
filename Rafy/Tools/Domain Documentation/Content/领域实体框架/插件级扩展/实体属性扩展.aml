@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="5a705045-b57e-46ab-be03-18183495d690" revisionNumber="1">
+    <developerConceptualDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+        <introduction>
+            <para>本节讲解如何实现插件外的实体属性的扩展。</para>
+            <!-- <autoOutline /> -->
+        </introduction>
+
+        <section address="addNew">
+            <title>扩展新属性</title>
+            <content>
+                <para>
+                    下面代码示例如何为 <codeInline>Transaction</codeInline> 类型添加一个 <codeInline>string BranchName</codeInline> 的属性：
+                </para>
+                <code language="cs">
+                    <![CDATA[[CompiledPropertyDeclarer]
+public static class TransactionExt
+{
+    #region string BranchName (分支名称)
+
+    /// <summary>
+    /// 分支名称 扩展属性。
+    /// </summary>
+    public static readonly Property<string> BranchNameProperty =
+        P<Transaction>.RegisterExtension<string>("BranchName", typeof(TransactionExt));
+    /// <summary>
+    /// 获取 分支名称 属性的值。
+    /// </summary>
+    public static string GetBranchName(this Transaction me)
+    {
+        return me.GetProperty(BranchNameProperty);
+    }
+    /// <summary>
+    /// 设置 分支名称 属性的值。
+    /// </summary>
+    public static void SetBranchName(this Transaction me, string value)
+    {
+        me.SetProperty(BranchNameProperty, value);
+    }
+
+    #endregion
+}]]>
+                </code>
+                <para>使用方法：</para>
+                <code language="cs">
+                    <![CDATA[var entity = new Transaction();
+entity.CustomerName = "customerName";//一般属性
+entity.SetBranchName("branchName");//扩展属性使用方法：使用扩展方法来获取或设置属性的值]]>
+                </code>
+            </content>
+        </section>
+
+        <section address="codeSnippets">
+            <title>代码段</title>
+            <content>
+                <para>RafySDK 中代码段来辅助开发者生成上面的扩展属性代码：RafyPropertyExtension。</para>
+                <para>
+                    关于代码段，见：<link xlink:href="6b3e8163-8516-4065-91f5-194491334343" />。
+                </para>
+            </content>
+        </section>
+
+        <relatedTopics>
+        </relatedTopics>
+    </developerConceptualDocument>
+</topic>
