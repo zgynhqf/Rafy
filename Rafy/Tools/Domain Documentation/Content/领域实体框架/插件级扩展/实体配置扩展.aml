@@ -1,14 +1,55 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <topic id="7fc0bd92-4063-4d8f-b9dc-8be2889f4a50" revisionNumber="1">
-  <developerConceptualDocument
-    xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
-    xmlns:xlink="http://www.w3.org/1999/xlink">
-      <introduction>
-          <!-- <autoOutline /> -->
-          <para>文件整理中……</para>
-      </introduction>
+    <developerConceptualDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+        <introduction>
+            <para>
+                本节讲解如何在客户化插件中，为产品插件内的实体变更实体的配置(<codeInline>EntityConfig</codeInline>)。
+            </para>
+            <autoOutline />
+        </introduction>
 
-      <relatedTopics>
-      </relatedTopics>
-  </developerConceptualDocument>
+        <section address="senarios">
+            <title>场景</title>
+            <content>
+                <para>
+                    当领域工程的产品插件开发并打包完成后。这时，应用工程的开发团队往往需要为产品插件中的实体进行新的配置。实体的所有配置都可以被重新定义，目前主要包含：实体与表的映射关系（表名、列名、列是否映射列等）、实体的验证信息（<codeInline>Validation</codeInline>）等。
+                </para>
+            </content>
+        </section>
+
+        <section address="addNew">
+            <title>扩展实体配置</title>
+            <content>
+                <para>
+                    下面代码示例如何在新的插件中，为 <codeInline>Transaction</codeInline> 类型配置一些数据库映射信息：
+                </para>
+                <code language="cs">
+                    <![CDATA[class TransactionConfig : EntityConfig<Transaction>
+{
+    protected override void ConfigMeta()
+    {
+        //配置 TransactionExt.BranchNameProperty 在数据表中映射列名为 BN
+        Meta.Property(TransactionExt.BranchNameProperty).MapColumn().HasColumnName("BN");
+
+        //配置 TransactionExt.BranchNameLengthProperty 不映射数据表中的列。
+        Meta.Property(TransactionExt.BranchNameLengthProperty).DontMapColumn();
+    }
+}]]>
+                </code>
+            </content>
+        </section>
+
+        <section address="principal">
+            <title>原理</title>
+            <content>
+                <para>通过上面的代码可以看到，新插件中的实体配置代码，与产品插件中的实体配置代码的编写方法是一致的。</para>
+                <para>在运行时，框架会执行所有插件中对指定实体类的所有配置代码。这些插件中的配置代码的运行顺序是严格按照插件的启动顺序来执行的（详见：<link xlink:href="15c790a6-8f5e-44aa-b8c3-74a955004a1e"/> ）。由于产品插件的启动顺序是在客户化插件之前，所以框架会在产品插件的配置类的代码运行完成后，继续执行客户化插件的配置代码。</para>
+            </content>
+        </section>
+
+        <relatedTopics>
+        </relatedTopics>
+    </developerConceptualDocument>
 </topic>
