@@ -36,7 +36,7 @@
                         </p><p>
                             Linq 的 Labmda 语法中的属性表达式(e.Name)需要绑定具体的实体类型(Book e)，这导致了必须使用反射去生成表达式树，才能编写通条蚁。但是，SqlTree 的语法是基于托管属性框架的，它不需要使用确切的实体属性表达式，只需要使用托管属性的运行时对象 IManagedProperty 即可(Book.NameProperty)。这使得开发人员可以更加方便地编写通用查询。例如，仓库基类 EntityRepository 中的所有查询方法，都是直接通过使用实体的托管属性来实现的，例如：GetById、GetByParentId、GetAll 等。
                         </p></li><li><p>可以为扩展属性编写查询。</p><p>由于扩展属性写在额外的程序集插件中的，所以当无法通过 Linq 表达式进行查询。这时就不得不通过托管属性 IManagedProperty 来定义 SqlTree 完成查询了。</p><p>
-                            关于扩展属性，参见：<a href="760ddc4e-6b70-4713-b173-c855a00e25d0.htm">扩展属性</a>。
+                            关于扩展属性，参见：<span class="nolink">[760ddc4e-6b70-4713-b173-c855a00e25d0]</span>。
                         </p></li><li><p>支持多个数据库。</p><p>上述的场景中，其实还可以直接编写 Sql 语句来进行查询。但是这样就很难保证开发者编写的 Sql 语句能够在多个数据库上能够正确运行。</p></li><li><p>查询需要支持仓库数据层的扩展点。</p><p>由于 Rafy 的查询核心都是基于 SqlTree 来实现的，所以内部的所有扩展点都是要依赖 SqlTree的。如果开发者直接编写 Sql 语句来查询，那么这些许多的扩展点都将无效，无法对开发者编写的这条 Sql 语句进行扩展。</p><p>
                             例如：当使用 <a href="f662f88a-8221-49f4-bc38-901134ea893e.htm">幽灵插件</a> 对所有幽灵数据进行自动过滤时，如果开发者使用手工编写的 Sql 语法进行查询，那么自动过滤功能无效，需要开发者自己进行幽灵数据的过滤。
                         </p></li></ul></div><div class="collapsibleAreaRegion" id="codeSnippets"><span class="collapsibleRegionTitle" onclick="SectionExpandCollapse('ID3RB')" onkeypress="SectionExpandCollapse_CheckKey('ID3RB', event)" tabindex="0"><img id="ID3RBToggle" class="collapseToggle" src="../icons/SectionExpanded.png" />代码段</span></div><div id="ID3RBSection" class="collapsibleSection"><p>RafySDK 中提供了两个代码段，来辅助开发者生成基本的 SqlTree 查询结构：Rafy_Query、Rafy_Query_TableQueryContent。</p><p>
