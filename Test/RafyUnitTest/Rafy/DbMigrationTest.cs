@@ -147,6 +147,25 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void DMT_CreateColumn_CLOB()
+        {
+            if (DbSetting.IsOracleProvider(UnitTest2EntityRepositoryDataProvider.DbSettingName))
+            {
+                this.Test(destination =>
+                {
+                    var taskTable = destination.FindTable("Task");
+                    taskTable.AddColumn("TestingColumn", DbType.String, "CLOB", isRequired: true);
+                }, result =>
+                {
+                    var taskTable = result.FindTable("Task");
+                    var c1 = taskTable.FindColumn("TestingColumn");
+                    Assert.IsTrue(c1 != null && c1.IsRequired);
+                    Assert.IsTrue(DbTypeHelper.IsCompatible(c1.DataType, DbType.String));
+                });
+            }
+        }
+
+        [TestMethod]
         public void DMT_DropColumn()
         {
             this.Test(destination =>

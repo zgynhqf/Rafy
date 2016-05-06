@@ -536,6 +536,8 @@ namespace UT
         protected override void ConfigMeta()
         {
             Meta.MapTable().MapAllProperties();
+
+            Meta.Property(Book.ContentProperty).MapColumn().HasLength("CLOB");
         }
     }
 

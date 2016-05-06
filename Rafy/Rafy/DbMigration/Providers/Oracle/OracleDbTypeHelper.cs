@@ -57,6 +57,10 @@ namespace Rafy.DbMigration.Oracle
                 case DbType.AnsiString:
                     if (!string.IsNullOrEmpty(length))
                     {
+                        if (length == "CLOB")
+                        {
+                            return "CLOB";
+                        }
                         return "VARCHAR2(" + length + ')';
                     }
                     return "VARCHAR2(4000)";
@@ -94,6 +98,7 @@ namespace Rafy.DbMigration.Oracle
             {
                 case "nvarchar2":
                 case "varchar2":
+                case "clob":
                     return DbType.String;
                 case "xmltype":
                     return DbType.Xml;
