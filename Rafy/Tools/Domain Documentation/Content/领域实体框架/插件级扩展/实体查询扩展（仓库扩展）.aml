@@ -23,7 +23,7 @@
             <title>添加新查询</title>
             <content>
                 <para>
-                    下面代码示例如何在新的插件中，为 <codeInline>TransactionRepository</codeInline> 类型添加新查询
+                    下面代码示例如何在新的插件中，为 <codeInline>TransactionRepository</codeInline> 类型添加新查询：
                 </para>
                 <code language="cs">
                     <![CDATA[/// <summary>
@@ -81,6 +81,18 @@ public class TransactionRepositoryExt : EntityRepositoryExt<TransactionRepositor
             </content>
         </section>
 
+        <section address="howToUse">
+            <title>如何使用</title>
+            <content>
+                <para>仓库扩展的使用方法如下：</para>
+                <code language="cs">
+<![CDATA[var repo = RF.Concrete<TransactionRepository>();
+var list = repo.Extension<TransactionRepositoryExt>().GetAutoImported();
+]]>
+                </code>
+            </content>
+        </section>
+
         <section address="replaceExists">
             <title>替换现有的查询</title>
             <content>
@@ -92,7 +104,7 @@ public class TransactionRepositoryExt : EntityRepositoryExt<TransactionRepositor
                 </para>
                 <para>示例代码：</para>
                 <code language="cs">
-<![CDATA[[DataProviderFor(typeof(TransactionRepository))]
+                    <![CDATA[[DataProviderFor(typeof(TransactionRepository))]
 public class TransactionRepositoryDataProviderExt : TransactionRepositoryDataProvider
 {
     //由于此方法是编写在 TransactionRepository 中，所以直接编写同签名的方法即可直接重用。

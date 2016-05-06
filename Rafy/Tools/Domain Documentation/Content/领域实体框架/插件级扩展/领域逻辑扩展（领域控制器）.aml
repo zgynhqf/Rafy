@@ -4,9 +4,67 @@
       xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
       xmlns:xlink="http://www.w3.org/1999/xlink">
         <introduction>
-            <!-- <autoOutline /> -->
-            <para>文件整理中……</para>
+            <para>
+                本节讲解如何在客户化插件中，为产品插件内的 <link xlink:href="de820b7a-0bf7-498b-89b6-3f80cf29de40">实体领域控制器</link> 进行扩展。
+            </para>
+            <autoOutline />
         </introduction>
+
+        <section address="senarios">
+            <title>场景</title>
+            <content>
+                <para>
+                    当领域工程的产品插件开发并打包完成后，产品插件中自带的领域逻辑往往并不能满足所有的应用场景。这时，应用工程的开发团队往往需要添加新的领域逻辑，或者调整已有的领域逻辑。
+                </para>
+            </content>
+        </section>
+
+        <section address="addNew">
+            <title>添加新逻辑控制器</title>
+            <content>
+                <para>
+                    添加新的逻辑控制器非常简单，直接编写新的控制器代码即可。编写方案参考：<link xlink:href="de820b7a-0bf7-498b-89b6-3f80cf29de40"/>
+                </para>
+            </content>
+        </section>
+
+        <section address="replaceExists">
+            <title>替换现有的逻辑</title>
+            <content>
+                <para>
+                    替换现有查询时，需要在客户化插件中定义新的 <codeInline>DomainController</codeInline>，其从产品插件中的 <codeInline>DomainController</codeInline> 上继承，并使用 <codeInline>ControllerFactory</codeInline> 的 API 来替换其基类领域控制器。
+                </para>
+                <para>示例代码：</para>
+                <para>控制器扩展：</para>
+                <code language="cs">
+                    <![CDATA[public class TransactionControllerExt : TransactionController
+{
+    protected override Transaction CreateTransaction(ImportedTransactionBase importedTransaction)
+    {
+        var transaction = base.CreateTransaction(importedTransaction);
+
+        if (importedTransaction is EnterpriseTransaction)
+        {
+            var branchName = EnterpriseTransactionExt.GetBranchName(importedTransaction as EnterpriseTransaction);
+            TransactionExt.SetBranchName(transaction, branchName);
+        }
+
+        return transaction;
+    }
+}]]>
+                </code>
+                <para>在客户化插件中，使用 API 替换基类扩展器：</para>
+                <code language="cs">
+                    <![CDATA[public class CustomizedPlugin : DomainPlugin
+{
+    public override void Initialize(IApp app)
+    {
+        ControllerFactory.Override<TransactionController, TransactionControllerExt>();
+    }
+}]]>
+                </code>
+            </content>
+        </section>
 
         <relatedTopics>
         </relatedTopics>
