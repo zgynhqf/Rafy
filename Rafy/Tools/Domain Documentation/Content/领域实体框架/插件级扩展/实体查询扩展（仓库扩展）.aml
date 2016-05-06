@@ -1,14 +1,111 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <topic id="42003d74-55c3-4eb9-8e9a-95ddb539e61a" revisionNumber="1">
-  <developerConceptualDocument
-    xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
-    xmlns:xlink="http://www.w3.org/1999/xlink">
-      <introduction>
-          <!-- <autoOutline /> -->
-          <para>文件整理中……</para>
-      </introduction>
+    <developerConceptualDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+        <introduction>
+            <para>
+                本节讲解如何在客户化插件中，为产品插件内的实体仓库添加扩展新的查询。
+            </para>
+            <autoOutline />
+        </introduction>
 
-      <relatedTopics>
-      </relatedTopics>
-  </developerConceptualDocument>
+        <section address="senarios">
+            <title>场景</title>
+            <content>
+                <para>
+                    当领域工程的产品插件开发并打包完成后，产品插件中实体对应的实体仓库自带的查询并不能满足所有的应用场景。这时，应用工程的开发团队往往需要为这些实体仓库添加新的查询。
+                </para>
+            </content>
+        </section>
+
+        <section address="addNew">
+            <title>添加新查询</title>
+            <content>
+                <para>
+                    下面代码示例如何在新的插件中，为 <codeInline>TransactionRepository</codeInline> 类型添加新查询
+                </para>
+                <code language="cs">
+                    <![CDATA[/// <summary>
+/// 查询扩展示例。
+/// </summary>
+public class TransactionRepositoryExt : EntityRepositoryExt<TransactionRepository>
+{
+    /// <summary>
+    /// 获取所有通过 EnterpriseTransaction 自动导入的交易。
+    /// </summary>
+    /// <returns></returns>
+    [RepositoryQuery]
+    public virtual TransactionList GetAutoImported()
+    {
+        var q = this.CreateLinqQuery<Transaction>();
+        q = q.Where(e => e.EnterpriseTransactionId != null);
+        return (TransactionList)this.QueryData(q);
+    }
+}]]>
+                </code>
+                <para>
+                    上述查询代码，与在实体仓库（<codeInline>EntityRepository</codeInline>）中编写查询是基本一致的。唯一不同在于 <codeInline>EntityRepository</codeInline> 中使用的是 <codeInline>this.CreateLinqQuery()</codeInline> 来创建查询，而 <codeInline>EntityRepositoryExt</codeInline> 中则需要使用 <codeInline><![CDATA[this.CreateLinqQuery<Transaction>()]]></codeInline> 方法来明确指定当前仓库对应的实体。
+                </para>
+                <para>
+                    另外，当新的查询需要使用新的 <link xlink:href="5a705045-b57e-46ab-be03-18183495d690">扩展属性</link> 来进行查询时，需要使用 <link xlink:href="6d65448c-b51b-4c9b-9500-f6b7a48b1188"/> 来进行查询。
+                </para>
+                <para>
+                    下面代码示例如何在 <codeInline>EntityRepositoryExt</codeInline> 中编写此类查询：
+                </para>
+                <code language="cs">
+                    <![CDATA[public class TransactionRepositoryExt : EntityRepositoryExt<TransactionRepository>
+{
+    /// <summary>
+    /// 要使用扩展属性来查询（通过使用 SqlTree 查询）。
+    /// </summary>
+    /// <param name="branchName"></param>
+    /// <returns></returns>
+    [RepositoryQuery]
+    public virtual TransactionList GetByBrachName(string branchName)
+    {
+        var f = QueryFactory.Instance;
+
+        var t = f.Table<Transaction>();
+        var et = f.Table<EnterpriseTransaction>();
+
+        var q = f.Query(
+            selection: t.Star(),
+            from: t.Join(et),
+            where: et.Column(EnterpriseTransactionExt.BranchNameProperty).Equal(branchName)
+        );
+        return (TransactionList)this.QueryData(q);
+    }
+}]]>
+                </code>
+            </content>
+        </section>
+
+        <section address="replaceExists">
+            <title>替换现有的查询</title>
+            <content>
+                <para>
+                    替换现有查询时，需要在客户化插件中定义新的 <codeInline>RepositoryDataProvider</codeInline>，并将其替换对应仓库已有的数据层。编写方法与产品插件一致，不同点在于新的 <codeInline>RepositoryDataProvider</codeInline> 应该从产品的 <codeInline>RepositoryDataProvider</codeInline> 上继承。
+                </para>
+                <para>
+                    关于 <codeInline>RepositoryDataProvider</codeInline> 的具体内容，见：<link xlink:href="6928689f-c384-4ce0-9969-b3570fedf996"/>。
+                </para>
+                <para>示例代码：</para>
+                <code language="cs">
+<![CDATA[[DataProviderFor(typeof(TransactionRepository))]
+public class TransactionRepositoryDataProviderExt : TransactionRepositoryDataProvider
+{
+    //由于此方法是编写在 TransactionRepository 中，所以直接编写同签名的方法即可直接重用。
+    public TransactionList GetByTransactionCriteria(TransactionCriteria criteria)
+    {
+        //...
+    }
+}]]>
+                </code>
+            </content>
+        </section>
+
+        <relatedTopics>
+        </relatedTopics>
+    </developerConceptualDocument>
 </topic>

@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="6928689f-c384-4ce0-9969-b3570fedf996" revisionNumber="1">
+    <developerConceptualDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+        <introduction>
+            <para>文档整理中……</para>
+            <!-- <autoOutline /> -->
+        </introduction>
+
+<!--
+在仓库中已经实现了查询时，可以在数据层中定义同名方法，即可直接覆盖仓库的实现。
+-->
+        <relatedTopics>
+        </relatedTopics>
+    </developerConceptualDocument>
+</topic>
