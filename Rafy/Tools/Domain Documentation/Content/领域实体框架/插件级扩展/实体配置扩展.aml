@@ -41,7 +41,7 @@
             </content>
         </section>
 
-        <section address="principal">
+        <section address="principle">
             <title>原理</title>
             <content>
                 <para>通过上面的代码可以看到，新插件中的实体配置代码，与产品插件中的实体配置代码的编写方法是一致的。</para>

@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="7e890df0-d93b-424d-8bc1-e6fc939160f3" revisionNumber="1">
+    <developerConceptualDocument
+      xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+        <introduction>
+            <para>
+                本节讲解如何在客户化插件中，为产品插件内的实体仓库数据层扩展保存逻辑。
+            </para>
+            <autoOutline />
+        </introduction>
+
+        <section address="principle">
+            <title>原理</title>
+            <content>
+                <para>RepositoryDataProvider 支持插件级别的替换。</para>
+                <para>客户化插件中新的 RepositoryDataProvider 继承自产品插件中现有的数据层，这样其可以使用面向对象的方式来进行功能的扩展。然后，框架提供 <codeInline>DataProviderForAttribute</codeInline> 标签，可以让新的数据层来替换原有的数据层：产品插件中的仓库在创建其对应的数据层对象时，创建出来的是客户化插件中的数据层类的对象。</para>
+            </content>
+        </section>
+
+        <section address="demo">
+            <title>示例</title>
+            <content>
+                <para>示例代码：</para>
+                <code language="cs">
+                    <![CDATA[[DataProviderFor(typeof(TransactionRepository))]
+public class TransactionRepositoryDataProviderExt : TransactionRepositoryDataProvider
+{
+    protected override void Delete(Entity entity)
+    {
+        //do sth else;
+        
+        base.Delete(entity);
+    }
+}]]>
+                </code>
+            </content>
+        </section>
+        
+        <relatedTopics>
+        </relatedTopics>
+    </developerConceptualDocument>
+</topic>
