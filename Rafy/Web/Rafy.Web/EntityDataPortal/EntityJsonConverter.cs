@@ -153,7 +153,7 @@ namespace Rafy.Web.EntityDataPortal
 
         internal static object ToServerValue(Type serverType, object value)
         {
-            if (serverType.IsEnum) { value = EnumViewModel.LabelToEnum(value as string, serverType); }
+            if (serverType.IsEnum) { value = EnumViewModel.Parse(value as string, serverType); }
             else if (serverType == typeof(Nullable<int>))
             {
                 var intValue = Convert.ToInt32(value);

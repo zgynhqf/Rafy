@@ -371,7 +371,27 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
         }
 
         [TestMethod]
-        public void ODT_Filter_EnumValue()
+        public void ODT_Filter_Enum_Value()
+        {
+            var repo = RF.Concrete<TestRoleRepository>();
+            var q = Parse("RoleType ne 1", repo);
+            var sql = QueryNodeTester.GenerateTestSql(q.Where);
+
+            Assert.IsTrue(sql.ToString() == @"Roles.RoleType != {0}");
+        }
+
+        [TestMethod]
+        public void ODT_Filter_Enum_Value_WithQuota()
+        {
+            var repo = RF.Concrete<TestRoleRepository>();
+            var q = Parse("RoleType ne '1'", repo);
+            var sql = QueryNodeTester.GenerateTestSql(q.Where);
+
+            Assert.IsTrue(sql.ToString() == @"Roles.RoleType != {0}");
+        }
+
+        [TestMethod]
+        public void ODT_Filter_Enum_Name()
         {
             var repo = RF.Concrete<TestRoleRepository>();
             var q = Parse("RoleType ne Administrator", repo);
@@ -381,7 +401,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
         }
 
         [TestMethod]
-        public void ODT_Filter_EnumValueWithBracket()
+        public void ODT_Filter_Enum_Name_WithBracket()
         {
             var repo = RF.Concrete<TestRoleRepository>();
             var q = Parse("(RoleType ne Administrator or RoleType ne Normal)", repo);
@@ -391,7 +411,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
         }
 
         [TestMethod]
-        public void ODT_Filter_EnumValue_WithQuote()
+        public void ODT_Filter_Enum_Name_WithQuote()
         {
             var repo = RF.Concrete<TestRoleRepository>();
             var q = Parse("RoleType ne 'Administrator'", repo);
@@ -401,7 +421,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
         }
 
         [TestMethod]
-        public void ODT_Filter_EnumValue_UseLabel()
+        public void ODT_Filter_Enum_Label()
         {
             var repo = RF.Concrete<TestRoleRepository>();
             var q = Parse("RoleType ne 管理员", repo);
@@ -411,7 +431,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
         }
 
         [TestMethod]
-        public void ODT_Filter_EnumValue_UseLabel_WithQuote()
+        public void ODT_Filter_Enum_Label_WithQuote()
         {
             var repo = RF.Concrete<TestRoleRepository>();
             var q = Parse("RoleType ne '管理员'", repo);
@@ -421,7 +441,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
         }
 
         [TestMethod]
-        public void ODT_Filter_EnumValue_Nullable()
+        public void ODT_Filter_Enum_Nullable()
         {
             var repo = RF.Concrete<TestRoleRepository>();
             var q = Parse("RoleType2 ne Administrator", repo);

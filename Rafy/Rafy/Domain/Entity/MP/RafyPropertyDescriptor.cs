@@ -111,7 +111,7 @@ namespace Rafy.Domain
                 var enumType = TypeHelper.IgnoreNullable(mp.PropertyType);
                 if (enumType.IsEnum)
                 {
-                    value = EnumViewModel.LabelToEnum((value as string).TranslateReverse(), enumType);
+                    value = EnumViewModel.Parse((value as string).TranslateReverse(), enumType);
                 }
             }
 

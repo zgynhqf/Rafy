@@ -223,7 +223,7 @@ namespace Rafy.Domain
             var innerType = TypeHelper.IgnoreNullable(propertyType);
             if (innerType.IsEnum)
             {
-                columnValue = EnumViewModel.LabelToEnum(value, innerType);
+                columnValue = EnumViewModel.Parse(value, innerType);
             }
             else
             {

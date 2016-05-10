@@ -97,29 +97,6 @@ namespace Rafy.Utils
         }
 
         /// <summary>
-        /// 把 Label 或 Name 解析为目标枚举类型中对应的枚举值。
-        /// </summary>
-        /// <param name="labelOrName"></param>
-        /// <param name="enumType">枚举类型（不接受可空类型）</param>
-        /// <returns></returns>
-        public static object LabelToEnum(string labelOrName, Type enumType)
-        {
-            FieldInfo[] fields = enumType.GetFields();
-
-            for (int i = 0; i < fields.Length; i++)
-            {
-                var field = fields[i];
-                var attr = field.GetSingleAttribute<DisplayNameAttribute>();
-                if (attr != null && attr.DisplayName == labelOrName || field.Name == labelOrName)
-                {
-                    return Enum.Parse(enumType, field.Name, true);
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// 返回一个枚举值对应的 Label。
         /// 如果该枚举值没有标记 Label，则返回 null。
         /// </summary>
@@ -139,6 +116,32 @@ namespace Rafy.Utils
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// 把 Label 或 Name 或 数值（字符串格式）解析为目标枚举类型中对应的枚举值。
+        /// 注意，如果无法转换时，会抛出异常。
+        /// </summary>
+        /// <param name="labelOrNameOrValue">枚举对应的 Label、或名称、或对应的值。</param>
+        /// <param name="enumType">枚举类型（不接受可空类型）</param>
+        /// <param name="ignoreCase">在匹配时，是否需要忽略大小写。</param>
+        /// <returns></returns>
+        public static object Parse(string labelOrNameOrValue, Type enumType, bool ignoreCase = true)
+        {
+            //先尝试解析 DisplayName。
+            FieldInfo[] fields = enumType.GetFields();
+            for (int i = 0; i < fields.Length; i++)
+            {
+                var field = fields[i];
+                var attr = field.GetSingleAttribute<DisplayNameAttribute>();
+                if (attr != null && string.Compare(attr.DisplayName, labelOrNameOrValue, ignoreCase) == 0)
+                {
+                    return field.GetValue(null);
+                }
+            }
+
+            //如果 DisplayName 解析失败， 则使用名称和值的匹配。
+            return Enum.Parse(enumType, labelOrNameOrValue, ignoreCase);
         }
     }
 }
