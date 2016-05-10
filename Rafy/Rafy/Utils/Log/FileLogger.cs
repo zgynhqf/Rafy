@@ -37,7 +37,7 @@ namespace Rafy
         /// <summary>
         /// 记录某个已经生成的异常到文件中。
         /// </summary>
-        /// <param name="title"></param>
+        /// <param name="title">异常对应的标题，用于描述当前异常的信息。</param>
         /// <param name="e"></param>
         public override void LogError(string title, Exception e)
         {
