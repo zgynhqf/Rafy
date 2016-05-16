@@ -44,5 +44,7 @@ namespace Rafy.Accounts.Controllers
         public static int LoginExceedMaxFailedTimes { get { return BaseCode + 12; } }
 
         public static int LoginUserNotExists { get { return BaseCode + 13; } }
+
+        public static int LoginUserDisabled { get { return BaseCode + 14; } }
     }
 }

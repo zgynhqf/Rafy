@@ -127,6 +127,16 @@ namespace Rafy.Accounts
             set { this.SetProperty(PhoneNumberProperty, value); }
         }
 
+        public static readonly Property<bool> IsDisabledProperty = P<User>.Register(e => e.IsDisabled);
+        /// <summary>
+        /// 当前用户是否已经被禁用。
+        /// </summary>
+        public bool IsDisabled
+        {
+            get { return this.GetProperty(IsDisabledProperty); }
+            set { this.SetProperty(IsDisabledProperty, value); }
+        }
+
         #endregion
 
         #region 只读属性
@@ -194,6 +204,37 @@ namespace Rafy.Accounts
             {
                 new PropertyMatch(User.EmailProperty, email)
             });
+        }
+
+        /// <summary>
+        /// 获取所有激活的用户。<see cref="User.IsDisabledProperty"/>
+        /// </summary>
+        /// <returns></returns>
+        public UserList GetActiveUsers(PagingInfo pi = null, EagerLoadOptions eagerLoad = null)
+        {
+            return this.GetIsDisabledUsers(BooleanBoxes.False, pi, eagerLoad);
+        }
+
+        /// <summary>
+        /// 获取所有禁用的用户。<see cref="User.IsDisabledProperty"/>
+        /// </summary>
+        /// <returns></returns>
+        public UserList GetDisabledUsers(PagingInfo pi = null, EagerLoadOptions eagerLoad = null)
+        {
+            return this.GetIsDisabledUsers(BooleanBoxes.True, pi, eagerLoad);
+        }
+
+        private UserList GetIsDisabledUsers(object isDisabled, PagingInfo pi = null, EagerLoadOptions eagerLoad = null)
+        {
+            var criteria = new CommonQueryCriteria
+            {
+                new PropertyMatch(User.IsDisabledProperty, isDisabled)
+            };
+
+            criteria.PagingInfo = pi;
+            criteria.EagerLoad = eagerLoad;
+
+            return this.GetBy(criteria);
         }
     }
 

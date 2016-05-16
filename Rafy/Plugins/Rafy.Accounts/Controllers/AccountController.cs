@@ -183,6 +183,8 @@ namespace Rafy.Accounts.Controllers
         /// <returns></returns>
         protected virtual Result LoginCore(User user, string password)
         {
+            if (user.IsDisabled) return new Result(ResultCodes.LoginUserDisabled, "登录失败，用户已经被禁用。");
+
             var repo = RF.Concrete<UserRepository>();
 
             //最大登录失败次数限制。

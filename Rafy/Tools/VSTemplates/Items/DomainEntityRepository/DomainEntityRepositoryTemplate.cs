@@ -137,7 +137,7 @@
         {
             return base.GetByParentId(parentId, paging, eagerLoad) as $domainEntityName$List;
         }
-    
+
         /// <summary>
         /// 通过 CommonQueryCriteria 来查询实体列表。
         /// </summary>
@@ -148,7 +148,7 @@
         {
             return base.GetBy(criteria) as $domainEntityName$List;
         }
-    
+
         /// <summary>
         /// 通过 CommonQueryCriteria 来查询单一实体。
         /// </summary>

@@ -326,5 +326,34 @@ namespace RafyUnitTest
                 Assert.AreEqual(3, user.LoginFailedTimes);
             }
         }
+
+        [TestMethod]
+        public void APT_Login_Failed_UserDisabled()
+        {
+            var repo = RF.Concrete<UserRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var controller = DomainControllerFactory.Create<AccountController>();
+                controller.MaxLoginFailedTimes = 3;
+
+                repo.Save(new User
+                {
+                    UserName = "hqf",
+                    RealName = "hqf",
+                    Password = controller.EncodePassword("hqf")
+                });
+
+                User user = null;
+                var res = controller.LoginByUserName("hqf", "hqf", out user);
+                Assert.IsTrue(res.Success);
+
+                user.IsDisabled = true;
+                repo.Save(user);
+
+                res = controller.LoginByUserName("hqf", "hqf", out user);
+                Assert.IsFalse(res.Success);
+                Assert.AreEqual(ResultCodes.LoginUserDisabled, res.StatusCode, "用户已经被禁用。");
+            }
+        }
     }
 }
