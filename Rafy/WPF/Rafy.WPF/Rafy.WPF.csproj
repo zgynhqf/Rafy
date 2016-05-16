@@ -267,7 +267,7 @@
     <Compile Include="Controls\zzzSDG\ListEditors\SelectorEditor.cs" />
     <Compile Include="Controls\zzzSDG\ListEditors\SortableList.cs" />
     <Compile Include="Controls\zzzSDG\SelectionDataGrid.cs" />
-    <Compile Include="Helpers\DynamicPropertyHelperBase.cs" />
+    <Compile Include="Helpers\zzzDynamicPropertyHelperBase.cs" />
     <Compile Include="Controls\ReverseBooleanConverter.cs" />
     <Compile Include="Shell\ClientApp.cs" />
     <Compile Include="Helpers\ExcelHelper.cs" />

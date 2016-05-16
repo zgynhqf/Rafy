@@ -21,7 +21,7 @@ using UT;
 
 namespace Rafy.UnitTest.WPF.ViewConfig
 {
-    internal class TestUserExtConfig : WPFViewConfig<TestUserExt>
+    internal class TestUserExtConfig : WPFViewConfig<TestUser>
     {
         protected override void ConfigView()
         {

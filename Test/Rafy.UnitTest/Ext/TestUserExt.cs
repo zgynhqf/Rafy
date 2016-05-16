@@ -14,9 +14,9 @@ namespace UT
     /// 这个类可以写在 721 中 2 的包中。
     /// </summary>
     [CompiledPropertyDeclarer]
-    public class TestUserExt
+    public static class TestUserExt
     {
-        public static ManagedProperty<string> UserCodeProperty = 
+        public static ManagedProperty<string> UserCodeProperty =
             P<TestUser>.RegisterExtension("TestUserExt_UserCode", typeof(TestUserExt), "DefaultUserCode");
         public static string GetUserCode(TestUser entity)
         {
@@ -38,7 +38,7 @@ namespace UT
             return GetUserCode(user) + " ReadOnly!";
         }
 
-        public static ManagedProperty<string> ReadOnlyUserCodeShadowProperty = 
+        public static ManagedProperty<string> ReadOnlyUserCodeShadowProperty =
             P<TestUser>.RegisterExtensionReadOnly("TestUserExt_ReadOnlyUserCodeShadow", typeof(TestUserExt), ReadOnlyUserCodeShadow_GetValue, ReadOnlyUserCodeProperty);
         public static string GetReadOnlyUserCodeShadow(TestUser entity)
         {
@@ -48,6 +48,24 @@ namespace UT
         {
             return GetReadOnlyUserCode(user);
         }
+
+        #region TestUserLogList TestUserLogList (用户行为日志)
+
+        /// <summary>
+        /// 用户行为日志 扩展属性。
+        /// </summary>
+        public static ListProperty<TestUserLogList> TestUserLogListProperty =
+            P<TestUser>.RegisterListExtension<TestUserLogList>("TestUserLogList", typeof(TestUserExt));
+        /// <summary>
+        /// 获取 用户行为日志 属性的值。
+        /// </summary>
+        /// <param name="me">要获取扩展属性值的对象。</param>
+        public static TestUserLogList GetTestUserLogList(this TestUser me)
+        {
+            return me.GetLazyList(TestUserLogListProperty) as TestUserLogList;
+        }
+
+        #endregion
     }
 
     internal class TestUserExtConfig : EntityConfig<TestUser>

@@ -70,12 +70,6 @@ namespace Rafy.MetaModel.View
             {
                 this.CreateEntityPropertyViewMeta(property, viewMeta);
             }
-
-            //加入扩展属性元数据
-            foreach (var mp in EntityMetaHelper.GetEntityPropertiesExtension(viewMeta.EntityMeta))
-            {
-                this.CreateExtensionPropertyViewMeta(mp, viewMeta);
-            }
         }
 
         private EntityPropertyViewMeta CreateEntityPropertyViewMeta(IManagedProperty mp, EntityViewMeta evm)
@@ -104,19 +98,6 @@ namespace Rafy.MetaModel.View
             evm.EntityProperties.Add(item);
 
             return item;
-        }
-
-        internal EntityPropertyViewMeta CreateExtensionPropertyViewMeta(IManagedProperty mp, EntityViewMeta evm)
-        {
-            var epm = evm.EntityMeta.Property(mp);
-
-            var epvm = evm.CreatePropertyViewMeta();
-            epvm.Owner = evm;
-            epvm.PropertyMeta = epm;
-
-            evm.EntityProperties.Add(epvm);
-
-            return epvm;
         }
     }
 }

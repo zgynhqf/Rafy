@@ -34,6 +34,9 @@ namespace Rafy.Domain
         internal ListProperty(Type ownerType, string propertyName, ListPropertyMetadata<TEntityList> defaultMeta)
             : base(ownerType, propertyName, defaultMeta) { }
 
+        internal ListProperty(Type ownerType, Type declareType, string propertyName, ListPropertyMetadata<TEntityList> defaultMeta)
+            : base(ownerType, declareType, propertyName, defaultMeta) { }
+
         public new IRafyListPropertyMetadata GetMeta(object owner)
         {
             return base.GetMeta(owner) as IRafyListPropertyMetadata;

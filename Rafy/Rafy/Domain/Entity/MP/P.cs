@@ -456,6 +456,51 @@ namespace Rafy.Domain
 
         #endregion
 
+        #region RegisterListExtension
+
+        /// <summary>
+        /// 扩展一个列表属性
+        /// </summary>
+        /// <typeparam name="TEntityList">The type of the entity list.</typeparam>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <param name="declareType">Type of the declare.</param>
+        /// <returns></returns>
+        public static ListProperty<TEntityList> RegisterListExtension<TEntityList>(string propertyName, Type declareType)
+            where TEntityList : EntityList
+        {
+            return RegisterListExtensionCore<TEntityList>(propertyName, declareType, new ListPropertyMeta());
+        }
+
+        /// <summary>
+        /// 扩展一个列表属性
+        /// </summary>
+        /// <typeparam name="TEntityList">The type of the entity list.</typeparam>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <param name="declareType">Type of the declare.</param>
+        /// <param name="meta">The meta.</param>
+        /// <returns></returns>
+        public static ListProperty<TEntityList> RegisterListExtension<TEntityList>(string propertyName, Type declareType, ListPropertyMeta meta)
+            where TEntityList : EntityList
+        {
+            return RegisterListExtensionCore<TEntityList>(propertyName, declareType, meta);
+        }
+
+        private static ListProperty<TEntityList> RegisterListExtensionCore<TEntityList>(string propertyName, Type declareType, ListPropertyMeta args)
+            where TEntityList : EntityList
+        {
+            var meta = new ListPropertyMetadata<TEntityList>(args.DataProvider);
+
+            var property = new ListProperty<TEntityList>(typeof(TEntity), declareType, propertyName, meta);
+
+            property._hasManyType = args.HasManyType;
+
+            ManagedPropertyRepository.Instance.RegisterProperty(property);
+
+            return property;
+        }
+
+        #endregion
+
         public static void UnRegisterAllRuntimeProperties()
         {
             ManagedPropertyRepository.Instance.UnRegisterAllRuntimeProperties(typeof(TEntity));

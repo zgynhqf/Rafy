@@ -198,6 +198,24 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void MPT_ExtensionProperty_LazyList()
+        {
+            var repo = RF.Concrete<TestUserRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var user = new TestUser();
+                user.GetTestUserLogList().Add(new TestUserLog());
+                user.GetTestUserLogList().Add(new TestUserLog());
+                repo.Save(user);
+
+                var user2 = repo.GetById(user.Id);
+                Assert.IsTrue(!user2.FieldExists(TestUserExt.TestUserLogListProperty));
+                Assert.IsTrue(user2.GetProperty(TestUserExt.TestUserLogListProperty) == null);
+                Assert.IsTrue(user2.GetTestUserLogList().Count == 2);
+            }
+        }
+
+        [TestMethod]
         public void zzzMPT_ExtensionProperties_CreateListControl()
         {
             //var grid = AutoUI.BlockUIFactory.CreateTreeListControl(

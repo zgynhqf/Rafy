@@ -228,9 +228,9 @@ namespace Rafy.MetaModel.View
             return raw;
         }
 
-        public EntityPropertyViewMeta CreateExtensionPropertyViewMeta(IManagedProperty mp, EntityViewMeta evm)
-        {
-            return this._codeReader.CreateExtensionPropertyViewMeta(mp, evm);
-        }
+        //public EntityPropertyViewMeta CreateExtensionPropertyViewMeta(IManagedProperty mp, EntityViewMeta evm)
+        //{
+        //    return this._codeReader.CreateExtensionPropertyViewMeta(mp, evm);
+        //}
     }
 }

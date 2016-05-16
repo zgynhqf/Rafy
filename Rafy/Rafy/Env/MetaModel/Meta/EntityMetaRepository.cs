@@ -123,24 +123,6 @@ namespace Rafy.MetaModel
 
         #endregion
 
-        #region 内部接口 - 扩展属性
-
-        public EntityPropertyMeta CreateExtensionPropertyMeta(IManagedProperty mp, EntityMeta em)
-        {
-            var epm = new EntityPropertyMeta()
-            {
-                Owner = em,
-                Runtime = new ManagedPropertyRuntime(mp),
-                PropertyType = mp.PropertyType,
-                ManagedProperty = mp,
-            };
-            em.EntityProperties.Add(epm);
-
-            return epm;
-        }
-
-        #endregion
-
         #region CreateEntityMeta
 
         /// <summary>
@@ -248,12 +230,6 @@ namespace Rafy.MetaModel
             foreach (var property in EntityMetaHelper.GetChildrenProperties(entityMeta))
             {
                 this.CreateChildrenPropertyMeta(property, entityMeta);
-            }
-
-            //加入扩展属性元数据
-            foreach (var mp in EntityMetaHelper.GetEntityPropertiesExtension(entityMeta))
-            {
-                this.CreateExtensionPropertyMeta(mp, entityMeta);
             }
         }
 

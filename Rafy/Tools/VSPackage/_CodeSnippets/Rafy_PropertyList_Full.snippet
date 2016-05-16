@@ -26,7 +26,7 @@
                 <![CDATA[public static readonly ListProperty<$EntityListType$> $EntityListType$Property = P<$ClassName$>.RegisterList(e => e.$EntityListType$, new ListPropertyMeta
         {
             HasManyType = HasManyType.Aggregation,
-            DataProvider = e => (e as ProductNavigationCriteria).LoadProductCategoryList()
+            DataProvider = e => (e as $ClassName$).LoadProductCategoryList()
         });
         public $EntityListType$ $EntityListType$
         {

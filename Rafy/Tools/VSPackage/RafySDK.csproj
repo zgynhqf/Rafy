@@ -241,6 +241,9 @@
     <EmbeddedResource Include="_CodeSnippets\Rafy_DataProvider.snippet">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="_CodeSnippets\Rafy_PropertyListExtension.snippet">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <VSCTCompile Include="VSPackage.vsct">

@@ -211,6 +211,11 @@
     <Compile Include="Entities\TestUserQueryCriteria.cs" />
     <Compile Include="Entities\UnitTestEntity2.cs" />
     <Compile Include="Ext\EntityRepositoryExtension.cs" />
+    <Compile Include="Ext\TestUserLog.cs" />
+    <Compile Include="Ext\TestUserLog.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>TestUserLog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Ext\TestUserRepositoryExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Entities\TestAdministrator.cs" />

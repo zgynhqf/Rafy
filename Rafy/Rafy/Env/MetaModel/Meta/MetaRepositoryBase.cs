@@ -58,16 +58,6 @@ namespace Rafy.MetaModel
     internal static class EntityMetaHelper
     {
         /// <summary>
-        /// 通过托管属性获取所有的扩展属性列表
-        /// </summary>
-        /// <param name="em"></param>
-        /// <returns></returns>
-        internal static IList<IManagedProperty> GetEntityPropertiesExtension(EntityMeta em)
-        {
-            return em.ManagedProperties.GetCompiledProperties().Where(mp => mp.IsExtension).ToArray();
-        }
-
-        /// <summary>
         /// 通过托管属性获取所有的实体属性列表
         /// </summary>
         /// <param name="entityMeta"></param>
@@ -75,7 +65,7 @@ namespace Rafy.MetaModel
         internal static IList<IManagedProperty> GetEntityProperties(EntityMeta entityMeta)
         {
             return entityMeta.ManagedProperties.GetCompiledProperties()
-                .Where(mp => !mp.IsExtension && !(mp is IListProperty))
+                .Where(mp => !(mp is IListProperty))
                 .ToArray();
         }
 
@@ -87,7 +77,7 @@ namespace Rafy.MetaModel
         internal static IList<IManagedProperty> GetChildrenProperties(EntityMeta entityMeta)
         {
             return entityMeta.ManagedProperties.GetCompiledProperties()
-                .Where(mp => !mp.IsExtension && mp is IListProperty)
+                .Where(mp => mp is IListProperty)
                 .ToArray();
         }
     }
