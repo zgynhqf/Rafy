@@ -66,6 +66,24 @@ namespace UT
         }
 
         #endregion
+
+        #region string ANameExt (扩展的 AName)
+
+        /// <summary>
+        /// 扩展的 AName 扩展属性。
+        /// </summary>
+        public static Property<string> ANameExtProperty = P<B>.RegisterRedundancyExtension<string>("ANameExt", typeof(TestUserExt),
+            new RedundantPath(B.AProperty, A.NameProperty));
+        /// <summary>
+        /// 获取 扩展的 AName 属性的值。
+        /// </summary>
+        /// <param name="me">要获取扩展属性值的对象。</param>
+        public static string GetANameExt(this B me)
+        {
+            return me.GetProperty(ANameExtProperty);
+        }
+
+        #endregion
     }
 
     internal class TestUserExtConfig : EntityConfig<TestUser>

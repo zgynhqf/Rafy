@@ -216,6 +216,26 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void MPT_ExtensionProperty_Redundancy()
+        {
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            {
+                var a = new A { Name = "AName" };
+                Save(a);
+
+                var b = new B { A = a };
+                Assert.AreEqual(a.Name, b.GetANameExt());
+                Save(b);
+
+                a.Name = "New Name";
+                Save(a);
+
+                var b2 = RF.Concrete<BRepository>().GetById(b.Id) as B;
+                Assert.AreEqual(a.Name, b2.GetANameExt());
+            }
+        }
+
+        [TestMethod]
         public void zzzMPT_ExtensionProperties_CreateListControl()
         {
             //var grid = AutoUI.BlockUIFactory.CreateTreeListControl(

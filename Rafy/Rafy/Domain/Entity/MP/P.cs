@@ -159,12 +159,29 @@ namespace Rafy.Domain
         /// <param name="path">属性冗余的路径</param>
         /// <returns></returns>
         /// 不使用 lambda 表达式来注册冗余路径，这是因为可能会与属性生命周期冲突，同时也没有这个必要。
-        public static Property<TProperty> RegisterRedundancy<TProperty>(
-            Expression<Func<TEntity, TProperty>> propertyExp, RedundantPath path)
+        public static Property<TProperty> RegisterRedundancy<TProperty>(Expression<Func<TEntity, TProperty>> propertyExp, RedundantPath path)
         {
             var property = GetPropertyName(propertyExp);
 
             var mp = new Property<TProperty>(typeof(TEntity), property, new PropertyMetadata<TProperty>());
+            mp.AsRedundantOf(path);
+
+            ManagedPropertyRepository.Instance.RegisterProperty(mp);
+
+            return mp;
+        }
+
+        /// <summary>
+        /// 注册一个冗余扩展属性
+        /// </summary>
+        /// <typeparam name="TProperty">The type of the property.</typeparam>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <param name="declareType">Type of the declare.</param>
+        /// <param name="path">属性冗余的路径</param>
+        /// <returns></returns>
+        public static Property<TProperty> RegisterRedundancyExtension<TProperty>(string propertyName, Type declareType, RedundantPath path)
+        {
+            var mp = new Property<TProperty>(typeof(TEntity), declareType, propertyName, new PropertyMetadata<TProperty>());
             mp.AsRedundantOf(path);
 
             ManagedPropertyRepository.Instance.RegisterProperty(mp);

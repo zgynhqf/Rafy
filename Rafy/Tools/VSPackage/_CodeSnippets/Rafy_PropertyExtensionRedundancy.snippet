@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+    <CodeSnippet Format="1.0.0">
+        <Header>
+            <Description>冗余属性</Description>
+            <Title>Rafy Extension Property Redundancy</Title>
+            <Shortcut>RafyPropertyExtensionRedundancy</Shortcut>
+            <Author>HuQingfang</Author>
+            <SnippetTypes>
+                <SnippetType>Expansion</SnippetType>
+            </SnippetTypes>
+        </Header>
+        <Snippet>
+            <Declarations>
+                <Literal>
+                    <ID>PropertyType</ID>
+                    <Default>string</Default>
+                    <ToolTip>Property type</ToolTip>
+                </Literal>
+                <Literal>
+                    <ID>PropertyName</ID>
+                    <Default>Name</Default>
+                </Literal>
+                <Literal>
+                    <ID>Comment</ID>
+                    <Default>属性注释</Default>
+                </Literal>
+                <Literal>
+                    <ID>ClassName</ID>
+                    <Default>Entity</Default>
+                </Literal>
+                <Literal>
+                    <ID>DeclareType</ID>
+                    <Function>ClassName()</Function>
+                </Literal>
+                <Literal>
+                    <ID>RedundantPath</ID>
+                    <Default>DRefProperty, D.CRefProperty, C.BRefProperty, B.ARefProperty, A.NameProperty</Default>
+                    <ToolTip>Property Redundant Path</ToolTip>
+                </Literal>
+            </Declarations>
+            <Code Language="csharp">
+                <![CDATA[#region $PropertyType$ $PropertyName$ ($Comment$)
+                
+        /// <summary>
+        /// $Comment$ 扩展属性。
+        /// </summary>
+        public static Property<$PropertyType$> $PropertyName$Property = P<$ClassName$>.RegisterRedundancyExtension<$PropertyType$>("$PropertyName$", typeof($DeclareType$),
+            new RedundantPath($RedundantPath$));
+        /// <summary>
+        /// 获取 $Comment$ 属性的值。
+        /// </summary>
+        /// <param name="me">要获取扩展属性值的对象。</param>
+        public static $PropertyType$ Get$PropertyName$(this $ClassName$ me)
+        {
+            return me.GetProperty($PropertyName$Property);
+        }
+
+        #endregion$end$]]>
+            </Code>
+        </Snippet>
+    </CodeSnippet>
+</CodeSnippets>

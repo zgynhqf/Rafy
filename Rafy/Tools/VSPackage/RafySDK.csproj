@@ -241,7 +241,10 @@
     <EmbeddedResource Include="_CodeSnippets\Rafy_DataProvider.snippet">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="_CodeSnippets\Rafy_PropertyListExtension.snippet">
+    <EmbeddedResource Include="_CodeSnippets\Rafy_PropertyExtensionList.snippet">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="_CodeSnippets\Rafy_PropertyExtensionRedundancy.snippet">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
