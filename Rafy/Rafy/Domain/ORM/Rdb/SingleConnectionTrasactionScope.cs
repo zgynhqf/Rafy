@@ -30,7 +30,7 @@ namespace Rafy.Domain.ORM
     /// 连接与事务的关系，见：<see cref="TransactionDependentConnectionManager"/>。
     /// 事务与线程及上下文的关系，见：<see cref="LocalTransactionBlock"/>。
     /// </summary>
-    public class SingleConnectionTrasactionScope : LocalTransactionBlock
+    public class SingleConnectionTransactionScope : LocalTransactionBlock
     {
         private IConnectionManager _conMgr;
 
@@ -38,14 +38,14 @@ namespace Rafy.Domain.ORM
         /// 构造一个事务块
         /// </summary>
         /// <param name="dbSetting">整个数据库的配置名</param>
-        public SingleConnectionTrasactionScope(DbSetting dbSetting) : base(dbSetting, IsolationLevel.Unspecified) { }
+        public SingleConnectionTransactionScope(DbSetting dbSetting) : base(dbSetting, IsolationLevel.Unspecified) { }
 
         /// <summary>
         /// 构造一个事务块
         /// </summary>
         /// <param name="dbSetting">整个数据库的配置名</param>
         /// <param name="level">事务的孤立级别</param>
-        public SingleConnectionTrasactionScope(DbSetting dbSetting, IsolationLevel level) : base(dbSetting, level) { }
+        public SingleConnectionTransactionScope(DbSetting dbSetting, IsolationLevel level) : base(dbSetting, level) { }
 
         protected override IDbTransaction BeginTransaction()
         {

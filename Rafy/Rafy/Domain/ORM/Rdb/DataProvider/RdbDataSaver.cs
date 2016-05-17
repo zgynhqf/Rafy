@@ -39,7 +39,7 @@ namespace Rafy.Domain.ORM
             //以下事务代码，不需要区分是否使用分布式缓存的情况来做事务处理，
             //而是直接使用 SingleConnectionTransactionScope 类来管理不同数据库的事务，
             //因为这个类会保证不同的库使用不同的事务。
-            using (var tran = new SingleConnectionTrasactionScope(_dataProvider.DbSetting))
+            using (var tran = new SingleConnectionTransactionScope(_dataProvider.DbSetting))
             {
                 base.SubmitComposition(component);
 

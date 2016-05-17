@@ -134,9 +134,9 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        public static SingleConnectionTrasactionScope TransactionScope(string dbSetting)
+        public static SingleConnectionTransactionScope TransactionScope(string dbSetting)
         {
-            return new SingleConnectionTrasactionScope(DbSetting.FindOrCreate(dbSetting));
+            return new SingleConnectionTransactionScope(DbSetting.FindOrCreate(dbSetting));
         }
 
         /// <summary>
@@ -144,9 +144,9 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="dbDelegate"></param>
         /// <returns></returns>
-        public static SingleConnectionTrasactionScope TransactionScope(EntityRepository dbDelegate)
+        public static SingleConnectionTransactionScope TransactionScope(EntityRepository dbDelegate)
         {
-            return new SingleConnectionTrasactionScope(RdbDataProvider.Get(dbDelegate).DbSetting);
+            return new SingleConnectionTransactionScope(RdbDataProvider.Get(dbDelegate).DbSetting);
         }
 
         /// <summary>
@@ -154,9 +154,9 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        public static SingleConnectionTrasactionScope TransactionScope(DbSetting dbSetting)
+        public static SingleConnectionTransactionScope TransactionScope(DbSetting dbSetting)
         {
-            return new SingleConnectionTrasactionScope(dbSetting);
+            return new SingleConnectionTransactionScope(dbSetting);
         }
 
         /// <summary>
