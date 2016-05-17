@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.52.3160
+3.52.3163
     添加接口
         添加 EntityRepositoryQueryBase.QueryInBatches 方法，帮助开发者处理 In 参数过多无法查询的场景。
     添加功能
@@ -19,6 +19,7 @@
         枚举的反序列化支持数值。
         Rafy.Accounts.User 添加 IsDisabled 属性与相关逻辑。
         支持扩展列表属性。
+        Rafy.SerialNumber 插件支持：可以拿到当前的流水号、根据日期查找这一天的下一个流水。
     内部修改
         添加 Rafy.FileStorage 相关的单元测试。
     BUG修复

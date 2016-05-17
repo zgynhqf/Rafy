@@ -133,6 +133,18 @@ namespace Rafy.SerialNumber
         #region 只读属性
 
         #endregion
+
+        internal static string GetTimeGroupKey(DateTime time, string timeKeyFormat)
+        {
+            string timeGroupKey = null;
+
+            if (!string.IsNullOrEmpty(timeKeyFormat))
+            {
+                timeGroupKey = time.ToString(timeKeyFormat);
+            }
+
+            return timeGroupKey;
+        }
     }
 
     /// <summary>

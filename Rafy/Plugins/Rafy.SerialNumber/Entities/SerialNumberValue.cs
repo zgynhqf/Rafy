@@ -160,33 +160,54 @@ namespace Rafy.SerialNumber
         protected SerialNumberValueRepository() { }
 
         /// <summary>
+        /// 获取指定规则下指定时间对应的当前值。
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="specificTime"></param>
+        /// <returns></returns>
+        public SerialNumberValue GetByTime(SerialNumberInfo info, DateTime specificTime)
+        {
+            var timeGroupKey = SerialNumberInfo.GetTimeGroupKey(specificTime, info.TimeGroupFormat);
+            return this.GetByKey(info.Name, timeGroupKey);
+        }
+
+        /// <summary>
         /// 通过规则名、时间键来获取当前值。
         /// </summary>
-        /// <param name="autoCodeName"></param>
+        /// <param name="infoName"></param>
         /// <param name="timeKey"></param>
         /// <returns></returns>
         [RepositoryQuery]
-        public virtual SerialNumberValue GetByKey(string autoCodeName, string timeKey)
+        public virtual SerialNumberValue GetByKey(string infoName, string timeKey)
         {
-            var q = this.CreateLinqQuery();
-            q = q.Where(e => e.SerialNumberInfo.Name == autoCodeName && e.TimeKey == timeKey);
+            var f = QueryFactory.Instance;
+            var tValue = f.Table<SerialNumberValue>();
+            var tInfo = f.Table<SerialNumberInfo>();
+            var q = f.Query(
+                from: tValue.Join(tInfo),
+                where: f.And(
+                    tInfo.Column(SerialNumberInfo.NameProperty).Equal(infoName),
+                    tValue.Column(SerialNumberValue.TimeKeyProperty).Equal(timeKey)
+                )
+            );
+
             return (SerialNumberValue)this.QueryData(q);
         }
 
         /// <summary>
         /// 获取某个规则下最新的一个值。
         /// </summary>
-        /// <param name="autoCodeName"></param>
+        /// <param name="infoName"></param>
         /// <returns></returns>
         [RepositoryQuery]
-        public virtual SerialNumberValue GetLastValue(string autoCodeName)
+        public virtual SerialNumberValue GetLastValue(string infoName)
         {
             var f = QueryFactory.Instance;
             var t = f.Table<SerialNumberValue>();
             var t2 = f.Table<SerialNumberInfo>();
             var q = f.Query(
                 from: t.Join(t2),
-                where: t2.Column(SerialNumberInfo.NameProperty).Equal(autoCodeName),
+                where: t2.Column(SerialNumberInfo.NameProperty).Equal(infoName),
                 orderBy: new List<IOrderBy> { f.OrderBy(t.Column(SerialNumberValue.LastUpdatedTimeProperty), OrderDirection.Descending) }
             );
 

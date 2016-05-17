@@ -100,5 +100,39 @@ namespace RafyUnitTest
                 Assert.AreEqual(today + "00000002", next);
             }
         }
+
+        /// <summary>
+        /// 可以通过指定的时间来生成流水号。
+        /// </summary>
+        [TestMethod]
+        public void SNPT_SpecificTime()
+        {
+            using (RF.TransactionScope(SerialNumberPlugin.DbSettingName))
+            {
+                var name = "testACP";
+
+                var controller = DomainControllerFactory.Create<SerialNumberController>();
+                var sni = controller.CreateDailySerialNumberInfo(name);
+
+                var next = controller.GenerateNext(name, DateTime.Parse("2000-01-01"));
+                Assert.AreEqual("2000010100000001", next);
+                next = controller.GenerateNext(name, DateTime.Parse("2000-01-01"));
+                Assert.AreEqual("2000010100000002", next);
+
+                next = controller.GenerateNext(name, DateTime.Parse("2016-05-01"));
+                Assert.AreEqual("2016050100000001", next);
+
+                next = controller.GenerateNext(sni, DateTime.Parse("2016-05-02"));
+                Assert.AreEqual("2016050200000001", next);
+                next = controller.GenerateNext(sni, DateTime.Parse("2016-05-02"));
+                Assert.AreEqual("2016050200000002", next);
+                next = controller.GenerateNext(sni, DateTime.Parse("2016-05-02"));
+                Assert.AreEqual("2016050200000003", next);
+
+                var valueRepo = RF.Concrete<SerialNumberValueRepository>();
+                var value = valueRepo.GetByTime(sni, DateTime.Parse("2016-05-02"));
+                Assert.AreEqual(3, value.RollValue);
+            }
+        }
     }
 }
