@@ -46,31 +46,39 @@ namespace Rafy.VSPackage.Commands.RefreshCodeSnippets
                 string[] files = GetFiles();
                 var dir = GetSnippetsDir();
 
-                if (res == MessageBoxResult.Yes)
+                try
                 {
-                    foreach (var name in files)
+                    if (res == MessageBoxResult.Yes)
                     {
-                        var resource = string.Format("Rafy.VSPackage._CodeSnippets.{0}.snippet", name);
-                        var content = Helper.GetResourceContent(typeof(RafySDKPackage).Assembly, resource);
+                        foreach (var name in files)
+                        {
+                            var resource = string.Format("Rafy.VSPackage._CodeSnippets.{0}.snippet", name);
+                            var content = Helper.GetResourceContent(typeof(RafySDKPackage).Assembly, resource);
 
-                        var path = Path.Combine(dir, name + ".snippet");
-                        File.WriteAllText(path, content);
+                            var path = Path.Combine(dir, name + ".snippet");
+                            File.WriteAllText(path, content);
+                        }
+                    }
+                    else if (res == MessageBoxResult.No)
+                    {
+                        foreach (var name in files)
+                        {
+                            var path = Path.Combine(dir, name + ".snippet");
+                            File.Delete(path);
+                        }
+                    }
+
+                    //MessageBox.Show("操作完成，需要重启后才能生效。", "提示");
+                    var res2 = MessageBox.Show("操作完成，可能需要重启 VS 后才能生效，是否打开代码段文件夹检查？", "提示", MessageBoxButton.YesNo);
+                    if (res2 == MessageBoxResult.Yes)
+                    {
+                        System.Diagnostics.Process.Start(dir);
                     }
                 }
-                else if (res == MessageBoxResult.No)
+                //catch (IOException ex)
+                catch (UnauthorizedAccessException)
                 {
-                    foreach (var name in files)
-                    {
-                        var path = Path.Combine(dir, name + ".snippet");
-                        File.Delete(path);
-                    }
-                }
-
-                //MessageBox.Show("操作完成，需要重启后才能生效。", "提示");
-                var res2 = MessageBox.Show("操作完成，可能需要重启 VS 后才能生效，是否打开代码段文件夹检查？", "提示", MessageBoxButton.YesNo);
-                if (res2 == MessageBoxResult.Yes)
-                {
-                    System.Diagnostics.Process.Start(dir);
+                    MessageBox.Show("没有权限访问代码段文件夹，请以管理员启动 Visual Studio。");
                 }
             }
         }
@@ -78,6 +86,7 @@ namespace Rafy.VSPackage.Commands.RefreshCodeSnippets
         private static string[] GetFiles()
         {
             string[] files = new string[]{
+                "Hxy_Extension",
                 //"Rafy_Command",
                 "Rafy_Criteria",
                 "Rafy_DataProvider",
@@ -87,7 +96,9 @@ namespace Rafy.VSPackage.Commands.RefreshCodeSnippets
                 "Rafy_Property_PropertyChanged",
                 "Rafy_Property_PropertyChanging",
                 "Rafy_PropertyExtension",
+                "Rafy_PropertyExtensionList",
                 "Rafy_PropertyExtensionReadOnly",
+                "Rafy_PropertyExtensionRedundancy",
                 "Rafy_PropertyList",
                 "Rafy_PropertyList_Full",
                 "Rafy_PropertyLOB",
@@ -98,7 +109,6 @@ namespace Rafy.VSPackage.Commands.RefreshCodeSnippets
                 "Rafy_Query",
                 "Rafy_Query_Common",
                 "Rafy_Query_TableQueryContent",
-                "Hxy_Extension",
             };
             return files;
         }

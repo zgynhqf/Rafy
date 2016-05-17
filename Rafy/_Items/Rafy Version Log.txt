@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.52.3165
+3.52.3166
     添加接口
         添加 EntityRepositoryQueryBase.QueryInBatches 方法，帮助开发者处理 In 参数过多无法查询的场景。
     添加功能
@@ -28,6 +28,7 @@
         Oracle 中的一些 BUG。
         解决了在当前库的其它用户（表空间）下已经存在同名的 Sequence 时，无法再生成 Sequence 的问题。
         解决 DomainPlugin.Intialize 方法的可重入性问题。
+        RafySDK.
 
 3.50.3138
     添加接口
