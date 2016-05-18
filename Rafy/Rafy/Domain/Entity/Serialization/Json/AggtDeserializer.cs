@@ -241,7 +241,7 @@ namespace Rafy.Domain.Serialization.Json
                                     var innerType = TypeHelper.IgnoreNullable(propertyType);
                                     if (innerType.IsEnum)
                                     {
-                                        value = EnumViewModel.Parse(value.ToString(), innerType);
+                                        value = EnumViewModel.Parse(value as string, innerType);
                                     }
                                 }
                             }
