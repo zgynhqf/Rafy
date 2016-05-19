@@ -59,7 +59,7 @@
 {
     public override void Initialize(IApp app)
     {
-        ControllerFactory.Override<TransactionController, TransactionControllerExt>();
+        DomainControllerFactory.Override<TransactionController, TransactionControllerExt>();
     }
 }]]>
                 </code>
