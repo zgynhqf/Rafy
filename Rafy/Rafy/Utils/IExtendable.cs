@@ -26,6 +26,11 @@ namespace Rafy
     public interface IExtendable
     {
         /// <summary>
+        /// 返回当前已经扩展的属性个数。
+        /// </summary>
+        int ExtendedPropertiesCount { get; }
+
+        /// <summary>
         /// 通过属性名称设置/获取某个值。
         /// </summary>
         /// <param name="property"></param>
@@ -52,7 +57,7 @@ namespace Rafy
         /// 获取已经设置的所有的扩展属性
         /// </summary>
         /// <returns></returns>
-        IEnumerable<KeyValuePair<string, object>> GetExtendedProperties();
+        IReadOnlyDictionary<string, object> GetExtendedProperties();
     }
 
     public static class IExtendableExtension

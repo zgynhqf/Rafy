@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.52.3168
+3.52.3169
     添加接口
         添加 EntityRepositoryQueryBase.QueryInBatches 方法，帮助开发者处理 In 参数过多无法查询的场景。
     添加功能
@@ -24,6 +24,7 @@
     内部修改
         添加 Rafy.FileStorage 相关的单元测试。
         修改 SingleConnectionTransactionScope 的命名错误。
+        修改 IExtendable 接口。
     BUG修复
         Oracle 中的一些 BUG。
         解决了在当前库的其它用户（表空间）下已经存在同名的 Sequence 时，无法再生成 Sequence 的问题。
