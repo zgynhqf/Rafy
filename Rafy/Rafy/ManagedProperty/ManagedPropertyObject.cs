@@ -450,33 +450,6 @@ namespace Rafy.ManagedProperty
 
         #endregion
 
-        #region RegisterProperty
-
-        /// <summary>
-        /// Register Property
-        /// </summary>
-        /// <typeparam name="T">Type of Target</typeparam>
-        /// <typeparam name="P">Type of property</typeparam>
-        /// <param name="propertyLambdaExpression">Property Expression</param>
-        /// <param name="defaultValue">Default Value for the property</param>
-        /// <returns></returns>
-        protected static ManagedProperty<P> RegisterProperty<T, P>(Expression<Func<T, object>> propertyLambdaExpression, P defaultValue)
-        {
-            var reflectedPropertyInfo = Reflect<T>.GetProperty(propertyLambdaExpression);
-
-            var property = new ManagedProperty<P>(
-                typeof(T), reflectedPropertyInfo.Name, new ManagedPropertyMetadata<P>()
-                {
-                    DefaultValue = defaultValue
-                });
-
-            ManagedPropertyRepository.Instance.RegisterProperty(property);
-
-            return property;
-        }
-
-        #endregion
-
         #region PropertyChanged
 
         /// <summary>
