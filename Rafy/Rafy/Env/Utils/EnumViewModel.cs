@@ -121,6 +121,7 @@ namespace Rafy.Utils
         /// <summary>
         /// 把 Label 或 Name 或 数值（字符串格式）解析为目标枚举类型中对应的枚举值。
         /// 注意，如果无法转换时，会抛出异常。
+        /// 如果传入的是空字符串，则返回 null。
         /// </summary>
         /// <param name="labelOrNameOrValue">枚举对应的 Label、或名称、或对应的值。</param>
         /// <param name="enumType">枚举类型（不接受可空类型）</param>
@@ -128,6 +129,9 @@ namespace Rafy.Utils
         /// <returns></returns>
         public static object Parse(string labelOrNameOrValue, Type enumType, bool ignoreCase = true)
         {
+            //需要兼容可空的枚举，即传入 Null、String.Empty 时，返回 null。
+            if (string.IsNullOrEmpty(labelOrNameOrValue)) return null;
+
             //先尝试解析 DisplayName。
             FieldInfo[] fields = enumType.GetFields();
             for (int i = 0; i < fields.Length; i++)

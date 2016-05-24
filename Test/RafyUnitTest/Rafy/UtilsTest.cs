@@ -361,6 +361,37 @@ namespace RafyUnitTest
             Assert.IsTrue(table2[1].GetInt32("Age") == 25);
         }
 
+        [TestMethod]
+        public void UtilsTest_EnumViewModel_Parse_Name()
+        {
+            var value = EnumViewModel.Parse("A", typeof(FavorateTypeWithLabel));
+            Assert.AreEqual(FavorateTypeWithLabel.A, value);
+        }
+
+        [TestMethod]
+        public void UtilsTest_EnumViewModel_Parse_Label()
+        {
+            var value = EnumViewModel.Parse("第一个", typeof(FavorateTypeWithLabel));
+            Assert.AreEqual(FavorateTypeWithLabel.A, value);
+        }
+
+        [TestMethod]
+        public void UtilsTest_EnumViewModel_Parse_Value()
+        {
+            var value = EnumViewModel.Parse("1", typeof(FavorateTypeWithLabel));
+            Assert.AreEqual(FavorateTypeWithLabel.B, value);
+        }
+
+        [TestMethod]
+        public void UtilsTest_EnumViewModel_Parse_Null()
+        {
+            var value = EnumViewModel.Parse(null, typeof(FavorateTypeWithLabel));
+            Assert.IsNull(value);
+
+            value = EnumViewModel.Parse(string.Empty, typeof(FavorateTypeWithLabel));
+            Assert.IsNull(value);
+        }
+
         #region Reflection
 
         private int TestArguments(int a, int? b)

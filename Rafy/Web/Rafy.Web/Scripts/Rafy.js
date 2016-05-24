@@ -206,12 +206,12 @@ Ext.define('Rafy', {
         Ext.apply(entityConfig, {
             "extend": "Rafy.data.Entity",
             "proxy": {
+                "type": "ajax",
                 "url": "/Rafy_EntityDataPortal.ashx?type=" + model,
                 "reader": {
                     "type": "json",
                     "root": "entities"
-                },
-                "type": "ajax"
+                }
             }
         });
         //if (entityConfig.isTree) {

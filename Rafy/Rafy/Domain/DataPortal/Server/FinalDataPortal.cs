@@ -38,7 +38,7 @@ namespace Rafy.Domain.DataPortal
             get
             {
                 var ieqc = CurrentQueryCriteriaItem.Value as IEQC;
-                if (ieqc == null) throw new InvalidProgramException("实体查询时必须使用正确的格式，查询方法必须标记为虚方法，否则无法判断查询中的返回值。");
+                if (ieqc == null) throw new InvalidProgramException("实体查询时必须使用正确的格式，查询方法必须是虚方法，并添加 RepositoryQuery 标记，否则无法判断查询中的返回值。");
                 return ieqc;
             }
         }

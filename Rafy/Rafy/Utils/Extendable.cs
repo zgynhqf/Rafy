@@ -13,6 +13,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -138,10 +139,9 @@ namespace Rafy
         /// 获取已经设置的所有的扩展属性
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<KeyValuePair<string, object>> GetExtendedProperties()
+        public IReadOnlyDictionary<string, object> GetExtendedProperties()
         {
-            if (_properties != null) { return _properties; }
-            return Enumerable.Empty<KeyValuePair<string, object>>();
+            return _properties ?? Empty;
         }
 
         /// <summary>
@@ -156,5 +156,7 @@ namespace Rafy
         /// </summary>
         /// <param name="property"></param>
         protected virtual void OnExtendedPropertyChanged(string property) { }
+
+        private static IReadOnlyDictionary<string, object> Empty = new ReadOnlyDictionary<string, object>(new Dictionary<string, object>());
     }
 }
