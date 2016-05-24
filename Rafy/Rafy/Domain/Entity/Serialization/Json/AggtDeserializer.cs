@@ -31,11 +31,6 @@ namespace Rafy.Domain.Serialization.Json
     /// </summary>
     public class AggtDeserializer
     {
-        /// <summary>
-        /// 实体的 Json 中可以使用这个属性来指定实体的状态。值是该枚举的名称。
-        /// </summary>
-        public const string PersistenceStatusProperty = "persistenceStatus";
-
         private UpdatedEntityCreationMode _creationMode = UpdatedEntityCreationMode.CreateNewInstance;
 
         /// <summary>
@@ -47,6 +42,16 @@ namespace Rafy.Domain.Serialization.Json
             get { return _creationMode; }
             set { _creationMode = value; }
         }
+
+        /// <summary>
+        /// 反序列化时，需要把哪个属性的认为是树型子属性。默认为 "TreeChildren".
+        /// </summary>
+        public string TreeChildrenProperty { get; set; } = AggtSerializer.TreeChildrenProperty;
+
+        /// <summary>
+        /// 实体的 Json 中可以使用这个属性来指定实体的状态。值是该枚举的名称。
+        /// </summary>
+        public string PersistenceStatusProperty { get; set; } = "persistenceStatus";
 
         /// <summary>
         /// 实体或实体列表的自定义反序列化方法。
@@ -255,14 +260,14 @@ namespace Rafy.Domain.Serialization.Json
                     #region 处理：PersistenceStatus、TreeChildren
 
                     //PersistenceStatus:如果指定了状态，则主动设置该实体的状态。
-                    if (propertyName.EqualsIgnoreCase(PersistenceStatusProperty))
+                    if (propertyName.EqualsIgnoreCase(this.PersistenceStatusProperty))
                     {
                         var value = (jValue as JValue).Value;
                         var status = (PersistenceStatus)Enum.Parse(typeof(PersistenceStatus), value.ToString(), true);
                         entity.PersistenceStatus = status;
                     }
                     //TreeChildren:如果指定了树子节点列表，则也需要加载进来。
-                    else if (propertyName.EqualsIgnoreCase(AggtSerializer.TreeChildrenProperty))
+                    else if (propertyName.EqualsIgnoreCase(this.TreeChildrenProperty))
                     {
                         var jArray = jValue as JArray;
                         if (jArray != null)

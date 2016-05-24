@@ -440,8 +440,9 @@ namespace Rafy.Domain
         #endregion
 
         /// <summary>
-        /// 防止重入、设置父子关系
+        /// 树型实体的子实体列表类。
         /// </summary>
+        /// 防止重入、设置父子关系
         [Serializable]
         [DebuggerDisplay("{DebuggerDisplay}")]
         public sealed class EntityTreeChildren : IList<Entity>, ITreeComponent

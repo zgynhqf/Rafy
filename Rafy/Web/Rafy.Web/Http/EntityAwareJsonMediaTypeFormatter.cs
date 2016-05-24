@@ -48,7 +48,6 @@ namespace Rafy.Web.Http
             base.SupportedEncodings.Add(new UTF8Encoding(false, true));
             base.SupportedEncodings.Add(new UnicodeEncoding(false, true, true));
             base.MediaTypeMappings.Add(new XmlHttpRequestHeaderMapping());
-            this.SerializeAsCamelProperty = true;
         }
 
         public override bool CanReadType(Type type)
@@ -80,17 +79,7 @@ namespace Rafy.Web.Http
         /// <value>
         ///   <c>true</c> if [use camel property]; otherwise, <c>false</c>.
         /// </value>
-        public bool SerializeAsCamelProperty { get; set; }
-
-        /// <summary>
-        /// JsonTextWriter 的配置方法。
-        /// </summary>
-        public Action<JsonTextWriter> WriterConfiguration { get; set; }
-
-        /// <summary>
-        /// AggtSerializer 的配置方法。
-        /// </summary>
-        public Action<AggtSerializer> SerializerConfiguration { get; set; }
+        public bool SerializeAsCamelProperty { get; set; } = true;
 
         private void Serialize(Type type, object value, Stream writeStream, HttpContent content)
         {
@@ -114,7 +103,7 @@ namespace Rafy.Web.Http
             {
                 using (var jw = this.CreateJsonWriter(writeStream, content))
                 {
-                    this.SerializeAggt(value as IDomainComponent, jw);
+                    this.SerializeDomainComponent(value as IDomainComponent, jw);
 
                     handled = true;
                 }
@@ -144,7 +133,7 @@ namespace Rafy.Web.Http
             jw.WritePropertyName(this.SerializeAsCamelProperty ? "data" : "Data");
             if (res.Data is IDomainComponent)
             {
-                this.SerializeAggt(res.Data as IDomainComponent, jw);
+                this.SerializeDomainComponent(res.Data as IDomainComponent, jw);
             }
             else
             {
@@ -155,18 +144,14 @@ namespace Rafy.Web.Http
         }
 
         /// <summary>
-        /// 使用指定的 JsonTextWriter 来序列化 IDomainComponent 类型。
+        /// 使用指定的 JsonTextWriter 来序列化 <see cref="IDomainComponent"/> 类型。
         /// </summary>
         /// <param name="value"></param>
         /// <param name="jw"></param>
-        protected virtual void SerializeAggt(IDomainComponent value, JsonTextWriter jw)
+        protected virtual void SerializeDomainComponent(IDomainComponent value, JsonTextWriter jw)
         {
-            var serializer = new AggtSerializer();
+            var serializer = CreateSerializer();
             serializer.UseCamelProperty = this.SerializeAsCamelProperty;
-            if (this.SerializerConfiguration != null)
-            {
-                this.SerializerConfiguration(serializer);
-            }
             serializer.Serialize(value, jw);
         }
 
@@ -189,23 +174,7 @@ namespace Rafy.Web.Http
                 {
                     var json = await content.ReadAsStringAsync();
 
-                    var deserializer = new AggtDeserializer();
-                    if (type.IsSubclassOf(typeof(Entity)))
-                    {
-                        var jObject = JObject.Parse(json);
-                        if (idContent != null)
-                        {
-                            result = deserializer.DeserializeEntity(type, jObject, idContent.Id);
-                        }
-                        else
-                        {
-                            result = deserializer.DeserializeEntity(type, jObject);
-                        }
-                    }
-                    else
-                    {
-                        result = deserializer.Deserialize(type, json);
-                    }
+                    result = DeserializeDomainComponent(type, idContent != null ? idContent.Id : null, json);
                 }
                 //else if (type == typeof(CommonQueryCriteria))
                 //{
@@ -229,60 +198,67 @@ namespace Rafy.Web.Http
             return result;
         }
 
-        private JsonTextWriter CreateJsonWriter(Stream writeStream, HttpContent content)
+        /// <summary>
+        /// 反序列化 <see cref="IDomainComponent"/> 类型。
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="id"></param>
+        /// <param name="json"></param>
+        /// <returns></returns>
+        protected virtual IDomainComponent DeserializeDomainComponent(Type type, string id, string json)
+        {
+            IDomainComponent result;
+            var deserializer = CreateDeserializer();
+            if (type.IsSubclassOf(typeof(Entity)))
+            {
+                var jObject = JObject.Parse(json);
+                if (id != null)
+                {
+                    result = deserializer.DeserializeEntity(type, jObject, id);
+                }
+                else
+                {
+                    result = deserializer.DeserializeEntity(type, jObject);
+                }
+            }
+            else
+            {
+                result = deserializer.Deserialize(type, json);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 创建一个 <see cref="AggtSerializer"/> 的对象。
+        /// </summary>
+        /// <returns></returns>
+        protected virtual AggtSerializer CreateSerializer()
+        {
+            return new AggtSerializer();
+        }
+
+        /// <summary>
+        /// 创建一个 <see cref="AggtDeserializer"/> 的对象。
+        /// </summary>
+        /// <returns></returns>
+        private static AggtDeserializer CreateDeserializer()
+        {
+            return new AggtDeserializer();
+        }
+
+        /// <summary>
+        /// 创建一个用于序列化的 JsonTextWriter。
+        /// </summary>
+        /// <param name="writeStream"></param>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        protected virtual JsonTextWriter CreateJsonWriter(Stream writeStream, HttpContent content)
         {
             var writer = new StreamWriter(writeStream, this.SelectCharacterEncoding((content == null) ? null : content.Headers));
             var jw = new JsonTextWriter(writer);
-            if (this.WriterConfiguration != null) { this.WriterConfiguration(jw); }
             return jw;
         }
-
-        #region //CommonQueryCriteria
-
-        //private CommonQueryCriteria DesrializeCommonQueryCriteria(string strContent)
-        //{
-        //    var criteria = new CommonQueryCriteria();
-
-        //    var json = JObject.Parse(strContent);
-
-        //    var orderBy = json.Property("$orderby");
-        //    if (orderBy != null)
-        //    {
-        //        criteria.OrderBy = orderBy.Value.Value<string>();
-        //    }
-
-        //    var jPageNumber = json.Property("$pageNumber");
-        //    if (jPageNumber != null)
-        //    {
-        //        int pageNumber = jPageNumber.Value.Value<int>();
-        //        int pageSize = 10;
-        //        var jPageSize = json.Property("$pageSize");
-        //        if (jPageSize != null)
-        //        {
-        //            pageSize = jPageSize.Value.Value<int>();
-        //        }
-
-        //        var pagingInfo = new PagingInfo(pageNumber, pageSize);
-        //        criteria.PagingInfo = pagingInfo;
-        //    }
-
-        //    //filter
-        //    var jFilter = json.Property("$filter");
-        //    if (jFilter != null)
-        //    {
-        //        var filter = jFilter.Value.Value<string>();
-        //        ParseFilter(criteria, filter);
-        //    }
-
-        //    return criteria;
-        //}
-
-        //private void ParseFilter(CommonQueryCriteria criteria, string filter)
-        //{
-        //    //to do
-        //}
-
-        #endregion
 
         #region Other
 

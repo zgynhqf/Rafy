@@ -34,28 +34,29 @@ namespace Rafy.Domain.Serialization.Json
         private const string TotalCountProperty = "TotalCount";
         private const string EntityListProperty ="Data";
 
-        private bool _ignoreROProperties;
         private JsonTextWriter _writer;
-        private EnumSerializationMode _enumSerializationMode;
 
-        public AggtSerializer()
+        /// <summary>
+        /// 内部的 JsonTextWriter。
+        /// </summary>
+        protected JsonTextWriter InnerWriter
         {
-            this.SerializeAggt = true;
-            this.SerializeReference = true;
-            this.UseCamelProperty = true;
+            get { return _writer; }
         }
+
+        #region 序列化的配置属性
 
         /// <summary>
         /// 是否需要同时序列化所有子对象。
         /// 默认为 true。
         /// </summary>
-        public bool SerializeAggt { get; set; }
+        public bool SerializeAggt { get; set; } = true;
 
         /// <summary>
         /// 是否需要同时序列化相关的引用属性。
         /// 默认为 true。
         /// </summary>
-        public bool SerializeReference { get; set; }
+        public bool SerializeReference { get; set; } = true;
 
         /// <summary>
         /// 如果使用了幽灵框架，那么此属性表示是否需要同时序列化幽灵属性。
@@ -67,17 +68,13 @@ namespace Rafy.Domain.Serialization.Json
         /// 是否使用舵峰式。
         /// 默认为 true。
         /// </summary>
-        public bool UseCamelProperty { get; set; }
+        public bool UseCamelProperty { get; set; } = true;
 
         /// <summary>
         /// 是把在序列化枚举时，把值输出为字符串。
         /// 默认为 <see cref="EnumSerializationMode.Integer"/>。
         /// </summary>
-        public EnumSerializationMode EnumSerializationMode
-        {
-            get { return _enumSerializationMode; }
-            set { _enumSerializationMode = value; }
-        }
+        public EnumSerializationMode EnumSerializationMode { get; set; }
 
         /// <summary>
         /// 是否需要在序列化时忽略默认值的属性。
@@ -89,11 +86,7 @@ namespace Rafy.Domain.Serialization.Json
         /// 是否需要在序列化时忽略只读属性。
         /// 默认为 false。
         /// </summary>
-        public bool IgnoreROProperties
-        {
-            get { return _ignoreROProperties; }
-            set { _ignoreROProperties = value; }
-        }
+        public bool IgnoreROProperties { get; set; }
 
         /// <summary>
         /// 是否输出实体列表的 TotalCount 的值，而把列表的值放到一个名为 Data 的属性值中。
@@ -106,6 +99,8 @@ namespace Rafy.Domain.Serialization.Json
         /// 默认为 false。
         /// </summary>
         public bool Indent { get; set; }
+
+        #endregion
 
         /// <summary>
         /// 序列化指定的实体元素，并返回对应的 JSON。
@@ -164,21 +159,23 @@ namespace Rafy.Domain.Serialization.Json
             }
         }
 
-        private void SerializeEntity(Entity entity)
+        /// <summary>
+        /// 向 JSON 中序列化某个指定的属性的值。
+        /// </summary>
+        /// <param name="entity"></param>
+        protected virtual void SerializeEntity(Entity entity)
         {
             var isTree = entity.SupportTree;
 
             _writer.WriteStartObject();
 
+            //序列化所有的编译期属性。
             foreach (var field in entity.GetCompiledPropertyValues())
             {
                 var property = field.Property as IProperty;
 
-                if (property.IsReadOnly && _ignoreROProperties) continue;
-                if (!isTree && (property == Entity.TreePIdProperty || property == Entity.TreeIndexProperty))
-                {
-                    continue;
-                }
+                if (property.IsReadOnly && this.IgnoreROProperties) continue;
+                if (!isTree && (property == Entity.TreePIdProperty || property == Entity.TreeIndexProperty)) { continue; }
                 if (!this.SerializeIsPhantom && property == EntityConvention.Property_IsPhantom) continue;
 
                 var value = field.Value;
@@ -200,21 +197,38 @@ namespace Rafy.Domain.Serialization.Json
                 var treeChildren = entity.TreeChildrenField;
                 if (treeChildren != null)
                 {
-                    this.WritePropertyName(TreeChildrenProperty);
-                    _writer.WriteStartArray();
-                    for (int i = 0, c = treeChildren.Count; i < c; i++)
-                    {
-                        var treeChild = treeChildren[i];
-                        this.SerializeEntity(treeChild);
-                    }
-                    _writer.WriteEndArray();
+                    SerializeTreeChildren(treeChildren);
                 }
             }
 
             _writer.WriteEndObject();
         }
 
-        private void SerializeProperty(IProperty property, object value)
+        /// <summary>
+        /// 序列化实体的树子节点列表属性。
+        /// </summary>
+        /// <param name="treeChildren"></param>
+        protected virtual void SerializeTreeChildren(Entity.EntityTreeChildren treeChildren)
+        {
+            //属性名
+            this.WritePropertyName(TreeChildrenProperty);
+
+            //属性值。
+            _writer.WriteStartArray();
+            for (int i = 0, c = treeChildren.Count; i < c; i++)
+            {
+                var treeChild = treeChildren[i];
+                this.SerializeEntity(treeChild);
+            }
+            _writer.WriteEndArray();
+        }
+
+        /// <summary>
+        /// 序列化某个指定的属性
+        /// </summary>
+        /// <param name="property"></param>
+        /// <param name="value"></param>
+        protected virtual void SerializeProperty(IProperty property, object value)
         {
             switch (property.Category)
             {
@@ -252,7 +266,7 @@ namespace Rafy.Domain.Serialization.Json
                     {
                         if (value != null && value.GetType().IsEnum)
                         {
-                            switch (_enumSerializationMode)
+                            switch (this.EnumSerializationMode)
                             {
                                 case EnumSerializationMode.String:
                                     value = value.ToString();
@@ -326,7 +340,11 @@ namespace Rafy.Domain.Serialization.Json
             }
         }
 
-        private void WritePropertyName(string property)
+        /// <summary>
+        /// 向 JSON 中写入某个指定的属性。
+        /// </summary>
+        /// <param name="property"></param>
+        protected virtual void WritePropertyName(string property)
         {
             if (this.UseCamelProperty)
             {
