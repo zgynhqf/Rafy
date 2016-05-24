@@ -150,8 +150,7 @@ namespace Rafy.Web.Http
         /// <param name="jw"></param>
         protected virtual void SerializeDomainComponent(IDomainComponent value, JsonTextWriter jw)
         {
-            var serializer = CreateSerializer();
-            serializer.UseCamelProperty = this.SerializeAsCamelProperty;
+            var serializer = this.CreateSerializer();
             serializer.Serialize(value, jw);
         }
 
@@ -235,14 +234,16 @@ namespace Rafy.Web.Http
         /// <returns></returns>
         protected virtual AggtSerializer CreateSerializer()
         {
-            return new AggtSerializer();
+            var serializer = new AggtSerializer();
+            serializer.UseCamelProperty = this.SerializeAsCamelProperty;
+            return serializer;
         }
 
         /// <summary>
         /// 创建一个 <see cref="AggtDeserializer"/> 的对象。
         /// </summary>
         /// <returns></returns>
-        private static AggtDeserializer CreateDeserializer()
+        protected virtual AggtDeserializer CreateDeserializer()
         {
             return new AggtDeserializer();
         }
