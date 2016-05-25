@@ -100,12 +100,15 @@ namespace Rafy.Domain
 
         private Entity ForceGetById(Entity entity, IRepository repository)
         {
-            var dbEntity = repository.GetById(entity.Id);
-            if (dbEntity == null)
+            using (RF.DisableEntityContext())
             {
-                throw new InvalidOperationException(string.Format(@"{1} 类型对应的仓库中不存在 Id 为 {0} 的实体，更新冗余属性失败！", entity.Id, entity.GetType()));
+                var dbEntity = repository.GetById(entity.Id);
+                if (dbEntity == null)
+                {
+                    throw new InvalidOperationException(string.Format(@"{1} 类型对应的仓库中不存在 Id 为 {0} 的实体，更新冗余属性失败！", entity.Id, entity.GetType()));
+                }
+                return dbEntity;
             }
-            return dbEntity;
         }
 
         /// <summary>
