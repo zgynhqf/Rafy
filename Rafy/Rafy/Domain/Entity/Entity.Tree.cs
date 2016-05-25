@@ -333,6 +333,16 @@ namespace Rafy.Domain
             }
         }
 
+        ///// <summary>
+        ///// 用于判断是否已经加载了 <see cref="TreeChildren"/> 属性。
+        ///// 直接使用 TreeChildren 属性来进行一些判断，可能会创建新的 <see cref="EntityTreeChildren"/> 实例。
+        ///// 所以给出此属性，以优化性能。
+        ///// </summary>
+        //public bool HasTreeChildrenField
+        //{
+        //    get { return _treeChildren != null; }
+        //}
+
         internal EntityTreeChildren TreeChildrenField
         {
             get { return _treeChildren; }

@@ -159,7 +159,11 @@ namespace Rafy.Domain.Serialization.Json
             }
         }
 
-        private void SerializeEntity(Entity entity)
+        /// <summary>
+        /// 向 JSON 中序列化指定实体容。
+        /// </summary>
+        /// <param name="entity"></param>
+        protected void SerializeEntity(Entity entity)
         {
             _writer.WriteStartObject();
 
