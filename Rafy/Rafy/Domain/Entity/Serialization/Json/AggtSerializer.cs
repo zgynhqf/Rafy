@@ -159,17 +159,43 @@ namespace Rafy.Domain.Serialization.Json
             }
         }
 
+        private void SerializeEntity(Entity entity)
+        {
+            _writer.WriteStartObject();
+
+            this.SerializeEntityContent(entity);
+
+            _writer.WriteEndObject();
+        }
+
         /// <summary>
-        /// 向 JSON 中序列化某个指定的属性的值。
+        /// 向 JSON 中序列化指定实体的所有内容。
         /// </summary>
         /// <param name="entity"></param>
-        protected virtual void SerializeEntity(Entity entity)
+        protected virtual void SerializeEntityContent(Entity entity)
+        {
+            //序列化所有的编译期属性。
+            this.SerializeCompiledProperties(entity);
+
+            //如果是树实体，还需要输出树实体下的所有树子节点。
+            if (entity.SupportTree)
+            {
+                var treeChildren = entity.TreeChildrenField;
+                if (treeChildren != null)
+                {
+                    SerializeTreeChildren(treeChildren);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 序列化所有的编译期属性。
+        /// </summary>
+        /// <param name="entity"></param>
+        protected virtual void SerializeCompiledProperties(Entity entity)
         {
             var isTree = entity.SupportTree;
 
-            _writer.WriteStartObject();
-
-            //序列化所有的编译期属性。
             foreach (var field in entity.GetCompiledPropertyValues())
             {
                 var property = field.Property as IProperty;
@@ -182,26 +208,11 @@ namespace Rafy.Domain.Serialization.Json
                 if (this.IgnoreDefault)
                 {
                     var defaultValue = property.GetMeta(entity).DefaultValue;
-                    if (object.Equals(defaultValue, value))
-                    {
-                        continue;
-                    }
+                    if (object.Equals(defaultValue, value)) { continue; }
                 }
 
                 this.SerializeProperty(property, value);
             }
-
-            //如果是树实体，还需要输出树实体下的所有树子节点。
-            if (isTree)
-            {
-                var treeChildren = entity.TreeChildrenField;
-                if (treeChildren != null)
-                {
-                    SerializeTreeChildren(treeChildren);
-                }
-            }
-
-            _writer.WriteEndObject();
         }
 
         /// <summary>
