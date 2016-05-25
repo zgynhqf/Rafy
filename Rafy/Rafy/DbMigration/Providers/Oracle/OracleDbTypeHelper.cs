@@ -57,7 +57,7 @@ namespace Rafy.DbMigration.Oracle
                 case DbType.AnsiString:
                     if (!string.IsNullOrEmpty(length))
                     {
-                        if (length == "CLOB")
+                        if ("CLOB".EqualsIgnoreCase(length) || "MAX".EqualsIgnoreCase(length))
                         {
                             return "CLOB";
                         }
