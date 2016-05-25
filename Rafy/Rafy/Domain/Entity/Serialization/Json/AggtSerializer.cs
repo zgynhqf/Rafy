@@ -95,6 +95,11 @@ namespace Rafy.Domain.Serialization.Json
         public bool OutputListTotalCount { get; set; }
 
         /// <summary>
+        /// 是否忽略所有的动态属性。
+        /// </summary>
+        public bool IgnoreDynamicProperties { get; set; } = false;
+
+        /// <summary>
         /// 是否采用缩进的格式。
         /// 默认为 false。
         /// </summary>
@@ -181,6 +186,11 @@ namespace Rafy.Domain.Serialization.Json
             //序列化所有的编译期属性。
             this.SerializeCompiledProperties(entity);
 
+            if (!this.IgnoreDynamicProperties)
+            {
+                this.SerializeDynamicProperties(entity);
+            }
+
             //如果是树实体，还需要输出树实体下的所有树子节点。
             if (entity.SupportTree)
             {
@@ -216,6 +226,23 @@ namespace Rafy.Domain.Serialization.Json
                 }
 
                 this.SerializeProperty(property, value);
+            }
+        }
+
+        /// <summary>
+        /// 序列化所有的编译期属性。
+        /// </summary>
+        /// <param name="entity"></param>
+        protected virtual void SerializeDynamicProperties(Entity entity)
+        {
+            if (entity.DynamicPropertiesCount > 0)
+            {
+                var properties = entity.GetDynamicProperties();
+                foreach (var kv in properties)
+                {
+                    this.WritePropertyName(kv.Key);
+                    this.SerializeValue(kv.Value);
+                }
             }
         }
 
@@ -260,41 +287,7 @@ namespace Rafy.Domain.Serialization.Json
                 case PropertyCategory.Redundancy:
                 case PropertyCategory.ReferenceId:
                     this.WritePropertyName(property.Name);
-                    //if (value is byte[])
-                    //{
-                    //    var base64 = Convert.ToBase64String(value as byte[]);
-                    //    _writer.WriteValue(base64);
-                    //}
-                    //else
-                    if (value is IList && !(value is byte[]))
-                    {
-                        _writer.WriteStartArray();
-                        var list = value as IList;
-                        for (int i = 0, c = list.Count; i < c; i++)
-                        {
-                            var item = list[i];
-                            _writer.WriteValue(item);
-                        }
-                        _writer.WriteEndArray();
-                    }
-                    else
-                    {
-                        if (value != null && value.GetType().IsEnum)
-                        {
-                            switch (this.EnumSerializationMode)
-                            {
-                                case EnumSerializationMode.String:
-                                    value = value.ToString();
-                                    break;
-                                case EnumSerializationMode.EnumLabel:
-                                    value = EnumViewModel.EnumToLabel((Enum)value) ?? value.ToString();
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                        _writer.WriteValue(value);
-                    }
+                    this.SerializeValue(value);
                     break;
                 //ReferenceId 也都全部直接输出。
                 //case PropertyCategory.ReferenceId:
@@ -321,6 +314,49 @@ namespace Rafy.Domain.Serialization.Json
                     break;
                 default:
                     throw new NotSupportedException();
+            }
+        }
+
+        /// <summary>
+        /// 序列化某个指定的属性的值。
+        /// </summary>
+        /// <param name="value"></param>
+        protected virtual void SerializeValue(object value)
+        {
+            //if (value is byte[])
+            //{
+            //    var base64 = Convert.ToBase64String(value as byte[]);
+            //    _writer.WriteValue(base64);
+            //}
+            //else
+            if (value is IList && !(value is byte[]))
+            {
+                _writer.WriteStartArray();
+                var list = value as IList;
+                for (int i = 0, c = list.Count; i < c; i++)
+                {
+                    var item = list[i];
+                    _writer.WriteValue(item);
+                }
+                _writer.WriteEndArray();
+            }
+            else
+            {
+                if (value != null && value.GetType().IsEnum)
+                {
+                    switch (this.EnumSerializationMode)
+                    {
+                        case EnumSerializationMode.String:
+                            value = value.ToString();
+                            break;
+                        case EnumSerializationMode.EnumLabel:
+                            value = EnumViewModel.EnumToLabel((Enum)value) ?? value.ToString();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                _writer.WriteValue(value);
             }
         }
 

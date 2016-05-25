@@ -2177,6 +2177,30 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void ET_Json_Serialization_DynamicProperty()
+        {
+            var now = new DateTime(2016, 5, 25, 1, 1, 1);
+
+            var entity = new Favorate();
+            entity.SetDynamicProperty("dp1", "Value1");
+            entity.SetDynamicProperty("dp2", 1);
+            entity.SetDynamicProperty("dp3", now);
+
+            var serializer = new AggtSerializer();
+            serializer.Indent = true;
+            serializer.IgnoreDefault = true;
+            serializer.IgnoreROProperties = true;
+            var json = serializer.Serialize(entity);
+
+            Assert.AreEqual(
+@"{
+  ""dp1"": ""Value1"",
+  ""dp2"": 1,
+  ""dp3"": ""2016-05-25T01:01:01""
+}", json);
+        }
+
+        [TestMethod]
         public void ET_Json_Deserialization()
         {
             var json =
@@ -2469,6 +2493,29 @@ namespace RafyUnitTest
             Assert.AreEqual(root.TreeChildren[0].TreeChildren[1].TreeChildren.Count, 0);
             Assert.AreEqual(root.TreeChildren[1].TreeIndex, "001.002.");
             Assert.AreEqual(root.TreeChildren[1].TreeChildren.Count, 0);
+        }
+
+        [TestMethod]
+        public void ET_Json_Deserialization_DynamicProperty()
+        {
+            var json =
+@"{
+  ""dp1"": ""Value1"",
+  ""dp2"": 1,
+  ""dp3"": ""2016-05-25T01:01:01"",
+  ""dp4"": ""2016-05-25 1:01:01""
+}";
+
+            var deserializer = new AggtDeserializer();
+            deserializer.UnknownAsDynamicProperties = true;
+            var entity = deserializer.Deserialize(typeof(Favorate), json) as Favorate;
+
+            Assert.IsNotNull(entity);
+            Assert.AreEqual(4, entity.DynamicPropertiesCount);
+            Assert.AreEqual("Value1", entity.GetDynamicProperty("dp1"));
+            Assert.AreEqual(1L, entity.GetDynamicProperty("dp2"));
+            Assert.AreEqual(new DateTime(2016, 5, 25, 1, 1, 1), entity.GetDynamicProperty("dp3"));
+            Assert.AreEqual("2016-05-25 1:01:01", entity.GetDynamicProperty("dp4"));
         }
 
         #endregion

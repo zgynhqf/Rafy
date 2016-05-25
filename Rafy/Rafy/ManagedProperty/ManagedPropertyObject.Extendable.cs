@@ -20,18 +20,21 @@ using Rafy.Reflection;
 namespace Rafy.ManagedProperty
 {
     /// <summary>
-    /// 运行时动态扩展属性的实现。
+    /// 运行时动态属性的实现。
+    /// 
+    /// 概念：动态属性表示可以在运行时为单个实体随意添加的属性。同一类型的各个实体实例间的动态属性是互不相关的。
     /// </summary>
     /// <remarks>大部分代码拷贝自：<see cref="Extendable"/>。</remarks>
     public abstract partial class ManagedPropertyObject //: IExtendable
     {
         /// <summary>
-        /// 由于运行时属性不会很多，所以使用 Dictionary 类来进行更快速的检索。
+        /// 由于运行时动态属性不会很多，所以使用 Dictionary 类来进行更快速的检索。
         /// </summary>
         private Dictionary<string, object> _dynamics;
 
         /// <summary>
-        /// 返回当前已经扩展的属性个数。
+        /// 返回当前已经添加的动态属性的个数。
+        /// 概念：动态属性表示可以在运行时为单个实体随意添加的属性。同一类型的各个实体实例间的动态属性是互不相关的。
         /// </summary>
         public int DynamicPropertiesCount
         {
@@ -43,11 +46,11 @@ namespace Rafy.ManagedProperty
         }
 
         /// <summary>
-        /// 用于扩展的属性列表。
+        /// 获取或设置动态属性的值。
         /// 
         /// 注意，如果设置 null 值，则表示清空该属性。
         /// </summary>
-        /// <param name="dynamicProperty"></param>
+        /// <param name="dynamicProperty">对应的动态属性的名称。</param>
         /// <returns></returns>
         public object this[string dynamicProperty]
         {
@@ -83,11 +86,11 @@ namespace Rafy.ManagedProperty
         }
 
         /// <summary>
-        /// 获取指定名称的扩展属性值
+        /// 获取指定名称的动态属性值
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="dynamicProperty"></param>
-        /// <param name="defaultValue"></param>
+        /// <param name="dynamicProperty">对应的动态属性的名称。</param>
+        /// <param name="defaultValue">如果属性还没有值，则返回这个默认值。</param>
         /// <returns></returns>
         public T GetDynamicPropertyOrDefault<T>(string dynamicProperty, T defaultValue = default(T))
         {
@@ -105,27 +108,37 @@ namespace Rafy.ManagedProperty
         }
 
         /// <summary>
-        /// 设置某个扩展属性为指定的值。
+        /// 获取动态属性的值。
         /// </summary>
-        /// <param name="dynamicProperty"></param>
-        /// <param name="value"></param>
+        /// <param name="dynamicProperty">对应的动态属性的名称。</param>
+        /// <returns></returns>
+        public object GetDynamicProperty(string dynamicProperty)
+        {
+            return this[dynamicProperty];
+        }
+
+        /// <summary>
+        /// 设置某个动态属性为指定的值。
+        /// </summary>
+        /// <param name="dynamicProperty">对应的动态属性的名称。</param>
+        /// <param name="value">要设置的值。</param>
         public void SetDynamicProperty(string dynamicProperty, object value)
         {
             this[dynamicProperty] = value;
         }
 
         /// <summary>
-        /// 设置某个扩展属性为指定的值。
+        /// 设置某个动态属性为指定的值。
         /// </summary>
-        /// <param name="dynamicProperty"></param>
-        /// <param name="value"></param>
+        /// <param name="dynamicProperty">对应的动态属性的名称。</param>
+        /// <param name="value">要设置的值。</param>
         public void SetDynamicProperty(string dynamicProperty, bool value)
         {
             this[dynamicProperty] = BooleanBoxes.Box(value);
         }
 
         /// <summary>
-        /// 获取已经设置的所有的扩展属性
+        /// 获取已经设置的所有的动态属性
         /// </summary>
         /// <returns></returns>
         public IReadOnlyDictionary<string, object> GetDynamicProperties()

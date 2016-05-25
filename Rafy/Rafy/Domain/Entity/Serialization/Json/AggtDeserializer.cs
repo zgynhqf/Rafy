@@ -54,6 +54,12 @@ namespace Rafy.Domain.Serialization.Json
         public string PersistenceStatusProperty { get; set; } = "persistenceStatus";
 
         /// <summary>
+        /// 是否把未知的属性都反序列化为动态属性？
+        /// 默认为 false。
+        /// </summary>
+        public bool UnknownAsDynamicProperties { get; set; }
+
+        /// <summary>
         /// 实体或实体列表的自定义反序列化方法。
         /// </summary>
         /// <param name="type">传入实体类型或实体列表类型。</param>
@@ -191,6 +197,8 @@ namespace Rafy.Domain.Serialization.Json
                     //一般属性。
                     else
                     {
+                        #region 处理不同类型的 value
+
                         object value = null;
 
                         if (jValue is JArray)
@@ -252,23 +260,29 @@ namespace Rafy.Domain.Serialization.Json
                             }
                         }
 
+                        #endregion
+
                         entity.SetProperty(mp, value, ManagedPropertyChangedSource.FromUIOperating);
                     }
                 }
                 else
                 {
-                    #region 处理：PersistenceStatus、TreeChildren
-
                     //PersistenceStatus:如果指定了状态，则主动设置该实体的状态。
                     if (propertyName.EqualsIgnoreCase(this.PersistenceStatusProperty))
                     {
+                        #region 处理：PersistenceStatus
+
                         var value = (jValue as JValue).Value;
                         var status = (PersistenceStatus)Enum.Parse(typeof(PersistenceStatus), value.ToString(), true);
                         entity.PersistenceStatus = status;
+
+                        #endregion
                     }
                     //TreeChildren:如果指定了树子节点列表，则也需要加载进来。
                     else if (propertyName.EqualsIgnoreCase(this.TreeChildrenProperty))
                     {
+                        #region 处理：TreeChildren
+
                         var jArray = jValue as JArray;
                         if (jArray != null)
                         {
@@ -280,9 +294,21 @@ namespace Rafy.Domain.Serialization.Json
                             }
                             treeChildren.MarkLoaded();
                         }
-                    }
 
-                    #endregion
+                        #endregion
+                    }
+                    else if (this.UnknownAsDynamicProperties)
+                    {
+                        #region 处理动态属性
+
+                        var jValueObj = jValue as JValue;
+                        if (jValueObj != null)
+                        {
+                            entity.SetDynamicProperty(propertyName, jValueObj.Value);
+                        }
+
+                        #endregion
+                    }
                 }
             }
 
