@@ -157,6 +157,6 @@ namespace Rafy
         /// <param name="property"></param>
         protected virtual void OnExtendedPropertyChanged(string property) { }
 
-        private static IReadOnlyDictionary<string, object> Empty = new ReadOnlyDictionary<string, object>(new Dictionary<string, object>());
+        internal static IReadOnlyDictionary<string, object> Empty = new ReadOnlyDictionary<string, object>(new Dictionary<string, object>());
     }
 }

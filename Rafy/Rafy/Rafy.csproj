@@ -277,7 +277,6 @@
     <Compile Include="Domain\Entity\MP\RefIdProperty.cs" />
     <Compile Include="Domain\Entity\MP\RegisterRefArgs.cs" />
     <Compile Include="Domain\Entity\MP\RegisterRefIdArgs.cs" />
-    <Compile Include="Domain\Entity\MP\zzzDateTimeDescriptorAttribute.cs" />
     <Compile Include="Domain\Entity\PersistenceStatus.cs" />
     <Compile Include="Domain\Entity\Serialization\Json\AggtDeserializer.cs" />
     <Compile Include="Domain\Entity\Serialization\Json\AggtSerializer.cs" />
@@ -610,6 +609,9 @@
     <Compile Include="ManagedProperty\ManagedPropertyLifeCycle.cs" />
     <Compile Include="ManagedProperty\ManagedPropertyMetadata.cs" />
     <Compile Include="ManagedProperty\ManagedPropertyObject.cs" />
+    <Compile Include="ManagedProperty\ManagedPropertyObject.Extendable.cs">
+      <DependentUpon>ManagedPropertyObject.cs</DependentUpon>
+    </Compile>
     <Compile Include="ManagedProperty\ManagedPropertyObject.Serialization.cs">
       <DependentUpon>ManagedPropertyObject.cs</DependentUpon>
     </Compile>

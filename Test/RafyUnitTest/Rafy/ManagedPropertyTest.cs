@@ -310,42 +310,89 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void MPT_DynamicProperties()
+        public void MPT_RuntimeProperties()
         {
-            TestDynamicPropertiesCore(Get<TestUser>());
+            TestRuntimePropertiesCore(Get<TestUser>());
         }
 
         [TestMethod]
-        public void MPT_DynamicProperties_Inheritance()
+        public void MPT_RuntimeProperties_Inheritance()
         {
-            TestDynamicPropertiesCore(Get<TestAdministrator>());
+            TestRuntimePropertiesCore(Get<TestAdministrator>());
         }
 
-        private static void TestDynamicPropertiesCore(TestUser admin)
+        private static void TestRuntimePropertiesCore(TestUser admin)
         {
             var container = admin.PropertiesContainer;
             var count1 = container.GetAvailableProperties().Count;
 
             //为 TestUser 注册属性
-            var DynamicNameProperty = P<TestUser>.RegisterExtension<string>("DynamicName", typeof(ManagedPropertyTest));
-            var DynamicAgeProperty = P<TestUser>.RegisterExtension("DynamicAge", typeof(ManagedPropertyTest), 10);
+            var RuntimeNameProperty = P<TestUser>.RegisterExtension<string>("RuntimeName", typeof(ManagedPropertyTest));
+            var RuntimeAgeProperty = P<TestUser>.RegisterExtension("RuntimeAge", typeof(ManagedPropertyTest), 10);
 
             var count2 = container.GetAvailableProperties().Count;
             Assert.AreEqual(count2, count1 + 2);
 
-            Assert.AreEqual(admin.GetProperty(DynamicNameProperty), string.Empty);
-            Assert.AreEqual(admin.GetProperty(DynamicAgeProperty), 10);
+            Assert.AreEqual(admin.GetProperty(RuntimeNameProperty), string.Empty);
+            Assert.AreEqual(admin.GetProperty(RuntimeAgeProperty), 10);
 
-            admin.SetProperty(DynamicNameProperty, "Haha");
-            admin.SetProperty(DynamicAgeProperty, 12);
-            Assert.AreEqual(admin.GetProperty(DynamicNameProperty), "Haha");
-            Assert.AreEqual(admin.GetProperty(DynamicAgeProperty), 12);
+            admin.SetProperty(RuntimeNameProperty, "Haha");
+            admin.SetProperty(RuntimeAgeProperty, 12);
+            Assert.AreEqual(admin.GetProperty(RuntimeNameProperty), "Haha");
+            Assert.AreEqual(admin.GetProperty(RuntimeAgeProperty), 12);
 
-            P.UnRegister(DynamicAgeProperty, DynamicNameProperty);
+            P.UnRegister(RuntimeAgeProperty, RuntimeNameProperty);
 
             var count3 = container.GetAvailableProperties().Count;
 
             Assert.AreEqual(count1, count3);
+        }
+
+        [TestMethod]
+        public void MPT_DynamicProperties()
+        {
+            var user = new TestUser();
+            user.SetDynamicProperty("DynamicProperty", "DDDD");
+
+            Assert.AreEqual("DDDD", user["DynamicProperty"]);
+        }
+
+        [TestMethod]
+        public void MPT_DynamicProperties_Reflection()
+        {
+            var user = new TestUser();
+            user.SetDynamicProperty("DynamicProperty", "Value1");
+            user.SetDynamicProperty("DynamicProperty2", "Value2");
+
+            var dpList = user.GetDynamicProperties();
+            Assert.AreEqual(2, dpList.Count);
+            Assert.IsTrue(dpList.ContainsKey("DynamicProperty"));
+            Assert.IsTrue(dpList.ContainsKey("DynamicProperty2"));
+            Assert.AreEqual("Value1", dpList["DynamicProperty"]);
+            Assert.AreEqual("Value2", dpList["DynamicProperty2"]);
+        }
+
+        [TestMethod]
+        public void MPT_DynamicProperties_SetNull()
+        {
+            var user = new TestUser();
+            user.SetDynamicProperty("DynamicProperty", "Value1");
+
+            Assert.AreEqual(1, user.DynamicPropertiesCount);
+
+            user.SetDynamicProperty("DynamicProperty", null);
+            Assert.AreEqual(0, user.DynamicPropertiesCount, "设置为 null 后，需要清空数据。");
+        }
+
+        [TestMethod]
+        public void MPT_DynamicProperties_GetOrDefault()
+        {
+            var user = new TestUser();
+            var value = user.GetDynamicPropertyOrDefault("DN", "HAHA");
+            Assert.AreEqual("HAHA", value);
+            user.SetDynamicProperty("DN", "Value2");
+            value = user.GetDynamicPropertyOrDefault("DN", "HAHA");
+            Assert.AreEqual("Value2", value);
         }
 
         [TestMethod]

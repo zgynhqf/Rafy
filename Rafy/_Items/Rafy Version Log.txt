@@ -10,6 +10,10 @@
  * 
 *******************************************************/
 
+3.53.3177
+    添加功能
+        ManagedPropertyObject 类型支持动态属性。
+
 3.52.3172
     添加接口
         添加 EntityRepositoryQueryBase.QueryInBatches 方法，帮助开发者处理 In 参数过多无法查询的场景。

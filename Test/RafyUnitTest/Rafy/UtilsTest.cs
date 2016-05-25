@@ -29,6 +29,8 @@ namespace RafyUnitTest
             ServerTestHelper.ClassInitialize(context);
         }
 
+        #region Logger
+
         [TestMethod]
         public void UtilsTest_Logger_DbAccessed()
         {
@@ -128,6 +130,10 @@ namespace RafyUnitTest
                 }
             }
         }
+
+        #endregion
+
+        #region TrasactionScope
 
         [TestMethod]
         public void UtilsTest_TrasactionScope_RollBack()
@@ -262,6 +268,10 @@ namespace RafyUnitTest
         //{
         //}
 
+        #endregion
+
+        #region LiteDataTable
+
         /// <summary>
         /// 通过 IDbAccesser 查询表格。
         /// </summary>
@@ -361,6 +371,10 @@ namespace RafyUnitTest
             Assert.IsTrue(table2[1].GetInt32("Age") == 25);
         }
 
+        #endregion
+
+        #region EnumViewModel
+
         [TestMethod]
         public void UtilsTest_EnumViewModel_Parse_Name()
         {
@@ -391,6 +405,8 @@ namespace RafyUnitTest
             value = EnumViewModel.Parse(string.Empty, typeof(FavorateTypeWithLabel));
             Assert.IsNull(value);
         }
+
+        #endregion
 
         #region Reflection
 
@@ -484,6 +500,59 @@ namespace RafyUnitTest
         {
             var res = (int)MethodCaller.CallMethod(this, "TestArguments", 1, null, "", null);
             Assert.IsTrue(res == 4);
+        }
+
+        #endregion
+
+        #region Extendable
+
+        private class ExtendableObject : Extendable { }
+
+        [TestMethod]
+        public void UtilsTest_Extendable()
+        {
+            var ext = new ExtendableObject();
+            ext.SetExtendedProperty("DynamicProperty", "DDDD");
+
+            Assert.AreEqual("DDDD", ext["DynamicProperty"]);
+        }
+
+        [TestMethod]
+        public void UtilsTest_Extendable_Reflection()
+        {
+            var ext = new ExtendableObject();
+            ext.SetExtendedProperty("DynamicProperty", "Value1");
+            ext.SetExtendedProperty("DynamicProperty2", "Value2");
+
+            var dpList = ext.GetExtendedProperties();
+            Assert.AreEqual(2, dpList.Count);
+            Assert.IsTrue(dpList.ContainsKey("DynamicProperty"));
+            Assert.IsTrue(dpList.ContainsKey("DynamicProperty2"));
+            Assert.AreEqual("Value1", dpList["DynamicProperty"]);
+            Assert.AreEqual("Value2", dpList["DynamicProperty2"]);
+        }
+
+        [TestMethod]
+        public void UtilsTest_Extendable_SetNull()
+        {
+            var ext = new ExtendableObject();
+            ext.SetExtendedProperty("DynamicProperty", "Value1");
+
+            Assert.AreEqual(1, ext.ExtendedPropertiesCount);
+
+            ext.SetExtendedProperty("DynamicProperty", null);
+            Assert.AreEqual(0, ext.ExtendedPropertiesCount, "设置为 null 后，需要清空数据。");
+        }
+
+        [TestMethod]
+        public void UtilsTest_Extendable_GetOrDefault()
+        {
+            var ext = new ExtendableObject();
+            var value = ext.GetPropertyOrDefault("DN", "HAHA");
+            Assert.AreEqual("HAHA", value);
+            ext.SetExtendedProperty("DN", "Value2");
+            value = ext.GetPropertyOrDefault("DN", "HAHA");
+            Assert.AreEqual("Value2", value);
         }
 
         #endregion

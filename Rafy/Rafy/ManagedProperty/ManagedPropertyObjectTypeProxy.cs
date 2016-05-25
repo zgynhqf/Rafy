@@ -33,12 +33,26 @@ namespace Rafy.ManagedProperty
                 _mpo = mpo;
             }
 
-            public List<ManagedPropertyField> CompiledPropertis
+            public List<ManagedPropertyField> CompiledProperties
             {
                 get { return _mpo._compiledFields.ToList(); }
             }
 
-            public List<ManagedPropertyField> ReadOnlyPropertis
+            public List<ManagedPropertyField> ExtensionProperties
+            {
+                get
+                {
+                    return _mpo.PropertiesContainer.GetAvailableProperties()
+                        .Where(mp => mp.IsExtension)
+                        .Select(mp => new ManagedPropertyField
+                        {
+                            _property = mp,
+                            _value = _mpo.GetProperty(mp)
+                        }).ToList();
+                }
+            }
+
+            public List<ManagedPropertyField> ReadOnlyProperties
             {
                 get
                 {
@@ -52,7 +66,7 @@ namespace Rafy.ManagedProperty
                 }
             }
 
-            public List<ManagedPropertyField> RuntimePropertis
+            public List<ManagedPropertyField> RuntimeProperties
             {
                 get
                 {
@@ -64,17 +78,11 @@ namespace Rafy.ManagedProperty
                 }
             }
 
-            public List<ManagedPropertyField> ExtensionPropertis
+            public Dictionary<string, object> DynamicProperties
             {
                 get
                 {
-                    return _mpo.PropertiesContainer.GetAvailableProperties()
-                        .Where(mp => mp.IsExtension)
-                        .Select(mp => new ManagedPropertyField
-                        {
-                            _property = mp,
-                            _value = _mpo.GetProperty(mp)
-                        }).ToList();
+                    return _mpo._dynamics;
                 }
             }
         }
