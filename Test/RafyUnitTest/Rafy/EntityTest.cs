@@ -2185,18 +2185,22 @@ namespace RafyUnitTest
             entity.SetDynamicProperty("dp1", "Value1");
             entity.SetDynamicProperty("dp2", 1);
             entity.SetDynamicProperty("dp3", now);
+            entity.SetDynamicProperty("dp4", FavorateTypeWithLabel.B);
 
             var serializer = new AggtSerializer();
             serializer.Indent = true;
             serializer.IgnoreDefault = true;
             serializer.IgnoreROProperties = true;
+            serializer.EnumSerializationMode = EnumSerializationMode.EnumLabel;
+
             var json = serializer.Serialize(entity);
 
             Assert.AreEqual(
 @"{
   ""dp1"": ""Value1"",
   ""dp2"": 1,
-  ""dp3"": ""2016-05-25T01:01:01""
+  ""dp3"": ""2016-05-25T01:01:01"",
+  ""dp4"": ""第二个""
 }", json);
         }
 
@@ -2503,7 +2507,8 @@ namespace RafyUnitTest
   ""dp1"": ""Value1"",
   ""dp2"": 1,
   ""dp3"": ""2016-05-25T01:01:01"",
-  ""dp4"": ""2016-05-25 1:01:01""
+  ""dp4"": ""2016-05-25 1:01:01"",
+  ""dp5"": ""第二个""
 }";
 
             var deserializer = new AggtDeserializer();
@@ -2511,11 +2516,12 @@ namespace RafyUnitTest
             var entity = deserializer.Deserialize(typeof(Favorate), json) as Favorate;
 
             Assert.IsNotNull(entity);
-            Assert.AreEqual(4, entity.DynamicPropertiesCount);
+            Assert.AreEqual(5, entity.DynamicPropertiesCount);
             Assert.AreEqual("Value1", entity.GetDynamicProperty("dp1"));
             Assert.AreEqual(1L, entity.GetDynamicProperty("dp2"));
             Assert.AreEqual(new DateTime(2016, 5, 25, 1, 1, 1), entity.GetDynamicProperty("dp3"));
             Assert.AreEqual("2016-05-25 1:01:01", entity.GetDynamicProperty("dp4"));
+            Assert.AreEqual(FavorateTypeWithLabel.B, entity.GetDynamicPropertyOrDefault("dp5", FavorateTypeWithLabel.A));
         }
 
         #endregion

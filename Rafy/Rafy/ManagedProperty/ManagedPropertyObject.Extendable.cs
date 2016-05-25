@@ -16,6 +16,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Rafy.Reflection;
+using Rafy.Utils;
 
 namespace Rafy.ManagedProperty
 {
@@ -100,7 +101,12 @@ namespace Rafy.ManagedProperty
             {
                 if (_dynamics.TryGetValue(dynamicProperty, out result))
                 {
-                    return (T)TypeHelper.CoerceValue(typeof(T), result);
+                    var desiredType = typeof(T);
+                    if (desiredType.IsEnum)
+                    {
+                        result = EnumViewModel.Parse(result as string, desiredType);
+                    }
+                    return (T)TypeHelper.CoerceValue(desiredType, result);
                 }
             }
 
@@ -111,10 +117,22 @@ namespace Rafy.ManagedProperty
         /// 获取动态属性的值。
         /// </summary>
         /// <param name="dynamicProperty">对应的动态属性的名称。</param>
+        /// <param name="desiredType">需要转换的类型。</param>
         /// <returns></returns>
-        public object GetDynamicProperty(string dynamicProperty)
+        public object GetDynamicProperty(string dynamicProperty, Type desiredType = null)
         {
-            return this[dynamicProperty];
+            var result = this[dynamicProperty];
+
+            if (desiredType != null && result != null)
+            {
+                if (desiredType.IsEnum)
+                {
+                    result = EnumViewModel.Parse(result as string, desiredType);
+                }
+                result = TypeHelper.CoerceValue(desiredType, result);
+            }
+
+            return result;
         }
 
         /// <summary>
