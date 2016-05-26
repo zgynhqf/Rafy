@@ -50,7 +50,7 @@ namespace $domainNamespace$
                 {
                     //ReserveHistory = true,//ReserveHistory 表示是否需要保存所有数据库升级的历史记录
                     RunDataLossOperation = DataLossOperation.All,//要禁止数据库表、字段的删除操作，请使用 DataLossOperation.None 值。
-                    Databases = new string[] { $domainNamespace$EntityRepositoryDataProvider.DbSettingName }
+                    Databases = new string[] { $domainNamespace$Plugin.DbSettingName }
                 };
                 svc.Invoke();
             }
