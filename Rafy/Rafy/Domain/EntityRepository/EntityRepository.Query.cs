@@ -132,7 +132,7 @@ namespace Rafy.Domain
         /// 统计仓库中所有的实体数量
         /// </summary>
         /// <returns></returns>
-        public int CountAll()
+        public long CountAll()
         {
             return this.DoCountAll();
         }
@@ -141,7 +141,7 @@ namespace Rafy.Domain
         /// 统计某个父对象下的子对象条数
         /// </summary>
         /// <returns></returns>
-        public int CountByParentId(object parentId)
+        public long CountByParentId(object parentId)
         {
             return this.DoCountByParentId(parentId);
         }
@@ -217,7 +217,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="criteria">常用查询条件。</param>
         /// <returns></returns>
-        public int CountBy(CommonQueryCriteria criteria)
+        public long CountBy(CommonQueryCriteria criteria)
         {
             return this.DoCountBy(criteria);
         }
@@ -247,7 +247,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="criteria">常用查询条件。</param>
         /// <returns></returns>
-        public int CountBy(ODataQueryCriteria criteria)
+        public long CountBy(ODataQueryCriteria criteria)
         {
             return this.DoCountBy(criteria);
         }
@@ -310,7 +310,7 @@ namespace Rafy.Domain
         /// 查询所有的根节点数量。
         /// </summary>
         /// <returns></returns>
-        public int CountTreeRoots()
+        public long CountTreeRoots()
         {
             return this.DoCountTreeRoots();
         }
@@ -528,9 +528,9 @@ namespace Rafy.Domain
         /// </summary>
         /// <returns></returns>
         [RepositoryQuery]
-        protected virtual int DoCountTreeRoots()
+        protected virtual long DoCountTreeRoots()
         {
-            return (int)_dataProvider.GetTreeRoots(null);
+            return (long)_dataProvider.GetTreeRoots(null);
         }
 
         /// <summary>
@@ -599,9 +599,9 @@ namespace Rafy.Domain
         /// <param name="criteria">常用查询条件。</param>
         /// <returns></returns>
         [RepositoryQuery]
-        protected virtual int DoCountBy(CommonQueryCriteria criteria)
+        protected virtual long DoCountBy(CommonQueryCriteria criteria)
         {
-            return (int)_dataProvider.GetBy(criteria);
+            return (long)_dataProvider.GetBy(criteria);
         }
 
         /// <summary>
@@ -632,9 +632,9 @@ namespace Rafy.Domain
         /// <param name="criteria">常用查询条件。</param>
         /// <returns></returns>
         [RepositoryQuery]
-        protected virtual int DoCountBy(ODataQueryCriteria criteria)
+        protected virtual long DoCountBy(ODataQueryCriteria criteria)
         {
-            return (int)_dataProvider.GetBy(criteria);
+            return (long)_dataProvider.GetBy(criteria);
         }
 
         /// <summary>
@@ -666,9 +666,9 @@ namespace Rafy.Domain
         /// </summary>
         /// <returns></returns>
         [RepositoryQuery]
-        protected virtual int DoCountAll()
+        protected virtual long DoCountAll()
         {
-            return (int)_dataProvider.GetAll(null, null);
+            return (long)_dataProvider.GetAll(null, null);
         }
 
         /// <summary>
@@ -677,9 +677,9 @@ namespace Rafy.Domain
         /// <param name="parentId"></param>
         /// <returns></returns>
         [RepositoryQuery]
-        protected virtual int DoCountByParentId(object parentId)
+        protected virtual long DoCountByParentId(object parentId)
         {
-            return (int)_dataProvider.GetByParentId(parentId, null, null);
+            return (long)_dataProvider.GetByParentId(parentId, null, null);
         }
 
         /// <summary>

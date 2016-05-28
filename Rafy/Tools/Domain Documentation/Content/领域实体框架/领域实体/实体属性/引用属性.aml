@@ -23,9 +23,9 @@
                         <code language="cs">
                             <![CDATA[public static readonly RefIdProperty AdministratorIdProperty =
     P<Warehouse>.RegisterRefId(e => e.AdministratorId, ReferenceType.Normal);
-public int? AdministratorId
+public long? AdministratorId
 {
-    get { (int?)return this.GetRefNullableId(AdministratorIdProperty); }
+    get { (long?)return this.GetRefNullableId(AdministratorIdProperty); }
     set { this.SetRefNullableId(AdministratorIdProperty, value); }
 }
 public static readonly RefEntityProperty<User> AdministratorProperty =
@@ -43,9 +43,9 @@ public User Administrator
                         <code language="cs">
                             <![CDATA[public static readonly RefIdProperty AdministratorIdProperty =
     P<Warehouse>.RegisterRefId(e => e.AdministratorId, ReferenceType.Normal);
-public int AdministratorId
+public long AdministratorId
 {
-    get { return (int)this.GetRefId(AdministratorIdProperty); }
+    get { return (long)this.GetRefId(AdministratorIdProperty); }
     set { this.SetRefId(AdministratorIdProperty, value); }
 }
 public static readonly RefEntityProperty<User> AdministratorProperty =
@@ -69,9 +69,9 @@ public User Administrator
                 <code language="cs">
                     <![CDATA[public static readonly RefIdProperty CarIdProperty =
     P<Wheel>.RegisterRefId(e => e.CarId, ReferenceType.Parent);
-public int CarId
+public long CarId
 {
-    get { return (int)this.GetRefId(CarIdProperty); }
+    get { return (long)this.GetRefId(CarIdProperty); }
     set { this.SetRefId(CarIdProperty, value); }
 }
 public static readonly RefEntityProperty<Car> CarProperty =
@@ -111,9 +111,9 @@ public Car Car
                         <code language="cs">
                             <![CDATA[public static readonly RefIdProperty AdministratorIdProperty =
     P<Warehouse>.RegisterRefId(e => e.AdministratorId, ReferenceType.Normal);
-public int? AdministratorId
+public long? AdministratorId
 {
-    get { return (int?)this.GetRefNullableId(AdministratorIdProperty); }
+    get { return (long?)this.GetRefNullableId(AdministratorIdProperty); }
     set { this.SetRefNullableId(AdministratorIdProperty, value); }
 }]]>
                         </code>

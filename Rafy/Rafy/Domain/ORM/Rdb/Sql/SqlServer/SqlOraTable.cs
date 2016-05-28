@@ -111,7 +111,7 @@ namespace Rafy.Domain.ORM
 
                 //查询值。（由于所有参数都不会在 OrderBy、Select 语句中，所以把所有参数都传入。
                 var value = dba.QueryValue(pagingCountSql, parameters);
-                pagingInfo.TotalCount = Convert.ToInt32(value);
+                pagingInfo.TotalCount = Convert.ToInt64(value);
             }
         }
 

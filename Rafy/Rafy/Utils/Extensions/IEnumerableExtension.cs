@@ -39,7 +39,7 @@ namespace Rafy
             //需要记数
             if (pagingInfo.IsNeedCount)
             {
-                pagingInfo.TotalCount = models.Count();
+                pagingInfo.TotalCount = models.LongCount();
             }
 
             if (pagingInfo.PageNumber == 1)
@@ -48,7 +48,7 @@ namespace Rafy
             }
 
             return models
-                .Skip((pagingInfo.PageNumber - 1) * pagingInfo.PageSize)
+                .Skip((int)(pagingInfo.PageNumber - 1) * pagingInfo.PageSize)
                 .Take(pagingInfo.PageSize);
         }
 
@@ -71,7 +71,7 @@ namespace Rafy
             //需要记数
             if (pagingInfo.IsNeedCount)
             {
-                pagingInfo.TotalCount = models.Count();
+                pagingInfo.TotalCount = models.LongCount();
             }
 
             if (pagingInfo.PageNumber == 1)
@@ -80,7 +80,7 @@ namespace Rafy
             }
 
             return models
-                .Skip((pagingInfo.PageNumber - 1) * pagingInfo.PageSize)
+                .Skip((int)(pagingInfo.PageNumber - 1) * pagingInfo.PageSize)
                 .Take(pagingInfo.PageSize);
         }
 

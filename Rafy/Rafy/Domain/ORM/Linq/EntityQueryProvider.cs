@@ -18,6 +18,7 @@ using System.Linq.Expressions;
 using System.Text;
 using Rafy.Domain.DataPortal;
 using Rafy.Domain;
+using Rafy.Reflection;
 
 namespace Rafy.Domain.ORM.Linq
 {
@@ -46,7 +47,9 @@ namespace Rafy.Domain.ORM.Linq
 
         public TResult Execute<TResult>(Expression expression)
         {
-            return (TResult)this.Execute(expression);
+            var res = this.Execute(expression);
+            res = TypeHelper.CoerceValue(typeof(TResult), res);
+            return (TResult)res;
         }
 
         public IQueryable CreateQuery(Expression expression)
@@ -77,7 +80,8 @@ namespace Rafy.Domain.ORM.Linq
             if (expression.NodeType == ExpressionType.Call)
             {
                 var call = expression as MethodCallExpression;
-                if (call.Method.DeclaringType == typeof(Queryable) && call.Method.Name == LinqConsts.QueryableMethod_Count)
+                if (call.Method.DeclaringType == typeof(Queryable) &&
+                    (call.Method.Name == LinqConsts.QueryableMethod_Count || call.Method.Name == LinqConsts.QueryableMethod_LongCount))
                 {
                     if (call.Arguments.Count > 1) throw EntityQueryBuilder.OperationNotSupported(call.Method);
 

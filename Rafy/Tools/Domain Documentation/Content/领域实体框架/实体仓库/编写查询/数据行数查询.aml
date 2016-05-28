@@ -22,9 +22,9 @@ public virtual WarehouseList GetByCode(string warehouseCode)
 }
 //查询行数
 [RepositoryQuery]
-public virtual int CountByCode(string warehouseCode)
+public virtual long CountByCode(string warehouseCode)
 {
-    return (int)this.DA_GetByCode(warehouseCode);
+    return (long)this.DA_GetByCode(warehouseCode);
 }
 private object DA_GetByCode(string warehouseCode)
 {

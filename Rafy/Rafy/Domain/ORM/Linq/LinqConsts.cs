@@ -26,6 +26,7 @@ namespace Rafy.Domain.ORM.Linq
         public const string QueryableMethod_ThenBy = "ThenBy";
         public const string QueryableMethod_ThenByDescending = "ThenByDescending";
         public const string QueryableMethod_Count = "Count";
+        public const string QueryableMethod_LongCount = "LongCount";
 
         public const string EnumerableMethod_Contains = "Contains";
         public const string EnumerableMethod_Any = "Any";

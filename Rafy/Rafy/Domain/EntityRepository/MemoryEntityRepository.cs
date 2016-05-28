@@ -49,7 +49,7 @@ namespace Rafy.Domain.ORM
         /// <returns></returns>
         protected abstract string GetRealKey(Entity entity);
 
-        protected sealed override int DoCountAll()
+        protected sealed override long DoCountAll()
         {
             DataProvider.EnsureStore();
             return DataProvider._memoryRows.Count;

@@ -579,7 +579,7 @@ namespace Rafy.Domain.ORM
             return res.ToString();
         }
 
-        internal int Count(IDbAccesser dba, IQuery query)
+        internal long Count(IDbAccesser dba, IQuery query)
         {
             var oldCounting = query.IsCounting;
             try
@@ -599,13 +599,13 @@ namespace Rafy.Domain.ORM
             }
         }
 
-        internal static int ConvertCount(object value)
+        internal static long ConvertCount(object value)
         {
             if (value != DBNull.Value)
             {
                 try
                 {
-                    return Convert.ToInt32(value);
+                    return Convert.ToInt64(value);
                 }
                 catch { }
             }

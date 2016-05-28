@@ -46,7 +46,7 @@ namespace Rafy.Web.Mvc
 
             if (values.ContainsPrefix("$pageNumber"))
             {
-                var pageNumber = (int)values.GetValue("$pageNumber").ConvertTo(typeof(int));
+                var pageNumber = (long)values.GetValue("$pageNumber").ConvertTo(typeof(long));
                 int pageSize = 10;
                 if (values.ContainsPrefix("$pageSize"))
                 {

@@ -120,11 +120,11 @@ public virtual Warehouse GetByName(string name)
                         <para>查询实体个数的数据层实现中，与查询实体列表的实体层实现保持一致。框架内部会自动转换为数据行数的查询。</para>
                         <code language="cs">
                             <![CDATA[[RepositoryQuery]
-public virtual int CountByDate(DateTime date)
+public virtual long CountByDate(DateTime date)
 {
     var q = this.CreateLinqQuery();
     q = q.Where(e => e.CreateTime >= date);
-    return (int)this.QueryData(q);
+    return (long)this.QueryData(q);
 }]]>
                         </code>
                     </listItem>

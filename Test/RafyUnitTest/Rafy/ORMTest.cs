@@ -1442,7 +1442,37 @@ namespace RafyUnitTest
 
                 var count = repo.LinqByBookName_RealLinqCount("1");
                 Assert.IsTrue(count == 2);
-                count = repo.LinqByBookName_RealLinqCount("2");
+            }
+        }
+
+        [TestMethod]
+        public void ORM_LinqQuery_PureLinqLongCount()
+        {
+            var repo = RF.Concrete<ChapterRepository>();
+            var rootRepo = RF.Concrete<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                rootRepo.Save(new Book
+                {
+                    Name = "1",
+                    ChapterList =
+                    {
+                        new Chapter { Name = "1.1"},
+                        new Chapter { Name = "1.2"}
+                    }
+                });
+                rootRepo.Save(new Book
+                {
+                    Name = "2",
+                    ChapterList =
+                    {
+                        new Chapter { Name = "2.1"},
+                        new Chapter { Name = "2.2"},
+                        new Chapter { Name = "2.3"}
+                    }
+                });
+
+                var count = repo.LinqByBookName_RealLinqLongCount("2");
                 Assert.IsTrue(count == 3);
             }
         }

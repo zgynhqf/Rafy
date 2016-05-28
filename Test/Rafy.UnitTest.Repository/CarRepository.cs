@@ -40,9 +40,9 @@ namespace Rafy.UnitTest.Repository
         }
 
         [RepositoryQuery]
-        public virtual int CountByStartDate(DateTime startTime)
+        public virtual long CountByStartDate(DateTime startTime)
         {
-            return (int)this.DataProvider.GetByStartDate(startTime);
+            return (long)this.DataProvider.GetByStartDate(startTime);
         }
 
         [RepositoryQuery]

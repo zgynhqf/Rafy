@@ -34,9 +34,9 @@ namespace Rafy.Data
         {
             bool isPaging = !PagingInfo.IsNullOrEmpty(pagingInfo);
             bool needCount = isPaging && pagingInfo.IsNeedCount;
-            int totalCount = 0;
-            int startRow = 1;//从一开始的行号
-            int endRow = int.MaxValue;
+            long totalCount = 0;
+            long startRow = 1;//从一开始的行号
+            long endRow = int.MaxValue;
 
             if (isPaging)
             {

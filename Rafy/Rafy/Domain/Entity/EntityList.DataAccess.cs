@@ -27,7 +27,7 @@ namespace Rafy.Domain
     {
         #region Count
 
-        private int _totalCount = -1;
+        private long _totalCount = -1;
 
         /// <summary>
         /// 查询出来的当前列表在数据库中存在的总数据条数。
@@ -35,7 +35,7 @@ namespace Rafy.Domain
         /// 一是用于统计数据条数查询的数据传输。
         /// 二是是分页时保存所有数据的行数。
         /// </summary>
-        public int TotalCount
+        public long TotalCount
         {
             get { return this._totalCount; }
         }
@@ -44,7 +44,7 @@ namespace Rafy.Domain
         /// 当查询 Count 时，调用此方法设置最终查询出的总条数。
         /// </summary>
         /// <param name="value"></param>
-        public void SetTotalCount(int value)
+        public void SetTotalCount(long value)
         {
             if (value < 0) throw new ArgumentOutOfRangeException("value");
 

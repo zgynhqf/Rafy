@@ -32,13 +32,13 @@ namespace Rafy
     [DataContract]
     public class PagingInfo
     {
-        private int _pageNumber;
+        private long _pageNumber;
         private int _pageSize;
         /// <summary>
         /// If this value is positive or zero, it indicates the count.
         /// Otherwise, it means "need count all items".
         /// </summary>
-        private int _totalCount;
+        private long _totalCount;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PagingInfo"/> class.
@@ -52,7 +52,7 @@ namespace Rafy
         /// </summary>
         /// <param name="pageNumber"></param>
         /// <param name="pageSize"></param>
-        public PagingInfo(int pageNumber, int pageSize) : this(pageNumber, pageSize, false) { }
+        public PagingInfo(long pageNumber, int pageSize) : this(pageNumber, pageSize, false) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PagingInfo"/> class.
@@ -61,7 +61,7 @@ namespace Rafy
         /// <param name="pageNumber"></param>
         /// <param name="pageSize"></param>
         /// <param name="isNeedCount">is need retrieve count of all records(if it is true,it will retrieve count info from persistence)</param>
-        public PagingInfo(int pageNumber, int pageSize, bool isNeedCount)
+        public PagingInfo(long pageNumber, int pageSize, bool isNeedCount)
         {
             this.PageNumber = pageNumber;
             this.PageSize = pageSize;
@@ -74,7 +74,7 @@ namespace Rafy
         /// <param name="pageNumber"></param>
         /// <param name="pageSize"></param>
         /// <param name="totalCount"></param>
-        public PagingInfo(int pageNumber, int pageSize, int totalCount)
+        public PagingInfo(long pageNumber, int pageSize, long totalCount)
         {
             this.PageNumber = pageNumber;
             this.PageSize = pageSize;
@@ -121,7 +121,7 @@ namespace Rafy
         /// <summary>
         /// Count of all records
         /// </summary>
-        public int TotalCount
+        public long TotalCount
         {
             get
             {
@@ -159,7 +159,7 @@ namespace Rafy
         /// start from 1.
         /// </summary>
         [DataMember]
-        public int PageNumber
+        public long PageNumber
         {
             get { return this._pageNumber; }
             set
@@ -173,7 +173,7 @@ namespace Rafy
         /// <summary>
         /// Gets the total page count, if <see cref="TotalCount"/> has positive value.
         /// </summary>
-        public int PageCount
+        public long PageCount
         {
             get
             {

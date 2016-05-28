@@ -35,7 +35,7 @@ namespace Rafy.Web.EntityDataPortal
         /// 
         /// 分页时，实际量和当前量是不一致的。
         /// </summary>
-        internal int total { get; set; }
+        internal long total { get; set; }
 
         /// <summary>
         /// 客户端实体类型

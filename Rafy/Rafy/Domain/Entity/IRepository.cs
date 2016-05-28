@@ -88,26 +88,26 @@ namespace Rafy.Domain
         /// 统计仓库中所有的实体数量
         /// </summary>
         /// <returns></returns>
-        int CountAll();
+        long CountAll();
 
         /// <summary>
         /// 统计某个父对象下的子对象条数
         /// </summary>
         /// <returns></returns>
-        int CountByParentId(object parentId);
+        long CountByParentId(object parentId);
 
         /// <summary>
         /// 查询所有的根节点数量。
         /// </summary>
         /// <returns></returns>
-        int CountTreeRoots();
+        long CountTreeRoots();
 
         /// <summary>
         /// 通过 CommonQueryCriteria 来查询实体的个数。
         /// </summary>
         /// <param name="criteria">常用查询条件。</param>
         /// <returns></returns>
-        int CountBy(CommonQueryCriteria criteria);
+        long CountBy(CommonQueryCriteria criteria);
 
         /// <summary>
         /// 优先使用缓存中的数据来通过 Id 获取指定的实体对象

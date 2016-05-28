@@ -110,7 +110,7 @@ namespace Rafy.Domain.ORM.Oracle
             return res;
         }
 
-        private static ISqlSelect MakePagingTree(SqlSelect raw, int startRow, int endRow)
+        private static ISqlSelect MakePagingTree(SqlSelect raw, long startRow, long endRow)
         {
             /*********************** 代码块解释 *********************************
              * 以下转换使用 ORACLE 行号字段来实现分页。只需要简单地在查询的 WHERE 语句中加入等号的判断即可。

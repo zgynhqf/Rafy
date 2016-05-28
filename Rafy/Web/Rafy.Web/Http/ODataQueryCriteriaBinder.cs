@@ -73,7 +73,7 @@ namespace Rafy.Web.Http
             var tc = values.GetValue("$inlinecount");
             if (pn != null || tc != null)
             {
-                var pageNumber = pn != null ? (int)pn.ConvertTo(typeof(int)) : 1;
+                var pageNumber = pn != null ? (long)pn.ConvertTo(typeof(long)) : 1;
                 var needCount = tc != null && !string.IsNullOrWhiteSpace(tc.AttemptedValue);
 
                 var ps = values.GetValue("$pageSize");

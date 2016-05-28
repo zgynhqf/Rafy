@@ -54,9 +54,9 @@ namespace Rafy.Domain.Validation
 
         /// <summary>
         /// 设置此属性可以自定义要显示的错误信息。
-        /// int 参数表示已经被使用的次数。
+        /// long 参数表示已经被使用的次数。
         /// </summary>
-        public Func<Entity, int, string> MessageBuilder { get; set; }
+        public Func<Entity, long, string> MessageBuilder { get; set; }
 
         protected override void Validate(Entity entity, RuleArgs e)
         {
@@ -76,7 +76,7 @@ namespace Rafy.Domain.Validation
             }
         }
 
-        private string BuildError(Entity entity, int usedCount)
+        private string BuildError(Entity entity, long usedCount)
         {
             if (this.MessageBuilder != null)
             {

@@ -95,7 +95,7 @@ namespace UT
         protected ChapterRepository() { }
 
         [RepositoryQuery]
-        public virtual int CountByBookName2(string name)
+        public virtual long CountByBookName2(string name)
         {
             var source = f.Table(this);
             var bookSource = f.Table<Book>();
@@ -103,7 +103,7 @@ namespace UT
                 from: f.Join(source, bookSource)
             );
             q.AddConstraintIf(Book.NameProperty, PropertyOperator.Equal, name);
-            return (int)this.QueryData(q);
+            return (long)this.QueryData(q);
         }
 
         [RepositoryQuery]
@@ -114,21 +114,32 @@ namespace UT
             return (ChapterList)this.QueryData(q);
         }
         [RepositoryQuery]
-        public virtual int LinqCountByBookName(string name)
+        public virtual long LinqCountByBookName(string name)
         {
             var q = this.CreateLinqQuery();
             q = q.Where(c => c.Book.Name == name);
-            return (int)this.QueryData(q);
+            return Convert.ToInt64(this.QueryData(q));
         }
 
         [RepositoryQuery]
-        public virtual int LinqByBookName_RealLinqCount(string name)
+        public virtual long LinqByBookName_RealLinqCount(string name)
         {
             var q = this.CreateLinqQuery();
 
             q = q.Where(c => c.Book.Name == name);
 
             var count = q.Count();
+
+            return count;
+        }
+        [RepositoryQuery]
+        public virtual long LinqByBookName_RealLinqLongCount(string name)
+        {
+            var q = this.CreateLinqQuery();
+
+            q = q.Where(c => c.Book.Name == name);
+
+            var count = q.LongCount();
 
             return count;
         }
