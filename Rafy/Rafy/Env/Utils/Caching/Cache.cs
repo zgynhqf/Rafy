@@ -122,14 +122,20 @@ namespace Rafy.Utils.Caching
             where T : class
         {
             var result = this.Get(key, regionName) as T;
-
             if (result == null)
             {
-                result = ifNotExists();
-
-                if (result != null)
+                lock (this)
                 {
-                    this.Add(key, result, policy, regionName);
+                    result = this.Get(key, regionName) as T;
+                    if (result == null)
+                    {
+                        result = ifNotExists();
+
+                        if (result != null)
+                        {
+                            this.Add(key, result, policy, regionName);
+                        }
+                    }
                 }
             }
 
