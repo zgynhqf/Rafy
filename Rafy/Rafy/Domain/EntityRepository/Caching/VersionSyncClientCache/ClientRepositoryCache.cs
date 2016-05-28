@@ -23,13 +23,13 @@ namespace Rafy.Domain.Caching
     /// <summary>
     /// 基本版本号更新方案的客户端缓存的 API
     /// </summary>
-    public class ClientCache : RepositoryCache
+    public class ClientRepositoryCache : RepositoryCache
     {
         private ClientCacheScope _clientCacheDefinition;
 
         private bool _clientCacheDefinitionLoaded;
 
-        internal ClientCache(IRepository repository) : base(repository) { }
+        internal ClientRepositoryCache(IRepository repository) : base(repository) { }
 
         /// <summary>
         /// 本缓存对象对应的实体类型。

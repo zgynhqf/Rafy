@@ -55,12 +55,12 @@ namespace Rafy.Domain
         /// <summary>
         /// 基于版本号更新的客户端缓存 API。
         /// </summary>
-        ClientCache ClientCache { get; }
+        ClientRepositoryCache ClientCache { get; }
 
         /// <summary>
         /// 服务端内存缓存 API
         /// </summary>
-        ServerCache ServerCache { get; }
+        ServerRepositoryCache ServerCache { get; }
 
         /// <summary>
         /// 是否声明本仓库为本地仓库（客户端只在客户端查询，服务端在服务端查询）

@@ -157,9 +157,9 @@
     <Compile Include="Domain\EntityRepository\Caching\AggregateChecker.cs" />
     <Compile Include="Domain\EntityRepository\Caching\CacheInstance.cs" />
     <Compile Include="Domain\EntityRepository\Caching\RepositoryCache.cs" />
-    <Compile Include="Domain\EntityRepository\Caching\ServerCache.cs" />
+    <Compile Include="Domain\EntityRepository\Caching\ServerRepositoryCache.cs" />
     <Compile Include="Domain\EntityRepository\Caching\VersionSyncClientCache\AggregateRootCache.cs" />
-    <Compile Include="Domain\EntityRepository\Caching\VersionSyncClientCache\ClientCache.cs" />
+    <Compile Include="Domain\EntityRepository\Caching\VersionSyncClientCache\ClientRepositoryCache.cs" />
     <Compile Include="Domain\EntityRepository\Caching\VersionSyncClientCache\EntityListVersion.cs" />
     <Compile Include="Domain\EntityRepository\Caching\VersionSyncClientCache\VersionChecker.cs" />
     <Compile Include="Domain\EntityRepository\Caching\VersionSyncClientCache\VersionSyncMgr.cs" />

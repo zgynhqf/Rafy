@@ -43,8 +43,8 @@ namespace Rafy.Domain
         protected EntityRepository()
         {
             this.DataPortalLocation = DataPortalLocation.Dynamic;
-            _clientCache = new ClientCache(this);
-            _serverCache = new ServerCache(this);
+            _clientCache = new ClientRepositoryCache(this);
+            _serverCache = new ServerRepositoryCache(this);
         }
 
         /// <summary>
@@ -59,13 +59,13 @@ namespace Rafy.Domain
 
         #region 缓存
 
-        private ClientCache _clientCache;
-        private ServerCache _serverCache;
+        private ClientRepositoryCache _clientCache;
+        private ServerRepositoryCache _serverCache;
 
         /// <summary>
         /// 基于版本号更新的客户端缓存 API
         /// </summary>
-        public ClientCache ClientCache
+        public ClientRepositoryCache ClientCache
         {
             get { return _clientCache; }
         }
@@ -73,7 +73,7 @@ namespace Rafy.Domain
         /// <summary>
         /// 服务端内存缓存 API
         /// </summary>
-        public ServerCache ServerCache
+        public ServerRepositoryCache ServerCache
         {
             get { return _serverCache; }
         }

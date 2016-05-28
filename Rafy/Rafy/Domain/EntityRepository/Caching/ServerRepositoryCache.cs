@@ -22,7 +22,7 @@ namespace Rafy.Domain.Caching
     /// <summary>
     /// 服务端使用的缓存。
     /// </summary>
-    public class ServerCache : RepositoryCache
+    public class ServerRepositoryCache : RepositoryCache
     {
         /// <summary>
         /// 应用层可以修改此属性来达到服务端缓存逻辑的变更。
@@ -31,7 +31,7 @@ namespace Rafy.Domain.Caching
 
         private bool? _enabled;
 
-        internal ServerCache(IRepository repository) : base(repository) { }
+        internal ServerRepositoryCache(IRepository repository) : base(repository) { }
 
         /// <summary>
         /// 是否已经被启用。
