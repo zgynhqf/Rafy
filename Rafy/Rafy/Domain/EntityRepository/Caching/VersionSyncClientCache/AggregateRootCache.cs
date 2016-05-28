@@ -31,7 +31,7 @@ namespace Rafy.Domain.Caching
 
         private Cache Cache
         {
-            get { return CacheInstance.Memory; }
+            get { return CacheInstances.Memory; }
         }
 
         //public EntityList CacheAll(Type entityType, Func<EntityList> ifNotExists = null)

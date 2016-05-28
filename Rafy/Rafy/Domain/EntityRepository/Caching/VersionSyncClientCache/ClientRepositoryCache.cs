@@ -163,7 +163,7 @@ namespace Rafy.Domain.Caching
             {
                 //同时清空 Memory 及 Disk 中的缓存。
                 var region = this.ClientCacheDefinition.Class.Name;
-                CacheInstance.MemoryDisk.ClearRegion(region);
+                CacheInstances.MemoryDisk.ClearRegion(region);
             }
         }
 
@@ -176,7 +176,7 @@ namespace Rafy.Domain.Caching
         internal override IList<Entity> GetCachedTable()
         {
             //使用 MemoryDisk 作为 GetAll 的缓存
-            Cache cache = CacheInstance.MemoryDisk;
+            Cache cache = CacheInstances.MemoryDisk;
 
             IList<Entity> result = null;
 
@@ -209,7 +209,7 @@ namespace Rafy.Domain.Caching
         internal override IList<Entity> GetCachedTableByParent(Entity parent)
         {
             //只使用 SqlCe 作为 GetByParent 的缓存
-            Cache cache = CacheInstance.Disk;
+            Cache cache = CacheInstances.Disk;
 
             IList<Entity> result = null;
 

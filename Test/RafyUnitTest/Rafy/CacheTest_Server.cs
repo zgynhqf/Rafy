@@ -38,21 +38,21 @@ namespace RafyUnitTest
         [TestInitialize]
         public void TestInitialize()
         {
-            CacheInstance.Memory.Clear();
+            CacheInstances.Memory.Clear();
         }
 
         [TestMethod]
         public void CTS_CacheInstance()
         {
-            var cache = CacheInstance.Memory;
+            var cache = CacheInstances.Memory;
             cache.Add("TestKey", "TestContent", Policy.Empty);
             Assert.AreEqual(cache.Get("TestKey"), "TestContent");
 
-            cache = CacheInstance.Disk;
+            cache = CacheInstances.Disk;
             cache.Add("TestKey", "TestContent", Policy.Empty);
             Assert.AreEqual(cache.Get("TestKey"), "TestContent");
 
-            cache = CacheInstance.MemoryDisk;
+            cache = CacheInstances.MemoryDisk;
             cache.Add("TestKey2", "TestContent", Policy.Empty);
             Assert.AreEqual(cache.Get("TestKey2"), "TestContent");
         }

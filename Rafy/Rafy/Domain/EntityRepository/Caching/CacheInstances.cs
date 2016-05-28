@@ -27,7 +27,7 @@ namespace Rafy.Domain.Caching
     /// 
     /// 应用层可修改这些属性来实现自己的缓存逻辑。
     /// </summary>
-    public static class CacheInstance
+    public static class CacheInstances
     {
         /// <summary>
         /// 默认使用的硬盘 sqlce 缓存文件。
