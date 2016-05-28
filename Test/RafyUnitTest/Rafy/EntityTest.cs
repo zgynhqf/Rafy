@@ -2674,6 +2674,61 @@ namespace RafyUnitTest
 
         #endregion
 
+        #region Clone
+
+        [TestMethod]
+        public void ET_Clone()
+        {
+            var b = new B { Name = "b1", Id = 1 };
+            var b2 = new B();
+            b2.Clone(b);
+
+            Assert.AreEqual("b1", b2.Name);
+            Assert.AreEqual(0, b2.Id);
+        }
+
+        [TestMethod]
+        public void ET_Clone_ReadDbRow()
+        {
+            var a = new A { Id = 1 };
+            var b = new B { Name = "b1", Id = 1, A = a};
+            var b2 = new B();
+            b2.Clone(b, CloneOptions.ReadDbRow());
+
+            Assert.AreEqual("b1", b2.Name);
+            Assert.AreEqual(1, b2.Id);
+            Assert.AreEqual(1, b2.AId);
+            Assert.IsNull(b2.GetProperty(B.AProperty));
+        }
+
+        [TestMethod]
+        public void ET_Clone_NewSingleEntity()
+        {
+            var a = new A { Id = 1 };
+            var b = new B { Name = "b1", Id = 1, A = a};
+            var b2 = new B();
+            b2.Clone(b, CloneOptions.NewSingleEntity());
+
+            Assert.AreEqual("b1", b2.Name);
+            Assert.AreEqual(0, b2.Id);
+            Assert.AreEqual(1, b2.AId);
+            Assert.IsNotNull(b2.GetProperty(B.AProperty));
+        }
+
+        [TestMethod]
+        public void ET_Clone_NewSingleEntity_ParentRef()
+        {
+            var pbsType = new PBSType { Id = 1 };
+            var pbs = new PBS { PBSType = pbsType };
+
+            var pbs2 = new PBS();
+            pbs2.Clone(pbs);
+
+            Assert.IsNotNull(pbs2.GetProperty(PBS.PBSTypeProperty));
+        }
+
+        #endregion
+
         ////由于 LazyEntityRef 类删除后，所以不再可以在运行时控制是否可序列化，本测试不再可用。
         //[TestMethod]
         //public void ET_LazyRef_Serialization_Manual()

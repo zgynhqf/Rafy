@@ -390,25 +390,23 @@ namespace Rafy.Domain
         /// <param name="options">The options.</param>
         private void CopyProperty(Entity source, IManagedProperty property, CloneOptions options)
         {
-            var refIndicator = property as IRefEntityProperty;
-            if (refIndicator != null)
+            var refProperty = property as IRefEntityProperty;
+            if (refProperty != null)
             {
-                bool copyEntity = refIndicator.ReferenceType == ReferenceType.Parent ?
+                bool copyEntity = refProperty.ReferenceType == ReferenceType.Parent ?
                     options.HasAction(CloneActions.ParentRefEntity) :
                     options.HasAction(CloneActions.RefEntities);
                 if (!copyEntity) { return; }
             }
+
+            var value = source.GetProperty(property);
+            if (options.Method == CloneValueMethod.LoadProperty)
+            {
+                this.LoadProperty(property, value);
+            }
             else
             {
-                var value = source.GetProperty(property);
-                if (options.Method == CloneValueMethod.LoadProperty)
-                {
-                    this.LoadProperty(property, value);
-                }
-                else
-                {
-                    this.SetProperty(property, value);
-                }
+                this.SetProperty(property, value);
             }
         }
 
