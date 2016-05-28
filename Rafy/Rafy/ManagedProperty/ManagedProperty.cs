@@ -293,7 +293,7 @@ namespace Rafy.ManagedProperty
         {
             var result = this._defaultMeta;
 
-            if (this._overridedMetas != null)
+            if (_overridedMetas != null)
             {
                 result = this.GetOverridedMeta(ownerType);
             }
@@ -311,7 +311,7 @@ namespace Rafy.ManagedProperty
                 var t = ownerType;
                 while (t != myOwnerType && t != typeof(ManagedPropertyObject) && t != null)
                 {
-                    if (this._overridedMetas.TryGetValue(t, out result)) { break; }
+                    if (_overridedMetas.TryGetValue(t, out result)) { break; }
 
                     t = t.BaseType;
                 }
