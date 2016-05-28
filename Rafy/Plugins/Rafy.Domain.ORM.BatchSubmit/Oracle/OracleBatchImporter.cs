@@ -96,7 +96,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
             var nextSeqValueSql = string.Format("SELECT {0}.NEXTVAL FROM DUAL", seqName);
             foreach (var section in EnumerateAllBatches(batch.InsertBatch, incrementBy))
             {
-                var nextValue = Convert.ToInt32(dba.QueryValue(nextSeqValueSql));
+                var nextValue = Convert.ToInt64(dba.QueryValue(nextSeqValueSql));
                 var startId = nextValue - incrementBy + 1;
                 for (int i = 0, c = section.Count; i < c; i++)
                 {
@@ -263,7 +263,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
         //    {
         //        //先把 STEP 改为 10 万，再获取下一个加了 10 万的值，这样不会有并发问题。
         //        dba.ExecuteText(string.Format("ALTER SEQUENCE {0} INCREMENT BY {1} NOCACHE", seqName, size));
-        //        nextValue = Convert.ToInt32(dba.QueryValue(string.Format("SELECT {0}.NEXTVAL FROM DUAL", seqName)));
+        //        nextValue = Convert.ToInt64(dba.QueryValue(string.Format("SELECT {0}.NEXTVAL FROM DUAL", seqName)));
         //    }
         //    finally
         //    {

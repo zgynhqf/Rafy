@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.53.3187
+3.53.3188
     添加功能
         动态属性
             ManagedPropertyObject 类型支持动态属性。
@@ -21,6 +21,7 @@
         支持 MAX 也映射为 Oracle-CLOB 类型的列。
     BUG修复
         冗余属性在查询数据库值时，需要禁用 EntityContext。
+        Rafy.Domain.ORM.BatchSubmit 中 Id 应该使用 Long 型。
 
 3.52.3172
     添加接口

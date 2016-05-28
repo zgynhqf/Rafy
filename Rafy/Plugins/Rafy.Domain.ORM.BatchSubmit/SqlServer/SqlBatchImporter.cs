@@ -90,7 +90,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
         /// <param name="table">The table.</param>
         /// <param name="size">需要连续的多少个 Id 号。</param>
         /// <returns></returns>
-        private static int GetBatchIDs(IDbAccesser dba, RdbTable table, int size)
+        private static long GetBatchIDs(IDbAccesser dba, RdbTable table, int size)
         {
             /*********************** 代码块解释 *********************************
              * 算法解释：
@@ -110,7 +110,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
             {
                 while (true)
                 {
-                    var currentValue = Convert.ToInt32(dba.QueryValue(string.Format("SELECT IDENT_CURRENT('{0}')", tableName)));
+                    var currentValue = Convert.ToInt64(dba.QueryValue(string.Format("SELECT IDENT_CURRENT('{0}')", tableName)));
                     var start = currentValue + 1;
                     var end = start + size - 1;
                     dba.ExecuteText(string.Format("DBCC CHECKIDENT('{0}', RESEED, {1})", tableName, end));

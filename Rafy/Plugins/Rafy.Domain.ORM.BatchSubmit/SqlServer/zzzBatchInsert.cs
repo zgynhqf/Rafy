@@ -107,7 +107,7 @@
 //            {
 //                while (true)
 //                {
-//                    var currentValue = Convert.ToInt32(dba.QueryValue(string.Format("SELECT IDENT_CURRENT('{0}')", tableName)));
+//                    var currentValue = Convert.ToInt64(dba.QueryValue(string.Format("SELECT IDENT_CURRENT('{0}')", tableName)));
 //                    var start = currentValue + 1;
 //                    var end = start + size - 1;
 //                    dba.ExecuteText(string.Format("DBCC CHECKIDENT('{0}', RESEED, {1})", tableName, end));
