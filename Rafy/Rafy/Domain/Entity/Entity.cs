@@ -135,8 +135,8 @@ namespace Rafy.Domain
 
             var meta = new PropertyMetadata<object>
             {
-                CoerceGetValueCallBack = (o, v) => (o as Entity).CoerceGetId(v),
-                PropertyChangingCallBack = (o, e) => (o as Entity).OnIdChanging(e),
+                //CoerceGetValueCallBack = (o, v) => (o as Entity).CoerceGetId(v),
+                //PropertyChangingCallBack = (o, e) => (o as Entity).OnIdChanging(e),
                 PropertyChangedCallBack = (o, e) => (o as Entity).OnIdChanged(e),
             };
             IdProperty = P<Entity>.Register(e => e.Id, meta);
@@ -220,18 +220,18 @@ namespace Rafy.Domain
         /// </summary>
         public static readonly Property<object> IdProperty;
 
-        /// <summary>
-        /// 强制获取 Id 逻辑。
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns></returns>
-        protected virtual object CoerceGetId(object value) { return value; }
+        ///// <summary>
+        ///// 强制获取 Id 逻辑。
+        ///// </summary>
+        ///// <param name="value">The value.</param>
+        ///// <returns></returns>
+        //protected virtual object CoerceGetId(object value) { return value; }
 
-        /// <summary>
-        /// Id 变更前事件。
-        /// </summary>
-        /// <param name="e">The decimal.</param>
-        protected virtual void OnIdChanging(ManagedPropertyChangingEventArgs<object> e) { }
+        ///// <summary>
+        ///// Id 变更前事件。
+        ///// </summary>
+        ///// <param name="e">The decimal.</param>
+        //protected virtual void OnIdChanging(ManagedPropertyChangingEventArgs<object> e) { }
 
         /// <summary>
         /// Id 变更后事件。
