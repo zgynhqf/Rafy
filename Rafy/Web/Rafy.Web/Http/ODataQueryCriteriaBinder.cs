@@ -32,7 +32,7 @@ using Rafy.ManagedProperty;
 
 namespace Rafy.Web.Http
 {
-    internal class ODataQueryCriteriaBinder : IModelBinder
+    public class ODataQueryCriteriaBinder : IModelBinder
     {
         public bool BindModel(HttpActionContext actionContext, ModelBindingContext bindingContext)
         {
@@ -40,7 +40,7 @@ namespace Rafy.Web.Http
             return true;
         }
 
-        private ODataQueryCriteria Desrialize(IValueProvider values)
+        protected virtual ODataQueryCriteria Desrialize(IValueProvider values)
         {
             var criteria = new ODataQueryCriteria();
 
@@ -62,6 +62,12 @@ namespace Rafy.Web.Http
             if (expand != null)
             {
                 criteria.Expand = expand.AttemptedValue;
+            }
+
+            var markTreeFullLoaded = values.GetValue("$markTreeFullLoaded");
+            if (markTreeFullLoaded != null)
+            {
+                criteria.MarkTreeFullLoaded = true;
             }
 
             return criteria;

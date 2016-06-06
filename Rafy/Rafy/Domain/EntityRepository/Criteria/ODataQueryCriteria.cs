@@ -58,5 +58,10 @@ namespace Rafy.Domain
         /// EagerLoadProperties
         /// </summary>
         public string Expand { get; set; }
+
+        /// <summary>
+        /// 如果某次查询结果是一棵完整的子树，那么必须设置此参数为 true，才可以把整个树标记为完整加载。
+        /// </summary>
+        public bool MarkTreeFullLoaded { get; set; }
     }
 }
