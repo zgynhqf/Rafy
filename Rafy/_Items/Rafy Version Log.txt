@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.54.3200
+3.54.3203
     添加接口
         ODataQueryCriteria 添加 MarkTreeFullLoaded 属性。
     BUG修复
@@ -22,6 +22,7 @@
         CacheInstance => CacheInstances;
         Cache.Get 加锁。 
         删除暂时无用的 CoerceGetId、OnIdChanging 虚方法。
+        BatchInsert 支持 ORACLE CLOB 类型的列。
 
 3.53.3188
     添加功能

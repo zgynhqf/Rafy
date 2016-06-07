@@ -53,21 +53,9 @@ namespace Rafy.Domain.ORM
                 //生成 ManagedPropertyBridge
                 var epm = em.Property(propertyName);
                 if (epm == null) { throw new ArgumentNullException(string.Format("{0}.{1} 属性需要使用托管属性进行编写。", type.FullName, propertyName)); }
-                var mp = epm.ManagedProperty as IProperty;
 
-                //列名
-                var columnName = meta.ColumnName;
-                if (string.IsNullOrWhiteSpace(columnName)) columnName = propertyName;
 
-                var column = new PersistanceColumnInfo
-                {
-                    Table = table,
-                    Name = columnName,
-                    DataType = epm.PropertyType,
-                    IsIdentity = meta.IsIdentity,
-                    IsPrimaryKey = meta.IsPrimaryKey,
-                    Property = mp
-                };
+                var column = new PersistanceColumnInfo(epm, meta, table);
 
                 if (meta.IsPrimaryKey)
                 {

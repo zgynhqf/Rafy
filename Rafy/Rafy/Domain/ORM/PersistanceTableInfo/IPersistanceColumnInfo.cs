@@ -12,6 +12,7 @@
 *******************************************************/
 
 using System;
+using Rafy.MetaModel;
 
 namespace Rafy.Domain.ORM
 {
@@ -20,6 +21,11 @@ namespace Rafy.Domain.ORM
     /// </summary>
     internal interface IPersistanceColumnInfo
     {
+        /// <summary>
+        /// 对应的列的元数据。
+        /// </summary>
+        ColumnMeta ColumnMeta { get; }
+
         /// <summary>
         /// 对应的表
         /// </summary>

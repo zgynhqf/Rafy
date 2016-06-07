@@ -15,20 +15,49 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Rafy.MetaModel;
 using Rafy.Reflection;
 
 namespace Rafy.Domain.ORM
 {
     class PersistanceColumnInfo : IPersistanceColumnInfo
     {
+        private EntityPropertyMeta _propertyMeta;
+        private ColumnMeta _columnMeta;
+
+        public PersistanceColumnInfo(EntityPropertyMeta propertyMeta, ColumnMeta columnMeta, PersistanceTableInfo table)
+        {
+            _propertyMeta = propertyMeta;
+            _columnMeta = columnMeta;
+            this.Table = table;
+
+            this.DataType = propertyMeta.PropertyType;
+            this.IsIdentity = columnMeta.IsIdentity;
+            this.IsPrimaryKey = columnMeta.IsPrimaryKey;
+            this.Property = propertyMeta.ManagedProperty as IProperty;
+        }
+
         private Type _dataType;
         private bool _isBooleanType;
         private bool _isStringType;
         private bool _isNullable;
 
-        public PersistanceTableInfo Table { get; set; }
+        public PersistanceTableInfo Table { get; private set; }
 
-        public string Name { get; set; }
+        public ColumnMeta ColumnMeta
+        {
+            get { return _columnMeta; }
+        }
+
+        public string Name
+        {
+            get
+            {
+                var columnName = _columnMeta.ColumnName;
+                if (string.IsNullOrWhiteSpace(columnName)) columnName = _propertyMeta.Name;
+                return columnName;
+            }
+        }
 
         public Type DataType
         {

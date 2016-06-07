@@ -21,6 +21,8 @@ namespace Rafy.DbMigration.Oracle
 {
     internal static class OracleDbTypeHelper
     {
+        public const string CLOBTypeName = "CLOB";
+
         public static string ToDbBoolean(bool value)
         {
             //数据库使用 CHAR(1) 来存储 Boolean 类型数据。
@@ -57,9 +59,9 @@ namespace Rafy.DbMigration.Oracle
                 case DbType.AnsiString:
                     if (!string.IsNullOrEmpty(length))
                     {
-                        if ("CLOB".EqualsIgnoreCase(length) || "MAX".EqualsIgnoreCase(length))
+                        if (CLOBTypeName.EqualsIgnoreCase(length) || "MAX".EqualsIgnoreCase(length))
                         {
-                            return "CLOB";
+                            return CLOBTypeName;
                         }
                         return "VARCHAR2(" + length + ')';
                     }

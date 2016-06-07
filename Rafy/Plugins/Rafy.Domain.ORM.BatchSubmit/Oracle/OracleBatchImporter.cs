@@ -387,7 +387,17 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
         {
             var parameter = dba.ParameterFactory.CreateParameter();
             parameter.ParameterName = column.Name;
-            parameter.DbType = OracleDbTypeHelper.ConvertFromCLRType(column.Info.DataType);
+
+            //对于 CLOB 类型，需要特殊处理。
+            var length = column.Info.ColumnMeta.DataTypeLength;
+            if (OracleDbTypeHelper.CLOBTypeName.EqualsIgnoreCase(length) || "MAX".EqualsIgnoreCase(length))
+            {
+                (parameter as OracleParameter).OracleDbTypeEx = OracleDbType.Clob;
+            }
+            else
+            {
+                parameter.DbType = OracleDbTypeHelper.ConvertFromCLRType(column.Info.DataType);
+            }
 
             int rowsCount = entities.Count;
             var valueArray = new object[rowsCount] as IList;
