@@ -200,7 +200,7 @@ namespace Rafy.Domain
         /// <param name="batchQueryer">分批进行查询的查询实现。</param>
         /// <param name="batchSize">每一个批次的大小。</param>
         /// <returns></returns>
-        public EntityList QueryInBatches(object[] inParameters, Func<object[], EntityList> batchQueryer, int batchSize = 1000)
+        public EntityList QueryInBatches<TParamType>(TParamType[] inParameters, Func<TParamType[], EntityList> batchQueryer, int batchSize = 1000)
         {
             var all = inParameters.Length;
 
@@ -214,7 +214,7 @@ namespace Rafy.Domain
             for (int i = 0; i < all; i += batchSize)
             {
                 var length = i + batchSize > all ? all - i : batchSize;
-                var array = new object[length];
+                var array = new TParamType[length];
                 Array.Copy(inParameters, i, array, 0, length);
 
                 var batchList = batchQueryer(array);
