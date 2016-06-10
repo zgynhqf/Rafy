@@ -543,6 +543,7 @@ namespace RafyUnitTest
                 repo.Save(book2);
 
                 Assert.IsTrue(updateSql.Contains("update"));
+                Assert.IsTrue(updateSql.Contains("bytes"));
                 Assert.IsTrue(!updateSql.Contains("content"), "LOB 属性未发生改变时，更新语句不更新该字段。");
             }
         }
@@ -1089,7 +1090,7 @@ namespace RafyUnitTest
 
         #region 批量导入
 
-        internal const int BATCH_IMPORT_DATA_SIZE = 100;
+        internal static readonly int BATCH_IMPORT_DATA_SIZE = ConfigurationHelper.GetAppSettingOrDefault("RafyUnitTest.BatchImportDataSize", 100);
 
         /// <summary>
         /// 批量导入需要支持事务回滚
@@ -1166,6 +1167,56 @@ namespace RafyUnitTest
                 for (int i = 0; i < size; i++)
                 {
                     var book = new Book();
+                    books.Add(book);
+                }
+
+                var importer = repo.CreateImporter();
+                importer.Save(books);
+
+                Assert.AreEqual(size, repo.CountAll());
+            }
+        }
+
+        [TestMethod]
+        public void ET_Repository_BatchImport_CDU_C_CLOB()
+        {
+            int size = BATCH_IMPORT_DATA_SIZE;
+
+            var longContent = new string('X', 20000);
+
+            var repo = RF.Concrete<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var books = new BookList();
+                for (int i = 0; i < size; i++)
+                {
+                    var book = new Book();
+                    book.Content = longContent;
+                    books.Add(book);
+                }
+
+                var importer = repo.CreateImporter();
+                importer.Save(books);
+
+                Assert.AreEqual(size, repo.CountAll());
+            }
+        }
+
+        [TestMethod]
+        public void ET_Repository_BatchImport_CDU_C_BLOB()
+        {
+            int size = BATCH_IMPORT_DATA_SIZE;
+
+            var longContent = new byte[20000];
+
+            var repo = RF.Concrete<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var books = new BookList();
+                for (int i = 0; i < size; i++)
+                {
+                    var book = new Book();
+                    book.Bytes = longContent;
                     books.Add(book);
                 }
 

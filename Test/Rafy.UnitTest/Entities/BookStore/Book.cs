@@ -140,6 +140,13 @@ namespace UT
             set { this.SetProperty(PublisherProperty, value); }
         }
 
+        public static readonly Property<byte[]> BytesProperty = P<Book>.Register(e => e.Bytes);
+        public byte[] Bytes
+        {
+            get { return this.GetProperty(BytesProperty); }
+            set { this.SetProperty(BytesProperty, value); }
+        }
+
         #endregion
 
         #region 只读属性
@@ -537,7 +544,8 @@ namespace UT
         {
             Meta.MapTable().MapAllProperties();
 
-            Meta.Property(Book.ContentProperty).MapColumn().HasLength("CLOB");
+            Meta.Property(Book.ContentProperty).MapColumn().HasLength("MAX");
+            Meta.Property(Book.BytesProperty).MapColumn().HasDataType(System.Data.DbType.Binary);
         }
     }
 
