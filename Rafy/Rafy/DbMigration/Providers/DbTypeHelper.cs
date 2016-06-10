@@ -22,6 +22,11 @@ namespace Rafy.DbMigration
 {
     internal static class DbTypeHelper
     {
+        /// <summary>
+        /// 返回 CLR 类型默认映射的数据库的类型。
+        /// </summary>
+        /// <param name="clrType"></param>
+        /// <returns></returns>
         internal static DbType ConvertFromCLRType(Type clrType)
         {
             if (clrType.IsEnum) { return DbType.Int32; }

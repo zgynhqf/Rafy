@@ -309,7 +309,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
                     var parameter = dba.ParameterFactory.CreateParameter();
                     parameter.ParameterName = '@' + column.Name;
                     parameter.SourceColumn = column.Name;//额外地，需要设置 SourceColumn
-                    parameter.DbType = DbTypeHelper.ConvertFromCLRType(column.Info.DataType);
+                    parameter.DbType = column.Info.ColumnMeta.DataType ?? DbTypeHelper.ConvertFromCLRType(column.Info.DataType);
                     parameters.Add(parameter);
                 }
             }
@@ -318,7 +318,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
             var pkParameter = dba.ParameterFactory.CreateParameter();
             pkParameter.ParameterName = '@' + table.PKColumn.Name;
             pkParameter.SourceColumn = table.PKColumn.Name;
-            pkParameter.DbType = DbTypeHelper.ConvertFromCLRType(table.PKColumn.Info.DataType);
+            pkParameter.DbType = table.PKColumn.Info.ColumnMeta.DataType ?? DbTypeHelper.ConvertFromCLRType(table.PKColumn.Info.DataType);
             parameters.Add(pkParameter);
 
             return parameters.ToArray();

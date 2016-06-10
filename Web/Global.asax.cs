@@ -75,8 +75,6 @@ namespace Rafy.Web.Site
         {
             protected override void OnRuntimeStarting()
             {
-                base.OnRuntimeStarting();
-
                 var svc = ServiceFactory.Create<MigrateService>();
                 svc.Options = new MigratingOptions
                 {
@@ -88,6 +86,8 @@ namespace Rafy.Web.Site
                     }
                 };
                 svc.Invoke();
+
+                base.OnRuntimeStarting();
             }
         }
     }

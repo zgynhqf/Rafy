@@ -388,16 +388,39 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
             var parameter = dba.ParameterFactory.CreateParameter();
             parameter.ParameterName = column.Name;
 
-            //对于 CLOB 类型，需要特殊处理。
-            var length = column.Info.ColumnMeta.DataTypeLength;
-            if (OracleDbTypeHelper.CLOBTypeName.EqualsIgnoreCase(length) || "MAX".EqualsIgnoreCase(length))
-            {
-                (parameter as OracleParameter).OracleDbTypeEx = OracleDbType.Clob;
-            }
-            else
-            {
-                parameter.DbType = OracleDbTypeHelper.ConvertFromCLRType(column.Info.DataType);
-            }
+            #region 对于 CLOB 类型，需要特殊处理。
+
+            var dbType = column.Info.ColumnMeta.DataType ?? OracleDbTypeHelper.ConvertFromCLRType(column.Info.DataType);
+            /*********************** 代码块解释 *********************************
+             * 不再需要对 CLOB 类型特殊处理
+             * 
+             * 这是因为：某个字段使用 CLOB 类型后，如果再使用 BatchInsert 的功能，如果数据条数较多时（1000条未再现，10000条时出现），
+             * oracle.exe 会一直占用 100% CPU，而且一直运行，不再返回（目前还不知道什么原因）。
+             * 
+             * 另外，如果不使用 OracleDbType.Clob 来标记 OracleParameter，而只是使用 DbType.String，也可以正确的运行。
+            **********************************************************************/
+            //bool setOracleDbTypeEx = false;
+            //if (dbType == DbType.String || dbType == DbType.AnsiString)
+            //{
+            //    //对于 CLOB 类型，需要特殊处理。
+            //    var length = column.Info.ColumnMeta.DataTypeLength;
+            //    if (OracleDbTypeHelper.CLOBTypeName.EqualsIgnoreCase(length) || "MAX".EqualsIgnoreCase(length))
+            //    {
+            //        (parameter as OracleParameter).OracleDbTypeEx = OracleDbType.Clob;
+            //        setOracleDbTypeEx = true;
+            //    }
+            //}
+            //else if (dbType == DbType.Binary)
+            //{
+            //    (parameter as OracleParameter).OracleDbTypeEx = OracleDbType.Blob;
+            //    setOracleDbTypeEx = true;
+            //}
+            //if (!setOracleDbTypeEx)
+            //{
+            parameter.DbType = dbType;
+            //}
+
+            #endregion
 
             int rowsCount = entities.Count;
             var valueArray = new object[rowsCount] as IList;
