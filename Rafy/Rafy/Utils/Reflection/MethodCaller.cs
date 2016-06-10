@@ -196,8 +196,7 @@ namespace Rafy.Reflection
         public static object CallMethod(object obj, MethodInfo info, params object[] parameters)
         {
             var mh = GetCachedMethod(info);
-            if (mh == null || mh.DynamicMethod == null)
-                throw new InvalidProgramException(info.Name + " 方法没有实现。");
+            if (mh == null || mh.DynamicMethod == null) throw new InvalidProgramException(info.Name + " 方法没有实现。");
             return CallMethod(obj, mh, parameters);
         }
 
@@ -330,9 +329,6 @@ namespace Rafy.Reflection
                         found = true;
                         result = CallMethod(obj, mh, parameters);
                     }
-
-                    ////反射直接调用
-                    //result = methodInfo.Invoke(obj, parameters);
                 }
                 else if (methods.Count > 1)
                 {
@@ -436,6 +432,29 @@ namespace Rafy.Reflection
                     var method = methods[i];
                     if (method.Name == methodName)
                     {
+                        #region 如果方法是虚方法，且结果集中已经有该虚方法的重载方法时，不再检测该方法。
+
+                        //方法是虚方法，而且现在正在检测的类型 type 是 objType 的某个基类。
+                        if (method.IsVirtual && type != objType)
+                        {
+                            bool overrideExisted = false;
+                            for (int j = 0, c2 = res.Count; j < c2; j++)
+                            {
+                                var existed = res[j];
+                                if (existed.GetBaseDefinition() == method.GetBaseDefinition())
+                                {
+                                    overrideExisted = true;
+                                    continue;
+                                }
+                            }
+                            if (overrideExisted)
+                            {
+                                continue;
+                            }
+                        }
+
+                        #endregion
+
                         var targetParameters = method.GetParameters();
                         var isParamArray = IsParamArray(targetParameters);
                         if (!isParamArray)

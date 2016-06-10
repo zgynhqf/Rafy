@@ -10,13 +10,14 @@
  * 
 *******************************************************/
 
-3.54.3203
+3.54.3205
     添加接口
         ODataQueryCriteria 添加 MarkTreeFullLoaded 属性。
     BUG修复
         由于 Id 使用了 Long 型，所以相应的 PageNumber、PageCount、EntityList.TotalCount、查询方法等，都应该使用 Long 型。
         LinqQuery 支持 LongCount 方法。
         解决 Clone 时没有 Clone 引用实体的问题。
+        解决“MethodCaller 处理虚方法的被重写时错误”的问题。
     内部修改
         ServerCache & ClientCache 更名为： ServerRepositoryCache & ClientRepositoryCache.
         CacheInstance => CacheInstances;

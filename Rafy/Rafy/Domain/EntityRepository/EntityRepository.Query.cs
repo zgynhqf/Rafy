@@ -796,9 +796,7 @@ namespace Rafy.Domain
                 _dataProvider, methodName, parameters, out result
                 ))
             {
-                MethodCaller.CallMethodIfImplemented(
-                    this, methodName, parameters, out result
-                    );
+                result = MethodCaller.CallMethod(this, methodName, parameters);
             }
 
             return result;
