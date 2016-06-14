@@ -25,7 +25,20 @@ namespace Rafy.Domain.Validation
     /// </summary>
     public class HandlerRule : ValidationRule
     {
+        /// <summary>
+        /// 验证逻辑代理方法。
+        /// </summary>
         public RuleHandler Handler { get; set; }
+
+        /// <summary>
+        /// 验证逻辑是否需要连接数据源。
+        /// </summary>
+        public bool NeedDataSource { get; set; }
+
+        protected override bool ConnectToDataSource
+        {
+            get { return this.NeedDataSource; }
+        }
 
         protected override void Validate(Entity entity, RuleArgs e)
         {

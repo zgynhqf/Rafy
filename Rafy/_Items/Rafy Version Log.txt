@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.54.3208
+3.54.3209
     添加接口
         ODataQueryCriteria 添加 MarkTreeFullLoaded 属性。
     BUG修复
@@ -25,6 +25,7 @@
         删除暂时无用的 CoerceGetId、OnIdChanging 虚方法。
         BatchInsert 支持 ORACLE CLOB 类型的列。
             不特殊处理 CLOB、BLOB 类型，否则会造成 Oracle 死锁。
+        HandlerRule 添加 NeedDataSource 属性
 
 3.53.3188
     添加功能
