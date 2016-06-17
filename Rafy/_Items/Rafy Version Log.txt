@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.54.3209
+3.54.3211
     添加接口
         ODataQueryCriteria 添加 MarkTreeFullLoaded 属性。
     BUG修复
@@ -18,6 +18,7 @@
         LinqQuery 支持 LongCount 方法。
         解决 Clone 时没有 Clone 引用实体的问题。
         解决“MethodCaller 处理虚方法的被重写时错误”的问题。
+        解决 Oracle 数据库中，不同用户拥有同名的序列时，批量导入无法正确查询指定序列的跨度大小的问题。
     内部修改
         ServerCache & ClientCache 更名为： ServerRepositoryCache & ClientRepositoryCache.
         CacheInstance => CacheInstances;

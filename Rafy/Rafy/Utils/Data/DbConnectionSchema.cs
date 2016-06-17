@@ -84,12 +84,7 @@ namespace Rafy.Data
             if (string.IsNullOrWhiteSpace(database) && IsOracleProvider(this))
             {
                 //Oracle 中，把用户名（Schema）认为数据库名。
-                var match = Regex.Match(this.ConnectionString, @"User Id=\s*(?<dbName>\w+)\s*");
-                if (!match.Success)
-                {
-                    throw new NotSupportedException("无法解析出此数据库连接字符串中的数据库名：" + this.ConnectionString);
-                }
-                database = match.Groups["dbName"].Value;
+                database = GetOracleUserId(this);
             }
 
             this._database = database;
@@ -131,6 +126,22 @@ namespace Rafy.Data
         public static bool IsOracleProvider(string providerName)
         {
             return providerName.Contains("Oracle");
+        }
+
+        /// <summary>
+        /// 获取 Oracle 连接中的用户 Id。
+        /// </summary>
+        /// <param name="schema"></param>
+        /// <returns></returns>
+        public static string GetOracleUserId(DbConnectionSchema schema)
+        {
+            var match = Regex.Match(schema.ConnectionString, @"User Id=\s*(?<userId>\w+)\s*");
+            if (!match.Success)
+            {
+                throw new NotSupportedException("无法解析出此数据库连接字符串中的数据库名：" + schema.ConnectionString);
+            }
+            var userId = match.Groups["userId"].Value;
+            return userId;
         }
     }
 }

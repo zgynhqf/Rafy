@@ -30,7 +30,7 @@ namespace Rafy.DbMigration.Oracle
             var count = Convert.ToInt32(db.QueryValue(
                 "SELECT COUNT(0) FROM ALL_SEQUENCES WHERE SEQUENCE_NAME = {0} AND SEQUENCE_OWNER = {1}",
                 this.SequenceName,
-                db.ConnectionSchema.Database.ToUpper()//目前 Oracle 中的用户就是解析为 数据库名，见：DbConnectionSchema.ParseDbName
+                DbConnectionSchema.GetOracleUserId(db.ConnectionSchema).ToUpper()
                 ));
 
             if (count <= 0)
