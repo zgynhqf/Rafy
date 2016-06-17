@@ -123,7 +123,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
                 }
             }
 
-            throw new InvalidOperationException("");
+            throw new InvalidOperationException("生成 Id 时，发生未知错误。");
         }
 
         #endregion
