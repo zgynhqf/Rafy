@@ -18,6 +18,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using Rafy;
 using Rafy.Data;
@@ -30,9 +31,36 @@ namespace Rafy
     public class FileLogger : LoggerBase
     {
         /// <summary>
-        /// 错误日志的文件名。
+        /// 构造一个默认的文件记录器。
         /// </summary>
-        public string FileName { get; set; } = "ExceptionLog.txt";
+        public FileLogger()
+        {
+            this.ExceptionLogFileName = "ExceptionLog.txt";
+            this.SqlTraceFileName = ConfigurationHelper.GetAppSettingOrDefault("Rafy.FileLogger.SqlTraceFileName", string.Empty);
+        }
+
+        /// <summary>
+        /// 错误日志的文件名。
+        /// 默认为：ExceptionLog.txt。
+        /// </summary>
+        public string ExceptionLogFileName { get; set; }
+
+        /// <summary>
+        /// 默认使用配置文件中的 Rafy.FileLogger.SqlTraceFileName 配置项。
+        /// </summary>
+        public string SqlTraceFileName { get; set; }
+
+        /// <summary>
+        /// 把所有的参数嵌入到 Sql 语句中。（方便开发者粘贴并调试）
+        /// 默认为 true。
+        /// </summary>
+        public bool EmbadParameters { get; set; } = true;
+
+        ///// <summary>
+        ///// 是否只输出 Sql，忽略其它的信息。（方便开发者生成一个 .SQL 文件）
+        ///// 默认为 false。
+        ///// </summary>
+        //public bool WriteSqlOnly { get; set; }
 
         /// <summary>
         /// 记录某个已经生成的异常到文件中。
@@ -41,10 +69,12 @@ namespace Rafy
         /// <param name="e"></param>
         public override void LogError(string title, Exception e)
         {
-            var stackTrace = e.StackTrace;//需要记录完整的堆栈信息。
-            e = e.GetBaseException();
+            if (!string.IsNullOrEmpty(this.ExceptionLogFileName))
+            {
+                var stackTrace = e.StackTrace;//需要记录完整的堆栈信息。
+                e = e.GetBaseException();
 
-            string message = string.Format(@"
+                string message = string.Format(@"
 ===================================================================
 ======== {0} =========
 ===================================================================
@@ -55,10 +85,9 @@ namespace Rafy
 {2}
 
 ", title, e.Message, stackTrace, Thread.CurrentThread.ManagedThreadId, DateTime.Now);
-            File.AppendAllText(this.FileName, message);
+                File.AppendAllText(this.ExceptionLogFileName, message);
+            }
         }
-
-        private string _sqlTraceFile;
 
         /// <summary>
         /// 记录 Sql 执行过程。
@@ -70,43 +99,89 @@ namespace Rafy
         /// <param name="connection"></param>
         public override void LogDbAccessed(string sql, IDbDataParameter[] parameters, DbConnectionSchema connectionSchema, IDbConnection connection)
         {
-            if (_sqlTraceFile == null)
+            if (!string.IsNullOrEmpty(this.SqlTraceFileName))
             {
-                _sqlTraceFile = ConfigurationHelper.GetAppSettingOrDefault("Rafy.FileLogger.SqlTraceFileName", string.Empty);
+                var content = new StringBuilder();
 
-                //兼容原来的配置。
-                if (_sqlTraceFile.Length == 0)
+                var sqlConnection = connection as SqlConnection;
+                content.Append("--").Append(DateTime.Now);
+                content.AppendLine();
+                if (sqlConnection != null)
                 {
-                    _sqlTraceFile = ConfigurationHelper.GetAppSettingOrDefault("SQL_TRACE_FILE", string.Empty);
+                    content.Append("--ClientConnectionId: ").Append(sqlConnection.ClientConnectionId);
+                    content.AppendLine();
                 }
-            }
-
-            if (_sqlTraceFile.Length > 0)
-            {
-                var content = sql;
+                //"--Database:  " + connectionSchema.Database +
+                content.Append("--ConnectionString: ").Append(connectionSchema.ConnectionString);
+                content.AppendLine();
 
                 if (parameters.Length > 0)
                 {
-                    var pValues = parameters.Select(p =>
-                    {
-                        var value = p.Value;
-                        if (value is string)
-                        {
-                            value = '"' + value.ToString() + '"';
-                        }
-                        return value;
-                    });
-                    content += Environment.NewLine + "Parameters:" + string.Join(",", pValues);
+                    this.WriteSqlAndParameters(content, sql, parameters, connectionSchema);
+                }
+                else
+                {
+                    content.Append(sql);
                 }
 
-                var sqlConnection = connection as SqlConnection;
-                content = DateTime.Now +
-                    (sqlConnection != null ? ("\r\nClientConnectionId:  " + sqlConnection.ClientConnectionId) : "") +
-                    //"\r\nDatabase:  " + connectionSchema.Database +
-                    "\r\nConnectionString:  " + connectionSchema.ConnectionString +
-                    "\r\n" + content + "\r\n\r\n\r\n";
+                content.AppendLine().AppendLine().AppendLine();
 
-                File.AppendAllText(_sqlTraceFile, content, Encoding.UTF8);
+                File.AppendAllText(SqlTraceFileName, content.ToString(), Encoding.UTF8);
+            }
+        }
+
+        /// <summary>
+        /// 把 Sql 和 参数写入到 content 中。
+        /// </summary>
+        /// <param name="content"></param>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <param name="connectionSchema"></param>
+        protected virtual void WriteSqlAndParameters(StringBuilder content, string sql, IDbDataParameter[] parameters, DbConnectionSchema connectionSchema)
+        {
+            var isOracle = DbConnectionSchema.IsOracleProvider(connectionSchema);
+
+            var pValues = parameters.Select(p =>
+            {
+                var value = p.Value;
+                if (p.DbType == DbType.DateTime)
+                {
+                    if (isOracle)
+                    {
+                        value = string.Format("to_date('{0}', 'dd-mm-yyyy hh24:mi:ss')", value);
+                    }
+                    else
+                    {
+                        value = '\'' + value.ToString() + '\'';
+                    }
+                }
+                else if (value is string)
+                {
+                    value = '\'' + value.ToString() + '\'';
+                    //value = '"' + value.ToString() + '"';
+                }
+                else if(p.DbType == DbType.Boolean)
+                {
+                    value = Convert.ToByte(value);
+                }
+                else if(value == null)
+                {
+                    value = "null";
+                }
+                return value;
+            }).ToArray();
+
+            if (this.EmbadParameters)
+            {
+                var toReplace = isOracle ? @"\:" : "@";
+                var formattedSql = Regex.Replace(sql, toReplace + @"p(?<number>\d+)", @"{${number}}");
+                content.AppendFormat(formattedSql, pValues);
+            }
+            else
+            {
+                content.Append(sql);
+                content.AppendLine();
+                content.Append("Parameters:").Append(string.Join(",", pValues));
             }
         }
     }

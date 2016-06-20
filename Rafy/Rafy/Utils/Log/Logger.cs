@@ -129,20 +129,14 @@ namespace Rafy
 
             if (EnableSqlObervation)
             {
-                var handler1 = _threadDbAccessedHandler;
-                var handler2 = DbAccessed;
-                if (handler1 != null || handler2 != null)
+                var threadHandler = _threadDbAccessedHandler;
+                var handler = DbAccessed;
+                if (threadHandler != null || handler != null)
                 {
                     var args = new DbAccessedEventArgs(sql, parameters, connectionSchema);
 
-                    if (handler1 != null)
-                    {
-                        handler1(null, new DbAccessedEventArgs(sql, parameters, connectionSchema));
-                    }
-                    if (handler2 != null)
-                    {
-                        handler2(null, new DbAccessedEventArgs(sql, parameters, connectionSchema));
-                    }
+                    if (threadHandler != null) { threadHandler(null, args); }
+                    if (handler != null) { handler(null, args); }
                 }
             }
         }
@@ -150,7 +144,7 @@ namespace Rafy
         /// <summary>
         /// 数据访问事件参数。
         /// </summary>
-        public class DbAccessedEventArgs : EventArgs
+        public struct DbAccessedEventArgs
         {
             public DbAccessedEventArgs(string sql, IDbDataParameter[] parameters, DbConnectionSchema connectionSchema)
             {

@@ -1,0 +1,652 @@
+﻿2.48.3095
+    ★★公布、添加功能
+        添加 Rafy.SerialNumber 流水号插件，用于生成流水号。
+    ★重要、添加接口
+        AggtDeserializer 添加 UpdatedEntityCreationMode 属性。表示更新时是否需要把实体从仓库中查询出来。
+    ★重要、！修改接口
+        Rafy.RBAC 插件重命名为 Rafy.RBAC.Old。准备签入新版本、更具重用性的 RBAC 插件。
+
+2.47.3085
+    ！删除接口
+        删除 DomainPlugin.SetupLevel、UIPlugin.SetupLevel。
+    添加接口
+        添加 LocalTransactionBlock.GetCurrentTransactionBlock 方法。
+        添加 DbMigrationSettings.StringColumnDataTypeLength 属性。
+    BUG修复
+        修复 EagerLoadOptions 无法序列化的 BUG。
+    添加功能
+        ConcreteProperty 支持序列化。
+    内部修改
+        FileLogger 支持路径的设置。
+        AccountsController 支持重写默认逻辑。
+
+2.47.3078
+    ★★公布
+        此版本开始，不再使用本地仓库，将会以 GITHUB 为主要代码库。
+    内部修改
+        修改 ClientApp 的一些接口。
+
+2.46.3077
+    ★★公布、添加功能
+        添加 Rafy.Domain.Stamp 插件。
+        添加 Rafy.Accounts 插件。
+        添加 DomainController 和 DomainControllerFactory。
+    ★★公布、！修改接口
+        重构插件环境：
+            PluginTable.DomainLibraries 移动到 RafyEnvironment.DomainPlugins。
+            RafyEnvironment.DomainPlugins 支持配置文件的方式来配置。
+    ！修改接口
+        ConnectionStringNames 重命名为：DbSettingNames。
+
+2.43.3050
+    ★★公布、添加功能
+        添加 Rafy.Web.Http、Rafy.Web.Mvc 两个命名空间。（代码移植自历史项目）。
+    ★★公布、！删除接口
+        删除 EntityList.SupressSetItemParent 属性。同时，列表默认不再改变新加项的父列表、父实体。
+    ★★公布、添加接口
+        AggtSerializer 在序列化枚举时，可以选择使用 字符串 或 Label 进行输出。
+        OData 支持枚举属性的查询。
+        添加 CloneOptions.NewSingleEntity();
+        添加 AppContextItem、ClientContextItem 等泛型类型，方便使用 AppContext 对象。
+        添加 DataSaver.SubmitInterceptors 来配置提交数据时的扩展点（以拦截器的方式扩展）。
+    ★★公布、添加功能
+        在输出 Sql 日志时，如果是 SQLServer 数据库，还同时输出对应的连接的客户端 Id。
+    BUG修复
+        Oracle 支持问题。
+        解决 WebOrThreadStaticAppContextProvider 中的代码引发 ThreadStaticAppContextProvider.Items 集合出错的问题。
+        解决‘无法更新枚举类型的冗余属性。’的 BUG。
+        在 WebApi 等一些框架中，会开启异步线程去执行一些序列化的代码，这时会找不到 HttpContext.Current 对象，所以只能退而求其次使用线程中的数据。
+        NullParameter 没有标记可序列化。
+        冗余属性无法更新的问题。
+        解决 Clone 对象时，引用属性无法复制的问题。
+        解决 bool? 在映射 Oracle 列时无法转换 Null 值的 BUG。
+        RafyEntity.js 中输出实体时，外键、主键支持 long 类型。
+    内部修改
+        EnumViewMode.LabelToEnum。
+        反序列化时，也需要支持 EnumViewModel 的反序列化。
+
+2.42.2840
+    ★★公布、添加功能
+        添加幽灵实体插件，实现实体的假删除功能。
+    添加接口
+        为 RepositoryDataProvider 添加删除前、查询前两个事件扩展点。
+        添加 WebAppStarter。
+        添加 ExtensionPropertiesRegister。
+    重构
+        DataSaver.Delete 改为 DeleteFromPersistence。
+
+2.41.2815
+    ★★公布、添加功能
+        支持使用实体类中的注释来更新数据库中的相关注释内容。
+            实现在 SqlServer 中生成注释。
+            实现在 Oracle 中生成注释。
+        支持批量导入大量实体
+            实现 Oracle 中的批量插入大量新实体。
+            实现 SqlServer 的批量插入大量新实体。
+            支持设置每批次多少数据。
+            支持批量删除数据。
+            支持批量更新数据。
+            准备更新冗余属性。
+            可以配置是否在更新的同时，一同更新所有大对象属性。
+            批量更新支持远程调用。
+            支持 Long 为实体的 Id 主键类型，以支持真正大数据量。
+        Json.AggtSerializer 支持序列化、反序列化树型实体。
+        DbAccesserFactory 支持从仓库创建 IDbAccesser。
+    BUG修复
+        解决使用 Like 语句模糊查询时，参数值中有通配符 % 及 _ 时无效的问题。
+        解决 ORACLE 中把列从可空变为不可空时，更新空列的默认时间时使用字符串，导致语法错误的问题。
+
+2.39.2760
+    ★★公布、添加功能、BUG修复
+        ORACLE 支持
+            使用全新的 ODP.NET（Oracle.ManagedDataAccess），为批量导入做准备。
+            DbConnectionSchema 不再指定 Oracle Provider 名称。
+            ORACLE 兼容性
+                Sql 生成时，ORACLE 数据库不支持 TOP 语句。重新使用新的分页 SQL 生成方案。
+                修复 Oracle 表名过长的问题。
+                ORACLE 中，使用 Linq 查询时不能生成 AS 关键字。
+                ORACLE 中，MODIFY 关键字后没有 COLUMN 关键字。
+            UPDATE 语句中 Id 参数的值需要加入参数列表的最后。（这是因为 ORACLE 的参数是按照顺序绑定的：http://www.oseye.net/question/44）
+            ORACLE 中的数字类型其实是 Decimal，加载进 TreePId 时需要进行类型的转换。
+            IN 语句中参数过多时，如果是简单的查询（GetByIdList、GetByParentIdList 等），则可以分批进行查询。
+            添加 Oracle Sql 生成的单元测试。
+            枚举值在映射数据库时，应该读取为 Int32 类型的数据。
+            ORACLE SEQUENCE 在创建时进行判断。
+            支持 ORACLE XMLTYPE 类型。
+        解决 TreeIndex 没有值时，查询所有行时，加载到列表报表的问题。
+        解决 AggtSerializer 中没有序列化 TotalCount 属性的值的问题。
+
+2.38.2736
+    重构
+        把 SqlServer 的批量插入代码提取到单独的项目中，准备添加 Oracle 的批量处理。
+    新功能
+        添加 Rafy.Domain.ORM.BatchSubmit 项目，并添加默认的项目文件结构。
+    BUG修复
+        GetCompiledPropertyValues 调用了错误的 MPO 方法。
+        GetCompiledPropertyValues 输出只读属性时，有逻辑错误。
+        AggtSeraizlier 中 ReferenceId 也都全部直接输出。
+
+2.38.2724
+    重构
+        重构事务、数据库连接的创建逻辑：
+            事务不再存储在上下文中，而是存储在线程中。
+            数据库连接先依赖线程中是事务。如果代码没有在事务中时，则每次都构建新的连接，不再进行连接的共享。
+            见 SingleConnectionTrasactionScope 类型注释。
+        重构贪婪加载时，把子集合加载到父集合中的逻辑。110万行数据，修改前需要 750 秒，修改后只需要 13 秒。
+        LocationInformation 类型添加 IsUI 属性。
+        TypeHelper.CoerceType 方法内部重构。
+        OracleTable 中的 Sequence Sql 语句。
+        RF 改为继承自 RepositoryFactory。
+        Entity.Validate 扩展方法，会自动根据实体的状态来过滤不需要的规则。
+    BUG修复
+        修复部分代码，在使用 DataReader 时，没有调用 Dispose。
+        在为 SQL Server 插入数据时，执行 Insert 的同时，必须同时执行 SELECT @@IDENTITY。否则会有多线程问题。
+            上述问题只对于 SqlServer 有效，所以对于 SqlCE 数据库还需要使用两次单独的数据库访问。
+            同时解决 Xml 字段类型无法映射到 SqlCE 上的问题。
+        引用属性：设置 RefId 时，如果 RefId 与 RefEntity.Id 值相同，那么不需要清空 RefEntity 的值。
+        AggtSerializer 不支持引用实体的序列化。
+        CommonQueryCriteria 没有反序列化构造器。
+        LoadProperty 处理 Id 时，需要对 Id 类型进行强制转换。
+    添加接口
+        Result 类型添加 Data 属性。
+        AggtDeserializer 公开 DeserializeEntity、DeserializeList 两个方法。
+        AggtSerializer 添加 JsonTextWriter 参数的方法。
+        PagingInfo 添加无参构建函数。
+    添加功能
+        冗余属性：在变更子实体的父实体（新建状态）时，立刻同步冗余属性到子实体上。
+        AggtSerializer、AggtDeserializer 支持数组、列表的序列化。
+        ORM:In、NotIn 操作符，由于数据库有最大参数的限制，所以不再使用参数化查询。
+        添加 EntityListExtension.ToDataTable 方法。
+    ！修改接口
+        配置文件中的 Sql 语句记录文件的配置名，由 SQL_TRACE_FILE 改为 Rafy.FileLogger.SqlTraceFileName。
+        AggtSerializer 在输出实体列表时，不再根据 TotalCount 来变更动态的结构，而是固定输出结构。并添加 OutputListTotalCount 属性。
+    ！删除接口
+        删除 RuleScope.AddOrUpdate 及 RuleScope.All。
+
+2.38.2660
+    ★★公布、★重要、添加接口
+        Rafy.Domain 决定引用 Json.NET。
+        提供 AggtSerializer、AggtDesiralizer 两个类型来完成聚合实体与 JSON 对象的转换。
+    重构
+        整理 Rafy.Domain 中的命名空间。
+        由于没有规划好多线程访问数据库的问题，所以暂时去除所有的异步调用。
+    BUG修复
+        修复数据库升级过程中，从可空的字符串类型变到不可空的数值类型时，类型错误的问题。
+    内部修改
+        调整 WPF 默认的表单布局为 AutoGrid。
+
+2.37.2602
+    ★★公布、★重要、！修改接口、重构
+        重构实体框架中的数据层，完全解耦仓库与关系数据层的实现代码，为 MongoDB、EF 等第三方实现做准备。
+            解除 EntityRepositoryQueryBase 对 EntityRepository 的直接耦合。
+            IRepositoryInternal 不应该引用 RdbDataProvider。
+                EntityList 中不能使用 IRepositoryInternal.RdbDataProvider。
+                IQuery 接口体系需要与 DbTable 体系解除耦合。
+                    DbTable 体系需要分为运行时元数据信息，以及执行逻辑。（IPersistanceTableInfo）
+            EntityRepository 不能引用 RdbDataProvider。
+                添加新的 DataProvider 基类。
+                    添加 DataSaver、DataQueryer、RedundanciesUpdater 几大类型。子类要重写保存、查询时，必须从这两个类继承。
+                    RdbDataProvider 继承自 DataProvider。提取与关系数据库无关的代码到 DataProvider 中。同时，添加 RdbDataSaver、RdbDataQueryer、RdbRedundanciesUpdater。
+                IDataQueryer 不需要支持 FormattedSql。
+    内部修改
+        decimal 类型默认使用 2 个小数点。
+
+2.36.2555
+    添加接口
+        EntityList 添加 MovingItems 方法。
+    添加功能
+        支持在 Linq 查询中直接对 Boolean 类型属性进行判断，如 e=>e.IsDefault 或 e=>e.!IsDefault。
+        OData 支持使用空值 NULL 进行判断。
+    BUG修复
+        FocusTrackerAdorner 的空引用 BUG。
+        EntityRepository.FetchBy 方法不能被重写。
+        MemoPropertyEditor 自动折行。
+
+2.36.2544
+    ★★公布、添加功能
+        支持在 Linq 语法中，使用聚合子的条件表达式来查询聚合父实体。
+        （意义：1.Linq 查询已完整，可以处理所有的查询了。2.复杂查询，不再必须使用关系数据库查询 API，而导致无法使用非关系数据库。）
+            支持 Any 表达式：q = q.Where(book => book.ChapterList.Cast<Chapter>().Any(c => c.Name == chapterName));
+            支持 All 表达式，并支持 All 中嵌套 All/Any。
+            支持嵌套的 Any 表达式：q = q.Where(book => book.ChapterList.Concrete().Any(c => c.SectionList.Cast<Section>().Any(s => s.Name.Contains(sectionName))));
+            完成最复杂的查询，该查询同时包含：聚合属性的Any、All、嵌套、引用属性、分页。
+            支持使用引用实体的聚合子进行查询。
+            Linq 中使用可空引用实体的属性来进行判断时，在 SQL 中强制自动生成该列不为空的查询条件。
+    添加接口
+        PropertyOperator 添加字符串匹配的反向操作符：NotLike、NotContains、NotStartWith、NotEndWith。
+        OData 也支持这几个操作符。
+    修改接口
+        重命名：StartWith 改为 StartsWith；EndWith 改为 EndsWith。
+        DbMigrationContext 改为非抽象类。
+        内置的 ValidationRule 都添加 MessageBuilder 属性，并全部改为非单例（需要实例化）。
+    内部修改
+        删除 EntityQueryBuilder 中的 QueryMethod 类型，不再跟踪当前表达式所在的方法。
+        数据库日志更详细。
+        生成的字段不需要大小写敏感。
+
+2.35.2508
+    ★★公布、添加接口
+        OData：
+            支持模糊匹配。
+            filter 查询支持使用引用属性来进行关联表查询。
+        数据库映射：
+            字符串类型的属性支持映射到 DbType.Xml 类型上。
+    内部修改
+        不完整树节点的加载。
+
+2.35.2497
+    重构、★重要
+        重构 Repository、DataProvider 与 RepsitoryQueryBase 的关系。使得只需要在 DataProvider 中重写一次数据层代码即可。
+    BUG修复
+        QueryNodeVisitor 遗漏了对 OrderBy 的处理。
+
+2.34.2492
+    ！删除接口、添加接口
+        添加 AppContext 类型，更好地支持数据上下文。
+    内部修改
+        $expand 支持 TreeChildren。
+        $expand 支持多级级联引用属性，例如 "Section.Chapter.Book,SectionOwner"。
+
+2.33.2487
+    添加接口
+        支持 ODataQueryCriteria 查询。
+
+2.32.2477
+    添加接口
+        添加 QueryNodeTester。
+    RafySDK
+        领域模型设计器支持在属性上显示注释。
+
+2.32.2474
+    ★重要、！删除接口
+        简化 Entity 的状态接口：Status 属性可直接设置，Mark 方法被删除。
+        ValidationRule
+        NotUsedByReferenceRule
+        EagerLoadOptions 支持 LoadWithTreeChildren 方法。
+    添加接口
+        添加 IEventSubscribers 类型，支持更高效的事件发布。
+    内部修改
+        当根节点出现断码时，直接添加根节点时，也应该自动生成不重复的 TreeIndex。
+        在直接删除一个树实体时，不论它的子节点加载没有加载，都应该被删除。
+        Validator 添加默认行为。
+        如果在查询树状实体时设置了排序，那么应该抛出异常。
+        EntityRepository.GetFirstBy
+        RafySDK：添加实体时，可以指定父实体的主键类型。
+        RafySDK：Repository 的层基类是没有 .g.cs 文件的，这时不需要为它生成代码。
+        同样优先级(SetupLevel)的一组插件，应该按照引用的关系做排序后，再进行初始化。
+        自关联实体框架：支持对树的根集合进行内存级别的分页操作。
+
+2.31.2446
+    ★重要、添加接口
+        添加 Rafy.ComponentModel.UnityAdapter 插件。
+        IOC 在注册单一实例时，可以通过该实例的类型来完成。
+        CommonRules.PropertiesNotExists。
+        ValidationRule
+            PropertyNotExistsRule。
+            删除 CommonRules，全部替换为 ValidationRule 的子类。
+            添加 ValidationRule.ConnectToDataSource 属性。
+            为 Validate 方法添加 ValidatorActions 参数。
+    内部修改
+        DbMigration
+        修改 CommonQueryCriteria 中 Add 方法的逻辑。
+    重构
+        RuleMethod => Rule。
+
+2.30.2472
+    ★重要、添加接口
+        接口全面支持贪婪加载。
+        QueryList 等查询接口，支持 eagerLoad 参数。
+    内部修改
+        RafySDK
+
+2.29.2463
+    ★重要、添加功能、！删除接口
+        添加 Composer 类、IOC 功能。
+        添加 CommonQueryCriteria 类型、删除 PropertiesMatchCriteria 类型。
+    内部修改
+        整理 Rafy.Utils 类库。
+        整理 Rafy 项目中的命名空间。
+        Validate 支持对整个聚合进行验证。
+
+2.28.2424
+    ★★公布、★重要
+        重构 TreeEntity，使用全新的树结构：由一维的列表结构，改为层次结构。
+        重构 TreeGrid。
+        Web 应用程序支持多种类型的主键。
+        Hxy 程序集改名为 Rafy.Utils。
+    ！删除接口
+        删除 Entity.IsDataAccessing 属性及字段。
+    内部修改
+        支持 TreeIndexHelper.ResetTreeIndex。
+        直接添加根节点时，也应该自动生成 TreeIndex。
+        优化设置 TreePId 时引发的查询为只查询一次。
+        修复原有测试。
+        添加 ContractAttribute。
+
+2.26.2335
+    添加功能
+        引用属性同样可以作为冗余属性的值属性来进行冗余。
+        QueryTable 支持使用 IQuery 进行查询。
+        LiteDataTable 支持使用 ManagedProperty 作为列名。
+        LiteDataTable.ToDataTable.
+    内部修改
+        删除 Entity.DisableTreeEditing 属性。
+    BUG修复
+        UpdateRedundanciesIf 中使用了错误的实体。
+
+2.26.2323
+    ★★公布、添加接口
+        全面升级为 .NET4.5。
+        Repository 可以与实体放在不同的文件中。（依然可以放在同一个文件中。）
+            添加 Repository 项模板。
+        实体的 Id 属性的类型可以使用 String、Int、Guid，并可扩展。
+            修改接口
+            修改数据库生成
+            字符串主（外）键只能是450长度&相同的排序规则
+            修复所有单元测试。
+            一个系统中，可混用多种不同的标识属性。
+        添加 RepositoryDataProvider 来完成 Repository 的数据层实现。
+        领域模型设计器中，聚合根显示为黑体。
+    ！修改接口
+        扩展的托管属性名，不主动添加类型作为前缀。
+        实体的 Id 的默认值是 0，这样开发人员比较理解。
+    其它
+        SplitButton 包必须要签名，所以直接把代码拷贝进来。
+        RafySDK
+            添加仓库模板。
+        EnvironmentProvider 中直接根据是否 Web 程序来设置 dll 路径。
+        DisconnectFirst。
+        新加 ManagedPropertyList 类型，MPO 获取属性列表接口的返回值，支持 Find 方法。
+        默认支持 GetByTreePId 查询。
+        支持众 SQL CE 数据库中读取自增列。
+
+2.23.2203
+    内部修改
+
+2.23.2202
+    ！修改接口、重构
+        重构实体的验证规则的声明与调用。
+            不再在实体内部直接声明验证规则，该方案会导致开发人员使用 this 指针引发异常，改为在实体配置中通过 ValidationDeclarer 类型进行声明。
+            调用端，可以直接使用 Validator.Validate 方法对实体进行验证。该方法同时也是扩展方法。
+    添加接口
+        声明验证时，可以移除、清空之前已经加入的旧规则。
+        添加 IValidationDeclarer.RulesCount 属性。
+
+2.23.2193
+    ！修改接口、内部修改
+        多国语言的翻译，应该使用全显式翻译。（目前一些 API 使用隐式翻译，例如 MessageBox.Show，这导致上层还需要使用 IgnoreTranslate、TranslateFormat 等一系列 API，更加混淆。如果使用显式 API，虽然上层需要显式为每一个字段串都使用 Translate 方法，但是理解起来更加简单。）
+            删除 IgnoreTranslation、TranslateJoin、TranslateFormat 等方法。
+            MessageBox.Show 方法不再主动翻译传入的字符串。
+            WaitDialog 窗口中显示的提示信息，不再主动翻译。
+            ViewDialog 窗口的标题不再主动翻译。
+        服务端也需要支持翻译。
+    BUG修复
+        自动收集功能修改出错。
+
+2.23.2186
+    BUG修复
+        生成 Sql 时需要处理 In/NotIn 后面跟空集合的情况；以及 Contains 中是空字符串的情况。
+        解决 SqlLiteral 不能转换为 SqlConstraint 而导致无法添加到 Where 语句中的情况。
+        解决由 PropertyQuery 转换为 SqlSelect 时，In/NotIn 转换出错的问题。
+        OnDbLoaded 方法需要在所有贪婪加载完成后，才被调用；否则应用层可能会重写此方法并在逻辑中使用相关的关系属性。
+    ！删除接口
+        JoinRefType 类型不再向外公布。
+
+2.23.2180
+    ★★公布、添加功能
+        支持 Id 属性不再做为主键。（可以对列更名，但是必须是自增长列。）
+        直接在编写数据层查询时，直接以原生数据类型的数组类型作为参数。
+
+2.23.2176
+    内部修改
+        使用 .NET 文化系统来实现多国语言的配置。
+        多国语言需要处理回车翻译。
+    BUG修复
+
+2.23.2167
+    内部修改
+        实现 ServiceLocator 类型。
+        重写 ServiceFactory 类型，使其不再直接支持服务重载，而是使用新的契约模式来实现。
+        编写相关单元测试。
+        让实体类型支持 WCF 序列化。
+
+2.23.2160
+    ★★公布、★重要
+        RafySDK 1.4.48 支持 Visual Studio 2013.
+
+2.23.2158
+    内部修改
+        让 QueryList 数据查询方法，支持 null 参数的传递。
+        odml 不能更新类的属性, Enjoo.Activity.odml 文件.
+        Validation 与视图中的 Label 解除直接耦合，当在服务端调用时，使用的是属性的名称。
+
+2.23.2153
+    ★★公布、★重要、重构
+        使用 TextWriter 来实现 Sql 的生成。
+        为了强化 ORM 的 Sql 语句生成功能，使用 Sql 语法树来重构原来的 LiteORM 功能。
+            * 使用 Sql 语法树来替换了原有的 Linq 查询方式。
+            * 添加 IQuery 系列接口，准备全面替换原有机制。
+            * SqlSelect 不再依赖 ORM DbTable.
+            * 由于已经支持了 NOT IN 数据库分页，所以 SQLCE 在 IQuery 查询模式下，也可以不再使用内存分页。
+            * 在仓库中添加 IQuery 的创建接口。
+            * IQuery 查询模式下，支持 EagerLoad。
+            * 为 IQuery 实现测试用例测试其在实体中的功能。
+            * 由于使用 EntitySource、PropertyNode 等命名，导致使用时，思维并不能很好地与表结合。所以直接放弃以实体命名，回归到以表进行命名，即：TableSource、ColumnNode。
+            * 性能优化：TableSource 在构造时，不必立刻为所有属性生成相应的列。必须使用懒加载。
+            * IPropertyQuery 从 Rafy.Domain 中移出，做为一个新的程序集 Rafy.Domain.OldQuery 来扩展。
+            * 所有基类的默认实体都切换为 IPropertyQuery 上，否则一些通用的回调还会调用到 IPropertyQuery 上，导致用户必须重写这些方法。（例如用户期望设置默认的排序规则。）
+            * DBAFactory 改名为 DbAccesserFactory.
+            * 所有老的插件都引用 Rafy.Domain.OldQuery.
+            * 添加模板 Rafy_Query_TableQuery
+            * 使用 Linq，对同时引用 BlogUser 表的两个引用实体（一个可空，一个非空），进行查询。
+
+2.22.2097
+    ★★公布、★重要、重构
+        重构登录流程，使用系统闪屏类，使其在第一时间就显示。同时主窗口与登录窗口同时显示。并在登录成功后，才显示主窗口的模块列表。
+        重构表单中的属性分组模式，支持对分组后的属性组指定不同的布局模式（流布局、表格布局）。
+
+2.22.2093
+    ！删除接口
+        由于可以直接使用 App.Current.MainWindow 属性来附加事件，所以删除 IClientApp.MainWindowLoaded 事件的定义。
+        删除 IClientApp.MainWindowShowing 事件。
+    内部修改
+        使用 InputBinding 实现 Ctrl+W 的绑定。
+
+2.22.2090
+    内部修改
+        WPF 界面 ContentControl 等控件的 IsTabStop 设置为 False。
+        完善焦点跟踪控件。（支持以数据的方式来定义输入元素列表，以支持 DateTimeInputControl。同时处理了下拉框控件中存在文本框的情况。）
+
+2.22.2082
+    ！修改接口
+        RafyEnvironment.Location 属性的类型变更为 LocationInformation，删除原来的 RafyLocation类型。
+        Entity.Status 改名为 PersistenceStatus，把 Status 留给应用层，方便开发。
+    内部修改
+        整理 Rafy.Domain.DataPortal.WCF 命名空间。
+        Rafy.Result.Message 属性可以接受空值。
+    内部修改
+        如果是界面应用程序，则加载所有的 UI 文件。否则返回空集合。
+
+2.22.2069
+    ！修改接口
+        删除 EntityRepository 中以 Fetch 开头的数据层方法，数据层方法统一以 DA_ 开头。
+        添加 ConditionalSql、FormattedSql，删除 SqlWriter。
+        整理 QueryList 参数。
+    内部修改
+        修正所有插件为 Domain+UI 格式。
+        从旧数据库生成，支持所有的 Sql 数据类型。属性支持声明为 Decimal 类型。
+
+2.22.2054
+    ★重要
+        删除 Rafy.Web.Meta 程序集。
+    ！修改接口、！删除接口
+        Web 定义命令，使用 Rafy.defineCommand。并添加 Rafy.cmd.CommandManager 类型。
+        GetDomainPlugins、GetUIPlugins。
+        删除 App.mainWindowLoaded 事件。
+        工作区需要添加获取所有模块的方法。
+        ModuleMeta 分为 WebModuleMeta 及 WPFModuleMeta。
+        WebModuleMeta 支持声明客户端运行时类型，用于编写客户端模块的运行时行为。
+        WPF 中的命令全部移动到 WPFEntityViewMeta 中去。
+        视图元数据分为 Web、WPF 两套不同的配置类型及相应的配置方法，这样开发时是强类型的，可智能感知相应的配置方法。
+        Rafy.invokeService 方法的实现中，自动对实体、实体集合类型进行 json 格式转换。
+        TreeStore 添加 loadRawData 方法，这样可以保证所有的 Store 都有这个方法，方便使用。
+        调用服务返回的 Result 在向 Web 客户端输出时，使用与服务端相同的属性名称：Success、Message。
+        简化 WorkSpaceProvider 的实现代码。
+    添加功能
+        App 添加 getWorkspace，支持以工作区的方式来操作模块。
+        EntityRepository.query 支持指定方法名、参数进行数据查询。
+        为所有客户端实体的所有字段生成 get、set 方法。
+        添加 ServiceFactory 工厂类型。
+        App 添加获取当前模块的 API：getCurrentModule。
+    内部修改
+        EntityList.SyncParentEntityId 方法中删除多余的引用属性获取的代码。
+        如果是 WPF 客户端，则需要添加 Rafy.WPF 程序集。
+        svcParams 重命名为 svcInput。
+        Rafy.App 添加当前模块的获取设置方法。
+        条件面板的查询命令，需要使用元数据进行定义。
+        App.showModule 方法中，判断如果该模块已经存在，则直接设置该模块为当前模块。
+        js 命令定义中，如果 extend 的定义放在 meta 的定义之前时，也应该可以读取出其中的 text 文本。
+        配置界面窗口，由于使用了实体的差异保存，所以需要保存配置的代码也使用差异对比。否则会导致丢失上一次保存的结果。
+        EntityPropertyViewMeta 分为 Web、WPF 两个类。
+        时间类型序列化为 Json 时，不能使用 Json.NET，否则 ExtJs 无法反序列化时间的值。
+        Command 在生成时直接绑定到对应的 view 上，关系是多对一。
+        在界面配置后，在点击刷新按钮时，需要先对实体进行保存后，才能进行刷新操作。
+    示例
+        JXC 分为 JXC.WPF、JXC.Web。
+        RBAC
+            添加用户保存命令，调用服务对用户信息进行保存的命令。
+            添加岗位保存命令，调用服务对岗位信息进行保存的命令。
+            记录命令日志时，同时记录命令所在的模块。
+            设置权限的功能。
+        所有服务需要使用 ServiceFactory 来进行调用。
+
+2.22.1985
+    ★★公布
+        ！修改接口
+            Library,Module 文件夹名变为 Domain,UI。
+            界面层，Web 开发和 WPF 开发需要分成两个不同的 dll，这样就不会互相影响！
+                添加 Rafy.RBAC.Old.Web 程序集。
+                添加 Rafy.Customization.Web 程序集。
+                添加 Rafy.Customization.WPF 程序集。
+
+2.22.1979
+    内部修改
+        所有向客户端暴露的服务都需要标记 JsonServiceAttribute。
+        Domain 中项目添加 Xml 注释。
+        使用 NewtonJson 框架来实现 Json 数据的格式化。
+        空数组不输出。
+        在输出数据时，如果非树型实体，则需要排除树型实体的两个属性。
+
+2.22.1968
+    ★★公布、！修改接口
+        所有 ObjectView 类型都重命名为 LogicalView。
+
+2.22.1966
+    ！修改接口
+        EntityRepository.Save 方法去除 markOld 参数。
+        MarkOld 方法改为 MarkSaved。
+    ！删除接口
+        删除 RF.SaveReplace 方法。
+    内部修改
+
+2.22.1960
+    内部修改
+        防止外界使用 SetProperty 方法来操作列表属性。
+        Rafy Web Client
+            在父实体在 Id 是正数时，才表示父对象已经在服务器端有数据了，这时进行加载。
+            ExtJs 升级到 4.2
+            解决 BUG：HasMany 应该使用 RefIdProperty 作为 foreignKey。
+            BUG：界面配置打开后没有数据。
+            BUG：无法删除岗位成员。
+            扩展字符串类，提供 .t() 方法实现多国语言。
+            父视图点击刷新子视图的数据时，如果已经获取过数据，则不需要再次刷新了。
+            ClientEntityViewMeta 不再返回 isTree，这个属性在定义实体时直接定义。
+            添加 Rafy.data.Serailizer 处理客户端数据的序列化。并支持聚合数据的序列化。
+            模板中的 setEntityType 方法改名为 setModel，以后不再使用 EntityType。
+            Entity、Store 分别添加 IsDirty 方法。
+            删除所有 withUnchanged，不再需要此参数进行序列化。
+            选择岗位、选择用户不需要保存。
+            Serializer 方法变为静态。
+            Serializer 包含 ListChangeSet 原有的职责，ListChangeSet 变为纯粹的数据封装体。
+            rafy:commandEnd
+
+2.22.1915
+    内部修改
+        保存的提示，只在关闭窗口时才提示，在切换页签时不再提示。
+        设计按钮生成周期，解决因为 BaseSaveCommand 导致的内存泄漏问题。
+        查询实体类时，应该在所有插件中查找，包括界面层插件。否则会导致一些纯客户端实体类，不能加载到系统中。
+        重构命令生成，使同一个命令元数据，在不同位置的控件处都只生成同一个 ClientCommand 对象，防止应用层引起混淆。
+        重构命令类型：ClientCommand 添加 Argument 属性，表明一个 ClientCommand 只能用于一个参数，方便使用。
+        多国语言优化。
+        保存新数据时，动态拼接的错误提示信息，需要支持多国语言翻译。
+
+2.22.1903
+    ★重要、内部修改
+        重构命令生成模块，使 ClientCommand 成为核心元素。
+
+2.22.1895
+    ★★公布、★重要、添加功能
+        添加焦点跟踪框控件 1.0 版本。
+
+2.22.1880
+    内部修改
+        由于一般情况下，一个模块不会特别复杂，所以生成的聚合控件中，所有的快捷键，支持直接绑定在最外层的控件（模块）上。
+
+2.22.1879
+    内部修改、BUG修复
+        表格控件在没有数据行时，也能显示横向滚动条。
+        支持 Oracle 相关问题。
+        由于客户端也有可能直接连接一些数据库，所以不能在客户端连接时抛出异常。
+        处理 Oracle 数据库空字符串不能进行直接对比的问题。
+        两个属性直接对比的 Sql 生成。
+            一般属性与一般属性间的对比
+            一般属性与引用属性间的对比
+            引用属性与引用属性间的对比
+        PropertyOwnerType 改为 PropertyOwner
+        QueryBuilder 2.0.0
+        Oracle Sequence 过长，导致数据无法读取。
+        优化 DbTable.Quote。
+        SaveListCommand。
+        删除无用的 CreateRequest、DeleteRequest 类型
+        删除无用的 WcfInnerSerializer、WCFConfigurationElement 类型。
+        Serializer.SerializeBytes/DeserializeBytes。
+        MapAbsolutePath
+        时间、枚举等属性在不可空时显示的框应该和字符串的框是一致的。
+    ★重要、添加接口
+        添加 EnableBinaryFormatterBehaviorElement，优化 WCF。
+        添加空参数的 MapView() 方法。
+        ...
+    修改接口
+        EntityRepository.Save<TComponent> 方法重命名为 SaveReplace，以免引起混淆。
+
+2.22.1814
+    内部修改
+        删除 IPropertyBridge。
+        CreateQueryable 改名为 CreateLinqQuery。
+        对于 In、NotIn 操作，如果传入的是空列表时，需要特殊处理：In(Empty) 表示 false，NotIn(Empty) 表示 true。
+        删除依赖注入容器。
+        TreeGrid.AutoCalcRowHeaderWidth
+        QueryList(SqlQueryArgs args)
+
+2.22.1805
+
+2.22.1803
+    ★重要、添加接口、添加功能
+        添加 IConstraint 相关接口，用于任意以 And、Or 来组装查询 Where 条件。
+
+2.21.1786
+    移动文件。
+
+2.21.1784
+    ！修改接口
+        去除 QueryList(Action<IPropertyQuery>) 接口。
+
+2.21.1782
+    ★重要、内部修改
+        删除 IDb、Db 类型。
+
+2.21.1779
+
+2.21.1776
+    ★重要、添加功能
+        添加 LOB 属性。
