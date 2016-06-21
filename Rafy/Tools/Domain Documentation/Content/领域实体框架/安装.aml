@@ -47,6 +47,11 @@
                                 <para>
                                     点击<ui>是</ui>，弹出提示：“操作完成，可能需要重启 VS 后才能生效，是否打开代码段文件夹检查？”，点击“是”，打开 VS 代码段文件夹，检查是否已经拷贝进代码段，代码段列表见：<link xlink:href="6b3e8163-8516-4065-91f5-194491334343" />。此时，完成代码段安装。
                                 </para>
+                                <alert class="note">
+                                    <para>
+                                        需要以管理员启动 Visual Studio 才能正确弹出上述提示。
+                                    </para>
+                                </alert>
                             </content>
                         </step>
                         <step>
