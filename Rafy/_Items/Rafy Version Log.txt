@@ -10,13 +10,14 @@
  * 
 *******************************************************/
 
-3.54.3215
+3.54.3216
     添加功能
         SQLTraceLog 格式变更：
             为方便开发者调试，将参数嵌入到 SQL 中输出。
             注释所有不相关信息，方便开发者直接使用该文件作为 .sql 文件。
     添加接口
         ODataQueryCriteria 添加 MarkTreeFullLoaded 属性。
+        RF.TransactionScope 方法添加 IsolationLevel level 参数。
     BUG修复
         由于 Id 使用了 Long 型，所以相应的 PageNumber、PageCount、EntityList.TotalCount、查询方法等，都应该使用 Long 型。
         LinqQuery 支持 LongCount 方法。
