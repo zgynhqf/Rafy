@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.54.3216
+3.54.3217
     添加功能
         SQLTraceLog 格式变更：
             为方便开发者调试，将参数嵌入到 SQL 中输出。
@@ -24,6 +24,7 @@
         解决 Clone 时没有 Clone 引用实体的问题。
         解决“MethodCaller 处理虚方法的被重写时错误”的问题。
         解决 Oracle 数据库中，不同用户拥有同名的序列时，批量导入无法正确查询指定序列的跨度大小的问题。
+        解决 OData Filter 中字符串内部有括号的情况。
     内部修改
         ServerCache & ClientCache 更名为： ServerRepositoryCache & ClientRepositoryCache.
         CacheInstance => CacheInstances;

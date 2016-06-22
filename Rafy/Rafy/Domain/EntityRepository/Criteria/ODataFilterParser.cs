@@ -263,7 +263,7 @@ namespace Rafy.Domain
                 var c = _filter[_filterIndex++];
 
                 //括号直接返回。
-                if (c == '(' || c == ')')
+                if (!stringStarted && (c == '(' || c == ')'))
                 {
                     return c.ToString();
                 }
@@ -287,7 +287,7 @@ namespace Rafy.Domain
                     if (_filterIndex < length)
                     {
                         var next = _filter[_filterIndex];
-                        if (next == '(' || next == ')') { break; }
+                        if (!stringStarted && (next == '(' || next == ')')) { break; }
                     }
                 }
                 else

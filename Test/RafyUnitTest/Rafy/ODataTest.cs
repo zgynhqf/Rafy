@@ -285,6 +285,17 @@ namespace RafyUnitTest
             Assert.IsTrue(sql.ToString() == @"(Users.UserName = {0} OR Users.Age = {1} OR Users.AddedTime < {2}) AND Users.LoginName = {3}");
         }
 
+        [TestMethod]
+        public void ODT_Filter_Bracket_InString()
+        {
+            var filter = "Name eq 'h(u)q（f）'";
+
+            var sql = ParseWhere(filter);
+
+            Assert.IsTrue(sql.ToString() == @"Users.UserName = {0}");
+            Assert.AreEqual("h(u)q（f）", sql.Parameters[0]);
+        }
+
         /// <summary>
         /// 引用属性也可以使用在 Filter 中。
         /// </summary>
