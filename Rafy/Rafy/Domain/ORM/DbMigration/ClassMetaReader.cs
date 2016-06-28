@@ -41,9 +41,28 @@ namespace Rafy.Domain.ORM.DbMigration
             this.IgnoreTables = new List<string>();
         }
 
+        /// <summary>
+        /// 需要忽略的表的表名的集合。
+        /// </summary>
         public List<string> IgnoreTables { get; private set; }
 
-        public DestinationDatabase Read(bool readComment = false)
+        /// <summary>
+        /// 是否需要同时读取出相应的注释。
+        /// </summary>
+        public bool ReadComment { get; set; }
+
+        /// <summary>
+        /// 额外的一些属性注释的字典。
+        /// Key:属性名。
+        /// Value:注释值。
+        /// </summary>
+        public Dictionary<string, string> AdditionalPropertiesComments { get; set; }
+
+        /// <summary>
+        /// 读取整个类型对应的数据库的元数据。
+        /// </summary>
+        /// <returns></returns>
+        public DestinationDatabase Read()
         {
             var tableEntityTypes = this.GetMappingEntityTypes();
 
@@ -60,7 +79,8 @@ namespace Rafy.Domain.ORM.DbMigration
                 {
                     Database = result,
                     Entities = tableEntityTypes,
-                    ReadComment = readComment
+                    ReadComment = this.ReadComment,
+                    AdditionalPropertiesComments = this.AdditionalPropertiesComments
                 };
                 reader.Read();
             }
@@ -123,12 +143,21 @@ namespace Rafy.Domain.ORM.DbMigration
             }
 
             /// <summary>
+            /// 额外的一些属性注释的字典。
+            /// Key:属性名。
+            /// Value:注释值。
+            /// </summary>
+            internal Dictionary<string, string> AdditionalPropertiesComments { get; set; }
+
+            /// <summary>
             /// 临时存储在这个列表中，最后再整合到 Database 中。
             /// </summary>
             private IList<ForeignConstraintInfo> _foreigns = new List<ForeignConstraintInfo>();
 
             internal void Read()
             {
+                _commentFinder.AdditionalPropertiesComments = this.AdditionalPropertiesComments;
+
                 foreach (var meta in Entities)
                 {
                     this.BuildTable(meta);
@@ -267,13 +296,14 @@ namespace Rafy.Domain.ORM.DbMigration
                     //读取属性的注释。
                     if (_readComment)
                     {
-                        var cmtPropertyName = propertyName;
-                        var refProperty = mp as IRefProperty;
+                        var commentProperty = mp;
+                        var refProperty = commentProperty as IRefProperty;
                         if (refProperty != null)
                         {
-                            cmtPropertyName = refProperty.RefEntityProperty.Name;
+                            commentProperty = refProperty.RefEntityProperty;
                         }
-                        column.Comment = _commentFinder.TryFindComment(em.EntityType, cmtPropertyName);
+
+                        column.Comment = _commentFinder.TryFindComment(commentProperty);
                     }
                 }
 

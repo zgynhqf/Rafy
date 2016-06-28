@@ -81,6 +81,9 @@ namespace UT
         }
 
         public static readonly Property<RoleType> RoleTypeProperty = P<TestRole>.Register(e => e.RoleType, RoleType.Normal);
+        /// <summary>
+        /// 角色的类型
+        /// </summary>
         public RoleType RoleType
         {
             get { return this.GetProperty(RoleTypeProperty); }

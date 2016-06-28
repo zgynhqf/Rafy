@@ -16,6 +16,9 @@ namespace UT
     [CompiledPropertyDeclarer]
     public static class TestUserExt
     {
+        /// <summary>
+        /// 用户编码
+        /// </summary>
         public static ManagedProperty<string> UserCodeProperty =
             P<TestUser>.RegisterExtension("TestUserExt_UserCode", typeof(TestUserExt), "DefaultUserCode");
         public static string GetUserCode(TestUser entity)

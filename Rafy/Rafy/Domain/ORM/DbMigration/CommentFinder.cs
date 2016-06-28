@@ -19,6 +19,9 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Rafy.ManagedProperty;
+using Rafy.Reflection;
+using Rafy.Utils;
 
 namespace Rafy.Domain.ORM.DbMigration
 {
@@ -29,16 +32,50 @@ namespace Rafy.Domain.ORM.DbMigration
     {
         private Dictionary<Assembly, XDocument> _store = new Dictionary<Assembly, XDocument>();
 
+        /// <summary>
+        /// 额外的一些属性注释的字典。
+        /// Key:属性名。
+        /// Value:注释值。
+        /// </summary>
+        internal Dictionary<string, string> AdditionalPropertiesComments { get; set; }
+
         public string TryFindComment(Type type)
         {
             return this.TryFindComment(type.Assembly, "T:" + type.FullName);
         }
 
-        public string TryFindComment(Type type, string property)
+        public string TryFindComment(IManagedProperty property)
         {
-            var key = "P:" + type.FullName + "." + property;
-            return this.TryFindComment(type.Assembly, key);
+            var declareType = property.DeclareType;
+            var propertyKey = string.Empty;
+
+            if (property.IsExtension)
+            {
+                //扩展属性的注释是写在静态属性上的。
+                propertyKey = "F:" + declareType.FullName + "." + property.Name + "Property";
+            }
+            else
+            {
+                propertyKey = "P:" + declareType.FullName + "." + property.Name;
+            }
+
+            var comment = this.TryFindComment(declareType.Assembly, propertyKey);
+
+            if (string.IsNullOrEmpty(comment))
+            {
+                comment = this.TryGetAdditionalComment(property);
+            }
+
+            comment = this.AppendEnumValues(comment, property);
+
+            return comment;
         }
+
+        //public string TryFindComment(Type type, string property)
+        //{
+        //    var key = "P:" + type.FullName + "." + property;
+        //    return this.TryFindComment(type.Assembly, key);
+        //}
 
         private string TryFindComment(Assembly assembly, string key)
         {
@@ -57,6 +94,7 @@ namespace Rafy.Domain.ORM.DbMigration
                     catch { }
                 }
             }
+
             if (xdoc != null)
             {
                 var item = xdoc.Descendants("member")
@@ -67,7 +105,78 @@ namespace Rafy.Domain.ORM.DbMigration
                     return summary;
                 }
             }
+
             return null;
+        }
+
+        /// <summary>
+        /// 枚举值的注释，需要同时序列化所有枚举的值。
+        /// </summary>
+        /// <param name="comment"></param>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        private string AppendEnumValues(string comment, IManagedProperty property)
+        {
+            var propertyType = TypeHelper.IgnoreNullable(property.PropertyType);
+            if (propertyType.IsEnum)
+            {
+                if (!string.IsNullOrEmpty(comment))
+                {
+                    comment += Environment.NewLine + this.FormatEnumValues(propertyType);
+                }
+                else
+                {
+                    comment = this.FormatEnumValues(propertyType);
+                }
+            }
+
+            return comment;
+        }
+
+        /// <summary>
+        /// Formats the enum values.
+        /// </summary>
+        /// <param name="enumType">Type of the enum.</param>
+        /// <returns></returns>
+        private string FormatEnumValues(Type enumType)
+        {
+            var sb = new StringBuilder();
+
+            foreach (Enum item in Enum.GetValues(enumType))
+            {
+                if (sb.Length > 0)
+                {
+                    sb.AppendLine();
+                }
+
+                sb.Append(Convert.ToInt32(item));
+                sb.Append(":(");
+                sb.Append(item.ToString());
+
+                var label = EnumViewModel.EnumToLabel(item);
+                if (!string.IsNullOrEmpty(label))
+                {
+                    sb.Append(", ");
+                    sb.Append(label);
+                }
+
+                sb.Append(")");
+            }
+
+            return sb.ToString();
+        }
+
+        private string TryGetAdditionalComment(IManagedProperty property)
+        {
+            string comment = null;
+
+            var dic = this.AdditionalPropertiesComments;
+            if (dic != null)
+            {
+                dic.TryGetValue(property.Name, out comment);
+            }
+
+            return comment;
         }
     }
 }

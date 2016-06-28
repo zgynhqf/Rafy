@@ -63,7 +63,9 @@ namespace Rafy.Domain.ORM.DbMigration
         /// <returns></returns>
         public void AutoMigrate()
         {
-            var dbInClassMeta = this.ClassMetaReader.Read(false);
+            this.ClassMetaReader.ReadComment = false;
+
+            var dbInClassMeta = this.ClassMetaReader.Read();
 
             this.MigrateTo(dbInClassMeta);
         }
@@ -74,7 +76,9 @@ namespace Rafy.Domain.ORM.DbMigration
         /// </summary>
         public void RefreshComments()
         {
-            var dbInClassMeta = this.ClassMetaReader.Read(true);
+            this.ClassMetaReader.ReadComment = true;
+
+            var dbInClassMeta = this.ClassMetaReader.Read();
 
             this.RefreshComments(dbInClassMeta);
         }

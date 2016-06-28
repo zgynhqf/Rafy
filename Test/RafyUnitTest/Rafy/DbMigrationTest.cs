@@ -439,10 +439,29 @@ namespace RafyUnitTest
                     //数据库数据
                     using (var db = DbAccesserFactory.Create(context.DbSetting))
                     {
-                        var rowsCount = Convert.ToInt32(db.QueryValue(
-@"select COUNT(0) from sys.extended_properties p
-    join sys.tables t on p.major_id = t.object_id where t.name = 'ARTICLE'"));
-                        Assert.IsTrue(rowsCount > 0);
+                        Func<string, DataRow[]> queryComments = tableName =>
+                        {
+                            var table = db.QueryDataTable(
+@"select t.name tableName, c.name columnName, p.Value Comment from sys.all_columns c
+join sys.tables t on c.object_id = t.object_id 
+join sys.extended_properties p on p.major_id = c.object_id and p.minor_id = c.column_id
+where t.name = '" + tableName + "'");
+                            return table.Rows.Cast<DataRow>().ToArray();
+                        };
+                        var rows = queryComments("ARTICLE");
+                        Assert.IsTrue(rows.Any(r => r["columnName"].ToString() == "Id"), "主键必须有注释。");
+                        Assert.IsTrue(rows.Any(r => r["columnName"].ToString() == "AdministratorId"), "外键必须有注释。");
+                        Assert.IsTrue(rows.Any(r => r["columnName"].ToString() == "CreatedTime"), "扩展属性必须有注释。");
+
+                        rows = queryComments("Roles");
+                        var roleTypeDesc = rows.FirstOrDefault(r => r["columnName"].ToString() == "RoleType");
+                        Assert.IsNotNull(roleTypeDesc, "枚举属性必须有注释。");
+                        var comment = roleTypeDesc["Comment"].ToString();
+                        Assert.AreEqual(comment, @"角色的类型
+0:(Normal, 一般)
+1:(Administrator, 管理员)");
+
+                        //WF_ 开头的动态属性。
                     }
                 }
             }
