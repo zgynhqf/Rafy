@@ -124,7 +124,7 @@ namespace Rafy
                     content.Append(sql);
                 }
 
-                content.AppendLine().AppendLine().AppendLine();
+                content.Append(';').AppendLine().AppendLine().AppendLine();
 
                 File.AppendAllText(SqlTraceFileName, content.ToString(), Encoding.UTF8);
             }
