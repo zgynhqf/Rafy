@@ -148,7 +148,7 @@ namespace Rafy
                 {
                     if (isOracle)
                     {
-                        value = string.Format("to_date('{0}', 'dd-mm-yyyy hh24:mi:ss')", value);
+                        value = string.Format("to_date('{0}', 'yyyy-MM-dd hh24:mi:ss')", value);
                     }
                     else
                     {
