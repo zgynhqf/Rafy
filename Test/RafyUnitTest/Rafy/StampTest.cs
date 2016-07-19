@@ -62,6 +62,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void StampT_Insert_CreatedUser()
         {
+            RafyEnvironment.Principal = null;
+
             var repo = RF.Concrete<InvoiceRepository>();
             using (RF.TransactionScope(repo))
             {
@@ -127,6 +129,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void StampT_Update_UpdatedUser()
         {
+            RafyEnvironment.Principal = null;
+
             var repo = RF.Concrete<InvoiceRepository>();
             using (RF.TransactionScope(repo))
             {
