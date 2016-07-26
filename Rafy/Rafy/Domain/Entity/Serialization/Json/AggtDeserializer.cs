@@ -178,7 +178,7 @@ namespace Rafy.Domain.Serialization.Json
             {
                 var propertyName = propertyValue.Key;
                 var jValue = propertyValue.Value;
-                var mp = properties.Find(propertyName, true);
+                var mp = properties.Find(propertyName, true) as IProperty;
                 if (mp != null)
                 {
                     //只读属性不需要反序列化。
@@ -193,6 +193,12 @@ namespace Rafy.Domain.Serialization.Json
                     else if (mp is IRefEntityProperty)
                     {
                         //一般引用属性不支持反序列化。
+                    }
+                    else if (mp.IsRedundant)
+                    {
+                        //冗余属性不支持反序列化。
+                        //冗余属性在反序列化时，如果值是错误的（例如在客户端刚创建的实体），而且它在对应的引用属性之后进行反序列化的话，就会导致值出错。
+                        //另外，由于引用属性在反序列化时，都会计算相应的冗余属性，所以这里不再需要对冗余属性进行反序列化。
                     }
                     //一般属性。
                     else

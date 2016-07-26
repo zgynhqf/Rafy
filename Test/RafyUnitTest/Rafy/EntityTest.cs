@@ -2327,6 +2327,51 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void ET_Json_Deserialization_RedundancyProperty1()
+        {
+            var repoA = RF.Concrete<ARepository>();
+            var repo = RF.Concrete<BRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var a = new A { Name = "a" };
+                repoA.Save(a);
+
+                var json = @"{
+""AName"": ""b"",
+""AId"": " + a.Id + @"
+}";
+
+                var deserializer = new AggtDeserializer();
+                var entity = deserializer.Deserialize(typeof(B), json) as B;
+
+                Assert.AreEqual(entity.AName, "a", "冗余属性需要支持反序列化。同时，当反序列化的值是错的时候，应该以引用属性的值为主。");
+            }
+        }
+
+        [TestMethod]
+        public void ET_Json_Deserialization_RedundancyProperty2()
+        {
+            var repoA = RF.Concrete<ARepository>();
+            var repo = RF.Concrete<BRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var a = new A { Name = "a" };
+                repoA.Save(a);
+
+                var json = @"{
+""AId"": " + a.Id + @",
+""AName"": ""b""
+}
+            ";
+
+                var deserializer = new AggtDeserializer();
+                var entity = deserializer.Deserialize(typeof(B), json) as B;
+
+                Assert.AreEqual(entity.AName, "a", "冗余属性需要支持反序列化。同时，当反序列化的值是错的时候，应该以引用属性的值为主。");
+            }
+        }
+
+        [TestMethod]
         public void ET_Json_Deserialization_Enum()
         {
             var json =
