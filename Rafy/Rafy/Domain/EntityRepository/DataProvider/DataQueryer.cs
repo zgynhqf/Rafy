@@ -552,6 +552,7 @@ namespace Rafy.Domain
                 pIndex++;
                 while (pIndex < pLength)
                 {
+                    parent = sortedList[pIndex];
                     parent.LoadProperty(listProperty, targetRepo.NewList());
                     pIndex++;
                 }
