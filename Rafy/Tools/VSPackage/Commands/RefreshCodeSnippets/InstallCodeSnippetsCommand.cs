@@ -99,6 +99,8 @@ namespace Rafy.VSPackage.Commands.RefreshCodeSnippets
                 "Rafy_PropertyExtensionList",
                 "Rafy_PropertyExtensionReadOnly",
                 "Rafy_PropertyExtensionRedundancy",
+                "Rafy_PropertyExtensionReference",
+                "Rafy_PropertyExtensionReferenceNullable",
                 "Rafy_PropertyList",
                 "Rafy_PropertyList_Full",
                 "Rafy_PropertyLOB",

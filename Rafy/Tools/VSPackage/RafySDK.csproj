@@ -247,6 +247,8 @@
     <EmbeddedResource Include="_CodeSnippets\Rafy_PropertyExtensionRedundancy.snippet">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="_CodeSnippets\Rafy_PropertyExtensionReference.snippet" />
+    <EmbeddedResource Include="_CodeSnippets\Rafy_PropertyExtensionReferenceNullable.snippet" />
   </ItemGroup>
   <ItemGroup>
     <VSCTCompile Include="VSPackage.vsct">
