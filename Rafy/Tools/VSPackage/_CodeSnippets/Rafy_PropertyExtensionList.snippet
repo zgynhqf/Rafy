@@ -29,7 +29,7 @@
                     <ID>ClassName</ID>
                     <Default>Entity</Default>
                 </Literal>
-                <Literal>
+                <Literal Editable="false">
                     <ID>DeclareType</ID>
                     <Function>ClassName()</Function>
                 </Literal>
@@ -40,7 +40,7 @@
         /// <summary>
         /// $Comment$ 扩展属性。
         /// </summary>
-        public static ListProperty<$PropertyType$> $PropertyName$Property =
+        public static readonly ListProperty<$PropertyType$> $PropertyName$Property =
             P<$ClassName$>.RegisterListExtension<$PropertyType$>("$PropertyName$", typeof($DeclareType$));
         /// <summary>
         /// 获取 $Comment$ 属性的值。

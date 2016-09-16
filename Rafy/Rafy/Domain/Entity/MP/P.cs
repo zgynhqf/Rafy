@@ -430,6 +430,60 @@ namespace Rafy.Domain
 
         #endregion
 
+        #region RegisterRefExtension
+
+        /// <summary>
+        /// 扩展一个引用属性
+        /// </summary>
+        /// <typeparam name="TKey">The type of the entity list.</typeparam>
+        /// <param name="propertyName">属性名称。</param>
+        /// <param name="declareType">声明此属性的类型。</param>
+        /// <param name="isNullable">是否为一个可空的引用属性。</param>
+        /// <returns></returns>
+        public static IRefIdProperty RegisterRefIdExtension<TKey>(string propertyName, Type declareType, bool isNullable = false)
+            where TKey : struct
+        {
+            var property = new RefIdProperty<TKey>(typeof(TEntity), declareType, propertyName, new RegisterRefIdArgs<TKey>())
+            {
+                ReferenceType = ReferenceType.Normal,
+                Nullable = isNullable
+            };
+
+            ManagedPropertyRepository.Instance.RegisterProperty(property);
+
+            return property;
+        }
+
+        /// <summary>
+        /// 扩展一个引用实体属性。
+        /// </summary>
+        /// <typeparam name="TRefEntity"></typeparam>
+        /// <param name="propertyName">实体属性的名称。</param>
+        /// <param name="declareType">声明此属性的类型。</param>
+        /// <param name="refIdProperty">对应的引用 Id 属性，将为其建立关联。</param>
+        /// <returns></returns>
+        public static RefEntityProperty<TRefEntity> RegisterRefExtension<TRefEntity>(string propertyName, Type declareType, IRefIdProperty refIdProperty)
+            where TRefEntity : Entity
+        {
+            if (refIdProperty == null) throw new ArgumentNullException("refIdProperty", "必须指定引用 Id 属性，将为其建立关联。");
+
+            var defaultMeta = new PropertyMetadata<Entity>();
+
+            var property = new RefEntityProperty<TRefEntity>(typeof(TEntity), declareType, propertyName, defaultMeta)
+            {
+                RefIdProperty = refIdProperty
+            };
+
+            //默认只从服务端序列化到客户端。
+            defaultMeta.Serializable = RafyEnvironment.IsOnServer();
+
+            ManagedPropertyRepository.Instance.RegisterProperty(property);
+
+            return property;
+        }
+
+        #endregion
+
         #region RegisterList
 
         /// <summary>

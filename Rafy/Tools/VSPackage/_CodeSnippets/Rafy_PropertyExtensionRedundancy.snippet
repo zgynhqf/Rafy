@@ -29,7 +29,7 @@
                     <ID>ClassName</ID>
                     <Default>Entity</Default>
                 </Literal>
-                <Literal>
+                <Literal Editable="false">
                     <ID>DeclareType</ID>
                     <Function>ClassName()</Function>
                 </Literal>
@@ -45,7 +45,7 @@
         /// <summary>
         /// $Comment$ 扩展属性。
         /// </summary>
-        public static Property<$PropertyType$> $PropertyName$Property = P<$ClassName$>.RegisterRedundancyExtension<$PropertyType$>("$PropertyName$", typeof($DeclareType$),
+        public static readonly Property<$PropertyType$> $PropertyName$Property = P<$ClassName$>.RegisterRedundancyExtension<$PropertyType$>("$PropertyName$", typeof($DeclareType$),
             new RedundantPath($RedundantPath$));
         /// <summary>
         /// 获取 $Comment$ 属性的值。
