@@ -91,11 +91,13 @@ namespace Rafy.Domain.Serialization.Json
         /// <summary>
         /// 是否输出实体列表的 TotalCount 的值，而把列表的值放到一个名为 Data 的属性值中。
         /// 但是，如果 TotalCount 中没有值时，则不会输出 TotalCount，而只输出 Data 属性。
+        /// 默认为 false。
         /// </summary>
-        public bool OutputListTotalCount { get; set; }
+        public bool OutputListTotalCount { get; set; } = false;
 
         /// <summary>
         /// 是否忽略所有的动态属性。
+        /// 默认为 false。
         /// </summary>
         public bool IgnoreDynamicProperties { get; set; } = false;
 
@@ -160,7 +162,7 @@ namespace Rafy.Domain.Serialization.Json
             }
             else
             {
-                this.SerializeList(entityOrList as EntityList);
+                this.SerializeOuterList(entityOrList as EntityList);
             }
         }
 
@@ -362,6 +364,21 @@ namespace Rafy.Domain.Serialization.Json
 
         private void SerializeList(EntityList entityList)
         {
+            _writer.WriteStartArray();
+            for (int i = 0, c = entityList.Count; i < c; i++)
+            {
+                var entity = entityList[i];
+                this.SerializeEntity(entity);
+            }
+            _writer.WriteEndArray();
+        }
+
+        /// <summary>
+        /// 序列化最外层的 EntityList。需要处理分页的信息。
+        /// </summary>
+        /// <param name="entityList"></param>
+        private void SerializeOuterList(EntityList entityList)
+        {
             if (this.OutputListTotalCount)
             {
                 _writer.WriteStartObject();
@@ -377,13 +394,7 @@ namespace Rafy.Domain.Serialization.Json
                 this.WritePropertyName(EntityListProperty);
             }
 
-            _writer.WriteStartArray();
-            for (int i = 0, c = entityList.Count; i < c; i++)
-            {
-                var entity = entityList[i];
-                this.SerializeEntity(entity);
-            }
-            _writer.WriteEndArray();
+            this.SerializeList(entityList);
 
             if (this.OutputListTotalCount)
             {

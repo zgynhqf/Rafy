@@ -2067,6 +2067,101 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void ET_Json_Serialization_OutputListTotalCount()
+        {
+            var list = new BookList
+            {
+                new Book { Name = "book1" },
+                new Book { Name = "book2" },
+            };
+            list.SetTotalCount(1000);
+
+            var serializer = new AggtSerializer();
+            serializer.Indent = true;
+            serializer.IgnoreDefault = true;
+            serializer.IgnoreROProperties = true;
+
+            serializer.OutputListTotalCount = true;
+
+            var json = serializer.Serialize(list);
+
+            Assert.AreEqual(json,
+@"{
+  ""totalCount"": 1000,
+  ""data"": [
+    {
+      ""name"": ""book1""
+    },
+    {
+      ""name"": ""book2""
+    }
+  ]
+}");
+        }
+
+        [TestMethod]
+        public void ET_Json_Serialization_OutputListTotalCount_Aggt()
+        {
+            var list = new BookList
+            {
+                new Book
+                {
+                    Name = "book",
+                    ChapterList =
+                    {
+                        new Chapter
+                        {
+                            Name = "chapter1"
+                        },
+                        new Chapter
+                        {
+                            Name = "chapter2",
+                            SectionList =
+                            {
+                                new Section
+                                {
+                                    Name = "section"
+                                }
+                            }
+                        },
+                    }
+                }
+            };
+            list.SetTotalCount(1000);
+
+            var serializer = new AggtSerializer();
+            serializer.Indent = true;
+            serializer.IgnoreDefault = true;
+            serializer.IgnoreROProperties = true;
+            serializer.OutputListTotalCount = true;
+
+            var json = serializer.Serialize(list);
+
+            Assert.AreEqual(json,
+@"{
+  ""totalCount"": 1000,
+  ""data"": [
+    {
+      ""chapterList"": [
+        {
+          ""name"": ""chapter1""
+        },
+        {
+          ""name"": ""chapter2"",
+          ""sectionList"": [
+            {
+              ""name"": ""section""
+            }
+          ]
+        }
+      ],
+      ""name"": ""book""
+    }
+  ]
+}");
+        }
+
+        [TestMethod]
         public void ET_Json_Serialization_NoCamel()
         {
             var entity = new Favorate
