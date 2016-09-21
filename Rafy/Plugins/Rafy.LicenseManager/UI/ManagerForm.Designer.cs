@@ -46,6 +46,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tabAuthorizationView = new System.Windows.Forms.TabPage();
             this.dgvLicenseView = new System.Windows.Forms.DataGridView();
+            this.lblLog = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabAuthorization.SuspendLayout();
@@ -78,7 +79,7 @@
             // 退出ToolStripMenuItem
             // 
             this.退出ToolStripMenuItem.Name = "退出ToolStripMenuItem";
-            this.退出ToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.退出ToolStripMenuItem.Size = new System.Drawing.Size(114, 26);
             this.退出ToolStripMenuItem.Text = "退出";
             this.退出ToolStripMenuItem.Click += new System.EventHandler(this._Exit_ToolStripMenuItem_Click);
             // 
@@ -142,6 +143,7 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox1.Controls.Add(this.lblLog);
             this.groupBox1.Controls.Add(this.btnGeneratorAuthorizationCode);
             this.groupBox1.Controls.Add(this.cbxAuthorizationTarget);
             this.groupBox1.Controls.Add(this.label3);
@@ -160,9 +162,9 @@
             // 
             this.btnGeneratorAuthorizationCode.Location = new System.Drawing.Point(124, 214);
             this.btnGeneratorAuthorizationCode.Name = "btnGeneratorAuthorizationCode";
-            this.btnGeneratorAuthorizationCode.Size = new System.Drawing.Size(100, 30);
+            this.btnGeneratorAuthorizationCode.Size = new System.Drawing.Size(120, 30);
             this.btnGeneratorAuthorizationCode.TabIndex = 6;
-            this.btnGeneratorAuthorizationCode.Text = "生成授权";
+            this.btnGeneratorAuthorizationCode.Text = "生成授权码";
             this.btnGeneratorAuthorizationCode.UseVisualStyleBackColor = true;
             this.btnGeneratorAuthorizationCode.Click += new System.EventHandler(this._BtnGeneratorAuthorizationCode_Click);
             // 
@@ -190,7 +192,7 @@
             // 
             this.dtpExpireTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dtpExpireTime.CustomFormat = "yyyy-MM-dd HH:mm:ss";
+            this.dtpExpireTime.CustomFormat = "yyyy-MM-dd";
             this.dtpExpireTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dtpExpireTime.Location = new System.Drawing.Point(124, 81);
             this.dtpExpireTime.MinDate = new System.DateTime(2016, 1, 1, 0, 0, 0, 0);
@@ -215,6 +217,8 @@
             this.tbMac.Name = "tbMac";
             this.tbMac.Size = new System.Drawing.Size(288, 25);
             this.tbMac.TabIndex = 1;
+            this.tbMac.MouseEnter += new System.EventHandler(this._TbMac_MouseEnter);
+            this.tbMac.MouseLeave += new System.EventHandler(this._TbMac_MouseLeave);
             // 
             // label1
             // 
@@ -247,6 +251,15 @@
             this.dgvLicenseView.RowTemplate.Height = 27;
             this.dgvLicenseView.Size = new System.Drawing.Size(837, 368);
             this.dgvLicenseView.TabIndex = 0;
+            // 
+            // lblLog
+            // 
+            this.lblLog.AutoSize = true;
+            this.lblLog.ForeColor = System.Drawing.Color.OrangeRed;
+            this.lblLog.Location = new System.Drawing.Point(121, 270);
+            this.lblLog.Name = "lblLog";
+            this.lblLog.Size = new System.Drawing.Size(0, 15);
+            this.lblLog.TabIndex = 7;
             // 
             // ManagerForm
             // 
@@ -298,5 +311,6 @@
         private System.Windows.Forms.Button btnGeneratorAuthorizationCode;
         private System.Windows.Forms.TextBox tbLicenseCode;
         private System.Windows.Forms.DataGridView dgvLicenseView;
+        private System.Windows.Forms.Label lblLog;
     }
 }

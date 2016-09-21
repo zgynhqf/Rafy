@@ -1,21 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Rafy.Domain;
 using Rafy.LicenseManager.Entities;
 using Rafy.LicenseManager.Infrastructure;
+using Rafy.LicenseManager.Properties;
+using Rafy.Security;
 
 namespace Rafy.LicenseManager.UI
 {
     public partial class ManagerForm : Form
     {
+        private ToolTip _toolTip;
+
         public ManagerForm()
         {
             InitializeComponent();
@@ -24,16 +23,29 @@ namespace Rafy.LicenseManager.UI
         private void _ManagerForm_Load(object sender, EventArgs e)
         {
             this._BindLicenseTargetComboBox();
+
+            var now = DateTime.Now.AddMonths(6);
+            this.dtpExpireTime.Value = new DateTime(now.Year, now.Month, now.Day);
+
+            this._toolTip = new ToolTip
+            {
+                ToolTipTitle = "提示",
+                AutoPopDelay = 0
+            };
+
         }
 
+        /// <summary>
+        /// 为 <see cref="ComboBox"/> 绑定数据源。
+        /// </summary>
         private void _BindLicenseTargetComboBox()
         {
             var custoemrs = typeof(LicenseTarget)
                 .GetMembers(BindingFlags.Public | BindingFlags.Static)
                 .Select(m =>new
                 {
-                    Description = ((DescriptionAttribute)m.GetCustomAttributes().First(c => c.GetType() == typeof(DescriptionAttribute))).Description,
-                    Name = m.Name
+                    m.Name,
+                    ((DescriptionAttribute)m.GetCustomAttributes().First(c => c.GetType() == typeof(DescriptionAttribute))).Description
                 }).ToList();
 
             this.cbxAuthorizationTarget.DisplayMember = "Description";
@@ -43,22 +55,14 @@ namespace Rafy.LicenseManager.UI
 
         private void _BtnGeneratorAuthorizationCode_Click(object sender, EventArgs e)
         {
-            var mac = this.tbMac.Text.Trim();
-            var expireTime = this.dtpExpireTime.Value;
-            var authorizationTarget = this.cbxAuthorizationTarget.SelectedValue.ToString();
+            this.lblLog.Text = string.Empty;
 
-            if(!this._ValidateParameters(mac, expireTime, authorizationTarget)) return;
+            var license = this._GetLicenseEntity();
 
-            var license = new LicenseEntity
-            {
-                MacCode = mac,
-                ExpireTime = expireTime,
-                LicenseTarget = LicenseTarget.None,
-                PersistenceStatus = PersistenceStatus.New
-            };
+            if (license == null)
+                return;
 
-            var repository = RF.Concrete<LicenseEntityRepository>();
-            repository.Save(license);
+            this._SaveLicense(license);
         }
 
         private void _Exit_ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -66,37 +70,67 @@ namespace Rafy.LicenseManager.UI
             Environment.Exit(0);
         }
 
-        private bool _ValidateParameters(string mac, DateTime expireTime, string authorTarget)
+        /// <summary>
+        /// 获取一个 <see cref="LicenseEntity"/> 对象的实例。
+        /// </summary>
+        /// <returns></returns>
+        private LicenseEntity _GetLicenseEntity()
         {
-            if (string.IsNullOrWhiteSpace(mac))
+            var mac = this.tbMac.Text.Trim();
+            var expireTime = this.dtpExpireTime.Value;
+            LicenseTarget authorizationTarget;
+
+            if (!Enum.TryParse(this.cbxAuthorizationTarget.SelectedValue.ToString(), out authorizationTarget))
             {
-                MessageBox.Show("MAC 地址不能为空。", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return false;
+                MessageBox.Show(LicenseManagerResource.ManagerFormGetLicenseEntityAuthenticationTargetWarning, LicenseManagerResource.ManagerFormValidateParametersWarning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return null;
             }
 
-            if (expireTime < DateTime.Now)
-            {
-                MessageBox.Show("过期时间不能小于当前时间。", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return false;
-            }
+            if(!ManagerFormService.ValidateParameters(mac, expireTime, authorizationTarget))
+                return null;
 
-            if (string.IsNullOrWhiteSpace(authorTarget) || authorTarget.Equals("None", StringComparison.InvariantCultureIgnoreCase))
+            var license = new LicenseEntity
             {
-                MessageBox.Show("授权目标不能为空。", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return false;
-            }
+                MacCode = mac,
+                ExpireTime = expireTime,
+                LicenseTarget = authorizationTarget,
+                PersistenceStatus = PersistenceStatus.New
+            };
+            var licenseCode = ManagerFormService.GeneratorLicenseCode(license);
 
+            if(string.IsNullOrWhiteSpace(licenseCode))
+                return null;
+
+            license.LicenseCode = licenseCode;
+
+            return license;
+        }
+
+        /// <summary>
+        /// 保存 License 信息。
+        /// </summary>
+        /// <param name="entity"></param>
+        private void _SaveLicense(LicenseEntity entity)
+        {
             var repository = RF.Concrete<LicenseEntityRepository>();
+            repository.Save(entity);
 
-            var entity = repository.GetFirstBy(new CommonQueryCriteria(BinaryOperator.And) {new PropertyMatch(LicenseEntity.MacCodeProperty, PropertyOperator.Equal, mac)});
+            this.tbLicenseCode.Text = entity.LicenseCode;
+            this.tbLicenseCode.Focus();
+            this.tbLicenseCode.Select(0, entity.LicenseCode.Length);
+            Clipboard.SetText(entity.LicenseCode);
 
-            if (entity != null)
-            {
-                MessageBox.Show($"当前 MAC 地址：{mac}，已经被授权。", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return false;
-            }
+            this.lblLog.Text = LicenseManagerResource.ManagerFormSaveLicenseSuccess;
+        }
 
-            return true;
+        private void _TbMac_MouseEnter(object sender, EventArgs e)
+        {
+            this._toolTip.Show("MAC 地址格式：XX-XX-XX-XX-XX-XX", (Control) sender);
+        }
+
+        private void _TbMac_MouseLeave(object sender, EventArgs e)
+        {
+            this._toolTip.Hide((IWin32Window) sender);
         }
     }
 }

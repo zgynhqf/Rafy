@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Forms;
 using Rafy.LicenseManager.Infrastructure;
 using Rafy.LicenseManager.UI;
@@ -10,6 +11,8 @@ namespace Rafy.LicenseManager
         [STAThread]
         static void Main(string[] args)
         {
+            AppDomain.CurrentDomain.UnhandledException += _CurrentDomain_UnhandledException;
+
             //启动领域项目
             new LicenseManagerApp().Startup();
 
@@ -25,12 +28,28 @@ namespace Rafy.LicenseManager
             Application.Run(new ManagerForm());
         }
 
+        private static void _CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            var exception = e.ExceptionObject as Exception;
+            if (exception != null)
+            {
+                using (var writer = File.AppendText($"{AppDomain.CurrentDomain.BaseDirectory}error.log"))
+                {
+                    writer.WriteLine(exception.Message);
+                }
+
+                throw new Exception("应用程序未处理异常。", exception);
+            }
+        }
+
         private static void MainDomainProcess()
         {
             ////本项目中使用了一个 RBAC 的插件，
             ////同时在应用层引用 RBAC.dll 即可使用。
             ////（注意，只是简单引用，不拷贝到根目录，还放在插件目录。即引用的 CopyLocal = False。）
             //var users = RF.Concrete<UserRepository>().GetAll();
+
+            //LicenseManagerApp.GeneratorPublicPrivateKey();
         }
     }
 }
