@@ -132,3 +132,5 @@
 /Rafy/Plugins/Rafy.LicenseManager/x86
 /Rafy.Security/obj/Debug
 /Rafy/Plugins/Rafy.LicenseManager/Rafy.LicenseManager.csproj
+/Rafy/Plugins/Rafy.Security/obj/Debug
+/Rafy.Security/bin/Debug
