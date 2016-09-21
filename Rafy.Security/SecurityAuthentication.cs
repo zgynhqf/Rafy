@@ -32,8 +32,8 @@ namespace Rafy.Security
             var macFormart = mac.Replace(":", "").Replace("-", "");
             var ran = new Random();
             var randKey = ran.Next(1000, 9999);
-            //14+12+8+1+4 防止同一个授权信息生成相同的授权码
-            string source = $"{now}{macFormart}{expireTime.ToString("yyyyMMdd")}{category}{randKey}";
+            //14+12+10+1+4 防止同一个授权信息生成相同的授权码
+            string source = $"{now}{macFormart}{expireTime.ToString("yyyy-MM-dd")}{category}{randKey}";
             return RSACryptoService.EncryptString(source, sPublicKey);
         }
 
@@ -60,9 +60,9 @@ namespace Rafy.Security
             var authorizationCode = new AuthorizationCode();
             var code = RSACryptoService.DecryptString(sSource, sPrivateKey);
             authorizationCode.Mac = code.Substring(14, 12);
-            authorizationCode.Category = Convert.ToInt32(code.Substring(34, 1));
+            authorizationCode.Category = Convert.ToInt32(code.Substring(36, 1));
             DateTime expireTime;
-            DateTime.TryParse(code.Substring(26, 8), out expireTime);
+            DateTime.TryParse(code.Substring(26, 10), out expireTime);
             authorizationCode.ExpireTime = expireTime;
             return authorizationCode;
         }
