@@ -54,6 +54,7 @@
     <Compile Include="IBatchImporter.cs" />
     <Compile Include="ImporterFactory.cs" />
     <Compile Include="Oracle\OracleBatchImporter.cs" />
+    <Compile Include="SqlServer\SqlAzureBatchImporter.cs" />
     <Compile Include="SqlServer\zzzBatchInsert.cs" />
     <Compile Include="EntityBatchReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
