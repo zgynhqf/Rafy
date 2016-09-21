@@ -37,6 +37,7 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.tbLicenseCode = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lblLog = new System.Windows.Forms.Label();
             this.btnGeneratorAuthorizationCode = new System.Windows.Forms.Button();
             this.cbxAuthorizationTarget = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -46,7 +47,11 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tabAuthorizationView = new System.Windows.Forms.TabPage();
             this.dgvLicenseView = new System.Windows.Forms.DataGridView();
-            this.lblLog = new System.Windows.Forms.Label();
+            this.MacCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LicenseCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ExpireTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LicenseTarget = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CreateTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabAuthorization.SuspendLayout();
@@ -101,6 +106,7 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(857, 409);
             this.tabControl1.TabIndex = 1;
+            this.tabControl1.Selected += new System.Windows.Forms.TabControlEventHandler(this._TabControl1_Selected);
             // 
             // tabAuthorization
             // 
@@ -157,6 +163,15 @@
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "输入";
+            // 
+            // lblLog
+            // 
+            this.lblLog.AutoSize = true;
+            this.lblLog.ForeColor = System.Drawing.Color.OrangeRed;
+            this.lblLog.Location = new System.Drawing.Point(121, 270);
+            this.lblLog.Name = "lblLog";
+            this.lblLog.Size = new System.Drawing.Size(0, 15);
+            this.lblLog.TabIndex = 7;
             // 
             // btnGeneratorAuthorizationCode
             // 
@@ -246,20 +261,53 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvLicenseView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvLicenseView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.MacCode,
+            this.LicenseCode,
+            this.ExpireTime,
+            this.LicenseTarget,
+            this.CreateTime});
             this.dgvLicenseView.Location = new System.Drawing.Point(6, 6);
             this.dgvLicenseView.Name = "dgvLicenseView";
             this.dgvLicenseView.RowTemplate.Height = 27;
             this.dgvLicenseView.Size = new System.Drawing.Size(837, 368);
             this.dgvLicenseView.TabIndex = 0;
             // 
-            // lblLog
+            // MacCode
             // 
-            this.lblLog.AutoSize = true;
-            this.lblLog.ForeColor = System.Drawing.Color.OrangeRed;
-            this.lblLog.Location = new System.Drawing.Point(121, 270);
-            this.lblLog.Name = "lblLog";
-            this.lblLog.Size = new System.Drawing.Size(0, 15);
-            this.lblLog.TabIndex = 7;
+            this.MacCode.DataPropertyName = "MacCode";
+            this.MacCode.HeaderText = "MAC地址";
+            this.MacCode.Name = "MacCode";
+            this.MacCode.ReadOnly = true;
+            this.MacCode.Width = 120;
+            // 
+            // LicenseCode
+            // 
+            this.LicenseCode.DataPropertyName = "LicenseCode";
+            this.LicenseCode.HeaderText = "授权码";
+            this.LicenseCode.Name = "LicenseCode";
+            this.LicenseCode.ReadOnly = true;
+            // 
+            // ExpireTime
+            // 
+            this.ExpireTime.DataPropertyName = "ExpireTime";
+            this.ExpireTime.HeaderText = "授权过期时间";
+            this.ExpireTime.Name = "ExpireTime";
+            this.ExpireTime.ReadOnly = true;
+            // 
+            // LicenseTarget
+            // 
+            this.LicenseTarget.DataPropertyName = "LicenseTarget";
+            this.LicenseTarget.HeaderText = "授权目标";
+            this.LicenseTarget.Name = "LicenseTarget";
+            this.LicenseTarget.ReadOnly = true;
+            // 
+            // CreateTime
+            // 
+            this.CreateTime.DataPropertyName = "CreateTime";
+            this.CreateTime.HeaderText = "创建时间";
+            this.CreateTime.Name = "CreateTime";
+            this.CreateTime.ReadOnly = true;
             // 
             // ManagerForm
             // 
@@ -312,5 +360,10 @@
         private System.Windows.Forms.TextBox tbLicenseCode;
         private System.Windows.Forms.DataGridView dgvLicenseView;
         private System.Windows.Forms.Label lblLog;
+        private System.Windows.Forms.DataGridViewTextBoxColumn MacCode;
+        private System.Windows.Forms.DataGridViewTextBoxColumn LicenseCode;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ExpireTime;
+        private System.Windows.Forms.DataGridViewTextBoxColumn LicenseTarget;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CreateTime;
     }
 }
