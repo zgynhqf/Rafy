@@ -32,7 +32,7 @@ namespace Rafy.Security
             var macFormart = mac.Replace(":", "").Replace("-", "");
             var ran = new Random();
             var randKey = ran.Next(1000, 9999);
-            //14+12+8+1+4 防止同一个授权码生成相同的秘钥
+            //14+12+8+1+4 防止同一个授权信息生成相同的授权码
             string source = $"{now}{macFormart}{expireTime.ToString("yyyyMMdd")}{category}{randKey}";
             return RSACryptoService.EncryptString(source, sPublicKey);
         }
@@ -74,22 +74,28 @@ namespace Rafy.Security
         /// <returns></returns>
         public AuthorizationResult Authenticate(string sSource, string sPrivateKey)
         {
-            AuthorizationResult result = new AuthorizationResult();
+            AuthorizationResult result = new AuthorizationResult()
+            {
+                AuthorizationState=AuthorizationState.Success
+            };
             AuthorizationCode authorizationCode = Decrypt(sSource, sPrivateKey);
             var macList = ComputerMacUtils.GetMacByNetworkInterface();
             if (!macList.Contains(authorizationCode.Mac))
             {
                 result.AuthorizationState = AuthorizationState.MacError;
+                return result;
             }
             if (!authorizationCode.ExpireTime.HasValue)
             {
                 result.AuthorizationState = AuthorizationState.Expire;
+                return result;
             }
             else
             {
                 if (authorizationCode.ExpireTime.Value < DateTime.Now)
                 {
                     result.AuthorizationState = AuthorizationState.Expire;
+                    return result;
                 }
             }
             return result;
