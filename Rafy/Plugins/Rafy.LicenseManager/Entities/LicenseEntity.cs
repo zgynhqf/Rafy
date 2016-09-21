@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using Rafy.Domain;
@@ -52,14 +53,24 @@ namespace Rafy.LicenseManager.Entities
             set { this.SetProperty(MacCodeProperty, value); }
         }
 
-        public static readonly Property<LicenseType> LicenseTypeProperty = P<LicenseEntity>.Register(e => e.LicenseType);
+        public static readonly Property<LicenseTarget> LicenseTargetProperty = P<LicenseEntity>.Register(e => e.LicenseTarget);
         /// <summary>
         /// 获取或设置授权类型。
         /// </summary>
-        public LicenseType LicenseType
+        public LicenseTarget LicenseTarget
         {
-            get { return this.GetProperty(LicenseTypeProperty); }
-            set { this.SetProperty(LicenseTypeProperty, value); }
+            get { return this.GetProperty(LicenseTargetProperty); }
+            set { this.SetProperty(LicenseTargetProperty, value); }
+        }
+
+        public static readonly Property<DateTime> ExpireTimeProperty = P<LicenseEntity>.Register(e => e.ExpireTime);
+        /// <summary>
+        /// 获取或设置授权过期时间。
+        /// </summary>
+        public DateTime ExpireTime
+        {
+            get { return this.GetProperty(ExpireTimeProperty); }
+            set { this.SetProperty(ExpireTimeProperty, value); }
         }
 
         #endregion
@@ -72,21 +83,24 @@ namespace Rafy.LicenseManager.Entities
     /// <summary>
     /// 表示授权类型的枚举值。
     /// </summary>
-    public enum LicenseType
+    public enum LicenseTarget
     {
         /// <summary>
         /// 未知
         /// </summary>
+        [Description("")]
         None = 0,
 
         /// <summary>
         /// 开发环境
         /// </summary>
+        [Description("开发环境")]
         Development = 1,
 
         /// <summary>
         /// 生产环境。
         /// </summary>
+        [Description("生产环境")]
         Production = 16
     }
 
