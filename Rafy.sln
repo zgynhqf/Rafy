@@ -145,6 +145,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Old", "Old", "{EEC610ED-8A0
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.FileStorage", "Rafy\Plugins\Rafy.FileStorage\Rafy.FileStorage.csproj", "{143FEBB0-B41C-4E47-9325-F656CCED2FA6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.Security", "Rafy.Security\Rafy.Security.csproj", "{9E62ED52-63DF-4AFB-BCF5-09B8134D7C52}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.LicenseManager", "Rafy\Plugins\Rafy.LicenseManager\Rafy.LicenseManager.csproj", "{8F910D0F-0A51-417C-97E9-203C30FDA006}"
 EndProject
 Global
