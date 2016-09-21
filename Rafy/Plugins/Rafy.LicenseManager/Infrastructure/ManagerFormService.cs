@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Rafy.Domain;
 using Rafy.LicenseManager.Entities;
@@ -79,6 +76,32 @@ namespace Rafy.LicenseManager.Infrastructure
             }
 
             return true;
+        }
+
+        internal static void BindDataGridView(DataGridView dataGridView)
+        {
+            var repository = RF.Concrete<LicenseEntityRepository>();
+            var list = repository.GetAll();
+
+            var source = list.Select(l =>
+            {
+                var entity = (LicenseEntity) l;
+
+                return new
+                {
+                    entity.LicenseTarget,
+                    entity.ExpireTime,
+                    entity.MacCode,
+                    entity.LicenseCode,
+                    entity.CreateTime
+                };
+            }).ToList();
+
+            dataGridView.Invoke(new Action(() =>
+            {
+                
+                dataGridView.DataSource = source;
+            }));
         }
     }
 }
