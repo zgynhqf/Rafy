@@ -97,7 +97,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Rafy.Security\Rafy.Security.csproj">
+    <ProjectReference Include="..\Rafy.Security\Rafy.Security.csproj">
       <Project>{9e62ed52-63df-4afb-bcf5-09b8134d7c52}</Project>
       <Name>Rafy.Security</Name>
     </ProjectReference>
