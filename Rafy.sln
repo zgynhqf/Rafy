@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{96BE2240-F243-41C6-B050-CDD83504633B}"
 	ProjectSection(SolutionItems) = preProject
@@ -144,6 +144,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Old", "Old", "{EEC610ED-8A05-47BA-AF25-78CD4EAA2BAF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.FileStorage", "Rafy\Plugins\Rafy.FileStorage\Rafy.FileStorage.csproj", "{143FEBB0-B41C-4E47-9325-F656CCED2FA6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.LicenseManager", "Rafy\Plugins\Rafy.LicenseManager\Rafy.LicenseManager.csproj", "{8F910D0F-0A51-417C-97E9-203C30FDA006}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -515,6 +517,14 @@ Global
 		{143FEBB0-B41C-4E47-9325-F656CCED2FA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{143FEBB0-B41C-4E47-9325-F656CCED2FA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{143FEBB0-B41C-4E47-9325-F656CCED2FA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F910D0F-0A51-417C-97E9-203C30FDA006}.D_UIA_Standard|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F910D0F-0A51-417C-97E9-203C30FDA006}.D_UIA_Standard|Any CPU.Build.0 = Debug|Any CPU
+		{8F910D0F-0A51-417C-97E9-203C30FDA006}.D_Web|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F910D0F-0A51-417C-97E9-203C30FDA006}.D_Web|Any CPU.Build.0 = Debug|Any CPU
+		{8F910D0F-0A51-417C-97E9-203C30FDA006}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F910D0F-0A51-417C-97E9-203C30FDA006}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F910D0F-0A51-417C-97E9-203C30FDA006}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F910D0F-0A51-417C-97E9-203C30FDA006}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -581,6 +591,7 @@ Global
 		{82B13357-E5D5-475A-8103-27BD1E20D90F} = {69E705F1-D47A-4E70-A08C-B4301DD8F6F2}
 		{EEC610ED-8A05-47BA-AF25-78CD4EAA2BAF} = {DC52A572-512A-4D70-81C0-F0EF8B6FFC85}
 		{143FEBB0-B41C-4E47-9325-F656CCED2FA6} = {DC52A572-512A-4D70-81C0-F0EF8B6FFC85}
+		{8F910D0F-0A51-417C-97E9-203C30FDA006} = {DC52A572-512A-4D70-81C0-F0EF8B6FFC85}
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = GIX4_ExpressApp.vsmdi
