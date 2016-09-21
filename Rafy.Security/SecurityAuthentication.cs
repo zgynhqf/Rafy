@@ -16,7 +16,7 @@ using System;
 
 namespace Rafy.Security
 {
-    internal class SecurityAuthentication
+    public class SecurityAuthentication
     {
         /// <summary>
         ///     生成授权码
