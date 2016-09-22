@@ -1,4 +1,17 @@
-﻿using System;
+﻿/*******************************************************
+ * 
+ * 作者：宋军瑞
+ * 创建日期：20160921
+ * 说明：此文件只包含一个类，具体内容见类型注释。
+ * 运行环境：.NET 4.5
+ * 版本号：1.0.0
+ * 
+ * 历史记录：
+ * 创建文件 宋军瑞 20160921 10:00
+ * 
+*******************************************************/
+
+using System;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
