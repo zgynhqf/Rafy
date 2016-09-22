@@ -36,26 +36,26 @@ namespace Rafy.LicenseManager.Infrastructure
 
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
         {
-            if (destinationType == typeof(string) && value != null)
+            if (destinationType != typeof(string) || value == null)
             {
-                LicenseTarget target;
-                if (!Enum.TryParse(value.ToString(), out target))
-                {
-                    return base.ConvertTo(context, culture, value, destinationType);
-                }
-
-                var member = _members.FirstOrDefault(m => m.Name == value.ToString());
-
-                if (member != null)
-                {
-                    var attribute = member.GetCustomAttribute(typeof(DescriptionAttribute), false);
-
-                    if (attribute != null)
-                        return ((DescriptionAttribute) attribute).Description;
-                }
+                return base.ConvertTo(context, culture, value, destinationType);
             }
 
-            return base.ConvertTo(context, culture, value, destinationType);
+            LicenseTarget target;
+            if (!Enum.TryParse(value.ToString(), out target))
+            {
+                return base.ConvertTo(context, culture, value, destinationType);
+            }
+
+            var member = _members.FirstOrDefault(m => m.Name == value.ToString());
+            if (member == null)
+            {
+                return base.ConvertTo(context, culture, value, destinationType);
+            }
+
+            var attribute = member.GetCustomAttribute(typeof(DescriptionAttribute), false);
+
+            return attribute != null ? ((DescriptionAttribute) attribute).Description : base.ConvertTo(context, culture, value, destinationType);
         }
 
         public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
