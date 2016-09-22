@@ -48,7 +48,7 @@ namespace Rafy.LicenseManager.Infrastructure
 
                 if (member != null)
                 {
-                    var attribute = member.GetCustomAttributes(typeof(DescriptionAttribute)).FirstOrDefault();
+                    var attribute = member.GetCustomAttribute(typeof(DescriptionAttribute), false);
 
                     if (attribute != null)
                         return ((DescriptionAttribute) attribute).Description;
@@ -56,6 +56,11 @@ namespace Rafy.LicenseManager.Infrastructure
             }
 
             return base.ConvertTo(context, culture, value, destinationType);
+        }
+
+        public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+        {
+            return destinationType == typeof(string);
         }
     }
 }
