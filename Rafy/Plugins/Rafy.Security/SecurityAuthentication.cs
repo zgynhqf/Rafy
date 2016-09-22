@@ -13,11 +13,19 @@
 
 
 using System;
+using System.Collections.Generic;
 
 namespace Rafy.Security
 {
-    public class SecurityAuthentication
+    public static class SecurityAuthentication
     {
+        private static List<string> _macList;
+
+        public static List<string> MacList
+        {
+            get { return _macList ?? (_macList = ComputerMacUtils.GetMacByNetworkInterface()); }
+        }
+
         /// <summary>
         ///     生成授权码
         /// </summary>
@@ -26,7 +34,7 @@ namespace Rafy.Security
         /// <param name="category">授权类型0=开发 1=产品</param>
         /// <param name="sPublicKey">公钥</param>
         /// <returns></returns>
-        public string Encrypt(string mac, DateTime expireTime, int category, string sPublicKey)
+        public static string Encrypt(string mac, DateTime expireTime, int category, string sPublicKey)
         {
             var now = DateTime.Now.ToString("yyyyMMddHHmmss");
             var macFormart = mac.Replace(":", "").Replace("-", "");
@@ -43,7 +51,7 @@ namespace Rafy.Security
         /// <param name="authorizationCode">授权信息</param>
         /// <param name="sPublicKey">公钥</param>
         /// <returns></returns>
-        public string Encrypt(AuthorizationCode authorizationCode, string sPublicKey)
+        public static string Encrypt(AuthorizationCode authorizationCode, string sPublicKey)
         {
             return Encrypt(authorizationCode.Mac, authorizationCode.ExpireTime.Value, authorizationCode.Category,
                 sPublicKey);
@@ -55,7 +63,7 @@ namespace Rafy.Security
         /// <param name="sSource">授权码</param>
         /// <param name="sPrivateKey">私钥</param>
         /// <returns>授权信息</returns>
-        public AuthorizationCode Decrypt(string sSource, string sPrivateKey)
+        public static AuthorizationCode Decrypt(string sSource, string sPrivateKey)
         {
             var authorizationCode = new AuthorizationCode();
             var code = RSACryptoService.DecryptString(sSource, sPrivateKey);
@@ -66,21 +74,21 @@ namespace Rafy.Security
             authorizationCode.ExpireTime = expireTime;
             return authorizationCode;
         }
+
         /// <summary>
-        /// 验证
+        ///     验证
         /// </summary>
         /// <param name="sSource">授权码</param>
         /// <param name="sPrivateKey">私钥</param>
         /// <returns></returns>
-        public AuthorizationResult Authenticate(string sSource, string sPrivateKey)
+        public static AuthorizationResult Authenticate(string sSource, string sPrivateKey)
         {
-            AuthorizationResult result = new AuthorizationResult()
+            var result = new AuthorizationResult
             {
-                AuthorizationState=AuthorizationState.Success
+                AuthorizationState = AuthorizationState.Success
             };
-            AuthorizationCode authorizationCode = Decrypt(sSource, sPrivateKey);
-            var macList = ComputerMacUtils.GetMacByNetworkInterface();
-            if (!macList.Contains(authorizationCode.Mac))
+            var authorizationCode = Decrypt(sSource, sPrivateKey);
+            if (!MacList.Contains(authorizationCode.Mac.ToLower()))
             {
                 result.AuthorizationState = AuthorizationState.MacError;
                 return result;
@@ -90,13 +98,10 @@ namespace Rafy.Security
                 result.AuthorizationState = AuthorizationState.Expire;
                 return result;
             }
-            else
+            if (authorizationCode.ExpireTime.Value < DateTime.Now)
             {
-                if (authorizationCode.ExpireTime.Value < DateTime.Now)
-                {
-                    result.AuthorizationState = AuthorizationState.Expire;
-                    return result;
-                }
+                result.AuthorizationState = AuthorizationState.Expire;
+                return result;
             }
             return result;
         }

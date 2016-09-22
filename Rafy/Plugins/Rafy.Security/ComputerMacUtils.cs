@@ -36,7 +36,7 @@ namespace Rafy.Security
                 var mac = ni.GetPhysicalAddress().ToString();
                 if (!string.IsNullOrEmpty(mac))
                 {
-                    macs.Add(mac.Replace(":", "").Replace("-", ""));
+                    macs.Add(mac.Replace(":", "").Replace("-", "").ToLower());
                 }
             }
             return macs.ToList();
