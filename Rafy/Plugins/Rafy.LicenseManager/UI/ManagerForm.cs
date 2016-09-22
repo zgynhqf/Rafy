@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Rafy.Domain;
 using Rafy.LicenseManager.Entities;
@@ -94,6 +95,7 @@ namespace Rafy.LicenseManager.UI
                 MacCode = mac,
                 ExpireTime = expireTime,
                 LicenseTarget = authorizationTarget,
+                CreateTime = DateTime.Now,
                 PersistenceStatus = PersistenceStatus.New
             };
             var licenseCode = ManagerFormService.GeneratorLicenseCode(license);
@@ -131,6 +133,17 @@ namespace Rafy.LicenseManager.UI
         private void _TbMac_MouseLeave(object sender, EventArgs e)
         {
             this._toolTip.Hide((IWin32Window) sender);
+        }
+
+        private void _TabControl1_Selected(object sender, TabControlEventArgs e)
+        {
+            if (e.TabPage.Text == LicenseManagerResource.ManagerFormTabControl1SelectedQueryAuthentication)
+            {
+                Task.Run(() =>
+                {
+                    ManagerFormService.BindDataGridView(this.dgvLicenseView);
+                });
+            }
         }
     }
 }

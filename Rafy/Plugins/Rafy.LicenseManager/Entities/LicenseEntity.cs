@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using Rafy.Domain;
+using Rafy.LicenseManager.Infrastructure;
 using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
 
@@ -73,6 +74,16 @@ namespace Rafy.LicenseManager.Entities
             set { this.SetProperty(ExpireTimeProperty, value); }
         }
 
+        public static readonly Property<DateTime> CreateTimeProperty = P<LicenseEntity>.Register(e => e.CreateTime);
+        /// <summary>
+        /// 获取或设置创建时间。
+        /// </summary>
+        public DateTime CreateTime
+        {
+            get { return this.GetProperty(CreateTimeProperty); }
+            set { this.SetProperty(CreateTimeProperty, value); }
+        }
+
         #endregion
 
         #region 只读属性
@@ -83,6 +94,7 @@ namespace Rafy.LicenseManager.Entities
     /// <summary>
     /// 表示授权类型的枚举值。
     /// </summary>
+    [TypeConverter(typeof(DescriptionConverter))]
     public enum LicenseTarget
     {
         /// <summary>

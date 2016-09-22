@@ -79,6 +79,15 @@ namespace Rafy.LicenseManager.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 授权信息查询.
+        /// </summary>
+        internal static string ManagerFormTabControl1SelectedQueryAuthentication {
+            get {
+                return ResourceManager.GetString("ManagerFormTabControl1SelectedQueryAuthentication", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 过期时间不能小于当前时间。.
         /// </summary>
         internal static string ManagerFormValidateParametersExpireTime {

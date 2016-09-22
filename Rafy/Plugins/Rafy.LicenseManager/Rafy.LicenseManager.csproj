@@ -67,6 +67,7 @@
       <DependentUpon>LicenseEntity.cs</DependentUpon>
     </Compile>
     <Compile Include="Entities\LicenseManagerEntity.cs" />
+    <Compile Include="Infrastructure\DescriptionConverter.cs" />
     <Compile Include="Infrastructure\LicenseManagerApp.cs" />
     <Compile Include="Infrastructure\ManagerFormService.cs" />
     <Compile Include="LicenseManagerPlugin.cs" />
