@@ -6,9 +6,9 @@
 }
 <span class="highlight-comment">//查询行数</span>
 [RepositoryQuery]
-<span class="highlight-keyword">public</span> <span class="highlight-keyword">virtual</span> <span class="highlight-keyword">int</span> CountByCode(<span class="highlight-keyword">string</span> warehouseCode)
+<span class="highlight-keyword">public</span> <span class="highlight-keyword">virtual</span> <span class="highlight-keyword">long</span> CountByCode(<span class="highlight-keyword">string</span> warehouseCode)
 {
-    <span class="highlight-keyword">return</span> (<span class="highlight-keyword">int</span>)<span class="highlight-keyword">this</span>.DA_GetByCode(warehouseCode);
+    <span class="highlight-keyword">return</span> (<span class="highlight-keyword">long</span>)<span class="highlight-keyword">this</span>.DA_GetByCode(warehouseCode);
 }
 <span class="highlight-keyword">private</span> <span class="highlight-keyword">object</span> DA_GetByCode(<span class="highlight-keyword">string</span> warehouseCode)
 {

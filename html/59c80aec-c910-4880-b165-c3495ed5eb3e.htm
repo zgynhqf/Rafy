@@ -50,11 +50,11 @@
     q = q.Where(e =&gt; e.Name == name).OrderByDescending(e =&gt; e.CreateTime);
     <span class="highlight-keyword">return</span> (Warehouse)<span class="highlight-keyword">this</span>.QueryData(q);
 }</pre></div></div></div><script type="text/javascript">AddLanguageTabSet("ID0EAACAACAAA");</script></li><li><p>查询实体个数</p><p>返回整型。</p><p>查询实体个数的数据层实现中，与查询实体列表的实体层实现保持一致。框架内部会自动转换为数据行数的查询。</p><div class="codeSnippetContainer"><div class="codeSnippetContainerTabs"><div id="ID0EAABAACAAA_tab1" class="codeSnippetContainerTabSingle">C#</div></div><div class="codeSnippetContainerCodeContainer"><div class="codeSnippetToolBar"><div class="codeSnippetToolBarText"><a id="ID0EAABAACAAA_copyCode" href="#" onclick="javascript:CopyToClipboard('ID0EAABAACAAA');return false;" title="Copy">Copy</a></div></div><div id="ID0EAABAACAAA_code_Div1" class="codeSnippetContainerCode" style="display: block"><pre xml:space="preserve">[RepositoryQuery]
-<span class="highlight-keyword">public</span> <span class="highlight-keyword">virtual</span> <span class="highlight-keyword">int</span> CountByDate(DateTime date)
+<span class="highlight-keyword">public</span> <span class="highlight-keyword">virtual</span> <span class="highlight-keyword">long</span> CountByDate(DateTime date)
 {
     <span class="highlight-keyword">var</span> q = <span class="highlight-keyword">this</span>.CreateLinqQuery();
     q = q.Where(e =&gt; e.CreateTime &gt;= date);
-    <span class="highlight-keyword">return</span> (<span class="highlight-keyword">int</span>)<span class="highlight-keyword">this</span>.QueryData(q);
+    <span class="highlight-keyword">return</span> (<span class="highlight-keyword">long</span>)<span class="highlight-keyword">this</span>.QueryData(q);
 }</pre></div></div></div><script type="text/javascript">AddLanguageTabSet("ID0EAABAACAAA");</script></li><li><p>查询表格数据</p><p>可返回一个简单的表格类型数据。LiteDataTable 类型是一个可直接用于网络传输的数据表格。</p><p>根据 Command Query Responsibility Segregation（命令查询职责分离，简称 CQRS）模式，复杂查询一般使用表格查询，但是返回的数据只做只读查看，不支持修改。</p><div class="codeSnippetContainer"><div class="codeSnippetContainerTabs"><div id="ID0EABAAACAAA_tab1" class="codeSnippetContainerTabSingle">C#</div></div><div class="codeSnippetContainerCodeContainer"><div class="codeSnippetToolBar"><div class="codeSnippetToolBarText"><a id="ID0EABAAACAAA_copyCode" href="#" onclick="javascript:CopyToClipboard('ID0EABAAACAAA');return false;" title="Copy">Copy</a></div></div><div id="ID0EABAAACAAA_code_Div1" class="codeSnippetContainerCode" style="display: block"><pre xml:space="preserve">[RepositoryQuery]
 <span class="highlight-keyword">public</span> <span class="highlight-keyword">virtual</span> LiteDataTable GetTableByName(<span class="highlight-keyword">string</span> name)
 {
