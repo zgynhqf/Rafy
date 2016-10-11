@@ -31,7 +31,7 @@ using Rafy.Reflection;
 namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
 {
     /// <summary>
-    /// 如果使用 SqlServer 大量插入数据，可以使用本类来实现 Insert 方法。
+    /// SqlServer 数据库的实体批量导入器。
     /// </summary>
     [Serializable]
     public class SqlBatchImporter : BatchImporter
@@ -72,7 +72,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
 
         private static object _identityLock = new object();
 
-        private void GenerateId(EntityBatch meta, IList<Entity> entities)
+        internal virtual void GenerateId(EntityBatch meta, IList<Entity> entities)
         {
             var startId = GetBatchIDs(meta.DBA, meta.Table, entities.Count);
 
@@ -128,7 +128,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
 
         #endregion
 
-        private DataTable ToDataTable(RdbTable meta, IList<Entity> list, bool isUpdating = false)
+        internal DataTable ToDataTable(RdbTable meta, IList<Entity> list, bool isUpdating = false)
         {
             //创建表格式
             var table = new DataTable();
@@ -167,11 +167,15 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
         /// </summary>
         /// <param name="table">The table.</param>
         /// <param name="meta">The meta.</param>
-        private void SaveBulk(DataTable table, EntityBatch meta)
+        /// <param name="keepIdentity">The meta.</param>
+        internal void SaveBulk(DataTable table, EntityBatch meta, bool keepIdentity = true)
         {
+            var opt = SqlBulkCopyOptions.CheckConstraints;
+            if (keepIdentity) opt |= SqlBulkCopyOptions.KeepIdentity;
+
             var bulkCopy = new SqlBulkCopy(
                 meta.DBA.Connection as SqlConnection,
-                SqlBulkCopyOptions.KeepIdentity | SqlBulkCopyOptions.CheckConstraints,
+                opt,
                 meta.DBA.RawAccesser.Transaction as SqlTransaction
                 );
             bulkCopy.DestinationTableName = meta.Table.Name;

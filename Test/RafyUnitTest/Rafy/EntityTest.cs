@@ -1174,6 +1174,12 @@ namespace RafyUnitTest
                 importer.Save(books);
 
                 Assert.AreEqual(size, repo.CountAll());
+
+                for (int i = 0; i < size; i++)
+                {
+                    var book = books[i];
+                    Assert.IsTrue(book.Id > 0);
+                }
             }
         }
 
