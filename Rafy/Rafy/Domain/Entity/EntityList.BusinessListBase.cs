@@ -37,7 +37,7 @@ namespace Rafy.Domain
 
             if (coreceType)
             {
-                var idType = this[0].KeyProvider.KeyType;
+                var idType = (this[0] as IEntityWithId).IdProvider.KeyType;
                 id = TypeHelper.CoerceValue(idType, id);
             }
 

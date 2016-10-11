@@ -244,7 +244,8 @@ namespace Rafy.Domain.ORM
                     string key = _dp.GetRealKey(entity);
 
                     //在生成 Id 时，为某个模型生成临时使用的本地 Id。
-                    if (!entity.HasId)
+                    var idProvider = (entity as IEntityWithId).IdProvider;
+                    if (!idProvider.IsAvailable(entity.Id))
                     {
                         var found = _dp.FindByRealKey(key);
                         if (found != null)
@@ -254,7 +255,7 @@ namespace Rafy.Domain.ORM
                         }
                         else
                         {
-                            var newId = entity.KeyProvider.NewLocalId();
+                            var newId = idProvider.NewLocalValue();
                             entity.LoadProperty(Entity.IdProperty, newId);
                         }
                     }

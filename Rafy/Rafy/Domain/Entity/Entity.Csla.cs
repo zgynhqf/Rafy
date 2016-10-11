@@ -216,7 +216,7 @@ namespace Rafy.Domain
             if (property == IdProperty || property == TreePIdProperty && value != null)
             {
                 //由于 Id 属性的托管属性类型是 object，这里需要强制为具体的主键类型。
-                value = TypeHelper.CoerceValue(this.KeyProvider.KeyType, value);
+                value = TypeHelper.CoerceValue(this.IdProvider.KeyType, value);
             }
 
             base.LoadProperty(property, value);

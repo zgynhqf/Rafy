@@ -53,7 +53,7 @@ namespace Rafy.Domain.ORM.SqlServer
 
                 //由于默认是 decimal 类型，所以需要类型转换。
                 var idValue = dba.QueryValue(this._insertSQL, parameters.ToArray());
-                idValue = TypeHelper.CoerceValue(item.KeyProvider.KeyType, idValue);
+                idValue = TypeHelper.CoerceValue((item as IEntityWithId).IdProvider.KeyType, idValue);
                 idColumn.LoadValue(item, idValue);
 
                 //如果实体的 Id 是在插入的过程中生成的，

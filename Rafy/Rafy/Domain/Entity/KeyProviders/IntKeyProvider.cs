@@ -36,12 +36,12 @@ namespace Rafy.Domain
             get { return Zero; }
         }
 
-        public bool HasId(object id)
+        public bool IsAvailable(object id)
         {
             return id != null && Convert.ToInt32(id) > 0;
         }
 
-        public object NewLocalId()
+        public object NewLocalValue()
         {
             return RafyEnvironment.NewLocalId();
         }
@@ -53,7 +53,7 @@ namespace Rafy.Domain
 
         public object ToNullableValue(object value)
         {
-            return HasId(value) ? value : default(int?);
+            return IsAvailable(value) ? value : default(int?);
         }
     }
 }

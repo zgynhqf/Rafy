@@ -36,12 +36,12 @@ namespace Rafy.Domain
             return null;
         }
 
-        public bool HasId(object id)
+        public bool IsAvailable(object id)
         {
             return id != null;
         }
 
-        public object NewLocalId()
+        public object NewLocalValue()
         {
             return Guid.NewGuid();
         }

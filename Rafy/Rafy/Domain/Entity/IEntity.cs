@@ -12,8 +12,7 @@ namespace Rafy.Domain
     /// <summary>
     /// 实体
     /// </summary>
-    public interface IEntity : IDomainComponent, IRafyEntity { }
-
+    public interface IEntity : IDomainComponent, IEntityWithId { }
     /// <summary>
     /// 实体列表
     /// </summary>

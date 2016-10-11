@@ -40,7 +40,7 @@ namespace Rafy.Domain
         /// 值类型返回空值：
         /// int、long: 0
         /// Guid: Guid.Empty
-        /// 引用类型返回 null：
+        /// 引用类型返回 null
         /// String: null
         /// </summary>
         /// <returns></returns>
@@ -52,18 +52,18 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        bool HasId(object id);
+        bool IsAvailable(object id);
 
         /// <summary>
         /// 构造一个在本应用程序域中不会重复的主键值。
         /// 这个值只保证在内存中是唯一的，并不保证与持久层中的数据不会重复。
         /// </summary>
         /// <returns></returns>
-        object NewLocalId();
+        object NewLocalValue();
 
         /// <summary>
         /// 如果是值类型，则需要判断：
-        /// 当 HasId(value) 返回 false 时，需要返回对应的可空类型的值。如传入 0，返回 default(int?)。
+        /// 当 <see cref="IsAvailable"/> 返回 false 时，需要返回对应的可空类型的值。如传入 0，返回 default(int?)。
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>

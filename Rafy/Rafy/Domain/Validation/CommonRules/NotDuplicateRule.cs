@@ -105,7 +105,7 @@ namespace Rafy.Domain.Validation
                     criteria.Add(property, value);
                 }
             }
-            if (entity.HasId)
+            if ((entity as IEntityWithId).IdProvider.IsAvailable(entity.Id))
             {
                 criteria.Add(Entity.IdProperty, PropertyOperator.NotEqual, entity.Id);
             }

@@ -493,7 +493,7 @@
     <Compile Include="Env\Configuration\RafyConfigurationSection.cs" />
     <Compile Include="Env\Domain\IKeyProvider.cs" />
     <Compile Include="Env\ManagedProperty\ILOBProperty.cs" />
-    <Compile Include="Env\Domain\IRafyEntity.cs" />
+    <Compile Include="Env\Domain\IEntityWithId.cs" />
     <Compile Include="Env\ManagedProperty\LOBType.cs" />
     <Compile Include="Env\ManagedProperty\ReferenceType.cs" />
     <Compile Include="Env\MetaModel\Meta\Validation\IValidationDeclarer.cs" />

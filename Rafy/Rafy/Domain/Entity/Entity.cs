@@ -88,7 +88,7 @@ namespace Rafy.Domain
     /// </summary>
     /// <threadsafety static="true" instance="false" />
     [Serializable]
-    public abstract partial class Entity : ManagedPropertyObject, IEntity, IRafyEntity
+    public abstract partial class Entity : ManagedPropertyObject, IEntity, IEntityWithId
     {
         #region 构造函数
 
@@ -252,17 +252,6 @@ namespace Rafy.Domain
         }
 
         /// <summary>
-        /// 判断本实体是否已经拥有了可用的 Id 值。
-        /// </summary>
-        public bool HasId
-        {
-            get
-            {
-                return KeyProvider.HasId(this.Id);
-            }
-        }
-
-        /// <summary>
         /// 获取实体所对应的属性容器。
         /// </summary>
         /// <returns></returns>
@@ -277,10 +266,15 @@ namespace Rafy.Domain
             return base.FindPropertiesContainer();
         }
 
+        IKeyProvider IEntityWithId.IdProvider
+        {
+            get { return this.IdProvider; }
+        }
+
         /// <summary>
         /// 实体标识属性的算法程序。
         /// </summary>
-        public abstract IKeyProvider KeyProvider { get; }
+        protected abstract IKeyProvider IdProvider { get; }
 
         #endregion
 

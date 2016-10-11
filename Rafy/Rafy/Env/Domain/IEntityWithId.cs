@@ -22,7 +22,7 @@ namespace Rafy.Domain
     /// <summary>
     /// 实体都必须实现此接口。
     /// </summary>
-    public interface IRafyEntity
+    public interface IEntityWithId
     {
         /// <summary>
         /// 唯一的标识属性
@@ -32,6 +32,6 @@ namespace Rafy.Domain
         /// <summary>
         /// 标识属性的算法提供器。
         /// </summary>
-        IKeyProvider KeyProvider { get; }
+        IKeyProvider IdProvider { get; }
     }
 }

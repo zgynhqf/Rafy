@@ -86,7 +86,7 @@ namespace Rafy.Domain
                 ));
         }
 
-        public override IKeyProvider KeyProvider
+        protected override IKeyProvider IdProvider
         {
             get { return KeyProviderField; }
         }

@@ -31,12 +31,12 @@ namespace Rafy.Domain
             get { return string.Empty; }
         }
 
-        public bool HasId(object id)
+        public bool IsAvailable(object id)
         {
             return id != null && !string.IsNullOrEmpty((string)id);
         }
 
-        public object NewLocalId()
+        public object NewLocalValue()
         {
             return Guid.NewGuid().ToString();
         }

@@ -63,7 +63,7 @@ namespace Rafy.Domain.ORM.Oracle
                 }
                 //由于默认可能不是 int 类型，所以需要类型转换。
                 var value = dba.RawAccesser.QueryValue(_selectSEQSql);
-                value = TypeHelper.CoerceValue(item.KeyProvider.KeyType, value);
+                value = TypeHelper.CoerceValue((item as IEntityWithId).IdProvider.KeyType, value);
                 idColumn.LoadValue(item, value);
 
                 //如果实体的 Id 是在插入的过程中生成的，

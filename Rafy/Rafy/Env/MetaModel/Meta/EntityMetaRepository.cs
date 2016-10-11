@@ -158,8 +158,8 @@ namespace Rafy.MetaModel
             };
 
             //标识属性的真实类型。
-            var entity = Activator.CreateInstance(entityMeta.EntityType) as IRafyEntity;
-            entityMeta.IdType = entity.KeyProvider.KeyType;
+            var entity = Activator.CreateInstance(entityMeta.EntityType) as IEntityWithId;
+            entityMeta.IdType = entity.IdProvider.KeyType;
 
             //聚合关系设置
             if (parentMeta != null)

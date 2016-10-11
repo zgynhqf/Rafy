@@ -117,7 +117,7 @@ namespace Rafy.Domain
                 //此时，需要加载父节点，并通过父节点来计算本节点的索引。
                 if (_treeParent == null || !_treeParent.Id.Equals(newValue))
                 {
-                    var hasId = this.KeyProvider.HasId(newValue);
+                    var hasId = this.IdProvider.IsAvailable(newValue);
                     if (hasId)
                     {
                         //直接设置 TreeParent 属性，在 TreeParent 属性中会重新生成 TreeIndex。
@@ -248,7 +248,7 @@ namespace Rafy.Domain
                     var treePId = this.TreePId;
                     if (treePId != null)
                     {
-                        if (this.KeyProvider.HasId(treePId))
+                        if (this.IdProvider.IsAvailable(treePId))
                         {
                             var repo = this.GetRepository();
                             _treeParent = repo.GetById(treePId);

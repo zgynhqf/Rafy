@@ -26,7 +26,7 @@ namespace Rafy.Domain
     /// 一个指定的实体的主键类型的实体基类。
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
-    public abstract class Entity<TKey> : Entity, IEntity, IRafyEntity
+    public abstract class Entity<TKey> : Entity, IEntity, IEntityWithId
     {
         #region 构造函数
 
@@ -58,7 +58,7 @@ namespace Rafy.Domain
         /// <summary>
         /// 实体标识属性的算法程序。
         /// </summary>
-        public override IKeyProvider KeyProvider
+        protected override IKeyProvider IdProvider
         {
             get { return KeyProviderField; }
         }

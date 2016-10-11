@@ -33,12 +33,12 @@ namespace Rafy.Domain
             get { return Empty; }
         }
 
-        public bool HasId(object id)
+        public bool IsAvailable(object id)
         {
             return id != null && (Guid)id != Guid.Empty;
         }
 
-        public object NewLocalId()
+        public object NewLocalValue()
         {
             return Guid.NewGuid();
         }
@@ -50,7 +50,7 @@ namespace Rafy.Domain
 
         public object ToNullableValue(object value)
         {
-            return HasId(value) ? value : default(Guid?);
+            return IsAvailable(value) ? value : default(Guid?);
         }
     }
 }
