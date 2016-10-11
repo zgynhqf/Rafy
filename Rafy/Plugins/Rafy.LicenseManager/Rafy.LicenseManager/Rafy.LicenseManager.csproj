@@ -99,9 +99,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Rafy.Security\Rafy.Security.csproj">
+    <ProjectReference Include="..\Rafy.Security\Rafy.LicenseManager.Encryption.csproj">
       <Project>{9e62ed52-63df-4afb-bcf5-09b8134d7c52}</Project>
-      <Name>Rafy.Security</Name>
+      <Name>Rafy.LicenseManager.Encryption</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Rafy.Domain.ORM.BatchSubmit\Rafy.Domain.ORM.BatchSubmit.csproj">
       <Project>{f0533889-be2c-4a21-90b0-26765833270e}</Project>
