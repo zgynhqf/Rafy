@@ -93,6 +93,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+    <None Include="Rafy.License 使用说明.docx" />
     <None Include="x86\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -102,11 +103,11 @@
       <Project>{9e62ed52-63df-4afb-bcf5-09b8134d7c52}</Project>
       <Name>Rafy.Security</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rafy.Domain.ORM.BatchSubmit\Rafy.Domain.ORM.BatchSubmit.csproj">
+    <ProjectReference Include="..\..\Rafy.Domain.ORM.BatchSubmit\Rafy.Domain.ORM.BatchSubmit.csproj">
       <Project>{f0533889-be2c-4a21-90b0-26765833270e}</Project>
       <Name>Rafy.Domain.ORM.BatchSubmit</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Rafy\Rafy.csproj">
+    <ProjectReference Include="..\..\..\Rafy\Rafy.csproj">
       <Project>{966a5bf2-d690-426b-ad68-ad868bb8f855}</Project>
       <Name>Rafy</Name>
     </ProjectReference>
@@ -139,7 +140,6 @@
     <Content Include="amd64\sqlcese40.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="ReadMe.txt" />
     <Content Include="x86\Microsoft.VC90.CRT\msvcr90.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
