@@ -813,7 +813,7 @@ namespace Rafy.ManagedProperty
         /// <summary>
         /// 调试器显示文本
         /// </summary>
-        protected virtual string DebuggerDisplay
+        internal string DebuggerDisplay
         {
             get
             {
