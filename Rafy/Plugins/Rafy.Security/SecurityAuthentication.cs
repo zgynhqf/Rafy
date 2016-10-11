@@ -27,7 +27,7 @@ namespace Rafy.Security
         }
 
         /// <summary>
-        ///     生成授权码
+        ///生成授权码
         /// </summary>
         /// <param name="mac">网卡物理地址</param>
         /// <param name="expireTime">到时时间</param>
@@ -46,7 +46,7 @@ namespace Rafy.Security
         }
 
         /// <summary>
-        ///     生成授权码
+        /// 生成授权码
         /// </summary>
         /// <param name="authorizationCode">授权信息</param>
         /// <param name="sPublicKey">公钥</param>
@@ -58,7 +58,7 @@ namespace Rafy.Security
         }
 
         /// <summary>
-        ///     解密授权码
+        /// 解密授权码
         /// </summary>
         /// <param name="sSource">授权码</param>
         /// <param name="sPrivateKey">私钥</param>
@@ -76,7 +76,7 @@ namespace Rafy.Security
         }
 
         /// <summary>
-        ///     验证
+        /// 验证
         /// </summary>
         /// <param name="sSource">授权码</param>
         /// <param name="sPrivateKey">私钥</param>

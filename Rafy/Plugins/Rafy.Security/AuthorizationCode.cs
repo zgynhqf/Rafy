@@ -22,17 +22,17 @@ namespace Rafy.Security
     public class AuthorizationCode
     {
         /// <summary>
-        ///     网卡物理地址
+        /// 网卡物理地址
         /// </summary>
         public string Mac { get; set; }
 
         /// <summary>
-        ///     过期时间
+        /// 过期时间
         /// </summary>
         public DateTime? ExpireTime { get; set; }
 
         /// <summary>
-        ///     授权类别 0=开发 1=产品
+        /// 授权类别 0=开发 1=产品
         /// </summary>
         public int Category { get; set; }
     }

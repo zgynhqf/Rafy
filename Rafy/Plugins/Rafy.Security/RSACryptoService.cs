@@ -19,12 +19,12 @@ using System.Text;
 namespace Rafy.Security
 {
     /// <summary>
-    ///     RSA加密
+    /// RSA加密
     /// </summary>
     public static class RSACryptoService
     {
         /// <summary>
-        ///     生成公钥私钥
+        /// 生成公钥私钥
         /// </summary>
         /// <returns>公钥=arr[1] 私钥=arr[0]</returns>
         public static string[] GenerateKeys()
@@ -37,7 +37,7 @@ namespace Rafy.Security
         }
 
         /// <summary>
-        ///     加密
+        /// 加密
         /// </summary>
         /// <param name="sSource">加密字符</param>
         /// <param name="sPublicKey">公钥</param>
@@ -53,7 +53,7 @@ namespace Rafy.Security
         }
 
         /// <summary>
-        ///     解密
+        /// 解密
         /// </summary>
         /// <param name="sSource">解密字符</param>
         /// <param name="sPrivateKey"> </param>

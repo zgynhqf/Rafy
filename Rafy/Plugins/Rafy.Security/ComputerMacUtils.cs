@@ -19,12 +19,12 @@ using System.Net.NetworkInformation;
 namespace Rafy.Security
 {
     /// <summary>
-    ///     获取网卡的mac地址
+    /// 获取网卡的mac地址
     /// </summary>
     public static class ComputerMacUtils
     {
         /// <summary>
-        ///     通过NetworkInterface读取网卡Mac
+        /// 通过NetworkInterface读取网卡Mac
         /// </summary>
         /// <returns></returns>
         public static List<string> GetMacByNetworkInterface()
