@@ -12,7 +12,7 @@
 *******************************************************/
 
 
-namespace Rafy.Security
+namespace Rafy.LicenseManager.Encryption
 {
     public class AuthorizationResult
     {

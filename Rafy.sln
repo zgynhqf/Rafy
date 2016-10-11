@@ -147,7 +147,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.FileStorage", "Rafy\Pl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.LicenseManager", "Rafy\Plugins\Rafy.LicenseManager\Rafy.LicenseManager\Rafy.LicenseManager.csproj", "{8F910D0F-0A51-417C-97E9-203C30FDA006}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.Security", "Rafy\Plugins\Rafy.LicenseManager\Rafy.Security\Rafy.Security.csproj", "{9E62ED52-63DF-4AFB-BCF5-09B8134D7C52}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.LicenseManager.Encryption", "Rafy\Plugins\Rafy.LicenseManager\Rafy.Security\Rafy.LicenseManager.Encryption.csproj", "{9E62ED52-63DF-4AFB-BCF5-09B8134D7C52}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Rafy.LicenseManager", "Rafy.LicenseManager", "{1D2022E1-44A9-4786-8B2E-927CD18CBB67}"
 EndProject

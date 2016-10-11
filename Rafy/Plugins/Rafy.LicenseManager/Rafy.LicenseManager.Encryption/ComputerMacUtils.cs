@@ -16,12 +16,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
 
-namespace Rafy.Security
+namespace Rafy.LicenseManager.Encryption
 {
     /// <summary>
     /// 获取网卡的mac地址
     /// </summary>
-    public static class ComputerMacUtils
+    internal static class ComputerMacUtils
     {
         /// <summary>
         /// 通过NetworkInterface读取网卡Mac
