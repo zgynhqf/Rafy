@@ -32,6 +32,13 @@ namespace Rafy.Domain
         /// </summary>
         /// <returns></returns>
         Entity.LoadedChildrenEnumerator GetLoadedChildren();
+
+        /// <summary>
+        /// 根据孩子类型，直接获取孩子列表。
+        /// </summary>
+        /// <typeparam name="TChild"></typeparam>
+        /// <returns></returns>
+        EntityList GetChildProperty<TChild>();
     }
 
     /// <summary>

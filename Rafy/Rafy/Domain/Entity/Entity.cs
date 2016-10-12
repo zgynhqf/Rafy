@@ -461,7 +461,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <typeparam name="TChild"></typeparam>
         /// <returns></returns>
-        public EntityList GetChildProperty<TChild>()
+        EntityList IEntity.GetChildProperty<TChild>()
         {
             var properties = this.PropertiesContainer.GetNonReadOnlyCompiledProperties();
             var childProperty = properties.OfType<IListProperty>().FirstOrDefault(listProperty =>
