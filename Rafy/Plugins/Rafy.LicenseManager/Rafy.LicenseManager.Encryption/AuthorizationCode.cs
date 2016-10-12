@@ -14,7 +14,7 @@
 
 using System;
 
-namespace Rafy.Security
+namespace Rafy.LicenseManager.Encryption
 {
     /// <summary>
     /// 授权信息
