@@ -51,7 +51,7 @@ namespace Rafy.Domain
             {
                 case EntityRoutedEventType.BubbleToParent:
 
-                    var parent = this.FindParentEntity();
+                    var parent = (this as IEntity).FindParentEntity();
                     if (parent != null)
                     {
                         parent.OnRoutedEvent(sender, e);

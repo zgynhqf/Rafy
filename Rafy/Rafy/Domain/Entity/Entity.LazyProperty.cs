@@ -435,7 +435,7 @@ namespace Rafy.Domain
         /// <summary>
         /// 获取组合关系中父对象的引用。
         /// </summary>
-        public Entity FindParentEntity()
+        Entity IEntity.FindParentEntity()
         {
             var pMeta = this.GetRepository().FindParentPropertyInfo(false);
             if (pMeta != null) { return this.GetRefEntity(pMeta.ManagedProperty as IRefEntityProperty); }

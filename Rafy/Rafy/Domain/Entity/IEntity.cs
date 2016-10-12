@@ -20,6 +20,11 @@ namespace Rafy.Domain
         EntityList ParentList { get; }
 
         /// <summary>
+        /// 获取组合关系中父对象的引用。
+        /// </summary>
+        Entity FindParentEntity();
+
+        /// <summary>
         /// 获取所有已经加载的组合子的字段集合。
         /// 
         /// 返回的字段的值必须是 IEntityOrList 类型。

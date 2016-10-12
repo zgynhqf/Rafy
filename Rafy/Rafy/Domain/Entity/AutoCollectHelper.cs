@@ -55,7 +55,7 @@ namespace Rafy.Domain
 
             if (toParentProperty != null)
             {
-                var parent = entity.FindParentEntity();
+                var parent = (entity as IEntity).FindParentEntity();
                 if (parent != null)
                 {
                     CalculateCollectValue(parent, toParentProperty, changedPropertyArgs);
