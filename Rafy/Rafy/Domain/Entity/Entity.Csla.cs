@@ -381,7 +381,7 @@ namespace Rafy.Domain
         /// 
         /// 虽然一个实体可以存在于多个集合中，但是，它只保留一个主要集合的引用，见：<see cref="EntityList.ResetItemParent"/>。
         /// </summary>
-        public EntityList ParentList
+        EntityList IEntity.ParentList
         {
             get { return _parent as EntityList; }
         }

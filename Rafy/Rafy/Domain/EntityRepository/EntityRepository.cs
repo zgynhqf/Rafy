@@ -463,7 +463,7 @@ namespace Rafy.Domain
         /// 列表的数据来自于 srcList 中的所有项。
         /// </summary>
         /// <param name="srcList"></param>
-        /// <param name="resetParent">此参数表示是否需要把 srcList 中的每一个实体的 <see cref="Entity.ParentList"/> 属性设置为新列表，并把实体的 ParentEntity 也设置为新列表的父实体。</param>
+        /// <param name="resetParent">此参数表示是否需要把 srcList 中的每一个实体的 <see cref="IEntity.ParentList"/> 属性设置为新列表，并把实体的 ParentEntity 也设置为新列表的父实体。</param>
         /// <returns></returns>
         public EntityList CreateList(IEnumerable srcList, bool resetParent)
         {

@@ -161,7 +161,7 @@ namespace Rafy.Domain
         /// <param name="addIntoDeletedList">是否在删除完成后，添加到删除列表中。</param>
         private void RemoveFromParentList(bool addIntoDeletedList)
         {
-            var parentList = this.ParentList;
+            var parentList = (this as IEntity).ParentList;
             if (parentList != null)
             {
                 //由于当前节点可能是 parentList 中的第一个，所以不能使用 IsTreeRootList 属性来直接检测是否在根节点集合中。
@@ -438,7 +438,7 @@ namespace Rafy.Domain
             get
             {
                 if (_treeParent != null) { return _treeParent._treeChildren; }
-                return this.ParentList;
+                return (this as IEntity).ParentList;
             }
         }
 

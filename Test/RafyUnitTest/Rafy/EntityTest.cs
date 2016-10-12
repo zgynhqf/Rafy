@@ -632,13 +632,13 @@ namespace RafyUnitTest
         public void __ET_EntityList_ParentList_Remove()
         {
             var item = new TestUser();
-            Assert.IsTrue(item.ParentList == null);
+            Assert.IsTrue((item as IEntity).ParentList == null);
 
             var list = new TestUserList { item };
-            Assert.IsTrue(item.ParentList == list);
+            Assert.IsTrue((item as IEntity).ParentList == list);
 
             list.RemoveAt(0);
-            Assert.IsTrue(item.ParentList == null);
+            Assert.IsTrue((item as IEntity).ParentList == null);
         }
 
         #endregion

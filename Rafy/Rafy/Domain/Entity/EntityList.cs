@@ -154,7 +154,7 @@ namespace Rafy.Domain
         #endregion
 
         /// <summary>
-        /// 是否：在添加每一项时，设置实体的 <see cref="Entity.ParentList"/> 为当前列表，并设置它的父对象为本列表对象的父对象。
+        /// 是否：在添加每一项时，设置实体的 <see cref="IEntity.ParentList"/> 为当前列表，并设置它的父对象为本列表对象的父对象。
         /// </summary>
         internal bool ResetItemParent;
 
