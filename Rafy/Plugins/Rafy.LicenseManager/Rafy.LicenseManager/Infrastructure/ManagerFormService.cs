@@ -16,9 +16,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Rafy.Domain;
+using Rafy.LicenseManager.Encryption;
 using Rafy.LicenseManager.Entities;
 using Rafy.LicenseManager.Properties;
-using Rafy.Security;
 
 namespace Rafy.LicenseManager.Infrastructure
 {

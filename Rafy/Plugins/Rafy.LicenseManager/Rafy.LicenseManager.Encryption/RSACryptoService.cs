@@ -16,12 +16,12 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Rafy.Security
+namespace Rafy.LicenseManager.Encryption
 {
     /// <summary>
     /// RSA加密
     /// </summary>
-    public static class RSACryptoService
+    internal static class RSACryptoService
     {
         /// <summary>
         /// 生成公钥私钥

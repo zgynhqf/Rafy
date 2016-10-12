@@ -15,7 +15,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Rafy.Security
+namespace Rafy.LicenseManager.Encryption
 {
     public static class SecurityAuthentication
     {
@@ -63,7 +63,7 @@ namespace Rafy.Security
         /// <param name="sSource">授权码</param>
         /// <param name="sPrivateKey">私钥</param>
         /// <returns>授权信息</returns>
-        public static AuthorizationCode Decrypt(string sSource, string sPrivateKey)
+        private static AuthorizationCode Decrypt(string sSource, string sPrivateKey)
         {
             var authorizationCode = new AuthorizationCode();
             var code = RSACryptoService.DecryptString(sSource, sPrivateKey);
