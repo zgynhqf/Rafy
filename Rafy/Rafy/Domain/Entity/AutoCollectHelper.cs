@@ -44,9 +44,10 @@ namespace Rafy.Domain
         {
             if (toTreeParent)
             {
-                if (entity.IsTreeParentLoaded && entity.TreeParent != null)
+                var treeEntity = entity as ITreeEntity;
+                if (treeEntity.IsTreeParentLoaded && treeEntity.TreeParent != null)
                 {
-                    CalculateCollectValue(entity.TreeParent, changedPropertyArgs.Property, changedPropertyArgs);
+                    CalculateCollectValue(treeEntity.TreeParent, changedPropertyArgs.Property, changedPropertyArgs);
                     //如果已经向树型父汇总，则不向父对象汇总，直接返回
                     return;
                 }

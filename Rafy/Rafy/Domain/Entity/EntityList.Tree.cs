@@ -251,7 +251,7 @@ namespace Rafy.Domain
                         var field = dbItem.TreeChildrenField;
                         if (field != null)
                         {
-                            item.TreeChildren.MergeFullTree(field.ToList());
+                            item.TreeChildren.MergeFullTree(field.Cast<Entity>().ToList());
                         }
                     }
                 }

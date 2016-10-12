@@ -383,7 +383,7 @@ namespace Rafy.Domain
                 case SubmitAction.ChildrenOnly:
                     if (markSaved)
                     {
-                        entity.MarkSaved();
+                        (entity as IDirtyAware).MarkSaved();
                     }
                     break;
                 default:

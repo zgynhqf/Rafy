@@ -382,7 +382,7 @@ namespace Rafy.Customization
             var m = new ViewConfigurationModel();
             list.Add(m);
             m.Read(evm);
-            m.MarkSaved();
+            (m as IDirtyAware).MarkSaved();
 
             return list;
         }
@@ -400,7 +400,7 @@ namespace Rafy.Customization
 
             var m = new ViewConfigurationModel();
             m.Read(evm);
-            m.MarkSaved();
+            (m as IDirtyAware).MarkSaved();
 
             return m;
         }

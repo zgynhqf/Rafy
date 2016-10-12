@@ -30,7 +30,7 @@ using Rafy.ManagedProperty;
 namespace Rafy.Domain
 {
     //树型实体相关的代码。
-    public partial class Entity : ITreeComponent
+    public partial class Entity : ITreeComponent, ITreeEntity
     {
         [NonSerialized]
         private Entity _treeParent;
@@ -199,7 +199,7 @@ namespace Rafy.Domain
         /// <summary>
         /// 返回当前的 TreeParent 的值是否已经加载。
         /// </summary>
-        public bool IsTreeParentLoaded
+        bool ITreeEntity.IsTreeParentLoaded
         {
             get { return _treeParent != null || this.TreePId == null; }
         }
@@ -298,7 +298,7 @@ namespace Rafy.Domain
         /// 
         /// 如果此实体不是一个树实体，则返回 -1。
         /// </summary>
-        public int TreeLevel
+        int ITreeEntity.TreeLevel
         {
             get
             {
@@ -455,7 +455,7 @@ namespace Rafy.Domain
         /// 防止重入、设置父子关系
         [Serializable]
         [DebuggerDisplay("{DebuggerDisplay}")]
-        public sealed class EntityTreeChildren : IList<Entity>, ITreeComponent
+        public sealed class EntityTreeChildren : IList<ITreeEntity>, IList<Entity>, ITreeComponent
         {
             #region 字段
 
@@ -628,7 +628,7 @@ namespace Rafy.Domain
                     for (int i = 0, c = _nodes.Count; i < c; i++)
                     {
                         var child = _nodes[i];
-                        child.MarkSaved();
+                        (child as IDirtyAware).MarkSaved();
                     }
                 }
             }
@@ -956,6 +956,7 @@ namespace Rafy.Domain
             {
                 this.Load();
                 if (_nodes == null) return;
+
                 _nodes.CopyTo(array, arrayIndex);
             }
 
@@ -1080,7 +1081,7 @@ namespace Rafy.Domain
                 {
                     (item as ITreeComponent).EachNode(e =>
                     {
-                        e.RevertDeletedStatus();
+                        (e as IEntityWithStatus).RevertDeletedStatus();
                         return false;
                     });
                 }
@@ -1289,6 +1290,60 @@ namespace Rafy.Domain
             IEnumerator IEnumerable.GetEnumerator()
             {
                 return this.GetEnumerator();
+            }
+
+            int IList<ITreeEntity>.IndexOf(ITreeEntity item)
+            {
+                return this.IndexOf(item as Entity);
+            }
+
+            void IList<ITreeEntity>.Insert(int index, ITreeEntity item)
+            {
+                this.Insert(index, item as Entity);
+            }
+
+            void ICollection<ITreeEntity>.Add(ITreeEntity item)
+            {
+                this.Add(item as Entity);
+            }
+
+            bool ICollection<ITreeEntity>.Contains(ITreeEntity item)
+            {
+                return this.Contains(item as Entity);
+            }
+
+            void ICollection<ITreeEntity>.CopyTo(ITreeEntity[] array, int arrayIndex)
+            {
+                this.Load();
+                if (_nodes == null) return;
+
+                for (int i = 0, c = _nodes.Count, c2 = array.Length; i < c && arrayIndex < c2; i++, arrayIndex++)
+                {
+                    array[arrayIndex] = _nodes[i];
+                }
+            }
+
+            bool ICollection<ITreeEntity>.Remove(ITreeEntity item)
+            {
+                return this.Remove(item as Entity);
+            }
+
+            IEnumerator<ITreeEntity> IEnumerable<ITreeEntity>.GetEnumerator()
+            {
+                return this.GetEnumerator();
+            }
+
+            ITreeEntity IList<ITreeEntity>.this[int index]
+            {
+                get
+                {
+                    return this[index];
+                }
+
+                set
+                {
+                    this[index] = value as Entity;
+                }
             }
 
             ITreeComponent ITreeComponent.TreeComponentParent

@@ -45,7 +45,7 @@ namespace RafyUnitTest
             entity.PersistenceStatus = PersistenceStatus.Unchanged;
             Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.Unchanged);
 
-            entity.MarkModifiedIfUnchanged();
+            (entity as IEntityWithStatus).MarkModifiedIfUnchanged();
             Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.Modified);
 
             entity.PersistenceStatus = PersistenceStatus.Deleted;
@@ -62,16 +62,16 @@ namespace RafyUnitTest
             entity.PersistenceStatus = PersistenceStatus.Deleted;
             Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.Deleted);
 
-            entity.RevertDeletedStatus();
+            (entity as IEntityWithStatus).RevertDeletedStatus();
             Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.Unchanged, "之前的状态是 Unchanged");
 
-            entity.MarkModifiedIfUnchanged();
+            (entity as IEntityWithStatus).MarkModifiedIfUnchanged();
             Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.Modified);
 
             entity.PersistenceStatus = PersistenceStatus.Deleted;
             Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.Deleted);
 
-            entity.RevertDeletedStatus();
+            (entity as IEntityWithStatus).RevertDeletedStatus();
             Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.Modified, "之前的状态是 Modified");
         }
 

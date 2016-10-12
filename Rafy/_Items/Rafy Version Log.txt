@@ -10,9 +10,11 @@
  * 
 *******************************************************/
 
-3.54.3235
+3.55.3240
     ！修改接口
-        隐藏实体上不常用的属性：HasId、KeyProvider。
+        隐藏实体上不常用的属性：HasId、KeyProvider、IsTreeParentLoaded、TreeLevel。
+    添加接口
+        ITreeEntity、IManagedPropertyObject、IEntityWithStatus、IEntityWithManagedProperties、IClonableEntity。
 
 3.54.3233
     添加功能

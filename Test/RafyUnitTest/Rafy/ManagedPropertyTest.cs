@@ -667,7 +667,7 @@ namespace RafyUnitTest
             userRoles.Add(role);
             role.Name = "admin";
             Assert.IsTrue(user.Id == role.TestUserId);
-            Assert.IsTrue(!user.HasId);
+            Assert.IsTrue(!(user as IEntityWithId).IdProvider.IsAvailable(user.Id));
 
             //保存新建用户
             repo.Save(user);

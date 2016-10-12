@@ -125,7 +125,7 @@ namespace Rafy.WPF.Controls
         public override object GetParentItem(object item)
         {
             var entity = item as Entity;
-            if (entity.IsTreeParentLoaded || this.EnabledDataLazyLoading)
+            if ((entity as ITreeEntity).IsTreeParentLoaded || this.EnabledDataLazyLoading)
             {
                 return entity.TreeParent;
             }

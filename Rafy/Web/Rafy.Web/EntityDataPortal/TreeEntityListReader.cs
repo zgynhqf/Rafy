@@ -85,7 +85,7 @@ namespace Rafy.Web.EntityDataPortal
 
                 //暂时是把所有的实体都标记为需要删除。
                 //未来可以从客户端传输一个 isSelfDirty 的属性过来，有这个属性才标记、更新。
-                e.MarkModifiedIfUnchanged();
+                (e as IEntityWithStatus).MarkModifiedIfUnchanged();
             }
         }
 

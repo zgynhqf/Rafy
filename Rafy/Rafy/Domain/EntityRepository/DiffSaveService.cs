@@ -256,7 +256,7 @@ namespace Rafy.Domain
                 }
             }
 
-            oldEntity.MarkSaved();
+            (oldEntity as IDirtyAware).MarkSaved();
         }
     }
 }

@@ -131,7 +131,7 @@ namespace Rafy.Domain
         /// 
         /// 只有实体的状态是 Unchanged 状态时（其它状态已经算是 Dirty 了），调用本方法才会把实体的状态改为 Modified。
         /// </summary>
-        public void MarkModifiedIfUnchanged()
+        void IEntityWithStatus.MarkModifiedIfUnchanged()
         {
             //只有 Unchanged 状态时，才需要标记，这是因为其它状态已经算是 Dirty 了。
             if (_status == PersistenceStatus.Unchanged)
@@ -143,7 +143,7 @@ namespace Rafy.Domain
         /// <summary>
         /// 清空实体的 IsDeleted 状态，使其还原到删除之前的状态。
         /// </summary>
-        public void RevertDeletedStatus()
+        void IEntityWithStatus.RevertDeletedStatus()
         {
             SetFlags(EntitySerializableFlags.IsDeleted, false);
         }
@@ -151,7 +151,7 @@ namespace Rafy.Domain
         /// <summary>
         /// 清空实体的 IsNew 状态，使其还原到之前的状态。
         /// </summary>
-        public void RevertNewStatus()
+        void IEntityWithStatus.RevertNewStatus()
         {
             SetFlags(EntitySerializableFlags.IsNew, false);
         }
@@ -185,7 +185,7 @@ namespace Rafy.Domain
         /// <summary>
         /// 递归将整个组合对象树都标记为未变更状态。
         /// </summary>
-        public void MarkSaved()
+        void IDirtyAware.MarkSaved()
         {
             this.PersistenceStatus = PersistenceStatus.Unchanged;
 
@@ -252,7 +252,7 @@ namespace Rafy.Domain
             var meta = e.Property.DefaultMeta as IPropertyMetadata;
             if (meta.AffectStatus)
             {
-                this.MarkModifiedIfUnchanged();
+                (this as IEntityWithStatus).MarkModifiedIfUnchanged();
 
                 this.NotifyIfInRedundancyPath(e.Property as IProperty);
             }

@@ -165,7 +165,7 @@ namespace Rafy.Domain.ORM.BatchSubmit
                     if (i > 0) { sqlDelete.Append(','); }
                     else
                     {
-                        var keyType = item.KeyProvider.KeyType;
+                        var keyType = (item as IEntity).IdProvider.KeyType;
                         needDelimiter = keyType.IsClass;
                     }
 

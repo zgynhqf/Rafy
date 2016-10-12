@@ -72,4 +72,45 @@ namespace Rafy.Domain
         /// </summary>
         TreeChildren = 2
     }
+
+    /// <summary>
+    /// 树型实体对应的属性与操作。
+    /// </summary>
+    public interface ITreeEntity : ITreeComponent, IEntity
+    {
+        /// <summary>
+        /// 是否为树型实体。
+        /// </summary>
+        bool SupportTree { get; }
+
+        /// <summary>
+        /// 返回当前的 TreeParent 的值是否已经加载。
+        /// </summary>
+        bool IsTreeParentLoaded { get; }
+
+        /// <summary>
+        /// 此节点在树中的级别。 根节点是第一级。 此级别是完全根据 Rafy.Domain.Entity.TreeIndex 计算出来的。 如果此实体不是一个树实体，则返回 -1。
+        /// </summary>
+        int TreeLevel { get; }
+
+        /// <summary>
+        /// 树型实体的树型索引编码 这个属性是实现树型实体的关键所在！
+        /// </summary>
+        string TreeIndex { get; set; }
+
+        /// <summary>
+        /// 树型父实体的 Id 属性 默认使用存储于数据库中的字段，子类可以重写此属性以实现自定义的父子结构逻辑。
+        /// </summary>
+        object TreePId { get; set; }
+
+        /// <summary>
+        /// 树中的父对象。 操作此属性，同样引起 TreeChildren、EntityList 的变化。 同时，注意此属性并不是懒加载属性。
+        /// </summary>
+        Entity TreeParent { get; set; }
+
+        /// <summary>
+        /// 树中的子对象集合。 操作此属性，同样引起 TreeParent、EntityList 的变化。 同时，注意此属性并不是懒加载属性。
+        /// </summary>
+        Entity.EntityTreeChildren TreeChildren { get; }
+    }
 }

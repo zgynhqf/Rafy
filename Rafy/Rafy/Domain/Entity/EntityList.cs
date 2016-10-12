@@ -299,7 +299,7 @@ namespace Rafy.Domain
             {
                 (item as ITreeComponent).EachNode(i =>
                 {
-                    i.RevertDeletedStatus();
+                    (i as IEntityWithStatus).RevertDeletedStatus();
                     return false;
                 });
 

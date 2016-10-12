@@ -105,7 +105,7 @@ namespace Rafy.RBAC.Old
             foreach (var child in module.Children)
             {
                 var childModule = this.AddItemRecur(list, child);
-                childModule.TreeParent = item;
+                (childModule as ITreeEntity).TreeParent = item;
             }
 
             item.PersistenceStatus = PersistenceStatus.Unchanged;

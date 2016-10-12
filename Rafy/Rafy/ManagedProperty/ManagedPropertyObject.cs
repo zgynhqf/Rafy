@@ -46,7 +46,7 @@ namespace Rafy.ManagedProperty
     [CompiledPropertyDeclarer]
     [DebuggerDisplay("{DebuggerDisplay}")]
     [DebuggerTypeProxy(typeof(ManagedPropertyObjectTypeProxy))]
-    public abstract partial class ManagedPropertyObject : CustomSerializationObject, INotifyPropertyChanged, ICustomTypeDescriptor
+    public abstract partial class ManagedPropertyObject : CustomSerializationObject, IManagedPropertyObject, INotifyPropertyChanged, ICustomTypeDescriptor
     {
         #region 构造函数
 

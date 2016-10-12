@@ -667,10 +667,10 @@ namespace RafyUnitTest
                 repo.Save(list);
 
                 veryChild = repo.GetById(veryChild.Id);
-                Assert.IsTrue(!veryChild.IsTreeParentLoaded);
+                Assert.IsTrue(!(veryChild as ITreeEntity).IsTreeParentLoaded);
                 repo.LoadAllTreeParents(veryChild);
-                Assert.IsTrue(veryChild.IsTreeParentLoaded);
-                Assert.IsTrue(veryChild.TreeParent.IsTreeParentLoaded);
+                Assert.IsTrue((veryChild as ITreeEntity).IsTreeParentLoaded);
+                Assert.IsTrue((veryChild.TreeParent as ITreeEntity).IsTreeParentLoaded);
             }
         }
 
@@ -985,7 +985,7 @@ namespace RafyUnitTest
                     child
                 }
             };
-            root.MarkSaved();
+            (root as IDirtyAware).MarkSaved();
 
             Assert.IsTrue(child.TreePId.Equals(1));
 
@@ -1006,12 +1006,12 @@ namespace RafyUnitTest
             {
                 Id = 1234
             };
-            var b = new Folder();
+            var b = new Folder() as ITreeEntity;
             b.TreeParent = a;
 
             Assert.IsTrue(b.IsTreeParentLoaded);
             Assert.IsTrue(b.TreeParent == a);
-            Assert.IsTrue(b.TreePId == a.Id);
+            Assert.IsTrue(b.TreePId.Equals(a.Id));
             Assert.IsTrue(a.TreeChildren.Count == 1);
             Assert.IsTrue(a.TreeChildren[0] == b);
         }
@@ -1046,7 +1046,7 @@ namespace RafyUnitTest
             {
                 Id = 1234
             };
-            var a= new Folder();
+            var a = new Folder() as ITreeEntity;
             a.TreeParent = b;
 
             a.TreePId = null;
@@ -1068,7 +1068,7 @@ namespace RafyUnitTest
                 var b = new Folder();
                 repo.Save(b);
 
-                var a  = new Folder();
+                var a  = new Folder() as ITreeEntity;
                 a.TreePId = b.Id;
 
                 Assert.IsTrue(a.IsTreeParentLoaded);
@@ -1757,7 +1757,7 @@ namespace RafyUnitTest
             var repo = RF.Concrete<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
-                var veryChild = new Folder();
+                var veryChild = new Folder() as ITreeEntity;
                 var list = new FolderList
                 {
                     new Folder
@@ -1768,7 +1768,7 @@ namespace RafyUnitTest
                             {
                                 TreeChildren =
                                 {
-                                    veryChild,
+                                    veryChild as Entity,
                                 }
                             }
                         }
@@ -1779,7 +1779,7 @@ namespace RafyUnitTest
                 veryChild = repo.GetById(veryChild.Id);
 
                 Assert.IsTrue(!veryChild.IsTreeParentLoaded);
-                var p = veryChild.TreeParent;
+                var p = veryChild.TreeParent as ITreeEntity;
                 Assert.IsTrue(veryChild.IsTreeParentLoaded);
                 Assert.IsTrue(p != null);
 
@@ -1992,7 +1992,7 @@ namespace RafyUnitTest
             Assert.IsTrue(list2.Count == 2);
             var a = list2[0];
             Assert.IsTrue(a.TreeChildren.IsLoaded && a.TreeChildren.Count == 2);
-            foreach (var treeChild in a.TreeChildren)
+            foreach (ITreeEntity treeChild in a.TreeChildren)
             {
                 Assert.IsTrue(treeChild.IsTreeParentLoaded && treeChild.TreeParent == a);
             }

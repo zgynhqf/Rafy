@@ -82,7 +82,7 @@ namespace RafyUnitTest
 
                 using (RF.EnterEntityContext())
                 {
-                    user.MarkModifiedIfUnchanged();
+                    (user as IEntityWithStatus).MarkModifiedIfUnchanged();
                     repo.Save(user);
 
                     var user2 = repo.GetById(user.Id);

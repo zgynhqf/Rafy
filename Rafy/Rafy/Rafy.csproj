@@ -601,6 +601,7 @@
     <Compile Include="ManagedProperty\CustomSerializationObject.cs" />
     <Compile Include="ManagedProperty\ExtensionPropertiesRegister.cs" />
     <Compile Include="ManagedProperty\FreezableMeta.cs" />
+    <Compile Include="ManagedProperty\IManagedPropertyObject.cs" />
     <Compile Include="ManagedProperty\ManagedProperty.cs" />
     <Compile Include="ManagedProperty\ManagedPropertyChangedEventArgs.cs" />
     <Compile Include="ManagedProperty\ManagedPropertyChangedSource.cs" />

@@ -209,7 +209,7 @@ namespace Rafy.WPF.Command
         {
             return base.CanExecute(view) &&
                 view.Current != null
-                && view.Current.IsTreeParentLoaded
+                && (view.Current as ITreeEntity).IsTreeParentLoaded
                 && view.Current.TreeParent != null;
         }
 
