@@ -147,4 +147,7 @@
   <data name="ManagerFormTabControl1SelectedQueryAuthentication" xml:space="preserve">
     <value>授权信息查询</value>
   </data>
+  <data name="ManagerFormServiceValidateParametersNeedPrivateKeyAndPublicKey" xml:space="preserve">
+    <value>请在“获取私钥”选项卡生成或输入公钥与私钥。</value>
+  </data>
 </root>

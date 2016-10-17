@@ -33,10 +33,18 @@
             this.退出ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.帮助ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabGetPrivateKey = new System.Windows.Forms.TabPage();
+            this.btnGenerator = new System.Windows.Forms.Button();
+            this.tbPublicKey = new System.Windows.Forms.TextBox();
+            this.tbPrivateKey = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.tabAuthorization = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.tbLicenseCode = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.lblLog = new System.Windows.Forms.Label();
             this.btnGeneratorAuthorizationCode = new System.Windows.Forms.Button();
             this.cbxAuthorizationTarget = new System.Windows.Forms.ComboBox();
@@ -48,12 +56,15 @@
             this.tabAuthorizationView = new System.Windows.Forms.TabPage();
             this.dgvLicenseView = new System.Windows.Forms.DataGridView();
             this.MacCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PrivateKey = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PublicKey = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.LicenseCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ExpireTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.LicenseTarget = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CreateTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
+            this.tabGetPrivateKey.SuspendLayout();
             this.tabAuthorization.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -99,14 +110,81 @@
             this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl1.Controls.Add(this.tabGetPrivateKey);
             this.tabControl1.Controls.Add(this.tabAuthorization);
             this.tabControl1.Controls.Add(this.tabAuthorizationView);
             this.tabControl1.Location = new System.Drawing.Point(13, 32);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(857, 409);
+            this.tabControl1.Size = new System.Drawing.Size(857, 509);
             this.tabControl1.TabIndex = 1;
             this.tabControl1.Selected += new System.Windows.Forms.TabControlEventHandler(this._TabControl1_Selected);
+            // 
+            // tabGetPrivateKey
+            // 
+            this.tabGetPrivateKey.AllowDrop = true;
+            this.tabGetPrivateKey.Controls.Add(this.btnGenerator);
+            this.tabGetPrivateKey.Controls.Add(this.tbPublicKey);
+            this.tabGetPrivateKey.Controls.Add(this.tbPrivateKey);
+            this.tabGetPrivateKey.Controls.Add(this.label6);
+            this.tabGetPrivateKey.Controls.Add(this.label5);
+            this.tabGetPrivateKey.Location = new System.Drawing.Point(4, 25);
+            this.tabGetPrivateKey.Name = "tabGetPrivateKey";
+            this.tabGetPrivateKey.Padding = new System.Windows.Forms.Padding(3);
+            this.tabGetPrivateKey.Size = new System.Drawing.Size(849, 480);
+            this.tabGetPrivateKey.TabIndex = 2;
+            this.tabGetPrivateKey.Text = "获取私钥";
+            this.tabGetPrivateKey.UseVisualStyleBackColor = true;
+            // 
+            // btnGenerator
+            // 
+            this.btnGenerator.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnGenerator.Location = new System.Drawing.Point(368, 429);
+            this.btnGenerator.Name = "btnGenerator";
+            this.btnGenerator.Size = new System.Drawing.Size(121, 34);
+            this.btnGenerator.TabIndex = 4;
+            this.btnGenerator.Text = "获取公钥私钥";
+            this.btnGenerator.UseVisualStyleBackColor = true;
+            this.btnGenerator.Click += new System.EventHandler(this._BtnGenerator_Click);
+            // 
+            // tbPublicKey
+            // 
+            this.tbPublicKey.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbPublicKey.Location = new System.Drawing.Point(78, 226);
+            this.tbPublicKey.Multiline = true;
+            this.tbPublicKey.Name = "tbPublicKey";
+            this.tbPublicKey.Size = new System.Drawing.Size(746, 181);
+            this.tbPublicKey.TabIndex = 3;
+            // 
+            // tbPrivateKey
+            // 
+            this.tbPrivateKey.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbPrivateKey.Location = new System.Drawing.Point(78, 21);
+            this.tbPrivateKey.Multiline = true;
+            this.tbPrivateKey.Name = "tbPrivateKey";
+            this.tbPrivateKey.Size = new System.Drawing.Size(746, 181);
+            this.tbPrivateKey.TabIndex = 2;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(19, 228);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(52, 15);
+            this.label6.TabIndex = 1;
+            this.label6.Text = "公钥：";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(19, 24);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(52, 15);
+            this.label5.TabIndex = 0;
+            this.label5.Text = "私钥：";
             // 
             // tabAuthorization
             // 
@@ -115,7 +193,7 @@
             this.tabAuthorization.Location = new System.Drawing.Point(4, 25);
             this.tabAuthorization.Name = "tabAuthorization";
             this.tabAuthorization.Padding = new System.Windows.Forms.Padding(3);
-            this.tabAuthorization.Size = new System.Drawing.Size(849, 380);
+            this.tabAuthorization.Size = new System.Drawing.Size(849, 480);
             this.tabAuthorization.TabIndex = 0;
             this.tabAuthorization.Text = "授权";
             this.tabAuthorization.UseVisualStyleBackColor = true;
@@ -128,7 +206,7 @@
             this.groupBox2.Controls.Add(this.tbLicenseCode);
             this.groupBox2.Location = new System.Drawing.Point(503, 34);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(321, 319);
+            this.groupBox2.Size = new System.Drawing.Size(321, 419);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "授权码";
@@ -142,13 +220,15 @@
             this.tbLicenseCode.Multiline = true;
             this.tbLicenseCode.Name = "tbLicenseCode";
             this.tbLicenseCode.ReadOnly = true;
-            this.tbLicenseCode.Size = new System.Drawing.Size(296, 269);
+            this.tbLicenseCode.Size = new System.Drawing.Size(296, 369);
             this.tbLicenseCode.TabIndex = 0;
             // 
             // groupBox1
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox1.Controls.Add(this.textBox1);
+            this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.lblLog);
             this.groupBox1.Controls.Add(this.btnGeneratorAuthorizationCode);
             this.groupBox1.Controls.Add(this.cbxAuthorizationTarget);
@@ -159,23 +239,44 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(22, 34);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(455, 319);
+            this.groupBox1.Size = new System.Drawing.Size(455, 419);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "输入";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox1.Location = new System.Drawing.Point(124, 30);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(288, 120);
+            this.textBox1.TabIndex = 9;
+            this.textBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.textBox1_MouseClick);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(30, 34);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(82, 15);
+            this.label4.TabIndex = 8;
+            this.label4.Text = "输入私钥：";
             // 
             // lblLog
             // 
             this.lblLog.AutoSize = true;
             this.lblLog.ForeColor = System.Drawing.Color.OrangeRed;
-            this.lblLog.Location = new System.Drawing.Point(121, 270);
+            this.lblLog.Location = new System.Drawing.Point(121, 385);
             this.lblLog.Name = "lblLog";
-            this.lblLog.Size = new System.Drawing.Size(0, 15);
+            this.lblLog.Size = new System.Drawing.Size(112, 15);
             this.lblLog.TabIndex = 7;
+            this.lblLog.Text = "生成授权码成功";
             // 
             // btnGeneratorAuthorizationCode
             // 
-            this.btnGeneratorAuthorizationCode.Location = new System.Drawing.Point(124, 214);
+            this.btnGeneratorAuthorizationCode.Location = new System.Drawing.Point(124, 329);
             this.btnGeneratorAuthorizationCode.Name = "btnGeneratorAuthorizationCode";
             this.btnGeneratorAuthorizationCode.Size = new System.Drawing.Size(120, 30);
             this.btnGeneratorAuthorizationCode.TabIndex = 6;
@@ -189,7 +290,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.cbxAuthorizationTarget.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbxAuthorizationTarget.FormattingEnabled = true;
-            this.cbxAuthorizationTarget.Location = new System.Drawing.Point(124, 143);
+            this.cbxAuthorizationTarget.Location = new System.Drawing.Point(124, 275);
             this.cbxAuthorizationTarget.Name = "cbxAuthorizationTarget";
             this.cbxAuthorizationTarget.Size = new System.Drawing.Size(288, 23);
             this.cbxAuthorizationTarget.TabIndex = 5;
@@ -197,7 +298,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(32, 147);
+            this.label3.Location = new System.Drawing.Point(32, 279);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(82, 15);
             this.label3.TabIndex = 4;
@@ -209,7 +310,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dtpExpireTime.CustomFormat = "yyyy-MM-dd";
             this.dtpExpireTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtpExpireTime.Location = new System.Drawing.Point(124, 81);
+            this.dtpExpireTime.Location = new System.Drawing.Point(124, 222);
             this.dtpExpireTime.MinDate = new System.DateTime(2016, 1, 1, 0, 0, 0, 0);
             this.dtpExpireTime.Name = "dtpExpireTime";
             this.dtpExpireTime.Size = new System.Drawing.Size(288, 25);
@@ -218,7 +319,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(30, 87);
+            this.label2.Location = new System.Drawing.Point(30, 228);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(82, 15);
             this.label2.TabIndex = 2;
@@ -228,7 +329,7 @@
             // 
             this.tbMac.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbMac.Location = new System.Drawing.Point(124, 31);
+            this.tbMac.Location = new System.Drawing.Point(124, 172);
             this.tbMac.Name = "tbMac";
             this.tbMac.Size = new System.Drawing.Size(288, 25);
             this.tbMac.TabIndex = 1;
@@ -238,7 +339,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(30, 36);
+            this.label1.Location = new System.Drawing.Point(30, 177);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(84, 15);
             this.label1.TabIndex = 0;
@@ -250,7 +351,7 @@
             this.tabAuthorizationView.Location = new System.Drawing.Point(4, 25);
             this.tabAuthorizationView.Name = "tabAuthorizationView";
             this.tabAuthorizationView.Padding = new System.Windows.Forms.Padding(3);
-            this.tabAuthorizationView.Size = new System.Drawing.Size(849, 380);
+            this.tabAuthorizationView.Size = new System.Drawing.Size(849, 480);
             this.tabAuthorizationView.TabIndex = 1;
             this.tabAuthorizationView.Text = "授权信息查询";
             this.tabAuthorizationView.UseVisualStyleBackColor = true;
@@ -263,6 +364,8 @@
             this.dgvLicenseView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvLicenseView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.MacCode,
+            this.PrivateKey,
+            this.PublicKey,
             this.LicenseCode,
             this.ExpireTime,
             this.LicenseTarget,
@@ -270,7 +373,7 @@
             this.dgvLicenseView.Location = new System.Drawing.Point(6, 6);
             this.dgvLicenseView.Name = "dgvLicenseView";
             this.dgvLicenseView.RowTemplate.Height = 27;
-            this.dgvLicenseView.Size = new System.Drawing.Size(837, 368);
+            this.dgvLicenseView.Size = new System.Drawing.Size(837, 468);
             this.dgvLicenseView.TabIndex = 0;
             // 
             // MacCode
@@ -280,6 +383,18 @@
             this.MacCode.Name = "MacCode";
             this.MacCode.ReadOnly = true;
             this.MacCode.Width = 120;
+            // 
+            // PrivateKey
+            // 
+            this.PrivateKey.DataPropertyName = "PrivateKey";
+            this.PrivateKey.HeaderText = "私钥";
+            this.PrivateKey.Name = "PrivateKey";
+            // 
+            // PublicKey
+            // 
+            this.PublicKey.DataPropertyName = "PublicKey";
+            this.PublicKey.HeaderText = "公钥";
+            this.PublicKey.Name = "PublicKey";
             // 
             // LicenseCode
             // 
@@ -313,7 +428,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(882, 453);
+            this.ClientSize = new System.Drawing.Size(882, 553);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -327,6 +442,8 @@
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
+            this.tabGetPrivateKey.ResumeLayout(false);
+            this.tabGetPrivateKey.PerformLayout();
             this.tabAuthorization.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
@@ -360,7 +477,17 @@
         private System.Windows.Forms.TextBox tbLicenseCode;
         private System.Windows.Forms.DataGridView dgvLicenseView;
         private System.Windows.Forms.Label lblLog;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TabPage tabGetPrivateKey;
+        private System.Windows.Forms.Button btnGenerator;
+        private System.Windows.Forms.TextBox tbPublicKey;
+        private System.Windows.Forms.TextBox tbPrivateKey;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.DataGridViewTextBoxColumn MacCode;
+        private System.Windows.Forms.DataGridViewTextBoxColumn PrivateKey;
+        private System.Windows.Forms.DataGridViewTextBoxColumn PublicKey;
         private System.Windows.Forms.DataGridViewTextBoxColumn LicenseCode;
         private System.Windows.Forms.DataGridViewTextBoxColumn ExpireTime;
         private System.Windows.Forms.DataGridViewTextBoxColumn LicenseTarget;

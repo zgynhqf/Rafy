@@ -79,6 +79,15 @@ namespace Rafy.LicenseManager.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 请在“获取私钥”选项卡生成或输入公钥与私钥。.
+        /// </summary>
+        internal static string ManagerFormServiceValidateParametersNeedPrivateKeyAndPublicKey {
+            get {
+                return ResourceManager.GetString("ManagerFormServiceValidateParametersNeedPrivateKeyAndPublicKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 授权信息查询.
         /// </summary>
         internal static string ManagerFormTabControl1SelectedQueryAuthentication {

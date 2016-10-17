@@ -47,6 +47,26 @@ namespace Rafy.LicenseManager.Entities
 
         #region 一般属性
 
+        public static readonly Property<string> PrivateKeyProperty = P<LicenseEntity>.Register(e => e.PrivateKey);
+        /// <summary>
+        /// 获取或设置 RSA 私钥。
+        /// </summary>
+        public string PrivateKey
+        {
+            get { return this.GetProperty(PrivateKeyProperty); }
+            set { this.SetProperty(PrivateKeyProperty, value); }
+        }
+
+        public static readonly Property<string> PublicKeyProperty = P<LicenseEntity>.Register(e => e.PublicKey);
+        /// <summary>
+        /// 获取或设置 RSA 公钥。
+        /// </summary>
+        public string PublicKey
+        {
+            get { return this.GetProperty(PublicKeyProperty); }
+            set { this.SetProperty(PublicKeyProperty, value); }
+        }
+
         public static readonly Property<string> LicenseCodeProperty = P<LicenseEntity>.Register(e => e.LicenseCode);
         /// <summary>
         /// 获取或设置授权码。
@@ -126,7 +146,28 @@ namespace Rafy.LicenseManager.Entities
         /// 生产环境。
         /// </summary>
         [Description("生产环境")]
-        Production = 16
+        Production = 16,
+
+        [Description("ACME")]
+        Acme = 18,
+
+        /// <summary>
+        /// VICA
+        /// </summary>
+        [Description("VICA")]
+        Vica = 20,
+
+        /// <summary>
+        /// DBK 本地版
+        /// </summary>
+        [Description("DBK(本地版)")]
+        Dbk = 22,
+
+        /// <summary>
+        /// UK
+        /// </summary>
+        [Description("UK")]
+        Uk = 24
     }
 
     /// <summary>
