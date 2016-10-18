@@ -32,9 +32,9 @@ namespace Rafy.LicenseManager.Encryption
         /// <param name="mac">网卡物理地址</param>
         /// <param name="expireTime">到时时间</param>
         /// <param name="category">授权类型0=开发 1=产品</param>
-        /// <param name="sPublicKey">公钥</param>
+        /// <param name="privateKey">私钥</param>
         /// <returns></returns>
-        public static string Encrypt(string mac, DateTime expireTime, int category, string sPublicKey)
+        public static string Encrypt(string mac, DateTime expireTime, int category, string privateKey)
         {
             var now = DateTime.Now.ToString("yyyyMMddHHmmss");
             var macFormart = mac.Replace(":", "").Replace("-", "");
@@ -42,31 +42,31 @@ namespace Rafy.LicenseManager.Encryption
             var randKey = ran.Next(1000, 9999);
             //14+12+10+1+4 防止同一个授权信息生成相同的授权码
             string source = $"{now}{macFormart}{expireTime.ToString("yyyy-MM-dd")}{category}{randKey}";
-            return RSACryptoService.EncryptString(source, sPublicKey);
+            return RSACryptoService.EncryptString(source, privateKey);
         }
 
         /// <summary>
         /// 生成授权码
         /// </summary>
         /// <param name="authorizationCode">授权信息</param>
-        /// <param name="sPublicKey">公钥</param>
+        /// <param name="privateKey">私钥</param>
         /// <returns></returns>
-        public static string Encrypt(AuthorizationCode authorizationCode, string sPublicKey)
+        public static string Encrypt(AuthorizationCode authorizationCode, string privateKey)
         {
             return Encrypt(authorizationCode.Mac, authorizationCode.ExpireTime.Value, authorizationCode.Category,
-                sPublicKey);
+                privateKey);
         }
 
         /// <summary>
         /// 解密授权码
         /// </summary>
         /// <param name="sSource">授权码</param>
-        /// <param name="sPrivateKey">私钥</param>
+        /// <param name="publicKey">公钥</param>
         /// <returns>授权信息</returns>
-        public static AuthorizationCode Decrypt(string sSource, string sPrivateKey)
+        public static AuthorizationCode Decrypt(string sSource, string publicKey)
         {
             var authorizationCode = new AuthorizationCode();
-            var code = RSACryptoService.DecryptString(sSource, sPrivateKey);
+            var code = RSACryptoService.DecryptString(sSource, publicKey);
             authorizationCode.Mac = code.Substring(14, 12);
             authorizationCode.Category = Convert.ToInt32(code.Substring(36, 1));
             DateTime expireTime;
@@ -79,15 +79,15 @@ namespace Rafy.LicenseManager.Encryption
         /// 验证
         /// </summary>
         /// <param name="sSource">授权码</param>
-        /// <param name="sPrivateKey">私钥</param>
+        /// <param name="publicKey">公钥</param>
         /// <returns></returns>
-        public static AuthorizationResult Authenticate(string sSource, string sPrivateKey)
+        public static AuthorizationResult Authenticate(string sSource, string publicKey)
         {
             var result = new AuthorizationResult
             {
                 AuthorizationState = AuthorizationState.Success
             };
-            var authorizationCode = Decrypt(sSource, sPrivateKey);
+            var authorizationCode = Decrypt(sSource, publicKey);
             if (!MacList.Contains(authorizationCode.Mac.ToLower()))
             {
                 result.AuthorizationState = AuthorizationState.MacError;

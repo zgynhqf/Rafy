@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Rafy.Domain;
@@ -36,6 +37,10 @@ namespace Rafy.LicenseManager.UI
             {"复制私钥", "PrivateKey"},
             {"复制公钥", "PublicKey"},
             {"复制授权码", "LicenseCode"}
+        };
+        private readonly Dictionary<string, Action<string>> _delegateDictionary=new Dictionary<string, Action<string>>
+        {
+            {"删除", ManagerFormService.DeleteRecord}
         };
 
         public ManagerForm()
@@ -147,9 +152,16 @@ namespace Rafy.LicenseManager.UI
             this.tbLicenseCode.Text = entity.LicenseCode;
             this.tbLicenseCode.Focus();
             this.tbLicenseCode.Select(0, entity.LicenseCode.Length);
-            Clipboard.SetText(entity.LicenseCode);
 
-            this.lblLog.Text = LicenseManagerResource.ManagerFormSaveLicenseSuccess;
+            try
+            {
+                Clipboard.SetText(entity.LicenseCode);
+                this.lblLog.Text = LicenseManagerResource.ManagerFormSaveLicenseSuccess;
+            }
+            catch (ExternalException)
+            {
+                MessageBox.Show(@"自动复制到剪贴版失败，请手动复制。", LicenseManagerResource.ManagerFormGetLicenseEntityAuthenticationTargetWarning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private void _TbMac_MouseEnter(object sender, EventArgs e)
@@ -181,14 +193,14 @@ namespace Rafy.LicenseManager.UI
             this.tbPublicKey.Text = this._keys[1];
         }
 
-        private void textBox1_MouseClick(object sender, MouseEventArgs e)
+        private void _TextBox1_MouseClick(object sender, MouseEventArgs e)
         {
             if(this._keys == null) return;
             
             this.textBox1.Text = this._keys[0];
         }
 
-        private void dgvContextMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        private void _DgvContextMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             this.dgvContextMenu.Hide();
             if(this.dgvLicenseView.SelectedRows.Count < 1) return;
@@ -204,14 +216,29 @@ namespace Rafy.LicenseManager.UI
             }
             else
             {
+                if (this._delegateDictionary.ContainsKey(e.ClickedItem.Text))
+                {
+                    this._delegateDictionary[e.ClickedItem.Text](row.Cells["Id"].Value.ToString());
+                    MessageBox.Show(@"删除成功", @"提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    ManagerFormService.BindDataGridView(this.dgvLicenseView);
+                    return;
+                }
+
                 var publicKey = row.Cells["PublicKey"].Value.ToString();
                 var licenseCode = row.Cells["LicenseCode"].Value.ToString();
                 expressData = RSACryptoService.DecryptString(licenseCode, publicKey);
             }
 
-            Clipboard.SetText(expressData);
+            try
+            {
+                Clipboard.SetText(expressData);
+                MessageBox.Show(LicenseManagerResource.ManagerFormdgvContextMenuPaste);
+            }
+            catch (ExternalException)
+            {
+                MessageBox.Show(@"复制到剪贴版失败，请重试。", LicenseManagerResource.ManagerFormGetLicenseEntityAuthenticationTargetWarning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
 
-            MessageBox.Show(LicenseManagerResource.ManagerFormdgvContextMenuPaste);
         }
     }
 }

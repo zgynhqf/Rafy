@@ -12,9 +12,7 @@
 *******************************************************/
 
 using System;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.Remoting.Channels;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Rafy.Domain;
@@ -125,6 +123,7 @@ namespace Rafy.LicenseManager.Infrastructure
 
                 return new
                 {
+                    entity.Id,
                     entity.PrivateKey,
                     entity.PublicKey,
                     entity.LicenseTarget,
@@ -150,6 +149,19 @@ namespace Rafy.LicenseManager.Infrastructure
             var keys = RSACryptoService.GenerateKeys();
 
             return keys;
+        }
+
+        internal static void DeleteRecord(string id)
+        {
+            var repository = RF.Concrete<LicenseEntityRepository>();
+
+            var entity = repository.GetById(id);
+
+            if (entity == null) return;
+
+            entity.PersistenceStatus = PersistenceStatus.Deleted;
+
+            repository.Save(entity);
         }
     }
 }
