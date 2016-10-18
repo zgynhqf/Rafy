@@ -63,7 +63,7 @@ namespace Rafy.LicenseManager.Encryption
         /// <param name="sSource">授权码</param>
         /// <param name="sPrivateKey">私钥</param>
         /// <returns>授权信息</returns>
-        private static AuthorizationCode Decrypt(string sSource, string sPrivateKey)
+        public static AuthorizationCode Decrypt(string sSource, string sPrivateKey)
         {
             var authorizationCode = new AuthorizationCode();
             var code = RSACryptoService.DecryptString(sSource, sPrivateKey);
