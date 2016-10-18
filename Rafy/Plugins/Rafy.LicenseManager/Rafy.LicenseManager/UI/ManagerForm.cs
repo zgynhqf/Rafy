@@ -12,12 +12,14 @@
 *******************************************************/
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Rafy.Domain;
+using Rafy.LicenseManager.Encryption;
 using Rafy.LicenseManager.Entities;
 using Rafy.LicenseManager.Infrastructure;
 using Rafy.LicenseManager.Properties;
@@ -28,6 +30,13 @@ namespace Rafy.LicenseManager.UI
     {
         private ToolTip _toolTip;
         private string[] _keys;
+
+        private readonly Dictionary<string, string> _commandDictionary = new Dictionary<string, string>
+        {
+            {"复制私钥", "PrivateKey"},
+            {"复制公钥", "PublicKey"},
+            {"复制授权码", "LicenseCode"}
+        };
 
         public ManagerForm()
         {
@@ -47,6 +56,7 @@ namespace Rafy.LicenseManager.UI
                 AutoPopDelay = 0
             };
 
+            ManagerFormService.BindContextMenu(this.dgvLicenseView, this.dgvContextMenu);
         }
 
         /// <summary>
@@ -176,6 +186,32 @@ namespace Rafy.LicenseManager.UI
             if(this._keys == null) return;
             
             this.textBox1.Text = this._keys[0];
+        }
+
+        private void dgvContextMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            this.dgvContextMenu.Hide();
+            if(this.dgvLicenseView.SelectedRows.Count < 1) return;
+
+            var row = this.dgvLicenseView.SelectedRows[0];
+            var commandText = e.ClickedItem.Text;
+            string dataPropertyName;
+            string expressData;
+
+            if (this._commandDictionary.TryGetValue(commandText, out dataPropertyName))
+            {
+                expressData = row.Cells[dataPropertyName].Value.ToString();
+            }
+            else
+            {
+                var publicKey = row.Cells["PublicKey"].Value.ToString();
+                var licenseCode = row.Cells["LicenseCode"].Value.ToString();
+                expressData = RSACryptoService.DecryptString(licenseCode, publicKey);
+            }
+
+            Clipboard.SetText(expressData);
+
+            MessageBox.Show(LicenseManagerResource.ManagerFormdgvContextMenuPaste);
         }
     }
 }

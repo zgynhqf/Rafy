@@ -12,7 +12,9 @@
 *******************************************************/
 
 using System;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.Remoting.Channels;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Rafy.Domain;
@@ -81,6 +83,31 @@ namespace Rafy.LicenseManager.Infrastructure
             }
 
             return true;
+        }
+
+        internal static void BindContextMenu(DataGridView dataGridView, ContextMenuStrip contextMenuTrip)
+        {
+            dataGridView.CellMouseDown += (sender, e) =>
+            {
+                if (e.Button != MouseButtons.Right) return;
+                if (e.RowIndex < 0) return;
+
+                var dgv = sender as DataGridView;
+                if(dgv == null) return;
+
+                if (!dgv.Rows[e.RowIndex].Selected)
+                {
+                    dgv.ClearSelection();
+                    dgv.Rows[e.RowIndex].Selected = true;
+                }
+
+                if (dgv.SelectedRows.Count == 1)
+                {
+                    dgv.CurrentCell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                }
+
+                contextMenuTrip.Show(Control.MousePosition.X, Control.MousePosition.Y);
+            };
         }
 
         /// <summary>

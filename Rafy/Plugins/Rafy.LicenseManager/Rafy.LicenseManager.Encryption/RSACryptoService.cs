@@ -40,14 +40,14 @@ namespace Rafy.LicenseManager.Encryption
         /// 加密
         /// </summary>
         /// <param name="sSource">加密字符</param>
-        /// <param name="sPublicKey">公钥</param>
+        /// <param name="privateKey">公钥</param>
         /// <returns>加密后的字符</returns>
-        public static string EncryptString(string sSource, string sPublicKey)
+        public static string EncryptString(string sSource, string privateKey)
         {
             var enc = new UTF8Encoding();
             var bytes = enc.GetBytes(sSource);
             var crypt = new RSACryptoServiceProvider();
-            crypt.FromXmlString(sPublicKey);
+            crypt.FromXmlString(privateKey);
             //bytes = crypt.Encrypt(bytes, false);
             bytes = crypt.PrivateEncryption(bytes);
             return Convert.ToBase64String(bytes);
@@ -57,14 +57,14 @@ namespace Rafy.LicenseManager.Encryption
         /// 解密
         /// </summary>
         /// <param name="sSource">解密字符</param>
-        /// <param name="sPrivateKey"> </param>
+        /// <param name="publicKey"> </param>
         /// <returns></returns>
-        public static string DecryptString(string sSource, string sPrivateKey)
+        public static string DecryptString(string sSource, string publicKey)
         {
             var crypt = new RSACryptoServiceProvider();
             var enc = new UTF8Encoding();
             var bytes = Convert.FromBase64String(sSource);
-            crypt.FromXmlString(sPrivateKey);
+            crypt.FromXmlString(publicKey);
             //var decryptbyte = crypt.Decrypt(bytes, false);
             var decryptbyte = crypt.PublicDecryption(bytes);
             return enc.GetString(decryptbyte);

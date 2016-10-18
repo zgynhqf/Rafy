@@ -61,6 +61,15 @@ namespace Rafy.LicenseManager.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 已经复制到剪贴版，请在编辑器中按 Ctrl + V 进行粘贴。.
+        /// </summary>
+        internal static string ManagerFormdgvContextMenuPaste {
+            get {
+                return ResourceManager.GetString("ManagerFormdgvContextMenuPaste", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 授权目标错误。.
         /// </summary>
         internal static string ManagerFormGetLicenseEntityAuthenticationTargetWarning {

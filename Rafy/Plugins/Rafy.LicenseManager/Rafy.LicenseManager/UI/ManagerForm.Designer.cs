@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.文件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.退出ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -62,6 +63,12 @@
             this.ExpireTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.LicenseTarget = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CreateTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsmPrivateKey = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmPublicKey = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmLicenceCode = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmExpressData = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabGetPrivateKey.SuspendLayout();
@@ -70,6 +77,7 @@
             this.groupBox1.SuspendLayout();
             this.tabAuthorizationView.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLicenseView)).BeginInit();
+            this.dgvContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -133,7 +141,7 @@
             this.tabGetPrivateKey.Padding = new System.Windows.Forms.Padding(3);
             this.tabGetPrivateKey.Size = new System.Drawing.Size(849, 480);
             this.tabGetPrivateKey.TabIndex = 2;
-            this.tabGetPrivateKey.Text = "获取私钥";
+            this.tabGetPrivateKey.Text = "获取公钥私钥";
             this.tabGetPrivateKey.UseVisualStyleBackColor = true;
             // 
             // btnGenerator
@@ -424,6 +432,48 @@
             this.CreateTime.Name = "CreateTime";
             this.CreateTime.ReadOnly = true;
             // 
+            // dgvContextMenu
+            // 
+            this.dgvContextMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.dgvContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmPrivateKey,
+            this.tsmPublicKey,
+            this.tsmLicenceCode,
+            this.toolStripSeparator1,
+            this.tsmExpressData});
+            this.dgvContextMenu.Name = "dgvContextMenu";
+            this.dgvContextMenu.Size = new System.Drawing.Size(175, 114);
+            this.dgvContextMenu.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.dgvContextMenu_ItemClicked);
+            // 
+            // tsmPrivateKey
+            // 
+            this.tsmPrivateKey.Name = "tsmPrivateKey";
+            this.tsmPrivateKey.Size = new System.Drawing.Size(174, 26);
+            this.tsmPrivateKey.Text = "复制私钥";
+            // 
+            // tsmPublicKey
+            // 
+            this.tsmPublicKey.Name = "tsmPublicKey";
+            this.tsmPublicKey.Size = new System.Drawing.Size(174, 26);
+            this.tsmPublicKey.Text = "复制公钥";
+            // 
+            // tsmLicenceCode
+            // 
+            this.tsmLicenceCode.Name = "tsmLicenceCode";
+            this.tsmLicenceCode.Size = new System.Drawing.Size(174, 26);
+            this.tsmLicenceCode.Text = "复制授权码";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(171, 6);
+            // 
+            // tsmExpressData
+            // 
+            this.tsmExpressData.Name = "tsmExpressData";
+            this.tsmExpressData.Size = new System.Drawing.Size(174, 26);
+            this.tsmExpressData.Text = "获取明文数据";
+            // 
             // ManagerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -451,6 +501,7 @@
             this.groupBox1.PerformLayout();
             this.tabAuthorizationView.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvLicenseView)).EndInit();
+            this.dgvContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -492,5 +543,11 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ExpireTime;
         private System.Windows.Forms.DataGridViewTextBoxColumn LicenseTarget;
         private System.Windows.Forms.DataGridViewTextBoxColumn CreateTime;
+        private System.Windows.Forms.ContextMenuStrip dgvContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem tsmPrivateKey;
+        private System.Windows.Forms.ToolStripMenuItem tsmPublicKey;
+        private System.Windows.Forms.ToolStripMenuItem tsmLicenceCode;
+        private System.Windows.Forms.ToolStripMenuItem tsmExpressData;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
 }
