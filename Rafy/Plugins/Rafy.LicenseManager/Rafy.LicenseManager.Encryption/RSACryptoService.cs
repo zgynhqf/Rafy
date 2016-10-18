@@ -48,7 +48,8 @@ namespace Rafy.LicenseManager.Encryption
             var bytes = enc.GetBytes(sSource);
             var crypt = new RSACryptoServiceProvider();
             crypt.FromXmlString(sPublicKey);
-            bytes = crypt.Encrypt(bytes, false);
+            //bytes = crypt.Encrypt(bytes, false);
+            bytes = crypt.PrivateEncryption(bytes);
             return Convert.ToBase64String(bytes);
         }
 
@@ -64,7 +65,8 @@ namespace Rafy.LicenseManager.Encryption
             var enc = new UTF8Encoding();
             var bytes = Convert.FromBase64String(sSource);
             crypt.FromXmlString(sPrivateKey);
-            var decryptbyte = crypt.Decrypt(bytes, false);
+            //var decryptbyte = crypt.Decrypt(bytes, false);
+            var decryptbyte = crypt.PublicDecryption(bytes);
             return enc.GetString(decryptbyte);
         }
     }

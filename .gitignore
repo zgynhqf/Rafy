@@ -134,3 +134,6 @@
 /Rafy/Plugins/Rafy.LicenseManager/Rafy.Security/obj/Debug
 /Rafy/Plugins/Rafy.LicenseManager/Rafy.LicenseManager.Encryption/obj/Debug
 /Rafy/Plugins/Rafy.LicenseManager/Rafy.LicenseManager.Encryption/bin/Debug
+bin/
+obj/
+Debug/
