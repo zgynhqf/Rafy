@@ -5,8 +5,6 @@
 *.user
 /.gitattributes
 /.vs
-/Rafy/UIA/Rafy.UIA/bin/_Debug_UIA_Standard
-/Rafy/UIA/Rafy.UIA/obj/_Debug_UIA_Standard
 *.suo
 
 # Directory
