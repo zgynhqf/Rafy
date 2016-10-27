@@ -95,7 +95,7 @@ public virtual ChapterList GetBy(string name, PagingInfo pi)
                         <para>可以为扩展属性编写查询。</para>
                         <para>由于扩展属性写在额外的程序集插件中的，所以当无法通过 Linq 表达式进行查询。这时就不得不通过托管属性 IManagedProperty 来定义 SqlTree 完成查询了。</para>
                         <para>
-                            关于扩展属性，参见：<link xlink:href="760ddc4e-6b70-4713-b173-c855a00e25d0" />。
+                            关于扩展属性，参见：<link xlink:href="5a705045-b57e-46ab-be03-18183495d690" />。
                         </para>
                     </listItem>
                     <listItem>
