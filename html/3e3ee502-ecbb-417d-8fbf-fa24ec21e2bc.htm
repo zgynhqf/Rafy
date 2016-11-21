@@ -21,7 +21,7 @@
     .LoadWith(Product.ProductCategoryProperty);
 
 <span class="highlight-comment">//一次性将数据全部加载到内存中。</span>
-<span class="highlight-keyword">var</span> repo = RF.Concrete&lt;WarehouseRepository&gt;();
+<span class="highlight-keyword">var</span> repo = RF.ResolveInstance&lt;WarehouseRepository&gt;();
 <span class="highlight-keyword">var</span> warehouseList = repo.SearchByCode(<span class="highlight-literal">"001"</span>, eagerLoad);
 
 <span class="highlight-comment">//由于已经使用贪婪加载，所以数据都已经查询到内存中。下面的循环将不会再触发懒加载。</span>

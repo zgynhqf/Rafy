@@ -24,7 +24,7 @@
 
 <span class="highlight-comment">//本行执行实体查询，在数据库中进行分页（Sql 语句分页），返回需要的 20 个实体，</span>
 <span class="highlight-comment">//并查询出满足条件的实体个数，给 pagingInfo.TotalCount 赋值。</span>
-WarehouseRepository repo = RF.Concrete&lt;WarehouseRepository&gt;();
+WarehouseRepository repo = RF.ResolveInstance&lt;WarehouseRepository&gt;();
 WarehouseList list = repo.GetAll(pagingInfo);
 
 GridView.DataSource = list;<span class="highlight-comment">//绑定到界面的列表</span>

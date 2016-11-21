@@ -35,7 +35,7 @@
         RollValueStep = <span class="highlight-number">1</span>,
     };
 
-    <span class="highlight-keyword">var</span> infoRepo = RF.Concrete&lt;SerialNumberInfoRepository&gt;();
+    <span class="highlight-keyword">var</span> infoRepo = RF.ResolveInstance&lt;SerialNumberInfoRepository&gt;();
     infoRepo.Save(sni);
 
     <span class="highlight-keyword">return</span> sni;

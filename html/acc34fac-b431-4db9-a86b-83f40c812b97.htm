@@ -3,9 +3,9 @@
                 </p><p>该类的使用方法与 .NET 自带的 TransactionScope 类一致：使用 using 声明代码块，使用 Complete 方法提交整个事务。另外，建议使用 RF 类提供了方便构建单连接事务块的接口。</p><p>代码示例如下：</p><div class="codeSnippetContainer"><div class="codeSnippetContainerTabs"><div id="ID0EAAABAAA_tab1" class="codeSnippetContainerTabSingle">C#</div></div><div class="codeSnippetContainerCodeContainer"><div class="codeSnippetToolBar"><div class="codeSnippetToolBarText"><a id="ID0EAAABAAA_copyCode" href="#" onclick="javascript:CopyToClipboard('ID0EAAABAAA');return false;" title="Copy">Copy</a></div></div><div id="ID0EAAABAAA_code_Div1" class="codeSnippetContainerCode" style="display: block"><pre xml:space="preserve"><span class="highlight-keyword">using</span> (<span class="highlight-keyword">var</span> tran = RF.TransactionScope(JXCEntityRepository.DbSettingName))
 {
     <span class="highlight-comment">//以下两个查询使用的都是同一个数据库连接。</span>
-    <span class="highlight-keyword">var</span> whRepo = RF.Concrete&lt;WarehouseRepository&gt;();
+    <span class="highlight-keyword">var</span> whRepo = RF.ResolveInstance&lt;WarehouseRepository&gt;();
     <span class="highlight-keyword">var</span> warehouses = whRepo.GetAll();
-    <span class="highlight-keyword">var</span> userRepo = RF.Concrete&lt;UserRepository&gt;();
+    <span class="highlight-keyword">var</span> userRepo = RF.ResolveInstance&lt;UserRepository&gt;();
     <span class="highlight-keyword">var</span> users = userRepo.GetAll();
 
     <span class="highlight-comment">//do transaction...</span>
