@@ -83,7 +83,7 @@ namespace Rafy.MultiLanguages
 
             //根据当前语言文件化设定，来重新设置 CollectionEnabled
             var value = RafyEnvironment.Configuration.Section.CollectDevLanguages.ToBoolean();
-            var lang = RF.Concrete<LanguageRepository>().GetByCode(this.CurrentCulture);
+            var lang = RF.ResolveInstance<LanguageRepository>().GetByCode(this.CurrentCulture);
             if (lang != null)
             {
                 value &= lang.NeedCollect;
@@ -117,7 +117,7 @@ namespace Rafy.MultiLanguages
         {
             if (this._transDic == null)
             {
-                var lang = RF.Concrete<LanguageRepository>().GetByCode(this.CurrentCulture);
+                var lang = RF.ResolveInstance<LanguageRepository>().GetByCode(this.CurrentCulture);
 
                 //如果设置的语言已经在数据库中定义好了，则生成相应的两个字典，否则生成两个空字典。
                 if (lang != null)
@@ -126,7 +126,7 @@ namespace Rafy.MultiLanguages
                     this._transReverseDic = new Dictionary<string, string>(lang.MappingInfoList.Count);
 
                     //把 MappingList 中的所有项都加入到两个 Dictionary 集合中。
-                    var devItems = RF.Concrete<DevLanguageItemRepository>().CacheAll();
+                    var devItems = RF.ResolveInstance<DevLanguageItemRepository>().CacheAll();
                     foreach (MappingInfo item in lang.MappingInfoList)
                     {
                         var devItem = devItems.Find(item.DevLanguageItemId) as DevLanguageItem;
@@ -159,7 +159,7 @@ namespace Rafy.MultiLanguages
 
         public override IList<string> GetSupportCultures()
         {
-            var items = RF.Concrete<LanguageRepository>().CacheAll();
+            var items = RF.ResolveInstance<LanguageRepository>().CacheAll();
             var codes = items.Cast<Language>().Select(i => i.Code).ToArray();
             return codes;
         }

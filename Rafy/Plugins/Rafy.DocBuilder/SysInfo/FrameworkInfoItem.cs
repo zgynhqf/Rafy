@@ -148,7 +148,7 @@ namespace Rafy.DevTools.SysInfo
 
         private void CountDevLanguages()
         {
-            this.AddItem("语言项", RF.Concrete<DevLanguageItemRepository>().CountAll());
+            this.AddItem("语言项", RF.ResolveInstance<DevLanguageItemRepository>().CountAll());
         }
 
         private void AddItem(string key, object value)

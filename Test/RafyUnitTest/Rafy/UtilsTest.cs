@@ -34,7 +34,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void UtilsTest_Logger_DbAccessed()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
                 int count = 0;
@@ -63,7 +63,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void UtilsTest_Logger_ThreadDbAccessed()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
                 int count = 0;
@@ -92,7 +92,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void UtilsTest_Logger_DbAccessedCount()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
                 var c1 = Logger.DbAccessedCount;
@@ -113,7 +113,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void UtilsTest_Logger_ThreadDbAccessedCount()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
                 var c1 = Logger.ThreadDbAccessedCount;
@@ -138,7 +138,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void UtilsTest_TrasactionScope_RollBack()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             Assert.IsTrue(repo.CountAll() == 0);
 
             using (RF.TransactionScope(repo))
@@ -153,7 +153,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void UtilsTest_TrasactionScope_Complete()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             Assert.IsTrue(repo.CountAll() == 0);
 
             using (var tran = RF.TransactionScope(repo))
@@ -175,7 +175,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void UtilsTest_TrasactionScope_Inner_RollBack()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             Assert.IsTrue(repo.CountAll() == 0);
 
             using (var tranWhole = RF.TransactionScope(repo))
@@ -204,7 +204,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void UtilsTest_TrasactionScope_Outer_RollBack()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             Assert.IsTrue(repo.CountAll() == 0);
 
             using (var tranWhole = RF.TransactionScope(repo))
@@ -233,9 +233,9 @@ namespace RafyUnitTest
         [TestMethod]
         public void UtilsTest_TrasactionScope_MultiDatabases()
         {
-            var repoUser = RF.Concrete<TestUserRepository>();
+            var repoUser = RF.ResolveInstance<TestUserRepository>();
             Assert.IsTrue(repoUser.CountAll() == 0);
-            var repoCustomer = RF.Concrete<CustomerRepository>();
+            var repoCustomer = RF.ResolveInstance<CustomerRepository>();
             Assert.IsTrue(repoCustomer.CountAll() == 0);
 
             using (var tranWhole = RF.TransactionScope(repoUser))
@@ -278,7 +278,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void UtilsTest_LiteDataTable_Query()
         {
-            var repoUser = RF.Concrete<TestUserRepository>();
+            var repoUser = RF.ResolveInstance<TestUserRepository>();
             using (var tranWhole = RF.TransactionScope(repoUser))
             {
                 repoUser.Save(new TestUser() { Age = 1 });
@@ -559,7 +559,7 @@ namespace RafyUnitTest
 
         private static void DeleteUsers()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
 
             var users = repo.GetAll();
             users.Clear();

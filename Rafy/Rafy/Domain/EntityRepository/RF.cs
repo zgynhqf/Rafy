@@ -21,12 +21,12 @@ using Rafy.Domain.ORM;
 namespace Rafy.Domain
 {
     /// <summary>
-    /// 仓库工厂 API（快捷方式：RF 类型）
+    /// 仓库门面 API（快捷方式：<see cref="RF"/> 类型）
     /// 
     /// 封装了一些静态代理方法的实体分为代理类。
     /// 主要是方便上层的调用。
     /// </summary>
-    public abstract class RepositoryFactory
+    public abstract class RepositoryFacade
     {
         /// <summary>
         /// 用于查找指定实体的仓库。
@@ -53,6 +53,18 @@ namespace Rafy.Domain
         /// </summary>
         /// <typeparam name="TRepository"></typeparam>
         /// <returns></returns>
+        public static TRepository ResolveInstance<TRepository>()
+            where TRepository : EntityRepository
+        {
+            return HostByRepo<TRepository>.Instance;
+        }
+
+        /// <summary>
+        /// 用于查找指定类型的仓库。
+        /// </summary>
+        /// <typeparam name="TRepository"></typeparam>
+        /// <returns></returns>
+        [Obsolete]
         public static TRepository Concrete<TRepository>()
             where TRepository : EntityRepository
         {
@@ -94,19 +106,6 @@ namespace Rafy.Domain
         {
             Save(entity, EntitySaveType.Normal);
         }
-
-        ///// <summary>
-        ///// 把这个组件中的所有改动保存到仓库中，并同时把参数替换为从仓库（服务端）返回的实体。
-        ///// </summary>
-        ///// <param name="component">
-        ///// 传入参数：需要保存的实体/实体列表。
-        ///// 传出结果：保存完成后的实体/实体列表。注意，它与传入的对象并不是同一个对象。
-        ///// </param>
-        //public static void SaveReplace<T>(ref T component)
-        //    where T : class, IDomainComponent
-        //{
-        //    component = component.GetRepository().Save(component) as T;
-        //}
 
         /// <summary>
         /// 保存某个实体。
@@ -188,11 +187,24 @@ namespace Rafy.Domain
             return EntityContext.Disable();
         }
 
+        ///// <summary>
+        ///// 把这个组件中的所有改动保存到仓库中，并同时把参数替换为从仓库（服务端）返回的实体。
+        ///// </summary>
+        ///// <param name="component">
+        ///// 传入参数：需要保存的实体/实体列表。
+        ///// 传出结果：保存完成后的实体/实体列表。注意，它与传入的对象并不是同一个对象。
+        ///// </param>
+        //public static void SaveReplace<T>(ref T component)
+        //    where T : class, IDomainComponent
+        //{
+        //    component = component.GetRepository().Save(component) as T;
+        //}
+
         #endregion
 
         #region 私有化构造器
 
-        internal RepositoryFactory() { }
+        internal RepositoryFacade() { }
 
         #endregion
 
@@ -230,10 +242,10 @@ namespace Rafy.Domain
     }
 
     /// <summary>
-    /// 仓库工厂 API
-    /// RepositoryFactory 的缩写（快捷写法）
+    /// 仓库门面 API
+    /// <see cref="RepositoryFacade"/> 的缩写（快捷写法）
     /// </summary>
-    public abstract class RF : RepositoryFactory
+    public abstract class RF : RepositoryFacade
     {
         internal RF() { }
     }

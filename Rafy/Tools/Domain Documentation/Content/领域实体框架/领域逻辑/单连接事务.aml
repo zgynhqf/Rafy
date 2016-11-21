@@ -19,9 +19,9 @@
                     <![CDATA[using (var tran = RF.TransactionScope(JXCEntityRepository.DbSettingName))
 {
     //以下两个查询使用的都是同一个数据库连接。
-    var whRepo = RF.Concrete<WarehouseRepository>();
+    var whRepo = RF.ResolveInstance<WarehouseRepository>();
     var warehouses = whRepo.GetAll();
-    var userRepo = RF.Concrete<UserRepository>();
+    var userRepo = RF.ResolveInstance<UserRepository>();
     var users = userRepo.GetAll();
     
     //do transaction...

@@ -38,7 +38,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void EPT_IsPhantom()
         {
-            var repo = RF.Concrete<InvoiceRepository>();
+            var repo = RF.ResolveInstance<InvoiceRepository>();
             using (RF.TransactionScope(repo))
             {
                 var inv = new Invoice();
@@ -52,7 +52,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void EPT_SimpleDelete()
         {
-            var repo = RF.Concrete<InvoiceRepository>();
+            var repo = RF.ResolveInstance<InvoiceRepository>();
             using (RF.TransactionScope(repo))
             {
                 var item = new Invoice();
@@ -69,7 +69,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void EPT_Clear()
         {
-            var repo = RF.Concrete<InvoiceRepository>();
+            var repo = RF.ResolveInstance<InvoiceRepository>();
             using (RF.TransactionScope(repo))
             {
                 var InvoiceList = new InvoiceList
@@ -90,7 +90,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void EPT_Query()
         {
-            var repo = RF.Concrete<InvoiceRepository>();
+            var repo = RF.ResolveInstance<InvoiceRepository>();
             using (RF.TransactionScope(repo))
             {
                 var Invoice = new Invoice();
@@ -117,7 +117,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void EPT_Clear_Query()
         {
-            var repo = RF.Concrete<InvoiceRepository>();
+            var repo = RF.ResolveInstance<InvoiceRepository>();
             using (RF.TransactionScope(repo))
             {
                 var InvoiceList = new InvoiceList
@@ -150,8 +150,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void EPT_Aggt()
         {
-            var repo = RF.Concrete<InvoiceRepository>();
-            var itemRepo = RF.Concrete<InvoiceItemRepository>();
+            var repo = RF.ResolveInstance<InvoiceRepository>();
+            var itemRepo = RF.ResolveInstance<InvoiceItemRepository>();
             using (RF.TransactionScope(repo))
             {
                 var item = new Invoice
@@ -194,7 +194,7 @@ namespace RafyUnitTest
         {
             int size = EntityTest.BATCH_IMPORT_DATA_SIZE;
 
-            var repo = RF.Concrete<InvoiceRepository>();
+            var repo = RF.ResolveInstance<InvoiceRepository>();
             using (RF.TransactionScope(repo))
             {
                 var list = new InvoiceList();
@@ -225,8 +225,8 @@ namespace RafyUnitTest
         {
             int size = EntityTest.BATCH_IMPORT_DATA_SIZE;
 
-            var repo = RF.Concrete<InvoiceRepository>();
-            var itemRepo = RF.Concrete<InvoiceItemRepository>();
+            var repo = RF.ResolveInstance<InvoiceRepository>();
+            var itemRepo = RF.ResolveInstance<InvoiceItemRepository>();
             using (RF.TransactionScope(repo))
             {
                 var invoices = new InvoiceList();

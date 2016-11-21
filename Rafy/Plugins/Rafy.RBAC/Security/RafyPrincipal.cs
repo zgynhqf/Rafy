@@ -51,7 +51,7 @@ namespace Rafy.RBAC.Old.Security
             {
                 if (this._edsIdentity == null)
                 {
-                    this._edsIdentity = RF.Concrete<RafyIdentityRepository>().GetById(this._userId) as RafyIdentity;
+                    this._edsIdentity = RF.ResolveInstance<RafyIdentityRepository>().GetById(this._userId) as RafyIdentity;
                 }
 
                 return this._edsIdentity;
@@ -73,7 +73,7 @@ namespace Rafy.RBAC.Old.Security
         /// <returns></returns>
         public static bool Login(string username, string password)
         {
-            var identity = RF.Concrete<RafyIdentityRepository>().GetBy(username, password);
+            var identity = RF.ResolveInstance<RafyIdentityRepository>().GetBy(username, password);
             if (identity.IsAuthenticated)
             {
                 RafyEnvironment.Principal = new RafyPrincipal(identity);

@@ -99,7 +99,7 @@ public partial class WarehouseRepository : EntityRepository
                     建议通过 <codeInline>Concrete</codeInline> 方法获取仓库，该方法经过优化，速度比 <codeInline>Find</codeInline> 方法要快许多。
                 </para>
                 <code language="cs">
-                    <![CDATA[CarRepository carRepo = RF.Concrete<CarRepository>();]]>
+                    <![CDATA[CarRepository carRepo = RF.ResolveInstance<CarRepository>();]]>
                 </code>
             </content>
         </section>

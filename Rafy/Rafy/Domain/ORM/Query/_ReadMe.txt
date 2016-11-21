@@ -9,8 +9,8 @@ Rafy.Domain.ORM.Query.Impl 中的所有类，都继承自相应的 Sql 语法树
 public void ORM_EntityQueryTree_ChildrenAll()
 {
     var f = new QueryFactory();
-    var articleSource = f.EntitySource(RF.Concrete<ArticleRepository>());
-    var userSource = f.EntitySource(RF.Concrete<BlogUserRepository>(), "u");
+    var articleSource = f.EntitySource(RF.ResolveInstance<ArticleRepository>());
+    var userSource = f.EntitySource(RF.ResolveInstance<BlogUserRepository>(), "u");
 
     var query = f.Query(
         from: userSource,

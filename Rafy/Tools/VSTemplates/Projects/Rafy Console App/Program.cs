@@ -18,7 +18,7 @@ namespace $domainNamespace$
             new $domainNamespace$App().Startup();
 
             //在领域项目启动后，就可以使用领域模型了：
-            //var repo = RF.Concrete<XXXRepository>();
+            //var repo = RF.ResolveInstance<XXXRepository>();
             //repo.Save(new XXX { Name = "Name" });
             //var items = repo.CountAll();
             //Console.WriteLine("实体存储成功，目前数据库中存在 {0} 条数据。", items);

@@ -77,7 +77,7 @@ namespace Rafy.LicenseManager.Infrastructure
                 return false;
             }
 
-            var repository = RF.Concrete<LicenseEntityRepository>();
+            var repository = RF.ResolveInstance<LicenseEntityRepository>();
 
             var entity = repository.GetFirstBy(new CommonQueryCriteria(BinaryOperator.And) { new PropertyMatch(LicenseEntity.MacCodeProperty, PropertyOperator.Equal, mac) });
 
@@ -96,7 +96,7 @@ namespace Rafy.LicenseManager.Infrastructure
         /// <param name="dataGridView"></param>
         internal static void BindDataGridView(DataGridView dataGridView)
         {
-            var repository = RF.Concrete<LicenseEntityRepository>();
+            var repository = RF.ResolveInstance<LicenseEntityRepository>();
             var list = repository.GetAll();
 
             var source = list.Select(l =>

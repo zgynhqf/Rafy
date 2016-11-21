@@ -110,7 +110,7 @@ namespace Rafy.RBAC.Old.Security
         {
             var res = new RafyIdentity
             {
-                User = RF.Concrete<UserRepository>().GetBy(username, password)
+                User = RF.ResolveInstance<UserRepository>().GetBy(username, password)
             };
 
             res.LoadChildrenProperties();
@@ -124,7 +124,7 @@ namespace Rafy.RBAC.Old.Security
         {
             var res = new RafyIdentity
             {
-                User = RF.Concrete<UserRepository>().GetById(id) as User
+                User = RF.ResolveInstance<UserRepository>().GetById(id) as User
             };
 
             res.LoadChildrenProperties();

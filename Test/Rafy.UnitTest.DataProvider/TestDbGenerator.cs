@@ -66,8 +66,8 @@ namespace Rafy.UnitTest.DataProvider
                 var dbSetting = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName);
                 if (DbSetting.IsOracleProvider(dbSetting))
                 {
-                    OracleBatchImporter.EnableBatchSequence(RF.Concrete<BookRepository>());
-                    OracleBatchImporter.EnableBatchSequence(RF.Concrete<InvoiceRepository>());
+                    OracleBatchImporter.EnableBatchSequence(RF.ResolveInstance<BookRepository>());
+                    OracleBatchImporter.EnableBatchSequence(RF.ResolveInstance<InvoiceRepository>());
                 }
             }
         }

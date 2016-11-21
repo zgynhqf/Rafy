@@ -56,7 +56,7 @@ namespace Rafy.Accounts
                     }
                     else if (AccountsPlugin.IsUserNameInIdentity)
                     {
-                        user = RF.Concrete<UserRepository>().GetByUserName(identity.Name);
+                        user = RF.ResolveInstance<UserRepository>().GetByUserName(identity.Name);
                         if (user != null)
                         {
                             CurrentUserACI.Value = user;

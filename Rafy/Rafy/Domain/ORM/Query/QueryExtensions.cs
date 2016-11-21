@@ -53,7 +53,7 @@ namespace Rafy.Domain.ORM.Query
         public static ITableSource FindTable<TRepository>(this ISource source, string alias = null)
             where TRepository : EntityRepository
         {
-            var repo = RF.Concrete<TRepository>();
+            var repo = RF.ResolveInstance<TRepository>();
             return source.FindTable(repo, alias);
         }
 

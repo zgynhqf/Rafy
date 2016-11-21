@@ -50,7 +50,7 @@
 
 //本行执行实体查询，在数据库中进行分页（Sql 语句分页），返回需要的 20 个实体，
 //并查询出满足条件的实体个数，给 pagingInfo.TotalCount 赋值。
-WarehouseRepository repo = RF.Concrete<WarehouseRepository>();
+WarehouseRepository repo = RF.ResolveInstance<WarehouseRepository>();
 WarehouseList list = repo.GetAll(pagingInfo);
 
 GridView.DataSource = list;//绑定到界面的列表

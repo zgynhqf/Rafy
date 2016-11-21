@@ -129,7 +129,7 @@ namespace RafyUnitTest
                 next = controller.GenerateNext(sni, DateTime.Parse("2016-05-02"));
                 Assert.AreEqual("2016050200000003", next);
 
-                var valueRepo = RF.Concrete<SerialNumberValueRepository>();
+                var valueRepo = RF.ResolveInstance<SerialNumberValueRepository>();
                 var value = valueRepo.GetByTime(sni, DateTime.Parse("2016-05-02"));
                 Assert.AreEqual(3, value.RollValue);
             }

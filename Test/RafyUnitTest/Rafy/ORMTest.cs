@@ -38,7 +38,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_EntityContext_Query()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
                 var user = new TestUser();
@@ -59,7 +59,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_EntityContext_Insert()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             using (RF.EnterEntityContext())
             {
@@ -74,7 +74,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_EntityContext_Update()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
                 var user = new TestUser();
@@ -105,7 +105,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_OrderBy()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new TestUser { Name = "1" });
@@ -127,7 +127,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_DefaultOrderBy_Id()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
                 for (int i = 0; i < 10; i++) { repo.Save(new TestUser()); }
@@ -145,7 +145,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_MatchCriteria()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new TestUser { Age = 1, Name = "user1" });
@@ -166,7 +166,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_CommonQueryCriteria()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new TestUser { Age = 1, Name = "user1" });
@@ -184,7 +184,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_CommonQueryCriteria_getBy()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new TestUser { Age = 1, Name = "user1" });
@@ -209,7 +209,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_ByMultiParameters()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new TestUser { Age = 1, Name = "user1" });
@@ -230,7 +230,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_ByMultiParameters_Null()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new TestUser { Age = 1, Name = "user1" });
@@ -248,7 +248,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_ByMultiParameters_Empty()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new TestUser { Age = 1, Name = "user1" });
@@ -263,7 +263,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_ByMultiParameters_IntArray()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
                 var a1 = new TestUser { Age = 1, Name = "user1" };
@@ -280,7 +280,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_ByMultiParameters_IntArrayParam()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
                 var a1 = new TestUser { Age = 1, Name = "user1" };
@@ -300,7 +300,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_EagerLoad()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var so = new SectionOwner();
@@ -337,7 +337,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_EagerLoad_LoadWithTreeChildren_GetAll()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 RF.Save(new FolderList
@@ -387,7 +387,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_EagerLoad_LoadWithTreeChildren_GetById()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 Folder folder = null;
@@ -433,7 +433,7 @@ namespace RafyUnitTest
         //[TestMethod]
         //public void ORM_Query_Count_IPropertyQuery()
         //{
-        //    var repo = RF.Concrete<ChapterRepository>();
+        //    var repo = RF.ResolveInstance<ChapterRepository>();
         //    using (RF.TransactionScope(repo))
         //    {
         //        RF.Save(new Book
@@ -466,7 +466,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_Count()
         {
-            var repo = RF.Concrete<ChapterRepository>();
+            var repo = RF.ResolveInstance<ChapterRepository>();
             using (RF.TransactionScope(repo))
             {
                 RF.Save(new Book
@@ -499,7 +499,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_CountAll()
         {
-            var repo = RF.Concrete<ChapterRepository>();
+            var repo = RF.ResolveInstance<ChapterRepository>();
             using (RF.TransactionScope(repo))
             {
                 RF.Save(new Book
@@ -529,7 +529,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_CountByParentId()
         {
-            var repo = RF.Concrete<ChapterRepository>();
+            var repo = RF.ResolveInstance<ChapterRepository>();
             using (RF.TransactionScope(repo))
             {
                 var book = new Book
@@ -551,7 +551,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_GetFirst()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new Book { Name = "1" });
@@ -565,7 +565,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_GetAll()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new Book { Name = "1" });
@@ -581,7 +581,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_GetById()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var book = new Book { Name = "1" };
@@ -596,7 +596,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_GetByIdList()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var book = new Book { Name = "1" };
@@ -620,7 +620,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_GetByLargeIn()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (var tran = RF.TransactionScope(repo))
             {
                 var books = new BookList();
@@ -659,7 +659,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_GetByLargeIn_QueryInBatches_ComplicateInClause()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (var tran = RF.TransactionScope(repo))
             {
                 var books = new BookList();
@@ -687,7 +687,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_GetByParentIdList()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var book = new Book
@@ -721,7 +721,7 @@ namespace RafyUnitTest
                 };
                 repo.Save(book3);
 
-                var list = RF.Concrete<ChapterRepository>().GetByParentIdList(new object[] { book.Id, book2.Id });
+                var list = RF.ResolveInstance<ChapterRepository>().GetByParentIdList(new object[] { book.Id, book2.Id });
                 Assert.IsTrue(list.Count == 6);
                 Assert.IsTrue(list[0].Name == "1.1");
                 Assert.IsTrue(list[1].Name == "1.2");
@@ -735,7 +735,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_GetByParentIdList_5000()
         {
-            var repo = RF.Concrete<ChapterRepository>();
+            var repo = RF.ResolveInstance<ChapterRepository>();
             using (RF.TransactionScope(repo))
             {
                 var idList = new object[5000];
@@ -751,7 +751,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_GetByParentId()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var book = new Book
@@ -765,7 +765,7 @@ namespace RafyUnitTest
                 };
                 repo.Save(book);
 
-                var list = RF.Concrete<ChapterRepository>().GetByParentId(book.Id);
+                var list = RF.ResolveInstance<ChapterRepository>().GetByParentId(book.Id);
                 Assert.IsTrue(list.Count == 3);
                 Assert.IsTrue(list[0].Name == "1");
                 Assert.IsTrue(list[1].Name == "2");
@@ -776,7 +776,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_GetBy()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new Book { Name = "123" });
@@ -795,7 +795,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_TwoPropertiesConstraint()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new Book { Code = "1", Name = "2" });
@@ -811,7 +811,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_WhereChildrenExists()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new Book { });
@@ -835,7 +835,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_WhereChildrenExistsChapterName()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new Book { });
@@ -874,7 +874,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_WhereChildrenAllChapterName()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new Book { });
@@ -915,7 +915,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_DataProvider()
         {
-            var repo = RF.Concrete<BookLocRepository>();
+            var repo = RF.ResolveInstance<BookLocRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new BookLoc { Name = "1" });
@@ -932,7 +932,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_Query_DataProvider_OnQuerying_SameOverrideToRepo()
         {
-            var repo = RF.Concrete<BookLocRepository>();
+            var repo = RF.ResolveInstance<BookLocRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new BookLoc { Name = "1", Length = -1 });
@@ -954,7 +954,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_Where()
         {
-            var repo = RF.Concrete<PBSTypeRepository>();
+            var repo = RF.ResolveInstance<PBSTypeRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new PBSType { Name = "1" });
@@ -972,7 +972,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_Where_Reverse()
         {
-            var repo = RF.Concrete<PBSTypeRepository>();
+            var repo = RF.ResolveInstance<PBSTypeRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new PBSType { Name = "1" });
@@ -990,7 +990,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_Where_Boolean()
         {
-            var repo = RF.Concrete<PBSTypeRepository>();
+            var repo = RF.ResolveInstance<PBSTypeRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new PBSType { Name = "1", IsDefault = true });
@@ -1008,7 +1008,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_Where_Boolean_Raw()
         {
-            var repo = RF.Concrete<PBSTypeRepository>();
+            var repo = RF.ResolveInstance<PBSTypeRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new PBSType { Name = "1", IsDefault = true });
@@ -1023,7 +1023,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_Where_Boolean_Not()
         {
-            var repo = RF.Concrete<PBSTypeRepository>();
+            var repo = RF.ResolveInstance<PBSTypeRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new PBSType { Name = "1", IsDefault = true });
@@ -1041,7 +1041,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_Where_Boolean_InBinary()
         {
-            var repo = RF.Concrete<PBSTypeRepository>();
+            var repo = RF.ResolveInstance<PBSTypeRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new PBSType { Name = "1", IsDefault = true });
@@ -1058,7 +1058,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_Where_Boolean_InBinary_Not()
         {
-            var repo = RF.Concrete<PBSTypeRepository>();
+            var repo = RF.ResolveInstance<PBSTypeRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new PBSType { Name = "1", IsDefault = true });
@@ -1075,7 +1075,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_Where_And()
         {
-            var repo = RF.Concrete<PBSTypeRepository>();
+            var repo = RF.ResolveInstance<PBSTypeRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new PBSType { Code = "1", Name = "1" });
@@ -1095,7 +1095,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_Where_Or()
         {
-            var repo = RF.Concrete<PBSTypeRepository>();
+            var repo = RF.ResolveInstance<PBSTypeRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new PBSType { Code = "1", Name = "1" });
@@ -1115,7 +1115,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_WhereOnWhere()
         {
-            var repo = RF.Concrete<PBSTypeRepository>();
+            var repo = RF.ResolveInstance<PBSTypeRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new PBSType { Code = "1", Name = "1" });
@@ -1137,7 +1137,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_OrderBy()
         {
-            var repo = RF.Concrete<PBSTypeRepository>();
+            var repo = RF.ResolveInstance<PBSTypeRepository>();
             using (RF.TransactionScope(repo))
             {
                 Save5ItemsForOrder(repo);
@@ -1156,7 +1156,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_OrderByDescending()
         {
-            var repo = RF.Concrete<PBSTypeRepository>();
+            var repo = RF.ResolveInstance<PBSTypeRepository>();
             using (RF.TransactionScope(repo))
             {
                 Save5ItemsForOrder(repo);
@@ -1184,7 +1184,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_OrderByThenBy()
         {
-            var repo = RF.Concrete<PBSTypeRepository>();
+            var repo = RF.ResolveInstance<PBSTypeRepository>();
             using (RF.TransactionScope(repo))
             {
                 Save5ItemsForThenBy(repo);
@@ -1203,7 +1203,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_OrderByThenByDescending()
         {
-            var repo = RF.Concrete<PBSTypeRepository>();
+            var repo = RF.ResolveInstance<PBSTypeRepository>();
             using (RF.TransactionScope(repo))
             {
                 Save5ItemsForThenBy(repo);
@@ -1233,8 +1233,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_WhereRef()
         {
-            var repo = RF.Concrete<ChapterRepository>();
-            var rootRepo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<ChapterRepository>();
+            var rootRepo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 rootRepo.Save(new Book
@@ -1267,7 +1267,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_WhereRefAndWhereRef()
         {
-            var repo = RF.Concrete<SectionRepository>();
+            var repo = RF.ResolveInstance<SectionRepository>();
             using (RF.TransactionScope(repo))
             {
                 var sectionOwner = new SectionOwner { Name = "SO" };
@@ -1336,7 +1336,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_WhereNullableRef()
         {
-            var repo = RF.Concrete<FavorateRepository>();
+            var repo = RF.ResolveInstance<FavorateRepository>();
             using (RF.TransactionScope(repo))
             {
                 var book1 = new Book { Name = "Book1", };
@@ -1361,7 +1361,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_WhereNullableRef_AutoGenerateNullableRefConstraint()
         {
-            var repo = RF.Concrete<FavorateRepository>();
+            var repo = RF.ResolveInstance<FavorateRepository>();
             using (RF.TransactionScope(repo))
             {
                 var book1 = new Book { Name = "Book1", };
@@ -1382,8 +1382,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_Count()
         {
-            var repo = RF.Concrete<ChapterRepository>();
-            var rootRepo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<ChapterRepository>();
+            var rootRepo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 rootRepo.Save(new Book
@@ -1416,8 +1416,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_PureLinqCount()
         {
-            var repo = RF.Concrete<ChapterRepository>();
-            var rootRepo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<ChapterRepository>();
+            var rootRepo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 rootRepo.Save(new Book
@@ -1448,8 +1448,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_PureLinqLongCount()
         {
-            var repo = RF.Concrete<ChapterRepository>();
-            var rootRepo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<ChapterRepository>();
+            var rootRepo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 rootRepo.Save(new Book
@@ -1480,7 +1480,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_Paging()
         {
-            var repo = RF.Concrete<ChapterRepository>();
+            var repo = RF.ResolveInstance<ChapterRepository>();
             using (RF.TransactionScope(repo))
             {
                 RF.Save(new Book
@@ -1512,7 +1512,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_Paging_PageNumer1()
         {
-            var repo = RF.Concrete<ChapterRepository>();
+            var repo = RF.ResolveInstance<ChapterRepository>();
             using (RF.TransactionScope(repo))
             {
                 RF.Save(new Book
@@ -1544,7 +1544,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_StringContains()
         {
-            var repo = RF.Concrete<ChapterRepository>();
+            var repo = RF.ResolveInstance<ChapterRepository>();
             using (RF.TransactionScope(repo))
             {
                 RF.Save(new Book
@@ -1567,7 +1567,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_StringContains_Escape1()
         {
-            var repo = RF.Concrete<ChapterRepository>();
+            var repo = RF.ResolveInstance<ChapterRepository>();
             using (RF.TransactionScope(repo))
             {
                 RF.Save(new Book
@@ -1590,7 +1590,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_StringContains_Escape2()
         {
-            var repo = RF.Concrete<ChapterRepository>();
+            var repo = RF.ResolveInstance<ChapterRepository>();
             using (RF.TransactionScope(repo))
             {
                 RF.Save(new Book
@@ -1613,7 +1613,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_StringStartWith()
         {
-            var repo = RF.Concrete<ChapterRepository>();
+            var repo = RF.ResolveInstance<ChapterRepository>();
             using (RF.TransactionScope(repo))
             {
                 RF.Save(new Book
@@ -1636,7 +1636,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_StringEndWith()
         {
-            var repo = RF.Concrete<ChapterRepository>();
+            var repo = RF.ResolveInstance<ChapterRepository>();
             using (RF.TransactionScope(repo))
             {
                 RF.Save(new Book
@@ -1659,7 +1659,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_StringNotEmpty()
         {
-            var repo = RF.Concrete<ChapterRepository>();
+            var repo = RF.ResolveInstance<ChapterRepository>();
             using (RF.TransactionScope(repo))
             {
                 RF.Save(new Book
@@ -1683,7 +1683,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_StringContainsRef()
         {
-            var repo = RF.Concrete<ChapterRepository>();
+            var repo = RF.ResolveInstance<ChapterRepository>();
             using (RF.TransactionScope(repo))
             {
                 RF.Save(new Book
@@ -1722,7 +1722,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_StringLengthNotsupported()
         {
-            var repo = RF.Concrete<ChapterRepository>();
+            var repo = RF.ResolveInstance<ChapterRepository>();
             using (RF.TransactionScope(repo))
             {
                 try
@@ -1737,7 +1737,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_ValueInArray()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 RF.Save(new Book { Name = "1" });
@@ -1752,7 +1752,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_ValueInArray_Ref()
         {
-            var repo = RF.Concrete<ChapterRepository>();
+            var repo = RF.ResolveInstance<ChapterRepository>();
             using (RF.TransactionScope(repo))
             {
                 RF.Save(new Book
@@ -1789,7 +1789,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_ValueIn_List()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 RF.Save(new Book { Name = "1" });
@@ -1807,7 +1807,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_BracketOrAndOr()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new Book { Code = "c1", Name = "n1" });
@@ -1825,7 +1825,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_TwoPropertiesConstraint()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new Book { Code = "1", Name = "2" });
@@ -1844,8 +1844,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_TwoPropertiesConstraint_NormalToRef()
         {
-            var bcRepo = RF.Concrete<BookCategoryRepository>();
-            var repo = RF.Concrete<BookRepository>();
+            var bcRepo = RF.ResolveInstance<BookCategoryRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (var tran = RF.TransactionScope(repo))
             {
                 var bc = new BookCategory { Code = "1" };
@@ -1866,7 +1866,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_TwoPropertiesConstraint_RefToRef()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var bc1 = new BookCategory { Code = "1", Name = "1" };
@@ -1900,7 +1900,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_Argument_Nullable()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new Book { });
@@ -1919,7 +1919,7 @@ namespace RafyUnitTest
         //[TestMethod]
         //public void ORM_LinqQuery_Argument_Nullable_FetchBy()
         //{
-        //    var repo = RF.Concrete<BookRepository>();
+        //    var repo = RF.ResolveInstance<BookRepository>();
         //    using (RF.TransactionScope(repo))
         //    {
         //        repo.Save(new Book { });
@@ -1942,7 +1942,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_InnerJoin_TwoToSingleTable()
         {
-            var repo = RF.Concrete<ArticleRepository>();
+            var repo = RF.ResolveInstance<ArticleRepository>();
             using (RF.TransactionScope(repo))
             {
                 var huqf = new BlogUser { UserName = "huqf" };
@@ -1969,7 +1969,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_WhereChildren_Any()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new Book { });
@@ -1992,7 +1992,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_WhereChildren_Any_ChapterName()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new Book { });
@@ -2033,7 +2033,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_WhereChildren_Any_SectionName()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new Book { });
@@ -2090,7 +2090,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_WhereChildren_Any_SectionAndOwner()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var so = new SectionOwner { Name = "huqf" };
@@ -2170,7 +2170,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_WhereChildren_Any_RefChildren()
         {
-            var repo = RF.Concrete<FavorateRepository>();
+            var repo = RF.ResolveInstance<FavorateRepository>();
             using (RF.TransactionScope(repo))
             {
                 var b1 = new Book();
@@ -2206,7 +2206,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_WhereChildren_All_ChapterName()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new Book { Name = "0" });
@@ -2252,7 +2252,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_WhereChildren_All_Any()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var so = new SectionOwner { Name = "huqf" };
@@ -2335,7 +2335,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_WhereChildren_All_All()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var so = new SectionOwner { Name = "huqf" };
@@ -2427,7 +2427,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_WhereChildren_Complicated_Any_All()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 AddBookForAggtQuery(repo);
@@ -2445,7 +2445,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_LinqQuery_WhereChildren_Complicated_Any_All_WithPaging()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 AddBookForAggtQuery(repo);
@@ -2765,7 +2765,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_PagingQuery_GetAll()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
                 for (int i = 0; i < 10; i++)
@@ -2793,7 +2793,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_PagingQuery_GetAll_Top()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
                 for (int i = 0; i < 10; i++)
@@ -2818,8 +2818,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_PagingQuery_GetByParentId()
         {
-            var taskRepo = RF.Concrete<TestTreeTaskRepository>();
-            var userRepo = RF.Concrete<TestUserRepository>();
+            var taskRepo = RF.ResolveInstance<TestTreeTaskRepository>();
+            var userRepo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(userRepo))
             {
                 var user = new TestUser
@@ -2848,8 +2848,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_PagingQuery_GetByParentId_Top()
         {
-            var taskRepo = RF.Concrete<TestTreeTaskRepository>();
-            var userRepo = RF.Concrete<TestUserRepository>();
+            var taskRepo = RF.ResolveInstance<TestTreeTaskRepository>();
+            var userRepo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(userRepo))
             {
                 var user = new TestUser
@@ -2885,8 +2885,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_PagingQuery_Tree()
         {
-            var taskRepo = RF.Concrete<TestTreeTaskRepository>();
-            var userRepo = RF.Concrete<TestUserRepository>();
+            var taskRepo = RF.ResolveInstance<TestTreeTaskRepository>();
+            var userRepo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(userRepo))
             {
                 var user = new TestUser
@@ -2929,8 +2929,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_PagingQuery_ByRawSql()
         {
-            var roleRepo = RF.Concrete<TestRoleRepository>();
-            var userRepo = RF.Concrete<TestUserRepository>();
+            var roleRepo = RF.ResolveInstance<TestRoleRepository>();
+            var userRepo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(userRepo))
             {
                 var user = new TestUser();
@@ -2959,8 +2959,8 @@ ORDER BY Roles.Id DESC, Roles.name DESC", new object[] { 0 }, pagingInfo);
         [TestMethod]
         public void ORM_PagingQuery_ByRawSql_Top()
         {
-            var roleRepo = RF.Concrete<TestRoleRepository>();
-            var userRepo = RF.Concrete<TestUserRepository>();
+            var roleRepo = RF.ResolveInstance<TestRoleRepository>();
+            var userRepo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(userRepo))
             {
                 var user = new TestUser();
@@ -2993,7 +2993,7 @@ ORDER BY Roles.Id DESC, Roles.name DESC";
         [TestMethod]
         public void ORM_PagingQuery_ByMultiParameters()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new TestUser { Age = 1, Name = "user" });
@@ -4922,8 +4922,8 @@ ORDER BY t1.Code ASC, t1.Name DESC");
         public void ORM_TableQuery_InnerJoin()
         {
             var f = QueryFactory.Instance;
-            var articleSource = f.Table(RF.Concrete<ArticleRepository>(), "a");
-            var userSource = f.Table(RF.Concrete<BlogUserRepository>(), "u");
+            var articleSource = f.Table(RF.ResolveInstance<ArticleRepository>(), "a");
+            var userSource = f.Table(RF.ResolveInstance<BlogUserRepository>(), "u");
             var query = f.Query(
                 selection: f.Array(f.SelectAll(articleSource), f.SelectAll(userSource)),
                 from: f.Join(
@@ -4952,9 +4952,9 @@ WHERE u.UserName = {0}");
         public void ORM_TableQuery_InnerJoin_TwoToSingleTable()
         {
             var f = QueryFactory.Instance;
-            var articleSource = f.Table(RF.Concrete<ArticleRepository>(), "a");
-            var userSource1 = f.Table(RF.Concrete<BlogUserRepository>(), "u1");
-            var userSource2 = f.Table(RF.Concrete<BlogUserRepository>(), "u2");
+            var articleSource = f.Table(RF.ResolveInstance<ArticleRepository>(), "a");
+            var userSource1 = f.Table(RF.ResolveInstance<BlogUserRepository>(), "u1");
+            var userSource2 = f.Table(RF.ResolveInstance<BlogUserRepository>(), "u2");
             var query = f.Query(
                 selection: f.SelectAll(articleSource),
                 from: f.Join(
@@ -4991,8 +4991,8 @@ WHERE u2.UserName = {0}");
         public void ORM_TableQuery_OuterJoin()
         {
             var f = QueryFactory.Instance;
-            var articleSource = f.Table(RF.Concrete<ArticleRepository>(), "a");
-            var userSource = f.Table(RF.Concrete<BlogUserRepository>(), "u");
+            var articleSource = f.Table(RF.ResolveInstance<ArticleRepository>(), "a");
+            var userSource = f.Table(RF.ResolveInstance<BlogUserRepository>(), "u");
             var query = f.Query(
                 selection: f.SelectAll(articleSource),
                 from: f.Join(
@@ -5022,8 +5022,8 @@ WHERE u.UserName = {0}");
         public void ORM_TableQuery_InSubSelect()
         {
             var f = QueryFactory.Instance;
-            var articleSource = f.Table(RF.Concrete<ArticleRepository>());
-            var userSource = f.Table(RF.Concrete<BlogUserRepository>());
+            var articleSource = f.Table(RF.ResolveInstance<ArticleRepository>());
+            var userSource = f.Table(RF.ResolveInstance<BlogUserRepository>());
             var query = f.Query(
                 from: userSource,
                 where: f.Constraint(
@@ -5057,9 +5057,9 @@ WHERE BlogUser.Id IN (
         public void ORM_TableQuery_InSubSelect_Join()
         {
             var f = QueryFactory.Instance;
-            var articleSource = f.Table(RF.Concrete<ArticleRepository>());
-            var userSource = f.Table(RF.Concrete<BlogUserRepository>());
-            var adminSource = f.Table(RF.Concrete<BlogUserRepository>(), "Administrator");
+            var articleSource = f.Table(RF.ResolveInstance<ArticleRepository>());
+            var userSource = f.Table(RF.ResolveInstance<BlogUserRepository>());
+            var adminSource = f.Table(RF.ResolveInstance<BlogUserRepository>(), "Administrator");
 
             var query = f.Query(
                 from: userSource,
@@ -5100,8 +5100,8 @@ WHERE BlogUser.Id IN (
         public void ORM_TableQuery_ChildrenExists()
         {
             var f = QueryFactory.Instance;
-            var articleSource = f.Table(RF.Concrete<ArticleRepository>());
-            var userSource = f.Table(RF.Concrete<BlogUserRepository>(), "u");
+            var articleSource = f.Table(RF.ResolveInstance<ArticleRepository>());
+            var userSource = f.Table(RF.ResolveInstance<BlogUserRepository>(), "u");
 
             var query = f.Query(
                 from: userSource,
@@ -5137,8 +5137,8 @@ WHERE u.Id > {0} AND EXISTS (
         public void ORM_TableQuery_ChildrenAll()
         {
             var f = QueryFactory.Instance;
-            var articleSource = f.Table(RF.Concrete<ArticleRepository>());
-            var userSource = f.Table(RF.Concrete<BlogUserRepository>(), "u");
+            var articleSource = f.Table(RF.ResolveInstance<ArticleRepository>());
+            var userSource = f.Table(RF.ResolveInstance<BlogUserRepository>(), "u");
 
             var query = f.Query(
                 from: userSource,
@@ -5180,7 +5180,7 @@ WHERE u.Id > {0} AND NOT (EXISTS (
         public void ORM_TableQuery_SelectFromSelectResult()
         {
             var f = QueryFactory.Instance;
-            var userSource = f.Table(RF.Concrete<BlogUserRepository>());
+            var userSource = f.Table(RF.ResolveInstance<BlogUserRepository>());
 
             var subQuery = f.SubQuery(
                 query: f.Query(
@@ -5218,7 +5218,7 @@ WHERE T.Id < {1}");
         public void ORM_TableQuery_Paging()
         {
             var f = QueryFactory.Instance;
-            var source = f.Table(RF.Concrete<ArticleRepository>());
+            var source = f.Table(RF.ResolveInstance<ArticleRepository>());
             var pk = source.Column(Entity.IdProperty);
             var query = f.Query(
                 from: source,
@@ -5257,7 +5257,7 @@ ORDER BY Article.Code ASC");
         public void ORM_TableQuery_Paging_PageNumer1()
         {
             var f = QueryFactory.Instance;
-            var source = f.Table(RF.Concrete<ArticleRepository>());
+            var source = f.Table(RF.ResolveInstance<ArticleRepository>());
             var query = f.Query(
                 from: source,
                 where: f.Constraint(source.Column(Entity.IdProperty), PropertyOperator.Greater, 0),
@@ -5399,7 +5399,7 @@ ORDER BY Article.Code ASC");
         [TestMethod]
         public void ORM_Performance_Insert_DBA_Raw()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             try
             {
                 var watch = new System.Diagnostics.Stopwatch();
@@ -5461,7 +5461,7 @@ ORDER BY Article.Code ASC");
         [TestMethod]
         public void ORM_Performance_Insert_DBA()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             try
             {
                 var watch = new System.Diagnostics.Stopwatch();
@@ -5531,7 +5531,7 @@ ORDER BY Article.Code ASC");
         [TestMethod]
         public void ORM_Performance_Insert()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             try
             {
                 var bookList = new BookList();
@@ -5562,7 +5562,7 @@ ORDER BY Article.Code ASC");
         [TestMethod]
         public void ORM_Performance_Update()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             try
             {
                 this.InsertBooks();
@@ -5604,7 +5604,7 @@ ORDER BY Article.Code ASC");
         [TestMethod]
         public void ORM_Performance_Query()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             try
             {
                 this.InsertBooks();
@@ -5640,7 +5640,7 @@ ORDER BY Article.Code ASC");
         [TestMethod]
         public void ORM_Performance_Delete()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             try
             {
                 this.InsertBooks();
@@ -5670,7 +5670,7 @@ ORDER BY Article.Code ASC");
         [TestMethod]
         public void ORM_Performance_Insert_Transaction()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             try
             {
                 var bookList = new BookList();
@@ -5705,7 +5705,7 @@ ORDER BY Article.Code ASC");
         [TestMethod]
         public void ORM_Performance_Update_Transaction()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             try
             {
                 this.InsertBooks();
@@ -5751,7 +5751,7 @@ ORDER BY Article.Code ASC");
         [TestMethod]
         public void ORM_Performance_Query_Transaction()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             try
             {
                 this.InsertBooks();
@@ -5791,7 +5791,7 @@ ORDER BY Article.Code ASC");
         [TestMethod]
         public void ORM_Performance_Delete_Transaction()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             try
             {
                 this.InsertBooks();
@@ -5824,7 +5824,7 @@ ORDER BY Article.Code ASC");
 
         private void InsertBooks()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             for (int i = 0; i < Config_LineCount; i++)
             {
                 repo.Save(new Book { Name = i.ToString() });
@@ -5837,7 +5837,7 @@ ORDER BY Article.Code ASC");
             {
                 dba.ExecuteText("DELETE FROM BOOK");
             }
-            //var repo = RF.Concrete<BookRepository>();
+            //var repo = RF.ResolveInstance<BookRepository>();
             //var all = repo.GetAll();
             //all.Clear();
             //repo.Save(all);
@@ -5850,7 +5850,7 @@ ORDER BY Article.Code ASC");
         //[TestMethod]
         //public void ORM_Query_OrderBy_IPropertyQuery()
         //{
-        //    var repo = RF.Concrete<TestUserRepository>();
+        //    var repo = RF.ResolveInstance<TestUserRepository>();
         //    using (RF.TransactionScope(repo))
         //    {
         //        repo.Save(new TestUser { Name = "1" });
@@ -5872,7 +5872,7 @@ ORDER BY Article.Code ASC");
         //[TestMethod]
         //public void ORM_Query_DefaultOrderBy_Id_IPropertyQuery()
         //{
-        //    var repo = RF.Concrete<TestUserRepository>();
+        //    var repo = RF.ResolveInstance<TestUserRepository>();
         //    using (RF.TransactionScope(repo))
         //    {
         //        for (int i = 0; i < 10; i++) { repo.Save(new TestUser()); }
@@ -5890,7 +5890,7 @@ ORDER BY Article.Code ASC");
         //[TestMethod]
         //public void ORM_Query_MatchCriteria_IPropertyQuery()
         //{
-        //    var repo = RF.Concrete<TestUserRepository>();
+        //    var repo = RF.ResolveInstance<TestUserRepository>();
         //    using (RF.TransactionScope(repo))
         //    {
         //        repo.Save(new TestUser { Age = 1, Name = "user1" });
@@ -5911,7 +5911,7 @@ ORDER BY Article.Code ASC");
         //[TestMethod]
         //public void ORM_Query_ByMultiParameters_IPropertyQuery()
         //{
-        //    var repo = RF.Concrete<TestUserRepository>();
+        //    var repo = RF.ResolveInstance<TestUserRepository>();
         //    using (RF.TransactionScope(repo))
         //    {
         //        repo.Save(new TestUser { Age = 1, Name = "user1" });
@@ -5932,7 +5932,7 @@ ORDER BY Article.Code ASC");
         //[TestMethod]
         //public void ORM_Query_ByMultiParameters_Null_IPropertyQuery()
         //{
-        //    var repo = RF.Concrete<TestUserRepository>();
+        //    var repo = RF.ResolveInstance<TestUserRepository>();
         //    using (RF.TransactionScope(repo))
         //    {
         //        repo.Save(new TestUser { Age = 1, Name = "user1" });
@@ -5950,7 +5950,7 @@ ORDER BY Article.Code ASC");
         //[TestMethod]
         //public void ORM_Query_ByMultiParameters_Empty_IPropertyQuery()
         //{
-        //    var repo = RF.Concrete<TestUserRepository>();
+        //    var repo = RF.ResolveInstance<TestUserRepository>();
         //    using (RF.TransactionScope(repo))
         //    {
         //        repo.Save(new TestUser { Age = 1, Name = "user1" });
@@ -5965,7 +5965,7 @@ ORDER BY Article.Code ASC");
         //[TestMethod]
         //public void ORM_Query_EagerLoad_IPropertyQuery()
         //{
-        //    var repo = RF.Concrete<BookRepository>();
+        //    var repo = RF.ResolveInstance<BookRepository>();
         //    using (RF.TransactionScope(repo))
         //    {
         //        var so = new SectionOwner();
@@ -6001,7 +6001,7 @@ ORDER BY Article.Code ASC");
         //[TestMethod]
         //public void ORM_LinqQuery_WithPropertyQuery()
         //{
-        //    var repo = RF.Concrete<BookRepository>();
+        //    var repo = RF.ResolveInstance<BookRepository>();
         //    using (RF.TransactionScope(repo))
         //    {
         //        repo.Save(new Book { Code = "c1", Name = "n1" });
@@ -6019,7 +6019,7 @@ ORDER BY Article.Code ASC");
         //[TestMethod]
         //public void ORM_Query_TwoPropertiesConstraint_IPropertyQuery()
         //{
-        //    var repo = RF.Concrete<BookRepository>();
+        //    var repo = RF.ResolveInstance<BookRepository>();
         //    using (RF.TransactionScope(repo))
         //    {
         //        repo.Save(new Book { Code = "1", Name = "2" });
