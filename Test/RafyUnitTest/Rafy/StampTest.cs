@@ -46,7 +46,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void StampT_Insert_CreatedTime()
         {
-            var repo = RF.Concrete<InvoiceRepository>();
+            var repo = RF.ResolveInstance<InvoiceRepository>();
             using (RF.TransactionScope(repo))
             {
                 var inv = new Invoice();
@@ -64,7 +64,7 @@ namespace RafyUnitTest
         {
             RafyEnvironment.Principal = null;
 
-            var repo = RF.Concrete<InvoiceRepository>();
+            var repo = RF.ResolveInstance<InvoiceRepository>();
             using (RF.TransactionScope(repo))
             {
                 var inv = new Invoice();
@@ -87,7 +87,7 @@ namespace RafyUnitTest
                 var userName = "test user";
                 RafyEnvironment.Principal = new GenericPrincipal(new GenericIdentity(userName), null);
 
-                var repo = RF.Concrete<InvoiceRepository>();
+                var repo = RF.ResolveInstance<InvoiceRepository>();
                 using (RF.TransactionScope(repo))
                 {
                     var inv = new Invoice();
@@ -108,7 +108,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void StampT_Update_UpdatedTime()
         {
-            var repo = RF.Concrete<InvoiceRepository>();
+            var repo = RF.ResolveInstance<InvoiceRepository>();
             using (RF.TransactionScope(repo))
             {
                 var inv = new Invoice();
@@ -131,7 +131,7 @@ namespace RafyUnitTest
         {
             RafyEnvironment.Principal = null;
 
-            var repo = RF.Concrete<InvoiceRepository>();
+            var repo = RF.ResolveInstance<InvoiceRepository>();
             using (RF.TransactionScope(repo))
             {
                 var inv = new Invoice();
@@ -157,7 +157,7 @@ namespace RafyUnitTest
                 var userName = "test user";
                 RafyEnvironment.Principal = new GenericPrincipal(new GenericIdentity(userName), null);
 
-                var repo = RF.Concrete<InvoiceRepository>();
+                var repo = RF.ResolveInstance<InvoiceRepository>();
                 using (RF.TransactionScope(repo))
                 {
                     var inv = new Invoice();

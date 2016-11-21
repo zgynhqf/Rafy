@@ -20,7 +20,7 @@ namespace Rafy.UnitTest.WCFPortal
 
         public LiteDataTable GetTable()
         {
-            var repo = RF.Concrete<ArticleRepository>();
+            var repo = RF.ResolveInstance<ArticleRepository>();
 
             var res = repo.GetAllInTable();
 
@@ -30,7 +30,7 @@ namespace Rafy.UnitTest.WCFPortal
         public Article GetFirstArticle()
         {
             return null;
-            //return RF.Concrete<ArticleRepository>().GetFirst();
+            //return RF.ResolveInstance<ArticleRepository>().GetFirst();
         }
 
         public CompositeType GetDataUsingDataContract(CompositeType composite)

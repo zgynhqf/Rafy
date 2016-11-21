@@ -34,7 +34,7 @@ namespace Rafy.Domain.DbMigrations
             this.RunCode(db =>
             {
                 //由于本类没有支持 Down 操作，所以这里面的 Up 需要防止重入。
-                var orgRepository = RF.Concrete<OrgRepository>();
+                var orgRepository = RF.ResolveInstance<OrgRepository>();
                 var list = orgRepository.GetAll();
                 if (list.Count == 0)
                 {

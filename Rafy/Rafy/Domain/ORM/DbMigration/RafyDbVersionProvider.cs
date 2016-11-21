@@ -28,7 +28,7 @@ namespace Rafy.Domain.ORM.DbMigration
 
         public RafyDbVersionProvider()
         {
-            this._versionRepo = RF.Concrete<DbVersionRepository>();
+            this._versionRepo = RF.ResolveInstance<DbVersionRepository>();
         }
 
         protected override DateTime GetDbVersionCore()

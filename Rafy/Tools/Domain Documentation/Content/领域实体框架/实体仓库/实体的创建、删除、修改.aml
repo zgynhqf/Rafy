@@ -23,7 +23,7 @@
                     可使用 <codeInline>new</codeInline> 操作符来创建新实体，并直接保存到仓库中。
                 </para>
                 <code language="cs">
-                    <![CDATA[BookRepository repo = RF.Concrete<BookRepository>();
+                    <![CDATA[BookRepository repo = RF.ResolveInstance<BookRepository>();
 repo.Save(new Book());]]>
                 </code>
             </content>
@@ -36,14 +36,14 @@ repo.Save(new Book());]]>
                     通过 <codeInline>PersistenceStatus</codeInline> 属性把实体的状态标记为需要删除后，调用保存即可从仓库中删除该实体。
                 </para>
                 <code language="cs">
-                    <![CDATA[BookRepository repo = RF.Concrete<BookRepository>();
+                    <![CDATA[BookRepository repo = RF.ResolveInstance<BookRepository>();
 Book book = repo.GetById(1);
 book.PersistenceStatus = PersistenceStatus.Deleted;
 repo.Save(book);]]>
                 </code>
                 <para>另外，如果把一个实体从实体列表中移除后，再保存该列表，也可以达到删除该实体的效果：</para>
                 <code language="cs">
-                    <![CDATA[BookRepository repo = RF.Concrete<BookRepository>();
+                    <![CDATA[BookRepository repo = RF.ResolveInstance<BookRepository>();
 BookList bookList = repo.GetAll();
 if (bookList.Count > 0)
 {
@@ -53,7 +53,7 @@ repo.Save(bookList);]]>
                 </code>
                 <para>以下代码，则会导致从数据库中删除所有的书籍：</para>
                 <code language="cs">
-                    <![CDATA[BookRepository repo = RF.Concrete<BookRepository>();
+                    <![CDATA[BookRepository repo = RF.ResolveInstance<BookRepository>();
 BookList bookList = repo.GetAll();
 bookList.Clear();
 repo.Save(bookList);]]>
@@ -68,7 +68,7 @@ repo.Save(bookList);]]>
                     对于查询出来的实体，在修改其至少一个属性后，可以对其进行保存。
                 </para>
                 <code language="cs">
-                    <![CDATA[BookRepository repo = RF.Concrete<BookRepository>();
+                    <![CDATA[BookRepository repo = RF.ResolveInstance<BookRepository>();
 Book book = repo.GetById(1);
 book.Name = "New Name";
 repo.Save(book);]]>
@@ -91,7 +91,7 @@ car.WheelList.Add(new Wheel());
 car.WheelList.Add(new Wheel());
 car.WheelList.Add(new Wheel());
 
-var repo = RF.Concrete<CarRepository>();
+var repo = RF.ResolveInstance<CarRepository>();
 repo.Save(car);]]>
                 </code>
                 <para>注意，上例中，也可以直接使用 WheelRepository 来保存每一个 Wheel。</para>
@@ -109,7 +109,7 @@ repo.Save(car);]]>
                 </para>
                 <para>以下代码在删除小车时，也会删除与之对应的四个车轮：</para>
                 <code language="cs">
-                    <![CDATA[CarRepository repo = RF.Concrete<CarRepository>();
+                    <![CDATA[CarRepository repo = RF.ResolveInstance<CarRepository>();
 Car car = repo.GetById(1);
 car.Status = PersistenceStatus.Deleted;
 repo.Save(car);]]>
@@ -140,7 +140,7 @@ repo.Save(car);]]>
                     组合实体树中任一实体状态变更，都可以通过直接保存组合根来保存整个组合树。如，以下代码把一个四轮小车改造为一个三轮车：
                 </para>
                 <code language="cs">
-                    <![CDATA[CarRepository repo = RF.Concrete<CarRepository>();
+                    <![CDATA[CarRepository repo = RF.ResolveInstance<CarRepository>();
 Car car = repo.GetById(1);
 car.WheelList.RemoveAt(3);//移除第四个轮子
 car.WheelList[0].Weight = 100;//第一个轮子重量改变

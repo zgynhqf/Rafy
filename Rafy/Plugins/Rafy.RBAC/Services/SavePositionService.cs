@@ -29,7 +29,7 @@ namespace Rafy.RBAC.Old
 
         protected override Result ExecuteCore()
         {
-            var repo = RF.Concrete<PositionRepository>();
+            var repo = RF.ResolveInstance<PositionRepository>();
 
             foreach (Position item in EntityList)
             {

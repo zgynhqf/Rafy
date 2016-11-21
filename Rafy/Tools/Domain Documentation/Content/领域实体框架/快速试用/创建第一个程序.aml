@@ -267,7 +267,7 @@ public string Name
                                     在主函数中 new DomainApp().Startup(); 代码行后加入以下代码：
                                 </para>
                                 <code language="csharp">
-                                    <![CDATA[var repo = RF.Concrete<WarehouseRepository>();
+                                    <![CDATA[var repo = RF.ResolveInstance<WarehouseRepository>();
 repo.Save(new Warehouse { Name = "Name" });
 var items = repo.CountAll();
 Console.WriteLine("实体存储成功，目前数据库中存在 {0} 条数据。", items);

@@ -54,7 +54,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void APT_Register_Success()
         {
-            var repo = RF.Concrete<UserRepository>();
+            var repo = RF.ResolveInstance<UserRepository>();
             using (RF.TransactionScope(repo))
             {
                 var controller = DomainControllerFactory.Create<AccountController>();
@@ -73,7 +73,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void APT_Register_Validate_Password()
         {
-            var repo = RF.Concrete<UserRepository>();
+            var repo = RF.ResolveInstance<UserRepository>();
             using (RF.TransactionScope(repo))
             {
                 var controller = DomainControllerFactory.Create<AccountController>();
@@ -91,7 +91,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void APT_Register_Identity_UserName()
         {
-            var repo = RF.Concrete<UserRepository>();
+            var repo = RF.ResolveInstance<UserRepository>();
             using (RF.TransactionScope(repo))
             {
                 var controller = DomainControllerFactory.Create<AccountController>();
@@ -120,7 +120,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void APT_Register_Identity_Email()
         {
-            var repo = RF.Concrete<UserRepository>();
+            var repo = RF.ResolveInstance<UserRepository>();
             using (RF.TransactionScope(repo))
             {
                 var controller = DomainControllerFactory.Create<AccountController>();
@@ -158,7 +158,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void APT_Register_Identity_EmailAndUserName()
         {
-            var repo = RF.Concrete<UserRepository>();
+            var repo = RF.ResolveInstance<UserRepository>();
             using (RF.TransactionScope(repo))
             {
                 var controller = DomainControllerFactory.Create<AccountController>();
@@ -214,7 +214,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void APT_Login_Success_Email()
         {
-            var repo = RF.Concrete<UserRepository>();
+            var repo = RF.ResolveInstance<UserRepository>();
             using (RF.TransactionScope(repo))
             {
                 var controller = DomainControllerFactory.Create<AccountController>();
@@ -238,7 +238,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void APT_Login_Success()
         {
-            var repo = RF.Concrete<UserRepository>();
+            var repo = RF.ResolveInstance<UserRepository>();
             using (RF.TransactionScope(repo))
             {
                 var controller = DomainControllerFactory.Create<AccountController>();
@@ -263,7 +263,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void APT_Login_Failed()
         {
-            var repo = RF.Concrete<UserRepository>();
+            var repo = RF.ResolveInstance<UserRepository>();
             using (RF.TransactionScope(repo))
             {
                 var controller = DomainControllerFactory.Create<AccountController>();
@@ -286,7 +286,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void APT_Login_Failed_MaxLoginTimes()
         {
-            var repo = RF.Concrete<UserRepository>();
+            var repo = RF.ResolveInstance<UserRepository>();
             using (RF.TransactionScope(repo))
             {
                 var controller = DomainControllerFactory.Create<AccountController>();
@@ -330,7 +330,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void APT_Login_Failed_UserDisabled()
         {
-            var repo = RF.Concrete<UserRepository>();
+            var repo = RF.ResolveInstance<UserRepository>();
             using (RF.TransactionScope(repo))
             {
                 var controller = DomainControllerFactory.Create<AccountController>();

@@ -94,7 +94,7 @@ public SerialNumberInfo CreateDailySerialNumberInfo(string name, string format =
         RollValueStep = 1,
     };
 
-    var infoRepo = RF.Concrete<SerialNumberInfoRepository>();
+    var infoRepo = RF.ResolveInstance<SerialNumberInfoRepository>();
     infoRepo.Save(sni);
 
     return sni;

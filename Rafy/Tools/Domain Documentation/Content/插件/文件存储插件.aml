@@ -72,7 +72,7 @@
                                 </para>
                                 <para>保存文件及文件内容：</para>
                                 <code language="cs">
-                                    <![CDATA[var repo = RF.Concrete<FileInfoRepository>();
+                                    <![CDATA[var repo = RF.ResolveInstance<FileInfoRepository>();
 var file = new FileInfo
 {
     Name = "1.txt",
@@ -83,7 +83,7 @@ repo.Save(file);]]>
                                 </code>
                                 <para>读取文件及文件内容：</para>
                                 <code language="cs">
-                                    <![CDATA[var repo = RF.Concrete<FileInfoRepository>();
+                                    <![CDATA[var repo = RF.ResolveInstance<FileInfoRepository>();
 var file = repo.GetById(file.Id);
 var content = Encoding.UTF8.GetString(file.Content);//Content 属性使用懒加载设计，不到使用时是不会加载到内存中的。]]>
                                 </code>

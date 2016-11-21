@@ -39,7 +39,7 @@ namespace Rafy.MultiLanguages
             var collectedList = this.CollectedList;
             if (collectedList.Length > 0)
             {
-                var items = RF.Concrete<DevLanguageItemRepository>().CacheAll() as DevLanguageItemList;
+                var items = RF.ResolveInstance<DevLanguageItemRepository>().CacheAll() as DevLanguageItemList;
 
                 foreach (var item in collectedList)
                 {
@@ -57,8 +57,8 @@ namespace Rafy.MultiLanguages
         /// </summary>
         private void AutoAddOtherLanguageItems()
         {
-            var devItems = RF.Concrete<DevLanguageItemRepository>().CacheAll();
-            var languages = RF.Concrete<LanguageRepository>().CacheAll();
+            var devItems = RF.ResolveInstance<DevLanguageItemRepository>().CacheAll();
+            var languages = RF.ResolveInstance<LanguageRepository>().CacheAll();
 
             foreach (Language lang in languages)
             {

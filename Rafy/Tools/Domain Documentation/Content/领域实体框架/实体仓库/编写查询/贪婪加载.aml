@@ -50,7 +50,7 @@ var eagerLoad = new EagerLoadOptions()
     .LoadWith(Product.ProductCategoryProperty);
 
 //一次性将数据全部加载到内存中。
-var repo = RF.Concrete<WarehouseRepository>();
+var repo = RF.ResolveInstance<WarehouseRepository>();
 var warehouseList = repo.SearchByCode("001", eagerLoad);
 
 //由于已经使用贪婪加载，所以数据都已经查询到内存中。下面的循环将不会再触发懒加载。

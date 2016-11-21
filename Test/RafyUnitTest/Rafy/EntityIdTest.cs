@@ -41,7 +41,7 @@ namespace RafyUnitTest.StringEntity
         [TestMethod]
         public void EIT_StringId_Insert()
         {
-            var repo = RF.Concrete<HouseRepository>();
+            var repo = RF.ResolveInstance<HouseRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new House
@@ -56,7 +56,7 @@ namespace RafyUnitTest.StringEntity
         [TestMethod]
         public void EIT_StringId_Insert_NullKey()
         {
-            var repo = RF.Concrete<HouseRepository>();
+            var repo = RF.ResolveInstance<HouseRepository>();
             using (RF.TransactionScope(repo))
             {
                 bool error = false;
@@ -75,7 +75,7 @@ namespace RafyUnitTest.StringEntity
         [TestMethod]
         public void EIT_StringId_Insert_DeplicateKey()
         {
-            var repo = RF.Concrete<HouseRepository>();
+            var repo = RF.ResolveInstance<HouseRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new House { Id = "Id1" });
@@ -96,8 +96,8 @@ namespace RafyUnitTest.StringEntity
         [TestMethod]
         public void EIT_StringId_StringRefLong()
         {
-            var lRepo = RF.Concrete<LesseeRepository>();
-            var repo = RF.Concrete<HouseRepository>();
+            var lRepo = RF.ResolveInstance<LesseeRepository>();
+            var repo = RF.ResolveInstance<HouseRepository>();
             using (RF.TransactionScope(repo))
             {
                 var house = new House { Id = "House1" };
@@ -136,8 +136,8 @@ namespace RafyUnitTest.StringEntity
         [TestMethod]
         public void EIT_StringId_IntWithString_Insert()
         {
-            var repo = RF.Concrete<HouseMerchantRepository>();
-            var houseRepo = RF.Concrete<HouseRepository>();
+            var repo = RF.ResolveInstance<HouseMerchantRepository>();
+            var houseRepo = RF.ResolveInstance<HouseRepository>();
             using (RF.TransactionScope(repo))
             {
                 var house = new House { Id = "House1" };
@@ -167,8 +167,8 @@ namespace RafyUnitTest.StringEntity
         [TestMethod]
         public void EIT_StringId_IntWithString_GetByParentString()
         {
-            var repo = RF.Concrete<HouseMerchantRepository>();
-            var houseRepo = RF.Concrete<HouseRepository>();
+            var repo = RF.ResolveInstance<HouseMerchantRepository>();
+            var houseRepo = RF.ResolveInstance<HouseRepository>();
             using (RF.TransactionScope(repo))
             {
                 var house = new House { Id = "House1" };
@@ -203,8 +203,8 @@ namespace RafyUnitTest.StringEntity
         [TestMethod]
         public void EIT_StringId_IntWithString_GetParentRef()
         {
-            var repo = RF.Concrete<HouseMerchantRepository>();
-            var itemRepo = RF.Concrete<MerchantItemRepository>();
+            var repo = RF.ResolveInstance<HouseMerchantRepository>();
+            var itemRepo = RF.ResolveInstance<MerchantItemRepository>();
             using (RF.TransactionScope(repo))
             {
                 var house = new House { Id = "House1" };
@@ -238,7 +238,7 @@ namespace RafyUnitTest.StringEntity
         [TestMethod]
         public void EIT_LongId_Insert()
         {
-            var repo = RF.Concrete<LesseeRepository>();
+            var repo = RF.ResolveInstance<LesseeRepository>();
             using (RF.TransactionScope(repo))
             {
                 var entity = new Lessee();

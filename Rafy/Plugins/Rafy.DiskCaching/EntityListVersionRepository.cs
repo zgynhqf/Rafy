@@ -57,7 +57,7 @@ namespace Rafy.Domain.Caching
             item.ClassRegion = region.FullName;
             item.ScopeClass = scopeClass == null ? string.Empty : scopeClass.FullName;
             item.ScopeId = scopeId ?? string.Empty;
-            item = RF.Concrete<ScopeVersionRepository>().Save(item) as ScopeVersion;
+            item = RF.ResolveInstance<ScopeVersionRepository>().Save(item) as ScopeVersion;
 
             _versionListCache.Expire();
 
@@ -279,13 +279,13 @@ namespace Rafy.Domain.Caching
                     {
                         if (this._regionValues == null)
                         {
-                            var allValues = RF.Concrete<ScopeVersionRepository>().GetAll() as ScopeVersionList;
+                            var allValues = RF.ResolveInstance<ScopeVersionRepository>().GetAll() as ScopeVersionList;
                             this.SetAllValues(allValues);
                         }
                         //如果过期，则差异更新。
                         else if (this.IsExpired())
                         {
-                            var values = RF.Concrete<ScopeVersionRepository>().GetList(_serverTime);
+                            var values = RF.ResolveInstance<ScopeVersionRepository>().GetList(_serverTime);
                             this.UpdateByDifference(values);
                         }
                     }

@@ -177,12 +177,12 @@ namespace Rafy.RBAC.Old
         {
             var opId = c.OrgPositionId;
 
-            var moduleAC = RF.Concrete<ModuleACRepository>().GetById(c.ModuleACId);
+            var moduleAC = RF.ResolveInstance<ModuleACRepository>().GetById(c.ModuleACId);
             var operations = this.DoGetByParent(moduleAC);
 
             //把所有已经禁用的功能都加入到列表中去。并把这个返回
             var list = this.NewList();
-            var op = RF.Concrete<OrgPositionRepository>().GetById(opId) as OrgPosition;
+            var op = RF.ResolveInstance<OrgPositionRepository>().GetById(opId) as OrgPosition;
             var denyList = op.OrgPositionOperationDenyList;
             list.AddRange(operations.Cast<OperationAC>().Where(item =>
             {
