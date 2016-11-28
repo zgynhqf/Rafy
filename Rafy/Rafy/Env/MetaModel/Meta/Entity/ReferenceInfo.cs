@@ -32,7 +32,7 @@ namespace Rafy.MetaModel
         #endregion
 
         /// <summary>
-        /// 引用的类型
+        /// 对应的引用实体属性（托管属性）。
         /// </summary>
         public IRefEntityProperty RefEntityProperty { get; internal set; }
 
