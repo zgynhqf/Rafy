@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{03D5A267-C106-42A9-8959-93D7AE3648DD}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Rafy.RBAC.Old</RootNamespace>
+    <AssemblyName>Rafy.RBAC.Old</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Entities\Audit\AuditItem.g.cs">
+      <DependentUpon>AuditItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Audit\AuditLogItem.cs" />
+    <Compile Include="Entities\Audit\AuditLogService.cs" />
+    <Compile Include="Services\AuditServerService.cs" />
+    <Compile Include="Entities\Audit\ClientAuditLogProvider.cs" />
+    <Compile Include="Entities\Audit\IAuditLogProvider.cs" />
+    <Compile Include="Entities\Audit\AuditItem.cs" />
+    <Compile Include="Entities\Audit\AuditItemConditionCriteria.cs" />
+    <Compile Include="Entities\Org.g.cs">
+      <DependentUpon>Org.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\OrgPosition.g.cs">
+      <DependentUpon>OrgPosition.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\OrgPositionOperationDeny.g.cs">
+      <DependentUpon>OrgPositionOperationDeny.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\OrgPositionUser.g.cs">
+      <DependentUpon>OrgPositionUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Position.g.cs">
+      <DependentUpon>Position.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\User.g.cs">
+      <DependentUpon>User.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\UserLoginLog.g.cs">
+      <DependentUpon>UserLoginLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ViewModel\ModuleAC.g.cs">
+      <DependentUpon>ModuleAC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ViewModel\OperationAC.g.cs">
+      <DependentUpon>OperationAC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Security\RafyIdentity.g.cs">
+      <DependentUpon>RafyIdentity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Services\ClearLogService.cs" />
+    <Compile Include="Entities\Audit\ServerAuditLogProvider.cs" />
+    <Compile Include="Entities\OrgPositionOperationDeny.cs" />
+    <Compile Include="Security\RafyPermissionProvider.cs" />
+    <Compile Include="RBACPlugin.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Entities\ViewModel\ModuleAC.cs" />
+    <Compile Include="Entities\ViewModel\OperationAC.cs" />
+    <Compile Include="DbMigrations\_20090101_000000_InitRBACData.cs" />
+    <Compile Include="Entities\Org.cs" />
+    <Compile Include="Entities\OrgPosition.cs" />
+    <Compile Include="Entities\OrgPositionUser.cs" />
+    <Compile Include="Entities\Position.cs" />
+    <Compile Include="Security\RafyIdentity.cs" />
+    <Compile Include="Security\RafyPrincipal.cs" />
+    <Compile Include="Entities\User.cs" />
+    <Compile Include="Entities\UserLoginLog.cs" />
+    <Compile Include="Services\LogService.cs" />
+    <Compile Include="Services\DenyOperationService.cs" />
+    <Compile Include="Services\QueryModelLabelService.cs" />
+    <Compile Include="Services\SavePositionService.cs" />
+    <Compile Include="Services\SaveUserService.cs" />
+    <Compile Include="StringHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Rafy\Rafy.csproj">
+      <Project>{966A5BF2-D690-426B-AD68-AD868BB8F855}</Project>
+      <Name>Rafy</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Entities\RBAC.odml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(TargetPath)" "$(SolutionDir)Web\bin\Domain\" /Y
+xcopy "$(TargetPath)" "$(SolutionDir)WPFClient\bin\$(ConfigurationName)\Domain\" /Y
+xcopy "$(TargetPath)" "$(SolutionDir)ConsoleHost\bin\$(ConfigurationName)\Domain\" /Y</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

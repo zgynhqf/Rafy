@@ -32,7 +32,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "Web\Web.csproj", "{F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo", "Demo\Demo\Demo.csproj", "{BBC530FC-0B10-4DA9-9360-FFF250415EB5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.RBAC.Old", "Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.Old.csproj", "{03D5A267-C106-42A9-8959-93D7AE3648DD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.RBAC.Old", "Rafy\Plugins\Rafy.RBAC.Old\Rafy.RBAC\Rafy.RBAC.Old.csproj", "{03D5A267-C106-42A9-8959-93D7AE3648DD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.UnitTest", "Test\Rafy.UnitTest\Rafy.UnitTest.csproj", "{D226414C-37F6-4618-8B91-7E80E7D2C42E}"
 EndProject
@@ -40,7 +40,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.DiskCaching", "Rafy\Pl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFClient", "WPFClient\WPFClient.csproj", "{257BF7C4-07DE-4E76-B2E2-443E2200B1E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.RBAC.Old.WPF", "Rafy\Plugins\Rafy.RBAC.WPF\Rafy.RBAC.Old.WPF.csproj", "{547364FE-CCBF-4F72-9B72-F7BB272B0988}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.RBAC.Old.WPF", "Rafy\Plugins\Rafy.RBAC.Old\Rafy.RBAC.WPF\Rafy.RBAC.Old.WPF.csproj", "{547364FE-CCBF-4F72-9B72-F7BB272B0988}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JXC", "Demo\JXC\JXC.csproj", "{70AB9A4D-27E0-4F3C-9A7D-1A33F0FA4E73}"
 EndProject
@@ -81,7 +81,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modeling", "Modeling", "{8E
 EndProject
 Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "Domain Documentation", "Rafy\Tools\Domain Documentation\Domain Documentation.shfbproj", "{B3673A48-EF4C-47BC-9450-20D278F16558}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.RBAC.Old.Web", "Rafy\Plugins\Rafy.RBAC.Web\Rafy.RBAC.Old.Web.csproj", "{DF358672-DBA8-4ACF-84DF-AD61E8AB811E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.RBAC.Old.Web", "Rafy\Plugins\Rafy.RBAC.Old\Rafy.RBAC.Web\Rafy.RBAC.Old.Web.csproj", "{DF358672-DBA8-4ACF-84DF-AD61E8AB811E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.Customization.Web", "Rafy\Plugins\Rafy.Customization.Web\Rafy.Customization.Web.csproj", "{15ABC304-2DD3-4302-9C44-E75F86DD2FA5}"
 EndProject
@@ -150,6 +150,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Rafy.LicenseManager", "Rafy.LicenseManager", "{1D2022E1-44A9-4786-8B2E-927CD18CBB67}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.LicenseManager.Encryption", "Rafy\Plugins\Rafy.LicenseManager\Rafy.LicenseManager.Encryption\Rafy.LicenseManager.Encryption.csproj", "{9E62ED52-63DF-4AFB-BCF5-09B8134D7C52}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Rafy.RBAC", "Rafy.RBAC", "{7D317F92-6904-459E-A03C-EC4B44BB73B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -606,6 +608,7 @@ Global
 		{8F910D0F-0A51-417C-97E9-203C30FDA006} = {1D2022E1-44A9-4786-8B2E-927CD18CBB67}
 		{1D2022E1-44A9-4786-8B2E-927CD18CBB67} = {DC52A572-512A-4D70-81C0-F0EF8B6FFC85}
 		{9E62ED52-63DF-4AFB-BCF5-09B8134D7C52} = {1D2022E1-44A9-4786-8B2E-927CD18CBB67}
+		{7D317F92-6904-459E-A03C-EC4B44BB73B0} = {DC52A572-512A-4D70-81C0-F0EF8B6FFC85}
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = GIX4_ExpressApp.vsmdi

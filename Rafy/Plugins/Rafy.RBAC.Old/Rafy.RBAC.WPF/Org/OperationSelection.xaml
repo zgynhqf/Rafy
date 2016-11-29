@@ -1,0 +1,10 @@
+﻿<UserControl x:Class="Rafy.RBAC.Old.WPF.OperationSelection" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ad="clr-namespace:Rafy.WPF.Controls;assembly=Rafy.WPF">
+    <ad:ResizingPanel x:Name="container">
+        <ContentControl x:Name="navigation" ad:ResizingPanel.ResizeWidth="3*" />
+        <Border x:Name="result" ad:ResizingPanel.ResizeWidth="7*" BorderThickness="1"
+                BorderBrush="{DynamicResource BorderBrush}" />
+    </ad:ResizingPanel>
+</UserControl>
