@@ -25,7 +25,7 @@ namespace Rafy.MetaModel
     /// </summary>
     public class ColumnMeta : Freezable
     {
-        private bool _HasFKConstraint = true;
+        private bool _HasFKConstraint;
         /// <summary>
         /// 如果这是一个引用属性的列，则这个属性表示数据库中是否有对应的外键存在（引用属性也可以不映射外键）。
         /// </summary>
