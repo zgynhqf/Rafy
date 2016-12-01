@@ -48,7 +48,7 @@ namespace Rafy.RBAC.RoleManagement
 
         public long ResourceId
         {
-            get { return (long) GetRefId(ResourceIdProperty); }
+            get { return (long)GetRefId(ResourceIdProperty); }
             set { SetRefId(ResourceIdProperty, value); }
         }
 
@@ -60,7 +60,7 @@ namespace Rafy.RBAC.RoleManagement
 
         public long RoleId
         {
-            get { return (long) GetRefId(RoleIdProperty); }
+            get { return (long)GetRefId(RoleIdProperty); }
             set { SetRefId(RoleIdProperty, value); }
         }
 
@@ -90,7 +90,15 @@ namespace Rafy.RBAC.RoleManagement
         #endregion
 
         #region 一般属性
-
+        public static readonly Property<int> ModeProperty = P<DataFilter>.Register(e => e.Mode);
+        /// <summary>
+        /// 数据授权模式值可自行设置 如 本人、本部门、下级部门、自定义
+        /// </summary>
+        public int Mode
+        {
+            get { return this.GetProperty(ModeProperty); }
+            set { this.SetProperty(ModeProperty, value); }
+        }
         public static readonly Property<string> FilterRuleProperty = P<DataFilter>.Register(e => e.FilterRule);
 
         /// <summary>
