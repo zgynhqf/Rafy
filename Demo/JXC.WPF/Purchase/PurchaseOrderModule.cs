@@ -32,7 +32,7 @@ namespace JXC.WPF
         {
             base.OnItemCreated(entity);
 
-            var code = RF.Concrete<AutoCodeInfoRepository>().GetOrCreateAutoCode<PurchaseOrder>();
+            var code = RF.ResolveInstance<AutoCodeInfoRepository>().GetOrCreateAutoCode<PurchaseOrder>();
             var p = entity as PurchaseOrder;
             p.Code = code;
 
@@ -47,7 +47,7 @@ namespace JXC.WPF
                 var entity = sender as PurchaseOrder;
                 if (entity.StorageInDirectly && !entity.StorageId.HasValue)
                 {
-                    entity.Storage = RF.Concrete<StorageRepository>().GetDefault();
+                    entity.Storage = RF.ResolveInstance<StorageRepository>().GetDefault();
                 }
             }
         }

@@ -58,9 +58,9 @@ namespace FM.Commands
         {
             var userArray = log.Users.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             var tagArray = log.Tags.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            AsyncHelper.InvokeSafe(() =>
+            AsyncHelper.InvokeSafe((Action)(() =>
             {
-                var userRepo = RF.Concrete<PersonRepository>();
+                var userRepo = RF.ResolveInstance<PersonRepository>();
                 var users = userRepo.CacheAll().Concrete();
                 foreach (var userName in userArray)
                 {
@@ -75,7 +75,7 @@ namespace FM.Commands
                     }
                 }
 
-                var tagRepo = RF.Concrete<TagRepository>();
+                var tagRepo = RF.ResolveInstance<TagRepository>();
                 var tags = tagRepo.CacheAll().Concrete();
                 foreach (var tagName in tagArray)
                 {
@@ -89,7 +89,7 @@ namespace FM.Commands
                         userRepo.Save(tag);
                     }
                 }
-            });
+            }));
         }
     }
 }

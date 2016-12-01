@@ -41,7 +41,7 @@ namespace JXC
 
             var entityType = ClientEntities.Find(this.EntityType).EntityType;
 
-            this.code = RF.Concrete<AutoCodeInfoRepository>().GetOrCreateAutoCode(entityType);
+            this.code = RF.ResolveInstance<AutoCodeInfoRepository>().GetOrCreateAutoCode(entityType);
         }
     }
 }

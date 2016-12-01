@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.56.3248
+3.56.3249
     ★★公布、！修改接口、！删除接口、添加接口
         RepositoryFactory 重命名为 RepositoryFacade。
         RepositoryFactory.Concrete 方法重命名为 RepositoryFacade.ResolveInstance 方法。
