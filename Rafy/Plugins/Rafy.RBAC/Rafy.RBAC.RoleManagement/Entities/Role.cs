@@ -22,7 +22,7 @@ using Rafy.MetaModel.Attributes;
 namespace Rafy.RBAC.RoleManagement
 {
     /// <summary>
-    ///     角色
+    /// 角色
     /// </summary>
     [RootEntity, Serializable]
     public class Role : RoleManagementEntity
@@ -53,7 +53,7 @@ namespace Rafy.RBAC.RoleManagement
         public static readonly Property<string> NameProperty = P<Role>.Register(e => e.Name);
 
         /// <summary>
-        ///     角色名称
+        /// 角色名称
         /// </summary>
         public string Name
         {
@@ -64,7 +64,7 @@ namespace Rafy.RBAC.RoleManagement
         public static readonly Property<string> CodeProperty = P<Role>.Register(e => e.Code);
 
         /// <summary>
-        ///     角色编码
+        /// 角色编码
         /// </summary>
         public string Code
         {
@@ -75,7 +75,7 @@ namespace Rafy.RBAC.RoleManagement
         public static readonly Property<string> DescriptionProperty = P<Role>.Register(e => e.Description);
 
         /// <summary>
-        ///     角色描述
+        /// 角色描述
         /// </summary>
         public string Description
         {
@@ -91,7 +91,7 @@ namespace Rafy.RBAC.RoleManagement
     }
 
     /// <summary>
-    ///     实体的领域名称 列表类。
+    /// 实体的领域名称 列表类。
     /// </summary>
     [Serializable]
     public partial class RoleList : RoleManagementEntityList
@@ -99,13 +99,13 @@ namespace Rafy.RBAC.RoleManagement
     }
 
     /// <summary>
-    ///     实体的领域名称 仓库类。
-    ///     负责 实体的领域名称 类的查询、保存。
+    /// 实体的领域名称 仓库类。
+    /// 负责 实体的领域名称 类的查询、保存。
     /// </summary>
     public partial class RoleRepository : RoleManagementEntityRepository
     {
         /// <summary>
-        ///     单例模式，外界不可以直接构造本对象。
+        /// 单例模式，外界不可以直接构造本对象。
         /// </summary>
         protected RoleRepository()
         {
@@ -113,13 +113,13 @@ namespace Rafy.RBAC.RoleManagement
     }
 
     /// <summary>
-    ///     实体的领域名称 配置类。
-    ///     负责 实体的领域名称 类的实体元数据的配置。
+    /// 实体的领域名称 配置类。
+    /// 负责 实体的领域名称 类的实体元数据的配置。
     /// </summary>
     internal class RoleConfig : RoleManagementEntityConfig<Role>
     {
         /// <summary>
-        ///     配置实体的元数据
+        /// 配置实体的元数据
         /// </summary>
         protected override void ConfigMeta()
         {

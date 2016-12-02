@@ -23,7 +23,7 @@ using Rafy.MetaModel.Attributes;
 namespace Rafy.RBAC.RoleManagement
 {
     /// <summary>
-    ///     资源
+    /// 资源
     /// </summary>
     [RootEntity, Serializable]
     public class ResourceOperation : RoleManagementEntity
@@ -72,7 +72,7 @@ namespace Rafy.RBAC.RoleManagement
         public static readonly Property<string> NameProperty = P<ResourceOperation>.Register(e => e.Name);
 
         /// <summary>
-        ///     功能名称
+        /// 功能名称
         /// </summary>
         public string Name
         {
@@ -83,7 +83,7 @@ namespace Rafy.RBAC.RoleManagement
         public static readonly Property<string> CodeProperty = P<ResourceOperation>.Register(e => e.Code);
 
         /// <summary>
-        ///     功能编码
+        /// 功能编码
         /// </summary>
         public string Code
         {
@@ -95,28 +95,13 @@ namespace Rafy.RBAC.RoleManagement
         public static readonly Property<string> DescriptionProperty = P<ResourceOperation>.Register(e => e.Description);
 
         /// <summary>
-        ///     功能描述
+        /// 功能描述
         /// </summary>
         public string Description
         {
             get { return GetProperty(DescriptionProperty); }
             set { SetProperty(DescriptionProperty, value); }
         }
-
-        public static readonly Property<string> OperationNameProperty =
-            P<ResourceOperation>.Register(e => e.OperationName);
-
-        /// <summary>
-        ///     按钮名称
-        ///     此属性，对应界面按钮对象的operationName属性。
-        ///     用于对按钮进行权限控制。
-        /// </summary>
-        public string OperationName
-        {
-            get { return GetProperty(OperationNameProperty); }
-            set { SetProperty(OperationNameProperty, value); }
-        }
-
         #endregion
 
         #region 只读属性
@@ -125,7 +110,7 @@ namespace Rafy.RBAC.RoleManagement
     }
 
     /// <summary>
-    ///     实体的领域名称 列表类。
+    ///实体的领域名称 列表类。
     /// </summary>
     [Serializable]
     public partial class ResourceOperationList : RoleManagementEntityList
@@ -133,13 +118,13 @@ namespace Rafy.RBAC.RoleManagement
     }
 
     /// <summary>
-    ///     实体的领域名称 仓库类。
-    ///     负责 实体的领域名称 类的查询、保存。
+    /// 实体的领域名称 仓库类。
+    /// 负责 实体的领域名称 类的查询、保存。
     /// </summary>
     public partial class ResourceOperationRepository : RoleManagementEntityRepository
     {
         /// <summary>
-        ///     单例模式，外界不可以直接构造本对象。
+        /// 单例模式，外界不可以直接构造本对象。
         /// </summary>
         protected ResourceOperationRepository()
         {
@@ -147,13 +132,13 @@ namespace Rafy.RBAC.RoleManagement
     }
 
     /// <summary>
-    ///     实体的领域名称 配置类。
-    ///     负责 实体的领域名称 类的实体元数据的配置。
+    /// 实体的领域名称 配置类。
+    /// 负责 实体的领域名称 类的实体元数据的配置。
     /// </summary>
     internal class ResourceOperationConfig : RoleManagementEntityConfig<ResourceOperation>
     {
         /// <summary>
-        ///     配置实体的元数据
+        /// 配置实体的元数据
         /// </summary>
         protected override void ConfigMeta()
         {

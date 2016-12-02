@@ -23,7 +23,7 @@ using Rafy.MetaModel.Attributes;
 namespace Rafy.RBAC.RoleManagement
 {
     /// <summary>
-    ///     角色功能
+    /// 角色功能
     /// </summary>
     [RootEntity, Serializable]
     public class RoleOperation : RoleManagementEntity
@@ -74,7 +74,7 @@ namespace Rafy.RBAC.RoleManagement
             P<RoleOperation>.RegisterRef(e => e.Operation, OperationIdProperty);
 
         /// <summary>
-        ///     资源操作
+        /// 资源操作
         /// </summary>
         public ResourceOperation Operation
         {
@@ -98,7 +98,7 @@ namespace Rafy.RBAC.RoleManagement
     }
 
     /// <summary>
-    ///     实体的领域名称 列表类。
+    /// 实体的领域名称 列表类。
     /// </summary>
     [Serializable]
     public partial class RoleOperationList : RoleManagementEntityList
@@ -106,13 +106,13 @@ namespace Rafy.RBAC.RoleManagement
     }
 
     /// <summary>
-    ///     实体的领域名称 仓库类。
-    ///     负责 实体的领域名称 类的查询、保存。
+    /// 实体的领域名称 仓库类。
+    /// 负责 实体的领域名称 类的查询、保存。
     /// </summary>
     public partial class RoleOperationRepository : RoleManagementEntityRepository
     {
         /// <summary>
-        ///     单例模式，外界不可以直接构造本对象。
+        /// 单例模式，外界不可以直接构造本对象。
         /// </summary>
         protected RoleOperationRepository()
         {
@@ -120,13 +120,13 @@ namespace Rafy.RBAC.RoleManagement
     }
 
     /// <summary>
-    ///     实体的领域名称 配置类。
-    ///     负责 实体的领域名称 类的实体元数据的配置。
+    /// 实体的领域名称 配置类。
+    /// 负责 实体的领域名称 类的实体元数据的配置。
     /// </summary>
     internal class RoleOperationConfig : RoleManagementEntityConfig<RoleOperation>
     {
         /// <summary>
-        ///     配置实体的元数据
+        /// 配置实体的元数据
         /// </summary>
         protected override void ConfigMeta()
         {

@@ -41,11 +41,6 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\DataFilter.cs" />
-    <Compile Include="Entities\DataFilter.g.cs">
-      <SubType>Code</SubType>
-      <DependentUpon>DataFilter.cs</DependentUpon>
-    </Compile>
     <Compile Include="Entities\Resource.cs" />
     <Compile Include="Entities\Resource.g.cs">
       <SubType>Code</SubType>

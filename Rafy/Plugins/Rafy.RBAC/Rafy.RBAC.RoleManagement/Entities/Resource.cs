@@ -22,7 +22,7 @@ using Rafy.MetaModel.Attributes;
 namespace Rafy.RBAC.RoleManagement
 {
     /// <summary>
-    ///  资源
+    /// 资源
     /// </summary>
     [RootEntity, Serializable]
     public class Resource : RoleManagementEntity
@@ -53,7 +53,7 @@ namespace Rafy.RBAC.RoleManagement
         public static readonly Property<string> NameProperty = P<Resource>.Register(e => e.Name);
 
         /// <summary>
-        ///     资源名称
+        /// 资源名称
         /// </summary>
         public string Name
         {
@@ -64,41 +64,17 @@ namespace Rafy.RBAC.RoleManagement
         public static readonly Property<string> CodeProperty = P<Resource>.Register(e => e.Code);
 
         /// <summary>
-        ///     资源编码
+        /// 资源编码
         /// </summary>
         public string Code
         {
             get { return GetProperty(CodeProperty); }
             set { SetProperty(CodeProperty, value); }
         }
-
-        public static readonly Property<string> UrlProperty = P<Resource>.Register(e => e.Url);
-
-        /// <summary>
-        ///     资源路径
-        /// </summary>
-        public string Url
-        {
-            get { return GetProperty(UrlProperty); }
-            set { SetProperty(UrlProperty, value); }
-        }
-
-        public static readonly Property<string> ResourceEntityTypeProperty =
-            P<Resource>.Register(e => e.ResourceEntityType);
-
-        /// <summary>
-        ///     资源领域实体类型
-        /// </summary>
-        public string ResourceEntityType
-        {
-            get { return GetProperty(ResourceEntityTypeProperty); }
-            set { SetProperty(ResourceEntityTypeProperty, value); }
-        }
-
         public static readonly Property<string> DescriptionProperty = P<Resource>.Register(e => e.Description);
 
         /// <summary>
-        ///     资源描述
+        /// 资源描述
         /// </summary>
         public string Description
         {
@@ -126,7 +102,7 @@ namespace Rafy.RBAC.RoleManagement
     }
 
     /// <summary>
-    ///     实体的领域名称 列表类。
+    /// 实体的领域名称 列表类。
     /// </summary>
     [Serializable]
     public partial class ResourceList : RoleManagementEntityList
@@ -134,13 +110,13 @@ namespace Rafy.RBAC.RoleManagement
     }
 
     /// <summary>
-    ///     实体的领域名称 仓库类。
-    ///     负责 实体的领域名称 类的查询、保存。
+    ///  实体的领域名称 仓库类。
+    ///  负责 实体的领域名称 类的查询、保存。
     /// </summary>
     public partial class ResourceRepository : RoleManagementEntityRepository
     {
         /// <summary>
-        ///     单例模式，外界不可以直接构造本对象。
+        /// 单例模式，外界不可以直接构造本对象。
         /// </summary>
         protected ResourceRepository()
         {
@@ -148,13 +124,13 @@ namespace Rafy.RBAC.RoleManagement
     }
 
     /// <summary>
-    ///     实体的领域名称 配置类。
-    ///     负责 实体的领域名称 类的实体元数据的配置。
+    /// 实体的领域名称 配置类。
+    /// 负责 实体的领域名称 类的实体元数据的配置。
     /// </summary>
     internal class ResourceConfig : RoleManagementEntityConfig<Resource>
     {
         /// <summary>
-        ///     配置实体的元数据
+        /// 配置实体的元数据
         /// </summary>
         protected override void ConfigMeta()
         {
