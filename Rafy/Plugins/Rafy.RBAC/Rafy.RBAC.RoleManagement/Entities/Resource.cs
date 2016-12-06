@@ -46,6 +46,12 @@ namespace Rafy.RBAC.RoleManagement
 
         #region 组合子属性
 
+        public static readonly ListProperty<ResourceOperationList> ResourceOperationListProperty = P<Resource>.RegisterList(e => e.ResourceOperationList);
+        public ResourceOperationList ResourceOperationList
+        {
+            get { return this.GetLazyList(ResourceOperationListProperty); }
+        }
+
         #endregion
 
         #region 一般属性
