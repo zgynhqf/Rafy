@@ -12,7 +12,16 @@ namespace Rafy.RBAC.GroupManagement
 {
     public class GroupManagementPlugin : DomainPlugin
     {
-        public static string DbSettingName = "GroupManagement";
+        private static string _dbSettingName;
+        /// <summary>
+        /// 本插件中所有实体对应的连接字符串的配置名。
+        /// 如果没有设置，则默认使用 <see cref="DbSettingNames.RafyPlugins"/>。
+        /// </summary>
+        public static string DbSettingName
+        {
+            get { return _dbSettingName ?? DbSettingNames.RafyPlugins; }
+            set { _dbSettingName = value; }
+        }
 
         public override void Initialize(IApp app)
         {

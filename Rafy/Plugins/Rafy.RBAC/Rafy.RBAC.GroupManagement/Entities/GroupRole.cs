@@ -15,6 +15,7 @@ using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
 using Rafy.MetaModel.View;
+using Rafy.RBAC.RoleManagement;
 
 namespace Rafy.RBAC.GroupManagement
 {
@@ -37,7 +38,6 @@ namespace Rafy.RBAC.GroupManagement
 
         public static readonly IRefIdProperty GroupIdProperty =
             P<GroupRole>.RegisterRefId(e => e.GroupId, ReferenceType.Parent);
-
         /// <summary>
         /// 组的主键
         /// </summary>
@@ -46,9 +46,9 @@ namespace Rafy.RBAC.GroupManagement
             get { return (int)this.GetRefId(GroupIdProperty); }
             set { this.SetRefId(GroupIdProperty, value); }
         }
+
         public static readonly RefEntityProperty<Group> GroupProperty =
             P<GroupRole>.RegisterRef(e => e.Group, GroupIdProperty);
-
         /// <summary>
         /// 关联的组对象
         /// </summary>
@@ -58,6 +58,27 @@ namespace Rafy.RBAC.GroupManagement
             set { this.SetRefEntity(GroupProperty, value); }
         }
 
+        public static readonly IRefIdProperty RoleIdProperty =
+            P<GroupRole>.RegisterRefId(e => e.RoleId, ReferenceType.Normal);
+        /// <summary>
+        /// 角色主键
+        /// </summary>
+        public long RoleId
+        {
+            get { return (long)this.GetRefId(RoleIdProperty); }
+            set { this.SetRefId(RoleIdProperty, value); }
+        }
+
+        public static readonly RefEntityProperty<Role> RoleProperty =
+            P<GroupRole>.RegisterRef(e => e.Role, RoleIdProperty);
+        /// <summary>
+        /// 关联角色实体对象
+        /// </summary>
+        public Role Role
+        {
+            get { return this.GetRefEntity(RoleProperty); }
+            set { this.SetRefEntity(RoleProperty, value); }
+        }
 
         #endregion
 

@@ -38,7 +38,6 @@ namespace Rafy.RBAC.GroupManagement
 
         public static readonly IRefIdProperty GroupIdProperty =
             P<GroupUser>.RegisterRefId(e => e.GroupId, ReferenceType.Parent);
-
         /// <summary>
         /// 组的主键
         /// </summary>
@@ -47,9 +46,9 @@ namespace Rafy.RBAC.GroupManagement
             get { return (int)this.GetRefId(GroupIdProperty); }
             set { this.SetRefId(GroupIdProperty, value); }
         }
+
         public static readonly RefEntityProperty<Group> GroupProperty =
             P<GroupUser>.RegisterRef(e => e.Group, GroupIdProperty);
-
         /// <summary>
         /// 组的关联对象
         /// </summary>
@@ -61,7 +60,6 @@ namespace Rafy.RBAC.GroupManagement
 
         public static readonly IRefIdProperty UserIdProperty =
             P<GroupUser>.RegisterRefId(e => e.UserId, ReferenceType.Normal);
-
         /// <summary>
         /// 用户主键
         /// </summary>
@@ -73,7 +71,6 @@ namespace Rafy.RBAC.GroupManagement
 
         public static readonly RefEntityProperty<User> UserProperty =
             P<GroupUser>.RegisterRef(e => e.User, UserIdProperty);
-
         /// <summary>
         /// 关联的用户实体对象
         /// </summary>

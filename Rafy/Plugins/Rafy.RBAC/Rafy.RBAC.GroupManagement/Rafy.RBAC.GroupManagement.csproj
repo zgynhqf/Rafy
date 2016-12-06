@@ -41,6 +41,11 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PermissionArchitecture\DefaultPermissionBuilder.cs" />
+    <Compile Include="PermissionArchitecture\DefaultPermissionEntry.cs" />
+    <Compile Include="PermissionArchitecture\PermissionBuilder.cs" />
+    <Compile Include="PermissionArchitecture\PermissionEntry.cs" />
+    <Compile Include="Controllers\PermissionFacadeController.cs" />
     <Compile Include="Entities\Group.cs" />
     <Compile Include="Entities\Group.g.cs">
       <SubType>Code</SubType>
@@ -74,6 +79,7 @@
       <Name>Rafy.RBAC.RoleManagement</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <!--<ItemGroup>
         <Folder Include="Services\" />
     </ItemGroup>-->
