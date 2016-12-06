@@ -71,6 +71,9 @@
       <Name>Rafy</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Role.odml" />
+  </ItemGroup>
   <!--<ItemGroup>
         <Folder Include="Services\" />
     </ItemGroup>-->
