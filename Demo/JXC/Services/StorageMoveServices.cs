@@ -29,7 +29,7 @@ namespace JXC
     {
         protected override Result ExecuteCore()
         {
-            var repo = RF.Concrete<StorageRepository>();
+            var repo = RF.ResolveInstance<StorageRepository>();
 
             var storageMove = this.Item as StorageMove;
             using (var tran = RF.TransactionScope(repo))

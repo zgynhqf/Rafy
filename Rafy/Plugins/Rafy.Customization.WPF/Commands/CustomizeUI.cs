@@ -36,7 +36,7 @@ namespace Rafy.Customization.WPF.Commands
 
             var ui = AutoUI.AggtUIFactory.GenerateControl(blocks);
 
-            ui.MainView.DataLoader.LoadDataAsync(() =>
+            ui.MainView.DataLoader.LoadDataAsync((Func<IDomainComponent>)(() =>
             {
                 var model = RF.ResolveInstance<ViewConfigurationModelRepository>()
                     .GetBy(new ViewConfigurationModelNameCriteria
@@ -46,7 +46,7 @@ namespace Rafy.Customization.WPF.Commands
                     });
 
                 return model;
-            });
+            }));
 
             App.Windows.ShowWindow(ui.Control, w =>
             {

@@ -78,7 +78,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <None Include="Hxy Key.snk" />
+=======
+    <None Include="Role.odml" />
+>>>>>>> 7ee49e46b4fa99ce27e28bedb6c1166dfe04f82c
   </ItemGroup>
   <!--<ItemGroup>
         <Folder Include="Services\" />

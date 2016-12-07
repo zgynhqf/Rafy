@@ -52,7 +52,7 @@
     <Compile Include="EntityPhantomExtension.cs" />
     <Compile Include="PhantomDataInterceptor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PhantomQueryContext.cs" />
+    <Compile Include="PhantomContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Rafy\Rafy.csproj">
