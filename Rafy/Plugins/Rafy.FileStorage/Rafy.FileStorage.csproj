@@ -40,17 +40,6 @@
     <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.Core">
-      <HintPath>..\..\..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Rafy">
-      <HintPath>..\..\Rafy\bin\Debug\Rafy.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -75,7 +64,12 @@
   <ItemGroup>
     <None Include="Hxy Key.snk" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\Rafy\Rafy.csproj">
+      <Project>{966a5bf2-d690-426b-ad68-ad868bb8f855}</Project>
+      <Name>Rafy</Name>
+    </ProjectReference>
+  </ItemGroup>
   <!--<ItemGroup>
         <Folder Include="Services\" />
     </ItemGroup>-->
