@@ -82,7 +82,7 @@ namespace JXC
         private PurchaseOrderList GetPurchaseOrderDataSource()
         {
             //自定义数据源：选择商品订单时，只显示状态为未完成的订单。
-            return RF.Concrete<PurchaseOrderRepository>().GetByStatus(OrderStorageInStatus.Waiting);
+            return RF.ResolveInstance<PurchaseOrderRepository>().GetByStatus(OrderStorageInStatus.Waiting);
         }
 
         public static readonly Property<string> View_SupplierNameProperty = P<OrderStorageInBill>.RegisterReadOnly(e => e.View_SupplierName, e => (e as OrderStorageInBill).GetView_SupplierName());

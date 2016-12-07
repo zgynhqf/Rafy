@@ -28,12 +28,12 @@ namespace JXC
     {
         public static ClientInfoList Suppliers()
         {
-            return RF.Concrete<ClientInfoRepository>().GetSuppliers();
+            return RF.ResolveInstance<ClientInfoRepository>().GetSuppliers();
         }
 
         public static ClientInfoList Customers()
         {
-            return RF.Concrete<ClientInfoRepository>().GetCustomers();
+            return RF.ResolveInstance<ClientInfoRepository>().GetCustomers();
         }
     }
 }

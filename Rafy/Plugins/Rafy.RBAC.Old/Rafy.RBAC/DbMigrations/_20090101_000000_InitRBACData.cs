@@ -31,7 +31,7 @@ namespace Rafy.Domain.DbMigrations
 
         protected override void Up()
         {
-            this.RunCode(db =>
+            this.RunCode((Action<Data.IDbAccesser>)(db =>
             {
                 //由于本类没有支持 Down 操作，所以这里面的 Up 需要防止重入。
                 var orgRepository = RF.ResolveInstance<OrgRepository>();
@@ -97,7 +97,7 @@ namespace Rafy.Domain.DbMigrations
                     //    pRepo.Save(p);
                     //}
                 }
-            });
+            }));
         }
 
         protected override void Down() { }

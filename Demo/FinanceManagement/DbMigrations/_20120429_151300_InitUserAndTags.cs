@@ -19,10 +19,10 @@ namespace FM.DbMigrations
 
         protected override void Up()
         {
-            this.RunCode(db =>
+            this.RunCode((Action<Rafy.Data.IDbAccesser>)(db =>
             {
                 //由于本类没有支持 Down 操作，所以这里面的 Up 需要防止重入。
-                var repo = RF.Concrete<PersonRepository>();
+                var repo = RF.ResolveInstance<PersonRepository>();
                 var list = repo.GetAll();
                 if (list.Count == 0)
                 {
@@ -50,7 +50,7 @@ namespace FM.DbMigrations
                         tran.Complete();
                     }
                 }
-            });
+            }));
         }
     }
 }
