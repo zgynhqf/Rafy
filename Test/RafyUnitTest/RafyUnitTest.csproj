@@ -46,7 +46,9 @@
     <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Moq">
       <HintPath>..\..\packages\Moq.4.2.1409.1722\lib\net40\Moq.dll</HintPath>
     </Reference>
@@ -83,6 +85,7 @@
     <Compile Include="Rafy\Plugins\AccountsPluginTest.cs" />
     <Compile Include="Rafy\Plugins\FileStoragePluginTest.cs" />
     <Compile Include="Rafy\Plugins\SerialNumberPluginTest.cs" />
+    <Compile Include="Rafy\Plugins\GroupPluginTest.cs" />
     <Compile Include="Rafy\StampTest.cs" />
     <Compile Include="ServerTestHelper.cs" />
     <Compile Include="Rafy\DomainTest.cs" />
@@ -128,6 +131,18 @@
     <ProjectReference Include="..\..\Rafy\Plugins\Rafy.FileStorage\Rafy.FileStorage.csproj">
       <Project>{143febb0-b41c-4e47-9325-f656cced2fa6}</Project>
       <Name>Rafy.FileStorage</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.GroupManagement\Rafy.RBAC.GroupManagement.csproj">
+      <Project>{e54cd6bc-727e-4d97-810d-6bb83a64a23f}</Project>
+      <Name>Rafy.RBAC.GroupManagement</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.RoleManagement\Rafy.RBAC.RoleManagement.csproj">
+      <Project>{708150c2-4b78-4f02-a8e9-3338cc76f69c}</Project>
+      <Name>Rafy.RBAC.RoleManagement</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.UserRoleManagement\Rafy.RBAC.UserRoleManagement.csproj">
+      <Project>{609216eb-20af-48c2-90c3-514cf588a062}</Project>
+      <Name>Rafy.RBAC.UserRoleManagement</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Rafy\Plugins\Rafy.SerialNumber\Rafy.SerialNumber.csproj">
       <Project>{9ff37989-33e7-4d67-8e81-0a443eaee510}</Project>
