@@ -1,0 +1,11 @@
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Accounts\bin\Release\Rafy.Accounts.dll
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Accounts\bin\Release\Rafy.Accounts.pdb
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Accounts\bin\Release\Rafy.dll
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Accounts\bin\Release\Castle.Core.dll
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Accounts\bin\Release\Newtonsoft.Json.dll
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Accounts\bin\Release\Rafy.pdb
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Accounts\bin\Release\Castle.Core.xml
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Accounts\bin\Release\Newtonsoft.Json.xml
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Accounts\obj\Release\Rafy.Accounts.csprojResolveAssemblyReference.cache
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Accounts\obj\Release\Rafy.Accounts.dll
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Accounts\obj\Release\Rafy.Accounts.pdb

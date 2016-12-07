@@ -1,0 +1,13 @@
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Customization.Web\bin\Release\Rafy.Customization.Web.dll
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Customization.Web\bin\Release\Rafy.Customization.Web.pdb
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Customization.Web\bin\Release\Rafy.Customization.dll
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Customization.Web\bin\Release\Rafy.dll
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Customization.Web\bin\Release\Castle.Core.dll
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Customization.Web\bin\Release\Newtonsoft.Json.dll
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Customization.Web\bin\Release\Rafy.pdb
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Customization.Web\bin\Release\Rafy.Customization.pdb
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Customization.Web\bin\Release\Castle.Core.xml
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Customization.Web\bin\Release\Newtonsoft.Json.xml
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Customization.Web\obj\Release\Rafy.Customization.Web.csprojResolveAssemblyReference.cache
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Customization.Web\obj\Release\Rafy.Customization.Web.dll
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Customization.Web\obj\Release\Rafy.Customization.Web.pdb

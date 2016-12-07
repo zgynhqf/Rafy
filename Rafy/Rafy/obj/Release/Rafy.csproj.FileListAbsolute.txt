@@ -1,0 +1,8 @@
+E:\visual studio 2015\Projects\Rafy\Rafy\Rafy\bin\Release\Rafy.dll
+E:\visual studio 2015\Projects\Rafy\Rafy\Rafy\bin\Release\Rafy.pdb
+E:\visual studio 2015\Projects\Rafy\Rafy\Rafy\bin\Release\Castle.Core.dll
+E:\visual studio 2015\Projects\Rafy\Rafy\Rafy\bin\Release\Newtonsoft.Json.dll
+E:\visual studio 2015\Projects\Rafy\Rafy\Rafy\bin\Release\Castle.Core.xml
+E:\visual studio 2015\Projects\Rafy\Rafy\Rafy\bin\Release\Newtonsoft.Json.xml
+E:\visual studio 2015\Projects\Rafy\Rafy\Rafy\obj\Release\Rafy.dll
+E:\visual studio 2015\Projects\Rafy\Rafy\Rafy\obj\Release\Rafy.pdb

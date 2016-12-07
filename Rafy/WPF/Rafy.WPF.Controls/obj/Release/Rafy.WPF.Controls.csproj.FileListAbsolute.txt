@@ -1,0 +1,13 @@
+E:\visual studio 2015\Projects\Rafy\Rafy\WPF\Rafy.WPF.Controls\bin\Release\Rafy.WPF.Controls.dll
+E:\visual studio 2015\Projects\Rafy\Rafy\WPF\Rafy.WPF.Controls\bin\Release\Rafy.WPF.Controls.pdb
+E:\visual studio 2015\Projects\Rafy\Rafy\WPF\Rafy.WPF.Controls\obj\Release\GeneratedInternalTypeHelper.g.cs
+E:\visual studio 2015\Projects\Rafy\Rafy\WPF\Rafy.WPF.Controls\obj\Release\Rafy.WPF.Controls_MarkupCompile.cache
+E:\visual studio 2015\Projects\Rafy\Rafy\WPF\Rafy.WPF.Controls\obj\Release\Rafy.WPF.Controls_MarkupCompile.lref
+E:\visual studio 2015\Projects\Rafy\Rafy\WPF\Rafy.WPF.Controls\obj\Release\Themes\Generic.baml
+E:\visual studio 2015\Projects\Rafy\Rafy\WPF\Rafy.WPF.Controls\obj\Release\SplitButton\Themes\Generic.baml
+E:\visual studio 2015\Projects\Rafy\Rafy\WPF\Rafy.WPF.Controls\obj\Release\SplitButton\Themes\Vista.baml
+E:\visual studio 2015\Projects\Rafy\Rafy\WPF\Rafy.WPF.Controls\obj\Release\Rafy.WPF.Controls.g.resources
+E:\visual studio 2015\Projects\Rafy\Rafy\WPF\Rafy.WPF.Controls\obj\Release\Rafy.WPF.Controls.Properties.Resources.resources
+E:\visual studio 2015\Projects\Rafy\Rafy\WPF\Rafy.WPF.Controls\obj\Release\Rafy.WPF.Controls.csproj.GenerateResource.Cache
+E:\visual studio 2015\Projects\Rafy\Rafy\WPF\Rafy.WPF.Controls\obj\Release\Rafy.WPF.Controls.dll
+E:\visual studio 2015\Projects\Rafy\Rafy\WPF\Rafy.WPF.Controls\obj\Release\Rafy.WPF.Controls.pdb

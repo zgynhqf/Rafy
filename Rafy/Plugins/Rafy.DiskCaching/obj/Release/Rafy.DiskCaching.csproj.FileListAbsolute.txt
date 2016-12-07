@@ -1,0 +1,11 @@
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.DiskCaching\bin\Release\Rafy.DiskCaching.dll
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.DiskCaching\bin\Release\Rafy.DiskCaching.pdb
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.DiskCaching\bin\Release\Rafy.dll
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.DiskCaching\bin\Release\Castle.Core.dll
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.DiskCaching\bin\Release\Newtonsoft.Json.dll
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.DiskCaching\bin\Release\Rafy.pdb
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.DiskCaching\bin\Release\Castle.Core.xml
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.DiskCaching\bin\Release\Newtonsoft.Json.xml
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.DiskCaching\obj\Release\Rafy.DiskCaching.csprojResolveAssemblyReference.cache
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.DiskCaching\obj\Release\Rafy.DiskCaching.dll
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.DiskCaching\obj\Release\Rafy.DiskCaching.pdb

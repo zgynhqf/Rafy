@@ -69,7 +69,7 @@ namespace Rafy.RBAC.GroupManagement.PermissionArchitecture
         /// <returns>返回初始化后的组的实例对象</returns>
         protected override Group InitGroup(int groupID)
         {
-            return this.GroupRepository.GetGroupDetailsByID(groupID);
+            return this.GroupRepository.GetById(groupID);
         }
     }
 }

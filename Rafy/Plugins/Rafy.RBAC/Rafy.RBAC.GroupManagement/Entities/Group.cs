@@ -17,6 +17,7 @@ using Rafy.MetaModel.Attributes;
 using Rafy.MetaModel.View;
 using System.Data;
 using Rafy.RBAC.RoleManagement;
+using Rafy.RBAC.GroupManagement.Entities.Extensions;
 
 namespace Rafy.RBAC.GroupManagement
 {
@@ -135,37 +136,7 @@ namespace Rafy.RBAC.GroupManagement
         [RepositoryQuery]
         public virtual ResourceList GetResourcePermissionByGroupID(int groupID)
         {
-            var f = QueryFactory.Instance;
-            var groupRoleTable = f.Table<GroupRole>();
-            var roleOperationTable = f.Table<RoleOperation>();
-            var resourceOperationTable = f.Table<ResourceOperation>();
-            var resourceTable = f.Table<Resource>();
-            var q =
-                f.Query(
-                from: resourceTable,
-                where: resourceTable.Column(Resource.IdProperty).In(
-                    f.Query(
-                    selection: resourceOperationTable.Column(ResourceOperation.ResourceIdProperty),
-                    from: resourceOperationTable,
-                    where: resourceOperationTable.Column(ResourceOperation.IdProperty).In(
-
-                            f.Query(
-                            selection: roleOperationTable.Column(RoleOperation.OperationIdProperty),
-                            from: roleOperationTable,
-                            where: roleOperationTable.Column(RoleOperation.RoleIdProperty).In(
-
-                                        f.Query(
-                                        selection: groupRoleTable.Column(GroupRole.RoleIdProperty),
-                                        from: groupRoleTable,
-                                        where: groupRoleTable.Column(GroupRole.GroupIdProperty).Equal(groupID)
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            );
-            return (ResourceList)this.QueryData(q);
+            return RepositoryFacade.ResolveInstance<GroupRepository>().Extension<GroupRepositoryExtension>().GetResourcePermissionByGroupID(groupID);
         }
 
         /// <summary>
@@ -176,42 +147,7 @@ namespace Rafy.RBAC.GroupManagement
         [RepositoryQuery]
         public virtual ResourceOperationList GetResourceOperationPermissionByGroupID(int groupID)
         {
-            var f = QueryFactory.Instance;
-            var groupRoleTable = f.Table<GroupRole>();
-            var roleOperationTable = f.Table<RoleOperation>();
-            var resourceOperationTable = f.Table<ResourceOperation>();
-            var q = f.Query(
-                    from: resourceOperationTable,
-                    where: resourceOperationTable.Column(ResourceOperation.IdProperty).In(
-
-                            f.Query(
-                            selection: roleOperationTable.Column(RoleOperation.OperationIdProperty),
-                            from: roleOperationTable,
-                            where: roleOperationTable.Column(RoleOperation.RoleIdProperty).In(
-
-                                        f.Query(
-                                        selection: groupRoleTable.Column(GroupRole.RoleIdProperty),
-                                        from: groupRoleTable,
-                                        where: groupRoleTable.Column(GroupRole.GroupIdProperty).Equal(groupID)
-                                    )
-                                )
-                            )
-                        )
-                    );
-            return (ResourceOperationList)this.QueryData(q);
-        }
-
-        /// <summary>
-        /// 根据组的主键获取组的详情信息
-        /// </summary>
-        /// <param name="groupID">当前组的主键</param>
-        /// <returns>返回获取到的组对象实例</returns>
-        [RepositoryQuery]
-        public virtual Group GetGroupDetailsByID(int groupID)
-        {
-            var q = this.CreateLinqQuery();
-            q = q.Where(e => e.Id==groupID);
-            return (Group)this.QueryData(q);
+            return RepositoryFacade.ResolveInstance<GroupRepository>().Extension<GroupRepositoryExtension>().GetResourceOperationPermissionByGroupID(groupID);
         }
     }
 

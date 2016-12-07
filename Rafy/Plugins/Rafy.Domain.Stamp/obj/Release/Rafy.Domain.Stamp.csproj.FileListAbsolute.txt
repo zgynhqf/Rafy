@@ -1,0 +1,11 @@
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Domain.Stamp\bin\Release\Rafy.Domain.Stamp.dll
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Domain.Stamp\bin\Release\Rafy.Domain.Stamp.pdb
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Domain.Stamp\bin\Release\Rafy.dll
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Domain.Stamp\bin\Release\Castle.Core.dll
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Domain.Stamp\bin\Release\Newtonsoft.Json.dll
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Domain.Stamp\bin\Release\Rafy.pdb
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Domain.Stamp\bin\Release\Castle.Core.xml
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Domain.Stamp\bin\Release\Newtonsoft.Json.xml
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Domain.Stamp\obj\Release\Rafy.Domain.Stamp.dll
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Domain.Stamp\obj\Release\Rafy.Domain.Stamp.pdb
+E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.Domain.Stamp\obj\Release\Rafy.Domain.Stamp.csprojResolveAssemblyReference.cache
