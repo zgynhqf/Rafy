@@ -104,7 +104,7 @@ namespace RafyUnitTest
                 var all = repo.GetAll();
                 Assert.AreEqual(all.Count, 0, "幽灵状态的实体，应该无法通过正常的 API 查出。");
 
-                using (PhantomQueryContext.DontFilterPhantoms())
+                using (PhantomContext.DontFilterPhantoms())
                 {
                     Assert.AreEqual(repo.CountAll(), 1, "幽灵状态的实体，可以使用特定 API 查出。");
                     var all2 = repo.GetAll();
@@ -135,7 +135,7 @@ namespace RafyUnitTest
                 var all = repo.GetAll();
                 Assert.AreEqual(all.Count, 0, "幽灵状态的实体，应该无法通过正常的 API 查出。");
 
-                using (PhantomQueryContext.DontFilterPhantoms())
+                using (PhantomContext.DontFilterPhantoms())
                 {
                     Assert.AreEqual(repo.CountAll(), 3, "幽灵状态的实体，可以使用特定 API 查出。");
                     var all2 = repo.GetAll();
@@ -174,7 +174,7 @@ namespace RafyUnitTest
                 Assert.AreEqual(repo.CountAll(), 0, "幽灵状态的实体，应该无法通过正常的 API 查出。");
                 Assert.AreEqual(itemRepo.CountAll(), 0, "幽灵状态的实体，应该无法通过正常的 API 查出。");
 
-                using (PhantomQueryContext.DontFilterPhantoms())
+                using (PhantomContext.DontFilterPhantoms())
                 {
                     Assert.AreEqual(repo.CountAll(), 1, "幽灵状态的实体，可以使用特定 API 查出。");
                     var roots = repo.GetAll();
@@ -210,7 +210,7 @@ namespace RafyUnitTest
 
                 Assert.AreEqual(repo.CountAll(), 0, "幽灵状态的实体，应该无法通过正常的 API 查出。");
 
-                using (PhantomQueryContext.DontFilterPhantoms())
+                using (PhantomContext.DontFilterPhantoms())
                 {
                     Assert.AreEqual(repo.CountAll(), size, "幽灵状态的实体，可以使用特定 API 查出。");
                     var all2 = repo.GetAll();
@@ -255,7 +255,7 @@ namespace RafyUnitTest
                 Assert.AreEqual(repo.CountAll(), 0, "幽灵状态的实体，应该无法通过正常的 API 查出。");
                 Assert.AreEqual(itemRepo.CountAll(), 0, "幽灵状态的实体，应该无法通过正常的 API 查出。");
 
-                using (PhantomQueryContext.DontFilterPhantoms())
+                using (PhantomContext.DontFilterPhantoms())
                 {
                     Assert.AreEqual(repo.CountAll(), size, "幽灵状态的实体，可以使用特定 API 查出。");
                     var roots = repo.GetAll();

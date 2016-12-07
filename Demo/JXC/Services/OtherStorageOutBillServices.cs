@@ -32,7 +32,7 @@ namespace JXC
             var storageOut = this.Item as OtherStorageOutBill;
             if (storageOut == null) throw new ArgumentNullException("storageIn");
 
-            var repo = RF.Concrete<OrderStorageInBillRepository>();
+            var repo = RF.ResolveInstance<OrderStorageInBillRepository>();
             using (var tran = RF.TransactionScope(repo))
             {
                 repo.Save(storageOut);

@@ -80,7 +80,7 @@ namespace JXC.Commands
                 };
 
                 //窗口在数据改变后再关闭窗口，需要提示用户是否保存。
-                tmpEntity.MarkSaved();
+                (tmpEntity as IDirtyAware).MarkSaved();
                 w.Closing += (o, e) =>
                 {
                     if (w.DialogResult != true)

@@ -18,9 +18,9 @@ namespace MP.DbMigrations
 
         protected override void Up()
         {
-            this.RunCode(db =>
+            this.RunCode((Action<Rafy.Data.IDbAccesser>)(db =>
             {
-                var repo = RF.Concrete<MonthPlanRepository>();
+                var repo = RF.ResolveInstance<MonthPlanRepository>();
 
                 var plans = repo.GetAll();
 
@@ -43,7 +43,7 @@ namespace MP.DbMigrations
                 }
 
                 RF.Save(plans);
-            });
+            }));
         }
     }
 }

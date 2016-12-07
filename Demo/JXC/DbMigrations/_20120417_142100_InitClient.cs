@@ -19,9 +19,9 @@ namespace JXC.DbMigrations
 
         protected override void Up()
         {
-            this.RunCode(db =>
+            this.RunCode((Action<Rafy.Data.IDbAccesser>)(db =>
             {
-                var ccRepo = RF.Concrete<ClientCategoryRepository>();
+                var ccRepo = RF.ResolveInstance<ClientCategoryRepository>();
                 var cclist = ccRepo.GetAll();
                 if (cclist.Count == 0)
                 {
@@ -32,7 +32,7 @@ namespace JXC.DbMigrations
                         RF.Save(supplier);
                         RF.Save(customer);
 
-                        var clientRepo = RF.Concrete<ClientInfoRepository>();
+                        var clientRepo = RF.ResolveInstance<ClientInfoRepository>();
                         clientRepo.Save(new ClientInfo
                         {
                             ClientCategory = supplier,
@@ -70,7 +70,7 @@ namespace JXC.DbMigrations
                         tran.Complete();
                     }
                 }
-            });
+            }));
         }
     }
 }

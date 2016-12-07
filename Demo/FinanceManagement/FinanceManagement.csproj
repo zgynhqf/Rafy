@@ -76,11 +76,11 @@
       <Project>{966A5BF2-D690-426B-AD68-AD868BB8F855}</Project>
       <Name>Rafy</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC.WPF\Rafy.RBAC.Old.WPF.csproj">
+    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC.Old\Rafy.RBAC.WPF\Rafy.RBAC.Old.WPF.csproj">
       <Project>{547364FE-CCBF-4F72-9B72-F7BB272B0988}</Project>
       <Name>Rafy.RBAC.Old.WPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.Old.csproj">
+    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC.Old\Rafy.RBAC\Rafy.RBAC.Old.csproj">
       <Project>{03D5A267-C106-42A9-8959-93D7AE3648DD}</Project>
       <Name>Rafy.RBAC.Old</Name>
     </ProjectReference>

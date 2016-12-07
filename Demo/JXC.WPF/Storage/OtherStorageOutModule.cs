@@ -31,11 +31,11 @@ namespace JXC.WPF
         {
             base.OnItemCreated(entity);
 
-            var code = RF.Concrete<AutoCodeInfoRepository>().GetOrCreateAutoCode<OtherStorageOutBill>();
+            var code = RF.ResolveInstance<AutoCodeInfoRepository>().GetOrCreateAutoCode<OtherStorageOutBill>();
             var p = entity as OtherStorageOutBill;
             p.Code = code;
 
-            p.Storage = RF.Concrete<StorageRepository>().GetDefault();
+            p.Storage = RF.ResolveInstance<StorageRepository>().GetDefault();
         }
     }
 }
