@@ -30,6 +30,11 @@ using Rafy.UnitTest.DataProvider;
 using Rafy.UnitTest.IDataProvider;
 using Rafy.UnitTest.Repository;
 using UT;
+using Rafy.RBAC.RoleManagement;
+using Rafy.RBAC.GroupManagement;
+using Rafy.FileStorage;
+using Rafy.SerialNumber;
+using Rafy.Accounts;
 
 namespace RafyUnitTest
 {
@@ -59,9 +64,12 @@ namespace RafyUnitTest
             RafyEnvironment.DomainPlugins.Add(new UnitTestRepoPlugin());
             RafyEnvironment.DomainPlugins.Add(new DCPlugin());
 
-            RafyEnvironment.DomainPlugins.Add(new Rafy.Accounts.AccountsPlugin());
-            RafyEnvironment.DomainPlugins.Add(new Rafy.SerialNumber.SerialNumberPlugin());
-            RafyEnvironment.DomainPlugins.Add(new Rafy.FileStorage.FileStoragePlugin());
+            RafyEnvironment.DomainPlugins.Add(new AccountsPlugin());
+            RafyEnvironment.DomainPlugins.Add(new SerialNumberPlugin());
+            RafyEnvironment.DomainPlugins.Add(new FileStoragePlugin());
+
+            RafyEnvironment.DomainPlugins.Add(new RoleManagementPlugin());
+            RafyEnvironment.DomainPlugins.Add(new GroupManagementPlugin());
 
             ////为了多次修改 Location 值，需要把修改值的操作放到 InitEnvironment 中。
             //RafyEnvironment.Location.IsWebUI = false;

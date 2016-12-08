@@ -31,7 +31,7 @@ namespace JXC.WPF
         {
             base.OnItemCreated(entity);
 
-            var code = RF.Concrete<AutoCodeInfoRepository>().GetOrCreateAutoCode<OtherStorageOutBill>();
+            var code = RF.ResolveInstance<AutoCodeInfoRepository>().GetOrCreateAutoCode<OtherStorageOutBill>();
             var p = entity as StorageMove;
             p.Code = code;
             p.User = RafyEnvironment.Identity.Name;

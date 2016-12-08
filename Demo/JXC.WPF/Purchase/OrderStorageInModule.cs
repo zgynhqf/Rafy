@@ -32,11 +32,11 @@ namespace JXC.WPF
         {
             base.OnItemCreated(entity);
 
-            var code = RF.Concrete<AutoCodeInfoRepository>().GetOrCreateAutoCode<OrderStorageInBill>();
+            var code = RF.ResolveInstance<AutoCodeInfoRepository>().GetOrCreateAutoCode<OrderStorageInBill>();
             var p = entity as OrderStorageInBill;
             p.Code = code;
 
-            p.Storage = RF.Concrete<StorageRepository>().GetDefault();
+            p.Storage = RF.ResolveInstance<StorageRepository>().GetDefault();
         }
     }
 }
