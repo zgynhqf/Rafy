@@ -41,6 +41,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\UserRoleController.cs" />
     <Compile Include="Entities\UserRole.cs" />
     <Compile Include="Entities\UserRole.g.cs">
       <SubType>Code</SubType>
@@ -64,6 +65,7 @@
       <Name>Rafy.RBAC.RoleManagement</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <!--<ItemGroup>
         <Folder Include="Services\" />
     </ItemGroup>-->
