@@ -62,6 +62,8 @@ namespace Rafy.RBAC.UserRoleManagement.Controllers
             var results = _roleRepository.NewList();
             foreach (var userRole in userRoles)
             {
+                if(userRole.Role == null) continue;
+
                 results.Add(userRole.Role);
             }
 
