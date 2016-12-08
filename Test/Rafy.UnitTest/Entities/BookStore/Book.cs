@@ -544,7 +544,7 @@ namespace UT
         {
             Meta.MapTable().MapAllProperties();
 
-            Meta.Property(Book.ContentProperty).MapColumn().HasLength("MAX");
+            Meta.Property(Book.ContentProperty).MapColumn().HasLength("500");
             Meta.Property(Book.BytesProperty).MapColumn().HasDataType(System.Data.DbType.Binary);
         }
     }

@@ -95,7 +95,7 @@ namespace JXC
             //整个列表中只有一个默认仓库。
             if (e.Source == ManagedPropertyChangedSource.FromUIOperating && (bool)e.NewValue)
             {
-                var list = this.ParentList;
+                var list = (this as IEntity).ParentList;
                 if (list != null)
                 {
                     foreach (Storage item in list)

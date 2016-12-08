@@ -187,7 +187,7 @@ namespace JXC
         }
         private ClientInfoList GetSupplierDataSource()
         {
-            return RF.Concrete<ClientInfoRepository>().GetSuppliers();
+            return RF.ResolveInstance<ClientInfoRepository>().GetSuppliers();
         }
 
         #endregion

@@ -49,7 +49,7 @@ namespace JXC.Commands
                 }
                 else
                 {
-                    var product = RF.Concrete<ProductRepository>().GetByBarcode(barcode);
+                    var product = RF.ResolveInstance<ProductRepository>().GetByBarcode(barcode);
                     if (product == null)
                     {
                         App.MessageBox.Show(string.Format("没有找到对应 {0} 的商品".Translate(), barcode), MessageBoxImage.Error);

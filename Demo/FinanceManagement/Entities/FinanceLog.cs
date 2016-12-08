@@ -128,7 +128,7 @@ namespace FM
         }
         private TagList GetTagDataSource()
         {
-            return RF.Concrete<TagRepository>().GetValidList();
+            return RF.ResolveInstance<TagRepository>().GetValidList();
         }
 
         #endregion

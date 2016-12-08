@@ -30,7 +30,7 @@ namespace JXC
         protected override Result ExecuteCore()
         {
             var po = this.Item as PurchaseOrder;
-            var poRepo = RF.Concrete<PurchaseOrderRepository>();
+            var poRepo = RF.ResolveInstance<PurchaseOrderRepository>();
 
             using (var tran = RF.TransactionScope(poRepo))
             {
@@ -73,7 +73,7 @@ namespace JXC
         protected override Result ExecuteCore()
         {
             var orderId = this.ItemId;
-            var osibRepo = RF.Concrete<OrderStorageInBillRepository>();
+            var osibRepo = RF.ResolveInstance<OrderStorageInBillRepository>();
 
             var storageInList = osibRepo.GetByOrderId(orderId);
             if (storageInList.Count > 0)
@@ -113,7 +113,7 @@ namespace JXC
             };
 
             //默认直接入库第一个仓库
-            storageIn.Storage = RF.Concrete<StorageRepository>().CacheAll().First() as Storage;
+            storageIn.Storage = RF.ResolveInstance<StorageRepository>().CacheAll().First() as Storage;
 
             //调用另外一个服务直接入库
             var siService = ServiceFactory.Create<AddOrderStorageInBillService>();

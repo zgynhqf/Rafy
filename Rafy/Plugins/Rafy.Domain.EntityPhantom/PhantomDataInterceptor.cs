@@ -34,7 +34,7 @@ namespace Rafy.Domain.EntityPhantom
         private static void RepositoryDataProvider_Deleting(object sender, EntityCUDEventArgs e)
         {
             var dp = sender as RepositoryDataProvider;
-            if (dp.Repository.EntityMeta.IsPhantomEnabled)
+            if (dp.Repository.EntityMeta.IsPhantomEnabled && !PhantomContext.DeleteRealData.Value)
             {
                 var entity = e.Entity;
 
@@ -55,7 +55,7 @@ namespace Rafy.Domain.EntityPhantom
         private static void RepositoryDataProvider_Querying(object sender, QueryingEventArgs e)
         {
             var dp = sender as RepositoryDataProvider;
-            if (dp.Repository.EntityMeta.IsPhantomEnabled && !PhantomQueryContext.NeedPhantomData.Value)
+            if (dp.Repository.EntityMeta.IsPhantomEnabled && !PhantomContext.NeedPhantomData.Value)
             {
                 //为查询中的 Where 条件添加 "IsPhantom = 'false'" 条件
                 var appender = new PhantomWhereAppender();
