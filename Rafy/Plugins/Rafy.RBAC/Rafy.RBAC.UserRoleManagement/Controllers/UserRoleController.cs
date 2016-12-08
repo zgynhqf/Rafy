@@ -6,34 +6,6 @@ using Rafy.RBAC.RoleManagement;
 namespace Rafy.RBAC.UserRoleManagement.Controllers
 {
     /// <summary>
-    /// 定义一个用户与角色的操作接口。
-    /// </summary>
-    public interface IUserRoleController
-    {
-        /// <summary>
-        /// 获取指定的用户 <paramref name="user"/> 是否具有指定的角色 <paramref name="role"/> 。
-        /// </summary>
-        /// <param name="user">表示一个用户的实例。</param>
-        /// <param name="role">表示一个角色的实例。</param>
-        /// <returns>true: 指定的用户 <paramref name="user"/> 有指定的角色 <paramref name="role"/> ; false: 反之。</returns>
-        bool HasRole(User user, Role role);
-
-        /// <summary>
-        /// 获取指定的用户 <paramref name="user"/> 下面的角色集合 <seealso cref="RoleList"/>。
-        /// </summary>
-        /// <param name="user">表示一个用户的实例。</param>
-        /// <returns>指定用户下的所有角色。</returns>
-        RoleList GetRoleList(User user);
-
-        /// <summary>
-        /// 获取指定的角色 <paramref name="role"/> 下面的所有资源操作集合 <seealso cref="ResourceOperationList"/>。
-        /// </summary>
-        /// <param name="role"></param>
-        /// <returns></returns>
-        ResourceOperationList GetResourceOperationList(Role role);
-    }
-
-    /// <summary>
     /// 提供一个用户与角色的操作类。
     /// </summary>
     public class UserRoleController : DomainController, IUserRoleController
@@ -44,7 +16,18 @@ namespace Rafy.RBAC.UserRoleManagement.Controllers
         private readonly ResourceOperationRepository _resourceOperationRepository = RepositoryFacade.ResolveInstance<ResourceOperationRepository>();
 
         /// <inheritdoc />
-        public bool HasRole(User user, Role role)
+        public virtual void Save(UserRole userRole)
+        {
+            if (userRole == null)
+            {
+                throw new ArgumentNullException(nameof(userRole));
+            }
+
+            this._userRoleRepository.Save(userRole);
+        }
+
+        /// <inheritdoc />
+        public virtual bool HasRole(User user, Role role)
         {
             if (user == null)
             {
@@ -55,20 +38,17 @@ namespace Rafy.RBAC.UserRoleManagement.Controllers
                 throw new ArgumentNullException(nameof(role));
             }
 
-            var roles = this.GetRoleList(user);
-            foreach (var otherRole in roles)
-            {
-                if (otherRole.Id == role.Id)
-                {
-                    return true;
-                }
-            }
+            var condition = new CommonQueryCriteria(BinaryOperator.And) {
+                new PropertyMatch(UserRole.UserIdProperty, PropertyOperator.Equal, user.Id),
+                new PropertyMatch(UserRole.RoleIdProperty, PropertyOperator.Equal, role.Id)
+            };
+            var userRole = this._userRoleRepository.GetFirstBy(condition);
 
-            return false;
+            return userRole != null;
         }
 
         /// <inheritdoc />
-        public RoleList GetRoleList(User user)
+        public virtual RoleList GetRoleList(User user)
         {
             if (user == null)
             {
@@ -89,7 +69,7 @@ namespace Rafy.RBAC.UserRoleManagement.Controllers
         }
 
         /// <inheritdoc />
-        public ResourceOperationList GetResourceOperationList(Role role)
+        public virtual ResourceOperationList GetResourceOperationList(Role role)
         {
             if (role == null)
             {

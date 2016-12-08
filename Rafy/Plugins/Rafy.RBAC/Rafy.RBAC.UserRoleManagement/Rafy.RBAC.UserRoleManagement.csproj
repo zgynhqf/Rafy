@@ -47,6 +47,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\IUserRoleController.cs" />
     <Compile Include="Controllers\UserRoleController.cs" />
     <Compile Include="Entities\UserRole.cs" />
     <Compile Include="Entities\UserRole.g.cs">
