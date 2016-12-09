@@ -50,7 +50,7 @@ namespace Rafy.RBAC.UserRoleManagement.Controllers
             };
             var userRole = this._userRoleRepository.GetFirstBy(condition);
 
-            return userRole != null;
+            return userRole != null && userRole.RoleId > 0;
         }
 
 
