@@ -1,4 +1,17 @@
-﻿using System;
+﻿/*******************************************************
+ * 
+ * 作者：刘雷
+ * 创建日期：20161209
+ * 说明：此文件只包含一个类，具体内容见类型注释。
+ * 运行环境：.NET 4.0
+ * 版本号：1.0.0
+ * 
+ * 历史记录：
+ * 创建文件 刘雷 20161209 17:58
+ * 
+*******************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,6 +20,7 @@ using Rafy.RBAC.RoleManagement;
 using System.Data;
 using Rafy.Accounts;
 using Rafy.Domain;
+using Rafy.RBAC.GroupManagement.Entities.Extensions;
 
 namespace Rafy.RBAC.GroupManagement.PermissionArchitecture
 {
@@ -22,7 +36,8 @@ namespace Rafy.RBAC.GroupManagement.PermissionArchitecture
         /// <returns>返回获取到的资源数组列表</returns>
         protected override IList<Resource> GenerateResourcePermission(int groupID)
         {
-            ResourceList resourceList = this.GroupRepository.GetResourcePermissionByGroupID(groupID);
+            //ResourceList resourceList = this.GroupRepository.GetResourcePermissionByGroupID(groupID);
+            ResourceList resourceList = RepositoryFacade.ResolveInstance<ResourceRepository>().Extension<ResourceRepositoryExtension>().GetResourcePermissionByGroupID(groupID);
             IList<Resource> resource = resourceList.Concrete().ToList();
             return resource;
         }
@@ -35,8 +50,9 @@ namespace Rafy.RBAC.GroupManagement.PermissionArchitecture
         protected override IDictionary<long, IList<ResourceOperation>> GenerateOperationPermission(int groupID)
         {
             IDictionary<long, IList<ResourceOperation>> operations = new Dictionary<long, IList<ResourceOperation>>();
-            List<ResourceOperation> resourceOperationList = this.GroupRepository.GetResourceOperationPermissionByGroupID(groupID).Concrete().ToList();
-            foreach(var item in resourceOperationList)
+            //List<ResourceOperation> resourceOperationList = this.GroupRepository.GetResourceOperationPermissionByGroupID(groupID).Concrete().ToList();
+            List<ResourceOperation> resourceOperationList = RepositoryFacade.ResolveInstance<ResourceRepository>().Extension<ResourceRepositoryExtension>().GetResourceOperationPermissionByGroupID(groupID).Concrete().ToList();
+            foreach (var item in resourceOperationList)
             {
                 IList<ResourceOperation> list = null;
                 if(operations.TryGetValue(item.ResourceId,out list))

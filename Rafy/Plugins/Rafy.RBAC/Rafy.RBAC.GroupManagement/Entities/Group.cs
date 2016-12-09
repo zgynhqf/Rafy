@@ -127,28 +127,6 @@ namespace Rafy.RBAC.GroupManagement
         /// 单例模式，外界不可以直接构造本对象。
         /// </summary>
         protected GroupRepository() { }
-
-        /// <summary>
-        /// 获取当前会员组下所有资源的权限数据表
-        /// </summary>
-        /// <param name="groupID">用户当前使用的组的主键</param>
-        /// <returns>返回获取到的当前组下的所有资源的数据过滤权限的数据表</returns>
-        [RepositoryQuery]
-        public virtual ResourceList GetResourcePermissionByGroupID(int groupID)
-        {
-            return RepositoryFacade.ResolveInstance<GroupRepository>().Extension<GroupRepositoryExtension>().GetResourcePermissionByGroupID(groupID);
-        }
-
-        /// <summary>
-        /// 获取当前会员组下所有资源的权限数据表
-        /// </summary>
-        /// <param name="groupID">用户当前使用的组的主键</param>
-        /// <returns>返回获取到的当前组下的所有资源的数据过滤权限的数据表</returns>
-        [RepositoryQuery]
-        public virtual ResourceOperationList GetResourceOperationPermissionByGroupID(int groupID)
-        {
-            return RepositoryFacade.ResolveInstance<GroupRepository>().Extension<GroupRepositoryExtension>().GetResourceOperationPermissionByGroupID(groupID);
-        }
     }
 
     /// <summary>

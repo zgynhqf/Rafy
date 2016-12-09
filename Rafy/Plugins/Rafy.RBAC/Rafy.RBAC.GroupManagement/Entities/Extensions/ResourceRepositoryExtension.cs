@@ -1,4 +1,17 @@
-﻿using Rafy.Domain;
+﻿/*******************************************************
+ * 
+ * 作者：刘雷
+ * 创建日期：20161209
+ * 说明：此文件只包含一个类，具体内容见类型注释。
+ * 运行环境：.NET 4.0
+ * 版本号：1.0.0
+ * 
+ * 历史记录：
+ * 创建文件 刘雷 20161209 17:51
+ * 
+*******************************************************/
+
+using Rafy.Domain;
 using Rafy.Domain.ORM.Query;
 using Rafy.RBAC.RoleManagement;
 using System;
@@ -12,7 +25,7 @@ namespace Rafy.RBAC.GroupManagement.Entities.Extensions
     /// <summary>
     /// 组仓库的扩展类型
     /// </summary>
-    public class GroupRepositoryExtension: EntityRepositoryExt<GroupRepository>
+    public class ResourceRepositoryExtension: EntityRepositoryExt<ResourceRepository>
     {
         /// <summary>
         /// 获取当前会员组下所有资源的权限数据表

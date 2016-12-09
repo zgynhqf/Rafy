@@ -35,6 +35,7 @@ using Rafy.RBAC.GroupManagement;
 using Rafy.FileStorage;
 using Rafy.SerialNumber;
 using Rafy.Accounts;
+using Rafy.RBAC.UserRoleManagement;
 
 namespace RafyUnitTest
 {
@@ -70,6 +71,7 @@ namespace RafyUnitTest
 
             RafyEnvironment.DomainPlugins.Add(new RoleManagementPlugin());
             RafyEnvironment.DomainPlugins.Add(new GroupManagementPlugin());
+            RafyEnvironment.DomainPlugins.Add(new UserRoleManagementPlugin());
 
             ////为了多次修改 Location 值，需要把修改值的操作放到 InitEnvironment 中。
             //RafyEnvironment.Location.IsWebUI = false;
