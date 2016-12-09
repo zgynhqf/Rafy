@@ -8,6 +8,7 @@
  * 
  * 历史记录：
  * 创建文件 吴中坡 20161201 10:20
+ * 修改文件 宋军瑞 20161209 09:49 格式化代码
  * 
 *******************************************************/
 
@@ -25,7 +26,7 @@ using Rafy.RBAC.RoleManagement;
 namespace Rafy.RBAC.UserRoleManagement
 {
     /// <summary>
-    ///  用户角色
+    /// 用户角色
     /// </summary>
     [RootEntity, Serializable]
     public class UserRole : UserRoleManagementEntity
@@ -45,40 +46,28 @@ namespace Rafy.RBAC.UserRoleManagement
 
         #region 引用属性
 
-        public static readonly IRefIdProperty UserIdProperty =
-            P<UserRole>.RegisterRefId(e => e.UserId, ReferenceType.Normal);
-
+        public static readonly IRefIdProperty UserIdProperty = P<UserRole>.RegisterRefId(e => e.UserId, ReferenceType.Normal);
         public long UserId
         {
             get { return (long) GetRefId(UserIdProperty); }
             set { SetRefId(UserIdProperty, value); }
         }
 
-        public static readonly RefEntityProperty<User> UserProperty =
-            P<UserRole>.RegisterRef(e => e.User, UserIdProperty);
-
-        /// <summary>
-        /// </summary>
+        public static readonly RefEntityProperty<User> UserProperty = P<UserRole>.RegisterRef(e => e.User, UserIdProperty);
         public User User
         {
             get { return GetRefEntity(UserProperty); }
             set { SetRefEntity(UserProperty, value); }
         }
 
-        public static readonly IRefIdProperty RoleIdProperty =
-            P<UserRole>.RegisterRefId(e => e.RoleId, ReferenceType.Normal);
-
+        public static readonly IRefIdProperty RoleIdProperty = P<UserRole>.RegisterRefId(e => e.RoleId, ReferenceType.Normal);
         public long RoleId
         {
             get { return (long) GetRefId(RoleIdProperty); }
             set { SetRefId(RoleIdProperty, value); }
         }
 
-        public static readonly RefEntityProperty<Role> RoleProperty =
-            P<UserRole>.RegisterRef(e => e.Role, RoleIdProperty);
-
-        /// <summary>
-        /// </summary>
+        public static readonly RefEntityProperty<Role> RoleProperty = P<UserRole>.RegisterRef(e => e.Role, RoleIdProperty);
         public Role Role
         {
             get { return GetRefEntity(RoleProperty); }
@@ -101,7 +90,7 @@ namespace Rafy.RBAC.UserRoleManagement
     }
 
     /// <summary>
-    ///     实体的领域名称 列表类。
+    /// 实体的领域名称 列表类。
     /// </summary>
     [Serializable]
     public partial class UserRoleList : UserRoleManagementEntityList
@@ -109,13 +98,13 @@ namespace Rafy.RBAC.UserRoleManagement
     }
 
     /// <summary>
-    ///     实体的领域名称 仓库类。
-    ///     负责 实体的领域名称 类的查询、保存。
+    /// 实体的领域名称 仓库类。
+    /// 负责 实体的领域名称 类的查询、保存。
     /// </summary>
     public partial class UserRoleRepository : UserRoleManagementEntityRepository
     {
         /// <summary>
-        ///     单例模式，外界不可以直接构造本对象。
+        /// 单例模式，外界不可以直接构造本对象。
         /// </summary>
         protected UserRoleRepository()
         {
@@ -123,13 +112,13 @@ namespace Rafy.RBAC.UserRoleManagement
     }
 
     /// <summary>
-    ///     实体的领域名称 配置类。
-    ///     负责 实体的领域名称 类的实体元数据的配置。
+    /// 实体的领域名称 配置类。
+    /// 负责 实体的领域名称 类的实体元数据的配置。
     /// </summary>
     internal class UserRoleConfig : UserRoleManagementEntityConfig<UserRole>
     {
         /// <summary>
-        ///     配置实体的元数据
+        /// 配置实体的元数据
         /// </summary>
         protected override void ConfigMeta()
         {
