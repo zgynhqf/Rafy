@@ -16,6 +16,7 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rafy.RBAC.GroupManagement.Controllers;
+using System.Transactions;
 
 namespace RafyUnitTest
 {
@@ -31,8 +32,11 @@ namespace RafyUnitTest
         [TestMethod]
         public void RBAC_GetPermissionEntry_Success()
         {
-            var controller =new PermissionFacadeController();
-            Assert.IsNotNull(controller.Create(1));
+            using (TransactionScope transaction = new TransactionScope())
+            {
+                var controller = new PermissionFacadeController();
+                Assert.IsNotNull(controller.GetPermissionEntry(1));
+            }
         }
     }
 }
