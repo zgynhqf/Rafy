@@ -45,7 +45,6 @@ namespace Rafy.RBAC.RoleManagement
 
         public static readonly IRefIdProperty RoleIdProperty =
             P<RoleOperation>.RegisterRefId(e => e.RoleId, ReferenceType.Parent);
-
         public long RoleId
         {
             get { return (long) GetRefId(RoleIdProperty); }
@@ -54,7 +53,6 @@ namespace Rafy.RBAC.RoleManagement
 
         public static readonly RefEntityProperty<Role> RoleProperty =
             P<RoleOperation>.RegisterRef(e => e.Role, RoleIdProperty);
-
         public Role Role
         {
             get { return GetRefEntity(RoleProperty); }
@@ -63,7 +61,6 @@ namespace Rafy.RBAC.RoleManagement
 
         public static readonly IRefIdProperty OperationIdProperty =
             P<RoleOperation>.RegisterRefId(e => e.OperationId, ReferenceType.Normal);
-
         public long OperationId
         {
             get { return (long) GetRefId(OperationIdProperty); }
@@ -72,7 +69,6 @@ namespace Rafy.RBAC.RoleManagement
 
         public static readonly RefEntityProperty<ResourceOperation> OperationProperty =
             P<RoleOperation>.RegisterRef(e => e.Operation, OperationIdProperty);
-
         /// <summary>
         /// 资源操作
         /// </summary>

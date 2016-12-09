@@ -45,11 +45,16 @@ namespace Rafy.RBAC.RoleManagement
         #endregion
 
         #region 组合子属性
+
         public static readonly ListProperty<RoleOperationList> RoleOperationListProperty = P<Role>.RegisterList(e => e.RoleOperationList);
+        /// <summary>
+        /// 获取角色、操作关联列表数据
+        /// </summary>
         public RoleOperationList RoleOperationList
         {
             get { return this.GetLazyList(RoleOperationListProperty); }
         }
+
         #endregion
 
         #region 一般属性
@@ -129,11 +134,9 @@ namespace Rafy.RBAC.RoleManagement
         {
             //配置实体的所有属性都映射到数据表中。
             Meta.MapTable().MapAllProperties();
-            var namePropertyMeta = Meta.Property(Role.NameProperty).MapColumn();
-            namePropertyMeta.DataTypeLength = "40";
+            var namePropertyMeta = Meta.Property(Role.NameProperty).MapColumn().HasLength("40");
             namePropertyMeta.IsRequired = true;
-            var codePropertyMeta = Meta.Property(Role.CodeProperty).MapColumn();
-            codePropertyMeta.DataTypeLength = "40";
+            var codePropertyMeta = Meta.Property(Role.CodeProperty).MapColumn().HasLength("40");
             codePropertyMeta.IsRequired = true;
             Meta.Property(Role.DescriptionProperty).MapColumn().DataTypeLength = "200";
         }
