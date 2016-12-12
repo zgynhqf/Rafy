@@ -42,7 +42,6 @@ namespace Rafy.RBAC.RoleManagement
         #endregion
 
         #region 引用属性
-
         public static readonly IRefIdProperty RoleIdProperty =
             P<RoleOperation>.RegisterRefId(e => e.RoleId, ReferenceType.Parent);
         public long RoleId
@@ -50,7 +49,6 @@ namespace Rafy.RBAC.RoleManagement
             get { return (long) GetRefId(RoleIdProperty); }
             set { SetRefId(RoleIdProperty, value); }
         }
-
         public static readonly RefEntityProperty<Role> RoleProperty =
             P<RoleOperation>.RegisterRef(e => e.Role, RoleIdProperty);
         public Role Role
@@ -58,7 +56,6 @@ namespace Rafy.RBAC.RoleManagement
             get { return GetRefEntity(RoleProperty); }
             set { SetRefEntity(RoleProperty, value); }
         }
-
         public static readonly IRefIdProperty OperationIdProperty =
             P<RoleOperation>.RegisterRefId(e => e.OperationId, ReferenceType.Normal);
         public long OperationId
@@ -66,7 +63,6 @@ namespace Rafy.RBAC.RoleManagement
             get { return (long) GetRefId(OperationIdProperty); }
             set { SetRefId(OperationIdProperty, value); }
         }
-
         public static readonly RefEntityProperty<ResourceOperation> OperationProperty =
             P<RoleOperation>.RegisterRef(e => e.Operation, OperationIdProperty);
         /// <summary>
@@ -77,7 +73,6 @@ namespace Rafy.RBAC.RoleManagement
             get { return GetRefEntity(OperationProperty); }
             set { SetRefEntity(OperationProperty, value); }
         }
-
         #endregion
 
         #region 组合子属性
