@@ -49,6 +49,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\Extensions\ResourceOperationRepositoryExtension.cs" />
     <Compile Include="Entities\Extensions\ResourceRepositoryExtension.cs" />
     <Compile Include="PermissionArchitecture\DefaultPermissionBuilder.cs" />
     <Compile Include="PermissionArchitecture\DefaultPermissionEntry.cs" />
