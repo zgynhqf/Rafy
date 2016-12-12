@@ -30,3 +30,4 @@ App_Data/*.ldf
 
 # NuGet
 packages/
+/Rafy/Tools/Domain Documentation/Help
