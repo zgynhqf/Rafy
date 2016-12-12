@@ -147,4 +147,10 @@
   <data name="ManagerFormTabControl1SelectedQueryAuthentication" xml:space="preserve">
     <value>授权信息查询</value>
   </data>
+  <data name="ManagerFormServiceValidateParametersNeedPrivateKeyAndPublicKey" xml:space="preserve">
+    <value>请在“获取私钥”选项卡生成或输入公钥与私钥。</value>
+  </data>
+  <data name="ManagerFormdgvContextMenuPaste" xml:space="preserve">
+    <value>已经复制到剪贴版，请在编辑器中按 Ctrl + V 进行粘贴。</value>
+  </data>
 </root>

@@ -199,7 +199,7 @@ namespace Rafy.Domain.ORM
                 //在加载数据时，自动索引功能都不可用。
                 entityList.AutoTreeIndexEnabled = false;
 
-                QueryDataCore(args, entityList);
+                this.QueryDataCore(args, entityList);
             }
             finally
             {

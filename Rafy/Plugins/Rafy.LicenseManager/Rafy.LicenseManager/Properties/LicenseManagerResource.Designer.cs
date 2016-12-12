@@ -61,6 +61,15 @@ namespace Rafy.LicenseManager.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 已经复制到剪贴版，请在编辑器中按 Ctrl + V 进行粘贴。.
+        /// </summary>
+        internal static string ManagerFormdgvContextMenuPaste {
+            get {
+                return ResourceManager.GetString("ManagerFormdgvContextMenuPaste", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 授权目标错误。.
         /// </summary>
         internal static string ManagerFormGetLicenseEntityAuthenticationTargetWarning {
@@ -75,6 +84,15 @@ namespace Rafy.LicenseManager.Properties {
         internal static string ManagerFormSaveLicenseSuccess {
             get {
                 return ResourceManager.GetString("ManagerFormSaveLicenseSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 请在“获取私钥”选项卡生成或输入公钥与私钥。.
+        /// </summary>
+        internal static string ManagerFormServiceValidateParametersNeedPrivateKeyAndPublicKey {
+            get {
+                return ResourceManager.GetString("ManagerFormServiceValidateParametersNeedPrivateKeyAndPublicKey", resourceCulture);
             }
         }
         

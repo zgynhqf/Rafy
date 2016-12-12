@@ -39,13 +39,12 @@ namespace Rafy.LicenseManager.Infrastructure
                 return string.Empty;
             }
 
-            var authCode = new AuthorizationCode
-            {
+            var authCode = new AuthorizationCode {
                 ExpireTime = entity.ExpireTime,
                 Mac = entity.MacCode,
                 Category = entity.LicenseTarget == LicenseTarget.Development ? 0 : 1
             };
-            var licenseCode = SecurityAuthentication.Encrypt(authCode, LicenseManagerResource.PublicKey);
+            var licenseCode = SecurityAuthentication.Encrypt(authCode, entity.PrivateKey);
 
             return licenseCode;
         }
@@ -53,41 +52,60 @@ namespace Rafy.LicenseManager.Infrastructure
         /// <summary>
         /// 验证参数。
         /// </summary>
-        /// <param name="mac"></param>
-        /// <param name="expireTime"></param>
-        /// <param name="authorizationTarget"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        internal static bool ValidateParameters(string mac, DateTime expireTime, LicenseTarget authorizationTarget)
+        internal static bool ValidateParameters(LicenseEntity entity)
         {
-            if(string.IsNullOrWhiteSpace(mac) || !_regex.IsMatch(mac))
+            if (string.IsNullOrWhiteSpace(entity.PrivateKey) || string.IsNullOrWhiteSpace(entity.PublicKey))
+            {
+                MessageBox.Show(LicenseManagerResource.ManagerFormServiceValidateParametersNeedPrivateKeyAndPublicKey, LicenseManagerResource.ManagerFormValidateParametersWarning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
+            if(string.IsNullOrWhiteSpace(entity.MacCode) || !_regex.IsMatch(entity.MacCode))
             {
                 MessageBox.Show(LicenseManagerResource.ManagerFormValidateParametersMACAddress, LicenseManagerResource.ManagerFormValidateParametersWarning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
-            if(expireTime < DateTime.Now)
+            if(entity.ExpireTime < DateTime.Now)
             {
                 MessageBox.Show(LicenseManagerResource.ManagerFormValidateParametersExpireTime, LicenseManagerResource.ManagerFormValidateParametersWarning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
-            if(authorizationTarget == LicenseTarget.None)
+            if(entity.LicenseTarget == LicenseTarget.None)
             {
                 MessageBox.Show(LicenseManagerResource.ManagerFormValidateParametersSelectAuthenticationTarget, LicenseManagerResource.ManagerFormValidateParametersWarning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
-            var repository = RF.ResolveInstance<LicenseEntityRepository>();
-
-            var entity = repository.GetFirstBy(new CommonQueryCriteria(BinaryOperator.And) { new PropertyMatch(LicenseEntity.MacCodeProperty, PropertyOperator.Equal, mac) });
-
-            if(entity != null)
-            {
-                MessageBox.Show(string.Format(LicenseManagerResource.ManagerFormValidateParametersMACHasUsed, mac), LicenseManagerResource.ManagerFormValidateParametersWarning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return false;
-            }
-
             return true;
+        }
+
+        internal static void BindContextMenu(DataGridView dataGridView, ContextMenuStrip contextMenuTrip)
+        {
+            dataGridView.CellMouseDown += (sender, e) =>
+            {
+                if (e.Button != MouseButtons.Right) return;
+                if (e.RowIndex < 0) return;
+
+                var dgv = sender as DataGridView;
+                if(dgv == null) return;
+
+                if (!dgv.Rows[e.RowIndex].Selected)
+                {
+                    dgv.ClearSelection();
+                    dgv.Rows[e.RowIndex].Selected = true;
+                }
+
+                if (dgv.SelectedRows.Count == 1)
+                {
+                    dgv.CurrentCell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                }
+
+                contextMenuTrip.Show(Control.MousePosition.X, Control.MousePosition.Y);
+            };
         }
 
         /// <summary>
@@ -105,6 +123,9 @@ namespace Rafy.LicenseManager.Infrastructure
 
                 return new
                 {
+                    entity.Id,
+                    entity.PrivateKey,
+                    entity.PublicKey,
                     entity.LicenseTarget,
                     entity.ExpireTime,
                     entity.MacCode,
@@ -117,6 +138,30 @@ namespace Rafy.LicenseManager.Infrastructure
             {
                 dataGridView.DataSource = source;
             }));
+        }
+
+        /// <summary>
+        /// 获取一对 RAS 公钥与私钥。
+        /// </summary>
+        /// <returns></returns>
+        internal static string[] GeneratorKeys()
+        {
+            var keys = RSACryptoService.GenerateKeys();
+
+            return keys;
+        }
+
+        internal static void DeleteRecord(string id)
+        {
+            var repository = RF.Concrete<LicenseEntityRepository>();
+
+            var entity = repository.GetById(id);
+
+            if (entity == null) return;
+
+            entity.PersistenceStatus = PersistenceStatus.Deleted;
+
+            repository.Save(entity);
         }
     }
 }
