@@ -1,4 +1,0 @@
-E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.LicenseManager\Rafy.LicenseManager.Encryption\bin\Release\Rafy.LicenseManager.Encryption.dll
-E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.LicenseManager\Rafy.LicenseManager.Encryption\bin\Release\Rafy.LicenseManager.Encryption.pdb
-E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.LicenseManager\Rafy.LicenseManager.Encryption\obj\Release\Rafy.LicenseManager.Encryption.dll
-E:\visual studio 2015\Projects\Rafy\Rafy\Plugins\Rafy.LicenseManager\Rafy.LicenseManager.Encryption\obj\Release\Rafy.LicenseManager.Encryption.pdb
