@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-16"?>
+<Document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" HideNonsenceLabels="false">
+  <EntityTypes>
+    <EntityTypeElement FullName="Rafy.RBAC.UserRoleManagement.UserRole" Label="用户角色" Left="0" Top="0" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
+      <Properties />
+    </EntityTypeElement>
+  </EntityTypes>
+  <EnumTypes />
+  <Connections />
+</Document>

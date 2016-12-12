@@ -31,6 +31,12 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -41,6 +47,12 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\UserRoleController.cs" />
+    <Compile Include="Entities\UserRole.cs" />
+    <Compile Include="Entities\UserRole.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>UserRole.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\UserRoleManagementEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserRoleManagementPlugin.cs" />
@@ -50,10 +62,18 @@
       <Project>{966a5bf2-d690-426b-ad68-ad868bb8f855}</Project>
       <Name>Rafy</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Rafy.Accounts\Rafy.Accounts.csproj">
+      <Project>{4d6467e4-d1ce-4fa8-a1fe-92b1ba549a4a}</Project>
+      <Name>Rafy.Accounts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rafy.RBAC.RoleManagement\Rafy.RBAC.RoleManagement.csproj">
       <Project>{708150c2-4b78-4f02-a8e9-3338cc76f69c}</Project>
       <Name>Rafy.RBAC.RoleManagement</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Hxy Key.snk" />
+    <None Include="UserRole.odml" />
   </ItemGroup>
   <!--<ItemGroup>
         <Folder Include="Services\" />
