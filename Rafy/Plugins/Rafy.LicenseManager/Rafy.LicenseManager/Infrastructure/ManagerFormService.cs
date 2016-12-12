@@ -33,13 +33,14 @@ namespace Rafy.LicenseManager.Infrastructure
         /// <returns></returns>
         internal static string GeneratorLicenseCode(LicenseEntity entity)
         {
-            if(entity.LicenseTarget == LicenseTarget.None)
+            if (entity.LicenseTarget == LicenseTarget.None)
             {
                 MessageBox.Show(LicenseManagerResource.ManagerFormGetLicenseEntityAuthenticationTargetWarning, LicenseManagerResource.ManagerFormValidateParametersWarning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return string.Empty;
             }
 
-            var authCode = new AuthorizationCode {
+            var authCode = new AuthorizationCode
+            {
                 ExpireTime = entity.ExpireTime,
                 Mac = entity.MacCode,
                 Category = entity.LicenseTarget == LicenseTarget.Development ? 0 : 1
@@ -62,19 +63,19 @@ namespace Rafy.LicenseManager.Infrastructure
                 return false;
             }
 
-            if(string.IsNullOrWhiteSpace(entity.MacCode) || !_regex.IsMatch(entity.MacCode))
+            if (string.IsNullOrWhiteSpace(entity.MacCode) || !_regex.IsMatch(entity.MacCode))
             {
                 MessageBox.Show(LicenseManagerResource.ManagerFormValidateParametersMACAddress, LicenseManagerResource.ManagerFormValidateParametersWarning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
-            if(entity.ExpireTime < DateTime.Now)
+            if (entity.ExpireTime < DateTime.Now)
             {
                 MessageBox.Show(LicenseManagerResource.ManagerFormValidateParametersExpireTime, LicenseManagerResource.ManagerFormValidateParametersWarning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
-            if(entity.LicenseTarget == LicenseTarget.None)
+            if (entity.LicenseTarget == LicenseTarget.None)
             {
                 MessageBox.Show(LicenseManagerResource.ManagerFormValidateParametersSelectAuthenticationTarget, LicenseManagerResource.ManagerFormValidateParametersWarning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
@@ -91,7 +92,7 @@ namespace Rafy.LicenseManager.Infrastructure
                 if (e.RowIndex < 0) return;
 
                 var dgv = sender as DataGridView;
-                if(dgv == null) return;
+                if (dgv == null) return;
 
                 if (!dgv.Rows[e.RowIndex].Selected)
                 {
@@ -153,7 +154,7 @@ namespace Rafy.LicenseManager.Infrastructure
 
         internal static void DeleteRecord(string id)
         {
-            var repository = RF.Concrete<LicenseEntityRepository>();
+            var repository = RF.ResolveInstance<LicenseEntityRepository>();
 
             var entity = repository.GetById(id);
 

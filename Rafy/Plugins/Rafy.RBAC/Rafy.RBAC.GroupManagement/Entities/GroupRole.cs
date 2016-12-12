@@ -54,9 +54,9 @@ namespace Rafy.RBAC.GroupManagement
         /// <summary>
         /// 组的主键
         /// </summary>
-        public int GroupId
+        public long GroupId
         {
-            get { return (int)this.GetRefId(GroupIdProperty); }
+            get { return (long)this.GetRefId(GroupIdProperty); }
             set { this.SetRefId(GroupIdProperty, value); }
         }
 

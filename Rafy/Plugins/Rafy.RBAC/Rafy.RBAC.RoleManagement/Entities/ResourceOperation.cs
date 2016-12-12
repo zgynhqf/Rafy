@@ -31,16 +31,14 @@ namespace Rafy.RBAC.RoleManagement
 
         public static readonly IRefIdProperty ResourceIdProperty =
             P<ResourceOperation>.RegisterRefId(e => e.ResourceId, ReferenceType.Parent);
-
-        public int ResourceId
+        public long ResourceId
         {
-            get { return (int) GetRefId(ResourceIdProperty); }
+            get { return (long)GetRefId(ResourceIdProperty); }
             set { SetRefId(ResourceIdProperty, value); }
         }
 
         public static readonly RefEntityProperty<Resource> ResourceProperty =
             P<ResourceOperation>.RegisterRef(e => e.Resource, ResourceIdProperty);
-
         public Resource Resource
         {
             get { return GetRefEntity(ResourceProperty); }

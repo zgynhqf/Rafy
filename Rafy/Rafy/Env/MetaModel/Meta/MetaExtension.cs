@@ -173,13 +173,11 @@ namespace Rafy.MetaModel
                             var columnAttri = clrProperty.GetSingleAttribute<ColumnAttribute>();
                             if (columnAttri != null)
                             {
+                                var columnMeta = ep.MapColumn();
                                 var name = columnAttri.ColumnName;
-                                if (string.IsNullOrWhiteSpace(name)) name = clrProperty.Name;
-
-                                ep.ColumnMeta = new ColumnMeta { ColumnName = name };
-                                if (mp is IRefProperty)
+                                if (!string.IsNullOrWhiteSpace(name))
                                 {
-                                    ep.ColumnMeta.HasFKConstraint = true;
+                                    columnMeta.HasColumnName(name);
                                 }
                             }
                         }
@@ -227,7 +225,7 @@ namespace Rafy.MetaModel
             if (meta.ColumnMeta == null)
             {
                 meta.ColumnMeta = new ColumnMeta();
-                if (meta.ReferenceInfo != null)
+                if (meta.ManagedProperty is IRefIdProperty)
                 {
                     meta.ColumnMeta.HasFKConstraint = true;
                 }

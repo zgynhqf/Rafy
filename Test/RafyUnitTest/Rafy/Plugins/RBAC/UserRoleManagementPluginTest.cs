@@ -40,16 +40,14 @@ namespace RafyUnitTest
             var userRepository = RepositoryFacade.ResolveInstance<UserRepository>();
             var roleRepository = RepositoryFacade.ResolveInstance<RoleRepository>();
 
-            using(RepositoryFacade.TransactionScope(userRepository))
-            using(RepositoryFacade.TransactionScope(roleRepository))
-            using(RepositoryFacade.TransactionScope(userRoleRepository))
+            using (RepositoryFacade.TransactionScope(userRepository))
             {
                 var user = new User {Id = 1, UserName = "Test_001", RealName = "Test_001", Email = "rafy@rafy.org", PhoneNumber = "18666666666"};
                 var role = new Role {Id = 1, Code = Guid.NewGuid().ToString("N"), Description = "", Name = "管理员"};
 
                 userRepository.Save(user);
                 roleRepository.Save(role);
-                userRoleRepository.Save(new UserRole {User = user, Role = role});
+                userRoleRepository.Save(new UserRole { User = user, Role = role });
 
                 var result1 = this._controller.HasRole(new User { Id = user.Id }, new Role { Id = role.Id });
                 var result2 = this._controller.HasRole(new User { Id = user.Id }, new Role { Id = role.Id + 1L });
@@ -68,8 +66,6 @@ namespace RafyUnitTest
             var userRepository = RepositoryFacade.ResolveInstance<UserRepository>();
             var roleRepository = RepositoryFacade.ResolveInstance<RoleRepository>();
 
-            using(RepositoryFacade.TransactionScope(userRepository))
-            using(RepositoryFacade.TransactionScope(roleRepository))
             using (RepositoryFacade.TransactionScope(userRoleRepository))
             {
                 var user = new User { Id = 1, UserName = "Test_001", RealName = "Test_001", Email = "rafy@rafy.org", PhoneNumber = "18666666666" };
@@ -95,9 +91,7 @@ namespace RafyUnitTest
             var userRepository = RepositoryFacade.ResolveInstance<UserRepository>();
             var roleRepository = RepositoryFacade.ResolveInstance<RoleRepository>();
 
-            using(RepositoryFacade.TransactionScope(userRepository))
-            using(RepositoryFacade.TransactionScope(roleRepository))
-            using(RepositoryFacade.TransactionScope(userRoleRepository))
+            using (RepositoryFacade.TransactionScope(userRepository))
             {
                 var user = new User { Id = 1, UserName = "Test_001", RealName = "Test_001", Email = "rafy@rafy.org", PhoneNumber = "18666666666" };
                 var role = new Role { Id = 1, Code = Guid.NewGuid().ToString("N"), Description = "", Name = "管理员" };
