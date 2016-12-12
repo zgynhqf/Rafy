@@ -46,7 +46,7 @@ namespace Rafy.DevTools.SysInfo
     {
         public override void Execute(LogicalView view)
         {
-            view.DataLoader.LoadDataAsync(() => RF.Concrete<FrameworkInfoItemRepository>().GetAllOnClient());
+            view.DataLoader.LoadDataAsync(() => RF.ResolveInstance<FrameworkInfoItemRepository>().GetAllOnClient());
         }
     }
 
@@ -56,7 +56,7 @@ namespace Rafy.DevTools.SysInfo
         public override void Execute(LogicalView view)
         {
             CommonModel.Entities.EnsureAllLoaded();
-            view.DataLoader.LoadDataAsync(() => RF.Concrete<FrameworkInfoItemRepository>().GetAllOnClient());
+            view.DataLoader.LoadDataAsync(() => RF.ResolveInstance<FrameworkInfoItemRepository>().GetAllOnClient());
         }
     }
 }

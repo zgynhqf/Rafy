@@ -177,6 +177,10 @@ namespace Rafy.MetaModel
                                 if (string.IsNullOrWhiteSpace(name)) name = clrProperty.Name;
 
                                 ep.ColumnMeta = new ColumnMeta { ColumnName = name };
+                                if (mp is IRefProperty)
+                                {
+                                    ep.ColumnMeta.HasFKConstraint = true;
+                                }
                             }
                         }
                     }
@@ -223,6 +227,10 @@ namespace Rafy.MetaModel
             if (meta.ColumnMeta == null)
             {
                 meta.ColumnMeta = new ColumnMeta();
+                if (meta.ReferenceInfo != null)
+                {
+                    meta.ColumnMeta.HasFKConstraint = true;
+                }
             }
 
             return meta.ColumnMeta;

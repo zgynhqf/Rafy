@@ -70,7 +70,7 @@ namespace Rafy.Accounts.Controllers
             if (brokenRules.Count > 0) return new Result(ResultCodes.RegisterPropertiesInvalid, brokenRules.ToString());
 
             //检查用户名、邮箱的重复性。
-            var repo = RF.Concrete<UserRepository>();
+            var repo = RF.ResolveInstance<UserRepository>();
             var criteria = new CommonQueryCriteria();
             criteria.Concat = BinaryOperator.Or;
             if (userNameAsId)
@@ -144,7 +144,7 @@ namespace Rafy.Accounts.Controllers
         /// <returns></returns>
         public virtual Result LoginByUserName(string userName, string password, out User user)
         {
-            var repo = RF.Concrete<UserRepository>();
+            var repo = RF.ResolveInstance<UserRepository>();
             user = repo.GetByUserName(userName);
             if (user == null)
             {
@@ -164,7 +164,7 @@ namespace Rafy.Accounts.Controllers
         /// <returns></returns>
         public virtual Result LoginByEmail(string email, string password, out User user)
         {
-            var repo = RF.Concrete<UserRepository>();
+            var repo = RF.ResolveInstance<UserRepository>();
             user = repo.GetByEmail(email);
             if (user == null)
             {
@@ -185,7 +185,7 @@ namespace Rafy.Accounts.Controllers
         {
             if (user.IsDisabled) return new Result(ResultCodes.LoginUserDisabled, "登录失败，用户已经被禁用。");
 
-            var repo = RF.Concrete<UserRepository>();
+            var repo = RF.ResolveInstance<UserRepository>();
 
             //最大登录失败次数限制。
             var maxLoginTimes = this.MaxLoginFailedTimes;

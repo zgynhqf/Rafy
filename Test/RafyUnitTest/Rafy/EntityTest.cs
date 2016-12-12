@@ -78,7 +78,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void __ET_PersistenceStatus_Delete_SavedAsNew()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
                 var item = new TestUser();
@@ -267,7 +267,7 @@ namespace RafyUnitTest
                 var user = new TestUser { Name = "DDDDD" };
                 RF.Save(user);
 
-                var repo = RF.Concrete<TestRoleRepository>();
+                var repo = RF.ResolveInstance<TestRoleRepository>();
                 var entity = new TestRole
                 {
                     TestUser = user,
@@ -351,7 +351,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Property_LazyRef()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var bc = new BookCategory
@@ -369,7 +369,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Property_LazyRef_SetEntity()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var bc = new BookCategory
@@ -389,7 +389,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Property_LazyRef_SetId()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var bc = new BookCategory
@@ -409,7 +409,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Property_LazyList()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var book = new Book
@@ -457,7 +457,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Property_LOB_LazyValue_GetById()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var book = new Book { Name = "1", Content = "Book1 Long Content........." };
@@ -476,7 +476,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Property_LOB_LazyValue_GetList()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new Book { Name = "1", Content = "Book1 Long Content........." });
@@ -496,7 +496,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Property_LOB_UpdateWithLOB()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var book = new Book { Name = "1", Content = "Book1 Long Content........." };
@@ -525,7 +525,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Property_LOB_UpdateWithoutLOB()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var book = new Book { Name = "1", Content = "Book1 Long Content........." };
@@ -551,7 +551,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Property_LOB_SqlSelectWithLOB()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new Book { Name = "1", Content = "Book1 Long Content........." });
@@ -567,7 +567,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Property_LOB_SqlSelectWithoutLOB()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new Book { Name = "1", Content = "Book1 Long Content........." });
@@ -582,7 +582,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Property_LOB_SqlSelectWithoutLOB_TablePrefix()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new Book { Name = "1", Content = "Book1 Long Content........." });
@@ -648,7 +648,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_CDUQ_C()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new Book());
@@ -659,7 +659,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_CDUQ_D()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var book = new Book();
@@ -675,7 +675,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_CDUQ_D_Clear()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var bookList = new BookList
@@ -696,7 +696,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_CDUQ_U()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var book = new Book();
@@ -747,7 +747,7 @@ namespace RafyUnitTest
         //[TestMethod]
         //public void ET_Repository_Query_Lambda()
         //{
-        //    var repository = RF.Concrete<TestUserRepository>();
+        //    var repository = RF.ResolveInstance<TestUserRepository>();
         //    using (RF.TransactionScope(repository))
         //    {
         //        repository.Save(new TestUser { Name = "AAA" });
@@ -760,7 +760,7 @@ namespace RafyUnitTest
         //[TestMethod]
         //public void ET_Repository_Query_Lambda_Count()
         //{
-        //    var repository = RF.Concrete<TestUserRepository>();
+        //    var repository = RF.ResolveInstance<TestUserRepository>();
         //    using (RF.TransactionScope(repository))
         //    {
         //        repository.Save(new TestUser { Name = "AAA" });
@@ -773,7 +773,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_TableQuery_ColumnConflict()
         {
-            var repo = RF.Concrete<ChapterRepository>();
+            var repo = RF.ResolveInstance<ChapterRepository>();
             bool success  = false;
             try
             {
@@ -788,7 +788,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_TableQuery()
         {
-            var repo = RF.Concrete<ChapterRepository>();
+            var repo = RF.ResolveInstance<ChapterRepository>();
             using (RF.TransactionScope(repo))
             {
                 RF.Save(new Book
@@ -818,7 +818,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_TableQuery_Paging()
         {
-            var repo = RF.Concrete<ChapterRepository>();
+            var repo = RF.ResolveInstance<ChapterRepository>();
             using (RF.TransactionScope(repo))
             {
                 RF.Save(new Book
@@ -854,7 +854,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_TableQuery_UseSqlTreeQuery()
         {
-            var repo = RF.Concrete<ChapterRepository>();
+            var repo = RF.ResolveInstance<ChapterRepository>();
             using (RF.TransactionScope(repo))
             {
                 RF.Save(new Book
@@ -881,7 +881,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_Memory()
         {
-            var repo = RF.Concrete<MemoryCustomerRepository>();
+            var repo = RF.ResolveInstance<MemoryCustomerRepository>();
             var items = repo.GetAll();
             Assert.IsTrue(items.Count == 0);
 
@@ -907,7 +907,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_Submit_Callback()
         {
-            var repo = RF.Concrete<MemoryCustomerRepository>();
+            var repo = RF.ResolveInstance<MemoryCustomerRepository>();
             var customer = new MemoryCustomer { Name = "Huqf", Version = 1 };
 
             repo.Save(customer);
@@ -930,7 +930,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_Submit_ChildrenOnly()
         {
-            var repo = RF.Concrete<PBSTypeRepository>();
+            var repo = RF.ResolveInstance<PBSTypeRepository>();
             using (RF.TransactionScope(repo))
             {
                 var root = new PBSType();
@@ -965,7 +965,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_Submit_ChildrenOnly_UpdateCurrent()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var book = new Book
@@ -996,7 +996,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_GetChildProperties()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             var childProperties = repo.GetChildProperties();
             Assert.IsTrue(childProperties.Count == 1);
         }
@@ -1004,7 +1004,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_SaveList_Transaction()
         {
-            var repo = RF.Concrete<BookLocRepository>();
+            var repo = RF.ResolveInstance<BookLocRepository>();
             var list = repo.GetAll();
             list.Clear();
             repo.Save(list);
@@ -1038,7 +1038,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_DAL_ComposeDataProvider()
         {
-            var repo = RF.Concrete<CarRepository>();
+            var repo = RF.ResolveInstance<CarRepository>();
             if (RafyEnvironment.Location.ConnectDataDirectly)
             {
                 Assert.IsTrue(repo.DataProvider is ICarDataProvider);
@@ -1048,7 +1048,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_DAL_Invoke()
         {
-            var repo = RF.Concrete<CarRepository>();
+            var repo = RF.ResolveInstance<CarRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new Car { AddTime = DateTime.Parse("2014-05-08") });
@@ -1066,7 +1066,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_DAL_Replace()
         {
-            var repo = RF.Concrete<CarRepository>();
+            var repo = RF.ResolveInstance<CarRepository>();
             var item = repo.GetByReplacableDAL();
             Assert.IsTrue(item.Name == "ImplementationReplaced");
         }
@@ -1100,8 +1100,8 @@ namespace RafyUnitTest
         {
             int size = BATCH_IMPORT_DATA_SIZE;
 
-            var bookRepo = RF.Concrete<BookRepository>();
-            var chapterRepo = RF.Concrete<ChapterRepository>();
+            var bookRepo = RF.ResolveInstance<BookRepository>();
+            var chapterRepo = RF.ResolveInstance<ChapterRepository>();
             Assert.AreEqual(0, bookRepo.CountAll());
             using (RF.TransactionScope(bookRepo))
             {
@@ -1137,7 +1137,7 @@ namespace RafyUnitTest
         {
             int size = (int)(2.345 * BATCH_IMPORT_DATA_SIZE);
 
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var books = new BookList();
@@ -1160,7 +1160,7 @@ namespace RafyUnitTest
         {
             int size = BATCH_IMPORT_DATA_SIZE;
 
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var books = new BookList();
@@ -1190,7 +1190,7 @@ namespace RafyUnitTest
 
             var longContent = new string('X', 20000);
 
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var books = new BookList();
@@ -1215,7 +1215,7 @@ namespace RafyUnitTest
 
             var longContent = new byte[20000];
 
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var books = new BookList();
@@ -1238,7 +1238,7 @@ namespace RafyUnitTest
         {
             int size = BATCH_IMPORT_DATA_SIZE;
 
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var books = new BookList();
@@ -1259,7 +1259,7 @@ namespace RafyUnitTest
                 importer.Save(books);
 
                 Assert.AreEqual(size, repo.CountAll());
-                Assert.AreEqual(size * 2, RF.Concrete<ChapterRepository>().CountAll());
+                Assert.AreEqual(size * 2, RF.ResolveInstance<ChapterRepository>().CountAll());
             }
         }
 
@@ -1268,7 +1268,7 @@ namespace RafyUnitTest
         {
             int size = BATCH_IMPORT_DATA_SIZE;
 
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var books = new BookList();
@@ -1293,7 +1293,7 @@ namespace RafyUnitTest
         {
             int size = BATCH_IMPORT_DATA_SIZE;
 
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var books = new BookList();
@@ -1329,7 +1329,7 @@ namespace RafyUnitTest
         {
             int size = BATCH_IMPORT_DATA_SIZE;
 
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var books = new BookList();
@@ -1361,7 +1361,7 @@ namespace RafyUnitTest
         {
             int size = BATCH_IMPORT_DATA_SIZE;
 
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var books = new BookList();
@@ -1382,7 +1382,7 @@ namespace RafyUnitTest
                 importer.Save(books);
 
                 Assert.AreEqual(size, repo.CountAll());
-                Assert.AreEqual(size * 2, RF.Concrete<ChapterRepository>().CountAll());
+                Assert.AreEqual(size * 2, RF.ResolveInstance<ChapterRepository>().CountAll());
 
                 for (int i = 0; i < size; i++)
                 {
@@ -1404,7 +1404,7 @@ namespace RafyUnitTest
         {
             int size = BATCH_IMPORT_DATA_SIZE;
 
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var books = new BookList();
@@ -1446,7 +1446,7 @@ namespace RafyUnitTest
         {
             int size = BATCH_IMPORT_DATA_SIZE;
 
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var books = new BookList();
@@ -1501,7 +1501,7 @@ namespace RafyUnitTest
         {
             int size = BATCH_IMPORT_DATA_SIZE;
 
-            var repo = RF.Concrete<ARepository>();
+            var repo = RF.ResolveInstance<ARepository>();
             using (RF.TransactionScope(repo))
             {
                 var list = new AList();
@@ -1528,7 +1528,7 @@ namespace RafyUnitTest
                 Assert.AreEqual("New Name", res[0].Name);
                 Assert.AreEqual("New Name", res[res.Count - 1].Name);
 
-                var b2 = RF.Concrete<BRepository>().GetById(b.Id);
+                var b2 = RF.ResolveInstance<BRepository>().GetById(b.Id);
                 Assert.AreEqual("New Name", b2.AName);
             }
         }
@@ -1538,7 +1538,7 @@ namespace RafyUnitTest
         {
             int size = BATCH_IMPORT_DATA_SIZE;
 
-            var repo = RF.Concrete<ARepository>();
+            var repo = RF.ResolveInstance<ARepository>();
             using (RF.TransactionScope(repo))
             {
                 var list = new AList();
@@ -1568,10 +1568,10 @@ namespace RafyUnitTest
                 Assert.AreEqual("New Name", res[0].Name);
                 Assert.AreEqual("New Name", res[res.Count - 1].Name);
 
-                var b2 = RF.Concrete<BRepository>().GetById(b.Id);
+                var b2 = RF.ResolveInstance<BRepository>().GetById(b.Id);
                 Assert.AreEqual("New Name", b2.AName);
 
-                var c2 = RF.Concrete<CRepository>().GetById(c.Id) as C;
+                var c2 = RF.ResolveInstance<CRepository>().GetById(c.Id) as C;
                 Assert.AreEqual("New Name", c2.AName);
             }
         }
@@ -1581,7 +1581,7 @@ namespace RafyUnitTest
         {
             int size = BATCH_IMPORT_DATA_SIZE;
 
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var books = new BookList();
@@ -1604,7 +1604,7 @@ namespace RafyUnitTest
         {
             int size = BATCH_IMPORT_DATA_SIZE;
 
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var books = new BookList();
@@ -1633,7 +1633,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_QueryExt()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
                 var name = "QueryExt_User";
@@ -1651,7 +1651,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_QueryExt_QueryExt1ByRawRepository()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
                 var name = "QueryExt_User";
@@ -1671,7 +1671,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_QueryExt_QueryExt2ByRawRepository()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
                 var name = "QueryExt_User";
@@ -1693,7 +1693,7 @@ namespace RafyUnitTest
         {
             try
             {
-                var repo = RF.Concrete<TestUserRepository>();
+                var repo = RF.ResolveInstance<TestUserRepository>();
                 var userList = repo.GetBy(new NotImplementCriteria());
 
                 Assert.IsTrue(false, "本方法没有在仓库及扩展中实现，应该抛出异常。");
@@ -1707,7 +1707,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_QueryExt_ExtendBase()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
                 //查询 TestUser
@@ -1728,12 +1728,12 @@ namespace RafyUnitTest
                 var task = new TestTreeTask { TestUser = user };
                 RF.Save(task);
 
-                var taskRepo = RF.Concrete<TestTreeTaskRepository>();
+                var taskRepo = RF.ResolveInstance<TestTreeTaskRepository>();
                 var taskList = taskRepo.Extension<EntityRepositoryExtension>().GetBySingleProperty(TestTreeTask.TestUserIdProperty, user.Id);
                 Assert.IsTrue(taskList.Count > 0);
 
                 //查询 TestAdministrator
-                var adminRepo = RF.Concrete<TestAdministratorRepository>();
+                var adminRepo = RF.ResolveInstance<TestAdministratorRepository>();
                 var adminList = adminRepo.Extension<EntityRepositoryExtension>().GetBySingleProperty(TestUser.AgeProperty, 100);
                 Assert.IsTrue(adminList.Count > 0);
             }
@@ -1742,7 +1742,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_QueryExt_GetByObjectCriteria_Exception()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             try
             {
                 repo.GetBy(new { });
@@ -2388,7 +2388,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Json_Deserialization_Update_RequeryFromRepository()
         {
-            var repo = RF.Concrete<FavorateRepository>();
+            var repo = RF.ResolveInstance<FavorateRepository>();
             using (RF.TransactionScope(repo))
             {
                 var f1 = new Favorate();
@@ -2430,8 +2430,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Json_Deserialization_RedundancyProperty1()
         {
-            var repoA = RF.Concrete<ARepository>();
-            var repo = RF.Concrete<BRepository>();
+            var repoA = RF.ResolveInstance<ARepository>();
+            var repo = RF.ResolveInstance<BRepository>();
             using (RF.TransactionScope(repo))
             {
                 var a = new A { Name = "a" };
@@ -2452,8 +2452,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Json_Deserialization_RedundancyProperty2()
         {
-            var repoA = RF.Concrete<ARepository>();
-            var repo = RF.Concrete<BRepository>();
+            var repoA = RF.ResolveInstance<ARepository>();
+            var repo = RF.ResolveInstance<BRepository>();
             using (RF.TransactionScope(repo))
             {
                 var a = new A { Name = "a" };
@@ -2581,7 +2581,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Json_Deserialization_Status()
         {
-            var repo = RF.Concrete<FavorateRepository>();
+            var repo = RF.ResolveInstance<FavorateRepository>();
             using (RF.TransactionScope(repo))
             {
                 var f1 = new Favorate();
@@ -2737,7 +2737,7 @@ namespace RafyUnitTest
                 return;
             }
 
-            var repo = RF.Concrete<BuildingRepository>();
+            var repo = RF.ResolveInstance<BuildingRepository>();
             using (RF.TransactionScope(repo))
             {
                 var model = new Building();
@@ -2797,7 +2797,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Validation_NotDuplicateRule()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var entity = new Book { Code = "01" };
@@ -2812,7 +2812,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Validation_NotDuplicateRule_MultiProperties()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var entity = new Book { Name = "IT秘籍", Author = "胡庆访" };
@@ -2831,7 +2831,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Validation_NotDuplicateRule_Deleted()
         {
-            var repo = RF.Concrete<BookRepository>();
+            var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
                 var entity = new Book { Code = "01" };
@@ -2850,7 +2850,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Validation_NotUsedByReferenceRule_EntityStatusScope_Delete()
         {
-            var repo = RF.Concrete<BookCategoryRepository>();
+            var repo = RF.ResolveInstance<BookCategoryRepository>();
             using (RF.TransactionScope(repo))
             {
                 var cate = new BookCategory { Code = "01" };

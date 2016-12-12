@@ -31,7 +31,7 @@ namespace Rafy.Domain.ORM.DbMigration
 
         public DbHistoryRepository()
         {
-            this._historyRepo = RF.Concrete<DbMigrationHistoryRepository>();
+            this._historyRepo = RF.ResolveInstance<DbMigrationHistoryRepository>();
         }
 
         protected override IList<HistoryItem> GetHistoriesCore(string database)

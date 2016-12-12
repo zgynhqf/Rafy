@@ -49,8 +49,8 @@ namespace RafyUnitTest.ClientTest
         [TestInitialize]
         public void TestInitialize()
         {
-            RF.Concrete<PBSTypeRepository>().ClientCache.ClearOnClient();
-            RF.Concrete<PBSRepository>().ClientCache.ClearOnClient();
+            RF.ResolveInstance<PBSTypeRepository>().ClientCache.ClearOnClient();
+            RF.ResolveInstance<PBSRepository>().ClientCache.ClearOnClient();
             VersionSyncMgr.Repository.Clear();
         }
 
@@ -71,7 +71,7 @@ namespace RafyUnitTest.ClientTest
         [TestMethod]
         public void CT_CTC_CacheAll()
         {
-            var repo = RF.Concrete<PBSTypeRepository>();
+            var repo = RF.ResolveInstance<PBSTypeRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new PBSType
@@ -87,7 +87,7 @@ namespace RafyUnitTest.ClientTest
                     }
                 });
 
-                var pbsRepo = RF.Concrete<PBSRepository>();
+                var pbsRepo = RF.ResolveInstance<PBSRepository>();
 
                 var list1 = pbsRepo.CacheAll();
                 Assert.IsTrue(list1.Count == 5);
@@ -102,7 +102,7 @@ namespace RafyUnitTest.ClientTest
         [TestMethod]
         public void CT_CTC_CacheByParentId()
         {
-            var repo = RF.Concrete<PBSTypeRepository>();
+            var repo = RF.ResolveInstance<PBSTypeRepository>();
             using (RF.TransactionScope(repo))
             {
                 var pbsType = new PBSType
@@ -136,7 +136,7 @@ namespace RafyUnitTest.ClientTest
         [TestMethod]
         public void CT_CTC_CacheById()
         {
-            var repo = RF.Concrete<PBSTypeRepository>();
+            var repo = RF.ResolveInstance<PBSTypeRepository>();
             using (RF.TransactionScope(repo))
             {
                 var pbsType = new PBSType
@@ -159,7 +159,7 @@ namespace RafyUnitTest.ClientTest
         //[TestMethod]
         //public void CTS_GetByParentId()
         //{
-        //    var repo = RF.Concrete<PBSTypeRepository>();
+        //    var repo = RF.ResolveInstance<PBSTypeRepository>();
         //    using (RF.TransactionScope(repo))
         //    {
         //        var pbsType = new PBSType

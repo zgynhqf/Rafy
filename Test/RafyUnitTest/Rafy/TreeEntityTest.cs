@@ -53,7 +53,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Save_ByEntityList()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 var list = new FolderList
@@ -85,7 +85,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Save_ByEntity()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 var node = new Folder
@@ -121,7 +121,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Save_Add_ByEntityList()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new FolderList
@@ -159,7 +159,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Save_Add_ByTreeChildren()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new FolderList
@@ -199,7 +199,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Save_Remove_ByEntity_WithUnloadedTreeChildren()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new FolderList
@@ -238,7 +238,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Save_Remove_ByEntityList()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new FolderList
@@ -270,7 +270,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Save_Remove_ByTreeChildren()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new FolderList
@@ -301,7 +301,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void __TET_Save_LevelDownRoot()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 var list = new FolderList
@@ -333,7 +333,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Save_MoveNode()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new FolderList
@@ -370,7 +370,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Save_Combine_LevelDownAndDelete()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new FolderList
@@ -401,7 +401,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Save_Combine_DeleteByTreeParentAndReAddIt()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new FolderList
@@ -439,7 +439,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Save_Combine_LevelUpAndDelete()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new FolderList
@@ -474,7 +474,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void __TET_Save_Combine_MoveAndLevelUpAndDelete()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new FolderList
@@ -518,7 +518,7 @@ namespace RafyUnitTest
         //[TestMethod]
         //public void TET_Save_UpdateEntityBySetProperty()
         //{
-        //    var repo = RF.Concrete<FolderRepository>();
+        //    var repo = RF.ResolveInstance<FolderRepository>();
         //    using (RF.TransactionScope(repo))
         //    {
         //        var node = new Folder
@@ -616,7 +616,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Query_TreeParentRelation()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 var list = new FolderList
@@ -644,7 +644,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Query_LoadAllParent()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 var veryChild = new Folder();
@@ -680,7 +680,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Query_GetByTreeParentCode()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 var list = new FolderList
@@ -720,7 +720,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Query_GetByTreePId()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 var list = new FolderList
@@ -762,7 +762,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Query_LoadSubTreeIgnoreOtherNodes()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 var list = new FolderList
@@ -801,7 +801,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Query_GetAll_FullLoaded()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 var list = new FolderList
@@ -853,7 +853,7 @@ namespace RafyUnitTest
                 }
             };
 
-            var repo = RF.Concrete<TestTreeTaskRepository>();
+            var repo = RF.ResolveInstance<TestTreeTaskRepository>();
             using (RF.TransactionScope(repo))
             {
                 RF.Save(user);
@@ -1062,7 +1062,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Struc_Relation_TreePId_Set()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 var b = new Folder();
@@ -1303,7 +1303,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Struc_TreeIndex_TreePId_Set()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 var root = new Folder();
@@ -1344,7 +1344,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Struc_TreeIndex_ResetAllTreeIndex()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 var list = new FolderList
@@ -1389,7 +1389,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Struc_TreeIndex_InsertRootItem()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 var list = new FolderList
@@ -1414,7 +1414,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Struc_TreeIndex_InsertRootItem_WhileIndexCollapsed()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 var list = new FolderList
@@ -1478,7 +1478,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Struc_LazyLoad_TreeChildren_Load()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 var list = new FolderList
@@ -1517,7 +1517,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Struc_LazyLoad_TreeChildren_Load_Full()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 var list = new FolderList
@@ -1553,7 +1553,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Struc_LazyLoad_TreeChildren_AutoLoad_Add()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 var list = new FolderList
@@ -1586,7 +1586,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Struc_LazyLoad_TreeChildren_AutoLoad_Insert()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 var list = new FolderList
@@ -1619,7 +1619,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Struc_LazyLoad_TreeChildren_AutoLoad_Remove()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 var list = new FolderList
@@ -1652,7 +1652,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Struc_LazyLoad_TreeChildren_AutoLoad_Clear()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 var list = new FolderList
@@ -1685,7 +1685,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Struc_LazyLoad_TreeChildren_AutoLoad_GetItem()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 var list = new FolderList
@@ -1718,7 +1718,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Struc_LazyLoad_TreeChildren_AutoLoad_SetItem()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 var list = new FolderList
@@ -1754,7 +1754,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Struc_LazyLoad_TreeParent()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 var veryChild = new Folder() as ITreeEntity;
@@ -1831,7 +1831,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Struc_TreeComponent_EntityList()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 var list = new FolderList
@@ -1862,7 +1862,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Struc_TreeComponent_Entity()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 var list = new FolderList
@@ -1892,7 +1892,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Struc_TreeComponent_TreeChildren()
         {
-            var repo = RF.Concrete<FolderRepository>();
+            var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
                 var list = new FolderList
@@ -2201,7 +2201,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Query_EagerLoadChildrenTree()
         {
-            var repo  = RF.Concrete<TestUserRepository>();
+            var repo  = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
                 var user = new TestUser
@@ -2269,7 +2269,7 @@ namespace RafyUnitTest
         //        }
         //    };
 
-        //    var repo = RF.Concrete<TestTreeTaskRepository>();
+        //    var repo = RF.ResolveInstance<TestTreeTaskRepository>();
         //    using (RF.TransactionScope(repo))
         //    {
         //        RF.Save(user);

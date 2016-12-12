@@ -18,7 +18,7 @@
                         <para>仓库的所有公有查询接口</para>
                         <para>如以下代码，可以在客户端、服务端及单机程序中被直接使用：</para>
                         <code language="cs">
-                            <![CDATA[var repo = RF.Concrete<WarehouseRepository>();
+                            <![CDATA[var repo = RF.ResolveInstance<WarehouseRepository>();
 Warehouse wh = repo.GetByCode("0001");]]>
                         </code>
                         <alert class="note">

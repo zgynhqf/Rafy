@@ -60,7 +60,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void CTS_CacheAll()
         {
-            var repo = RF.Concrete<PBSTypeRepository>();
+            var repo = RF.ResolveInstance<PBSTypeRepository>();
             using (RF.TransactionScope(repo))
             {
                 repo.Save(new PBSType
@@ -76,7 +76,7 @@ namespace RafyUnitTest
                     }
                 });
 
-                var pbsRepo = RF.Concrete<PBSRepository>();
+                var pbsRepo = RF.ResolveInstance<PBSRepository>();
 
                 var list1 = pbsRepo.CacheAll();
                 Assert.IsTrue(list1.Count == 5);
@@ -91,7 +91,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void CTS_CacheByParentId()
         {
-            var repo = RF.Concrete<PBSTypeRepository>();
+            var repo = RF.ResolveInstance<PBSTypeRepository>();
             using (RF.TransactionScope(repo))
             {
                 var pbsType = new PBSType
@@ -125,7 +125,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void CTS_CacheById()
         {
-            var repo = RF.Concrete<PBSTypeRepository>();
+            var repo = RF.ResolveInstance<PBSTypeRepository>();
             using (RF.TransactionScope(repo))
             {
                 var pbsType = new PBSType
@@ -148,7 +148,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void CTS_EntityContext()
         {
-            var repo = RF.Concrete<PBSTypeRepository>();
+            var repo = RF.ResolveInstance<PBSTypeRepository>();
             using (RF.TransactionScope(repo))
             {
                 var pbsType = new PBSType

@@ -38,7 +38,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void EPT_IsPhantom()
         {
-            var repo = RF.Concrete<InvoiceRepository>();
+            var repo = RF.ResolveInstance<InvoiceRepository>();
             using (RF.TransactionScope(repo))
             {
                 var inv = new Invoice();
@@ -52,7 +52,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void EPT_SimpleDelete()
         {
-            var repo = RF.Concrete<InvoiceRepository>();
+            var repo = RF.ResolveInstance<InvoiceRepository>();
             using (RF.TransactionScope(repo))
             {
                 var item = new Invoice();
@@ -69,7 +69,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void EPT_Clear()
         {
-            var repo = RF.Concrete<InvoiceRepository>();
+            var repo = RF.ResolveInstance<InvoiceRepository>();
             using (RF.TransactionScope(repo))
             {
                 var InvoiceList = new InvoiceList
@@ -90,7 +90,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void EPT_Query()
         {
-            var repo = RF.Concrete<InvoiceRepository>();
+            var repo = RF.ResolveInstance<InvoiceRepository>();
             using (RF.TransactionScope(repo))
             {
                 var Invoice = new Invoice();
@@ -104,7 +104,7 @@ namespace RafyUnitTest
                 var all = repo.GetAll();
                 Assert.AreEqual(all.Count, 0, "幽灵状态的实体，应该无法通过正常的 API 查出。");
 
-                using (PhantomQueryContext.DontFilterPhantoms())
+                using (PhantomContext.DontFilterPhantoms())
                 {
                     Assert.AreEqual(repo.CountAll(), 1, "幽灵状态的实体，可以使用特定 API 查出。");
                     var all2 = repo.GetAll();
@@ -117,7 +117,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void EPT_Clear_Query()
         {
-            var repo = RF.Concrete<InvoiceRepository>();
+            var repo = RF.ResolveInstance<InvoiceRepository>();
             using (RF.TransactionScope(repo))
             {
                 var InvoiceList = new InvoiceList
@@ -135,7 +135,7 @@ namespace RafyUnitTest
                 var all = repo.GetAll();
                 Assert.AreEqual(all.Count, 0, "幽灵状态的实体，应该无法通过正常的 API 查出。");
 
-                using (PhantomQueryContext.DontFilterPhantoms())
+                using (PhantomContext.DontFilterPhantoms())
                 {
                     Assert.AreEqual(repo.CountAll(), 3, "幽灵状态的实体，可以使用特定 API 查出。");
                     var all2 = repo.GetAll();
@@ -150,8 +150,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void EPT_Aggt()
         {
-            var repo = RF.Concrete<InvoiceRepository>();
-            var itemRepo = RF.Concrete<InvoiceItemRepository>();
+            var repo = RF.ResolveInstance<InvoiceRepository>();
+            var itemRepo = RF.ResolveInstance<InvoiceItemRepository>();
             using (RF.TransactionScope(repo))
             {
                 var item = new Invoice
@@ -174,7 +174,7 @@ namespace RafyUnitTest
                 Assert.AreEqual(repo.CountAll(), 0, "幽灵状态的实体，应该无法通过正常的 API 查出。");
                 Assert.AreEqual(itemRepo.CountAll(), 0, "幽灵状态的实体，应该无法通过正常的 API 查出。");
 
-                using (PhantomQueryContext.DontFilterPhantoms())
+                using (PhantomContext.DontFilterPhantoms())
                 {
                     Assert.AreEqual(repo.CountAll(), 1, "幽灵状态的实体，可以使用特定 API 查出。");
                     var roots = repo.GetAll();
@@ -194,7 +194,7 @@ namespace RafyUnitTest
         {
             int size = EntityTest.BATCH_IMPORT_DATA_SIZE;
 
-            var repo = RF.Concrete<InvoiceRepository>();
+            var repo = RF.ResolveInstance<InvoiceRepository>();
             using (RF.TransactionScope(repo))
             {
                 var list = new InvoiceList();
@@ -210,7 +210,7 @@ namespace RafyUnitTest
 
                 Assert.AreEqual(repo.CountAll(), 0, "幽灵状态的实体，应该无法通过正常的 API 查出。");
 
-                using (PhantomQueryContext.DontFilterPhantoms())
+                using (PhantomContext.DontFilterPhantoms())
                 {
                     Assert.AreEqual(repo.CountAll(), size, "幽灵状态的实体，可以使用特定 API 查出。");
                     var all2 = repo.GetAll();
@@ -225,8 +225,8 @@ namespace RafyUnitTest
         {
             int size = EntityTest.BATCH_IMPORT_DATA_SIZE;
 
-            var repo = RF.Concrete<InvoiceRepository>();
-            var itemRepo = RF.Concrete<InvoiceItemRepository>();
+            var repo = RF.ResolveInstance<InvoiceRepository>();
+            var itemRepo = RF.ResolveInstance<InvoiceItemRepository>();
             using (RF.TransactionScope(repo))
             {
                 var invoices = new InvoiceList();
@@ -255,7 +255,7 @@ namespace RafyUnitTest
                 Assert.AreEqual(repo.CountAll(), 0, "幽灵状态的实体，应该无法通过正常的 API 查出。");
                 Assert.AreEqual(itemRepo.CountAll(), 0, "幽灵状态的实体，应该无法通过正常的 API 查出。");
 
-                using (PhantomQueryContext.DontFilterPhantoms())
+                using (PhantomContext.DontFilterPhantoms())
                 {
                     Assert.AreEqual(repo.CountAll(), size, "幽灵状态的实体，可以使用特定 API 查出。");
                     var roots = repo.GetAll();

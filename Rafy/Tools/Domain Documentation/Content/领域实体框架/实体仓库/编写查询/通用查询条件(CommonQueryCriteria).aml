@@ -4,40 +4,174 @@
       xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
       xmlns:xlink="http://www.w3.org/1999/xlink">
         <introduction>
-            <para>注意，本查询方式（基于 CreatePropertyQuery 方法）已经过时，不再可用！！！新的文档正在更新中……</para>
+            <para>
+                在应用开发过程中，有 80% 的场景下，开发者所需要的实体查询，查询条件中其实都是一些简单的属性匹配，又或是一些属性匹配的简单组合。Rafy 为这样的场景提供了更为方便使用的 API：<codeInline>CommonQueryCriteria</codeInline>。
+            </para>
             <autoOutline />
         </introduction>
 
-        <section address="PropertiesMatchCriteria">
-            <title>使用 PropertiesMatchCriteria 进行精确属性匹配</title>
+        <section address="singleGroupMatch">
+            <title>属性匹配</title>
             <content>
-                <para>在查询时，我们常常期望对实体的一组属性中的每一个都进行精确匹配，这时可以使用 <codeInline>PropertiesMatchCriteria</codeInline> 类型来快速实现查询。例如，以下查询实现了同时通过编码和名称来查询指定的仓库：</para>
+                <para>
+                    在查询时，当需要使用一个或几个属性的限定匹配来进行查询时，我们可以通过 <codeInline>CommonQueryCriteria</codeInline> 来使用以下方法进行快速查询。例如，以下查询实现了通过用户的编码的精确匹配来查询唯一指定的用户：
+                </para>
                 <code language="cs">
-                    <![CDATA[public Warehouse GetByCodeAndName(string warehouseCode, string warehouseName)
+                    <![CDATA[public User GetByCode(string code)
 {
-    return this.FetchFirst(new PropertiesMatchCriteria
+    return this.GetFirstBy(new CommonQueryCriteria
     {
-        { Warehouse.CodeProperty, warehouseCode },
-        { Warehouse.NameProperty, warehouseName },
+        new PropertyMatch(User.CodeProperty, PropertyOperator.Equal, code)
     });
 }]]>
                 </code>
-                <para>以上代码，功能上完全等同于下面的查询：</para>
+                <para>例如，以下查询实现同时通过用户名称的模糊匹配、年龄的精确匹配来查询一组用户（由于 Age 未指定 PropertyOperator，所以使用的是 Equal）：</para>
                 <code language="cs">
-                    <![CDATA[public Warehouse GetByCodeAndName(string warehouseCode, string warehouseName)
+                    <![CDATA[public UserList GetByNameAge(string name, int age)
 {
-    return this.FetchFirst(r => r.DA_GetByCodeAndName(warehouseCode, warehouseName));
-}
-private EntityList DA_GetByCodeAndName(string warehouseCode, string warehouseName)
-{
-    IPropertyQuery q = this.CreatePropertyQuery();
-
-    q.Constrain(Warehouse.CodeProperty).Equal(warehouseCode);
-    q.And().Constrain(Warehouse.NameProperty).Contains(warehouseName);
-
-    return this.QueryList(q);
+    return this.GetBy(new CommonQueryCriteria
+    {
+        new PropertyMatch(User.NameProperty, PropertyOperator.Contains, name),
+        new PropertyMatch(User.AgeProperty, age)
+    });
 }]]>
                 </code>
+                <para>
+                    上述查询默认使用 And 进行多条件的连接。如果需要修改，可以通过 <codeInline>CommonQueryCriteria</codeInline>
+                    的构造器传入或属性进行设置。
+                </para>
+                <para>PropertyOperator 表示属性匹配的方式，可用的操作有：</para>
+                <list class="bullet">
+                    <listItem>
+                        <para>Equal</para>
+                    </listItem>
+                    <listItem>
+                        <para>
+                            NotEqual
+                        </para>
+                    </listItem>
+                    <listItem>
+                        <para>
+                            Greater
+                        </para>
+                    </listItem>
+                    <listItem>
+                        <para>
+                            GreaterEqual
+                        </para>
+                    </listItem>
+                    <listItem>
+                        <para>
+                            Less
+                        </para>
+                    </listItem>
+                    <listItem>
+                        <para>
+                            LessEqual
+                        </para>
+                    </listItem>
+                    <listItem>
+                        <para>
+
+                            Like
+                        </para>
+                    </listItem>
+                    <listItem>
+                        <para>
+                            NotLike
+                        </para>
+                    </listItem>
+                    <listItem>
+                        <para>
+                            Contains
+                        </para>
+                    </listItem>
+                    <listItem>
+                        <para>
+                            NotContains
+                        </para>
+                    </listItem>
+                    <listItem>
+                        <para>
+                            StartsWith
+                        </para>
+                    </listItem>
+                    <listItem>
+                        <para>
+                            NotStartsWith
+                        </para>
+                    </listItem>
+                    <listItem>
+                        <para>
+                            EndsWith
+                        </para>
+                    </listItem>
+                    <listItem>
+                        <para>
+                            NotEndsWith
+                        </para>
+                    </listItem>
+                    <listItem>
+                        <para>
+                            In
+                        </para>
+                    </listItem>
+                    <listItem>
+                        <para>
+                            NotIn
+                        </para>
+                    </listItem>
+                </list>
+                <alert class="note">
+                    <para>
+                        为了方便开发者使用 <codeInline>CommonQueryCriteria</codeInline>，RafySDK 提供了代码段 <codeInline>RafyQuery_Common</codeInline> 来生成上述代码。
+                    </para>
+                </alert>
+            </content>
+        </section>
+
+        <section address="multiGroupsMatch">
+            <title>使用多个属性匹配组进行查询</title>
+            <content>
+                <para>上面是比较简单的查询，只是对单个属性或使用 And、Or 连接的几个条件进行匹配。我们还可以通过属性匹配组来实现相对复杂的查询。</para>
+                <para>
+                    一个 <codeInline>CommonQueryCriteria</codeInline> 中可以通过 And、Or 连接多个属性匹配组，而每一个属性匹配组也可以通过 And、Or 连接多个具体的属性匹配条件。
+                </para>
+                <para>下面的代码演示了如何使用（'Name contains name' And 'Age equal age' Or 'Code equal code'）的条件进行查询：</para>
+                <code language="cs">
+                    <![CDATA[this.GetBy(new CommonQueryCriteria(BinaryOperator.Or)
+{
+    new PropertyMatchGroup
+    {
+        new PropertyMatch(TestUser.NameProperty, PropertyOperator.Contains, name)
+        new PropertyMatch(TestUser.AgeProperty, age)
+    },
+    new PropertyMatchGroup
+    {
+        new PropertyMatch(TestUser.CodeProperty, code)
+    }
+});]]>
+                </code>
+            </content>
+        </section>
+
+        <section address="adv">
+            <title>相对于 Linq 查询的优势</title>
+            <content>
+                <para>
+                    使用 <codeInline>CommonQueryCriteria</codeInline> 进行查询时，相对于 <link xlink:href="c7c6d07b-bb41-4590-a2a6-8b0b49ce1c0b" /> 而言，有以下的优势：
+                </para>
+                <list class="bullet">
+                    <listItem>
+                        <para>更加方便、简单</para>
+                        <para>仓库类型上已经提供了参数是 <codeInline>CommonQueryCriteria</codeInline> 的公有查询方法，开发可以直接使用这些方法进行查询，没有必要再封装一个相应的公有方法。</para>
+                        <para>例如，上面的示例中，也可以不封装 GetByCode 方法，而是由仓库的调用者直接使用 GetBy(CommonQueryCriteria) 方法。</para>
+                    </listItem>
+                    <listItem>
+                        <para>性能更好</para>
+                        <para>使用 Linq 查询时，编译器会使用反射生成表达式树，然后 Rafy 框架才会解析这棵树，生成最终的 Sql 树。但是使用 <codeInline>CommonQueryCriteria</codeInline> 通用查询时，Rafy 框架会直接将 <codeInline>CommonQueryCriteria</codeInline> 中的条件生成对应的 Sql 树，这就节省了表达式树的生成和解析的环节，提升了性能。</para>
+                    </listItem>
+                </list>
             </content>
         </section>
 

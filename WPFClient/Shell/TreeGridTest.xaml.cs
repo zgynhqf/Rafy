@@ -24,7 +24,7 @@ namespace WPFClient.Shell
         {
             InitializeComponent();
 
-            var data = RF.Concrete<AuditItemRepository>()
+            var data = RF.ResolveInstance<AuditItemRepository>()
                 .GetAll(new Rafy.PagingInfo(1, 100));
 
             grid.RootItems = data;

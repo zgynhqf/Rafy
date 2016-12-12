@@ -146,7 +146,7 @@ namespace Rafy.LicenseManager.UI
         /// <param name="entity"></param>
         private void _SaveLicense(LicenseEntity entity)
         {
-            var repository = RF.Concrete<LicenseEntityRepository>();
+            var repository = RF.ResolveInstance<LicenseEntityRepository>();
             repository.Save(entity);
 
             this.tbLicenseCode.Text = entity.LicenseCode;

@@ -148,8 +148,9 @@ namespace Rafy.Domain.ORM.Oracle
             inClause.Value = paramSection;//临时把树中的条件中的值改成子集合。
             while (start < parameters.Count)
             {
-                var end = Math.Min(start + MAX_ITEMS_IN_INCLAUSE - 1, parameters.Count - 1);
                 paramSection.Clear();
+
+                var end = Math.Min(start + MAX_ITEMS_IN_INCLAUSE - 1, parameters.Count - 1);
                 for (int i = start; i <= end; i++)
                 {
                     paramSection.Add(parameters[i]);

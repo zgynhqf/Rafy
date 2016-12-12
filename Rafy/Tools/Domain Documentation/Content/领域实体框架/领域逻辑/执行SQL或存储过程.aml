@@ -111,7 +111,7 @@
                 <para>执行查询代码示例：</para>
                 <code language="cs">
                     <![CDATA[
-            var bookRepo = RF.Concrete<BookRepository>();
+            var bookRepo = RF.ResolveInstance<BookRepository>();
             using (var dba = DbAccesserFactory.Create(bookRepo))
             {
                 DataTable table = dba.QueryDataTable("SELECT * FROM Books WHERE id > {0}", 0);
@@ -121,7 +121,7 @@
                 <para>执行非查询代码示例：</para>
                 <code language="cs">
                     <![CDATA[
-            var bookRepo = RF.Concrete<BookRepository>();
+            var bookRepo = RF.ResolveInstance<BookRepository>();
             using (var dba = DbAccesserFactory.Create(bookRepo))
             {
                 int linesAffected = dba.ExecuteText("DELETE FROM Books WHERE id > {0}", 0);

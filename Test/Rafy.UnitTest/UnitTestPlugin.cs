@@ -23,7 +23,7 @@ namespace Rafy.UnitTest
             if (DbSetting.IsOracleProvider(dbSetting))
             {
                 Rafy.Domain.ORM.BatchSubmit.Oracle.OracleBatchImporter.EnableBatchSequence(
-                    RF.Concrete<BookRepository>()
+                    RF.ResolveInstance<BookRepository>()
                     );
             }
         }

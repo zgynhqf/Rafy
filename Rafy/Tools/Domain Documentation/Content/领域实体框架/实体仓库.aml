@@ -77,18 +77,18 @@ public partial class WarehouseRepository : EntityRepository
             </content>
         </section>
 
-        <section address="factory">
-            <title>仓库工厂</title>
+        <section address="facade">
+            <title>仓库外观 Api</title>
             <content>
                 <para>
-                    由于仓库是单例的，在整个系统运行时只存在一个对象。所以我们需要通过仓库工厂来获取唯一的这个仓库对象。
-                    <codeInline>RF</codeInline> 类型即是仓库工厂，全称是 RepositoryFactory。由于仓库工厂使用频率太大，所以使用拼音缩写。（另外，如果使用中觉得缩写不方便，框架提供了同样功能、全称的 RepositoryFactory 类型。）
+                    由于仓库是单例的，在整个系统运行时只会存在一个仓库的实例。所以我们需要通过仓库工厂来获取唯一的这个仓库对象。
+                    <codeInline>RF</codeInline> 类型是仓库相关的外观 Api，全称是 RepositoryFacade，其中包含了仓库工厂的 Api。（仓库外观 Api 的使用频率比较大，所以使用拼音缩写。另外，如果使用中觉得缩写不方便，框架提供了同样功能、全称的 RepositoryFacade 类型。）
                 </para>
                 <para>我们可以通过该类的以下两个方法来获取指定的仓库对象：</para>
                 <list class="bullet">
                     <listItem>
                         <para>直接通过指定的仓库类型来获取其运行时仓库对象：</para>
-                        <para><![CDATA[public static TRepository Concrete<TRepository>() where TRepository : EntityRepository]]></para>
+                        <para><![CDATA[public static TRepository ResolveInstance<TRepository>() where TRepository : EntityRepository]]></para>
                     </listItem>
                     <listItem>
                         <para>通过实体类型来获取其唯一的仓库：</para>
@@ -96,10 +96,10 @@ public partial class WarehouseRepository : EntityRepository
                     </listItem>
                 </list>
                 <para>
-                    建议通过 <codeInline>Concrete</codeInline> 方法获取仓库，该方法经过优化，速度比 <codeInline>Find</codeInline> 方法要快许多。
+                    建议通过 <codeInline>ResolveInstance</codeInline> 方法获取仓库，该方法经过优化，速度比 <codeInline>Find</codeInline> 方法要快许多。
                 </para>
                 <code language="cs">
-                    <![CDATA[CarRepository carRepo = RF.Concrete<CarRepository>();]]>
+                    <![CDATA[CarRepository carRepo = RF.ResolveInstance<CarRepository>();]]>
                 </code>
             </content>
         </section>

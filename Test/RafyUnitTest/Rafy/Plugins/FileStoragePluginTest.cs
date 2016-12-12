@@ -51,7 +51,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void FSPT_Save()
         {
-            var repo = RF.Concrete<FileInfoRepository>();
+            var repo = RF.ResolveInstance<FileInfoRepository>();
             using (RF.TransactionScope(repo))
             {
                 var file = new FileInfo
@@ -74,7 +74,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void FSPT_ReadContent_LazyLoad()
         {
-            var repo = RF.Concrete<FileInfoRepository>();
+            var repo = RF.ResolveInstance<FileInfoRepository>();
             using (RF.TransactionScope(repo))
             {
                 var file = new FileInfo
@@ -92,7 +92,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void FSPT_ReadContent()
         {
-            var repo = RF.Concrete<FileInfoRepository>();
+            var repo = RF.ResolveInstance<FileInfoRepository>();
             using (RF.TransactionScope(repo))
             {
                 var file = new FileInfo
@@ -113,7 +113,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void FSPT_UpdateContent()
         {
-            var repo = RF.Concrete<FileInfoRepository>();
+            var repo = RF.ResolveInstance<FileInfoRepository>();
             using (RF.TransactionScope(repo))
             {
                 var file = new FileInfo

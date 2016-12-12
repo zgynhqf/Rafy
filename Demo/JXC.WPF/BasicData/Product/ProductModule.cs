@@ -47,7 +47,7 @@ namespace JXC.WPF
         {
             base.OnItemCreated(entity);
 
-            var code = RF.Concrete<AutoCodeInfoRepository>().GetOrCreateAutoCode<Product>();
+            var code = RF.ResolveInstance<AutoCodeInfoRepository>().GetOrCreateAutoCode<Product>();
 
             var p = entity as Product;
             p.BianMa = code;

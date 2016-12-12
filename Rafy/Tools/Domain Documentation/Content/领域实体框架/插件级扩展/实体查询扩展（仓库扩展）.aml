@@ -86,7 +86,7 @@ public class TransactionRepositoryExt : EntityRepositoryExt<TransactionRepositor
             <content>
                 <para>仓库扩展的使用方法如下：</para>
                 <code language="cs">
-<![CDATA[var repo = RF.Concrete<TransactionRepository>();
+<![CDATA[var repo = RF.ResolveInstance<TransactionRepository>();
 var list = repo.Extension<TransactionRepositoryExt>().GetAutoImported();
 ]]>
                 </code>

@@ -10,10 +10,19 @@
  * 
 *******************************************************/
 
+3.56.3249
+    ★★公布、！修改接口、！删除接口、添加接口
+        RepositoryFactory 重命名为 RepositoryFacade。
+        RepositoryFactory.Concrete 方法重命名为 RepositoryFacade.ResolveInstance 方法。
+        PhantomQueryContext 更名为 PhantomContext。
+        PhantomContext 类型添加方法 DisablePhantomDeleting()。
+    内部修改
+        ColumnMeta.HasFKConstraint 的默认值，应该是 false。
+
 3.55.3243
-    ！修改接口
+    ★★公布、！修改接口
         隐藏实体上不常用的属性：HasId、KeyProvider、IsTreeParentLoaded、TreeLevel、ParentList、FindParentEntity()、GetChildProperty<T>。
-    添加接口
+    ★★公布、添加接口
         ITreeEntity、IManagedPropertyObject、IEntityWithStatus、IEntityWithManagedProperties、IClonableEntity。
 
 3.54.3233

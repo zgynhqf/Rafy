@@ -200,7 +200,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void MPT_ExtensionProperty_LazyList()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
                 var user = new TestUser();
@@ -230,7 +230,7 @@ namespace RafyUnitTest
                 a.Name = "New Name";
                 Save(a);
 
-                var b2 = RF.Concrete<BRepository>().GetById(b.Id) as B;
+                var b2 = RF.ResolveInstance<BRepository>().GetById(b.Id) as B;
                 Assert.AreEqual(a.Name, b2.GetANameExt());
             }
         }
@@ -514,7 +514,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void MPT_ORM_PropertiesMapping()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
 
             //清空历史数据
             var user = repo.GetByName("huqf");
@@ -616,7 +616,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void MPT_ORM_IsSelfDirty()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
 
             //clear
             var e = repo.GetByName("huqf");
@@ -648,7 +648,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void MPT_ORM_ForeignKey()
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
 
             //clear
             var e = repo.GetByName("huqf");
@@ -673,7 +673,7 @@ namespace RafyUnitTest
             repo.Save(user);
             Assert.AreEqual(user.Id, role.TestUserId);
 
-            var roles = RF.Concrete<TestRoleRepository>().GetByUserId(user.Id);
+            var roles = RF.ResolveInstance<TestRoleRepository>().GetByUserId(user.Id);
 
             Assert.AreEqual(roles.Count, 1);
             Assert.AreEqual(userRoles.Count, 1);
@@ -739,7 +739,7 @@ namespace RafyUnitTest
                 a.Name = "New Name";
                 Save(a);
 
-                var b2 = RF.Concrete<BRepository>().GetById(b.Id) as B;
+                var b2 = RF.ResolveInstance<BRepository>().GetById(b.Id) as B;
                 Assert.AreEqual("New Name", b2.AName);
             }
         }
@@ -761,10 +761,10 @@ namespace RafyUnitTest
                 a.Name = "New Name";
                 Save(a);
 
-                var b2 = RF.Concrete<BRepository>().GetById(b.Id) as B;
+                var b2 = RF.ResolveInstance<BRepository>().GetById(b.Id) as B;
                 Assert.AreEqual("New Name", b2.AName);
 
-                var c2 = RF.Concrete<CRepository>().GetById(c.Id) as C;
+                var c2 = RF.ResolveInstance<CRepository>().GetById(c.Id) as C;
                 Assert.AreEqual("New Name", c2.AName);
             }
         }
@@ -789,7 +789,7 @@ namespace RafyUnitTest
                 b.A = a2;
                 Save(b);
 
-                var cInDb = RF.Concrete<CRepository>().GetById(c.Id) as C;
+                var cInDb = RF.ResolveInstance<CRepository>().GetById(c.Id) as C;
                 Assert.AreEqual(cInDb.AName, "A2");
             }
         }
@@ -822,10 +822,10 @@ namespace RafyUnitTest
                 b.A = a2;
                 Save(b);
 
-                var dInDb = RF.Concrete<DRepository>().GetById(d.Id) as D;
+                var dInDb = RF.ResolveInstance<DRepository>().GetById(d.Id) as D;
                 Assert.AreEqual(dInDb.AName, "A2");
 
-                var eInDb = RF.Concrete<ERepository>().GetById(e.Id) as E;
+                var eInDb = RF.ResolveInstance<ERepository>().GetById(e.Id) as E;
                 Assert.AreEqual(eInDb.ANameFromDCBA, "A2");
                 Assert.AreEqual(eInDb.ANameFromCBA, "A2");
             }
@@ -845,7 +845,7 @@ namespace RafyUnitTest
                 a.Type = AType.X;
                 Save(a);
 
-                var b2 = RF.Concrete<BRepository>().GetById(b.Id) as B;
+                var b2 = RF.ResolveInstance<BRepository>().GetById(b.Id) as B;
                 Assert.AreEqual(AType.X, b2.AType);
             }
         }
@@ -871,7 +871,7 @@ namespace RafyUnitTest
                 b.A = a2;
                 Save(b);
 
-                var cInDb = RF.Concrete<CRepository>().GetById(c.Id) as C;
+                var cInDb = RF.ResolveInstance<CRepository>().GetById(c.Id) as C;
                 Assert.AreEqual(cInDb.AId, a2.Id);
             }
         }
@@ -897,7 +897,7 @@ namespace RafyUnitTest
                 b.A = a2;
                 Save(b);
 
-                var cInDb = RF.Concrete<CRepository>().GetById(c.Id) as C;
+                var cInDb = RF.ResolveInstance<CRepository>().GetById(c.Id) as C;
                 Assert.AreEqual(cInDb.AIdOfB, a2.Id);
             }
         }
@@ -905,7 +905,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void MPT_Redundancy_AddNewAggt()
         {
-            var repo = RF.Concrete<ARepository>();
+            var repo = RF.ResolveInstance<ARepository>();
             using (RF.TransactionScope(repo))
             {
                 var a = new A { Name = "A1" };
@@ -931,7 +931,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void MPT_Redundancy_AddNewAggt_StringEntity()
         {
-            var repo = RF.Concrete<HouseMerchantRepository>();
+            var repo = RF.ResolveInstance<HouseMerchantRepository>();
             using (RF.TransactionScope(repo))
             {
                 var r = new HouseMerchant { Name = "A1" };

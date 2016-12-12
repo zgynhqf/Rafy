@@ -304,7 +304,7 @@ namespace RafyUnitTest
         {
             var filter = "TestUser.Name contains 'huqf'";
 
-            var sql = ParseFull(filter, RF.Concrete<TestRoleRepository>());
+            var sql = ParseFull(filter, RF.ResolveInstance<TestRoleRepository>());
 
             Assert.IsTrue(sql.ToString() ==
 @"SELECT *
@@ -350,7 +350,7 @@ WHERE T0.UserName LIKE {0}");
                     }
                 });
 
-                var list = RF.Concrete<SectionRepository>().GetBy(new ODataQueryCriteria
+                var list = RF.ResolveInstance<SectionRepository>().GetBy(new ODataQueryCriteria
                 {
                     Expand = "Chapter",
                     Filter = "Chapter.Name eq 'c1'"
@@ -372,7 +372,7 @@ WHERE T0.UserName LIKE {0}");
         {
             var filter = "(Name eq 'huqf' or (TestUser.Age eq 10 or TestUser.AddedTime lt '2014-12-17 19:00')) and TestUser.Name contains 'huqf'";
 
-            var sql = ParseFull(filter, RF.Concrete<TestRoleRepository>());
+            var sql = ParseFull(filter, RF.ResolveInstance<TestRoleRepository>());
 
             Assert.IsTrue(sql.ToString() ==
 @"SELECT *
@@ -384,7 +384,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
         [TestMethod]
         public void ODT_Filter_Enum_Value()
         {
-            var repo = RF.Concrete<TestRoleRepository>();
+            var repo = RF.ResolveInstance<TestRoleRepository>();
             var q = Parse("RoleType ne 1", repo);
             var sql = QueryNodeTester.GenerateTestSql(q.Where);
 
@@ -394,7 +394,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
         [TestMethod]
         public void ODT_Filter_Enum_Value_WithQuota()
         {
-            var repo = RF.Concrete<TestRoleRepository>();
+            var repo = RF.ResolveInstance<TestRoleRepository>();
             var q = Parse("RoleType ne '1'", repo);
             var sql = QueryNodeTester.GenerateTestSql(q.Where);
 
@@ -404,7 +404,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
         [TestMethod]
         public void ODT_Filter_Enum_Name()
         {
-            var repo = RF.Concrete<TestRoleRepository>();
+            var repo = RF.ResolveInstance<TestRoleRepository>();
             var q = Parse("RoleType ne Administrator", repo);
             var sql = QueryNodeTester.GenerateTestSql(q.Where);
 
@@ -414,7 +414,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
         [TestMethod]
         public void ODT_Filter_Enum_Name_WithBracket()
         {
-            var repo = RF.Concrete<TestRoleRepository>();
+            var repo = RF.ResolveInstance<TestRoleRepository>();
             var q = Parse("(RoleType ne Administrator or RoleType ne Normal)", repo);
             var sql = QueryNodeTester.GenerateTestSql(q.Where);
 
@@ -424,7 +424,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
         [TestMethod]
         public void ODT_Filter_Enum_Name_WithQuote()
         {
-            var repo = RF.Concrete<TestRoleRepository>();
+            var repo = RF.ResolveInstance<TestRoleRepository>();
             var q = Parse("RoleType ne 'Administrator'", repo);
             var sql = QueryNodeTester.GenerateTestSql(q.Where);
 
@@ -434,7 +434,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
         [TestMethod]
         public void ODT_Filter_Enum_Label()
         {
-            var repo = RF.Concrete<TestRoleRepository>();
+            var repo = RF.ResolveInstance<TestRoleRepository>();
             var q = Parse("RoleType ne 管理员", repo);
             var sql = QueryNodeTester.GenerateTestSql(q.Where);
 
@@ -444,7 +444,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
         [TestMethod]
         public void ODT_Filter_Enum_Label_WithQuote()
         {
-            var repo = RF.Concrete<TestRoleRepository>();
+            var repo = RF.ResolveInstance<TestRoleRepository>();
             var q = Parse("RoleType ne '管理员'", repo);
             var sql = QueryNodeTester.GenerateTestSql(q.Where);
 
@@ -454,7 +454,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
         [TestMethod]
         public void ODT_Filter_Enum_Nullable()
         {
-            var repo = RF.Concrete<TestRoleRepository>();
+            var repo = RF.ResolveInstance<TestRoleRepository>();
             var q = Parse("RoleType2 ne Administrator", repo);
             var sql = QueryNodeTester.GenerateTestSql(q.Where);
 
@@ -543,7 +543,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
                     }
                 });
 
-                var list = RF.Concrete<SectionRepository>().GetBy(new ODataQueryCriteria
+                var list = RF.ResolveInstance<SectionRepository>().GetBy(new ODataQueryCriteria
                 {
                     Expand = "Chapter"
                 }) as SectionList;
@@ -579,7 +579,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
                     }
                 });
 
-                var list = RF.Concrete<SectionRepository>().GetBy(new ODataQueryCriteria
+                var list = RF.ResolveInstance<SectionRepository>().GetBy(new ODataQueryCriteria
                 {
                     Expand = "Chapter,SectionOwner"
                 }) as SectionList;
@@ -616,7 +616,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
                     }
                 });
 
-                var list = RF.Concrete<SectionRepository>().GetBy(new ODataQueryCriteria
+                var list = RF.ResolveInstance<SectionRepository>().GetBy(new ODataQueryCriteria
                 {
                     Expand = "Chapter.Book"
                 }) as SectionList;
@@ -654,7 +654,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
                     }
                 });
 
-                var list = RF.Concrete<SectionRepository>().GetBy(new ODataQueryCriteria
+                var list = RF.ResolveInstance<SectionRepository>().GetBy(new ODataQueryCriteria
                 {
                     Expand = "Chapter.Book,SectionOwner"
                 }) as SectionList;
@@ -672,7 +672,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
 
         private static FormattedSql ParseWhere(string filter)
         {
-            var repo = RF.Concrete<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             var q = Parse(filter, repo);
             return QueryNodeTester.GenerateTestSql(q.Where);
         }
@@ -699,7 +699,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
 
         private static TestUserList QueryUserList(ODataQueryCriteria criteria)
         {
-            return RF.Concrete<TestUserRepository>().GetBy(criteria) as TestUserList;
+            return RF.ResolveInstance<TestUserRepository>().GetBy(criteria) as TestUserList;
         }
     }
 }

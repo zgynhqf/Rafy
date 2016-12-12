@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-16"?>
+<Document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" HideNonsenceLabels="false">
+  <EntityTypes>
+    <EntityTypeElement FullName="Rafy.RBAC.UserLoginLog" Label="用户登录日志" Left="51" Top="156" Width="0" Height="0" HideProperties="true">
+      <Properties>
+        <PropertyElement Name="UserName" PropertyType="String" />
+        <PropertyElement Name="IsIn" PropertyType="Boolean" />
+        <PropertyElement Name="IsInText" PropertyType="String" />
+        <PropertyElement Name="LogTime" PropertyType="DateTime" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="Rafy.RBAC.Audit.AuditItem" Label="审查日志项" Left="153" Top="38" Width="0" Height="0" HideProperties="true">
+      <Properties>
+        <PropertyElement Name="Title" PropertyType="String" />
+        <PropertyElement Name="Content" PropertyType="String" />
+        <PropertyElement Name="PrivateContent" PropertyType="String" />
+        <PropertyElement Name="User" PropertyType="String" />
+        <PropertyElement Name="MachineName" PropertyType="String" />
+        <PropertyElement Name="ModuleName" PropertyType="String" />
+        <PropertyElement Name="Type" PropertyType="AuditLogType" />
+        <PropertyElement Name="LogTime" PropertyType="DateTime" />
+        <PropertyElement Name="EntityId" PropertyType="Int?" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="Rafy.RBAC.Org" Label="部门" Left="451" Top="9" Width="0" Height="0" HideProperties="true">
+      <Properties>
+        <PropertyElement Name="Name" PropertyType="String" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="Rafy.RBAC.OrgPosition" Label="部门岗位" Left="418" Top="141" Width="0" Height="0" HideProperties="true">
+      <Properties>
+        <PropertyElement Name="View_Code" PropertyType="String" />
+        <PropertyElement Name="View_Name" PropertyType="String" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="Rafy.RBAC.OrgPositionUser" Label="部门岗位用户" Left="303" Top="299" Width="0" Height="0" HideProperties="true">
+      <Properties>
+        <PropertyElement Name="View_Code" PropertyType="String" />
+        <PropertyElement Name="View_Name" PropertyType="String" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="Rafy.RBAC.Position" Label="岗位" Left="693" Top="141" Width="0" Height="0" HideProperties="true">
+      <Properties>
+        <PropertyElement Name="Code" PropertyType="String" />
+        <PropertyElement Name="Name" PropertyType="String" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="Rafy.RBAC.User" Label="用户" Left="99" Top="299" Width="0" Height="0" HideProperties="true">
+      <Properties>
+        <PropertyElement Name="Code" PropertyType="String" />
+        <PropertyElement Name="Name" PropertyType="String" />
+        <PropertyElement Name="Password" PropertyType="String" />
+        <PropertyElement Name="LastLoginTime" PropertyType="DateTime?" />
+        <PropertyElement Name="LoginCount" PropertyType="Int" />
+        <PropertyElement Name="MaxLoginCount" PropertyType="Int" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="Rafy.RBAC.OrgPositionOperationDeny" Label="岗位下的被禁用的每一个功能（命令）的权限" Left="546" Top="299" Width="251" Height="0" HideProperties="true">
+      <Properties>
+        <PropertyElement Name="ModuleKey" PropertyType="String" />
+        <PropertyElement Name="BlockKey" PropertyType="String" />
+        <PropertyElement Name="OperationKey" PropertyType="String" />
+      </Properties>
+    </EntityTypeElement>
+  </EntityTypes>
+  <EnumTypes />
+  <Connections>
+    <ConnectionElement From="Rafy.RBAC.UserLoginLog" To="Rafy.RBAC.User" Label="User" Hidden="false" LabelVisible="true" ConnectionType="Reference">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="Rafy.RBAC.OrgPosition" To="Rafy.RBAC.Org" Label="OrgPositionList" Hidden="false" LabelVisible="true" ConnectionType="Composition">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="Rafy.RBAC.OrgPosition" To="Rafy.RBAC.Position" Label="Position" Hidden="false" LabelVisible="true" ConnectionType="Reference">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="Rafy.RBAC.OrgPositionUser" To="Rafy.RBAC.OrgPosition" Label="OrgPositionUserList" Hidden="false" LabelVisible="true" ConnectionType="Composition">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="Rafy.RBAC.OrgPositionOperationDeny" To="Rafy.RBAC.OrgPosition" Label="OrgPositionOperationDenyList" Hidden="false" LabelVisible="true" ConnectionType="Composition">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="Rafy.RBAC.OrgPositionUser" To="Rafy.RBAC.User" Label="User" Hidden="false" LabelVisible="true" ConnectionType="Reference">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+  </Connections>
+</Document>

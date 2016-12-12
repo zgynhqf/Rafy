@@ -86,7 +86,7 @@
                         <code language="cs">
                             <![CDATA[
             Rafy.Domain.ORM.BatchSubmit.Oracle.OracleBatchImporter.EnableBatchSequence(
-                RF.Concrete<OriginalDataRepository>()
+                RF.ResolveInstance<OriginalDataRepository>()
                 );
                             ]]>
                         </code>

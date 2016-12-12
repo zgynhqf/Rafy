@@ -47,7 +47,7 @@ namespace Rafy.SerialNumber
                 RollValueStep = 1,
             };
 
-            var infoRepo = RF.Concrete<SerialNumberInfoRepository>();
+            var infoRepo = RF.ResolveInstance<SerialNumberInfoRepository>();
             infoRepo.Save(sni);
 
             return sni;
@@ -61,7 +61,7 @@ namespace Rafy.SerialNumber
         /// <returns></returns>
         public virtual string GenerateNext(string name)
         {
-            var valueRepo = RF.Concrete<SerialNumberValueRepository>();
+            var valueRepo = RF.ResolveInstance<SerialNumberValueRepository>();
             var value = valueRepo.GetLastValue(name);
             if (value != null)
             {
@@ -113,7 +113,7 @@ namespace Rafy.SerialNumber
         /// <returns></returns>
         public string GenerateNext(string name, DateTime specificTime)
         {
-            var infoRepo = RF.Concrete<SerialNumberInfoRepository>();
+            var infoRepo = RF.ResolveInstance<SerialNumberInfoRepository>();
             var sni = infoRepo.GetByName(name);
             if (sni == null) throw new InvalidOperationException(string.Format("没有找到名称是 {0} 的规则。", name));
 
@@ -134,7 +134,7 @@ namespace Rafy.SerialNumber
             //计算 specificTime 时间对应的分组 Key
             string timeGroupKey = GetTimeGroupKey(specificTime, info.TimeGroupFormat);
 
-            var valueRepo = RF.Concrete<SerialNumberValueRepository>();
+            var valueRepo = RF.ResolveInstance<SerialNumberValueRepository>();
             using (var tran = RF.TransactionScope(valueRepo))
             {
                 //先找到当前的值。
@@ -176,7 +176,7 @@ namespace Rafy.SerialNumber
             //流动当前的值。
             currentGroupValue.RollValue += currentGroupValue.RD_RollValueStep;
 
-            var valueRepo = RF.Concrete<SerialNumberValueRepository>();
+            var valueRepo = RF.ResolveInstance<SerialNumberValueRepository>();
             valueRepo.Save(currentGroupValue);
 
             return this.GenerateCode(time, currentGroupValue.RollValue, currentGroupValue.RD_Format);
