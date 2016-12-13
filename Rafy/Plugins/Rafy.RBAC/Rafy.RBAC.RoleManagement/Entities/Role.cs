@@ -60,7 +60,6 @@ namespace Rafy.RBAC.RoleManagement
         #region 一般属性
 
         public static readonly Property<string> NameProperty = P<Role>.Register(e => e.Name);
-
         /// <summary>
         /// 角色名称
         /// </summary>
@@ -71,7 +70,6 @@ namespace Rafy.RBAC.RoleManagement
         }
 
         public static readonly Property<string> CodeProperty = P<Role>.Register(e => e.Code);
-
         /// <summary>
         /// 角色编码
         /// </summary>
@@ -82,7 +80,6 @@ namespace Rafy.RBAC.RoleManagement
         }
 
         public static readonly Property<string> DescriptionProperty = P<Role>.Register(e => e.Description);
-
         /// <summary>
         /// 角色描述
         /// </summary>
