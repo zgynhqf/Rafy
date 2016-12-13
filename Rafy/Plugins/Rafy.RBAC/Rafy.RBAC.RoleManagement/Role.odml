@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-16"?>
+<Document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" HideNonsenceLabels="false">
+  <EntityTypes>
+    <EntityTypeElement FullName="Rafy.RBAC.RoleManagement.Resource" Label="资源" Left="63" Top="80" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
+      <Properties>
+        <PropertyElement Name="Name" PropertyType="String" Label="资源名称" />
+        <PropertyElement Name="Code" PropertyType="String" Label="资源编码" />
+        <PropertyElement Name="Description" PropertyType="String" Label="资源描述" />
+        <PropertyElement Name="IsSupportDataPermission" PropertyType="Boolean" Label="是否支持数据权限" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="Rafy.RBAC.RoleManagement.ResourceOperation" Label="资源操作" Left="300" Top="0" Width="0" Height="0" HideProperties="true" IsAggtRoot="false">
+      <Properties>
+        <PropertyElement Name="Name" PropertyType="String" Label="功能名称" />
+        <PropertyElement Name="Code" PropertyType="String" Label="功能编码" />
+        <PropertyElement Name="Description" PropertyType="String" Label="功能描述" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="Rafy.RBAC.RoleManagement.Role" Label="角色" Left="600" Top="0" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
+      <Properties>
+        <PropertyElement Name="Name" PropertyType="String" Label="角色名称" />
+        <PropertyElement Name="Code" PropertyType="String" Label="角色编码" />
+        <PropertyElement Name="Description" PropertyType="String" Label="角色描述" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="Rafy.RBAC.RoleManagement.RoleOperation" Label="角色功能" Left="314" Top="290" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
+      <Properties />
+    </EntityTypeElement>
+  </EntityTypes>
+  <EnumTypes />
+  <Connections>
+    <ConnectionElement From="Rafy.RBAC.RoleManagement.ResourceOperation" To="Rafy.RBAC.RoleManagement.Resource" Label="ResourceOperationList" Hidden="false" LabelVisible="true" ConnectionType="Composition">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="Rafy.RBAC.RoleManagement.RoleOperation" To="Rafy.RBAC.RoleManagement.Role" Label="RoleOperationList" Hidden="false" LabelVisible="true" ConnectionType="Composition">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="Rafy.RBAC.RoleManagement.RoleOperation" To="Rafy.RBAC.RoleManagement.ResourceOperation" Label="Operation" Hidden="false" LabelVisible="true" ConnectionType="Reference">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+  </Connections>
+</Document>

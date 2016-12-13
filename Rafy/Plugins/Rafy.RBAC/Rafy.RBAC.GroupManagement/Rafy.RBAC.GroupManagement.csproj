@@ -21,6 +21,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>bin\Debug\Rafy.RBAC.GroupManagement.XML</DocumentationFile>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,6 +33,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -41,7 +50,29 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\Extensions\ResourceOperationRepositoryExtension.cs" />
+    <Compile Include="Entities\Extensions\ResourceRepositoryExtension.cs" />
+    <Compile Include="PermissionArchitecture\DefaultPermissionBuilder.cs" />
+    <Compile Include="PermissionArchitecture\DefaultPermissionEntry.cs" />
+    <Compile Include="PermissionArchitecture\PermissionBuilder.cs" />
+    <Compile Include="PermissionArchitecture\PermissionEntry.cs" />
+    <Compile Include="Controllers\PermissionFacadeController.cs" />
+    <Compile Include="Entities\Group.cs" />
+    <Compile Include="Entities\Group.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>Group.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\GroupManagementEntity.cs" />
+    <Compile Include="Entities\GroupRole.cs" />
+    <Compile Include="Entities\GroupRole.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>GroupRole.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GroupUser.cs" />
+    <Compile Include="Entities\GroupUser.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>GroupUser.cs</DependentUpon>
+    </Compile>
     <Compile Include="GroupManagementPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -50,10 +81,17 @@
       <Project>{966a5bf2-d690-426b-ad68-ad868bb8f855}</Project>
       <Name>Rafy</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Rafy.Accounts\Rafy.Accounts.csproj">
+      <Project>{4D6467E4-D1CE-4FA8-A1FE-92B1BA549A4A}</Project>
+      <Name>Rafy.Accounts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rafy.RBAC.RoleManagement\Rafy.RBAC.RoleManagement.csproj">
       <Project>{708150c2-4b78-4f02-a8e9-3338cc76f69c}</Project>
       <Name>Rafy.RBAC.RoleManagement</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Hxy Key.snk" />
   </ItemGroup>
   <!--<ItemGroup>
         <Folder Include="Services\" />

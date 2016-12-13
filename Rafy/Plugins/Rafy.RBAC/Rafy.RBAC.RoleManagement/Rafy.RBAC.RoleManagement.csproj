@@ -21,6 +21,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,6 +31,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -41,7 +48,27 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\Resource.cs" />
+    <Compile Include="Entities\Resource.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>Resource.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ResourceOperation.cs" />
+    <Compile Include="Entities\ResourceOperation.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>ResourceOperation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Role.cs" />
+    <Compile Include="Entities\Role.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>Role.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\RoleManagementEntity.cs" />
+    <Compile Include="Entities\RoleOperation.cs" />
+    <Compile Include="Entities\RoleOperation.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>RoleOperation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoleManagementPlugin.cs" />
   </ItemGroup>
@@ -50,6 +77,10 @@
       <Project>{966a5bf2-d690-426b-ad68-ad868bb8f855}</Project>
       <Name>Rafy</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Hxy Key.snk" />
+    <None Include="Role.odml" />
   </ItemGroup>
   <!--<ItemGroup>
         <Folder Include="Services\" />
