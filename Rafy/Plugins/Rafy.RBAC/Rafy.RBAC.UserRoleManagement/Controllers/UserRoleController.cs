@@ -15,7 +15,7 @@ using System;
 using Rafy.Accounts;
 using Rafy.Domain;
 using Rafy.RBAC.RoleManagement;
-
+using System.Linq;
 namespace Rafy.RBAC.UserRoleManagement.Controllers
 {
     /// <summary>
@@ -26,7 +26,7 @@ namespace Rafy.RBAC.UserRoleManagement.Controllers
         private readonly UserRepository _userRepository = RepositoryFacade.ResolveInstance<UserRepository>();
         private readonly RoleRepository _roleRepository = RepositoryFacade.ResolveInstance<RoleRepository>();
         private readonly UserRoleRepository _userRoleRepository = RepositoryFacade.ResolveInstance<UserRoleRepository>();
-        
+
         /// <summary>
         /// 获取指定的用户 <paramref name="user"/> 是否具有指定的角色 <paramref name="role"/> 。
         /// </summary>
@@ -55,21 +55,18 @@ namespace Rafy.RBAC.UserRoleManagement.Controllers
 
 
         /// <summary>
-        /// 获取指定的用户 <paramref name="user"/> 下面的角色集合 <seealso cref="RoleList"/>。
+        /// 获取指定的用户 <paramref name="userId"/> 下面的角色集合 <seealso cref="RoleList"/>。
         /// </summary>
-        /// <param name="user">表示一个用户的实例。</param>
+        /// <param name="userId">用户Id</param>
         /// <returns>指定用户下的所有角色。</returns>
-        public virtual RoleList GetRoleList(User user)
+        public virtual RoleList GetRoleList(long userId)
         {
-            if (user == null)
+            var q = new CommonQueryCriteria(BinaryOperator.And)
             {
-                throw new ArgumentNullException(nameof(user));
-            }
-
-            var userRoles = _userRoleRepository.GetBy(new CommonQueryCriteria(BinaryOperator.And) {
-                new PropertyMatch(UserRole.UserIdProperty, PropertyOperator.Equal, user.Id)
-            });
-
+                new PropertyMatch(UserRole.UserIdProperty, PropertyOperator.Equal, userId)
+            };
+            q.EagerLoad = new EagerLoadOptions().LoadWith(UserRole.RoleProperty);
+            var userRoles = _userRoleRepository.GetBy(q);
             if (userRoles == null || userRoles.Count == 0)
             {
                 return this._roleRepository.NewList();
@@ -78,11 +75,10 @@ namespace Rafy.RBAC.UserRoleManagement.Controllers
             var results = _roleRepository.NewList();
             foreach (var userRole in userRoles)
             {
-                if(userRole.Role == null) continue;
+                if (userRole.Role == null) continue;
 
                 results.Add(userRole.Role);
             }
-
             return results;
         }
 
@@ -108,14 +104,37 @@ namespace Rafy.RBAC.UserRoleManagement.Controllers
             }
 
             var results = this._userRepository.NewList();
-            foreach(var userRole in userRoles)
+            foreach (var userRole in userRoles)
             {
-                if(userRole.User == null) continue;
+                if (userRole.User == null) continue;
 
                 results.Add(userRole.User);
             }
 
             return results;
+        }
+        /// <summary>
+        /// 获取指定用户、资源的操作列表
+        /// </summary>
+        /// <param name="userId">用户Id</param>
+        /// <param name="resourceId">资源Id</param>
+        /// <returns></returns>
+        public virtual ResourceOperationList GetResourceOperation(long userId, long resourceId)
+        {
+            var roleList = this.GetRoleList(userId);
+            var roleIdList = roleList.Select(r => r.Id).Cast<long>().ToList();
+            var roleOperationList = RepositoryFacade.ResolveInstance<RoleOperationRepository>().GetByRoleIdList(roleIdList).Concrete().ToList();
+            var resourceOperationRepository = RepositoryFacade.ResolveInstance<ResourceOperationRepository>();
+            var resourceOperationList = resourceOperationRepository.GetByParentId(resourceId);
+            var newOperationList = resourceOperationRepository.NewList();
+            foreach (var item in resourceOperationList)
+            {
+                if (roleOperationList.Any(r => r.OperationId == item.Id))
+                {
+                    newOperationList.Add(item);
+                }
+            }
+            return newOperationList;
         }
     }
 }

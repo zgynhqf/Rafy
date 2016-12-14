@@ -13,6 +13,7 @@
 
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
@@ -108,6 +109,21 @@ namespace Rafy.RBAC.RoleManagement
         /// </summary>
         protected RoleOperationRepository()
         {
+        }
+        /// <summary>
+        /// 获取角色的操作列表
+        /// </summary>
+        /// <param name="roleIds">角色集合</param>
+        /// <returns></returns>
+        [RepositoryQuery]
+        public virtual RoleOperationList GetByRoleIdList(List<long> roleIds)
+        {
+            return (RoleOperationList)this.QueryInBatches(roleIds.ToArray(), ids =>
+            {
+                var q = new CommonQueryCriteria();
+                q.Add(RoleOperation.RoleIdProperty, PropertyOperator.In, ids);
+                return this.GetBy(q);
+            });
         }
         /// <summary>
         /// 获取角色的角色操作列表
