@@ -27,7 +27,6 @@ namespace Rafy.RBAC.RoleManagement
         {
             RepositoryDataProvider.Querying += RepositoryDataProvider_Querying;
         }
-
         protected virtual void RepositoryDataProvider_Querying(object sender, QueryingEventArgs e)
         {
 
@@ -45,16 +44,16 @@ namespace Rafy.RBAC.RoleManagement
         /// </summary>
         /// <param name="dp"></param>
         /// <param name="e"></param>
-        /// <param name="dataPermissionResourceFilte"></param>
-        /// <param name="appender"></param>
-        public static void RegisterRepositoryQuerying(RepositoryDataProvider dp, QueryingEventArgs e, Func<string, Resource> dataPermissionResourceFilte, MainTableWhereAppender appender)
+        /// <param name="dataPermissionResourceFilte">当前查询实体对应的数据权限资源</param>
+        /// <param name="appenderFunc">根据资源Id构造whereAppend</param>
+        public static void RegisterRepositoryQuerying(RepositoryDataProvider dp, QueryingEventArgs e, Func<string, Resource> dataPermissionResourceFilte, Func<long,MainTableWhereAppender> appenderFunc)
         {
             if (FilterEnabled.Value)
             {
                 var resource = dataPermissionResourceFilte(dp.Repository.EntityType.FullName);
                 if (resource != null && resource.IsSupportDataPermission)
                 {
-                    appender.Append(e.Args.Query);
+                    appenderFunc(resource.Id).Append(e.Args.Query);
                 }
             }
         }
