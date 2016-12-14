@@ -86,6 +86,25 @@ namespace Rafy.RBAC.RoleManagement
             set { SetProperty(DescriptionProperty, value); }
         }
 
+        public static readonly Property<string> ResourceEntityTypeProperty = P<Resource>.Register(e => e.ResourceEntityType);
+        /// <summary>
+        ///     资源领域实体类型
+        /// </summary>
+        public string ResourceEntityType
+        {
+            get { return GetProperty(ResourceEntityTypeProperty); }
+            set { SetProperty(ResourceEntityTypeProperty, value); }
+        }
+
+        public static readonly Property<bool> IsSupportDataPermissionProperty = P<Resource>.Register(e => e.IsSupportDataPermission);
+        /// <summary>
+        /// 是否支持数据权限
+        /// </summary>
+        public bool IsSupportDataPermission
+        {
+            get { return GetProperty(IsSupportDataPermissionProperty); }
+            set { SetProperty(IsSupportDataPermissionProperty, value); }
+        }
         #endregion
 
         #region 只读属性

@@ -13,6 +13,7 @@
 
 
 using System;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using Rafy.Domain;
@@ -25,7 +26,7 @@ namespace Rafy.RBAC.RoleManagement
     /// <summary>
     /// 角色功能
     /// </summary>
-    [RootEntity, Serializable]
+    [ChildEntity, Serializable]
     public class RoleOperation : RoleManagementEntity
     {
         #region 构造函数
@@ -46,7 +47,7 @@ namespace Rafy.RBAC.RoleManagement
             P<RoleOperation>.RegisterRefId(e => e.RoleId, ReferenceType.Parent);
         public long RoleId
         {
-            get { return (long) GetRefId(RoleIdProperty); }
+            get { return (long)GetRefId(RoleIdProperty); }
             set { SetRefId(RoleIdProperty, value); }
         }
         public static readonly RefEntityProperty<Role> RoleProperty =
@@ -60,7 +61,7 @@ namespace Rafy.RBAC.RoleManagement
             P<RoleOperation>.RegisterRefId(e => e.OperationId, ReferenceType.Normal);
         public long OperationId
         {
-            get { return (long) GetRefId(OperationIdProperty); }
+            get { return (long)GetRefId(OperationIdProperty); }
             set { SetRefId(OperationIdProperty, value); }
         }
         public static readonly RefEntityProperty<ResourceOperation> OperationProperty =
@@ -107,6 +108,18 @@ namespace Rafy.RBAC.RoleManagement
         /// </summary>
         protected RoleOperationRepository()
         {
+        }
+        /// <summary>
+        /// 获取角色的角色操作列表
+        /// </summary>
+        /// <param name="roleId">角色Id</param>
+        /// <returns></returns>
+        [RepositoryQuery]
+        public virtual RoleOperationList GetByRoleId(long roleId)
+        {
+            var q = this.CreateLinqQuery();
+            q = q.Where(e => e.RoleId == roleId);
+            return (RoleOperationList)this.QueryData(q);
         }
     }
 

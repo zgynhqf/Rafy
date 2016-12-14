@@ -54,7 +54,14 @@ namespace Rafy.RBAC.RoleManagement
         {
             get { return this.GetLazyList(RoleOperationListProperty); }
         }
-
+        public static readonly ListProperty<DataPermissionList> DataPermissionListProperty = P<Role>.RegisterList(e => e.DataPermissionList);
+        /// <summary>
+        /// 获取角色、操作关联列表数据
+        /// </summary>
+        public DataPermissionList DataPermissionList
+        {
+            get { return this.GetLazyList(DataPermissionListProperty); }
+        }
         #endregion
 
         #region 一般属性

@@ -48,6 +48,12 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\RoleController.cs" />
+    <Compile Include="Entities\DataPermission.cs" />
+    <Compile Include="Entities\DataPermission.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>DataPermission.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\Resource.cs" />
     <Compile Include="Entities\Resource.g.cs">
       <SubType>Code</SubType>

@@ -50,8 +50,8 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\Extensions\ResourceOperationRepositoryExtension.cs" />
-    <Compile Include="Entities\Extensions\ResourceRepositoryExtension.cs" />
+    <Compile Include="Extensions\ResourceOperationRepositoryExtension.cs" />
+    <Compile Include="Extensions\ResourceRepositoryExtension.cs" />
     <Compile Include="PermissionArchitecture\DefaultPermissionBuilder.cs" />
     <Compile Include="PermissionArchitecture\DefaultPermissionEntry.cs" />
     <Compile Include="PermissionArchitecture\PermissionBuilder.cs" />

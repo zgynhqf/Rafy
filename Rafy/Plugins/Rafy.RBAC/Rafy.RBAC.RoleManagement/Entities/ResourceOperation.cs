@@ -13,6 +13,7 @@
 
 
 using System;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using Rafy.Domain;
@@ -124,6 +125,18 @@ namespace Rafy.RBAC.RoleManagement
         /// </summary>
         protected ResourceOperationRepository()
         {
+        }
+        /// <summary>
+        /// 获取资源下的资源操作列表
+        /// </summary>
+        /// <param name="resourceId">资源Id</param>
+        /// <returns></returns>
+        [RepositoryQuery]
+        public virtual ResourceOperationList GetByResourceId(long resourceId)
+        {
+            var q = this.CreateLinqQuery();
+            q = q.Where(e => e.ResourceId == resourceId);
+            return (ResourceOperationList)this.QueryData(q);
         }
     }
 

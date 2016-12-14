@@ -30,7 +30,7 @@ using Rafy.MetaModel.Attributes;
 using Rafy.MetaModel.View;
 using System.Data;
 using Rafy.RBAC.RoleManagement;
-using Rafy.RBAC.GroupManagement.Entities.Extensions;
+using Rafy.RBAC.GroupManagement.Extensions;
 
 namespace Rafy.RBAC.GroupManagement
 {

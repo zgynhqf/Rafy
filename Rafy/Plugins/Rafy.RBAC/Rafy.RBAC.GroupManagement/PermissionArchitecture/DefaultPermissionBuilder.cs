@@ -20,7 +20,7 @@ using Rafy.RBAC.RoleManagement;
 using System.Data;
 using Rafy.Accounts;
 using Rafy.Domain;
-using Rafy.RBAC.GroupManagement.Entities.Extensions;
+using Rafy.RBAC.GroupManagement.Extensions;
 
 namespace Rafy.RBAC.GroupManagement.PermissionArchitecture
 {
