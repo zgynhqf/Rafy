@@ -25,7 +25,7 @@ namespace Rafy.RBAC.RoleManagement
     /// <summary>
     /// 数据权限
     /// </summary>
-    [ChildEntity, Serializable]
+    [RootEntity, Serializable]
     public partial class DataPermission : RoleManagementEntity
     {
         #region 构造函数

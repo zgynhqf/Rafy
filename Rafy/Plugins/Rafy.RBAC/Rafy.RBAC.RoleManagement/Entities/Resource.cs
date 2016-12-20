@@ -149,7 +149,7 @@ namespace Rafy.RBAC.RoleManagement
             Meta.MapTable().MapAllProperties();
             Meta.SupportTree();
             Meta.Property(Resource.NameProperty).MapColumn().HasLength("40").IsRequired = true;
-            Meta.Property(Resource.CodeProperty).MapColumn().HasLength("40").IsRequired = true;
+            Meta.Property(Resource.CodeProperty).MapColumn().HasLength("200").IsRequired = true;
             Meta.Property(Resource.DescriptionProperty).MapColumn().DataTypeLength = "200";
             Meta.Property(Resource.ResourceEntityTypeProperty).MapColumn().DataTypeLength = "200";
         }
