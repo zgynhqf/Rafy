@@ -15,11 +15,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Rafy.Accounts;
+using Rafy.ComponentModel;
 using Rafy.Domain;
 using Rafy.Domain.ORM.Query;
-using Rafy.RBAC.GroupManagement;
 using Rafy.RBAC.RoleManagement;
-using Rafy.RBAC.UserRoleManagement.Controllers;
 
 namespace Rafy.RBAC.DataPermissionManagement
 {
@@ -28,19 +28,19 @@ namespace Rafy.RBAC.DataPermissionManagement
     /// 默认关闭过滤
     /// 开启过滤,需要设置上下文信息如下
     /// using (DataPermissionInterceptor.FilterEnabled.UseScopeValue(true))
-    //  {
-    //     dp.GetBy(xxxxx);
-    //  }
+    /// {
+    ///    dp.GetBy(xxxxx);
+    /// }
     /// </summary>
-    public class DataPermissionInterceptor
+    internal class DataPermissionInterceptor
     {
-        public static readonly AppContextItem<bool> FilterEnabled =
-            new AppContextItem<bool>("Rafy.RBAC.RoleManagement.DataPermission.FilterEnabled", false);
+        internal static readonly AppContextItem<bool> FilterEnabled =
+            new AppContextItem<bool>("Rafy.RBAC.DataPermissionManagement.DataPermissionInterceptor.FilterEnabled", false);
 
         /// <summary>
         /// 注册拦截器
         /// </summary>
-        public void Intercept()
+        public static void Intercept()
         {
             RepositoryDataProvider.Querying += RepositoryDataProvider_Querying;
         }
@@ -50,83 +50,106 @@ namespace Rafy.RBAC.DataPermissionManagement
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected virtual void RepositoryDataProvider_Querying(object sender, QueryingEventArgs e)
+        private static void RepositoryDataProvider_Querying(object sender, QueryingEventArgs e)
         {
             if (FilterEnabled.Value)
             {
-                var dp = sender as RepositoryDataProvider;
-                var resource = FindDataPermissionResource(dp.Repository.EntityType.FullName);
-                if (resource != null && resource.GetIsSupportDataPermission())
+                var currentUser = AccountContext.CurrentUser;
+
+                var userRoleFilder = RafyEnvironment.ObjectContainer.Resolve<IUserRoleFinder>();
+                var roles = userRoleFilder.FindByUser(currentUser);
+
+                var dataPermissions = CollectDataPermissions(roles);
+
+                var appender = new DataPermissionWhereAppender();
+
+                foreach (var dataPermission in dataPermissions)
                 {
-                    long currentUserId = 1000;
-                    var roleIdList = GetRoleIdListByUserId(currentUserId);
-                    var dataPermissionList = GetDataPermission(resource.Id, roleIdList);
-                    List<DataPermissionFilterMode> modeList = new List<DataPermissionFilterMode>();
-                    foreach (DataPermission item in dataPermissionList)
-                    {
-                        if (item.Mode == DataPermissionFilterMode.Custom || !modeList.Contains(item.Mode))
-                        {
-                            var whereAppender = new DataPermissionWhereAppender(item.Mode, GetCurrentAndLowerGroup);
-                            whereAppender.CurrentUser = null;
-                            whereAppender.CurrentGroup = null;
-                            whereAppender.Append(e.Args.Query);
-                            modeList.Add(item.Mode);
-                        }
-                    }
+                    var constraintBuilder = dataPermission.CreateBuilder();
+
+                    appender.ConstrainsBuilders.Add(constraintBuilder);
                 }
+
+                appender.Append(e.Args.Query);
+
+                //var dp = sender as RepositoryDataProvider;
+                //var resource = FindDataPermissionResource(dp.Repository.EntityType.FullName);
+                //if (resource != null && resource.GetIsSupportDataPermission())
+                //{
+                //    long currentUserId = 1000;
+                //    var roleIdList = GetRoleIdListByUserId(currentUserId);
+                //    var dataPermissionList = GetDataPermission(resource.Id, roleIdList);
+                //    List<DataPermissionFilterMode> modeList = new List<DataPermissionFilterMode>();
+                //    foreach (DataPermission item in dataPermissionList)
+                //    {
+                //        if (item.Mode == DataPermissionFilterMode.Custom || !modeList.Contains(item.Mode))
+                //        {
+                //            var whereAppender = new DataPermissionWhereAppender(item.Mode, GetCurrentAndLowerGroup);
+                //            whereAppender.CurrentUser = null;
+                //            whereAppender.CurrentGroup = null;
+                //            whereAppender.Append(e.Args.Query);
+                //            modeList.Add(item.Mode);
+                //        }
+                //    }
+                //}
             }
         }
 
-        /// <summary>
-        /// 获取当前组织及其下级
-        /// </summary>
-        /// <param name="group"></param>
-        /// <returns></returns>
-        protected virtual List<long> GetCurrentAndLowerGroup(Group group)
+        private static IList<DataPermission> CollectDataPermissions(RoleList roles)
         {
-            if (group != null)
-            {
-                var q = new CommonQueryCriteria {
-                    new PropertyMatch(Group.TreeIndexProperty, PropertyOperator.Like, group.TreeIndex)
-                };
-                return RepositoryFacade.ResolveInstance<GroupRepository>().GetBy(q).Select(p => p.Id).Cast<long>().ToList();
-            }
-            return new List<long>();
-        }
-        /// <summary>
-        /// 获取资源角色对应的数据权限列表
-        /// </summary>
-        /// <param name="resourceId">资源Id</param>
-        /// <param name="roleIdList">角色Id列表</param>
-        /// <returns></returns>
-        protected virtual DataPermissionList GetDataPermission(long resourceId, List<long> roleIdList)
-        {
-            return RepositoryFacade.ResolveInstance<DataPermissionRepository>()
-                .GetDataPermissionList(resourceId, roleIdList);
+            throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// 获取用户的角色列表
-        /// </summary>
-        /// <param name="userId">用户Id</param>
-        /// <returns></returns>
-        protected virtual List<long> GetRoleIdListByUserId(long userId)
-        {
-            var userRoleDc = DomainControllerFactory.Create<UserRoleController>();
-            return userRoleDc.GetRoleList(userId).Select(p => p.Id).Cast<long>().ToList();
-        }
+        ///// <summary>
+        ///// 获取当前组织及其下级
+        ///// </summary>
+        ///// <param name="group"></param>
+        ///// <returns></returns>
+        //protected virtual List<long> GetCurrentAndLowerGroup(Group group)
+        //{
+        //    if (group != null)
+        //    {
+        //        var q = new CommonQueryCriteria {
+        //            new PropertyMatch(Group.TreeIndexProperty, PropertyOperator.Like, group.TreeIndex)
+        //        };
+        //        return RepositoryFacade.ResolveInstance<GroupRepository>().GetBy(q).Select(p => p.Id).Cast<long>().ToList();
+        //    }
+        //    return new List<long>();
+        //}
+        ///// <summary>
+        ///// 获取资源角色对应的数据权限列表
+        ///// </summary>
+        ///// <param name="resourceId">资源Id</param>
+        ///// <param name="roleIdList">角色Id列表</param>
+        ///// <returns></returns>
+        //protected virtual DataPermissionList GetDataPermission(long resourceId, List<long> roleIdList)
+        //{
+        //    return RepositoryFacade.ResolveInstance<DataPermissionRepository>()
+        //        .GetDataPermissionList(resourceId, roleIdList);
+        //}
 
-        /// <summary>
-        /// 查找资源
-        /// </summary>
-        /// <param name="fullName">资源实体全名称</param>
-        /// <returns></returns>
-        protected virtual Resource FindDataPermissionResource(string fullName)
-        {
-            var q = new CommonQueryCriteria {
-                new PropertyMatch(ResourceExtension.ResourceEntityTypeProperty, PropertyOperator.Equal, fullName)
-                };
-            return RepositoryFacade.ResolveInstance<ResourceRepository>().GetFirstBy(q);
-        }
+        ///// <summary>
+        ///// 获取用户的角色列表
+        ///// </summary>
+        ///// <param name="userId">用户Id</param>
+        ///// <returns></returns>
+        //protected virtual List<long> GetRoleIdListByUserId(long userId)
+        //{
+        //    var userRoleDc = DomainControllerFactory.Create<UserRoleController>();
+        //    return userRoleDc.GetRoleList(userId).Select(p => p.Id).Cast<long>().ToList();
+        //}
+
+        ///// <summary>
+        ///// 查找资源
+        ///// </summary>
+        ///// <param name="fullName">资源实体全名称</param>
+        ///// <returns></returns>
+        //protected virtual Resource FindDataPermissionResource(string fullName)
+        //{
+        //    var q = new CommonQueryCriteria {
+        //        new PropertyMatch(ResourceExtension.ResourceEntityTypeProperty, PropertyOperator.Equal, fullName)
+        //        };
+        //    return RepositoryFacade.ResolveInstance<ResourceRepository>().GetFirstBy(q);
+        //}
     }
 }

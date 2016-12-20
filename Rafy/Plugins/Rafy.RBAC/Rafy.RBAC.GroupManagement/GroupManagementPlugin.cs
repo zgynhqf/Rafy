@@ -7,6 +7,7 @@ using Rafy.ComponentModel;
 using Rafy.DbMigration;
 using Rafy.Domain;
 using Rafy.Domain.ORM.DbMigration;
+using Rafy.RBAC.RoleManagement;
 
 namespace Rafy.RBAC.GroupManagement
 {
@@ -25,6 +26,7 @@ namespace Rafy.RBAC.GroupManagement
 
         public override void Initialize(IApp app)
         {
+            Composer.ObjectContainer.RegisterInstance(typeof(IUserRoleFinder), typeof(GroupUserRoleFinder));
         }
     }
 }

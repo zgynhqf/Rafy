@@ -50,8 +50,10 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataPermissionConstraintBuilders\CurrentGroupPermissionConstraintBuilder.cs" />
     <Compile Include="Extensions\ResourceOperationRepositoryExtension.cs" />
     <Compile Include="Extensions\ResourceRepositoryExtension.cs" />
+    <Compile Include="GroupUserRoleFinder.cs" />
     <Compile Include="PermissionArchitecture\DefaultPermissionBuilder.cs" />
     <Compile Include="PermissionArchitecture\DefaultPermissionEntry.cs" />
     <Compile Include="PermissionArchitecture\PermissionBuilder.cs" />
@@ -93,6 +95,7 @@
   <ItemGroup>
     <None Include="Hxy Key.snk" />
   </ItemGroup>
+  <ItemGroup />
   <!--<ItemGroup>
         <Folder Include="Services\" />
     </ItemGroup>-->

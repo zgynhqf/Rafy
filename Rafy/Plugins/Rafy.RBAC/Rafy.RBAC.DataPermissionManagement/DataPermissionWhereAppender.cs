@@ -19,35 +19,16 @@ using System.Text;
 using System.Threading.Tasks;
 using Rafy.Accounts;
 using Rafy.Domain.ORM.Query;
-using Rafy.RBAC.GroupManagement;
 using Rafy.RBAC.RoleManagement;
 
 namespace Rafy.RBAC.DataPermissionManagement
 {
-
     /// <summary>
     /// 为查询中的 Where 条件添加 数据权限过滤条件的类。
     /// </summary>
-    public class DataPermissionWhereAppender : MainTableWhereAppender
+    internal class DataPermissionWhereAppender : MainTableWhereAppender
     {
-        private DataPermissionFilterMode _mode;
-
-        private Func<Group, List<long>> _getCurrentAndLowerGroup;
-        public DataPermissionWhereAppender(DataPermissionFilterMode dataPermissionFilterMode, Func<Group, List<long>> getCurrentAndLowerGroup)
-        {
-            this._mode = dataPermissionFilterMode;
-            _getCurrentAndLowerGroup = getCurrentAndLowerGroup;
-        }
-
-        /// <summary>
-        /// 当前用户
-        /// </summary>
-        public User CurrentUser { get; set; }
-
-        /// <summary>
-        /// 当前组
-        /// </summary>
-        public Group CurrentGroup { get; set; }
+        public IList<DataPermissionConstraintBuilder> ConstrainsBuilders { get; private set; } = new List<DataPermissionConstraintBuilder>();
 
         /// <summary>
         /// 获取过滤条件
@@ -57,24 +38,15 @@ namespace Rafy.RBAC.DataPermissionManagement
         /// <returns></returns>
         protected override IConstraint GetCondition(ITableSource mainTable, IQuery query)
         {
-            switch (_mode)
-            {
-                case DataPermissionFilterMode.CurrentUser:
-                    var userColumn = mainTable.FindColumn(Resource.IdProperty);
-                    return userColumn.Equal(CurrentUser);
-                case DataPermissionFilterMode.CurrentOrg:
-                    var orgColumn = mainTable.FindColumn(Resource.IdProperty);
-                    return orgColumn.Equal(CurrentGroup.Id);
-                case DataPermissionFilterMode.CurrentOrgAndLower:
-                    var orgsColumn = mainTable.FindColumn(Resource.IdProperty);
-                    return orgsColumn.In(_getCurrentAndLowerGroup(CurrentGroup));
-                case DataPermissionFilterMode.Custom:
-                    throw new Exception("不支持的过滤类型：" + _mode);
-                default:
-                    throw new Exception("不支持的过滤类型：" + _mode);
+            IConstraint res = null;
 
+            foreach (var builder in this.ConstrainsBuilders)
+            {
+                var constraint = builder.BuildConstraint(mainTable, query);
+                res = QueryFactory.Instance.Or(res, constraint);
             }
 
+            return res;
         }
     }
 }

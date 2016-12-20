@@ -14,6 +14,7 @@
 
 using Rafy.ComponentModel;
 using Rafy.Domain;
+using Rafy.RBAC.RoleManagement;
 
 namespace Rafy.RBAC.UserRoleManagement
 {
@@ -32,6 +33,7 @@ namespace Rafy.RBAC.UserRoleManagement
 
         public override void Initialize(IApp app)
         {
+            Composer.ObjectContainer.RegisterInstance(typeof(IUserRoleFinder), typeof(UserRoleFinder));
         }
     }
 }

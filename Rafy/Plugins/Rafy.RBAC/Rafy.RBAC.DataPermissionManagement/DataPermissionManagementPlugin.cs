@@ -22,8 +22,18 @@ namespace Rafy.RBAC.DataPermissionManagement
             get { return _dbSettingName ?? DbSettingNames.RafyPlugins; }
             set { _dbSettingName = value; }
         }
+
+        private static bool _added = false;
+
         public override void Initialize(IApp app)
         {
+            if (!_added)
+            {
+                //数据的删除、查询的拦截器。
+                DataPermissionInterceptor.Intercept();
+
+                _added = true;
+            }
         }
     }
 }
