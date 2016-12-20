@@ -91,7 +91,7 @@ namespace Rafy.RBAC.RoleManagement
     }
 
     /// <summary>
-    /// 实体的领域名称 列表类。
+    /// 角色功能 列表类。
     /// </summary>
     [Serializable]
     public partial class RoleOperationList : RoleManagementEntityList
@@ -99,7 +99,7 @@ namespace Rafy.RBAC.RoleManagement
     }
 
     /// <summary>
-    /// 实体的领域名称 仓库类。
+    /// 角色功能 仓库类。
     /// 负责 实体的领域名称 类的查询、保存。
     /// </summary>
     public partial class RoleOperationRepository : RoleManagementEntityRepository
@@ -140,7 +140,7 @@ namespace Rafy.RBAC.RoleManagement
     }
 
     /// <summary>
-    /// 实体的领域名称 配置类。
+    /// 角色功能 配置类。
     /// 负责 实体的领域名称 类的实体元数据的配置。
     /// </summary>
     internal class RoleOperationConfig : RoleManagementEntityConfig<RoleOperation>

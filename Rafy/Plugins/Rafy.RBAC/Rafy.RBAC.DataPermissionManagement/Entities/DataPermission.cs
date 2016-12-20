@@ -1,50 +1,49 @@
-﻿/*******************************************************
- * 
- * 作者：吴中坡
- * 创建日期：20161213
- * 说明：此文件只包含一个类，具体内容见类型注释。
- * 运行环境：.NET 4.0
- * 版本号：1.0.0
- * 
- * 历史记录：
- * 创建文件 吴中坡 20161213 17:49
- * 
-*******************************************************/
-
-
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
+using System.Text;
+using Rafy;
+using Rafy.ComponentModel;
+using Rafy.Data;
 using Rafy.Domain;
+using Rafy.Domain.ORM;
+using Rafy.Domain.ORM.Query;
+using Rafy.Domain.Validation;
 using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
+using Rafy.MetaModel.View;
+using Rafy.RBAC.RoleManagement;
 
-namespace Rafy.RBAC.RoleManagement
+namespace Rafy.RBAC.DataPermissionManagement
 {
     /// <summary>
     /// 数据权限
     /// </summary>
     [RootEntity, Serializable]
-    public partial class DataPermission : RoleManagementEntity
+    public partial class DataPermission : DataPermissionManagementEntity
     {
         #region 构造函数
 
         public DataPermission() { }
 
-        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
         protected DataPermission(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
         #endregion
 
         #region 引用属性
+        
         public static readonly IRefIdProperty RoleIdProperty =
-           P<DataPermission>.RegisterRefId(e => e.RoleId, ReferenceType.Normal);
+         P<DataPermission>.RegisterRefId(e => e.RoleId, ReferenceType.Normal);
         public long RoleId
         {
             get { return (long)this.GetRefId(RoleIdProperty); }
             set { this.SetRefId(RoleIdProperty, value); }
         }
+
         public static readonly RefEntityProperty<Role> RoleProperty =
             P<DataPermission>.RegisterRef(e => e.Role, RoleIdProperty);
         /// <summary>
@@ -55,6 +54,7 @@ namespace Rafy.RBAC.RoleManagement
             get { return this.GetRefEntity(RoleProperty); }
             set { this.SetRefEntity(RoleProperty, value); }
         }
+
         public static readonly IRefIdProperty ResourceIdProperty =
             P<DataPermission>.RegisterRefId(e => e.ResourceId, ReferenceType.Normal);
         public long ResourceId
@@ -62,6 +62,7 @@ namespace Rafy.RBAC.RoleManagement
             get { return (long)this.GetRefId(ResourceIdProperty); }
             set { this.SetRefId(ResourceIdProperty, value); }
         }
+
         public static readonly RefEntityProperty<Resource> ResourceProperty =
             P<DataPermission>.RegisterRef(e => e.Resource, ResourceIdProperty);
         /// <summary>
@@ -79,14 +80,25 @@ namespace Rafy.RBAC.RoleManagement
         #endregion
 
         #region 一般属性
-        public static readonly Property<int> ModeProperty = P<DataPermission>.Register(e => e.Mode);
+
+        public static readonly Property<DataPermissionFilterMode> ModeProperty = P<DataPermission>.Register(e => e.Mode);
         /// <summary>
-        /// 数据授权模式值可自行设置 如 本人、本部门、下级部门、自定义
+        /// 数据权限过滤模式
         /// </summary>
-        public int Mode
+        public DataPermissionFilterMode Mode
         {
             get { return this.GetProperty(ModeProperty); }
             set { this.SetProperty(ModeProperty, value); }
+        }
+
+        public static readonly Property<string> RuleProperty = P<DataPermission>.Register(e => e.Rule);
+        /// <summary>
+        /// 自定义模式过滤规则
+        /// </summary>
+        public string Rule
+        {
+            get { return this.GetProperty(RuleProperty); }
+            set { this.SetProperty(RuleProperty, value); }
         }
         #endregion
 
@@ -99,25 +111,45 @@ namespace Rafy.RBAC.RoleManagement
     /// 实体的领域名称 列表类。
     /// </summary>
     [Serializable]
-    public partial class DataPermissionList : RoleManagementEntityList { }
+    public partial class DataPermissionList : DataPermissionManagementEntityList { }
 
     /// <summary>
-    /// 实体的领域名称 仓库类。
+    /// 数据权限 仓库类。
     /// 负责 实体的领域名称 类的查询、保存。
     /// </summary>
-    public partial class DataPermissionRepository : RoleManagementEntityRepository
+    public partial class DataPermissionRepository : DataPermissionManagementEntityRepository
     {
         /// <summary>
         /// 单例模式，外界不可以直接构造本对象。
         /// </summary>
         protected DataPermissionRepository() { }
+
+        /// <summary>
+        /// 获取资源角色的数据权限集合
+        /// </summary>
+        /// <param name="resourceId">资源Id</param>
+        /// <param name="roleIdList">角色Id集合</param>
+        /// <returns></returns>
+        [RepositoryQuery]
+        public virtual DataPermissionList GetDataPermissionList(long resourceId,List<long> roleIdList)
+        {
+            var f = QueryFactory.Instance;
+            var t = f.Table<DataPermission>();
+            var q = f.Query(
+                selection: t.Star(),//查询所有列
+                from: t,//要查询的实体的表
+                where: f.And(t.Column(DataPermission.ResourceIdProperty).Equal(resourceId),
+                t.Column(DataPermission.RoleIdProperty).In(roleIdList))
+            );
+            return (DataPermissionList)this.QueryData(q);
+        }
     }
 
     /// <summary>
-    /// 实体的领域名称 配置类。
+    /// 数据权限 配置类。
     /// 负责 实体的领域名称 类的实体元数据的配置。
     /// </summary>
-    internal class DataPermissionConfig : RoleManagementEntityConfig<DataPermission>
+    internal class DataPermissionConfig : DataPermissionManagementEntityConfig<DataPermission>
     {
         /// <summary>
         /// 配置实体的元数据

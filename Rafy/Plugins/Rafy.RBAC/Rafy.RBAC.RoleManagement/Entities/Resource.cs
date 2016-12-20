@@ -85,26 +85,6 @@ namespace Rafy.RBAC.RoleManagement
             get { return GetProperty(DescriptionProperty); }
             set { SetProperty(DescriptionProperty, value); }
         }
-
-        public static readonly Property<string> ResourceEntityTypeProperty = P<Resource>.Register(e => e.ResourceEntityType);
-        /// <summary>
-        ///     资源领域实体类型
-        /// </summary>
-        public string ResourceEntityType
-        {
-            get { return GetProperty(ResourceEntityTypeProperty); }
-            set { SetProperty(ResourceEntityTypeProperty, value); }
-        }
-
-        public static readonly Property<bool> IsSupportDataPermissionProperty = P<Resource>.Register(e => e.IsSupportDataPermission);
-        /// <summary>
-        /// 是否支持数据权限
-        /// </summary>
-        public bool IsSupportDataPermission
-        {
-            get { return GetProperty(IsSupportDataPermissionProperty); }
-            set { SetProperty(IsSupportDataPermissionProperty, value); }
-        }
         #endregion
 
         #region 只读属性
@@ -113,7 +93,7 @@ namespace Rafy.RBAC.RoleManagement
     }
 
     /// <summary>
-    /// 实体的领域名称 列表类。
+    /// 资源 列表类。
     /// </summary>
     [Serializable]
     public partial class ResourceList : RoleManagementEntityList
@@ -121,7 +101,7 @@ namespace Rafy.RBAC.RoleManagement
     }
 
     /// <summary>
-    ///  实体的领域名称 仓库类。
+    ///  资源 仓库类。
     ///  负责 实体的领域名称 类的查询、保存。
     /// </summary>
     public partial class ResourceRepository : RoleManagementEntityRepository
@@ -151,7 +131,6 @@ namespace Rafy.RBAC.RoleManagement
             Meta.Property(Resource.NameProperty).MapColumn().HasLength("40").IsRequired = true;
             Meta.Property(Resource.CodeProperty).MapColumn().HasLength("200").IsRequired = true;
             Meta.Property(Resource.DescriptionProperty).MapColumn().DataTypeLength = "200";
-            Meta.Property(Resource.ResourceEntityTypeProperty).MapColumn().DataTypeLength = "200";
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Rafy.RBAC.GroupManagement.Extensions
     /// <summary>
     /// 资源、操作仓库扩展类
     /// </summary>
-    public class ResourceOperationRepositoryExtension:EntityRepositoryExt<ResourceOperationRepository>
+    public class ResourceOperationRepositoryExtension : EntityRepositoryExt<ResourceOperationRepository>
     {
         /// <summary>
         /// 获取当前会员组下所有资源的权限数据表
@@ -56,6 +56,19 @@ namespace Rafy.RBAC.GroupManagement.Extensions
                         )
                     );
             return (ResourceOperationList)this.QueryData(q);
+        }
+    }
+
+    public static class ResourceOperationRepositoryExtensionHelper
+    {
+        /// <summary>
+        /// 获取当前会员组下所有资源的权限数据表
+        /// </summary>
+        /// <param name="groupID">用户当前使用的组的主键</param>
+        /// <returns>返回获取到的当前组下的所有资源的数据过滤权限的数据表</returns>
+        public static ResourceOperationList GetResourceOperationPermissionByGroupID(this ResourceOperationRepository repo, long groupID)
+        {
+            return repo.Extension<ResourceOperationRepositoryExtension>().GetResourceOperationPermissionByGroupID(groupID);
         }
     }
 }

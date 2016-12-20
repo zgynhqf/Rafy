@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{708150C2-4B78-4F02-A8E9-3338CC76F69C}</ProjectGuid>
+    <ProjectGuid>{7750612E-AB7E-4A98-86E1-FF6E4D9D7C54}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Rafy.RBAC.RoleManagement</RootNamespace>
-    <AssemblyName>Rafy.RBAC.RoleManagement</AssemblyName>
+    <RootNamespace>Rafy.RBAC.DataPermissionManagement</RootNamespace>
+    <AssemblyName>Rafy.RBAC.DataPermissionManagement</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -21,8 +21,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <NoWarn>1591</NoWarn>
-    <DocumentationFile>bin\Debug\Rafy.RBAC.RoleManagement.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,12 +30,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -49,40 +41,43 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\RoleController.cs" />
-    <Compile Include="Entities\Resource.cs" />
-    <Compile Include="Entities\Resource.g.cs">
+    <Compile Include="DataPermissionInterceptor.cs" />
+    <Compile Include="DataPermissionManagementPlugin.cs" />
+    <Compile Include="DataPermissionWhereAppender.cs" />
+    <Compile Include="Entities\DataPermission.cs" />
+    <Compile Include="Entities\DataPermission.g.cs">
       <SubType>Code</SubType>
-      <DependentUpon>Resource.cs</DependentUpon>
+      <DependentUpon>DataPermission.cs</DependentUpon>
     </Compile>
-    <Compile Include="Entities\ResourceOperation.cs" />
-    <Compile Include="Entities\ResourceOperation.g.cs">
-      <SubType>Code</SubType>
-      <DependentUpon>ResourceOperation.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\Role.cs" />
-    <Compile Include="Entities\Role.g.cs">
-      <SubType>Code</SubType>
-      <DependentUpon>Role.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\RoleManagementEntity.cs" />
-    <Compile Include="Entities\RoleOperation.cs" />
-    <Compile Include="Entities\RoleOperation.g.cs">
-      <SubType>Code</SubType>
-      <DependentUpon>RoleOperation.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Entities\DataPermissionManagementEntity.cs" />
+    <Compile Include="Enums\DataPermissionFilterMode.cs" />
+    <Compile Include="Extensions\ResourceExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RoleManagementPlugin.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Rafy\Rafy.csproj">
       <Project>{966a5bf2-d690-426b-ad68-ad868bb8f855}</Project>
       <Name>Rafy</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Hxy Key.snk" />
-    <None Include="Role.odml" />
+    <ProjectReference Include="..\..\Rafy.Accounts\Rafy.Accounts.csproj">
+      <Project>{4d6467e4-d1ce-4fa8-a1fe-92b1ba549a4a}</Project>
+      <Name>Rafy.Accounts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rafy.RBAC.GroupManagement\Rafy.RBAC.GroupManagement.csproj">
+      <Project>{e54cd6bc-727e-4d97-810d-6bb83a64a23f}</Project>
+      <Name>Rafy.RBAC.GroupManagement</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rafy.RBAC.RoleManagement\Rafy.RBAC.RoleManagement.csproj">
+      <Project>{708150c2-4b78-4f02-a8e9-3338cc76f69c}</Project>
+      <Name>Rafy.RBAC.RoleManagement</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rafy.RBAC.UserRoleManagement\Rafy.RBAC.UserRoleManagement.csproj">
+      <Project>{609216eb-20af-48c2-90c3-514cf588a062}</Project>
+      <Name>Rafy.RBAC.UserRoleManagement</Name>
+    </ProjectReference>
   </ItemGroup>
   <!--<ItemGroup>
         <Folder Include="Services\" />

@@ -51,8 +51,8 @@ namespace Rafy.RBAC.GroupManagement.PermissionArchitecture
         {
             IDictionary<long, IList<ResourceOperation>> operations = new Dictionary<long, IList<ResourceOperation>>();
             //List<ResourceOperation> resourceOperationList = this.GroupRepository.GetResourceOperationPermissionByGroupID(groupID).Concrete().ToList();
-            List<ResourceOperation> resourceOperationList = RepositoryFacade.ResolveInstance<ResourceOperationRepository>().Extension<ResourceOperationRepositoryExtension>().GetResourceOperationPermissionByGroupID(groupID).Concrete().ToList();
-            foreach (var item in resourceOperationList)
+            var resourceOperationList = RepositoryFacade.ResolveInstance<ResourceOperationRepository>().Extension<ResourceOperationRepositoryExtension>().GetResourceOperationPermissionByGroupID(groupID);
+            foreach (ResourceOperation item in resourceOperationList)
             {
                 IList<ResourceOperation> list = null;
                 if(operations.TryGetValue(item.ResourceId,out list))

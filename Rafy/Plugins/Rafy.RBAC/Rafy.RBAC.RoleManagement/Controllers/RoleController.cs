@@ -57,6 +57,7 @@ namespace Rafy.RBAC.RoleManagement.Controllers
                 roleOperationRepository.Save(changeRoleOpertaionList);
             }
         }
+
         /// <summary>
         /// 获取指定角色的操作列表
         /// </summary>

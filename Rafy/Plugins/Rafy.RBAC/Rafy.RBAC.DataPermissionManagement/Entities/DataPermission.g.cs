@@ -19,7 +19,7 @@ using Rafy.Data;
 using Rafy.Domain;
 using Rafy.Domain.ORM;
 
-namespace Rafy.RBAC.RoleManagement
+namespace Rafy.RBAC.DataPermissionManagement
 {
     partial class DataPermissionList
     {

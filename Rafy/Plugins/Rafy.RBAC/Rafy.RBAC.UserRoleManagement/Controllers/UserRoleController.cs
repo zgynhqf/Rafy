@@ -53,7 +53,6 @@ namespace Rafy.RBAC.UserRoleManagement.Controllers
             return userRole != null && userRole.RoleId > 0;
         }
 
-
         /// <summary>
         /// 获取指定的用户 <paramref name="userId"/> 下面的角色集合 <seealso cref="RoleList"/>。
         /// </summary>
@@ -113,6 +112,7 @@ namespace Rafy.RBAC.UserRoleManagement.Controllers
 
             return results;
         }
+
         /// <summary>
         /// 获取指定用户、资源的操作列表
         /// </summary>
