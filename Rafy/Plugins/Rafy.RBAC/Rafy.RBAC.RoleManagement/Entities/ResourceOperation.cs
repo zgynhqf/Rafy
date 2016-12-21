@@ -17,6 +17,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using Rafy.Domain;
+using Rafy.Domain.ORM.Query;
 using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
@@ -136,6 +137,25 @@ namespace Rafy.RBAC.RoleManagement
         {
             var q = this.CreateLinqQuery();
             q = q.Where(e => e.ResourceId == resourceId);
+            return (ResourceOperationList)this.QueryData(q);
+        }
+
+        /// <summary>
+        /// 获取指定角色的操作列表
+        /// </summary>
+        /// <param name="roleId">角色Id</param>
+        /// <returns></returns>
+        [RepositoryQuery]
+        public virtual ResourceOperationList GetOperationByRole(long roleId)
+        {
+            var f = QueryFactory.Instance;
+            var t = f.Table<ResourceOperation>();
+            var t1 = f.Table<RoleOperation>();
+            var q = f.Query(
+                selection: t.Star(),//查询所有列
+                from: t.Join(t1, t.Column(Entity.IdProperty).Equal(t1.Column(RoleOperation.OperationIdProperty))),
+                where: t1.Column(RoleOperation.RoleIdProperty).Equal(roleId)
+            );
             return (ResourceOperationList)this.QueryData(q);
         }
     }

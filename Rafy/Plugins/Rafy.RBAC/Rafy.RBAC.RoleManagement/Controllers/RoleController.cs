@@ -58,24 +58,5 @@ namespace Rafy.RBAC.RoleManagement.Controllers
             }
         }
 
-        /// <summary>
-        /// 获取指定角色的操作列表
-        /// </summary>
-        /// <param name="roleId">角色Id</param>
-        /// <returns></returns>
-        public virtual ResourceOperationList GetOperationByRole(long roleId)
-        {
-            RoleOperationRepository roleOperationRepository = RepositoryFacade.ResolveInstance<RoleOperationRepository>();
-            var q = new CommonQueryCriteria();
-            q.Add(new PropertyMatch(RoleOperation.RoleIdProperty, PropertyOperator.Equal, roleId));
-            q.EagerLoad = new EagerLoadOptions().LoadWith(RoleOperation.OperationProperty);
-           var roleOperationList= roleOperationRepository.GetBy(q).Concrete().ToList();
-            var resourceOperationList = new ResourceOperationList();
-            foreach (var item in roleOperationList)
-            {
-                resourceOperationList.Add(item.Operation);
-            }
-            return resourceOperationList;
-        }
     }
 }

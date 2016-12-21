@@ -21,31 +21,20 @@ using Rafy.RBAC.RoleManagement;
 
 namespace Rafy.RBAC.UserRoleManagement
 {
+    /// <summary>
+    /// 根据用户查询角色
+    /// </summary>
     public class UserRoleFinder : IUserRoleFinder
     {
+        /// <summary>
+        /// 查询用户的所有角色
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public RoleList FindByUser(User user)
         {
             RoleRepository roleRepository = RepositoryFacade.ResolveInstance<RoleRepository>();
-            UserRoleRepository userRoleRepository = RepositoryFacade.ResolveInstance<UserRoleRepository>();
-            var q = new CommonQueryCriteria(BinaryOperator.And)
-            {
-                new PropertyMatch(UserRole.UserIdProperty, PropertyOperator.Equal, user.Id)
-            };
-            q.EagerLoad = new EagerLoadOptions().LoadWith(UserRole.RoleProperty);
-            var userRoles = userRoleRepository.GetBy(q);
-            if (userRoles == null || userRoles.Count == 0)
-            {
-                return roleRepository.NewList();
-            }
-
-            var results = roleRepository.NewList();
-            foreach (var userRole in userRoles)
-            {
-                if (userRole.Role == null) continue;
-
-                results.Add(userRole.Role);
-            }
-            return results;
+            return roleRepository.GetRoleByUserId(user.Id);
         }
     }
 }

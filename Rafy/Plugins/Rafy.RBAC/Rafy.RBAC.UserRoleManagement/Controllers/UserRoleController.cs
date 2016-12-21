@@ -60,25 +60,8 @@ namespace Rafy.RBAC.UserRoleManagement.Controllers
         /// <returns>指定用户下的所有角色。</returns>
         public virtual RoleList GetRoleList(long userId)
         {
-            var q = new CommonQueryCriteria(BinaryOperator.And)
-            {
-                new PropertyMatch(UserRole.UserIdProperty, PropertyOperator.Equal, userId)
-            };
-            q.EagerLoad = new EagerLoadOptions().LoadWith(UserRole.RoleProperty);
-            var userRoles = _userRoleRepository.GetBy(q);
-            if (userRoles == null || userRoles.Count == 0)
-            {
-                return this._roleRepository.NewList();
-            }
-
-            var results = _roleRepository.NewList();
-            foreach (var userRole in userRoles)
-            {
-                if (userRole.Role == null) continue;
-
-                results.Add(userRole.Role);
-            }
-            return results;
+            RoleRepository roleRepository = RepositoryFacade.ResolveInstance<RoleRepository>();
+            return roleRepository.GetRoleByUserId(userId);
         }
 
         /// <summary>
