@@ -56,6 +56,7 @@
       <DependentUpon>UserRole.cs</DependentUpon>
     </Compile>
     <Compile Include="Entities\UserRoleManagementEntity.cs" />
+    <Compile Include="Extensions\UserRepositoryExtension.cs" />
     <Compile Include="Extensions\RoleRepositoryExtension.cs" />
     <Compile Include="UserRoleFinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

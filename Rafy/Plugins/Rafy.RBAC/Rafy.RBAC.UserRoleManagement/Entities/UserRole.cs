@@ -12,7 +12,6 @@
  * 
 *******************************************************/
 
-
 using System;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
@@ -87,7 +86,7 @@ namespace Rafy.RBAC.UserRoleManagement
     }
 
     /// <summary>
-    /// 实体的领域名称 列表类。
+    /// 用户角色 列表类。
     /// </summary>
     [Serializable]
     public partial class UserRoleList : UserRoleManagementEntityList
@@ -95,7 +94,7 @@ namespace Rafy.RBAC.UserRoleManagement
     }
 
     /// <summary>
-    /// 实体的领域名称 仓库类。
+    /// 用户角色 仓库类。
     /// 负责 实体的领域名称 类的查询、保存。
     /// </summary>
     public partial class UserRoleRepository : UserRoleManagementEntityRepository
@@ -109,7 +108,7 @@ namespace Rafy.RBAC.UserRoleManagement
     }
 
     /// <summary>
-    /// 实体的领域名称 配置类。
+    /// 用户角色 配置类。
     /// 负责 实体的领域名称 类的实体元数据的配置。
     /// </summary>
     internal class UserRoleConfig : UserRoleManagementEntityConfig<UserRole>

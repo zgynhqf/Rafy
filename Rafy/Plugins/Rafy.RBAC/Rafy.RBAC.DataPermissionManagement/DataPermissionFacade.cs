@@ -12,23 +12,31 @@
 
 using Rafy.RBAC.RoleManagement;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Rafy.RBAC.DataPermissionManagement
 {
+    /// <summary>
+    /// 数据权限开关
+    /// </summary>
     public class DataPermissionFacade
     {
+        /// <summary>
+        /// 启用资源的数据权限
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <returns></returns>
         public static IDisposable EnableDataPermission(Resource resource)
         {
-           return DataPermissionInterceptor.FilterResource.UseScopeValue(resource);//huqf
+           return DataPermissionInterceptor.FilterResource.UseScopeValue(resource);
         }
 
+        /// <summary>
+        /// 禁用数据权限
+        /// </summary>
+        /// <returns></returns>
         public static IDisposable DisableDataPermission()
         {
-            return DataPermissionInterceptor.FilterResource.UseScopeValue(null);//huqf
+            return DataPermissionInterceptor.FilterResource.UseScopeValue(null);
         }
     }
 }

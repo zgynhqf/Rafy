@@ -12,9 +12,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Rafy.Domain.ORM.Query;
 
 namespace Rafy.RBAC.RoleManagement
@@ -32,11 +29,23 @@ namespace Rafy.RBAC.RoleManagement
         /// </summary>
         public Dictionary<string, string> FilterPeoperty { get; set; }
 
+        /// <summary>
+        /// 构建过滤约束条件
+        /// </summary>
+        /// <param name="mainTable"></param>
+        /// <param name="query"></param>
+        /// <returns></returns>
         public IConstraint BuildConstraint(ITableSource mainTable, IQuery query)
         {
             return this.BuildConstraintCore(mainTable, query);
         }
 
+        /// <summary>
+        /// 构建过滤约束条件
+        /// </summary>
+        /// <param name="mainTable"></param>
+        /// <param name="query"></param>
+        /// <returns></returns>
         protected abstract IConstraint BuildConstraintCore(ITableSource mainTable, IQuery query);
     }
 }

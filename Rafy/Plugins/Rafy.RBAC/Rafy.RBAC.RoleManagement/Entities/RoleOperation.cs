@@ -11,13 +11,13 @@
  * 
 *******************************************************/
 
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using Rafy.Domain;
+using Rafy.Domain.ORM.Query;
 using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
@@ -110,6 +110,7 @@ namespace Rafy.RBAC.RoleManagement
         protected RoleOperationRepository()
         {
         }
+
         /// <summary>
         /// 获取角色的操作列表
         /// </summary>
@@ -118,13 +119,15 @@ namespace Rafy.RBAC.RoleManagement
         [RepositoryQuery]
         public virtual RoleOperationList GetByRoleIdList(List<long> roleIds)
         {
-            return (RoleOperationList)this.QueryInBatches(roleIds.ToArray(), ids =>
-            {
-                var q = new CommonQueryCriteria();
-                q.Add(RoleOperation.RoleIdProperty, PropertyOperator.In, ids);
-                return this.GetBy(q);
-            });
+            var f = QueryFactory.Instance;
+            var t1 = f.Table<RoleOperation>();
+            var q = f.Query(
+               selection: t1.Star(),//查询所有列
+               from: t1,//要查询的实体的表
+               where: t1.Column(RoleOperation.RoleIdProperty).In(roleIds));
+            return (RoleOperationList)this.QueryData(q);
         }
+
         /// <summary>
         /// 获取角色的角色操作列表
         /// </summary>

@@ -15,46 +15,46 @@ using Rafy.Domain;
 using Rafy.Domain.ORM.Query;
 using Rafy.RBAC.UserRoleManagement;
 
-namespace Rafy.RBAC.RoleManagement
+namespace Rafy.Accounts
 {
     /// <summary>
-    /// 角色仓储扩展
+    /// 用户仓储扩展
     /// </summary>
-    public class RoleRepositoryExtension : EntityRepositoryExt<RoleRepository>
+    public class UserRepositoryExtension : EntityRepositoryExt<UserRepository>
     {
         /// <summary>
-        /// 查询用户所有的角色集合
+        /// 查询角色下的用户列表
         /// </summary>
-        /// <param name="userId">用户Id</param>
+        /// <param name="roleId">角色Id</param>
         /// <returns></returns>
         [RepositoryQuery]
-        public virtual RoleList GetRoleByUserId(long userId)
+        public virtual UserList GetUserListByRoleId(long roleId)
         {
             var f = QueryFactory.Instance;
-            var t1 = f.Table<Role>();
+            var t1 = f.Table<User>();
             var t2 = f.Table<UserRole>();
             var q = f.Query(
                selection: t1.Star(),//查询所有列
-               from: t1.Join(t2, t1.Column(Entity.IdProperty).Equal(t2.Column(UserRole.RoleIdProperty))),//要查询的实体的表
-               where: t2.Column(UserRole.UserIdProperty).In(userId));
-            return (RoleList)this.QueryData(q);
+               from: t1.Join(t2, t1.Column(Entity.IdProperty).Equal(t2.Column(UserRole.UserIdProperty))),//要查询的实体的表
+               where: t2.Column(UserRole.RoleIdProperty).In(roleId));
+            return (UserList)this.QueryData(q);
         }
     }
 
     /// <summary>
-    /// 角色仓储扩展
+    /// 用户仓储扩展
     /// </summary>
-    public static class RoleRepositoryExtensionHelper
+    public static class UserRepositoryExtensionHelper
     {
         /// <summary>
-        /// 查询用户所有的角色集合
+        /// 查询角色下的用户列表
         /// </summary>
         /// <param name="repo"></param>
-        /// <param name="userId">用户Id</param>
+        /// <param name="roleId">角色Id</param>
         /// <returns></returns>
-        public static RoleList GetRoleByUserId(this RoleRepository repo, long userId)
+        public static UserList GetUserListByRoleId(this UserRepository repo, long roleId)
         {
-            return repo.Extension<RoleRepositoryExtension>().GetRoleByUserId(userId);
+            return repo.Extension<UserRepositoryExtension>().GetUserListByRoleId(roleId);
         }
     }
 }

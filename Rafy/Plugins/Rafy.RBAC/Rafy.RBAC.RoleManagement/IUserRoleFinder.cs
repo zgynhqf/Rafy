@@ -10,17 +10,21 @@
  * 
 *******************************************************/
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Rafy.Accounts;
 
 namespace Rafy.RBAC.RoleManagement
 {
+    /// <summary>
+    /// 根据用户查找角色
+    /// 支持user-role 和group-role 
+    /// </summary>
     public interface IUserRoleFinder
     {
+        /// <summary>
+        /// 查询用户的角色列表
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         RoleList FindByUser(User user);
     }
 }

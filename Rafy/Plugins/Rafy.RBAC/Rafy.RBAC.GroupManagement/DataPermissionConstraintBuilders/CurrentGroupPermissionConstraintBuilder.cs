@@ -20,7 +20,6 @@ using Rafy.RBAC.RoleManagement;
 
 namespace Rafy.RBAC.GroupManagement
 {
-
     /// <summary>
     /// 组织数据权限的条件生成器
     /// </summary>

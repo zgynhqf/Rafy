@@ -11,13 +11,15 @@
  * 
 *******************************************************/
 
-
 using System.Collections.Generic;
 using System.Linq;
 using Rafy.Domain;
 
 namespace Rafy.RBAC.RoleManagement.Controllers
 {
+    /// <summary>
+    /// 角色领域控制器
+    /// </summary>
     public class RoleController : DomainController
     {
         /// <summary>

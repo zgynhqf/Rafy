@@ -71,29 +71,8 @@ namespace Rafy.RBAC.UserRoleManagement.Controllers
         /// <returns>指定角色下的所有用户的集合。</returns>
         public virtual UserList GetUserList(Role role)
         {
-            if (role == null)
-            {
-                throw new ArgumentNullException(nameof(role));
-            }
-
-            var userRoles = _userRoleRepository.GetBy(new CommonQueryCriteria(BinaryOperator.And) {
-                new PropertyMatch(UserRole.RoleIdProperty, PropertyOperator.Equal, role.Id)
-            });
-
-            if (userRoles == null || userRoles.Count == 0)
-            {
-                return this._userRepository.NewList();
-            }
-
-            var results = this._userRepository.NewList();
-            foreach (var userRole in userRoles)
-            {
-                if (userRole.User == null) continue;
-
-                results.Add(userRole.User);
-            }
-
-            return results;
+            UserRepository userRepository = RepositoryFacade.ResolveInstance<UserRepository>();
+            return userRepository.GetUserListByRoleId(role.Id);
         }
 
         /// <summary>

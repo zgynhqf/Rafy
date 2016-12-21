@@ -11,10 +11,10 @@
  * 
 *******************************************************/
 
-
 using System;
 using Rafy.Domain;
 using Rafy.ManagedProperty;
+using Rafy.MetaModel;
 using Rafy.RBAC.RoleManagement;
 
 namespace Rafy.RBAC.DataPermissionManagement.Extensions
@@ -78,6 +78,21 @@ namespace Rafy.RBAC.DataPermissionManagement.Extensions
         }
 
         #endregion
+    }
 
+    /// <summary>
+    /// 资源 配置类。
+    /// 负责 资源 类的实体元数据的配置。
+    /// </summary>
+    internal class ResourceConfigExtension : RoleManagementEntityConfig<Resource>
+    {
+        /// <summary>
+        /// 配置实体的元数据
+        /// </summary>
+        protected override void ConfigMeta()
+        {
+            //配置实体的所有属性都映射到数据表中。
+            Meta.Property(ResourceExtension.ResourceEntityTypeProperty).MapColumn().HasLength("200");
+        }
     }
 }

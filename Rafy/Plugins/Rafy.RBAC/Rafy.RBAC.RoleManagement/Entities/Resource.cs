@@ -11,7 +11,6 @@
  * 
 *******************************************************/
 
-
 using System;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
@@ -115,8 +114,8 @@ namespace Rafy.RBAC.RoleManagement
     }
 
     /// <summary>
-    /// 实体的领域名称 配置类。
-    /// 负责 实体的领域名称 类的实体元数据的配置。
+    /// 资源 配置类。
+    /// 负责 资源 类的实体元数据的配置。
     /// </summary>
     internal class ResourceConfig : RoleManagementEntityConfig<Resource>
     {
