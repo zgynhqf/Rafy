@@ -39,13 +39,11 @@ namespace Rafy.RBAC.DataPermissionManagement
         protected override IConstraint GetCondition(ITableSource mainTable, IQuery query)
         {
             IConstraint res = null;
-
             foreach (var builder in this.ConstrainsBuilders)
             {
                 var constraint = builder.BuildConstraint(mainTable, query);
                 res = QueryFactory.Instance.Or(res, constraint);
             }
-
             return res;
         }
     }

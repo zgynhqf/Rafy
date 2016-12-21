@@ -11,16 +11,16 @@
 *******************************************************/
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Rafy.Accounts;
 using Rafy.Domain.ORM.Query;
 using Rafy.RBAC.RoleManagement;
 
 namespace Rafy.RBAC.DataPermissionManagement
 {
+
+    /// <summary>
+    /// 用户数据权限的条件生成器
+    /// </summary>
     public class CurrentUserPermissionConstraintBuilder : DataPermissionConstraintBuilder
     {
         /// <summary>
@@ -37,6 +37,12 @@ namespace Rafy.RBAC.DataPermissionManagement
             set { FilterPeoperty["UserIdProperty"] = value; }
         }
 
+        /// <summary>
+        /// 构建权限过滤条件
+        /// </summary>
+        /// <param name="mainTable"></param>
+        /// <param name="query"></param>
+        /// <returns></returns>
         protected override IConstraint BuildConstraintCore(ITableSource mainTable, IQuery query)
         {
             if (UserIdProperty == null) throw new ArgumentNullException("this.UserIdProperty");

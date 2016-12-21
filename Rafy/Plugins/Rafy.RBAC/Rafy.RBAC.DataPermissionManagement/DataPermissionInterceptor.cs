@@ -11,14 +11,11 @@
  * 
 *******************************************************/
 
-
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using Rafy.Accounts;
 using Rafy.ComponentModel;
 using Rafy.Domain;
-using Rafy.Domain.ORM.Query;
+using Rafy.RBAC.DataPermissionManagement.Extensions;
 using Rafy.RBAC.RoleManagement;
 
 namespace Rafy.RBAC.DataPermissionManagement

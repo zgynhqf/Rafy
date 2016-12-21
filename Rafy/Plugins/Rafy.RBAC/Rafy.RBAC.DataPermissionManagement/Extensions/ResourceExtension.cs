@@ -17,10 +17,10 @@ using Rafy.Domain;
 using Rafy.ManagedProperty;
 using Rafy.RBAC.RoleManagement;
 
-namespace Rafy.RBAC.DataPermissionManagement
+namespace Rafy.RBAC.DataPermissionManagement.Extensions
 {
     /// <summary>
-    /// 
+    /// 资源实体属性扩展
     /// </summary>
     [CompiledPropertyDeclarer]
     public static class ResourceExtension

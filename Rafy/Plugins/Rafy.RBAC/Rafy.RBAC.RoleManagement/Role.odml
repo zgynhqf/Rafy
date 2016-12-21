@@ -6,8 +6,6 @@
         <PropertyElement Name="Name" PropertyType="String" Label="资源名称" />
         <PropertyElement Name="Code" PropertyType="String" Label="资源编码" />
         <PropertyElement Name="Description" PropertyType="String" Label="资源描述" />
-        <PropertyElement Name="ResourceEntityType" PropertyType="String" Label="资源领域实体类型" />
-        <PropertyElement Name="IsSupportDataPermission" PropertyType="Boolean" Label="是否支持数据权限" />
       </Properties>
     </EntityTypeElement>
     <EntityTypeElement FullName="Rafy.RBAC.RoleManagement.ResourceOperation" Label="资源操作" Left="62" Top="262" Width="0" Height="0" HideProperties="true" IsAggtRoot="false">
@@ -27,11 +25,6 @@
     <EntityTypeElement FullName="Rafy.RBAC.RoleManagement.RoleOperation" Label="角色功能" Left="413" Top="371" Width="0" Height="0" HideProperties="true" IsAggtRoot="false">
       <Properties />
     </EntityTypeElement>
-    <EntityTypeElement FullName="Rafy.RBAC.RoleManagement.DataPermission" Label="数据权限" Left="339" Top="5" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
-      <Properties>
-        <PropertyElement Name="Mode" PropertyType="Int" Label="数据授权模式值可自行设置 如 本人、本部门、下级部门、自定义" />
-      </Properties>
-    </EntityTypeElement>
   </EntityTypes>
   <EnumTypes />
   <Connections>
@@ -48,18 +41,6 @@
       <ToPointY xsi:nil="true" />
     </ConnectionElement>
     <ConnectionElement From="Rafy.RBAC.RoleManagement.RoleOperation" To="Rafy.RBAC.RoleManagement.ResourceOperation" Label="Operation" Hidden="false" LabelVisible="true" ConnectionType="Reference">
-      <FromPointX xsi:nil="true" />
-      <FromPointY xsi:nil="true" />
-      <ToPointX xsi:nil="true" />
-      <ToPointY xsi:nil="true" />
-    </ConnectionElement>
-    <ConnectionElement From="Rafy.RBAC.RoleManagement.DataPermission" To="Rafy.RBAC.RoleManagement.Role" Label="Role" Hidden="false" LabelVisible="true" ConnectionType="Reference">
-      <FromPointX xsi:nil="true" />
-      <FromPointY xsi:nil="true" />
-      <ToPointX xsi:nil="true" />
-      <ToPointY xsi:nil="true" />
-    </ConnectionElement>
-    <ConnectionElement From="Rafy.RBAC.RoleManagement.DataPermission" To="Rafy.RBAC.RoleManagement.Resource" Label="Resource" Hidden="false" LabelVisible="true" ConnectionType="Reference">
       <FromPointX xsi:nil="true" />
       <FromPointY xsi:nil="true" />
       <ToPointX xsi:nil="true" />

@@ -11,17 +11,11 @@
  * 
 *******************************************************/
 
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Rafy.Domain;
 using Rafy.ManagedProperty;
 using Rafy.RBAC.RoleManagement;
 
-namespace Rafy.RBAC.DataPermissionManagement
+namespace Rafy.RBAC.DataPermissionManagement.Extensions
 {
     /// <summary>
     /// 角色数据权限扩展

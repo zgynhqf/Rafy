@@ -142,7 +142,7 @@ namespace Rafy.RBAC.DataPermissionManagement
     }
 
     /// <summary>
-    /// 实体的领域名称 列表类。
+    /// 数据权限 列表类。
     /// </summary>
     [Serializable]
     public partial class DataPermissionList : DataPermissionManagementEntityList { }
