@@ -25,7 +25,7 @@ namespace Rafy.RBAC.RoleManagement.Controllers
         /// </summary>
         /// <param name="roleId">角色Id</param>
         /// <param name="operationIdList">操作Id集合</param>
-        public virtual void SaveRoleOperation(long roleId, List<long> operationIdList)
+        public virtual void SetRoleOperation(long roleId, List<long> operationIdList)
         {
             RoleOperationRepository roleOperationRepository = RepositoryFacade.ResolveInstance<RoleOperationRepository>();
             var roleOperationList = roleOperationRepository.GetByRoleId(roleId).Concrete().ToList();

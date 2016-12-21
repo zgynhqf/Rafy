@@ -50,6 +50,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="DataPermissionConstraintBuilders\CurrentGroupPermissionConstraintBuilder.cs" />
     <Compile Include="Extensions\ResourceOperationRepositoryExtension.cs" />
     <Compile Include="Extensions\ResourceRepositoryExtension.cs" />

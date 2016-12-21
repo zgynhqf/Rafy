@@ -124,6 +124,19 @@ namespace Rafy.RBAC.GroupManagement
         /// 单例模式，外界不可以直接构造本对象。
         /// </summary>
         protected GroupUserRepository() { }
+
+        /// <summary>
+        /// 根据组织ID获取组织用户关系集合
+        /// </summary>
+        /// <param name="groupId">组织Id</param>
+        /// <returns></returns>
+        [RepositoryQuery]
+        public virtual GroupUserList GetGroupUserListByGroupId(long groupId)
+        {
+            var q = this.CreateLinqQuery();
+            q = q.Where(g => g.GroupId == groupId);
+            return (GroupUserList)this.QueryData(q);
+        }
     }
 
     /// <summary>
