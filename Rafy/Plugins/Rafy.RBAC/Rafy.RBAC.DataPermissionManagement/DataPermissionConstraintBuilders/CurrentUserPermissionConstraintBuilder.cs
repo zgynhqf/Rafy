@@ -26,19 +26,25 @@ namespace Rafy.RBAC.DataPermissionManagement
         /// <summary>
         /// 在被查询的主表中的用户 Id 的属性名称。
         /// </summary>
-        public string UserIdProperty { get; set; }
+        public string UserIdProperty
+        {
+            get
+            {
+                string userIdProperty;
+                FilterPeoperty.TryGetValue("UserIdProperty", out userIdProperty);
+                return userIdProperty;
+            }
+            set { FilterPeoperty["UserIdProperty"] = value; }
+        }
 
         protected override IConstraint BuildConstraintCore(ITableSource mainTable, IQuery query)
         {
-            if (this.UserIdProperty == null) throw new ArgumentNullException("this.UserIdProperty");
-
+            if (UserIdProperty == null) throw new ArgumentNullException("this.UserIdProperty");
             var currentUser = AccountContext.CurrentUser;
             var currentUserid = currentUser != null ? currentUser.Id : 0;//如果是匿名用户，则这个条件永远返回 False。
-
             var userIdProperty = mainTable.EntityRepository.EntityMeta.Property(this.UserIdProperty);
             if (userIdProperty == null) throw new InvalidProgramException();
-
-            return mainTable.Column(userIdProperty.ManagedProperty).Equal(currentUser.Id);
+            return mainTable.Column(userIdProperty.ManagedProperty).Equal(currentUserid);
         }
     }
 }

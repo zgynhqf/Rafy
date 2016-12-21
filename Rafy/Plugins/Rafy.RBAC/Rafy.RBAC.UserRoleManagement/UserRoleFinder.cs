@@ -16,6 +16,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Rafy.Accounts;
+using Rafy.Domain;
 using Rafy.RBAC.RoleManagement;
 
 namespace Rafy.RBAC.UserRoleManagement
@@ -24,7 +25,27 @@ namespace Rafy.RBAC.UserRoleManagement
     {
         public RoleList FindByUser(User user)
         {
-            throw new NotImplementedException();
+            RoleRepository roleRepository = RepositoryFacade.ResolveInstance<RoleRepository>();
+            UserRoleRepository userRoleRepository = RepositoryFacade.ResolveInstance<UserRoleRepository>();
+            var q = new CommonQueryCriteria(BinaryOperator.And)
+            {
+                new PropertyMatch(UserRole.UserIdProperty, PropertyOperator.Equal, user.Id)
+            };
+            q.EagerLoad = new EagerLoadOptions().LoadWith(UserRole.RoleProperty);
+            var userRoles = userRoleRepository.GetBy(q);
+            if (userRoles == null || userRoles.Count == 0)
+            {
+                return roleRepository.NewList();
+            }
+
+            var results = roleRepository.NewList();
+            foreach (var userRole in userRoles)
+            {
+                if (userRole.Role == null) continue;
+
+                results.Add(userRole.Role);
+            }
+            return results;
         }
     }
 }

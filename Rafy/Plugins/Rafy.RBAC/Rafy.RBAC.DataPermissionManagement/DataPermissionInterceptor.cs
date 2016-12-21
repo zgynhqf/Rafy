@@ -34,8 +34,8 @@ namespace Rafy.RBAC.DataPermissionManagement
     /// </summary>
     internal class DataPermissionInterceptor
     {
-        internal static readonly AppContextItem<bool> FilterEnabled =
-            new AppContextItem<bool>("Rafy.RBAC.DataPermissionManagement.DataPermissionInterceptor.FilterEnabled", false);
+        internal static readonly AppContextItem<Resource> FilterResource =
+            new AppContextItem<Resource>("Rafy.RBAC.DataPermissionManagement.DataPermissionInterceptor.Resource");
 
         /// <summary>
         /// 注册拦截器
@@ -52,52 +52,32 @@ namespace Rafy.RBAC.DataPermissionManagement
         /// <param name="e"></param>
         private static void RepositoryDataProvider_Querying(object sender, QueryingEventArgs e)
         {
-            if (FilterEnabled.Value)
+            var resource = FilterResource.Value;
+            if (resource != null)
             {
-                var currentUser = AccountContext.CurrentUser;
-
-                var userRoleFilder = RafyEnvironment.ObjectContainer.Resolve<IUserRoleFinder>();
-                var roles = userRoleFilder.FindByUser(currentUser);
-
-                var dataPermissions = CollectDataPermissions(roles);
-
-                var appender = new DataPermissionWhereAppender();
-
-                foreach (var dataPermission in dataPermissions)
+                var dp = sender as RepositoryDataProvider;
+                if (resource.GeResourceEntityType() == dp.Repository.EntityType.FullName && resource.GetIsSupportDataPermission())
                 {
-                    var constraintBuilder = dataPermission.CreateBuilder();
+                    var currentUser = AccountContext.CurrentUser;
+                    var userRoleFilder = RafyEnvironment.ObjectContainer.Resolve<IUserRoleFinder>();
+                    var roles = userRoleFilder.FindByUser(currentUser);
+                    var dataPermissions = CollectDataPermissions(resource.Id,roles);
+                    var appender = new DataPermissionWhereAppender();
+                    foreach (var dataPermission in dataPermissions)
+                    {
+                        var constraintBuilder = dataPermission.CreateBuilder();
 
-                    appender.ConstrainsBuilders.Add(constraintBuilder);
+                        appender.ConstrainsBuilders.Add(constraintBuilder);
+                    }
+                    appender.Append(e.Args.Query);
                 }
-
-                appender.Append(e.Args.Query);
-
-                //var dp = sender as RepositoryDataProvider;
-                //var resource = FindDataPermissionResource(dp.Repository.EntityType.FullName);
-                //if (resource != null && resource.GetIsSupportDataPermission())
-                //{
-                //    long currentUserId = 1000;
-                //    var roleIdList = GetRoleIdListByUserId(currentUserId);
-                //    var dataPermissionList = GetDataPermission(resource.Id, roleIdList);
-                //    List<DataPermissionFilterMode> modeList = new List<DataPermissionFilterMode>();
-                //    foreach (DataPermission item in dataPermissionList)
-                //    {
-                //        if (item.Mode == DataPermissionFilterMode.Custom || !modeList.Contains(item.Mode))
-                //        {
-                //            var whereAppender = new DataPermissionWhereAppender(item.Mode, GetCurrentAndLowerGroup);
-                //            whereAppender.CurrentUser = null;
-                //            whereAppender.CurrentGroup = null;
-                //            whereAppender.Append(e.Args.Query);
-                //            modeList.Add(item.Mode);
-                //        }
-                //    }
-                //}
             }
         }
 
-        private static IList<DataPermission> CollectDataPermissions(RoleList roles)
+        private static DataPermissionList CollectDataPermissions(long resourceId, RoleList roles)
         {
-            throw new NotImplementedException();
+            return RepositoryFacade.ResolveInstance<DataPermissionRepository>()
+              .GetDataPermissionList(resourceId, roles.Select(p=>p.Id).Cast<long>().ToList());
         }
 
         ///// <summary>
@@ -144,7 +124,7 @@ namespace Rafy.RBAC.DataPermissionManagement
         ///// </summary>
         ///// <param name="fullName">资源实体全名称</param>
         ///// <returns></returns>
-        //protected virtual Resource FindDataPermissionResource(string fullName)
+        //protected static Resource FindDataPermissionResource(string fullName)
         //{
         //    var q = new CommonQueryCriteria {
         //        new PropertyMatch(ResourceExtension.ResourceEntityTypeProperty, PropertyOperator.Equal, fullName)

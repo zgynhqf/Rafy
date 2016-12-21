@@ -140,6 +140,42 @@ namespace Rafy.RBAC.GroupManagement
         /// 单例模式，外界不可以直接构造本对象。
         /// </summary>
         protected GroupRepository() { }
+
+        /// <summary>
+        /// 查找用户所属的组织列表
+        /// </summary>
+        /// <param name="userId">用户Id</param>
+        /// <returns></returns>
+        [RepositoryQuery]
+        public virtual GroupList GetGroupByUserId(long userId)
+        {
+            var f = QueryFactory.Instance;
+            var t = f.Table<Group>();
+            var t1 = f.Table<GroupUser>();
+            var q = f.Query(
+                selection: t.Star(),//查询所有列
+                from: t.Join(t1, t.Column(Entity.IdProperty).Equal(t1.Column(GroupUser.GroupIdProperty))),//要查询的实体的表
+                where: t1.Column(GroupUser.UserIdProperty).Equal(userId)
+            );
+            return (GroupList)this.QueryData(q);
+        }
+
+        /// <summary>
+        /// 查找组织的所有子组织
+        /// </summary>
+        /// <param name="groupList">组织列表</param>
+        /// <returns></returns>
+        [RepositoryQuery]
+        public virtual GroupList GetGroupAndLowerByGroupList(GroupList groupList)
+        {
+            var newGroupList = this.NewList();
+            newGroupList.AutoTreeIndexEnabled = false;
+            foreach (var item in groupList)
+            {
+                newGroupList.AddRange(this.GetByTreeParentIndex(item.TreeIndex));
+            }
+            return newGroupList;
+        }
     }
 
     /// <summary>

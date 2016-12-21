@@ -78,5 +78,6 @@ namespace Rafy.RBAC.DataPermissionManagement
         }
 
         #endregion
+
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Text;
+using Newtonsoft.Json;
 using Rafy;
 using Rafy.ComponentModel;
 using Rafy.Data;
@@ -16,13 +17,12 @@ using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
 using Rafy.MetaModel.View;
 using Rafy.RBAC.RoleManagement;
-
 namespace Rafy.RBAC.DataPermissionManagement
 {
     /// <summary>
     /// 数据权限
     /// </summary>
-    [RootEntity, Serializable]
+    [ChildEntity, Serializable]
     public partial class DataPermission : DataPermissionManagementEntity
     {
         #region 构造函数
@@ -37,7 +37,7 @@ namespace Rafy.RBAC.DataPermissionManagement
         #region 引用属性
 
         public static readonly IRefIdProperty RoleIdProperty =
-         P<DataPermission>.RegisterRefId(e => e.RoleId, ReferenceType.Normal);
+         P<DataPermission>.RegisterRefId(e => e.RoleId, ReferenceType.Parent);
         public long RoleId
         {
             get { return (long)this.GetRefId(RoleIdProperty); }
@@ -107,25 +107,37 @@ namespace Rafy.RBAC.DataPermissionManagement
 
         #endregion
 
+        /// <summary>
+        /// 设置权限过滤builder
+        /// </summary>
+        /// <param name="buider"></param>
         public void SetBuilder(DataPermissionConstraintBuilder buider)
         {
             this.DataPermissionConstraintBuilderType = buider.GetType().AssemblyQualifiedName;
 
             //JSON 序列化这个对象的所有属性到 BuilderProperties 属性中。
-            //this.BuilderProperties = JSONFY(buider);
-            throw new NotImplementedException();
+            this.BuilderProperties = JsonConvert.SerializeObject(buider.FilterPeoperty);
+            // throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 创建权限过滤builder
+        /// </summary>
+        /// <returns></returns>
         public DataPermissionConstraintBuilder CreateBuilder()
         {
             var builderType = Type.GetType(this.DataPermissionConstraintBuilderType);
 
             var constraintBuilder = Activator.CreateInstance(builderType, true) as DataPermissionConstraintBuilder;
 
+             constraintBuilder.FilterPeoperty =
+                JsonConvert.DeserializeObject<Dictionary<string, string>>(this.BuilderProperties);//{UserIdProperty: "UserId"}
+            //{GroupIdProperty: "GroupId", IncludeChildGroup: false }
+            //{ ODataCondition : { } }
             //通用 JSON 反序列化，把 dataPermission.BuilderProperties 中定义的值反射写入 constraintBuilder 对象中。
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
 
-            //return constraintBuilder;
+            return constraintBuilder;
         }
     }
 

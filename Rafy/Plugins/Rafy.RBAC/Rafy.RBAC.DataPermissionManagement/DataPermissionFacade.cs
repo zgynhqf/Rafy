@@ -10,6 +10,7 @@
  * 
 *******************************************************/
 
+using Rafy.RBAC.RoleManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,14 +21,14 @@ namespace Rafy.RBAC.DataPermissionManagement
 {
     public class DataPermissionFacade
     {
-        public static IDisposable EnableDataPermission()
+        public static IDisposable EnableDataPermission(Resource resource)
         {
-            throw new NotImplementedException();//huqf
+           return DataPermissionInterceptor.FilterResource.UseScopeValue(resource);//huqf
         }
 
         public static IDisposable DisableDataPermission()
         {
-            throw new NotImplementedException();//huqf
+            return DataPermissionInterceptor.FilterResource.UseScopeValue(null);//huqf
         }
     }
 }

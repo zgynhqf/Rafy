@@ -17,7 +17,7 @@
         <PropertyElement Name="Description" PropertyType="String" Label="功能描述" />
       </Properties>
     </EntityTypeElement>
-    <EntityTypeElement FullName="Rafy.RBAC.RoleManagement.Role" Label="角色" Left="573" Top="143" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
+    <EntityTypeElement FullName="Rafy.RBAC.RoleManagement.Role" Label="角色" Left="575" Top="144" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
       <Properties>
         <PropertyElement Name="Name" PropertyType="String" Label="角色名称" />
         <PropertyElement Name="Code" PropertyType="String" Label="角色编码" />

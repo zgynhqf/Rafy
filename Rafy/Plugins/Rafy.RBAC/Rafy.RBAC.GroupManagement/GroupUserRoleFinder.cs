@@ -16,15 +16,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Rafy.Accounts;
+using Rafy.Domain;
 using Rafy.RBAC.RoleManagement;
-
+using Rafy.RBAC.GroupManagement.Extensions;
 namespace Rafy.RBAC.GroupManagement
 {
+    /// <summary>
+    /// 根据组织查找角色
+    /// </summary>
     public class GroupUserRoleFinder : IUserRoleFinder
     {
+
+        /// <summary>
+        /// 根据用户所在的组集合，获取组的角色列表
+        /// </summary>
+        /// <param name="user">用户</param>
+        /// <returns></returns>
         public RoleList FindByUser(User user)
         {
-            throw new NotImplementedException();
+           var groupList=  RepositoryFacade.ResolveInstance<GroupRepository>().GetGroupByUserId(user.Id);
+            return
+                RepositoryFacade.ResolveInstance<RoleRepository>()
+                    .GetRoleByGroupIdList(groupList.Select(p => p.Id).Cast<long>());
         }
     }
 }

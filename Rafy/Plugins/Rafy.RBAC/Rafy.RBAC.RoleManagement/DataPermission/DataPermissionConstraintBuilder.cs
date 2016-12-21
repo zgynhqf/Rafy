@@ -24,6 +24,14 @@ namespace Rafy.RBAC.RoleManagement
     /// </summary>
     public abstract class DataPermissionConstraintBuilder
     {
+        /// <summary>
+        /// 过滤属性字典
+        /// key:value型的属性集合
+        /// 如：{UserIdProperty: "UserId"}
+        /// {OData:{Groupby:"Age",Orderby:"Id"}}
+        /// </summary>
+        public Dictionary<string, string> FilterPeoperty { get; set; }
+
         public IConstraint BuildConstraint(ITableSource mainTable, IQuery query)
         {
             return this.BuildConstraintCore(mainTable, query);
