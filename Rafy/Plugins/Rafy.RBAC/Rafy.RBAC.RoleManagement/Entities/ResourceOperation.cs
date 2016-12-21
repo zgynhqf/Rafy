@@ -12,6 +12,7 @@
 *******************************************************/
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
@@ -142,10 +143,10 @@ namespace Rafy.RBAC.RoleManagement
         /// <summary>
         /// 获取指定角色的操作列表
         /// </summary>
-        /// <param name="roleId">角色Id</param>
+        /// <param name="roleIdList">角色Id列表</param>
         /// <returns></returns>
         [RepositoryQuery]
-        public virtual ResourceOperationList GetOperationByRole(long roleId)
+        public virtual ResourceOperationList GetOperationByRoleList(List<long> roleIdList)
         {
             var f = QueryFactory.Instance;
             var t = f.Table<ResourceOperation>();
@@ -153,7 +154,7 @@ namespace Rafy.RBAC.RoleManagement
             var q = f.Query(
                 selection: t.Star(),//查询所有列
                 from: t.Join(t1, t.Column(Entity.IdProperty).Equal(t1.Column(RoleOperation.OperationIdProperty))),
-                where: t1.Column(RoleOperation.RoleIdProperty).Equal(roleId)
+                where: t1.Column(RoleOperation.RoleIdProperty).In(roleIdList)
             );
             return (ResourceOperationList)this.QueryData(q);
         }
