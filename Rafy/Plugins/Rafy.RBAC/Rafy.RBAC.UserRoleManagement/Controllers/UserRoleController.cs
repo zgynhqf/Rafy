@@ -12,6 +12,7 @@
 *******************************************************/
 
 using System;
+using System.Collections.Generic;
 using Rafy.Accounts;
 using Rafy.Domain;
 using Rafy.RBAC.RoleManagement;
@@ -23,8 +24,6 @@ namespace Rafy.RBAC.UserRoleManagement.Controllers
     /// </summary>
     public class UserRoleController : DomainController
     {
-        private readonly UserRepository _userRepository = RepositoryFacade.ResolveInstance<UserRepository>();
-        private readonly RoleRepository _roleRepository = RepositoryFacade.ResolveInstance<RoleRepository>();
         private readonly UserRoleRepository _userRoleRepository = RepositoryFacade.ResolveInstance<UserRoleRepository>();
 
         /// <summary>
@@ -97,6 +96,29 @@ namespace Rafy.RBAC.UserRoleManagement.Controllers
                 }
             }
             return newOperationList;
+        }
+
+        /// <summary>
+        /// 获取用户的资源列表
+        /// </summary>
+        /// <param name="userId">用户Id</param>
+        /// <returns></returns>
+        public virtual ResourceList GetResourceOperation(long userId)
+        {
+            RoleRepository roleRepository = RepositoryFacade.ResolveInstance<RoleRepository>();
+            var roleList = roleRepository.GetRoleByUserId(userId);
+            var roleIdList = roleList.Select(r => r.Id).Cast<long>().ToList();
+            List<object> resourceIdList = new List<object>();
+            var resourceOperationRepository = RepositoryFacade.ResolveInstance<ResourceOperationRepository>();
+            var resourceOperationList = resourceOperationRepository.GetOperationByRoleList(roleIdList);
+            foreach (var item in resourceOperationList)
+            {
+                if (!resourceIdList.Contains(item.ResourceId))
+                {
+                    resourceIdList.Add(item.ResourceId);
+                }
+            }
+            return RepositoryFacade.ResolveInstance<ResourceRepository>().GetByIdList(resourceIdList.ToArray());
         }
     }
 }

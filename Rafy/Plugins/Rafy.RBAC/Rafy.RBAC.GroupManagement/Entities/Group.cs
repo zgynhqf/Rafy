@@ -161,6 +161,25 @@ namespace Rafy.RBAC.GroupManagement
         }
 
         /// <summary>
+        /// 获取角色下的组织列表
+        /// </summary>
+        /// <param name="roleId">角色Id</param>
+        /// <returns></returns>
+        [RepositoryQuery]
+        public virtual GroupList GetGroupByRoleId(long roleId)
+        {
+            var f = QueryFactory.Instance;
+            var t = f.Table<Group>();
+            var t1 = f.Table<GroupRole>();
+            var q = f.Query(
+                selection: t.Star(),//查询所有列
+                from: t.Join(t1, t.Column(Entity.IdProperty).Equal(t1.Column(GroupRole.GroupIdProperty))),//要查询的实体的表
+                where: t1.Column(GroupRole.RoleIdProperty).Equal(roleId)
+            );
+            return (GroupList)this.QueryData(q);
+        }
+
+        /// <summary>
         /// 查找组织的所有子组织
         /// </summary>
         /// <param name="groupList">组织列表</param>

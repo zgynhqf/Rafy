@@ -130,8 +130,8 @@ namespace Rafy.RBAC.DataPermissionManagement
 
             var constraintBuilder = Activator.CreateInstance(builderType, true) as DataPermissionConstraintBuilder;
 
-             constraintBuilder.FilterPeoperty =
-                JsonConvert.DeserializeObject<Dictionary<string, string>>(this.BuilderProperties);//{UserIdProperty: "UserId"}
+            constraintBuilder.FilterPeoperty =
+               JsonConvert.DeserializeObject<Dictionary<string, string>>(this.BuilderProperties);//{UserIdProperty: "UserId"}
             //{GroupIdProperty: "GroupId", IncludeChildGroup: false }
             //{ ODataCondition : { } }
             //通用 JSON 反序列化，把 dataPermission.BuilderProperties 中定义的值反射写入 constraintBuilder 对象中。
@@ -174,6 +174,24 @@ namespace Rafy.RBAC.DataPermissionManagement
                 from: t,//要查询的实体的表
                 where: f.And(t.Column(DataPermission.ResourceIdProperty).Equal(resourceId),
                 t.Column(DataPermission.RoleIdProperty).In(roleIdList))
+            );
+            return (DataPermissionList)this.QueryData(q);
+        }
+
+        /// <summary>
+        /// 获取角色的数据权限集合
+        /// </summary>
+        /// <param name="roleIdList">角色Id集合</param>
+        /// <returns></returns>
+        [RepositoryQuery]
+        public virtual DataPermissionList GetDataPermissionList(List<long> roleIdList)
+        {
+            var f = QueryFactory.Instance;
+            var t = f.Table<DataPermission>();
+            var q = f.Query(
+                selection: t.Star(),//查询所有列
+                from: t,//要查询的实体的表
+                where: t.Column(DataPermission.RoleIdProperty).In(roleIdList)
             );
             return (DataPermissionList)this.QueryData(q);
         }
