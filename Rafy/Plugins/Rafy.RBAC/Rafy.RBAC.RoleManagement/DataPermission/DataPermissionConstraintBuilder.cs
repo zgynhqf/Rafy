@@ -27,7 +27,7 @@ namespace Rafy.RBAC.RoleManagement
         /// 如：{UserIdProperty: "UserId"}
         /// {OData:{Groupby:"Age",Orderby:"Id"}}
         /// </summary>
-        public Dictionary<string, string> FilterPeoperty { get; set; }
+        public Dictionary<string, string> FilterPeoperty { get; set; }=new Dictionary<string, string>();
 
         /// <summary>
         /// 构建过滤约束条件

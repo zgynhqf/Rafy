@@ -55,7 +55,7 @@ namespace Rafy.RBAC.DataPermissionManagement
                 if (resource.GeResourceEntityType() == dp.Repository.EntityType.FullName && resource.GetIsSupportDataPermission())
                 {
                     var currentUser = AccountContext.CurrentUser;
-                    var userRoleFilder = RafyEnvironment.ObjectContainer.Resolve<IUserRoleFinder>();
+                    var userRoleFilder = Composer.ObjectContainer.Resolve<IUserRoleFinder>();
                     var roles = userRoleFilder.FindByUser(currentUser);
                     var dataPermissions = CollectDataPermissions(resource.Id,roles);
                     var appender = new DataPermissionWhereAppender();
