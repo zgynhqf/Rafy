@@ -55,6 +55,7 @@
     <Compile Include="Extensions\ResourceOperationRepositoryExtension.cs" />
     <Compile Include="Extensions\ResourceRepositoryExtension.cs" />
     <Compile Include="Extensions\RoleRepositoryExtension.cs" />
+    <Compile Include="Extensions\UserRepositoryGroupExtension.cs" />
     <Compile Include="GroupUserRoleFinder.cs" />
     <Compile Include="PermissionArchitecture\DefaultPermissionBuilder.cs" />
     <Compile Include="PermissionArchitecture\DefaultPermissionEntry.cs" />

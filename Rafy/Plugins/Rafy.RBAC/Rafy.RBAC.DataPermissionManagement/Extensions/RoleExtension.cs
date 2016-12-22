@@ -13,9 +13,9 @@
 
 using Rafy.Domain;
 using Rafy.ManagedProperty;
-using Rafy.RBAC.RoleManagement;
+using Rafy.RBAC.DataPermissionManagement;
 
-namespace Rafy.RBAC.DataPermissionManagement.Extensions
+namespace Rafy.RBAC.RoleManagement
 {
     /// <summary>
     /// 角色数据权限扩展

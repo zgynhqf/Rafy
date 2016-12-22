@@ -11,13 +11,11 @@
  * 
 *******************************************************/
 
-using System;
 using Rafy.Domain;
 using Rafy.ManagedProperty;
 using Rafy.MetaModel;
-using Rafy.RBAC.RoleManagement;
 
-namespace Rafy.RBAC.DataPermissionManagement.Extensions
+namespace Rafy.RBAC.RoleManagement
 {
     /// <summary>
     /// 资源实体属性扩展
@@ -45,9 +43,10 @@ namespace Rafy.RBAC.DataPermissionManagement.Extensions
         /// </summary>
         /// <param name="me">要设置扩展属性值的对象。</param>
         /// <param name="value">设置的值。</param>
-        public static void SetResourceEntityType(this Resource me, string value)
+        public static Resource SetResourceEntityType(this Resource me, string value)
         {
             me.SetProperty(ResourceEntityTypeProperty, value);
+            return me;
         }
 
         #endregion
@@ -72,9 +71,10 @@ namespace Rafy.RBAC.DataPermissionManagement.Extensions
         /// </summary>
         /// <param name="me">要设置扩展属性值的对象。</param>
         /// <param name="value">设置的值。</param>
-        public static void SetIsSupportDataPermission(this Resource me, bool value)
+        public static Resource SetIsSupportDataPermission(this Resource me, bool value)
         {
             me.SetProperty(IsSupportDataPermissionProperty, value);
+            return me;
         }
 
         #endregion

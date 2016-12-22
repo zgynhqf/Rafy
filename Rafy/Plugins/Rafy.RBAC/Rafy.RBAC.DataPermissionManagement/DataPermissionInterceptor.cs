@@ -15,7 +15,6 @@ using System.Linq;
 using Rafy.Accounts;
 using Rafy.ComponentModel;
 using Rafy.Domain;
-using Rafy.RBAC.DataPermissionManagement.Extensions;
 using Rafy.RBAC.RoleManagement;
 
 namespace Rafy.RBAC.DataPermissionManagement

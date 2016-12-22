@@ -111,12 +111,13 @@ namespace Rafy.RBAC.DataPermissionManagement
         /// 设置权限过滤builder
         /// </summary>
         /// <param name="buider"></param>
-        public void SetBuilder(DataPermissionConstraintBuilder buider)
+        public DataPermission SetBuilder(DataPermissionConstraintBuilder buider)
         {
             this.DataPermissionConstraintBuilderType = buider.GetType().AssemblyQualifiedName;
 
             //JSON 序列化这个对象的所有属性到 BuilderProperties 属性中。
             this.BuilderProperties = JsonConvert.SerializeObject(buider.FilterPeoperty);
+            return this;
             // throw new NotImplementedException();
         }
 
