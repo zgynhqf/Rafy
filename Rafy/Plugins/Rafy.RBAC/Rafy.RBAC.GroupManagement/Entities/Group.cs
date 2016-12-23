@@ -180,19 +180,20 @@ namespace Rafy.RBAC.GroupManagement
         }
 
         /// <summary>
-        /// 查找组织的所有子组织
+        /// 查找组织的所有子组织Id
         /// </summary>
         /// <param name="groupList">组织列表</param>
         /// <returns></returns>
-        [RepositoryQuery]
-        public virtual GroupList GetGroupAndLowerByGroupList(GroupList groupList)
+        internal List<long> GetGroupAndLowerByGroupList(GroupList groupList)
         {
-            var newGroupList = this.NewList();
-            newGroupList.AutoTreeIndexEnabled = false;
-            foreach (var item in groupList)
+            var newGroupList = new List<long>();
+            groupList.EachNode(item =>
             {
-                newGroupList.AddRange(this.GetByTreeParentIndex(item.TreeIndex));
-            }
+                newGroupList.AddRange(
+                    TreeHelper.ConvertToList<Group>(this.GetByTreeParentIndex(item.TreeIndex))
+                        .Select(p => p.Id));
+                return false;
+            });
             return newGroupList;
         }
     }

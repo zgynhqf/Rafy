@@ -36,7 +36,7 @@ namespace Rafy.RBAC.RoleManagement
             var q = f.Query(
                selection: t1.Star(),//查询所有列
                from: t1.Join(t2, t1.Column(Entity.IdProperty).Equal(t2.Column(UserRole.RoleIdProperty))),//要查询的实体的表
-               where: t2.Column(UserRole.UserIdProperty).In(userId));
+               where: t2.Column(UserRole.UserIdProperty).Equal(userId));
             return (RoleList)this.QueryData(q);
         }
     }

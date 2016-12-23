@@ -11,7 +11,9 @@
  * 
 *******************************************************/
 
+using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using Rafy.Accounts;
 using Rafy.ComponentModel;
 using Rafy.Domain;
@@ -57,13 +59,18 @@ namespace Rafy.RBAC.DataPermissionManagement
                     var currentUser = AccountContext.CurrentUser;
                     var userRoleFilder = Composer.ObjectContainer.Resolve<IUserRoleFinder>();
                     var roles = userRoleFilder.FindByUser(currentUser);
-                    var dataPermissions = CollectDataPermissions(resource.Id,roles);
+                    var dataPermissions = CollectDataPermissions(resource.Id, roles);
                     var appender = new DataPermissionWhereAppender();
+                    List<string> duplicateList = new List<string>();
                     foreach (var dataPermission in dataPermissions)
                     {
                         var constraintBuilder = dataPermission.CreateBuilder();
-
-                        appender.ConstrainsBuilders.Add(constraintBuilder);
+                        var filterProperty = JsonConvert.SerializeObject(constraintBuilder.FilterPeoperty);
+                        if (!duplicateList.Contains(filterProperty))
+                        {
+                            appender.ConstrainsBuilders.Add(constraintBuilder);
+                            duplicateList.Add(filterProperty);
+                        }
                     }
                     appender.Append(e.Args.Query);
                 }
@@ -73,7 +80,7 @@ namespace Rafy.RBAC.DataPermissionManagement
         private static DataPermissionList CollectDataPermissions(long resourceId, RoleList roles)
         {
             return RepositoryFacade.ResolveInstance<DataPermissionRepository>()
-              .GetDataPermissionList(resourceId, roles.Select(p=>p.Id).Cast<long>().ToList());
+              .GetDataPermissionList(resourceId, roles.Select(p => p.Id).Cast<long>().ToList());
         }
 
         ///// <summary>

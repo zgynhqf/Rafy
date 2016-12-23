@@ -49,7 +49,7 @@ namespace Rafy.RBAC.GroupManagement
                 string isIncludeChildGroup;
                 if (FilterPeoperty.TryGetValue("IsIncludeChildGroup", out isIncludeChildGroup))
                 {
-                    return Convert.ToBoolean(IsIncludeChildGroup);
+                    return Convert.ToBoolean(isIncludeChildGroup);
                 }
                 return false;
             }
@@ -67,7 +67,7 @@ namespace Rafy.RBAC.GroupManagement
             if (this.GroupIdProperty == null) throw new ArgumentNullException("this.GroupIdProperty");
             var currentUser = AccountContext.CurrentUser;
             var currentUserid = currentUser != null ? currentUser.Id : 0;
-            var groupIdList = GetGroupListByUserId(currentUserid);
+            var groupIdList = GetGroupListByUserId(currentUserid, IsIncludeChildGroup);
             var groupIdProperty = mainTable.EntityRepository.EntityMeta.Property(this.GroupIdProperty);
             if (groupIdProperty == null) throw new InvalidProgramException();
             return mainTable.Column(groupIdProperty.ManagedProperty).In(groupIdList);
@@ -77,15 +77,16 @@ namespace Rafy.RBAC.GroupManagement
         /// 获取用户的组织列表或者及其下级组织列表
         /// </summary>
         /// <param name="userId">用户Id</param>
+        /// <param name="isIncludeChildGroup">是否包含下级</param>
         /// <returns></returns>
-        protected virtual List<long> GetGroupListByUserId(long userId)
+        protected virtual List<long> GetGroupListByUserId(long userId, bool isIncludeChildGroup)
         {
             List<long> groupIdList = new List<long>();
             var groupRepository = RepositoryFacade.ResolveInstance<GroupRepository>();
             var groupList = groupRepository.GetGroupByUserId(userId);
-            if (IsIncludeChildGroup)
+            if (isIncludeChildGroup)
             {
-                groupIdList.AddRange(groupRepository.GetGroupAndLowerByGroupList(groupList).Select(p => p.Id).Cast<long>());
+                groupIdList.AddRange(groupRepository.GetGroupAndLowerByGroupList(groupList));
             }
             else
             {
