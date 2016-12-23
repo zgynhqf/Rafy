@@ -75,7 +75,7 @@ namespace RafyUnitTest
                 roleRepository.Save(role);
                 userRoleRepository.Save(new UserRole { User = user, Role = role });
 
-                var roleList = this._controller.GetRoleList(new User {Id = user.Id});
+                var roleList = this._controller.GetRoleList(user.Id);
 
                 Assert.IsNotNull(roleList);
                 Assert.IsTrue(roleList.Count == 1);
