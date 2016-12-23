@@ -84,13 +84,14 @@ namespace Rafy.RBAC.UserRoleManagement.Controllers
         {
             var roleList = this.GetRoleList(userId);
             var roleIdList = roleList.Select(r => r.Id).Cast<long>().ToList();
-            var roleOperationList = RepositoryFacade.ResolveInstance<RoleOperationRepository>().GetByRoleIdList(roleIdList).Concrete().ToList();
+            var operationIdList = RepositoryFacade.ResolveInstance<ResourceOperationRepository>().GetOperationByRoleList(roleIdList).Select(o=>(long)o.Id);
             var resourceOperationRepository = RepositoryFacade.ResolveInstance<ResourceOperationRepository>();
             var resourceOperationList = resourceOperationRepository.GetByParentId(resourceId);
             var newOperationList = resourceOperationRepository.NewList();
+            var idList = operationIdList as long[] ?? operationIdList.ToArray();
             foreach (var item in resourceOperationList)
             {
-                if (roleOperationList.Any(r => r.OperationId == item.Id))
+                if (idList.Any(id=>id== item.Id))
                 {
                     newOperationList.Add(item);
                 }

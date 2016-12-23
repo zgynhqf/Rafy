@@ -35,9 +35,10 @@ namespace Rafy.RBAC.GroupManagement
         public RoleList FindByUser(User user)
         {
            var groupList=  RepositoryFacade.ResolveInstance<GroupRepository>().GetGroupByUserId(user.Id);
+            var idList = groupList.Select(p => (long)p.Id);
             return
                 RepositoryFacade.ResolveInstance<RoleRepository>()
-                    .GetRoleByGroupIdList(groupList.Select(p => p.Id).Cast<long>());
+                    .GetRoleByGroupIdList(idList);
         }
     }
 }

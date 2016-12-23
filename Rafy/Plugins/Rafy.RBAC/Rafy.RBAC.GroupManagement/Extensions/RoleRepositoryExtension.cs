@@ -23,7 +23,7 @@ namespace Rafy.RBAC.GroupManagement.Extensions
     /// <summary>
     /// 角色扩展
     /// </summary>
-    public class RoleRepositoryExtension : EntityRepositoryExt<ResourceOperationRepository>
+    public class RoleRepositoryExtension : EntityRepositoryExt<RoleRepository>
     {
         /// <summary>
         /// 根据组查询所有的角色集合
