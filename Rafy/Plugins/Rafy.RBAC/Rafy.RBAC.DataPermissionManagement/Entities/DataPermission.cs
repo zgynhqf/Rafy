@@ -113,8 +113,8 @@ namespace Rafy.RBAC.DataPermissionManagement
         /// <param name="buider"></param>
         public DataPermission SetBuilder(DataPermissionConstraintBuilder buider)
         {
-            this.DataPermissionConstraintBuilderType = buider.GetType().AssemblyQualifiedName;
-
+            var buiderType = buider.GetType();
+            this.DataPermissionConstraintBuilderType = $"{buiderType.FullName},{buiderType.Assembly.GetName().Name}";
             //JSON 序列化这个对象的所有属性到 BuilderProperties 属性中。
             this.BuilderProperties = JsonConvert.SerializeObject(buider.FilterPeoperty);
             return this;
@@ -211,7 +211,7 @@ namespace Rafy.RBAC.DataPermissionManagement
         {
             //配置实体的所有属性都映射到数据表中。
             Meta.MapTable().MapAllProperties();
-            Meta.Property(DataPermission.DataPermissionConstraintBuilderTypeProperty).MapColumn().HasLength("500").ColumnName= "BuilderType";
+            Meta.Property(DataPermission.DataPermissionConstraintBuilderTypeProperty).MapColumn().HasLength("500").ColumnName = "BuilderType";
         }
     }
 }
