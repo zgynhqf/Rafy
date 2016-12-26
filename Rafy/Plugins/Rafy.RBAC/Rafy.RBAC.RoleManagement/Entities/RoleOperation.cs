@@ -112,7 +112,7 @@ namespace Rafy.RBAC.RoleManagement
         }
 
         /// <summary>
-        /// 获取角色的操作列表
+        /// 获取角色操作的列表
         /// </summary>
         /// <param name="roleIds">角色集合</param>
         /// <returns></returns>
@@ -125,19 +125,6 @@ namespace Rafy.RBAC.RoleManagement
                selection: t1.Star(),//查询所有列
                from: t1,//要查询的实体的表
                where: t1.Column(RoleOperation.RoleIdProperty).In(roleIds));
-            return (RoleOperationList)this.QueryData(q);
-        }
-
-        /// <summary>
-        /// 获取角色的角色操作列表
-        /// </summary>
-        /// <param name="roleId">角色Id</param>
-        /// <returns></returns>
-        [RepositoryQuery]
-        public virtual RoleOperationList GetByRoleId(long roleId)
-        {
-            var q = this.CreateLinqQuery();
-            q = q.Where(e => e.RoleId == roleId);
             return (RoleOperationList)this.QueryData(q);
         }
     }

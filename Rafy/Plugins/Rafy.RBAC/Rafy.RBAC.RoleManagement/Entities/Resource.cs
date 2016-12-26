@@ -65,7 +65,7 @@ namespace Rafy.RBAC.RoleManagement
             set { SetProperty(NameProperty, value); }
         }
 
-        public static readonly Property<string> CodeProperty = P<Resource>.Register(e => e.Code,Guid.NewGuid().ToString());
+        public static readonly Property<string> CodeProperty = P<Resource>.Register(e => e.Code, Guid.NewGuid().ToString());
         /// <summary>
         /// 资源编码
         /// </summary>
@@ -127,9 +127,9 @@ namespace Rafy.RBAC.RoleManagement
             //配置实体的所有属性都映射到数据表中。
             Meta.MapTable().MapAllProperties();
             Meta.SupportTree();
-            Meta.Property(Resource.NameProperty).MapColumn().HasLength("200").IsRequired = true;
-            Meta.Property(Resource.CodeProperty).MapColumn().HasLength("500").IsRequired = true;
-            Meta.Property(Resource.DescriptionProperty).MapColumn().DataTypeLength = "200";
+            Meta.Property(Resource.NameProperty).MapColumn().HasLength("200").IsRequired();
+            Meta.Property(Resource.CodeProperty).MapColumn().HasLength("500").IsRequired();
+            Meta.Property(Resource.DescriptionProperty).MapColumn().HasLength("200");
         }
     }
 }

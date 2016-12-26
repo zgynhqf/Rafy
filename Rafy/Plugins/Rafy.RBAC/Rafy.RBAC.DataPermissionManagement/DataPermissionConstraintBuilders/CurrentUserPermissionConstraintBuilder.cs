@@ -17,7 +17,6 @@ using Rafy.RBAC.RoleManagement;
 
 namespace Rafy.RBAC.DataPermissionManagement
 {
-
     /// <summary>
     /// 用户数据权限的条件生成器
     /// </summary>
@@ -28,13 +27,8 @@ namespace Rafy.RBAC.DataPermissionManagement
         /// </summary>
         public string UserIdProperty
         {
-            get
-            {
-                string userIdProperty;
-                FilterPeoperty.TryGetValue("UserIdProperty", out userIdProperty);
-                return userIdProperty;
-            }
-            set { FilterPeoperty["UserIdProperty"] = value; }
+            get;
+            set;
         }
 
         /// <summary>
@@ -51,6 +45,19 @@ namespace Rafy.RBAC.DataPermissionManagement
             var userIdProperty = mainTable.EntityRepository.EntityMeta.Property(this.UserIdProperty);
             if (userIdProperty == null) throw new InvalidProgramException();
             return mainTable.Column(userIdProperty.ManagedProperty).Equal(currentUserid);
+        }
+
+        /// <summary>
+        /// 判断Builder是否相等
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public override bool Equals(DataPermissionConstraintBuilder other)
+        {
+            if (other == null) return false;
+            CurrentUserPermissionConstraintBuilder compareBuilder = other as CurrentUserPermissionConstraintBuilder;
+            if (compareBuilder == null) return false;
+            return this.UserIdProperty.Equals(compareBuilder.UserIdProperty);
         }
     }
 }

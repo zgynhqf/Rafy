@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Text;
@@ -17,6 +18,8 @@ using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
 using Rafy.MetaModel.View;
 using Rafy.RBAC.RoleManagement;
+using Rafy.Reflection;
+
 namespace Rafy.RBAC.DataPermissionManagement
 {
     /// <summary>
@@ -115,10 +118,17 @@ namespace Rafy.RBAC.DataPermissionManagement
         {
             var buiderType = buider.GetType();
             this.DataPermissionConstraintBuilderType = $"{buiderType.FullName},{buiderType.Assembly.GetName().Name}";
-            //JSON 序列化这个对象的所有属性到 BuilderProperties 属性中。
-            this.BuilderProperties = JsonConvert.SerializeObject(buider.FilterPeoperty);
+            PropertyInfo[] propertyInfos = buiderType.GetProperties();
+            Dictionary<string, object> builderPropertyDictionary = new Dictionary<string, object>();
+            foreach (var prop in propertyInfos)
+            {
+                if (prop.CanRead)
+                {
+                    builderPropertyDictionary.Add(prop.Name, prop.GetValue(buider));
+                }
+            }
+            this.BuilderProperties = JsonConvert.SerializeObject(builderPropertyDictionary);
             return this;
-            // throw new NotImplementedException();
         }
 
         /// <summary>
@@ -128,16 +138,22 @@ namespace Rafy.RBAC.DataPermissionManagement
         public DataPermissionConstraintBuilder CreateBuilder()
         {
             var builderType = Type.GetType(this.DataPermissionConstraintBuilderType);
-
+            if (builderType == null) throw new NullReferenceException(this.DataPermissionConstraintBuilderType);
             var constraintBuilder = Activator.CreateInstance(builderType, true) as DataPermissionConstraintBuilder;
-
-            constraintBuilder.FilterPeoperty =
-               JsonConvert.DeserializeObject<Dictionary<string, string>>(this.BuilderProperties);//{UserIdProperty: "UserId"}
-            //{GroupIdProperty: "GroupId", IncludeChildGroup: false }
-            //{ ODataCondition : { } }
-            //通用 JSON 反序列化，把 dataPermission.BuilderProperties 中定义的值反射写入 constraintBuilder 对象中。
-            //throw new NotImplementedException();
-
+            var builderProperties = JsonConvert.DeserializeObject<Dictionary<string, string>>(this.BuilderProperties);
+            PropertyInfo[] propertyInfos = builderType.GetProperties();
+            foreach (var prop in propertyInfos)
+            {
+                if (prop.CanWrite)
+                {
+                    string propValue;
+                    if (builderProperties.TryGetValue(prop.Name, out propValue))
+                    {
+                        prop.SetValue(constraintBuilder,
+                            TypeHelper.CoerceValue(prop.PropertyType, propValue));
+                    }
+                }
+            }
             return constraintBuilder;
         }
     }

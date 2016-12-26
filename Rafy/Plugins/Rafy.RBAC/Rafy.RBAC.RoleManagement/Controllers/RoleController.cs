@@ -24,13 +24,14 @@ namespace Rafy.RBAC.RoleManagement.Controllers
     {
         /// <summary>
         /// 保存角色分配功能操作
+        /// 功能操作列表必须是当前角色所有的功能操作集合
         /// </summary>
         /// <param name="roleId">角色Id</param>
         /// <param name="operationIdList">操作Id集合</param>
         public virtual void SetRoleOperation(long roleId, List<long> operationIdList)
         {
             RoleOperationRepository roleOperationRepository = RepositoryFacade.ResolveInstance<RoleOperationRepository>();
-            var roleOperationList = roleOperationRepository.GetByRoleId(roleId).Concrete().ToList();
+            var roleOperationList = roleOperationRepository.GetByRoleIdList(new List<long> { roleId }).Concrete().ToList();
             var changeRoleOpertaionList = roleOperationRepository.NewList();
             //处理删除的操作
             foreach (var item in roleOperationList)

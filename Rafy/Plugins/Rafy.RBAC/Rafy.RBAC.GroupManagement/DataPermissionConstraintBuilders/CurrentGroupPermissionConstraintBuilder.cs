@@ -30,13 +30,8 @@ namespace Rafy.RBAC.GroupManagement
         /// </summary>
         public string GroupIdProperty
         {
-            get
-            {
-                string groupIdProperty;
-                FilterPeoperty.TryGetValue("GroupIdProperty", out groupIdProperty);
-                return groupIdProperty;
-            }
-            set { FilterPeoperty["GroupIdProperty"] = value; }
+            get;
+            set;
         }
 
         /// <summary>
@@ -44,16 +39,8 @@ namespace Rafy.RBAC.GroupManagement
         /// </summary>
         public bool IsIncludeChildGroup
         {
-            get
-            {
-                string isIncludeChildGroup;
-                if (FilterPeoperty.TryGetValue("IsIncludeChildGroup", out isIncludeChildGroup))
-                {
-                    return Convert.ToBoolean(isIncludeChildGroup);
-                }
-                return false;
-            }
-            set { FilterPeoperty["IsIncludeChildGroup"] = value.ToString(); }
+            get;
+            set;
         }
 
         /// <summary>
@@ -93,6 +80,19 @@ namespace Rafy.RBAC.GroupManagement
                 groupIdList.AddRange(groupList.Select(p => p.Id).Cast<long>());
             }
             return groupIdList;
+        }
+
+        /// <summary>
+        /// 判断Builder是否相等
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public override bool Equals(DataPermissionConstraintBuilder other)
+        {
+            if (other == null) return false;
+            CurrentGroupPermissionConstraintBuilder compareBuilder = other as CurrentGroupPermissionConstraintBuilder;
+            if (compareBuilder == null) return false;
+            return this.IsIncludeChildGroup.Equals(compareBuilder.IsIncludeChildGroup) && this.GroupIdProperty.Equals(compareBuilder.GroupIdProperty);
         }
     }
 }

@@ -49,7 +49,6 @@ namespace Rafy.RBAC.GroupManagement.Extensions
     /// </summary>
     public static class RoleRepositoryExtensionHelper
     {
-
         /// <summary>
         /// 根据组查询所有的角色集合
         /// </summary>

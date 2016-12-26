@@ -19,16 +19,8 @@ namespace Rafy.RBAC.RoleManagement
     /// <summary>
     /// 数据权限的条件生成器
     /// </summary>
-    public abstract class DataPermissionConstraintBuilder
+    public abstract class DataPermissionConstraintBuilder: IEquatable<DataPermissionConstraintBuilder>
     {
-        /// <summary>
-        /// 过滤属性字典
-        /// key:value型的属性集合
-        /// 如：{UserIdProperty: "UserId"}
-        /// {OData:{Groupby:"Age",Orderby:"Id"}}
-        /// </summary>
-        public Dictionary<string, string> FilterPeoperty { get; set; }=new Dictionary<string, string>();
-
         /// <summary>
         /// 构建过滤约束条件
         /// </summary>
@@ -47,5 +39,12 @@ namespace Rafy.RBAC.RoleManagement
         /// <param name="query"></param>
         /// <returns></returns>
         protected abstract IConstraint BuildConstraintCore(ITableSource mainTable, IQuery query);
+
+        /// <summary>
+        /// 判断Builder是否相等
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public abstract bool Equals(DataPermissionConstraintBuilder other);
     }
 }

@@ -212,8 +212,8 @@ namespace Rafy.RBAC.GroupManagement
             //配置实体的所有属性都映射到数据表中。
             Meta.MapTable().MapAllProperties();
             Meta.SupportTree();
-            Meta.Property(Group.NameProperty).MapColumn().HasLength("40").IsRequired = true;
-            Meta.Property(Group.CodeProperty).MapColumn().HasLength("100").IsRequired = true;
+            Meta.Property(Group.NameProperty).MapColumn().HasLength("40").IsRequired();
+            Meta.Property(Group.CodeProperty).MapColumn().HasLength("100").IsRequired();
             Meta.Property(Group.DescriptionProperty).MapColumn().HasLength("200");
         }
     }

@@ -26,7 +26,6 @@ namespace Rafy.RBAC.GroupManagement
     /// </summary>
     public class GroupUserRoleFinder : IUserRoleFinder
     {
-
         /// <summary>
         /// 根据用户所在的组集合，获取组的角色列表
         /// </summary>

@@ -127,18 +127,6 @@ namespace Rafy.RBAC.RoleManagement
         protected ResourceOperationRepository()
         {
         }
-        /// <summary>
-        /// 获取资源下的资源操作列表
-        /// </summary>
-        /// <param name="resourceId">资源Id</param>
-        /// <returns></returns>
-        [RepositoryQuery]
-        public virtual ResourceOperationList GetByResourceId(long resourceId)
-        {
-            var q = this.CreateLinqQuery();
-            q = q.Where(e => e.ResourceId == resourceId);
-            return (ResourceOperationList)this.QueryData(q);
-        }
 
         /// <summary>
         /// 获取指定角色的操作列表
@@ -173,8 +161,8 @@ namespace Rafy.RBAC.RoleManagement
         {
             //配置实体的所有属性都映射到数据表中。
             Meta.MapTable().MapAllProperties();
-            Meta.Property(ResourceOperation.CodeProperty).MapColumn().HasLength("200").IsRequired = true;
-            Meta.Property(ResourceOperation.NameProperty).MapColumn().HasLength("40").IsRequired = true;
+            Meta.Property(ResourceOperation.CodeProperty).MapColumn().HasLength("200").IsRequired();
+            Meta.Property(ResourceOperation.NameProperty).MapColumn().HasLength("40").IsRequired();
             Meta.Property(ResourceOperation.DescriptionProperty).MapColumn().HasLength("100");
         }
     }

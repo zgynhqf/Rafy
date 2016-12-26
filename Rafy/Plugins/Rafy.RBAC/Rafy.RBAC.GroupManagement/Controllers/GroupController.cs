@@ -20,17 +20,18 @@ namespace Rafy.RBAC.GroupManagement.Controllers
     /// <summary>
     /// 组织领域控制器
     /// </summary>
-   public class GroupController: DomainController
+    public class GroupController : DomainController
     {
         /// <summary>
-        /// 设置组织用户
+        /// 设置组织的用户列表
+        /// 用户列表必须是当前组织的所有用户集合
         /// </summary>
         /// <param name="userIds">用户Id集合</param>
         /// <param name="groupId">组织Id</param>
         public void SetGroupUser(IList<long> userIds, long groupId)
         {
             var groupUserRepository = RepositoryFacade.ResolveInstance<GroupUserRepository>();
-            var groupUserList = groupUserRepository.GetGroupUserListByGroupId(groupId).Concrete();
+            var groupUserList = groupUserRepository.GetByParentId(groupId).Concrete();
             var changeGroupUserList = groupUserRepository.NewList();
             var groupUsers = groupUserList as IList<GroupUser> ?? groupUserList.ToList();
             foreach (GroupUser item in groupUsers)
@@ -41,7 +42,7 @@ namespace Rafy.RBAC.GroupManagement.Controllers
                     item.PersistenceStatus = PersistenceStatus.Deleted;
                 }
             }
-            var group = new Group{ Id = groupId };
+            var group = new Group { Id = groupId };
             foreach (var userId in userIds)
             {
                 if (groupUsers.All(g => g.UserId != userId))

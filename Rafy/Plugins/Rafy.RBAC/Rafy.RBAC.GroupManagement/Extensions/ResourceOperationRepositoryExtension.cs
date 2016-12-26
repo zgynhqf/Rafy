@@ -33,7 +33,7 @@ namespace Rafy.RBAC.GroupManagement.Extensions
         /// <param name="groupID">用户当前使用的组的主键</param>
         /// <returns>返回获取到的当前组下的所有资源的数据过滤权限的数据表</returns>
         [RepositoryQuery]
-        public virtual ResourceOperationList GetResourceOperationPermissionByGroupID(long groupID)
+        public virtual ResourceOperationList GetResourceOperationByGroupID(long groupID)
         {
             var f = QueryFactory.Instance;
             var groupRoleTable = f.Table<GroupRole>();
@@ -66,9 +66,9 @@ namespace Rafy.RBAC.GroupManagement.Extensions
         /// </summary>
         /// <param name="groupID">用户当前使用的组的主键</param>
         /// <returns>返回获取到的当前组下的所有资源的数据过滤权限的数据表</returns>
-        public static ResourceOperationList GetResourceOperationPermissionByGroupID(this ResourceOperationRepository repo, long groupID)
+        public static ResourceOperationList GetResourceOperationByGroupID(this ResourceOperationRepository repo, long groupID)
         {
-            return repo.Extension<ResourceOperationRepositoryExtension>().GetResourceOperationPermissionByGroupID(groupID);
+            return repo.Extension<ResourceOperationRepositoryExtension>().GetResourceOperationByGroupID(groupID);
         }
     }
 }

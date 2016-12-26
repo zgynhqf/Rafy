@@ -53,28 +53,6 @@ namespace Rafy.RBAC.UserRoleManagement.Controllers
         }
 
         /// <summary>
-        /// 获取指定的用户 <paramref name="userId"/> 下面的角色集合 <seealso cref="RoleList"/>。
-        /// </summary>
-        /// <param name="userId">用户Id</param>
-        /// <returns>指定用户下的所有角色。</returns>
-        public virtual RoleList GetRoleList(long userId)
-        {
-            RoleRepository roleRepository = RepositoryFacade.ResolveInstance<RoleRepository>();
-            return roleRepository.GetRoleByUserId(userId);
-        }
-
-        /// <summary>
-        /// 获取指定的角色 <paramref name="role"/> 下面的用户集合 <seealso cref="UserList"/>。
-        /// </summary>
-        /// <param name="role">表示一个角色的实例。</param>
-        /// <returns>指定角色下的所有用户的集合。</returns>
-        public virtual UserList GetUserList(Role role)
-        {
-            UserRepository userRepository = RepositoryFacade.ResolveInstance<UserRepository>();
-            return userRepository.GetUserListByRoleId(role.Id);
-        }
-
-        /// <summary>
         /// 获取指定用户、资源的操作列表
         /// </summary>
         /// <param name="userId">用户Id</param>
@@ -82,16 +60,17 @@ namespace Rafy.RBAC.UserRoleManagement.Controllers
         /// <returns></returns>
         public virtual ResourceOperationList GetResourceOperation(long userId, long resourceId)
         {
-            var roleList = this.GetRoleList(userId);
+            RoleRepository roleRepository = RepositoryFacade.ResolveInstance<RoleRepository>();
+            var roleList = roleRepository.GetRoleByUserId(userId);
             var roleIdList = roleList.Select(r => r.Id).Cast<long>().ToList();
-            var operationIdList = RepositoryFacade.ResolveInstance<ResourceOperationRepository>().GetOperationByRoleList(roleIdList).Select(o=>(long)o.Id);
+            var operationIdList = RepositoryFacade.ResolveInstance<ResourceOperationRepository>().GetOperationByRoleList(roleIdList).Select(o => (long)o.Id);
             var resourceOperationRepository = RepositoryFacade.ResolveInstance<ResourceOperationRepository>();
             var resourceOperationList = resourceOperationRepository.GetByParentId(resourceId);
             var newOperationList = resourceOperationRepository.NewList();
             var idList = operationIdList as long[] ?? operationIdList.ToArray();
             foreach (var item in resourceOperationList)
             {
-                if (idList.Any(id=>id== item.Id))
+                if (idList.Any(id => id == item.Id))
                 {
                     newOperationList.Add(item);
                 }

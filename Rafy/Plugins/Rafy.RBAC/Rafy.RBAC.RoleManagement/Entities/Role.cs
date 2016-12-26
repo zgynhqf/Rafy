@@ -129,9 +129,9 @@ namespace Rafy.RBAC.RoleManagement
         {
             //配置实体的所有属性都映射到数据表中。
             Meta.MapTable().MapAllProperties();
-            Meta.Property(Role.NameProperty).MapColumn().HasLength("40").IsRequired = true;
-            Meta.Property(Role.CodeProperty).MapColumn().HasLength("40").IsRequired=true;
-            Meta.Property(Role.DescriptionProperty).MapColumn().DataTypeLength = "200";
+            Meta.Property(Role.NameProperty).MapColumn().HasLength("40").IsRequired();
+            Meta.Property(Role.CodeProperty).MapColumn().HasLength("40").IsRequired();
+            Meta.Property(Role.DescriptionProperty).MapColumn().HasLength("200");
         }
     }
 }
