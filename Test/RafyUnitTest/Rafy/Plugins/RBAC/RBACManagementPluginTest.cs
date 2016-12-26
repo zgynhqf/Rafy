@@ -23,8 +23,10 @@ using Rafy.Domain;
 using Rafy.RBAC.DataPermissionManagement;
 using Rafy.RBAC.GroupManagement;
 using Rafy.RBAC.RoleManagement;
+using Rafy.RBAC.RoleManagement.Controllers;
 using Rafy.RBAC.UserRoleManagement;
 using Rafy.RBAC.UserRoleManagement.Controllers;
+using Rafy.Reflection;
 using Rafy.UnitTest;
 
 namespace RafyUnitTest.Rafy.Plugins.RBAC
@@ -37,6 +39,7 @@ namespace RafyUnitTest.Rafy.Plugins.RBAC
         {
             ServerTestHelper.ClassInitialize(context);
         }
+
 
         private Tuple<User, Role, Group, Resource> TestInitRBAC()
         {
@@ -189,11 +192,30 @@ namespace RafyUnitTest.Rafy.Plugins.RBAC
             using (RF.TransactionScope(repo))
             {
                 var tuple = TestInitRBAC();
-               var userRoleDc=  DomainControllerFactory.Create<UserRoleController>();
-                Assert.IsTrue(repo.GetByParentId(tuple.Item4.Id).Count==2);
-                Assert.IsTrue(userRoleDc.GetResourceOperation(tuple.Item1.Id,tuple.Item4.Id).Count==1);
+                var userRoleDc = DomainControllerFactory.Create<UserRoleController>();
+                Assert.IsTrue(repo.GetByParentId(tuple.Item4.Id).Count == 2);
+                Assert.IsTrue(userRoleDc.GetResourceOperation(tuple.Item1.Id, tuple.Item4.Id).Count == 1);
             }
         }
 
+        [TestMethod]
+        public void TestSetRoleOperation()
+        {
+            RoleController controller = DomainControllerFactory.Create<RoleController>();
+            var repo = RF.ResolveInstance<RoleOperationRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var tuple = TestInitRBAC();
+                var originId = repo.GetAll()[0].OperationId;
+                var role = tuple.Item2;
+                var resource = tuple.Item4;
+                var delopId = Convert.ToInt64(resource.ResourceOperationList[1].Id);
+                controller.SetRoleOperation(role.Id, new List<long>() { delopId });
+                var savedId= repo.GetAll()[0].OperationId;
+                Assert.AreNotEqual(originId,savedId);
+
+            }
+
+        }
     }
 }
