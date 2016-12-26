@@ -37,8 +37,8 @@ namespace Rafy.RBAC.GroupManagement.Controllers
             {
                 if (userIds.All(id => id != item.UserId))
                 {
-                    item.PersistenceStatus = PersistenceStatus.Deleted;
                     changeGroupUserList.Add(item);
+                    item.PersistenceStatus = PersistenceStatus.Deleted;
                 }
             }
             var group = new Group{ Id = groupId };

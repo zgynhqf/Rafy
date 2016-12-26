@@ -37,8 +37,8 @@ namespace Rafy.RBAC.RoleManagement.Controllers
             {
                 if (operationIdList.All(id => id != item.OperationId))
                 {
-                    item.PersistenceStatus = PersistenceStatus.Deleted;
                     changeRoleOpertaionList.Add(item);
+                    item.PersistenceStatus = PersistenceStatus.Deleted;
                 }
             }
             var addRole = new Role { Id = roleId };
