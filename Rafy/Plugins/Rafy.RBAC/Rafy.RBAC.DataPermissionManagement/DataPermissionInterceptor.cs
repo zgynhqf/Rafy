@@ -57,11 +57,15 @@ namespace Rafy.RBAC.DataPermissionManagement
                 if (resource.GeResourceEntityType() == dp.Repository.EntityType.FullName && resource.GetIsSupportDataPermission())
                 {
                     var currentUser = AccountContext.CurrentUser;
+
                     var userRoleFilder = Composer.ObjectContainer.Resolve<IUserRoleFinder>();
                     var roles = userRoleFilder.FindByUser(currentUser);
+
                     var dataPermissions = CollectDataPermissions(resource.Id, roles);
+
                     var appender = new DataPermissionWhereAppender();
                     List<DataPermissionConstraintBuilder> duplicateList = new List<DataPermissionConstraintBuilder>();
+
                     foreach (var dataPermission in dataPermissions)
                     {
                         var constraintBuilder = dataPermission.CreateBuilder();
@@ -77,6 +81,12 @@ namespace Rafy.RBAC.DataPermissionManagement
             }
         }
 
+        /// <summary>
+        /// 获取某个资源角色的数据权限列表
+        /// </summary>
+        /// <param name="resourceId"></param>
+        /// <param name="roles"></param>
+        /// <returns></returns>
         private static DataPermissionList CollectDataPermissions(long resourceId, RoleList roles)
         {
             return RepositoryFacade.ResolveInstance<DataPermissionRepository>()

@@ -227,7 +227,7 @@ namespace Rafy.RBAC.DataPermissionManagement
         {
             //配置实体的所有属性都映射到数据表中。
             Meta.MapTable().MapAllProperties();
-            Meta.Property(DataPermission.DataPermissionConstraintBuilderTypeProperty).MapColumn().HasLength("500").ColumnName = "BuilderType";
+            Meta.Property(DataPermission.DataPermissionConstraintBuilderTypeProperty).MapColumn().HasLength("500").HasColumnName("BuilderType");
         }
     }
 }

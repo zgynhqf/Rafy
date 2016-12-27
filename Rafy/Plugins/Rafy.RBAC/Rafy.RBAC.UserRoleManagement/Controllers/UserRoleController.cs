@@ -51,54 +51,5 @@ namespace Rafy.RBAC.UserRoleManagement.Controllers
 
             return userRole != null && userRole.RoleId > 0;
         }
-
-        /// <summary>
-        /// 获取指定用户、资源的操作列表
-        /// </summary>
-        /// <param name="userId">用户Id</param>
-        /// <param name="resourceId">资源Id</param>
-        /// <returns></returns>
-        public virtual ResourceOperationList GetResourceOperation(long userId, long resourceId)
-        {
-            RoleRepository roleRepository = RepositoryFacade.ResolveInstance<RoleRepository>();
-            var roleList = roleRepository.GetRoleByUserId(userId);
-            var roleIdList = roleList.Select(r => r.Id).Cast<long>().ToList();
-            var operationIdList = RepositoryFacade.ResolveInstance<ResourceOperationRepository>().GetOperationByRoleList(roleIdList).Select(o => (long)o.Id);
-            var resourceOperationRepository = RepositoryFacade.ResolveInstance<ResourceOperationRepository>();
-            var resourceOperationList = resourceOperationRepository.GetByParentId(resourceId);
-            var newOperationList = resourceOperationRepository.NewList();
-            var idList = operationIdList as long[] ?? operationIdList.ToArray();
-            foreach (var item in resourceOperationList)
-            {
-                if (idList.Any(id => id == item.Id))
-                {
-                    newOperationList.Add(item);
-                }
-            }
-            return newOperationList;
-        }
-
-        /// <summary>
-        /// 获取用户的资源列表
-        /// </summary>
-        /// <param name="userId">用户Id</param>
-        /// <returns></returns>
-        public virtual ResourceList GetResourceOperation(long userId)
-        {
-            RoleRepository roleRepository = RepositoryFacade.ResolveInstance<RoleRepository>();
-            var roleList = roleRepository.GetRoleByUserId(userId);
-            var roleIdList = roleList.Select(r => r.Id).Cast<long>().ToList();
-            List<object> resourceIdList = new List<object>();
-            var resourceOperationRepository = RepositoryFacade.ResolveInstance<ResourceOperationRepository>();
-            var resourceOperationList = resourceOperationRepository.GetOperationByRoleList(roleIdList);
-            foreach (var item in resourceOperationList)
-            {
-                if (!resourceIdList.Contains(item.ResourceId))
-                {
-                    resourceIdList.Add(item.ResourceId);
-                }
-            }
-            return RepositoryFacade.ResolveInstance<ResourceRepository>().GetByIdList(resourceIdList.ToArray());
-        }
     }
 }
