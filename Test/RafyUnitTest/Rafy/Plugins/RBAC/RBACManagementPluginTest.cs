@@ -192,9 +192,8 @@ namespace RafyUnitTest.Rafy.Plugins.RBAC
             using (RF.TransactionScope(repo))
             {
                 var tuple = TestInitRBAC();
-                var userRoleDc = DomainControllerFactory.Create<UserRoleController>();
                 Assert.IsTrue(repo.GetByParentId(tuple.Item4.Id).Count == 2);
-                Assert.IsTrue(userRoleDc.GetResourceOperation(tuple.Item1.Id, tuple.Item4.Id).Count == 1);
+                Assert.IsTrue(repo.GetResourceOperation(tuple.Item1.Id, tuple.Item4.Id).Count == 1);
             }
         }
 
