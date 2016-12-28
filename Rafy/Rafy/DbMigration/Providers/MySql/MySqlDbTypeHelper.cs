@@ -55,7 +55,7 @@ namespace Rafy.DbMigration.MySql
         /// <param name="length">The length.</param>
         /// <returns></returns>
         /// <exception cref="System.NotSupportedException"></exception>
-        public static string ConvertToOracleTypeString(DbType fieldType, string length = null)
+        public static string ConvertToMySqlTypeString(DbType fieldType, string length = null)
         {
             switch (fieldType)
             {
@@ -98,7 +98,7 @@ namespace Rafy.DbMigration.MySql
         /// <param name="lowerSqlType">Type of the lower SQL.</param>
         /// <returns></returns>
         /// <exception cref="System.NotSupportedException"></exception>
-        public static DbType ConvertFromOracleTypeString(string lowerSqlType)
+        public static DbType ConvertFromMySqlTypeString(string lowerSqlType)
         {
             switch (lowerSqlType)
             {

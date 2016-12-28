@@ -68,18 +68,13 @@ namespace Rafy.DbMigration
 
         protected virtual void GenerateAddPKConstraint(IndentedTextWriter sql, string tableName, string columnName)
         {
-            var pkName = string.Format("PK_{0}_{1}",
-                this.Prepare(tableName), this.Prepare(columnName)
-                );
+            var pkName = string.Format("PK_{0}_{1}", this.Prepare(tableName), this.Prepare(columnName));
 
-            sql.Write(@"
-ALTER TABLE ");
+            sql.Write(@"ALTER TABLE ");
             sql.Write(this.Quote(tableName));
-            sql.Write(@"
-    ADD CONSTRAINT ");
+            sql.Write(@" ADD CONSTRAINT ");
             sql.Write(this.Quote(pkName));
-            sql.Write(@"
-    PRIMARY KEY (");
+            sql.Write(@" PRIMARY KEY (");
             sql.Write(this.Quote(columnName));
             sql.Write(")");
         }

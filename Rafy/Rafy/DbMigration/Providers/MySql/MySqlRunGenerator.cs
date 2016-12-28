@@ -122,18 +122,8 @@ namespace Rafy.DbMigration.MySql
             using (var sql = this.Writer())
             {
                 this.GenerateAddPKConstraint(sql, op.TableName, op.PKName);
-
                 this.AddRun(sql);
             }
-
-            //if (op.PKIdentity)
-            //{
-            //    this.AddRun(new TryCreateTableSequenceRun
-            //    {
-            //        SequenceName = this.SEQName(op)
-            //        //Sql = sql
-            //    });
-            //}
         }
 
         /// <summary>
