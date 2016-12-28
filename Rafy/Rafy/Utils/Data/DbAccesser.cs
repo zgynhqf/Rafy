@@ -20,6 +20,7 @@ using System.Data.Common;
 using System.Text.RegularExpressions;
 using Rafy.Data.Providers;
 using System.Runtime;
+using System.Data.SqlClient;
 
 namespace Rafy.Data
 {
