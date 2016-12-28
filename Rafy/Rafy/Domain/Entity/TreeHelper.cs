@@ -21,8 +21,24 @@ using Rafy.MetaModel;
 
 namespace Rafy.Domain
 {
-    internal static class TreeHelper
+    public static class TreeHelper
     {
+        /// <summary>
+        /// 树形EntityList转化为全部节点集合
+        /// </summary>
+        /// <param name="tree"></param>
+        /// <returns></returns>
+        public static List<T> ConvertToList<T>(ITreeComponent tree) where T:Entity
+        {
+            List<T> list = new List<T>();
+            tree.EachNode(e =>
+            {
+                list.Add((T)e);
+                return false;
+            });
+            return list;
+        }
+
         internal static int CountNodes(ITreeComponent component)
         {
             int count = 0;

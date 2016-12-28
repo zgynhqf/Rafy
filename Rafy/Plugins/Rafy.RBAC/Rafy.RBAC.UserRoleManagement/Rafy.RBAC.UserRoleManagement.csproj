@@ -22,6 +22,7 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
     <NoWarn>1591</NoWarn>
+    <DocumentationFile>bin\Debug\Rafy.RBAC.UserRoleManagement.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -55,6 +56,11 @@
       <DependentUpon>UserRole.cs</DependentUpon>
     </Compile>
     <Compile Include="Entities\UserRoleManagementEntity.cs" />
+    <Compile Include="Extensions\ResourceOperationRepositoryExtension.cs" />
+    <Compile Include="Extensions\ResourceRepositoryExtension.cs" />
+    <Compile Include="Extensions\UserRepositoryExtension.cs" />
+    <Compile Include="Extensions\RoleRepositoryExtension.cs" />
+    <Compile Include="UserRoleFinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserRoleManagementPlugin.cs" />
   </ItemGroup>

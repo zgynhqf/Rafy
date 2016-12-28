@@ -86,6 +86,7 @@
     <Compile Include="Rafy\Plugins\AccountsPluginTest.cs" />
     <Compile Include="Rafy\Plugins\FileStoragePluginTest.cs" />
     <Compile Include="Rafy\Plugins\GroupPluginTest.cs" />
+    <Compile Include="Rafy\Plugins\RBAC\RBACManagementPluginTest.cs" />
     <Compile Include="Rafy\Plugins\RBAC\UserRoleManagementPluginTest.cs" />
     <Compile Include="Rafy\Plugins\SerialNumberPluginTest.cs" />
     <Compile Include="Rafy\StampTest.cs" />
@@ -133,6 +134,10 @@
     <ProjectReference Include="..\..\Rafy\Plugins\Rafy.FileStorage\Rafy.FileStorage.csproj">
       <Project>{143febb0-b41c-4e47-9325-f656cced2fa6}</Project>
       <Name>Rafy.FileStorage</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.DataPermissionManagement\Rafy.RBAC.DataPermissionManagement.csproj">
+      <Project>{7750612e-ab7e-4a98-86e1-ff6e4d9d7c54}</Project>
+      <Name>Rafy.RBAC.DataPermissionManagement</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.GroupManagement\Rafy.RBAC.GroupManagement.csproj">
       <Project>{e54cd6bc-727e-4d97-810d-6bb83a64a23f}</Project>
