@@ -56,7 +56,7 @@ namespace Rafy.DbMigration.MySql
         /// <returns></returns>
         protected override string ConvertToTypeString(DbType dataType, string length)
         {
-            return MySqlDbTypeHelper.ConvertToOracleTypeString(dataType, length);
+            return MySqlDbTypeHelper.ConvertToMySqlTypeString(dataType, length);
         }
 
         /// <summary>
