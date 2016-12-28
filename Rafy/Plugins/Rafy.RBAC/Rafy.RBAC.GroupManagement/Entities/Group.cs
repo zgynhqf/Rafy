@@ -30,7 +30,7 @@ using Rafy.MetaModel.Attributes;
 using Rafy.MetaModel.View;
 using System.Data;
 using Rafy.RBAC.RoleManagement;
-using Rafy.RBAC.GroupManagement.Entities.Extensions;
+using Rafy.RBAC.GroupManagement.Extensions;
 
 namespace Rafy.RBAC.GroupManagement
 {
@@ -140,6 +140,62 @@ namespace Rafy.RBAC.GroupManagement
         /// 单例模式，外界不可以直接构造本对象。
         /// </summary>
         protected GroupRepository() { }
+
+        /// <summary>
+        /// 查找用户所属的组织列表
+        /// </summary>
+        /// <param name="userId">用户Id</param>
+        /// <returns></returns>
+        [RepositoryQuery]
+        public virtual GroupList GetGroupByUserId(long userId)
+        {
+            var f = QueryFactory.Instance;
+            var t = f.Table<Group>();
+            var t1 = f.Table<GroupUser>();
+            var q = f.Query(
+                selection: t.Star(),//查询所有列
+                from: t.Join(t1, t.Column(Entity.IdProperty).Equal(t1.Column(GroupUser.GroupIdProperty))),//要查询的实体的表
+                where: t1.Column(GroupUser.UserIdProperty).Equal(userId)
+            );
+            return (GroupList)this.QueryData(q);
+        }
+
+        /// <summary>
+        /// 获取角色下的组织列表
+        /// </summary>
+        /// <param name="roleId">角色Id</param>
+        /// <returns></returns>
+        [RepositoryQuery]
+        public virtual GroupList GetGroupByRoleId(long roleId)
+        {
+            var f = QueryFactory.Instance;
+            var t = f.Table<Group>();
+            var t1 = f.Table<GroupRole>();
+            var q = f.Query(
+                selection: t.Star(),//查询所有列
+                from: t.Join(t1, t.Column(Entity.IdProperty).Equal(t1.Column(GroupRole.GroupIdProperty))),//要查询的实体的表
+                where: t1.Column(GroupRole.RoleIdProperty).Equal(roleId)
+            );
+            return (GroupList)this.QueryData(q);
+        }
+
+        /// <summary>
+        /// 查找组织的所有子组织Id
+        /// </summary>
+        /// <param name="groupList">组织列表</param>
+        /// <returns></returns>
+        internal List<long> GetGroupAndLowerByGroupList(GroupList groupList)
+        {
+            var newGroupList = new List<long>();
+            groupList.EachNode(item =>
+            {
+                newGroupList.AddRange(
+                    TreeHelper.ConvertToList<Group>(this.GetByTreeParentIndex(item.TreeIndex))
+                        .Select(p => p.Id));
+                return false;
+            });
+            return newGroupList;
+        }
     }
 
     /// <summary>
@@ -156,6 +212,9 @@ namespace Rafy.RBAC.GroupManagement
             //配置实体的所有属性都映射到数据表中。
             Meta.MapTable().MapAllProperties();
             Meta.SupportTree();
+            Meta.Property(Group.NameProperty).MapColumn().HasLength("40").IsRequired();
+            Meta.Property(Group.CodeProperty).MapColumn().HasLength("100").IsRequired();
+            Meta.Property(Group.DescriptionProperty).MapColumn().HasLength("200");
         }
     }
 }

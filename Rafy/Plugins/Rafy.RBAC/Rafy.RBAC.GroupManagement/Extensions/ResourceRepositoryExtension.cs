@@ -20,7 +20,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Rafy.RBAC.GroupManagement.Entities.Extensions
+namespace Rafy.RBAC.GroupManagement.Extensions
 {
     /// <summary>
     /// 组仓库的扩展类型
@@ -33,7 +33,7 @@ namespace Rafy.RBAC.GroupManagement.Entities.Extensions
         /// <param name="groupID">用户当前使用的组的主键</param>
         /// <returns>返回获取到的当前组下的所有资源的数据过滤权限的数据表</returns>
         [RepositoryQuery]
-        public virtual ResourceList GetResourcePermissionByGroupID(int groupID)
+        public virtual ResourceList GetResourceByGroupID(long groupID)
         {
             var f = QueryFactory.Instance;
             var groupRoleTable = f.Table<GroupRole>();

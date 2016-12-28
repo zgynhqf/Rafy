@@ -678,7 +678,7 @@ namespace RafyUnitTest
         /// GetByTreeParentCode 数据正确、排序正确。
         /// </summary>
         [TestMethod]
-        public void TET_Query_GetByTreeParentCode()
+        public void TET_Query_GetByTreeParentIndex()
         {
             var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
@@ -705,7 +705,9 @@ namespace RafyUnitTest
                 };
                 repo.Save(list);
 
-                Assert.IsTrue(list.Count == 1);
+                list = repo.GetByTreeParentIndex("1");
+
+                Assert.IsTrue(list.Count == 2);
                 var root = list[0];
                 Assert.IsTrue(root.TreeChildren.Count == 2);
                 var node11 = root.TreeChildren[0];

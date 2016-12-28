@@ -12,10 +12,11 @@
 *******************************************************/
 
 using System;
+using System.Collections.Generic;
 using Rafy.Accounts;
 using Rafy.Domain;
 using Rafy.RBAC.RoleManagement;
-
+using System.Linq;
 namespace Rafy.RBAC.UserRoleManagement.Controllers
 {
     /// <summary>
@@ -23,10 +24,8 @@ namespace Rafy.RBAC.UserRoleManagement.Controllers
     /// </summary>
     public class UserRoleController : DomainController
     {
-        private readonly UserRepository _userRepository = RepositoryFacade.ResolveInstance<UserRepository>();
-        private readonly RoleRepository _roleRepository = RepositoryFacade.ResolveInstance<RoleRepository>();
         private readonly UserRoleRepository _userRoleRepository = RepositoryFacade.ResolveInstance<UserRoleRepository>();
-        
+
         /// <summary>
         /// 获取指定的用户 <paramref name="user"/> 是否具有指定的角色 <paramref name="role"/> 。
         /// </summary>
@@ -51,71 +50,6 @@ namespace Rafy.RBAC.UserRoleManagement.Controllers
             var userRole = this._userRoleRepository.GetFirstBy(condition);
 
             return userRole != null && userRole.RoleId > 0;
-        }
-
-
-        /// <summary>
-        /// 获取指定的用户 <paramref name="user"/> 下面的角色集合 <seealso cref="RoleList"/>。
-        /// </summary>
-        /// <param name="user">表示一个用户的实例。</param>
-        /// <returns>指定用户下的所有角色。</returns>
-        public virtual RoleList GetRoleList(User user)
-        {
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-
-            var userRoles = _userRoleRepository.GetBy(new CommonQueryCriteria(BinaryOperator.And) {
-                new PropertyMatch(UserRole.UserIdProperty, PropertyOperator.Equal, user.Id)
-            });
-
-            if (userRoles == null || userRoles.Count == 0)
-            {
-                return this._roleRepository.NewList();
-            }
-
-            var results = _roleRepository.NewList();
-            foreach (var userRole in userRoles)
-            {
-                if(userRole.Role == null) continue;
-
-                results.Add(userRole.Role);
-            }
-
-            return results;
-        }
-
-        /// <summary>
-        /// 获取指定的角色 <paramref name="role"/> 下面的用户集合 <seealso cref="UserList"/>。
-        /// </summary>
-        /// <param name="role">表示一个角色的实例。</param>
-        /// <returns>指定角色下的所有用户的集合。</returns>
-        public virtual UserList GetUserList(Role role)
-        {
-            if (role == null)
-            {
-                throw new ArgumentNullException(nameof(role));
-            }
-
-            var userRoles = _userRoleRepository.GetBy(new CommonQueryCriteria(BinaryOperator.And) {
-                new PropertyMatch(UserRole.RoleIdProperty, PropertyOperator.Equal, role.Id)
-            });
-
-            if (userRoles == null || userRoles.Count == 0)
-            {
-                return this._userRepository.NewList();
-            }
-
-            var results = this._userRepository.NewList();
-            foreach(var userRole in userRoles)
-            {
-                if(userRole.User == null) continue;
-
-                results.Add(userRole.User);
-            }
-
-            return results;
         }
     }
 }
