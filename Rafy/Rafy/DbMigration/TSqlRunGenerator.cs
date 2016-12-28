@@ -185,10 +185,7 @@ ALTER TABLE ");
         /// <param name="length">The length.</param>
         /// <param name="isRequired">if set to <c>true</c> [is required].</param>
         /// <param name="isPKorFK">在没有给出字段长度的情况下，如果这个字段是一个主键或外键，则需要自动限制它的长度。</param>
-        protected void GenerateColumnDeclaration(
-            IndentedTextWriter sql,
-            string columnName, DbType dataType, string length, bool? isRequired, bool isPKorFK
-            )
+        protected void GenerateColumnDeclaration(IndentedTextWriter sql,string columnName, DbType dataType, string length, bool? isRequired, bool isPKorFK)
         {
             if (string.IsNullOrEmpty(length))
             {
