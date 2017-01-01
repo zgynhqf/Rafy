@@ -27,6 +27,8 @@ namespace Rafy.Data
     /// </summary>
     public class DbSetting : DbConnectionSchema
     {
+        private static Dictionary<string, DbSetting> _generatedSettings = new Dictionary<string, DbSetting>();
+
         private DbSetting() { }
 
         /// <summary>
@@ -110,8 +112,6 @@ namespace Rafy.Data
         {
             return _generatedSettings.Values;
         }
-
-        private static Dictionary<string, DbSetting> _generatedSettings = new Dictionary<string, DbSetting>();
 
         private static DbSetting Create(string dbSettingName)
         {
