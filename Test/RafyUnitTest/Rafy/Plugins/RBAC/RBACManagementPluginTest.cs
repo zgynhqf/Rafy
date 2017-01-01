@@ -23,7 +23,7 @@ using Rafy.RBAC.RoleManagement.Controllers;
 using Rafy.RBAC.UserRoleManagement;
 using Rafy.UnitTest;
 
-namespace RafyUnitTest.Rafy.Plugins.RBAC
+namespace RafyUnitTest
 {
     [TestClass]
     public class RBACManagementPluginTest
@@ -37,7 +37,7 @@ namespace RafyUnitTest.Rafy.Plugins.RBAC
         private Tuple<User, Role, Group, Resource> TestInitRBAC()
         {
             var user = new User {UserName = "admin"};
-            RepositoryFacade.Save(user); 
+            RepositoryFacade.Save(user);
 
             var role = new Role {Name = "管理员", Code = "admin"};
             RepositoryFacade.Save(role);
@@ -122,7 +122,7 @@ namespace RafyUnitTest.Rafy.Plugins.RBAC
                 var tuple = TestInitRBAC();
                 Assert.IsTrue(
                     RepositoryFacade.ResolveInstance<ResourceOperationRepository>()
-                        .GetOperationByRoleList(new List<long> {tuple.Item2.Id})
+                        .GetOperationByRoleList(new List<long> { tuple.Item2.Id })
                         .Count == 1);
             }
         }
@@ -217,7 +217,7 @@ namespace RafyUnitTest.Rafy.Plugins.RBAC
                 var role = tuple.Item2;
                 var resource = tuple.Item4;
                 var delopId = Convert.ToInt64(resource.ResourceOperationList[1].Id);
-                controller.SetRoleOperation(role.Id, new List<long> {delopId});
+                controller.SetRoleOperation(role.Id, new List<long> { delopId });
                 var savedId = repo.GetAll()[0].OperationId;
                 Assert.AreNotEqual(originId, savedId);
             }
