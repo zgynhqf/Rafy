@@ -96,9 +96,7 @@
     </Compile>
     <Compile Include="Wizards\Projects\DomainLibraryProjectWizard.cs" />
     <None Include="Deploy_Templates.ps1" />
-    <None Include="Projects\Rafy Console App\amd64\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest" />
     <None Include="Projects\Rafy Console App\App.config" />
-    <None Include="Projects\Rafy Console App\x86\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest" />
     <None Include="Projects\Rafy Domain Library\DomainLibraryPlugin.cs" />
     <None Include="Projects\Rafy Domain Library\Entities\DomainLibraryEntity.cs" />
     <None Include="Projects\Rafy Domain Library\packages.config" />
@@ -117,26 +115,8 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Items\DomainEntity\__TemplateIcon.ico" />
-    <None Include="Projects\Rafy Console App\amd64\Microsoft.VC90.CRT\msvcr90.dll" />
-    <None Include="Projects\Rafy Console App\amd64\Microsoft.VC90.CRT\README_CHS.txt" />
-    <None Include="Projects\Rafy Console App\amd64\sqlceca40.dll" />
-    <None Include="Projects\Rafy Console App\amd64\sqlcecompact40.dll" />
-    <None Include="Projects\Rafy Console App\amd64\sqlceer40CN.dll" />
-    <None Include="Projects\Rafy Console App\amd64\sqlceer40EN.dll" />
-    <None Include="Projects\Rafy Console App\amd64\sqlceme40.dll" />
-    <None Include="Projects\Rafy Console App\amd64\sqlceqp40.dll" />
-    <None Include="Projects\Rafy Console App\amd64\sqlcese40.dll" />
     <None Include="Projects\Rafy Console App\ConsoleApp.csproj" />
     <None Include="Projects\Rafy Console App\RafyConsoleAppTemplate.vstemplate" />
-    <None Include="Projects\Rafy Console App\x86\Microsoft.VC90.CRT\msvcr90.dll" />
-    <None Include="Projects\Rafy Console App\x86\Microsoft.VC90.CRT\README_CHS.txt" />
-    <None Include="Projects\Rafy Console App\x86\sqlceca40.dll" />
-    <None Include="Projects\Rafy Console App\x86\sqlcecompact40.dll" />
-    <None Include="Projects\Rafy Console App\x86\sqlceer40CN.dll" />
-    <None Include="Projects\Rafy Console App\x86\sqlceer40EN.dll" />
-    <None Include="Projects\Rafy Console App\x86\sqlceme40.dll" />
-    <None Include="Projects\Rafy Console App\x86\sqlceqp40.dll" />
-    <None Include="Projects\Rafy Console App\x86\sqlcese40.dll" />
     <None Include="Projects\Rafy Console App\__TemplateIcon.ico" />
     <None Include="Projects\Rafy Domain Library\DomainLibrary.csproj" />
     <None Include="Projects\Rafy Domain Library\RafyDomainLibraryTemplate.vstemplate" />
