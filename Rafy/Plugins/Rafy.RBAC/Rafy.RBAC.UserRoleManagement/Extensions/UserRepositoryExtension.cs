@@ -36,7 +36,7 @@ namespace Rafy.Accounts
             var q = f.Query(
                selection: t1.Star(),//查询所有列
                from: t1.Join(t2, t1.Column(Entity.IdProperty).Equal(t2.Column(UserRole.UserIdProperty))),//要查询的实体的表
-               where: t2.Column(UserRole.RoleIdProperty).In(roleId));
+               where: t2.Column(UserRole.RoleIdProperty).Equal(roleId));
             return (UserList)this.QueryData(q);
         }
     }
