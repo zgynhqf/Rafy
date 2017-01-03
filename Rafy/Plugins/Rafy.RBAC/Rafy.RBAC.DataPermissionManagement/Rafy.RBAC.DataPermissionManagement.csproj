@@ -22,6 +22,7 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
     <DocumentationFile>bin\Debug\Rafy.RBAC.DataPermissionManagement.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -74,6 +75,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Rafy\Rafy.csproj">
+      <Project>{966a5bf2-d690-426b-ad68-ad868bb8f855}</Project>
+      <Name>Rafy</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Rafy.Accounts\Rafy.Accounts.csproj">
       <Project>{4d6467e4-d1ce-4fa8-a1fe-92b1ba549a4a}</Project>
       <Name>Rafy.Accounts</Name>
