@@ -21,6 +21,7 @@ using Rafy.DbMigration.SqlServer;
 using Rafy.Data.Providers;
 using Rafy.DbMigration.SqlServerCe;
 using Rafy.DbMigration.Oracle;
+using Rafy.DbMigration.MySql;
 
 namespace Rafy.DbMigration
 {
@@ -38,6 +39,10 @@ namespace Rafy.DbMigration
                     break;
                 case DbConnectionSchema.Provider_SqlCe:
                     provider = new SqlServerCeMigrationProvider();
+                    break;
+                //Patrickliu增加的代码块
+                case DbConnectionSchema.Provider_MySql:
+                    provider = new MySqlMigrationProvider();
                     break;
                 //case "System.Data.Odbc":
                 //    return new ODBCProvider();

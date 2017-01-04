@@ -21,34 +21,6 @@
             <Folder Name="Properties" TargetFolderName="Properties">
                 <ProjectItem ReplaceParameters="true" TargetFileName="AssemblyInfo.cs">AssemblyInfo.cs</ProjectItem>
             </Folder>
-            <Folder Name="x86" TargetFolderName="x86">
-                <Folder Name="Microsoft.VC90.CRT" TargetFolderName="Microsoft.VC90.CRT">
-                    <ProjectItem ReplaceParameters="false" TargetFileName="Microsoft.VC90.CRT.manifest">Microsoft.VC90.CRT.manifest</ProjectItem>
-                    <ProjectItem ReplaceParameters="false" TargetFileName="msvcr90.dll">msvcr90.dll</ProjectItem>
-                    <ProjectItem ReplaceParameters="true" TargetFileName="README_CHS.txt">README_CHS.txt</ProjectItem>
-                </Folder>
-                <ProjectItem ReplaceParameters="false" TargetFileName="sqlceca40.dll">sqlceca40.dll</ProjectItem>
-                <ProjectItem ReplaceParameters="false" TargetFileName="sqlcecompact40.dll">sqlcecompact40.dll</ProjectItem>
-                <ProjectItem ReplaceParameters="false" TargetFileName="sqlceer40CN.dll">sqlceer40CN.dll</ProjectItem>
-                <ProjectItem ReplaceParameters="false" TargetFileName="sqlceer40EN.dll">sqlceer40EN.dll</ProjectItem>
-                <ProjectItem ReplaceParameters="false" TargetFileName="sqlceme40.dll">sqlceme40.dll</ProjectItem>
-                <ProjectItem ReplaceParameters="false" TargetFileName="sqlceqp40.dll">sqlceqp40.dll</ProjectItem>
-                <ProjectItem ReplaceParameters="false" TargetFileName="sqlcese40.dll">sqlcese40.dll</ProjectItem>
-            </Folder>
-            <Folder Name="amd64" TargetFolderName="amd64">
-                <Folder Name="Microsoft.VC90.CRT" TargetFolderName="Microsoft.VC90.CRT">
-                    <ProjectItem ReplaceParameters="false" TargetFileName="Microsoft.VC90.CRT.manifest">Microsoft.VC90.CRT.manifest</ProjectItem>
-                    <ProjectItem ReplaceParameters="false" TargetFileName="msvcr90.dll">msvcr90.dll</ProjectItem>
-                    <ProjectItem ReplaceParameters="true" TargetFileName="README_CHS.txt">README_CHS.txt</ProjectItem>
-                </Folder>
-                <ProjectItem ReplaceParameters="false" TargetFileName="sqlceca40.dll">sqlceca40.dll</ProjectItem>
-                <ProjectItem ReplaceParameters="false" TargetFileName="sqlcecompact40.dll">sqlcecompact40.dll</ProjectItem>
-                <ProjectItem ReplaceParameters="false" TargetFileName="sqlceer40CN.dll">sqlceer40CN.dll</ProjectItem>
-                <ProjectItem ReplaceParameters="false" TargetFileName="sqlceer40EN.dll">sqlceer40EN.dll</ProjectItem>
-                <ProjectItem ReplaceParameters="false" TargetFileName="sqlceme40.dll">sqlceme40.dll</ProjectItem>
-                <ProjectItem ReplaceParameters="false" TargetFileName="sqlceqp40.dll">sqlceqp40.dll</ProjectItem>
-                <ProjectItem ReplaceParameters="false" TargetFileName="sqlcese40.dll">sqlcese40.dll</ProjectItem>
-            </Folder>
         </Project>
     </TemplateContent>
     <WizardExtension>

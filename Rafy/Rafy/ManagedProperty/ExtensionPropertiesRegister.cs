@@ -21,6 +21,7 @@ namespace Rafy.ManagedProperty
 {
     /// <summary>
     /// 一个动态注册扩展实体属性的类型。
+    /// 该类的子类会在系统初始化时、注册扩展属性的时候被调用。
     /// </summary>
     public abstract class ExtensionPropertiesRegister
     {
