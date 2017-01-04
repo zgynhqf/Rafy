@@ -85,7 +85,7 @@
     <Compile Include="Rafy\ODataTest.cs" />
     <Compile Include="Rafy\Plugins\AccountsPluginTest.cs" />
     <Compile Include="Rafy\Plugins\FileStoragePluginTest.cs" />
-    <Compile Include="Rafy\Plugins\GroupPluginTest.cs" />
+    <Compile Include="Rafy\Plugins\RBAC\GroupPluginTest.cs" />
     <Compile Include="Rafy\Plugins\RBAC\RBACManagementPluginTest.cs" />
     <Compile Include="Rafy\Plugins\RBAC\UserRoleManagementPluginTest.cs" />
     <Compile Include="Rafy\Plugins\SerialNumberPluginTest.cs" />

@@ -24,7 +24,7 @@ namespace RafyUnitTest
     public class GroupPluginTest
     {
         [ClassInitialize]
-        public static void RBAC_ClassInitialize(TestContext context)
+        public static void ClassInitialize(TestContext context)
         {
             ServerTestHelper.ClassInitialize(context);
         }
