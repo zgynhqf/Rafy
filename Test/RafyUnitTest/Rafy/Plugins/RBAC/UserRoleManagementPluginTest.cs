@@ -32,7 +32,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void HasRoleTest()
+        public void RBAC_UserRole_HasRoleTest()
         {
             this._controller = DomainControllerFactory.Create<UserRoleController>();
 
@@ -58,7 +58,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void GetRoleListTest()
+        public void RBAC_UserRole_GetRoleListTest()
         {
             this._controller = DomainControllerFactory.Create<UserRoleController>();
 
@@ -83,7 +83,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void GetUserListTest()
+        public void RBAC_UserRole_GetUserListTest()
         {
             this._controller = DomainControllerFactory.Create<UserRoleController>();
 

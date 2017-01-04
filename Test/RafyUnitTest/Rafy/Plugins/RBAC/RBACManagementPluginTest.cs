@@ -34,15 +34,15 @@ namespace RafyUnitTest.Rafy.Plugins.RBAC
             ServerTestHelper.ClassInitialize(context);
         }
 
-        private Tuple<User, Role, Group, Resource> TestInitRBAC()
+        private Tuple<User, Role, Group, Resource> RBAC_InitRBAC()
         {
-            var user = new User {UserName = "admin"};
-            RepositoryFacade.Save(user); 
+            var user = new User { UserName = "admin" };
+            RepositoryFacade.Save(user);
 
-            var role = new Role {Name = "管理员", Code = "admin"};
+            var role = new Role { Name = "管理员", Code = "admin" };
             RepositoryFacade.Save(role);
 
-            var userRole = new UserRole {User = user, Role = role};
+            var userRole = new UserRole { User = user, Role = role };
             RepositoryFacade.Save(userRole);
 
             var group = new Group
@@ -60,10 +60,10 @@ namespace RafyUnitTest.Rafy.Plugins.RBAC
             };
             RepositoryFacade.Save(group);
 
-            var groupUser = new GroupUser {Group = group, User = user};
+            var groupUser = new GroupUser { Group = group, User = user };
             RepositoryFacade.Save(groupUser);
 
-            var groupRole = new GroupRole {Group = group, Role = role};
+            var groupRole = new GroupRole { Group = group, Role = role };
             RepositoryFacade.Save(groupRole);
 
             var resource = new Resource
@@ -71,7 +71,7 @@ namespace RafyUnitTest.Rafy.Plugins.RBAC
                 Name = "待开明细",
                 Code = "Transcation",
                 Description = "Transcation"
-            }.SetIsSupportDataPermission(true).SetResourceEntityType(typeof (TestDataPermission).FullName);
+            }.SetIsSupportDataPermission(true).SetResourceEntityType(typeof(TestDataPermission).FullName);
             var operation = new ResourceOperation
             {
                 Name = "新增",
@@ -114,26 +114,26 @@ namespace RafyUnitTest.Rafy.Plugins.RBAC
         }
 
         [TestMethod]
-        public void TestGetOperationByRole()
+        public void RBAC_Role_GetOperationByRole()
         {
             var repo = RepositoryFacade.ResolveInstance<RoleRepository>();
             using (RepositoryFacade.TransactionScope(repo))
             {
-                var tuple = TestInitRBAC();
+                var tuple = RBAC_InitRBAC();
                 Assert.IsTrue(
                     RepositoryFacade.ResolveInstance<ResourceOperationRepository>()
-                        .GetOperationByRoleList(new List<long> {tuple.Item2.Id})
+                        .GetOperationByRoleList(new List<long> { tuple.Item2.Id })
                         .Count == 1);
             }
         }
 
         [TestMethod]
-        public void TestCurrentGroupDataPermisssion()
+        public void RBAC_DataPermission_CurrentGroupDataPermisssion()
         {
             var repo = RepositoryFacade.ResolveInstance<TestDataPermissionRepository>();
             using (RepositoryFacade.TransactionScope(repo))
             {
-                var tuple = TestInitRBAC();
+                var tuple = RBAC_InitRBAC();
                 using (DataPermissionFacade.EnableDataPermission(tuple.Item4))
                 {
                     AccountContext.CurrentUser = tuple.Item1;
@@ -143,16 +143,16 @@ namespace RafyUnitTest.Rafy.Plugins.RBAC
         }
 
         [TestMethod]
-        public void TestCurrentGroupAndLowerDataPermisssion()
+        public void RBAC_DataPermissionCu_rrentGroupAndLowerDataPermisssion()
         {
             var repo = RepositoryFacade.ResolveInstance<TestDataPermissionRepository>();
             using (RepositoryFacade.TransactionScope(repo))
             {
-                var tuple = TestInitRBAC();
+                var tuple = RBAC_InitRBAC();
 
-                var role = new Role {Name = "包含下级管理员", Code = "admin"};
+                var role = new Role { Name = "包含下级管理员", Code = "admin" };
                 RepositoryFacade.Save(role);
-                var userRole = new UserRole {User = tuple.Item1, Role = role};
+                var userRole = new UserRole { User = tuple.Item1, Role = role };
                 RepositoryFacade.Save(userRole);
 
                 var dataPermission1 = new DataPermission
@@ -182,42 +182,42 @@ namespace RafyUnitTest.Rafy.Plugins.RBAC
         }
 
         [TestMethod]
-        public void TestGetAllGroupList()
+        public void RBAC_Group_GetAllGroupList()
         {
             var repo = RepositoryFacade.ResolveInstance<GroupRepository>();
             using (RepositoryFacade.TransactionScope(repo))
             {
-                TestInitRBAC();
+                RBAC_InitRBAC();
                 var groupList = TreeHelper.ConvertToList<Group>(repo.GetAll());
                 Assert.IsTrue(groupList.Count == 2);
             }
         }
 
         [TestMethod]
-        public void TestGetResourceOperation()
+        public void RBAC_Role_GetResourceOperation()
         {
             var repo = RepositoryFacade.ResolveInstance<ResourceOperationRepository>();
             using (RepositoryFacade.TransactionScope(repo))
             {
-                var tuple = TestInitRBAC();
+                var tuple = RBAC_InitRBAC();
                 Assert.IsTrue(repo.GetByParentId(tuple.Item4.Id).Count == 2);
                 Assert.IsTrue(repo.GetResourceOperation(tuple.Item1.Id, tuple.Item4.Id).Count == 1);
             }
         }
 
         [TestMethod]
-        public void TestSetRoleOperation()
+        public void RBAC_Role_SetRoleOperation()
         {
             var controller = DomainControllerFactory.Create<RoleController>();
             var repo = RepositoryFacade.ResolveInstance<RoleOperationRepository>();
             using (RepositoryFacade.TransactionScope(repo))
             {
-                var tuple = TestInitRBAC();
+                var tuple = RBAC_InitRBAC();
                 var originId = repo.GetAll()[0].OperationId;
                 var role = tuple.Item2;
                 var resource = tuple.Item4;
                 var delopId = Convert.ToInt64(resource.ResourceOperationList[1].Id);
-                controller.SetRoleOperation(role.Id, new List<long> {delopId});
+                controller.SetRoleOperation(role.Id, new List<long> { delopId });
                 var savedId = repo.GetAll()[0].OperationId;
                 Assert.AreNotEqual(originId, savedId);
             }
