@@ -23,7 +23,7 @@ using Rafy.RBAC.RoleManagement.Controllers;
 using Rafy.RBAC.UserRoleManagement;
 using Rafy.UnitTest;
 
-namespace RafyUnitTest.Rafy.Plugins.RBAC
+namespace RafyUnitTest
 {
     [TestClass]
     public class RBACManagementPluginTest
