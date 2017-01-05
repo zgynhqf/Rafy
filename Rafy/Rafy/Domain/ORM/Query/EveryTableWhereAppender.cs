@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Rafy.Domain.ORM.Query.Impl;
 
 namespace Rafy.Domain.ORM.Query
 {
@@ -25,9 +26,9 @@ namespace Rafy.Domain.ORM.Query
     public abstract class EveryTableWhereAppender : QueryNodeVisitor
     {
         /// <summary>
-        /// Join表集合
+        /// 表集合
         /// </summary>
-        private readonly List<ITableSource> _tableSourceList = new List<ITableSource>();
+        private List<ITableSource> _tableSourceList;
 
         /// <summary>
         /// 是把新的条件添加到 Where 条件的最后。
@@ -53,18 +54,40 @@ namespace Rafy.Domain.ORM.Query
         /// <returns></returns>
         protected override IQuery VisitQuery(IQuery node)
         {
-            var query = base.VisitQuery(node);
+            if (node.Selection != null)
+            {
+                this.Visit(node.Selection);
+            }
+            _tableSourceList = new List<ITableSource>();
+            this.Visit(node.From);
             var condition = GetTableSourceCondition(node);
+            _tableSourceList = null;
             if (condition != null)
             {
-                query.Where = QueryFactory.Instance.And(query.Where, condition);
+                node.Where = QueryFactory.Instance.And(node.Where, condition);
             }
-            return query;
+            if (node.Where != null)
+            {
+                this.Visit(node.Where);
+            }
+            var entityQuery = node as TableQuery;
+            if (entityQuery.HasOrdered())
+            {
+                for (int i = 0, c = node.OrderBy.Count; i < c; i++)
+                {
+                    var item = node.OrderBy[i];
+                    this.Visit(item);
+                }
+            }
+            return node;
         }
 
         protected override ITableSource VisitEntitySource(ITableSource node)
         {
-            _tableSourceList.Add(node);
+            if (_tableSourceList != null)
+            {
+                _tableSourceList.Add(node);
+            }
             return base.VisitEntitySource(node);
         }
 

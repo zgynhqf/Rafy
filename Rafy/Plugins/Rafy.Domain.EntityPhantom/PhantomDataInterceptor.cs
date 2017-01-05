@@ -55,7 +55,7 @@ namespace Rafy.Domain.EntityPhantom
         private static void RepositoryDataProvider_Querying(object sender, QueryingEventArgs e)
         {
             var dp = sender as RepositoryDataProvider;
-            if (dp.Repository.EntityMeta.IsPhantomEnabled && !PhantomContext.NeedPhantomData.Value)
+            if (!PhantomContext.NeedPhantomData.Value)
             {
                 //为查询中的 Where 条件添加 "IsPhantom = 'false'" 条件
                 var appender = new PhantomWhereAppender();
@@ -71,11 +71,11 @@ namespace Rafy.Domain.EntityPhantom
         /// </summary>
         class PhantomWhereAppender : EveryTableWhereAppender
         {
-            protected override IConstraint GetCondition(ITableSource mainTable, IQuery query)
+            protected override IConstraint GetCondition(ITableSource tableSource, IQuery query)
             {
-                if (mainTable.EntityRepository.EntityMeta.IsPhantomEnabled && !PhantomContext.NeedPhantomData.Value)
+                if (tableSource.EntityRepository.EntityMeta.IsPhantomEnabled)
                 {
-                    var isPhantomColumn = mainTable.FindColumn(EntityPhantomExtension.IsPhantomProperty);
+                    var isPhantomColumn = tableSource.FindColumn(EntityPhantomExtension.IsPhantomProperty);
                     return isPhantomColumn.Equal(BooleanBoxes.False);
                 }
                 return null;
