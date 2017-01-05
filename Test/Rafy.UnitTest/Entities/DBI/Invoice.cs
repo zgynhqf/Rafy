@@ -95,6 +95,25 @@ namespace UT
         /// 单例模式，外界不可以直接构造本对象。
         /// </summary>
         protected InvoiceRepository() { }
+
+        /// <summary>
+        /// 查询单据明细数量大于某个值的单据列表
+        /// </summary>
+        /// <param name="amount"></param>
+        /// <returns></returns>
+        [RepositoryQuery]
+        public virtual InvoiceList GetInvoiceByAmount(long amount)
+        {
+            var f = QueryFactory.Instance;
+            var t = f.Table<Invoice>();
+            var t1 = f.Table<InvoiceItem>();
+            var q = f.Query(
+                selection: t.Star(),//查询所有列
+                from: t.Join(t1, t.Column(Entity.IdProperty).Equal(t1.Column(InvoiceItem.InvoiceIdProperty))),//要查询的实体的表
+                where: t1.Column(InvoiceItem.AmountProperty).Greater(amount)
+            );
+            return (InvoiceList)this.QueryData(q);
+        }
     }
 
     /// <summary>
