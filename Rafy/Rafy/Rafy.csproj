@@ -326,6 +326,7 @@
     <Compile Include="Domain\ORM\PersistanceTableInfo\PersistanceTableInfo.cs" />
     <Compile Include="Domain\ORM\PersistanceTableInfo\PersistanceTableInfoFactory.cs" />
     <Compile Include="Domain\ORM\QueryExtensions.cs" />
+    <Compile Include="Domain\ORM\Query\EveryTableWhereAppender.cs" />
     <Compile Include="Domain\ORM\Query\IArray.cs" />
     <Compile Include="Domain\ORM\Query\IBinaryConstraint.cs" />
     <Compile Include="Domain\ORM\Query\IColumnConstraint.cs" />

@@ -115,6 +115,26 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void EPT_JoinQuery()
+        {
+            var repo = RF.ResolveInstance<InvoiceRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var Invoice = new Invoice();
+                var item1 = new InvoiceItem() { Amount = 100 };
+                var item2 = new InvoiceItem() { Amount = 200 };
+                Invoice.InvoiceItemList.Add(item1);
+                Invoice.InvoiceItemList.Add(item2);
+                repo.Save(Invoice);
+                Assert.AreEqual(repo.GetInvoiceByAmount(80).Count, 2);
+
+                item2.PersistenceStatus = PersistenceStatus.Deleted;
+                repo.Save(Invoice);
+                Assert.AreEqual(repo.GetInvoiceByAmount(80).Count, 1);
+            }
+        }
+
+        [TestMethod]
         public void EPT_Clear_Query()
         {
             var repo = RF.ResolveInstance<InvoiceRepository>();
