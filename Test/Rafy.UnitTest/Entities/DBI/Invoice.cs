@@ -97,20 +97,39 @@ namespace UT
         protected InvoiceRepository() { }
 
         /// <summary>
-        /// 查询单据明细数量大于某个值的单据列表
+        /// 返回所有明细的单据
         /// </summary>
-        /// <param name="amount"></param>
         /// <returns></returns>
         [RepositoryQuery]
-        public virtual InvoiceList GetInvoiceByAmount(long amount)
+        public virtual InvoiceList GetInvoice()
         {
             var f = QueryFactory.Instance;
             var t = f.Table<Invoice>();
             var t1 = f.Table<InvoiceItem>();
             var q = f.Query(
                 selection: t.Star(),//查询所有列
-                from: t.Join(t1, t.Column(Entity.IdProperty).Equal(t1.Column(InvoiceItem.InvoiceIdProperty))),//要查询的实体的表
-                where: t1.Column(InvoiceItem.AmountProperty).Greater(amount)
+                from: t.Join(t1, t.Column(Entity.IdProperty).Equal(t1.Column(InvoiceItem.InvoiceIdProperty)))//要查询的实体的表
+            );
+            return (InvoiceList)this.QueryData(q);
+        }
+
+        /// <summary>
+        /// 返回有明细的单据列表
+        /// </summary>
+        /// <returns></returns>
+        [RepositoryQuery]
+        public virtual InvoiceList GetInvoiceByHasItem()
+        {
+            var f = QueryFactory.Instance;
+            var t = f.Table<Invoice>();
+            var t1 = f.Table<InvoiceItem>();
+            var q = f.Query(
+                selection: t.Star(),//查询所有列
+                from: t,//要查询的实体的表
+                where: f.Exists(f.Query(
+                    from: t1,
+                    where: t1.Column(InvoiceItem.InvoiceIdProperty).Equal(t.Column(Entity.IdProperty))
+            ))
             );
             return (InvoiceList)this.QueryData(q);
         }

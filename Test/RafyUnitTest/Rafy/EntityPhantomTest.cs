@@ -115,22 +115,70 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void EPT_JoinQuery()
+        public void EPT_Query_Join()
         {
+            /*********************** sql语句 *********************************
+              SELECT [Invoice].*
+                FROM [Invoice]
+                    INNER JOIN [InvoiceItem] ON [Invoice].[Id] = [InvoiceItem].[InvoiceId]
+                WHERE [Invoice].[IsPhantom] = 0 AND [InvoiceItem].[IsPhantom] = 0
+                ORDER BY [Invoice].[Id] ASC;
+             **********************************************************************/
+
             var repo = RF.ResolveInstance<InvoiceRepository>();
             using (RF.TransactionScope(repo))
             {
-                var Invoice = new Invoice();
-                var item1 = new InvoiceItem() { Amount = 100 };
-                var item2 = new InvoiceItem() { Amount = 200 };
-                Invoice.InvoiceItemList.Add(item1);
-                Invoice.InvoiceItemList.Add(item2);
-                repo.Save(Invoice);
-                Assert.AreEqual(repo.GetInvoiceByAmount(80).Count, 2);
+                var item1 = new InvoiceItem();
+                var invoice = new Invoice()
+                {
+                    InvoiceItemList =
+                    {
+                        new InvoiceItem(),
+                        item1
+                    }
+                };
 
-                item2.PersistenceStatus = PersistenceStatus.Deleted;
-                repo.Save(Invoice);
-                Assert.AreEqual(repo.GetInvoiceByAmount(80).Count, 1);
+                repo.Save(invoice);
+                Assert.AreEqual(repo.GetInvoice().Count, 2);
+
+                item1.PersistenceStatus = PersistenceStatus.Deleted;
+                repo.Save(invoice);
+                Assert.AreEqual(repo.GetInvoice().Count, 1, "删除后，Join的表添加过滤条件，数量为1");
+            }
+        }
+
+        [TestMethod]
+        public void EPT_Query_Exists()
+        {
+            /*********************** sql语句 *********************************
+                SELECT [Invoice].*
+                FROM [Invoice]
+                WHERE EXISTS (
+                    SELECT *
+                    FROM [InvoiceItem]
+                    WHERE [InvoiceItem].[InvoiceId] = [Invoice].[Id] AND [InvoiceItem].[IsPhantom] = 0
+                ) AND [Invoice].[IsPhantom] = 0
+                ORDER BY [Invoice].[Id] ASC;
+           **********************************************************************/
+
+            var repo = RF.ResolveInstance<InvoiceRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var item1 = new InvoiceItem();
+                var invoice = new Invoice()
+                {
+                    InvoiceItemList =
+                    {
+                        item1
+                    }
+                };
+
+                repo.Save(invoice);
+                Assert.AreEqual(repo.GetInvoiceByHasItem().Count, 1);
+
+                item1.PersistenceStatus = PersistenceStatus.Deleted;
+                repo.Save(invoice);
+                Assert.AreEqual(repo.GetInvoiceByHasItem().Count, 0, "删除后，Exists子查询添加过滤条件，数量为0");
             }
         }
 
