@@ -58,18 +58,22 @@ namespace Rafy.Domain.ORM.Query
             {
                 this.Visit(node.Selection);
             }
+
             _tableSourceList = new List<ITableSource>();
             this.Visit(node.From);
             var condition = GetTableSourceCondition(node);
             _tableSourceList = null;
+
             if (condition != null)
             {
                 node.Where = QueryFactory.Instance.And(node.Where, condition);
             }
+
             if (node.Where != null)
             {
                 this.Visit(node.Where);
             }
+
             var entityQuery = node as TableQuery;
             if (entityQuery.HasOrdered())
             {

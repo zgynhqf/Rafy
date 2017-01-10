@@ -27,7 +27,7 @@ namespace Rafy.RBAC.UserRoleManagement
     /// <summary>
     /// 用户角色
     /// </summary>
-    [RootEntity, Serializable]
+    [ChildEntity, Serializable]
     public class UserRole : UserRoleManagementEntity
     {
         #region 构造函数
@@ -45,7 +45,7 @@ namespace Rafy.RBAC.UserRoleManagement
 
         #region 引用属性
 
-        public static readonly IRefIdProperty UserIdProperty = P<UserRole>.RegisterRefId(e => e.UserId, ReferenceType.Normal);
+        public static readonly IRefIdProperty UserIdProperty = P<UserRole>.RegisterRefId(e => e.UserId, ReferenceType.Parent);
         public long UserId
         {
             get { return (long) GetRefId(UserIdProperty); }

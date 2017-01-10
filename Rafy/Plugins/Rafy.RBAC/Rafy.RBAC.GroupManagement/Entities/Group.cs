@@ -180,11 +180,12 @@ namespace Rafy.RBAC.GroupManagement
         }
 
         /// <summary>
-        /// 查找组织的所有子组织Id
+        /// 获取组织的组织Id及其子组织Id
+        /// 内部是根据group的TreeIndex进行查找，所以treeIndex必须有值
         /// </summary>
         /// <param name="groupList">组织列表</param>
         /// <returns></returns>
-        internal List<long> GetGroupAndLowerByGroupList(GroupList groupList)
+        public List<long> GetGroupAndLowerByGroupList(GroupList groupList)
         {
             var newGroupList = new List<long>();
             groupList.EachNode(item =>

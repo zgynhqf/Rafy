@@ -11,6 +11,7 @@
  * 
 *******************************************************/
 
+using System.Collections.Generic;
 using Rafy.Domain;
 using Rafy.Domain.ORM.Query;
 using Rafy.RBAC.GroupManagement;
@@ -25,10 +26,10 @@ namespace Rafy.Accounts
         /// <summary>
         /// 查询组织下的用户列表
         /// </summary>
-        /// <param name="groupId">组织Id</param>
+        /// <param name="groupIdList">组织Id</param>
         /// <returns></returns>
         [RepositoryQuery]
-        public virtual UserList GetUserListByGroupId(long groupId)
+        public virtual UserList GetUserListByGroupIdList(List<long> groupIdList)
         {
             var f = QueryFactory.Instance;
             var t1 = f.Table<User>();
@@ -36,7 +37,7 @@ namespace Rafy.Accounts
             var q = f.Query(
                selection: t1.Star(),//查询所有列
                from: t1.Join(t2, t1.Column(Entity.IdProperty).Equal(t2.Column(GroupUser.UserIdProperty))),//要查询的实体的表
-               where: t2.Column(GroupUser.GroupIdProperty).In(groupId));
+               where: t2.Column(GroupUser.GroupIdProperty).In(groupIdList));
             return (UserList)this.QueryData(q);
         }
     }
@@ -50,11 +51,11 @@ namespace Rafy.Accounts
         /// 查询组织下的用户列表
         /// </summary>
         /// <param name="repo"></param>
-        /// <param name="groupId">组Id</param>
+        /// <param name="groupIdList">组Id</param>
         /// <returns></returns>
-        public static UserList GetUserListByGroupId(this UserRepository repo, long groupId)
+        public static UserList GetUserListByGroupId(this UserRepository repo, List<long> groupIdList)
         {
-            return repo.Extension<UserRepositoryGroupExtension>().GetUserListByGroupId(groupId);
+            return repo.Extension<UserRepositoryGroupExtension>().GetUserListByGroupIdList(groupIdList);
         }
     }
 }
