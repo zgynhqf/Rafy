@@ -29,5 +29,5 @@ App_Data/*.mdf
 App_Data/*.ldf
 
 # NuGet
-packages/
+# packages/
 /Rafy/Tools/Domain Documentation/Help

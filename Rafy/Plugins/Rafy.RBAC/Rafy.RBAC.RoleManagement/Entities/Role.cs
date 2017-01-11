@@ -11,7 +11,6 @@
  * 
 *******************************************************/
 
-
 using System;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
@@ -54,13 +53,11 @@ namespace Rafy.RBAC.RoleManagement
         {
             get { return this.GetLazyList(RoleOperationListProperty); }
         }
-
         #endregion
 
         #region 一般属性
 
         public static readonly Property<string> NameProperty = P<Role>.Register(e => e.Name);
-
         /// <summary>
         /// 角色名称
         /// </summary>
@@ -71,7 +68,6 @@ namespace Rafy.RBAC.RoleManagement
         }
 
         public static readonly Property<string> CodeProperty = P<Role>.Register(e => e.Code);
-
         /// <summary>
         /// 角色编码
         /// </summary>
@@ -82,7 +78,6 @@ namespace Rafy.RBAC.RoleManagement
         }
 
         public static readonly Property<string> DescriptionProperty = P<Role>.Register(e => e.Description);
-
         /// <summary>
         /// 角色描述
         /// </summary>
@@ -100,7 +95,7 @@ namespace Rafy.RBAC.RoleManagement
     }
 
     /// <summary>
-    /// 实体的领域名称 列表类。
+    /// 角色 列表类。
     /// </summary>
     [Serializable]
     public partial class RoleList : RoleManagementEntityList
@@ -108,7 +103,7 @@ namespace Rafy.RBAC.RoleManagement
     }
 
     /// <summary>
-    /// 实体的领域名称 仓库类。
+    /// 角色 仓库类。
     /// 负责 实体的领域名称 类的查询、保存。
     /// </summary>
     public partial class RoleRepository : RoleManagementEntityRepository
@@ -122,7 +117,7 @@ namespace Rafy.RBAC.RoleManagement
     }
 
     /// <summary>
-    /// 实体的领域名称 配置类。
+    /// 角色 配置类。
     /// 负责 实体的领域名称 类的实体元数据的配置。
     /// </summary>
     internal class RoleConfig : RoleManagementEntityConfig<Role>
@@ -134,9 +129,9 @@ namespace Rafy.RBAC.RoleManagement
         {
             //配置实体的所有属性都映射到数据表中。
             Meta.MapTable().MapAllProperties();
-            Meta.Property(Role.NameProperty).MapColumn().HasLength("40").IsRequired = true;
-            Meta.Property(Role.CodeProperty).MapColumn().HasLength("40").IsRequired=true;
-            Meta.Property(Role.DescriptionProperty).MapColumn().DataTypeLength = "200";
+            Meta.Property(Role.NameProperty).MapColumn().HasLength("40").IsRequired();
+            Meta.Property(Role.CodeProperty).MapColumn().HasLength("40").IsRequired();
+            Meta.Property(Role.DescriptionProperty).MapColumn().HasLength("200");
         }
     }
 }

@@ -11,7 +11,6 @@
  * 
 *******************************************************/
 
-
 using System;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
@@ -66,7 +65,7 @@ namespace Rafy.RBAC.RoleManagement
             set { SetProperty(NameProperty, value); }
         }
 
-        public static readonly Property<string> CodeProperty = P<Resource>.Register(e => e.Code);
+        public static readonly Property<string> CodeProperty = P<Resource>.Register(e => e.Code, Guid.NewGuid().ToString());
         /// <summary>
         /// 资源编码
         /// </summary>
@@ -85,7 +84,6 @@ namespace Rafy.RBAC.RoleManagement
             get { return GetProperty(DescriptionProperty); }
             set { SetProperty(DescriptionProperty, value); }
         }
-
         #endregion
 
         #region 只读属性
@@ -94,7 +92,7 @@ namespace Rafy.RBAC.RoleManagement
     }
 
     /// <summary>
-    /// 实体的领域名称 列表类。
+    /// 资源 列表类。
     /// </summary>
     [Serializable]
     public partial class ResourceList : RoleManagementEntityList
@@ -102,7 +100,7 @@ namespace Rafy.RBAC.RoleManagement
     }
 
     /// <summary>
-    ///  实体的领域名称 仓库类。
+    ///  资源 仓库类。
     ///  负责 实体的领域名称 类的查询、保存。
     /// </summary>
     public partial class ResourceRepository : RoleManagementEntityRepository
@@ -116,8 +114,8 @@ namespace Rafy.RBAC.RoleManagement
     }
 
     /// <summary>
-    /// 实体的领域名称 配置类。
-    /// 负责 实体的领域名称 类的实体元数据的配置。
+    /// 资源 配置类。
+    /// 负责 资源 类的实体元数据的配置。
     /// </summary>
     internal class ResourceConfig : RoleManagementEntityConfig<Resource>
     {
@@ -129,6 +127,9 @@ namespace Rafy.RBAC.RoleManagement
             //配置实体的所有属性都映射到数据表中。
             Meta.MapTable().MapAllProperties();
             Meta.SupportTree();
+            Meta.Property(Resource.NameProperty).MapColumn().HasLength("200").IsRequired();
+            Meta.Property(Resource.CodeProperty).MapColumn().HasLength("500").IsRequired();
+            Meta.Property(Resource.DescriptionProperty).MapColumn().HasLength("200");
         }
     }
 }

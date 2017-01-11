@@ -95,6 +95,44 @@ namespace UT
         /// 单例模式，外界不可以直接构造本对象。
         /// </summary>
         protected InvoiceRepository() { }
+
+        /// <summary>
+        /// 返回所有明细的单据
+        /// </summary>
+        /// <returns></returns>
+        [RepositoryQuery]
+        public virtual InvoiceList GetInvoice()
+        {
+            var f = QueryFactory.Instance;
+            var t = f.Table<Invoice>();
+            var t1 = f.Table<InvoiceItem>();
+            var q = f.Query(
+                selection: t.Star(),//查询所有列
+                from: t.Join(t1, t.Column(Entity.IdProperty).Equal(t1.Column(InvoiceItem.InvoiceIdProperty)))//要查询的实体的表
+            );
+            return (InvoiceList)this.QueryData(q);
+        }
+
+        /// <summary>
+        /// 返回有明细的单据列表
+        /// </summary>
+        /// <returns></returns>
+        [RepositoryQuery]
+        public virtual InvoiceList GetInvoiceByHasItem()
+        {
+            var f = QueryFactory.Instance;
+            var t = f.Table<Invoice>();
+            var t1 = f.Table<InvoiceItem>();
+            var q = f.Query(
+                selection: t.Star(),//查询所有列
+                from: t,//要查询的实体的表
+                where: f.Exists(f.Query(
+                    from: t1,
+                    where: t1.Column(InvoiceItem.InvoiceIdProperty).Equal(t.Column(Entity.IdProperty))
+            ))
+            );
+            return (InvoiceList)this.QueryData(q);
+        }
     }
 
     /// <summary>

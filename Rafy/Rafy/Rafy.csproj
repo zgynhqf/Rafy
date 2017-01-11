@@ -109,6 +109,10 @@
     <Compile Include="DbMigration\Providers\DbMigrationProvider.cs" />
     <Compile Include="DbMigration\Providers\DbMigrationProviderFactory.cs" />
     <Compile Include="DbMigration\Providers\DbTypeHelper.cs" />
+    <Compile Include="DbMigration\Providers\MySql\MySqlDbTypeHelper.cs" />
+    <Compile Include="DbMigration\Providers\MySql\MySqlMetaReader.cs" />
+    <Compile Include="DbMigration\Providers\MySql\MySqlMigrationProvider.cs" />
+    <Compile Include="DbMigration\Providers\MySql\MySqlRunGenerator.cs" />
     <Compile Include="DbMigration\Providers\Oracle\OracleDbTypeHelper.cs" />
     <Compile Include="DbMigration\Providers\Oracle\OracleMetaReader.cs" />
     <Compile Include="DbMigration\Providers\Oracle\OracleMigrationProvider.cs" />
@@ -322,6 +326,7 @@
     <Compile Include="Domain\ORM\PersistanceTableInfo\PersistanceTableInfo.cs" />
     <Compile Include="Domain\ORM\PersistanceTableInfo\PersistanceTableInfoFactory.cs" />
     <Compile Include="Domain\ORM\QueryExtensions.cs" />
+    <Compile Include="Domain\ORM\Query\EveryTableWhereAppender.cs" />
     <Compile Include="Domain\ORM\Query\IArray.cs" />
     <Compile Include="Domain\ORM\Query\IBinaryConstraint.cs" />
     <Compile Include="Domain\ORM\Query\IColumnConstraint.cs" />
@@ -721,6 +726,7 @@
     <Compile Include="Utils\Data\PagingHelper.cs" />
     <Compile Include="Utils\Data\Providers\ConverterFactory.cs" />
     <Compile Include="Utils\Data\Providers\ISqlProvider.cs" />
+    <Compile Include="Utils\Data\Providers\MySqlServerProvider.cs" />
     <Compile Include="Utils\Data\Providers\ODBCProvider.cs" />
     <Compile Include="Utils\Data\Providers\OracleProvider.cs" />
     <Compile Include="Utils\Data\Providers\SqlServer2005Backuper.cs" />

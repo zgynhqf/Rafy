@@ -34,7 +34,7 @@ namespace Rafy.DbMigration.SqlServerCe
                 case DbType.String:
                 case DbType.AnsiString:
                 case DbType.Xml:
-                    if (!string.IsNullOrEmpty(length))
+                    if (!string.IsNullOrEmpty(length) && !length.EqualsIgnoreCase("MAX"))
                     {
                         return "NVARCHAR(" + length + ')';
                     }

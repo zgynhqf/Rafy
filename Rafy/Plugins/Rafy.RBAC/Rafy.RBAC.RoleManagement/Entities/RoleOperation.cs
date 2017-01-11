@@ -11,11 +11,13 @@
  * 
 *******************************************************/
 
-
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using Rafy.Domain;
+using Rafy.Domain.ORM.Query;
 using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
@@ -25,7 +27,7 @@ namespace Rafy.RBAC.RoleManagement
     /// <summary>
     /// 角色功能
     /// </summary>
-    [RootEntity, Serializable]
+    [ChildEntity, Serializable]
     public class RoleOperation : RoleManagementEntity
     {
         #region 构造函数
@@ -46,7 +48,7 @@ namespace Rafy.RBAC.RoleManagement
             P<RoleOperation>.RegisterRefId(e => e.RoleId, ReferenceType.Parent);
         public long RoleId
         {
-            get { return (long) GetRefId(RoleIdProperty); }
+            get { return (long)GetRefId(RoleIdProperty); }
             set { SetRefId(RoleIdProperty, value); }
         }
         public static readonly RefEntityProperty<Role> RoleProperty =
@@ -60,7 +62,7 @@ namespace Rafy.RBAC.RoleManagement
             P<RoleOperation>.RegisterRefId(e => e.OperationId, ReferenceType.Normal);
         public long OperationId
         {
-            get { return (long) GetRefId(OperationIdProperty); }
+            get { return (long)GetRefId(OperationIdProperty); }
             set { SetRefId(OperationIdProperty, value); }
         }
         public static readonly RefEntityProperty<ResourceOperation> OperationProperty =
@@ -89,7 +91,7 @@ namespace Rafy.RBAC.RoleManagement
     }
 
     /// <summary>
-    /// 实体的领域名称 列表类。
+    /// 角色功能 列表类。
     /// </summary>
     [Serializable]
     public partial class RoleOperationList : RoleManagementEntityList
@@ -97,7 +99,7 @@ namespace Rafy.RBAC.RoleManagement
     }
 
     /// <summary>
-    /// 实体的领域名称 仓库类。
+    /// 角色功能 仓库类。
     /// 负责 实体的领域名称 类的查询、保存。
     /// </summary>
     public partial class RoleOperationRepository : RoleManagementEntityRepository
@@ -108,10 +110,27 @@ namespace Rafy.RBAC.RoleManagement
         protected RoleOperationRepository()
         {
         }
+
+        /// <summary>
+        /// 获取角色操作的列表
+        /// </summary>
+        /// <param name="roleIds">角色集合</param>
+        /// <returns></returns>
+        [RepositoryQuery]
+        public virtual RoleOperationList GetByRoleIdList(List<long> roleIds)
+        {
+            var f = QueryFactory.Instance;
+            var t1 = f.Table<RoleOperation>();
+            var q = f.Query(
+               selection: t1.Star(),//查询所有列
+               from: t1,//要查询的实体的表
+               where: t1.Column(RoleOperation.RoleIdProperty).In(roleIds));
+            return (RoleOperationList)this.QueryData(q);
+        }
     }
 
     /// <summary>
-    /// 实体的领域名称 配置类。
+    /// 角色功能 配置类。
     /// 负责 实体的领域名称 类的实体元数据的配置。
     /// </summary>
     internal class RoleOperationConfig : RoleManagementEntityConfig<RoleOperation>

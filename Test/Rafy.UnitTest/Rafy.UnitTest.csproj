@@ -199,6 +199,11 @@
     <Compile Include="Entities\TestAdministrator.g.cs">
       <DependentUpon>TestAdministrator.cs</DependentUpon>
     </Compile>
+    <Compile Include="Entities\TestDataPermission.cs" />
+    <Compile Include="Entities\TestDataPermission.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>TestDataPermission.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\TestRole.g.cs">
       <DependentUpon>TestRole.cs</DependentUpon>
     </Compile>
@@ -240,6 +245,14 @@
     <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.ORM.BatchSubmit\Rafy.Domain.ORM.BatchSubmit.csproj">
       <Project>{f0533889-be2c-4a21-90b0-26765833270e}</Project>
       <Name>Rafy.Domain.ORM.BatchSubmit</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.GroupManagement\Rafy.RBAC.GroupManagement.csproj">
+      <Project>{e54cd6bc-727e-4d97-810d-6bb83a64a23f}</Project>
+      <Name>Rafy.RBAC.GroupManagement</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.RoleManagement\Rafy.RBAC.RoleManagement.csproj">
+      <Project>{708150c2-4b78-4f02-a8e9-3338cc76f69c}</Project>
+      <Name>Rafy.RBAC.RoleManagement</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Rafy\Rafy\Rafy.csproj">
       <Project>{966A5BF2-D690-426B-AD68-AD868BB8F855}</Project>
