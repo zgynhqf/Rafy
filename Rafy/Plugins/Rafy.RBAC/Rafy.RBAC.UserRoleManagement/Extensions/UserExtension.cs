@@ -12,6 +12,7 @@
 *******************************************************/
 
 using Rafy.Domain;
+using Rafy.ManagedProperty;
 using Rafy.RBAC.RoleManagement;
 using Rafy.RBAC.UserRoleManagement;
 
@@ -20,6 +21,7 @@ namespace Rafy.Accounts
     /// <summary>
     /// 用户属性扩展
     /// </summary>
+    [CompiledPropertyDeclarer]
     public static class UserExtension
     {
         #region UserRoleList UserRoleList (用户扩展用户角色集合)
