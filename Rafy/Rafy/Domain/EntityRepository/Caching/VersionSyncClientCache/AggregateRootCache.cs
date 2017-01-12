@@ -27,7 +27,7 @@ namespace Rafy.Domain.Caching
 
         private AggregateRootCache() { }
 
-        private ICache Cache => CacheInstances.Memory;
+        private ICache Cache => Utils.Caching.Cache.Default;
 
         //public EntityList CacheAll(Type entityType, Func<EntityList> ifNotExists = null)
         //{

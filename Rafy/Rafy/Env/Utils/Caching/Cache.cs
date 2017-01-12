@@ -21,6 +21,37 @@ namespace Rafy.Utils.Caching
     /// </summary>
     public abstract class Cache : ICache
     {
+        private static ICache _cache;
+        private static readonly object _syncRoot = new object();
+
+        /// <summary>
+        /// <see cref="Cache"/> 的默认实现。采用单例模式。
+        /// </summary>
+        public static ICache Default
+        {
+            get
+            {
+                if (_cache == null)
+                {
+                    lock (_syncRoot)
+                    {
+                        if (_cache == null)
+                        {
+                            _cache = new MemoryCache();
+                        }
+                    }
+                }
+
+                return _cache;
+            }
+            set
+            {
+                if(value == null) throw new ArgumentNullException(nameof(value));
+
+                _cache = value;
+            }
+        }
+
         /// <summary>
         /// 获取或设置是否打开缓存功能。
         /// </summary>
