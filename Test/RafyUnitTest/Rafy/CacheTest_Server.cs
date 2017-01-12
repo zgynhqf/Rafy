@@ -13,8 +13,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Web;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rafy;
 using Rafy.Domain;
@@ -190,6 +192,59 @@ namespace RafyUnitTest
                     }
                 }
             }
+        }
+
+        [TestMethod]
+        public void CTS_PerHttpRequestCache_Add_Get_Remove_Test()
+        {
+            var wapper = this.MockHttpContext();
+            var cache = new PerHttpRequestCache(wapper);
+            var key = "xxx";
+            var value = new StoredValue { Value = "123" };
+
+            var addResult = cache.Add(key, value, null);
+            Assert.IsTrue(addResult);
+
+            var obj1 = cache.Get(key) as StoredValue;
+            Assert.IsNotNull(obj1);
+            Assert.IsTrue(obj1.Value == value.Value);
+
+            cache.Remove(key);
+
+            var obj2 = cache.Get(key) as StoredValue;
+            Assert.IsNull(obj2);
+        }
+
+        [TestMethod]
+        public void CTS_PerHttpRequestCache_Region_Clear_Test()
+        {
+            var wapper = this.MockHttpContext();
+            var cache = new PerHttpRequestCache(wapper);
+            var key = "xxx.";
+            var result = new List<bool>();
+
+            result.Add(cache.Add(key + "1", "111", null));
+            result.Add(cache.Add(key + "2", "222", null));
+            result.Add(cache.Add(key + "3", "333", null));
+            result.Add(cache.Add("123", "444", null));
+            Assert.IsTrue(result.All(r => r));
+
+            cache.ClearRegion(key);
+            Assert.IsTrue(wapper.Items.Count == 1);
+
+            cache.Clear();
+            Assert.IsTrue(wapper.Items.Count == 0);
+        }
+
+        private HttpContextWrapper MockHttpContext()
+        {
+            var request = new HttpRequest("", "http://www.rafy.org/", "");
+            var writer = new StringWriter();
+            var response = new HttpResponse(writer);
+            var httpContextMock = new HttpContext(request, response);
+            var wapper = new HttpContextWrapper(httpContextMock);
+
+            return wapper;
         }
     }
 }
