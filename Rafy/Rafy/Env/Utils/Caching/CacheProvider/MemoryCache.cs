@@ -24,7 +24,17 @@ namespace Rafy.Utils.Caching
     /// </summary>
     public class MemoryCache : Cache
     {
-        private readonly RegionCache _regionCache = new RegionCache(System.Runtime.Caching.MemoryCache.Default);
+        internal MemoryCache()
+        {
+            _regionCache = new RegionCache(System.Runtime.Caching.MemoryCache.Default);
+        }
+
+        public MemoryCache(System.Runtime.Caching.MemoryCache memoryCache)
+        {
+            _regionCache = new RegionCache(memoryCache);
+        }
+
+        private readonly RegionCache _regionCache;
 
         protected internal override StoredValue GetCacheItemCore(string region, string key)
         {
