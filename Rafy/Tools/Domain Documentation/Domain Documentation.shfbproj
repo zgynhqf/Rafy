@@ -90,6 +90,7 @@
     <Folder Include="Content\领域实体框架\领域实体" />
     <Folder Include="Media" />
     <Folder Include="Media\插件" />
+    <Folder Include="Media\插件\RBAC插件" />
     <Folder Include="Media\插件\幽灵插件" />
     <Folder Include="Media\框架基础" />
     <Folder Include="Media\框架基础\领域驱动设计" />
@@ -213,6 +214,30 @@
     <None Include="UML.7z" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Media\插件\RBAC插件\RBAC01.png">
+      <ImageId>RBAC01</ImageId>
+      <AlternateText>RBAC 01</AlternateText>
+    </Image>
+    <Image Include="Media\插件\RBAC插件\RBAC02.png">
+      <ImageId>RBAC02</ImageId>
+      <AlternateText>RBAC 02</AlternateText>
+    </Image>
+    <Image Include="Media\插件\RBAC插件\RBAC03.png">
+      <ImageId>RBAC03</ImageId>
+      <AlternateText>RBAC 03</AlternateText>
+    </Image>
+    <Image Include="Media\插件\RBAC插件\RBAC04.png">
+      <ImageId>RBAC04</ImageId>
+      <AlternateText>RBAC 04</AlternateText>
+    </Image>
+    <Image Include="Media\插件\RBAC插件\RBAC插件01.png">
+      <ImageId>RBAC插件01</ImageId>
+      <AlternateText>RBAC插件01</AlternateText>
+    </Image>
+    <Image Include="Media\插件\RBAC插件\RBAC权限模型.png">
+      <ImageId>RBAC权限模型</ImageId>
+      <AlternateText>RBAC权限模型</AlternateText>
+    </Image>
     <Image Include="Media\插件\幽灵插件\幽灵插件01.png">
       <ImageId>幽灵插件01</ImageId>
       <AlternateText>幽灵插件01</AlternateText>
