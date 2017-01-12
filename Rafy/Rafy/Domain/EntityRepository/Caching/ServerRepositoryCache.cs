@@ -27,7 +27,7 @@ namespace Rafy.Domain.Caching
         /// <summary>
         /// 应用层可以修改此属性来达到服务端缓存逻辑的变更。
         /// </summary>
-        public static Cache ServerCacheAPI = CacheInstances.Memory;
+        public static ICache ServerCacheAPI = CacheInstances.Memory;
 
         private bool? _enabled;
 

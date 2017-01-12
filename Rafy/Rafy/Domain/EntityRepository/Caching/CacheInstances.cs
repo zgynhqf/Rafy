@@ -12,13 +12,7 @@
 *******************************************************/
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Rafy.Utils.Caching;
-using Rafy.MetaModel;
-using Rafy.Utils;
-using Rafy.Serialization;
 
 namespace Rafy.Domain.Caching
 {
@@ -34,42 +28,35 @@ namespace Rafy.Domain.Caching
         /// </summary>
         public static readonly string CACHE_FILE_NAME = "Rafy_Disk_Cache.sdf";
 
-        private static Cache _memory, _disk, _memoryDisk;
+        private static ICache _memory;
+        private static ICache _perHttpRequest;
+        private static ICache _disk;
+        private static ICache _memoryDisk;
 
         /// <summary>
         /// 内存缓存
         /// </summary>
-        public static Cache Memory
-        {
-            get
-            {
-                if (_memory == null)
-                {
-                    _memory = new Cache(new MemoryCacheProvider());
-                }
-                return _memory;
-            }
-        }
+        public static ICache Memory => _memory ?? (_memory = new MemoryCache());
 
         /// <summary>
         /// 硬盘缓存。
         /// 默认使用 SqlCe 的硬盘缓存
         /// </summary>
-        public static Cache Disk
+        public static ICache Disk
         {
             get
             {
                 //由于有时并不会使用硬盘缓存，所以这个属性需要使用懒加载。
                 if (_disk == null)
                 {
-                    string dbFileName = RafyEnvironment.MapAbsolutePath(CACHE_FILE_NAME);
-                    _disk = new Cache(new SQLCompactCacheProvider(dbFileName));
+                    var dbFileName = RafyEnvironment.MapAbsolutePath(CACHE_FILE_NAME);
+                    _disk = new SQLCompactCache(dbFileName);
                 }
                 return _disk;
             }
             set
             {
-                if (value == null) throw new ArgumentNullException("value");
+                if (value == null) throw new ArgumentNullException(nameof(value));
                 _disk = value;
             }
         }
@@ -78,23 +65,29 @@ namespace Rafy.Domain.Caching
         /// 一个先用内存，后用硬盘的二级缓存
         /// 默认使用 SqlCe 作为二级缓存的硬盘缓存
         /// </summary>
-        public static Cache MemoryDisk
+        public static ICache MemoryDisk
         {
             get
             {
                 //由于有时并不会使用硬盘缓存，所以这个属性需要使用懒加载。
                 if (_memoryDisk == null)
                 {
-                    string dbFileName = RafyEnvironment.MapAbsolutePath(CACHE_FILE_NAME);
-                    _memoryDisk = new Cache(new HybirdCacheProvider(dbFileName));
+                    var dbFileName = RafyEnvironment.MapAbsolutePath(CACHE_FILE_NAME);
+                    _memoryDisk = new HybirdCache(dbFileName);
                 }
                 return _memoryDisk;
             }
             set
             {
-                if (value == null) throw new ArgumentNullException("value");
+                if (value == null) throw new ArgumentNullException(nameof(value));
+
                 _memoryDisk = value;
             }
         }
+
+        /// <summary>
+        /// 获取一个当前 Http 请求的缓存提供者实例。
+        /// </summary>
+        public static ICache PerHttpRequest => _perHttpRequest ?? (_perHttpRequest = new PerHttpRequestCache());
     }
 }

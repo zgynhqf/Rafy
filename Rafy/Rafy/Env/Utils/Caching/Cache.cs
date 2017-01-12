@@ -2,101 +2,115 @@
  * 
  * 作者：胡庆访
  * 创建时间：20101017
- * 说明：缓存模块为上层提供的API。
+ * 说明：通用缓存框架中的提供器
  * 运行环境：.NET 4.0
  * 版本号：1.0.0
  * 
  * 历史记录：
  * 创建文件 胡庆访 20101017
-
  * 
 *******************************************************/
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.Caching;
 
 namespace Rafy.Utils.Caching
 {
     /// <summary>
-    /// 缓存子系统
+    /// 通用缓存框架中的抽象类。
     /// </summary>
-    public class Cache
+    public abstract class Cache : ICache
     {
-        private CacheProvider _cacheProvider;
-
         /// <summary>
-        /// 构造函数。
+        /// 获取或设置是否打开缓存功能。
         /// </summary>
-        /// <param name="cacheProvider">
-        /// 本缓存模块需要指定提供器。
-        /// </param>
-        public Cache(CacheProvider cacheProvider)
-        {
-            if (cacheProvider == null) throw new ArgumentNullException("cacheProvider");
-            this._cacheProvider = cacheProvider;
-            this.IsEnabled = true;
-        }
+        public virtual bool IsEnabled { get; set; } = true;
 
         /// <summary>
-        /// 是否打开缓存功能？
-        /// </summary>
-        public bool IsEnabled { get; set; }
-
-        /// <summary>
-        /// 通过key和region从缓存中获取缓存项。
+        /// 通过 <paramref name="key"/> 和 <paramref name="region"/> 从缓存中获取缓存项。
         /// 如果不存在，则返回null。
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="regionName"></param>
-        /// <returns></returns>
-        public object Get(string key, string regionName = null)
+        /// <param name="key">表示一个缓存的键。</param>
+        /// <param name="region">表示缓存所属的域。</param>
+        /// <returns>返回缓存项。</returns>
+        public object Get(string key, string region = null)
         {
-            if (!this.IsEnabled) return null;
+            if (string.IsNullOrWhiteSpace(key)) throw new ArgumentException($"parameter {nameof(key)} can not be null or empty.");
 
-            return this._cacheProvider.GetCacheItem(key, regionName);
+            if(!this.IsEnabled) return null;
+
+            var wrapper = this.GetCacheItemCore(region, key);
+            if (wrapper != null)
+            {
+                //如果存在检测器，则需要进行检测后才能保证缓存没有失效。
+                var checker = wrapper.Checker;
+                if (checker != null)
+                {
+                    checker.Check();
+                    if (checker.HasChanged)
+                    {
+                        this.Remove(key, region);
+                        wrapper.Value = null;
+                    }
+                }
+
+                return wrapper.Value;
+            }
+
+            return null;
         }
 
         /// <summary>
-        /// 向缓存中添加一项。
+        /// 向缓存中添加一个缓存项。
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
+        /// <param name="key">表示一个缓存的键。</param>
+        /// <param name="value">表示一个缓存的值。</param>
         /// <param name="policy">缓存使用的策略（一般是过期策略）</param>
-        /// <param name="region"></param>
-        /// <returns></returns>
+        /// <param name="region">表示缓存所属的域。</param>
+        /// <returns>添加成功返回 true, 失败返回 false。</returns>
         public bool Add(string key, object value, Policy policy, string region = null)
         {
-            if (!this.IsEnabled) return false;
+            if(string.IsNullOrWhiteSpace(key)) throw new ArgumentException($"parameter {nameof(key)} can not be null or empty.");
 
-            return this._cacheProvider.Add(key, value, policy, region);
+            if(!this.IsEnabled) return false;
+
+            if (value == null) return false;
+
+            ChangeChecker checker = null;
+            if (policy != null)
+            {
+                checker = policy.Checker;
+            }
+
+            return this.AddCore(region, key, new StoredValue()
+            {
+                Value = value,
+                Checker = checker
+            });
         }
 
         /// <summary>
-        /// 删除指定键值的缓存。
+        /// 把指定项从缓存中移除。
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="region"></param>
+        /// <param name="key">表示一个缓存的键。</param>
+        /// <param name="region">表示缓存所属的域。</param>
         public void Remove(string key, string region = null)
         {
-            if (this.IsEnabled)
-            {
-                this._cacheProvider.Remove(key, region);
-            }
+            if(string.IsNullOrWhiteSpace(key)) throw new ArgumentException($"parameter {nameof(key)} can not be null or empty.");
+
+            if(!this.IsEnabled) return;
+
+            this.RemoveCore(region, key);
         }
 
         /// <summary>
-        /// 清空某个区域下的所有数据。
+        /// 删除某个区域中的所有值。
         /// </summary>
-        /// <param name="region"></param>
+        /// <param name="region">表示缓存所属的域。</param>
         public void ClearRegion(string region)
         {
-            if (this.IsEnabled)
-            {
-                this._cacheProvider.ClearRegion(region);
-            }
+            if(!this.IsEnabled) return;
+
+            this.ClearRegionCore(region);
         }
 
         /// <summary>
@@ -104,42 +118,77 @@ namespace Rafy.Utils.Caching
         /// </summary>
         public void Clear()
         {
-            this._cacheProvider.Clear();
+            if(!this.IsEnabled) return;
+
+            this.ClearCore();
         }
+
 
         /// <summary>
         /// 从缓存中获取指定的值。
-        /// 
-        /// 尝试使用缓存获取，如果不存在，则调用ifNotExists函数获取返回值，并添加到缓存中。
+        /// <para>尝试使用缓存获取，如果不存在，则调用ifNotExists函数获取返回值，并添加到缓存中。</para>
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="key"></param>
-        /// <param name="ifNotExists"></param>
-        /// <param name="regionName"></param>
-        /// <param name="policy"></param>
+        /// <typeparam name="T">表示缓存项的类型。</typeparam>
+        /// <param name="key">表示一个缓存的键。</param>
+        /// <param name="ifNotExists">表示如果未取到缓存，执行的委托。</param>
+        /// <param name="regionName">表示缓存所属的域。</param>
+        /// <param name="policy">表示缓存策略。</param>
         /// <returns></returns>
         public T Get<T>(string key, Func<T> ifNotExists, string regionName = null, Policy policy = null)
             where T : class
         {
-            var result = this.Get(key, regionName) as T;
-            if (result == null)
-            {
-                lock (this)
-                {
-                    result = this.Get(key, regionName) as T;
-                    if (result == null)
-                    {
-                        result = ifNotExists();
+            if(string.IsNullOrWhiteSpace(key)) throw new ArgumentException($"parameter {nameof(key)} can not be null or empty.");
 
-                        if (result != null)
-                        {
-                            this.Add(key, result, policy, regionName);
-                        }
-                    }
+            if (!this.IsEnabled) return default(T);
+
+            var result = this.Get(key, regionName) as T;
+
+            if(result != null) return result;
+
+            lock(this)
+            {
+                result = this.Get(key, regionName) as T;
+                if (result != null) return result;
+
+                result = ifNotExists();
+
+                if(result != null)
+                {
+                    this.Add(key, result, policy, regionName);
                 }
             }
 
             return result;
         }
+
+        #region 子类实现以下方法
+
+        protected internal abstract StoredValue GetCacheItemCore(string region, string key);
+
+        protected internal abstract bool AddCore(string region, string key, StoredValue value);
+
+        protected internal abstract void RemoveCore(string region, string key);
+
+        protected internal abstract void ClearRegionCore(string region);
+
+        protected internal abstract void ClearCore();
+
+        #endregion
+    }
+
+    /// <summary>
+    /// 存储在缓存中的对象
+    /// </summary>
+    public class StoredValue
+    {
+        /// <summary>
+        /// 真实的缓存值。
+        /// </summary>
+        public object Value;
+
+        /// <summary>
+        /// 缓存值获取时需要进行的检测。
+        /// </summary>
+        public ChangeChecker Checker;
     }
 }

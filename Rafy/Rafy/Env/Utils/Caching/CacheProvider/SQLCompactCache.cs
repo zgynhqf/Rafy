@@ -29,7 +29,7 @@ namespace Rafy.Utils.Caching
     /// <summary>
     /// 使用 SqlCe 的缓存提供器。
     /// </summary>
-    public class SQLCompactCacheProvider : CacheProvider
+    public class SQLCompactCache : Cache
     {
         /// <summary>
         /// 所有未提供Region的项，都加入到这个Region中。
@@ -39,7 +39,7 @@ namespace Rafy.Utils.Caching
         /// <summary>
         /// SQL CE 3.5 不支持锁进制，但是ObjectCache必须实现多线程间同步。
         /// </summary>
-        private ReaderWriterLockSlim _locker = new ReaderWriterLockSlim();
+        private readonly ReaderWriterLockSlim _locker = new ReaderWriterLockSlim();
 
         /// <summary>
         /// 由于SQLCE不支持多链接，所以打开/关闭链接时，需要手工进行同步。
@@ -54,7 +54,7 @@ namespace Rafy.Utils.Caching
 
         private IDbAccesser _db;
 
-        public SQLCompactCacheProvider(string dbFile)
+        public SQLCompactCache(string dbFile)
         {
             if (string.IsNullOrWhiteSpace(dbFile)) throw new ArgumentNullException("dbFile");
 
@@ -322,10 +322,10 @@ ALTER TABLE [Entities] ADD CONSTRAINT [PK__Entities__000000000000000D] PRIMARY K
             if (region == null) region = _commonRegionName;
 
             using (var reader = this._db.QueryDataReader(
-@"Select Value, ValuePath, ChangeChecker 
-from [Entities]
-where [Region] = {0} and [Key] = {1}
-", region, key))
+                @"Select Value, ValuePath, ChangeChecker 
+                from [Entities]
+                where [Region] = {0} and [Key] = {1}
+                ", region, key))
             {
                 if (reader.Read())
                 {

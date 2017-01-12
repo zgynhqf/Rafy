@@ -13,8 +13,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Rafy.MetaModel;
 using Rafy.Utils.Caching;
 
@@ -176,7 +174,7 @@ namespace Rafy.Domain.Caching
         internal override IList<Entity> GetCachedTable()
         {
             //使用 MemoryDisk 作为 GetAll 的缓存
-            Cache cache = CacheInstances.MemoryDisk;
+            ICache cache = CacheInstances.MemoryDisk;
 
             IList<Entity> result = null;
 
@@ -209,7 +207,7 @@ namespace Rafy.Domain.Caching
         internal override IList<Entity> GetCachedTableByParent(Entity parent)
         {
             //只使用 SqlCe 作为 GetByParent 的缓存
-            Cache cache = CacheInstances.Disk;
+            ICache cache = CacheInstances.Disk;
 
             IList<Entity> result = null;
 
