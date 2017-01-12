@@ -57,6 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommonTest\CacheInstances.cs" />
     <Compile Include="Entities\Blog\Article.cs" />
     <Compile Include="Entities\Blog\Article.g.cs">
       <SubType>Code</SubType>

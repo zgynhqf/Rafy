@@ -8,13 +8,10 @@
  * 
  * 历史记录：
  * 创建文件 胡庆访 20101017
+ * 修改文件 宋军瑞 20170112 -- 重构 Caching 模块。
  * 
 *******************************************************/
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Runtime.Caching;
 
 namespace Rafy.Utils.Caching
@@ -25,18 +22,25 @@ namespace Rafy.Utils.Caching
     /// 使用System.Runtime.Caching.MemoryCache作为内部实现。
     /// 由于MemoryCache不支持Region，所以这里使用RegionCache进行转换。
     /// </summary>
-    public class MemoryCacheProvider : CacheProvider
+    public class MemoryCache : Cache
     {
-        private RegionCache _regionCache = new RegionCache(MemoryCache.Default);
+        internal MemoryCache()
+        {
+            _regionCache = new RegionCache(System.Runtime.Caching.MemoryCache.Default);
+        }
+
+        public MemoryCache(System.Runtime.Caching.MemoryCache memoryCache)
+        {
+            _regionCache = new RegionCache(memoryCache);
+        }
+
+        private readonly RegionCache _regionCache;
 
         protected internal override StoredValue GetCacheItemCore(string region, string key)
         {
             var item = this._regionCache.GetCacheItem(key, region);
-            if (item != null)
-            {
-                return item.Value as StoredValue;
-            }
-            return null;
+
+            return item?.Value as StoredValue;
         }
 
         protected internal override bool AddCore(string region, string key, StoredValue value)

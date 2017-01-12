@@ -159,7 +159,6 @@
     <Compile Include="Domain\DomainApp.cs" />
     <Compile Include="Domain\DomainMetaExtension.cs" />
     <Compile Include="Domain\EntityRepository\Caching\AggregateChecker.cs" />
-    <Compile Include="Domain\EntityRepository\Caching\CacheInstances.cs" />
     <Compile Include="Domain\EntityRepository\Caching\RepositoryCache.cs" />
     <Compile Include="Domain\EntityRepository\Caching\ServerRepositoryCache.cs" />
     <Compile Include="Domain\EntityRepository\Caching\VersionSyncClientCache\AggregateRootCache.cs" />
@@ -488,6 +487,8 @@
     <Compile Include="Env\MetaModel\Meta\Validation\IValidationRule.cs" />
     <Compile Include="Env\MetaModel\Meta\Validation\RuleMeta.cs" />
     <Compile Include="Env\MetaModel\View\WPFEditorNames.cs" />
+    <Compile Include="Env\Utils\Caching\CacheProvider\PerHttpRequestCache.cs" />
+    <Compile Include="Env\Utils\Caching\ICache.cs" />
     <Compile Include="Env\Utils\DateTimePart.cs" />
     <Compile Include="Env\Utils\EnumViewModel.cs" />
     <Compile Include="Env\Utils\Freezable.cs" />
@@ -657,10 +658,9 @@
     <Compile Include="ManagedProperty\zzzManagedPropertyObjectView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Env\Utils\Caching\Cache.cs" />
-    <Compile Include="Env\Utils\Caching\CacheProvider\CacheProvider.cs" />
-    <Compile Include="Env\Utils\Caching\CacheProvider\HybirdCacheProvider.cs" />
-    <Compile Include="Env\Utils\Caching\CacheProvider\MemoryCacheProvider.cs" />
-    <Compile Include="Env\Utils\Caching\CacheProvider\SQLCompactCacheProvider.cs" />
+    <Compile Include="Env\Utils\Caching\CacheProvider\HybirdCache.cs" />
+    <Compile Include="Env\Utils\Caching\CacheProvider\MemoryCache.cs" />
+    <Compile Include="Env\Utils\Caching\CacheProvider\SQLCompactCache.cs" />
     <Compile Include="Env\Utils\Caching\CacheProvider\SystemCaching\NormalProvider.cs" />
     <Compile Include="Env\Utils\Caching\CacheProvider\SystemCaching\RegionCache.cs" />
     <Compile Include="Env\Utils\Caching\ChangeChecker.cs" />
