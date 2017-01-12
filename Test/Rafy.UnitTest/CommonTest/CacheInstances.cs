@@ -29,7 +29,6 @@ namespace Rafy.Domain.Caching
         /// </summary>
         public static readonly string CACHE_FILE_NAME = "Rafy_Disk_Cache.sdf";
 
-        private static ICache _memory;
         private static ICache _perHttpRequest;
         private static ICache _disk;
         private static ICache _memoryDisk;
@@ -37,7 +36,7 @@ namespace Rafy.Domain.Caching
         /// <summary>
         /// 内存缓存
         /// </summary>
-        public static ICache Memory => _memory ?? (_memory = new MemoryCache());
+        public static ICache Memory => Cache.Default;
 
         /// <summary>
         /// 硬盘缓存。
