@@ -30,7 +30,7 @@ namespace Rafy.Accounts
         /// 数据权限集合 扩展属性。
         /// </summary>
         public static ListProperty<UserRoleList> UserRoleListProperty =
-            P<Role>.RegisterListExtension<UserRoleList>("UserRoleList", typeof(UserExtension));
+            P<User>.RegisterListExtension<UserRoleList>("UserRoleList", typeof(UserExtension));
         /// <summary>
         /// 获取用户角色列表
         /// </summary>
