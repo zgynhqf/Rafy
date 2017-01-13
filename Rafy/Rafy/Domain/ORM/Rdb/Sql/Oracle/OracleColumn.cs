@@ -43,7 +43,7 @@ namespace Rafy.Domain.ORM.Oracle
             return value;
         }
 
-        internal override void Write(Entity entity, object value)
+        public override void Write(Entity entity, object value)
         {
             var info = this.Info;
             if (value != null && info.IsBooleanType)

@@ -433,19 +433,40 @@ namespace RafyUnitTest
             using (var context = new RafyDbMigrationContext(UnitTestEntityRepositoryDataProvider.DbSettingName))
             {
                 context.RefreshComments();
-
-                if (!DbSetting.IsOracleProvider(context.DbSetting))
+                if (context.DbSetting.ProviderName.Contains("MySql"))
                 {
                     //数据库数据
                     using (var db = DbAccesserFactory.Create(context.DbSetting))
                     {
                         Func<string, DataRow[]> queryComments = tableName =>
                         {
-                            var table = db.QueryDataTable(
-@"select t.name tableName, c.name columnName, p.Value Comment from sys.all_columns c
-join sys.tables t on c.object_id = t.object_id 
-join sys.extended_properties p on p.major_id = c.object_id and p.minor_id = c.column_id
-where t.name = '" + tableName + "'");
+                            var table = db.QueryDataTable(@"show full columns from `" + tableName + "`");
+                            return table.Rows.Cast<DataRow>().ToArray();
+                        };
+                        var rows = queryComments("ARTICLE");
+                        Assert.IsTrue(rows.Any(r => r["Field"].ToString() == "Id"), "实体的标识属性。");
+                        Assert.IsTrue(rows.Any(r => r["Field"].ToString() == "AdministratorId"), "文章的管理员");
+                        Assert.IsTrue(rows.Any(r => r["Field"].ToString() == "CreatedTime"), "实体的创建时间。");
+
+                        rows = queryComments("Roles");
+                        var roleTypeDesc = rows.FirstOrDefault(r => r["Field"].ToString() == "RoleType");
+                        Assert.IsNotNull(roleTypeDesc, "枚举属性必须有注释。");
+                        var comment = roleTypeDesc["Comment"].ToString();
+                        Assert.AreEqual(comment, @"角色的类型
+0:(Normal, 一般)
+1:(Administrator, 管理员)");
+                    }
+                }
+                else if (!DbSetting.IsOracleProvider(context.DbSetting))
+                {
+                    //数据库数据
+                    using (var db = DbAccesserFactory.Create(context.DbSetting))
+                    {
+                        Func<string, DataRow[]> queryComments = tableName =>
+                        {
+                            var table = db.QueryDataTable(@"select t.name tableName, c.name columnName, p.Value Comment from sys.all_columns c
+                            join sys.tables t on c.object_id = t.object_id join sys.extended_properties p on p.major_id = c.object_id and p.minor_id = c.column_id
+                            where t.name = '" + tableName + "'");
                             return table.Rows.Cast<DataRow>().ToArray();
                         };
                         var rows = queryComments("ARTICLE");

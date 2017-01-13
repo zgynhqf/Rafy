@@ -18,6 +18,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Rafy.Data;
 using Rafy.DbMigration.Model;
+using System.Data;
 
 namespace Rafy.DbMigration.MySql
 {
@@ -27,38 +28,100 @@ namespace Rafy.DbMigration.MySql
     public sealed class MySqlMetaReader : DbMetaReader
     {
         /// <summary>
-        /// 
+        /// 构造函数 初始化配置
         /// </summary>
-        /// <param name="dbSetting"></param>
+        /// <param name="dbSetting">数据库配置信息</param>
         public MySqlMetaReader(DbSetting dbSetting) : base(dbSetting)
-        {
-        }
+        { }
 
         /// <summary>
-        /// 加载每个表的所有列
+        /// 加载指定数据库中的每个表的所有列
         /// </summary>
-        /// <param name="database"></param>
+        /// <param name="database">需要加载列的数据库对象</param>
         protected override void LoadAllColumns(Database database)
         {
-            throw new NotImplementedException();
+            foreach (Table table in database.Tables)
+            {
+                using (var columnsReader = this.Db.QueryDataReader(@"SHOW FULL COLUMNS FROM `"+ table.Name + "`;"))
+                {
+                    while (columnsReader.Read())
+                    {
+                        string columnName = columnsReader["Field"].ToString();
+                        string sqlType = columnsReader["Type"].ToString();
+
+                        DbType dbType = MySqlDbTypeHelper.ConvertFromMySqlTypeString(sqlType);
+                        Column column = new Column(columnName, dbType, null, table);
+                        column.IsRequired = string.Compare(columnsReader["Null"].ToString(),"Yes",true)!=0;
+
+                        table.Columns.Add(column);
+                    }
+                    table.SortColumns();
+                }
+            }
         }
 
         /// <summary>
-        /// 添加所有表
+        /// 加载指定数据库的所有的数据表
         /// </summary>
-        /// <param name="database"></param>
+        /// <param name="database">待加载表的数据库对象</param>
         protected override void LoadAllTables(Database database)
         {
-            throw new NotImplementedException();
+            using (var reader = this.Db.QueryDataReader(@"select table_name from information_schema.tables where table_schema='"+ database.Name + "';"))
+            {
+                while (reader.Read())
+                {
+                    string tableName = reader["TABLE_NAME"].ToString();
+                    Table table = new Table(tableName, database);
+                    database.Tables.Add(table);
+                }
+            }
         }
 
         /// <summary>
-        /// 加载外键
+        /// 加载所有的约束
         /// </summary>
-        /// <returns></returns>
+        /// <returns>以列表的形式返回所有约束数据</returns>
         protected override List<Constraint> ReadAllConstrains()
         {
-            throw new NotImplementedException();
+            List<Constraint> allConstrains = new List<Constraint>();
+
+            #region 缓存数据库中的所有约束
+
+            using (var constraintReader = this.Db.QueryDataReader(
+@"select O.CONSTRAINT_SCHEMA,O.CONSTRAINT_NAME,O.TABLE_SCHEMA,O.TABLE_NAME,O.COLUMN_NAME,O.REFERENCED_TABLE_SCHEMA,O.REFERENCED_TABLE_NAME,O.REFERENCED_COLUMN_NAME,O.UPDATE_RULE,O.DELETE_RULE,O.UNIQUE_CONSTRAINT_NAME,T.CONSTRAINT_TYPE
+from (
+    select K.CONSTRAINT_SCHEMA,K.CONSTRAINT_NAME,K.TABLE_SCHEMA,K.TABLE_NAME,K.COLUMN_NAME,K.REFERENCED_TABLE_SCHEMA,K.REFERENCED_TABLE_NAME,K.REFERENCED_COLUMN_NAME,R.UPDATE_RULE,R.DELETE_RULE,R.UNIQUE_CONSTRAINT_NAME
+        from information_schema.KEY_COLUMN_USAGE K 
+            LEFT join information_schema.REFERENTIAL_CONSTRAINTS R on K.CONSTRAINT_NAME=R.CONSTRAINT_NAME
+) as O 
+inner join Information_schema.TABLE_CONSTRAINTS T on O.Table_Name=T.TABLE_NAME and T.CONSTRAINT_NAME=O.CONSTRAINT_NAME
+where O.CONSTRAINT_SCHEMA!='mysql' and O.CONSTRAINT_SCHEMA!='sys';"))
+            {
+                while (constraintReader.Read())
+                {
+                    var c = new Constraint()
+                    {
+                        CONSTRAINT_NAME = constraintReader["CONSTRAINT_NAME"].ToString(),
+                        CONSTRAINT_TYPE = constraintReader["CONSTRAINT_TYPE"].ToString(),
+                        TABLE_NAME = constraintReader["TABLE_NAME"].ToString(),
+                        COLUMN_NAME = constraintReader["COLUMN_NAME"].ToString(),
+
+                        FK_TABLE_NAME = constraintReader["TABLE_NAME"].ToString(),
+                        FK_COLUMN_NAME = constraintReader["COLUMN_NAME"].ToString(),
+                        PK_TABLE_NAME = constraintReader["REFERENCED_TABLE_NAME"].ToString(),
+                        PK_COLUMN_NAME = constraintReader["REFERENCED_COLUMN_NAME"].ToString(),
+
+                        UNIQUE_CONSTRAINT_NAME = constraintReader["UNIQUE_CONSTRAINT_NAME"].ToString(),
+                        DELETE_RULE = constraintReader["DELETE_RULE"].ToString()
+                    };
+
+                    allConstrains.Add(c);
+                }
+            }
+
+            #endregion
+
+            return allConstrains;
         }
     }
 }
