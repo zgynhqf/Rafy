@@ -25,9 +25,13 @@ using Rafy.Domain.ORM.Oracle;
 using Rafy.Domain.ORM.SqlCe;
 using Rafy.Domain.ORM.SqlServer;
 using Rafy.Utils;
+using Rafy.Domain.ORM.MySql;
 
 namespace Rafy.Domain.ORM
 {
+    /// <summary>
+    /// 获取指定类型的数据表对象的工厂类
+    /// </summary>
     internal static class RdbTableFactory
     {
         /// <summary>
@@ -47,6 +51,9 @@ namespace Rafy.Domain.ORM
                     break;
                 case DbSetting.Provider_SqlCe:
                     table = new SqlCeTable(repo);
+                    break;
+                case DbSetting.Provider_MySql:
+                    table = new MySqlTable(repo);
                     break;
                 default:
                     if (DbConnectionSchema.IsOracleProvider(provider))

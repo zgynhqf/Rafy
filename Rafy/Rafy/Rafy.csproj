@@ -42,6 +42,7 @@
     <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -112,7 +113,10 @@
     <Compile Include="DbMigration\Providers\MySql\MySqlDbTypeHelper.cs" />
     <Compile Include="DbMigration\Providers\MySql\MySqlMetaReader.cs" />
     <Compile Include="DbMigration\Providers\MySql\MySqlMigrationProvider.cs" />
+    <Compile Include="DbMigration\Providers\MySql\Run\MySqlChangeDbMigrationRun.cs" />
     <Compile Include="DbMigration\Providers\MySql\MySqlRunGenerator.cs" />
+    <Compile Include="DbMigration\Providers\MySql\Run\MySqlCreateDbMigrationRun.cs" />
+    <Compile Include="DbMigration\Providers\MySql\Run\MySqlDropDbMigrationRun.cs" />
     <Compile Include="DbMigration\Providers\Oracle\OracleDbTypeHelper.cs" />
     <Compile Include="DbMigration\Providers\Oracle\OracleMetaReader.cs" />
     <Compile Include="DbMigration\Providers\Oracle\OracleMigrationProvider.cs" />
@@ -398,6 +402,9 @@
     <Compile Include="Domain\ORM\Rdb\RdbTable\RdbTableFinder.cs" />
     <Compile Include="Domain\ORM\Rdb\SingleConnectionTrasactionScope.cs" />
     <Compile Include="Domain\ORM\Rdb\Sql\FirstTableFinder.cs" />
+    <Compile Include="Domain\ORM\Rdb\Sql\MySql\MySqlColumn.cs" />
+    <Compile Include="Domain\ORM\Rdb\Sql\MySql\MySqlGenerator.cs" />
+    <Compile Include="Domain\ORM\Rdb\Sql\MySql\MySqlTable.cs" />
     <Compile Include="Domain\ORM\Rdb\Sql\Oracle\OracleColumn.cs" />
     <Compile Include="Domain\ORM\Rdb\Sql\Oracle\OracleSqlGenerator.cs" />
     <Compile Include="Domain\ORM\Rdb\Sql\Oracle\OracleTable.cs" />
