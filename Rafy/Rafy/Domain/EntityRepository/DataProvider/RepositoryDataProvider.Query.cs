@@ -145,7 +145,7 @@ namespace Rafy.Domain
         public virtual EntityList GetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad)
         {
             //递归查找所有树型子
-            var childCode = treeIndex + SqlGenerator.WILDCARD_ALL + _repository.TreeIndexOption.Seperator;
+            var childCode = treeIndex + SqlGenerator.WILDCARD_ALL;// + _repository.TreeIndexOption.Seperator;
             var table = f.Table(_repository);
             var q = f.Query(
                 table,
