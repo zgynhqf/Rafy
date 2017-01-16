@@ -180,6 +180,24 @@ namespace Rafy.RBAC.GroupManagement
         }
 
         /// <summary>
+        /// 获取组织及其下级子组织
+        /// </summary>
+        /// <param name="treeIndex">组织的treeIndex</param>
+        /// <returns></returns>
+        [RepositoryQuery]
+        public virtual GroupList GetGroupAndLowerByTreeParentIndex(string treeIndex)
+        {
+            var f = QueryFactory.Instance;
+            var t = f.Table<Group>();
+            var q = f.Query(
+                selection: t.Star(),//查询所有列
+                from: t,//要查询的实体的表
+                where: t.Column(Entity.TreeIndexProperty).Like(treeIndex+"%")
+            );
+            return (GroupList)this.QueryData(q);
+        }
+
+        /// <summary>
         /// 获取组织的组织Id及其子组织Id
         /// 内部是根据group的TreeIndex进行查找，所以treeIndex必须有值
         /// </summary>
@@ -191,7 +209,7 @@ namespace Rafy.RBAC.GroupManagement
             groupList.EachNode(item =>
             {
                 newGroupList.AddRange(
-                    TreeHelper.ConvertToList<Group>(this.GetByTreeParentIndex(item.TreeIndex))
+                    TreeHelper.ConvertToList<Group>(this.GetGroupAndLowerByTreeParentIndex(item.TreeIndex))
                         .Select(p => p.Id));
                 return false;
             });
