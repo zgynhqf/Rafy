@@ -4,8 +4,9 @@
     xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
     xmlns:xlink="http://www.w3.org/1999/xlink">
     <introduction>
-      <para> Rafy基于角色的访问权限控制,主要包含四个插件，角色插件（Rafy.RBAC.RoleManagement）、用户角色插件（Rafy.RBAC.UserRoleManagement）、组织插件（Rafy.RBAC.GroupManagement）、数据权限插件（Rafy.RBAC.DataPermissionManagement）。其中角色插件是底层插件，其它三个插件都依赖角色插件，如下图。
-      <!--<para>
+      <para>
+        Rafy基于角色的访问权限控制,主要包含四个插件，角色插件（Rafy.RBAC.RoleManagement）、用户角色插件（Rafy.RBAC.UserRoleManagement）、组织插件（Rafy.RBAC.GroupManagement）、数据权限插件（Rafy.RBAC.DataPermissionManagement）。其中角色插件是底层插件，其它三个插件都依赖角色插件，如下图。四个插件可以组合也可以独立使用，用户根据自己的实际场景自行下载相应的插件。
+        <!--<para>
         权限管理技术，一般使用基于角色访问控制技术RBAC（Role Based Access Control）。该技术被广泛运用于各个系统，非常容易掌握。该技术模型如下图示：
         <mediaLink>
           <image xlink:href="RBAC权限模型"/>
