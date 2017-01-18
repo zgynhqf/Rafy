@@ -100,7 +100,12 @@ namespace Rafy.Domain.ORM
             return value;
         }
 
-        internal virtual void Write(Entity entity, object val)
+        /// <summary>
+        /// 写入操作，PatrickLiu修改了访问修饰符，从internal修改为pubic
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="val"></param>
+        public virtual void Write(Entity entity, object val)
         {
             var refIdProperty = _columnInfo.Property as IRefIdProperty;
             if (refIdProperty != null)

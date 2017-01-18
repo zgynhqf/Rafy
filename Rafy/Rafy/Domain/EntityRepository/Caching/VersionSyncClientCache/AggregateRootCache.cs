@@ -13,8 +13,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Rafy.Utils.Caching;
 using Rafy.MetaModel;
 
@@ -29,10 +27,7 @@ namespace Rafy.Domain.Caching
 
         private AggregateRootCache() { }
 
-        private Cache Cache
-        {
-            get { return CacheInstances.Memory; }
-        }
+        private ICache Cache => Utils.Caching.Cache.Default;
 
         //public EntityList CacheAll(Type entityType, Func<EntityList> ifNotExists = null)
         //{

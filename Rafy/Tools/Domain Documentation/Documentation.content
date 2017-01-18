@@ -32,7 +32,7 @@
         <Topic id="59c80aec-c910-4880-b165-c3495ed5eb3e" visible="True" isExpanded="true">
           <Topic id="c7c6d07b-bb41-4590-a2a6-8b0b49ce1c0b" visible="True" />
           <Topic id="6d65448c-b51b-4c9b-9500-f6b7a48b1188" visible="True" />
-          <Topic id="02f40bcc-1ff3-4abc-b4a9-2dea57d516ce" visible="True" isSelected="true" />
+          <Topic id="02f40bcc-1ff3-4abc-b4a9-2dea57d516ce" visible="True" />
           <Topic id="7e5f115b-c00c-4dff-8786-57e603353243" visible="False" />
           <Topic id="c2eced2c-e434-4d53-a06d-fbc518fbddf5" visible="True" />
           <Topic id="ae9a2512-1528-401a-ac4f-502304a7ae03" visible="True" />
@@ -69,7 +69,7 @@
         <Topic id="7e890df0-d93b-424d-8bc1-e6fc939160f3" visible="True" />
         <Topic id="be2a2e90-87f1-4390-aabb-b3ad82561cfa" visible="True" />
       </Topic>
-      <Topic id="6f0cbfca-e254-4219-bda1-34039e617df4" visible="False">
+      <Topic id="6f0cbfca-e254-4219-bda1-34039e617df4" visible="True" isExpanded="true" isSelected="true">
         <Topic id="cb3db853-e455-43b5-b762-8794a03c3aac" visible="False" />
         <Topic id="18a091ea-f39e-4e16-a2a7-3a499a0acb91" visible="False" />
       </Topic>

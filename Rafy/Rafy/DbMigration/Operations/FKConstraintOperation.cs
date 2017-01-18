@@ -24,25 +24,28 @@ namespace Rafy.DbMigration.Operations
         public string ConstraintName { get; set; }
 
         /// <summary>
-        /// FK Table
+        /// 外键表
         /// </summary>
         public string DependentTable { get; set; }
 
         /// <summary>
-        /// FK Table Column
+        /// 外键表的字段
         /// </summary>
         public string DependentTableColumn { get; set; }
 
         /// <summary>
-        /// PK Table
+        /// 主键表
         /// </summary>
         public string PrincipleTable { get; set; }
 
         /// <summary>
-        /// PK Table Column
+        /// 主键表的字段
         /// </summary>
         public string PrincipleTableColumn { get; set; }
 
+        /// <summary>
+        /// 是否需要级联删除
+        /// </summary>
         public bool NeedDeleteCascade { get; set; }
 
         internal ForeignConstraint CopyFromConstraint
