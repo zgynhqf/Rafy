@@ -231,6 +231,10 @@
       <ImageId>RBAC04</ImageId>
       <AlternateText>RBAC 04</AlternateText>
     </Image>
+    <Image Include="Media\插件\RBAC插件\RBAC05.png">
+      <ImageId>RBAC05</ImageId>
+      <AlternateText>RBAC 05</AlternateText>
+    </Image>
     <Image Include="Media\插件\RBAC插件\RBAC插件01.png">
       <ImageId>RBAC插件01</ImageId>
       <AlternateText>RBAC插件01</AlternateText>
