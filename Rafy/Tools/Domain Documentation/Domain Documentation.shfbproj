@@ -98,6 +98,7 @@
     <Folder Include="Media\框架基础\插件化架构" />
     <Folder Include="Media\框架基础\产品线工程" />
     <Folder Include="Media\领域框架" />
+    <Folder Include="Media\领域框架\实体缓存" />
     <Folder Include="Media\领域框架\插件级扩展" />
     <Folder Include="Media\领域框架\其它" />
     <Folder Include="Media\领域框架\其它\代码段" />
@@ -341,6 +342,10 @@
     <Image Include="Media\领域框架\安装\安装02.png">
       <ImageId>安装02</ImageId>
       <AlternateText>安装02</AlternateText>
+    </Image>
+    <Image Include="Media\领域框架\实体缓存\Cache_01.png">
+      <ImageId>Cache_01</ImageId>
+      <AlternateText>Cache 01</AlternateText>
     </Image>
     <Image Include="Media\领域框架\快速试用\创建第一个程序\第一个程序01.png">
       <ImageId>第一个程序01</ImageId>
