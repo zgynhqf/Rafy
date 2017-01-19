@@ -33,8 +33,8 @@ namespace Rafy.DbMigration
         public static string PKFKDataTypeLength = "40";
 
         /// <summary>
-        /// 可设置所有一般字符串字段的默认长度。默认为 4000。
+        /// 可设置所有一般字符串字段的默认长度。默认为 2000。
         /// </summary>
-        public static string StringColumnDataTypeLength = "4000";
+        public static string StringColumnDataTypeLength = "2000";
     }
 }

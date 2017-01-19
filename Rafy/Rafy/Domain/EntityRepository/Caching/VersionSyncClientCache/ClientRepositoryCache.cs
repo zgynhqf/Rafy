@@ -13,8 +13,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Rafy.MetaModel;
 using Rafy.Utils.Caching;
 
@@ -163,7 +161,7 @@ namespace Rafy.Domain.Caching
             {
                 //同时清空 Memory 及 Disk 中的缓存。
                 var region = this.ClientCacheDefinition.Class.Name;
-                CacheInstances.MemoryDisk.ClearRegion(region);
+                this.Cache.ClearRegion(region);
             }
         }
 
@@ -175,9 +173,6 @@ namespace Rafy.Domain.Caching
         /// <returns></returns>
         internal override IList<Entity> GetCachedTable()
         {
-            //使用 MemoryDisk 作为 GetAll 的缓存
-            Cache cache = CacheInstances.MemoryDisk;
-
             IList<Entity> result = null;
 
             var sd = this.ClientCacheDefinition;
@@ -187,13 +182,13 @@ namespace Rafy.Domain.Caching
                 var key = CacheAllKey;
 
                 //如果内存不存在此数据，则尝试使用硬盘缓存获取
-                result = cache.Get(key, className) as IList<Entity>;
+                result = this.Cache.Get(key, className) as IList<Entity>;
                 if (result == null)
                 {
                     result = this._repository.GetAll();
 
                     var policy = new Policy() { Checker = new VersionChecker(sd.Class) };
-                    cache.Add(key, result, policy, className);
+                    this.Cache.Add(key, result, policy, className);
                 }
             }
 
@@ -208,9 +203,6 @@ namespace Rafy.Domain.Caching
         /// <returns></returns>
         internal override IList<Entity> GetCachedTableByParent(Entity parent)
         {
-            //只使用 SqlCe 作为 GetByParent 的缓存
-            Cache cache = CacheInstances.Disk;
-
             IList<Entity> result = null;
 
             var sd = this.ClientCacheDefinition;
@@ -218,7 +210,7 @@ namespace Rafy.Domain.Caching
             {
                 var className = sd.Class.Name;
                 var key = string.Format(CacheByParentKeyFormat, parent.Id);
-                result = cache.Get(key, className) as IList<Entity>;
+                result = this.Cache.Get(key, className) as IList<Entity>;
 
                 if (result == null)
                 {
@@ -236,7 +228,7 @@ namespace Rafy.Domain.Caching
                     }
 
                     var policy = new Policy() { Checker = checker };
-                    cache.Add(key, result, policy, className);
+                    this.Cache.Add(key, result, policy, className);
                 }
             }
 

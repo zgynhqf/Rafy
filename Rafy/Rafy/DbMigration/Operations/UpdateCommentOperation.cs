@@ -13,6 +13,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,10 +31,15 @@ namespace Rafy.DbMigration.Operations
         public string TableName { get; set; }
 
         /// <summary>
-        /// 要添加注释的表的名字。
+        /// 要添加注释的表的字段的名字。
         /// 如果本字段为空，则表示给表加注释，而不是给字段加注释。
         /// </summary>
         public string ColumnName { get; set; }
+
+        /// <summary>
+        /// 修改字段注释信息的字段类型
+        /// </summary>
+        public DbType ColumnDataType { get; set; }
 
         /// <summary>
         /// 注释内容
@@ -46,6 +52,7 @@ namespace Rafy.DbMigration.Operations
             {
                 TableName = this.TableName,
                 ColumnName = this.ColumnName,
+                ColumnDataType = this.ColumnDataType,
                 Comment = string.Empty
             });
         }

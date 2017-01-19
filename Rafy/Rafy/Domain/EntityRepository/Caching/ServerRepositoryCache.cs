@@ -24,11 +24,6 @@ namespace Rafy.Domain.Caching
     /// </summary>
     public class ServerRepositoryCache : RepositoryCache
     {
-        /// <summary>
-        /// 应用层可以修改此属性来达到服务端缓存逻辑的变更。
-        /// </summary>
-        public static Cache ServerCacheAPI = CacheInstances.Memory;
-
         private bool? _enabled;
 
         internal ServerRepositoryCache(IRepository repository) : base(repository) { }
@@ -56,7 +51,8 @@ namespace Rafy.Domain.Caching
         internal override IList<Entity> GetCachedTable()
         {
             var className = this._repository.EntityType.Name;
-            return ServerCacheAPI.Get(CacheAllKey, () => this._repository.GetAll(), className);
+
+            return this.Cache.Get(CacheAllKey, () => this._repository.GetAll(), className);
         }
 
         internal override IList<Entity> GetCachedTableByParent(Entity parent)
@@ -64,7 +60,8 @@ namespace Rafy.Domain.Caching
             var className = this._repository.EntityType.Name;
             var parentId = parent.Id;
             var key = string.Format(CacheByParentKeyFormat, parentId);
-            return ServerCacheAPI.Get(key, () => this._repository.GetByParentId(parentId), className);
+
+            return this.Cache.Get(key, () => this._repository.GetByParentId(parentId), className);
         }
     }
 }

@@ -25,6 +25,31 @@ using UT;
 namespace RafyUnitTest
 {
     [TestClass]
+    public class ORMTest2
+    {
+        [TestMethod]
+        public void ORM_Performance_Insert_DBA2222()
+        {
+            using (var dba = DbAccesserFactory.Create("myconnctions"))
+            {
+                dba.ExecuteText(
+                    "INSERT INTO Book (Author,BookCategoryId,BookLocId,Code,Content,Name,Price,Publisher,CreatedTime,UpdatedTime) VALUES ({0},{1},{2},{3},{4},{5},{6},{7},{8},{9})",
+                    "罗琳",
+                    1,
+                    2,
+                    "HP1232342",
+                    "哈利波特与死亡圣器的内容",
+                    "哈利波特与死亡圣器",
+                    324.65m,
+                    "魔法书屋",
+                    DateTime.Now,
+                    DateTime.Now
+                    );
+            }
+        }
+    }
+
+    [TestClass]
     public class ORMTest
     {
         [ClassInitialize]

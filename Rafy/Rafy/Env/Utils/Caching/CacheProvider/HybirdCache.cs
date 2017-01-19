@@ -8,14 +8,10 @@
  * 
  * 历史记录：
  * 创建文件 胡庆访 20101017
+ * 修改文件 宋军瑞 20170112 -- 重构 Caching 模块。
  * 
 *******************************************************/
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Rafy.Threading;
 
 namespace Rafy.Utils.Caching
@@ -25,32 +21,32 @@ namespace Rafy.Utils.Caching
     /// 一级缓存：内存
     /// 二级缓存：硬盘/数据库
     /// </summary>
-    public class HybirdCacheProvider : CacheProvider
+    public class HybirdCache : Cache
     {
         /// <summary>
         /// 一级缓存：内存
         /// </summary>
-        private CacheProvider _memory;
+        private Cache _memory;
 
         /// <summary>
         /// 二级缓存：硬盘
         /// </summary>
-        private CacheProvider _disk;
+        private Cache _disk;
 
         /// <summary>
         /// 使用指定的 sqlce 文件来作为二级缓存的硬盘缓存。
         /// </summary>
         /// <param name="sqlceFile"></param>
-        public HybirdCacheProvider(string sqlceFile) : this(new SQLCompactCacheProvider(sqlceFile)) { }
+        public HybirdCache(string sqlceFile) : this(new SQLCompactCache(sqlceFile)) { }
 
         /// <summary>
         /// 使用指定的硬盘缓存来构造二级缓存。
         /// </summary>
-        /// <param name="diskProvider"></param>
-        public HybirdCacheProvider(CacheProvider diskProvider)
+        /// <param name="diskCache"></param>
+        public HybirdCache(Cache diskCache)
         {
-            this._memory = new MemoryCacheProvider();
-            this._disk = diskProvider;
+            this._memory = new MemoryCache();
+            this._disk = diskCache;
         }
 
         internal protected override StoredValue GetCacheItemCore(string region, string key)
