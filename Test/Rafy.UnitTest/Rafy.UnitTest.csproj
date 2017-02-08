@@ -118,6 +118,11 @@
       <SubType>Code</SubType>
       <DependentUpon>InvoiceItem.cs</DependentUpon>
     </Compile>
+    <Compile Include="Entities\DBI\Org.cs" />
+    <Compile Include="Entities\DBI\Org.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>Org.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\DMS\File.cs" />
     <Compile Include="Entities\DMS\File.g.cs">
       <SubType>Code</SubType>
