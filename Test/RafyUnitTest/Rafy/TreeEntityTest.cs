@@ -2314,15 +2314,24 @@ namespace RafyUnitTest
                     a1,
                     a2
                 }
-
             };
             RF.Save(a);
-            a1.PersistenceStatus = PersistenceStatus.Deleted;
-            RF.Save(a1);
+            bool hasException = false;
+            try
+            {
+                a1.PersistenceStatus = PersistenceStatus.Deleted;
+                RF.Save(a1);
+            }
+            catch (Exception ex)
+            {
+                hasException = true;
+            }
+            Assert.IsTrue(hasException);
+            a.TreeChildren.Remove(a1);
+            RF.Save(a);
             a3.TreePId = a.Id;
             RF.Save(a3);
             Assert.AreNotEqual(a2.TreeIndex, a3.TreeIndex);
-
         }
     }
 }
