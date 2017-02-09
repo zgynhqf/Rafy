@@ -2293,5 +2293,36 @@ namespace RafyUnitTest
         //        Assert.IsFalse(success, "默认应该按照 TreeIndex 正 序排列。");
         //    }
         //}
+
+        [TestMethod]
+        public void TET_Query_TreeIndex()
+        {
+            /*********************** sql语句 *********************************
+               父实体a  两个子 a1 、a2 
+               删除子a1，添加子a3
+               a2 和a3 的TreeIndex 不应该相等
+           **********************************************************************/
+
+            var a1 = new Folder() { Name = "a1" };
+            var a2 = new Folder() { Name = "a2" };
+            var a3 = new Folder() { Name = "a3" };
+            var a = new Folder()
+            {
+                Name = "a",
+                TreeChildren =
+                {
+                    a1,
+                    a2
+                }
+
+            };
+            RF.Save(a);
+            a1.PersistenceStatus = PersistenceStatus.Deleted;
+            RF.Save(a1);
+            a3.TreePId = a.Id;
+            RF.Save(a3);
+            Assert.AreNotEqual(a2.TreeIndex, a3.TreeIndex);
+
+        }
     }
 }
