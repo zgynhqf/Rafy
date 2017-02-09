@@ -2302,36 +2302,39 @@ namespace RafyUnitTest
                删除子a1，添加子a3
                a2 和a3 的TreeIndex 不应该相等
            **********************************************************************/
-
-            var a1 = new Folder() { Name = "a1" };
-            var a2 = new Folder() { Name = "a2" };
-            var a3 = new Folder() { Name = "a3" };
-            var a = new Folder()
+            var repo = RF.ResolveInstance<FolderRepository>();
+            using (RF.TransactionScope(repo))
             {
-                Name = "a",
-                TreeChildren =
+                var a1 = new Folder() {Name = "a1"};
+                var a2 = new Folder() {Name = "a2"};
+                var a3 = new Folder() {Name = "a3"};
+                var a = new Folder()
                 {
-                    a1,
-                    a2
+                    Name = "a",
+                    TreeChildren =
+                    {
+                        a1,
+                        a2
+                    }
+                };
+                RF.Save(a);
+                bool hasException = false;
+                try
+                {
+                    a1.PersistenceStatus = PersistenceStatus.Deleted;
+                    RF.Save(a1);
                 }
-            };
-            RF.Save(a);
-            bool hasException = false;
-            try
-            {
-                a1.PersistenceStatus = PersistenceStatus.Deleted;
-                RF.Save(a1);
+                catch (Exception ex)
+                {
+                    hasException = true;
+                }
+                Assert.IsTrue(hasException);
+                a.TreeChildren.Remove(a1);
+                RF.Save(a);
+                a3.TreePId = a.Id;
+                RF.Save(a3);
+                Assert.AreNotEqual(a2.TreeIndex, a3.TreeIndex);
             }
-            catch (Exception ex)
-            {
-                hasException = true;
-            }
-            Assert.IsTrue(hasException);
-            a.TreeChildren.Remove(a1);
-            RF.Save(a);
-            a3.TreePId = a.Id;
-            RF.Save(a3);
-            Assert.AreNotEqual(a2.TreeIndex, a3.TreeIndex);
         }
     }
 }
