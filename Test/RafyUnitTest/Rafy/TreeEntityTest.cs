@@ -2297,7 +2297,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Query_TreeIndex()
         {
-            /*********************** sql语句 *********************************
+            /********************************************************
                父实体a  两个子 a1 、a2 
                删除子a1，添加子a3
                a2 和a3 的TreeIndex 不应该相等
