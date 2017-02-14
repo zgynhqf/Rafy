@@ -2328,7 +2328,7 @@ namespace RafyUnitTest
                 {
                     hasException = true;
                 }
-                Assert.IsTrue(hasException);
+                Assert.IsTrue(hasException, "删除树形子实体，请用父实体的TreeChildren.Remove()方法");
                 a.TreeChildren.Remove(a1);
                 RF.Save(a);
                 a3.TreePId = a.Id;
