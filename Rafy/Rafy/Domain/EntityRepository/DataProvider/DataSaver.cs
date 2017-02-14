@@ -189,28 +189,28 @@ namespace Rafy.Domain
         /// <param name="markSaved"></param>
         private void SubmitTree(Entity tree, bool markSaved)
         {
-            //如果要提交的树节点是一个根节点，而且它的索引还没有生成，则需要主动为其生成索引。
-            if (tree.TreePId == null && string.IsNullOrEmpty(tree.TreeIndex))
-            {
-                var maxIndex = _repository.GetMaxTreeIndex();
-                if (!string.IsNullOrEmpty(maxIndex))
-                {
-                    tree.TreeIndex = _repository.TreeIndexOption.GetNextRootTreeIndex(maxIndex);
-                }
-                else
-                {
-                    tree.TreeIndex = _repository.TreeIndexOption.CalculateChildIndex(null, 0);
-                }
-
-                var treeChildren = tree.TreeChildren;
-                treeChildren.LoadAllNodes();
-                treeChildren.ResetTreeIndex();
-            }
-
             //先保存所有添加、变更的节点。
             //这里的 markSaved 传入的应该是 false，否则会把待删除列表中的元素清空。
             if (!tree.IsDeleted)
             {
+                //如果要提交的树节点是一个根节点，而且它的索引还没有生成，则需要主动为其生成索引。
+                if (tree.TreePId == null && string.IsNullOrEmpty(tree.TreeIndex))
+                {
+                    var maxIndex = _repository.GetMaxTreeIndex();
+                    if (!string.IsNullOrEmpty(maxIndex))
+                    {
+                        tree.TreeIndex = _repository.TreeIndexOption.GetNextRootTreeIndex(maxIndex);
+                    }
+                    else
+                    {
+                        tree.TreeIndex = _repository.TreeIndexOption.CalculateChildIndex(null, 0);
+                    }
+
+                    var treeChildren = tree.TreeChildren;
+                    treeChildren.LoadAllNodes();
+                    treeChildren.ResetTreeIndex();
+                }
+
                 this.SubmitItem(tree, false, true);
 
                 //然后再保存所有删除的节点。
@@ -218,6 +218,11 @@ namespace Rafy.Domain
             }
             else
             {
+                if ((tree as IEntityWithId).IdProvider.IsAvailable(tree.TreePId))
+                {
+                    throw new NotSupportedException("删除树形子实体，请用父实体的TreeChildren.Remove()方法。");
+                }
+
                 this.DeleteTreeChildren(tree);
 
                 this.SubmitItem(tree, false, true);
