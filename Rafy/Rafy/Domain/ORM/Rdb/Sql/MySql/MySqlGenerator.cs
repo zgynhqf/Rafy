@@ -63,7 +63,7 @@ namespace Rafy.Domain.ORM.MySql
         }
 
         /// <summary>
-        /// 
+        /// 转换空值比较
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
@@ -73,11 +73,28 @@ namespace Rafy.Domain.ORM.MySql
             {
                 case SqlColumnConstraintOperator.Equal:
                 case SqlColumnConstraintOperator.NotEqual:
-                    //在 Oracle 中，空字符串的对比，需要转换为对 Null 值的对比。
-                    var strValue = node.Value as string;
-                    if (strValue != null && strValue.Length == 0)
+                    //在 MySql 中，空字符串的对比，需要转换为对 Null 值的对比。
+                    if (node.Value is string)
                     {
-                        node.Value = null;
+                        if (node.Value != null)
+                        {
+                            if (node.Value.ToString().Length == 0)
+                            {
+                                node.Value = "";
+                            }
+                        }
+                    }
+                    break;
+                case SqlColumnConstraintOperator.Contains:
+                    if (node.Value is string && node.Value.ToString().IndexOf('%')>=0)
+                    {
+                        node.Value = "locate('" + node.Value + "'," + node.Column.ColumnName + ")!=0";
+                    }
+                    break;
+                case SqlColumnConstraintOperator.NotContains:
+                    if (node.Value is string&& node.Value.ToString().IndexOf('%') >= 0)
+                    {
+                        node.Value = "locate('" + node.Value + "'," + node.Column.ColumnName + ") = 0";
                     }
                     break;
                 default:
@@ -88,10 +105,10 @@ namespace Rafy.Domain.ORM.MySql
         }
 
         /// <summary>
-        /// 
+        /// 进行数据类型的转换
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="value">待转化的CLR数据类型</param>
+        /// <returns>返回MySql兼容的数据类型</returns>
         public override object PrepareConstraintValue(object value)
         {
             value = base.PrepareConstraintValue(value);
@@ -102,10 +119,10 @@ namespace Rafy.Domain.ORM.MySql
         }
 
         /// <summary>
-        /// 
+        /// 针对布尔类型和枚举类型进行特殊处理
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="value">待转换的CLR数据类型</param>
+        /// <returns>返回MySql兼容的具体数据类型</returns>
         internal static object PrepareConstraintValueInternal(object value)
         {
             if (value != DBNull.Value)
@@ -134,149 +151,32 @@ namespace Rafy.Domain.ORM.MySql
             if (PagingInfo.IsNullOrEmpty(pagingInfo)) { throw new ArgumentNullException("pagingInfo"); }
             if (!raw.HasOrdered()) { throw new InvalidProgramException("必须排序后才能使用分页功能。"); }
 
-            var startRow = pagingInfo.PageSize * (pagingInfo.PageNumber - 1) + 1;
-            var endRow = startRow + pagingInfo.PageSize - 1;
+            var pageNumber =pagingInfo.PageNumber;
+            var pageSize = pagingInfo.PageSize;
 
-            var res = MakePagingTree(raw, startRow, endRow);
+            var res = MakePagingTree(raw, pageNumber, pageSize);
 
             return res;
         }
 
         /// <summary>
-        /// 
+        /// 生成分页的Sql树
         /// </summary>
-        /// <param name="raw"></param>
-        /// <param name="startRow"></param>
-        /// <param name="endRow"></param>
+        /// <param name="raw">原始的查询语句</param>
+        /// <param name="pageNumber">当前页数，从0开始索引</param>
+        /// <param name="pageSize">每页的行数</param>
         /// <returns></returns>
-        private static ISqlSelect MakePagingTree(SqlSelect raw, long startRow, long endRow)
+        private static ISqlSelect MakePagingTree(SqlSelect raw, long pageNumber, long pageSize)
         {
-            /*********************** 代码块解释 *********************************
-             * 以下转换使用 ORACLE 行号字段来实现分页。只需要简单地在查询的 WHERE 语句中加入等号的判断即可。
-             *
-             * 源格式：
-             *     SELECT *
-             *     FROM A
-             *     WHERE A.Id > 0
-             *     ORDER BY A.NAME ASC
-             * 
-             * 目标格式：
-             *      SELECT * FROM
-             *      (
-             *          SELECT T.*, ROWNUM RN
-             *          FROM (
-             *              SELECT *
-             *              FROM A
-             *              WHERE A.Id > 0
-             *              ORDER BY A.NAME ASC
-             *          ) T
-             *          WHERE ROWNUM <= 20
-             *      )
-             *      WHERE RN >= 10
-            **********************************************************************/
-
+            //return new SqlNodeList
+            //{
+            //    new SqlLiteral(@"SELECT * FROM("),
+            //    raw,
+            //    new SqlLiteral(@")T ORDER BY T.ID ASC LIMIT " + (pageNumber-1)*pageSize + "," +pageSize)};
             return new SqlNodeList
             {
-                new SqlLiteral(
-@"SELECT * FROM
-(
-    SELECT T.*, ROWNUM RN
-    FROM 
-    (
-"),
                 raw,
-                new SqlLiteral(
-@"
-    ) T
-    WHERE ROWNUM <= " + endRow + @"
-)
-WHERE RN >= " + startRow)
-            };
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="raw"></param>
-        /// <param name="startRow"></param>
-        /// <param name="endRow"></param>
-        /// <returns></returns>
-        private static ISqlSelect MakePagingTree_ReserveMethod(SqlSelect raw, int startRow, int endRow)
-        {
-            /*********************** 代码块解释 *********************************
-             * 源格式：
-             *     SELECT *
-             *     FROM A
-             *     WHERE A.Id > 0
-             *     ORDER BY A.NAME ASC
-             * 
-             * 目标格式：
-             *      SELECT * FROM
-             *      (SELECT A.*, ROWNUM RN
-             *     FROM A
-             *     WHERE A.Id > 0 AND ROWNUM <= 20
-             *     ORDER BY A.NAME ASC)
-             *     WHERE RN >= 10
-             *     
-             * 这种方法可能存在问题：
-             * 因为源 Sql 可能是：Select * From A Join B，这时表示结果集需要显示 A 和 B 的所有字段，
-             * 但是此方法会转换为：Select A.* From A Join B。比较麻烦，暂不处理
-            **********************************************************************/
-            var innerSelect = new SqlSelect
-            {
-                IsDistinct = raw.IsDistinct,
-                From = raw.From,
-                Where = AppendWhere(raw.Where, new SqlLiteral("ROWNUM <= " + endRow)),
-                OrderBy = raw.OrderBy
-            };
-
-            //内部的 Select 子句中，不能简单地使用 "*, ROWNUM"，而是需要使用 "A.*, ROWNUM"
-            var rawSelection = raw.Selection;
-            if (rawSelection == null)
-            {
-                //默认约定第一张表，就是
-                var table = new FirstTableFinder().Find(raw.From);
-                rawSelection = new SqlSelectAll
-                {
-                    Table = table
-                };
-            }
-            innerSelect.Selection = new SqlNodeList
-            {
-                rawSelection,
-                new SqlLiteral(", ROWNUM RN")
-            };
-
-            var res = new SqlSelect
-            {
-                Selection = SqlSelectAll.Default,
-                From = new SqlSubSelect
-                {
-                    Select = innerSelect
-                },
-                Where = new SqlLiteral("RN >= " + startRow)
-            };
-            return res;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="old"></param>
-        /// <param name="newConstraint"></param>
-        /// <returns></returns>
-        private static ISqlConstraint AppendWhere(ISqlConstraint old, ISqlConstraint newConstraint)
-        {
-            if (old != null)
-            {
-                newConstraint = new SqlBinaryConstraint
-                {
-                    Left = old,
-                    Opeartor = SqlBinaryConstraintType.And,
-                    Right = newConstraint
-                };
-            }
-            return newConstraint;
+                new SqlLiteral(@" LIMIT " + (pageNumber-1)*pageSize + "," +pageSize)};
         }
     }
 }

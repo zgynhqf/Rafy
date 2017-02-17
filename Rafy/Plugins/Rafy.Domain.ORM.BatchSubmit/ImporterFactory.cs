@@ -21,6 +21,7 @@ using Rafy.Domain.ORM;
 using Rafy.Domain.ORM.BatchSubmit;
 using Rafy.Domain.ORM.BatchSubmit.Oracle;
 using Rafy.Domain.ORM.BatchSubmit.SqlServer;
+using Rafy.Domain.ORM.BatchSubmit.MySql;
 
 namespace Rafy.Domain
 {
@@ -51,6 +52,8 @@ namespace Rafy.Domain
             {
                 case DbSetting.Provider_SqlClient:
                     return new SqlBatchImporter();
+                case DbSetting.Provider_MySql:
+                    return new MySqlBatchImporter();
                 default:
                     if (DbSetting.IsOracleProvider(setting))
                     {

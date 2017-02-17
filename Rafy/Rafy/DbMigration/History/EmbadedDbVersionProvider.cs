@@ -107,14 +107,7 @@ namespace Rafy.DbMigration.History
                 OracleDbTypeHelper.ConvertToOracleTypeString(DbType.Int64) :
                 SqlDbTypeHelper.ConvertToSQLTypeString(DbType.Int64);
 
-            this.DBA.RawAccesser.ExecuteText(string.Format(@"
-CREATE TABLE {1}
-(
-    ID INT NOT NULL,
-    Value {0} NOT NULL,
-    PRIMARY KEY (ID)
-)
-", timeType, TableName));
+            this.DBA.RawAccesser.ExecuteText(string.Format(@"CREATE TABLE {1}(ID INT NOT NULL,Value {0} NOT NULL,PRIMARY KEY (ID))", timeType, TableName));
             this.DBA.ExecuteText("INSERT INTO " + TableName + " (ID,VALUE) VALUES (1, {0})", DefaultMinTime.Ticks);
         }
 
