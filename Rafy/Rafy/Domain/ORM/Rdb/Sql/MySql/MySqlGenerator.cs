@@ -85,18 +85,18 @@ namespace Rafy.Domain.ORM.MySql
                         }
                     }
                     break;
-                case SqlColumnConstraintOperator.Contains:
-                    if (node.Value is string && node.Value.ToString().IndexOf('%')>=0)
-                    {
-                        node.Value = "locate('" + node.Value + "'," + node.Column.ColumnName + ")!=0";
-                    }
-                    break;
-                case SqlColumnConstraintOperator.NotContains:
-                    if (node.Value is string&& node.Value.ToString().IndexOf('%') >= 0)
-                    {
-                        node.Value = "locate('" + node.Value + "'," + node.Column.ColumnName + ") = 0";
-                    }
-                    break;
+                //case SqlColumnConstraintOperator.Contains:
+                //    if (node.Value is string && node.Value.ToString().IndexOf('%')>=0)
+                //    {
+                //        node.Value = "locate('" + node.Value + "'," + node.Column.ColumnName + ")!=0";
+                //    }
+                //    break;
+                //case SqlColumnConstraintOperator.NotContains:
+                //    if (node.Value is string&& node.Value.ToString().IndexOf('%') >= 0)
+                //    {
+                //        node.Value = "locate('" + node.Value + "'," + node.Column.ColumnName + ") = 0";
+                //    }
+                //    break;
                 default:
                     break;
             }

@@ -38,8 +38,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Program Files (x86)\MySQL\MySQL Connector Net 6.9.9\Assemblies\v4.5\MySql.Data.dll</HintPath>
+      <HintPath>..\..\..\packages\MySql.Data.6.9.9\lib\net45\MySql.Data.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Oracle.ManagedDataAccess">
       <HintPath>..\..\..\packages\Oracle.ManagedDataAccess.12.1.022\lib\net40\Oracle.ManagedDataAccess.dll</HintPath>
@@ -72,6 +72,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="Hxy Key.snk" />
     <None Include="packages.config" />
   </ItemGroup>

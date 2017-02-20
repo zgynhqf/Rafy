@@ -42,7 +42,10 @@
     <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
+    <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MySql.Data.6.9.9\lib\net45\MySql.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -782,6 +785,7 @@
     <Content Include="Utils\_ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="Hxy Key.snk" />
     <None Include="ManagedProperty\_Other\ManagedProperty 1.0 20121118备份.7z" />
     <None Include="packages.config" />

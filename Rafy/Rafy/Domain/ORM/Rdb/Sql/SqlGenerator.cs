@@ -33,7 +33,7 @@ namespace Rafy.Domain.ORM
     {
         internal const string WILDCARD_ALL = "%";
         internal const string WILDCARD_SINGLE = "_";
-        internal const string ESCAPE_CHAR = "\\";
+        internal const string ESCAPE_CHAR = "/";
         internal static readonly string WILDCARD_ALL_ESCAPED = ESCAPE_CHAR  + WILDCARD_ALL;
         internal static readonly string WILDCARD_SINGLE_ESCAPED = ESCAPE_CHAR  + WILDCARD_SINGLE;
 
