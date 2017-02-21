@@ -381,6 +381,7 @@ namespace UT
 
             Meta.MapTable("Users");
             Meta.Property(TestUser.NameProperty).MapColumn().HasColumnName("UserName");
+            Meta.Property(Entity.IdProperty).MapColumn().IsIdentity = true;
             Meta.MapProperties(
                 TestUser.LoginNameProperty,
                 TestUser.AddedTimeProperty,

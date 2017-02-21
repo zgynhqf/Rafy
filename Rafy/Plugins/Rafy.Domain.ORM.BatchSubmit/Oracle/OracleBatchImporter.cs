@@ -133,10 +133,9 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
         private static string GenerateInsertSQL(RdbTable table)
         {
             //代码参考 RdbTable.GenerateInsertSQL() 方法。
-
             var sql = new StringWriter();
             sql.Write("INSERT INTO ");
-            sql.AppendQuote(table, table.Name).Write(" (");
+            sql.AppendQuote(table, table.Name).Write("(");
 
             var columns = table.Columns;
 

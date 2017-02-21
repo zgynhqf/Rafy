@@ -117,7 +117,7 @@ namespace UT
         public virtual long LinqCountByBookName(string name)
         {
             var q = this.CreateLinqQuery();
-            q = q.Where(c => c.Book.Name == name);
+            q = q.Where(c => c.Book.Name.Contains(name));
             return Convert.ToInt64(this.QueryData(q));
         }
 
