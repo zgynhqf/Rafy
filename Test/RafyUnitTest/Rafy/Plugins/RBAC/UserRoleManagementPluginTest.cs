@@ -32,7 +32,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void HasRoleTest()
+        public void RBAC_UserRole_HasRoleTest()
         {
             this._controller = DomainControllerFactory.Create<UserRoleController>();
 
@@ -58,7 +58,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void GetRoleListTest()
+        public void RBAC_UserRole_GetRoleListTest()
         {
             this._controller = DomainControllerFactory.Create<UserRoleController>();
 
@@ -75,7 +75,7 @@ namespace RafyUnitTest
                 roleRepository.Save(role);
                 userRoleRepository.Save(new UserRole { User = user, Role = role });
 
-                var roleList = this._controller.GetRoleList(new User {Id = user.Id});
+                var roleList = roleRepository.GetRoleByUserId(user.Id);
 
                 Assert.IsNotNull(roleList);
                 Assert.IsTrue(roleList.Count == 1);
@@ -83,7 +83,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void GetUserListTest()
+        public void RBAC_UserRole_GetUserListTest()
         {
             this._controller = DomainControllerFactory.Create<UserRoleController>();
 
@@ -100,7 +100,7 @@ namespace RafyUnitTest
                 roleRepository.Save(role);
                 userRoleRepository.Save(new UserRole { User = user, Role = role });
 
-                var list = this._controller.GetUserList(new Role { Id = role.Id });
+                var list = userRepository.GetUserListByRoleId(role.Id);
 
                 Assert.IsNotNull(list);
                 Assert.IsTrue(list.Count == 1);

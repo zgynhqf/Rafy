@@ -25,10 +25,10 @@ namespace Rafy.Domain.ORM.MySql
     /// <summary>
     /// MySql的表对象
     /// </summary>
+
     internal sealed class MySqlTable : SqlOraTable
     {
         private string _insertSQL;
-
         /// <summary>
         /// 构造函数 初始化仓库对象
         /// </summary>

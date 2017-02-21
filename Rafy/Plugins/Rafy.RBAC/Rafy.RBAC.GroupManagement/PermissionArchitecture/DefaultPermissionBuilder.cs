@@ -20,7 +20,7 @@ using Rafy.RBAC.RoleManagement;
 using System.Data;
 using Rafy.Accounts;
 using Rafy.Domain;
-using Rafy.RBAC.GroupManagement.Entities.Extensions;
+using Rafy.RBAC.GroupManagement.Extensions;
 
 namespace Rafy.RBAC.GroupManagement.PermissionArchitecture
 {
@@ -36,8 +36,7 @@ namespace Rafy.RBAC.GroupManagement.PermissionArchitecture
         /// <returns>返回获取到的资源数组列表</returns>
         protected override IList<Resource> GenerateResourcePermission(int groupID)
         {
-            //ResourceList resourceList = this.GroupRepository.GetResourcePermissionByGroupID(groupID);
-            ResourceList resourceList = RepositoryFacade.ResolveInstance<ResourceRepository>().Extension<ResourceRepositoryExtension>().GetResourcePermissionByGroupID(groupID);
+            ResourceList resourceList = RepositoryFacade.ResolveInstance<ResourceRepository>().Extension<ResourceRepositoryExtension>().GetResourceByGroupID(groupID);
             IList<Resource> resource = resourceList.Concrete().ToList();
             return resource;
         }
@@ -50,12 +49,11 @@ namespace Rafy.RBAC.GroupManagement.PermissionArchitecture
         protected override IDictionary<long, IList<ResourceOperation>> GenerateOperationPermission(int groupID)
         {
             IDictionary<long, IList<ResourceOperation>> operations = new Dictionary<long, IList<ResourceOperation>>();
-            //List<ResourceOperation> resourceOperationList = this.GroupRepository.GetResourceOperationPermissionByGroupID(groupID).Concrete().ToList();
-            List<ResourceOperation> resourceOperationList = RepositoryFacade.ResolveInstance<ResourceOperationRepository>().Extension<ResourceOperationRepositoryExtension>().GetResourceOperationPermissionByGroupID(groupID).Concrete().ToList();
-            foreach (var item in resourceOperationList)
+            var resourceOperationList = RepositoryFacade.ResolveInstance<ResourceOperationRepository>().Extension<ResourceOperationRepositoryExtension>().GetResourceOperationByGroupID(groupID);
+            foreach (ResourceOperation item in resourceOperationList)
             {
                 IList<ResourceOperation> list = null;
-                if(operations.TryGetValue(item.ResourceId,out list))
+                if (operations.TryGetValue(item.ResourceId, out list))
                 {
                     list.Add(item);
                 }

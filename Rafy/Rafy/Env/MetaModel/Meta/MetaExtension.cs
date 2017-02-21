@@ -117,6 +117,7 @@ namespace Rafy.MetaModel
         /// <returns></returns>
         public static EntityMeta MapTable(this EntityMeta meta, string tableName)
         {
+            if (tableName == null) throw new ArgumentNullException(nameof(tableName));
             meta.TableMeta = new TableMeta(tableName);
 
             MapDefaultColumns(meta);
@@ -125,7 +126,8 @@ namespace Rafy.MetaModel
         }
 
         /// <summary>
-        /// 指定某实体映射某个视图 SQL。
+        /// 指定某实体映射某个虚拟的视图。
+        /// 当映射视图时，不会生成数据库表，仓库中也需要在所有的查询中都编写自定义查询。
         /// </summary>
         /// <param name="meta"></param>
         /// <param name="viewSql">
@@ -134,10 +136,10 @@ namespace Rafy.MetaModel
         /// 如果不指定此参数，则需要在所有的查询中都编写自定义查询。
         /// </param>
         /// <returns></returns>
-        public static EntityMeta MapView(this EntityMeta meta, string viewSql = null)
+        public static EntityMeta MapView(this EntityMeta meta)//, string viewSql = null)
         {
             meta.TableMeta = new TableMeta();
-            meta.TableMeta.ViewSql = viewSql;
+            //meta.TableMeta.ViewSql = viewSql;
 
             MapDefaultColumns(meta);
 

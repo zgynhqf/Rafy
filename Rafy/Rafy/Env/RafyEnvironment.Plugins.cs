@@ -502,5 +502,25 @@ namespace Rafy
         }
 
         #endregion
+
+        #region IOC & SOA
+
+        /// <summary>
+        /// 组件的 IOC 容器。
+        /// </summary>
+        public static IObjectContainer ObjectContainer
+        {
+            get { return Composer.ObjectContainer; }
+        }
+
+        ///// <summary>
+        ///// 组件的服务容器。
+        ///// </summary>
+        //public static IServiceContainer ServiceContainer
+        //{
+        //    get { return Composer.ServiceContainer; }
+        //}
+
+        #endregion
     }
 }

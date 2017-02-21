@@ -598,6 +598,23 @@ namespace Rafy.Domain
         {
             ManagedPropertyRepository.Instance.UnRegister(properties.ToArray());
         }
+
+        /// <summary>
+        /// 为指定的实体类型扩展指定名称的属性。
+        /// </summary>
+        /// <typeparam name="TProperty"></typeparam>
+        /// <param name="entityType"></param>
+        /// <param name="propertyName"></param>
+        /// <param name="declareType"></param>
+        /// <returns></returns>
+        public static Property<TProperty> RegisterExtension<TProperty>(Type entityType, string propertyName, Type declareType)
+        {
+            var mp = new Property<TProperty>(entityType, declareType, propertyName, new PropertyMetadata<TProperty>());
+
+            ManagedPropertyRepository.Instance.RegisterProperty(mp);
+
+            return mp;
+        }
     }
 
     ///// <summary>

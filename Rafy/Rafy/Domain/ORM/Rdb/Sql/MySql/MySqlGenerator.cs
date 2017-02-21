@@ -153,9 +153,8 @@ namespace Rafy.Domain.ORM.MySql
 
             var pageNumber =pagingInfo.PageNumber;
             var pageSize = pagingInfo.PageSize;
-
+            
             var res = MakePagingTree(raw, pageNumber, pageSize);
-
             return res;
         }
 

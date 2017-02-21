@@ -678,7 +678,7 @@ namespace RafyUnitTest
         /// GetByTreeParentCode 数据正确、排序正确。
         /// </summary>
         [TestMethod]
-        public void TET_Query_GetByTreeParentCode()
+        public void TET_Query_GetByTreeParentIndex()
         {
             var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
@@ -695,25 +695,25 @@ namespace RafyUnitTest
                                 Name = "1.1",
                                 TreeChildren =
                                 {
-                                    new Folder{Name = "1.1.1"},
-                                    new Folder{Name = "1.1.2"},
+                                    new Folder{ Name = "1.1.1" },
+                                    new Folder{ Name = "1.1.2" },
                                 }
                             },
-                            new Folder{Name = "1.2"},
+                            new Folder{ Name = "1.2"},
                         }
                     }
                 };
                 repo.Save(list);
 
-                Assert.IsTrue(list.Count == 1);
-                var root = list[0];
-                Assert.IsTrue(root.TreeChildren.Count == 2);
-                var node11 = root.TreeChildren[0];
-                Assert.IsTrue(node11.TreeChildren.Count == 2);
-                var a = node11.TreeChildren[0] as Folder;
-                Assert.IsTrue(a.Name == "1.1.1");
-                var b = node11.TreeChildren[1] as Folder;
-                Assert.IsTrue(b.Name == "1.1.2");
+                list = repo.GetByTreeParentIndex("001.");
+
+                Assert.AreEqual(2, list.Count);
+                Assert.AreEqual("1.1", list[0].Name);
+                Assert.AreEqual("1.2", list[1].Name);
+                Assert.AreEqual(2, list[0].TreeChildren.Count);
+                Assert.AreEqual("1.1.1", (list[0].TreeChildren[0] as Folder).Name);
+                Assert.AreEqual("1.1.2", (list[0].TreeChildren[1] as Folder).Name);
+                Assert.AreEqual(0, list[1].TreeChildren.Count);
             }
         }
 
@@ -2293,5 +2293,48 @@ namespace RafyUnitTest
         //        Assert.IsFalse(success, "默认应该按照 TreeIndex 正 序排列。");
         //    }
         //}
+
+        [TestMethod]
+        public void TET_Query_TreeIndex()
+        {
+            /********************************************************
+               父实体a  两个子 a1 、a2 
+               删除子a1，添加子a3
+               a2 和a3 的TreeIndex 不应该相等
+           **********************************************************************/
+            var repo = RF.ResolveInstance<FolderRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var a1 = new Folder() {Name = "a1"};
+                var a2 = new Folder() {Name = "a2"};
+                var a3 = new Folder() {Name = "a3"};
+                var a = new Folder()
+                {
+                    Name = "a",
+                    TreeChildren =
+                    {
+                        a1,
+                        a2
+                    }
+                };
+                RF.Save(a);
+                bool hasException = false;
+                try
+                {
+                    a1.PersistenceStatus = PersistenceStatus.Deleted;
+                    RF.Save(a1);
+                }
+                catch (Exception ex)
+                {
+                    hasException = true;
+                }
+                Assert.IsTrue(hasException, "删除树形子实体，请用父实体的TreeChildren.Remove()方法");
+                a.TreeChildren.Remove(a1);
+                RF.Save(a);
+                a3.TreePId = a.Id;
+                RF.Save(a3);
+                Assert.AreNotEqual(a2.TreeIndex, a3.TreeIndex);
+            }
+        }
     }
 }

@@ -3,13 +3,338 @@
   <developerConceptualDocument
     xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
     xmlns:xlink="http://www.w3.org/1999/xlink">
+    <introduction>
+      <para>
+        Rafy基于角色的访问权限控制,主要包含四个插件，角色插件（Rafy.RBAC.RoleManagement）、用户角色插件（Rafy.RBAC.UserRoleManagement）、组织插件（Rafy.RBAC.GroupManagement）、数据权限插件（Rafy.RBAC.DataPermissionManagement）。其中角色插件是底层插件，其它三个插件都依赖角色插件，如下图。四个插件可以组合也可以独立使用，用户根据自己的实际场景自行下载相应的插件。
+        <para>
+        权限管理技术，一般使用基于角色访问控制技术RBAC（Role Based Access Control）。该技术被广泛运用于各个系统，非常容易掌握。该技术模型如下图示：
+        <mediaLink>
+          <image xlink:href="RBAC权限模型"/>
+        </mediaLink>
+        </para>
+        <mediaLink>
+          <image xlink:href="RBAC05"/>
+        </mediaLink>
+      </para>
+      <para>用户可以通过 Nuget Package Manager 搜索rafy.rbac并选择安装相应的插件。</para>
+      <mediaLink>
+        <image xlink:href="RBAC插件01"/>
+      </mediaLink>
+      <autoOutline />
+    </introduction>
 
-      <introduction>
-          <!-- <autoOutline /> -->
-          <para>本文档正在整理中，敬请期待。</para>
-      </introduction>
+    <section address="senarios">
+      <title>角色插件（Rafy.RBAC.RoleManagement）</title>
+      <content>
+        <para>
+          领域关系图如下：
+          <mediaLink>
+            <image xlink:href="RBAC01"/>
+          </mediaLink>
+        </para>
+        <para>
+          该插件主要包含角色和资源，每个资源包含多个功能操作，功能操作和角色进行关联。通过角色来控制功能权限。当系统只需要角色及功能权限时，可以选择此插件。
+        </para>
+      </content>
+    </section>
+    <section address="senarios">
+      <title>用户角色插件（Rafy.RBAC.UserRoleManagement）</title>
+      <content>
+        <para>
+          领域关系图如下：
+          <mediaLink>
+            <image xlink:href="RBAC02"/>
+          </mediaLink>
+        </para>
+        <para>
+          该插件依赖账户插件（Rafy.Accounts）,和角色插件（Rafy.RBAC.RoleManagement），主要包含用户和角色的关系，一个用户可以有多个角色。如果系统启用用户和角色关联可以采用此插件。
+        </para>
+      </content>
+    </section>
+    <section address="senarios">
+      <title>组织插件（Rafy.RBAC.GroupManagement）</title>
+      <content>
+        <para>
+          领域关系图如下：
+          <mediaLink>
+            <image xlink:href="RBAC03"/>
+          </mediaLink>
+        </para>
+        <para>
+          该插件依赖账户插件（Rafy.Accounts）,和角色插件（Rafy.RBAC.RoleManagement），主要包含组织，组织和角色关系，组织和用户关系，一个组织可以包含多个用户，同时也可以有多个角色。当系统有组织模型时，可以选择此插件。
+        </para>
+      </content>
+    </section>
+    <section address="senarios">
+      <title>数据权限插件（Rafy.RBAC.DataPermissionManagement）</title>
+      <content>
+        <para>
+          领域关系图如下：
+          <mediaLink>
+            <image xlink:href="RBAC04"/>
+          </mediaLink>
+        </para>
+        <para>
+          该插件依赖角色插件（Rafy.RBAC.RoleManagement），主要是对某个资源进行数据过滤。数据过滤类型提供两种。一种是基于用户进行过滤，一种是基于组织（及其下级组织）进行过滤。同时支持扩展，需要自己实现DataPermissionConstraintBuilder类。当系统提供数据权限时可以选择此插件。
+        </para>
+      </content>
+    </section>
+       <section address="senarios">
+      <title>插件使用</title>
+      <content>
+       <para>在 DomainApp 中添加需要的插件：</para>
+                <code language="cs">
+                  <![CDATA[class JXCApp : DomainApp
+{
+    protected override void InitEnvironment()
+    {
+        //添加RBAC插件到 Rafy 应用程序集中。
+         RafyEnvironment.DomainPlugins.Add(new AccountsPlugin());
+         RafyEnvironment.DomainPlugins.Add(new RoleManagementPlugin());
+         RafyEnvironment.DomainPlugins.Add(new GroupManagementPlugin());
+         RafyEnvironment.DomainPlugins.Add(new UserRoleManagementPlugin());
+         RafyEnvironment.DomainPlugins.Add(new DataPermissionManagementPlugin());
 
-      <relatedTopics>
-      </relatedTopics>
+        base.InitEnvironment();
+    }
+}]]>
+                </code>
+      </content>
+    </section>
+    <!--<section address="howto">
+      <title>使用方法</title>
+      <content>
+        <procedure>
+          <title>步骤</title>
+          <steps class="ordered">
+            <step>
+              <content>
+                <para>通过 Nuget Package Manager 搜索rafy.rbac并选择安装相应的插件。</para>
+                <mediaLink>
+                  <image xlink:href="RBAC插件01"/>
+                </mediaLink>
+              </content>
+            </step>
+            <step>
+              <content>
+                <para>在 DomainApp 中添加该插件：</para>
+                <code language="cs">
+                  <![CDATA[class JXCApp : DomainApp
+{
+    protected override void InitEnvironment()
+    {
+        //添加RBAC插件到 Rafy 应用程序集中。
+         RafyEnvironment.DomainPlugins.Add(new AccountsPlugin());
+         RafyEnvironment.DomainPlugins.Add(new RoleManagementPlugin());
+         RafyEnvironment.DomainPlugins.Add(new GroupManagementPlugin());
+         RafyEnvironment.DomainPlugins.Add(new UserRoleManagementPlugin());
+         RafyEnvironment.DomainPlugins.Add(new DataPermissionManagementPlugin());
+
+        base.InitEnvironment();
+    }
+}]]>
+                </code>
+              </content>
+            </step>
+            <step>
+              <content>
+                <para>数据权限，内置了两种实现。一种是基于用户进行过滤，一种是基于组织（及其下级组织）进行过滤。如果用户需要支持其他过滤，需要自己实现DataPermissionConstraintBuilder类 </para>
+                <code language="cs">
+                  <![CDATA[
+    /// <summary>
+    /// 数据权限的条件生成器
+    /// </summary>
+    public abstract class DataPermissionConstraintBuilder: IEquatable<DataPermissionConstraintBuilder>
+    {
+        /// <summary>
+        /// 构建过滤约束条件
+        /// </summary>
+        /// <param name="mainTable"></param>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public IConstraint BuildConstraint(ITableSource mainTable, IQuery query)
+        {
+            return this.BuildConstraintCore(mainTable, query);
+        }
+
+        /// <summary>
+        /// 构建过滤约束条件
+        /// </summary>
+        /// <param name="mainTable"></param>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        protected abstract IConstraint BuildConstraintCore(ITableSource mainTable, IQuery query);
+
+        /// <summary>
+        /// 判断Builder是否相等
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public abstract bool Equals(DataPermissionConstraintBuilder other);
+    }
+                  ]]>
+                </code>
+              </content>
+            </step>
+            <step>
+              <content>
+                <para>
+                  权限验证逻辑非常简单。主要是查看该当前登录用户的角色，基于角色对权限进行验证。我们提供了两种插件模式，一种是用户角色插件，一种是组织角色插件。DomainApp中后添加的插件将会覆盖前一种模式。例如：步骤2中将采用用户角色模式。如果需要同时支持两种模式，需要实现接口 IUserRoleFinder，先根据用户查找角色，在根据用户查找组织，然后在根据组织查找角色，最后进行角色合并。实现类需要在步骤2，InitEnvironment方法中采用 Composer.ObjectContainer.RegisterInstance(typeof(IUserRoleFinder), typeof(IUserRoleFinder的实现类)),进行注册。
+                </para>
+                <code language="cs">
+                  <![CDATA[
+    /// <summary>
+    /// 根据用户查找角色
+    /// 支持user-role 和group-role 
+    /// </summary>
+    public interface IUserRoleFinder
+    {
+        /// <summary>
+        /// 查询用户的角色列表
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        RoleList FindByUser(User user);
+    }
+                  ]]>
+                </code>
+              </content>
+            </step>
+          </steps>
+        </procedure>
+      </content>
+    </section>
+
+    --><!--<section address="effect">
+      <title>效果</title>
+      <content>
+        <para>经过上面几步的配置，User 实体类就已经开启了幽灵功能。开启后，对实体会有以下的影响：</para>
+        <list class="bullet">
+          <listItem>
+            <para>所有继承自 Entity 的实体都会统一的添加一个 IsPhantom 的属性。这个属性表示这个实体是否为‘幽灵’，即已经删除的数据。</para>
+          </listItem>
+          <listItem>
+            <para>开发者可以使用 Meta.EnablePhantoms() 来为某个指定的实体类型开启‘幽灵’功能。</para>
+          </listItem>
+          <listItem>
+            <para>开启该功能的实体的 IsPhantom 属性会自动映射到数据库中。</para>
+          </listItem>
+          <listItem>
+            <para>在保存实体时，如果要删除一个聚合实体，则这个聚合中的所有实体都将会被标记为‘幽灵’状态。</para>
+          </listItem>
+          <listItem>
+            <para>在查询实体时，所有的查询，都将会自动过滤掉所有‘幽灵’状态的数据。（手写 SQL 查询的场景不在考虑范围内。）</para>
+          </listItem>
+          <listItem>
+            <para>使用批量导入数据插件进行数据的批量导入时，批量删除的实体同样都会被标记为‘幽灵’状态。</para>
+          </listItem>
+        </list>
+        <para>运行程序后，数据库中的字段，已经自动添加上 IsPhantom 字段了：</para>
+        <mediaLink>
+          <image xlink:href="幽灵插件01"/>
+        </mediaLink>
+        <para>在使用 GetAll 查询所有实体时，框架自动加上一 IsPhantom = false 的过滤条件：</para>
+        <code language="sql">
+          <![CDATA[SELECT *
+FROM [User]
+WHERE [User].[IsPhantom] = @p0
+ORDER BY [User].[Id] ASC
+Parameters:False]]>
+        </code>
+        <para>数据的删除，变为更新表中对应行的 IsPhantom 字段为 True：</para>
+        <code language="sql">
+          <![CDATA[UPDATE [User] SET [Name] = @p0,[IsPhantom] = @p1 WHERE [Id] = @p2
+Parameters:"Name",True,3]]>
+        </code>
+      </content>
+    </section>--><!--
+
+    <section address="theory">
+      <title>原理</title>
+      <content>
+        <para>四个插件对应的领域关系图如下：</para>
+        <para>
+          角色插件
+          <mediaLink>
+            <image xlink:href="RBAC01"/>
+          </mediaLink>
+        </para>
+        <para>
+          用户角色插件
+          <mediaLink>
+            <image xlink:href="RBAC02"/>
+          </mediaLink>
+        </para>
+        <para>
+          组织角色插件
+          <mediaLink>
+            <image xlink:href="RBAC03"/>
+          </mediaLink>
+        </para>
+        <para>
+          数据权限插件
+          <mediaLink>
+            <image xlink:href="RBAC04"/>
+          </mediaLink>
+        </para>
+        <para>数据权限插件对 Rafy 框架中实体的数据层进行了扩展。在添加数据权限插件后，实体的 DataProvider 类型的Querying 事件都会被监听并扩展：</para>
+        <code language="csharp">
+          <![CDATA[ 
+        /// <summary>
+        /// 注册拦截器
+        /// </summary>
+        public static void Intercept()
+        {
+            RepositoryDataProvider.Querying += RepositoryDataProvider_Querying;
+        }
+
+        /// <summary>
+        /// 数据权限过滤
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void RepositoryDataProvider_Querying(object sender, QueryingEventArgs e)
+        {
+            var resource = FilterResource.Value;
+            if (resource != null)
+            {
+                var dp = sender as RepositoryDataProvider;
+                if (resource.GeResourceEntityType() == dp.Repository.EntityType.FullName && resource.GetIsSupportDataPermission())
+                {
+                    var currentUser = AccountContext.CurrentUser;
+
+                    var userRoleFilder = Composer.ObjectContainer.Resolve<IUserRoleFinder>();
+                    var roles = userRoleFilder.FindByUser(currentUser);
+
+                    var dataPermissions = CollectDataPermissions(resource.Id, roles);
+
+                    var appender = new DataPermissionWhereAppender();
+                    List<DataPermissionConstraintBuilder> duplicateList = new List<DataPermissionConstraintBuilder>();
+
+                    foreach (var dataPermission in dataPermissions)
+                    {
+                        var constraintBuilder = dataPermission.CreateBuilder();
+                        //去掉重复的builder
+                        if (!duplicateList.Contains(constraintBuilder))
+                        {
+                            appender.ConstrainsBuilders.Add(constraintBuilder);
+                            duplicateList.Add(constraintBuilder);
+                        }
+                    }
+                    appender.Append(e.Args.Query);
+                }
+            }
+        }]]>
+        </code>
+      </content>
+    </section>-->
+
+    <!--<relatedTopics>
+      <externalLink>
+        <linkText>Rafy 框架 - 幽灵插件（假删除）</linkText>
+        <linkAlternateText>Rafy 框架 - 幽灵插件（假删除）</linkAlternateText>
+        <linkUri>http://www.cnblogs.com/zgynhqf/p/5086644.html</linkUri>
+      </externalLink>
+    </relatedTopics>-->
   </developerConceptualDocument>
 </topic>
