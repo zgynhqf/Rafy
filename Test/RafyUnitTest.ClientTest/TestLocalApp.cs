@@ -35,8 +35,8 @@ namespace RafyUnitTest.ClientTest
             DbSettingNames.DbMigrationHistory = "Test_DbMigrationHistory";
 
             var sqlceFile = @"Rafy_Disk_Cache.sdf";
-            CacheInstances.Disk = new Cache(new SQLCompactCacheProvider(sqlceFile));
-            CacheInstances.MemoryDisk = new Cache(new HybirdCacheProvider(sqlceFile));
+            CacheInstances.Disk = new SQLCompactCache(sqlceFile);
+            CacheInstances.MemoryDisk = new HybirdCache(sqlceFile);
 
             RafyEnvironment.Provider.IsDebuggingEnabled = true;
 

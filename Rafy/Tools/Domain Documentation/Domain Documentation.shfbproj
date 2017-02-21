@@ -90,6 +90,7 @@
     <Folder Include="Content\领域实体框架\领域实体" />
     <Folder Include="Media" />
     <Folder Include="Media\插件" />
+    <Folder Include="Media\插件\RBAC插件" />
     <Folder Include="Media\插件\幽灵插件" />
     <Folder Include="Media\框架基础" />
     <Folder Include="Media\框架基础\领域驱动设计" />
@@ -97,6 +98,7 @@
     <Folder Include="Media\框架基础\插件化架构" />
     <Folder Include="Media\框架基础\产品线工程" />
     <Folder Include="Media\领域框架" />
+    <Folder Include="Media\领域框架\实体缓存" />
     <Folder Include="Media\领域框架\插件级扩展" />
     <Folder Include="Media\领域框架\其它" />
     <Folder Include="Media\领域框架\其它\代码段" />
@@ -213,6 +215,34 @@
     <None Include="UML.7z" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Media\插件\RBAC插件\RBAC01.png">
+      <ImageId>RBAC01</ImageId>
+      <AlternateText>RBAC 01</AlternateText>
+    </Image>
+    <Image Include="Media\插件\RBAC插件\RBAC02.png">
+      <ImageId>RBAC02</ImageId>
+      <AlternateText>RBAC 02</AlternateText>
+    </Image>
+    <Image Include="Media\插件\RBAC插件\RBAC03.png">
+      <ImageId>RBAC03</ImageId>
+      <AlternateText>RBAC 03</AlternateText>
+    </Image>
+    <Image Include="Media\插件\RBAC插件\RBAC04.png">
+      <ImageId>RBAC04</ImageId>
+      <AlternateText>RBAC 04</AlternateText>
+    </Image>
+    <Image Include="Media\插件\RBAC插件\RBAC05.png">
+      <ImageId>RBAC05</ImageId>
+      <AlternateText>RBAC 05</AlternateText>
+    </Image>
+    <Image Include="Media\插件\RBAC插件\RBAC插件01.png">
+      <ImageId>RBAC插件01</ImageId>
+      <AlternateText>RBAC插件01</AlternateText>
+    </Image>
+    <Image Include="Media\插件\RBAC插件\RBAC权限模型.png">
+      <ImageId>RBAC权限模型</ImageId>
+      <AlternateText>RBAC权限模型</AlternateText>
+    </Image>
     <Image Include="Media\插件\幽灵插件\幽灵插件01.png">
       <ImageId>幽灵插件01</ImageId>
       <AlternateText>幽灵插件01</AlternateText>
@@ -316,6 +346,10 @@
     <Image Include="Media\领域框架\安装\安装02.png">
       <ImageId>安装02</ImageId>
       <AlternateText>安装02</AlternateText>
+    </Image>
+    <Image Include="Media\领域框架\实体缓存\Cache_01.png">
+      <ImageId>Cache_01</ImageId>
+      <AlternateText>Cache 01</AlternateText>
     </Image>
     <Image Include="Media\领域框架\快速试用\创建第一个程序\第一个程序01.png">
       <ImageId>第一个程序01</ImageId>

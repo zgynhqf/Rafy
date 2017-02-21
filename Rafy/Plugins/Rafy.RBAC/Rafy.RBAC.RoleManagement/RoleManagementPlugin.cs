@@ -11,10 +11,8 @@
  * 
 *******************************************************/
 
-
 using Rafy.ComponentModel;
 using Rafy.Domain;
-
 
 namespace Rafy.RBAC.RoleManagement
 {

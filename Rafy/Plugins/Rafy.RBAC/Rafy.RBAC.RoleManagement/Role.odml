@@ -1,29 +1,28 @@
 <?xml version="1.0" encoding="utf-16"?>
 <Document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" HideNonsenceLabels="false">
   <EntityTypes>
-    <EntityTypeElement FullName="Rafy.RBAC.RoleManagement.Resource" Label="资源" Left="63" Top="80" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
+    <EntityTypeElement FullName="Rafy.RBAC.RoleManagement.Resource" Label="资源" Left="42" Top="49" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
       <Properties>
         <PropertyElement Name="Name" PropertyType="String" Label="资源名称" />
         <PropertyElement Name="Code" PropertyType="String" Label="资源编码" />
         <PropertyElement Name="Description" PropertyType="String" Label="资源描述" />
-        <PropertyElement Name="IsSupportDataPermission" PropertyType="Boolean" Label="是否支持数据权限" />
       </Properties>
     </EntityTypeElement>
-    <EntityTypeElement FullName="Rafy.RBAC.RoleManagement.ResourceOperation" Label="资源操作" Left="300" Top="0" Width="0" Height="0" HideProperties="true" IsAggtRoot="false">
+    <EntityTypeElement FullName="Rafy.RBAC.RoleManagement.ResourceOperation" Label="资源操作" Left="62" Top="262" Width="0" Height="0" HideProperties="true" IsAggtRoot="false">
       <Properties>
         <PropertyElement Name="Name" PropertyType="String" Label="功能名称" />
         <PropertyElement Name="Code" PropertyType="String" Label="功能编码" />
         <PropertyElement Name="Description" PropertyType="String" Label="功能描述" />
       </Properties>
     </EntityTypeElement>
-    <EntityTypeElement FullName="Rafy.RBAC.RoleManagement.Role" Label="角色" Left="600" Top="0" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
+    <EntityTypeElement FullName="Rafy.RBAC.RoleManagement.Role" Label="角色" Left="575" Top="144" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
       <Properties>
         <PropertyElement Name="Name" PropertyType="String" Label="角色名称" />
         <PropertyElement Name="Code" PropertyType="String" Label="角色编码" />
         <PropertyElement Name="Description" PropertyType="String" Label="角色描述" />
       </Properties>
     </EntityTypeElement>
-    <EntityTypeElement FullName="Rafy.RBAC.RoleManagement.RoleOperation" Label="角色功能" Left="314" Top="290" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
+    <EntityTypeElement FullName="Rafy.RBAC.RoleManagement.RoleOperation" Label="角色功能" Left="413" Top="371" Width="0" Height="0" HideProperties="true" IsAggtRoot="false">
       <Properties />
     </EntityTypeElement>
   </EntityTypes>

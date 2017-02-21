@@ -20,7 +20,6 @@ using System.Data.Common;
 using System.Text.RegularExpressions;
 using Rafy.Data.Providers;
 using System.Runtime;
-using System.Data.SqlClient;
 
 namespace Rafy.Data
 {
@@ -489,6 +488,11 @@ namespace Rafy.Data
             command.Connection = _connection;
             command.CommandText = sql;
             command.CommandType = type;
+            //如果连接中的过期时间不是默认值，那么命令也使用这个作为过期时间。
+            if (_connection.ConnectionTimeout != 15)
+            {
+                command.CommandTimeout = _connection.ConnectionTimeout;
+            }
 
             var tran = this.Transaction;
             if (tran != null) command.Transaction = tran;

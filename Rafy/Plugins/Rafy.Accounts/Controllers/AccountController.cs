@@ -148,7 +148,7 @@ namespace Rafy.Accounts.Controllers
             user = repo.GetByUserName(userName);
             if (user == null)
             {
-                return new Result(ResultCodes.LoginUserNotExists, string.Format("登录失败，用户名或密码不正确。没有找到用户名为：{0} 的用户。", userName));
+                return new Result(ResultCodes.LoginUserNotExists, string.Format("登录失败，没有找到用户名为：{0} 的用户。", userName));
             }
 
             return this.LoginCore(user, password);

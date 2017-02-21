@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Rafy.Domain.ORM;
+using Rafy.Utils.Caching;
 
 namespace Rafy.Domain.Caching
 {
@@ -34,6 +35,11 @@ namespace Rafy.Domain.Caching
         {
             this._repository = repository;
         }
+
+        /// <summary>
+        /// 获取或设置当前仓库使用的缓存对象。
+        /// </summary>
+        public ICache Cache { get; set; } = Utils.Caching.Cache.Default;
 
         /// <summary>
         /// 使用Cache获取所有对象。
