@@ -786,7 +786,6 @@
     <Content Include="Utils\_ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="Hxy Key.snk" />
     <None Include="ManagedProperty\_Other\ManagedProperty 1.0 20121118备份.7z" />
     <None Include="packages.config" />

@@ -486,7 +486,8 @@ namespace RafyUnitTest
             var properties = (newUserView as ICustomTypeDescriptor).GetProperties();
             var managedProperties = newUser.PropertiesContainer.GetAvailableProperties();
             Assert.IsTrue(managedProperties.All(mp => properties.Cast<PropertyDescriptor>().Any(p => p.Name == mp.Name)));
-            var clrProperties = typeof(TestUser).GetProperties();
+            //去掉索引器
+            var clrProperties = typeof(TestUser).GetProperties().Where(p=>p.GetMethod.GetParameters().Length==0).ToArray();
             Assert.IsTrue(clrProperties.All(clr => properties.Cast<PropertyDescriptor>().Any(p => p.Name == clr.Name)));
 
             //view model 的属性更改事件
