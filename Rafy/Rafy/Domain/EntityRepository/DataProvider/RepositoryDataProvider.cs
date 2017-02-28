@@ -34,6 +34,8 @@ namespace Rafy.Domain
         IRepositoryDataProvider,
         IRepositoryDataProviderInternal
     {
+        private AppContextItem<string> _dbSettingContextItem;
+
         private EntityRepository _repository;
 
         private DataQueryer _dataQueryer;
@@ -46,6 +48,14 @@ namespace Rafy.Domain
         public EntityRepository Repository
         {
             get { return _repository; }
+        }
+
+        /// <summary>
+        /// 数据源上下文
+        /// </summary>
+        protected AppContextItem<string> DbSettingContextItem
+        {
+            get { return _dbSettingContextItem; }
         }
 
         /// <summary>
@@ -90,6 +100,8 @@ namespace Rafy.Domain
 
             if (_dataSaver != null) { _dataSaver.Init(this); }
             if (_dataQueryer != null) { _dataQueryer.Init(this); }
+
+            _dbSettingContextItem = new AppContextItem<string>(_repository.GetType().FullName);
         }
 
         /// <summary>

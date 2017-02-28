@@ -16,6 +16,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Rafy.Data;
 using Rafy.ManagedProperty;
 
@@ -75,10 +76,24 @@ namespace Rafy.Domain.ORM
         {
             get
             {
-                if (this._dbSetting == null)
+                var conSetting = DbSettingContextItem.Value ?? this.ConnectionStringSettingName;
+                if (conSetting == null) throw new InvalidProgramException("数据库配置属性重写有误，不能返回 null。");
+                if (!string.IsNullOrEmpty(DbSettingContextItem.Value))
                 {
-                    var conSetting = this.ConnectionStringSettingName;
-                    if (conSetting == null) throw new InvalidProgramException("数据库配置属性重写有误，不能返回 null。");
+                    if (this._dbSetting == null)
+                    {
+                        try
+                        {
+                            this._dbSetting = JsonConvert.DeserializeObject<DbSetting>(conSetting);
+                        }
+                        catch (Exception)
+                        {
+                            this._dbSetting = DbSetting.FindOrCreate(conSetting);
+                        }
+                    }
+                }
+                else
+                {
                     this._dbSetting = DbSetting.FindOrCreate(conSetting);
                 }
                 return this._dbSetting;
@@ -250,6 +265,12 @@ namespace Rafy.Domain.ORM
                     ));
             }
             return dp;
+        }
+
+        public IDisposable SetDbSetting(string dbSetting)
+        {
+            this._dbSetting = null;
+            return DbSettingContextItem.UseScopeValue(dbSetting);
         }
 
         #endregion

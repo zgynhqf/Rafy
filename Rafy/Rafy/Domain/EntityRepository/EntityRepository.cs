@@ -518,6 +518,17 @@ namespace Rafy.Domain
             }
         }
 
+        /// <summary>
+        /// 更改数据源
+        /// </summary>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        public IDisposable SetDbSetting(string dbSetting)
+        {
+            RdbDataProvider provider = RdbDataProvider.Get(this);
+            return provider.SetDbSetting(dbSetting);
+        }
+
         #endregion
     }
 }
