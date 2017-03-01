@@ -28,6 +28,8 @@ namespace Rafy.Domain.ORM
     /// </summary>
     public class RdbDataProvider : RepositoryDataProvider, IDbConnector
     {
+        private readonly AppContextItem<string> _shareDbSettingContextItem=new AppContextItem<string>("RdbDataProvider.DbSetting");
+
         public RdbDataProvider()
         {
             this.DataSaver = new RdbDataSaver();
@@ -76,21 +78,20 @@ namespace Rafy.Domain.ORM
         {
             get
             {
-                var conSetting = DbSettingContextItem.Value ?? this.ConnectionStringSettingName;
+                //先取当前仓储上下文的，在取共享仓储上下文的，最后取DataProvider设置的
+                var conSetting = (DbSettingContextItem.Value??_shareDbSettingContextItem.Value) ?? this.ConnectionStringSettingName;
                 if (conSetting == null) throw new InvalidProgramException("数据库配置属性重写有误，不能返回 null。");
-                if (!string.IsNullOrEmpty(DbSettingContextItem.Value))
+                if (!string.IsNullOrEmpty(DbSettingContextItem.Value)|| !string.IsNullOrEmpty(_shareDbSettingContextItem.Value))
                 {
-                    if (this._dbSetting == null)
-                    {
                         try
                         {
+                            //支持直接设置字符串，避免从web.config 读取
                             this._dbSetting = JsonConvert.DeserializeObject<DbSetting>(conSetting);
                         }
                         catch (Exception)
                         {
                             this._dbSetting = DbSetting.FindOrCreate(conSetting);
                         }
-                    }
                 }
                 else
                 {
@@ -267,10 +268,24 @@ namespace Rafy.Domain.ORM
             return dp;
         }
 
+        /// <summary>
+        /// 设置仓储的数据源
+        /// </summary>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         public IDisposable SetDbSetting(string dbSetting)
         {
-            this._dbSetting = null;
             return DbSettingContextItem.UseScopeValue(dbSetting);
+        }
+
+        /// <summary>
+        /// 设置所有仓储的数据源
+        /// </summary>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        public IDisposable SetShareDbSetting(string dbSetting)
+        {
+            return _shareDbSettingContextItem.UseScopeValue(dbSetting);
         }
 
         #endregion
