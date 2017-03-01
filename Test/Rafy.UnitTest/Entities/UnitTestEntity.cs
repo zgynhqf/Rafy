@@ -82,6 +82,7 @@ namespace UT
     public class UnitTestEntityRepositoryDataProvider : RdbDataProvider
     {
         public static string DbSettingName = "Test_RafyUnitTest";
+        public static string DbSettingName_Duplicate = "Test_RafyUnitTest_Duplicate";
 
         protected override string ConnectionStringSettingName
         {

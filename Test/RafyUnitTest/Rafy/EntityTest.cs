@@ -847,6 +847,52 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void ET_Repository_RedirectDbSetting()
+        {
+            var bookRepo = RF.ResolveInstance<BookRepository>();
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            {
+                bookRepo.Save(new Book());
+                Assert.AreEqual(1, bookRepo.CountAll());
+
+                using (RF.RedirectDbSetting(UnitTestEntityRepositoryDataProvider.DbSettingName, UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
+                {
+                    Assert.AreEqual(0, bookRepo.CountAll());
+
+                    bookRepo.Save(new Book());
+                    Assert.AreEqual(1, bookRepo.CountAll());
+                }
+
+                Assert.AreEqual(1, bookRepo.CountAll());
+            }
+        }
+
+        [TestMethod]
+        public void ET_Repository_RedirectDbSetting_Batch()
+        {
+            var bookRepo = RF.ResolveInstance<BookRepository>();
+            var chapterRepo = RF.ResolveInstance<ChapterRepository>();
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            {
+                bookRepo.Save(new Book
+                {
+                    ChapterList =
+                    {
+                        new Chapter()
+                    }
+                });
+                Assert.AreEqual(1, bookRepo.CountAll());
+                Assert.AreEqual(1, chapterRepo.CountAll());
+
+                using (RF.RedirectDbSetting(UnitTestEntityRepositoryDataProvider.DbSettingName, UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
+                {
+                    Assert.AreEqual(0, bookRepo.CountAll());
+                    Assert.AreEqual(0, chapterRepo.CountAll());
+                }
+            }
+        }
+
+        [TestMethod]
         public void ET_Repository_TableQuery_Paging()
         {
             var repo = RF.ResolveInstance<ChapterRepository>();

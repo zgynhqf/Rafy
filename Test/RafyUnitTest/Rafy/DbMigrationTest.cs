@@ -66,19 +66,20 @@ namespace RafyUnitTest
             }
         }
 
+        /// <summary>
+        /// 更改数据源，测试实体在Test_StringEntityTest库中创建
+        /// to change
+        /// </summary>
         [TestMethod]
-        public void _DMT_ChangeDbSettingAutoMigrate()
+        public void DMT_AutoMigrate_ChangeDbSetting()
         {
-            //更改数据源，测试实体在Test_StringEntityTest库中创建
-            var repo = RF.ResolveInstance<BookRepository>();
-            using (repo.SetShareDbSetting("DBI"))
+            using (var c = new RafyDbMigrationContext(UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
             {
-                using (var c = new RafyDbMigrationContext("DBI"))
-                {
-                    c.EntitySourceDbSetting = UnitTestEntityRepositoryDataProvider.DbSettingName;
-                    c.RunDataLossOperation = DataLossOperation.All;
-                    c.AutoMigrate();
-                }
+                c.ClassMetaReader.EntityDbSetting = UnitTestEntityRepositoryDataProvider.DbSettingName;
+
+                c.HistoryRepository = new DbHistoryRepository();
+                c.RunDataLossOperation = DataLossOperation.All;
+                c.AutoMigrate();
             }
         }
 
