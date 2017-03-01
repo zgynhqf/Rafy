@@ -833,15 +833,12 @@ namespace RafyUnitTest
 
             //两个仓储同时变更数据源
             var newBookRepo = RF.ResolveInstance<BookRepository>();
-            using (repo.SetDbSetting(DbSettingNames.DbMigrationHistory))
+            using (RdbDataProvider.RedirectDbSetting(UnitTestEntityRepositoryDataProvider.DbSettingName, UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
             {
-                using (newBookRepo.SetDbSetting(StringTestEntityDataProvider.DbSettingName))
-                {
-                    Assert.AreEqual(RdbDataProvider.Get(newBookRepo).DbSetting.Name, StringTestEntityDataProvider.DbSettingName);
-                    Assert.AreEqual(RdbDataProvider.Get(repo).DbSetting.Name, DbSettingNames.DbMigrationHistory);
-                }
+                Assert.AreEqual(RdbDataProvider.Get(newBookRepo).DbSetting.Name, UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate);
+                Assert.AreEqual(RdbDataProvider.Get(repo).DbSetting.Name, UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate);
             }
-
+            
             //还原
             Assert.AreEqual(dbSetting, dataProvider.DbSetting);
         }
@@ -855,12 +852,17 @@ namespace RafyUnitTest
                 bookRepo.Save(new Book());
                 Assert.AreEqual(1, bookRepo.CountAll());
 
-                using (RF.RedirectDbSetting(UnitTestEntityRepositoryDataProvider.DbSettingName, UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
+                using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
                 {
-                    Assert.AreEqual(0, bookRepo.CountAll());
+                    using (
+                        RdbDataProvider.RedirectDbSetting(UnitTestEntityRepositoryDataProvider.DbSettingName,
+                            UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
+                    {
+                        Assert.AreEqual(0, bookRepo.CountAll());
 
-                    bookRepo.Save(new Book());
-                    Assert.AreEqual(1, bookRepo.CountAll());
+                        bookRepo.Save(new Book());
+                        Assert.AreEqual(1, bookRepo.CountAll());
+                    }
                 }
 
                 Assert.AreEqual(1, bookRepo.CountAll());
@@ -884,7 +886,7 @@ namespace RafyUnitTest
                 Assert.AreEqual(1, bookRepo.CountAll());
                 Assert.AreEqual(1, chapterRepo.CountAll());
 
-                using (RF.RedirectDbSetting(UnitTestEntityRepositoryDataProvider.DbSettingName, UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
+                using (RdbDataProvider.RedirectDbSetting(UnitTestEntityRepositoryDataProvider.DbSettingName, UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
                 {
                     Assert.AreEqual(0, bookRepo.CountAll());
                     Assert.AreEqual(0, chapterRepo.CountAll());

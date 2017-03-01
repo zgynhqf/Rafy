@@ -67,19 +67,22 @@ namespace RafyUnitTest
         }
 
         /// <summary>
-        /// 更改数据源，测试实体在Test_StringEntityTest库中创建
-        /// to change
+        /// 测试实体数据库的迁移，实体从源库迁移到目标库
         /// </summary>
         [TestMethod]
         public void DMT_AutoMigrate_ChangeDbSetting()
         {
-            using (var c = new RafyDbMigrationContext(UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
+            using (RdbDataProvider.RedirectDbSetting(UnitTestEntityRepositoryDataProvider.DbSettingName,
+                    UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
             {
-                c.ClassMetaReader.EntityDbSetting = UnitTestEntityRepositoryDataProvider.DbSettingName;
+                using (var c = new RafyDbMigrationContext(UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
+                {
+                    c.ClassMetaReader.EntityDbSetting = UnitTestEntityRepositoryDataProvider.DbSettingName;
 
-                c.HistoryRepository = new DbHistoryRepository();
-                c.RunDataLossOperation = DataLossOperation.All;
-                c.AutoMigrate();
+                    c.HistoryRepository = new DbHistoryRepository();
+                    c.RunDataLossOperation = DataLossOperation.All;
+                    c.AutoMigrate();
+                }
             }
         }
 

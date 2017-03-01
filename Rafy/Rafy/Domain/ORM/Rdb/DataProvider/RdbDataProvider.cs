@@ -28,7 +28,9 @@ namespace Rafy.Domain.ORM
     /// </summary>
     public class RdbDataProvider : RepositoryDataProvider, IDbConnector
     {
-        private readonly AppContextItem<string> _shareDbSettingContextItem=new AppContextItem<string>("RdbDataProvider.DbSetting");
+        private AppContextItem<Dictionary<IRepository, string>> DbSettingContextItem = new AppContextItem<Dictionary<IRepository, string>>("RdbDataProvider.DbSetting");
+
+        private static readonly AppContextItem<Tuple<string, string>> ShareDbSettingContextItem = new AppContextItem<Tuple<string, string>>("RdbDataProvider.ShareDbSetting");
 
         public RdbDataProvider()
         {
@@ -78,20 +80,41 @@ namespace Rafy.Domain.ORM
         {
             get
             {
-                //先取当前仓储上下文的，在取共享仓储上下文的，最后取DataProvider设置的
-                var conSetting = (DbSettingContextItem.Value??_shareDbSettingContextItem.Value) ?? this.ConnectionStringSettingName;
-                if (conSetting == null) throw new InvalidProgramException("数据库配置属性重写有误，不能返回 null。");
-                if (!string.IsNullOrEmpty(DbSettingContextItem.Value)|| !string.IsNullOrEmpty(_shareDbSettingContextItem.Value))
+                //首先取当前仓储上下文的
+                string conSetting = string.Empty;
+                if (DbSettingContextItem.Value != null)
                 {
-                        try
+                    DbSettingContextItem.Value.TryGetValue(this.Repository, out conSetting);
+                }
+
+                //在取共享仓储上下文的
+                if (string.IsNullOrEmpty(conSetting))
+                {
+                    if (ShareDbSettingContextItem.Value != null)
+                    {
+                        if (this.ConnectionStringSettingName == ShareDbSettingContextItem.Value.Item1)
                         {
-                            //支持直接设置字符串，避免从web.config 读取
-                            this._dbSetting = JsonConvert.DeserializeObject<DbSetting>(conSetting);
+                            conSetting = ShareDbSettingContextItem.Value.Item2;
                         }
-                        catch (Exception)
-                        {
-                            this._dbSetting = DbSetting.FindOrCreate(conSetting);
-                        }
+                    }
+                }
+                //最后取DataProvider设置的
+                if (string.IsNullOrEmpty(conSetting))
+                {
+                    conSetting = ConnectionStringSettingName;
+                }
+                if (conSetting == null) throw new InvalidProgramException("数据库配置属性重写有误，不能返回 null。");
+                if (DbSettingContextItem.Value != null || ShareDbSettingContextItem.Value != null)
+                {
+                    try
+                    {
+                        //支持直接设置字符串，避免从web.config 读取
+                        this._dbSetting = JsonConvert.DeserializeObject<DbSetting>(conSetting);
+                    }
+                    catch (Exception)
+                    {
+                        this._dbSetting = DbSetting.FindOrCreate(conSetting);
+                    }
                 }
                 else
                 {
@@ -275,19 +298,21 @@ namespace Rafy.Domain.ORM
         /// <returns></returns>
         public IDisposable SetDbSetting(string dbSetting)
         {
-            return DbSettingContextItem.UseScopeValue(dbSetting);
+            var dic = new Dictionary<IRepository, string>();
+            dic.Add(this.Repository,dbSetting);
+            return DbSettingContextItem.UseScopeValue(dic);
         }
 
         /// <summary>
-        /// 设置所有仓储的数据源
+        /// 更改实体仓储的数据源
         /// </summary>
-        /// <param name="dbSetting"></param>
+        /// <param name="sourceDbSetting">实体仓储原数据源</param>
+        /// <param name="targetDbSetting">实体仓储变更后的数据源</param>
         /// <returns></returns>
-        public IDisposable SetShareDbSetting(string dbSetting)
+        public static IDisposable RedirectDbSetting(string sourceDbSetting, string targetDbSetting)
         {
-            return _shareDbSettingContextItem.UseScopeValue(dbSetting);
+            return ShareDbSettingContextItem.UseScopeValue(new Tuple<string, string>(sourceDbSetting, targetDbSetting));
         }
-
         #endregion
     }
 }

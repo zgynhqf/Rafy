@@ -52,14 +52,6 @@ namespace Rafy.Domain.ORM.DbMigration
         }
 
         /// <summary>
-        /// 实体源数据源
-        /// </summary>
-        public string EntitySourceDbSetting
-        {
-            set { this.ClassMetaReader.EntityDbSetting = value; }
-        }
-
-        /// <summary>
         /// 从实体类型元数据中读取数据库结构的读取器。
         /// </summary>
         public ClassMetaReader ClassMetaReader { get; private set; }
