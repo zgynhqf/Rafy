@@ -822,15 +822,6 @@ namespace RafyUnitTest
             var dataProvider = (repo.DataProvider as RdbDataProvider);
             var dbSetting = dataProvider.DbSetting;
 
-            //两个仓储 一个变更，另一个保持不变
-            using (repo.SetDbSetting(DbSettingNames.DbMigrationHistory))
-            {
-                var bookRepo = RF.ResolveInstance<BookRepository>();
-                var bookDataProvider = (bookRepo.DataProvider as RdbDataProvider);
-                Assert.AreNotEqual(dbSetting, dataProvider.DbSetting, "数据源已变更");//Chapter数据源已改
-                Assert.AreEqual(dbSetting, bookDataProvider.DbSetting, "数据源未变更");//book 数据源已改
-            }
-
             //两个仓储同时变更数据源
             var newBookRepo = RF.ResolveInstance<BookRepository>();
             using (RdbDataProvider.RedirectDbSetting(UnitTestEntityRepositoryDataProvider.DbSettingName, UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
@@ -854,8 +845,7 @@ namespace RafyUnitTest
 
                 using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
                 {
-                    using (
-                        RdbDataProvider.RedirectDbSetting(UnitTestEntityRepositoryDataProvider.DbSettingName,
+                    using (RdbDataProvider.RedirectDbSetting(UnitTestEntityRepositoryDataProvider.DbSettingName,
                             UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
                     {
                         Assert.AreEqual(0, bookRepo.CountAll());
@@ -875,6 +865,7 @@ namespace RafyUnitTest
             var bookRepo = RF.ResolveInstance<BookRepository>();
             var chapterRepo = RF.ResolveInstance<ChapterRepository>();
             using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
             {
                 bookRepo.Save(new Book
                 {

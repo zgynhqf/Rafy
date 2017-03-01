@@ -518,17 +518,6 @@ namespace Rafy.Domain
             }
         }
 
-        /// <summary>
-        /// 设置仓储的数据源
-        /// </summary>
-        /// <param name="dbSetting"></param>
-        /// <returns></returns>
-        public IDisposable SetDbSetting(string dbSetting)
-        {
-            RdbDataProvider provider = RdbDataProvider.Get(this);
-            return provider.SetDbSetting(dbSetting);
-        }
-
         #endregion
     }
 }
