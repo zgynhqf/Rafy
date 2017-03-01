@@ -87,8 +87,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
         private void ImportBatch(EntityBatch meta, IList<Entity> entities)
         {
             var sql = GenerateBatchInsertStatement(meta,entities);
-            var command = meta.DBA.RawAccesser.CommandFactory.CreateCommand(sql, CommandType.Text);
-            command.ExecuteNonQuery();
+            meta.DBA.RawAccesser.ExecuteText(sql);
         }
 
         /// <summary>
@@ -263,9 +262,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
         private void ImportUpdate(EntityBatch meta, IList<Entity> entities)
         {
             var sql = GenerateBatchUpdateStatement(meta, entities);
-            var command = meta.DBA.RawAccesser.CommandFactory.CreateCommand(sql, CommandType.Text);
-            
-            command.ExecuteNonQuery();
+            meta.DBA.RawAccesser.ExecuteText(sql);
         }
 
         /// <summary>

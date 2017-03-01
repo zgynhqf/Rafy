@@ -11,10 +11,10 @@
  * 
 *******************************************************/
 
-using MySql.Data.MySqlClient;
 using Rafy.Data;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -39,10 +39,10 @@ namespace Rafy.DbMigration.MySql
         /// <param name="db">数据库操作对象</param>
         protected override void RunCore(IDbAccesser db)
         {
-            var mysqlInstance = new MySqlConnectionStringBuilder(db.Connection.ConnectionString);
-            MySqlConnection.ClearPool(db.Connection as MySqlConnection);
-
-            using (var db2 = new DbAccesser(mysqlInstance.ConnectionString, DbSetting.Provider_MySql))
+            //var mysqlInstance = new MySqlConnectionStringBuilder(db.Connection.ConnectionString);
+            //MySqlConnection.ClearPool(db.Connection as MySqlConnection);
+          
+            using (var db2 = new DbAccesser(db.ConnectionSchema.ConnectionString, DbSetting.Provider_MySql))
             {
                 db2.ExecuteText(string.Format("DROP DATABASE IF EXISTS {0};", this.Database));
             }

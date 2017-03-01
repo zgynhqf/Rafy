@@ -13,6 +13,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Globalization;
 using System.Linq;
@@ -34,7 +35,7 @@ namespace Rafy.DbMigration.MySql
         public static int ToDbBoolean(bool value)
         {
             //数据库使用 tinyint(1)来存储 Boolean 类型数据。
-            return value ? 1 :0;
+            return value ? 1 : 0;
         }
 
         /// <summary>
@@ -75,7 +76,7 @@ namespace Rafy.DbMigration.MySql
             {
                 case DbType.String:
                 case DbType.AnsiString:
-                    if (!string.IsNullOrEmpty(length))
+                    if (!string.IsNullOrEmpty(length) && !string.Equals("max", length, StringComparison.CurrentCultureIgnoreCase))
                     {
                         return "VARCHAR(" + length + ")";
                     }

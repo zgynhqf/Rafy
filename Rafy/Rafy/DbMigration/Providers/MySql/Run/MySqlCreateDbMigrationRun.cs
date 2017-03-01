@@ -11,7 +11,6 @@
  * 
 *******************************************************/
 
-using MySql.Data.MySqlClient;
 using Rafy.Data;
 using System;
 using System.Collections.Generic;
@@ -40,15 +39,14 @@ namespace Rafy.DbMigration.MySql
         /// <param name="db">数据库访问对象</param>
         protected override void RunCore(IDbAccesser db)
         {
-            var builder = new MySqlConnectionStringBuilder(db.ConnectionSchema.ConnectionString) {Database="mysql" };
-
+            string dbConnString = db.ConnectionSchema.ConnectionString;
+            db.Connection.ConnectionString = dbConnString.Replace(db.Connection.Database, "mysql");
             //手动打开连接，并不关闭，让连接一直处于打开的状态，否则不能立刻连接到新的数据库上
-            db.Connection.ConnectionString = builder.ConnectionString;
             db.Connection.Open();
             db.RawAccesser.ExecuteText(string.Format("CREATE DATABASE IF NOT EXISTS {0} CHARACTER SET UTF8;", this.Database));
             db.RawAccesser.ExecuteText("USE " + this.Database + ";");
             db.Connection.Close();
-            db.Connection.ConnectionString = db.ConnectionSchema.ConnectionString;
+            db.Connection.ConnectionString = dbConnString;
         }
     }
 }
