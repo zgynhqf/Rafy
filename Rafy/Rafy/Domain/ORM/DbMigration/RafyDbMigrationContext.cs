@@ -45,6 +45,7 @@ namespace Rafy.Domain.ORM.DbMigration
         {
             this.ManualMigrations = new RafyUserMigrations();
             this.ClassMetaReader = new ClassMetaReader(this.DbSetting);
+
             //this.DbVersionProvider = new RafyDbVersionProvider();
 
             //如果需要使用 DbHistoryHistory 库来记录升级日志，可使用以下代码。
