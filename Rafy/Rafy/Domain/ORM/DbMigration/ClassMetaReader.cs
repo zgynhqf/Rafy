@@ -39,7 +39,13 @@ namespace Rafy.Domain.ORM.DbMigration
         {
             this._dbSetting = dbSetting;
             this.IgnoreTables = new List<string>();
+            EntityDbSetting = this._dbSetting.Name;
         }
+
+        /// <summary>
+        /// 实体源数据源
+        /// </summary>
+        public string EntityDbSetting { get; set; }
 
         /// <summary>
         /// 需要忽略的表的表名的集合。
@@ -104,7 +110,7 @@ namespace Rafy.Domain.ORM.DbMigration
                         if (em != null && em.TableMeta != null)
                         {
                             var entityDb = RdbDataProvider.Get(RF.Find(type)).ConnectionStringSettingName;
-                            if (entityDb == this._dbSetting.Name)
+                            if (entityDb == EntityDbSetting)
                             {
                                 tableEntityTypes.Add(em);
                             }
