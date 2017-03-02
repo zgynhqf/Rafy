@@ -28,6 +28,7 @@ using Rafy.DbMigration.SqlServer;
 using Rafy.Domain;
 using Rafy.Domain.ORM;
 using Rafy.Domain.ORM.DbMigration;
+using Rafy.Domain.ORM.DbMigration.Presistence;
 using UT;
 
 namespace RafyUnitTest
@@ -62,6 +63,26 @@ namespace RafyUnitTest
                 c.HistoryRepository = new DbHistoryRepository();
                 c.RunDataLossOperation = DataLossOperation.All;
                 c.AutoMigrate();
+            }
+        }
+
+        /// <summary>
+        /// 测试实体数据库的迁移，实体从源库迁移到目标库
+        /// </summary>
+        [TestMethod]
+        public void DMT_AutoMigrate_ChangeDbSetting()
+        {
+            using (RdbDataProvider.RedirectDbSetting(UnitTestEntityRepositoryDataProvider.DbSettingName,
+                    UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
+            {
+                using (var c = new RafyDbMigrationContext(UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
+                {
+                    c.ClassMetaReader.EntityDbSettingName = UnitTestEntityRepositoryDataProvider.DbSettingName;
+
+                    c.HistoryRepository = new DbHistoryRepository();
+                    c.RunDataLossOperation = DataLossOperation.All;
+                    c.AutoMigrate();
+                }
             }
         }
 
