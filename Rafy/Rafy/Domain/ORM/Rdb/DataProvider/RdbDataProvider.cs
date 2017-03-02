@@ -273,12 +273,12 @@ namespace Rafy.Domain.ORM
         /// 切换实体仓储的数据源
         /// 在当前上下文中原仓储的数据源都会切换为新的数据源
         /// </summary>
-        /// <param name="sourceDbSetting">实体仓储原数据源</param>
-        /// <param name="targetDbSetting">实体仓储新的数据源</param>
+        /// <param name="oldDbSettingName">实体仓储旧的数据源</param>
+        /// <param name="newDbSettingName">实体仓储新的数据源</param>
         /// <returns></returns>
-        public static IDisposable RedirectDbSetting(string sourceDbSetting, string targetDbSetting)
+        public static IDisposable RedirectDbSetting(string oldDbSettingName, string newDbSettingName)
         {
-            return ShareDbSettingContextItem.UseScopeValue(new Tuple<string, string>(sourceDbSetting, targetDbSetting));
+            return ShareDbSettingContextItem.UseScopeValue(new Tuple<string, string>(oldDbSettingName, newDbSettingName));
         }
         #endregion
     }
