@@ -47,6 +47,7 @@ namespace Rafy.Domain
         {
             get { return _repository; }
         }
+
         /// <summary>
         /// 数据的保存器。
         /// </summary>
