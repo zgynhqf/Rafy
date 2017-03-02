@@ -11,16 +11,8 @@
     -->
 
     <introduction>
-      <!-- Uncomment this to generate an outline of the section and sub-section
-           titles.  Specify a numeric value as the inner text to limit it to
-           a specific number of sub-topics when creating the outline.  Specify
-           zero (0) to limit it to top-level sections only.  -->
-      <!-- <autoOutline /> -->
-
-      <para>Rafy的实体仓储是以单例的形式存在的，每个仓储都有唯一的RdbDataProvider，它的数据库连接字符串是全局共享的，一旦更新数据源会全部更新。
-      Rafy支持一种使用线程安全上下文的变量，来实现仓储数据源的切换，在线程上下文的作用域内，仓储使用新的数据源，离开作用域，即还原为老的数据源。
-      
-      </para>
+      <para>大型应用中我们常对数据进行切分，并且采用多个数据库实例进行管理，这样可以有效提高系统的水平伸缩性。比如常见的读写分离。本节就是描述如何实现多个数据源切换。</para>
+   
       <autoOutline />
     </introduction>
 
@@ -30,44 +22,76 @@
     <section address="Section0">
       <title>说明</title>
       <content>
-        <!-- Uncomment this to create a sub-section outline
-        <autoOutline /> -->
-        <para>Rafy仓储数据源的切换，是通过 RdbDataProvider 类中的 RedirectDbSetting 方法来完成的。</para>
+        <para>
+          实体 Repository 是以单例的形式存在的，每个Repository 都有唯一的RdbDataProvider，它的数据库连接字符串是全局共享的，一旦更新数据源会全部更新。
+          我们采用一种线程安全上下文的变量，来实现 Repository 数据源的切换，在线程上下文的作用域内，Repository 使用新的数据源，离开作用域，即还原为默认的数据源。
+
+        </para>
+        <para>Repository 数据源的切换，是通过 RdbDataProvider 类中的 RedirectDbSetting 方法来完成的。</para>
 
         <code language="cs">
           <![CDATA[
-            /// <summary>
+        /// <summary>
         /// 切换实体仓储的数据源
         /// 在当前上下文中原仓储的数据源都会切换为新的数据源
+        /// 不支持跨数据库类型切换例如：从MySql切换到SQL Server
         /// </summary>
         /// <param name="oldDbSettingName">实体仓储旧的数据源</param>
         /// <param name="newDbSettingName">实体仓储新的数据源</param>
         /// <returns></returns>
         public static IDisposable RedirectDbSetting(string oldDbSettingName, string newDbSettingName)
         {
-            return ShareDbSettingContextItem.UseScopeValue(new Tuple<string, string>(oldDbSettingName, newDbSettingName));
+            var contextItemDic = ShareDbSettingContextItem.Value ?? new Dictionary<string, string>();
+            contextItemDic[oldDbSettingName] = newDbSettingName;
+            return ShareDbSettingContextItem.UseScopeValue(contextItemDic);
         }
           ]]>
         </code>
       </content>
     </section>
-    
-    <section address="Section1">
-      <title>Rafy数据库切换</title>
+
+    <section address="Section2">
+      <title>Repository 数据源切换</title>
       <content>
         <!-- Uncomment this to create a sub-section outline
         <autoOutline /> -->
-        <para>Rafy运行时，会完成数据库的生成。但我们在做数据备份时，希望新建一个数据库进行备份，以下代码即实现了数据库备份。</para>
+        <para>对 Repository 的数据源进行切换，我们可以实现实体的读写分离。</para>
         <code language="cs">
           <![CDATA[
-          public void DMT_AutoMigrate_ChangeDbSetting()
+        public void ET_Repository_RedirectDbSetting()
+        {
+            var bookRepo = RF.ResolveInstance<BookRepository>();
+            ////默认主库为UnitTestEntityRepositoryDataProvider.DbSettingName
+            bookRepo.Save(new Book());
+            //切换为UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate
+            using (RdbDataProvider.RedirectDbSetting(UnitTestEntityRepositoryDataProvider.DbSettingName,
+                            UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
+            {
+                Assert.AreEqual(0, bookRepo.CountAll());
+            }
+        }
+          ]]>
+        </code>
+      </content>
+    </section>
+    <section address="Section1">
+      <title>数据库生成切换</title>
+      <content>
+        <!-- Uncomment this to create a sub-section outline
+        <autoOutline /> -->
+        <para>Rafy 运行时，会完成数据库的生成。我们在做数据备份时，希望新建一个数据库进行备份，以下代码即实现了数据库备份。</para>
+        <code language="cs">
+          <![CDATA[
+        public void DMT_AutoMigrate_ChangeDbSetting()
         {
             using (RdbDataProvider.RedirectDbSetting(UnitTestEntityRepositoryDataProvider.DbSettingName,
                     UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
             {
                 using (var c = new RafyDbMigrationContext(UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
                 {
-                    c.ClassMetaReader.EntityDbSettingName = UnitTestEntityRepositoryDataProvider.DbSettingName;//老的数据源
+                    /// 实体元数据默认设置的连接字符串
+                    /// 如果切换新的数据库需要设置，否则不用设置
+                    c.ClassMetaReader.EntityDbSettingName = UnitTestEntityRepositoryDataProvider.DbSettingName;
                     c.HistoryRepository = new DbHistoryRepository();
                     c.RunDataLossOperation = DataLossOperation.All;
                     c.AutoMigrate();
@@ -78,33 +102,10 @@
         </code>
       </content>
     </section>
-
-    <section address="Section2">
-      <title>Repository数据源切换</title>
-      <content>
-        <!-- Uncomment this to create a sub-section outline
-        <autoOutline /> -->
-        <para>Repository采用新的数据源进行CRUD操作,离开using作用域即还原为老的数据源。</para>
-        <code language="cs">
-          <![CDATA[
-          public void Test()
-        {
-             using (RdbDataProvider.RedirectDbSetting(UnitTestEntityRepositoryDataProvider.DbSettingName,
-                    UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
-            {
-                var bookRepo = RF.ResolveInstance<BookRepository>();
-                bookRepo.Save(new Book());
-                Assert.AreEqual(1, bookRepo.CountAll());
-            }
-        }
-          ]]>
-        </code>
-      </content>
-    </section>
     <section address="notice">
       <title>注意</title>
       <content>
-        Rafy目前只支持相同数据库类型间进行切换。例如：运行期不允许从MySql切换到SQL Server 数据源。
+        目前只支持相同数据库类型间进行切换。例如：运行期不允许从 MySql 切换到 SQL Server 数据源。
       </content>
     </section>
     <relatedTopics>

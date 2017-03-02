@@ -77,8 +77,9 @@ namespace RafyUnitTest
             {
                 using (var c = new RafyDbMigrationContext(UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
                 {
+                    /// 实体元数据默认设置的连接字符串
+                    /// 如果切换新的数据库需要设置，否则不用设置
                     c.ClassMetaReader.EntityDbSettingName = UnitTestEntityRepositoryDataProvider.DbSettingName;
-
                     c.HistoryRepository = new DbHistoryRepository();
                     c.RunDataLossOperation = DataLossOperation.All;
                     c.AutoMigrate();

@@ -27,7 +27,7 @@ namespace Rafy.Domain.ORM
     /// </summary>
     public class RdbDataProvider : RepositoryDataProvider, IDbConnector
     {
-        private static readonly AppContextItem<Tuple<string, string>> ShareDbSettingContextItem = new AppContextItem<Tuple<string, string>>("RdbDataProvider.ShareDbSetting");
+        private static readonly AppContextItem<Dictionary<string, string>> ShareDbSettingContextItem = new AppContextItem<Dictionary<string, string>>("RdbDataProvider.ShareDbSetting");
 
         public RdbDataProvider()
         {
@@ -55,7 +55,6 @@ namespace Rafy.Domain.ORM
 
         #region 数据库配置
 
-        private DbSetting _dbSetting;
         /// <summary>
         /// 这个字段用于存储运行时解析出来的 ORM 信息。
         /// </summary>
@@ -77,27 +76,10 @@ namespace Rafy.Domain.ORM
         {
             get
             {
-                string conSetting = string.Empty;
-                //先取线程上下文切换的数据源
-                if (string.IsNullOrEmpty(conSetting))
-                {
-                    var tupleDbSettingName = ShareDbSettingContextItem.Value;
-                    if (tupleDbSettingName != null)
-                    {
-                        if (this.ConnectionStringSettingName == tupleDbSettingName.Item1)
-                        {
-                            conSetting = tupleDbSettingName.Item2;
-                        }
-                    }
-                }
-                //在取DataProvider设置的
-                if (string.IsNullOrEmpty(conSetting))
-                {
-                    conSetting = ConnectionStringSettingName;
-                }
-                if (conSetting == null) throw new InvalidProgramException("数据库配置属性重写有误，不能返回 null。");
-                this._dbSetting = DbSetting.FindOrCreate(conSetting);
-                return this._dbSetting;
+                string conSetting = null;
+                var dbSettingNameDic = ShareDbSettingContextItem.Value;
+                dbSettingNameDic?.TryGetValue(ConnectionStringSettingName, out conSetting);
+                return DbSetting.FindOrCreate(conSetting ?? ConnectionStringSettingName);
             }
         }
 
@@ -271,13 +253,16 @@ namespace Rafy.Domain.ORM
         /// <summary>
         /// 切换实体仓储的数据源
         /// 在当前上下文中原仓储的数据源都会切换为新的数据源
+        /// 不支持跨数据库类型切换例如：从MySql切换到SQL Server
         /// </summary>
         /// <param name="oldDbSettingName">实体仓储旧的数据源</param>
         /// <param name="newDbSettingName">实体仓储新的数据源</param>
         /// <returns></returns>
         public static IDisposable RedirectDbSetting(string oldDbSettingName, string newDbSettingName)
         {
-            return ShareDbSettingContextItem.UseScopeValue(new Tuple<string, string>(oldDbSettingName, newDbSettingName));
+            var contextItemDic = ShareDbSettingContextItem.Value ?? new Dictionary<string, string>();
+            contextItemDic[oldDbSettingName] = newDbSettingName;
+            return ShareDbSettingContextItem.UseScopeValue(contextItemDic);
         }
         #endregion
     }
