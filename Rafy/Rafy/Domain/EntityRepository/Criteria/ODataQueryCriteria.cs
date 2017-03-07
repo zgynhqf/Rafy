@@ -28,8 +28,10 @@ namespace Rafy.Domain
     /// <para>    * Or 与 And 没有优先级之分。                                                                                     </para>
     /// <para>    * 可以使用空值 null。注意：null 表示空值，而 'null' 则表示字符串值。                                                </para>
     /// <para>    * （另外，不支持对集合进行对比的操作 in 和 notIn，这两个操作需要转换为 A eq 1 or A eq 2 or A eq 3                    </para>
+    /// <para>    * 特殊字符 如 ‘  “  \ 需要加转义\\                                                                                                                  </para>
     /// <para>    示例（详见源码单元测试）：                                                                                        </para>
     /// <para>        NickName eq 'huqf'                                                                                          </para>
+    /// <para>        NickName eq 'hu\\'qf'  or   NickName eq 'hu\\\"qf'   or   NickName eq 'hu\\\\qf'                                                                                        </para>
     /// <para>        NickName eq 'huqf' and UserName eq 'huqf'                                                                   </para>
     /// <para>        NickName eq 'huqf' or UserName eq 'huqf' and ActiveTimeStamp lt '2014-12-17 19:00'                          </para>
     /// <para>        NickName eq 'huqf' and UserName eq 'huqf' or ActiveTimeStamp lt '2014-12-17 19:00'                          </para>

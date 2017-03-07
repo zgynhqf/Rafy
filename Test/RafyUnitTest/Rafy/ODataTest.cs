@@ -128,6 +128,40 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void ODT_Filter_SpecialCharacter()
+        {
+            var filter = "Name contains '\\''";
+
+            var sql = ParseWhere(filter);
+
+            Assert.IsTrue(sql.ToString() == @"Users.UserName LIKE {0}");
+            Assert.IsTrue(sql.Parameters[0].ToString() == "%'%");
+
+            var filter1 = "Name contains '\\\"'";
+            var sql1 = ParseWhere(filter1);
+            Assert.IsTrue(sql1.ToString() == @"Users.UserName LIKE {0}");
+            Assert.IsTrue(sql1.Parameters[0].ToString() == "%\"%");
+
+            var filter2 = "Name contains '\\\\'";
+            var sql2 = ParseWhere(filter2);
+            Assert.IsTrue(sql2.ToString() == @"Users.UserName LIKE {0}");
+            Assert.IsTrue(sql2.Parameters[0].ToString() == "%\\%");
+
+
+        }
+
+        [TestMethod]
+        public void ODT_Filter_Space()
+        {
+            var filter = "Name contains 'hu  qf'";
+
+            var sql = ParseWhere(filter);
+
+            Assert.IsTrue(sql.ToString() == @"Users.UserName LIKE {0}");
+            Assert.IsTrue(sql.Parameters[0].ToString() == "%hu  qf%");
+        }
+
+        [TestMethod]
         public void ODT_Filter_Null()
         {
             var filter = "Name eq null";
