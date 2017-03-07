@@ -20,6 +20,7 @@ using Rafy;
 using Rafy.Data;
 using Rafy.DbMigration;
 using Rafy.Domain;
+using Rafy.Domain.ORM;
 using Rafy.Domain.ORM.BatchSubmit.Oracle;
 using Rafy.Domain.ORM.DbMigration;
 using UT;
@@ -48,6 +49,17 @@ namespace Rafy.UnitTest.DataProvider
                     c.HistoryRepository = new DbHistoryRepository();
                     c.RunDataLossOperation = DataLossOperation.All;
                     c.AutoMigrate();
+                }
+                using (RdbDataProvider.RedirectDbSetting(UnitTestEntityRepositoryDataProvider.DbSettingName,
+                     UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
+                {
+                    using (var c = new RafyDbMigrationContext(UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
+                    {
+                        c.ClassMetaReader.EntityDbSettingName = UnitTestEntityRepositoryDataProvider.DbSettingName;
+                        c.HistoryRepository = new DbHistoryRepository();
+                        c.RunDataLossOperation = DataLossOperation.All;
+                        c.AutoMigrate();
+                    }
                 }
                 using (var c = new RafyDbMigrationContext(UnitTest2EntityRepositoryDataProvider.DbSettingName))
                 {

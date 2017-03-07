@@ -35,10 +35,11 @@ namespace Rafy.Domain.ORM.DbMigration
     {
         private DbSetting _dbSetting;
 
-        public ClassMetaReader(DbSetting dbSetting)
+        internal ClassMetaReader(DbSetting dbSetting)
         {
             this._dbSetting = dbSetting;
             this.IgnoreTables = new List<string>();
+            this.EntityDbSettingName = this._dbSetting.Name;
         }
 
         /// <summary>
@@ -104,7 +105,7 @@ namespace Rafy.Domain.ORM.DbMigration
                         if (em != null && em.TableMeta != null)
                         {
                             var entityDb = RdbDataProvider.Get(RF.Find(type)).ConnectionStringSettingName;
-                            if (entityDb == this._dbSetting.Name)
+                            if (entityDb == EntityDbSettingName)
                             {
                                 tableEntityTypes.Add(em);
                             }
@@ -375,5 +376,12 @@ namespace Rafy.Domain.ORM.DbMigration
                 public bool NeedDeleteCascade;
             }
         }
+
+        /// <summary>
+        /// 此属性用于指定需要读取的实体集合对应的数据库配置名称。
+        /// 默认值：将要生成的数据库的配置名。
+        /// 当需要生成的数据库的配置名与实体集合的数据库配置名不一致时，可以摄者此属性来指定实体集合对应的数据库配置名称。
+        /// </summary>
+        public string EntityDbSettingName { get; set; }
     }
 }

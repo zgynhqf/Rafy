@@ -774,7 +774,7 @@ namespace RafyUnitTest
         public void ET_Repository_TableQuery_ColumnConflict()
         {
             var repo = RF.ResolveInstance<ChapterRepository>();
-            bool success  = false;
+            bool success = false;
             try
             {
                 repo.QueryChapterTable(0, PagingInfo.Empty);
@@ -812,6 +812,76 @@ namespace RafyUnitTest
                 Assert.IsTrue(table.Rows.Count == 2);
                 var bookName = table[0].GetString("BookName");
                 Assert.IsTrue(bookName.Contains("Book"));
+            }
+        }
+
+        [TestMethod]
+        public void ET_Repository_ChangeDbSetting()
+        {
+            var repo = RF.ResolveInstance<ChapterRepository>();
+            var dataProvider = (repo.DataProvider as RdbDataProvider);
+            var dbSetting = dataProvider.DbSetting;
+
+            //两个仓储同时变更数据源
+            var newBookRepo = RF.ResolveInstance<BookRepository>();
+            using (RdbDataProvider.RedirectDbSetting(UnitTestEntityRepositoryDataProvider.DbSettingName, UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
+            {
+                Assert.AreEqual(RdbDataProvider.Get(newBookRepo).DbSetting.Name, UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate);
+                Assert.AreEqual(RdbDataProvider.Get(repo).DbSetting.Name, UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate);
+            }
+            
+            //还原
+            Assert.AreEqual(dbSetting, dataProvider.DbSetting);
+        }
+
+        [TestMethod]
+        public void ET_Repository_RedirectDbSetting()
+        {
+            var bookRepo = RF.ResolveInstance<BookRepository>();
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            {
+                bookRepo.Save(new Book());
+                Assert.AreEqual(1, bookRepo.CountAll());
+
+                using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
+                {
+                    using (RdbDataProvider.RedirectDbSetting(UnitTestEntityRepositoryDataProvider.DbSettingName,
+                            UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
+                    {
+                        Assert.AreEqual(0, bookRepo.CountAll());
+
+                        bookRepo.Save(new Book());
+                        Assert.AreEqual(1, bookRepo.CountAll());
+                    }
+                }
+
+                Assert.AreEqual(1, bookRepo.CountAll());
+            }
+        }
+
+        [TestMethod]
+        public void ET_Repository_RedirectDbSetting_Batch()
+        {
+            var bookRepo = RF.ResolveInstance<BookRepository>();
+            var chapterRepo = RF.ResolveInstance<ChapterRepository>();
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
+            {
+                bookRepo.Save(new Book
+                {
+                    ChapterList =
+                    {
+                        new Chapter()
+                    }
+                });
+                Assert.AreEqual(1, bookRepo.CountAll());
+                Assert.AreEqual(1, chapterRepo.CountAll());
+
+                using (RdbDataProvider.RedirectDbSetting(UnitTestEntityRepositoryDataProvider.DbSettingName, UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
+                {
+                    Assert.AreEqual(0, bookRepo.CountAll());
+                    Assert.AreEqual(0, chapterRepo.CountAll());
+                }
             }
         }
 
@@ -1058,7 +1128,7 @@ namespace RafyUnitTest
                 var list = repo.GetByStartDate(DateTime.Parse("2014-05-08 13:30"));
                 Assert.IsTrue(list.Count == 2);
 
-                var listCount= repo.CountByStartDate(DateTime.Parse("2014-05-08 13:30"));
+                var listCount = repo.CountByStartDate(DateTime.Parse("2014-05-08 13:30"));
                 Assert.IsTrue(listCount == 2);
             }
         }
@@ -2749,7 +2819,7 @@ namespace RafyUnitTest
                 model = new Building();
                 model.Name = "B";
                 repo.Save(model);
-               // Assert.IsTrue(model.Id > 0);
+                // Assert.IsTrue(model.Id > 0);
                 Assert.IsTrue(repo.CountAll() == 2);
 
                 model = new Building();
@@ -2888,7 +2958,7 @@ namespace RafyUnitTest
         public void ET_Clone_ReadDbRow()
         {
             var a = new A { Id = 1 };
-            var b = new B { Name = "b1", Id = 1, A = a};
+            var b = new B { Name = "b1", Id = 1, A = a };
             var b2 = new B();
             b2.Clone(b, CloneOptions.ReadDbRow());
 
@@ -2902,7 +2972,7 @@ namespace RafyUnitTest
         public void ET_Clone_NewSingleEntity()
         {
             var a = new A { Id = 1 };
-            var b = new B { Name = "b1", Id = 1, A = a};
+            var b = new B { Name = "b1", Id = 1, A = a };
             var b2 = new B();
             b2.Clone(b, CloneOptions.NewSingleEntity());
 

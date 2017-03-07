@@ -145,6 +145,7 @@
     <None Include="Content\界面生成\界面配置\枚举的显示.aml" />
     <None Include="Content\领域实体框架.aml" />
     <None Include="Content\领域实体框架\ORM\为数据库生成注释.aml" />
+    <None Include="Content\领域实体框架\ORM\多数据源切换.aml" />
     <None Include="Content\领域实体框架\其它\实体框架常见问题.aml" />
     <None Include="Content\领域实体框架\实体仓库\仓库数据层（RepositoryDataProvider）.aml" />
     <None Include="Content\领域实体框架\实体仓库\大批量导入实体.aml" />
