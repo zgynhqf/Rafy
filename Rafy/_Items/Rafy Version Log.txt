@@ -25,10 +25,10 @@
 3.58.3323
     ★★公布、！修改接口、重构
         重构缓存模块。
-            添加新的缓存组件 PerHttpRequestCache。
-            RepositoryCache 增加 Cache 属性。
-            CacheInstance 类移除，由使用者自行创建。
-            MemoryCache 公共构造函数，可以替换内部依赖的 MemoryCache 。
+        添加新的缓存组件 PerHttpRequestCache。
+        RepositoryCache 增加 Cache 属性。
+        CacheInstance 类移除，由使用者自行创建。
+        MemoryCache 公共构造函数，可以替换内部依赖的 MemoryCache 。
     BUG修复
         幽灵插件在添加查询时，内部的子查询也需要添加相应的查询。
         实体属性反射时，过滤掉索引器属性

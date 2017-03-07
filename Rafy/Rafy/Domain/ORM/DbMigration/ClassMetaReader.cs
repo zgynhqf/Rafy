@@ -43,12 +43,6 @@ namespace Rafy.Domain.ORM.DbMigration
         }
 
         /// <summary>
-        /// 实体元数据 RdbDataProvider 默认设置的 DbSettingName
-        /// 如果变更新的数据库需要设置，否则不用设置
-        /// </summary>
-        public string EntityDbSettingName { get; set; }
-
-        /// <summary>
         /// 需要忽略的表的表名的集合。
         /// </summary>
         public List<string> IgnoreTables { get; private set; }
@@ -382,5 +376,12 @@ namespace Rafy.Domain.ORM.DbMigration
                 public bool NeedDeleteCascade;
             }
         }
+
+        /// <summary>
+        /// 此属性用于指定需要读取的实体集合对应的数据库配置名称。
+        /// 默认值：将要生成的数据库的配置名。
+        /// 当需要生成的数据库的配置名与实体集合的数据库配置名不一致时，可以摄者此属性来指定实体集合对应的数据库配置名称。
+        /// </summary>
+        public string EntityDbSettingName { get; set; }
     }
 }
