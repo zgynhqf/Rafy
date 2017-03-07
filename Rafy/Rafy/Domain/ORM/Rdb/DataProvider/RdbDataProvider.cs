@@ -78,8 +78,21 @@ namespace Rafy.Domain.ORM
             {
                 string conSetting = null;
                 var dbSettingNameDic = ShareDbSettingContextItem.Value;
-                dbSettingNameDic?.TryGetValue(ConnectionStringSettingName, out conSetting);
-                return DbSetting.FindOrCreate(conSetting ?? ConnectionStringSettingName);
+                dbSettingNameDic?.TryGetValue(CacheConnectionStringSettingName, out conSetting);
+                return DbSetting.FindOrCreate(conSetting ?? CacheConnectionStringSettingName);
+            }
+        }
+
+        private string _cacheConnectionStringSettingName;
+
+        /// <summary>
+        /// 数据库配置名称
+        /// </summary>
+        private string CacheConnectionStringSettingName
+        {
+            get
+            {
+                return _cacheConnectionStringSettingName ?? (_cacheConnectionStringSettingName=ConnectionStringSettingName);
             }
         }
 

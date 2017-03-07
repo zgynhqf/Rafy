@@ -43,8 +43,8 @@ namespace Rafy.Domain.ORM.DbMigration
         }
 
         /// <summary>
-        /// 实体元数据默认设置的连接字符串
-        /// 如果切换新的数据库需要设置，否则不用设置
+        /// 实体元数据 RdbDataProvider 默认设置的 DbSettingName
+        /// 如果变更新的数据库需要设置，否则不用设置
         /// </summary>
         public string EntityDbSettingName { get; set; }
 

@@ -12,15 +12,15 @@
 
 3.60.3300
     ★★公布、添加功能
-        实体仓储支持多数据源
+        实体仓储支持多数据库连接字符串切换
 
 3.59.3400
     ★★公布、添加功能
         支持MySql数据库
    BUG修复
-         MySql数据类型varchar(max)改为text
+        MySql数据类型varchar(max)改为text
    内部修改
-         Rafy工程文件移除引用的MySQL.DLL文件
+        Rafy工程文件移除引用的MySQL.DLL文件
 
 3.58.3323
     ★★公布、！修改接口、重构
