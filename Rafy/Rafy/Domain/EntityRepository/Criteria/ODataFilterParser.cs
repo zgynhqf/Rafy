@@ -258,8 +258,6 @@ namespace Rafy.Domain
             _wordBuffer.Clear();
             bool stringStarted = false;
 
-           // var _filterLength = _filter.Length;
-
             while (true)
             {
                 if (_filterIndex >= _filterLength) break;
@@ -272,7 +270,7 @@ namespace Rafy.Domain
                     return c.ToString();
                 }
 
-                //处理特殊字符‘  “  \  前面需要加上转义字符 \\ 如 : filter = "Name contains 'aa\\'bb'" ;
+                //处理特殊字符‘  “  \  前面需要加上转义字符 \ 如 : filter = "Name contains 'aa\'bb'" ;
                 if (c == '\\')
                 {
                     //直接添加下一个字符

@@ -31,7 +31,7 @@ namespace Rafy.Domain
     /// <para>    * 特殊字符 如 ‘  “  \ 需要加转义\\                                                                                                                  </para>
     /// <para>    示例（详见源码单元测试）：                                                                                        </para>
     /// <para>        NickName eq 'huqf'                                                                                          </para>
-    /// <para>        NickName eq 'hu\\'qf'  or   NickName eq 'hu\\\"qf'   or   NickName eq 'hu\\\\qf'                                                                                        </para>
+    /// <para>        NickName eq 'hu\'qf'  or   NickName eq 'hu\\"qf'   or   NickName eq 'hu\\qf'                                                                                        </para>
     /// <para>        NickName eq 'huqf' and UserName eq 'huqf'                                                                   </para>
     /// <para>        NickName eq 'huqf' or UserName eq 'huqf' and ActiveTimeStamp lt '2014-12-17 19:00'                          </para>
     /// <para>        NickName eq 'huqf' and UserName eq 'huqf' or ActiveTimeStamp lt '2014-12-17 19:00'                          </para>
