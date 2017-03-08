@@ -57,6 +57,7 @@ namespace Rafy.Domain
 
             _filter = filter;
             _filterIndex = 0;
+            _filterLength = _filter.Length;
             while (true)
             {
                 var part = this.ReadPart();
@@ -237,6 +238,9 @@ namespace Rafy.Domain
 
         #region ReadPart
 
+        //过滤字符串长度
+        private int _filterLength;
+
         private string _filter;
         private int _filterIndex;
 
@@ -254,11 +258,9 @@ namespace Rafy.Domain
             _wordBuffer.Clear();
             bool stringStarted = false;
 
-            var length = _filter.Length;
-
             while (true)
             {
-                if (_filterIndex >= length) break;
+                if (_filterIndex >= _filterLength) break;
 
                 var c = _filter[_filterIndex++];
 
@@ -268,6 +270,14 @@ namespace Rafy.Domain
                     return c.ToString();
                 }
 
+                //处理特殊字符‘  “  \  前面需要加上转义字符 \ 如 : filter = "Name contains 'aa\'bb'" ;
+                if (c == '\\')
+                {
+                    //直接添加下一个字符
+                    var next = _filter[_filterIndex++];
+                    _wordBuffer.Append(next);
+                    continue;
+                }
                 //如果是字符串，则直接返回。
                 if (c == '\'' || c == '"')
                 {
@@ -284,7 +294,7 @@ namespace Rafy.Domain
                     _wordBuffer.Append(c);
 
                     //如果单词后面紧跟括号，那么单词也必须结束。
-                    if (_filterIndex < length)
+                    if (_filterIndex < _filterLength)
                     {
                         var next = _filter[_filterIndex];
                         if (!stringStarted && (next == '(' || next == ')')) { break; }
