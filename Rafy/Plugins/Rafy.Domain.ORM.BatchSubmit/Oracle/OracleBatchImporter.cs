@@ -66,7 +66,8 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
         protected override void ImportInsert(EntityBatch batch)
         {
             //为所有实体生成 Id
-            if (batch.Table.IdentityColumn != null)
+            //Identity列已经手动赋值，就不需要生成id了，否则需要生成id 
+            if (batch.Table.IdentityColumn != null && batch.InsertBatch.Any(p => (long)p.Id == 0))
             {
                 this.GenerateId(batch);
             }

@@ -183,7 +183,12 @@ namespace Rafy.Domain.ORM
             dba.ExecuteText(this._insertSQL, parameters.ToArray());
         }
 
-        internal string GenerateInsertSQL()
+        /// <summary>
+        /// 生成Insert 语句
+        /// </summary>
+        /// <param name="isManualIdentity">是否手动赋值identity</param>
+        /// <returns></returns>
+        internal string GenerateInsertSQL(bool isManualIdentity = false)
         {
             var sql = new StringWriter();
             sql.Write("INSERT INTO ");
@@ -195,7 +200,7 @@ namespace Rafy.Domain.ORM
             for (int i = 0, c = _columns.Count; i < c; i++)
             {
                 var column = _columns[i];
-                if (column.CanInsert)
+                if (column.CanInsert || isManualIdentity)
                 {
                     if (comma)
                     {
@@ -684,7 +689,7 @@ namespace Rafy.Domain.ORM
             else
             {
                 //在内存中分页。
-                var tempList =new List<Entity>();
+                var tempList = new List<Entity>();
                 TreeHelper.LoadTreeData(tempList, entities, _repository.TreeIndexOption);
                 var paged = tempList.JumpToPage(pagingInfo);
                 foreach (var item in paged) { list.Add(item); }

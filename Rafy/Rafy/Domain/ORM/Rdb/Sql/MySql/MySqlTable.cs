@@ -29,6 +29,10 @@ namespace Rafy.Domain.ORM.MySql
     internal sealed class MySqlTable : SqlOraTable
     {
         private string _insertSQL;
+
+        // 缓存  identity 手动、自动赋值 两种sql 
+        private readonly Dictionary<bool, string> _insertSqlDic = new Dictionary<bool, string>(2);
+
         /// <summary>
         /// 构造函数 初始化仓库对象
         /// </summary>
@@ -66,17 +70,23 @@ namespace Rafy.Domain.ORM.MySql
             var idColumn = this.IdentityColumn;
             if (idColumn != null)
             {
-                if (_insertSQL == null)
-                {
-                    _insertSQL = this.GenerateInsertSQL()+";";
-                    _insertSQL += Environment.NewLine;
-                    _insertSQL += "SELECT @@IDENTITY;";
-                }
+                // identity 是 int 或者long 型
+                var isIdnetityHasValue = Convert.ToInt64(idColumn.ReadParameterValue(item)) > 0;
 
+                if (!_insertSqlDic.TryGetValue(isIdnetityHasValue, out _insertSQL))
+                {
+                    _insertSQL = this.GenerateInsertSQL(isIdnetityHasValue);
+                    _insertSQL += Environment.NewLine;
+                    if (!isIdnetityHasValue)
+                    {
+                        _insertSQL += "; SELECT @@IDENTITY; ";
+                    }
+                    _insertSqlDic[isIdnetityHasValue] = _insertSQL;
+                }
                 var parameters = new List<object>();
                 foreach (RdbColumn column in this.Columns)
                 {
-                    if (column.CanInsert)
+                    if (column.CanInsert || isIdnetityHasValue)
                     {
                         var value = column.ReadParameterValue(item);
                         parameters.Add(value);
@@ -84,9 +94,12 @@ namespace Rafy.Domain.ORM.MySql
                 }
 
                 //由于默认是 decimal 类型，所以需要类型转换。
-                var idValue = dba.QueryValue(_insertSQL, parameters.ToArray());
-                idValue = TypeHelper.CoerceValue((item as IEntityWithId).IdProvider.KeyType, idValue);
-                idColumn.LoadValue(item, idValue);
+                var idValue = dba.QueryValue(this._insertSQL, parameters.ToArray());
+                if (!isIdnetityHasValue)
+                {
+                    idValue = TypeHelper.CoerceValue((item as IEntityWithId).IdProvider.KeyType, idValue);
+                    idColumn.LoadValue(item, idValue);
+                }
 
                 //如果实体的 Id 是在插入的过程中生成的，
                 //那么需要在插入组合子对象前，先把新生成的父对象 Id 都同步到子列表中。

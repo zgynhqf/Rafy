@@ -250,5 +250,18 @@ namespace RafyUnitTest.StringEntity
                 Assert.IsNotNull(entity2);
             }
         }
+
+        [TestMethod]
+        public void EIT_IdentityId_Insert()
+        {
+            var repo = RF.ResolveInstance<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                int id = 555555;
+                var entity = new Book() {Id= id };
+                repo.Save(entity);
+                Assert.IsTrue(entity.Id == id);
+            }
+        }
     }
 }
