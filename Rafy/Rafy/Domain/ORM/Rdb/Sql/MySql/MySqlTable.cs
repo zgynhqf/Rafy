@@ -74,10 +74,9 @@ namespace Rafy.Domain.ORM.MySql
                 string insertSql = isIdentityHasValue ? _withIdInsertSql ?? (_withIdInsertSql = this.GenerateInsertSQL(true)) :
                     _insertSql ?? (_insertSql = $"{this.GenerateInsertSQL()};SELECT @@IDENTITY;");
 
-                var parameters =
-                    (from column in Columns
-                     where column.CanInsert || isIdentityHasValue
-                     select column.ReadParameterValue(item)).ToArray();
+                var parameters = Columns.Where(c => c.CanInsert || isIdentityHasValue)
+                                 .Select(c => c.ReadParameterValue(item))
+                                 .ToArray();
 
                 //由于默认是 decimal 类型，所以需要类型转换。
                 var idValue = dba.QueryValue(insertSql, parameters);

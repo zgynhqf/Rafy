@@ -45,10 +45,9 @@ namespace Rafy.Domain.ORM.SqlCe
                 string insertSql = isIdentityHasValue ? _withIdInsertSql ?? (_withIdInsertSql = $"{this.GenerateInsertSQL(true)}") :
                     _insertSql ?? (_insertSql = $"{this.GenerateInsertSQL()} ");
 
-                var parameters =
-                    (from column in Columns
-                     where column.CanInsert || isIdentityHasValue
-                     select column.ReadParameterValue(item)).ToArray();
+                var parameters = Columns.Where(c => c.CanInsert || isIdentityHasValue)
+                              .Select(c => c.ReadParameterValue(item))
+                              .ToArray();
 
                 if (isIdentityHasValue)
                 {

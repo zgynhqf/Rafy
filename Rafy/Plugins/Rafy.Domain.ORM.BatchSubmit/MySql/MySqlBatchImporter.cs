@@ -405,7 +405,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
             for (int i = 0, c = entities.Count; i < c; i++)
             {
                 var item = entities[i];
-                if (!((IEntityWithId) item).IdProvider.IsAvailable(item.Id))
+                if (!((IEntityWithId)item).IdProvider.IsAvailable(item.Id))
                 {
                     item.Id = ++startId;
                 }

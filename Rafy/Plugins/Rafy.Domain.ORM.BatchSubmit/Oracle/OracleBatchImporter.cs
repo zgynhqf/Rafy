@@ -104,7 +104,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
                 for (int i = 0, c = section.Count; i < c; i++)
                 {
                     var item = section[i];
-                    if (!((IEntityWithId) item).IdProvider.IsAvailable(item.Id))
+                    if (!((IEntityWithId)item).IdProvider.IsAvailable(item.Id))
                     {
                         item.Id = startId++;
                     }
