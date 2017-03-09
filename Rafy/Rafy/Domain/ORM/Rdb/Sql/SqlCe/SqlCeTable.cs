@@ -32,7 +32,7 @@ namespace Rafy.Domain.ORM.SqlCe
     {
         private string _insertSql;
 
-        private string _withIdInsrtSql;
+        private string _withIdInsertSql;
 
         public SqlCeTable(IRepositoryInternal repository) : base(repository) { }
 
@@ -42,7 +42,7 @@ namespace Rafy.Domain.ORM.SqlCe
             if (idColumn != null)
             {
                 var isIdentityHasValue = (item as IEntityWithId).IdProvider.IsAvailable(item.Id);
-                string insertSql = isIdentityHasValue ? _withIdInsrtSql ?? (_withIdInsrtSql = $"{this.GenerateInsertSQL(true)}") :
+                string insertSql = isIdentityHasValue ? _withIdInsertSql ?? (_withIdInsertSql = $"{this.GenerateInsertSQL(true)}") :
                     _insertSql ?? (_insertSql = $"{this.GenerateInsertSQL()} ");
 
                 var parameters =

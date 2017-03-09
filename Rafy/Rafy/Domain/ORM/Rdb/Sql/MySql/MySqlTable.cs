@@ -30,7 +30,7 @@ namespace Rafy.Domain.ORM.MySql
     {
         private string _insertSql;
 
-        private string _withIdInsrtSql;
+        private string _withIdInsertSql;
 
         /// <summary>
         /// 构造函数 初始化仓库对象
@@ -71,7 +71,7 @@ namespace Rafy.Domain.ORM.MySql
             {
 
                 var isIdentityHasValue = (item as IEntityWithId).IdProvider.IsAvailable(item.Id);
-                string insertSql = isIdentityHasValue ? _withIdInsrtSql ?? (_withIdInsrtSql = this.GenerateInsertSQL(true)) :
+                string insertSql = isIdentityHasValue ? _withIdInsertSql ?? (_withIdInsertSql = this.GenerateInsertSQL(true)) :
                     _insertSql ?? (_insertSql = $"{this.GenerateInsertSQL()};SELECT @@IDENTITY;");
 
                 var parameters =

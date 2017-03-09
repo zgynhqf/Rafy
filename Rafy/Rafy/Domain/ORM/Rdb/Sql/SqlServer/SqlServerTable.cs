@@ -25,10 +25,7 @@ namespace Rafy.Domain.ORM.SqlServer
     {
         private string _insertSql;
 
-        private string _withIdInsrtSql;
-
-        // 缓存  identity 手动、自动赋值 两种sql 
-        private readonly Dictionary<bool, string> _insertSqlDic = new Dictionary<bool, string>(2);
+        private string _withIdInsertSql;
 
         public SqlServerTable(IRepositoryInternal repository) : base(repository) { }
 
@@ -40,7 +37,7 @@ namespace Rafy.Domain.ORM.SqlServer
             if (idColumn != null)
             {
                 var isIdentityHasValue = (item as IEntityWithId).IdProvider.IsAvailable(item.Id);
-                string insertSql = isIdentityHasValue ? _withIdInsrtSql ?? (_withIdInsrtSql = $" SET IDENTITY_INSERT {this.Name} ON ;{this.GenerateInsertSQL(true)};SET IDENTITY_INSERT {this.Name} OFF ;") :
+                string insertSql = isIdentityHasValue ? _withIdInsertSql ?? (_withIdInsertSql = $" SET IDENTITY_INSERT {this.Name} ON ;{this.GenerateInsertSQL(true)};SET IDENTITY_INSERT {this.Name} OFF ;") :
                     _insertSql ?? (_insertSql = $"{this.GenerateInsertSQL()};SELECT @@IDENTITY;");
 
                 var parameters =
