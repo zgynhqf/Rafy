@@ -30,10 +30,9 @@ namespace Rafy.Domain.ORM.SqlCe
 {
     internal class SqlCeTable : SqlTable
     {
-        private string _insertSQL;
+        private string _insertSql;
 
-        // 缓存  identity 手动、自动赋值 两种sql 
-        private readonly Dictionary<bool, string> _insertSqlDic = new Dictionary<bool, string>(2);
+        private string _withIdInsrtSql;
 
         public SqlCeTable(IRepositoryInternal repository) : base(repository) { }
 
@@ -42,34 +41,31 @@ namespace Rafy.Domain.ORM.SqlCe
             var idColumn = this.IdentityColumn;
             if (idColumn != null)
             {
-                // identity 是 int 或者long 型
-                var isIdnetityHasValue = Convert.ToInt64(idColumn.ReadParameterValue(item)) > 0;
-                if (!_insertSqlDic.TryGetValue(isIdnetityHasValue, out _insertSQL))
-                {
-                    _insertSQL = this.GenerateInsertSQL(isIdnetityHasValue);
-                    _insertSQL += Environment.NewLine;
-                    if (!isIdnetityHasValue)
-                    {
-                        _insertSQL += "; SELECT @@IDENTITY;";
-                    }
-                    _insertSqlDic[isIdnetityHasValue] = _insertSQL;
-                }
-                var parameters = new List<object>();
-                foreach (RdbColumn column in this.Columns)
-                {
-                    if (column.CanInsert || isIdnetityHasValue)
-                    {
-                        var value = column.ReadParameterValue(item);
-                        parameters.Add(value);
-                    }
-                }
+                var isIdentityHasValue = (item as IEntityWithId).IdProvider.IsAvailable(item.Id);
+                string insertSql = isIdentityHasValue ? _withIdInsrtSql ?? (_withIdInsrtSql = $"{this.GenerateInsertSQL(true)}") :
+                    _insertSql ?? (_insertSql = $"{this.GenerateInsertSQL()} ");
 
-                //由于默认是 decimal 类型，所以需要类型转换。
-                var idValue = dba.QueryValue(this._insertSQL, parameters.ToArray());
-                if (!isIdnetityHasValue)
+                var parameters =
+                    (from column in Columns
+                     where column.CanInsert || isIdentityHasValue
+                     select column.ReadParameterValue(item)).ToArray();
+
+                if (isIdentityHasValue)
                 {
+                    //打开 Identity 列可以手动插入
+                    dba.RawAccesser.ExecuteText($"SET IDENTITY_INSERT {Name} ON ");
+                }
+                dba.ExecuteText(insertSql, parameters);
+                if (!isIdentityHasValue)
+                {
+                    var idValue = dba.RawAccesser.QueryValue("SELECT @@IDENTITY;");
                     idValue = TypeHelper.CoerceValue((item as IEntityWithId).IdProvider.KeyType, idValue);
                     idColumn.LoadValue(item, idValue);
+                }
+                else
+                {
+                    //关闭 Identity 列可以手动插入
+                    dba.RawAccesser.ExecuteText($"SET IDENTITY_INSERT {Name} OFF ");
                 }
 
                 //如果实体的 Id 是在插入的过程中生成的，

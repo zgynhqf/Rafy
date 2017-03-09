@@ -66,8 +66,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
         protected override void ImportInsert(EntityBatch batch)
         {
             //为所有实体生成 Id
-            //Identity列已经手动赋值，就不需要生成id了，否则需要生成id 
-            if (batch.Table.IdentityColumn != null && batch.InsertBatch.Any(p => (long)p.Id == 0))
+            if (batch.Table.IdentityColumn != null)
             {
                 this.GenerateId(batch);
             }
@@ -86,7 +85,6 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
         private void GenerateId(EntityBatch batch)
         {
             var dba = batch.DBA;
-            var entities = batch.InsertBatch;
 
             //如果批量生成 Id 使用的序列号太低，则需要抛出异常。
             var seqName = OracleMigrationProvider.SequenceName(batch.Table.Name, batch.Table.IdentityColumn.Name);
@@ -106,7 +104,10 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
                 for (int i = 0, c = section.Count; i < c; i++)
                 {
                     var item = section[i];
-                    item.Id = startId++;
+                    if (!((IEntityWithId) item).IdProvider.IsAvailable(item.Id))
+                    {
+                        item.Id = startId++;
+                    }
                 }
             }
         }

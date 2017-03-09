@@ -23,7 +23,9 @@ namespace Rafy.Domain.ORM.SqlServer
 {
     class SqlServerTable : SqlTable
     {
-        private string _insertSQL;
+        private string _insertSql;
+
+        private string _withIdInsrtSql;
 
         // 缓存  identity 手动、自动赋值 两种sql 
         private readonly Dictionary<bool, string> _insertSqlDic = new Dictionary<bool, string>(2);
@@ -37,41 +39,18 @@ namespace Rafy.Domain.ORM.SqlServer
             var idColumn = this.IdentityColumn;
             if (idColumn != null)
             {
-                // identity 是 int 或者long 型
-                var isIdnetityHasValue = Convert.ToInt64(idColumn.ReadParameterValue(item)) > 0;
+                var isIdentityHasValue = (item as IEntityWithId).IdProvider.IsAvailable(item.Id);
+                string insertSql = isIdentityHasValue ? _withIdInsrtSql ?? (_withIdInsrtSql = $" SET IDENTITY_INSERT {this.Name} ON ;{this.GenerateInsertSQL(true)};SET IDENTITY_INSERT {this.Name} OFF ;") :
+                    _insertSql ?? (_insertSql = $"{this.GenerateInsertSQL()};SELECT @@IDENTITY;");
 
-                if (!_insertSqlDic.TryGetValue(isIdnetityHasValue, out _insertSQL))
-                {
-                    _insertSQL = string.Empty;
-                    if (isIdnetityHasValue)
-                    {
-                        _insertSQL = $" SET IDENTITY_INSERT {this.Name} ON ;";
-                    }
-                    _insertSQL += this.GenerateInsertSQL(isIdnetityHasValue);
-                    _insertSQL += Environment.NewLine;
-                    if (isIdnetityHasValue)
-                    {
-                        _insertSQL += $" SET IDENTITY_INSERT {this.Name} OFF ;";
-                    }
-                    else
-                    {
-                        _insertSQL += "SELECT @@IDENTITY;";
-                    }
-                    _insertSqlDic[isIdnetityHasValue] = _insertSQL;
-                }
-                var parameters = new List<object>();
-                foreach (RdbColumn column in this.Columns)
-                {
-                    if (column.CanInsert || isIdnetityHasValue)
-                    {
-                        var value = column.ReadParameterValue(item);
-                        parameters.Add(value);
-                    }
-                }
+                var parameters =
+                    (from column in Columns
+                     where column.CanInsert || isIdentityHasValue
+                     select column.ReadParameterValue(item)).ToArray();
 
                 //由于默认是 decimal 类型，所以需要类型转换。
-                var idValue = dba.QueryValue(this._insertSQL, parameters.ToArray());
-                if (!isIdnetityHasValue)
+                var idValue = dba.QueryValue(insertSql, parameters);
+                if (!isIdentityHasValue)
                 {
                     idValue = TypeHelper.CoerceValue((item as IEntityWithId).IdProvider.KeyType, idValue);
                     idColumn.LoadValue(item, idValue);

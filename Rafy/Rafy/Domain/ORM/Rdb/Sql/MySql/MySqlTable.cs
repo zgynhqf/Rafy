@@ -28,10 +28,9 @@ namespace Rafy.Domain.ORM.MySql
 
     internal sealed class MySqlTable : SqlOraTable
     {
-        private string _insertSQL;
+        private string _insertSql;
 
-        // 缓存  identity 手动、自动赋值 两种sql 
-        private readonly Dictionary<bool, string> _insertSqlDic = new Dictionary<bool, string>(2);
+        private string _withIdInsrtSql;
 
         /// <summary>
         /// 构造函数 初始化仓库对象
@@ -70,32 +69,19 @@ namespace Rafy.Domain.ORM.MySql
             var idColumn = this.IdentityColumn;
             if (idColumn != null)
             {
-                // identity 是 int 或者long 型
-                var isIdnetityHasValue = Convert.ToInt64(idColumn.ReadParameterValue(item)) > 0;
 
-                if (!_insertSqlDic.TryGetValue(isIdnetityHasValue, out _insertSQL))
-                {
-                    _insertSQL = this.GenerateInsertSQL(isIdnetityHasValue);
-                    _insertSQL += Environment.NewLine;
-                    if (!isIdnetityHasValue)
-                    {
-                        _insertSQL += "; SELECT @@IDENTITY; ";
-                    }
-                    _insertSqlDic[isIdnetityHasValue] = _insertSQL;
-                }
-                var parameters = new List<object>();
-                foreach (RdbColumn column in this.Columns)
-                {
-                    if (column.CanInsert || isIdnetityHasValue)
-                    {
-                        var value = column.ReadParameterValue(item);
-                        parameters.Add(value);
-                    }
-                }
+                var isIdentityHasValue = (item as IEntityWithId).IdProvider.IsAvailable(item.Id);
+                string insertSql = isIdentityHasValue ? _withIdInsrtSql ?? (_withIdInsrtSql = this.GenerateInsertSQL(true)) :
+                    _insertSql ?? (_insertSql = $"{this.GenerateInsertSQL()};SELECT @@IDENTITY;");
+
+                var parameters =
+                    (from column in Columns
+                     where column.CanInsert || isIdentityHasValue
+                     select column.ReadParameterValue(item)).ToArray();
 
                 //由于默认是 decimal 类型，所以需要类型转换。
-                var idValue = dba.QueryValue(this._insertSQL, parameters.ToArray());
-                if (!isIdnetityHasValue)
+                var idValue = dba.QueryValue(insertSql, parameters);
+                if (!isIdentityHasValue)
                 {
                     idValue = TypeHelper.CoerceValue((item as IEntityWithId).IdProvider.KeyType, idValue);
                     idColumn.LoadValue(item, idValue);
@@ -118,14 +104,14 @@ namespace Rafy.Domain.ORM.MySql
         /// <param name="pagingInfo">分页对象</param>
         protected override void CreatePagingSql(ref PagingSqlParts parts, PagingInfo pagingInfo)
         {
-            var pageNumber =pagingInfo.PageNumber;
+            var pageNumber = pagingInfo.PageNumber;
             var pageSize = pagingInfo.PageSize;
 
             var sql = new StringBuilder("SELECT * FROM (");
 
             sql.AppendLine().Append(parts.RawSql)
                 .Append(") T ")
-                .Append("limit ").Append((pageNumber-1)*pageSize)
+                .Append("limit ").Append((pageNumber - 1) * pageSize)
                 .Append(",").Append(pageSize);
 
             parts.PagingSql = sql.ToString();

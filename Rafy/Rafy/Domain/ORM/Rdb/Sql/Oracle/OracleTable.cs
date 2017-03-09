@@ -51,7 +51,7 @@ namespace Rafy.Domain.ORM.Oracle
             if (idColumn != null)
             {
                 // identity 是 int 或者long 型
-                var isIdColumnHasValue = Convert.ToInt64(idColumn.ReadParameterValue(item))>0;
+                var isIdColumnHasValue = (item as IEntityWithId).IdProvider.IsAvailable(item.Id);
                 if (!isIdColumnHasValue)
                 {
                     if (_selectSEQSql == null)

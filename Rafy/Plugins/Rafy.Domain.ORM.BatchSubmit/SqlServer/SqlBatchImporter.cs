@@ -55,8 +55,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
         {
             var entities = batch.InsertBatch;
 
-            //Identity列已经手动赋值，就不需要生成id了，否则需要生成id 
-            if (batch.Table.IdentityColumn != null && batch.InsertBatch.Any(p => (long)p.Id == 0))
+            if (batch.Table.IdentityColumn != null)
             {
                 this.GenerateId(batch, entities);
             }
@@ -80,7 +79,10 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
             for (int i = 0, c = entities.Count; i < c; i++)
             {
                 var item = entities[i];
-                item.Id = startId++;
+                if (!((IEntityWithId)item).IdProvider.IsAvailable(item.Id))
+                {
+                    item.Id = startId++;
+                }
             }
         }
 
