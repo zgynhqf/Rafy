@@ -74,7 +74,7 @@ namespace Rafy.Domain.ORM.MySql
                 string insertSql = isIdentityHasValue ? _withIdInsertSql ?? (_withIdInsertSql = this.GenerateInsertSQL(true)) :
                     _insertSql ?? (_insertSql = $"{this.GenerateInsertSQL()};SELECT @@IDENTITY;");
 
-                var parameters = Columns.Where(c => c.CanInsert || isIdentityHasValue)
+                var parameters = Columns.Where(c => c.CanInsert || (c.Info.IsIdentity && isIdentityHasValue))
                                  .Select(c => c.ReadParameterValue(item))
                                  .ToArray();
 

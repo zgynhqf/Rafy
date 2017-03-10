@@ -40,7 +40,7 @@ namespace Rafy.Domain.ORM.SqlServer
                 string insertSql = isIdentityHasValue ? _withIdInsertSql ?? (_withIdInsertSql = $" SET IDENTITY_INSERT {this.Name} ON ;{this.GenerateInsertSQL(true)};SET IDENTITY_INSERT {this.Name} OFF ;") :
                     _insertSql ?? (_insertSql = $"{this.GenerateInsertSQL()};SELECT @@IDENTITY;");
 
-                var parameters = Columns.Where(c => c.CanInsert || isIdentityHasValue)
+                var parameters = Columns.Where(c => c.CanInsert || (c.Info.IsIdentity && isIdentityHasValue))
                                  .Select(c => c.ReadParameterValue(item))
                                  .ToArray();
 
