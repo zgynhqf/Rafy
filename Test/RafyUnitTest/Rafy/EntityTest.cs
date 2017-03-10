@@ -1254,6 +1254,35 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void ET_Repository_BatchImport_CDU_C_Identity()
+        {
+            int size = BATCH_IMPORT_DATA_SIZE;
+
+            var repo = RF.ResolveInstance<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var books = new BookList();
+                for (int i = 0; i < size; i++)
+                {
+                    var book = new Book();
+                    book.Id = i + 1;
+                    books.Add(book);
+                }
+
+                var importer = repo.CreateImporter();
+                importer.Save(books);
+
+                Assert.AreEqual(size, repo.CountAll());
+
+                for (int i = 0; i < size; i++)
+                {
+                    var book = books[i];
+                    Assert.IsTrue(book.Id > 0," Identity 手动赋值");
+                }
+            }
+        }
+
+        [TestMethod]
         public void ET_Repository_BatchImport_CDU_C_CLOB()
         {
             int size = BATCH_IMPORT_DATA_SIZE;

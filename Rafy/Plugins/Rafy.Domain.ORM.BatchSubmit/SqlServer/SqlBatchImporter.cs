@@ -79,7 +79,10 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
             for (int i = 0, c = entities.Count; i < c; i++)
             {
                 var item = entities[i];
-                item.Id = startId++;
+                if (!((IEntityWithId)item).IdProvider.IsAvailable(item.Id))
+                {
+                    item.Id = startId++;
+                }
             }
         }
 

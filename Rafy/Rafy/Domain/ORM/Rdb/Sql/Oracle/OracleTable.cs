@@ -12,6 +12,7 @@
 *******************************************************/
 
 using System;
+using System.CodeDom;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -49,22 +50,28 @@ namespace Rafy.Domain.ORM.Oracle
             var idColumn = this.IdentityColumn;
             if (idColumn != null)
             {
-                if (_selectSEQSql == null)
+                // identity 是 int 或者long 型
+                var isIdColumnHasValue = (item as IEntityWithId).IdProvider.IsAvailable(item.Id);
+                if (!isIdColumnHasValue)
                 {
-                    var seqName = new StringWriter();
-                    seqName.Write("SEQ_");
-                    this.AppendPrepare(seqName, this.Name);
-                    seqName.Write('_');
-                    this.AppendPrepare(seqName, idColumn.Name);
-                    var seqNameValue = Rafy.DbMigration.Oracle.OracleMigrationProvider.LimitOracleIdentifier(seqName.ToString());
+                    if (_selectSEQSql == null)
+                    {
+                        var seqName = new StringWriter();
+                        seqName.Write("SEQ_");
+                        this.AppendPrepare(seqName, this.Name);
+                        seqName.Write('_');
+                        this.AppendPrepare(seqName, idColumn.Name);
+                        var seqNameValue =
+                            Rafy.DbMigration.Oracle.OracleMigrationProvider.LimitOracleIdentifier(seqName.ToString());
 
-                    //此序列是由 DbMigration 中自动生成的。
-                    _selectSEQSql = string.Format(@"SELECT {0}.NEXTVAL FROM DUAL", seqNameValue);
+                        //此序列是由 DbMigration 中自动生成的。
+                        _selectSEQSql = string.Format(@"SELECT {0}.NEXTVAL FROM DUAL", seqNameValue);
+                    }
+                    //由于默认可能不是 int 类型，所以需要类型转换。
+                    var value = dba.RawAccesser.QueryValue(_selectSEQSql);
+                    value = TypeHelper.CoerceValue((item as IEntityWithId).IdProvider.KeyType, value);
+                    idColumn.LoadValue(item, value);
                 }
-                //由于默认可能不是 int 类型，所以需要类型转换。
-                var value = dba.RawAccesser.QueryValue(_selectSEQSql);
-                value = TypeHelper.CoerceValue((item as IEntityWithId).IdProvider.KeyType, value);
-                idColumn.LoadValue(item, value);
 
                 //如果实体的 Id 是在插入的过程中生成的，
                 //那么需要在插入组合子对象前，先把新生成的父对象 Id 都同步到子列表中。
