@@ -200,7 +200,7 @@ namespace Rafy.Domain.ORM
             for (int i = 0, c = _columns.Count; i < c; i++)
             {
                 var column = _columns[i];
-                if (column.CanInsert || isManualIdentity)
+                if (column.CanInsert || (column.Info.IsIdentity && isManualIdentity))
                 {
                     if (comma)
                     {
