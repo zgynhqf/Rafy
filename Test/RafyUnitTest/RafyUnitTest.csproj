@@ -88,6 +88,7 @@
     <Compile Include="Rafy\MiscellaneousTest.cs" />
     <Compile Include="Rafy\ODataTest.cs" />
     <Compile Include="Rafy\Plugins\AccountsPluginTest.cs" />
+    <Compile Include="Rafy\Plugins\DataTableMigrationPluginTest.cs" />
     <Compile Include="Rafy\Plugins\FileStoragePluginTest.cs" />
     <Compile Include="Rafy\Plugins\RBAC\GroupPluginTest.cs" />
     <Compile Include="Rafy\Plugins\RBAC\RBACManagementPluginTest.cs" />
@@ -124,6 +125,10 @@
     <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Accounts\Rafy.Accounts.csproj">
       <Project>{4d6467e4-d1ce-4fa8-a1fe-92b1ba549a4a}</Project>
       <Name>Rafy.Accounts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.DataTableMigration\Rafy.DataTableMigration.csproj">
+      <Project>{95cb6f76-3d35-4f2e-bf2a-a45ec41c76b4}</Project>
+      <Name>Rafy.DataTableMigration</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.EntityPhantom\Rafy.Domain.EntityPhantom.csproj">
       <Project>{0b6df92b-0248-422d-a9c2-1604d4cb7bc9}</Project>
