@@ -190,6 +190,24 @@
             </content>
         </section>
 
+        <section address="optionalAddress">
+            <title>辅助说明</title>
+            <content>
+                <para>
+                    Rafy = ProductLine + MDA + Plugins + Rafy.Domain + Rafy.UI(AutoUI)
+                </para>
+                <para>
+                    Rafy.Domain = DDD + ORM + Distributed + SOA
+                </para>
+                <para>
+                    Rafy.Domain DDD = Controller + Repository + 可扩展属性的Entity
+                </para>
+                <para>
+                    Rafy.Domain ORM = 可扩展属性的Entity + 易用的Linq + SqlTree + 高性能Mapping + AutoDB + 多数据库支持
+                </para>
+            </content>
+        </section>
+
         <relatedTopics>
         </relatedTopics>
     </developerConceptualDocument>
