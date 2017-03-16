@@ -56,6 +56,7 @@ namespace Rafy.UnitTest.DataProvider
                     using (var c = new RafyDbMigrationContext(UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
                     {
                         c.ClassMetaReader.EntityDbSettingName = UnitTestEntityRepositoryDataProvider.DbSettingName;
+                        c.ClassMetaReader.IsGenerateForeignKey = false;
                         c.HistoryRepository = new DbHistoryRepository();
                         c.RunDataLossOperation = DataLossOperation.All;
                         c.AutoMigrate();
