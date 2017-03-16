@@ -83,6 +83,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void DPT_TreeEntity_Migration()
         {
+            //树形实体带聚合子
+
             var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(DataTableMigrationPlugin.BackUpDbSettingName))
             {
@@ -91,6 +93,7 @@ namespace RafyUnitTest
                     RF.Save(new Folder
                     {
                         Name = "001.",
+                        FileList = { new File(), new File() },
                         TreeChildren =
                         {
                             new Folder
@@ -120,7 +123,8 @@ namespace RafyUnitTest
                         RdbDataProvider.RedirectDbSetting(DataTableMigrationPlugin.DbSettingName,
                             DataTableMigrationPlugin.BackUpDbSettingName))
                     {
-                        Assert.AreEqual(repo.GetAll().Count, 1, "数据归档数据库 Folder 数目为 3");
+                        Assert.AreEqual(repo.GetAll().Count, 1, "归档数据库 Folder 数目为 3");
+                        Assert.AreEqual(repo.GetAll()[0].FileList.Count, 2, "归档数据库聚合子 File 数目为 2");
                     }
                 }
             }

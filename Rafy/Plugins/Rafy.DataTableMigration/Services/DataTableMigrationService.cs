@@ -99,7 +99,7 @@ namespace Rafy.DataTableMigration.Services
                     eagerLoadOptions.LoadWithTreeChildren();
                 }
 
-                if (isHasChild)
+                if (isHasChild||isSupportTree)
                 {
                     condition.EagerLoad = eagerLoadOptions;
                 }
