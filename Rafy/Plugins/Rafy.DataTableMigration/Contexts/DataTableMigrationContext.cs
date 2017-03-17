@@ -40,7 +40,7 @@ namespace Rafy.DataTableMigration.Contexts
         }
 
         /// <summary>
-        /// 获取批次大小。
+        /// 每批次迁移实体的个数
         /// </summary>
         public int PageSize { get; }
 

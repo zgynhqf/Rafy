@@ -134,7 +134,7 @@ namespace Rafy.DataTableMigration.Services
             {
                 t.PersistenceStatus = PersistenceStatus.Deleted;
                 t.TreeChildren?.Clear();
-                return true;
+                return false;
 
             });
             try

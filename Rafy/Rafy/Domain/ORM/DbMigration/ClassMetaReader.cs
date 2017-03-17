@@ -81,7 +81,7 @@ namespace Rafy.Domain.ORM.DbMigration
                     Database = result,
                     Entities = tableEntityTypes,
                     ReadComment = this.ReadComment,
-                    IsGenerateForeignKey = this.IsGenerateForeignKey,
+                    IsGeneratingForeignKey = this.IsGeneratingForeignKey,
                     AdditionalPropertiesComments = this.AdditionalPropertiesComments
                 };
                 reader.Read();
@@ -215,7 +215,7 @@ namespace Rafy.Domain.ORM.DbMigration
 
                     #region 引用关系
 
-                    if (IsGenerateForeignKey && columnMeta.HasFKConstraint)
+                    if (IsGeneratingForeignKey && columnMeta.HasFKConstraint)
                     {
                         var refProperty = mp as IRefProperty;
                         if (refProperty != null)
@@ -253,7 +253,7 @@ namespace Rafy.Domain.ORM.DbMigration
                                 }
                             }
                         }
-                        else if (IsGenerateForeignKey && mp == Entity.TreePIdProperty)
+                        else if (IsGeneratingForeignKey && mp == Entity.TreePIdProperty)
                         {
                             var id = em.Property(Entity.IdProperty);
                             //有时一些表的 Id 只是自增长，但并不是主键，不能创建外键。
@@ -377,15 +377,15 @@ namespace Rafy.Domain.ORM.DbMigration
                 public bool NeedDeleteCascade;
             }
 
-            private bool _isGenerateForeignKey = true;
+            private bool _isGeneratingForeignKey = true;
 
             /// <summary>
             /// 是否生成外键，默认true 
             /// </summary>
-            internal bool IsGenerateForeignKey
+            internal bool IsGeneratingForeignKey
             {
-                get { return _isGenerateForeignKey; }
-                set { _isGenerateForeignKey = false; }
+                get { return _isGeneratingForeignKey; }
+                set { _isGeneratingForeignKey = false; }
             }
         }
 
@@ -396,15 +396,15 @@ namespace Rafy.Domain.ORM.DbMigration
         /// </summary>
         public string EntityDbSettingName { get; set; }
 
-        private bool _isGenerateForeignKey = true;
+        private bool _isGeneratingForeignKey = true;
 
         /// <summary>
         /// 是否生成外键，默认true 
         /// </summary>
-        public bool IsGenerateForeignKey
+        public bool IsGeneratingForeignKey
         {
-            get { return _isGenerateForeignKey; }
-            set { _isGenerateForeignKey = false; }
+            get { return _isGeneratingForeignKey; }
+            set { _isGeneratingForeignKey = false; }
         }
     }
 }

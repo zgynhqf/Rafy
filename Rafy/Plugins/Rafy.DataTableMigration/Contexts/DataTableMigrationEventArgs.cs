@@ -41,6 +41,9 @@ namespace Rafy.DataTableMigration.Contexts
         /// </summary>
         public decimal CurrentProcess { get; }
 
+        /// <summary>
+        /// 是否增加换行
+        /// </summary>
         public bool NeedNewLine { get; set; }
 
         /// <summary>Returns a string that represents the current object.</summary>
