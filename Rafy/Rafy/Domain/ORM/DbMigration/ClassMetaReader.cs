@@ -81,6 +81,7 @@ namespace Rafy.Domain.ORM.DbMigration
                     Database = result,
                     Entities = tableEntityTypes,
                     ReadComment = this.ReadComment,
+                    IsGeneratingForeignKey = this.IsGeneratingForeignKey,
                     AdditionalPropertiesComments = this.AdditionalPropertiesComments
                 };
                 reader.Read();
@@ -214,7 +215,7 @@ namespace Rafy.Domain.ORM.DbMigration
 
                     #region 引用关系
 
-                    if (columnMeta.HasFKConstraint)
+                    if (IsGeneratingForeignKey && columnMeta.HasFKConstraint)
                     {
                         var refProperty = mp as IRefProperty;
                         if (refProperty != null)
@@ -252,7 +253,7 @@ namespace Rafy.Domain.ORM.DbMigration
                                 }
                             }
                         }
-                        else if (mp == Entity.TreePIdProperty)
+                        else if (IsGeneratingForeignKey && mp == Entity.TreePIdProperty)
                         {
                             var id = em.Property(Entity.IdProperty);
                             //有时一些表的 Id 只是自增长，但并不是主键，不能创建外键。
@@ -375,6 +376,17 @@ namespace Rafy.Domain.ORM.DbMigration
                 public string FkTableName, PkTableName, FkColumn, PkColumn;
                 public bool NeedDeleteCascade;
             }
+
+            private bool _isGeneratingForeignKey = true;
+
+            /// <summary>
+            /// 是否生成外键，默认true 
+            /// </summary>
+            internal bool IsGeneratingForeignKey
+            {
+                get { return _isGeneratingForeignKey; }
+                set { _isGeneratingForeignKey = false; }
+            }
         }
 
         /// <summary>
@@ -383,5 +395,16 @@ namespace Rafy.Domain.ORM.DbMigration
         /// 当需要生成的数据库的配置名与实体集合的数据库配置名不一致时，可以摄者此属性来指定实体集合对应的数据库配置名称。
         /// </summary>
         public string EntityDbSettingName { get; set; }
+
+        private bool _isGeneratingForeignKey = true;
+
+        /// <summary>
+        /// 是否生成外键，默认true 
+        /// </summary>
+        public bool IsGeneratingForeignKey
+        {
+            get { return _isGeneratingForeignKey; }
+            set { _isGeneratingForeignKey = false; }
+        }
     }
 }
