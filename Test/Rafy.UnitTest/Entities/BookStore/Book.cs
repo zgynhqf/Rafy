@@ -487,6 +487,18 @@ namespace UT
             return (BookList)this.QueryData(q);
         }
 
+        [RepositoryQuery]
+        public virtual BookList GetBookListByIds(IEnumerable<int> ids )
+        {
+            var f = QueryFactory.Instance;
+            var table = f.Table<Book>();
+            var query = f.Query(
+                from: table,
+                where: table.Column(Entity.IdProperty).In(ids)
+            );
+            return (BookList)this.QueryData(query);
+        }
+
         //不再支持没有参数类型的模糊查找。
         //public BookList LinqGetByNullableFetchBy(double? price)
         //{

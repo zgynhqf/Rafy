@@ -4736,6 +4736,28 @@ FROM Book");
         }
 
         [TestMethod]
+        public void ORM_TableQuery_LargeInCondition()
+        {
+            List<int> ids = new List<int>();
+            for (int i = 1; i < 3001; i++)
+            {
+                ids.Add(i);
+            }
+            var repo = RepositoryFacade.ResolveInstance<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var book=new Book();
+                repo.Save(book);
+                if (!ids.Contains(book.Id))
+                {
+                    ids.Add(book.Id);
+                }
+                Assert.AreEqual(repo.GetBookListByIds(ids).Count, 1,"大批量IN条件测试");
+            }
+
+        }
+
+        [TestMethod]
         public void ORM_TableQuery_Star()
         {
             var f = QueryFactory.Instance;
