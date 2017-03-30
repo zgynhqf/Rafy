@@ -42,6 +42,6 @@ namespace Rafy.Domain.ORM
         /// <summary>
         /// 所有的列
         /// </summary>
-        IReadOnlyList<IPersistanceColumnInfo> Columns { get; }
+        IList<IPersistanceColumnInfo> Columns { get; }
     }
 }

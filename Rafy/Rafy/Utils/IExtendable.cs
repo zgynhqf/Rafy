@@ -57,7 +57,7 @@ namespace Rafy
         /// 获取已经设置的所有的扩展属性
         /// </summary>
         /// <returns></returns>
-        IReadOnlyDictionary<string, object> GetExtendedProperties();
+        IDictionary<string, object>GetExtendedProperties();
     }
 
     public static class IExtendableExtension

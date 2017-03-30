@@ -20,7 +20,7 @@ namespace Rafy.DataTableMigration.Services
     /// <summary>
     /// 定义一个数据归档的服务。
     /// </summary>
-    public interface IDataTableMigrationService : IProgress<DataTableMigrationEventArgs>
+    public interface IDataTableMigrationService 
     {
         /// <summary>
         /// 当数据归档状态发生变化时引发此事件。

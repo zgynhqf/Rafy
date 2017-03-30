@@ -51,9 +51,9 @@ namespace Rafy.Domain.ORM
         /// </summary>
         public List<PersistanceColumnInfo> Columns { get; private set; }
 
-        IReadOnlyList<IPersistanceColumnInfo> IPersistanceTableInfo.Columns
+        IList<IPersistanceColumnInfo> IPersistanceTableInfo.Columns
         {
-            get { return this.Columns; }
+            get { return this.Columns.Cast<IPersistanceColumnInfo>().ToList(); }
         }
 
         IPersistanceColumnInfo IPersistanceTableInfo.PKColumn

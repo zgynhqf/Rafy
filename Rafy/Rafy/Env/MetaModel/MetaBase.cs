@@ -14,6 +14,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -31,8 +32,9 @@ namespace Rafy.MetaModel
     /// </summary>
     public abstract class MetaBase : Freezable, INotifyPropertyChanged
     {
-        protected void SetValue<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        protected void SetValue<T>(ref T field, T value, string propertyName = null)
         {
+            propertyName = GetProperyName(new StackTrace(true).GetFrame(1).GetMethod().Name);
             this.CheckUnFrozen();
 
             if (propertyName != null)
@@ -72,6 +74,16 @@ namespace Rafy.MetaModel
             base.CloneValues(target, option);
 
             this.CopyExtendedProperties(target as MetaBase);
+        }
+
+        private static string GetProperyName(string methodName)
+        {
+            if (methodName.StartsWith("get_") || methodName.StartsWith("set_") ||
+                methodName.StartsWith("put_"))
+            {
+                return methodName.Substring("get_".Length);
+            }
+            throw new Exception(methodName + " not a method of Property");
         }
     }
 }
