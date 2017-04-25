@@ -34,7 +34,7 @@ namespace Rafy.MetaModel
     {
         protected void SetValue<T>(ref T field, T value, string propertyName = null)
         {
-            propertyName = GetProperyName(new StackTrace(true).GetFrame(1).GetMethod().Name);
+            propertyName = propertyName??GetProperyName(new StackTrace(true).GetFrame(1).GetMethod().Name);
             this.CheckUnFrozen();
 
             if (propertyName != null)

@@ -16,6 +16,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Rafy.Domain.ORM.Oracle;
 using Rafy.ManagedProperty;
 
 namespace Rafy.Domain.ORM.Query
@@ -27,8 +28,6 @@ namespace Rafy.Domain.ORM.Query
     /// </summary>
     public static partial class QueryExtensions
     {
-        //sql in(1,2,3...1000) in参数最大支持1000个
-        public const int MaxItemsInClause = 1000;
 
         /// <summary>
         /// 如果提供的值是不可空的，则为查询添加一个对应的约束条件，并以 And 与原条件进行连接。
@@ -216,14 +215,14 @@ namespace Rafy.Domain.ORM.Query
 
             IConstraint res = null;
             //处理大数目In 条件
-            if (parameters != null && parameters.Count > MaxItemsInClause)
+            if (parameters != null && parameters.Count > OracleTable.MAX_ITEMS_IN_INCLAUSE)
             {
                 var start = 0;
                 while (start < parameters.Count)
                 {
-                    var paramSection = new List<object>(MaxItemsInClause);
+                    var paramSection = new List<object>(OracleTable.MAX_ITEMS_IN_INCLAUSE);
 
-                    var end = Math.Min(start + MaxItemsInClause - 1, parameters.Count - 1);
+                    var end = Math.Min(start + OracleTable.MAX_ITEMS_IN_INCLAUSE - 1, parameters.Count - 1);
                     for (int i = start; i <= end; i++)
                     {
                         paramSection.Add(parameters[i]);
@@ -249,14 +248,14 @@ namespace Rafy.Domain.ORM.Query
 
             IConstraint res = null;
             //处理大数目NotIn 条件
-            if (parameters != null && parameters.Count > MaxItemsInClause)
+            if (parameters != null && parameters.Count > OracleTable.MAX_ITEMS_IN_INCLAUSE)
             {
                 var start = 0;
                 while (start < parameters.Count)
                 {
-                    var paramSection = new List<object>(MaxItemsInClause);
+                    var paramSection = new List<object>(OracleTable.MAX_ITEMS_IN_INCLAUSE);
 
-                    var end = Math.Min(start + MaxItemsInClause - 1, parameters.Count - 1);
+                    var end = Math.Min(start + OracleTable.MAX_ITEMS_IN_INCLAUSE - 1, parameters.Count - 1);
                     for (int i = start; i <= end; i++)
                     {
                         paramSection.Add(parameters[i]);
@@ -264,7 +263,7 @@ namespace Rafy.Domain.ORM.Query
 
                     var sectionConstraint = QueryFactory.Instance.Constraint(column, PropertyOperator.NotIn, paramSection);
 
-                    res = QueryFactory.Instance.Or(res, sectionConstraint);
+                    res = QueryFactory.Instance.And(res, sectionConstraint);
 
                     start += paramSection.Count;
                 }
