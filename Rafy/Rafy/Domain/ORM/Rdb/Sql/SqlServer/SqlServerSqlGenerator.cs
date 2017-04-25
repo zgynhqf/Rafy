@@ -47,6 +47,151 @@ namespace Rafy.Domain.ORM
         /// <returns></returns>
         protected override ISqlSelect ModifyToPagingTree(SqlSelect raw, PagingInfo pagingInfo)
         {
+            return ModifyToPagingTreeWithRowNumberOver(raw, pagingInfo);
+        }
+
+        private static ISqlSelect MakePagingTree(SqlSelect raw, long startRow, long endRow)
+        {
+            /*********************** 代码块解释 *********************************
+             * 以下转换使用 row_number 行号字段来实现分页。只需要简单地在查询的 WHERE 语句中加入等号的判断即可。
+             *
+             * 源格式：
+             *     SELECT *
+             *     FROM A
+             *     WHERE A.Id > 0
+             *     ORDER BY A.NAME ASC
+             * 
+             * 目标格式：
+             *      SELECT * FROM
+             *      (
+             *          SELECT A.*, row_number() over (order by XXXXXX)_rowNumber
+             *          FROM  A
+             *      ) T
+             *      WHERE _rowNumber between 1 and 10
+            **********************************************************************/
+
+            return new SqlNodeList
+            {
+                                new SqlLiteral(
+                @"SELECT * FROM
+                ("),
+                                raw,
+                                new SqlLiteral(
+                @")T WHERE _rowNumber BETWEEN " + startRow + @" AND " +endRow )
+            };
+        }
+
+        /// <summary>
+        /// 为指定的原始查询生成指定分页效果的新查询。
+        /// </summary>
+        /// <param name="raw">原始查询</param>
+        /// <param name="pagingInfo">分页信息。</param>
+        /// <returns></returns>
+        private ISqlSelect ModifyToPagingTreeWithNotIn(SqlSelect raw, PagingInfo pagingInfo)
+        {
+            if (PagingInfo.IsNullOrEmpty(pagingInfo)) { throw new ArgumentNullException("pagingInfo"); }
+            if (!raw.HasOrdered()) { throw new InvalidProgramException("必须排序后才能使用分页功能。"); }
+
+            //如果是第一页，则只需要使用 TOP 语句即可。
+            if (pagingInfo.PageNumber == 1)
+            {
+                return new SqlSelect
+                {
+                    Selection = new SqlNodeList
+                    {
+                        new SqlLiteral { FormattedSql = "TOP " + pagingInfo.PageSize + " " },
+                        raw.Selection ?? SqlSelectAll.Default
+                    },
+                    From = raw.From,
+                    Where = raw.Where,
+                    OrderBy = raw.OrderBy
+                };
+            }
+
+            /*********************** 代码块解释 *********************************
+             * 
+             * 转换方案：
+             * 
+             * SELECT * 
+             * FROM ASN
+             * WHERE ASN.Id > 0
+             * ORDER BY ASN.AsnCode ASC
+             * 
+             * 转换分页后：
+             * 
+             * SELECT TOP 10 * 
+             * FROM ASN
+             * WHERE ASN.Id > 0 AND ASN.Id NOT IN(
+             *     SELECT TOP 20 Id
+             *     FROM ASN
+             *     WHERE ASN.Id > 0 
+             *     ORDER BY ASN.AsnCode ASC
+             * )
+             * ORDER BY ASN.AsnCode ASC
+             * 
+            **********************************************************************/
+
+            //先要找到主表的 PK，分页时需要使用此主键列来生成分页 Sql。
+            //这里约定 Id 为主键列名。
+            var finder = new FirstTableFinder();
+            var pkTable = finder.Find(raw.From);
+            var pkColumn = new SqlColumn { Table = pkTable, ColumnName = EntityConvention.IdColumnName };
+
+            //先生成内部的 Select
+            var excludeSelect = new SqlSelect
+            {
+                Selection = new SqlNodeList
+                {
+                    new SqlLiteral { FormattedSql = "TOP " + (pagingInfo.PageNumber - 1) * pagingInfo.PageSize + " " },
+                    pkColumn
+                },
+                From = raw.From,
+                Where = raw.Where,
+                OrderBy = raw.OrderBy,
+            };
+
+            var res = new SqlSelect
+            {
+                Selection = new SqlNodeList
+                {
+                    new SqlLiteral { FormattedSql = "TOP " + pagingInfo.PageSize + " " },
+                    raw.Selection ?? SqlSelectAll.Default
+                },
+                From = raw.From,
+                OrderBy = raw.OrderBy,
+            };
+
+            var newWhere = new SqlColumnConstraint
+            {
+                Column = pkColumn,
+                Operator = SqlColumnConstraintOperator.NotIn,
+                Value = excludeSelect
+            };
+            if (raw.Where != null)
+            {
+                res.Where = new SqlBinaryConstraint
+                {
+                    Left = raw.Where,
+                    Opeartor = SqlBinaryConstraintType.And,
+                    Right = newWhere
+                };
+            }
+            else
+            {
+                res.Where = newWhere;
+            }
+
+            return res;
+        }
+
+        /// <summary>
+        /// 为指定的原始查询生成指定分页效果的新查询。
+        /// </summary>
+        /// <param name="raw">原始查询</param>
+        /// <param name="pagingInfo">分页信息。</param>
+        /// <returns></returns>
+        protected  ISqlSelect ModifyToPagingTreeWithRowNumberOver(SqlSelect raw, PagingInfo pagingInfo)
+        {
             if (PagingInfo.IsNullOrEmpty(pagingInfo)) { throw new ArgumentNullException("pagingInfo"); }
             if (!raw.HasOrdered()) { throw new InvalidProgramException("必须排序后才能使用分页功能。"); }
 
@@ -98,7 +243,7 @@ namespace Rafy.Domain.ORM
                 Where = raw.Where,
                 IsDistinct = raw.IsDistinct,
                 IsCounting = raw.IsCounting,
-               
+
             };
             var startRow = pagingInfo.PageSize * (pagingInfo.PageNumber - 1) + 1;
             var endRow = startRow + pagingInfo.PageSize - 1;
@@ -106,37 +251,6 @@ namespace Rafy.Domain.ORM
             var res = MakePagingTree(newRaw, startRow, endRow);
 
             return res;
-        }
-
-        private static ISqlSelect MakePagingTree(SqlSelect raw, long startRow, long endRow)
-        {
-            /*********************** 代码块解释 *********************************
-             * 以下转换使用 row_number 行号字段来实现分页。只需要简单地在查询的 WHERE 语句中加入等号的判断即可。
-             *
-             * 源格式：
-             *     SELECT *
-             *     FROM A
-             *     WHERE A.Id > 0
-             *     ORDER BY A.NAME ASC
-             * 
-             * 目标格式：
-             *      SELECT * FROM
-             *      (
-             *          SELECT A.*, row_number() over (order by XXXXXX)_rowNumber
-             *          FROM  A
-             *      ) T
-             *      WHERE _rowNumber between 1 and 10
-            **********************************************************************/
-
-            return new SqlNodeList
-            {
-                                new SqlLiteral(
-                @"SELECT * FROM
-                ("),
-                                raw,
-                                new SqlLiteral(
-                @")T WHERE _rowNumber BETWEEN " + startRow + @" AND " +endRow )
-            };
         }
 
     }

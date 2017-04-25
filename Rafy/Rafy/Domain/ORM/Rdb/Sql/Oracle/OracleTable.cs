@@ -34,7 +34,7 @@ namespace Rafy.Domain.ORM.Oracle
         /// <summary>
         /// ORACLE 中 IN 语句的最大参数个数是 1000 个。
         /// </summary>
-        private const int MAX_ITEMS_IN_INCLAUSE = 1000;
+        public const int MAX_ITEMS_IN_INCLAUSE = 1000;
 
         public OracleTable(IRepositoryInternal repository) : base(repository) { }
 
