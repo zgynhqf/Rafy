@@ -31,11 +31,7 @@ namespace Rafy.Domain.ORM.Oracle
 {
     internal class OracleTable : SqlOraTable
     {
-        /// <summary>
-        /// ORACLE 中 IN 语句的最大参数个数是 1000 个。
-        /// </summary>
-        public const int MAX_ITEMS_IN_INCLAUSE = 1000;
-
+       
         public OracleTable(IRepositoryInternal repository) : base(repository) { }
 
         internal override RdbColumn CreateColumn(IPersistanceColumnInfo columnInfo)
@@ -96,7 +92,6 @@ namespace Rafy.Domain.ORM.Oracle
         public override SqlGenerator CreateSqlGenerator()
         {
             var generator =  new OracleSqlGenerator();
-            generator.MaxItemsInInClause = MAX_ITEMS_IN_INCLAUSE;
             return generator;
         }
 
@@ -151,13 +146,13 @@ namespace Rafy.Domain.ORM.Oracle
              * 所有查询完成后，再把树中的集合还原为原始的大集合。
             **********************************************************************/
             var start = 0;
-            var paramSection = new List<object>(MAX_ITEMS_IN_INCLAUSE);
+            var paramSection = new List<object>(SqlGenerator.MaxItemsInInClause);
             inClause.Value = paramSection;//临时把树中的条件中的值改成子集合。
             while (start < parameters.Count)
             {
                 paramSection.Clear();
 
-                var end = Math.Min(start + MAX_ITEMS_IN_INCLAUSE - 1, parameters.Count - 1);
+                var end = Math.Min(start + SqlGenerator.MaxItemsInInClause - 1, parameters.Count - 1);
                 for (int i = start; i <= end; i++)
                 {
                     paramSection.Add(parameters[i]);
