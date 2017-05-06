@@ -215,14 +215,14 @@ namespace Rafy.Domain.ORM.Query
 
             IConstraint res = null;
             //处理大数目In 条件
-            if (parameters != null && parameters.Count > OracleTable.MAX_ITEMS_IN_INCLAUSE)
+            if (parameters != null && parameters.Count > SqlGenerator.MaxItemsInInClause)
             {
                 var start = 0;
                 while (start < parameters.Count)
                 {
-                    var paramSection = new List<object>(OracleTable.MAX_ITEMS_IN_INCLAUSE);
+                    var paramSection = new List<object>(SqlGenerator.MaxItemsInInClause);
 
-                    var end = Math.Min(start + OracleTable.MAX_ITEMS_IN_INCLAUSE - 1, parameters.Count - 1);
+                    var end = Math.Min(start + SqlGenerator.MaxItemsInInClause - 1, parameters.Count - 1);
                     for (int i = start; i <= end; i++)
                     {
                         paramSection.Add(parameters[i]);
@@ -248,14 +248,14 @@ namespace Rafy.Domain.ORM.Query
 
             IConstraint res = null;
             //处理大数目NotIn 条件
-            if (parameters != null && parameters.Count > OracleTable.MAX_ITEMS_IN_INCLAUSE)
+            if (parameters != null && parameters.Count > SqlGenerator.MaxItemsInInClause)
             {
                 var start = 0;
                 while (start < parameters.Count)
                 {
-                    var paramSection = new List<object>(OracleTable.MAX_ITEMS_IN_INCLAUSE);
+                    var paramSection = new List<object>(SqlGenerator.MaxItemsInInClause);
 
-                    var end = Math.Min(start + OracleTable.MAX_ITEMS_IN_INCLAUSE - 1, parameters.Count - 1);
+                    var end = Math.Min(start + SqlGenerator.MaxItemsInInClause - 1, parameters.Count - 1);
                     for (int i = start; i <= end; i++)
                     {
                         paramSection.Add(parameters[i]);
