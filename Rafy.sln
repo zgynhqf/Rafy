@@ -665,6 +665,9 @@ Global
 		{7750612E-AB7E-4A98-86E1-FF6E4D9D7C54} = {7D317F92-6904-459E-A03C-EC4B44BB73B0}
 		{95CB6F76-3D35-4F2E-BF2A-A45EC41C76B4} = {DC52A572-512A-4D70-81C0-F0EF8B6FFC85}
 	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35;packages\Unity.Interception.2.1.505.2\lib\NET35
+	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = GIX4_ExpressApp.vsmdi
 	EndGlobalSection

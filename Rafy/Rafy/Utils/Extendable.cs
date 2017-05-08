@@ -139,7 +139,7 @@ namespace Rafy
         /// 获取已经设置的所有的扩展属性
         /// </summary>
         /// <returns></returns>
-        public IReadOnlyDictionary<string, object> GetExtendedProperties()
+        public IDictionary<string, object> GetExtendedProperties()
         {
             return _properties ?? Empty;
         }
@@ -157,6 +157,6 @@ namespace Rafy
         /// <param name="property"></param>
         protected virtual void OnExtendedPropertyChanged(string property) { }
 
-        internal static IReadOnlyDictionary<string, object> Empty = new ReadOnlyDictionary<string, object>(new Dictionary<string, object>());
+        internal static IDictionary<string, object> Empty = new  Dictionary<string, object>();
     }
 }

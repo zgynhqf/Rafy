@@ -70,7 +70,7 @@ namespace Rafy.ManagedProperty
                 if (mpList.All(mp => mp.Name != clrProperty.Name))
                 {
                     //索引器被反射为属性，需要过滤掉Item索引器
-                    if (clrProperty.GetMethod.GetParameters().Length == 0)
+                    if (clrProperty.GetGetMethod().GetParameters().Length == 0)
                     {
                         pdList.Add(new CLRPropertyDescriptor(clrProperty));
                     }

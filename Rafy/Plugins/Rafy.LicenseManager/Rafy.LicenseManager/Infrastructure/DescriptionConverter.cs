@@ -53,7 +53,7 @@ namespace Rafy.LicenseManager.Infrastructure
                 return base.ConvertTo(context, culture, value, destinationType);
             }
 
-            var attribute = member.GetCustomAttribute(typeof(DescriptionAttribute), false);
+            var attribute = member.GetCustomAttributes(typeof(DescriptionAttribute), false).SingleOrDefault();
 
             return attribute != null ? ((DescriptionAttribute) attribute).Description : base.ConvertTo(context, culture, value, destinationType);
         }

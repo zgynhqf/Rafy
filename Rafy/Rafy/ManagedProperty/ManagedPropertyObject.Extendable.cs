@@ -159,7 +159,7 @@ namespace Rafy.ManagedProperty
         /// 获取已经设置的所有的动态属性
         /// </summary>
         /// <returns></returns>
-        public IReadOnlyDictionary<string, object> GetDynamicProperties()
+        public IDictionary<string, object> GetDynamicProperties()
         {
             return _dynamics ?? Extendable.Empty;
         }

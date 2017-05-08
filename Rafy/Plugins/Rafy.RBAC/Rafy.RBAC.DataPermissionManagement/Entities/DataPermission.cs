@@ -124,7 +124,7 @@ namespace Rafy.RBAC.DataPermissionManagement
             {
                 if (prop.CanRead)
                 {
-                    builderPropertyDictionary.Add(prop.Name, prop.GetValue(buider));
+                    builderPropertyDictionary.Add(prop.Name, prop.GetValue(buider,null));
                 }
             }
             this.BuilderProperties = JsonConvert.SerializeObject(builderPropertyDictionary);
@@ -150,7 +150,7 @@ namespace Rafy.RBAC.DataPermissionManagement
                     if (builderProperties.TryGetValue(prop.Name, out propValue))
                     {
                         prop.SetValue(constraintBuilder,
-                            TypeHelper.CoerceValue(prop.PropertyType, propValue));
+                            TypeHelper.CoerceValue(prop.PropertyType, propValue),null);
                     }
                 }
             }

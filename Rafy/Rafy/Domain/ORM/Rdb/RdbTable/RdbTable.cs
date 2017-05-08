@@ -112,7 +112,7 @@ namespace Rafy.Domain.ORM
         /// <summary>
         /// 本表中可用的所有字段信息。
         /// </summary>
-        public IReadOnlyList<RdbColumn> Columns
+        public IList<RdbColumn> Columns
         {
             get { return this._columns; }
         }

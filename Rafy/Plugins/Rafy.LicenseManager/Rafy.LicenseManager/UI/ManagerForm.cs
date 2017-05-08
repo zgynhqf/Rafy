@@ -74,7 +74,7 @@ namespace Rafy.LicenseManager.UI
                 .Select(m =>new
                 {
                     m.Name,
-                    ((DescriptionAttribute)m.GetCustomAttributes().First(c => c.GetType() == typeof(DescriptionAttribute))).Description
+                    ((DescriptionAttribute)m.GetCustomAttributes(typeof(DescriptionAttribute),false).First(c => c.GetType() == typeof(DescriptionAttribute))).Description
                 }).ToList();
 
             this.cbxAuthorizationTarget.DisplayMember = "Description";
@@ -178,7 +178,7 @@ namespace Rafy.LicenseManager.UI
         {
             if (e.TabPage.Text == LicenseManagerResource.ManagerFormTabControl1SelectedQueryAuthentication)
             {
-                Task.Run(() =>
+                Task.Factory.StartNew(() =>
                 {
                     ManagerFormService.BindDataGridView(this.dgvLicenseView);
                 });

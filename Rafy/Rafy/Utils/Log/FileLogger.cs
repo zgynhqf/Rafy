@@ -106,11 +106,11 @@ namespace Rafy
                 var sqlConnection = connection as SqlConnection;
                 content.Append("--").Append(DateTime.Now);
                 content.AppendLine();
-                if (sqlConnection != null)
-                {
-                    content.Append("--ClientConnectionId: ").Append(sqlConnection.ClientConnectionId);
-                    content.AppendLine();
-                }
+                //if (sqlConnection != null)
+                //{
+                //    content.Append("--ClientConnectionId: ").Append(sqlConnection.ClientConnectionId);
+                //    content.AppendLine();
+                //}
                 //"--Database:  " + connectionSchema.Database +
                 content.Append("--ConnectionString: ").Append(connectionSchema.ConnectionString);
                 content.AppendLine();

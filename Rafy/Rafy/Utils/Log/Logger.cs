@@ -144,7 +144,7 @@ namespace Rafy
         /// <summary>
         /// 数据访问事件参数。
         /// </summary>
-        public struct DbAccessedEventArgs
+        public class DbAccessedEventArgs:System.EventArgs
         {
             public DbAccessedEventArgs(string sql, IDbDataParameter[] parameters, DbConnectionSchema connectionSchema)
             {
