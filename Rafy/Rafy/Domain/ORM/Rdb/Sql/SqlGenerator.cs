@@ -44,7 +44,6 @@ namespace Rafy.Domain.ORM
             _sql = new FormattedSql();
             _sql.InnerWriter = new IndentedTextWriter(_sql.InnerWriter);
             this.AutoQuota = true;
-            this.MaxItemsInInClause = int.MaxValue;
         }
 
         /// <summary>
@@ -73,7 +72,7 @@ namespace Rafy.Domain.ORM
         /// In 语句中可以承受的最大的个数。
         /// 如果超出这个个数，则会抛出
         /// </summary>
-        internal int MaxItemsInInClause;
+        internal const int MaxItemsInInClause=1000;
 
         #region 分页支持
 
@@ -512,7 +511,7 @@ namespace Rafy.Domain.ORM
                         int i = 0;
                         foreach (var item in value as IEnumerable)
                         {
-                            if (++i > this.MaxItemsInInClause) throw new TooManyItemsInInClauseException();
+                            if (++i > MaxItemsInInClause) throw new TooManyItemsInInClauseException();
 
                             if (first)
                             {
