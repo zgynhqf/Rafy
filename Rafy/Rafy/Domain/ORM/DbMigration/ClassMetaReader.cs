@@ -385,7 +385,7 @@ namespace Rafy.Domain.ORM.DbMigration
             internal bool IsGeneratingForeignKey
             {
                 get { return _isGeneratingForeignKey; }
-                set { _isGeneratingForeignKey = false; }
+                set { _isGeneratingForeignKey = value; }
             }
         }
 
@@ -404,7 +404,7 @@ namespace Rafy.Domain.ORM.DbMigration
         public bool IsGeneratingForeignKey
         {
             get { return _isGeneratingForeignKey; }
-            set { _isGeneratingForeignKey = false; }
+            set { _isGeneratingForeignKey = value; }
         }
     }
 }

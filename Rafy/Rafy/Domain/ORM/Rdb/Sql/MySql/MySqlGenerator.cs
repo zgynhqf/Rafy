@@ -53,16 +53,6 @@ namespace Rafy.Domain.ORM.MySql
         }
 
         /// <summary>
-        /// 将小写的标识符转换成大写
-        /// </summary>
-        /// <param name="identifier">待转换的标识符</param>
-        /// <returns>返回大写的标识符</returns>
-        protected override string PrepareIdentifier(string identifier)
-        {
-            return identifier.ToUpper();
-        }
-
-        /// <summary>
         /// 转换空值比较
         /// </summary>
         /// <param name="node"></param>

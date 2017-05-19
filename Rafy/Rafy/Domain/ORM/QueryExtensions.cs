@@ -12,9 +12,11 @@
 *******************************************************/
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Rafy.Domain.ORM.Oracle;
 using Rafy.ManagedProperty;
 
 namespace Rafy.Domain.ORM.Query
@@ -26,6 +28,7 @@ namespace Rafy.Domain.ORM.Query
     /// </summary>
     public static partial class QueryExtensions
     {
+
         /// <summary>
         /// 如果提供的值是不可空的，则为查询添加一个对应的约束条件，并以 And 与原条件进行连接。
         /// </summary>
@@ -208,11 +211,69 @@ namespace Rafy.Domain.ORM.Query
         }
         public static IConstraint In(this IColumnNode column, object value)
         {
-            return QueryFactory.Instance.Constraint(column, PropertyOperator.In, value);
+            var parameters = value as IList;
+
+            IConstraint res = null;
+            //处理大数目In 条件
+            if (parameters != null && parameters.Count > SqlGenerator.MaxItemsInInClause)
+            {
+                var start = 0;
+                while (start < parameters.Count)
+                {
+                    var paramSection = new List<object>(SqlGenerator.MaxItemsInInClause);
+
+                    var end = Math.Min(start + SqlGenerator.MaxItemsInInClause - 1, parameters.Count - 1);
+                    for (int i = start; i <= end; i++)
+                    {
+                        paramSection.Add(parameters[i]);
+                    }
+
+                    var sectionConstraint = QueryFactory.Instance.Constraint(column, PropertyOperator.In, paramSection);
+
+                    res = QueryFactory.Instance.Or(res, sectionConstraint);
+
+                    start += paramSection.Count;
+                }
+            }
+            else
+            {
+                res = QueryFactory.Instance.Constraint(column, PropertyOperator.In, value);
+            }
+
+            return res;
         }
         public static IConstraint NotIn(this IColumnNode column, object value)
         {
-            return QueryFactory.Instance.Constraint(column, PropertyOperator.NotIn, value);
+            var parameters = value as IList;
+
+            IConstraint res = null;
+            //处理大数目NotIn 条件
+            if (parameters != null && parameters.Count > SqlGenerator.MaxItemsInInClause)
+            {
+                var start = 0;
+                while (start < parameters.Count)
+                {
+                    var paramSection = new List<object>(SqlGenerator.MaxItemsInInClause);
+
+                    var end = Math.Min(start + SqlGenerator.MaxItemsInInClause - 1, parameters.Count - 1);
+                    for (int i = start; i <= end; i++)
+                    {
+                        paramSection.Add(parameters[i]);
+                    }
+
+                    var sectionConstraint = QueryFactory.Instance.Constraint(column, PropertyOperator.NotIn, paramSection);
+
+                    res = QueryFactory.Instance.And(res, sectionConstraint);
+
+                    start += paramSection.Count;
+                }
+            }
+            else
+            {
+                res = QueryFactory.Instance.Constraint(column, PropertyOperator.NotIn, value);
+            }
+
+            return res;
         }
 
         public static IConstraint Equal(this IColumnNode column, IColumnNode rightColumn)
