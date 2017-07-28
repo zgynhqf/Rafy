@@ -64,7 +64,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <typeparam name="TRepository"></typeparam>
         /// <returns></returns>
-        [Obsolete]
+        [Obsolete("Concrete 方法已过时，请用 ResolveInstance 方法替换")]
         public static TRepository Concrete<TRepository>()
             where TRepository : EntityRepository
         {
