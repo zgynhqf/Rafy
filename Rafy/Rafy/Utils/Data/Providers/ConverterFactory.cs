@@ -22,26 +22,24 @@ namespace Rafy.Data.Providers
         /// <returns>返回DbProviderFactory类型的具体对象实例</returns>
         public static DbProviderFactory GetFactory(string provider)
         {
-            //ISqlConverter Factory
             switch (provider)
             {
                 case DbSetting.Provider_SqlClient:
-                    if (_sql == null) { _sql = DbProviderFactories.GetFactory(DbSetting.Provider_SqlClient); }
+                    if (_sql == null) { _sql = System.Data.SqlClient.SqlClientFactory.Instance; }
                     return _sql;
                 case DbSetting.Provider_SqlCe:
-                    if (_sqlCe == null) { _sqlCe = DbProviderFactories.GetFactory(DbSetting.Provider_SqlCe); }
+                    if (_sqlCe == null) { _sqlCe = System.Data.SqlClient.SqlClientFactory.Instance; }
                     return _sqlCe;
-                //PatrickLiu增加的有关获取MySql的Provider工厂类
                 case DbSetting.Provider_MySql:
-                    if (_mySql == null) { _mySql = DbProviderFactories.GetFactory(DbSetting.Provider_MySql); }
+                    if (_mySql == null) { _mySql = MySql.Data.MySqlClient.MySqlClientFactory.Instance; }
                     return _mySql;
                 default:
                     if (DbSetting.IsOracleProvider(provider))
                     {
-                        if (_oracle == null) { _oracle = DbProviderFactories.GetFactory(provider); }
+                        if (_oracle == null) { _oracle = Oracle.ManagedDataAccess.Client.OracleClientFactory.Instance; }
                         return _oracle;
                     }
-                    return DbProviderFactories.GetFactory(provider);
+                    return System.Data.SqlClient.SqlClientFactory.Instance;
                 //throw new NotSupportedException("This type of database is not supportted now:" + provider);
             }
         }

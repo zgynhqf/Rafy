@@ -53,7 +53,7 @@ namespace Rafy.Data
                 {
                     if (!_generatedSettings.TryGetValue(dbSettingName, out setting))
                     {
-                        var config = ConfigurationManager.ConnectionStrings[dbSettingName];
+                        var config = ConfigurationHelper.GetConnectionString(dbSettingName);
                         if (config != null)
                         {
                             setting = new DbSetting
@@ -116,7 +116,7 @@ namespace Rafy.Data
         private static DbSetting Create(string dbSettingName)
         {
             //查找连接字符串时，根据用户的 LocalSqlServer 来查找。
-            var local = ConfigurationManager.ConnectionStrings[DbName_LocalServer];
+            var local = ConfigurationHelper.GetConnectionString(DbName_LocalServer);
             if (local != null && local.ProviderName == Provider_SqlClient)
             {
                 var builder = new SqlConnectionStringBuilder(local.ConnectionString);
