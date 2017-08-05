@@ -202,6 +202,7 @@
     <Compile Include="AutoUI\CallbackTemplate.cs" />
     <Compile Include="Runtime\Command\ClientCommand.cs" />
     <Compile Include="Runtime\Command\ClientCommandCollection.cs" />
+    <Compile Include="Shell\PathHelper.cs" />
     <Compile Include="SysCommand\LookupSelectAddCommand.cs" />
     <Compile Include="SysCommand\FilterCommand.cs" />
     <Compile Include="SysCommand\PopupDetailCommand.cs" />
