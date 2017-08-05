@@ -12,7 +12,9 @@
  * 
 *******************************************************/
 
-using System.Runtime.Caching;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
+
 
 namespace Rafy.Utils.Caching
 {
@@ -24,28 +26,28 @@ namespace Rafy.Utils.Caching
     /// </summary>
     public class MemoryCache : Cache
     {
+        private readonly RegionCache _regionCache;
+
         internal MemoryCache()
         {
-            _regionCache = new RegionCache(System.Runtime.Caching.MemoryCache.Default);
+            _regionCache = new RegionCache();
         }
 
-        public MemoryCache(System.Runtime.Caching.MemoryCache memoryCache)
+        public MemoryCache(Microsoft.Extensions.Caching.Memory.MemoryCache memoryCache)
         {
             _regionCache = new RegionCache(memoryCache);
         }
 
-        private readonly RegionCache _regionCache;
-
         protected internal override StoredValue GetCacheItemCore(string region, string key)
         {
-            var item = this._regionCache.GetCacheItem(key, region);
+            var item = this._regionCache.Get(key, region);
 
-            return item?.Value as StoredValue;
+            return item as StoredValue;
         }
 
         protected internal override bool AddCore(string region, string key, StoredValue value)
         {
-            return this._regionCache.Add(key, value, new CacheItemPolicy(), region);
+            return this._regionCache.Add(key, value, region);
         }
 
         protected internal override void RemoveCore(string region, string key)
