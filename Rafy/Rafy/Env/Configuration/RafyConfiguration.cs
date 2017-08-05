@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Text;
+using Microsoft.Extensions.Configuration;
 using Rafy;
 using Rafy.Configuration;
 
@@ -52,12 +53,13 @@ namespace Rafy
                 //在 WCFServer 下，以下代码不起作用。所以所有属性都暂时只支持只读。
                 //_configurtaion = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 
-                _section = ConfigurationManager.GetSection("rafy") as RafyConfigurationSection;
-                if (_section == null)
+                var rafyRawSection = ConfigurationHelper.Configuration.GetSection("rafy");
+                if (rafyRawSection == null)
                 {
-                    _section = new RafyConfigurationSection();
-                    //throw new InvalidProgramException("配置文件中没有 rafy 配置节，请检查配置文件。");
+                    throw new InvalidProgramException("配置文件中没有 rafy 配置节，请检查配置文件。");
                 }
+
+                _section = new RafyConfigurationSection(ConfigurationHelper.Configuration as ConfigurationRoot, rafyRawSection.Path);
             }
         }
 

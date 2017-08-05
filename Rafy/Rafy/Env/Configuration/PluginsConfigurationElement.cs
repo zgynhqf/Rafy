@@ -10,6 +10,7 @@
  * 
 *******************************************************/
 
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -19,26 +20,18 @@ using System.Threading.Tasks;
 
 namespace Rafy.Configuration
 {
-    [ConfigurationCollection(typeof(PluginElement))]
-    public class PluginsConfigurationElement : ConfigurationElementCollection
+    public class PluginsConfigurationElement : ConfigurationSection
     {
-        protected override ConfigurationElement CreateNewElement()
-        {
-            return new PluginElement();
-        }
-
-        protected override object GetElementKey(ConfigurationElement element)
-        {
-            return (element as PluginElement).Plugin;
-        }
+        public PluginsConfigurationElement(ConfigurationRoot root, string path) : base(root, path) { }
     }
 
-    public class PluginElement : ConfigurationElement
+    public class PluginElement : ConfigurationSection
     {
+        public PluginElement(ConfigurationRoot root, string path) : base(root, path) { }
+
         /// <summary>
         /// 可以只填写插件程序集的全名称，也可以写出具体的插件类型的全名称。
         /// </summary>
-        [ConfigurationProperty("plugin", IsKey = true, IsRequired = true)]
         public string Plugin
         {
             get { return (string)this["plugin"]; }

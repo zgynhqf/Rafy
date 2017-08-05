@@ -16,39 +16,35 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Text;
+using Microsoft.Extensions.Configuration;
 
 namespace Rafy.Configuration
 {
     public class RafyConfigurationSection : ConfigurationSection
     {
+        internal RafyConfigurationSection(ConfigurationRoot root, string path) : base(root, path) { }
+
         #region 子元素
 
-        [ConfigurationProperty("wpf")]
-        public WPFConfigurationElement WPF
+        public IEnumerable<IConfigurationSection> WPF
         {
-            get { return (WPFConfigurationElement)this["wpf"]; }
-            set { this["wpf"] = value; }
+            get { return this.GetSection("wpf").GetChildren(); }
         }
 
-        [ConfigurationProperty("web")]
-        public WebConfigurationElement Web
+        public IEnumerable<IConfigurationSection> Web
         {
-            get { return (WebConfigurationElement)this["web"]; }
-            set { this["web"] = value; }
+            get { return this.GetSection("web").GetChildren(); }
         }
 
-        [ConfigurationProperty("domainPlugins")]
         public PluginsConfigurationElement DomainPlugins
         {
-            get { return (PluginsConfigurationElement)this["domainPlugins"]; }
-            set { this["domainPlugins"] = value; }
+            get { return this.GetSection("domainPlugins") as PluginsConfigurationElement; }
         }
 
-        [ConfigurationProperty("uiPlugins")]
         public PluginsConfigurationElement UIPlugins
         {
-            get { return (PluginsConfigurationElement)this["uiPlugins"]; }
-            set { this["uiPlugins"] = value; }
+
+            get { return this.GetSection("uiPlugins") as PluginsConfigurationElement; }
         }
 
         #endregion
@@ -58,21 +54,28 @@ namespace Rafy.Configuration
         /// 如果没有设置本项，表明使用系统自带的语言文化。
         /// 例如：zh-CN、en-US 等。
         /// </summary>
-        [ConfigurationProperty("currentCulture")]
         public string CurrentCulture
         {
-            get { return (string)this["currentCulture"]; }
-            set { this["currentCulture"] = value; }
+            get { return (string)this.GetSection("currentCulture").Value; }
+            set { this.GetSection("currentCulture").Value = value; }
         }
 
         /// <summary>
         /// 在当前语言下是否执行收集操作。
         /// </summary>
-        [ConfigurationProperty("collectDevLanguages", DefaultValue = DynamicBoolean.IsDebugging)]
+        /// 
         public DynamicBoolean CollectDevLanguages
         {
-            get { return (DynamicBoolean)this["collectDevLanguages"]; }
-            set { this["collectDevLanguages"] = value; }
+            get
+            {
+                string val = (string)this["collectDevLanguages"];
+                if (string.IsNullOrEmpty(val))
+                {
+                    return (DynamicBoolean)Enum.Parse(typeof(DynamicBoolean), val);
+                }
+                return DynamicBoolean.IsDebugging;
+            }
+            set { this["collectDevLanguages"] = value.ToString(); }
         }
 
         /// <summary>
@@ -114,10 +117,18 @@ namespace Rafy.Configuration
         /// Enterprise Services must be hosted in COM+.
         /// </para>
         /// </remarks>
-        [ConfigurationProperty("dataPortalProxy", DefaultValue = "Local")]
+
         public string DataPortalProxy
         {
-            get { return (string)this["dataPortalProxy"]; }
+            get
+            {
+                string val = this["dataPortalProxy"];
+                if (string.IsNullOrEmpty(val))
+                {
+                    return "Local";
+                }
+                return val;
+            }
             set { this["dataPortalProxy"] = value; }
         }
     }

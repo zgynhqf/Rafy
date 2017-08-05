@@ -16,10 +16,12 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Text;
+using Microsoft.Extensions.Configuration;
 
 namespace Rafy.Configuration
 {
-    public class WebConfigurationElement : ConfigurationElement
+    public class WebConfigurationElement : ConfigurationSection
     {
+        public WebConfigurationElement(ConfigurationRoot root, string path) : base(root, path) { }
     }
 }
