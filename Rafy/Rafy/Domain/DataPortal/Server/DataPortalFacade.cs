@@ -91,7 +91,7 @@ namespace Rafy.Domain.DataPortal
                 System.Security.SecurityException ex =
                   new System.Security.SecurityException(
                     "Resources.BusinessPrincipalException" + " Nothing");
-                ex.Action = System.Security.Permissions.SecurityAction.Demand;
+                //ex.Action = System.Security.Permissions.SecurityAction.Demand;
                 throw ex;
             }
 
