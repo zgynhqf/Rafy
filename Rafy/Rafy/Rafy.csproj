@@ -1,798 +1,581 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{966A5BF2-D690-426B-AD68-AD868BB8F855}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Rafy</RootNamespace>
-    <AssemblyName>Rafy</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Rafy.XML</DocumentationFile>
-    <NoWarn>1591</NoWarn>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Caching" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Transactions" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
-    <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Lib\SQLCE\System.Data.SqlServerCe.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="DbMigration\AutomationMigration.cs" />
-    <Compile Include="DbMigration\DbMigration.cs" />
-    <Compile Include="DbMigration\DbMigrationContext.cs" />
-    <Compile Include="DbMigration\DbMigrationException.cs" />
-    <Compile Include="DbMigration\DbMigrationExceptionMessageFormatter.cs" />
-    <Compile Include="DbMigration\DbMigrationSettings.cs" />
-    <Compile Include="DbMigration\History\DbVersionProvider.cs" />
-    <Compile Include="DbMigration\History\EmbadedDbVersionProvider.cs" />
-    <Compile Include="DbMigration\History\HistoryItem.cs" />
-    <Compile Include="DbMigration\History\HistoryRepository.cs" />
-    <Compile Include="DbMigration\ManualDbMigration.cs" />
-    <Compile Include="DbMigration\ManualMigrationsContainer.cs" />
-    <Compile Include="DbMigration\MigrationOperation.cs" />
-    <Compile Include="DbMigration\MigrationRun.cs" />
-    <Compile Include="DbMigration\Model\Column.cs" />
-    <Compile Include="DbMigration\Model\Database.cs" />
-    <Compile Include="DbMigration\Model\DestinationDatabase.cs" />
-    <Compile Include="DbMigration\Model\Differ\ChangeType.cs" />
-    <Compile Include="DbMigration\Model\Differ\ColumnChanges.cs" />
-    <Compile Include="DbMigration\Model\Differ\DatabaseChanges.cs" />
-    <Compile Include="DbMigration\Model\Differ\ModelDiffer.cs" />
-    <Compile Include="DbMigration\Model\Differ\TableChanges.cs" />
-    <Compile Include="DbMigration\Model\ForeignConstraint.cs" />
-    <Compile Include="DbMigration\Model\IMetadataReader.cs" />
-    <Compile Include="DbMigration\Model\Table.cs" />
-    <Compile Include="DbMigration\Operations\ColumnOperation.cs" />
-    <Compile Include="DbMigration\Operations\DatabaseOperation.cs" />
-    <Compile Include="DbMigration\Operations\FKConstraintOperation.cs" />
-    <Compile Include="DbMigration\Operations\RunAction.cs" />
-    <Compile Include="DbMigration\Operations\RunSql.cs" />
-    <Compile Include="DbMigration\Operations\TableOperation.cs" />
-    <Compile Include="DbMigration\Operations\UpdateCommentOperation.cs" />
-    <Compile Include="DbMigration\Providers\DbMetaReader.cs" />
-    <Compile Include="DbMigration\Providers\DbMigrationProvider.cs" />
-    <Compile Include="DbMigration\Providers\DbMigrationProviderFactory.cs" />
-    <Compile Include="DbMigration\Providers\DbTypeHelper.cs" />
-    <Compile Include="DbMigration\Providers\MySql\MySqlDbTypeHelper.cs" />
-    <Compile Include="DbMigration\Providers\MySql\MySqlMetaReader.cs" />
-    <Compile Include="DbMigration\Providers\MySql\MySqlMigrationProvider.cs" />
-    <Compile Include="DbMigration\Providers\MySql\Run\MySqlChangeDbMigrationRun.cs" />
-    <Compile Include="DbMigration\Providers\MySql\MySqlRunGenerator.cs" />
-    <Compile Include="DbMigration\Providers\MySql\Run\MySqlCreateDbMigrationRun.cs" />
-    <Compile Include="DbMigration\Providers\MySql\Run\MySqlDropDbMigrationRun.cs" />
-    <Compile Include="DbMigration\Providers\Oracle\OracleDbTypeHelper.cs" />
-    <Compile Include="DbMigration\Providers\Oracle\OracleMetaReader.cs" />
-    <Compile Include="DbMigration\Providers\Oracle\OracleMigrationProvider.cs" />
-    <Compile Include="DbMigration\Providers\Oracle\OracleRunGenerator.cs" />
-    <Compile Include="DbMigration\Providers\SqlServerCe\Run\CreateDbMigrationRun.cs" />
-    <Compile Include="DbMigration\Providers\SqlServerCe\Run\DropDbMigrationRun.cs" />
-    <Compile Include="DbMigration\Providers\SqlServerCe\SqlServerCeMetaReader.cs" />
-    <Compile Include="DbMigration\Providers\SqlServerCe\SqlServerCeMigrationProvider.cs" />
-    <Compile Include="DbMigration\Providers\SqlServerCe\SqlServerCeRunGenerator.cs" />
-    <Compile Include="DbMigration\Providers\SqlServer\Run\ChangeDbMigrationRun.cs" />
-    <Compile Include="DbMigration\Providers\SqlServer\Run\CreateDbMigrationRun.cs" />
-    <Compile Include="DbMigration\Providers\SqlServer\Run\DropDbMigrationRun.cs" />
-    <Compile Include="DbMigration\Providers\SqlServer\SqlDbTypeHelper.cs" />
-    <Compile Include="DbMigration\Providers\SqlServer\SqlServerMetaReader.cs" />
-    <Compile Include="DbMigration\Providers\SqlServer\SqlServerMigrationProvider.cs" />
-    <Compile Include="DbMigration\Providers\SqlServer\SqlServerRunGenerator.cs" />
-    <Compile Include="DbMigration\RunGenerator.cs" />
-    <Compile Include="DbMigration\Run\ActionMigrationRun.cs" />
-    <Compile Include="DbMigration\Run\GenerationExceptionRun.cs" />
-    <Compile Include="DbMigration\Run\Oracle\TryCreateTableSequenceRun.cs" />
-    <Compile Include="DbMigration\Run\SqlMigrationRun.cs" />
-    <Compile Include="DbMigration\TSqlRunGenerator.cs" />
-    <Compile Include="Domain\BinaryOperator.cs" />
-    <Compile Include="Domain\DataPortalLocation.cs" />
-    <Compile Include="Domain\DataPortal\ClientContextItem.cs" />
-    <Compile Include="Domain\DataPortal\DataPortalApi.cs" />
-    <Compile Include="Domain\DataPortal\DataPortalException.cs" />
-    <Compile Include="Domain\DataPortal\DataPortalResult.cs" />
-    <Compile Include="Domain\DataPortal\DistributionContext.cs" />
-    <Compile Include="Domain\DataPortal\GlobalContextItem.cs" />
-    <Compile Include="Domain\DataPortal\IDataPortalProxy.cs" />
-    <Compile Include="Domain\DataPortal\Server\DataPortalContext.cs" />
-    <Compile Include="Domain\DataPortal\Server\DataPortalFacade.cs" />
-    <Compile Include="Domain\DataPortal\Server\DataPortalResult.cs" />
-    <Compile Include="Domain\DataPortal\Server\FinalDataPortal.cs" />
-    <Compile Include="Domain\DataPortal\Server\IDataPortalServer.cs" />
-    <Compile Include="Domain\DataPortal\WCF\ClientProxy.cs" />
-    <Compile Include="Domain\DataPortal\WCF\FetchRequest.cs" />
-    <Compile Include="Domain\DataPortal\WCF\IWcfPortal.cs" />
-    <Compile Include="Domain\DataPortal\WCF\ServerPortal.cs" />
-    <Compile Include="Domain\DataPortal\WCF\UpdateRequest.cs" />
-    <Compile Include="Domain\DataPortal\WCF\WcfResponse.cs" />
-    <Compile Include="Domain\DbSettingNames.cs" />
-    <Compile Include="Domain\DomainApp.cs" />
-    <Compile Include="Domain\DomainMetaExtension.cs" />
-    <Compile Include="Domain\EntityRepository\Caching\AggregateChecker.cs" />
-    <Compile Include="Domain\EntityRepository\Caching\RepositoryCache.cs" />
-    <Compile Include="Domain\EntityRepository\Caching\ServerRepositoryCache.cs" />
-    <Compile Include="Domain\EntityRepository\Caching\VersionSyncClientCache\AggregateRootCache.cs" />
-    <Compile Include="Domain\EntityRepository\Caching\VersionSyncClientCache\ClientRepositoryCache.cs" />
-    <Compile Include="Domain\EntityRepository\Caching\VersionSyncClientCache\EntityListVersion.cs" />
-    <Compile Include="Domain\EntityRepository\Caching\VersionSyncClientCache\VersionChecker.cs" />
-    <Compile Include="Domain\EntityRepository\Caching\VersionSyncClientCache\VersionSyncMgr.cs" />
-    <Compile Include="Domain\EntityRepository\Criteria\CommonQueryCriteria.cs" />
-    <Compile Include="Domain\EntityRepository\Criteria\IEQC.cs" />
-    <Compile Include="Domain\EntityRepository\Criteria\ODataFilterParser.cs" />
-    <Compile Include="Domain\EntityRepository\Criteria\ODataQueryCriteria.cs" />
-    <Compile Include="Domain\EntityRepository\DataProvider\DataProviderComposer.cs" />
-    <Compile Include="Domain\EntityRepository\DataProvider\DataProviderForAttribute.cs" />
-    <Compile Include="Domain\EntityRepository\DataProvider\DataQueryer.cs" />
-    <Compile Include="Domain\EntityRepository\DataProvider\DataSaver.cs" />
-    <Compile Include="Domain\EntityRepository\DataProvider\IRepositoryDataProvider.cs" />
-    <Compile Include="Domain\EntityRepository\DataProvider\RedundanciesUpdater.cs" />
-    <Compile Include="Domain\EntityRepository\DataProvider\RepositoryDataProvider.cs" />
-    <Compile Include="Domain\EntityRepository\DataProvider\RepositoryDataProvider.Query.cs">
-      <DependentUpon>RepositoryDataProvider.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Domain\EntityRepository\DataProvider\SubmitInterceptor.cs" />
-    <Compile Include="Domain\EntityRepository\DictionaryRepositoryFactory.cs" />
-    <Compile Include="Domain\EntityRepository\DiffSaveService.cs" />
-    <Compile Include="Domain\EntityRepository\EagerLoadOptions.cs" />
-    <Compile Include="Domain\EntityRepository\EntityRepository.cs" />
-    <Compile Include="Domain\EntityRepository\EntityRepository.CUD.cs">
-      <DependentUpon>EntityRepository.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Domain\EntityRepository\EntityRepository.Query.cs">
-      <DependentUpon>EntityRepository.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Domain\EntityRepository\EntityRepositoryExt.cs" />
-    <Compile Include="Domain\EntityRepository\EntityRepositoryQueryBase.cs" />
-    <Compile Include="Domain\EntityRepository\MemoryEntityRepository.cs" />
-    <Compile Include="Domain\EntityRepository\QueryArgs\EntityQueryArgs.cs" />
-    <Compile Include="Domain\EntityRepository\QueryArgs\IEntitySelectArgs.cs" />
-    <Compile Include="Domain\EntityRepository\QueryArgs\IQueryArgs.cs" />
-    <Compile Include="Domain\EntityRepository\QueryArgs\ISelectArgs.cs" />
-    <Compile Include="Domain\EntityRepository\QueryArgs\QueryArgs.cs" />
-    <Compile Include="Domain\EntityRepository\RepositoryInterceptor.cs" />
-    <Compile Include="Domain\EntityRepository\RepositoryQueryMethodAttribute.cs" />
-    <Compile Include="Domain\EntityRepository\RF.cs" />
-    <Compile Include="Domain\EntityRepository\SubmitArgs.cs" />
-    <Compile Include="Domain\EntityRepository\zzzEF\DbContextExtension.cs" />
-    <Compile Include="Domain\EntityRepository\zzzEF\DbCreationType.cs" />
-    <Compile Include="Domain\EntityRepository\zzzEF\ORMapping.cs" />
-    <Compile Include="Domain\EntityRepository\zzzEF\ORMContext.cs" />
-    <Compile Include="Domain\EntityRepository\zzzEF\_DbContextBase.cs" />
-    <Compile Include="Domain\Entity\AutoCollectHelper.cs" />
-    <Compile Include="Domain\Entity\CloneOptions.cs" />
-    <Compile Include="Domain\Entity\Entity.cs" />
-    <Compile Include="Domain\Entity\Entity.Csla.cs">
-      <DependentUpon>Entity.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Domain\Entity\Entity.DataAccess.cs">
-      <DependentUpon>Entity.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Domain\Entity\Entity.LazyProperty.cs">
-      <DependentUpon>Entity.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Domain\Entity\Entity.Miscellaneous.cs">
-      <DependentUpon>Entity.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Domain\Entity\Entity.RoutedEvent.cs">
-      <DependentUpon>Entity.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Domain\Entity\Entity.Tree.cs">
-      <DependentUpon>Entity.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Domain\Entity\EntityList.BusinessListBase.cs">
-      <DependentUpon>EntityList.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Domain\Entity\EntityList.cs" />
-    <Compile Include="Domain\Entity\EntityList.Csla.cs">
-      <DependentUpon>EntityList.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Domain\Entity\EntityList.DataAccess.cs">
-      <DependentUpon>EntityList.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Domain\Entity\EntityList.Tree.cs">
-      <DependentUpon>EntityList.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Domain\Entity\EntityListExtension.cs" />
-    <Compile Include="Domain\Entity\EntitySerializableFlags.cs" />
-    <Compile Include="Domain\Entity\GenericEntity\Criteria.cs" />
-    <Compile Include="Domain\Entity\GenericEntity\Entity.Generic.cs" />
-    <Compile Include="Domain\Entity\GenericEntity\GuidEntity.cs" />
-    <Compile Include="Domain\Entity\GenericEntity\IntEntity.cs" />
-    <Compile Include="Domain\Entity\GenericEntity\LongEntity.cs" />
-    <Compile Include="Domain\Entity\GenericEntity\StringEntity.cs" />
-    <Compile Include="Domain\Entity\IDbConnector.cs" />
-    <Compile Include="Domain\Entity\IDirtyAware.cs" />
-    <Compile Include="Domain\Entity\IDomainComponent.cs" />
-    <Compile Include="Domain\Entity\IEntity.cs" />
-    <Compile Include="Domain\Entity\IEntityInfoHost.cs" />
-    <Compile Include="Domain\Entity\IHasHame.cs" />
-    <Compile Include="Domain\Entity\IRepository.cs" />
-    <Compile Include="Domain\Entity\ITreeComponent.cs" />
-    <Compile Include="Domain\Entity\KeyProviders\GuidKeyProvider.cs" />
-    <Compile Include="Domain\Entity\KeyProviders\IntKeyProvider.cs" />
-    <Compile Include="Domain\Entity\KeyProviders\KeyProviders.cs" />
-    <Compile Include="Domain\Entity\KeyProviders\LongKeyProvider.cs" />
-    <Compile Include="Domain\Entity\KeyProviders\ObjectKeyProvider.cs" />
-    <Compile Include="Domain\Entity\KeyProviders\StringKeyProvider.cs" />
-    <Compile Include="Domain\Entity\MP\IProperty.cs" />
-    <Compile Include="Domain\Entity\MP\ListProperty.cs" />
-    <Compile Include="Domain\Entity\MP\ListPropertyMetadata.cs" />
-    <Compile Include="Domain\Entity\MP\LOBProperty.cs" />
-    <Compile Include="Domain\Entity\MP\P.cs" />
-    <Compile Include="Domain\Entity\MP\Property.cs" />
-    <Compile Include="Domain\Entity\MP\PropertyCategory.cs" />
-    <Compile Include="Domain\Entity\MP\PropertyDefailtValues.cs" />
-    <Compile Include="Domain\Entity\MP\PropertyMetadata.cs" />
-    <Compile Include="Domain\Entity\MP\RafyPropertyDescriptor.cs" />
-    <Compile Include="Domain\Entity\MP\RafyPropertyDescriptorFactory.cs" />
-    <Compile Include="Domain\Entity\MP\RedundantPath.cs" />
-    <Compile Include="Domain\Entity\MP\RefEntityProperty.cs" />
-    <Compile Include="Domain\Entity\MP\RefIdProperty.cs" />
-    <Compile Include="Domain\Entity\MP\RegisterRefArgs.cs" />
-    <Compile Include="Domain\Entity\MP\RegisterRefIdArgs.cs" />
-    <Compile Include="Domain\Entity\PersistenceStatus.cs" />
-    <Compile Include="Domain\Entity\Serialization\Json\AggtDeserializer.cs" />
-    <Compile Include="Domain\Entity\Serialization\Json\AggtSerializer.cs" />
-    <Compile Include="Domain\Entity\Serialization\SerializationEntityGraph.cs" />
-    <Compile Include="Domain\Entity\TreeHelper.cs" />
-    <Compile Include="Domain\Entity\ValidationHelper.cs" />
-    <Compile Include="Domain\ORM\ConditionalSql.cs" />
-    <Compile Include="Domain\ORM\DbMigration\ClassMetaReader.cs" />
-    <Compile Include="Domain\ORM\DbMigration\CommentFinder.cs" />
-    <Compile Include="Domain\ORM\DbMigration\DbHistoryRepository.cs" />
-    <Compile Include="Domain\ORM\DbMigration\MigrateService.cs" />
-    <Compile Include="Domain\ORM\DbMigration\MigratingOptions.cs" />
-    <Compile Include="Domain\ORM\DbMigration\Presistence\DbMigrationHistory.cs" />
-    <Compile Include="Domain\ORM\DbMigration\Presistence\DbMigrationHistory.g.cs">
-      <DependentUpon>DbMigrationHistory.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Domain\ORM\DbMigration\Presistence\DbMigrationHistoryQueryCriteria.cs" />
-    <Compile Include="Domain\ORM\DbMigration\Presistence\DbVersion.cs" />
-    <Compile Include="Domain\ORM\DbMigration\Presistence\DbVersion.g.cs">
-      <DependentUpon>DbVersion.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Domain\ORM\DbMigration\RafyDbMigrationContext.cs" />
-    <Compile Include="Domain\ORM\DbMigration\RafyDbVersionProvider.cs" />
-    <Compile Include="Domain\ORM\DbMigration\RafyUserMigrations.cs" />
-    <Compile Include="Domain\ORM\EntityContext\DisabledTypedEntityContext.cs" />
-    <Compile Include="Domain\ORM\EntityContext\EntityContext.cs" />
-    <Compile Include="Domain\ORM\EntityContext\EntityContextWrapper.cs" />
-    <Compile Include="Domain\ORM\EntityContext\TypedEntityContext.cs" />
-    <Compile Include="Domain\ORM\Linq\EntityQueryable.cs" />
-    <Compile Include="Domain\ORM\Linq\EntityQueryBuilder.cs" />
-    <Compile Include="Domain\ORM\Linq\EntityQueryProvider.cs" />
-    <Compile Include="Domain\ORM\Linq\Evaluator.cs" />
-    <Compile Include="Domain\ORM\Linq\LinqConsts.cs" />
-    <Compile Include="Domain\ORM\Linq\PropertyFinder.cs" />
-    <Compile Include="Domain\ORM\Linq\SubEntityQueryBuilder.cs" />
-    <Compile Include="Domain\ORM\Linq\TypeSystem.cs" />
-    <Compile Include="Domain\ORM\OrderDirection.cs" />
-    <Compile Include="Domain\ORM\ORMException.cs" />
-    <Compile Include="Domain\ORM\ORMHelper.cs" />
-    <Compile Include="Domain\ORM\PersistanceTableInfo\IPersistanceColumnInfo.cs" />
-    <Compile Include="Domain\ORM\PersistanceTableInfo\IPersistanceTableInfo.cs" />
-    <Compile Include="Domain\ORM\PersistanceTableInfo\PersistanceColumnInfo.cs" />
-    <Compile Include="Domain\ORM\PersistanceTableInfo\PersistanceTableInfo.cs" />
-    <Compile Include="Domain\ORM\PersistanceTableInfo\PersistanceTableInfoFactory.cs" />
-    <Compile Include="Domain\ORM\QueryExtensions.cs" />
-    <Compile Include="Domain\ORM\Query\EveryTableWhereAppender.cs" />
-    <Compile Include="Domain\ORM\Query\IArray.cs" />
-    <Compile Include="Domain\ORM\Query\IBinaryConstraint.cs" />
-    <Compile Include="Domain\ORM\Query\IColumnConstraint.cs" />
-    <Compile Include="Domain\ORM\Query\IColumnNode.cs" />
-    <Compile Include="Domain\ORM\Query\IColumnsComparison.cs" />
-    <Compile Include="Domain\ORM\Query\IConstraint.cs" />
-    <Compile Include="Domain\ORM\Query\IExistsConstraint.cs" />
-    <Compile Include="Domain\ORM\Query\IJoin.cs" />
-    <Compile Include="Domain\ORM\Query\ILiteral.cs" />
-    <Compile Include="Domain\ORM\Query\Impl\ArrayNode.cs" />
-    <Compile Include="Domain\ORM\Query\Impl\BinaryConstraint.cs" />
-    <Compile Include="Domain\ORM\Query\Impl\ColumnConstraint.cs" />
-    <Compile Include="Domain\ORM\Query\Impl\ColumnNode.cs" />
-    <Compile Include="Domain\ORM\Query\Impl\ColumnsComparison.cs" />
-    <Compile Include="Domain\ORM\Query\Impl\ExistsConstraint.cs" />
-    <Compile Include="Domain\ORM\Query\Impl\Join.cs" />
-    <Compile Include="Domain\ORM\Query\Impl\Literal.cs" />
-    <Compile Include="Domain\ORM\Query\Impl\NotConstraint.cs" />
-    <Compile Include="Domain\ORM\Query\Impl\OrderBy.cs" />
-    <Compile Include="Domain\ORM\Query\Impl\QueryGenerationContext.cs" />
-    <Compile Include="Domain\ORM\Query\Impl\SelectAll.cs" />
-    <Compile Include="Domain\ORM\Query\Impl\SubQueryRef.cs" />
-    <Compile Include="Domain\ORM\Query\Impl\TableQuery.cs" />
-    <Compile Include="Domain\ORM\Query\Impl\TableSource.cs" />
-    <Compile Include="Domain\ORM\Query\Impl\TableSourceFinder.cs" />
-    <Compile Include="Domain\ORM\Query\INamedSource.cs" />
-    <Compile Include="Domain\ORM\Query\INotConstraint.cs" />
-    <Compile Include="Domain\ORM\Query\IOrderBy.cs" />
-    <Compile Include="Domain\ORM\Query\IQuery.cs" />
-    <Compile Include="Domain\ORM\Query\IQueryNode.cs" />
-    <Compile Include="Domain\ORM\Query\ISelectAll.cs" />
-    <Compile Include="Domain\ORM\Query\ISource.cs" />
-    <Compile Include="Domain\ORM\Query\ISubQuery.cs" />
-    <Compile Include="Domain\ORM\Query\ITableSource.cs" />
-    <Compile Include="Domain\ORM\Query\MainTableWhereAppender.cs" />
-    <Compile Include="Domain\ORM\Query\QueryExtensions.cs" />
-    <Compile Include="Domain\ORM\Query\QueryFactory.cs" />
-    <Compile Include="Domain\ORM\Query\QueryNodeTester.cs" />
-    <Compile Include="Domain\ORM\Query\QueryNodeVisitor.cs" />
-    <Compile Include="Domain\ORM\Rdb\AggregateSQL\AggregateDescriptor.cs" />
-    <Compile Include="Domain\ORM\Rdb\AggregateSQL\AggregateEntityLoader.cs" />
-    <Compile Include="Domain\ORM\Rdb\AggregateSQL\AggregateSQLGenerator.cs" />
-    <Compile Include="Domain\ORM\Rdb\AggregateSQL\API\AggregateSQL.cs" />
-    <Compile Include="Domain\ORM\Rdb\AggregateSQL\API\ChildrenSelector.cs" />
-    <Compile Include="Domain\ORM\Rdb\AggregateSQL\API\LoadOptionSelector.cs" />
-    <Compile Include="Domain\ORM\Rdb\AggregateSQL\API\OrderByLoadOption.cs" />
-    <Compile Include="Domain\ORM\Rdb\AggregateSQL\API\PropertySelector.cs" />
-    <Compile Include="Domain\ORM\Rdb\AggregateSQL\IDataTable.cs" />
-    <Compile Include="Domain\ORM\Rdb\AggregateSQL\LoadOptionItem.cs" />
-    <Compile Include="Domain\ORM\Rdb\AggregateSQL\RawTable.cs" />
-    <Compile Include="Domain\ORM\Rdb\AggregateSQL\SQLColumnsGenerator.cs" />
-    <Compile Include="Domain\ORM\Rdb\AggregateSQL\SubTable.cs" />
-    <Compile Include="Domain\ORM\Rdb\AggregateSQL\TableEnumerator.cs" />
-    <Compile Include="Domain\ORM\Rdb\DataProvider\QueryArgs\ISqlSelectArgs.cs" />
-    <Compile Include="Domain\ORM\Rdb\DataProvider\QueryArgs\ITableQueryArgs.cs" />
-    <Compile Include="Domain\ORM\Rdb\DataProvider\QueryArgs\SqlQueryArgs.cs" />
-    <Compile Include="Domain\ORM\Rdb\DataProvider\QueryArgs\TableQueryArgs.cs" />
-    <Compile Include="Domain\ORM\Rdb\DataProvider\RdbDataProvider.cs" />
-    <Compile Include="Domain\ORM\Rdb\DataProvider\RdbDataQueryer.cs" />
-    <Compile Include="Domain\ORM\Rdb\DataProvider\RdbDataSaver.cs" />
-    <Compile Include="Domain\ORM\Rdb\DataProvider\RdbRedundanciesUpdater.cs" />
-    <Compile Include="Domain\ORM\Rdb\DbAccesser\AppContextDependentConnectionManager.cs" />
-    <Compile Include="Domain\ORM\Rdb\DbAccesser\DbAccesserFactory.cs" />
-    <Compile Include="Domain\ORM\Rdb\DbAccesser\IConnectionManager.cs" />
-    <Compile Include="Domain\ORM\Rdb\DbAccesser\ManagedConnectionDbAccesser.cs" />
-    <Compile Include="Domain\ORM\Rdb\DbAccesser\TransactionDependentConnectionManager.cs" />
-    <Compile Include="Domain\ORM\Rdb\RdbTable\RdbColumn.cs" />
-    <Compile Include="Domain\ORM\Rdb\RdbTable\RdbTable.cs" />
-    <Compile Include="Domain\ORM\Rdb\RdbTable\RdbTableFactory.cs" />
-    <Compile Include="Domain\ORM\Rdb\RdbTable\RdbTableFinder.cs" />
-    <Compile Include="Domain\ORM\Rdb\SingleConnectionTrasactionScope.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\FirstTableFinder.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\MySql\MySqlColumn.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\MySql\MySqlGenerator.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\MySql\MySqlTable.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\Oracle\OracleColumn.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\Oracle\OracleSqlGenerator.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\Oracle\OracleTable.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\SqlCe\SqlCeTable.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\SqlGenerator.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\SqlServer\SqlOraTable.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\SqlServer\SqlServerSqlGenerator.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\SqlServer\SqlServerTable.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\SqlServer\SqlTable.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\Tree\Interfaces.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlArray.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlBinaryConstraint.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlColumn.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlColumnComparisonConstraint.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlColumnsComparisonConstraint.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlConstraint.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlExistsConstraint.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlJoin.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlLiteral.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlNamedSource.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlNode.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlNodeList.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlNodeVisitor.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlNotConstraint.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlOrderBy.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlOrderByList.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlSelect.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlSelectAll.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlSource.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlSubSelect.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlTable.cs" />
-    <Compile Include="Domain\ORM\Rdb\TreeIndexHelper.cs" />
-    <Compile Include="Domain\PropertyOperator.cs" />
-    <Compile Include="Domain\RafyDomainPlugin.cs" />
-    <Compile Include="Domain\Service\ContractAttribute.cs" />
-    <Compile Include="Domain\Service\ContractImplAttribute.cs" />
-    <Compile Include="Domain\Service\Controllers\DomainController.cs" />
-    <Compile Include="Domain\Service\Controllers\DomainControllerFactory.cs" />
-    <Compile Include="Domain\Service\Controllers\DomainException.cs" />
-    <Compile Include="Domain\Service\FlowService.cs" />
-    <Compile Include="Domain\Service\ISaveListService.cs" />
-    <Compile Include="Domain\Service\Service.cs" />
-    <Compile Include="Domain\Service\ServiceFactory.cs" />
-    <Compile Include="Domain\Service\ServiceLocator.cs" />
-    <Compile Include="Domain\Utils\DomainHelper.cs" />
-    <Compile Include="Domain\Utils\EntityListEnumerator.cs" />
-    <Compile Include="Domain\Utils\zzzIRepository.Generic.cs" />
-    <Compile Include="Domain\Validation\BrokenRule.cs" />
-    <Compile Include="Domain\Validation\BrokenRulesCollection.cs" />
-    <Compile Include="Domain\Validation\CommonRules\HandlerRule.cs" />
-    <Compile Include="Domain\Validation\CommonRules\NotDuplicateRule.cs" />
-    <Compile Include="Domain\Validation\CommonRules\NotUsedByReferenceRule.cs" />
-    <Compile Include="Domain\Validation\CommonRules\NumberRangeRule.cs" />
-    <Compile Include="Domain\Validation\CommonRules\PositiveNumberRule.cs" />
-    <Compile Include="Domain\Validation\CommonRules\RegexMatchRule.cs" />
-    <Compile Include="Domain\Validation\CommonRules\RequiredRule.cs" />
-    <Compile Include="Domain\Validation\CommonRules\StringLengthRangeRule.cs" />
-    <Compile Include="Domain\Validation\CommonRules\ValidationRule.cs" />
-    <Compile Include="Domain\Validation\ITypeValidationsHost.cs" />
-    <Compile Include="Domain\Validation\Rule.cs" />
-    <Compile Include="Domain\Validation\RulesContainer.cs" />
-    <Compile Include="Domain\Validation\ValidationDeclarer.cs" />
-    <Compile Include="Domain\Validation\ValidationException.cs" />
-    <Compile Include="Domain\Validation\ValidationRulesManager.cs" />
-    <Compile Include="Domain\Validation\Validator.cs" />
-    <Compile Include="Env\ComponentModel\AppImplementationBase.cs" />
-    <Compile Include="Env\ComponentModel\Composer.cs" />
-    <Compile Include="Env\ComponentModel\ContainerItemAttribute.cs" />
-    <Compile Include="Env\ComponentModel\EventBus.cs" />
-    <Compile Include="Env\ComponentModel\IEventBus.cs" />
-    <Compile Include="Env\ComponentModel\IEventSubscribers.cs" />
-    <Compile Include="Env\ComponentModel\IObjectContainer.cs" />
-    <Compile Include="Env\ComponentModel\IServiceContainer.cs" />
-    <Compile Include="Env\ComponentModel\IObjectContainerFactory.cs" />
-    <Compile Include="Env\ComponentModel\CompositionExtension.cs" />
-    <Compile Include="Env\ComponentModel\ObjectContainerFactory.cs" />
-    <Compile Include="Env\ComponentModel\ObjectContainerToServiceConatinerAdapter.cs" />
-    <Compile Include="Env\ComponentModel\SimpleObjectContainer.cs" />
-    <Compile Include="Env\Configuration\DynamicBoolean.cs" />
-    <Compile Include="Env\Configuration\PluginsConfigurationElement.cs" />
-    <Compile Include="Env\Configuration\WebConfigurationElement.cs" />
-    <Compile Include="Env\Configuration\WPFConfigurationElement.cs" />
-    <Compile Include="Env\Domain\EntityConvention.cs" />
-    <Compile Include="Env\Domain\EntityMatrix.cs" />
-    <Compile Include="Env\Domain\RepositoryForAttribute.cs" />
-    <Compile Include="Env\MetaModel\Meta\Validation\IRule.cs" />
-    <Compile Include="Env\MetaModel\Meta\Validation\IValidationRule.cs" />
-    <Compile Include="Env\MetaModel\Meta\Validation\RuleMeta.cs" />
-    <Compile Include="Env\MetaModel\View\WPFEditorNames.cs" />
-    <Compile Include="Env\Utils\Caching\CacheProvider\PerHttpRequestCache.cs" />
-    <Compile Include="Env\Utils\Caching\ICache.cs" />
-    <Compile Include="Env\Utils\DateTimePart.cs" />
-    <Compile Include="Env\Utils\EnumViewModel.cs" />
-    <Compile Include="Env\Utils\Freezable.cs" />
-    <Compile Include="Env\EnvironmentProvider.cs" />
-    <Compile Include="Env\ComponentModel\IApp.cs" />
-    <Compile Include="Env\ComponentModel\IClientApp.cs" />
-    <Compile Include="Env\Configuration\RafyConfiguration.cs" />
-    <Compile Include="Env\Configuration\RafyConfigurationSection.cs" />
-    <Compile Include="Env\Domain\IKeyProvider.cs" />
-    <Compile Include="Env\ManagedProperty\ILOBProperty.cs" />
-    <Compile Include="Env\Domain\IEntityWithId.cs" />
-    <Compile Include="Env\ManagedProperty\LOBType.cs" />
-    <Compile Include="Env\ManagedProperty\ReferenceType.cs" />
-    <Compile Include="Env\MetaModel\Meta\Validation\IValidationDeclarer.cs" />
-    <Compile Include="Env\MetaModel\Meta\Validation\RuleArgs.cs" />
-    <Compile Include="Env\MetaModel\Meta\Validation\RuleHandler.cs" />
-    <Compile Include="Env\MetaModel\Meta\Validation\RuleLevel.cs" />
-    <Compile Include="Env\MetaModel\Meta\ViewConfig.cs" />
-    <Compile Include="Env\MetaModel\View\Block\Web\WebEntityViewMeta.cs" />
-    <Compile Include="Env\MetaModel\View\Block\Web\WebEntityPropertyViewMeta.cs" />
-    <Compile Include="Env\MetaModel\View\Block\WPF\WPFEntityPropertyViewMeta.cs" />
-    <Compile Include="Env\MetaModel\View\Block\WPF\WPFEntityViewMeta.cs" />
-    <Compile Include="Env\MetaModel\View\WebCommandCollection.cs" />
-    <Compile Include="Env\MetaModel\View\WPFCommandCollection.cs" />
-    <Compile Include="Env\Permission\AnonymousPrincipal.cs" />
-    <Compile Include="Env\Permission\PermissionProvider.cs" />
-    <Compile Include="Env\ComponentModel\PluginCollection.cs" />
-    <Compile Include="Env\Translation\EmptyTranslator.cs" />
-    <Compile Include="Env\Translation\Translator.cs" />
-    <Compile Include="Env\ComponentModel\DomainPlugin.cs" />
-    <Compile Include="Env\MetaModel\View\Aggt\AggtBlocksCollection.cs" />
-    <Compile Include="Env\MetaModel\View\Aggt\BlockType.cs" />
-    <Compile Include="Env\ComponentModel\UIPlugin.cs" />
-    <Compile Include="Env\ComponentModel\IPlugin.cs" />
-    <Compile Include="Env\ManagedProperty\IPropertyMetadata.cs" />
-    <Compile Include="Env\Domain\IService.cs" />
-    <Compile Include="Env\ManagedProperty\IListProperty.cs" />
-    <Compile Include="Env\ManagedProperty\IRafyListPropertyMetadata.cs" />
-    <Compile Include="Env\ManagedProperty\IRefProperty.cs" />
-    <Compile Include="Env\MetaModel\Attributes\Command\CommandAttribute.cs" />
-    <Compile Include="Env\MetaModel\Attributes\Entity\ChildEntityAttribute.cs" />
-    <Compile Include="Env\MetaModel\Attributes\Entity\ConditionQueryTypeAttribute.cs" />
-    <Compile Include="Env\MetaModel\Attributes\Entity\EntityAttribute.cs" />
-    <Compile Include="Env\MetaModel\Attributes\Entity\QueryEntityAttribute.cs" />
-    <Compile Include="Env\MetaModel\Attributes\Entity\NavigationQueryTypeAttribute.cs" />
-    <Compile Include="Env\MetaModel\Attributes\Entity\ORM\ColumnAttribute.cs" />
-    <Compile Include="Env\MetaModel\Attributes\Entity\RootEntityAttribute.cs" />
-    <Compile Include="Env\MetaModel\Attributes\Enums.cs" />
-    <Compile Include="Env\MetaModel\Attributes\LabelAttribute.cs" />
-    <Compile Include="Env\MetaModel\Meta.cs" />
-    <Compile Include="Env\MetaModel\MetaBase.cs" />
-    <Compile Include="Env\MetaModel\Meta\CommonModel.cs" />
-    <Compile Include="Env\MetaModel\Meta\EntityConfig.cs" />
-    <Compile Include="Env\MetaModel\Meta\EntityMetaRepository.cs" />
-    <Compile Include="Env\MetaModel\Meta\Entity\ChildrenPropertyMeta.cs" />
-    <Compile Include="Env\MetaModel\Meta\Entity\EntityCategory.cs" />
-    <Compile Include="Env\MetaModel\Meta\Entity\EntityMeta.cs" />
-    <Compile Include="Env\MetaModel\Meta\Entity\EntityPropertyMeta.cs" />
-    <Compile Include="Env\MetaModel\Meta\Entity\PropertyMeta.cs" />
-    <Compile Include="Env\MetaModel\Meta\Entity\ReferenceInfo.cs" />
-    <Compile Include="Env\MetaModel\Meta\Entity\TreeIndexOption.cs" />
-    <Compile Include="Env\MetaModel\Meta\MetaRepositoryBase.cs" />
-    <Compile Include="Env\MetaModel\Meta\Module\ModuleMeta.cs" />
-    <Compile Include="Env\MetaModel\Meta\Module\ModuleOperation.cs" />
-    <Compile Include="Env\MetaModel\Meta\Module\ModulesContainer.cs" />
-    <Compile Include="Env\MetaModel\Meta\ORM\ColumnMeta.cs" />
-    <Compile Include="Env\MetaModel\Meta\ORM\TableMeta.cs" />
-    <Compile Include="Env\MetaModel\Meta\MetaExtension.cs" />
-    <Compile Include="Env\MetaModel\View\Aggt\AggtBlocksRepository.cs" />
-    <Compile Include="Env\MetaModel\View\Aggt\Block.cs" />
-    <Compile Include="Env\MetaModel\View\Aggt\ChildBlock.cs" />
-    <Compile Include="Env\MetaModel\View\Aggt\CodeBlocksTemplate.cs" />
-    <Compile Include="Env\MetaModel\View\Aggt\AggtBlocks.cs" />
-    <Compile Include="Env\MetaModel\View\Aggt\SurrounderBlock.cs" />
-    <Compile Include="Env\MetaModel\View\Aggt\LayoutMeta.cs" />
-    <Compile Include="Env\MetaModel\View\Aggt\BlocksTemplate.cs" />
-    <Compile Include="Env\MetaModel\View\Block\WPF\PropertyReadonlyIndicator.cs" />
-    <Compile Include="Env\MetaModel\View\Block\WPF\PropertyVisibilityIndicator.cs" />
-    <Compile Include="Env\MetaModel\View\Block\Web\WebCommand\WebCommandNames.cs" />
-    <Compile Include="Env\MetaModel\View\Block\Web\WebCommand\WebCommand.cs" />
-    <Compile Include="Env\MetaModel\View\CommandCollection.cs" />
-    <Compile Include="Env\MetaModel\View\Block\Web\WebCommand\WebCommandRepository.cs" />
-    <Compile Include="Env\MetaModel\View\Helper.cs" />
-    <Compile Include="Env\MetaModel\View\ViewMetaExtension.cs" />
-    <Compile Include="Env\MetaModel\View\Block\EntityViewMetaFactory.cs" />
-    <Compile Include="Env\MetaModel\View\Block\EntityPropertyViewMeta.cs" />
-    <Compile Include="Env\MetaModel\View\Block\EntityViewMeta.cs" />
-    <Compile Include="Env\MetaModel\View\Block\SelectionViewMeta.cs" />
-    <Compile Include="Env\MetaModel\View\UIModel.cs" />
-    <Compile Include="Env\MetaModel\View\CommandGroupType.cs" />
-    <Compile Include="Env\MetaModel\View\Block\Web\WebCommand\WebCommandJsHelper.cs" />
-    <Compile Include="Env\MetaModel\View\Block\WPF\WPFCommand\CommandLocation.cs" />
-    <Compile Include="Env\MetaModel\View\Block\WPF\WPFCommand\WPFCommandNames.cs" />
-    <Compile Include="Env\MetaModel\View\Block\WPF\WPFCommand\WPFCommand.cs" />
-    <Compile Include="Env\MetaModel\View\Block\WPF\WPFCommand\WPFCommandRepository.cs" />
-    <Compile Include="Env\MetaModel\XmlConfig\MetaConfig.cs" />
-    <Compile Include="Env\MetaModel\XmlConfig\BlockCommandConfig.cs" />
-    <Compile Include="Env\MetaModel\XmlConfig\BlockConfig.cs" />
-    <Compile Include="Env\MetaModel\XmlConfig\BlockConfigKey.cs" />
-    <Compile Include="Env\MetaModel\XmlConfig\BlockPropertyConfig.cs" />
-    <Compile Include="Env\MetaModel\View\Block\CodeEVMReader.cs" />
-    <Compile Include="Env\MetaModel\XmlConfig\XmlConfigFileSystem.cs" />
-    <Compile Include="Env\MetaModel\XmlConfig\XmlConfigManager.cs" />
-    <Compile Include="Env\RafyEnvironment.cs" />
-    <Compile Include="Env\RafyEnvironment.Plugins.cs">
-      <DependentUpon>RafyEnvironment.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Env\LocationInformation.cs" />
-    <Compile Include="Env\BranchPathProvider.cs" />
-    <Compile Include="Env\Permission\AnonymousIdentity.cs" />
-    <Compile Include="Env\Permission\IRafyIdentity.cs" />
-    <Compile Include="Env\Permission\PermissionMgr.cs" />
-    <Compile Include="Env\Permission\SystemOperationKeys.cs" />
-    <Compile Include="ManagedProperty\CompiledPropertyDeclarerAttribute.cs" />
-    <Compile Include="ManagedProperty\ConcreteProperty.cs" />
-    <Compile Include="ManagedProperty\CustomSerializationObject.cs" />
-    <Compile Include="ManagedProperty\ExtensionPropertiesRegister.cs" />
-    <Compile Include="ManagedProperty\FreezableMeta.cs" />
-    <Compile Include="ManagedProperty\IManagedPropertyObject.cs" />
-    <Compile Include="ManagedProperty\ManagedProperty.cs" />
-    <Compile Include="ManagedProperty\ManagedPropertyChangedEventArgs.cs" />
-    <Compile Include="ManagedProperty\ManagedPropertyChangedSource.cs" />
-    <Compile Include="ManagedProperty\ManagedPropertyChangingEventArgs.cs" />
-    <Compile Include="ManagedProperty\ManagedPropertyField.cs" />
-    <Compile Include="ManagedProperty\ManagedPropertyLifeCycle.cs" />
-    <Compile Include="ManagedProperty\ManagedPropertyMetadata.cs" />
-    <Compile Include="ManagedProperty\ManagedPropertyObject.cs" />
-    <Compile Include="ManagedProperty\ManagedPropertyObject.Extendable.cs">
-      <DependentUpon>ManagedPropertyObject.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ManagedProperty\ManagedPropertyObject.Serialization.cs">
-      <DependentUpon>ManagedPropertyObject.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ManagedProperty\ManagedPropertyObjectList.cs" />
-    <Compile Include="ManagedProperty\ManagedPropertyObjectTypeProxy.cs" />
-    <Compile Include="ManagedProperty\PropertyDescriptors\CLRPropertyDescriptor.cs" />
-    <Compile Include="ManagedProperty\PropertyDescriptors\ManagedPropertyDescriptor.cs" />
-    <Compile Include="ManagedProperty\PropertyDescriptors\PropertyDescriptorFactory.cs" />
-    <Compile Include="ManagedProperty\Repository\ConsolidatedTypePropertiesContainer.cs" />
-    <Compile Include="ManagedProperty\Repository\ManagedPropertyList.cs" />
-    <Compile Include="ManagedProperty\Repository\ManagedPropertyRepository.cs" />
-    <Compile Include="ManagedProperty\Repository\TypePropertiesContainer.cs" />
-    <Compile Include="ManagedProperty\Serialization\BinaryFormatterWrapper.cs" />
-    <Compile Include="ManagedProperty\Serialization\DesirializedArgs.cs" />
-    <Compile Include="ManagedProperty\Serialization\ISerializationFormatter.cs" />
-    <Compile Include="ManagedProperty\Serialization\MobileAndBinaryFormatter.cs" />
-    <Compile Include="ManagedProperty\Serialization\Mobile\BitArray.cs" />
-    <Compile Include="ManagedProperty\Serialization\Mobile\FieldsSerializationHelper.cs" />
-    <Compile Include="ManagedProperty\Serialization\Mobile\IMobileObject.cs" />
-    <Compile Include="ManagedProperty\Serialization\Mobile\ISerializationContext.cs" />
-    <Compile Include="ManagedProperty\Serialization\Mobile\ISerializationNotification.cs" />
-    <Compile Include="ManagedProperty\Serialization\Mobile\MobileCollection.cs" />
-    <Compile Include="ManagedProperty\Serialization\Mobile\MobileDictionary.cs" />
-    <Compile Include="ManagedProperty\Serialization\Mobile\MobileFormatter.cs" />
-    <Compile Include="ManagedProperty\Serialization\Mobile\MobileList.cs" />
-    <Compile Include="ManagedProperty\Serialization\Mobile\MobileNonSerializedAttribute.cs" />
-    <Compile Include="ManagedProperty\Serialization\Mobile\MobileObject.cs" />
-    <Compile Include="ManagedProperty\Serialization\Mobile\NullPlaceholder.cs" />
-    <Compile Include="ManagedProperty\Serialization\Mobile\ReferenceComparer.cs" />
-    <Compile Include="ManagedProperty\Serialization\Mobile\SerializationContainerContext.cs" />
-    <Compile Include="ManagedProperty\Serialization\Mobile\SerializationInfo.cs" />
-    <Compile Include="ManagedProperty\Serialization\Mobile\SysState.cs" />
-    <Compile Include="ManagedProperty\Serialization\NetDataContractSerializerWrapper.cs" />
-    <Compile Include="ManagedProperty\Serialization\SerializationFormatterFactory.cs" />
-    <Compile Include="ManagedProperty\Serialization\Serializer.cs" />
-    <Compile Include="ManagedProperty\zzzManagedPropertyObjectListView.cs" />
-    <Compile Include="ManagedProperty\zzzManagedPropertyObjectView.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Env\Utils\Caching\Cache.cs" />
-    <Compile Include="Env\Utils\Caching\CacheProvider\HybirdCache.cs" />
-    <Compile Include="Env\Utils\Caching\CacheProvider\MemoryCache.cs" />
-    <Compile Include="Env\Utils\Caching\CacheProvider\SQLCompactCache.cs" />
-    <Compile Include="Env\Utils\Caching\CacheProvider\SystemCaching\NormalProvider.cs" />
-    <Compile Include="Env\Utils\Caching\CacheProvider\SystemCaching\RegionCache.cs" />
-    <Compile Include="Env\Utils\Caching\ChangeChecker.cs" />
-    <Compile Include="Env\Utils\Caching\Policy.cs" />
-    <Compile Include="Env\WCF\CompactMessageEncoder\CompactMessageEncoder.cs" />
-    <Compile Include="Env\WCF\CompactMessageEncoder\CompactMessageEncoderFactory.cs" />
-    <Compile Include="Env\WCF\CompactMessageEncoder\CompactMessageEncodingBindingElement.cs" />
-    <Compile Include="Env\WCF\CompactMessageEncoder\CompactMessageEncodingElement.cs" />
-    <Compile Include="Env\Utils\DateRange.cs" />
-    <Compile Include="Env\Utils\EmitContext.cs" />
-    <Compile Include="Env\Utils\NumberRange.cs" />
-    <Compile Include="Env\Utils\ObjectCloner.cs" />
-    <Compile Include="Env\Utils\PathHelper.cs" />
-    <Compile Include="Env\Utils\Threading\AsyncMultiActions.cs" />
-    <Compile Include="Env\Utils\Threading\ForeAsyncLoader.cs" />
-    <Compile Include="Env\Utils\Threading\IObservableActions.cs" />
-    <Compile Include="Env\Utils\Threading\IParallelActions.cs" />
-    <Compile Include="Env\Utils\Threading\ParallelActions.cs" />
-    <Compile Include="Env\Utils\Threading\AsyncHelper.cs" />
-    <Compile Include="Env\Utils\TypeComparer.cs" />
-    <Compile Include="Env\WCF\BinaryFormatter\BinaryFormatterAdapter.cs" />
-    <Compile Include="Env\WCF\BinaryFormatter\BinaryFormatterOperationBehavior.cs" />
-    <Compile Include="Env\WCF\BinaryFormatter\EnableBinaryFormatterBehavior.cs" />
-    <Compile Include="Env\WCF\BinaryFormatter\EnableBinaryFormatterBehaviorElement.cs" />
-    <Compile Include="Env\WCF\NetDataContract\NetDataContractOperationBehavior.cs" />
-    <Compile Include="Env\WCF\NetDataContract\UseNetDataContractAttribute.cs" />
-    <Compile Include="Env\ComponentModel\WebOrThreadAppContextProvider.cs" />
-    <Compile Include="Env\Web\ClientEntities.cs" />
-    <Compile Include="Env\Web\JsonServiceAttribute.cs" />
-    <Compile Include="Utils\BooleanBoxes.cs" />
-    <Compile Include="Utils\Collection\INotifyChangedCollection.cs" />
-    <Compile Include="Utils\Collection\NotifyChangedCollection.cs" />
-    <Compile Include="Utils\Collection\SealableCollection.cs" />
-    <Compile Include="Utils\Configuration\ConfigurationExtension.cs" />
-    <Compile Include="Utils\Configuration\ConfigurationHelper.cs" />
-    <Compile Include="Utils\Context\AppContext.cs" />
-    <Compile Include="Utils\Context\AppContextItem.cs" />
-    <Compile Include="Utils\Context\AppContextScope.cs" />
-    <Compile Include="Utils\Context\ContextItem.cs" />
-    <Compile Include="Utils\Context\ContextScope.cs" />
-    <Compile Include="Utils\Context\IAppContextProvider.cs" />
-    <Compile Include="Utils\Context\StaticAppContextProvider.cs" />
-    <Compile Include="Utils\Context\ThreadStaticAppContextProvider.cs" />
-    <Compile Include="Utils\Data\DbAccesser.cs" />
-    <Compile Include="Utils\Data\DbConnectionSchema.cs" />
-    <Compile Include="Utils\Data\DbSetting.cs" />
-    <Compile Include="Utils\Data\FormattedSql.cs" />
-    <Compile Include="Utils\Data\FormattedSqlParameters.cs" />
-    <Compile Include="Utils\Data\IDbAccesser.cs" />
-    <Compile Include="Utils\Data\IDbBackuper.cs" />
-    <Compile Include="Utils\Data\IDbCommandFactory.cs" />
-    <Compile Include="Utils\Data\IDbParameterFactory.cs" />
-    <Compile Include="Utils\Data\IRawDbAccesser.cs" />
-    <Compile Include="Utils\Data\LiteDataTable\LiteDataColumn.cs" />
-    <Compile Include="Utils\Data\LiteDataTable\LiteDataColumnCollection.cs" />
-    <Compile Include="Utils\Data\LiteDataTable\LiteDataRow.cs" />
-    <Compile Include="Utils\Data\LiteDataTable\LiteDataRowCollection.cs" />
-    <Compile Include="Utils\Data\LiteDataTable\LiteDataTable.cs" />
-    <Compile Include="Utils\Data\LiteDataTable\LiteDataTableAdapter.cs" />
-    <Compile Include="Utils\Data\LocalTransactionBlock.cs" />
-    <Compile Include="Utils\Data\LocalTransactionBlock_1_0.cs" />
-    <Compile Include="Utils\Data\LongTimeDbAccesser.cs" />
-    <Compile Include="Utils\Data\PagingHelper.cs" />
-    <Compile Include="Utils\Data\Providers\ConverterFactory.cs" />
-    <Compile Include="Utils\Data\Providers\ISqlProvider.cs" />
-    <Compile Include="Utils\Data\Providers\MySqlServerProvider.cs" />
-    <Compile Include="Utils\Data\Providers\ODBCProvider.cs" />
-    <Compile Include="Utils\Data\Providers\OracleProvider.cs" />
-    <Compile Include="Utils\Data\Providers\SqlServer2005Backuper.cs" />
-    <Compile Include="Utils\Data\Providers\SqlServer2008Backuper.cs" />
-    <Compile Include="Utils\Data\Providers\SqlServerBackuper.cs" />
-    <Compile Include="Utils\Data\Providers\SqlServerProvider.cs" />
-    <Compile Include="Utils\Extendable.cs" />
-    <Compile Include="Utils\Extensions\IEnumerableExtension.cs" />
-    <Compile Include="Utils\Extensions\StringExtension.cs" />
-    <Compile Include="Utils\Extensions\SystemExtension.cs" />
-    <Compile Include="Utils\IExtendable.cs" />
-    <Compile Include="Utils\IHasName.cs" />
-    <Compile Include="Utils\Log\FileLogger.cs" />
-    <Compile Include="Utils\Log\Logger.cs" />
-    <Compile Include="Utils\Log\LoggerBase.cs" />
-    <Compile Include="Utils\PagingInfo.cs" />
-    <Compile Include="Utils\Reflection\DynamicMemberHandle.cs" />
-    <Compile Include="Utils\Reflection\DynamicMethodHandle.cs" />
-    <Compile Include="Utils\Reflection\DynamicMethodHandlerFactory.cs" />
-    <Compile Include="Utils\Reflection\ExpressionHelper.cs" />
-    <Compile Include="Utils\Reflection\MemberInfoExtension.cs" />
-    <Compile Include="Utils\Reflection\MethodCacheKey.cs" />
-    <Compile Include="Utils\Reflection\MethodCaller.cs" />
-    <Compile Include="Utils\Reflection\ObjectHelper.cs" />
-    <Compile Include="Utils\Reflection\Reflect.cs" />
-    <Compile Include="Utils\Reflection\TypeHelper.cs" />
-    <Compile Include="Utils\Result.cs" />
-    <Compile Include="Utils\Serialization\BytesFormatter.cs" />
-    <Compile Include="Utils\Serialization\FormatType.cs" />
-    <Compile Include="Utils\Serialization\IStateFormatter.cs" />
-    <Compile Include="Utils\Serialization\SerializationHelper.cs" />
-    <Compile Include="Utils\Serialization\XmlFormatter.cs" />
-    <Compile Include="Utils\TextFormatter.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="DbMigration\Operations\_Design description.txt" />
-    <Content Include="DbMigration\_Read Me.txt" />
-    <Content Include="Domain\EntityRepository\zzzEF\如何加载所有 ORM 配置.txt" />
-    <Content Include="Domain\ORM\Query\_ReadMe.txt" />
-    <Content Include="Domain\ORM\Rdb\Sql\Tree\_ReadMe.txt" />
-    <Content Include="Domain\Validation\_ReadMe.txt" />
-    <Content Include="Domain\_命名空间规划.txt" />
-    <Content Include="Env\MetaModel\UI MetaModel.jpg" />
-    <Content Include="Env\Translation\翻译相关测试用例.txt" />
-    <Content Include="ManagedProperty\Serialization\Mobile\_ReadMe.txt" />
-    <Content Include="ManagedProperty\_Other\_ManagedProperty Version Log.txt" />
-    <Content Include="Utils\_ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Hxy Key.snk" />
-    <None Include="ManagedProperty\_Other\ManagedProperty 1.0 20121118备份.7z" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
+        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+        <Version>4.52.3150</Version>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Remove="DbMigration\**" />
+        <Compile Remove="Domain\**" />
+        <Compile Remove="Env\**" />
+        <EmbeddedResource Remove="DbMigration\**" />
+        <EmbeddedResource Remove="Domain\**" />
+        <EmbeddedResource Remove="Env\**" />
+        <None Remove="DbMigration\**" />
+        <None Remove="Domain\**" />
+        <None Remove="Env\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Remove="ConfigurationElement.cs" />
+        <Compile Remove="ConfigurationPropertyAttribute.cs" />
+        <Compile Remove="ManagedProperty\Serialization\NetDataContractSerializerWrapper.cs" />
+        <Compile Remove="Utils\Configuration\ConfigurationExtension.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Include="DbMigration\AutomationMigration.cs" />
+        <Compile Include="DbMigration\DbMigration.cs" />
+        <Compile Include="DbMigration\DbMigrationContext.cs" />
+        <Compile Include="DbMigration\DbMigrationException.cs" />
+        <Compile Include="DbMigration\DbMigrationExceptionMessageFormatter.cs" />
+        <Compile Include="DbMigration\DbMigrationSettings.cs" />
+        <Compile Include="DbMigration\History\DbVersionProvider.cs" />
+        <Compile Include="DbMigration\History\EmbadedDbVersionProvider.cs" />
+        <Compile Include="DbMigration\History\HistoryItem.cs" />
+        <Compile Include="DbMigration\History\HistoryRepository.cs" />
+        <Compile Include="DbMigration\ManualDbMigration.cs" />
+        <Compile Include="DbMigration\ManualMigrationsContainer.cs" />
+        <Compile Include="DbMigration\MigrationOperation.cs" />
+        <Compile Include="DbMigration\MigrationRun.cs" />
+        <Compile Include="DbMigration\Model\Column.cs" />
+        <Compile Include="DbMigration\Model\Database.cs" />
+        <Compile Include="DbMigration\Model\DestinationDatabase.cs" />
+        <Compile Include="DbMigration\Model\Differ\ChangeType.cs" />
+        <Compile Include="DbMigration\Model\Differ\ColumnChanges.cs" />
+        <Compile Include="DbMigration\Model\Differ\DatabaseChanges.cs" />
+        <Compile Include="DbMigration\Model\Differ\ModelDiffer.cs" />
+        <Compile Include="DbMigration\Model\Differ\TableChanges.cs" />
+        <Compile Include="DbMigration\Model\ForeignConstraint.cs" />
+        <Compile Include="DbMigration\Model\IMetadataReader.cs" />
+        <Compile Include="DbMigration\Model\Table.cs" />
+        <Compile Include="DbMigration\Operations\ColumnOperation.cs" />
+        <Compile Include="DbMigration\Operations\DatabaseOperation.cs" />
+        <Compile Include="DbMigration\Operations\FKConstraintOperation.cs" />
+        <Compile Include="DbMigration\Operations\RunAction.cs" />
+        <Compile Include="DbMigration\Operations\RunSql.cs" />
+        <Compile Include="DbMigration\Operations\TableOperation.cs" />
+        <Compile Include="DbMigration\Operations\UpdateCommentOperation.cs" />
+        <Compile Include="DbMigration\Providers\DbMetaReader.cs" />
+        <Compile Include="DbMigration\Providers\DbMigrationProvider.cs" />
+        <Compile Include="DbMigration\Providers\DbMigrationProviderFactory.cs" />
+        <Compile Include="DbMigration\Providers\DbTypeHelper.cs" />
+        <Compile Include="DbMigration\Providers\MySql\MySqlDbTypeHelper.cs" />
+        <Compile Include="DbMigration\Providers\MySql\MySqlMetaReader.cs" />
+        <Compile Include="DbMigration\Providers\MySql\MySqlMigrationProvider.cs" />
+        <Compile Include="DbMigration\Providers\MySql\MySqlRunGenerator.cs" />
+        <Compile Include="DbMigration\Providers\MySql\Run\MySqlChangeDbMigrationRun.cs" />
+        <Compile Include="DbMigration\Providers\MySql\Run\MySqlCreateDbMigrationRun.cs" />
+        <Compile Include="DbMigration\Providers\MySql\Run\MySqlDropDbMigrationRun.cs" />
+        <Compile Include="DbMigration\Providers\Oracle\OracleDbTypeHelper.cs" />
+        <Compile Include="DbMigration\Providers\Oracle\OracleMetaReader.cs" />
+        <Compile Include="DbMigration\Providers\Oracle\OracleMigrationProvider.cs" />
+        <Compile Include="DbMigration\Providers\Oracle\OracleRunGenerator.cs" />
+        <Compile Include="DbMigration\Providers\SqlServerCe\Run\CreateDbMigrationRun.cs" />
+        <Compile Include="DbMigration\Providers\SqlServerCe\Run\DropDbMigrationRun.cs" />
+        <Compile Include="DbMigration\Providers\SqlServerCe\SqlServerCeMetaReader.cs" />
+        <Compile Include="DbMigration\Providers\SqlServerCe\SqlServerCeMigrationProvider.cs" />
+        <Compile Include="DbMigration\Providers\SqlServerCe\SqlServerCeRunGenerator.cs" />
+        <Compile Include="DbMigration\Providers\SqlServer\Run\ChangeDbMigrationRun.cs" />
+        <Compile Include="DbMigration\Providers\SqlServer\Run\CreateDbMigrationRun.cs" />
+        <Compile Include="DbMigration\Providers\SqlServer\Run\DropDbMigrationRun.cs" />
+        <Compile Include="DbMigration\Providers\SqlServer\SqlDbTypeHelper.cs" />
+        <Compile Include="DbMigration\Providers\SqlServer\SqlServerMetaReader.cs" />
+        <Compile Include="DbMigration\Providers\SqlServer\SqlServerMigrationProvider.cs" />
+        <Compile Include="DbMigration\Providers\SqlServer\SqlServerRunGenerator.cs" />
+        <Compile Include="DbMigration\RunGenerator.cs" />
+        <Compile Include="DbMigration\Run\ActionMigrationRun.cs" />
+        <Compile Include="DbMigration\Run\GenerationExceptionRun.cs" />
+        <Compile Include="DbMigration\Run\Oracle\TryCreateTableSequenceRun.cs" />
+        <Compile Include="DbMigration\Run\SqlMigrationRun.cs" />
+        <Compile Include="DbMigration\TSqlRunGenerator.cs" />
+        <Compile Include="Domain\BinaryOperator.cs" />
+        <Compile Include="Domain\DataPortalLocation.cs" />
+        <Compile Include="Domain\DataPortal\ClientContextItem.cs" />
+        <Compile Include="Domain\DataPortal\DataPortalApi.cs" />
+        <Compile Include="Domain\DataPortal\DataPortalException.cs" />
+        <Compile Include="Domain\DataPortal\DataPortalResult.cs" />
+        <Compile Include="Domain\DataPortal\DistributionContext.cs" />
+        <Compile Include="Domain\DataPortal\GlobalContextItem.cs" />
+        <Compile Include="Domain\DataPortal\IDataPortalProxy.cs" />
+        <Compile Include="Domain\DataPortal\Server\DataPortalContext.cs" />
+        <Compile Include="Domain\DataPortal\Server\DataPortalFacade.cs" />
+        <Compile Include="Domain\DataPortal\Server\DataPortalResult.cs" />
+        <Compile Include="Domain\DataPortal\Server\FinalDataPortal.cs" />
+        <Compile Include="Domain\DataPortal\Server\IDataPortalServer.cs" />
+        <Compile Include="Domain\DbSettingNames.cs" />
+        <Compile Include="Domain\DomainApp.cs" />
+        <Compile Include="Domain\DomainMetaExtension.cs" />
+        <Compile Include="Domain\EntityRepository\Caching\AggregateChecker.cs" />
+        <Compile Include="Domain\EntityRepository\Caching\RepositoryCache.cs" />
+        <Compile Include="Domain\EntityRepository\Caching\ServerRepositoryCache.cs" />
+        <Compile Include="Domain\EntityRepository\Caching\VersionSyncClientCache\AggregateRootCache.cs" />
+        <Compile Include="Domain\EntityRepository\Caching\VersionSyncClientCache\ClientRepositoryCache.cs" />
+        <Compile Include="Domain\EntityRepository\Caching\VersionSyncClientCache\EntityListVersion.cs" />
+        <Compile Include="Domain\EntityRepository\Caching\VersionSyncClientCache\VersionChecker.cs" />
+        <Compile Include="Domain\EntityRepository\Caching\VersionSyncClientCache\VersionSyncMgr.cs" />
+        <Compile Include="Domain\EntityRepository\Criteria\CommonQueryCriteria.cs" />
+        <Compile Include="Domain\EntityRepository\Criteria\IEQC.cs" />
+        <Compile Include="Domain\EntityRepository\Criteria\ODataFilterParser.cs" />
+        <Compile Include="Domain\EntityRepository\Criteria\ODataQueryCriteria.cs" />
+        <Compile Include="Domain\EntityRepository\DataProvider\DataProviderComposer.cs" />
+        <Compile Include="Domain\EntityRepository\DataProvider\DataProviderForAttribute.cs" />
+        <Compile Include="Domain\EntityRepository\DataProvider\DataQueryer.cs" />
+        <Compile Include="Domain\EntityRepository\DataProvider\DataSaver.cs" />
+        <Compile Include="Domain\EntityRepository\DataProvider\IRepositoryDataProvider.cs" />
+        <Compile Include="Domain\EntityRepository\DataProvider\RedundanciesUpdater.cs" />
+        <Compile Include="Domain\EntityRepository\DataProvider\RepositoryDataProvider.cs" />
+        <Compile Include="Domain\EntityRepository\DataProvider\RepositoryDataProvider.Query.cs" />
+        <Compile Include="Domain\EntityRepository\DataProvider\SubmitInterceptor.cs" />
+        <Compile Include="Domain\EntityRepository\DictionaryRepositoryFactory.cs" />
+        <Compile Include="Domain\EntityRepository\DiffSaveService.cs" />
+        <Compile Include="Domain\EntityRepository\EagerLoadOptions.cs" />
+        <Compile Include="Domain\EntityRepository\EntityRepository.cs" />
+        <Compile Include="Domain\EntityRepository\EntityRepository.CUD.cs" />
+        <Compile Include="Domain\EntityRepository\EntityRepository.Query.cs" />
+        <Compile Include="Domain\EntityRepository\EntityRepositoryExt.cs" />
+        <Compile Include="Domain\EntityRepository\EntityRepositoryQueryBase.cs" />
+        <Compile Include="Domain\EntityRepository\MemoryEntityRepository.cs" />
+        <Compile Include="Domain\EntityRepository\QueryArgs\EntityQueryArgs.cs" />
+        <Compile Include="Domain\EntityRepository\QueryArgs\IEntitySelectArgs.cs" />
+        <Compile Include="Domain\EntityRepository\QueryArgs\IQueryArgs.cs" />
+        <Compile Include="Domain\EntityRepository\QueryArgs\ISelectArgs.cs" />
+        <Compile Include="Domain\EntityRepository\QueryArgs\QueryArgs.cs" />
+        <Compile Include="Domain\EntityRepository\RepositoryInterceptor.cs" />
+        <Compile Include="Domain\EntityRepository\RepositoryQueryMethodAttribute.cs" />
+        <Compile Include="Domain\EntityRepository\RF.cs" />
+        <Compile Include="Domain\EntityRepository\SubmitArgs.cs" />
+        <Compile Include="Domain\EntityRepository\zzzEF\DbContextExtension.cs" />
+        <Compile Include="Domain\EntityRepository\zzzEF\DbCreationType.cs" />
+        <Compile Include="Domain\EntityRepository\zzzEF\ORMapping.cs" />
+        <Compile Include="Domain\EntityRepository\zzzEF\ORMContext.cs" />
+        <Compile Include="Domain\EntityRepository\zzzEF\_DbContextBase.cs" />
+        <Compile Include="Domain\Entity\AutoCollectHelper.cs" />
+        <Compile Include="Domain\Entity\CloneOptions.cs" />
+        <Compile Include="Domain\Entity\Entity.cs" />
+        <Compile Include="Domain\Entity\Entity.Csla.cs" />
+        <Compile Include="Domain\Entity\Entity.DataAccess.cs" />
+        <Compile Include="Domain\Entity\Entity.LazyProperty.cs" />
+        <Compile Include="Domain\Entity\Entity.Miscellaneous.cs" />
+        <Compile Include="Domain\Entity\Entity.RoutedEvent.cs" />
+        <Compile Include="Domain\Entity\Entity.Tree.cs" />
+        <Compile Include="Domain\Entity\EntityList.BusinessListBase.cs" />
+        <Compile Include="Domain\Entity\EntityList.cs" />
+        <Compile Include="Domain\Entity\EntityList.Csla.cs" />
+        <Compile Include="Domain\Entity\EntityList.DataAccess.cs" />
+        <Compile Include="Domain\Entity\EntityList.Tree.cs" />
+        <Compile Include="Domain\Entity\EntityListExtension.cs" />
+        <Compile Include="Domain\Entity\EntitySerializableFlags.cs" />
+        <Compile Include="Domain\Entity\GenericEntity\Criteria.cs" />
+        <Compile Include="Domain\Entity\GenericEntity\Entity.Generic.cs" />
+        <Compile Include="Domain\Entity\GenericEntity\GuidEntity.cs" />
+        <Compile Include="Domain\Entity\GenericEntity\IntEntity.cs" />
+        <Compile Include="Domain\Entity\GenericEntity\LongEntity.cs" />
+        <Compile Include="Domain\Entity\GenericEntity\StringEntity.cs" />
+        <Compile Include="Domain\Entity\IDbConnector.cs" />
+        <Compile Include="Domain\Entity\IDirtyAware.cs" />
+        <Compile Include="Domain\Entity\IDomainComponent.cs" />
+        <Compile Include="Domain\Entity\IEntity.cs" />
+        <Compile Include="Domain\Entity\IEntityInfoHost.cs" />
+        <Compile Include="Domain\Entity\IHasHame.cs" />
+        <Compile Include="Domain\Entity\IRepository.cs" />
+        <Compile Include="Domain\Entity\ITreeComponent.cs" />
+        <Compile Include="Domain\Entity\KeyProviders\GuidKeyProvider.cs" />
+        <Compile Include="Domain\Entity\KeyProviders\IntKeyProvider.cs" />
+        <Compile Include="Domain\Entity\KeyProviders\KeyProviders.cs" />
+        <Compile Include="Domain\Entity\KeyProviders\LongKeyProvider.cs" />
+        <Compile Include="Domain\Entity\KeyProviders\ObjectKeyProvider.cs" />
+        <Compile Include="Domain\Entity\KeyProviders\StringKeyProvider.cs" />
+        <Compile Include="Domain\Entity\MP\IProperty.cs" />
+        <Compile Include="Domain\Entity\MP\ListProperty.cs" />
+        <Compile Include="Domain\Entity\MP\ListPropertyMetadata.cs" />
+        <Compile Include="Domain\Entity\MP\LOBProperty.cs" />
+        <Compile Include="Domain\Entity\MP\P.cs" />
+        <Compile Include="Domain\Entity\MP\Property.cs" />
+        <Compile Include="Domain\Entity\MP\PropertyCategory.cs" />
+        <Compile Include="Domain\Entity\MP\PropertyDefailtValues.cs" />
+        <Compile Include="Domain\Entity\MP\PropertyMetadata.cs" />
+        <Compile Include="Domain\Entity\MP\RafyPropertyDescriptor.cs" />
+        <Compile Include="Domain\Entity\MP\RafyPropertyDescriptorFactory.cs" />
+        <Compile Include="Domain\Entity\MP\RedundantPath.cs" />
+        <Compile Include="Domain\Entity\MP\RefEntityProperty.cs" />
+        <Compile Include="Domain\Entity\MP\RefIdProperty.cs" />
+        <Compile Include="Domain\Entity\MP\RegisterRefArgs.cs" />
+        <Compile Include="Domain\Entity\MP\RegisterRefIdArgs.cs" />
+        <Compile Include="Domain\Entity\PersistenceStatus.cs" />
+        <Compile Include="Domain\Entity\Serialization\Json\AggtDeserializer.cs" />
+        <Compile Include="Domain\Entity\Serialization\Json\AggtSerializer.cs" />
+        <Compile Include="Domain\Entity\Serialization\SerializationEntityGraph.cs" />
+        <Compile Include="Domain\Entity\TreeHelper.cs" />
+        <Compile Include="Domain\Entity\ValidationHelper.cs" />
+        <Compile Include="Domain\ORM\ConditionalSql.cs" />
+        <Compile Include="Domain\ORM\DbMigration\ClassMetaReader.cs" />
+        <Compile Include="Domain\ORM\DbMigration\CommentFinder.cs" />
+        <Compile Include="Domain\ORM\DbMigration\DbHistoryRepository.cs" />
+        <Compile Include="Domain\ORM\DbMigration\MigrateService.cs" />
+        <Compile Include="Domain\ORM\DbMigration\MigratingOptions.cs" />
+        <Compile Include="Domain\ORM\DbMigration\Presistence\DbMigrationHistory.cs" />
+        <Compile Include="Domain\ORM\DbMigration\Presistence\DbMigrationHistory.g.cs" />
+        <Compile Include="Domain\ORM\DbMigration\Presistence\DbMigrationHistoryQueryCriteria.cs" />
+        <Compile Include="Domain\ORM\DbMigration\Presistence\DbVersion.cs" />
+        <Compile Include="Domain\ORM\DbMigration\Presistence\DbVersion.g.cs" />
+        <Compile Include="Domain\ORM\DbMigration\RafyDbMigrationContext.cs" />
+        <Compile Include="Domain\ORM\DbMigration\RafyDbVersionProvider.cs" />
+        <Compile Include="Domain\ORM\DbMigration\RafyUserMigrations.cs" />
+        <Compile Include="Domain\ORM\EntityContext\DisabledTypedEntityContext.cs" />
+        <Compile Include="Domain\ORM\EntityContext\EntityContext.cs" />
+        <Compile Include="Domain\ORM\EntityContext\EntityContextWrapper.cs" />
+        <Compile Include="Domain\ORM\EntityContext\TypedEntityContext.cs" />
+        <Compile Include="Domain\ORM\Linq\EntityQueryable.cs" />
+        <Compile Include="Domain\ORM\Linq\EntityQueryBuilder.cs" />
+        <Compile Include="Domain\ORM\Linq\EntityQueryProvider.cs" />
+        <Compile Include="Domain\ORM\Linq\Evaluator.cs" />
+        <Compile Include="Domain\ORM\Linq\LinqConsts.cs" />
+        <Compile Include="Domain\ORM\Linq\PropertyFinder.cs" />
+        <Compile Include="Domain\ORM\Linq\SubEntityQueryBuilder.cs" />
+        <Compile Include="Domain\ORM\Linq\TypeSystem.cs" />
+        <Compile Include="Domain\ORM\OrderDirection.cs" />
+        <Compile Include="Domain\ORM\ORMException.cs" />
+        <Compile Include="Domain\ORM\ORMHelper.cs" />
+        <Compile Include="Domain\ORM\PersistanceTableInfo\IPersistanceColumnInfo.cs" />
+        <Compile Include="Domain\ORM\PersistanceTableInfo\IPersistanceTableInfo.cs" />
+        <Compile Include="Domain\ORM\PersistanceTableInfo\PersistanceColumnInfo.cs" />
+        <Compile Include="Domain\ORM\PersistanceTableInfo\PersistanceTableInfo.cs" />
+        <Compile Include="Domain\ORM\PersistanceTableInfo\PersistanceTableInfoFactory.cs" />
+        <Compile Include="Domain\ORM\QueryExtensions.cs" />
+        <Compile Include="Domain\ORM\Query\EveryTableWhereAppender.cs" />
+        <Compile Include="Domain\ORM\Query\IArray.cs" />
+        <Compile Include="Domain\ORM\Query\IBinaryConstraint.cs" />
+        <Compile Include="Domain\ORM\Query\IColumnConstraint.cs" />
+        <Compile Include="Domain\ORM\Query\IColumnNode.cs" />
+        <Compile Include="Domain\ORM\Query\IColumnsComparison.cs" />
+        <Compile Include="Domain\ORM\Query\IConstraint.cs" />
+        <Compile Include="Domain\ORM\Query\IExistsConstraint.cs" />
+        <Compile Include="Domain\ORM\Query\IJoin.cs" />
+        <Compile Include="Domain\ORM\Query\ILiteral.cs" />
+        <Compile Include="Domain\ORM\Query\Impl\ArrayNode.cs" />
+        <Compile Include="Domain\ORM\Query\Impl\BinaryConstraint.cs" />
+        <Compile Include="Domain\ORM\Query\Impl\ColumnConstraint.cs" />
+        <Compile Include="Domain\ORM\Query\Impl\ColumnNode.cs" />
+        <Compile Include="Domain\ORM\Query\Impl\ColumnsComparison.cs" />
+        <Compile Include="Domain\ORM\Query\Impl\ExistsConstraint.cs" />
+        <Compile Include="Domain\ORM\Query\Impl\Join.cs" />
+        <Compile Include="Domain\ORM\Query\Impl\Literal.cs" />
+        <Compile Include="Domain\ORM\Query\Impl\NotConstraint.cs" />
+        <Compile Include="Domain\ORM\Query\Impl\OrderBy.cs" />
+        <Compile Include="Domain\ORM\Query\Impl\QueryGenerationContext.cs" />
+        <Compile Include="Domain\ORM\Query\Impl\SelectAll.cs" />
+        <Compile Include="Domain\ORM\Query\Impl\SubQueryRef.cs" />
+        <Compile Include="Domain\ORM\Query\Impl\TableQuery.cs" />
+        <Compile Include="Domain\ORM\Query\Impl\TableSource.cs" />
+        <Compile Include="Domain\ORM\Query\Impl\TableSourceFinder.cs" />
+        <Compile Include="Domain\ORM\Query\INamedSource.cs" />
+        <Compile Include="Domain\ORM\Query\INotConstraint.cs" />
+        <Compile Include="Domain\ORM\Query\IOrderBy.cs" />
+        <Compile Include="Domain\ORM\Query\IQuery.cs" />
+        <Compile Include="Domain\ORM\Query\IQueryNode.cs" />
+        <Compile Include="Domain\ORM\Query\ISelectAll.cs" />
+        <Compile Include="Domain\ORM\Query\ISource.cs" />
+        <Compile Include="Domain\ORM\Query\ISubQuery.cs" />
+        <Compile Include="Domain\ORM\Query\ITableSource.cs" />
+        <Compile Include="Domain\ORM\Query\MainTableWhereAppender.cs" />
+        <Compile Include="Domain\ORM\Query\QueryExtensions.cs" />
+        <Compile Include="Domain\ORM\Query\QueryFactory.cs" />
+        <Compile Include="Domain\ORM\Query\QueryNodeTester.cs" />
+        <Compile Include="Domain\ORM\Query\QueryNodeVisitor.cs" />
+        <Compile Include="Domain\ORM\Rdb\AggregateSQL\AggregateDescriptor.cs" />
+        <Compile Include="Domain\ORM\Rdb\AggregateSQL\AggregateEntityLoader.cs" />
+        <Compile Include="Domain\ORM\Rdb\AggregateSQL\AggregateSQLGenerator.cs" />
+        <Compile Include="Domain\ORM\Rdb\AggregateSQL\API\AggregateSQL.cs" />
+        <Compile Include="Domain\ORM\Rdb\AggregateSQL\API\ChildrenSelector.cs" />
+        <Compile Include="Domain\ORM\Rdb\AggregateSQL\API\LoadOptionSelector.cs" />
+        <Compile Include="Domain\ORM\Rdb\AggregateSQL\API\OrderByLoadOption.cs" />
+        <Compile Include="Domain\ORM\Rdb\AggregateSQL\API\PropertySelector.cs" />
+        <Compile Include="Domain\ORM\Rdb\AggregateSQL\IDataTable.cs" />
+        <Compile Include="Domain\ORM\Rdb\AggregateSQL\LoadOptionItem.cs" />
+        <Compile Include="Domain\ORM\Rdb\AggregateSQL\RawTable.cs" />
+        <Compile Include="Domain\ORM\Rdb\AggregateSQL\SQLColumnsGenerator.cs" />
+        <Compile Include="Domain\ORM\Rdb\AggregateSQL\SubTable.cs" />
+        <Compile Include="Domain\ORM\Rdb\AggregateSQL\TableEnumerator.cs" />
+        <Compile Include="Domain\ORM\Rdb\DataProvider\QueryArgs\ISqlSelectArgs.cs" />
+        <Compile Include="Domain\ORM\Rdb\DataProvider\QueryArgs\ITableQueryArgs.cs" />
+        <Compile Include="Domain\ORM\Rdb\DataProvider\QueryArgs\SqlQueryArgs.cs" />
+        <Compile Include="Domain\ORM\Rdb\DataProvider\QueryArgs\TableQueryArgs.cs" />
+        <Compile Include="Domain\ORM\Rdb\DataProvider\RdbDataProvider.cs" />
+        <Compile Include="Domain\ORM\Rdb\DataProvider\RdbDataQueryer.cs" />
+        <Compile Include="Domain\ORM\Rdb\DataProvider\RdbDataSaver.cs" />
+        <Compile Include="Domain\ORM\Rdb\DataProvider\RdbRedundanciesUpdater.cs" />
+        <Compile Include="Domain\ORM\Rdb\DbAccesser\AppContextDependentConnectionManager.cs" />
+        <Compile Include="Domain\ORM\Rdb\DbAccesser\DbAccesserFactory.cs" />
+        <Compile Include="Domain\ORM\Rdb\DbAccesser\IConnectionManager.cs" />
+        <Compile Include="Domain\ORM\Rdb\DbAccesser\ManagedConnectionDbAccesser.cs" />
+        <Compile Include="Domain\ORM\Rdb\DbAccesser\TransactionDependentConnectionManager.cs" />
+        <Compile Include="Domain\ORM\Rdb\RdbTable\RdbColumn.cs" />
+        <Compile Include="Domain\ORM\Rdb\RdbTable\RdbTable.cs" />
+        <Compile Include="Domain\ORM\Rdb\RdbTable\RdbTableFactory.cs" />
+        <Compile Include="Domain\ORM\Rdb\RdbTable\RdbTableFinder.cs" />
+        <Compile Include="Domain\ORM\Rdb\SingleConnectionTrasactionScope.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\FirstTableFinder.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\MySql\MySqlColumn.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\MySql\MySqlGenerator.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\MySql\MySqlTable.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\Oracle\OracleColumn.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\Oracle\OracleSqlGenerator.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\Oracle\OracleTable.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\SqlCe\SqlCeTable.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\SqlGenerator.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\SqlServer\SqlOraTable.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\SqlServer\SqlServerSqlGenerator.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\SqlServer\SqlServerTable.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\SqlServer\SqlTable.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\Tree\Interfaces.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlArray.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlBinaryConstraint.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlColumn.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlColumnComparisonConstraint.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlColumnsComparisonConstraint.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlConstraint.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlExistsConstraint.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlJoin.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlLiteral.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlNamedSource.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlNode.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlNodeList.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlNodeVisitor.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlNotConstraint.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlOrderBy.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlOrderByList.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlSelect.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlSelectAll.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlSource.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlSubSelect.cs" />
+        <Compile Include="Domain\ORM\Rdb\Sql\Tree\SqlTable.cs" />
+        <Compile Include="Domain\ORM\Rdb\TreeIndexHelper.cs" />
+        <Compile Include="Domain\PropertyOperator.cs" />
+        <Compile Include="Domain\RafyDomainPlugin.cs" />
+        <Compile Include="Domain\Service\ContractAttribute.cs" />
+        <Compile Include="Domain\Service\ContractImplAttribute.cs" />
+        <Compile Include="Domain\Service\Controllers\DomainController.cs" />
+        <Compile Include="Domain\Service\Controllers\DomainControllerFactory.cs" />
+        <Compile Include="Domain\Service\Controllers\DomainException.cs" />
+        <Compile Include="Domain\Service\FlowService.cs" />
+        <Compile Include="Domain\Service\ISaveListService.cs" />
+        <Compile Include="Domain\Service\Service.cs" />
+        <Compile Include="Domain\Service\ServiceFactory.cs" />
+        <Compile Include="Domain\Service\ServiceLocator.cs" />
+        <Compile Include="Domain\Utils\DomainHelper.cs" />
+        <Compile Include="Domain\Utils\EntityListEnumerator.cs" />
+        <Compile Include="Domain\Utils\zzzIRepository.Generic.cs" />
+        <Compile Include="Domain\Validation\BrokenRule.cs" />
+        <Compile Include="Domain\Validation\BrokenRulesCollection.cs" />
+        <Compile Include="Domain\Validation\CommonRules\HandlerRule.cs" />
+        <Compile Include="Domain\Validation\CommonRules\NotDuplicateRule.cs" />
+        <Compile Include="Domain\Validation\CommonRules\NotUsedByReferenceRule.cs" />
+        <Compile Include="Domain\Validation\CommonRules\NumberRangeRule.cs" />
+        <Compile Include="Domain\Validation\CommonRules\PositiveNumberRule.cs" />
+        <Compile Include="Domain\Validation\CommonRules\RegexMatchRule.cs" />
+        <Compile Include="Domain\Validation\CommonRules\RequiredRule.cs" />
+        <Compile Include="Domain\Validation\CommonRules\StringLengthRangeRule.cs" />
+        <Compile Include="Domain\Validation\CommonRules\ValidationRule.cs" />
+        <Compile Include="Domain\Validation\ITypeValidationsHost.cs" />
+        <Compile Include="Domain\Validation\Rule.cs" />
+        <Compile Include="Domain\Validation\RulesContainer.cs" />
+        <Compile Include="Domain\Validation\ValidationDeclarer.cs" />
+        <Compile Include="Domain\Validation\ValidationException.cs" />
+        <Compile Include="Domain\Validation\ValidationRulesManager.cs" />
+        <Compile Include="Domain\Validation\Validator.cs" />
+        <Compile Include="Env\BranchPathProvider.cs" />
+        <Compile Include="Env\ComponentModel\AppImplementationBase.cs" />
+        <Compile Include="Env\ComponentModel\Composer.cs" />
+        <Compile Include="Env\ComponentModel\CompositionExtension.cs" />
+        <Compile Include="Env\ComponentModel\ContainerItemAttribute.cs" />
+        <Compile Include="Env\ComponentModel\DomainPlugin.cs" />
+        <Compile Include="Env\ComponentModel\EventBus.cs" />
+        <Compile Include="Env\ComponentModel\IApp.cs" />
+        <Compile Include="Env\ComponentModel\IClientApp.cs" />
+        <Compile Include="Env\ComponentModel\IEventBus.cs" />
+        <Compile Include="Env\ComponentModel\IEventSubscribers.cs" />
+        <Compile Include="Env\ComponentModel\IObjectContainer.cs" />
+        <Compile Include="Env\ComponentModel\IObjectContainerFactory.cs" />
+        <Compile Include="Env\ComponentModel\IPlugin.cs" />
+        <Compile Include="Env\ComponentModel\IServiceContainer.cs" />
+        <Compile Include="Env\ComponentModel\ObjectContainerFactory.cs" />
+        <Compile Include="Env\ComponentModel\ObjectContainerToServiceConatinerAdapter.cs" />
+        <Compile Include="Env\ComponentModel\PluginCollection.cs" />
+        <Compile Include="Env\ComponentModel\SimpleObjectContainer.cs" />
+        <Compile Include="Env\ComponentModel\UIPlugin.cs" />
+        <Compile Include="Env\ComponentModel\WebOrThreadAppContextProvider.cs" />
+        <Compile Include="Env\Configuration\DynamicBoolean.cs" />
+        <Compile Include="Env\Configuration\PluginsConfigurationElement.cs" />
+        <Compile Include="Env\Configuration\RafyConfiguration.cs" />
+        <Compile Include="Env\Configuration\RafyConfigurationSection.cs" />
+        <Compile Include="Env\Configuration\WebConfigurationElement.cs" />
+        <Compile Include="Env\Configuration\WPFConfigurationElement.cs" />
+        <Compile Include="Env\Domain\EntityConvention.cs" />
+        <Compile Include="Env\Domain\EntityMatrix.cs" />
+        <Compile Include="Env\Domain\IEntityWithId.cs" />
+        <Compile Include="Env\Domain\IKeyProvider.cs" />
+        <Compile Include="Env\Domain\IService.cs" />
+        <Compile Include="Env\Domain\RepositoryForAttribute.cs" />
+        <Compile Include="Env\EnvironmentProvider.cs" />
+        <Compile Include="Env\LocationInformation.cs" />
+        <Compile Include="Env\ManagedProperty\IListProperty.cs" />
+        <Compile Include="Env\ManagedProperty\ILOBProperty.cs" />
+        <Compile Include="Env\ManagedProperty\IPropertyMetadata.cs" />
+        <Compile Include="Env\ManagedProperty\IRafyListPropertyMetadata.cs" />
+        <Compile Include="Env\ManagedProperty\IRefProperty.cs" />
+        <Compile Include="Env\ManagedProperty\LOBType.cs" />
+        <Compile Include="Env\ManagedProperty\ReferenceType.cs" />
+        <Compile Include="Env\MetaModel\Attributes\Command\CommandAttribute.cs" />
+        <Compile Include="Env\MetaModel\Attributes\Entity\ChildEntityAttribute.cs" />
+        <Compile Include="Env\MetaModel\Attributes\Entity\ConditionQueryTypeAttribute.cs" />
+        <Compile Include="Env\MetaModel\Attributes\Entity\EntityAttribute.cs" />
+        <Compile Include="Env\MetaModel\Attributes\Entity\NavigationQueryTypeAttribute.cs" />
+        <Compile Include="Env\MetaModel\Attributes\Entity\ORM\ColumnAttribute.cs" />
+        <Compile Include="Env\MetaModel\Attributes\Entity\QueryEntityAttribute.cs" />
+        <Compile Include="Env\MetaModel\Attributes\Entity\RootEntityAttribute.cs" />
+        <Compile Include="Env\MetaModel\Attributes\Enums.cs" />
+        <Compile Include="Env\MetaModel\Attributes\LabelAttribute.cs" />
+        <Compile Include="Env\MetaModel\Meta.cs" />
+        <Compile Include="Env\MetaModel\MetaBase.cs" />
+        <Compile Include="Env\MetaModel\Meta\CommonModel.cs" />
+        <Compile Include="Env\MetaModel\Meta\EntityConfig.cs" />
+        <Compile Include="Env\MetaModel\Meta\EntityMetaRepository.cs" />
+        <Compile Include="Env\MetaModel\Meta\Entity\ChildrenPropertyMeta.cs" />
+        <Compile Include="Env\MetaModel\Meta\Entity\EntityCategory.cs" />
+        <Compile Include="Env\MetaModel\Meta\Entity\EntityMeta.cs" />
+        <Compile Include="Env\MetaModel\Meta\Entity\EntityPropertyMeta.cs" />
+        <Compile Include="Env\MetaModel\Meta\Entity\PropertyMeta.cs" />
+        <Compile Include="Env\MetaModel\Meta\Entity\ReferenceInfo.cs" />
+        <Compile Include="Env\MetaModel\Meta\Entity\TreeIndexOption.cs" />
+        <Compile Include="Env\MetaModel\Meta\MetaExtension.cs" />
+        <Compile Include="Env\MetaModel\Meta\MetaRepositoryBase.cs" />
+        <Compile Include="Env\MetaModel\Meta\Module\ModuleMeta.cs" />
+        <Compile Include="Env\MetaModel\Meta\Module\ModuleOperation.cs" />
+        <Compile Include="Env\MetaModel\Meta\Module\ModulesContainer.cs" />
+        <Compile Include="Env\MetaModel\Meta\ORM\ColumnMeta.cs" />
+        <Compile Include="Env\MetaModel\Meta\ORM\TableMeta.cs" />
+        <Compile Include="Env\MetaModel\Meta\Validation\IRule.cs" />
+        <Compile Include="Env\MetaModel\Meta\Validation\IValidationDeclarer.cs" />
+        <Compile Include="Env\MetaModel\Meta\Validation\IValidationRule.cs" />
+        <Compile Include="Env\MetaModel\Meta\Validation\RuleArgs.cs" />
+        <Compile Include="Env\MetaModel\Meta\Validation\RuleHandler.cs" />
+        <Compile Include="Env\MetaModel\Meta\Validation\RuleLevel.cs" />
+        <Compile Include="Env\MetaModel\Meta\Validation\RuleMeta.cs" />
+        <Compile Include="Env\MetaModel\Meta\ViewConfig.cs" />
+        <Compile Include="Env\MetaModel\View\Aggt\AggtBlocks.cs" />
+        <Compile Include="Env\MetaModel\View\Aggt\AggtBlocksCollection.cs" />
+        <Compile Include="Env\MetaModel\View\Aggt\AggtBlocksRepository.cs" />
+        <Compile Include="Env\MetaModel\View\Aggt\Block.cs" />
+        <Compile Include="Env\MetaModel\View\Aggt\BlocksTemplate.cs" />
+        <Compile Include="Env\MetaModel\View\Aggt\BlockType.cs" />
+        <Compile Include="Env\MetaModel\View\Aggt\ChildBlock.cs" />
+        <Compile Include="Env\MetaModel\View\Aggt\CodeBlocksTemplate.cs" />
+        <Compile Include="Env\MetaModel\View\Aggt\LayoutMeta.cs" />
+        <Compile Include="Env\MetaModel\View\Aggt\SurrounderBlock.cs" />
+        <Compile Include="Env\MetaModel\View\Block\CodeEVMReader.cs" />
+        <Compile Include="Env\MetaModel\View\Block\EntityPropertyViewMeta.cs" />
+        <Compile Include="Env\MetaModel\View\Block\EntityViewMeta.cs" />
+        <Compile Include="Env\MetaModel\View\Block\EntityViewMetaFactory.cs" />
+        <Compile Include="Env\MetaModel\View\Block\SelectionViewMeta.cs" />
+        <Compile Include="Env\MetaModel\View\Block\Web\WebCommand\WebCommand.cs" />
+        <Compile Include="Env\MetaModel\View\Block\Web\WebCommand\WebCommandJsHelper.cs" />
+        <Compile Include="Env\MetaModel\View\Block\Web\WebCommand\WebCommandNames.cs" />
+        <Compile Include="Env\MetaModel\View\Block\Web\WebCommand\WebCommandRepository.cs" />
+        <Compile Include="Env\MetaModel\View\Block\Web\WebEntityPropertyViewMeta.cs" />
+        <Compile Include="Env\MetaModel\View\Block\Web\WebEntityViewMeta.cs" />
+        <Compile Include="Env\MetaModel\View\Block\WPF\PropertyReadonlyIndicator.cs" />
+        <Compile Include="Env\MetaModel\View\Block\WPF\PropertyVisibilityIndicator.cs" />
+        <Compile Include="Env\MetaModel\View\Block\WPF\WPFCommand\CommandLocation.cs" />
+        <Compile Include="Env\MetaModel\View\Block\WPF\WPFCommand\WPFCommand.cs" />
+        <Compile Include="Env\MetaModel\View\Block\WPF\WPFCommand\WPFCommandNames.cs" />
+        <Compile Include="Env\MetaModel\View\Block\WPF\WPFCommand\WPFCommandRepository.cs" />
+        <Compile Include="Env\MetaModel\View\Block\WPF\WPFEntityPropertyViewMeta.cs" />
+        <Compile Include="Env\MetaModel\View\Block\WPF\WPFEntityViewMeta.cs" />
+        <Compile Include="Env\MetaModel\View\CommandCollection.cs" />
+        <Compile Include="Env\MetaModel\View\CommandGroupType.cs" />
+        <Compile Include="Env\MetaModel\View\Helper.cs" />
+        <Compile Include="Env\MetaModel\View\UIModel.cs" />
+        <Compile Include="Env\MetaModel\View\ViewMetaExtension.cs" />
+        <Compile Include="Env\MetaModel\View\WebCommandCollection.cs" />
+        <Compile Include="Env\MetaModel\View\WPFCommandCollection.cs" />
+        <Compile Include="Env\MetaModel\View\WPFEditorNames.cs" />
+        <Compile Include="Env\MetaModel\XmlConfig\BlockCommandConfig.cs" />
+        <Compile Include="Env\MetaModel\XmlConfig\BlockConfig.cs" />
+        <Compile Include="Env\MetaModel\XmlConfig\BlockConfigKey.cs" />
+        <Compile Include="Env\MetaModel\XmlConfig\BlockPropertyConfig.cs" />
+        <Compile Include="Env\MetaModel\XmlConfig\MetaConfig.cs" />
+        <Compile Include="Env\MetaModel\XmlConfig\XmlConfigFileSystem.cs" />
+        <Compile Include="Env\MetaModel\XmlConfig\XmlConfigManager.cs" />
+        <Compile Include="Env\Permission\AnonymousIdentity.cs" />
+        <Compile Include="Env\Permission\AnonymousPrincipal.cs" />
+        <Compile Include="Env\Permission\IRafyIdentity.cs" />
+        <Compile Include="Env\Permission\PermissionMgr.cs" />
+        <Compile Include="Env\Permission\PermissionProvider.cs" />
+        <Compile Include="Env\Permission\SystemOperationKeys.cs" />
+        <Compile Include="Env\RafyEnvironment.cs" />
+        <Compile Include="Env\RafyEnvironment.Plugins.cs" />
+        <Compile Include="Env\Translation\EmptyTranslator.cs" />
+        <Compile Include="Env\Translation\Translator.cs" />
+        <Compile Include="Env\Utils\Caching\Cache.cs" />
+        <Compile Include="Env\Utils\Caching\CacheProvider\HybirdCache.cs" />
+        <Compile Include="Env\Utils\Caching\CacheProvider\MemoryCache.cs" />
+        <Compile Include="Env\Utils\Caching\CacheProvider\PerHttpRequestCache.cs" />
+        <Compile Include="Env\Utils\Caching\CacheProvider\SQLCompactCache.cs" />
+        <Compile Include="Env\Utils\Caching\CacheProvider\SystemCaching\RegionCache.cs" />
+        <Compile Include="Env\Utils\Caching\ChangeChecker.cs" />
+        <Compile Include="Env\Utils\Caching\ICache.cs" />
+        <Compile Include="Env\Utils\Caching\Policy.cs" />
+        <Compile Include="Env\Utils\DateRange.cs" />
+        <Compile Include="Env\Utils\DateTimePart.cs" />
+        <Compile Include="Env\Utils\EmitContext.cs" />
+        <Compile Include="Env\Utils\EnumViewModel.cs" />
+        <Compile Include="Env\Utils\Freezable.cs" />
+        <Compile Include="Env\Utils\NumberRange.cs" />
+        <Compile Include="Env\Utils\ObjectCloner.cs" />
+        <Compile Include="Env\Utils\Threading\AsyncHelper.cs" />
+        <Compile Include="Env\Utils\Threading\AsyncMultiActions.cs" />
+        <Compile Include="Env\Utils\Threading\ForeAsyncLoader.cs" />
+        <Compile Include="Env\Utils\Threading\IObservableActions.cs" />
+        <Compile Include="Env\Utils\Threading\IParallelActions.cs" />
+        <Compile Include="Env\Utils\Threading\ParallelActions.cs" />
+        <Compile Include="Env\Utils\TypeComparer.cs" />
+        <Compile Include="Env\Web\ClientEntities.cs" />
+        <Compile Include="Env\Web\JsonServiceAttribute.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="DbMigration\Operations\_Design description.txt" />
+        <Content Include="DbMigration\_Read Me.txt" />
+        <Content Include="Domain\EntityRepository\zzzEF\如何加载所有 ORM 配置.txt" />
+        <Content Include="Domain\ORM\Query\_ReadMe.txt" />
+        <Content Include="Domain\ORM\Rdb\Sql\Tree\_ReadMe.txt" />
+        <Content Include="Domain\Validation\_ReadMe.txt" />
+        <Content Include="Domain\_命名空间规划.txt" />
+        <Content Include="Env\MetaModel\UI MetaModel.jpg" />
+        <Content Include="Env\Translation\翻译相关测试用例.txt" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.0.0-preview2-final" />
+        <PackageReference Include="MySql.Data" Version="8.0.8-dmr" />
+        <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+        <PackageReference Include="Oracle.ManagedDataAccess" Version="12.2.1100" />
+        <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
+        <PackageReference Include="System.Data.Common" Version="4.3.0" />
+        <PackageReference Include="System.Data.SqlClient" Version="4.3.1" />
+        <PackageReference Include="Castle.Core" Version="4.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="System.Data.SqlServerCe">
+        <HintPath>..\..\packages\Lib\SQLCE\System.Data.SqlServerCe.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>
