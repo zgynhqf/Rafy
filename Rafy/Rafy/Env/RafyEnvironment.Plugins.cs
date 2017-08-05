@@ -27,6 +27,7 @@ using Rafy;
 using Rafy.Reflection;
 using Rafy.ComponentModel;
 using Rafy.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Rafy
 {
@@ -129,7 +130,7 @@ namespace Rafy
             _allPlugins = new PluginCollection();
 
             //domain plugins.
-            var configPlugins = Configuration.Section.DomainPlugins.OfType<PluginElement>().Select(e => e.Plugin).ToArray();
+            var configPlugins = Configuration.Section.DomainPlugins.GetChildren().OfType<PluginElement>().Select(e => e.Plugin).ToArray();
             if (configPlugins.Length > 0)
             {
                 InitPluginsByConfig(_domainPlugins, configPlugins);
@@ -142,7 +143,7 @@ namespace Rafy
             //ui plugins.
             if (_location.IsUI)
             {
-                configPlugins = Configuration.Section.UIPlugins.OfType<PluginElement>().Select(e => e.Plugin).ToArray();
+                configPlugins = Configuration.Section.UIPlugins.GetChildren().OfType<PluginElement>().Select(e => e.Plugin).ToArray();
                 if (configPlugins.Length > 0)
                 {
                     InitPluginsByConfig(_uiPlugins, configPlugins);
@@ -512,6 +513,14 @@ namespace Rafy
         {
             get { return Composer.ObjectContainer; }
         }
+
+        //public static IServiceCollection ServiceCollection
+        //{
+        //    get
+        //    {
+        //        throw new NotImplementedException();//huqf
+        //    }
+        //}
 
         ///// <summary>
         ///// 组件的服务容器。

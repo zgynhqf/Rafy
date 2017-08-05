@@ -10,6 +10,7 @@
  * 
 *******************************************************/
 
+using Rafy.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,17 +26,16 @@ namespace Rafy
     {
         public EnvironmentProvider()
         {
-            this.RootDirectory = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-            var httpContext = System.Web.HttpContext.Current;
-            if (httpContext != null)
-            {
-                this.DllRootDirectory = httpContext.Server.MapPath("Bin");
-                this.IsDebuggingEnabled = httpContext.IsDebuggingEnabled;
-            }
-            else
-            {
-                this.DllRootDirectory = this.RootDirectory;
-            }
+            this.RootDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            this.DllRootDirectory = this.RootDirectory;
+            this.IsDebuggingEnabled = ConfigurationHelper.GetAppSettingOrDefault("Rafy.IsDebuggingEnabled", false);
+
+            //var httpContext = HttpContext.Current;
+            //if (httpContext != null)
+            //{
+            //    //this.DllRootDirectory = httpContext.Server.MapPath("Bin"); 许保同修改
+            //    this.IsDebuggingEnabled = false;//httpContext.IsDebuggingEnabled;许保同修改
+            //}
         }
 
         /// <summary>
