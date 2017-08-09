@@ -25,7 +25,7 @@ namespace Rafy.Domain.ORM.MySql
     /// <summary>
     /// MySql的Sql语句生成器
     /// </summary>
-    internal sealed class MySqlGenerator:SqlGenerator
+    internal sealed class MySqlGenerator : SqlGenerator
     {
         /// <summary>
         /// 名称别名设置
@@ -143,7 +143,7 @@ namespace Rafy.Domain.ORM.MySql
 
             var pageNumber =pagingInfo.PageNumber;
             var pageSize = pagingInfo.PageSize;
-            
+
             var res = MakePagingTree(raw, pageNumber, pageSize);
             return res;
         }
