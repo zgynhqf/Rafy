@@ -22,9 +22,9 @@ namespace Rafy.LicenseManager.Encryption
     public class AuthorizationCode
     {
         /// <summary>
-        /// 网卡物理地址
+        /// 校验码，替换之前的网卡物理地址
         /// </summary>
-        public string Mac { get; set; }
+        public string CheckCode { get; set; }
 
         /// <summary>
         /// 过期时间
