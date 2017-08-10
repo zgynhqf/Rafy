@@ -73,7 +73,9 @@ namespace Rafy.LicenseManager.Encryption
             var authorizationCode = new AuthorizationCode();
             var code = RSACryptoService.DecryptString(sSource, publicKey);
 
-            string[] authorizationCodes = code.Split(new string[] {Flag}, StringSplitOptions.None);
+            string[] authorizationCodes = code.Split(new string[] {Flag}, StringSplitOptions.RemoveEmptyEntries);
+            if (authorizationCodes.Length < 5) return authorizationCode;
+
             authorizationCode.CheckCode = authorizationCodes[1];
             authorizationCode.Category = Convert.ToInt16(authorizationCodes[3]);
             DateTime expireTime;
