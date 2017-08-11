@@ -94,31 +94,31 @@ namespace Rafy.LicenseManager.Encryption
         /// <returns></returns>
         public static AuthorizationResult Authenticate(string sSource, string publicKey)
         {
-            var authorizationCode = Decrypt(sSource, publicKey);
+            var result = new AuthorizationResult();
 
-            var result = new AuthorizationResult
+            foreach (var mac in MacList)
             {
-                AuthorizationState = AuthorizationState.Success,
-                CheckCode = authorizationCode.CheckCode,
-                ExpireTime = authorizationCode.ExpireTime
-            };
-            
-            if (!MacList.Contains(authorizationCode.CheckCode.ToLower()))
-            {
-                result.AuthorizationState = AuthorizationState.CheckCodeError;
-                return result;
+                //使用当前MAC码作为校验码进行验证
+                result = Authenticate(sSource, publicKey, mac);
+
+                //验证结果是通过或过期时退出循环
+                if (result.Success || result.AuthorizationState == AuthorizationState.Expire) break;
             }
-            if (!authorizationCode.ExpireTime.HasValue)
-            {
-                result.AuthorizationState = AuthorizationState.Expire;
-                return result;
-            }
-            if (authorizationCode.ExpireTime.Value < DateTime.Now)
-            {
-                result.AuthorizationState = AuthorizationState.Expire;
-                return result;
-            }
+
             return result;
+        }
+
+        /// <summary>
+        /// 验证
+        /// <para>此方法在验证过期时间时，与本机的当前时间进行对比</para>
+        /// </summary>
+        /// <param name="sSource">授权码</param>
+        /// <param name="publicKey">公钥</param>
+        /// <param name="checkCode">校验码</param>
+        /// <returns></returns>
+        public static AuthorizationResult Authenticate(string sSource, string publicKey, string checkCode)
+        {
+            return Authenticate(sSource, publicKey, checkCode, DateTime.Now);
         }
 
         /// <summary>
@@ -127,8 +127,9 @@ namespace Rafy.LicenseManager.Encryption
         /// <param name="sSource">授权码</param>
         /// <param name="publicKey">公钥</param>
         /// <param name="checkCode">校验码</param>
+        /// <param name="inspectionTime">校验日期</param>
         /// <returns></returns>
-        public static AuthorizationResult Authenticate(string sSource, string publicKey, string checkCode)
+        public static AuthorizationResult Authenticate(string sSource, string publicKey, string checkCode,  DateTime inspectionTime)
         {
             var authorizationCode = Decrypt(sSource, publicKey);
 
@@ -139,7 +140,7 @@ namespace Rafy.LicenseManager.Encryption
                 ExpireTime = authorizationCode.ExpireTime
             };
 
-            if (!string.Equals(checkCode, authorizationCode.CheckCode,StringComparison.CurrentCultureIgnoreCase))
+            if (!string.Equals(checkCode, authorizationCode.CheckCode, StringComparison.CurrentCultureIgnoreCase))
             {
                 result.AuthorizationState = AuthorizationState.CheckCodeError;
                 return result;
@@ -149,11 +150,12 @@ namespace Rafy.LicenseManager.Encryption
                 result.AuthorizationState = AuthorizationState.Expire;
                 return result;
             }
-            if (authorizationCode.ExpireTime.Value < DateTime.Now)
+            if (authorizationCode.ExpireTime.Value < inspectionTime)
             {
                 result.AuthorizationState = AuthorizationState.Expire;
                 return result;
             }
+            
             return result;
         }
     }
