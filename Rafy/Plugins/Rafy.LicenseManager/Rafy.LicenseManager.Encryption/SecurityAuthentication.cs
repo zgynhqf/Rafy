@@ -17,6 +17,9 @@ using System.Collections.Generic;
 
 namespace Rafy.LicenseManager.Encryption
 {
+    /// <summary>
+    /// 此类型是一个静态类，提供了生成授权码和验证授权码等方法。
+    /// </summary>
     public static class SecurityAuthentication
     {
         private static List<string> _macList;
@@ -26,6 +29,9 @@ namespace Rafy.LicenseManager.Encryption
         /// </summary>
         private static string Flag = "┿╃";
 
+        /// <summary>
+        /// 物理网卡地址列表
+        /// </summary>
         public static List<string> MacList
         {
             get { return _macList ?? (_macList = ComputerMacUtils.GetMacByNetworkInterface()); }
