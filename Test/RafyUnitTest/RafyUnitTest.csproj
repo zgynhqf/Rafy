@@ -90,6 +90,7 @@
     <Compile Include="Rafy\Plugins\AccountsPluginTest.cs" />
     <Compile Include="Rafy\Plugins\DataTableMigrationPluginTest.cs" />
     <Compile Include="Rafy\Plugins\FileStoragePluginTest.cs" />
+    <Compile Include="Rafy\Plugins\LicenseManagerPluginTest.cs" />
     <Compile Include="Rafy\Plugins\RBAC\GroupPluginTest.cs" />
     <Compile Include="Rafy\Plugins\RBAC\RBACManagementPluginTest.cs" />
     <Compile Include="Rafy\Plugins\RBAC\UserRoleManagementPluginTest.cs" />
@@ -145,6 +146,10 @@
     <ProjectReference Include="..\..\Rafy\Plugins\Rafy.FileStorage\Rafy.FileStorage.csproj">
       <Project>{143febb0-b41c-4e47-9325-f656cced2fa6}</Project>
       <Name>Rafy.FileStorage</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.LicenseManager\Rafy.LicenseManager.Encryption\Rafy.LicenseManager.Encryption.csproj">
+      <Project>{9e62ed52-63df-4afb-bcf5-09b8134d7c52}</Project>
+      <Name>Rafy.LicenseManager.Encryption</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.DataPermissionManagement\Rafy.RBAC.DataPermissionManagement.csproj">
       <Project>{7750612e-ab7e-4a98-86e1-ff6e4d9d7c54}</Project>
