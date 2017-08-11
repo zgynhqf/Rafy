@@ -232,7 +232,7 @@ namespace Rafy.ManagedProperty
             {
                 if (!this._isRegisteringExtension)
                 {
-                    throw new InvalidProgramException("在注册所有扩展属性前，不能使用 RegisterProperty 方法注册任何其它属性。(请查看代码是否在托管属性初始化完成之前，就已经开始使用托管属性了。)");
+                    throw new InvalidProgramException("在注册所有扩展属性前，不能使用 RegisterProperty 方法注册任何其它属性。(例如：在控制台 Main 函数中除了调用 Rafy 初始化，后面还加载了 Rafy 实体，则会抛出此异常。)");
                 }
             }
 

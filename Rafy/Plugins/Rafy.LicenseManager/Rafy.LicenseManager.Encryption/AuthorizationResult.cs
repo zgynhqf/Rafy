@@ -12,20 +12,41 @@
 *******************************************************/
 
 
+using System;
+
 namespace Rafy.LicenseManager.Encryption
 {
     public class AuthorizationResult
     {
+        /// <summary>
+        /// 认证结果
+        /// </summary>
         public bool Success => AuthorizationState == AuthorizationState.Success;
+
+        /// <summary>
+        /// 认证状态
+        /// </summary>
         public AuthorizationState AuthorizationState { get; set; }
+
+        /// <summary>
+        /// 校验码
+        /// </summary>
+        public string CheckCode { get; set; }
+
+        /// <summary>
+        /// 过期时间
+        /// </summary>
+        public DateTime? ExpireTime { get; set; }
     }
 
     public enum AuthorizationState
     {
         //授权通过
         Success = 0,
-        //网卡错误
-        MacError = 1,
+
+        //校验码错误
+        CheckCodeError = 1,
+
         //授权过期
         Expire = 2
     }

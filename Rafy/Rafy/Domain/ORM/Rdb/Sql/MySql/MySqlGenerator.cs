@@ -25,7 +25,7 @@ namespace Rafy.Domain.ORM.MySql
     /// <summary>
     /// MySql的Sql语句生成器
     /// </summary>
-    internal sealed class MySqlGenerator:SqlGenerator
+    internal sealed class MySqlGenerator : SqlGenerator
     {
         /// <summary>
         /// 名称别名设置
@@ -50,16 +50,6 @@ namespace Rafy.Domain.ORM.MySql
             {
                 base.QuoteAppend(identifier);
             }
-        }
-
-        /// <summary>
-        /// 将小写的标识符转换成大写
-        /// </summary>
-        /// <param name="identifier">待转换的标识符</param>
-        /// <returns>返回大写的标识符</returns>
-        protected override string PrepareIdentifier(string identifier)
-        {
-            return identifier.ToUpper();
         }
 
         /// <summary>
@@ -153,7 +143,7 @@ namespace Rafy.Domain.ORM.MySql
 
             var pageNumber =pagingInfo.PageNumber;
             var pageSize = pagingInfo.PageSize;
-            
+
             var res = MakePagingTree(raw, pageNumber, pageSize);
             return res;
         }
