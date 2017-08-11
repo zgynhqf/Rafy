@@ -37,7 +37,7 @@ namespace Rafy.UnitTest.LicenseManager
         /// <summary>
         /// 校验码
         /// </summary>
-        private string _checkCode = "校验码";
+        private string _checkCode = "70-1C-E7-9A-EB-D3";
 
         /// <summary>
         /// 测试使用正确的授权码、公钥和校验码进行验证。
@@ -45,13 +45,13 @@ namespace Rafy.UnitTest.LicenseManager
         [TestMethod]
         public void SA_Authenticate_Success()
         {
-            DateTime expireTime = new DateTime(2017, 8, 12);
+            DateTime expireTime = new DateTime(2017, 8, 10);
 
             //生成授权码
             string authenticationCode = SecurityAuthentication.Encrypt(_checkCode, expireTime, 0, _privateKey);
 
             //认证
-            AuthorizationResult result = SecurityAuthentication.Authenticate(authenticationCode, _publicKey, _checkCode);
+            AuthorizationResult result = SecurityAuthentication.Authenticate(authenticationCode, _publicKey);
 
             Assert.IsTrue(result.Success, "未过期，结果应该是认证成功！");
         }
