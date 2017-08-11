@@ -163,6 +163,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.RBAC.DataPermissionMan
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.DataTableMigration", "Rafy\Plugins\Rafy.DataTableMigration\Rafy.DataTableMigration.csproj", "{95CB6F76-3D35-4F2E-BF2A-A45EC41C76B4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.UnitTest.LicenseManager", "Test\Rafy.UnitTest.LicenseManager\Rafy.UnitTest.LicenseManager.csproj", "{B9618544-BB24-4FD4-B870-6D0FAA98A322}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		D_UIA_Standard|Any CPU = D_UIA_Standard|Any CPU
@@ -589,6 +591,14 @@ Global
 		{95CB6F76-3D35-4F2E-BF2A-A45EC41C76B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95CB6F76-3D35-4F2E-BF2A-A45EC41C76B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95CB6F76-3D35-4F2E-BF2A-A45EC41C76B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9618544-BB24-4FD4-B870-6D0FAA98A322}.D_UIA_Standard|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9618544-BB24-4FD4-B870-6D0FAA98A322}.D_UIA_Standard|Any CPU.Build.0 = Debug|Any CPU
+		{B9618544-BB24-4FD4-B870-6D0FAA98A322}.D_Web|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9618544-BB24-4FD4-B870-6D0FAA98A322}.D_Web|Any CPU.Build.0 = Debug|Any CPU
+		{B9618544-BB24-4FD4-B870-6D0FAA98A322}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9618544-BB24-4FD4-B870-6D0FAA98A322}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9618544-BB24-4FD4-B870-6D0FAA98A322}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9618544-BB24-4FD4-B870-6D0FAA98A322}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -664,6 +674,7 @@ Global
 		{609216EB-20AF-48C2-90C3-514CF588A062} = {7D317F92-6904-459E-A03C-EC4B44BB73B0}
 		{7750612E-AB7E-4A98-86E1-FF6E4D9D7C54} = {7D317F92-6904-459E-A03C-EC4B44BB73B0}
 		{95CB6F76-3D35-4F2E-BF2A-A45EC41C76B4} = {DC52A572-512A-4D70-81C0-F0EF8B6FFC85}
+		{B9618544-BB24-4FD4-B870-6D0FAA98A322} = {1E609049-148F-4954-97CE-810A78A9036D}
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = GIX4_ExpressApp.vsmdi
