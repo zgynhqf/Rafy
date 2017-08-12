@@ -829,7 +829,7 @@ namespace RafyUnitTest
                 Assert.AreEqual(RdbDataProvider.Get(newBookRepo).DbSetting.Name, UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate);
                 Assert.AreEqual(RdbDataProvider.Get(repo).DbSetting.Name, UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate);
             }
-            
+
             //还原
             Assert.AreEqual(dbSetting, dataProvider.DbSetting);
         }
@@ -1277,7 +1277,7 @@ namespace RafyUnitTest
                 for (int i = 0; i < size; i++)
                 {
                     var book = books[i];
-                    Assert.IsTrue(book.Id > 0," Identity 手动赋值");
+                    Assert.IsTrue(book.Id > 0, " Identity 手动赋值");
                 }
             }
         }
