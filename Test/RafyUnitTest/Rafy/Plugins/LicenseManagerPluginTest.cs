@@ -1,28 +1,16 @@
-﻿/*******************************************************
- * 
- * 作者：赵朋
- * 创建日期：20170810
- * 说明：此文件只包含一个类，具体内容见类型注释。
- * 版本号：1.0.0
- * 
- * 历史记录：
- * 创建文件 赵朋 20170810 19:37
- * 
-*******************************************************/
-
-using System;
+﻿using System;
 using System.Text;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rafy.LicenseManager.Encryption;
 
-namespace Rafy.UnitTest.LicenseManager
+namespace RafyUnitTest.Rafy.Plugins
 {
     /// <summary>
-    /// SecurityAuthenticationTest 的摘要说明
+    /// 授权认证插件的单元测试类
     /// </summary>
     [TestClass]
-    public class SecurityAuthenticationTest
+    public class LicenseManagerPluginTest
     {
         /// <summary>
         /// 私钥
