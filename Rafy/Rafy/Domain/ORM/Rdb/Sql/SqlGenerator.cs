@@ -72,7 +72,7 @@ namespace Rafy.Domain.ORM
         /// In 语句中可以承受的最大的个数。
         /// 如果超出这个个数，则会抛出
         /// </summary>
-        internal const int MaxItemsInInClause=1000;
+        internal const int MaxItemsInInClause = 1000;
 
         #region 分页支持
 
