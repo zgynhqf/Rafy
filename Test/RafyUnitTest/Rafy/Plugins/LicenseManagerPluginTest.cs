@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rafy.LicenseManager.Encryption;
 
-namespace RafyUnitTest.Rafy.Plugins
+namespace RafyUnitTest
 {
     /// <summary>
     /// 授权认证插件的单元测试类
