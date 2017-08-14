@@ -145,14 +145,15 @@ namespace Rafy.Domain.ORM.Oracle
              * 然后使用新的树生成对应的 Sql 语句并查询实体。
              * 所有查询完成后，再把树中的集合还原为原始的大集合。
             **********************************************************************/
+            var maxItemsCount = SqlGenerator.CampatibleMaxItemsInInClause;
             var start = 0;
-            var paramSection = new List<object>(SqlGenerator.MaxItemsInInClause);
+            var paramSection = new List<object>(maxItemsCount);
             inClause.Value = paramSection;//临时把树中的条件中的值改成子集合。
             while (start < parameters.Count)
             {
                 paramSection.Clear();
 
-                var end = Math.Min(start + SqlGenerator.MaxItemsInInClause - 1, parameters.Count - 1);
+                var end = Math.Min(start + maxItemsCount - 1, parameters.Count - 1);
                 for (int i = start; i <= end; i++)
                 {
                     paramSection.Add(parameters[i]);
