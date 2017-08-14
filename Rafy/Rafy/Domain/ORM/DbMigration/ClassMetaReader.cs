@@ -215,39 +215,46 @@ namespace Rafy.Domain.ORM.DbMigration
 
                     #region 引用关系
 
-                    if (IsGeneratingForeignKey && columnMeta.HasFKConstraint)
+                    if (columnMeta.HasFKConstraint)
                     {
                         var refProperty = mp as IRefProperty;
                         if (refProperty != null)
                         {
                             isNullableRef = refProperty.Nullable;
 
-                            var refMeta = em.Property(refProperty.RefEntityProperty);
-                            if (refMeta.ReferenceInfo == null) throw new InvalidOperationException("refMeta.ReferenceInfo == null");
-
-                            //引用实体的类型。
-                            var refTypeMeta = refMeta.ReferenceInfo.RefTypeMeta;
-                            if (refTypeMeta != null)
+                            //是否生成外键
+                            // 默认 IsGeneratingForeignKey 为 true
+                            if (IsGeneratingForeignKey)
                             {
-                                var refTableMeta = refTypeMeta.TableMeta;
-                                if (refTableMeta != null)
+                                var refMeta = em.Property(refProperty.RefEntityProperty);
+                                if (refMeta.ReferenceInfo == null)
+                                    throw new InvalidOperationException("refMeta.ReferenceInfo == null");
+
+                                //引用实体的类型。
+                                var refTypeMeta = refMeta.ReferenceInfo.RefTypeMeta;
+                                if (refTypeMeta != null)
                                 {
-                                    //如果主键表已经被忽略，那么到这个表上的外键也不能建立了。
-                                    //这是因为被忽略的表的结构是未知的，不一定是以这个字段为主键。
-                                    if (!this.Database.IsIgnored(refTableMeta.TableName))
+                                    var refTableMeta = refTypeMeta.TableMeta;
+                                    if (refTableMeta != null)
                                     {
-                                        var id = refTypeMeta.Property(Entity.IdProperty);
-                                        //有时一些表的 Id 只是自增长，但并不是主键，不能创建外键。
-                                        if (id.ColumnMeta.IsPrimaryKey)
+                                        //如果主键表已经被忽略，那么到这个表上的外键也不能建立了。
+                                        //这是因为被忽略的表的结构是未知的，不一定是以这个字段为主键。
+                                        if (!this.Database.IsIgnored(refTableMeta.TableName))
                                         {
-                                            this._foreigns.Add(new ForeignConstraintInfo()
+                                            var id = refTypeMeta.Property(Entity.IdProperty);
+                                            //有时一些表的 Id 只是自增长，但并不是主键，不能创建外键。
+                                            if (id.ColumnMeta.IsPrimaryKey)
                                             {
-                                                FkTableName = tableMeta.TableName,
-                                                PkTableName = refTableMeta.TableName,
-                                                FkColumn = columnName,
-                                                PkColumn = id.ColumnMeta.ColumnName,
-                                                NeedDeleteCascade = refProperty.ReferenceType == ReferenceType.Parent
-                                            });
+                                                this._foreigns.Add(new ForeignConstraintInfo()
+                                                {
+                                                    FkTableName = tableMeta.TableName,
+                                                    PkTableName = refTableMeta.TableName,
+                                                    FkColumn = columnName,
+                                                    PkColumn = id.ColumnMeta.ColumnName,
+                                                    NeedDeleteCascade =
+                                                        refProperty.ReferenceType == ReferenceType.Parent
+                                                });
+                                            }
                                         }
                                     }
                                 }
