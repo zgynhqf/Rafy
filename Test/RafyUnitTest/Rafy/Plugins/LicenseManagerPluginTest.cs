@@ -33,7 +33,7 @@ namespace RafyUnitTest.Rafy.Plugins
         [TestMethod]
         public void SA_Authenticate_Success()
         {
-            DateTime expireTime = new DateTime(2017, 8, 12);
+            DateTime expireTime = DateTime.Now.AddDays(1);
 
             //生成授权码
             string authenticationCode = SecurityAuthentication.Encrypt(_checkCode, expireTime, 0, _privateKey);
@@ -50,7 +50,7 @@ namespace RafyUnitTest.Rafy.Plugins
         [TestMethod]
         public void SA_SA_Authenticate_FailureByCheckCode()
         {
-            DateTime expireTime = new DateTime(2017, 8, 12);
+            DateTime expireTime = DateTime.Now.AddDays(1);
 
             string errorCheckCode = "错误的校验码";
 
@@ -88,7 +88,7 @@ namespace RafyUnitTest.Rafy.Plugins
         [TestMethod]
         public void SA_SA_Authenticate_FailureByAuthCode()
         {
-            DateTime expireTime = new DateTime(2017, 8, 9);
+            DateTime expireTime = DateTime.Now.AddDays(1);
 
             //生成授权码
             string authenticationCode = SecurityAuthentication.Encrypt(_checkCode, expireTime, 0, _privateKey);
@@ -107,7 +107,7 @@ namespace RafyUnitTest.Rafy.Plugins
         [TestMethod]
         public void SA_SA_Authenticate_FailureByPublicKey()
         {
-            DateTime expireTime = new DateTime(2017, 8, 9);
+            DateTime expireTime = DateTime.Now.AddDays(1);
 
             //生成授权码
             string authenticationCode = SecurityAuthentication.Encrypt(_checkCode, expireTime, 0, _privateKey);
