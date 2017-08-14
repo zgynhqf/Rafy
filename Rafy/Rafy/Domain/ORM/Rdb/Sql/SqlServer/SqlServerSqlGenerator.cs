@@ -74,7 +74,7 @@ namespace Rafy.Domain.ORM
                 };
             }
 
-            return this.ModifyToPagingTreeWithNotIn(raw, pagingInfo);
+            return this.ModifyToPagingTreeWithRowNumberOver(raw, pagingInfo);
         }
 
         /// <summary>
@@ -182,20 +182,24 @@ namespace Rafy.Domain.ORM
              * 
              * SELECT * FROM
              * (
-             *     SELECT A.*, ROW_NUMBER() OVER (order by  Id)_rowNumber
+             *     SELECT A.*, ROW_NUMBER() OVER (order by  Id) _RowNumber
              *     FROM  A
              * ) T
-             * WHERE _rowNumber between 1 and 10
+             * WHERE _RowNumber between 1 and 10
             **********************************************************************/
+
+            var finder = new FirstTableFinder();
+            var pkTable = finder.Find(raw.From);
 
             var newRaw = new SqlSelect
             {
                 Selection = new SqlNodeList()
                 {
-                    new SqlLiteral { FormattedSql = "ROW_NUMBER() OVER (" },
+                    raw.Selection ?? new SqlSelectAll() { Table = pkTable },
+                    new SqlLiteral { FormattedSql = ", ROW_NUMBER() OVER (" },
                     raw.OrderBy,
-                    new SqlLiteral { FormattedSql = ") _rowNumber," },
-                    raw.Selection ?? SqlSelectAll.Default
+                    new SqlLiteral { FormattedSql = ") _RowNumber " },
+  
                 },
                 From = raw.From,
                 Where = raw.Where,
@@ -212,7 +216,7 @@ namespace Rafy.Domain.ORM
 ("),
                                 newRaw,
                                 new SqlLiteral(
-                @")T WHERE _rowNumber BETWEEN " + startRow + @" AND " +endRow )
+                @")T WHERE _RowNumber BETWEEN " + startRow + @" AND " +endRow )
             };
 
             return res;
