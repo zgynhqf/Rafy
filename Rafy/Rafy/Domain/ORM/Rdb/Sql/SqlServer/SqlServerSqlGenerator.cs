@@ -21,6 +21,14 @@ namespace Rafy.Domain.ORM
 {
     class SqlServerSqlGenerator : SqlGenerator
     {
+        /// <summary>
+        /// Sql Server 中没有限制 In 语句中的项的个数。（但是如果使用参数的话，则最多只能使用 2000 个参数。）
+        /// 
+        /// In 语句中可以承受的最大的个数。
+        /// 如果超出这个个数，则会抛出 TooManyItemsInInClauseException。
+        /// </summary>
+        protected override int MaxItemsInInClause => int.MaxValue;
+
         protected override void QuoteAppend(string identifier)
         {
             if (this.AutoQuota)
