@@ -95,7 +95,7 @@ from (
             LEFT join information_schema.REFERENTIAL_CONSTRAINTS R on K.CONSTRAINT_NAME=R.CONSTRAINT_NAME
 ) as O 
 inner join Information_schema.TABLE_CONSTRAINTS T on O.Table_Name=T.TABLE_NAME and T.CONSTRAINT_NAME=O.CONSTRAINT_NAME
-where O.CONSTRAINT_SCHEMA!='mysql' and O.CONSTRAINT_SCHEMA!='sys';"))
+where O.CONSTRAINT_SCHEMA!='mysql' and O.CONSTRAINT_SCHEMA!='sys' and O.CONSTRAINT_SCHEMA='" + this.Db.Connection.Database + "'"))
             {
                 while (constraintReader.Read())
                 {
