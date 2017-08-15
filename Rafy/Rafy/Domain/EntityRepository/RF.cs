@@ -62,6 +62,16 @@ namespace Rafy.Domain
         /// <summary>
         /// 用于查找指定类型的仓库。
         /// </summary>
+        /// <param name="repositoryType">Type of the repository.</param>
+        /// <returns></returns>
+        public static EntityRepository ResolveInstance(Type repositoryType)
+        {
+            return RepositoryFactoryHost.Factory.Find(repositoryType) as EntityRepository;
+        }
+
+        /// <summary>
+        /// 用于查找指定类型的仓库。
+        /// </summary>
         /// <typeparam name="TRepository"></typeparam>
         /// <returns></returns>
         [Obsolete("Concrete 方法已过时，请用 ResolveInstance 方法替换")]
