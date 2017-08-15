@@ -10,10 +10,12 @@
  * 
 *******************************************************
 
-3.61.3403
+3.61.3404
     BUG修复
         解决sql In过滤条件数量大于1000报错
         修改 SQL SERVER 分页采用RowNumber() Over
+    添加接口
+        添加 EntityRepository ResolveInstance(Type repositoryType) 接口。
 
 3.61.3340
     ★★公布、添加功能
