@@ -12,7 +12,7 @@ namespace Rafy.Data.Providers
 
         public string ConvertToSpecialDbSql(string commonSql)
         {
-            return DbConverterFactory.ReParameterName.Replace(commonSql, ":p${number}");
+            return DbConnectorFactory.ReParameterName.Replace(commonSql, ":p${number}");
         }
 
         public string GetParameterName(int number)

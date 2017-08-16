@@ -140,8 +140,8 @@ namespace Rafy.Data
         {
             this._connectionSchema = schema;
 
-            this._factory = DbConverterFactory.GetFactory(schema.ProviderName);
-            this._converter = DbConverterFactory.Create(schema.ProviderName);
+            this._factory = DbConnectorFactory.GetFactory(schema.ProviderName);
+            this._converter = DbConnectorFactory.Create(schema.ProviderName);
             if (connection == null)
             {
                 this._connection = this._factory.CreateConnection();
