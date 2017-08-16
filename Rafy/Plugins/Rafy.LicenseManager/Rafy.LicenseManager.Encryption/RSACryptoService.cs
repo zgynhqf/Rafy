@@ -21,7 +21,7 @@ namespace Rafy.LicenseManager.Encryption
     /// <summary>
     /// RSA加密
     /// </summary>
-    internal static class RSACryptoService
+    public static class RSACryptoService
     {
         /// <summary>
         /// 生成公钥私钥

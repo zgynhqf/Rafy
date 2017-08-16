@@ -63,7 +63,7 @@ namespace Rafy.LicenseManager.Infrastructure
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(entity.MacCode) || !_regex.IsMatch(entity.MacCode))
+            if (string.IsNullOrWhiteSpace(entity.MacCode) /*|| !_regex.IsMatch(entity.MacCode)*/)
             {
                 MessageBox.Show(LicenseManagerResource.ManagerFormValidateParametersMACAddress, LicenseManagerResource.ManagerFormValidateParametersWarning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
