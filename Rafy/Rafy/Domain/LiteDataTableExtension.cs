@@ -27,7 +27,7 @@ namespace Rafy.Domain
     public static class LiteDataTableExtension
     {
         /// <summary>
-        /// 
+        /// LiteDataTableExtension 的扩展方法，实现 LiteDataTableExtension 类型到 EntityList 类型的转换
         /// </summary>
         /// <typeparam name="TEntityList"></typeparam>
         /// <param name="liteDataTable"></param>
@@ -39,11 +39,12 @@ namespace Rafy.Domain
         /// <returns></returns>
         public static TEntityList ToEntityList<TEntityList>(this LiteDataTable liteDataTable, bool columnMapToProperty = true) where TEntityList : EntityList
         {
-            var repo = Activator.CreateInstance<TEntityList>().FindRepository();
+            var entityMatrix = EntityMatrix.FindByList(typeof(TEntityList));
+            var repo = RepositoryFacade.Find(entityMatrix.EntityType);
+
             var entity = repo.New();
             var resultList = repo.NewList();
             var entityMeta = repo.EntityMeta;
-            var canConvert = true;
             var columns = liteDataTable.Columns;
             var liteDataTableColumnsNameList = new List<string>();//liteDataTable 中所有列名的集合
             for (int i = 0; i < columns.Count; i++)
@@ -53,48 +54,39 @@ namespace Rafy.Domain
 
             if (!columnMapToProperty)
             {
-
-                List<EntityPropertyMeta> entityPropertyMetaList = (List<EntityPropertyMeta>)entityMeta.EntityProperties;
+                IList<EntityPropertyMeta> entityPropertyMetaList = entityMeta.EntityProperties;
 
                 #region 判断 liteDataTable 类型能否转换成 EntityList 类型
 
-                List<string> EntitycolumnNameList = new List<string>();
+                List<string> entitycolumnNameList = new List<string>();
                 for (int i = 0; i < entityPropertyMetaList.Count; i++)
                 {
                     var columnName = entityPropertyMetaList[i].ColumnMeta.ColumnName;
-                    EntitycolumnNameList.Add(columnName);
+                    entitycolumnNameList.Add(columnName);
                 }
 
-                for (int i = 0; i < EntitycolumnNameList.Count; i++)
+                for (int i = 0; i < entitycolumnNameList.Count; i++)
                 {
-                    if (!liteDataTableColumnsNameList.Contains(EntitycolumnNameList[i]))
+                    if (!liteDataTableColumnsNameList.Contains(entitycolumnNameList[i]))
                     {
-                        canConvert = false;
-                        break;
+                        throw new NotSupportedException("需要转换的 LiteDataTable 不包含 " + entitycolumnNameList[i] + " 列，所以不能转换");
                     }
                 }
 
                 #endregion
 
-                if (canConvert)
+                foreach (var row in liteDataTable.Rows)
                 {
-                    foreach (var row in liteDataTable.Rows)
+                    var entityItem = repo.New();
+                    foreach (var metaProperty in entityPropertyMetaList)
                     {
-                        var entityItem = repo.New();
-                        foreach (var metaProperty in entityPropertyMetaList)
-                        {
-                            var manageProperty = metaProperty.ManagedProperty;
-                            var propertyName = metaProperty.ColumnMeta.ColumnName;
-                            entityItem.LoadProperty(manageProperty, row[propertyName]);
-                        }
-                        resultList.Add(entityItem);
+                        var manageProperty = metaProperty.ManagedProperty;
+                        var propertyName = metaProperty.ColumnMeta.ColumnName;
+                        entityItem.LoadProperty(manageProperty, row[propertyName]);
                     }
-                    return (TEntityList)resultList;
+                    resultList.Add(entityItem);
                 }
-                else
-                {
-                    throw new NotSupportedException();
-                }
+                return resultList as TEntityList;
             }
             else
             {
@@ -108,31 +100,24 @@ namespace Rafy.Domain
 
                     if (!liteDataTableColumnsNameList.Contains(entityPropertyName))
                     {
-                        canConvert = false;
-                        break;
+                        throw new NotSupportedException("需要转换的 LiteDataTable 不包含 " + entityPropertyName + " 列，所以不能转换");
                     }
                 }
 
                 #endregion
 
-                if (canConvert)
+                foreach (var row in liteDataTable.Rows)
                 {
-                    foreach (var row in liteDataTable.Rows)
+                    var entityItem = repo.New();
+                    foreach (var property in propertyList)
                     {
-                        var entityItem = repo.New();
-                        foreach (var property in propertyList)
-                        {
-                            var propertyName = property.Name;
-                            entityItem.LoadProperty(property, row[propertyName]);
-                        }
-                        resultList.Add(entityItem);
+                        var propertyName = property.Name;
+                        var rowValue = row[propertyName];
+                        entityItem.LoadProperty(property, rowValue);
                     }
-                    return (TEntityList)resultList;
+                    resultList.Add(entityItem);
                 }
-                else
-                {
-                    throw new NotSupportedException();
-                }
+                return resultList as TEntityList;
             }
         }
     }
