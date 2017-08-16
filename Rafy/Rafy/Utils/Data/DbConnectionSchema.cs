@@ -99,7 +99,7 @@ namespace Rafy.Data
         /// <returns></returns>
         public IDbConnection CreateConnection()
         {
-            var factory = ConverterFactory.GetFactory(this.ProviderName);
+            var factory = DbConverterFactory.GetFactory(this.ProviderName);
 
             var connection = factory.CreateConnection();
             connection.ConnectionString = this.ConnectionString;
