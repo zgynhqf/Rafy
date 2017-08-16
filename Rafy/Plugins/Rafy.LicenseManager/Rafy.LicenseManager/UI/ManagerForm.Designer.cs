@@ -56,14 +56,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tabAuthorizationView = new System.Windows.Forms.TabPage();
             this.dgvLicenseView = new System.Windows.Forms.DataGridView();
-            this.MacCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PrivateKey = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PublicKey = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LicenseCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ExpireTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LicenseTarget = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CreateTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsmPrivateKey = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmPublicKey = new System.Windows.Forms.ToolStripMenuItem();
@@ -72,6 +64,14 @@
             this.tsmExpressData = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tsmDelete = new System.Windows.Forms.ToolStripMenuItem();
+            this.MacCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PrivateKey = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PublicKey = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LicenseCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ExpireTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LicenseTarget = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CreateTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabGetPrivateKey.SuspendLayout();
@@ -387,61 +387,6 @@
             this.dgvLicenseView.Size = new System.Drawing.Size(837, 468);
             this.dgvLicenseView.TabIndex = 0;
             // 
-            // MacCode
-            // 
-            this.MacCode.DataPropertyName = "MacCode";
-            this.MacCode.HeaderText = "MAC地址";
-            this.MacCode.Name = "MacCode";
-            this.MacCode.ReadOnly = true;
-            this.MacCode.Width = 120;
-            // 
-            // Id
-            // 
-            this.Id.DataPropertyName = "Id";
-            this.Id.HeaderText = "Id";
-            this.Id.Name = "Id";
-            this.Id.Visible = false;
-            // 
-            // PrivateKey
-            // 
-            this.PrivateKey.DataPropertyName = "PrivateKey";
-            this.PrivateKey.HeaderText = "私钥";
-            this.PrivateKey.Name = "PrivateKey";
-            // 
-            // PublicKey
-            // 
-            this.PublicKey.DataPropertyName = "PublicKey";
-            this.PublicKey.HeaderText = "公钥";
-            this.PublicKey.Name = "PublicKey";
-            // 
-            // LicenseCode
-            // 
-            this.LicenseCode.DataPropertyName = "LicenseCode";
-            this.LicenseCode.HeaderText = "授权码";
-            this.LicenseCode.Name = "LicenseCode";
-            this.LicenseCode.ReadOnly = true;
-            // 
-            // ExpireTime
-            // 
-            this.ExpireTime.DataPropertyName = "ExpireTime";
-            this.ExpireTime.HeaderText = "授权过期时间";
-            this.ExpireTime.Name = "ExpireTime";
-            this.ExpireTime.ReadOnly = true;
-            // 
-            // LicenseTarget
-            // 
-            this.LicenseTarget.DataPropertyName = "LicenseTarget";
-            this.LicenseTarget.HeaderText = "授权目标";
-            this.LicenseTarget.Name = "LicenseTarget";
-            this.LicenseTarget.ReadOnly = true;
-            // 
-            // CreateTime
-            // 
-            this.CreateTime.DataPropertyName = "CreateTime";
-            this.CreateTime.HeaderText = "创建时间";
-            this.CreateTime.Name = "CreateTime";
-            this.CreateTime.ReadOnly = true;
-            // 
             // dgvContextMenu
             // 
             this.dgvContextMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
@@ -496,6 +441,61 @@
             this.tsmDelete.Name = "tsmDelete";
             this.tsmDelete.Size = new System.Drawing.Size(168, 24);
             this.tsmDelete.Text = "删除";
+            // 
+            // MacCode
+            // 
+            this.MacCode.DataPropertyName = "MacCode";
+            this.MacCode.HeaderText = "校验码";
+            this.MacCode.Name = "MacCode";
+            this.MacCode.ReadOnly = true;
+            this.MacCode.Width = 120;
+            // 
+            // Id
+            // 
+            this.Id.DataPropertyName = "Id";
+            this.Id.HeaderText = "Id";
+            this.Id.Name = "Id";
+            this.Id.Visible = false;
+            // 
+            // PrivateKey
+            // 
+            this.PrivateKey.DataPropertyName = "PrivateKey";
+            this.PrivateKey.HeaderText = "私钥";
+            this.PrivateKey.Name = "PrivateKey";
+            // 
+            // PublicKey
+            // 
+            this.PublicKey.DataPropertyName = "PublicKey";
+            this.PublicKey.HeaderText = "公钥";
+            this.PublicKey.Name = "PublicKey";
+            // 
+            // LicenseCode
+            // 
+            this.LicenseCode.DataPropertyName = "LicenseCode";
+            this.LicenseCode.HeaderText = "授权码";
+            this.LicenseCode.Name = "LicenseCode";
+            this.LicenseCode.ReadOnly = true;
+            // 
+            // ExpireTime
+            // 
+            this.ExpireTime.DataPropertyName = "ExpireTime";
+            this.ExpireTime.HeaderText = "授权过期时间";
+            this.ExpireTime.Name = "ExpireTime";
+            this.ExpireTime.ReadOnly = true;
+            // 
+            // LicenseTarget
+            // 
+            this.LicenseTarget.DataPropertyName = "LicenseTarget";
+            this.LicenseTarget.HeaderText = "授权目标";
+            this.LicenseTarget.Name = "LicenseTarget";
+            this.LicenseTarget.ReadOnly = true;
+            // 
+            // CreateTime
+            // 
+            this.CreateTime.DataPropertyName = "CreateTime";
+            this.CreateTime.HeaderText = "创建时间";
+            this.CreateTime.Name = "CreateTime";
+            this.CreateTime.ReadOnly = true;
             // 
             // ManagerForm
             // 
