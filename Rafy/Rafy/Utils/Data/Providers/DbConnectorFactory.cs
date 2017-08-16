@@ -10,7 +10,7 @@ namespace Rafy.Data.Providers
     /// <summary>
     /// 根据提供的字符串类型数据库提供器转换类型，可以获取指定的DbProviderFactory和ISqlProvider类型的具体实例
     /// </summary>
-    internal class DbConverterFactory
+    internal class DbConnectorFactory
     {
         private static DbProviderFactory _sql, _sqlCe, _oracle,_mySql;
         private static ISqlProvider _sqlConverter, _oracleConverter, _odbcConverter,_mySqlConverter;
