@@ -111,7 +111,6 @@ namespace RafyUnitTest
             row["TreePId"] = null;
             table.Rows.Add(row);
 
-
             var customer = table.ToEntityList<CustomerList>();
             Assert.AreEqual(1, customer.Count, "liteDataTable 应该能转换成一条 customer 的数据");
         }
