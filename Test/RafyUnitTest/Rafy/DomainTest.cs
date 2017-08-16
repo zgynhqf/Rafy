@@ -78,5 +78,43 @@ namespace RafyUnitTest
             service.Invoke();
             Assert.IsTrue(service.Result == 2);
         }
+
+        [TestMethod]
+        public void DT_ExtLiteDataTable_CanConvert()
+        {
+            var table = new LiteDataTable();
+            table.Columns.Add(new LiteDataColumn("Id", typeof(int)));
+            table.Columns.Add(new LiteDataColumn("Name", typeof(string)));
+            table.Columns.Add(new LiteDataColumn("DecimalProperty1", typeof(decimal)));
+            table.Columns.Add(new LiteDataColumn("DecimalProperty2", typeof(decimal)));
+            table.Columns.Add(new LiteDataColumn("DecimalProperty3", typeof(decimal)));
+            table.Columns.Add(new LiteDataColumn("CreatedTime", typeof(DateTime)));
+            table.Columns.Add(new LiteDataColumn("CreatedUser", typeof(string)));
+            table.Columns.Add(new LiteDataColumn("UpdatedTime", typeof(string)));
+            table.Columns.Add(new LiteDataColumn("UpdatedUser", typeof(DateTime)));
+            table.Columns.Add(new LiteDataColumn("IsPhantom", typeof(bool)));
+            table.Columns.Add(new LiteDataColumn("TreeIndex", typeof(int)));
+            table.Columns.Add(new LiteDataColumn("TreePId", typeof(int)));
+
+            var row = table.NewRow();
+            row["Id"] = 1;
+            row["Name"] = "HuKang";
+            row["DecimalProperty1"] = 1;
+            row["DecimalProperty2"] = 2;
+            row["DecimalProperty3"] = 3;
+            row["CreatedTime"] = DateTime.Now;
+            row["UpdatedTime"] = DateTime.Now;
+            row["CreatedUser"] = "hk";
+            row["UpdatedUser"] = "hk";
+            row["IsPhantom"] = false;
+            row["TreeIndex"] = null;
+            row["TreePId"] = null;
+            table.Rows.Add(row);
+
+
+            var customer = table.ToEntityList<CustomerList>();
+            Assert.AreEqual(1, customer.Count, "liteDataTable 应该能转换成一条 customer 的数据");
+        }
+
     }
 }
