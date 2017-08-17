@@ -133,6 +133,13 @@ namespace UT
             );
             return (InvoiceList)this.QueryData(q);
         }
+
+        [RepositoryQuery]
+        public virtual LiteDataTable GetAllTable()
+        {
+            var sql = @"select * from invoice ";
+            return (this.DataQueryer as RdbDataQueryer).QueryTable(sql);
+        }
     }
 
     /// <summary>
