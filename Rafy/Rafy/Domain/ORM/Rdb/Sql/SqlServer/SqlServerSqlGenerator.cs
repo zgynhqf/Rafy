@@ -21,6 +21,14 @@ namespace Rafy.Domain.ORM
 {
     class SqlServerSqlGenerator : SqlGenerator
     {
+        /// <summary>
+        /// Sql Server 中没有限制 In 语句中的项的个数。（但是如果使用参数的话，则最多只能使用 2000 个参数。）
+        /// 
+        /// In 语句中可以承受的最大的个数。
+        /// 如果超出这个个数，则会抛出 TooManyItemsInInClauseException。
+        /// </summary>
+        protected override int MaxItemsInInClause => int.MaxValue;
+
         protected override void QuoteAppend(string identifier)
         {
             if (this.AutoQuota)
@@ -47,48 +55,6 @@ namespace Rafy.Domain.ORM
         /// <returns></returns>
         protected override ISqlSelect ModifyToPagingTree(SqlSelect raw, PagingInfo pagingInfo)
         {
-            return ModifyToPagingTreeWithRowNumberOver(raw, pagingInfo);
-        }
-
-        private static ISqlSelect MakePagingTree(SqlSelect raw, long startRow, long endRow)
-        {
-            /*********************** 代码块解释 *********************************
-             * 以下转换使用 row_number 行号字段来实现分页。只需要简单地在查询的 WHERE 语句中加入等号的判断即可。
-             *
-             * 源格式：
-             *     SELECT *
-             *     FROM A
-             *     WHERE A.Id > 0
-             *     ORDER BY A.NAME ASC
-             * 
-             * 目标格式：
-             *      SELECT * FROM
-             *      (
-             *          SELECT A.*, row_number() over (order by XXXXXX)_rowNumber
-             *          FROM  A
-             *      ) T
-             *      WHERE _rowNumber between 1 and 10
-            **********************************************************************/
-
-            return new SqlNodeList
-            {
-                                new SqlLiteral(
-                @"SELECT * FROM
-                ("),
-                                raw,
-                                new SqlLiteral(
-                @")T WHERE _rowNumber BETWEEN " + startRow + @" AND " +endRow )
-            };
-        }
-
-        /// <summary>
-        /// 为指定的原始查询生成指定分页效果的新查询。
-        /// </summary>
-        /// <param name="raw">原始查询</param>
-        /// <param name="pagingInfo">分页信息。</param>
-        /// <returns></returns>
-        private ISqlSelect ModifyToPagingTreeWithNotIn(SqlSelect raw, PagingInfo pagingInfo)
-        {
             if (PagingInfo.IsNullOrEmpty(pagingInfo)) { throw new ArgumentNullException("pagingInfo"); }
             if (!raw.HasOrdered()) { throw new InvalidProgramException("必须排序后才能使用分页功能。"); }
 
@@ -108,6 +74,17 @@ namespace Rafy.Domain.ORM
                 };
             }
 
+            return this.ModifyToPagingTreeWithRowNumberOver(raw, pagingInfo);
+        }
+
+        /// <summary>
+        /// 为指定的原始查询生成指定分页效果的新查询。
+        /// </summary>
+        /// <param name="raw">原始查询</param>
+        /// <param name="pagingInfo">分页信息。</param>
+        /// <returns></returns>
+        private ISqlSelect ModifyToPagingTreeWithNotIn(SqlSelect raw, PagingInfo pagingInfo)
+        {
             /*********************** 代码块解释 *********************************
              * 
              * 转换方案：
@@ -190,27 +167,8 @@ namespace Rafy.Domain.ORM
         /// <param name="raw">原始查询</param>
         /// <param name="pagingInfo">分页信息。</param>
         /// <returns></returns>
-        protected  ISqlSelect ModifyToPagingTreeWithRowNumberOver(SqlSelect raw, PagingInfo pagingInfo)
+        private ISqlSelect ModifyToPagingTreeWithRowNumberOver(SqlSelect raw, PagingInfo pagingInfo)
         {
-            if (PagingInfo.IsNullOrEmpty(pagingInfo)) { throw new ArgumentNullException("pagingInfo"); }
-            if (!raw.HasOrdered()) { throw new InvalidProgramException("必须排序后才能使用分页功能。"); }
-
-            //如果是第一页，则只需要使用 TOP 语句即可。
-            if (pagingInfo.PageNumber == 1)
-            {
-                return new SqlSelect
-                {
-                    Selection = new SqlNodeList
-                    {
-                        new SqlLiteral { FormattedSql = "TOP " + pagingInfo.PageSize + " " },
-                        raw.Selection ?? SqlSelectAll.Default
-                    },
-                    From = raw.From,
-                    Where = raw.Where,
-                    OrderBy = raw.OrderBy
-                };
-            }
-
             /*********************** 代码块解释 *********************************
              * 
              * 转换方案：
@@ -222,36 +180,46 @@ namespace Rafy.Domain.ORM
              * 
              * 转换分页后：
              * 
-             *      SELECT * FROM
-             *      (
-             *          SELECT A.*, ROW_NUMBER() OVER (order by  Id)_rowNumber
-             *          FROM  A
-             *      ) T
-             *      WHERE _rowNumber between 1 and 10
+             * SELECT * FROM
+             * (
+             *     SELECT A.*, ROW_NUMBER() OVER (order by  Id) _RowNumber
+             *     FROM  A
+             * ) T
+             * WHERE _RowNumber between 1 and 10
             **********************************************************************/
+
+            var finder = new FirstTableFinder();
+            var pkTable = finder.Find(raw.From);
 
             var newRaw = new SqlSelect
             {
                 Selection = new SqlNodeList()
-                    {
-                        new SqlLiteral {FormattedSql = "ROW_NUMBER() OVER ("},
-                        raw.OrderBy,
-                        new SqlLiteral {FormattedSql = ")_rowNumber,"},
-                        raw.Selection ?? SqlSelectAll.Default
-                    },
+                {
+                    raw.Selection ?? new SqlSelectAll() { Table = pkTable },
+                    new SqlLiteral { FormattedSql = ", ROW_NUMBER() OVER (" },
+                    raw.OrderBy,
+                    new SqlLiteral { FormattedSql = ") _RowNumber " },
+  
+                },
                 From = raw.From,
                 Where = raw.Where,
                 IsDistinct = raw.IsDistinct,
-                IsCounting = raw.IsCounting,
-
+                IsCounting = raw.IsCounting
             };
             var startRow = pagingInfo.PageSize * (pagingInfo.PageNumber - 1) + 1;
             var endRow = startRow + pagingInfo.PageSize - 1;
 
-            var res = MakePagingTree(newRaw, startRow, endRow);
+            var res = new SqlNodeList
+            {
+                                new SqlLiteral(
+                @"SELECT * FROM
+("),
+                                newRaw,
+                                new SqlLiteral(
+                @")T WHERE _RowNumber BETWEEN " + startRow + @" AND " +endRow )
+            };
 
             return res;
         }
-
     }
 }

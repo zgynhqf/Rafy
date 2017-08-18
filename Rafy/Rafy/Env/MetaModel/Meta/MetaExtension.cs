@@ -130,12 +130,12 @@ namespace Rafy.MetaModel
         /// 当映射视图时，不会生成数据库表，仓库中也需要在所有的查询中都编写自定义查询。
         /// </summary>
         /// <param name="meta"></param>
-        /// <param name="viewSql">
-        /// 可以是一个数据库视图，也可以是一个能查询出数据的 Sql 语句。
-        /// 
-        /// 如果不指定此参数，则需要在所有的查询中都编写自定义查询。
-        /// </param>
         /// <returns></returns>
+        ///// <param name="viewSql">
+        ///// 可以是一个数据库视图，也可以是一个能查询出数据的 Sql 语句。
+        ///// 
+        ///// 如果不指定此参数，则需要在所有的查询中都编写自定义查询。
+        ///// </param>
         public static EntityMeta MapView(this EntityMeta meta)//, string viewSql = null)
         {
             meta.TableMeta = new TableMeta();

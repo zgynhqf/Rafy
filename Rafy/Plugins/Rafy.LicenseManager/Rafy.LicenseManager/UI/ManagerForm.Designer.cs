@@ -351,9 +351,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(30, 177);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(84, 15);
+            this.label1.Size = new System.Drawing.Size(67, 15);
             this.label1.TabIndex = 0;
-            this.label1.Text = "MAC 地址：";
+            this.label1.Text = "校验码：";
             // 
             // tabAuthorizationView
             // 
@@ -399,53 +399,53 @@
             this.toolStripSeparator2,
             this.tsmDelete});
             this.dgvContextMenu.Name = "dgvContextMenu";
-            this.dgvContextMenu.Size = new System.Drawing.Size(175, 146);
+            this.dgvContextMenu.Size = new System.Drawing.Size(169, 136);
             this.dgvContextMenu.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this._DgvContextMenu_ItemClicked);
             // 
             // tsmPrivateKey
             // 
             this.tsmPrivateKey.Name = "tsmPrivateKey";
-            this.tsmPrivateKey.Size = new System.Drawing.Size(174, 26);
+            this.tsmPrivateKey.Size = new System.Drawing.Size(168, 24);
             this.tsmPrivateKey.Text = "复制私钥";
             // 
             // tsmPublicKey
             // 
             this.tsmPublicKey.Name = "tsmPublicKey";
-            this.tsmPublicKey.Size = new System.Drawing.Size(174, 26);
+            this.tsmPublicKey.Size = new System.Drawing.Size(168, 24);
             this.tsmPublicKey.Text = "复制公钥";
             // 
             // tsmLicenceCode
             // 
             this.tsmLicenceCode.Name = "tsmLicenceCode";
-            this.tsmLicenceCode.Size = new System.Drawing.Size(174, 26);
+            this.tsmLicenceCode.Size = new System.Drawing.Size(168, 24);
             this.tsmLicenceCode.Text = "复制授权码";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(171, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(165, 6);
             // 
             // tsmExpressData
             // 
             this.tsmExpressData.Name = "tsmExpressData";
-            this.tsmExpressData.Size = new System.Drawing.Size(174, 26);
+            this.tsmExpressData.Size = new System.Drawing.Size(168, 24);
             this.tsmExpressData.Text = "获取明文数据";
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(171, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(165, 6);
             // 
             // tsmDelete
             // 
             this.tsmDelete.Name = "tsmDelete";
-            this.tsmDelete.Size = new System.Drawing.Size(174, 26);
+            this.tsmDelete.Size = new System.Drawing.Size(168, 24);
             this.tsmDelete.Text = "删除";
             // 
             // MacCode
             // 
             this.MacCode.DataPropertyName = "MacCode";
-            this.MacCode.HeaderText = "MAC地址";
+            this.MacCode.HeaderText = "校验码";
             this.MacCode.Name = "MacCode";
             this.MacCode.ReadOnly = true;
             this.MacCode.Width = 120;

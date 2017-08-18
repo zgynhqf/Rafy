@@ -31,8 +31,7 @@ namespace Rafy.DbMigration.MySql
         /// 构造函数 初始化配置
         /// </summary>
         /// <param name="dbSetting">数据库配置信息</param>
-        public MySqlMetaReader(DbSetting dbSetting) : base(dbSetting)
-        { }
+        public MySqlMetaReader(DbSetting dbSetting) : base(dbSetting) { }
 
         /// <summary>
         /// 加载指定数据库中的每个表的所有列
@@ -42,7 +41,7 @@ namespace Rafy.DbMigration.MySql
         {
             foreach (Table table in database.Tables)
             {
-                using (var columnsReader = this.Db.QueryDataReader(@"SHOW FULL COLUMNS FROM `"+ table.Name + "`;"))
+                using (var columnsReader = this.Db.QueryDataReader(@"SHOW FULL COLUMNS FROM `" + table.Name + "`;"))
                 {
                     while (columnsReader.Read())
                     {
@@ -51,8 +50,9 @@ namespace Rafy.DbMigration.MySql
 
                         DbType dbType = MySqlDbTypeHelper.ConvertFromMySqlTypeString(sqlType);
                         Column column = new Column(columnName, dbType, null, table);
-                        column.IsRequired = string.Compare(columnsReader["Null"].ToString(),"Yes",true)!=0;
-
+                        column.IsRequired = string.Compare(columnsReader["Null"].ToString(), "Yes", true) != 0;
+                        column.IsIdentity = string.Equals(columnsReader["Extra"].ToString(), "auto_increment",
+                            StringComparison.CurrentCultureIgnoreCase);
                         table.Columns.Add(column);
                     }
                     table.SortColumns();
@@ -66,7 +66,7 @@ namespace Rafy.DbMigration.MySql
         /// <param name="database">待加载表的数据库对象</param>
         protected override void LoadAllTables(Database database)
         {
-            using (var reader = this.Db.QueryDataReader(@"select table_name from information_schema.tables where table_schema='"+ database.Name + "';"))
+            using (var reader = this.Db.QueryDataReader(@"select table_name from information_schema.tables where table_schema='" + database.Name + "';"))
             {
                 while (reader.Read())
                 {
@@ -95,7 +95,7 @@ from (
             LEFT join information_schema.REFERENTIAL_CONSTRAINTS R on K.CONSTRAINT_NAME=R.CONSTRAINT_NAME
 ) as O 
 inner join Information_schema.TABLE_CONSTRAINTS T on O.Table_Name=T.TABLE_NAME and T.CONSTRAINT_NAME=O.CONSTRAINT_NAME
-where O.CONSTRAINT_SCHEMA!='mysql' and O.CONSTRAINT_SCHEMA!='sys';"))
+where O.CONSTRAINT_SCHEMA!='mysql' and O.CONSTRAINT_SCHEMA!='sys' and O.CONSTRAINT_SCHEMA='" + this.Db.Connection.Database + "'"))
             {
                 while (constraintReader.Read())
                 {

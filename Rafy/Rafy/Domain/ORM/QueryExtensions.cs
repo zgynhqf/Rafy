@@ -214,15 +214,16 @@ namespace Rafy.Domain.ORM.Query
             var parameters = value as IList;
 
             IConstraint res = null;
+            var maxItemsCount = SqlGenerator.CampatibleMaxItemsInInClause;
             //处理大数目In 条件
-            if (parameters != null && parameters.Count > SqlGenerator.MaxItemsInInClause)
+            if (parameters != null && parameters.Count > maxItemsCount)
             {
                 var start = 0;
                 while (start < parameters.Count)
                 {
-                    var paramSection = new List<object>(SqlGenerator.MaxItemsInInClause);
+                    var paramSection = new List<object>(maxItemsCount);
 
-                    var end = Math.Min(start + SqlGenerator.MaxItemsInInClause - 1, parameters.Count - 1);
+                    var end = Math.Min(start + maxItemsCount - 1, parameters.Count - 1);
                     for (int i = start; i <= end; i++)
                     {
                         paramSection.Add(parameters[i]);
@@ -248,14 +249,15 @@ namespace Rafy.Domain.ORM.Query
 
             IConstraint res = null;
             //处理大数目NotIn 条件
-            if (parameters != null && parameters.Count > SqlGenerator.MaxItemsInInClause)
+            var maxItemsCount = SqlGenerator.CampatibleMaxItemsInInClause;
+            if (parameters != null && parameters.Count > maxItemsCount)
             {
                 var start = 0;
                 while (start < parameters.Count)
                 {
-                    var paramSection = new List<object>(SqlGenerator.MaxItemsInInClause);
+                    var paramSection = new List<object>(maxItemsCount);
 
-                    var end = Math.Min(start + SqlGenerator.MaxItemsInInClause - 1, parameters.Count - 1);
+                    var end = Math.Min(start + maxItemsCount - 1, parameters.Count - 1);
                     for (int i = start; i <= end; i++)
                     {
                         paramSection.Add(parameters[i]);

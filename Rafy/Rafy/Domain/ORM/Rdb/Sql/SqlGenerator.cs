@@ -70,9 +70,20 @@ namespace Rafy.Domain.ORM
 
         /// <summary>
         /// In 语句中可以承受的最大的个数。
-        /// 如果超出这个个数，则会抛出
+        /// 
+        /// 这个数表示各个不同类型的数据库中能接受的个数的最小值。
+        /// 
+        /// Oracle: 1000.
+        /// Sql server: 未限制。
+        /// MySql: ???
         /// </summary>
-        internal const int MaxItemsInInClause=1000;
+        internal const int CampatibleMaxItemsInInClause = 1000;
+
+        /// <summary>
+        /// In 语句中可以承受的最大的个数。
+        /// 如果超出这个个数，则会抛出 TooManyItemsInInClauseException。
+        /// </summary>
+        protected virtual int MaxItemsInInClause => CampatibleMaxItemsInInClause;
 
         #region 分页支持
 
@@ -511,7 +522,7 @@ namespace Rafy.Domain.ORM
                         int i = 0;
                         foreach (var item in value as IEnumerable)
                         {
-                            if (++i > MaxItemsInInClause) throw new TooManyItemsInInClauseException();
+                            if (++i > this.MaxItemsInInClause) throw new TooManyItemsInInClauseException();
 
                             if (first)
                             {

@@ -13,7 +13,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: InternalsVisibleTo("Rafy.LicenseManager")]
+[assembly: InternalsVisibleTo("Rafy.LicenseManager, PublicKey=0024000004800000940000000602000000240000525341310004000001000100d3ae8c70610ec4e9ddd1c83c90c9e99c19a4c675e79b0360283797b567ea20e1a6804e1bd5459f5ad6d354a3ee5d1608faafff8d33460116af32c3e9b012c38f5ef334eff3b7f85f1a3db52e4f44ebbbf24429b5650072bb1968ea80dec1b97ab9429db053fc85d89acc0f287516bf367efebecc7ea085808367f978f69fb8c2")]
 
 //将 ComVisible 设置为 false 将使此程序集中的类型
 //对 COM 组件不可见。  如果需要从 COM 访问此程序集中的类型，

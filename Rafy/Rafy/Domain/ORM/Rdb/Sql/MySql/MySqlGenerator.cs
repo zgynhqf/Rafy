@@ -25,8 +25,16 @@ namespace Rafy.Domain.ORM.MySql
     /// <summary>
     /// MySql的Sql语句生成器
     /// </summary>
-    internal sealed class MySqlGenerator:SqlGenerator
+    internal sealed class MySqlGenerator : SqlGenerator
     {
+        /// <summary>
+        /// Sql Server 中没有限制 In 语句中的项的个数。（但是如果使用参数的话，则最多只能使用 2000 个参数。）
+        /// 
+        /// In 语句中可以承受的最大的个数。
+        /// 如果超出这个个数，则会抛出 TooManyItemsInInClauseException。
+        /// </summary>
+        protected override int MaxItemsInInClause => int.MaxValue;
+
         /// <summary>
         /// 名称别名设置
         /// </summary>
@@ -143,7 +151,7 @@ namespace Rafy.Domain.ORM.MySql
 
             var pageNumber =pagingInfo.PageNumber;
             var pageSize = pagingInfo.PageSize;
-            
+
             var res = MakePagingTree(raw, pageNumber, pageSize);
             return res;
         }

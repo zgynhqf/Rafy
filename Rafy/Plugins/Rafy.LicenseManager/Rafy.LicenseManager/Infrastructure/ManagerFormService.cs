@@ -42,7 +42,7 @@ namespace Rafy.LicenseManager.Infrastructure
             var authCode = new AuthorizationCode
             {
                 ExpireTime = entity.ExpireTime,
-                Mac = entity.MacCode,
+                CheckCode = entity.MacCode,
                 Category = entity.LicenseTarget == LicenseTarget.Development ? 0 : 1
             };
             var licenseCode = SecurityAuthentication.Encrypt(authCode, entity.PrivateKey);
@@ -63,7 +63,7 @@ namespace Rafy.LicenseManager.Infrastructure
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(entity.MacCode) || !_regex.IsMatch(entity.MacCode))
+            if (string.IsNullOrWhiteSpace(entity.MacCode) /*|| !_regex.IsMatch(entity.MacCode)*/)
             {
                 MessageBox.Show(LicenseManagerResource.ManagerFormValidateParametersMACAddress, LicenseManagerResource.ManagerFormValidateParametersWarning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
