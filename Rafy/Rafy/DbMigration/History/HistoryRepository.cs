@@ -60,12 +60,15 @@ namespace Rafy.DbMigration.History
         /// <returns></returns>
         internal Result AddAsExecuted(string database, DbMigration migration)
         {
+            var migrationType = migration.GetType();
+
             var history = new HistoryItem()
             {
                 IsGenerated = false,
                 TimeId = migration.TimeId,
                 Description = migration.Description,
-                MigrationClass = migration.GetType().AssemblyQualifiedName,
+                //MigrationClass = migration.GetType().AssemblyQualifiedName,//Rafy.DbMigration.Operations.RemoveFKConstraint, Rafy, Version=3.51.3140.0, Culture=neutral, PublicKeyToken=f7937325279b37cf
+                MigrationClass = migrationType.FullName + ", " + migrationType.Assembly.FullName,//忽略版本号，方便框架升级。Rafy.DbMigration.Operations.RemoveFKConstraint, Rafy
             };
 
             if (migration.MigrationType == MigrationType.AutoMigration)
