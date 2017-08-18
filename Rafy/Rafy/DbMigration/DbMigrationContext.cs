@@ -372,7 +372,7 @@ namespace Rafy.DbMigration
                 {
                     if (!string.IsNullOrWhiteSpace(column.Comment))
                     {
-                        operations.Add(new UpdateComment { TableName = table.Name,  ColumnName = column.Name, ColumnDataType= column.DataType, Comment = column.Comment });
+                        operations.Add(new UpdateComment { TableName = table.Name, ColumnName = column.Name, ColumnDataType = column.DataType, Comment = column.Comment });
                     }
                 }
             }
