@@ -162,7 +162,8 @@ namespace Rafy.DbMigration.Model
         {
             if (a.Table.Name.EqualsIgnoreCase(b.Table.Name) &&
                 a.Name.EqualsIgnoreCase(b.Name) &&
-                a.DataType == b.DataType &&
+                DbTypeHelper.IsCompatible(a.DataType, b.DataType) &&
+                //a.DataType == b.DataType &&
                 a.IsRequired == b.IsRequired &&
                 a.IsForeignKey == b.IsForeignKey &&
                 a.IsPrimaryKey == b.IsPrimaryKey

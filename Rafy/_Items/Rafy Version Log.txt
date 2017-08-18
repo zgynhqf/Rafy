@@ -10,11 +10,12 @@
  * 
 *******************************************************
 
-3.61.3406
+3.61.3410
     BUG修复
         解决sql In过滤条件数量大于1000报错
         修改 SQL SERVER 分页采用RowNumber() Over
         解决“DbMigration 中生成的历史日志中的 MigrationClass 因为包含版本号，导致程序集升级后，无法加载类型，进而无法回滚”的问题。
+        解决 MySql 下每个表都更新时间类型的字段 的问题。
     添加接口
         添加 EntityRepository ResolveInstance(Type repositoryType) 接口。
 

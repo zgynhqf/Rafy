@@ -199,10 +199,6 @@ namespace Rafy.DbMigration.MySql
             {
                 return DbType.Binary;
             }
-            else if (CultureInfo.InvariantCulture.CompareInfo.IndexOf(mySqlType, "DATE", CompareOptions.IgnoreCase) != -1)
-            {
-                return DbType.Date;
-            }
             else if (CultureInfo.InvariantCulture.CompareInfo.IndexOf(mySqlType, "TIME", CompareOptions.IgnoreCase) != -1)
             {
                 if (mySqlType.IndexOf('(') > 0)
@@ -225,6 +221,10 @@ namespace Rafy.DbMigration.MySql
                 {
                     throw new NotSupportedException(string.Format("不支持读取数据库中的列类型：{0}。", mySqlType));
                 }
+            }
+            else if (CultureInfo.InvariantCulture.CompareInfo.IndexOf(mySqlType, "DATE", CompareOptions.IgnoreCase) != -1)
+            {
+                return DbType.Date;
             }
             else
             {
