@@ -51,7 +51,8 @@ namespace Rafy.DbMigration.MySql
                         DbType dbType = MySqlDbTypeHelper.ConvertFromMySqlTypeString(sqlType);
                         Column column = new Column(columnName, dbType, null, table);
                         column.IsRequired = string.Compare(columnsReader["Null"].ToString(), "Yes", true) != 0;
-
+                        column.IsIdentity = string.Equals(columnsReader["Extra"].ToString(), "auto_increment",
+                            StringComparison.CurrentCultureIgnoreCase);
                         table.Columns.Add(column);
                     }
                     table.SortColumns();
