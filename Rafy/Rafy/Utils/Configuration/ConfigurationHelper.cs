@@ -66,8 +66,8 @@ namespace Rafy
         /// <summary>
         /// 获取配置文件中的ConnectionString的指定键的值
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="defaultValue"></param>
+        /// <param name="key">The key.</param>
+        /// <param name="providerName">Name of the provider.</param>
         /// <returns></returns>
         internal static ConnectionStringSettings GetConnectionString(string key, string providerName = "System.Data.SqlClient")
         {
