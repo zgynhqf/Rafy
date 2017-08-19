@@ -6,7 +6,11 @@
         <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-        <Version>4.52.3150</Version>
+        <Version>4.0.0</Version>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <DocumentationFile>bin\Debug\netstandard2.0\Rafy.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -575,6 +579,7 @@
     <ItemGroup>
       <Reference Include="System.Data.SqlServerCe">
         <HintPath>..\..\packages\Lib\SQLCE\System.Data.SqlServerCe.dll</HintPath>
+        <Private>false</Private>
       </Reference>
     </ItemGroup>
 

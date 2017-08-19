@@ -23,6 +23,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Items", "_Items", "{0BC3A639-82DB-489E-880C-A8A504C1DAAC}"
 	ProjectSection(SolutionItems) = preProject
 		Rafy\_Items\Hxy Key.snk = Rafy\_Items\Hxy Key.snk
+		Rafy\_Items\Rafy Net Standard Version Log.txt = Rafy\_Items\Rafy Net Standard Version Log.txt
 		Rafy\_Items\Rafy Version Log.txt = Rafy\_Items\Rafy Version Log.txt
 		Rafy\_Items\RafySDK Version Log.txt = Rafy\_Items\RafySDK Version Log.txt
 	EndProjectSection
@@ -143,7 +144,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.Domain.EntityPhantom",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.Domain.Stamp", "Rafy\Plugins\Rafy.Domain.Stamp\Rafy.Domain.Stamp.csproj", "{6A13F732-1658-4636-8113-338B398CF328}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.Accounts", "Rafy\Plugins\Rafy.Accounts\Rafy.Accounts.csproj", "{4D6467E4-D1CE-4FA8-A1FE-92B1BA549A4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rafy.Accounts", "Rafy\Plugins\Rafy.Accounts\Rafy.Accounts.csproj", "{4D6467E4-D1CE-4FA8-A1FE-92B1BA549A4A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.SerialNumber", "Rafy\Plugins\Rafy.SerialNumber\Rafy.SerialNumber.csproj", "{9FF37989-33E7-4D67-8E81-0A443EAEE510}"
 EndProject
