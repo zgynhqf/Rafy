@@ -135,7 +135,7 @@ namespace UT
         }
 
         [RepositoryQuery]
-        public virtual LiteDataTable GetAllTable()
+        public virtual LiteDataTable GetAllInTable()
         {
             var sql = @"select * from invoice ";
             return (this.DataQueryer as RdbDataQueryer).QueryTable(sql);
