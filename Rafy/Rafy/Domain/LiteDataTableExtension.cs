@@ -53,6 +53,7 @@ namespace Rafy.Domain
                 tableColumnsNameList.Add(columns[i].ColumnName);
             }
 
+            //当表格中的列名映射的是实体对应的数据库表的列名，而非属性名的转换方法。
             var resultList = repo.NewList();
             if (!columnMapToProperty)
             {
@@ -88,7 +89,7 @@ namespace Rafy.Domain
                     }
                 }
 
-                // 通过 liteDataTable 填充 entitylist
+                // 通过 liteDataTable 填充 entitylist。
                 for (int i = 0; i < liteDataTable.Rows.Count; i++)
                 {
                     var row = liteDataTable.Rows[i];
@@ -126,7 +127,7 @@ namespace Rafy.Domain
                 throw new NotSupportedException("liteDataTable 的列集合和 entitylist 映射在数据库中的列（以及没映射属性）集合没有任何交集");
             }
 
-            // 通过 liteDataTable 填充 entitylist
+            // 通过 liteDataTable 填充 entitylist。 
             for (int i = 0; i < liteDataTable.Rows.Count; i++)
             {
                 var entityItem = repo.New();
