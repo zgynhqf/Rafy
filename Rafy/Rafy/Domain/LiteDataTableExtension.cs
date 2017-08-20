@@ -12,6 +12,7 @@
 *******************************************************/
 
 using Rafy.Data;
+using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using System;
 using System.Collections.Generic;
@@ -22,12 +23,12 @@ using System.Threading.Tasks;
 namespace Rafy.Domain
 {
     /// <summary>
-    /// 对 LiteDataTableExtension 类型的扩展
+    /// 对 LiteDataTable 类型的扩展。
     /// </summary>
     public static class LiteDataTableExtension
     {
         /// <summary>
-        /// LiteDataTableExtension 的扩展方法，实现 LiteDataTableExtension 类型到 EntityList 类型的转换
+        /// LiteDataTable 类型的扩展方法，实现 LiteDataTable 类型到 EntityList 类型的转换。
         /// </summary>
         /// <typeparam name="TEntityList"></typeparam>
         /// <param name="liteDataTable"></param>
@@ -41,74 +42,64 @@ namespace Rafy.Domain
         {
             var entityMatrix = EntityMatrix.FindByList(typeof(TEntityList));
             var repo = RepositoryFacade.Find(entityMatrix.EntityType);
-
             var entity = repo.New();
-            var resultList = repo.NewList();
             var entityMeta = repo.EntityMeta;
+
+            //初始化 liteDataTable 中所有列名的集合 tableColumnsNameList。
             var columns = liteDataTable.Columns;
-            var liteDataTableColumnsNameList = new List<string>();//liteDataTable 中所有列名的集合
+            var tableColumnsNameList = new List<string>();
             for (int i = 0; i < columns.Count; i++)
             {
-                liteDataTableColumnsNameList.Add(columns[i].ColumnName);
+                tableColumnsNameList.Add(columns[i].ColumnName);
             }
 
+            var resultList = repo.NewList();
             if (!columnMapToProperty)
             {
-                List<EntityPropertyMeta> pMetaList = new List<EntityPropertyMeta>();
-                IList<EntityPropertyMeta> entityPropertyMetaList = entityMeta.EntityProperties;
+                var pMetaList = new List<EntityPropertyMeta>();
+                var entityPropertyMetaList = entityMeta.EntityProperties;
 
-                #region 判断 liteDataTable 类型能否转换成 EntityList 类型
-
-                List<string> entitycolumnNameList = new List<string>();
+                //初始化 liteDateTable 能够映射到实体属性列名集合 pMetaList，
+                //并检验 liteDataTable 是否能转换为相应的 entitylist。
                 for (int i = 0; i < entityPropertyMetaList.Count; i++)
                 {
                     var propertyMeta = entityPropertyMetaList[i];
-                    var columnMeta = propertyMeta.ColumnMeta;
-
-                    var columnName = "";
-
-                    // 这个位置有时候会存在 columnMeta 为空的情况
-                    // 很多实体会默认继承 treeIndex  treePId  isphantom  
-                    // 而且这些属性没有映射到数据库，所以这个时候取 columnMeta 就是空的
-                    // 这个时候如果要转换我就不对这3个属性处理
-                    if (columnMeta != null)
+                    var manageProperty = propertyMeta.ManagedProperty;
+                    if (!manageProperty.IsReadOnly)
                     {
-                        //这个位置是针对于时间戳的那几个字段 columnMeta 不为空 但是 映射到数据库的 columnName 这个属性是空的
-                        if (columnMeta.ColumnName == null)
+                        var columnMeta = propertyMeta.ColumnMeta;
+
+                        //这个位置是针对于时间戳的那几个字段 columnMeta 不为空 ，但是映射到数据库的 columnName 这个属性是空的。
+                        //还有种情况是 columnMeta 为空，比如当对应的属性为 treeIndex。
+                        var columnName = columnMeta == null ? propertyMeta.Name : columnMeta.ColumnName ?? propertyMeta.Name;
+
+                        for (int j = 0; j < tableColumnsNameList.Count; j++)
                         {
-                            columnName = propertyMeta.Name;
+                            if (tableColumnsNameList.Contains(columnName))
+                            {
+                                pMetaList.Add(propertyMeta);
+                            }
                         }
-                        else
-                        {
-                            columnName = columnMeta.ColumnName;
-                        }
-                        entitycolumnNameList.Add(columnName);
-                        pMetaList.Add(propertyMeta);
+                    }
+                    //如果 liteDataTable 的列集合和 entitylist 映射在数据库中的列（以及没映射属性）集合没有任何交集那么就不能转换。
+                    if (pMetaList.Count == 0)
+                    {
+                        throw new NotSupportedException("liteDataTable 的列集合和 entitylist 映射在数据库中的列（以及没映射属性）集合没有任何交集");
                     }
                 }
 
-                for (int i = 0; i < entitycolumnNameList.Count; i++)
+                // 通过 liteDataTable 填充 entitylist
+                for (int i = 0; i < liteDataTable.Rows.Count; i++)
                 {
-                    var entityColumnName = entitycolumnNameList[i];
-                    if (!liteDataTableColumnsNameList.Contains(entityColumnName) && (!LiteDataTableExtension.IsInheritProperty(entityColumnName)))
-                    {
-                        throw new NotSupportedException("需要转换的 LiteDataTable 不包含 " + entitycolumnNameList[i] + " 列，所以不能转换");
-                    }
-                }
-
-                #endregion
-
-                foreach (var row in liteDataTable.Rows)
-                {
+                    var row = liteDataTable.Rows[i];
                     var entityItem = repo.New();
-                    foreach (var metaProperty in pMetaList)
+                    for (int j = 0; j < pMetaList.Count; j++)
                     {
-                        var manageProperty = metaProperty.ManagedProperty;
-                        var propertyName = metaProperty.ColumnMeta.ColumnName;
-                        if (propertyName == null)
-                        {
-                            propertyName = metaProperty.Name;
-                        }
+                        var metaItem = pMetaList[j];
+                        var manageProperty = metaItem.ManagedProperty;
+                        var columnMeta = metaItem.ColumnMeta;
+                        var propertyName = string.Empty;
+                        propertyName = columnMeta == null ? metaItem.Name : columnMeta.ColumnName ?? metaItem.Name;
                         var rowValue = row[propertyName];
                         entityItem.LoadProperty(manageProperty, rowValue);
                     }
@@ -116,56 +107,40 @@ namespace Rafy.Domain
                 }
                 return resultList as TEntityList;
             }
-            else
+
+            //初始化 liteDateTable 能够映射到实体属性列名集合 pMetaList，
+            //并检验 liteDataTable 是否能转换为相应的 entitylist。
+            var propertyList = entity.PropertiesContainer.GetCompiledProperties();
+            var availablePropertyList = new List<IManagedProperty>();
+            for (int i = 0; i < propertyList.Count; i++)
             {
-                #region 判断 liteDataTable 类型能否转换成 EntityList 类型
-
-                var propertyList = entity.PropertiesContainer.GetCompiledProperties();
-
-                for (int i = 0; i < propertyList.Count; i++)
+                var property = propertyList[i];
+                var entityPropertyName = property.Name;
+                if (tableColumnsNameList.Contains(entityPropertyName) && (!property.IsReadOnly))
                 {
-                    var entityPropertyName = propertyList[i].Name;
-
-                    if (!liteDataTableColumnsNameList.Contains(entityPropertyName))
-                    {
-                        throw new NotSupportedException("需要转换的 LiteDataTable 不包含 " + entityPropertyName + " 列，所以不能转换");
-                    }
+                    availablePropertyList.Add(property);
                 }
+            }
+            if (availablePropertyList.Count == 0)
+            {
+                throw new NotSupportedException("liteDataTable 的列集合和 entitylist 映射在数据库中的列（以及没映射属性）集合没有任何交集");
+            }
 
-                #endregion
-
-                foreach (var row in liteDataTable.Rows)
+            // 通过 liteDataTable 填充 entitylist
+            for (int i = 0; i < liteDataTable.Rows.Count; i++)
+            {
+                var entityItem = repo.New();
+                var row = liteDataTable.Rows[i];
+                for (int j = 0; j < availablePropertyList.Count; j++)
                 {
-                    var entityItem = repo.New();
-                    foreach (var property in propertyList)
-                    {
-                        var propertyName = property.Name;
-                        var rowValue = row[propertyName];
-                        entityItem.LoadProperty(property, rowValue);
-                    }
-                    resultList.Add(entityItem);
+                    var item = availablePropertyList[j];
+                    var propertyName = item.Name;
+                    var rowValue = row[propertyName];
+                    entityItem.LoadProperty(item, rowValue);
                 }
-                return resultList as TEntityList;
+                resultList.Add(entityItem);
             }
-        }
-
-        /// <summary>
-        /// 判断属性是否为继承属性 treeIndex  treePId  isphantom
-        /// 很多实体会默认继承 treeIndex  treePId  isphantom 
-        /// 而且这些属性没有映射到数据库
-        /// 所以当类型转换的时候 ，就不需要判断这几个属性
-        /// </summary>
-        /// <returns></returns>
-        public static bool IsInheritProperty(string propertyName)
-        {
-            if (propertyName == "IsPhantom" || propertyName == "TreeIndex" || propertyName == "TreePId")
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return resultList as TEntityList;
         }
     }
 }
