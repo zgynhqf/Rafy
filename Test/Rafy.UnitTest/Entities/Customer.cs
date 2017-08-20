@@ -87,7 +87,7 @@ namespace UT
         #region 数据访问
 
         [RepositoryQuery]
-        public virtual LiteDataTable GetAllTable()
+        public virtual LiteDataTable GetAllInTable()
         {
             var sql = @"select * from customer ";
             return (this.DataQueryer as RdbDataQueryer).QueryTable(sql);
