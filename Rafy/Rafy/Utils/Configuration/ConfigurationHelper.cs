@@ -93,7 +93,7 @@ namespace Rafy
                 {
                     _configuration = new ConfigurationBuilder()
                         .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                        .AddJsonFile("appsettings.json")
+                        //.AddJsonFile("appsettings.json")
                         .Build();
                 }
                 return _configuration;

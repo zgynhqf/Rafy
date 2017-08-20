@@ -25,22 +25,36 @@ namespace Rafy.Data.Providers
             switch (provider)
             {
                 case DbSetting.Provider_SqlClient:
-                    if (_sql == null) { _sql = System.Data.SqlClient.SqlClientFactory.Instance; }
+                    if (_sql == null)
+                    {
+                        _sql = System.Data.SqlClient.SqlClientFactory.Instance;
+                    }
                     return _sql;
                 case DbSetting.Provider_SqlCe:
-                    if (_sqlCe == null) { _sqlCe = System.Data.SqlClient.SqlClientFactory.Instance; }
+                    if (_sqlCe == null)
+                    {
+                        _sqlCe = System.Data.SqlClient.SqlClientFactory.Instance;
+                    }
                     return _sqlCe;
                 case DbSetting.Provider_MySql:
-                    if (_mySql == null) { _mySql = MySql.Data.MySqlClient.MySqlClientFactory.Instance; }
+                    if (_mySql == null)
+                    {
+                        _mySql = LoadFromAssembly("MySql.Data.MySqlClient.MySqlClientFactory, MySql.Data");
+                        //_mySql = MySql.Data.MySqlClient.MySqlClientFactory.Instance;
+                    }
                     return _mySql;
                 default:
                     if (DbSetting.IsOracleProvider(provider))
                     {
-                        if (_oracle == null) { _oracle = Oracle.ManagedDataAccess.Client.OracleClientFactory.Instance; }
+                        if (_oracle == null)
+                        {
+                            _oracle = LoadFromAssembly("Oracle.ManagedDataAccess.Client.OracleClientFactory, Oracle.ManagedDataAccess");
+                            //_oracle = Oracle.ManagedDataAccess.Client.OracleClientFactory.Instance;
+                        }
                         return _oracle;
                     }
                     return System.Data.SqlClient.SqlClientFactory.Instance;
-                //throw new NotSupportedException("This type of database is not supportted now:" + provider);
+                    //throw new NotSupportedException("This type of database is not supportted now:" + provider);
             }
         }
 
@@ -83,5 +97,13 @@ namespace Rafy.Data.Providers
         /// 在 FormatSQL 中的参数格式定义。
         /// </summary>
         internal static readonly Regex ReParameterName = new Regex(@"{(?<number>\d+)}", RegexOptions.Compiled);
+
+        private static DbProviderFactory LoadFromAssembly(string typeName)
+        {
+            var factoryType = Type.GetType(typeName);
+            var instance = Activator.CreateInstance(factoryType, true) as DbProviderFactory;
+            if (instance == null) throw new InvalidProgramException($"{typeName} 对应的类型无法加载。");
+            return instance;
+        }
     }
 }

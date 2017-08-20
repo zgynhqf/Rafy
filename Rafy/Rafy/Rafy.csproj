@@ -34,9 +34,8 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.0.0-preview2-final" />
-        <PackageReference Include="MySql.Data" Version="8.0.8-dmr" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.0.0" />
         <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
-        <PackageReference Include="Oracle.ManagedDataAccess" Version="12.2.1100" />
         <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
         <PackageReference Include="System.Data.Common" Version="4.3.0" />
         <PackageReference Include="System.Data.SqlClient" Version="4.3.1" />
