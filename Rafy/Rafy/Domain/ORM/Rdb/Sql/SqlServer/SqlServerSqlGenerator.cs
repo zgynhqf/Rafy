@@ -74,7 +74,7 @@ namespace Rafy.Domain.ORM
                 };
             }
 
-            return this.ModifyToPagingTreeWithRowNumberOver(raw, pagingInfo);
+            return this.ModifyToPagingTree_With_RowNumber(raw, pagingInfo);
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace Rafy.Domain.ORM
         /// <param name="raw">原始查询</param>
         /// <param name="pagingInfo">分页信息。</param>
         /// <returns></returns>
-        private ISqlSelect ModifyToPagingTreeWithNotIn(SqlSelect raw, PagingInfo pagingInfo)
+        private ISqlSelect ModifyToPagingTree_With_NotIn(SqlSelect raw, PagingInfo pagingInfo)
         {
             /*********************** 代码块解释 *********************************
              * 
@@ -167,11 +167,12 @@ namespace Rafy.Domain.ORM
         /// <param name="raw">原始查询</param>
         /// <param name="pagingInfo">分页信息。</param>
         /// <returns></returns>
-        private ISqlSelect ModifyToPagingTreeWithRowNumberOver(SqlSelect raw, PagingInfo pagingInfo)
+        private ISqlSelect ModifyToPagingTree_With_RowNumber(SqlSelect raw, PagingInfo pagingInfo)
         {
             /*********************** 代码块解释 *********************************
              * 
              * 转换方案：
+             * 使用 ROW_NUMBER() 函数。（此函数 SqlServer、Oracle 都可使用。）
              * 
              * SELECT * 
              * FROM ASN
@@ -185,7 +186,7 @@ namespace Rafy.Domain.ORM
              *     SELECT A.*, ROW_NUMBER() OVER (order by  Id) _RowNumber
              *     FROM  A
              * ) T
-             * WHERE _RowNumber between 1 and 10
+             * WHERE _RowNumber BETWEEN 1 AND 10
             **********************************************************************/
 
             var finder = new FirstTableFinder();
@@ -198,8 +199,7 @@ namespace Rafy.Domain.ORM
                     raw.Selection ?? new SqlSelectAll() { Table = pkTable },
                     new SqlLiteral { FormattedSql = ", ROW_NUMBER() OVER (" },
                     raw.OrderBy,
-                    new SqlLiteral { FormattedSql = ") _RowNumber " },
-  
+                    new SqlLiteral { FormattedSql = ") _RowNumber " }
                 },
                 From = raw.From,
                 Where = raw.Where,
@@ -211,11 +211,11 @@ namespace Rafy.Domain.ORM
 
             var res = new SqlNodeList
             {
-                                new SqlLiteral(
+                new SqlLiteral(
                 @"SELECT * FROM
 ("),
-                                newRaw,
-                                new SqlLiteral(
+                newRaw,
+                new SqlLiteral(
                 @")T WHERE _RowNumber BETWEEN " + startRow + @" AND " +endRow )
             };
 

@@ -95,72 +95,7 @@ namespace Rafy.Domain.ORM
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">pagingInfo</exception>
         /// <exception cref="System.InvalidProgramException">必须排序后才能使用分页功能。</exception>
-        protected virtual ISqlSelect ModifyToPagingTree(SqlSelect raw, PagingInfo pagingInfo)
-        {
-            if (PagingInfo.IsNullOrEmpty(pagingInfo)) { throw new ArgumentNullException("pagingInfo"); }
-            if (!raw.HasOrdered()) { throw new InvalidProgramException("必须排序后才能使用分页功能。"); }
-
-            /*********************** 代码块解释 *********************************
-             * 
-             * 使用 ROW_NUMBER() 函数，此函数 SqlServer、Oracle 都可使用。
-             * 注意，这个方法只支持不太复杂 SQL 的转换。
-             *
-             * 源格式：
-             * select ...... from ...... order by xxxx asc, yyyy desc
-             * 不限于以上格式，只要满足没有复杂的嵌套查询，最外层是一个 Select 和 From 语句即可。
-             * 
-             * 目标格式：
-             * select * from (select ......, row_number() over(order by xxxx asc, yyyy desc) _rowNumber from ......) x where x._rowNumber<10 and x._rowNumber>5;
-            **********************************************************************/
-
-            var startRow = pagingInfo.PageSize * (pagingInfo.PageNumber - 1) + 1;
-            var endRow = startRow + pagingInfo.PageSize - 1;
-
-            var innerSelect = new SqlSelect();
-            var selection = new SqlArray();
-            if (raw.Selection != null)
-            {
-                selection.Items.Add(raw.Selection);
-            }
-            selection.Items.Add(new SqlNodeList
-            {
-                new SqlLiteral { FormattedSql = "row_number() over (" },
-                raw.OrderBy,
-                new SqlLiteral { FormattedSql = ") _rowNumber" }
-            });
-            innerSelect.Selection = selection;
-
-            var subSelect = new SqlSubSelect
-            {
-                Select = innerSelect,
-                Alias = "x"
-            };
-            var rowNumberColumn = new SqlTree.SqlColumn
-            {
-                Table = subSelect,
-                ColumnName = "_rowNumber"
-            };
-            var pagingSelect = new SqlSelect();
-            pagingSelect.From = subSelect;
-            pagingSelect.Where = new SqlTree.SqlBinaryConstraint
-            {
-                Left = new SqlTree.SqlColumnConstraint
-                {
-                    Column = rowNumberColumn,
-                    Operator = SqlColumnConstraintOperator.GreaterEqual,
-                    Value = startRow
-                },
-                Opeartor = SqlBinaryConstraintType.And,
-                Right = new SqlTree.SqlColumnConstraint
-                {
-                    Column = rowNumberColumn,
-                    Operator = SqlColumnConstraintOperator.LessEqual,
-                    Value = endRow
-                }
-            };
-
-            return pagingSelect;
-        }
+        protected abstract ISqlSelect ModifyToPagingTree(SqlSelect raw, PagingInfo pagingInfo);
 
         #endregion
 
