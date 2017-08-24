@@ -146,8 +146,6 @@ namespace Rafy.Domain.ORM.MySql
         /// <returns></returns>
         protected override ISqlSelect ModifyToPagingTree(SqlSelect raw, PagingInfo pagingInfo)
         {
-            if (PagingInfo.IsNullOrEmpty(pagingInfo)) { throw new ArgumentNullException("pagingInfo"); }
-
             var pageNumber = pagingInfo.PageNumber;
             var pageSize = pagingInfo.PageSize;
 

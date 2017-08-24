@@ -55,9 +55,6 @@ namespace Rafy.Domain.ORM
         /// <returns></returns>
         protected override ISqlSelect ModifyToPagingTree(SqlSelect raw, PagingInfo pagingInfo)
         {
-            if (PagingInfo.IsNullOrEmpty(pagingInfo)) { throw new ArgumentNullException("pagingInfo"); }
-            if (!raw.HasOrdered()) { throw new InvalidProgramException("必须排序后才能使用分页功能。"); }
-
             //如果是第一页，则只需要使用 TOP 语句即可。
             if (pagingInfo.PageNumber == 1)
             {
@@ -138,6 +135,7 @@ namespace Rafy.Domain.ORM
                 OrderBy = raw.OrderBy,
             };
 
+            //where
             var newWhere = new SqlColumnConstraint
             {
                 Column = pkColumn,
@@ -192,13 +190,35 @@ namespace Rafy.Domain.ORM
             var finder = new FirstTableFinder();
             var pkTable = finder.Find(raw.From);
 
+            //在 Sql 分页的算法中，必须排序后才能使用分页功能，所以如果给定的 sql 中没有排序语句的话，则尝试使用任意表的一个默认的字段（Id）来进行排序。
+            var orderBy = raw.OrderBy;
+            if (!raw.HasOrdered())
+            {
+                if (SqlServerSqlGeneratorConfiguration.DefaultPagingSqlOrderbyColumn == null)
+                {
+                    throw new InvalidProgramException("必须提供排序语句后，才能使用分页功能。");
+                }
+
+                orderBy = new SqlOrderByList
+                {
+                    new SqlOrderBy
+                    {
+                        Column = new SqlColumn
+                        {
+                            Table = pkTable,
+                            ColumnName = SqlServerSqlGeneratorConfiguration.DefaultPagingSqlOrderbyColumn
+                        }
+                    }
+                };
+            }
+
             var newRaw = new SqlSelect
             {
                 Selection = new SqlNodeList()
                 {
                     raw.Selection ?? new SqlSelectAll() { Table = pkTable },
                     new SqlLiteral { FormattedSql = ", ROW_NUMBER() OVER (" },
-                    raw.OrderBy,
+                    orderBy,
                     new SqlLiteral { FormattedSql = ") _RowNumber " }
                 },
                 From = raw.From,

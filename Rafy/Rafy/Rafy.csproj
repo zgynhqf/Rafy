@@ -411,6 +411,7 @@
     <Compile Include="Domain\ORM\Rdb\Sql\SqlGenerator.cs" />
     <Compile Include="Domain\ORM\Rdb\Sql\SqlServer\SqlOraTable.cs" />
     <Compile Include="Domain\ORM\Rdb\Sql\SqlServer\SqlServerSqlGenerator.cs" />
+    <Compile Include="Domain\ORM\Rdb\Sql\SqlServer\SqlServerSqlGeneratorConfiguration.cs" />
     <Compile Include="Domain\ORM\Rdb\Sql\SqlServer\SqlServerTable.cs" />
     <Compile Include="Domain\ORM\Rdb\Sql\SqlServer\SqlTable.cs" />
     <Compile Include="Domain\ORM\Rdb\Sql\Tree\Interfaces.cs" />
