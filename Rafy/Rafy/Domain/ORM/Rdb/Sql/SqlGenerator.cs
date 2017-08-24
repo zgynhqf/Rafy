@@ -109,7 +109,7 @@ namespace Rafy.Domain.ORM
             ISqlSelect res = tree;
             if (!PagingInfo.IsNullOrEmpty(pagingInfo))
             {
-                res = ModifyToPagingTree(tree, pagingInfo);
+                res = this.ModifyToPagingTree(tree, pagingInfo);
             }
 
             base.Visit(res);
