@@ -32,7 +32,7 @@ namespace Rafy.DbMigration.Oracle
 
         protected override void LoadAllTables(Database database)
         {
-            using (var reader = this.Db.QueryDataReader(@"select * from user_tables"))
+            using (var reader = this.Db.QueryDataReader(@"SELECT * FROM USER_TABLES"))
             {
                 while (reader.Read())
                 {
@@ -49,9 +49,7 @@ namespace Rafy.DbMigration.Oracle
         {
             foreach (Table table in database.Tables)
             {
-                using (var columnsReader = this.Db.QueryDataReader(
-@"SELECT * FROM user_tab_columns WHERE TABLE_NAME = {0}",
-table.Name))
+                using (var columnsReader = this.Db.QueryDataReader(@"SELECT * FROM USER_TAB_COLUMNS WHERE TABLE_NAME = {0}", table.Name))
                 {
                     while (columnsReader.Read())
                     {
@@ -75,11 +73,13 @@ table.Name))
             }
         }
 
+        /// <summary>
+        /// 缓存数据库中的所有约束
+        /// </summary>
+        /// <returns></returns>
         protected override List<Constraint> ReadAllConstrains()
         {
-            List<Constraint> allConstrains = new List<Constraint>();
-
-            #region 缓存数据库中的所有约束
+            var allConstrains = new List<Constraint>();
 
             using (var constraintReader = this.Db.QueryDataReader(
 @"SELECT 
@@ -122,9 +122,47 @@ WHERE C.CONSTRAINT_TYPE = 'P' AND INSTR(C.CONSTRAINT_NAME, '$') = 0
                 }
             }
 
-            #endregion
-
             return allConstrains;
+        }
+
+        protected override void LoadAllConstraints(Database database)
+        {
+            base.LoadAllConstraints(database);
+
+            //在所有的主键都加载好之后，来加载 IsIdentity。
+            this.LoadIsIdentity(database);
+        }
+
+        /// <summary>
+        /// 加载数据库中所有表的 IsIdentity 属性。
+        /// </summary>
+        /// <param name="database"></param>
+        private void LoadIsIdentity(Database database)
+        {
+            //从数据库中加载出所有的 Sequence 的名字。
+            var sequenceNames = new List<string>();
+            using (var reader = this.Db.QueryDataReader(@"SELECT * FROM USER_SEQUENCES"))
+            {
+                while (reader.Read())
+                {
+                    sequenceNames.Add(reader["SEQUENCE_NAME"].ToString());
+                }
+            }
+
+            //如果主键对应的 Sequence 存在，则表示这个主键是 Identity 列。
+            //详见：OracleRunGenerator.Generate(CreateTable op)。
+            foreach (var table in database.Tables)
+            {
+                var pk = table.FindPrimaryColumn();
+                if (pk != null)
+                {
+                    var sequenceName = OracleMigrationProvider.SequenceName(table.Name, pk.Name);
+                    if (sequenceNames.Contains(sequenceName, StringComparer.CurrentCultureIgnoreCase))
+                    {
+                        pk.IsIdentity = true;
+                    }
+                }
+            }
         }
     }
 }

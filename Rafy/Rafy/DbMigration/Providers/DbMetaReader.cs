@@ -86,10 +86,10 @@ namespace Rafy.DbMigration
         protected abstract void LoadAllColumns(Database database);
 
         /// <summary>
-        /// 加载外键
+        /// 加载主键、外键等约束。
         /// </summary>
         /// <param name="database"></param>
-        private void LoadAllConstraints(Database database)
+        protected virtual void LoadAllConstraints(Database database)
         {
             List<Constraint> allConstrains = this.ReadAllConstrains();
             foreach (var table in database.Tables)
@@ -114,10 +114,13 @@ namespace Rafy.DbMigration
 
             foreach (var constraint in constraints)
             {
-                //主键
                 if (string.Compare(constraint.CONSTRAINT_TYPE, "PRIMARY KEY", true) == 0)
                 {
+                    #region 主键
+
                     column.IsPrimaryKey = true;
+
+                    #endregion
                 }
                 else if (string.Compare(constraint.CONSTRAINT_TYPE, "FOREIGN KEY", true) == 0)
                 {
