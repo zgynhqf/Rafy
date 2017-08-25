@@ -59,6 +59,11 @@ namespace Rafy.DbMigration
 
                 this.LoadAllColumns(database);
 
+                foreach (var table in database.Tables)
+                {
+                    table.SortColumns();
+                }
+
                 this.LoadAllConstraints(database);
             }
             catch (DbException)

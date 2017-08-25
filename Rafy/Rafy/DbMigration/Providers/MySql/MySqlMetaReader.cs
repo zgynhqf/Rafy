@@ -39,22 +39,38 @@ namespace Rafy.DbMigration.MySql
         /// <param name="database">需要加载列的数据库对象</param>
         protected override void LoadAllColumns(Database database)
         {
-            foreach (Table table in database.Tables)
-            {
-                using (var columnsReader = this.Db.QueryDataReader(@"SHOW FULL COLUMNS FROM `" + table.Name + "`;"))
-                {
-                    while (columnsReader.Read())
-                    {
-                        string columnName = columnsReader["Field"].ToString();
-                        string sqlType = columnsReader["Type"].ToString();
+            //用一句 Sql 将所有的表的所有字段都一次性查询出来。
+            //不再使用 @"SHOW FULL COLUMNS FROM `" + table.Name + "`;"
+            var sql = new StringBuilder(
+@"SELECT TABLE_NAME, COLUMN_NAME, IS_NULLABLE, DATA_TYPE, EXTRA
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME IN (");
+            sql.Append(string.Join(",", database.Tables.Select(t => "'" + t.Name + "'")));
+            sql.Append(") AND TABLE_SCHEMA = '").Append(database.Name).Append(@"'
+ORDER BY TABLE_NAME");
 
-                        DbType dbType = MySqlDbTypeHelper.ConvertFromMySqlTypeString(sqlType);
-                        Column column = new Column(columnName, dbType, null, table);
-                        column.IsRequired = string.Compare(columnsReader["Null"].ToString(), "Yes", true) != 0;
-                        column.IsIdentity = string.Equals(columnsReader["Extra"].ToString(), "auto_increment", StringComparison.CurrentCultureIgnoreCase);
-                        table.Columns.Add(column);
+            using (var columnsReader = this.Db.QueryDataReader(sql.ToString()))
+            {
+                Table currentTable = null;//当前正在处理的表。（放在循环外，有缓存的作用。）
+                while (columnsReader.Read())
+                {
+                    //找到该列所对应的表。
+                    var tableName = columnsReader["TABLE_NAME"].ToString();
+                    if (currentTable == null || !currentTable.Name.EqualsIgnoreCase(tableName))
+                    {
+                        currentTable = database.FindTable(tableName);
                     }
-                    table.SortColumns();
+
+                    string columnName = columnsReader["COLUMN_NAME"].ToString();
+                    string sqlType = columnsReader["DATA_TYPE"].ToString();
+                    DbType dbType = MySqlDbTypeHelper.ConvertFromMySqlTypeString(sqlType);
+
+                    Column column = new Column(columnName, dbType, null, currentTable);
+
+                    column.IsRequired = "NO".EqualsIgnoreCase(columnsReader["IS_NULLABLE"].ToString());
+                    column.IsIdentity = columnsReader["EXTRA"].ToString().ToLower().Contains("auto_increment");
+
+                    currentTable.Columns.Add(column);
                 }
             }
         }
@@ -65,7 +81,10 @@ namespace Rafy.DbMigration.MySql
         /// <param name="database">待加载表的数据库对象</param>
         protected override void LoadAllTables(Database database)
         {
-            using (var reader = this.Db.QueryDataReader(@"select table_name from information_schema.tables where table_schema='" + database.Name + "';"))
+            using (var reader = this.Db.QueryDataReader(
+@"SELECT TABLE_NAME
+FROM INFORMATION_SCHEMA.TABLES
+WHERE TABLE_SCHEMA = '" + database.Name + "';"))
             {
                 while (reader.Read())
                 {
@@ -87,14 +106,14 @@ namespace Rafy.DbMigration.MySql
             #region 缓存数据库中的所有约束
 
             using (var constraintReader = this.Db.QueryDataReader(
-@"select O.CONSTRAINT_SCHEMA,O.CONSTRAINT_NAME,O.TABLE_SCHEMA,O.TABLE_NAME,O.COLUMN_NAME,O.REFERENCED_TABLE_SCHEMA,O.REFERENCED_TABLE_NAME,O.REFERENCED_COLUMN_NAME,O.UPDATE_RULE,O.DELETE_RULE,O.UNIQUE_CONSTRAINT_NAME,T.CONSTRAINT_TYPE
-from (
-    select K.CONSTRAINT_SCHEMA,K.CONSTRAINT_NAME,K.TABLE_SCHEMA,K.TABLE_NAME,K.COLUMN_NAME,K.REFERENCED_TABLE_SCHEMA,K.REFERENCED_TABLE_NAME,K.REFERENCED_COLUMN_NAME,R.UPDATE_RULE,R.DELETE_RULE,R.UNIQUE_CONSTRAINT_NAME
-        from information_schema.KEY_COLUMN_USAGE K 
-            LEFT join information_schema.REFERENTIAL_CONSTRAINTS R on K.CONSTRAINT_NAME=R.CONSTRAINT_NAME
-) as O 
-inner join Information_schema.TABLE_CONSTRAINTS T on O.Table_Name=T.TABLE_NAME and T.CONSTRAINT_NAME=O.CONSTRAINT_NAME
-where O.CONSTRAINT_SCHEMA!='mysql' and O.CONSTRAINT_SCHEMA!='sys' and O.CONSTRAINT_SCHEMA='" + this.Db.Connection.Database + "'"))
+@"SELECT O.CONSTRAINT_SCHEMA, O.CONSTRAINT_NAME, O.TABLE_SCHEMA, O.TABLE_NAME, O.COLUMN_NAME, O.REFERENCED_TABLE_SCHEMA, O.REFERENCED_TABLE_NAME, O.REFERENCED_COLUMN_NAME, O.UPDATE_RULE, O.DELETE_RULE, O.UNIQUE_CONSTRAINT_NAME, T.CONSTRAINT_TYPE
+FROM (
+    SELECT K.CONSTRAINT_SCHEMA, K.CONSTRAINT_NAME, K.TABLE_SCHEMA, K.TABLE_NAME, K.COLUMN_NAME, K.REFERENCED_TABLE_SCHEMA, K.REFERENCED_TABLE_NAME, K.REFERENCED_COLUMN_NAME, R.UPDATE_RULE, R.DELETE_RULE, R.UNIQUE_CONSTRAINT_NAME
+    FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE K 
+        LEFT JOIN INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS R ON K.CONSTRAINT_NAME = R.CONSTRAINT_NAME
+) AS O 
+INNER JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS T ON O.TABLE_NAME = T.TABLE_NAME AND T.CONSTRAINT_NAME = O.CONSTRAINT_NAME
+WHERE O.CONSTRAINT_SCHEMA != 'mysql' AND O.CONSTRAINT_SCHEMA != 'sys' AND O.CONSTRAINT_SCHEMA = '" + this.Db.Connection.Database + "'"))
             {
                 while (constraintReader.Read())
                 {
