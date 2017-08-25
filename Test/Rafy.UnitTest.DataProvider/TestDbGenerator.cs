@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Rafy;
 using Rafy.Data;
 using Rafy.DbMigration;
+using Rafy.DbMigration.Model;
 using Rafy.Domain;
 using Rafy.Domain.ORM;
 using Rafy.Domain.ORM.BatchSubmit.Oracle;
@@ -50,8 +51,10 @@ namespace Rafy.UnitTest.DataProvider
                     c.RunDataLossOperation = DataLossOperation.All;
                     c.AutoMigrate();
                 }
-                using (RdbDataProvider.RedirectDbSetting(UnitTestEntityRepositoryDataProvider.DbSettingName,
-                     UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
+                using (RdbDataProvider.RedirectDbSetting(
+                    UnitTestEntityRepositoryDataProvider.DbSettingName,
+                    UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate
+                    ))
                 {
                     using (var c = new RafyDbMigrationContext(UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
                     {
@@ -82,6 +85,48 @@ namespace Rafy.UnitTest.DataProvider
                     OracleBatchImporter.EnableBatchSequence(RF.ResolveInstance<BookRepository>());
                     OracleBatchImporter.EnableBatchSequence(RF.ResolveInstance<InvoiceRepository>());
                 }
+            }
+        }
+
+        public static void DropAllTables()
+        {
+            using (var c = new RafyDbMigrationContext(DbSettingNames.DbMigrationHistory))
+            {
+                c.RunDataLossOperation = DataLossOperation.All;
+                c.MigrateTo(new DestinationDatabase(DbSettingNames.DbMigrationHistory));
+            }
+            using (var c = new RafyDbMigrationContext(DbSettingNames.RafyPlugins))
+            {
+                c.RunDataLossOperation = DataLossOperation.All;
+                c.MigrateTo(new DestinationDatabase(DbSettingNames.RafyPlugins));
+            }
+            using (var c = new RafyDbMigrationContext(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            {
+                c.RunDataLossOperation = DataLossOperation.All;
+                c.MigrateTo(new DestinationDatabase(UnitTestEntityRepositoryDataProvider.DbSettingName));
+            }
+            using (RdbDataProvider.RedirectDbSetting(
+                UnitTestEntityRepositoryDataProvider.DbSettingName,
+                UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate
+                ))
+            {
+                using (var c = new RafyDbMigrationContext(UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate))
+                {
+                    c.ClassMetaReader.EntityDbSettingName = UnitTestEntityRepositoryDataProvider.DbSettingName;
+                    c.ClassMetaReader.IsGeneratingForeignKey = false;
+                    c.RunDataLossOperation = DataLossOperation.All;
+                    c.MigrateTo(new DestinationDatabase(UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate));
+                }
+            }
+            using (var c = new RafyDbMigrationContext(UnitTest2EntityRepositoryDataProvider.DbSettingName))
+            {
+                c.RunDataLossOperation = DataLossOperation.All;
+                c.MigrateTo(new DestinationDatabase(UnitTest2EntityRepositoryDataProvider.DbSettingName));
+            }
+            using (var c = new RafyDbMigrationContext(StringTestEntityDataProvider.DbSettingName))
+            {
+                c.RunDataLossOperation = DataLossOperation.All;
+                c.MigrateTo(new DestinationDatabase(StringTestEntityDataProvider.DbSettingName));
             }
         }
     }

@@ -251,14 +251,6 @@ namespace Rafy.Domain
         /// <param name="args"></param>
         internal protected virtual void OnQuerying(EntityQueryArgs args)
         {
-            //如果没有指定 OrderNo 字段，则按照Id 排序。
-            if (args.QueryType != RepositoryQueryType.Count && !(args.Query as SqlSelect).HasOrdered())
-            {
-                args.Query.OrderBy.Add(
-                    QueryFactory.Instance.OrderBy(args.Query.From.FindTable(Repo).IdColumn)
-                    );
-            }
-
             //默认对分页进行处理。
             var pList = FinalDataPortal.CurrentIEQC.Parameters;
             if (pList.Length == 1)

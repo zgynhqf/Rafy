@@ -135,7 +135,6 @@ namespace Rafy.Domain.ORM
             if (isPaging)
             {
                 var query = args.Query;
-                if (!(query as TableQuery).HasOrdered()) { throw new InvalidProgramException("分页查询的同时，必须指定排序属性。"); }
 
                 var autoSelection = AutoSelectionForLOB(query);
 

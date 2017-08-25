@@ -99,9 +99,6 @@ namespace Rafy.Domain.ORM.Oracle
         /// <exception cref="System.InvalidProgramException">必须排序后才能使用分页功能。</exception>
         protected override ISqlSelect ModifyToPagingTree(SqlSelect raw, PagingInfo pagingInfo)
         {
-            if (PagingInfo.IsNullOrEmpty(pagingInfo)) { throw new ArgumentNullException("pagingInfo"); }
-            if (!raw.HasOrdered()) { throw new InvalidProgramException("必须排序后才能使用分页功能。"); }
-
             var startRow = pagingInfo.PageSize * (pagingInfo.PageNumber - 1) + 1;
             var endRow = startRow + pagingInfo.PageSize - 1;
 
