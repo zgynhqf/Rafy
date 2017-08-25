@@ -36,7 +36,7 @@ namespace Rafy.DbMigration.SqlServer
         /// <param name="database"></param>
         protected override void LoadAllTables(Database database)
         {
-            using (var reader = this.Db.QueryDataReader(@"select * from INFORMATION_SCHEMA.TABLES"))
+            using (var reader = this.Db.QueryDataReader(@"SELECT * FROM INFORMATION_SCHEMA.TABLES"))
             {
                 while (reader.Read())
                 {
@@ -104,19 +104,14 @@ ORDER BY TABLE_NAME");
                     currentTable.Columns.Add(column);
                 }
             }
-
-            this.LoadIsIdentity(database);
         }
 
-        protected override List<Constraint> ReadAllConstrains()
+        protected override IList<Constraint> ReadAllConstrains(Database database)
         {
-            List<Constraint> allConstrains = new List<Constraint>();
-
-            #region 缓存数据库中的所有约束
+            var allConstrains = new List<Constraint>();
 
             using (var constraintReader = this.Db.QueryDataReader(
-@"SELECT 
-T1.CONSTRAINT_NAME, T1.CONSTRAINT_TYPE, T1.TABLE_NAME, T1.COLUMN_NAME, T2.FK_TABLE_NAME, T2.FK_COLUMN_NAME, T2.PREP, T2.PK_TABLE_NAME, T2.PK_COLUMN_NAME, T2.UNIQUE_CONSTRAINT_NAME, T2.DELETE_RULE
+@"SELECT T1.CONSTRAINT_NAME, T1.CONSTRAINT_TYPE, T1.TABLE_NAME, T1.COLUMN_NAME, T2.FK_TABLE_NAME, T2.FK_COLUMN_NAME, T2.PREP, T2.PK_TABLE_NAME, T2.PK_COLUMN_NAME, T2.UNIQUE_CONSTRAINT_NAME, T2.DELETE_RULE
 FROM 
 (
 --外键或主键表列
@@ -161,16 +156,15 @@ ON T1.CONSTRAINT_NAME = T2.CONSTRAINT_NAME"))
                 }
             }
 
-            #endregion
-
             return allConstrains;
         }
 
         #region 读取列的 Identity 信息
 
-        private void LoadIsIdentity(Database database)
+        protected override void LoadAllIdentities(Database database)
         {
             var identities = this.ReadAllIdentities();
+
             foreach (var identity in identities)
             {
                 var table = database.FindTable(identity.TableName);

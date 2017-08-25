@@ -89,7 +89,7 @@ ORDER BY TABLE_NAME");
         /// 缓存数据库中的所有约束
         /// </summary>
         /// <returns></returns>
-        protected override List<Constraint> ReadAllConstrains()
+        protected override IList<Constraint> ReadAllConstrains(Database database)
         {
             var allConstrains = new List<Constraint>();
 
@@ -135,19 +135,11 @@ FROM
             return allConstrains;
         }
 
-        protected override void LoadAllConstraints(Database database)
-        {
-            base.LoadAllConstraints(database);
-
-            //在所有的主键都加载好之后，来加载 IsIdentity。
-            this.LoadIsIdentity(database);
-        }
-
         /// <summary>
-        /// 加载数据库中所有表的 IsIdentity 属性。
+        /// 加载指定数据库的所有表中的自增列。
         /// </summary>
-        /// <param name="database"></param>
-        private void LoadIsIdentity(Database database)
+        /// <param name="database">指定的数据库对象</param>
+        protected override void LoadAllIdentities(Database database)
         {
             //从数据库中加载出所有的 Sequence 的名字。
             var sequenceNames = new List<string>();

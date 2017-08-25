@@ -34,6 +34,26 @@ namespace Rafy.DbMigration.MySql
         public MySqlMetaReader(DbSetting dbSetting) : base(dbSetting) { }
 
         /// <summary>
+        /// 加载指定数据库的所有的数据表
+        /// </summary>
+        /// <param name="database">待加载表的数据库对象</param>
+        protected override void LoadAllTables(Database database)
+        {
+            using (var reader = this.Db.QueryDataReader(
+@"SELECT TABLE_NAME
+FROM INFORMATION_SCHEMA.TABLES
+WHERE TABLE_SCHEMA = '" + database.Name + "'"))
+            {
+                while (reader.Read())
+                {
+                    string tableName = reader["TABLE_NAME"].ToString();
+                    Table table = new Table(tableName, database);
+                    database.Tables.Add(table);
+                }
+            }
+        }
+
+        /// <summary>
         /// 加载指定数据库中的每个表的所有列
         /// </summary>
         /// <param name="database">需要加载列的数据库对象</param>
@@ -76,34 +96,15 @@ ORDER BY TABLE_NAME");
         }
 
         /// <summary>
-        /// 加载指定数据库的所有的数据表
+        /// 子类实现此方法，实现从数据库中读取出指定数据库的所有约束。
         /// </summary>
-        /// <param name="database">待加载表的数据库对象</param>
-        protected override void LoadAllTables(Database database)
+        /// <param name="database">The database.</param>
+        /// <returns>
+        /// 以列表的形式返回所有约束数据
+        /// </returns>
+        protected override IList<Constraint> ReadAllConstrains(Database database)
         {
-            using (var reader = this.Db.QueryDataReader(
-@"SELECT TABLE_NAME
-FROM INFORMATION_SCHEMA.TABLES
-WHERE TABLE_SCHEMA = '" + database.Name + "';"))
-            {
-                while (reader.Read())
-                {
-                    string tableName = reader["TABLE_NAME"].ToString();
-                    Table table = new Table(tableName, database);
-                    database.Tables.Add(table);
-                }
-            }
-        }
-
-        /// <summary>
-        /// 加载所有的约束
-        /// </summary>
-        /// <returns>以列表的形式返回所有约束数据</returns>
-        protected override List<Constraint> ReadAllConstrains()
-        {
-            List<Constraint> allConstrains = new List<Constraint>();
-
-            #region 缓存数据库中的所有约束
+            var allConstrains = new List<Constraint>();
 
             using (var constraintReader = this.Db.QueryDataReader(
 @"SELECT O.CONSTRAINT_SCHEMA, O.CONSTRAINT_NAME, O.TABLE_SCHEMA, O.TABLE_NAME, O.COLUMN_NAME, O.REFERENCED_TABLE_SCHEMA, O.REFERENCED_TABLE_NAME, O.REFERENCED_COLUMN_NAME, O.UPDATE_RULE, O.DELETE_RULE, O.UNIQUE_CONSTRAINT_NAME, T.CONSTRAINT_TYPE
@@ -113,7 +114,7 @@ FROM (
         LEFT JOIN INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS R ON K.CONSTRAINT_NAME = R.CONSTRAINT_NAME
 ) AS O 
 INNER JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS T ON O.TABLE_NAME = T.TABLE_NAME AND T.CONSTRAINT_NAME = O.CONSTRAINT_NAME
-WHERE O.CONSTRAINT_SCHEMA != 'mysql' AND O.CONSTRAINT_SCHEMA != 'sys' AND O.CONSTRAINT_SCHEMA = '" + this.Db.Connection.Database + "'"))
+WHERE O.CONSTRAINT_SCHEMA != 'mysql' AND O.CONSTRAINT_SCHEMA != 'sys' AND O.CONSTRAINT_SCHEMA = '" + database.Name + "'"))
             {
                 while (constraintReader.Read())
                 {
@@ -137,9 +138,13 @@ WHERE O.CONSTRAINT_SCHEMA != 'mysql' AND O.CONSTRAINT_SCHEMA != 'sys' AND O.CONS
                 }
             }
 
-            #endregion
-
             return allConstrains;
+        }
+
+        protected override void LoadAllIdentities(Database database)
+        {
+            //do nothing.
+            //自增列，已经在 LoadAllColumns 方法中直接加载了。
         }
     }
 }
