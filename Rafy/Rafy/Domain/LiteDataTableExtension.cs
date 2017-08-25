@@ -106,6 +106,7 @@ namespace Rafy.Domain
                     }
                     resultList.Add(entityItem);
                 }
+
                 return resultList as TEntityList;
             }
 
@@ -141,6 +142,7 @@ namespace Rafy.Domain
                 }
                 resultList.Add(entityItem);
             }
+
             return resultList as TEntityList;
         }
     }
