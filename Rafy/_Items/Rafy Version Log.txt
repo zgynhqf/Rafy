@@ -10,11 +10,11 @@
  * 
 *******************************************************
 
-3.61.3420
+3.61.3421
     内部修改
         Oracle、MySql 下，进行分页时，都不自动使用 Id 来进行排序。该功能只在 SqlServer 中启用。
     重构
-        优化加载所有数据库类型中的表的列的元数据的性能。
+        MySqlGenerator 重命名为 MySqlSqlGenerator。
     BUG修复
         解决sql In过滤条件数量大于1000报错
         修改 SQL SERVER 分页采用 RowNumber() Over

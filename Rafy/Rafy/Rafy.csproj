@@ -402,7 +402,7 @@
     <Compile Include="Domain\ORM\Rdb\SingleConnectionTrasactionScope.cs" />
     <Compile Include="Domain\ORM\Rdb\Sql\FirstTableFinder.cs" />
     <Compile Include="Domain\ORM\Rdb\Sql\MySql\MySqlColumn.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\MySql\MySqlGenerator.cs" />
+    <Compile Include="Domain\ORM\Rdb\Sql\MySql\MySqlSqlGenerator.cs" />
     <Compile Include="Domain\ORM\Rdb\Sql\MySql\MySqlTable.cs" />
     <Compile Include="Domain\ORM\Rdb\Sql\Oracle\OracleColumn.cs" />
     <Compile Include="Domain\ORM\Rdb\Sql\Oracle\OracleSqlGenerator.cs" />

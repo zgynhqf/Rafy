@@ -51,7 +51,7 @@ namespace Rafy.Domain.ORM.MySql
         public override object ConvertToParameterValue(object value)
         {
             value = base.ConvertToParameterValue(value);
-            value = MySqlGenerator.PrepareConstraintValueInternal(value);
+            value = MySqlSqlGenerator.PrepareConstraintValueInternal(value);
             return value;
         }
 
