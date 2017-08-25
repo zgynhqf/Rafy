@@ -77,14 +77,6 @@ namespace Rafy.UnitTest.DataProvider
                     c.RunDataLossOperation = DataLossOperation.All;
                     c.AutoMigrate();
                 }
-
-                //启用批量更新
-                var dbSetting = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName);
-                if (DbSetting.IsOracleProvider(dbSetting))
-                {
-                    OracleBatchImporter.EnableBatchSequence(RF.ResolveInstance<BookRepository>());
-                    OracleBatchImporter.EnableBatchSequence(RF.ResolveInstance<InvoiceRepository>());
-                }
             }
         }
 
