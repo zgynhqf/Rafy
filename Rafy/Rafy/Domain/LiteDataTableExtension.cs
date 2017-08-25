@@ -48,7 +48,7 @@ namespace Rafy.Domain
             //初始化 liteDataTable 中所有列名的集合 tableColumnsNameList。
             var columns = liteDataTable.Columns;
             var tableColumnsNameList = new List<string>();
-            for (int i = 0; i < columns.Count; i++)
+            for (int i = 0, c = columns.Count; i < c; i++)
             {
                 tableColumnsNameList.Add(columns[i].ColumnName);
             }
@@ -62,7 +62,7 @@ namespace Rafy.Domain
 
                 //初始化 liteDateTable 能够映射到实体属性列名集合 pMetaList，
                 //并检验 liteDataTable 是否能转换为相应的 entitylist。
-                for (int i = 0; i < entityPropertyMetaList.Count; i++)
+                for (int i = 0, c = entityPropertyMetaList.Count; i < c; i++)
                 {
                     var propertyMeta = entityPropertyMetaList[i];
                     var manageProperty = propertyMeta.ManagedProperty;
@@ -74,7 +74,7 @@ namespace Rafy.Domain
                         //还有种情况是 columnMeta 为空，比如当对应的属性为 treeIndex。
                         var columnName = columnMeta == null ? propertyMeta.Name : columnMeta.ColumnName ?? propertyMeta.Name;
 
-                        for (int j = 0; j < tableColumnsNameList.Count; j++)
+                        for (int j = 0, c2 = tableColumnsNameList.Count; j < c2; j++)
                         {
                             if (tableColumnsNameList.Contains(columnName))
                             {
@@ -90,11 +90,11 @@ namespace Rafy.Domain
                 }
 
                 // 通过 liteDataTable 填充 entitylist。
-                for (int i = 0; i < liteDataTable.Rows.Count; i++)
+                for (int i = 0, c = liteDataTable.Rows.Count; i < c; i++)
                 {
                     var row = liteDataTable.Rows[i];
                     var entityItem = repo.New();
-                    for (int j = 0; j < pMetaList.Count; j++)
+                    for (int j = 0, c2 = pMetaList.Count; j < c2; j++)
                     {
                         var metaItem = pMetaList[j];
                         var manageProperty = metaItem.ManagedProperty;
@@ -113,7 +113,7 @@ namespace Rafy.Domain
             //并检验 liteDataTable 是否能转换为相应的 entitylist。
             var propertyList = entity.PropertiesContainer.GetCompiledProperties();
             var availablePropertyList = new List<IManagedProperty>();
-            for (int i = 0; i < propertyList.Count; i++)
+            for (int i = 0, c = propertyList.Count; i < c; i++)
             {
                 var property = propertyList[i];
                 var entityPropertyName = property.Name;
@@ -128,11 +128,11 @@ namespace Rafy.Domain
             }
 
             // 通过 liteDataTable 填充 entitylist。 
-            for (int i = 0; i < liteDataTable.Rows.Count; i++)
+            for (int i = 0, c = liteDataTable.Rows.Count; i < c; i++)
             {
                 var entityItem = repo.New();
                 var row = liteDataTable.Rows[i];
-                for (int j = 0; j < availablePropertyList.Count; j++)
+                for (int j = 0, c2 = availablePropertyList.Count; j < c2; j++)
                 {
                     var item = availablePropertyList[j];
                     var propertyName = item.Name;
