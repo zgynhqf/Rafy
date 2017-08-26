@@ -36,17 +36,17 @@ namespace Rafy.Domain
         /// 此参数表示表格中的列名是否直接映射实体的属性名。
         /// 如果传入 false，表示表格中的列名映射的是实体对应的数据库表的列名，而非属性名。
         /// 默认为 true。
-        /// 。</param>
+        /// </param>
         /// <returns></returns>
         public static TEntityList ToEntityList<TEntityList>(this LiteDataTable liteDataTable, bool columnMapToProperty = true) where TEntityList : EntityList
         {
             var entityMatrix = EntityMatrix.FindByList(typeof(TEntityList));
             var repo = RepositoryFacade.Find(entityMatrix.EntityType);
 
-            //属性和列的键值对集合，为后面填充实体用。
+            //属性和对应列的键值对集合,为后面填充实体用。
             var propertyToColumnMappings = new List<PropertyToColumnMapping>(10);
 
-            //liteDataTable 中所有列名的集合，为后面填充 propertyToColumnMappings 和对比实体属性。
+            //初始化 liteDataTable 中所有列名的集合，为后面初始化 propertyToColumnMappings 和判断属性用 。
             var columns = liteDataTable.Columns;
             var tableColumnsNameList = new List<string>();
             for (int i = 0, c = columns.Count; i < c; i++)
@@ -55,7 +55,6 @@ namespace Rafy.Domain
             }
 
             //当表格中的列名映射的是实体对应的数据库表的列名，而非属性名的转换方法。
-            var resultList = repo.NewList();
             if (!columnMapToProperty)
             {
                 var entityPropertyMetaList = repo.EntityMeta.EntityProperties;
@@ -76,7 +75,7 @@ namespace Rafy.Domain
                             {
                                 propertyToColumnMappings.Add(new PropertyToColumnMapping
                                 {
-                                    Property = propertyMeta.ManagedProperty,
+                                    Property = manageProperty,
                                     ColumnName = columnName
                                 });
                             }
@@ -108,9 +107,9 @@ namespace Rafy.Domain
         /// <summary>
         /// 填充实体
         /// </summary>
-        /// <param name="liteDataTable">需要转换实体的 liteDataTable</param>
+        /// <param name="liteDataTable">需要转换实体的 LiteDataTable</param>
         /// <param name="repo">实体的仓储</param>
-        /// <param name="propertyToColumnMappings">属性和列名的键值对集合</param>
+        /// <param name="propertyToColumnMappings">属性和对应列的键值对集合</param>
         /// <returns></returns>
         private static EntityList ConvertEntitiesIntoList(LiteDataTable liteDataTable, EntityRepository repo, IList<PropertyToColumnMapping> propertyToColumnMappings)
         {
