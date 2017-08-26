@@ -35,7 +35,7 @@ namespace Rafy.DataTableMigration.Services
         /// <summary>
         /// 存储到历史表。
         /// </summary>
-        /// <param name="repository">表示当前 <see cref="component"/> 对应的仓库。</param>
+        /// <param name="repository">表示当前 component 对应的仓库。</param>
         /// <param name="component">表示一个领域对象。</param>
         /// <param name="isSupportTree"> 是否是树形实体</param>
         void SaveToHistory(IRepository repository, EntityList component, bool isSupportTree);
@@ -43,7 +43,7 @@ namespace Rafy.DataTableMigration.Services
         /// <summary>
         /// 从原始表中移除聚合。
         /// </summary>
-        /// <param name="repository">表示当前 <see cref="entityList" /> 对应的仓库。</param>
+        /// <param name="repository">表示当前 entityList 对应的仓库。</param>
         /// <param name="entityList">表示一个领域对象的集合。</param>
         void RemoveOriginData(IRepository repository, EntityList entityList);
     }
