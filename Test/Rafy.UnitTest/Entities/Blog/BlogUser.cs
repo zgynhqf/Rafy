@@ -87,6 +87,13 @@ namespace UT
         /// 单例模式，外界不可以直接构造本对象。
         /// </summary>
         protected BlogUserRepository() { }
+
+        [RepositoryQuery]
+        public virtual LiteDataTable GetAllInTable()
+        {
+            var sql = @"select * from blogUser ";
+            return (this.DataQueryer as RdbDataQueryer).QueryTable(sql);
+        }
     }
 
     /// <summary>
