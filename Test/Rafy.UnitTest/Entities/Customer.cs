@@ -13,6 +13,7 @@ using Rafy.MetaModel.Attributes;
 using Rafy.MetaModel.View;
 using Rafy.ManagedProperty;
 using System.Data;
+using Rafy.Data;
 
 namespace UT
 {
@@ -84,6 +85,13 @@ namespace UT
         protected CustomerRepository() { }
 
         #region 数据访问
+
+        [RepositoryQuery]
+        public virtual LiteDataTable GetAllInTable()
+        {
+            var sql = @"select * from customer ";
+            return (this.DataQueryer as RdbDataQueryer).QueryTable(sql);
+        }
 
         #endregion
     }

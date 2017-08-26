@@ -289,6 +289,7 @@
     <Compile Include="Domain\Entity\Serialization\SerializationEntityGraph.cs" />
     <Compile Include="Domain\Entity\TreeHelper.cs" />
     <Compile Include="Domain\Entity\ValidationHelper.cs" />
+    <Compile Include="Domain\LiteDataTableExtension.cs" />
     <Compile Include="Domain\ORM\ConditionalSql.cs" />
     <Compile Include="Domain\ORM\DbMigration\ClassMetaReader.cs" />
     <Compile Include="Domain\ORM\DbMigration\CommentFinder.cs" />
