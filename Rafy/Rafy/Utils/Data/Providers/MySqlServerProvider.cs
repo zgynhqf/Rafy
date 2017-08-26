@@ -43,7 +43,7 @@ namespace Rafy.Data.Providers
         /// <returns>返回针对MySql的数据库链接字符串</returns>
         public string ConvertToSpecialDbSql(string commonSql)
         {
-            return ConverterFactory.ReParameterName.Replace(commonSql, "?p${number}");
+            return DbConnectorFactory.ReParameterName.Replace(commonSql, "?p${number}");
         }
 
         /// <summary>

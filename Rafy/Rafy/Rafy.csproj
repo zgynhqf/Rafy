@@ -731,7 +731,7 @@
     <Compile Include="Utils\Data\LocalTransactionBlock_1_0.cs" />
     <Compile Include="Utils\Data\LongTimeDbAccesser.cs" />
     <Compile Include="Utils\Data\PagingHelper.cs" />
-    <Compile Include="Utils\Data\Providers\ConverterFactory.cs" />
+    <Compile Include="Utils\Data\Providers\DbConnectorFactory.cs" />
     <Compile Include="Utils\Data\Providers\ISqlProvider.cs" />
     <Compile Include="Utils\Data\Providers\MySqlServerProvider.cs" />
     <Compile Include="Utils\Data\Providers\ODBCProvider.cs" />
