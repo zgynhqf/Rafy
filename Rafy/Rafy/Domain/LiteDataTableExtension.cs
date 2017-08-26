@@ -42,10 +42,11 @@ namespace Rafy.Domain
         {
             var entityMatrix = EntityMatrix.FindByList(typeof(TEntityList));
             var repo = RepositoryFacade.Find(entityMatrix.EntityType);
-            var entity = repo.New();
-            var entityMeta = repo.EntityMeta;
 
-            //初始化 liteDataTable 中所有列名的集合 tableColumnsNameList。
+            //属性和列的键值对集合，为后面填充实体用。
+            var propertyToColumnMappings = new List<PropertyToColumnMapping>(10);
+
+            //liteDataTable 中所有列名的集合，为后面填充 propertyToColumnMappings 和对比实体属性。
             var columns = liteDataTable.Columns;
             var tableColumnsNameList = new List<string>();
             for (int i = 0, c = columns.Count; i < c; i++)
@@ -57,93 +58,90 @@ namespace Rafy.Domain
             var resultList = repo.NewList();
             if (!columnMapToProperty)
             {
-                var pMetaList = new List<EntityPropertyMeta>();
-                var entityPropertyMetaList = entityMeta.EntityProperties;
-
-                //初始化 liteDateTable 能够映射到实体属性列名集合 pMetaList，
-                //并检验 liteDataTable 是否能转换为相应的 entitylist。
+                var entityPropertyMetaList = repo.EntityMeta.EntityProperties;
                 for (int i = 0, c = entityPropertyMetaList.Count; i < c; i++)
                 {
                     var propertyMeta = entityPropertyMetaList[i];
                     var manageProperty = propertyMeta.ManagedProperty;
                     if (!manageProperty.IsReadOnly)
                     {
-                        var columnMeta = propertyMeta.ColumnMeta;
-
                         //这个位置是针对于时间戳的那几个字段 columnMeta 不为空 ，但是映射到数据库的 columnName 这个属性是空的。
                         //还有种情况是 columnMeta 为空，比如当对应的属性为 treeIndex。
+                        var columnMeta = propertyMeta.ColumnMeta;
                         var columnName = columnMeta == null ? propertyMeta.Name : columnMeta.ColumnName ?? propertyMeta.Name;
 
                         for (int j = 0, c2 = tableColumnsNameList.Count; j < c2; j++)
                         {
                             if (tableColumnsNameList.Contains(columnName))
                             {
-                                pMetaList.Add(propertyMeta);
+                                propertyToColumnMappings.Add(new PropertyToColumnMapping
+                                {
+                                    Property = propertyMeta.ManagedProperty,
+                                    ColumnName = columnName
+                                });
                             }
                         }
                     }
-                    //如果 liteDataTable 的列集合和 entitylist 映射在数据库中的列（以及没映射属性）集合没有任何交集那么就不能转换。
-                    if (pMetaList.Count == 0)
+                }
+            }
+            else
+            {
+                var propertyList = repo.EntityMeta.ManagedProperties.GetCompiledProperties();
+                for (int i = 0, c = propertyList.Count; i < c; i++)
+                {
+                    var property = propertyList[i];
+                    var propertyName = property.Name;
+                    if (tableColumnsNameList.Contains(propertyName) && !property.IsReadOnly)
                     {
-                        throw new NotSupportedException("liteDataTable 的列集合和 entitylist 映射在数据库中的列（以及没映射属性）集合没有任何交集");
+                        propertyToColumnMappings.Add(new PropertyToColumnMapping
+                        {
+                            Property = property,
+                            ColumnName = propertyName
+                        });
                     }
                 }
-
-                // 通过 liteDataTable 填充 entitylist。
-                for (int i = 0, c = liteDataTable.Rows.Count; i < c; i++)
-                {
-                    var row = liteDataTable.Rows[i];
-                    var entityItem = repo.New();
-                    for (int j = 0, c2 = pMetaList.Count; j < c2; j++)
-                    {
-                        var metaItem = pMetaList[j];
-                        var manageProperty = metaItem.ManagedProperty;
-                        var columnMeta = metaItem.ColumnMeta;
-                        var propertyName = string.Empty;
-                        propertyName = columnMeta == null ? metaItem.Name : columnMeta.ColumnName ?? metaItem.Name;
-                        var rowValue = row[propertyName];
-                        entityItem.LoadProperty(manageProperty, rowValue);
-                    }
-                    resultList.Add(entityItem);
-                }
-
-                return resultList as TEntityList;
             }
 
-            //初始化 liteDateTable 能够映射到实体属性列名集合 pMetaList，
-            //并检验 liteDataTable 是否能转换为相应的 entitylist。
-            var propertyList = entity.PropertiesContainer.GetCompiledProperties();
-            var availablePropertyList = new List<IManagedProperty>();
-            for (int i = 0, c = propertyList.Count; i < c; i++)
-            {
-                var property = propertyList[i];
-                var entityPropertyName = property.Name;
-                if (tableColumnsNameList.Contains(entityPropertyName) && (!property.IsReadOnly))
-                {
-                    availablePropertyList.Add(property);
-                }
-            }
-            if (availablePropertyList.Count == 0)
-            {
-                throw new NotSupportedException("liteDataTable 的列集合和 entitylist 映射在数据库中的列（以及没映射属性）集合没有任何交集");
-            }
+            return ConvertEntitiesIntoList(liteDataTable, repo, propertyToColumnMappings) as TEntityList;
+        }
 
-            // 通过 liteDataTable 填充 entitylist。 
+        /// <summary>
+        /// 填充实体
+        /// </summary>
+        /// <param name="liteDataTable">需要转换实体的 liteDataTable</param>
+        /// <param name="repo">实体的仓储</param>
+        /// <param name="propertyToColumnMappings">属性和列名的键值对集合</param>
+        /// <returns></returns>
+        private static EntityList ConvertEntitiesIntoList(LiteDataTable liteDataTable, EntityRepository repo, IList<PropertyToColumnMapping> propertyToColumnMappings)
+        {
+            var resultList = repo.NewList();
+
             for (int i = 0, c = liteDataTable.Rows.Count; i < c; i++)
             {
-                var entityItem = repo.New();
                 var row = liteDataTable.Rows[i];
-                for (int j = 0, c2 = availablePropertyList.Count; j < c2; j++)
+
+                var entityItem = repo.New();
+                for (int j = 0, c2 = propertyToColumnMappings.Count; j < c2; j++)
                 {
-                    var item = availablePropertyList[j];
-                    var propertyName = item.Name;
-                    var rowValue = row[propertyName];
-                    entityItem.LoadProperty(item, rowValue);
+                    var mapping = propertyToColumnMappings[j];
+                    var rowValue = row[mapping.ColumnName];
+
+                    entityItem.LoadProperty(mapping.Property, rowValue);
                 }
+
                 resultList.Add(entityItem);
             }
 
-            return resultList as TEntityList;
+            return resultList;
+        }
+
+        /// <summary>
+        /// 属性名和与之对应的列名。
+        /// </summary>
+        private struct PropertyToColumnMapping
+        {
+            public IManagedProperty Property;
+            public string ColumnName;
         }
     }
 }
