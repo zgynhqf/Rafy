@@ -75,6 +75,9 @@ namespace RafyUnitTest
             Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.Modified, "之前的状态是 Modified");
         }
 
+        /// <summary>
+        /// 实体被删除后，状态应该为 New。
+        /// </summary>
         [TestMethod]
         public void __ET_PersistenceStatus_Delete_SavedAsNew()
         {
@@ -1595,6 +1598,9 @@ namespace RafyUnitTest
             }
         }
 
+        /// <summary>
+        /// 被冗余属性在批量更新时，在框架层面也能自动更新其对应的冗余属性。
+        /// </summary>
         [TestMethod]
         public void __ET_Repository_BatchImport_CDU_U_Redundancy_UpdateB()
         {
@@ -1632,6 +1638,9 @@ namespace RafyUnitTest
             }
         }
 
+        /// <summary>
+        /// 被冗余属性在批量更新时，在框架层面也能自动更新其对应的冗余属性。
+        /// </summary>
         [TestMethod]
         public void __ET_Repository_BatchImport_CDU_U_Redundancy_UpdateC()
         {

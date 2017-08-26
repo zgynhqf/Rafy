@@ -59,7 +59,14 @@ namespace Rafy.DbMigration
 
                 this.LoadAllColumns(database);
 
+                foreach (var table in database.Tables)
+                {
+                    table.SortColumns();
+                }
+
                 this.LoadAllConstraints(database);
+
+                this.LoadAllIdentities(database);
             }
             catch (DbException)
             {
@@ -74,24 +81,31 @@ namespace Rafy.DbMigration
         }
 
         /// <summary>
-        /// 添加所有表
+        /// 加载指定数据库的所有的数据表
         /// </summary>
-        /// <param name="database"></param>
+        /// <param name="database">待加载表的数据库对象</param>
         protected abstract void LoadAllTables(Database database);
 
         /// <summary>
-        /// 加载每个表的所有列
+        /// 加载指定数据库中的每个表的所有列
         /// </summary>
-        /// <param name="database"></param>
+        /// <param name="database">需要加载列的数据库对象</param>
         protected abstract void LoadAllColumns(Database database);
+
+        /// <summary>
+        /// 加载指定数据库的所有表中的自增列。
+        /// </summary>
+        /// <param name="database">指定的数据库对象</param>
+        protected abstract void LoadAllIdentities(Database database);
 
         /// <summary>
         /// 加载主键、外键等约束。
         /// </summary>
-        /// <param name="database"></param>
+        /// <param name="database">需要加载约束的数据库对象</param>
         protected virtual void LoadAllConstraints(Database database)
         {
-            List<Constraint> allConstrains = this.ReadAllConstrains();
+            var allConstrains = this.ReadAllConstrains(database);
+
             foreach (var table in database.Tables)
             {
                 foreach (var column in table.Columns)
@@ -142,7 +156,12 @@ namespace Rafy.DbMigration
             }
         }
 
-        protected abstract List<Constraint> ReadAllConstrains();
+        /// <summary>
+        /// 子类实现此方法，实现从数据库中读取出指定数据库的所有约束。
+        /// </summary>
+        /// <param name="database">The database.</param>
+        /// <returns>以列表的形式返回所有约束数据</returns>
+        protected abstract IList<Constraint> ReadAllConstrains(Database database);
 
         protected class Constraint
         {

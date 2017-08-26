@@ -25,7 +25,7 @@ namespace Rafy.Domain.ORM.MySql
     /// <summary>
     /// MySql的Sql语句生成器
     /// </summary>
-    internal sealed class MySqlGenerator : SqlGenerator
+    internal sealed class MySqlSqlGenerator : SqlGenerator
     {
         /// <summary>
         /// Sql Server 中没有限制 In 语句中的项的个数。（但是如果使用参数的话，则最多只能使用 2000 个参数。）

@@ -284,6 +284,13 @@ namespace UT
             return (TestUser)this.QueryData(args);
         }
 
+        [RepositoryQuery]
+        public virtual LiteDataTable GetAllInTable()
+        {
+            var sql = @"select * from users ";
+            return (this.DataQueryer as RdbDataQueryer).QueryTable(sql);
+        }
+
         //public TestUserList GetByName_Expression(string name, PagingInfo pagingInfo)
         //{
         //    return this.FetchList(r => r.FetchByCustom(name, pagingInfo));
