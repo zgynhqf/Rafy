@@ -10,9 +10,10 @@
  * 
 *******************************************************
 
-3.61.3421
+3.61.3422
     内部修改
         Oracle、MySql 下，进行分页时，都不自动使用 Id 来进行排序。该功能只在 SqlServer 中启用。
+        ConverterFactory 需要更名为 DbConnectorFactory #61
     重构
         MySqlGenerator 重命名为 MySqlSqlGenerator。
     BUG修复
