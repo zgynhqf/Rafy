@@ -116,6 +116,7 @@ namespace RafyUnitTest
 
             var customerList = table.ToEntityList<CustomerList>();
             Assert.AreEqual(1, customerList.Count, "通过自己组装的 liteDataTable 应该能转换成一条 customer 的数据");
+            Assert.AreEqual(customerList[0].Name, "HuKang", "通过自己组装的 liteDataTable 转换成的 customer 的数据应该保持一致");
         }
 
         /// <summary>
@@ -195,24 +196,42 @@ namespace RafyUnitTest
         }
 
         /// <summary>
-        /// 当实体的属性与数据库的字段不一致时，columnMapToProperty 参数传入 true，也能正常转换。
+        /// 当实体的属性与数据库的字段不一致时，columnMapToProperty 参数传入 false，也能正常转换。
         /// </summary>
-        public void DT_LiteDataTable_CanConvertToEntity_ColumnMapToProperty()
+        [TestMethod]
+        public void DT_LiteDataTable_CanConvertToEntity_PropertyDiffColumnName()
         {
-            //这个位置 customer 的 treeIndex 属性没有映射到数据库。
-            CustomerRepository repo = RF.ResolveInstance<CustomerRepository>();
+            //这个位置 testUser 的 name 属性映射到数据库对应的是 userName。
+            var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
-                var customer = new Customer();
-                customer.DecimalProperty1 = 1;
-                customer.DecimalProperty2 = 2;
-                customer.DecimalProperty3 = 3;
-                customer.Name = "hk";
-                repo.Save(customer);
+                var user = new TestUser();
+                user.Name = "hk";
+                user.LoginName = "wy";
+                repo.Save(user);
 
                 var table = repo.GetAllInTable();
-                var customerList = table.ToEntityList<CustomerList>(true);
-                Assert.AreEqual(1, customerList.Count, "通过数据库查询出来的 liteDataTable 应该能转换成一条 customer 的数据");
+                var userList = table.ToEntityList<TestUserList>(false);
+                Assert.AreEqual("hk", userList[0].Name, "当实体的属性与数据库的字段不一致时，转换出来的值应该与原来保持一致。");
+            }
+        }
+
+        /// <summary>
+        /// 当实体的属性与数据库的字段一致时，columnMapToProperty 参数传入 true，也能正常转换。
+        /// </summary>
+        [TestMethod]
+        public void DT_LiteDataTable_CanConvertToEntity_PropertySameColumnName()
+        {
+            var repo = RF.ResolveInstance<BlogUserRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var blogUser = new BlogUser();
+                blogUser.UserName = "hk2";
+                repo.Save(blogUser);
+
+                var table = repo.GetAllInTable();
+                var userList = table.ToEntityList<BlogUserList>(true);
+                Assert.AreEqual("hk2", userList[0].UserName, "当实体的属性与数据库的字段不一致时，转换出来的值应该与原来保持一致。");
             }
         }
     }
