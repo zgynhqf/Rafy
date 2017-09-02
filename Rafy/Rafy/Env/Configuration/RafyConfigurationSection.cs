@@ -22,18 +22,31 @@ namespace Rafy.Configuration
 {
     public class RafyConfigurationSection : ConfigurationSection
     {
-        internal RafyConfigurationSection(ConfigurationRoot root, string path) : base(root, path) { }
+        private ConfigurationRoot _root;
+        private WPFConfigurationSection _wpf;
+
+        internal RafyConfigurationSection(ConfigurationRoot root, string path) : base(root, path)
+        {
+            _root = root;
+        }
 
         #region 子元素
 
-        public IEnumerable<IConfigurationSection> WPF
+        public WPFConfigurationSection WPF
         {
-            get { return this.GetSection("wpf").GetChildren(); }
+            get
+            {
+                if (_wpf == null)
+                {
+                    _wpf = new WPFConfigurationSection(_root, this.Path + "/wpf");
+                }
+                return _wpf;
+            }
         }
 
-        public IEnumerable<IConfigurationSection> Web
+        public IConfigurationSection Web
         {
-            get { return this.GetSection("web").GetChildren(); }
+            get { return this.GetSection("web"); }
         }
 
         public PluginsConfigurationElement DomainPlugins

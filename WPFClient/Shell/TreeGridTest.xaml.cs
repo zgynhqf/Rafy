@@ -11,7 +11,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Rafy.Domain;
-using Rafy.RBAC.Old.Audit;
 
 namespace WPFClient.Shell
 {
@@ -24,10 +23,10 @@ namespace WPFClient.Shell
         {
             InitializeComponent();
 
-            var data = RF.ResolveInstance<AuditItemRepository>()
-                .GetAll(new Rafy.PagingInfo(1, 100));
+            //var data = RF.ResolveInstance<AuditItemRepository>()
+            //    .GetAll(new Rafy.PagingInfo(1, 100));
 
-            grid.RootItems = data;
+            //grid.RootItems = data;
         }
     }
 }

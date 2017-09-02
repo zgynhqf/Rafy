@@ -8,7 +8,6 @@ using Rafy.DbMigration;
 using Rafy.Domain;
 using Rafy.Domain.ORM.DbMigration;
 using Rafy.MetaModel;
-using Rafy.RBAC.Old;
 
 namespace ConsoleHost
 {
