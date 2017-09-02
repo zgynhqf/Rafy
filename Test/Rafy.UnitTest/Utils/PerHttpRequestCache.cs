@@ -56,7 +56,7 @@ namespace Rafy.Utils.Caching
             return null;
         }
 
-        protected internal override StoredValue GetCacheItemCore(string region, string key)
+        protected override StoredValue GetCacheItemCore(string region, string key)
         {
             if (string.IsNullOrWhiteSpace(key)) throw new ArgumentException($"parameter {nameof(key)} can not be null or empty.");
 
@@ -65,7 +65,7 @@ namespace Rafy.Utils.Caching
             return (StoredValue)items?[key];
         }
 
-        protected internal override bool AddCore(string region, string key, StoredValue value)
+        protected override bool AddCore(string region, string key, StoredValue value)
         {
             if (string.IsNullOrWhiteSpace(key)) throw new ArgumentException($"parameter {nameof(key)} can not be null or empty.");
 
@@ -86,7 +86,7 @@ namespace Rafy.Utils.Caching
             return true;
         }
 
-        protected internal override void RemoveCore(string region, string key)
+        protected override void RemoveCore(string region, string key)
         {
             if (string.IsNullOrWhiteSpace(key)) throw new ArgumentException($"parameter {nameof(key)} can not be null or empty.");
 
@@ -95,7 +95,7 @@ namespace Rafy.Utils.Caching
             items?.Remove(key);
         }
 
-        protected internal override void ClearRegionCore(string region)
+        protected override void ClearRegionCore(string region)
         {
             if (string.IsNullOrWhiteSpace(region)) throw new ArgumentException($"parameter {nameof(region)} can not be null or empty.");
 
@@ -122,7 +122,7 @@ namespace Rafy.Utils.Caching
             }
         }
 
-        protected internal override void ClearCore()
+        protected override void ClearCore()
         {
             var items = this.GetItems();
             if (items == null)

@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RafyUnitTest.ClientTest</RootNamespace>
     <AssemblyName>RafyUnitTest.ClientTest</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -93,10 +93,6 @@
     <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.Stamp\Rafy.Domain.Stamp.csproj">
       <Project>{6a13f732-1658-4636-8113-338b398cf328}</Project>
       <Name>Rafy.Domain.Stamp</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.DiskCaching\Rafy.DiskCaching.csproj">
-      <Project>{a2f2f4e8-a6ec-4856-a1da-bd4eb783041d}</Project>
-      <Name>Rafy.DiskCaching</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Rafy\Rafy\Rafy.csproj">
       <Project>{966a5bf2-d690-426b-ad68-ad868bb8f855}</Project>
