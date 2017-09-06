@@ -285,6 +285,63 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void ET_Property_Decimal()
+        {
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            {
+                CarEntity car = new CarEntity()
+                {
+                    DecimalName = (decimal)999999.99
+                };
+                var repo = RF.ResolveInstance<CarEntityRepository>();
+                repo.Save(car);
+
+                long id = car.Id;
+                var newCar = repo.GetById(id);
+
+                Assert.AreEqual(newCar.DecimalName, car.DecimalName);
+            }
+        }
+
+        [TestMethod]
+        public void ET_Property_Float()
+        {
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            {
+                CarEntity car = new CarEntity()
+                {
+                    FloatName = (float)16.6,
+                };
+                var repo = RF.ResolveInstance<CarEntityRepository>();
+                repo.Save(car);
+
+                long id = car.Id;
+                var newCar = repo.GetById(id);
+
+                Assert.AreEqual(newCar.FloatName, car.FloatName);
+            }
+        }
+
+        [TestMethod]
+        public void ET_Property_Byte()
+        {
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            {
+                CarEntity car = new CarEntity()
+                {
+                    ByteName = (byte)1
+                };
+                var repo = RF.ResolveInstance<CarEntityRepository>();
+                repo.Save(car);
+
+                long id = car.Id;
+                var newCar = repo.GetById(id);
+
+                Assert.AreEqual(newCar.ByteName, car.ByteName);
+            }
+        }
+
+        [TestMethod]
         public void ET_Property_Enum_ForUI()
         {
             var entity = new TestRole
@@ -3032,34 +3089,6 @@ namespace RafyUnitTest
 
             Assert.IsNotNull(pbs2.GetProperty(PBS.PBSTypeProperty));
         }
-
-        #endregion
-
-        #region 实体
-
-        [TestMethod]
-        public void TestEntityProperty()
-        {
-            CarEntity car = new CarEntity()
-            {
-                Name = "LAMBORGHINI",
-                ByteName = (byte)1,
-                FloatName = (float)16.6,
-                DoubleName = (double)1000000.99,
-                DecimalName = (decimal)999999.99
-            };
-            var repo = RF.ResolveInstance<CarEntityRepository>();
-            repo.Save(car);
-
-            long id = car.Id;
-            var newCar = repo.GetById(id);
-
-            Assert.AreEqual(newCar.ByteName, car.ByteName);
-            Assert.AreEqual(newCar.FloatName, car.FloatName);
-            Assert.AreEqual(newCar.DoubleName,car.DoubleName);
-            Assert.AreEqual(newCar.DecimalName, car.DecimalName);
-        }
-
 
         #endregion
 
