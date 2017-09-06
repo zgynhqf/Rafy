@@ -24,6 +24,7 @@ using Rafy.UnitTest.IDataProvider;
 using Rafy.UnitTest.Repository;
 using Rafy.Utils;
 using UT;
+using Rafy.UnitTest;
 
 namespace RafyUnitTest
 {
@@ -3031,6 +3032,34 @@ namespace RafyUnitTest
 
             Assert.IsNotNull(pbs2.GetProperty(PBS.PBSTypeProperty));
         }
+
+        #endregion
+
+        #region 实体
+
+        [TestMethod]
+        public void TestEntityProperty()
+        {
+            CarEntity car = new CarEntity()
+            {
+                Name = "LAMBORGHINI",
+                ByteName = (byte)1,
+                FloatName = (float)16.6,
+                DoubleName = (double)1000000.99,
+                DecimalName = (decimal)999999.99
+            };
+            var repo = RF.ResolveInstance<CarEntityRepository>();
+            repo.Save(car);
+
+            long id = car.Id;
+            var newCar = repo.GetById(id);
+
+            Assert.AreEqual(newCar.ByteName, car.ByteName);
+            Assert.AreEqual(newCar.FloatName, car.FloatName);
+            Assert.AreEqual(newCar.DoubleName,car.DoubleName);
+            Assert.AreEqual(newCar.DecimalName, car.DecimalName);
+        }
+
 
         #endregion
 
