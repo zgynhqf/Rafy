@@ -46,7 +46,7 @@ namespace Rafy.Data.Providers
                 case DbSetting.Provider_SqlCe:
                     if (_sqlCe == null)
                     {
-                        _sqlCe = System.Data.SqlClient.SqlClientFactory.Instance;
+                        _sqlCe = System.Data.SqlServerCe.SqlCeProviderFactory.Instance;
                     }
                     return _sqlCe;
                 case DbSetting.Provider_MySql:
