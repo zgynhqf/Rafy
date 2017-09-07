@@ -1163,7 +1163,7 @@ namespace RafyUnitTest
 
         #region 批量导入
 
-        internal static readonly int BATCH_IMPORT_DATA_SIZE = ConfigurationHelper.GetAppSettingOrDefault("RafyUnitTest.BatchImportDataSize", 100);
+        internal static readonly int BATCH_IMPORT_DATA_SIZE = ConfigurationHelper.GetAppSettingOrDefault("RafyUnitTest:BatchImportDataSize", 100);
 
         /// <summary>
         /// 批量导入需要支持事务回滚

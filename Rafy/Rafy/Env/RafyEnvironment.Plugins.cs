@@ -130,8 +130,8 @@ namespace Rafy
             _allPlugins = new PluginCollection();
 
             //domain plugins.
-            var configPlugins = Configuration.Section.DomainPlugins.GetChildren().OfType<PluginElement>().Select(e => e.Plugin).ToArray();
-            if (configPlugins.Length > 0)
+            var configPlugins = Configuration.Section.DomainPlugins;
+            if (configPlugins != null && configPlugins.Length > 0)
             {
                 InitPluginsByConfig(_domainPlugins, configPlugins);
             }
@@ -143,8 +143,8 @@ namespace Rafy
             //ui plugins.
             if (_location.IsUI)
             {
-                configPlugins = Configuration.Section.UIPlugins.GetChildren().OfType<PluginElement>().Select(e => e.Plugin).ToArray();
-                if (configPlugins.Length > 0)
+                configPlugins = Configuration.Section.UIPlugins;
+                if (configPlugins != null && configPlugins.Length > 0)
                 {
                     InitPluginsByConfig(_uiPlugins, configPlugins);
                 }

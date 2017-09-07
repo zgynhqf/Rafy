@@ -32,7 +32,7 @@ namespace Rafy.UnitTest.DataProvider
     {
         public static void GenerateDb()
         {
-            if (ConfigurationHelper.GetAppSettingOrDefault("单元测试-生成数据库", false))
+            if (ConfigurationHelper.GetAppSettingOrDefault("rafyUnitTest:migrateDatabase", false))
             {
                 using (var c = new RafyDbMigrationContext(DbSettingNames.DbMigrationHistory))
                 {

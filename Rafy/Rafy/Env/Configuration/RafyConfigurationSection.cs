@@ -20,129 +20,38 @@ using Microsoft.Extensions.Configuration;
 
 namespace Rafy.Configuration
 {
-    public class RafyConfigurationSection : ConfigurationSection
+    public class RafyConfigurationSection
     {
-        private ConfigurationRoot _root;
-        private WPFConfigurationSection _wpf;
+        public WPFConfigurationSection WPF { get; private set; } = new WPFConfigurationSection();
 
-        internal RafyConfigurationSection(ConfigurationRoot root, string path) : base(root, path)
-        {
-            _root = root;
-        }
-
-        #region 子元素
-
-        public WPFConfigurationSection WPF
-        {
-            get
-            {
-                if (_wpf == null)
-                {
-                    _wpf = new WPFConfigurationSection(_root, this.Path + "/wpf");
-                }
-                return _wpf;
-            }
-        }
-
-        public IConfigurationSection Web
-        {
-            get { return this.GetSection("web"); }
-        }
-
-        public PluginsConfigurationElement DomainPlugins
-        {
-            get { return this.GetSection("domainPlugins") as PluginsConfigurationElement; }
-        }
-
-        public PluginsConfigurationElement UIPlugins
-        {
-
-            get { return this.GetSection("uiPlugins") as PluginsConfigurationElement; }
-        }
-
-        #endregion
+        //public IConfigurationSection Web
+        //{
+        //    get { return this.GetSection("web"); }
+        //}
 
         /// <summary>
         /// 当前显示的语言文化。
         /// 如果没有设置本项，表明使用系统自带的语言文化。
         /// 例如：zh-CN、en-US 等。
         /// </summary>
-        public string CurrentCulture
-        {
-            get { return (string)this.GetSection("currentCulture").Value; }
-            set { this.GetSection("currentCulture").Value = value; }
-        }
+        public string CurrentCulture { get; set; }
 
         /// <summary>
         /// 在当前语言下是否执行收集操作。
         /// </summary>
         /// 
-        public DynamicBoolean CollectDevLanguages
-        {
-            get
-            {
-                string val = (string)this["collectDevLanguages"];
-                if (string.IsNullOrEmpty(val))
-                {
-                    return (DynamicBoolean)Enum.Parse(typeof(DynamicBoolean), val);
-                }
-                return DynamicBoolean.IsDebugging;
-            }
-            set { this["collectDevLanguages"] = value.ToString(); }
-        }
+        public DynamicBoolean CollectDevLanguages { get; set; } = DynamicBoolean.IsDebugging;
 
         /// <summary>
-        /// Gets or sets the full type name (or 'Local') of
-        /// the data portal proxy object to be used when
-        /// communicating with the data portal server.
+        /// 配置使用哪个数据门户代理。
+        /// 
+        /// 如果直接连接数据源，则需要配置：Local（默认值）。
+        /// 如果使用 WCF，则需要配置：Rafy.Domain.DataPortal.WCF.ClientProxy, Rafy.Domain。
         /// </summary>
-        /// <value>Fully qualified assembly/type name of the proxy class
-        /// or 'Local'.</value>
-        /// <returns></returns>
-        /// <remarks>
-        /// <para>
-        /// If this value is empty or null, a new value is read from the 
-        /// application configuration file with the key value 
-        /// "DataPortalProxy".
-        /// </para><para>
-        /// The proxy class must implement SimpleCsla.Server.IDataPortalServer.
-        /// </para><para>
-        /// The value "Local" is a shortcut to running the DataPortal
-        /// "server" in the client process.
-        /// </para><para>
-        /// Other built-in values include:
-        /// <list>
-        /// <item>
-        /// <term>SimpleCsla,SimpleCsla.DataPortalClient.RemotingProxy</term>
-        /// <description>Use .NET Remoting to communicate with the server</description>
-        /// </item>
-        /// <item>
-        /// <term>SimpleCsla,SimpleCsla.DataPortalClient.EnterpriseServicesProxy</term>
-        /// <description>Use Enterprise Services (DCOM) to communicate with the server</description>
-        /// </item>
-        /// <item>
-        /// <term>SimpleCsla,SimpleCsla.DataPortalClient.WebServicesProxy</term>
-        /// <description>Use Web Services (asmx) to communicate with the server</description>
-        /// </item>
-        /// </list>
-        /// Each proxy type does require that the DataPortal server be hosted using the appropriate
-        /// technology. For instance, Web Services and Remoting should be hosted in IIS, while
-        /// Enterprise Services must be hosted in COM+.
-        /// </para>
-        /// </remarks>
+        public string DataPortalProxy { get; set; } = "Local";
 
-        public string DataPortalProxy
-        {
-            get
-            {
-                string val = this["dataPortalProxy"];
-                if (string.IsNullOrEmpty(val))
-                {
-                    return "Local";
-                }
-                return val;
-            }
-            set { this["dataPortalProxy"] = value; }
-        }
+        public string[] DomainPlugins { get; set; }
+
+        public string[] UIPlugins { get; set; }
     }
 }

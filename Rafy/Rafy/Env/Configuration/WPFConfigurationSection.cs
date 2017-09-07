@@ -20,10 +20,8 @@ using Microsoft.Extensions.Configuration;
 
 namespace Rafy.Configuration
 {
-    public class WPFConfigurationSection : ConfigurationSection
+    public class WPFConfigurationSection
     {
-        internal WPFConfigurationSection(ConfigurationRoot root, string path) : base(root, path) { }
-
         ///// <summary>
         ///// 闪屏的时间控制
         ///// </summary>
@@ -37,32 +35,11 @@ namespace Rafy.Configuration
         /// <summary>
         /// 是否显示错误的详细信息。
         /// </summary>
-        //[ConfigurationProperty("showErrorDetail", DefaultValue = DynamicBoolean.IsDebugging)]
-        public DynamicBoolean ShowErrorDetail
-        {
-            get
-            {
-                string val = (string)this["showErrorDetail"];
-                if (string.IsNullOrEmpty(val))
-                {
-                    return (DynamicBoolean)Enum.Parse(typeof(DynamicBoolean), val);
-                }
-                return DynamicBoolean.IsDebugging;
-            }
-            set
-            {
-                this["showErrorDetail"] = value.ToString();
-            }
-        }
+        public DynamicBoolean ShowErrorDetail { get; set; } = DynamicBoolean.IsDebugging;
 
         /// <summary>
         /// 使用的皮肤名称。
         /// </summary>
-        //[ConfigurationProperty("skin", DefaultValue = "Blue")]
-        public string Skin
-        {
-            get { return this["skin"]; }
-            set { this["skin"] = value; }
-        }
+        public string Skin { get; set; } = "Blue";
     }
 }
