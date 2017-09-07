@@ -76,44 +76,11 @@ namespace Rafy.Configuration
         }
 
         /// <summary>
-        /// Gets or sets the full type name (or 'Local') of
-        /// the data portal proxy object to be used when
-        /// communicating with the data portal server.
+        /// 配置使用哪个数据门户代理。
+        /// 
+        /// 如果直接连接数据源，则需要配置：Local（默认值）。
+        /// 如果使用 WCF，则需要配置：Rafy.Domain.DataPortal.WCF.ClientProxy, Rafy.Domain。
         /// </summary>
-        /// <value>Fully qualified assembly/type name of the proxy class
-        /// or 'Local'.</value>
-        /// <returns></returns>
-        /// <remarks>
-        /// <para>
-        /// If this value is empty or null, a new value is read from the 
-        /// application configuration file with the key value 
-        /// "DataPortalProxy".
-        /// </para><para>
-        /// The proxy class must implement SimpleCsla.Server.IDataPortalServer.
-        /// </para><para>
-        /// The value "Local" is a shortcut to running the DataPortal
-        /// "server" in the client process.
-        /// </para><para>
-        /// Other built-in values include:
-        /// <list>
-        /// <item>
-        /// <term>SimpleCsla,SimpleCsla.DataPortalClient.RemotingProxy</term>
-        /// <description>Use .NET Remoting to communicate with the server</description>
-        /// </item>
-        /// <item>
-        /// <term>SimpleCsla,SimpleCsla.DataPortalClient.EnterpriseServicesProxy</term>
-        /// <description>Use Enterprise Services (DCOM) to communicate with the server</description>
-        /// </item>
-        /// <item>
-        /// <term>SimpleCsla,SimpleCsla.DataPortalClient.WebServicesProxy</term>
-        /// <description>Use Web Services (asmx) to communicate with the server</description>
-        /// </item>
-        /// </list>
-        /// Each proxy type does require that the DataPortal server be hosted using the appropriate
-        /// technology. For instance, Web Services and Remoting should be hosted in IIS, while
-        /// Enterprise Services must be hosted in COM+.
-        /// </para>
-        /// </remarks>
         [ConfigurationProperty("dataPortalProxy", DefaultValue = "Local")]
         public string DataPortalProxy
         {
