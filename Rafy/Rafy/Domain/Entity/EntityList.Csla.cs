@@ -123,11 +123,12 @@ namespace Rafy.Domain
 
         #region Serialization Notification
 
-        [OnDeserialized]
-        private void OnDeserializedHandler(StreamingContext context)
-        {
-            OnDeserialized();
-        }
+        //net standard not compatible?
+        //[OnDeserialized]
+        //private void OnDeserializedHandler(StreamingContext context)
+        //{
+        //    OnDeserialized();
+        //}
 
         /// <summary>
         /// This method is called on a newly deserialized object
