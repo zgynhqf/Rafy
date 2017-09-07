@@ -3190,6 +3190,10 @@
       <Project>{966A5BF2-D690-426B-AD68-AD868BB8F855}</Project>
       <Name>Rafy</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rafy\Web\Rafy.Web\Rafy.Web.csproj">
+      <Project>{22a24653-e4a5-48e2-b9c7-a1b24dacecf3}</Project>
+      <Name>Rafy.Web</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
