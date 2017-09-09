@@ -101,7 +101,7 @@ namespace Rafy.Domain
                 }
             }
 
-            return ConvertEntitiesIntoList(liteDataTable, repo, propertyToColumnMappings) as TEntityList;
+            return ConvertEntitiesIntoList(liteDataTable, repo, propertyToColumnMappings, columnMapToProperty) as TEntityList;
         }
 
         /// <summary>
@@ -110,10 +110,17 @@ namespace Rafy.Domain
         /// <param name="liteDataTable">需要转换实体的 LiteDataTable</param>
         /// <param name="repo">实体的仓储</param>
         /// <param name="propertyToColumnMappings">属性和对应列的键值对集合</param>
+        /// <param name="columnMapToProperty">
+        /// 此参数表示表格中的列的数据类型和是否直接映射实体的属性数据类型。
+        /// 如果传入 false，表示表格中的列数据类型和实体属性数据类型不一致。
+        /// </param>
         /// <returns></returns>
-        private static EntityList ConvertEntitiesIntoList(LiteDataTable liteDataTable, EntityRepository repo, IList<PropertyToColumnMapping> propertyToColumnMappings)
+        private static EntityList ConvertEntitiesIntoList(LiteDataTable liteDataTable, EntityRepository repo, IList<PropertyToColumnMapping> propertyToColumnMappings, bool columnMapToProperty = true)
         {
             var resultList = repo.NewList();
+
+            var rdbDataProvider = ORM.RdbDataProvider.Get(repo);
+            var columns = rdbDataProvider.DbTable.Columns;
 
             for (int i = 0, c = liteDataTable.Rows.Count; i < c; i++)
             {
@@ -124,8 +131,23 @@ namespace Rafy.Domain
                 {
                     var mapping = propertyToColumnMappings[j];
                     var rowValue = row[mapping.ColumnName];
-
-                    entityItem.LoadProperty(mapping.Property, rowValue);
+                    if (!columnMapToProperty)
+                    {
+                        for (int z = 0, z2 = columns.Count; z < z2; z++)
+                        {
+                            var column = columns[z];
+                            //通过列名称相等匹配找到 rdbcolumn。
+                            if (column.Name == mapping.ColumnName)
+                            {
+                                column.LoadValue(entityItem, rowValue);
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        entityItem.LoadProperty(mapping.Property, rowValue);
+                    }
                 }
 
                 resultList.Add(entityItem);
