@@ -101,7 +101,7 @@ namespace Rafy.Domain
                 }
             }
 
-            return ConvertEntitiesIntoList(liteDataTable, repo, propertyToColumnMappings) as TEntityList;
+            return ConvertEntitiesIntoList(liteDataTable, repo, propertyToColumnMappings, columnMapToProperty) as TEntityList;
         }
 
         /// <summary>

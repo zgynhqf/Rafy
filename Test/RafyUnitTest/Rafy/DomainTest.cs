@@ -185,13 +185,32 @@ namespace RafyUnitTest
             using (RF.TransactionScope(repo))
             {
                 var invoice = new Invoice();
-                invoice.Code = "123";
                 invoice.SetIsPhantom(true);
                 repo.Save(invoice);
 
                 var table = repo.GetAllInTable();
                 var invoiceList = table.ToEntityList<InvoiceList>(false);
                 Assert.AreEqual(true, invoiceList[0].GetIsPhantom(), "继承属性映射到数据库，那么 liteDateTable 转换成 entitylist 值应该保持一致");
+            }
+        }
+
+        /// <summary>
+        /// 映射数据库的数据类型和实体属性数据类型不一致时候，转换能成功。
+        /// （这里是当数据库是 oracle 的时候 isphantom 在数据库中会被映射成整形）
+        /// </summary>
+        [TestMethod]
+        public void DT_LiteDataTable_QueryFromDbAndConvertToEntity_DiffrerntDataType()
+        {
+            var repo = RF.ResolveInstance<InvoiceRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var invoice = new Invoice();
+                invoice.SetIsPhantom(true);
+                repo.Save(invoice);
+
+                var table = repo.GetAllInTable();
+                var invoiceList = table.ToEntityList<InvoiceList>(false);
+                Assert.AreEqual(true, invoiceList[0].GetIsPhantom(), "映射数据库的数据类型和实体属性数据类型不一致时候，转换能成功");
             }
         }
 
