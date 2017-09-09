@@ -44,7 +44,7 @@ namespace Rafy.Domain.ORM.MySql
         /// <returns></returns>
         public override SqlGenerator CreateSqlGenerator()
         {
-            return new MySqlGenerator();
+            return new MySqlSqlGenerator();
         }
 
         /// <summary>

@@ -10,14 +10,22 @@
  * 
 *******************************************************
 
-3.61.3410
+3.61.3426
+    内部修改
+        Oracle、MySql 下，进行分页时，都不自动使用 Id 来进行排序。该功能只在 SqlServer 中启用。
+        ConverterFactory 需要更名为 DbConnectorFactory #61
+        添加 CheckDuplucatePlugins 方法，用于检测：一个程序集只能声明一个插件类型！
+    重构
+        MySqlGenerator 重命名为 MySqlSqlGenerator。
     BUG修复
         解决sql In过滤条件数量大于1000报错
-        修改 SQL SERVER 分页采用RowNumber() Over
+        修改 SQL SERVER 分页采用 RowNumber() Over
         解决“DbMigration 中生成的历史日志中的 MigrationClass 因为包含版本号，导致程序集升级后，无法加载类型，进而无法回滚”的问题。
         解决 MySql 下每个表都更新时间类型的字段 的问题。
+        解决 OracleMetaReader 中没有把主键列的 IsIdentity 属性读取出来，导致删除表时没有删除对应的 Sequence 的问题。
     添加接口
         添加 EntityRepository ResolveInstance(Type repositoryType) 接口。
+        添加 LiteDataTable.ToEntityList 扩展方法，支持把 LiteDataTable 直接转换为指定实体类型的 API #52
 
 3.61.3340
     ★★公布、添加功能

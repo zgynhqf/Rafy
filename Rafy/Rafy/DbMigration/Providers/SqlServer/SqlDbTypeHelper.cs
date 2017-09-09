@@ -45,6 +45,7 @@ namespace Rafy.DbMigration.SqlServer
                 case DbType.Guid:
                     return "UNIQUEIDENTIFIER";
                 case DbType.Double:
+                case DbType.Single:
                     return "FLOAT";
                 case DbType.Decimal:
                     if (!string.IsNullOrWhiteSpace(length))
@@ -57,7 +58,7 @@ namespace Rafy.DbMigration.SqlServer
                 case DbType.Boolean:
                     return "BIT";
                 case DbType.Byte:
-                    return "BYTE";
+                    return "TINYINT";
                 case DbType.Xml:
                     return "XML";
                 default:
@@ -105,7 +106,7 @@ namespace Rafy.DbMigration.SqlServer
                 case "varbinary":
                 case "image":
                     return DbType.Binary;
-                case "byte":
+                case "tinyint":
                     return DbType.Byte;
                 case "date":
                 case "datetime":

@@ -24,6 +24,7 @@ using Rafy.UnitTest.IDataProvider;
 using Rafy.UnitTest.Repository;
 using Rafy.Utils;
 using UT;
+using Rafy.UnitTest;
 
 namespace RafyUnitTest
 {
@@ -75,6 +76,9 @@ namespace RafyUnitTest
             Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.Modified, "之前的状态是 Modified");
         }
 
+        /// <summary>
+        /// 实体被删除后，状态应该为 New。
+        /// </summary>
         [TestMethod]
         public void __ET_PersistenceStatus_Delete_SavedAsNew()
         {
@@ -277,6 +281,63 @@ namespace RafyUnitTest
 
                 var entity2 = repo.GetById(entity.Id);
                 Assert.AreEqual(entity.RoleType, entity2.RoleType);
+            }
+        }
+
+        [TestMethod]
+        public void ET_Property_Decimal()
+        {
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            {
+                CarEntity car = new CarEntity()
+                {
+                    DecimalName = (decimal)999999.99
+                };
+                var repo = RF.ResolveInstance<CarEntityRepository>();
+                repo.Save(car);
+
+                long id = car.Id;
+                var newCar = repo.GetById(id);
+
+                Assert.AreEqual(newCar.DecimalName, car.DecimalName);
+            }
+        }
+
+        [TestMethod]
+        public void ET_Property_Float()
+        {
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            {
+                CarEntity car = new CarEntity()
+                {
+                    FloatName = (float)16.6,
+                };
+                var repo = RF.ResolveInstance<CarEntityRepository>();
+                repo.Save(car);
+
+                long id = car.Id;
+                var newCar = repo.GetById(id);
+
+                Assert.AreEqual(newCar.FloatName, car.FloatName);
+            }
+        }
+
+        [TestMethod]
+        public void ET_Property_Byte()
+        {
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            {
+                CarEntity car = new CarEntity()
+                {
+                    ByteName = (byte)1
+                };
+                var repo = RF.ResolveInstance<CarEntityRepository>();
+                repo.Save(car);
+
+                long id = car.Id;
+                var newCar = repo.GetById(id);
+
+                Assert.AreEqual(newCar.ByteName, car.ByteName);
             }
         }
 
@@ -1595,6 +1656,9 @@ namespace RafyUnitTest
             }
         }
 
+        /// <summary>
+        /// 被冗余属性在批量更新时，在框架层面也能自动更新其对应的冗余属性。
+        /// </summary>
         [TestMethod]
         public void __ET_Repository_BatchImport_CDU_U_Redundancy_UpdateB()
         {
@@ -1632,6 +1696,9 @@ namespace RafyUnitTest
             }
         }
 
+        /// <summary>
+        /// 被冗余属性在批量更新时，在框架层面也能自动更新其对应的冗余属性。
+        /// </summary>
         [TestMethod]
         public void __ET_Repository_BatchImport_CDU_U_Redundancy_UpdateC()
         {

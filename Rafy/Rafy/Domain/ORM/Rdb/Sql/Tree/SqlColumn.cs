@@ -29,7 +29,7 @@ namespace Rafy.Domain.ORM.SqlTree
         }
 
         /// <summary>
-        /// 只能是<see cref="SqlTable"/>、<see cref="SqlSubSelect"/>
+        /// 只能是 <see cref="SqlTable"/>、<see cref="SqlSubSelect"/>
         /// </summary>
         public SqlNamedSource Table { get; set; }
 

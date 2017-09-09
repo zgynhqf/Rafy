@@ -403,7 +403,7 @@
     <Compile Include="Domain\ORM\Rdb\SingleConnectionTrasactionScope.cs" />
     <Compile Include="Domain\ORM\Rdb\Sql\FirstTableFinder.cs" />
     <Compile Include="Domain\ORM\Rdb\Sql\MySql\MySqlColumn.cs" />
-    <Compile Include="Domain\ORM\Rdb\Sql\MySql\MySqlGenerator.cs" />
+    <Compile Include="Domain\ORM\Rdb\Sql\MySql\MySqlSqlGenerator.cs" />
     <Compile Include="Domain\ORM\Rdb\Sql\MySql\MySqlTable.cs" />
     <Compile Include="Domain\ORM\Rdb\Sql\Oracle\OracleColumn.cs" />
     <Compile Include="Domain\ORM\Rdb\Sql\Oracle\OracleSqlGenerator.cs" />
@@ -412,6 +412,7 @@
     <Compile Include="Domain\ORM\Rdb\Sql\SqlGenerator.cs" />
     <Compile Include="Domain\ORM\Rdb\Sql\SqlServer\SqlOraTable.cs" />
     <Compile Include="Domain\ORM\Rdb\Sql\SqlServer\SqlServerSqlGenerator.cs" />
+    <Compile Include="Domain\ORM\Rdb\Sql\SqlServer\SqlServerSqlGeneratorConfiguration.cs" />
     <Compile Include="Domain\ORM\Rdb\Sql\SqlServer\SqlServerTable.cs" />
     <Compile Include="Domain\ORM\Rdb\Sql\SqlServer\SqlTable.cs" />
     <Compile Include="Domain\ORM\Rdb\Sql\Tree\Interfaces.cs" />
@@ -731,7 +732,7 @@
     <Compile Include="Utils\Data\LocalTransactionBlock_1_0.cs" />
     <Compile Include="Utils\Data\LongTimeDbAccesser.cs" />
     <Compile Include="Utils\Data\PagingHelper.cs" />
-    <Compile Include="Utils\Data\Providers\ConverterFactory.cs" />
+    <Compile Include="Utils\Data\Providers\DbConnectorFactory.cs" />
     <Compile Include="Utils\Data\Providers\ISqlProvider.cs" />
     <Compile Include="Utils\Data\Providers\MySqlServerProvider.cs" />
     <Compile Include="Utils\Data\Providers\ODBCProvider.cs" />
@@ -783,6 +784,7 @@
     <Content Include="Utils\_ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Domain\ORM\Rdb\Sql\SqlGenerators.dgml" />
     <None Include="Hxy Key.snk" />
     <None Include="ManagedProperty\_Other\ManagedProperty 1.0 20121118备份.7z" />
     <None Include="packages.config" />

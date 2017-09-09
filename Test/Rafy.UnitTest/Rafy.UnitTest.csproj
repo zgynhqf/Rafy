@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommonTest\CacheInstances.cs" />
+    <Compile Include="CommonTest\RafyEntityJScriptHandler.cs" />
     <Compile Include="Entities\Blog\Article.cs" />
     <Compile Include="Entities\Blog\Article.g.cs">
       <SubType>Code</SubType>
@@ -98,6 +99,11 @@
     <Compile Include="Entities\BookStore\SectionOwner.cs" />
     <Compile Include="Entities\BookStore\SectionOwner.g.cs">
       <DependentUpon>SectionOwner.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\CarEntity.cs" />
+    <Compile Include="Entities\CarEntity.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>CarEntity.cs</DependentUpon>
     </Compile>
     <Compile Include="Entities\CarStore\Car.cs" />
     <Compile Include="Entities\CarStore\Car.g.cs">
@@ -258,6 +264,10 @@
     <ProjectReference Include="..\..\Rafy\Rafy\Rafy.csproj">
       <Project>{966A5BF2-D690-426B-AD68-AD868BB8F855}</Project>
       <Name>Rafy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy\Web\Rafy.Web\Rafy.Web.csproj">
+      <Project>{22A24653-E4A5-48E2-B9C7-A1B24DACECF3}</Project>
+      <Name>Rafy.Web</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

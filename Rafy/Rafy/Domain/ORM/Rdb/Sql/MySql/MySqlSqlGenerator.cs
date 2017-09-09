@@ -25,7 +25,7 @@ namespace Rafy.Domain.ORM.MySql
     /// <summary>
     /// MySql的Sql语句生成器
     /// </summary>
-    internal sealed class MySqlGenerator : SqlGenerator
+    internal sealed class MySqlSqlGenerator : SqlGenerator
     {
         /// <summary>
         /// Sql Server 中没有限制 In 语句中的项的个数。（但是如果使用参数的话，则最多只能使用 2000 个参数。）
@@ -146,34 +146,14 @@ namespace Rafy.Domain.ORM.MySql
         /// <returns></returns>
         protected override ISqlSelect ModifyToPagingTree(SqlSelect raw, PagingInfo pagingInfo)
         {
-            if (PagingInfo.IsNullOrEmpty(pagingInfo)) { throw new ArgumentNullException("pagingInfo"); }
-            if (!raw.HasOrdered()) { throw new InvalidProgramException("必须排序后才能使用分页功能。"); }
-
-            var pageNumber =pagingInfo.PageNumber;
+            var pageNumber = pagingInfo.PageNumber;
             var pageSize = pagingInfo.PageSize;
 
-            var res = MakePagingTree(raw, pageNumber, pageSize);
-            return res;
-        }
-
-        /// <summary>
-        /// 生成分页的Sql树
-        /// </summary>
-        /// <param name="raw">原始的查询语句</param>
-        /// <param name="pageNumber">当前页数，从0开始索引</param>
-        /// <param name="pageSize">每页的行数</param>
-        /// <returns></returns>
-        private static ISqlSelect MakePagingTree(SqlSelect raw, long pageNumber, long pageSize)
-        {
-            //return new SqlNodeList
-            //{
-            //    new SqlLiteral(@"SELECT * FROM("),
-            //    raw,
-            //    new SqlLiteral(@")T ORDER BY T.ID ASC LIMIT " + (pageNumber-1)*pageSize + "," +pageSize)};
             return new SqlNodeList
             {
                 raw,
-                new SqlLiteral(@" LIMIT " + (pageNumber-1)*pageSize + "," +pageSize)};
+                new SqlLiteral(@" LIMIT " + (pageNumber - 1) * pageSize + "," + pageSize)
+            };
         }
     }
 }

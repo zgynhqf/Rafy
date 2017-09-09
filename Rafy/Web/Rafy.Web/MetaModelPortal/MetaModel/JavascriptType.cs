@@ -24,8 +24,7 @@ namespace Rafy.Web.ClientMetaModel
     public enum JavascriptType
     {
         String,
-        Int,
-        Float,
+        Number,
         Date,
         Boolean,
         /// <summary>

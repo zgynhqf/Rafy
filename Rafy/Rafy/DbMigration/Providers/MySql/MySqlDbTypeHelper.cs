@@ -108,7 +108,11 @@ namespace Rafy.DbMigration.MySql
                 case DbType.Double:
                     return "DOUBLE";
                 case DbType.Decimal:
-                    return "DECIMAL";
+                    if (!string.IsNullOrWhiteSpace(length))
+                    {
+                        return "DECIMAL(" + length + ")";
+                    }
+                    return "DECIMAL(18,2)";
                 case DbType.Binary:
                     return "BLOB";
                 case DbType.Boolean:

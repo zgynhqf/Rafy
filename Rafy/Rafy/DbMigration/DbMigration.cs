@@ -85,13 +85,17 @@ namespace Rafy.DbMigration
             get { return this.GetMigrationType(); }
         }
 
+
         /// <summary>
         /// 数据库升级
+        /// 注意，开发者在实现此方法时，不能在方法中直接操作数据库，而是应该通过 <see cref="AddOperation(MigrationOperation)"/>、<see cref="ManualDbMigration.RunCode(Action{IDbAccesser})"/>、<see cref="ManualDbMigration.RunSql(string)"/> 等方法添加一些数据库的操作，进而由框架来统一规划与操作数据库。
+        /// 另外，为了保证能正确的回滚、升级数据库，在实现 Up 方法的同时，应该实现相应的 <see cref="Down"/> 方法，来实现数据库操作的回滚。如果因为某些原因无法实现 Down 方法的话，则应该保证 Up 方法中的代码是可以重入的。
         /// </summary>
         protected abstract void Up();
 
         /// <summary>
         /// 数据库回滚
+        /// 详细注释，见：<see cref="Up"/> 方法。
         /// </summary>
         protected abstract void Down();
 

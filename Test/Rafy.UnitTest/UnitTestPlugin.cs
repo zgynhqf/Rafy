@@ -6,6 +6,7 @@ using Rafy;
 using Rafy.ComponentModel;
 using Rafy.Data;
 using Rafy.Domain;
+using Rafy.Domain.ORM.BatchSubmit.Oracle;
 using UT;
 
 namespace Rafy.UnitTest
@@ -22,9 +23,8 @@ namespace Rafy.UnitTest
             var dbSetting = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName);
             if (DbSetting.IsOracleProvider(dbSetting))
             {
-                Rafy.Domain.ORM.BatchSubmit.Oracle.OracleBatchImporter.EnableBatchSequence(
-                    RF.ResolveInstance<BookRepository>()
-                    );
+                OracleBatchImporter.EnableBatchSequence(RF.ResolveInstance<BookRepository>());
+                OracleBatchImporter.EnableBatchSequence(RF.ResolveInstance<InvoiceRepository>());
             }
         }
     }

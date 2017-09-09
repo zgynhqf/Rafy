@@ -46,7 +46,6 @@ namespace Rafy.DbMigration
             if (clrType == typeof(ulong)) { return DbType.UInt64; }
             if (clrType == typeof(ushort)) { return DbType.UInt16; }
             if (clrType == typeof(sbyte)) { return DbType.SByte; }
-            if (clrType == typeof(float)) { return DbType.Single; }
             if (clrType == typeof(byte[])) { return DbType.Binary; }
 
             if (TypeHelper.IsNullable(clrType))
@@ -81,6 +80,7 @@ namespace Rafy.DbMigration
                 case DbType.Boolean:
                 case DbType.Byte:
                 case DbType.Decimal:
+                case DbType.Single:
                     return 0;
                 default:
                     throw new NotSupportedException();

@@ -36,7 +36,7 @@ namespace Rafy.DbMigration.SqlServer
         /// <param name="database"></param>
         protected override void LoadAllTables(Database database)
         {
-            using (var reader = this.Db.QueryDataReader(@"select * from INFORMATION_SCHEMA.TABLES"))
+            using (var reader = this.Db.QueryDataReader(@"SELECT * FROM INFORMATION_SCHEMA.TABLES"))
             {
                 while (reader.Read())
                 {
@@ -63,58 +63,60 @@ namespace Rafy.DbMigration.SqlServer
         /// <param name="database"></param>
         protected override void LoadAllColumns(Database database)
         {
-            foreach (Table table in database.Tables)
+            //用一句 Sql 将所有的表的所有字段都一次性查询出来。
+            var sql = new StringBuilder(
+@"SELECT TABLE_NAME, COLUMN_NAME, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME IN (");
+            sql.Append(string.Join(",", database.Tables.Select(t => "'" + t.Name + "'")));
+            sql.Append(@")
+ORDER BY TABLE_NAME");
+
+            using (var columnsReader = this.Db.QueryDataReader(sql.ToString()))
             {
-                using (var columnsReader = this.Db.QueryDataReader(@"
-SELECT C.COLUMN_NAME, C.IS_NULLABLE, C.DATA_TYPE, C.CHARACTER_MAXIMUM_LENGTH
-FROM INFORMATION_SCHEMA.COLUMNS C
-WHERE C.TABLE_NAME = {0}
-", table.Name))
+                Table currentTable = null;//当前正在处理的表。（放在循环外，有缓存的作用。）
+                while (columnsReader.Read())
                 {
-                    while (columnsReader.Read())
+                    //找到该列所对应的表。
+                    var tableName = columnsReader["TABLE_NAME"].ToString();
+                    if (currentTable == null || !currentTable.Name.EqualsIgnoreCase(tableName))
                     {
-                        string columnName = columnsReader["COLUMN_NAME"].ToString();
-                        string sqlType = columnsReader["DATA_TYPE"].ToString();
-
-                        //不再读取 Length
-                        //string length = null;
-                        //var lengthObj = columnsReader["CHARACTER_MAXIMUM_LENGTH"];
-                        //if (lengthObj != null && !DBNull.Value.Equals(lengthObj) && lengthObj.ToString() != "-1")
-                        //{
-                        //    length = lengthObj.ToString();
-                        //}
-
-                        DbType dbType = SqlDbTypeHelper.ConvertFromSQLTypeString(sqlType);
-                        Column column = new Column(columnName, dbType, null, table);
-
-                        column.IsRequired = string.Compare(columnsReader["IS_NULLABLE"].ToString(), "no", true) == 0;
-
-                        table.Columns.Add(column);
+                        currentTable = database.FindTable(tableName);
                     }
 
-                    table.SortColumns();
+                    string columnName = columnsReader["COLUMN_NAME"].ToString();
+                    string sqlType = columnsReader["DATA_TYPE"].ToString();
+
+                    //不再读取 Length
+                    //string length = null;
+                    //var lengthObj = columnsReader["CHARACTER_MAXIMUM_LENGTH"];
+                    //if (lengthObj != null && !DBNull.Value.Equals(lengthObj) && lengthObj.ToString() != "-1")
+                    //{
+                    //    length = lengthObj.ToString();
+                    //}
+
+                    DbType dbType = SqlDbTypeHelper.ConvertFromSQLTypeString(sqlType);
+
+                    Column column = new Column(columnName, dbType, null, currentTable);
+
+                    column.IsRequired = "NO".EqualsIgnoreCase(columnsReader["IS_NULLABLE"].ToString());
+
+                    currentTable.Columns.Add(column);
                 }
             }
-
-            this.LoadIsIdentity(database);
         }
 
-        protected override List<Constraint> ReadAllConstrains()
+        protected override IList<Constraint> ReadAllConstrains(Database database)
         {
-            List<Constraint> allConstrains = new List<Constraint>();
+            var allConstrains = new List<Constraint>();
 
-            #region 缓存数据库中的所有约束
-
-            using (var constraintReader = this.Db.QueryDataReader(@"
-SELECT 
-T1.CONSTRAINT_NAME, T1.CONSTRAINT_TYPE, T1.TABLE_NAME, T1.COLUMN_NAME,
-T2.FK_TABLE_NAME, T2.FK_COLUMN_NAME, T2.PREP, T2.PK_TABLE_NAME, T2.PK_COLUMN_NAME, T2.UNIQUE_CONSTRAINT_NAME, T2.DELETE_RULE
+            using (var constraintReader = this.Db.QueryDataReader(
+@"SELECT T1.CONSTRAINT_NAME, T1.CONSTRAINT_TYPE, T1.TABLE_NAME, T1.COLUMN_NAME, T2.FK_TABLE_NAME, T2.FK_COLUMN_NAME, T2.PREP, T2.PK_TABLE_NAME, T2.PK_COLUMN_NAME, T2.UNIQUE_CONSTRAINT_NAME, T2.DELETE_RULE
 FROM 
 (
 --外键或主键表列
     SELECT c.CONSTRAINT_NAME, c.CONSTRAINT_TYPE, c.TABLE_NAME, K.COLUMN_NAME
-    FROM 
-        INFORMATION_SCHEMA.TABLE_CONSTRAINTS c
+    FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS c
         INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE k ON 
         c.CONSTRAINT_NAME = k.CONSTRAINT_NAME 
 ) T1
@@ -134,8 +136,7 @@ LEFT JOIN
         INNER JOIN INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE FKC ON R.CONSTRAINT_NAME = FKC.CONSTRAINT_NAME
         INNER JOIN INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE PKC ON R.UNIQUE_CONSTRAINT_NAME = PKC.CONSTRAINT_NAME
 ) T2
-ON T1.CONSTRAINT_NAME = T2.CONSTRAINT_NAME
-"))
+ON T1.CONSTRAINT_NAME = T2.CONSTRAINT_NAME"))
             {
                 while (constraintReader.Read())
                 {
@@ -155,16 +156,15 @@ ON T1.CONSTRAINT_NAME = T2.CONSTRAINT_NAME
                 }
             }
 
-            #endregion
-
             return allConstrains;
         }
 
         #region 读取列的 Identity 信息
 
-        private void LoadIsIdentity(Database database)
+        protected override void LoadAllIdentities(Database database)
         {
             var identities = this.ReadAllIdentities();
+
             foreach (var identity in identities)
             {
                 var table = database.FindTable(identity.TableName);
@@ -190,12 +190,11 @@ ON T1.CONSTRAINT_NAME = T2.CONSTRAINT_NAME
             #region 缓存数据库中的所有约束
 
             //all_objects.type：U 是用户表、IT 是内部表，对应的 type_desc 是 USER_TABLE 和 INTERNAL_TABLE
-            using (var reader = this.Db.QueryDataReader(@"
-SELECT c.name columnName, obj.name tableName, obj.type, obj.type_desc
-    FROM [sys].[columns] c
-    left join [sys].all_objects obj on c.object_id = obj.object_id
-    where c.is_identity = 1 and obj.type = 'U'
-"))
+            using (var reader = this.Db.QueryDataReader(
+@"SELECT C.NAME COLUMNNAME, OBJ.NAME TABLENAME, OBJ.TYPE, OBJ.TYPE_DESC
+FROM [SYS].[COLUMNS] C
+LEFT JOIN [SYS].ALL_OBJECTS OBJ ON C.OBJECT_ID = OBJ.OBJECT_ID
+WHERE C.IS_IDENTITY = 1 AND OBJ.TYPE = 'U'"))
             {
                 while (reader.Read())
                 {

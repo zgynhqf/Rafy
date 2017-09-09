@@ -131,9 +131,10 @@ namespace RafyUnitTest
 
                     Assert.AreEqual(repo.GetAll().Count, 0, "执行数据归档后 Invoice 数目为 0");
 
-                    using (
-                        RdbDataProvider.RedirectDbSetting(DataTableMigrationPlugin.DbSettingName,
-                            DataTableMigrationPlugin.BackUpDbSettingName))
+                    using (RdbDataProvider.RedirectDbSetting(
+                        DataTableMigrationPlugin.DbSettingName,
+                        DataTableMigrationPlugin.BackUpDbSettingName
+                        ))
                     {
                         Assert.AreEqual(repo.GetAll().Count, 4, "数据归档数据库 Invoice 数目为 4");
                     }

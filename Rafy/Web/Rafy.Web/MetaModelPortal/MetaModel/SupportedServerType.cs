@@ -20,7 +20,7 @@ namespace Rafy.Web.ClientMetaModel
 {
     public enum SupportedServerType
     {
-        Guid, String, Enum, Int32, Int64, Double, Boolean, DateTime,
+        Guid, String, Byte, Enum, Int32, Int64, Float, Double, Decimal, Boolean, DateTime,
         Unknown
     }
 }

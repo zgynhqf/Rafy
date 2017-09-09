@@ -20,33 +20,30 @@ using Rafy.Data;
 using System.Data;
 using System.Data.Common;
 using Rafy;
+using Rafy.DbMigration.SqlServer;
 
 namespace Rafy.DbMigration.SqlServerCe
 {
     /// <summary>
     /// SqlServer CE 数据库的元数据读取器
     /// </summary>
-    public class SqlServerCeMetaReader : SqlServer.SqlServerMetaReader
+    public class SqlServerCeMetaReader : SqlServerMetaReader
     {
         public SqlServerCeMetaReader(DbSetting dbSetting) : base(dbSetting) { }
 
-        protected override List<Constraint> ReadAllConstrains()
+        protected override IList<Constraint> ReadAllConstrains(Database database)
         {
-            List<Constraint> allConstrains = new List<Constraint>();
-
-            #region 缓存数据库中的所有约束
+            var allConstrains = new List<Constraint>();
 
             using (var constraintReader = this.Db.QueryDataReader(@"
-SELECT 
-T1.CONSTRAINT_NAME, T1.CONSTRAINT_TYPE, T1.TABLE_NAME, T1.COLUMN_NAME,
-T2.FK_TABLE_NAME, T2.FK_COLUMN_NAME, T2.PREP, T2.PK_TABLE_NAME, T2.PK_COLUMN_NAME, T2.UNIQUE_CONSTRAINT_NAME, T2.DELETE_RULE
+SELECT T1.CONSTRAINT_NAME, T1.CONSTRAINT_TYPE, T1.TABLE_NAME, T1.COLUMN_NAME, T2.FK_TABLE_NAME, T2.FK_COLUMN_NAME, T2.PREP, T2.PK_TABLE_NAME, T2.PK_COLUMN_NAME, T2.UNIQUE_CONSTRAINT_NAME, T2.DELETE_RULE
 FROM 
 (
-    SELECT c.CONSTRAINT_NAME, c.CONSTRAINT_TYPE, c.TABLE_NAME, K.COLUMN_NAME
+    SELECT C.CONSTRAINT_NAME, C.CONSTRAINT_TYPE, C.TABLE_NAME, K.COLUMN_NAME
     FROM 
-        INFORMATION_SCHEMA.TABLE_CONSTRAINTS c
-        INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE k ON 
-        c.CONSTRAINT_NAME = k.CONSTRAINT_NAME 
+        INFORMATION_SCHEMA.TABLE_CONSTRAINTS C
+        INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE K ON 
+        C.CONSTRAINT_NAME = K.CONSTRAINT_NAME 
 ) T1
 LEFT JOIN 
 (
@@ -85,16 +82,12 @@ ON T1.CONSTRAINT_NAME = T2.CONSTRAINT_NAME
                 }
             }
 
-            #endregion
-
             return allConstrains;
         }
 
         protected override List<SqlServer.SqlServerMetaReader.IdentityColumn> ReadAllIdentities()
         {
             var list = new List<IdentityColumn>();
-
-            #region 缓存数据库中的所有约束
 
             using (var reader = this.Db.QueryDataReader(@"
 SELECT c.TABLE_NAME, c.COLUMN_NAME
@@ -111,8 +104,6 @@ SELECT c.TABLE_NAME, c.COLUMN_NAME
                     });
                 }
             }
-
-            #endregion
 
             return list;
         }
