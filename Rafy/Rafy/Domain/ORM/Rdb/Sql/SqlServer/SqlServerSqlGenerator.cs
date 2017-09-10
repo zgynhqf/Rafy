@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Rafy.Domain.ORM.SqlTree;
+using System.Collections;
 
 namespace Rafy.Domain.ORM
 {
@@ -72,6 +73,45 @@ namespace Rafy.Domain.ORM
             }
 
             return this.ModifyToPagingTree_With_RowNumber(raw, pagingInfo);
+        }
+        /// <summary>
+        /// 处理准备比较的参数
+        /// </summary>
+        /// <param name="value">参数</param>
+        /// <returns></returns>
+        public override object PrepareConstraintValue(object value)
+        {
+            value = base.PrepareConstraintValue(value);
+
+            value = PrepareConstraintValueInternal(value);
+
+            return value;
+        }
+        /// <summary>
+        /// 处理准备比较的参数 转义单引号
+        /// </summary>
+        /// <param name="value">参数</param>
+        /// <returns></returns>
+        internal static object PrepareConstraintValueInternal(object value)
+        {
+            if (value != DBNull.Value)
+            {
+                if (value is string)
+                {
+                    value = value.ToString().Replace("'", "''");
+                }
+                else if (value is IEnumerable)
+                {
+                    var newRes = new List<string>();
+                    foreach (var item in value as IEnumerable)
+                    {
+                        newRes.Add(item.ToString().Replace("'", "''"));
+                    }
+                    value = newRes;
+                }
+            }
+
+            return value;
         }
 
         /// <summary>

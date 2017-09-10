@@ -18,6 +18,7 @@ using System.Text;
 using Rafy.DbMigration.Oracle;
 using Rafy.Domain.ORM.SqlTree;
 using Rafy.Reflection;
+using System.Collections;
 
 namespace Rafy.Domain.ORM.Oracle
 {
@@ -63,6 +64,11 @@ namespace Rafy.Domain.ORM.Oracle
             return base.VisitSqlColumnConstraint(node);
         }
 
+        /// <summary>
+        /// 处理准备比较的参数
+        /// </summary>
+        /// <param name="value">参数</param>
+        /// <returns></returns>
         public override object PrepareConstraintValue(object value)
         {
             value = base.PrepareConstraintValue(value);
@@ -72,6 +78,11 @@ namespace Rafy.Domain.ORM.Oracle
             return value;
         }
 
+        /// <summary>
+        /// 处理准备比较的参数 处理枚举、布尔、转义单引号
+        /// </summary>
+        /// <param name="value">参数</param>
+        /// <returns></returns>
         internal static object PrepareConstraintValueInternal(object value)
         {
             if (value != DBNull.Value)
@@ -83,6 +94,17 @@ namespace Rafy.Domain.ORM.Oracle
                 else if (value.GetType().IsEnum)
                 {
                     value = TypeHelper.CoerceValue(typeof(int), value);
+                }
+                else if (value is string)
+                {
+                    value = value.ToString().Replace("'", "''");
+                }
+                else if (value is IEnumerable)
+                {
+                    foreach (var item in value as IEnumerable)
+                    {
+                        value = value.ToString().Replace("'", "''");
+                    }
                 }
             }
 
