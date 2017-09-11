@@ -284,62 +284,62 @@ namespace RafyUnitTest
             }
         }
 
-        [TestMethod]
-        public void ET_Property_Decimal()
-        {
-            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
-            {
-                CarEntity car = new CarEntity()
-                {
-                    DecimalName = (decimal)999999.99
-                };
-                var repo = RF.ResolveInstance<CarEntityRepository>();
-                repo.Save(car);
+        //[TestMethod]
+        //public void ET_Property_Decimal()
+        //{
+        //    using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+        //    {
+        //        CarEntity car = new CarEntity()
+        //        {
+        //            DecimalName = (decimal)999999.99
+        //        };
+        //        var repo = RF.ResolveInstance<CarEntityRepository>();
+        //        repo.Save(car);
 
-                long id = car.Id;
-                var newCar = repo.GetById(id);
+        //        long id = car.Id;
+        //        var newCar = repo.GetById(id);
 
-                Assert.AreEqual(newCar.DecimalName, car.DecimalName);
-            }
-        }
+        //        Assert.AreEqual(newCar.DecimalName, car.DecimalName);
+        //    }
+        //}
 
-        [TestMethod]
-        public void ET_Property_Float()
-        {
-            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
-            {
-                CarEntity car = new CarEntity()
-                {
-                    FloatName = (float)16.6,
-                };
-                var repo = RF.ResolveInstance<CarEntityRepository>();
-                repo.Save(car);
+        //[TestMethod]
+        //public void ET_Property_Float()
+        //{
+        //    using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+        //    {
+        //        CarEntity car = new CarEntity()
+        //        {
+        //            FloatName = (float)16.6,
+        //        };
+        //        var repo = RF.ResolveInstance<CarEntityRepository>();
+        //        repo.Save(car);
 
-                long id = car.Id;
-                var newCar = repo.GetById(id);
+        //        long id = car.Id;
+        //        var newCar = repo.GetById(id);
 
-                Assert.AreEqual(newCar.FloatName, car.FloatName);
-            }
-        }
+        //        Assert.AreEqual(newCar.FloatName, car.FloatName);
+        //    }
+        //}
 
-        [TestMethod]
-        public void ET_Property_Byte()
-        {
-            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
-            {
-                CarEntity car = new CarEntity()
-                {
-                    ByteName = (byte)1
-                };
-                var repo = RF.ResolveInstance<CarEntityRepository>();
-                repo.Save(car);
+        //[TestMethod]
+        //public void ET_Property_Byte()
+        //{
+        //    using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+        //    {
+        //        CarEntity car = new CarEntity()
+        //        {
+        //            ByteName = (byte)1
+        //        };
+        //        var repo = RF.ResolveInstance<CarEntityRepository>();
+        //        repo.Save(car);
 
-                long id = car.Id;
-                var newCar = repo.GetById(id);
+        //        long id = car.Id;
+        //        var newCar = repo.GetById(id);
 
-                Assert.AreEqual(newCar.ByteName, car.ByteName);
-            }
-        }
+        //        Assert.AreEqual(newCar.ByteName, car.ByteName);
+        //    }
+        //}
 
         [TestMethod]
         public void ET_Property_Enum_ForUI()
