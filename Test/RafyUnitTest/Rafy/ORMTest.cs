@@ -321,26 +321,6 @@ namespace RafyUnitTest
         }
 
         /// <summary>
-        /// 测试含有单引号的参数的查询
-        /// </summary>
-        [TestMethod]
-        public void ORM_Query_Parameters_SingalQuotes()
-        {
-            var repo = RF.ResolveInstance<TestUserRepository>();
-            using (RF.TransactionScope(repo))
-            {
-                var a1 = new TestUser { Age = 1, Name = "us'er1" };
-                var a2 = new TestUser { Age = 1, Name = "us'e'r1" };
-                var a3 = new TestUser { Age = 1, Name = "use''''r1" };
-                repo.Save(a1);
-                repo.Save(a2);
-                repo.Save(a3);
-                var list = repo.GetBy(new CommonQueryCriteria() { new PropertyMatch(TestUser.NameProperty, PropertyOperator.In, new string[] { "us'er1", "us'e'r1", "use''''r1" }) });
-                Assert.IsTrue(list.Count == 3);
-            }
-        }
-
-        /// <summary>
         /// 贪婪加载
         /// </summary>
         [TestMethod]

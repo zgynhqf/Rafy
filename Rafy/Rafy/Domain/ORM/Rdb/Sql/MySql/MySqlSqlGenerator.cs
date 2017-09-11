@@ -15,7 +15,6 @@ using Rafy.DbMigration.MySql;
 using Rafy.Domain.ORM.SqlTree;
 using Rafy.Reflection;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -118,7 +117,7 @@ namespace Rafy.Domain.ORM.MySql
         }
 
         /// <summary>
-        /// 针对布尔类型和枚举类型进行特殊处理 转义单引号
+        /// 针对布尔类型和枚举类型进行特殊处理
         /// </summary>
         /// <param name="value">待转换的CLR数据类型</param>
         /// <returns>返回MySql兼容的具体数据类型</returns>
@@ -134,18 +133,8 @@ namespace Rafy.Domain.ORM.MySql
                 {
                     value = TypeHelper.CoerceValue(typeof(int), value);
                 }
-                else if (value is string)
-                {
-                    value = value.ToString().Replace("'", @"\'");
-                }
-                else if (value is IEnumerable)
-                {
-                    foreach (var item in value as IEnumerable)
-                    {
-                        value = value.ToString().Replace("'", @"\'");
-                    }
-                }
             }
+
             return value;
         }
 
