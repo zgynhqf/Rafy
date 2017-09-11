@@ -468,11 +468,11 @@ namespace Rafy.Domain.ORM
 
                             if (needDelimiter)
                             {
-                                _sql.Append('\'').Append(item).Append('\'');
+                                _sql.Append('\'').Append(EscapeSpecialChar(item)).Append('\'');
                             }
                             else
                             {
-                                _sql.Append(item);
+                                _sql.Append(EscapeSpecialChar(item));
                             }
 
                             //由于集合中的数据可能过多，所以这里不要使用参数化的查询。
@@ -495,6 +495,21 @@ namespace Rafy.Domain.ORM
 
             return node;
         }
+
+        /// <summary>
+        /// in 和 not in 没用参数化 所以要转义特殊字符 
+        /// </summary>
+        /// <param name="value">参数</param>
+        /// <returns>double 单引号</returns>
+        protected virtual object EscapeSpecialChar(object value)
+        {
+            if (value is string)
+            {
+                return value.ToString().Replace("'", "''");
+            }
+            return value;
+        }
+
 
         private string Escape(object value)
         {

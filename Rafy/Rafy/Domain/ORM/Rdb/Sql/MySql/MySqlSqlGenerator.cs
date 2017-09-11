@@ -139,6 +139,21 @@ namespace Rafy.Domain.ORM.MySql
         }
 
         /// <summary>
+        /// in 和 not in 没用参数化 所以要转义特殊字符  mysql 好像也能 double 单引号来转义。。。
+        /// </summary>
+        /// <param name="value">参数</param>
+        /// <returns>\单引号</returns>
+        //protected override object EscapeSpecialChar(object value)
+        //{
+        //    if (value is string)
+        //    {
+        //        return value.ToString().Replace("'", @"\'");
+        //    }
+        //    return value;
+        //}
+
+
+        /// <summary>
         /// 为指定的原始查询生成指定分页效果的新查询。
         /// </summary>
         /// <param name="raw">原始查询</param>
