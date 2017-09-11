@@ -303,6 +303,26 @@ namespace RafyUnitTest
             }
         }
 
+        /// <summary>
+        /// in notin 处理 单引号
+        /// </summary>
+        [TestMethod]
+        public void ORM_Query_Singal_Quotes()
+        {
+            var repo = RF.ResolveInstance<TestUserRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var a1 = new TestUser { Age = 1, Name = "'user1" };
+                var a2 = new TestUser { Age = 1, Name = "us'e'r1" };
+                var a3 = new TestUser { Age = 1, Name = "use''''r1" };
+                repo.Save(a1);
+                repo.Save(a2);
+                repo.Save(a3);
+                var list = repo.GetBy(new CommonQueryCriteria() { new PropertyMatch(TestUser.NameProperty, PropertyOperator.In, new string[] { "'user1", "us'e'r1", "use''''r1" }) });
+                Assert.IsTrue(list.Count == 3);
+            }
+        }
+
         [TestMethod]
         public void ORM_Query_ByMultiParameters_IntArrayParam()
         {
