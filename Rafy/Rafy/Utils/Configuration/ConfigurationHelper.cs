@@ -21,6 +21,10 @@ using Microsoft.Extensions.Configuration;
 
 namespace Rafy
 {
+    /// <summary>
+    /// 配置帮助类型。
+    /// .NET Core 下的配置使用方法，见：https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration#in-memory-provider-and-binding-to-a-poco-class。
+    /// </summary>
     public static class ConfigurationHelper
     {
         /// <summary>
@@ -34,21 +38,7 @@ namespace Rafy
         public static T GetAppSettingOrDefault<T>(string key, T defaultValue = default(T))
             where T : struct
         {
-            var value = GetAppSettingOrDefault(key);
-            if (value != string.Empty)
-            {
-                var converter = TypeDescriptor.GetConverter(typeof(T));
-                if (converter.CanConvertFrom(typeof(string)))
-                {
-                    try
-                    {
-                        return (T)converter.ConvertFromString(value);
-                    }
-                    catch { }
-                }
-            }
-
-            return defaultValue;
+            return Configuration.GetValue(key, defaultValue);
         }
 
         /// <summary>
@@ -60,7 +50,7 @@ namespace Rafy
         /// <returns></returns>
         public static string GetAppSettingOrDefault(string key, string defaultValue = "")
         {
-            return Configuration[key] ?? defaultValue;
+            return Configuration.GetValue(key, defaultValue);
         }
 
         /// <summary>
@@ -71,13 +61,19 @@ namespace Rafy
         /// <returns></returns>
         internal static ConnectionStringSettings GetConnectionString(string key, string providerName = "System.Data.SqlClient")
         {
-            var connectionStringSection = ConfigurationHelper.Configuration.GetSection("ConnectionStrings").GetSection(key);
-            if (connectionStringSection == null) { return null; }
+            var section = Configuration.GetSection("ConnectionStrings:" + key);
+            if (!section.Exists()) return null;
 
-            string connectionString = connectionStringSection.GetSection("connectionString").Value;
-            providerName = connectionStringSection.GetSection("providerName").Value ?? providerName;
+            var res = new ConnectionStringSettings();
 
-            return new ConnectionStringSettings(key, connectionString, providerName);
+            section.Bind(res);
+
+            if (string.IsNullOrEmpty(res.ProviderName))
+            {
+                res.ProviderName = providerName;
+            }
+
+            return res;
         }
 
         private static IConfigurationRoot _configuration;
@@ -91,13 +87,15 @@ namespace Rafy
             {
                 if (_configuration == null)
                 {
+                    //默认使用运行目录中的 appsettings.json 文件作为配置文件。
                     _configuration = new ConfigurationBuilder()
                         .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                        //.AddJsonFile("appsettings.json")
+                        .AddJsonFile("appsettings.json")
                         .Build();
                 }
                 return _configuration;
             }
+            set { _configuration = value; }
         }
     }
 }

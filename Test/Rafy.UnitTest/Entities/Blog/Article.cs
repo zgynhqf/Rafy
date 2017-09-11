@@ -140,7 +140,7 @@ namespace UT
         {
             var q = this.CreateLinqQuery();
             //对同时引用 BlogUser 表的两个引用实体（一个可空，一个非空），进行查询。
-            q = q.Where(e => (e.Administrator.UserName == "admin" || e.AdministratorId == null) && e.User.UserName == "huqf");
+            q = q.Where(e => (e.Administrator.UserName == "admin" || e.AdministratorId == null) && e.User.UserName == "huqf").OrderBy(p=>p.Id);
             return (ArticleList)this.QueryData(q);
         }
 

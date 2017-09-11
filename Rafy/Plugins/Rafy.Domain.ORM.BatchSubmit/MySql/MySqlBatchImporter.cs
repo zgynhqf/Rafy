@@ -41,7 +41,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
         public MySqlBatchImporter()
         {
             this.BatchSize = 100000;
-            this.SqlGenerator = new MySqlGenerator();
+            this.SqlGenerator = new MySqlSqlGenerator();
         }
 
         /// <summary>

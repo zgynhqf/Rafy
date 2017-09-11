@@ -59,7 +59,9 @@ namespace Rafy
                     throw new InvalidProgramException("配置文件中没有 rafy 配置节，请检查配置文件。");
                 }
 
-                _section = new RafyConfigurationSection(ConfigurationHelper.Configuration as ConfigurationRoot, rafyRawSection.Path);
+                _section = new RafyConfigurationSection();
+
+                rafyRawSection.Bind(_section);
             }
         }
 

@@ -68,12 +68,13 @@ namespace Rafy
         //    //this.SetObjectData(this._info, new StreamingContext(StreamingContextStates.All));
         //}
 
-        [OnDeserialized]
-        private void OnDeserialization(StreamingContext context)
-        {
-            //this.SetObjectData(this._info, context);
-            this.OnDeserialized(context);
-        }
+        //net standard not compatible?
+        //[OnDeserialized]
+        //private void SetValuesOnDeserialized(StreamingContext context)
+        //{
+        //    //this.SetObjectData(this._info, context);
+        //    this.OnDeserialized();
+        //}
 
         #endregion
     }

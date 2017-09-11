@@ -54,11 +54,22 @@ namespace Rafy.DbMigration.Model
         /// 通过表名找到对应的表。
         /// 忽略大小写。
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="tableNameIgnoreCase"></param>
         /// <returns></returns>
-        public Table FindTable(string name)
+        public Table FindTable(string tableNameIgnoreCase)
         {
-            return this.Tables.FirstOrDefault(t => t.Name.EqualsIgnoreCase(name));
+            var tables = this.Tables;
+
+            for (int i = 0, c = tables.Count; i < c; i++)
+            {
+                var table = tables[i];
+                if (table.Name.EqualsIgnoreCase(tableNameIgnoreCase))
+                {
+                    return table;
+                }
+            }
+
+            return null;
         }
 
         /// <summary>

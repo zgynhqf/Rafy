@@ -36,7 +36,7 @@ namespace Rafy
         public FileLogger()
         {
             this.ExceptionLogFileName = "ExceptionLog.txt";
-            this.SqlTraceFileName = ConfigurationHelper.GetAppSettingOrDefault("Rafy.FileLogger.SqlTraceFileName", string.Empty);
+            this.SqlTraceFileName = ConfigurationHelper.GetAppSettingOrDefault("Rafy:FileLogger:SqlTraceFileName", string.Empty);
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Rafy
         public string ExceptionLogFileName { get; set; }
 
         /// <summary>
-        /// 默认使用配置文件中的 Rafy.FileLogger.SqlTraceFileName 配置项。
+        /// 默认使用配置文件中的 Rafy:FileLogger:SqlTraceFileName 配置项。
         /// </summary>
         public string SqlTraceFileName { get; set; }
 
@@ -91,7 +91,7 @@ namespace Rafy
 
         /// <summary>
         /// 记录 Sql 执行过程。
-        /// 把 SQL 语句及参数，写到 'Rafy.FileLogger.SqlTraceFileName' 配置所对应的文件中。
+        /// 把 SQL 语句及参数，写到 'Rafy:FileLogger:SqlTraceFileName' 配置所对应的文件中。
         /// </summary>
         /// <param name="sql"></param>
         /// <param name="parameters"></param>

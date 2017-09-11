@@ -65,7 +65,7 @@ namespace RafyUnitTest
             RafyEnvironment.DomainPlugins.Add(new UnitTestDataProviderPlugin());
             RafyEnvironment.DomainPlugins.Add(new UnitTestIDataProviderPlugin());
             RafyEnvironment.DomainPlugins.Add(new UnitTestRepoPlugin());
-            RafyEnvironment.DomainPlugins.Add(new DCPlugin());
+            //RafyEnvironment.DomainPlugins.Add(new DCPlugin());
 
             RafyEnvironment.DomainPlugins.Add(new AccountsPlugin());
             RafyEnvironment.DomainPlugins.Add(new SerialNumberPlugin());

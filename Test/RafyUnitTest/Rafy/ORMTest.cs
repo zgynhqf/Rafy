@@ -5389,8 +5389,8 @@ ORDER BY Article.Code ASC");
         [TestMethod]
         public void ORM_MultiThread_Query()
         {
-            var p = AppContext.GetProvider();
-            AppContext.SetProvider(new StaticAppContextProvider());
+            var p = Rafy.AppContext.GetProvider();
+            Rafy.AppContext.SetProvider(new StaticAppContextProvider());
 
             /*********************** 代码块解释 *********************************
              * 模拟：线程 1 在查找的同时，线程 2 也开始查询。
@@ -5429,7 +5429,7 @@ ORDER BY Article.Code ASC");
             finally
             {
                 thread1End.Set();
-                AppContext.SetProvider(p);
+                Rafy.AppContext.SetProvider(p);
             }
         }
 

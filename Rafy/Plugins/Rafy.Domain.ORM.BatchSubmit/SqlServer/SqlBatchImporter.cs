@@ -188,7 +188,9 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
             {
                 this.SetMappings(bulkCopy.ColumnMappings, meta.Table);
 
-                bulkCopy.WriteToServer(table);
+                var reader = new DataTableReader(table);
+
+                bulkCopy.WriteToServer(reader);
             }
             finally
             {
@@ -239,20 +241,22 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
         /// <param name="batch"></param>
         protected override void ImportUpdate(EntityBatch batch)
         {
-            var sql = this.GenerateUpdateSQL(batch.Table);
+            throw new NotSupportedException("Net Standard 2.0 API 中，暂时没有 SqlDataAdapter API，无法批量更新。");
 
-            //生成对应的参数列表。
-            var parameters = this.GenerateUpdateParameters(batch);
+            //var sql = this.GenerateUpdateSQL(batch.Table);
 
-            var table = ToDataTable(batch.Table, batch.UpdateBatch, true);
+            ////生成对应的参数列表。
+            //var parameters = this.GenerateUpdateParameters(batch);
 
-            var command = batch.DBA.RawAccesser.CommandFactory.CreateCommand(sql, CommandType.Text, parameters);
-            var adapter = new SqlDataAdapter();
-            adapter.UpdateCommand = command as SqlCommand;
-            adapter.UpdateBatchSize = this.BatchSize;
-            adapter.UpdateCommand.UpdatedRowSource = UpdateRowSource.None;
+            //var table = ToDataTable(batch.Table, batch.UpdateBatch, true);
 
-            adapter.Update(table);
+            //var command = batch.DBA.RawAccesser.CommandFactory.CreateCommand(sql, CommandType.Text, parameters);
+            //var adapter = new SqlDataAdapter();
+            //adapter.UpdateCommand = command as SqlCommand;
+            //adapter.UpdateBatchSize = this.BatchSize;
+            //adapter.UpdateCommand.UpdatedRowSource = UpdateRowSource.None;
+
+            //adapter.Update(table);
         }
 
         /// <summary>

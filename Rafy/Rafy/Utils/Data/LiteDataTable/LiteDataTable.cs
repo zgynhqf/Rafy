@@ -154,16 +154,17 @@ namespace Rafy.Data
             return rows;
         }
 
-        [OnDeserialized]
-        private void OnDeserializedMethod(StreamingContext context)
-        {
-            _rows._table = this;
-            for (int i = 0, c = _rows.Count; i < c; i++)
-            {
-                var row = _rows[i];
-                row._table = this;
-            }
-        }
+        //net standard not compatible?
+        //[OnDeserialized]
+        //private void OnDeserializedMethod(StreamingContext context)
+        //{
+        //    _rows._table = this;
+        //    for (int i = 0, c = _rows.Count; i < c; i++)
+        //    {
+        //        var row = _rows[i];
+        //        row._table = this;
+        //    }
+        //}
 
         /// <summary>
         /// 构造一个 DataTable 并把数据拷贝到其中。

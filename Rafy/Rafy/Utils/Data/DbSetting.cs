@@ -140,14 +140,14 @@ namespace Rafy.Data
 
             return new DbSetting
             {
-                ConnectionString = string.Format(@"Data Source={0}.sdf", dbSettingName),
-                ProviderName = Provider_SqlCe
+                ConnectionString = string.Format(@"Data Source=.\SQLExpress;Initial Catalog={0};Integrated Security=True", dbSettingName),
+                ProviderName = Provider_SqlClient
             };
 
             //return new DbSetting
             //{
-            //    ConnectionString = string.Format(@"Data Source=.\SQLExpress;Initial Catalog={0};Integrated Security=True", dbSetting),
-            //    ProviderName = "System.Data.SqlClient"
+            //    ConnectionString = string.Format(@"Data Source={0}.sdf", dbSettingName),
+            //    ProviderName = Provider_SqlCe
             //};
         }
     }

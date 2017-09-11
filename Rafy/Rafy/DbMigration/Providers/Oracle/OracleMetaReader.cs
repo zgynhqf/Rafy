@@ -32,7 +32,7 @@ namespace Rafy.DbMigration.Oracle
 
         protected override void LoadAllTables(Database database)
         {
-            using (var reader = this.Db.QueryDataReader(@"select * from user_tables"))
+            using (var reader = this.Db.QueryDataReader(@"SELECT * FROM USER_TABLES"))
             {
                 while (reader.Read())
                 {
@@ -47,56 +47,66 @@ namespace Rafy.DbMigration.Oracle
 
         protected override void LoadAllColumns(Database database)
         {
-            foreach (Table table in database.Tables)
+            //用一句 Sql 将所有的表的所有字段都一次性查询出来。
+            var sql = new StringBuilder(
+@"SELECT * FROM USER_TAB_COLUMNS WHERE TABLE_NAME IN (");
+            sql.Append(string.Join(",", database.Tables.Select(t => "'" + t.Name + "'")));
+            sql.Append(@")
+ORDER BY TABLE_NAME");
+
+            using (var columnsReader = this.Db.QueryDataReader(sql.ToString()))
             {
-                using (var columnsReader = this.Db.QueryDataReader(
-@"SELECT * FROM user_tab_columns WHERE TABLE_NAME = {0}",
-table.Name))
+                Table currentTable = null;//当前正在处理的表。（放在循环外，有缓存的作用。）
+                while (columnsReader.Read())
                 {
-                    while (columnsReader.Read())
+                    //找到该列所对应的表。
+                    var tableName = columnsReader["TABLE_NAME"].ToString();
+                    if (currentTable == null || !currentTable.Name.EqualsIgnoreCase(tableName))
                     {
-                        string columnName = columnsReader["COLUMN_NAME"].ToString();
-                        string sqlType = columnsReader["DATA_TYPE"].ToString().ToLower();
-                        if (sqlType == "number")
-                        {
-                            var dataScale = columnsReader["DATA_SCALE"].ToString();
-                            if (dataScale == "0") { sqlType = "integer"; }
-                        }
-
-                        DbType dbType = OracleDbTypeHelper.ConvertFromOracleTypeString(sqlType);
-                        Column column = new Column(columnName, dbType, null, table);
-                        column.IsRequired = columnsReader["NULLABLE"].ToString() == "N";
-
-                        table.Columns.Add(column);
+                        currentTable = database.FindTable(tableName);
                     }
 
-                    table.SortColumns();
+                    string columnName = columnsReader["COLUMN_NAME"].ToString();
+                    string sqlType = columnsReader["DATA_TYPE"].ToString().ToLower();
+                    if (sqlType == "number")
+                    {
+                        var dataScale = columnsReader["DATA_SCALE"].ToString();
+                        if (dataScale == "0") { sqlType = "integer"; }
+                    }
+
+                    DbType dbType = OracleDbTypeHelper.ConvertFromOracleTypeString(sqlType);
+
+                    Column column = new Column(columnName, dbType, null, currentTable);
+
+                    column.IsRequired = columnsReader["NULLABLE"].ToString() == "N";
+
+                    currentTable.Columns.Add(column);
                 }
             }
         }
 
-        protected override List<Constraint> ReadAllConstrains()
+        /// <summary>
+        /// 缓存数据库中的所有约束
+        /// </summary>
+        /// <returns></returns>
+        protected override IList<Constraint> ReadAllConstrains(Database database)
         {
-            List<Constraint> allConstrains = new List<Constraint>();
-
-            #region 缓存数据库中的所有约束
+            var allConstrains = new List<Constraint>();
 
             using (var constraintReader = this.Db.QueryDataReader(
-@"SELECT 
-C.CONSTRAINT_NAME, C.CONSTRAINT_TYPE, C.TABLE_NAME, C.COLUMN_NAME, CR.TABLE_NAME FK_TABLE_NAME, CR.COLUMN_NAME FK_COLUMN_NAME,
-CR.PREP, CR.TABLE_NAME PK_TABLE_NAME, CR.COLUMN_NAME PK_COLUMN_NAME, CR.CONSTRAINT_NAME UNIQUE_CONSTRAINT_NAME, C.DELETE_RULE
+@"SELECT C.CONSTRAINT_NAME, C.CONSTRAINT_TYPE, C.TABLE_NAME, C.COLUMN_NAME, CR.TABLE_NAME FK_TABLE_NAME, CR.COLUMN_NAME FK_COLUMN_NAME, CR.PREP, CR.TABLE_NAME PK_TABLE_NAME, CR.COLUMN_NAME PK_COLUMN_NAME, CR.CONSTRAINT_NAME UNIQUE_CONSTRAINT_NAME, C.DELETE_RULE
 FROM 
 (
---外键或主键表列
-SELECT C.CONSTRAINT_NAME, C.CONSTRAINT_TYPE, C.TABLE_NAME, COL.COLUMN_NAME, C.R_CONSTRAINT_NAME, C.DELETE_RULE
-FROM USER_CONSTRAINTS C INNER JOIN USER_CONS_COLUMNS COL ON C.CONSTRAINT_NAME = COL.CONSTRAINT_NAME
-WHERE (C.CONSTRAINT_TYPE = 'P' OR C.CONSTRAINT_TYPE= 'R') AND INSTR(C.CONSTRAINT_NAME, '$') = 0
+    --外键或主键表列
+    SELECT C.CONSTRAINT_NAME, C.CONSTRAINT_TYPE, C.TABLE_NAME, COL.COLUMN_NAME, C.R_CONSTRAINT_NAME, C.DELETE_RULE
+    FROM USER_CONSTRAINTS C INNER JOIN USER_CONS_COLUMNS COL ON C.CONSTRAINT_NAME = COL.CONSTRAINT_NAME
+    WHERE (C.CONSTRAINT_TYPE = 'P' OR C.CONSTRAINT_TYPE= 'R') AND INSTR(C.CONSTRAINT_NAME, '$') = 0
 ) C LEFT JOIN 
 (
---主键表列
-SELECT C.CONSTRAINT_NAME, C.TABLE_NAME, COL.COLUMN_NAME, 'TO' PREP
-FROM USER_CONSTRAINTS C INNER JOIN USER_CONS_COLUMNS COL ON C.CONSTRAINT_NAME = COL.CONSTRAINT_NAME
-WHERE C.CONSTRAINT_TYPE = 'P' AND INSTR(C.CONSTRAINT_NAME, '$') = 0
+    --主键表列
+    SELECT C.CONSTRAINT_NAME, C.TABLE_NAME, COL.COLUMN_NAME, 'TO' PREP
+    FROM USER_CONSTRAINTS C INNER JOIN USER_CONS_COLUMNS COL ON C.CONSTRAINT_NAME = COL.CONSTRAINT_NAME
+    WHERE C.CONSTRAINT_TYPE = 'P' AND INSTR(C.CONSTRAINT_NAME, '$') = 0
 ) CR ON C.R_CONSTRAINT_NAME = CR.CONSTRAINT_NAME"))
             {
                 while (constraintReader.Read())
@@ -122,9 +132,39 @@ WHERE C.CONSTRAINT_TYPE = 'P' AND INSTR(C.CONSTRAINT_NAME, '$') = 0
                 }
             }
 
-            #endregion
-
             return allConstrains;
+        }
+
+        /// <summary>
+        /// 加载指定数据库的所有表中的自增列。
+        /// </summary>
+        /// <param name="database">指定的数据库对象</param>
+        protected override void LoadAllIdentities(Database database)
+        {
+            //从数据库中加载出所有的 Sequence 的名字。
+            var sequenceNames = new List<string>();
+            using (var reader = this.Db.QueryDataReader(@"SELECT * FROM USER_SEQUENCES"))
+            {
+                while (reader.Read())
+                {
+                    sequenceNames.Add(reader["SEQUENCE_NAME"].ToString());
+                }
+            }
+
+            //如果主键对应的 Sequence 存在，则表示这个主键是 Identity 列。
+            //详见：OracleRunGenerator.Generate(CreateTable op)。
+            foreach (var table in database.Tables)
+            {
+                var pk = table.FindPrimaryColumn();
+                if (pk != null)
+                {
+                    var sequenceName = OracleMigrationProvider.SequenceName(table.Name, pk.Name);
+                    if (sequenceNames.Contains(sequenceName, StringComparer.CurrentCultureIgnoreCase))
+                    {
+                        pk.IsIdentity = true;
+                    }
+                }
+            }
         }
     }
 }
