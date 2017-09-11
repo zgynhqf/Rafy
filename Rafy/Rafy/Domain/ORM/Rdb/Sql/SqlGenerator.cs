@@ -505,7 +505,7 @@ namespace Rafy.Domain.ORM
         {
             if (value is string)
             {
-                value= value.ToString().Replace("'", "''");
+                value = value.ToString().Replace("'", "''");
             }
             return value;
         }
