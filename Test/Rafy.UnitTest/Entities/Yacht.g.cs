@@ -21,7 +21,7 @@ using Rafy.Domain.ORM;
 
 namespace Rafy.UnitTest
 {
-    partial class CarEntityList
+    partial class YachtList
     {
         #region 强类型公有接口
 
@@ -30,11 +30,11 @@ namespace Rafy.UnitTest
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public new CarEntity this[int index]
+        public new Yacht this[int index]
         {
             get
             {
-                return base[index] as CarEntity;
+                return base[index] as Yacht;
             }
             set
             {
@@ -47,9 +47,9 @@ namespace Rafy.UnitTest
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new IEnumerator<CarEntity> GetEnumerator()
+        public new IEnumerator<Yacht> GetEnumerator()
         {
-            return new EntityListEnumerator<CarEntity>(this);
+            return new EntityListEnumerator<Yacht>(this);
         }
 
         /// <summary>
@@ -57,16 +57,16 @@ namespace Rafy.UnitTest
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public IEnumerable<CarEntity> Concrete()
+        public IEnumerable<Yacht> Concrete()
         {
-            return this.Cast<CarEntity>();
+            return this.Cast<Yacht>();
         }
 
         /// <summary>
         /// 添加指定的实体到集合中。
         /// </summary>
         [DebuggerStepThrough]
-        public void Add(CarEntity entity)
+        public void Add(Yacht entity)
         {
             base.Add(entity);
         }
@@ -76,7 +76,7 @@ namespace Rafy.UnitTest
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public bool Contains(CarEntity entity)
+        public bool Contains(Yacht entity)
         {
             return base.Contains(entity);
         }
@@ -86,7 +86,7 @@ namespace Rafy.UnitTest
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public int IndexOf(CarEntity entity)
+        public int IndexOf(Yacht entity)
         {
             return base.IndexOf(entity);
         }
@@ -96,7 +96,7 @@ namespace Rafy.UnitTest
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public void Insert(int index, CarEntity entity)
+        public void Insert(int index, Yacht entity)
         {
             base.Insert(index, entity);
         }
@@ -106,7 +106,7 @@ namespace Rafy.UnitTest
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public bool Remove(CarEntity entity)
+        public bool Remove(Yacht entity)
         {
             return base.Remove(entity);
         }
@@ -114,7 +114,7 @@ namespace Rafy.UnitTest
         #endregion
     }
 
-    partial class CarEntityRepository
+    partial class YachtRepository
     {
         #region 私有方法，本类内部使用
 
@@ -123,9 +123,9 @@ namespace Rafy.UnitTest
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        private IQueryable<CarEntity> CreateLinqQuery()
+        private IQueryable<Yacht> CreateLinqQuery()
         {
-            return base.CreateLinqQuery<CarEntity>();
+            return base.CreateLinqQuery<Yacht>();
         }
 
         #endregion
@@ -137,9 +137,9 @@ namespace Rafy.UnitTest
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new CarEntity New()
+        public new Yacht New()
         {
-            return base.New() as CarEntity;
+            return base.New() as Yacht;
         }
 
         /// <summary>
@@ -147,9 +147,9 @@ namespace Rafy.UnitTest
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new CarEntityList NewList()
+        public new YachtList NewList()
         {
-            return base.NewList() as CarEntityList;
+            return base.NewList() as YachtList;
         }
 
         /// <summary>
@@ -161,9 +161,9 @@ namespace Rafy.UnitTest
         /// <param name="id"></param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new CarEntity CacheById(object id)
+        public new Yacht CacheById(object id)
         {
-            return base.CacheById(id) as CarEntity;
+            return base.CacheById(id) as Yacht;
         }
 
         /// <summary>
@@ -174,9 +174,9 @@ namespace Rafy.UnitTest
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new CarEntityList CacheAll()
+        public new YachtList CacheAll()
         {
-            return base.CacheAll() as CarEntityList;
+            return base.CacheAll() as YachtList;
         }
 
         /// <summary>
@@ -186,9 +186,9 @@ namespace Rafy.UnitTest
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new CarEntity GetById(object id, EagerLoadOptions eagerLoad = null)
+        public new Yacht GetById(object id, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetById(id, eagerLoad) as CarEntity;
+            return base.GetById(id, eagerLoad) as Yacht;
         }
 
         /// <summary>
@@ -197,9 +197,9 @@ namespace Rafy.UnitTest
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new CarEntity GetFirst(EagerLoadOptions eagerLoad = null)
+        public new Yacht GetFirst(EagerLoadOptions eagerLoad = null)
         {
-            return base.GetFirst(eagerLoad) as CarEntity;
+            return base.GetFirst(eagerLoad) as Yacht;
         }
 
         /// <summary>
@@ -209,9 +209,9 @@ namespace Rafy.UnitTest
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new CarEntityList GetAll(PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new YachtList GetAll(PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetAll(paging, eagerLoad) as CarEntityList;
+            return base.GetAll(paging, eagerLoad) as YachtList;
         }
 
         /// <summary>
@@ -221,9 +221,9 @@ namespace Rafy.UnitTest
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new CarEntityList GetByIdList(object[] idList, EagerLoadOptions eagerLoad = null)
+        public new YachtList GetByIdList(object[] idList, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetByIdList(idList, eagerLoad) as CarEntityList;
+            return base.GetByIdList(idList, eagerLoad) as YachtList;
         }
 
         /// <summary>
@@ -234,9 +234,9 @@ namespace Rafy.UnitTest
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new CarEntityList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new YachtList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetByParentIdList(parentIdList, paging, eagerLoad) as CarEntityList;
+            return base.GetByParentIdList(parentIdList, paging, eagerLoad) as YachtList;
         }
 
         /// <summary>
@@ -247,9 +247,9 @@ namespace Rafy.UnitTest
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new CarEntityList GetByParentId(object parentId, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new YachtList GetByParentId(object parentId, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetByParentId(parentId, paging, eagerLoad) as CarEntityList;
+            return base.GetByParentId(parentId, paging, eagerLoad) as YachtList;
         }
 
         /// <summary>
@@ -258,9 +258,9 @@ namespace Rafy.UnitTest
         /// <param name="criteria">常用查询条件。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new CarEntityList GetBy(CommonQueryCriteria criteria)
+        public new YachtList GetBy(CommonQueryCriteria criteria)
         {
-            return base.GetBy(criteria) as CarEntityList;
+            return base.GetBy(criteria) as YachtList;
         }
 
         /// <summary>
@@ -269,9 +269,9 @@ namespace Rafy.UnitTest
         /// <param name="criteria">常用查询条件。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new CarEntity GetFirstBy(CommonQueryCriteria criteria)
+        public new Yacht GetFirstBy(CommonQueryCriteria criteria)
         {
-            return base.GetFirstBy(criteria) as CarEntity;
+            return base.GetFirstBy(criteria) as Yacht;
         }
 
         /// <summary>
@@ -281,9 +281,9 @@ namespace Rafy.UnitTest
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new CarEntityList GetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad = null)
+        public new YachtList GetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetByTreeParentIndex(treeIndex, eagerLoad) as CarEntityList;
+            return base.GetByTreeParentIndex(treeIndex, eagerLoad) as YachtList;
         }
 
         /// <summary>
@@ -293,9 +293,9 @@ namespace Rafy.UnitTest
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new CarEntityList GetByTreePId(object treePId, EagerLoadOptions eagerLoad = null)
+        public new YachtList GetByTreePId(object treePId, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetByTreePId(treePId, eagerLoad) as CarEntityList;
+            return base.GetByTreePId(treePId, eagerLoad) as YachtList;
         }
 
         #endregion

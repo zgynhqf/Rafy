@@ -1,4 +1,17 @@
-﻿using System;
+﻿/*******************************************************
+ * 
+ * 作者：颜昌龙
+ * 创建日期：20170912
+ * 说明：一个用来测试实体属性的类。
+ * 运行环境：.NET 4.0
+ * 版本号：1.0.0
+ * 
+ * 历史记录：
+ * 创建文件 颜昌龙 20170912 11:09
+ * 
+*******************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -23,14 +36,14 @@ namespace Rafy.UnitTest
     /// 实体的领域名称
     /// </summary>
     [RootEntity, Serializable]
-    public partial class CarEntity : UnitTestEntity
+    public partial class Yacht : UnitTestEntity
     {
         #region 构造函数
 
-        public CarEntity() { }
+        public Yacht() { }
 
         [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected CarEntity(SerializationInfo info, StreamingContext context) : base(info, context) { }
+        protected Yacht(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
         #endregion
 
@@ -44,7 +57,7 @@ namespace Rafy.UnitTest
 
         #region 一般属性
 
-        public static readonly Property<string> NameProperty = P<CarEntity>.Register(e => e.Name);
+        public static readonly Property<string> NameProperty = P<Yacht>.Register(e => e.Name);
         /// <summary>
         /// 
         /// </summary>
@@ -54,46 +67,46 @@ namespace Rafy.UnitTest
             set { this.SetProperty(NameProperty, value); }
         }
 
-        public static readonly Property<byte> ByteNameProperty = P<CarEntity>.Register(e => e.ByteName);
+        public static readonly Property<byte> ByteValueProperty = P<Yacht>.Register(e => e.ByteValue);
         /// <summary>
         /// 
         /// </summary>
-        public byte ByteName
+        public byte ByteValue
         {
-            get { return this.GetProperty(ByteNameProperty); }
-            set { this.SetProperty(ByteNameProperty, value); }
+            get { return this.GetProperty(ByteValueProperty); }
+            set { this.SetProperty(ByteValueProperty, value); }
         }
 
 
-        public static readonly Property<float> FloatNameProperty = P<CarEntity>.Register(e => e.FloatName);
+        public static readonly Property<float> FloatValueProperty = P<Yacht>.Register(e => e.FloatValue);
         /// <summary>
         /// 
         /// </summary>
-        public float FloatName
+        public float FloatValue
         {
-            get { return this.GetProperty(FloatNameProperty); }
-            set { this.SetProperty(FloatNameProperty, value); }
+            get { return this.GetProperty(FloatValueProperty); }
+            set { this.SetProperty(FloatValueProperty, value); }
         }
 
-        public static readonly Property<double> DoubleNameProperty = P<CarEntity>.Register(e => e.DoubleName);
+        public static readonly Property<double> DoubleValueProperty = P<Yacht>.Register(e => e.DoubleValue);
         /// <summary>
         /// 
         /// </summary>
-        public double DoubleName
+        public double DoubleValue
         {
-            get { return this.GetProperty(DoubleNameProperty); }
-            set { this.SetProperty(DoubleNameProperty, value); }
+            get { return this.GetProperty(DoubleValueProperty); }
+            set { this.SetProperty(DoubleValueProperty, value); }
         }
 
 
-        public static readonly Property<decimal> DecimalNameProperty = P<CarEntity>.Register(e => e.DecimalName);
+        public static readonly Property<decimal> DecimalValueProperty = P<Yacht>.Register(e => e.DecimalValue);
         /// <summary>
         /// 
         /// </summary>
-        public decimal DecimalName
+        public decimal DecimalValue
         {
-            get { return this.GetProperty(DecimalNameProperty); }
-            set { this.SetProperty(DecimalNameProperty, value); }
+            get { return this.GetProperty(DecimalValueProperty); }
+            set { this.SetProperty(DecimalValueProperty, value); }
         }
 
 
@@ -108,25 +121,25 @@ namespace Rafy.UnitTest
     /// 实体的领域名称 列表类。
     /// </summary>
     [Serializable]
-    public partial class CarEntityList : UnitTestEntityList { }
+    public partial class YachtList : UnitTestEntityList { }
 
     /// <summary>
     /// 实体的领域名称 仓库类。
     /// 负责 实体的领域名称 类的查询、保存。
     /// </summary>
-    public partial class CarEntityRepository : UnitTestEntityRepository
+    public partial class YachtRepository : UnitTestEntityRepository
     {
         /// <summary>
         /// 单例模式，外界不可以直接构造本对象。
         /// </summary>
-        protected CarEntityRepository() { }
+        protected YachtRepository() { }
     }
 
     /// <summary>
     /// 实体的领域名称 配置类。
     /// 负责 实体的领域名称 类的实体元数据的配置。
     /// </summary>
-    internal class CarEntityConfig : UnitTestEntityConfig<CarEntity>
+    internal class YachtConfig : UnitTestEntityConfig<Yacht>
     {
         /// <summary>
         /// 配置实体的元数据
