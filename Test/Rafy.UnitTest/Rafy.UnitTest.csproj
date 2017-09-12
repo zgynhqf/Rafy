@@ -58,7 +58,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommonTest\CacheInstances.cs" />
-    <Compile Include="CommonTest\RafyEntityJScriptHandler.cs" />
     <Compile Include="Entities\Blog\Article.cs" />
     <Compile Include="Entities\Blog\Article.g.cs">
       <SubType>Code</SubType>
@@ -99,11 +98,6 @@
     <Compile Include="Entities\BookStore\SectionOwner.cs" />
     <Compile Include="Entities\BookStore\SectionOwner.g.cs">
       <DependentUpon>SectionOwner.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\CarEntity.cs" />
-    <Compile Include="Entities\CarEntity.g.cs">
-      <SubType>Code</SubType>
-      <DependentUpon>CarEntity.cs</DependentUpon>
     </Compile>
     <Compile Include="Entities\CarStore\Car.cs" />
     <Compile Include="Entities\CarStore\Car.g.cs">
@@ -222,6 +216,11 @@
     </Compile>
     <Compile Include="Entities\TestUserQueryCriteria.cs" />
     <Compile Include="Entities\UnitTestEntity2.cs" />
+    <Compile Include="Entities\Yacht.cs" />
+    <Compile Include="Entities\Yacht.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>Yacht.cs</DependentUpon>
+    </Compile>
     <Compile Include="Ext\EntityRepositoryExtension.cs" />
     <Compile Include="Ext\TestUserLog.cs" />
     <Compile Include="Ext\TestUserLog.g.cs">
