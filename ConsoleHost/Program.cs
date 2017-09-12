@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Rafy;
+using Rafy.Accounts;
 using Rafy.ComponentModel;
 using Rafy.DbMigration;
 using Rafy.Domain;
@@ -31,10 +32,7 @@ namespace ConsoleHost
 
         private static void MainDomainProcess()
         {
-            ////本项目中使用了一个 RBAC 的插件，
-            ////同时在应用层引用 RBAC.dll 即可使用。
-            ////（注意，只是简单引用，不拷贝到根目录，还放在插件目录。即引用的 CopyLocal = False。）
-            //var users = RF.ResolveInstance<UserRepository>().GetAll();
+            var users = RF.ResolveInstance<UserRepository>().GetAll();
         }
     }
 
@@ -44,24 +42,34 @@ namespace ConsoleHost
         {
             RafyEnvironment.Provider.IsDebuggingEnabled = ConfigurationHelper.GetAppSettingOrDefault("IsDebuggingEnabled", false);
 
+            RafyEnvironment.DomainPlugins.Add(new AccountsPlugin());
+
+            AccountsPlugin.DbSettingName = "ConsoleHostApp";
+
             base.InitEnvironment();
         }
 
-        //protected override void OnRuntimeStarting()
-        //{
-        //    base.OnRuntimeStarting();
+        protected override void OnRuntimeStarting()
+        {
+            base.OnRuntimeStarting();
 
-        //    if (ConfigurationHelper.GetAppSettingOrDefault("ConsoleHost_AutoUpdateDb", true))
-        //    {
-        //        var svc = ServiceFactory.Create<MigrateService>();
-        //        svc.Options = new MigratingOptions
-        //        {
-        //            //ReserveHistory = true,//ReserveHistory 表示是否需要保存所有数据库升级的历史记录
-        //            RunDataLossOperation = DataLossOperation.All,//要支持数据库表、字段的删除操作，取消本行注释。
-        //            Databases = new string[] { "FundMng" }
-        //        };
-        //        svc.Invoke();
-        //    }
-        //}
+            Console.WriteLine($"已经加载了 {RafyEnvironment.AllPlugins.Count} 个插件：");
+            foreach (var plugin in RafyEnvironment.AllPlugins)
+            {
+                Console.WriteLine(plugin.Assembly.FullName);
+            }
+
+            if (ConfigurationHelper.GetAppSettingOrDefault("ConsoleHost:AutoUpdateDb", true))
+            {
+                var svc = ServiceFactory.Create<MigrateService>();
+                svc.Options = new MigratingOptions
+                {
+                    //ReserveHistory = true,//ReserveHistory 表示是否需要保存所有数据库升级的历史记录
+                    RunDataLossOperation = DataLossOperation.All,//要支持数据库表、字段的删除操作，取消本行注释。
+                    Databases = new string[] { AccountsPlugin.DbSettingName }
+                };
+                svc.Invoke();
+            }
+        }
     }
 }

@@ -117,14 +117,18 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config">
-      <SubType>Designer</SubType>
-    </None>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Rafy\Plugins\Rafy.Accounts\Rafy.Accounts.csproj">
+      <Project>{4d6467e4-d1ce-4fa8-a1fe-92b1ba549a4a}</Project>
+      <Name>Rafy.Accounts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rafy\Plugins\Rafy.Domain.ORM.BatchSubmit\Rafy.Domain.ORM.BatchSubmit.csproj">
       <Project>{f0533889-be2c-4a21-90b0-26765833270e}</Project>
       <Name>Rafy.Domain.ORM.BatchSubmit</Name>
