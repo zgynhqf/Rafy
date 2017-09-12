@@ -96,6 +96,7 @@ namespace Rafy.UnitTest
             set { this.SetProperty(DecimalNameProperty, value); }
         }
 
+
         #endregion
 
         #region 只读属性
