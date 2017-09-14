@@ -695,7 +695,8 @@
     <Compile Include="Env\WCF\BinaryFormatter\EnableBinaryFormatterBehaviorElement.cs" />
     <Compile Include="Env\WCF\NetDataContract\NetDataContractOperationBehavior.cs" />
     <Compile Include="Env\WCF\NetDataContract\UseNetDataContractAttribute.cs" />
-    <Compile Include="Env\ComponentModel\WebOrThreadAppContextProvider.cs" />
+    <Compile Include="Utils\Context\CallContextAppContextProvider.cs" />
+    <Compile Include="Utils\Context\WebOrThreadAppContextProvider.cs" />
     <Compile Include="Env\Web\ClientEntities.cs" />
     <Compile Include="Env\Web\JsonServiceAttribute.cs" />
     <Compile Include="Utils\BooleanBoxes.cs" />

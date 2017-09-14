@@ -20,7 +20,7 @@ using System.Threading;
 using System.Web;
 using Rafy;
 
-namespace Rafy.ComponentModel
+namespace Rafy
 {
     /// <summary>
     /// 基于 HttpContext 实现的上下文提供器。
@@ -30,7 +30,7 @@ namespace Rafy.ComponentModel
     /// </summary>
     internal class WebOrThreadAppContextProvider : IAppContextProvider
     {
-        protected const string HttpContextName = "Rafy.ComponentModel.WebOrThreadAppContextProvider";
+        protected const string HttpContextName = "Rafy.WebOrThreadAppContextProvider";
 
         [ThreadStatic]
         private static IDictionary<string, object> _threadItems;
