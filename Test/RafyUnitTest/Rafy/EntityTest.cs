@@ -289,17 +289,17 @@ namespace RafyUnitTest
         {
             using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
             {
-                CarEntity car = new CarEntity()
+                Yacht car = new Yacht()
                 {
-                    DecimalName = (decimal)999999.99
+                    DecimalValue = (decimal)999999.99
                 };
-                var repo = RF.ResolveInstance<CarEntityRepository>();
+                var repo = RF.ResolveInstance<YachtRepository>();
                 repo.Save(car);
 
                 long id = car.Id;
                 var newCar = repo.GetById(id);
 
-                Assert.AreEqual(newCar.DecimalName, car.DecimalName);
+                Assert.AreEqual(newCar.DecimalValue, car.DecimalValue);
             }
         }
 
@@ -308,17 +308,17 @@ namespace RafyUnitTest
         {
             using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
             {
-                CarEntity car = new CarEntity()
+                Yacht car = new Yacht()
                 {
-                    FloatName = (float)16.6,
+                    FloatValue = (float)16.6,
                 };
-                var repo = RF.ResolveInstance<CarEntityRepository>();
+                var repo = RF.ResolveInstance<YachtRepository>();
                 repo.Save(car);
 
                 long id = car.Id;
                 var newCar = repo.GetById(id);
 
-                Assert.AreEqual(newCar.FloatName, car.FloatName);
+                Assert.AreEqual(newCar.FloatValue, car.FloatValue);
             }
         }
 
@@ -327,17 +327,17 @@ namespace RafyUnitTest
         {
             using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
             {
-                CarEntity car = new CarEntity()
+                Yacht car = new Yacht()
                 {
-                    ByteName = (byte)1
+                    ByteValue = (byte)1
                 };
-                var repo = RF.ResolveInstance<CarEntityRepository>();
+                var repo = RF.ResolveInstance<YachtRepository>();
                 repo.Save(car);
 
                 long id = car.Id;
                 var newCar = repo.GetById(id);
 
-                Assert.AreEqual(newCar.ByteName, car.ByteName);
+                Assert.AreEqual(newCar.ByteValue, car.ByteValue);
             }
         }
 

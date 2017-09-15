@@ -8,9 +8,17 @@
  * 内部：结构、重构、内部修改。
  * （重构与内部修改相比，是不会造成任何功能变动的。）
  * 
-*******************************************************
+*******************************************************/
 
-3.61.3426
+3.61.3531
+    内部修改
+        添加 CalllContextAppContextProvider 类型，用于通过 ExecutionContext 来实现跨线程的数据共享。
+
+3.61.3530
+    内部修改
+        整理版本号，与 Nuget 服务器同步。
+
+3.61.3430
     内部修改
         Oracle、MySql 下，进行分页时，都不自动使用 Id 来进行排序。该功能只在 SqlServer 中启用。
         ConverterFactory 需要更名为 DbConnectorFactory #61
@@ -23,6 +31,8 @@
         解决“DbMigration 中生成的历史日志中的 MigrationClass 因为包含版本号，导致程序集升级后，无法加载类型，进而无法回滚”的问题。
         解决 MySql 下每个表都更新时间类型的字段 的问题。
         解决 OracleMetaReader 中没有把主键列的 IsIdentity 属性读取出来，导致删除表时没有删除对应的 Sequence 的问题。
+        解决“#112 In、NotIn 语句中可以 Sql 注入”的问题。
+        解决“#105 类型为decimal 的实体属性没有在 rafyentity.js 中生成”的问题。
     添加接口
         添加 EntityRepository ResolveInstance(Type repositoryType) 接口。
         添加 LiteDataTable.ToEntityList 扩展方法，支持把 LiteDataTable 直接转换为指定实体类型的 API #52

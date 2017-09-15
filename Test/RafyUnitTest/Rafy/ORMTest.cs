@@ -303,6 +303,29 @@ namespace RafyUnitTest
             }
         }
 
+        /// <summary>
+        /// in notin 处理 单引号
+        /// </summary>
+        [TestMethod]
+        public void ORM_Query_Single_Quotes()
+        {
+            var repo = RF.ResolveInstance<TestUserRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var a1 = new TestUser { Age = 1, Name = "'user1" };
+                var a2 = new TestUser { Age = 1, Name = "us'e'r1" };
+                var a3 = new TestUser { Age = 1, Name = "use''''r1" };
+                repo.Save(a1);
+                repo.Save(a2);
+                repo.Save(a3);
+
+                var list = repo.GetBy(new CommonQueryCriteria() {
+                    new PropertyMatch(TestUser.NameProperty, PropertyOperator.In, new string[] { "'user1", "us'e'r1", "use''''r1" })
+                });
+                Assert.IsTrue(list.Count == 3);
+            }
+        }
+
         [TestMethod]
         public void ORM_Query_ByMultiParameters_IntArrayParam()
         {
@@ -1436,7 +1459,7 @@ namespace RafyUnitTest
                 Assert.IsTrue(count == 2);
                 count = repo.LinqCountByBookName("2");
                 Assert.IsTrue(count == 3);
-           }
+            }
         }
 
         [TestMethod]
@@ -1532,8 +1555,8 @@ namespace RafyUnitTest
                 Assert.IsTrue(list.Count == 3);
                 Assert.IsTrue(list[0].Name == "1.3");
                 Assert.IsTrue(pi.TotalCount == 10);
+            }
         }
-    }
 
         [TestMethod]
         public void ORM_LinqQuery_Paging_PageNumer1()
@@ -3207,7 +3230,7 @@ ORDER BY Table1.Id ASC");
             var generator = new OracleSqlGenerator { AutoQuota = false };
             generator.Generate(select, new PagingInfo(1, 10));
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT * FROM
+            AssertSqlEqual(sql.ToString(), @"SELECT * FROM
 (
     SELECT T.*, ROWNUM RN
     FROM 
@@ -4440,17 +4463,18 @@ ORDER BY ASN.AsnCode ASC");
             generator = new SqlServerSqlGenerator { AutoQuota = false };
             generator.Generate(select, new PagingInfo(3, 10));
             var pagingSql = generator.Sql;
-//            Assert.IsTrue(pagingSql.ToString() ==
-//@"SELECT TOP 10 *
-//FROM ASN
-//WHERE ASN.Id > {0} AND ASN.Id NOT IN (
-//    SELECT TOP 20 ASN.Id
-//    FROM ASN
-//    WHERE ASN.Id > {1}
-//    ORDER BY ASN.AsnCode ASC
-//)
-//ORDER BY ASN.AsnCode ASC");
-            Assert.IsTrue(pagingSql.ToString() ==
+            //            Assert.IsTrue(pagingSql.ToString() ==
+            //@"SELECT TOP 10 *
+            //FROM ASN
+            //WHERE ASN.Id > {0} AND ASN.Id NOT IN (
+            //    SELECT TOP 20 ASN.Id
+            //    FROM ASN
+            //    WHERE ASN.Id > {1}
+            //    ORDER BY ASN.AsnCode ASC
+            //)
+            //ORDER BY ASN.AsnCode ASC");
+
+            AssertSqlEqual(pagingSql.ToString(),
 @"SELECT * FROM
 (SELECT *, ROW_NUMBER() OVER (ORDER BY ASN.AsnCode ASC) _RowNumber 
 FROM ASN
@@ -4496,7 +4520,7 @@ ORDER BY ASN.ASNCODE ASC");
             generator = new OracleSqlGenerator { AutoQuota = false };
             generator.Generate(select, new PagingInfo(3, 10));
             var pagingSql = generator.Sql;
-            Assert.IsTrue(pagingSql.ToString() ==
+            AssertSqlEqual(pagingSql.ToString(),
 @"SELECT * FROM
 (
     SELECT T.*, ROWNUM RN
@@ -4597,7 +4621,7 @@ ORDER BY ASN.ASNCODE ASC");
             generator = new OracleSqlGenerator { AutoQuota = false };
             generator.Generate(select, new PagingInfo(1, 10));
             var pagingSql = generator.Sql;
-            Assert.IsTrue(pagingSql.ToString() ==
+            AssertSqlEqual(pagingSql.ToString(),
 @"SELECT * FROM
 (
     SELECT T.*, ROWNUM RN
@@ -4611,6 +4635,19 @@ ORDER BY ASN.ASNCODE ASC
     WHERE ROWNUM <= 10
 )
 WHERE RN >= 1");
+        }
+
+        /// <summary>
+        /// 一些 Sql 语句上的换行符并不是 \r\n 而只是 \n，所以这里需要对其忽略后再进行对比。
+        /// </summary>
+        /// <param name="sqlA"></param>
+        /// <param name="sqlB"></param>
+        /// <param name="message"></param>
+        private static void AssertSqlEqual(string sqlA, string sqlB, string message = "")
+        {
+            sqlA = sqlA.Replace("\r", string.Empty);
+            sqlB = sqlB.Replace("\r", string.Empty);
+            Assert.AreEqual(sqlA, sqlB, message);
         }
 
         #endregion
@@ -4757,7 +4794,7 @@ FROM Book");
                 {
                     ids.Add(book.Id);
                 }
-                Assert.AreEqual(repo.GetBookListByIds(ids).Count, 1,"大批量IN条件测试");
+                Assert.AreEqual(repo.GetBookListByIds(ids).Count, 1, "大批量IN条件测试");
             }
 
         }
@@ -5297,7 +5334,7 @@ ORDER BY Article.Code ASC");
             //)
             //ORDER BY Article.Code ASC");
 
-            Assert.IsTrue(pagingSql.ToString() ==
+            AssertSqlEqual(pagingSql.ToString(),
 @"SELECT * FROM
 (SELECT Article.*, ROW_NUMBER() OVER (ORDER BY Article.Code ASC) _RowNumber 
 FROM Article
@@ -5643,7 +5680,7 @@ ORDER BY Article.Code ASC");
                 }
                 else
                 {
-                    Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 2*Config_LineCount, "更新一行数据，不能超过 2 ms。");
+                    Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 2 * Config_LineCount, "更新一行数据，不能超过 2 ms。");
                 }
             }
             finally
@@ -5790,7 +5827,7 @@ ORDER BY Article.Code ASC");
                 }
                 else
                 {
-                    Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 3*Config_LineCount, "更新一行数据，不能超过 3 ms。");
+                    Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 3 * Config_LineCount, "更新一行数据，不能超过 3 ms。");
                 }
             }
             finally
