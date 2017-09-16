@@ -20,6 +20,8 @@ using System.Data.Common;
 using System.Text.RegularExpressions;
 using Rafy.Data.Providers;
 using System.Runtime;
+using Rafy.Utils.Data;
+using System.Collections.Generic;
 
 namespace Rafy.Data
 {
@@ -74,6 +76,15 @@ namespace Rafy.Data
 
         //private IDbTransaction _transaction; 
 
+        /// <summary>
+        /// Special types that need to be converted
+        /// </summary>
+        private ICLRDbTypeMapping _typeMapping;
+
+        /// <summary>
+        /// mapping list
+        /// </summary>
+        private Dictionary<Type, DbType> _dicMapping;
         #endregion
 
         #region Constructor
@@ -152,6 +163,8 @@ namespace Rafy.Data
             {
                 this._connection = connection;
             }
+            this._typeMapping = CLRToDbTypeHepler.DbTypeByCLRType(schema.ProviderName);
+            this._dicMapping = this._typeMapping.CLRToDbType();
         }
 
         #endregion
@@ -460,10 +473,35 @@ namespace Rafy.Data
 
                 //convert null value.
                 if (value == null) { value = DBNull.Value; }
-                IDbDataParameter param = (this as IDbParameterFactory).CreateParameter(parameterName, value, ParameterDirection.Input);
+                DbType dbType = DbType.String;
+                IDbDataParameter param;
+
+                if (DbParameterNeedConverted(value, out dbType))
+                    param = (this as IDbParameterFactory).CreateParameter(parameterName, value, dbType, ParameterDirection.Input);
+                else
+                    param = (this as IDbParameterFactory).CreateParameter(parameterName, value, ParameterDirection.Input);
+
                 dbParameters[i] = param;
             }
             return dbParameters;
+        }
+
+        private bool DbParameterNeedConverted(object value, out DbType dbtype)
+        {
+            if (value == null) throw new ArgumentNullException(nameof(value));
+
+            bool need = false;
+            dbtype = DbType.String;
+
+            if (this._dicMapping != null)
+            {
+                if (this._dicMapping.TryGetValue(value.GetType(), out dbtype))
+                {
+                    need = true;
+                }
+            }
+
+            return need;
         }
 
         #endregion

@@ -342,6 +342,45 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void ET_Property_DataTime2()
+        {
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            {
+                Yacht car = new Yacht()
+                {
+                    DateTimeValue = DateTime.Parse("1623-01-01")
+                };
+                var repo = RF.ResolveInstance<YachtRepository>();
+                repo.Save(car);
+
+                long id = car.Id;
+                var newCar = repo.GetById(id);
+
+                Assert.AreEqual(newCar.DateTimeValue, car.DateTimeValue);
+            }
+        }
+
+        [TestMethod]
+        public void ET_Property_DataTimeNull()
+        {
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            {
+                Yacht car = new Yacht()
+                {
+                    DateTimeNull = DateTime.Parse("1623-01-01")
+                };
+                var repo = RF.ResolveInstance<YachtRepository>();
+                repo.Save(car);
+
+                long id = car.Id;
+                var newCar = repo.GetById(id);
+
+                Assert.AreEqual(newCar.DateTimeNull, car.DateTimeNull);
+            }
+        }
+
+
+        [TestMethod]
         public void ET_Property_Enum_ForUI()
         {
             var entity = new TestRole
