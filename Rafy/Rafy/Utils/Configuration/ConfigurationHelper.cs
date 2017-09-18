@@ -79,7 +79,10 @@ namespace Rafy
         private static IConfigurationRoot _configuration;
 
         /// <summary>
-        /// 获取代表配置文件中配置根的对象。
+        /// 获取或设置主配置文件所对应的配置文件根对象。
+        /// 
+        /// 默认使用 AppDomain.CurrentDomain.BaseDirectory 中的 appsettings.json 文件作为配置文件。
+        /// 也可以设置为别的配置文件。
         /// </summary>
         public static IConfigurationRoot Configuration
         {

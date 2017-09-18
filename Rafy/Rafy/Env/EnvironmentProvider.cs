@@ -28,7 +28,7 @@ namespace Rafy
         {
             this.RootDirectory = AppDomain.CurrentDomain.BaseDirectory;
             this.DllRootDirectory = this.RootDirectory;
-            this.IsDebuggingEnabled = ConfigurationHelper.GetAppSettingOrDefault("Rafy.IsDebuggingEnabled", false);
+            this.IsDebuggingEnabled = ConfigurationHelper.GetAppSettingOrDefault("Rafy:IsDebuggingEnabled", false);
 
             //var httpContext = HttpContext.Current;
             //if (httpContext != null)

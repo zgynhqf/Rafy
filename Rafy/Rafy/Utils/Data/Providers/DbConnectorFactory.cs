@@ -40,13 +40,15 @@ namespace Rafy.Data.Providers
                 case DbSetting.Provider_SqlClient:
                     if (_sql == null)
                     {
-                        _sql = System.Data.SqlClient.SqlClientFactory.Instance;
+                        _sql = LoadFromAssembly("System.Data.SqlClient.SqlClientFactory, System.Data.SqlClient");
+                        //_sql = System.Data.SqlClient.SqlClientFactory.Instance;
                     }
                     return _sql;
                 case DbSetting.Provider_SqlCe:
                     if (_sqlCe == null)
                     {
-                        _sqlCe = System.Data.SqlServerCe.SqlCeProviderFactory.Instance;
+                        _sqlCe = LoadFromAssembly("System.Data.SqlServerCe.SqlCeProviderFactory, System.Data.SqlServerCe");
+                        //_sqlCe = System.Data.SqlServerCe.SqlCeProviderFactory.Instance;
                     }
                     return _sqlCe;
                 case DbSetting.Provider_MySql:
