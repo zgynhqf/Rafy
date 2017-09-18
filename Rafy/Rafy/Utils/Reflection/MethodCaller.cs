@@ -216,8 +216,6 @@ namespace Rafy.Reflection
         /// </param>
         private static object CallMethod(object obj, DynamicMethodHandle methodHandle, params object[] parameters)
         {
-            var method = methodHandle.DynamicMethod;
-
             object[] inParams = parameters == null ? new object[] { null } : parameters;
             //如果最后一个参数是一个 param 数组，则尝试把参数动态添加到这个数组中。
             if (methodHandle.HasFinalArrayParam)

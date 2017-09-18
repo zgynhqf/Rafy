@@ -214,6 +214,11 @@
     </Compile>
     <Compile Include="Entities\TestUserQueryCriteria.cs" />
     <Compile Include="Entities\UnitTestEntity2.cs" />
+    <Compile Include="Entities\Yacht.cs" />
+    <Compile Include="Entities\Yacht.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>Yacht.cs</DependentUpon>
+    </Compile>
     <Compile Include="Ext\EntityRepositoryExtension.cs" />
     <Compile Include="Ext\TestUserLog.cs" />
     <Compile Include="Ext\TestUserLog.g.cs">
@@ -257,6 +262,10 @@
     <ProjectReference Include="..\..\Rafy\Rafy\Rafy.csproj">
       <Project>{966A5BF2-D690-426B-AD68-AD868BB8F855}</Project>
       <Name>Rafy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy\Web\Rafy.Web\Rafy.Web.csproj">
+      <Project>{22A24653-E4A5-48E2-B9C7-A1B24DACECF3}</Project>
+      <Name>Rafy.Web</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

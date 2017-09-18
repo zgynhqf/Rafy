@@ -38,6 +38,9 @@ namespace Rafy.Web.ClientMetaModel
             else if (propertyType.IsEnum) { st.Name = SupportedServerType.Enum; }
             else if (propertyType == typeof(double)) { st.Name = SupportedServerType.Double; }
             else if (propertyType == typeof(bool)) { st.Name = SupportedServerType.Boolean; }
+            else if (propertyType == typeof(float)) { st.Name = SupportedServerType.Float; }
+            else if (propertyType == typeof(decimal)) { st.Name = SupportedServerType.Decimal; }
+            else if (propertyType == typeof(byte)) { st.Name = SupportedServerType.Byte; }
             else if (propertyType == typeof(DateTime)) { st.Name = SupportedServerType.DateTime; }
             else if (propertyType == typeof(Guid)) { st.Name = SupportedServerType.Guid; }
             else if (TypeHelper.IsNullable(propertyType))
@@ -65,11 +68,13 @@ namespace Rafy.Web.ClientMetaModel
                 case SupportedServerType.String:
                 case SupportedServerType.Enum:
                     return JavascriptType.String;
+                case SupportedServerType.Byte:
                 case SupportedServerType.Int32:
                 case SupportedServerType.Int64:
-                    return JavascriptType.Int;
                 case SupportedServerType.Double:
-                    return JavascriptType.Float;
+                case SupportedServerType.Float:
+                case SupportedServerType.Decimal:
+                    return JavascriptType.Number;
                 case SupportedServerType.Boolean:
                     return JavascriptType.Boolean;
                 case SupportedServerType.DateTime:
@@ -85,8 +90,7 @@ namespace Rafy.Web.ClientMetaModel
         {
             switch (type.JSType)
             {
-                case JavascriptType.Int:
-                case JavascriptType.Float:
+                case JavascriptType.Number:
                     return "numbercolumn";
                 case JavascriptType.Date:
                     return "datecolumn";
@@ -105,8 +109,7 @@ namespace Rafy.Web.ClientMetaModel
 
             switch (type.JSType)
             {
-                case JavascriptType.Int:
-                case JavascriptType.Float:
+                case JavascriptType.Number:
                     return new FieldConfig
                     {
                         xtype = "numberfield"

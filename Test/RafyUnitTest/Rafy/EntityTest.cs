@@ -24,6 +24,7 @@ using Rafy.UnitTest.IDataProvider;
 using Rafy.UnitTest.Repository;
 using Rafy.Utils;
 using UT;
+using Rafy.UnitTest;
 
 namespace RafyUnitTest
 {
@@ -280,6 +281,63 @@ namespace RafyUnitTest
 
                 var entity2 = repo.GetById(entity.Id);
                 Assert.AreEqual(entity.RoleType, entity2.RoleType);
+            }
+        }
+
+        [TestMethod]
+        public void ET_Property_Decimal()
+        {
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            {
+                Yacht car = new Yacht()
+                {
+                    DecimalValue = (decimal)999999.99
+                };
+                var repo = RF.ResolveInstance<YachtRepository>();
+                repo.Save(car);
+
+                long id = car.Id;
+                var newCar = repo.GetById(id);
+
+                Assert.AreEqual(newCar.DecimalValue, car.DecimalValue);
+            }
+        }
+
+        [TestMethod]
+        public void ET_Property_Float()
+        {
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            {
+                Yacht car = new Yacht()
+                {
+                    FloatValue = (float)16.6,
+                };
+                var repo = RF.ResolveInstance<YachtRepository>();
+                repo.Save(car);
+
+                long id = car.Id;
+                var newCar = repo.GetById(id);
+
+                Assert.AreEqual(newCar.FloatValue, car.FloatValue);
+            }
+        }
+
+        [TestMethod]
+        public void ET_Property_Byte()
+        {
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            {
+                Yacht car = new Yacht()
+                {
+                    ByteValue = (byte)1
+                };
+                var repo = RF.ResolveInstance<YachtRepository>();
+                repo.Save(car);
+
+                long id = car.Id;
+                var newCar = repo.GetById(id);
+
+                Assert.AreEqual(newCar.ByteValue, car.ByteValue);
             }
         }
 

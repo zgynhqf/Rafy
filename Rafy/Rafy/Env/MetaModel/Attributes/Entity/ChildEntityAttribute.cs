@@ -20,7 +20,7 @@ using System.Text;
 namespace Rafy.MetaModel.Attributes
 {
     /// <summary>
-    /// 所有孩子实体对象都应该标记这个属性。
+    /// 所有非聚合根的实体类型，都应该标记这个属性。
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public class ChildEntityAttribute : EntityAttribute { }

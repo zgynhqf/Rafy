@@ -72,6 +72,8 @@ namespace Rafy.DbMigration.Oracle
                     return "INTEGER";
                 case DbType.DateTime:
                     return "DATE";
+                case DbType.Byte:
+                case DbType.Single:
                 case DbType.Int64:
                 case DbType.Double:
                 case DbType.Decimal:
@@ -80,8 +82,6 @@ namespace Rafy.DbMigration.Oracle
                     return "BLOB";
                 case DbType.Boolean:
                     return "CHAR(1)";
-                case DbType.Byte:
-                    return "BYTE";
                 default:
                     break;
             }

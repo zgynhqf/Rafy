@@ -157,6 +157,8 @@ namespace Rafy
                 foreach (var item in _uiPlugins) { _allPlugins.Add(item); }
             }
 
+            CheckDuplucatePlugins();
+
             _allPlugins.Lock();
         }
 
@@ -233,6 +235,20 @@ namespace Rafy
                 }
 
                 pluginList.Add(plugin);
+            }
+        }
+
+        private static void CheckDuplucatePlugins()
+        {
+            foreach (var a in _allPlugins)
+            {
+                foreach (var b in _allPlugins)
+                {
+                    if (a != b && a.Assembly == b.Assembly)
+                    {
+                        throw new InvalidProgramException($"编写的代码有误，一个程序集只能声明一个插件类型！在 {a.Assembly} 程序集中，声明了 {a.GetType()} 和 {b.GetType()} 两个插件类型。");
+                    }
+                }
             }
         }
 

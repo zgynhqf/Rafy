@@ -12,7 +12,7 @@
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <DebugType>Full</DebugType>
         <DocumentationFile>bin\Debug\netstandard2.0\Rafy.xml</DocumentationFile>
-        <NoWarn>1701;1702;1705;1591</NoWarn>
+        <NoWarn>NU1701;1702;1705;1591</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
@@ -26,11 +26,14 @@
 
     <ItemGroup>
         <Compile Remove="Env\ComponentModel\WebOrThreadAppContextProvider.cs" />
+        <Compile Remove="Env\Configuration\PluginsConfigurationSection.cs" />
         <Compile Remove="Env\Utils\Caching\CacheProvider\PerHttpRequestCache.cs" />
         <Compile Remove="Env\Utils\Caching\CacheProvider\SystemCaching\NormalProvider.cs" />
         <Compile Remove="Env\Utils\EmitContext.cs" />
         <Compile Remove="ManagedProperty\Serialization\NetDataContractSerializerWrapper.cs" />
         <Compile Remove="Utils\Configuration\ConfigurationExtension.cs" />
+        <Compile Remove="Utils\Context\CallContextAppContextProvider.cs" />
+        <Compile Remove="Utils\Context\WebOrThreadAppContextProvider.cs" />
     </ItemGroup>
 
     <ItemGroup>

@@ -34,8 +34,8 @@ namespace Rafy.Domain.ORM
         internal const string WILDCARD_ALL = "%";
         internal const string WILDCARD_SINGLE = "_";
         internal const string ESCAPE_CHAR = "/";
-        internal static readonly string WILDCARD_ALL_ESCAPED = ESCAPE_CHAR  + WILDCARD_ALL;
-        internal static readonly string WILDCARD_SINGLE_ESCAPED = ESCAPE_CHAR  + WILDCARD_SINGLE;
+        internal static readonly string WILDCARD_ALL_ESCAPED = ESCAPE_CHAR + WILDCARD_ALL;
+        internal static readonly string WILDCARD_SINGLE_ESCAPED = ESCAPE_CHAR + WILDCARD_SINGLE;
 
         private FormattedSql _sql;
 
@@ -468,7 +468,7 @@ namespace Rafy.Domain.ORM
 
                             if (needDelimiter)
                             {
-                                _sql.Append('\'').Append(item).Append('\'');
+                                _sql.Append('\'').Append(EscapeSpecialChar(item)).Append('\'');
                             }
                             else
                             {
@@ -494,6 +494,20 @@ namespace Rafy.Domain.ORM
             }
 
             return node;
+        }
+
+        /// <summary>
+        /// in 和 not in 没用参数化 所以要转义特殊字符 
+        /// </summary>
+        /// <param name="value">参数</param>
+        /// <returns>value double 单引号</returns>
+        protected virtual object EscapeSpecialChar(object value)
+        {
+            if (value is string)
+            {
+                value = value.ToString().Replace("'", "''");
+            }
+            return value;
         }
 
         private string Escape(object value)
