@@ -3,7 +3,6 @@ using System.Data;
 using System.Configuration;
 using System.Web;
 using System.IO;
-using System.Data.SqlClient;
 using Rafy.Data;
 
 namespace Rafy.Data.Providers
@@ -21,10 +20,7 @@ namespace Rafy.Data.Providers
 
         protected virtual string DatabaseIdColumnName
         {
-            get
-            {
-                return "_dbid";
-            }
+            get { return "_dbid"; }
         }
 
         #region IDbBackuper Members
