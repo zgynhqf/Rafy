@@ -394,10 +394,10 @@
     <Compile Include="Domain\ORM\Rdb\DbAccesser\IConnectionManager.cs" />
     <Compile Include="Domain\ORM\Rdb\DbAccesser\ManagedConnectionDbAccesser.cs" />
     <Compile Include="Domain\ORM\Rdb\DbAccesser\TransactionDependentConnectionManager.cs" />
-    <Compile Include="Domain\ORM\Rdb\RdbTable\RdbColumn.cs" />
-    <Compile Include="Domain\ORM\Rdb\RdbTable\RdbTable.cs" />
-    <Compile Include="Domain\ORM\Rdb\RdbTable\RdbTableFactory.cs" />
-    <Compile Include="Domain\ORM\Rdb\RdbTable\RdbTableFinder.cs" />
+    <Compile Include="Domain\ORM\Rdb\Sql\RdbTable\RdbColumn.cs" />
+    <Compile Include="Domain\ORM\Rdb\Sql\RdbTable\RdbTable.cs" />
+    <Compile Include="Domain\ORM\Rdb\Sql\RdbTable\RdbTableFactory.cs" />
+    <Compile Include="Domain\ORM\Rdb\Sql\RdbTable\RdbTableFinder.cs" />
     <Compile Include="Domain\ORM\Rdb\SingleConnectionTrasactionScope.cs" />
     <Compile Include="Domain\ORM\Rdb\Sql\FirstTableFinder.cs" />
     <Compile Include="Domain\ORM\Rdb\Sql\MySql\MySqlColumn.cs" />

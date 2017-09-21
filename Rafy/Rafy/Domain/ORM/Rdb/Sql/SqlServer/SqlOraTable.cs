@@ -27,14 +27,14 @@ using Rafy.MetaModel;
 namespace Rafy.Domain.ORM
 {
     /// <summary>
-    /// SqlServer 、 Oracle 两个数据库都支持的一些功能，封装在这个类中。
+    /// SqlServer、Oracle 两个数据库都支持的一些功能，封装在这个类中。
     /// </summary>
     internal abstract class SqlOraTable : RdbTable
     {
         public SqlOraTable(IRepositoryInternal repository) : base(repository) { }
 
         /// <summary>
-        /// SqlServer 、 Oracle 都支持在数据库层面进行分页。
+        /// SqlServer、Oracle 都支持在数据库层面进行分页。
         /// </summary>
         protected override PagingLocation GetPagingLocation(PagingInfo pagingInfo)
         {
