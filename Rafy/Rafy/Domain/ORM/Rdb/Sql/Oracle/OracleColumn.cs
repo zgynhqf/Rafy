@@ -26,12 +26,10 @@ namespace Rafy.Domain.ORM.Oracle
     {
         internal OracleColumn(RdbTable table, IPersistanceColumnInfo columnInfo) : base(table, columnInfo) { }
 
-        public override bool CanInsert
+        public override bool ShouldInsert(bool withIdentity)
         {
-            get
-            {
-                return true;//&& !this.IsPKID
-            }
+            //Oracle 中 Identity 列是由 Sequence 生成的，这些列也必须放在 Insert 语句中进行插入。
+            return true;
         }
 
         public override object ConvertToParameterValue(object value)

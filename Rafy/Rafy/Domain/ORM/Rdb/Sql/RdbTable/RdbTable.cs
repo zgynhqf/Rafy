@@ -205,7 +205,7 @@ namespace Rafy.Domain.ORM
             for (int i = 0, c = _columns.Count; i < c; i++)
             {
                 var column = _columns[i];
-                if (column.CanInsert || (withIdentity && column.Info.IsIdentity))
+                if (column.ShouldInsert(withIdentity))
                 {
                     if (index > 0)
                     {
@@ -237,7 +237,7 @@ namespace Rafy.Domain.ORM
             for (int i = 0, c = _columns.Count; i < c; i++)
             {
                 var column = _columns[i];
-                if (column.CanInsert || (withIdentity && column.Info.IsIdentity))
+                if (column.ShouldInsert(withIdentity))
                 {
                     var value = column.ReadParameterValue(item);
                     parameters.Add(value);

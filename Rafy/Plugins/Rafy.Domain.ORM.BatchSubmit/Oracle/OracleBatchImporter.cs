@@ -146,14 +146,10 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
             bool comma = false;
             for (int i = 0, c = columns.Count; i < c; i++)
             {
-                var column = columns[i];
-                if (column.CanInsert)
-                {
-                    if (comma) { sql.Write(','); }
-                    else { comma = true; }
+                if (comma) { sql.Write(','); }
+                else { comma = true; }
 
-                    sql.AppendQuote(table, column.Name);
-                }
+                sql.AppendQuote(table, columns[i].Name);
             }
 
             sql.Write(") VALUES (");
@@ -161,15 +157,11 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
             comma = false;
             for (int i = 0, c = columns.Count; i < c; i++)
             {
-                var column = columns[i];
-                if (column.CanInsert)
-                {
-                    if (comma) { sql.Write(','); }
-                    else { comma = true; }
+                if (comma) { sql.Write(','); }
+                else { comma = true; }
 
-                    sql.Write(":");
-                    sql.Write(column.Name);
-                }
+                sql.Write(":");
+                sql.Write(columns[i].Name);
             }
 
             sql.Write(")");
@@ -193,12 +185,8 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
             var columns = table.Columns;
             for (int i = 0, c = columns.Count; i < c; i++)
             {
-                var column = columns[i];
-                if (column.CanInsert)
-                {
-                    var parameter = ReadIntoBatchParameter(entities, column, dba);
-                    parameters.Add(parameter);
-                }
+                var parameter = ReadIntoBatchParameter(entities, columns[i], dba);
+                parameters.Add(parameter);
             }
             return parameters.ToArray();
         }
