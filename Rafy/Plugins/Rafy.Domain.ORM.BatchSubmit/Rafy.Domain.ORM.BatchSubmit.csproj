@@ -63,7 +63,7 @@
     <Compile Include="SqlServer\zzzBatchInsert.cs" />
     <Compile Include="EntityBatchReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SqlServer\SqlBatchImporter.cs" />
+    <Compile Include="SqlServer\SqlServerBatchImporter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Rafy\Rafy.csproj">

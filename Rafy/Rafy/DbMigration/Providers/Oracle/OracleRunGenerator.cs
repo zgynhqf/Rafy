@@ -30,11 +30,7 @@ namespace Rafy.DbMigration.Oracle
         public OracleRunGenerator()
         {
             this.IdentifierQuoter = OracleIdentifierQuoter.Instance;
-        }
-
-        protected override string ConvertToTypeString(DbType dataType, string length)
-        {
-            return OracleDbTypeHelper.ConvertToOracleTypeString(dataType, length);
+            this.DbTypeCoverter = OracleDbTypeConverter.Instance;
         }
 
         protected override void Generate(CreateDatabase op)

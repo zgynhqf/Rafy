@@ -27,7 +27,11 @@ namespace Rafy.Domain.ORM.Oracle
     //TOP、!=、
     class OracleSqlGenerator : SqlGenerator
     {
-        public OracleSqlGenerator() : base(OracleIdentifierQuoter.Instance) { }
+        public OracleSqlGenerator()
+        {
+            this.IdentifierProvider = OracleIdentifierQuoter.Instance;
+            this.DbTypeCoverter = OracleDbTypeConverter.Instance;
+        }
 
         protected override SqlColumnConstraint VisitSqlColumnConstraint(SqlColumnConstraint node)
         {
@@ -64,7 +68,7 @@ namespace Rafy.Domain.ORM.Oracle
             {
                 if (value is bool)
                 {
-                    value = OracleDbTypeHelper.ToDbBoolean((bool)value);
+                    value = OracleDbTypeConverter.Instance.ToDbBoolean((bool)value);
                 }
                 else if (value.GetType().IsEnum)
                 {

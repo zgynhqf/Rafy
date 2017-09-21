@@ -51,7 +51,7 @@ namespace Rafy.Domain
             switch (setting.ProviderName)
             {
                 case DbSetting.Provider_SqlClient:
-                    return new SqlBatchImporter();
+                    return new SqlServerBatchImporter();
                 case DbSetting.Provider_MySql:
                     return new MySqlBatchImporter();
                 default:

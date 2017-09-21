@@ -34,12 +34,12 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
     /// SqlServer 数据库的实体批量导入器。
     /// </summary>
     [Serializable]
-    public class SqlBatchImporter : BatchImporter
+    public class SqlServerBatchImporter : BatchImporter
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SqlBatchImporter"/> class.
+        /// Initializes a new instance of the <see cref="SqlServerBatchImporter"/> class.
         /// </summary>
-        public SqlBatchImporter()
+        public SqlServerBatchImporter()
         {
             this.SqlGenerator = new SqlServerSqlGenerator();
         }
@@ -316,7 +316,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
                     var parameter = dba.ParameterFactory.CreateParameter();
                     parameter.ParameterName = '@' + column.Name;
                     parameter.SourceColumn = column.Name;//额外地，需要设置 SourceColumn
-                    parameter.DbType = column.Info.ColumnMeta.DataType ?? DbTypeHelper.ConvertFromCLRType(column.Info.DataType);
+                    parameter.DbType = column.Info.ColumnMeta.DataType ?? this.SqlGenerator.DbTypeCoverter.FromClrType(column.Info.DataType);
                     parameters.Add(parameter);
                 }
             }
@@ -325,7 +325,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
             var pkParameter = dba.ParameterFactory.CreateParameter();
             pkParameter.ParameterName = '@' + table.PKColumn.Name;
             pkParameter.SourceColumn = table.PKColumn.Name;
-            pkParameter.DbType = table.PKColumn.Info.ColumnMeta.DataType ?? DbTypeHelper.ConvertFromCLRType(table.PKColumn.Info.DataType);
+            pkParameter.DbType = table.PKColumn.Info.ColumnMeta.DataType ?? this.SqlGenerator.DbTypeCoverter.FromClrType(table.PKColumn.Info.DataType);
             parameters.Add(pkParameter);
 
             return parameters.ToArray();

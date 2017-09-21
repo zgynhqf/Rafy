@@ -103,9 +103,8 @@ namespace Rafy.DbMigration.History
         {
             //不再使用 Date 类型，因为 Oracle 和 SQLServer 里面的数据的精度不一样。改为使用 LONG
             //Oracle 中的 DateTime 类型为 Date
-            var timeType = DbSetting.IsOracleProvider(this.DbSetting) ?
-                OracleDbTypeHelper.ConvertToOracleTypeString(DbType.Int64) :
-                SqlDbTypeHelper.ConvertToSQLTypeString(DbType.Int64);
+            var converter = DbMigrationProviderFactory.GetDbTypeConverter(this.DbSetting.ProviderName);
+            var timeType = converter.ConvertToDatabaseTypeName(DbType.Int64);
 
             this.DBA.RawAccesser.ExecuteText(string.Format(@"CREATE TABLE {1}(ID INT NOT NULL,Value {0} NOT NULL,PRIMARY KEY (ID))", timeType, TableName));
             this.DBA.ExecuteText("INSERT INTO " + TableName + " (ID,VALUE) VALUES (1, {0})", DefaultMinTime.Ticks);

@@ -24,7 +24,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
     /// 目前 Sql Azure 数据库有缺陷：于 Sql Azure 暂时不支持 DBCC CHECKIDENT 方法，所以无法获取实体的 Id。
     /// </summary>
     [Serializable]
-    public class SqlAzureBatchImporter : SqlBatchImporter
+    public class SqlAzureBatchImporter : SqlServerBatchImporter
     {
         internal override void GenerateId(EntityBatch meta, IList<Entity> entities)
         {

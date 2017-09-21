@@ -1,33 +1,52 @@
 ﻿/*******************************************************
  * 
  * 作者：胡庆访
- * 创建时间：20110104
+ * 创建日期：20170921
  * 说明：此文件只包含一个类，具体内容见类型注释。
  * 运行环境：.NET 4.0
  * 版本号：1.0.0
  * 
  * 历史记录：
- * 创建文件 胡庆访 20110104
+ * 创建文件 胡庆访 20170921 23:24
  * 
 *******************************************************/
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
-using System.Data;
+using System.Threading.Tasks;
 using Rafy.Reflection;
 
 namespace Rafy.DbMigration
 {
-    internal static class DbTypeHelper
+    /// <summary>
+    /// 数据库字段类型的转换器。
+    /// </summary>
+    public abstract class DbTypeConverter
     {
+        /// <summary>
+        /// 将 DbType 转换为数据库中的列的类型名称。
+        /// </summary>
+        /// <param name="fieldType"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public abstract string ConvertToDatabaseTypeName(DbType fieldType, string length = null);
+
+        /// <summary>
+        /// 将从数据库 Schema Meta 中读取出来的列的类型名称，转换为其对应的 DbType。
+        /// </summary>
+        /// <param name="databaseTypeName">从数据库 Schema Meta 中读取出来的列的类型名称。</param>
+        /// <returns></returns>
+        public abstract DbType ConvertToDbType(string databaseTypeName);
+
         /// <summary>
         /// 返回 CLR 类型默认映射的数据库的类型。
         /// </summary>
         /// <param name="clrType"></param>
         /// <returns></returns>
-        internal static DbType ConvertFromCLRType(Type clrType)
+        public virtual DbType FromClrType(Type clrType)
         {
             if (clrType.IsEnum) { return DbType.Int32; }
             if (clrType == typeof(string)) { return DbType.String; }
@@ -50,38 +69,50 @@ namespace Rafy.DbMigration
 
             if (TypeHelper.IsNullable(clrType))
             {
-                return ConvertFromCLRType(TypeHelper.IgnoreNullable(clrType));
+                return this.FromClrType(TypeHelper.IgnoreNullable(clrType));
             }
 
             return DbType.String;
         }
 
         /// <summary>
-        /// 获取type的默认值sql表达式
+        /// 获取指定的数据库字段类型所对应的默认值。
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        internal static object GetDefaultValue(DbType type)
+        internal virtual object GetDefaultValue(DbType type)
         {
             switch (type)
             {
                 case DbType.String:
                 case DbType.AnsiString:
                 case DbType.AnsiStringFixedLength:
+                case DbType.Xml:
                     return string.Empty;
+                case DbType.Date:
+                case DbType.Time:
                 case DbType.DateTime:
+                case DbType.DateTime2:
+                case DbType.DateTimeOffset:
                     return new DateTime(2000, 1, 1, 0, 0, 0);
                 case DbType.Guid:
-                    return Guid.Empty.ToString();
-                case DbType.Int32:
-                case DbType.Int64:
-                case DbType.Binary:
-                case DbType.Double:
+                    return Guid.Empty;
                 case DbType.Boolean:
                 case DbType.Byte:
-                case DbType.Decimal:
+                case DbType.Int32:
+                case DbType.Int64:
                 case DbType.Single:
+                case DbType.Double:
+                case DbType.Decimal:
+                case DbType.VarNumeric:
+                case DbType.UInt16:
+                case DbType.UInt32:
+                case DbType.UInt64:
+                case DbType.SByte:
+                case DbType.Currency:
                     return 0;
+                case DbType.Binary:
+                    return new byte[0];
                 default:
                     throw new NotSupportedException();
             }
@@ -109,6 +140,7 @@ namespace Rafy.DbMigration
 
             return false;
         }
+
         private static DbType[][] CompatibleTypes = new DbType[][]{
             new DbType[]{ DbType.String, DbType.AnsiString, DbType.Xml },
             new DbType[]{ DbType.Int64, DbType.Double, DbType.Decimal },

@@ -118,9 +118,9 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
         {
             var rowsCount = entities.Count;
 
-            var sql = GenerateInsertSQL(meta.Table);
+            var sql = this.GenerateInsertSQL(meta.Table);
 
-            var parameters = GenerateInsertParameters(meta, entities);
+            var parameters = this.GenerateInsertParameters(meta, entities);
 
             //设置 ArrayBindCount 后再执行，就是批量导入功能。
             var command = meta.DBA.RawAccesser.CommandFactory.CreateCommand(sql, CommandType.Text, parameters);
@@ -134,7 +134,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
         /// </summary>
         /// <param name="table"></param>
         /// <returns></returns>
-        private static string GenerateInsertSQL(RdbTable table)
+        private string GenerateInsertSQL(RdbTable table)
         {
             //代码参考 RdbTable.GenerateInsertSQL() 方法。
             var sql = new StringWriter();
@@ -175,7 +175,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
         /// <param name="meta"></param>
         /// <param name="entities"></param>
         /// <returns></returns>
-        private static IDbDataParameter[] GenerateInsertParameters(EntityBatch meta, IList<Entity> entities)
+        private IDbDataParameter[] GenerateInsertParameters(EntityBatch meta, IList<Entity> entities)
         {
             var dba = meta.DBA.RawAccesser;
             var table = meta.Table;
@@ -185,7 +185,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
             var columns = table.Columns;
             for (int i = 0, c = columns.Count; i < c; i++)
             {
-                var parameter = ReadIntoBatchParameter(entities, columns[i], dba);
+                var parameter = this.ReadIntoBatchParameter(entities, columns[i], dba);
                 parameters.Add(parameter);
             }
             return parameters.ToArray();
@@ -363,13 +363,13 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
                 var column = columns[i];
                 if (!column.Info.IsPrimaryKey && (updateLOB || !column.IsLOB))
                 {
-                    var parameter = ReadIntoBatchParameter(entities, column, dba);
+                    var parameter = this.ReadIntoBatchParameter(entities, column, dba);
                     parameters.Add(parameter);
                 }
             }
 
             //主键列放在最后。
-            var pkParameter = ReadIntoBatchParameter(entities, table.PKColumn, dba);
+            var pkParameter = this.ReadIntoBatchParameter(entities, table.PKColumn, dba);
             parameters.Add(pkParameter);
             return parameters.ToArray();
         }
@@ -378,14 +378,14 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
 
         #region 帮助方法
 
-        private static IDbDataParameter ReadIntoBatchParameter(IList<Entity> entities, RdbColumn column, IRawDbAccesser dba)
+        private IDbDataParameter ReadIntoBatchParameter(IList<Entity> entities, RdbColumn column, IRawDbAccesser dba)
         {
             var parameter = dba.ParameterFactory.CreateParameter();
             parameter.ParameterName = column.Name;
 
             #region 对于 CLOB 类型，需要特殊处理。
 
-            var dbType = column.Info.ColumnMeta.DataType ?? OracleDbTypeHelper.ConvertFromCLRType(column.Info.DataType);
+            var dbType = column.Info.ColumnMeta.DataType ?? this.SqlGenerator.DbTypeCoverter.FromClrType(column.Info.DataType);
             /*********************** 代码块解释 *********************************
              * 不再需要对 CLOB 类型特殊处理
              * 

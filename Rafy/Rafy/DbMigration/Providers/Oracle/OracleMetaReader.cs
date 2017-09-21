@@ -74,7 +74,7 @@ ORDER BY TABLE_NAME");
                         if (dataScale == "0") { sqlType = "integer"; }
                     }
 
-                    DbType dbType = OracleDbTypeHelper.ConvertFromOracleTypeString(sqlType);
+                    DbType dbType = OracleDbTypeConverter.Instance.ConvertToDbType(sqlType);
 
                     Column column = new Column(columnName, dbType, null, currentTable);
 

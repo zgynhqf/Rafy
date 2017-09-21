@@ -41,12 +41,21 @@ namespace Rafy.Domain.ORM
         private IDbIdentifierQuoter _identifierProvider;
         private FormattedSql _sql;
 
-        public SqlGenerator(IDbIdentifierQuoter identifierProvider)
+        protected SqlGenerator()
         {
-            _identifierProvider = identifierProvider;
             _sql = new FormattedSql();
             _sql.InnerWriter = new IndentedTextWriter(_sql.InnerWriter);
         }
+
+        /// <summary>
+        /// 数据库字段类型的转换器。
+        /// </summary>
+        public DbTypeConverter DbTypeCoverter { get; protected set; }
+
+        /// <summary>
+        /// 数据库标识符的处理器。
+        /// </summary>
+        public IDbIdentifierQuoter IdentifierProvider { get => _identifierProvider; protected set => _identifierProvider = value; }
 
         /// <summary>
         /// 当前需要的缩进量。

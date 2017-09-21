@@ -46,7 +46,7 @@ namespace Rafy.Domain.ORM.Oracle
             var info = this.Info;
             if (value != null && info.IsBooleanType)
             {
-                value = OracleDbTypeHelper.ToCLRBoolean(value);
+                value = OracleDbTypeConverter.Instance.ToCLRBoolean(value);
             }
             else if (value == null && info.IsStringType)//null 转换为空字符串
             {

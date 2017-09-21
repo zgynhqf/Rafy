@@ -28,9 +28,9 @@ namespace Rafy.DbMigration
     /// </summary>
     public abstract class SqlRunGenerator : RunGenerator
     {
-        public DbIdentifierQuoter IdentifierQuoter { get; set; }
+        public DbIdentifierQuoter IdentifierQuoter { get; protected set; }
 
-        protected abstract string ConvertToTypeString(DbType dataType, string length);
+        public DbTypeConverter DbTypeCoverter { get; protected set; }
 
         protected override void Generate(DropTable op)
         {
@@ -108,7 +108,7 @@ ALTER TABLE ");
         {
             FormattedSql sql = string.Format(@"UPDATE {0} SET {1} = {2} WHERE {1} IS NULL",
                     this.Quote(op.TableName), this.Quote(op.ColumnName), "{0}");
-            sql.Parameters.Add(DbTypeHelper.GetDefaultValue(op.DataType));
+            sql.Parameters.Add(this.DbTypeCoverter.GetDefaultValue(op.DataType));
 
             this.AddRun(new FormattedSqlMigrationRun
             {
@@ -204,7 +204,7 @@ ALTER TABLE ");
 
             sql.Write(this.Quote(columnName));
             sql.Write(" ");
-            sql.Write(this.ConvertToTypeString(dataType, length));
+            sql.Write(this.DbTypeCoverter.ConvertToDatabaseTypeName(dataType, length));
 
             if (isRequired.HasValue)
             {

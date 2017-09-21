@@ -76,5 +76,24 @@ namespace Rafy.DbMigration
                     throw new NotSupportedException("This type of database is not supportted now:" + providerName);
             }
         }
+
+        public static DbTypeConverter GetDbTypeConverter(string providerName)
+        {
+            switch (providerName)
+            {
+                case DbConnectionSchema.Provider_SqlClient:
+                    return SqlServerDbTypeConverter.Instance;
+                case DbConnectionSchema.Provider_SqlCe:
+                    return SqlServerCeDbTypeConverter.Instance;
+                case DbConnectionSchema.Provider_MySql:
+                    return MySqlDbTypeConverter.Instance;
+                default:
+                    if (DbConnectionSchema.IsOracleProvider(providerName))
+                    {
+                        return OracleDbTypeConverter.Instance;
+                    }
+                    throw new NotSupportedException("This type of database is not supportted now:" + providerName);
+            }
+        }
     }
 }

@@ -32,6 +32,7 @@ namespace Rafy.DbMigration.MySql
         public MySqlRunGenerator()
         {
             this.IdentifierQuoter = MySqlIdentifierQuoter.Instance;
+            this.DbTypeCoverter = MySqlDbTypeConverter.Instance;
         }
 
         /// <summary>
@@ -51,17 +52,6 @@ namespace Rafy.DbMigration.MySql
 
                 this.AddRun(sql);
             }
-        }
-
-        /// <summary>
-        /// 把Clr的数据类型转型为MySql的数据类型
-        /// </summary>
-        /// <param name="dataType">数据类型</param>
-        /// <param name="length">数据长度</param>
-        /// <returns>返回MySql的数据类型</returns>
-        protected override string ConvertToTypeString(DbType dataType, string length)
-        {
-            return MySqlDbTypeHelper.ConvertToMySqlTypeString(dataType, length);
         }
 
         /// <summary>
@@ -102,7 +92,13 @@ namespace Rafy.DbMigration.MySql
                 {
                     this.AddRun(new SqlMigrationRun
                     {
-                        Sql = string.Format(@"ALTER TABLE `{0}` MODIFY COLUMN `{1}` {2} COMMENT '{3}'", this.Prepare(op.TableName), this.Prepare(op.ColumnName), MySqlDbTypeHelper.ConvertToMySqlTypeString(op.ColumnDataType), op.Comment)
+                        Sql = string.Format(
+                            @"ALTER TABLE `{0}` MODIFY COLUMN `{1}` {2} COMMENT '{3}'",
+                            this.Prepare(op.TableName),
+                            this.Prepare(op.ColumnName),
+                            this.DbTypeCoverter.ConvertToDatabaseTypeName(op.ColumnDataType),
+                            op.Comment
+                            )
                     });
                 }
             }

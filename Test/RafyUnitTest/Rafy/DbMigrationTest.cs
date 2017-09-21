@@ -164,7 +164,7 @@ namespace RafyUnitTest
                 var taskTable = result.FindTable("Task");
                 var c1 = taskTable.FindColumn("TestingColumn");
                 Assert.IsTrue(c1 != null && c1.IsRequired);
-                Assert.IsTrue(DbTypeHelper.IsCompatible(c1.DataType, DbType.Decimal));
+                Assert.IsTrue(DbTypeConverter.IsCompatible(c1.DataType, DbType.Decimal));
             });
         }
 
@@ -182,7 +182,7 @@ namespace RafyUnitTest
                     var taskTable = result.FindTable("Task");
                     var c1 = taskTable.FindColumn("TestingColumn");
                     Assert.IsTrue(c1 != null && c1.IsRequired);
-                    Assert.IsTrue(DbTypeHelper.IsCompatible(c1.DataType, DbType.String));
+                    Assert.IsTrue(DbTypeConverter.IsCompatible(c1.DataType, DbType.String));
                 });
             }
         }
@@ -222,7 +222,7 @@ namespace RafyUnitTest
                 Assert.IsTrue(column != null);
 
                 var p = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName).ProviderName;
-                Assert.IsTrue(DbTypeHelper.IsCompatible(column.DataType, DbType.Xml));
+                Assert.IsTrue(DbTypeConverter.IsCompatible(column.DataType, DbType.Xml));
             });
         }
 
@@ -241,7 +241,7 @@ namespace RafyUnitTest
                 Assert.IsTrue(column != null);
 
                 var p = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName).ProviderName;
-                Assert.IsTrue(DbTypeHelper.IsCompatible(column.DataType, DbType.Xml));
+                Assert.IsTrue(DbTypeConverter.IsCompatible(column.DataType, DbType.Xml));
             });
         }
 
@@ -261,7 +261,7 @@ namespace RafyUnitTest
                 var table = result.FindTable("Task");
                 var column = table.FindColumn("Name");
                 Assert.IsTrue(column != null);
-                Assert.IsTrue(DbTypeHelper.IsCompatible(column.DataType, DbType.Double));
+                Assert.IsTrue(DbTypeConverter.IsCompatible(column.DataType, DbType.Double));
                 Assert.IsTrue(column.IsRequired);
             });
         }

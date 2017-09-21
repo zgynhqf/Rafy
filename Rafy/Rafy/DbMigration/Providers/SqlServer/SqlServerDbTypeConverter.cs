@@ -1,34 +1,32 @@
 ﻿/*******************************************************
  * 
  * 作者：胡庆访
- * 创建时间：20110104
+ * 创建日期：20170921
  * 说明：此文件只包含一个类，具体内容见类型注释。
  * 运行环境：.NET 4.0
  * 版本号：1.0.0
  * 
  * 历史记录：
- * 创建文件 胡庆访 20110104
+ * 创建文件 胡庆访 20170921 23:42
  * 
 *******************************************************/
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
-using System.Data;
+using System.Threading.Tasks;
 
 namespace Rafy.DbMigration.SqlServer
 {
-    internal static class SqlDbTypeHelper
+    public class SqlServerDbTypeConverter : DbTypeConverter
     {
-        /// <summary>
-        /// 把 DbType 转换为 SqlServer 中的数据类型
-        /// </summary>
-        /// <param name="fieldType">Type of the field.</param>
-        /// <param name="length">The length.</param>
-        /// <returns></returns>
-        /// <exception cref="System.NotSupportedException"></exception>
-        public static string ConvertToSQLTypeString(DbType fieldType, string length = null)
+        public static readonly SqlServerDbTypeConverter Instance = new SqlServerDbTypeConverter();
+
+        protected SqlServerDbTypeConverter() { }
+
+        public override string ConvertToDatabaseTypeName(DbType fieldType, string length = null)
         {
             switch (fieldType)
             {
@@ -67,15 +65,9 @@ namespace Rafy.DbMigration.SqlServer
             throw new NotSupportedException(string.Format("不支持生成列类型：{0}。", fieldType));
         }
 
-        /// <summary>
-        /// 把 SqlServer 中的数据类型 转换为 DbType
-        /// </summary>
-        /// <param name="sqlType">Type of the SQL.</param>
-        /// <returns></returns>
-        /// <exception cref="System.NotSupportedException"></exception>
-        public static DbType ConvertFromSQLTypeString(string sqlType)
+        public override DbType ConvertToDbType(string databaseTypeName)
         {
-            switch (sqlType.ToLower())
+            switch (databaseTypeName.ToLower())
             {
                 case "uniqueidentifier":
                     return DbType.Guid;
@@ -114,7 +106,7 @@ namespace Rafy.DbMigration.SqlServer
                 case "time":
                     return DbType.DateTime;
                 default:
-                    throw new NotSupportedException(string.Format("不支持读取数据库中的列类型：{0}。", sqlType));
+                    throw new NotSupportedException($"不支持读取数据库中的列类型：{databaseTypeName}。");
             }
         }
     }

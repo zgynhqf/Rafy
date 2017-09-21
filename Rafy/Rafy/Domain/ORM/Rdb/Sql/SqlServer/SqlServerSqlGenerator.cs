@@ -24,7 +24,11 @@ namespace Rafy.Domain.ORM
 {
     class SqlServerSqlGenerator : SqlGenerator
     {
-        public SqlServerSqlGenerator() : base(SqlServerIdentifierQuoter.Instance) { }
+        public SqlServerSqlGenerator()
+        {
+            this.IdentifierProvider = SqlServerIdentifierQuoter.Instance;
+            this.DbTypeCoverter = SqlServerDbTypeConverter.Instance;
+        }
 
         /// <summary>
         /// Sql Server 中没有限制 In 语句中的项的个数。（但是如果使用参数的话，则最多只能使用 2000 个参数。）

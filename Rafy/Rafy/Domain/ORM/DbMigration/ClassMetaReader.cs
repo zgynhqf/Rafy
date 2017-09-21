@@ -78,6 +78,7 @@ namespace Rafy.Domain.ORM.DbMigration
             {
                 var reader = new TypesMetaReader
                 {
+                    _dbTypeConverter = DbMigrationProviderFactory.GetDbTypeConverter(_dbSetting.ProviderName),
                     Database = result,
                     Entities = tableEntityTypes,
                     ReadComment = this.ReadComment,
@@ -130,6 +131,8 @@ namespace Rafy.Domain.ORM.DbMigration
 
         private class TypesMetaReader
         {
+            internal DbTypeConverter _dbTypeConverter;
+
             private bool _readComment;
 
             private CommentFinder _commentFinder = new CommentFinder();
@@ -285,7 +288,7 @@ namespace Rafy.Domain.ORM.DbMigration
                     {
                         dataType = em.IdType;
                     }
-                    var dbType = columnMeta.DataType.GetValueOrDefault(DbTypeHelper.ConvertFromCLRType(dataType));
+                    var dbType = columnMeta.DataType.GetValueOrDefault(_dbTypeConverter.FromClrType(dataType));
                     var column = new Column(columnName, dbType, columnMeta.DataTypeLength, table);
                     if (columnMeta.IsRequired.HasValue)
                     {

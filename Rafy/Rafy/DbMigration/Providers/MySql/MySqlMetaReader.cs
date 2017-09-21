@@ -83,7 +83,7 @@ ORDER BY TABLE_NAME");
 
                     string columnName = columnsReader["COLUMN_NAME"].ToString();
                     string sqlType = columnsReader["DATA_TYPE"].ToString();
-                    DbType dbType = MySqlDbTypeHelper.ConvertFromMySqlTypeString(sqlType);
+                    DbType dbType = MySqlDbTypeConverter.Instance.ConvertToDbType(sqlType);
 
                     Column column = new Column(columnName, dbType, null, currentTable);
 

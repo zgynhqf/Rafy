@@ -1,57 +1,34 @@
 ﻿/*******************************************************
  * 
  * 作者：胡庆访
- * 创建时间：20120427
+ * 创建日期：20170921
  * 说明：此文件只包含一个类，具体内容见类型注释。
  * 运行环境：.NET 4.0
  * 版本号：1.0.0
  * 
  * 历史记录：
- * 创建文件 胡庆访 20120427
+ * 创建文件 胡庆访 20170921 23:41
  * 
 *******************************************************/
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
-using System.Data;
+using System.Threading.Tasks;
 
 namespace Rafy.DbMigration.Oracle
 {
-    internal static class OracleDbTypeHelper
+    public class OracleDbTypeConverter : DbTypeConverter
     {
-        public const string CLOBTypeName = "CLOB";
+        private const string CLOBTypeName = "CLOB";
 
-        public static string ToDbBoolean(bool value)
-        {
-            //数据库使用 CHAR(1) 来存储 Boolean 类型数据。
-            return value ? "1" : "0";
-        }
+        public static readonly OracleDbTypeConverter Instance = new OracleDbTypeConverter();
 
-        public static bool ToCLRBoolean(object value)
-        {
-            return value.ToString() == "1" ? true : false;
-        }
+        private OracleDbTypeConverter() { }
 
-        public static DbType ConvertFromCLRType(Type clrType)
-        {
-            var value = DbTypeHelper.ConvertFromCLRType(clrType);
-            if (value == DbType.Boolean)
-            {
-                value = DbType.String;
-            }
-            return value;
-        }
-
-        /// <summary>
-        /// 把 DbType 转换为 Oracle 中的数据类型
-        /// </summary>
-        /// <param name="fieldType">Type of the field.</param>
-        /// <param name="length">The length.</param>
-        /// <returns></returns>
-        /// <exception cref="System.NotSupportedException"></exception>
-        public static string ConvertToOracleTypeString(DbType fieldType, string length = null)
+        public override string ConvertToDatabaseTypeName(DbType fieldType, string length = null)
         {
             switch (fieldType)
             {
@@ -88,15 +65,9 @@ namespace Rafy.DbMigration.Oracle
             throw new NotSupportedException(string.Format("不支持生成列类型：{0}。", fieldType));
         }
 
-        /// <summary>
-        /// 把 Oracle 中的数据类型 转换为 DbType
-        /// </summary>
-        /// <param name="lowerSqlType">Type of the lower SQL.</param>
-        /// <returns></returns>
-        /// <exception cref="System.NotSupportedException"></exception>
-        public static DbType ConvertFromOracleTypeString(string lowerSqlType)
+        public override DbType ConvertToDbType(string databaseTypeName)
         {
-            switch (lowerSqlType)
+            switch (databaseTypeName.ToLower())
             {
                 case "nvarchar2":
                 case "varchar2":
@@ -119,7 +90,30 @@ namespace Rafy.DbMigration.Oracle
                 default:
                     break;
             }
-            throw new NotSupportedException(string.Format("不支持读取数据库中的列类型：{0}。", lowerSqlType));
+            throw new NotSupportedException($"不支持读取数据库中的列类型：{databaseTypeName}。");
+        }
+
+        public override DbType FromClrType(Type clrType)
+        {
+            var value = base.FromClrType(clrType);
+
+            if (value == DbType.Boolean)
+            {
+                value = DbType.String;
+            }
+
+            return value;
+        }
+
+        public string ToDbBoolean(bool value)
+        {
+            //数据库使用 CHAR(1) 来存储 Boolean 类型数据。
+            return value ? "1" : "0";
+        }
+
+        public bool ToCLRBoolean(object value)
+        {
+            return value.ToString() == "1" ? true : false;
         }
     }
 }

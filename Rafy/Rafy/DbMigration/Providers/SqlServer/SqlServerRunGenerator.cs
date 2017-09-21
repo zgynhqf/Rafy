@@ -30,11 +30,7 @@ namespace Rafy.DbMigration.SqlServer
         public SqlServerRunGenerator()
         {
             this.IdentifierQuoter = SqlServerIdentifierQuoter.Instance;
-        }
-
-        protected override string ConvertToTypeString(DbType dataType, string length)
-        {
-            return SqlDbTypeHelper.ConvertToSQLTypeString(dataType, length);
+            this.DbTypeCoverter = SqlServerDbTypeConverter.Instance;
         }
 
         protected override void Generate(CreateDatabase op)

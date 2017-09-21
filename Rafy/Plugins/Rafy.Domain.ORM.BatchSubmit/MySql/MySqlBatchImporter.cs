@@ -86,7 +86,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
         /// <param name="entities"></param>
         private void ImportBatch(EntityBatch meta, IList<Entity> entities)
         {
-            var sql = GenerateBatchInsertStatement(meta,entities);
+            var sql = this.GenerateBatchInsertStatement(meta,entities);
             meta.DBA.RawAccesser.ExecuteText(sql);
         }
 
@@ -96,7 +96,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
         /// <param name="meta"></param>
         /// <param name="entities">需要插入的实体类型集合</param>
         /// <returns>返回拼接完成的、批量插入的Sql语句</returns>
-        private static string GenerateBatchInsertStatement(EntityBatch meta, IList<Entity> entities)
+        private string GenerateBatchInsertStatement(EntityBatch meta, IList<Entity> entities)
         {
             var dba = meta.DBA.RawAccesser;
             var table = meta.Table;
@@ -114,7 +114,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
             }
             sql.Write(")VALUES");
 
-            GenerateValuesSql(sql, entities, table);
+            this.GenerateValuesSql(sql, entities, table);
 
             return sql.ToString();
         }
@@ -143,7 +143,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
         /// <param name="entities">需要更新的实例集合</param>
         private void ImportUpdate(EntityBatch meta, IList<Entity> entities)
         {
-            var sql = GenerateBatchUpdateStatement(meta, entities);
+            var sql = this.GenerateBatchUpdateStatement(meta, entities);
             meta.DBA.RawAccesser.ExecuteText(sql);
         }
 
@@ -153,7 +153,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
         /// <param name="meta"></param>
         /// <param name="entities">需要插入的实体类型集合</param>
         /// <returns>返回拼接完成的、批量插入的Sql语句</returns>
-        private static string GenerateBatchUpdateStatement(EntityBatch meta, IList<Entity> entities)
+        private string GenerateBatchUpdateStatement(EntityBatch meta, IList<Entity> entities)
         {
             var dba = meta.DBA.RawAccesser;
             var table = meta.Table;
@@ -171,7 +171,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
             }
             sql.Write(")VALUES");
 
-            GenerateValuesSql(sql, entities, table);
+            this.GenerateValuesSql(sql, entities, table);
 
             return sql.ToString();
         }
@@ -180,7 +180,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
 
         #region 公用方法
 
-        private static void GenerateValuesSql(StringWriter sql, IList<Entity> entities, RdbTable table)
+        private void GenerateValuesSql(StringWriter sql, IList<Entity> entities, RdbTable table)
         {
             var columns = table.Columns;
 
@@ -198,7 +198,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
                     if (i != 0) { sql.Write(','); }
 
                     //获取数据类型及值。
-                    var dbType = column.Info.ColumnMeta.DataType ?? MySqlDbTypeHelper.ConvertFromCLRType(column.Info.DataType);
+                    var dbType = column.Info.ColumnMeta.DataType ?? this.SqlGenerator.DbTypeCoverter.FromClrType(column.Info.DataType);
                     var value = column.ReadParameterValue(entity);
 
                     //处理空值

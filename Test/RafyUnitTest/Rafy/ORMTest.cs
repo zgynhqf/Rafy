@@ -695,15 +695,15 @@ namespace RafyUnitTest
                 repo.CreateImporter().Save(books);
 
                 var idList = new object[5500];
-                for (int i = 0; i < 5500; i++)
+                for (int i = 0; i < idList.Length; i++)
                 {
                     idList[i] = books[i].Id;
                 }
 
                 var bookList = repo.QueryInBatches(idList, ids => repo.GetByComplicateIn(ids));
                 Assert.AreEqual(bookList.Count, idList.Length);
-                Assert.AreEqual(books[0].Id, bookList[0].Id);
-                Assert.AreEqual(books[bookList.Count - 1].Id, bookList[bookList.Count - 1].Id);
+                Assert.IsTrue(bookList.Any(e => e.Id.Equals(idList[0])), "第一个 Id 的数据必须查询出来。");
+                Assert.IsTrue(bookList.Any(e => e.Id.Equals(idList[idList.Length - 1])), "最后一个 Id 的数据必须查询出来。");
             }
         }
 
@@ -5348,7 +5348,7 @@ ORDER BY Article.Code ASC");
                 var db = context.DatabaseMetaReader.Read();
                 var table = db.FindTable("Customer");
                 var c1 = table.FindColumn("DecimalProperty1");
-                Assert.IsTrue(DbTypeHelper.IsCompatible(c1.DataType, DbType.Decimal));
+                Assert.IsTrue(DbTypeConverter.IsCompatible(c1.DataType, DbType.Decimal));
             }
         }
 
@@ -5360,7 +5360,7 @@ ORDER BY Article.Code ASC");
                 var db = context.DatabaseMetaReader.Read();
                 var table = db.FindTable("Customer");
                 var c1 = table.FindColumn("DecimalProperty2");
-                Assert.IsTrue(DbTypeHelper.IsCompatible(c1.DataType, DbType.Decimal));
+                Assert.IsTrue(DbTypeConverter.IsCompatible(c1.DataType, DbType.Decimal));
                 //Assert.IsTrue(c1.Length == "18,4");
             }
         }
@@ -5373,7 +5373,7 @@ ORDER BY Article.Code ASC");
                 var db = context.DatabaseMetaReader.Read();
                 var table = db.FindTable("Customer");
                 var c1 = table.FindColumn("DecimalProperty3");
-                Assert.IsTrue(DbTypeHelper.IsCompatible(c1.DataType, DbType.Double));
+                Assert.IsTrue(DbTypeConverter.IsCompatible(c1.DataType, DbType.Double));
             }
         }
 
