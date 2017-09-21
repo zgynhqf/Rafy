@@ -91,54 +91,6 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
         }
 
         /// <summary>
-        /// 生成 Insert 语句
-        /// </summary>
-        /// <param name="table"></param>
-        /// <returns></returns>
-        private static string GenerateInsertSQL(RdbTable table)
-        {
-            //代码参考 RdbTable.GenerateInsertSQL() 方法。
-            var sql = new StringWriter();
-            sql.Write("INSERT INTO ");
-            sql.AppendQuote(table, table.Name).Write("(");
-
-            var columns = table.Columns;
-
-            bool comma = false;
-            for (int i = 0, c = columns.Count; i < c; i++)
-            {
-                var column = columns[i];
-                if (column.CanInsert)
-                {
-                    if (comma) { sql.Write(','); }
-                    else { comma = true; }
-
-                    sql.AppendQuote(table, column.Name);
-                }
-            }
-
-            sql.Write(") VALUES (");
-
-            comma = false;
-            for (int i = 0, c = columns.Count; i < c; i++)
-            {
-                var column = columns[i];
-                if (column.CanInsert)
-                {
-                    if (comma) { sql.Write(','); }
-                    else { comma = true; }
-
-                    sql.Write("?");
-                    sql.Write(column.Name);
-                }
-            }
-
-            sql.Write(")");
-
-            return sql.ToString();
-        }
-
-        /// <summary>
         /// 生成批量插入的Sql语句
         /// </summary>
         /// <param name="meta"></param>
