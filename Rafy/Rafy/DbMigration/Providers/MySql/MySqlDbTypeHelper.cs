@@ -27,39 +27,9 @@ namespace Rafy.DbMigration.MySql
     /// </summary>
     internal static class MySqlDbTypeHelper
     {
-        /// <summary>
-        /// 将CLR的布尔类型转换为MySql数据库兼容的类型
-        /// </summary>
-        /// <param name="value">CLR的布尔类型值</param>
-        /// <returns>转换为1或者0的数值</returns>
-        public static int ToDbBoolean(bool value)
-        {
-            //数据库使用 tinyint(1)来存储 Boolean 类型数据。
-            return value ? 1 : 0;
-        }
-
-        /// <summary>
-        /// 转换为CLR的布尔类型
-        /// </summary>
-        /// <param name="value">待转换的对象值</param>
-        /// <returns>返回CLR的true或者false</returns>
-        public static bool ToCLRBoolean(object value)
-        {
-            return value.ToString() == "1" ? true : false;
-        }
-
-        /// <summary>
-        /// 将CLR类型的Type值转换为CLR的DbType类型值
-        /// </summary>
-        /// <param name="clrType">CLR类型的Type值</param>
-        /// <returns>返回DbType类型对应的值</returns>
         public static DbType ConvertFromCLRType(Type clrType)
         {
             var value = DbTypeHelper.ConvertFromCLRType(clrType);
-            if (value == DbType.Boolean)
-            {
-                value = DbType.String;
-            }
             return value;
         }
 
@@ -116,7 +86,7 @@ namespace Rafy.DbMigration.MySql
                 case DbType.Binary:
                     return "BLOB";
                 case DbType.Boolean:
-                    return "TINYINT(1)";
+                    return "BIT";
                 default:
                     break;
             }
@@ -131,109 +101,51 @@ namespace Rafy.DbMigration.MySql
         /// <exception cref="System.NotSupportedException"></exception>
         public static DbType ConvertFromMySqlTypeString(string mySqlType)
         {
-            if (CultureInfo.InvariantCulture.CompareInfo.IndexOf(mySqlType, "CHAR", CompareOptions.IgnoreCase) != -1)
-            {
-                return DbType.String;
-            }
-            else if (CultureInfo.InvariantCulture.CompareInfo.IndexOf(mySqlType, "VARCHAR", CompareOptions.IgnoreCase) != -1)
-            {
-                return DbType.String;
-            }
-            else if (CultureInfo.InvariantCulture.CompareInfo.IndexOf(mySqlType, "TINYTEXT", CompareOptions.IgnoreCase) != -1)
-            {
-                return DbType.String;
-            }
-            else if (CultureInfo.InvariantCulture.CompareInfo.IndexOf(mySqlType, "MEDIUMTEXT", CompareOptions.IgnoreCase) != -1)
-            {
-                return DbType.String;
-            }
-            else if (CultureInfo.InvariantCulture.CompareInfo.IndexOf(mySqlType, "TEXT", CompareOptions.IgnoreCase) != -1)
-            {
-                return DbType.String;
-            }
-            else if (CultureInfo.InvariantCulture.CompareInfo.IndexOf(mySqlType, "LONGTEXT", CompareOptions.IgnoreCase) != -1)
-            {
-                return DbType.String;
-            }
-            else if (CultureInfo.InvariantCulture.CompareInfo.IndexOf(mySqlType, "INT", CompareOptions.IgnoreCase) != -1)
+            if (TypeContains(mySqlType, "CHAR")) { return DbType.String; }
+            if (TypeContains(mySqlType, "VARCHAR")) { return DbType.String; }
+            if (TypeContains(mySqlType, "TINYTEXT")) { return DbType.String; }
+            if (TypeContains(mySqlType, "MEDIUMTEXT")) { return DbType.String; }
+            if (TypeContains(mySqlType, "TEXT")) { return DbType.String; }
+            if (TypeContains(mySqlType, "LONGTEXT")) { return DbType.String; }
+            if (TypeContains(mySqlType, "BIT")) { return DbType.Boolean; }
+            if (TypeContains(mySqlType, "INT"))
             {
                 //针对布尔类型特殊处理
-                if (string.Compare(mySqlType, "TINYINT(1)", true) == 0)
-                {
-                    return DbType.Boolean;
-                }
                 if (mySqlType.IndexOf('(') > 0)
                 {
                     mySqlType = mySqlType.Substring(0, mySqlType.IndexOf('('));
                 }
-                if (string.Compare(mySqlType, "TINYINT", true) == 0)
-                {
-                    return DbType.Byte;
-                }
-                else if (string.Compare(mySqlType, "SMALLINT", true) == 0)
-                {
-                    return DbType.Int16;
-                }
-                else if (string.Compare(mySqlType, "BIGINT", true) == 0)
-                {
-                    return DbType.Int64;
-                }
-                else if ((string.Compare(mySqlType, "INT", true) == 0) || (string.Compare(mySqlType, "YEAR", true) == 0))
-                {
-                    return DbType.Int32;
-                }
-                else
-                {
-                    throw new NotSupportedException(string.Format("不支持读取数据库中的列类型：{0}。", mySqlType));
-                }
-            }
-            else if (CultureInfo.InvariantCulture.CompareInfo.IndexOf(mySqlType, "FLOAT", CompareOptions.IgnoreCase) != -1)
-            {
-                return DbType.Single;
-            }
-            else if (CultureInfo.InvariantCulture.CompareInfo.IndexOf(mySqlType, "DOUBLE", CompareOptions.IgnoreCase) != -1)
-            {
-                return DbType.Double;
-            }
-            else if (CultureInfo.InvariantCulture.CompareInfo.IndexOf(mySqlType, "DECIMAL", CompareOptions.IgnoreCase) != -1)
-            {
-                return DbType.Decimal;
-            }
-            else if (CultureInfo.InvariantCulture.CompareInfo.IndexOf(mySqlType, "BLOB", CompareOptions.IgnoreCase) != -1)
-            {
-                return DbType.Binary;
-            }
-            else if (CultureInfo.InvariantCulture.CompareInfo.IndexOf(mySqlType, "TIME", CompareOptions.IgnoreCase) != -1)
-            {
-                if (mySqlType.IndexOf('(') > 0)
-                {
-                    mySqlType = mySqlType.Substring(0, mySqlType.IndexOf('('));
-                }
-                if (string.Compare(mySqlType, "TIME", true) == 0)
-                {
-                    return DbType.Time;
-                }
-                else if (string.Compare(mySqlType, "DATETIME", true) == 0)
-                {
-                    return DbType.DateTime;
-                }
-                else if (string.Compare(mySqlType, "TIMESTAMP", true) == 0)
-                {
-                    return DbType.DateTimeOffset;
-                }
-                else
-                {
-                    throw new NotSupportedException(string.Format("不支持读取数据库中的列类型：{0}。", mySqlType));
-                }
-            }
-            else if (CultureInfo.InvariantCulture.CompareInfo.IndexOf(mySqlType, "DATE", CompareOptions.IgnoreCase) != -1)
-            {
-                return DbType.Date;
-            }
-            else
-            {
+                if (string.Compare(mySqlType, "TINYINT", true) == 0) { return DbType.Byte; }
+                if (string.Compare(mySqlType, "SMALLINT", true) == 0) { return DbType.Int16; }
+                if (string.Compare(mySqlType, "BIGINT", true) == 0) { return DbType.Int64; }
+                if ((string.Compare(mySqlType, "INT", true) == 0) || (string.Compare(mySqlType, "YEAR", true) == 0)) { return DbType.Int32; }
+
                 throw new NotSupportedException(string.Format("不支持读取数据库中的列类型：{0}。", mySqlType));
             }
+            if (TypeContains(mySqlType, "FLOAT")) { return DbType.Single; }
+            if (TypeContains(mySqlType, "DOUBLE")) { return DbType.Double; }
+            if (TypeContains(mySqlType, "DECIMAL")) { return DbType.Decimal; }
+            if (TypeContains(mySqlType, "BLOB")) { return DbType.Binary; }
+            if (TypeContains(mySqlType, "TIME"))
+            {
+                if (mySqlType.IndexOf('(') > 0)
+                {
+                    mySqlType = mySqlType.Substring(0, mySqlType.IndexOf('('));
+                }
+                if (string.Compare(mySqlType, "TIME", true) == 0) { return DbType.Time; }
+                if (string.Compare(mySqlType, "DATETIME", true) == 0) { return DbType.DateTime; }
+                if (string.Compare(mySqlType, "TIMESTAMP", true) == 0) { return DbType.DateTimeOffset; }
+                throw new NotSupportedException(string.Format("不支持读取数据库中的列类型：{0}。", mySqlType));
+            }
+            if (TypeContains(mySqlType, "DATE")) { return DbType.Date; }
+
+            throw new NotSupportedException(string.Format("不支持读取数据库中的列类型：{0}。", mySqlType));
+        }
+
+        private static bool TypeContains(string mySqlType, string targetType)
+        {
+            return CultureInfo.InvariantCulture.CompareInfo
+                .IndexOf(mySqlType, targetType, CompareOptions.IgnoreCase) >= 0;
         }
     }
 }

@@ -30,14 +30,14 @@ namespace Rafy.Domain.ORM.SqlServer
                 var generatedSql = this.GenerateInsertSQL(false);
                 return $@"{generatedSql};
 SELECT @@IDENTITY;";
-            });
+            }, false);
             _insertSqlWithId = new Lazy<string>(() =>
             {
                 var generatedSql = this.GenerateInsertSQL(true);
                 return $@"SET IDENTITY_INSERT {this.Name} ON;
 {generatedSql};
 SET IDENTITY_INSERT {this.Name} OFF;";
-            });
+            }, false);
         }
 
         public override void Insert(IDbAccesser dba, Entity item)

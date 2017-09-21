@@ -112,11 +112,7 @@ namespace Rafy.Domain.ORM.MySql
         {
             if (value != DBNull.Value)
             {
-                if (value is bool)
-                {
-                    value = MySqlDbTypeHelper.ToDbBoolean((bool)value);
-                }
-                else if (value.GetType().IsEnum)
+                if (value.GetType().IsEnum)
                 {
                     value = TypeHelper.CoerceValue(typeof(int), value);
                 }

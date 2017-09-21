@@ -39,7 +39,12 @@ namespace Rafy.Domain.ORM.MySql
                 var generatedSql = this.GenerateInsertSQL(false);
                 return $@"{generatedSql};
 SELECT @@IDENTITY;";
-            });
+            }, false);
+        }
+
+        internal override RdbColumn CreateColumn(IPersistanceColumnInfo columnInfo)
+        {
+            return new MySqlColumn(this, columnInfo);
         }
 
         /// <summary>

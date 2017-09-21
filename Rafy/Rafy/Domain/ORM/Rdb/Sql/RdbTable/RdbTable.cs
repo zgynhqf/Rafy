@@ -60,10 +60,10 @@ namespace Rafy.Domain.ORM
             _tableInfo = repository.TableInfo;
             _columns = new List<RdbColumn>();
 
-            _deleteSql = new Lazy<string>(this.GenerateDeleteSQL);
-            _updateSQL = new Lazy<string>(() => this.GenerateUpdateSQL(null));
-            _insertSql = new Lazy<string>(() => this.GenerateInsertSQL(false));
-            _insertSqlWithId = new Lazy<string>(() => this.GenerateInsertSQL(true));
+            _deleteSql = new Lazy<string>(this.GenerateDeleteSQL, false);
+            _updateSQL = new Lazy<string>(() => this.GenerateUpdateSQL(null), false);
+            _insertSql = new Lazy<string>(() => this.GenerateInsertSQL(false), false);
+            _insertSqlWithId = new Lazy<string>(() => this.GenerateInsertSQL(true), false);
         }
 
         internal IRepositoryInternal Repository
@@ -158,8 +158,14 @@ namespace Rafy.Domain.ORM
 
         #region 数据操作 CUD 及相应的 SQL 生成。
 
+        /// <summary>
+        /// 插入实体的 Sql 语句。（插入语句中不含 Identity 列的插入。）
+        /// </summary>
         protected Lazy<string> _insertSql;
 
+        /// <summary>
+        /// 插入实体的 Sql 语句。（插入语句中包含 Identity 列的插入。）
+        /// </summary>
         protected Lazy<string> _insertSqlWithId;
 
         private Lazy<string> _deleteSql;

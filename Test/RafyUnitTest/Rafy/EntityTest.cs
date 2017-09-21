@@ -342,6 +342,29 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void ET_Property_Boolean()
+        {
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            {
+                var book = new Book()
+                {
+                    IsSoldOut = true
+                };
+                var repo = RF.ResolveInstance<BookRepository>();
+                repo.Save(book);
+
+                var newBook = repo.GetById(book.Id);
+                Assert.AreEqual(newBook.IsSoldOut, true);
+
+                newBook.IsSoldOut = false;
+                repo.Save(newBook);
+
+                var newBook2 = repo.GetById(book.Id);
+                Assert.AreEqual(newBook2.IsSoldOut, false);
+            }
+        }
+
+        [TestMethod]
         public void ET_Property_Enum_ForUI()
         {
             var entity = new TestRole
