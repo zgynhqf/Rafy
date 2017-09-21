@@ -195,19 +195,17 @@ namespace Rafy.Domain.ORM
             sql.AppendQuote(this, this.Name).Write(" (");
 
             var values = new StringBuilder();
-            bool comma = false;
             var index = 0;
             for (int i = 0, c = _columns.Count; i < c; i++)
             {
                 var column = _columns[i];
                 if (column.CanInsert || (withIdentity && column.Info.IsIdentity))
                 {
-                    if (comma)
+                    if (index > 0)
                     {
                         sql.Write(',');
                         values.Append(',');
                     }
-                    else { comma = true; }
 
                     sql.AppendQuote(this, column.Name);
                     values.Append('{').Append(index++).Append('}');
