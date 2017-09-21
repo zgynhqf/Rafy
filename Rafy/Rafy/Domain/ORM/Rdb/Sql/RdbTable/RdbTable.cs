@@ -51,10 +51,6 @@ namespace Rafy.Domain.ORM
 
         private RdbColumn _pkColumn;
 
-        private string _insertSQL;
-
-        private string _deleteSQL;
-
         #endregion
 
         internal RdbTable(IRepositoryInternal repository)
@@ -63,6 +59,11 @@ namespace Rafy.Domain.ORM
             _meta = repository.EntityMeta;
             _tableInfo = repository.TableInfo;
             _columns = new List<RdbColumn>();
+
+            _deleteSql = new Lazy<string>(this.GenerateDeleteSQL);
+            _updateSQL = new Lazy<string>(() => this.GenerateUpdateSQL(null));
+            _insertSql = new Lazy<string>(() => this.GenerateInsertSQL(false));
+            _insertSqlWithId = new Lazy<string>(() => this.GenerateInsertSQL(true));
         }
 
         internal IRepositoryInternal Repository
@@ -157,8 +158,15 @@ namespace Rafy.Domain.ORM
 
         #region 数据操作 CUD 及相应的 SQL 生成。
 
+        protected Lazy<string> _insertSql;
+
+        protected Lazy<string> _insertSqlWithId;
+
+        private Lazy<string> _deleteSql;
+
+        private Lazy<string> _updateSQL;
+
         private bool _hasLOB;
-        private string _updateSQL;
 
         /// <summary>
         /// 执行 sql 插入一个实体到数据库中。
@@ -170,28 +178,17 @@ namespace Rafy.Domain.ORM
         {
             EnsureMappingTable();
 
-            if (this._insertSQL == null) { this._insertSQL = this.GenerateInsertSQL(); }
+            var parameters = this.GenerateInsertSqlParameters(item, false);
 
-            var parameters = new List<object>(10);
-            for (int i = 0, c = _columns.Count; i < c; i++)
-            {
-                var column = _columns[i];
-                if (column.CanInsert)
-                {
-                    var value = column.ReadParameterValue(item);
-                    parameters.Add(value);
-                }
-            }
-
-            dba.ExecuteText(this._insertSQL, parameters.ToArray());
+            dba.ExecuteText(_insertSql.Value, parameters);
         }
 
         /// <summary>
-        /// 生成Insert 语句
+        /// 生成 Insert 语句
         /// </summary>
-        /// <param name="isManualIdentity">是否手动赋值identity</param>
+        /// <param name="withIdentity">是否将 Identity 列也生成到 Insert 语句中。</param>
         /// <returns></returns>
-        internal string GenerateInsertSQL(bool isManualIdentity = false)
+        internal string GenerateInsertSQL(bool withIdentity)
         {
             var sql = new StringWriter();
             sql.Write("INSERT INTO ");
@@ -203,7 +200,7 @@ namespace Rafy.Domain.ORM
             for (int i = 0, c = _columns.Count; i < c; i++)
             {
                 var column = _columns[i];
-                if (column.CanInsert || (column.Info.IsIdentity && isManualIdentity))
+                if (column.CanInsert || (withIdentity && column.Info.IsIdentity))
                 {
                     if (comma)
                     {
@@ -224,13 +221,32 @@ namespace Rafy.Domain.ORM
             return sql.ToString();
         }
 
+        /// <summary>
+        /// 生成 <see cref="GenerateInsertSQL(bool)"/> 方法所对应的参数列表。
+        /// </summary>
+        /// <param name="item">被插件的实体。（从这个实体提取参数的值。）</param>
+        /// <param name="withIdentity">是否将 Identity 列的值，也生成到参数数组中。</param>
+        /// <returns></returns>
+        protected object[] GenerateInsertSqlParameters(Entity item, bool withIdentity)
+        {
+            var parameters = new List<object>(_columns.Count);
+            for (int i = 0, c = _columns.Count; i < c; i++)
+            {
+                var column = _columns[i];
+                if (column.CanInsert || (withIdentity && column.Info.IsIdentity))
+                {
+                    var value = column.ReadParameterValue(item);
+                    parameters.Add(value);
+                }
+            }
+            return parameters.ToArray();
+        }
+
         internal int Delete(IDbAccesser dba, Entity item)
         {
             EnsureMappingTable();
 
-            if (this._deleteSQL == null) { this._deleteSQL = this.GenerateDeleteSQL(); }
-
-            var result = dba.ExecuteText(this._deleteSQL, item.Id);
+            var result = dba.ExecuteText(_deleteSql.Value, item.Id);
 
             return result;
         }
@@ -295,8 +311,7 @@ namespace Rafy.Domain.ORM
             if (!hasUpdatedLOBColumns)
             {
                 //如果没有 LOB，则直接缓存上更新语句。
-                if (_updateSQL == null) { _updateSQL = this.GenerateUpdateSQL(null); }
-                updateSql = _updateSQL;
+                updateSql = _updateSQL.Value;
             }
             else
             {

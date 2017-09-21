@@ -10,12 +10,13 @@
  * 
 *******************************************************/
 
-3.62.3541
+3.62.3543
     BUG修复
         采用截断的方式，解决 MySql 中外键名过长时，无法创建成功的问题。
     ★重要、重构
         提取 DbIdentifierQuoter 类型，用于统一处理 SqlRunGenerator、SqlGenerator、RdbTable、DbMigrationProvider 等类型中的数据库标识符逻辑。
         ColumnMeta.ColumnName 不再为空，必须有值。默认为属性名。
+        使用 Lazy<string> 重构 RdbTable 中的代码，并同时提取 GenerateInsertSqlParameters 方法来优化参数获取的性能。
     ！删除接口
         删除不再使用的 AggtSql 功能。
 

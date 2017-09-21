@@ -30,10 +30,6 @@ namespace Rafy.Domain.ORM.SqlCe
 {
     internal class SqlCeTable : SqlTable
     {
-        private string _insertSql;
-
-        private string _withIdInsertSql;
-
         public SqlCeTable(IRepositoryInternal repository) : base(repository) { }
 
         public override void Insert(IDbAccesser dba, Entity item)
@@ -41,35 +37,35 @@ namespace Rafy.Domain.ORM.SqlCe
             var idColumn = this.IdentityColumn;
             if (idColumn != null)
             {
-                var isIdentityHasValue = (item as IEntityWithId).IdProvider.IsAvailable(item.Id);
-                string insertSql = isIdentityHasValue ? _withIdInsertSql ?? (_withIdInsertSql = $"{this.GenerateInsertSQL(true)}") :
-                    _insertSql ?? (_insertSql = $"{this.GenerateInsertSQL()} ");
+                var idProvider = (item as IEntityWithId).IdProvider;
+                var hasId = idProvider.IsAvailable(item.Id);
 
-                var parameters = Columns.Where(c => c.CanInsert || (c.Info.IsIdentity && isIdentityHasValue))
-                              .Select(c => c.ReadParameterValue(item))
-                              .ToArray();
+                string insertSql = hasId ? _insertSqlWithId.Value : _insertSql.Value;
+                object[] parameters = this.GenerateInsertSqlParameters(item, hasId);
 
-                if (isIdentityHasValue)
+                if (hasId)
                 {
                     //打开 Identity 列可以手动插入
                     dba.RawAccesser.ExecuteText($"SET IDENTITY_INSERT {Name} ON ");
                 }
+
                 dba.ExecuteText(insertSql, parameters);
-                if (!isIdentityHasValue)
+
+                if (!hasId)
                 {
                     var idValue = dba.RawAccesser.QueryValue("SELECT @@IDENTITY;");
-                    idValue = TypeHelper.CoerceValue((item as IEntityWithId).IdProvider.KeyType, idValue);
+                    idValue = TypeHelper.CoerceValue(idProvider.KeyType, idValue);
                     idColumn.LoadValue(item, idValue);
+
+                    //如果实体的 Id 是在插入的过程中生成的，
+                    //那么需要在插入组合子对象前，先把新生成的父对象 Id 都同步到子列表中。
+                    item.SyncIdToChildren();
                 }
                 else
                 {
                     //关闭 Identity 列可以手动插入
                     dba.RawAccesser.ExecuteText($"SET IDENTITY_INSERT {Name} OFF ");
                 }
-
-                //如果实体的 Id 是在插入的过程中生成的，
-                //那么需要在插入组合子对象前，先把新生成的父对象 Id 都同步到子列表中。
-                item.SyncIdToChildren();
             }
             else
             {

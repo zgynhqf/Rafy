@@ -41,33 +41,33 @@ namespace Rafy.Domain.ORM.Oracle
             return new OracleColumn(this, columnInfo);
         }
 
-        private string _selectSEQSql;
+        private string _selectSequenceSql;
 
         public override void Insert(IDbAccesser dba, Entity item)
         {
             var idColumn = this.IdentityColumn;
             if (idColumn != null)
             {
-                // identity 是 int 或者long 型
-                var isIdColumnHasValue = (item as IEntityWithId).IdProvider.IsAvailable(item.Id);
-                if (!isIdColumnHasValue)
+                var idProvider = (item as IEntityWithId).IdProvider;
+                var hasIdValue = idProvider.IsAvailable(item.Id);
+                if (!hasIdValue)
                 {
-                    if (_selectSEQSql == null)
+                    if (_selectSequenceSql == null)
                     {
+                        //此序列是由 DbMigration 中 OracleRunGenerator 自动生成的。
                         var seqName = _oracleRunGenerator.SequenceName(this.Name, idColumn.Name);
-
-                        //此序列是由 DbMigration 中自动生成的。
-                        _selectSEQSql = string.Format(@"SELECT {0}.NEXTVAL FROM DUAL", seqName);
+                        _selectSequenceSql = string.Format(@"SELECT {0}.NEXTVAL FROM DUAL", seqName);
                     }
-                    //由于默认可能不是 int 类型，所以需要类型转换。
-                    var value = dba.RawAccesser.QueryValue(_selectSEQSql);
-                    value = TypeHelper.CoerceValue((item as IEntityWithId).IdProvider.KeyType, value);
-                    idColumn.LoadValue(item, value);
-                }
 
-                //如果实体的 Id 是在插入的过程中生成的，
-                //那么需要在插入组合子对象前，先把新生成的父对象 Id 都同步到子列表中。
-                item.SyncIdToChildren();
+                    var sequenceValue = dba.RawAccesser.QueryValue(_selectSequenceSql);
+
+                    sequenceValue = TypeHelper.CoerceValue(idProvider.KeyType, sequenceValue);
+                    idColumn.LoadValue(item, sequenceValue);
+
+                    //如果实体的 Id 是在插入的过程中生成的，
+                    //那么需要在插入组合子对象前，先把新生成的父对象 Id 都同步到子列表中。
+                    item.SyncIdToChildren();
+                }
             }
 
             base.Insert(dba, item);
