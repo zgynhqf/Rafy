@@ -86,7 +86,8 @@ namespace Rafy.DbMigration.MySql
                 case DbType.Binary:
                     return "BLOB";
                 case DbType.Boolean:
-                    return "BIT";
+                    return "TINYINT(1)";
+                //return "BIT";// Boolean 映射为 BIT 时，批量导入会出错。
                 default:
                     break;
             }
@@ -108,9 +109,9 @@ namespace Rafy.DbMigration.MySql
             if (TypeContains(mySqlType, "TEXT")) { return DbType.String; }
             if (TypeContains(mySqlType, "LONGTEXT")) { return DbType.String; }
             if (TypeContains(mySqlType, "BIT")) { return DbType.Boolean; }
+            if (TypeContains(mySqlType, "TINYINT(1)")) { return DbType.Boolean; }
             if (TypeContains(mySqlType, "INT"))
             {
-                //针对布尔类型特殊处理
                 if (mySqlType.IndexOf('(') > 0)
                 {
                     mySqlType = mySqlType.Substring(0, mySqlType.IndexOf('('));
@@ -119,8 +120,6 @@ namespace Rafy.DbMigration.MySql
                 if (string.Compare(mySqlType, "SMALLINT", true) == 0) { return DbType.Int16; }
                 if (string.Compare(mySqlType, "BIGINT", true) == 0) { return DbType.Int64; }
                 if ((string.Compare(mySqlType, "INT", true) == 0) || (string.Compare(mySqlType, "YEAR", true) == 0)) { return DbType.Int32; }
-
-                throw new NotSupportedException(string.Format("不支持读取数据库中的列类型：{0}。", mySqlType));
             }
             if (TypeContains(mySqlType, "FLOAT")) { return DbType.Single; }
             if (TypeContains(mySqlType, "DOUBLE")) { return DbType.Double; }
@@ -135,7 +134,6 @@ namespace Rafy.DbMigration.MySql
                 if (string.Compare(mySqlType, "TIME", true) == 0) { return DbType.Time; }
                 if (string.Compare(mySqlType, "DATETIME", true) == 0) { return DbType.DateTime; }
                 if (string.Compare(mySqlType, "TIMESTAMP", true) == 0) { return DbType.DateTimeOffset; }
-                throw new NotSupportedException(string.Format("不支持读取数据库中的列类型：{0}。", mySqlType));
             }
             if (TypeContains(mySqlType, "DATE")) { return DbType.Date; }
 
