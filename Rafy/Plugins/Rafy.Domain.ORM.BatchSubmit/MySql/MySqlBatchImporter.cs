@@ -114,54 +114,9 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
             }
             sql.Write(")VALUES");
 
-            GenerateValuesSql(sql, entities, table, dba);
+            GenerateValuesSql(sql, entities, table);
 
             return sql.ToString();
-        }
-
-        private static void GenerateValuesSql(StringWriter sql, IList<Entity> entities, RdbTable table, IRawDbAccesser dba)
-        {
-            var columns = table.Columns;
-
-            for (int e = 0, ec = entities.Count; e < ec; e++)
-            {
-                var entity = entities[e];
-
-                if (e > 0) { sql.Write(","); }
-
-                sql.Write("(");
-
-                for (int i = 0, c = table.Columns.Count; i < c; i++)
-                {
-                    var column = columns[i];
-                    if (i != 0) { sql.Write(','); }
-
-                    var parameter = GetDataParameterObject(entity, column, dba);
-                    var value = parameter.Value;
-                    if (value == DBNull.Value || value == null)
-                    {
-                        sql.Write("null");
-                        continue;
-                    }
-
-                    if (parameter.DbType == DbType.Binary)
-                    {
-                        var bytes = value as byte[];
-                        string newValue = Convert.ToBase64String(bytes);
-                        sql.Write("'" + newValue + "'");
-                    }
-                    else if (parameter.DbType == DbType.String || parameter.DbType == DbType.DateTime)
-                    {
-                        sql.Write("'" + value + "'");
-                    }
-                    else
-                    {
-                        sql.Write(value);
-                    }
-                }
-
-                sql.Write(")");
-            }
         }
 
         #endregion
@@ -216,7 +171,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
             }
             sql.Write(")VALUES");
 
-            GenerateValuesSql(sql, entities, table, dba);
+            GenerateValuesSql(sql, entities, table);
 
             return sql.ToString();
         }
@@ -225,23 +180,53 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
 
         #region 公用方法
 
-        /// <summary>
-        /// 获取包含指定实体类所对应列名对应属性的值参数对象
-        /// </summary>
-        /// <param name="entity">实体对象</param>
-        /// <param name="column">列对象</param>
-        /// <param name="dba"></param>
-        /// <returns>返回包含参数值的对象实例</returns>
-        private static IDbDataParameter GetDataParameterObject(Entity entity, RdbColumn column, IRawDbAccesser dba)
+        private static void GenerateValuesSql(StringWriter sql, IList<Entity> entities, RdbTable table)
         {
-            var parameter = dba.ParameterFactory.CreateParameter();
-            parameter.ParameterName = column.Name;
+            var columns = table.Columns;
 
-            var dbType = column.Info.ColumnMeta.DataType ?? MySqlDbTypeHelper.ConvertFromCLRType(column.Info.DataType);
+            for (int e = 0, ec = entities.Count; e < ec; e++)
+            {
+                var entity = entities[e];
 
-            parameter.DbType = dbType;
-            parameter.Value = column.ReadParameterValue(entity);
-            return parameter;
+                if (e > 0) { sql.Write(","); }
+
+                sql.Write("(");
+
+                for (int i = 0, c = columns.Count; i < c; i++)
+                {
+                    var column = columns[i];
+                    if (i != 0) { sql.Write(','); }
+
+                    //获取数据类型及值。
+                    var dbType = column.Info.ColumnMeta.DataType ?? MySqlDbTypeHelper.ConvertFromCLRType(column.Info.DataType);
+                    var value = column.ReadParameterValue(entity);
+
+                    //处理空值
+                    if (value == DBNull.Value || value == null)
+                    {
+                        sql.Write("null");
+                        continue;
+                    }
+
+                    //按类型写入值。
+                    if (dbType == DbType.Binary)
+                    {
+                        var bytes = value as byte[];
+                        string newValue = Convert.ToBase64String(bytes);
+                        sql.Write("'" + newValue + "'");
+                    }
+                    else if (dbType == DbType.String || dbType == DbType.DateTime)
+                    {
+                        sql.Write("'" + value + "'");
+                    }
+                    else
+                    {
+                        sql.Write(value);
+                    }
+                }
+
+                sql.Write(")");
+            }
         }
 
         #endregion
