@@ -69,16 +69,13 @@ namespace Rafy.Domain
                         var columnMeta = propertyMeta.ColumnMeta;
                         var columnName = columnMeta == null ? propertyMeta.Name : columnMeta.ColumnName ?? propertyMeta.Name;
 
-                        for (int j = 0, c2 = tableColumnsNameList.Count; j < c2; j++)
+                        if (tableColumnsNameList.Contains(columnName, StringComparer.OrdinalIgnoreCase))
                         {
-                            if (tableColumnsNameList.Contains(columnName))
+                            propertyToColumnMappings.Add(new PropertyToColumnMapping
                             {
-                                propertyToColumnMappings.Add(new PropertyToColumnMapping
-                                {
-                                    Property = manageProperty,
-                                    ColumnName = columnName
-                                });
-                            }
+                                Property = manageProperty,
+                                ColumnName = columnName
+                            });
                         }
                     }
                 }
@@ -101,7 +98,7 @@ namespace Rafy.Domain
                 }
             }
 
-            return ConvertEntitiesIntoList(liteDataTable, repo, propertyToColumnMappings) as TEntityList;
+            return ConvertEntitiesIntoList(liteDataTable, repo, propertyToColumnMappings, columnMapToProperty) as TEntityList;
         }
 
         /// <summary>
