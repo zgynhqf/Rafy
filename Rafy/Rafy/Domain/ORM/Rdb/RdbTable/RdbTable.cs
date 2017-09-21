@@ -21,6 +21,7 @@ using System.Runtime;
 using System.Text;
 using Rafy;
 using Rafy.Data;
+using Rafy.DbMigration;
 using Rafy.Domain;
 using Rafy.Domain.ORM.Query;
 using Rafy.Domain.ORM.Query.Impl;
@@ -68,6 +69,8 @@ namespace Rafy.Domain.ORM
         {
             get { return _repository; }
         }
+
+        internal IDbIdentifierQuoter IdentifierProvider;
 
         internal virtual RdbColumn CreateColumn(IPersistanceColumnInfo columnInfo)
         {
@@ -1000,15 +1003,28 @@ namespace Rafy.Domain.ORM
         /// </summary>
         /// <param name="sql">The SQL.</param>
         /// <param name="identifier">The identifier.</param>
-        internal abstract void AppendQuote(TextWriter sql, string identifier);
+        internal void AppendQuote(TextWriter sql, string identifier)
+        {
+            if (this.IdentifierProvider.QuoteStart != char.MinValue)
+            {
+                sql.Write(this.IdentifierProvider.QuoteStart);
+                this.AppendPrepare(sql, identifier);
+                sql.Write(this.IdentifierProvider.QuoteEnd);
+            }
+            else
+            {
+                this.AppendPrepare(sql, identifier);
+            }
+        }
 
         /// <summary>
         /// 每个标记符被 SQL 语句使用前都需要使用此语句进行准备。
         /// </summary>
         /// <param name="sql"></param>
         /// <param name="identifier"></param>
-        internal virtual void AppendPrepare(TextWriter sql, string identifier)
+        internal void AppendPrepare(TextWriter sql, string identifier)
         {
+            identifier = this.IdentifierProvider.Prepare(identifier);
             sql.Write(identifier);
         }
 

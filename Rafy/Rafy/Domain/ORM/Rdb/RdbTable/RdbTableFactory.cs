@@ -26,6 +26,7 @@ using Rafy.Domain.ORM.SqlCe;
 using Rafy.Domain.ORM.SqlServer;
 using Rafy.Utils;
 using Rafy.Domain.ORM.MySql;
+using Rafy.DbMigration;
 
 namespace Rafy.Domain.ORM
 {
@@ -64,10 +65,11 @@ namespace Rafy.Domain.ORM
                     throw new NotSupportedException();
             }
 
+            table.IdentifierProvider = DbMigrationProviderFactory.GetIdentifierProvider(provider);
+
             var em = repo.EntityMeta;
             foreach (var columnInfo in table.Info.Columns)
             {
-                //生成 ManagedPropertyBridge
                 var epm = em.Property(columnInfo.Property);
                 if (epm == null) { throw new ArgumentNullException(string.Format("{0}.{1} 属性需要使用托管属性进行编写。", table.Info.Class.FullName, columnInfo.Property.Name)); }
 

@@ -220,7 +220,10 @@ namespace Rafy.DbMigration
             var dataPending = manualPendings.Where(m => m.Type == ManualMigrationType.Data).ToList();
 
             var dbMeta = this.DatabaseMetaReader.Read();
-            var changeSet = ModelDiffer.Distinguish(dbMeta, destination);
+
+            var differ = new ModelDiffer();
+            differ.IDbIdentifierProvider = (_runGenerator as SqlRunGenerator).IdentifierQuoter;
+            var changeSet = differ.Distinguish(dbMeta, destination);
 
             //判断是否正处于升级阶段。（或者是处于创建阶段。）
             //不能直接用 dbMeta.Tables.Count > 0 来判断，这是因为里面可能有 IgnoreTables 中指定表。

@@ -85,7 +85,7 @@ namespace Rafy.MetaModel
 
         private string _ColumnName;
         /// <summary>
-        /// 映射数据库中的字段名
+        /// 映射数据库中的字段名。此属性不为空。
         /// </summary>
         public string ColumnName
         {

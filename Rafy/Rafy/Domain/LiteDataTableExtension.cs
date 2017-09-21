@@ -67,7 +67,7 @@ namespace Rafy.Domain
                         //这个位置是针对于时间戳的那几个字段 columnMeta 不为空 ，但是映射到数据库的 columnName 这个属性是空的。
                         //还有种情况是 columnMeta 为空，比如当对应的属性为 treeIndex。
                         var columnMeta = propertyMeta.ColumnMeta;
-                        var columnName = columnMeta == null ? propertyMeta.Name : columnMeta.ColumnName ?? propertyMeta.Name;
+                        var columnName = columnMeta == null ? propertyMeta.Name : columnMeta.ColumnName;
 
                         for (int j = 0, c2 = tableColumnsNameList.Count; j < c2; j++)
                         {

@@ -15,6 +15,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Rafy.Data;
+using Rafy.DbMigration;
 using Rafy.DbMigration.Oracle;
 using Rafy.Domain.ORM.SqlTree;
 using Rafy.Reflection;
@@ -25,23 +27,7 @@ namespace Rafy.Domain.ORM.Oracle
     //TOP、!=、
     class OracleSqlGenerator : SqlGenerator
     {
-        protected override void QuoteAppend(string identifier)
-        {
-            if (this.AutoQuota)
-            {
-                identifier = this.PrepareIdentifier(identifier);
-                Sql.Append("\"").Append(identifier).Append("\"");
-            }
-            else
-            {
-                base.QuoteAppend(identifier);
-            }
-        }
-
-        protected override string PrepareIdentifier(string identifier)
-        {
-            return identifier.ToUpper();
-        }
+        public OracleSqlGenerator() : base(OracleIdentifierQuoter.Instance) { }
 
         protected override SqlColumnConstraint VisitSqlColumnConstraint(SqlColumnConstraint node)
         {

@@ -128,7 +128,7 @@ namespace Demo
 
         public BookList GetBy(BookQueryCriteria criteria)
         {
-            return (BookList)this.GetBy(new CommonQueryCriteria
+            return this.GetBy(new CommonQueryCriteria
             {
                 new PropertyMatch(Book.BookCategoryIdProperty, criteria.BookCategoryId),
                 new PropertyMatch(Book.NameProperty, criteria.BookName),
@@ -145,20 +145,20 @@ namespace Demo
         }
     }
 
-    [DataProviderFor(typeof(BookRepository))]
-    public partial class BookDataProvider : DemoEntityDataProvider
-    {
-        public override object GetAll(PagingInfo paging, EagerLoadOptions eagerLoad)
-        {
-            var list = new BookList();
+    //[DataProviderFor(typeof(BookRepository))]
+    //public partial class BookDataProvider : DemoEntityDataProvider
+    //{
+    //    public override object GetAll(PagingInfo paging, EagerLoadOptions eagerLoad)
+    //    {
+    //        var list = new BookList();
 
-            //聚合 SQL 示例
-            //为了降低数据库的查询次数，这里使用了聚合加载。
-            AggregateSQL.Instance.LoadEntities<Book>(list, p => p.LoadChildren(b => b.ChapterList));
+    //        //聚合 SQL 示例
+    //        //为了降低数据库的查询次数，这里使用了聚合加载。
+    //        AggregateSQL.Instance.LoadEntities<Book>(list, p => p.LoadChildren(b => b.ChapterList));
 
-            return list;
-        }
-    }
+    //        return list;
+    //    }
+    //}
 
     internal class BookConfig : DemoEntityConfig<Book>
     {

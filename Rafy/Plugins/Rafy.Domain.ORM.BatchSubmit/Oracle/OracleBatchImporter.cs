@@ -34,6 +34,8 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
     [Serializable]
     public class OracleBatchImporter : BatchImporter
     {
+        private static OracleRunGenerator _oracleRunGenerator = new OracleRunGenerator();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="OracleBatchImporter"/> class.
         /// </summary>
@@ -87,11 +89,11 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
             var dba = batch.DBA;
 
             //如果批量生成 Id 使用的序列号太低，则需要抛出异常。
-            var seqName = OracleMigrationProvider.SequenceName(batch.Table.Name, batch.Table.IdentityColumn.Name);
+            var seqName = _oracleRunGenerator.SequenceName(batch.Table.Name, batch.Table.IdentityColumn.Name);
             var incrementBy = Convert.ToInt32(dba.QueryValue(
                 "SELECT INCREMENT_BY FROM ALL_SEQUENCES WHERE SEQUENCE_NAME = {0} AND SEQUENCE_OWNER = {1}",
                 seqName,
-                DbConnectionSchema.GetOracleUserId(dba.ConnectionSchema).ToUpper()
+                _oracleRunGenerator.IdentifierQuoter.Prepare(DbConnectionSchema.GetOracleUserId(dba.ConnectionSchema))
                 ));
             if (incrementBy < 100) { throw new InvalidOperationException(string.Format("使用批量保存，表 {0} 的序列 {1} 的每次递增数不能少于 100。建议在数据库生成完成后使用 Rafy.Domain.ORM.BatchSubmit.Oracle.OracleBatchImporter.EnableBatchSequence() 来变更序列的每次递增数以批量生成实体聚合中的所有 Id 标识。", batch.Table.Name, seqName)); }
 
@@ -221,7 +223,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
                 foreach (var repo in DomainHelper.EnumerateAllTypesInAggregation(aggtRepo))
                 {
                     var table = RdbDataProvider.Get(repo).DbTable;
-                    var seqName = OracleMigrationProvider.SequenceName(table.Name, table.IdentityColumn.Name);
+                    var seqName = _oracleRunGenerator.SequenceName(table.Name, table.IdentityColumn.Name);
                     dba.ExecuteText(string.Format("ALTER SEQUENCE {0} INCREMENT BY {1} NOCACHE", seqName, sequenceStep));
                 }
             }

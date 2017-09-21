@@ -25,32 +25,6 @@ using UT;
 namespace RafyUnitTest
 {
     [TestClass]
-    public class ORMTest2
-    {
-
-        //[TestMethod]
-        //public void ORM_Performance_Insert_DBA2222()
-        //{
-        //    using (var dba = DbAccesserFactory.Create("myconnctions"))
-        //    {
-        //        dba.ExecuteText(
-        //            "INSERT INTO Book (Author,BookCategoryId,BookLocId,Code,Content,Name,Price,Publisher,CreatedTime,UpdatedTime) VALUES ({0},{1},{2},{3},{4},{5},{6},{7},{8},{9})",
-        //            "罗琳",
-        //            1,
-        //            2,
-        //            "HP1232342",
-        //            "哈利波特与死亡圣器的内容",
-        //            "哈利波特与死亡圣器",
-        //            324.65m,
-        //            "魔法书屋",
-        //            DateTime.Now,
-        //            DateTime.Now
-        //            );
-        //    }
-        //}
-    }
-
-    [TestClass]
     public class ORMTest
     {
         [ClassInitialize]
@@ -2652,113 +2626,113 @@ namespace RafyUnitTest
 
         #region AggtSQL
 
-        [TestMethod]
-        public void ORM_AggtSQL_LoadReferenceEntities()
-        {
-            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
-            {
-                var so = new SectionOwner();
-                RF.Save(so);
+        //[TestMethod]
+        //public void ORM_AggtSQL_LoadReferenceEntities()
+        //{
+        //    using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+        //    {
+        //        var so = new SectionOwner();
+        //        RF.Save(so);
 
-                var book = CreateAggtBook(so);
-                RF.Save(book);
+        //        var book = CreateAggtBook(so);
+        //        RF.Save(book);
 
-                var api = AggregateSQL.Instance;
+        //        var api = AggregateSQL.Instance;
 
-                var loadOptions = api
-                    .BeginLoadOptions<Book>()
-                    .LoadChildren(pp => pp.ChapterList)
-                    .Continue<Chapter>().LoadChildren(c => c.SectionList)
-                    .Order<Section>().By(v => v.SectionOwner.Name)
-                    .LoadFK(v => v.SectionOwner);
+        //        var loadOptions = api
+        //            .BeginLoadOptions<Book>()
+        //            .LoadChildren(pp => pp.ChapterList)
+        //            .Continue<Chapter>().LoadChildren(c => c.SectionList)
+        //            .Order<Section>().By(v => v.SectionOwner.Name)
+        //            .LoadFK(v => v.SectionOwner);
 
-                var sql = api.GenerateQuerySQL(loadOptions, book.Id);
+        //        var sql = api.GenerateQuerySQL(loadOptions, book.Id);
 
-                //聚合加载整个对象树。
-                var entities = new BookList();
-                api.LoadEntities(entities, sql, loadOptions);
+        //        //聚合加载整个对象树。
+        //        var entities = new BookList();
+        //        api.LoadEntities(entities, sql, loadOptions);
 
-                //无懒加载测试。
-                var count = Logger.DbAccessedCount;
-                foreach (Book book2 in entities)
-                {
-                    foreach (Chapter chapter in book2.ChapterList)
-                    {
-                        foreach (Section section in chapter.SectionList)
-                        {
-                            var so2 = section.SectionOwner;
-                        }
-                    }
-                }
-                Assert.IsTrue(Logger.DbAccessedCount == count, "由于数据已经全部加载完成，所以这里不会发生懒加载。");
-            }
-        }
+        //        //无懒加载测试。
+        //        var count = Logger.DbAccessedCount;
+        //        foreach (Book book2 in entities)
+        //        {
+        //            foreach (Chapter chapter in book2.ChapterList)
+        //            {
+        //                foreach (Section section in chapter.SectionList)
+        //                {
+        //                    var so2 = section.SectionOwner;
+        //                }
+        //            }
+        //        }
+        //        Assert.IsTrue(Logger.DbAccessedCount == count, "由于数据已经全部加载完成，所以这里不会发生懒加载。");
+        //    }
+        //}
 
-        [TestMethod]
-        public void ORM_AggtSQL_LoadEntities()
-        {
-            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
-            {
-                var so = new SectionOwner();
-                RF.Save(so);
+        //[TestMethod]
+        //public void ORM_AggtSQL_LoadEntities()
+        //{
+        //    using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+        //    {
+        //        var so = new SectionOwner();
+        //        RF.Save(so);
 
-                var book = CreateAggtBook(so);
-                RF.Save(book);
+        //        var book = CreateAggtBook(so);
+        //        RF.Save(book);
 
-                var api = AggregateSQL.Instance;
+        //        var api = AggregateSQL.Instance;
 
-                var loadOptions = api
-                    .BeginLoadOptions<Chapter>().LoadChildren(c => c.SectionList)
-                    .Order<Section>().By(p => p.Name)
-                    //.Continue<PBSProperty>()
-                    .LoadFK(p => p.SectionOwner);
+        //        var loadOptions = api
+        //            .BeginLoadOptions<Chapter>().LoadChildren(c => c.SectionList)
+        //            .Order<Section>().By(p => p.Name)
+        //            //.Continue<PBSProperty>()
+        //            .LoadFK(p => p.SectionOwner);
 
-                var sql = api.GenerateQuerySQL(loadOptions, book.Id);
-                var sql2 = api.GenerateQuerySQL(loadOptions, string.Format("Chapter.BookId = {0}", book.Id));
+        //        var sql = api.GenerateQuerySQL(loadOptions, book.Id);
+        //        var sql2 = api.GenerateQuerySQL(loadOptions, string.Format("Chapter.BookId = {0}", book.Id));
 
-                Assert.AreEqual(sql, sql2);
+        //        AssertSqlEqual(sql, sql2);
 
-                //聚合加载整个对象树。
-                var entities = new ChapterList();
-                api.LoadEntities(entities, sql, loadOptions);
+        //        //聚合加载整个对象树。
+        //        var entities = new ChapterList();
+        //        api.LoadEntities(entities, sql, loadOptions);
 
-                //无懒加载测试。
-                var count = Logger.DbAccessedCount;
-                foreach (Chapter chapter in entities)
-                {
-                    foreach (Section section in chapter.SectionList)
-                    {
-                        var so2 = section.SectionOwner;
-                    }
-                }
-                Assert.IsTrue(Logger.DbAccessedCount == count, "由于数据已经全部加载完成，所以这里不会发生懒加载。");
-            }
-        }
+        //        //无懒加载测试。
+        //        var count = Logger.DbAccessedCount;
+        //        foreach (Chapter chapter in entities)
+        //        {
+        //            foreach (Section section in chapter.SectionList)
+        //            {
+        //                var so2 = section.SectionOwner;
+        //            }
+        //        }
+        //        Assert.IsTrue(Logger.DbAccessedCount == count, "由于数据已经全部加载完成，所以这里不会发生懒加载。");
+        //    }
+        //}
 
-        [TestMethod]
-        public void ORM_AggtSQL_LoadSingleChild()
-        {
-            var bookId = 0;
-            var sqlSimple = AggregateSQL.Instance.GenerateQuerySQL<Chapter>(
-                option => option.LoadChildren(c => c.SectionList),
-                bookId
-                );
-            var list = new ChapterList();
-            AggregateSQL.Instance.LoadEntities<Chapter>(list,
-                option => option.LoadChildren(c => c.SectionList),
-                bookId
-                );
-        }
+        //[TestMethod]
+        //public void ORM_AggtSQL_LoadSingleChild()
+        //{
+        //    var bookId = 0;
+        //    var sqlSimple = AggregateSQL.Instance.GenerateQuerySQL<Chapter>(
+        //        option => option.LoadChildren(c => c.SectionList),
+        //        bookId
+        //        );
+        //    var list = new ChapterList();
+        //    AggregateSQL.Instance.LoadEntities<Chapter>(list,
+        //        option => option.LoadChildren(c => c.SectionList),
+        //        bookId
+        //        );
+        //}
 
-        [TestMethod]
-        public void ORM_AggtSQL_JoinWhere()
-        {
-            var sqlSimple = AggregateSQL.Instance.GenerateQuerySQL<Section>(
-                option => option.LoadFK(s => s.SectionOwner),
-                "Section.Name = 'testing'",
-                "JOIN Chapter on Chapter.Id = Section.ChapterId"
-                );
-        }
+        //[TestMethod]
+        //public void ORM_AggtSQL_JoinWhere()
+        //{
+        //    var sqlSimple = AggregateSQL.Instance.GenerateQuerySQL<Section>(
+        //        option => option.LoadFK(s => s.SectionOwner),
+        //        "Section.Name = 'testing'",
+        //        "JOIN Chapter on Chapter.Id = Section.ChapterId"
+        //        );
+        //}
 
         private static Book CreateAggtBook(SectionOwner so)
         {
@@ -3084,7 +3058,7 @@ namespace RafyUnitTest
             generator.Generate(select);
             var sql = generator.Sql;
 
-            Assert.IsTrue(sql.ToString() ==
+            AssertSqlEqual(sql.ToString(),
 @"SELECT [Table1].[Column1], [Table1].[Column2]
 FROM [Table1]
 WHERE [Table1].[Column2] = {0}");
@@ -3117,7 +3091,7 @@ WHERE [Table1].[Column2] = {0}");
             var generator = new OracleSqlGenerator();
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() ==
+            AssertSqlEqual(sql.ToString(),
 @"SELECT ""TABLE1"".""COLUMN1"", ""TABLE1"".""COLUMN2""
 FROM ""TABLE1""
 WHERE ""TABLE1"".""COLUMN2"" = {0}");
@@ -3135,7 +3109,7 @@ WHERE ""TABLE1"".""COLUMN2"" = {0}");
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT *
+            AssertSqlEqual(sql.ToString(), @"SELECT *
 FROM Table1");
         }
 
@@ -3149,7 +3123,7 @@ FROM Table1");
             var generator = new OracleSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT *
+            AssertSqlEqual(sql.ToString(), @"SELECT *
 FROM TABLE1");
         }
 
@@ -3163,7 +3137,7 @@ FROM TABLE1");
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT *
+            AssertSqlEqual(sql.ToString(), @"SELECT *
 FROM Table1");
         }
 
@@ -3177,7 +3151,7 @@ FROM Table1");
             var generator = new OracleSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT *
+            AssertSqlEqual(sql.ToString(), @"SELECT *
 FROM TABLE1");
         }
 
@@ -3203,7 +3177,7 @@ FROM TABLE1");
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             generator.Generate(select, new PagingInfo(1, 10));
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT TOP 10 *
+            AssertSqlEqual(sql.ToString(), @"SELECT TOP 10 *
 FROM Table1
 ORDER BY Table1.Id ASC");
         }
@@ -3320,7 +3294,7 @@ FROM TABLE1");
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT Table1.Column1, Table1.Column2
+            AssertSqlEqual(sql.ToString(), @"SELECT Table1.Column1, Table1.Column2
 FROM Table1
 WHERE Table1.Column2 = {0}");
             Assert.IsTrue(sql.Parameters.Count == 1);
@@ -3349,7 +3323,7 @@ WHERE Table1.Column2 = {0}");
             var generator = new OracleSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT TABLE1.COLUMN1, TABLE1.COLUMN2
+            AssertSqlEqual(sql.ToString(), @"SELECT TABLE1.COLUMN1, TABLE1.COLUMN2
 FROM TABLE1
 WHERE TABLE1.COLUMN2 = {0}");
             Assert.IsTrue(sql.Parameters.Count == 1);
@@ -3403,7 +3377,7 @@ WHERE TABLE1.COLUMN2 = {0}");
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT *
+            AssertSqlEqual(sql.ToString(), @"SELECT *
 FROM Table1
 WHERE Table1.Column1 = {0} OR (Table1.Column2 = {1} OR Table1.Column2 = {2}) AND Table1.Column1 = {3}");
             Assert.IsTrue(sql.Parameters.Count == 4);
@@ -3460,7 +3434,7 @@ WHERE Table1.Column1 = {0} OR (Table1.Column2 = {1} OR Table1.Column2 = {2}) AND
             var generator = new OracleSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT *
+            AssertSqlEqual(sql.ToString(), @"SELECT *
 FROM TABLE1
 WHERE TABLE1.COLUMN1 = {0} OR (TABLE1.COLUMN2 = {1} OR TABLE1.COLUMN2 = {2}) AND TABLE1.COLUMN1 = {3}");
             Assert.IsTrue(sql.Parameters.Count == 4);
@@ -3492,7 +3466,7 @@ WHERE TABLE1.COLUMN1 = {0} OR (TABLE1.COLUMN2 = {1} OR TABLE1.COLUMN2 = {2}) AND
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT t1.Column1 AS c1, t1.Column2 AS c2
+            AssertSqlEqual(sql.ToString(), @"SELECT t1.Column1 AS c1, t1.Column2 AS c2
 FROM Table1 AS t1
 WHERE t1.Column2 = {0}");
             Assert.IsTrue(sql.Parameters.Count == 1);
@@ -3521,7 +3495,7 @@ WHERE t1.Column2 = {0}");
             var generator = new OracleSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT T1.COLUMN1 C1, T1.COLUMN2 C2
+            AssertSqlEqual(sql.ToString(), @"SELECT T1.COLUMN1 C1, T1.COLUMN2 C2
 FROM TABLE1 T1
 WHERE T1.COLUMN2 = {0}");
             Assert.IsTrue(sql.Parameters.Count == 1);
@@ -3558,7 +3532,7 @@ WHERE T1.COLUMN2 = {0}");
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT t1.Column1 AS c1, t1.Column2 AS c2
+            AssertSqlEqual(sql.ToString(), @"SELECT t1.Column1 AS c1, t1.Column2 AS c2
 FROM Table1 AS t1
 WHERE t1.Column2 = {0}
 ORDER BY t1.Column2 DESC");
@@ -3596,7 +3570,7 @@ ORDER BY t1.Column2 DESC");
             var generator = new OracleSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT T1.COLUMN1 C1, T1.COLUMN2 C2
+            AssertSqlEqual(sql.ToString(), @"SELECT T1.COLUMN1 C1, T1.COLUMN2 C2
 FROM TABLE1 T1
 WHERE T1.COLUMN2 = {0}
 ORDER BY T1.COLUMN2 DESC");
@@ -3639,7 +3613,7 @@ ORDER BY T1.COLUMN2 DESC");
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT t1.Column1 AS c1, t1.Column2 AS c2
+            AssertSqlEqual(sql.ToString(), @"SELECT t1.Column1 AS c1, t1.Column2 AS c2
 FROM Table1 AS t1
 WHERE t1.Column2 = {0}
 ORDER BY t1.Column1 ASC, t1.Column2 DESC");
@@ -3682,7 +3656,7 @@ ORDER BY t1.Column1 ASC, t1.Column2 DESC");
             var generator = new OracleSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT T1.COLUMN1 C1, T1.COLUMN2 C2
+            AssertSqlEqual(sql.ToString(), @"SELECT T1.COLUMN1 C1, T1.COLUMN2 C2
 FROM TABLE1 T1
 WHERE T1.COLUMN2 = {0}
 ORDER BY T1.COLUMN1 ASC, T1.COLUMN2 DESC");
@@ -3725,7 +3699,7 @@ ORDER BY T1.COLUMN1 ASC, T1.COLUMN2 DESC");
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT a.*, u.*
+            AssertSqlEqual(sql.ToString(), @"SELECT a.*, u.*
 FROM Article AS a
     INNER JOIN User AS u ON a.UserId = u.Id
 WHERE u.UserName = {0}");
@@ -3768,7 +3742,7 @@ WHERE u.UserName = {0}");
             var generator = new OracleSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT A.*, U.*
+            AssertSqlEqual(sql.ToString(), @"SELECT A.*, U.*
 FROM ARTICLE A
     INNER JOIN USER U ON A.USERID = U.ID
 WHERE U.USERNAME = {0}");
@@ -3815,7 +3789,7 @@ WHERE U.USERNAME = {0}");
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT a.*
+            AssertSqlEqual(sql.ToString(), @"SELECT a.*
 FROM Article AS a
     INNER JOIN User AS u1 ON a.UserId = u1.Id
     INNER JOIN User AS u2 ON a.AdministratorId = u2.Id
@@ -3863,7 +3837,7 @@ WHERE u2.UserName = {0}");
             var generator = new OracleSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT A.*
+            AssertSqlEqual(sql.ToString(), @"SELECT A.*
 FROM ARTICLE A
     INNER JOIN USER U1 ON A.USERID = U1.ID
     INNER JOIN USER U2 ON A.ADMINISTRATORID = U2.ID
@@ -3900,7 +3874,7 @@ WHERE U2.USERNAME = {0}");
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT a.*
+            AssertSqlEqual(sql.ToString(), @"SELECT a.*
 FROM Article AS a
     LEFT OUTER JOIN User AS u ON a.UserId = u.Id
 WHERE u.UserName = {0}");
@@ -3936,7 +3910,7 @@ WHERE u.UserName = {0}");
             var generator = new OracleSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT A.*
+            AssertSqlEqual(sql.ToString(), @"SELECT A.*
 FROM ARTICLE A
     LEFT OUTER JOIN USER U ON A.USERID = U.ID
 WHERE U.USERNAME = {0}");
@@ -3974,7 +3948,7 @@ WHERE U.USERNAME = {0}");
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT *
+            AssertSqlEqual(sql.ToString(), @"SELECT *
 FROM User
 WHERE User.Id IN (
     SELECT Article.UserId
@@ -4015,7 +3989,7 @@ WHERE User.Id IN (
             var generator = new OracleSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT *
+            AssertSqlEqual(sql.ToString(), @"SELECT *
 FROM USER
 WHERE USER.ID IN (
     SELECT ARTICLE.USERID
@@ -4067,7 +4041,7 @@ WHERE USER.ID IN (
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT *
+            AssertSqlEqual(sql.ToString(), @"SELECT *
 FROM User
 WHERE User.Id IN (
     SELECT Article.UserId
@@ -4120,7 +4094,7 @@ WHERE User.Id IN (
             var generator = new OracleSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT *
+            AssertSqlEqual(sql.ToString(), @"SELECT *
 FROM USER
 WHERE USER.ID IN (
     SELECT ARTICLE.USERID
@@ -4167,7 +4141,7 @@ WHERE USER.ID IN (
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT *
+            AssertSqlEqual(sql.ToString(), @"SELECT *
 FROM User AS u
 WHERE u.Id > {0} AND EXISTS (
     SELECT 0
@@ -4211,7 +4185,7 @@ WHERE u.Id > {0} AND EXISTS (
             var generator = new OracleSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT *
+            AssertSqlEqual(sql.ToString(), @"SELECT *
 FROM USER U
 WHERE U.ID > {0} AND EXISTS (
     SELECT 0
@@ -4270,7 +4244,7 @@ WHERE U.ID > {0} AND EXISTS (
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT *
+            AssertSqlEqual(sql.ToString(), @"SELECT *
 FROM User AS u
 WHERE u.Id > {0} AND NOT (EXISTS (
     SELECT 0
@@ -4329,7 +4303,7 @@ WHERE u.Id > {0} AND NOT (EXISTS (
             var generator = new OracleSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT *
+            AssertSqlEqual(sql.ToString(), @"SELECT *
 FROM USER U
 WHERE U.ID > {0} AND NOT (EXISTS (
     SELECT 0
@@ -4372,7 +4346,7 @@ WHERE U.ID > {0} AND NOT (EXISTS (
             generator.Generate(select);
             var sql = generator.Sql;
 
-            Assert.IsTrue(sql.ToString() == @"SELECT *
+            AssertSqlEqual(sql.ToString(), @"SELECT *
 FROM (
     SELECT *
     FROM User
@@ -4415,7 +4389,7 @@ WHERE T.Id < {1}");
             generator.Generate(select);
             var sql = generator.Sql;
 
-            Assert.IsTrue(sql.ToString() == @"SELECT *
+            AssertSqlEqual(sql.ToString(), @"SELECT *
 FROM (
     SELECT *
     FROM USER
@@ -4454,7 +4428,7 @@ WHERE T.ID < {1}");
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() ==
+            AssertSqlEqual(sql.ToString(),
 @"SELECT *
 FROM ASN
 WHERE ASN.Id > {0}
@@ -4511,7 +4485,7 @@ WHERE ASN.Id > {0})T WHERE _RowNumber BETWEEN 21 AND 30");
             var generator = new OracleSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() ==
+            AssertSqlEqual(sql.ToString(),
 @"SELECT *
 FROM ASN
 WHERE ASN.ID > {0}
@@ -4566,7 +4540,7 @@ WHERE RN >= 21");
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() ==
+            AssertSqlEqual(sql.ToString(),
 @"SELECT *
 FROM ASN
 WHERE ASN.Id > {0}
@@ -4612,7 +4586,7 @@ ORDER BY ASN.AsnCode ASC");
             var generator = new OracleSqlGenerator { AutoQuota = false };
             generator.Generate(select);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() ==
+            AssertSqlEqual(sql.ToString(),
 @"SELECT *
 FROM ASN
 WHERE ASN.ID > {0}
@@ -4637,19 +4611,6 @@ ORDER BY ASN.ASNCODE ASC
 WHERE RN >= 1");
         }
 
-        /// <summary>
-        /// 一些 Sql 语句上的换行符并不是 \r\n 而只是 \n，所以这里需要对其忽略后再进行对比。
-        /// </summary>
-        /// <param name="sqlA"></param>
-        /// <param name="sqlB"></param>
-        /// <param name="message"></param>
-        private static void AssertSqlEqual(string sqlA, string sqlB, string message = "")
-        {
-            sqlA = sqlA.Replace("\r", string.Empty);
-            sqlB = sqlB.Replace("\r", string.Empty);
-            Assert.AreEqual(sqlA, sqlB, message);
-        }
-
         #endregion
 
         #region TableQuery
@@ -4670,7 +4631,7 @@ WHERE RN >= 1");
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             f.Generate(generator, query);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() ==
+            AssertSqlEqual(sql.ToString(),
 @"SELECT Book.Code, Book.Name
 FROM Book
 WHERE Book.Code = {0}");
@@ -4702,7 +4663,7 @@ WHERE Book.Code = {0}");
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             f.Generate(generator, query);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() ==
+            AssertSqlEqual(sql.ToString(),
 @"SELECT *
 FROM Book
 WHERE Book.Code = {0} OR (Book.Name = {1} OR Book.Name = {2}) AND Book.Code = {3}");
@@ -4729,7 +4690,7 @@ WHERE Book.Code = {0} OR (Book.Name = {1} OR Book.Name = {2}) AND Book.Code = {3
             var generator = new SqlServerSqlGenerator();
             f.Generate(generator, query);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() ==
+            AssertSqlEqual(sql.ToString(),
 @"SELECT [Book].[Code], [Book].[Name]
 FROM [Book]
 WHERE [Book].[Code] = {0}");
@@ -4753,7 +4714,7 @@ WHERE [Book].[Code] = {0}");
             var generator = new OracleSqlGenerator();
             f.Generate(generator, query);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() ==
+            AssertSqlEqual(sql.ToString(),
 @"SELECT ""BOOK"".""CODE"", ""BOOK"".""NAME""
 FROM ""BOOK""
 WHERE ""BOOK"".""CODE"" = {0}");
@@ -4773,7 +4734,7 @@ WHERE ""BOOK"".""CODE"" = {0}");
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             f.Generate(generator, query);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT *
+            AssertSqlEqual(sql.ToString(), @"SELECT *
 FROM Book");
         }
 
@@ -4812,7 +4773,7 @@ FROM Book");
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             f.Generate(generator, query);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT *
+            AssertSqlEqual(sql.ToString(), @"SELECT *
 FROM Book");
         }
 
@@ -4831,10 +4792,10 @@ FROM Book");
 
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             f.Generate(generator, query, new PagingInfo(1, 10));
-            var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString().StartsWith(@"SELECT TOP 10 *
+            var sql = generator.Sql.ToString();
+            AssertSqlEqual(sql, @"SELECT TOP 10 *
 FROM Book
-ORDER BY Book.Id ASC"));
+ORDER BY Book.Id ASC");
         }
 
         [TestMethod]
@@ -4848,7 +4809,7 @@ ORDER BY Book.Id ASC"));
 
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             f.Generate(generator, query);
-            Assert.IsTrue(generator.Sql.ToString() == @"SELECT DISTINCT *
+            AssertSqlEqual(generator.Sql.ToString(), @"SELECT DISTINCT *
 FROM Book");
         }
 
@@ -4863,7 +4824,7 @@ FROM Book");
 
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             f.Generate(generator, query);
-            Assert.IsTrue(generator.Sql.ToString() == @"SELECT COUNT(0)
+            AssertSqlEqual(generator.Sql.ToString(), @"SELECT COUNT(0)
 FROM Book");
         }
 
@@ -4883,7 +4844,7 @@ FROM Book");
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             f.Generate(generator, query);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT Book.Code, Book.Name
+            AssertSqlEqual(sql.ToString(), @"SELECT Book.Code, Book.Name
 FROM Book
 WHERE Book.Code = {0}");
             Assert.IsTrue(sql.Parameters.Count == 1);
@@ -4917,7 +4878,7 @@ WHERE Book.Code = {0}");
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             f.Generate(generator, query);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT *
+            AssertSqlEqual(sql.ToString(), @"SELECT *
 FROM Book
 WHERE Book.Code = {0} OR (Book.Name = {1} OR Book.Name = {2}) AND Book.Code = {3}");
             Assert.IsTrue(sql.Parameters.Count == 4);
@@ -4943,7 +4904,7 @@ WHERE Book.Code = {0} OR (Book.Name = {1} OR Book.Name = {2}) AND Book.Code = {3
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             f.Generate(generator, query);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT t1.Code AS c1, t1.Name AS c2
+            AssertSqlEqual(sql.ToString(), @"SELECT t1.Code AS c1, t1.Name AS c2
 FROM Book AS t1
 WHERE t1.Code = {0}");
             Assert.IsTrue(sql.Parameters.Count == 1);
@@ -4967,7 +4928,7 @@ WHERE t1.Code = {0}");
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             f.Generate(generator, query);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT t1.Code AS c1, t1.Name AS c2
+            AssertSqlEqual(sql.ToString(), @"SELECT t1.Code AS c1, t1.Name AS c2
 FROM Book AS t1
 WHERE t1.Name = {0}
 ORDER BY t1.Name DESC");
@@ -4992,7 +4953,7 @@ ORDER BY t1.Name DESC");
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             f.Generate(generator, query);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT t1.Code AS c1, t1.Name AS c2
+            AssertSqlEqual(sql.ToString(), @"SELECT t1.Code AS c1, t1.Name AS c2
 FROM Book AS t1
 WHERE t1.Name = {0}
 ORDER BY t1.Code ASC, t1.Name DESC");
@@ -5022,7 +4983,7 @@ ORDER BY t1.Code ASC, t1.Name DESC");
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             f.Generate(generator, query);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT a.*, u.*
+            AssertSqlEqual(sql.ToString(), @"SELECT a.*, u.*
 FROM Article AS a
     INNER JOIN BlogUser AS u ON a.UserId = u.Id
 WHERE u.UserName = {0}");
@@ -5060,7 +5021,7 @@ WHERE u.UserName = {0}");
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             f.Generate(generator, query);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT a.*
+            AssertSqlEqual(sql.ToString(), @"SELECT a.*
 FROM Article AS a
     INNER JOIN BlogUser AS u1 ON a.UserId = u1.Id
     INNER JOIN BlogUser AS u2 ON a.AdministratorId = u2.Id
@@ -5092,7 +5053,7 @@ WHERE u2.UserName = {0}");
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             f.Generate(generator, query);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT a.*
+            AssertSqlEqual(sql.ToString(), @"SELECT a.*
 FROM Article AS a
     LEFT OUTER JOIN BlogUser AS u ON a.UserId = u.Id
 WHERE u.UserName = {0}");
@@ -5123,7 +5084,7 @@ WHERE u.UserName = {0}");
             f.Generate(generator, query);
             var sql = generator.Sql;
 
-            Assert.IsTrue(sql.ToString() ==
+            AssertSqlEqual(sql.ToString(),
 @"SELECT *
 FROM BlogUser
 WHERE BlogUser.Id IN (
@@ -5166,7 +5127,7 @@ WHERE BlogUser.Id IN (
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             f.Generate(generator, query);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT *
+            AssertSqlEqual(sql.ToString(), @"SELECT *
 FROM BlogUser
 WHERE BlogUser.Id IN (
     SELECT Article.UserId
@@ -5206,7 +5167,7 @@ WHERE BlogUser.Id IN (
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             f.Generate(generator, query);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT *
+            AssertSqlEqual(sql.ToString(), @"SELECT *
 FROM BlogUser AS u
 WHERE u.Id > {0} AND EXISTS (
     SELECT 0
@@ -5249,7 +5210,7 @@ WHERE u.Id > {0} AND EXISTS (
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             f.Generate(generator, query);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() == @"SELECT *
+            AssertSqlEqual(sql.ToString(), @"SELECT *
 FROM BlogUser AS u
 WHERE u.Id > {0} AND NOT (EXISTS (
     SELECT 0
@@ -5287,7 +5248,7 @@ WHERE u.Id > {0} AND NOT (EXISTS (
             f.Generate(generator, query);
             var sql = generator.Sql;
 
-            Assert.IsTrue(sql.ToString() == @"SELECT *
+            AssertSqlEqual(sql.ToString(), @"SELECT *
 FROM (
     SELECT *
     FROM BlogUser
@@ -5314,7 +5275,7 @@ WHERE T.Id < {1}");
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             f.Generate(generator, query);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() ==
+            AssertSqlEqual(sql.ToString(),
 @"SELECT *
 FROM Article
 WHERE Article.Id > {0}
@@ -5358,7 +5319,7 @@ WHERE Article.Id > {0})T WHERE _RowNumber BETWEEN 21 AND 30");
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
             f.Generate(generator, query);
             var sql = generator.Sql;
-            Assert.IsTrue(sql.ToString() ==
+            AssertSqlEqual(sql.ToString(),
 @"SELECT *
 FROM Article
 WHERE Article.Id > {0}
@@ -5368,7 +5329,7 @@ ORDER BY Article.Code ASC");
             generator = new SqlServerSqlGenerator { AutoQuota = false };
             generator.Generate(query as SqlSelect, new PagingInfo(1, 10));
             var pagingSql = generator.Sql;
-            Assert.IsTrue(pagingSql.ToString() ==
+            AssertSqlEqual(pagingSql.ToString(),
 @"SELECT TOP 10 *
 FROM Article
 WHERE Article.Id > {0}
@@ -6121,5 +6082,18 @@ ORDER BY Article.Code ASC");
         //}
 
         #endregion
+
+        /// <summary>
+        /// 一些 Sql 语句上的换行符并不是 \r\n 而只是 \n，所以这里需要对其忽略后再进行对比。
+        /// </summary>
+        /// <param name="sqlA"></param>
+        /// <param name="sqlB"></param>
+        /// <param name="message"></param>
+        private static void AssertSqlEqual(string sqlA, string sqlB, string message = "")
+        {
+            sqlA = sqlA.ToUpper().Replace("\r", string.Empty);
+            sqlB = sqlB.ToUpper().Replace("\r", string.Empty);
+            Assert.AreEqual(sqlA, sqlB, message);
+        }
     }
 }

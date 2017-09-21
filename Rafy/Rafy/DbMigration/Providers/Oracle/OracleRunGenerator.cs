@@ -25,8 +25,13 @@ namespace Rafy.DbMigration.Oracle
     /// <summary>
     /// Oracle 的执行项生成器
     /// </summary>
-    public class OracleRunGenerator : TSqlRunGenerator
+    public sealed class OracleRunGenerator : SqlRunGenerator
     {
+        public OracleRunGenerator()
+        {
+            this.IdentifierQuoter = OracleIdentifierQuoter.Instance;
+        }
+
         protected override string ConvertToTypeString(DbType dataType, string length)
         {
             return OracleDbTypeHelper.ConvertToOracleTypeString(dataType, length);
@@ -104,29 +109,9 @@ namespace Rafy.DbMigration.Oracle
             {
                 this.AddRun(new TryCreateTableSequenceRun
                 {
-                    SequenceName = this.SEQName(op)
-                    //Sql = sql
+                    SequenceName = SequenceName(op.TableName, op.PKName)
                 });
             }
-        }
-
-        protected override void GenerateAddPKConstraint(IndentedTextWriter sql, string tableName, string columnName)
-        {
-            var pkName = string.Format("PK_{0}_{1}",
-                this.Prepare(tableName), this.Prepare(columnName)
-                );
-            pkName = OracleMigrationProvider.LimitOracleIdentifier(pkName);
-
-            sql.Write(@"
-ALTER TABLE ");
-            sql.Write(this.Quote(tableName));
-            sql.Write(@"
-    ADD CONSTRAINT ");
-            sql.Write(this.Quote(pkName));
-            sql.Write(@"
-    PRIMARY KEY (");
-            sql.Write(this.Quote(columnName));
-            sql.Write(")");
         }
 
         protected override void Generate(DropTable op)
@@ -137,7 +122,7 @@ ALTER TABLE ");
             {
                 this.AddRun(new SqlMigrationRun
                 {
-                    Sql = "DROP SEQUENCE " + this.SEQName(op)
+                    Sql = "DROP SEQUENCE " + SequenceName(op.TableName, op.PKName)
                 });
             }
         }
@@ -161,26 +146,6 @@ ALTER TABLE ");
             }
         }
 
-        protected override void Generate(AddFKConstraint op)
-        {
-            var oldName = op.ConstraintName;
-
-            PrepareFKConstraintName(op);
-            base.Generate(op);
-
-            op.ConstraintName = oldName;
-        }
-
-        protected override void Generate(RemoveFKConstraint op)
-        {
-            var oldName = op.ConstraintName;
-
-            PrepareFKConstraintName(op);
-            base.Generate(op);
-
-            op.ConstraintName = oldName;
-        }
-
         protected override void Generate(UpdateComment op)
         {
             if (string.IsNullOrEmpty(op.ColumnName))
@@ -197,22 +162,6 @@ ALTER TABLE ");
                     Sql = string.Format(@"COMMENT ON COLUMN ""{0}"".""{1}"" IS '{2}'", this.Prepare(op.TableName), this.Prepare(op.ColumnName), op.Comment)
                 });
             }
-        }
-
-        /// <summary>
-        /// 由于 Oracle 中 FK 最长是 30 个字符，所以这里需要对多余的字符串做截取操作。
-        /// </summary>
-        /// <param name="op"></param>
-        /// <returns></returns>
-        private static void PrepareFKConstraintName(FKConstraintOperation op)
-        {
-            var constraintName = op.ConstraintName;
-            if (constraintName.StartsWith("FK_"))
-            {
-                constraintName = constraintName.Substring(3);
-            }
-
-            op.ConstraintName = OracleMigrationProvider.LimitOracleIdentifier(constraintName);
         }
 
         protected override void AddNotNullConstraint(ColumnOperation op)
@@ -249,19 +198,17 @@ ALTER TABLE ");
             }
         }
 
-        protected override string Quote(string identifier)
+        /// <summary>
+        /// 返回指定的表对应的序列的名称。
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="pkName"></param>
+        /// <returns></returns>
+        public string SequenceName(string tableName, string pkName)
         {
-            return "\"" + this.Prepare(identifier) + "\"";
-        }
-
-        protected override string Prepare(string identifier)
-        {
-            return OracleMigrationProvider.PrepareIdentifier(identifier);
-        }
-
-        private string SEQName(TableOperation op)
-        {
-            return OracleMigrationProvider.SequenceName(op.TableName, op.PKName);
+            var name = string.Format("SEQ_{0}_{1}", this.Prepare(tableName), this.Prepare(pkName));
+            name = this.Prepare(name);
+            return name;
         }
     }
 }

@@ -25,8 +25,13 @@ namespace Rafy.DbMigration.SqlServer
     /// <summary>
     /// SqlServer 的执行项生成器
     /// </summary>
-    public class SqlServerRunGenerator : TSqlRunGenerator
+    public class SqlServerRunGenerator : SqlRunGenerator
     {
+        public SqlServerRunGenerator()
+        {
+            this.IdentifierQuoter = SqlServerIdentifierQuoter.Instance;
+        }
+
         protected override string ConvertToTypeString(DbType dataType, string length)
         {
             return SqlDbTypeHelper.ConvertToSQLTypeString(dataType, length);

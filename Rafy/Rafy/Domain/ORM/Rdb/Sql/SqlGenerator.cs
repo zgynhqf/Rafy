@@ -22,6 +22,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Rafy;
 using Rafy.Data;
+using Rafy.DbMigration;
 using Rafy.Domain.ORM.SqlTree;
 
 namespace Rafy.Domain.ORM
@@ -37,13 +38,14 @@ namespace Rafy.Domain.ORM
         internal static readonly string WILDCARD_ALL_ESCAPED = ESCAPE_CHAR + WILDCARD_ALL;
         internal static readonly string WILDCARD_SINGLE_ESCAPED = ESCAPE_CHAR + WILDCARD_SINGLE;
 
+        private IDbIdentifierQuoter _identifierProvider;
         private FormattedSql _sql;
 
-        public SqlGenerator()
+        public SqlGenerator(IDbIdentifierQuoter identifierProvider)
         {
+            _identifierProvider = identifierProvider;
             _sql = new FormattedSql();
             _sql.InnerWriter = new IndentedTextWriter(_sql.InnerWriter);
-            this.AutoQuota = true;
         }
 
         /// <summary>
@@ -56,9 +58,9 @@ namespace Rafy.Domain.ORM
         }
 
         /// <summary>
-        /// 是否自动添加标识符的括号
+        /// 是否自动添加标识符的括号。默认为 true。
         /// </summary>
-        public bool AutoQuota { get; set; }
+        public bool AutoQuota { get; set; } = true;
 
         /// <summary>
         /// 生成完毕后的 Sql 语句及参数。
@@ -651,10 +653,20 @@ namespace Rafy.Domain.ORM
         /// Oracle 生成 "IDENTIFIER"
         /// </summary>
         /// <param name="identifier"></param>
-        protected virtual void QuoteAppend(string identifier)
+        protected void QuoteAppend(string identifier)
         {
-            identifier = this.PrepareIdentifier(identifier);
-            _sql.Append(identifier);
+            identifier = this.Prepare(identifier);
+
+            if (this.AutoQuota && _identifierProvider.QuoteStart != char.MinValue)
+            {
+                _sql.Append(_identifierProvider.QuoteStart);
+                _sql.Append(identifier);
+                _sql.Append(_identifierProvider.QuoteEnd);
+            }
+            else
+            {
+                _sql.Append(identifier);
+            }
         }
 
         /// <summary>
@@ -663,9 +675,9 @@ namespace Rafy.Domain.ORM
         /// </summary>
         /// <param name="identifier"></param>
         /// <returns></returns>
-        protected virtual string PrepareIdentifier(string identifier)
+        protected string Prepare(string identifier)
         {
-            return identifier;
+            return _identifierProvider.Prepare(identifier);
         }
 
         private void AppendColumnDeclaration(SqlColumn sqlColumn)

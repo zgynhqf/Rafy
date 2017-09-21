@@ -19,6 +19,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Rafy.Data;
+using Rafy.DbMigration;
 
 namespace Rafy.Domain.ORM.MySql
 {
@@ -27,6 +29,8 @@ namespace Rafy.Domain.ORM.MySql
     /// </summary>
     internal sealed class MySqlSqlGenerator : SqlGenerator
     {
+        public MySqlSqlGenerator() : base(MySqlIdentifierQuoter.Instance) { }
+
         /// <summary>
         /// Sql Server 中没有限制 In 语句中的项的个数。（但是如果使用参数的话，则最多只能使用 2000 个参数。）
         /// 
@@ -41,23 +45,6 @@ namespace Rafy.Domain.ORM.MySql
         protected override void AppendNameCast()
         {
             Sql.Append(" AS ");
-        }
-
-        /// <summary>
-        /// 为指定标识符增加引用符号
-        /// </summary>
-        /// <param name="identifier">标识符</param>
-        protected override void QuoteAppend(string identifier)
-        {
-            if (this.AutoQuota)
-            {
-                identifier = this.PrepareIdentifier(identifier);
-                Sql.Append("`").Append(identifier).Append("`");
-            }
-            else
-            {
-                base.QuoteAppend(identifier);
-            }
         }
 
         /// <summary>

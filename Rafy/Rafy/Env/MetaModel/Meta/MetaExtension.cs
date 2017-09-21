@@ -226,7 +226,11 @@ namespace Rafy.MetaModel
 
             if (meta.ColumnMeta == null)
             {
-                meta.ColumnMeta = new ColumnMeta();
+                meta.ColumnMeta = new ColumnMeta
+                {
+                    ColumnName = meta.Name
+                };
+
                 if (meta.ManagedProperty is IRefIdProperty)
                 {
                     meta.ColumnMeta.HasFKConstraint = true;

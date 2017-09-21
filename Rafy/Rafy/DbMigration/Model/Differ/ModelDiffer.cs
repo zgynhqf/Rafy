@@ -20,15 +20,17 @@ using Rafy;
 
 namespace Rafy.DbMigration.Model
 {
-    internal static class ModelDiffer
+    internal class ModelDiffer
     {
+        internal IDbIdentifierQuoter IDbIdentifierProvider;
+
         /// <summary>
         /// 计算出两个数据库元数据的所有表差别
         /// </summary>
         /// <param name="oldDatabase">旧数据库</param>
         /// <param name="newDatabase">新数据库</param>
         /// <returns></returns>
-        public static DatabaseChanges Distinguish(Database oldDatabase, DestinationDatabase newDatabase)
+        public DatabaseChanges Distinguish(Database oldDatabase, DestinationDatabase newDatabase)
         {
             if (!oldDatabase.Removed) { oldDatabase.OrderByRelations(); }
             if (!newDatabase.Removed) { newDatabase.OrderByRelations(); }
@@ -40,7 +42,7 @@ namespace Rafy.DbMigration.Model
                 //先找出所有被删除的表
                 foreach (var oldTable in oldDatabase.Tables.Reverse())
                 {
-                    if (newDatabase.FindTable(oldTable.Name) == null && !newDatabase.IsIgnored(oldTable.Name))
+                    if (FindTable(newDatabase, oldTable.Name) == null && !newDatabase.IsIgnored(oldTable.Name))
                     {
                         result.Add(new TableChanges(oldTable, null, ChangeType.Removed));
                     }
@@ -50,7 +52,7 @@ namespace Rafy.DbMigration.Model
                 {
                     if (!newDatabase.IsIgnored(newTable.Name))
                     {
-                        var oldTable = oldDatabase.FindTable(newTable.Name);
+                        var oldTable = FindTable(oldDatabase, newTable.Name);
                         //如果没有找到旧表，说明这个表是新加的。
                         if (oldTable == null)
                         {
@@ -79,7 +81,7 @@ namespace Rafy.DbMigration.Model
         /// <returns>
         /// 返回表之间区别，如果没有区别，则返回null
         /// </returns>
-        private static TableChanges Distinguish(Table oldTable, Table newTable)
+        private TableChanges Distinguish(Table oldTable, Table newTable)
         {
             //if (newTable == null) throw new ArgumentNullException("newTable");
             //if (oldTable == null) throw new ArgumentNullException("oldTable");
@@ -90,7 +92,7 @@ namespace Rafy.DbMigration.Model
             //先找到已经删除的列
             foreach (var oldColumn in oldTable.Columns)
             {
-                if (newTable.FindColumn(oldColumn.Name) == null)
+                if (FindColumn(newTable, oldColumn.Name) == null)
                 {
                     record.ColumnsChanged.Add(new ColumnChanges(oldColumn, null, ChangeType.Removed));
                 }
@@ -99,7 +101,7 @@ namespace Rafy.DbMigration.Model
             //记录新增的和更改过的列
             foreach (var column in newTable.Columns)
             {
-                Column oldColumn = oldTable.FindColumn(column.Name);
+                Column oldColumn = FindColumn(oldTable, column.Name);
 
                 if (oldColumn == null)
                 {
@@ -120,7 +122,7 @@ namespace Rafy.DbMigration.Model
             return null;
         }
 
-        private static ColumnChanges Distinguish(Column oldColumn, Column newColumn)
+        private ColumnChanges Distinguish(Column oldColumn, Column newColumn)
         {
             //if (newColumn == null) throw new ArgumentNullException("newColumn");
             //if (newColumn.Name.EqualsIgnoreCase(oldColumn.Name)) throw new InvalidOperationException("newColumn.Name.EqualsIgnoreCase(oldColumn.Name) must be false.");
@@ -158,7 +160,7 @@ namespace Rafy.DbMigration.Model
             return columnChanged;
         }
 
-        public static bool Equals(Column a, Column b)
+        private bool Equals(Column a, Column b)
         {
             if (a.Table.Name.EqualsIgnoreCase(b.Table.Name) &&
                 a.Name.EqualsIgnoreCase(b.Name) &&
@@ -187,7 +189,7 @@ namespace Rafy.DbMigration.Model
             }
         }
 
-        public static bool Equals(ForeignConstraint a, ForeignConstraint b)
+        private bool Equals(ForeignConstraint a, ForeignConstraint b)
         {
             if (a.NeedDeleteCascade == b.NeedDeleteCascade &&
                 a.PKTable.Name.EqualsIgnoreCase(b.PKTable.Name))
@@ -196,6 +198,65 @@ namespace Rafy.DbMigration.Model
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// 不使用 <see cref="Database.FindTable(string)"/> 的原因是因为要考虑标识符的截断。
+        /// </summary>
+        /// <param name="database"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private Table FindTable(Database database, string name)
+        {
+            var tables = database.Tables;
+
+            for (int i = 0, c = tables.Count; i < c; i++)
+            {
+                var table = tables[i];
+
+                var tableName = this.Prepare(table.Name);
+                name = this.Prepare(name);
+
+                if (tableName.EqualsIgnoreCase(name)) { return table; }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// 不使用 <see cref="Table.FindColumn(string)"/> 的原因是因为要考虑标识符的截断。
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private Column FindColumn(Table table, string name)
+        {
+            var columns = table.Columns;
+
+            for (int i = 0, c = columns.Count; i < c; i++)
+            {
+                var column = columns[i];
+
+                var columnName = this.Prepare(column.Name);
+                name = this.Prepare(name);
+
+                if (columnName.EqualsIgnoreCase(name)) { return column; }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// 对比时需要考虑截断。
+        /// 由于在数据库生成时，有可能额外地对标识符进行一些处理，所以这里需要对这些情况做兼容性处理。
+        /// </summary>
+        /// <param name="identifier"></param>
+        /// <returns></returns>
+        private string Prepare(string identifier)
+        {
+            return this.IDbIdentifierProvider != null ?
+                this.IDbIdentifierProvider.Prepare(identifier) :
+                identifier;
         }
     }
 }

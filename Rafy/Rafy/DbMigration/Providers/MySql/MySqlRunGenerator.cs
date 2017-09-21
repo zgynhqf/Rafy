@@ -18,6 +18,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Rafy.Data;
 using Rafy.DbMigration.Operations;
 using Rafy.DbMigration.Oracle;
 
@@ -26,8 +27,13 @@ namespace Rafy.DbMigration.MySql
     /// <summary>
     /// MySql的执行项生成器
     /// </summary>
-    public sealed class MySqlRunGenerator : TSqlRunGenerator
+    public sealed class MySqlRunGenerator : SqlRunGenerator
     {
+        public MySqlRunGenerator()
+        {
+            this.IdentifierQuoter = MySqlIdentifierQuoter.Instance;
+        }
+
         /// <summary>
         /// 增加不允许为空的约束
         /// </summary>
@@ -112,9 +118,11 @@ namespace Rafy.DbMigration.MySql
             {
                 sql.Write("ALTER TABLE ");
                 sql.Write(this.Quote(op.DependentTable));
-                sql.Write(@" ADD CONSTRAINT ");
+                sql.Write(@"
+    ADD CONSTRAINT ");
                 sql.Write(this.Quote(op.ConstraintName));
-                sql.Write(@" FOREIGN KEY ");
+                sql.Write(@"
+    FOREIGN KEY ");
                 sql.Write(this.Quote(op.DependentTable));
                 sql.Write(@" (");
                 sql.Write(this.Quote(op.DependentTableColumn));
@@ -123,6 +131,7 @@ namespace Rafy.DbMigration.MySql
                 sql.Write("(");
                 sql.Write(this.Quote(op.PrincipleTableColumn));
                 sql.Write(")");
+
                 if (op.NeedDeleteCascade)
                 {
                     sql.Write(" ON DELETE CASCADE");
@@ -142,7 +151,8 @@ namespace Rafy.DbMigration.MySql
             {
                 sql.Write(@"ALTER TABLE ");
                 sql.Write(this.Quote(op.DependentTable));
-                sql.Write(@" DROP FOREIGN KEY ");
+                sql.Write(@"
+    DROP FOREIGN KEY ");
                 sql.Write(this.Quote(op.ConstraintName));
 
                 this.AddRun(sql);
@@ -308,16 +318,6 @@ namespace Rafy.DbMigration.MySql
 
                 this.AddRun(sql);
             }
-        }
-
-        /// <summary>
-        /// 防止命名冲突而增加的引用
-        /// </summary>
-        /// <param name="identifier">需要被引用的内容</param>
-        /// <returns>返回增加了指定字符应用的字符串</returns>
-        protected override string Quote(string identifier)
-        {
-            return "`" + identifier + "`";
         }
     }
 }

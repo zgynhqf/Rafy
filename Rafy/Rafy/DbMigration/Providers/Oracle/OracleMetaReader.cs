@@ -151,6 +151,8 @@ FROM
                 }
             }
 
+            var oracleRunGenerator = new OracleRunGenerator();
+
             //如果主键对应的 Sequence 存在，则表示这个主键是 Identity 列。
             //详见：OracleRunGenerator.Generate(CreateTable op)。
             foreach (var table in database.Tables)
@@ -158,7 +160,7 @@ FROM
                 var pk = table.FindPrimaryColumn();
                 if (pk != null)
                 {
-                    var sequenceName = OracleMigrationProvider.SequenceName(table.Name, pk.Name);
+                    var sequenceName = oracleRunGenerator.SequenceName(table.Name, pk.Name);
                     if (sequenceNames.Contains(sequenceName, StringComparer.CurrentCultureIgnoreCase))
                     {
                         pk.IsIdentity = true;

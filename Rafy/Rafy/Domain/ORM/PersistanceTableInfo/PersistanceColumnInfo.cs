@@ -25,12 +25,13 @@ namespace Rafy.Domain.ORM
         private EntityPropertyMeta _propertyMeta;
         private ColumnMeta _columnMeta;
 
-        public PersistanceColumnInfo(EntityPropertyMeta propertyMeta, ColumnMeta columnMeta, PersistanceTableInfo table)
+        public PersistanceColumnInfo(string name, EntityPropertyMeta propertyMeta, ColumnMeta columnMeta, PersistanceTableInfo table)
         {
             _propertyMeta = propertyMeta;
             _columnMeta = columnMeta;
             this.Table = table;
 
+            this.Name = name;
             this.DataType = propertyMeta.PropertyType;
             this.IsIdentity = columnMeta.IsIdentity;
             this.IsPrimaryKey = columnMeta.IsPrimaryKey;
@@ -49,15 +50,7 @@ namespace Rafy.Domain.ORM
             get { return _columnMeta; }
         }
 
-        public string Name
-        {
-            get
-            {
-                var columnName = _columnMeta.ColumnName;
-                if (string.IsNullOrWhiteSpace(columnName)) columnName = _propertyMeta.Name;
-                return columnName;
-            }
-        }
+        public string Name { get; private set; }
 
         public Type DataType
         {

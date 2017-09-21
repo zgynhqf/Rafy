@@ -109,6 +109,7 @@
     <Compile Include="DbMigration\Providers\DbMigrationProvider.cs" />
     <Compile Include="DbMigration\Providers\DbMigrationProviderFactory.cs" />
     <Compile Include="DbMigration\Providers\DbTypeHelper.cs" />
+    <Compile Include="DbMigration\Providers\MySql\MySqlIdentifierQuoter.cs" />
     <Compile Include="DbMigration\Providers\MySql\MySqlDbTypeHelper.cs" />
     <Compile Include="DbMigration\Providers\MySql\MySqlMetaReader.cs" />
     <Compile Include="DbMigration\Providers\MySql\MySqlMigrationProvider.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="DbMigration\Providers\MySql\MySqlRunGenerator.cs" />
     <Compile Include="DbMigration\Providers\MySql\Run\MySqlCreateDbMigrationRun.cs" />
     <Compile Include="DbMigration\Providers\MySql\Run\MySqlDropDbMigrationRun.cs" />
+    <Compile Include="DbMigration\Providers\Oracle\OracleIdentifierQuoter.cs" />
     <Compile Include="DbMigration\Providers\Oracle\OracleDbTypeHelper.cs" />
     <Compile Include="DbMigration\Providers\Oracle\OracleMetaReader.cs" />
     <Compile Include="DbMigration\Providers\Oracle\OracleMigrationProvider.cs" />
@@ -125,6 +127,7 @@
     <Compile Include="DbMigration\Providers\SqlServerCe\SqlServerCeMetaReader.cs" />
     <Compile Include="DbMigration\Providers\SqlServerCe\SqlServerCeMigrationProvider.cs" />
     <Compile Include="DbMigration\Providers\SqlServerCe\SqlServerCeRunGenerator.cs" />
+    <Compile Include="DbMigration\Providers\SqlServer\SqlServerIdentifierQuoter.cs" />
     <Compile Include="DbMigration\Providers\SqlServer\Run\ChangeDbMigrationRun.cs" />
     <Compile Include="DbMigration\Providers\SqlServer\Run\CreateDbMigrationRun.cs" />
     <Compile Include="DbMigration\Providers\SqlServer\Run\DropDbMigrationRun.cs" />
@@ -137,7 +140,7 @@
     <Compile Include="DbMigration\Run\GenerationExceptionRun.cs" />
     <Compile Include="DbMigration\Run\Oracle\TryCreateTableSequenceRun.cs" />
     <Compile Include="DbMigration\Run\SqlMigrationRun.cs" />
-    <Compile Include="DbMigration\TSqlRunGenerator.cs" />
+    <Compile Include="DbMigration\Providers\SqlRunGenerator.cs" />
     <Compile Include="Domain\BinaryOperator.cs" />
     <Compile Include="Domain\DataPortalLocation.cs" />
     <Compile Include="Domain\DataPortal\ClientContextItem.cs" />
@@ -372,11 +375,6 @@
     <Compile Include="Domain\ORM\Rdb\AggregateSQL\AggregateDescriptor.cs" />
     <Compile Include="Domain\ORM\Rdb\AggregateSQL\AggregateEntityLoader.cs" />
     <Compile Include="Domain\ORM\Rdb\AggregateSQL\AggregateSQLGenerator.cs" />
-    <Compile Include="Domain\ORM\Rdb\AggregateSQL\API\AggregateSQL.cs" />
-    <Compile Include="Domain\ORM\Rdb\AggregateSQL\API\ChildrenSelector.cs" />
-    <Compile Include="Domain\ORM\Rdb\AggregateSQL\API\LoadOptionSelector.cs" />
-    <Compile Include="Domain\ORM\Rdb\AggregateSQL\API\OrderByLoadOption.cs" />
-    <Compile Include="Domain\ORM\Rdb\AggregateSQL\API\PropertySelector.cs" />
     <Compile Include="Domain\ORM\Rdb\AggregateSQL\IDataTable.cs" />
     <Compile Include="Domain\ORM\Rdb\AggregateSQL\LoadOptionItem.cs" />
     <Compile Include="Domain\ORM\Rdb\AggregateSQL\RawTable.cs" />
@@ -734,6 +732,7 @@
     <Compile Include="Utils\Data\LongTimeDbAccesser.cs" />
     <Compile Include="Utils\Data\PagingHelper.cs" />
     <Compile Include="Utils\Data\Providers\DbConnectorFactory.cs" />
+    <Compile Include="DbMigration\Providers\DbIdentifierQuoter.cs" />
     <Compile Include="Utils\Data\Providers\ISqlProvider.cs" />
     <Compile Include="Utils\Data\Providers\MySqlServerProvider.cs" />
     <Compile Include="Utils\Data\Providers\ODBCProvider.cs" />

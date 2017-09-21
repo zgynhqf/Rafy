@@ -48,18 +48,6 @@ namespace Rafy.Domain.ORM.MySql
         }
 
         /// <summary>
-        /// 追加引用符号
-        /// </summary>
-        /// <param name="sql">sql文本写入器</param>
-        /// <param name="identifier">标识符</param>
-        internal override void AppendQuote(TextWriter sql, string identifier)
-        {
-            sql.Write("`");
-            this.AppendPrepare(sql, identifier);
-            sql.Write("`");
-        }
-
-        /// <summary>
         /// 插入操作
         /// </summary>
         /// <param name="dba">数据库操作对象</param>

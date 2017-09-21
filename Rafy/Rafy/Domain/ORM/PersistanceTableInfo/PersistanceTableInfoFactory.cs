@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Rafy.DbMigration;
 using Rafy.MetaModel;
 
 namespace Rafy.Domain.ORM
@@ -34,14 +35,18 @@ namespace Rafy.Domain.ORM
                 throw new ORMException(string.Format("类型 {0} 没有映射数据库，无法为其创造 ORM 运行时对象。", em.EntityType.FullName));
             }
 
-            var res = new PersistanceTableInfo(repo);
+            var dbSetting = RdbDataProvider.Get(repo).DbSetting;
+            var identifierProvider = DbMigrationProviderFactory.GetIdentifierProvider(dbSetting.ProviderName);
 
-            ProcessManagedProperties(em.EntityType, res, em);
+            var name = identifierProvider.Prepare(repo.EntityMeta.TableMeta.TableName);
+            var res = new PersistanceTableInfo(name, repo);
+
+            ProcessManagedProperties(em.EntityType, res, em, identifierProvider);
 
             return res;
         }
 
-        private static void ProcessManagedProperties(Type type, PersistanceTableInfo table, EntityMeta em)
+        private static void ProcessManagedProperties(Type type, PersistanceTableInfo table, EntityMeta em, IDbIdentifierQuoter identifierProvider)
         {
             foreach (var property in em.EntityProperties)
             {
@@ -54,8 +59,9 @@ namespace Rafy.Domain.ORM
                 var epm = em.Property(propertyName);
                 if (epm == null) { throw new ArgumentNullException(string.Format("{0}.{1} 属性需要使用托管属性进行编写。", type.FullName, propertyName)); }
 
+                var columnName = identifierProvider.Prepare(meta.ColumnName);
 
-                var column = new PersistanceColumnInfo(epm, meta, table);
+                var column = new PersistanceColumnInfo(columnName, epm, meta, table);
 
                 if (meta.IsPrimaryKey)
                 {

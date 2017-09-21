@@ -19,14 +19,17 @@ using Rafy.DbMigration.Operations;
 using System.CodeDom.Compiler;
 using System.Data;
 using Rafy.Data;
+using Rafy.Data.Providers;
 
 namespace Rafy.DbMigration
 {
     /// <summary>
-    /// T-SQL 生成的基类
+    /// SQL 生成器的基类
     /// </summary>
-    public abstract class TSqlRunGenerator : RunGenerator
+    public abstract class SqlRunGenerator : RunGenerator
     {
+        public DbIdentifierQuoter IdentifierQuoter { get; set; }
+
         protected abstract string ConvertToTypeString(DbType dataType, string length);
 
         protected override void Generate(DropTable op)
@@ -68,13 +71,18 @@ namespace Rafy.DbMigration
 
         protected virtual void GenerateAddPKConstraint(IndentedTextWriter sql, string tableName, string columnName)
         {
-            var pkName = string.Format("PK_{0}_{1}", this.Prepare(tableName), this.Prepare(columnName));
+            var pkName = string.Format("PK_{0}_{1}",
+                this.Prepare(tableName), this.Prepare(columnName)
+                );
 
-            sql.Write(@"ALTER TABLE ");
+            sql.Write(@"
+ALTER TABLE ");
             sql.Write(this.Quote(tableName));
-            sql.Write(@" ADD CONSTRAINT ");
+            sql.Write(@"
+    ADD CONSTRAINT ");
             sql.Write(this.Quote(pkName));
-            sql.Write(@" PRIMARY KEY (");
+            sql.Write(@"
+    PRIMARY KEY (");
             sql.Write(this.Quote(columnName));
             sql.Write(")");
         }
@@ -160,8 +168,7 @@ ALTER TABLE ");
         {
             using (var sql = this.Writer())
             {
-                sql.Write(@"
-ALTER TABLE ");
+                sql.Write(@"ALTER TABLE ");
                 sql.Write(this.Quote(op.DependentTable));
                 sql.Write(@"
     DROP CONSTRAINT ");
@@ -180,7 +187,7 @@ ALTER TABLE ");
         /// <param name="length">The length.</param>
         /// <param name="isRequired">if set to <c>true</c> [is required].</param>
         /// <param name="isPKorFK">在没有给出字段长度的情况下，如果这个字段是一个主键或外键，则需要自动限制它的长度。</param>
-        protected void GenerateColumnDeclaration(IndentedTextWriter sql,string columnName, DbType dataType, string length, bool? isRequired, bool isPKorFK)
+        protected void GenerateColumnDeclaration(IndentedTextWriter sql, string columnName, DbType dataType, string length, bool? isRequired, bool isPKorFK)
         {
             if (string.IsNullOrEmpty(length))
             {
@@ -209,14 +216,14 @@ ALTER TABLE ");
             }
         }
 
-        protected virtual string Quote(string identifier)
+        protected string Quote(string identifier)
         {
-            return "[" + this.Prepare(identifier) + "]";
+            return this.IdentifierQuoter.Quote(identifier);
         }
 
-        protected virtual string Prepare(string identifier)
+        protected string Prepare(string identifier)
         {
-            return identifier;
+            return this.IdentifierQuoter.Prepare(identifier);
         }
     }
 }

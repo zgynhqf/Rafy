@@ -20,6 +20,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Rafy.Data;
+using Rafy.DbMigration.Oracle;
 using Rafy.Domain;
 using Rafy.Domain.ORM.Query;
 using Rafy.ManagedProperty;
@@ -31,6 +32,7 @@ namespace Rafy.Domain.ORM.Oracle
 {
     internal class OracleTable : SqlOraTable
     {
+        private OracleRunGenerator _oracleRunGenerator = new OracleRunGenerator();
 
         public OracleTable(IRepositoryInternal repository) : base(repository) { }
 
@@ -52,16 +54,10 @@ namespace Rafy.Domain.ORM.Oracle
                 {
                     if (_selectSEQSql == null)
                     {
-                        var seqName = new StringWriter();
-                        seqName.Write("SEQ_");
-                        this.AppendPrepare(seqName, this.Name);
-                        seqName.Write('_');
-                        this.AppendPrepare(seqName, idColumn.Name);
-                        var seqNameValue =
-                            Rafy.DbMigration.Oracle.OracleMigrationProvider.LimitOracleIdentifier(seqName.ToString());
+                        var seqName = _oracleRunGenerator.SequenceName(this.Name, idColumn.Name);
 
                         //此序列是由 DbMigration 中自动生成的。
-                        _selectSEQSql = string.Format(@"SELECT {0}.NEXTVAL FROM DUAL", seqNameValue);
+                        _selectSEQSql = string.Format(@"SELECT {0}.NEXTVAL FROM DUAL", seqName);
                     }
                     //由于默认可能不是 int 类型，所以需要类型转换。
                     var value = dba.RawAccesser.QueryValue(_selectSEQSql);
@@ -77,21 +73,9 @@ namespace Rafy.Domain.ORM.Oracle
             base.Insert(dba, item);
         }
 
-        internal override void AppendQuote(TextWriter sql, string identifier)
-        {
-            sql.Write("\"");
-            this.AppendPrepare(sql, identifier);
-            sql.Write("\"");
-        }
-
-        internal override void AppendPrepare(TextWriter sql, string identifier)
-        {
-            sql.Write(identifier.ToUpper());
-        }
-
         public override SqlGenerator CreateSqlGenerator()
         {
-            var generator =  new OracleSqlGenerator();
+            var generator = new OracleSqlGenerator();
             return generator;
         }
 

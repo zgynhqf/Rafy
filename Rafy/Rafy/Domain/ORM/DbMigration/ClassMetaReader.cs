@@ -207,7 +207,6 @@ namespace Rafy.Domain.ORM.DbMigration
                     //列名
                     var propertyName = property.Name;
                     var columnName = columnMeta.ColumnName;
-                    if (string.IsNullOrWhiteSpace(columnName)) columnName = propertyName;
 
                     //类型
                     var propertyType = property.PropertyType;
