@@ -147,11 +147,11 @@ namespace UT
             set { this.SetProperty(BytesProperty, value); }
         }
 
-        public static readonly Property<bool> IsSoldOutProperty = P<Book>.Register(e => e.IsSoldOut);
+        public static readonly Property<bool?> IsSoldOutProperty = P<Book>.Register(e => e.IsSoldOut);
         /// <summary>
         /// 是否卖光。
         /// </summary>
-        public bool IsSoldOut
+        public bool? IsSoldOut
         {
             get { return this.GetProperty(IsSoldOutProperty); }
             set { this.SetProperty(IsSoldOutProperty, value); }
