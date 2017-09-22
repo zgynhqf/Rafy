@@ -108,7 +108,7 @@ namespace Rafy.Domain.ORM.MySql
         }
 
         /// <summary>
-        /// 针对布尔类型和枚举类型进行特殊处理
+        /// 针对特定类型进行特殊处理
         /// </summary>
         /// <param name="value">待转换的CLR数据类型</param>
         /// <returns>返回MySql兼容的具体数据类型</returns>
@@ -119,6 +119,10 @@ namespace Rafy.Domain.ORM.MySql
                 if (value is bool)
                 {
                     value = Convert.ToInt32(value);
+                }
+                if (value is DateTimeOffset)
+                {
+                    value = TypeHelper.CoerceValue(typeof(DateTime), value);
                 }
                 else if (value.GetType().IsEnum)
                 {

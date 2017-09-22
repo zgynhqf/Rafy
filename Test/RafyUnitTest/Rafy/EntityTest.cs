@@ -364,6 +364,29 @@ namespace RafyUnitTest
             }
         }
 
+        /// <summary>
+        /// 该测试不支持SqlCe，因为SqlCe只有DateTime类型并且精度不够
+        /// https://technet.microsoft.com/zh-cn/library/ms172424(v=sql.110).aspx
+        /// </summary>
+        [TestMethod]
+        public void ET_Property_DateTimeOffset()
+        {
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            {
+                Yacht car = new Yacht()
+                {
+                    DateTimeOffsetValue = DateTime.Parse("1230-1-1")
+                };
+                var repo = RF.ResolveInstance<YachtRepository>();
+                repo.Save(car);
+
+                long id = car.Id;
+                var newCar = repo.GetById(id);
+
+                Assert.AreEqual(newCar.DateTimeOffsetValue, car.DateTimeOffsetValue);
+            }
+        }
+
         [TestMethod]
         public void ET_Property_Enum_ForUI()
         {
