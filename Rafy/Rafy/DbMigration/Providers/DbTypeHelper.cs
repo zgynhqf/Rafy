@@ -35,6 +35,7 @@ namespace Rafy.DbMigration
             if (clrType == typeof(long)) { return DbType.Int64; }
             if (clrType == typeof(bool)) { return DbType.Boolean; }
             if (clrType == typeof(DateTime)) { return DbType.DateTime; }
+            if (clrType == typeof(DateTimeOffset)) { return DbType.DateTimeOffset; }
             if (clrType == typeof(Guid)) { return DbType.Guid; }
             if (clrType == typeof(double)) { return DbType.Double; }
             if (clrType == typeof(byte)) { return DbType.Byte; }
@@ -70,6 +71,8 @@ namespace Rafy.DbMigration
                 case DbType.AnsiStringFixedLength:
                     return string.Empty;
                 case DbType.DateTime:
+                case DbType.DateTime2:
+                case DbType.DateTimeOffset:
                     return new DateTime(2000, 1, 1, 0, 0, 0);
                 case DbType.Guid:
                     return Guid.Empty.ToString();

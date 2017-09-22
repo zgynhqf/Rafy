@@ -65,6 +65,7 @@ namespace Rafy.DbMigration.MySql
 
         /// <summary>
         /// 把 DbType的类型值 转换为 MySql 数据库中兼容的数据类型
+        /// MySql数据精度 http://qimo601.iteye.com/blog/1622368
         /// </summary>
         /// <param name="fieldType">字段的DbType类型值</param>
         /// <param name="length">数据类型的长度</param>
@@ -95,12 +96,11 @@ namespace Rafy.DbMigration.MySql
                 case DbType.UInt64:
                 case DbType.Int64:
                     return "BIGINT";
-                case DbType.DateTimeOffset:
-                    return "TIMESTAMP";
                 case DbType.Time:
                     return "TIME";
                 case DbType.Date:
                     return "DATE";
+                case DbType.DateTimeOffset:
                 case DbType.DateTime:
                     return "DATETIME";
                 case DbType.Single:
@@ -219,7 +219,7 @@ namespace Rafy.DbMigration.MySql
                 }
                 else if (string.Compare(mySqlType, "TIMESTAMP", true) == 0)
                 {
-                    return DbType.DateTimeOffset;
+                    return DbType.DateTime;
                 }
                 else
                 {

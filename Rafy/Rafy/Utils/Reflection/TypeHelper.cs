@@ -270,6 +270,20 @@ namespace Rafy.Reflection
             //处理 Guid
             if (desiredType == typeof(Guid) && value is string) { return Guid.Parse(value as string); }
 
+            //处理 DateTimeOffset
+            // DateTime to DateTimeOffset  https://msdn.microsoft.com/zh-cn/library/bb546101.aspx
+            // DateTime DateTime2 区别 http://www.studyofnet.com/news/1050.html
+            if (desiredType == typeof(DateTimeOffset) && value is DateTime)
+            {
+                return (DateTimeOffset)DateTime.SpecifyKind((DateTime)value, DateTimeKind.Local);
+            }
+
+            //DateTime to DateTimeOffset
+            if (desiredType == typeof(DateTime) && value is DateTimeOffset)
+            {
+                return ((DateTimeOffset)value).DateTime;
+            }
+
             try
             {
                 return Convert.ChangeType(value, desiredType);

@@ -133,6 +133,10 @@ namespace Rafy.Domain.ORM.MySql
                 {
                     value = TypeHelper.CoerceValue(typeof(int), value);
                 }
+                if (value is DateTimeOffset)
+                {
+                    value = TypeHelper.CoerceValue(typeof(DateTime), value);
+                }
             }
 
             return value;

@@ -84,6 +84,10 @@ namespace Rafy.Domain.ORM.Oracle
                 {
                     value = TypeHelper.CoerceValue(typeof(int), value);
                 }
+                else if (value is DateTimeOffset)
+                {
+                    value = TypeHelper.CoerceValue(typeof(DateTime), value);
+                }
             }
 
             return value;

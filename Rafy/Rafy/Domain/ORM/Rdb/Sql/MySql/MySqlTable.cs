@@ -39,6 +39,16 @@ namespace Rafy.Domain.ORM.MySql
         public MySqlTable(IRepositoryInternal repository) : base(repository) { }
 
         /// <summary>
+        /// 构造函数 初始化表和 持久列信息
+        /// </summary>
+        /// <param name="columnInfo"></param>
+        /// <returns></returns>
+        internal override RdbColumn CreateColumn(IPersistanceColumnInfo columnInfo)
+        {
+            return new MySqlColumn(this, columnInfo);
+        }
+
+        /// <summary>
         /// 创建Sql生成器对象
         /// </summary>
         /// <returns></returns>
