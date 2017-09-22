@@ -70,6 +70,10 @@ namespace Rafy.Domain.ORM.Oracle
                 {
                     value = OracleDbTypeConverter.Instance.ToDbBoolean((bool)value);
                 }
+                else if (value is DateTimeOffset)
+                {
+                    value = TypeHelper.CoerceValue(typeof(DateTime), value);
+                }
                 else if (value.GetType().IsEnum)
                 {
                     value = TypeHelper.CoerceValue(typeof(int), value);

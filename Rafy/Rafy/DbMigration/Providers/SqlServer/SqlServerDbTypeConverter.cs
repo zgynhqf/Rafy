@@ -40,6 +40,10 @@ namespace Rafy.DbMigration.SqlServer
                     return "BIGINT";
                 case DbType.DateTime:
                     return "DATETIME";
+                case DbType.DateTime2:
+                    return "DATETIME2";
+                case DbType.DateTimeOffset:
+                    return "DATETIMEOFFSET";
                 case DbType.Guid:
                     return "UNIQUEIDENTIFIER";
                 case DbType.Double:
@@ -102,9 +106,12 @@ namespace Rafy.DbMigration.SqlServer
                     return DbType.Byte;
                 case "date":
                 case "datetime":
-                case "datetimeoffset":
                 case "time":
                     return DbType.DateTime;
+                case "datetime2":
+                    return DbType.DateTime2;
+                case "datetimeoffset":
+                    return DbType.DateTimeOffset;
                 default:
                     throw new NotSupportedException($"不支持读取数据库中的列类型：{databaseTypeName}。");
             }

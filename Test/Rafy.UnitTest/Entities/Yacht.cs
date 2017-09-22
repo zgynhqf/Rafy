@@ -109,7 +109,16 @@ namespace Rafy.UnitTest
             set { this.SetProperty(DecimalValueProperty, value); }
         }
 
-
+        public static readonly Property<DateTimeOffset> DateTimeOffsetValueProperty = P<Yacht>.Register(e => e.DateTimeOffsetValue);
+        /// <summary>
+        /// 日期
+        /// <para>注意：SqlCe不支持该类型</para>  
+        /// </summary>
+        public DateTimeOffset DateTimeOffsetValue
+        {
+            get { return this.GetProperty(DateTimeOffsetValueProperty); }
+            set { this.SetProperty(DateTimeOffsetValueProperty, value); }
+        }
         #endregion
 
         #region 只读属性
