@@ -27,7 +27,7 @@ namespace Rafy.DbMigration.Operations
 
         public string ColumnName { get; set; }
 
-        public DbType DataType { get; set; }
+        public DbType DbType { get; set; }
 
         public string Length { get; set; }
 
@@ -41,7 +41,7 @@ namespace Rafy.DbMigration.Operations
                 {
                     this.TableName = value.Table.Name;
                     this.ColumnName = value.Name;
-                    this.DataType = value.DataType;
+                    this.DbType = value.DbType;
                     this.Length = value.Length;
                     this.IsForeignKey = value.IsForeignKey;
                 }
@@ -56,7 +56,7 @@ namespace Rafy.DbMigration.Operations
                 {
                     this.TableName = value.TableName;
                     this.ColumnName = value.ColumnName;
-                    this.DataType = value.DataType;
+                    this.DbType = value.DbType;
                     this.Length = value.Length;
                     this.IsForeignKey = value.IsForeignKey;
                 }
@@ -182,8 +182,8 @@ namespace Rafy.DbMigration.Operations
             {
                 CopyFrom = this,
                 IsRequired = this.IsRequired,
-                DataType = this.NewType,
-                NewType = this.DataType
+                DbType = this.NewType,
+                NewType = this.DbType
             });
         }
 
@@ -191,7 +191,7 @@ namespace Rafy.DbMigration.Operations
         {
             get
             {
-                return base.Description + " From " + this.DataType + " To " + this.NewType;
+                return base.Description + " From " + this.DbType + " To " + this.NewType;
             }
         }
     }

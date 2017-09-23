@@ -221,7 +221,7 @@ namespace RafyUnitTest
         /// （这里是当数据库是 oracle 的时候 isphantom 在数据库中会被映射成整形）
         /// </summary>
         [TestMethod]
-        public void DT_LiteDataTable_QueryFromDbAndConvertToEntity_DifferentDataType()
+        public void DT_LiteDataTable_QueryFromDbAndConvertToEntity_DifferentDbType()
         {
             var repo = RF.ResolveInstance<InvoiceRepository>();
             using (RF.TransactionScope(repo))

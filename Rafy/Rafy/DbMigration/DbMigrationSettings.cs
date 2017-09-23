@@ -30,11 +30,11 @@ namespace Rafy.DbMigration
         /// http://stackoverflow.com/questions/2863993/is-of-a-type-that-is-invalid-for-use-as-a-key-column-in-an-index
         /// SqlServer 主键最大 450、Oracle 主键最大 400。
         /// </remarks>
-        public static string PKFKDataTypeLength = "40";
+        public static string PKFKDbTypeLength = "40";
 
         /// <summary>
         /// 可设置所有一般字符串字段的默认长度。默认为 2000。
         /// </summary>
-        public static string StringColumnDataTypeLength = "2000";
+        public static string StringColumnDbTypeLength = "2000";
     }
 }

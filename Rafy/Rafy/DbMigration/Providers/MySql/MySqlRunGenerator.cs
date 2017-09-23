@@ -48,7 +48,7 @@ namespace Rafy.DbMigration.MySql
                 sql.Write(" MODIFY ");
 
                 sql.Indent++;
-                this.GenerateColumnDeclaration(sql, op.ColumnName, op.DataType, op.Length, true, op.IsForeignKey);
+                this.GenerateColumnDeclaration(sql, op.ColumnName, op.DbType, op.Length, true, op.IsForeignKey);
 
                 this.AddRun(sql);
             }
@@ -96,7 +96,7 @@ namespace Rafy.DbMigration.MySql
                             @"ALTER TABLE `{0}` MODIFY COLUMN `{1}` {2} COMMENT '{3}'",
                             this.Prepare(op.TableName),
                             this.Prepare(op.ColumnName),
-                            this.DbTypeCoverter.ConvertToDatabaseTypeName(op.ColumnDataType),
+                            this.DbTypeCoverter.ConvertToDatabaseTypeName(op.ColumnDbType),
                             op.Comment
                             )
                     });
@@ -239,7 +239,7 @@ namespace Rafy.DbMigration.MySql
                 sql.WriteLine(this.Quote(op.TableName));
                 sql.WriteLine("(");
                 sql.Indent++;
-                this.GenerateColumnDeclaration(sql, op.PKName, op.PKDataType, op.PKLength, true, true);
+                this.GenerateColumnDeclaration(sql, op.PKName, op.PKDbType, op.PKLength, true, true);
                 if (op.PKIdentity) { sql.Write(" auto_increment"); }
                 sql.Write(" primary key");
                 sql.WriteLine();
@@ -290,7 +290,7 @@ namespace Rafy.DbMigration.MySql
 
                 sql.Indent++;
                 sql.Write("ADD ");
-                this.GenerateColumnDeclaration(sql, op.ColumnName, op.DataType, op.Length, false, op.IsForeignKey);
+                this.GenerateColumnDeclaration(sql, op.ColumnName, op.DbType, op.Length, false, op.IsForeignKey);
 
                 this.AddRun(sql);
             }
@@ -310,7 +310,7 @@ namespace Rafy.DbMigration.MySql
 
                 sql.Indent++;
                 sql.Write("MODIFY ");
-                this.GenerateColumnDeclaration(sql, op.ColumnName, op.DataType, op.Length, false, op.IsForeignKey);
+                this.GenerateColumnDeclaration(sql, op.ColumnName, op.DbType, op.Length, false, op.IsForeignKey);
 
                 this.AddRun(sql);
             }

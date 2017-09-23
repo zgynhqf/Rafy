@@ -137,7 +137,7 @@ namespace Rafy.DbMigration.Model
 
                 if (newColumn.IsPrimaryKey != oldColumn.IsPrimaryKey) { columnChanged.IsPrimaryKeyChanged = true; }
 
-                if (!DbTypeConverter.IsCompatible(newColumn.DataType, oldColumn.DataType)) { columnChanged.IsDbTypeChanged = true; }
+                if (!DbTypeConverter.IsCompatible(newColumn.DbType, oldColumn.DbType)) { columnChanged.IsDbTypeChanged = true; }
 
                 //ForeignRelationChangeType
                 columnChanged.ForeignRelationChangeType = ChangeType.UnChanged;
@@ -164,7 +164,7 @@ namespace Rafy.DbMigration.Model
         {
             if (a.Table.Name.EqualsIgnoreCase(b.Table.Name) &&
                 a.Name.EqualsIgnoreCase(b.Name) &&
-                DbTypeConverter.IsCompatible(a.DataType, b.DataType) &&
+                DbTypeConverter.IsCompatible(a.DbType, b.DbType) &&
                 //a.DataType == b.DataType &&
                 a.IsRequired == b.IsRequired &&
                 a.IsForeignKey == b.IsForeignKey &&

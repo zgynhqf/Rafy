@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.62.3560
+3.62.3562
     BUG修复
         采用截断的方式，解决 MySql 中外键名过长时，无法创建成功的问题。
     ★重要、重构
@@ -18,6 +18,8 @@
         提取 DbTypeConverter 类型，用于统一处理数据库字段类型的转换。
             将数据库字段值与实体属性的值的转换，也封装到 DbTypeConverter 类型中。
         ColumnMeta.ColumnName 不再为空，必须有值。默认为属性名。
+    ！修改接口
+        所有的 DataType （列的数据的类型）统一重命名为 DbType。
     重构
         使用 Lazy<string> 重构 RdbTable 中的代码，并同时提取 GenerateInsertSqlParameters 方法来优化参数获取的性能。
         MySqlBatchImporter.GenerateBatchUpdateStatement 方法重构。

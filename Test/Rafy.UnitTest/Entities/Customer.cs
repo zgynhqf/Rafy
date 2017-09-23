@@ -103,7 +103,7 @@ namespace UT
             Meta.MapTable().MapAllProperties();
 
             Meta.Property(Customer.DecimalProperty2Property).MapColumn().HasLength("18,4");
-            Meta.Property(Customer.DecimalProperty3Property).MapColumn().HasDataType(DbType.Double);
+            Meta.Property(Customer.DecimalProperty3Property).MapColumn().HasDbType(DbType.Double);
         }
     }
 }

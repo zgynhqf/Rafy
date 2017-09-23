@@ -39,7 +39,7 @@ namespace Rafy.DbMigration.Operations
         /// <summary>
         /// 修改字段注释信息的字段类型
         /// </summary>
-        public DbType ColumnDataType { get; set; }
+        public DbType ColumnDbType { get; set; }
 
         /// <summary>
         /// 注释内容
@@ -52,7 +52,7 @@ namespace Rafy.DbMigration.Operations
             {
                 TableName = this.TableName,
                 ColumnName = this.ColumnName,
-                ColumnDataType = this.ColumnDataType,
+                ColumnDbType = this.ColumnDbType,
                 Comment = string.Empty
             });
         }

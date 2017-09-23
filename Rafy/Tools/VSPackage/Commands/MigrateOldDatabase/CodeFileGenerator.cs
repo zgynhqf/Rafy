@@ -242,7 +242,7 @@ namespace Rafy.VSPackage.Commands.MigrateOldDatabase
                     string propertyType = string.Empty;
                     #region 转换到属性的类型
 
-                    switch (column.DataType)
+                    switch (column.DbType)
                     {
                         case DbType.AnsiString:
                         case DbType.AnsiStringFixedLength:

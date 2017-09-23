@@ -258,9 +258,9 @@ namespace Rafy.MetaModel
         /// <param name="meta">The meta.</param>
         /// <param name="dataType">Type of the data.</param>
         /// <returns></returns>
-        public static ColumnMeta HasDataType(this ColumnMeta meta, DbType dataType)
+        public static ColumnMeta HasDbType(this ColumnMeta meta, DbType dataType)
         {
-            meta.DataType = dataType;
+            meta.DbType = dataType;
             return meta;
         }
 
@@ -277,7 +277,7 @@ namespace Rafy.MetaModel
         /// <returns></returns>
         public static ColumnMeta HasLength(this ColumnMeta meta, string length)
         {
-            meta.DataTypeLength = length;
+            meta.DbTypeLength = length;
             return meta;
         }
 

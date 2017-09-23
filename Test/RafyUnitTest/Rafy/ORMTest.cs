@@ -5348,7 +5348,7 @@ ORDER BY Article.Code ASC");
                 var db = context.DatabaseMetaReader.Read();
                 var table = db.FindTable("Customer");
                 var c1 = table.FindColumn("DecimalProperty1");
-                Assert.IsTrue(DbTypeConverter.IsCompatible(c1.DataType, DbType.Decimal));
+                Assert.IsTrue(DbTypeConverter.IsCompatible(c1.DbType, DbType.Decimal));
             }
         }
 
@@ -5360,7 +5360,7 @@ ORDER BY Article.Code ASC");
                 var db = context.DatabaseMetaReader.Read();
                 var table = db.FindTable("Customer");
                 var c1 = table.FindColumn("DecimalProperty2");
-                Assert.IsTrue(DbTypeConverter.IsCompatible(c1.DataType, DbType.Decimal));
+                Assert.IsTrue(DbTypeConverter.IsCompatible(c1.DbType, DbType.Decimal));
                 //Assert.IsTrue(c1.Length == "18,4");
             }
         }
@@ -5373,7 +5373,7 @@ ORDER BY Article.Code ASC");
                 var db = context.DatabaseMetaReader.Read();
                 var table = db.FindTable("Customer");
                 var c1 = table.FindColumn("DecimalProperty3");
-                Assert.IsTrue(DbTypeConverter.IsCompatible(c1.DataType, DbType.Double));
+                Assert.IsTrue(DbTypeConverter.IsCompatible(c1.DbType, DbType.Double));
             }
         }
 

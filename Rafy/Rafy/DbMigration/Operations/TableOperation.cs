@@ -36,7 +36,7 @@ namespace Rafy.DbMigration.Operations
         /// 如果有主键，则这个字段表示主键的名称
         /// 目前只简单地支持单一主键
         /// </summary>
-        public DbType PKDataType { get; set; }
+        public DbType PKDbType { get; set; }
 
         /// <summary>
         /// 主键列的长度。
@@ -67,7 +67,7 @@ namespace Rafy.DbMigration.Operations
                     if (pk != null)
                     {
                         this.PKName = pk.Name;
-                        this.PKDataType = pk.DataType;
+                        this.PKDbType = pk.DbType;
                         this.PKIdentity = pk.IsIdentity;
                         this.PKLength = pk.Length;
                     }
@@ -83,7 +83,7 @@ namespace Rafy.DbMigration.Operations
                 {
                     this.TableName = value.TableName;
                     this.PKName = value.PKName;
-                    this.PKDataType = value.PKDataType;
+                    this.PKDbType = value.PKDbType;
                     this.PKIdentity = value.PKIdentity;
                     this.PKLength = value.PKLength;
                 }

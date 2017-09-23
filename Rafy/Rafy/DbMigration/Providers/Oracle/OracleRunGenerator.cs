@@ -57,7 +57,7 @@ namespace Rafy.DbMigration.Oracle
                 sql.Indent++;
                 sql.Write("ADD ");
 
-                this.GenerateColumnDeclaration(sql, op.ColumnName, op.DataType, op.Length, false, op.IsForeignKey);
+                this.GenerateColumnDeclaration(sql, op.ColumnName, op.DbType, op.Length, false, op.IsForeignKey);
 
                 this.AddRun(sql);
             }
@@ -85,7 +85,7 @@ namespace Rafy.DbMigration.Oracle
                 sql.WriteLine(this.Quote(op.TableName));
                 sql.WriteLine("(");
                 sql.Indent++;
-                this.GenerateColumnDeclaration(sql, op.PKName, op.PKDataType, op.PKLength, true, true);
+                this.GenerateColumnDeclaration(sql, op.PKName, op.PKDbType, op.PKLength, true, true);
 
                 sql.WriteLine();
                 sql.Indent--;

@@ -93,27 +93,27 @@ namespace Rafy.MetaModel
             set { this.SetValue(ref this._ColumnName, value); }
         }
 
-        private DbType? _DataType;
+        private DbType? _DbType;
         /// <summary>
         /// 映射数据库中的字段的类型。
         /// 如果没有设置，则使用默认的映射规则。
         /// </summary>
-        public DbType? DataType
+        public DbType? DbType
         {
-            get { return this._DataType; }
-            set { this.SetValue(ref this._DataType, value); }
+            get { return this._DbType; }
+            set { this.SetValue(ref this._DbType, value); }
         }
 
-        private string _DataTypeLength;
+        private string _DbTypeLength;
         /// <summary>
         /// 映射数据库中的字段的长度、精度等信息。
         /// 可以是数字，也可以是 MAX 等字符串。
         /// 如果是空，则表示使用默认的长度。
         /// </summary>
-        public string DataTypeLength
+        public string DbTypeLength
         {
-            get { return this._DataTypeLength; }
-            set { this.SetValue(ref this._DataTypeLength, value); }
+            get { return this._DbTypeLength; }
+            set { this.SetValue(ref this._DbTypeLength, value); }
         }
     }
 }

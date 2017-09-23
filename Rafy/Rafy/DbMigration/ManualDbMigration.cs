@@ -98,7 +98,7 @@ namespace Rafy.DbMigration
             {
                 TableName = tableName,
                 PKName = pkName,
-                PKDataType = pkDbType,
+                PKDbType = pkDbType,
                 PKLength = length,
                 PKIdentity = isPkIdentity,
             });
@@ -110,7 +110,7 @@ namespace Rafy.DbMigration
             {
                 TableName = tableName,
                 PKName = pkName,
-                PKDataType = pkDbType,
+                PKDbType = pkDbType,
                 PKLength = length,
                 PKIdentity = isPkIdentity,
             });
@@ -122,7 +122,7 @@ namespace Rafy.DbMigration
             {
                 TableName = tableName,
                 ColumnName = columnName,
-                DataType = dataType,
+                DbType = dataType,
                 Length = length,
                 IsPrimaryKey = isPrimaryKey,
                 IsIdentity = isIdentity,
@@ -135,7 +135,7 @@ namespace Rafy.DbMigration
             {
                 TableName = tableName,
                 ColumnName = columnName,
-                DataType = dataType,
+                DbType = dataType,
                 Length = length,
                 IsPrimaryKey = isPrimaryKey,
                 IsIdentity = isIdentity,
@@ -148,7 +148,7 @@ namespace Rafy.DbMigration
             {
                 TableName = tableName,
                 ColumnName = pkName,
-                DataType = pkDbType,
+                DbType = pkDbType,
                 Length = pkLength,
             });
         }
@@ -159,7 +159,7 @@ namespace Rafy.DbMigration
             {
                 TableName = tableName,
                 ColumnName = pkName,
-                DataType = pkDbType,
+                DbType = pkDbType,
                 Length = pkLength,
             });
         }

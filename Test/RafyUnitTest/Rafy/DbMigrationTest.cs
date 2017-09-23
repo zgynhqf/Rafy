@@ -164,7 +164,7 @@ namespace RafyUnitTest
                 var taskTable = result.FindTable("Task");
                 var c1 = taskTable.FindColumn("TestingColumn");
                 Assert.IsTrue(c1 != null && c1.IsRequired);
-                Assert.IsTrue(DbTypeConverter.IsCompatible(c1.DataType, DbType.Decimal));
+                Assert.IsTrue(DbTypeConverter.IsCompatible(c1.DbType, DbType.Decimal));
             });
         }
 
@@ -182,7 +182,7 @@ namespace RafyUnitTest
                     var taskTable = result.FindTable("Task");
                     var c1 = taskTable.FindColumn("TestingColumn");
                     Assert.IsTrue(c1 != null && c1.IsRequired);
-                    Assert.IsTrue(DbTypeConverter.IsCompatible(c1.DataType, DbType.String));
+                    Assert.IsTrue(DbTypeConverter.IsCompatible(c1.DbType, DbType.String));
                 });
             }
         }
@@ -208,10 +208,10 @@ namespace RafyUnitTest
         }
 
         /// <summary>
-        /// 在自动升级时，可以升级使用 HasDataType 定义的数据类型。
+        /// 在自动升级时，可以升级使用 HasDbType 定义的数据类型。
         /// </summary>
         [TestMethod]
-        public void DMT_AlterColumn_DataType_AutoMigrate()
+        public void DMT_AlterColumn_DbType_AutoMigrate()
         {
             this.Test(destination =>
             {
@@ -222,12 +222,12 @@ namespace RafyUnitTest
                 Assert.IsTrue(column != null);
 
                 var p = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName).ProviderName;
-                Assert.IsTrue(DbTypeConverter.IsCompatible(column.DataType, DbType.Xml));
+                Assert.IsTrue(DbTypeConverter.IsCompatible(column.DbType, DbType.Xml));
             });
         }
 
         [TestMethod]
-        public void DMT_AlterColumn_DataType()
+        public void DMT_AlterColumn_DbType()
         {
             this.Test(destination =>
             {
@@ -241,7 +241,7 @@ namespace RafyUnitTest
                 Assert.IsTrue(column != null);
 
                 var p = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName).ProviderName;
-                Assert.IsTrue(DbTypeConverter.IsCompatible(column.DataType, DbType.Xml));
+                Assert.IsTrue(DbTypeConverter.IsCompatible(column.DbType, DbType.Xml));
             });
         }
 
@@ -249,7 +249,7 @@ namespace RafyUnitTest
         /// 测试从可空的字符串类型变到不可空的数值类型时的迁移。
         /// </summary>
         [TestMethod]
-        public void DMT_AlterColumn_DataType_NullStringToDouble()
+        public void DMT_AlterColumn_DbType_NullStringToDouble()
         {
             this.Test(destination =>
             {
@@ -261,7 +261,7 @@ namespace RafyUnitTest
                 var table = result.FindTable("Task");
                 var column = table.FindColumn("Name");
                 Assert.IsTrue(column != null);
-                Assert.IsTrue(DbTypeConverter.IsCompatible(column.DataType, DbType.Double));
+                Assert.IsTrue(DbTypeConverter.IsCompatible(column.DbType, DbType.Double));
                 Assert.IsTrue(column.IsRequired);
             });
         }
@@ -427,7 +427,7 @@ namespace RafyUnitTest
                     Assert.IsTrue(table.Columns.Count == 2);
                     var pk = table.FindPrimaryColumn();
                     Assert.IsTrue(pk.Name.EqualsIgnoreCase("Id"));
-                    Assert.IsTrue(pk.DataType == DbType.Int32);
+                    Assert.IsTrue(pk.DbType == DbType.Int32);
 
                     //数据库数据
                     using (var db = DbAccesserFactory.Create(context.DbSetting))

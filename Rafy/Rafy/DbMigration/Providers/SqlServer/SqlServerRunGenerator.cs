@@ -60,7 +60,7 @@ namespace Rafy.DbMigration.SqlServer
                 sql.WriteLine(this.Quote(op.TableName));
                 sql.WriteLine("(");
                 sql.Indent++;
-                this.GenerateColumnDeclaration(sql, op.PKName, op.PKDataType, op.PKLength, true, true);
+                this.GenerateColumnDeclaration(sql, op.PKName, op.PKDbType, op.PKLength, true, true);
 
                 if (op.PKIdentity) { sql.Write(" IDENTITY(1,1)"); }
 
@@ -91,7 +91,7 @@ namespace Rafy.DbMigration.SqlServer
                 sql.Write("ADD ");
 
                 //自增列必然是不可空的，在创建列时必须同时把不可空约束给创建好了。
-                this.GenerateColumnDeclaration(sql, op.ColumnName, op.DataType, op.Length, op.IsIdentity, op.IsForeignKey);
+                this.GenerateColumnDeclaration(sql, op.ColumnName, op.DbType, op.Length, op.IsIdentity, op.IsForeignKey);
 
                 if (op.IsIdentity)
                 {
@@ -112,7 +112,7 @@ namespace Rafy.DbMigration.SqlServer
 
                 sql.Indent++;
                 sql.Write("ALTER COLUMN ");
-                this.GenerateColumnDeclaration(sql, op.ColumnName, op.DataType, op.Length, true, op.IsForeignKey);
+                this.GenerateColumnDeclaration(sql, op.ColumnName, op.DbType, op.Length, true, op.IsForeignKey);
 
                 this.AddRun(sql);
             }
@@ -128,7 +128,7 @@ namespace Rafy.DbMigration.SqlServer
 
                 sql.Indent++;
                 sql.Write("ALTER COLUMN ");
-                this.GenerateColumnDeclaration(sql, op.ColumnName, op.DataType, op.Length, false, op.IsForeignKey);
+                this.GenerateColumnDeclaration(sql, op.ColumnName, op.DbType, op.Length, false, op.IsForeignKey);
 
                 this.AddRun(sql);
             }

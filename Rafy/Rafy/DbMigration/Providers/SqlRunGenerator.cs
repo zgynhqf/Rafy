@@ -108,7 +108,7 @@ ALTER TABLE ");
         {
             FormattedSql sql = string.Format(@"UPDATE {0} SET {1} = {2} WHERE {1} IS NULL",
                     this.Quote(op.TableName), this.Quote(op.ColumnName), "{0}");
-            sql.Parameters.Add(this.DbTypeCoverter.GetDefaultValue(op.DataType));
+            sql.Parameters.Add(this.DbTypeCoverter.GetDefaultValue(op.DbType));
 
             this.AddRun(new FormattedSqlMigrationRun
             {
@@ -194,11 +194,11 @@ ALTER TABLE ");
                 if (isPKorFK)
                 {
                     //http://stackoverflow.com/questions/2863993/is-of-a-type-that-is-invalid-for-use-as-a-key-column-in-an-index
-                    length = DbMigrationSettings.PKFKDataTypeLength;
+                    length = DbMigrationSettings.PKFKDbTypeLength;
                 }
                 else if (dataType == DbType.String)
                 {
-                    length = DbMigrationSettings.StringColumnDataTypeLength;
+                    length = DbMigrationSettings.StringColumnDbTypeLength;
                 }
             }
 

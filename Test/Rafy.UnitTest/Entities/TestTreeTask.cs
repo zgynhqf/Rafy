@@ -162,7 +162,7 @@ namespace UT
                 TestTreeTask.XmlContentProperty
                 );
 
-            Meta.Property(TestTreeTask.XmlContentProperty).MapColumn().HasDataType(DbType.Xml);
+            Meta.Property(TestTreeTask.XmlContentProperty).MapColumn().HasDbType(DbType.Xml);
         }
     }
 }

@@ -36,7 +36,7 @@ namespace Rafy.Domain.ORM
             this.Name = name;
             this.Meta = columnMeta;
             this.PropertyType = TypeHelper.IgnoreNullable(propertyMeta.PropertyType);
-            this.DbType = columnMeta.DataType ?? dbTypeConverter.FromClrType(this.PropertyType);
+            this.DbType = columnMeta.DbType ?? dbTypeConverter.FromClrType(this.PropertyType);
             this.Property = propertyMeta.ManagedProperty as IProperty;
         }
 
