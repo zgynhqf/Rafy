@@ -37,16 +37,23 @@ namespace Rafy.Domain.ORM
 
             var dbSetting = RdbDataProvider.Get(repo).DbSetting;
             var identifierProvider = DbMigrationProviderFactory.GetIdentifierProvider(dbSetting.ProviderName);
+            var dbTypeConverter = DbMigrationProviderFactory.GetDbTypeConverter(dbSetting.ProviderName);
 
             var name = identifierProvider.Prepare(repo.EntityMeta.TableMeta.TableName);
             var res = new PersistanceTableInfo(name, repo);
 
-            ProcessManagedProperties(em.EntityType, res, em, identifierProvider);
+            ProcessManagedProperties(em.EntityType, res, em, identifierProvider, dbTypeConverter);
 
             return res;
         }
 
-        private static void ProcessManagedProperties(Type type, PersistanceTableInfo table, EntityMeta em, IDbIdentifierQuoter identifierProvider)
+        private static void ProcessManagedProperties(
+            Type type,
+            PersistanceTableInfo table,
+            EntityMeta em,
+            IDbIdentifierQuoter identifierProvider,
+            DbTypeConverter dbTypeConverter
+            )
         {
             foreach (var property in em.EntityProperties)
             {
@@ -61,7 +68,7 @@ namespace Rafy.Domain.ORM
 
                 var columnName = identifierProvider.Prepare(meta.ColumnName);
 
-                var column = new PersistanceColumnInfo(columnName, epm, meta, table);
+                var column = new PersistanceColumnInfo(columnName, epm, meta, table, dbTypeConverter);
 
                 if (meta.IsPrimaryKey)
                 {

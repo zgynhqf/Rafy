@@ -20,12 +20,21 @@ using System.Threading.Tasks;
 
 namespace Rafy.DbMigration.SqlServerCe
 {
+    /// <summary>
+    /// SqlServerCe 数据库字段类型的转换器。
+    /// </summary>
     public class SqlServerCeDbTypeConverter : SqlServer.SqlServerDbTypeConverter
     {
         public static readonly new SqlServerCeDbTypeConverter Instance = new SqlServerCeDbTypeConverter();
 
         private SqlServerCeDbTypeConverter() { }
 
+        /// <summary>
+        /// 将 DbType 转换为数据库中的列的类型名称。
+        /// </summary>
+        /// <param name="fieldType"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
         public override string ConvertToDatabaseTypeName(DbType fieldType, string length = null)
         {
             switch (fieldType)

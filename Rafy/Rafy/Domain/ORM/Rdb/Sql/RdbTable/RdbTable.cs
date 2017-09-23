@@ -71,7 +71,21 @@ namespace Rafy.Domain.ORM
             get { return _repository; }
         }
 
-        internal IDbIdentifierQuoter IdentifierProvider;
+        /// <summary>
+        /// Gets or sets the identifier provider.
+        /// </summary>
+        /// <value>
+        /// The identifier provider.
+        /// </value>
+        public IDbIdentifierQuoter IdentifierProvider { get; internal set; }
+
+        /// <summary>
+        /// Gets or sets the database type converter.
+        /// </summary>
+        /// <value>
+        /// The database type converter.
+        /// </value>
+        public DbTypeConverter DbTypeConverter { get; internal set; }
 
         internal virtual RdbColumn CreateColumn(IPersistanceColumnInfo columnInfo)
         {
@@ -239,7 +253,7 @@ namespace Rafy.Domain.ORM
                 var column = _columns[i];
                 if (column.ShouldInsert(withIdentity))
                 {
-                    var value = column.ReadParameterValue(item);
+                    var value = column.ReadDbParameterValue(item);
                     parameters.Add(value);
                 }
             }
@@ -328,7 +342,7 @@ namespace Rafy.Domain.ORM
                 var column = _columns[i];
                 if (!column.Info.IsPrimaryKey && !column.IsLOB)
                 {
-                    var value = column.ReadParameterValue(item);
+                    var value = column.ReadDbParameterValue(item);
                     parameters.Add(value);
                 }
             }
@@ -341,7 +355,7 @@ namespace Rafy.Domain.ORM
                     var column = lobColumns[i];
                     if (!column.Info.IsPrimaryKey)
                     {
-                        var value = column.ReadParameterValue(item);
+                        var value = column.ReadDbParameterValue(item);
                         parameters.Add(value);
                     }
                 }
@@ -754,7 +768,7 @@ namespace Rafy.Domain.ORM
                 if (!column.IsLOB)
                 {
                     object val = reader.GetValue(indexFrom++);
-                    column.LoadValue(entity, val);
+                    column.WritePropertyValue(entity, val);
                 }
             }
 
@@ -770,7 +784,7 @@ namespace Rafy.Domain.ORM
             foreach (var column in _columns)
             {
                 object val = reader[column.Name];
-                column.LoadValue(entity, val);
+                column.WritePropertyValue(entity, val);
             }
 
             entity = this.TryReplaceByContext(entity) as Entity;

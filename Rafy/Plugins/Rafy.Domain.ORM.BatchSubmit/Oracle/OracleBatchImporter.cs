@@ -385,7 +385,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
 
             #region 对于 CLOB 类型，需要特殊处理。
 
-            var dbType = column.Info.ColumnMeta.DataType ?? this.SqlGenerator.DbTypeCoverter.FromClrType(column.Info.DataType);
+            var dbType = column.Info.DbType;
             /*********************** 代码块解释 *********************************
              * 不再需要对 CLOB 类型特殊处理
              * 
@@ -422,7 +422,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
             for (int j = 0; j < rowsCount; j++)
             {
                 var entity = entities[j];
-                var value = column.ReadParameterValue(entity);
+                var value = column.ReadDbParameterValue(entity);
                 valueArray[j] = value;
             }
 

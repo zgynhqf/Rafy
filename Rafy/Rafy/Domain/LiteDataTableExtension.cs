@@ -139,7 +139,7 @@ namespace Rafy.Domain
                             //通过列名称相等匹配找到 rdbcolumn。
                             if (column.Name == mapping.ColumnName)
                             {
-                                column.LoadValue(entityItem, rowValue);
+                                column.WritePropertyValue(entityItem, rowValue);
                                 break;
                             }
                         }

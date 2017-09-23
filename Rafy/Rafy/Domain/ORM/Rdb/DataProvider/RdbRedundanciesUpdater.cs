@@ -165,7 +165,7 @@ namespace Rafy.Domain.ORM
             var rdColumn = table.FindByPropertyName(redundancy.Property.Name);
             sql.Append("UPDATE ").AppendQuoteName(table)
                 .Append(" SET ").AppendQuote(table, rdColumn.Name)
-                .Append(" = ").AppendParameter(rdColumn.ConvertToParameterValue(newValue)).Append(" WHERE ");
+                .Append(" = ").AppendParameter(table.DbTypeConverter.ToDbParameterValue(newValue)).Append(" WHERE ");
 
             int quoteNeeded = 0;
             if (refTables.Length > 1)
@@ -195,7 +195,7 @@ namespace Rafy.Domain.ORM
             var lastRef = refTables[refTables.Length - 1];
             var refColumn = lastRef.OwnerTable.FindByPropertyName(lastRef.RefProperty.Property.Name);
             sql.AppendQuote(lastRef.OwnerTable, refColumn.Name)
-                .Append(" = ").AppendParameter(refColumn.ConvertToParameterValue(lastRefId));
+                .Append(" = ").AppendParameter(refColumn.Table.DbTypeConverter.ToDbParameterValue(lastRefId));
 
             while (quoteNeeded > 0)
             {

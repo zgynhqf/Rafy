@@ -138,7 +138,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
             var columns = meta.Columns;
             foreach (var column in columns)
             {
-                var dataType = TypeHelper.IgnoreNullable(column.Info.DataType);
+                var dataType = TypeHelper.IgnoreNullable(column.Info.PropertyType);
                 table.Columns.Add(new DataColumn(column.Name, dataType));
             }
 
@@ -151,7 +151,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
                 for (int j = 0, jc = columns.Count; j < jc; j++)
                 {
                     var column = columns[j];
-                    row[j] = column.ReadParameterValue(entity);
+                    row[j] = column.ReadDbParameterValue(entity);
                 }
                 rows.Add(row);
 
@@ -316,7 +316,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
                     var parameter = dba.ParameterFactory.CreateParameter();
                     parameter.ParameterName = '@' + column.Name;
                     parameter.SourceColumn = column.Name;//额外地，需要设置 SourceColumn
-                    parameter.DbType = column.Info.ColumnMeta.DataType ?? this.SqlGenerator.DbTypeCoverter.FromClrType(column.Info.DataType);
+                    parameter.DbType = column.Info.DbType;
                     parameters.Add(parameter);
                 }
             }
@@ -325,7 +325,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
             var pkParameter = dba.ParameterFactory.CreateParameter();
             pkParameter.ParameterName = '@' + table.PKColumn.Name;
             pkParameter.SourceColumn = table.PKColumn.Name;
-            pkParameter.DbType = table.PKColumn.Info.ColumnMeta.DataType ?? this.SqlGenerator.DbTypeCoverter.FromClrType(table.PKColumn.Info.DataType);
+            pkParameter.DbType = table.PKColumn.Info.DbType;
             parameters.Add(pkParameter);
 
             return parameters.ToArray();

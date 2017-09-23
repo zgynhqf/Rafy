@@ -94,42 +94,6 @@ namespace Rafy.Domain.ORM.MySql
         }
 
         /// <summary>
-        /// 进行数据类型的转换
-        /// </summary>
-        /// <param name="value">待转化的CLR数据类型</param>
-        /// <returns>返回MySql兼容的数据类型</returns>
-        public override object PrepareConstraintValue(object value)
-        {
-            value = base.PrepareConstraintValue(value);
-
-            value = PrepareConstraintValueInternal(value);
-
-            return value;
-        }
-
-        /// <summary>
-        /// 针对布尔类型和枚举类型进行特殊处理
-        /// </summary>
-        /// <param name="value">待转换的CLR数据类型</param>
-        /// <returns>返回MySql兼容的具体数据类型</returns>
-        internal static object PrepareConstraintValueInternal(object value)
-        {
-            if (value != DBNull.Value)
-            {
-                if (value is bool)
-                {
-                    value = Convert.ToInt32(value);
-                }
-                else if (value.GetType().IsEnum)
-                {
-                    value = TypeHelper.CoerceValue(typeof(int), value);
-                }
-            }
-
-            return value;
-        }
-
-        /// <summary>
         /// 为指定的原始查询生成指定分页效果的新查询。
         /// </summary>
         /// <param name="raw">原始查询</param>

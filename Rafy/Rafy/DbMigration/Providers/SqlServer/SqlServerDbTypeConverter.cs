@@ -20,12 +20,22 @@ using System.Threading.Tasks;
 
 namespace Rafy.DbMigration.SqlServer
 {
+    /// <summary>
+    /// SqlServer 数据库字段类型的转换器。
+    /// </summary>
     public class SqlServerDbTypeConverter : DbTypeConverter
     {
         public static readonly SqlServerDbTypeConverter Instance = new SqlServerDbTypeConverter();
 
         protected SqlServerDbTypeConverter() { }
 
+        /// <summary>
+        /// 将 DbType 转换为数据库中的列的类型名称。
+        /// </summary>
+        /// <param name="fieldType"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        /// <exception cref="NotSupportedException"></exception>
         public override string ConvertToDatabaseTypeName(DbType fieldType, string length = null)
         {
             switch (fieldType)
@@ -65,6 +75,12 @@ namespace Rafy.DbMigration.SqlServer
             throw new NotSupportedException(string.Format("不支持生成列类型：{0}。", fieldType));
         }
 
+        /// <summary>
+        /// 将从数据库 Schema Meta 中读取出来的列的类型名称，转换为其对应的 DbType。
+        /// </summary>
+        /// <param name="databaseTypeName">从数据库 Schema Meta 中读取出来的列的类型名称。</param>
+        /// <returns></returns>
+        /// <exception cref="NotSupportedException"></exception>
         public override DbType ConvertToDbType(string databaseTypeName)
         {
             switch (databaseTypeName.ToLower())

@@ -198,8 +198,8 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
                     if (i != 0) { sql.Write(','); }
 
                     //获取数据类型及值。
-                    var dbType = column.Info.ColumnMeta.DataType ?? this.SqlGenerator.DbTypeCoverter.FromClrType(column.Info.DataType);
-                    var value = column.ReadParameterValue(entity);
+                    var dbType = column.Info.DbType;
+                    var value = column.ReadDbParameterValue(entity);
 
                     //处理空值
                     if (value == DBNull.Value || value == null)

@@ -61,7 +61,7 @@ namespace Rafy.Domain.ORM
                     {
                         string conventionColumnName = tableInfo.Name + "_" + column.Name;
 
-                        column.LoadValue(result, rowData[conventionColumnName]);
+                        column.WritePropertyValue(result, rowData[conventionColumnName]);
                     }
                 }
             }

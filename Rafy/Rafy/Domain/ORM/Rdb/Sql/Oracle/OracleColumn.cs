@@ -31,29 +31,5 @@ namespace Rafy.Domain.ORM.Oracle
             //Oracle 中 Identity 列是由 Sequence 生成的，这些列也必须放在 Insert 语句中进行插入。
             return true;
         }
-
-        public override object ConvertToParameterValue(object value)
-        {
-            value = base.ConvertToParameterValue(value);
-
-            value = OracleSqlGenerator.PrepareConstraintValueInternal(value);
-
-            return value;
-        }
-
-        public override void Write(Entity entity, object value)
-        {
-            var info = this.Info;
-            if (value != null && info.IsBooleanType)
-            {
-                value = OracleDbTypeConverter.Instance.ToCLRBoolean(value);
-            }
-            else if (value == null && info.IsStringType)//null 转换为空字符串
-            {
-                value = string.Empty;
-            }
-
-            base.Write(entity, value);
-        }
     }
 }

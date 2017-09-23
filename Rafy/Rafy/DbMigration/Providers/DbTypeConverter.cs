@@ -76,6 +76,28 @@ namespace Rafy.DbMigration
         }
 
         /// <summary>
+        /// 将指定的值转换为一个兼容数据库类型的值。
+        /// 该值可用于与下层的 ADO.NET 交互。
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public virtual object ToDbParameterValue(object value)
+        {
+            return value ?? DBNull.Value;
+        }
+
+        /// <summary>
+        /// 将指定的值转换为一个 CLR 类型的值。
+        /// </summary>
+        /// <param name="dbValue">The database value.</param>
+        /// <param name="clrType">Type of the color.</param>
+        /// <returns></returns>
+        public virtual object ToClrValue(object dbValue, Type clrType)
+        {
+            return dbValue == DBNull.Value ? null : dbValue;
+        }
+
+        /// <summary>
         /// 获取指定的数据库字段类型所对应的默认值。
         /// </summary>
         /// <param name="type"></param>

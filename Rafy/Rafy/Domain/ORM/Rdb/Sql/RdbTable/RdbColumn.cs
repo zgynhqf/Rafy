@@ -4,6 +4,7 @@ using System.Diagnostics;
 using Rafy.ManagedProperty;
 using Rafy.Reflection;
 using Rafy.MetaModel;
+using Rafy.DbMigration;
 
 namespace Rafy.Domain.ORM
 {
@@ -66,26 +67,22 @@ namespace Rafy.Domain.ORM
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public virtual object ReadParameterValue(Entity entity)
+        public object ReadDbParameterValue(Entity entity)
         {
             object value = this.Read(entity);
-            return this.ConvertToParameterValue(value);
-        }
-
-        public virtual object ConvertToParameterValue(object value)
-        {
-            return value ?? DBNull.Value;
+            value = _table.DbTypeConverter.ToDbParameterValue(value);
+            return value;
         }
 
         /// <summary>
         /// 把数据库中列的值写入到实体对应的属性中。
         /// </summary>
         /// <param name="entity"></param>
-        /// <param name="val"></param>
-        public void LoadValue(Entity entity, object val)
+        /// <param name="value"></param>
+        public void WritePropertyValue(Entity entity, object value)
         {
-            if (val == DBNull.Value) { val = null; }
-            this.Write(entity, val);
+            value = _table.DbTypeConverter.ToClrValue(value, _columnInfo.PropertyType);
+            this.Write(entity, value);
         }
 
         private object Read(Entity entity)
@@ -102,25 +99,20 @@ namespace Rafy.Domain.ORM
             return value;
         }
 
-        /// <summary>
-        /// 写入操作，PatrickLiu修改了访问修饰符，从internal修改为pubic
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <param name="val"></param>
-        public virtual void Write(Entity entity, object val)
+        private void Write(Entity entity, object value)
         {
             var refIdProperty = _columnInfo.Property as IRefIdProperty;
             if (refIdProperty != null)
             {
-                if (val != null)
+                if (value != null)
                 {
-                    var id = TypeHelper.CoerceValue(refIdProperty.PropertyType, val);
+                    var id = TypeHelper.CoerceValue(refIdProperty.PropertyType, value);
                     entity.LoadProperty(refIdProperty, id);
                 }
                 return;
             }
 
-            entity.LoadProperty(_columnInfo.Property, val);
+            entity.LoadProperty(_columnInfo.Property, value);
         }
     }
 }

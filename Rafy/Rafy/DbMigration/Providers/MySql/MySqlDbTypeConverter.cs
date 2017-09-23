@@ -18,9 +18,14 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Rafy.Reflection;
 
 namespace Rafy.DbMigration.MySql
 {
+    /// <summary>
+    /// MySql 数据库字段类型的转换器。
+    /// </summary>
+    /// <seealso cref="Rafy.DbMigration.DbTypeConverter" />
     public class MySqlDbTypeConverter : DbTypeConverter
     {
         public static readonly MySqlDbTypeConverter Instance = new MySqlDbTypeConverter();
@@ -87,6 +92,12 @@ namespace Rafy.DbMigration.MySql
             throw new NotSupportedException(string.Format("不支持生成列类型：{0}。", fieldType));
         }
 
+        /// <summary>
+        /// 将从数据库 Schema Meta 中读取出来的列的类型名称，转换为其对应的 DbType。
+        /// </summary>
+        /// <param name="databaseTypeName">从数据库 Schema Meta 中读取出来的列的类型名称。</param>
+        /// <returns></returns>
+        /// <exception cref="NotSupportedException"></exception>
         public override DbType ConvertToDbType(string databaseTypeName)
         {
             if (TypeContains(databaseTypeName, "CHAR")) { return DbType.String; }
@@ -125,6 +136,49 @@ namespace Rafy.DbMigration.MySql
             if (TypeContains(databaseTypeName, "DATE")) { return DbType.Date; }
 
             throw new NotSupportedException(string.Format("不支持读取数据库中的列类型：{0}。", databaseTypeName));
+        }
+
+        /// <summary>
+        /// 将指定的值转换为一个兼容数据库类型的值。
+        /// 该值可用于与下层的 ADO.NET 交互。
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public override object ToDbParameterValue(object value)
+        {
+            value = base.ToDbParameterValue(value);
+
+            if (value != DBNull.Value)
+            {
+                if (value is bool)
+                {
+                    value = Convert.ToInt32(value);
+                }
+                else if (value.GetType().IsEnum)
+                {
+                    value = TypeHelper.CoerceValue(typeof(int), value);
+                }
+            }
+
+            return value;
+        }
+
+        /// <summary>
+        /// 将指定的值转换为一个 CLR 类型的值。
+        /// </summary>
+        /// <param name="dbValue">The database value.</param>
+        /// <param name="clrType">Type of the color.</param>
+        /// <returns></returns>
+        public override object ToClrValue(object dbValue, Type clrType)
+        {
+            dbValue = base.ToClrValue(dbValue, clrType);
+
+            if (dbValue == null && clrType == typeof(string))
+            {
+                dbValue = string.Empty;//null 转换为空字符串
+            }
+
+            return dbValue;
         }
 
         private static bool TypeContains(string mySqlType, string targetType)

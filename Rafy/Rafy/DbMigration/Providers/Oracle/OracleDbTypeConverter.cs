@@ -17,9 +17,13 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Rafy.Reflection;
 
 namespace Rafy.DbMigration.Oracle
 {
+    /// <summary>
+    /// Oracle 数据库字段类型的转换器。
+    /// </summary>
     public class OracleDbTypeConverter : DbTypeConverter
     {
         private const string CLOBTypeName = "CLOB";
@@ -28,6 +32,13 @@ namespace Rafy.DbMigration.Oracle
 
         private OracleDbTypeConverter() { }
 
+        /// <summary>
+        /// 将 DbType 转换为数据库中的列的类型名称。
+        /// </summary>
+        /// <param name="fieldType"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        /// <exception cref="NotSupportedException"></exception>
         public override string ConvertToDatabaseTypeName(DbType fieldType, string length = null)
         {
             switch (fieldType)
@@ -65,6 +76,12 @@ namespace Rafy.DbMigration.Oracle
             throw new NotSupportedException(string.Format("不支持生成列类型：{0}。", fieldType));
         }
 
+        /// <summary>
+        /// 将从数据库 Schema Meta 中读取出来的列的类型名称，转换为其对应的 DbType。
+        /// </summary>
+        /// <param name="databaseTypeName">从数据库 Schema Meta 中读取出来的列的类型名称。</param>
+        /// <returns></returns>
+        /// <exception cref="NotSupportedException"></exception>
         public override DbType ConvertToDbType(string databaseTypeName)
         {
             switch (databaseTypeName.ToLower())
@@ -93,6 +110,11 @@ namespace Rafy.DbMigration.Oracle
             throw new NotSupportedException($"不支持读取数据库中的列类型：{databaseTypeName}。");
         }
 
+        /// <summary>
+        /// 返回 CLR 类型默认映射的数据库的类型。
+        /// </summary>
+        /// <param name="clrType"></param>
+        /// <returns></returns>
         public override DbType FromClrType(Type clrType)
         {
             var value = base.FromClrType(clrType);
@@ -105,15 +127,58 @@ namespace Rafy.DbMigration.Oracle
             return value;
         }
 
-        public string ToDbBoolean(bool value)
+        /// <summary>
+        /// 将指定的值转换为一个兼容数据库类型的值。
+        /// 该值可用于与下层的 ADO.NET 交互。
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public override object ToDbParameterValue(object value)
         {
-            //数据库使用 CHAR(1) 来存储 Boolean 类型数据。
-            return value ? "1" : "0";
+            value = base.ToDbParameterValue(value);
+
+            if (value != DBNull.Value)
+            {
+                if (value is bool)
+                {
+                    //数据库使用 CHAR(1) 来存储 Boolean 类型数据。
+                    value = (bool)value ? "1" : "0";
+                }
+                else if (value.GetType().IsEnum)
+                {
+                    value = TypeHelper.CoerceValue(typeof(int), value);
+                }
+            }
+
+            return value;
         }
 
-        public bool ToCLRBoolean(object value)
+        /// <summary>
+        /// 将指定的值转换为一个 CLR 类型的值。
+        /// </summary>
+        /// <param name="dbValue">The database value.</param>
+        /// <param name="clrType">Type of the color.</param>
+        /// <returns></returns>
+        public override object ToClrValue(object dbValue, Type clrType)
         {
-            return value.ToString() == "1" ? true : false;
+            dbValue = base.ToClrValue(dbValue, clrType);
+
+            if (dbValue != null)
+            {
+                if (clrType == typeof(bool))
+                {
+                    dbValue = dbValue.ToString() == "1" ? true : false;
+                }
+            }
+            else
+            {
+                if (clrType == typeof(string))
+                {
+                    dbValue = string.Empty;//null 转换为空字符串
+                }
+            }
+
+            return dbValue;
         }
     }
 }

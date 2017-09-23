@@ -66,6 +66,7 @@ namespace Rafy.Domain.ORM
             }
 
             table.IdentifierProvider = DbMigrationProviderFactory.GetIdentifierProvider(provider);
+            table.DbTypeConverter = DbMigrationProviderFactory.GetDbTypeConverter(provider);
 
             var em = repo.EntityMeta;
             foreach (var columnInfo in table.Info.Columns)
@@ -74,6 +75,7 @@ namespace Rafy.Domain.ORM
                 if (epm == null) { throw new ArgumentNullException(string.Format("{0}.{1} 属性需要使用托管属性进行编写。", table.Info.Class.FullName, columnInfo.Property.Name)); }
 
                 var column = table.CreateColumn(columnInfo);
+
                 table.Add(column);
             }
 

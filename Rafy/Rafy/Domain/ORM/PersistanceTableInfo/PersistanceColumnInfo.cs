@@ -12,9 +12,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Rafy.DbMigration;
 using Rafy.MetaModel;
 using Rafy.Reflection;
 
@@ -22,70 +24,37 @@ namespace Rafy.Domain.ORM
 {
     class PersistanceColumnInfo : IPersistanceColumnInfo
     {
-        private EntityPropertyMeta _propertyMeta;
-        private ColumnMeta _columnMeta;
-
-        public PersistanceColumnInfo(string name, EntityPropertyMeta propertyMeta, ColumnMeta columnMeta, PersistanceTableInfo table)
+        internal PersistanceColumnInfo(
+            string name,
+            EntityPropertyMeta propertyMeta,
+            ColumnMeta columnMeta,
+            PersistanceTableInfo table,
+            DbTypeConverter dbTypeConverter
+            )
         {
-            _propertyMeta = propertyMeta;
-            _columnMeta = columnMeta;
             this.Table = table;
-
             this.Name = name;
-            this.DataType = propertyMeta.PropertyType;
-            this.IsIdentity = columnMeta.IsIdentity;
-            this.IsPrimaryKey = columnMeta.IsPrimaryKey;
+            this.Meta = columnMeta;
+            this.PropertyType = TypeHelper.IgnoreNullable(propertyMeta.PropertyType);
+            this.DbType = columnMeta.DataType ?? dbTypeConverter.FromClrType(this.PropertyType);
             this.Property = propertyMeta.ManagedProperty as IProperty;
         }
 
-        private Type _dataType;
-        private bool _isBooleanType;
-        private bool _isStringType;
-        private bool _isNullable;
-
         public PersistanceTableInfo Table { get; private set; }
-
-        public ColumnMeta ColumnMeta
-        {
-            get { return _columnMeta; }
-        }
 
         public string Name { get; private set; }
 
-        public Type DataType
-        {
-            get { return _dataType; }
-            set
-            {
-                var raw = TypeHelper.IgnoreNullable(value);
+        public ColumnMeta Meta { get; private set; }
 
-                _dataType = raw;
-                _isBooleanType = _dataType == typeof(bool);
-                _isStringType = _dataType == typeof(string);
-                _isNullable = raw != value;
-            }
-        }
+        public Type PropertyType { get; private set; }
 
-        public bool IsBooleanType
-        {
-            get { return _isBooleanType; }
-        }
+        public DbType DbType { get; private set; }
 
-        public bool IsStringType
-        {
-            get { return _isStringType; }
-        }
+        public bool IsIdentity => this.Meta.IsIdentity;
 
-        public bool IsNullable
-        {
-            get { return _isNullable; }
-        }
+        public bool IsPrimaryKey => this.Meta.IsPrimaryKey;
 
-        public bool IsIdentity { get; set; }
-
-        public bool IsPrimaryKey { get; set; }
-
-        public IProperty Property { get; set; }
+        public IProperty Property { get; private set; }
 
         IPersistanceTableInfo IPersistanceColumnInfo.Table
         {

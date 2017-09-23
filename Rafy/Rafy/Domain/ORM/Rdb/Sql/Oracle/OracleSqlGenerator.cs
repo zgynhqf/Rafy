@@ -53,32 +53,6 @@ namespace Rafy.Domain.ORM.Oracle
             return base.VisitSqlColumnConstraint(node);
         }
 
-        public override object PrepareConstraintValue(object value)
-        {
-            value = base.PrepareConstraintValue(value);
-
-            value = PrepareConstraintValueInternal(value);
-
-            return value;
-        }
-
-        internal static object PrepareConstraintValueInternal(object value)
-        {
-            if (value != DBNull.Value)
-            {
-                if (value is bool)
-                {
-                    value = OracleDbTypeConverter.Instance.ToDbBoolean((bool)value);
-                }
-                else if (value.GetType().IsEnum)
-                {
-                    value = TypeHelper.CoerceValue(typeof(int), value);
-                }
-            }
-
-            return value;
-        }
-
         /// <summary>
         /// 使用 ROWNUM 来进行分页。
         /// </summary>

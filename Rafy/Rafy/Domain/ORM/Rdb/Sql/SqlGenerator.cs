@@ -313,7 +313,7 @@ namespace Rafy.Domain.ORM
             var op = node.Operator;
             var value = node.Value;
 
-            value = this.PrepareConstraintValue(value);
+            value = this.DbTypeCoverter.ToDbParameterValue(value);
 
             #region 处理一些特殊的值
 
@@ -538,11 +538,6 @@ namespace Rafy.Domain.ORM
             {
                 _sql.Append(" ESCAPE '").Append(ESCAPE_CHAR).Append('\'');
             }
-        }
-
-        public virtual object PrepareConstraintValue(object value)
-        {
-            return value ?? DBNull.Value;
         }
 
         protected override SqlSelectAll VisitSqlSelectAll(SqlSelectAll sqlSelectStar)

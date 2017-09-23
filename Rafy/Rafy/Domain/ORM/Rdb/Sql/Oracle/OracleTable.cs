@@ -62,7 +62,7 @@ namespace Rafy.Domain.ORM.Oracle
                     var sequenceValue = dba.RawAccesser.QueryValue(_selectSequenceSql);
 
                     sequenceValue = TypeHelper.CoerceValue(idProvider.KeyType, sequenceValue);
-                    idColumn.LoadValue(item, sequenceValue);
+                    idColumn.WritePropertyValue(item, sequenceValue);
 
                     //如果实体的 Id 是在插入的过程中生成的，
                     //那么需要在插入组合子对象前，先把新生成的父对象 Id 都同步到子列表中。

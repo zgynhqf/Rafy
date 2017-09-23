@@ -55,7 +55,7 @@ namespace Rafy.Domain.ORM.SqlCe
                 {
                     var idValue = dba.RawAccesser.QueryValue("SELECT @@IDENTITY;");
                     idValue = TypeHelper.CoerceValue(idProvider.KeyType, idValue);
-                    idColumn.LoadValue(item, idValue);
+                    idColumn.WritePropertyValue(item, idValue);
 
                     //如果实体的 Id 是在插入的过程中生成的，
                     //那么需要在插入组合子对象前，先把新生成的父对象 Id 都同步到子列表中。

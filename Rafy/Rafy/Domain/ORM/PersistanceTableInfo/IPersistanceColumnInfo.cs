@@ -12,6 +12,7 @@
 *******************************************************/
 
 using System;
+using System.Data;
 using Rafy.MetaModel;
 
 namespace Rafy.Domain.ORM
@@ -24,7 +25,7 @@ namespace Rafy.Domain.ORM
         /// <summary>
         /// 对应的列的元数据。
         /// </summary>
-        ColumnMeta ColumnMeta { get; }
+        ColumnMeta Meta { get; }
 
         /// <summary>
         /// 对应的表
@@ -37,29 +38,20 @@ namespace Rafy.Domain.ORM
         string Name { get; }
 
         /// <summary>
-        /// 数据类型
+        /// 属性的类型。
+        /// 如果属性是可空类型。这里会去除可空类型，返回内部的真实属性类型。
         /// </summary>
-        Type DataType { get; }
+        Type PropertyType { get; }
 
         /// <summary>
-        /// 返回本列是否为一个 Boolean 类型的属性（专为 Oracle 特制）
+        /// 该列的列类型。
         /// </summary>
-        bool IsBooleanType { get; }
-
-        /// <summary>
-        /// 返回本列是否为一个 String 类型的属性（专为 Oracle 特制）
-        /// </summary>
-        bool IsStringType { get; }
+        DbType DbType { get; }
 
         /// <summary>
         /// 是否为自增长主键列。
         /// </summary>
         bool IsIdentity { get; }
-
-        /// <summary>
-        /// 是否可空列。
-        /// </summary>
-        bool IsNullable { get; }
 
         /// <summary>
         /// 是否主键列
