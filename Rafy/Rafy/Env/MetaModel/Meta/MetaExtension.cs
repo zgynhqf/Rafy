@@ -129,19 +129,24 @@ namespace Rafy.MetaModel
         /// 指定某实体映射某个虚拟的视图。
         /// 当映射视图时，不会生成数据库表，仓库中也需要在所有的查询中都编写自定义查询。
         /// </summary>
-        /// <param name="meta"></param>
+        /// <param name="meta">The meta.</param>
+        /// <param name="mapDefaultProperties">设置为 true，则会自动映射 Id、TreeId、TreePId 以及有 ColumnAttribute 标签的属性。</param>
         /// <returns></returns>
         ///// <param name="viewSql">
         ///// 可以是一个数据库视图，也可以是一个能查询出数据的 Sql 语句。
         ///// 
         ///// 如果不指定此参数，则需要在所有的查询中都编写自定义查询。
         ///// </param>
-        public static EntityMeta MapView(this EntityMeta meta)//, string viewSql = null)
+        public static EntityMeta MapView(this EntityMeta meta, bool mapDefaultProperties = true)//, string viewSql = null)
         {
-            meta.TableMeta = new TableMeta();
+            meta.TableMeta = new TableMeta(meta.EntityType.Name);
+            meta.TableMeta.IsMappingView = true;
             //meta.TableMeta.ViewSql = viewSql;
 
-            MapDefaultColumns(meta);
+            if (mapDefaultProperties)
+            {
+                MapDefaultColumns(meta);
+            }
 
             return meta;
         }

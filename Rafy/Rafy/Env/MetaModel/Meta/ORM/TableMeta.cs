@@ -28,7 +28,7 @@ namespace Rafy.MetaModel
         private string _TableName;
         /// <summary>
         /// 映射数据库中的表名。
-        /// 如果此属性为 null，表示正在映射某个虚拟的视图。见：<see cref="IsMappingView"/>。
+        /// 本属性不能为 null。
         /// </summary>
         public string TableName
         {
@@ -47,13 +47,15 @@ namespace Rafy.MetaModel
         //    set { this.SetValue(ref this._ViewSql, value); }
         //}
 
+        private bool _IsMappingView;
         /// <summary>
         /// 是否正在映射某个虚拟的视图。
         /// 当映射视图时，不会生成数据库表，仓库中也需要在所有的查询中都编写自定义查询。
         /// </summary>
         public bool IsMappingView
         {
-            get { return string.IsNullOrEmpty(_TableName); }
+            get { return _IsMappingView; }
+            set { this.SetValue(ref _IsMappingView, value); }
         }
     }
 }
