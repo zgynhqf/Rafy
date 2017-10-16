@@ -181,6 +181,14 @@ namespace Rafy.Domain
 
         /// <summary>
         /// 申明一个实体上下文操作代码块。
+        /// 
+        /// 实体唯一上下文
+        /// 
+        /// 保证了同一个 id 的实体在内存中只有一个运行时对象：
+        /// 申请实体上下文块后，块中的所有代码经过实体仓库操作的实体，都会被保存在内存中。
+        /// 当再次查询出同样的实体时，则会返回出之前已经查询出来的实体。
+        /// 
+        /// 注意，目前此功能只能在服务端使用。
         /// </summary>
         /// <returns></returns>
         public static IDisposable EnterEntityContext()
