@@ -763,8 +763,9 @@ namespace Rafy.Domain.ORM
         {
             var entity = this.CreateEntity();
 
-            foreach (var column in this._columns)
+            for (int i = 0, c = _columns.Count; i < c; i++)
             {
+                var column = _columns[i];
                 if (!column.IsLOB)
                 {
                     object val = reader.GetValue(indexFrom++);
@@ -781,8 +782,9 @@ namespace Rafy.Domain.ORM
         {
             var entity = this.CreateEntity();
 
-            foreach (var column in _columns)
+            for (int i = 0, c = _columns.Count; i < c; i++)
             {
+                var column = _columns[i];
                 object val = reader[column.Name];
                 column.WritePropertyValue(entity, val);
             }
