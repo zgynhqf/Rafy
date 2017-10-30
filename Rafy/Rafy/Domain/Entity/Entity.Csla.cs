@@ -224,7 +224,7 @@ namespace Rafy.Domain
 
             if (_treeChildren != null)
             {
-                _treeChildren.MarkAggregate(status);
+                (_treeChildren as IDirtyAware).MarkAggregate(status);
             }
         }
 
