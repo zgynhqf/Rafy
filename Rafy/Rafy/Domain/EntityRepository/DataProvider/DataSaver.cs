@@ -377,22 +377,9 @@ namespace Rafy.Domain
             _submitter.Submit(args);
 
             //保存完毕，修改实体的状态
-            switch (args.Action)
+            if (markSaved)
             {
-                case SubmitAction.Delete:
-                    //在删除后，标记对象的状态到“新对象”。
-                    entity.PersistenceStatus = PersistenceStatus.New;
-                    break;
-                case SubmitAction.Update:
-                case SubmitAction.Insert:
-                case SubmitAction.ChildrenOnly:
-                    if (markSaved)
-                    {
-                        (entity as IDirtyAware).MarkSaved();
-                    }
-                    break;
-                default:
-                    throw new NotSupportedException();
+                (entity as IDirtyAware).MarkSaved();
             }
         }
 

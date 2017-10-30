@@ -515,174 +515,123 @@ namespace RafyUnitTest
         [TestMethod]
         public void MPT_ORM_PropertiesMapping()
         {
-            var repo = RF.ResolveInstance<TestUserRepository>();
-
-            //清空历史数据
-            var user = repo.GetByName("huqf");
-            if (user != null)
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
             {
-                user.PersistenceStatus = PersistenceStatus.Deleted;
-                repo.Save(user);
+                var repo = RF.ResolveInstance<TestUserRepository>();
+
+                //新建用户并设置一些值。
+                var user1 = repo.New();
+                user1.Name = "huqf";
+                TestUserExt.SetUserCode(user1, "NewUserCode");
+
+                //为用户添加一个角色
+                var userRoles = user1.TestRoleList;
+                var role = new TestRole();
+                userRoles.Add(role);
+                role.Name = "admin";
+                Assert.AreEqual(user1.Id, role.TestUserId);
+
+                //保存新建用户
+                repo.Save(user1);
+
+                //重新获取保存的用户
+                var user2 = repo.GetByName("huqf");
+                Assert.IsNotNull(user2);
+                Assert.AreEqual(user1.Name, user2.Name);
+                Assert.AreEqual(TestUserExt.GetUserCode(user2), "NewUserCode");
+                Assert.AreEqual(user1.TestRoleList.Count, 1);
+                Assert.AreEqual(user1.TestRoleList[0].CastTo<TestRole>().Name, "admin");
+
+                //获取 Role
+                var role2 = RF.Find<TestRole>().GetById(role.Id).CastTo<TestRole>();
+                Assert.AreEqual(role.Name, "admin");
+                Assert.AreEqual(role2.Name, "admin");
+                Assert.AreEqual(user1.Id, role2.TestUserId);
+                Assert.IsNotNull(role2.TestUser);
+
+                //删除用户
+                user1.PersistenceStatus = PersistenceStatus.Deleted;
+                repo.Save(user1);
+                var users = repo.GetAll();
+                Assert.IsTrue(!users.Cast<TestUser>().Any(u => u.Name == "huqf"));
             }
-
-            //新建用户并设置一些值。
-            var user1 = repo.New().CastTo<TestUser>();
-            user1.Name = "huqf";
-            TestUserExt.SetUserCode(user1, "NewUserCode");
-
-            //为用户添加一个角色
-            var userRoles = user1.TestRoleList;
-            var role = new TestRole();
-            userRoles.Add(role);
-            role.Name = "admin";
-            Assert.AreEqual(user1.Id, role.TestUserId);
-
-            //保存新建用户
-            repo.Save(user1);
-
-            //重新获取保存的用户
-            var user2 = repo.GetByName("huqf");
-            Assert.IsNotNull(user2);
-            Assert.AreEqual(user1.Name, user2.Name);
-            Assert.AreEqual(TestUserExt.GetUserCode(user2), "NewUserCode");
-            Assert.AreEqual(user1.TestRoleList.Count, 1);
-            Assert.AreEqual(user1.TestRoleList[0].CastTo<TestRole>().Name, "admin");
-
-            //获取 Role
-            var role2 = RF.Find<TestRole>().GetById(role.Id).CastTo<TestRole>();
-            Assert.AreEqual(role.Name, "admin");
-            Assert.AreEqual(role2.Name, "admin");
-            Assert.AreEqual(user1.Id, role2.TestUserId);
-            Assert.IsNotNull(role2.TestUser);
-
-            //删除用户
-            user1.PersistenceStatus = PersistenceStatus.Deleted;
-            repo.Save(user1);
-            var users = repo.GetAll();
-            Assert.IsTrue(!users.Cast<TestUser>().Any(u => u.Name == "huqf"));
         }
 
         [TestMethod]
         public void MPT_ORM_PropertiesMapping_Inheritance()
         {
-            var repo = RF.Find<TestAdministrator>() as TestUserRepository;
-
-            //清空历史数据
-            var user = repo.GetByName("huqf");
-            if (user != null)
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
             {
-                user.PersistenceStatus = PersistenceStatus.Deleted;
-                repo.Save(user);
+                var repo = RF.Find<TestAdministrator>() as TestUserRepository;
+
+                //新建用户并设置一些值。
+                var user1 = repo.New().CastTo<TestAdministrator>();
+                user1.Name = "huqf";
+                user1.Level = 1;
+                TestUserExt.SetUserCode(user1, "NewUserCode");
+
+                //为用户添加一个角色
+                var userRoles = user1.TestRoleList;
+                var role = new TestRole();
+                userRoles.Add(role);
+                role.Name = "admin";
+                Assert.AreEqual(user1.Id, role.TestUserId);
+
+                //保存新建用户
+                repo.Save(user1);
+
+                //重新获取保存的用户
+                var user2 = repo.GetByName("huqf").CastTo<TestAdministrator>();
+                Assert.IsNotNull(user2);
+                Assert.AreEqual(user1.Name, user2.Name);
+                Assert.AreEqual(user2.Level, 1);
+                Assert.AreEqual(TestUserExt.GetUserCode(user2), "NewUserCode");
+                Assert.AreEqual(user1.TestRoleList.Count, 1);
+                Assert.AreEqual(user1.TestRoleList[0].CastTo<TestRole>().Name, "admin");
+
+                //获取 Role
+                var role2 = RF.Find<TestRole>().GetById(role.Id).CastTo<TestRole>();
+                Assert.AreEqual(role.Name, "admin");
+                Assert.AreEqual(role2.Name, "admin");
+                Assert.AreEqual(user1.Id, role2.TestUserId);
+                Assert.IsNotNull(role2.TestUser);
+
+                //删除用户
+                user1.PersistenceStatus = PersistenceStatus.Deleted;
+                repo.Save(user1);
+                var users = repo.GetAll();
+                Assert.IsTrue(!users.Cast<TestUser>().Any(u => u.Name == "huqf"));
             }
-
-            //新建用户并设置一些值。
-            var user1 = repo.New().CastTo<TestAdministrator>();
-            user1.Name = "huqf";
-            user1.Level = 1;
-            TestUserExt.SetUserCode(user1, "NewUserCode");
-
-            //为用户添加一个角色
-            var userRoles = user1.TestRoleList;
-            var role = new TestRole();
-            userRoles.Add(role);
-            role.Name = "admin";
-            Assert.AreEqual(user1.Id, role.TestUserId);
-
-            //保存新建用户
-            repo.Save(user1);
-
-            //重新获取保存的用户
-            var user2 = repo.GetByName("huqf").CastTo<TestAdministrator>();
-            Assert.IsNotNull(user2);
-            Assert.AreEqual(user1.Name, user2.Name);
-            Assert.AreEqual(user2.Level, 1);
-            Assert.AreEqual(TestUserExt.GetUserCode(user2), "NewUserCode");
-            Assert.AreEqual(user1.TestRoleList.Count, 1);
-            Assert.AreEqual(user1.TestRoleList[0].CastTo<TestRole>().Name, "admin");
-
-            //获取 Role
-            var role2 = RF.Find<TestRole>().GetById(role.Id).CastTo<TestRole>();
-            Assert.AreEqual(role.Name, "admin");
-            Assert.AreEqual(role2.Name, "admin");
-            Assert.AreEqual(user1.Id, role2.TestUserId);
-            Assert.IsNotNull(role2.TestUser);
-
-            //删除用户
-            user1.PersistenceStatus = PersistenceStatus.Deleted;
-            repo.Save(user1);
-            var users = repo.GetAll();
-            Assert.IsTrue(!users.Cast<TestUser>().Any(u => u.Name == "huqf"));
-        }
-
-        [TestMethod]
-        public void MPT_ORM_IsSelfDirty()
-        {
-            var repo = RF.ResolveInstance<TestUserRepository>();
-
-            //clear
-            var e = repo.GetByName("huqf");
-            if (e != null)
-            {
-                e.PersistenceStatus = PersistenceStatus.Deleted;
-                repo.Save(e);
-            }
-
-            var user = repo.New().CastTo<TestUser>();
-            user.Name = "huqf";
-            user.NotEmptyCode = "NotEmptyCode";
-
-            Assert.IsTrue(user.IsNew);
-            Assert.IsTrue(user.IsDirty);
-
-            repo.Save(user);
-            Assert.IsTrue(!user.IsNew);
-            Assert.IsTrue(!user.IsDirty);
-
-            user.PersistenceStatus = PersistenceStatus.Deleted;
-            Assert.IsTrue(user.IsDeleted);
-
-            repo.Save(user);
-            Assert.IsTrue(!user.IsDeleted);
-            Assert.IsTrue(!user.IsDirty);
         }
 
         [TestMethod]
         public void MPT_ORM_ForeignKey()
         {
-            var repo = RF.ResolveInstance<TestUserRepository>();
-
-            //clear
-            var e = repo.GetByName("huqf");
-            if (e != null)
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
             {
-                e.PersistenceStatus = PersistenceStatus.Deleted;
-                repo.Save(e);
+                var repo = RF.ResolveInstance<TestUserRepository>();
+
+                var user = repo.New().CastTo<TestUser>();
+                user.Name = "huqf";
+
+                //为用户添加一个角色
+                var userRoles = user.TestRoleList;
+                var role = new TestRole();
+                userRoles.Add(role);
+                role.Name = "admin";
+                Assert.IsTrue(user.Id == role.TestUserId);
+                Assert.IsTrue(!(user as IEntityWithId).IdProvider.IsAvailable(user.Id));
+
+                //保存新建用户
+                repo.Save(user);
+                Assert.AreEqual(user.Id, role.TestUserId);
+
+                var roles = RF.ResolveInstance<TestRoleRepository>().GetByUserId(user.Id);
+
+                Assert.AreEqual(roles.Count, 1);
+                Assert.AreEqual(userRoles.Count, 1);
+                Assert.AreEqual(roles[0].CastTo<TestRole>().Name, role.Name);
             }
-
-            var user = repo.New().CastTo<TestUser>();
-            user.Name = "huqf";
-
-            //为用户添加一个角色
-            var userRoles = user.TestRoleList;
-            var role = new TestRole();
-            userRoles.Add(role);
-            role.Name = "admin";
-            Assert.IsTrue(user.Id == role.TestUserId);
-            Assert.IsTrue(!(user as IEntityWithId).IdProvider.IsAvailable(user.Id));
-
-            //保存新建用户
-            repo.Save(user);
-            Assert.AreEqual(user.Id, role.TestUserId);
-
-            var roles = RF.ResolveInstance<TestRoleRepository>().GetByUserId(user.Id);
-
-            Assert.AreEqual(roles.Count, 1);
-            Assert.AreEqual(userRoles.Count, 1);
-            Assert.AreEqual(roles[0].CastTo<TestRole>().Name, role.Name);
-
-            //clear
-            user.PersistenceStatus = PersistenceStatus.Deleted;
-            repo.Save(user);
         }
 
         #endregion

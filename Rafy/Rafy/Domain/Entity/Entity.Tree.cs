@@ -633,6 +633,22 @@ namespace Rafy.Domain
                 }
             }
 
+            /// <summary>
+            /// 设置整个聚合为指定的状态。
+            /// </summary>
+            /// <param name="status">The status.</param>
+            void IDirtyAware.MarkAggregate(PersistenceStatus status)
+            {
+                if (_nodes != null)
+                {
+                    for (int i = 0, c = _nodes.Count; i < c; i++)
+                    {
+                        var child = _nodes[i];
+                        (child as IDirtyAware).MarkAggregate(status);
+                    }
+                }
+            }
+
             #endregion
 
             #region 懒加载节点

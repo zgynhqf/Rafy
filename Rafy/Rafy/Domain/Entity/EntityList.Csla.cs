@@ -84,13 +84,23 @@ namespace Rafy.Domain
         {
             _deletedList = null;
 
-            foreach (var child in this)
+            for (int i = 0, c = this.Count; i < c; i++)
             {
-                if (child.IsDirty)
-                {
-                    var childEntity = child as IDirtyAware;
-                    if (childEntity != null) { childEntity.MarkSaved(); }
-                }
+                var child = this[i] as IDirtyAware;
+                child.MarkSaved();
+            }
+        }
+
+        /// <summary>
+        /// 设置整个聚合为指定的状态。
+        /// </summary>
+        /// <param name="status">The status.</param>
+        void IDirtyAware.MarkAggregate(PersistenceStatus status)
+        {
+            for (int i = 0, c = this.Count; i < c; i++)
+            {
+                var child = this[i] as IDirtyAware;
+                child.MarkAggregate(status);
             }
         }
 

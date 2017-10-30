@@ -76,11 +76,8 @@ namespace RafyUnitTest
             Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.Modified, "之前的状态是 Modified");
         }
 
-        /// <summary>
-        /// 实体被删除后，状态应该为 New。
-        /// </summary>
         [TestMethod]
-        public void __ET_PersistenceStatus_Delete_SavedAsNew()
+        public void ET_PersistenceStatus_Delete_SavedAsNew()
         {
             var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
@@ -93,6 +90,56 @@ namespace RafyUnitTest
                 repo.Save(item);
 
                 Assert.AreEqual(item.PersistenceStatus, PersistenceStatus.New, "实体被删除后，状态应该为 New。");
+            }
+        }
+
+        [TestMethod]
+        public void ET_PersistenceStatus_Delete_SavedAsNew_Aggt()
+        {
+            var repo = RF.ResolveInstance<TestUserRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var user = new TestUser
+                {
+                    TestRoleList =
+                    {
+                        new TestRole()
+                    }
+                };
+                repo.Save(user);
+                Assert.IsTrue(repo.CountAll() == 1);
+
+                user.PersistenceStatus = PersistenceStatus.Deleted;
+                repo.Save(user);
+
+                Assert.AreEqual(user.PersistenceStatus, PersistenceStatus.New, "实体被删除后，状态应该为 New。");
+                Assert.AreEqual(user.TestRoleList[0].PersistenceStatus, PersistenceStatus.New, "聚合实体被删除后，整个聚合中所有实体的状态应该为 New。");
+            }
+        }
+
+        [TestMethod]
+        public void ET_PersistenceStatus_IsNewIsDirty()
+        {
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            {
+                var repo = RF.ResolveInstance<TestUserRepository>();
+
+                var user = repo.New();
+
+                Assert.IsTrue(user.IsNew);
+                Assert.IsTrue(user.IsDirty);
+
+                repo.Save(user);
+                Assert.IsTrue(!user.IsNew);
+                Assert.IsTrue(!user.IsDirty);
+
+                user.PersistenceStatus = PersistenceStatus.Deleted;
+                Assert.IsTrue(user.IsDeleted);
+
+                repo.Save(user);
+                Assert.IsTrue(!user.IsDeleted);
+                Assert.IsTrue(user.IsNew);
+                Assert.IsTrue(user.IsDirty);
             }
         }
 

@@ -184,18 +184,47 @@ namespace Rafy.Domain
         /// </summary>
         void IDirtyAware.MarkSaved()
         {
-            this.PersistenceStatus = PersistenceStatus.Unchanged;
-
+            //聚合子需要都调用 MarkSaved。
             var enumerator = this.GetLoadedChildren();
             while (enumerator.MoveNext())
             {
                 var child = enumerator.Current.Value;
                 child.MarkSaved();
             }
-
             if (_treeChildren != null)
             {
                 _treeChildren.MarkSaved();
+            }
+
+            /*********************** 代码块解释 *********************************
+             * 在保存删除的实体情况下，聚合子的状态需要在 MarkSaved 之后再设置为 New。
+             * 这是因为在删除某个聚合时，使用者只需要设置聚合根的 PersistenceStatus 为 Deleted，然后再保存，就可以把整个聚合删除。
+             * 但是这时，只有聚合父的状态为被设置为 Deleted，而聚合子的状态还是其它状态；导致 MarkSaved 之后，聚合子的状态不是 New。
+             * 
+             * 注意：需要先 MarkSaved，再设置为 New。这是因为 MarkSaved 需要有一些额外的操作。
+            **********************************************************************/
+            if (this.IsDeleted)
+            {
+                (this as IDirtyAware).MarkAggregate(PersistenceStatus.New);
+            }
+            else
+            {
+                this.PersistenceStatus = PersistenceStatus.Unchanged;
+            }
+        }
+
+        void IDirtyAware.MarkAggregate(PersistenceStatus status)
+        {
+            this.PersistenceStatus = status;
+
+            foreach (var child in this.GetLoadedChildren())
+            {
+                child.Value.MarkAggregate(status);
+            }
+
+            if (_treeChildren != null)
+            {
+                _treeChildren.MarkAggregate(status);
             }
         }
 

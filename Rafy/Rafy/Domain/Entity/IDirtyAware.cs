@@ -33,5 +33,11 @@ namespace Rafy.Domain
         /// 标记为已经保存。IsDirty 为 false。
         /// </summary>
         void MarkSaved();
+
+        /// <summary>
+        /// 设置整个聚合为指定的状态。
+        /// </summary>
+        /// <param name="status">The status.</param>
+        void MarkAggregate(PersistenceStatus status);
     }
 }
