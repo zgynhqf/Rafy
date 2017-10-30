@@ -34,7 +34,7 @@ namespace Rafy.Domain
         {
             _repository = repository;
 
-            if (_status != PersistenceStatus.New)
+            if (this.PersistenceStatus != PersistenceStatus.New)
             {
                 this.PersistenceStatus = PersistenceStatus.Unchanged;
             }

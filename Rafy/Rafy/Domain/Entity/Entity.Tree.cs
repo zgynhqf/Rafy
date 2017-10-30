@@ -694,7 +694,7 @@ namespace Rafy.Domain
                 {
                     var repo = _owner.GetRepository();
                     var dbOwner = _owner;
-                    if (_owner._status != PersistenceStatus.Unchanged)
+                    if (_owner.PersistenceStatus != PersistenceStatus.Unchanged)
                     {
                         dbOwner = repo.GetById(_owner.Id);
                         if (dbOwner == null)

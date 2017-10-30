@@ -426,7 +426,7 @@ namespace Rafy.Domain
 
             //由于新的父实体可以还没有 Id，这时需要主动通知冗余属性变更。
             //见测试：MPT_Redundancy_AddNewAggt
-            if (parent != null && parent._status == PersistenceStatus.New)
+            if (parent != null && parent.PersistenceStatus == PersistenceStatus.New)
             {
                 this.NotifyIfInRedundancyPath(property.RefIdProperty as IProperty);
             }

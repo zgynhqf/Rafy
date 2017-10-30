@@ -54,31 +54,28 @@ namespace Rafy.Domain
             }
         }
 
-        private PersistenceStatus _status
-        {
-            get
-            {
-                //注意，以下代码的顺序注定了实体状态的优先级顺序。
-                if (GetFlags(EntitySerializableFlags.IsDeleted))
-                {
-                    return PersistenceStatus.Deleted;
-                }
-                if (GetFlags(EntitySerializableFlags.IsNew))
-                {
-                    return PersistenceStatus.New;
-                }
-                return GetFlags(EntitySerializableFlags.IsModified) ?
-                    PersistenceStatus.Modified : PersistenceStatus.Unchanged;
-            }
-        }
-
         /// <summary>
         /// 获取或设置实体当前的持久化状态。
         /// 保存实体时，会根据这个状态来进行对应的增、删、改的操作。
         /// </summary>
         public PersistenceStatus PersistenceStatus
         {
-            get { return _status; }
+            get
+            {
+                //注意，以下代码的顺序注定了实体状态的优先级顺序。
+                if (GetFlags(EntitySerializableFlags.IsDeleted))
+                {
+                    return Domain.PersistenceStatus.Deleted;
+                }
+
+                if (GetFlags(EntitySerializableFlags.IsNew))
+                {
+                    return Domain.PersistenceStatus.New;
+                }
+
+                return GetFlags(EntitySerializableFlags.IsModified) ?
+                    PersistenceStatus.Modified : PersistenceStatus.Unchanged;
+            }
             set
             {
                 switch (value)
@@ -115,7 +112,7 @@ namespace Rafy.Domain
         /// </summary>
         internal bool IsDeleted
         {
-            get { return _status == PersistenceStatus.Deleted; }
+            get { return this.PersistenceStatus == PersistenceStatus.Deleted; }
         }
 
         /// <summary>
@@ -123,7 +120,7 @@ namespace Rafy.Domain
         /// </summary>
         internal bool IsNew
         {
-            get { return _status == PersistenceStatus.New; }
+            get { return this.PersistenceStatus == PersistenceStatus.New; }
         }
 
         /// <summary>
@@ -134,7 +131,7 @@ namespace Rafy.Domain
         void IEntityWithStatus.MarkModifiedIfUnchanged()
         {
             //只有 Unchanged 状态时，才需要标记，这是因为其它状态已经算是 Dirty 了。
-            if (_status == PersistenceStatus.Unchanged)
+            if (this.PersistenceStatus == PersistenceStatus.Unchanged)
             {
                 this.PersistenceStatus = PersistenceStatus.Modified;
             }
