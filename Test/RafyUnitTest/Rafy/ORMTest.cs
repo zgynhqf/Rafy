@@ -1680,6 +1680,48 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void ORM_LinqQuery_Object_Equals()
+        {
+            var repo = RF.ResolveInstance<ChapterRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                RF.Save(new Book
+                {
+                    Name = "1",
+                    ChapterList =
+                    {
+                        new Chapter { Name = "1.0"},
+                        new Chapter { Name = "1.1"},
+                    }
+                });
+
+                var list = repo.LinqGetByNameStringAction(StringAction.ObjectEquals, "1.0");
+                Assert.AreEqual(1, list.Count);
+            }
+        }
+
+        [TestMethod]
+        public void ORM_LinqQuery_Object_Equals_Reverse()
+        {
+            var repo = RF.ResolveInstance<ChapterRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                RF.Save(new Book
+                {
+                    Name = "1",
+                    ChapterList =
+                    {
+                        new Chapter { Name = "1.0"},
+                        new Chapter { Name = "1.1"},
+                    }
+                });
+
+                var list = repo.LinqGetByNameStringAction(StringAction.ObjectEquals_Reverse, "1.0");
+                Assert.AreEqual(1, list.Count);
+            }
+        }
+
+        [TestMethod]
         public void ORM_LinqQuery_StringNotEmpty()
         {
             var repo = RF.ResolveInstance<ChapterRepository>();
