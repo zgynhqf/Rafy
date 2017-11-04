@@ -95,6 +95,7 @@
     <Compile Include="Rafy\Plugins\RBAC\RBACManagementPluginTest.cs" />
     <Compile Include="Rafy\Plugins\RBAC\UserRoleManagementPluginTest.cs" />
     <Compile Include="Rafy\Plugins\SerialNumberPluginTest.cs" />
+    <Compile Include="Rafy\Plugins\SystemSettingsPluginTest.cs" />
     <Compile Include="Rafy\StampTest.cs" />
     <Compile Include="ServerTestHelper.cs" />
     <Compile Include="Rafy\DomainTest.cs" />
@@ -170,6 +171,10 @@
     <ProjectReference Include="..\..\Rafy\Plugins\Rafy.SerialNumber\Rafy.SerialNumber.csproj">
       <Project>{9ff37989-33e7-4d67-8e81-0a443eaee510}</Project>
       <Name>Rafy.SerialNumber</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.SystemSettings\Rafy.SystemSettings.csproj">
+      <Project>{1c9c3546-f650-40a3-aa7f-64e8a230a02b}</Project>
+      <Name>Rafy.SystemSettings</Name>
     </ProjectReference>
     <ProjectReference Include="..\Rafy.UnitTest.DataProvider\Rafy.UnitTest.DataProvider.csproj">
       <Project>{df5e92a5-b32f-41ae-b880-14069d4fe7f4}</Project>

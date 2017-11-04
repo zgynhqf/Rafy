@@ -38,6 +38,7 @@ using Rafy.Accounts;
 using Rafy.DataTableMigration;
 using Rafy.RBAC.DataPermissionManagement;
 using Rafy.RBAC.UserRoleManagement;
+using Rafy.SystemSettings;
 
 namespace RafyUnitTest
 {
@@ -68,6 +69,7 @@ namespace RafyUnitTest
             RafyEnvironment.DomainPlugins.Add(new DCPlugin());
 
             RafyEnvironment.DomainPlugins.Add(new AccountsPlugin());
+            RafyEnvironment.DomainPlugins.Add(new SystemSettingsPlugin());
             RafyEnvironment.DomainPlugins.Add(new SerialNumberPlugin());
             RafyEnvironment.DomainPlugins.Add(new FileStoragePlugin());
 

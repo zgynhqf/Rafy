@@ -7,6 +7,9 @@ using System.Configuration;
 
 namespace Rafy
 {
+    /// <summary>
+    /// 配置文件的帮助类。
+    /// </summary>
     public static class ConfigurationHelper
     {
         /// <summary>
