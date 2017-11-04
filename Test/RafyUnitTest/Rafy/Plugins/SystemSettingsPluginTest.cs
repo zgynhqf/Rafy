@@ -180,5 +180,53 @@ namespace RafyUnitTest
                 Assert.AreEqual("3", item.Value);
             }
         }
+
+        [TestMethod]
+        public void SSPT_SetValue_WithDescription()
+        {
+            var repo = RF.ResolveInstance<GlobalSettingRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var key = "SystemSettingsPluginTest_TestKey";
+
+                repo.Save(new GlobalSetting
+                {
+                    Key = key,
+                    Value = "2",
+                    Description = "2"
+                });
+
+                var controller = DomainControllerFactory.Create<GlobalSettingController>();
+                controller.SetValue(key, 3, "3");
+
+                var item = repo.GetByKey(key);
+                Assert.IsNotNull(item);
+                Assert.AreEqual("3", item.Description);
+            }
+        }
+
+        [TestMethod]
+        public void SSPT_SetValue_WithoutDescription()
+        {
+            var repo = RF.ResolveInstance<GlobalSettingRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var key = "SystemSettingsPluginTest_TestKey";
+
+                repo.Save(new GlobalSetting
+                {
+                    Key = key,
+                    Value = "2",
+                    Description = "2"
+                });
+
+                var controller = DomainControllerFactory.Create<GlobalSettingController>();
+                controller.SetValue(key, 3);
+
+                var item = repo.GetByKey(key);
+                Assert.IsNotNull(item);
+                Assert.AreEqual("2", item.Description);
+            }
+        }
     }
 }

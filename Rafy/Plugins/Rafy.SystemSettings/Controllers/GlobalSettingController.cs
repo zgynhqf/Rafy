@@ -114,7 +114,10 @@ namespace Rafy.SystemSettings.Controllers
                     }
 
                     item.Value = value != null ? value.ToString() : string.Empty;
-                    item.Description = description ?? string.Empty;
+                    if (description != null)
+                    {
+                        item.Description = description;
+                    }
 
                     this.Repository.Save(item);
 
