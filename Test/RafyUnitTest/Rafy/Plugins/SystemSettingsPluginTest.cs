@@ -52,6 +52,69 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void SSPT_GetValue()
+        {
+            var repo = RF.ResolveInstance<GlobalSettingRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var key = "SystemSettingsPluginTest_TestKey";
+
+                var controller = DomainControllerFactory.Create<GlobalSettingController>();
+                try
+                {
+                    controller.GetValue(key);
+                    Assert.IsTrue(false, "不存在，应该抛出异常。");
+                }
+                catch (InvalidProgramException) { }
+
+                repo.Save(new GlobalSetting
+                {
+                    Key = key,
+                    Value = "1"
+                });
+
+                var value = controller.GetValue(key);
+                Assert.AreEqual("1", value);
+
+                try
+                {
+                    Assert.AreEqual(1, value);
+                    Assert.IsTrue(false, "两个值的类型不一致，应该抛出异常。");
+                }
+                catch (Exception) { }
+            }
+        }
+
+        [TestMethod]
+        public void SSPT_GetValue_T()
+        {
+            var repo = RF.ResolveInstance<GlobalSettingRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var key = "SystemSettingsPluginTest_TestKey";
+
+                var controller = DomainControllerFactory.Create<GlobalSettingController>();
+                try
+                {
+                    controller.GetValue<int>(key);
+                    Assert.IsTrue(false, "不存在，应该抛出异常。");
+                }
+                catch (InvalidProgramException)
+                {
+                }
+
+                repo.Save(new GlobalSetting
+                {
+                    Key = key,
+                    Value = "1"
+                });
+
+                var value = controller.GetValue<int>(key);
+                Assert.AreEqual(1, value);
+            }
+        }
+
+        [TestMethod]
         public void SSPT_GetValueOrDefault()
         {
             var repo = RF.ResolveInstance<GlobalSettingRepository>();

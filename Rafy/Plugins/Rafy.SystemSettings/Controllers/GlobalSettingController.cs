@@ -43,6 +43,38 @@ namespace Rafy.SystemSettings.Controllers
 
         /// <summary>
         /// 获取某个指定键对应的值。
+        /// 若键值对应的 GlobalSetting 不在，则会抛出 InvalidProgramException 异常。
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key">唯一键值。</param>
+        /// <returns></returns>
+        public virtual T GetValue<T>(string key)
+        {
+            var stringValue = this.GetValue(key);
+
+            var value = TypeHelper.CoerceValue<T>(stringValue);
+            return value;
+        }
+
+        /// <summary>
+        /// 获取某个指定键对应的值。
+        /// 若键值对应的 GlobalSetting 不在，则会抛出 InvalidProgramException 异常。
+        /// </summary>
+        /// <param name="key">唯一键值。</param>
+        /// <returns></returns>
+        public virtual string GetValue(string key)
+        {
+            var item = this.Repository.GetByKey(key);
+            if (item == null)
+            {
+                throw new InvalidProgramException($"{key} 对应的 GlobalSetting 不存在。");
+            }
+
+            return item.Value;
+        }
+
+        /// <summary>
+        /// 获取某个指定键对应的值。
         /// 如果该键对应的项不存在，则返回传入的默认值。
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -66,7 +98,8 @@ namespace Rafy.SystemSettings.Controllers
         /// </summary>
         /// <param name="key">唯一键值。</param>
         /// <param name="value">需要设置的值。</param>
-        public virtual void SetValue(string key, object value)
+        /// <param name="description">可以同时设置其对应的描述。</param>
+        public virtual void SetValue(string key, object value, string description = null)
         {
             lock (SetValueLock)
             {
@@ -81,6 +114,7 @@ namespace Rafy.SystemSettings.Controllers
                     }
 
                     item.Value = value != null ? value.ToString() : string.Empty;
+                    item.Description = description ?? string.Empty;
 
                     this.Repository.Save(item);
 
