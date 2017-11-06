@@ -50,6 +50,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\GlobalSettingController.cs" />
+    <Compile Include="Entities\DataDict.cs" />
+    <Compile Include="Entities\DataDict.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>DataDict.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DataDictItem.cs" />
+    <Compile Include="Entities\DataDictItem.g.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>DataDictItem.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\GlobalSetting.cs" />
     <Compile Include="Entities\GlobalSetting.g.cs">
       <SubType>Code</SubType>
