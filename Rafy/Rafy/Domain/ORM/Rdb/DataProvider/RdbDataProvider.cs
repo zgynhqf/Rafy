@@ -27,8 +27,6 @@ namespace Rafy.Domain.ORM
     /// </summary>
     public class RdbDataProvider : RepositoryDataProvider, IDbConnector
     {
-        private static readonly AppContextItem<Dictionary<string, string>> ShareDbSettingContextItem = new AppContextItem<Dictionary<string, string>>("RdbDataProvider.ShareDbSetting");
-
         public RdbDataProvider()
         {
             this.DataSaver = new RdbDataSaver();
@@ -53,12 +51,25 @@ namespace Rafy.Domain.ORM
             set { base.DataQueryer = value; }
         }
 
-        #region 数据库配置
+        #region 数据库运行时对象
 
         /// <summary>
         /// 这个字段用于存储运行时解析出来的 ORM 信息。
         /// </summary>
-        private RdbTable _ormTable;
+        private RdbTable _rdbTable;
+
+        internal RdbTable DbTable
+        {
+            get
+            {
+                if (_rdbTable == null && this.Repository.EntityMeta != null)
+                {
+                    _rdbTable = RdbTableFactory.CreateORMTable(this.Repository);
+                }
+
+                return _rdbTable;
+            }
+        }
 
         /// <summary>
         /// 创建数据库操作对象
@@ -69,6 +80,30 @@ namespace Rafy.Domain.ORM
             return DbAccesserFactory.Create(this.DbSetting);
         }
 
+        #endregion
+
+        #region DbSetting && RedirectDbSetting
+
+        /// <summary>
+        /// 数据层使用的 DbSetting 的缓存。
+        /// </summary>
+        private DbSetting _dbSetting;
+
+        /// <summary>
+        /// 判断 _dbSetting 是否正在使用变更后的数据库。
+        /// </summary>
+        private bool _dbSettingRedirected;
+
+        /// <summary>
+        /// 数据库配置名称（每个库有一个唯一的配置名）
+        /// 
+        /// 默认使用 <see cref="DbSettingNames.RafyPlugins"/> 中配置的数据库。
+        /// </summary>
+        internal protected virtual string ConnectionStringSettingName
+        {
+            get { return DbSettingNames.RafyPlugins; }
+        }
+
         /// <summary>
         /// 数据库配置（每个库有一个唯一的配置名）
         /// </summary>
@@ -76,59 +111,61 @@ namespace Rafy.Domain.ORM
         {
             get
             {
-                string conSetting = null;
-                var dbSettingNameDic = ShareDbSettingContextItem.Value;
-                dbSettingNameDic?.TryGetValue(CacheConnectionStringSettingName, out conSetting);
-                return DbSetting.FindOrCreate(conSetting ?? CacheConnectionStringSettingName);
-            }
-        }
-
-        private string _cacheConnectionStringSettingName;
-
-        /// <summary>
-        /// 数据库配置名称
-        /// </summary>
-        private string CacheConnectionStringSettingName
-        {
-            get
-            {
-                return _cacheConnectionStringSettingName ?? (_cacheConnectionStringSettingName=ConnectionStringSettingName);
-            }
-        }
-
-        /// <summary>
-        /// 数据库配置名称（每个库有一个唯一的配置名）
-        /// 
-        /// 默认使用 ConnectionStringNames.RafyPlugins 中配置的数据库。
-        /// </summary>
-        internal protected virtual string ConnectionStringSettingName
-        {
-            get { return DbSettingNames.RafyPlugins; }
-        }
-
-        ///// <summary>
-        ///// 获取该实体对应的 ORM 运行时对象。
-        ///// 
-        ///// 如果该实体没有对应的实体元数据或者该实体没有被配置为映射数据库，
-        ///// 则本方法则无法创建对应的 ORM 运行时，此时会返回 null。
-        ///// </summary>
-        ///// <returns></returns>
-        //public ITable GetDbTable()
-        //{
-        //    return this.DbTable;
-        //}
-
-        internal RdbTable DbTable
-        {
-            get
-            {
-                if (_ormTable == null && this.Repository.EntityMeta != null)
+                //如果还没有初始化，进入初始化的逻辑。
+                if (_dbSetting == null)
                 {
-                    _ormTable = RdbTableFactory.CreateORMTable(this.Repository);
+                    string dbSettingName = this.ConnectionStringSettingName;
+                    _dbSetting = DbSetting.FindOrCreate(dbSettingName);
                 }
 
-                return _ormTable;
+                //尝试变更数据库。
+                var dbSettingNameMapping = _dbSettingMappingAppItem.Value;
+                if (dbSettingNameMapping != null)
+                {
+                    string redirectedName = null;
+                    if (dbSettingNameMapping.TryGetValue(this.ConnectionStringSettingName, out redirectedName))
+                    {
+                        this.DbSetting = DbSetting.FindOrCreate(redirectedName);
+                        _dbSettingRedirected = true;
+                    }
+                }
+                else
+                {
+                    //上次使用了映射的数据库，但是目前已经退出 using 代码块，所以这里需要还原到原来的数据库配置中。
+                    if (_dbSettingRedirected)
+                    {
+                        this.DbSetting = DbSetting.FindOrCreate(this.ConnectionStringSettingName);
+                        _dbSettingRedirected = false;
+                    }
+                }
+
+                return _dbSetting;
             }
+            private set
+            {
+                _dbSetting = value;
+                //由于 _dbSetting 已经变更，可能底层的数据库也会变更。这里需要重置 _rdbTable;
+                _rdbTable = null;
+            }
+        }
+
+        private static readonly AppContextItem<Dictionary<string, string>> _dbSettingMappingAppItem = new AppContextItem<Dictionary<string, string>>("Rafy.Domain.ORM.RdbDataProvider._dbSettingMappingAppItem");
+
+        /// <summary>
+        /// 切换实体仓储对应的关系数据库配置名称。
+        /// 使用此方法之后，在当前 using 代码块中，使用 oldDbSettingName 对应的所有仓库时，将会切换到使用新的数据库配置名称 newDbSettingName 对应的数据连接。
+        /// 注意：此方法不支持不同数据库类型之间的切换，例如：从 MySql 切换到 SQL Server。（也就是说，新旧两个数据库连接配置必须使用同一个 ProviderName）
+        /// </summary>
+        /// <param name="oldDbSettingName">实体仓储旧的数据源</param>
+        /// <param name="newDbSettingName">实体仓储新的数据源</param>
+        /// <returns></returns>
+        public static IDisposable RedirectDbSetting(string oldDbSettingName, string newDbSettingName)
+        {
+            var contextItemDic = _dbSettingMappingAppItem.Value ?? new Dictionary<string, string>();
+
+            contextItemDic[oldDbSettingName] = newDbSettingName;
+
+            return _dbSettingMappingAppItem.UseScopeValue(contextItemDic);
         }
 
         #endregion
@@ -261,21 +298,6 @@ namespace Rafy.Domain.ORM
                     ));
             }
             return dp;
-        }
-
-        /// <summary>
-        /// 切换实体仓储对应的关系数据库配置名称。
-        /// 使用此方法之后，在当前 using 代码块中，使用 oldDbSettingName 对应的所有仓库时，将会切换到使用新的数据库配置名称 newDbSettingName 对应的数据连接。
-        /// 注意：此方法不支持不同数据库类型之间的切换，例如：从 MySql 切换到 SQL Server。（也就是说，新旧两个数据库连接配置必须使用同一个 ProviderName）
-        /// </summary>
-        /// <param name="oldDbSettingName">实体仓储旧的数据源</param>
-        /// <param name="newDbSettingName">实体仓储新的数据源</param>
-        /// <returns></returns>
-        public static IDisposable RedirectDbSetting(string oldDbSettingName, string newDbSettingName)
-        {
-            var contextItemDic = ShareDbSettingContextItem.Value ?? new Dictionary<string, string>();
-            contextItemDic[oldDbSettingName] = newDbSettingName;
-            return ShareDbSettingContextItem.UseScopeValue(contextItemDic);
         }
 
         #endregion
