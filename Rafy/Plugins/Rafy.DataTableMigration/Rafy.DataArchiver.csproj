@@ -47,15 +47,10 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Contexts\DataTableMigrationContext.cs" />
-    <Compile Include="Contexts\DataTableMigrationEventArgs.cs" />
-    <Compile Include="Exceptions\DataTableMigrationException.cs" />
-    <Compile Include="DataTableMigrationPlugin.cs" />
-    <Compile Include="Services\DataTableMigrationService.cs" />
-    <Compile Include="Entities\DataTableMigrationEntity.cs" />
-    <Compile Include="Services\IDataTableMigrationService.cs" />
+    <Compile Include="AggregationArchiveContext.cs" />
+    <Compile Include="AggregationArchiveProgressEventArgs.cs" />
+    <Compile Include="AggregationArchiver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils\EnumberableExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Rafy\Rafy.csproj">

@@ -161,7 +161,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.RBAC.UserRoleManagemen
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.RBAC.DataPermissionManagement", "Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.DataPermissionManagement\Rafy.RBAC.DataPermissionManagement.csproj", "{7750612E-AB7E-4A98-86E1-FF6E4D9D7C54}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.DataTableMigration", "Rafy\Plugins\Rafy.DataTableMigration\Rafy.DataTableMigration.csproj", "{95CB6F76-3D35-4F2E-BF2A-A45EC41C76B4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.DataArchiver", "Rafy\Plugins\Rafy.DataTableMigration\Rafy.DataArchiver.csproj", "{95CB6F76-3D35-4F2E-BF2A-A45EC41C76B4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.SystemSettings", "Rafy\Plugins\Rafy.SystemSettings\Rafy.SystemSettings.csproj", "{1C9C3546-F650-40A3-AA7F-64E8A230A02B}"
 EndProject

@@ -54,6 +54,17 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void ET_PersistenceStatus_New_SetNewWillResetId()
+        {
+            var item = new TestUser{ Id = 111 };
+            item.PersistenceStatus = PersistenceStatus.Unchanged;
+
+            item.PersistenceStatus = PersistenceStatus.New;
+
+            Assert.AreEqual(0, item.Id, "设置实体的状态为 new 时，需要重置其 Id。");
+        }
+
+        [TestMethod]
         public void ET_PersistenceStatus_Delete()
         {
             var entity = new TestUser();
@@ -90,6 +101,27 @@ namespace RafyUnitTest
                 repo.Save(item);
 
                 Assert.AreEqual(item.PersistenceStatus, PersistenceStatus.New, "实体被删除后，状态应该为 New。");
+            }
+        }
+
+        [TestMethod]
+        public void ET_PersistenceStatus_Delete_SavedAsNew_Reinsert()
+        {
+            var repo = RF.ResolveInstance<TestUserRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var item = new TestUser();
+                repo.Save(item);
+
+                var oldId = item.Id;
+
+                item.PersistenceStatus = PersistenceStatus.Deleted;
+                repo.Save(item);
+
+                Assert.AreEqual(0, item.Id, "再次插入已经删除的数据时，Id 应该会重置。");
+
+                repo.Save(item);
+                Assert.AreNotEqual(oldId, item.Id, "再次插入已经删除的数据时，Id 应该会重新生成。");
             }
         }
 

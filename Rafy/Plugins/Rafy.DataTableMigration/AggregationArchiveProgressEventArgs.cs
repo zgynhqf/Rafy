@@ -13,14 +13,14 @@
 
 using System;
 
-namespace Rafy.DataTableMigration.Contexts
+namespace Rafy.DataArchiver
 {
     /// <summary>
     /// 为数据迁移状态的变化提供数据。
     /// </summary>
-    public class DataTableMigrationEventArgs : EventArgs
+    public class AggregationArchiveProgressEventArgs : EventArgs
     {
-        public DataTableMigrationEventArgs(string message, decimal currentProcess = 0M)
+        public AggregationArchiveProgressEventArgs(string message, decimal currentProcess)
         {
             if (currentProcess < 0)
             {
@@ -37,14 +37,9 @@ namespace Rafy.DataTableMigration.Contexts
         public string Message { get; }
 
         /// <summary>
-        /// 当前数据迁移进度，值区间：[1, 100]。
+        /// 当前数据迁移进度，值区间：[0, 100]。
         /// </summary>
         public decimal CurrentProcess { get; }
-
-        /// <summary>
-        /// 是否增加换行
-        /// </summary>
-        public bool NeedNewLine { get; set; }
 
         /// <summary>Returns a string that represents the current object.</summary>
         /// <returns>A string that represents the current object.</returns>
@@ -55,11 +50,6 @@ namespace Rafy.DataTableMigration.Contexts
             if (this.CurrentProcess > 0)
             {
                 message += $", CurrentProcess: {this.CurrentProcess} %";
-            }
-
-            if (this.NeedNewLine)
-            {
-                message += Environment.NewLine;
             }
 
             return message;
