@@ -444,7 +444,7 @@ namespace Rafy.Domain
 
         private static object GetEmptyIdForRefIdProperty(IRefIdProperty refIdProperty)
         {
-            return refIdProperty.KeyProvider.GetEmptyIdForRefIdProperty();
+            return refIdProperty.KeyProvider.GetEmptyId();
         }
 
         private static bool HasRefId(IRefIdProperty refIdProperty, object id)

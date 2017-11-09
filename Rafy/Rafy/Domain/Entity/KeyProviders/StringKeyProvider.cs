@@ -41,7 +41,7 @@ namespace Rafy.Domain
             return Guid.NewGuid().ToString();
         }
 
-        public object GetEmptyIdForRefIdProperty()
+        public object GetEmptyId()
         {
             return null;
         }

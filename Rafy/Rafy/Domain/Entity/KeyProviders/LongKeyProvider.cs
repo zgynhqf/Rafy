@@ -46,7 +46,7 @@ namespace Rafy.Domain
             return RafyEnvironment.NewLocalId();
         }
 
-        public object GetEmptyIdForRefIdProperty()
+        public object GetEmptyId()
         {
             return Zero;
         }

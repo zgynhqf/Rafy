@@ -10,9 +10,10 @@
  * 
 *******************************************************/
 
-3.63.3690
+3.63.3691
     重构
         Rafy.DataTableMigartion 升级版本到 2.0，重构为 Rafy.DataArchiver。
+        KeyProvider.GetEmptyIdForRefIdProperty 的方法重构为 GetEmptyId。
 
 3.62.3681
     BUG修复
