@@ -94,6 +94,9 @@ namespace Rafy.Domain
                         //把当前对象标记为一个全新的刚创建的对象。
                         SetFlags(EntitySerializableFlags.IsDeleted, false);
                         SetFlags(EntitySerializableFlags.IsNew, true);
+
+                        //设置实体的状态为 new 时，需要重置其 Id。
+                        this.Id = this.IdProvider.GetEmptyIdForRefIdProperty();
                         break;
                     case PersistenceStatus.Deleted:
                         //把当前对象标记为需要删除状态。
