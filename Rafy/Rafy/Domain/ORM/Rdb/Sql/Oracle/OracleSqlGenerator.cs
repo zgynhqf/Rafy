@@ -108,11 +108,11 @@ namespace Rafy.Domain.ORM.Oracle
 "),
                 raw,
                 new SqlLiteral(
-@"
+$@"
     ) T
-    WHERE ROWNUM <= " + endRow + @"
+    WHERE ROWNUM <= { endRow }
 )
-WHERE RN >= " + startRow)
+WHERE RN >= { startRow }")
             };
         }
 
