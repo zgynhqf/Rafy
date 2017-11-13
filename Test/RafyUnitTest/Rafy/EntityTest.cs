@@ -126,6 +126,31 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void ET_PersistenceStatus_Delete_SavedAsNew_ListClear()
+        {
+            var repo = RF.ResolveInstance<TestUserRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var items = new TestUserList
+                {
+                    new TestUser(),
+                    new TestUser(),
+                    new TestUser()
+                };
+                repo.Save(items);
+
+                items.RemoveAt(0);
+                Assert.AreEqual(1, items.DeletedList.Count);
+                items[0].PersistenceStatus = PersistenceStatus.Deleted;
+                repo.Save(items);
+
+                Assert.AreEqual(0, items.DeletedList.Count, "保存已删除数据的数据列表时，已经删除的数据需要从 List 中删除。");
+                Assert.AreEqual(1, items.Count, "保存已删除数据的数据列表时，已经删除的数据需要从 List 中删除。");
+                Assert.AreEqual(PersistenceStatus.Unchanged, items[0].PersistenceStatus);
+            }
+        }
+
+        [TestMethod]
         public void ET_PersistenceStatus_Delete_SavedAsNew_Aggt()
         {
             var repo = RF.ResolveInstance<TestUserRepository>();

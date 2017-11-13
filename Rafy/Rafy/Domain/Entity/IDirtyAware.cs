@@ -30,7 +30,8 @@ namespace Rafy.Domain
         bool IsDirty { get; }
 
         /// <summary>
-        /// 标记为已经保存。IsDirty 为 false。
+        /// 标记为已经保存（IsDirty 为 false）。
+        /// 同时，聚合中任意列表中其中已经删除的实体，也会在这个列表中被移除。
         /// </summary>
         void MarkSaved();
 

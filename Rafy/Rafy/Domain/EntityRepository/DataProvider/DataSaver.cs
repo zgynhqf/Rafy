@@ -350,8 +350,13 @@ namespace Rafy.Domain
                 var item = list[i];
                 if (item.IsDirty)
                 {
-                    this.SubmitItem(item, markSaved, false);
+                    this.SubmitItem(item, false, false);
                 }
+            }
+
+            if (markSaved)
+            {
+                list.MarkSaved();
             }
         }
 

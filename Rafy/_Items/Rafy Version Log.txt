@@ -10,16 +10,18 @@
  * 
 *******************************************************/
 
-3.63.3693
+3.63.3694
     重构
         Rafy.DataTableMigartion 升级版本到 2.0，重构为 Rafy.DataArchiver。
         KeyProvider.GetEmptyIdForRefIdProperty 的方法重构为 GetEmptyId。
     添加接口
         添加 DbAccesserParameter 类型，用于辅助处理当 DbDataParameter 中没有设置 DbType，导致索引失效的问题。
+    BUG修复
+        设置已删除的实体的状态为 New 时，如果该实体在列表中，需要将它从这个列表中移除。（否则有可能再次保存此实体列表时，会将这个实体再次插入到数据库中）
 
 3.62.3681
     BUG修复
-        设置实体的状态为 new 时，需要重置其 Id。
+        设置已删除的实体的状态为 New 时，需要重置其 Id。
         RdbDataProvider.DbSetting 的逻辑有问题。
 
 3.62.3678
