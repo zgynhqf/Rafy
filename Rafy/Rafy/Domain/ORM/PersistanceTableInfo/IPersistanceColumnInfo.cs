@@ -59,6 +59,11 @@ namespace Rafy.Domain.ORM
         bool IsPrimaryKey { get; }
 
         /// <summary>
+        /// 该列是否拥有索引。
+        /// </summary>
+        bool HasIndex { get; }
+
+        /// <summary>
         /// 对应的托管属性
         /// </summary>
         IProperty Property { get; }

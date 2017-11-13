@@ -313,6 +313,18 @@ namespace Rafy.MetaModel
         }
 
         /// <summary>
+        /// 指定某个属性映射字段时是否拥有索引。
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static ColumnMeta HasIndex(this ColumnMeta meta, bool value)
+        {
+            meta.HasIndex = value;
+            return meta;
+        }
+
+        /// <summary>
         /// 指定某个属性映射字段时的是否为必需的
         /// </summary>
         /// <param name="meta"></param>

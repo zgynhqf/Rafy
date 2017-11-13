@@ -66,7 +66,7 @@ namespace Rafy.MetaModel
 
         private bool? _IsRequired;
         /// <summary>
-        /// 是否必须的，如果没有赋值，则按照默认的类型计算方法来计算该值。
+        /// 是否必填列。如果没有赋值，则按照默认的类型计算方法来计算该值。
         /// </summary>
         public bool? IsRequired
         {
@@ -81,6 +81,17 @@ namespace Rafy.MetaModel
                     this.IsPrimaryKey = false;
                 }
             }
+        }
+
+        private bool _HasIndex;
+        /// <summary>
+        /// 该列是否拥有索引。
+        /// 对于有索引的列，在查询时，会设置查询的参数的类型为 <see cref="DbType"/>，这样索引才会起作用。
+        /// </summary>
+        public bool HasIndex
+        {
+            get { return this._HasIndex; }
+            set { this.SetValue(ref this._HasIndex, value); }
         }
 
         private string _ColumnName;

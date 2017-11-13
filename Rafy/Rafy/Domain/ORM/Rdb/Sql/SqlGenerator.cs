@@ -376,6 +376,7 @@ namespace Rafy.Domain.ORM
 
             #endregion
 
+            var column = node.Column;
             this.AppendColumnUsage(node.Column);
 
             //根据不同的操作符，来生成不同的_sql。
@@ -389,7 +390,7 @@ namespace Rafy.Domain.ORM
                     else
                     {
                         _sql.Append(" = ");
-                        _sql.AppendParameter(value);
+                        this.AppendParameter(value, column);
                     }
                     break;
                 case SqlColumnConstraintOperator.NotEqual:
@@ -400,61 +401,61 @@ namespace Rafy.Domain.ORM
                     else
                     {
                         _sql.Append(" != ");
-                        _sql.AppendParameter(value);
+                        this.AppendParameter(value, column);
                     }
                     break;
                 case SqlColumnConstraintOperator.Greater:
                     _sql.Append(" > ");
-                    _sql.AppendParameter(value);
+                    this.AppendParameter(value, column);
                     break;
                 case SqlColumnConstraintOperator.GreaterEqual:
                     _sql.Append(" >= ");
-                    _sql.AppendParameter(value);
+                    this.AppendParameter(value, column);
                     break;
                 case SqlColumnConstraintOperator.Less:
                     _sql.Append(" < ");
-                    _sql.AppendParameter(value);
+                    this.AppendParameter(value, column);
                     break;
                 case SqlColumnConstraintOperator.LessEqual:
                     _sql.Append(" <= ");
-                    _sql.AppendParameter(value);
+                    this.AppendParameter(value, column);
                     break;
                 case SqlColumnConstraintOperator.Like:
                     _sql.Append(" LIKE ");
-                    _sql.AppendParameter(value);
+                    this.AppendParameter(value, column);
                     break;
                 case SqlColumnConstraintOperator.NotLike:
                     _sql.Append(" NOT LIKE ");
-                    _sql.AppendParameter(value);
+                    this.AppendParameter(value, column);
                     break;
                 case SqlColumnConstraintOperator.Contains:
                     _sql.Append(" LIKE ");
-                    _sql.AppendParameter(WILDCARD_ALL + this.Escape(value) + WILDCARD_ALL);
+                    this.AppendParameter(WILDCARD_ALL + this.Escape(value) + WILDCARD_ALL, column);
                     this.AppendEscapePlause(value);
                     break;
                 case SqlColumnConstraintOperator.NotContains:
                     _sql.Append(" NOT LIKE ");
-                    _sql.AppendParameter(WILDCARD_ALL + this.Escape(value) + WILDCARD_ALL);
+                    this.AppendParameter(WILDCARD_ALL + this.Escape(value) + WILDCARD_ALL, column);
                     this.AppendEscapePlause(value);
                     break;
                 case SqlColumnConstraintOperator.StartsWith:
                     _sql.Append(" LIKE ");
-                    _sql.AppendParameter(this.Escape(value) + WILDCARD_ALL);
+                    this.AppendParameter(this.Escape(value) + WILDCARD_ALL, column);
                     this.AppendEscapePlause(value);
                     break;
                 case SqlColumnConstraintOperator.NotStartsWith:
                     _sql.Append(" NOT LIKE ");
-                    _sql.AppendParameter(this.Escape(value) + WILDCARD_ALL);
+                    this.AppendParameter(this.Escape(value) + WILDCARD_ALL, column);
                     this.AppendEscapePlause(value);
                     break;
                 case SqlColumnConstraintOperator.EndsWith:
                     _sql.Append(" LIKE ");
-                    _sql.AppendParameter(WILDCARD_ALL + this.Escape(value));
+                    this.AppendParameter(WILDCARD_ALL + this.Escape(value), column);
                     this.AppendEscapePlause(value);
                     break;
                 case SqlColumnConstraintOperator.NotEndsWith:
                     _sql.Append(" NOT LIKE ");
-                    _sql.AppendParameter(WILDCARD_ALL + this.Escape(value));
+                    this.AppendParameter(WILDCARD_ALL + this.Escape(value), column);
                     this.AppendEscapePlause(value);
                     break;
                 case SqlColumnConstraintOperator.In:
@@ -505,6 +506,17 @@ namespace Rafy.Domain.ORM
             }
 
             return node;
+        }
+
+        private void AppendParameter(object value, SqlColumn column)
+        {
+            //如果只传入参数的值，那么 DbDataParameter 中是没有设置 DbType 的，这会造成索引无效。
+            if (column.HasIndex)
+            {
+                value = new DbAccesserParameter(value, column.DbType);
+            }
+
+            _sql.AppendParameter(value);
         }
 
         /// <summary>

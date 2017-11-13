@@ -13,6 +13,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 
@@ -43,5 +44,15 @@ namespace Rafy.Domain.ORM.SqlTree
         /// 列的别名只用在 Select 语句之后。
         /// </summary>
         public string Alias { get; set; }
+
+        /// <summary>
+        /// 该列所对应的数据库的类型。
+        /// </summary>
+        public DbType DbType { get; set; }
+
+        /// <summary>
+        /// 该列是否拥有索引。
+        /// </summary>
+        public bool HasIndex { get; set; }
     }
 }

@@ -10,6 +10,12 @@
  * 
 *******************************************************/
 
+3.64.3700
+    ★★公布、添加接口、内部修改
+        重要性能优化：Sql 查询时，有索引的列需要设置其 DbDataParameter 的 DbType，否则会索引失效。
+        添加 ColumnMeta.HasIndex 属性及方法，以配置某属性是否有索引。
+            使用方法：Meta.Property(SALESDATA.CREATEDATESProperty).MapColumn().HasDbType(DbType.Date).HasIndex(true);
+
 3.63.3696
     ！修改接口
         Rafy.DataTableMigartion 升级版本到 2.0，重构为 Rafy.DataArchiver。
@@ -37,7 +43,7 @@
         由于从 3.59.3400 升级到 3.60.3300 时，版本号出错，需要加上相应的 100 个小版本号。
 
 3.62.3569
-    添加功能
+    ★★公布、添加功能
         聚合实体被删除后，整个聚合中所有实体的状态都应该是 PersistenceStatus.New。
         Linq 查询，支持使用 Equals 方法来对属性进行判断。
     BUG修复

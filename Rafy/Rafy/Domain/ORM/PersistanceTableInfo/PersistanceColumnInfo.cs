@@ -54,6 +54,8 @@ namespace Rafy.Domain.ORM
 
         public bool IsPrimaryKey => this.Meta.IsPrimaryKey;
 
+        public bool HasIndex => this.Meta.HasIndex;
+
         public IProperty Property { get; private set; }
 
         IPersistanceTableInfo IPersistanceColumnInfo.Table

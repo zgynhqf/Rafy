@@ -31,7 +31,7 @@ namespace Rafy.Data
         /// 
         /// 当在 Sql 中直接写入 {0} 时，可以使用本方法直接添加一个参数到参数列表中。
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="value">object or <see cref="DbAccesserParameter"/></param>
         /// <returns></returns>
         public int Add(object value)
         {
@@ -101,7 +101,7 @@ namespace Rafy.Data
         /// 隐式操作符，使得本类的对象可以直接当作 object[] 使用。方便 DBA 类型的操作。
         /// </summary>
         /// <returns></returns>
-        public static implicit operator object[](FormattedSqlParameters value)
+        public static implicit operator object[] (FormattedSqlParameters value)
         {
             return value._parameters.ToArray();
         }
