@@ -10,10 +10,12 @@
  * 
 *******************************************************/
 
-3.63.3694
-    重构
+3.63.3695
+    ！修改接口
         Rafy.DataTableMigartion 升级版本到 2.0，重构为 Rafy.DataArchiver。
         KeyProvider.GetEmptyIdForRefIdProperty 的方法重构为 GetEmptyId。
+    内部修改
+        优化性能：通过名称来加载数据行时，可以先把列的索引初始化好。
     添加接口
         添加 DbAccesserParameter 类型，用于辅助处理当 DbDataParameter 中没有设置 DbType，导致索引失效的问题。
     BUG修复
