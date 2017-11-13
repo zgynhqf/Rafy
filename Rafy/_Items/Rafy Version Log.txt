@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.63.3695
+3.63.3696
     ！修改接口
         Rafy.DataTableMigartion 升级版本到 2.0，重构为 Rafy.DataArchiver。
         KeyProvider.GetEmptyIdForRefIdProperty 的方法重构为 GetEmptyId。

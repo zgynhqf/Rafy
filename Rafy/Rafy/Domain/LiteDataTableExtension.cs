@@ -210,7 +210,7 @@ namespace Rafy.Domain
                 }
             }
 
-            return ConvertEntitiesIntoList(table, repo, propertyMappings) as TEntityList;
+            return ConvertEntitiesIntoList(table, repo, propertyMappings, columnMapToProperty) as TEntityList;
         }
 
         /// <summary>
@@ -224,7 +224,12 @@ namespace Rafy.Domain
         /// 如果传入 false，表示表格中的列数据类型和实体属性数据类型不一致。
         /// </param>
         /// <returns></returns>
-        private static EntityList ConvertEntitiesIntoList(LiteDataTable table, EntityRepository repo, IList<PropertyToColumnMapping> propertyToColumnMappings, bool columnMapToProperty = true)
+        private static EntityList ConvertEntitiesIntoList(
+            LiteDataTable table,
+            EntityRepository repo,
+            IList<PropertyToColumnMapping> propertyToColumnMappings,
+            bool columnMapToProperty = true
+            )
         {
             var resultList = repo.NewList();
 
@@ -247,7 +252,7 @@ namespace Rafy.Domain
                         {
                             var column = columns[z];
                             //通过列名称相等匹配找到 rdbcolumn。
-                            if (column.Name == mapping.ColumnName)
+                            if (column.Name.EqualsIgnoreCase(mapping.ColumnName))
                             {
                                 column.WritePropertyValue(entityItem, rowValue);
                                 break;
