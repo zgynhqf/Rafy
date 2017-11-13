@@ -103,7 +103,7 @@ namespace Rafy.DbMigration.Oracle
                 case "byte":
                     return DbType.Byte;
                 case "date":
-                    return DbType.DateTime;
+                    return DbType.Date;
                 default:
                     break;
             }
@@ -117,6 +117,8 @@ namespace Rafy.DbMigration.Oracle
         /// <returns></returns>
         public override DbType FromClrType(Type clrType)
         {
+            if (clrType == typeof(DateTime)) { return DbType.Date; }
+
             var value = base.FromClrType(clrType);
 
             if (value == DbType.Boolean)
