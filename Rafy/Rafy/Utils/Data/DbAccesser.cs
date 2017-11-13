@@ -458,12 +458,43 @@ namespace Rafy.Data
                 parameterName = _converter.GetParameterName(i);
                 object value = parametersValues[i];
 
-                //convert null value.
-                if (value == null) { value = DBNull.Value; }
-                IDbDataParameter param = (this as IDbParameterFactory).CreateParameter(parameterName, value, ParameterDirection.Input);
-                dbParameters[i] = param;
+                var parameter = (this as IDbParameterFactory).CreateParameter();
+                SetDbTypeAndValue(parameter, value);
+                parameter.ParameterName = parameterName;
+                parameter.Direction = ParameterDirection.Input;
+
+                dbParameters[i] = parameter;
             }
             return dbParameters;
+        }
+
+        private static void SetDbTypeAndValue(IDbDataParameter parameter, object value)
+        {
+            var dap = value as DbAccesserParameter;
+            if (dap != null)
+            {
+                value = dap.Value;
+                parameter.DbType = dap.DbType;
+            }
+            //else
+            //{
+            //    if (value != null)
+            //    {
+            //        if (value is DateTime)
+            //        {
+            //            parameter.DbType = DbType.DateTime;
+            //        }
+            //        else if (value is string)
+            //        {
+            //            parameter.DbType = DbType.String;
+            //        }
+            //    }
+            //}
+
+            //convert null value.
+            if (value == null) { value = DBNull.Value; }
+
+            parameter.Value = value;
         }
 
         #endregion

@@ -713,6 +713,7 @@
     <Compile Include="Utils\Context\StaticAppContextProvider.cs" />
     <Compile Include="Utils\Context\ThreadStaticAppContextProvider.cs" />
     <Compile Include="Utils\Data\DbAccesser.cs" />
+    <Compile Include="Utils\Data\DbAccesserParameter.cs" />
     <Compile Include="Utils\Data\DbConnectionSchema.cs" />
     <Compile Include="Utils\Data\DbSetting.cs" />
     <Compile Include="Utils\Data\FormattedSql.cs" />

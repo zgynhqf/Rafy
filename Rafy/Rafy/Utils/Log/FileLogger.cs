@@ -146,7 +146,7 @@ namespace Rafy
             var pValues = parameters.Select(p =>
             {
                 var value = p.Value;
-                if (p.DbType == DbType.DateTime)
+                if (p.DbType == DbType.DateTime || p.DbType == DbType.Date)
                 {
                     if (isOracle)
                     {
