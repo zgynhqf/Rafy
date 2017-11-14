@@ -73,8 +73,12 @@ namespace Rafy.Domain
                     return Domain.PersistenceStatus.New;
                 }
 
-                return GetFlags(EntitySerializableFlags.IsModified) ?
-                    PersistenceStatus.Modified : PersistenceStatus.Unchanged;
+                if (GetFlags(EntitySerializableFlags.IsModified))
+                {
+                    return Domain.PersistenceStatus.Modified;
+                }
+
+                return PersistenceStatus.Unchanged;
             }
             set
             {

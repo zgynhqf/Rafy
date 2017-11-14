@@ -25,19 +25,39 @@ namespace Rafy.Domain
     public enum PersistenceStatus
     {
         /// <summary>
-        /// 未改动
+        /// 已保存。
+        /// <para>表示该实体当前的所有状态已经持久化到数据库中。</para>
+        /// <para>
+        /// The object has not been modified since it was loaded into the memory or since
+        /// the last time that the Repository.Save method was
+        /// called.
+        /// </para>
         /// </summary>
         Unchanged = 0,
         /// <summary>
-        /// 数据变更。仓库保存时，需要执行更新操作。
+        /// 数据变更。
+        /// <para>仓库保存时，需要执行更新操作。</para>
+        /// <para>
+        /// The object is changed but the Repository.Save method was not called.
+        /// </para>
         /// </summary>
         Modified = 1,
         /// <summary>
-        /// 新对象。仓库保存时，需要执行添加操作。
+        /// 新对象。
+        /// <para>仓库保存时，需要执行添加操作。</para>
+        /// <para>注意：给实体设置状态为 New 时，为清空实体的 Id。</para>
+        /// <para>
+        /// The object is new to the database and the Repository.Save
+        /// method has not been called.
+        /// </para>
         /// </summary>
         New = 2,
         /// <summary>
-        /// 已删除。仓库保存时，需要执行删除操作。
+        /// 已删除。
+        /// <para>仓库保存时，需要执行删除操作。</para>
+        /// <para>
+        /// The object is deleted in memory, and not saved into database.
+        /// </para>
         /// </summary>
         Deleted = 3
     }
