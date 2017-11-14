@@ -118,7 +118,7 @@ namespace Rafy
             //"--Database:  " + connectionSchema.Database +
             content.Append("--ConnectionString: ").Append(connectionSchema.ConnectionString).AppendLine();
 
-            if (parameters.Length > 0)
+            if (parameters?.Length > 0)
             {
                 this.WriteSqlAndParameters(content, sql, parameters, connectionSchema);
             }
