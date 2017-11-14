@@ -69,12 +69,12 @@ namespace Rafy
         /// <param name="e"></param>
         public override void LogError(string title, Exception e)
         {
-            if (!string.IsNullOrEmpty(this.ExceptionLogFileName))
-            {
-                var stackTrace = e.StackTrace;//需要记录完整的堆栈信息。
-                e = e.GetBaseException();
+            if (string.IsNullOrEmpty(this.ExceptionLogFileName)) return;
 
-                string message = string.Format(@"
+            var stackTrace = e.StackTrace;//需要记录完整的堆栈信息。
+            e = e.GetBaseException();
+
+            string message = string.Format(@"
 ===================================================================
 ======== {0} =========
 ===================================================================
@@ -85,6 +85,9 @@ namespace Rafy
 {2}
 
 ", title, e.Message, stackTrace, Thread.CurrentThread.ManagedThreadId, DateTime.Now);
+
+            lock (this)
+            {
                 File.AppendAllText(this.ExceptionLogFileName, message);
             }
         }
@@ -99,36 +102,53 @@ namespace Rafy
         /// <param name="connection"></param>
         public override void LogDbAccessed(string sql, IDbDataParameter[] parameters, DbConnectionSchema connectionSchema, IDbConnection connection)
         {
-            if (!string.IsNullOrEmpty(this.SqlTraceFileName))
+            if (string.IsNullOrEmpty(this.SqlTraceFileName)) return;
+
+            var content = new StringBuilder();
+
+            content.AppendLine().AppendLine().AppendLine()
+                .Append("--").Append(DateTime.Now).AppendLine();
+
+            var sqlConnection = connection as SqlConnection;
+            if (sqlConnection != null)
             {
-                var content = new StringBuilder();
+                content.Append("--ClientConnectionId: ").Append(sqlConnection.ClientConnectionId).AppendLine();
+            }
 
-                content.Append("--").Append(DateTime.Now);
-                content.AppendLine();
+            //"--Database:  " + connectionSchema.Database +
+            content.Append("--ConnectionString: ").Append(connectionSchema.ConnectionString).AppendLine();
 
-                //var sqlConnection = connection as SqlConnection;
-                //if (sqlConnection != null)
-                //{
-                //    content.Append("--ClientConnectionId: ").Append(sqlConnection.ClientConnectionId);
-                //    content.AppendLine();
-                //}
+            if (parameters.Length > 0)
+            {
+                this.WriteSqlAndParameters(content, sql, parameters, connectionSchema);
+            }
+            else
+            {
+                content.Append(sql);
+            }
 
-                //"--Database:  " + connectionSchema.Database +
-                content.Append("--ConnectionString: ").Append(connectionSchema.ConnectionString);
-                content.AppendLine();
+            content.Append(';');
 
-                if (parameters.Length > 0)
-                {
-                    this.WriteSqlAndParameters(content, sql, parameters, connectionSchema);
-                }
-                else
-                {
-                    content.Append(sql);
-                }
+            lock (this)
+            {
+                File.AppendAllText(this.SqlTraceFileName, content.ToString(), Encoding.UTF8);
+            }
+        }
 
-                content.Append(';').AppendLine().AppendLine().AppendLine();
+        public override void LogDbAccessedResult(int rowsEffect)
+        {
+            if (string.IsNullOrEmpty(this.SqlTraceFileName)) return;
 
-                File.AppendAllText(SqlTraceFileName, content.ToString(), Encoding.UTF8);
+            var content = new StringBuilder();
+
+            content.AppendLine()
+                .Append("--").Append(DateTime.Now)
+                .AppendLine()
+                .Append("Rows effected: ").Append(rowsEffect).Append(";");
+
+            lock (this)
+            {
+                File.AppendAllText(this.SqlTraceFileName, content.ToString(), Encoding.UTF8);
             }
         }
 

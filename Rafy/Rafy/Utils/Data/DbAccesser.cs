@@ -640,7 +640,11 @@ namespace Rafy.Data
             {
                 this.MakeConnectionOpen();
 
-                return command.ExecuteNonQuery();
+                var rowsEffect = command.ExecuteNonQuery();
+
+                Logger.LogDbAccessedResult(rowsEffect);
+
+                return rowsEffect;
             }
             finally
             {

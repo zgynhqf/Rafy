@@ -84,18 +84,12 @@ namespace Rafy.Domain
         {
             _deletedList = null;
 
-            for (int i = this.Count - 1; i >= 0; i--)
+            for (int i = 0, c = this.Count; i < c; i++)
             {
                 var entity = this[i];
 
                 var child = entity as IDirtyAware;
                 child.MarkSaved();
-
-                //Deleted 的实体在保存后，状态会变为 New。这些已经删除的实体需要从列表中移除。
-                if (entity.IsNew)
-                {
-                    this.RemoveAt(i);
-                }
             }
         }
 
