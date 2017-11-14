@@ -54,6 +54,19 @@ namespace Rafy
             catch { }
         }
 
+        /// <summary>
+        /// 记录某个消息到 Log 日志中。
+        /// </summary>
+        /// <param name="message">要记录的消息。</param>
+        public static void LogInfo(string message)
+        {
+            try
+            {
+                _impl.LogInfo(message);
+            }
+            catch { }
+        }
+
         [ThreadStatic]
         private static long _threadDbAccessedCount = 0;
         [ThreadStatic]

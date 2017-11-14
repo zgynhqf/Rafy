@@ -35,9 +35,16 @@ namespace Rafy
         /// </summary>
         public FileLogger()
         {
-            this.ExceptionLogFileName = "ExceptionLog.txt";
+            this.InfoLogFileName = ConfigurationHelper.GetAppSettingOrDefault("Rafy.FileLogger.InfoLogFileName", "ApplicationInfoLog.txt");
+            this.ExceptionLogFileName = ConfigurationHelper.GetAppSettingOrDefault("Rafy.FileLogger.ExceptionLogFileName", "ExceptionLog.txt");
             this.SqlTraceFileName = ConfigurationHelper.GetAppSettingOrDefault("Rafy.FileLogger.SqlTraceFileName", string.Empty);
         }
+
+        /// <summary>
+        /// 常用信息的日志的文件名。
+        /// 默认为空。
+        /// </summary>
+        public string InfoLogFileName { get; set; }
 
         /// <summary>
         /// 错误日志的文件名。
@@ -61,6 +68,21 @@ namespace Rafy
         ///// 默认为 false。
         ///// </summary>
         //public bool WriteSqlOnly { get; set; }
+
+        public override void LogInfo(string message)
+        {
+            if (string.IsNullOrEmpty(this.InfoLogFileName)) return;
+
+            lock (this)
+            {
+                File.AppendAllText(this.ExceptionLogFileName, $@"
+
+-----------------------------------------------------------------
+Time：{ DateTime.Now }
+Thread Id:[ { Thread.CurrentThread.ManagedThreadId } ]
+Message：{ message }");
+            }
+        }
 
         /// <summary>
         /// 记录某个已经生成的异常到文件中。
