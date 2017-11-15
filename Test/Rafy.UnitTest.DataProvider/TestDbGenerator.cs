@@ -30,14 +30,18 @@ namespace Rafy.UnitTest.DataProvider
 {
     public static class TestDbGenerator
     {
+        private static bool ClearDb = true;
+
         public static void GenerateDb()
         {
             if (ConfigurationHelper.GetAppSettingOrDefault("单元测试-生成数据库", false))
             {
-                if (ConfigurationHelper.GetAppSettingOrDefault("单元测试-生成数据库-先清空数据库", false))
+                if (ClearDb && ConfigurationHelper.GetAppSettingOrDefault("单元测试-生成数据库-先清空数据库", false))
                 {
                     //不想手工去删除数据库，可以使用下面这个方法来在程序中删除所有的表。
                     DropAllTables();
+
+                    ClearDb = false;
                 }
 
                 using (var c = new RafyDbMigrationContext(DbSettingNames.DbMigrationHistory))
