@@ -1387,7 +1387,7 @@ namespace RafyUnitTest
             var repo = RF.ResolveInstance<FavorateRepository>();
             using (RF.TransactionScope(repo))
             {
-                var book1 = new Book { Name = "Book1", };
+                var book1 = new Book { Name = "Book1" };
                 RF.Save(book1);
                 var book2 = new Book { Name = "Book2" };
                 RF.Save(book2);
@@ -1396,9 +1396,9 @@ namespace RafyUnitTest
                 repo.Save(new Favorate { Name = "f3" });
 
                 var list = repo.GetByBookNameNotOrNull(book1.Name);
-                Assert.IsTrue(list.Count == 2);
-                Assert.IsTrue(list[0].Name == "f2");
-                Assert.IsTrue(list[1].Name == "f3");
+                Assert.AreEqual(2, list.Count);
+                Assert.AreEqual("f2", list[0].Name);
+                Assert.AreEqual("f3", list[1].Name);
             }
         }
 

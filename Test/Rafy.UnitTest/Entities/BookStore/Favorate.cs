@@ -150,7 +150,8 @@ namespace UT
         public virtual FavorateList GetByBookNameNotOrNull(string bookName)
         {
             var q = this.CreateLinqQuery();
-            q = q.Where(e => e.Book.Name != bookName || e.BookId == null);
+            q = q.Where(e => e.Book.Name != bookName || e.BookId == null)
+                .OrderBy(e => e.Id);
             return (FavorateList)this.QueryData(q);
         }
 
