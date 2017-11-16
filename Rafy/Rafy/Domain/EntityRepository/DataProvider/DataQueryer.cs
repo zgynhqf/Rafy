@@ -575,11 +575,15 @@ namespace Rafy.Domain
             });
             if (idList.Count > 0)
             {
+                #region 加载所有的引用实体。
+
                 var targetRepo = RepositoryFactoryHost.Factory.FindByEntity(refProperty.RefEntityType);
                 var refList = targetRepo.GetByIdList(idList.ToArray());
 
                 //继续递归加载它的贪婪属性。
                 this.EagerLoad(refList, eagerLoadProperties);
+
+                #endregion
 
                 #region 把实体全部放到排序列表中
 
@@ -601,6 +605,8 @@ namespace Rafy.Domain
                     sortedList = list.OrderBy(e => e.GetRefNullableId(refIdProperty)).ToList();
                 }
 
+                var sortedRefList = refList.OrderBy(e => e.Id).ToList();
+
                 #endregion
 
                 #region 使用一次主循环就把所有的子实体都加载到父实体中。
@@ -608,8 +614,8 @@ namespace Rafy.Domain
 
                 //把大的实体集合，根据 Id，设置到每一个实体上。
                 var refEntityProperty = refProperty.RefEntityProperty;
-                int refListIndex = 0, refListCount = refList.Count;
-                var refEntity = refList[refListIndex];
+                int refListIndex = 0, refListCount = sortedRefList.Count;
+                var refEntity = sortedRefList[refListIndex];
                 for (int i = 0, c = sortedList.Count; i < c; i++)
                 {
                     var entity = sortedList[i];
@@ -637,7 +643,7 @@ namespace Rafy.Domain
                                     break;
                                 }
 
-                                refEntity = refList[refListIndex];
+                                refEntity = sortedRefList[refListIndex];
                             }
                         }
                     }
