@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.65.3711
+3.65.3712
     添加功能
         Logger 添加 LogInfo 方法，用于记录系统日志。
     内部修改
@@ -18,6 +18,7 @@
         完善 DbTypeConverters 中对 DbType 的支持，以及相关的单元测试。
     BUG修复
         Oracle 中只有 Date 类型，不应该返回 DateTime。
+        MySqlMetaReader.LoadAllColumns 方法中使用了错误的列来加载数据类型。
 
 3.65.3705
     ★★公布、内部修改

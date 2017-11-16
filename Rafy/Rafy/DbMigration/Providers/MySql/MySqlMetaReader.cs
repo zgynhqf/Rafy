@@ -62,7 +62,7 @@ WHERE TABLE_SCHEMA = '" + database.Name + "'"))
             //用一句 Sql 将所有的表的所有字段都一次性查询出来。
             //不再使用 @"SHOW FULL COLUMNS FROM `" + table.Name + "`;"
             var sql = new StringBuilder(
-@"SELECT TABLE_NAME, COLUMN_NAME, IS_NULLABLE, DATA_TYPE, EXTRA
+@"SELECT TABLE_NAME, COLUMN_NAME, IS_NULLABLE, COLUMN_TYPE, EXTRA
 FROM INFORMATION_SCHEMA.COLUMNS
 WHERE TABLE_NAME IN (");
             sql.Append(string.Join(",", database.Tables.Select(t => "'" + t.Name + "'")));
@@ -82,7 +82,7 @@ ORDER BY TABLE_NAME");
                     }
 
                     string columnName = columnsReader["COLUMN_NAME"].ToString();
-                    string sqlType = columnsReader["DATA_TYPE"].ToString();
+                    string sqlType = columnsReader["COLUMN_TYPE"].ToString();
                     DbType dbType = MySqlDbTypeConverter.Instance.ConvertToDbType(sqlType);
 
                     Column column = new Column(columnName, dbType, null, currentTable);
