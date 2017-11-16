@@ -58,8 +58,10 @@ namespace Rafy.DbMigration.Oracle
                     return "XMLTYPE";
                 case DbType.Int32:
                     return "INTEGER";
-                case DbType.DateTime:
                 case DbType.Date:
+                case DbType.Time:
+                case DbType.DateTime:
+                case DbType.DateTimeOffset:
                     return "DATE";
                 case DbType.Byte:
                 case DbType.Single:

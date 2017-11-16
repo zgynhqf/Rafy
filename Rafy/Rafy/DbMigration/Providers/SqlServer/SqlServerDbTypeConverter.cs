@@ -48,7 +48,10 @@ namespace Rafy.DbMigration.SqlServer
                     return "INT";
                 case DbType.Int64:
                     return "BIGINT";
+                case DbType.Date:
+                case DbType.Time:
                 case DbType.DateTime:
+                case DbType.DateTimeOffset:
                     return "DATETIME";
                 case DbType.Guid:
                     return "UNIQUEIDENTIFIER";

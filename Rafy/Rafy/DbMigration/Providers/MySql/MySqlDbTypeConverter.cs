@@ -56,7 +56,7 @@ namespace Rafy.DbMigration.MySql
                     return "TINYINT";
                 case DbType.UInt16:
                 case DbType.Int16:
-                    return "SMALLINT ";
+                    return "SMALLINT";
                 case DbType.UInt32:
                 case DbType.Int32:
                     return "INT";

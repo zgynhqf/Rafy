@@ -166,6 +166,7 @@ namespace Rafy.DbMigration
         private static DbType[][] CompatibleTypes = new DbType[][]{
             new DbType[]{ DbType.String, DbType.AnsiString, DbType.Xml },
             new DbType[]{ DbType.Int64, DbType.Double, DbType.Decimal },
+            new DbType[]{ DbType.Date, DbType.Time, DbType.DateTime, DbType.DateTimeOffset },
         };
     }
 }
