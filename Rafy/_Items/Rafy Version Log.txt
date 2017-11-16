@@ -10,9 +10,10 @@
  * 
 *******************************************************/
 
-3.65.3713
-    添加功能
+3.65.3718
+    添加功能、添加接口
         Logger 添加 LogInfo 方法，用于记录系统日志。
+        添加 StampContext.DisableAutoSetStamps() 方法，用于禁用自动设置 Stamp 的功能。
     内部修改
         优化 DbAccesser 中的参数传递。节省内存。
         完善 DbTypeConverters 中对 DbType 的支持，以及相关的单元测试。
