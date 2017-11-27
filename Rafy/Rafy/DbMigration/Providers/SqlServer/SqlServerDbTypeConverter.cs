@@ -51,8 +51,9 @@ namespace Rafy.DbMigration.SqlServer
                 case DbType.Date:
                 case DbType.Time:
                 case DbType.DateTime:
-                case DbType.DateTimeOffset:
                     return "DATETIME";
+                case DbType.DateTimeOffset:
+                    return "DATETIMEOFFSET";
                 case DbType.Guid:
                     return "UNIQUEIDENTIFIER";
                 case DbType.Double:
@@ -121,12 +122,28 @@ namespace Rafy.DbMigration.SqlServer
                     return DbType.Byte;
                 case "date":
                 case "datetime":
-                case "datetimeoffset":
                 case "time":
                     return DbType.DateTime;
+                case "datetimeoffset":
+                    return DbType.DateTimeOffset;
                 default:
                     throw new NotSupportedException($"不支持读取数据库中的列类型：{databaseTypeName}。");
             }
+        }
+
+        /// <summary>
+        /// 由于不同的 DbType 映射到库中后的类型可能是相同的，所以这里需要对类型进行兼容性判断。
+        /// </summary>
+        /// <param name="oldColumnType"></param>
+        /// <param name="newColumnType"></param>
+        /// <returns></returns>
+        internal override bool IsCompatible(DbType oldColumnType, DbType newColumnType)
+        {
+            if (oldColumnType == newColumnType) return true;
+
+            if (oldColumnType == DbType.DateTimeOffset || newColumnType == DbType.DateTimeOffset) return false;
+
+            return base.IsCompatible(oldColumnType, newColumnType);
         }
     }
 }

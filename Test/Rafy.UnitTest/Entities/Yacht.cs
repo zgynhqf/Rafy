@@ -109,6 +109,15 @@ namespace Rafy.UnitTest
             set { this.SetProperty(DecimalValueProperty, value); }
         }
 
+        public static readonly Property<DateTimeOffset?> DateTimeOffsetValueProperty = P<Yacht>.Register(e => e.DateTimeOffsetValue);
+        /// <summary>
+        /// 
+        /// </summary>
+        public DateTimeOffset? DateTimeOffsetValue
+        {
+            get { return this.GetProperty(DateTimeOffsetValueProperty); }
+            set { this.SetProperty(DateTimeOffsetValueProperty, value); }
+        }
 
         #endregion
 

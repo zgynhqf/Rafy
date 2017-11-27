@@ -24,6 +24,13 @@ namespace Rafy.DbMigration.Model
     {
         internal IDbIdentifierQuoter IDbIdentifierProvider;
 
+        DbTypeConverter DbTypeConverter;
+
+        internal ModelDiffer(DbTypeConverter _dbTypeConverter)
+        {
+            DbTypeConverter = _dbTypeConverter;
+        }
+
         /// <summary>
         /// 计算出两个数据库元数据的所有表差别
         /// </summary>

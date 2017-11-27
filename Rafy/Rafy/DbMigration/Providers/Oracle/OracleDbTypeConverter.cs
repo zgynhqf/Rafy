@@ -120,7 +120,7 @@ namespace Rafy.DbMigration.Oracle
         /// <returns></returns>
         public override DbType FromClrType(Type clrType)
         {
-            if (clrType == typeof(DateTime)) { return DbType.Date; }
+            if (clrType == typeof(DateTime) || clrType == typeof(DateTimeOffset)) { return DbType.Date; }
 
             var value = base.FromClrType(clrType);
 
@@ -153,6 +153,10 @@ namespace Rafy.DbMigration.Oracle
                 {
                     value = TypeHelper.CoerceValue(typeof(int), value);
                 }
+                else if (value is DateTimeOffset)
+                {
+                    value = ((DateTimeOffset)value).DateTime;
+                }
             }
 
             return value;
@@ -173,6 +177,19 @@ namespace Rafy.DbMigration.Oracle
                 if (clrType == typeof(bool))
                 {
                     dbValue = dbValue.ToString() == "1" ? true : false;
+                }
+                else if (clrType == typeof(DateTimeOffset))
+                {
+                    DateTime dateTime = (DateTime)dbValue;
+
+                    if (dateTime == DateTime.MinValue)
+                    {
+                        dbValue = DateTimeOffset.MinValue;
+                    }
+                    else
+                    {
+                        dbValue = (DateTimeOffset)DateTime.SpecifyKind(dateTime, DateTimeKind.Local);
+                    }
                 }
             }
             else

@@ -36,6 +36,8 @@ namespace RafyUnitTest
     [TestClass]
     public class DbMigrationTest
     {
+        static DbTypeConverter DbTypeConverter;
+
         [ClassInitialize]
         public static void DbMigrationTest_ClassInitialize(TestContext context)
         {
@@ -52,6 +54,9 @@ namespace RafyUnitTest
 
                 c.ResetDbVersion();
                 c.ResetHistory();
+
+                var _dbProvider = DbMigrationProviderFactory.GetProvider(c.DbSetting);
+                DbTypeConverter = (_dbProvider.CreateRunGenerator() as SqlRunGenerator).DbTypeCoverter;
             };
         }
 
