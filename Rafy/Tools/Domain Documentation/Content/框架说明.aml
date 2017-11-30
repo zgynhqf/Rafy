@@ -6,7 +6,7 @@
 
         <introduction>
             <para>Rafy 帮助文档</para>
-            <para>文档版本号：0.5.543</para>
+            <para>文档版本号：0.5.544</para>
         </introduction>
 
         <section address="intro">
@@ -16,11 +16,11 @@
                 <list class="bullet">
                     <listItem>
                         <para>快速开发：</para>
-                        <para>DDD、界面自动生成、数据库自动生成与升级、易用的业务逻辑编写框架。</para>
+                        <para>领域驱动设计、界面自动生成、数据库自动生成与升级、易用的业务逻辑编写框架。</para>
                     </listItem>
                     <listItem>
                         <para>产品线工程：</para>
-                        <para>插件化业务模块积累（内置一个权限控制插件模块）、客户化二次开发、实施配置平台。</para>
+                        <para>插件化业务模块积累（内置一个多个现有的插件模块）、客户化二次开发、实施配置平台。</para>
                     </listItem>
                     <listItem>
                         <para>一套代码，可同时生成并运行 C/S、单机版、B/S 三种应用程序。</para>
@@ -88,9 +88,9 @@
                 <para>它包含了以下组成部分：</para>
                 <list class="bullet">
                     <listItem>
-                        <para>领域实体框架</para>
+                        <para>Rafy 领域实体框架</para>
                         <para>
-                            <link xlink:href="c8e6cd25-c674-4cd1-9880-816d11f58eb8" /> 是一个 ORM 框架，可脱离 Rafy 框架其它组件单独运行，为开发人员提供了极高的开发效率、强大的功能。同时集领域驱动设计、面向服务架构、模型驱动架构、产品线工程方法于一身，是 Rafy 框架中其它组件（如界面生成等高级功能）的基础。
+                            Rafy <link xlink:href="c8e6cd25-c674-4cd1-9880-816d11f58eb8" /> 是一个 ORM 框架，可脱离 Rafy 框架其它组件单独运行，为开发人员提供了极高的开发效率、强大的功能。同时集领域驱动设计、面向服务架构、模型驱动架构、产品线工程方法于一身，是 Rafy 框架中其它组件（如界面生成等高级功能）的基础。
                         </para>
                         <para>包含以下程序集：</para>
                         <list class="bullet">
