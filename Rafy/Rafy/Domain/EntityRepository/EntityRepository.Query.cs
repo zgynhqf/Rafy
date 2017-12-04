@@ -260,6 +260,8 @@ namespace Rafy.Domain
         /// <returns></returns>
         public EntityList GetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad = null)
         {
+            if (string.IsNullOrEmpty(treeIndex)) throw new ArgumentNullException(nameof(treeIndex));
+
             return this.DoGetByTreeParentIndex(treeIndex, eagerLoad);
         }
 

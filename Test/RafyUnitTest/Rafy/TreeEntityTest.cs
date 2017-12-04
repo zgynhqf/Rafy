@@ -1450,6 +1450,44 @@ namespace RafyUnitTest
         }
 
         /// <summary>
+        /// 如果要提交的树节点是一个根节点，而且它的索引还没有生成，则需要在更新时，主动为其生成索引。
+        /// </summary>
+        [TestMethod]
+        public void TET_Struc_TreeIndex_RepairAsEmpty()
+        {
+            var repo = RF.ResolveInstance<FolderRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var list = new FolderList
+                {
+                    new Folder(),//001.
+                    new Folder//002.
+                    {
+                        TreeChildren =
+                        {
+                            new Folder()//002.001.
+                        }
+                    },
+                    new Folder(),//003.
+                };
+                repo.Save(list);
+
+                //一些需要迁移的历史数据。
+                var root = list[0];
+                var dba = DbAccesserFactory.Create(repo);
+                dba.ExecuteText("update folder set treeindex = {0} where id = {1}", string.Empty, root.Id);
+
+                root = repo.GetById(root.Id);
+                root.Name = "name changed.";
+                repo.Save(root);
+                Assert.AreEqual("004.", root.TreeIndex);
+
+                root = repo.GetById(root.Id);
+                Assert.AreEqual("004.", root.TreeIndex);
+            }
+        }
+
+        /// <summary>
         /// 统一关闭整个列表的自动编码生成行为
         /// </summary>
         [TestMethod]
