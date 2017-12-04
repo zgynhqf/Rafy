@@ -417,6 +417,13 @@ namespace Rafy.Domain
                 this.TreeChildren.LoadAllNodes();
             }
         }
+        void ITreeComponent.LoadAllNodes(LoadAllNodesMethod method)
+        {
+            if (!this.IsTreeLeafSure)
+            {
+                this.TreeChildren.LoadAllNodes(method);
+            }
+        }
 
         Entity ITreeComponent.EachNode(Func<Entity, bool> action)
         {
@@ -709,6 +716,14 @@ namespace Rafy.Domain
             }
 
             /// <summary>
+            /// 一次性加载所有节点。
+            /// </summary>
+            public void LoadAllNodes(LoadAllNodesMethod method)
+            {
+                this.LoadAllNodes(method, false);
+            }
+
+            /// <summary>
             /// 一次性递归加载所有树节点。
             /// </summary>
             /// <param name="method">
@@ -720,7 +735,7 @@ namespace Rafy.Domain
             /// </param>
             /// <exception cref="InvalidProgramException">还没有存储到数据库中的节点，它的 IsFullLoaded 属性应该返回 true。</exception>
             /// <exception cref="System.InvalidProgramException">还没有存储到数据库中的节点，它的 IsFullLoaded 属性应该返回 true。</exception>
-            public void LoadAllNodes(LoadAllNodesMethod method, bool forceOwnerTreeIndex = false)
+            public void LoadAllNodes(LoadAllNodesMethod method, bool forceOwnerTreeIndex)
             {
                 if (!this.IsFullLoaded)
                 {
@@ -1432,20 +1447,5 @@ namespace Rafy.Domain
             //}
             //public enum MoveDirection { Up, Down }
         }
-    }
-
-    /// <summary>
-    /// LoadAllNodes 的两种方式
-    /// </summary>
-    public enum LoadAllNodesMethod
-    {
-        /// <summary>
-        /// 通过当前节点的 TreeIndex 来一次性加载所有节点。
-        /// </summary>
-        ByTreeIndex,
-        /// <summary>
-        /// 使用 TreePId 递归加载子节点（强关系，但是性能较差）。
-        /// </summary>
-        ByTreePId
     }
 }
