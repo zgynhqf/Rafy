@@ -23,33 +23,36 @@ namespace Rafy.MetaModel
     /// <summary>
     /// 树型实体的编码生成规则
     /// </summary>
-    public class TreeIndexOption
+    public abstract class TreeIndexOption
     {
+        private char _seperator = '.';
+
         #region TreeIndexOption.Default
 
         static TreeIndexOption()
         {
-            //最大可以到 999.
-            var numbers = new string[999];
-            for (int i = 1; i <= 999; i++)
+            Default = new TreeIndexOptionByNumber
             {
-                numbers[i - 1] = i.ToString("d3");
-            }
-
-            var value = new TreeIndexOption
-            {
-                Seperator = '.',
-                Layers = new string[][] { numbers }
+                LayersMaxNumber = new int[]
+                {
+                    //999999,
+                    999
+                }
             };
 
-            //public static readonly TreeIndexOption Default = new TreeIndexOption
+            //使用 Layers
+            ////最大可以到 999.
+            //var numbers = new string[999];
+            //for (int i = 1; i <= 999; i++)
             //{
-            //    Seperator = '.',
-            //    Layers = new string[][] {
-            //        new string[] { "1", "2", "3", "4", "5", "6", "7", "8", "9" }
-            //    }
+            //    numbers[i - 1] = i.ToString("d3");
+            //}
+
+            //Default = new TreeIndexOptionByChar
+            //{
+            //    _seperator = '.',
+            //    Layers = new string[][] { numbers }
             //};
-            Default = value;
         }
 
         private static TreeIndexOption _default;
@@ -73,23 +76,12 @@ namespace Rafy.MetaModel
         #endregion
 
         /// <summary>
-        /// 每一层间的分隔符
+        /// 每一层间的分隔符。默认使用 '.'。
         /// </summary>
-        public char Seperator { get; set; }
-
-        /// <summary>
-        /// 每一层的字符串定义
-        /// </summary>
-        public string[][] Layers { get; set; }
-
-        private string[] GetLayer(int index)
+        public char Seperator
         {
-            if (index < this.Layers.Length)
-            {
-                return this.Layers[index];
-            }
-
-            return this.Layers[this.Layers.Length - 1];
+            get { return _seperator; }
+            set { _seperator = value; }
         }
 
         /// <summary>
@@ -100,22 +92,23 @@ namespace Rafy.MetaModel
         /// <returns></returns>
         public string CalculateChildIndex(string parentIndex, int nodeIndex)
         {
-            int layerIndex = -1;
+            int layerIndex = 0;
             if (!string.IsNullOrEmpty(parentIndex))
             {
                 //父结点中有几个分隔符，就表示第几层。
-                for (int i = 0; i < parentIndex.Length; i++) { if (parentIndex[i] == Seperator) layerIndex++; }
-                if (layerIndex == -1) layerIndex = 0;
+                for (int i = 0; i < parentIndex.Length; i++)
+                {
+                    if (parentIndex[i] == _seperator) layerIndex++;
+                }
             }
             else
             {
-                layerIndex = 0;
                 parentIndex = string.Empty;
             }
 
             var code = this.GetSingleIndex(layerIndex, nodeIndex);
 
-            return parentIndex + code + Seperator;
+            return parentIndex + code + _seperator;
         }
 
         /// <summary>
@@ -126,10 +119,10 @@ namespace Rafy.MetaModel
         /// <returns></returns>
         public string CalculateParentIndex(string index)
         {
-            //反向找到倒数第二个 Seperator 即可。
+            //反向找到倒数第二个 _seperator 即可。
             for (int i = index.Length - 2; i >= 0; i--)
             {
-                if (index[i] == Seperator)
+                if (index[i] == _seperator)
                 {
                     return index.Substring(0, i + 1);
                 }
@@ -155,12 +148,111 @@ namespace Rafy.MetaModel
             for (int i = 0, c = index.Length; i < c; i++)
             {
                 var cItem = index[i];
-                if (cItem == Seperator) res++;
+                if (cItem == _seperator) res++;
             }
             return res;
         }
 
-        private string GetSingleIndex(int layerIndex, int nodeIndex)
+        /// <summary>
+        /// 获取指定层级指定索引号对应的 TreeIndex。
+        /// </summary>
+        /// <param name="layerIndex"></param>
+        /// <param name="nodeIndex"></param>
+        /// <returns></returns>
+        protected abstract string GetSingleIndex(int layerIndex, int nodeIndex);
+
+        /// <summary>
+        /// 通过目前最大的 TreeIndex，来推算下一个根节点应该使用的 TreeIndex。
+        /// </summary>
+        /// <param name="maxTreeIndex"></param>
+        /// <returns></returns>
+        internal string GetNextRootTreeIndex(string maxTreeIndex)
+        {
+            var seperatorIndex = maxTreeIndex.IndexOf(_seperator);
+            if (seperatorIndex < 0)
+            {
+                throw new InvalidOperationException(string.Format("树索引 {0} 中应该包含分隔符，格式有误！", maxTreeIndex));
+            }
+
+            var rootIndexCode = maxTreeIndex.Substring(0, seperatorIndex);
+
+            var res = this.DoGetNextRootTreeIndex(rootIndexCode);
+
+            return res;
+        }
+
+        protected abstract string DoGetNextRootTreeIndex(string rootIndexCode);
+    }
+
+    /// <summary>
+    /// 通过设置每层最大数字来生成 TreeIndex 的 TreeIndexOption
+    /// </summary>
+    public class TreeIndexOptionByNumber : TreeIndexOption
+    {
+        /// <summary>
+        /// 获取或设置一个数组，该数组中的每一个数字代表每一层所使用的数字的最大位数（最大3位表示001-999）。
+        /// 如果使用的层数超过数组的个数，则会继续数组的最后一个。
+        /// </summary>
+        public int[] LayersMaxNumber { get; set; }
+
+        protected override string GetSingleIndex(int layerIndex, int nodeIndex)
+        {
+            var layerMaxNo = this.GetLayerMaxNumber(layerIndex);
+
+            var value = Math.Min(nodeIndex + 1, layerMaxNo);
+
+            var bits = layerMaxNo.ToString().Length;
+
+            return value.ToString("d" + bits);
+        }
+
+        protected override string DoGetNextRootTreeIndex(string rootIndexCode)
+        {
+            var nextRootIndex = int.Parse(rootIndexCode);
+
+            return this.CalculateChildIndex(null, nextRootIndex);
+        }
+
+        private int GetLayerMaxNumber(int layerIndex)
+        {
+            var layersMaxNumber = this.LayersMaxNumber;
+
+            if (layerIndex < layersMaxNumber.Length)
+            {
+                return layersMaxNumber[layerIndex];
+            }
+
+            return layersMaxNumber[layersMaxNumber.Length - 1];
+        }
+    }
+
+    /// <summary>
+    /// 通过设置每层可用的字符来生成 TreeIndex 的 TreeIndexOption
+    /// </summary>
+    public class TreeIndexOptionByChar : TreeIndexOption
+    {
+        /// <summary>
+        /// 获取或设置一个数组，该数组中的每一个数字代表每一层所使用的字符串定义。
+        /// 如果使用的层数超过数组的个数，则会继续数组的最后一个。
+        /// </summary>
+        public string[][] Layers { get; set; }
+
+        protected override string DoGetNextRootTreeIndex(string rootIndexCode)
+        {
+            var rootLayer = this.GetLayer(0);
+            for (int i = 0, c = rootLayer.Length; i < c; i++)
+            {
+                var item = rootLayer[i];
+                if (item == rootIndexCode)
+                {
+                    return this.CalculateChildIndex(null, i + 1);
+                }
+            }
+
+            throw new InvalidOperationException(string.Format("没有找到 {0} 的树索引，数据有误。", rootIndexCode));
+        }
+
+        protected override string GetSingleIndex(int layerIndex, int nodeIndex)
         {
             var layer = this.GetLayer(layerIndex);
 
@@ -172,36 +264,16 @@ namespace Rafy.MetaModel
             return layer[layer.Length - 1];
         }
 
-        internal string GetNextRootTreeIndex(string treeIndex)
+        private string[] GetLayer(int layerIndex)
         {
-            var seperatorIndex = -1;
-            for (int i = 0, c = treeIndex.Length; i < c; i++)
+            var layers = this.Layers;
+
+            if (layerIndex < layers.Length)
             {
-                var item = treeIndex[i];
-                if (item == Seperator)
-                {
-                    seperatorIndex = i;
-                    break;
-                }
-            }
-            if (seperatorIndex < 0)
-            {
-                throw new InvalidOperationException(string.Format("树索引 {0} 中应该包含分隔符，格式有误！", treeIndex));
+                return layers[layerIndex];
             }
 
-            var indexCode = treeIndex.Substring(0, seperatorIndex);
-
-            var rootLayer = this.GetLayer(0);
-            for (int i = 0, c = rootLayer.Length; i < c; i++)
-            {
-                var item = rootLayer[i];
-                if (item == indexCode)
-                {
-                    return this.CalculateChildIndex(null, i + 1);
-                }
-            }
-
-            throw new InvalidOperationException(string.Format("没有找到 {0} 的树索引，数据有误。", indexCode));
+            return layers[layers.Length - 1];
         }
     }
 }
