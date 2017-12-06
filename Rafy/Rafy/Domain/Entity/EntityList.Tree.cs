@@ -234,25 +234,41 @@ namespace Rafy.Domain
 
         void ITreeComponent.LoadAllNodes()
         {
+            (this as ITreeComponent).LoadAllNodes(LoadAllNodesMethod.ByTreeIndex);
+        }
+
+        void ITreeComponent.LoadAllNodes(LoadAllNodesMethod method)
+        {
             if (this.Count > 0)
             {
-                if (!this.IsTreeRootList)
+                if (method == LoadAllNodesMethod.ByTreeIndex)
                 {
-                    throw new InvalidOperationException("只有根节点的集合，才能调用本方法。");
-                }
-
-                var all = this.GetRepository().GetAll();
-                for (int i = 0, c = this.Count; i < c; i++)
-                {
-                    var item = this[i];
-                    if (!item.IsTreeLeafSure && !item.TreeChildren.IsFullLoaded)
+                    if (!this.IsTreeRootList)
                     {
-                        var dbItem = all.Find(item.Id);
-                        var field = dbItem.TreeChildrenField;
-                        if (field != null)
+                        throw new InvalidOperationException("只有根节点的集合，才能调用本方法。");
+                    }
+
+                    var all = this.GetRepository().GetAll();
+                    for (int i = 0, c = this.Count; i < c; i++)
+                    {
+                        var item = this[i];
+                        if (!item.IsTreeLeafSure && !item.TreeChildren.IsFullLoaded)
                         {
-                            item.TreeChildren.MergeFullTree(field.Cast<Entity>().ToList());
+                            var dbItem = all.Find(item.Id);
+                            var field = dbItem.TreeChildrenField;
+                            if (field != null)
+                            {
+                                item.TreeChildren.MergeFullTree(field.Cast<Entity>().ToList());
+                            }
                         }
+                    }
+                }
+                else
+                {
+                    for (int i = 0, c = this.Count; i < c; i++)
+                    {
+                        var item = this[i] as ITreeComponent;
+                        item.LoadAllNodes(method);
                     }
                 }
             }

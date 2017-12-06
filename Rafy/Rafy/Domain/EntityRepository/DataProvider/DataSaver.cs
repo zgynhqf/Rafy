@@ -206,8 +206,9 @@ namespace Rafy.Domain
                         tree.TreeIndex = _repository.TreeIndexOption.CalculateChildIndex(null, 0);
                     }
 
+                    //通过 TreePId 加载所有的子，并重设它们的 TreeIndex。
                     var treeChildren = tree.TreeChildren;
-                    treeChildren.LoadAllNodes();
+                    treeChildren.LoadAllNodes(LoadAllNodesMethod.ByTreePId);
                     treeChildren.ResetTreeIndex();
                 }
 

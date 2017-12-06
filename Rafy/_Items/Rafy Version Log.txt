@@ -10,10 +10,11 @@
  * 
 *******************************************************/
 
-3.65.3718
+3.65.3725
     添加功能、添加接口
         Logger 添加 LogInfo 方法，用于记录系统日志。
         添加 StampContext.DisableAutoSetStamps() 方法，用于禁用自动设置 Stamp 的功能。
+        TreeIndexOption 分化为 TreeIndexOptionByNumber & TreeIndexOptionByChar
     内部修改
         优化 DbAccesser 中的参数传递。节省内存。
         完善 DbTypeConverters 中对 DbType 的支持，以及相关的单元测试。
@@ -21,6 +22,8 @@
         Oracle 中只有 Date 类型，不应该返回 DateTime。
         MySqlMetaReader.LoadAllColumns 方法中使用了错误的列来加载数据类型。
         解决当 GetByIdList 返回的数据没有按照 Id 排序时，贪婪加载失败的问题。
+        在更新一个没有 TreeIndex 的根节点的一般属性时，报错。（新生成的 TreeIndex 并没有用于查找子，反而是把所有的节点都查出来了 使用了 %.）
+        在数据库中的 TreeIndex 不正确时，ResetTreeIndex 方法无法正确运行。
 
 3.65.3705
     ★★公布、内部修改

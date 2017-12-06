@@ -52,6 +52,14 @@ namespace Rafy.Domain
         /// 递归加载所有树节点。
         /// </summary>
         void LoadAllNodes();
+
+        /// <summary>
+        /// 一次性递归加载所有树节点。
+        /// </summary>
+        /// <param name="method">
+        /// 是使用 TreeIndex 一次性加载所有节点，还是使用 TreePId 递归加载子节点（强关系，但是性能较差）。
+        /// </param>
+        void LoadAllNodes(LoadAllNodesMethod method);
     }
 
     /// <summary>
@@ -71,6 +79,22 @@ namespace Rafy.Domain
         /// 某个节点的所有子节点的集合。
         /// </summary>
         TreeChildren = 2
+    }
+
+    /// <summary>
+    /// LoadAllNodes 的两种模式
+    /// </summary>
+    public enum LoadAllNodesMethod
+    {
+        /// <summary>
+        /// 通过当前节点的 TreeIndex 来一次性加载所有节点。
+        /// 性能较好，但是前提是 TreeIndex 必须正确。
+        /// </summary>
+        ByTreeIndex,
+        /// <summary>
+        /// 使用 TreePId 递归加载子节点（强关系，但是性能较差）。
+        /// </summary>
+        ByTreePId
     }
 
     /// <summary>
