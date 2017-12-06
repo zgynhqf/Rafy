@@ -5390,8 +5390,8 @@ ORDER BY Article.Code ASC");
                 var db = context.DatabaseMetaReader.Read();
                 var table = db.FindTable("Customer");
                 var c1 = table.FindColumn("DecimalProperty1");
-                var _dbProvider = DbMigrationProviderFactory.GetProvider(context.DbSetting);
-                var dbTypeCoverter = (_dbProvider.CreateRunGenerator() as SqlRunGenerator).DbTypeCoverter;
+                var dbProvider = DbMigrationProviderFactory.GetProvider(context.DbSetting);
+                var dbTypeCoverter = (dbProvider.CreateRunGenerator() as SqlRunGenerator).DbTypeCoverter;
                 Assert.IsTrue(dbTypeCoverter.IsCompatible(c1.DbType, DbType.Decimal));
             }
         }
@@ -5404,8 +5404,8 @@ ORDER BY Article.Code ASC");
                 var db = context.DatabaseMetaReader.Read();
                 var table = db.FindTable("Customer");
                 var c1 = table.FindColumn("DecimalProperty2");
-                var _dbProvider = DbMigrationProviderFactory.GetProvider(context.DbSetting);
-                var dbTypeCoverter = (_dbProvider.CreateRunGenerator() as SqlRunGenerator).DbTypeCoverter;
+                var dbProvider = DbMigrationProviderFactory.GetProvider(context.DbSetting);
+                var dbTypeCoverter = (dbProvider.CreateRunGenerator() as SqlRunGenerator).DbTypeCoverter;
                 Assert.IsTrue(dbTypeCoverter.IsCompatible(c1.DbType, DbType.Decimal));
                 //Assert.IsTrue(c1.Length == "18,4");
             }
@@ -5419,8 +5419,8 @@ ORDER BY Article.Code ASC");
                 var db = context.DatabaseMetaReader.Read();
                 var table = db.FindTable("Customer");
                 var c1 = table.FindColumn("DecimalProperty3");
-                var _dbProvider = DbMigrationProviderFactory.GetProvider(context.DbSetting);
-                var dbTypeCoverter = (_dbProvider.CreateRunGenerator() as SqlRunGenerator).DbTypeCoverter;
+                var dbProvider = DbMigrationProviderFactory.GetProvider(context.DbSetting);
+                var dbTypeCoverter = (dbProvider.CreateRunGenerator() as SqlRunGenerator).DbTypeCoverter;
                 Assert.IsTrue(dbTypeCoverter.IsCompatible(c1.DbType, DbType.Double));
             }
         }

@@ -608,12 +608,18 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Property_DateTimeOffset()
         {
-            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            using (var tran = RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
             {
                 Yacht car = new Yacht()
                 {
-                    DateTimeOffsetValue = DateTime.Parse("2030-1-1")
+                    DateTimeOffsetValue = DateTime.Parse("1030-1-1")
                 };
+
+                if (tran.DbSetting.ProviderName.Contains("SqlServerCe"))
+                {
+                    car.DateTimeOffsetValue = DateTime.Parse("1750-1-1");
+                }
+
                 var repo = RF.ResolveInstance<YachtRepository>();
                 repo.Save(car);
 

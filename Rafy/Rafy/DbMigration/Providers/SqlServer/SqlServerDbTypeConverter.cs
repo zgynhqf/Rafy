@@ -141,9 +141,24 @@ namespace Rafy.DbMigration.SqlServer
         {
             if (oldColumnType == newColumnType) return true;
 
-            if (oldColumnType == DbType.DateTimeOffset || newColumnType == DbType.DateTimeOffset) return false;
+            for (int i = 0, c = CompatibleTypes.Length; i < c; i++)
+            {
+                var sameTypes = CompatibleTypes[i];
+                if (sameTypes.Contains(oldColumnType) && sameTypes.Contains(newColumnType))
+                {
+                    return true;
+                }
+            }
 
             return base.IsCompatible(oldColumnType, newColumnType);
         }
+
+        /// <summary>
+        /// SqlServer DataType
+        /// https://technet.microsoft.com/zh-cn/library/microsoft.sqlserver.dac.model.sqldatatype(v=sql.120).aspx
+        /// </summary>
+        private static DbType[][] CompatibleTypes = new DbType[][]{
+            new DbType[]{ DbType.DateTime2, DbType.DateTimeOffset }
+        };
     }
 }

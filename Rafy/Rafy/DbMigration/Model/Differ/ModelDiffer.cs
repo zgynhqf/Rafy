@@ -24,11 +24,11 @@ namespace Rafy.DbMigration.Model
     {
         internal IDbIdentifierQuoter IDbIdentifierProvider;
 
-        DbTypeConverter DbTypeConverter;
+        private DbTypeConverter dbTypeConverter;
 
-        internal ModelDiffer(DbTypeConverter _dbTypeConverter)
+        internal ModelDiffer(DbTypeConverter dbTypeConverter)
         {
-            DbTypeConverter = _dbTypeConverter;
+            this.dbTypeConverter = dbTypeConverter;
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace Rafy.DbMigration.Model
 
                 if (newColumn.IsPrimaryKey != oldColumn.IsPrimaryKey) { columnChanged.IsPrimaryKeyChanged = true; }
 
-                if (!DbTypeConverter.IsCompatible(newColumn.DbType, oldColumn.DbType)) { columnChanged.IsDbTypeChanged = true; }
+                if (!dbTypeConverter.IsCompatible(newColumn.DbType, oldColumn.DbType)) { columnChanged.IsDbTypeChanged = true; }
 
                 //ForeignRelationChangeType
                 columnChanged.ForeignRelationChangeType = ChangeType.UnChanged;
@@ -171,7 +171,7 @@ namespace Rafy.DbMigration.Model
         {
             if (a.Table.Name.EqualsIgnoreCase(b.Table.Name) &&
                 a.Name.EqualsIgnoreCase(b.Name) &&
-                DbTypeConverter.IsCompatible(a.DbType, b.DbType) &&
+                dbTypeConverter.IsCompatible(a.DbType, b.DbType) &&
                 //a.DataType == b.DataType &&
                 a.IsRequired == b.IsRequired &&
                 a.IsForeignKey == b.IsForeignKey &&
