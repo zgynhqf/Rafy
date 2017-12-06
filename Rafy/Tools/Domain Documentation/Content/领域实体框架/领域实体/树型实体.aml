@@ -71,6 +71,14 @@ Meta.TreeIndexOption = new TreeIndexOption
                 <para>上述代码使得树型实体的第一层使用汉字的数字进行编码，第二层及以下层都使用数字进行编码，层与层之间使用 '.' 进行分隔。如："一.","一.1.","一.2.","一.2.1."等。</para>
             </content>
         </section>
+        <section address="howToMigrate">
+            <title>如何刷新 TreeIndex</title>
+            <content>
+                <para>某些情况下，需要对库中的 TreeIndex 进行重新整理。</para>
+                <para>例如：当一个非树型的实体升级到树型实体后，虽然数据库的结构会自动升级完成，自动添加上 TreeIndex、TreePId 列。但是数据库中的 TreeIndex 列却是空的。</para>
+                <para>这时，我们可以使用 <codeInline>TreeIndexHelper.ResetTreeIndex(EntityRepository repository)</codeInline> 方法来更新整个表中所有列的 TreeIndex。</para>
+            </content>
+        </section>
 
         <relatedTopics>
             <externalLink>

@@ -28,7 +28,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="tree"></param>
         /// <returns></returns>
-        public static List<T> ConvertToList<T>(ITreeComponent tree) where T:Entity
+        public static List<T> ConvertToList<T>(ITreeComponent tree) where T : Entity
         {
             List<T> list = new List<T>();
             tree.EachNode(e =>
@@ -96,7 +96,7 @@ namespace Rafy.Domain
         {
             /*********************** 代码块解释 *********************************
              * 树节点加载算法：
-             * 由于树节点在查询时已经通过 TreeIndex 来排序了，本质上是一种树的深度遍历序。
+             * 由于树节点在查询时 *已经通过 TreeIndex 来排序* 了，本质上是一种树的深度遍历序。
              * 所以我们只需要记录最后一次添加的节点，然后通过它尝试找到与要添加的节点的父节点，
              * 如果没有找到，则直接把要添加的节点添加到列表中。
              * 这样，就以一种顺序的方式完成了整个节点的加载。
@@ -109,8 +109,12 @@ namespace Rafy.Domain
                 var treePId = entity.TreePId;
                 if (treePId == null)
                 {
-                    var added = TryAddToList(list, entity, indexOption);
-                    if (added) lastNode = entity;
+                    bool isRootList = list.Count == 0 || list[0].TreePId == null;
+                    if (isRootList)
+                    {
+                        list.Add(entity);
+                        lastNode = entity;
+                    }
                 }
                 else
                 {

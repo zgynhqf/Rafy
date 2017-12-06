@@ -417,6 +417,13 @@ namespace Rafy.Domain
                 this.TreeChildren.LoadAllNodes();
             }
         }
+        void ITreeComponent.LoadAllNodes(LoadAllNodesMethod method)
+        {
+            if (!this.IsTreeLeafSure)
+            {
+                this.TreeChildren.LoadAllNodes(method);
+            }
+        }
 
         Entity ITreeComponent.EachNode(Func<Entity, bool> action)
         {
@@ -701,25 +708,66 @@ namespace Rafy.Domain
             }
 
             /// <summary>
-            /// 递归加载所有树节点。
+            /// 使用 TreeIndex 一次性加载所有节点。
             /// </summary>
-            /// <exception cref="System.InvalidProgramException">还没有存储到数据库中的节点，它的 IsFullLoaded 属性应该返回 true。</exception>
             public void LoadAllNodes()
+            {
+                this.LoadAllNodes(LoadAllNodesMethod.ByTreeIndex);
+            }
+
+            /// <summary>
+            /// 一次性加载所有节点。
+            /// </summary>
+            public void LoadAllNodes(LoadAllNodesMethod method)
+            {
+                this.LoadAllNodes(method, false);
+            }
+
+            /// <summary>
+            /// 一次性递归加载所有树节点。
+            /// </summary>
+            /// <param name="method">
+            /// 是使用 TreeIndex 一次性加载所有节点，还是使用 TreePId 递归加载子节点（强关系，但是性能较差）。
+            /// </param>
+            /// <param name="forceOwnerTreeIndex">
+            /// 如果当前节点的状态还没有保存到数据库，那么此方法会使用数据库中的 TreeIndex 值来加载子节点。
+            /// 此时，可以通过此参数来强制使用内存中 TreeIndex。
+            /// </param>
+            /// <exception cref="InvalidProgramException">还没有存储到数据库中的节点，它的 IsFullLoaded 属性应该返回 true。</exception>
+            /// <exception cref="System.InvalidProgramException">还没有存储到数据库中的节点，它的 IsFullLoaded 属性应该返回 true。</exception>
+            public void LoadAllNodes(LoadAllNodesMethod method, bool forceOwnerTreeIndex)
             {
                 if (!this.IsFullLoaded)
                 {
                     var repo = _owner.GetRepository();
-                    var dbOwner = _owner;
-                    if (_owner.PersistenceStatus != PersistenceStatus.Unchanged)
+
+                    if (method == LoadAllNodesMethod.ByTreeIndex)
                     {
-                        dbOwner = repo.GetById(_owner.Id);
-                        if (dbOwner == null)
+                        var treeIndex = _owner.TreeIndex;
+
+                        if (!forceOwnerTreeIndex && _owner.PersistenceStatus != PersistenceStatus.Unchanged)
                         {
-                            throw new InvalidProgramException("还没有存储到数据库中的节点，它的 IsFullLoaded 属性应该返回 true。");
+                            var dbOwner = repo.GetById(_owner.Id);
+                            if (dbOwner == null)
+                            {
+                                throw new InvalidProgramException("还没有存储到数据库中的节点，它的 IsFullLoaded 属性应该返回 true。");
+                            }
+
+                            treeIndex = dbOwner.TreeIndex;
                         }
+
+                        var children = repo.GetByTreeParentIndex(treeIndex);
+                        this.MergeFullTree(children.ToList());
                     }
-                    var children = repo.GetByTreeParentIndex(dbOwner.TreeIndex);
-                    this.MergeFullTree(children.ToList());
+                    else
+                    {
+                        this.Load();
+                        (this as ITreeComponent).EachNode(n =>
+                        {
+                            n.TreeChildren.Load();
+                            return false;
+                        });
+                    }
                 }
             }
 
