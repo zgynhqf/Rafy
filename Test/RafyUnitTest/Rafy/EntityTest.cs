@@ -617,7 +617,7 @@ namespace RafyUnitTest
 
                 if (tran.DbSetting.ProviderName.Contains("SqlServerCe"))
                 {
-                    car.DateTimeOffsetValue = DateTime.Parse("1750-1-1");
+                    car.DateTimeOffsetValue = DateTime.Parse("1753-1-1");
                 }
 
                 var repo = RF.ResolveInstance<YachtRepository>();
