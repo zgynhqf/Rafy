@@ -113,7 +113,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_PersistenceStatus_New_SetNewWillResetId()
         {
-            var item = new TestUser{ Id = 111 };
+            var item = new TestUser { Id = 111 };
             item.PersistenceStatus = PersistenceStatus.Unchanged;
 
             item.PersistenceStatus = PersistenceStatus.New;
@@ -599,6 +599,34 @@ namespace RafyUnitTest
 
                 var newBook2 = repo.GetById(book.Id);
                 Assert.AreEqual(newBook2.IsSoldOut, false);
+            }
+        }
+
+        /// <summary>
+        /// https://technet.microsoft.com/zh-cn/library/ms172424(v=sql.110).aspx
+        /// </summary>
+        [TestMethod]
+        public void ET_Property_DateTimeOffset()
+        {
+            using (var tran = RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            {
+                Yacht car = new Yacht()
+                {
+                    DateTimeOffsetValue = DateTime.Parse("1030-1-1")
+                };
+
+                if (tran.DbSetting.ProviderName.Contains("SqlServerCe"))
+                {
+                    car.DateTimeOffsetValue = DateTime.Parse("1753-1-1");
+                }
+
+                var repo = RF.ResolveInstance<YachtRepository>();
+                repo.Save(car);
+
+                long id = car.Id;
+                var newCar = repo.GetById(id);
+
+                Assert.AreEqual(newCar.DateTimeOffsetValue, car.DateTimeOffsetValue);
             }
         }
 

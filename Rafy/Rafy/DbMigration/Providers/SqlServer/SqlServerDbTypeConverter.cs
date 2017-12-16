@@ -51,8 +51,9 @@ namespace Rafy.DbMigration.SqlServer
                 case DbType.Date:
                 case DbType.Time:
                 case DbType.DateTime:
-                case DbType.DateTimeOffset:
                     return "DATETIME";
+                case DbType.DateTimeOffset:
+                    return "DATETIMEOFFSET";
                 case DbType.Guid:
                     return "UNIQUEIDENTIFIER";
                 case DbType.Double:
@@ -121,12 +122,43 @@ namespace Rafy.DbMigration.SqlServer
                     return DbType.Byte;
                 case "date":
                 case "datetime":
-                case "datetimeoffset":
                 case "time":
                     return DbType.DateTime;
+                case "datetimeoffset":
+                    return DbType.DateTimeOffset;
                 default:
                     throw new NotSupportedException($"不支持读取数据库中的列类型：{databaseTypeName}。");
             }
         }
+
+        /// <summary>
+        /// 由于不同的 DbType 映射到库中后的类型可能是相同的，所以这里需要对类型进行兼容性判断。
+        /// </summary>
+        /// <param name="oldColumnType"></param>
+        /// <param name="newColumnType"></param>
+        /// <returns></returns>
+        internal override bool IsCompatible(DbType oldColumnType, DbType newColumnType)
+        {
+            if (oldColumnType == newColumnType) return true;
+
+            for (int i = 0, c = CompatibleTypes.Length; i < c; i++)
+            {
+                var sameTypes = CompatibleTypes[i];
+                if (sameTypes.Contains(oldColumnType) && sameTypes.Contains(newColumnType))
+                {
+                    return true;
+                }
+            }
+
+            return base.IsCompatible(oldColumnType, newColumnType);
+        }
+
+        /// <summary>
+        /// SqlServer DataType
+        /// https://technet.microsoft.com/zh-cn/library/microsoft.sqlserver.dac.model.sqldatatype(v=sql.120).aspx
+        /// </summary>
+        private static DbType[][] CompatibleTypes = new DbType[][]{
+            new DbType[]{ DbType.DateTime2, DbType.DateTimeOffset }
+        };
     }
 }

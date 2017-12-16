@@ -34,6 +34,7 @@ namespace Rafy.DbMigration.MySql
 
         /// <summary>
         /// 把 DbType的类型值 转换为 MySql 数据库中兼容的数据类型
+        /// MySql数据精度 http://qimo601.iteye.com/blog/1622368
         /// </summary>
         /// <param name="fieldType">字段的DbType类型值</param>
         /// <param name="length">数据类型的长度</param>
@@ -63,13 +64,12 @@ namespace Rafy.DbMigration.MySql
                 case DbType.UInt64:
                 case DbType.Int64:
                     return "BIGINT";
-                case DbType.DateTimeOffset:
-                    return "TIMESTAMP";
                 case DbType.Time:
                     return "TIME";
                 case DbType.Date:
                     return "DATE";
                 case DbType.DateTime:
+                case DbType.DateTimeOffset:
                     return "DATETIME";
                 case DbType.Single:
                     return "FLOAT";
@@ -131,7 +131,7 @@ namespace Rafy.DbMigration.MySql
                 }
                 if (string.Compare(databaseTypeName, "TIME", true) == 0) { return DbType.Time; }
                 if (string.Compare(databaseTypeName, "DATETIME", true) == 0) { return DbType.DateTime; }
-                if (string.Compare(databaseTypeName, "TIMESTAMP", true) == 0) { return DbType.DateTimeOffset; }
+                if (string.Compare(databaseTypeName, "TIMESTAMP", true) == 0) { return DbType.DateTime; }
             }
             if (TypeContains(databaseTypeName, "DATE")) { return DbType.Date; }
 
@@ -158,6 +158,10 @@ namespace Rafy.DbMigration.MySql
                 {
                     value = TypeHelper.CoerceValue(typeof(int), value);
                 }
+                else if (value is DateTimeOffset)
+                {
+                    value = ((DateTimeOffset)value).DateTime;
+                }
             }
 
             return value;
@@ -176,6 +180,23 @@ namespace Rafy.DbMigration.MySql
             if (dbValue == null && clrType == typeof(string))
             {
                 dbValue = string.Empty;//null 转换为空字符串
+            }
+
+            // DateTime to DateTimeOffset
+            // https://msdn.microsoft.com/zh-cn/library/bb546101.aspx
+            // DateTime DateTime2 区别 http://www.studyofnet.com/news/1050.html
+            if (clrType == typeof(DateTimeOffset) && dbValue != null)
+            {
+                DateTime dateTime = (DateTime)dbValue;
+
+                if (dateTime == DateTime.MinValue)
+                {
+                    dbValue = DateTimeOffset.MinValue;
+                }
+                else
+                {
+                    dbValue = (DateTimeOffset)DateTime.SpecifyKind(dateTime, DateTimeKind.Local);
+                }
             }
 
             return dbValue;
