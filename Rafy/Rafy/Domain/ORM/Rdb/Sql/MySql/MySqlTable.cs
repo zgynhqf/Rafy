@@ -25,7 +25,6 @@ namespace Rafy.Domain.ORM.MySql
     /// <summary>
     /// MySql的表对象
     /// </summary>
-
     internal sealed class MySqlTable : SqlOraTable
     {
         /// <summary>
@@ -39,7 +38,7 @@ namespace Rafy.Domain.ORM.MySql
                 var generatedSql = this.GenerateInsertSQL(false);
                 return $@"{generatedSql};
 SELECT @@IDENTITY;";
-            }, false);
+            });
         }
 
         internal override RdbColumn CreateColumn(IPersistanceColumnInfo columnInfo)

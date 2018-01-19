@@ -60,10 +60,10 @@ namespace Rafy.Domain.ORM
             _tableInfo = repository.TableInfo;
             _columns = new List<RdbColumn>();
 
-            _deleteSql = new Lazy<string>(this.GenerateDeleteSQL, false);
-            _updateSQL = new Lazy<string>(() => this.GenerateUpdateSQL(null), false);
-            _insertSql = new Lazy<string>(() => this.GenerateInsertSQL(false), false);
-            _insertSqlWithId = new Lazy<string>(() => this.GenerateInsertSQL(true), false);
+            _deleteSql = new Lazy<string>(this.GenerateDeleteSQL);
+            _updateSQL = new Lazy<string>(() => this.GenerateUpdateSQL(null));
+            _insertSql = new Lazy<string>(() => this.GenerateInsertSQL(false));
+            _insertSqlWithId = new Lazy<string>(() => this.GenerateInsertSQL(true));
         }
 
         internal IRepositoryInternal Repository
