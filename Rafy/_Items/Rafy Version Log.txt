@@ -10,11 +10,11 @@
  * 
 *******************************************************/
 
-3.65.3727
+3.65.3730
     BUG修复
         RdbTable 中使用 Lazy 时，需要考虑线程安全的问题。（并发时，Lazy.Value 抛出异常。）
     内部修改
-        SingleConnectionTransactionScope 事务的默认隔离级别使用 Serializable。
+        DataArchiver 应该保持原有的 ID 不变。（未完成）
 
 3.65.3725
     添加功能、添加接口

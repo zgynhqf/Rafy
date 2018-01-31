@@ -15,14 +15,21 @@ namespace Rafy.UnitTest
     {
         public override void Initialize(IApp app)
         {
-            app.RuntimeStarting += UnitTestPlugin_RuntimeStarting;
+            //app.RuntimeStarting += UnitTestPlugin_RuntimeStarting;
         }
 
-        private void UnitTestPlugin_RuntimeStarting(object sender, EventArgs e)
+        //private void UnitTestPlugin_RuntimeStarting(object sender, EventArgs e)
+        //{
+        //    InitailizeSequences();
+        //}
+
+        public static void InitailizeSequences()
         {
             var dbSetting = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName);
             if (DbSetting.IsOracleProvider(dbSetting))
             {
+                OracleBatchImporter.EnableBatchSequence(RF.ResolveInstance<BookCategoryRepository>());
+                OracleBatchImporter.EnableBatchSequence(RF.ResolveInstance<FolderRepository>());
                 OracleBatchImporter.EnableBatchSequence(RF.ResolveInstance<BookRepository>());
                 OracleBatchImporter.EnableBatchSequence(RF.ResolveInstance<InvoiceRepository>());
             }

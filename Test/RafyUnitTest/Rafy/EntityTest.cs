@@ -1576,6 +1576,12 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void __ET_Repository_BatchImport_CDU_C_TreeEntity()
+        {
+            throw new NotImplementedException();//huqf
+        }
+
+        [TestMethod]
         public void ET_Repository_BatchImport_CDU_C_Identity()
         {
             int size = BATCH_IMPORT_DATA_SIZE;

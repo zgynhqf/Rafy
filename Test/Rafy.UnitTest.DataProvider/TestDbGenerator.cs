@@ -61,6 +61,8 @@ namespace Rafy.UnitTest.DataProvider
                     c.RunDataLossOperation = DataLossOperation.All;
                     c.AutoMigrate();
                 }
+                UnitTestPlugin.InitailizeSequences();
+
                 using (RdbDataProvider.RedirectDbSetting(
                     UnitTestEntityRepositoryDataProvider.DbSettingName,
                     UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate
@@ -74,6 +76,7 @@ namespace Rafy.UnitTest.DataProvider
                         c.RunDataLossOperation = DataLossOperation.All;
                         c.AutoMigrate();
                     }
+                    UnitTestPlugin.InitailizeSequences();
                 }
                 using (var c = new RafyDbMigrationContext(UnitTest2EntityRepositoryDataProvider.DbSettingName))
                 {

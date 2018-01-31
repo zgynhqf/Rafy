@@ -12,6 +12,7 @@
 *******************************************************/
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,9 @@ using Rafy.Accounts.Controllers;
 using Rafy.DataArchiver;
 using Rafy.Domain;
 using Rafy.Domain.ORM;
+using Rafy.Domain.Stamp;
+using Rafy.ManagedProperty;
+using Rafy.UnitTest.Repository;
 using UT;
 
 namespace RafyUnitTest
@@ -39,198 +43,403 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void DAT_Entity_Migration()
+        public void DAT_Cut()
         {
             using (RF.TransactionScope(BackUpDbSettingName))
             using (RF.TransactionScope(DbSettingName))
             {
-                var repo = RF.ResolveInstance<InvoiceRepository>();
-                repo.Save(new Invoice()
+                var rawList = new BookCategoryList
                 {
-                    InvoiceItemList =
+                    new BookCategory
                     {
-                        new InvoiceItem(),
-                        new InvoiceItem(),
+                        Name = "bc1"
                     }
-                });
-                Assert.AreEqual(1, repo.CountAll(), "新增 Invoice 数目为1");
-
-                //执行数据接口。
-                var context = new AggregationArchiveContext
-                {
-                    OrignalDataDbSettingName = DbSettingName,
-                    BackUpDbSettingName = BackUpDbSettingName,
-                    BatchSize = 2,
-                    DateOfArchiving = DateTime.Now.AddMinutes(2),
-                    AggregationsToArchive = new List<Type> { typeof(Invoice) }
                 };
-                var migrationSvc = new AggregationArchiver();
-                migrationSvc.Archive(context);
 
-                Assert.AreEqual(0, repo.CountAll(), "执行数据归档后 Invoice 数目为 0");
+                var repo = RF.ResolveInstance<BookCategoryRepository>();
+                repo.Save(rawList);
+                Assert.AreEqual(1, repo.CountAll(), "新增数目为 1");
 
+                rawList = repo.GetAll();//由于数据库中存储的值可能与内存中的值有一定的差异，所以这里需要把这些数据重新读取出来再进行对比。
+
+                Archive(new List<ArchiveItem>
+                {
+                    new ArchiveItem
+                    {
+                        AggregationRoot = typeof(BookCategory),
+                        ArchiveType = ArchiveType.Cut
+                    },
+                });
+
+                Assert.AreEqual(0, repo.CountAll(), "执行数据归档后数目为 0");
                 using (RdbDataProvider.RedirectDbSetting(DbSettingName, BackUpDbSettingName))
                 {
-                    Assert.AreEqual(1, repo.CountAll(), "数据归档数据库 Invoice 数目为 1");
+                    Assert.AreEqual(1, repo.CountAll(), "数据归档数据库数目为 1");
                 }
+                AssertAllDataMigrated(rawList, repo);
             }
         }
 
         [TestMethod]
-        public void DAT_EntityList_Migration()
+        public void DAT_Cut_Aggt_Phantom()
         {
-            //聚合实体
-            var repo = RF.ResolveInstance<InvoiceRepository>();
             using (RF.TransactionScope(BackUpDbSettingName))
             using (RF.TransactionScope(DbSettingName))
             {
-                var invoiceList = new InvoiceList
+                var rawList = new InvoiceList
                 {
                     new Invoice()
                     {
+                        Code = "0101",
                         InvoiceItemList =
                         {
-                            new InvoiceItem(),
-                            new InvoiceItem(),
+                            new InvoiceItem
+                            {
+                                Amount = 111D
+                            },
+                            new InvoiceItem
+                            {
+                                Amount = 222D
+                            },
                         }
-                    },
-                    new Invoice()
+                    }
+                };
+
+                var repo = RF.ResolveInstance<InvoiceRepository>();
+                repo.Save(rawList);
+
+                rawList = repo.GetAll();//由于数据库中存储的值可能与内存中的值有一定的差异，所以这里需要把这些数据重新读取出来再进行对比。
+
+                Archive(new List<ArchiveItem>
+                {
+                    new ArchiveItem
                     {
-                        InvoiceItemList =
-                        {
-                            new InvoiceItem(),
-                            new InvoiceItem(),
-                        }
+                        AggregationRoot = typeof(Invoice),
+                        ArchiveType = ArchiveType.Cut
                     },
-                    new Invoice(),
-                    new Invoice()
-                };
+                });
 
-                RF.Save(invoiceList);
-
-                Assert.AreEqual(repo.GetAll().Count, 4, "新增 Invoice 数目为4");
-
-                var context = new AggregationArchiveContext
-                {
-                    OrignalDataDbSettingName = DbSettingName,
-                    BackUpDbSettingName = BackUpDbSettingName,
-                    BatchSize = 2,
-                    DateOfArchiving = DateTime.Now.AddMinutes(2),
-                    AggregationsToArchive = new List<Type> { typeof(Invoice) }
-                };
-                var migrationSvc = new AggregationArchiver();
-                migrationSvc.Archive(context);
-
-                Assert.AreEqual(repo.GetAll().Count, 0, "执行数据归档后 Invoice 数目为 0");
-
-                using (RdbDataProvider.RedirectDbSetting(DbSettingName, BackUpDbSettingName))
-                {
-                    Assert.AreEqual(repo.GetAll().Count, 4, "数据归档数据库 Invoice 数目为 4");
-                }
+                AssertAllDataMigrated(rawList, repo);
             }
         }
 
         [TestMethod]
-        public void DAT_TreeEntity_Migration()
+        public void DAT_Cut_Aggt_ManyData()
+        {
+            using (RF.TransactionScope(BackUpDbSettingName))
+            using (RF.TransactionScope(DbSettingName))
+            {
+                var rawList = new InvoiceList
+                {
+                    new Invoice()
+                    {
+                        Code = "0101",
+                        InvoiceItemList =
+                        {
+                            new InvoiceItem
+                            {
+                                Amount = 111D
+                            },
+                            new InvoiceItem
+                            {
+                                Amount = 222D
+                            },
+                        }
+                    },
+                    new Invoice()
+                    {
+                        Code = "0102",
+                        InvoiceItemList =
+                        {
+                            new InvoiceItem
+                            {
+                                Amount = 333D
+                            },
+                            new InvoiceItem
+                            {
+                                Amount = 444D
+                            },
+                        }
+                    },
+                    new Invoice
+                    {
+                        Code = "0103",
+                        InvoiceItemList =
+                        {
+                            new InvoiceItem
+                            {
+                                Amount = 555D
+                            },
+                        }
+                    },
+                    new Invoice
+                    {
+                        Code = "0103"
+                    }
+                };
+
+                var repo = RF.ResolveInstance<InvoiceRepository>();
+                repo.Save(rawList);
+                rawList = repo.GetAll();//由于数据库中存储的值可能与内存中的值有一定的差异，所以这里需要把这些数据重新读取出来再进行对比。
+
+                Archive(new List<ArchiveItem>
+                {
+                    new ArchiveItem
+                    {
+                        AggregationRoot = typeof(Invoice),
+                        ArchiveType = ArchiveType.Cut
+                    },
+                });
+
+                AssertAllDataMigrated(rawList, repo);
+            }
+        }
+
+        [TestMethod]
+        public void DAT_Cut_Aggt_TreeEntity()
         {
             //树形实体带聚合子
-
             var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(BackUpDbSettingName))
             using (RF.TransactionScope(DbSettingName))
             {
-                RF.Save(new Folder
+                var rawList = new FolderList
                 {
-                    Name = "001.",
-                    FileList = { new File(), new File() },
-                    TreeChildren =
+                    new Folder
                     {
-                        new Folder
+                        Name = "001.",
+                        FileList =
                         {
-                            TreeChildren = {new Folder()}
+                            new File
+                            {
+                                Name = "f1"
+                            },
+                            new File
+                            {
+                                Name = "f2"
+                            },
+                        },
+                        TreeChildren =
+                        {
+                            new Folder
+                            {
+                                TreeChildren =
+                                {
+                                    new Folder()
+                                }
+                            }
                         }
                     }
-                });
-                Assert.AreEqual(repo.GetAll().Count, 1, "树形实体只查根实体 Folder 数目为1");
-
-                var context = new AggregationArchiveContext
-                {
-                    OrignalDataDbSettingName = DbSettingName,
-                    BackUpDbSettingName = BackUpDbSettingName,
-                    BatchSize = 2,
-                    DateOfArchiving = DateTime.Now.AddMinutes(2),
-                    AggregationsToArchive = new List<Type> { typeof(Folder) }
                 };
-                var migrationSvc = new AggregationArchiver();
-                migrationSvc.Archive(context);
+                repo.Save(rawList);
+                rawList = repo.GetAll();//由于数据库中存储的值可能与内存中的值有一定的差异，所以这里需要把这些数据重新读取出来再进行对比。
 
-                Assert.AreEqual(repo.GetAll().Count, 0, "执行数据归档后 Folder 数目为 0");
-
-                using (RdbDataProvider.RedirectDbSetting(DbSettingName, BackUpDbSettingName))
+                Archive(new List<ArchiveItem>
                 {
-                    Assert.AreEqual(repo.GetAll().Count, 1, "归档数据库 Folder 数目为 3");
-                    Assert.AreEqual(repo.GetAll()[0].FileList.Count, 2, "归档数据库聚合子 File 数目为 2");
-                }
+                    new ArchiveItem
+                    {
+                        AggregationRoot = typeof(Folder),
+                        ArchiveType = ArchiveType.Cut
+                    },
+                });
+
+                AssertAllDataMigrated(rawList, repo);
             }
         }
 
+        /// <summary>
+        /// 多个实体
+        /// </summary>
         [TestMethod]
-        public void DAT_MoreEntity_Migration()
+        public void DAT_Cut_Aggt_ManyTypes()
         {
-            //多个实体
-
-            var repo = RF.ResolveInstance<FolderRepository>();
-            var repoInvoice = RF.ResolveInstance<InvoiceRepository>();
             using (RF.TransactionScope(BackUpDbSettingName))
             using (RF.TransactionScope(DbSettingName))
             {
-                RF.Save(new Folder
+                var rawFolders = new FolderList
                 {
-                    Name = "001.",
-                    FileList = { new File(), new File() },
-                    TreeChildren =
+                    new Folder
                     {
-                        new Folder
+                        Name = "001.",
+                        FileList =
                         {
-                            TreeChildren = {new Folder()}
+                            new File
+                            {
+                                Name = "f1"
+                            },
+                            new File
+                            {
+                                Name = "f2"
+                            },
+                        },
+                        TreeChildren =
+                        {
+                            new Folder
+                            {
+                                TreeChildren =
+                                {
+                                    new Folder()
+                                }
+                            }
                         }
                     }
-                });
-                Assert.AreEqual(repo.GetAll().Count, 1, "树形实体只查根实体 Folder 数目为1");
-
-                RF.Save(new InvoiceList
-                {
-                    new Invoice()
-                        {
-                            InvoiceItemList =
-                            {
-                                new InvoiceItem(),
-                                new InvoiceItem(),
-                            }
-                        },
-                    new Invoice()
-                });
-                Assert.AreEqual(repoInvoice.GetAll().Count, 2, "新增 Invoice 数目为2");
-
-                var context = new AggregationArchiveContext
-                {
-                    OrignalDataDbSettingName = DbSettingName,
-                    BackUpDbSettingName = BackUpDbSettingName,
-                    BatchSize = 2,
-                    DateOfArchiving = DateTime.Now.AddMinutes(2),
-                    AggregationsToArchive = new List<Type> { typeof(Invoice), typeof(Folder) }
                 };
-                var migrationSvc = new AggregationArchiver();
-                migrationSvc.Archive(context);
+                var folderRepo = RF.ResolveInstance<FolderRepository>();
+                folderRepo.Save(rawFolders);
+                rawFolders = folderRepo.GetAll();//由于数据库中存储的值可能与内存中的值有一定的差异，所以这里需要把这些数据重新读取出来再进行对比。
 
-                Assert.AreEqual(repo.GetAll().Count, 0, "执行数据归档后 Folder 数目为 0");
-                Assert.AreEqual(repoInvoice.GetAll().Count, 0, "执行数据归档后 Invoice 数目为 0");
-
-                using (RdbDataProvider.RedirectDbSetting(DbSettingName, BackUpDbSettingName))
+                var rawInvoices = new InvoiceList
                 {
-                    Assert.AreEqual(repo.GetAll().Count, 1, "归档数据库 Folder 数目为 3");
-                    Assert.AreEqual(repo.GetAll()[0].FileList.Count, 2, "归档数据库聚合子 File 数目为 2");
-                    Assert.AreEqual(repoInvoice.GetAll().Count, 2, "数据归档数据库 Invoice 数目为 2");
+                    new Invoice()
+                    {
+                        Code = "0101",
+                        InvoiceItemList =
+                        {
+                            new InvoiceItem
+                            {
+                                Amount = 111D
+                            },
+                            new InvoiceItem
+                            {
+                                Amount = 222D
+                            },
+                        }
+                    },
+                    new Invoice()
+                    {
+                        Code = "0102",
+                        InvoiceItemList =
+                        {
+                            new InvoiceItem
+                            {
+                                Amount = 333D
+                            }
+                        }
+                    }
+                };
+                var invRepo = RF.ResolveInstance<InvoiceRepository>();
+                invRepo.Save(rawInvoices);
+                rawInvoices = invRepo.GetAll();//由于数据库中存储的值可能与内存中的值有一定的差异，所以这里需要把这些数据重新读取出来再进行对比。
+
+                Archive(new List<ArchiveItem>
+                {
+                    new ArchiveItem
+                    {
+                        AggregationRoot = typeof(Invoice),
+                        ArchiveType = ArchiveType.Cut
+                    },
+                    new ArchiveItem
+                    {
+                        AggregationRoot = typeof(Folder),
+                        ArchiveType = ArchiveType.Cut
+                    }
+                });
+
+                AssertAllDataMigrated(rawFolders, folderRepo);
+                AssertAllDataMigrated(rawInvoices, invRepo);
+            }
+        }
+
+        //[TestMethod]
+        //public void DAT_Copy_Insert()
+        //{
+        //    throw new NotImplementedException();//huqf
+        //}
+
+        //[TestMethod]
+        //public void DAT_Copy_Insert_Aggt()
+        //{
+        //    throw new NotImplementedException();//huqf
+        //}
+
+        //[TestMethod]
+        //public void DAT_Copy_Update()
+        //{
+        //    throw new NotImplementedException();//huqf
+        //}
+
+        //[TestMethod]
+        //public void DAT_Copy_Update_Aggt()
+        //{
+        //    throw new NotImplementedException();//huqf
+        //}
+
+        /// <summary>
+        /// 执行数据接口。
+        /// </summary>
+        /// <param name="items"></param>
+        private void Archive(List<ArchiveItem> items)
+        {
+            var context = new AggregationArchiveContext
+            {
+                BatchSize = 2,
+                DateOfArchiving = DateTime.Now.AddMinutes(1),
+                ItemsToArchive = items
+            };
+            this.Archive(context);
+        }
+
+        private void Archive(AggregationArchiveContext context)
+        {
+            context.OrignalDataDbSettingName = DbSettingName;
+            context.BackUpDbSettingName = BackUpDbSettingName;
+
+            var archiver = this.CreateAggregationArchiver();
+            archiver.Archive(context);
+        }
+
+        protected virtual AggregationArchiver CreateAggregationArchiver()
+        {
+            return new AggregationArchiver();
+        }
+
+        private static void AssertAllDataMigrated(EntityList rawList, IRepository repository)
+        {
+            Assert.AreEqual(0, repository.CountAll(), "执行数据归档后聚合根的数目为 0");
+
+            EntityList migratedList = null;
+            using (RdbDataProvider.RedirectDbSetting(DbSettingName, BackUpDbSettingName))
+            {
+                migratedList = repository.GetAll();
+            }
+
+            AssertAggtEqual(rawList, migratedList, repository);
+        }
+
+        private static void AssertAggtEqual(IList<Entity> rawList, IList<Entity> migratedList, IRepository repository)
+        {
+            Assert.AreEqual(rawList.Count, migratedList.Count, "迁移前后，实体列表的个数应该相同。" + repository.EntityType.FullName);
+
+            var properties = repository.EntityMeta.ManagedProperties.GetNonReadOnlyCompiledProperties();
+            for (int j = 0, c2 = rawList.Count; j < c2; j++)
+            {
+                var raw = rawList[j];
+                var migrated = migratedList[j];
+
+                //对比所有的属性。
+                for (int i = 0, c = properties.Count; i < c; i++)
+                {
+                    var property = properties[i];
+                    var valueRaw = raw.GetProperty(property);
+                    var valueMigrated = migrated.GetProperty(property);
+                    Assert.AreEqual(valueRaw, valueMigrated, $"迁移前后，实体 { raw.Id } 的属性 { property.Name } 的值应该相同。");
+                }
+
+                //对比所有的聚合子属性。
+                var childProperties = repository.GetChildProperties();
+                for (int i = 0, c = childProperties.Count; i < c; i++)
+                {
+                    if (childProperties[i] is IListProperty childProperty)
+                    {
+                        var childrenRaw = raw.GetLazyList(childProperty);
+                        var childrenMigrated = raw.GetLazyList(childProperty);
+                        AssertAggtEqual(childrenRaw, childrenMigrated, childrenRaw.GetRepository());
+                    }
+                }
+
+                if (repository.SupportTree)
+                {
+                    AssertAggtEqual(raw.TreeChildren, migrated.TreeChildren, repository);
                 }
             }
         }

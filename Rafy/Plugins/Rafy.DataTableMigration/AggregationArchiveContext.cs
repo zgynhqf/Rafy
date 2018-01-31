@@ -37,13 +37,47 @@ namespace Rafy.DataArchiver
         public DateTime DateOfArchiving { get; set; }
 
         /// <summary>
-        /// 迁移的聚合根类型集合
+        /// 归档的项的集合
         /// </summary>
-        public List<Type> AggregationsToArchive { get; set; }
+        public List<ArchiveItem> ItemsToArchive { get; set; }
 
         /// <summary>
-        /// 每批次迁移实体的个数
+        /// 每批次迁移实体的个数。
         /// </summary>
-        public int BatchSize { get; set; }
+        public int BatchSize { get; set; } = 1000;
+    }
+
+    /// <summary>
+    /// 需要归档的项
+    /// </summary>
+    public class ArchiveItem
+    {
+        /// <summary>
+        /// 需要归档的聚合根类型。
+        /// </summary>
+        public Type AggregationRoot { get; set; }
+
+        /// <summary>
+        /// 数据备份的类型。
+        /// 默认为 <see cref="ArchiveType.Cut"/>。
+        /// </summary>
+        public ArchiveType ArchiveType { get; set; } = ArchiveType.Cut;
+    }
+
+    /// <summary>
+    /// 数据备份的类型。
+    /// </summary>
+    public enum ArchiveType
+    {
+        /// <summary>
+        /// 只是复制数据。不删除原来的数据。
+        /// 某些公用的表，只要求复制数据。不能删除。例如用户。
+        /// </summary>
+        Copy,
+        /// <summary>
+        /// 将数据从原库复制到目标库，同时删除原库中的数据。
+        /// 业务的主表，往往需要的是剪切数据，降低主库的压力。
+        /// </summary>
+        Cut
     }
 }

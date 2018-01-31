@@ -89,6 +89,7 @@
     <Compile Include="Rafy\ODataTest.cs" />
     <Compile Include="Rafy\Plugins\AccountsPluginTest.cs" />
     <Compile Include="Rafy\Plugins\DataArchiverTest.cs" />
+    <Compile Include="Rafy\Plugins\DataArchiverTest_BatchImport.cs" />
     <Compile Include="Rafy\Plugins\FileStoragePluginTest.cs" />
     <Compile Include="Rafy\Plugins\LicenseManagerPluginTest.cs" />
     <Compile Include="Rafy\Plugins\RBAC\GroupPluginTest.cs" />

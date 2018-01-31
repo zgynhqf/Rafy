@@ -353,6 +353,69 @@ namespace RafyUnitTest
             }
         }
 
+        ///// <summary>
+        ///// 单元测试注释的原因：
+        ///// 无法使用代码重现让数据库中的数据通过 GetByIdList 查询时乱序
+        ///// 
+        ///// 由于底层使用排序来设置引用实体，所以当数据库中的 Id 的顺序不对时，需要能够正确加载贪婪属性。
+        ///// </summary>
+        //[TestMethod]
+        //public void ORM_Query_EagerLoad_IdOrderInChaos()
+        //{
+        //    var repo = RF.ResolveInstance<BookRepository>();
+        //    using (RF.TransactionScope(repo))
+        //    {
+        //        var categories = new BookCategoryList
+        //        {
+        //            new BookCategory(),
+        //            new BookCategory(),
+        //            new BookCategory(),
+        //            new BookCategory(),
+        //        };
+        //        RF.Save(categories);
+
+        //        var books = new BookList
+        //        {
+        //            new Book
+        //            {
+        //                BookCategory = categories[2],
+        //            },
+        //            new Book
+        //            {
+        //                BookCategory = categories[0],
+        //            },
+        //            new Book
+        //            {
+        //                BookCategory = categories[1],
+        //            },
+        //        };
+        //        repo.Save(books);
+
+        //        //使 Id 处于一个混乱的状态。
+        //        using (var dba = DbAccesserFactory.Create(repo))
+        //        {
+        //            var id = categories[categories.Count-1].Id + 1;
+
+        //            dba.ExecuteText("UPDATE BOOK SET BOOKCATEGORYID = NULL WHERE ID = {0}", books[1].Id);
+        //            dba.ExecuteText("UPDATE BOOKCATEGORY SET ID = {0} WHERE ID = {1}", id, categories[0].Id);
+        //            dba.ExecuteText("UPDATE BOOK SET BOOKCATEGORYID = {0} WHERE ID = {1}", id, books[1].Id);
+        //        }
+
+        //        //查询的数据访问测试。
+        //        var oldCount = Logger.DbAccessedCount;
+        //        var all = repo.GetAll(
+        //            eagerLoad: new EagerLoadOptions().LoadWith(Book.BookCategoryProperty)
+        //            );
+        //        var newCount = Logger.DbAccessedCount;
+        //        Assert.IsTrue(newCount - oldCount == 2, "应该只进行了 2 次数据库查询。");
+
+        //        foreach (Book book2 in all)
+        //        {
+        //            Assert.IsTrue(book2.FieldExists(Book.BookCategoryProperty));
+        //        }
+        //    }
+        //}
+
         /// <summary>
         /// 贪婪加载时，先加载树子节点，再加载属性。
         /// 用例一：查询时直接查出整个树，此时 LoadTreeChildren 不会再有数据加载。

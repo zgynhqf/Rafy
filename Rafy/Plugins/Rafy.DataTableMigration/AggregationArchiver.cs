@@ -49,58 +49,73 @@ namespace Rafy.DataArchiver
             _backUpDbSettingName = context.BackUpDbSettingName;
 
             var updatedTimeCondition = new PropertyMatch(EntityStampExtension.UpdatedTimeProperty, PropertyOperator.LessEqual, context.DateOfArchiving);
-            var criteria = new CommonQueryCriteria() { updatedTimeCondition };
-            criteria.PagingInfo = new PagingInfo(1, context.BatchSize);
 
             bool needProgress = this.ProgressChanged != null;
             if (needProgress) this.OnProgressChanged("-------------- 开始数据归档 --------------");
 
-            foreach (var aggtRootType in context.AggregationsToArchive)
+            using (StampContext.DisableAutoSetStamps())
             {
-                var repository = RepositoryFacade.Find(aggtRootType);
-
-                long _totalCount = 0;
-                if (needProgress)
+                foreach (var item in context.ItemsToArchive)
                 {
-                    _totalCount = repository.CountBy(new CommonQueryCriteria { updatedTimeCondition });
-                    this.OnProgressChanged($"目前，共有 {_totalCount} 个聚合根 {aggtRootType.FullName} 需要归档。");
-                }
+                    var aggtRootType = item.AggregationRoot;
+                    var archiveType = item.ArchiveType;
+                    if (archiveType == ArchiveType.Copy) throw new NotSupportedException("Copy 操作暂不支持。");
 
-                //设置 EagerLoadOptions，加载整个聚合。
-                var eagerLoadOptions = new EagerLoadOptions();
-                EagerLoadAggregationRecur(eagerLoadOptions, repository.EntityMeta);
-                if (repository.SupportTree)
-                {
-                    eagerLoadOptions.LoadWithTreeChildren();
-                }
-                criteria.EagerLoad = eagerLoadOptions;
+                    var repository = RepositoryFacade.Find(aggtRootType);
 
-                //逐页迁移历史数据表。
-                var currentProcess = 0;
-                while (true)
-                {
-                    //获取最新的一页的数据。
-                    var entitiesToMigrate = repository.GetBy(criteria);
-                    var count = entitiesToMigrate.Count;
-                    if (count == 0) { break; }
+                    #region 查询本次需要归档的总数据行数。
 
-                    using (var tranOriginal = RF.TransactionScope(_orignalDataDbSettingName))
-                    using (var tranBackup = RF.TransactionScope(_backUpDbSettingName))
+                    long totalCount = 0;
+                    if (needProgress)
                     {
-                        //迁移到历史表。
-                        this.BackupToHistory(repository, entitiesToMigrate);
-
-                        //实体删除
-                        this.DeleteOriginalData(repository, entitiesToMigrate);
-
-                        //备份完成，才能同时提交两个库的事务。
-                        tranOriginal.Complete();
-                        tranBackup.Complete();
+                        totalCount = repository.CountBy(new CommonQueryCriteria { updatedTimeCondition });
+                        this.OnProgressChanged($"目前，共有 {totalCount} 个聚合根 {aggtRootType.FullName} 需要归档。");
                     }
 
-                    currentProcess += count;
+                    #endregion
 
-                    if (needProgress) this.OnProgressChanged($"    处理进度", decimal.Round(currentProcess / _totalCount * 100, 2));
+                    #region 构造一个查完整聚合的条件对象 CommonQueryCriteria
+
+                    //设置 EagerLoadOptions，加载整个聚合。
+                    var criteria = new CommonQueryCriteria() { updatedTimeCondition };
+                    criteria.PagingInfo = new PagingInfo(1, context.BatchSize);
+                    var eagerLoadOptions = new EagerLoadOptions();
+                    EagerLoadAggregationRecur(eagerLoadOptions, repository.EntityMeta);
+                    if (repository.SupportTree)
+                    {
+                        eagerLoadOptions.LoadWithTreeChildren();
+                    }
+                    criteria.EagerLoad = eagerLoadOptions;
+
+                    #endregion
+
+                    //逐页迁移历史数据表。
+                    var currentProcess = 0;
+                    while (true)
+                    {
+                        //获取最新的一页的数据。
+                        var entitiesToMigrate = repository.GetBy(criteria);
+                        var count = entitiesToMigrate.Count;
+                        if (count == 0) { break; }
+
+                        using (var tranOriginal = RF.TransactionScope(_orignalDataDbSettingName))
+                        using (var tranBackup = RF.TransactionScope(_backUpDbSettingName))
+                        {
+                            //迁移到历史表。
+                            this.BackupToHistory(repository, entitiesToMigrate);
+
+                            //实体删除
+                            this.DeleteOriginalData(repository, entitiesToMigrate);
+
+                            //备份完成，才能同时提交两个库的事务。
+                            tranOriginal.Complete();
+                            tranBackup.Complete();
+                        }
+
+                        currentProcess += count;
+
+                        if (needProgress) this.OnProgressChanged($"    处理进度", decimal.Round(currentProcess / totalCount * 100, 2));
+                    }
                 }
             }
 
@@ -114,8 +129,12 @@ namespace Rafy.DataArchiver
         /// <param name="entitiesToMigrate">实体集合</param>
         private void BackupToHistory(IRepository repository, EntityList entitiesToMigrate)
         {
+            var options = CloneOptions.NewComposition();
+            options.Actions |= CloneActions.IdProperty;//Id 也需要拷贝。
+            options.Method = CloneValueMethod.LoadProperty;
+
             var newList = repository.NewList();
-            newList.Clone(entitiesToMigrate, CloneOptions.NewComposition());
+            newList.Clone(entitiesToMigrate, options);
 
             using (RdbDataProvider.RedirectDbSetting(_orignalDataDbSettingName, _backUpDbSettingName))
             {
