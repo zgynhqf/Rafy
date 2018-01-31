@@ -221,7 +221,7 @@ namespace Rafy.DbMigration
 
             var dbMeta = this.DatabaseMetaReader.Read();
 
-            var differ = new ModelDiffer();
+            var differ = new ModelDiffer((_runGenerator as SqlRunGenerator).DbTypeCoverter);
             differ.IDbIdentifierProvider = (_runGenerator as SqlRunGenerator).IdentifierQuoter;
             var changeSet = differ.Distinguish(dbMeta, destination);
 

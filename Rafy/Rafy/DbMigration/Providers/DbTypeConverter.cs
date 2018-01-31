@@ -54,6 +54,7 @@ namespace Rafy.DbMigration
             if (clrType == typeof(long)) { return DbType.Int64; }
             if (clrType == typeof(bool)) { return DbType.Boolean; }
             if (clrType == typeof(DateTime)) { return DbType.DateTime; }
+            if (clrType == typeof(DateTimeOffset)) { return DbType.DateTimeOffset; }
             if (clrType == typeof(Guid)) { return DbType.Guid; }
             if (clrType == typeof(double)) { return DbType.Double; }
             if (clrType == typeof(byte)) { return DbType.Byte; }
@@ -146,7 +147,7 @@ namespace Rafy.DbMigration
         /// <param name="oldColumnType"></param>
         /// <param name="newColumnType"></param>
         /// <returns></returns>
-        internal static bool IsCompatible(DbType oldColumnType, DbType newColumnType)
+        internal virtual bool IsCompatible(DbType oldColumnType, DbType newColumnType)
         {
             if (oldColumnType == newColumnType) return true;
 

@@ -49,9 +49,96 @@ namespace Rafy.DbMigration.SqlServerCe
                     return "NVARCHAR(4000)";
                 case DbType.Binary:
                     return "VARBINARY(8000)";
+                case DbType.DateTime2:
+                case DbType.DateTimeOffset:
+                    return "DATETIME";
                 default:
                     return base.ConvertToDatabaseTypeName(fieldType, length);
             }
+        }
+
+        /// <summary>
+        /// 将从数据库 Schema Meta 中读取出来的列的类型名称，转换为其对应的 DbType。
+        /// </summary>
+        /// <param name="databaseTypeName">从数据库 Schema Meta 中读取出来的列的类型名称。</param>
+        /// <returns></returns>
+        /// <exception cref="NotSupportedException"></exception>
+        public override DbType ConvertToDbType(string databaseTypeName)
+        {
+            switch (databaseTypeName.ToLower())
+            {
+                case "datetimeoffset":
+                case "datetime2":
+                case "time":
+                    return DbType.DateTime;
+                default:
+                    return base.ConvertToDbType(databaseTypeName);
+            }
+        }
+
+        /// <summary>
+        /// 返回 CLR 类型默认映射的数据库的类型。
+        /// </summary>
+        /// <param name="clrType"></param>
+        /// <returns></returns>
+        public override DbType FromClrType(Type clrType)
+        {
+            if (clrType == typeof(DateTimeOffset)) { return DbType.DateTime; }
+
+            var value = base.FromClrType(clrType);
+
+            return value;
+        }
+
+        /// <summary>
+        /// 将指定的值转换为一个兼容数据库类型的值。
+        /// 该值可用于与下层的 ADO.NET 交互。
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public override object ToDbParameterValue(object value)
+        {
+            value = base.ToDbParameterValue(value);
+
+            if (value != DBNull.Value)
+            {
+                if (value is DateTimeOffset)
+                {
+                    value = ((DateTimeOffset)value).DateTime;
+                }
+            }
+
+            return value;
+        }
+
+        /// <summary>
+        /// 将指定的值转换为一个 CLR 类型的值。
+        /// </summary>
+        /// <param name="dbValue">The database value.</param>
+        /// <param name="clrType">Type of the color.</param>
+        /// <returns></returns>
+        public override object ToClrValue(object dbValue, Type clrType)
+        {
+            dbValue = base.ToClrValue(dbValue, clrType);
+
+            if (dbValue != null)
+            {
+                if (clrType == typeof(DateTimeOffset))
+                {
+                    DateTime dateTime = (DateTime)dbValue;
+
+                    if (dateTime == DateTime.MinValue)
+                    {
+                        dbValue = DateTimeOffset.MinValue;
+                    }
+                    else
+                    {
+                        dbValue = (DateTimeOffset)DateTime.SpecifyKind(dateTime, DateTimeKind.Local);
+                    }
+                }
+            }
+
+            return dbValue;
         }
     }
 }

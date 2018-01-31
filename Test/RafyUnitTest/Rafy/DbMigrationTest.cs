@@ -36,6 +36,8 @@ namespace RafyUnitTest
     [TestClass]
     public class DbMigrationTest
     {
+        private static DbTypeConverter dbTypeConverter;
+
         [ClassInitialize]
         public static void DbMigrationTest_ClassInitialize(TestContext context)
         {
@@ -52,6 +54,9 @@ namespace RafyUnitTest
 
                 c.ResetDbVersion();
                 c.ResetHistory();
+
+                var dbProvider = DbMigrationProviderFactory.GetProvider(c.DbSetting);
+                dbTypeConverter = (dbProvider.CreateRunGenerator() as SqlRunGenerator).DbTypeCoverter;
             };
         }
 
@@ -164,7 +169,7 @@ namespace RafyUnitTest
                 var taskTable = result.FindTable("Task");
                 var c1 = taskTable.FindColumn("TestingColumn");
                 Assert.IsTrue(c1 != null && c1.IsRequired);
-                Assert.IsTrue(DbTypeConverter.IsCompatible(c1.DbType, DbType.String));
+                Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.String));
             });
         }
 
@@ -180,7 +185,7 @@ namespace RafyUnitTest
                 var taskTable = result.FindTable("Task");
                 var c1 = taskTable.FindColumn("TestingColumn");
                 Assert.IsTrue(c1 != null && c1.IsRequired);
-                Assert.IsTrue(DbTypeConverter.IsCompatible(c1.DbType, DbType.AnsiString));
+                Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.AnsiString));
             });
         }
 
@@ -196,7 +201,7 @@ namespace RafyUnitTest
                 var taskTable = result.FindTable("Task");
                 var c1 = taskTable.FindColumn("TestingColumn");
                 Assert.IsTrue(c1 != null && c1.IsRequired);
-                Assert.IsTrue(DbTypeConverter.IsCompatible(c1.DbType, DbType.Date));
+                Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.Date));
             });
         }
 
@@ -212,7 +217,7 @@ namespace RafyUnitTest
                 var taskTable = result.FindTable("Task");
                 var c1 = taskTable.FindColumn("TestingColumn");
                 Assert.IsTrue(c1 != null && c1.IsRequired);
-                Assert.IsTrue(DbTypeConverter.IsCompatible(c1.DbType, DbType.Time));
+                Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.Time));
             });
         }
 
@@ -228,7 +233,7 @@ namespace RafyUnitTest
                 var taskTable = result.FindTable("Task");
                 var c1 = taskTable.FindColumn("TestingColumn");
                 Assert.IsTrue(c1 != null && c1.IsRequired);
-                Assert.IsTrue(DbTypeConverter.IsCompatible(c1.DbType, DbType.DateTime));
+                Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.DateTime));
             });
         }
 
@@ -244,7 +249,7 @@ namespace RafyUnitTest
                 var taskTable = result.FindTable("Task");
                 var c1 = taskTable.FindColumn("TestingColumn");
                 Assert.IsTrue(c1 != null && c1.IsRequired);
-                Assert.IsTrue(DbTypeConverter.IsCompatible(c1.DbType, DbType.DateTimeOffset));
+                Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.DateTimeOffset));
             });
         }
 
@@ -260,7 +265,7 @@ namespace RafyUnitTest
                 var taskTable = result.FindTable("Task");
                 var c1 = taskTable.FindColumn("TestingColumn");
                 Assert.IsTrue(c1 != null && c1.IsRequired);
-                Assert.IsTrue(DbTypeConverter.IsCompatible(c1.DbType, DbType.Int32));
+                Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.Int32));
             });
         }
 
@@ -276,7 +281,7 @@ namespace RafyUnitTest
                 var taskTable = result.FindTable("Task");
                 var c1 = taskTable.FindColumn("TestingColumn");
                 Assert.IsTrue(c1 != null && c1.IsRequired);
-                Assert.IsTrue(DbTypeConverter.IsCompatible(c1.DbType, DbType.Int64));
+                Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.Int64));
             });
         }
 
@@ -292,7 +297,7 @@ namespace RafyUnitTest
                 var taskTable = result.FindTable("Task");
                 var c1 = taskTable.FindColumn("TestingColumn");
                 Assert.IsTrue(c1 != null && c1.IsRequired);
-                Assert.IsTrue(DbTypeConverter.IsCompatible(c1.DbType, DbType.Double));
+                Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.Double));
             });
         }
 
@@ -308,7 +313,7 @@ namespace RafyUnitTest
                 var taskTable = result.FindTable("Task");
                 var c1 = taskTable.FindColumn("TestingColumn");
                 Assert.IsTrue(c1 != null && c1.IsRequired);
-                Assert.IsTrue(DbTypeConverter.IsCompatible(c1.DbType, DbType.Decimal));
+                Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.Decimal));
             });
         }
 
@@ -324,7 +329,7 @@ namespace RafyUnitTest
                 var taskTable = result.FindTable("Task");
                 var c1 = taskTable.FindColumn("TestingColumn");
                 Assert.IsTrue(c1 != null && c1.IsRequired);
-                Assert.IsTrue(DbTypeConverter.IsCompatible(c1.DbType, DbType.Binary));
+                Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.Binary));
             });
         }
 
@@ -340,7 +345,7 @@ namespace RafyUnitTest
                 var taskTable = result.FindTable("Task");
                 var c1 = taskTable.FindColumn("TestingColumn");
                 Assert.IsTrue(c1 != null && c1.IsRequired);
-                Assert.IsTrue(DbTypeConverter.IsCompatible(c1.DbType, DbType.Boolean));
+                Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.Boolean));
             });
         }
 
@@ -358,7 +363,7 @@ namespace RafyUnitTest
                     var taskTable = result.FindTable("Task");
                     var c1 = taskTable.FindColumn("TestingColumn");
                     Assert.IsTrue(c1 != null && c1.IsRequired);
-                    Assert.IsTrue(DbTypeConverter.IsCompatible(c1.DbType, DbType.String));
+                    Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.String));
                 });
             }
         }
@@ -398,7 +403,7 @@ namespace RafyUnitTest
                 Assert.IsTrue(column != null);
 
                 var p = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName).ProviderName;
-                Assert.IsTrue(DbTypeConverter.IsCompatible(column.DbType, DbType.Xml));
+                Assert.IsTrue(dbTypeConverter.IsCompatible(column.DbType, DbType.Xml));
             });
         }
 
@@ -417,7 +422,7 @@ namespace RafyUnitTest
                 Assert.IsTrue(column != null);
 
                 var p = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName).ProviderName;
-                Assert.IsTrue(DbTypeConverter.IsCompatible(column.DbType, DbType.Xml));
+                Assert.IsTrue(dbTypeConverter.IsCompatible(column.DbType, DbType.Xml));
             });
         }
 
@@ -437,7 +442,7 @@ namespace RafyUnitTest
                 var table = result.FindTable("Task");
                 var column = table.FindColumn("Name");
                 Assert.IsTrue(column != null);
-                Assert.IsTrue(DbTypeConverter.IsCompatible(column.DbType, DbType.Double));
+                Assert.IsTrue(dbTypeConverter.IsCompatible(column.DbType, DbType.Double));
                 Assert.IsTrue(column.IsRequired);
             });
         }
