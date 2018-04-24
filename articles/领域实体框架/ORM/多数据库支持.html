@@ -1,0 +1,159 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>&#25968;&#25454;&#24211;&#20999;&#25442; </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="&#25968;&#25454;&#24211;&#20999;&#25442; ">
+    <meta name="generator" content="docfx 2.34.0.0">
+    
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../../styles/docfx.css">
+    <link rel="stylesheet" href="../../../styles/main.css">
+    <meta property="docfx:navrel" content="../../../toc.html">
+    <meta property="docfx:tocrel" content="../../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../../index.html">
+                <img id="logo" class="svg" src="../../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+
+<p>Rafy 领域实体框架，在结构设计上支持各种数据库。目前只是支持了最常用的几种数据库：SqlServer 2005 以上版本，Oracle 10G，Sql CE 4.0。  </p>
+<h2 id="数据库切换">数据库切换</h2>
+<p>一个数据库中可以存储多个实体。但是每个领域实体仓库，都只能对应一个数据库，通过重写 ConnectionStringSettingName 属性来指定对应的数据库连接字符串配置名。例如以下代码把 Warehouse 实体类都存储到以 JXC 为配置名称的数据库中：</p>
+<pre><code class="lang-cs">public class WarehouseRepository : EntityRepository
+{
+    /// &lt;summary&gt;
+    /// 此仓库存储实体对应的数据库连接配置名称。
+    /// &lt;/summary&gt;
+    protected override string ConnectionStringSettingName
+    {
+        get { return &quot;JXC&quot;; }
+    }
+}
+</code></pre><p>要在多种数据库间切换，只需要在应用程序配置文件中，配置对应数据库的连接字符串即可。<br>当配置文件中没有做任何配置时，框架会自动生成一个连接字符串。这个连接字符串使用本地的 SqlServer。</p>
+<h2 id="sql-server-2005">Sql Server 2005+</h2>
+<p>如果需要连接到指定的 SqlServer 服务器，只需要修改为以下配置即可：</p>
+<pre><code class="lang-cs">&lt;add name=&quot;JXC&quot; connectionString=&quot;Data Source=.\SQLExpress;Initial Catalog=Rafy_JXC;User ID=sa;Password=***&quot; providerName=&quot;System.Data.SqlClient&quot;/&gt;
+</code></pre><h2 id="oracle-10g">Oracle 10G</h2>
+<p>Rafy 使用纯托管的 ODP.NET 来访问 Oracle。<br>首先，需要使用 NuGet 来引用最新的纯托管 ODP.NET：Oracle.ManagedDataAccess，版本在 12.1.022 以上即可。<br>接着，配置正确的连接字符串后，即可自动更新数据库中的表结构。Oracle 使用以下连接字符串：</p>
+<pre><code class="lang-cs">&lt;connectionStrings&gt;
+    &lt;add name=&quot;JXC&quot; connectionString=&quot;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=localhost)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=ORCL)));User Id=hqf;Password=***;&quot; providerName=&quot;Oracle.ManagedDataAccess.Client&quot;/&gt;
+&lt;/connectionStrings&gt;
+&lt;system.data&gt;
+    &lt;DbProviderFactories&gt;
+        &lt;remove invariant=&quot;Oracle.ManagedDataAccess.Client&quot;/&gt;
+        &lt;add name=&quot;ODP.NET, Managed Driver&quot; invariant=&quot;Oracle.ManagedDataAccess.Client&quot; description=&quot;Oracle Data Provider for .NET, Managed Driver&quot;
+             type=&quot;Oracle.ManagedDataAccess.Client.OracleClientFactory, Oracle.ManagedDataAccess, Version=4.121.2.0, Culture=neutral, PublicKeyToken=89b483f429c47342&quot;/&gt;
+    &lt;/DbProviderFactories&gt;
+&lt;/system.data&gt;
+</code></pre><p>由于 Oracle 数据库的特殊性，目前并不支持创建 Oracle 数据库，需要手工创建好数据库和用户后，才可以在指定的库中生成所有的表和字段。</p>
+<h2 id="sql-server-compact-edition-40">Sql Server Compact Edition 4.0</h2>
+<p>要使用 SQLCE 4.0，需要添加 SQLCE 的数据库提供程序工厂，并使用以下连接字符串：</p>
+<pre><code class="lang-cs">&lt;connectionStrings&gt;
+    &lt;add name=&quot;JXC&quot; connectionString=&quot;Data Source=Data\JXC.sdf&quot; providerName=&quot;System.Data.SqlServerCe&quot; /&gt;
+&lt;/connectionStrings&gt;
+&lt;system.data&gt;
+    &lt;DbProviderFactories&gt;
+        &lt;remove invariant=&quot;System.Data.SqlServerCe&quot;/&gt;
+        &lt;add name=&quot;SqlServerCe Data Provider&quot; invariant=&quot;System.Data.SqlServerCe&quot; description=&quot;SqlServerCe Data Provider&quot;
+                type=&quot;System.Data.SqlServerCe.SqlCeProviderFactory, System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91&quot;/&gt;
+    &lt;/DbProviderFactories&gt;
+&lt;/system.data&gt;
+</code></pre><h2 id="mysql-50">MySql 5.0+</h2>
+<p>要使用 MySql ，需要添加 MySql 的数据库提供程序工厂，并使用以下连接字符串：</p>
+<pre><code class="lang-cs">&lt;connectionStrings&gt;
+    &lt;add name=&quot;JXC&quot; connectionString=&quot;server=localhost;database=JXC;user id=****;password=******;&quot; providerName=&quot;MySql.Data.MySqlClient&quot; /&gt;
+&lt;/connectionStrings&gt;
+&lt;system.data&gt;
+    &lt;DbProviderFactories&gt;
+        &lt;remove invariant=&quot;MySql.Data.MySqlClient&quot; /&gt;
+        &lt;add name=&quot;MySqlClient Data Provider&quot; invariant=&quot;MySql.Data.MySqlClient&quot; description=&quot;.Net Framework Data Provider for MySqlServer&quot; type=&quot;MySql.Data.MySqlClient.MySqlClientFactory, MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d&quot; /&gt;
+    &lt;/DbProviderFactories&gt;
+&lt;/system.data&gt;
+</code></pre></article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../../styles/main.js"></script>
+  </body>
+</html>

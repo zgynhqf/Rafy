@@ -5,17 +5,17 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title> </title>
+    <title>&#31034;&#20363; </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content=" ">
+    <meta name="title" content="&#31034;&#20363; ">
     <meta name="generator" content="docfx 2.34.0.0">
     
-    <link rel="shortcut icon" href="favicon.ico">
-    <link rel="stylesheet" href="styles/docfx.vendor.css">
-    <link rel="stylesheet" href="styles/docfx.css">
-    <link rel="stylesheet" href="styles/main.css">
-    <meta property="docfx:navrel" content="toc.html">
-    <meta property="docfx:tocrel" content="toc.html">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    <link rel="stylesheet" href="../../../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../../../styles/docfx.css">
+    <link rel="stylesheet" href="../../../../styles/main.css">
+    <meta property="docfx:navrel" content="../../../../toc.html">
+    <meta property="docfx:tocrel" content="../../../toc.html">
     
     
     
@@ -34,8 +34,8 @@
                 <span class="icon-bar"></span>
               </button>
               
-              <a class="navbar-brand" href="index.html">
-                <img id="logo" class="svg" src="logo.svg" alt="">
+              <a class="navbar-brand" href="../../../../index.html">
+                <img id="logo" class="svg" src="../../../../logo.svg" alt="">
               </a>
             </div>
             <div class="collapse navbar-collapse" id="navbar">
@@ -57,12 +57,28 @@
         </div>
       </header>
       <div role="main" class="container body-content hide-when-search">
-        <div class="article row grid">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
 
-<p><a href="articles/框架说明.html">Rafy 帮助文档</a>
-文档版本号：1.5.700  </p>
+<p>在经典领域驱动设计中，一个著名的设计模式是 Command Query Responsibility Segregation（命令查询职责分离，简称 CQRS）。此模式指出，基于领域实体开发整个系统中的所有模块的做法并不合适。系统中一些查询、报表、分析模块，并不对数据进行写操作，只是简单地查询数据。在这种情况下，在继续使用领域实体会非常的不方便，而是应该使用一般性的表格查询。这样，可以发挥 Sql 语句在查询上强大功能。  </p>
+<h2 id="示例">示例</h2>
+<pre><code class="lang-cs">[RepositoryQuery]
+public virtual LiteDataTable GetTableByName(string name)
+{
+    FormattedSql sql = &quot;SELECT * FROM WAREHOUSE WHERE NAME = {0}&quot;;
+    sql.Parameters.Add(name);
+    return (this.DataQueryer as RdbDataQueryer).QueryTable(sql);
+}
+</code></pre><h2 id="litedatatable-类型">LiteDataTable 类型</h2>
+<p> LiteDataTable 类型是一个数据表格类型，它相对于 ADO.NET 中的 System.Data.DataTable 而言更加简单，是一个轻量级对象。它只是简单的单一表，而没有 DataSet 数据集的概念。设计它的主要目的是为了实现轻量级的数据传输。</p>
 </article>
           </div>
           
@@ -94,8 +110,8 @@
       </footer>
     </div>
     
-    <script type="text/javascript" src="styles/docfx.vendor.js"></script>
-    <script type="text/javascript" src="styles/docfx.js"></script>
-    <script type="text/javascript" src="styles/main.js"></script>
+    <script type="text/javascript" src="../../../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../../../styles/main.js"></script>
   </body>
 </html>

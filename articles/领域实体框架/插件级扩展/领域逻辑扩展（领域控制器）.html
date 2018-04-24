@@ -1,0 +1,137 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>&#22330;&#26223; </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="&#22330;&#26223; ">
+    <meta name="generator" content="docfx 2.34.0.0">
+    
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../../styles/docfx.css">
+    <link rel="stylesheet" href="../../../styles/main.css">
+    <meta property="docfx:navrel" content="../../../toc.html">
+    <meta property="docfx:tocrel" content="../../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../../index.html">
+                <img id="logo" class="svg" src="../../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+
+<p>本节讲解如何在客户化插件中，为产品插件内的 <a href="\articles\Content\领域实体框架\领域逻辑\领域控制器.html">实体领域控制器</a> 进行扩展。  </p>
+<h2 id="场景">场景</h2>
+<p>当领域工程的产品插件开发并打包完成后，产品插件中自带的领域逻辑往往并不能满足所有的应用场景。这时，应用工程的开发团队往往需要添加新的领域逻辑，或者调整已有的领域逻辑。</p>
+<h2 id="添加新逻辑控制器">添加新逻辑控制器</h2>
+<p>添加新的逻辑控制器非常简单，直接编写新的控制器代码即可。编写方案参考：
+<a href="\articles\Content\领域实体框架\领域逻辑\领域控制器.html">领域控制器</a></p>
+<h2 id="替换现有的逻辑">替换现有的逻辑</h2>
+<p>替换现有查询时，需要在客户化插件中定义新的 DomainController，其从产品插件中的  DomainController 上继承，并使用 ControllerFactory 的 API 来替换其基类领域控制器。<br>示例代码：<br>控制器扩展：</p>
+<pre><code class="lang-cs">public class TransactionControllerExt : TransactionController
+{
+    protected override Transaction CreateTransaction(ImportedTransactionBase importedTransaction)
+    {
+        var transaction = base.CreateTransaction(importedTransaction);
+
+        if (importedTransaction is EnterpriseTransaction)
+        {
+            var branchName = EnterpriseTransactionExt.GetBranchName(importedTransaction as EnterpriseTransaction);
+            TransactionExt.SetBranchName(transaction, branchName);
+        }
+
+        return transaction;
+    }
+}
+</code></pre><p>在客户化插件中，使用 API 替换基类扩展器：</p>
+<pre><code class="lang-cs">public class CustomizedPlugin : DomainPlugin
+{
+    public override void Initialize(IApp app)
+    {
+        DomainControllerFactory.Override&lt;TransactionController, TransactionControllerExt&gt;();
+    }
+}
+</code></pre></article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../../styles/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>&#35828;&#26126; </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="&#35828;&#26126; ">
+    <meta name="generator" content="docfx 2.34.0.0">
+    
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../../styles/docfx.css">
+    <link rel="stylesheet" href="../../../styles/main.css">
+    <meta property="docfx:navrel" content="../../../toc.html">
+    <meta property="docfx:tocrel" content="../../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../../index.html">
+                <img id="logo" class="svg" src="../../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+
+<p>实体属性是领域实体设计中的重要概念。各种不同的属性，在实体设计中提供不同的功能。  </p>
+<h2 id="说明">说明</h2>
+<p>实体的属性是基于 Rafy 自定义的托管属性框架而设计的。与 WPF 框架的依赖属性类似，托管属性是 Rafy 框架中其它各子系统的基础，它为 数据库映射、分布式数据传输、界面生成 等上层框架提供一系列支持。按照托管属性框架规则编写的所有实体属性，可以被框架有机地管理起来。<br>托管属性的编写与一般的 CLR 属性不同，它由一个静态的属性标记字段和一个相应的 CLR 封装属性组成。静态属性标记是托管属性的核心，而CLR 属性封装只是为了方便开发人员使用。属性存储的值，由框架的基类来做统一的管理，故名托管属性。<br>以下用一般属性作为示例代码（其它属性的详细声明方式参见本章下各小节）：</p>
+<pre><code class="lang-cs">public static readonly Property&lt;string&gt; NameProperty = P&lt;Warehouse&gt;.Register(e =&gt; e.Name);
+public string Name
+{
+    get { return this.GetProperty(NameProperty); }
+    set { this.SetProperty(NameProperty, value); }
+}
+</code></pre><p>CLR 属性的 get、set 封装体中只能简单地调用 GetProperty、SetProperty，而不能写其它的逻辑。<br>这是因为框架内部许多机制只会直接调用 GetProperty、SetProperty 两个方法来进行属性值的设置，而不使用反射来调用 CLR 属性。所以写在 CLR 属性中的所有代码都会被忽略。要对属性的获取或设置逻辑进行扩展，可以在注册托管属性时，提供回调接口。详情参见各属性对应小节。</p>
+<h2 id="托管属性的优势">托管属性的优势</h2>
+<p>使用托管属性编写实体的属性，除了给 Rafy 框架带来底层支持外。相对于一般的 CLR 属性，它还有以下优势：</p>
+<ul>
+<li>支持动态属性扩展
+实体在编写并生成程序集之后，属性依然可以很方便地进行扩展。只需要在其它程序集中，为该实体定义扩展属性即可。详见：<a href="\articles\Content\领域实体框架\插件级扩展\实体属性扩展.html">实体属性扩展</a>。</li>
+<li>减少序列化数据
+没有改变的实体数据，在分布式传输时，不会进行序列化操作。减少数据量。</li>
+<li>高性能
+一般框架对实体的属性都会进行大量的反射操作，用于获取、设置属性的值。托管属性框架则可以让框架直接通过预设的接口来操作实体属性，不需要进行反射操作，提升了性能。</li>
+</ul>
+<h2 id="代码生成">代码生成</h2>
+<p>所有实体的属性都支持自动生成代码，详见：<a href="\articles\Content\领域实体框架\其它\代码段.html">代码段</a></p>
+<h2 id="参见">参见</h2>
+<p><a href="http://www.cnblogs.com/zgynhqf/archive/2011/10/30/2229163.html">OEA 扩展属性系统 - 主要设计类图</a><br><a href="http://www.cnblogs.com/zgynhqf/archive/2012/01/11/2319888.html">《OEA - 实体扩展属性系统 - 设计方案说明书.pdf》</a><br><a href="http://www.cnblogs.com/wangiqngpei557/archive/2012/05/06/2486620.html">.NET ORM框架设计(利用抽象、多态实现无反射的绿色环保ORM框架)（参考本文中描述为何需要一个托管属性系统）</a></p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../../styles/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,174 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>&#39046;&#22495;&#23454;&#20307;&#20803;&#25968;&#25454;&#12289;ORM &#20803;&#25968;&#25454; </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="&#39046;&#22495;&#23454;&#20307;&#20803;&#25968;&#25454;&#12289;ORM &#20803;&#25968;&#25454; ">
+    <meta name="generator" content="docfx 2.34.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+
+<p>为了实现整个程序的可配置性，框架使用了模型驱动架构（Model Driven Architecture，MDA）的架构思想。<br>Rafy 中，框架就是各类元数据，它们包括：领域实体元数据、界面元数据、ORM 元数据、其它零散元数据。与其它 MDA 的平台的不同在于，这些元数据完全由内存对象表示，并没有用 Xml 持久化。而这些元数据的配置，也主要是由代码进行配置（只有少部分元数据支持 Xml 配置），这样就使得开发人员可以封装更高级的配置函数，提高了开发效率。  </p>
+<h2 id="领域实体元数据orm-元数据">领域实体元数据、ORM 元数据</h2>
+<p>领域实体元数据由类型 Rafy.MetaModel.EntityMeta 表示。它是实体框架运行时的基础，通过对它的配置，可以使得不同的实体表现出不同的行为。<br>ORM 元数据是由 EntityMeta 中的一些属性表示的： EntityMeta.TableMeta、EntityPropertyMeta.ColumnMeta
+等。<br>对领域实体元数据及 ORM 元数据的配置，通过使用 Rafy.MetaModel.EntityConfig<t> 类型来完成。例如：<p>
+<pre><code class="lang-cs">/// &lt;summary&gt;
+/// 仓库 配置类。
+/// 负责 仓库 类的实体元数据、界面元数据的配置。
+/// &lt;/summary&gt;
+internal class WarehouseConfig : JXCEntityConfig&lt;Warehouse&gt;
+{
+    /// &lt;summary&gt;
+    /// 配置实体的元数据
+    /// &lt;/summary&gt;
+    protected override void ConfigMeta()
+    {
+        //启用客户端缓存。
+        Meta.EnableClientCache();
+
+        //配置实体的所有属性都映射到数据表中。
+        Meta.MapTable().MapAllProperties();
+    }
+}
+</code></pre><h2 id="界面元数据">界面元数据</h2>
+<p>界面元数据由类型 Rafy.MetaModel.View.EntityViewMeta表示（它的两个子类 Rafy.MetaModel.View.WPFEntityViewMeta 及 Rafy.MetaModel.View.WebEntityViewMeta
+分别用于配置 WPF 界面及 Web 界面）。<br>它是界面生动生成框架的输入。通过配置界面元数据，可以控制生成不同的界面。<br>对界面元数据的配置，通过使用 Rafy.MetaModel.WPFViewConfig<t> 或 Rafy.MetaModel.WebViewConfig<t>
+类型来完成。例如：<p>
+<pre><code class="lang-cs">/// &lt;summary&gt;
+/// 货品的视图配置。
+/// &lt;/summary&gt;
+internal class ProductWPFViewConfig : WPFViewConfig&lt;Product&gt;
+{
+    protected override void ConfigView()
+    {
+        View.DomainName(&quot;商品&quot;).HasDelegate(Product.MingChengProperty);
+
+        //界面生成时，使用以下命令
+        View.UseDefaultCommands().UseCommands(typeof(ResetProductAmountCommand));
+
+        //表单使用以下布局
+        View.UseDetailPanel&lt;ProductForm&gt;();
+
+        //表格中的属性，使用以下布局
+        using (View.OrderProperties())
+        {
+            View.Property(Product.BianMaProperty)
+                .HasLabel(&quot;编码&quot;).ShowIn(ShowInWhere.All).ShowInDetail(contentWidth: 0.7, columnSpan: 2);
+            View.Property(Product.MingChengProperty)
+                .HasLabel(&quot;名称&quot;).ShowIn(ShowInWhere.All).ShowInDetail(contentWidth: 600, columnSpan: 2);
+            //...
+        }
+    }
+}
+</code></pre><h2 id="rafy-模型驱动架构">Rafy 模型驱动架构</h2>
+<p>下图是 Rafy 的多层结构图，在各层中，都有相应的元数据（应用模型）支撑。只有绿色的部分是需要开发人员编写的。
+<strong>模型驱动架构</strong></p>
+<p><img src="../../../images/MDA_RafyMDA.png" alt=""></p>
+<h2 id="附---模型驱动架构">附 - 模型驱动架构</h2>
+<p>**模型驱动架构 **</p>
+<p><img src="../../../images/MDA_Overview.png" alt=""></p>
+<p><strong>模型转换</strong></p>
+<p><img src="../../../images/MDA_Transform.png" alt=""></p>
+<p><strong>三大模型</strong></p>
+<p><img src="../../../images/MDA_Transform.png" alt=""></p>
+<p><strong>代码生成</strong></p>
+<p><img src="../../../images/MDA_Generate.png" alt=""></p>
+<p>关于模型驱动架构的详细概念，参考：《<a href="http://www.omg.org/mda/">MDA</a>》。</p>
+<h2 id="参见">参见</h2>
+<p>其他资源<br><a href="http://www.omg.org/mda/">MDA</a></p>
+</t></t></t></article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

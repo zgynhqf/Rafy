@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>&#35828;&#26126; </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="&#35828;&#26126; ">
+    <meta name="generator" content="docfx 2.34.0.0">
+    
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../../styles/docfx.css">
+    <link rel="stylesheet" href="../../../styles/main.css">
+    <meta property="docfx:navrel" content="../../../toc.html">
+    <meta property="docfx:tocrel" content="../../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../../index.html">
+                <img id="logo" class="svg" src="../../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+
+<p>本节简要说明 Rafy 框架中目前提供的所有代码段及使用方法。  </p>
+<h2 id="说明">说明</h2>
+<p>代码段是 VisualStudio 提供的辅助开发的功能。使用代码段可以方便地生成小段的代码。<br>
+Rafy 框架提供了大量的代码段，以方便日常开发。</p>
+<h2 id="安装">安装</h2>
+<p>安装 SDK 后，在 VisualStudio 菜单栏中点击 工具 -&gt; 安装/卸载代码段，在弹出窗口中点击确定即可。安装完成并重新启动 VisualStudio 后，代码段就会生效了。</p>
+<h2 id="属性代码段">属性代码段</h2>
+<p>对于开发人最常写的属性代码，提供了以下代码段：</p>
+<ul>
+<li><p>Rafy_Property<br>用于编写实体的一般属性。</p>
+</li>
+<li><p>Rafy_Property_PropertyChanged<br>用于编写实体属性的变更后逻辑。
+需要注意的是，这个代码段并不生成完整的属性代码，而是只生成差异部分。使用方法如下：</p>
+<p><img src="../../../../images/Snippets_PropertyChangedUsage.png" alt=""></p>
+</li>
+<li><p>Rafy_Property_PropertyChanging<br>用于编写实体属性的变更前逻辑。使用方法同：Rafy_Property_PropertyChanged。</p>
+</li>
+<li><p>Rafy_Property_CoerceGetValue<br>用于编写实体属性的强制 Get 逻辑。使用方法同：Rafy_Property_PropertyChanged。</p>
+</li>
+<li><p>Rafy_PropertyLOB<br>用于编写实体的大对象属性。</p>
+</li>
+<li><p>Rafy_PropertyReadOnly<br>用于编写实体的只读属性。</p>
+</li>
+<li><p>Rafy_PropertyRedundancy<br>用于编写实体的冗余属性。</p>
+</li>
+<li><p>Rafy_PropertyReference<br>用于编写实体的引用属性。</p>
+</li>
+<li><p>Rafy_PropertyReferenceNullable<br>用于编写实体的可空引用属性。</p>
+</li>
+<li><p>Rafy_PropertyList<br>用于编写实体的组合子属性。</p>
+</li>
+<li><p>Rafy_PropertyList_Full<br>用于编写完整的实体的组合子属性。<br>以上代码段都可以使用缩写来方便调用，例如，Rafy_PropertyReferenceNullable 只需要输入 RPR 即可。</p>
+</li>
+</ul>
+<h2 id="其它代码段">其它代码段</h2>
+<ul>
+<li><p>Rafy_Query<br>用于在仓库类中生成简单的查询方法。</p>
+<pre><code class="lang-cs">[RepositoryQuery]
+public virtual $EntityListName$ $MethodName$($Parameters$)
+{
+ var q = this.CreateLinqQuery();
+ q = q.Where(e =&gt; e.$WhereExpression$);$end$
+ return ($EntityListName$)this.QueryData(q);
+}
+</code></pre></li>
+<li><p>Rafy_Query_Common<br>用于在仓库类中生成一个用于精确匹配每一个属性的查询方法。</p>
+</li>
+<li>Rafy_Query_TableQueryContent<br>用于在 Rafy_Query 生成的查询方法中，再生成一个使用 SqlTree 进行查询的查询实现代码。</li>
+</ul>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../../styles/main.js"></script>
+  </body>
+</html>

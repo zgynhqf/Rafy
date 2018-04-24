@@ -5,17 +5,17 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title> </title>
+    <title>&#21407;&#29702; </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content=" ">
+    <meta name="title" content="&#21407;&#29702; ">
     <meta name="generator" content="docfx 2.34.0.0">
     
-    <link rel="shortcut icon" href="favicon.ico">
-    <link rel="stylesheet" href="styles/docfx.vendor.css">
-    <link rel="stylesheet" href="styles/docfx.css">
-    <link rel="stylesheet" href="styles/main.css">
-    <meta property="docfx:navrel" content="toc.html">
-    <meta property="docfx:tocrel" content="toc.html">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../../styles/docfx.css">
+    <link rel="stylesheet" href="../../../styles/main.css">
+    <meta property="docfx:navrel" content="../../../toc.html">
+    <meta property="docfx:tocrel" content="../../toc.html">
     
     
     
@@ -34,8 +34,8 @@
                 <span class="icon-bar"></span>
               </button>
               
-              <a class="navbar-brand" href="index.html">
-                <img id="logo" class="svg" src="logo.svg" alt="">
+              <a class="navbar-brand" href="../../../index.html">
+                <img id="logo" class="svg" src="../../../logo.svg" alt="">
               </a>
             </div>
             <div class="collapse navbar-collapse" id="navbar">
@@ -57,13 +57,33 @@
         </div>
       </header>
       <div role="main" class="container body-content hide-when-search">
-        <div class="article row grid">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
 
-<p><a href="articles/框架说明.html">Rafy 帮助文档</a>
-文档版本号：1.5.700  </p>
-</article>
+<p>本节讲解如何在客户化插件中，为产品插件内的实体仓库数据层扩展保存逻辑。  </p>
+<h2 id="原理">原理</h2>
+<p>RepositoryDataProvider 支持插件级别的替换。<br>客户化插件中新的 RepositoryDataProvider 继承自产品插件中现有的数据层，这样其可以使用面向对象的方式来进行功能的扩展。然后，框架提供 DataProviderForAttribute 标签，可以让新的数据层来替换原有的数据层：产品插件中的仓库在创建其对应的数据层对象时，创建出来的是客户化插件中的数据层类的对象。</p>
+<h2 id="示例">示例</h2>
+<p>示例代码：</p>
+<pre><code class="lang-cs">[DataProviderFor(typeof(TransactionRepository))]
+public class TransactionRepositoryDataProviderExt : TransactionRepositoryDataProvider
+{
+    protected override void Delete(Entity entity)
+    {
+        //do sth else;
+
+        base.Delete(entity);
+    }
+}
+</code></pre></article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
@@ -94,8 +114,8 @@
       </footer>
     </div>
     
-    <script type="text/javascript" src="styles/docfx.vendor.js"></script>
-    <script type="text/javascript" src="styles/docfx.js"></script>
-    <script type="text/javascript" src="styles/main.js"></script>
+    <script type="text/javascript" src="../../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../../styles/main.js"></script>
   </body>
 </html>

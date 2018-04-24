@@ -5,17 +5,17 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title> </title>
+    <title>&#32479;&#19968;&#30340;&#25509;&#21475; </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content=" ">
+    <meta name="title" content="&#32479;&#19968;&#30340;&#25509;&#21475; ">
     <meta name="generator" content="docfx 2.34.0.0">
     
-    <link rel="shortcut icon" href="favicon.ico">
-    <link rel="stylesheet" href="styles/docfx.vendor.css">
-    <link rel="stylesheet" href="styles/docfx.css">
-    <link rel="stylesheet" href="styles/main.css">
-    <meta property="docfx:navrel" content="toc.html">
-    <meta property="docfx:tocrel" content="toc.html">
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
     
     
     
@@ -34,8 +34,8 @@
                 <span class="icon-bar"></span>
               </button>
               
-              <a class="navbar-brand" href="index.html">
-                <img id="logo" class="svg" src="logo.svg" alt="">
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
               </a>
             </div>
             <div class="collapse navbar-collapse" id="navbar">
@@ -57,12 +57,30 @@
         </div>
       </header>
       <div role="main" class="container body-content hide-when-search">
-        <div class="article row grid">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
 
-<p><a href="articles/框架说明.html">Rafy 帮助文档</a>
-文档版本号：1.5.700  </p>
+<p>Rafy 支持统一的直连、分布式开发模式。即同一份代码，即可部署为本地程序，直连数据库；也可部署为 C/S 结构程序，使用 WCF 进行分布式数据传输。  </p>
+<h2 id="统一的接口">统一的接口</h2>
+<p>涉及到分布式数据传输的调用列表有以下接口，它们在服务端和客户端都可以直接被调用：</p>
+<ul>
+<li><p>仓库的所有公有查询接口<br>如以下代码，可以在客户端、服务端及单机程序中被直接使用：</p>
+<pre><code class="lang-cs">var repo = RF.ResolveInstance&lt;WarehouseRepository&gt;();
+Warehouse wh = repo.GetByCode(&quot;0001&quot;);
+</code></pre></li>
+<li><p>领域服务<br>所有领域服务也是支持远程调用。如以下代码，可以在客户端、服务端及单机程序中被直接使用：</p>
+<pre><code class="lang-cs">var svc = ServiceFactory.Create&lt;MigrateService&gt;();
+svc.Invoke();
+</code></pre></li>
+</ul>
 </article>
           </div>
           
@@ -94,8 +112,8 @@
       </footer>
     </div>
     
-    <script type="text/javascript" src="styles/docfx.vendor.js"></script>
-    <script type="text/javascript" src="styles/docfx.js"></script>
-    <script type="text/javascript" src="styles/main.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
   </body>
 </html>

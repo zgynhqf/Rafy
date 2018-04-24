@@ -1,0 +1,138 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>&#22914;&#20309;&#32534;&#20889;&#26641;&#22411;&#23454;&#20307; </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="&#22914;&#20309;&#32534;&#20889;&#26641;&#22411;&#23454;&#20307; ">
+    <meta name="generator" content="docfx 2.34.0.0">
+    
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../../styles/docfx.css">
+    <link rel="stylesheet" href="../../../styles/main.css">
+    <meta property="docfx:navrel" content="../../../toc.html">
+    <meta property="docfx:tocrel" content="../../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../../index.html">
+                <img id="logo" class="svg" src="../../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+
+<p>树型实体，也叫自关联实体，是一种常用的层次的、树状结构的实体类型。这种实体类型的每一个对象都可以包含多个本实体类型的对象作为它的树子节点，而树子节点还可以继续包含更多的树子节点。<br>例如，有时某种分类可以设计为树型实体，这是因为类别下可以有更小的类别，而小类下还可以有更小的类别，这种包含关系可以是无极限的。  </p>
+<h2 id="如何编写树型实体">如何编写树型实体</h2>
+<p>对于树型实体，Rafy 框架在实体基类中已经给出了默认的实现，只需要在元数据配置中，编写以下代码即可：</p>
+<pre><code class="lang-cs">protected override void ConfigMeta()
+{
+    //配置当前实体实树型实体
+    Meta.SupportTree();
+
+    //配置实体的所有属性都映射到数据表中。
+    Meta.MapTable().MapAllPropertiesToTable();
+}
+</code></pre><h2 id="特点">特点</h2>
+<ul>
+<li>配置为树型实体后，实体的两个属性 TreeIndex、TreePId 将会在数据库中映射为同名的两个字段。（未配置时，这两个属性会被忽略。）</li>
+<li>TreePId 属性用于存储该对象在树型关系中的父对象 Id。</li>
+<li>TreeIndex 是树节点的系统编号，由框架自动维护。</li>
+<li>EntityRepository 类中一些查询方法是面向树型实体的，例如查询某个节点下的所有子节点。这些功能，主要通过 TreeIndex 来做模糊匹配。所以 TreeIndex 不能被随意设置。                        </li>
+<li>可以通过 Entity.TreeParent 来获取或设置实体的树型父节点实体；通过 Entity.TreeChildren 来获取或设置实体的树型子节点集合。</li>
+</ul>
+<h2 id="如何使用自动编码">如何使用自动编码</h2>
+<p>默认情况下，框架为树型实体使用数字进行层次编码，例如一级节点编码为：&quot;1.&quot;,&quot;2.&quot;,...，二级节点编码为：&quot;1.1.&quot;,&quot;1.2.&quot;,...。如果期望使用其它形式的自动编码，可以使用以下代码在元数据中进行如下配置：</p>
+<pre><code class="lang-cs">Meta.TreeIndexOption = new TreeIndexOption
+{
+    Seperator = &#39;.&#39;,
+    Layers = new string[][] {
+        new string[]{&quot;一&quot;, &quot;二&quot;, &quot;三&quot;, &quot;四&quot;, &quot;五&quot;, &quot;六&quot;, &quot;七&quot;, &quot;八&quot;, &quot;九&quot;},
+        new string[]{&quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;, &quot;6&quot;, &quot;7&quot;, &quot;8&quot;, &quot;9&quot;}
+    }
+};
+</code></pre><p>上述代码使得树型实体的第一层使用汉字的数字进行编码，第二层及以下层都使用数字进行编码，层与层之间使用 &#39;.&#39; 进行分隔。如：&quot;一.&quot;,&quot;一.1.&quot;,&quot;一.2.&quot;,&quot;一.2.1.&quot;等。</p>
+<h2 id="参见">参见</h2>
+<p>其他资源<br><a href="http://www.cnblogs.com/zgynhqf/p/4133511.html">Rafy 领域实体框架 - 树型实体功能（自关联表）</a></p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../../styles/main.js"></script>
+  </body>
+</html>

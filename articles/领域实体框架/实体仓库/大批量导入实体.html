@@ -1,0 +1,169 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>&#20351;&#29992;&#26041;&#27861; </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="&#20351;&#29992;&#26041;&#27861; ">
+    <meta name="generator" content="docfx 2.34.0.0">
+    
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../../styles/docfx.css">
+    <link rel="stylesheet" href="../../../styles/main.css">
+    <meta property="docfx:navrel" content="../../../toc.html">
+    <meta property="docfx:tocrel" content="../../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../../index.html">
+                <img id="logo" class="svg" src="../../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+
+<p>某些场景下，开发者希望能够大批量地把实体的数据导入到数据库中。虽然使用实体仓库保存实体列表非常方便，但是其内部实现机制是一条一条的保存到数据库，当实体的个数较多时，效率就会很低。所以 Rafy 设计了批量导入插件程序，其内部使用 ADO.NET 及 ODP.NET 中的批量导入机制来把大量数据一次性导入到数据库中。  </p>
+<h2 id="使用方法">使用方法</h2>
+<p><strong>步骤</strong></p>
+<ul>
+<li>由于批量导入功能是一个额外的程序集，所以在使用该功能时，需要先使用 NuGet 引用最新版本的 Rafy.Domain.ORM.BatchSubmit 程序集。</li>
+<li>如果准备导入 ORACLE 数据库，则也需要引用 Oracle.ManagedDataAccess(12.1.022 以上版本) 程序集。
+ -修改需要保存大量实体的代码，例如，原代码如下：</li>
+</ul>
+<pre><code class="lang-cs">                var books = new BookList();
+                for (int i = 0; i &lt; 1000000; i++)
+                {
+                    var book = new Book
+                    {
+                        ChapterList =
+                        {
+                            new Chapter(),
+                            new Chapter(),
+                        }
+                    };
+                    books.Add(book);
+                }
+
+                //直接使用实体仓库进行保存。
+                repo.Save(books);               
+</code></pre><p>需要把最后一行使用仓库保存实体列表，修改为创建导入器来保存实体列表：</p>
+<pre><code class="lang-cs">//创建一个批量导入器进行保存。
+repo.CreateImporter().Save(books);            
+</code></pre><h2 id="注意">注意</h2>
+<ul>
+<li>从上面的代码可以看出，批量导入程序是面向整个聚合的。也就是说，批量导入父实体时，同时也会批量导入父实体下的所有子实体。</li>
+<li>批量导入不但支持添加新实体，同时也支持批量更新、批量删除。使用方法与使用仓库保持一致。</li>
+<li>对于大批量的数据，使用批量导入，比直接使用仓库来保存实体，速度要快两个数据级左右。</li>
+<li>目前批量导入实体的功能，只支持 Oracle 和 SqlServer 两个数据库。</li>
+<li><p>在使用 Oracle 数据库时，还需要在数据库生成完成后，特别地调用以下代码以启用某个聚合实体的批量导入功能，否则导入过程中会抛出异常（原因请见后面的实现原理章节）。代码如下：</p>
+<pre><code class="lang-cs">Rafy.Domain.ORM.BatchSubmit.Oracle.OracleBatchImporter.EnableBatchSequence(
+RF.ResolveInstance&lt;OriginalDataRepository&gt;()
+);                         
+</code></pre></li>
+</ul>
+<h2 id="缺点">缺点</h2>
+<p>目前，大批量导入实体的功能是由一个单独的插件以新的方式完成的。虽然性能非常好，但是它只是简单地把数据快速地导入数据库中，并不能支持仓库、仓库数据提供器中许多内置的功能和扩展点（例如 RepositoryDataProvider 中的 Inserting、Updating、Deleting、Querying 等事件以及相应的虚方法等都不会发生）。这将会导致一些功能失效，如：更新实体时冗余属性不会自动更新、时间戳插件的功能无效。<br>较好的性能往往与更多的功能和扩展性冲突。为了应对大数据的导入，在使用本插件的同时，开发者不得不额外地人工处理这些缺失的功能；所以，除了对性能非常敏感的应用场景以外，为了保证更好的扩展性与强大的功能，尽量不要使用大数据批量导入功能。</p>
+<h2 id="实现原理">实现原理</h2>
+<p>下面简要介绍批量导入的原理。</p>
+<h2 id="sql-server">Sql Server</h2>
+<p>对于 Sql Server 数据库的批量保存：</p>
+<ul>
+<li><p>批量新增数据，是使用 System.Data.SqlClient.SqlBulkCopy 来实现的。</p>
+</li>
+<li><p>批量更新数据，是使用 System.Data.SqlClient.SqlDataAdapter 来实现的。</p>
+</li>
+<li><p>批量删除数据，则是直接拼接 SQL 语句，把需要删除的实体的 Id 放到 In 语句中进行删除。例如：</p>
+<pre><code class="lang-cs">   DELETE FROM Books WHERE Id IN (1,3,5,7......);                               
+</code></pre></li>
+</ul>
+<h2 id="oracle">Oracle</h2>
+<p>对于 Oracle 数据库的批量保存：</p>
+<ul>
+<li>新增数据、更新数据都是使用 ODP.NET 中原生的批量导入功能。
+参见：<code>Oracle.ManagedDataAccess.Client.OracleCommand.ArrayBindCount</code>属性。</li>
+<li>而删除数据的实现则和 SQLServer 的实现一致，均是拼接 DELETE 语句。</li>
+</ul>
+<h2 id="新增大量实体时实体的-id-生成">新增大量实体时，实体的 Id 生成</h2>
+<p>一般情况下，使用仓库保存一个新增的实体时，仓库会使用数据库本身的机制来为实体生成 Id，在 SQLServer 中是使用 IDENTITY 列，在 ORACLE 中则是使用每个表对应的 SEQUENCE 来生成。但是，批量导入大量新实体时，为了性能上的考虑，则需要一次性为需要保存的所有新实体统一生成 Id。<br>在 SQLServer 中，可以方便地使用 SQL 语句调整表中 IDENTITY 下一次的值，所以实现比较简单。只需要设置 IDENTITY 下一次的值 + 100000，并使用中间跳过的这些值来作为实体的 Id 即可。<br>但是在 ORACLE 中，如果去调整 SEQUENCE 的值，则属于 DDL 语句，会隐式自动提交事务，会造成数据的错误。所以我们最终决定：如果在 ORACLE 中要使用批量导入功能，数据表对应的 SEQUENCE 必须以较大的数字为步距（如 ALTER SEQUENCE &quot;SEQ_TABLE_ID&quot; INCREMENT BY 100000 NOCACHE）。这样，在批量导入时，就不再需要增修改 SEQUENCE 的步距，而直接使用中间跳过的这些值作为实体的 Id。这样做也比较方便，但是负面效果则是使用仓库保存单一实体时，两次保存不同实体生成的 Id 会相差 100000，不再是连续的。</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../../styles/main.js"></script>
+  </body>
+</html>

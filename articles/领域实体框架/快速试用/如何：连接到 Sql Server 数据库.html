@@ -5,17 +5,17 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title> </title>
+    <title>&#21069;&#25552; </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content=" ">
+    <meta name="title" content="&#21069;&#25552; ">
     <meta name="generator" content="docfx 2.34.0.0">
     
-    <link rel="shortcut icon" href="favicon.ico">
-    <link rel="stylesheet" href="styles/docfx.vendor.css">
-    <link rel="stylesheet" href="styles/docfx.css">
-    <link rel="stylesheet" href="styles/main.css">
-    <meta property="docfx:navrel" content="toc.html">
-    <meta property="docfx:tocrel" content="toc.html">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../../styles/docfx.css">
+    <link rel="stylesheet" href="../../../styles/main.css">
+    <meta property="docfx:navrel" content="../../../toc.html">
+    <meta property="docfx:tocrel" content="../../toc.html">
     
     
     
@@ -34,8 +34,8 @@
                 <span class="icon-bar"></span>
               </button>
               
-              <a class="navbar-brand" href="index.html">
-                <img id="logo" class="svg" src="logo.svg" alt="">
+              <a class="navbar-brand" href="../../../index.html">
+                <img id="logo" class="svg" src="../../../logo.svg" alt="">
               </a>
             </div>
             <div class="collapse navbar-collapse" id="navbar">
@@ -57,12 +57,32 @@
         </div>
       </header>
       <div role="main" class="container body-content hide-when-search">
-        <div class="article row grid">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
 
-<p><a href="articles/框架说明.html">Rafy 帮助文档</a>
-文档版本号：1.5.700  </p>
+<p>本章说明如何使 Rafy 连接到 Sql Server 数据库。如果您期望继续使用 SQLCE 完成本示例，可以跳过本章。  </p>
+<h2 id="前提">前提</h2>
+<p>请先完成示例：<a href="\articles\Content\领域实体框架\快速试用\创建第一个程序.html">创建第一个程序</a>后，再尝试本示例。</p>
+<h2 id="如何连接-sql-server-数据库">如何：连接 Sql Server 数据库</h2>
+<p><strong>步骤</strong></p>
+<ol>
+<li>打开 ConsoleApp 项目中的 App.config 文件。
+<code>xml
+把连接配置项：&#39;&lt;add name=&quot;JXC&quot; connectionString=&quot;Data Source=Data\JXC.sdf&quot; providerName=&quot;System.Data.SqlServerCe&quot; /&gt;&#39;
+ 替换为：&lt;add name=&quot;JXC&quot; connectionString=&quot;Data Source=.\SQLExpress;Initial Catalog=JXCDemo;User ID=UserName;Password=Password&quot; providerName=&quot;System.Data.SqlClient&quot;/&gt;即可。</code>
+注意，连接字符串要保证正确。支持 Sql Server 2005 以上版本。</li>
+<li>检查
+编译并运行解决方案。提示已经把数据存储到数据库中。
+这时，打开 SqlServer 的数据库管理界面，可以看到 JXCDemo 的数据库已经生成完成了。这个数据库中有一个 Warehouse 表，表中有三个字段，分别是 Id、Code、Name。</li>
+</ol>
 </article>
           </div>
           
@@ -94,8 +114,8 @@
       </footer>
     </div>
     
-    <script type="text/javascript" src="styles/docfx.vendor.js"></script>
-    <script type="text/javascript" src="styles/docfx.js"></script>
-    <script type="text/javascript" src="styles/main.js"></script>
+    <script type="text/javascript" src="../../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../../styles/main.js"></script>
   </body>
 </html>

@@ -1,0 +1,195 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>&#26597;&#35810;&#27169;&#24335; </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="&#26597;&#35810;&#27169;&#24335; ">
+    <meta name="generator" content="docfx 2.34.0.0">
+    
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../../styles/docfx.css">
+    <link rel="stylesheet" href="../../../styles/main.css">
+    <meta property="docfx:navrel" content="../../../toc.html">
+    <meta property="docfx:tocrel" content="../../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../../index.html">
+                <img id="logo" class="svg" src="../../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h2 id="查询模式">查询模式</h2>
+
+<p>框架要求以一种统一的开发模式来编写实体仓库的查询方法，来兼顾本地应用、分布式应用程序的开发。不论在客户端，还是在服务端，都可以直接调用这种查询接口。这种开发模式如下：</p>
+<pre><code class="lang-cs">[RepositoryQuery]
+public virtual WarehouseList GetByCode(string warehouseCode)
+{
+    var q = this.CreateLinqQuery();
+    q = q.Where(e =&gt; e.Code == warehouseCode);
+    return (WarehouseList)this.QueryData(q);
+}
+</code></pre><ul>
+<li>必须标记为虚方法。
+这是因为框架需要对仓库生成代码，并对该方法进行拦截。</li>
+<li>方法需要标记：[RepositoryQuery]。
+不是所有的虚方法都会被拦截，所以需要显式标记来区分公有数据方法。<br>添加此标记后的方法拥有以下的功能：<br>1.判断是需要在本地、还是服务端来执行此方法。如果需要在服务端执行，则框架会转而调用 WCF 数据门户。（如果需要分布式调用，所有参数需要支持可序列化。）<br>2.根据方法的返回值，来确定底层查询时应该返回的类型（EntityList、Entity、int、LiteDataTable）。<br>3.查询完成后，调整查询结果的类型，与需要的类型一致。</li>
+<li>返回值
+方法的返回值只可以是以下几类，具体实体列表类型、具体的实体类型、int（查询数据条数）、LiteDataTable（轻量级数据表格类型）。</li>
+<li>方法体
+方法体中需要构造查询，并最终使用<code>QueryData()</code>来查询数据。<code>QueryData()</code>方法会根据当前查询方法的返回值，而决定底层需要执行的查询的类型（查全部实体、查单个实体、查数据条数），并返回相应类型的数据。</li>
+</ul>
+<h2 id="四种查询示例">四种查询示例</h2>
+<p>四种查询对应枚举 Rafy.Domain.RepositoryQueryType：</p>
+<pre><code class="lang-cs">/// &lt;summary&gt;
+/// 仓库返回数据的类型
+/// &lt;/summary&gt;
+public enum RepositoryQueryType
+{
+    /// &lt;summary&gt;
+    /// 查询实体列表
+    /// &lt;/summary&gt;
+    List = 0,
+    /// &lt;summary&gt;
+    /// 查询单个实体
+    /// &lt;/summary&gt;
+    First = 1,
+    /// &lt;summary&gt;
+    /// 查询数据条数统计
+    /// &lt;/summary&gt;
+    Count = 2,
+    /// &lt;summary&gt;
+    /// 查询数据表格
+    /// &lt;/summary&gt;
+    Table = 3
+}
+</code></pre><ul>
+<li><p>查询实体列表<br>返回具体实体列表类型。</p>
+<pre><code class="lang-cs">[RepositoryQuery]
+public virtual WarehouseList GetByCode(string warehouseCode)
+{
+ var q = this.CreateLinqQuery();
+ q = q.Where(e =&gt; e.Code == warehouseCode);
+ return (WarehouseList)this.QueryData(q);
+}
+</code></pre></li>
+<li><p>查询单个实体<br>返回具体实体类型。<br>查询实体个数的数据层实现中，与查询实体列表的实体层实现保持一致。如果查询出多条实体，则框架只会返回第一个实体。</p>
+<pre><code class="lang-cs">[RepositoryQuery]
+public virtual Warehouse GetByName(string name)
+{
+ var q = this.CreateLinqQuery();
+ q = q.Where(e =&gt; e.Name == name).OrderByDescending(e =&gt; e.CreateTime);
+ return (Warehouse)this.QueryData(q);
+}
+</code></pre></li>
+<li><p>查询实体个数<br>返回整型。<br>查询实体个数的数据层实现中，与查询实体列表的实体层实现保持一致。框架内部会自动转换为数据行数的查询。</p>
+<pre><code class="lang-cs">[RepositoryQuery]
+public virtual long CountByDate(DateTime date)
+{
+ var q = this.CreateLinqQuery();
+ q = q.Where(e =&gt; e.CreateTime &gt;= date);
+ return (long)this.QueryData(q);
+}
+</code></pre></li>
+<li><p>查询表格数据<br>可返回一个简单的表格类型数据。LiteDataTable 类型是一个可直接用于网络传输的数据表格。<br>根据 Command Query Responsibility Segregation（命令查询职责分离，简称 CQRS）模式，复杂查询一般使用表格查询，但是返回的数据只做只读查看，不支持修改。</p>
+<pre><code class="lang-cs">[RepositoryQuery]
+public virtual LiteDataTable GetTableByName(string name)
+{
+ FormattedSql sql = &quot;SELECT * FROM WAREHOUSE WHERE NAME = {0}&quot;;
+ sql.Parameters.Add(name);
+ return (this.DataQueryer as RdbDataQueryer).QueryTable(sql);
+}
+</code></pre></li>
+</ul>
+<p>字符串可自动隐式转换为一个 FormattedSql 类型的对象。<br>FormattedSql 表格格式化的 Sql 语句，为了支持多个数据库，它其中的每一个参数都使用大括号括住的数字来代替，最终会通过 ADO.NET 来使用参数化的查询，而非使用 String.Format 简单地格式化 Sql 语句。</p>
+<h2 id="实体查询实现方式">实体查询实现方式</h2>
+<p>在数据层实现中，对于实体查询而言，目前支持以下三种查询方式：</p>
+<ul>
+<li><a href="\articles\Content\领域实体框架\实体仓库\编写查询\Linq 查询.html">Linq 查询</a></li>
+<li><a href="\articles\Content\领域实体框架\实体仓库\编写查询\通用查询条件(CommonQueryCriteria).html">通用查询条件(CommonQueryCriteria)</a></li>
+<li><a href="\articles\Content\领域实体框架\实体仓库\编写查询\Sql 查询.html">Sql 查询</a></li>
+</ul>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../../styles/main.js"></script>
+  </body>
+</html>

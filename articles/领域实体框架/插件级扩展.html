@@ -5,17 +5,17 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title> </title>
+    <title>&#20351;&#29992;&#22330;&#26223; </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content=" ">
+    <meta name="title" content="&#20351;&#29992;&#22330;&#26223; ">
     <meta name="generator" content="docfx 2.34.0.0">
     
-    <link rel="shortcut icon" href="favicon.ico">
-    <link rel="stylesheet" href="styles/docfx.vendor.css">
-    <link rel="stylesheet" href="styles/docfx.css">
-    <link rel="stylesheet" href="styles/main.css">
-    <meta property="docfx:navrel" content="toc.html">
-    <meta property="docfx:tocrel" content="toc.html">
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
     
     
     
@@ -34,8 +34,8 @@
                 <span class="icon-bar"></span>
               </button>
               
-              <a class="navbar-brand" href="index.html">
-                <img id="logo" class="svg" src="logo.svg" alt="">
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
               </a>
             </div>
             <div class="collapse navbar-collapse" id="navbar">
@@ -57,12 +57,31 @@
         </div>
       </header>
       <div role="main" class="container body-content hide-when-search">
-        <div class="article row grid">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
 
-<p><a href="articles/框架说明.html">Rafy 帮助文档</a>
-文档版本号：1.5.700  </p>
+<p>本章说明如何使用额外的插件（如客户化插件）对另一插件（如产品插件）进行扩展。  </p>
+<h2 id="使用场景">使用场景</h2>
+<p>在<a href="\articles\Content\框架基础\产品线工程.html">产品线工程</a>中，项目的研发分为领域工程和应用工程。这个过程中会需要对领域工程中的内容进行大量的扩展。</p>
+<h2 id="分层与扩展点">分层与扩展点</h2>
+<p>下图中显示了一个产品插件的逻辑分层，以及各层对应的扩展点。</p>
+<p><img src="../../../images/领域插件的扩展点.png" alt=""></p>
+<h2 id="可扩展的内容">可扩展的内容</h2>
+<ul>
+<li>实体属性扩展<br>可以为产品插件的实体添加新的实体属性，也可以修改现有属性的一些元数据。</li>
+<li>实体配置扩展<br>可以随意修改产品插件中的实体配置，如实体的数据库映射。</li>
+<li>实体查询的扩展<br>可以添加新的实体查询。可以修改、替换产品插件中现有的查询的实现。</li>
+<li>实体保存的扩展<br>可以扩展产品插件实体在保存时的行为。</li>
+<li>领域逻辑的扩展<br>可以添加新的领域逻辑，也可以修改、替换产品插件中现有的领域逻辑。</li>
+</ul>
 </article>
           </div>
           
@@ -94,8 +113,8 @@
       </footer>
     </div>
     
-    <script type="text/javascript" src="styles/docfx.vendor.js"></script>
-    <script type="text/javascript" src="styles/docfx.js"></script>
-    <script type="text/javascript" src="styles/main.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
   </body>
 </html>

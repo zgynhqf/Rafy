@@ -1,0 +1,145 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>&#22330;&#26223; </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="&#22330;&#26223; ">
+    <meta name="generator" content="docfx 2.34.0.0">
+    
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../../styles/docfx.css">
+    <link rel="stylesheet" href="../../../styles/main.css">
+    <meta property="docfx:navrel" content="../../../toc.html">
+    <meta property="docfx:tocrel" content="../../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../../index.html">
+                <img id="logo" class="svg" src="../../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+
+<p>本节讲解如何在客户化插件中，为产品插件内的实体实现实体属性的扩展。  </p>
+<h2 id="场景">场景</h2>
+<p>当领域工程的产品插件开发并打包完成后，其中的属性往往不满足应用工程（项目）的需要。这时，应用工程的开发团队往往需要为产品插件中的实体添加新的实体属性。</p>
+<h2 id="扩展新属性">扩展新属性</h2>
+<p>下面代码示例如何为 Transaction 类型添加一个 string BranchName 的属性：</p>
+<pre><code class="lang-cs">[CompiledPropertyDeclarer]
+public static class TransactionExt
+{
+    #region string BranchName (分支名称)
+
+    /// &lt;summary&gt;
+    /// 分支名称 扩展属性。
+    /// &lt;/summary&gt;
+    public static readonly Property&lt;string&gt; BranchNameProperty =
+        P&lt;Transaction&gt;.RegisterExtension&lt;string&gt;(&quot;BranchName&quot;, typeof(TransactionExt));
+    /// &lt;summary&gt;
+    /// 获取 分支名称 属性的值。
+    /// &lt;/summary&gt;
+    public static string GetBranchName(this Transaction me)
+    {
+        return me.GetProperty(BranchNameProperty);
+    }
+    /// &lt;summary&gt;
+    /// 设置 分支名称 属性的值。
+    /// &lt;/summary&gt;
+    public static void SetBranchName(this Transaction me, string value)
+    {
+        me.SetProperty(BranchNameProperty, value);
+    }
+
+    #endregion
+}
+</code></pre><p>使用方法：</p>
+<pre><code class="lang-cs">var entity = new Transaction();
+entity.CustomerName = &quot;customerName&quot;;//一般属性
+entity.SetBranchName(&quot;branchName&quot;);//扩展属性使用方法：使用扩展方法来获取或设置属性的值
+</code></pre><h2 id="代码段">代码段</h2>
+<p>RafySDK 中代码段来辅助开发者生成上面的扩展属性代码：RafyPropertyExtension。
+关于代码段，见：<a href="\articles\Content\领域实体框架\其它\代码段.html">代码段</a>。</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../../styles/main.js"></script>
+  </body>
+</html>

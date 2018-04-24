@@ -1,0 +1,145 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>&#35282;&#33394;&#25554;&#20214;&#65288;Rafy.RBAC.RoleManagement&#65289; </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="&#35282;&#33394;&#25554;&#20214;&#65288;Rafy.RBAC.RoleManagement&#65289; ">
+    <meta name="generator" content="docfx 2.34.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+
+<p>Rafy基于角色的访问权限控制,主要包含四个插件，角色插件（Rafy.RBAC.RoleManagement）、用户角色插件（Rafy.RBAC.UserRoleManagement）、组织插件（Rafy.RBAC.GroupManagement）、数据权限插件（Rafy.RBAC.DataPermissionManagement）。其中角色插件是底层插件，其它三个插件都依赖角色插件，如下图。四个插件可以组合也可以独立使用，用户根据自己的实际场景自行下载相应的插件。
+        <para xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><br>
+        权限管理技术，一般使用基于角色访问控制技术RBAC（Role Based Access Control）。该技术被广泛运用于各个系统，非常容易掌握。该技术模型如下图示：
+        &lt;img src = ../../../images/RBAC权限模型.png  align = center /&gt;
+        &lt;img src = ../../../images/RBAC05.png  align = center /&gt;<p>
+<p>用户可以通过 Nuget Package Manager 搜索rafy.rbac并选择安装相应的插件。
+&lt;img src = ../../../images/RBAC插件01.png  align = center /&gt;  </p>
+<h2 id="角色插件rafyrbacrolemanagement">角色插件（Rafy.RBAC.RoleManagement）</h2>
+<p>领域关系图如下：
+</br>&lt;img src = ../../../images/RBAC01.png  align = center /&gt;<br>
+该插件主要包含角色和资源，每个资源包含多个功能操作，功能操作和角色进行关联。通过角色来控制功能权限。当系统只需要角色及功能权限时，可以选择此插件。<p>
+<h2 id="用户角色插件rafyrbacuserrolemanagement">用户角色插件（Rafy.RBAC.UserRoleManagement）</h2>
+<p>领域关系图如下：
+</br>&lt;img src = ../../../images/RBAC02.png  align = center /&gt;<br>
+该插件依赖账户插件（Rafy.Accounts）,和角色插件（Rafy.RBAC.RoleManagement），主要包含用户和角色的关系，一个用户可以有多个角色。如果系统启用用户和角色关联可以采用此插件。<p>
+<h2 id="组织插件rafyrbacgroupmanagement">组织插件（Rafy.RBAC.GroupManagement）</h2>
+<p>领域关系图如下：
+</br>&lt;img src = ../../../images/RBAC03.png  align = center /&gt;<br>
+该插件依赖账户插件（Rafy.Accounts）,和角色插件（Rafy.RBAC.RoleManagement），主要包含组织，组织和角色关系，组织和用户关系，一个组织可以包含多个用户，同时也可以有多个角色。当系统有组织模型时，可以选择此插件。<p>
+<h2 id="数据权限插件rafyrbacdatapermissionmanagement">数据权限插件（Rafy.RBAC.DataPermissionManagement）</h2>
+<p>领域关系图如下：
+</br>&lt;img src = ../../../images/RBAC04.png  align = center /&gt;<br>
+该插件依赖角色插件（Rafy.RBAC.RoleManagement），主要是对某个资源进行数据过滤。数据过滤类型提供两种。一种是基于用户进行过滤，一种是基于组织（及其下级组织）进行过滤。同时支持扩展，需要自己实现DataPermissionConstraintBuilder类。当系统提供数据权限时可以选择此插件。<p>
+<h2 id="插件使用">插件使用</h2>
+<p>在 DomainApp 中添加需要的插件：</p>
+<pre><code class="lang-cs">class JXCApp : DomainApp
+{
+    protected override void InitEnvironment()
+    {
+        //添加RBAC插件到 Rafy 应用程序集中。
+         RafyEnvironment.DomainPlugins.Add(new AccountsPlugin());
+         RafyEnvironment.DomainPlugins.Add(new RoleManagementPlugin());
+         RafyEnvironment.DomainPlugins.Add(new GroupManagementPlugin());
+         RafyEnvironment.DomainPlugins.Add(new UserRoleManagementPlugin());
+         RafyEnvironment.DomainPlugins.Add(new DataPermissionManagementPlugin());
+
+        base.InitEnvironment();
+    }
+}
+</code></pre></para></article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

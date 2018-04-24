@@ -1,0 +1,144 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>&#20351;&#29992;&#25991;&#20214;&#35760;&#24405; </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="&#20351;&#29992;&#25991;&#20214;&#35760;&#24405; ">
+    <meta name="generator" content="docfx 2.34.0.0">
+    
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../../styles/docfx.css">
+    <link rel="stylesheet" href="../../../styles/main.css">
+    <meta property="docfx:navrel" content="../../../toc.html">
+    <meta property="docfx:tocrel" content="../../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../../index.html">
+                <img id="logo" class="svg" src="../../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+
+<p>使用数据访问接口 <code>IDbAccesser</code>访问数据库时，系统可以记录所有运行过程中执行的 Sql 语句及相关日志。这对于开发人员做系统调试、性能优化提供了较好的帮助。<br>ORM 框架中所有的数据访问，都是直接或间接地通过 <code>IDbAccesser</code>类型来完成的，所以本机制可以显示框架与数据库的所有交互。  </p>
+<h2 id="使用文件记录">使用文件记录</h2>
+<p>要打开这个功能，需要到应用程序的配置文件中添加名为 Rafy.FileLogger.SqlTraceFileName 的应用程序配置项，该配置项的值是用于记录日志的文件地址，示例代码如下：</p>
+<pre><code class="lang-cs">&lt;configuration&gt;
+    &lt;appSettings&gt;
+        &lt;!--如果是监听应用程序所有的 SQL 语句，请打开以下配置--&gt;
+        &lt;add key=&quot;Rafy.FileLogger.SqlTraceFileName&quot; value=&quot;D:\SQLTraceLog.txt&quot;/&gt;
+    &lt;/appSettings&gt;
+&lt;/configuration&gt;
+</code></pre><p>打开此配置项后，文件即会被自动添加，其中日志的格式如下：</p>
+<pre><code class="lang-cs">2013/10/2 16:16:43
+Database:  Test_RafyUnitTest
+SELECT [Book].[Id],[Book].[Author],[Book].[BookCategoryId],[Book].[BookLocId],[Book].[Code],[Book].[Name],[Book].[Price],[Book].[Publisher]
+FROM [Book]
+ORDER BY [Book].[Id] ASC
+
+
+2013/10/2 16:16:43
+Database:  Test_RafyUnitTest
+INSERT INTO [Users] ([Age],[UserName],[TasksTime],[TestUserExt_UserCode]) VALUES (@p0,@p1,@p2,@p3)
+Parameters:10,&quot;QueryExt_User&quot;,0,&quot;DefaultUserCode&quot;
+
+
+2013/10/2 16:16:43
+Database:  Test_RafyUnitTest
+SELECT @@IDENTITY;
+
+
+2013/10/2 16:16:43
+Database:  Test_RafyUnitTest
+SELECT [Users].[Id],[Users].[Age],[Users].[UserName],[Users].[TasksTime],[Users].[TestUserExt_UserCode]
+FROM [Users]
+WHERE [Users].[Age] = @p0
+ORDER BY [Users].[Id] ASC
+Parameters:10
+</code></pre><h2 id="高级">高级</h2>
+<p>如果不想使用文件记录日志，或者想自定义 Sql 日志格式，请使用
+方法替换为自己的日志实体类型。</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../../styles/main.js"></script>
+  </body>
+</html>

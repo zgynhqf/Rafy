@@ -1,0 +1,209 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>&#31034;&#20363; </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="&#31034;&#20363; ">
+    <meta name="generator" content="docfx 2.34.0.0">
+    
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    <link rel="stylesheet" href="../../../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../../../styles/docfx.css">
+    <link rel="stylesheet" href="../../../../styles/main.css">
+    <meta property="docfx:navrel" content="../../../../toc.html">
+    <meta property="docfx:tocrel" content="../../../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../../../index.html">
+                <img id="logo" class="svg" src="../../../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+
+<p>一般属性用于存储实体中的一个值数据。  </p>
+<h2 id="示例">示例</h2>
+<p>以下代码为  Warehouse 类声明了一个名称为 Name  的一般属性。</p>
+<pre><code class="lang-cs">public static readonly Property&lt;string&gt; NameProperty = P&lt;Warehouse&gt;.Register(e =&gt; e.Name);
+public string Name
+{
+    get { return this.GetProperty(NameProperty); }
+    set { this.SetProperty(NameProperty, value); }
+}
+</code></pre><p>一般属性包含一个类型为 Property<t> 的属性标识，以及一个对应的 CLR 属性包装。<p>
+<h2 id="支持的属性类型">支持的属性类型</h2>
+<p>一般属性可以声明为任何类型。但是只支持以下类型属性类型（如果该类型是值类型，则包含相应的可空类型。）到数据库的映射：</p>
+<ul>
+<li>string</li>
+<li>bool、bool?</li>
+<li>int、int?, long, long?</li>
+<li>double、double?</li>
+<li>DateTime、DateTime?</li>
+<li>枚举类型、Nullable&lt;枚举类型&gt;</li>
+<li>Byte[]</li>
+</ul>
+<h2 id="属性逻辑扩展">属性逻辑扩展</h2>
+<p>一般属性的逻辑的扩展方式有以下三种：属性设置前回调、属性设置后回调、更换属性获取逻辑。这三种扩展都是通过在定义属性的同时指定该属性的元数据中的回调委托来完成的。</p>
+<ul>
+<li><p>编写属性变更前逻辑
+以下代码为 Warehouse（仓库）实体的 Name 属性添加属性变更前事件委托：</p>
+<pre><code class="lang-cs">public static readonly Property&lt;string&gt; NameProperty = P&lt;Warehouse&gt;.Register(e =&gt; e.Name, new PropertyMetadata&lt;string&gt;
+{
+ PropertyChangingCallBack = (o, e) =&gt; (o as Warehouse).OnNameChanging(e)
+});
+public string Name
+{
+ get { return this.GetProperty(NameProperty); }
+ set { this.SetProperty(NameProperty, value); }
+}
+protected virtual void OnNameChanging(ManagedPropertyChangingEventArgs&lt;string&gt; e)
+{
+ if (string.IsNullOrWhiteSpace(e.Value))
+ {
+     e.Cancel = true;
+ }
+ if (e.Value.Length &gt; 10)
+ {
+     e.CoercedValue = e.Value.Substring(0, 10);
+ }
+}
+</code></pre></li>
+</ul>
+<p>通过设置 PropertyMetadata.PropertyChangingCallBack 委托，来调用实体的实例方法 OnNameChanging，完成了两个功能：如果设置的值是空字符串，则忽略本次设置；如果设置的字符串长度大于 10，则只取字符串的前 10 个字符作为仓库的名称。同时，通过把 OnNameChanging 设计为实例虚方法，可以支持继承此类的子类方便地重写此处的逻辑。</p>
+<ul>
+<li><p>编写属性变更后逻辑
+以下代码为 Warehouse（仓库）实体的 Name 属性添加属性变更后事件委托：</p>
+<pre><code class="lang-cs">public static readonly Property&lt;string&gt; NameProperty = P&lt;Warehouse&gt;.Register(e =&gt; e.Name, new PropertyMetadata&lt;string&gt;
+{
+ PropertyChangedCallBack = (o, e) =&gt; (o as Warehouse).OnNameChanged(e)
+});
+public string Name
+{
+ get { return this.GetProperty(NameProperty); }
+ set { this.SetProperty(NameProperty, value); }
+}
+protected virtual void OnNameChanged(ManagedPropertyChangedEventArgs e)
+{
+ string oldName = e.OldValue as string;
+ string newName = e.NewValue as string;
+ LogNameChanged(oldName, newName);
+}
+</code></pre></li>
+</ul>
+<p>通过设置 PropertyMetadata.PropertyChangedCallBack 委托，来调用实体的实例方法 OnNameChanged 方法。OnNameChanged 可以获取到属性变更前后的两个值，并记录到名称变更日志中。<br>由于属性变更后事件使用场景较多，实体框架还提供了更简单的一种处理方法：实体的属性值在变更时，都会调用实体的<code>OnPropertyChanged</code>方法。<code>Entity.OnPropertyChanged(ManagedPropertyChangedEventArgs e)</code>虚方法，完成与上段代码相同的逻辑：</p>
+<pre><code class="lang-cs">protected override void OnPropertyChanged(ManagedPropertyChangedEventArgs e)
+{
+   if (e.Property == NameProperty)
+   {
+       string oldName = e.OldValue as string;
+       string newName = e.NewValue as string;
+       LogNameChanged(oldName, newName);
+   }
+
+   base.OnPropertyChanged(e);
+}
+</code></pre><ul>
+<li><p>更换属性值获取逻辑<br> 一般情况下，只需要编写属性变更前逻辑就可以完全控制属性存储的值了。但是框架还额外提供了属性的获取逻辑委托，使得开发人员可以重写属性获取逻辑。（尽量使用属性变更前逻辑。）<br> 以下代码为 Warehouse（仓库）实体的 Name 属性更换属性获取强制逻辑：</p>
+<pre><code class="lang-cs">public static readonly Property&lt;string&gt; NameProperty = P&lt;Warehouse&gt;.Register(e =&gt; e.Name, new PropertyMetadata&lt;string&gt;
+{
+ CoerceGetValueCallBack = (o, v) =&gt; (o as Warehouse).CoerceGetName(v)
+});
+public string Name
+{
+ get { return this.GetProperty(NameProperty); }
+ set { this.SetProperty(NameProperty, value); }
+}
+protected virtual string CoerceGetName(string value)
+{
+ if (value.Length &gt; 10)
+ {
+     return value.Substring(0, 10);
+ }
+ return value;
+}
+</code></pre></li>
+</ul>
+<p>通过设置 PropertyMetadata.CoerceGetValueCallBack 委托，调用实体的实例方法 CoerceGetName，完成了与属性变更前事件相同的逻辑：如果名称的长度大于 10，则只返回前 10 个字符作为仓库的名称。而与重写设置前事件不同的地方在于，这个属性内部存储的值实际上长度是超过 10 的，只是通过 GetProperty 只能获取前 10 个字符而已。例如，如果设置了这个属性值为 &quot;123456789012345&quot;，在存储数据库中后，它的长度就是这个字符串，但是通过属性的获取方法，返回的是 &quot;1234567890&quot;。</p>
+</t></article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../../../styles/main.js"></script>
+  </body>
+</html>

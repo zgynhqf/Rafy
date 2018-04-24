@@ -1,0 +1,223 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>&#31616;&#20171; </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="&#31616;&#20171; ">
+    <meta name="generator" content="docfx 2.34.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h2 id="简介">简介</h2>
+
+<p>缓存 -- 日常开发常用基础组件之一。
+在 Rafy 这套框架里面也为大家提供了几个常用的缓存组件（不够还可以自己扩展）。</p>
+<ul>
+<li>内存缓存(MemoryCache)
+使用当前服务器的内存或客户端所在电脑的内存缓存数据项。
+特点：速度快的要命。</li>
+<li>磁盘缓存(SQLCompactCache)
+使用 SQL Compact 本地数据库缓存数据项。
+特点：缓存数据项不会因为应用宕机或离线而丢失。</li>
+<li>每个 HTTP 请求的缓存(PerHttpRequestCache)
+在每个 http 请求中，第一次获取数据时进行一次缓存，在当前生命周期内可以直接从缓存中读取数据项。http 生命周期结束，缓存自动释放。
+特点：只能用于 .NET Web 应用程序。被缓存数据项仅在 http 生命周期内有效。
+建议：不要存放过大的数据。以避免增加 GC 的压力。</li>
+<li>使用内存缓存和磁盘缓存的二级缓存(HybirdCache)
+同时拥有内存缓存和磁盘缓存的特点。
+上面列出来了 Rafy 中实现的缓存组件，也说明了每个缓存组件的特点。那么具体使用时选用哪个组件呢？这没有一个固定答案，需要结合自己的应用程序的业务场景来选择。</li>
+</ul>
+<h2 id="使用示例">使用示例</h2>
+<p>在 Cache 这个抽象类中提供了一个静态属性，也是 Rafy 缓存组件中默认的实现，即 MemoryCache。如果要使用其它缓存组件请参见下面的示例。</p>
+<ul>
+<li><p>Cache 的默认实现（即 MemoryCache）的开箱即用的使用方式</p>
+<pre><code class="lang-cs">// 添加缓存
+var result = Cache.Default.Add(&quot;rafy&quot;, &quot;rafy orm v5&quot;, null);
+Assert.IsTrue(result);
+</code></pre></li>
+</ul>
+<p>// 获取缓存
+var cacheItem = Cache.Default.Get(&quot;rafy&quot;);
+Assert.AreEqual(cacheItem.ToString(), &quot;rafy orm v5&quot;);</p>
+<p>// 移除缓存
+Cache.Default.Remove(&quot;rafy&quot;);</p>
+<pre><code>
+- PerHttpRequestCache
+在一个 HTTP 生命周期内只需要 new 一次。尽量配合 IoC/DI 框架使用。
+
+```cs
+// 创建一个 PerHttpRequestCache 对象的实例
+var preHttpRequestCache = new PerHttpRequestCache();
+
+// 添加缓存
+var result = preHttpRequestCache.Add(&quot;rafy&quot;, &quot;rafy orm v5&quot;, null);
+Assert.IsTrue(result);
+
+// 获取缓存
+var cacheItem = preHttpRequestCache.Get(&quot;rafy&quot;);
+Assert.AreEqual(cacheItem.ToString(), &quot;rafy orm v5&quot;);
+
+// 移除缓存
+preHttpRequestCache.Remove(&quot;rafy&quot;);
+</code></pre><ul>
+<li><p>SQLCompactCache</p>
+<pre><code class="lang-cs">// 创建一个 SQLCompactCache 对象的实例
+var sqlCompactCache = new SQLCompactCache(&quot;rafy_cache.sdf&quot;);
+</code></pre></li>
+</ul>
+<p>// 添加缓存
+var result = sqlCompactCache.Add(&quot;rafy&quot;, &quot;rafy orm v5&quot;, null);
+Assert.IsTrue(result);</p>
+<p>// 获取缓存
+var cacheItem = sqlCompactCache.Get(&quot;rafy&quot;);
+Assert.AreEqual(cacheItem.ToString(), &quot;rafy orm v5&quot;);</p>
+<p>// 移除缓存
+sqlCompactCache.Remove(&quot;rafy&quot;);</p>
+<pre><code>
+- HybirdCache
+
+```cs
+// 创建一个 HybirdCache 对象的实例
+var hybirdCache = new HybirdCache(&quot;rafy_cache.sdf&quot;);
+
+// 添加缓存
+var result = hybirdCache.Add(&quot;rafy&quot;, &quot;rafy orm v5&quot;, null);
+Assert.IsTrue(result);
+
+// 获取缓存
+var cacheItem = hybirdCache.Get(&quot;rafy&quot;);
+Assert.AreEqual(cacheItem.ToString(), &quot;rafy orm v5&quot;);
+
+// 移除缓存
+hybirdCache.Remove(&quot;rafy&quot;);
+</code></pre><h2 id="扩展">扩展</h2>
+<p>在分布式环境中应用都是群集部署。大家使用缓存时一般会选择 Redis 或 Memcached 或 MongoDB 等等。目前 Rafy 并没有提供对上一句所说的这些分布式缓存框架的支持。
+          但大家可以通过简单的扩展就让 Rafy 支持这些分布式缓存框架。假设我们要让 Rafy 支持 Redis 。
+示例代码</p>
+<pre><code class="lang-cs">public sealed class RedisCache : Cache
+{
+    protected internal override StoredValue GetCacheItemCore(string region, string key)
+    {
+        // 使用 Redis 驱动获取指定域的缓存项
+        throw new NotImplementedException();
+    }
+
+    protected internal override bool AddCore(string region, string key, StoredValue value)
+    {
+        // 使用 Redis 驱动添加缓存项到指定域
+        throw new NotImplementedException();
+    }
+
+    protected internal override void RemoveCore(string region, string key)
+    {
+        // 使用 Redis 驱动移除指定域的缓存项
+        throw new NotImplementedException();
+    }
+
+    protected internal override void ClearRegionCore(string region)
+    {
+        // 使用 Redis 驱动移除指定域的所有缓存项
+        throw new NotImplementedException();
+    }
+
+    protected internal override void ClearCore()
+    {
+        // 使用 Redis 驱动移除所有缓存项
+        throw new NotImplementedException();
+    }
+}
+</code></pre></article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,218 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>&#35828;&#26126; </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="&#35828;&#26126; ">
+    <meta name="generator" content="docfx 2.34.0.0">
+    
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../../styles/docfx.css">
+    <link rel="stylesheet" href="../../../styles/main.css">
+    <meta property="docfx:navrel" content="../../../toc.html">
+    <meta property="docfx:tocrel" content="../../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../../index.html">
+                <img id="logo" class="svg" src="../../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+
+<p>创建你的第一个 Rafy 应用程序  </p>
+<h2 id="说明">说明</h2>
+<p>通过完成本示例，你将学会如何建立一个领域实体程序集，并建立一个应用层程序使用这些领域实体，完成数据的增删改查。
+本示例使用 SQLCE 作为示例的数据库。你也可以使用其它的数据库，详情参见：<a href="\articles\Content\领域实体框架\ORM\多数据库支持.html">多数据库支持</a>。</p>
+<h2 id="环境">环境</h2>
+<p>运行此示例需要安装以下组件：</p>
+<ul>
+<li>Visual Studio 2012</li>
+<li><a href="\articles\Content\领域实体框架\安装.html">Rafy SDK</a></li>
+</ul>
+<h2 id="建立领域实体程序集">建立领域实体程序集</h2>
+<p>本节中，你将会为“进销存”管理系统建立一个对应名为 JXC 的领域实体程序集。
+<strong>步骤</strong></p>
+<ol>
+<li><p>新建项目
+点击新建项目，在 Visual C# 项目类型中找到“Rafy Domain Library”，名称中填入：&quot;JXC&quot;，选择项目位置后，点击确定。</p>
+<p><img src="../../../../images/第一个程序01.png" alt=""></p>
+</li>
+<li><p>这时，会弹出<strong>添加项目</strong>窗口。在此窗口中，填写实体命名空间为 JXC，点击确定。</p>
+<p><img src="../../../../images/第一个程序02.png" alt=""></p>
+</li>
+<li><p>文件检查
+至此，VS 会创建一个名为 JXC 的解决方案，其中包含了一个名为 JXC 的 C# 程序集。如图：</p>
+<p><img src="../../../../images/第一个程序03.png" alt=""></p>
+<p>JXC 程序集中包含了以下内容：**Entities **文件夹</p>
+<ul>
+<li>**/Entities/ ** 文件夹：用于存放所有实体类。                                        </li>
+<li>**/Entities/JXCEntity.cs ** ：将作为 JXC 领域空间下所有实体类的基类。参见：<a href="\articles\Content\领域实体框架\领域实体.html">领域实体</a>。                                        </li>
+<li>**/JXCPlugin.cs ** ：领域插件主文件。参见：<a href="\articles\Content\框架基础\插件化架构.html">插件化架构</a>。<br>编译整个解决方案，提示编译成功。</li>
+</ul>
+</li>
+</ol>
+<h2 id="添加实体类">添加实体类</h2>
+<p>本节将会在领域项目中添加实体类：仓库实体。
+<strong>步骤</strong></p>
+<ol>
+<li><p>添加领域实体类文件
+在<strong>Entities **文件夹上点击右键，选择添加-添加项，在弹出的</strong>添加项**窗口中，选择<code>Rafy Domain Entity</code>项，并在名称中输入：“Warehouse&quot;。点击添加。如图：</p>
+<p><img src="../../../../images/第一个程序04.png" alt=""></p>
+</li>
+<li><p>这时，弹出<strong>添加领域实体</strong>窗口。修改**领域名称 **项为“仓库”，勾选：“同时生成仓库”（该选项会把实体的仓库也生成在同一个文件中），点击确定。如图：</p>
+<p><img src="../../../../images/第一个程序05.png" alt=""></p>
+</li>
+<li><p>在实体中添加一般属性
+在打开的<strong>Warehouse.cs **代码编辑器中，找到并展开</strong>一般属性 **代码区域。</p>
+<p>在这个区域块中，输入<strong>RafyP</strong>，VisualStudio 会立刻显示以 RafyP 开头的代码段（相关内容，参见：<a href="\articles\Content\领域实体框架\其它\代码段.html">代码段</a>如下图：</p>
+<p><img src="../../../../images/第一个程序06.png" alt=""></p>
+<p>选择 RafyProperty，并按下 Tab 键。在生成的代码中录入类型为<strong>string</strong>、名称为<strong>Name</strong>的属性。这时，会生成以下代码：</p>
+</li>
+</ol>
+<pre><code class="lang-csharp">public static readonly Property&lt;string&gt; NameProperty = P&lt;Warehouse&gt;.Register(e =&gt; e.Name);
+/// &lt;summary&gt;
+/// 名称
+/// &lt;/summary&gt;
+public string Name
+{
+    get { return this.GetProperty(NameProperty); }
+    set { this.SetProperty(NameProperty, value); }
+}
+</code></pre><ol>
+<li>编译解决方案
+这时，编译解决方案，提示成功。</li>
+</ol>
+<h2 id="建立控制台程序集">建立控制台程序集</h2>
+<p>本节中，你将会创建一个控制台应用程序。它使用刚才创建的 JXC 的领域实体程序集，来实现与用户的交互。
+<strong>步骤</strong></p>
+<ol>
+<li><p>新建项目
+在解决方案中右键，点击添加-新的项目，在弹出的<strong>新建项目</strong>窗口中，在 Visual C# 项目类型中找到“Rafy Console App”，名称中填入：&quot;ConsoleApp&quot;，点击确定。</p>
+<p><img src="../../../../images/第一个程序07.png" alt=""></p>
+</li>
+<li><p>这时，会弹出<strong>添加项目</strong>窗口。在此窗口中，填写实体命名空间为 JXC，点击确定。</p>
+<p><img src="../../../../images/第一个程序08.png" alt=""></p>
+<p>添加的控制台项目中有以下文件/文件夹：</p>
+<ul>
+<li>**/amd64/ ** 文件夹：64位机的 SQLCE 程序集。                                        </li>
+<li>**/x86/ ** 文件夹：32位机的 SQLCE 程序集。                                        </li>
+<li>**/App.config ** 文件：应用程序配置文件，其中主要包含了 JXC 空间中领域实体所映射的数据库连接；以及 SQLCE 数据库相关配置。                                        </li>
+<li>**/Program.cs ** 文件：应用程序入口文件。                                        </li>
+<li>在 ConsoleApp 项目中添加 JXC 实体项目的引用。</li>
+</ul>
+</li>
+<li>编译并运行解决方案
+这时编译整个解决方案，会提示编译成功。
+设置 ConsoleApp 为启动项目，按 Ctrl+F5 运行程序。程序成功运行。
+控制台项目只是一个示例，展示如何在应用程序中使用领域实体类。你可以在任意的应用程序中，添加与本项目类似的代码，也可以一样使用领域实体程序集。
+另外，控制台项目模板是为了方便 SQLCE 数据库的使用而创建的。如果你使用的是 SqlServer，则只需要手动引用 Rafy 程序集，并启动领域项目即可。</li>
+</ol>
+<h2 id="使用领域实体">使用领域实体</h2>
+<p><strong>步骤</strong></p>
+<ol>
+<li>在主函数中 new DomainApp().Startup(); 代码行后加入以下代码：</li>
+</ol>
+<pre><code class="lang-cs">var repo = RF.ResolveInstance&lt;WarehouseRepository&gt;();
+repo.Save(new Warehouse { Name = &quot;Name&quot; });
+var items = repo.CountAll();
+Console.WriteLine(&quot;实体存储成功，目前数据库中存在 {0} 条数据。&quot;, items);
+var list = repo.GetAll();
+foreach (var item in list)
+{
+    Console.WriteLine(item.Name);
+}
+</code></pre><ol>
+<li>运行整个项目
+控制台中输出目前数据库中存在的数据条数，以及所有仓库的名称。
+多次运行项目，会发现数据库中的数据条数不断添加。</li>
+<li>查看生成的数据库
+Rafy 内置了数据库的同步功能，所以在整个研发过程中，可以不需要进行任何数据库的开发。
+打开 /ConsoleApp/bin/Debug/Data/ 目录，可以看到已经生成了一个 JXC.sdf 文件，这是一个 SQLCE 4.0 的数据库文件。
+有关数据库生成的相关内容，参见：<a href="\articles\Content\领域实体框架\ORM\数据库同步功能.html">数据库同步功能</a>。
+关于如何切换为使用 Sql Server 的相关内容，参见：<a href="\articles\Content\领域实体框架\快速试用\如何：连接到 Sql Server 数据库.html">如何：连接到 Sql Server 数据库</a>。</li>
+</ol>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../../styles/main.js"></script>
+  </body>
+</html>

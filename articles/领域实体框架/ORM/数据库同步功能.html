@@ -1,0 +1,146 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>CodeFirst &#24320;&#21457;&#27169;&#24335; </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="CodeFirst &#24320;&#21457;&#27169;&#24335; ">
+    <meta name="generator" content="docfx 2.34.0.0">
+    
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../../styles/docfx.css">
+    <link rel="stylesheet" href="../../../styles/main.css">
+    <meta property="docfx:navrel" content="../../../toc.html">
+    <meta property="docfx:tocrel" content="../../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../../index.html">
+                <img id="logo" class="svg" src="../../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h2 id="codefirst-开发模式">CodeFirst 开发模式</h2>
+
+<p>传统的 ORM 框架都是 DatabaseFirst 的开发模式，也就是先设计好数据库，再编写实体的代码，并配置 ORM 框架中实体与数据库间的映射关系。由于要同时关心这三个不同内容，使得开发人员的工作量变得很大，开发效率低下。<br>在 Rafy 框架中，提倡开发人员采用 CodeFirst 的开发模式开发领域实体。即先编写领域实体的属性、关系的代码，然后由框架自动配置映射规则并生成目标数据库。这样的开发模式下，由于框架生成的数据库满足第三范式，使得开发人员通常都不用关心数据库结构及映射，大大提高开发效率。<br>框架的数据库同步模块，不但支持一次性生成完整的数据库，更重要的是支持渐近式更新数据库，会自动把实体上的变更实时同步到目标数据库上。例如，当为实体添加一个新的属性后，框架会为对应的表添加新的列，而不会删除历史表及数据。<br>优势：      </p>
+<ul>
+<li>这种方式和敏捷开发的模式非常相似，可以不用一次性把实体类设计完整，而是随着对需求的理解越来越深刻，再逐步地完善实体类、数据库。</li>
+<li>这也使得拥抱变化万能可能。软件开发过程中，需求变化时，数据库字段也经常会发生变化。而使用渐近式开发模式后，任何时候都可以随意地添加新的字段、删除旧的字段，而不会影响其它数据。</li>
+</ul>
+<h2 id="使用方法">使用方法</h2>
+<p>要打开数据库同步功能，我们需要在领域插件类型中使用领域服务  MigrateService 来实现。以下代码在 JXC 领域插件中，开启了 JXC 数据库自动同步的功能：</p>
+<pre><code class="lang-cs">public class JXCPlugin : DomainPlugin
+{
+    public override void Initialize(IApp app)
+    {
+        //在应用程序运行时启动时，才升级数据库。
+        app.RuntimeStarting += (o, e) =&gt; AutoUpdateDb();
+    }
+
+    /// &lt;summary&gt;
+    /// 自动升级数据库。
+    /// &lt;/summary&gt;
+    private static void AutoUpdateDb()
+    {
+        var svc = ServiceFactory.Create&lt;MigrateService&gt;();
+        svc.Options = new MigratingOptions
+        {
+            //ReserveHistory = true,//ReserveHistory 表示是否需要保存所有数据库升级的历史记录
+            //RunDataLossOperation = DataLossOperation.All,//要支持数据库表、字段的删除操作，取消本行注释。
+            Databases = new string[] { JXCEntityRepository.DbSettingName }
+        };
+        svc.Invoke();
+    }
+}
+</code></pre><p>使用时，需要注意以下几点：</p>
+<ul>
+<li>自动同步数据库的代码，需要在应用程序运行时生成周期开始时执行。这时，应用程序中所有实体的属性已经初始化完成，才能同步出正确的数据库。</li>
+<li>默认没有开启日志记录功能，可以设置 ReserveHistory = true 来记录所有数据库同步日志。
+打开日志记录功能后，框架会自动生成一个专门用于存储日志的数据库，该库可通过 DbMigrationHistory 连接字符串配置名进行配置。</li>
+<li>默认不会执行所有会造成数据丢失的操作（删除列、删除表），要执行删除操作，需要设置 RunDataLossOperation 属性。</li>
+</ul>
+<h2 id="高级">高级</h2>
+<p>如果期望更细粒度地控制数据库同步功能，可以使用 RafyDbMigrationContext 类型来完成。</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../../styles/main.js"></script>
+  </body>
+</html>

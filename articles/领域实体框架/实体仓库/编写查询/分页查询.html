@@ -1,0 +1,146 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>PagingInfo &#20998;&#39029;&#20449;&#24687;&#31867;&#22411; </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="PagingInfo &#20998;&#39029;&#20449;&#24687;&#31867;&#22411; ">
+    <meta name="generator" content="docfx 2.34.0.0">
+    
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    <link rel="stylesheet" href="../../../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../../../styles/docfx.css">
+    <link rel="stylesheet" href="../../../../styles/main.css">
+    <meta property="docfx:navrel" content="../../../../toc.html">
+    <meta property="docfx:tocrel" content="../../../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../../../index.html">
+                <img id="logo" class="svg" src="../../../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h2 id="paginginfo-分页信息类型">PagingInfo 分页信息类型</h2>
+
+<p>PagingInfo 是一种分页查询的实现模式：在查询数据时，可以指定查询的具体页码 PageIndex、一页所含数据行数 PageSize，就可以把该页的数据显示在界面上了。但是，在进行分页时，往往要在界面中显示一个分页脚，用于显示当前页号、所有页数。所以在进行查询的同时，还需要对结果集中所有数据的总行数进行统计，并把这个总行数与查询出的实体列表数据一同返回。所以，PagingInfo 添加了额外的两个属性，IsNeedCount、TotalCount，当 IsNeedCount 被设置为真时，框架在数据层进行查询时，会把统计出来的总行数赋值给 TotalCount。这样，上层（界面层）在调用查询方法完成后，不但获取到了实体的列表，也获取到了总行数。<br>PagingInfo 公有接口如下：</p>
+<pre><code class="lang-cs">public class PagingInfo
+{
+    public static readonly PagingInfo Empty;
+
+    public PagingInfo(int pageNumber, int pageSize);
+    protected PagingInfo(SerializationInfo info, StreamingContext context);
+    public PagingInfo(int pageNumber, int pageSize, bool isNeedCount);
+    public PagingInfo(int pageNumber, int pageSize, int totalCount);
+
+    public bool HasNextPage { get; }
+    public bool HasPreviousPage { get; }
+    public bool IsNeedCount { get; set; }
+    public int PageCount { get; }
+    public int PageNumber { get; set; }
+    public int PageSize { get; set; }
+    public int TotalCount { get; set; }
+
+    public bool IsEmpty();
+
+    public static bool IsNullOrEmpty(PagingInfo pagingInfo);
+}
+</code></pre><h2 id="分页查询">分页查询</h2>
+<p>Rafy 领域实体框架中的分页查询都是在数据层进行分页。在进行实体查询时，对于所有支持
+类型为参数的方法，都是支持分页的方法。例如：
+以下代码示例如何使用 PagingInfo 类型：</p>
+<pre><code class="lang-cs">PagingInfo pagingInfo = new PagingInfo(2, 20, true);//第 2 页，一页 20 个，并需要返回总行数。
+
+//本行执行实体查询，在数据库中进行分页（Sql 语句分页），返回需要的 20 个实体，
+//并查询出满足条件的实体个数，给 pagingInfo.TotalCount 赋值。
+WarehouseRepository repo = RF.ResolveInstance&lt;WarehouseRepository&gt;();
+WarehouseList list = repo.GetAll(pagingInfo);
+
+GridView.DataSource = list;//绑定到界面的列表
+Pager.PageNumber = pagingInfo.PageNumber;
+Pager.PageSize = pagingInfo.PageSize;
+Pager.TotalCount = pagingInfo.TotalCount;//总行数
+</code></pre><p>关于分页的更多信息，可以参见博文：
+<a href="http://www.cnblogs.com/zgynhqf/archive/2013/01/23/2873583.html">Rafy ORM 中的分页查询设计</a></p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../../../styles/main.js"></script>
+  </body>
+</html>

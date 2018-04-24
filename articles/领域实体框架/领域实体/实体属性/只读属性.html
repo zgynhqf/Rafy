@@ -5,17 +5,17 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title> </title>
+    <title>&#35828;&#26126; </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content=" ">
+    <meta name="title" content="&#35828;&#26126; ">
     <meta name="generator" content="docfx 2.34.0.0">
     
-    <link rel="shortcut icon" href="favicon.ico">
-    <link rel="stylesheet" href="styles/docfx.vendor.css">
-    <link rel="stylesheet" href="styles/docfx.css">
-    <link rel="stylesheet" href="styles/main.css">
-    <meta property="docfx:navrel" content="toc.html">
-    <meta property="docfx:tocrel" content="toc.html">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    <link rel="stylesheet" href="../../../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../../../styles/docfx.css">
+    <link rel="stylesheet" href="../../../../styles/main.css">
+    <meta property="docfx:navrel" content="../../../../toc.html">
+    <meta property="docfx:tocrel" content="../../../toc.html">
     
     
     
@@ -34,8 +34,8 @@
                 <span class="icon-bar"></span>
               </button>
               
-              <a class="navbar-brand" href="index.html">
-                <img id="logo" class="svg" src="logo.svg" alt="">
+              <a class="navbar-brand" href="../../../../index.html">
+                <img id="logo" class="svg" src="../../../../logo.svg" alt="">
               </a>
             </div>
             <div class="collapse navbar-collapse" id="navbar">
@@ -57,12 +57,30 @@
         </div>
       </header>
       <div role="main" class="container body-content hide-when-search">
-        <div class="article row grid">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
+<h2 id="说明">说明</h2>
 
-<p><a href="articles/框架说明.html">Rafy 帮助文档</a>
-文档版本号：1.5.700  </p>
+<p>只读属性用于表示实体中的一个只读的数据。只读属性主要为界面展现层设计。如果只是使用 Rafy 的领域实体进行数据访问，则可以不使用此属性。<br>以下代码为 Warehouse （仓库）类声明了一个名称为 FullName （全名称）的只读属性，拼接仓库编码与仓库名称的字符串后返回。</p>
+<pre><code class="lang-cs">public static readonly Property&lt;string&gt; FullNameProperty = P&lt;Warehouse&gt;.RegisterReadOnly(
+    e =&gt; e.FullName, e =&gt; e.GetFullName(), NameProperty, CodeProperty);
+public string FullName
+{
+    get { return this.GetProperty(FullNameProperty); }
+}
+private string GetFullName()
+{
+    return this.Code + &quot;（&quot; + this.Name + &quot;)&quot;;
+}
+</code></pre><p>在使用 RegisterReadOnly 方法时，最后的两个参数分别是 FullNameProperty 只读属性依赖的两个一般属性。这里表示 FullName 是通过 Name 与 Code 两个属性计算出来的，一旦 Name、Code 属性发生改变，FullName 对应的属性变更事件也会同时发生，如果界面绑定了这个只读属性，则会自动刷新。</p>
 </article>
           </div>
           
@@ -94,8 +112,8 @@
       </footer>
     </div>
     
-    <script type="text/javascript" src="styles/docfx.vendor.js"></script>
-    <script type="text/javascript" src="styles/docfx.js"></script>
-    <script type="text/javascript" src="styles/main.js"></script>
+    <script type="text/javascript" src="../../../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../../../styles/main.js"></script>
   </body>
 </html>

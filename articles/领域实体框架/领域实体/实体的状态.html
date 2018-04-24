@@ -1,0 +1,146 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>&#21333;&#20010;&#23454;&#20307;&#30340;&#29366;&#24577; </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="&#21333;&#20010;&#23454;&#20307;&#30340;&#29366;&#24577; ">
+    <meta name="generator" content="docfx 2.34.0.0">
+    
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../../styles/docfx.css">
+    <link rel="stylesheet" href="../../../styles/main.css">
+    <meta property="docfx:navrel" content="../../../toc.html">
+    <meta property="docfx:tocrel" content="../../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../../index.html">
+                <img id="logo" class="svg" src="../../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h2 id="单个实体的状态">单个实体的状态</h2>
+
+<p>实体仓库对实体的保存操作，是通过唯一的一个 Save 方法来完成的。而具体是执行 CDU 中的哪一个操作，则由传入的实体的状态来决定。实体的状态由 Entity.PersistenceStatus 属性决定，该属性的类型是枚举，如下：</p>
+<pre><code class="lang-cs">namespace Rafy.Domain
+{
+    /// &lt;summary&gt;
+    /// 实体状态
+    /// &lt;/summary&gt;
+    public enum PersistenceStatus
+    {
+        /// &lt;summary&gt;
+        /// 未改动
+        /// &lt;/summary&gt;
+        Unchanged = 0,
+        /// &lt;summary&gt;
+        /// 数据变更。仓库保存时，需要执行更新操作。
+        /// &lt;/summary&gt;
+        Modified = 1,
+        /// &lt;summary&gt;
+        /// 新对象。仓库保存时，需要执行添加操作。
+        /// &lt;/summary&gt;
+        New = 2,
+        /// &lt;summary&gt;
+        /// 已删除。仓库保存时，需要执行删除操作。
+        /// &lt;/summary&gt;
+        Deleted = 3
+    }
+}
+</code></pre><p>单一实体对象在状态：New、Deleted、Modified 中，并通过仓库保存时，对应在数据库中执行 Insert、Delete、Update(CDU) 操作。<br>一些 ORM 框架实体类的实体状态中，还会额外有 Detached 或 Attached 状态，用于表示分布式应用程序环境下，实体是否已经与上下文脱离关系。而 Rafy 中的实体，本身就是脱离仓库而存在的，可直接用于分布式传输，所以没有这两个状态。（也就是说，通过仓库查询出来的实体，可直接绑定界面、传输至客户端，当界面层/客户端把修改过的实体传输回业务逻辑层并通过仓库进行保存时，无需考虑是否附加到仓库上下文中，直接保存即可。）<br>为了方便状态的检测，Entity 还额外定义了几个冗余的属性：Entity.IsDeleted、Entity.IsNew、Entity.IsModified
+用于检测对象是否已经被删除、是否刚创建、是否已经被使用。另外，Entity.IsSelfDirty 属性用于表示本实体是否处于需要保存的状态，即以上三种状态中任一一种。</p>
+<h2 id="实体状态的转换">实体状态的转换</h2>
+<p>实体状态的自动转换：</p>
+<ul>
+<li>当使用 new 操作符刚创建一个实体时，它的状态是 New；此实体如果通过仓库保存后，它的状态变更为 Unchanged。                        </li>
+<li>一个刚从仓库中查询出来的实体，它的状态是 Unchanged；对此实体的任一属性进行修改时，它的状态自动变更为 Modified；如果继续通过仓库保存后，状态则会变回 Unchanged。                        </li>
+<li>一个实体从实体列表中移除时（例如使用 EntityList.Remove 方法），它的状态变为 Deleted；通过仓库保存该实体后，它的状态变更为 New。（一个从仓库中完成删除后的实体，对于仓库来说，将是一个全新的实体。）<br>实体状态的手动转换：在自动维护状态的基础上，也可以通过实体的以下方法来强制直接改变实体的状态：
+。（注意，MarkSelfDirty 方法只会在实体状态为 Unchanged 时，把状态变更为 Modified；这样防止误把处于 New、Deleted 状态的实体直接改变为 Modified 而导致保存失败。）</li>
+</ul>
+<h2 id="组合实体的状态">组合实体的状态</h2>
+<p>在通过实体仓库的 Save(Entity entity) 方法保存传入的实体对象时，其实是对以该实体为根的整个组合实体树进行保存。也就是说，组合实体树中任一实体状态变更时，都会被保存。    </p>
+<p>Entity.IsDirty属性表示整个组合实体是否需要保存。当该实体或者该实体组合中的组合子实体中，任一实体的 IsSelfDirty 状态为真时，整个组合实体的 IsDrity 为真。<br>相应的，可以使用 Entity.MarkSaved()方法，来把整个组合实体树中的所有实体都标记为 Unchanged 状态。</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../../styles/main.js"></script>
+  </body>
+</html>

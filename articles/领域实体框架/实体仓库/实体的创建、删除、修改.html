@@ -1,0 +1,178 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>&#23454;&#20307;&#29366;&#24577; </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="&#23454;&#20307;&#29366;&#24577; ">
+    <meta name="generator" content="docfx 2.34.0.0">
+    
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../../styles/docfx.css">
+    <link rel="stylesheet" href="../../../styles/main.css">
+    <meta property="docfx:navrel" content="../../../toc.html">
+    <meta property="docfx:tocrel" content="../../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../../index.html">
+                <img id="logo" class="svg" src="../../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h2 id="实体状态">实体状态</h2>
+
+<p>实体仓库对实体的创建、删除、修改操作，与实体的状态密切相关。关于实体的状态，参见：
+<a href="\articles\Content\领域实体框架\领域实体\实体的状态.html">实体的状态</a></p>
+<h2 id="创建实体">创建实体</h2>
+<p>可使用  new 操作符来创建新实体，并直接保存到仓库中。</p>
+<pre><code class="lang-cs">BookRepository repo = RF.ResolveInstance&lt;BookRepository&gt;();
+repo.Save(new Book());
+</code></pre><h2 id="删除">删除</h2>
+<p>通过 PersistenceStatus 属性把实体的状态标记为需要删除后，调用保存即可从仓库中删除该实体。</p>
+<pre><code class="lang-cs">BookRepository repo = RF.ResolveInstance&lt;BookRepository&gt;();
+Book book = repo.GetById(1);
+book.PersistenceStatus = PersistenceStatus.Deleted;
+repo.Save(book);
+</code></pre><p>另外，如果把一个实体从实体列表中移除后，再保存该列表，也可以达到删除该实体的效果：</p>
+<pre><code class="lang-cs">BookRepository repo = RF.ResolveInstance&lt;BookRepository&gt;();
+BookList bookList = repo.GetAll();
+if (bookList.Count &gt; 0)
+{
+    bookList.RemoveAt(0);
+}
+repo.Save(bookList);
+</code></pre><p>以下代码，则会导致从数据库中删除所有的书籍：</p>
+<pre><code class="lang-cs">BookRepository repo = RF.ResolveInstance&lt;BookRepository&gt;();
+BookList bookList = repo.GetAll();
+bookList.Clear();
+repo.Save(bookList);
+</code></pre><h2 id="修改">修改</h2>
+<p>对于查询出来的实体，在修改其至少一个属性后，可以对其进行保存。</p>
+<pre><code class="lang-cs">BookRepository repo = RF.ResolveInstance&lt;BookRepository&gt;();
+Book book = repo.GetById(1);
+book.Name = &quot;New Name&quot;;
+repo.Save(book);
+</code></pre><h2 id="创建组合实体">创建组合实体</h2>
+<p>组合实体的保存，可直接通过组合根保存，即可完成整个组合树中所有实体的保存。（在保存根实体时，框架会调用组合子实体的仓库来保存这些组合子实体。）</p>
+<pre><code class="lang-cs">
+//创建一个有四个轮子的汽车
+Car car = new Car();
+car.WheelList.Add(new Wheel());
+car.WheelList.Add(new Wheel());
+car.WheelList.Add(new Wheel());
+car.WheelList.Add(new Wheel());
+
+var repo = RF.ResolveInstance&lt;CarRepository&gt;();
+repo.Save(car);
+</code></pre><p>注意，上例中，也可以直接使用 WheelRepository 来保存每一个 Wheel。</p>
+<h2 id="删除组合实体">删除组合实体</h2>
+<p>删除组合根实体时，它组合的所有子实体也都同时被删除。<br>由于组合实体的生成周期相关性，框架在把组合关系映射到数据库的外键关系时，会自动把该外键设计为级联删除。所以需要删除整个组合实体时，只需要删除其根实体，数据库会自动把与它关联的所有子实体也同时删除。<br>以下代码在删除小车时，也会删除与之对应的四个车轮：</p>
+<pre><code class="lang-cs">CarRepository repo = RF.ResolveInstance&lt;CarRepository&gt;();
+Car car = repo.GetById(1);
+car.Status = PersistenceStatus.Deleted;
+repo.Save(car);
+</code></pre><p>另外，框架也支持在内存中递归删除组合实体的子实体。例如，如果组合关系对应的外键在元数据配置时，被手动配置为不级联删除，那么要删除整个组合对象，就需要打开内存删除功能：</p>
+<pre><code class="lang-cs">public partial class CarRepository : JXCEntityRepository
+{
+    /// &lt;summary&gt;
+    /// 打开内存中删除组合子实体的功能
+    /// &lt;/summary&gt;
+    protected override bool EnableDeletingChildrenInMemory
+    {
+        get { return true; }
+    }
+}
+</code></pre><p>注意，打开此功能后，由于框架会在内存中加载所有的组合子实体，而组合子实体较多时，则性能较差。建议不要轻易关闭数据库中组合关系的级联删除功能。</p>
+<h2 id="修改组合实体">修改组合实体</h2>
+<p>组合实体树中任一实体状态变更，都可以通过直接保存组合根来保存整个组合树。如，以下代码把一个四轮小车改造为一个三轮车：</p>
+<pre><code class="lang-cs">CarRepository repo = RF.ResolveInstance&lt;CarRepository&gt;();
+Car car = repo.GetById(1);
+car.WheelList.RemoveAt(3);//移除第四个轮子
+car.WheelList[0].Weight = 100;//第一个轮子重量改变
+repo.Save(car);
+</code></pre><h2 id="注意">注意</h2>
+<p>虽然经典的领域驱动要求，组合实体树中的所有实体都必须通过组合根实体来获取、操作、保存。但是根据大量的实践经验，Rafy 框架决定不强制要求这一点。也就是说，非组合根的实体，也可以直接通过该实体对应的仓库来完成创建、删除、修改的操作。</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../../styles/main.js"></script>
+  </body>
+</html>

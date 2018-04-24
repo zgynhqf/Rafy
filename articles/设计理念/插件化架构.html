@@ -1,0 +1,256 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>&#25554;&#20214;&#30340;&#20998;&#31867; </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="&#25554;&#20214;&#30340;&#20998;&#31867; ">
+    <meta name="generator" content="docfx 2.34.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+
+<p>插件化架构是产品线可变性管理的基础。每一个独立的业务，都应该在一个单独的插件程序集内开发。</p>
+<p><img src="../../../images/Plugin_Architecture.png" alt="t">  </p>
+<h2 id="插件的分类">插件的分类</h2>
+<p>插件分为领域插件和界面插件：领域插件中包含所涉及到的领域实体、领域服务；界面插件则包含需要显示的界面元素（界面插件又分两类：WPF 界面插件、Web 界面插件）。</p>
+<ul>
+<li>领域插件
+领域插件类型需要从<code>Rafy.DomainPlugin</code>类继承。</li>
+<li>界面插件
+界面插件类型需要从<code>Rafy.UIPlugin</code>类继承。</li>
+</ul>
+<h2 id="插件的加载及启动顺序">插件的加载及启动顺序</h2>
+<p>应用程序最终由多个插件构成，而每一个插件程序集，都会严格按照启动顺序进行加载。这是因为启动级别越高，重用级别越高。例如：主版本重用、部分版本重用、定制化这三种重用级别分别对应
+<a href="\articles\Content\框架基础\产品线工程.html">产品线工程</a>
+中的 721，所以应该把主版本重用的插件放在前面，定制化的插件放在后面。<br>一个开发完成的插件，要加载到主程序中，有两种方式：</p>
+<ul>
+<li><p>运行时加载方式<br>这是一般的插件加载方式，需要通过 app.config 中指定需要使用到的插件程序集，系统在启动时会自动加载该目录下的所有插件。<br>下面是 app.config 中的示例插件配置：</p>
+<pre><code class="lang-cs">&lt;rafy currentCulture=&quot;zh-CN&quot; collectDevLanguages=&quot;IsDebugging&quot;&gt;
+ &lt;domainPlugins&gt;
+     &lt;add plugin=&quot;Rafy.Customization&quot;/&gt;
+     &lt;add plugin=&quot;Rafy.DiskCaching&quot;/&gt;
+     &lt;add plugin=&quot;Rafy.MultiLanguages&quot;/&gt;
+     &lt;add plugin=&quot;Rafy.RBAC.Old&quot;/&gt;
+     &lt;add plugin=&quot;JXC&quot;/&gt;
+ &lt;/domainPlugins&gt;
+ **
+     &lt;add plugin=&quot;Rafy.Customization.WPF&quot;/&gt;
+     &lt;add plugin=&quot;Rafy.MultiLanguages.WPF&quot;/&gt;
+     &lt;add plugin=&quot;Rafy.DevTools.WPF&quot;/&gt;
+     &lt;add plugin=&quot;Rafy.RBAC.Old.WPF&quot;/&gt;
+     &lt;add plugin=&quot;JXC.WPF&quot;/&gt;
+     &lt;add plugin=&quot;Demo&quot;/&gt;
+ **
+&lt;/rafy&gt;
+</code></pre></li>
+</ul>
+<p>对于领域插件：如果是 C/S 程序，则客户端和服务端都需要部署。<br>对于界面插件：如果是 C/S 程序，只需要部署到客户端；如果是 Web 开发，只需要部署到网站服务端。</p>
+<ul>
+<li><p>强制加载方式<br>一些对于系统来说，必须加载的插件程序集，可以使用程序加载方式。这种方式只需要在程序启动时，通过集合添加指定的插件即可。以下代码强制加载 JXCPlugin 插件：<br>另外，如果使用代码加载的方式，那么集合中的顺序则表示了插件的启动顺序。如下：</p>
+<pre><code class="lang-cs">class DBIWebApp : DomainApp
+{
+ protected override void InitEnvironment()
+ {
+     RafyEnvironment.DomainPlugins.Add(new StampPlugin());
+     RafyEnvironment.DomainPlugins.Add(new EntityPhantomPlugin());
+     RafyEnvironment.DomainPlugins.Add(new AccountsPlugin());
+     RafyEnvironment.DomainPlugins.Add(new RBACPlugin());
+     RafyEnvironment.DomainPlugins.Add(new WFPlugin());
+     RafyEnvironment.DomainPlugins.Add(new DBIPlugin());
+     RafyEnvironment.DomainPlugins.Add(new VATEnginePlugin());
+ }
+}
+</code></pre></li>
+</ul>
+<h2 id="iplugin-类型">IPlugin 类型</h2>
+<p>在 Rafy 中，每个插件由一个单独的程序集来表示。而每个插件程序集中，必须有唯一一个插件类型，该类必须实现 IPlugin 接口：</p>
+<pre><code class="lang-cs">namespace Rafy
+{
+    /// &lt;summary&gt;
+    /// 插件定义。
+    /// &lt;/summary&gt;
+    public interface IPlugin
+    {
+        /// &lt;summary&gt;
+        /// 插件的初始化方法。
+        /// 框架会在启动时根据启动级别顺序调用本方法。
+        /// 
+        /// 方法有两个职责：
+        /// 1.依赖注入。
+        /// 2.注册 app 生命周期中事件，进行特定的初始化工作。
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;app&quot;&gt;应用程序对象。&lt;/param&gt;
+        void Initialize(IApp app);
+    }
+}
+</code></pre><h2 id="应用程序生命周期">应用程序生命周期</h2>
+<p>插件的 Initialize 方法会在启动时根据启动级别顺序被调用。在该方法中，需要注册 app 生命周期中事件，进行特定的初始化工作。以下代码示例如果在运行时启动时，自动升级数据库：</p>
+<pre><code class="lang-cs">public class JXCPlugin : DomainPlugin
+{
+    public override void Initialize(IApp app)
+    {
+        //在运行时启动时，自动升级数据库。
+        app.RuntimeStarting += (o, e) =&gt; AutoUpdateDb();
+    }
+
+    /// &lt;summary&gt;
+    /// 自动升级数据库。
+    /// &lt;/summary&gt;
+    private static void AutoUpdateDb()
+    {
+        //...
+    }
+}
+</code></pre><p>IApp 应用程序对象的生命周期如下：</p>
+<pre><code class="lang-cs">/// &lt;summary&gt;
+/// 应用程序生成周期定义
+/// &lt;/summary&gt;
+public interface IApp
+{
+    /// &lt;summary&gt;
+    /// 所有实体元数据初始化完毕，包括实体元数据之间的关系。
+    /// &lt;/summary&gt;
+    event EventHandler AllPluginsIntialized;
+
+    /// &lt;summary&gt;
+    /// 所有初始化期定义的元数据初始化完成时事件。
+    /// &lt;/summary&gt;
+    event EventHandler MetaCompiled;
+
+    /// &lt;summary&gt;
+    /// 模块的定义先于其它模型的操作。这样可以先设置好模板默认的按钮。
+    /// &lt;/summary&gt;
+    event EventHandler ModuleOperations;
+
+    /// &lt;summary&gt;
+    /// 模块的定义完成
+    /// &lt;/summary&gt;
+    event EventHandler ModuleOperationsCompleted;
+
+    /// &lt;summary&gt;
+    /// 所有初始化工作完成
+    /// &lt;/summary&gt;
+    event EventHandler AppModelCompleted;
+
+    /// &lt;summary&gt;
+    /// 应用程序运行时行为开始。
+    /// &lt;/summary&gt;
+    event EventHandler RuntimeStarting;
+
+    /// &lt;summary&gt;
+    /// AppStartup 完毕
+    /// &lt;/summary&gt;
+    event EventHandler StartupCompleted;
+
+    /// &lt;summary&gt;
+    /// 应用程序完全退出
+    /// &lt;/summary&gt;
+    event EventHandler Exit;
+
+    /// &lt;summary&gt;
+    /// 主过程开始前事件。
+    /// &lt;/summary&gt;
+    event EventHandler MainProcessStarting;
+
+    /// &lt;summary&gt;
+    /// 关闭应用程序
+    /// &lt;/summary&gt;
+    void Shutdown();
+}
+</code></pre><h2 id="其它">其它</h2>
+<p>关于插件生命周期的设计，参见：<br><a href="http://www.cnblogs.com/zgynhqf/archive/2011/02/22/1961081.html">使用“管道”与“应用程序生命周期”重构：可插拔模块</a>。</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

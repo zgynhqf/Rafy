@@ -1,0 +1,2074 @@
+{
+  "homepages": [],
+  "source_base_path": "C:/Users/huqf/Desktop/docfx_project(3)",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "log_codes": [
+        "InvalidFileLink"
+      ],
+      "type": "Toc",
+      "source_relative_path": "articles/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "articles/toc.html",
+          "hash": "bUacjp4oaP1NgiC6+gJbdQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/快速界面生成.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/快速界面生成.html",
+          "hash": "TJB9DwkSXuufHhJsZFzfsg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/插件/RBAC 插件.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/插件/RBAC 插件.html",
+          "hash": "b+48Yj/QREEUo3JUiJjnrg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/插件/多国语言插件.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/插件/多国语言插件.html",
+          "hash": "LIa2cCY0P2m82syMspgZtw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/插件/大批量导入实体插件.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/插件/大批量导入实体插件.html",
+          "hash": "hbhH2qRj32LXF/oAKvfSag=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/插件/帐户插件.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/插件/帐户插件.html",
+          "hash": "6muzNFRM/CJcxqry5yNkYQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/插件/幽灵插件.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/插件/幽灵插件.html",
+          "hash": "1IUa+AqTkLQWy7LSEFlK4Q=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/插件/文件存储插件.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/插件/文件存储插件.html",
+          "hash": "F3YaA6HUpg/4NK4NgLaofA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/插件/时间戳插件.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/插件/时间戳插件.html",
+          "hash": "QqjyEdIgtETKSRjOn+c3qQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/插件/流水号插件.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/插件/流水号插件.html",
+          "hash": "hCTK4w1AmyJGKCZohL92EQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/插件/附件插件.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/插件/附件插件.html",
+          "hash": "zTl+nZvZIW/Ys3B4dWsYhg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/框架基础/产品线工程.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/框架基础/产品线工程.html",
+          "hash": "PFdsjn34bwnaq3V4wwq/jw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/框架基础/插件化架构.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/框架基础/插件化架构.html",
+          "hash": "+voYu/TWK2gnyiKp1p0dqA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/框架基础/模型驱动架构.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/框架基础/模型驱动架构.html",
+          "hash": "y3Xz9qUxhVw2uVbIUeeYJw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/框架基础/面向服务架构.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/框架基础/面向服务架构.html",
+          "hash": "KYVOfeD8iv10J68SXoCV0A=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/框架基础/领域驱动设计.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/框架基础/领域驱动设计.html",
+          "hash": "ZHX4eXc/nmq3pxdw0DkagA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/框架说明.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/框架说明.html",
+          "hash": "bZHFmTmvqnm417T2iPdx5w=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/现有插件.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/现有插件.html",
+          "hash": "EWlKkCvC/k8K50lKVxgO7Q=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/界面生成/WPF 界面.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/界面生成/WPF 界面.html",
+          "hash": "i+Jw3EyCWxCQggvZFceLMg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/界面生成/Web 界面.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/界面生成/Web 界面.html",
+          "hash": "X40qsFNvW8lPR4XQRXUVUA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/界面生成/界面配置.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/界面生成/界面配置.html",
+          "hash": "Su8+RijquxWDOPgAPWdrRw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/界面生成/界面配置/实体视图配置.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/界面生成/界面配置/实体视图配置.html",
+          "hash": "DgP83rUn+i7VOeykff6XJw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/界面生成/界面配置/实体视图配置/代理属性.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/界面生成/界面配置/实体视图配置/代理属性.html",
+          "hash": "HiPHNvtOolP4xt8gmtNU5g=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/界面生成/界面配置/实体视图配置/基础视图配置.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/界面生成/界面配置/实体视图配置/基础视图配置.html",
+          "hash": "AqEixhMroeBJoI3QXOHoYw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/界面生成/界面配置/实体视图配置/扩展视图配置.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/界面生成/界面配置/实体视图配置/扩展视图配置.html",
+          "hash": "Ve6QsbS1AygjbzV8NGkprw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/界面生成/界面配置/枚举的显示.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/界面生成/界面配置/枚举的显示.html",
+          "hash": "akyuKyaggidTpYYOurSAKw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/设计理念.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/设计理念.html",
+          "hash": "T+TfzWHF8nppqx7GBjZqFQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "log_codes": [
+        "InvalidFileLink"
+      ],
+      "type": "Conceptual",
+      "source_relative_path": "articles/设计理念/产品线工程.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/设计理念/产品线工程.html",
+          "hash": "LMtz9YpwF9NZMQtPl26QrQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "log_codes": [
+        "InvalidFileLink"
+      ],
+      "type": "Conceptual",
+      "source_relative_path": "articles/设计理念/插件化架构.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/设计理念/插件化架构.html",
+          "hash": "hAgntIUHcetd6FMMRTKuWQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "log_codes": [
+        "InvalidFileLink"
+      ],
+      "type": "Conceptual",
+      "source_relative_path": "articles/设计理念/模型驱动架构.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/设计理念/模型驱动架构.html",
+          "hash": "vENA6TPlAQKHzPkIMUGU9Q=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/设计理念/面向服务架构.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/设计理念/面向服务架构.html",
+          "hash": "4P59mAkd7Jf9CXZipzHJ2A=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "log_codes": [
+        "InvalidFileLink"
+      ],
+      "type": "Conceptual",
+      "source_relative_path": "articles/设计理念/领域驱动设计.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/设计理念/领域驱动设计.html",
+          "hash": "OqXxL4+3C7XGZyrUpsQXVg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架.html",
+          "hash": "NqQvNFa5nCS1aNTOgaqrIg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/ORM.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/ORM.html",
+          "hash": "YoixgAd2s1hEEp5tSzmInA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/ORM/SQL 语句日志.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/ORM/SQL 语句日志.html",
+          "hash": "Ffy0PTfzR0pafN2NsvI4sw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/ORM/为数据库生成注释.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/ORM/为数据库生成注释.html",
+          "hash": "b+2DWl8pG1vzigGvqlAI+Q=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/ORM/多数据库支持.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/ORM/多数据库支持.html",
+          "hash": "fxXLH52Od28VDtXEjcRfSg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/ORM/多数据源切换.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/ORM/多数据源切换.html",
+          "hash": "AqYL+oorT/ns7YiU1xAW6A=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/ORM/数据库同步功能.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/ORM/数据库同步功能.html",
+          "hash": "Xhm7OgKs5JE8fZqtc0BVvg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "log_codes": [
+        "InvalidFileLink"
+      ],
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/ORM/继承映射.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/ORM/继承映射.html",
+          "hash": "cg+BBm/gAgXD826sFhEQVA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/ORM/配置映射.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/ORM/配置映射.html",
+          "hash": "qGFoFF4HaOQWyk9sZq15WQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/其它.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/其它.html",
+          "hash": "3aysCJNNM/q2VCAcjbphTw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "log_codes": [
+        "InvalidFileLink"
+      ],
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/其它/Rafy 与经典 DDD 的关系.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/其它/Rafy 与经典 DDD 的关系.html",
+          "hash": "xD1z1g8EFYTQGFCImwKy1w=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "log_codes": [
+        "InvalidFileLink"
+      ],
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/其它/与经典 DDD 的关系.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/其它/与经典 DDD 的关系.html",
+          "hash": "RM/w5y07NeL4czCHjqgaqA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/其它/从现有数据库移植.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/其它/从现有数据库移植.html",
+          "hash": "GpT4p7p29wLCI6MkyqWC9Q=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "log_codes": [
+        "InvalidFileLink"
+      ],
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/其它/代码段.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/其它/代码段.html",
+          "hash": "oURiw7aN5wx56squyKob5Q=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/其它/实体框架常见问题.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/其它/实体框架常见问题.html",
+          "hash": "cR5OgtMf97xkENzBJM3n9A=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/其它/常见问题.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/其它/常见问题.html",
+          "hash": "Z8rTMlQNi5wSUMgww4V9dw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/其它/性能测试.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/其它/性能测试.html",
+          "hash": "dlb+D1gTPXPMo5o5T6R6Xg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "log_codes": [
+        "InvalidFileLink"
+      ],
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/安装.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/安装.html",
+          "hash": "58yUfQc8ly3Gk6R6FmTZPQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/实体仓库.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/实体仓库.html",
+          "hash": "Kpux6QF+uMldK8zCzMDY5g=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/实体仓库/仓库数据层（RepositoryDataProvider）.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/实体仓库/仓库数据层（RepositoryDataProvider）.html",
+          "hash": "STjt8ln0D9/6glSTpq07Kg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/实体仓库/大批量导入实体.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/实体仓库/大批量导入实体.html",
+          "hash": "rhiCjfDuB78alrqSNE94cw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/实体仓库/实体的创建、删除、修改.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/实体仓库/实体的创建、删除、修改.html",
+          "hash": "zOkWDTOFUVwc1kDKn6UyQQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/实体仓库/组合实体的创建、删除、修改.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/实体仓库/组合实体的创建、删除、修改.html",
+          "hash": "veO6XdPlZu3KBUKmYlenyw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/实体仓库/组合实体的增删改.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/实体仓库/组合实体的增删改.html",
+          "hash": "pWjA/6JHNN02pyhtjxPp+g=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/实体仓库/编写查询.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/实体仓库/编写查询.html",
+          "hash": "QEzcnltng0HTWu22J591Cg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/实体仓库/编写查询/Linq 查询.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/实体仓库/编写查询/Linq 查询.html",
+          "hash": "D7yV3A+2uqWvgt1n/AKf4w=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/实体仓库/编写查询/OData 查询条件(ODataQueryCriteria).md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/实体仓库/编写查询/OData 查询条件(ODataQueryCriteria).html",
+          "hash": "7QbIShviA9cqT3lro3sbdg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/实体仓库/编写查询/Sql 查询.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/实体仓库/编写查询/Sql 查询.html",
+          "hash": "LA8tkwqqRWnTbzIoc2/LYg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/实体仓库/编写查询/SqlTree 查询.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/实体仓库/编写查询/SqlTree 查询.html",
+          "hash": "EbZS+46RBC9HyYfQRP5y9g=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/实体仓库/编写查询/分页查询.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/实体仓库/编写查询/分页查询.html",
+          "hash": "y5yRe+9FIO8S3zMz5ONZkw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/实体仓库/编写查询/数据行数查询.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/实体仓库/编写查询/数据行数查询.html",
+          "hash": "d23EiMmGJsQPdgcI0HalFQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/实体仓库/编写查询/表格查询.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/实体仓库/编写查询/表格查询.html",
+          "hash": "kf3z7WNJJzFzL58IJYwiyA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/实体仓库/编写查询/贪婪加载.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/实体仓库/编写查询/贪婪加载.html",
+          "hash": "sj5NKjJGBog4h5rv+doHQw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/实体仓库/编写查询/通用查询条件(CommonQueryCriteria).md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/实体仓库/编写查询/通用查询条件(CommonQueryCriteria).html",
+          "hash": "Jj5kSy63HzBws1UJ0m4G+g=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/实体缓存.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/实体缓存.html",
+          "hash": "Iu8GkLDFJv5XUdxgmb3Vww=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/实体缓存/客户端缓存.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/实体缓存/客户端缓存.html",
+          "hash": "AUXoUmhm4BEt/lnfiuDXMQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/实体缓存/服务端缓存.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/实体缓存/服务端缓存.html",
+          "hash": "1DQXL+DvmmDrjmqF90siVQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/对象关系映射.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/对象关系映射.html",
+          "hash": "92/kGYUuyUL/anZcNPhjWg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/快速试用.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/快速试用.html",
+          "hash": "QSPuUlJ0O99yzpjJvBgFcw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "log_codes": [
+        "InvalidFileLink"
+      ],
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/快速试用/创建第一个程序.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/快速试用/创建第一个程序.html",
+          "hash": "h+Dd5PY/0qj0oWbHydwPbw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/快速试用/如何：查看领域实体关系图.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/快速试用/如何：查看领域实体关系图.html",
+          "hash": "GF3X7EftwQ2D356g9R47dg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/快速试用/如何：连接到 Sql Server 数据库.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/快速试用/如何：连接到 Sql Server 数据库.html",
+          "hash": "Uo4i9jcDnq92xAFbwRwY/A=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/快速试用/绘制领域类图.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/快速试用/绘制领域类图.html",
+          "hash": "CeJLbVRqdxg/0tZhVyfvZQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "log_codes": [
+        "InvalidFileLink"
+      ],
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/插件级扩展.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/插件级扩展.html",
+          "hash": "wKvakvbLVtbAshT7il1UXw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/插件级扩展/实体保存逻辑扩展（仓库数据层）.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/插件级扩展/实体保存逻辑扩展（仓库数据层）.html",
+          "hash": "W92oCRqeEqoONu5isl8bCA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/插件级扩展/实体属性扩展.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/插件级扩展/实体属性扩展.html",
+          "hash": "0LOvJ1aQlFQtnM62Mn4OjA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/插件级扩展/实体查询扩展（仓库扩展）.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/插件级扩展/实体查询扩展（仓库扩展）.html",
+          "hash": "79PS6P3BdCgItd0SJR/LaQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/插件级扩展/实体配置扩展.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/插件级扩展/实体配置扩展.html",
+          "hash": "9ZRPUbBZAjgwhXy+qQfGIw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/插件级扩展/领域逻辑扩展（领域控制器）.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/插件级扩展/领域逻辑扩展（领域控制器）.html",
+          "hash": "K7P4HhTjTiBVEO6ezV4FAw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/自动生成代码.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/自动生成代码.html",
+          "hash": "wOrkPs9RAMuXCtQEgVAOWA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/部署.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/部署.html",
+          "hash": "w0LeIo6unSwdN2/Yv9Ejcg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/部署/分布式部署.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/部署/分布式部署.html",
+          "hash": "PaJKws/1hL8M44aPadZe0g=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/部署/如何：控制数据传输.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/部署/如何：控制数据传输.html",
+          "hash": "T1n8cAT5DxLQB+JyhJXZZg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/部署/直联部署.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/部署/直联部署.html",
+          "hash": "Ya9WEBuQGmjiK/ydCFiWxg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/部署/直连部署.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/部署/直连部署.html",
+          "hash": "T+/GXHJ4eq2Qk62CMnA1YA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "log_codes": [
+        "InvalidFileLink"
+      ],
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/领域实体.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/领域实体.html",
+          "hash": "VQB4sTtt15M2YSmNwSPrjQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "log_codes": [
+        "InvalidFileLink"
+      ],
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/领域实体/实体关系.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/领域实体/实体关系.html",
+          "hash": "i8VwfbHTiLIeN+N5pMX0eQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/领域实体/实体属性.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/领域实体/实体属性.html",
+          "hash": "l6yh4CA+UE1gpHZ6Mpwavg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/领域实体/实体属性/一般属性.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/领域实体/实体属性/一般属性.html",
+          "hash": "Nq2HdHpQtGiXGlZlifiN9w=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/领域实体/实体属性/冗余属性.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/领域实体/实体属性/冗余属性.html",
+          "hash": "hEkh6CZgK2Ye42tJDqGHxw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/领域实体/实体属性/只读属性.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/领域实体/实体属性/只读属性.html",
+          "hash": "mcNYN3h7evjWjn8dezBZSg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/领域实体/实体属性/大数据属性.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/领域实体/实体属性/大数据属性.html",
+          "hash": "SfJIps6mZmAdnm4U5/8tcQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/领域实体/实体属性/引用属性.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/领域实体/实体属性/引用属性.html",
+          "hash": "l6seOBTOW6jKAyj6sFNfaA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/领域实体/实体属性/组合子属性.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/领域实体/实体属性/组合子属性.html",
+          "hash": "gon3nr8K+A/E/iZBDSyQKw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/领域实体/实体的状态.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/领域实体/实体的状态.html",
+          "hash": "e1RPy+t5F2wWCZmIj04MZg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/领域实体/实体配置.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/领域实体/实体配置.html",
+          "hash": "gXyGsMIh1YNk1WNyosm9ig=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/领域实体/实体集合.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/领域实体/实体集合.html",
+          "hash": "/lUozZ5yS/LTQ0vHgBXGZg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/领域实体/实体验证规则.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/领域实体/实体验证规则.html",
+          "hash": "5yCnbaCuH9hFPvHzmMhXQg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/领域实体/树型实体.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/领域实体/树型实体.html",
+          "hash": "J9NEilEBs4Q95RvGbCH3UA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/领域实体/路由事件.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/领域实体/路由事件.html",
+          "hash": "tiab2aaECd7R5eSy3P5Cxg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "log_codes": [
+        "InvalidFileLink"
+      ],
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/领域实体/领域实体关系图.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/领域实体/领域实体关系图.html",
+          "hash": "NgUf/4rU9uILUsKxCJWScw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/领域流程/事务.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/领域流程/事务.html",
+          "hash": "fKmX13+M29bsO7LMbMfWFw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/领域逻辑.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/领域逻辑.html",
+          "hash": "hvJ7hL/XIo0Ee6dWkc7M3g=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/领域逻辑/单连接事务.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/领域逻辑/单连接事务.html",
+          "hash": "RG76yUSlETYV6shpuz/eqg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/领域逻辑/执行SQL或存储过程.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/领域逻辑/执行SQL或存储过程.html",
+          "hash": "3ZzlRR6XH/qpCmah5VkLxg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/领域逻辑/领域控制器.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/领域逻辑/领域控制器.html",
+          "hash": "WUMd+ci6P3shyQPvsncOqA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/领域实体框架/领域逻辑/领域服务.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/领域实体框架/领域逻辑/领域服务.html",
+          "hash": "oCv9h2hQVybyEZKlO78QCA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/Cache_01.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/Cache_01.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/DDD_Components.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/DDD_Components.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/DDD_Layer1.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/DDD_Layer1.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/DDD_Layer2.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/DDD_Layer2.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/DDD_OnionArchitecture.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/DDD_OnionArchitecture.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/DDD_UMLSource.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/DDD_UMLSource.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/DDD_UMLSource_VS.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/DDD_UMLSource_VS.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/DomainEntity_AddNewItem.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "images/DomainEntity_AddNewItem.jpg"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/DomainEntity_AddNewItemWindow.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "images/DomainEntity_AddNewItemWindow.jpg"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/EntityDemo.jpeg",
+      "output": {
+        "resource": {
+          "relative_path": "images/EntityDemo.jpeg"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/MDA_Generate.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/MDA_Generate.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/MDA_Overview.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/MDA_Overview.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/MDA_RafyMDA.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/MDA_RafyMDA.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/MDA_Transform.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/MDA_Transform.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/MDA_Transform2.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/MDA_Transform2.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/ODML_AddNewEntity .png",
+      "output": {
+        "resource": {
+          "relative_path": "images/ODML_AddNewEntity .png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/ODML_AddNewEntity.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/ODML_AddNewEntity.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/ODML_AddNewItemWindow.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/ODML_AddNewItemWindow.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/ODML_ModelViewer.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/ODML_ModelViewer.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/OnionArchitecture.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "images/OnionArchitecture.jpg"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/OnionArchitecture.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/OnionArchitecture.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/Plugin_Architecture.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/Plugin_Architecture.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/RBAC01.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/RBAC01.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/RBAC02.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/RBAC02.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/RBAC03.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/RBAC03.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/RBAC04.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/RBAC04.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/RBAC05.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/RBAC05.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/RBAC插件01.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/RBAC插件01.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/RBAC权限模型.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/RBAC权限模型.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/SPL_2LifeCycle.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/SPL_2LifeCycle.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/SPL_3Activities.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/SPL_3Activities.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/SPL_Variables1.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "images/SPL_Variables1.jpg"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/SPL_Variables1.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/SPL_Variables1.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/SPL_Variables2.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "images/SPL_Variables2.jpg"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/SPL_Variables2.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/SPL_Variables2.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/Snippets_PropertyChangedUsage.jpg",
+      "output": {
+        "resource": {
+          "relative_path": "images/Snippets_PropertyChangedUsage.jpg"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/Snippets_PropertyChangedUsage.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/Snippets_PropertyChangedUsage.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/TPH.jpeg",
+      "output": {
+        "resource": {
+          "relative_path": "images/TPH.jpeg"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/安装.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/安装.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/安装01.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/安装01.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/实体关系_AllRelations.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/实体关系_AllRelations.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/实体关系_User_Role_Aggregation.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/实体关系_User_Role_Aggregation.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/实体关系_User_Role_Composition.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/实体关系_User_Role_Composition.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/幽灵插件01.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/幽灵插件01.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/幽灵插件02.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/幽灵插件02.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/无关表.jpeg",
+      "output": {
+        "resource": {
+          "relative_path": "images/无关表.jpeg"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/第一个程序01.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/第一个程序01.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/第一个程序02.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/第一个程序02.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/第一个程序03.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/第一个程序03.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/第一个程序04.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/第一个程序04.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/第一个程序05.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/第一个程序05.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/第一个程序06.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/第一个程序06.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/第一个程序07.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/第一个程序07.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/第一个程序08.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/第一个程序08.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/继承映射_EntityDemo.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/继承映射_EntityDemo.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/继承映射_TPH.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/继承映射_TPH.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/继承映射_无关表.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/继承映射_无关表.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/领域插件的扩展点.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/领域插件的扩展点.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/领域驱动设计组成.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/领域驱动设计组成.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "log_codes": [
+        "InvalidFileLink"
+      ],
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html",
+          "hash": "mFAHkBavawooUwzVInXYPw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html",
+          "hash": "jMt6lHNtZtn2mYBAUOUKSg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    }
+  ],
+  "incremental_info": [
+    {
+      "status": {
+        "can_incremental": true,
+        "incrementalPhase": "build"
+      },
+      "processors": {
+        "ResourceDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor ResourceDocumentProcessor cannot suppport incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build"
+        },
+        "ConceptualDocumentProcessor": {
+          "can_incremental": true,
+          "incrementalPhase": "build"
+        },
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot suppport incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build"
+        }
+      }
+    },
+    {
+      "status": {
+        "can_incremental": true,
+        "details": "Can support incremental post processing.",
+        "incrementalPhase": "postProcessing"
+      },
+      "processors": {}
+    }
+  ],
+  "version_info": {},
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}

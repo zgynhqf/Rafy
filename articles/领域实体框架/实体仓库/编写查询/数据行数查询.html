@@ -5,17 +5,17 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title> </title>
+    <title>&#31034;&#20363; </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content=" ">
+    <meta name="title" content="&#31034;&#20363; ">
     <meta name="generator" content="docfx 2.34.0.0">
     
-    <link rel="shortcut icon" href="favicon.ico">
-    <link rel="stylesheet" href="styles/docfx.vendor.css">
-    <link rel="stylesheet" href="styles/docfx.css">
-    <link rel="stylesheet" href="styles/main.css">
-    <meta property="docfx:navrel" content="toc.html">
-    <meta property="docfx:tocrel" content="toc.html">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    <link rel="stylesheet" href="../../../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../../../styles/docfx.css">
+    <link rel="stylesheet" href="../../../../styles/main.css">
+    <meta property="docfx:navrel" content="../../../../toc.html">
+    <meta property="docfx:tocrel" content="../../../toc.html">
     
     
     
@@ -34,8 +34,8 @@
                 <span class="icon-bar"></span>
               </button>
               
-              <a class="navbar-brand" href="index.html">
-                <img id="logo" class="svg" src="logo.svg" alt="">
+              <a class="navbar-brand" href="../../../../index.html">
+                <img id="logo" class="svg" src="../../../../logo.svg" alt="">
               </a>
             </div>
             <div class="collapse navbar-collapse" id="navbar">
@@ -57,12 +57,39 @@
         </div>
       </header>
       <div role="main" class="container body-content hide-when-search">
-        <div class="article row grid">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
 
-<p><a href="articles/框架说明.html">Rafy 帮助文档</a>
-文档版本号：1.5.700  </p>
+<p>有时候，只需要统计实体的个数，这就需要用到数据行数查询的功能。<br>数据行数查询的数据层实现，与一般的实体查询保持一致。唯一的区别在于，查询的公有接口方法内部，调用的是 FetchCount 方法，而非 FetchList 方法。数据层查询方法中，同样可以使用 Linq 查询、托管属性查询。  </p>
+<h2 id="示例">示例</h2>
+<p>以下是一个简单的数据行统计查询示例，其中还包含了一个实体查询方法：</p>
+<pre><code class="lang-cs">//查询实体
+[RepositoryQuery]
+public virtual WarehouseList GetByCode(string warehouseCode)
+{
+    return (WarehouseList)this.DA_GetByCode(warehouseCode);
+}
+//查询行数
+[RepositoryQuery]
+public virtual long CountByCode(string warehouseCode)
+{
+    return (long)this.DA_GetByCode(warehouseCode);
+}
+private object DA_GetByCode(string warehouseCode)
+{
+    var q = this.CreateLinqQuery();
+    q = q.Where(e =&gt; e.Code == warehouseCode);
+    return this.QueryData(q);
+}
+</code></pre><p>注意，上面的代码中，实体查询及数据行查询使用的是同一个数据层实现：DA_GetByCode。</p>
 </article>
           </div>
           
@@ -94,8 +121,8 @@
       </footer>
     </div>
     
-    <script type="text/javascript" src="styles/docfx.vendor.js"></script>
-    <script type="text/javascript" src="styles/docfx.js"></script>
-    <script type="text/javascript" src="styles/main.js"></script>
+    <script type="text/javascript" src="../../../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../../../styles/main.js"></script>
   </body>
 </html>
