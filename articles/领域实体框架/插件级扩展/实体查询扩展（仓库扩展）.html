@@ -91,7 +91,7 @@ public class TransactionRepositoryExt : EntityRepositoryExt&lt;TransactionReposi
     }
 }
 </code></pre><p>上述查询代码，与在实体仓库（EntityRepository）中编写查询是基本一致的。唯一不同在于EntityRepository
-中使用的是 this.CreateLinqQuery() 来创建查询，而 EntityRepositoryExt 中则需要使用  this.CreateLinqQuery<transaction>() 方法来明确指定当前仓库对应的实体。<br>另外，当新的查询需要使用新的<a href="..\领域实体框架\插件级扩展\实体属性扩展.html">扩展属性</a>来进行查询时，需要使用<a href="..\领域实体框架\实体仓库\编写查询\SqlTree 查询.html">SqlTree 查询</a>来进行查询。<br>下面代码示例如何在中编写此类查询：<p>
+中使用的是 this.CreateLinqQuery() 来创建查询，而 EntityRepositoryExt 中则需要使用  this.CreateLinqQuery<transaction>() 方法来明确指定当前仓库对应的实体。<br>另外，当新的查询需要使用新的<a href="../../领域实体框架\插件级扩展\实体属性扩展.html">扩展属性</a>来进行查询时，需要使用<a href="../../领域实体框架\实体仓库\编写查询\SqlTree 查询.html">SqlTree 查询</a>来进行查询。<br>下面代码示例如何在中编写此类查询：<p>
 <pre><code class="lang-cs">public class TransactionRepositoryExt : EntityRepositoryExt&lt;TransactionRepository&gt;
 {
     /// &lt;summary&gt;
@@ -122,7 +122,7 @@ var list = repo.Extension&lt;TransactionRepositoryExt&gt;().GetAutoImported();
 </code></pre><h2 id="替换现有的查询">替换现有的查询</h2>
 <p>替换现有查询时，需要在客户化插件中定义新的 RepositoryDataProvider，并将其替换对应仓库已有的数据层。编写方法与产品插件一致，不同点在于新的 RepositoryDataProvider 应该从产品的  RepositoryDataProvider
 上继承。关于 RepositoryDataProvider的具体内容，见：
-<a href="..\领域实体框架\实体仓库\仓库数据层（RepositoryDataProvider）.html">仓库数据层（RepositoryDataProvider）</a>。
+<a href="../../领域实体框架\实体仓库\仓库数据层（RepositoryDataProvider）.html">仓库数据层（RepositoryDataProvider）</a>。
 示例代码：</p>
 <pre><code class="lang-cs">[DataProviderFor(typeof(TransactionRepository))]
 public class TransactionRepositoryDataProviderExt : TransactionRepositoryDataProvider
