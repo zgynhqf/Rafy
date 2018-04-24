@@ -81,7 +81,7 @@
 <h2 id="rafy-实体继承">Rafy 实体继承</h2>
 <p>目前框架中只支持 TPC、TPH 两种模式，不支持 TPT。而且建议使用 TPC 映射。接下来，使用以下模型作为示例：
 <strong>领域模型</strong></p>
-<p><img src="../../../../images/继承映射_EntityDemo.png" alt=""></p>
+<p><img src="../../../images/%E7%BB%A7%E6%89%BF%E6%98%A0%E5%B0%84_EntityDemo.png" alt=""></p>
 <h2 id="tpc-配置">TPC 配置</h2>
 <p>优点：</p>
 <p>简单。建议使用。</p>
@@ -93,7 +93,7 @@
     同时两个子类 OrderStorageIn 和 OtherStorageIn 分别设置为映射所有字段。这时，由于它们继承了基类的所有属性，所以它们分别生成了它们自己的表。
     同时，StorageInItem 的外键则完全失效，也不会自动的级联删除。如图：
 **TPC 表结构 **</p>
-<p><img src="../../../../images/继承映射_无关表.png" alt=""></p>
+<p><img src="../../../images/%E7%BB%A7%E6%89%BF%E6%98%A0%E5%B0%84_%E6%97%A0%E5%85%B3%E8%A1%A8.png" alt=""></p>
 <p>这时，我们需要在代码中主动添加级联删除，如 StorageIn 的 OnDelete 方法中加入以下代码：</p>
 <pre><code class="lang-cs">protected override void OnDelete()
 {
@@ -112,7 +112,7 @@
 Meta.MapTable(&quot;StorageIn&quot;).MapAllPropertiesToTable();
   这时，生成表如下：
 **TPH 表结构 **</p>
-<p><img src="../../../../images/继承映射_TPH.png" alt=""></p>
+<p><img src="../../../images/%E7%BB%A7%E6%89%BF%E6%98%A0%E5%B0%84_TPH.png" alt=""></p>
 <p>外键及所对应的级联删除都存在，比较简单。
 这样，包括两个子类的所有的字段都存放在基类的表 StorageIn 中。也就是说，这种模式下，需要两个子类添加的新字段都是可以为空的，否则会造成其它的类型无法插入。
 同时，由于两个类的数据都存储在同一张表里，所以数据需要添加一个单独的字段进行分辨，例如：在 StorageIn 上添加属性 Descrimilator，然后，在子类中分别为该属性设置不同的默认值：</p>

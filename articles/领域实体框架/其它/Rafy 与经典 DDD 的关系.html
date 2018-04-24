@@ -71,7 +71,7 @@
 
 <p>DDD 全名为 Domain Driven Design，即领域驱动设计。由 03 年 Evans 在书《<a href="http://book.douban.com/subject/1418618/">Domain Driven Design</a>》中提出。DDD 包含以下概念：统一领域语言；应对复杂逻辑；快速应对变化；分层架构；实体；值对象；聚合；仓库；工厂；领域服务。如下图：
 **DDD组成部分 **</p>
-<p><img src="../../../../images/领域驱动设计组成.png" alt=""><br>
+<p><img src="../../../images/%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E7%BB%84%E6%88%90.png" alt=""><br>
 后来，在这些基础概念之上，又发展了更多的领域设计模式，例如：CQRS、四色模型、事件溯源等。</p>
 <h2 id="rafy-框架与经典-ddd-对比">Rafy 框架与经典 DDD 对比</h2>
 <ul>
@@ -84,7 +84,7 @@
 </li>
 <li><p>分层架构<br>支持。Rafy 是按照洋葱架构来组织代码，如图：</p>
 <p>**洋葱架构 **</p>
-<p><img src="../../../../images/OnionArchitecture.png" alt=""></p>
+<p><img src="../../../images/OnionArchitecture.png" alt=""></p>
 <p>应用代码按照 实体层、业务逻辑层、应用服务层、界面层进行分层开发，而框架帮助处理领域实体与数据库间的交互。</p>
 </li>
 <li><p>实体<br>支持。实体是 DDD 中最重要的概念。Rafy 中的实体，支持标识 Id 属性，数据库中映射为自增长列；支持继承映射；支持树型实体。最方便开发人员的是，Rafy 中的实体为聚合、引用等实体关系做了大量的特殊处理，使得在开发时，可以非常方便地使用这些关系。

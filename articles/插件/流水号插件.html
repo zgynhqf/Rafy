@@ -94,9 +94,9 @@
 </code></pre><p><strong>使用插件</strong></p>
 <ol>
 <li>生成数据库。<br>
-该插件中自带两个实体：<codeinline xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">SerialNumberInfo、<codeinline xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">SerialNumberValue，所以 Rafy 会为其在数据库中添加相应的两张表。</codeinline></codeinline></li>
+该插件中自带两个实体：<code>SerialNumberInfo、SerialNumberValue</code>，所以 Rafy 会为其在数据库中添加相应的两张表。</li>
 <li><p>添加流水号生成规则。 <br>
-<codeinline xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">SerialNumberInfo表示定义的流水号生成规则信息。而<codeinline xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">SerialNumberValue则表示生成的流水号的具体值。所以要生成流水号，必须先为其定义生成规则。可以使用<codeinline xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">SerialNumberController进行简单的每日规则创建，示例如下：<p>
+<code>SerialNumberInfo</code>表示定义的流水号生成规则信息。而<code>SerialNumberValue</code>则表示生成的流水号的具体值。所以要生成流水号，必须先为其定义生成规则。可以使用<codeinline xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5">SerialNumberController进行简单的每日规则创建，示例如下：<p>
 <pre><code class="lang-cs">var controller = DomainControllerFactory.Create&lt;SerialNumberController&gt;();
 var sni = controller.CreateDailySerialNumberInfo(&quot;流水号规则-1&quot;);
 </code></pre><p>CreateDailySerialNumberInfo 方法内部其实非常简单，开发者可以参考以下代码创建新的生成规则，如下：</p>
@@ -122,7 +122,7 @@ public SerialNumberInfo CreateDailySerialNumberInfo(string name, string format =
 
  return sni;
 });
-</code></pre></codeinline></codeinline></codeinline></li>
+</code></pre></codeinline></li>
 <li>生成流水号。
 使用以下代码生成流水号即可：
 <code>cs

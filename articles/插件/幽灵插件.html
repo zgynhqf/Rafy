@@ -77,7 +77,7 @@
 <strong>步骤</strong></p>
 <ol>
 <li>通过 Nuget Package Manager 搜索并安装 Rafy.Domain.EntityPhantom 插件。
-<br>&lt;img src = ../../../images/幽灵插件02.png  align = center /&gt;</br></li>
+<img src="../../images/%E5%B9%BD%E7%81%B5%E6%8F%92%E4%BB%B602.png" alt=""></li>
 <li><p>在 DomainApp 中添加该插件：</p>
 <pre><code class="lang-cs">class JXCApp : DomainApp
 {
@@ -114,7 +114,7 @@
 <li>在查询实体时，所有的查询，都将会自动过滤掉所有‘幽灵’状态的数据。（手写 SQL 查询的场景不在考虑范围内。）</li>
 <li>使用批量导入数据插件进行数据的批量导入时，批量删除的实体同样都会被标记为‘幽灵’状态。<br>
 运行程序后，数据库中的字段，已经自动添加上 IsPhantom 字段了：
-</br>&lt;img src = ../../../images/幽灵插件01.png  align = center /&gt;<br>
+<img src="../../images/%E5%B9%BD%E7%81%B5%E6%8F%92%E4%BB%B601.png" alt="">
 在使用 GetAll 查询所有实体时，框架自动加上一 IsPhantom = false 的过滤条件：</li>
 </ul>
 <pre><code class="lang-cs">SELECT *

@@ -68,12 +68,12 @@
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
 
-<p>本节讲解如何在客户化插件中，为产品插件内的 <a href="\articles\Content\领域实体框架\领域逻辑\领域控制器.html">实体领域控制器</a> 进行扩展。  </p>
+<p>本节讲解如何在客户化插件中，为产品插件内的 <a href="..\articles\领域实体框架\领域逻辑\领域控制器.html">实体领域控制器</a> 进行扩展。  </p>
 <h2 id="场景">场景</h2>
 <p>当领域工程的产品插件开发并打包完成后，产品插件中自带的领域逻辑往往并不能满足所有的应用场景。这时，应用工程的开发团队往往需要添加新的领域逻辑，或者调整已有的领域逻辑。</p>
 <h2 id="添加新逻辑控制器">添加新逻辑控制器</h2>
 <p>添加新的逻辑控制器非常简单，直接编写新的控制器代码即可。编写方案参考：
-<a href="\articles\Content\领域实体框架\领域逻辑\领域控制器.html">领域控制器</a></p>
+<a href="..\articles\领域实体框架\领域逻辑\领域控制器.html">领域控制器</a></p>
 <h2 id="替换现有的逻辑">替换现有的逻辑</h2>
 <p>替换现有查询时，需要在客户化插件中定义新的 DomainController，其从产品插件中的  DomainController 上继承，并使用 ControllerFactory 的 API 来替换其基类领域控制器。<br>示例代码：<br>控制器扩展：</p>
 <pre><code class="lang-cs">public class TransactionControllerExt : TransactionController

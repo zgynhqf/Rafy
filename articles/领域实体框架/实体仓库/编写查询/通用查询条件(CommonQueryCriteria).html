@@ -140,7 +140,7 @@
     }
 });
 </code></pre><h2 id="相对于-linq-查询的优势">相对于 Linq 查询的优势</h2>
-<p>使用 CommonQueryCriteria 进行查询时，相对于<a href="\articles\Content\领域实体框架\实体仓库\编写查询\Linq 查询.html">Linq 查询</a>而言，有以下的优势：</p>
+<p>使用 CommonQueryCriteria 进行查询时，相对于<a href="..\articles\领域实体框架\实体仓库\编写查询\Linq 查询.html">Linq 查询</a>而言，有以下的优势：</p>
 <ul>
 <li>更加方便、简单<br>仓库类型上已经提供了参数是<code>CommonQueryCriteria</code>的公有查询方法，开发可以直接使用这些方法进行查询，没有必要再封装一个相应的公有方法。
 例如，上面的示例中，也可以不封装 GetByCode 方法，而是由仓库的调用者直接使用 GetBy(CommonQueryCriteria) 方法。</li>
