@@ -71,12 +71,12 @@
 <p>创建你的第一个 Rafy 应用程序  </p>
 <h2 id="说明">说明</h2>
 <p>通过完成本示例，你将学会如何建立一个领域实体程序集，并建立一个应用层程序使用这些领域实体，完成数据的增删改查。
-本示例使用 SQLCE 作为示例的数据库。你也可以使用其它的数据库，详情参见：<a href="..\articles\领域实体框架\ORM\多数据库支持.html">多数据库支持</a>。</p>
+本示例使用 SQLCE 作为示例的数据库。你也可以使用其它的数据库，详情参见：<a href="..\领域实体框架\ORM\多数据库支持.html">多数据库支持</a>。</p>
 <h2 id="环境">环境</h2>
 <p>运行此示例需要安装以下组件：</p>
 <ul>
 <li>Visual Studio 2012</li>
-<li><a href="..\articles\领域实体框架\安装.html">Rafy SDK</a></li>
+<li><a href="..\领域实体框架\安装.html">Rafy SDK</a></li>
 </ul>
 <h2 id="建立领域实体程序集">建立领域实体程序集</h2>
 <p>本节中，你将会为“进销存”管理系统建立一个对应名为 JXC 的领域实体程序集。
@@ -95,8 +95,8 @@
 <p>JXC 程序集中包含了以下内容：**Entities **文件夹</p>
 <ul>
 <li>**/Entities/ ** 文件夹：用于存放所有实体类。                                        </li>
-<li>**/Entities/JXCEntity.cs ** ：将作为 JXC 领域空间下所有实体类的基类。参见：<a href="..\articles\领域实体框架\领域实体.html">领域实体</a>。                                        </li>
-<li>**/JXCPlugin.cs ** ：领域插件主文件。参见：<a href="..\articles\框架基础\插件化架构.html">插件化架构</a>。<br>编译整个解决方案，提示编译成功。</li>
+<li>**/Entities/JXCEntity.cs ** ：将作为 JXC 领域空间下所有实体类的基类。参见：<a href="..\领域实体框架\领域实体.html">领域实体</a>。                                        </li>
+<li>**/JXCPlugin.cs ** ：领域插件主文件。参见：<a href="..\框架基础\插件化架构.html">插件化架构</a>。<br>编译整个解决方案，提示编译成功。</li>
 </ul>
 </li>
 </ol>
@@ -113,7 +113,7 @@
 </li>
 <li><p>在实体中添加一般属性
 在打开的<strong>Warehouse.cs **代码编辑器中，找到并展开</strong>一般属性 **代码区域。</p>
-<p>在这个区域块中，输入<strong>RafyP</strong>，VisualStudio 会立刻显示以 RafyP 开头的代码段（相关内容，参见：<a href="..\articles\领域实体框架\其它\代码段.html">代码段</a>如下图：</p>
+<p>在这个区域块中，输入<strong>RafyP</strong>，VisualStudio 会立刻显示以 RafyP 开头的代码段（相关内容，参见：<a href="..\领域实体框架\其它\代码段.html">代码段</a>如下图：</p>
 <p><img src="../../../images/%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A8%8B%E5%BA%8F06.png" alt=""></p>
 <p>选择 RafyProperty，并按下 Tab 键。在生成的代码中录入类型为<strong>string</strong>、名称为<strong>Name</strong>的属性。这时，会生成以下代码：</p>
 </li>
@@ -177,8 +177,8 @@ foreach (var item in list)
 <li>查看生成的数据库
 Rafy 内置了数据库的同步功能，所以在整个研发过程中，可以不需要进行任何数据库的开发。
 打开 /ConsoleApp/bin/Debug/Data/ 目录，可以看到已经生成了一个 JXC.sdf 文件，这是一个 SQLCE 4.0 的数据库文件。
-有关数据库生成的相关内容，参见：<a href="..\articles\领域实体框架\ORM\数据库同步功能.html">数据库同步功能</a>。
-关于如何切换为使用 Sql Server 的相关内容，参见：<a href="..\articles\领域实体框架\快速试用\如何：连接到 Sql Server 数据库.html">如何：连接到 Sql Server 数据库</a>。</li>
+有关数据库生成的相关内容，参见：<a href="..\领域实体框架\ORM\数据库同步功能.html">数据库同步功能</a>。
+关于如何切换为使用 Sql Server 的相关内容，参见：<a href="..\领域实体框架\快速试用\如何：连接到 Sql Server 数据库.html">如何：连接到 Sql Server 数据库</a>。</li>
 </ol>
 </article>
           </div>
