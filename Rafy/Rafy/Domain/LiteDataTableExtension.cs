@@ -224,12 +224,7 @@ namespace Rafy.Domain
         /// 如果传入 false，表示表格中的列数据类型和实体属性数据类型不一致。
         /// </param>
         /// <returns></returns>
-        private static EntityList ConvertEntitiesIntoList(
-            LiteDataTable table,
-            EntityRepository repo,
-            IList<PropertyToColumnMapping> propertyToColumnMappings,
-            bool columnMapToProperty = true
-            )
+        private static EntityList ConvertEntitiesIntoList(LiteDataTable table, EntityRepository repo, IList<PropertyToColumnMapping> propertyToColumnMappings, bool columnMapToProperty = true)
         {
             var resultList = repo.NewList();
 

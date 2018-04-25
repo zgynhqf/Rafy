@@ -34,7 +34,7 @@ namespace Rafy.UnitTest.DataProvider
 
         public static void GenerateDb()
         {
-            if (ConfigurationHelper.GetAppSettingOrDefault("单元测试-生成数据库", false))
+            if (ConfigurationHelper.GetAppSettingOrDefault("rafyUnitTest:migrateDatabase", false))
             {
                 if (ClearDb && ConfigurationHelper.GetAppSettingOrDefault("单元测试-生成数据库-先清空数据库", false))
                 {

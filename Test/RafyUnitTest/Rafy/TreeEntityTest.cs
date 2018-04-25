@@ -2551,7 +2551,7 @@ namespace RafyUnitTest
                     a1.PersistenceStatus = PersistenceStatus.Deleted;
                     RF.Save(a1);
                 }
-                catch (Exception ex)
+                catch
                 {
                     hasException = true;
                 }

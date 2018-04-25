@@ -53,7 +53,12 @@ namespace Rafy.Data
                 {
                     if (!_generatedSettings.TryGetValue(dbSettingName, out setting))
                     {
+#if NET45
                         var config = ConfigurationManager.ConnectionStrings[dbSettingName];
+#endif
+#if NETSTANDARD2_0 || NETCOREAPP2_0
+                        var config = ConfigurationHelper.GetConnectionString(dbSettingName);
+#endif
                         if (config != null)
                         {
                             setting = new DbSetting
@@ -116,7 +121,12 @@ namespace Rafy.Data
         private static DbSetting Create(string dbSettingName)
         {
             //查找连接字符串时，根据用户的 LocalSqlServer 来查找。
+#if NET45
             var local = ConfigurationManager.ConnectionStrings[DbName_LocalServer];
+#endif
+#if NETSTANDARD2_0 || NETCOREAPP2_0
+            var local = ConfigurationHelper.GetConnectionString(DbName_LocalServer);
+#endif
             if (local != null && local.ProviderName == Provider_SqlClient)
             {
                 var builder = new SqlConnectionStringBuilder(local.ConnectionString);
@@ -140,14 +150,14 @@ namespace Rafy.Data
 
             return new DbSetting
             {
-                ConnectionString = string.Format(@"Data Source={0}.sdf", dbSettingName),
-                ProviderName = Provider_SqlCe
+                ConnectionString = string.Format(@"Data Source=.\SQLExpress;Initial Catalog={0};Integrated Security=True", dbSettingName),
+                ProviderName = Provider_SqlClient
             };
 
             //return new DbSetting
             //{
-            //    ConnectionString = string.Format(@"Data Source=.\SQLExpress;Initial Catalog={0};Integrated Security=True", dbSetting),
-            //    ProviderName = "System.Data.SqlClient"
+            //    ConnectionString = string.Format(@"Data Source={0}.sdf", dbSettingName),
+            //    ProviderName = Provider_SqlCe
             //};
         }
     }

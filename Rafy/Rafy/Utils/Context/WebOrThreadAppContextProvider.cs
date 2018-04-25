@@ -19,6 +19,8 @@ using System.Text;
 using System.Threading;
 using System.Web;
 using Rafy;
+using Rafy.Utils;
+using System.Security.Claims;
 
 namespace Rafy
 {
@@ -52,7 +54,7 @@ namespace Rafy
                 var hc = HttpContext.Current;
                 if (hc != null)
                 {
-                    hc.User = value;
+                    hc.User = (ClaimsPrincipal)value;
                 }
 
                 Thread.CurrentPrincipal = value;

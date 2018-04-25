@@ -35,9 +35,13 @@ namespace Rafy
         /// </summary>
         public FileLogger()
         {
-            this.InfoLogFileName = ConfigurationHelper.GetAppSettingOrDefault("Rafy.FileLogger.InfoLogFileName", "ApplicationInfoLog.txt");
-            this.ExceptionLogFileName = ConfigurationHelper.GetAppSettingOrDefault("Rafy.FileLogger.ExceptionLogFileName", "ExceptionLog.txt");
-            this.SqlTraceFileName = ConfigurationHelper.GetAppSettingOrDefault("Rafy.FileLogger.SqlTraceFileName", string.Empty);
+            var separator = '.';
+#if NETSTANDARD2_0 || NETCOREAPP2_0
+            separator = ':';
+#endif
+            this.InfoLogFileName = ConfigurationHelper.GetAppSettingOrDefault($"Rafy{separator}FileLogger{separator}InfoLogFileName", "ApplicationInfoLog.txt");
+            this.ExceptionLogFileName = ConfigurationHelper.GetAppSettingOrDefault($"Raf{separator}FileLogger{separator}ExceptionLogFileName", "ExceptionLog.txt");
+            this.SqlTraceFileName = ConfigurationHelper.GetAppSettingOrDefault($"Rafy{separator}FileLogger{separator}SqlTraceFileName", string.Empty);
         }
 
         /// <summary>
@@ -53,7 +57,7 @@ namespace Rafy
         public string ExceptionLogFileName { get; set; }
 
         /// <summary>
-        /// 默认使用配置文件中的 Rafy.FileLogger.SqlTraceFileName 配置项。
+        /// 默认使用配置文件中的 Rafy:FileLogger:SqlTraceFileName 配置项。
         /// </summary>
         public string SqlTraceFileName { get; set; }
 
@@ -116,7 +120,7 @@ Message：{ message }");
 
         /// <summary>
         /// 记录 Sql 执行过程。
-        /// 把 SQL 语句及参数，写到 'Rafy.FileLogger.SqlTraceFileName' 配置所对应的文件中。
+        /// 把 SQL 语句及参数，写到 'Rafy:FileLogger:SqlTraceFileName' 配置所对应的文件中。
         /// </summary>
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
@@ -204,11 +208,11 @@ Message：{ message }");
                     value = '\'' + value.ToString() + '\'';
                     //value = '"' + value.ToString() + '"';
                 }
-                else if(p.DbType == DbType.Boolean)
+                else if (p.DbType == DbType.Boolean)
                 {
                     value = Convert.ToByte(value);
                 }
-                else if(value == null)
+                else if (value == null)
                 {
                     value = "null";
                 }
