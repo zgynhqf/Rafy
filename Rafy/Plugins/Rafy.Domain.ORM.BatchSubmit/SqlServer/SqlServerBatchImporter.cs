@@ -188,7 +188,9 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
             {
                 this.SetMappings(bulkCopy.ColumnMappings, meta.Table);
 
-                bulkCopy.WriteToServer(table);
+                var reader = new DataTableReader(table);
+
+                bulkCopy.WriteToServer(reader);
             }
             finally
             {

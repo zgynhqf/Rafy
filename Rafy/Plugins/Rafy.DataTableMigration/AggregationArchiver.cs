@@ -145,7 +145,7 @@ namespace Rafy.DataArchiver
         /// <summary>
         /// 从原始表中移除聚合。
         /// </summary>
-        /// <param name="repository">表示当前 <see cref="entityList" /> 对应的仓库。</param>
+        /// <param name="repository">表示当前 <see cref="EntityList" /> 对应的仓库。</param>
         /// <param name="entityList">表示一个领域对象的集合。</param>
         private void DeleteOriginalData(IRepository repository, EntityList entityList)
         {
@@ -174,8 +174,11 @@ namespace Rafy.DataArchiver
         /// </summary>
         public event EventHandler<AggregationArchiveProgressEventArgs> ProgressChanged;
 
-        /// <summary>Reports a progress update.</summary>
-        /// <param name="value">The value of the updated progress.</param>
+        /// <summary>
+        /// Reports a progress update.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="currentProcess"></param>
         private void OnProgressChanged(string message, decimal currentProcess = 0M)
         {
             this.ProgressChanged(this, new AggregationArchiveProgressEventArgs(message, currentProcess));
