@@ -21,10 +21,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/快速界面生成.html",
-          "hash": "3P3ZDfETnNGEHcYHd5k0Mg=="
+          "hash": "BumzvFHhQcp70berokHW2g=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -36,10 +36,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/插件/RBAC 插件.html",
-          "hash": "AwcKMU9g4pEoLiZysDbjPg=="
+          "hash": "RCXm4mj+HOaH9bUXZlhkqw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -48,10 +48,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/插件/多国语言插件.html",
-          "hash": "rTxt4wruxlc5I7/r77OXGA=="
+          "hash": "GB2JRH6nYrGkdReo7eNw2w=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -63,10 +63,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/插件/大批量导入实体插件.html",
-          "hash": "Ok8DMycjFJPGB1GY2b+5/w=="
+          "hash": "UrzTmDIwrvetCxMwhRFvmQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -75,10 +75,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/插件/帐户插件.html",
-          "hash": "H157g6MJkOnfBXnIb9VTqA=="
+          "hash": "hgbrflZFH2NVvfvKrDoo1g=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -87,10 +87,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/插件/幽灵插件.html",
-          "hash": "1s1IeHIHxlsg3Ljgn//3UA=="
+          "hash": "jcJQe3yMrBRta9VVt5NWmw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -99,10 +99,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/插件/文件存储插件.html",
-          "hash": "ZxdhsadReZRRlLZykS9hzg=="
+          "hash": "DTkM1bCcKb8qKSiOjARQsw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -111,10 +111,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/插件/时间戳插件.html",
-          "hash": "WsOtK5E3HO2JMUKM3YENmw=="
+          "hash": "6Lqq5mCfwm1KcG7lhcMswQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -123,10 +123,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/插件/流水号插件.html",
-          "hash": "5z3GlOZZwZmuUdbVoP077A=="
+          "hash": "s6+YBp2zDN8L6VNrihXRiw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -135,10 +135,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/插件/附件插件.html",
-          "hash": "hQv2NQ6iy5pZSAuW/U9IDw=="
+          "hash": "eMw95OOSMOYZnk2F1onfJA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -150,10 +150,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/框架说明.html",
-          "hash": "HZt1lm7vsbyG8PLDX/vqTQ=="
+          "hash": "q5xjKcVT7WGfGMobNNbD1Q=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -162,10 +162,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/现有插件.html",
-          "hash": "4fmE3spiCM85o/57jpNMwg=="
+          "hash": "YEydCx8zzSA8akPs8PZp7A=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -174,10 +174,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/界面生成/WPF 界面.html",
-          "hash": "H/KAadVakI9DVmUiQ7aqrg=="
+          "hash": "5PpsbVgCy40TH467F3wi7A=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -186,10 +186,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/界面生成/Web 界面.html",
-          "hash": "EFvzdBJyZEqOIoVOJw1AaQ=="
+          "hash": "k78QjNgG63RQgyLiqvxfgw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -198,10 +198,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/界面生成/界面配置.html",
-          "hash": "waY+5D6R4igXkaypini+Vg=="
+          "hash": "l8a2bdZlfgyxnasOJwJtEw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -210,10 +210,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/界面生成/界面配置/实体视图配置.html",
-          "hash": "6sUqlH3NCS/iRgUg+W+iCg=="
+          "hash": "vyy8qTgXxgnKnfIU7pfHTg=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -222,10 +222,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/界面生成/界面配置/实体视图配置/代理属性.html",
-          "hash": "rDmdnQ2wfmqelVnQqX1F4Q=="
+          "hash": "PmwSklZzZ88BEDcRT368gA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -234,10 +234,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/界面生成/界面配置/实体视图配置/基础视图配置.html",
-          "hash": "bZTUP/OKW3dVfPrLm+ThLA=="
+          "hash": "79fXef5u2aBxWRhxLfgOJg=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -246,10 +246,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/界面生成/界面配置/实体视图配置/扩展视图配置.html",
-          "hash": "MUEmS171lw6Bu1wQfktyjQ=="
+          "hash": "XyUDbAwX9bBab2QIJUeEzQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -258,10 +258,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/界面生成/界面配置/枚举的显示.html",
-          "hash": "jdvr7P1lN6WaWZwsTYaqIQ=="
+          "hash": "UTAHHrueE1xq5aC5AwaIbw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -270,10 +270,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/设计理念.html",
-          "hash": "I1YpnawOEV5bLiaz0h18BQ=="
+          "hash": "8tMnXGoWmTByXNKDqf5C5A=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -285,7 +285,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/设计理念/产品线工程.html",
-          "hash": "p6VGqGjwuQxKCvXj+4TkfQ=="
+          "hash": "BXtyo+SQuZuagwjIbBx2Cg=="
         }
       },
       "is_incremental": false,
@@ -300,10 +300,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/设计理念/插件化架构.html",
-          "hash": "KkpLg2U/3e5LqUGsnjWhaQ=="
+          "hash": "8sBWHIGGwGoT6rDiVMrsiA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -312,10 +312,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/设计理念/模型驱动架构.html",
-          "hash": "XtCP6sI8eem3YS2Nh8UAAw=="
+          "hash": "A12b/CUzNGnwOiUsQnX3Jw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -324,10 +324,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/设计理念/面向服务架构.html",
-          "hash": "swgKoFHcQzw5cuBQDVblDg=="
+          "hash": "toX/YYmwOiaGYOy5SjD28w=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -339,10 +339,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/设计理念/领域驱动设计.html",
-          "hash": "oAjLG3sonUWZUKkWcPUlSA=="
+          "hash": "TV04vJ1dekgQ/RBaaZr5uQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -354,10 +354,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架.html",
-          "hash": "jHRvPdgRfl1sqi89/yAdHQ=="
+          "hash": "pMjTZmlUWOng83S2RHFkrw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -366,10 +366,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/ORM.html",
-          "hash": "wTgghrX0IwUvxTY0dK0AVQ=="
+          "hash": "mj4fbAF7482ynt+glgcHzg=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -378,10 +378,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/ORM/SQL 语句日志.html",
-          "hash": "MwRy2qQmVBuWzwkIbEDn5A=="
+          "hash": "Eshi14W9mqCOPrcZq5Sjdw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -390,10 +390,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/ORM/为数据库生成注释.html",
-          "hash": "i5XZidVU171+Yt/9GQweRg=="
+          "hash": "MkuDYGzaBLWVaHGgV2Henw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -402,10 +402,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/ORM/多数据库支持.html",
-          "hash": "+32Pt0NoLH25QxlpH1dNlw=="
+          "hash": "ZktW7+gMOlYKcs5uyR3E8Q=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -414,10 +414,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/ORM/多数据源切换.html",
-          "hash": "tDr1eforjL67YDGtDwzmFQ=="
+          "hash": "L7RUgls2eg2VlXKan8efgQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -426,10 +426,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/ORM/数据库同步功能.html",
-          "hash": "fmNWO3tEZivoQbJ5YuTsWg=="
+          "hash": "Wugq9+XsA9XwouCfQNvTWQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -438,10 +438,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/ORM/继承映射.html",
-          "hash": "D3qz6AMN6LUlGSkUvkZkQA=="
+          "hash": "NafgH+LkuuxYb86u1T0uyw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -450,10 +450,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/ORM/配置映射.html",
-          "hash": "A4UfiiWfAHiF8/pLUg/n3w=="
+          "hash": "p/Ea5LAracWPBZ9RR5kwMQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -462,10 +462,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/其它.html",
-          "hash": "wsVC80IwUR4zsOYtke06cQ=="
+          "hash": "1FeC+PNJaCDXgCRfY0tiNA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -474,10 +474,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/其它/Rafy 与经典 DDD 的关系.html",
-          "hash": "12jUIbwzkpknVhNANFZUOQ=="
+          "hash": "wGSW8AhPozjFDEPk/ZyjXg=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -489,10 +489,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/其它/与经典 DDD 的关系.html",
-          "hash": "MStrd1IC+GrEpS3c82Q8IQ=="
+          "hash": "jR6tC22KOYmW/SxXtRUIdQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -501,10 +501,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/其它/从现有数据库移植.html",
-          "hash": "Fxa51aT6etxjtrkNzOWrqQ=="
+          "hash": "hYf2UL4SbPD3N+3ixzbvbQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -513,10 +513,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/其它/代码段.html",
-          "hash": "Y7CYO8iRBz3ErmHNZdrFag=="
+          "hash": "L/7WJCjPy6B4GuvQxO4IEQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -528,10 +528,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/其它/实体框架常见问题.html",
-          "hash": "PIbQl868C6dM0qdAAp5ssA=="
+          "hash": "PBKyULi+d0UVEcrCJb/wtw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -543,10 +543,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/其它/常见问题.html",
-          "hash": "pXsuzbUQxQQnA+evO28Qcw=="
+          "hash": "4N+rUOxVvr+KPrvdjbV0Xg=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -555,10 +555,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/其它/性能测试.html",
-          "hash": "PaxFC6vHth11XC9lIzZZ4Q=="
+          "hash": "tfXgCwinPCgGY3NoOekwtA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -570,10 +570,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/安装.html",
-          "hash": "S5BmxVShEg2teNdSRbUSvg=="
+          "hash": "Rg628/irr48cCIhNAUSaBA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -585,10 +585,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/实体仓库.html",
-          "hash": "b1FKyqr65vVM+5a3SIP8ew=="
+          "hash": "xZCyY6E3PAtKjy5OiWEnsw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -597,10 +597,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/实体仓库/仓库数据层（RepositoryDataProvider）.html",
-          "hash": "7RZXVkd0G3zbkHlx2/somA=="
+          "hash": "1Yb8NXote/U8RG9Bf2+sOQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -609,10 +609,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/实体仓库/大批量导入实体.html",
-          "hash": "hJXA5Wl8fi0zYPxEn0ESHg=="
+          "hash": "Z2p+8qmIIVQMacOP2ocZ+A=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -624,10 +624,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/实体仓库/实体的创建、删除、修改.html",
-          "hash": "84E1Fqrns9bVKtU8F92ByA=="
+          "hash": "tByWRXWSiiEbr3W/UHse1w=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -636,10 +636,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/实体仓库/组合实体的创建、删除、修改.html",
-          "hash": "/0b9MqMpxitJLzeELg/5tQ=="
+          "hash": "wu5C75LfTyGb4raE8maDiA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -648,10 +648,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/实体仓库/组合实体的增删改.html",
-          "hash": "ZRmIZ6SL+6+HfE0UgZAtAw=="
+          "hash": "YlF6Tb+/do6rY1iVSL0JZQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -663,10 +663,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/实体仓库/编写查询.html",
-          "hash": "LLiDVK7j4Z20q8rG1lwgeg=="
+          "hash": "8YFpIRTQuRP88artU9+dqg=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -678,10 +678,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/实体仓库/编写查询/Linq 查询.html",
-          "hash": "U5KE2bYSG8gAQbJem6e/Ww=="
+          "hash": "mhJw3g1T4uvvMDyJ2EwYPQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -690,10 +690,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/实体仓库/编写查询/OData 查询条件(ODataQueryCriteria).html",
-          "hash": "xff2RJskvCqUldZuc6Q7+A=="
+          "hash": "JPsFz2L09UGuPbNprhHacQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -702,10 +702,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/实体仓库/编写查询/Sql 查询.html",
-          "hash": "d2OSx3FzCe4nz7YjVCFXiQ=="
+          "hash": "zoLihVQjU8GjtKy+uUpHkw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -717,10 +717,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/实体仓库/编写查询/SqlTree 查询.html",
-          "hash": "ZHg31D8/Y7QAsLMvf2W/1w=="
+          "hash": "el01fhIzM/+L3rT917Refg=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -729,10 +729,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/实体仓库/编写查询/分页查询.html",
-          "hash": "TrF5JWXT5Cihc+IAma/Tdw=="
+          "hash": "OITaUgRF87/E5FBsTBzXvQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -741,10 +741,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/实体仓库/编写查询/数据行数查询.html",
-          "hash": "hB6SjdZOEBmrIJoyh5YKCQ=="
+          "hash": "jNZmJHlZz4L7EIqrHe/E3Q=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -753,10 +753,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/实体仓库/编写查询/表格查询.html",
-          "hash": "XLWKgL4+kd93D7eGzoSR/g=="
+          "hash": "LbrEXeRcVbT/qyQNJ8Lnkg=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -765,10 +765,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/实体仓库/编写查询/贪婪加载.html",
-          "hash": "bIFXOn6o5WkS6lxS8XaZNQ=="
+          "hash": "/HLv4AuiRbGP0jWc8aaDQQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -780,10 +780,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/实体仓库/编写查询/通用查询条件(CommonQueryCriteria).html",
-          "hash": "FFOh9VM0+viCEKMqyyvFIQ=="
+          "hash": "6BM1Hj0sF9IPaoY3T0MbiA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -792,10 +792,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/实体缓存.html",
-          "hash": "uDqcaWU6DHPJTHPB7xXo/w=="
+          "hash": "EZL5IPOh6QlcTLEBueooxw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -804,10 +804,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/实体缓存/客户端缓存.html",
-          "hash": "P7BdALtM1x/TJSZ0X0k6bw=="
+          "hash": "fteT0CRkrb5U7X5hJfHp/A=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -816,10 +816,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/实体缓存/服务端缓存.html",
-          "hash": "qo5jFb4LpiPd/wj9Jo9NmQ=="
+          "hash": "y+Mb3KVReMVifKq3EGHoMg=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -828,10 +828,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/对象关系映射.html",
-          "hash": "7CQrif/g5ohgQ16e1vVtiA=="
+          "hash": "3IWiqQTitdqJU5iTsjNH9Q=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -840,10 +840,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/快速试用.html",
-          "hash": "3krgxZnfSz06sA2paYlyqw=="
+          "hash": "E9EI64SdPuPopK/hUzk2BA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -855,10 +855,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/快速试用/创建第一个程序.html",
-          "hash": "+CTzD+Ubw9Rd7q0dxHkZiQ=="
+          "hash": "kJaXAqwgu4L97yYSuGqRhQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -867,10 +867,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/快速试用/如何：查看领域实体关系图.html",
-          "hash": "B9z7N6abYkvL3jKXx5N+Lw=="
+          "hash": "o6nPEESX4fDdjWzVhNziiQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -882,10 +882,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/快速试用/如何：连接到 Sql Server 数据库.html",
-          "hash": "Hzh1sgfyiy+VPndmWFrXdg=="
+          "hash": "ai1JYYhAdCxiZ7XYH8H5Mw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -894,10 +894,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/快速试用/绘制领域类图.html",
-          "hash": "1gt/zrtxByZrrucJpLIJOg=="
+          "hash": "axuKCbdTV8oq7anmdD5GXQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -909,10 +909,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/插件级扩展.html",
-          "hash": "c5PQLZbxL4mSp32hsHkR9w=="
+          "hash": "auaXLTKB61BZUwUuW75+bQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -921,10 +921,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/插件级扩展/实体保存逻辑扩展（仓库数据层）.html",
-          "hash": "7jxRw9oeHAE9swJagaAy3w=="
+          "hash": "0a4zW4mK6sGhdxjKtrdvWw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -936,10 +936,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/插件级扩展/实体属性扩展.html",
-          "hash": "P8m1NS4Kz1n25bufjCCnhA=="
+          "hash": "s3nlRKaVnXRE65rU0D3A0A=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -951,10 +951,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/插件级扩展/实体查询扩展（仓库扩展）.html",
-          "hash": "2ljcCh3vVYbevlbL2ZN3mw=="
+          "hash": "vxy2eYKxtDFQqIfw9OAiPA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -966,10 +966,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/插件级扩展/实体配置扩展.html",
-          "hash": "w1joVjfz6ANAd7K48XFUfA=="
+          "hash": "3NPqmtnD1I/1EtXeNpNLng=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -981,10 +981,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/插件级扩展/领域逻辑扩展（领域控制器）.html",
-          "hash": "BIiMH8sFr2I+ZUsaDE5NjA=="
+          "hash": "QYEjdAB5MzUigVJxzEYbSw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -993,10 +993,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/自动生成代码.html",
-          "hash": "KBGm1Jj8nrdWhuyXGvmwyw=="
+          "hash": "qncUonJjIJn/BcJxA3GLxw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1005,10 +1005,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/部署.html",
-          "hash": "eFTwCjP5LGtBHCjHB4uneg=="
+          "hash": "i3r9k2PxzhxKjwfuPt3THA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1017,10 +1017,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/部署/分布式部署.html",
-          "hash": "EQKOtPg13F4rkXwpbWd1Yg=="
+          "hash": "vG0L6dDrmIae/Rz5r3gQcg=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1029,10 +1029,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/部署/如何：控制数据传输.html",
-          "hash": "ragRvnX7hu6OhAfhgoMqaA=="
+          "hash": "mFVveHU7HVPwKZ8u9DZ/3A=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1041,10 +1041,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/部署/直联部署.html",
-          "hash": "NdXjPDV49pPn5vROip2htQ=="
+          "hash": "X92tm+u5yywbBM55xfKBLQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1053,10 +1053,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/部署/直连部署.html",
-          "hash": "reLgADZa0JzkeffMb6QlOw=="
+          "hash": "rSEPA9QG/YpmdUrMbrRdJw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1068,10 +1068,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/领域实体.html",
-          "hash": "RcsLKEqHjNxP5ILx4ukIkw=="
+          "hash": "hnQoeM9oLuGVo/pJOAvVag=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1083,10 +1083,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/领域实体/实体关系.html",
-          "hash": "TYis0zp2iUnpNleAqZHGow=="
+          "hash": "KM/U+wm9UB5jYeJ0Gs1Vvg=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1098,10 +1098,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/领域实体/实体属性.html",
-          "hash": "+3LSSssui43+Q6i1HrlQnQ=="
+          "hash": "Wj5HbUUUIhU7Emsi8TIwyg=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1110,10 +1110,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/领域实体/实体属性/一般属性.html",
-          "hash": "SyAros1sAD/S3Dt1Fo8Vug=="
+          "hash": "5JBD860sKLgrJ06+jyYYXA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1122,10 +1122,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/领域实体/实体属性/冗余属性.html",
-          "hash": "8yHaoYcQWkX42GDiKtv9kA=="
+          "hash": "t0SEh0cfGbhVPvhAQZYTWg=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1134,10 +1134,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/领域实体/实体属性/只读属性.html",
-          "hash": "NYxLRybl47KCoN3YuK7sKQ=="
+          "hash": "CjLZnxEEapgfhure0LI/hA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1146,10 +1146,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/领域实体/实体属性/大数据属性.html",
-          "hash": "4bqyDriGFk9Pt102nKwwgg=="
+          "hash": "YiXFVGjHmWqKaNTatt8qmA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1161,10 +1161,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/领域实体/实体属性/引用属性.html",
-          "hash": "aV/lA0OO52YDS6szEVofJg=="
+          "hash": "+nVuKgaTmiaWZsP+wi2IUA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1176,10 +1176,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/领域实体/实体属性/组合子属性.html",
-          "hash": "8yJ72tTYMAmlxOFJB/Y/dg=="
+          "hash": "QKZWdH1ow4SZzYX7XVOnDA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1188,10 +1188,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/领域实体/实体的状态.html",
-          "hash": "aQ2dissoh9M6lg4LEGzowg=="
+          "hash": "8wa6sNIYaZpiWjnnXal7ew=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1200,10 +1200,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/领域实体/实体配置.html",
-          "hash": "AyKirykp5wkYjFZUgc9f0Q=="
+          "hash": "meN/6vWixdKx0YiTbrNDlg=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1212,10 +1212,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/领域实体/实体集合.html",
-          "hash": "QXo/gLdffSKukQexzh7Jlw=="
+          "hash": "aUQOosl15Vbmq6uEzek4cw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1224,10 +1224,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/领域实体/实体验证规则.html",
-          "hash": "AociUIInKEGqd+RCNLU4uA=="
+          "hash": "508mrZq+E2RW5oPMajI3Rg=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1236,10 +1236,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/领域实体/树型实体.html",
-          "hash": "eFh3YG9wE9Y7iX1GRnB3aw=="
+          "hash": "/90+Obo8K+7UkY3IXeQ5Bw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1248,10 +1248,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/领域实体/路由事件.html",
-          "hash": "/lDximCdAJyIe1Qd8ALGXg=="
+          "hash": "/bbwCnDxrwoopSRnSlulUA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1260,10 +1260,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/领域实体/领域实体关系图.html",
-          "hash": "N3OSmPrazRRs3OpI3uOqUA=="
+          "hash": "HNxU9Sc+4SsbvF/rUegT4A=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1272,10 +1272,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/领域流程/事务.html",
-          "hash": "odTIKDeYoEmHJEiSWb1l7w=="
+          "hash": "HNUIMhrr3RrGw0VM6ChDJw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1284,10 +1284,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/领域逻辑.html",
-          "hash": "9dsacMBdUmSdP+IBSLnrwg=="
+          "hash": "b0tKsSSBSDoUDiDqrstRQA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1296,10 +1296,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/领域逻辑/单连接事务.html",
-          "hash": "FoJzA96bYX3EqXI5+dQd6w=="
+          "hash": "XC5fpBvzrP39UKGADKPThA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1308,10 +1308,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/领域逻辑/执行SQL或存储过程.html",
-          "hash": "wkqs/52uzmWlBVly/scK4g=="
+          "hash": "72uB027rwW8lcbHipAWy4Q=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1320,10 +1320,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/领域逻辑/领域控制器.html",
-          "hash": "FBQXM47BBemO5ZkfSjzn7g=="
+          "hash": "qK8Hao0IT+5FIJli3WCvxA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1335,10 +1335,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/领域实体框架/领域逻辑/领域服务.html",
-          "hash": "qMRBTd62BNqJXxnenZFfhA=="
+          "hash": "/HjGzq1JtUx0r0xRfa3s7A=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -1999,10 +1999,10 @@
       "output": {
         ".html": {
           "relative_path": "index.html",
-          "hash": "lrpj0GW94bw60LxHn2TL4g=="
+          "hash": "HvXhxteOqfz7c89J9jOJbA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -2025,18 +2025,18 @@
         "incrementalPhase": "build"
       },
       "processors": {
-        "TocDocumentProcessor": {
+        "ResourceDocumentProcessor": {
           "can_incremental": false,
-          "details": "Processor TocDocumentProcessor cannot suppport incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "details": "Processor ResourceDocumentProcessor cannot suppport incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         },
         "ConceptualDocumentProcessor": {
           "can_incremental": true,
           "incrementalPhase": "build"
         },
-        "ResourceDocumentProcessor": {
+        "TocDocumentProcessor": {
           "can_incremental": false,
-          "details": "Processor ResourceDocumentProcessor cannot suppport incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "details": "Processor TocDocumentProcessor cannot suppport incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         }
       }
