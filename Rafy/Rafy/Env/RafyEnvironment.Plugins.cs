@@ -543,14 +543,6 @@ namespace Rafy
             get { return Composer.ObjectContainer; }
         }
 
-        //public static IServiceCollection ServiceCollection
-        //{
-        //    get
-        //    {
-        //        throw new NotImplementedException();//huqf
-        //    }
-        //}
-
         ///// <summary>
         ///// 组件的服务容器。
         ///// </summary>

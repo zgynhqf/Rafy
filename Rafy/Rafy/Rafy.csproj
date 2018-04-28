@@ -33,7 +33,6 @@
     <Compile Remove="ManagedProperty\Serialization\NetDataContractSerializerWrapper.cs" />
     <Compile Remove="Utils\Configuration\ConfigurationExtension.cs" />
     <Compile Remove="Utils\Context\CallContextAppContextProvider.cs" />
-    <Compile Remove="Utils\Context\WebOrThreadAppContextProvider.cs" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net45'">

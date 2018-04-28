@@ -40,22 +40,37 @@ namespace Rafy.Data.Providers
                 case DbSetting.Provider_SqlClient:
                     if (_sql == null)
                     {
+#if NET45
+                        _sql = DbProviderFactories.GetFactory(DbSetting.Provider_SqlClient);
+#endif
+#if NETSTANDARD2_0 || NETCOREAPP2_0
                         _sql = LoadFromAssembly("System.Data.SqlClient.SqlClientFactory, System.Data.SqlClient");
                         //_sql = System.Data.SqlClient.SqlClientFactory.Instance;
+#endif
                     }
                     return _sql;
                 case DbSetting.Provider_SqlCe:
                     if (_sqlCe == null)
                     {
+#if NET45
+                        _sqlCe = DbProviderFactories.GetFactory(DbSetting.Provider_SqlCe);
+#endif
+#if NETSTANDARD2_0 || NETCOREAPP2_0
                         _sqlCe = LoadFromAssembly("System.Data.SqlServerCe.SqlCeProviderFactory, System.Data.SqlServerCe");
                         //_sqlCe = System.Data.SqlServerCe.SqlCeProviderFactory.Instance;
+#endif
                     }
                     return _sqlCe;
                 case DbSetting.Provider_MySql:
                     if (_mySql == null)
                     {
+#if NET45
+                        _mySql = DbProviderFactories.GetFactory(DbSetting.Provider_MySql);
+#endif
+#if NETSTANDARD2_0 || NETCOREAPP2_0
                         _mySql = LoadFromAssembly("MySql.Data.MySqlClient.MySqlClientFactory, MySql.Data");
                         //_mySql = MySql.Data.MySqlClient.MySqlClientFactory.Instance;
+#endif
                     }
                     return _mySql;
                 default:
@@ -63,12 +78,22 @@ namespace Rafy.Data.Providers
                     {
                         if (_oracle == null)
                         {
+#if NET45
+                            _oracle = DbProviderFactories.GetFactory(provider);
+#endif
+#if NETSTANDARD2_0 || NETCOREAPP2_0
                             _oracle = LoadFromAssembly("Oracle.ManagedDataAccess.Client.OracleClientFactory, Oracle.ManagedDataAccess");
                             //_oracle = Oracle.ManagedDataAccess.Client.OracleClientFactory.Instance;
+#endif
                         }
                         return _oracle;
                     }
+#if NET45
+                    return DbProviderFactories.GetFactory(provider);
+#endif
+#if NETSTANDARD2_0 || NETCOREAPP2_0
                     return System.Data.SqlClient.SqlClientFactory.Instance;
+#endif
                     //throw new NotSupportedException("This type of database is not supportted now:" + provider);
             }
         }
@@ -113,6 +138,7 @@ namespace Rafy.Data.Providers
         /// </summary>
         internal static readonly Regex ReParameterName = new Regex(@"{(?<number>\d+)}", RegexOptions.Compiled);
 
+#if NETSTANDARD2_0 || NETCOREAPP2_0
         private static DbProviderFactory LoadFromAssembly(string typeName)
         {
             var factoryType = Type.GetType(typeName);
@@ -120,5 +146,6 @@ namespace Rafy.Data.Providers
             if (instance == null) throw new InvalidProgramException($"{typeName} 对应的类型无法加载。");
             return instance;
         }
+#endif
     }
 }

@@ -120,12 +120,13 @@ namespace Rafy.ComponentModel
             {
                 AppContext.SetProvider(new StaticAppContextProvider());
             }
-            ////如果是网站，则一个 HttpContext 使用一个身份（上下文）；否则，每个线程使用一个单独的身份（上下文）。
-            //else if (HttpContext.Current != null)
-            //{
-            //    AppContext.SetProvider(new WebOrThreadAppContextProvider());
-            //}
-
+#if NET45
+            //如果是网站，则一个 HttpContext 使用一个身份（上下文）；否则，每个线程使用一个单独的身份（上下文）。
+            else if (HttpContext.Current != null)
+            {
+                AppContext.SetProvider(new WebOrThreadAppContextProvider());
+            }
+#endif
             RafyEnvironment.InitCustomizationPath();
 
             RafyEnvironment.SetApp(this);
@@ -159,7 +160,7 @@ namespace Rafy.ComponentModel
         /// </summary>
         protected virtual void StartMainProcess() { }
 
-        #region IServerApp 事件
+#region IServerApp 事件
 
         /// <summary>
         /// 所有实体元数据初始化完毕，包括实体元数据之间的关系。
@@ -316,6 +317,6 @@ namespace Rafy.ComponentModel
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
-        #endregion
+#endregion
     }
 }

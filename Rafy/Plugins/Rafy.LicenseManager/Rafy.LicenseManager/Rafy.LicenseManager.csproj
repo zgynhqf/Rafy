@@ -31,4 +31,8 @@
     <ProjectReference Include="..\..\..\Rafy\Rafy.csproj" />
     <ProjectReference Include="..\Rafy.LicenseManager.Encryption\Rafy.LicenseManager.Encryption.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
 </Project>

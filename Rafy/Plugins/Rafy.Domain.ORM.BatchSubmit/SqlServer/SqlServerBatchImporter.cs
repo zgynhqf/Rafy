@@ -188,9 +188,13 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
             {
                 this.SetMappings(bulkCopy.ColumnMappings, meta.Table);
 
+#if NET45
+                bulkCopy.WriteToServer(table);
+#endif
+#if NETSTANDARD2_0 || NETCOREAPP2_0
                 var reader = new DataTableReader(table);
-
                 bulkCopy.WriteToServer(reader);
+#endif
             }
             finally
             {
@@ -231,9 +235,9 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
             //}
         }
 
-        #endregion
+#endregion
 
-        #region ImportUpdate
+#region ImportUpdate
 
         /// <summary>
         /// 批量导入指定的实体或列表。
@@ -333,6 +337,6 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
             return parameters.ToArray();
         }
 
-        #endregion
+#endregion
     }
 }

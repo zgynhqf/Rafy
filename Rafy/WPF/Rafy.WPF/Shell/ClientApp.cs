@@ -207,8 +207,7 @@ namespace Rafy.WPF.Shell
                 var path = string.Join(";", pathes);
 
                 //ModifyPrivateBinPath
-                AppDomain.CurrentDomain.SetData("PRIVATE_BINPATH", path);
-                AppDomain.CurrentDomain.SetData("BINPATH_PROBE_ONLY", path);
+                PathHelper.ModifyPrivateBinPath(path);
             }
         }
 
@@ -247,9 +246,9 @@ namespace Rafy.WPF.Shell
             return true;
         }
 
-        #endregion
+#endregion
 
-        #region 闪屏
+#region 闪屏
 
         /// <summary>
         /// 如果在客户端应用程序启动前设置了这个属性，则将会使用这个对象表示的图片来作为程序的闪屏。
@@ -325,9 +324,9 @@ namespace Rafy.WPF.Shell
             }
         }
 
-        #endregion
+#endregion
 
-        #region 其它方法
+#region 其它方法
 
         public void ShowMessage(string message, string title)
         {
@@ -339,9 +338,9 @@ namespace Rafy.WPF.Shell
             _wpfApp.Shutdown();
         }
 
-        #endregion
+#endregion
 
-        #region IClientApp 成员
+#region IClientApp 成员
 
         public event EventHandler CommandMetaIntialized;
 
@@ -367,7 +366,7 @@ namespace Rafy.WPF.Shell
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
-        #endregion
+#endregion
     }
 
     /// <summary>

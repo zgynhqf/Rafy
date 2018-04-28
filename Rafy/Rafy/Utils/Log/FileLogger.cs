@@ -35,13 +35,16 @@ namespace Rafy
         /// </summary>
         public FileLogger()
         {
-            var separator = '.';
-#if NETSTANDARD2_0 || NETCOREAPP2_0
-            separator = ':';
+#if NET45
+            this.InfoLogFileName = ConfigurationHelper.GetAppSettingOrDefault($"Rafy.FileLogger.InfoLogFileName", "ApplicationInfoLog.txt");
+            this.ExceptionLogFileName = ConfigurationHelper.GetAppSettingOrDefault($"Rafy.FileLogger.ExceptionLogFileName", "ExceptionLog.txt");
+            this.SqlTraceFileName = ConfigurationHelper.GetAppSettingOrDefault($"Rafy.FileLogger.SqlTraceFileName", string.Empty);
 #endif
-            this.InfoLogFileName = ConfigurationHelper.GetAppSettingOrDefault($"Rafy{separator}FileLogger{separator}InfoLogFileName", "ApplicationInfoLog.txt");
-            this.ExceptionLogFileName = ConfigurationHelper.GetAppSettingOrDefault($"Raf{separator}FileLogger{separator}ExceptionLogFileName", "ExceptionLog.txt");
-            this.SqlTraceFileName = ConfigurationHelper.GetAppSettingOrDefault($"Rafy{separator}FileLogger{separator}SqlTraceFileName", string.Empty);
+#if NETSTANDARD2_0 || NETCOREAPP2_0
+            this.InfoLogFileName = ConfigurationHelper.GetAppSettingOrDefault($"Rafy:FileLogger:InfoLogFileName", "ApplicationInfoLog.txt");
+            this.ExceptionLogFileName = ConfigurationHelper.GetAppSettingOrDefault($"Rafy:FileLogger:ExceptionLogFileName", "ExceptionLog.txt");
+            this.SqlTraceFileName = ConfigurationHelper.GetAppSettingOrDefault($"Rafy:FileLogger:SqlTraceFileName", string.Empty);
+#endif
         }
 
         /// <summary>
@@ -57,7 +60,8 @@ namespace Rafy
         public string ExceptionLogFileName { get; set; }
 
         /// <summary>
-        /// 默认使用配置文件中的 Rafy:FileLogger:SqlTraceFileName 配置项。
+        /// 默认使用配置文件中的 Rafy:FileLogger:SqlTraceFileName 配置项
+        ///   NetFramework 分隔符为“.”，NetCore 分隔符为“:”
         /// </summary>
         public string SqlTraceFileName { get; set; }
 
@@ -121,6 +125,7 @@ Message：{ message }");
         /// <summary>
         /// 记录 Sql 执行过程。
         /// 把 SQL 语句及参数，写到 'Rafy:FileLogger:SqlTraceFileName' 配置所对应的文件中。
+        ///   NetFramework 分隔符为“.”，NetCore 分隔符为“:”
         /// </summary>
         /// <param name="sql"></param>
         /// <param name="parameters"></param>

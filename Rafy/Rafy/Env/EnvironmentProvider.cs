@@ -24,6 +24,23 @@ namespace Rafy
     /// </summary>
     public class EnvironmentProvider
     {
+#if NET45
+        public EnvironmentProvider()
+        {
+            this.RootDirectory = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+            var httpContext = System.Web.HttpContext.Current;
+            if (httpContext != null)
+            {
+                this.DllRootDirectory = httpContext.Server.MapPath("Bin");
+                this.IsDebuggingEnabled = httpContext.IsDebuggingEnabled;
+            }
+            else
+            {
+                this.DllRootDirectory = this.RootDirectory;
+            }
+        }
+#endif
+#if NETSTANDARD2_0 || NETCOREAPP2_0
         public EnvironmentProvider()
         {
             this.RootDirectory = AppDomain.CurrentDomain.BaseDirectory;
@@ -37,6 +54,7 @@ namespace Rafy
             //    this.IsDebuggingEnabled = false;//httpContext.IsDebuggingEnabled;许保同修改
             //}
         }
+#endif
 
         /// <summary>
         /// 整个应用程序的根目录

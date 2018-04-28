@@ -11,6 +11,7 @@
  * 
 *******************************************************/
 
+#if NET45
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,7 +55,7 @@ namespace Rafy
                 var hc = HttpContext.Current;
                 if (hc != null)
                 {
-                    hc.User = (ClaimsPrincipal)value;
+                    hc.User = value;
                 }
 
                 Thread.CurrentPrincipal = value;
@@ -87,3 +88,4 @@ namespace Rafy
         }
     }
 }
+#endif
