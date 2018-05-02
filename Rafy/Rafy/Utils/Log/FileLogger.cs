@@ -8,6 +8,7 @@
  * 
  * 历史记录：
  * 创建文件 胡庆访 20130314 14:41
+ * 编辑文件 崔化栋 20180502 14:00
  * 
 *******************************************************/
 
@@ -35,9 +36,15 @@ namespace Rafy
         /// </summary>
         public FileLogger()
         {
-            this.InfoLogFileName = ConfigurationHelper.GetAppSettingOrDefault("Rafy.FileLogger.InfoLogFileName", "ApplicationInfoLog.txt");
-            this.ExceptionLogFileName = ConfigurationHelper.GetAppSettingOrDefault("Rafy.FileLogger.ExceptionLogFileName", "ExceptionLog.txt");
-            this.SqlTraceFileName = ConfigurationHelper.GetAppSettingOrDefault("Rafy.FileLogger.SqlTraceFileName", string.Empty);
+            this.InfoLogFileName = ConfigurationHelper.GetAppSettingOrDefault($"Rafy:FileLogger:InfoLogFileName", 
+                ConfigurationHelper.GetAppSettingOrDefault($"Rafy.FileLogger.InfoLogFileName", "ApplicationInfoLog.txt")
+                );
+            this.ExceptionLogFileName = ConfigurationHelper.GetAppSettingOrDefault($"Rafy:FileLogger:ExceptionLogFileName", 
+                ConfigurationHelper.GetAppSettingOrDefault($"Rafy.FileLogger.ExceptionLogFileName", "ExceptionLog.txt")
+                );
+            this.SqlTraceFileName = ConfigurationHelper.GetAppSettingOrDefault($"Rafy:FileLogger:SqlTraceFileName", 
+                ConfigurationHelper.GetAppSettingOrDefault($"Rafy.FileLogger.SqlTraceFileName", string.Empty)
+                );
         }
 
         /// <summary>
@@ -53,7 +60,8 @@ namespace Rafy
         public string ExceptionLogFileName { get; set; }
 
         /// <summary>
-        /// 默认使用配置文件中的 Rafy.FileLogger.SqlTraceFileName 配置项。
+        /// 默认使用配置文件中的 Rafy:FileLogger:SqlTraceFileName 配置项
+        ///   NetFramework 分隔符为“.”，NetCore 分隔符为“:”
         /// </summary>
         public string SqlTraceFileName { get; set; }
 
@@ -116,7 +124,8 @@ Message：{ message }");
 
         /// <summary>
         /// 记录 Sql 执行过程。
-        /// 把 SQL 语句及参数，写到 'Rafy.FileLogger.SqlTraceFileName' 配置所对应的文件中。
+        /// 把 SQL 语句及参数，写到 'Rafy:FileLogger:SqlTraceFileName' 配置所对应的文件中。
+        ///   NetFramework 分隔符为“.”，NetCore 分隔符为“:”
         /// </summary>
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
@@ -204,11 +213,11 @@ Message：{ message }");
                     value = '\'' + value.ToString() + '\'';
                     //value = '"' + value.ToString() + '"';
                 }
-                else if(p.DbType == DbType.Boolean)
+                else if (p.DbType == DbType.Boolean)
                 {
                     value = Convert.ToByte(value);
                 }
-                else if(value == null)
+                else if (value == null)
                 {
                     value = "null";
                 }

@@ -4716,6 +4716,19 @@ ORDER BY ASN.ASNCODE ASC
 WHERE RN >= 1");
         }
 
+        /// <summary>
+        /// 一些 Sql 语句上的换行符并不是 \r\n 而只是 \n，所以这里需要对其忽略后再进行对比。
+        /// </summary>
+        /// <param name="sqlA"></param>
+        /// <param name="sqlB"></param>
+        /// <param name="message"></param>
+        private static void AssertSqlEqual(string sqlA, string sqlB, string message = "")
+        {
+            sqlA = sqlA.Replace("\r", string.Empty);
+            sqlB = sqlB.Replace("\r", string.Empty);
+            Assert.AreEqual(sqlA, sqlB, message);
+        }
+        
         #endregion
 
         #region TableQuery
@@ -5498,8 +5511,8 @@ ORDER BY Article.Code ASC");
         [TestMethod]
         public void ORM_MultiThread_Query()
         {
-            var p = AppContext.GetProvider();
-            AppContext.SetProvider(new StaticAppContextProvider());
+            var p = Rafy.AppContext.GetProvider();
+            Rafy.AppContext.SetProvider(new StaticAppContextProvider());
 
             /*********************** 代码块解释 *********************************
              * 模拟：线程 1 在查找的同时，线程 2 也开始查询。
@@ -5538,7 +5551,7 @@ ORDER BY Article.Code ASC");
             finally
             {
                 thread1End.Set();
-                AppContext.SetProvider(p);
+                Rafy.AppContext.SetProvider(p);
             }
         }
 
@@ -6193,18 +6206,5 @@ ORDER BY Article.Code ASC");
         //}
 
         #endregion
-
-        /// <summary>
-        /// 一些 Sql 语句上的换行符并不是 \r\n 而只是 \n，所以这里需要对其忽略后再进行对比。
-        /// </summary>
-        /// <param name="sqlA"></param>
-        /// <param name="sqlB"></param>
-        /// <param name="message"></param>
-        private static void AssertSqlEqual(string sqlA, string sqlB, string message = "")
-        {
-            sqlA = sqlA.ToUpper().Replace("\r", string.Empty);
-            sqlB = sqlB.ToUpper().Replace("\r", string.Empty);
-            Assert.AreEqual(sqlA, sqlB, message);
-        }
     }
 }

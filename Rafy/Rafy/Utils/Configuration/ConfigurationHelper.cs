@@ -1,14 +1,32 @@
-﻿using System;
+﻿/*******************************************************
+ * 
+ * 作者：胡庆访
+ * 创建日期：????
+ * 说明：此文件只包含一个类，具体内容见类型注释。
+ * 运行环境：.NET 4.0
+ * 版本号：1.0.0
+ * 
+ * 历史记录：
+ * 创建文件 胡庆访
+ * 编辑文件 崔化栋 20180502 14:00
+ * 
+*******************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ComponentModel;
 using System.Configuration;
+#if NETSTANDARD2_0 || NETCOREAPP2_0
+using Microsoft.Extensions.Configuration;
+#endif
 
 namespace Rafy
 {
     /// <summary>
     /// 配置文件的帮助类。
+    /// .NET Core 下的配置使用方法，见：https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration#in-memory-provider-and-binding-to-a-poco-class。
     /// </summary>
     public static class ConfigurationHelper
     {
@@ -23,6 +41,7 @@ namespace Rafy
         public static T GetAppSettingOrDefault<T>(string key, T defaultValue = default(T))
             where T : struct
         {
+#if NET45
             var value = GetAppSettingOrDefault(key);
             if (value != string.Empty)
             {
@@ -38,6 +57,9 @@ namespace Rafy
             }
 
             return defaultValue;
+#elif NETSTANDARD2_0 || NETCOREAPP2_0
+            return Configuration.GetValue(key, defaultValue);
+#endif
         }
 
         /// <summary>
@@ -49,7 +71,61 @@ namespace Rafy
         /// <returns></returns>
         public static string GetAppSettingOrDefault(string key, string defaultValue = "")
         {
+#if NET45
             return ConfigurationManager.AppSettings[key] ?? defaultValue;
+#elif NETSTANDARD2_0 || NETCOREAPP2_0
+            return Configuration.GetValue(key, defaultValue);
+#endif
         }
+
+#if NETSTANDARD2_0 || NETCOREAPP2_0
+        /// <summary>
+        /// 获取配置文件中的ConnectionString的指定键的值
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="providerName">Name of the provider.</param>
+        /// <returns></returns>
+        internal static ConnectionStringSettings GetConnectionString(string key, string providerName = "System.Data.SqlClient")
+        {
+            var section = Configuration.GetSection("ConnectionStrings:" + key);
+            if (!section.Exists()) return null;
+
+            var res = new ConnectionStringSettings();
+
+            section.Bind(res);
+
+            if (string.IsNullOrEmpty(res.ProviderName))
+            {
+                res.ProviderName = providerName;
+            }
+
+            return res;
+        }
+
+        private static IConfigurationRoot _configuration;
+
+        /// <summary>
+        /// 获取或设置主配置文件所对应的配置文件根对象。
+        /// 
+        /// 默认使用 AppDomain.CurrentDomain.BaseDirectory 中的 appsettings.json 文件作为配置文件。
+        /// 也可以设置为别的配置文件。
+        /// </summary>
+        public static IConfigurationRoot Configuration
+        {
+            get
+            {
+                if (_configuration == null)
+                {
+                    //默认使用运行目录中的 appsettings.json 文件作为配置文件。
+                    _configuration = new ConfigurationBuilder()
+                        .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                        .AddJsonFile("appsettings.json")
+                        .Build();
+                }
+                return _configuration;
+            }
+            set { _configuration = value; }
+        }
+#endif
     }
 }

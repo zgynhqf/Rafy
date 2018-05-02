@@ -8,9 +8,11 @@
  * 
  * 历史记录：
  * 创建文件 胡庆访 20130125 11:27
+ * 编辑文件 崔化栋 20180424 09:50
  * 
 *******************************************************/
 
+#if NET45
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -89,3 +91,51 @@ namespace Rafy.Configuration
         }
     }
 }
+#endif
+
+#if NETSTANDARD2_0 || NETCOREAPP2_0
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
+using System.Text;
+using Microsoft.Extensions.Configuration;
+
+namespace Rafy.Configuration
+{
+    public class RafyConfigurationSection
+    {
+        public WPFConfigurationSection WPF { get; private set; } = new WPFConfigurationSection();
+
+        //public IConfigurationSection Web
+        //{
+        //    get { return this.GetSection("web"); }
+        //}
+
+        /// <summary>
+        /// 当前显示的语言文化。
+        /// 如果没有设置本项，表明使用系统自带的语言文化。
+        /// 例如：zh-CN、en-US 等。
+        /// </summary>
+        public string CurrentCulture { get; set; }
+
+        /// <summary>
+        /// 在当前语言下是否执行收集操作。
+        /// </summary>
+        /// 
+        public DynamicBoolean CollectDevLanguages { get; set; } = DynamicBoolean.IsDebugging;
+
+        /// <summary>
+        /// 配置使用哪个数据门户代理。
+        /// 
+        /// 如果直接连接数据源，则需要配置：Local（默认值）。
+        /// 如果使用 WCF，则需要配置：Rafy.Domain.DataPortal.WCF.ClientProxy, Rafy.Domain。
+        /// </summary>
+        public string DataPortalProxy { get; set; } = "Local";
+
+        public string[] DomainPlugins { get; set; }
+
+        public string[] UIPlugins { get; set; }
+    }
+}
+#endif

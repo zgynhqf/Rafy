@@ -13,7 +13,6 @@
 3.65.3730
     BUG修复
         RdbTable 中使用 Lazy 时，需要考虑线程安全的问题。（并发时，Lazy.Value 抛出异常。）
-    内部修改
         DataArchiver 应该保持原有的 ID 不变。（未完成）
 
 3.65.3725
@@ -116,7 +115,6 @@
 3.61.3530
     内部修改
         整理版本号，与 Nuget 服务器同步。
-
 3.61.3430
     内部修改
         Oracle、MySql 下，进行分页时，都不自动使用 Id 来进行排序。该功能只在 SqlServer 中启用。
@@ -135,6 +133,9 @@
     添加接口
         添加 EntityRepository ResolveInstance(Type repositoryType) 接口。
         添加 LiteDataTable.ToEntityList 扩展方法，支持把 LiteDataTable 直接转换为指定实体类型的 API #52
+
+3.61.3425    
+	内部修改
 
 3.61.3340
     ★★公布、添加功能

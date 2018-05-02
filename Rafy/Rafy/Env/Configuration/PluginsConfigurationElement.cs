@@ -7,9 +7,11 @@
  * 
  * 历史记录：
  * 创建文件 胡庆访 20151209 20:28
+ * 编辑文件 崔化栋 20180502 14:00
  * 
 *******************************************************/
 
+#if NET45
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -46,3 +48,4 @@ namespace Rafy.Configuration
         }
     }
 }
+#endif

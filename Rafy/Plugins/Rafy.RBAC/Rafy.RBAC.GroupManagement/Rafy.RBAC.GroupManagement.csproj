@@ -1,113 +1,24 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E54CD6BC-727E-4D97-810D-6BB83A64A23F}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Rafy.RBAC.GroupManagement</RootNamespace>
-    <AssemblyName>Rafy.RBAC.GroupManagement</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>bin\Debug\Rafy.RBAC.GroupManagement.XML</DocumentationFile>
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <NoWarn>1591</NoWarn>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
+    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
     <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
     <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netstandard2.0\Rafy.RBAC.GroupManagement.XML</DocumentationFile>
+    <NoWarn>1701;1702;1705;1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Controllers\GroupController.cs" />
-    <Compile Include="DataPermissionConstraintBuilders\CurrentGroupPermissionConstraintBuilder.cs" />
-    <Compile Include="Extensions\ResourceOperationRepositoryExtension.cs" />
-    <Compile Include="Extensions\ResourceRepositoryExtension.cs" />
-    <Compile Include="Extensions\RoleRepositoryExtension.cs" />
-    <Compile Include="Extensions\UserRepositoryGroupExtension.cs" />
-    <Compile Include="GroupUserRoleFinder.cs" />
-    <Compile Include="PermissionArchitecture\DefaultPermissionBuilder.cs" />
-    <Compile Include="PermissionArchitecture\DefaultPermissionEntry.cs" />
-    <Compile Include="PermissionArchitecture\PermissionBuilder.cs" />
-    <Compile Include="PermissionArchitecture\PermissionEntry.cs" />
-    <Compile Include="Controllers\PermissionFacadeController.cs" />
-    <Compile Include="Entities\Group.cs" />
-    <Compile Include="Entities\Group.g.cs">
-      <SubType>Code</SubType>
-      <DependentUpon>Group.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\GroupManagementEntity.cs" />
-    <Compile Include="Entities\GroupRole.cs" />
-    <Compile Include="Entities\GroupRole.g.cs">
-      <SubType>Code</SubType>
-      <DependentUpon>GroupRole.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\GroupUser.cs" />
-    <Compile Include="Entities\GroupUser.g.cs">
-      <SubType>Code</SubType>
-      <DependentUpon>GroupUser.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GroupManagementPlugin.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Rafy\Rafy.csproj">
-      <Project>{966a5bf2-d690-426b-ad68-ad868bb8f855}</Project>
-      <Name>Rafy</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Rafy.Accounts\Rafy.Accounts.csproj">
-      <Project>{4D6467E4-D1CE-4FA8-A1FE-92B1BA549A4A}</Project>
-      <Name>Rafy.Accounts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rafy.RBAC.RoleManagement\Rafy.RBAC.RoleManagement.csproj">
-      <Project>{708150c2-4b78-4f02-a8e9-3338cc76f69c}</Project>
-      <Name>Rafy.RBAC.RoleManagement</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\..\..\Rafy\Rafy.csproj" />
+    <ProjectReference Include="..\..\Rafy.Accounts\Rafy.Accounts.csproj" />
+    <ProjectReference Include="..\Rafy.RBAC.RoleManagement\Rafy.RBAC.RoleManagement.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Hxy Key.snk" />
-  </ItemGroup>
-  <ItemGroup />
-  <!--<ItemGroup>
-        <Folder Include="Services\" />
-    </ItemGroup>-->
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

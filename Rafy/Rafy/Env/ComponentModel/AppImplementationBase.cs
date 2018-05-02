@@ -8,6 +8,7 @@
  * 
  * 历史记录：
  * 创建文件 胡庆访 20120310
+ * 编辑文件 崔化栋 20180502 14:00
  * 
 *******************************************************/
 
@@ -23,6 +24,7 @@ using System.Web;
 using Rafy;
 using Rafy.MetaModel;
 using Rafy.MetaModel.View;
+using Rafy.Utils;
 
 namespace Rafy.ComponentModel
 {
@@ -119,12 +121,13 @@ namespace Rafy.ComponentModel
             {
                 AppContext.SetProvider(new StaticAppContextProvider());
             }
+#if NET45
             //如果是网站，则一个 HttpContext 使用一个身份（上下文）；否则，每个线程使用一个单独的身份（上下文）。
             else if (HttpContext.Current != null)
             {
                 AppContext.SetProvider(new WebOrThreadAppContextProvider());
             }
-
+#endif
             RafyEnvironment.InitCustomizationPath();
 
             RafyEnvironment.SetApp(this);

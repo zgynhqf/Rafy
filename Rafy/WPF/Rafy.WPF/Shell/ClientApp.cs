@@ -206,6 +206,7 @@ namespace Rafy.WPF.Shell
 
                 var path = string.Join(";", pathes);
 
+                //ModifyPrivateBinPath
                 PathHelper.ModifyPrivateBinPath(path);
             }
         }

@@ -339,6 +339,26 @@ namespace RafyUnitTest
             }
         }
 
+        /// <summary>
+        /// 当实体的属性与数据库的字段一致时，columnMapToProperty 参数传入 true，也能正常转换。
+        /// </summary>
+        [TestMethod]
+        public void DT_LiteDataTable_CanConvertToEntity_PropertySameColumnName()
+        {
+            var repo = RF.ResolveInstance<BlogUserRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var blogUser = new BlogUser();
+                blogUser.UserName = "hk2";
+                repo.Save(blogUser);
+
+                var table = repo.GetAllInTable();
+                var userList = table.ToEntityList<BlogUserList>(true);
+                Assert.AreEqual("hk2", userList[0].UserName, "当实体的属性与数据库的字段不一致时，转换出来的值应该与原来保持一致。");
+            }
+        }
+
         #endregion
+
     }
 }
