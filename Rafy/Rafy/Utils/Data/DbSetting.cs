@@ -8,6 +8,7 @@
  * 
  * 历史记录：
  * 创建文件 胡庆访 20120312
+ * 编辑文件 崔化栋 20180502 14:00
  * 
 *******************************************************/
 
@@ -150,14 +151,14 @@ namespace Rafy.Data
 
             return new DbSetting
             {
-                ConnectionString = string.Format(@"Data Source=.\SQLExpress;Initial Catalog={0};Integrated Security=True", dbSettingName),
-                ProviderName = Provider_SqlClient
+                ConnectionString = string.Format(@"Data Source={0}.sdf", dbSettingName),
+                ProviderName = Provider_SqlCe
             };
 
             //return new DbSetting
             //{
-            //    ConnectionString = string.Format(@"Data Source={0}.sdf", dbSettingName),
-            //    ProviderName = Provider_SqlCe
+            //    ConnectionString = string.Format(@"Data Source=.\SQLExpress;Initial Catalog={0};Integrated Security=True", dbSetting),
+            //    ProviderName = "System.Data.SqlClient"
             //};
         }
     }

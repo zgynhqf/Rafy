@@ -190,7 +190,7 @@ namespace Rafy
         /// 获取所有此版本中需要加载的实体类Dll集合。
         /// </summary>
         /// <returns></returns>
-        public static string[] GetCustomerEntityDlls(bool toAbsolute = true)
+        internal static string[] GetCustomerEntityDlls(bool toAbsolute = true)
         {
             return _branchProvider.MapAllPathes(DomainPluginFolder, toAbsolute);
         }

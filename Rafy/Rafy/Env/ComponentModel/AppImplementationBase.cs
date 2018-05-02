@@ -8,6 +8,7 @@
  * 
  * 历史记录：
  * 创建文件 胡庆访 20120310
+ * 编辑文件 崔化栋 20180502 14:00
  * 
 *******************************************************/
 
@@ -160,7 +161,7 @@ namespace Rafy.ComponentModel
         /// </summary>
         protected virtual void StartMainProcess() { }
 
-#region IServerApp 事件
+        #region IServerApp 事件
 
         /// <summary>
         /// 所有实体元数据初始化完毕，包括实体元数据之间的关系。
@@ -317,6 +318,6 @@ namespace Rafy.ComponentModel
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
-#endregion
+        #endregion
     }
 }

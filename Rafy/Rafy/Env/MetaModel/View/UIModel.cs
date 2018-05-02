@@ -55,7 +55,7 @@ namespace Rafy.MetaModel.View
 
         public static WPFCommandRepository WPFCommands { get { return _wpfCommands; } }
 
-        public static void Freeze()
+        internal static void Freeze()
         {
             WebCommands.FreezeItems();
         }
@@ -75,7 +75,7 @@ namespace Rafy.MetaModel.View
         /// 
         /// 此方法应该在程序初始化时调用。
         /// </summary>
-        public static void InitCommandMetas()
+        internal static void InitCommandMetas()
         {
             if (RafyEnvironment.Location.IsWebUI)
             {

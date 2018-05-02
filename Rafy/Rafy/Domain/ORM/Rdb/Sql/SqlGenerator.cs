@@ -507,7 +507,7 @@ namespace Rafy.Domain.ORM
 
             return node;
         }
-        
+
         private void AppendParameter(object value, SqlColumn column)
         {
             //如果只传入参数的值，那么 DbDataParameter 中是没有设置 DbType 的，这会造成索引无效。

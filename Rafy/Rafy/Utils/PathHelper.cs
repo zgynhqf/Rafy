@@ -8,6 +8,7 @@
  * 
  * 历史记录：
  * 创建文件 胡庆访 20101122
+ * 编辑文件 崔化栋 20180502 14:00
  * 
 *******************************************************/
 
@@ -21,7 +22,7 @@ using System.Reflection;
 
 namespace Rafy.Utils
 {
-    public static class PathHelper
+    internal static class PathHelper
     {
         /// <summary>
         /// 修改当前程序的私有路径

@@ -235,9 +235,9 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
             //}
         }
 
-#endregion
+        #endregion
 
-#region ImportUpdate
+        #region ImportUpdate
 
         /// <summary>
         /// 批量导入指定的实体或列表。
@@ -337,6 +337,6 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
             return parameters.ToArray();
         }
 
-#endregion
+        #endregion
     }
 }

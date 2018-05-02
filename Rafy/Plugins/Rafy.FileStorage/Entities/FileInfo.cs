@@ -85,12 +85,12 @@ namespace Rafy.FileStorage
             internal set { this.SetProperty(LengthProperty, value); }
         }
 
-        public static readonly Property<string> StorageProperty = P<FileInfo>.Register(e => e.Storage);
+        internal static readonly Property<string> StorageProperty = P<FileInfo>.Register(e => e.Storage);
         /// <summary>
         /// 存储的具体信息。
         /// 不同的协议决定文件存储的方式。（可以是文件夹路径，也可能存储在云端等。）
         /// </summary>
-        public string Storage
+        internal string Storage
         {
             get { return this.GetProperty(StorageProperty); }
             set { this.SetProperty(StorageProperty, value); }

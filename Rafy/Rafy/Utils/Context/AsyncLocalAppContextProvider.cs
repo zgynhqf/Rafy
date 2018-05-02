@@ -8,8 +8,10 @@
  * 
  * 历史记录：
  * 创建文件 胡庆访 20170918 14:03
+ * 编辑文件 崔化栋 20180502 14:00
  * 
 *******************************************************/
+
 #if NETSTANDARD2_0 || NETCOREAPP2_0
 using System;
 using System.Collections.Generic;
