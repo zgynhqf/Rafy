@@ -30,10 +30,10 @@ namespace ConsoleHost
             Console.ReadLine();
         }
 
-        //private static void MainDomainProcess()
-        //{
-        //    var users = RF.ResolveInstance<UserRepository>().GetAll();
-        //}
+        private static void MainDomainProcess()
+        {
+            //    var users = RF.ResolveInstance<UserRepository>().GetAll();
+        }
     }
 
     class ConsoleHostApp : DomainApp
