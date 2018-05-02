@@ -30,10 +30,10 @@ namespace ConsoleHost
             Console.ReadLine();
         }
 
-        private static void MainDomainProcess()
-        {
-            var users = RF.ResolveInstance<UserRepository>().GetAll();
-        }
+        //private static void MainDomainProcess()
+        //{
+        //    var users = RF.ResolveInstance<UserRepository>().GetAll();
+        //}
     }
 
     class ConsoleHostApp : DomainApp
@@ -43,8 +43,6 @@ namespace ConsoleHost
             RafyEnvironment.Provider.IsDebuggingEnabled = ConfigurationHelper.GetAppSettingOrDefault("IsDebuggingEnabled", false);
 
             RafyEnvironment.DomainPlugins.Add(new AccountsPlugin());
-
-            AccountsPlugin.DbSettingName = "ConsoleHostApp";
 
             base.InitEnvironment();
         }
