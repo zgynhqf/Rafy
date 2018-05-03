@@ -6,7 +6,16 @@
     <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>4.0.0</Version>
+    <Version>3.70.3800</Version>
+    <PackageId>Rafy.Domain</PackageId>
+    <Authors>Hxy dev group</Authors>
+    <Company>Hxy dev group</Company>
+    <Description>Rafy Domain Entity Framework
+User Guide:
+http://zgynhqf.github.io/Rafy</Description>
+    <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageProjectUrl></PackageProjectUrl>
+    <RepositoryUrl>https://github.com/zgynhqf/rafy</RepositoryUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
