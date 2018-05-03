@@ -135,7 +135,7 @@
         添加 LiteDataTable.ToEntityList 扩展方法，支持把 LiteDataTable 直接转换为指定实体类型的 API #52
 
 3.61.3425    
-	内部修改
+    内部修改
 
 3.61.3340
     ★★公布、添加功能
