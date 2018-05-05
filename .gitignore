@@ -13,6 +13,7 @@
 [Oo]bj/
 [Dd]ebug/
 [Rr]elease/
+packages/
 
 # ReSharper is a .NET coding add-in
 _ReSharper*/
