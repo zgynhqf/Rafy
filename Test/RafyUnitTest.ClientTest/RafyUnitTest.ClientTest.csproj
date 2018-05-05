@@ -156,6 +156,10 @@
       <Project>{be8c3cd6-f314-453d-a0ed-fcfec0deadbc}</Project>
       <Name>Rafy.ComponentModel.UnityAdapter</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.DiskCaching\Rafy.DiskCaching.csproj">
+      <Project>{a2f2f4e8-a6ec-4856-a1da-bd4eb783041d}</Project>
+      <Name>Rafy.DiskCaching</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.EntityPhantom\Rafy.Domain.EntityPhantom.csproj">
       <Project>{0b6df92b-0248-422d-a9c2-1604d4cb7bc9}</Project>
       <Name>Rafy.Domain.EntityPhantom</Name>
