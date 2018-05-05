@@ -57,7 +57,7 @@ namespace Rafy.Data
 #if NET45
                         var config = ConfigurationManager.ConnectionStrings[dbSettingName];
 #endif
-#if NETSTANDARD2_0 || NETCOREAPP2_0
+#if NS2
                         var config = ConfigurationHelper.GetConnectionString(dbSettingName);
 #endif
                         if (config != null)
@@ -125,7 +125,7 @@ namespace Rafy.Data
 #if NET45
             var local = ConfigurationManager.ConnectionStrings[DbName_LocalServer];
 #endif
-#if NETSTANDARD2_0 || NETCOREAPP2_0
+#if NS2
             var local = ConfigurationHelper.GetConnectionString(DbName_LocalServer);
 #endif
             if (local != null && local.ProviderName == Provider_SqlClient)

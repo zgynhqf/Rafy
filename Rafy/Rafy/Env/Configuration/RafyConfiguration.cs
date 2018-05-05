@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Text;
-#if NETSTANDARD2_0 || NETCOREAPP2_0
+#if NS2
 using Microsoft.Extensions.Configuration;
 #endif
 using Rafy;
@@ -59,7 +59,7 @@ namespace Rafy
                 _section = ConfigurationManager.GetSection("rafy") as RafyConfigurationSection;
                 if (_section == null) _section = new RafyConfigurationSection();
 #endif
-#if NETSTANDARD2_0 || NETCOREAPP2_0
+#if NS2
                 var rafyRawSection = ConfigurationHelper.Configuration.GetSection("rafy");
                 if (rafyRawSection == null)
                 {

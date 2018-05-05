@@ -11,7 +11,7 @@
  * 编辑文件 崔化栋 20180424 09:50
  * 
 *******************************************************/
-#if NETSTANDARD2_0 || NETCOREAPP2_0
+#if NETSTANDARD2_0
 using System;
 using Rafy.DataTableMigration.Contexts;
 using Rafy.Domain;

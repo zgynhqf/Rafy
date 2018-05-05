@@ -24,6 +24,10 @@ http://zgynhqf.github.io/Rafy</Description>
     <NoWarn>1702;1705;1591</NoWarn>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+    <DefineConstants>NS2</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="Domain\DataPortal\WCF\**" />
     <Compile Remove="Env\WCF\**" />

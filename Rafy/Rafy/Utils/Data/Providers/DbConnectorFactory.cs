@@ -43,7 +43,7 @@ namespace Rafy.Data.Providers
 #if NET45
                         _sql = DbProviderFactories.GetFactory(DbSetting.Provider_SqlClient);
 #endif
-#if NETSTANDARD2_0 || NETCOREAPP2_0
+#if NS2
                         _sql = LoadFromAssembly("System.Data.SqlClient.SqlClientFactory, System.Data.SqlClient");
                         //_sql = System.Data.SqlClient.SqlClientFactory.Instance;
 #endif
@@ -55,7 +55,7 @@ namespace Rafy.Data.Providers
 #if NET45
                         _sqlCe = DbProviderFactories.GetFactory(DbSetting.Provider_SqlCe);
 #endif
-#if NETSTANDARD2_0 || NETCOREAPP2_0
+#if NS2
                         _sqlCe = LoadFromAssembly("System.Data.SqlServerCe.SqlCeProviderFactory, System.Data.SqlServerCe");
                         //_sqlCe = System.Data.SqlServerCe.SqlCeProviderFactory.Instance;
 #endif
@@ -67,7 +67,7 @@ namespace Rafy.Data.Providers
 #if NET45
                         _mySql = DbProviderFactories.GetFactory(DbSetting.Provider_MySql);
 #endif
-#if NETSTANDARD2_0 || NETCOREAPP2_0
+#if NS2
                         _mySql = LoadFromAssembly("MySql.Data.MySqlClient.MySqlClientFactory, MySql.Data");
                         //_mySql = MySql.Data.MySqlClient.MySqlClientFactory.Instance;
 #endif
@@ -81,7 +81,7 @@ namespace Rafy.Data.Providers
 #if NET45
                             _oracle = DbProviderFactories.GetFactory(provider);
 #endif
-#if NETSTANDARD2_0 || NETCOREAPP2_0
+#if NS2
                             _oracle = LoadFromAssembly("Oracle.ManagedDataAccess.Client.OracleClientFactory, Oracle.ManagedDataAccess");
                             //_oracle = Oracle.ManagedDataAccess.Client.OracleClientFactory.Instance;
 #endif
@@ -91,7 +91,7 @@ namespace Rafy.Data.Providers
 #if NET45
                     return DbProviderFactories.GetFactory(provider);
 #endif
-#if NETSTANDARD2_0 || NETCOREAPP2_0
+#if NS2
                     return System.Data.SqlClient.SqlClientFactory.Instance;
 #endif
                     //throw new NotSupportedException("This type of database is not supportted now:" + provider);
@@ -138,7 +138,7 @@ namespace Rafy.Data.Providers
         /// </summary>
         internal static readonly Regex ReParameterName = new Regex(@"{(?<number>\d+)}", RegexOptions.Compiled);
 
-#if NETSTANDARD2_0 || NETCOREAPP2_0
+#if NS2
         private static DbProviderFactory LoadFromAssembly(string typeName)
         {
             var factoryType = Type.GetType(typeName);

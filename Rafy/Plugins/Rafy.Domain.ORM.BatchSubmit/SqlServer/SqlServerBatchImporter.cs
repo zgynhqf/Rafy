@@ -188,10 +188,10 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
             {
                 this.SetMappings(bulkCopy.ColumnMappings, meta.Table);
 
-#if NET45 || NET452
+#if NET45
                 bulkCopy.WriteToServer(table);
 #endif
-#if NETSTANDARD2_0 || NETCOREAPP2_0
+#if NETSTANDARD2_0
                 var reader = new DataTableReader(table);
                 bulkCopy.WriteToServer(reader);
 #endif
