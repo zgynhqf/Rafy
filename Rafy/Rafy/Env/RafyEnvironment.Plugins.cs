@@ -28,9 +28,6 @@ using Rafy;
 using Rafy.Reflection;
 using Rafy.ComponentModel;
 using Rafy.Configuration;
-#if NETSTANDARD2_0 || NETCOREAPP2_0
-using Microsoft.Extensions.DependencyInjection;
-#endif
 
 namespace Rafy
 {
@@ -136,7 +133,7 @@ namespace Rafy
 #if NET45
             var configPlugins = Configuration.Section.DomainPlugins.OfType<PluginElement>().Select(e => e.Plugin).ToArray();
 #endif
-#if NETSTANDARD2_0 || NETCOREAPP2_0
+#if NS2
             var configPlugins = Configuration.Section.DomainPlugins;
 #endif
             if (configPlugins != null && configPlugins.Length > 0)
@@ -154,7 +151,7 @@ namespace Rafy
 #if NET45
                 configPlugins = Configuration.Section.UIPlugins.OfType<PluginElement>().Select(e => e.Plugin).ToArray();
 #endif
-#if NETSTANDARD2_0 || NETCOREAPP2_0
+#if NS2
                 configPlugins = Configuration.Section.UIPlugins;
 #endif
                 if (configPlugins != null && configPlugins.Length > 0)

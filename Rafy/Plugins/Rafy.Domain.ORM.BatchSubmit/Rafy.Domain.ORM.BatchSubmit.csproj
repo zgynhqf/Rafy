@@ -1,17 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net452;netstandard2.0</TargetFrameworks>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
+    <Version>3.70.3800</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin\Debug\netstandard2.0\Rafy.Domain.ORM.BatchSubmit.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591</NoWarn>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)'=='NET452'">
+    <DefineConstants>NET45</DefineConstants>
+  </PropertyGroup>
   
-  <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
-    <PackageReference Include="MySql.Data" Version="6.9.9" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'net452'">
+    <PackageReference Include="MySql.Data" Version="8.0.8-dmr" />
     <PackageReference Include="Oracle.ManagedDataAccess" Version="12.2.1100" />
     <Reference Include="System" />
     <Reference Include="System.Core" />

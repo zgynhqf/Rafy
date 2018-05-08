@@ -11,7 +11,7 @@
  * 
 *******************************************************/
 
-#if NETSTANDARD2_0 || NETCOREAPP2_0
+#if NETSTANDARD2_0
 using System;
 using Rafy.ComponentModel;
 using Rafy.Domain;

@@ -41,7 +41,7 @@ namespace Rafy
             }
         }
 #endif
-#if NETSTANDARD2_0 || NETCOREAPP2_0
+#if NS2
         public EnvironmentProvider()
         {
             this.RootDirectory = AppDomain.CurrentDomain.BaseDirectory;

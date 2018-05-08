@@ -252,7 +252,7 @@ namespace Rafy.Reflection
 }
 #endif
 
-#if NETSTANDARD2_0 || NETCOREAPP2_0
+#if NS2
 using System;
 using System.Linq.Expressions;
 using System.Reflection;

@@ -18,7 +18,7 @@ using System.Linq;
 using System.Text;
 using System.ComponentModel;
 using System.Configuration;
-#if NETSTANDARD2_0 || NETCOREAPP2_0
+#if NS2
 using Microsoft.Extensions.Configuration;
 #endif
 
@@ -57,7 +57,7 @@ namespace Rafy
             }
 
             return defaultValue;
-#elif NETSTANDARD2_0 || NETCOREAPP2_0
+#elif NS2
             return Configuration.GetValue(key, defaultValue);
 #endif
         }
@@ -73,12 +73,12 @@ namespace Rafy
         {
 #if NET45
             return ConfigurationManager.AppSettings[key] ?? defaultValue;
-#elif NETSTANDARD2_0 || NETCOREAPP2_0
+#elif NS2
             return Configuration.GetValue(key, defaultValue);
 #endif
         }
 
-#if NETSTANDARD2_0 || NETCOREAPP2_0
+#if NS2
         /// <summary>
         /// 获取配置文件中的ConnectionString的指定键的值
         /// </summary>

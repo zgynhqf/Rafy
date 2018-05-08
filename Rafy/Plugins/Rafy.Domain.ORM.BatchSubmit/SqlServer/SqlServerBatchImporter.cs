@@ -191,7 +191,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
 #if NET45
                 bulkCopy.WriteToServer(table);
 #endif
-#if NETSTANDARD2_0 || NETCOREAPP2_0
+#if NETSTANDARD2_0
                 var reader = new DataTableReader(table);
                 bulkCopy.WriteToServer(reader);
 #endif

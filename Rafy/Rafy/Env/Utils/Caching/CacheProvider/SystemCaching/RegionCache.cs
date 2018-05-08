@@ -226,7 +226,7 @@ namespace Rafy.Utils.Caching
 }
 #endif
 
-#if NETSTANDARD2_0 || NETCOREAPP2_0
+#if NS2
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Caching.Memory;
