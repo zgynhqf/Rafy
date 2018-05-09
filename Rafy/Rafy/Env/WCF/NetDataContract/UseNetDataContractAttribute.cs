@@ -10,6 +10,7 @@
  * 2.0.0.0 直接让行为起作用，否则优先级的效果会不对。 胡庆访 20130609 17:18
  * 
 *******************************************************/
+#if NET45
 
 using System;
 using System.ServiceModel.Channels;
@@ -68,3 +69,5 @@ namespace Rafy.WCF
         void IOperationBehavior.Validate(OperationDescription description) { }
     }
 }
+
+#endif

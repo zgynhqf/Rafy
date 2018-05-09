@@ -9,6 +9,7 @@
  * 创建文件 周金根 2008
  * 
 *******************************************************/
+#if NET45
 
 using System;
 using System.Runtime.Serialization;
@@ -42,3 +43,5 @@ namespace Rafy.Domain.DataPortal.WCF
         public DataPortalContext Context { get; set; }
     }
 }
+
+#endif
