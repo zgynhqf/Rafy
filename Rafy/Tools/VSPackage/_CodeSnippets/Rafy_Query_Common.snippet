@@ -46,7 +46,7 @@
             <Code Language="csharp">
                 <![CDATA[public $ReturnValue$ $MethodName$($Parameters$)
         {
-            return ($ReturnValue$)this.GetBy(new CommonQueryCriteria
+            return this.GetBy(new CommonQueryCriteria
             {
                 new PropertyMatch($EntityName$.$Property1$, $InputParameters$),
                 //new PropertyMatch($EntityName$.Property2Property, PropertyMatchOperator.Equal, parameter2),$end$

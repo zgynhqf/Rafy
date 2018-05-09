@@ -44,11 +44,11 @@ namespace Rafy.Domain
         /// String: null
         /// </summary>
         /// <returns></returns>
-        object GetEmptyIdForRefIdProperty();
+        object GetEmptyId();
 
         /// <summary>
-        /// 判断给的 Id 值是否表示‘有值’的状态。
-        /// 参照：<see cref="GetEmptyIdForRefIdProperty"/>。
+        /// 判断给的 Id 值是否表示‘有值’的状态。（即非默认值，也非空值。）
+        /// 参照：<see cref="GetEmptyId"/>。
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

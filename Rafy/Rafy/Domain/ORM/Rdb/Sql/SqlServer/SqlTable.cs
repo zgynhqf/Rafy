@@ -31,13 +31,6 @@ namespace Rafy.Domain.ORM.SqlServer
     {
         public SqlTable(IRepositoryInternal repository) : base(repository) { }
 
-        internal override void AppendQuote(TextWriter sql, string identifier)
-        {
-            sql.Write("[");
-            this.AppendPrepare(sql, identifier);
-            sql.Write("]");
-        }
-
         protected override void CreatePagingSql(ref SqlOraTable.PagingSqlParts parts, PagingInfo pagingInfo)
         {
             //Sql Server 中，如果是第一页，直接使用 TOP 语法。

@@ -54,7 +54,103 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void ET_PersistenceStatus_Modified()
+        {
+            var repo = RF.ResolveInstance<TestUserRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var entity = repo.New();
+                repo.Save(entity);
+
+                entity.Name = "name changed.";
+                entity.PersistenceStatus = PersistenceStatus.Modified;
+                repo.Save(entity);
+
+                var entity2 = repo.GetById(entity.Id);
+                Assert.AreEqual(entity.Name, entity2.Name);
+            }
+        }
+
+        [TestMethod]
+        public void ET_PersistenceStatus_Modified_SetAsPropertyChanged()
+        {
+            var repo = RF.ResolveInstance<TestUserRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var entity = repo.New();
+                repo.Save(entity);
+
+                entity.Name = "name changed.";
+                Assert.AreEqual(PersistenceStatus.Modified, entity.PersistenceStatus);
+            }
+        }
+
+        [TestMethod]
+        public void ET_PersistenceStatus_New()
+        {
+            var repo = RF.ResolveInstance<TestUserRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var user = repo.New();
+
+                Assert.IsTrue(user.IsNew);
+
+                repo.Save(user);
+                Assert.IsTrue(!user.IsNew);
+            }
+        }
+
+        [TestMethod]
+        public void ET_PersistenceStatus_New_IsDirty()
+        {
+            var user = new TestUser();
+
+            Assert.IsTrue(user.PersistenceStatus == PersistenceStatus.New);
+            Assert.IsTrue(user.IsNew);
+            Assert.IsTrue(user.IsDirty);
+        }
+
+        [TestMethod]
+        public void ET_PersistenceStatus_New_SetNewWillResetId()
+        {
+            var item = new TestUser { Id = 111 };
+            item.PersistenceStatus = PersistenceStatus.Unchanged;
+
+            item.PersistenceStatus = PersistenceStatus.New;
+
+            Assert.AreEqual(0, item.Id, "设置实体的状态为 new 时，需要重置其 Id。");
+        }
+
+        [TestMethod]
         public void ET_PersistenceStatus_Delete()
+        {
+            var repo = RF.ResolveInstance<TestUserRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var user = repo.New();
+                repo.Save(user);
+
+                user.PersistenceStatus = PersistenceStatus.Deleted;
+                Assert.IsTrue(user.IsDeleted);
+                repo.Save(user);
+
+                Assert.AreEqual(PersistenceStatus.Unchanged, user.PersistenceStatus);
+            }
+        }
+
+        [TestMethod]
+        public void ET_PersistenceStatus_Delete_IsDirty()
+        {
+            var entity = new TestUser();
+
+            entity.PersistenceStatus = PersistenceStatus.Deleted;
+            Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.Deleted);
+            Assert.IsTrue(entity.IsDirty);
+            Assert.IsTrue(entity.IsDirty);
+        }
+
+        [TestMethod]
+        public void ET_PersistenceStatus_Delete_RevertDeletedStatus()
         {
             var entity = new TestUser();
             entity.PersistenceStatus = PersistenceStatus.Unchanged;
@@ -76,25 +172,167 @@ namespace RafyUnitTest
             Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.Modified, "之前的状态是 Modified");
         }
 
-        /// <summary>
-        /// 实体被删除后，状态应该为 New。
-        /// </summary>
         [TestMethod]
-        public void __ET_PersistenceStatus_Delete_SavedAsNew()
+        public void ET_PersistenceStatus_Delete_Update0Row()
         {
             var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
-                var item = new TestUser();
-                repo.Save(item);
-                Assert.IsTrue(repo.CountAll() == 1);
+                var user = repo.New();
+                repo.Save(user);
 
-                item.PersistenceStatus = PersistenceStatus.Deleted;
-                repo.Save(item);
+                user.PersistenceStatus = PersistenceStatus.Deleted;
+                repo.Save(user);
 
-                Assert.AreEqual(item.PersistenceStatus, PersistenceStatus.New, "实体被删除后，状态应该为 New。");
+                Assert.AreEqual(PersistenceStatus.Unchanged, user.PersistenceStatus);
+
+                user.Name = "name changed.";
+                repo.Save(user);
+                Assert.AreEqual(0, Logger.LastRowEffected, "由于数据已经删除，所以这里影响的行号为 0。");
             }
         }
+
+        [TestMethod]
+        public void ET_PersistenceStatus_Delete_Reinsert()
+        {
+            var repo = RF.ResolveInstance<TestUserRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var user = repo.New();
+                repo.Save(user);
+                var oldId = user.Id;
+
+                user.PersistenceStatus = PersistenceStatus.Deleted;
+                repo.Save(user);
+
+                user.PersistenceStatus = PersistenceStatus.New;
+                repo.Save(user);
+                Assert.AreNotEqual(oldId, user.Id, "重新插入此实体，需要生成新的行。");
+                Assert.AreEqual(PersistenceStatus.Unchanged, user.PersistenceStatus);
+            }
+        }
+
+        /// <summary>
+        /// 在列表中的实体，不论其的状态如何变换，都不会影响 EntityList 中的项的个数，除非直接操作 EntityList。
+        /// </summary>
+        [TestMethod]
+        public void ET_PersistenceStatus_Delete_ParentListItemsNotChanged()
+        {
+            var repo = RF.ResolveInstance<TestUserRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var users = new TestUserList
+                {
+                    new TestUser(),
+                    new TestUser()
+                };
+                repo.Save(users);
+
+                users[0].PersistenceStatus = PersistenceStatus.Deleted;
+                users.RemoveAt(1);
+                repo.Save(users);
+
+                Assert.AreEqual(1, users.Count);
+                Assert.AreEqual(0, users.DeletedList.Count);
+                Assert.AreEqual(PersistenceStatus.Unchanged, users[0].PersistenceStatus);
+                var oldId = users[0].Id;
+
+                users[0].PersistenceStatus = PersistenceStatus.New;
+                repo.Save(users);
+
+                Assert.AreEqual(1, users.Count);
+                Assert.AreEqual(0, users.DeletedList.Count);
+                Assert.AreEqual(PersistenceStatus.Unchanged, users[0].PersistenceStatus);
+                Assert.AreNotEqual(oldId, users[0].Id, "重新插入此实体，需要生成新的行。");
+            }
+        }
+
+        //[TestMethod]
+        //public void ET_PersistenceStatus_Delete_SavedAsNew()
+        //{
+        //    var repo = RF.ResolveInstance<TestUserRepository>();
+        //    using (RF.TransactionScope(repo))
+        //    {
+        //        var item = new TestUser();
+        //        repo.Save(item);
+        //        Assert.IsTrue(repo.CountAll() == 1);
+
+        //        item.PersistenceStatus = PersistenceStatus.Deleted;
+        //        repo.Save(item);
+
+        //        Assert.AreEqual(item.PersistenceStatus, PersistenceStatus.New, "实体被删除后，状态应该为 New。");
+        //    }
+        //}
+
+        //[TestMethod]
+        //public void ET_PersistenceStatus_Delete_SavedAsNew_Reinsert()
+        //{
+        //    var repo = RF.ResolveInstance<TestUserRepository>();
+        //    using (RF.TransactionScope(repo))
+        //    {
+        //        var item = new TestUser();
+        //        repo.Save(item);
+
+        //        var oldId = item.Id;
+
+        //        item.PersistenceStatus = PersistenceStatus.Deleted;
+        //        repo.Save(item);
+
+        //        Assert.AreEqual(0, item.Id, "再次插入已经删除的数据时，Id 应该会重置。");
+
+        //        repo.Save(item);
+        //        Assert.AreNotEqual(oldId, item.Id, "再次插入已经删除的数据时，Id 应该会重新生成。");
+        //    }
+        //}
+
+        //[TestMethod]
+        //public void ET_PersistenceStatus_Delete_SavedAsNew_ListClear()
+        //{
+        //    var repo = RF.ResolveInstance<TestUserRepository>();
+        //    using (RF.TransactionScope(repo))
+        //    {
+        //        var items = new TestUserList
+        //        {
+        //            new TestUser(),
+        //            new TestUser(),
+        //            new TestUser()
+        //        };
+        //        repo.Save(items);
+
+        //        items.RemoveAt(0);
+        //        Assert.AreEqual(1, items.DeletedList.Count);
+        //        items[0].PersistenceStatus = PersistenceStatus.Deleted;
+        //        repo.Save(items);
+
+        //        Assert.AreEqual(0, items.DeletedList.Count, "保存已删除数据的数据列表时，已经删除的数据需要从 List 中删除。");
+        //        Assert.AreEqual(1, items.Count, "保存已删除数据的数据列表时，已经删除的数据需要从 List 中删除。");
+        //        Assert.AreEqual(PersistenceStatus.Unchanged, items[0].PersistenceStatus);
+        //    }
+        //}
+
+        //[TestMethod]
+        //public void ET_PersistenceStatus_Delete_SavedAsNew_Aggt()
+        //{
+        //    var repo = RF.ResolveInstance<TestUserRepository>();
+        //    using (RF.TransactionScope(repo))
+        //    {
+        //        var user = new TestUser
+        //        {
+        //            TestRoleList =
+        //            {
+        //                new TestRole()
+        //            }
+        //        };
+        //        repo.Save(user);
+        //        Assert.IsTrue(repo.CountAll() == 1);
+
+        //        user.PersistenceStatus = PersistenceStatus.Deleted;
+        //        repo.Save(user);
+
+        //        Assert.AreEqual(user.PersistenceStatus, PersistenceStatus.New, "实体被删除后，状态应该为 New。");
+        //        Assert.AreEqual(user.TestRoleList[0].PersistenceStatus, PersistenceStatus.New, "聚合实体被删除后，整个聚合中所有实体的状态应该为 New。");
+        //    }
+        //}
 
         [TestMethod]
         public void ET_RoutedEvent()
@@ -338,6 +576,57 @@ namespace RafyUnitTest
                 var newCar = repo.GetById(id);
 
                 Assert.AreEqual(newCar.ByteValue, car.ByteValue);
+            }
+        }
+
+        [TestMethod]
+        public void ET_Property_Boolean()
+        {
+            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            {
+                var book = new Book()
+                {
+                    IsSoldOut = true
+                };
+                var repo = RF.ResolveInstance<BookRepository>();
+                repo.Save(book);
+
+                var newBook = repo.GetById(book.Id);
+                Assert.AreEqual(newBook.IsSoldOut, true);
+
+                newBook.IsSoldOut = false;
+                repo.Save(newBook);
+
+                var newBook2 = repo.GetById(book.Id);
+                Assert.AreEqual(newBook2.IsSoldOut, false);
+            }
+        }
+
+        /// <summary>
+        /// https://technet.microsoft.com/zh-cn/library/ms172424(v=sql.110).aspx
+        /// </summary>
+        [TestMethod]
+        public void ET_Property_DateTimeOffset()
+        {
+            using (var tran = RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            {
+                Yacht car = new Yacht()
+                {
+                    DateTimeOffsetValue = DateTime.Parse("1030-1-1")
+                };
+
+                if (tran.DbSetting.ProviderName.Contains("SqlServerCe"))
+                {
+                    car.DateTimeOffsetValue = DateTime.Parse("1753-1-1");
+                }
+
+                var repo = RF.ResolveInstance<YachtRepository>();
+                repo.Save(car);
+
+                long id = car.Id;
+                var newCar = repo.GetById(id);
+
+                Assert.AreEqual(newCar.DateTimeOffsetValue, car.DateTimeOffsetValue);
             }
         }
 
@@ -1315,6 +1604,12 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void __ET_Repository_BatchImport_CDU_C_TreeEntity()
+        {
+            throw new NotImplementedException();//huqf
+        }
+
+        [TestMethod]
         public void ET_Repository_BatchImport_CDU_C_Identity()
         {
             int size = BATCH_IMPORT_DATA_SIZE;
@@ -2075,7 +2370,7 @@ namespace RafyUnitTest
             serializer.IgnoreROProperties = true;
             var json = serializer.Serialize(entity);
             Assert.AreEqual(json,
-@"{
+    @"{
   ""name"": ""name""
 }");
         }
@@ -2094,7 +2389,7 @@ namespace RafyUnitTest
             serializer.EnumSerializationMode = EnumSerializationMode.Integer;
             var json = serializer.Serialize(entity);
             Assert.AreEqual(json,
-@"{
+    @"{
   ""favorateType"": 1
 }");
         }
@@ -2113,7 +2408,7 @@ namespace RafyUnitTest
             serializer.EnumSerializationMode = EnumSerializationMode.String;
             var json = serializer.Serialize(entity);
             Assert.AreEqual(json,
-@"{
+    @"{
   ""favorateType"": ""B""
 }");
         }
@@ -2132,7 +2427,7 @@ namespace RafyUnitTest
             serializer.EnumSerializationMode = EnumSerializationMode.EnumLabel;
             var json = serializer.Serialize(entity);
             Assert.AreEqual(json,
-@"{
+    @"{
   ""favorateTypeWithLabel"": ""第二个""
 }");
         }
@@ -2168,7 +2463,7 @@ namespace RafyUnitTest
             serializer.IgnoreROProperties = true;
             var json = serializer.Serialize(entity);
             Assert.AreEqual(json,
-@"{
+    @"{
   ""chapterList"": [
     {
       ""name"": ""chapter1""
@@ -2202,7 +2497,7 @@ namespace RafyUnitTest
             var json = serializer.Serialize(entity);
 
             Assert.AreEqual(json,
-@"{
+    @"{
   ""book"": {
     ""id"": 100,
     ""name"": ""book""
@@ -2228,7 +2523,7 @@ namespace RafyUnitTest
             var json = serializer.Serialize(list);
 
             Assert.AreEqual(json,
-@"[
+    @"[
   {
     ""name"": ""f1""
   },
@@ -2258,7 +2553,7 @@ namespace RafyUnitTest
             var json = serializer.Serialize(list);
 
             Assert.AreEqual(json,
-@"{
+    @"{
   ""totalCount"": 1000,
   ""data"": [
     {
@@ -2310,7 +2605,7 @@ namespace RafyUnitTest
             var json = serializer.Serialize(list);
 
             Assert.AreEqual(json,
-@"{
+    @"{
   ""totalCount"": 1000,
   ""data"": [
     {
@@ -2349,7 +2644,7 @@ namespace RafyUnitTest
             var json = serializer.Serialize(entity);
 
             Assert.AreEqual(json,
-@"{
+    @"{
   ""Name"": ""name""
 }");
         }
@@ -2369,7 +2664,7 @@ namespace RafyUnitTest
             var json = serializer.Serialize(entity);
 
             Assert.AreEqual(json,
-@"{
+    @"{
   ""createdTime"": ""2000-01-01T00:00:00"",
   ""createdUser"": """",
   ""id"": 0,
@@ -2401,7 +2696,7 @@ namespace RafyUnitTest
             var json = serializer.Serialize(entity);
 
             Assert.AreEqual(json,
-@"{
+    @"{
   ""arrayValue"": [
     1,
     2,
@@ -2430,7 +2725,7 @@ namespace RafyUnitTest
             var json = serializer.Serialize(entity);
 
             Assert.AreEqual(json,
-@"{
+    @"{
   ""bytesContent"": ""dGVzdCBjb250ZW50""
 }");
         }
@@ -2464,7 +2759,7 @@ namespace RafyUnitTest
             var json = serializer.Serialize(list);
 
             Assert.AreEqual(json,
-@"[
+    @"[
   {
     ""treeIndex"": ""001."",
     ""treeChildren"": [
@@ -2514,7 +2809,7 @@ namespace RafyUnitTest
             var json = serializer.Serialize(entity);
 
             Assert.AreEqual(
-@"{
+    @"{
   ""dp1"": ""Value1"",
   ""dp2"": 1,
   ""dp3"": ""2016-05-25T01:01:01"",

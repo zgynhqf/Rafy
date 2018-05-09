@@ -24,10 +24,51 @@ namespace RafyUnitTest
     public class UtilsTest
     {
         [ClassInitialize]
-        public static void ET_ClassInitialize(TestContext context)
+        public static void UtilsTest_ClassInitialize(TestContext context)
         {
             ServerTestHelper.ClassInitialize(context);
         }
+
+        #region DBA
+
+        /// <summary>
+        /// 能使用 DbAccesserParameter 才能保证索引可以正常起作用。
+        /// </summary>
+        [TestMethod]
+        public void UtilsTest_DBA_DbAccesserParameter()
+        {
+            var repo = RF.ResolveInstance<BookRepository>();
+            using (var dba = DbAccesserFactory.Create(repo))
+            {
+                using (var reader = dba.QueryDataReader(@"SELECT * FROM BOOK WHERE UpdatedTime < {0}",
+                    new DbAccesserParameter(DateTime.Now, DbType.DateTime)
+                    ))
+                {
+                    //do nothing;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 能使用 DbAccesserParameter 才能保证索引可以正常起作用。
+        /// </summary>
+        [TestMethod]
+        public void UtilsTest_DBA_FormattedSql_DbAccesserParameter()
+        {
+            var repo = RF.ResolveInstance<BookRepository>();
+            using (var dba = DbAccesserFactory.Create(repo))
+            {
+                FormattedSql sql = @"SELECT * FROM BOOK WHERE UpdatedTime < {0}";
+                sql.Parameters.Add(new DbAccesserParameter(DateTime.Now, DbType.DateTime));
+
+                using (var reader = dba.QueryDataReader(sql, sql.Parameters.ToArray()))
+                {
+                    //do nothing;
+                }
+            }
+        }
+
+        #endregion
 
         #region Logger
 
@@ -49,7 +90,7 @@ namespace RafyUnitTest
                 Logger.DbAccessed -= handler;
 
                 var p = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName).ProviderName;
-                if (p == DbSetting.Provider_SqlClient|| p == DbSetting.Provider_MySql)
+                if (p == DbSetting.Provider_SqlClient || p == DbSetting.Provider_MySql)
                 {
                     Assert.IsTrue(count == 1);//sqlServer、MySql= 1
                 }
@@ -78,7 +119,7 @@ namespace RafyUnitTest
                 Logger.ThreadDbAccessed -= handler;
 
                 var p = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName).ProviderName;
-                if (p == DbSetting.Provider_SqlClient|| p == DbSetting.Provider_MySql)
+                if (p == DbSetting.Provider_SqlClient || p == DbSetting.Provider_MySql)
                 {
                     Assert.IsTrue(count == 1);//sqlServer、MySql= 1
                 }
@@ -99,7 +140,7 @@ namespace RafyUnitTest
                 repo.Save(new TestUser());
 
                 var p = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName).ProviderName;
-                if (p == DbSetting.Provider_SqlClient|| p == DbSetting.Provider_MySql)
+                if (p == DbSetting.Provider_SqlClient || p == DbSetting.Provider_MySql)
                 {
                     Assert.IsTrue(Logger.DbAccessedCount == c1 + 1);
                 }
@@ -120,7 +161,7 @@ namespace RafyUnitTest
                 repo.Save(new TestUser());
 
                 var p = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName).ProviderName;
-                if (p == DbSetting.Provider_SqlClient|| p == DbSetting.Provider_MySql)
+                if (p == DbSetting.Provider_SqlClient || p == DbSetting.Provider_MySql)
                 {
                     Assert.IsTrue(Logger.ThreadDbAccessedCount == c1 + 1);
                 }

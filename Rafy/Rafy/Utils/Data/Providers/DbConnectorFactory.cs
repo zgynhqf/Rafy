@@ -35,27 +35,66 @@ namespace Rafy.Data.Providers
         /// <returns>返回DbProviderFactory类型的具体对象实例</returns>
         public static DbProviderFactory GetFactory(string provider)
         {
-            //ISqlConverter Factory
             switch (provider)
             {
                 case DbSetting.Provider_SqlClient:
-                    if (_sql == null) { _sql = DbProviderFactories.GetFactory(DbSetting.Provider_SqlClient); }
+                    if (_sql == null)
+                    {
+#if NET45
+                        _sql = DbProviderFactories.GetFactory(DbSetting.Provider_SqlClient);
+#endif
+#if NS2
+                        _sql = LoadFromAssembly("System.Data.SqlClient.SqlClientFactory, System.Data.SqlClient");
+                        //_sql = System.Data.SqlClient.SqlClientFactory.Instance;
+#endif
+                    }
                     return _sql;
                 case DbSetting.Provider_SqlCe:
-                    if (_sqlCe == null) { _sqlCe = DbProviderFactories.GetFactory(DbSetting.Provider_SqlCe); }
+                    if (_sqlCe == null)
+                    {
+#if NET45
+                        _sqlCe = DbProviderFactories.GetFactory(DbSetting.Provider_SqlCe);
+#endif
+#if NS2
+                        _sqlCe = LoadFromAssembly("System.Data.SqlServerCe.SqlCeProviderFactory, System.Data.SqlServerCe");
+                        //_sqlCe = System.Data.SqlServerCe.SqlCeProviderFactory.Instance;
+#endif
+                    }
                     return _sqlCe;
-                //PatrickLiu增加的有关获取MySql的Provider工厂类
                 case DbSetting.Provider_MySql:
-                    if (_mySql == null) { _mySql = DbProviderFactories.GetFactory(DbSetting.Provider_MySql); }
+                    if (_mySql == null)
+                    {
+#if NET45
+                        _mySql = DbProviderFactories.GetFactory(DbSetting.Provider_MySql);
+#endif
+#if NS2
+                        _mySql = LoadFromAssembly("MySql.Data.MySqlClient.MySqlClientFactory, MySql.Data");
+                        //_mySql = MySql.Data.MySqlClient.MySqlClientFactory.Instance;
+#endif
+                    }
                     return _mySql;
                 default:
                     if (DbSetting.IsOracleProvider(provider))
                     {
-                        if (_oracle == null) { _oracle = DbProviderFactories.GetFactory(provider); }
+                        if (_oracle == null)
+                        {
+#if NET45
+                            _oracle = DbProviderFactories.GetFactory(provider);
+#endif
+#if NS2
+                            _oracle = LoadFromAssembly("Oracle.ManagedDataAccess.Client.OracleClientFactory, Oracle.ManagedDataAccess");
+                            //_oracle = Oracle.ManagedDataAccess.Client.OracleClientFactory.Instance;
+#endif
+                        }
                         return _oracle;
                     }
+#if NET45
                     return DbProviderFactories.GetFactory(provider);
-                //throw new NotSupportedException("This type of database is not supportted now:" + provider);
+#endif
+#if NS2
+                    return System.Data.SqlClient.SqlClientFactory.Instance;
+#endif
+                    //throw new NotSupportedException("This type of database is not supportted now:" + provider);
             }
         }
 
@@ -98,5 +137,15 @@ namespace Rafy.Data.Providers
         /// 在 FormatSQL 中的参数格式定义。
         /// </summary>
         internal static readonly Regex ReParameterName = new Regex(@"{(?<number>\d+)}", RegexOptions.Compiled);
+
+#if NS2
+        private static DbProviderFactory LoadFromAssembly(string typeName)
+        {
+            var factoryType = Type.GetType(typeName);
+            var instance = Activator.CreateInstance(factoryType, true) as DbProviderFactory;
+            if (instance == null) throw new InvalidProgramException($"{typeName} 对应的类型无法加载。");
+            return instance;
+        }
+#endif
     }
 }

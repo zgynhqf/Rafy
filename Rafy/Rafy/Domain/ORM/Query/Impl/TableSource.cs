@@ -146,6 +146,8 @@ namespace Rafy.Domain.ORM.Query.Impl
             res.Property = dbColumn.Property;
             res.ColumnName = dbColumn.Name;
             res.DbColumn = dbColumn;
+            res.DbType = dbColumn.DbType;
+            res.HasIndex = dbColumn.HasIndex;
             return res;
         }
 

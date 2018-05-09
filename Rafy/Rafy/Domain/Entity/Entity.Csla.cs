@@ -54,31 +54,32 @@ namespace Rafy.Domain
             }
         }
 
-        private PersistenceStatus _status
-        {
-            get
-            {
-                //注意，以下代码的顺序注定了实体状态的优先级顺序。
-                if (GetFlags(EntitySerializableFlags.IsDeleted))
-                {
-                    return PersistenceStatus.Deleted;
-                }
-                if (GetFlags(EntitySerializableFlags.IsNew))
-                {
-                    return PersistenceStatus.New;
-                }
-                return GetFlags(EntitySerializableFlags.IsModified) ?
-                    PersistenceStatus.Modified : PersistenceStatus.Unchanged;
-            }
-        }
-
         /// <summary>
         /// 获取或设置实体当前的持久化状态。
         /// 保存实体时，会根据这个状态来进行对应的增、删、改的操作。
         /// </summary>
         public PersistenceStatus PersistenceStatus
         {
-            get { return _status; }
+            get
+            {
+                //注意，以下代码的顺序注定了实体状态的优先级顺序。
+                if (GetFlags(EntitySerializableFlags.IsDeleted))
+                {
+                    return Domain.PersistenceStatus.Deleted;
+                }
+
+                if (GetFlags(EntitySerializableFlags.IsNew))
+                {
+                    return Domain.PersistenceStatus.New;
+                }
+
+                if (GetFlags(EntitySerializableFlags.IsModified))
+                {
+                    return Domain.PersistenceStatus.Modified;
+                }
+
+                return PersistenceStatus.Unchanged;
+            }
             set
             {
                 switch (value)
@@ -97,6 +98,9 @@ namespace Rafy.Domain
                         //把当前对象标记为一个全新的刚创建的对象。
                         SetFlags(EntitySerializableFlags.IsDeleted, false);
                         SetFlags(EntitySerializableFlags.IsNew, true);
+
+                        //设置实体的状态为 new 时，需要重置其 Id。
+                        this.Id = this.IdProvider.GetEmptyId();
                         break;
                     case PersistenceStatus.Deleted:
                         //把当前对象标记为需要删除状态。
@@ -115,7 +119,7 @@ namespace Rafy.Domain
         /// </summary>
         internal bool IsDeleted
         {
-            get { return _status == PersistenceStatus.Deleted; }
+            get { return this.PersistenceStatus == PersistenceStatus.Deleted; }
         }
 
         /// <summary>
@@ -123,7 +127,7 @@ namespace Rafy.Domain
         /// </summary>
         internal bool IsNew
         {
-            get { return _status == PersistenceStatus.New; }
+            get { return this.PersistenceStatus == PersistenceStatus.New; }
         }
 
         /// <summary>
@@ -134,7 +138,7 @@ namespace Rafy.Domain
         void IEntityWithStatus.MarkModifiedIfUnchanged()
         {
             //只有 Unchanged 状态时，才需要标记，这是因为其它状态已经算是 Dirty 了。
-            if (_status == PersistenceStatus.Unchanged)
+            if (this.PersistenceStatus == PersistenceStatus.Unchanged)
             {
                 this.PersistenceStatus = PersistenceStatus.Modified;
             }
@@ -187,18 +191,69 @@ namespace Rafy.Domain
         /// </summary>
         void IDirtyAware.MarkSaved()
         {
-            this.PersistenceStatus = PersistenceStatus.Unchanged;
-
+            //聚合子需要都调用 MarkSaved。
             var enumerator = this.GetLoadedChildren();
             while (enumerator.MoveNext())
             {
                 var child = enumerator.Current.Value;
                 child.MarkSaved();
             }
-
             if (_treeChildren != null)
             {
                 _treeChildren.MarkSaved();
+            }
+
+            this.PersistenceStatus = PersistenceStatus.Unchanged;
+
+            #region 设计说明：Deleted 后的数据的状态不再改为 New
+
+            /*********************** 代码块解释 *********************************
+             * Deleted 后的数据的状态不再改为 New，否则会出现两个问题：
+             * 1、实体列表在保存后，其中的某些项的状态是 New，整个列表的状态是 Dirty，会引起困惑，而且会引起再次保存会重复插入已经删除的数据的问题。
+             * 2、也不能依靠在实体列表删除该项的做法，这同样会引起困惑。同样，如果开发者没有保存列表，而是直接保存实体时，
+             * 同样会将状态为 New 的实体遗留在列表中。继续造成了第一条的问题。
+             * 
+             * 结论：
+             * 保持实体的状态的设计为一种简单易理解的状态，更易被开发者接受：
+             * - 三种实体的状态对应数据库的操作：（CDU）；
+             * - 这些状态的数据在保存后，都会变更到 Unchanged 的状态。
+             * - 不论实体的状态如何变换，都不会影响 EntityList 中的项的个数，除非直接操作 EntityList。
+             * - 删除后的实体，在保存后的状态是 Unchanged，同样表示这个实体已经持久化到数据库中（只不过持久化操作是删除）。
+             *      这时，如果再修改实体的属性时，状态会变更到 Modified。此类数据再进行保存，会因为数据库中没有相应的数据，而导致更新失效。
+             *      （如果是幽灵删除则会更新成功……）（当然，其实这种场景较少。）
+            ********************************************************************/
+
+            ////*********************** 代码块解释 *********************************
+            // * 在保存删除的实体情况下，聚合子的状态需要在 MarkSaved 之后再设置为 New。
+            // * 这是因为在删除某个聚合时，使用者只需要设置聚合根的 PersistenceStatus 为 Deleted，然后再保存，就可以把整个聚合删除。
+            // * 但是这时，只有聚合父的状态为被设置为 Deleted，而聚合子的状态还是其它状态；导致 MarkSaved 之后，聚合子的状态不是 New。
+            // * 
+            // * 注意：需要先 MarkSaved，再设置为 New。这是因为 MarkSaved 需要有一些额外的操作。
+            //**********************************************************************/
+            ////if (this.IsDeleted)
+            ////{
+            ////    (this as IDirtyAware).MarkAggregate(PersistenceStatus.New);
+            ////}
+            ////else
+            ////{
+            ////    this.PersistenceStatus = PersistenceStatus.Unchanged;
+            ////} 
+
+            #endregion
+        }
+
+        void IDirtyAware.MarkAggregate(PersistenceStatus status)
+        {
+            this.PersistenceStatus = status;
+
+            foreach (var child in this.GetLoadedChildren())
+            {
+                child.Value.MarkAggregate(status);
+            }
+
+            if (_treeChildren != null)
+            {
+                (_treeChildren as IDirtyAware).MarkAggregate(status);
             }
         }
 

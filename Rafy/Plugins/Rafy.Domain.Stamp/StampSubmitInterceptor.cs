@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Rafy.Domain.Stamp
@@ -29,6 +30,32 @@ namespace Rafy.Domain.Stamp
         /// <param name="e">The e.</param>
         /// <param name="link">The link.</param>
         protected override void Submit(SubmitArgs e, ISubmitInterceptorLink link)
+        {
+            bool disabled = false;
+
+            if (StampContext.Disabled)
+            {
+                if (StampContext.ThreadId == Thread.CurrentThread.ManagedThreadId)
+                {
+                    //如果是 Disable 的线程，则忽略
+                    disabled = true;
+                }
+                else
+                {
+                    //如果不是 Disable 的线程，则需要等待 Disable 的线程结束后，才能继续执行后续的操作。
+                    lock (StampContext.DisabledLock) { }
+                }
+            }
+
+            if (!disabled)
+            {
+                this.ResetStamp(e);
+            }
+
+            link.InvokeNext(this, e);
+        }
+
+        private void ResetStamp(SubmitArgs e)
         {
             switch (e.Action)
             {
@@ -58,8 +85,6 @@ namespace Rafy.Domain.Stamp
                     //do nothing;
                     break;
             }
-
-            link.InvokeNext(this, e);
         }
     }
 }

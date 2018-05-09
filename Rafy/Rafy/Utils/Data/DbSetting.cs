@@ -8,6 +8,7 @@
  * 
  * 历史记录：
  * 创建文件 胡庆访 20120312
+ * 编辑文件 崔化栋 20180502 14:00
  * 
 *******************************************************/
 
@@ -53,7 +54,12 @@ namespace Rafy.Data
                 {
                     if (!_generatedSettings.TryGetValue(dbSettingName, out setting))
                     {
+#if NET45
                         var config = ConfigurationManager.ConnectionStrings[dbSettingName];
+#endif
+#if NS2
+                        var config = ConfigurationHelper.GetConnectionString(dbSettingName);
+#endif
                         if (config != null)
                         {
                             setting = new DbSetting
@@ -116,7 +122,12 @@ namespace Rafy.Data
         private static DbSetting Create(string dbSettingName)
         {
             //查找连接字符串时，根据用户的 LocalSqlServer 来查找。
+#if NET45
             var local = ConfigurationManager.ConnectionStrings[DbName_LocalServer];
+#endif
+#if NS2
+            var local = ConfigurationHelper.GetConnectionString(DbName_LocalServer);
+#endif
             if (local != null && local.ProviderName == Provider_SqlClient)
             {
                 var builder = new SqlConnectionStringBuilder(local.ConnectionString);

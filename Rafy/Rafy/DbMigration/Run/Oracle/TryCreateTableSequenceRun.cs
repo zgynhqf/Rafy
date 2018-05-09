@@ -30,7 +30,7 @@ namespace Rafy.DbMigration.Oracle
             var count = Convert.ToInt32(db.QueryValue(
                 "SELECT COUNT(0) FROM ALL_SEQUENCES WHERE SEQUENCE_NAME = {0} AND SEQUENCE_OWNER = {1}",
                 this.SequenceName,
-                DbConnectionSchema.GetOracleUserId(db.ConnectionSchema).ToUpper()
+                OracleIdentifierQuoter.Instance.Prepare(DbConnectionSchema.GetOracleUserId(db.ConnectionSchema))
                 ));
 
             if (count <= 0)

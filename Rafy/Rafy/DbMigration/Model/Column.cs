@@ -47,7 +47,7 @@ namespace Rafy.DbMigration.Model
             if (table == null) throw new ArgumentNullException("DataTable");
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException("name");
 
-            this.DataType = dataType;
+            this.DbType = dataType;
             this.Length = length;
             this.Name = name;
             this.Table = table;
@@ -61,7 +61,7 @@ namespace Rafy.DbMigration.Model
         /// <summary>
         /// 数据类型
         /// </summary>
-        public DbType DataType { get; private set; }
+        public DbType DbType { get; private set; }
 
         /// <summary>
         /// 可指定列的长度

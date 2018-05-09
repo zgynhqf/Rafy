@@ -11,6 +11,7 @@
  * 
 *******************************************************/
 
+#if NETSTANDARD2_0
 using System;
 using Rafy.ComponentModel;
 using Rafy.Domain;
@@ -50,3 +51,4 @@ namespace Rafy.DataTableMigration
         }
     }
 }
+#endif

@@ -8,9 +8,11 @@
  * 
  * 历史记录：
  * 创建文件 胡庆访 20121217 17:50
+ * 编辑文件 崔化栋 20180502 14:00
  * 
 *******************************************************/
 
+#if NET45
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +21,8 @@ using System.Text;
 using System.Threading;
 using System.Web;
 using Rafy;
+using Rafy.Utils;
+using System.Security.Claims;
 
 namespace Rafy
 {
@@ -85,3 +89,4 @@ namespace Rafy
         }
     }
 }
+#endif

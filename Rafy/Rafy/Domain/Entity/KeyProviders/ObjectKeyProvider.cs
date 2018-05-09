@@ -31,7 +31,7 @@ namespace Rafy.Domain
             get { return null; }
         }
 
-        public object GetEmptyIdForRefIdProperty()
+        public object GetEmptyId()
         {
             return null;
         }

@@ -78,6 +78,7 @@ namespace Rafy.Domain.ORM.DbMigration
             {
                 var reader = new TypesMetaReader
                 {
+                    _dbTypeConverter = DbMigrationProviderFactory.GetDbTypeConverter(_dbSetting.ProviderName),
                     Database = result,
                     Entities = tableEntityTypes,
                     ReadComment = this.ReadComment,
@@ -130,6 +131,8 @@ namespace Rafy.Domain.ORM.DbMigration
 
         private class TypesMetaReader
         {
+            internal DbTypeConverter _dbTypeConverter;
+
             private bool _readComment;
 
             private CommentFinder _commentFinder = new CommentFinder();
@@ -207,7 +210,6 @@ namespace Rafy.Domain.ORM.DbMigration
                     //列名
                     var propertyName = property.Name;
                     var columnName = columnMeta.ColumnName;
-                    if (string.IsNullOrWhiteSpace(columnName)) columnName = propertyName;
 
                     //类型
                     var propertyType = property.PropertyType;
@@ -286,8 +288,8 @@ namespace Rafy.Domain.ORM.DbMigration
                     {
                         dataType = em.IdType;
                     }
-                    var dbType = columnMeta.DataType.GetValueOrDefault(DbTypeHelper.ConvertFromCLRType(dataType));
-                    var column = new Column(columnName, dbType, columnMeta.DataTypeLength, table);
+                    var dbType = columnMeta.DbType.GetValueOrDefault(_dbTypeConverter.FromClrType(dataType));
+                    var column = new Column(columnName, dbType, columnMeta.DbTypeLength, table);
                     if (columnMeta.IsRequired.HasValue)
                     {
                         column.IsRequired = columnMeta.IsRequired.Value;
@@ -335,7 +337,7 @@ namespace Rafy.Domain.ORM.DbMigration
                     {
                         if (existingTable.FindColumn(newColumn.Name) == null)
                         {
-                            existingTable.Columns.Add(new Column(newColumn.Name, newColumn.DataType, newColumn.Length, existingTable)
+                            existingTable.Columns.Add(new Column(newColumn.Name, newColumn.DbType, newColumn.Length, existingTable)
                             {
                                 IsRequired = newColumn.IsRequired,
                                 IsPrimaryKey = newColumn.IsPrimaryKey,

@@ -11,6 +11,7 @@
  * 
 *******************************************************/
 
+#if NETSTANDARD2_0
 using System;
 using System.Collections.Generic;
 using Rafy.Domain;
@@ -19,7 +20,7 @@ namespace Rafy.DataTableMigration.Utils
 {
     internal static class EnumberableExtensions
     {
-        public static void ForEach<T>(this IEnumerable<T> items, Action<T> callback) where  T : Entity
+        public static void ForEach<T>(this IEnumerable<T> items, Action<T> callback) where T : Entity
         {
             if (callback == null)
             {
@@ -33,3 +34,4 @@ namespace Rafy.DataTableMigration.Utils
         }
     }
 }
+#endif

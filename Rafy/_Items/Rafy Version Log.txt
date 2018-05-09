@@ -10,6 +10,108 @@
  * 
 *******************************************************/
 
+3.70.3810
+    ★★公布、★重要、添加接口
+        在 Rafy 项目直接支持 NetStandard 2.0 的代码及发布。
+
+3.65.3730
+    BUG修复
+        RdbTable 中使用 Lazy 时，需要考虑线程安全的问题。（并发时，Lazy.Value 抛出异常。）
+        DataArchiver 应该保持原有的 ID 不变。（未完成）
+
+3.65.3725
+    添加功能、添加接口
+        Logger 添加 LogInfo 方法，用于记录系统日志。
+        添加 StampContext.DisableAutoSetStamps() 方法，用于禁用自动设置 Stamp 的功能。
+        TreeIndexOption 分化为 TreeIndexOptionByNumber & TreeIndexOptionByChar
+    内部修改
+        优化 DbAccesser 中的参数传递。节省内存。
+        完善 DbTypeConverters 中对 DbType 的支持，以及相关的单元测试。
+    BUG修复
+        Oracle 中只有 Date 类型，不应该返回 DateTime。
+        MySqlMetaReader.LoadAllColumns 方法中使用了错误的列来加载数据类型。
+        解决当 GetByIdList 返回的数据没有按照 Id 排序时，贪婪加载失败的问题。
+        在更新一个没有 TreeIndex 的根节点的一般属性时，报错。（新生成的 TreeIndex 并没有用于查找子，反而是把所有的节点都查出来了 使用了 %.）
+        在数据库中的 TreeIndex 不正确时，ResetTreeIndex 方法无法正确运行。
+
+3.65.3705
+    ★★公布、内部修改
+        撤消 3.62.3569 的功能。改为：实体被删除后，实体的状态应该是 PersistenceStatus.Unchanged。详见注释： 
+            * Deleted 后的数据的状态不再改为 New，否则会出现两个问题：
+            * 1、实体列表在保存后，其中的某些项的状态是 New，整个列表的状态是 Dirty，会引起困惑，而且会引起再次保存会重复插入已经删除的数据的问题。
+            * 2、也不能依靠在实体列表删除该项的做法，这同样会引起困惑。同样，如果开发者没有保存列表，而是直接保存实体时，
+            * 同样会将状态为 New 的实体遗留在列表中。继续造成了第一条的问题。
+            * 
+            * 结论：
+            * 保持实体的状态的设计为一种简单易理解的状态，更易被开发者接受：
+            * - 三种实体的状态对应数据库的操作：（CDU）；
+            * - 这些状态的数据在保存后，都会变更到 Unchanged 的状态。
+            * - 不论实体的状态如何变换，都不会影响 EntityList 中的项的个数，除非直接操作 EntityList。
+            * - 删除后的实体，在保存后的状态是 Unchanged，同样表示这个实体已经持久化到数据库中（只不过持久化操作是删除）。
+            *      这时，如果再修改实体的属性时，状态会变更到 Modified。此类数据再进行保存，会因为数据库中没有相应的数据，而导致更新失效。
+            *      （如果是幽灵删除则会更新成功……）（当然，其实这种场景较少。）
+    内部修改
+        Oracle 中只有 Date 类型，不应该返回 DateTime。
+
+3.64.3700
+    ★★公布、添加接口、内部修改
+        重要性能优化：Sql 查询时，有索引的列需要设置其 DbDataParameter 的 DbType，否则会索引失效。
+        添加 ColumnMeta.HasIndex 属性及方法，以配置某属性是否有索引。
+            使用方法：Meta.Property(SALESDATA.CREATEDATESProperty).MapColumn().HasDbType(DbType.Date).HasIndex(true);
+
+3.63.3696
+    ！修改接口
+        Rafy.DataTableMigartion 升级版本到 2.0，重构为 Rafy.DataArchiver。
+        KeyProvider.GetEmptyIdForRefIdProperty 的方法重构为 GetEmptyId。
+    内部修改
+        优化性能：通过名称来加载数据行时，可以先把列的索引初始化好。
+    添加接口
+        添加 DbAccesserParameter 类型，用于辅助处理当 DbDataParameter 中没有设置 DbType，导致索引失效的问题。
+    BUG修复
+        设置已删除的实体的状态为 New 时，如果该实体在列表中，需要将它从这个列表中移除。（否则有可能再次保存此实体列表时，会将这个实体再次插入到数据库中）
+
+3.62.3681
+    BUG修复
+        设置已删除的实体的状态为 New 时，需要重置其 Id。
+        RdbDataProvider.DbSetting 的逻辑有问题。
+
+3.62.3678
+    添加功能
+        添加新的 系统设置插件。（本插件中包含一些 IT 系统内常用的 “系统设置” 模块中的领域模型。如：全局配置（<see cref="GlobalSetting"/>）。）
+        在该系统设置插件中，添加 数据字典 功能。
+        为 LiteDataTable or DataTable 扩展 ToPOCO 方法。
+
+3.62.3669
+    内部修改
+        由于从 3.59.3400 升级到 3.60.3300 时，版本号出错，需要加上相应的 100 个小版本号。
+
+3.62.3569
+    ★★公布、添加功能
+        聚合实体被删除后，整个聚合中所有实体的状态都应该是 PersistenceStatus.New。
+        Linq 查询，支持使用 Equals 方法来对属性进行判断。
+    BUG修复
+        采用截断的方式，解决 MySql 中外键名过长时，无法创建成功的问题。
+    ★重要、重构
+        提取 DbIdentifierQuoter 类型，用于统一处理 SqlRunGenerator、SqlGenerator、RdbTable、DbMigrationProvider 等类型中的数据库标识符逻辑。
+        提取 DbTypeConverter 类型，用于统一处理数据库字段类型的转换。
+            将数据库字段值与实体属性的值的转换，也封装到 DbTypeConverter 类型中。
+        ColumnMeta.ColumnName 不再为空，必须有值。默认为属性名。
+        TableMeta.TableName 不再为空，必须有值。默认为实体名。
+    ！修改接口
+        所有的 DataType （列的数据的类型）统一重命名为 DbType。
+    重构
+        使用 Lazy<string> 重构 RdbTable 中的代码，并同时提取 GenerateInsertSqlParameters 方法来优化参数获取的性能。
+        MySqlBatchImporter.GenerateBatchUpdateStatement 方法重构。
+        OracleBatchImporter 中不需要使用 CanInsert 来进行判断。
+        RdbTable.CanInsert 属性重构为 ShouldInsert 方法。
+        Entity._status 属性被合并到 PersistenceStatus 属性中。
+    内部修改
+        RdbTable 性能微调。
+        MySql 数据库中，Bool 值需要映射为 BIT 类型。
+        MapView 方法添加 mapDefaultProperties 参数。
+    ！删除接口
+        删除不再使用的 AggtSql 功能。
+
 3.61.3531
     内部修改
         添加 CalllContextAppContextProvider 类型，用于通过 ExecutionContext 来实现跨线程的数据共享。
@@ -17,7 +119,6 @@
 3.61.3530
     内部修改
         整理版本号，与 Nuget 服务器同步。
-
 3.61.3430
     内部修改
         Oracle、MySql 下，进行分页时，都不自动使用 Id 来进行排序。该功能只在 SqlServer 中启用。
@@ -36,6 +137,9 @@
     添加接口
         添加 EntityRepository ResolveInstance(Type repositoryType) 接口。
         添加 LiteDataTable.ToEntityList 扩展方法，支持把 LiteDataTable 直接转换为指定实体类型的 API #52
+
+3.61.3425    
+    内部修改
 
 3.61.3340
     ★★公布、添加功能

@@ -147,6 +147,16 @@ namespace UT
             set { this.SetProperty(BytesProperty, value); }
         }
 
+        public static readonly Property<bool?> IsSoldOutProperty = P<Book>.Register(e => e.IsSoldOut);
+        /// <summary>
+        /// 是否卖光。
+        /// </summary>
+        public bool? IsSoldOut
+        {
+            get { return this.GetProperty(IsSoldOutProperty); }
+            set { this.SetProperty(IsSoldOutProperty, value); }
+        }
+
         #endregion
 
         #region 只读属性
@@ -488,7 +498,7 @@ namespace UT
         }
 
         [RepositoryQuery]
-        public virtual BookList GetBookListByIds(IEnumerable<int> ids )
+        public virtual BookList GetBookListByIds(IEnumerable<int> ids)
         {
             var f = QueryFactory.Instance;
             var table = f.Table<Book>();
@@ -557,7 +567,7 @@ namespace UT
             Meta.MapTable().MapAllProperties();
 
             Meta.Property(Book.ContentProperty).MapColumn().HasLength("MAX");
-            Meta.Property(Book.BytesProperty).MapColumn().HasDataType(System.Data.DbType.Binary);
+            Meta.Property(Book.BytesProperty).MapColumn().HasDbType(System.Data.DbType.Binary);
         }
     }
 

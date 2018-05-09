@@ -39,7 +39,7 @@ namespace RafyUnitTest
 
             var sql = ParseWhere(filter);
 
-            Assert.IsTrue(sql.ToString() == @"Users.UserName = {0}");
+            AssertSqlEqual(sql.ToString(), @"Users.UserName = {0}");
             Assert.IsTrue(sql.Parameters.Count == 1);
             Assert.IsTrue(sql.Parameters[0].ToString() == "huqf");
         }
@@ -51,7 +51,7 @@ namespace RafyUnitTest
 
             var sql = ParseWhere(filter);
 
-            Assert.IsTrue(sql.ToString() == @"Users.UserName != {0}");
+            AssertSqlEqual(sql.ToString(), @"Users.UserName != {0}");
         }
 
         [TestMethod]
@@ -61,7 +61,7 @@ namespace RafyUnitTest
 
             var sql = ParseWhere(filter);
 
-            Assert.IsTrue(sql.ToString() == @"Users.UserName <= {0}");
+            AssertSqlEqual(sql.ToString(), @"Users.UserName <= {0}");
         }
 
         [TestMethod]
@@ -71,7 +71,7 @@ namespace RafyUnitTest
 
             var sql = ParseWhere(filter);
 
-            Assert.IsTrue(sql.ToString() == @"Users.UserName < {0}");
+            AssertSqlEqual(sql.ToString(), @"Users.UserName < {0}");
         }
 
         [TestMethod]
@@ -81,7 +81,7 @@ namespace RafyUnitTest
 
             var sql = ParseWhere(filter);
 
-            Assert.IsTrue(sql.ToString() == @"Users.UserName > {0}");
+            AssertSqlEqual(sql.ToString(), @"Users.UserName > {0}");
         }
 
         [TestMethod]
@@ -91,7 +91,7 @@ namespace RafyUnitTest
 
             var sql = ParseWhere(filter);
 
-            Assert.IsTrue(sql.ToString() == @"Users.UserName >= {0}");
+            AssertSqlEqual(sql.ToString(), @"Users.UserName >= {0}");
         }
 
         [TestMethod]
@@ -101,7 +101,7 @@ namespace RafyUnitTest
 
             var sql = ParseWhere(filter);
 
-            Assert.IsTrue(sql.ToString() == @"Users.UserName LIKE {0}");
+            AssertSqlEqual(sql.ToString(), @"Users.UserName LIKE {0}");
             Assert.IsTrue(sql.Parameters[0].ToString() == "huqf%");
         }
 
@@ -112,7 +112,7 @@ namespace RafyUnitTest
 
             var sql = ParseWhere(filter);
 
-            Assert.IsTrue(sql.ToString() == @"Users.UserName LIKE {0}");
+            AssertSqlEqual(sql.ToString(), @"Users.UserName LIKE {0}");
             Assert.IsTrue(sql.Parameters[0].ToString() == "%huqf");
         }
 
@@ -123,7 +123,7 @@ namespace RafyUnitTest
 
             var sql = ParseWhere(filter);
 
-            Assert.IsTrue(sql.ToString() == @"Users.UserName LIKE {0}");
+            AssertSqlEqual(sql.ToString(), @"Users.UserName LIKE {0}");
             Assert.IsTrue(sql.Parameters[0].ToString() == "%huqf%");
         }
 
@@ -133,19 +133,19 @@ namespace RafyUnitTest
             //特殊字符'
             var filter = "Name contains '\\''";
             var sql = ParseWhere(filter);
-            Assert.IsTrue(sql.ToString() == @"Users.UserName LIKE {0}");
+            AssertSqlEqual(sql.ToString(), @"Users.UserName LIKE {0}");
             Assert.IsTrue(sql.Parameters[0].ToString() == "%'%");
 
             //特殊字符"
             var filter1 = "Name contains '\\\"'";
             var sql1 = ParseWhere(filter1);
-            Assert.IsTrue(sql1.ToString() == @"Users.UserName LIKE {0}");
+            AssertSqlEqual(sql1.ToString(), @"Users.UserName LIKE {0}");
             Assert.IsTrue(sql1.Parameters[0].ToString() == "%\"%");
 
             //特殊字符\
             var filter2 = "Name contains '\\\\'";
             var sql2 = ParseWhere(filter2);
-            Assert.IsTrue(sql2.ToString() == @"Users.UserName LIKE {0}");
+            AssertSqlEqual(sql2.ToString(), @"Users.UserName LIKE {0}");
             Assert.IsTrue(sql2.Parameters[0].ToString() == "%\\%");
         }
 
@@ -156,7 +156,7 @@ namespace RafyUnitTest
 
             var sql = ParseWhere(filter);
 
-            Assert.IsTrue(sql.ToString() == @"Users.UserName LIKE {0}");
+            AssertSqlEqual(sql.ToString(), @"Users.UserName LIKE {0}");
             Assert.IsTrue(sql.Parameters[0].ToString() == "%hu  qf%");
         }
 
@@ -167,7 +167,7 @@ namespace RafyUnitTest
 
             var sql = ParseWhere(filter);
 
-            Assert.IsTrue(sql.ToString() == @"Users.UserName IS NULL");
+            AssertSqlEqual(sql.ToString(), @"Users.UserName IS NULL");
             Assert.IsTrue(sql.Parameters.Count == 0);
         }
 
@@ -178,7 +178,7 @@ namespace RafyUnitTest
 
             var sql = ParseWhere(filter);
 
-            Assert.IsTrue(sql.ToString() == @"Users.UserName IS NOT NULL");
+            AssertSqlEqual(sql.ToString(), @"Users.UserName IS NOT NULL");
             Assert.IsTrue(sql.Parameters.Count == 0);
         }
 
@@ -189,7 +189,7 @@ namespace RafyUnitTest
 
             var sql = ParseWhere(filter);
 
-            Assert.IsTrue(sql.ToString() == @"Users.UserName = {0}");
+            AssertSqlEqual(sql.ToString(), @"Users.UserName = {0}");
             Assert.IsTrue(sql.Parameters.Count == 1);
             Assert.IsTrue(sql.Parameters[0].ToString() == "null");
         }
@@ -201,7 +201,7 @@ namespace RafyUnitTest
 
             var sql = ParseWhere(filter);
 
-            Assert.IsTrue(sql.ToString() == @"Users.UserName != {0}");
+            AssertSqlEqual(sql.ToString(), @"Users.UserName != {0}");
             Assert.IsTrue(sql.Parameters.Count == 1);
             Assert.IsTrue(sql.Parameters[0].ToString() == "null");
         }
@@ -213,7 +213,7 @@ namespace RafyUnitTest
 
             var sql = ParseWhere(filter);
 
-            Assert.IsTrue(sql.ToString() == @"Users.UserName = {0} AND Users.LoginName = {1}");
+            AssertSqlEqual(sql.ToString(), @"Users.UserName = {0} AND Users.LoginName = {1}");
             Assert.IsTrue(sql.Parameters.Count == 2);
             Assert.IsTrue(sql.Parameters[0].ToString() == "huqf");
             Assert.IsTrue(sql.Parameters[1].ToString() == "huqf");
@@ -226,7 +226,7 @@ namespace RafyUnitTest
 
             var sql = ParseWhere(filter);
 
-            Assert.IsTrue(sql.ToString() == @"Users.UserName = {0} OR Users.LoginName = {1}");
+            AssertSqlEqual(sql.ToString(), @"Users.UserName = {0} OR Users.LoginName = {1}");
             Assert.IsTrue(sql.Parameters.Count == 2);
             Assert.IsTrue(sql.Parameters[0].ToString() == "huqf");
             Assert.IsTrue(sql.Parameters[1].ToString() == "huqf");
@@ -242,7 +242,7 @@ namespace RafyUnitTest
 
             var sql = ParseWhere(filter);
 
-            Assert.IsTrue(sql.ToString() == @"(Users.UserName = {0} OR Users.LoginName = {1}) AND Users.AddedTime < {2}");
+            AssertSqlEqual(sql.ToString(), @"(Users.UserName = {0} OR Users.LoginName = {1}) AND Users.AddedTime < {2}");
             Assert.IsTrue(sql.Parameters.Count == 3);
             Assert.IsTrue(sql.Parameters[0].ToString() == "huqf");
             Assert.IsTrue(sql.Parameters[1].ToString() == "huqf");
@@ -255,7 +255,7 @@ namespace RafyUnitTest
 
             var sql = ParseWhere(filter);
 
-            Assert.IsTrue(sql.ToString() == @"Users.UserName = {0} AND Users.LoginName = {1} OR Users.AddedTime < {2}");
+            AssertSqlEqual(sql.ToString(), @"Users.UserName = {0} AND Users.LoginName = {1} OR Users.AddedTime < {2}");
         }
 
         [TestMethod]
@@ -265,7 +265,7 @@ namespace RafyUnitTest
 
             var sql = ParseWhere(filter);
 
-            Assert.IsTrue(sql.ToString() == @"Users.AddedTime < {0} AND (Users.UserName = {1} OR Users.LoginName = {2})");
+            AssertSqlEqual(sql.ToString(), @"Users.AddedTime < {0} AND (Users.UserName = {1} OR Users.LoginName = {2})");
         }
 
         [TestMethod]
@@ -275,7 +275,7 @@ namespace RafyUnitTest
 
             var sql = ParseWhere(filter);
 
-            Assert.IsTrue(sql.ToString() == @"(Users.UserName = {0} OR Users.LoginName = {1}) AND (Users.Age = {2} OR Users.AddedTime < {3})");
+            AssertSqlEqual(sql.ToString(), @"(Users.UserName = {0} OR Users.LoginName = {1}) AND (Users.Age = {2} OR Users.AddedTime < {3})");
         }
 
         [TestMethod]
@@ -285,7 +285,7 @@ namespace RafyUnitTest
 
             var sql = ParseWhere(filter);
 
-            Assert.IsTrue(sql.ToString() == @"Users.UserName = {0} OR Users.LoginName = {1}");
+            AssertSqlEqual(sql.ToString(), @"Users.UserName = {0} OR Users.LoginName = {1}");
         }
 
         [TestMethod]
@@ -295,7 +295,7 @@ namespace RafyUnitTest
 
             var sql = ParseWhere(filter);
 
-            Assert.IsTrue(sql.ToString() == @"Users.UserName = {0}");
+            AssertSqlEqual(sql.ToString(), @"Users.UserName = {0}");
         }
 
         [TestMethod]
@@ -305,7 +305,7 @@ namespace RafyUnitTest
 
             var sql = ParseWhere(filter);
 
-            Assert.IsTrue(sql.ToString() == @"Users.AddedTime < {0} AND (Users.UserName = {1} OR Users.LoginName = {2})");
+            AssertSqlEqual(sql.ToString(), @"Users.AddedTime < {0} AND (Users.UserName = {1} OR Users.LoginName = {2})");
         }
 
         [TestMethod]
@@ -315,7 +315,7 @@ namespace RafyUnitTest
 
             var sql = ParseWhere(filter);
 
-            Assert.IsTrue(sql.ToString() == @"(Users.UserName = {0} OR Users.Age = {1} OR Users.AddedTime < {2}) AND Users.LoginName = {3}");
+            AssertSqlEqual(sql.ToString(), @"(Users.UserName = {0} OR Users.Age = {1} OR Users.AddedTime < {2}) AND Users.LoginName = {3}");
         }
 
         [TestMethod]
@@ -325,7 +325,7 @@ namespace RafyUnitTest
 
             var sql = ParseWhere(filter);
 
-            Assert.IsTrue(sql.ToString() == @"Users.UserName = {0}");
+            AssertSqlEqual(sql.ToString(), @"Users.UserName = {0}");
             Assert.AreEqual("h(u)q（f）", sql.Parameters[0]);
         }
 
@@ -339,7 +339,7 @@ namespace RafyUnitTest
 
             var sql = ParseFull(filter, RF.ResolveInstance<TestRoleRepository>());
 
-            Assert.IsTrue(sql.ToString() ==
+            AssertSqlEqual(sql.ToString(),
 @"SELECT *
 FROM Roles
     INNER JOIN Users AS T0 ON Roles.UserId = T0.Id
@@ -407,7 +407,7 @@ WHERE T0.UserName LIKE {0}");
 
             var sql = ParseFull(filter, RF.ResolveInstance<TestRoleRepository>());
 
-            Assert.IsTrue(sql.ToString() ==
+            AssertSqlEqual(sql.ToString(),
 @"SELECT *
 FROM Roles
     INNER JOIN Users AS T0 ON Roles.UserId = T0.Id
@@ -421,7 +421,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
             var q = Parse("RoleType ne 1", repo);
             var sql = QueryNodeTester.GenerateTestSql(q.Where);
 
-            Assert.IsTrue(sql.ToString() == @"Roles.RoleType != {0}");
+            AssertSqlEqual(sql.ToString(), @"Roles.RoleType != {0}");
         }
 
         [TestMethod]
@@ -431,7 +431,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
             var q = Parse("RoleType ne '1'", repo);
             var sql = QueryNodeTester.GenerateTestSql(q.Where);
 
-            Assert.IsTrue(sql.ToString() == @"Roles.RoleType != {0}");
+            AssertSqlEqual(sql.ToString(), @"Roles.RoleType != {0}");
         }
 
         [TestMethod]
@@ -441,7 +441,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
             var q = Parse("RoleType ne Administrator", repo);
             var sql = QueryNodeTester.GenerateTestSql(q.Where);
 
-            Assert.IsTrue(sql.ToString() == @"Roles.RoleType != {0}");
+            AssertSqlEqual(sql.ToString(), @"Roles.RoleType != {0}");
         }
 
         [TestMethod]
@@ -451,7 +451,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
             var q = Parse("(RoleType ne Administrator or RoleType ne Normal)", repo);
             var sql = QueryNodeTester.GenerateTestSql(q.Where);
 
-            Assert.IsTrue(sql.ToString() == @"Roles.RoleType != {0} OR Roles.RoleType != {1}", "枚举值后紧跟括号时，需要能解析出枚举的值。");
+            AssertSqlEqual(sql.ToString(), @"Roles.RoleType != {0} OR Roles.RoleType != {1}", "枚举值后紧跟括号时，需要能解析出枚举的值。");
         }
 
         [TestMethod]
@@ -461,7 +461,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
             var q = Parse("RoleType ne 'Administrator'", repo);
             var sql = QueryNodeTester.GenerateTestSql(q.Where);
 
-            Assert.IsTrue(sql.ToString() == @"Roles.RoleType != {0}");
+            AssertSqlEqual(sql.ToString(), @"Roles.RoleType != {0}");
         }
 
         [TestMethod]
@@ -471,7 +471,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
             var q = Parse("RoleType ne 管理员", repo);
             var sql = QueryNodeTester.GenerateTestSql(q.Where);
 
-            Assert.IsTrue(sql.ToString() == @"Roles.RoleType != {0}");
+            AssertSqlEqual(sql.ToString(), @"Roles.RoleType != {0}");
         }
 
         [TestMethod]
@@ -481,7 +481,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
             var q = Parse("RoleType ne '管理员'", repo);
             var sql = QueryNodeTester.GenerateTestSql(q.Where);
 
-            Assert.IsTrue(sql.ToString() == @"Roles.RoleType != {0}");
+            AssertSqlEqual(sql.ToString(), @"Roles.RoleType != {0}");
         }
 
         [TestMethod]
@@ -491,7 +491,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
             var q = Parse("RoleType2 ne Administrator", repo);
             var sql = QueryNodeTester.GenerateTestSql(q.Where);
 
-            Assert.IsTrue(sql.ToString() == @"Roles.RoleType2 != {0}");
+            AssertSqlEqual(sql.ToString(), @"Roles.RoleType2 != {0}");
         }
 
         [TestMethod]
@@ -733,6 +733,19 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
         private static TestUserList QueryUserList(ODataQueryCriteria criteria)
         {
             return RF.ResolveInstance<TestUserRepository>().GetBy(criteria) as TestUserList;
+        }
+
+        /// <summary>
+        /// 一些 Sql 语句上的换行符并不是 \r\n 而只是 \n，所以这里需要对其忽略后再进行对比。
+        /// </summary>
+        /// <param name="sqlA"></param>
+        /// <param name="sqlB"></param>
+        /// <param name="message"></param>
+        private static void AssertSqlEqual(string sqlA, string sqlB, string message = "")
+        {
+            sqlA = sqlA.ToUpper().Replace("\r", string.Empty);
+            sqlB = sqlB.ToUpper().Replace("\r", string.Empty);
+            Assert.AreEqual(sqlA, sqlB, message);
         }
     }
 }

@@ -98,9 +98,6 @@ namespace Rafy.Domain
                 {
                     throw new NotSupportedException("只支持对 Entity、EntityList 进行保存。");
                 }
-
-                //保存结束，传入的组件需要标记为已保存。
-                component.MarkSaved();
             }
 
             //this.OnSaved(new SavedArgs

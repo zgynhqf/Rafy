@@ -996,6 +996,40 @@ namespace RafyUnitTest
             Assert.IsTrue(child.TreeParent == root);
         }
 
+        [TestMethod]
+        public void TET_Struc_Relation_TreeChildren_Move()
+        {
+            var repo = RF.ResolveInstance<FolderRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var list = new FolderList
+                {
+                    new Folder
+                    {
+                        TreeChildren=
+                        {
+                            new Folder()
+                        }
+                    },
+                    new Folder(),
+                };
+                repo.Save(list);
+
+                var item = list[0].TreeChildren[0];
+                list[0].TreeChildren.Remove(item);
+                list[1].TreeChildren.Add(item);
+                repo.Save(list);
+
+                var tree = repo.GetAll();
+                Assert.AreEqual(2, tree.Count);
+                Assert.AreEqual(0, tree[0].TreeChildren.Count);
+                Assert.AreEqual(1, tree[1].TreeChildren.Count);
+                Assert.AreEqual("001.", tree[0].TreeIndex);
+                Assert.AreEqual("002.", tree[1].TreeIndex);
+                Assert.AreEqual("002.001.", tree[1].TreeChildren[0].TreeIndex);
+            }
+        }
+
         /// <summary>
         /// 设置 B.TreeParent 为某个节点 A，则 A.TreeChildren 中含有 B；B.TreePId == A.Id.
         /// </summary>
@@ -1384,6 +1418,53 @@ namespace RafyUnitTest
         }
 
         /// <summary>
+        /// 当父子关系的顺序不是按照 Id 加载的顺序时，也可以修复。
+        /// </summary>
+        [TestMethod]
+        public void TET_Struc_TreeIndex_ResetAllTreeIndex_WhenOrderError()
+        {
+            var repo = RF.ResolveInstance<FolderRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var list = new FolderList
+                {
+                    new Folder
+                    {
+                        TreeChildren=
+                        {
+                            new Folder()
+                        }
+                    },
+                    new Folder(),
+                };
+                repo.Save(list);
+
+                var item = list[0].TreeChildren[0];
+                list[0].TreeChildren.Remove(item);
+                list[1].TreeChildren.Add(item);
+                repo.Save(list);
+
+                var tree = repo.GetAll();
+                Assert.AreEqual(2, tree.Count);
+                Assert.AreEqual(0, tree[0].TreeChildren.Count);
+                Assert.AreEqual(1, tree[1].TreeChildren.Count);
+                Assert.AreEqual("001.", tree[0].TreeIndex);
+                Assert.AreEqual("002.", tree[1].TreeIndex);
+                Assert.AreEqual("002.001.", tree[1].TreeChildren[0].TreeIndex);
+
+                TreeIndexHelper.ResetTreeIndex(repo);
+
+                tree = repo.GetAll();
+                Assert.AreEqual(2, tree.Count);
+                Assert.AreEqual(0, tree[0].TreeChildren.Count);
+                Assert.AreEqual(1, tree[1].TreeChildren.Count);
+                Assert.AreEqual("001.", tree[0].TreeIndex);
+                Assert.AreEqual("002.", tree[1].TreeIndex);
+                Assert.AreEqual("002.001.", tree[1].TreeChildren[0].TreeIndex);
+            }
+        }
+
+        /// <summary>
         /// 直接添加根节点时，也应该自动生成 TreeIndex。
         /// </summary>
         [TestMethod]
@@ -1400,11 +1481,11 @@ namespace RafyUnitTest
 
                 var root2 = new Folder();
                 repo.Save(root2);
-                Assert.IsTrue(root2.TreeIndex == "002.");
+                Assert.AreEqual("002.", root2.TreeIndex);
 
                 var tree = repo.GetAll();
                 Assert.IsTrue(tree.Count == 2);
-                Assert.IsTrue(tree[1].TreeIndex == "002.");
+                Assert.AreEqual("002.", tree[1].TreeIndex);
             }
         }
 
@@ -1450,6 +1531,114 @@ namespace RafyUnitTest
         }
 
         /// <summary>
+        /// 如果要提交的树节点是一个根节点，而且它的索引还没有生成，则需要在更新时，主动为其生成索引。
+        /// </summary>
+        [TestMethod]
+        public void TET_Struc_TreeIndex_RepairAsEmpty()
+        {
+            var repo = RF.ResolveInstance<FolderRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var list = new FolderList
+                {
+                    new Folder(),//001.
+                    new Folder//002.
+                    {
+                        TreeChildren =
+                        {
+                            new Folder()//002.001.
+                        }
+                    },
+                    new Folder(),//003.
+                };
+                repo.Save(list);
+
+                //一些需要迁移的历史数据。
+                var root = list[0];
+                UpdateTreeIndex(list[0].Id, string.Empty);
+
+                root = repo.GetById(root.Id);
+                root.Name = "name changed.";
+                repo.Save(root);
+                Assert.AreEqual("004.", root.TreeIndex);
+
+                root = repo.GetById(root.Id);
+                Assert.AreEqual("004.", root.TreeIndex);
+            }
+        }
+
+        /// <summary>
+        /// TreeIndex 出错的数据，也应该可以在 GetAll 中成功加载出来。
+        /// </summary>
+        [TestMethod]
+        public void TET_Struc_TreeIndex_GetAllWhenTreeIndexError()
+        {
+            var repo = RF.ResolveInstance<FolderRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var list = new FolderList
+                {
+                    new Folder//001.
+                    {
+                        TreeChildren =
+                        {
+                            new Folder()//001.001.
+                        }
+                    }
+                };
+                repo.Save(list);
+
+                //直接把一些数据给整理错误。
+                UpdateTreeIndex(list[0].Id, "002.");
+                UpdateTreeIndex(list[0].TreeChildren[0].Id, "005.003.002.");
+
+                var tree = repo.GetAll();
+                Assert.AreEqual(1, tree.Count, "TreeIndex 出错的数据，也应该可以在 GetAll 中成功加载出来。");
+                Assert.AreEqual("002.", tree[0].TreeIndex, "TreeIndex 出错的数据，也应该可以在 GetAll 中成功加载出来。");
+                Assert.AreEqual("005.003.002.", tree[0].TreeChildren[0].TreeIndex, "TreeIndex 出错的数据，也应该可以在 GetAll 中成功加载出来。");
+            }
+        }
+
+        /// <summary>
+        /// 可以使用 ResetAllTreeIndex 来重设所有数据行的 TreeIndex。
+        /// </summary>
+        [TestMethod]
+        public void TET_Struc_TreeIndex_ResetAllTreeIndex_WhenTreeIndexError()
+        {
+            var repo = RF.ResolveInstance<FolderRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var list = new FolderList
+                {
+                    new Folder//001.
+                    {
+                        TreeChildren =
+                        {
+                            new Folder()//001.001.
+                        }
+                    }
+                };
+                repo.Save(list);
+
+                //直接把一些数据给整理错误。
+                UpdateTreeIndex(list[0].Id, "002.");
+                UpdateTreeIndex(list[0].TreeChildren[0].Id, "005.003.002.");
+
+                var tree = repo.GetAll();
+                Assert.AreEqual(1, tree.Count, "TreeIndex 出错的数据，也应该可以在 GetAll 中成功加载出来。");
+                Assert.AreEqual("002.", tree[0].TreeIndex, "TreeIndex 出错的数据，也应该可以在 GetAll 中成功加载出来。");
+                Assert.AreEqual("005.003.002.", tree[0].TreeChildren[0].TreeIndex, "TreeIndex 出错的数据，也应该可以在 GetAll 中成功加载出来。");
+
+                TreeIndexHelper.ResetTreeIndex(repo);
+
+                tree = repo.GetAll();
+                Assert.AreEqual(1, tree.Count, "TreeIndex 出错的数据，也应该可以在 GetAll 中成功加载出来。");
+                Assert.AreEqual("001.", tree[0].TreeIndex, "TreeIndex 出错的数据，也应该可以在 GetAll 中成功加载出来。");
+                Assert.AreEqual("001.001.", tree[0].TreeChildren[0].TreeIndex, "TreeIndex 出错的数据，也应该可以在 GetAll 中成功加载出来。");
+            }
+        }
+
+        /// <summary>
         /// 统一关闭整个列表的自动编码生成行为
         /// </summary>
         [TestMethod]
@@ -1464,6 +1653,44 @@ namespace RafyUnitTest
 
             Assert.AreEqual(list[0].TreeIndex, "001.");
             Assert.AreEqual(list[1].TreeIndex, string.Empty);
+        }
+
+        [TestMethod]
+        public void __TET_Struc_TreeIndex_Clone()
+        {
+            var repo = RF.ResolveInstance<FolderRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var rawList = new FolderList
+                {
+                    new Folder
+                    {
+                        Name = "1.",
+                        TreeChildren =
+                        {
+                            new Folder
+                            {
+                                Name = "1.1.",
+                            }
+                        }
+                    }
+                };
+                repo.Save(rawList);
+
+                var options = CloneOptions.NewComposition();
+                var toCloneList = new FolderList();
+                toCloneList.Clone(rawList, options);
+
+                Assert.AreEqual("001.", toCloneList[0].TreeIndex);
+                Assert.AreEqual("001.001.", toCloneList[0].TreeChildren[0].TreeIndex);
+            }
+        }
+
+        private static void UpdateTreeIndex(object id, string value)
+        {
+            var repo = RF.ResolveInstance<FolderRepository>();
+            var dba = DbAccesserFactory.Create(repo);
+            dba.ExecuteText("UPDATE FOLDER SET TREEINDEX = {0} WHERE ID = {1}", value, id);
         }
 
         #endregion
@@ -2324,7 +2551,7 @@ namespace RafyUnitTest
                     a1.PersistenceStatus = PersistenceStatus.Deleted;
                     RF.Save(a1);
                 }
-                catch (Exception ex)
+                catch
                 {
                     hasException = true;
                 }

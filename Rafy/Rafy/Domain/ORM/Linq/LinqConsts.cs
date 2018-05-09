@@ -38,5 +38,7 @@ namespace Rafy.Domain.ORM.Linq
         public const string StringMethod_StartWith = "StartsWith";
         public const string StringMethod_EndWith = "EndsWith";
         public const string StringMethod_IsNullOrEmpty = "IsNullOrEmpty";
+
+        public const string ObjectMethod_Equals = "Equals";
     }
 }

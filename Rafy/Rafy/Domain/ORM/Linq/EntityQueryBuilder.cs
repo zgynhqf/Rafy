@@ -78,30 +78,52 @@ namespace Rafy.Domain.ORM.Linq
         {
             var method = exp.Method;
             var methodType = method.DeclaringType;
-            bool processed = false;
 
-            //处理 Queryable 上的方法
-            if (methodType == typeof(Queryable))
+            bool processed = VisitMethod_Object(exp);
+            if (!processed)
             {
-                processed = VisitMethod_Queryable(exp);
-            }
-            //处理 string 上的方法
-            else if (methodType == typeof(string))
-            {
-                processed = VisitMethod_String(exp);
-            }
-            else if (methodType == typeof(Enumerable))
-            {
-                processed = VisitMethod_Enumerable(exp);
-            }
-            else if (methodType.IsGenericType && methodType.GetGenericTypeDefinition() == typeof(List<>))
-            {
-                processed = VisitMethod_List(exp);
+                //处理 Queryable 上的方法
+                if (methodType == typeof(Queryable))
+                {
+                    processed = VisitMethod_Queryable(exp);
+                }
+                //处理 string 上的方法
+                else if (methodType == typeof(string))
+                {
+                    processed = VisitMethod_String(exp);
+                }
+                else if (methodType == typeof(Enumerable))
+                {
+                    processed = VisitMethod_Enumerable(exp);
+                }
+                else if (methodType.IsGenericType && methodType.GetGenericTypeDefinition() == typeof(List<>))
+                {
+                    processed = VisitMethod_List(exp);
+                }
             }
 
             if (!processed) throw OperationNotSupported(method);
 
             return exp;
+        }
+
+        private bool VisitMethod_Object(MethodCallExpression exp)
+        {
+            switch (exp.Method.Name)
+            {
+                case LinqConsts.ObjectMethod_Equals:
+                    var args = exp.Arguments;
+                    _operator = _hasNot ? PropertyOperator.NotEqual : PropertyOperator.Equal;
+                    this.Visit(exp.Object);
+                    this.Visit(args[0]);
+                    break;
+                default:
+                    return false;
+            }
+
+            this.MakeConstraint();
+
+            return true;
         }
 
         private bool VisitMethod_Queryable(MethodCallExpression exp)

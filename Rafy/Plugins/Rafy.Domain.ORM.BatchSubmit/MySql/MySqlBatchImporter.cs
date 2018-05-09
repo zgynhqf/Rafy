@@ -33,7 +33,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
     /// MySql 数据库的实体批量导入器
     /// </summary>
     [Serializable]
-    public sealed class MySqlBatchImporter: BatchImporter
+    public sealed class MySqlBatchImporter : BatchImporter
     {
         /// <summary>
         /// 默认无参构造函数，初始化批处理的容量和MySql语句生成器
@@ -86,56 +86,8 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
         /// <param name="entities"></param>
         private void ImportBatch(EntityBatch meta, IList<Entity> entities)
         {
-            var sql = GenerateBatchInsertStatement(meta,entities);
+            var sql = this.GenerateBatchInsertStatement(meta,entities);
             meta.DBA.RawAccesser.ExecuteText(sql);
-        }
-
-        /// <summary>
-        /// 生成 Insert 语句
-        /// </summary>
-        /// <param name="table"></param>
-        /// <returns></returns>
-        private static string GenerateInsertSQL(RdbTable table)
-        {
-            //代码参考 RdbTable.GenerateInsertSQL() 方法。
-            var sql = new StringWriter();
-            sql.Write("INSERT INTO ");
-            sql.AppendQuote(table, table.Name).Write("(");
-
-            var columns = table.Columns;
-
-            bool comma = false;
-            for (int i = 0, c = columns.Count; i < c; i++)
-            {
-                var column = columns[i];
-                if (column.CanInsert)
-                {
-                    if (comma) { sql.Write(','); }
-                    else { comma = true; }
-
-                    sql.AppendQuote(table, column.Name);
-                }
-            }
-
-            sql.Write(") VALUES (");
-
-            comma = false;
-            for (int i = 0, c = columns.Count; i < c; i++)
-            {
-                var column = columns[i];
-                if (column.CanInsert)
-                {
-                    if (comma) { sql.Write(','); }
-                    else { comma = true; }
-
-                    sql.Write("?");
-                    sql.Write(column.Name);
-                }
-            }
-
-            sql.Write(")");
-
-            return sql.ToString();
         }
 
         /// <summary>
@@ -144,7 +96,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
         /// <param name="meta"></param>
         /// <param name="entities">需要插入的实体类型集合</param>
         /// <returns>返回拼接完成的、批量插入的Sql语句</returns>
-        private static string GenerateBatchInsertStatement(EntityBatch meta, IList<Entity> entities)
+        private string GenerateBatchInsertStatement(EntityBatch meta, IList<Entity> entities)
         {
             var dba = meta.DBA.RawAccesser;
             var table = meta.Table;
@@ -156,87 +108,17 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
             var columns = table.Columns;
             for (int i = 0, c = columns.Count; i < c; i++)
             {
-                var column = columns[i];
-                if (i != 0)
-                {
-                    sql.Write(',');
-                }
-                sql.AppendQuote(table, column.Name);
+                if (i != 0) { sql.Write(','); }
+
+                sql.AppendQuote(table, columns[i].Name);
             }
             sql.Write(")VALUES");
 
-            for (int e = 0; e < entities.Count; e++)
-            {
-                sql.Write("(");
-                for (int i = 0, c = table.Columns.Count; i < c; i++)
-                {
-                    var column = columns[i];
-                    if (i != 0)
-                    {
-                        sql.Write(',');
-                    }
-                    var parameter = GetDataParameterObject(entities[e], column, dba);
-                    if (parameter.DbType == DbType.Int16 || parameter.DbType == DbType.Int32 || parameter.DbType == DbType.Int64 || parameter.DbType == DbType.Decimal || parameter.DbType == DbType.Double || parameter.DbType == DbType.Single || parameter.DbType == DbType.UInt16 || parameter.DbType == DbType.UInt32 || parameter.DbType == DbType.UInt64)
-                    {
-                        if (string.IsNullOrEmpty(parameter.Value.ToString()))
-                        {
-                            sql.Write("null");
-                        }
-                        else
-                        {
-                            sql.Write(parameter.Value);
-                        }
-                    }
-                    else if (parameter.DbType == DbType.Binary)
-                    {
-                        byte[] values = parameter.Value as byte[];
-                        if(values==null|| values.Length==0)
-                        {
-                            sql.Write("null");
-                        }
-                        else
-                        {
-                            string newValue=Convert.ToBase64String(values);
-                            sql.Write("'"+newValue+"'");
-                        }
-                    }
-                    else if (parameter.DbType == DbType.String)
-                    {
-                        if (string.Compare(parameter.Value.ToString(), "false", true) == 0 || string.Compare(parameter.Value.ToString(), "true", true) == 0)
-                        {
-                            if (string.Compare(parameter.Value.ToString(), "false", true) == 0)
-                            {
-                                parameter.Value = 0;
-                            }
-                            else
-                            {
-                                parameter.Value = 1;
-                            }
-                            sql.Write(parameter.Value);
-                        }
-                        else
-                        {
-                            sql.Write("'" + parameter.Value + "'");
-                        }
-                    }
-                    else
-                    {
-                        sql.Write("'" + parameter.Value + "'");
-                    }
-                }
-                if (e == entities.Count - 1)
-                {
-                    sql.Write(")");
-                }
-                else
-                {
-                    sql.Write("),");
-                }
-            }
-            
+            this.GenerateValuesSql(sql, entities, table);
+
             return sql.ToString();
         }
-        
+
         #endregion
 
         #region ImportUpdate
@@ -261,7 +143,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
         /// <param name="entities">需要更新的实例集合</param>
         private void ImportUpdate(EntityBatch meta, IList<Entity> entities)
         {
-            var sql = GenerateBatchUpdateStatement(meta, entities);
+            var sql = this.GenerateBatchUpdateStatement(meta, entities);
             meta.DBA.RawAccesser.ExecuteText(sql);
         }
 
@@ -271,7 +153,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
         /// <param name="meta"></param>
         /// <param name="entities">需要插入的实体类型集合</param>
         /// <returns>返回拼接完成的、批量插入的Sql语句</returns>
-        private static string GenerateBatchUpdateStatement(EntityBatch meta, IList<Entity> entities)
+        private string GenerateBatchUpdateStatement(EntityBatch meta, IList<Entity> entities)
         {
             var dba = meta.DBA.RawAccesser;
             var table = meta.Table;
@@ -283,83 +165,13 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
             var columns = table.Columns;
             for (int i = 0, c = columns.Count; i < c; i++)
             {
-                var column = columns[i];
-                if (i != 0)
-                {
-                    sql.Write(',');
-                }
-                sql.AppendQuote(table, column.Name);
+                if (i != 0) { sql.Write(','); }
+
+                sql.AppendQuote(table, columns[i].Name);
             }
             sql.Write(")VALUES");
 
-            for (int e = 0; e < entities.Count; e++)
-            {
-                sql.Write("(");
-                for (int i = 0, c = table.Columns.Count; i < c; i++)
-                {
-                    var column = columns[i];
-                    if (i != 0)
-                    {
-                        sql.Write(',');
-                    }
-                    var parameter = GetDataParameterObject(entities[e], column, dba);
-                    if (parameter.DbType == DbType.Int16 || parameter.DbType == DbType.Int32 || parameter.DbType == DbType.Int64 || parameter.DbType == DbType.Decimal || parameter.DbType == DbType.Double || parameter.DbType == DbType.Single || parameter.DbType == DbType.UInt16 || parameter.DbType == DbType.UInt32 || parameter.DbType == DbType.UInt64)
-                    {
-                        if (string.IsNullOrEmpty(parameter.Value.ToString()))
-                        {
-                            sql.Write("null");
-                        }
-                        else
-                        {
-                            sql.Write(parameter.Value);
-                        }
-                    }
-                    else if (parameter.DbType == DbType.Binary)
-                    {
-                        byte[] values = parameter.Value as byte[];
-                        if (values == null || values.Length == 0)
-                        {
-                            sql.Write("null");
-                        }
-                        else
-                        {
-                            string newValue = Convert.ToBase64String(values);
-                            sql.Write("'" + newValue + "'");
-                        }
-                    }
-                    else if (parameter.DbType == DbType.String)
-                    {
-                        if (string.Compare(parameter.Value.ToString(), "false", true) == 0 || string.Compare(parameter.Value.ToString(), "true", true) == 0)
-                        {
-                            if (string.Compare(parameter.Value.ToString(), "false", true) == 0)
-                            {
-                                parameter.Value = 0;
-                            }
-                            else
-                            {
-                                parameter.Value = 1;
-                            }
-                            sql.Write(parameter.Value);
-                        }
-                        else
-                        {
-                            sql.Write("'" + parameter.Value + "'");
-                        }
-                    }
-                    else
-                    {
-                        sql.Write("'" + parameter.Value + "'");
-                    }
-                }
-                if (e == entities.Count - 1)
-                {
-                    sql.Write(")");
-                }
-                else
-                {
-                    sql.Write("),");
-                }
-            }
+            this.GenerateValuesSql(sql, entities, table);
 
             return sql.ToString();
         }
@@ -368,23 +180,53 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
 
         #region 公用方法
 
-        /// <summary>
-        /// 获取包含指定实体类所对应列名对应属性的值参数对象
-        /// </summary>
-        /// <param name="entity">实体对象</param>
-        /// <param name="column">列对象</param>
-        /// <param name="dba"></param>
-        /// <returns>返回包含参数值的对象实例</returns>
-        private static IDbDataParameter GetDataParameterObject(Entity entity, RdbColumn column, IRawDbAccesser dba)
+        private void GenerateValuesSql(StringWriter sql, IList<Entity> entities, RdbTable table)
         {
-            var parameter = dba.ParameterFactory.CreateParameter();
-            parameter.ParameterName = column.Name;
+            var columns = table.Columns;
 
-            var dbType = column.Info.ColumnMeta.DataType ?? MySqlDbTypeHelper.ConvertFromCLRType(column.Info.DataType);
+            for (int e = 0, ec = entities.Count; e < ec; e++)
+            {
+                var entity = entities[e];
 
-            parameter.DbType = dbType;
-            parameter.Value = column.ReadParameterValue(entity);
-            return parameter;
+                if (e > 0) { sql.Write(","); }
+
+                sql.Write("(");
+
+                for (int i = 0, c = columns.Count; i < c; i++)
+                {
+                    var column = columns[i];
+                    if (i != 0) { sql.Write(','); }
+
+                    //获取数据类型及值。
+                    var dbType = column.Info.DbType;
+                    var value = column.ReadDbParameterValue(entity);
+
+                    //处理空值
+                    if (value == DBNull.Value || value == null)
+                    {
+                        sql.Write("null");
+                        continue;
+                    }
+
+                    //按类型写入值。
+                    if (dbType == DbType.Binary)
+                    {
+                        var bytes = value as byte[];
+                        string newValue = Convert.ToBase64String(bytes);
+                        sql.Write("'" + newValue + "'");
+                    }
+                    else if (dbType == DbType.String || dbType == DbType.DateTime)
+                    {
+                        sql.Write("'" + value + "'");
+                    }
+                    else
+                    {
+                        sql.Write(value);
+                    }
+                }
+
+                sql.Write(")");
+            }
         }
 
         #endregion

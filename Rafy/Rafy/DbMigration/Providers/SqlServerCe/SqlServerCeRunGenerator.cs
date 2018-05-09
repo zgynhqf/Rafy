@@ -27,23 +27,9 @@ namespace Rafy.DbMigration.SqlServerCe
     /// </summary>
     public class SqlServerCeRunGenerator : SqlServer.SqlServerRunGenerator
     {
-        protected override string ConvertToTypeString(DbType dataType, string length)
+        public SqlServerCeRunGenerator()
         {
-            switch (dataType)
-            {
-                case DbType.String:
-                case DbType.AnsiString:
-                case DbType.Xml:
-                    if (!string.IsNullOrEmpty(length) && !length.EqualsIgnoreCase("MAX"))
-                    {
-                        return "NVARCHAR(" + length + ')';
-                    }
-                    return "NVARCHAR(4000)";
-                case DbType.Binary:
-                    return "VARBINARY(8000)";
-                default:
-                    return base.ConvertToTypeString(dataType, length);
-            }
+            this.DbTypeCoverter = SqlServerCeDbTypeConverter.Instance;
         }
 
         protected override void Generate(CreateDatabase op)

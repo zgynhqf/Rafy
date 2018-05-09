@@ -31,47 +31,5 @@ namespace Rafy.Domain.ORM.MySql
         /// <param name="table">表对象</param>
         /// <param name="columnInfo">持久列对象</param>
         public MySqlColumn(RdbTable table, IPersistanceColumnInfo columnInfo) : base(table, columnInfo) { }
-
-        /// <summary>
-        /// 是否可以执行插入数据操作
-        /// </summary>
-        public override bool CanInsert
-        {
-            get
-            {
-                return true;
-            }
-        }
-
-        /// <summary>
-        /// 转换为MySql所需要的参数值类型
-        /// </summary>
-        /// <param name="value">需要转换的值</param>
-        /// <returns></returns>
-        public override object ConvertToParameterValue(object value)
-        {
-            value = base.ConvertToParameterValue(value);
-            value = MySqlSqlGenerator.PrepareConstraintValueInternal(value);
-            return value;
-        }
-
-        /// <summary>
-        /// 写入实体和对应的值
-        /// </summary>
-        /// <param name="entity">实体对象</param>
-        /// <param name="value">结果值</param>
-        public override void Write(Entity entity, object value)
-        {
-            var info = this.Info;
-            if (value != null && info.IsBooleanType)
-            {
-                value = MySqlDbTypeHelper.ToCLRBoolean(value);
-            }
-            else if (value == null && info.IsStringType)
-            {
-                value = string.Empty;
-            }
-            base.Write(entity, value);
-        }
     }
 }

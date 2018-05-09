@@ -9,6 +9,7 @@
  * 创建文件 周金根 2008
  * 
 *******************************************************/
+#if NET45
 
 using System;
 using System.ServiceModel;
@@ -43,3 +44,5 @@ namespace Rafy.Domain.DataPortal.WCF
         string Test(string msg);
     }
 }
+
+#endif

@@ -83,6 +83,24 @@ namespace UT
             set { this.SetRefEntity(AdministratorProperty, value); }
         }
 
+        public static readonly IRefIdProperty ToTestExtremeLongReferencePropertyMapToDataBaseColumnIdProperty =
+            P<Article>.RegisterRefId(e => e.ToTestExtremeLongReferencePropertyMapToDataBaseColumnId, ReferenceType.Normal);
+        public int? ToTestExtremeLongReferencePropertyMapToDataBaseColumnId
+        {
+            get { return (int?)this.GetRefNullableId(ToTestExtremeLongReferencePropertyMapToDataBaseColumnIdProperty); }
+            set { this.SetRefNullableId(ToTestExtremeLongReferencePropertyMapToDataBaseColumnIdProperty, value); }
+        }
+        public static readonly RefEntityProperty<BlogUser> ToTestExtremeLongReferencePropertyMapToDataBaseColumnProperty =
+            P<Article>.RegisterRef(e => e.ToTestExtremeLongReferencePropertyMapToDataBaseColumn, ToTestExtremeLongReferencePropertyMapToDataBaseColumnIdProperty);
+        /// <summary>
+        /// 测试超长的列名及外键名。
+        /// </summary>
+        public BlogUser ToTestExtremeLongReferencePropertyMapToDataBaseColumn
+        {
+            get { return this.GetRefEntity(ToTestExtremeLongReferencePropertyMapToDataBaseColumnProperty); }
+            set { this.SetRefEntity(ToTestExtremeLongReferencePropertyMapToDataBaseColumnProperty, value); }
+        }
+
         #endregion
 
         #region 组合子属性
@@ -140,7 +158,7 @@ namespace UT
         {
             var q = this.CreateLinqQuery();
             //对同时引用 BlogUser 表的两个引用实体（一个可空，一个非空），进行查询。
-            q = q.Where(e => (e.Administrator.UserName == "admin" || e.AdministratorId == null) && e.User.UserName == "huqf").OrderBy(p=>p.Id);
+            q = q.Where(e => (e.Administrator.UserName == "admin" || e.AdministratorId == null) && e.User.UserName == "huqf").OrderBy(p => p.Id);
             return (ArticleList)this.QueryData(q);
         }
 

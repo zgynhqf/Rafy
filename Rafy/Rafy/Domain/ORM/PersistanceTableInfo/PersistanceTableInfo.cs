@@ -23,11 +23,11 @@ namespace Rafy.Domain.ORM
     {
         private IRepositoryInternal _repo;
 
-        public PersistanceTableInfo(IRepositoryInternal repo)
+        public PersistanceTableInfo(string name, IRepositoryInternal repo)
         {
             _repo = repo;
+            this.Name = name;
             this.Class = repo.EntityType;
-            this.Name = repo.EntityMeta.TableMeta.TableName;
             this.Columns = new List<PersistanceColumnInfo>();
         }
 
@@ -39,7 +39,7 @@ namespace Rafy.Domain.ORM
         /// <summary>
         /// 表名
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; private set; }
 
         /// <summary>
         /// 主键列（每个表肯定有一个主键列）

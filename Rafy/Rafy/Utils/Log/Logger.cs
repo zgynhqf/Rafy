@@ -29,7 +29,6 @@ namespace Rafy
     /// </summary>
     public static class Logger
     {
-        private static object _lock = new object();
         private static LoggerBase _impl = new FileLogger();
 
         /// <summary>
@@ -48,18 +47,30 @@ namespace Rafy
         /// <param name="e"></param>
         public static void LogError(string title, Exception e)
         {
-            lock (_lock)
+            try
             {
-                try
-                {
-                    _impl.LogError(title, e);
-                }
-                catch { }
+                _impl.LogError(title, e);
             }
+            catch { }
+        }
+
+        /// <summary>
+        /// 记录某个消息到 Log 日志中。
+        /// </summary>
+        /// <param name="message">要记录的消息。</param>
+        public static void LogInfo(string message)
+        {
+            try
+            {
+                _impl.LogInfo(message);
+            }
+            catch { }
         }
 
         [ThreadStatic]
         private static long _threadDbAccessedCount = 0;
+        [ThreadStatic]
+        private static int _lastRowEffected = 0;
         private static long _dbAccessedCount = 0;
 
         /// <summary>
@@ -76,6 +87,14 @@ namespace Rafy
         public static long ThreadDbAccessedCount
         {
             get { return _threadDbAccessedCount; }
+        }
+
+        /// <summary>
+        /// 当前线程最近一次执行的非查询的 SQL 影响的行数。
+        /// </summary>
+        public static int LastRowEffected
+        {
+            get { return _lastRowEffected; }
         }
 
         /// <summary>
@@ -115,17 +134,17 @@ namespace Rafy
         /// <param name="connection">The connection.</param>
         public static void LogDbAccessed(string sql, IDbDataParameter[] parameters, DbConnectionSchema connectionSchema, IDbConnection connection)
         {
-            _dbAccessedCount++;
-            _threadDbAccessedCount++;
-
-            lock (_lock)
+            if (EnableSqlObervation)
             {
-                try
-                {
-                    _impl.LogDbAccessed(sql, parameters, connectionSchema, connection);
-                }
-                catch { }
+                _dbAccessedCount++;
+                _threadDbAccessedCount++;
             }
+
+            try
+            {
+                _impl.LogDbAccessed(sql, parameters, connectionSchema, connection);
+            }
+            catch { }
 
             if (EnableSqlObervation)
             {
@@ -139,6 +158,20 @@ namespace Rafy
                     if (handler != null) { handler(null, args); }
                 }
             }
+        }
+
+        /// <summary>
+        /// 将上条 SQL 执行的结果记录到日志中。
+        /// </summary>
+        /// <param name="rowsEffect">The result.</param>
+        public static void LogDbAccessedResult(int rowsEffect)
+        {
+            if (EnableSqlObervation)
+            {
+                _lastRowEffected = rowsEffect;
+            }
+
+            _impl.LogDbAccessedResult(rowsEffect);
         }
 
         /// <summary>

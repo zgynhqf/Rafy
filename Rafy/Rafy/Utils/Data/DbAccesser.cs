@@ -310,16 +310,15 @@ namespace Rafy.Data
         /// <returns></returns>
         public DataTable QueryDataTable(string formattedSql, params object[] parameters)
         {
-            if (parameters.Length > 0)
+            IDbDataParameter[] dbParameters = null;
+
+            if (parameters?.Length > 0)
             {
                 formattedSql = _converter.ConvertToSpecialDbSql(formattedSql);
-                IDbDataParameter[] dbParameters = ConvertFormatParamaters(parameters);
-                return this.DoQueryDataTable(formattedSql, CommandType.Text, dbParameters);
+                dbParameters = ConvertFormatParamaters(parameters);
             }
-            else
-            {
-                return this.DoQueryDataTable(formattedSql, CommandType.Text);
-            }
+
+            return this.DoQueryDataTable(formattedSql, CommandType.Text, dbParameters);
         }
 
         /// <summary>
@@ -331,16 +330,15 @@ namespace Rafy.Data
         /// <returns></returns>
         public DataRow QueryDataRow(string formattedSql, params object[] parameters)
         {
-            if (parameters.Length > 0)
+            IDbDataParameter[] dbParameters = null;
+
+            if (parameters?.Length > 0)
             {
                 formattedSql = _converter.ConvertToSpecialDbSql(formattedSql);
-                IDbDataParameter[] dbParameters = ConvertFormatParamaters(parameters);
-                return this.DoQueryDataRow(formattedSql, CommandType.Text, dbParameters);
+                dbParameters = ConvertFormatParamaters(parameters);
             }
-            else
-            {
-                return this.DoQueryDataRow(formattedSql, CommandType.Text);
-            }
+
+            return this.DoQueryDataRow(formattedSql, CommandType.Text, dbParameters);
         }
 
         /// <summary>
@@ -392,16 +390,15 @@ namespace Rafy.Data
         /// <returns></returns>
         public IDataReader QueryDataReader(string formattedSql, bool closeConnection, params object[] parameters)
         {
-            if (parameters.Length > 0)
+            IDbDataParameter[] dbParameters = null;
+
+            if (parameters?.Length > 0)
             {
                 formattedSql = _converter.ConvertToSpecialDbSql(formattedSql);
-                IDbDataParameter[] dbParameters = ConvertFormatParamaters(parameters);
-                return this.DoQueryDataReader(formattedSql, CommandType.Text, closeConnection, dbParameters);
+                dbParameters = ConvertFormatParamaters(parameters);
             }
-            else
-            {
-                return this.DoQueryDataReader(formattedSql, CommandType.Text, closeConnection);
-            }
+
+            return this.DoQueryDataReader(formattedSql, CommandType.Text, closeConnection, dbParameters);
         }
 
         /// <summary>
@@ -412,16 +409,15 @@ namespace Rafy.Data
         /// <returns>DBNull or value object.</returns>
         public object QueryValue(string formattedSql, params object[] parameters)
         {
-            if (parameters.Length > 0)
+            IDbDataParameter[] dbParameters = null;
+
+            if (parameters?.Length > 0)
             {
                 formattedSql = _converter.ConvertToSpecialDbSql(formattedSql);
-                IDbDataParameter[] dbParameters = ConvertFormatParamaters(parameters);
-                return this.DoQueryValue(formattedSql, CommandType.Text, dbParameters);
+                dbParameters = ConvertFormatParamaters(parameters);
             }
-            else
-            {
-                return this.DoQueryValue(formattedSql, CommandType.Text);
-            }
+
+            return this.DoQueryValue(formattedSql, CommandType.Text, dbParameters);
         }
 
         /// <summary>
@@ -432,16 +428,15 @@ namespace Rafy.Data
         /// <returns>The number of rows effected</returns>
         public int ExecuteText(string formattedSql, params object[] parameters)
         {
-            if (parameters.Length > 0)
+            IDbDataParameter[] dbParameters = null;
+
+            if (parameters?.Length > 0)
             {
                 formattedSql = _converter.ConvertToSpecialDbSql(formattedSql);
-                IDbDataParameter[] dbParameters = ConvertFormatParamaters(parameters);
-                return this.DoExecuteText(formattedSql, dbParameters);
+                dbParameters = ConvertFormatParamaters(parameters);
             }
-            else
-            {
-                return this.DoExecuteText(formattedSql);
-            }
+
+            return this.DoExecuteText(formattedSql, dbParameters);
         }
 
         /// <summary>
@@ -458,12 +453,43 @@ namespace Rafy.Data
                 parameterName = _converter.GetParameterName(i);
                 object value = parametersValues[i];
 
-                //convert null value.
-                if (value == null) { value = DBNull.Value; }
-                IDbDataParameter param = (this as IDbParameterFactory).CreateParameter(parameterName, value, ParameterDirection.Input);
-                dbParameters[i] = param;
+                var parameter = (this as IDbParameterFactory).CreateParameter();
+                SetDbTypeAndValue(parameter, value);
+                parameter.ParameterName = parameterName;
+                parameter.Direction = ParameterDirection.Input;
+
+                dbParameters[i] = parameter;
             }
             return dbParameters;
+        }
+
+        private static void SetDbTypeAndValue(IDbDataParameter parameter, object value)
+        {
+            var dap = value as DbAccesserParameter;
+            if (dap != null)
+            {
+                value = dap.Value;
+                parameter.DbType = dap.DbType;
+            }
+            //else
+            //{
+            //    if (value != null)
+            //    {
+            //        if (value is DateTime)
+            //        {
+            //            parameter.DbType = DbType.DateTime;
+            //        }
+            //        else if (value is string)
+            //        {
+            //            parameter.DbType = DbType.String;
+            //        }
+            //    }
+            //}
+
+            //convert null value.
+            if (value == null) { value = DBNull.Value; }
+
+            parameter.Value = value;
         }
 
         #endregion
@@ -497,11 +523,14 @@ namespace Rafy.Data
             var tran = this.Transaction;
             if (tran != null) command.Transaction = tran;
 
-            var pas = command.Parameters;
-            for (int i = 0, c = parameters.Length; i < c; i++)
+            if (parameters != null)
             {
-                var p = parameters[i];
-                pas.Add(p);
+                var pas = command.Parameters;
+                for (int i = 0, c = parameters.Length; i < c; i++)
+                {
+                    var p = parameters[i];
+                    pas.Add(p);
+                }
             }
 
             Logger.LogDbAccessed(sql, parameters, _connectionSchema, _connection);
@@ -609,7 +638,11 @@ namespace Rafy.Data
             {
                 this.MakeConnectionOpen();
 
-                return command.ExecuteNonQuery();
+                var rowsEffect = command.ExecuteNonQuery();
+
+                Logger.LogDbAccessedResult(rowsEffect);
+
+                return rowsEffect;
             }
             finally
             {
@@ -1058,7 +1091,7 @@ namespace Rafy.Data
         ///// <returns></returns>
         //public void FillDataSet(string formattedSql, DataSet ds, string tableName, params object[] parameters)
         //{
-        //    if (parameters.Length > 0)
+        //    if (parameters?.Length > 0)
         //    {
         //        formattedSql = _converter.ConvertToSpecialDbSql(formattedSql);
         //        DbParameter[] dbParameters = ConvertFormatParamaters(parameters);

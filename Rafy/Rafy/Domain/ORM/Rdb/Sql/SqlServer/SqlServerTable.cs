@@ -23,11 +23,22 @@ namespace Rafy.Domain.ORM.SqlServer
 {
     class SqlServerTable : SqlTable
     {
-        private string _insertSql;
-
-        private string _withIdInsertSql;
-
-        public SqlServerTable(IRepositoryInternal repository) : base(repository) { }
+        public SqlServerTable(IRepositoryInternal repository) : base(repository)
+        {
+            _insertSql = new Lazy<string>(() =>
+            {
+                var generatedSql = this.GenerateInsertSQL(false);
+                return $@"{generatedSql};
+SELECT @@IDENTITY;";
+            });
+            _insertSqlWithId = new Lazy<string>(() =>
+            {
+                var generatedSql = this.GenerateInsertSQL(true);
+                return $@"SET IDENTITY_INSERT {this.Name} ON;
+{generatedSql};
+SET IDENTITY_INSERT {this.Name} OFF;";
+            });
+        }
 
         public override void Insert(IDbAccesser dba, Entity item)
         {
@@ -36,25 +47,23 @@ namespace Rafy.Domain.ORM.SqlServer
             var idColumn = this.IdentityColumn;
             if (idColumn != null)
             {
-                var isIdentityHasValue = (item as IEntityWithId).IdProvider.IsAvailable(item.Id);
-                string insertSql = isIdentityHasValue ? _withIdInsertSql ?? (_withIdInsertSql = $" SET IDENTITY_INSERT {this.Name} ON ;{this.GenerateInsertSQL(true)};SET IDENTITY_INSERT {this.Name} OFF ;") :
-                    _insertSql ?? (_insertSql = $"{this.GenerateInsertSQL()};SELECT @@IDENTITY;");
+                var idProvider = (item as IEntityWithId).IdProvider;
+                var hasId = idProvider.IsAvailable(item.Id);
 
-                var parameters = Columns.Where(c => c.CanInsert || (c.Info.IsIdentity && isIdentityHasValue))
-                                 .Select(c => c.ReadParameterValue(item))
-                                 .ToArray();
+                string insertSql = hasId ? _insertSqlWithId.Value : _insertSql.Value;
+                object[] parameters = this.GenerateInsertSqlParameters(item, hasId);
 
-                //由于默认是 decimal 类型，所以需要类型转换。
                 var idValue = dba.QueryValue(insertSql, parameters);
-                if (!isIdentityHasValue)
-                {
-                    idValue = TypeHelper.CoerceValue((item as IEntityWithId).IdProvider.KeyType, idValue);
-                    idColumn.LoadValue(item, idValue);
-                }
 
-                //如果实体的 Id 是在插入的过程中生成的，
-                //那么需要在插入组合子对象前，先把新生成的父对象 Id 都同步到子列表中。
-                item.SyncIdToChildren();
+                if (!hasId)
+                {
+                    idValue = TypeHelper.CoerceValue(idProvider.KeyType, idValue);
+                    idColumn.WritePropertyValue(item, idValue);
+
+                    //如果实体的 Id 是在插入的过程中生成的，
+                    //那么需要在插入组合子对象前，先把新生成的父对象 Id 都同步到子列表中。
+                    item.SyncIdToChildren();
+                }
             }
             else
             {

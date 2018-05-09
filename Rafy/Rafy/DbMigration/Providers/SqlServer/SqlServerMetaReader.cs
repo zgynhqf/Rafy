@@ -95,7 +95,7 @@ ORDER BY TABLE_NAME");
                     //    length = lengthObj.ToString();
                     //}
 
-                    DbType dbType = SqlDbTypeHelper.ConvertFromSQLTypeString(sqlType);
+                    DbType dbType = SqlServerDbTypeConverter.Instance.ConvertToDbType(sqlType);
 
                     Column column = new Column(columnName, dbType, null, currentTable);
 

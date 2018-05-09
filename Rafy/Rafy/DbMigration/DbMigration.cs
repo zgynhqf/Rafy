@@ -85,7 +85,6 @@ namespace Rafy.DbMigration
             get { return this.GetMigrationType(); }
         }
 
-
         /// <summary>
         /// 数据库升级
         /// 注意，开发者在实现此方法时，不能在方法中直接操作数据库，而是应该通过 <see cref="AddOperation(MigrationOperation)"/>、<see cref="ManualDbMigration.RunCode(Action{IDbAccesser})"/>、<see cref="ManualDbMigration.RunSql(string)"/> 等方法添加一些数据库的操作，进而由框架来统一规划与操作数据库。

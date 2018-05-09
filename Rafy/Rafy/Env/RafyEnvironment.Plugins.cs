@@ -8,6 +8,7 @@
  * 
  * 历史记录：
  * 创建文件 胡庆访 20100331
+ * 编辑文件 崔化栋 20180424 09:50
  * 
 *******************************************************/
 
@@ -129,8 +130,13 @@ namespace Rafy
             _allPlugins = new PluginCollection();
 
             //domain plugins.
+#if NET45
             var configPlugins = Configuration.Section.DomainPlugins.OfType<PluginElement>().Select(e => e.Plugin).ToArray();
-            if (configPlugins.Length > 0)
+#endif
+#if NS2
+            var configPlugins = Configuration.Section.DomainPlugins;
+#endif
+            if (configPlugins != null && configPlugins.Length > 0)
             {
                 InitPluginsByConfig(_domainPlugins, configPlugins);
             }
@@ -142,8 +148,13 @@ namespace Rafy
             //ui plugins.
             if (_location.IsUI)
             {
+#if NET45
                 configPlugins = Configuration.Section.UIPlugins.OfType<PluginElement>().Select(e => e.Plugin).ToArray();
-                if (configPlugins.Length > 0)
+#endif
+#if NS2
+                configPlugins = Configuration.Section.UIPlugins;
+#endif
+                if (configPlugins != null && configPlugins.Length > 0)
                 {
                     InitPluginsByConfig(_uiPlugins, configPlugins);
                 }

@@ -8,6 +8,7 @@
  * 
  * 历史记录：
  * 创建文件 胡庆访 20130314 14:41
+ * 编辑文件 崔化栋 20180502 14:00
  * 
 *******************************************************/
 
@@ -35,9 +36,22 @@ namespace Rafy
         /// </summary>
         public FileLogger()
         {
-            this.ExceptionLogFileName = "ExceptionLog.txt";
-            this.SqlTraceFileName = ConfigurationHelper.GetAppSettingOrDefault("Rafy.FileLogger.SqlTraceFileName", string.Empty);
+            this.InfoLogFileName = ConfigurationHelper.GetAppSettingOrDefault($"Rafy:FileLogger:InfoLogFileName", 
+                ConfigurationHelper.GetAppSettingOrDefault($"Rafy.FileLogger.InfoLogFileName", "ApplicationInfoLog.txt")
+                );
+            this.ExceptionLogFileName = ConfigurationHelper.GetAppSettingOrDefault($"Rafy:FileLogger:ExceptionLogFileName", 
+                ConfigurationHelper.GetAppSettingOrDefault($"Rafy.FileLogger.ExceptionLogFileName", "ExceptionLog.txt")
+                );
+            this.SqlTraceFileName = ConfigurationHelper.GetAppSettingOrDefault($"Rafy:FileLogger:SqlTraceFileName", 
+                ConfigurationHelper.GetAppSettingOrDefault($"Rafy.FileLogger.SqlTraceFileName", string.Empty)
+                );
         }
+
+        /// <summary>
+        /// 常用信息的日志的文件名。
+        /// 默认为空。
+        /// </summary>
+        public string InfoLogFileName { get; set; }
 
         /// <summary>
         /// 错误日志的文件名。
@@ -46,7 +60,8 @@ namespace Rafy
         public string ExceptionLogFileName { get; set; }
 
         /// <summary>
-        /// 默认使用配置文件中的 Rafy.FileLogger.SqlTraceFileName 配置项。
+        /// 默认使用配置文件中的 Rafy:FileLogger:SqlTraceFileName 配置项
+        ///   NetFramework 分隔符为“.”，NetCore 分隔符为“:”
         /// </summary>
         public string SqlTraceFileName { get; set; }
 
@@ -62,6 +77,21 @@ namespace Rafy
         ///// </summary>
         //public bool WriteSqlOnly { get; set; }
 
+        public override void LogInfo(string message)
+        {
+            if (string.IsNullOrEmpty(this.InfoLogFileName)) return;
+
+            lock (this)
+            {
+                File.AppendAllText(this.ExceptionLogFileName, $@"
+
+-----------------------------------------------------------------
+Time：{ DateTime.Now }
+Thread Id:[ { Thread.CurrentThread.ManagedThreadId } ]
+Message：{ message }");
+            }
+        }
+
         /// <summary>
         /// 记录某个已经生成的异常到文件中。
         /// </summary>
@@ -69,12 +99,12 @@ namespace Rafy
         /// <param name="e"></param>
         public override void LogError(string title, Exception e)
         {
-            if (!string.IsNullOrEmpty(this.ExceptionLogFileName))
-            {
-                var stackTrace = e.StackTrace;//需要记录完整的堆栈信息。
-                e = e.GetBaseException();
+            if (string.IsNullOrEmpty(this.ExceptionLogFileName)) return;
 
-                string message = string.Format(@"
+            var stackTrace = e.StackTrace;//需要记录完整的堆栈信息。
+            e = e.GetBaseException();
+
+            string message = string.Format(@"
 ===================================================================
 ======== {0} =========
 ===================================================================
@@ -85,13 +115,17 @@ namespace Rafy
 {2}
 
 ", title, e.Message, stackTrace, Thread.CurrentThread.ManagedThreadId, DateTime.Now);
+
+            lock (this)
+            {
                 File.AppendAllText(this.ExceptionLogFileName, message);
             }
         }
 
         /// <summary>
         /// 记录 Sql 执行过程。
-        /// 把 SQL 语句及参数，写到 'Rafy.FileLogger.SqlTraceFileName' 配置所对应的文件中。
+        /// 把 SQL 语句及参数，写到 'Rafy:FileLogger:SqlTraceFileName' 配置所对应的文件中。
+        ///   NetFramework 分隔符为“.”，NetCore 分隔符为“:”
         /// </summary>
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
@@ -99,34 +133,53 @@ namespace Rafy
         /// <param name="connection"></param>
         public override void LogDbAccessed(string sql, IDbDataParameter[] parameters, DbConnectionSchema connectionSchema, IDbConnection connection)
         {
-            if (!string.IsNullOrEmpty(this.SqlTraceFileName))
+            if (string.IsNullOrEmpty(this.SqlTraceFileName)) return;
+
+            var content = new StringBuilder();
+
+            content.AppendLine().AppendLine().AppendLine()
+                .Append("--").Append(DateTime.Now).AppendLine();
+
+            var sqlConnection = connection as SqlConnection;
+            if (sqlConnection != null)
             {
-                var content = new StringBuilder();
+                content.Append("--ClientConnectionId: ").Append(sqlConnection.ClientConnectionId).AppendLine();
+            }
 
-                var sqlConnection = connection as SqlConnection;
-                content.Append("--").Append(DateTime.Now);
-                content.AppendLine();
-                if (sqlConnection != null)
-                {
-                    content.Append("--ClientConnectionId: ").Append(sqlConnection.ClientConnectionId);
-                    content.AppendLine();
-                }
-                //"--Database:  " + connectionSchema.Database +
-                content.Append("--ConnectionString: ").Append(connectionSchema.ConnectionString);
-                content.AppendLine();
+            //"--Database:  " + connectionSchema.Database +
+            content.Append("--ConnectionString: ").Append(connectionSchema.ConnectionString).AppendLine();
 
-                if (parameters.Length > 0)
-                {
-                    this.WriteSqlAndParameters(content, sql, parameters, connectionSchema);
-                }
-                else
-                {
-                    content.Append(sql);
-                }
+            if (parameters?.Length > 0)
+            {
+                this.WriteSqlAndParameters(content, sql, parameters, connectionSchema);
+            }
+            else
+            {
+                content.Append(sql);
+            }
 
-                content.Append(';').AppendLine().AppendLine().AppendLine();
+            content.Append(';');
 
-                File.AppendAllText(SqlTraceFileName, content.ToString(), Encoding.UTF8);
+            lock (this)
+            {
+                File.AppendAllText(this.SqlTraceFileName, content.ToString(), Encoding.UTF8);
+            }
+        }
+
+        public override void LogDbAccessedResult(int rowsEffect)
+        {
+            if (string.IsNullOrEmpty(this.SqlTraceFileName)) return;
+
+            var content = new StringBuilder();
+
+            content.AppendLine()
+                .Append("--").Append(DateTime.Now)
+                .AppendLine()
+                .Append("Rows effected: ").Append(rowsEffect).Append(";");
+
+            lock (this)
+            {
+                File.AppendAllText(this.SqlTraceFileName, content.ToString(), Encoding.UTF8);
             }
         }
 
@@ -144,7 +197,7 @@ namespace Rafy
             var pValues = parameters.Select(p =>
             {
                 var value = p.Value;
-                if (p.DbType == DbType.DateTime)
+                if (p.DbType == DbType.DateTime || p.DbType == DbType.Date)
                 {
                     if (isOracle)
                     {
@@ -160,11 +213,11 @@ namespace Rafy
                     value = '\'' + value.ToString() + '\'';
                     //value = '"' + value.ToString() + '"';
                 }
-                else if(p.DbType == DbType.Boolean)
+                else if (p.DbType == DbType.Boolean)
                 {
                     value = Convert.ToByte(value);
                 }
-                else if(value == null)
+                else if (value == null)
                 {
                     value = "null";
                 }

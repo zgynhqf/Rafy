@@ -18,6 +18,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Rafy.Data;
 using Rafy.DbMigration.Operations;
 using Rafy.DbMigration.Oracle;
 
@@ -26,8 +27,14 @@ namespace Rafy.DbMigration.MySql
     /// <summary>
     /// MySql的执行项生成器
     /// </summary>
-    public sealed class MySqlRunGenerator : TSqlRunGenerator
+    public sealed class MySqlRunGenerator : SqlRunGenerator
     {
+        public MySqlRunGenerator()
+        {
+            this.IdentifierQuoter = MySqlIdentifierQuoter.Instance;
+            this.DbTypeCoverter = MySqlDbTypeConverter.Instance;
+        }
+
         /// <summary>
         /// 增加不允许为空的约束
         /// </summary>
@@ -41,21 +48,10 @@ namespace Rafy.DbMigration.MySql
                 sql.Write(" MODIFY ");
 
                 sql.Indent++;
-                this.GenerateColumnDeclaration(sql, op.ColumnName, op.DataType, op.Length, true, op.IsForeignKey);
+                this.GenerateColumnDeclaration(sql, op.ColumnName, op.DbType, op.Length, true, op.IsForeignKey);
 
                 this.AddRun(sql);
             }
-        }
-
-        /// <summary>
-        /// 把Clr的数据类型转型为MySql的数据类型
-        /// </summary>
-        /// <param name="dataType">数据类型</param>
-        /// <param name="length">数据长度</param>
-        /// <returns>返回MySql的数据类型</returns>
-        protected override string ConvertToTypeString(DbType dataType, string length)
-        {
-            return MySqlDbTypeHelper.ConvertToMySqlTypeString(dataType, length);
         }
 
         /// <summary>
@@ -96,7 +92,13 @@ namespace Rafy.DbMigration.MySql
                 {
                     this.AddRun(new SqlMigrationRun
                     {
-                        Sql = string.Format(@"ALTER TABLE `{0}` MODIFY COLUMN `{1}` {2} COMMENT '{3}'", this.Prepare(op.TableName), this.Prepare(op.ColumnName), MySqlDbTypeHelper.ConvertToMySqlTypeString(op.ColumnDataType), op.Comment)
+                        Sql = string.Format(
+                            @"ALTER TABLE `{0}` MODIFY COLUMN `{1}` {2} COMMENT '{3}'",
+                            this.Prepare(op.TableName),
+                            this.Prepare(op.ColumnName),
+                            this.DbTypeCoverter.ConvertToDatabaseTypeName(op.ColumnDbType),
+                            op.Comment
+                            )
                     });
                 }
             }
@@ -112,9 +114,11 @@ namespace Rafy.DbMigration.MySql
             {
                 sql.Write("ALTER TABLE ");
                 sql.Write(this.Quote(op.DependentTable));
-                sql.Write(@" ADD CONSTRAINT ");
+                sql.Write(@"
+    ADD CONSTRAINT ");
                 sql.Write(this.Quote(op.ConstraintName));
-                sql.Write(@" FOREIGN KEY ");
+                sql.Write(@"
+    FOREIGN KEY ");
                 sql.Write(this.Quote(op.DependentTable));
                 sql.Write(@" (");
                 sql.Write(this.Quote(op.DependentTableColumn));
@@ -123,6 +127,7 @@ namespace Rafy.DbMigration.MySql
                 sql.Write("(");
                 sql.Write(this.Quote(op.PrincipleTableColumn));
                 sql.Write(")");
+
                 if (op.NeedDeleteCascade)
                 {
                     sql.Write(" ON DELETE CASCADE");
@@ -142,7 +147,8 @@ namespace Rafy.DbMigration.MySql
             {
                 sql.Write(@"ALTER TABLE ");
                 sql.Write(this.Quote(op.DependentTable));
-                sql.Write(@" DROP FOREIGN KEY ");
+                sql.Write(@"
+    DROP FOREIGN KEY ");
                 sql.Write(this.Quote(op.ConstraintName));
 
                 this.AddRun(sql);
@@ -233,7 +239,7 @@ namespace Rafy.DbMigration.MySql
                 sql.WriteLine(this.Quote(op.TableName));
                 sql.WriteLine("(");
                 sql.Indent++;
-                this.GenerateColumnDeclaration(sql, op.PKName, op.PKDataType, op.PKLength, true, true);
+                this.GenerateColumnDeclaration(sql, op.PKName, op.PKDbType, op.PKLength, true, true);
                 if (op.PKIdentity) { sql.Write(" auto_increment"); }
                 sql.Write(" primary key");
                 sql.WriteLine();
@@ -284,7 +290,7 @@ namespace Rafy.DbMigration.MySql
 
                 sql.Indent++;
                 sql.Write("ADD ");
-                this.GenerateColumnDeclaration(sql, op.ColumnName, op.DataType, op.Length, false, op.IsForeignKey);
+                this.GenerateColumnDeclaration(sql, op.ColumnName, op.DbType, op.Length, false, op.IsForeignKey);
 
                 this.AddRun(sql);
             }
@@ -304,20 +310,10 @@ namespace Rafy.DbMigration.MySql
 
                 sql.Indent++;
                 sql.Write("MODIFY ");
-                this.GenerateColumnDeclaration(sql, op.ColumnName, op.DataType, op.Length, false, op.IsForeignKey);
+                this.GenerateColumnDeclaration(sql, op.ColumnName, op.DbType, op.Length, false, op.IsForeignKey);
 
                 this.AddRun(sql);
             }
-        }
-
-        /// <summary>
-        /// 防止命名冲突而增加的引用
-        /// </summary>
-        /// <param name="identifier">需要被引用的内容</param>
-        /// <returns>返回增加了指定字符应用的字符串</returns>
-        protected override string Quote(string identifier)
-        {
-            return "`" + identifier + "`";
         }
     }
 }

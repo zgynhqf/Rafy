@@ -244,7 +244,7 @@ namespace Rafy.DbMigration
                 this.AddOperation(new AlterColumnType
                 {
                     CopyFromColumn = columnChanges.OldColumn,
-                    NewType = columnChanges.NewColumn.DataType,
+                    NewType = columnChanges.NewColumn.DbType,
                     IsRequired = columnChanges.OldColumn.IsRequired,
                 });
             }

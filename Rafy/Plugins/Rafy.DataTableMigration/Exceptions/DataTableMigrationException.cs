@@ -8,9 +8,11 @@
  * 
  * 历史记录：
  * 创建文件 吴中坡 20170315 13:48
+ * 编辑文件 崔化栋 20180424 09:50
  * 
 *******************************************************/
 
+#if NETSTANDARD2_0
 using System;
 
 namespace Rafy.DataTableMigration.Exceptions
@@ -27,7 +29,8 @@ namespace Rafy.DataTableMigration.Exceptions
         /// <param name="innerException">表示一个内部异常信息。</param>
         public DataTableMigrationException(string message, Exception innerException) : base(message, innerException)
         {
-            
+
         }
     }
 }
+#endif

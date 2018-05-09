@@ -77,13 +77,21 @@ namespace Rafy.Domain.ORM.DbMigration
         //    return this.TryFindComment(type.Assembly, key);
         //}
 
+        /// <summary>
+        /// 通过程序集获取对应xml文件，为设置备注做准备
+        /// Assembly.CodeBase vs Assembly.Location
+        /// https://www.cnblogs.com/happyframework/p/3612494.html
+        /// </summary>
+        /// <param name="assembly"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
         private string TryFindComment(Assembly assembly, string key)
         {
             XDocument xdoc = null;
             if (!_store.TryGetValue(assembly, out xdoc))
             {
-                var assemblyPath = assembly.Location;
-                var xmlDocPath = Path.Combine(Path.GetDirectoryName(assemblyPath), Path.GetFileNameWithoutExtension(assemblyPath) + ".xml");
+                var assemblyCodeBase = assembly.CodeBase.Replace("file:///", "");
+                var xmlDocPath = Path.Combine(Path.GetDirectoryName(assemblyCodeBase), Path.GetFileNameWithoutExtension(assemblyCodeBase) + ".xml");
                 if (File.Exists(xmlDocPath))
                 {
                     try

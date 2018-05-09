@@ -206,8 +206,9 @@ namespace Rafy.Domain
                         tree.TreeIndex = _repository.TreeIndexOption.CalculateChildIndex(null, 0);
                     }
 
+                    //通过 TreePId 加载所有的子，并重设它们的 TreeIndex。
                     var treeChildren = tree.TreeChildren;
-                    treeChildren.LoadAllNodes();
+                    treeChildren.LoadAllNodes(LoadAllNodesMethod.ByTreePId);
                     treeChildren.ResetTreeIndex();
                 }
 
@@ -350,8 +351,13 @@ namespace Rafy.Domain
                 var item = list[i];
                 if (item.IsDirty)
                 {
-                    this.SubmitItem(item, markSaved, false);
+                    this.SubmitItem(item, false, false);
                 }
+            }
+
+            if (markSaved)
+            {
+                list.MarkSaved();
             }
         }
 
@@ -377,22 +383,9 @@ namespace Rafy.Domain
             _submitter.Submit(args);
 
             //保存完毕，修改实体的状态
-            switch (args.Action)
+            if (markSaved)
             {
-                case SubmitAction.Delete:
-                    //在删除后，标记对象的状态到“新对象”。
-                    entity.PersistenceStatus = PersistenceStatus.New;
-                    break;
-                case SubmitAction.Update:
-                case SubmitAction.Insert:
-                case SubmitAction.ChildrenOnly:
-                    if (markSaved)
-                    {
-                        (entity as IDirtyAware).MarkSaved();
-                    }
-                    break;
-                default:
-                    throw new NotSupportedException();
+                (entity as IDirtyAware).MarkSaved();
             }
         }
 

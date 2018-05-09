@@ -7,9 +7,11 @@
  * 
  * 历史记录：
  * 创建文件 胡庆访 2012
+ * 编辑文件 崔化栋 20180502 14:00
  * 
 *******************************************************/
 
+using Rafy.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,6 +25,7 @@ namespace Rafy
     /// </summary>
     public class EnvironmentProvider
     {
+#if NET45
         public EnvironmentProvider()
         {
             this.RootDirectory = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
@@ -37,6 +40,22 @@ namespace Rafy
                 this.DllRootDirectory = this.RootDirectory;
             }
         }
+#endif
+#if NS2
+        public EnvironmentProvider()
+        {
+            this.RootDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            this.DllRootDirectory = this.RootDirectory;
+            this.IsDebuggingEnabled = ConfigurationHelper.GetAppSettingOrDefault("Rafy:IsDebuggingEnabled", false);
+
+            //var httpContext = HttpContext.Current;
+            //if (httpContext != null)
+            //{
+            //    //this.DllRootDirectory = httpContext.Server.MapPath("Bin"); 许保同修改
+            //    this.IsDebuggingEnabled = false;//httpContext.IsDebuggingEnabled;许保同修改
+            //}
+        }
+#endif
 
         /// <summary>
         /// 整个应用程序的根目录

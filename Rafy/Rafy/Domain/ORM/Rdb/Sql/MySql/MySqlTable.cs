@@ -25,18 +25,26 @@ namespace Rafy.Domain.ORM.MySql
     /// <summary>
     /// MySql的表对象
     /// </summary>
-
     internal sealed class MySqlTable : SqlOraTable
     {
-        private string _insertSql;
-
-        private string _withIdInsertSql;
-
         /// <summary>
         /// 构造函数 初始化仓库对象
         /// </summary>
         /// <param name="repository">仓库对象</param>
-        public MySqlTable(IRepositoryInternal repository) : base(repository) { }
+        public MySqlTable(IRepositoryInternal repository) : base(repository)
+        {
+            _insertSql = new Lazy<string>(() =>
+            {
+                var generatedSql = this.GenerateInsertSQL(false);
+                return $@"{generatedSql};
+SELECT @@IDENTITY;";
+            });
+        }
+
+        internal override RdbColumn CreateColumn(IPersistanceColumnInfo columnInfo)
+        {
+            return new MySqlColumn(this, columnInfo);
+        }
 
         /// <summary>
         /// 创建Sql生成器对象
@@ -45,18 +53,6 @@ namespace Rafy.Domain.ORM.MySql
         public override SqlGenerator CreateSqlGenerator()
         {
             return new MySqlSqlGenerator();
-        }
-
-        /// <summary>
-        /// 追加引用符号
-        /// </summary>
-        /// <param name="sql">sql文本写入器</param>
-        /// <param name="identifier">标识符</param>
-        internal override void AppendQuote(TextWriter sql, string identifier)
-        {
-            sql.Write("`");
-            this.AppendPrepare(sql, identifier);
-            sql.Write("`");
         }
 
         /// <summary>
@@ -69,26 +65,23 @@ namespace Rafy.Domain.ORM.MySql
             var idColumn = this.IdentityColumn;
             if (idColumn != null)
             {
+                var idProvider = (item as IEntityWithId).IdProvider;
+                var hasId = idProvider.IsAvailable(item.Id);
 
-                var isIdentityHasValue = (item as IEntityWithId).IdProvider.IsAvailable(item.Id);
-                string insertSql = isIdentityHasValue ? _withIdInsertSql ?? (_withIdInsertSql = this.GenerateInsertSQL(true)) :
-                    _insertSql ?? (_insertSql = $"{this.GenerateInsertSQL()};SELECT @@IDENTITY;");
+                string insertSql = hasId ? _insertSqlWithId.Value : _insertSql.Value;
+                var parameters = this.GenerateInsertSqlParameters(item, hasId);
 
-                var parameters = Columns.Where(c => c.CanInsert || (c.Info.IsIdentity && isIdentityHasValue))
-                                 .Select(c => c.ReadParameterValue(item))
-                                 .ToArray();
-
-                //由于默认是 decimal 类型，所以需要类型转换。
                 var idValue = dba.QueryValue(insertSql, parameters);
-                if (!isIdentityHasValue)
-                {
-                    idValue = TypeHelper.CoerceValue((item as IEntityWithId).IdProvider.KeyType, idValue);
-                    idColumn.LoadValue(item, idValue);
-                }
 
-                //如果实体的 Id 是在插入的过程中生成的，
-                //那么需要在插入组合子对象前，先把新生成的父对象 Id 都同步到子列表中。
-                item.SyncIdToChildren();
+                if (!hasId)
+                {
+                    idValue = TypeHelper.CoerceValue(idProvider.KeyType, idValue);
+                    idColumn.WritePropertyValue(item, idValue);
+
+                    //如果实体的 Id 是在插入的过程中生成的，
+                    //那么需要在插入组合子对象前，先把新生成的父对象 Id 都同步到子列表中。
+                    item.SyncIdToChildren();
+                }
             }
             else
             {

@@ -35,7 +35,6 @@ namespace Rafy.Domain
             if (repository == null) { repository = entity.GetRepository(); }
 
             //如果有一些在冗余属性路径中的属性的值改变了，则开始更新数据库的中的所有冗余字段的值。
-            Entity dbEntity = null;
             var propertiesInPath = repository.GetPropertiesInRedundancyPath();
             for (int i = 0, c = propertiesInPath.Count; i < c; i++)
             {
@@ -45,6 +44,7 @@ namespace Rafy.Domain
                 //否则，需要从数据库获取原始值来对比检测具体哪些属性值变更，然后再发起冗余更新。
                 bool isChanged = c == 1;
 
+                Entity dbEntity = null;
                 var refProperty = property as IRefIdProperty;
                 if (refProperty != null)
                 {

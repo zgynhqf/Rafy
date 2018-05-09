@@ -46,7 +46,7 @@ namespace Rafy.Utils.Caching
             }
             set
             {
-                if(value == null) throw new ArgumentNullException(nameof(value));
+                if (value == null) throw new ArgumentNullException(nameof(value));
 
                 _cache = value;
             }
@@ -68,7 +68,7 @@ namespace Rafy.Utils.Caching
         {
             if (string.IsNullOrWhiteSpace(key)) throw new ArgumentException($"parameter {nameof(key)} can not be null or empty.");
 
-            if(!this.IsEnabled) return null;
+            if (!this.IsEnabled) return null;
 
             var wrapper = this.GetCacheItemCore(region, key);
             if (wrapper != null)
@@ -101,9 +101,9 @@ namespace Rafy.Utils.Caching
         /// <returns>添加成功返回 true, 失败返回 false。</returns>
         public bool Add(string key, object value, Policy policy, string region = null)
         {
-            if(string.IsNullOrWhiteSpace(key)) throw new ArgumentException($"parameter {nameof(key)} can not be null or empty.");
+            if (string.IsNullOrWhiteSpace(key)) throw new ArgumentException($"parameter {nameof(key)} can not be null or empty.");
 
-            if(!this.IsEnabled) return false;
+            if (!this.IsEnabled) return false;
 
             if (value == null) return false;
 
@@ -127,9 +127,9 @@ namespace Rafy.Utils.Caching
         /// <param name="region">表示缓存所属的域。</param>
         public void Remove(string key, string region = null)
         {
-            if(string.IsNullOrWhiteSpace(key)) throw new ArgumentException($"parameter {nameof(key)} can not be null or empty.");
+            if (string.IsNullOrWhiteSpace(key)) throw new ArgumentException($"parameter {nameof(key)} can not be null or empty.");
 
-            if(!this.IsEnabled) return;
+            if (!this.IsEnabled) return;
 
             this.RemoveCore(region, key);
         }
@@ -140,7 +140,7 @@ namespace Rafy.Utils.Caching
         /// <param name="region">表示缓存所属的域。</param>
         public void ClearRegion(string region)
         {
-            if(!this.IsEnabled) return;
+            if (!this.IsEnabled) return;
 
             this.ClearRegionCore(region);
         }
@@ -150,7 +150,7 @@ namespace Rafy.Utils.Caching
         /// </summary>
         public void Clear()
         {
-            if(!this.IsEnabled) return;
+            if (!this.IsEnabled) return;
 
             this.ClearCore();
         }
@@ -169,22 +169,22 @@ namespace Rafy.Utils.Caching
         public T Get<T>(string key, Func<T> ifNotExists, string regionName = null, Policy policy = null)
             where T : class
         {
-            if(string.IsNullOrWhiteSpace(key)) throw new ArgumentException($"parameter {nameof(key)} can not be null or empty.");
+            if (string.IsNullOrWhiteSpace(key)) throw new ArgumentException($"parameter {nameof(key)} can not be null or empty.");
 
             if (!this.IsEnabled) return default(T);
 
             var result = this.Get(key, regionName) as T;
 
-            if(result != null) return result;
+            if (result != null) return result;
 
-            lock(this)
+            lock (this)
             {
                 result = this.Get(key, regionName) as T;
                 if (result != null) return result;
 
                 result = ifNotExists();
 
-                if(result != null)
+                if (result != null)
                 {
                     this.Add(key, result, policy, regionName);
                 }

@@ -15,6 +15,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Rafy.Data;
+using Rafy.DbMigration;
 using Rafy.DbMigration.Oracle;
 using Rafy.Domain.ORM.SqlTree;
 using Rafy.Reflection;
@@ -25,22 +27,10 @@ namespace Rafy.Domain.ORM.Oracle
     //TOP、!=、
     class OracleSqlGenerator : SqlGenerator
     {
-        protected override void QuoteAppend(string identifier)
+        public OracleSqlGenerator()
         {
-            if (this.AutoQuota)
-            {
-                identifier = this.PrepareIdentifier(identifier);
-                Sql.Append("\"").Append(identifier).Append("\"");
-            }
-            else
-            {
-                base.QuoteAppend(identifier);
-            }
-        }
-
-        protected override string PrepareIdentifier(string identifier)
-        {
-            return identifier.ToUpper();
+            this.IdentifierProvider = OracleIdentifierQuoter.Instance;
+            this.DbTypeCoverter = OracleDbTypeConverter.Instance;
         }
 
         protected override SqlColumnConstraint VisitSqlColumnConstraint(SqlColumnConstraint node)
@@ -61,32 +51,6 @@ namespace Rafy.Domain.ORM.Oracle
             }
 
             return base.VisitSqlColumnConstraint(node);
-        }
-
-        public override object PrepareConstraintValue(object value)
-        {
-            value = base.PrepareConstraintValue(value);
-
-            value = PrepareConstraintValueInternal(value);
-
-            return value;
-        }
-
-        internal static object PrepareConstraintValueInternal(object value)
-        {
-            if (value != DBNull.Value)
-            {
-                if (value is bool)
-                {
-                    value = OracleDbTypeHelper.ToDbBoolean((bool)value);
-                }
-                else if (value.GetType().IsEnum)
-                {
-                    value = TypeHelper.CoerceValue(typeof(int), value);
-                }
-            }
-
-            return value;
         }
 
         /// <summary>
@@ -144,11 +108,11 @@ namespace Rafy.Domain.ORM.Oracle
 "),
                 raw,
                 new SqlLiteral(
-@"
+$@"
     ) T
-    WHERE ROWNUM <= " + endRow + @"
+    WHERE ROWNUM <= { endRow }
 )
-WHERE RN >= " + startRow)
+WHERE RN >= { startRow }")
             };
         }
 

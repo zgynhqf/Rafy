@@ -32,7 +32,7 @@ namespace Rafy.Data
         public const string Provider_Odbc = "System.Data.Odbc";
         //public const string Provider_Oracle = "System.Data.OracleClient";
         //public const string Provider_Oracle = "Oracle.DataAccess.Client";
-        //public const string Provider_Oracle = "Oracle.ManagedDataAccess.Client";
+        //public const string Provider_Oracle_Default = "Oracle.ManagedDataAccess.Client";
 
         //PatrickLiu增加的有关MySql的链接客户端
         public const string Provider_MySql = "MySql.Data.MySqlClient";

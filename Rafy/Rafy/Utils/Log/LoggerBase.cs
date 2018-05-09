@@ -26,6 +26,12 @@ namespace Rafy
     public abstract class LoggerBase
     {
         /// <summary>
+        /// 记录某个消息到 Log 日志中。
+        /// </summary>
+        /// <param name="message"></param>
+        public virtual void LogInfo(string message) { }
+
+        /// <summary>
         /// 记录某个已经生成的异常到文件中。
         /// </summary>
         /// <param name="title"></param>
@@ -40,5 +46,11 @@ namespace Rafy
         /// <param name="connectionSchema">The connection schema.</param>
         /// <param name="connection">The connection.</param>
         public virtual void LogDbAccessed(string sql, IDbDataParameter[] parameters, DbConnectionSchema connectionSchema, IDbConnection connection) { }
+
+        /// <summary>
+        /// 将上条 SQL 执行的结果记录到日志中。
+        /// </summary>
+        /// <param name="rowsEffect">The result.</param>
+        public virtual void LogDbAccessedResult(int rowsEffect) { }
     }
 }

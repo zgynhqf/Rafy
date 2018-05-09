@@ -36,6 +36,8 @@ namespace RafyUnitTest
     [TestClass]
     public class DbMigrationTest
     {
+        private static DbTypeConverter dbTypeConverter;
+
         [ClassInitialize]
         public static void DbMigrationTest_ClassInitialize(TestContext context)
         {
@@ -52,6 +54,9 @@ namespace RafyUnitTest
 
                 c.ResetDbVersion();
                 c.ResetHistory();
+
+                var dbProvider = DbMigrationProviderFactory.GetProvider(c.DbSetting);
+                dbTypeConverter = (dbProvider.CreateRunGenerator() as SqlRunGenerator).DbTypeCoverter;
             };
         }
 
@@ -153,6 +158,150 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void DMT_CreateColumn_String()
+        {
+            this.Test(destination =>
+            {
+                var taskTable = destination.FindTable("Task");
+                taskTable.AddColumn("TestingColumn", DbType.String, isRequired: true);
+            }, result =>
+            {
+                var taskTable = result.FindTable("Task");
+                var c1 = taskTable.FindColumn("TestingColumn");
+                Assert.IsTrue(c1 != null && c1.IsRequired);
+                Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.String));
+            });
+        }
+
+        [TestMethod]
+        public void DMT_CreateColumn_AnsiString()
+        {
+            this.Test(destination =>
+            {
+                var taskTable = destination.FindTable("Task");
+                taskTable.AddColumn("TestingColumn", DbType.AnsiString, isRequired: true);
+            }, result =>
+            {
+                var taskTable = result.FindTable("Task");
+                var c1 = taskTable.FindColumn("TestingColumn");
+                Assert.IsTrue(c1 != null && c1.IsRequired);
+                Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.AnsiString));
+            });
+        }
+
+        [TestMethod]
+        public void DMT_CreateColumn_Date()
+        {
+            this.Test(destination =>
+            {
+                var taskTable = destination.FindTable("Task");
+                taskTable.AddColumn("TestingColumn", DbType.Date, isRequired: true);
+            }, result =>
+            {
+                var taskTable = result.FindTable("Task");
+                var c1 = taskTable.FindColumn("TestingColumn");
+                Assert.IsTrue(c1 != null && c1.IsRequired);
+                Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.Date));
+            });
+        }
+
+        [TestMethod]
+        public void DMT_CreateColumn_Time()
+        {
+            this.Test(destination =>
+            {
+                var taskTable = destination.FindTable("Task");
+                taskTable.AddColumn("TestingColumn", DbType.Time, isRequired: true);
+            }, result =>
+            {
+                var taskTable = result.FindTable("Task");
+                var c1 = taskTable.FindColumn("TestingColumn");
+                Assert.IsTrue(c1 != null && c1.IsRequired);
+                Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.Time));
+            });
+        }
+
+        [TestMethod]
+        public void DMT_CreateColumn_DateTime()
+        {
+            this.Test(destination =>
+            {
+                var taskTable = destination.FindTable("Task");
+                taskTable.AddColumn("TestingColumn", DbType.DateTime, isRequired: true);
+            }, result =>
+            {
+                var taskTable = result.FindTable("Task");
+                var c1 = taskTable.FindColumn("TestingColumn");
+                Assert.IsTrue(c1 != null && c1.IsRequired);
+                Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.DateTime));
+            });
+        }
+
+        [TestMethod]
+        public void DMT_CreateColumn_DateTimeOffset()
+        {
+            this.Test(destination =>
+            {
+                var taskTable = destination.FindTable("Task");
+                taskTable.AddColumn("TestingColumn", DbType.DateTimeOffset, isRequired: true);
+            }, result =>
+            {
+                var taskTable = result.FindTable("Task");
+                var c1 = taskTable.FindColumn("TestingColumn");
+                Assert.IsTrue(c1 != null && c1.IsRequired);
+                Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.DateTimeOffset));
+            });
+        }
+
+        [TestMethod]
+        public void DMT_CreateColumn_Int32()
+        {
+            this.Test(destination =>
+            {
+                var taskTable = destination.FindTable("Task");
+                taskTable.AddColumn("TestingColumn", DbType.Int32, isRequired: true);
+            }, result =>
+            {
+                var taskTable = result.FindTable("Task");
+                var c1 = taskTable.FindColumn("TestingColumn");
+                Assert.IsTrue(c1 != null && c1.IsRequired);
+                Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.Int32));
+            });
+        }
+
+        [TestMethod]
+        public void DMT_CreateColumn_Int64()
+        {
+            this.Test(destination =>
+            {
+                var taskTable = destination.FindTable("Task");
+                taskTable.AddColumn("TestingColumn", DbType.Int64, isRequired: true);
+            }, result =>
+            {
+                var taskTable = result.FindTable("Task");
+                var c1 = taskTable.FindColumn("TestingColumn");
+                Assert.IsTrue(c1 != null && c1.IsRequired);
+                Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.Int64));
+            });
+        }
+
+        [TestMethod]
+        public void DMT_CreateColumn_Double()
+        {
+            this.Test(destination =>
+            {
+                var taskTable = destination.FindTable("Task");
+                taskTable.AddColumn("TestingColumn", DbType.Double, isRequired: true);
+            }, result =>
+            {
+                var taskTable = result.FindTable("Task");
+                var c1 = taskTable.FindColumn("TestingColumn");
+                Assert.IsTrue(c1 != null && c1.IsRequired);
+                Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.Double));
+            });
+        }
+
+        [TestMethod]
         public void DMT_CreateColumn_Decimal()
         {
             this.Test(destination =>
@@ -164,7 +313,39 @@ namespace RafyUnitTest
                 var taskTable = result.FindTable("Task");
                 var c1 = taskTable.FindColumn("TestingColumn");
                 Assert.IsTrue(c1 != null && c1.IsRequired);
-                Assert.IsTrue(DbTypeHelper.IsCompatible(c1.DataType, DbType.Decimal));
+                Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.Decimal));
+            });
+        }
+
+        [TestMethod]
+        public void DMT_CreateColumn_Binary()
+        {
+            this.Test(destination =>
+            {
+                var taskTable = destination.FindTable("Task");
+                taskTable.AddColumn("TestingColumn", DbType.Binary, isRequired: true);
+            }, result =>
+            {
+                var taskTable = result.FindTable("Task");
+                var c1 = taskTable.FindColumn("TestingColumn");
+                Assert.IsTrue(c1 != null && c1.IsRequired);
+                Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.Binary));
+            });
+        }
+
+        [TestMethod]
+        public void DMT_CreateColumn_Boolean()
+        {
+            this.Test(destination =>
+            {
+                var taskTable = destination.FindTable("Task");
+                taskTable.AddColumn("TestingColumn", DbType.Boolean, isRequired: true);
+            }, result =>
+            {
+                var taskTable = result.FindTable("Task");
+                var c1 = taskTable.FindColumn("TestingColumn");
+                Assert.IsTrue(c1 != null && c1.IsRequired);
+                Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.Boolean));
             });
         }
 
@@ -182,7 +363,7 @@ namespace RafyUnitTest
                     var taskTable = result.FindTable("Task");
                     var c1 = taskTable.FindColumn("TestingColumn");
                     Assert.IsTrue(c1 != null && c1.IsRequired);
-                    Assert.IsTrue(DbTypeHelper.IsCompatible(c1.DataType, DbType.String));
+                    Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.String));
                 });
             }
         }
@@ -208,10 +389,10 @@ namespace RafyUnitTest
         }
 
         /// <summary>
-        /// 在自动升级时，可以升级使用 HasDataType 定义的数据类型。
+        /// 在自动升级时，可以升级使用 HasDbType 定义的数据类型。
         /// </summary>
         [TestMethod]
-        public void DMT_AlterColumn_DataType_AutoMigrate()
+        public void DMT_AlterColumn_DbType_AutoMigrate()
         {
             this.Test(destination =>
             {
@@ -222,12 +403,12 @@ namespace RafyUnitTest
                 Assert.IsTrue(column != null);
 
                 var p = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName).ProviderName;
-                Assert.IsTrue(DbTypeHelper.IsCompatible(column.DataType, DbType.Xml));
+                Assert.IsTrue(dbTypeConverter.IsCompatible(column.DbType, DbType.Xml));
             });
         }
 
         [TestMethod]
-        public void DMT_AlterColumn_DataType()
+        public void DMT_AlterColumn_DbType()
         {
             this.Test(destination =>
             {
@@ -241,7 +422,7 @@ namespace RafyUnitTest
                 Assert.IsTrue(column != null);
 
                 var p = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName).ProviderName;
-                Assert.IsTrue(DbTypeHelper.IsCompatible(column.DataType, DbType.Xml));
+                Assert.IsTrue(dbTypeConverter.IsCompatible(column.DbType, DbType.Xml));
             });
         }
 
@@ -249,7 +430,7 @@ namespace RafyUnitTest
         /// 测试从可空的字符串类型变到不可空的数值类型时的迁移。
         /// </summary>
         [TestMethod]
-        public void DMT_AlterColumn_DataType_NullStringToDouble()
+        public void DMT_AlterColumn_DbType_NullStringToDouble()
         {
             this.Test(destination =>
             {
@@ -261,7 +442,7 @@ namespace RafyUnitTest
                 var table = result.FindTable("Task");
                 var column = table.FindColumn("Name");
                 Assert.IsTrue(column != null);
-                Assert.IsTrue(DbTypeHelper.IsCompatible(column.DataType, DbType.Double));
+                Assert.IsTrue(dbTypeConverter.IsCompatible(column.DbType, DbType.Double));
                 Assert.IsTrue(column.IsRequired);
             });
         }
@@ -427,7 +608,7 @@ namespace RafyUnitTest
                     Assert.IsTrue(table.Columns.Count == 2);
                     var pk = table.FindPrimaryColumn();
                     Assert.IsTrue(pk.Name.EqualsIgnoreCase("Id"));
-                    Assert.IsTrue(pk.DataType == DbType.Int32);
+                    Assert.IsTrue(pk.DbType == DbType.Int32);
 
                     //数据库数据
                     using (var db = DbAccesserFactory.Create(context.DbSetting))

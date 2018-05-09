@@ -8,9 +8,11 @@
  * 
  * 历史记录：
  * 创建文件 吴中坡 20170315 13:41
+ * 编辑文件 崔化栋 20180424 09:50
  * 
 *******************************************************/
 
+#if NETSTANDARD2_0
 using System;
 using System.Collections.Generic;
 
@@ -55,3 +57,4 @@ namespace Rafy.DataTableMigration.Contexts
         public List<Type> ArchivingAggregationRootTypeList { get; }
     }
 }
+#endif

@@ -378,7 +378,7 @@ namespace Rafy.Domain.Caching
             /// <returns></returns>
             private bool IsExpired()
             {
-                return (DateTime.Now - this._localTime).TotalSeconds > DCPlugin.CacheExpiredSeconds;
+                return (DateTime.Now - this._localTime).TotalSeconds > DiskCachingPlugin.CacheExpiredSeconds;
             }
         }
 

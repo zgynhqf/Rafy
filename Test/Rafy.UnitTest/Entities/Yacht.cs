@@ -33,7 +33,7 @@ using UT;
 namespace Rafy.UnitTest
 {
     /// <summary>
-    /// 实体的领域名称
+    /// 游艇
     /// </summary>
     [RootEntity, Serializable]
     public partial class Yacht : UnitTestEntity
@@ -109,6 +109,15 @@ namespace Rafy.UnitTest
             set { this.SetProperty(DecimalValueProperty, value); }
         }
 
+        public static readonly Property<DateTimeOffset?> DateTimeOffsetValueProperty = P<Yacht>.Register(e => e.DateTimeOffsetValue);
+        /// <summary>
+        /// 
+        /// </summary>
+        public DateTimeOffset? DateTimeOffsetValue
+        {
+            get { return this.GetProperty(DateTimeOffsetValueProperty); }
+            set { this.SetProperty(DateTimeOffsetValueProperty, value); }
+        }
 
         #endregion
 
@@ -118,14 +127,14 @@ namespace Rafy.UnitTest
     }
 
     /// <summary>
-    /// 实体的领域名称 列表类。
+    /// 游艇 列表类。
     /// </summary>
     [Serializable]
     public partial class YachtList : UnitTestEntityList { }
 
     /// <summary>
-    /// 实体的领域名称 仓库类。
-    /// 负责 实体的领域名称 类的查询、保存。
+    /// 游艇 仓库类。
+    /// 负责 游艇 类的查询、保存。
     /// </summary>
     public partial class YachtRepository : UnitTestEntityRepository
     {
@@ -136,8 +145,8 @@ namespace Rafy.UnitTest
     }
 
     /// <summary>
-    /// 实体的领域名称 配置类。
-    /// 负责 实体的领域名称 类的实体元数据的配置。
+    /// 游艇 配置类。
+    /// 负责 游艇 类的实体元数据的配置。
     /// </summary>
     internal class YachtConfig : UnitTestEntityConfig<Yacht>
     {

@@ -13,6 +13,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -63,7 +64,7 @@ namespace Rafy.Data
         /// </summary>
         public FormattedSqlParameters Parameters
         {
-            get { return this._parameters; }
+            get { return _parameters; }
         }
 
         /// <summary>
@@ -72,7 +73,20 @@ namespace Rafy.Data
         /// <param name="value"></param>
         public FormattedSql AppendParameter(object value)
         {
-            this._parameters.WriteParameter(this._writer, value);
+            _parameters.WriteParameter(this._writer, value);
+            return this;
+        }
+
+        /// <summary>
+        /// 写入一个参数值。
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="dbType">可以明确指定列的 DbType。</param>
+        /// <returns></returns>
+        public FormattedSql AppendParameter(object value, DbType dbType)
+        {
+            var parameter = new DbAccesserParameter(value, dbType);
+            _parameters.WriteParameter(this._writer, parameter);
             return this;
         }
 
@@ -223,7 +237,7 @@ namespace Rafy.Data
             {
                 return _sql.ToString() + @"
 
-Parameters: " + this._parameters.ToString();
+Parameters: " + _parameters.ToString();
             }
         }
 

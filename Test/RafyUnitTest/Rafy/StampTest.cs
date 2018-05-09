@@ -179,5 +179,24 @@ namespace RafyUnitTest
                 RafyEnvironment.Principal = oldPrincipal;
             }
         }
+
+        [TestMethod]
+        public void StampT_Disable()
+        {
+            var repo = RF.ResolveInstance<InvoiceRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var inv = new Invoice();
+
+                using (StampContext.DisableAutoSetStamps())
+                {
+                    repo.Save(inv);
+                    Assert.AreEqual(DateTime.Parse("2000-01-01 00:00:00"), inv.GetCreatedTime().Date, "被禁用，创建时间 属性已经正确的设置。");
+
+                    inv = repo.GetById(inv.Id);
+                    Assert.AreEqual(DateTime.Parse("2000-01-01 00:00:00"), inv.GetCreatedTime().Date, "被禁用，创建时间 属性已经正确的设置。");
+                }
+            }
+        }
     }
 }

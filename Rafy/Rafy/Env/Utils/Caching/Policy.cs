@@ -8,6 +8,7 @@
  * 
  * 历史记录：
  * 创建文件 胡庆访 20101017
+ * 编辑文件 崔化栋 20180502 14:00
  * 
 *******************************************************/
 
@@ -16,7 +17,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Collections.ObjectModel;
-using System.Runtime.Caching;
 
 namespace Rafy.Utils.Caching
 {

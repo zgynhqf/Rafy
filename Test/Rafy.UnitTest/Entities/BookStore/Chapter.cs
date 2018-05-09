@@ -177,6 +177,12 @@ namespace UT
                 case StringAction.RefContains:
                     q = q.Where(c => c.Book.Name.Contains(name) && c.BookId > 0);
                     break;
+                case StringAction.ObjectEquals:
+                    q = q.Where(c => name.Equals(c.Name));
+                    break;
+                case StringAction.ObjectEquals_Reverse:
+                    q = q.Where(c => c.Name.Equals(name));
+                    break;
                 default:
                     break;
             }
@@ -250,6 +256,7 @@ order by chapter.name desc
     public enum StringAction
     {
         Contains, StartsWith, EndsWith,
-        NotEmpty, LengthNotSupport, RefContains
+        NotEmpty, LengthNotSupport, RefContains,
+        ObjectEquals, ObjectEquals_Reverse,
     }
 }

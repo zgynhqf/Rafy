@@ -1,0 +1,163 @@
+- name: Rafy 框架
+  href: 框架说明.md
+  items:
+    - name: 领域实体框架
+      href: 领域实体框架.md
+      items:
+       - name: 安装
+         href: 领域实体框架\安装.md
+       - name: 快速试用
+         href: 领域实体框架\快速试用.md
+         items:
+           - name: 创建第一个程序
+             href: 领域实体框架\快速试用\创建第一个程序.md
+           - name: 连接到 Sql Server 数据库
+             href: 领域实体框架\快速试用\如何：连接到 Sql Server 数据库.md
+       - name: 领域实体
+         href: 领域实体框架\领域实体.md
+         items:	 
+           - name: 实体的状态
+             href: 领域实体框架\领域实体\实体的状态.md
+           - name: 实体关系
+             href: 领域实体框架\领域实体\实体关系.md
+           - name: 实体属性
+             href: 领域实体框架\领域实体\实体属性.md
+             items:
+             - name: 一般属性
+               href: 领域实体框架\领域实体\实体属性\一般属性.md
+             - name: 引用属性
+               href: 领域实体框架\领域实体\实体属性\引用属性.md
+             - name: 组合子属性
+               href: 领域实体框架\领域实体\实体属性\组合子属性.md
+             - name: 冗余属性
+               href: 领域实体框架\领域实体\实体属性\冗余属性.md
+             - name: 大数据属性
+               href: 领域实体框架\领域实体\实体属性\大数据属性.md
+             - name: 只读属性
+               href: 领域实体框架\领域实体\实体属性\只读属性.md
+           - name: 领域实体关系图
+             href: 领域实体框架\领域实体\领域实体关系图.md
+           - name: 树型实体
+             href: 领域实体框架\领域实体\树型实体.md    
+       - name: 实体仓库	
+         href: 领域实体框架\实体仓库.md 
+         items: 
+           - name: 实体的创建、删除、修改
+             href: 领域实体框架\实体仓库\实体的创建、删除、修改.md
+           - name: 编写查询
+             href: 领域实体框架\实体仓库\编写查询.md
+             items:
+               - name: Linq 查询
+                 href: 领域实体框架\实体仓库\编写查询\Linq 查询.md
+               - name: SqlTree 查询
+                 href: 领域实体框架\实体仓库\编写查询\SqlTree 查询.md
+               - name: 通用查询条件（CommonQueryCriteria）
+                 href: 领域实体框架\实体仓库\编写查询\通用查询条件(CommonQueryCriteria).md
+               - name: Sql 查询
+                 href: 领域实体框架\实体仓库\编写查询\Sql 查询.md
+               - name: 分页查询
+                 href: 领域实体框架\实体仓库\编写查询\分页查询.md
+               - name: 贪婪加载
+                 href: 领域实体框架\实体仓库\编写查询\贪婪加载.md
+               - name: 数据行数查询
+                 href: 领域实体框架\实体仓库\编写查询\数据行数查询.md
+               - name: 表格查询
+                 href: 领域实体框架\实体仓库\编写查询\表格查询.md			 
+           - name: 大批量导入实体
+             href: 领域实体框架\实体仓库\大批量导入实体.md
+           - name: 创建数据层（RepositoryDataProvider）
+             href: 领域实体框架\实体仓库\仓库数据层（RepositoryDataProvider）.md
+       - name: 领域逻辑
+         href: 领域实体框架\领域逻辑.md
+         items:
+               - name: 领域控制器
+                 href: 领域实体框架\领域逻辑\领域控制器.md
+               - name: 单连接事务
+                 href: 领域实体框架\领域逻辑\单连接事务.md
+               - name: 执行SQL或存储过程
+                 href: 领域实体框架\领域逻辑\执行SQL或存储过程.md
+               - name: 领域服务
+                 href: 领域实体框架\领域逻辑\领域服务.md
+       - name: 对象关系映射
+         href: 领域实体框架\对象关系映射.md
+         items:
+               - name: 配置映射
+                 href: 领域实体框架\ORM\配置映射.md
+               - name: 继承映射
+                 href: 领域实体框架\ORM\继承映射.md
+               - name: SQL 语句日志
+                 href: 领域实体框架\ORM\SQL 语句日志.md
+               - name: 数据库同步功能
+                 href: 领域实体框架\ORM\数据库同步功能.md
+               - name: 为数据库生成注释
+                 href: 领域实体框架\ORM\为数据库生成注释.md
+               - name: 多数据库支持
+                 href: 领域实体框架\ORM\多数据库支持.md           
+       - name: 部署
+         href: 领域实体框架\部署.md
+         items:
+               - name: 分布式部署
+                 href: 领域实体框架\部署\分布式部署.md 
+       - name: 插件级扩展
+         href: 领域实体框架\插件级扩展.md
+         items:
+               - name: 实体属性扩展
+                 href: 领域实体框架\插件级扩展\实体属性扩展.md 
+               - name: 实体配置扩展
+                 href: 领域实体框架\插件级扩展\实体配置扩展.md
+               - name: 实体查询扩展（仓库扩展）
+                 href: 领域实体框架\插件级扩展\实体查询扩展（仓库扩展）.md
+               - name: 实体保存逻辑扩展（仓库数据层）
+                 href: 领域实体框架\插件级扩展\实体保存逻辑扩展（仓库数据层）.md
+               - name: 领域逻辑扩展（领域控制器）
+                 href: 领域实体框架\插件级扩展\领域逻辑扩展（领域控制器）.md             
+       - name: 其它
+         href: 领域实体框架\其它.md	
+         items:
+               - name: 代码段
+                 href: 领域实体框架\其它\代码段.md
+               - name: Rafy 与经典 DDD 的关系
+                 href: 领域实体框架\其它\Rafy 与经典 DDD 的关系.md
+               - name: 常见问题（FQA）
+                 href: 领域实体框架\其它\常见问题.md
+    - name: 设计理念
+      href: 设计理念.md	
+      items:
+               - name: 领域驱动设计
+                 href: 设计理念\领域驱动设计.md
+               - name: 面向服务架构
+                 href: 设计理念\面向服务架构.md
+               - name: 插件化架构
+                 href: 设计理念\插件化架构.md
+               - name: 模型驱动架构
+                 href: 设计理念\模型驱动架构.md
+               - name: 产品线工程
+                 href: 设计理念\产品线工程.md  
+    - name: 快速界面生成
+      href: 快速界面生成.md
+      items:
+               - name: WPF 界面
+                 href: 界面生成\WPF 界面.md
+               - name: Web 界面
+                 href: 界面生成\Web 界面.md
+    - name: 现有插件
+      href: 现有插件.md  
+      items:
+               - name: 幽灵插件
+                 href: 插件\幽灵插件.md
+               - name: 流水号插件
+                 href: 插件\流水号插件.md
+               - name: 时间戳插件
+                 href: 插件\时间戳插件.md
+               - name: 帐户插件
+                 href: 插件\帐户插件.md
+               - name: RBAC 插件
+                 href: 插件\RBAC 插件.md  
+               - name: 多国语言插件
+                 href: 插件\多国语言插件.md
+               - name: 附件插件
+                 href: 插件\附件插件.md
+               - name: 大批量导入实体插件
+                 href: 插件\大批量导入实体插件.md
+               - name: 文件存储插件
+                 href: 插件\文件存储插件.md          

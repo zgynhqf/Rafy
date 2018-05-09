@@ -26,7 +26,7 @@ namespace Rafy.Data
     /// 
     /// 注意：
     /// * 多个数据库之间的事务，将会完全独立，互不干扰。
-    /// * 一个事务的代码只能在同一个线程中执行。（事务是存储在当前线程中的。多线程之间不共享事务。）
+    /// * 本类只能保证同一个线程中的代码运行在同一个事务中。（原因：事务是存储在当前线程中的。多线程之间不共享事务。）
     /// * 如果想主动使用分布式事务，请在最外层使用 ADO.NET 的 TransactionScope 类。
     /// </summary>
     public abstract class LocalTransactionBlock : ContextScope

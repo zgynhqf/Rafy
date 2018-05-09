@@ -25,13 +25,15 @@ using Rafy.DbMigration.MySql;
 
 namespace Rafy.DbMigration
 {
-    internal static class DbMigrationProviderFactory
+    /// <summary>
+    /// <see cref="DbMigrationProvider"/>、<see cref="DbIdentifierQuoter"/> 的工厂类型。
+    /// </summary>
+    public static class DbMigrationProviderFactory
     {
         public static DbMigrationProvider GetProvider(DbSetting dbSetting)
         {
             DbMigrationProvider provider = null;
 
-            //ISqlConverter Factory
             switch (dbSetting.ProviderName)
             {
                 case DbConnectionSchema.Provider_SqlClient:
@@ -40,12 +42,9 @@ namespace Rafy.DbMigration
                 case DbConnectionSchema.Provider_SqlCe:
                     provider = new SqlServerCeMigrationProvider();
                     break;
-                //Patrickliu增加的代码块
                 case DbConnectionSchema.Provider_MySql:
                     provider = new MySqlMigrationProvider();
                     break;
-                //case "System.Data.Odbc":
-                //    return new ODBCProvider();
                 default:
                     if (DbConnectionSchema.IsOracleProvider(dbSetting))
                     {
@@ -58,6 +57,43 @@ namespace Rafy.DbMigration
             provider.DbSetting = dbSetting;
 
             return provider;
+        }
+
+        public static DbIdentifierQuoter GetIdentifierProvider(string providerName)
+        {
+            switch (providerName)
+            {
+                case DbConnectionSchema.Provider_SqlClient:
+                case DbConnectionSchema.Provider_SqlCe:
+                    return SqlServerIdentifierQuoter.Instance;
+                case DbConnectionSchema.Provider_MySql:
+                    return MySqlIdentifierQuoter.Instance;
+                default:
+                    if (DbConnectionSchema.IsOracleProvider(providerName))
+                    {
+                        return OracleIdentifierQuoter.Instance;
+                    }
+                    throw new NotSupportedException("This type of database is not supportted now:" + providerName);
+            }
+        }
+
+        public static DbTypeConverter GetDbTypeConverter(string providerName)
+        {
+            switch (providerName)
+            {
+                case DbConnectionSchema.Provider_SqlClient:
+                    return SqlServerDbTypeConverter.Instance;
+                case DbConnectionSchema.Provider_SqlCe:
+                    return SqlServerCeDbTypeConverter.Instance;
+                case DbConnectionSchema.Provider_MySql:
+                    return MySqlDbTypeConverter.Instance;
+                default:
+                    if (DbConnectionSchema.IsOracleProvider(providerName))
+                    {
+                        return OracleDbTypeConverter.Instance;
+                    }
+                    throw new NotSupportedException("This type of database is not supportted now:" + providerName);
+            }
         }
     }
 }

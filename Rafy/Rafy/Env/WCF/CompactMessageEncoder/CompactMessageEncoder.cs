@@ -1,4 +1,6 @@
-﻿using System.ServiceModel.Channels;
+﻿#if NET45
+
+using System.ServiceModel.Channels;
 using System;
 using System.IO;
 using System.IO.Compression;
@@ -209,3 +211,5 @@ namespace Rafy.WCF
         }
     }
 }
+
+#endif
