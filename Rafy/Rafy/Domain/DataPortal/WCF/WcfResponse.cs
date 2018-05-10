@@ -9,7 +9,7 @@
  * 创建文件 周金根 2008
  * 
 *******************************************************/
-
+#if NET45
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -140,3 +140,4 @@ namespace Rafy.Domain.DataPortal.WCF
         //}
     }
 }
+#endif

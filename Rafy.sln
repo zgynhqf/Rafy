@@ -59,7 +59,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.WPF", "Rafy\WPF\Rafy.W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RafyUnitTest", "Test\RafyUnitTest\RafyUnitTest.csproj", "{9AA27D8B-8F77-403B-99D0-51EB0CE01AC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy", "Rafy\Rafy\Rafy.csproj", "{966A5BF2-D690-426B-AD68-AD868BB8F855}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rafy", "Rafy\Rafy\Rafy.csproj", "{966A5BF2-D690-426B-AD68-AD868BB8F855}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.Web", "Rafy\Web\Rafy.Web\Rafy.Web.csproj", "{22A24653-E4A5-48E2-B9C7-A1B24DACECF3}"
 EndProject
@@ -105,8 +105,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesignerEngine", "Rafy\Tool
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RafySDK.Templates", "Rafy\Tools\VSTemplates\RafySDK.Templates.csproj", "{50706521-F843-4C7D-9B27-5197B4088F3D}"
 EndProject
-Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "Domain Documentation", "Rafy\Tools\Domain Documentation\Domain Documentation.shfbproj", "{B3673A48-EF4C-47BC-9450-20D278F16558}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.RBAC.Old.Web", "Rafy\Plugins\Rafy.RBAC.Old\Rafy.RBAC.Web\Rafy.RBAC.Old.Web.csproj", "{DF358672-DBA8-4ACF-84DF-AD61E8AB811E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.Customization.Web", "Rafy\Plugins\Rafy.Customization.Web\Rafy.Customization.Web.csproj", "{15ABC304-2DD3-4302-9C44-E75F86DD2FA5}"
@@ -131,39 +129,39 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.UnitTest.DataProvider"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RafyUnitTest.ClientTest", "Test\RafyUnitTest.ClientTest\RafyUnitTest.ClientTest.csproj", "{7A57E885-049B-4145-A446-44245A8DF483}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.ComponentModel.UnityAdapter", "Rafy\Plugins\Rafy.ComponentModel.UnityAdapter\Rafy.ComponentModel.UnityAdapter.csproj", "{BE8C3CD6-F314-453D-A0ED-FCFEC0DEADBC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rafy.ComponentModel.UnityAdapter", "Rafy\Plugins\Rafy.ComponentModel.UnityAdapter\Rafy.ComponentModel.UnityAdapter.csproj", "{BE8C3CD6-F314-453D-A0ED-FCFEC0DEADBC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinanceManagement", "Demo\FinanceManagement\FinanceManagement.csproj", "{CC48969B-892D-4C4C-9296-86CB25EF50A3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonthPlan", "Demo\MonthPlan\MonthPlan.csproj", "{E11072FD-EF61-4373-8A1B-F7B642C0359C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.Domain.ORM.BatchSubmit", "Rafy\Plugins\Rafy.Domain.ORM.BatchSubmit\Rafy.Domain.ORM.BatchSubmit.csproj", "{F0533889-BE2C-4A21-90B0-26765833270E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rafy.Domain.ORM.BatchSubmit", "Rafy\Plugins\Rafy.Domain.ORM.BatchSubmit\Rafy.Domain.ORM.BatchSubmit.csproj", "{F0533889-BE2C-4A21-90B0-26765833270E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.Domain.EntityPhantom", "Rafy\Plugins\Rafy.Domain.EntityPhantom\Rafy.Domain.EntityPhantom.csproj", "{0B6DF92B-0248-422D-A9C2-1604D4CB7BC9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rafy.Domain.EntityPhantom", "Rafy\Plugins\Rafy.Domain.EntityPhantom\Rafy.Domain.EntityPhantom.csproj", "{0B6DF92B-0248-422D-A9C2-1604D4CB7BC9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.Domain.Stamp", "Rafy\Plugins\Rafy.Domain.Stamp\Rafy.Domain.Stamp.csproj", "{6A13F732-1658-4636-8113-338B398CF328}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rafy.Domain.Stamp", "Rafy\Plugins\Rafy.Domain.Stamp\Rafy.Domain.Stamp.csproj", "{6A13F732-1658-4636-8113-338B398CF328}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.Accounts", "Rafy\Plugins\Rafy.Accounts\Rafy.Accounts.csproj", "{4D6467E4-D1CE-4FA8-A1FE-92B1BA549A4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rafy.Accounts", "Rafy\Plugins\Rafy.Accounts\Rafy.Accounts.csproj", "{4D6467E4-D1CE-4FA8-A1FE-92B1BA549A4A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.SerialNumber", "Rafy\Plugins\Rafy.SerialNumber\Rafy.SerialNumber.csproj", "{9FF37989-33E7-4D67-8E81-0A443EAEE510}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rafy.SerialNumber", "Rafy\Plugins\Rafy.SerialNumber\Rafy.SerialNumber.csproj", "{9FF37989-33E7-4D67-8E81-0A443EAEE510}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.FileStorage", "Rafy\Plugins\Rafy.FileStorage\Rafy.FileStorage.csproj", "{143FEBB0-B41C-4E47-9325-F656CCED2FA6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rafy.FileStorage", "Rafy\Plugins\Rafy.FileStorage\Rafy.FileStorage.csproj", "{143FEBB0-B41C-4E47-9325-F656CCED2FA6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.LicenseManager", "Rafy\Plugins\Rafy.LicenseManager\Rafy.LicenseManager\Rafy.LicenseManager.csproj", "{8F910D0F-0A51-417C-97E9-203C30FDA006}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rafy.LicenseManager", "Rafy\Plugins\Rafy.LicenseManager\Rafy.LicenseManager\Rafy.LicenseManager.csproj", "{8F910D0F-0A51-417C-97E9-203C30FDA006}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.LicenseManager.Encryption", "Rafy\Plugins\Rafy.LicenseManager\Rafy.LicenseManager.Encryption\Rafy.LicenseManager.Encryption.csproj", "{9E62ED52-63DF-4AFB-BCF5-09B8134D7C52}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rafy.LicenseManager.Encryption", "Rafy\Plugins\Rafy.LicenseManager\Rafy.LicenseManager.Encryption\Rafy.LicenseManager.Encryption.csproj", "{9E62ED52-63DF-4AFB-BCF5-09B8134D7C52}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.RBAC.RoleManagement", "Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.RoleManagement\Rafy.RBAC.RoleManagement.csproj", "{708150C2-4B78-4F02-A8E9-3338CC76F69C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rafy.RBAC.RoleManagement", "Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.RoleManagement\Rafy.RBAC.RoleManagement.csproj", "{708150C2-4B78-4F02-A8E9-3338CC76F69C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.RBAC.GroupManagement", "Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.GroupManagement\Rafy.RBAC.GroupManagement.csproj", "{E54CD6BC-727E-4D97-810D-6BB83A64A23F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rafy.RBAC.GroupManagement", "Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.GroupManagement\Rafy.RBAC.GroupManagement.csproj", "{E54CD6BC-727E-4D97-810D-6BB83A64A23F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.RBAC.UserRoleManagement", "Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.UserRoleManagement\Rafy.RBAC.UserRoleManagement.csproj", "{609216EB-20AF-48C2-90C3-514CF588A062}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rafy.RBAC.UserRoleManagement", "Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.UserRoleManagement\Rafy.RBAC.UserRoleManagement.csproj", "{609216EB-20AF-48C2-90C3-514CF588A062}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.RBAC.DataPermissionManagement", "Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.DataPermissionManagement\Rafy.RBAC.DataPermissionManagement.csproj", "{7750612E-AB7E-4A98-86E1-FF6E4D9D7C54}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rafy.RBAC.DataPermissionManagement", "Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.DataPermissionManagement\Rafy.RBAC.DataPermissionManagement.csproj", "{7750612E-AB7E-4A98-86E1-FF6E4D9D7C54}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.DataArchiver", "Rafy\Plugins\Rafy.DataTableMigration\Rafy.DataArchiver.csproj", "{95CB6F76-3D35-4F2E-BF2A-A45EC41C76B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rafy.DataArchiver", "Rafy\Plugins\Rafy.DataTableMigration\Rafy.DataArchiver.csproj", "{95CB6F76-3D35-4F2E-BF2A-A45EC41C76B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.SystemSettings", "Rafy\Plugins\Rafy.SystemSettings\Rafy.SystemSettings.csproj", "{1C9C3546-F650-40A3-AA7F-64E8A230A02B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rafy.SystemSettings", "Rafy\Plugins\Rafy.SystemSettings\Rafy.SystemSettings.csproj", "{1C9C3546-F650-40A3-AA7F-64E8A230A02B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -360,13 +358,6 @@ Global
 		{50706521-F843-4C7D-9B27-5197B4088F3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50706521-F843-4C7D-9B27-5197B4088F3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50706521-F843-4C7D-9B27-5197B4088F3D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B3673A48-EF4C-47BC-9450-20D278F16558}.D_UIA_Standard|Any CPU.ActiveCfg = Debug|Any CPU
-		{B3673A48-EF4C-47BC-9450-20D278F16558}.D_UIA_Standard|Any CPU.Build.0 = Debug|Any CPU
-		{B3673A48-EF4C-47BC-9450-20D278F16558}.D_Web|Any CPU.ActiveCfg = Debug|Any CPU
-		{B3673A48-EF4C-47BC-9450-20D278F16558}.D_Web|Any CPU.Build.0 = Debug|Any CPU
-		{B3673A48-EF4C-47BC-9450-20D278F16558}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B3673A48-EF4C-47BC-9450-20D278F16558}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B3673A48-EF4C-47BC-9450-20D278F16558}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DF358672-DBA8-4ACF-84DF-AD61E8AB811E}.D_UIA_Standard|Any CPU.ActiveCfg = Debug|Any CPU
 		{DF358672-DBA8-4ACF-84DF-AD61E8AB811E}.D_UIA_Standard|Any CPU.Build.0 = Debug|Any CPU
 		{DF358672-DBA8-4ACF-84DF-AD61E8AB811E}.D_Web|Any CPU.ActiveCfg = Debug|Any CPU
@@ -645,7 +636,6 @@ Global
 		{B10AFEDA-3905-4A84-B8DF-B557B48040E3} = {09769B96-A913-4654-9B5B-C4FB46CCDC4C}
 		{27C8A770-42FE-4BB4-9C2A-63A2DF354958} = {8EA20BE2-38C2-4A7E-B9BF-84CAFEA632B3}
 		{50706521-F843-4C7D-9B27-5197B4088F3D} = {09769B96-A913-4654-9B5B-C4FB46CCDC4C}
-		{B3673A48-EF4C-47BC-9450-20D278F16558} = {409E3E18-DF54-4269-B76E-81EFA18037A0}
 		{DF358672-DBA8-4ACF-84DF-AD61E8AB811E} = {AB601A10-BB0E-4176-B074-DB7194EFD3C7}
 		{15ABC304-2DD3-4302-9C44-E75F86DD2FA5} = {621953C1-D6E5-4E67-9755-484FBA498F39}
 		{1370C33E-858C-4A32-9D66-4CE324674E3C} = {621953C1-D6E5-4E67-9755-484FBA498F39}

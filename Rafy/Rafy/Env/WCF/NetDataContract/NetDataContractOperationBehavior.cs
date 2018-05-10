@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if NET45
+
+using System;
 using System.Collections.Generic;
 using System.ServiceModel;
 using System.Runtime.Serialization;
@@ -61,3 +63,5 @@ namespace Rafy.WCF
         #endregion
     }
 }
+
+#endif

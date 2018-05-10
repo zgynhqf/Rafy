@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if NET45
+
+using System;
 using System.ServiceModel;
 
 namespace Rafy.Domain.DataPortal.WCF
@@ -93,3 +95,5 @@ namespace Rafy.Domain.DataPortal.WCF
         #endregion
     }
 }
+
+#endif

@@ -29,15 +29,6 @@ http://zgynhqf.github.io/Rafy</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Domain\DataPortal\WCF\**" />
-    <Compile Remove="Env\WCF\**" />
-    <EmbeddedResource Remove="Domain\DataPortal\WCF\**" />
-    <EmbeddedResource Remove="Env\WCF\**" />
-    <None Remove="Domain\DataPortal\WCF\**" />
-    <None Remove="Env\WCF\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Remove="Env\ComponentModel\WebOrThreadAppContextProvider.cs" />
     <Compile Remove="Env\Configuration\PluginsConfigurationSection.cs" />
     <Compile Remove="Env\Utils\Caching\CacheProvider\PerHttpRequestCache.cs" />
