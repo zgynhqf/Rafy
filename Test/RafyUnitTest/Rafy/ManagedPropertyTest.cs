@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Windows.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rafy;
 using Rafy.Domain;
@@ -458,46 +457,48 @@ namespace RafyUnitTest
         [TestMethod]
         public void MPT_WPFBinding()
         {
-            var userList = RF.Find<TestUser>().NewList();
-            var newUser = Get<TestUser>();
-            newUser.Name = "1";
-            userList.Add(newUser);
+            //HACK:itont 崔化栋 因NetStandard不支持WPF，故暂且注释掉以下代码。
+            //var userList = RF.Find<TestUser>().NewList();
+            //var newUser = Get<TestUser>();
+            //newUser.Name = "1";
+            //userList.Add(newUser);
 
-            //创建 binding view
-            var view = CollectionViewSource.GetDefaultView(userList) as ListCollectionView;
-            Assert.IsNotNull(view);
-            var userListView = view.SourceCollection as TestUserList;
-            Assert.AreEqual(userListView, userList);
+            ////创建 binding view
+            
+            //var view = CollectionViewSource.GetDefaultView(userList) as ListCollectionView;
+            //Assert.IsNotNull(view);
+            //var userListView = view.SourceCollection as TestUserList;
+            //Assert.AreEqual(userListView, userList);
 
-            //list change 事件
-            NotifyCollectionChangedEventArgs eventArgs = null;
-            userListView.CollectionChanged += (oo, ee) => { eventArgs = ee; };
+            ////list change 事件
+            //NotifyCollectionChangedEventArgs eventArgs = null;
+            //userListView.CollectionChanged += (oo, ee) => { eventArgs = ee; };
 
-            newUser = Get<TestUser>();
-            newUser.Name = "2";
-            userList.Add(newUser);
+            //newUser = Get<TestUser>();
+            //newUser.Name = "2";
+            //userList.Add(newUser);
 
-            Assert.IsNotNull(eventArgs);
-            Assert.AreEqual(eventArgs.Action, NotifyCollectionChangedAction.Add);
-            Assert.AreEqual(userListView.Count, userList.Count);
+            //Assert.IsNotNull(eventArgs);
+            //Assert.AreEqual(eventArgs.Action, NotifyCollectionChangedAction.Add);
+            //Assert.AreEqual(userListView.Count, userList.Count);
 
-            //测试 ICustomTypeDescriptor 的实现
-            var newUserView = userListView[1];
-            var properties = (newUserView as ICustomTypeDescriptor).GetProperties();
-            var managedProperties = newUser.PropertiesContainer.GetAvailableProperties();
-            Assert.IsTrue(managedProperties.All(mp => properties.Cast<PropertyDescriptor>().Any(p => p.Name == mp.Name)));
-            //去掉索引器
-            var clrProperties = typeof(TestUser).GetProperties().Where(p=>p.GetMethod.GetParameters().Length==0).ToArray();
-            Assert.IsTrue(clrProperties.All(clr => properties.Cast<PropertyDescriptor>().Any(p => p.Name == clr.Name)));
+            ////测试 ICustomTypeDescriptor 的实现
+            //var newUserView = userListView[1];
+            //var properties = (newUserView as ICustomTypeDescriptor).GetProperties();
+            //var managedProperties = newUser.PropertiesContainer.GetAvailableProperties();
+            //Assert.IsTrue(managedProperties.All(mp => properties.Cast<PropertyDescriptor>().Any(p => p.Name == mp.Name)));
+            ////去掉索引器
+            //var clrProperties = typeof(TestUser).GetProperties().Where(p=>p.GetMethod.GetParameters().Length==0).ToArray();
+            //Assert.IsTrue(clrProperties.All(clr => properties.Cast<PropertyDescriptor>().Any(p => p.Name == clr.Name)));
 
-            //view model 的属性更改事件
-            var namePropertyChanged = false;
-            newUserView.PropertyChanged += (oo, ee) =>
-            {
-                if (ee.PropertyName == "Name") { namePropertyChanged = true; }
-            };
-            newUser.Name += "_Modified";
-            Assert.IsTrue(namePropertyChanged);
+            ////view model 的属性更改事件
+            //var namePropertyChanged = false;
+            //newUserView.PropertyChanged += (oo, ee) =>
+            //{
+            //    if (ee.PropertyName == "Name") { namePropertyChanged = true; }
+            //};
+            //newUser.Name += "_Modified";
+            //Assert.IsTrue(namePropertyChanged);
         }
 
         [TestMethod]

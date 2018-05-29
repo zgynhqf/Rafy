@@ -55,9 +55,13 @@ namespace RafyUnitTest.ClientTest
                 var path = string.Join(";", pathes);
 
                 //ModifyPrivateBinPath
+#if NET45
                 PathHelper.ModifyPrivateBinPath(path);//NetFramework
-                //AppDomain.CurrentDomain.SetData("PRIVATE_BINPATH", path);//NetCore
-                //AppDomain.CurrentDomain.SetData("BINPATH_PROBE_ONLY", path);//NetCore
+#endif
+#if NS2
+                AppDomain.CurrentDomain.SetData("PRIVATE_BINPATH", path);//NetCore
+                AppDomain.CurrentDomain.SetData("BINPATH_PROBE_ONLY", path);//NetCore
+#endif
             }
         }
 

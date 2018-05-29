@@ -1,299 +1,60 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>
-    </ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{9AA27D8B-8F77-403B-99D0-51EB0CE01AC6}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RafyUnitTest</RootNamespace>
-    <AssemblyName>RafyUnitTest</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>
-    </DocumentationFile>
-    <NoWarn>
-    </NoWarn>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Castle.Core, Version=4.1.1.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Castle.Core.4.1.1\lib\net45\Castle.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Google.Protobuf, Version=3.3.0.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Google.Protobuf.3.3.0\lib\net45\Google.Protobuf.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Caching.Abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Extensions.Caching.Abstractions.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Caching.Memory, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Extensions.Caching.Memory.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Caching.Memory.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Extensions.Configuration.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Configuration.Abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Extensions.Configuration.Abstractions.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Configuration.Binder">
-      <HintPath>..\..\packages\Microsoft.Extensions.Configuration.Binder.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.Binder.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Configuration.FileExtensions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Extensions.Configuration.FileExtensions.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.FileExtensions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Configuration.Json">
-      <HintPath>..\..\packages\Microsoft.Extensions.Configuration.Json.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Configuration.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Extensions.Configuration.Xml.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.Xml.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Extensions.DependencyInjection.2.0.0\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.2.0.0\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.FileProviders.Abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Extensions.FileProviders.Abstractions.2.0.0\lib\netstandard2.0\Microsoft.Extensions.FileProviders.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.FileProviders.Physical, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Extensions.FileProviders.Physical.2.0.0\lib\netstandard2.0\Microsoft.Extensions.FileProviders.Physical.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.FileSystemGlobbing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Extensions.FileSystemGlobbing.2.0.0\lib\netstandard2.0\Microsoft.Extensions.FileSystemGlobbing.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Options, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Extensions.Options.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Options.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Options.ConfigurationExtensions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Extensions.Options.ConfigurationExtensions.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Options.ConfigurationExtensions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Primitives, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Extensions.Primitives.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Primitives.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Moq">
-      <HintPath>..\..\packages\Moq.4.2.1409.1722\lib\net40\Moq.dll</HintPath>
-    </Reference>
-    <Reference Include="MySql.Data, Version=8.0.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MySql.Data.8.0.8-dmr\lib\net452\MySql.Data.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Oracle.ManagedDataAccess, Version=4.122.1.0, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Oracle.ManagedDataAccess.12.2.1100\lib\net40\Oracle.ManagedDataAccess.dll</HintPath>
-    </Reference>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Data.SqlClient, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Data.SqlClient.4.4.0\lib\net461\System.Data.SqlClient.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Runtime.CompilerServices.Unsafe.4.4.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Security" />
-    <Reference Include="System.Security.Cryptography.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Security.Cryptography.Xml.4.4.0\lib\net461\System.Security.Cryptography.Xml.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Transactions" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
-  </ItemGroup>
-  <ItemGroup>
-    <CodeAnalysisDependentAssemblyPaths Condition=" '$(VS100COMNTOOLS)' != '' " Include="$(VS100COMNTOOLS)..\IDE\PrivateAssemblies">
-      <Visible>False</Visible>
-    </CodeAnalysisDependentAssemblyPaths>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Rafy\EntityPhantomTest.cs" />
-    <Compile Include="Rafy\EnvironmentTest.cs" />
-    <Compile Include="Rafy\MiscellaneousTest.cs" />
-    <Compile Include="Rafy\ODataTest.cs" />
-    <Compile Include="Rafy\Plugins\AccountsPluginTest.cs" />
-    <Compile Include="Rafy\Plugins\DataArchiverTest.cs" />
-    <Compile Include="Rafy\Plugins\DataArchiverTest_BatchImport.cs" />
-    <Compile Include="Rafy\Plugins\FileStoragePluginTest.cs" />
-    <Compile Include="Rafy\Plugins\LicenseManagerPluginTest.cs" />
-    <Compile Include="Rafy\Plugins\RBAC\GroupPluginTest.cs" />
-    <Compile Include="Rafy\Plugins\RBAC\RBACManagementPluginTest.cs" />
-    <Compile Include="Rafy\Plugins\RBAC\UserRoleManagementPluginTest.cs" />
-    <Compile Include="Rafy\Plugins\SerialNumberPluginTest.cs" />
-    <Compile Include="Rafy\Plugins\SystemSettingsPluginTest.cs" />
-    <Compile Include="Rafy\StampTest.cs" />
-    <Compile Include="ServerTestHelper.cs" />
-    <Compile Include="Rafy\DomainTest.cs" />
-    <Compile Include="Rafy\ORMTest.cs" />
-    <Compile Include="Rafy\UtilsTest.cs" />
-    <Compile Include="Rafy\EntityIdTest.cs" />
-    <Compile Include="Rafy\zzzAutoUITest.cs" />
-    <Compile Include="Rafy\CacheTest_Server.cs" />
-    <Compile Include="Rafy\zzzSundryTest.cs" />
-    <Compile Include="Rafy\TreeEntityTest.cs" />
-    <Compile Include="Rafy\DbMigrationTest.cs" />
-    <Compile Include="Rafy\DbMigrationTest_DataBase.cs" />
-    <Compile Include="Rafy\EntityTest.cs" />
-    <Compile Include="Rafy\ManagedPropertyTest.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SimpleTest.cs" />
-    <Compile Include="TestServerApp.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <None Include="App.config" />
-    <None Include="Hxy Key.snk" />
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Accounts\Rafy.Accounts.csproj">
-      <Project>{4d6467e4-d1ce-4fa8-a1fe-92b1ba549a4a}</Project>
-      <Name>Rafy.Accounts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.ComponentModel.UnityAdapter\Rafy.ComponentModel.UnityAdapter.csproj">
-      <Project>{be8c3cd6-f314-453d-a0ed-fcfec0deadbc}</Project>
-      <Name>Rafy.ComponentModel.UnityAdapter</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.DataTableMigration\Rafy.DataArchiver.csproj">
-      <Project>{95cb6f76-3d35-4f2e-bf2a-a45ec41c76b4}</Project>
-      <Name>Rafy.DataArchiver</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.EntityPhantom\Rafy.Domain.EntityPhantom.csproj">
-      <Project>{0b6df92b-0248-422d-a9c2-1604d4cb7bc9}</Project>
-      <Name>Rafy.Domain.EntityPhantom</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.ORM.BatchSubmit\Rafy.Domain.ORM.BatchSubmit.csproj">
-      <Project>{f0533889-be2c-4a21-90b0-26765833270e}</Project>
-      <Name>Rafy.Domain.ORM.BatchSubmit</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.Stamp\Rafy.Domain.Stamp.csproj">
-      <Project>{6a13f732-1658-4636-8113-338b398cf328}</Project>
-      <Name>Rafy.Domain.Stamp</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.FileStorage\Rafy.FileStorage.csproj">
-      <Project>{143febb0-b41c-4e47-9325-f656cced2fa6}</Project>
-      <Name>Rafy.FileStorage</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.LicenseManager\Rafy.LicenseManager.Encryption\Rafy.LicenseManager.Encryption.csproj">
-      <Project>{9e62ed52-63df-4afb-bcf5-09b8134d7c52}</Project>
-      <Name>Rafy.LicenseManager.Encryption</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.DataPermissionManagement\Rafy.RBAC.DataPermissionManagement.csproj">
-      <Project>{7750612e-ab7e-4a98-86e1-ff6e4d9d7c54}</Project>
-      <Name>Rafy.RBAC.DataPermissionManagement</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.GroupManagement\Rafy.RBAC.GroupManagement.csproj">
-      <Project>{e54cd6bc-727e-4d97-810d-6bb83a64a23f}</Project>
-      <Name>Rafy.RBAC.GroupManagement</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.RoleManagement\Rafy.RBAC.RoleManagement.csproj">
-      <Project>{708150c2-4b78-4f02-a8e9-3338cc76f69c}</Project>
-      <Name>Rafy.RBAC.RoleManagement</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.UserRoleManagement\Rafy.RBAC.UserRoleManagement.csproj">
-      <Project>{609216eb-20af-48c2-90c3-514cf588a062}</Project>
-      <Name>Rafy.RBAC.UserRoleManagement</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.SerialNumber\Rafy.SerialNumber.csproj">
-      <Project>{9ff37989-33e7-4d67-8e81-0a443eaee510}</Project>
-      <Name>Rafy.SerialNumber</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.SystemSettings\Rafy.SystemSettings.csproj">
-      <Project>{1c9c3546-f650-40a3-aa7f-64e8a230a02b}</Project>
-      <Name>Rafy.SystemSettings</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Rafy\Rafy\Rafy.csproj">
-      <Project>{ed9cfdc2-6ebe-41fb-80db-006825fb0a25}</Project>
-      <Name>Rafy</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rafy.UnitTest.DataProvider\Rafy.UnitTest.DataProvider.csproj">
-      <Project>{df5e92a5-b32f-41ae-b880-14069d4fe7f4}</Project>
-      <Name>Rafy.UnitTest.DataProvider</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rafy.UnitTest.IDataProvider\Rafy.UnitTest.IDataProvider.csproj">
-      <Project>{c13c7dfe-3bdf-456e-8b7b-01ad483d7396}</Project>
-      <Name>Rafy.UnitTest.IDataProvider</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rafy.UnitTest.Repository\Rafy.UnitTest.Repository.csproj">
-      <Project>{03e2413d-ec73-44f1-a0d3-366c3892700a}</Project>
-      <Name>Rafy.UnitTest.Repository</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rafy.UnitTest\Rafy.UnitTest.csproj">
-      <Project>{D226414C-37F6-4618-8B91-7E80E7D2C42E}</Project>
-      <Name>Rafy.UnitTest</Name>
-      <Private>True</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>
-    if not exist "$(TargetDir)x86" md "$(TargetDir)x86"
-    xcopy /s /y "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\x86\*.*" "$(TargetDir)x86"
-    if not exist "$(TargetDir)amd64" md "$(TargetDir)amd64"
-    xcopy /s /y "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\amd64\*.*" "$(TargetDir)amd64"</PostBuildEvent>
-  </PropertyGroup>
-  <Import Project="..\..\packages\Microsoft.Packaging.Tools.1.0.0-preview2-25401-01\build\Microsoft.Packaging.Tools.targets" Condition="Exists('..\..\packages\Microsoft.Packaging.Tools.1.0.0-preview2-25401-01\build\Microsoft.Packaging.Tools.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+        <TargetFrameworks>netcoreapp2.0;net45;</TargetFrameworks>
+        <IsPackable>false</IsPackable>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\Microsoft.Packaging.Tools.1.0.0-preview2-25401-01\build\Microsoft.Packaging.Tools.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Packaging.Tools.1.0.0-preview2-25401-01\build\Microsoft.Packaging.Tools.targets'))" />
-    <Error Condition="!Exists('..\..\packages\NETStandard.Library.2.0.1\build\netstandard2.0\NETStandard.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NETStandard.Library.2.0.1\build\netstandard2.0\NETStandard.Library.targets'))" />
-  </Target>
-  <Import Project="..\..\packages\NETStandard.Library.2.0.1\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\..\packages\NETStandard.Library.2.0.1\build\netstandard2.0\NETStandard.Library.targets')" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
+        <DefineConstants>DEBUG;</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netcoreapp2.0'">
+        <DefineConstants>DEBUG;NS2</DefineConstants>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Content Include="appsettings.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Castle.Core" Version="4.1.1" />
+        <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
+        <PackageReference Include="MSTest.TestAdapter" Version="1.1.18" />
+        <PackageReference Include="MSTest.TestFramework" Version="1.1.18" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Accounts\Rafy.Accounts.csproj" />
+      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.ComponentModel.UnityAdapter\Rafy.ComponentModel.UnityAdapter.csproj" />
+      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.DataTableMigration\Rafy.DataArchiver.csproj" />
+      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.EntityPhantom\Rafy.Domain.EntityPhantom.csproj" />
+      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.ORM.BatchSubmit\Rafy.Domain.ORM.BatchSubmit.csproj" />
+      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.Stamp\Rafy.Domain.Stamp.csproj" />
+      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.FileStorage\Rafy.FileStorage.csproj" />
+      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.LicenseManager\Rafy.LicenseManager.Encryption\Rafy.LicenseManager.Encryption.csproj" />
+      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.DataPermissionManagement\Rafy.RBAC.DataPermissionManagement.csproj" />
+      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.GroupManagement\Rafy.RBAC.GroupManagement.csproj" />
+      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.RoleManagement\Rafy.RBAC.RoleManagement.csproj" />
+      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.UserRoleManagement\Rafy.RBAC.UserRoleManagement.csproj" />
+      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.SerialNumber\Rafy.SerialNumber.csproj" />
+      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.SystemSettings\Rafy.SystemSettings.csproj" />
+      <ProjectReference Include="..\..\Rafy\Rafy\Rafy.csproj" />
+      <ProjectReference Include="..\Rafy.UnitTest.DataProvider\Rafy.UnitTest.DataProvider.csproj" />
+      <ProjectReference Include="..\Rafy.UnitTest.IDataProvider\Rafy.UnitTest.IDataProvider.csproj" />
+      <ProjectReference Include="..\Rafy.UnitTest.Repository\Rafy.UnitTest.Repository.csproj" />
+      <ProjectReference Include="..\Rafy.UnitTest\Rafy.UnitTest.csproj" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
+        <Reference Include="System.Web" />
+        <PackageReference Include="Oracle.ManagedDataAccess" Version="12.2.1100" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
+        <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.12.0-beta2" />
+    </ItemGroup>
 </Project>

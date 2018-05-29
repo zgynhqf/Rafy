@@ -25,6 +25,9 @@ using Rafy.Domain.ORM.DbMigration;
 using Rafy.MetaModel;
 using Rafy.Utils.Caching;
 using UT;
+#if NS2
+using Microsoft.AspNetCore.Http;
+#endif
 
 namespace RafyUnitTest
 {
@@ -236,6 +239,7 @@ namespace RafyUnitTest
             Assert.IsTrue(wapper.Items.Count == 0);
         }
 
+#if NET45
         private HttpContextWrapper MockHttpContext()
         {
             var request = new HttpRequest("", "http://www.rafy.org/", "");
@@ -246,5 +250,13 @@ namespace RafyUnitTest
 
             return wapper;
         }
+#endif
+#if NS2
+        private DefaultHttpContext MockHttpContext()
+        {
+            var context = new DefaultHttpContext();
+            return context;
+        }
+#endif
     }
 }

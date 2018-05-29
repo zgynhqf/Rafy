@@ -1,14 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netstandard2.0\Rafy.LicenseManager.xml</DocumentationFile>
-    <NoWarn>1701;1702;1705;1591</NoWarn>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DocumentationFile>bin\Debug\netstandard2.0\Rafy.LicenseManager.xml</DocumentationFile>
+        <NoWarn>1701;1702;1705;1591</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+        <PackageReference Include="System.Security.Cryptography.Csp" Version="4.3.0" />
+        <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.0" />
+    </ItemGroup>
 
 </Project>

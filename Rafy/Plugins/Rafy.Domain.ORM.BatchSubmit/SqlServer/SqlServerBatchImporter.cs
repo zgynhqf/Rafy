@@ -183,6 +183,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
                 );
             bulkCopy.DestinationTableName = meta.Table.Name;
             bulkCopy.BatchSize = table.Rows.Count;
+            bulkCopy.BulkCopyTimeout = 10 * 60;
 
             try
             {
