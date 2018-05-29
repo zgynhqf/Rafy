@@ -5,10 +5,15 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
     <Version>3.70.3800</Version>
+    <Authors>Hxy dev group</Authors>
+    <Description>Rafy 幽灵数据插件。
+本插件用于为领域实体框架添加‘幽灵’功能（假删除），即在删除数据时，不是真实地在数据库中删除这行记录，而是把该实体的‘幽灵’标识标记为真。</Description>
+    <Product />
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netstandard2.0\Rafy.ComponentModel.UnityAdapter.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netstandard2.0\Rafy.Domain.EntityPhantom.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591</NoWarn>
   </PropertyGroup>
 
