@@ -142,7 +142,7 @@ namespace Rafy.LicenseManager.Infrastructure
         }
 
         /// <summary>
-        /// 获取一对 RAS 公钥与私钥。
+        /// 获取一对 RSA 公钥与私钥。
         /// </summary>
         /// <returns></returns>
         internal static string[] GeneratorKeys()

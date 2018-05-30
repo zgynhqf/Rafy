@@ -73,6 +73,10 @@ http://zgynhqf.github.io/Rafy</Description>
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
     <PackageReference Include="Castle.Core" Version="4.1.1" />
     <PackageReference Include="System.Data.SqlClient" Version="4.4.0" />
+    <!--SqlCe 加载依赖包-->
+    <PackageReference Include="System.Security.Permissions">
+      <Version>4.4.0</Version>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

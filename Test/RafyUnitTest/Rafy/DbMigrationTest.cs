@@ -599,8 +599,8 @@ namespace RafyUnitTest
                     //历史记录
                     var histories = context.GetHistories();
                     Assert.IsTrue(histories.Count == 2);
-                    Assert.IsTrue(histories[0] is DMT_ManualMigrateTest);
-                    Assert.IsTrue(histories[1] is DMT_ManualMigrateEntity);
+                    Assert.IsTrue(histories[0] is DMT_ManualMigrateEntity);
+                    Assert.IsTrue(histories[1] is DMT_ManualMigrateTest);
 
                     //数据库结构
                     var database = context.DatabaseMetaReader.Read();

@@ -16,7 +16,6 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rafy.RBAC.GroupManagement.Controllers;
-using System.Transactions;
 using Rafy.RBAC.RoleManagement;
 using Rafy.RBAC.GroupManagement;
 using Rafy.Domain;

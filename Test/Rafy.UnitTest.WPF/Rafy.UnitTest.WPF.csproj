@@ -1,89 +1,27 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F1E214F9-7C72-4C52-B262-A41CE23A3993}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Rafy.UnitTest.WPF</RootNamespace>
-    <AssemblyName>Rafy.UnitTest.WPF</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UnitTestWPFPlugin.cs" />
-    <Compile Include="ViewConfig\TestUserConfig.cs" />
-    <Compile Include="ViewConfig\TestTreeTaskConfig.cs" />
-    <Compile Include="ViewConfig\TestRoleConfig.cs" />
-    <Compile Include="ViewConfig\Ext\TestUserExtConfig.cs" />
-    <Compile Include="ViewConfig\Redundancy\AConfig.cs" />
-    <Compile Include="ViewConfig\Redundancy\BConfig.cs" />
-    <Compile Include="ViewConfig\Redundancy\CConfig.cs" />
-    <Compile Include="ViewConfig\Redundancy\EConfig.cs" />
-    <Compile Include="ViewConfig\Redundancy\DConfig.cs" />
-    <Compile Include="ViewConfig\TestAdministratorConfig.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Rafy\Rafy\Rafy.csproj">
-      <Project>{966a5bf2-d690-426b-ad68-ad868bb8f855}</Project>
-      <Name>Rafy</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rafy.UnitTest\Rafy.UnitTest.csproj">
-      <Project>{d226414c-37f6-4618-8b91-7e80e7d2c42e}</Project>
-      <Name>Rafy.UnitTest</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Hxy Key.snk" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>net45;netcoreapp2.0</TargetFrameworks>
+        <IsPackable>false</IsPackable>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
+        <DefineConstants>NET45</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netcoreapp2.0'">
+        <DefineConstants>NS2</DefineConstants>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
+        <PackageReference Include="MSTest.TestAdapter" Version="1.1.18" />
+        <PackageReference Include="MSTest.TestFramework" Version="1.1.18" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Rafy\Rafy\Rafy.csproj" />
+        <ProjectReference Include="..\Rafy.UnitTest\Rafy.UnitTest.csproj" />
+    </ItemGroup>
 </Project>

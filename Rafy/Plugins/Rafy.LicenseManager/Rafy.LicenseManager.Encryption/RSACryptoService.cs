@@ -8,6 +8,8 @@
  * 
  * 历史记录：
  * 创建文件 吴中坡 20160921 09:36
+ * 修改文件 崔化栋 20180528 18:00
+ *   增加NS2的支持；
  * 
 *******************************************************/
 
@@ -30,9 +32,16 @@ namespace Rafy.LicenseManager.Encryption
         public static string[] GenerateKeys()
         {
             var sKeys = new string[2];
+#if NET45
             var rsa = new RSACryptoServiceProvider();
             sKeys[0] = rsa.ToXmlString(true);
             sKeys[1] = rsa.ToXmlString(false);
+#endif
+#if NETSTANDARD2_0 || NETCOREAPP2_0
+            var rsa = RSA.Create();
+            sKeys[0] = rsa.ToXMLString(true);
+            sKeys[1] = rsa.ToXMLString(false);
+#endif
             return sKeys;
         }
 
@@ -40,16 +49,22 @@ namespace Rafy.LicenseManager.Encryption
         /// 加密
         /// </summary>
         /// <param name="sSource">加密字符</param>
-        /// <param name="privateKey">公钥</param>
+        /// <param name="publicKey">公钥</param>
         /// <returns>加密后的字符</returns>
-        public static string EncryptString(string sSource, string privateKey)
+        public static string EncryptString(string sSource, string publicKey)
         {
             var enc = new UTF8Encoding();
             var bytes = enc.GetBytes(sSource);
+#if NET45
             var crypt = new RSACryptoServiceProvider();
-            crypt.FromXmlString(privateKey);
-            //bytes = crypt.Encrypt(bytes, false);
+            crypt.FromXmlString(publicKey);
             bytes = crypt.PrivateEncryption(bytes);
+#endif
+#if NETSTANDARD2_0 || NETCOREAPP2_0
+            var crypt = RSA.Create();
+            crypt.FromXMLString(publicKey);
+            bytes = crypt.Encrypt(bytes, RSAEncryptionPadding.Pkcs1);
+#endif
             return Convert.ToBase64String(bytes);
         }
 
@@ -57,16 +72,22 @@ namespace Rafy.LicenseManager.Encryption
         /// 解密
         /// </summary>
         /// <param name="sSource">解密字符</param>
-        /// <param name="publicKey"> </param>
+        /// <param name="privateKey"> </param>
         /// <returns></returns>
-        public static string DecryptString(string sSource, string publicKey)
+        public static string DecryptString(string sSource, string privateKey)
         {
-            var crypt = new RSACryptoServiceProvider();
             var enc = new UTF8Encoding();
             var bytes = Convert.FromBase64String(sSource);
-            crypt.FromXmlString(publicKey);
-            //var decryptbyte = crypt.Decrypt(bytes, false);
+#if NET45
+            var crypt = new RSACryptoServiceProvider();
+            crypt.FromXmlString(privateKey);
             var decryptbyte = crypt.PublicDecryption(bytes);
+#endif
+#if NETSTANDARD2_0 || NETCOREAPP2_0
+            var crypt = RSA.Create();
+            crypt.FromXMLString(privateKey);
+            var decryptbyte = crypt.Decrypt(bytes, RSAEncryptionPadding.Pkcs1);
+#endif
             return enc.GetString(decryptbyte);
         }
     }
