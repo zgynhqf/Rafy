@@ -29,12 +29,10 @@ namespace Rafy.LicenseManager.Encryption
         /// <param name="rsa"></param>
         /// <param name="data">表示要加密的数据。</param>
         /// <returns>返回加密后的数据。</returns>
-        public static byte[] PrivateEncryption(this RSACryptoServiceProvider rsa, byte[] data)
+        public static byte[] PrivateEncryption(this RSA rsa, byte[] data)
         {
-            if(data == null)
+            if (data == null)
                 throw new ArgumentNullException(nameof(data));
-            if(rsa.PublicOnly)
-                throw new InvalidOperationException("私钥未正确加载。");
 
             var maxDataLength = (rsa.KeySize / 8) - 6;
             if(data.Length > maxDataLength)
@@ -56,7 +54,7 @@ namespace Rafy.LicenseManager.Encryption
         /// <param name="rsa"></param>
         /// <param name="data">表示要解密的数据。</param>
         /// <returns>返回加密前的原始数据。</returns>
-        public static byte[] PublicDecryption(this RSACryptoServiceProvider rsa, byte[] data)
+        public static byte[] PublicDecryption(this RSA rsa, byte[] data)
         {
             if(data == null)
                 throw new ArgumentNullException(nameof(data));

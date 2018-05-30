@@ -63,7 +63,7 @@ namespace Rafy.LicenseManager.Encryption
 #if NETSTANDARD2_0 || NETCOREAPP2_0
             var crypt = RSA.Create();
             crypt.FromXMLString(publicKey);
-            bytes = crypt.Encrypt(bytes, RSAEncryptionPadding.Pkcs1);
+            bytes = crypt.EncryptValue(bytes);
 #endif
             return Convert.ToBase64String(bytes);
         }
@@ -86,7 +86,7 @@ namespace Rafy.LicenseManager.Encryption
 #if NETSTANDARD2_0 || NETCOREAPP2_0
             var crypt = RSA.Create();
             crypt.FromXMLString(privateKey);
-            var decryptbyte = crypt.Decrypt(bytes, RSAEncryptionPadding.Pkcs1);
+            var decryptbyte = crypt.PublicDecryption(bytes);
 #endif
             return enc.GetString(decryptbyte);
         }
