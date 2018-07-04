@@ -36,10 +36,10 @@ namespace RafyUnitTest
             DateTime expireTime = DateTime.Now.AddDays(1);
 
             //生成授权码
-            string authenticationCode = SecurityAuthentication.Encrypt(_checkCode, expireTime, 0, _publicKey);
+            string authenticationCode = SecurityAuthentication.Encrypt(_checkCode, expireTime, 0, _privateKey);
 
             //认证
-            AuthorizationResult result = SecurityAuthentication.Authenticate(authenticationCode, _privateKey, _checkCode);
+            AuthorizationResult result = SecurityAuthentication.Authenticate(authenticationCode, _publicKey, _checkCode);
 
             Assert.IsTrue(result.Success, "未过期，结果应该是认证成功！");
         }
@@ -55,10 +55,10 @@ namespace RafyUnitTest
             string errorCheckCode = "错误的校验码";
 
             //生成授权码   
-            string authenticationCode = SecurityAuthentication.Encrypt(_checkCode, expireTime, 0, _publicKey);
+            string authenticationCode = SecurityAuthentication.Encrypt(_checkCode, expireTime, 0, _privateKey);
 
             //认证
-            AuthorizationResult result = SecurityAuthentication.Authenticate(authenticationCode, _privateKey, errorCheckCode);
+            AuthorizationResult result = SecurityAuthentication.Authenticate(authenticationCode, _publicKey, errorCheckCode);
 
             Assert.IsTrue(!result.Success, "校验码错误，验证失败！");
             Assert.IsTrue(result.AuthorizationState == AuthorizationState.CheckCodeError, "验证失败原因：校验码错误！");
@@ -73,10 +73,10 @@ namespace RafyUnitTest
             DateTime expireTime = new DateTime(2017, 8, 9);
 
             //生成授权码
-            string authenticationCode = SecurityAuthentication.Encrypt(_checkCode, expireTime, 0, _publicKey);
+            string authenticationCode = SecurityAuthentication.Encrypt(_checkCode, expireTime, 0, _privateKey);
 
             //认证
-            AuthorizationResult result = SecurityAuthentication.Authenticate(authenticationCode, _privateKey, _checkCode);
+            AuthorizationResult result = SecurityAuthentication.Authenticate(authenticationCode, _publicKey, _checkCode);
 
             Assert.IsTrue(!result.Success, "当前时间超过授权期限，验证失败！");
             Assert.IsTrue(result.AuthorizationState == AuthorizationState.Expire, "验证失败原因：过期！");
@@ -91,12 +91,12 @@ namespace RafyUnitTest
             DateTime expireTime = DateTime.Now.AddDays(1);
 
             //生成授权码
-            string authenticationCode = SecurityAuthentication.Encrypt(_checkCode, expireTime, 0, _publicKey);
+            string authenticationCode = SecurityAuthentication.Encrypt(_checkCode, expireTime, 0, _privateKey);
 
             string errorAuthCode = "111111111111";
 
             //认证
-            AuthorizationResult result = SecurityAuthentication.Authenticate(errorAuthCode, _privateKey, _checkCode);
+            AuthorizationResult result = SecurityAuthentication.Authenticate(errorAuthCode, _publicKey, _checkCode);
 
             Assert.IsTrue(!result.Success, "授权码错误，验证失败！");
         }
@@ -110,7 +110,7 @@ namespace RafyUnitTest
             DateTime expireTime = DateTime.Now.AddDays(1);
 
             //生成授权码
-            string authenticationCode = SecurityAuthentication.Encrypt(_checkCode, expireTime, 0, _publicKey);
+            string authenticationCode = SecurityAuthentication.Encrypt(_checkCode, expireTime, 0, _privateKey);
 
             string errorPrivateKey = "<RSAKeyValue><Modulus>nr7rq0sgR0GokC/dTajW0MzTF1KJgeAhyxgMUhylsLcJVHqY4oo2SHs6uDYydfPd4m7t5uaaLmYdXTUfXDz9HNx9YwnuwDWy9GuNy7T9+ONENk/0hlfDs0bJKYgjcycu//QziY6WJi7yBZoTVSNmzj0takyoNqgSKLWhB20yTPk=</Modulus><Exponent>ABCD</Exponent></RSAKeyValue>";
 
