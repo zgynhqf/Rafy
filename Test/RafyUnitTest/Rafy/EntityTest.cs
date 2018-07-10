@@ -1779,6 +1779,8 @@ namespace RafyUnitTest
             }
         }
 
+#if NET45
+
         [TestMethod]
         public void ET_Repository_BatchImport_CDU_U()
         {
@@ -1951,6 +1953,7 @@ namespace RafyUnitTest
             }
         }
 
+#endif
         /// <summary>
         /// 被冗余属性在批量更新时，在框架层面也能自动更新其对应的冗余属性。
         /// </summary>

@@ -34,4 +34,11 @@
         <ProjectReference Include="..\Rafy.UnitTest.WPF\Rafy.UnitTest.WPF.csproj" />
         <ProjectReference Include="..\Rafy.UnitTest\Rafy.UnitTest.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="System.Data.SqlServerCe">
+        <HintPath>..\..\packages\Lib\SQLCE\System.Data.SqlServerCe.dll</HintPath>
+        <Private>true</Private>
+      </Reference>
+    </ItemGroup>
 </Project>
