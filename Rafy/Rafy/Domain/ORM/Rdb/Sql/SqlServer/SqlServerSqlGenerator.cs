@@ -19,6 +19,7 @@ using Rafy.Data;
 using Rafy.DbMigration;
 using Rafy.DbMigration.SqlServer;
 using Rafy.Domain.ORM.SqlTree;
+using System.Collections;
 
 namespace Rafy.Domain.ORM
 {
@@ -236,6 +237,107 @@ namespace Rafy.Domain.ORM
             };
 
             return res;
+        }
+
+        protected override SqlColumnConstraint VisitSqlColumnConstraint(SqlColumnConstraint node)
+        {
+            var op = node.Operator;
+            var value = node.Value;
+            
+            value = this.DbTypeCoverter.ToDbParameterValue(value);
+
+            #region 处理一些特殊的值
+
+            switch (op)
+            {
+                case SqlColumnConstraintOperator.In:
+                case SqlColumnConstraintOperator.NotIn:
+                    //对于 In、NotIn 操作，如果传入的是空列表时，需要特殊处理：
+                    //In(Empty) 表示 false，NotIn(Empty) 表示 true。
+                    if (value is IEnumerable)
+                    {
+                        bool hasValue = false;
+                        foreach (var item in value as IEnumerable)
+                        {
+                            hasValue = true;
+                            break;
+                        }
+                        if (!hasValue)
+                        {
+                            if (op == SqlColumnConstraintOperator.In)
+                            {
+                                Sql.Append("0 = 1");
+                            }
+                            else
+                            {
+                                Sql.Append("1 = 1");
+                            }
+
+                            return node;
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            #endregion
+            
+            //根据不同的操作符，来生成不同的Sql。
+            switch (op)
+            {
+                case SqlColumnConstraintOperator.In:
+                case SqlColumnConstraintOperator.NotIn:
+
+                    var column = node.Column;
+                    base.AppendColumnUsage(node.Column);
+
+                    var opSql = op == SqlColumnConstraintOperator.In ? "IN" : "NOT IN";
+                    Sql.Append(" ").Append(opSql).Append(" (");
+                    if (value is IEnumerable)
+                    {
+                        bool first = true;
+                        bool needDelimiter = false;
+                        bool isString = false;
+                        int i = 0;
+                        foreach (var item in value as IEnumerable)
+                        {
+                            if (++i > this.MaxItemsInInClause) throw new TooManyItemsInInClauseException();
+
+                            if (first)
+                            {
+                                first = false;
+                                needDelimiter = item is string || item is DateTime || item is Guid;
+                                isString = item is string;
+                            }
+                            else { Sql.Append(','); }
+
+                            if (needDelimiter)
+                            {
+                                if (isString) Sql.Append('N').Append('\'').Append(EscapeSpecialChar(item)).Append('\'');
+                                else Sql.Append('\'').Append(EscapeSpecialChar(item)).Append('\'');
+                            }
+                            else
+                            {
+                                Sql.Append(item);
+                            }
+                        }
+                    }
+                    else if (value is SqlNode)
+                    {
+                        Sql.AppendLine();
+                        this.Indent++;
+                        this.Visit(value as SqlNode);
+                        this.Indent--;
+                        Sql.AppendLine();
+                    }
+                    Sql.Append(')');
+                    return node;
+                default:
+                    break;
+            }
+
+            return base.VisitSqlColumnConstraint(node);
         }
     }
 }
