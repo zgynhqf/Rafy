@@ -8,10 +8,12 @@
 
     <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
         <DefineConstants>NET45</DefineConstants>
+		<DocumentationFile>bin\Debug\net45\Rafy.UnitTest.xml</DocumentationFile>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netcoreapp2.0'">
         <DefineConstants>NS2</DefineConstants>
+		<DocumentationFile>bin\Debug\netcoreapp2.0\Rafy.UnitTest.xml</DocumentationFile>
     </PropertyGroup>
     
     <ItemGroup>
