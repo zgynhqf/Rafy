@@ -34,4 +34,8 @@
         <ProjectReference Include="..\Rafy.UnitTest.WPF\Rafy.UnitTest.WPF.csproj" />
         <ProjectReference Include="..\Rafy.UnitTest\Rafy.UnitTest.csproj" />
     </ItemGroup>
+
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+      <Exec Command="xcopy /e /r /y $(ProjectDir)SQLCE $(SolutionDir)$(OutDir)" />
+    </Target>
 </Project>
