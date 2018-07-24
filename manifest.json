@@ -111,7 +111,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/插件/时间戳插件.html",
-          "hash": "6Lqq5mCfwm1KcG7lhcMswQ=="
+          "hash": "xA7blvOOZhf5GSoJgIrHSw=="
         }
       },
       "is_incremental": false,
@@ -1849,6 +1849,28 @@
     },
     {
       "type": "Resource",
+      "source_relative_path": "images/时间戳插件01.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/时间戳插件01.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/时间戳插件02.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/时间戳插件02.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
       "source_relative_path": "images/第一个程序01.png",
       "output": {
         "resource": {
@@ -2021,7 +2043,8 @@
   "incremental_info": [
     {
       "status": {
-        "can_incremental": true,
+        "can_incremental": false,
+        "details": "Cannot build incrementally because last build info is missing.",
         "incrementalPhase": "build"
       },
       "processors": {
@@ -2030,21 +2053,21 @@
           "details": "Processor ResourceDocumentProcessor cannot suppport incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         },
-        "ConceptualDocumentProcessor": {
-          "can_incremental": true,
-          "incrementalPhase": "build"
-        },
         "TocDocumentProcessor": {
           "can_incremental": false,
           "details": "Processor TocDocumentProcessor cannot suppport incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build"
+        },
+        "ConceptualDocumentProcessor": {
+          "can_incremental": false,
           "incrementalPhase": "build"
         }
       }
     },
     {
       "status": {
-        "can_incremental": true,
-        "details": "Can support incremental post processing.",
+        "can_incremental": false,
+        "details": "Cannot support incremental post processing, the reason is: last post processor info is null.",
         "incrementalPhase": "postProcessing"
       },
       "processors": {}
