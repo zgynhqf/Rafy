@@ -219,7 +219,12 @@ namespace Rafy.DbMigration
                     });
                 }
 
-                if (column.IsRequired)
+                //加上列名称不等于id的判断原因如下：
+                //rafy 现在的删除表的逻辑是先删除主键之外的列，如果列的属性为 not null 的，需要先讲 not null 修改成 null，
+                //在 rafy 的实体中 id 都是自增长，not null 的，
+                //如果表的主键不是 id ，那么在删除 id 列的时候，将 id 属性的 not null 修改为 null 就会有问题，因为 id 是自增长的，
+                //所以当表的主键名称不是 id 的时候不能走 RemoveNotNullConstraint 这个方法。
+                if (column.IsRequired && column.Name != EntityConvention.IdColumnName)
                 {
                     this.AddOperation(new RemoveNotNullConstraint
                     {
