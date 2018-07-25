@@ -34,9 +34,9 @@ namespace Rafy.UnitTest.DataProvider
 
         public static void GenerateDb()
         {
-            if (ConfigurationHelper.GetAppSettingOrDefault("Test_GeneratDB", false))
+            if (ConfigurationHelper.GetAppSettingOrDefault("Test_GenerateDb", false))
             {
-                if (ClearDb && ConfigurationHelper.GetAppSettingOrDefault("Test_GeneratDB_Clear", false))
+                if (ClearDb && ConfigurationHelper.GetAppSettingOrDefault("Test_GenerateDb_Clear", false))
                 {
                     //不想手工去删除数据库，可以使用下面这个方法来在程序中删除所有的表。
                     DropAllTables();
