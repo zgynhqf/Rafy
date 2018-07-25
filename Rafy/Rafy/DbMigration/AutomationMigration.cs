@@ -219,7 +219,7 @@ namespace Rafy.DbMigration
                     });
                 }
 
-                if (column.IsRequired)
+                if (column.IsRequired && column.Name != "Id")
                 {
                     this.AddOperation(new RemoveNotNullConstraint
                     {
