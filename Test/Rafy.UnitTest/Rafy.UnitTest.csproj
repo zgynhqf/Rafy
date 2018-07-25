@@ -8,26 +8,26 @@
 
     <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
         <DefineConstants>NET45</DefineConstants>
-		<DocumentationFile>bin\Debug\net45\Rafy.UnitTest.xml</DocumentationFile>
+        <DocumentationFile>bin\Debug\net45\Rafy.UnitTest.xml</DocumentationFile>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netcoreapp2.0'">
         <DefineConstants>NS2</DefineConstants>
-		<DocumentationFile>bin\Debug\netcoreapp2.0\Rafy.UnitTest.xml</DocumentationFile>
+        <DocumentationFile>bin\Debug\netcoreapp2.0\Rafy.UnitTest.xml</DocumentationFile>
     </PropertyGroup>
-    
+
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
         <PackageReference Include="MSTest.TestAdapter" Version="1.1.18" />
         <PackageReference Include="MSTest.TestFramework" Version="1.1.18" />
     </ItemGroup>
-    
+
     <ItemGroup>
-      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.EntityPhantom\Rafy.Domain.EntityPhantom.csproj" />
-      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.ORM.BatchSubmit\Rafy.Domain.ORM.BatchSubmit.csproj" />
-      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.GroupManagement\Rafy.RBAC.GroupManagement.csproj" />
-      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.RoleManagement\Rafy.RBAC.RoleManagement.csproj" />
-      <ProjectReference Include="..\..\Rafy\Rafy\Rafy.csproj" />
+        <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.EntityPhantom\Rafy.Domain.EntityPhantom.csproj" />
+        <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.ORM.BatchSubmit\Rafy.Domain.ORM.BatchSubmit.csproj" />
+        <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.GroupManagement\Rafy.RBAC.GroupManagement.csproj" />
+        <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.RoleManagement\Rafy.RBAC.RoleManagement.csproj" />
+        <ProjectReference Include="..\..\Rafy\Rafy\Rafy.csproj" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
