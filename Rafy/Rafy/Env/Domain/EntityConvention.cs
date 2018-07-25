@@ -69,10 +69,7 @@ namespace Rafy.Domain
             get { return Property_IsPhantom != null; }
         }
 
-        internal static string IdColumnName
-        {
-            get { return Property_Id.Name; }
-        }
+        internal static string IdColumnName = "Id";
 
         internal static string TreeChildrenPropertyName = "TreeChildren";
 
