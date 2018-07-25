@@ -239,6 +239,12 @@ namespace Rafy.Domain.ORM
             return res;
         }
 
+        /// <summary>
+        /// 重写VisitSqlColumnConstraint方法
+        /// 处理In、NotIn操作，如果传入的值为字符串，则查询条件增加N前缀
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
         protected override SqlColumnConstraint VisitSqlColumnConstraint(SqlColumnConstraint node)
         {
             var op = node.Operator;
@@ -314,6 +320,7 @@ namespace Rafy.Domain.ORM
 
                             if (needDelimiter)
                             {
+                                //判断值否是为字符串，如果是查询语句增加N前缀
                                 if (isString) Sql.Append('N').Append('\'').Append(EscapeSpecialChar(item)).Append('\'');
                                 else Sql.Append('\'').Append(EscapeSpecialChar(item)).Append('\'');
                             }
