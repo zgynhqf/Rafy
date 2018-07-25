@@ -1779,6 +1779,8 @@ namespace RafyUnitTest
             }
         }
 
+#if NET45
+
         [TestMethod]
         public void ET_Repository_BatchImport_CDU_U()
         {
@@ -1951,6 +1953,7 @@ namespace RafyUnitTest
             }
         }
 
+#endif
         /// <summary>
         /// 被冗余属性在批量更新时，在框架层面也能自动更新其对应的冗余属性。
         /// </summary>
@@ -2329,7 +2332,16 @@ namespace RafyUnitTest
             };
 
             //序列化。
+#if NET45
             var serializer = new NetDataContractSerializer();
+#endif
+#if NS2
+            var settings = new DataContractSerializerSettings();
+            settings.PreserveObjectReferences = true;
+            settings.KnownTypes = new List<Type>() { typeof(Book), typeof(ChapterList), typeof(Chapter) };
+            var serializer = new DataContractSerializer(typeof(Book), settings);
+#endif
+
             var stream = new MemoryStream();
             serializer.WriteObject(stream, model);
 

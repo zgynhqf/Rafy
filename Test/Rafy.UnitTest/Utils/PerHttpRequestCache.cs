@@ -12,11 +12,19 @@
  * 
 *******************************************************/
 
+#if NS2
+using Microsoft.AspNetCore.Http;
+using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+#endif
+#if NET45
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Web;
+#endif
 
 namespace Rafy.Utils.Caching
 {
@@ -25,8 +33,12 @@ namespace Rafy.Utils.Caching
     /// </summary>
     public class PerHttpRequestCache : Cache
     {
+#if NET45
         private readonly HttpContextBase _context;
-
+#endif
+#if NS2
+        private readonly HttpContext _context;
+#endif
         /// <summary>
         /// 初始化 <see cref="PerHttpRequestCache"/> 类的新实例.
         /// </summary>
@@ -39,7 +51,12 @@ namespace Rafy.Utils.Caching
         /// 初始化 <see cref="PerHttpRequestCache"/> 类的新实例.
         /// </summary>
         /// <param name="context">Context</param>
+#if NET45
         public PerHttpRequestCache(HttpContextBase context)
+#endif
+#if NS2
+        public PerHttpRequestCache(HttpContext context)
+#endif
         {
             this._context = context;
         }
@@ -47,12 +64,24 @@ namespace Rafy.Utils.Caching
         /// <summary>
         /// 获取 <see cref="HttpContextBase"/> 实例的 Items.
         /// </summary>
+#if NET45
         protected virtual IDictionary GetItems()
+#endif
+#if NS2
+        protected virtual IDictionary<object, object> GetItems()
+#endif
         {
+#if NET45
             if (this._context == null && HttpContext.Current == null) return null;
 
             if (this._context != null) return _context.Items;
             if (HttpContext.Current != null) return HttpContext.Current.Items;
+#endif
+#if NS2
+            if (this._context == null) return null;
+
+            if (this._context != null) return _context.Items;
+#endif
 
             return null;
         }
@@ -75,7 +104,12 @@ namespace Rafy.Utils.Caching
 
             if (value == null) return false;
 
+#if NET45
             if (items.Contains(key))
+#endif
+#if NS2
+            if (items.ContainsKey(key))
+#endif
             {
                 items[key] = value;
             }
@@ -106,9 +140,11 @@ namespace Rafy.Utils.Caching
                 return;
             }
 
-            var enumerator = items.GetEnumerator();
             var regex = new Regex(region, RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
             var keysToRemove = new List<string>();
+
+#if NET45
+            var enumerator = items.GetEnumerator();
             while (enumerator.MoveNext())
             {
                 if (regex.IsMatch(enumerator.Key.ToString()))
@@ -116,6 +152,16 @@ namespace Rafy.Utils.Caching
                     keysToRemove.Add(enumerator.Key.ToString());
                 }
             }
+#endif
+#if NS2
+            foreach (var item in items)
+            {
+                if (regex.IsMatch(item.Key.ToString()))
+                {
+                    keysToRemove.Add(item.Key.ToString());
+                }
+            }
+#endif
 
             foreach (var key in keysToRemove)
             {
@@ -131,12 +177,22 @@ namespace Rafy.Utils.Caching
                 return;
             }
 
-            var enumerator = items.GetEnumerator();
+
             var keysToRemove = new List<string>();
+
+#if NET45
+            var enumerator = items.GetEnumerator();
             while (enumerator.MoveNext())
             {
                 keysToRemove.Add(enumerator.Key.ToString());
             }
+#endif
+#if NS2
+            foreach (var item in items)
+            {
+                keysToRemove.Add(item.Key.ToString());
+            }
+#endif
 
             foreach (var key in keysToRemove)
             {

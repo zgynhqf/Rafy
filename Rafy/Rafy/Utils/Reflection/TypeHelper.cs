@@ -18,6 +18,7 @@ using System.Text;
 using System.ComponentModel;
 using System.Runtime;
 using System.Reflection;
+using Newtonsoft.Json.Linq;
 
 namespace Rafy.Reflection
 {
@@ -272,6 +273,9 @@ namespace Rafy.Reflection
 
             try
             {
+#if NETSTANDARD2_0 || NETCOREAPP2_0
+                if (value is JValue) value = ((JValue)value).Value;
+#endif
                 return Convert.ChangeType(value, desiredType);
             }
             catch
@@ -347,6 +351,6 @@ namespace Rafy.Reflection
             return (T)CoerceValue(typeof(T), value.GetType(), value);
         }
 
-        #endregion
+#endregion
     }
 }

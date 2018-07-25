@@ -43,9 +43,9 @@ namespace Rafy.LicenseManager.Encryption
         /// <param name="checkCode">校验码，替换之前的物理网卡地址</param>
         /// <param name="expireTime">到时时间</param>
         /// <param name="category">授权类型0=开发 1=产品</param>
-        /// <param name="privateKey">私钥</param>
+        /// <param name="publicKey">公钥</param>
         /// <returns></returns>
-        public static string Encrypt(string checkCode, DateTime expireTime, int category, string privateKey)
+        public static string Encrypt(string checkCode, DateTime expireTime, int category, string publicKey)
         {
             var now = DateTime.Now.ToString("yyyyMMddHHmmss");
             var checkCodeFormart = checkCode.Replace(":", "").Replace("-", "");
@@ -53,33 +53,33 @@ namespace Rafy.LicenseManager.Encryption
             var randKey = ran.Next(1000, 9999);
             //14+12+10+1+4 防止同一个授权信息生成相同的授权码
             string source = $"{now}{Flag}{checkCodeFormart}{Flag}{expireTime.ToString("yyyy-MM-dd")}{Flag}{category}{Flag}{randKey}";
-            return RSACryptoService.EncryptString(source, privateKey);
+            return RSACryptoService.EncryptString(source, publicKey);
         }
 
         /// <summary>
         /// 生成授权码
         /// </summary>
         /// <param name="authorizationCode">授权信息</param>
-        /// <param name="privateKey">私钥</param>
+        /// <param name="publicKey">公钥</param>
         /// <returns></returns>
-        public static string Encrypt(AuthorizationCode authorizationCode, string privateKey)
+        public static string Encrypt(AuthorizationCode authorizationCode, string publicKey)
         {
             return Encrypt(authorizationCode.CheckCode, authorizationCode.ExpireTime.Value, authorizationCode.Category,
-                privateKey);
+                publicKey);
         }
 
         /// <summary>
         /// 解密授权码
         /// </summary>
         /// <param name="sSource">授权码</param>
-        /// <param name="publicKey">公钥</param>
+        /// <param name="privateKey">私钥</param>
         /// <returns>授权信息</returns>
-        public static AuthorizationCode Decrypt(string sSource, string publicKey)
+        public static AuthorizationCode Decrypt(string sSource, string privateKey)
         {
             var authorizationCode = new AuthorizationCode();
-            var code = RSACryptoService.DecryptString(sSource, publicKey);
+            var code = RSACryptoService.DecryptString(sSource, privateKey);
 
-            string[] authorizationCodes = code.Split(new string[] {Flag}, StringSplitOptions.RemoveEmptyEntries);
+            string[] authorizationCodes = code.Split(new string[] { Flag }, StringSplitOptions.RemoveEmptyEntries);
             if (authorizationCodes.Length < 5) return authorizationCode;
 
             authorizationCode.CheckCode = authorizationCodes[1];
@@ -119,50 +119,61 @@ namespace Rafy.LicenseManager.Encryption
         /// <para>此方法在验证过期时间时，与本机的当前时间进行对比</para>
         /// </summary>
         /// <param name="sSource">授权码</param>
-        /// <param name="publicKey">公钥</param>
+        /// <param name="privateKey">私钥</param>
         /// <param name="checkCode">校验码</param>
         /// <returns></returns>
-        public static AuthorizationResult Authenticate(string sSource, string publicKey, string checkCode)
+        public static AuthorizationResult Authenticate(string sSource, string privateKey, string checkCode)
         {
-            return Authenticate(sSource, publicKey, checkCode, DateTime.Now);
+            return Authenticate(sSource, privateKey, checkCode, DateTime.Now);
         }
 
         /// <summary>
         /// 验证
         /// </summary>
         /// <param name="sSource">授权码</param>
-        /// <param name="publicKey">公钥</param>
+        /// <param name="privateKey">私钥</param>
         /// <param name="checkCode">校验码</param>
         /// <param name="inspectionTime">校验日期</param>
         /// <returns></returns>
-        public static AuthorizationResult Authenticate(string sSource, string publicKey, string checkCode, DateTime inspectionTime)
+        public static AuthorizationResult Authenticate(string sSource, string privateKey, string checkCode, DateTime inspectionTime)
         {
-            var authorizationCode = Decrypt(sSource, publicKey);
-
-            var result = new AuthorizationResult
+            try
             {
-                AuthorizationState = AuthorizationState.Success,
-                CheckCode = authorizationCode.CheckCode,
-                ExpireTime = authorizationCode.ExpireTime
-            };
+                var authorizationCode = Decrypt(sSource, privateKey);
 
-            if (!string.Equals(checkCode, authorizationCode.CheckCode, StringComparison.CurrentCultureIgnoreCase))
-            {
-                result.AuthorizationState = AuthorizationState.CheckCodeError;
+                var result = new AuthorizationResult
+                {
+                    AuthorizationState = AuthorizationState.Success,
+                    CheckCode = authorizationCode.CheckCode,
+                    ExpireTime = authorizationCode.ExpireTime
+                };
+
+                if (!string.Equals(checkCode, authorizationCode.CheckCode, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    result.AuthorizationState = AuthorizationState.CheckCodeError;
+                    return result;
+                }
+                if (!authorizationCode.ExpireTime.HasValue)
+                {
+                    result.AuthorizationState = AuthorizationState.Expire;
+                    return result;
+                }
+                if (authorizationCode.ExpireTime.Value < inspectionTime)
+                {
+                    result.AuthorizationState = AuthorizationState.Expire;
+                    return result;
+                }
+
                 return result;
             }
-            if (!authorizationCode.ExpireTime.HasValue)
+            catch
             {
-                result.AuthorizationState = AuthorizationState.Expire;
-                return result;
+                return new AuthorizationResult()
+                {
+                    AuthorizationState = AuthorizationState.CheckCodeError,
+                    CheckCode = string.Empty
+                };
             }
-            if (authorizationCode.ExpireTime.Value < inspectionTime)
-            {
-                result.AuthorizationState = AuthorizationState.Expire;
-                return result;
-            }
-
-            return result;
         }
     }
 }

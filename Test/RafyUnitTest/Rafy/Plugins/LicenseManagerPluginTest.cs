@@ -112,10 +112,10 @@ namespace RafyUnitTest
             //生成授权码
             string authenticationCode = SecurityAuthentication.Encrypt(_checkCode, expireTime, 0, _privateKey);
 
-            string errorPublicKey = "<RSAKeyValue><Modulus>nr7rq0sgR0GokC/dTajW0MzTF1KJgeAhyxgMUhylsLcJVHqY4oo2SHs6uDYydfPd4m7t5uaaLmYdXTUfXDz9HNx9YwnuwDWy9GuNy7T9+ONENk/0hlfDs0bJKYgjcycu//QziY6WJi7yBZoTVSNmzj0takyoNqgSKLWhB20yTPk=</Modulus><Exponent>ABCD</Exponent></RSAKeyValue>";
+            string errorPrivateKey = "<RSAKeyValue><Modulus>nr7rq0sgR0GokC/dTajW0MzTF1KJgeAhyxgMUhylsLcJVHqY4oo2SHs6uDYydfPd4m7t5uaaLmYdXTUfXDz9HNx9YwnuwDWy9GuNy7T9+ONENk/0hlfDs0bJKYgjcycu//QziY6WJi7yBZoTVSNmzj0takyoNqgSKLWhB20yTPk=</Modulus><Exponent>ABCD</Exponent></RSAKeyValue>";
 
             //认证
-            AuthorizationResult result = SecurityAuthentication.Authenticate(authenticationCode, errorPublicKey, _checkCode);
+            AuthorizationResult result = SecurityAuthentication.Authenticate(authenticationCode, errorPrivateKey, _checkCode);
 
             Assert.IsTrue(!result.Success, "公钥错误，验证失败！");
         }
