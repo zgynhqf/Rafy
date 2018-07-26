@@ -129,7 +129,12 @@ namespace Rafy.Domain
         {
             get { return this.PersistenceStatus == PersistenceStatus.New; }
         }
-
+        
+        /// <summary>
+        /// 在向 EntityList 里面插入新的 entity 时候，是否将 EntityList 设置为该 entity 的父对象。
+        /// </summary>
+        internal bool NeedParent = true;
+      
         /// <summary>
         /// 标记当前对象为需要保存的状态。
         /// 
