@@ -3550,6 +3550,191 @@ WHERE TABLE1.COLUMN1 = {0} OR (TABLE1.COLUMN2 = {1} OR TABLE1.COLUMN2 = {2}) AND
         }
 
         [TestMethod]
+        public void ORM_SqlTree_Select_Where_In_Str()
+        {
+            var select = new SqlSelect();
+            var table = new SqlTable { TableName = "Table1" };
+            var column1 = new SqlColumn { Table = table, ColumnName = "Column1" };
+            var column2 = new SqlColumn { Table = table, ColumnName = "Column2" };
+            select.Selection = new SqlArray
+            {
+                Items = { column1, column2 }
+            };
+            select.From = table;
+            select.Where = new SqlColumnConstraint
+            {
+                Column = column2,
+                Operator = SqlColumnConstraintOperator.In,
+                Value = new string[] {"Hi","你好","123"}
+            };
+
+            var generator = new SqlServerSqlGenerator();
+            generator.Generate(select);
+            var sql = generator.Sql;
+
+            AssertSqlEqual(sql.ToString(),
+@"SELECT [Table1].[Column1], [Table1].[Column2]
+FROM [Table1]
+WHERE [Table1].[Column2] IN (N'Hi',N'你好',N'123')");
+            Assert.IsTrue(sql.Parameters.Count == 0);
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_Where_AndOr_In_Str()
+        {
+            var select = new SqlSelect();
+            var table = new SqlTable { TableName = "Table1" };
+            var column1 = new SqlColumn { Table = table, ColumnName = "Column1" };
+            var column2 = new SqlColumn { Table = table, ColumnName = "Column2" };
+            var column3 = new SqlColumn { Table = table, ColumnName = "Column3" };
+            select.Selection = new SqlArray
+            {
+                Items = { column1, column2, column3 }
+            };
+            select.From = table;
+            select.Where = new SqlBinaryConstraint
+            {
+                Left = new SqlColumnConstraint
+                {
+                    Column = new SqlColumn { Table = table, ColumnName = "Column3" },
+                    Operator = SqlColumnConstraintOperator.Equal,
+                    Value = "A"
+                },
+                Opeartor = SqlBinaryConstraintType.And,
+                Right = new SqlColumnConstraint
+                {
+                    Column = column2,
+                    Operator = SqlColumnConstraintOperator.In,
+                    Value = new string[] { "Hi", "你好", "123" }
+                }
+            };
+
+            var generator = new SqlServerSqlGenerator();
+            generator.Generate(select);
+            var sql = generator.Sql;
+
+            AssertSqlEqual(sql.ToString(),
+@"SELECT [Table1].[Column1], [Table1].[Column2], [Table1].[Column3]
+FROM [Table1]
+WHERE [Table1].[Column3] = {0} AND [Table1].[Column2] IN (N'Hi',N'你好',N'123')");
+            Assert.IsTrue(sql.Parameters.Count == 1);
+            Assert.IsTrue(sql.Parameters[0].ToString() == "A");
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_Where_AndOr_In_Str_AndOr()
+        {
+            var select = new SqlSelect();
+            var table = new SqlTable { TableName = "Table1" };
+            var column1 = new SqlColumn { Table = table, ColumnName = "Column1" };
+            var column2 = new SqlColumn { Table = table, ColumnName = "Column2" };
+            var column3 = new SqlColumn { Table = table, ColumnName = "Column3" };
+            select.Selection = new SqlArray
+            {
+                Items = { column1, column2, column3 }
+            };
+            select.From = table;
+            select.Where = new SqlBinaryConstraint
+            {
+                Left = new SqlColumnConstraint
+                {
+                    Column = new SqlColumn { Table = table, ColumnName = "Column3" },
+                    Operator = SqlColumnConstraintOperator.Equal,
+                    Value = "A"
+                },
+                Opeartor = SqlBinaryConstraintType.And,
+                Right = new SqlBinaryConstraint
+                {
+                    Left = new SqlColumnConstraint
+                    {
+                        Column = column2,
+                        Operator = SqlColumnConstraintOperator.In,
+                        Value = new string[] { "Hi", "你好", "123" }
+                    },
+                    Opeartor = SqlBinaryConstraintType.Or,
+                    Right = new SqlColumnConstraint
+                    {
+                        Column = new SqlColumn { Table = table, ColumnName = "Column1" },
+                        Operator = SqlColumnConstraintOperator.Equal,
+                        Value = "B"
+                    }
+                }
+            };
+
+            var generator = new SqlServerSqlGenerator();
+            generator.Generate(select);
+            var sql = generator.Sql;
+
+            AssertSqlEqual(sql.ToString(),
+@"SELECT [Table1].[Column1], [Table1].[Column2], [Table1].[Column3]
+FROM [Table1]
+WHERE [Table1].[Column3] = {0} AND ([Table1].[Column2] IN (N'Hi',N'你好',N'123') OR [Table1].[Column1] = {1})");
+            Assert.IsTrue(sql.Parameters.Count == 2);
+            Assert.IsTrue(sql.Parameters[0].ToString() == "A");
+            Assert.IsTrue(sql.Parameters[1].ToString() == "B");
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_Where_In_Int()
+        {
+            var select = new SqlSelect();
+            var table = new SqlTable { TableName = "Table1" };
+            var column1 = new SqlColumn { Table = table, ColumnName = "Column1" };
+            var column2 = new SqlColumn { Table = table, ColumnName = "Column2" };
+            select.Selection = new SqlArray
+            {
+                Items = { column1, column2 }
+            };
+            select.From = table;
+            select.Where = new SqlColumnConstraint
+            {
+                Column = column2,
+                Operator = SqlColumnConstraintOperator.In,
+                Value = new int[] { 1, 2, 3 }
+            };
+
+            var generator = new SqlServerSqlGenerator();
+            generator.Generate(select);
+            var sql = generator.Sql;
+
+            AssertSqlEqual(sql.ToString(),
+@"SELECT [Table1].[Column1], [Table1].[Column2]
+FROM [Table1]
+WHERE [Table1].[Column2] IN (1,2,3)");
+            Assert.IsTrue(sql.Parameters.Count == 0);
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_Where_NotIn_Str()
+        {
+            var select = new SqlSelect();
+            var table = new SqlTable { TableName = "Table1" };
+            var column1 = new SqlColumn { Table = table, ColumnName = "Column1" };
+            var column2 = new SqlColumn { Table = table, ColumnName = "Column2" };
+            select.Selection = new SqlArray
+            {
+                Items = { column1, column2 }
+            };
+            select.From = table;
+            select.Where = new SqlColumnConstraint
+            {
+                Column = column2,
+                Operator = SqlColumnConstraintOperator.NotIn,
+                Value = new string[] { "Hi", "你好", "123" }
+            };
+
+            var generator = new SqlServerSqlGenerator();
+            generator.Generate(select);
+            var sql = generator.Sql;
+
+            AssertSqlEqual(sql.ToString(),
+@"SELECT [Table1].[Column1], [Table1].[Column2]
+FROM [Table1]
+WHERE [Table1].[Column2] NOT IN (N'Hi',N'你好',N'123')");
+            Assert.IsTrue(sql.Parameters.Count == 0);
+        }
+
+        [TestMethod]
         public void ORM_SqlTree_Select_Alias()
         {
             var select = new SqlSelect();
