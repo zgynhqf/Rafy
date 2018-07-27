@@ -21,6 +21,7 @@ using Rafy.Domain.ORM.SqlTree;
 using Rafy.Reflection;
 using Rafy.Utils;
 using UT;
+using Rafy.Domain.ORM.MySql;
 
 namespace RafyUnitTest
 {
@@ -3204,6 +3205,39 @@ WHERE ""TABLE1"".""COLUMN2"" = {0}");
             Assert.IsTrue(sql.Parameters[0].ToString() == "Column2Value");
         }
 
+        /// <summary>
+        /// 生成可用于 MySQL 数据库的一个简单的条件查询语句。
+        /// </summary>
+        [TestMethod]
+        public void ORM_SqlTree_Select_MYSQL()
+        {
+            var select = new SqlSelect();
+            var table = new SqlTable { TableName = "Table1" };
+            var column1 = new SqlColumn { Table = table, ColumnName = "Column1" };
+            var column2 = new SqlColumn { Table = table, ColumnName = "Column2" };
+            select.Selection = new SqlArray
+            {
+                Items = { column1, column2 }
+            };
+            select.From = table;
+            select.Where = new SqlColumnConstraint
+            {
+                Column = column2,
+                Operator = SqlColumnConstraintOperator.Equal,
+                Value = "Column2Value"
+            };
+
+            var generator = new MySqlSqlGenerator();
+            generator.Generate(select);
+            var sql = generator.Sql;
+            AssertSqlEqual(sql.ToString(),
+@"SELECT `Table1`.`Column1`, `Table1`.`Column2`
+FROM `Table1`
+WHERE `Table1`.`Column2` = {0}");
+            Assert.IsTrue(sql.Parameters.Count == 1);
+            Assert.IsTrue(sql.Parameters[0].ToString() == "Column2Value");
+        }
+
         [TestMethod]
         public void ORM_SqlTree_Select_Simplest()
         {
@@ -3233,6 +3267,20 @@ FROM TABLE1");
         }
 
         [TestMethod]
+        public void ORM_SqlTree_Select_Simplest_MYSQL()
+        {
+            var select = new SqlSelect();
+            select.Selection = new SqlSelectAll();
+            select.From = new SqlTable { TableName = "Table1" };
+
+            var generator = new MySqlSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+            AssertSqlEqual(sql.ToString(), @"SELECT *
+FROM Table1");
+        }
+
+        [TestMethod]
         public void ORM_SqlTree_Select_Star()
         {
             var select = new SqlSelect();
@@ -3258,6 +3306,20 @@ FROM Table1");
             var sql = generator.Sql;
             AssertSqlEqual(sql.ToString(), @"SELECT *
 FROM TABLE1");
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_Star_MYSQL()
+        {
+            var select = new SqlSelect();
+            select.Selection = new SqlSelectAll();
+            select.From = new SqlTable { TableName = "Table1" };
+
+            var generator = new MySqlSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+            AssertSqlEqual(sql.ToString(), @"SELECT *
+FROM Table1");
         }
 
         [TestMethod]
@@ -3324,6 +3386,33 @@ WHERE RN >= 1");
         }
 
         [TestMethod]
+        public void ORM_SqlTree_Select_Top_MYSQL()
+        {
+            var select = new SqlSelect();
+            select.Selection = new SqlSelectAll();
+            var t = new SqlTable { TableName = "Table1" }; ;
+            select.From = t;
+            select.OrderBy = new SqlOrderByList
+            {
+                new SqlOrderBy
+                {
+                    Column = new SqlColumn
+                    {
+                        Table = t,
+                        ColumnName = "Id",
+                    }
+                }
+            };
+
+            var generator = new MySqlSqlGenerator { AutoQuota = false };
+            generator.Generate(select, new PagingInfo(1, 10));
+            var sql = generator.Sql;
+            AssertSqlEqual(sql.ToString(), @"SELECT *
+FROM Table1
+ORDER BY Table1.Id ASC LIMIT 0,10");
+        }
+
+        [TestMethod]
         public void ORM_SqlTree_Select_Distinct()
         {
             var select = new SqlSelect();
@@ -3352,6 +3441,20 @@ FROM TABLE1");
         }
 
         [TestMethod]
+        public void ORM_SqlTree_Select_Distinct_MYSQL()
+        {
+            var select = new SqlSelect();
+            select.IsDistinct = true;
+            select.Selection = new SqlSelectAll();
+            select.From = new SqlTable { TableName = "Table1" };
+
+            var generator = new MySqlSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            Assert.IsTrue(generator.Sql.ToString() == @"SELECT DISTINCT *
+FROM Table1");
+        }
+
+        [TestMethod]
         public void ORM_SqlTree_Select_Count()
         {
             var select = new SqlSelect();
@@ -3375,6 +3478,19 @@ FROM Table1");
             generator.Generate(select);
             Assert.IsTrue(generator.Sql.ToString() == @"SELECT COUNT(0)
 FROM TABLE1");
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_Count_MYSQL()
+        {
+            var select = new SqlSelect();
+            select.IsCounting = true;
+            select.From = new SqlTable { TableName = "Table1" };
+
+            var generator = new MySqlSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            Assert.IsTrue(generator.Sql.ToString() == @"SELECT COUNT(0)
+FROM Table1");
         }
 
         [TestMethod]
@@ -3431,6 +3547,35 @@ WHERE Table1.Column2 = {0}");
             AssertSqlEqual(sql.ToString(), @"SELECT TABLE1.COLUMN1, TABLE1.COLUMN2
 FROM TABLE1
 WHERE TABLE1.COLUMN2 = {0}");
+            Assert.IsTrue(sql.Parameters.Count == 1);
+            Assert.IsTrue(sql.Parameters[0].ToString() == "Column2Value");
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_WithoutQuota_MYSQL()
+        {
+            var select = new SqlSelect();
+            var table = new SqlTable { TableName = "Table1" };
+            var column1 = new SqlColumn { Table = table, ColumnName = "Column1" };
+            var column2 = new SqlColumn { Table = table, ColumnName = "Column2" };
+            select.Selection = new SqlArray
+            {
+                Items = { column1, column2 }
+            };
+            select.From = table;
+            select.Where = new SqlColumnConstraint
+            {
+                Column = column2,
+                Operator = SqlColumnConstraintOperator.Equal,
+                Value = "Column2Value"
+            };
+
+            var generator = new MySqlSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+            AssertSqlEqual(sql.ToString(), @"SELECT Table1.Column1, Table1.Column2
+FROM Table1
+WHERE Table1.Column2 = {0}");
             Assert.IsTrue(sql.Parameters.Count == 1);
             Assert.IsTrue(sql.Parameters[0].ToString() == "Column2Value");
         }
@@ -3550,6 +3695,248 @@ WHERE TABLE1.COLUMN1 = {0} OR (TABLE1.COLUMN2 = {1} OR TABLE1.COLUMN2 = {2}) AND
         }
 
         [TestMethod]
+        public void ORM_SqlTree_Select_Where_AndOr_MYSQL()
+        {
+            var select = new SqlSelect();
+            var table = new SqlTable { TableName = "Table1" };
+            select.Selection = new SqlSelectAll();
+            select.From = table;
+            select.Where = new SqlBinaryConstraint
+            {
+                Left = new SqlColumnConstraint
+                {
+                    Column = new SqlColumn { Table = table, ColumnName = "Column1" },
+                    Operator = SqlColumnConstraintOperator.Equal,
+                    Value = "A"
+                },
+                Opeartor = SqlBinaryConstraintType.Or,
+                Right = new SqlBinaryConstraint
+                {
+                    Left = new SqlBinaryConstraint
+                    {
+                        Left = new SqlColumnConstraint
+                        {
+                            Column = new SqlColumn { Table = table, ColumnName = "Column2" },
+                            Operator = SqlColumnConstraintOperator.Equal,
+                            Value = "A2"
+                        },
+                        Opeartor = SqlBinaryConstraintType.Or,
+                        Right = new SqlColumnConstraint
+                        {
+                            Column = new SqlColumn { Table = table, ColumnName = "Column2" },
+                            Operator = SqlColumnConstraintOperator.Equal,
+                            Value = "B2"
+                        }
+                    },
+                    Opeartor = SqlBinaryConstraintType.And,
+                    Right = new SqlColumnConstraint
+                    {
+                        Column = new SqlColumn { Table = table, ColumnName = "Column1" },
+                        Operator = SqlColumnConstraintOperator.Equal,
+                        Value = "B"
+                    }
+                }
+            };
+
+            var generator = new MySqlSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+            AssertSqlEqual(sql.ToString(), @"SELECT *
+FROM Table1
+WHERE Table1.Column1 = {0} OR (Table1.Column2 = {1} OR Table1.Column2 = {2}) AND Table1.Column1 = {3}");
+            Assert.IsTrue(sql.Parameters.Count == 4);
+            Assert.IsTrue(sql.Parameters[0].ToString() == "A");
+            Assert.IsTrue(sql.Parameters[1].ToString() == "A2");
+            Assert.IsTrue(sql.Parameters[2].ToString() == "B2");
+            Assert.IsTrue(sql.Parameters[3].ToString() == "B");
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_Where_In_Str()
+        {
+            var select = new SqlSelect();
+            var table = new SqlTable { TableName = "Table1" };
+            var column1 = new SqlColumn { Table = table, ColumnName = "Column1" };
+            var column2 = new SqlColumn { Table = table, ColumnName = "Column2" };
+            select.Selection = new SqlArray
+            {
+                Items = { column1, column2 }
+            };
+            select.From = table;
+            select.Where = new SqlColumnConstraint
+            {
+                Column = column2,
+                Operator = SqlColumnConstraintOperator.In,
+                Value = new string[] {"Hi","你好","123"}
+            };
+
+            var generator = new SqlServerSqlGenerator();
+            generator.Generate(select);
+            var sql = generator.Sql;
+
+            AssertSqlEqual(sql.ToString(),
+@"SELECT [Table1].[Column1], [Table1].[Column2]
+FROM [Table1]
+WHERE [Table1].[Column2] IN (N'Hi',N'你好',N'123')");
+            Assert.IsTrue(sql.Parameters.Count == 0);
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_Where_AndOr_In_Str()
+        {
+            var select = new SqlSelect();
+            var table = new SqlTable { TableName = "Table1" };
+            var column1 = new SqlColumn { Table = table, ColumnName = "Column1" };
+            var column2 = new SqlColumn { Table = table, ColumnName = "Column2" };
+            var column3 = new SqlColumn { Table = table, ColumnName = "Column3" };
+            select.Selection = new SqlArray
+            {
+                Items = { column1, column2, column3 }
+            };
+            select.From = table;
+            select.Where = new SqlBinaryConstraint
+            {
+                Left = new SqlColumnConstraint
+                {
+                    Column = new SqlColumn { Table = table, ColumnName = "Column3" },
+                    Operator = SqlColumnConstraintOperator.Equal,
+                    Value = "A"
+                },
+                Opeartor = SqlBinaryConstraintType.And,
+                Right = new SqlColumnConstraint
+                {
+                    Column = column2,
+                    Operator = SqlColumnConstraintOperator.In,
+                    Value = new string[] { "Hi", "你好", "123" }
+                }
+            };
+
+            var generator = new SqlServerSqlGenerator();
+            generator.Generate(select);
+            var sql = generator.Sql;
+
+            AssertSqlEqual(sql.ToString(),
+@"SELECT [Table1].[Column1], [Table1].[Column2], [Table1].[Column3]
+FROM [Table1]
+WHERE [Table1].[Column3] = {0} AND [Table1].[Column2] IN (N'Hi',N'你好',N'123')");
+            Assert.IsTrue(sql.Parameters.Count == 1);
+            Assert.IsTrue(sql.Parameters[0].ToString() == "A");
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_Where_AndOr_In_Str_AndOr()
+        {
+            var select = new SqlSelect();
+            var table = new SqlTable { TableName = "Table1" };
+            var column1 = new SqlColumn { Table = table, ColumnName = "Column1" };
+            var column2 = new SqlColumn { Table = table, ColumnName = "Column2" };
+            var column3 = new SqlColumn { Table = table, ColumnName = "Column3" };
+            select.Selection = new SqlArray
+            {
+                Items = { column1, column2, column3 }
+            };
+            select.From = table;
+            select.Where = new SqlBinaryConstraint
+            {
+                Left = new SqlColumnConstraint
+                {
+                    Column = new SqlColumn { Table = table, ColumnName = "Column3" },
+                    Operator = SqlColumnConstraintOperator.Equal,
+                    Value = "A"
+                },
+                Opeartor = SqlBinaryConstraintType.And,
+                Right = new SqlBinaryConstraint
+                {
+                    Left = new SqlColumnConstraint
+                    {
+                        Column = column2,
+                        Operator = SqlColumnConstraintOperator.In,
+                        Value = new string[] { "Hi", "你好", "123" }
+                    },
+                    Opeartor = SqlBinaryConstraintType.Or,
+                    Right = new SqlColumnConstraint
+                    {
+                        Column = new SqlColumn { Table = table, ColumnName = "Column1" },
+                        Operator = SqlColumnConstraintOperator.Equal,
+                        Value = "B"
+                    }
+                }
+            };
+
+            var generator = new SqlServerSqlGenerator();
+            generator.Generate(select);
+            var sql = generator.Sql;
+
+            AssertSqlEqual(sql.ToString(),
+@"SELECT [Table1].[Column1], [Table1].[Column2], [Table1].[Column3]
+FROM [Table1]
+WHERE [Table1].[Column3] = {0} AND ([Table1].[Column2] IN (N'Hi',N'你好',N'123') OR [Table1].[Column1] = {1})");
+            Assert.IsTrue(sql.Parameters.Count == 2);
+            Assert.IsTrue(sql.Parameters[0].ToString() == "A");
+            Assert.IsTrue(sql.Parameters[1].ToString() == "B");
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_Where_In_Int()
+        {
+            var select = new SqlSelect();
+            var table = new SqlTable { TableName = "Table1" };
+            var column1 = new SqlColumn { Table = table, ColumnName = "Column1" };
+            var column2 = new SqlColumn { Table = table, ColumnName = "Column2" };
+            select.Selection = new SqlArray
+            {
+                Items = { column1, column2 }
+            };
+            select.From = table;
+            select.Where = new SqlColumnConstraint
+            {
+                Column = column2,
+                Operator = SqlColumnConstraintOperator.In,
+                Value = new int[] { 1, 2, 3 }
+            };
+
+            var generator = new SqlServerSqlGenerator();
+            generator.Generate(select);
+            var sql = generator.Sql;
+
+            AssertSqlEqual(sql.ToString(),
+@"SELECT [Table1].[Column1], [Table1].[Column2]
+FROM [Table1]
+WHERE [Table1].[Column2] IN (1,2,3)");
+            Assert.IsTrue(sql.Parameters.Count == 0);
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_Where_NotIn_Str()
+        {
+            var select = new SqlSelect();
+            var table = new SqlTable { TableName = "Table1" };
+            var column1 = new SqlColumn { Table = table, ColumnName = "Column1" };
+            var column2 = new SqlColumn { Table = table, ColumnName = "Column2" };
+            select.Selection = new SqlArray
+            {
+                Items = { column1, column2 }
+            };
+            select.From = table;
+            select.Where = new SqlColumnConstraint
+            {
+                Column = column2,
+                Operator = SqlColumnConstraintOperator.NotIn,
+                Value = new string[] { "Hi", "你好", "123" }
+            };
+
+            var generator = new SqlServerSqlGenerator();
+            generator.Generate(select);
+            var sql = generator.Sql;
+
+            AssertSqlEqual(sql.ToString(),
+@"SELECT [Table1].[Column1], [Table1].[Column2]
+FROM [Table1]
+WHERE [Table1].[Column2] NOT IN (N'Hi',N'你好',N'123')");
+            Assert.IsTrue(sql.Parameters.Count == 0);
+        }
+
+        [TestMethod]
         public void ORM_SqlTree_Select_Alias()
         {
             var select = new SqlSelect();
@@ -3603,6 +3990,35 @@ WHERE t1.Column2 = {0}");
             AssertSqlEqual(sql.ToString(), @"SELECT T1.COLUMN1 C1, T1.COLUMN2 C2
 FROM TABLE1 T1
 WHERE T1.COLUMN2 = {0}");
+            Assert.IsTrue(sql.Parameters.Count == 1);
+            Assert.IsTrue(sql.Parameters[0].ToString() == "Column2Value");
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_Alias_MYSQL()
+        {
+            var select = new SqlSelect();
+            var table = new SqlTable { TableName = "Table1", Alias = "t1" };
+            var column1 = new SqlColumn { Table = table, ColumnName = "Column1", Alias = "c1" };
+            var column2 = new SqlColumn { Table = table, ColumnName = "Column2", Alias = "c2" };
+            select.Selection = new SqlArray
+            {
+                Items = { column1, column2 }
+            };
+            select.From = table;
+            select.Where = new SqlColumnConstraint
+            {
+                Column = column2,
+                Operator = SqlColumnConstraintOperator.Equal,
+                Value = "Column2Value"
+            };
+
+            var generator = new MySqlSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+            AssertSqlEqual(sql.ToString(), @"SELECT t1.Column1 AS c1, t1.Column2 AS c2
+FROM Table1 AS t1
+WHERE t1.Column2 = {0}");
             Assert.IsTrue(sql.Parameters.Count == 1);
             Assert.IsTrue(sql.Parameters[0].ToString() == "Column2Value");
         }
@@ -3679,6 +4095,44 @@ ORDER BY t1.Column2 DESC");
 FROM TABLE1 T1
 WHERE T1.COLUMN2 = {0}
 ORDER BY T1.COLUMN2 DESC");
+            Assert.IsTrue(sql.Parameters.Count == 1);
+            Assert.IsTrue(sql.Parameters[0].ToString() == "Column2Value");
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_OrderBy_MYSQL()
+        {
+            var select = new SqlSelect();
+            var table = new SqlTable { TableName = "Table1", Alias = "t1" };
+            var column1 = new SqlColumn { Table = table, ColumnName = "Column1", Alias = "c1" };
+            var column2 = new SqlColumn { Table = table, ColumnName = "Column2", Alias = "c2" };
+            select.Selection = new SqlArray
+            {
+                Items = { column1, column2 }
+            };
+            select.From = table;
+            select.Where = new SqlColumnConstraint
+            {
+                Column = column2,
+                Operator = SqlColumnConstraintOperator.Equal,
+                Value = "Column2Value"
+            };
+            select.OrderBy = new SqlOrderByList
+            {
+                new SqlOrderBy
+                {
+                    Column = column2,
+                    Direction = OrderDirection.Descending
+                }
+            };
+
+            var generator = new MySqlSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+            AssertSqlEqual(sql.ToString(), @"SELECT t1.Column1 AS c1, t1.Column2 AS c2
+FROM Table1 AS t1
+WHERE t1.Column2 = {0}
+ORDER BY t1.Column2 DESC");
             Assert.IsTrue(sql.Parameters.Count == 1);
             Assert.IsTrue(sql.Parameters[0].ToString() == "Column2Value");
         }
@@ -3770,6 +4224,49 @@ ORDER BY T1.COLUMN1 ASC, T1.COLUMN2 DESC");
         }
 
         [TestMethod]
+        public void ORM_SqlTree_Select_OrderBy2_MYSQL()
+        {
+            var select = new SqlSelect();
+            var table = new SqlTable { TableName = "Table1", Alias = "t1" };
+            var column1 = new SqlColumn { Table = table, ColumnName = "Column1", Alias = "c1" };
+            var column2 = new SqlColumn { Table = table, ColumnName = "Column2", Alias = "c2" };
+            select.Selection = new SqlArray
+            {
+                Items = { column1, column2 }
+            };
+            select.From = table;
+            select.Where = new SqlColumnConstraint
+            {
+                Column = column2,
+                Operator = SqlColumnConstraintOperator.Equal,
+                Value = "Column2Value"
+            };
+            select.OrderBy = new SqlOrderByList
+            {
+                new SqlOrderBy
+                {
+                    Column = column1,
+                    Direction = OrderDirection.Ascending
+                },
+                new SqlOrderBy
+                {
+                    Column = column2,
+                    Direction = OrderDirection.Descending
+                }
+            };
+
+            var generator = new MySqlSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+            AssertSqlEqual(sql.ToString(), @"SELECT t1.Column1 AS c1, t1.Column2 AS c2
+FROM Table1 AS t1
+WHERE t1.Column2 = {0}
+ORDER BY t1.Column1 ASC, t1.Column2 DESC");
+            Assert.IsTrue(sql.Parameters.Count == 1);
+            Assert.IsTrue(sql.Parameters[0].ToString() == "Column2Value");
+        }
+
+        [TestMethod]
         public void ORM_SqlTree_Select_InnerJoin()
         {
             var select = new SqlSelect();
@@ -3851,6 +4348,49 @@ WHERE u.UserName = {0}");
 FROM ARTICLE A
     INNER JOIN USER U ON A.USERID = U.ID
 WHERE U.USERNAME = {0}");
+            Assert.IsTrue(sql.Parameters.Count == 1);
+            Assert.IsTrue(sql.Parameters[0].ToString() == "HuQingfang");
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_InnerJoin_MYSQL()
+        {
+            var select = new SqlSelect();
+            var table = new SqlTable { TableName = "Article", Alias = "a" };
+            var userTable = new SqlTable { TableName = "User", Alias = "u" };
+            select.Selection = new SqlArray
+            {
+                Items =
+                {
+                    new SqlSelectAll{ Table = table },
+                    new SqlSelectAll{ Table = userTable },
+                }
+            };
+            select.From = new SqlJoin
+            {
+                Left = table,
+                JoinType = SqlJoinType.Inner,
+                Right = userTable,
+                Condition = new SqlColumnsComparisonConstraint
+                {
+                    LeftColumn = new SqlColumn { Table = table, ColumnName = "UserId" },
+                    RightColumn = new SqlColumn { Table = userTable, ColumnName = "Id" },
+                }
+            };
+            select.Where = new SqlColumnConstraint
+            {
+                Column = new SqlColumn { Table = userTable, ColumnName = "UserName" },
+                Operator = SqlColumnConstraintOperator.Equal,
+                Value = "HuQingfang"
+            };
+
+            var generator = new MySqlSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+            AssertSqlEqual(sql.ToString(), @"SELECT a.*, u.*
+FROM Article AS a
+    INNER JOIN User AS u ON a.UserId = u.Id
+WHERE u.UserName = {0}");
             Assert.IsTrue(sql.Parameters.Count == 1);
             Assert.IsTrue(sql.Parameters[0].ToString() == "HuQingfang");
         }
@@ -3952,6 +4492,54 @@ WHERE U2.USERNAME = {0}");
         }
 
         [TestMethod]
+        public void ORM_SqlTree_Select_InnerJoin_TwoToSingleTable_MYSQL()
+        {
+            var select = new SqlSelect();
+            var table = new SqlTable { TableName = "Article", Alias = "a" };
+            var userTable1 = new SqlTable { TableName = "User", Alias = "u1" };
+            var userTable2 = new SqlTable { TableName = "User", Alias = "u2" };
+            select.Selection = new SqlSelectAll { Table = table };
+            select.From = new SqlJoin
+            {
+                Left = new SqlJoin
+                {
+                    Left = table,
+                    JoinType = SqlJoinType.Inner,
+                    Right = userTable1,
+                    Condition = new SqlColumnsComparisonConstraint
+                    {
+                        LeftColumn = new SqlColumn { Table = table, ColumnName = "UserId" },
+                        RightColumn = new SqlColumn { Table = userTable1, ColumnName = "Id" },
+                    }
+                },
+                JoinType = SqlJoinType.Inner,
+                Right = userTable2,
+                Condition = new SqlColumnsComparisonConstraint
+                {
+                    LeftColumn = new SqlColumn { Table = table, ColumnName = "AdministratorId" },
+                    RightColumn = new SqlColumn { Table = userTable2, ColumnName = "Id" },
+                }
+            };
+            select.Where = new SqlColumnConstraint
+            {
+                Column = new SqlColumn { Table = userTable2, ColumnName = "UserName" },
+                Operator = SqlColumnConstraintOperator.Equal,
+                Value = "HuQingfang"
+            };
+
+            var generator = new MySqlSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+            AssertSqlEqual(sql.ToString(), @"SELECT a.*
+FROM Article AS a
+    INNER JOIN User AS u1 ON a.UserId = u1.Id
+    INNER JOIN User AS u2 ON a.AdministratorId = u2.Id
+WHERE u2.UserName = {0}");
+            Assert.IsTrue(sql.Parameters.Count == 1);
+            Assert.IsTrue(sql.Parameters[0].ToString() == "HuQingfang");
+        }
+
+        [TestMethod]
         public void ORM_SqlTree_Select_OuterJoin()
         {
             var select = new SqlSelect();
@@ -4019,6 +4607,42 @@ WHERE u.UserName = {0}");
 FROM ARTICLE A
     LEFT OUTER JOIN USER U ON A.USERID = U.ID
 WHERE U.USERNAME = {0}");
+            Assert.IsTrue(sql.Parameters.Count == 1);
+            Assert.IsTrue(sql.Parameters[0].ToString() == "HuQingfang");
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_OuterJoin_MYSQL()
+        {
+            var select = new SqlSelect();
+            var table = new SqlTable { TableName = "Article", Alias = "a" };
+            var userTable = new SqlTable { TableName = "User", Alias = "u" };
+            select.Selection = new SqlSelectAll { Table = table };
+            select.From = new SqlJoin
+            {
+                Left = table,
+                JoinType = SqlJoinType.LeftOuter,
+                Right = userTable,
+                Condition = new SqlColumnsComparisonConstraint
+                {
+                    LeftColumn = new SqlColumn { Table = table, ColumnName = "UserId" },
+                    RightColumn = new SqlColumn { Table = userTable, ColumnName = "Id" },
+                }
+            };
+            select.Where = new SqlColumnConstraint
+            {
+                Column = new SqlColumn { Table = userTable, ColumnName = "UserName" },
+                Operator = SqlColumnConstraintOperator.Equal,
+                Value = "HuQingfang"
+            };
+
+            var generator = new MySqlSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+            AssertSqlEqual(sql.ToString(), @"SELECT a.*
+FROM Article AS a
+    LEFT OUTER JOIN User AS u ON a.UserId = u.Id
+WHERE u.UserName = {0}");
             Assert.IsTrue(sql.Parameters.Count == 1);
             Assert.IsTrue(sql.Parameters[0].ToString() == "HuQingfang");
         }
@@ -4100,6 +4724,47 @@ WHERE USER.ID IN (
     SELECT ARTICLE.USERID
     FROM ARTICLE
     WHERE ARTICLE.CREATEDATE = {0}
+)");
+            Assert.IsTrue(sql.Parameters.Count == 1);
+            Assert.IsTrue(sql.Parameters[0].Equals(DateTime.Today));
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_InSubSelect_MYSQL()
+        {
+            var select = new SqlSelect();
+            var articleTable = new SqlTable { TableName = "Article" };
+            var subSelect = new SqlSelect
+            {
+                Selection = new SqlColumn { Table = articleTable, ColumnName = "UserId" },
+                From = articleTable,
+                Where = new SqlColumnConstraint
+                {
+                    Column = new SqlColumn { Table = articleTable, ColumnName = "CreateDate" },
+                    Operator = SqlColumnConstraintOperator.Equal,
+                    Value = DateTime.Today
+                }
+            };
+
+            var userTable = new SqlTable { TableName = "User" };
+            select.Selection = new SqlSelectAll();
+            select.From = userTable;
+            select.Where = new SqlColumnConstraint
+            {
+                Column = new SqlColumn { Table = userTable, ColumnName = "Id" },
+                Operator = SqlColumnConstraintOperator.In,
+                Value = subSelect
+            };
+
+            var generator = new MySqlSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+            AssertSqlEqual(sql.ToString(), @"SELECT *
+FROM User
+WHERE User.Id IN (
+    SELECT Article.UserId
+    FROM Article
+    WHERE Article.CreateDate = {0}
 )");
             Assert.IsTrue(sql.Parameters.Count == 1);
             Assert.IsTrue(sql.Parameters[0].Equals(DateTime.Today));
@@ -4212,6 +4877,59 @@ WHERE USER.ID IN (
         }
 
         [TestMethod]
+        public void ORM_SqlTree_Select_InSubSelect_Join_MYSQL()
+        {
+            var select = new SqlSelect();
+            var adminTable = new SqlTable { TableName = "User", Alias = "Administrator" };
+            var articleTable = new SqlTable { TableName = "Article" };
+            var subSelect = new SqlSelect
+            {
+                Selection = new SqlColumn { Table = articleTable, ColumnName = "UserId" },
+                From = new SqlJoin
+                {
+                    Left = articleTable,
+                    JoinType = SqlJoinType.Inner,
+                    Right = adminTable,
+                    Condition = new SqlColumnsComparisonConstraint
+                    {
+                        LeftColumn = new SqlColumn { Table = articleTable, ColumnName = "AdministratorId" },
+                        RightColumn = new SqlColumn { Table = adminTable, ColumnName = "Id" },
+                    }
+                },
+                Where = new SqlColumnConstraint
+                {
+                    Column = new SqlColumn { Table = adminTable, ColumnName = "Id" },
+                    Operator = SqlColumnConstraintOperator.Equal,
+                    Value = 1
+                }
+            };
+
+            var userTable = new SqlTable { TableName = "User" };
+            select.Selection = new SqlSelectAll();
+            select.From = userTable;
+            select.Where = new SqlColumnConstraint
+            {
+                Column = new SqlColumn { Table = userTable, ColumnName = "Id" },
+                Operator = SqlColumnConstraintOperator.In,
+                Value = subSelect
+            };
+
+            var generator = new MySqlSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+            AssertSqlEqual(sql.ToString(), @"SELECT *
+FROM User
+WHERE User.Id IN (
+    SELECT Article.UserId
+    FROM Article
+        INNER JOIN User AS Administrator ON Article.AdministratorId = Administrator.Id
+    WHERE Administrator.Id = {0}
+)");
+            Assert.IsTrue(sql.Parameters.Count == 1);
+            Assert.IsTrue(sql.Parameters[0].Equals(1));
+        }
+
+        [TestMethod]
         public void ORM_SqlTree_Select_ChildrenExists()
         {
             var articleTable = new SqlTable { TableName = "Article" };
@@ -4296,6 +5014,50 @@ WHERE U.ID > {0} AND EXISTS (
     SELECT 0
     FROM ARTICLE
     WHERE ARTICLE.USERID = U.ID
+)");
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_ChildrenExists_MYSQL()
+        {
+            var articleTable = new SqlTable { TableName = "Article" };
+            var userTable = new SqlTable { TableName = "User", Alias = "u" };
+            var select = new SqlSelect();
+            select.Selection = new SqlSelectAll();
+            select.From = userTable;
+            select.Where = new SqlBinaryConstraint
+            {
+                Left = new SqlColumnConstraint
+                {
+                    Column = new SqlColumn { Table = userTable, ColumnName = "Id" },
+                    Operator = SqlColumnConstraintOperator.Greater,
+                    Value = 0
+                },
+                Opeartor = SqlBinaryConstraintType.And,
+                Right = new SqlExistsConstraint
+                {
+                    Select = new SqlSelect
+                    {
+                        Selection = new SqlLiteral { FormattedSql = "0" },
+                        From = articleTable,
+                        Where = new SqlColumnsComparisonConstraint
+                        {
+                            LeftColumn = new SqlColumn { Table = articleTable, ColumnName = "UserId" },
+                            RightColumn = new SqlColumn { Table = userTable, ColumnName = "Id" }
+                        }
+                    }
+                }
+            };
+
+            var generator = new MySqlSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+            AssertSqlEqual(sql.ToString(), @"SELECT *
+FROM User AS u
+WHERE u.Id > {0} AND EXISTS (
+    SELECT 0
+    FROM Article
+    WHERE Article.UserId = u.Id
 )");
         }
 
@@ -4418,6 +5180,65 @@ WHERE U.ID > {0} AND NOT (EXISTS (
         }
 
         [TestMethod]
+        public void ORM_SqlTree_Select_ChildrenAll_MYSQL()
+        {
+            var articleTable = new SqlTable { TableName = "Article" };
+            var userTable = new SqlTable { TableName = "User", Alias = "u" };
+            var select = new SqlSelect
+            {
+                Selection = new SqlSelectAll(),
+                From = userTable,
+                Where = new SqlBinaryConstraint
+                {
+                    Left = new SqlColumnConstraint
+                    {
+                        Column = new SqlColumn { Table = userTable, ColumnName = "Id" },
+                        Operator = SqlColumnConstraintOperator.Greater,
+                        Value = 0
+                    },
+                    Opeartor = SqlBinaryConstraintType.And,
+                    Right = new SqlNotConstraint
+                    {
+                        Constraint = new SqlExistsConstraint
+                        {
+                            Select = new SqlSelect
+                            {
+                                Selection = new SqlLiteral { FormattedSql = "0" },
+                                From = articleTable,
+                                Where = new SqlBinaryConstraint
+                                {
+                                    Left = new SqlColumnsComparisonConstraint
+                                    {
+                                        LeftColumn = new SqlColumn { Table = articleTable, ColumnName = "UserId" },
+                                        RightColumn = new SqlColumn { Table = userTable, ColumnName = "Id" }
+                                    },
+                                    Opeartor = SqlBinaryConstraintType.And,
+                                    Right = new SqlColumnConstraint
+                                    {
+                                        Column = new SqlColumn { Table = articleTable, ColumnName = "Id" },
+                                        Operator = SqlColumnConstraintOperator.Greater,
+                                        Value = 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var generator = new MySqlSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+            AssertSqlEqual(sql.ToString(), @"SELECT *
+FROM User AS u
+WHERE u.Id > {0} AND NOT (EXISTS (
+    SELECT 0
+    FROM Article
+    WHERE Article.UserId = u.Id AND Article.Id > {1}
+))");
+        }
+
+        [TestMethod]
         public void ORM_SqlTree_Select_SelectFromSelectResult()
         {
             var userTable = new SqlTable { TableName = "User" };
@@ -4501,6 +5322,49 @@ FROM (
     WHERE USER.ID > {0}
 ) T
 WHERE T.ID < {1}");
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_SelectFromSelectResult_MYSQL()
+        {
+            var userTable = new SqlTable { TableName = "User" };
+            var subSelectRef = new SqlSubSelect
+            {
+                Select = new SqlSelect
+                {
+                    Selection = new SqlSelectAll(),
+                    From = userTable,
+                    Where = new SqlColumnConstraint
+                    {
+                        Column = new SqlColumn { Table = userTable, ColumnName = "Id" },
+                        Operator = SqlColumnConstraintOperator.Greater,
+                        Value = 0
+                    }
+                },
+                Alias = "T"
+            };
+
+            var select = new SqlSelect();
+            select.Selection = new SqlSelectAll();
+            select.From = subSelectRef;
+            select.Where = new SqlColumnConstraint
+            {
+                Column = new SqlColumn { Table = subSelectRef, ColumnName = "Id" },
+                Operator = SqlColumnConstraintOperator.Less,
+                Value = 100
+            };
+
+            var generator = new MySqlSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+
+            AssertSqlEqual(sql.ToString(), @"SELECT *
+FROM (
+    SELECT *
+    FROM User
+    WHERE User.Id > {0}
+) AS T
+WHERE T.Id < {1}");
         }
 
         [TestMethod]
@@ -4616,6 +5480,52 @@ WHERE RN >= 21");
         }
 
         [TestMethod]
+        public void ORM_SqlTree_Select_Paging_MYSQL()
+        {
+            var table = new SqlTable { TableName = "ASN" };
+
+            var select = new SqlSelect
+            {
+                Selection = new SqlSelectAll(),
+                From = table,
+                Where = new SqlColumnConstraint
+                {
+                    Column = new SqlColumn { Table = table, ColumnName = Entity.IdProperty.Name },
+                    Operator = SqlColumnConstraintOperator.Greater,
+                    Value = 0
+                },
+                OrderBy = new SqlOrderByList
+                {
+                    Items =
+                    {
+                        new SqlOrderBy
+                        {
+                            Column = new SqlColumn{ Table = table, ColumnName = "AsnCode" },
+                            Direction = OrderDirection.Ascending
+                        }
+                    }
+                }
+            };
+            var generator = new MySqlSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+            AssertSqlEqual(sql.ToString(),
+@"SELECT *
+FROM ASN
+WHERE ASN.Id > {0}
+ORDER BY ASN.AsnCode ASC");
+
+            generator = new MySqlSqlGenerator { AutoQuota = false };
+            generator.Generate(select, new PagingInfo(3, 10));
+            var pagingSql = generator.Sql;
+            AssertSqlEqual(pagingSql.ToString(),
+@"SELECT *
+FROM ASN
+WHERE ASN.Id > {0}
+ORDER BY ASN.AsnCode ASC LIMIT 20,10");
+        }
+
+        [TestMethod]
         public void ORM_SqlTree_Select_Paging_PageNumer1()
         {
             var table = new SqlTable { TableName = "ASN" };
@@ -4714,6 +5624,52 @@ ORDER BY ASN.ASNCODE ASC
     WHERE ROWNUM <= 10
 )
 WHERE RN >= 1");
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_Paging_PageNumer1_MYSQL()
+        {
+            var table = new SqlTable { TableName = "ASN" };
+
+            var select = new SqlSelect
+            {
+                Selection = new SqlSelectAll(),
+                From = table,
+                Where = new SqlColumnConstraint
+                {
+                    Column = new SqlColumn { Table = table, ColumnName = Entity.IdProperty.Name },
+                    Operator = SqlColumnConstraintOperator.Greater,
+                    Value = 0
+                },
+                OrderBy = new SqlOrderByList
+                {
+                    Items =
+                    {
+                        new SqlOrderBy
+                        {
+                            Column = new SqlColumn{ Table = table, ColumnName = "AsnCode" },
+                            Direction = OrderDirection.Ascending
+                        }
+                    }
+                }
+            };
+            var generator = new MySqlSqlGenerator { AutoQuota = false };
+            generator.Generate(select);
+            var sql = generator.Sql;
+            AssertSqlEqual(sql.ToString(),
+@"SELECT *
+FROM ASN
+WHERE ASN.Id > {0}
+ORDER BY ASN.AsnCode ASC");
+
+            generator = new MySqlSqlGenerator { AutoQuota = false };
+            generator.Generate(select, new PagingInfo(1, 10));
+            var pagingSql = generator.Sql;
+            AssertSqlEqual(pagingSql.ToString(),
+@"SELECT *
+FROM ASN
+WHERE ASN.Id > {0}
+ORDER BY ASN.AsnCode ASC LIMIT 0,10");
         }
 
         /// <summary>
@@ -4836,6 +5792,30 @@ WHERE [Book].[Code] = {0}");
 @"SELECT ""BOOK"".""CODE"", ""BOOK"".""NAME""
 FROM ""BOOK""
 WHERE ""BOOK"".""CODE"" = {0}");
+            Assert.IsTrue(sql.Parameters.Count == 1);
+            Assert.IsTrue(sql.Parameters[0].ToString() == "code");
+        }
+
+        [TestMethod]
+        public void ORM_TableQuery_MySql()
+        {
+            var f = QueryFactory.Instance;
+            var table = f.Table<Book>();
+            var code = table.Column(Book.CodeProperty);
+            var name = table.Column(Book.NameProperty);
+            var query = f.Query(
+                selection: f.Array(code, name),
+                from: table,
+                where: f.Constraint(column: code, value: "code", op: PropertyOperator.Equal)
+            );
+
+            var generator = new MySqlSqlGenerator();
+            f.Generate(generator, query);
+            var sql = generator.Sql;
+            AssertSqlEqual(sql.ToString(),
+@"SELECT `Book`.`Code`, `Book`.`Name`
+FROM `Book`
+WHERE `Book`.`Code` = {0}");
             Assert.IsTrue(sql.Parameters.Count == 1);
             Assert.IsTrue(sql.Parameters[0].ToString() == "code");
         }
