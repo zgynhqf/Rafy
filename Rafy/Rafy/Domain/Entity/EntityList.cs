@@ -156,7 +156,7 @@ namespace Rafy.Domain
         /// <summary>
         /// 是否：在添加每一项时，设置实体的 <see cref="IEntity.ParentList"/> 为当前列表，并设置它的父对象为本列表对象的父对象。
         /// </summary>
-        internal bool ResetItemParent;
+        internal bool ResetItemParent = true;
 
         #region Insert, Remove, Clear
 
@@ -343,7 +343,7 @@ namespace Rafy.Domain
 
         private void SetItemParent(Entity item)
         {
-            var needParent = item != null && this.ResetItemParent;
+            var needParent = item != null && item.NeedParent && ResetItemParent;
             if (needParent)
             {
                 (item as IDomainComponent).SetParent(this);
@@ -357,7 +357,7 @@ namespace Rafy.Domain
 
         private void ClearItemParent(Entity item)
         {
-            var needParent = item != null && this.ResetItemParent;
+            var needParent = item != null && item.NeedParent && ResetItemParent;
             if (needParent)
             {
                 (item as IDomainComponent).SetParent(null);
