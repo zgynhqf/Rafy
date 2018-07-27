@@ -42,6 +42,9 @@
     <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Rafy">
+      <HintPath>..\..\..\Rafy\bin\Debug\net45\Rafy.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -165,10 +168,6 @@
     <Resource Include="_ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Rafy\Rafy.csproj">
-      <Project>{966a5bf2-d690-426b-ad68-ad868bb8f855}</Project>
-      <Name>Rafy</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Rafy.EntityObjectModel\Rafy.EntityObjectModel.csproj">
       <Project>{fcece939-5a33-44ba-b0fb-799d8efca7bf}</Project>
       <Name>Rafy.EntityObjectModel</Name>

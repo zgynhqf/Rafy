@@ -39,6 +39,9 @@
     <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Rafy">
+      <HintPath>..\..\Rafy\bin\Debug\net45\Rafy.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -71,12 +74,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Hxy Key.snk" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Rafy\Rafy.csproj">
-      <Project>{966a5bf2-d690-426b-ad68-ad868bb8f855}</Project>
-      <Name>Rafy</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
