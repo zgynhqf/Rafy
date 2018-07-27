@@ -547,7 +547,7 @@ namespace Rafy.Domain
                         for (int i = 0, c = srcNodes.Count; i < c; i++)
                         {
                             var src = srcNodes[i];
-                            var temp = src.TreePId;
+
                             Entity entity = null;
                             if (repo != null)
                             {
@@ -558,11 +558,13 @@ namespace Rafy.Domain
                                 entity = Entity.New(entityType);
                             }
 
+                            //保存src的TreePId，clone完成后还原
+                            var srcTreePId = src.TreePId;
+                            //设置clone后实体的ID
                             src.TreePId = parent.Id;
-
                             entity.Clone(src, options);
-
-                            src.TreePId = temp;
+                            //还原TreePId
+                            src.TreePId = srcTreePId;
 
                             entity._treeParent = _owner;
                             _nodes.Add(entity);
