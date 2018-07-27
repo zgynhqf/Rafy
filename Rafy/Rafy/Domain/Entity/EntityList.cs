@@ -343,7 +343,7 @@ namespace Rafy.Domain
 
         private void SetItemParent(Entity item)
         {
-            var needParent = item != null && this.ResetItemParent;
+            var needParent = item != null && item.NeedParent;
             if (needParent)
             {
                 (item as IDomainComponent).SetParent(this);
@@ -357,7 +357,7 @@ namespace Rafy.Domain
 
         private void ClearItemParent(Entity item)
         {
-            var needParent = item != null && this.ResetItemParent;
+            var needParent = item != null && item.NeedParent;
             if (needParent)
             {
                 (item as IDomainComponent).SetParent(null);
