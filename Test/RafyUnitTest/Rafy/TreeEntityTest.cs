@@ -1102,7 +1102,7 @@ namespace RafyUnitTest
                 var b = new Folder();
                 repo.Save(b);
 
-                var a  = new Folder() as ITreeEntity;
+                var a = new Folder() as ITreeEntity;
                 a.TreePId = b.Id;
 
                 Assert.IsTrue(a.IsTreeParentLoaded);
@@ -1671,18 +1671,28 @@ namespace RafyUnitTest
                             new Folder
                             {
                                 Name = "1.1.",
+                            },
+                             new Folder
+                            {
+                                Name = "1.2.",
                             }
                         }
                     }
                 };
+
                 repo.Save(rawList);
 
                 var options = CloneOptions.NewComposition();
                 var toCloneList = new FolderList();
                 toCloneList.Clone(rawList, options);
 
+                repo.Save(toCloneList);
+
                 Assert.AreEqual("001.", toCloneList[0].TreeIndex);
                 Assert.AreEqual("001.001.", toCloneList[0].TreeChildren[0].TreeIndex);
+                Assert.AreEqual("001.002.", toCloneList[0].TreeChildren[1].TreeIndex);
+
+                Assert.AreNotEqual(rawList[0].TreeChildren[0].TreePId, toCloneList[0].TreeChildren[0].TreePId);
             }
         }
 
@@ -2148,7 +2158,7 @@ namespace RafyUnitTest
                 };
                 repo.Save(list);
 
-                var treeChildren= repo.GetTreeRoots()[0].TreeChildren;
+                var treeChildren = repo.GetTreeRoots()[0].TreeChildren;
                 Assert.IsTrue(!treeChildren.IsLoaded);
                 treeChildren.Load();
                 var component = treeChildren as ITreeComponent;
@@ -2428,7 +2438,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void TET_Query_EagerLoadChildrenTree()
         {
-            var repo  = RF.ResolveInstance<TestUserRepository>();
+            var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
                 var user = new TestUser
@@ -2532,9 +2542,9 @@ namespace RafyUnitTest
             var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
             {
-                var a1 = new Folder() {Name = "a1"};
-                var a2 = new Folder() {Name = "a2"};
-                var a3 = new Folder() {Name = "a3"};
+                var a1 = new Folder() { Name = "a1" };
+                var a2 = new Folder() { Name = "a2" };
+                var a3 = new Folder() { Name = "a3" };
                 var a = new Folder()
                 {
                     Name = "a",

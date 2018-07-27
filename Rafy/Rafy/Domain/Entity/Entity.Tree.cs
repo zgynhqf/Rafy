@@ -348,7 +348,7 @@ namespace Rafy.Domain
             get { return _treeChildren; }
         }
 
-        private void OnTreeItemCloned(Entity source, CloneOptions options)
+        private void OnTreeItemCloned(Entity source, Entity target, CloneOptions options)
         {
             if (options.HasAction(CloneActions.ParentRefEntity))
             {
@@ -375,7 +375,7 @@ namespace Rafy.Domain
                 }
                 else
                 {
-                    this.TreeChildren.Clone(source._treeChildren, options);
+                    this.TreeChildren.Clone(source._treeChildren, target, options);
                 }
             }
         }
@@ -531,7 +531,7 @@ namespace Rafy.Domain
                 }
             }
 
-            internal void Clone(EntityTreeChildren source, CloneOptions options)
+            internal void Clone(EntityTreeChildren source, Entity parent, CloneOptions options)
             {
                 _loaded = source._loaded;
                 if (_loaded)
@@ -547,7 +547,7 @@ namespace Rafy.Domain
                         for (int i = 0, c = srcNodes.Count; i < c; i++)
                         {
                             var src = srcNodes[i];
-
+                            var temp = src.TreePId;
                             Entity entity = null;
                             if (repo != null)
                             {
@@ -558,7 +558,11 @@ namespace Rafy.Domain
                                 entity = Entity.New(entityType);
                             }
 
+                            src.TreePId = parent.Id;
+
                             entity.Clone(src, options);
+
+                            src.TreePId = temp;
 
                             entity._treeParent = _owner;
                             _nodes.Add(entity);
@@ -1186,7 +1190,7 @@ namespace Rafy.Domain
                         var nodes = oldTreeChildren._nodes;
                         if (nodes != null)
                         {
-                            var index  = nodes.IndexOf(child);
+                            var index = nodes.IndexOf(child);
                             if (index >= 0)
                             {
                                 nodes.RemoveAt(index);
