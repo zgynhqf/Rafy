@@ -248,23 +248,6 @@ namespace RafyUnitTest
         }
 
         //[TestMethod]
-        //public void ET_PersistenceStatus_Delete_SavedAsNew()
-        //{
-        //    var repo = RF.ResolveInstance<TestUserRepository>();
-        //    using (RF.TransactionScope(repo))
-        //    {
-        //        var item = new TestUser();
-        //        repo.Save(item);
-        //        Assert.IsTrue(repo.CountAll() == 1);
-
-        //        item.PersistenceStatus = PersistenceStatus.Deleted;
-        //        repo.Save(item);
-
-        //        Assert.AreEqual(item.PersistenceStatus, PersistenceStatus.New, "实体被删除后，状态应该为 New。");
-        //    }
-        //}
-
-        //[TestMethod]
         //public void ET_PersistenceStatus_Delete_SavedAsNew_Reinsert()
         //{
         //    var repo = RF.ResolveInstance<TestUserRepository>();
@@ -1779,6 +1762,8 @@ namespace RafyUnitTest
             }
         }
 
+#if NET45
+
         [TestMethod]
         public void ET_Repository_BatchImport_CDU_U()
         {
@@ -1951,6 +1936,7 @@ namespace RafyUnitTest
             }
         }
 
+#endif
         /// <summary>
         /// 被冗余属性在批量更新时，在框架层面也能自动更新其对应的冗余属性。
         /// </summary>
