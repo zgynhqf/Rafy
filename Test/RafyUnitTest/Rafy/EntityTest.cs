@@ -989,6 +989,11 @@ namespace RafyUnitTest
 
             list.RemoveAt(0);
             Assert.IsTrue((item as IEntity).ParentList == null);
+            
+            var item_NoParent = new TestUser();
+            item_NoParent.NeedParent = false;
+            var list2 = new TestUserList { item_NoParent };
+            Assert.IsTrue((item_NoParent as IEntity).ParentList == null);
         }
 
         #endregion
