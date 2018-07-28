@@ -373,7 +373,7 @@ namespace Rafy.Domain
 
             options.NotifyCloned(source, this);
 
-            if (this.SupportTree) { this.OnTreeItemCloned(source, this, options); }
+            if (this.SupportTree) { this.OnTreeItemCloned(source, options); }
         }
 
         /// <summary>

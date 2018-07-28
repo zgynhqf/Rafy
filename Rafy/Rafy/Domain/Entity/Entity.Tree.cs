@@ -348,7 +348,7 @@ namespace Rafy.Domain
             get { return _treeChildren; }
         }
 
-        private void OnTreeItemCloned(Entity source, Entity target, CloneOptions options)
+        private void OnTreeItemCloned(Entity source, CloneOptions options)
         {
             if (options.HasAction(CloneActions.ParentRefEntity))
             {
@@ -375,7 +375,7 @@ namespace Rafy.Domain
                 }
                 else
                 {
-                    this.TreeChildren.Clone(source._treeChildren, target, options);
+                    this.TreeChildren.Clone(source._treeChildren, options);
                 }
             }
         }
@@ -531,7 +531,7 @@ namespace Rafy.Domain
                 }
             }
 
-            internal void Clone(EntityTreeChildren source, Entity parent, CloneOptions options)
+            internal void Clone(EntityTreeChildren source, CloneOptions options)
             {
                 _loaded = source._loaded;
                 if (_loaded)
@@ -558,13 +558,17 @@ namespace Rafy.Domain
                                 entity = Entity.New(entityType);
                             }
 
-                            //保存src的TreePId，clone完成后还原
-                            var srcTreePId = src.TreePId;
-                            //设置clone后实体的ID
-                            src.TreePId = parent.Id;
+                            /*修复Entitylist使用TreeChildren属性Clone时TreeIndex错误问题
+                             *原因是TreeChildren中实体Clone时会TreePId改变触发OnTreePIdChanged事件，
+                             * OnTreePIdChanged事件中会处理entity._treeParent为空并且
+                             * _treeParent.Id不等于新的克隆值时，需要重新设置TreeParent值
+                             * 导致设置TreeIndex错误
+                             * 所以需要entity克隆前设置_treeParent的值为 source._owner
+                             */
+
+                            entity._treeParent = source._owner;
+
                             entity.Clone(src, options);
-                            //还原TreePId
-                            src.TreePId = srcTreePId;
 
                             entity._treeParent = _owner;
                             _nodes.Add(entity);
