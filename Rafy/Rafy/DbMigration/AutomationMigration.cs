@@ -18,6 +18,7 @@ using System.Text;
 using Rafy.DbMigration.Model;
 using Rafy.DbMigration.Operations;
 using Rafy.DbMigration.SqlServer;
+using Rafy.Domain;
 
 namespace Rafy.DbMigration
 {

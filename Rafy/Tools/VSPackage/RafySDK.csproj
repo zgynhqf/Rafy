@@ -165,6 +165,10 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Rafy, Version=3.70.3800.0, Culture=neutral, PublicKeyToken=f7937325279b37cf, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Rafy\bin\Debug\net45\Rafy.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -369,10 +373,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Rafy\Rafy.csproj">
-      <Project>{966a5bf2-d690-426b-ad68-ad868bb8f855}</Project>
-      <Name>Rafy</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Modeling\DesignerEngine\DesignerEngine.csproj">
       <Project>{27c8a770-42fe-4bb4-9c2a-63a2df354958}</Project>
       <Name>DesignerEngine</Name>
