@@ -558,6 +558,16 @@ namespace Rafy.Domain
                                 entity = Entity.New(entityType);
                             }
 
+                            /*修复Entitylist使用TreeChildren属性Clone时TreeIndex错误问题
+                             *原因是TreeChildren中实体Clone时会TreePId改变触发OnTreePIdChanged事件，
+                             * OnTreePIdChanged事件中会处理entity._treeParent为空并且
+                             * _treeParent.Id不等于新的克隆值时，需要重新设置TreeParent值
+                             * 导致设置TreeIndex错误
+                             * 所以需要entity克隆前设置_treeParent的值为 source._owner
+                             */
+
+                            entity._treeParent = source._owner;
+
                             entity.Clone(src, options);
 
                             entity._treeParent = _owner;
@@ -1186,7 +1196,7 @@ namespace Rafy.Domain
                         var nodes = oldTreeChildren._nodes;
                         if (nodes != null)
                         {
-                            var index  = nodes.IndexOf(child);
+                            var index = nodes.IndexOf(child);
                             if (index >= 0)
                             {
                                 nodes.RemoveAt(index);
