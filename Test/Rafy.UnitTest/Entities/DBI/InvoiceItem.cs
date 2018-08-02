@@ -81,6 +81,16 @@ namespace UT
             set { this.SetProperty(AmountProperty, value); }
         }
 
+        public static readonly Property<bool> IsDefaultProperty = P<InvoiceItem>.Register(e => e.IsDefault);
+        /// <summary>
+        /// 是否默认
+        /// </summary>
+        public bool IsDefault
+        {
+            get { return this.GetProperty(IsDefaultProperty); }
+            set { this.SetProperty(IsDefaultProperty, value); }
+        }
+
         #endregion
 
         #region 只读属性
