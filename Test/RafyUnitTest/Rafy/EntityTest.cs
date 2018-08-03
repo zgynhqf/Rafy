@@ -1765,7 +1765,33 @@ namespace RafyUnitTest
         [TestMethod]
         public void __ET_Repository_BatchImport_CDU_C_TreeEntity()
         {
-            throw new NotImplementedException();//huqf
+            int size = BATCH_IMPORT_DATA_SIZE;
+
+            var repo = RF.ResolveInstance<TestTreeTaskRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var user = new TestUser();
+                RF.Save(user);
+
+                var treeList = new TestTreeTaskList();
+                for (int i = 0; i < size; i++)
+                {
+                    var tree = new TestTreeTask();
+                    tree.TestUser = user;
+                    treeList.Add(tree);
+                }
+
+                var importer = repo.CreateImporter();
+                importer.Save(treeList);
+
+                Assert.AreEqual(size, repo.CountAll());
+
+                for (int i = 0; i < size; i++)
+                {
+                    var tree = treeList[i];
+                    Assert.IsTrue(tree.Id > 0);
+                }
+            }
         }
 
         [TestMethod]
