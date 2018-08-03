@@ -962,12 +962,14 @@ namespace RafyUnitTest
         /// 在列表中移除实体时，实体的 ParentList 属性应该是空。
         /// </summary>
         [TestMethod]
-        public void __ET_EntityList_ParentList_Remove()
+        public void ET_EntityList_ParentList_Remove()
         {
             var item = new TestUser();
             Assert.IsTrue((item as IEntity).ParentList == null);
 
-            var list = new TestUserList { item };
+            var list = new TestUserList();
+            list.ResetItemParent = true;
+            list.Add(item);
             Assert.IsTrue((item as IEntity).ParentList == list);
 
             list.RemoveAt(0);
