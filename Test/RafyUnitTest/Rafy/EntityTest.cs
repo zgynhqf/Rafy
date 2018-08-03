@@ -1278,6 +1278,182 @@ namespace RafyUnitTest
             }
         }
 
+        [TestMethod]
+        public void ET_Repository_LinqGetBySingleBoolean_Where()
+        {
+            var repo = RF.ResolveInstance<InvoiceRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var root1 = new Invoice() { Code = "root1", IsDefault = true };
+                var child1 = new InvoiceItem() { Amount = 1000 };
+                root1.InvoiceItemList.Add(child1);
+                repo.Save(root1);
+
+                var root2 = new Invoice() { Code = "root2", IsDefault = false };
+                var child2 = new InvoiceItem() { Amount = 2000 };
+                root2.InvoiceItemList.Add(child2);
+                repo.Save(root2);
+
+                var list1 = repo.LinqByIsDefaultBoolean(true).Concrete().ToList();
+                Assert.IsTrue(list1.Count == 1);
+                Assert.IsTrue(list1.First().Code == "root1");
+                Assert.IsTrue(list1.First().IsDefault);
+
+                var list2 = repo.LinqByIsDefaultBoolean(false).Concrete().ToList();
+                Assert.IsTrue(list2.Count == 1);
+                Assert.IsTrue(list2.First().Code == "root2");
+                Assert.IsTrue(!list2.First().IsDefault);
+            }
+        }
+
+        [TestMethod]
+        public void ET_Repository_LinqGetByAggregateChildrenSingleBoolean_Any_Exist()
+        {
+            var repo = RF.ResolveInstance<InvoiceRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var root1 = new Invoice() { Code = "root1", IsDefault = true };
+                var child1_1 = new InvoiceItem() { Amount = 1000, IsDefault = true };
+                var child1_2 = new InvoiceItem() { Amount = 2000, IsDefault = true };
+                root1.InvoiceItemList.Add(child1_1);
+                root1.InvoiceItemList.Add(child1_2);
+                repo.Save(root1);
+
+                var root2 = new Invoice() { Code = "root2", IsDefault = true };
+                var child2_1 = new InvoiceItem() { Amount = 3000, IsDefault = true };
+                var child2_2 = new InvoiceItem() { Amount = 4000, IsDefault = false };
+                root2.InvoiceItemList.Add(child2_1);
+                root2.InvoiceItemList.Add(child2_2);
+                repo.Save(root2);
+
+                var root3 = new Invoice() { Code = "root3", IsDefault = false };
+                var child3_1 = new InvoiceItem() { Amount = 5000, IsDefault = false };
+                var child3_2 = new InvoiceItem() { Amount = 6000, IsDefault = false };
+                root3.InvoiceItemList.Add(child3_1);
+                root3.InvoiceItemList.Add(child3_2);
+                repo.Save(root3);
+
+                var list1 = repo.LinqByItemListIsDefaultBooleanAny(true).Concrete().ToList();
+                Assert.IsTrue(list1.Count == 2);
+                Assert.IsTrue(list1.First().Code == "root1");
+                Assert.IsTrue(list1.First().IsDefault);
+                Assert.IsTrue(list1.First().InvoiceItemList.Concrete().ToList().Count == 2);
+                Assert.IsTrue(list1.First().InvoiceItemList.Concrete().ToList().First().Amount == 1000);
+                Assert.IsTrue(list1.First().InvoiceItemList.Concrete().ToList().First().IsDefault);
+                Assert.IsTrue(list1.Last().Code == "root2");
+                Assert.IsTrue(list1.Last().IsDefault);
+                Assert.IsTrue(list1.Last().InvoiceItemList.Concrete().ToList().Count == 2);
+                Assert.IsTrue(list1.Last().InvoiceItemList.Concrete().ToList().Last().Amount == 4000);
+                Assert.IsTrue(!list1.Last().InvoiceItemList.Concrete().ToList().Last().IsDefault);
+
+                var list2 = repo.LinqByItemListIsDefaultBooleanAny(false).Concrete().ToList();
+                Assert.IsTrue(list2.Count == 2);
+                Assert.IsTrue(list2.Last().Code == "root3");
+                Assert.IsTrue(!list2.Last().IsDefault);
+                Assert.IsTrue(list2.Last().InvoiceItemList.Concrete().ToList().Count == 2);
+                Assert.IsTrue(list2.Last().InvoiceItemList.Concrete().ToList().First().Amount == 5000);
+                Assert.IsTrue(!list2.Last().InvoiceItemList.Concrete().ToList().First().IsDefault);
+            }
+        }
+
+        [TestMethod]
+        public void ET_Repository_LinqGetByAggregateChildrenSingleBoolean_Any_Not_Exist()
+        {
+            var repo = RF.ResolveInstance<InvoiceRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var root1 = new Invoice() { Code = "root1", IsDefault = true };
+                var child1 = new InvoiceItem() { Amount = 1000, IsDefault = true };
+                root1.InvoiceItemList.Add(child1);
+                repo.Save(root1);
+
+                var root2 = new Invoice() { Code = "root2", IsDefault = true };
+                var child2 = new InvoiceItem() { Amount = 2000, IsDefault = true };
+                root2.InvoiceItemList.Add(child2);
+                repo.Save(root2);
+
+                var list = repo.LinqByItemListIsDefaultBooleanAny(false).Concrete().ToList();
+                Assert.IsTrue(list.Count == 0);
+            }
+        }
+
+        [TestMethod]
+        public void ET_Repository_LinqGetByAggregateChildrenSingleBoolean_All_Exist()
+        {
+            var repo = RF.ResolveInstance<InvoiceRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var root1 = new Invoice() { Code = "root1", IsDefault = true };
+                var child1_1 = new InvoiceItem() { Amount = 1000, IsDefault = true };
+                var child1_2 = new InvoiceItem() { Amount = 2000, IsDefault = true };
+                root1.InvoiceItemList.Add(child1_1);
+                root1.InvoiceItemList.Add(child1_2);
+                repo.Save(root1);
+
+                var root2 = new Invoice() { Code = "root2", IsDefault = false };
+                var child2_1 = new InvoiceItem() { Amount = 3000, IsDefault = false };
+                var child2_2 = new InvoiceItem() { Amount = 4000, IsDefault = false };
+                root2.InvoiceItemList.Add(child2_1);
+                root2.InvoiceItemList.Add(child2_2);
+                repo.Save(root2);
+
+                var root3 = new Invoice() { Code = "root3", IsDefault = false };
+                var child3_1 = new InvoiceItem() { Amount = 5000, IsDefault = true };
+                var child3_2 = new InvoiceItem() { Amount = 6000, IsDefault = false };
+                root3.InvoiceItemList.Add(child3_1);
+                root3.InvoiceItemList.Add(child3_2);
+                repo.Save(root3);
+
+                var list1 = repo.LinqByItemListIsDefaultBooleanAll(true).Concrete().ToList();
+                Assert.IsTrue(list1.Count == 1);
+                Assert.IsTrue(list1.First().Code == "root1");
+                Assert.IsTrue(list1.First().IsDefault);
+                Assert.IsTrue(list1.First().InvoiceItemList.Concrete().ToList().Count == 2);
+                Assert.IsTrue(list1.First().InvoiceItemList.Concrete().ToList().First().Amount == 1000);
+                Assert.IsTrue(list1.First().InvoiceItemList.Concrete().ToList().First().IsDefault);
+
+                var list2 = repo.LinqByItemListIsDefaultBooleanAll(false).Concrete().ToList();
+                Assert.IsTrue(list2.Count == 1);
+                Assert.IsTrue(list2.First().Code == "root2");
+                Assert.IsTrue(!list2.First().IsDefault);
+                Assert.IsTrue(list2.First().InvoiceItemList.Concrete().ToList().Count == 2);
+                Assert.IsTrue(list2.First().InvoiceItemList.Concrete().ToList().First().Amount == 3000);
+                Assert.IsTrue(!list2.First().InvoiceItemList.Concrete().ToList().First().IsDefault);
+            }
+        }
+
+        [TestMethod]
+        public void ET_Repository_LinqGetByAggregateChildrenSingleBoolean_All_Not_Exist()
+        {
+            var repo = RF.ResolveInstance<InvoiceRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var root1 = new Invoice() { Code = "root1", IsDefault = true };
+                var child1_1 = new InvoiceItem() { Amount = 1000, IsDefault = false };
+                var child1_2 = new InvoiceItem() { Amount = 2000, IsDefault = true };
+                root1.InvoiceItemList.Add(child1_1);
+                root1.InvoiceItemList.Add(child1_2);
+                repo.Save(root1);
+
+                var root2 = new Invoice() { Code = "root2", IsDefault = false };
+                var child2_1 = new InvoiceItem() { Amount = 3000, IsDefault = true };
+                var child2_2 = new InvoiceItem() { Amount = 4000, IsDefault = false };
+                root2.InvoiceItemList.Add(child2_1);
+                root2.InvoiceItemList.Add(child2_2);
+                repo.Save(root2);
+
+                var root3 = new Invoice() { Code = "root3", IsDefault = false };
+                var child3_1 = new InvoiceItem() { Amount = 5000, IsDefault = true };
+                var child3_2 = new InvoiceItem() { Amount = 6000, IsDefault = false };
+                root3.InvoiceItemList.Add(child3_1);
+                root3.InvoiceItemList.Add(child3_2);
+                repo.Save(root3);
+
+                var list1 = repo.LinqByItemListIsDefaultBooleanAll(false).Concrete().ToList();
+                Assert.IsTrue(list1.Count == 0);
+            }
+        }
+
         /// <summary>
         /// 测试 MemoryEntityRepository
         /// </summary>

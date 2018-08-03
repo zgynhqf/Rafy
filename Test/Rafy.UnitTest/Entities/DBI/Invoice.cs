@@ -72,6 +72,16 @@ namespace UT
             set { this.SetProperty(CodeProperty, value); }
         }
 
+        public static readonly Property<bool> IsDefaultProperty = P<Invoice>.Register(e => e.IsDefault);
+        /// <summary>
+        /// 是否默认
+        /// </summary>
+        public bool IsDefault
+        {
+            get { return this.GetProperty(IsDefaultProperty); }
+            set { this.SetProperty(IsDefaultProperty, value); }
+        }
+
         #endregion
 
         #region 只读属性
@@ -139,6 +149,67 @@ namespace UT
         {
             var sql = @"select * from invoice ";
             return (this.DataQueryer as RdbDataQueryer).QueryTable(sql);
+        }
+
+        /// <summary>
+        /// 返回默认记录
+        /// </summary>
+        /// <param name="isDefault"></param>
+        /// <returns></returns>
+        [RepositoryQuery]
+        public virtual InvoiceList LinqByIsDefaultBoolean(bool isDefault)
+        {
+            var q = this.CreateLinqQuery();
+            if (isDefault)
+            {
+                q = q.Where(e => e.IsDefault);
+            }
+            else
+            {
+                q = q.Where(e => !e.IsDefault);
+            }
+            return (InvoiceList)this.QueryData(q);
+        }
+
+        /// <summary>
+        /// 返回默认记录
+        /// </summary>
+        /// <param name="isDefault"></param>
+        /// <returns></returns>
+        [RepositoryQuery]
+        public virtual InvoiceList LinqByItemListIsDefaultBooleanAny(bool isDefault)
+        {
+            var q = this.CreateLinqQuery();
+            if (isDefault)
+            {
+                q = q.Where(e => e.InvoiceItemList.Concrete().Any(s => s.IsDefault));
+
+            }
+            else
+            {
+                q = q.Where(e => e.InvoiceItemList.Concrete().Any(s => !s.IsDefault));
+            }
+            return (InvoiceList)this.QueryData(q);
+        }
+
+        /// <summary>
+        /// 返回默认记录
+        /// </summary>
+        /// <param name="isDefault"></param>
+        /// <returns></returns>
+        [RepositoryQuery]
+        public virtual InvoiceList LinqByItemListIsDefaultBooleanAll(bool isDefault)
+        {
+            var q = this.CreateLinqQuery();
+            if (isDefault)
+            {
+                q = q.Where(e => e.InvoiceItemList.Concrete().All(s => s.IsDefault));
+            }
+            else
+            {
+                q = q.Where(e => e.InvoiceItemList.Concrete().All(s => !s.IsDefault));
+            }
+            return (InvoiceList)this.QueryData(q);
         }
     }
 

@@ -312,6 +312,12 @@ namespace Rafy.Domain.ORM.Linq
             //访问值属性
             VisitValueProperty(pf.Property, pf.PropertyOwnerTable);
 
+            //当表达式字段为Boolean类型时，需要把属性变成一个对判断条件
+            if (m.Type == typeof(bool))
+            {
+                this.MakeBooleanConstraintIfNoValue();
+            }
+
             return m;
         }
 
