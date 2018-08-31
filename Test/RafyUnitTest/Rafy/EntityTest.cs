@@ -1765,7 +1765,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void __ET_Repository_BatchImport_CDU_C_TreeEntity()
+        public void ET_Repository_BatchImport_CDU_C_TreeEntity()
         {
             int size = BATCH_IMPORT_DATA_SIZE;
 
@@ -1802,6 +1802,7 @@ namespace RafyUnitTest
                     var item = list[i];
                     Assert.IsTrue(item.Id > 0);
                 }
+            }
         }
 
         [TestMethod]
