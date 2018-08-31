@@ -57,7 +57,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Rafy.RBAC", "Rafy.RBAC", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.WPF", "Rafy\WPF\Rafy.WPF\Rafy.WPF.csproj", "{84399E4E-CC81-4B1F-9953-586B25B29792}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RafyUnitTest", "Test\RafyUnitTest\RafyUnitTest.csproj", "{9AA27D8B-8F77-403B-99D0-51EB0CE01AC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RafyUnitTest", "Test\RafyUnitTest\RafyUnitTest.csproj", "{9AA27D8B-8F77-403B-99D0-51EB0CE01AC6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rafy", "Rafy\Rafy\Rafy.csproj", "{966A5BF2-D690-426B-AD68-AD868BB8F855}"
 EndProject
@@ -71,9 +71,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo", "Demo\Demo\Demo.cspr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.RBAC.Old", "Rafy\Plugins\Rafy.RBAC.Old\Rafy.RBAC\Rafy.RBAC.Old.csproj", "{03D5A267-C106-42A9-8959-93D7AE3648DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.UnitTest", "Test\Rafy.UnitTest\Rafy.UnitTest.csproj", "{D226414C-37F6-4618-8B91-7E80E7D2C42E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rafy.UnitTest", "Test\Rafy.UnitTest\Rafy.UnitTest.csproj", "{D226414C-37F6-4618-8B91-7E80E7D2C42E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.DiskCaching", "Rafy\Plugins\Rafy.DiskCaching\Rafy.DiskCaching.csproj", "{A2F2F4E8-A6EC-4856-A1DA-BD4EB783041D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rafy.DiskCaching", "Rafy\Plugins\Rafy.DiskCaching\Rafy.DiskCaching.csproj", "{A2F2F4E8-A6EC-4856-A1DA-BD4EB783041D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFClient", "WPFClient\WPFClient.csproj", "{257BF7C4-07DE-4E76-B2E2-443E2200B1E0}"
 EndProject
@@ -117,17 +117,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JXC.WPF", "Demo\JXC.WPF\JXC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.MultiLanguages.WPF", "Rafy\Plugins\Rafy.MultiLanguages.WPF\Rafy.MultiLanguages.WPF.csproj", "{C0AB2E3B-408B-4AF9-84DC-C67B4A19A699}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.UnitTest.WPF", "Test\Rafy.UnitTest.WPF\Rafy.UnitTest.WPF.csproj", "{F1E214F9-7C72-4C52-B262-A41CE23A3993}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rafy.UnitTest.WPF", "Test\Rafy.UnitTest.WPF\Rafy.UnitTest.WPF.csproj", "{F1E214F9-7C72-4C52-B262-A41CE23A3993}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.UnitTest.WCFPortal", "Test\Rafy.UnitTest.WCFPortal\Rafy.UnitTest.WCFPortal.csproj", "{2CEFA9B1-9D6E-47C0-9067-F30E2148CF95}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.UnitTest.Repository", "Test\Rafy.UnitTest.Repository\Rafy.UnitTest.Repository.csproj", "{03E2413D-EC73-44F1-A0D3-366C3892700A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rafy.UnitTest.Repository", "Test\Rafy.UnitTest.Repository\Rafy.UnitTest.Repository.csproj", "{03E2413D-EC73-44F1-A0D3-366C3892700A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.UnitTest.IDataProvider", "Test\Rafy.UnitTest.IDataProvider\Rafy.UnitTest.IDataProvider.csproj", "{C13C7DFE-3BDF-456E-8B7B-01AD483D7396}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rafy.UnitTest.IDataProvider", "Test\Rafy.UnitTest.IDataProvider\Rafy.UnitTest.IDataProvider.csproj", "{C13C7DFE-3BDF-456E-8B7B-01AD483D7396}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.UnitTest.DataProvider", "Test\Rafy.UnitTest.DataProvider\Rafy.UnitTest.DataProvider.csproj", "{DF5E92A5-B32F-41AE-B880-14069D4FE7F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rafy.UnitTest.DataProvider", "Test\Rafy.UnitTest.DataProvider\Rafy.UnitTest.DataProvider.csproj", "{DF5E92A5-B32F-41AE-B880-14069D4FE7F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RafyUnitTest.ClientTest", "Test\RafyUnitTest.ClientTest\RafyUnitTest.ClientTest.csproj", "{7A57E885-049B-4145-A446-44245A8DF483}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RafyUnitTest.ClientTest", "Test\RafyUnitTest.ClientTest\RafyUnitTest.ClientTest.csproj", "{7A57E885-049B-4145-A446-44245A8DF483}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rafy.ComponentModel.UnityAdapter", "Rafy\Plugins\Rafy.ComponentModel.UnityAdapter\Rafy.ComponentModel.UnityAdapter.csproj", "{BE8C3CD6-F314-453D-A0ED-FCFEC0DEADBC}"
 EndProject
@@ -162,6 +162,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rafy.DataArchiver", "Rafy\Plugins\Rafy.DataTableMigration\Rafy.DataArchiver.csproj", "{95CB6F76-3D35-4F2E-BF2A-A45EC41C76B4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rafy.SystemSettings", "Rafy\Plugins\Rafy.SystemSettings\Rafy.SystemSettings.csproj", "{1C9C3546-F650-40A3-AA7F-64E8A230A02B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rafy.MultiTenancy", "Rafy\Plugins\Rafy.MultiTenancy\Rafy.MultiTenancy.csproj", "{620DD96C-5CB6-4DF2-9A98-386D3E56A9B7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -590,6 +592,14 @@ Global
 		{1C9C3546-F650-40A3-AA7F-64E8A230A02B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C9C3546-F650-40A3-AA7F-64E8A230A02B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1C9C3546-F650-40A3-AA7F-64E8A230A02B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{620DD96C-5CB6-4DF2-9A98-386D3E56A9B7}.D_UIA_Standard|Any CPU.ActiveCfg = Debug|Any CPU
+		{620DD96C-5CB6-4DF2-9A98-386D3E56A9B7}.D_UIA_Standard|Any CPU.Build.0 = Debug|Any CPU
+		{620DD96C-5CB6-4DF2-9A98-386D3E56A9B7}.D_Web|Any CPU.ActiveCfg = Debug|Any CPU
+		{620DD96C-5CB6-4DF2-9A98-386D3E56A9B7}.D_Web|Any CPU.Build.0 = Debug|Any CPU
+		{620DD96C-5CB6-4DF2-9A98-386D3E56A9B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{620DD96C-5CB6-4DF2-9A98-386D3E56A9B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{620DD96C-5CB6-4DF2-9A98-386D3E56A9B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{620DD96C-5CB6-4DF2-9A98-386D3E56A9B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -665,6 +675,7 @@ Global
 		{7750612E-AB7E-4A98-86E1-FF6E4D9D7C54} = {7D317F92-6904-459E-A03C-EC4B44BB73B0}
 		{95CB6F76-3D35-4F2E-BF2A-A45EC41C76B4} = {DC52A572-512A-4D70-81C0-F0EF8B6FFC85}
 		{1C9C3546-F650-40A3-AA7F-64E8A230A02B} = {DC52A572-512A-4D70-81C0-F0EF8B6FFC85}
+		{620DD96C-5CB6-4DF2-9A98-386D3E56A9B7} = {DC52A572-512A-4D70-81C0-F0EF8B6FFC85}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3EE6CCD8-2729-4C3F-9779-1761004827A5}
