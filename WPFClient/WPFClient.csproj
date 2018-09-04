@@ -138,9 +138,9 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Rafy\Plugins\Rafy.Accounts\Rafy.Accounts.csproj">
-      <Project>{4d6467e4-d1ce-4fa8-a1fe-92b1ba549a4a}</Project>
-      <Name>Rafy.Accounts</Name>
+    <ProjectReference Include="..\Rafy\Plugins\Rafy.RBAC.Old\Rafy.RBAC\Rafy.RBAC.Old.csproj">
+      <Project>{03D5A267-C106-42A9-8959-93D7AE3648DD}</Project>
+      <Name>Rafy.RBAC.Old</Name>
     </ProjectReference>
     <ProjectReference Include="..\Rafy\Rafy\Rafy.csproj">
       <Project>{966A5BF2-D690-426B-AD68-AD868BB8F855}</Project>

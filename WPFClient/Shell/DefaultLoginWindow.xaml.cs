@@ -27,8 +27,8 @@ using Rafy;
 using Rafy.Domain;
 using Rafy.WPF.Controls;
 using Rafy.Utils;
-using Rafy.Accounts.Controllers;
-using Rafy.Accounts;
+using Rafy.RBAC.Old.Security;
+using Rafy.RBAC.Old;
 
 namespace Rafy.WPF.Shell
 {
@@ -54,17 +54,25 @@ namespace Rafy.WPF.Shell
         {
             try
             {
-                var controller = DomainControllerFactory.Create<AccountController>();
-                var res = controller.LoginByUserName(txtUserName.Text, txtPassword.Password, out User user);
-
-                if (!res)
+                if (!RafyPrincipal.Login(txtUserName.Text, CryptographyHelper.MD5(txtPassword.Password)))
                 {
-                    MessageBox.Show(res.Message, "登录失败");
+                    MessageBox.Show("用户或密码错误，请重新输入！", "登录失败");
                 }
                 else
                 {
                     this.DialogResult = true;
                 }
+                //var controller = DomainControllerFactory.Create<AccountController>();
+                //var res = controller.LoginByUserName(txtUserName.Text, txtPassword.Password, out User user);
+
+                //if (!res)
+                //{
+                //    MessageBox.Show(res.Message, "登录失败");
+                //}
+                //else
+                //{
+                //    this.DialogResult = true;
+                //}
             }
             catch (Exception ex)
             {

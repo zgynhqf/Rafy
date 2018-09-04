@@ -29,9 +29,9 @@ namespace JXC.DbMigrations
                 {
                     list.Add(new ProductCategory
                     {
-                        Id = RafyEnvironment.NewLocalId(),
+                        //Id = RafyEnvironment.NewLocalId(),
                         Name = "服饰类",
-                        TreeChildren ={
+                        TreeChildren = {
                             new ProductCategory{ Name = "裤子" },
                             new ProductCategory{ Name = "裙子" },
                             new ProductCategory{ Name = "上衣" },
@@ -40,7 +40,7 @@ namespace JXC.DbMigrations
                     });
                     list.Add(new ProductCategory
                     {
-                        Id = RafyEnvironment.NewLocalId(),
+                        //Id = RafyEnvironment.NewLocalId(),
                         Name = "食品类",
                         TreeChildren ={
                             new ProductCategory{ Name = "生鲜食品" },

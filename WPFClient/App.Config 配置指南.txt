@@ -2,6 +2,7 @@
 自动数据库升级
     首次生成数据库时，由于无法登录并进入开发工具模块，请添加以下配置以支持启动时生成数据库：
     <add key="Rafy_DevTools_GenerateDbOnStartup" value="true"/>
+    初始学习时，更新 RafyPlugins、JXC 两个库即可。
     
 'Rafy.FileLogger.SqlTraceFileName' 设置的文件路径，会为其创建 SQL 监听文件。
     <add key="Rafy.FileLogger.SqlTraceFileName" value="C:\SQLTraceLog.txt"/>
