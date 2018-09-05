@@ -176,7 +176,7 @@ namespace Rafy.Domain
         /// <returns></returns>
         public static SingleConnectionTransactionScope TransactionScope(DbSetting dbSetting, IsolationLevel level)
         {
-            return new SingleConnectionTransactionScope(dbSetting);
+            return new SingleConnectionTransactionScope(dbSetting, level);
         }
 
         /// <summary>
