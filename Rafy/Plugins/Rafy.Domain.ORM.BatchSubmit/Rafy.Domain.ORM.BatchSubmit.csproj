@@ -3,7 +3,8 @@
     <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
-    <Version>3.70.3800</Version>
+    <Version>3.71.3830</Version>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

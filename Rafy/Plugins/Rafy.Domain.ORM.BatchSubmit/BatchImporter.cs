@@ -69,52 +69,63 @@ namespace Rafy.Domain.ORM.BatchSubmit
             var reader = new EntityBatchReader(_entityOrList);
             var batchList = reader.Read();
 
-            //反向先删除实体。从子表中的数据开始删除。
-            for (int i = batchList.Count - 1; i >= 0; i--)
+            try
             {
-                var batch = batchList[i];
-                if (batch.DeleteBatch.Count > 0)
+                //反向先删除实体。从子表中的数据开始删除。
+                for (int i = batchList.Count - 1; i >= 0; i--)
                 {
-                    this.ImportDelete(batch);
-                    this.SetStatus(batch.DeleteBatch, PersistenceStatus.New);
-                }
-            }
-
-            //再插入、更新数据
-            for (int i = 0, c = batchList.Count; i < c; i++)
-            {
-                var batch = batchList[i];
-                if (batch.InsertBatch.Count > 0)
-                {
-                    this.ImportInsert(batch);
-                    this.SetStatus(batch.InsertBatch, PersistenceStatus.Unchanged);
-                }
-                if (batch.UpdateBatch.Count > 0)
-                {
-                    this.ImportUpdate(batch);
-                    this.SetStatus(batch.UpdateBatch, PersistenceStatus.Unchanged);
-                }
-            }
-
-            //更新缓存
-            for (int i = 0, c = batchList.Count; i < c; i++)
-            {
-                var batch = batchList[i];
-                if (VersionSyncMgr.IsEnabled)
-                {
-                    VersionSyncMgr.Repository.UpdateVersion(batch.EntityType);
-                }
-
-                if (batch.UpdateBatch.Count > 0)
-                {
-                    var redundancyUpdater = batch.Repository.DataProvider.DataSaver.CreateRedundanciesUpdater();
-                    foreach (var property in batch.Repository.GetPropertiesInRedundancyPath())
+                    var batch = batchList[i];
+                    if (batch.DeleteBatch.Count > 0)
                     {
-                        foreach (var path in property.InRedundantPathes)
+                        this.ImportDelete(batch);
+                        this.SetStatus(batch.DeleteBatch, PersistenceStatus.New);
+                    }
+                }
+
+                //再插入、更新数据
+                for (int i = 0, c = batchList.Count; i < c; i++)
+                {
+                    var batch = batchList[i];
+                    if (batch.InsertBatch.Count > 0)
+                    {
+                        this.ImportInsert(batch);
+                        this.SetStatus(batch.InsertBatch, PersistenceStatus.Unchanged);
+                    }
+                    if (batch.UpdateBatch.Count > 0)
+                    {
+                        this.ImportUpdate(batch);
+                        this.SetStatus(batch.UpdateBatch, PersistenceStatus.Unchanged);
+                    }
+                }
+
+                //更新缓存
+                for (int i = 0, c = batchList.Count; i < c; i++)
+                {
+                    var batch = batchList[i];
+                    if (VersionSyncMgr.IsEnabled)
+                    {
+                        VersionSyncMgr.Repository.UpdateVersion(batch.EntityType);
+                    }
+
+                    if (batch.UpdateBatch.Count > 0)
+                    {
+                        var redundancyUpdater = batch.Repository.DataProvider.DataSaver.CreateRedundanciesUpdater();
+                        foreach (var property in batch.Repository.GetPropertiesInRedundancyPath())
                         {
-                            redundancyUpdater.RefreshRedundancy(path.Redundancy);
+                            foreach (var path in property.InRedundantPathes)
+                            {
+                                redundancyUpdater.RefreshRedundancy(path.Redundancy);
+                            }
                         }
                     }
+                }
+            }
+            finally
+            {
+                for (int i = 0, c = batchList.Count; i < c; i++)
+                {
+                    var batch = batchList[i];
+                    batch.Dispose();
                 }
             }
         }

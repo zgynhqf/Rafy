@@ -176,32 +176,34 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
             var opt = SqlBulkCopyOptions.CheckConstraints;
             if (keepIdentity) opt |= SqlBulkCopyOptions.KeepIdentity;
 
-            var bulkCopy = new SqlBulkCopy(
+            using (var bulkCopy = new SqlBulkCopy(
                 meta.DBA.Connection as SqlConnection,
                 opt,
                 meta.DBA.RawAccesser.Transaction as SqlTransaction
-                );
-            bulkCopy.DestinationTableName = meta.Table.Name;
-            bulkCopy.BatchSize = table.Rows.Count;
-            bulkCopy.BulkCopyTimeout = 10 * 60;
-
-            try
+                ))
             {
-                this.SetMappings(bulkCopy.ColumnMappings, meta.Table);
+                bulkCopy.DestinationTableName = meta.Table.Name;
+                bulkCopy.BatchSize = table.Rows.Count;
+                bulkCopy.BulkCopyTimeout = 10 * 60;
+
+                try
+                {
+                    this.SetMappings(bulkCopy.ColumnMappings, meta.Table);
 
 #if NET45
-                bulkCopy.WriteToServer(table);
+                    bulkCopy.WriteToServer(table);
 #endif
 #if NETSTANDARD2_0
                 var reader = new DataTableReader(table);
                 bulkCopy.WriteToServer(reader);
 #endif
-            }
-            finally
-            {
-                if (bulkCopy != null)
+                }
+                finally
                 {
-                    bulkCopy.Close();
+                    if (bulkCopy != null)
+                    {
+                        bulkCopy.Close();
+                    }
                 }
             }
         }

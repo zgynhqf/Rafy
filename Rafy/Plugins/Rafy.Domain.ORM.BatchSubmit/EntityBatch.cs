@@ -24,7 +24,7 @@ namespace Rafy.Domain.ORM.BatchSubmit
     /// <summary>
     /// 表示需要批量处理的某一个实体类型的所有对象实体。
     /// </summary>
-    public class EntityBatch
+    public class EntityBatch : IDisposable
     {
         private IDbAccesser _dba;
         private RdbTable _table;
@@ -88,5 +88,40 @@ namespace Rafy.Domain.ORM.BatchSubmit
                 return _table;
             }
         }
+
+        #region IDisposable Support
+
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+
+                }
+                if (_dba != null) _dba.Dispose();
+
+                disposedValue = true;
+            }
+        }
+
+        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
+        ~EntityBatch()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(false);
+        }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+            // TODO: uncomment the following line if the finalizer is overridden above.
+            GC.SuppressFinalize(this);
+        }
+        #endregion
     }
 }
