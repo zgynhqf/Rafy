@@ -39,6 +39,9 @@ using Rafy.Utils;
 using UT;
 using Rafy.Accounts;
 using Rafy.Accounts.Controllers;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Data;
 
 namespace RafyUnitTest
 {
@@ -50,6 +53,86 @@ namespace RafyUnitTest
         {
             ServerTestHelper.ClassInitialize(context);
         }
+
+        //[TestMethod]
+        //public void APT_Transaction_IsolationLevel()
+        //{
+        //    var repo = RF.ResolveInstance<UserRepository>();
+        //    //using (RF.TransactionScope(repo))
+        //    //{
+        //    //    var controller = DomainControllerFactory.Create<AccountController>();
+        //    //    var res = controller.Register(new User
+        //    //    {
+        //    //        UserName = "hqf",
+        //    //        RealName = "hqf",
+        //    //        Password = controller.EncodePassword("hqf")
+        //    //    });
+        //    //}
+
+        //    var db = RdbDataProvider.Get(repo).DbSetting;
+
+        //    TaskFactory factory = new TaskFactory();
+        //    //EventWaitHandle event1 = new AutoResetEvent(false);
+        //    //EventWaitHandle event2 = new AutoResetEvent(false);
+        //    bool let1Start = true, let1Save= true, let1Complete= false;
+        //    bool let2Start = true, let2Query= false, let2Save= false, let2Complete= false;
+        //    IsolationLevel level = IsolationLevel.ReadUncommitted;
+        //    String rn1, rn2;
+        //    var task1 = factory.StartNew(() =>
+        //    {
+        //        rn1 = Thread.CurrentThread.ManagedThreadId.ToString();
+
+        //        using(var tran = RF.TransactionScope(db, level))
+        //        {
+        //            while(!let1Start)
+        //            {
+        //                Thread.Sleep(1000);
+        //            }
+        //            var user = repo.GetByUserName("hqf");
+        //            user.RealName = rn1;
+        //            while(!let1Save)
+        //            {
+        //                Thread.Sleep(1000);
+        //            }
+        //            repo.Save(user);
+
+        //            while(!let1Complete)
+        //            {
+        //                Thread.Sleep(1000);
+        //            }
+        //            tran.Complete();
+        //        }
+        //    });
+        //    var task2 = factory.StartNew(() =>
+        //    {
+        //        rn2 = Thread.CurrentThread.ManagedThreadId.ToString();
+        //        while(!let2Start)
+        //        {
+        //            Thread.Sleep(1000);
+        //        }
+        //        using(var tran = RF.TransactionScope(db, level))
+        //        {
+        //            while(!let2Query)
+        //            {
+        //                Thread.Sleep(1000);
+        //            }
+        //            var user = repo.GetByUserName("hqf");
+        //            user.RealName = rn2;
+        //            while(!let2Save)
+        //            {
+        //                Thread.Sleep(1000);
+        //            }
+        //            repo.Save(user);
+        //            while(!let2Complete)
+        //            {
+        //                Thread.Sleep(1000);
+        //            }
+        //            tran.Complete();
+        //        }
+        //    });
+        //    task1.Wait();
+        //    task2.Wait();
+        //}
 
         [TestMethod]
         public void APT_Register_Success()
