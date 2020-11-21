@@ -96,6 +96,26 @@ namespace RafyUnitTest
 
         #region Query
 
+        /// <summary>
+        /// 通过 sql 查询 entityList
+        /// </summary>
+        [TestMethod]
+        public void ORM_Query_GetBySql()
+        {
+            var repo = RF.ResolveInstance<TestUserRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                FormattedSql sql = @"select * from users where username={0}";
+                sql.Parameters.Add(new DbAccesserParameter("hk", DbType.String));
+                TestUser user = new TestUser();
+                user.Name = "hk";
+                user.Age = 18;
+                repo.Save(user);
+                var entityList = repo.GetEntityListBySql(sql);
+                Assert.AreEqual(1, entityList.Count);
+            }
+        }
+            
         [TestMethod]
         public void ORM_Query_EmptyPaging_SingletonSerialization()
         {

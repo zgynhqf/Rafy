@@ -224,6 +224,12 @@ namespace UT
         }
 
         [RepositoryQuery]
+        public virtual EntityList GetEntityListBySql(FormattedSql sql, PagingInfo paging = null, bool columnMapToProperty = true)
+        {
+            return (EntityList)(this.DataQueryer as RdbDataQueryer).GetBySql<TestUserList>(sql, paging, columnMapToProperty);
+        }
+        
+        [RepositoryQuery]
         public virtual TestUserList GetByNameAgeByMultiParameters2(string name, int age, PagingInfo pi = null)
         {
             var f = QueryFactory.Instance;

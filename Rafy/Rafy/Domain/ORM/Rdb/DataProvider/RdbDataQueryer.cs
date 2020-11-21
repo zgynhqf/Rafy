@@ -149,6 +149,24 @@ namespace Rafy.Domain.ORM
         }
 
         /// <summary>
+        /// 通过 sql 查询实体
+        /// </summary>
+        /// <typeparam name="TEntityList"></typeparam>
+        /// <param name="sql"></param>
+        /// <param name="paging">分页信息</param>
+        /// <param name="columnMapToProperty"></param>
+        /// 此参数表示表格中的列名是否直接映射实体的属性名。
+        /// true：表格列名就是属性名。
+        /// false：表格中列名映射的是实体对应的数据库表的列名，而非属性名。
+        /// 默认为 true。
+        /// <returns></returns>
+        public TEntityList GetBySql<TEntityList>(FormattedSql sql, PagingInfo paging = null, bool columnMapToProperty = true) where TEntityList : EntityList
+        {
+            var entityList = QueryTable(new TableQueryArgs(sql, paging));
+            return entityList.ToEntityList<TEntityList>();
+        }
+         
+        /// <summary>
         /// 通过 IQuery 对象来查询数据表。
         /// </summary>
         /// <param name="query">查询条件。</param>
