@@ -176,6 +176,7 @@ namespace Rafy
         {
             var aName = typeof(RafyEnvironment).Assembly.GetName();
             aName.Name = name;
+            aName.Version = null;//忽略版本号
             var assembly = Assembly.Load(aName);
             return CreatePluginFromAssembly(assembly);
         }

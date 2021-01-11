@@ -20,4 +20,8 @@
     <ItemGroup>
         <ProjectReference Include="..\..\Rafy\Rafy.csproj" />
     </ItemGroup>
+
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+      <Exec Command="xcopy &quot;$(TargetPath)&quot; &quot;$(SolutionDir)Web\bin\Domain\&quot; /Y&#xD;&#xA;xcopy &quot;$(TargetPath)&quot; &quot;$(SolutionDir)WPFClient\bin\$(ConfigurationName)\Domain\&quot; /Y" />
+    </Target>
 </Project>
