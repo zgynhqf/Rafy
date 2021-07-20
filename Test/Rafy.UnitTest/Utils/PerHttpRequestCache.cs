@@ -61,10 +61,10 @@ namespace Rafy.Utils.Caching
             this._context = context;
         }
 
+#if NET45
         /// <summary>
         /// 获取 <see cref="HttpContextBase"/> 实例的 Items.
         /// </summary>
-#if NET45
         protected virtual IDictionary GetItems()
 #endif
 #if NS2

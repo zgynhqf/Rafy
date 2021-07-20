@@ -145,8 +145,8 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>rem zip projects
-$(ProjectDir)zipTools\zip.exe -r -j $(ProjectDir)..\VSPackage\ItemTemplates\DomainEntity.zip $(ProjectDir)Items\DomainEntity
-$(ProjectDir)zipTools\zip.exe -r -j $(ProjectDir)..\VSPackage\ItemTemplates\DomainEntityRepository.zip $(ProjectDir)Items\DomainEntityRepository
+"$(ProjectDir)zipTools\zip.exe" -r -j "$(ProjectDir)..\VSPackage\ItemTemplates\DomainEntity.zip" "$(ProjectDir)Items\DomainEntity"
+"$(ProjectDir)zipTools\zip.exe" -r -j "$(ProjectDir)..\VSPackage\ItemTemplates\DomainEntityRepository.zip" "$(ProjectDir)Items\DomainEntityRepository"
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
