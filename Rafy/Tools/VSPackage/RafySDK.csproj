@@ -290,6 +290,10 @@
     </None>
     <None Include="Hxy Key.snk" />
     <None Include="packages.config" />
+    <Content Include="ProjectTemplates\Rafy Domain Library NET5.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <None Include="_CodeSnippets\Rafy_Command.snippet" />
     <EmbeddedResource Include="_CodeSnippets\Rafy_Criteria.snippet" />
     <None Include="_CodeSnippets\Rafy_Entity_Criteria.snippet" />

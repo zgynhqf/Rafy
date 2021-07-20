@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Rafy.Domain" Version="3.71.3830" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <Compile Include="DomainLibraryPlugin.cs" />
+        <Compile Include="Entities\DomainLibraryEntity.cs" />
+    </ItemGroup>
+
+</Project>
