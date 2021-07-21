@@ -70,8 +70,11 @@
     <Compile Include="Common\Helper.cs" />
     <Compile Include="Common\ProjectHelper.cs" />
     <Compile Include="Common\RepoFileFinder.cs" />
+    <None Include="Projects\Rafy Console App NET5\appsettings.json" />
+    <None Include="Projects\Rafy Console App NET5\ConsoleApp.csproj" />
     <None Include="Projects\Rafy Domain Library NET5\DomainLibraryPlugin.cs" />
     <None Include="Projects\Rafy Domain Library NET5\Entities\DomainLibraryEntity.cs" />
+    <None Include="Projects\Rafy Console App NET5\Program.cs" />
     <Compile Include="Wizards\Items\DomainEntityRepository\DomainEntityRepositoryItemWizard.cs" />
     <Compile Include="Wizards\Items\DomainEntityRepository\DomainEntityRepositoryWizardWindow.xaml.cs">
       <DependentUpon>DomainEntityRepositoryWizardWindow.xaml</DependentUpon>
@@ -88,7 +91,8 @@
     <Compile Include="Wizards\Items\ItemCodeTemplate.cs" />
     <Compile Include="Wizards\Items\ViewModel.cs" />
     <Compile Include="Wizards\Projects\ConsoleAppProjectWizard.cs" />
-    <Compile Include="Wizards\Projects\DomainLibraryNET5ProjectWizard.cs" />
+    <Compile Include="Wizards\Projects\DomainLibraryNET5ProjectWizard - Copy.cs" />
+    <Compile Include="Wizards\Projects\ConsoleAppNET5ProjectWizard.cs" />
     <Compile Include="Wizards\Wizard.cs" />
     <None Include="Projects\Rafy Console App\packages.config" />
     <None Include="Projects\Rafy Console App\Program.cs" />
@@ -113,6 +117,8 @@
   <ItemGroup>
     <None Include="Projects\Rafy Domain Library NET5\__TemplateIcon.ico" />
     <None Include="Projects\Rafy Domain Library NET5\RafyDomainLibraryNET5Template.vstemplate" />
+    <None Include="Projects\Rafy Console App NET5\__TemplateIcon.ico" />
+    <None Include="Projects\Rafy Console App NET5\RafyConsoleAppTemplate.vstemplate" />
     <Content Include="zipTools\zip.exe" />
     <Content Include="zipTools\zip.txt" />
     <None Include="Items\DomainEntityRepository\__TemplateIcon.ico" />

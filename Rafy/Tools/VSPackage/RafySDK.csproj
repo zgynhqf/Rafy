@@ -294,6 +294,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="ProjectTemplates\Rafy Console App NET5.zip">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="_CodeSnippets\Rafy_Command.snippet" />
     <EmbeddedResource Include="_CodeSnippets\Rafy_Criteria.snippet" />
     <None Include="_CodeSnippets\Rafy_Entity_Criteria.snippet" />
