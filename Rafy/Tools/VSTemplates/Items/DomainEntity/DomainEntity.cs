@@ -28,7 +28,6 @@ namespace $domainNamespace$
 
         public $domainEntityName$() { }
 
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
         protected $domainEntityName$(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
         #endregion
