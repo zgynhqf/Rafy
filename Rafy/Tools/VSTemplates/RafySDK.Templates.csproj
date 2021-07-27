@@ -64,6 +64,7 @@
     <EmbeddedResource Include="Items\DomainEntityRepository\DomainEntityRepositoryTemplate.cs" />
     <EmbeddedResource Include="Items\DomainEntityRepository\DomainEntityRepository.cs" />
     <EmbeddedResource Include="Items\DomainEntityRepository\DomainEntityRepository.g.cs" />
+    <Compile Include="Common\ClassFinder.cs" />
     <Compile Include="Common\CodeElementVisitor.cs" />
     <Compile Include="Common\Consts.cs" />
     <Compile Include="Common\EntityFileFinder.cs" />

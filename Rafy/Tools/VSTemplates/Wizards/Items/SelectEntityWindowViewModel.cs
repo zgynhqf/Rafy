@@ -94,7 +94,7 @@ namespace RafySDK.Templates.Wizards
                 if (_types == null)
                 {
                     //查找其中的所有实体类的全名称。
-                    _types = EntityFileFinder.FindFiles(this.Project).OrderBy(c => c.FullName).ToList();
+                    _types = new EntityFileFinder().FindFiles(this.Project).OrderBy(c => c.FullName).ToList();
                 }
 
                 return _types;

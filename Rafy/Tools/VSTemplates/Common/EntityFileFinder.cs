@@ -20,72 +20,19 @@ using EnvDTE;
 
 namespace Rafy.VSPackage
 {
-    class EntityFileFinder : CodeElementVisitor
+    /// <summary>
+    /// 查找所有的实体文件，以及其一一对应的实体自动生成代码文件
+    /// </summary>
+    /// <seealso cref="Rafy.VSPackage.CodeElementVisitor" />
+    class EntityFileFinder : ClassFinder
     {
-        public static List<CodeClass> FindFiles(object selectedItem)
-        {
-            var finder = new EntityFileFinder();
-            finder.Find(selectedItem);
-            return finder.Result;
-        }
-
-        private bool _currentIsEntity = false;
-        private List<CodeClass> _result = new List<CodeClass>();
-
-        public List<CodeClass> Result
-        {
-            get { return _result; }
-        }
-
-        public void Find(object selectedItem)
-        {
-            _result.Clear();
-
-            var project = selectedItem as Project;
-            if (project != null)
-            {
-                //对所有 CSharp 文件进行解析。
-                foreach (var item in ProjectHelper.EnumerateCSharpFiles(project.ProjectItems))
-                {
-                    //忽略自动生成的文件。
-                    if (!item.Name.Contains(".g.cs"))
-                    {
-                        _currentIsEntity = false;
-                        this.Visit(item.FileCodeModel.CodeElements);
-                    }
-                }
-            }
-            else
-            {
-                //忽略自动生成的文件。
-                var item = selectedItem as ProjectItem;
-                if (!item.Name.Contains(".g.cs"))
-                {
-                    _currentIsEntity = false;
-                    this.Visit(item.FileCodeModel.CodeElements);
-                }
-            }
-        }
-
-        protected override void VisitClass(CodeClass codeClass)
+        protected override void VisitClassCore(CodeClass codeClass)
         {
             if (Helper.IsEntity(codeClass))
             {
-                _result.Add(codeClass);
-                _currentIsEntity = true;
+                this.Files.Add(codeClass);
+                StopVisiting = true;
             }
-        }
-
-        protected override void Visit(CodeElement element)
-        {
-            if (_currentIsEntity) return;
-            base.Visit(element);
-        }
-
-        protected override void VisitEnum(CodeEnum codeEnum)
-        {
-            //忽略 Enum，不用遍历其中的字段。
-            //base.VisitEnum(codeEnum);
         }
     }
 }

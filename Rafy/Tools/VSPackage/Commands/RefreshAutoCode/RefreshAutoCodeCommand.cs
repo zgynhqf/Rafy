@@ -71,8 +71,14 @@ namespace Rafy.VSPackage.Commands.RefreshAutoCode
             #endregion
 
             //查找文件。
-            var entities = EntityFileFinder.FindFiles(selectedItem).Where(e => !e.IsAbstract).ToList();
-            var repositories = RepoFileFinder.FindFiles(selectedItem).Where(e => !e.IsAbstract).ToList();
+            var selectedProjectItem = selectedItem as ProjectItem;
+            var project = selectedProjectItem != null ? selectedProjectItem.ContainingProject : (selectedItem as Project);
+            var entities = new EntityFileFinder().FindPairs(project, e => !e.IsAbstract &&
+                (selectedProjectItem == null || selectedProjectItem.Name == e.Name + ".cs")
+                ).ToList();
+            var repositories = new RepoFileFinder().FindPairs(project, e => !e.IsAbstract &&
+                (selectedProjectItem == null || selectedProjectItem.Name == e.Name + ".cs")
+                ).ToList();
             if (entities.Count == 0 && repositories.Count == 0)
             {
                 MessageBox.Show("无法生成：选中的项中没有找到任何有自动生成代码的文件。");
@@ -82,13 +88,12 @@ namespace Rafy.VSPackage.Commands.RefreshAutoCode
             //替换文件。
             foreach (var entity in entities)
             {
-                var item = entity.ProjectItem;
-                RefreshAutoCodeForClass(entity, item, this.RenderEntityByTemplate);
+                RefreshAutoCodeForClass(entity.CodeClass, entity.GeneratedCode, this.RenderEntityByTemplate);
             }
+            var allEntities = entities.Select(e => e.CodeClass).ToList();
             foreach (var repo in repositories)
             {
-                var item = repo.ProjectItem;
-                RefreshAutoCodeForClass(repo, item, r => this.RenderRepoByTemplate(r, entities));
+                RefreshAutoCodeForClass(repo.CodeClass, repo.GeneratedCode, r => this.RenderRepoByTemplate(r, allEntities));
             }
 
             MessageBox.Show(string.Format("生成完毕。一共生成 {0} 个实体文件，{1} 个仓库文件。", entities.Count, repositories.Count));
@@ -96,16 +101,32 @@ namespace Rafy.VSPackage.Commands.RefreshAutoCode
 
         #region 处理文件
 
-        private void RefreshAutoCodeForClass(CodeClass codeClass, ProjectItem item, Func<CodeClass, string> renderer)
+        /// <summary>
+        /// Refreshes the automatic code for class.
+        /// </summary>
+        /// <param name="codeClass">The code class.</param>
+        /// <param name="generatedCode">已经生成的代码文件。如果是 null，则会通过约定来进行生成。</param>
+        /// <param name="renderer">The renderer.</param>
+        private void RefreshAutoCodeForClass(CodeClass codeClass, ProjectItem generatedCode, Func<CodeClass, string> renderer)
         {
+            var item = codeClass.ProjectItem;
             var fileName = item.get_FileNames(1);
 
             //标记文件中的类型都为分部类
             this.MarkPartial(fileName);
 
             //计算路径
-            var gFileName = Path.GetFileNameWithoutExtension(fileName) + ".g.cs";
-            var gFile = Path.Combine(Path.GetDirectoryName(fileName), gFileName);
+            string gFile = null, gFileName = null;
+            if (generatedCode != null)
+            {
+                gFile = generatedCode.get_FileNames(1);
+                gFileName = Path.GetFileName(fileName);
+            }
+            else
+            {
+                gFileName = Path.GetFileNameWithoutExtension(fileName) + ".g.cs";
+                gFile = Path.Combine(Path.GetDirectoryName(fileName), gFileName);
+            }
 
             //生成代码，写入文件。
             var code = renderer(codeClass);
