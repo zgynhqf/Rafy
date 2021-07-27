@@ -64,6 +64,12 @@ namespace ModelingEnv
 
         private void LoadFile(string file)
         {
+            if (!File.Exists(file))
+            {
+                MessageBox.Show($"加载失败，找不到文件：{file}");
+                return;
+            }
+
             viewer.LoadDocument(file);
             viewer.Visibility = Visibility.Visible;
             this.Title = System.IO.Path.GetFileName(file) + "（" + this.Title + "）";
