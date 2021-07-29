@@ -28,6 +28,7 @@ namespace Rafy.Data
     public class DbConnectionSchema
     {
         public const string Provider_SqlClient = "System.Data.SqlClient";
+        public const string Provider_SQLite = "System.Data.SQLite";
         public const string Provider_SqlCe = "System.Data.SqlServerCe";
         public const string Provider_Odbc = "System.Data.Odbc";
         //public const string Provider_Oracle = "System.Data.OracleClient";
@@ -89,6 +90,10 @@ namespace Rafy.Data
                 //Oracle 中，把用户名（Schema）认为数据库名。
                 database = GetOracleUserId(this);
             }
+            else if (database == "main" && this.ProviderName == Provider_SQLite)
+            {
+                database = GetDataSourceName(this) + "/main";
+            }
 
             this._database = database;
         }
@@ -145,6 +150,16 @@ namespace Rafy.Data
             }
             var userId = match.Groups["userId"].Value;
             return userId;
+        }
+        public static string GetDataSourceName(DbConnectionSchema schema)
+        {
+            var match = Regex.Match(schema.ConnectionString, @"Data Source=\s*(?<dataSource>[^;]+)\s*");
+            if (!match.Success)
+            {
+                throw new NotSupportedException("无法解析出此数据库连接字符串中的数据库名：" + schema.ConnectionString);
+            }
+            var dataSource = match.Groups["dataSource"].Value;
+            return dataSource;
         }
     }
 }

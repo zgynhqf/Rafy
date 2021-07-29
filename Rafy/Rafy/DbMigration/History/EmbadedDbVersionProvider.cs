@@ -83,7 +83,8 @@ namespace Rafy.DbMigration.History
         private void CheckDbValid()
         {
             var conDb = this.DBA.Connection.Database;
-            if (conDb != this.DbSetting.Database && !string.IsNullOrWhiteSpace(conDb)) throw new InvalidOperationException("连接使用的数据库与正在创建的数据不一致！");
+            //sqlite 数据库中，this.DbSetting.Database 与 Connection.Database 并不一致。
+            if (!string.IsNullOrWhiteSpace(conDb) && !this.DbSetting.Database.EndsWith(conDb)) throw new InvalidOperationException("连接使用的数据库与正在创建的数据库不一致！");
         }
 
         private DateTime Get()

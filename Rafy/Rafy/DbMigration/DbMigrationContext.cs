@@ -640,7 +640,25 @@ namespace Rafy.DbMigration
 
             if (!embaded) { this.ResetDbVersion(); }
 
-            this.ResetHistory();
+            if (this.SupportHistory) this.ResetHistory();
+        }
+
+        /// <summary>
+        /// 不删除库，只是删除其中的所有的表。
+        /// </summary>
+        public void DeleteAllTables()
+        {
+            var old = _ManualMigrations;
+            _ManualMigrations = new ManualMigrationsContainer();
+            try
+            {
+                var emptyDb = new DestinationDatabase(this.DbSetting.Name);
+                this.MigrateTo(emptyDb);
+            }
+            finally
+            {
+                _ManualMigrations = old;
+            }
         }
 
         #endregion

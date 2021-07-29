@@ -27,6 +27,7 @@ using Rafy.Domain.ORM.SqlServer;
 using Rafy.Utils;
 using Rafy.Domain.ORM.MySql;
 using Rafy.DbMigration;
+using Rafy.Domain.ORM.SQLite;
 
 namespace Rafy.Domain.ORM
 {
@@ -52,6 +53,9 @@ namespace Rafy.Domain.ORM
                     break;
                 case DbSetting.Provider_SqlCe:
                     table = new SqlCeTable(repo);
+                    break;
+                case DbSetting.Provider_SQLite:
+                    table = new SQLiteTable(repo);
                     break;
                 case DbSetting.Provider_MySql:
                     table = new MySqlTable(repo);

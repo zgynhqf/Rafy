@@ -25,7 +25,7 @@ namespace Rafy.Domain.ORM.MySql
     /// <summary>
     /// MySql的表对象
     /// </summary>
-    internal sealed class MySqlTable : SqlOraTable
+    internal class MySqlTable : SqlOraTable
     {
         /// <summary>
         /// 构造函数 初始化仓库对象

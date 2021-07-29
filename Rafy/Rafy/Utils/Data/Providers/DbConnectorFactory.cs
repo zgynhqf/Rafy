@@ -25,7 +25,7 @@ namespace Rafy.Data.Providers
     /// </summary>
     internal class DbConnectorFactory
     {
-        private static DbProviderFactory _sql, _sqlCe, _oracle,_mySql;
+        private static DbProviderFactory _sql, _sqlCe, _sqlite, _oracle,_mySql;
         private static ISqlProvider _sqlConverter, _oracleConverter, _odbcConverter,_mySqlConverter;
 
         /// <summary>   
@@ -49,6 +49,12 @@ namespace Rafy.Data.Providers
 #endif
                     }
                     return _sql;
+                case DbSetting.Provider_SQLite:
+                    if (_sqlite == null)
+                    {
+                        _sqlite = LoadFromAssembly("System.Data.SQLite.SQLiteFactory, System.Data.SQLite");
+                    }
+                    return _sqlite;
                 case DbSetting.Provider_SqlCe:
                     if (_sqlCe == null)
                     {
@@ -114,6 +120,7 @@ namespace Rafy.Data.Providers
 
                 case DbSetting.Provider_SqlClient:
                 case DbSetting.Provider_SqlCe:
+                case DbSetting.Provider_SQLite:
                     if (_sqlConverter == null) _sqlConverter = new SqlServerProvider();
                     return _sqlConverter;
                 //PatrickLiu 增加的有关 MySql 的代码
@@ -138,7 +145,6 @@ namespace Rafy.Data.Providers
         /// </summary>
         internal static readonly Regex ReParameterName = new Regex(@"{(?<number>\d+)}", RegexOptions.Compiled);
 
-#if NS2
         private static DbProviderFactory LoadFromAssembly(string typeName)
         {
             var factoryType = Type.GetType(typeName);
@@ -146,6 +152,5 @@ namespace Rafy.Data.Providers
             if (instance == null) throw new InvalidProgramException($"{typeName} 对应的类型无法加载。");
             return instance;
         }
-#endif
     }
 }

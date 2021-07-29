@@ -51,13 +51,19 @@ namespace Rafy.UnitTest.DataProvider
                 }
                 using (var c = new RafyDbMigrationContext(DbSettingNames.RafyPlugins))
                 {
-                    c.HistoryRepository = new DbHistoryRepository();
+                    if (c.DbSetting.ProviderName != DbSetting.Provider_SQLite)
+                    {
+                        c.HistoryRepository = new DbHistoryRepository();
+                    }
                     c.RunDataLossOperation = DataLossOperation.All;
                     c.AutoMigrate();
                 }
                 using (var c = new RafyDbMigrationContext(UnitTestEntityRepositoryDataProvider.DbSettingName))
                 {
-                    c.HistoryRepository = new DbHistoryRepository();
+                    if (c.DbSetting.ProviderName != DbSetting.Provider_SQLite)
+                    {
+                        c.HistoryRepository = new DbHistoryRepository();
+                    }
                     c.RunDataLossOperation = DataLossOperation.All;
                     c.AutoMigrate();
                 }
@@ -72,7 +78,10 @@ namespace Rafy.UnitTest.DataProvider
                     {
                         c.ClassMetaReader.EntityDbSettingName = UnitTestEntityRepositoryDataProvider.DbSettingName;
                         c.ClassMetaReader.IsGeneratingForeignKey = false;
-                        c.HistoryRepository = new DbHistoryRepository();
+                        if (c.DbSetting.ProviderName != DbSetting.Provider_SQLite)
+                        {
+                            c.HistoryRepository = new DbHistoryRepository();
+                        }
                         c.RunDataLossOperation = DataLossOperation.All;
                         c.AutoMigrate();
                     }
@@ -80,13 +89,19 @@ namespace Rafy.UnitTest.DataProvider
                 }
                 using (var c = new RafyDbMigrationContext(UnitTest2EntityRepositoryDataProvider.DbSettingName))
                 {
-                    c.HistoryRepository = new DbHistoryRepository();
+                    if (c.DbSetting.ProviderName != DbSetting.Provider_SQLite)
+                    {
+                        c.HistoryRepository = new DbHistoryRepository();
+                    }
                     c.RunDataLossOperation = DataLossOperation.All;
                     c.AutoMigrate();
                 }
                 using (var c = new RafyDbMigrationContext(StringTestEntityDataProvider.DbSettingName))
                 {
-                    c.HistoryRepository = new DbHistoryRepository();
+                    if (c.DbSetting.ProviderName != DbSetting.Provider_SQLite)
+                    {
+                        c.HistoryRepository = new DbHistoryRepository();
+                    }
                     c.RunDataLossOperation = DataLossOperation.All;
                     c.AutoMigrate();
                 }
@@ -97,18 +112,15 @@ namespace Rafy.UnitTest.DataProvider
         {
             using (var c = new RafyDbMigrationContext(DbSettingNames.DbMigrationHistory))
             {
-                c.RunDataLossOperation = DataLossOperation.All;
-                c.MigrateTo(new DestinationDatabase(DbSettingNames.DbMigrationHistory));
+                DropTables(c);
             }
             using (var c = new RafyDbMigrationContext(DbSettingNames.RafyPlugins))
             {
-                c.RunDataLossOperation = DataLossOperation.All;
-                c.MigrateTo(new DestinationDatabase(DbSettingNames.RafyPlugins));
+                DropTables(c);
             }
             using (var c = new RafyDbMigrationContext(UnitTestEntityRepositoryDataProvider.DbSettingName))
             {
-                c.RunDataLossOperation = DataLossOperation.All;
-                c.MigrateTo(new DestinationDatabase(UnitTestEntityRepositoryDataProvider.DbSettingName));
+                DropTables(c);
             }
             using (RdbDataProvider.RedirectDbSetting(
                 UnitTestEntityRepositoryDataProvider.DbSettingName,
@@ -119,20 +131,23 @@ namespace Rafy.UnitTest.DataProvider
                 {
                     c.ClassMetaReader.EntityDbSettingName = UnitTestEntityRepositoryDataProvider.DbSettingName;
                     c.ClassMetaReader.IsGeneratingForeignKey = false;
-                    c.RunDataLossOperation = DataLossOperation.All;
-                    c.MigrateTo(new DestinationDatabase(UnitTestEntityRepositoryDataProvider.DbSettingName_Duplicate));
+                    DropTables(c);
                 }
             }
             using (var c = new RafyDbMigrationContext(UnitTest2EntityRepositoryDataProvider.DbSettingName))
             {
-                c.RunDataLossOperation = DataLossOperation.All;
-                c.MigrateTo(new DestinationDatabase(UnitTest2EntityRepositoryDataProvider.DbSettingName));
+                DropTables(c);
             }
             using (var c = new RafyDbMigrationContext(StringTestEntityDataProvider.DbSettingName))
             {
-                c.RunDataLossOperation = DataLossOperation.All;
-                c.MigrateTo(new DestinationDatabase(StringTestEntityDataProvider.DbSettingName));
+                DropTables(c);
             }
+        }
+
+        private static void DropTables(RafyDbMigrationContext c)
+        {
+            c.RunDataLossOperation = DataLossOperation.All;
+            c.MigrateTo(new DestinationDatabase(c.DbSetting.Name));
         }
     }
 }

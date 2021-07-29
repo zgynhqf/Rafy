@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
+        <TargetFramework>netcoreapp2.0</TargetFramework>
         <IsPackable>false</IsPackable>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
@@ -14,6 +14,10 @@
         <DefineConstants>DEBUG;NS2</DefineConstants>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.0|AnyCPU'">
+      <NoWarn>1701;1702;NETSDK1138</NoWarn>
+    </PropertyGroup>
+
     <ItemGroup>
       <Content Include="appsettings.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -23,9 +27,10 @@
     <ItemGroup>
         <PackageReference Include="Castle.Core" Version="4.1.1" />
         <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
-        <PackageReference Include="MSTest.TestAdapter" Version="1.1.18" />
-        <PackageReference Include="MSTest.TestFramework" Version="1.1.18" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
+        <PackageReference Include="MSTest.TestAdapter" Version="1.2.1" />
+        <PackageReference Include="MSTest.TestFramework" Version="1.2.1" />
+        <PackageReference Include="Stub.System.Data.SQLite.Core.NetStandard" Version="1.0.114.3" />
     </ItemGroup>
 
     <ItemGroup>

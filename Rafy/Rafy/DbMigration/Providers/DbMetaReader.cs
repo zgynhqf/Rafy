@@ -25,6 +25,7 @@ namespace Rafy.DbMigration
 {
     /// <summary>
     /// 数据库的元数据读取器
+    /// https://www.cnblogs.com/dirt2/p/5089441.html
     /// </summary>
     public abstract class DbMetaReader : IMetadataReader
     {
@@ -102,7 +103,7 @@ namespace Rafy.DbMigration
         /// 加载主键、外键等约束。
         /// </summary>
         /// <param name="database">需要加载约束的数据库对象</param>
-        protected virtual void LoadAllConstraints(Database database)
+        protected void LoadAllConstraints(Database database)
         {
             var allConstrains = this.ReadAllConstrains(database);
 

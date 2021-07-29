@@ -46,14 +46,25 @@ namespace RafyUnitTest
             //运行测试前，这个库升级到最新的内容，同时它的历史记录需要清空
             using (var c = new RafyDbMigrationContext(UnitTestEntityRepositoryDataProvider.DbSettingName))
             {
-                c.HistoryRepository = new DbHistoryRepository();
                 c.RunDataLossOperation = DataLossOperation.All;
-                //c.DeleteDatabase();
+
+                if (IsTestDbSQLite())
+                {
+                    c.DeleteAllTables();
+                }
+                else
+                {
+                    c.HistoryRepository = new DbHistoryRepository();
+                }
 
                 c.AutoMigrate();
 
                 c.ResetDbVersion();
-                c.ResetHistory();
+
+                if (!IsTestDbSQLite())
+                {
+                    c.ResetHistory();
+                }
 
                 var dbProvider = DbMigrationProviderFactory.GetProvider(c.DbSetting);
                 dbTypeConverter = (dbProvider.CreateRunGenerator() as SqlRunGenerator).DbTypeCoverter;
@@ -65,7 +76,10 @@ namespace RafyUnitTest
         {
             using (var c = new RafyDbMigrationContext(UnitTestEntityRepositoryDataProvider.DbSettingName))
             {
-                c.HistoryRepository = new DbHistoryRepository();
+                if (!IsTestDbSQLite())
+                {
+                    c.HistoryRepository = new DbHistoryRepository();
+                }
                 c.RunDataLossOperation = DataLossOperation.All;
                 c.AutoMigrate();
             }
@@ -85,7 +99,10 @@ namespace RafyUnitTest
                     /// 实体元数据默认设置的连接字符串
                     /// 如果切换新的数据库需要设置，否则不用设置
                     c.ClassMetaReader.EntityDbSettingName = UnitTestEntityRepositoryDataProvider.DbSettingName;
-                    c.HistoryRepository = new DbHistoryRepository();
+                    if (!IsTestDbSQLite())
+                    {
+                        c.HistoryRepository = new DbHistoryRepository();
+                    }
                     c.RunDataLossOperation = DataLossOperation.All;
                     c.AutoMigrate();
                 }
@@ -95,6 +112,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void DMT_RollbackAll()
         {
+            if (IsTestDbSQLite()) return;
+
             using (var context = new RafyDbMigrationContext(UnitTestEntityRepositoryDataProvider.DbSettingName))
             {
                 context.HistoryRepository = new DbHistoryRepository();
@@ -153,7 +172,7 @@ namespace RafyUnitTest
                 var c1 = taskTable.FindColumn("TestingColumn");
                 var c2 = taskTable.FindColumn("TestingColumn2");
                 Assert.IsTrue(c1 != null);
-                Assert.IsTrue(c2 != null && c2.IsRequired);
+                Assert.IsTrue(c2 != null && (c2.IsRequired || IsTestDbSQLite()));
             });
         }
 
@@ -168,7 +187,7 @@ namespace RafyUnitTest
             {
                 var taskTable = result.FindTable("Task");
                 var c1 = taskTable.FindColumn("TestingColumn");
-                Assert.IsTrue(c1 != null && c1.IsRequired);
+                Assert.IsTrue(c1 != null && (c1.IsRequired || IsTestDbSQLite()));
                 Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.String));
             });
         }
@@ -184,7 +203,7 @@ namespace RafyUnitTest
             {
                 var taskTable = result.FindTable("Task");
                 var c1 = taskTable.FindColumn("TestingColumn");
-                Assert.IsTrue(c1 != null && c1.IsRequired);
+                Assert.IsTrue(c1 != null && (c1.IsRequired || IsTestDbSQLite()));
                 Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.AnsiString));
             });
         }
@@ -200,7 +219,7 @@ namespace RafyUnitTest
             {
                 var taskTable = result.FindTable("Task");
                 var c1 = taskTable.FindColumn("TestingColumn");
-                Assert.IsTrue(c1 != null && c1.IsRequired);
+                Assert.IsTrue(c1 != null && (c1.IsRequired || IsTestDbSQLite()));
                 Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.Date));
             });
         }
@@ -216,7 +235,7 @@ namespace RafyUnitTest
             {
                 var taskTable = result.FindTable("Task");
                 var c1 = taskTable.FindColumn("TestingColumn");
-                Assert.IsTrue(c1 != null && c1.IsRequired);
+                Assert.IsTrue(c1 != null && (c1.IsRequired || IsTestDbSQLite()));
                 Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.Time));
             });
         }
@@ -232,7 +251,7 @@ namespace RafyUnitTest
             {
                 var taskTable = result.FindTable("Task");
                 var c1 = taskTable.FindColumn("TestingColumn");
-                Assert.IsTrue(c1 != null && c1.IsRequired);
+                Assert.IsTrue(c1 != null && (c1.IsRequired || IsTestDbSQLite()));
                 Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.DateTime));
             });
         }
@@ -248,7 +267,7 @@ namespace RafyUnitTest
             {
                 var taskTable = result.FindTable("Task");
                 var c1 = taskTable.FindColumn("TestingColumn");
-                Assert.IsTrue(c1 != null && c1.IsRequired);
+                Assert.IsTrue(c1 != null && (c1.IsRequired || IsTestDbSQLite()));
                 Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.DateTimeOffset));
             });
         }
@@ -264,7 +283,7 @@ namespace RafyUnitTest
             {
                 var taskTable = result.FindTable("Task");
                 var c1 = taskTable.FindColumn("TestingColumn");
-                Assert.IsTrue(c1 != null && c1.IsRequired);
+                Assert.IsTrue(c1 != null && (c1.IsRequired || IsTestDbSQLite()));
                 Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.Int32));
             });
         }
@@ -280,7 +299,7 @@ namespace RafyUnitTest
             {
                 var taskTable = result.FindTable("Task");
                 var c1 = taskTable.FindColumn("TestingColumn");
-                Assert.IsTrue(c1 != null && c1.IsRequired);
+                Assert.IsTrue(c1 != null && (c1.IsRequired || IsTestDbSQLite()));
                 Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.Int64));
             });
         }
@@ -296,7 +315,7 @@ namespace RafyUnitTest
             {
                 var taskTable = result.FindTable("Task");
                 var c1 = taskTable.FindColumn("TestingColumn");
-                Assert.IsTrue(c1 != null && c1.IsRequired);
+                Assert.IsTrue(c1 != null && (c1.IsRequired || IsTestDbSQLite()));
                 Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.Double));
             });
         }
@@ -312,7 +331,7 @@ namespace RafyUnitTest
             {
                 var taskTable = result.FindTable("Task");
                 var c1 = taskTable.FindColumn("TestingColumn");
-                Assert.IsTrue(c1 != null && c1.IsRequired);
+                Assert.IsTrue(c1 != null && (c1.IsRequired || IsTestDbSQLite()));
                 Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.Decimal));
             });
         }
@@ -328,7 +347,7 @@ namespace RafyUnitTest
             {
                 var taskTable = result.FindTable("Task");
                 var c1 = taskTable.FindColumn("TestingColumn");
-                Assert.IsTrue(c1 != null && c1.IsRequired);
+                Assert.IsTrue(c1 != null && (c1.IsRequired || IsTestDbSQLite()));
                 Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.Binary));
             });
         }
@@ -344,7 +363,7 @@ namespace RafyUnitTest
             {
                 var taskTable = result.FindTable("Task");
                 var c1 = taskTable.FindColumn("TestingColumn");
-                Assert.IsTrue(c1 != null && c1.IsRequired);
+                Assert.IsTrue(c1 != null && (c1.IsRequired || IsTestDbSQLite()));
                 Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.Boolean));
             });
         }
@@ -362,7 +381,7 @@ namespace RafyUnitTest
                 {
                     var taskTable = result.FindTable("Task");
                     var c1 = taskTable.FindColumn("TestingColumn");
-                    Assert.IsTrue(c1 != null && c1.IsRequired);
+                    Assert.IsTrue(c1 != null && (c1.IsRequired || IsTestDbSQLite()));
                     Assert.IsTrue(dbTypeConverter.IsCompatible(c1.DbType, DbType.String));
                 });
             }
@@ -371,6 +390,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void DMT_DropColumn()
         {
+            if (IsTestDbSQLite()) return;
+
             this.Test(destination =>
             {
                 var taskTable = destination.FindTable("Task");
@@ -394,6 +415,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void DMT_AlterColumn_DbType_AutoMigrate()
         {
+            if (IsTestDbSQLite()) return;
+
             this.Test(destination =>
             {
             }, result =>
@@ -410,6 +433,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void DMT_AlterColumn_DbType()
         {
+            if (IsTestDbSQLite()) return;
+
             this.Test(destination =>
             {
                 var taskTable = destination.FindTable("Task");
@@ -432,6 +457,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void DMT_AlterColumn_DbType_NullStringToDouble()
         {
+            if (IsTestDbSQLite()) return;
+
             this.Test(destination =>
             {
                 var taskTable = destination.FindTable("Task");
@@ -450,6 +477,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void DMT_AddFK()
         {
+            if (IsTestDbSQLite()) return;
+
             this.Test(destination =>
             {
                 destination.FindTable("Task").AddColumn("TestingColumn3", DbType.Int32,
@@ -469,6 +498,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void DMT_RemoveFK()
         {
+            if (IsTestDbSQLite()) return;
+
             this.Test(destination =>
             {
                 destination.FindTable("Task").FindColumn("TestUserId").ForeignConstraint = null;
@@ -481,6 +512,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void DMT_AddNotNull()
         {
+            if (IsTestDbSQLite()) return;
+
             this.Test(destination =>
             {
                 destination.FindTable("Users").FindColumn("Level").IsRequired = true;
@@ -493,6 +526,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void DMT_RemoveNotNull()
         {
+            if (IsTestDbSQLite()) return;
+
             this.Test(destination =>
             {
                 destination.FindTable("Task").FindColumn("AllTime").IsRequired = false;
@@ -506,7 +541,10 @@ namespace RafyUnitTest
         {
             using (var context = new RafyDbMigrationContext(UnitTestEntityRepositoryDataProvider.DbSettingName))
             {
-                context.HistoryRepository = new DbHistoryRepository();
+                if (!IsTestDbSQLite())
+                {
+                    context.HistoryRepository = new DbHistoryRepository();
+                }
                 context.RunDataLossOperation = DataLossOperation.All;
 
                 var destination = context.ClassMetaReader.Read();
@@ -518,10 +556,20 @@ namespace RafyUnitTest
 
                     var result = context.DatabaseMetaReader.Read();
                     assertAction(result);
+
+                    //SQLite 数据库，只能删除所有表，再重新生成。
+                    if (IsTestDbSQLite())
+                    {
+                        context.DeleteAllTables();
+                        context.AutoMigrate();
+                    }
                 }
                 finally
                 {
-                    context.RollbackAll(RollbackAction.DeleteHistory);
+                    if (!IsTestDbSQLite())
+                    {
+                        context.RollbackAll(RollbackAction.DeleteHistory);
+                    }
                 }
             }
         }
@@ -531,7 +579,10 @@ namespace RafyUnitTest
         {
             using (var context = new RafyDbMigrationContext(UnitTestEntityRepositoryDataProvider.DbSettingName))
             {
-                context.HistoryRepository = new DbHistoryRepository();
+                if (!IsTestDbSQLite())
+                {
+                    context.HistoryRepository = new DbHistoryRepository();
+                }
 
                 var destination = context.ClassMetaReader.Read();
                 var taskTable = destination.FindTable("Task");
@@ -547,7 +598,15 @@ namespace RafyUnitTest
                 }
                 finally
                 {
-                    context.RollbackAll(RollbackAction.DeleteHistory);
+                    if (!IsTestDbSQLite())
+                    {
+                        context.RollbackAll(RollbackAction.DeleteHistory);
+                    }
+                    else
+                    {
+                        context.DeleteAllTables();
+                        context.AutoMigrate();
+                    }
                 }
             }
         }
@@ -555,6 +614,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void DMT_DataLoss_DropColumn()
         {
+            if (IsTestDbSQLite()) return;
+
             using (var context = new RafyDbMigrationContext(UnitTestEntityRepositoryDataProvider.DbSettingName))
             {
                 context.HistoryRepository = new DbHistoryRepository();
@@ -584,7 +645,10 @@ namespace RafyUnitTest
         {
             using (var context = new RafyDbMigrationContext(UnitTestEntityRepositoryDataProvider.DbSettingName))
             {
-                context.HistoryRepository = new DbHistoryRepository();
+                if (!IsTestDbSQLite())
+                {
+                    context.HistoryRepository = new DbHistoryRepository();
+                }
                 context.RunDataLossOperation = DataLossOperation.All;
 
                 try
@@ -597,10 +661,13 @@ namespace RafyUnitTest
                     context.MigrateManually();
 
                     //历史记录
-                    var histories = context.GetHistories();
-                    Assert.IsTrue(histories.Count == 2);
-                    Assert.IsTrue(histories[0] is DMT_ManualMigrateEntity);
-                    Assert.IsTrue(histories[1] is DMT_ManualMigrateTest);
+                    if (context.SupportHistory)
+                    {
+                        var histories = context.GetHistories();
+                        Assert.IsTrue(histories.Count == 2);
+                        Assert.IsTrue(histories[0] is DMT_ManualMigrateEntity);
+                        Assert.IsTrue(histories[1] is DMT_ManualMigrateTest);
+                    }
 
                     //数据库结构
                     var database = context.DatabaseMetaReader.Read();
@@ -621,11 +688,19 @@ namespace RafyUnitTest
                 }
                 finally
                 {
-                    //回滚
-                    context.RollbackAll(RollbackAction.DeleteHistory);
+                    if (!IsTestDbSQLite())
+                    {
+                        //回滚
+                        context.RollbackAll(RollbackAction.DeleteHistory);
 
-                    var database = context.DatabaseMetaReader.Read();
-                    Assert.IsTrue(database.FindTable("TestingTable") == null);
+                        var database = context.DatabaseMetaReader.Read();
+                        Assert.IsTrue(database.FindTable("TestingTable") == null);
+                    }
+                    else
+                    {
+                        context.DeleteAllTables();
+                        context.AutoMigrate();
+                    }
                 }
             }
         }
@@ -633,10 +708,12 @@ namespace RafyUnitTest
         [TestMethod]
         public void DMT_RefreshComments()
         {
+            if (IsTestDbSQLite()) return;
+
             using (var context = new RafyDbMigrationContext(UnitTestEntityRepositoryDataProvider.DbSettingName))
             {
                 context.RefreshComments();
-                if (context.DbSetting.ProviderName.Contains("MySql"))
+                if (context.DbSetting.ProviderName == DbSetting.Provider_MySql)
                 {
                     //数据库数据
                     using (var db = DbAccesserFactory.Create(context.DbSetting))
@@ -689,6 +766,12 @@ namespace RafyUnitTest
                     }
                 }
             }
+        }
+
+        private static bool IsTestDbSQLite()
+        {
+            var dbSettings = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName);
+            return dbSettings.ProviderName == DbSetting.Provider_SQLite;
         }
 
         #region public class DMT_ManualMigrateTest

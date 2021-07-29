@@ -90,7 +90,7 @@ namespace RafyUnitTest
                 Logger.DbAccessed -= handler;
 
                 var p = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName).ProviderName;
-                if (p == DbSetting.Provider_SqlClient || p == DbSetting.Provider_MySql)
+                if (p == DbSetting.Provider_SqlClient || p == DbSetting.Provider_MySql || p == DbSetting.Provider_SQLite)
                 {
                     Assert.IsTrue(count == 1);//sqlServer、MySql= 1
                 }
@@ -119,7 +119,7 @@ namespace RafyUnitTest
                 Logger.ThreadDbAccessed -= handler;
 
                 var p = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName).ProviderName;
-                if (p == DbSetting.Provider_SqlClient || p == DbSetting.Provider_MySql)
+                if (p == DbSetting.Provider_SqlClient || p == DbSetting.Provider_MySql || p == DbSetting.Provider_SQLite)
                 {
                     Assert.IsTrue(count == 1);//sqlServer、MySql= 1
                 }
@@ -140,7 +140,7 @@ namespace RafyUnitTest
                 repo.Save(new TestUser());
 
                 var p = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName).ProviderName;
-                if (p == DbSetting.Provider_SqlClient || p == DbSetting.Provider_MySql)
+                if (p == DbSetting.Provider_SqlClient || p == DbSetting.Provider_MySql || p == DbSetting.Provider_SQLite)
                 {
                     Assert.IsTrue(Logger.DbAccessedCount == c1 + 1);
                 }
@@ -161,7 +161,7 @@ namespace RafyUnitTest
                 repo.Save(new TestUser());
 
                 var p = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName).ProviderName;
-                if (p == DbSetting.Provider_SqlClient || p == DbSetting.Provider_MySql)
+                if (p == DbSetting.Provider_SqlClient || p == DbSetting.Provider_MySql || p == DbSetting.Provider_SQLite)
                 {
                     Assert.IsTrue(Logger.ThreadDbAccessedCount == c1 + 1);
                 }
