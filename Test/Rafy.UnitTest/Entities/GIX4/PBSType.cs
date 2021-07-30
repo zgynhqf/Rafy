@@ -27,6 +27,7 @@ using Rafy.MetaModel.Attributes;
 using Rafy.MetaModel.View;
 using Rafy.ManagedProperty;
 using System.Linq.Expressions;
+using Rafy.Data;
 
 namespace UT
 {
@@ -228,6 +229,12 @@ namespace UT
 
             Meta.EnableClientCache(100);
             Meta.EnableServerCache();
+
+            var dbSettings = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName);
+            if (dbSettings.ProviderName == DbSetting.Provider_SQLite)
+            {
+                Meta.DeletingChildrenInMemory = true;
+            }
         }
     }
 

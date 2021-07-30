@@ -1053,7 +1053,7 @@ namespace RafyUnitTest
             var pbsRepository = RF.Find<PBS>();
             using (RF.TransactionScope(pbsRepository))
             {
-                pbsRepository.Save(new PBSType
+                RF.Save(new PBSType
                 {
                     Name = "PBSType1",
                     PBSList =
@@ -1076,6 +1076,38 @@ namespace RafyUnitTest
                     Assert.AreEqual(pbs.PBSTypeId, pbsOriginal.PBSTypeId);
                     Assert.AreEqual(pbs.Name, pbsOriginal.Name);
                 }
+            }
+        }
+
+        [TestMethod]
+        public void ET_Repository_Aggt_Delete()
+        {
+            var pbsTypeRepository = RF.Find<PBSType>();
+            using (RF.TransactionScope(pbsTypeRepository))
+            {
+                var pbsType = new PBSType
+                {
+                    Name = "PBSType1",
+                    PBSList =
+                    {
+                        new PBS { Name = "PBS1" },
+                        new PBS { Name = "PBS2" },
+                        new PBS { Name = "PBS3" },
+                        new PBS { Name = "PBS4" },
+                        new PBS { Name = "PBS5" },
+                    }
+                };
+                pbsTypeRepository.Save(pbsType);
+
+                var pbsTypeInDb = pbsTypeRepository.GetById(pbsType.Id);
+                Assert.IsNotNull(pbsTypeInDb);
+
+                pbsTypeInDb.PersistenceStatus = PersistenceStatus.Deleted;
+                pbsTypeRepository.Save(pbsTypeInDb);
+
+                var pbsRepository = RF.Find<PBS>();
+                var pbss = pbsRepository.GetByParentId(pbsType.Id);
+                Assert.AreEqual(0, pbss.Count, "删除聚合父实体，应该级联删除其聚合子。");
             }
         }
 
