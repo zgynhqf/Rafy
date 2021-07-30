@@ -40,6 +40,7 @@ namespace Rafy.Data
     {
         private string _columnName;
         private string _typeName;
+        [NonSerialized]
         private Type _type;
 
         public LiteDataColumn() { }
@@ -53,7 +54,7 @@ namespace Rafy.Data
         public LiteDataColumn(string columnName, string typeString)
         {
             this._columnName = columnName;
-            TypeName = typeString;
+            this.TypeName = typeString;
         }
 
         /// <summary>

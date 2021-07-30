@@ -254,7 +254,9 @@ namespace RafyUnitTest
 
                 var table = repo.GetAllInTable();
                 var userList = table.ToEntityList<TestUserList>(false);
-                Assert.AreEqual("hk", userList[0].Name, "当实体的属性与数据库的字段不一致时，转换出来的值应该与原来保持一致。");
+                var hkUser = userList.Concrete().FirstOrDefault(u => u.Id == user.Id);
+                Assert.IsNotNull(hkUser);
+                Assert.AreEqual("hk", hkUser.Name, "当实体的属性与数据库的字段不一致时，转换出来的值应该与原来保持一致。");
             }
         }
 

@@ -1679,6 +1679,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_BatchImport_Transaction()
         {
+            if (DbMigrationTest.IsTestDbSQLite()) return;
+
             int size = BATCH_IMPORT_DATA_SIZE;
 
             var bookRepo = RF.ResolveInstance<BookRepository>();
@@ -1716,6 +1718,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_BatchImport_BatchSize()
         {
+            if (DbMigrationTest.IsTestDbSQLite()) return;
+
             int size = (int)(2.345 * BATCH_IMPORT_DATA_SIZE);
 
             var repo = RF.ResolveInstance<BookRepository>();
@@ -1739,6 +1743,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_BatchImport_CDU_C()
         {
+            if (DbMigrationTest.IsTestDbSQLite()) return;
+
             int size = BATCH_IMPORT_DATA_SIZE;
 
             var repo = RF.ResolveInstance<BookRepository>();
@@ -1767,6 +1773,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_BatchImport_CDU_C_TreeEntity()
         {
+            if (DbMigrationTest.IsTestDbSQLite()) return;
+
             int size = BATCH_IMPORT_DATA_SIZE;
 
             var repo = RF.ResolveInstance<FolderRepository>();
@@ -1808,6 +1816,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_BatchImport_CDU_C_Identity()
         {
+            if (DbMigrationTest.IsTestDbSQLite()) return;
+
             int size = BATCH_IMPORT_DATA_SIZE;
 
             var repo = RF.ResolveInstance<BookRepository>();
@@ -1837,6 +1847,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_BatchImport_CDU_C_CLOB()
         {
+            if (DbMigrationTest.IsTestDbSQLite()) return;
+
             int size = BATCH_IMPORT_DATA_SIZE;
 
             var longContent = new string('X', 20000);
@@ -1862,6 +1874,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_BatchImport_CDU_C_BLOB()
         {
+            if (DbMigrationTest.IsTestDbSQLite()) return;
+
             int size = BATCH_IMPORT_DATA_SIZE;
 
             var longContent = new byte[20000];
@@ -1887,6 +1901,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_BatchImport_CDU_C_Aggt()
         {
+            if (DbMigrationTest.IsTestDbSQLite()) return;
+
             int size = BATCH_IMPORT_DATA_SIZE;
 
             var repo = RF.ResolveInstance<BookRepository>();
@@ -1917,6 +1933,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_BatchImport_CDU_C_Status()
         {
+            if (DbMigrationTest.IsTestDbSQLite()) return;
+
             int size = BATCH_IMPORT_DATA_SIZE;
 
             var repo = RF.ResolveInstance<BookRepository>();
@@ -1942,6 +1960,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_BatchImport_CDU_C_Status_Aggt()
         {
+            if (DbMigrationTest.IsTestDbSQLite()) return;
+
             int size = BATCH_IMPORT_DATA_SIZE;
 
             var repo = RF.ResolveInstance<BookRepository>();
@@ -2156,6 +2176,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void __ET_Repository_BatchImport_CDU_U_Redundancy_UpdateB()
         {
+            if (DbMigrationTest.IsTestDbSQLite()) return;
+
             int size = BATCH_IMPORT_DATA_SIZE;
 
             var repo = RF.ResolveInstance<ARepository>();
@@ -2196,6 +2218,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void __ET_Repository_BatchImport_CDU_U_Redundancy_UpdateC()
         {
+            if (DbMigrationTest.IsTestDbSQLite()) return;
+
             int size = BATCH_IMPORT_DATA_SIZE;
 
             var repo = RF.ResolveInstance<ARepository>();
@@ -2239,6 +2263,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_BatchImport_CDU_D()
         {
+            if (DbMigrationTest.IsTestDbSQLite()) return;
+
             int size = BATCH_IMPORT_DATA_SIZE;
 
             var repo = RF.ResolveInstance<BookRepository>();
@@ -2262,6 +2288,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_BatchImport_CDU_D_Status()
         {
+            if (DbMigrationTest.IsTestDbSQLite()) return;
+
             int size = BATCH_IMPORT_DATA_SIZE;
 
             var repo = RF.ResolveInstance<BookRepository>();

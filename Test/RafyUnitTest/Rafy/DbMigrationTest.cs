@@ -699,6 +699,7 @@ namespace RafyUnitTest
                     else
                     {
                         context.DeleteAllTables();
+                        context.ManualMigrations.Clear();
                         context.AutoMigrate();
                     }
                 }
@@ -768,7 +769,7 @@ namespace RafyUnitTest
             }
         }
 
-        private static bool IsTestDbSQLite()
+        internal static bool IsTestDbSQLite()
         {
             var dbSettings = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName);
             return dbSettings.ProviderName == DbSetting.Provider_SQLite;

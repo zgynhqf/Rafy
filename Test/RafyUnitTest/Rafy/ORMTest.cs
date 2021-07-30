@@ -717,7 +717,8 @@ namespace RafyUnitTest
                     books.Add(book);
                 }
 
-                if (DbSetting.Provider_SqlCe == tran.DbSetting.ProviderName)
+                if (DbSetting.Provider_SqlCe == tran.DbSetting.ProviderName ||
+                    DbSetting.Provider_SQLite == tran.DbSetting.ProviderName)
                 {
                     repo.Save(books);
                 }
@@ -756,7 +757,15 @@ namespace RafyUnitTest
                     books.Add(book);
                 }
 
-                repo.CreateImporter().Save(books);
+                if (DbSetting.Provider_SqlCe == tran.DbSetting.ProviderName ||
+                    DbSetting.Provider_SQLite == tran.DbSetting.ProviderName)
+                {
+                    repo.Save(books);
+                }
+                else
+                {
+                    repo.CreateImporter().Save(books);
+                }
 
                 var idList = new object[5500];
                 for (int i = 0; i < idList.Length; i++)
@@ -6715,6 +6724,8 @@ ORDER BY Article.Code ASC");
         [TestMethod]
         public void ORM_Performance_Update()
         {
+            if (DbMigrationTest.IsTestDbSQLite()) return;
+
             var repo = RF.ResolveInstance<BookRepository>();
             try
             {

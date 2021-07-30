@@ -17,6 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Rafy.Data;
 using Rafy.Domain;
 using Rafy.Domain.EntityPhantom;
 using UT;
@@ -260,6 +261,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void EPT_BatchImport()
         {
+            if (IsTestDbSQLite()) return;
+
             int size = EntityTest.BATCH_IMPORT_DATA_SIZE;
 
             var repo = RF.ResolveInstance<InvoiceRepository>();
@@ -291,6 +294,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void EPT_BatchImport_Aggt()
         {
+            if (IsTestDbSQLite()) return;
+
             int size = EntityTest.BATCH_IMPORT_DATA_SIZE;
 
             var repo = RF.ResolveInstance<InvoiceRepository>();
@@ -336,6 +341,11 @@ namespace RafyUnitTest
                     Assert.AreEqual(EntityPhantomExtension.GetIsPhantom(items[0]), true, "幽灵状态的实体，IsPhantom 值为 true。");
                 }
             }
+        }
+
+        private static bool IsTestDbSQLite()
+        {
+            return DbMigrationTest.IsTestDbSQLite();
         }
     }
 }

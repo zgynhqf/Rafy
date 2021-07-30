@@ -46,8 +46,11 @@ namespace RafyUnitTest
         {
             using (var context = new RafyDbMigrationContext("Test_TestingDataBase"))
             {
-                context.HistoryRepository = new DbHistoryRepository();
                 context.RunDataLossOperation = DataLossOperation.All;
+                if (context.DbSetting.ProviderName != DbSetting.Provider_SQLite)
+                {
+                    context.HistoryRepository = new DbHistoryRepository();
+                }
 
                 if (!context.DatabaseExists())
                 {
@@ -60,9 +63,12 @@ namespace RafyUnitTest
                     context.MigrateTo(destination);
 
                     //历史记录
-                    var histories = context.GetHistories();
-                    Assert.IsTrue(histories.Count == 3);
-                    Assert.IsTrue(histories[2] is CreateDatabase);
+                    if (context.SupportHistory)
+                    {
+                        var histories = context.GetHistories();
+                        Assert.IsTrue(histories.Count == 3);
+                        Assert.IsTrue(histories[2] is CreateDatabase);
+                    }
 
                     //数据库结构
                     Assert.IsTrue(context.DatabaseExists());
@@ -76,8 +82,11 @@ namespace RafyUnitTest
             //以下代码不能运行，会提示数据库正在被使用
             using (var context = new RafyDbMigrationContext("Test_TestingDataBase"))
             {
-                context.HistoryRepository = new DbHistoryRepository();
                 context.RunDataLossOperation = DataLossOperation.All;
+                if (context.DbSetting.ProviderName != DbSetting.Provider_SQLite)
+                {
+                    context.HistoryRepository = new DbHistoryRepository();
+                }
 
                 if (context.DatabaseExists() && !(context.DbVersionProvider is EmbadedDbVersionProvider))
                 {
@@ -86,31 +95,53 @@ namespace RafyUnitTest
                     context.MigrateTo(database);
 
                     //历史记录
-                    var histories = context.GetHistories();
-                    Assert.IsTrue(histories[0] is DropDatabase);
+                    if (context.SupportHistory)
+                    {
+                        var histories = context.GetHistories();
+                        Assert.IsTrue(histories[0] is DropDatabase);
+                    }
 
                     //数据库结构
                     Assert.IsTrue(!context.DatabaseExists());
                 }
 
-                context.ResetHistory();
+                if (context.SupportHistory)
+                {
+                    context.ResetHistory();
+                }
             }
+        }
 
-            //using (var context = new RafyDbMigrationContext("Test_TestingDataBase"))
-            //{
-            //    context.ManualMigrations.Add(new DMDBT_DropDatabase_Migration());
-            //    context.MigrateManually();
+        [TestMethod]
+        public void DMDBT_DeleteAllTables()
+        {
+            using (var context = new RafyDbMigrationContext("Test_TestingDataBase"))
+            {
+                context.RunDataLossOperation = DataLossOperation.All;
+                if (context.DbSetting.ProviderName != DbSetting.Provider_SQLite)
+                {
+                    context.HistoryRepository = new DbHistoryRepository();
+                }
 
-            //    //历史记录
-            //    var histories = context.GetHistories();
-            //    Assert.IsTrue(histories[0] is DMDBT_DropDatabase_Migration);
+                if (context.DatabaseExists() && !(context.DbVersionProvider is EmbadedDbVersionProvider))
+                {
+                    context.DeleteAllTables();
 
-            //    //数据库结构
-            //    var database = context.DatabaseMetaReader.Read();
-            //    Assert.IsTrue(database == null);
+                    //数据库结构
+                    var db = context.DatabaseMetaReader.Read();
+                    Assert.AreEqual(2, db.Tables.Count);
+                }
 
-            //    context.ResetHistory();
-            //}
+                if (context.SupportHistory)
+                {
+                    context.ResetHistory();
+                }
+                else
+                {
+                    context.DeleteAllTables();
+                    context.AutoMigrate();
+                }
+            }
         }
 
         //public class DMDBT_DropDatabase_Migration : ManualDbMigration

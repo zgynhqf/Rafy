@@ -498,6 +498,9 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
         {
             using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
             {
+                var repo = RF.ResolveInstance<TestUserRepository>();
+                var oldCound = repo.CountAll();
+
                 RF.Save(new TestUser { Name = "1" });
                 RF.Save(new TestUser { Name = "2" });
                 RF.Save(new TestUser { Name = "3" });
@@ -507,7 +510,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
                     OrderBy = "Name"
                 });
 
-                Assert.AreEqual(list.Count, 3);
+                Assert.AreEqual(list.Count, oldCound + 3);
                 Assert.IsTrue(string.Compare(list[0].Name, list[1].Name) == -1);
                 Assert.IsTrue(string.Compare(list[1].Name, list[2].Name) == -1);
             }
@@ -518,6 +521,9 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
         {
             using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
             {
+                var repo = RF.ResolveInstance<TestUserRepository>();
+                var oldCound = repo.CountAll();
+
                 RF.Save(new TestUser { Name = "1" });
                 RF.Save(new TestUser { Name = "2" });
                 RF.Save(new TestUser { Name = "3" });
@@ -527,7 +533,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
                     OrderBy = "Name asc"
                 });
 
-                Assert.AreEqual(list.Count, 3);
+                Assert.AreEqual(list.Count, oldCound + 3);
                 Assert.IsTrue(string.Compare(list[0].Name, list[1].Name) == -1);
                 Assert.IsTrue(string.Compare(list[1].Name, list[2].Name) == -1);
             }
@@ -538,6 +544,11 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
         {
             using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
             {
+                var repo = RF.ResolveInstance<TestUserRepository>();
+                var all = repo.GetAll();
+                all.Clear();
+                repo.Save(all);
+
                 RF.Save(new TestUser { Name = "1" });
                 RF.Save(new TestUser { Name = "2" });
                 RF.Save(new TestUser { Name = "3" });

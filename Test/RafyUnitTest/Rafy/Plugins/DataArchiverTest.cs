@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rafy.Accounts;
 using Rafy.Accounts.Controllers;
+using Rafy.Data;
 using Rafy.DataArchiver;
 using Rafy.Domain;
 using Rafy.Domain.ORM;
@@ -45,6 +46,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void DAT_Cut()
         {
+            if (IsTestDbSQLite()) return;
+
             using (RF.TransactionScope(BackUpDbSettingName))
             using (RF.TransactionScope(DbSettingName))
             {
@@ -83,6 +86,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void DAT_Cut_Aggt_Phantom()
         {
+            if (IsTestDbSQLite()) return;
+
             using (RF.TransactionScope(BackUpDbSettingName))
             using (RF.TransactionScope(DbSettingName))
             {
@@ -126,6 +131,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void DAT_Cut_Aggt_ManyData()
         {
+            if (IsTestDbSQLite()) return;
+
             using (RF.TransactionScope(BackUpDbSettingName))
             using (RF.TransactionScope(DbSettingName))
             {
@@ -198,6 +205,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void DAT_Cut_Aggt_TreeEntity()
         {
+            if (IsTestDbSQLite()) return;
+
             //树形实体带聚合子
             var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(BackUpDbSettingName))
@@ -253,6 +262,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void DAT_Cut_Aggt_ManyTypes()
         {
+            if (IsTestDbSQLite()) return;
+
             using (RF.TransactionScope(BackUpDbSettingName))
             using (RF.TransactionScope(DbSettingName))
             {
@@ -442,6 +453,12 @@ namespace RafyUnitTest
                     AssertAggtEqual(raw.TreeChildren, migrated.TreeChildren, repository);
                 }
             }
+        }
+
+        private static bool IsTestDbSQLite()
+        {
+            var dbSettings = DbSetting.FindOrCreate(BackUpDbSettingName);
+            return dbSettings.ProviderName == DbSetting.Provider_SQLite;
         }
     }
 }
