@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -98,7 +98,7 @@ namespace Rafy.UnitTest
     }
 
     [DataProviderFor(typeof(TestDataPermissionRepository))]
-    public class TestDataPermissionRepositoryDataProvider : RdbDataProvider
+    public partial class TestDataPermissionRepositoryDataProvider : RdbDataProvider
     {
 
         private static string _dbSettingName;

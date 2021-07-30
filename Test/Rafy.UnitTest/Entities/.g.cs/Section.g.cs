@@ -21,7 +21,7 @@ using Rafy.Domain.ORM;
 
 namespace UT
 {
-    partial class TestUserLogList
+    partial class SectionList
     {
         #region 强类型公有接口
 
@@ -30,11 +30,11 @@ namespace UT
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public new TestUserLog this[int index]
+        public new Section this[int index]
         {
             get
             {
-                return base[index] as TestUserLog;
+                return base[index] as Section;
             }
             set
             {
@@ -47,9 +47,9 @@ namespace UT
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new IEnumerator<TestUserLog> GetEnumerator()
+        public new IEnumerator<Section> GetEnumerator()
         {
-            return new EntityListEnumerator<TestUserLog>(this);
+            return new EntityListEnumerator<Section>(this);
         }
 
         /// <summary>
@@ -57,16 +57,16 @@ namespace UT
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public IEnumerable<TestUserLog> Concrete()
+        public IEnumerable<Section> Concrete()
         {
-            return this.Cast<TestUserLog>();
+            return this.Cast<Section>();
         }
 
         /// <summary>
         /// 添加指定的实体到集合中。
         /// </summary>
         [DebuggerStepThrough]
-        public void Add(TestUserLog entity)
+        public void Add(Section entity)
         {
             base.Add(entity);
         }
@@ -76,7 +76,7 @@ namespace UT
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public bool Contains(TestUserLog entity)
+        public bool Contains(Section entity)
         {
             return base.Contains(entity);
         }
@@ -86,7 +86,7 @@ namespace UT
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public int IndexOf(TestUserLog entity)
+        public int IndexOf(Section entity)
         {
             return base.IndexOf(entity);
         }
@@ -96,7 +96,7 @@ namespace UT
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public void Insert(int index, TestUserLog entity)
+        public void Insert(int index, Section entity)
         {
             base.Insert(index, entity);
         }
@@ -106,7 +106,7 @@ namespace UT
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public bool Remove(TestUserLog entity)
+        public bool Remove(Section entity)
         {
             return base.Remove(entity);
         }
@@ -114,7 +114,7 @@ namespace UT
         #endregion
     }
 
-    partial class TestUserLogRepository
+    partial class SectionRepository
     {
         #region 私有方法，本类内部使用
 
@@ -123,9 +123,9 @@ namespace UT
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        private IQueryable<TestUserLog> CreateLinqQuery()
+        private IQueryable<Section> CreateLinqQuery()
         {
-            return base.CreateLinqQuery<TestUserLog>();
+            return base.CreateLinqQuery<Section>();
         }
 
         #endregion
@@ -137,9 +137,9 @@ namespace UT
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLog New()
+        public new Section New()
         {
-            return base.New() as TestUserLog;
+            return base.New() as Section;
         }
 
         /// <summary>
@@ -147,9 +147,9 @@ namespace UT
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLogList NewList()
+        public new SectionList NewList()
         {
-            return base.NewList() as TestUserLogList;
+            return base.NewList() as SectionList;
         }
 
         /// <summary>
@@ -161,9 +161,9 @@ namespace UT
         /// <param name="id"></param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLog CacheById(object id)
+        public new Section CacheById(object id)
         {
-            return base.CacheById(id) as TestUserLog;
+            return base.CacheById(id) as Section;
         }
 
         /// <summary>
@@ -174,9 +174,9 @@ namespace UT
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLogList CacheAll()
+        public new SectionList CacheAll()
         {
-            return base.CacheAll() as TestUserLogList;
+            return base.CacheAll() as SectionList;
         }
 
         /// <summary>
@@ -186,9 +186,9 @@ namespace UT
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLog GetById(object id, EagerLoadOptions eagerLoad = null)
+        public new Section GetById(object id, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetById(id, eagerLoad) as TestUserLog;
+            return base.GetById(id, eagerLoad) as Section;
         }
 
         /// <summary>
@@ -197,9 +197,9 @@ namespace UT
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLog GetFirst(EagerLoadOptions eagerLoad = null)
+        public new Section GetFirst(EagerLoadOptions eagerLoad = null)
         {
-            return base.GetFirst(eagerLoad) as TestUserLog;
+            return base.GetFirst(eagerLoad) as Section;
         }
 
         /// <summary>
@@ -209,9 +209,9 @@ namespace UT
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLogList GetAll(PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new SectionList GetAll(PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetAll(paging, eagerLoad) as TestUserLogList;
+            return base.GetAll(paging, eagerLoad) as SectionList;
         }
 
         /// <summary>
@@ -221,9 +221,9 @@ namespace UT
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLogList GetByIdList(object[] idList, EagerLoadOptions eagerLoad = null)
+        public new SectionList GetByIdList(object[] idList, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetByIdList(idList, eagerLoad) as TestUserLogList;
+            return base.GetByIdList(idList, eagerLoad) as SectionList;
         }
 
         /// <summary>
@@ -234,9 +234,9 @@ namespace UT
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLogList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new SectionList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetByParentIdList(parentIdList, paging, eagerLoad) as TestUserLogList;
+            return base.GetByParentIdList(parentIdList, paging, eagerLoad) as SectionList;
         }
 
         /// <summary>
@@ -247,9 +247,9 @@ namespace UT
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLogList GetByParentId(object parentId, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new SectionList GetByParentId(object parentId, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetByParentId(parentId, paging, eagerLoad) as TestUserLogList;
+            return base.GetByParentId(parentId, paging, eagerLoad) as SectionList;
         }
 
         /// <summary>
@@ -258,9 +258,9 @@ namespace UT
         /// <param name="criteria">常用查询条件。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLogList GetBy(CommonQueryCriteria criteria)
+        public new SectionList GetBy(CommonQueryCriteria criteria)
         {
-            return base.GetBy(criteria) as TestUserLogList;
+            return base.GetBy(criteria) as SectionList;
         }
 
         /// <summary>
@@ -269,9 +269,9 @@ namespace UT
         /// <param name="criteria">常用查询条件。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLog GetFirstBy(CommonQueryCriteria criteria)
+        public new Section GetFirstBy(CommonQueryCriteria criteria)
         {
-            return base.GetFirstBy(criteria) as TestUserLog;
+            return base.GetFirstBy(criteria) as Section;
         }
 
         /// <summary>
@@ -281,9 +281,9 @@ namespace UT
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLogList GetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad = null)
+        public new SectionList GetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetByTreeParentIndex(treeIndex, eagerLoad) as TestUserLogList;
+            return base.GetByTreeParentIndex(treeIndex, eagerLoad) as SectionList;
         }
 
         /// <summary>
@@ -293,9 +293,9 @@ namespace UT
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLogList GetByTreePId(object treePId, EagerLoadOptions eagerLoad = null)
+        public new SectionList GetByTreePId(object treePId, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetByTreePId(treePId, eagerLoad) as TestUserLogList;
+            return base.GetByTreePId(treePId, eagerLoad) as SectionList;
         }
 
         #endregion

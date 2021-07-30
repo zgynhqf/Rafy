@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>net45;netcoreapp2.0</TargetFrameworks>
+        <TargetFrameworks>netcoreapp2.0;net45</TargetFrameworks>
         <IsPackable>false</IsPackable>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
@@ -19,6 +19,45 @@
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
       <NoWarn>1701;1702;1591</NoWarn>
     </PropertyGroup>
+
+    <ItemGroup>
+      <Compile Include="Entities\.g.cs\A.g.cs" />
+      <Compile Include="Entities\.g.cs\AChild.g.cs" />
+      <Compile Include="Entities\.g.cs\Article.g.cs" />
+      <Compile Include="Entities\.g.cs\B.g.cs" />
+      <Compile Include="Entities\.g.cs\BlogUser.g.cs" />
+      <Compile Include="Entities\.g.cs\Book.g.cs" />
+      <Compile Include="Entities\.g.cs\BookCategory.g.cs" />
+      <Compile Include="Entities\.g.cs\BookLoc.g.cs" />
+      <Compile Include="Entities\.g.cs\Building.g.cs" />
+      <Compile Include="Entities\.g.cs\C.g.cs" />
+      <Compile Include="Entities\.g.cs\Car.g.cs" />
+      <Compile Include="Entities\.g.cs\Chapter.g.cs" />
+      <Compile Include="Entities\.g.cs\Customer.g.cs" />
+      <Compile Include="Entities\.g.cs\D.g.cs" />
+      <Compile Include="Entities\.g.cs\E.g.cs" />
+      <Compile Include="Entities\.g.cs\Favorate.g.cs" />
+      <Compile Include="Entities\.g.cs\File.g.cs" />
+      <Compile Include="Entities\.g.cs\Folder.g.cs" />
+      <Compile Include="Entities\.g.cs\House.g.cs" />
+      <Compile Include="Entities\.g.cs\HouseMerchant.g.cs" />
+      <Compile Include="Entities\.g.cs\Invoice.g.cs" />
+      <Compile Include="Entities\.g.cs\InvoiceItem.g.cs" />
+      <Compile Include="Entities\.g.cs\Lessee.g.cs" />
+      <Compile Include="Entities\.g.cs\MemoryCustomer.g.cs" />
+      <Compile Include="Entities\.g.cs\MerchantItem.g.cs" />
+      <Compile Include="Entities\.g.cs\NoRepoEntity.g.cs" />
+      <Compile Include="Entities\.g.cs\PBS.g.cs" />
+      <Compile Include="Entities\.g.cs\PBSType.g.cs" />
+      <Compile Include="Entities\.g.cs\Section.g.cs" />
+      <Compile Include="Entities\.g.cs\SectionOwner.g.cs" />
+      <Compile Include="Entities\.g.cs\TestAdministrator.g.cs" />
+      <Compile Include="Entities\.g.cs\TestDataPermission.g.cs" />
+      <Compile Include="Entities\.g.cs\TestRole.g.cs" />
+      <Compile Include="Entities\.g.cs\TestTreeTask.g.cs" />
+      <Compile Include="Entities\.g.cs\TestUser.g.cs" />
+      <Compile Include="Entities\.g.cs\Yacht.g.cs" />
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />

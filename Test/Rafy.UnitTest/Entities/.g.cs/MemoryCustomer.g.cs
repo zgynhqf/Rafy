@@ -21,7 +21,7 @@ using Rafy.Domain.ORM;
 
 namespace UT
 {
-    partial class TestUserLogList
+    partial class MemoryCustomerList
     {
         #region 强类型公有接口
 
@@ -30,11 +30,11 @@ namespace UT
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public new TestUserLog this[int index]
+        public new MemoryCustomer this[int index]
         {
             get
             {
-                return base[index] as TestUserLog;
+                return base[index] as MemoryCustomer;
             }
             set
             {
@@ -47,9 +47,9 @@ namespace UT
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new IEnumerator<TestUserLog> GetEnumerator()
+        public new IEnumerator<MemoryCustomer> GetEnumerator()
         {
-            return new EntityListEnumerator<TestUserLog>(this);
+            return new EntityListEnumerator<MemoryCustomer>(this);
         }
 
         /// <summary>
@@ -57,16 +57,16 @@ namespace UT
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public IEnumerable<TestUserLog> Concrete()
+        public IEnumerable<MemoryCustomer> Concrete()
         {
-            return this.Cast<TestUserLog>();
+            return this.Cast<MemoryCustomer>();
         }
 
         /// <summary>
         /// 添加指定的实体到集合中。
         /// </summary>
         [DebuggerStepThrough]
-        public void Add(TestUserLog entity)
+        public void Add(MemoryCustomer entity)
         {
             base.Add(entity);
         }
@@ -76,7 +76,7 @@ namespace UT
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public bool Contains(TestUserLog entity)
+        public bool Contains(MemoryCustomer entity)
         {
             return base.Contains(entity);
         }
@@ -86,7 +86,7 @@ namespace UT
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public int IndexOf(TestUserLog entity)
+        public int IndexOf(MemoryCustomer entity)
         {
             return base.IndexOf(entity);
         }
@@ -96,7 +96,7 @@ namespace UT
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public void Insert(int index, TestUserLog entity)
+        public void Insert(int index, MemoryCustomer entity)
         {
             base.Insert(index, entity);
         }
@@ -106,7 +106,7 @@ namespace UT
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public bool Remove(TestUserLog entity)
+        public bool Remove(MemoryCustomer entity)
         {
             return base.Remove(entity);
         }
@@ -114,7 +114,7 @@ namespace UT
         #endregion
     }
 
-    partial class TestUserLogRepository
+    partial class MemoryCustomerRepository
     {
         #region 私有方法，本类内部使用
 
@@ -123,9 +123,9 @@ namespace UT
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        private IQueryable<TestUserLog> CreateLinqQuery()
+        private IQueryable<MemoryCustomer> CreateLinqQuery()
         {
-            return base.CreateLinqQuery<TestUserLog>();
+            return base.CreateLinqQuery<MemoryCustomer>();
         }
 
         #endregion
@@ -137,9 +137,9 @@ namespace UT
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLog New()
+        public new MemoryCustomer New()
         {
-            return base.New() as TestUserLog;
+            return base.New() as MemoryCustomer;
         }
 
         /// <summary>
@@ -147,9 +147,9 @@ namespace UT
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLogList NewList()
+        public new MemoryCustomerList NewList()
         {
-            return base.NewList() as TestUserLogList;
+            return base.NewList() as MemoryCustomerList;
         }
 
         /// <summary>
@@ -161,9 +161,9 @@ namespace UT
         /// <param name="id"></param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLog CacheById(object id)
+        public new MemoryCustomer CacheById(object id)
         {
-            return base.CacheById(id) as TestUserLog;
+            return base.CacheById(id) as MemoryCustomer;
         }
 
         /// <summary>
@@ -174,9 +174,9 @@ namespace UT
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLogList CacheAll()
+        public new MemoryCustomerList CacheAll()
         {
-            return base.CacheAll() as TestUserLogList;
+            return base.CacheAll() as MemoryCustomerList;
         }
 
         /// <summary>
@@ -186,9 +186,9 @@ namespace UT
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLog GetById(object id, EagerLoadOptions eagerLoad = null)
+        public new MemoryCustomer GetById(object id, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetById(id, eagerLoad) as TestUserLog;
+            return base.GetById(id, eagerLoad) as MemoryCustomer;
         }
 
         /// <summary>
@@ -197,9 +197,9 @@ namespace UT
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLog GetFirst(EagerLoadOptions eagerLoad = null)
+        public new MemoryCustomer GetFirst(EagerLoadOptions eagerLoad = null)
         {
-            return base.GetFirst(eagerLoad) as TestUserLog;
+            return base.GetFirst(eagerLoad) as MemoryCustomer;
         }
 
         /// <summary>
@@ -209,9 +209,9 @@ namespace UT
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLogList GetAll(PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new MemoryCustomerList GetAll(PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetAll(paging, eagerLoad) as TestUserLogList;
+            return base.GetAll(paging, eagerLoad) as MemoryCustomerList;
         }
 
         /// <summary>
@@ -221,9 +221,9 @@ namespace UT
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLogList GetByIdList(object[] idList, EagerLoadOptions eagerLoad = null)
+        public new MemoryCustomerList GetByIdList(object[] idList, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetByIdList(idList, eagerLoad) as TestUserLogList;
+            return base.GetByIdList(idList, eagerLoad) as MemoryCustomerList;
         }
 
         /// <summary>
@@ -234,9 +234,9 @@ namespace UT
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLogList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new MemoryCustomerList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetByParentIdList(parentIdList, paging, eagerLoad) as TestUserLogList;
+            return base.GetByParentIdList(parentIdList, paging, eagerLoad) as MemoryCustomerList;
         }
 
         /// <summary>
@@ -247,9 +247,9 @@ namespace UT
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLogList GetByParentId(object parentId, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new MemoryCustomerList GetByParentId(object parentId, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetByParentId(parentId, paging, eagerLoad) as TestUserLogList;
+            return base.GetByParentId(parentId, paging, eagerLoad) as MemoryCustomerList;
         }
 
         /// <summary>
@@ -258,9 +258,9 @@ namespace UT
         /// <param name="criteria">常用查询条件。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLogList GetBy(CommonQueryCriteria criteria)
+        public new MemoryCustomerList GetBy(CommonQueryCriteria criteria)
         {
-            return base.GetBy(criteria) as TestUserLogList;
+            return base.GetBy(criteria) as MemoryCustomerList;
         }
 
         /// <summary>
@@ -269,9 +269,9 @@ namespace UT
         /// <param name="criteria">常用查询条件。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLog GetFirstBy(CommonQueryCriteria criteria)
+        public new MemoryCustomer GetFirstBy(CommonQueryCriteria criteria)
         {
-            return base.GetFirstBy(criteria) as TestUserLog;
+            return base.GetFirstBy(criteria) as MemoryCustomer;
         }
 
         /// <summary>
@@ -281,9 +281,9 @@ namespace UT
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLogList GetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad = null)
+        public new MemoryCustomerList GetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetByTreeParentIndex(treeIndex, eagerLoad) as TestUserLogList;
+            return base.GetByTreeParentIndex(treeIndex, eagerLoad) as MemoryCustomerList;
         }
 
         /// <summary>
@@ -293,9 +293,9 @@ namespace UT
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLogList GetByTreePId(object treePId, EagerLoadOptions eagerLoad = null)
+        public new MemoryCustomerList GetByTreePId(object treePId, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetByTreePId(treePId, eagerLoad) as TestUserLogList;
+            return base.GetByTreePId(treePId, eagerLoad) as MemoryCustomerList;
         }
 
         #endregion

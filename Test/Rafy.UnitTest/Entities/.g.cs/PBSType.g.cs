@@ -21,7 +21,7 @@ using Rafy.Domain.ORM;
 
 namespace UT
 {
-    partial class TestUserLogList
+    partial class PBSTypeList
     {
         #region 强类型公有接口
 
@@ -30,11 +30,11 @@ namespace UT
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public new TestUserLog this[int index]
+        public new PBSType this[int index]
         {
             get
             {
-                return base[index] as TestUserLog;
+                return base[index] as PBSType;
             }
             set
             {
@@ -47,9 +47,9 @@ namespace UT
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new IEnumerator<TestUserLog> GetEnumerator()
+        public new IEnumerator<PBSType> GetEnumerator()
         {
-            return new EntityListEnumerator<TestUserLog>(this);
+            return new EntityListEnumerator<PBSType>(this);
         }
 
         /// <summary>
@@ -57,16 +57,16 @@ namespace UT
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public IEnumerable<TestUserLog> Concrete()
+        public IEnumerable<PBSType> Concrete()
         {
-            return this.Cast<TestUserLog>();
+            return this.Cast<PBSType>();
         }
 
         /// <summary>
         /// 添加指定的实体到集合中。
         /// </summary>
         [DebuggerStepThrough]
-        public void Add(TestUserLog entity)
+        public void Add(PBSType entity)
         {
             base.Add(entity);
         }
@@ -76,7 +76,7 @@ namespace UT
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public bool Contains(TestUserLog entity)
+        public bool Contains(PBSType entity)
         {
             return base.Contains(entity);
         }
@@ -86,7 +86,7 @@ namespace UT
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public int IndexOf(TestUserLog entity)
+        public int IndexOf(PBSType entity)
         {
             return base.IndexOf(entity);
         }
@@ -96,7 +96,7 @@ namespace UT
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public void Insert(int index, TestUserLog entity)
+        public void Insert(int index, PBSType entity)
         {
             base.Insert(index, entity);
         }
@@ -106,7 +106,7 @@ namespace UT
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public bool Remove(TestUserLog entity)
+        public bool Remove(PBSType entity)
         {
             return base.Remove(entity);
         }
@@ -114,7 +114,7 @@ namespace UT
         #endregion
     }
 
-    partial class TestUserLogRepository
+    partial class PBSTypeRepository
     {
         #region 私有方法，本类内部使用
 
@@ -123,9 +123,9 @@ namespace UT
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        private IQueryable<TestUserLog> CreateLinqQuery()
+        private IQueryable<PBSType> CreateLinqQuery()
         {
-            return base.CreateLinqQuery<TestUserLog>();
+            return base.CreateLinqQuery<PBSType>();
         }
 
         #endregion
@@ -137,9 +137,9 @@ namespace UT
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLog New()
+        public new PBSType New()
         {
-            return base.New() as TestUserLog;
+            return base.New() as PBSType;
         }
 
         /// <summary>
@@ -147,9 +147,9 @@ namespace UT
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLogList NewList()
+        public new PBSTypeList NewList()
         {
-            return base.NewList() as TestUserLogList;
+            return base.NewList() as PBSTypeList;
         }
 
         /// <summary>
@@ -161,9 +161,9 @@ namespace UT
         /// <param name="id"></param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLog CacheById(object id)
+        public new PBSType CacheById(object id)
         {
-            return base.CacheById(id) as TestUserLog;
+            return base.CacheById(id) as PBSType;
         }
 
         /// <summary>
@@ -174,9 +174,9 @@ namespace UT
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLogList CacheAll()
+        public new PBSTypeList CacheAll()
         {
-            return base.CacheAll() as TestUserLogList;
+            return base.CacheAll() as PBSTypeList;
         }
 
         /// <summary>
@@ -186,9 +186,9 @@ namespace UT
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLog GetById(object id, EagerLoadOptions eagerLoad = null)
+        public new PBSType GetById(object id, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetById(id, eagerLoad) as TestUserLog;
+            return base.GetById(id, eagerLoad) as PBSType;
         }
 
         /// <summary>
@@ -197,9 +197,9 @@ namespace UT
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLog GetFirst(EagerLoadOptions eagerLoad = null)
+        public new PBSType GetFirst(EagerLoadOptions eagerLoad = null)
         {
-            return base.GetFirst(eagerLoad) as TestUserLog;
+            return base.GetFirst(eagerLoad) as PBSType;
         }
 
         /// <summary>
@@ -209,9 +209,9 @@ namespace UT
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLogList GetAll(PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new PBSTypeList GetAll(PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetAll(paging, eagerLoad) as TestUserLogList;
+            return base.GetAll(paging, eagerLoad) as PBSTypeList;
         }
 
         /// <summary>
@@ -221,9 +221,9 @@ namespace UT
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLogList GetByIdList(object[] idList, EagerLoadOptions eagerLoad = null)
+        public new PBSTypeList GetByIdList(object[] idList, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetByIdList(idList, eagerLoad) as TestUserLogList;
+            return base.GetByIdList(idList, eagerLoad) as PBSTypeList;
         }
 
         /// <summary>
@@ -234,9 +234,9 @@ namespace UT
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLogList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new PBSTypeList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetByParentIdList(parentIdList, paging, eagerLoad) as TestUserLogList;
+            return base.GetByParentIdList(parentIdList, paging, eagerLoad) as PBSTypeList;
         }
 
         /// <summary>
@@ -247,9 +247,9 @@ namespace UT
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLogList GetByParentId(object parentId, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new PBSTypeList GetByParentId(object parentId, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetByParentId(parentId, paging, eagerLoad) as TestUserLogList;
+            return base.GetByParentId(parentId, paging, eagerLoad) as PBSTypeList;
         }
 
         /// <summary>
@@ -258,9 +258,9 @@ namespace UT
         /// <param name="criteria">常用查询条件。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLogList GetBy(CommonQueryCriteria criteria)
+        public new PBSTypeList GetBy(CommonQueryCriteria criteria)
         {
-            return base.GetBy(criteria) as TestUserLogList;
+            return base.GetBy(criteria) as PBSTypeList;
         }
 
         /// <summary>
@@ -269,9 +269,9 @@ namespace UT
         /// <param name="criteria">常用查询条件。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLog GetFirstBy(CommonQueryCriteria criteria)
+        public new PBSType GetFirstBy(CommonQueryCriteria criteria)
         {
-            return base.GetFirstBy(criteria) as TestUserLog;
+            return base.GetFirstBy(criteria) as PBSType;
         }
 
         /// <summary>
@@ -281,9 +281,9 @@ namespace UT
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLogList GetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad = null)
+        public new PBSTypeList GetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetByTreeParentIndex(treeIndex, eagerLoad) as TestUserLogList;
+            return base.GetByTreeParentIndex(treeIndex, eagerLoad) as PBSTypeList;
         }
 
         /// <summary>
@@ -293,9 +293,9 @@ namespace UT
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestUserLogList GetByTreePId(object treePId, EagerLoadOptions eagerLoad = null)
+        public new PBSTypeList GetByTreePId(object treePId, EagerLoadOptions eagerLoad = null)
         {
-            return base.GetByTreePId(treePId, eagerLoad) as TestUserLogList;
+            return base.GetByTreePId(treePId, eagerLoad) as PBSTypeList;
         }
 
         #endregion
