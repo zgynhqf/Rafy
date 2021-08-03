@@ -46,6 +46,8 @@ namespace RafyUnitTest
         public static void FSPT_ClassInitialize(TestContext context)
         {
             ServerTestHelper.ClassInitialize(context);
+
+            RafyEnvironment.LoadPlugin(typeof(FileStorageEntity).Assembly);
         }
 
         [TestMethod]

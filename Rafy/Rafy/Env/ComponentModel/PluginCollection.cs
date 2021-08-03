@@ -26,6 +26,29 @@ namespace Rafy.ComponentModel
     /// </summary>
     public class PluginCollection : Collection<IPlugin>
     {
+        public IPlugin Find(Assembly assembly)
+        {
+            for (int i = 0, c = this.Count; i < c; i++)
+            {
+                var item = this[i];
+                if (item.Assembly == assembly)
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+
+        public IPlugin Find(Type pluginType)
+        {
+            return this.FirstOrDefault(p => pluginType.IsInstanceOfType(p));
+        }
+
+        public IPlugin Find(string assemblyName)
+        {
+            return this.FirstOrDefault(p => p.Assembly.GetName().Name == assemblyName);
+        }
+
         #region Lockable
 
         private bool _isLocked;

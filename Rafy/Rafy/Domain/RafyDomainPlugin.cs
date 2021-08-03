@@ -54,12 +54,22 @@ namespace Rafy.Domain
             var plugins = RafyEnvironment.AllPlugins;
             foreach (var plugin in plugins)
             {
-                foreach (var type in plugin.Assembly.GetTypes())
-                {
-                    ServiceLocator.TryAddService(type);
-                    EntityMatrix.TryAddRepository(type);
-                    DataProviderComposer.TryAddDataProvider(type);
-                }
+                ProcessTypesInPlugin(plugin);
+            }
+
+            RafyEnvironment.RuntimePluginLoaded += (o, ee) =>
+            {
+                ProcessTypesInPlugin(ee.Plugin);
+            };
+        }
+
+        private static void ProcessTypesInPlugin(IPlugin plugin)
+        {
+            foreach (var type in plugin.Assembly.GetTypes())
+            {
+                ServiceLocator.TryAddService(type);
+                EntityMatrix.TryAddRepository(type);
+                DataProviderComposer.TryAddDataProvider(type);
             }
         }
     }

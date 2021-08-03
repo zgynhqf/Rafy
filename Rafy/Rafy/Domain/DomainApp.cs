@@ -33,9 +33,9 @@ namespace Rafy.Domain
             DataSaver.SubmitInterceptors = new List<Type>();
         }
 
-        protected override void OnAllPluginsIntialized()
+        protected override void OnStartupPluginsIntialized()
         {
-            base.OnAllPluginsIntialized();
+            base.OnStartupPluginsIntialized();
 
             //锁定该集合。
             DataSaver.SubmitInterceptors = new ReadOnlyCollection<Type>(DataSaver.SubmitInterceptors);

@@ -330,6 +330,7 @@ namespace Rafy.MetaModel
         /// <summary>
         /// 调用此方法来加载整个系统中的所有插件中的实体元数据。
         /// （同时，也就包含所有实体的托管属性。）
+        /// 注意，此方法也会主动加载所有的插件。
         /// 
         /// 调用此方法前，遍历此集合只会返回当前已经加载的实体元数据。
         /// </summary>
@@ -337,6 +338,8 @@ namespace Rafy.MetaModel
         {
             if (!this._allEntitiesLoaded)
             {
+                RafyEnvironment.EnsureAllPluginsLoaded();
+
                 var rootTypes = RafyEnvironment.SearchAllRootTypes();
                 foreach (var rootType in rootTypes) { this.Find(rootType); }
 

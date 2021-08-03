@@ -49,6 +49,8 @@ namespace RafyUnitTest
         public static void SSPT_ClassInitialize(TestContext context)
         {
             ServerTestHelper.ClassInitialize(context);
+
+            RafyEnvironment.LoadPlugin(typeof(SystemSettingsPlugin).Assembly);
         }
 
         [TestMethod]

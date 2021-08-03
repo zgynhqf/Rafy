@@ -14,6 +14,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Rafy;
 using Rafy.Accounts;
 using Rafy.Domain;
 using Rafy.RBAC.DataPermissionManagement;
@@ -32,6 +33,8 @@ namespace RafyUnitTest
         public static void ClassInitialize(TestContext context)
         {
             ServerTestHelper.ClassInitialize(context);
+
+            RafyEnvironment.LoadPlugin(typeof(UserRepository).Assembly);
         }
 
         private Tuple<User, Role, Group, Resource> RBAC_InitRBAC()

@@ -83,19 +83,29 @@ namespace Rafy.Domain
             {
                 foreach (var plugin in RafyEnvironment.AllPlugins)
                 {
-                    var assembly = plugin.Assembly;
-
-                    var types = assembly.GetTypes()
-                        .Where(t => t.IsSubclassOf(typeof(DomainController)))
-                        .ToArray();
-
-                    foreach (var item in types)
-                    {
-                        System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(item.TypeHandle);
-                    }
+                    Initialize(plugin);
                 }
 
+                RafyEnvironment.RuntimePluginLoaded += (o, e) =>
+                {
+                    Initialize(e.Plugin);
+                };
+
                 _intialized = true;
+            }
+        }
+
+        private static void Initialize(ComponentModel.IPlugin plugin)
+        {
+            var assembly = plugin.Assembly;
+
+            var types = assembly.GetTypes()
+                .Where(t => t.IsSubclassOf(typeof(DomainController)))
+                .ToArray();
+
+            foreach (var item in types)
+            {
+                System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(item.TypeHandle);
             }
         }
 

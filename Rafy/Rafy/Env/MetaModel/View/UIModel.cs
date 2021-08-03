@@ -57,7 +57,7 @@ namespace Rafy.MetaModel.View
 
         internal static void Freeze()
         {
-            WebCommands.FreezeItems();
+            _webCommands.FreezeItems();
         }
 
         internal static void Reset()
@@ -82,12 +82,12 @@ namespace Rafy.MetaModel.View
                 //放在 Commands 下的文件夹会自动加入进来
                 var cmdDir = ConfigurationHelper.GetAppSettingOrDefault("RafyCommandsDir", "Scripts/Commands/");
                 var dir = RafyEnvironment.MapAbsolutePath(cmdDir);
-                if (Directory.Exists(dir)) { WebCommands.AddByDirectory(dir); }
+                if (Directory.Exists(dir)) { _webCommands.AddByDirectory(dir); }
 
                 //加入所有 Library 中 Commands 文件夹下的 js Resource。
                 foreach (var plugin in RafyEnvironment.AllPlugins)
                 {
-                    WebCommands.AddByAssembly(plugin.Assembly);
+                    _webCommands.AddByAssembly(plugin.Assembly);
                 }
             }
             else
@@ -95,9 +95,21 @@ namespace Rafy.MetaModel.View
                 //加入所有 Module 中 Commands。
                 foreach (var plugin in RafyEnvironment.AllPlugins)
                 {
-                    WPFCommands.AddByAssembly(plugin.Assembly);
+                    _wpfCommands.AddByAssembly(plugin.Assembly);
                 }
             }
+
+            RafyEnvironment.RuntimePluginLoaded += (o, e) =>
+            {
+                if (RafyEnvironment.Location.IsWebUI)
+                {
+                    _webCommands.AddByAssembly(e.Plugin.Assembly);
+                }
+                else
+                {
+                    _wpfCommands.AddByAssembly(e.Plugin.Assembly);
+                }
+            };
         }
 
         #endregion

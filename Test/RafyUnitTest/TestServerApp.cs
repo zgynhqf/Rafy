@@ -47,6 +47,10 @@ namespace RafyUnitTest
         internal void Start()
         {
             this.StartupApplication();
+
+            RafyEnvironment.LoadPlugin(typeof(UnitTestDataProviderPlugin).Assembly);
+            RafyEnvironment.LoadPlugin(typeof(UnitTestIDataProviderPlugin).Assembly);
+            RafyEnvironment.LoadPlugin(typeof(UnitTestRepoPlugin).Assembly);
         }
 
         protected override void InitEnvironment()
@@ -63,15 +67,16 @@ namespace RafyUnitTest
             RafyEnvironment.DomainPlugins.Add(new StampPlugin());
 
             RafyEnvironment.DomainPlugins.Add(new UnitTestPlugin());
-            RafyEnvironment.DomainPlugins.Add(new UnitTestDataProviderPlugin());
-            RafyEnvironment.DomainPlugins.Add(new UnitTestIDataProviderPlugin());
-            RafyEnvironment.DomainPlugins.Add(new UnitTestRepoPlugin());
-            //RafyEnvironment.DomainPlugins.Add(new DCPlugin());
+            //RafyEnvironment.DomainPlugins.Add(new UnitTestDataProviderPlugin());//load as required
+            //RafyEnvironment.DomainPlugins.Add(new UnitTestIDataProviderPlugin());//load as required
+            //RafyEnvironment.DomainPlugins.Add(new UnitTestRepoPlugin());//load as required
 
-            RafyEnvironment.DomainPlugins.Add(new AccountsPlugin());
-            RafyEnvironment.DomainPlugins.Add(new SystemSettingsPlugin());
-            RafyEnvironment.DomainPlugins.Add(new SerialNumberPlugin());
-            RafyEnvironment.DomainPlugins.Add(new FileStoragePlugin());
+            //load as required, config in appsetting.json
+            //RafyEnvironment.DomainPlugins.Add(new DCPlugin());
+            //RafyEnvironment.DomainPlugins.Add(new AccountsPlugin());
+            //RafyEnvironment.DomainPlugins.Add(new SystemSettingsPlugin());
+            //RafyEnvironment.DomainPlugins.Add(new SerialNumberPlugin());
+            //RafyEnvironment.DomainPlugins.Add(new FileStoragePlugin());
 
             RafyEnvironment.DomainPlugins.Add(new RoleManagementPlugin());
             RafyEnvironment.DomainPlugins.Add(new GroupManagementPlugin());

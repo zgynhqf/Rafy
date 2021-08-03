@@ -11,9 +11,15 @@ namespace RafyUnitTest
 {
     public static class ServerTestHelper
     {
+        private static bool _runned = false;
+
         public static void ClassInitialize(TestContext context)
         {
-            new TestServerApp().Start();
+            if (!_runned)
+            {
+                new TestServerApp().Start();
+                _runned = true;
+            }
         }
 
         public static long GetSqlTraceLength()

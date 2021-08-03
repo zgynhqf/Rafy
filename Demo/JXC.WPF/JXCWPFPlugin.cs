@@ -34,7 +34,7 @@ namespace JXC.WPF
 
         private static void AddNewPropertyEditors(IApp app)
         {
-            app.AllPluginsIntialized += (o, e) =>
+            app.StartupPluginsIntialized += (o, e) =>
             {
                 AutoUI.BlockUIFactory.PropertyEditorFactory.Set("ImageSelector", typeof(ImagePropertyEditor));
             };

@@ -35,7 +35,7 @@ namespace Rafy.Configuration
         }
     }
 
-    public class PluginElement : ConfigurationElement
+    public class PluginElement : ConfigurationElement, IPluginConfig
     {
         /// <summary>
         /// 可以只填写插件程序集的全名称，也可以写出具体的插件类型的全名称。
@@ -45,6 +45,17 @@ namespace Rafy.Configuration
         {
             get { return (string)this["plugin"]; }
             set { this["plugin"] = value; }
+        }
+
+        /// <summary>
+        /// 加载的时机。
+        /// 如果插件中有扩展属性，需要设置为“启动时加载”，否则无法为按需加载的实体进行扩展。
+        /// </summary>
+        [ConfigurationProperty("loadType")]
+        public PluginLoadType LoadType
+        {
+            get { return (PluginLoadType)this["loadType"]; }
+            set { this["loadType"] = value; }
         }
     }
 }

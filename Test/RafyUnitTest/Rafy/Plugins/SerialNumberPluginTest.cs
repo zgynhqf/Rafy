@@ -47,6 +47,8 @@ namespace RafyUnitTest
         public static void SNPT_ClassInitialize(TestContext context)
         {
             ServerTestHelper.ClassInitialize(context);
+
+            RafyEnvironment.LoadPlugin(typeof(SerialNumberPlugin).Assembly);
         }
 
         /// <summary>

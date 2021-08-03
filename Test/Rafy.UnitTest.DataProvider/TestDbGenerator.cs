@@ -30,12 +30,19 @@ namespace Rafy.UnitTest.DataProvider
 {
     public static class TestDbGenerator
     {
+        public static bool ForceAllPluginsLoaded = false;
+
         private static bool ClearDb = true;
 
         public static void GenerateDb()
         {
             if (ConfigurationHelper.GetAppSettingOrDefault("Test_GenerateDb", false))
             {
+                //生成数据库时，为简单起见，需要先加载所有的插件。
+                //注意，此行代码会导致按需加载的单元测试无法通过。所以平时应该关闭数据库生成功能。
+                RafyEnvironment.EnsureAllPluginsLoaded();
+                ForceAllPluginsLoaded = true;
+
                 if (ClearDb && ConfigurationHelper.GetAppSettingOrDefault("Test_GenerateDb_Clear", false))
                 {
                     //不想手工去删除数据库，可以使用下面这个方法来在程序中删除所有的表。

@@ -52,6 +52,8 @@ namespace RafyUnitTest
         public static void APT_ClassInitialize(TestContext context)
         {
             ServerTestHelper.ClassInitialize(context);
+
+            RafyEnvironment.LoadPlugin(typeof(UserRepository).Assembly);
         }
 
         //[TestMethod]

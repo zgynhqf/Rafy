@@ -4,8 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Rafy;
 using Rafy.ComponentModel;
+using Rafy.Configuration;
+using Rafy.Domain;
+using Rafy.Domain.Caching;
+using Rafy.MetaModel;
 using Rafy.UnitTest;
+using Rafy.UnitTest.DataProvider;
+using Rafy.UnitTest.RuntimeLoad;
 
 namespace RafyUnitTest
 {
@@ -17,6 +24,57 @@ namespace RafyUnitTest
         {
             ServerTestHelper.ClassInitialize(context);
         }
+
+        #region RuntimePlugins
+
+        [TestMethod]
+        public void EnvTest_Plugin_LazyLoad()
+        {
+            if (TestDbGenerator.ForceAllPluginsLoaded) return;
+
+            var plugin = RafyEnvironment.AllPlugins.Find(typeof(DiskCachingPlugin));
+            Assert.IsNull(plugin, "该插件是按需加载，此时应该还没有加载");
+
+            var em = CommonModel.Entities.FirstOrDefault(e => e.EntityType == typeof(ScopeVersion));
+            Assert.IsNull(em, "该插件是按需加载，此时应该还没有加载");
+            Assert.IsNull(VersionSyncMgr.Repository, "该插件是按需加载，此时应该还没有加载");
+
+            RafyEnvironment.LoadPlugin(typeof(DiskCachingPlugin).Assembly);
+
+            plugin = RafyEnvironment.AllPlugins.Find(typeof(DiskCachingPlugin));
+            Assert.IsNotNull(plugin, "可以通过实体类，按需加载其对应的插件");
+
+            em = CommonModel.Entities.Find(typeof(ScopeVersion));
+            Assert.IsNotNull(em, "该插件是按需加载，此时应该加载");
+            Assert.IsNotNull(VersionSyncMgr.Repository, "按需加载的插件的 Initialize 方法也需要被调用。");
+
+            //本单元测试只用于演示。其实 DiskCachingPlugin 在使用时，必须启动时加载。
+        }
+
+        [TestMethod]
+        public void EnvTest_Plugin_LazyLoad2()
+        {
+            if (TestDbGenerator.ForceAllPluginsLoaded) return;
+
+            var plugin = RafyEnvironment.AllPlugins.Find(typeof(RuntimeLoadPlugin));
+            Assert.IsNull(plugin, "该插件是按需加载，此时应该还没有加载");
+
+            var configurations = RafyEnvironment.FindConfigurations(typeof(Invoice));
+            Assert.IsFalse(configurations.Any(c => c is InvoiceConfig), "该插件的实体配置，是没有加载的。");
+            Assert.IsFalse(InvoiceConfig.RunnedAnyTime, "该插件的实体配置，是没有加载的，所以也没有运行过。");
+
+            RafyEnvironment.LoadPlugin(typeof(Invoice).Assembly);
+
+            plugin = RafyEnvironment.AllPlugins.Find(typeof(RuntimeLoadPlugin));
+            Assert.IsNotNull(plugin, "可以通过实体类，按需加载其对应的插件");
+
+            var em = CommonModel.Entities.Find(typeof(Invoice));
+            Assert.IsTrue(InvoiceConfig.RunnedAnyTime, "该插件的实体配置，已经可以被加载并运行。");
+            configurations = RafyEnvironment.FindConfigurations(typeof(Invoice));
+            Assert.IsTrue(configurations.Any(c => c is InvoiceConfig), "该插件的实体配置被加载。");
+        }
+
+        #endregion
 
         #region IOC Container
 

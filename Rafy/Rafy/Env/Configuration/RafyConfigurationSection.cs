@@ -23,7 +23,7 @@ namespace Rafy.Configuration
 {
     public class RafyConfigurationSection : ConfigurationSection
     {
-        #region 子元素
+#region 子元素
 
         [ConfigurationProperty("wpf")]
         public WPFConfigurationElement WPF
@@ -53,7 +53,7 @@ namespace Rafy.Configuration
             set { this["uiPlugins"] = value; }
         }
 
-        #endregion
+#endregion
 
         /// <summary>
         /// 当前显示的语言文化。
@@ -122,7 +122,6 @@ namespace Rafy.Configuration
         /// <summary>
         /// 在当前语言下是否执行收集操作。
         /// </summary>
-        /// 
         public DynamicBoolean CollectDevLanguages { get; set; } = DynamicBoolean.IsDebugging;
 
         /// <summary>
@@ -133,9 +132,24 @@ namespace Rafy.Configuration
         /// </summary>
         public string DataPortalProxy { get; set; } = "Local";
 
-        public string[] DomainPlugins { get; set; }
+        public PluginSection[] DomainPlugins { get; set; }
 
-        public string[] UIPlugins { get; set; }
+        public PluginSection[] UIPlugins { get; set; }
+    }
+
+    public class PluginSection : IPluginConfig
+    {
+        /// <summary>
+        /// 对应的插件的类型。
+        /// 可以只填写程序集名称，也可以写出插件类型的全名称。（后者加载更快）
+        /// </summary>
+        public string Plugin { get; set; }
+
+        /// <summary>
+        /// 加载的时机。
+        /// 如果插件中有扩展属性，需要设置为“启动时加载”，否则无法为按需加载的实体进行扩展。
+        /// </summary>
+        public PluginLoadType LoadType { get; set; }
     }
 }
 #endif

@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp2.0</TargetFramework>
+        <!--<TargetFramework>net45</TargetFramework>-->
         <IsPackable>false</IsPackable>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
@@ -30,30 +31,31 @@
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
         <PackageReference Include="MSTest.TestAdapter" Version="1.2.1" />
         <PackageReference Include="MSTest.TestFramework" Version="1.2.1" />
-        <PackageReference Include="Stub.System.Data.SQLite.Core.NetStandard" Version="1.0.114.3" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Accounts\Rafy.Accounts.csproj" />
+      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.DiskCaching\Rafy.DiskCaching.csproj" />
+      <ProjectReference Include="..\..\Rafy\Rafy\Rafy.csproj" />
       <ProjectReference Include="..\..\Rafy\Plugins\Rafy.ComponentModel.UnityAdapter\Rafy.ComponentModel.UnityAdapter.csproj" />
       <ProjectReference Include="..\..\Rafy\Plugins\Rafy.DataTableMigration\Rafy.DataArchiver.csproj" />
       <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.EntityPhantom\Rafy.Domain.EntityPhantom.csproj" />
       <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.ORM.BatchSubmit\Rafy.Domain.ORM.BatchSubmit.csproj" />
+      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.MultiTenancy\Rafy.MultiTenancy.csproj" />
+      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Accounts\Rafy.Accounts.csproj" />
+      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.SerialNumber\Rafy.SerialNumber.csproj" />
+      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.SystemSettings\Rafy.SystemSettings.csproj" />
       <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.Stamp\Rafy.Domain.Stamp.csproj" />
       <ProjectReference Include="..\..\Rafy\Plugins\Rafy.FileStorage\Rafy.FileStorage.csproj" />
       <ProjectReference Include="..\..\Rafy\Plugins\Rafy.LicenseManager\Rafy.LicenseManager.Encryption\Rafy.LicenseManager.Encryption.csproj" />
-      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.MultiTenancy\Rafy.MultiTenancy.csproj" />
       <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.DataPermissionManagement\Rafy.RBAC.DataPermissionManagement.csproj" />
       <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.GroupManagement\Rafy.RBAC.GroupManagement.csproj" />
       <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.RoleManagement\Rafy.RBAC.RoleManagement.csproj" />
       <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.UserRoleManagement\Rafy.RBAC.UserRoleManagement.csproj" />
-      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.SerialNumber\Rafy.SerialNumber.csproj" />
-      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.SystemSettings\Rafy.SystemSettings.csproj" />
-      <ProjectReference Include="..\..\Rafy\Rafy\Rafy.csproj" />
+      <ProjectReference Include="..\Rafy.UnitTest.RuntimeLoad\Rafy.UnitTest.RuntimeLoad.csproj" />
+      <ProjectReference Include="..\Rafy.UnitTest\Rafy.UnitTest.csproj" />
       <ProjectReference Include="..\Rafy.UnitTest.DataProvider\Rafy.UnitTest.DataProvider.csproj" />
       <ProjectReference Include="..\Rafy.UnitTest.IDataProvider\Rafy.UnitTest.IDataProvider.csproj" />
       <ProjectReference Include="..\Rafy.UnitTest.Repository\Rafy.UnitTest.Repository.csproj" />
-      <ProjectReference Include="..\Rafy.UnitTest\Rafy.UnitTest.csproj" />
     </ItemGroup>
     <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
         <Reference Include="System.Web" />
@@ -62,5 +64,6 @@
 
     <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
         <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.12.0-beta2" />
+        <PackageReference Include="Stub.System.Data.SQLite.Core.NetStandard" Version="1.0.114.3" />
     </ItemGroup>
 </Project>

@@ -34,6 +34,11 @@ namespace Rafy.ComponentModel
     public abstract class AppImplementationBase : IServerApp
     {
         /// <summary>
+        /// 应用程序当前所处的阶段。
+        /// </summary>
+        public AppPhase Phase { get; private set; } = AppPhase.Created;
+
+        /// <summary>
         /// 子类在合适的时间调用此方法来启动整个 Rafy 应用程序。
         /// 
         /// 注意，为了支持重新启动，这个类中的所有方法都应该可以运行多次。
@@ -42,10 +47,11 @@ namespace Rafy.ComponentModel
         /// </summary>
         protected void StartupApplication()
         {
+            this.Phase = AppPhase.Starting;
             this.PrepareToStartup();
 
             this.InitEnvironment();
-            RafyEnvironment.LockPlugins();
+            RafyEnvironment.CreateStartupPlugins();
 
             //注册所有扩展属性
             //由于插件的 Intialize 方法中的应用层代码，有可能主动使用实体类而造成实体类的静态构造函数被执行，
@@ -53,8 +59,8 @@ namespace Rafy.ComponentModel
             RafyEnvironment.InitExtensionProperties();
 
             //调用所有插件的 Initialize 方法。
-            RafyEnvironment.InitPlugins();
-            this.OnAllPluginsIntialized();
+            RafyEnvironment.InitializeStartupPlugins();
+            this.OnStartupPluginsIntialized();
 
             //初始化编译期元数据
             this.CompileMeta();
@@ -67,6 +73,7 @@ namespace Rafy.ComponentModel
             //冻结模块的元数据
             CommonModel.Modules.Freeze();
             this.OnAppMetaCompleted();
+            this.Phase = AppPhase.MetaPrepared;
 
             //组合所有模块的 IOC、事件、
             this.RaiseComposeOperations();
@@ -81,9 +88,11 @@ namespace Rafy.ComponentModel
             //启动主过程
             this.OnMainProcessStarting();
             this.StartMainProcess();
+            this.Phase = AppPhase.MainProcessCompleted;
 
             //整个初始化完毕。
             this.OnStartupCompleted();
+            this.Phase = AppPhase.Running;
         }
 
         /// <summary>
@@ -166,14 +175,14 @@ namespace Rafy.ComponentModel
         /// <summary>
         /// 所有实体元数据初始化完毕，包括实体元数据之间的关系。
         /// </summary>
-        public event EventHandler AllPluginsIntialized;
+        public event EventHandler StartupPluginsIntialized;
 
         /// <summary>
-        /// 触发 AllPluginsIntialized 事件。
+        /// 触发 StartupPluginsIntialized 事件。
         /// </summary>
-        protected virtual void OnAllPluginsIntialized()
+        protected virtual void OnStartupPluginsIntialized()
         {
-            var handler = this.AllPluginsIntialized;
+            var handler = this.StartupPluginsIntialized;
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
@@ -302,6 +311,8 @@ namespace Rafy.ComponentModel
         {
             var handler = this.Exit;
             if (handler != null) handler(this, EventArgs.Empty);
+
+            this.Phase = AppPhase.Exited;
         }
 
         /// <summary>

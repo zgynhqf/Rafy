@@ -24,9 +24,14 @@ namespace Rafy.ComponentModel
     public interface IApp
     {
         /// <summary>
+        /// 应用程序当前所处的阶段。
+        /// </summary>
+        AppPhase Phase { get; }
+
+        /// <summary>
         /// 所有实体元数据初始化完毕，包括实体元数据之间的关系。
         /// </summary>
-        event EventHandler AllPluginsIntialized;
+        event EventHandler StartupPluginsIntialized;
 
         /// <summary>
         /// 所有初始化期定义的元数据初始化完成时事件。
@@ -78,5 +83,36 @@ namespace Rafy.ComponentModel
         /// 应用程序完全退出
         /// </summary>
         event EventHandler Exit;
+    }
+
+    /// <summary>
+    /// 应用程序当前所处的阶段。
+    /// </summary>
+    public enum AppPhase
+    {
+        /// <summary>
+        /// Rafy App 刚被创建，还没有启动。
+        /// </summary>
+        Created,
+        /// <summary>
+        /// 开始启动流程
+        /// </summary>
+        Starting,
+        /// <summary>
+        /// 启动的插件中的各类元数据已经被创建完成
+        /// </summary>
+        MetaPrepared,
+        /// <summary>
+        /// 主过程完成。
+        /// </summary>
+        MainProcessCompleted,
+        /// <summary>
+        /// 启动完成，开始运行中。
+        /// </summary>
+        Running,
+        /// <summary>
+        /// Rafy App 退出完成。
+        /// </summary>
+        Exited
     }
 }

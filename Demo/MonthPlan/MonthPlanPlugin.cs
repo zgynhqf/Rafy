@@ -40,7 +40,7 @@ namespace MP
             //不需要任何权限。
             PermissionMgr.Provider = null;
 
-            app.AllPluginsIntialized += (oo, ee) =>
+            app.StartupPluginsIntialized += (oo, ee) =>
             {
                 RafyResources.AddResource(typeof(MonthPlanPlugin), "Resources/MonthPlanResources.xaml");
             };
