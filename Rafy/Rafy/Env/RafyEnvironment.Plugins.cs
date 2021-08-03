@@ -542,6 +542,27 @@ namespace Rafy
             return _typeConfigurations;
         }
 
+        /// <summary>
+        /// 获取某个实体视图的所有配置类实例
+        /// </summary>
+        /// <param name="entityType"></param>
+        /// <returns></returns>
+        internal static IEnumerable<EntityConfig> FindConfigurations(Type entityType)
+        {
+            InitTypeConfigurations();
+
+            var hierachy = TypeHelper.GetHierarchy(entityType, typeof(ManagedPropertyObject)).Reverse();
+            foreach (var type in hierachy)
+            {
+                List<EntityConfig> configList = null;
+                if (_typeConfigurations.TryGetValue(type, out configList))
+                {
+                    var orderedList = configList.OrderBy(o => o.PluginIndex).ThenBy(o => o.InheritanceCount);
+                    foreach (var config in orderedList) { yield return config; }
+                }
+            }
+        }
+
         private static void InitTypeConfigurations()
         {
             if (_typeConfigurations == null)
@@ -583,27 +604,6 @@ namespace Rafy
             }
         }
 
-        /// <summary>
-        /// 获取某个实体视图的所有配置类实例
-        /// </summary>
-        /// <param name="entityType"></param>
-        /// <returns></returns>
-        internal static IEnumerable<EntityConfig> FindConfigurations(Type entityType)
-        {
-            InitTypeConfigurations();
-
-            var hierachy = TypeHelper.GetHierarchy(entityType, typeof(ManagedPropertyObject)).Reverse();
-            foreach (var type in hierachy)
-            {
-                List<EntityConfig> configList = null;
-                if (_typeConfigurations.TryGetValue(type, out configList))
-                {
-                    var orderedList = configList.OrderBy(o => o.PluginIndex).ThenBy(o => o.InheritanceCount);
-                    foreach (var config in orderedList) { yield return config; }
-                }
-            }
-        }
-
         #endregion
 
         #region EntityViewConfig
@@ -618,6 +618,45 @@ namespace Rafy
             private Dictionary<Type, List<TViewConfig>> _configurations;
 
             private Dictionary<ExtendTypeKey, List<TViewConfig>> _extendConfigurations;
+
+            /// <summary>
+            /// 获取某个实体视图的所有配置类实例
+            /// </summary>
+            /// <param name="entityType"></param>
+            /// <param name="extendView">如果想获取扩展视图列表，则需要传入指定的扩展视图列表</param>
+            /// <returns></returns>
+            internal IEnumerable<TViewConfig> FindViewConfigurations(Type entityType, string extendView = null)
+            {
+                InitConfigurations();
+
+                var hierachy = TypeHelper.GetHierarchy(entityType, typeof(ManagedPropertyObject)).Reverse();
+                if (extendView == null)
+                {
+                    foreach (var type in hierachy)
+                    {
+                        List<TViewConfig> configList = null;
+                        if (_configurations.TryGetValue(type, out configList))
+                        {
+                            var orderedList = configList.OrderBy(o => o.PluginIndex).ThenBy(o => o.InheritanceCount);
+                            foreach (var config in orderedList) { yield return config; }
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var type in hierachy)
+                    {
+                        var key = new ExtendTypeKey { EntityType = type, ExtendView = extendView };
+
+                        List<TViewConfig> configList = null;
+                        if (_extendConfigurations.TryGetValue(key, out configList))
+                        {
+                            var orderedList = configList.OrderBy(o => o.PluginIndex).ThenBy(o => o.InheritanceCount);
+                            foreach (var config in orderedList) { yield return config; }
+                        }
+                    }
+                }
+            }
 
             private void InitConfigurations()
             {
@@ -671,45 +710,6 @@ namespace Rafy
 
                     _configurations = defaultRepo;
                     _extendConfigurations = extendRepo;
-                }
-            }
-
-            /// <summary>
-            /// 获取某个实体视图的所有配置类实例
-            /// </summary>
-            /// <param name="entityType"></param>
-            /// <param name="extendView">如果想获取扩展视图列表，则需要传入指定的扩展视图列表</param>
-            /// <returns></returns>
-            internal IEnumerable<TViewConfig> FindViewConfigurations(Type entityType, string extendView = null)
-            {
-                InitConfigurations();
-
-                var hierachy = TypeHelper.GetHierarchy(entityType, typeof(ManagedPropertyObject)).Reverse();
-                if (extendView == null)
-                {
-                    foreach (var type in hierachy)
-                    {
-                        List<TViewConfig> configList = null;
-                        if (_configurations.TryGetValue(type, out configList))
-                        {
-                            var orderedList = configList.OrderBy(o => o.PluginIndex).ThenBy(o => o.InheritanceCount);
-                            foreach (var config in orderedList) { yield return config; }
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (var type in hierachy)
-                    {
-                        var key = new ExtendTypeKey { EntityType = type, ExtendView = extendView };
-
-                        List<TViewConfig> configList = null;
-                        if (_extendConfigurations.TryGetValue(key, out configList))
-                        {
-                            var orderedList = configList.OrderBy(o => o.PluginIndex).ThenBy(o => o.InheritanceCount);
-                            foreach (var config in orderedList) { yield return config; }
-                        }
-                    }
                 }
             }
 
