@@ -598,7 +598,7 @@ namespace RafyUnitTest
                 }
                 finally
                 {
-                    if (!IsTestDbSQLite())
+                    if (context.SupportHistory)
                     {
                         context.RollbackAll(RollbackAction.DeleteHistory);
                     }
@@ -654,8 +654,8 @@ namespace RafyUnitTest
                 try
                 {
                     context.ManualMigrations.Clear();
-                    context.ManualMigrations.Add(new DMT_ManualMigrateEntity());
-                    context.ManualMigrations.Add(new DMT_ManualMigrateTest());
+                    context.ManualMigrations.Add(new DMT_ManualMigrate_AddEntity());
+                    context.ManualMigrations.Add(new DMT_ManualMigrate_AddTable());
 
                     //手工更新
                     context.MigrateManually();
@@ -664,9 +664,11 @@ namespace RafyUnitTest
                     if (context.SupportHistory)
                     {
                         var histories = context.GetHistories();
-                        Assert.IsTrue(histories.Count == 2);
-                        Assert.IsTrue(histories[0] is DMT_ManualMigrateEntity);
-                        Assert.IsTrue(histories[1] is DMT_ManualMigrateTest);
+                        Assert.AreEqual(2, histories.Count);
+                        Assert.IsTrue(histories[0] is DMT_ManualMigrate_AddEntity);
+                        Assert.IsTrue(histories[1] is DMT_ManualMigrate_AddTable);
+                        //Assert.IsTrue(histories.Any(e => e is DMT_ManualMigrateEntity));
+                        //Assert.IsTrue(histories.Any(e => e is DMT_ManualMigrateTest));
                     }
 
                     //数据库结构
@@ -777,7 +779,7 @@ namespace RafyUnitTest
 
         #region public class DMT_ManualMigrateTest
 
-        public class DMT_ManualMigrateTest : ManualDbMigration
+        public class DMT_ManualMigrate_AddTable : ManualDbMigration
         {
             public override string DbSetting
             {
@@ -816,7 +818,7 @@ namespace RafyUnitTest
             {
                 get
                 {
-                    return new DateTime(2021, 1, 1);
+                    return DateTime.Now.AddDays(1);
                 }
             }
 
@@ -835,7 +837,7 @@ namespace RafyUnitTest
 
         #region public class DMT_ManualMigrateEntity
 
-        public class DMT_ManualMigrateEntity : ManualDbMigration
+        public class DMT_ManualMigrate_AddEntity : ManualDbMigration
         {
             public override string DbSetting
             {
@@ -870,7 +872,7 @@ namespace RafyUnitTest
             {
                 get
                 {
-                    return new DateTime(2021, 1, 2);
+                    return DateTime.Now.AddDays(2);
                 }
             }
 
