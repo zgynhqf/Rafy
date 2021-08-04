@@ -816,7 +816,7 @@ namespace RafyUnitTest
             {
                 get
                 {
-                    return DateTime.Now;
+                    return new DateTime(2021, 1, 1);
                 }
             }
 
@@ -870,7 +870,7 @@ namespace RafyUnitTest
             {
                 get
                 {
-                    return DateTime.Now;
+                    return new DateTime(2021, 1, 2);
                 }
             }
 
