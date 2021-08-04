@@ -207,7 +207,7 @@ namespace Rafy.WPF
         /// </summary>
         public void RefreshCurrentEntity()
         {
-            this.RefreshControlCore();
+            this.RefreshCurrentEntityCore();
         }
 
         /// <summary>
