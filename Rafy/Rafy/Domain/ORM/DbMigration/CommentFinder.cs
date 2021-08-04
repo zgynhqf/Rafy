@@ -99,7 +99,10 @@ namespace Rafy.Domain.ORM.DbMigration
                         xdoc = XDocument.Load(xmlDocPath);
                         _store.Add(assembly, xdoc);
                     }
-                    catch { }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
                 }
             }
 
