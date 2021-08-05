@@ -22,6 +22,7 @@ namespace Rafy.Configuration
     /// <summary>
     /// 插件的定义可以通过代码及配置文件来完成。
     /// <para>
+    /// 可通过 <see cref="RafyEnvironment.EnablePluginLoadAsRequired"/> 来启用插件的按需加载功能。
     /// * 通过配置文件时，默认都是按需加载，可以通过设置其 LoadType 属性来定义加载时机。
     /// * 通过代码加载时，全是启动即加载。都需要在 <see cref="AppImplementationBase.InitEnvironment"/> 过程中，向 <see cref="RafyEnvironment.DomainPlugins"/> 及  <see cref="RafyEnvironment.UIPlugins"/> 集合中添加。
     /// </para>

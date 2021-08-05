@@ -61,6 +61,12 @@ namespace Rafy
         private static PluginCollection _allPlugins;
 
         /// <summary>
+        /// 是否支持插件的按需加载。
+        /// 默认是 false。
+        /// </summary>
+        public static bool EnablePluginLoadAsRequired { get; set; }
+
+        /// <summary>
         /// 当前程序所有可运行的领域实体插件。
         /// 在 <see cref="AppImplementationBase.InitEnvironment"/> 中通过代码加入本集合中的插件，都会在启动时全部加载。
         /// </summary>
@@ -334,7 +340,7 @@ namespace Rafy
             for (int i = 0, c = sortedPlugins.Length; i < c; i++)
             {
                 var pluginSection = sortedPlugins[i];
-                if (pluginSection.LoadType == PluginLoadType.AsRequired) continue;
+                if (pluginSection.LoadType == PluginLoadType.AsRequired && EnablePluginLoadAsRequired) continue;
 
                 IPlugin plugin = CreatePlugin(pluginSection.Plugin);
 
