@@ -46,7 +46,7 @@ namespace Rafy.Domain
                 PropertyDescriptorFactory.Current = new RafyPropertyDescriptorFactory();
             }
 
-            app.MetaCompiled += OnMetaCompiled;
+            app.MetaCreating += OnMetaCompiled;
         }
 
         private void OnMetaCompiled(object sender, EventArgs e)

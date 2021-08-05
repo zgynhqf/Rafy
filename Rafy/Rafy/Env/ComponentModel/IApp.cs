@@ -36,43 +36,21 @@ namespace Rafy.ComponentModel
         /// <summary>
         /// 所有初始化期定义的元数据初始化完成时事件。
         /// </summary>
-        event EventHandler MetaCompiled;
-
-        /// <summary>
-        /// 模块的定义先于其它模型的操作。这样可以先设置好模板默认的按钮。
-        /// </summary>
-        event EventHandler ModuleOperations;
-
-        /// <summary>
-        /// 模块的定义完成
-        /// </summary>
-        event EventHandler ModuleOperationsCompleted;
+        event EventHandler MetaCreating;
 
         /// <summary>
         /// 所有初始化工作完成
         /// </summary>
-        event EventHandler AppMetaCompleted;
-
-        /// <summary>
-        /// 组件的组合操作。
-        /// 组合可以在此事件中添加自己的组合逻辑，例如 A 订阅 B 的某个事件。
-        /// </summary>
-        event EventHandler ComposeOperations;
-
-        /// <summary>
-        /// 所有组件组合完毕。
-        /// </summary>
-        event EventHandler Composed;
+        event EventHandler MetaCreated;
 
         /// <summary>
         /// 应用程序运行时行为开始。
+        /// 
+        /// 常见在这个事件执行的操作有：
+        /// * 组合逻辑，例如 A 订阅 B 的某个事件。
+        /// * 生成数据库。
         /// </summary>
         event EventHandler RuntimeStarting;
-
-        /// <summary>
-        /// 主过程开始前事件。
-        /// </summary>
-        event EventHandler MainProcessStarting;
 
         /// <summary>
         /// AppStartup 完毕
@@ -93,26 +71,22 @@ namespace Rafy.ComponentModel
         /// <summary>
         /// Rafy App 刚被创建，还没有启动。
         /// </summary>
-        Created,
+        Created = 10,
         /// <summary>
         /// 开始启动流程
         /// </summary>
-        Starting,
+        Starting = 20,
         /// <summary>
         /// 启动的插件中的各类元数据已经被创建完成
         /// </summary>
-        MetaPrepared,
-        /// <summary>
-        /// 主过程完成。
-        /// </summary>
-        MainProcessCompleted,
+        MetaCreated = 30,
         /// <summary>
         /// 启动完成，开始运行中。
         /// </summary>
-        Running,
+        Running = 40,
         /// <summary>
         /// Rafy App 退出完成。
         /// </summary>
-        Exited
+        Exited = 50
     }
 }

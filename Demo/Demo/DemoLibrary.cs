@@ -17,7 +17,7 @@ namespace Demo
     {
         public override void Initialize(IApp app)
         {
-            app.MetaCompiled += (o, e) =>
+            app.MetaCreating += (o, e) =>
             {
                 //定义书籍查询界面的结构
                 UIModel.AggtBlocks.DefineBlocks("书籍查询界面", m => new AggtBlocks
@@ -31,10 +31,7 @@ namespace Demo
                         new ConditionBlock(typeof(BookQueryCriteria))
                     }
                 });
-            };
 
-            app.ModuleOperations += (o, e) =>
-            {
                 if (RafyEnvironment.Location.IsWebUI)
                 {
                     var moduleBookImport = CommonModel.Modules.AddRoot(new WebModuleMeta

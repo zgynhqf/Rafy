@@ -33,7 +33,7 @@ namespace Rafy.Customization.Web
                 WebCommandNames.CommonCommands.Insert(0, customeUICmd);
             }
 
-            app.MetaCompiled += (o, e) =>
+            app.MetaCreating += (o, e) =>
             {
                 UIModel.AggtBlocks.DefineBlocks("ViewConfigurationModel模块界面", m =>
                 {

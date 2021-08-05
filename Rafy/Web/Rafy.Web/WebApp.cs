@@ -55,7 +55,7 @@ namespace Rafy.Web
             }
         }
 
-        protected override void CompileMeta()
+        protected override void CreateMeta()
         {
             //虽然是 WebApp，但是可能只是作为 WPFClient 的服务端。
             if (RafyEnvironment.Location.IsWebUI)
@@ -64,7 +64,7 @@ namespace Rafy.Web
                 this.InitCommandMetas();
             }
 
-            base.CompileMeta();
+            base.CreateMeta();
         }
 
         private void InitCommandMetas()
@@ -79,11 +79,11 @@ namespace Rafy.Web
             //this.OnCommandMetasIntialized();
         }
 
-        protected override void OnAppMetaCompleted()
+        protected override void OnMetaCreated()
         {
             UIModel.Freeze();
 
-            base.OnAppMetaCompleted();
+            base.OnMetaCreated();
         }
     }
 }

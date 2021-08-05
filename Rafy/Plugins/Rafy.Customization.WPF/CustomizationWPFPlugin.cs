@@ -31,7 +31,7 @@ namespace Rafy.Customization.WPF
                 WPFCommandNames.SysQueryCommands.Insert(0, typeof(CustomizeUI));
             }
 
-            app.MetaCompiled += (o, e) =>
+            app.MetaCreating += (o, e) =>
             {
                 UIModel.AggtBlocks.DefineBlocks("ViewConfigurationModel模块界面", m =>
                 {

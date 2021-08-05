@@ -43,12 +43,12 @@ namespace Rafy.DevTools
             //必须是在调试期才起作用。
             if (!RafyEnvironment.IsDebuggingEnabled) return;
 
-            app.ModuleOperations += AddDevModules;
+            app.MetaCreating += AddDevModules;
 
             //如果当前是在客户端，则需要尝试在启动时生成数据库。
             if (RafyEnvironment.Location.IsWPFUI)
             {
-                (app as IClientApp).MainProcessStarting += OnMainProcessStarting;
+                (app as IClientApp).RuntimeStarting += OnRuntimeStarting;
             }
         }
 
@@ -77,7 +77,7 @@ namespace Rafy.DevTools
             }
         }
 
-        private static void OnMainProcessStarting(object sender, EventArgs e)
+        private static void OnRuntimeStarting(object sender, EventArgs e)
         {
             //配置了以下配置项时，才在启动时升级数据库。
             if (ConfigurationHelper.GetAppSettingOrDefault("Rafy.DevTools.GenerateDbOnStartup", false))

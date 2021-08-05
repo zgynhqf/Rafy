@@ -29,7 +29,7 @@ namespace Rafy.RBAC.Old.WPF
     {
         public override void Initialize(IApp app)
         {
-            app.ModuleOperations += (o, e) =>
+            app.MetaCreating += (o, e) =>
             {
                 var module = CommonModel.Modules.AddRoot(new WebModuleMeta
                 {

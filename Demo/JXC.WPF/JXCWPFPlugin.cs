@@ -42,7 +42,7 @@ namespace JXC.WPF
 
         private static void InitModules(IApp app)
         {
-            app.ModuleOperations += (o, e) =>
+            app.MetaCreating += (o, e) =>
             {
                 var moduleJXC = CommonModel.Modules.AddRoot(new WPFModuleMeta
                 {

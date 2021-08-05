@@ -125,9 +125,9 @@ namespace Rafy.WPF.Shell
             this.ModifyPrivateBinPath();
         }
 
-        protected override void CompileMeta()
+        protected override void CreateMeta()
         {
-            base.CompileMeta();
+            base.CreateMeta();
 
             this.InitCommandMeta();
         }
@@ -144,11 +144,11 @@ namespace Rafy.WPF.Shell
             this.OnCommandMetasIntialized();
         }
 
-        protected override void OnAppMetaCompleted()
+        protected override void OnMetaCreated()
         {
             UIModel.Freeze();
 
-            base.OnAppMetaCompleted();
+            base.OnMetaCreated();
         }
 
         protected override void OnRuntimeStarting()

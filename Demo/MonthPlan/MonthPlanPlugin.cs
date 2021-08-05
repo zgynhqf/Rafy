@@ -45,7 +45,7 @@ namespace MP
                 RafyResources.AddResource(typeof(MonthPlanPlugin), "Resources/MonthPlanResources.xaml");
             };
 
-            app.ModuleOperations += (o, e) =>
+            app.MetaCreating += (o, e) =>
             {
                 CommonModel.Modules.AddRoot(new WPFModuleMeta { Label = "月度计划", EntityType = typeof(MonthPlan), BlocksTemplate = typeof(MonthPlanModule) });
             };

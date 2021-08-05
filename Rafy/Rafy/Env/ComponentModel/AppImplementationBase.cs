@@ -62,33 +62,18 @@ namespace Rafy.ComponentModel
             RafyEnvironment.InitializeStartupPlugins();
             this.OnStartupPluginsIntialized();
 
-            //初始化编译期元数据
-            this.CompileMeta();
-            this.OnMetaCompiled();
+            //初始化启动期元数据
+            this.CreateMeta();
+            this.OnMetaCreating();
 
-            //定义模块列表
-            this.RaiseModuleOpertions();
-            this.OnModuleOpertionsCompleted();
-
-            //冻结模块的元数据
-            CommonModel.Modules.Freeze();
-            this.OnAppMetaCompleted();
-            this.Phase = AppPhase.MetaPrepared;
-
-            //组合所有模块的 IOC、事件、
-            this.RaiseComposeOperations();
-            this.OnComposed();
+            this.OnMetaCreated();
+            this.Phase = AppPhase.MetaCreated;
 
             //开始运行时行为。此行代码后的所有代码都可以看作运行时行为。
             this.OnRuntimeStarting();
 
-            //设置多国语言
-            this.SetupLanguage();
-
             //启动主过程
-            this.OnMainProcessStarting();
             this.StartMainProcess();
-            this.Phase = AppPhase.MainProcessCompleted;
 
             //整个初始化完毕。
             this.OnStartupCompleted();
@@ -140,6 +125,9 @@ namespace Rafy.ComponentModel
             RafyEnvironment.InitCustomizationPath();
 
             RafyEnvironment.SetApp(this);
+
+            //设置多国语言
+            this.SetupLanguage();
         }
 
         /// <summary>
@@ -163,7 +151,7 @@ namespace Rafy.ComponentModel
         /// <summary>
         /// 初始化必须在初始化期定义的各种元数据。
         /// </summary>
-        protected virtual void CompileMeta() { }
+        protected virtual void CreateMeta() { }
 
         /// <summary>
         /// 子类重写此方法实现启动主逻辑。
@@ -189,85 +177,31 @@ namespace Rafy.ComponentModel
         /// <summary>
         /// 所有初始化期定义的元数据初始化完成时事件。
         /// </summary>
-        public event EventHandler MetaCompiled;
+        public event EventHandler MetaCreating;
 
         /// <summary>
-        /// 触发 MetaCompiled 事件。
+        /// 触发 MetaCreating 事件。
         /// </summary>
-        protected virtual void OnMetaCompiled()
+        protected virtual void OnMetaCreating()
         {
-            var handler = this.MetaCompiled;
-            if (handler != null) handler(this, EventArgs.Empty);
-        }
-
-        /// <summary>
-        /// 模块的定义先于其它模型的操作。这样可以先设置好模板默认的按钮。
-        /// </summary>
-        public event EventHandler ModuleOperations;
-
-        /// <summary>
-        /// 触发 ModuleOperations 事件。
-        /// </summary>
-        protected virtual void RaiseModuleOpertions()
-        {
-            var handler = this.ModuleOperations;
-            if (handler != null) handler(this, EventArgs.Empty);
-        }
-
-        /// <summary>
-        /// 模块的定义完成
-        /// </summary>
-        public event EventHandler ModuleOperationsCompleted;
-
-        /// <summary>
-        /// 触发 ModuleOperationsCompleted 事件。
-        /// </summary>
-        protected virtual void OnModuleOpertionsCompleted()
-        {
-            var handler = this.ModuleOperationsCompleted;
+            var handler = this.MetaCreating;
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
         /// <summary>
         /// 所有初始化工作完成
         /// </summary>
-        public event EventHandler AppMetaCompleted;
+        public event EventHandler MetaCreated;
 
         /// <summary>
-        /// 触发 AppMetaCompleted 事件。
+        /// 触发 MetaCreated 事件。
         /// </summary>
-        protected virtual void OnAppMetaCompleted()
+        protected virtual void OnMetaCreated()
         {
-            var handler = this.AppMetaCompleted;
-            if (handler != null) handler(this, EventArgs.Empty);
-        }
+            //冻结模块的元数据
+            CommonModel.Modules.Freeze();
 
-        /// <summary>
-        /// 组件的组合操作。
-        /// 组合可以在此事件中添加自己的组合逻辑，例如 A 订阅 B 的某个事件。
-        /// </summary>
-        public event EventHandler ComposeOperations;
-
-        /// <summary>
-        /// 触发 ComposeOperations 事件。
-        /// </summary>
-        protected virtual void RaiseComposeOperations()
-        {
-            var handler = this.ComposeOperations;
-            if (handler != null) handler(this, EventArgs.Empty);
-        }
-
-        /// <summary>
-        /// 所有组件组合完毕。
-        /// </summary>
-        public event EventHandler Composed;
-
-        /// <summary>
-        /// 触发 Composed 事件。
-        /// </summary>
-        protected virtual void OnComposed()
-        {
-            var handler = this.Composed;
+            var handler = this.MetaCreated;
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
@@ -282,20 +216,6 @@ namespace Rafy.ComponentModel
         protected virtual void OnRuntimeStarting()
         {
             var handler = this.RuntimeStarting;
-            if (handler != null) handler(this, EventArgs.Empty);
-        }
-
-        /// <summary>
-        /// 主过程开始前事件。
-        /// </summary>
-        public event EventHandler MainProcessStarting;
-
-        /// <summary>
-        /// 触发 MainProcessStarting 事件。
-        /// </summary>
-        protected virtual void OnMainProcessStarting()
-        {
-            var handler = this.MainProcessStarting;
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
