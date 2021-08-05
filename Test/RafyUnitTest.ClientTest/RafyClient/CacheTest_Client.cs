@@ -39,6 +39,8 @@ namespace RafyUnitTest.ClientTest
         {
             ClientTestHelper.ClassInitialize(context);
 
+            RafyEnvironment.LoadPlugin(typeof(DiskCachingPlugin).Assembly);
+
             Logger.DbAccessed += Logger_DbAccessed;
         }
 

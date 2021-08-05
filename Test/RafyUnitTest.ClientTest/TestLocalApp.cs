@@ -20,6 +20,10 @@ using Rafy.Domain.Stamp;
 
 namespace RafyUnitTest.ClientTest
 {
+    /// <summary>
+    /// 客户端应用程序。
+    /// 不支持生成数据库。（使用服务测试来生成数据库。）
+    /// </summary>
     public class TestLocalApp : ClientApp
     {
         internal void Start()
@@ -45,22 +49,15 @@ namespace RafyUnitTest.ClientTest
             RafyEnvironment.DomainPlugins.Add(new UnityAdapterPlugin());
 
             RafyEnvironment.DomainPlugins.Add(new UnitTestPlugin());
-            RafyEnvironment.DomainPlugins.Add(new UnitTestDataProviderPlugin());
-            RafyEnvironment.DomainPlugins.Add(new UnitTestIDataProviderPlugin());
-            RafyEnvironment.DomainPlugins.Add(new UnitTestRepoPlugin());
-            RafyEnvironment.DomainPlugins.Add(new DiskCachingPlugin());
+            //RafyEnvironment.DomainPlugins.Add(new UnitTestDataProviderPlugin());
+            //RafyEnvironment.DomainPlugins.Add(new UnitTestIDataProviderPlugin());
+            //RafyEnvironment.DomainPlugins.Add(new UnitTestRepoPlugin());
+            //RafyEnvironment.DomainPlugins.Add(new DiskCachingPlugin());
 
             RafyEnvironment.DomainPlugins.Add(new UnitTestWPFPlugin());
 
             base.InitEnvironment();
         }
-
-        //protected override void OnRuntimeStarting()
-        //{
-        //    TestDbGenerator.GenerateDb();
-
-        //    base.OnRuntimeStarting();
-        //}
 
         protected override void StartMainProcess()
         {
