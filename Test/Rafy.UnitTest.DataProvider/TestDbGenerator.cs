@@ -39,7 +39,8 @@ namespace Rafy.UnitTest.DataProvider
             if (ConfigurationHelper.GetAppSettingOrDefault("Test_GenerateDb", false))
             {
                 //生成数据库时，为简单起见，需要先加载所有的插件。
-                //注意，此行代码会导致按需加载的单元测试无法通过。所以平时应该关闭数据库生成功能。
+                //注意，此行代码会导致按需加载的单元测试全部通过。
+                //所以平时应该通过配置文件来关闭数据库生成功能。
                 RafyEnvironment.EnsureAllPluginsLoaded();
                 ForceAllPluginsLoaded = true;
 

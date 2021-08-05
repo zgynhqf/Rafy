@@ -11,6 +11,7 @@
  * 
 *******************************************************/
 
+using Rafy.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,9 @@ using System.Text;
 namespace Rafy.ComponentModel
 {
     /// <summary>
-    /// 插件定义。
+    /// Rafy 插件的运行时对象。
+    /// 
+    /// 关于插件的定义、配置、加载时机。见 <see cref="IPluginConfig"/>。
     /// </summary>
     public interface IPlugin
     {
