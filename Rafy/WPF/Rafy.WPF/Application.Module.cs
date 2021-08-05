@@ -223,6 +223,12 @@ namespace Rafy.WPF
         {
             if (moduleMeta == null) throw new ArgumentNullException("moduleMeta");
 
+            //点击某个菜单时，加载其对应的插件集合。
+            if (moduleMeta.EntityType != null)
+            {
+                RafyEnvironment.LoadPlugin(moduleMeta.EntityType.Assembly);
+            }
+
             //创建 WorkspaceWindow
             var window = new ModuleWorkspaceWindow
             {
