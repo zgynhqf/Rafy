@@ -55,12 +55,12 @@ namespace RafyUnitTest.ClientTest
             base.InitEnvironment();
         }
 
-        protected override void OnRuntimeStarting()
-        {
-            TestDbGenerator.GenerateDb();
+        //protected override void OnRuntimeStarting()
+        //{
+        //    TestDbGenerator.GenerateDb();
 
-            base.OnRuntimeStarting();
-        }
+        //    base.OnRuntimeStarting();
+        //}
 
         protected override void StartMainProcess()
         {
