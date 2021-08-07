@@ -80,11 +80,4 @@ http://zgynhqf.github.io/Rafy</Description>
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="System.Data.SqlServerCe">
-      <HintPath>..\..\packages\Lib\SQLCE\System.Data.SqlServerCe.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-  </ItemGroup>
-
 </Project>

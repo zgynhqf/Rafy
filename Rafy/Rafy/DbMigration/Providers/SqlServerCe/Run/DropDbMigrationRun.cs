@@ -20,7 +20,6 @@ using System.Linq;
 using System.Text;
 using Rafy.Data;
 using System.IO;
-using System.Data.SqlServerCe;
 
 namespace Rafy.DbMigration.SqlServerCe
 {
@@ -29,8 +28,8 @@ namespace Rafy.DbMigration.SqlServerCe
     {
         protected override void RunCore(IDbAccesser db)
         {
-            var sqlCeCon = db.Connection as SqlCeConnection;
-            if (sqlCeCon == null) throw new InvalidOperationException("需要使用 SqlCe 的连接，才能正确创建数据库。");
+            bool isSqlceCon = CreateDbMigrationRun.IsSqlceConnection(db);
+            if (!isSqlceCon) throw new InvalidOperationException("需要使用 SqlCe 的连接，才能正确创建数据库。");
 
             File.Delete(db.Connection.Database);
         }

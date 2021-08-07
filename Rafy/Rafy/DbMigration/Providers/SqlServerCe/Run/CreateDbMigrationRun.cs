@@ -16,10 +16,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Rafy.Data;
-using System.Data.SqlServerCe;
+using Rafy.Reflection;
 using System.Diagnostics;
 using System.Threading;
 using System.IO;
+using System.Data.Common;
 
 namespace Rafy.DbMigration.SqlServerCe
 {
@@ -28,12 +29,13 @@ namespace Rafy.DbMigration.SqlServerCe
     {
         protected override void RunCore(IDbAccesser db)
         {
-            var sqlCeCon = db.Connection as SqlCeConnection;
-            if (sqlCeCon == null) throw new InvalidOperationException("需要使用 SqlCe 的连接，才能正确创建数据库。");
+            bool isSqlceCon = IsSqlceConnection(db);
+            if (!isSqlceCon) throw new InvalidOperationException("需要使用 SqlCe 的连接，才能正确创建数据库。");
 
             //保存目录存在。
-            var csb = new SqlCeConnectionStringBuilder(db.Connection.ConnectionString);
-            var path = CommonUtils.ReplaceDataDirectory(csb.DataSource);
+            var type = Type.GetType("System.Data.SqlServerCe.SqlCeConnectionStringBuilder, System.Data.SqlServerCe");
+            var csb = Activator.CreateInstance(type, db.Connection.ConnectionString);
+            var path = CommonUtils.ReplaceDataDirectory(ObjectHelper.GetPropertyValue(csb, "DataSource") as string);
             var dir = Path.GetDirectoryName(path);
             if (!string.IsNullOrWhiteSpace(dir))
             {
@@ -45,8 +47,17 @@ namespace Rafy.DbMigration.SqlServerCe
             }
 
             //调用引擎创建数据库
-            var engine = new SqlCeEngine(db.Connection.ConnectionString);
-            engine.CreateDatabase();
+            var engineType = Type.GetType("System.Data.SqlServerCe.SqlCeEngine, System.Data.SqlServerCe");
+            var engine = Activator.CreateInstance(engineType, db.Connection.ConnectionString);
+            engineType.GetMethod("CreateDatabase").Invoke(engine, null);
+
+            //var engine = new System.Data.SqlServerCe.SqlCeEngine(db.Connection.ConnectionString);
+            //engine.CreateDatabase();
+        }
+
+        internal static bool IsSqlceConnection(IDbAccesser db)
+        {
+            return db.Connection.GetType().AssemblyQualifiedName.Contains(DbSetting.Provider_SqlCe);
         }
 
         /// <summary>

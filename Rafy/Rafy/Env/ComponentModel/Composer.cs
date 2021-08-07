@@ -105,7 +105,6 @@ namespace Rafy.ComponentModel
         /// 组合所有组件中标记了 <see cref="ContainerItemAttribute"/> 的类型到 IOC 容器中。
         /// 
         /// 此方法只能调用一次，
-        /// 而且应该重写 <see cref="AppImplementationBase.RaiseComposeOperations"/> 方法中调用。
         /// </summary>
         public static void RegisterAllPluginsByAttribute()
         {

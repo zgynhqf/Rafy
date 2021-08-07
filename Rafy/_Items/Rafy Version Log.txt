@@ -10,13 +10,15 @@
  * 
 *******************************************************/
 
-3.73.3855
+3.73.3856
     ★★公布、★重要
         添加接口：RafyEnvironment.EnablePluginLoadAsRequired。
         支持插件的延迟加载。（解决插件太多，启动时加载太过耗时的问题）
         删除 IApp 中冗余的事件。
     BUG修复
         LogicalView.RefreshCurrentEntity.
+    内部修改
+        Rafy.dll 不再引用 System.Data.SqlServerCe.dll。
 
 3.72.3842
     ★★公布、★重要
