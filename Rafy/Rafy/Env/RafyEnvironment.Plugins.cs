@@ -187,11 +187,11 @@ namespace Rafy
             {
                 configPlugins = GetUIPluginsConfig();
                 InitStartupPluginsByConfig(_uiPlugins, configPlugins);
-                if (_location.IsWPFUI)
-                {
-                    _uiPlugins.Insert(0, CreatePlugin("Rafy.WPF.RafyWPFPlugin, Rafy.WPF"));
-                    //_uiPlugins.Insert(0, LoadRafyPlugin("Rafy.WPF"));
-                }
+                //if (_location.IsWPFUI)
+                //{
+                //    _uiPlugins.Insert(0, CreatePlugin("Rafy.WPF.RafyWPFPlugin, Rafy.WPF"));
+                //    //_uiPlugins.Insert(0, LoadRafyPlugin("Rafy.WPF"));
+                //}
                 _uiPlugins.Lock();
 
                 foreach (var item in _uiPlugins) { _allPlugins.Add(item); }

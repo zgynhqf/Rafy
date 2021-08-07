@@ -31,6 +31,8 @@ namespace WPFClient
 
                 RafyEnvironment.Provider.IsDebuggingEnabled = ConfigurationHelper.GetAppSettingOrDefault("WPFClient.IsDebuggingEnabled", false);
 
+                RafyEnvironment.UIPlugins.Add(new RafyWPFPlugin());
+
                 base.InitEnvironment();
             }
 

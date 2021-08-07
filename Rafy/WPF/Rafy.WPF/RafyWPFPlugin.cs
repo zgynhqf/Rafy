@@ -31,7 +31,7 @@ namespace Rafy.WPF
     /// <summary>
     /// 当前工程所对应的模块类。
     /// </summary>
-    internal class RafyWPFPlugin : UIPlugin
+    public class RafyWPFPlugin : UIPlugin
     {
         public override void Initialize(IApp app)
         {
