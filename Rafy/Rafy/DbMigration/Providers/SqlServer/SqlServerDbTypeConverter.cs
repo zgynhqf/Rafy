@@ -25,7 +25,7 @@ namespace Rafy.DbMigration.SqlServer
     /// </summary>
     public class SqlServerDbTypeConverter : DbTypeConverter
     {
-        public static readonly SqlServerDbTypeConverter Instance = new SqlServerDbTypeConverter();
+        public static SqlServerDbTypeConverter Instance = new SqlServerDbTypeConverter();
 
         protected SqlServerDbTypeConverter() { }
 
@@ -44,6 +44,7 @@ namespace Rafy.DbMigration.SqlServer
                 case DbType.AnsiString:
                     if (string.IsNullOrEmpty(length)) { length = "MAX"; }
                     return "NVARCHAR(" + length + ")";
+                case DbType.Int16:
                 case DbType.Int32:
                     return "INT";
                 case DbType.Int64:

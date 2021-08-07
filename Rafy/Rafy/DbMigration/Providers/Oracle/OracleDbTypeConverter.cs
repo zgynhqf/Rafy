@@ -28,7 +28,7 @@ namespace Rafy.DbMigration.Oracle
     {
         private const string CLOBTypeName = "CLOB";
 
-        public static readonly OracleDbTypeConverter Instance = new OracleDbTypeConverter();
+        public static OracleDbTypeConverter Instance = new OracleDbTypeConverter();
 
         private OracleDbTypeConverter() { }
 

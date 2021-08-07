@@ -25,7 +25,7 @@ namespace Rafy.DbMigration.SqlServerCe
     /// </summary>
     public class SqlServerCeDbTypeConverter : SqlServer.SqlServerDbTypeConverter
     {
-        public static readonly new SqlServerCeDbTypeConverter Instance = new SqlServerCeDbTypeConverter();
+        public static new SqlServerCeDbTypeConverter Instance = new SqlServerCeDbTypeConverter();
 
         private SqlServerCeDbTypeConverter() { }
 

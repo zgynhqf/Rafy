@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.73.3857
+3.73.3858
     ★★公布、★重要
         添加接口：RafyEnvironment.EnablePluginLoadAsRequired。
         支持插件的延迟加载。（解决插件太多，启动时加载太过耗时的问题）
@@ -20,6 +20,8 @@
     内部修改
         Rafy.dll 不再引用 System.Data.SqlServerCe.dll。
         Rafy 在 WPF 模式下，不主动加载 Rafy.WPF 程序集。
+    添加接口
+        SqlServerDbTypeConverter.Instance 可以被设置。
 
 3.72.3842
     ★★公布、★重要

@@ -27,6 +27,9 @@ using Rafy.Reflection;
 
 namespace Rafy.Domain.ORM.SqlServer
 {
+    /// <summary>
+    /// Sql Server 和 Sql ce 的基类。
+    /// </summary>
     internal abstract class SqlTable : SqlOraTable
     {
         public SqlTable(IRepositoryInternal repository) : base(repository) { }

@@ -28,7 +28,7 @@ namespace Rafy.DbMigration.MySql
     /// <seealso cref="Rafy.DbMigration.DbTypeConverter" />
     public class MySqlDbTypeConverter : DbTypeConverter
     {
-        public static readonly MySqlDbTypeConverter Instance = new MySqlDbTypeConverter();
+        public static MySqlDbTypeConverter Instance = new MySqlDbTypeConverter();
 
         private MySqlDbTypeConverter() { }
 

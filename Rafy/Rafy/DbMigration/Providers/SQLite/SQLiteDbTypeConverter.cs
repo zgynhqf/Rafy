@@ -28,7 +28,7 @@ namespace Rafy.DbMigration.SQLite
     /// </summary>
     public class SQLiteDbTypeConverter : DbTypeConverter
     {
-        public static readonly SQLiteDbTypeConverter Instance = new SQLiteDbTypeConverter();
+        public static SQLiteDbTypeConverter Instance = new SQLiteDbTypeConverter();
 
         protected SQLiteDbTypeConverter() { }
 
