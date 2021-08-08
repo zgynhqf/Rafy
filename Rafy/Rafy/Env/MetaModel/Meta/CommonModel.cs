@@ -38,6 +38,11 @@ namespace Rafy.MetaModel
         public static EntityMetaRepository Entities
         {
             get { return _entities; }
+            set
+            {
+                if (value == null) throw new ArgumentNullException(nameof(value));
+                _entities = value;
+            }
         }
 
         /// <summary>
@@ -46,6 +51,11 @@ namespace Rafy.MetaModel
         public static ModulesContainer Modules
         {
             get { return _modules; }
+            set
+            {
+                if (value == null) throw new ArgumentNullException(nameof(value));
+                _modules = value;
+            }
         }
 
         internal static void Reset()

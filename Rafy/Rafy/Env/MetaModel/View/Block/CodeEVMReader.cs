@@ -31,6 +31,13 @@ namespace Rafy.MetaModel.View
     /// </summary>
     class CodeEVMReader
     {
+        private Func<EntityViewMeta> _evmFactory;
+
+        public CodeEVMReader(Func<EntityViewMeta> evmFactory)
+        {
+            _evmFactory = evmFactory;
+        }
+
         /// <summary>
         /// 从一个实体类型读取它所对应的视图模型。
         /// </summary>
@@ -52,7 +59,7 @@ namespace Rafy.MetaModel.View
         {
             var entityType = entityMeta.EntityType;
 
-            var vm = RafyEnvironment.Location.IsWebUI ? new WebEntityViewMeta() : new WPFEntityViewMeta() as EntityViewMeta;
+            var vm = _evmFactory();
             vm.EntityMeta = entityMeta;
 
             this.CreatePropertiesViewMeta(vm);

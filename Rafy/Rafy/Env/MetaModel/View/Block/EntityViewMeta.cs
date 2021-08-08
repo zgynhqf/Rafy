@@ -151,7 +151,7 @@ namespace Rafy.MetaModel.View
 
         #region 其它方法
 
-        internal abstract EntityPropertyViewMeta CreatePropertyViewMeta();
+        internal protected abstract EntityPropertyViewMeta CreatePropertyViewMeta();
 
         protected override void OnFrozen()
         {

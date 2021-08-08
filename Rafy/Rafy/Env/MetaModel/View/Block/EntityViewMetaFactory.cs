@@ -21,7 +21,6 @@ using Rafy.Utils;
 using Rafy.ManagedProperty;
 
 using Rafy.MetaModel.XmlConfig;
-using Rafy.MetaModel.XmlConfig.Web;
 
 namespace Rafy.MetaModel.View
 {
@@ -30,13 +29,13 @@ namespace Rafy.MetaModel.View
     /// </summary>
     public class EntityViewMetaFactory
     {
-        private CodeEVMReader _codeReader = new CodeEVMReader();
-
+        private CodeEVMReader _codeReader;
         private XmlConfigManager _xmlCfgMgr;
 
-        internal EntityViewMetaFactory(XmlConfigManager xmlConfigMgr)
+        public EntityViewMetaFactory(XmlConfigManager xmlConfigMgr)
         {
             this._xmlCfgMgr = xmlConfigMgr;
+            _codeReader = new CodeEVMReader(() => this.CreateEntityViewMeta());
         }
 
         /// <summary>
@@ -82,7 +81,7 @@ namespace Rafy.MetaModel.View
             //使用配置对象进行配置
             if (raw is WebEntityViewMeta)
             {
-                foreach (var config in RafyEnvironment.WebConfigurations.FindViewConfigurations(entityType))
+                foreach (WebViewConfig config in RafyEnvironment.WebConfigurations.FindViewConfigurations(entityType))
                 {
                     lock (config)
                     {
@@ -93,7 +92,7 @@ namespace Rafy.MetaModel.View
             }
             else
             {
-                foreach (var config in RafyEnvironment.WPFConfigurations.FindViewConfigurations(entityType))
+                foreach (WPFViewConfig config in RafyEnvironment.WPFConfigurations.FindViewConfigurations(entityType))
                 {
                     lock (config)
                     {
@@ -172,7 +171,7 @@ namespace Rafy.MetaModel.View
             //使用扩展视图配置对象进行配置
             if (raw is WebEntityViewMeta)
             {
-                foreach (var config in RafyEnvironment.WebConfigurations.FindViewConfigurations(entityType, extendViewName))
+                foreach (WebViewConfig config in RafyEnvironment.WebConfigurations.FindViewConfigurations(entityType, extendViewName))
                 {
                     lock (config)
                     {
@@ -183,7 +182,7 @@ namespace Rafy.MetaModel.View
             }
             else
             {
-                foreach (var config in RafyEnvironment.WPFConfigurations.FindViewConfigurations(entityType, extendViewName))
+                foreach (WPFViewConfig config in RafyEnvironment.WPFConfigurations.FindViewConfigurations(entityType, extendViewName))
                 {
                     lock (config)
                     {
@@ -226,6 +225,12 @@ namespace Rafy.MetaModel.View
             //raw.Freeze();
 
             return raw;
+        }
+
+        protected virtual EntityViewMeta CreateEntityViewMeta()
+        {
+            var vm = RafyEnvironment.Location.IsWebUI ? new WebEntityViewMeta() : new WPFEntityViewMeta() as EntityViewMeta;
+            return vm;
         }
 
         //public EntityPropertyViewMeta CreateExtensionPropertyViewMeta(IManagedProperty mp, EntityViewMeta evm)

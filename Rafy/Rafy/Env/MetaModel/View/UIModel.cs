@@ -17,14 +17,14 @@ using System.Linq;
 using System.Text;
 using Rafy;
 using System.IO;
-using Rafy.MetaModel.XmlConfig.Web;
+using Rafy.MetaModel.XmlConfig;
 
 namespace Rafy.MetaModel.View
 {
     /// <summary>
     /// Web 模型容器
     /// </summary>
-    public static class UIModel
+    public class UIModel
     {
         private static XmlConfigManager _xmlConfigMgr;
 
@@ -47,15 +47,47 @@ namespace Rafy.MetaModel.View
         /// </summary>
         public static XmlConfigManager XmlConfigMgr { get { return _xmlConfigMgr; } }
 
-        public static AggtBlocksRepository AggtBlocks { get { return _aggtBlocks; } }
+        public static AggtBlocksRepository AggtBlocks
+        {
+            get { return _aggtBlocks; }
+            set
+            {
+                if (value == null) throw new ArgumentNullException(nameof(value));
+                _aggtBlocks = value;
+            }
+        }
 
-        public static EntityViewMetaFactory Views { get { return _views; } }
+        public static EntityViewMetaFactory Views
+        {
+            get { return _views; }
+            set
+            {
+                if (value == null) throw new ArgumentNullException(nameof(value));
+                _views = value;
+            }
+        }
 
-        public static WebCommandRepository WebCommands { get { return _webCommands; } }
+        public static WebCommandRepository WebCommands
+        {
+            get { return _webCommands; }
+            set
+            {
+                if (value == null) throw new ArgumentNullException(nameof(value));
+                _webCommands = value;
+            }
+        }
 
-        public static WPFCommandRepository WPFCommands { get { return _wpfCommands; } }
+        public static WPFCommandRepository WPFCommands
+        {
+            get { return _wpfCommands; }
+            set
+            {
+                if (value == null) throw new ArgumentNullException(nameof(value));
+                _wpfCommands = value;
+            }
+        }
 
-        internal static void Freeze()
+        public static void Freeze()
         {
             _webCommands.FreezeItems();
         }

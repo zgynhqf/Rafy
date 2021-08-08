@@ -28,6 +28,7 @@ using Rafy;
 using Rafy.Reflection;
 using Rafy.ComponentModel;
 using Rafy.Configuration;
+using System.Collections;
 
 namespace Rafy
 {
@@ -176,7 +177,7 @@ namespace Rafy
             //所有插件（其中，DomainPlugins 在列表的前面，UIPlugins 在列表的后面。）
             //domain plugins.
             IPluginConfig[] configPlugins = GetDomainPluginsConfig();
-            InitStartupPluginsByConfig(_domainPlugins, configPlugins);
+            CreateStartupPluginsByConfig(_domainPlugins, configPlugins);
             _domainPlugins.Insert(0, new Rafy.Domain.RafyDomainPlugin());//其实这里不应该使用上层的类，但是内部为了简单实现，且效率更高。
             _domainPlugins.Lock();
 
@@ -186,7 +187,7 @@ namespace Rafy
             if (_location.IsUI)
             {
                 configPlugins = GetUIPluginsConfig();
-                InitStartupPluginsByConfig(_uiPlugins, configPlugins);
+                CreateStartupPluginsByConfig(_uiPlugins, configPlugins);
                 //if (_location.IsWPFUI)
                 //{
                 //    _uiPlugins.Insert(0, CreatePlugin("Rafy.WPF.RafyWPFPlugin, Rafy.WPF"));
@@ -295,7 +296,7 @@ namespace Rafy
             _allPlugins.Lock();
 
             //实体类型对应的集合需要重建。
-            _typeConfigurations = null;
+            EntityConfigRepository.ClearCache();
 
             var handler = RuntimePluginLoaded;
             if (handler != null)
@@ -333,7 +334,7 @@ namespace Rafy
             return pluginInstance;
         }
 
-        private static void InitStartupPluginsByConfig(PluginCollection pluginList, IPluginConfig[] sortedPlugins)
+        private static void CreateStartupPluginsByConfig(PluginCollection pluginList, IPluginConfig[] sortedPlugins)
         {
             if (sortedPlugins.Length == 0) return;
 
@@ -535,18 +536,7 @@ namespace Rafy
 
         #region EntityConfig
 
-        private static Dictionary<Type, List<EntityConfig>> _typeConfigurations;
-
-        /// <summary>
-        /// 获取所有的实体配置列表。
-        /// </summary>
-        /// <returns></returns>
-        internal static Dictionary<Type, List<EntityConfig>> GetTypeConfigurations()
-        {
-            InitTypeConfigurations();
-
-            return _typeConfigurations;
-        }
+        public static IEntityConfigRepository EntityConfigRepository { get; set; } = new EntityConfigFinder();
 
         /// <summary>
         /// 获取某个实体视图的所有配置类实例
@@ -555,58 +545,90 @@ namespace Rafy
         /// <returns></returns>
         internal static IEnumerable<EntityConfig> FindConfigurations(Type entityType)
         {
-            InitTypeConfigurations();
-
-            var hierachy = TypeHelper.GetHierarchy(entityType, typeof(ManagedPropertyObject)).Reverse();
-            foreach (var type in hierachy)
-            {
-                List<EntityConfig> configList = null;
-                if (_typeConfigurations.TryGetValue(type, out configList))
-                {
-                    var orderedList = configList.OrderBy(o => o.PluginIndex).ThenBy(o => o.InheritanceCount);
-                    foreach (var config in orderedList) { yield return config; }
-                }
-            }
+            return EntityConfigRepository.FindConfigurations(entityType);
         }
 
-        private static void InitTypeConfigurations()
+        public class EntityConfigFinder : IEntityConfigRepository
         {
-            if (_typeConfigurations == null)
+            private Dictionary<Type, List<EntityConfig>> _typeConfigurations;
+
+            /// <summary>
+            /// 获取所有的实体配置列表。
+            /// </summary>
+            /// <returns></returns>
+            internal Dictionary<Type, List<EntityConfig>> GetTypeConfigurations()
             {
-                /*********************** 代码块解释 *********************************
-                 * 查找所有 EntityConfig 类型，并根据是否为扩展视图的配置类，
-                 * 分别加入到两个不同的列表中。
-                **********************************************************************/
+                InitTypeConfigurations();
 
-                var defaultRepo = new Dictionary<Type, List<EntityConfig>>(100);
-                var entityType = typeof(EntityConfig);
+                return _typeConfigurations;
+            }
 
-                //实体配置一般只放在领域插件中。但是，一些只存在于客户端的实体，则会放到界面插件中，所以这里需要检查所有的插件。
-                for (int index = 0, c = _allPlugins.Count; index < c; index++)
+            /// <summary>
+            /// 获取某个实体视图的所有配置类实例
+            /// </summary>
+            /// <param name="entityType"></param>
+            /// <returns></returns>
+            public IEnumerable<EntityConfig> FindConfigurations(Type entityType)
+            {
+                InitTypeConfigurations();
+
+                var hierachy = TypeHelper.GetHierarchy(entityType, typeof(ManagedPropertyObject)).Reverse();
+                foreach (var type in hierachy)
                 {
-                    var plugin = _allPlugins[index];
-                    foreach (var type in plugin.Assembly.GetTypes())
+                    List<EntityConfig> configList = null;
+                    if (_typeConfigurations.TryGetValue(type, out configList))
                     {
-                        if (!type.IsGenericTypeDefinition && !type.IsAbstract && entityType.IsAssignableFrom(type))
-                        {
-                            var config = Activator.CreateInstance(type) as EntityConfig;
-                            config.PluginIndex = index;
-                            config.InheritanceCount = TypeHelper.GetHierarchy(type, typeof(ManagedPropertyObject)).Count();
-
-                            List<EntityConfig> typeList = null;
-
-                            if (!defaultRepo.TryGetValue(config.EntityType, out typeList))
-                            {
-                                typeList = new List<EntityConfig>(2);
-                                defaultRepo.Add(config.EntityType, typeList);
-                            }
-
-                            typeList.Add(config);
-                        }
+                        var orderedList = configList.OrderBy(o => o.PluginIndex).ThenBy(o => o.InheritanceCount);
+                        foreach (var config in orderedList) { yield return config; }
                     }
                 }
+            }
 
-                _typeConfigurations = defaultRepo;
+            private void InitTypeConfigurations()
+            {
+                if (_typeConfigurations == null)
+                {
+                    /*********************** 代码块解释 *********************************
+                     * 查找所有 EntityConfig 类型，并根据是否为扩展视图的配置类，
+                     * 分别加入到两个不同的列表中。
+                    **********************************************************************/
+
+                    var defaultRepo = new Dictionary<Type, List<EntityConfig>>(100);
+                    var entityType = typeof(EntityConfig);
+
+                    //实体配置一般只放在领域插件中。但是，一些只存在于客户端的实体，则会放到界面插件中，所以这里需要检查所有的插件。
+                    var allPlugins = RafyEnvironment.AllPlugins;
+                    for (int index = 0, c = allPlugins.Count; index < c; index++)
+                    {
+                        var plugin = allPlugins[index];
+                        foreach (var type in plugin.Assembly.GetTypes())
+                        {
+                            if (!type.IsGenericTypeDefinition && !type.IsAbstract && entityType.IsAssignableFrom(type))
+                            {
+                                var config = Activator.CreateInstance(type) as EntityConfig;
+                                config.PluginIndex = index;
+                                config.InheritanceCount = TypeHelper.GetHierarchy(type, typeof(ManagedPropertyObject)).Count();
+
+                                List<EntityConfig> typeList = null;
+
+                                if (!defaultRepo.TryGetValue(config.EntityType, out typeList))
+                                {
+                                    typeList = new List<EntityConfig>(2);
+                                    defaultRepo.Add(config.EntityType, typeList);
+                                }
+
+                                typeList.Add(config);
+                            }
+                        }
+                    }
+
+                    _typeConfigurations = defaultRepo;
+                }
+            }
+
+            public void ClearCache()
+            {
+                _typeConfigurations = null;
             }
         }
 
@@ -614,24 +636,30 @@ namespace Rafy
 
         #region EntityViewConfig
 
-        internal static readonly ViewConfigFinder<WebViewConfig> WebConfigurations = new ViewConfigFinder<WebViewConfig>();
+        /// <summary>
+        /// Web 视图配置仓库。
+        /// </summary>
+        public static IViewConfigRepository WebConfigurations { get; set; } = new ViewConfigFinder(typeof(WebViewConfig));
 
-        internal static readonly ViewConfigFinder<WPFViewConfig> WPFConfigurations = new ViewConfigFinder<WPFViewConfig>();
+        /// <summary>
+        /// WPF 视图配置仓库。
+        /// </summary>
+        public static IViewConfigRepository WPFConfigurations { get; set; } = new ViewConfigFinder(typeof(WPFViewConfig));
 
-        internal class ViewConfigFinder<TViewConfig>
-            where TViewConfig : ViewConfig
+        public class ViewConfigFinder : IViewConfigRepository
         {
-            private Dictionary<Type, List<TViewConfig>> _configurations;
+            private Type _viewConfigType;
 
-            private Dictionary<ExtendTypeKey, List<TViewConfig>> _extendConfigurations;
+            public ViewConfigFinder(Type viewConfigType)
+            {
+                _viewConfigType = viewConfigType;
+            }
 
-            /// <summary>
-            /// 获取某个实体视图的所有配置类实例
-            /// </summary>
-            /// <param name="entityType"></param>
-            /// <param name="extendView">如果想获取扩展视图列表，则需要传入指定的扩展视图列表</param>
-            /// <returns></returns>
-            internal IEnumerable<TViewConfig> FindViewConfigurations(Type entityType, string extendView = null)
+            private Dictionary<Type, List<ViewConfig>> _configurations;
+
+            private Dictionary<ExtendTypeKey, List<ViewConfig>> _extendConfigurations;
+
+            public IEnumerable<ViewConfig> FindViewConfigurations(Type entityType, string extendView = null)
             {
                 InitConfigurations();
 
@@ -640,7 +668,7 @@ namespace Rafy
                 {
                     foreach (var type in hierachy)
                     {
-                        List<TViewConfig> configList = null;
+                        List<ViewConfig> configList = null;
                         if (_configurations.TryGetValue(type, out configList))
                         {
                             var orderedList = configList.OrderBy(o => o.PluginIndex).ThenBy(o => o.InheritanceCount);
@@ -654,7 +682,7 @@ namespace Rafy
                     {
                         var key = new ExtendTypeKey { EntityType = type, ExtendView = extendView };
 
-                        List<TViewConfig> configList = null;
+                        List<ViewConfig> configList = null;
                         if (_extendConfigurations.TryGetValue(key, out configList))
                         {
                             var orderedList = configList.OrderBy(o => o.PluginIndex).ThenBy(o => o.InheritanceCount);
@@ -673,9 +701,8 @@ namespace Rafy
                      * 分别加入到两个不同的列表中。
                     **********************************************************************/
 
-                    var defaultRepo = new Dictionary<Type, List<TViewConfig>>(100);
-                    var extendRepo = new Dictionary<ExtendTypeKey, List<TViewConfig>>(100);
-                    var entityType = typeof(TViewConfig);
+                    var defaultRepo = new Dictionary<Type, List<ViewConfig>>(100);
+                    var extendRepo = new Dictionary<ExtendTypeKey, List<ViewConfig>>(100);
 
                     //视图配置可以放在所有插件中。
                     for (int index = 0, c = _allPlugins.Count; index < c; index++)
@@ -683,19 +710,19 @@ namespace Rafy
                         var plugin = _allPlugins[index];
                         foreach (var type in plugin.Assembly.GetTypes())
                         {
-                            if (!type.IsGenericTypeDefinition && !type.IsAbstract && entityType.IsAssignableFrom(type))
+                            if (!type.IsGenericTypeDefinition && !type.IsAbstract && _viewConfigType.IsAssignableFrom(type))
                             {
-                                var config = Activator.CreateInstance(type) as TViewConfig;
+                                var config = Activator.CreateInstance(type) as ViewConfig;
                                 config.PluginIndex = index;
                                 config.InheritanceCount = TypeHelper.GetHierarchy(type, typeof(ManagedPropertyObject)).Count();
 
-                                List<TViewConfig> typeList = null;
+                                List<ViewConfig> typeList = null;
 
                                 if (config.ExtendView == null)
                                 {
                                     if (!defaultRepo.TryGetValue(config.EntityType, out typeList))
                                     {
-                                        typeList = new List<TViewConfig>(2);
+                                        typeList = new List<ViewConfig>(2);
                                         defaultRepo.Add(config.EntityType, typeList);
                                     }
                                 }
@@ -704,7 +731,7 @@ namespace Rafy
                                     var key = new ExtendTypeKey { EntityType = config.EntityType, ExtendView = config.ExtendView };
                                     if (!extendRepo.TryGetValue(key, out typeList))
                                     {
-                                        typeList = new List<TViewConfig>(2);
+                                        typeList = new List<ViewConfig>(2);
                                         extendRepo.Add(key, typeList);
                                     }
                                 }

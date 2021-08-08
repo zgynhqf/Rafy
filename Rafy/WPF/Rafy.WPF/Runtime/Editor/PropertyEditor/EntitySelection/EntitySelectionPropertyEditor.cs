@@ -213,7 +213,7 @@ namespace Rafy.WPF.Editors
         /// <param name="selectedEntities">当前被选择的实体</param>
         private SetSelectionResult SyncSelectionToValue_Multiple(Entity curEntity, SelectionViewMeta rvm, IList<Entity> selectedEntities)
         {
-            var result = string.Join(rvm.SplitterIfMulti, selectedEntities.Select(i => this.GetSelectedValue(i)));
+            var result = string.Join(rvm.Splitter, selectedEntities.Select(i => this.GetSelectedValue(i)));
 
             //赋值给this.PropertyValue
             this.PropertyValue = result;
@@ -269,7 +269,7 @@ namespace Rafy.WPF.Editors
                 var targetValue = this.PropertyValue;
                 if (this.IsMultiSelection && targetValue != null)
                 {
-                    var splitter = this.Meta.SelectionViewMeta.SplitterIfMulti;
+                    var splitter = this.Meta.SelectionViewMeta.Splitter;
                     var values = targetValue.ToString().Split(
                         new string[] { splitter }, StringSplitOptions.RemoveEmptyEntries
                         );

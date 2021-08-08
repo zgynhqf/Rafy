@@ -715,7 +715,7 @@ namespace Rafy.MetaModel.View
         /// <param name="meta"></param>
         /// <param name="dataSourceProvier"></param>
         /// <returns></returns>
-        public static EntityPropertyViewMeta UseDataSource(this EntityPropertyViewMeta meta, Func<object> dataSourceProvier)
+        public static EntityPropertyViewMeta UseDataSource(this EntityPropertyViewMeta meta, Func<object, object> dataSourceProvier)
         {
             var svm = meta.SelectionViewMeta;
             if (svm == null) throw new InvalidOperationException("只有配置了 SelectionViewMeta 的属性才可以使用本方法为其设置数据源。");

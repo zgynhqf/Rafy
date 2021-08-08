@@ -21,7 +21,7 @@ namespace Rafy.MetaModel.View
     /// <summary>
     /// 一些内置的 WPF 命令
     /// </summary>
-    public static class WPFCommandNames
+    public class WPFCommandNames
     {
         /// <summary>
         /// 这个命令需要引入 Rafy.Customization 插件才可使用。
@@ -99,7 +99,7 @@ namespace Rafy.MetaModel.View
 
             WPFCommandNames.TreeCommands.AddRange(new Type[]{
                 ExpandAll, ExpandOne, ExpandTwo, ExpandThree, ExpandFour,
-                PopupAdd, Edit, Delete, 
+                PopupAdd, Edit, Delete,
                 MoveUp, MoveDown, LevelUp, LevelDown, InsertBefore, InsertChild,
             });
 

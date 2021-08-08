@@ -783,7 +783,7 @@ namespace Rafy.ManagedProperty
         }
         PropertyDescriptor ICustomTypeDescriptor.GetDefaultProperty()
         {
-            return null;
+            return TypeDescriptor.GetDefaultProperty(this, true);
         }
         object ICustomTypeDescriptor.GetEditor(Type editorBaseType)
         {

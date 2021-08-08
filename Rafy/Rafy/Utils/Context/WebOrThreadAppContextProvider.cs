@@ -32,7 +32,7 @@ namespace Rafy
     /// 在 WebApi 等一些框架中，会开启异步线程去执行一些序列化的代码，
     /// 这时会找不到 HttpContext.Current 对象，所以只能退而求其次使用线程中的数据。
     /// </summary>
-    internal class WebOrThreadAppContextProvider : IAppContextProvider
+    public class WebOrThreadAppContextProvider : IAppContextProvider
     {
         protected const string HttpContextName = "Rafy.WebOrThreadAppContextProvider";
 

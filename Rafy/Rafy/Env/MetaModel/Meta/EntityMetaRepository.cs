@@ -152,10 +152,8 @@ namespace Rafy.MetaModel
             var boAttri = entityType.GetSingleAttribute<EntityAttribute>();
             if (boAttri == null) throw new ArgumentNullException(string.Format("{0} 没有标记 EntityAttribute", entityType.FullName));
 
-            var entityMeta = new EntityMeta
-            {
-                EntityType = entityType
-            };
+            var entityMeta = this.CreateEntityMeta();
+            entityMeta.EntityType = entityType;
 
             //标识属性的真实类型。
             var entity = Activator.CreateInstance(entityMeta.EntityType) as IEntityWithId;
@@ -199,6 +197,16 @@ namespace Rafy.MetaModel
             this.AddPrime(entityMeta);
 
             return entityMeta;
+        }
+
+        /// <summary>
+        /// 创建实体元数据。
+        /// 子类可以重写此方法来生成更多扩展属性的实体元数据。
+        /// </summary>
+        /// <returns></returns>
+        protected virtual EntityMeta CreateEntityMeta()
+        {
+            return new EntityMeta();
         }
 
         /// <summary>

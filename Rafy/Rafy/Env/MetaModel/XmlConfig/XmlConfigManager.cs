@@ -20,7 +20,7 @@ using System.Xml.Linq;
 using Rafy.MetaModel.View;
 using Rafy;
 
-namespace Rafy.MetaModel.XmlConfig.Web
+namespace Rafy.MetaModel.XmlConfig
 {
     /// <summary>
     /// Web 模型的 Xml 配置文件管理器

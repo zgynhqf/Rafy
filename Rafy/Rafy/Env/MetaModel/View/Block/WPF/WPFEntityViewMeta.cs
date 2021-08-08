@@ -105,7 +105,7 @@ namespace Rafy.MetaModel.View
             set { this.SetValue(ref this._ReportPath, value); }
         }
 
-        internal override EntityPropertyViewMeta CreatePropertyViewMeta()
+        internal protected override EntityPropertyViewMeta CreatePropertyViewMeta()
         {
             return new WPFEntityPropertyViewMeta();
         }

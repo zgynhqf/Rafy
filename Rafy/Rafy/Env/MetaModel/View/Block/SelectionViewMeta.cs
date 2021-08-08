@@ -98,12 +98,12 @@ namespace Rafy.MetaModel.View
 
         #region WPF
 
-        private Func<object> _DataSourceProvider;
+        private Func<object, object> _DataSourceProvider;
         /// <summary>
         /// 如果是没有指定界面时，可以使用这个属性来指定弹出窗口的数据源。
         /// 可选。
         /// </summary>
-        public Func<object> DataSourceProvider
+        public Func<object, object> DataSourceProvider
         {
             get { return this._DataSourceProvider; }
             set { this.SetValue(ref this._DataSourceProvider, value); }
@@ -119,14 +119,14 @@ namespace Rafy.MetaModel.View
             set { this.SetValue(ref this._SelectionMode, value); }
         }
 
-        private string _SplitterIfMulti = ",";
+        private string _Splitter = ",";
         /// <summary>
         /// 多选模式下，返回的值应该根据这个进行分隔
         /// </summary>
-        public string SplitterIfMulti
+        public string Splitter
         {
-            get { return this._SplitterIfMulti; }
-            set { this.SetValue(ref this._SplitterIfMulti, value); }
+            get { return this._Splitter; }
+            set { this.SetValue(ref this._Splitter, value); }
         }
 
         private IManagedProperty _SelectedValuePath;

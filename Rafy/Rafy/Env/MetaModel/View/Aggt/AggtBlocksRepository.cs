@@ -11,11 +11,11 @@
  * 
 *******************************************************/
 
+using Rafy.MetaModel.XmlConfig;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Rafy.MetaModel.XmlConfig.Web;
 
 namespace Rafy.MetaModel.View
 {
@@ -28,7 +28,7 @@ namespace Rafy.MetaModel.View
 
         private XmlConfigManager _xmlCfgMgr;
 
-        internal AggtBlocksRepository(XmlConfigManager xmlConfigMgr)
+        public AggtBlocksRepository(XmlConfigManager xmlConfigMgr)
         {
             this._xmlCfgMgr = xmlConfigMgr;
         }
@@ -38,7 +38,7 @@ namespace Rafy.MetaModel.View
         /// </summary>
         /// <param name="moduleMeta"></param>
         /// <returns></returns>
-        public AggtBlocks GetModuleBlocks(ModuleMeta moduleMeta)
+        public virtual AggtBlocks GetModuleBlocks(ModuleMeta moduleMeta)
         {
             AggtBlocks blocks = null;
 

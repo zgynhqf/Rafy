@@ -26,7 +26,7 @@ namespace Rafy.MetaModel
     {
         private IList<ModuleMeta> _roots = new List<ModuleMeta>();
 
-        internal ModulesContainer() { }
+        internal protected ModulesContainer() { }
 
         /// <summary>
         /// 冻结所有的元数据

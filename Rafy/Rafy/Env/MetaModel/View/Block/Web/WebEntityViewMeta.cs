@@ -52,7 +52,7 @@ namespace Rafy.MetaModel.View
             get { return this._LockedProperty; }
         }
 
-        internal override EntityPropertyViewMeta CreatePropertyViewMeta()
+        internal protected override EntityPropertyViewMeta CreatePropertyViewMeta()
         {
             return new WebEntityPropertyViewMeta();
         }

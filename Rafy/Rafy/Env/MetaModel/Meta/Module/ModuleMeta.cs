@@ -37,7 +37,7 @@ namespace Rafy.MetaModel
         /// 
         /// 注意，这个名称在整个应用程序中所有模块中应该是唯一的，这样，就可以用它来实现权限控制。
         /// </summary>
-        public string KeyLabel
+        public virtual string KeyLabel
         {
             get
             {

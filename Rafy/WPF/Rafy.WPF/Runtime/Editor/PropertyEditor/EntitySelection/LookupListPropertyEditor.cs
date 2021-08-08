@@ -241,7 +241,7 @@ namespace Rafy.WPF.Editors
             {
                 if (rvm.DataSourceProvider != null)
                 {
-                    rawValues = rvm.DataSourceProvider();
+                    rawValues = rvm.DataSourceProvider(_context.CurrentObject);
                 }
                 else
                 {

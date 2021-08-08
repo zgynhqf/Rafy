@@ -35,6 +35,10 @@ namespace Rafy.Domain
         /// </summary>
         public const string GetByCriteriaMethod = "GetBy";
 
+        public const string IdColumnName = "Id";
+
+        public const string TreeChildrenPropertyName = "TreeChildren";
+
         ///// <summary>
         ///// 目前实体使用的主键类型。Int。
         ///// </summary>
@@ -43,23 +47,23 @@ namespace Rafy.Domain
         /// <summary>
         /// 目前实体使用的主键属性的名称。Id。
         /// </summary>
-        internal static IManagedProperty Property_Id;
+        public static IManagedProperty Property_Id { get; internal set; }
 
         /// <summary>
         /// 自关联属性名
         /// </summary>
-        internal static IManagedProperty Property_TreePId;
+        public static IManagedProperty Property_TreePId { get; internal set; }
 
         /// <summary>
         /// 树型实体的编码
         /// </summary>
-        internal static IManagedProperty Property_TreeIndex;
+        public static IManagedProperty Property_TreeIndex { get; internal set; }
 
         /// <summary>
         /// 实体的假删除标识。
         /// 如果没有使用假删除插件，那么这个属性为 null。
         /// </summary>
-        internal static IManagedProperty Property_IsPhantom;
+        public static IManagedProperty Property_IsPhantom { get; internal set; }
 
         /// <summary>
         /// 是否添加了数据的假删除功能插件。
@@ -68,10 +72,6 @@ namespace Rafy.Domain
         {
             get { return Property_IsPhantom != null; }
         }
-
-        internal static string IdColumnName = "Id";
-
-        internal static string TreeChildrenPropertyName = "TreeChildren";
 
         ///// <summary>
         ///// 目前实体使用的主键属性的名称。Id。

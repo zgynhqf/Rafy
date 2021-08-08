@@ -30,7 +30,7 @@ namespace Rafy.MetaModel.View
     /// </summary>
     public class WPFCommandRepository : MetaRepositoryBase<WPFCommand>
     {
-        internal WPFCommandRepository() { }
+        internal protected WPFCommandRepository() { }
 
         #region 查询 API
 
@@ -104,6 +104,15 @@ namespace Rafy.MetaModel.View
         /// <returns></returns>
         private WPFCommand Create(Type commandType)
         {
+            WPFCommand result = DoCreate(commandType);
+
+            result.RuntimeType = commandType;
+
+            return result;
+        }
+
+        protected virtual WPFCommand DoCreate(Type commandType)
+        {
             WPFCommand result = null;
 
             var cmdAttri = commandType.GetSingleAttribute<CommandAttribute>();
@@ -114,8 +123,6 @@ namespace Rafy.MetaModel.View
             }
 
             if (result == null) { result = new WPFCommand(); }
-
-            result.RuntimeType = commandType;
 
             if (cmdAttri != null)
             {

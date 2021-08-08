@@ -19,7 +19,7 @@ using Rafy.MetaModel.View;
 using System.Xml.Linq;
 using Rafy.Reflection;
 
-namespace Rafy.MetaModel.XmlConfig.Web
+namespace Rafy.MetaModel.XmlConfig
 {
     /// <summary>
     /// UI 块界面属性的配置
