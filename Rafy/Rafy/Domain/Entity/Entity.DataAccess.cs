@@ -33,6 +33,7 @@ namespace Rafy.Domain
         internal void NotifyLoaded(IRepository repository)
         {
             _repository = repository;
+            _repositoryLoaded = true;
 
             if (this.PersistenceStatus != PersistenceStatus.New)
             {
