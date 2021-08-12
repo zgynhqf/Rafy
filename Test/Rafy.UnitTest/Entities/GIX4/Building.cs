@@ -89,15 +89,11 @@ namespace UT
 
             //Id 属性不再是主键，主键改为 Name 属性。
             var setting = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName);
-            if (DbSetting.IsOracleProvider(setting)|| setting.ProviderName.Contains("MySql"))
+            Meta.Property(Building.NameProperty).MapColumn().IsPrimaryKey(true);
+            var idColumn = Meta.Property(Building.IdProperty).MapColumn().IsPrimaryKey(false);
+            if (DbSetting.IsOracleProvider(setting) || setting.ProviderName.Contains("MySql"))
             {
-                Meta.Property(Building.IdProperty).MapColumn().IsPrimaryKey(false).IsIdentity = false;
-                Meta.Property(Building.NameProperty).MapColumn().IsPrimaryKey(true);
-            }
-            else
-            {
-                Meta.Property(Building.IdProperty).MapColumn().IsPrimaryKey(false);
-                Meta.Property(Building.NameProperty).MapColumn().IsPrimaryKey(true);
+                idColumn.IsIdentity(false);
             }
         }
     }

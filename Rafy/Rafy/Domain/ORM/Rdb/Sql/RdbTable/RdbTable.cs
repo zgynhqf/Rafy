@@ -671,7 +671,7 @@ namespace Rafy.Domain.ORM
         /// <param name="fetchingFirst">是否只读取一条数据即返回。</param>
         /// <param name="pagingInfo">如果不是只取一行数据，则这个参数表示列表内存分页的信息。</param>
         /// <param name="markTreeFullLoaded">如果某次查询结果是一棵完整的子树，那么必须设置此参数为 true ，才可以把整个树标记为完整加载。</param>
-        protected void FillDataIntoList(
+        internal protected void FillDataIntoList(
             IDataReader reader, ReadDataType readType,
             IList<Entity> list, bool fetchingFirst, PagingInfo pagingInfo, bool markTreeFullLoaded
             )
@@ -996,7 +996,7 @@ namespace Rafy.Domain.ORM
         /// <param name="property"></param>
         /// <returns></returns>
         [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
-        internal string Translate(IManagedProperty property)
+        public string Translate(IManagedProperty property)
         {
             return this.Translate(property.Name);
         }
@@ -1006,7 +1006,7 @@ namespace Rafy.Domain.ORM
         /// </summary>
         /// <param name="propertyName"></param>
         /// <returns></returns>
-        internal string Translate(string propertyName)
+        public string Translate(string propertyName)
         {
             string name = null;
 
@@ -1065,7 +1065,7 @@ namespace Rafy.Domain.ORM
         /// </summary>
         /// <param name="sql">The SQL.</param>
         /// <param name="identifier">The identifier.</param>
-        internal void AppendQuote(TextWriter sql, string identifier)
+        public void AppendQuote(TextWriter sql, string identifier)
         {
             if (this.IdentifierProvider.QuoteStart != char.MinValue)
             {
@@ -1092,7 +1092,7 @@ namespace Rafy.Domain.ORM
 
         #endregion
 
-        protected enum ReadDataType { ByIndex, ByName }
+        internal protected enum ReadDataType { ByIndex, ByName }
     }
 
     /// <summary>

@@ -298,7 +298,7 @@ namespace Rafy.MetaModel
         }
 
         /// <summary>
-        /// 指定某个属性映射字段时的是否为主键。
+        /// 指定某个属性映射字段时是否为主键。
         /// 
         /// 一般情况下，直接使用 Id 为主键。
         /// 但是在映射一些旧数据库的表时，可以保留原来的主键。而只让 Id 映射的字段保持自增长即可。
@@ -309,6 +309,18 @@ namespace Rafy.MetaModel
         public static ColumnMeta IsPrimaryKey(this ColumnMeta meta, bool value)
         {
             meta.IsPrimaryKey = value;
+            return meta;
+        }
+
+        /// <summary>
+        /// 指定某个属性映射字段时是否为自增列。
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static ColumnMeta IsIdentity(this ColumnMeta meta, bool value)
+        {
+            meta.IsIdentity = value;
             return meta;
         }
 

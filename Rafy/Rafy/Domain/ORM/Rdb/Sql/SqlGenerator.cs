@@ -707,7 +707,7 @@ namespace Rafy.Domain.ORM
             }
         }
 
-        protected void AppendColumnUsage(SqlColumn sqlColumn)
+        protected virtual void AppendColumnUsage(SqlColumn sqlColumn)
         {
             var table = sqlColumn.Table;
             if (table != null)

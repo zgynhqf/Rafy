@@ -817,7 +817,7 @@ namespace Rafy.Domain
         /// 当一个实体最终要出仓库时，才调用此方法完成加载。
         /// </summary>
         /// <param name="entity">The entity.</param>
-        internal protected void NotifyLoaded(Entity entity)
+        internal protected virtual void NotifyLoaded(Entity entity)
         {
             if (entity != null)
             {

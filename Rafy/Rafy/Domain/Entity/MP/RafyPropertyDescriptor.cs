@@ -31,9 +31,9 @@ namespace Rafy.Domain
     /// 同时，由于只能是界面使用 RafyPropertyDescriptor 这个类型来操作属性值，
     /// 所以还需要把枚举值转换为字符串。
     /// </summary>
-    internal class RafyPropertyDescriptor : ManagedPropertyDescriptor
+    public class RafyPropertyDescriptor : ManagedPropertyDescriptor
     {
-        internal RafyPropertyDescriptor(IManagedProperty property) : base(property) { }
+        public RafyPropertyDescriptor(IManagedProperty property) : base(property) { }
 
         public override bool IsReadOnly
         {

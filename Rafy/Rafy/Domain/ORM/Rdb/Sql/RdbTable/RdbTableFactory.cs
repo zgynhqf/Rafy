@@ -34,8 +34,10 @@ namespace Rafy.Domain.ORM
     /// <summary>
     /// 获取指定类型的数据表对象的工厂类
     /// </summary>
-    internal static class RdbTableFactory
+    internal class RdbTableFactory : IRdbTableFactory
     {
+        public static IRdbTableFactory Current = new RdbTableFactory();
+
         /// <summary>
         /// 为某个指定的仓库对象构造一个 DbTable
         /// </summary>
@@ -43,31 +45,15 @@ namespace Rafy.Domain.ORM
         /// <returns></returns>
         internal static RdbTable CreateORMTable(IRepositoryInternal repo)
         {
+            return Current.CreateRdbTable(repo);
+        }
+
+        public RdbTable CreateRdbTable(IRepositoryInternal repo)
+        {
             RdbTable table = null;
 
             var provider = RdbDataProvider.Get(repo).DbSetting.ProviderName;
-            switch (provider)
-            {
-                case DbSetting.Provider_SqlClient:
-                    table = new SqlServerTable(repo);
-                    break;
-                case DbSetting.Provider_SqlCe:
-                    table = new SqlCeTable(repo);
-                    break;
-                case DbSetting.Provider_SQLite:
-                    table = new SQLiteTable(repo);
-                    break;
-                case DbSetting.Provider_MySql:
-                    table = new MySqlTable(repo);
-                    break;
-                default:
-                    if (DbConnectionSchema.IsOracleProvider(provider))
-                    {
-                        table = new OracleTable(repo);
-                        break;
-                    }
-                    throw new NotSupportedException();
-            }
+            table = this.CreateRdbTableCore(repo, provider);
 
             table.IdentifierProvider = DbMigrationProviderFactory.GetIdentifierProvider(provider);
             table.DbTypeConverter = DbMigrationProviderFactory.GetDbTypeConverter(provider);
@@ -85,5 +71,33 @@ namespace Rafy.Domain.ORM
 
             return table;
         }
+
+        protected virtual RdbTable CreateRdbTableCore(IRepositoryInternal repo, string provider)
+        {
+            switch (provider)
+            {
+                case DbSetting.Provider_SqlClient:
+                    return new SqlServerTable(repo);
+                case DbSetting.Provider_SqlCe:
+                    return new SqlCeTable(repo);
+                case DbSetting.Provider_SQLite:
+                    return new SQLiteTable(repo);
+                case DbSetting.Provider_MySql:
+                    return new MySqlTable(repo);
+                default:
+                    if (DbConnectionSchema.IsOracleProvider(provider))
+                    {
+                        return new OracleTable(repo);
+                    }
+                    break;
+            }
+
+            throw new NotSupportedException();
+        }
+    }
+
+    internal interface IRdbTableFactory
+    {
+        RdbTable CreateRdbTable(IRepositoryInternal repo);
     }
 }
