@@ -208,11 +208,11 @@ namespace Rafy.Domain
                     //如果只有一个排序时，允许使用聚合父属性进行排序。
                     if (c == 1)
                     {
-                        var parentProperty = _repository.FindParentPropertyInfo(false);
+                        var parentProperty = _repository.EntityMeta.FindParentReferenceProperty()?.ManagedProperty as IRefProperty;
                         if (parentProperty != null)
                         {
                             var property = query.OrderBy[0].Column.Property;
-                            var pProperty = (parentProperty.ManagedProperty as IRefProperty).RefIdProperty;
+                            var pProperty = parentProperty.RefIdProperty;
                             error = property != pProperty;
                         }
                     }
@@ -467,10 +467,6 @@ namespace Rafy.Domain
                 //继续递归加载它的贪婪属性。
                 this.EagerLoad(allChildren, eagerLoadProperties);
 
-                //把大的实体集合，根据父实体 Id，分拆到每一个父实体的子集合中。
-                var parentProperty = targetRepo.FindParentPropertyInfo(true).ManagedProperty as IRefProperty;
-                var parentIdProperty = parentProperty.RefIdProperty;
-
                 #region 把父实体全部放到排序列表中
 
                 //由于数据量可能较大，所以需要进行排序后再顺序加载。
@@ -494,8 +490,11 @@ namespace Rafy.Domain
                 #endregion
 
                 #region 使用一次主循环就把所有的子实体都加载到父实体中。
-                //一次循环就能完全加载的前提是因为父集合按照 Id 排序，子集合按照父 Id 排序。
+                //把大的实体集合，根据父实体 Id，分拆到每一个父实体的子集合中。
+                var parentProperty = targetRepo.EntityMeta.FindParentReferenceProperty(true).ManagedProperty as IRefProperty;
+                var parentIdProperty = parentProperty.RefIdProperty;
 
+                //一次循环就能完全加载的前提是因为父集合按照 Id 排序，子集合按照父 Id 排序。
                 int pIndex = 0, pLength = sortedList.Count;
                 var parent = sortedList[pIndex];
                 var children = targetRepo.NewList();

@@ -394,12 +394,13 @@ namespace Rafy.Domain
         /// 设置组合父对象。
         /// </summary>
         /// <param name="entity"></param>
-        public void SetParentEntity(Entity entity)
+        public virtual void SetParentEntity(Entity entity)
         {
-            var property = this.GetRepository().FindParentPropertyInfo(true).ManagedProperty as IRefEntityProperty;
+            var refProperty = this.GetRepository().EntityMeta
+                .FindParentReferenceProperty(true).ManagedProperty.CastTo<IRefEntityProperty>();
             this.EachNode(child =>
             {
-                child.SetRefEntity(property, entity);
+                child.SetRefEntity(refProperty, entity);
                 return false;
             });
         }
@@ -408,18 +409,19 @@ namespace Rafy.Domain
         /// 由于有时父引用实体没有发生改变，但是父引用实体的 Id 变了，此时需要调用此方法同步二者的 Id。
         /// </summary>
         /// <param name="parent">由于外部调用时，已经有 parent 的值了，所以直接传进来。</param>
-        internal void SyncParentEntityId(Entity parent)
+        internal virtual void SyncParentEntityId(Entity parent)
         {
             //调用此方法的方法，必须保证这个列表是指定实体的组合子集合。
             //if (this.HasManyType == HasManyType.Composition)
             //{
-            var property = this.GetRepository().FindParentPropertyInfo(true).ManagedProperty as IRefEntityProperty;
+            var refProperty = this.GetRepository().EntityMeta
+                .FindParentReferenceProperty(true).ManagedProperty.CastTo<IRefEntityProperty>();
             this.EachNode(child =>
             {
-                //注意，由于实体可能并没有发生改变，而只是 Id 变了，
-                //所以在设置的时候，先设置 Id，然后设置 Entity。
-                child.SetRefId(property.RefIdProperty, parent.Id);
-                child.SetRefEntity(property, parent);
+                    //注意，由于实体可能并没有发生改变，而只是 Id 变了，
+                    //所以在设置的时候，先设置 Id，然后设置 Entity。
+                    child.SetRefId(refProperty.RefIdProperty, parent.Id);
+                child.SetRefEntity(refProperty, parent);
 
                 return false;
             });

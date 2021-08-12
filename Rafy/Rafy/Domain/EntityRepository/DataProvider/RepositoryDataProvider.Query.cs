@@ -96,7 +96,7 @@ namespace Rafy.Domain
         /// <returns></returns>
         public virtual object GetByParentId(object parentId, PagingInfo paging, EagerLoadOptions eagerLoad)
         {
-            var parentProperty = _repository.FindParentPropertyInfo(true);
+            var parentProperty = _repository.EntityMeta.FindParentReferenceProperty(true);
             var mp = (parentProperty.ManagedProperty as IRefEntityProperty).RefIdProperty;
 
             var table = f.Table(_repository);
@@ -119,7 +119,7 @@ namespace Rafy.Domain
         /// <returns></returns>
         public virtual EntityList GetByParentIdList(object[] parentIdList, PagingInfo paging, EagerLoadOptions eagerLoad)
         {
-            var parentProperty = _repository.FindParentPropertyInfo(true);
+            var parentProperty = _repository.EntityMeta.FindParentReferenceProperty(true);
             var mp = (parentProperty.ManagedProperty as IRefEntityProperty).RefIdProperty;
 
             var table = f.Table(_repository);

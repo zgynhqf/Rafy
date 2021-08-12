@@ -176,7 +176,7 @@ namespace Rafy.Domain.ORM
                 {
                     pkTable = RdbDataProvider.Get(item.OwnerRepository).DbTable;
                     fkTable = RdbDataProvider.Get(item.PropertyEntityRepository).DbTable;
-                    var parentProperty = item.PropertyEntityRepository.FindParentPropertyInfo(true);
+                    var parentProperty = item.PropertyEntityRepository.EntityMeta.FindParentReferenceProperty(true);
                     var refIdProperty = (parentProperty.ManagedProperty as IRefEntityProperty).RefIdProperty;
                     fkName = refIdProperty.Name;
                 }
@@ -224,7 +224,7 @@ namespace Rafy.Domain.ORM
             {
                 this._sql.Append("WHERE ");
 
-                var parentProperty = this._directlyQueryRepository.FindParentPropertyInfo(true);
+                var parentProperty = this._directlyQueryRepository.EntityMeta.FindParentReferenceProperty(true);
                 var refIdProperty = (parentProperty.ManagedProperty as IRefEntityProperty).RefIdProperty;
                 var rootTypeFKColumn = refIdProperty.Name;//属性名就是列名
 

@@ -198,6 +198,23 @@ namespace Rafy.MetaModel
 
         #region 查询方法
 
+        private bool _parentPropertyCacheLoaded;
+        private EntityPropertyMeta _parentPropertyCache;
+
+        /// <summary>
+        /// 找到实体中对应聚合关系中的父实体引用属性元数据。
+        /// 
+        /// 注意，此函数返回的是引用实体属性，而非引用 Id 属性。
+        /// </summary>
+        /// <param name="throwOnNotFound"></param>
+        /// <returns></returns>
+        public EntityPropertyMeta FindParentReferenceProperty(bool throwOnNotFound)
+        {
+            var result = this.FindParentReferenceProperty();
+            if (result == null && throwOnNotFound) throw new InvalidProgramException(this.EntityType + " 类型中没有注册引用类型为 ReferenceType.Parent 的父引用属性。");
+            return result;
+        }
+
         /// <summary>
         /// 找到实体中对应聚合关系中的父实体引用属性元数据。
         /// 
@@ -206,12 +223,18 @@ namespace Rafy.MetaModel
         /// <returns></returns>
         public EntityPropertyMeta FindParentReferenceProperty()
         {
-            var result = this.EntityProperties
-                .Where(p => p.ReferenceInfo != null && p.ReferenceInfo.Type == ReferenceType.Parent).ToArray();
+            if (!_parentPropertyCacheLoaded)
+            {
+                var result = this.EntityProperties
+                    .Where(p => p.ReferenceInfo != null && p.ReferenceInfo.Type == ReferenceType.Parent).ToArray();
 
-            if (result.Length > 1) throw new InvalidOperationException(string.Format("类 {0} 中定义了两个父引用属性。（一个类中只能定义一个父引用属性。）", this.Name));
+                if (result.Length > 1) throw new InvalidOperationException(string.Format("类 {0} 中定义了两个父引用属性。（一个类中只能定义一个父引用属性。）", this.Name));
 
-            return result.Length > 0 ? result[0] : null;
+                _parentPropertyCache = result.Length > 0 ? result[0] : null;
+                _parentPropertyCacheLoaded = true;
+            }
+
+            return _parentPropertyCache;
         }
 
         /// <summary>

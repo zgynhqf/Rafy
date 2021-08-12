@@ -419,9 +419,10 @@ namespace Rafy.Domain
         /// 设置聚合关系中父对象的引用。
         /// </summary>
         /// <param name="parent"></param>
-        public void SetParentEntity(Entity parent)
+        public virtual void SetParentEntity(Entity parent)
         {
-            var property = this.GetRepository().FindParentPropertyInfo(true).ManagedProperty as IRefEntityProperty;
+            var property = this.GetRepository().EntityMeta
+                .FindParentReferenceProperty(true).ManagedProperty as IRefEntityProperty;
             this.SetRefEntity(property, parent);
 
             //由于新的父实体可以还没有 Id，这时需要主动通知冗余属性变更。
@@ -437,7 +438,7 @@ namespace Rafy.Domain
         /// </summary>
         Entity IEntity.FindParentEntity()
         {
-            var pMeta = this.GetRepository().FindParentPropertyInfo(false);
+            var pMeta = this.GetRepository().EntityMeta.FindParentReferenceProperty();
             if (pMeta != null) { return this.GetRefEntity(pMeta.ManagedProperty as IRefEntityProperty); }
             return null;
         }

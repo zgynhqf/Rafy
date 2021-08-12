@@ -292,35 +292,6 @@ namespace Rafy.Domain
 
         #region 实体元数据
 
-        private bool _parentPropertyCacheLoaded;
-        private EntityPropertyMeta _parentPropertyCache;
-        /// <summary>
-        /// 找到实体中对应聚合关系中的父实体引用属性元数据。
-        /// 
-        /// 注意，此函数返回的是引用实体属性，而非引用 Id 属性。
-        /// </summary>
-        /// <param name="throwOnNotFound"></param>
-        /// <returns></returns>
-        public EntityPropertyMeta FindParentPropertyInfo(bool throwOnNotFound = false)
-        {
-            if (!this._parentPropertyCacheLoaded)
-            {
-                var result = this.EntityMeta.FindParentReferenceProperty();
-                if (result != null)
-                {
-                    this._parentPropertyCache = result;
-                    this._parentPropertyCacheLoaded = true;
-                }
-            }
-
-            if (this._parentPropertyCache == null && throwOnNotFound)
-            {
-                throw new NotSupportedException(this.EntityType + " 类型中没有注册引用类型为 ReferenceType.Parent 的父引用属性。");
-            }
-
-            return this._parentPropertyCache;
-        }
-
         private IList<IProperty> _redundancies;
         /// <summary>
         /// 所有本实体中所有声明的冗余属性。

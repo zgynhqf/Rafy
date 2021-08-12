@@ -30,14 +30,5 @@ namespace Rafy.Domain
         /// </summary>
         /// <returns></returns>
         IList<IProperty> GetChildProperties();
-
-        /// <summary>
-        /// 找到本对象上层聚合父实体的实体引用属性元数据。
-        /// 
-        /// 注意，此函数返回的是引用实体属性，而非引用 Id 属性。
-        /// </summary>
-        /// <param name="throwOnNotFound">如果没有找到，是否需要抛出异常。</param>
-        /// <returns></returns>
-        EntityPropertyMeta FindParentPropertyInfo(bool throwOnNotFound);
     }
 }

@@ -118,10 +118,10 @@ namespace Rafy.Domain
 
         private static object GetRootId(Entity entity)
         {
-            var parentProeprtyMeta = entity.GetRepository().FindParentPropertyInfo(false);
-            if (parentProeprtyMeta == null) { return entity.Id; }
+            var parentPropertyMeta = entity.GetRepository().EntityMeta.FindParentReferenceProperty();
+            if (parentPropertyMeta == null) { return entity.Id; }
 
-            var refMP = parentProeprtyMeta.ManagedProperty.CastTo<IRefEntityProperty>();
+            var refMP = parentPropertyMeta.ManagedProperty.CastTo<IRefEntityProperty>();
             var parent = entity.GetRefEntity(refMP);
 
             return GetRootId(parent);

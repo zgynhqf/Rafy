@@ -10,9 +10,11 @@
  * 
 *******************************************************/
 
-3.73.3871
+3.73.3875
     添加接口
         开放一些内部接口，使得外部程序集更好扩展。
+    删除接口
+        删除 EntityRepository.FindParentPropertyInfo 接口。该接口功能与 EntityMeta.FindParentReferenceProperty 相同。
     BUG修复
         Entity.NotifyLoaded 需要设置 _repositoryLoaded 的值；
 
