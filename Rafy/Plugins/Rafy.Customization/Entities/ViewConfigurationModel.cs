@@ -9,7 +9,6 @@ using Rafy.MetaModel.Attributes;
 using Rafy.MetaModel.View;
 using Rafy.Web;
 using Rafy.MetaModel.XmlConfig;
-using Rafy.MetaModel.XmlConfig.Web;
 using System.Security.Permissions;
 using System.Runtime.Serialization;
 using Rafy.Domain.ORM;

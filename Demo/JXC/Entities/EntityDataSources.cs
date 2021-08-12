@@ -26,12 +26,12 @@ namespace JXC
     /// </summary>
     public static class EntityDataSources
     {
-        public static ClientInfoList Suppliers()
+        public static ClientInfoList Suppliers(object current)
         {
             return RF.ResolveInstance<ClientInfoRepository>().GetSuppliers();
         }
 
-        public static ClientInfoList Customers()
+        public static ClientInfoList Customers(object current)
         {
             return RF.ResolveInstance<ClientInfoRepository>().GetCustomers();
         }
