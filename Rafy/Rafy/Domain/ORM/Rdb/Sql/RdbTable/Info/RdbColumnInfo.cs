@@ -22,25 +22,25 @@ using Rafy.Reflection;
 
 namespace Rafy.Domain.ORM
 {
-    class PersistanceColumnInfo : IPersistanceColumnInfo
+    class RdbColumnInfo : IRdbColumnInfo
     {
-        internal PersistanceColumnInfo(
+        internal RdbColumnInfo(
             string name,
             EntityPropertyMeta propertyMeta,
             ColumnMeta columnMeta,
-            PersistanceTableInfo table,
-            DbTypeConverter dbTypeConverter
+            RdbTableInfo table,
+            DbType dbType
             )
         {
             this.Table = table;
             this.Name = name;
             this.Meta = columnMeta;
             this.PropertyType = TypeHelper.IgnoreNullable(propertyMeta.PropertyType);
-            this.DbType = columnMeta.DbType ?? dbTypeConverter.FromClrType(this.PropertyType);
+            this.DbType = dbType;
             this.Property = propertyMeta.ManagedProperty as IProperty;
         }
 
-        public PersistanceTableInfo Table { get; private set; }
+        public RdbTableInfo Table { get; private set; }
 
         public string Name { get; private set; }
 
@@ -58,7 +58,7 @@ namespace Rafy.Domain.ORM
 
         public IProperty Property { get; private set; }
 
-        IPersistanceTableInfo IPersistanceColumnInfo.Table
+        IRdbTableInfo IRdbColumnInfo.Table
         {
             get { return this.Table; }
         }

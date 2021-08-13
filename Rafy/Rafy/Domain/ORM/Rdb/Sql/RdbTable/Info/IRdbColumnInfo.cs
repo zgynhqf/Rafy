@@ -20,7 +20,8 @@ namespace Rafy.Domain.ORM
     /// <summary>
     /// 数据表列
     /// </summary>
-    internal interface IPersistanceColumnInfo
+    internal interface IRdbColumnInfo
+
     {
         /// <summary>
         /// 对应的列的元数据。
@@ -30,7 +31,7 @@ namespace Rafy.Domain.ORM
         /// <summary>
         /// 对应的表
         /// </summary>
-        IPersistanceTableInfo Table { get; }
+        IRdbTableInfo Table { get; }
 
         /// <summary>
         /// 列名

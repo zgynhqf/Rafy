@@ -32,7 +32,8 @@ namespace Rafy.Domain.ORM.SQLite
         /// 构造函数 初始化仓库对象
         /// </summary>
         /// <param name="repository">仓库对象</param>
-        public SQLiteTable(IRepositoryInternal repository) : base(repository)
+        /// <param name="dbProvider"></param>
+        public SQLiteTable(IRepositoryInternal repository, string dbProvider) : base(repository, dbProvider)
         {
             _insertSql = new Lazy<string>(() =>
             {

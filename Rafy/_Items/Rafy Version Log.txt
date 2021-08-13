@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.73.3876
+3.73.3878
     添加接口
         开放一些内部接口，使得外部程序集更好扩展。
         开放 CodeEVMReader。
@@ -18,6 +18,8 @@
         删除 EntityRepository.FindParentPropertyInfo 接口。该接口功能与 EntityMeta.FindParentReferenceProperty 相同。
     BUG修复
         Entity.NotifyLoaded 需要设置 _repositoryLoaded 的值；
+    重构
+        删除 IRepositoryInternal.TableInfo，简化 EntityRepository、RdbTable、TableInfo 之间的依赖关系。
 
 3.73.3858
     ★★公布、★重要

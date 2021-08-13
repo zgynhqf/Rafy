@@ -383,29 +383,6 @@ namespace Rafy.Domain
             }
         }
 
-        /// <summary>
-        /// 这个字段用于存储运行时解析出来的表的信息。
-        /// </summary>
-        private IPersistanceTableInfo _tableInfo;
-
-        internal IPersistanceTableInfo TableInfo
-        {
-            get
-            {
-                if (_tableInfo == null && this.EntityMeta != null)
-                {
-                    _tableInfo = PersistanceTableInfoFactory.CreateTableInfo(this);
-                }
-
-                return _tableInfo;
-            }
-        }
-
-        IPersistanceTableInfo IRepositoryInternal.TableInfo
-        {
-            get { return this.TableInfo; }
-        }
-
         #endregion
 
         #region 验证

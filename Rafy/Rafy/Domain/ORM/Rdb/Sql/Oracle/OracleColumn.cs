@@ -24,7 +24,7 @@ namespace Rafy.Domain.ORM.Oracle
 {
     class OracleColumn : RdbColumn
     {
-        internal OracleColumn(RdbTable table, IPersistanceColumnInfo columnInfo) : base(table, columnInfo) { }
+        internal OracleColumn(RdbTable table, IRdbColumnInfo columnInfo) : base(table, columnInfo) { }
 
         public override bool ShouldInsert(bool withIdentity)
         {

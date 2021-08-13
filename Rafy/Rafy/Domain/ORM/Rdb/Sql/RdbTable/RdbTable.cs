@@ -43,7 +43,7 @@ namespace Rafy.Domain.ORM
 
         private EntityMeta _meta;
 
-        private IPersistanceTableInfo _tableInfo;
+        private IRdbTableInfo _tableInfo;
 
         private List<RdbColumn> _columns;
 
@@ -53,11 +53,11 @@ namespace Rafy.Domain.ORM
 
         #endregion
 
-        internal RdbTable(IRepositoryInternal repository)
+        internal RdbTable(IRepositoryInternal repository, string dbProvider)
         {
             _repository = repository;
             _meta = repository.EntityMeta;
-            _tableInfo = repository.TableInfo;
+            _tableInfo = RdbTableInfoFactory.CreateTableInfo(_meta, dbProvider);
             _columns = new List<RdbColumn>();
 
             _deleteSql = new Lazy<string>(this.GenerateDeleteSQL);
@@ -87,7 +87,7 @@ namespace Rafy.Domain.ORM
         /// </value>
         public DbTypeConverter DbTypeConverter { get; internal set; }
 
-        internal virtual RdbColumn CreateColumn(IPersistanceColumnInfo columnInfo)
+        internal virtual RdbColumn CreateColumn(IRdbColumnInfo columnInfo)
         {
             return new RdbColumn(this, columnInfo);
         }
@@ -107,7 +107,7 @@ namespace Rafy.Domain.ORM
         /// <summary>
         /// 表的信息
         /// </summary>
-        public IPersistanceTableInfo Info
+        public IRdbTableInfo Info
         {
             get { return _tableInfo; }
         }
@@ -955,7 +955,7 @@ namespace Rafy.Domain.ORM
             var current = EntityContext.Current;
             if (current != null)
             {
-                var typeContext = current.GetOrCreateTypeContext(this.Info.Class);
+                var typeContext = current.GetOrCreateTypeContext(this.Info.EntityType);
 
                 var id = entity.Id;
                 var item = typeContext.TryGetById(id);
@@ -981,7 +981,7 @@ namespace Rafy.Domain.ORM
             var current = EntityContext.Current;
             if (current != null)
             {
-                var typeContext = current.GetOrCreateTypeContext(this.Info.Class);
+                var typeContext = current.GetOrCreateTypeContext(this.Info.EntityType);
                 typeContext.Set(entity.Id, entity);
             }
         }

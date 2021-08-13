@@ -53,6 +53,6 @@ namespace Rafy.Domain.ORM.Query.Impl
             get { return QueryNodeType.Column; }
         }
 
-        internal IPersistanceColumnInfo DbColumn;
+        internal IRdbColumnInfo DbColumn;
     }
 }

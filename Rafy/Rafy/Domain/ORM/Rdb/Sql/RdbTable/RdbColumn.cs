@@ -12,9 +12,9 @@ namespace Rafy.Domain.ORM
     internal class RdbColumn
     {
         private RdbTable _table;
-        private IPersistanceColumnInfo _columnInfo;
+        private IRdbColumnInfo _columnInfo;
 
-        internal RdbColumn(RdbTable table, IPersistanceColumnInfo columnInfo)
+        internal RdbColumn(RdbTable table, IRdbColumnInfo columnInfo)
         {
             _table = table;
             _columnInfo = columnInfo;
@@ -36,7 +36,7 @@ namespace Rafy.Domain.ORM
         /// <summary>
         /// 列的信息
         /// </summary>
-        public IPersistanceColumnInfo Info
+        public IRdbColumnInfo Info
         {
             get { return this._columnInfo; }
         }

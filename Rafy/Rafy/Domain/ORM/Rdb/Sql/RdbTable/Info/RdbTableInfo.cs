@@ -19,22 +19,19 @@ using Rafy.MetaModel;
 
 namespace Rafy.Domain.ORM
 {
-    class PersistanceTableInfo : IPersistanceTableInfo
+    class RdbTableInfo : IRdbTableInfo
     {
-        private IRepositoryInternal _repo;
-
-        public PersistanceTableInfo(string name, IRepositoryInternal repo)
+        public RdbTableInfo(string name, Type entityType)
         {
-            _repo = repo;
             this.Name = name;
-            this.Class = repo.EntityType;
-            this.Columns = new List<PersistanceColumnInfo>();
+            this.EntityType = entityType;
+            this.Columns = new List<RdbColumnInfo>();
         }
 
         /// <summary>
         /// 对应的实体类型
         /// </summary>
-        public Type Class { get; set; }
+        public Type EntityType { get; set; }
 
         /// <summary>
         /// 表名
@@ -44,19 +41,19 @@ namespace Rafy.Domain.ORM
         /// <summary>
         /// 主键列（每个表肯定有一个主键列）
         /// </summary>
-        public PersistanceColumnInfo PKColumn { get; set; }
+        public RdbColumnInfo PKColumn { get; set; }
 
         /// <summary>
         /// 所有的列
         /// </summary>
-        public List<PersistanceColumnInfo> Columns { get; private set; }
+        public List<RdbColumnInfo> Columns { get; private set; }
 
-        IReadOnlyList<IPersistanceColumnInfo> IPersistanceTableInfo.Columns
+        IReadOnlyList<IRdbColumnInfo> IRdbTableInfo.Columns
         {
             get { return this.Columns; }
         }
 
-        IPersistanceColumnInfo IPersistanceTableInfo.PKColumn
+        IRdbColumnInfo IRdbTableInfo.PKColumn
         {
             get { return this.PKColumn; }
         }

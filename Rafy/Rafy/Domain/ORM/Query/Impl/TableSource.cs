@@ -74,7 +74,7 @@ namespace Rafy.Domain.ORM.Query.Impl
         /// <summary>
         /// 对应 ORM 中的运行时表。
         /// </summary>
-        internal IPersistanceTableInfo _tableInfo;
+        internal IRdbTableInfo _tableInfo;
 
         /// <summary>
         /// 这个表中的所有可用的列。
@@ -139,7 +139,7 @@ namespace Rafy.Domain.ORM.Query.Impl
             return _columns;
         }
 
-        private ColumnNode NewColumn(IPersistanceColumnInfo dbColumn)
+        private ColumnNode NewColumn(IRdbColumnInfo dbColumn)
         {
             var res = new ColumnNode();
             res.Table = this;

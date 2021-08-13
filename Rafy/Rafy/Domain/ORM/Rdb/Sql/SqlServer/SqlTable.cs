@@ -32,7 +32,7 @@ namespace Rafy.Domain.ORM.SqlServer
     /// </summary>
     internal abstract class SqlTable : SqlOraTable
     {
-        public SqlTable(IRepositoryInternal repository) : base(repository) { }
+        public SqlTable(IRepositoryInternal repository, string dbProvider) : base(repository, dbProvider) { }
 
         protected override void CreatePagingSql(ref SqlOraTable.PagingSqlParts parts, PagingInfo pagingInfo)
         {

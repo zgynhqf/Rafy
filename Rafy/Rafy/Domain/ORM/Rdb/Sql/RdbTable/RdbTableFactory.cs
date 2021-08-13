@@ -62,7 +62,7 @@ namespace Rafy.Domain.ORM
             foreach (var columnInfo in table.Info.Columns)
             {
                 var epm = em.Property(columnInfo.Property);
-                if (epm == null) { throw new ArgumentNullException(string.Format("{0}.{1} 属性需要使用托管属性进行编写。", table.Info.Class.FullName, columnInfo.Property.Name)); }
+                if (epm == null) { throw new ArgumentNullException(string.Format("{0}.{1} 属性需要使用托管属性进行编写。", table.Info.EntityType.FullName, columnInfo.Property.Name)); }
 
                 var column = table.CreateColumn(columnInfo);
 
@@ -72,22 +72,22 @@ namespace Rafy.Domain.ORM
             return table;
         }
 
-        protected virtual RdbTable CreateRdbTableCore(IRepositoryInternal repo, string provider)
+        protected virtual RdbTable CreateRdbTableCore(IRepositoryInternal repo, string dbProvider)
         {
-            switch (provider)
+            switch (dbProvider)
             {
                 case DbSetting.Provider_SqlClient:
-                    return new SqlServerTable(repo);
+                    return new SqlServerTable(repo, dbProvider);
                 case DbSetting.Provider_SqlCe:
-                    return new SqlCeTable(repo);
+                    return new SqlCeTable(repo, dbProvider);
                 case DbSetting.Provider_SQLite:
-                    return new SQLiteTable(repo);
+                    return new SQLiteTable(repo, dbProvider);
                 case DbSetting.Provider_MySql:
-                    return new MySqlTable(repo);
+                    return new MySqlTable(repo, dbProvider);
                 default:
-                    if (DbConnectionSchema.IsOracleProvider(provider))
+                    if (DbConnectionSchema.IsOracleProvider(dbProvider))
                     {
-                        return new OracleTable(repo);
+                        return new OracleTable(repo, dbProvider);
                     }
                     break;
             }

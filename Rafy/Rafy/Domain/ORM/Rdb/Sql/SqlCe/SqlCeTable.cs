@@ -30,7 +30,7 @@ namespace Rafy.Domain.ORM.SqlCe
 {
     internal class SqlCeTable : SqlTable
     {
-        public SqlCeTable(IRepositoryInternal repository) : base(repository) { }
+        public SqlCeTable(IRepositoryInternal repository, string dbProvider) : base(repository, dbProvider) { }
 
         public override void Insert(IDbAccesser dba, Entity item)
         {

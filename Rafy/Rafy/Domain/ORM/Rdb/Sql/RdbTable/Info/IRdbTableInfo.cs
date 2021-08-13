@@ -22,12 +22,12 @@ namespace Rafy.Domain.ORM
     /// 某个实体类型对应的‘逻辑表’的元数据。
     /// 这个表并不一定就是数据库中的表，而可能是 MongoDb 中的表、一个 XML 文档等。
     /// </summary>
-    internal interface IPersistanceTableInfo
+    internal interface IRdbTableInfo
     {
         /// <summary>
         /// 对应的实体类型
         /// </summary>
-        Type Class { get; }
+        Type EntityType { get; }
 
         /// <summary>
         /// 表名
@@ -37,11 +37,11 @@ namespace Rafy.Domain.ORM
         /// <summary>
         /// 主键列（每个表肯定有一个主键列）
         /// </summary>
-        IPersistanceColumnInfo PKColumn { get; }
+        IRdbColumnInfo PKColumn { get; }
 
         /// <summary>
         /// 所有的列
         /// </summary>
-        IReadOnlyList<IPersistanceColumnInfo> Columns { get; }
+        IReadOnlyList<IRdbColumnInfo> Columns { get; }
     }
 }

@@ -31,7 +31,8 @@ namespace Rafy.Domain.ORM.MySql
         /// 构造函数 初始化仓库对象
         /// </summary>
         /// <param name="repository">仓库对象</param>
-        public MySqlTable(IRepositoryInternal repository) : base(repository)
+        /// <param name="dbProvider"></param>
+        public MySqlTable(IRepositoryInternal repository, string dbProvider) : base(repository, dbProvider)
         {
             _insertSql = new Lazy<string>(() =>
             {
@@ -41,7 +42,7 @@ SELECT @@IDENTITY;";
             });
         }
 
-        internal override RdbColumn CreateColumn(IPersistanceColumnInfo columnInfo)
+        internal override RdbColumn CreateColumn(IRdbColumnInfo columnInfo)
         {
             return new MySqlColumn(this, columnInfo);
         }

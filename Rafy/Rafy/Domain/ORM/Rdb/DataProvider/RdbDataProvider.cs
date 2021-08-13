@@ -62,7 +62,7 @@ namespace Rafy.Domain.ORM
         {
             get
             {
-                if (_rdbTable == null && this.Repository.EntityMeta != null)
+                if (_rdbTable == null)
                 {
                     _rdbTable = RdbTableFactory.CreateORMTable(this.Repository);
                 }

@@ -23,7 +23,7 @@ namespace Rafy.Domain.ORM.SqlServer
 {
     class SqlServerTable : SqlTable
     {
-        public SqlServerTable(IRepositoryInternal repository) : base(repository)
+        public SqlServerTable(IRepositoryInternal repository, string dbProvider) : base(repository, dbProvider)
         {
             _insertSql = new Lazy<string>(() =>
             {

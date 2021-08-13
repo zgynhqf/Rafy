@@ -31,7 +31,7 @@ namespace Rafy.Domain.ORM
     /// </summary>
     internal abstract class SqlOraTable : RdbTable
     {
-        public SqlOraTable(IRepositoryInternal repository) : base(repository) { }
+        public SqlOraTable(IRepositoryInternal repository, string dbProvider) : base(repository, dbProvider) { }
 
         /// <summary>
         /// SqlServer、Oracle 都支持在数据库层面进行分页。

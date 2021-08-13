@@ -178,7 +178,7 @@ namespace Rafy.Domain.ORM.Query
         {
             if (repository == null) throw new ArgumentNullException("entityRepository");
 
-            var tableInfo = (repository as IRepositoryInternal).TableInfo;
+            var tableInfo = RdbDataProvider.Get(repository).DbTable.Info;
             if (tableInfo == null)
             {
                 ORMHelper.ThrowBasePropertyNotMappedException(repository.EntityType);

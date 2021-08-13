@@ -34,9 +34,9 @@ namespace Rafy.Domain.ORM.Oracle
     {
         private OracleRunGenerator _oracleRunGenerator = new OracleRunGenerator();
 
-        public OracleTable(IRepositoryInternal repository) : base(repository) { }
+        public OracleTable(IRepositoryInternal repository, string dbProvider) : base(repository, dbProvider) { }
 
-        internal override RdbColumn CreateColumn(IPersistanceColumnInfo columnInfo)
+        internal override RdbColumn CreateColumn(IRdbColumnInfo columnInfo)
         {
             return new OracleColumn(this, columnInfo);
         }

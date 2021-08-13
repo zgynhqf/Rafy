@@ -30,6 +30,6 @@ namespace Rafy.Domain.ORM.MySql
         /// </summary>
         /// <param name="table">表对象</param>
         /// <param name="columnInfo">持久列对象</param>
-        public MySqlColumn(RdbTable table, IPersistanceColumnInfo columnInfo) : base(table, columnInfo) { }
+        public MySqlColumn(RdbTable table, IRdbColumnInfo columnInfo) : base(table, columnInfo) { }
     }
 }

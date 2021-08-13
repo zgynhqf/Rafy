@@ -307,10 +307,10 @@ namespace Rafy.Domain
 
     internal interface IRepositoryInternal : IRepository, IEntityInfoHost
     {
-        /// <summary>
-        /// 实体对应的数据表的信息。
-        /// </summary>
-        IPersistanceTableInfo TableInfo { get; }
+        ///// <summary>
+        ///// 实体对应的数据表的信息。
+        ///// </summary>
+        //IRdbTableInfo TableInfo { get; }
 
         /// <summary>
         /// 通过父对象获取子对象的集合。
