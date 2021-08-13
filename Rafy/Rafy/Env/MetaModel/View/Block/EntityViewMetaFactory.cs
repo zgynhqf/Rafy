@@ -32,10 +32,12 @@ namespace Rafy.MetaModel.View
         private CodeEVMReader _codeReader;
         private XmlConfigManager _xmlCfgMgr;
 
-        public EntityViewMetaFactory(XmlConfigManager xmlConfigMgr)
+        public EntityViewMetaFactory(XmlConfigManager xmlConfigMgr) : this(xmlConfigMgr, new CodeEVMReader()) { }
+
+        internal EntityViewMetaFactory(XmlConfigManager xmlConfigMgr, CodeEVMReader codeEVMReader)
         {
-            this._xmlCfgMgr = xmlConfigMgr;
-            _codeReader = new CodeEVMReader(() => this.CreateEntityViewMeta());
+            _xmlCfgMgr = xmlConfigMgr;
+            _codeReader = codeEVMReader;
         }
 
         /// <summary>
@@ -225,12 +227,6 @@ namespace Rafy.MetaModel.View
             //raw.Freeze();
 
             return raw;
-        }
-
-        protected virtual EntityViewMeta CreateEntityViewMeta()
-        {
-            var vm = RafyEnvironment.Location.IsWebUI ? new WebEntityViewMeta() : new WPFEntityViewMeta() as EntityViewMeta;
-            return vm;
         }
 
         //public EntityPropertyViewMeta CreateExtensionPropertyViewMeta(IManagedProperty mp, EntityViewMeta evm)
