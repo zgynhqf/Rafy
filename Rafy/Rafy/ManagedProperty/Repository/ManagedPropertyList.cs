@@ -59,11 +59,7 @@ namespace Rafy.ManagedProperty
         {
             if (string.IsNullOrWhiteSpace(propertyName)) throw new ArgumentNullException("propertyName");
 
-            IManagedProperty res = null;
-            if (_dic.TryGetValue(propertyName, out res))
-            {
-                return res;
-            }
+            if (_dic.TryGetValue(propertyName, out var res)) return res;
 
             return null;
         }
