@@ -300,7 +300,7 @@ namespace Rafy.Domain.ORM
             return dba.ExecuteText(sql.ToString(), whereSql.Parameters);
         }
 
-        internal int Update(IDbAccesser dba, Entity item)
+        public virtual int Update(IDbAccesser dba, Entity item)
         {
             EnsureMappingTable();
 

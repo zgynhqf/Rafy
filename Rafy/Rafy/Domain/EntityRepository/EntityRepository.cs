@@ -54,7 +54,7 @@ namespace Rafy.Domain
         /// 这会使得 FindRepository、GetRepository 方法更加快速。
         /// </summary>
         /// <returns></returns>
-        public Entity New()
+        public virtual Entity New()
         {
             var entity = Entity.New(this.EntityType);
 

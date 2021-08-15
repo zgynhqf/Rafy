@@ -191,6 +191,11 @@ namespace Rafy.Domain
         /// </summary>
         void IDirtyAware.MarkSaved()
         {
+            this.MarkSaved();
+        }
+
+        protected virtual void MarkSaved()
+        {
             //聚合子需要都调用 MarkSaved。
             var enumerator = this.GetLoadedChildren();
             while (enumerator.MoveNext())

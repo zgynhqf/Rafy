@@ -107,7 +107,7 @@ namespace Rafy.MetaModel.View
         /// 
         /// 此方法应该在程序初始化时调用。
         /// </summary>
-        internal static void InitCommandMetas()
+        public static void InitCommandMetas()
         {
             if (RafyEnvironment.Location.IsWebUI)
             {

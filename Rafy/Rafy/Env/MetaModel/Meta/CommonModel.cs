@@ -21,7 +21,7 @@ namespace Rafy.MetaModel
     /// <summary>
     /// WPF Web 通用的模型
     /// </summary>
-    public static class CommonModel
+    public abstract class CommonModel
     {
         private static EntityMetaRepository _entities;
 

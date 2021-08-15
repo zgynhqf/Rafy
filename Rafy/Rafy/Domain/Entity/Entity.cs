@@ -382,7 +382,7 @@ namespace Rafy.Domain
         /// <param name="source">从这个对象拷贝</param>
         /// <param name="property">拷贝这个属性</param>
         /// <param name="options">The options.</param>
-        private void CopyProperty(Entity source, IManagedProperty property, CloneOptions options)
+        protected virtual void CopyProperty(Entity source, IManagedProperty property, CloneOptions options)
         {
             var refProperty = property as IRefEntityProperty;
             if (refProperty != null)

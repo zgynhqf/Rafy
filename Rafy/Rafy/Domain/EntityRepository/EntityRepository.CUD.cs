@@ -48,7 +48,7 @@ namespace Rafy.Domain
         /// <returns>
         /// 返回在仓库中保存后的实体。
         /// </returns>
-        public IDomainComponent Save(IDomainComponent component)
+        public virtual IDomainComponent Save(IDomainComponent component)
         {
             IDomainComponent result = component;
 
