@@ -28,7 +28,7 @@ namespace Rafy.Domain
     /// Property Register
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    public static class P<TEntity>
+    public abstract class P<TEntity>
         where TEntity : Entity
     {
         #region Register
@@ -274,6 +274,17 @@ namespace Rafy.Domain
         /// 声明一个引用 Id 属性
         /// </summary>
         /// <param name="propertyExp">指向相应 CLR 的表达式。</param>
+        /// <returns></returns>
+        public static IRefIdProperty RegisterRefId<TKey>(Expression<Func<TEntity, TKey?>> propertyExp)
+            where TKey : struct
+        {
+            return RegisterRefId(propertyExp, ReferenceType.Normal);
+        }
+
+        /// <summary>
+        /// 声明一个引用 Id 属性
+        /// </summary>
+        /// <param name="propertyExp">指向相应 CLR 的表达式。</param>
         /// <param name="referenceType">引用的类型</param>
         /// <returns></returns>
         public static IRefIdProperty RegisterRefId<TKey>(Expression<Func<TEntity, TKey?>> propertyExp, ReferenceType referenceType)
@@ -296,6 +307,17 @@ namespace Rafy.Domain
 
             //简单地，args 直接作为 defaultMeta 传入。
             return RegisterRefIdCore(propertyInfo.Name, args.ReferenceType, propertyInfo.PropertyType, args);
+        }
+
+        /// <summary>
+        /// 声明一个引用 Id 属性
+        /// </summary>
+        /// <param name="propertyExp">指向相应 CLR 的表达式。</param>
+        /// <returns></returns>
+        public static IRefIdProperty RegisterRefId<TKey>(Expression<Func<TEntity, TKey>> propertyExp)
+            where TKey : struct
+        {
+            return RegisterRefId(propertyExp, ReferenceType.Normal);
         }
 
         /// <summary>

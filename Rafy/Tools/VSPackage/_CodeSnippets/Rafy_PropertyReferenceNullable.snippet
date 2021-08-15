@@ -23,11 +23,6 @@
                     <Default>RefPropertyName</Default>
                 </Literal>
                 <Literal>
-                    <ID>ReferenceType</ID>
-                    <ToolTip>引用类型（是否为组合父引用）</ToolTip>
-                    <Default>Normal</Default>
-                </Literal>
-                <Literal>
                     <ID>KeyType</ID>
                     <ToolTip>引用实体的标识类型。</ToolTip>
                     <Default>long</Default>
@@ -40,7 +35,7 @@
             </Declarations>
             <Code Language="csharp">
                 <![CDATA[public static readonly IRefIdProperty $RefPropertyName$IdProperty =
-            P<$ClassName$>.RegisterRefId(e => e.$RefPropertyName$Id, ReferenceType.$ReferenceType$);
+            P<$ClassName$>.RegisterRefId(e => e.$RefPropertyName$Id);
         public $KeyType$? $RefPropertyName$Id
         {
             get { return ($KeyType$?)this.GetRefNullableId($RefPropertyName$IdProperty); }
