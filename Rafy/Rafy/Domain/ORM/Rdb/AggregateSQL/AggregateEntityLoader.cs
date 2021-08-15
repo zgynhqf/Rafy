@@ -91,7 +91,6 @@ namespace Rafy.Domain.ORM
                 //当前对象是加载类型的子对象还是引用的外键
                 if (option.LoadType == AggregateLoadType.Children)
                 {
-                    listResult.SetParentEntity(entity);
                     entity.LoadProperty(option.PropertyMeta.ManagedProperty, listResult);
                 }
                 else

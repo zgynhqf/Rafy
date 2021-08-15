@@ -3614,6 +3614,33 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void ET_Clone_NormalProperties_NotIncludeReadOnlyProperty()
+        {
+            var a = new TestUser { Name = "name", Age = 20 };
+            var b = new TestUser();
+
+            b.Clone(a, new CloneOptions(CloneActions.NormalProperties));
+
+            Assert.AreEqual("name", b.Name);
+            Assert.AreEqual(20, b.Age);
+
+            Assert.IsFalse(b.FieldExists(TestUser.ReadOnlyNameAgeProperty));
+        }
+
+        [TestMethod]
+        public void ET_Clone_NormalProperties_NotIncludeDefaultValue()
+        {
+            var a = new TestUser();
+            Assert.AreEqual("DefaultName", a.Name);
+            var b = new TestUser();
+
+            b.Clone(a, new CloneOptions(CloneActions.NormalProperties));
+
+            Assert.AreEqual("DefaultName", b.Name);
+            Assert.IsFalse(b.FieldExists(TestUser.NameProperty));
+        }
+
+        [TestMethod]
         public void ET_Clone_ReadDbRow()
         {
             var a = new A { Id = 1 };
@@ -3651,6 +3678,152 @@ namespace RafyUnitTest
             pbs2.Clone(pbs);
 
             Assert.IsNotNull(pbs2.GetProperty(PBS.PBSTypeProperty));
+        }
+
+        [TestMethod]
+        public void ET_Clone_NewComposition()
+        {
+            var pbsType = new PBSType { Id = 1, Name = "PBS1" };
+            pbsType.PBSList.Add(new PBS { Id = 1, Name = "pbs1.1 a" });
+            pbsType.PBSList.Add(new PBS { Id = 2, Name = "pbs1.2 a" });
+            (pbsType as IDirtyAware).MarkSaved();
+
+            var pbsType2 = new PBSType();
+
+            pbsType2.Clone(pbsType, CloneOptions.NewComposition());
+
+            Assert.AreEqual(pbsType.Name, pbsType2.Name);
+            Assert.IsTrue(pbsType2.IsNew);
+            Assert.AreEqual(2, pbsType2.PBSList.Count);
+            Assert.AreEqual("pbs1.1 a", pbsType2.PBSList[0].Name);
+            Assert.IsTrue(pbsType2.PBSList[0].IsNew);
+            Assert.AreEqual("pbs1.2 a", pbsType2.PBSList[1].Name);
+            Assert.IsTrue(pbsType2.PBSList[1].IsNew);
+        }
+
+        [TestMethod]
+        public void ET_Clone_ChildrenRecur()
+        {
+            var pbsType = new PBSType { Id = 1, Name = "PBS1" };
+            pbsType.PBSList.Add(new PBS { Id = 1, Name = "pbs1.1 a" });
+            pbsType.PBSList.Add(new PBS { Id = 2, Name = "pbs1.2 a" });
+            (pbsType as IDirtyAware).MarkSaved();
+
+            var pbsType2 = new PBSType { Id = 1, Name = "PBS1 another" };
+            var pbs22 = new PBS { Id = 2, Name = "pbs1.2 b" };
+            pbsType2.PBSList.Add(pbs22);
+            (pbsType2 as IDirtyAware).MarkSaved();
+
+            var options = new CloneOptions(CloneActions.NormalProperties | CloneActions.ChildrenRecur);
+            pbsType2.Clone(pbsType, options);
+
+            Assert.AreEqual(pbsType.Name, pbsType2.Name);
+            Assert.AreEqual(2, pbsType2.PBSList.Count);
+            Assert.AreSame(pbs22, pbsType2.PBSList[0], "该对象并没有直接删除到 Deleted 列表中。");
+            Assert.AreEqual("pbs1.1 a", pbs22.Name);
+            Assert.AreEqual("pbs1.2 a", pbsType2.PBSList[1].Name, "不按 Id 来复制，而是直接根据位置来复制。");
+        }
+
+        [TestMethod]
+        public void ET_Clone_LoadProperty()
+        {
+            var pbsType = new PBSType { Id = 1, Name = "PBS1" };
+            pbsType.PBSList.Add(new PBS { Id = 1, Name = "pbs1.1 a" });
+            pbsType.PBSList.Add(new PBS { Id = 2, Name = "pbs1.2 a" });
+            (pbsType as IDirtyAware).MarkSaved();
+
+            var pbsType2 = new PBSType { Id = 1, Name = "PBS1 another" };
+            var pbs21 = new PBS { Id = 1, Name = "pbs1.1 b" };
+            pbsType2.PBSList.Add(pbs21);
+            (pbsType2 as IDirtyAware).MarkSaved();
+            Assert.IsFalse(pbsType2.IsDirty);
+
+            var options = new CloneOptions(CloneActions.IdProperty | CloneActions.NormalProperties | CloneActions.ChildrenRecur);
+            options.Method = CloneValueMethod.LoadProperty;
+
+            pbsType2.Clone(pbsType, options);
+
+            Assert.IsFalse(pbsType2.IsDirty);
+        }
+
+        /// <summary>
+        /// 可以使用 Clone 方法复制一个树节点。
+        /// </summary>
+        [TestMethod]
+        public void ET_Clone_Tree_Struc()
+        {
+            var list = new FolderList
+            {
+                new Folder
+                {
+                    TreeChildren =
+                    {
+                        new Folder(),
+                        new Folder(),
+                    }
+                },
+                new Folder
+                {
+                    TreeChildren =
+                    {
+                        new Folder(),
+                    }
+                },
+            };
+
+            var list2 = new FolderList();
+            list2.Clone(list, CloneOptions.NewComposition());
+
+            Assert.IsTrue(list2.Count == 2);
+            var a = list2[0];
+            Assert.IsTrue(a.TreeChildren.IsLoaded && a.TreeChildren.Count == 2);
+            foreach (ITreeEntity treeChild in a.TreeChildren)
+            {
+                Assert.IsTrue(treeChild.IsTreeParentLoaded && treeChild.TreeParent == a);
+            }
+            var b = list2[1];
+            Assert.IsTrue(b.TreeChildren.IsLoaded && b.TreeChildren.Count == 1);
+        }
+
+        [TestMethod]
+        public void ET_Clone_TreeIndex_TreePId()
+        {
+            var repo = RF.ResolveInstance<FolderRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var rawList = new FolderList
+                {
+                    new Folder
+                    {
+                        Name = "1.",
+                        TreeChildren =
+                        {
+                            new Folder
+                            {
+                                Name = "1.1.",
+                            },
+                             new Folder
+                            {
+                                Name = "1.2.",
+                            }
+                        }
+                    }
+                };
+
+                repo.Save(rawList);
+
+                var options = CloneOptions.NewComposition();
+                var toCloneList = new FolderList();
+                toCloneList.Clone(rawList, options);
+
+                repo.Save(toCloneList);
+
+                Assert.AreEqual("001.", toCloneList[0].TreeIndex);
+                Assert.AreEqual("001.001.", toCloneList[0].TreeChildren[0].TreeIndex);
+                Assert.AreEqual("001.002.", toCloneList[0].TreeChildren[1].TreeIndex);
+
+                Assert.AreNotEqual(rawList[0].TreeChildren[0].TreePId, toCloneList[0].TreeChildren[0].TreePId);
+            }
         }
 
         #endregion

@@ -272,9 +272,9 @@ namespace Rafy.ManagedProperty
         /// <returns></returns>
         public ManagedPropertyMetadata<TPropertyType> GetMeta(object owner)
         {
-            var result = this._defaultMeta;
+            var result = _defaultMeta;
 
-            if (this._overridedMetas != null)
+            if (_overridedMetas != null)
             {
                 result = this.GetOverridedMeta(owner.GetType());
             }

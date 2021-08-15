@@ -89,21 +89,6 @@ namespace Rafy.Domain
             }
         }
 
-        private void OnTreeItemRemoving(Entity item)
-        {
-            if (!item.IsNew)
-            {
-                if (item.TreeChildrenField != null)
-                {
-                    item.TreeChildrenField.EachNode(c =>
-                    {
-                        c.PersistenceStatus = PersistenceStatus.Deleted;
-                        return false;
-                    });
-                }
-            }
-        }
-
         private void OnTreeItemRemoved(int index, Entity item)
         {
             if (this.IsTreeRootList)

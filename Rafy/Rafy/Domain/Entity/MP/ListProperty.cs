@@ -29,8 +29,6 @@ namespace Rafy.Domain
     {
         private Type _listEntityType;
 
-        internal HasManyType _hasManyType;
-
         internal ListProperty(Type ownerType, string propertyName, ListPropertyMetadata<TEntityList> defaultMeta)
             : base(ownerType, propertyName, defaultMeta) { }
 
@@ -71,9 +69,6 @@ namespace Rafy.Domain
         /// <summary>
         /// 一对多子属性的类型
         /// </summary>
-        public HasManyType HasManyType
-        {
-            get { return _hasManyType; }
-        }
+        public HasManyType HasManyType { get; internal set; }
     }
 }

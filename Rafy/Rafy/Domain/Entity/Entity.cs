@@ -316,16 +316,15 @@ namespace Rafy.Domain
             if (source == null) throw new ArgumentNullException("source");
             if (options == null) throw new ArgumentNullException("options");
 
+            //准备一些控制变量
             var grabChildren = options.HasAction(CloneActions.GrabChildren);
             var childrenRecur = options.HasAction(CloneActions.ChildrenRecur);
             var copyId = options.HasAction(CloneActions.IdProperty);
+            var cloneParentRef = options.HasAction(CloneActions.ParentRefEntity);
+            var cloneRef = options.HasAction(CloneActions.RefEntities);
+            var ingoreList = options.RetrieveIgnoreList(false);
 
-            var ingoreList = options.RetrieveIgnoreListOnce();
-
-            //如果需要拷贝id，则应该先拷贝id，并立刻清空id的缓存。
-            //注意：
-            //由于 IdProperty 在 AllProperties 中的位置并不是第一个。所以会出现拷贝其它属性时，再次访问本ID导致缓存重建。
-            //所以这里需要单独对 Id 进行一次拷贝。
+            //如果需要拷贝id，则应该先拷贝id。否则后续在拷贝组合子时，可能访问不当前实体的 Id。
             if (copyId) { this.CopyProperty(source, IdProperty, options); }
 
             //复制目标对象的所有托管属性。
@@ -334,35 +333,44 @@ namespace Rafy.Domain
             {
                 var property = allProperties[i];
                 if (property.IsReadOnly) continue;
-                //var propertyMeta = property.GetMeta(this) as IPropertyMetadata;
 
                 //过滤一些不需要拷贝的属性
-                if (property == IdProperty && !copyId) continue;
+                if (property == IdProperty) continue;//Id 已经提前处理过了。
                 if (ingoreList != null && ingoreList.Contains(property)) continue;
-                //已经更改了GetLazyChildren方法，不再考虑null值的拷贝。
-                ////如果目标不存在这个值时，不需要也不能进行拷贝，否则会为懒加载属性的加载null值。
-                //if (!target.FieldManager.FieldExists(propertyInfo)) continue;
 
                 if (property is IListProperty)
                 {
-                    var listProperty = property as IListProperty;
-                    if (childrenRecur)
+                    if (childrenRecur || grabChildren)
                     {
-                        var sourceList = source.GetLazyList(listProperty);
-                        var targetList = this.GetLazyList(listProperty);
-                        targetList.Clone(sourceList, options);
+                        if (!source.FieldExists(property))
+                        {
+                            this.ResetProperty(property);
+                        }
+                        else
+                        {
+                            var listProperty = property as IListProperty;
+                            var sourceList = source.GetProperty(listProperty) as EntityList;
 
-                        var isComposition = targetList.HasManyType == HasManyType.Composition;
-                        if (isComposition) { targetList.SetParentEntity(this); }
+                            EntityList children = null;
+                            if (childrenRecur)
+                            {
+                                children = this.LoadLazyList(listProperty, true);
+                                children.Clone(sourceList, options);//内部 Add 时会调用 children.SetParentEntity(this);
+                            }
+                            else//grabChildren
+                            {
+                                children = sourceList;
+                                this.LoadProperty(property, children);//Load 时会调用 children.SetParentEntity(this);
+                            }
+                        }
                     }
-                    else if (grabChildren)
+                }
+                else if (property is IRefEntityProperty)
+                {
+                    bool copyEntity = (property as IRefEntityProperty).ReferenceType == ReferenceType.Parent ? cloneParentRef : cloneRef;
+                    if (copyEntity)
                     {
-                        var children = source.GetProperty(property) as EntityList;
-                        this.LoadProperty(property, children);
-                        if (children == null) return;
-
-                        var isComposition = children.HasManyType == HasManyType.Composition;
-                        if (isComposition) { children.SetParentEntity(this); }
+                        this.CopyProperty(source, property, options);
                     }
                 }
                 else
@@ -373,7 +381,40 @@ namespace Rafy.Domain
 
             options.NotifyCloned(source, this);
 
-            if (this.SupportTree) { this.OnTreeItemCloned(source, options); }
+            var supportTree = this.SupportTree;
+            if (supportTree)
+            {
+                this.OnTreeItemCloned(source, options, childrenRecur, grabChildren, cloneParentRef);
+            }
+
+            //如果 Id 值没有拷贝，那么组合子实体中的 PId 需要重新整理。
+            //由于这种场景下没有拷贝 Id，又需要重新整理 PId 和 TreePId，所以可以使用 SetProperty 方法来变更实体的状态。
+            if (!copyId && (childrenRecur || grabChildren))
+            {
+                foreach (var child in this.GetLoadedChildren())
+                {
+                    var list = child.Value as EntityList;
+                    if (list != null)
+                    {
+                        list.SetParentEntity(this);
+                    }
+                }
+
+                if (supportTree)
+                {
+                    (this as ITreeComponent).EachNode(e =>
+                    {
+                        e.SyncTreeChildrenPId();
+                        return false;
+                    });
+                }
+            }
+
+            //如果是新构建的实体，持久化状态也完全拷贝。（如果 Id 没有被拷贝，说明是只拷贝值，那么不需要变更新实体的状态）
+            if (this.IsNew && copyId && !source.IsNew)
+            {
+                this.PersistenceStatus = source.PersistenceStatus;
+            }
         }
 
         /// <summary>
@@ -384,15 +425,6 @@ namespace Rafy.Domain
         /// <param name="options">The options.</param>
         protected virtual void CopyProperty(Entity source, IManagedProperty property, CloneOptions options)
         {
-            var refProperty = property as IRefEntityProperty;
-            if (refProperty != null)
-            {
-                bool copyEntity = refProperty.ReferenceType == ReferenceType.Parent ?
-                    options.HasAction(CloneActions.ParentRefEntity) :
-                    options.HasAction(CloneActions.RefEntities);
-                if (!copyEntity) { return; }
-            }
-
             var value = source.GetProperty(property);
             if (options.Method == CloneValueMethod.LoadProperty)
             {

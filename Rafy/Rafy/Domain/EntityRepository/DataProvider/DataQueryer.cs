@@ -524,7 +524,6 @@ namespace Rafy.Domain
                             }
 
                             //把整理好的子集合，加载到父实体中。
-                            children.SetParentEntity(parent);
                             parent.LoadProperty(listProperty, children);
 
                             //并同时更新变量。
@@ -532,10 +531,6 @@ namespace Rafy.Domain
                             children = targetRepo.NewList();
                         }
                     }
-                }
-                if (children.Count > 0)
-                {
-                    children.SetParentEntity(parent);
                 }
                 parent.LoadProperty(listProperty, children);
 

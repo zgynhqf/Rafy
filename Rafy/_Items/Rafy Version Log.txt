@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.73.3880
+3.74.3885
     添加接口
         开放一些内部接口，使得外部程序集更好扩展。
         开放 CodeEVMReader。
@@ -21,6 +21,11 @@
         Entity.NotifyLoaded 需要设置 _repositoryLoaded 的值；
     重构
         删除 IRepositoryInternal.TableInfo，简化 EntityRepository、RdbTable、TableInfo 之间的依赖关系。
+        ListProperty.HasManyType
+        Entity.Clone
+        EntityList.Clone
+        Entity.SetParentEntity
+        MPO.SetProperty&LoadProperty 需要比对默认值，如果是默认值，就不需要存储了。
 
 3.73.3858
     ★★公布、★重要

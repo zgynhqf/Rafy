@@ -106,7 +106,7 @@ namespace Rafy.Domain
         /// <returns></returns>
         private IListProperty FindListProperty()
         {
-            if (this._listProperty == null)
+            if (_listProperty == null)
             {
                 var parentEntity = this.Parent;
                 if (parentEntity != null)
@@ -124,20 +124,19 @@ namespace Rafy.Domain
                 }
             }
 
-            return this._listProperty;
+            return _listProperty;
         }
 
         /// <summary>
         /// 当前集合的一对多类型
         /// </summary>
-        internal HasManyType HasManyType
+        private HasManyType HasManyType
         {
             get
             {
                 if (this._listHasManyType == null)
                 {
-                    var parentEntity = this.Parent;
-                    if (parentEntity != null)
+                    if (_parent != null)
                     {
                         var listProperty = this.FindListProperty();
                         if (listProperty != null)
@@ -154,9 +153,13 @@ namespace Rafy.Domain
         #endregion
 
         /// <summary>
-        /// 是否：在添加每一项时，设置实体的 <see cref="IEntity.ParentList"/> 为当前列表，并设置它的父对象为本列表对象的父对象。
+        /// 是否：在添加每一项时，
+        /// * 设置：实体的 <see cref="IEntity.ParentList"/> 为当前列表；
+        /// * 设置它的父对象为本列表对象的父对象。
+        /// 
+        /// 此属性大部分情况下，应该都是返回 true。
         /// </summary>
-        public bool ResetItemParent { get; set; }
+        public bool ResetItemParent { get; set; } = true;
 
         #region Insert, Remove, Clear
 
@@ -223,7 +226,7 @@ namespace Rafy.Domain
 
                     base.SetItem(index, item);
 
-                    this.OnItemRemoved(index, item);
+                    this.OnItemRemoved(index, toDelete);
                     this.OnItemAdded(index, item);
                 }
             }
@@ -309,12 +312,15 @@ namespace Rafy.Domain
                 }
             }
 
-            this.SetItemParent(item);
-        }
+            if (this.ResetItemParent)
+            {
+                (item as IDomainComponent).SetParent(this);
 
-        private void OnItemAdded(int index, Entity item)
-        {
-            this.OnTreeItemInserted(index, item);
+                if (_parent != null && this.HasManyType == HasManyType.Composition)
+                {
+                    item.SetParentEntity(_parent as Entity);
+                }
+            }
         }
 
         private void OnItemRemoving(int index, Entity item)
@@ -331,34 +337,7 @@ namespace Rafy.Domain
                 this.DeletedList.Add(item);
             }
 
-            this.ClearItemParent(item);
-
-            this.OnTreeItemRemoving(item);
-        }
-
-        private void OnItemRemoved(int index, Entity item)
-        {
-            this.OnTreeItemRemoved(index, item);
-        }
-
-        private void SetItemParent(Entity item)
-        {
-            var needParent = item != null && this.ResetItemParent;
-            if (needParent)
-            {
-                (item as IDomainComponent).SetParent(this);
-
-                if (this.HasManyType == HasManyType.Composition)
-                {
-                    item.SetParentEntity(this.Parent);
-                }
-            }
-        }
-
-        private void ClearItemParent(Entity item)
-        {
-            var needParent = item != null && this.ResetItemParent;
-            if (needParent)
+            if (this.ResetItemParent)
             {
                 (item as IDomainComponent).SetParent(null);
 
@@ -372,6 +351,16 @@ namespace Rafy.Domain
                 //    item.SetParentEntity(null);
                 //}
             }
+        }
+
+        private void OnItemAdded(int index, Entity item)
+        {
+            this.OnTreeItemInserted(index, item);
+        }
+
+        private void OnItemRemoved(int index, Entity item)
+        {
+            this.OnTreeItemRemoved(index, item);
         }
 
         #endregion
@@ -393,39 +382,19 @@ namespace Rafy.Domain
         /// <summary>
         /// 设置组合父对象。
         /// </summary>
-        /// <param name="entity"></param>
-        public virtual void SetParentEntity(Entity entity)
-        {
-            var refProperty = this.GetRepository().EntityMeta
-                .FindParentReferenceProperty(true).ManagedProperty.CastTo<IRefEntityProperty>();
-            this.EachNode(child =>
-            {
-                child.SetRefEntity(refProperty, entity);
-                return false;
-            });
-        }
-
-        /// <summary>
-        /// 由于有时父引用实体没有发生改变，但是父引用实体的 Id 变了，此时需要调用此方法同步二者的 Id。
-        /// </summary>
         /// <param name="parent">由于外部调用时，已经有 parent 的值了，所以直接传进来。</param>
-        internal virtual void SyncParentEntityId(Entity parent)
+        public virtual void SetParentEntity(Entity parent)
         {
-            //调用此方法的方法，必须保证这个列表是指定实体的组合子集合。
-            //if (this.HasManyType == HasManyType.Composition)
-            //{
-            var refProperty = this.GetRepository().EntityMeta
-                .FindParentReferenceProperty(true).ManagedProperty.CastTo<IRefEntityProperty>();
-            this.EachNode(child =>
+            if (this.Count > 0)
             {
-                    //注意，由于实体可能并没有发生改变，而只是 Id 变了，
-                    //所以在设置的时候，先设置 Id，然后设置 Entity。
-                    child.SetRefId(refProperty.RefIdProperty, parent.Id);
-                child.SetRefEntity(refProperty, parent);
-
-                return false;
-            });
-            //}
+                var refProperty = this.GetRepository().EntityMeta
+                    .FindParentReferenceProperty(true).ManagedProperty.CastTo<IRefEntityProperty>();
+                this.EachNode(child =>
+                {
+                    child.SetParentEntity(parent, refProperty);
+                    return false;
+                });
+            }
         }
 
         #region ReadRowDirectly
@@ -436,32 +405,41 @@ namespace Rafy.Domain
 
         /// <summary>
         /// 复制目标集合中的所有对象。
+        /// * 根据列表中的位置来进行拷贝；
+        /// * 多余的会移除（不进入 DeletedList）；
+        /// * 不够的会生成新的对象；（如果是新构建的实体，持久化状态也完全拷贝。）
         /// </summary>
         /// <param name="sourceList"></param>
         /// <param name="options"></param>
         public void Clone(EntityList sourceList, CloneOptions options)
         {
-            this.Clear();
-
             var repo = this.FindRepository();
             var entityType = this.EntityType;
 
+            //逐项拷贝。
+            var thisCount = this.Count;
             for (int i = 0, c = sourceList.Count; i < c; i++)
             {
                 var source = sourceList[i];
 
                 Entity entity = null;
-                if (repo != null)
+                if (i < thisCount)
                 {
-                    entity = repo.New();
+                    entity = this[i];
                 }
                 else
                 {
-                    entity = Entity.New(entityType);
+                    entity = repo?.New() ?? Entity.New(entityType);
+                    this.Add(entity);
                 }
 
                 entity.Clone(source, options);
-                this.Add(entity);
+            }
+
+            //直接调用基类的方法，直接删除多余的元素。
+            while (this.Count > sourceList.Count)
+            {
+                base.RemoveItem(sourceList.Count);
             }
 
             this.NotifyLoaded(sourceList._repository);

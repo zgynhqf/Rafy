@@ -822,12 +822,8 @@ namespace Rafy.Domain
             if (entity != null)
             {
                 entity.NotifyLoaded(this);
-
-                this.NotifyLoadedIfMemory(entity);
             }
         }
-
-        internal virtual void NotifyLoadedIfMemory(Entity entity) { }
 
         /// <summary>
         /// 当一个实体列表最终要出仓库时，才调用此方法完成加载。

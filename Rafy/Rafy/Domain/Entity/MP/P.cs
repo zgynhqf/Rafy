@@ -517,7 +517,7 @@ namespace Rafy.Domain
         public static ListProperty<TEntityList> RegisterList<TEntityList>(Expression<Func<TEntity, TEntityList>> propertyExp)
             where TEntityList : EntityList
         {
-            return RegisterListCore<TEntityList>(GetPropertyName(propertyExp), new ListPropertyMeta());
+            return RegisterListCore<TEntityList>(GetPropertyName(propertyExp), new ListPropertyMeta(), HasManyType.Composition);
         }
 
         /// <summary>
@@ -530,17 +530,30 @@ namespace Rafy.Domain
         public static ListProperty<TEntityList> RegisterList<TEntityList>(Expression<Func<TEntity, TEntityList>> propertyExp, ListPropertyMeta meta)
             where TEntityList : EntityList
         {
-            return RegisterListCore<TEntityList>(GetPropertyName(propertyExp), meta);
+            return RegisterListCore<TEntityList>(GetPropertyName(propertyExp), meta, HasManyType.Composition);
         }
 
-        private static ListProperty<TEntityList> RegisterListCore<TEntityList>(string propertyName, ListPropertyMeta args)
+        /// <summary>
+        /// 注册一个列表属性
+        /// </summary>
+        /// <typeparam name="TEntityList"></typeparam>
+        /// <param name="propertyExp"></param>
+        /// <param name="meta"></param>
+        /// <returns></returns>
+        public static ListProperty<TEntityList> RegisterList<TEntityList>(Expression<Func<TEntity, TEntityList>> propertyExp, ListPropertyMeta meta, HasManyType hasManyType)
+            where TEntityList : EntityList
+        {
+            return RegisterListCore<TEntityList>(GetPropertyName(propertyExp), meta, hasManyType);
+        }
+
+        private static ListProperty<TEntityList> RegisterListCore<TEntityList>(string propertyName, ListPropertyMeta args, HasManyType hasManyType)
             where TEntityList : EntityList
         {
             var meta = new ListPropertyMetadata<TEntityList>(args.DataProvider);
 
             var property = new ListProperty<TEntityList>(typeof(TEntity), propertyName, meta);
 
-            property._hasManyType = args.HasManyType;
+            property.HasManyType = hasManyType;
 
             ManagedPropertyRepository.Instance.RegisterProperty(property);
 
@@ -561,7 +574,7 @@ namespace Rafy.Domain
         public static ListProperty<TEntityList> RegisterListExtension<TEntityList>(string propertyName, Type declareType)
             where TEntityList : EntityList
         {
-            return RegisterListExtensionCore<TEntityList>(propertyName, declareType, new ListPropertyMeta());
+            return RegisterListExtensionCore<TEntityList>(propertyName, declareType, new ListPropertyMeta(), HasManyType.Composition);
         }
 
         /// <summary>
@@ -575,17 +588,31 @@ namespace Rafy.Domain
         public static ListProperty<TEntityList> RegisterListExtension<TEntityList>(string propertyName, Type declareType, ListPropertyMeta meta)
             where TEntityList : EntityList
         {
-            return RegisterListExtensionCore<TEntityList>(propertyName, declareType, meta);
+            return RegisterListExtensionCore<TEntityList>(propertyName, declareType, meta, HasManyType.Composition);
         }
 
-        private static ListProperty<TEntityList> RegisterListExtensionCore<TEntityList>(string propertyName, Type declareType, ListPropertyMeta args)
+        /// <summary>
+        /// 扩展一个列表属性
+        /// </summary>
+        /// <typeparam name="TEntityList">The type of the entity list.</typeparam>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <param name="declareType">Type of the declare.</param>
+        /// <param name="meta">The meta.</param>
+        /// <returns></returns>
+        public static ListProperty<TEntityList> RegisterListExtension<TEntityList>(string propertyName, Type declareType, ListPropertyMeta meta, HasManyType hasManyType)
+            where TEntityList : EntityList
+        {
+            return RegisterListExtensionCore<TEntityList>(propertyName, declareType, meta, hasManyType);
+        }
+
+        private static ListProperty<TEntityList> RegisterListExtensionCore<TEntityList>(string propertyName, Type declareType, ListPropertyMeta args, HasManyType hasManyType)
             where TEntityList : EntityList
         {
             var meta = new ListPropertyMetadata<TEntityList>(args.DataProvider);
 
             var property = new ListProperty<TEntityList>(typeof(TEntity), declareType, propertyName, meta);
 
-            property._hasManyType = args.HasManyType;
+            property.HasManyType = hasManyType;
 
             ManagedPropertyRepository.Instance.RegisterProperty(property);
 

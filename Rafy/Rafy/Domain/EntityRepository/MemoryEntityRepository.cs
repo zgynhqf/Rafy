@@ -89,11 +89,14 @@ namespace Rafy.Domain.ORM
             return DataProvider.FromRow(row);
         }
 
-        internal override void NotifyLoadedIfMemory(Entity entity)
+        protected internal override void NotifyLoaded(Entity entity)
         {
-            base.NotifyLoadedIfMemory(entity);
+            base.NotifyLoaded(entity);
 
-            (this.DataProvider as MemoryRepositoryDataProvider).Saver.InsertInternal(entity);
+            if (entity != null)
+            {
+                this.DataProvider.Saver.InsertInternal(entity);
+            }
         }
 
         public abstract class MemoryRepositoryDataProvider : RepositoryDataProvider

@@ -66,20 +66,10 @@ namespace Rafy.Domain
     /// 名称取为 Meta，主要是使用者可以更好地理解为元数据。
     public class ListPropertyMeta
     {
-        public ListPropertyMeta()
-        {
-            this.HasManyType = HasManyType.Composition;
-        }
-
         /// <summary>
         /// 自定义列表数据提供器
         /// </summary>
         public ListLoaderProvider DataProvider { get; set; }
-
-        /// <summary>
-        /// 一对多子属性的类型
-        /// </summary>
-        public HasManyType HasManyType { get; set; }
     }
 
     /// <summary>

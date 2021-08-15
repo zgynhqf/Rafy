@@ -1655,47 +1655,6 @@ namespace RafyUnitTest
             Assert.AreEqual(list[1].TreeIndex, string.Empty);
         }
 
-        [TestMethod]
-        public void __TET_Struc_TreeIndex_Clone()
-        {
-            var repo = RF.ResolveInstance<FolderRepository>();
-            using (RF.TransactionScope(repo))
-            {
-                var rawList = new FolderList
-                {
-                    new Folder
-                    {
-                        Name = "1.",
-                        TreeChildren =
-                        {
-                            new Folder
-                            {
-                                Name = "1.1.",
-                            },
-                             new Folder
-                            {
-                                Name = "1.2.",
-                            }
-                        }
-                    }
-                };
-
-                repo.Save(rawList);
-
-                var options = CloneOptions.NewComposition();
-                var toCloneList = new FolderList();
-                toCloneList.Clone(rawList, options);
-
-                repo.Save(toCloneList);
-
-                Assert.AreEqual("001.", toCloneList[0].TreeIndex);
-                Assert.AreEqual("001.001.", toCloneList[0].TreeChildren[0].TreeIndex);
-                Assert.AreEqual("001.002.", toCloneList[0].TreeChildren[1].TreeIndex);
-
-                Assert.AreNotEqual(rawList[0].TreeChildren[0].TreePId, toCloneList[0].TreeChildren[0].TreePId);
-            }
-        }
-
         private static void UpdateTreeIndex(object id, string value)
         {
             var repo = RF.ResolveInstance<FolderRepository>();
@@ -2197,45 +2156,6 @@ namespace RafyUnitTest
         #endregion
 
         #region 结构 - 其它
-
-        /// <summary>
-        /// 可以使用 Clone 方法复制一个树节点。
-        /// </summary>
-        [TestMethod]
-        public void TET_Struc_Clone()
-        {
-            var list = new FolderList
-            {
-                new Folder
-                {
-                    TreeChildren =
-                    {
-                        new Folder(),
-                        new Folder(),
-                    }
-                },
-                new Folder
-                {
-                    TreeChildren =
-                    {
-                        new Folder(),
-                    }
-                },
-            };
-
-            var list2 = new FolderList();
-            list2.Clone(list, CloneOptions.NewComposition());
-
-            Assert.IsTrue(list2.Count == 2);
-            var a = list2[0];
-            Assert.IsTrue(a.TreeChildren.IsLoaded && a.TreeChildren.Count == 2);
-            foreach (ITreeEntity treeChild in a.TreeChildren)
-            {
-                Assert.IsTrue(treeChild.IsTreeParentLoaded && treeChild.TreeParent == a);
-            }
-            var b = list2[1];
-            Assert.IsTrue(b.TreeChildren.IsLoaded && b.TreeChildren.Count == 1);
-        }
 
         /// <summary>
         /// 一个新的节点，可以任意在集合中添加、删除。

@@ -348,14 +348,14 @@ namespace Rafy.Domain
             get { return _treeChildren; }
         }
 
-        private void OnTreeItemCloned(Entity source, CloneOptions options)
+        private void OnTreeItemCloned(Entity source, CloneOptions options, bool childrenRecur, bool grabChildren, bool cloneParentRef)
         {
-            if (options.HasAction(CloneActions.ParentRefEntity))
+            if (cloneParentRef)
             {
                 this.TreeParentData = source._treeParent;
             }
 
-            if (options.HasAction(CloneActions.GrabChildren))
+            if (grabChildren)
             {
                 _treeChildren = source._treeChildren;
                 if (_treeChildren != null)
@@ -367,7 +367,7 @@ namespace Rafy.Domain
                     }
                 }
             }
-            else if (options.HasAction(CloneActions.ChildrenRecur))
+            else if (childrenRecur)
             {
                 if (source._treeChildren == null)
                 {
@@ -382,7 +382,7 @@ namespace Rafy.Domain
 
         private void EnsureSupportTree()
         {
-            if (!this.SupportTree) throw new NotSupportedException("此操作需要本类支持树型操作，请重写：SupportTree、TreePId、OrderNo。");
+            if (!this.SupportTree) throw new NotSupportedException("此操作需要本类支持树型操作。");
         }
 
         private void SyncTreeChildrenPId()

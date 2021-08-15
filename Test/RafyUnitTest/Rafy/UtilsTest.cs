@@ -31,6 +31,21 @@ namespace RafyUnitTest
 
         #region DBA
 
+        [TestMethod]
+        public void UtilsTest_DBA_QueryValue_DateTime()
+        {
+            var repo = RF.ResolveInstance<BookRepository>();
+            var dp = RdbDataProvider.Get(repo);
+            if (dp.DbSetting.ProviderName == DbSetting.Provider_SqlClient)
+            {
+                using (var dba = dp.CreateDbAccesser())
+                {
+                    var time = dba.QueryValue(@"SELECT GETDATE()");
+                    Assert.IsInstanceOfType(time, typeof(DateTime));
+                }
+            }
+        }
+
         /// <summary>
         /// 能使用 DbAccesserParameter 才能保证索引可以正常起作用。
         /// </summary>

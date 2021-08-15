@@ -156,11 +156,14 @@ namespace Rafy.Domain
         /// 获取一次性的 IgoreList
         /// </summary>
         /// <returns></returns>
-        internal IList<IManagedProperty> RetrieveIgnoreListOnce()
+        internal IList<IManagedProperty> RetrieveIgnoreList(bool clear)
         {
             var value = this._ignoreList;
 
-            this._ignoreList = null;
+            if (clear)
+            {
+                this._ignoreList = null;
+            }
 
             return value;
         }
@@ -182,6 +185,7 @@ namespace Rafy.Domain
     {
         /// <summary>
         /// 拷贝Id
+        /// 注意，如果是为新构建的实体进行拷贝，那么目标实体的持久化状态也完全拷贝。
         /// </summary>
         IdProperty = 1,
         /// <summary>

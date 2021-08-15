@@ -450,7 +450,7 @@ namespace Rafy.Domain
                     }
 
                     //同步组合父对象 Id
-                    oldChildren.SyncParentEntityId(oldEntity);
+                    oldChildren.SetParentEntity(oldEntity);
 
                     //同步 TreePId
                     if (oldChildren.SupportTree)

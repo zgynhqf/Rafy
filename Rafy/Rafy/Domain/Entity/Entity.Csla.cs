@@ -268,6 +268,8 @@ namespace Rafy.Domain
 
         /// <summary>
         /// LoadProperty 以最快的方式直接加载值，不发生 PropertyChanged 事件。
+        /// 
+        /// 同时，如果该属性是一个组合子实体列表，则还会调用 <see cref="EntityList.SetParentEntity(Entity)"/> 来重置列表中每个实体的引用父实体。
         /// </summary>
         /// <param name="property"></param>
         /// <param name="value"></param>
@@ -292,11 +294,16 @@ namespace Rafy.Domain
                 component.SetParent(this);
                 component.MarkSaved();
 
-                if (property is IListProperty)
+                var listProperty = property as IListProperty;
+                if (listProperty != null)
                 {
                     var list = value as EntityList;
-                    list.ResetItemParent = true;
-                    list.InitListProperty(property as IListProperty);
+                    list.InitListProperty(listProperty);
+
+                    if (listProperty.HasManyType == HasManyType.Composition)
+                    {
+                        list.SetParentEntity(this);
+                    }
                 }
             }
         }
@@ -321,16 +328,19 @@ namespace Rafy.Domain
         }
 
         /// <summary>
-        /// 同步当前实体的 Id 到组合子实体及子节点中。
+        /// 同步当前实体的 Id 到组合子实体及树型子节点中。
+        /// 
+        /// 一般来说，框架会自动将父实体的 Id 设置给所有的组合子。
+        /// 但是如果开发者手工变更了父实体的 Id 时，框架不会自动处理，此时，开发者需要手动调用此方法来主动同步 Id。
         /// </summary>
-        internal void SyncIdToChildren()
+        public void SyncIdToChildren()
         {
             foreach (var field in this.GetLoadedChildren())
             {
                 var children = field.Value as EntityList;
                 if (children != null)
                 {
-                    children.SyncParentEntityId(this);
+                    children.SetParentEntity(this);
                 }
                 else
                 {

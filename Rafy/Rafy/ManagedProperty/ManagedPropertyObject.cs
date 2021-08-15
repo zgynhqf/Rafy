@@ -206,7 +206,7 @@ namespace Rafy.ManagedProperty
             value = CoerceType(property, value);
 
             bool isReset = false;
-            if (NeedReset(property, value))
+            if (NeedReset(property, value, finalValue))
             {
                 isReset = true;
                 value = meta.DefaultValue;
@@ -313,7 +313,9 @@ namespace Rafy.ManagedProperty
 
             value = CoerceType(property, value);
 
-            if (NeedReset(property, value))
+            var meta = property.GetMeta(this) as IManagedPropertyMetadataInternal;
+
+            if (NeedReset(property, value, meta.DefaultValue))
             {
                 this._ResetProperty(property);
                 return;
@@ -355,12 +357,19 @@ namespace Rafy.ManagedProperty
         /// <param name="property"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        private static bool NeedReset(IManagedProperty property, object value)
+        private static bool NeedReset(IManagedProperty property, object value, object defaultValue)
         {
             if (value == null)
             {
                 var propertyType = property.PropertyType;
                 if (propertyType.IsValueType && (!propertyType.IsGenericType || propertyType.GetGenericTypeDefinition() != typeof(Nullable<>)))
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                if (value.Equals(defaultValue))
                 {
                     return true;
                 }
@@ -734,7 +743,7 @@ namespace Rafy.ManagedProperty
         {
             if (property == null) throw new ArgumentNullException("property");
 
-            if (property.IsReadOnly) return true;
+            if (property.IsReadOnly) return false;
 
             if (property.LifeCycle == ManagedPropertyLifeCycle.Compile)
             {

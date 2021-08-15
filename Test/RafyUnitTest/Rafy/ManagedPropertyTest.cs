@@ -283,6 +283,20 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void MPT_ReadOnlyProperties_NotWritable()
+        {
+            var user = Get<TestUser>();
+            try
+            {
+                user.SetProperty(TestUser.ReadOnlyNameAgeProperty, "name");
+                Assert.IsFalse(true, "只读属性不能设置成功。");
+            }
+            catch
+            {
+            }
+        }
+
+        [TestMethod]
         public void MPT_ReadOnlyExtensionProperties()
         {
             var user = Get<TestUser>();
@@ -464,7 +478,7 @@ namespace RafyUnitTest
             //userList.Add(newUser);
 
             ////创建 binding view
-            
+
             //var view = CollectionViewSource.GetDefaultView(userList) as ListCollectionView;
             //Assert.IsNotNull(view);
             //var userListView = view.SourceCollection as TestUserList;
@@ -956,7 +970,7 @@ namespace RafyUnitTest
         public void MPT_GetCompiledPropertyValues()
         {
             var a = new A { Id = 1 };
-            var properties =new List<IManagedProperty>();
+            var properties = new List<IManagedProperty>();
             foreach (var pv in a.GetCompiledPropertyValues())
             {
                 properties.Add(pv.Property);
@@ -989,7 +1003,7 @@ namespace RafyUnitTest
         public void MPT_GetNonDefaultPropertyValues()
         {
             var a = new A { Id = 1 };
-            var properties =new List<string>();
+            var properties = new List<string>();
             foreach (var pv in a.GetNonDefaultPropertyValues())
             {
                 properties.Add(pv.Property.Name);

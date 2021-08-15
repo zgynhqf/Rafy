@@ -56,8 +56,9 @@ namespace Rafy.Domain
         /// 执行懒加载操作。
         /// </summary>
         /// <param name="listProperty">The list property.</param>
+        /// <param name="loadEmptyData">The list property.</param>
         /// <returns></returns>
-        private EntityList LoadLazyList(IListProperty listProperty)
+        private EntityList LoadLazyList(IListProperty listProperty, bool loadEmptyData = false)
         {
             EntityList data = null;
 
@@ -67,7 +68,7 @@ namespace Rafy.Domain
                 if (data != null) return data;
             }
 
-            if (this.IsNew)
+            if (this.IsNew || loadEmptyData)
             {
                 var listRepository = RepositoryFactoryHost.Factory.FindByEntity(listProperty.ListEntityType);
                 data = listRepository.NewList();
@@ -84,7 +85,6 @@ namespace Rafy.Domain
                 {
                     var listRepository = RepositoryFactoryHost.Factory.FindByEntity(listProperty.ListEntityType) as IRepositoryInternal;
                     data = listRepository.GetLazyListByParent(this);
-                    data.SetParentEntity(this);
                 }
             }
 
@@ -423,13 +423,21 @@ namespace Rafy.Domain
         {
             var property = this.GetRepository().EntityMeta
                 .FindParentReferenceProperty(true).ManagedProperty as IRefEntityProperty;
-            this.SetRefEntity(property, parent);
+            this.SetParentEntity(parent, property);
+        }
+
+        internal void SetParentEntity(Entity parent, IRefEntityProperty parentRefProperty)
+        {
+            //由于有时父引用实体没有发生改变，但是父引用实体的 Id 变了，此时也可以调用此方法同步二者的 Id。
+            //例如：保存父实体后，它的 Id 生成了。这时会调用此方法来同步 Id。
+            this.SetRefNullableId(parentRefProperty.RefIdProperty, parent.Id);
+            this.SetRefEntity(parentRefProperty, parent);
 
             //由于新的父实体可以还没有 Id，这时需要主动通知冗余属性变更。
             //见测试：MPT_Redundancy_AddNewAggt
             if (parent != null && parent.PersistenceStatus == PersistenceStatus.New)
             {
-                this.NotifyIfInRedundancyPath(property.RefIdProperty as IProperty);
+                this.NotifyIfInRedundancyPath(parentRefProperty.RefIdProperty as IProperty);
             }
         }
 
