@@ -33,7 +33,7 @@ namespace Rafy.Domain
         /// </summary>
         public static CloneOptions ReadSingleEntity()
         {
-            return new CloneOptions(CloneActions.NormalProperties | CloneActions.IdProperty | CloneActions.RefEntities | CloneActions.ParentRefEntity);
+            return new CloneOptions(CloneActions.IdProperty | CloneActions.NormalProperties | CloneActions.RefEntities | CloneActions.ParentRefEntity);
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Rafy.Domain
         /// </summary>
         public static CloneOptions ReadDbRow()
         {
-            return new CloneOptions(CloneActions.NormalProperties | CloneActions.IdProperty);
+            return new CloneOptions(CloneActions.IdProperty | CloneActions.NormalProperties);
         }
 
         /// <summary>

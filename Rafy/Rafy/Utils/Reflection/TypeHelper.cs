@@ -351,6 +351,6 @@ namespace Rafy.Reflection
             return (T)CoerceValue(typeof(T), value.GetType(), value);
         }
 
-#endregion
+        #endregion
     }
 }
