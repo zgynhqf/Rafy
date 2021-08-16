@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.74.3890
+3.75.3892
     添加接口
         开放一些内部接口，使得外部程序集更好扩展。
         开放 CodeEVMReader。
@@ -23,13 +23,14 @@
         P.RegisterRef 注册引用实体属性时，这些属性默认是不影响实体的状态的。
         设置实体的状态为 new 时，不应该重置其 Id。
     重构
-        删除 IRepositoryInternal.TableInfo，简化 EntityRepository、RdbTable、TableInfo 之间的依赖关系。
-        ListProperty.HasManyType
+        EntityRepository.Save 使用 Clone 方法来进行值拷贝。
         Entity.Clone
         EntityList.Clone
         TreeChildren.Clone
         Entity.SetParentEntity
         MPO.SetProperty&LoadProperty 需要比对默认值，如果是默认值，就不需要存储了。
+        删除 IRepositoryInternal.TableInfo，简化 EntityRepository、RdbTable、TableInfo 之间的依赖关系。
+        ListProperty.HasManyType
 
 3.73.3858
     ★★公布、★重要

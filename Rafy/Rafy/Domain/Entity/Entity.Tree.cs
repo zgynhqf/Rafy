@@ -353,7 +353,15 @@ namespace Rafy.Domain
             get { return _treeChildren; }
         }
 
-        private void OnTreeItemCloned(Entity source, CloneOptions options, bool childrenRecur, bool grabChildren, bool cloneParentRef)
+        /// <summary>
+        /// 拷贝 TreeParent、TreeChildren
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="options"></param>
+        /// <param name="childrenRecur"></param>
+        /// <param name="grabChildren"></param>
+        /// <param name="cloneParentRef"></param>
+        private void CloneTreeRelations(Entity source, CloneOptions options, bool childrenRecur, bool grabChildren, bool cloneParentRef)
         {
             if (cloneParentRef)
             {

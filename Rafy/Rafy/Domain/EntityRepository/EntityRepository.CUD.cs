@@ -47,6 +47,7 @@ namespace Rafy.Domain
         /// <param name="component">需要保存的组件，可以是一个实体，也可以是一个实体列表。</param>
         /// <returns>
         /// 返回在仓库中保存后的实体。
+        /// 如果是远程保存，则返回的是远程服务的返回对象，而非传入的对象。
         /// </returns>
         public virtual IDomainComponent Save(IDomainComponent component)
         {
@@ -56,55 +57,39 @@ namespace Rafy.Domain
             {
                 this.OnSaving(component);
 
-                if (component is Entity)
+                result = this.SaveToPortal(component);
+
+                //如果返回的对象与传入的对象不是同一个对象，表示已经在客户端通过了 WCF 来进行传输，
+                //这时需要把客户端对象的 Id 值与服务器对象的 Id 值统一。
+                if (component != result)
                 {
-                    var entity = component as Entity;
+                    var mergeCloneOptions = new CloneOptions(
+                        CloneActions.IdProperty | //数据库生成的 Id，需要合并
+                        CloneActions.NormalProperties | //TreePId、ParentEntityId 以及一些数据库生成的时间等属性，都需要合并
+                        CloneActions.RefEntities | //实体引用，可有可无
+                        CloneActions.ChildrenRecur //递归拷贝
+                        );
 
-                    var entityServer = this.SaveToPortal(component) as Entity;
-
-                    //如果返回的对象与传入的对象不是同一个对象，表示已经在客户端通过了 WCF 来进行传输，
-                    //这时需要把客户端对象的 Id 值与服务器对象的 Id 值统一。
-                    if (entity != entityServer)
+                    if (component is Entity)
                     {
-                        if (HasNewEntity(entity))
-                        {
-                            MergeIdRecur(entity, entityServer as Entity);
-                        }
-
-                        result = entityServer;
+                        (component as Entity).Clone(result as Entity, mergeCloneOptions);
+                    }
+                    else if (component is EntityList)
+                    {
+                        (component as EntityList).Clone(result as EntityList, mergeCloneOptions);
+                    }
+                    else
+                    {
+                        throw new NotSupportedException("只支持对 Entity、EntityList 进行保存。");
                     }
                 }
-                else if (component is EntityList)
-                {
-                    var list = component as EntityList;
 
-                    var listServer = this.SaveToPortal(component) as EntityList;
-
-                    if (list != listServer)
-                    {
-                        //保存实体列表时，需要把所有新加的实体的 Id 都设置好。
-                        for (int i = 0; i < list.Count; i++)
-                        {
-                            if (HasNewEntity(list[i]))
-                            {
-                                MergeIdRecur(list[i], listServer[i]);
-                            }
-                        }
-
-                        result = listServer;
-                    }
-                }
-                else
-                {
-                    throw new NotSupportedException("只支持对 Entity、EntityList 进行保存。");
-                }
+                //this.OnSaved(new SavedArgs
+                //{
+                //    Component = component,
+                //    ReturnedComponent = result
+                //});
             }
-
-            //this.OnSaved(new SavedArgs
-            //{
-            //    Component = component,
-            //    ReturnedComponent = result
-            //});
 
             return result;
         }
@@ -131,37 +116,6 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="component"></param>
         protected virtual void OnSaving(IDomainComponent component) { }
-
-        /// <summary>
-        /// 迭归检测一个组合实体中是否有新添加的实体
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        private static bool HasNewEntity(Entity entity)
-        {
-            if (entity.IsNew) return true;
-
-            var enumerator = entity.GetLoadedChildren();
-            while (enumerator.MoveNext())
-            {
-                var field = enumerator.Current.Value;
-                var list = field as EntityList;
-                if (list != null)
-                {
-                    foreach (var child in list)
-                    {
-                        if (HasNewEntity(child)) return true;
-                    }
-                }
-                else
-                {
-                    var child = field as Entity;
-                    if (HasNewEntity(child)) return true;
-                }
-            }
-
-            return false;
-        }
 
         #endregion
     }

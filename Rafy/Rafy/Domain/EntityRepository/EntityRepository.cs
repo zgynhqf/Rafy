@@ -426,46 +426,6 @@ namespace Rafy.Domain
             return list;
         }
 
-        /// <summary>
-        /// 把整个聚合对象的 Id 设置完整。
-        /// </summary>
-        /// <param name="oldEntity"></param>
-        /// <param name="newEntity"></param>
-        private static void MergeIdRecur(Entity oldEntity, Entity newEntity)
-        {
-            oldEntity.LoadProperty(Entity.IdProperty, newEntity.GetProperty(Entity.IdProperty));
-
-            foreach (var field in oldEntity.GetLoadedChildren())
-            {
-                var listProperty = field.Property as IListProperty;
-                if (listProperty != null)
-                {
-                    var oldChildren = field.Value as EntityList;
-                    var newChildren = newEntity.GetLazyList(listProperty) as EntityList;
-
-                    //两个集合应该是一样的数据、顺序？如果后期出现 bug，则修改此处的逻辑为查找到对应项再修改。
-                    for (int i = 0, c = oldChildren.Count; i < c; i++)
-                    {
-                        MergeIdRecur(oldChildren[i], newChildren[i]);
-                    }
-
-                    //同步组合父对象 Id
-                    oldChildren.SetParentEntity(oldEntity);
-
-                    //同步 TreePId
-                    if (oldChildren.SupportTree)
-                    {
-                        for (int i = 0, c = oldChildren.Count; i < c; i++)
-                        {
-                            var oldChild = oldChildren[i];
-                            var newChild = newChildren[i];
-                            oldChild.TreePId = newChild.TreePId;
-                        }
-                    }
-                }
-            }
-        }
-
         #endregion
     }
 }

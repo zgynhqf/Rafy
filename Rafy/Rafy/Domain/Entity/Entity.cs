@@ -368,7 +368,7 @@ namespace Rafy.Domain
                 else if (property is IRefEntityProperty)
                 {
                     bool copyEntity = (property as IRefEntityProperty).ReferenceType == ReferenceType.Parent ? cloneParentRef : cloneRef;
-                    if (copyEntity)
+                    if (copyEntity && source.GetProperty(property) != null)
                     {
                         this.CopyProperty(source, property, options);
                     }
@@ -379,12 +379,10 @@ namespace Rafy.Domain
                 }
             }
 
-            options.NotifyCloned(source, this);
-
             var supportTree = this.SupportTree;
             if (supportTree)
             {
-                this.OnTreeItemCloned(source, options, childrenRecur, grabChildren, cloneParentRef);
+                this.CloneTreeRelations(source, options, childrenRecur, grabChildren, cloneParentRef);
             }
 
             //如果 Id 值没有拷贝，那么组合子实体中的 PId 需要重新整理。
@@ -415,6 +413,8 @@ namespace Rafy.Domain
             {
                 this.PersistenceStatus = source.PersistenceStatus;
             }
+
+            options.NotifyCloned(source, this);
         }
 
         /// <summary>

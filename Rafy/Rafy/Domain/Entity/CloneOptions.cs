@@ -98,7 +98,6 @@ namespace Rafy.Domain
         public CloneOptions(CloneActions cloneActions)
         {
             this._actions = cloneActions;
-            this.Method = CloneValueMethod.SetProperty;
         }
 
         /// <summary>
@@ -107,7 +106,7 @@ namespace Rafy.Domain
         /// 
         /// <note type="note">使用设置属性的方式来拷贝值，这样可以使得冗余属性知道自己变更了。</note>
         /// </summary>
-        public CloneValueMethod Method { get; set; }
+        public CloneValueMethod Method { get; set; } = CloneValueMethod.SetProperty;
 
         #region CloneMappings
 
