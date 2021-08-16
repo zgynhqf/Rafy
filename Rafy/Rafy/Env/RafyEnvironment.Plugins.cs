@@ -364,9 +364,14 @@ namespace Rafy
             {
                 //按照插件类型名称来加载插件
                 var pluginType = Type.GetType(pluginClassOrAssembly);
-                plugin = Activator.CreateInstance(pluginType, true) as IPlugin;
+                if (pluginType != null)
+                {
+                    plugin = Activator.CreateInstance(pluginType, true) as IPlugin;
+                }
             }
-            catch
+            catch { }
+
+            if (plugin == null)
             {
                 //按照程序集名称来加载插件
                 Assembly assembly = null;
@@ -378,6 +383,7 @@ namespace Rafy
                 {
                     throw new InvalidProgramException(string.Format("无法加载配置文件中指定的插件：{0}。", pluginClassOrAssembly), ex);
                 }
+
                 plugin = CreatePluginFromAssembly(assembly);
             }
 
