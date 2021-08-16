@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Rafy.MetaModel
+namespace Rafy.MetaModel.View
 {
     public enum Direction
     {
