@@ -26,6 +26,12 @@ namespace Rafy.Domain
     /// </summary>
     public class RegisterRefArgs : PropertyMetadata<Entity>
     {
+        public RegisterRefArgs()
+        {
+            //引用实体属性的变更，不会引起实体状态的变更。
+            this.AffectStatus = false;
+        }
+
         #region Args
 
         /// <summary>

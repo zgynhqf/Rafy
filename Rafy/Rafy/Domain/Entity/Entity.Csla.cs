@@ -99,8 +99,9 @@ namespace Rafy.Domain
                         SetFlags(EntitySerializableFlags.IsDeleted, false);
                         SetFlags(EntitySerializableFlags.IsNew, true);
 
-                        //设置实体的状态为 new 时，需要重置其 Id。
-                        this.Id = this.IdProvider.GetEmptyId();
+                        //不能变更 Id。（一：实体的持久化状态变更，不应该去修改实体属性；二：可以支持设置好 Id 值的实体类插入到数据库中）
+                        ////设置实体的状态为 new 时，需要重置其 Id。
+                        //this.Id = this.IdProvider.GetEmptyId();
                         break;
                     case PersistenceStatus.Deleted:
                         //把当前对象标记为需要删除状态。

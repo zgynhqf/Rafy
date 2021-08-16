@@ -372,6 +372,7 @@ namespace Rafy.Domain
             if (refIdProperty == null) throw new ArgumentNullException("refIdProperty", "必须指定引用 Id 属性，将为其建立关联。");
 
             var defaultMeta = new PropertyMetadata<Entity>();
+            defaultMeta.AffectStatus = false;
 
             var property = new RefEntityProperty<TRefEntity>(typeof(TEntity), GetPropertyName(propertyExp), defaultMeta)
             {

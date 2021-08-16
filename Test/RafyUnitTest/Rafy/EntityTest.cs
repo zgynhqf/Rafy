@@ -110,16 +110,16 @@ namespace RafyUnitTest
             Assert.IsTrue(user.IsDirty);
         }
 
-        [TestMethod]
-        public void ET_PersistenceStatus_New_SetNewWillResetId()
-        {
-            var item = new TestUser { Id = 111 };
-            item.PersistenceStatus = PersistenceStatus.Unchanged;
+        //[TestMethod]
+        //public void ET_PersistenceStatus_New_SetNewWillResetId()
+        //{
+        //    var item = new TestUser { Id = 111 };
+        //    item.PersistenceStatus = PersistenceStatus.Unchanged;
 
-            item.PersistenceStatus = PersistenceStatus.New;
+        //    item.PersistenceStatus = PersistenceStatus.New;
 
-            Assert.AreEqual(0, item.Id, "设置实体的状态为 new 时，需要重置其 Id。");
-        }
+        //    Assert.AreEqual(0, item.Id, "设置实体的状态为 new 时，需要重置其 Id。");
+        //}
 
         [TestMethod]
         public void ET_PersistenceStatus_Delete()
@@ -206,6 +206,7 @@ namespace RafyUnitTest
                 repo.Save(user);
 
                 user.PersistenceStatus = PersistenceStatus.New;
+                user.Id = -1;
                 repo.Save(user);
                 Assert.AreNotEqual(oldId, user.Id, "重新插入此实体，需要生成新的行。");
                 Assert.AreEqual(PersistenceStatus.Unchanged, user.PersistenceStatus);
@@ -238,6 +239,7 @@ namespace RafyUnitTest
                 var oldId = users[0].Id;
 
                 users[0].PersistenceStatus = PersistenceStatus.New;
+                users[0].Id = -1;
                 repo.Save(users);
 
                 Assert.AreEqual(1, users.Count);

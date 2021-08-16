@@ -136,6 +136,8 @@ namespace Rafy.DataArchiver
             var newList = repository.NewList();
             newList.Clone(entitiesToMigrate, options);
 
+            (newList as IDirtyAware).MarkAggregate(PersistenceStatus.New);
+
             using (RdbDataProvider.RedirectDbSetting(_orignalDataDbSettingName, _backUpDbSettingName))
             {
                 this.SaveList(repository, newList);
