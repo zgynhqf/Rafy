@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.74.3889
+3.74.3890
     添加接口
         开放一些内部接口，使得外部程序集更好扩展。
         开放 CodeEVMReader。
@@ -27,6 +27,7 @@
         ListProperty.HasManyType
         Entity.Clone
         EntityList.Clone
+        TreeChildren.Clone
         Entity.SetParentEntity
         MPO.SetProperty&LoadProperty 需要比对默认值，如果是默认值，就不需要存储了。
 

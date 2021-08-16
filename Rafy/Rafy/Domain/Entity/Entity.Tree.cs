@@ -533,29 +533,41 @@ namespace Rafy.Domain
 
             internal void Clone(EntityTreeChildren source, CloneOptions options)
             {
+                /*********************** 代码块解释 *********************************
+                 * 逻辑与 EntityList.Clone 方法一致：
+                 * 复制目标集合中的所有对象。
+                 * * 根据列表中的位置来进行拷贝；
+                 * * 多余的会移除（不进入 DeletedList）；
+                 * * 不够的会生成新的对象；（如果是新构建的实体，持久化状态也完全拷贝。）
+                 * 
+                 * ********************************************************************/
+
                 _loaded = source._loaded;
                 if (_loaded)
                 {
                     var srcNodes = source._nodes;
                     if (srcNodes != null)
                     {
-                        _nodes = new List<Entity>();
-
+                        if (_nodes == null) _nodes = new List<Entity>();
                         var repo = _owner.FindRepository();
                         var entityType = _owner.GetType();
+
+                        //逐项拷贝。
+                        var nodesCount = _nodes.Count;
 
                         for (int i = 0, c = srcNodes.Count; i < c; i++)
                         {
                             var src = srcNodes[i];
 
                             Entity entity = null;
-                            if (repo != null)
+                            if (i < nodesCount)
                             {
-                                entity = repo.New();
+                                entity = _nodes[i];
                             }
                             else
                             {
-                                entity = Entity.New(entityType);
+                                entity = repo?.New() ?? Entity.New(entityType);
+                                _nodes.Add(entity);
                             }
 
                             /*修复Entitylist使用TreeChildren属性Clone时TreeIndex错误问题
@@ -571,7 +583,12 @@ namespace Rafy.Domain
                             entity.Clone(src, options);
 
                             entity._treeParent = _owner;
-                            _nodes.Add(entity);
+                        }
+
+                        //删除多余的元素。
+                        while (_nodes.Count > srcNodes.Count)
+                        {
+                            _nodes.RemoveAt(srcNodes.Count);
                         }
                     }
                 }
