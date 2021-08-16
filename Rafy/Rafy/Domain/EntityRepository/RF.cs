@@ -153,7 +153,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="dbDelegate"></param>
         /// <returns></returns>
-        public static SingleConnectionTransactionScope TransactionScope(EntityRepository dbDelegate)
+        public static SingleConnectionTransactionScope TransactionScope(IRepository dbDelegate)
         {
             return new SingleConnectionTransactionScope(RdbDataProvider.Get(dbDelegate).DbSetting);
         }
