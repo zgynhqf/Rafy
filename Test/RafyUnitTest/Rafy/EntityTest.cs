@@ -684,6 +684,35 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void ET_Property_AffectStatus_RefEntityNotAffectStatus()
+        {
+            var book = new Book
+            {
+                Id = 1,
+                BookCategoryId = 1
+            };
+            book.PersistenceStatus = PersistenceStatus.Unchanged;
+
+            book.BookCategory = new BookCategory
+            {
+                Id = 1,
+            };
+            Assert.AreEqual(PersistenceStatus.Unchanged, book.PersistenceStatus, "BookCategoryId 没有变，虽然 BookCategory 从 null 变为 cate1，但是状态也不会改变。");
+
+            book.BookCategory = new BookCategory
+            {
+                Id = 1,
+            };
+            Assert.AreEqual(PersistenceStatus.Unchanged, book.PersistenceStatus, "BookCategoryId 没有变，虽然 BookCategory 改变了对象，但是状态也不会改变。");
+
+            book.BookCategory = new BookCategory
+            {
+                Id = 2,
+            };
+            Assert.AreEqual(PersistenceStatus.Modified, book.PersistenceStatus, "BookCategoryId 改变，状态也跟着改变。");
+        }
+
+        [TestMethod]
         public void ET_Property_LazyRef()
         {
             var repo = RF.ResolveInstance<BookRepository>();
