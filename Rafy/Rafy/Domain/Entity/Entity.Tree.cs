@@ -62,6 +62,11 @@ namespace Rafy.Domain
             }
         }
 
+        //private void EnsureSupportTree()
+        //{
+        //    if (!this.SupportTree) throw new NotSupportedException("此操作需要本类支持树型操作。");
+        //}
+
         #region TreeIndex 属性
 
         /// <summary>
@@ -378,11 +383,6 @@ namespace Rafy.Domain
                     this.TreeChildren.Clone(source._treeChildren, options);
                 }
             }
-        }
-
-        private void EnsureSupportTree()
-        {
-            if (!this.SupportTree) throw new NotSupportedException("此操作需要本类支持树型操作。");
         }
 
         private void SyncTreeChildrenPId()

@@ -313,12 +313,6 @@ namespace Rafy.Domain
             return finalEntity;
         }
 
-        internal bool IsRefLoadedOrAssigned(IRefProperty refProperty)
-        {
-            var value = this.GetProperty(refProperty.RefEntityProperty);
-            return value != null;
-        }
-
         //protected void LoadRefProperty(IRefIdProperty refProperty)
         //{
         //    //暂时只是获取 Entity，以后可以使用其它方法优化此实现。
