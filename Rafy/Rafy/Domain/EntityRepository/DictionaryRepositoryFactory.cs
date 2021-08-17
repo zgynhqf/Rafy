@@ -61,27 +61,27 @@ namespace Rafy.Domain
         /// <returns></returns>
         public IRepositoryInternal Find(Type repositoryType)
         {
-            var last = this._lastRepository;
+            var last = _lastRepository;
             if (last != null && last.GetType() == repositoryType) return last;
 
             EntityRepository result = null;
 
-            if (!this._repoByType.TryGetValue(repositoryType, out result))
+            if (!_repoByType.TryGetValue(repositoryType, out result))
             {
-                lock (this._repoByType)
+                lock (_repoByType)
                 {
-                    if (!this._repoByType.TryGetValue(repositoryType, out result))
+                    if (!_repoByType.TryGetValue(repositoryType, out result))
                     {
                         var matrix = EntityMatrix.FindByRepository(repositoryType);
                         var entityType = matrix.EntityType;
                         result = this.FindByEntity(entityType) as EntityRepository;
 
-                        this._repoByType.Add(repositoryType, result);
+                        _repoByType.Add(repositoryType, result);
                     }
                 }
             }
 
-            this._lastRepository = result;
+            _lastRepository = result;
 
             return result;
         }
@@ -94,42 +94,40 @@ namespace Rafy.Domain
         /// <returns></returns>
         public IRepositoryInternal FindByEntity(Type entityType)
         {
-            var last = this._lastRepository;
+            var last = _lastRepository;
             if (last != null && last.EntityType == entityType) return last;
 
             EntityRepository result = null;
 
-            if (!this._repoByEntityType.TryGetValue(entityType, out result))
+            if (!_repoByEntityType.TryGetValue(entityType, out result))
             {
-                //只有实体才能有对应的仓库类型。
+                //只有标记了这些标签的实体才会有元数据，这样才能正确生成对应的仓库类型。
                 if (entityType.HasMarked<RootEntityAttribute>() ||
                     entityType.HasMarked<ChildEntityAttribute>())
                 {
-                    lock (this._repoByEntityType)
+                    lock (_repoByEntityType)
                     {
-                        result = this.FindOrCreateWithoutLock(entityType);
+                        if (!_repoByEntityType.TryGetValue(entityType, out result))
+                        {
+                            result = this.CreateWithExtensions(entityType);
+
+                            _repoByEntityType.Add(entityType, result);
+                        }
                     }
                 }
             }
 
-            this._lastRepository = result;
+            _lastRepository = result;
 
             return result;
         }
 
-        private EntityRepository FindOrCreateWithoutLock(Type entityType)
+        private EntityRepository CreateWithExtensions(Type entityType)
         {
-            EntityRepository result = null;
+            var result = this.DoCreate(entityType);
 
-            if (!this._repoByEntityType.TryGetValue(entityType, out result))
-            {
-                result = this.DoCreate(entityType);
-
-                //仓库完成后，需要把仓库扩展都加入到仓库中。
-                this.AddExtensions(result);
-
-                this._repoByEntityType.Add(entityType, result);
-            }
+            //仓库完成后，需要把仓库扩展都加入到仓库中。
+            this.AddExtensions(result);
 
             return result;
         }
@@ -209,7 +207,7 @@ namespace Rafy.Domain
             foreach (var baseType in baseTypes)
             {
                 List<Type> extList = null;
-                if (this._extByType.TryGetValue(baseType, out extList))
+                if (_extByType.TryGetValue(baseType, out extList))
                 {
                     foreach (var extType in extList)
                     {
@@ -229,11 +227,11 @@ namespace Rafy.Domain
         /// </summary>
         private void LoadAllExtensions()
         {
-            if (!this._extLoaded)
+            if (!_extLoaded)
             {
-                lock (this._extByType)
+                lock (_extByType)
                 {
-                    if (!this._extLoaded)
+                    if (!_extLoaded)
                     {
                         //对于所有插件中的实体仓库扩展类，都需要检测仓库扩展类。
                         var baseClass = typeof(EntityRepositoryExt);
@@ -248,10 +246,10 @@ namespace Rafy.Domain
                                     var instance = Activator.CreateInstance(type, true) as IRepositoryExt;
 
                                     List<Type> list = null;
-                                    if (!this._extByType.TryGetValue(instance.RepositoryType, out list))
+                                    if (!_extByType.TryGetValue(instance.RepositoryType, out list))
                                     {
                                         list = new List<Type>();
-                                        this._extByType.Add(instance.RepositoryType, list);
+                                        _extByType.Add(instance.RepositoryType, list);
                                     }
                                     list.Add(type);
                                 }
@@ -260,7 +258,7 @@ namespace Rafy.Domain
                     }
                 }
 
-                this._extLoaded = true;
+                _extLoaded = true;
             }
         }
 
@@ -278,7 +276,7 @@ namespace Rafy.Domain
         private object CreateInstanceProxy(Type instanceType)
         {
             var options = new ProxyGenerationOptions(RepoQueryMethodDeterminationHook.Instance);
-            var instance = _proxyGenerator.CreateClassProxy(instanceType, options, RepositoryInterceptor.Instance) ;
+            var instance = _proxyGenerator.CreateClassProxy(instanceType, options, RepositoryInterceptor.Instance);
             return instance;
         }
 

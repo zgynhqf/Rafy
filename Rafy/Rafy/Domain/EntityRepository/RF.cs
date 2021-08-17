@@ -34,7 +34,9 @@ namespace Rafy.Domain
         /// <returns></returns>
         public static EntityRepository Find(Type entityType)
         {
-            return RepositoryFactoryHost.Factory.FindByEntity(entityType) as EntityRepository;
+            var er = RepositoryFactoryHost.Factory.FindByEntity(entityType) as EntityRepository;
+            if (er == null) throw new InvalidProgramException($"无法初始化实体 {entityType} 对应的仓库，可能是其未正确添加实体标签。");
+            return er;
         }
 
         /// <summary>
@@ -66,7 +68,9 @@ namespace Rafy.Domain
         /// <returns></returns>
         public static EntityRepository ResolveInstance(Type repositoryType)
         {
-            return RepositoryFactoryHost.Factory.Find(repositoryType) as EntityRepository;
+            var er = RepositoryFactoryHost.Factory.Find(repositoryType) as EntityRepository;
+            if (er == null) throw new InvalidProgramException($"无法初始化仓库 {repositoryType}，可能是其对应的实体未正确添加实体标签。");
+            return er;
         }
 
         /// <summary>
@@ -86,13 +90,13 @@ namespace Rafy.Domain
         private class HostByRepo<TRepository>
             where TRepository : EntityRepository
         {
-            public static readonly TRepository Instance = RepositoryFactoryHost.Factory.Find(typeof(TRepository)) as TRepository;
+            public static readonly TRepository Instance = ResolveInstance(typeof(TRepository)) as TRepository;
         }
 
         private class HostByEntity<TEntity>
             where TEntity : Entity
         {
-            public static readonly EntityRepository Instance = RepositoryFactoryHost.Factory.FindByEntity(typeof(TEntity)) as EntityRepository;
+            public static readonly EntityRepository Instance = Find(typeof(TEntity));
         }
 
         #endregion
