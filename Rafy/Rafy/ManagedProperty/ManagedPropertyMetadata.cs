@@ -21,7 +21,7 @@ namespace Rafy.ManagedProperty
     /// <summary>
     /// 托管属性元数据
     /// </summary>
-    public interface IManagedPropertyMetadata
+    public interface IManagedPropertyMetadata : IExtendable
     {
         /// <summary>
         /// 默认值

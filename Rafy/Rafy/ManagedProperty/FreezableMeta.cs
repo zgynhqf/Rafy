@@ -21,7 +21,7 @@ namespace Rafy.ManagedProperty
     /// <summary>
     /// 一个可以被冻结的对象
     /// </summary>
-    public abstract class FreezableMeta
+    public abstract class FreezableMeta : Extendable
     {
         private bool _frozen;
 
@@ -60,6 +60,13 @@ namespace Rafy.ManagedProperty
         protected void CheckUnFrozen()
         {
             if (this._frozen) throw new InvalidOperationException("本对象已经被冻结，不可再改变！");
+        }
+
+        protected override void OnExtendedPropertyChanging(string property, object value)
+        {
+            this.CheckUnFrozen();
+
+            base.OnExtendedPropertyChanging(property, value);
         }
     }
 }
