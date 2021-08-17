@@ -61,7 +61,7 @@ namespace Rafy.Domain
         /// <summary>
         /// 返回当前列表是否需要保存。
         /// </summary>
-        public bool IsDirty
+        public virtual bool IsDirty
         {
             get
             {

@@ -280,7 +280,7 @@ namespace Rafy.Domain
             }
         }
 
-        private void OnItemAdding(int index, Entity item)
+        protected virtual void OnItemAdding(int index, Entity item)
         {
             if (this.SupportTree)
             {
@@ -323,7 +323,7 @@ namespace Rafy.Domain
             }
         }
 
-        private void OnItemRemoving(int index, Entity item)
+        protected virtual void OnItemRemoving(int index, Entity item)
         {
             //如果是新的对象，则不需要加入到 DeletedList 列表中。
             if (!item.IsNew)
@@ -353,12 +353,12 @@ namespace Rafy.Domain
             }
         }
 
-        private void OnItemAdded(int index, Entity item)
+        protected virtual void OnItemAdded(int index, Entity item)
         {
             this.OnTreeItemInserted(index, item);
         }
 
-        private void OnItemRemoved(int index, Entity item)
+        protected virtual void OnItemRemoved(int index, Entity item)
         {
             this.OnTreeItemRemoved(index, item);
         }
