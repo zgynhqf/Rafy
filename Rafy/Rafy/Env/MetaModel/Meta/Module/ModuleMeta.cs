@@ -271,11 +271,8 @@ namespace Rafy.MetaModel
         private Type _CustomUI;
         /// <summary>
         /// 如果该模块不是由某个类型自动生成的，则这个属性将不为空，并表示某个自定义的 UI 界面。
-        /// 
-        /// 如果是 WPF 程序，那么这个属性表示目标用户控件的全名称，
-        /// 如果是 Web 程序，则这个属性表示目标页面的地址。
         /// </summary>
-        public Type CustomUI
+        public virtual Type CustomUI
         {
             get { return this._CustomUI; }
             set { this.SetValue(ref this._CustomUI, value); }
