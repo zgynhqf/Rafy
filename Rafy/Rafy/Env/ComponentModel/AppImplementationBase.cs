@@ -87,7 +87,7 @@ namespace Rafy.ComponentModel
         protected virtual void PrepareToStartup()
         {
             RafyEnvironment.Reset();
-            CommonModel.Reset();
+            CommonModel.Instance.Reset();
             UIModel.Reset();
             WPFCommandNames.Clear();
         }

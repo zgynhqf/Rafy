@@ -59,7 +59,7 @@ namespace Rafy.Domain
 
                 result = this.SaveToPortal(component);
 
-                //如果返回的对象与传入的对象不是同一个对象，表示已经在客户端通过了 WCF 来进行传输，
+                //如果返回的对象与传入的对象不是同一个对象，表示已经通过了 WCF 来进行进行传输，
                 //这时需要把客户端对象的 Id 值与服务器对象的 Id 值统一。
                 if (component != result)
                 {

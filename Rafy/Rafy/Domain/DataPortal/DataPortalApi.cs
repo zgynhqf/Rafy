@@ -26,8 +26,19 @@ namespace Rafy.Domain.DataPortal
     /// 数据门户。
     /// 内部封装了对数据层的调用，如果是远程，则使用对应的代理来访问，这使得单机版、网络版的调用完全一致。
     /// </summary>
-    internal static class DataPortalApi
+    public static class DataPortalApi
     {
+        /// <summary>
+        /// 是否需要在客户端模式下，模拟远程调用（进行对象的复制）。
+        /// 
+        /// 由于开发人员平时会使用单机版本开发，而正式部署时，又会选用 C/S 架构。
+        /// 所以需要保证单机版本和 C/S 架构版本的模式是一样的。也就是说，在单机模式下，
+        /// 在通过门户访问时，模拟网络版，clone 出一个新的对象。
+        /// 这样，在底层 Update 更改 obj 时，不会影响上层的实体。
+        /// 而是以返回值的形式把这个被修改的实体返回给上层。
+        /// </summary>
+        public static bool FakeRemoteIfOnClient { get; set; } = true;
+
         /// <summary>
         /// 使用门户查询
         /// </summary>
@@ -100,7 +111,8 @@ namespace Rafy.Domain.DataPortal
                     RafyEnvironment.ThreadPortalCount++;
 
                     //ThreadPortalCount == 1 表示第一次进入数据门户
-                    if (RafyEnvironment.Location.IsWPFUI && RafyEnvironment.Location.ConnectDataDirectly && RafyEnvironment.ThreadPortalCount == 1)
+                    if (FakeRemoteIfOnClient &&
+                        RafyEnvironment.Location.IsWPFUI && RafyEnvironment.Location.ConnectDataDirectly && RafyEnvironment.ThreadPortalCount == 1)
                     {
                         res = ObjectCloner.Clone(obj);
                     }

@@ -16,6 +16,8 @@
         开放 CodeEVMReader。
         ManagedPropertyMetadata 从 Extendable 上继承。
         添加 P.RegisterRefId 单参数方法。
+        DataPortalApi.FakeRemoteIfOnClient 属性。
+        CommonModel.Instance。
         其它一些接口……
     删除接口
         删除 EntityRepository.FindParentPropertyInfo 接口。该接口功能与 EntityMeta.FindParentReferenceProperty 相同。

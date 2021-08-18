@@ -21,15 +21,19 @@ namespace Rafy.MetaModel
     /// <summary>
     /// WPF Web 通用的模型
     /// </summary>
-    public abstract class CommonModel
+    public  class CommonModel
     {
+        public static CommonModel Instance = new CommonModel();
+
+        protected CommonModel() { }
+
         private static EntityMetaRepository _entities;
 
         private static ModulesContainer _modules;
 
         static CommonModel()
         {
-            Reset();
+            Instance.Reset();
         }
 
         /// <summary>
@@ -58,7 +62,7 @@ namespace Rafy.MetaModel
             }
         }
 
-        internal static void Reset()
+        public virtual void Reset()
         {
             _entities = new EntityMetaRepository();
             _entities.FreezeItems();
