@@ -815,15 +815,31 @@ namespace Rafy.Domain.ORM
                     for (int i = 0, c = columns.Count; i < c; i++)
                     {
                         var column = columns[i];
-                        _columnIndeces[i] = reader.GetOrdinal(column.Name);
+                        try
+                        {
+                            _columnIndeces[i] = reader.GetOrdinal(column.Name);
+                        }
+                        catch (IndexOutOfRangeException)
+                        {
+                            //如果 Reader 中没有这一列时，这里会抛出异常。
+                            if (ORMSettings.ErrorIfColumnNotFoundInSql)
+                            {
+                                throw new InvalidProgramException($"Sql 查询中没有给出必须的列：{column.Table}.{column.Name}，无法读取并转换实体。");
+                            }
+                            _columnIndeces[i] = -1;
+                        }
                     }
                 }
 
                 for (int i = 0, c = columns.Count; i < c; i++)
                 {
                     var column = columns[i];
-                    object val = reader[_columnIndeces[i]];
-                    column.WritePropertyValue(entity, val);
+                    var index = _columnIndeces[i];
+                    if (index >= 0)
+                    {
+                        object val = reader[index];
+                        column.WritePropertyValue(entity, val);
+                    }
                 }
             }
         }
