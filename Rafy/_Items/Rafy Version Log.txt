@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.75.3899
+3.75.3900
     添加接口
         开放一些内部接口，使得外部程序集更好扩展。
         开放 CodeEVMReader。
@@ -28,6 +28,7 @@
         P.RegisterRef 注册引用实体属性时，这些属性默认是不影响实体的状态的。
         设置实体的状态为 new 时，不应该重置其 Id。
         RF.ResolveInstance 不能返回 null；
+        intKeyProvider.IsAvailable.
     重构
         EntityRepository.Save 使用 Clone 方法来进行值拷贝。
         Entity.Clone

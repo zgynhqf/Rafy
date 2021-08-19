@@ -38,7 +38,7 @@ namespace Rafy.Domain
 
         public bool IsAvailable(object id)
         {
-            return id != null && Convert.ToInt32(id) > 0;
+            return id != null && Convert.ToInt32(id) != 0;
         }
 
         public object NewLocalValue()
