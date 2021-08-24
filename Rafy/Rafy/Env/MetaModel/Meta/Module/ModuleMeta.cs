@@ -104,10 +104,44 @@ namespace Rafy.MetaModel
         /// <summary>
         /// 这个模块使用 AutoUI 功能的话，这个属性表示其显示的实体类型，否则返回 null。
         /// </summary>
-        public Type EntityType
+        public virtual Type EntityType
         {
-            get { return this._EntityType; }
-            set { this.SetValue(ref this._EntityType, value); }
+            get
+            {
+                if (_EntityType == null && !string.IsNullOrWhiteSpace(_EntityTypeName))
+                {
+                    _EntityType = this.LoadEntityTypeByName();
+                }
+                return this._EntityType;
+            }
+            set
+            {
+                this.SetEntityType(value, value?.AssemblyQualifiedName);
+            }
+        }
+
+        private string _EntityTypeName;
+        /// <summary>
+        /// 这个模块对应的主实体的全名称
+        /// </summary>
+        public string EntityTypeName
+        {
+            get { return this._EntityTypeName; }
+            set
+            {
+                this.SetEntityType(null, value);
+            }
+        }
+
+        protected virtual Type LoadEntityTypeByName()
+        {
+            return Type.GetType(_EntityTypeName);
+        }
+
+        protected void SetEntityType(Type entityType, string entityTypeName)
+        {
+            this.SetValue(ref this._EntityType, entityType);
+            this.SetValue(ref this._EntityTypeName, entityTypeName);
         }
 
         private Type _TemplateType;

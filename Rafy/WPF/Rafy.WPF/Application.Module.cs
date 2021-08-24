@@ -142,20 +142,20 @@ namespace Rafy.WPF
             return this.OpenModuleOrAlert(module);
         }
 
-        /// <summary>
-        /// 打开指定类型的模块
-        /// 
-        /// 如果没有权限打开该模块，则弹出提示框。
-        /// </summary>
-        /// <param name="entityType"></param>
-        public WorkspaceWindow OpenModuleOrAlert(Type entityType)
-        {
-            //在列表中获取指定类型的元数据
-            var module = CommonModel.Modules.FindModule(entityType) as WPFModuleMeta;
-            if (module == null) throw new ArgumentNullException("没有找到对应的模块：" + entityType.FullName);
+        ///// <summary>
+        ///// 打开指定类型的模块
+        ///// 
+        ///// 如果没有权限打开该模块，则弹出提示框。
+        ///// </summary>
+        ///// <param name="entityType"></param>
+        //public WorkspaceWindow OpenModuleOrAlert(Type entityType)
+        //{
+        //    //在列表中获取指定类型的元数据
+        //    var module = CommonModel.Modules.FindModule(entityType) as WPFModuleMeta;
+        //    if (module == null) throw new ArgumentNullException("没有找到对应的模块：" + entityType.FullName);
 
-            return this.OpenModuleOrAlert(module);
-        }
+        //    return this.OpenModuleOrAlert(module);
+        //}
 
         /// <summary>
         /// 打开某个模块。

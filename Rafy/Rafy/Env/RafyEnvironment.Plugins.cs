@@ -109,12 +109,25 @@ namespace Rafy
         /// <summary>
         /// 在运行时，根据需要加载某个程序集对应的插件。
         /// 该插件需要在配置文件中提前进行配置。
+        /// 该方法会防止重入。
         /// </summary>
         /// <param name="assembly"></param>
-        public static void LoadPlugin(Assembly assembly)
+        public static IPlugin LoadPlugin(Assembly assembly)
+        {
+            return LoadPlugin(assembly.GetName().Name);
+        }
+
+        /// <summary>
+        /// 在运行时，根据需要加载某个程序集对应的插件。
+        /// 该插件需要在配置文件中提前进行配置。
+        /// 该方法会防止重入。
+        /// </summary>
+        /// <param name="assemblyName"></param>
+        public static IPlugin LoadPlugin(string assemblyName)
         {
             //已经加载过的插件，不再加载。
-            if (_allPlugins.Find(assembly) != null) return;
+            var exists = _allPlugins.Find(assemblyName);
+            if (exists != null) return exists;
 
             PluginType pluginType = PluginType.Domain;
             IPluginConfig pluginFound = null;
@@ -126,7 +139,7 @@ namespace Rafy
                 var pluginSection = configPlugins[i];
                 if (pluginSection.LoadType == PluginLoadType.AtStartup) continue;
 
-                if (IsPluginOfAssembly(pluginSection.Plugin, assembly))
+                if (IsPluginOfAssembly(pluginSection, assemblyName))
                 {
                     pluginFound = pluginSection;
                     break;
@@ -142,7 +155,7 @@ namespace Rafy
                     var pluginSection = configPlugins[i];
                     if (pluginSection.LoadType == PluginLoadType.AtStartup) continue;
 
-                    if (IsPluginOfAssembly(pluginSection.Plugin, assembly))
+                    if (IsPluginOfAssembly(pluginSection, assemblyName))
                     {
                         pluginFound = pluginSection;
                         pluginType = PluginType.UI;
@@ -151,9 +164,9 @@ namespace Rafy
                 }
             }
 
-            if (pluginFound == null) throw new InvalidProgramException($"插件 {assembly.GetName().Name } 需要在配置文件中提前进行配置。");
+            if (pluginFound == null) throw new InvalidProgramException($"插件 { assemblyName } 需要在配置文件中提前进行配置。");
 
-            LoadRuntimePlugin(pluginFound.Plugin, pluginType, false);
+            return LoadRuntimePlugin(pluginFound, pluginType);
         }
 
         /// <summary>
@@ -248,7 +261,7 @@ namespace Rafy
                 var pluginSection = configPlugins[i];
                 if (pluginSection.LoadType == PluginLoadType.AtStartup) continue;
 
-                LoadRuntimePlugin(pluginSection.Plugin, PluginType.Domain, true);
+                LoadRuntimePlugin(pluginSection, PluginType.Domain);
             }
 
             //ui plugins.
@@ -260,7 +273,7 @@ namespace Rafy
                     var pluginSection = configPlugins[i];
                     if (pluginSection.LoadType == PluginLoadType.AtStartup) continue;
 
-                    LoadRuntimePlugin(pluginSection.Plugin, PluginType.UI, true);
+                    LoadRuntimePlugin(pluginSection, PluginType.UI);
                 }
             }
         }
@@ -268,15 +281,15 @@ namespace Rafy
         /// <summary>
         /// 在运行时，按需加载指定的插件
         /// </summary>
-        /// <param name="pluginClass">要加载的插件类</param>
+        /// <param name="pluginConfig">要加载的插件</param>
         /// <param name="pluginType">该插件的类型</param>
-        /// <param name="checkExistence">是否检查存在性？</param>
-        private static void LoadRuntimePlugin(string pluginClass, PluginType pluginType, bool checkExistence)
+        private static IPlugin LoadRuntimePlugin(IPluginConfig pluginConfig, PluginType pluginType)
         {
-            var plugin = CreatePlugin(pluginClass);
+            var plugin = CreatePlugin(pluginConfig);
 
             //已经加载过的插件，不再加载。
-            if (checkExistence && _allPlugins.Find(plugin.Assembly) != null) return;
+            var existsPlugin = _allPlugins.Find(plugin.Assembly);
+            if (existsPlugin != null) return existsPlugin;
 
             if (pluginType == PluginType.Domain)
             {
@@ -310,6 +323,8 @@ namespace Rafy
 
             //加载完成后，再初始化。
             plugin.Initialize(_appCore);
+
+            return plugin;
         }
 
         private static IPlugin LoadRafyPlugin(string assebmlyName)
@@ -343,19 +358,16 @@ namespace Rafy
                 var pluginSection = sortedPlugins[i];
                 if (pluginSection.LoadType == PluginLoadType.AsRequired && EnablePluginLoadAsRequired) continue;
 
-                IPlugin plugin = CreatePlugin(pluginSection.Plugin);
+                IPlugin plugin = CreatePlugin(pluginSection);
 
                 pluginList.Add(plugin);
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="pluginClassOrAssembly">可以只填写程序集名称，也可以写出插件类型的全名称。</param>
-        /// <returns></returns>
-        private static IPlugin CreatePlugin(string pluginClassOrAssembly)
+        private static IPlugin CreatePlugin(IPluginConfig pluginConfig)
         {
+            string pluginClassOrAssembly = pluginConfig.Plugin;//可以只填写程序集名称，也可以写出插件类型的全名称。
+
             if (string.IsNullOrEmpty(pluginClassOrAssembly)) throw new ArgumentNullException(nameof(pluginClassOrAssembly));
 
             IPlugin plugin = null;
@@ -393,11 +405,12 @@ namespace Rafy
         /// <summary>
         /// 通过兼容的算法，来匹配配置的插件名是否与对应的程序集匹配。
         /// </summary>
-        /// <param name="pluginClassOrAssembly"></param>
-        /// <param name="assembly"></param>
+        /// <param name="pluginConfig"></param>
+        /// <param name="assemblyName"></param>
         /// <returns></returns>
-        private static bool IsPluginOfAssembly(string pluginClassOrAssembly, Assembly assembly)
+        private static bool IsPluginOfAssembly(IPluginConfig pluginConfig, string assemblyName)
         {
+            string pluginClassOrAssembly = pluginConfig.Plugin;//可以只填写程序集名称，也可以写出插件类型的全名称。
             if (string.IsNullOrEmpty(pluginClassOrAssembly)) throw new ArgumentNullException(nameof(pluginClassOrAssembly));
 
             //Version 后面的内部需要截断，只需要前面的部分。
@@ -409,18 +422,18 @@ namespace Rafy
             pluginClassOrAssembly = pluginClassOrAssembly.Trim();
 
             //截取出程序集的名称。（如果是两个部分，则前一部分是类名，后一部分是程序集名；否则全是程序集名。）
-            string assemblyName = null;
+            string pluginAssemblyName = null;
             var commaIndex = pluginClassOrAssembly.IndexOf(',');
             if (commaIndex > 0)
             {
-                assemblyName = pluginClassOrAssembly.Substring(commaIndex + 1).Trim();
+                pluginAssemblyName = pluginClassOrAssembly.Substring(commaIndex + 1).Trim();
             }
             else
             {
-                assemblyName = pluginClassOrAssembly;
+                pluginAssemblyName = pluginClassOrAssembly;
             }
 
-            return assembly.GetName().Name == assemblyName;
+            return assemblyName == pluginAssemblyName;
         }
 
         private static void CheckDuplucatePlugins()
