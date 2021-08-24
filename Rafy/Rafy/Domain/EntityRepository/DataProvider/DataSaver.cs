@@ -280,7 +280,7 @@ namespace Rafy.Domain
                         if (!isTreeRootList || child.TreePId == null)
                         {
                             //由于自关联外键没有级联删除，所以节点必须完整加载后，再全部加入到列表中。
-                            TreeHelper.FullAddIntoList(child, mergedDeletedList);
+                            TreeComponentHelper.FullAddIntoList(child, mergedDeletedList);
                         }
                     }
                 }
@@ -304,7 +304,7 @@ namespace Rafy.Domain
                             //与列表一样，必须检测删除的节点，当前是不是还属于 node。
                             if (node.Id.Equals(deleted.TreePId))
                             {
-                                TreeHelper.FullAddIntoList(deleted, mergedDeletedList);
+                                TreeComponentHelper.FullAddIntoList(deleted, mergedDeletedList);
                             }
                         }
                     }

@@ -191,7 +191,7 @@ namespace RafyUnitTest
             using (RepositoryFacade.TransactionScope(repo))
             {
                 RBAC_InitRBAC();
-                var groupList = TreeHelper.ConvertToList<Group>(repo.GetAll());
+                var groupList = TreeComponentHelper.ConvertToList<Group>(repo.GetAll());
                 Assert.IsTrue(groupList.Count == 2);
             }
         }

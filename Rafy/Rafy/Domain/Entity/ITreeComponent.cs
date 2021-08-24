@@ -39,14 +39,16 @@ namespace Rafy.Domain
         /// 递归对于整个树中的每一个节点都调用 action。
         /// </summary>
         /// <param name="action">对每一个节点调用的方法。方法如何返回 true，则表示停止循环，返回该节点。</param>
+        /// <param name="includeDeletedItems">遍历时，是否同时遍历被删除的节点。</param>
         /// <returns>第一个被调用 action 后返回 true 的节点。</returns>
-        Entity EachNode(Func<Entity, bool> action);
+        Entity EachNode(Func<Entity, bool> action, bool includeDeletedItems = false);
 
         /// <summary>
         /// 统计当前树中已经加载的节点的个数。
         /// </summary>
+        /// <param name="includeDeletedItems">遍历时，是否同时遍历被删除的节点。</param>
         /// <returns></returns>
-        int CountNodes();
+        int CountNodes(bool includeDeletedItems = false);
 
         /// <summary>
         /// 递归加载所有树节点。

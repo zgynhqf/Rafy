@@ -76,7 +76,7 @@ namespace Rafy.Domain
                     //在加载数据时，自动索引功能都不可用。
                     this.AutoTreeIndexEnabled = false;
 
-                    TreeHelper.LoadTreeData(this, srcList, this.GetRepository().TreeIndexOption);
+                    TreeComponentHelper.LoadTreeData(this, srcList, this.GetRepository().TreeIndexOption);
                 }
                 finally
                 {
@@ -150,14 +150,23 @@ namespace Rafy.Domain
         /// <returns>
         /// 第一个被调用 action 后返回 true 的节点。
         /// </returns>
-        public Entity EachNode(Func<Entity, bool> action)
+        public Entity EachNode(Func<Entity, bool> action, bool includeDeletedItems = false)
         {
             if (this.SupportTree)
             {
                 for (int i = 0, c = this.Count; i < c; i++)
                 {
-                    var foundItem = (this[i] as ITreeComponent).EachNode(action);
+                    var foundItem = (this[i] as ITreeComponent).EachNode(action, includeDeletedItems);
                     if (foundItem != null) return foundItem;
+                }
+
+                if (includeDeletedItems && _deletedList != null)
+                {
+                    for (int i = 0, c = _deletedList.Count; i < c; i++)
+                    {
+                        var foundItem = (_deletedList[i] as ITreeComponent).EachNode(action, includeDeletedItems);
+                        if (foundItem != null) return foundItem;
+                    }
                 }
             }
             else
@@ -212,9 +221,9 @@ namespace Rafy.Domain
             }
         }
 
-        int ITreeComponent.CountNodes()
+        int ITreeComponent.CountNodes(bool includeDeletedItems = false)
         {
-            return TreeHelper.CountNodes(this);
+            return TreeComponentHelper.CountNodes(this, includeDeletedItems);
         }
 
         void ITreeComponent.LoadAllNodes()

@@ -91,7 +91,7 @@ namespace Rafy.Domain.ORM
                                 }
                             }
                         }
-                        TreeHelper.MarkTreeFullLoaded(newList);
+                        TreeComponentHelper.MarkTreeFullLoaded(newList);
                         newList.ResetTreeIndex();
                         repository.Save(newList);
                     }

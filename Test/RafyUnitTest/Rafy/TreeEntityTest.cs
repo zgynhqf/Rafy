@@ -2125,6 +2125,47 @@ namespace RafyUnitTest
             }
         }
 
+        [TestMethod]
+        public void TET_Struc_TreeComponent_EachNode_IncludeDeletedItems()
+        {
+            var repo = RF.ResolveInstance<FolderRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var list = new FolderList
+                {
+                    new Folder
+                    {
+                        TreeChildren =
+                        {
+                            new Folder
+                            {
+                                TreeChildren =
+                                {
+                                    new Folder
+                                    {
+                                        TreeChildren =
+                                        {
+                                            new Folder(),
+                                        }
+                                    },
+                                    new Folder(),
+                                }
+                            },
+                            new Folder(),
+                        }
+                    },
+                };
+                list.MarkSaved();
+
+                var itemToRemove = list[0].TreeChildren[0];
+                list[0].TreeChildren.Remove(itemToRemove);
+
+                Assert.IsTrue(list.IsDirty);
+                Assert.AreEqual(2, (list as ITreeComponent).CountNodes());
+                Assert.AreEqual(6, (list as ITreeComponent).CountNodes(true));
+            }
+        }
+
         private static void TestTreeComponent(ITreeComponent component, int countBefore, int countAfter)
         {
             //只查询一级节点，统计该节点的个数应该正确。同时，它的 IsFullLoaded 返回假。

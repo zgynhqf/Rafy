@@ -62,7 +62,7 @@ namespace Rafy.Domain.ORM
             DataProvider.EnsureStore();
             var items = DataProvider._memoryRows.Values.Select(v => DataProvider.FromRow(v));
             var list = this.CreateList(items);
-            TreeHelper.MarkTreeFullLoaded(list);
+            TreeComponentHelper.MarkTreeFullLoaded(list);
 
             return list;
         }

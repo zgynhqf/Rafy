@@ -45,7 +45,7 @@ namespace Rafy.Domain
         internal bool IsTreeLeafSure
         {
             get { return this.GetFlags(EntitySerializableFlags.isTreeLeaf); }
-            set { this.SetFlags(EntitySerializableFlags.isTreeLeaf, true); }
+            set { this.SetFlags(EntitySerializableFlags.isTreeLeaf, value); }
         }
 
         /// <summary>
@@ -433,19 +433,19 @@ namespace Rafy.Domain
             }
         }
 
-        Entity ITreeComponent.EachNode(Func<Entity, bool> action)
+        Entity ITreeComponent.EachNode(Func<Entity, bool> action, bool includeDeletedItems = false)
         {
             var found = action(this);
             if (found) return this;
 
-            if (_treeChildren != null) return _treeChildren.EachNode(action);
+            if (_treeChildren != null) return _treeChildren.EachNode(action, includeDeletedItems);
 
             return null;
         }
 
-        int ITreeComponent.CountNodes()
+        int ITreeComponent.CountNodes(bool includeDeletedItems = false)
         {
-            return TreeHelper.CountNodes(this);
+            return TreeComponentHelper.CountNodes(this, includeDeletedItems);
         }
 
         ITreeComponent ITreeComponent.TreeComponentParent
@@ -965,19 +965,18 @@ namespace Rafy.Domain
             /// 统计当前树中已经加载的节点的个数。
             /// </summary>
             /// <returns></returns>
-            public int CountNodes()
+            public int CountNodes(bool includeDeletedItems = false)
             {
-                if (_nodes == null) { return 0; }
-
-                return TreeHelper.CountNodes(this);
+                return TreeComponentHelper.CountNodes(this, includeDeletedItems);
             }
 
             /// <summary>
             /// 递归对于整个树中的每一个节点都调用 action。
             /// </summary>
             /// <param name="action">对每一个节点调用的方法。方法如何返回 true，则表示停止循环，返回该节点。</param>
+            /// <param name="includeDeletedItems"></param>
             /// <returns>第一个被调用 action 后返回 true 的节点。</returns>
-            public Entity EachNode(Func<Entity, bool> action)
+            public Entity EachNode(Func<Entity, bool> action, bool includeDeletedItems = false)
             {
                 if (_nodes != null)
                 {
@@ -987,6 +986,15 @@ namespace Rafy.Domain
                         if (found != null) return found;
                     }
                 }
+                if (includeDeletedItems && _deleted != null)
+                {
+                    for (int i = 0, c = _deleted.Count; i < c; i++)
+                    {
+                        var found = TravelDepthFirst(_deleted[i], action);
+                        if (found != null) return found;
+                    }
+                }
+
                 return null;
             }
 

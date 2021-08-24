@@ -21,7 +21,10 @@ using Rafy.MetaModel;
 
 namespace Rafy.Domain
 {
-    public static class TreeHelper
+    /// <summary>
+    /// ITreeComponent 的帮助类
+    /// </summary>
+    internal static class TreeComponentHelper
     {
         /// <summary>
         /// 树形EntityList转化为全部节点集合
@@ -39,14 +42,14 @@ namespace Rafy.Domain
             return list;
         }
 
-        internal static int CountNodes(ITreeComponent component)
+        internal static int CountNodes(ITreeComponent component, bool includeDeletedItems = false)
         {
             int count = 0;
             component.EachNode(e =>
             {
                 count++;
                 return false;
-            });
+            }, includeDeletedItems);
             return count;
         }
 
