@@ -1339,7 +1339,7 @@ namespace Rafy.Domain
                     item.TreeParentData = null;
                 }
 
-                if (_nodes.Count == 0)
+                if (_nodes == null || _nodes.Count == 0)
                 {
                     _nodes = null;
                     _owner.IsTreeLeafSure = true;
@@ -1367,6 +1367,15 @@ namespace Rafy.Domain
                     else
                     {
                         _deleted.AddRange(_nodes);
+                    }
+
+                    foreach (ITreeComponent node in _nodes)
+                    {
+                        node.EachNode(e =>
+                        {
+                            e.PersistenceStatus = PersistenceStatus.Deleted;
+                            return false;
+                        });
                     }
 
                     _nodes = null;

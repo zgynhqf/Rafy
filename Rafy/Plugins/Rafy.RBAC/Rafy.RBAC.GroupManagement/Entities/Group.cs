@@ -209,7 +209,7 @@ namespace Rafy.RBAC.GroupManagement
             groupList.EachNode(item =>
             {
                 newGroupList.AddRange(
-                    TreeHelper.ConvertToList<Group>(this.GetGroupAndLowerByTreeParentIndex(item.TreeIndex))
+                    TreeComponentHelper.ConvertToList<Group>(this.GetGroupAndLowerByTreeParentIndex(item.TreeIndex))
                         .Select(p => p.Id));
                 return false;
             });

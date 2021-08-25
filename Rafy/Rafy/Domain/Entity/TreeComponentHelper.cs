@@ -24,7 +24,7 @@ namespace Rafy.Domain
     /// <summary>
     /// ITreeComponent 的帮助类
     /// </summary>
-    internal static class TreeComponentHelper
+    public static class TreeComponentHelper
     {
         /// <summary>
         /// 树形EntityList转化为全部节点集合

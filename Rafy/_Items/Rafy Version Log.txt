@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.75.3905
+3.75.3906
     添加接口
         开放一些内部接口，使得外部程序集更好扩展。
         开放 CodeEVMReader。
@@ -27,6 +27,7 @@
     BUG修复
         Entity.NotifyLoaded 需要设置 _repositoryLoaded 的值；
         Entity.IsTreeLeafSure 属性值实现有误。
+        设置 Entity.TreeParent = null 时，应该也将其加入到 DeletedList 中去。
     内部修改
         P.RegisterRef 注册引用实体属性时，这些属性默认是不影响实体的状态的。
         设置实体的状态为 new 时，不应该重置其 Id。

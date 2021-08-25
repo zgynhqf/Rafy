@@ -116,6 +116,7 @@ namespace Rafy.Domain
 
         /// <summary>
         /// 数据门户调用本接口来保存数据。
+        /// 另外，父实体在其保存之后，也会调用子实体的 DataSaver 的这个方法来保存子实体。
         /// </summary>
         /// <param name="component"></param>
         internal protected virtual void SubmitComposition(IDomainComponent component)
@@ -189,8 +190,6 @@ namespace Rafy.Domain
         /// <param name="markSaved"></param>
         private void SubmitTree(Entity tree, bool markSaved)
         {
-            //先保存所有添加、变更的节点。
-            //这里的 markSaved 传入的应该是 false，否则会把待删除列表中的元素清空。
             if (!tree.IsDeleted)
             {
                 //如果要提交的树节点是一个根节点，而且它的索引还没有生成，则需要主动为其生成索引。
@@ -212,6 +211,8 @@ namespace Rafy.Domain
                     treeChildren.ResetTreeIndex();
                 }
 
+                //先保存所有添加、变更的节点。
+                //这里的 markSaved 传入的应该是 false，否则会把待删除列表中的元素清空。
                 this.SubmitItem(tree, false, true);
 
                 //然后再保存所有删除的节点。
@@ -301,11 +302,7 @@ namespace Rafy.Domain
                         for (int i = 0, c = tcDeleted.Count; i < c; i++)
                         {
                             var deleted = tcDeleted[i];
-                            //与列表一样，必须检测删除的节点，当前是不是还属于 node。
-                            if (node.Id.Equals(deleted.TreePId))
-                            {
-                                TreeComponentHelper.FullAddIntoList(deleted, mergedDeletedList);
-                            }
+                            TreeComponentHelper.FullAddIntoList(deleted, mergedDeletedList);
                         }
                     }
                 }
@@ -380,6 +377,7 @@ namespace Rafy.Domain
             };
 
             //提交更改。
+            //无其它拦截点时，会进入 DataSaver.Submit(SubmitArgs e) 方法。
             _submitter.Submit(args);
 
             //保存完毕，修改实体的状态
@@ -603,7 +601,7 @@ namespace Rafy.Domain
         }
 
         /// <summary>
-        /// 删除所有的子节点。
+        /// 删除 entity.TreeChildren 集合中所有的子节点。
         /// 
         /// 子类重写此方法来实现新的删除逻辑。
         /// </summary>

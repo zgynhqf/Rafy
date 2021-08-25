@@ -268,7 +268,7 @@ namespace RafyUnitTest
         /// 在 TreeChildren 中删除的节点，可以被保存。
         /// </summary>
         [TestMethod]
-        public void TET_Save_Remove_ByTreeChildren()
+        public void TET_Save_Remove_ByTreeChildren_Clear()
         {
             var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
@@ -286,12 +286,74 @@ namespace RafyUnitTest
 
                 var list = repo.GetAll();
                 var root = list[0];
-                Assert.IsTrue(root.TreeChildren.Count == 1);
-                root.TreeChildren.Clear();
-                repo.Save(root);
+                Assert.AreEqual(1, root.TreeChildren.Count);
 
-                var list2 = repo.GetAll();
-                Assert.IsTrue(root.TreeChildren.Count == 0);
+                var c = root.TreeChildren[0];
+                root.TreeChildren.Clear();
+                Assert.IsTrue(c.IsDeleted);
+
+                repo.Save(root);
+                var count = repo.CountAll();
+                Assert.AreEqual(1, count);
+            }
+        }
+
+        [TestMethod]
+        public void TET_Save_Remove_ByTreeChildren_Remove()
+        {
+            var repo = RF.ResolveInstance<FolderRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                repo.Save(new FolderList
+                {
+                    new Folder
+                    {
+                        TreeChildren =
+                        {
+                            new Folder()
+                        }
+                    }
+                });
+
+                var list = repo.GetAll();
+                var root = list[0];
+                Assert.AreEqual(1, root.TreeChildren.Count);
+
+                var c = root.TreeChildren[0];
+                root.TreeChildren.RemoveAt(0);
+                Assert.IsTrue(c.IsDeleted);
+
+                repo.Save(root);
+                var count = repo.CountAll();
+                Assert.AreEqual(1, count);
+            }
+        }
+
+        [TestMethod]
+        public void TET_Save_Remove_ByTreeParent_SetNull()
+        {
+            var repo = RF.ResolveInstance<FolderRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                repo.Save(new FolderList
+                {
+                    new Folder
+                    {
+                        TreeChildren =
+                        {
+                            new Folder()
+                        }
+                    }
+                });
+
+                var list = repo.GetAll();
+                var child = list[0].TreeChildren[0];
+                child.TreeParent = null;
+                Assert.IsTrue(child.IsDeleted);
+
+                repo.Save(list);
+                var count = repo.CountAll();
+                Assert.AreEqual(1, count);
             }
         }
 
@@ -430,6 +492,40 @@ namespace RafyUnitTest
                 Assert.IsTrue(list.Count == 1);
                 Assert.IsTrue(list[0].Id.Equals(b.Id),
 @"虽然这时 b 在 a 的子节点删除列表中，但是由于后面把 b 又加入到了树中。所以保存后，也不应该把 b 删除。");
+            }
+        }
+
+        /// <summary>
+        /// B 是 A 的子节点，当把 B 升级后，再把 A 删除，应该可以保存成功。
+        /// </summary>
+        [TestMethod]
+        public void TET_Save_Combine_LevelUp()
+        {
+            var repo = RF.ResolveInstance<FolderRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                repo.Save(new FolderList
+                {
+                    new Folder
+                    {
+                        TreeChildren =
+                        {
+                            new Folder()
+                        }
+                    }
+                });
+
+                var list = repo.GetAll();
+                var a = list[0];
+                var b = a.TreeChildren[0];
+                a.TreeChildren.Remove(b);
+
+                list.Add(b);
+                repo.Save(list);
+
+                list = repo.GetAll();
+                Assert.IsTrue(list.Count == 2);
+                Assert.IsTrue(list.Concrete().Any(b2 => b2.Id.Equals(b.Id)));
             }
         }
 

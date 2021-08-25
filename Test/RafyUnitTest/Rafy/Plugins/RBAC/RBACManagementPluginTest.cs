@@ -146,7 +146,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void RBAC_DataPermissionCu_rrentGroupAndLowerDataPermisssion()
+        public void RBAC_DataPermission_CurrentGroupAndLowerDataPermisssion()
         {
             var repo = RepositoryFacade.ResolveInstance<TestDataPermissionRepository>();
             using (RepositoryFacade.TransactionScope(repo))
