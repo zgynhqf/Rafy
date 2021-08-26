@@ -24,6 +24,11 @@ namespace Rafy.MetaModel
     public interface IValidationDeclarer
     {
         /// <summary>
+        /// 正在验证的实体的类型
+        /// </summary>
+        Type EntityType { get; }
+
+        /// <summary>
         /// 获取当前已经声明的规则的个数。
         /// </summary>
         int RulesCount { get; }

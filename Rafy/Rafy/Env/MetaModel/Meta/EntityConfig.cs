@@ -35,6 +35,7 @@ namespace Rafy.MetaModel
 
         /// <summary>
         /// 本实体配置对应的实体类
+        /// 如果这个配置是配置大部分实体的基类，那么这个属性就是基类的类型。
         /// </summary>
         protected internal abstract Type EntityType { get; }
     }

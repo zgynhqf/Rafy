@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.75.3908
+3.75.3909
     添加接口
         开放一些内部接口，使得外部程序集更好扩展。
         开放 CodeEVMReader。
@@ -21,6 +21,7 @@
         ORMSettings.ErrorIfColumnNotFoundInSql。
         添加 ModuleMeta.EntityTypeName。（解决使用 EntityType 造成 .NET 加载 Assembly 的行为）
         添加 ITreeComponent.EachNode(action, includeDeletedItems)；
+        IValidationDeclarer.EntityType
         其它一些接口……
     删除接口
         删除 EntityRepository.FindParentPropertyInfo 接口。该接口功能与 EntityMeta.FindParentReferenceProperty 相同。
