@@ -62,12 +62,6 @@ namespace Rafy
         private static PluginCollection _allPlugins;
 
         /// <summary>
-        /// 是否支持插件的按需加载。
-        /// 默认是 false。
-        /// </summary>
-        public static bool EnablePluginLoadAsRequired { get; set; }
-
-        /// <summary>
         /// 当前程序所有可运行的领域实体插件。
         /// 在 <see cref="AppImplementationBase.InitEnvironment"/> 中通过代码加入本集合中的插件，都会在启动时全部加载。
         /// </summary>
@@ -129,44 +123,10 @@ namespace Rafy
             var exists = _allPlugins.Find(assemblyName);
             if (exists != null) return exists;
 
-            PluginType pluginType = PluginType.Domain;
-            IPluginConfig pluginFound = null;
-
-            //domain plugins.
-            IPluginConfig[] configPlugins = GetDomainPluginsConfig();
-            for (int i = 0, c = configPlugins.Length; i < c; i++)
-            {
-                var pluginSection = configPlugins[i];
-                if (pluginSection.LoadType == PluginLoadType.AtStartup) continue;
-
-                if (IsPluginOfAssembly(pluginSection, assemblyName))
-                {
-                    pluginFound = pluginSection;
-                    break;
-                }
-            }
-
-            //ui plugins.
-            if (pluginFound == null && _location.IsUI)
-            {
-                configPlugins = GetUIPluginsConfig();
-                for (int i = 0, c = configPlugins.Length; i < c; i++)
-                {
-                    var pluginSection = configPlugins[i];
-                    if (pluginSection.LoadType == PluginLoadType.AtStartup) continue;
-
-                    if (IsPluginOfAssembly(pluginSection, assemblyName))
-                    {
-                        pluginFound = pluginSection;
-                        pluginType = PluginType.UI;
-                        break;
-                    }
-                }
-            }
-
+            var pluginFound = FindPluginConfigItem(assemblyName);
             if (pluginFound == null) throw new InvalidProgramException($"插件 { assemblyName } 需要在配置文件中提前进行配置。");
 
-            return LoadRuntimePlugin(pluginFound, pluginType);
+            return LoadRuntimePlugin(pluginFound);
         }
 
         /// <summary>
@@ -254,27 +214,13 @@ namespace Rafy
         private static void LoadAllRuntimePlugins()
         {
             //所有插件（其中，DomainPlugins 在列表的前面，UIPlugins 在列表的后面。）
-            //domain plugins.
-            IPluginConfig[] configPlugins = GetDomainPluginsConfig();
+            var configPlugins = GetAllPluginsConfig();
             for (int i = 0, c = configPlugins.Length; i < c; i++)
             {
                 var pluginSection = configPlugins[i];
                 if (pluginSection.LoadType == PluginLoadType.AtStartup) continue;
 
-                LoadRuntimePlugin(pluginSection, PluginType.Domain);
-            }
-
-            //ui plugins.
-            if (_location.IsUI)
-            {
-                configPlugins = GetUIPluginsConfig();
-                for (int i = 0, c = configPlugins.Length; i < c; i++)
-                {
-                    var pluginSection = configPlugins[i];
-                    if (pluginSection.LoadType == PluginLoadType.AtStartup) continue;
-
-                    LoadRuntimePlugin(pluginSection, PluginType.UI);
-                }
+                LoadRuntimePlugin(pluginSection);
             }
         }
 
@@ -282,8 +228,7 @@ namespace Rafy
         /// 在运行时，按需加载指定的插件
         /// </summary>
         /// <param name="pluginConfig">要加载的插件</param>
-        /// <param name="pluginType">该插件的类型</param>
-        private static IPlugin LoadRuntimePlugin(IPluginConfig pluginConfig, PluginType pluginType)
+        private static IPlugin LoadRuntimePlugin(PluginConfigItem pluginConfig)
         {
             var plugin = CreatePlugin(pluginConfig);
 
@@ -291,7 +236,10 @@ namespace Rafy
             var existsPlugin = _allPlugins.Find(plugin.Assembly);
             if (existsPlugin != null) return existsPlugin;
 
-            if (pluginType == PluginType.Domain)
+            //先得加载这个程序集引用的其它程序集
+            LoadReferences(plugin);
+
+            if (pluginConfig.PluginType == PluginType.Domain)
             {
                 _domainPlugins.Unlock();
                 _domainPlugins.Add(plugin);
@@ -317,14 +265,32 @@ namespace Rafy
                 handler(null, new PluginEventArgs
                 {
                     Plugin = plugin,
-                    PluginType = pluginType
+                    PluginType = pluginConfig.PluginType
                 });
             }
 
             //加载完成后，再初始化。
             plugin.Initialize(_appCore);
+            Logger.LogInfo($"插件 {pluginConfig.Plugin} 加载完成!");
 
             return plugin;
+        }
+
+        /// <summary>
+        /// 先得加载某个插件的所有
+        /// </summary>
+        /// <param name="plugin"></param>
+        private static void LoadReferences(IPlugin plugin)
+        {
+            var references = plugin.Assembly.GetReferencedAssemblies();
+            foreach (var reference in references)
+            {
+                var pluginRef = GetAllPluginsConfig().FirstOrDefault(c => IsPluginOfAssembly(c, reference.Name));
+                if (pluginRef != null)
+                {
+                    LoadRuntimePlugin(pluginRef);
+                }
+            }
         }
 
         private static IPlugin LoadRafyPlugin(string assebmlyName)
@@ -356,7 +322,7 @@ namespace Rafy
             for (int i = 0, c = sortedPlugins.Length; i < c; i++)
             {
                 var pluginSection = sortedPlugins[i];
-                if (pluginSection.LoadType == PluginLoadType.AsRequired && EnablePluginLoadAsRequired) continue;
+                if (pluginSection.LoadType == PluginLoadType.AsRequired) continue;
 
                 IPlugin plugin = CreatePlugin(pluginSection);
 
@@ -466,31 +432,86 @@ namespace Rafy
             public PluginType PluginType { get; internal set; }
         }
 
-        private static IPluginConfig[] GetDomainPluginsConfig()
+        private static PluginConfigItem[] _domainPluginConfigs, _uiPluginConfigs, _allPluginConfigs;
+
+        private static PluginConfigItem[] GetDomainPluginsConfig()
         {
+            if (_domainPluginConfigs == null)
+            {
+                IPluginConfig[] configs = null;
 #if NET45
-            return Configuration.Section.DomainPlugins.OfType<PluginElement>().ToArray();
+                configs = Configuration.Section.DomainPlugins.OfType<PluginElement>().ToArray();
 #endif
 #if NS2
-            return Configuration.Section.DomainPlugins;
+                configs = Configuration.Section.DomainPlugins;
 #endif
+                _domainPluginConfigs = configs.Select(i => new PluginConfigItem
+                {
+                    Plugin = i.Plugin,
+                    LoadType = i.LoadType,
+                    PluginType = PluginType.Domain
+                }).ToArray();
+            }
+            return _domainPluginConfigs;
         }
 
-        private static IPluginConfig[] GetUIPluginsConfig()
+        private static PluginConfigItem[] GetUIPluginsConfig()
         {
+            if (_uiPluginConfigs == null)
+            {
+                IPluginConfig[] configs = null;
 #if NET45
-            return Configuration.Section.UIPlugins.OfType<PluginElement>().ToArray();
+                configs = Configuration.Section.UIPlugins.OfType<PluginElement>().ToArray();
 #endif
 #if NS2
-            return Configuration.Section.UIPlugins;
+                configs = Configuration.Section.UIPlugins;
 #endif
+                _uiPluginConfigs = configs.Select(i => new PluginConfigItem
+                {
+                    Plugin = i.Plugin,
+                    LoadType = i.LoadType,
+                    PluginType = PluginType.UI
+                }).ToArray();
+            }
+            return _uiPluginConfigs;
         }
 
-        //private static void EnsureAppMetaPrepared()
-        //{
-        //    if (_appCore == null) throw new InvalidProgramException("应用程序还没有启动！");
-        //    if (_appCore.Phase < AppPhase.MetaPrepared) throw new InvalidProgramException("应用程序还没有进入运行时！");
-        //}
+        private static PluginConfigItem[] GetAllPluginsConfig()
+        {
+            if (_allPluginConfigs == null)
+            {
+                _allPluginConfigs = GetDomainPluginsConfig();
+                if (_location.IsUI)
+                {
+                    _allPluginConfigs = _allPluginConfigs.Union(GetUIPluginsConfig()).ToArray();
+                }
+            }
+            return _allPluginConfigs;
+        }
+
+        private static PluginConfigItem FindPluginConfigItem(string assemblyName)
+        {
+            var configPlugins = GetAllPluginsConfig();
+            for (int i = 0, c = configPlugins.Length; i < c; i++)
+            {
+                var pluginSection = configPlugins[i];
+                if (pluginSection.LoadType == PluginLoadType.AtStartup) continue;
+
+                if (IsPluginOfAssembly(pluginSection, assemblyName))
+                {
+                    return pluginSection;
+                }
+            }
+
+            return null;
+        }
+
+        private class PluginConfigItem : IPluginConfig
+        {
+            public string Plugin { get; set; }
+            public PluginLoadType LoadType { get; set; }
+            public PluginType PluginType { get; set; }
+        }
 
         #endregion
 

@@ -83,7 +83,7 @@ namespace Rafy
 
             lock (this)
             {
-                File.AppendAllText(this.ExceptionLogFileName, $@"
+                File.AppendAllText(this.InfoLogFileName, $@"
 
 -----------------------------------------------------------------
 Time：{ DateTime.Now }

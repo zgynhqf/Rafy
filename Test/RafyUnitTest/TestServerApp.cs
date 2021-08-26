@@ -61,7 +61,6 @@ namespace RafyUnitTest
             DbSettingNames.DbMigrationHistory = "Test_DbMigrationHistory";
 
             RafyEnvironment.Provider.IsDebuggingEnabled = true;
-            RafyEnvironment.EnablePluginLoadAsRequired = true;
 
             //故意把下面两个插件的位置放反。测试 Config 中配置插件的顺序是否成功。
             RafyEnvironment.DomainPlugins.Add(new EntityPhantomPlugin());
