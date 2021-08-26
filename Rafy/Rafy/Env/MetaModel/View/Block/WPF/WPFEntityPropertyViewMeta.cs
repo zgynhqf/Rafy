@@ -176,7 +176,7 @@ namespace Rafy.MetaModel.View
         {
             var properties = new List<IManagedProperty>(2);
 
-            if (this.IsReference)
+            if (this.IsReferenceEntity)
             {
                 if (this.DisplayDelegate != null)
                 {

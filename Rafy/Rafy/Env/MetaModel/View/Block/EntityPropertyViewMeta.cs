@@ -46,9 +46,9 @@ namespace Rafy.MetaModel.View
         }
 
         /// <summary>
-        /// 是否为“引用属性”
+        /// 是否为“引用实体属性”
         /// </summary>
-        public bool IsReference
+        internal bool IsReferenceEntity
         {
             get { return this.PropertyMeta.ReferenceInfo != null; }
         }
@@ -66,7 +66,7 @@ namespace Rafy.MetaModel.View
             {
                 this._selectionViewMeta = value;
 
-                if (value != null && this.IsReference)
+                if (value != null && this.IsReferenceEntity)
                 {
                     value.RefInfo = this.PropertyMeta.ReferenceInfo;
                 }
@@ -141,7 +141,7 @@ namespace Rafy.MetaModel.View
 
         private bool IsChildReference()
         {
-            return this.IsReference && this.PropertyMeta.ReferenceInfo.Type == ReferenceType.Child;
+            return this.IsReferenceEntity && this.PropertyMeta.ReferenceInfo.Type == ReferenceType.Child;
         }
 
         #region 查询方法

@@ -96,7 +96,7 @@ namespace Rafy.MetaModel.View
             item.Readonly(mp.IsReadOnly || mp == EntityConvention.Property_TreeIndex);
 
             //如果是引用实体的属性，创建 SelectionViewMeta
-            if (item.IsReference)
+            if (item.IsReferenceEntity)
             {
                 item.SelectionViewMeta = new SelectionViewMeta();
             }

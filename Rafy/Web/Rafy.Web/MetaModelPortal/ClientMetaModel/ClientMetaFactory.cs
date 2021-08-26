@@ -108,7 +108,7 @@ namespace Rafy.Web.ClientMetaModel
                     if (groupBy != null)
                     {
                         var n = groupBy.Name;
-                        if (groupBy.IsReference)
+                        if (groupBy.IsReferenceEntity)
                         {
                             n = EntityModelGenerator.LabeledRefProperty(n);
                         }
@@ -151,7 +151,7 @@ namespace Rafy.Web.ClientMetaModel
                     }
 
                     //对于引用属性需要分开来特殊处理
-                    if (!property.IsReference)
+                    if (!property.IsReferenceEntity)
                     {
                         column.dataIndex = property.Name;
 
@@ -192,7 +192,7 @@ namespace Rafy.Web.ClientMetaModel
                     FieldConfig field = null;
 
                     //对于引用属性需要分开来特殊处理
-                    if (!property.IsReference)
+                    if (!property.IsReferenceEntity)
                     {
                         field = ServerTypeHelper.GetTypeEditor(property);
                         field.name = property.Name;

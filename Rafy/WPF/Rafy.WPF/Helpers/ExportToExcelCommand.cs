@@ -181,7 +181,7 @@ namespace Rafy.WPF
 
             try
             {
-                if (property.IsReference)
+                if (property.IsReferenceEntity)
                 {
                     var displayPath = property.DisplayPath();
                     var value = ObjectHelper.GetPropertyValue(this._currentRow, displayPath);

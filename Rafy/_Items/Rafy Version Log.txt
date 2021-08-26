@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.75.3906
+3.75.3907
     添加接口
         开放一些内部接口，使得外部程序集更好扩展。
         开放 CodeEVMReader。
@@ -24,6 +24,7 @@
         其它一些接口……
     删除接口
         删除 EntityRepository.FindParentPropertyInfo 接口。该接口功能与 EntityMeta.FindParentReferenceProperty 相同。
+        删除 EntityPropertyViewMeta.IsReference 属性。
     BUG修复
         Entity.NotifyLoaded 需要设置 _repositoryLoaded 的值；
         Entity.IsTreeLeafSure 属性值实现有误。
