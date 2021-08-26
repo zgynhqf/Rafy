@@ -36,13 +36,13 @@ namespace Rafy
         /// </summary>
         public FileLogger()
         {
-            this.InfoLogFileName = ConfigurationHelper.GetAppSettingOrDefault($"Rafy:FileLogger:InfoLogFileName", 
+            this.InfoLogFileName = ConfigurationHelper.GetAppSettingOrDefault($"Rafy:FileLogger:InfoLogFileName",
                 ConfigurationHelper.GetAppSettingOrDefault($"Rafy.FileLogger.InfoLogFileName", "ApplicationInfo.log")
                 );
-            this.ExceptionLogFileName = ConfigurationHelper.GetAppSettingOrDefault($"Rafy:FileLogger:ExceptionLogFileName", 
+            this.ExceptionLogFileName = ConfigurationHelper.GetAppSettingOrDefault($"Rafy:FileLogger:ExceptionLogFileName",
                 ConfigurationHelper.GetAppSettingOrDefault($"Rafy.FileLogger.ExceptionLogFileName", "Exception.log")
                 );
-            this.SqlTraceFileName = ConfigurationHelper.GetAppSettingOrDefault($"Rafy:FileLogger:SqlTraceFileName", 
+            this.SqlTraceFileName = ConfigurationHelper.GetAppSettingOrDefault($"Rafy:FileLogger:SqlTraceFileName",
                 ConfigurationHelper.GetAppSettingOrDefault($"Rafy.FileLogger.SqlTraceFileName", string.Empty)
                 );
         }
@@ -83,12 +83,13 @@ namespace Rafy
 
             lock (this)
             {
-                File.AppendAllText(this.InfoLogFileName, $@"
-
------------------------------------------------------------------
+                File.AppendAllText(this.InfoLogFileName,
+$@"-----------------------------------------------------------------
 Time：{ DateTime.Now }
 Thread Id:[ { Thread.CurrentThread.ManagedThreadId } ]
-Message：{ message }");
+Message：{ message }
+
+");
             }
         }
 
@@ -104,21 +105,19 @@ Message：{ message }");
             var stackTrace = e.StackTrace;//需要记录完整的堆栈信息。
             e = e.GetBaseException();
 
-            string message = string.Format(@"
-===================================================================
-======== {0} =========
-===================================================================
-记录时间：{4}
-线程ID:[ {3} ]
-错误描述：{1}
-
-{2}
-
-", title, e.Message, stackTrace, Thread.CurrentThread.ManagedThreadId, DateTime.Now);
-
             lock (this)
             {
-                File.AppendAllText(this.ExceptionLogFileName, message);
+                File.AppendAllText(this.ExceptionLogFileName, 
+$@"===================================================================
+======== {title} =========
+===================================================================
+记录时间：{DateTime.Now}
+线程ID:[ {Thread.CurrentThread.ManagedThreadId} ]
+错误描述：{e.Message}
+StockTrace：
+{stackTrace}
+
+");
             }
         }
 
