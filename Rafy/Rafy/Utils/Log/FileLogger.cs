@@ -37,10 +37,10 @@ namespace Rafy
         public FileLogger()
         {
             this.InfoLogFileName = ConfigurationHelper.GetAppSettingOrDefault($"Rafy:FileLogger:InfoLogFileName", 
-                ConfigurationHelper.GetAppSettingOrDefault($"Rafy.FileLogger.InfoLogFileName", "ApplicationInfoLog.txt")
+                ConfigurationHelper.GetAppSettingOrDefault($"Rafy.FileLogger.InfoLogFileName", "ApplicationInfo.log")
                 );
             this.ExceptionLogFileName = ConfigurationHelper.GetAppSettingOrDefault($"Rafy:FileLogger:ExceptionLogFileName", 
-                ConfigurationHelper.GetAppSettingOrDefault($"Rafy.FileLogger.ExceptionLogFileName", "ExceptionLog.txt")
+                ConfigurationHelper.GetAppSettingOrDefault($"Rafy.FileLogger.ExceptionLogFileName", "Exception.log")
                 );
             this.SqlTraceFileName = ConfigurationHelper.GetAppSettingOrDefault($"Rafy:FileLogger:SqlTraceFileName", 
                 ConfigurationHelper.GetAppSettingOrDefault($"Rafy.FileLogger.SqlTraceFileName", string.Empty)

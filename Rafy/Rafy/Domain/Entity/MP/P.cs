@@ -540,6 +540,7 @@ namespace Rafy.Domain
         /// <typeparam name="TEntityList"></typeparam>
         /// <param name="propertyExp"></param>
         /// <param name="meta"></param>
+        /// <param name="hasManyType"></param>
         /// <returns></returns>
         public static ListProperty<TEntityList> RegisterList<TEntityList>(Expression<Func<TEntity, TEntityList>> propertyExp, ListPropertyMeta meta, HasManyType hasManyType)
             where TEntityList : EntityList
@@ -599,6 +600,7 @@ namespace Rafy.Domain
         /// <param name="propertyName">Name of the property.</param>
         /// <param name="declareType">Type of the declare.</param>
         /// <param name="meta">The meta.</param>
+        /// <param name="hasManyType"></param>
         /// <returns></returns>
         public static ListProperty<TEntityList> RegisterListExtension<TEntityList>(string propertyName, Type declareType, ListPropertyMeta meta, HasManyType hasManyType)
             where TEntityList : EntityList

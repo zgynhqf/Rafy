@@ -277,7 +277,7 @@ namespace Rafy
         }
 
         /// <summary>
-        /// 先得加载某个插件的所有
+        /// 按需加载某个插件时，先得加载某个插件的所有依赖的其它插件。
         /// </summary>
         /// <param name="plugin"></param>
         private static void LoadReferences(IPlugin plugin)

@@ -433,7 +433,7 @@ namespace Rafy.Domain
             }
         }
 
-        Entity ITreeComponent.EachNode(Func<Entity, bool> action, bool includeDeletedItems = false)
+        Entity ITreeComponent.EachNode(Func<Entity, bool> action, bool includeDeletedItems)
         {
             var found = action(this);
             if (found) return this;
@@ -443,7 +443,7 @@ namespace Rafy.Domain
             return null;
         }
 
-        int ITreeComponent.CountNodes(bool includeDeletedItems = false)
+        int ITreeComponent.CountNodes(bool includeDeletedItems)
         {
             return TreeComponentHelper.CountNodes(this, includeDeletedItems);
         }

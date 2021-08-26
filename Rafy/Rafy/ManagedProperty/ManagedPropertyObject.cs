@@ -356,6 +356,7 @@ namespace Rafy.ManagedProperty
         /// </summary>
         /// <param name="property"></param>
         /// <param name="value"></param>
+        /// <param name="defaultValue"></param>
         /// <returns></returns>
         private static bool NeedReset(IManagedProperty property, object value, object defaultValue)
         {

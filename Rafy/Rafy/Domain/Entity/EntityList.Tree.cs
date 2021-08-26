@@ -147,6 +147,7 @@ namespace Rafy.Domain
         /// 否则，只是简单地遍历整个集合。
         /// </summary>
         /// <param name="action">对每一个节点调用的方法。方法如何返回 true，则表示停止循环，返回该节点。</param>
+        /// <param name="includeDeletedItems"></param>
         /// <returns>
         /// 第一个被调用 action 后返回 true 的节点。
         /// </returns>
@@ -221,7 +222,7 @@ namespace Rafy.Domain
             }
         }
 
-        int ITreeComponent.CountNodes(bool includeDeletedItems = false)
+        int ITreeComponent.CountNodes(bool includeDeletedItems)
         {
             return TreeComponentHelper.CountNodes(this, includeDeletedItems);
         }
