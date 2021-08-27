@@ -20,6 +20,7 @@ using System.Text;
 using Rafy;
 using Rafy.Domain.ORM;
 using Rafy.ManagedProperty;
+using Rafy.MetaModel.Attributes;
 
 namespace Rafy.Domain
 {
@@ -29,6 +30,7 @@ namespace Rafy.Domain
     /// 如果不使用这个类做基类的查询条件类，也可以在 WPF 下运行正常。但是无法在 Web 下运行。
     /// </summary>
     [Serializable]
+    [EntityKeyType(KeyTypeName = "System.Object")]
     public abstract class Criteria : Entity, ILoadOptionsCriteria
     {
         private static IKeyProvider KeyProviderField = KeyProviders.Get(typeof(object));

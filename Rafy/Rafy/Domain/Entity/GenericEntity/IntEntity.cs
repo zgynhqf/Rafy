@@ -18,12 +18,14 @@ using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Text;
 using Rafy.ManagedProperty;
+using Rafy.MetaModel.Attributes;
 
 namespace Rafy.Domain
 {
     /// <summary>
     /// 以 Int 作为主键的实体基类。
     /// </summary>
+    [EntityKeyType(KeyTypeName = "System.Int32")]
     public abstract class IntEntity : Entity<int>
     {
         #region 构造函数

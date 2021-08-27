@@ -11,6 +11,7 @@
  * 
 *******************************************************/
 
+using Rafy.MetaModel.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,7 @@ namespace Rafy.Domain
     /// <summary>
     /// 以 Int64 作为主键的实体基类。
     /// </summary>
+    [EntityKeyType(KeyTypeName = "System.Long")]
     public abstract class LongEntity : Entity<long>
     {
         #region 构造函数

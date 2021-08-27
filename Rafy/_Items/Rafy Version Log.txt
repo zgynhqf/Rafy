@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.75.3912
+3.75.3913
     添加接口
         开放一些内部接口，使得外部程序集更好扩展。
         开放 CodeEVMReader。
@@ -36,6 +36,7 @@
         RF.ResolveInstance 不能返回 null；
         intKeyProvider.IsAvailable.
         按需加载某个插件时，先应该加载其引用的所有其它插件。
+        entityMeta.IdType 的设置，使用 EntityKeyTypeAttribute 实现，而不是使用一个新实体来实现。否则会因为开发者编写的实体的构造器出问题，导致元数据无法创建成功。
     重构
         EntityRepository.Save 使用 Clone 方法来进行值拷贝。
         Entity.Clone

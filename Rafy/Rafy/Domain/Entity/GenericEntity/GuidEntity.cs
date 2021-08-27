@@ -18,12 +18,14 @@ using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Text;
 using Rafy.ManagedProperty;
+using Rafy.MetaModel.Attributes;
 
 namespace Rafy.Domain
 {
     /// <summary>
     /// 以 Guid 作为主键的实体基类。
     /// </summary>
+    [EntityKeyType(KeyTypeName = "System.Guid")]
     public abstract class GuidEntity : Entity<Guid>
     {
         #region 构造函数
