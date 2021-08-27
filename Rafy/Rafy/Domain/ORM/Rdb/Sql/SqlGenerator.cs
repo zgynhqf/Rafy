@@ -137,18 +137,23 @@ namespace Rafy.Domain.ORM
 
         protected override SqlLiteral VisitSqlLiteral(SqlLiteral sqlLiteral)
         {
-            if (sqlLiteral.Parameters != null && sqlLiteral.Parameters.Length > 0)
+            var parameters = sqlLiteral.Parameters;
+            if (parameters != null && parameters.Length > 0)
             {
-                sqlLiteral.FormattedSql = Regex.Replace(sqlLiteral.FormattedSql, @"\{(?<index>\d+)\}", m =>
+                var sql = Regex.Replace(sqlLiteral.FormattedSql, @"\{(?<index>\d+)\}", m =>
                 {
                     var index = Convert.ToInt32(m.Groups["index"].Value);
-                    var value = sqlLiteral.Parameters[index];
+                    var value = parameters[index];
                     index = _sql.Parameters.Add(value);
                     return "{" + index + "}";
                 });
+                _sql.Append(sql);
+            }
+            else
+            {
+                _sql.Append(sqlLiteral.FormattedSql);
             }
 
-            _sql.Append(sqlLiteral.FormattedSql);
             return sqlLiteral;
         }
 
