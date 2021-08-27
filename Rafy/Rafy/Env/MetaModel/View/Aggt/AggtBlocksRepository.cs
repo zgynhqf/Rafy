@@ -70,7 +70,7 @@ namespace Rafy.MetaModel.View
         /// </summary>
         /// <param name="entityType"></param>
         /// <returns></returns>
-        public AggtBlocks GetDefaultBlocks(Type entityType)
+        public virtual AggtBlocks GetDefaultBlocks(Type entityType)
         {
             //默认模板使用代码结构生成
             var template = new CodeBlocksTemplate
