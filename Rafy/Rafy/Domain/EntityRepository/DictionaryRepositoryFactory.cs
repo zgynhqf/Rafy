@@ -139,6 +139,8 @@ namespace Rafy.Domain
         /// <returns></returns>
         private EntityRepository DoCreate(Type entityType)
         {
+            EntityRepository repo = null;
+
             //先尝试在约定中寻找实体类型自己定义的仓库类型。
             var metrix = EntityMatrix.FindByEntity(entityType);
             var repoType = metrix.RepositoryType;
@@ -146,7 +148,7 @@ namespace Rafy.Domain
             {
                 if (repoType.IsAbstract) throw new InvalidProgramException(repoType.FullName + " 仓库类型是抽象的，无法创建。");
 
-                var repo = this.CreateInstanceProxy(repoType) as EntityRepository;
+                repo = this.CreateInstanceProxy(repoType) as EntityRepository;
                 //EntityRepository repo;
                 //if (RafyEnvironment.Location.ConnectDataDirectly || repoType.IsSubclassOf(typeof(MemoryEntityRepository)))
                 //{
@@ -161,20 +163,19 @@ namespace Rafy.Domain
                 //{
                 //    repo = _proxyGenerator.CreateClassProxy(repoType, RepositoryInterceptor.Instance) as EntityRepository;
                 //}
-
-                var repoDataProvider = DataProviderComposer.CreateDataProvider(repoType);
-
-                repo.InitDataProvider(repoDataProvider);
-                repoDataProvider.InitRepository(repo);
-
-                return repo;
+            }
+            else
+            {
+                //如果上面在约定中没有找到，则直接生成一个默认的实体仓库。
+                repo = this.CreateDefaultRepository(entityType);
             }
 
-            throw new InvalidProgramException(entityType.FullName + " 类型没有对应的仓库，创建仓库失败！");
+            var repoDataProvider = DataProviderComposer.CreateDataProvider(repoType);
 
-            //实体类必须编写对应的 EntityRepository 类型，不再支持生成默认类型。
-            ////如果上面在约定中没有找到，则直接生成一个默认的实体仓库。
-            //return this.CreateDefaultRepository(entityType);
+            repo.InitDataProvider(repoDataProvider);
+            repoDataProvider.InitRepository(repo);
+
+            return repo;
         }
 
         #region RepositoryExtension
@@ -321,19 +322,22 @@ namespace Rafy.Domain
 
         #region 生成默认Repository类（暂不使用）
 
-        ///// <summary>
-        ///// 如果上面在约定中没有找到（开发者没有编写仓库类型），则直接生成一个默认的实体仓库。
-        ///// </summary>
-        ///// <param name="entityType"></param>
-        ///// <returns></returns>
-        //private EntityRepository CreateDefaultRepository(Type entityType)
-        //{
-        //    var dynamicType = this.GenerateDefaultRepositoryType(entityType);
+        /// <summary>
+        /// 如果上面在约定中没有找到（开发者没有编写仓库类型），则直接生成一个默认的实体仓库。
+        /// </summary>
+        /// <param name="entityType"></param>
+        /// <returns></returns>
+        protected virtual EntityRepository CreateDefaultRepository(Type entityType)
+        {
+            //实体类必须编写对应的 EntityRepository 类型，不再支持生成默认类型。
+            throw new InvalidProgramException(entityType.FullName + " 类型没有对应的仓库，创建仓库失败！");
 
-        //    var result = Activator.CreateInstance(dynamicType) as EntityRepository;
-        //    //result.RealEntityType = entityType;
-        //    return result;
-        //}
+            //var dynamicType = this.GenerateDefaultRepositoryType(entityType);
+
+            //var result = Activator.CreateInstance(dynamicType) as EntityRepository;
+            ////result.RealEntityType = entityType;
+            //return result;
+        }
 
         ///// <summary>
         ///// 为实体类型生成一个默认的实体类。
