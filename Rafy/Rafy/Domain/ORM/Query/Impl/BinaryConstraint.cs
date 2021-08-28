@@ -29,7 +29,7 @@ namespace Rafy.Domain.ORM.Query.Impl
             }
             set
             {
-                base.Left = value as SqlConstraint;
+                base.Left = value as ISqlConstraint;
             }
         }
 
@@ -53,7 +53,7 @@ namespace Rafy.Domain.ORM.Query.Impl
             }
             set
             {
-                base.Right = value as SqlConstraint;
+                base.Right = value as ISqlConstraint;
             }
         }
 
