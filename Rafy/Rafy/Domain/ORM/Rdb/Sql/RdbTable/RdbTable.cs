@@ -490,14 +490,18 @@ namespace Rafy.Domain.ORM
             {
                 //加载所有不是 LOB 的列。
                 var allColumns = (query.From.FindTable(_repository) as TableSource).LoadAllColumns();
-                var columns = allColumns.Where(n => (n as ColumnNode).DbColumn.Property.Category != PropertyCategory.LOB);
+                var columns = allColumns.Where(n => n.Property.Category != PropertyCategory.LOB);
 
-                query.Selection = QueryFactory.Instance.AutoSelectionColumns(columns);
+                var array = new AutoSelectionColumns();
+                array.Items = new List<IQueryNode>(columns);
+                query.Selection = array;
                 return true;
             }
 
             return false;
         }
+
+        private class AutoSelectionColumns : ArrayNode { }
 
         /// <summary>
         /// 使用 Sql 进行查询。

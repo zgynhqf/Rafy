@@ -32,7 +32,7 @@ namespace Rafy.Domain.ORM.Query
         /// <summary>
         /// 本属性对应一个实体的托管属性
         /// </summary>
-        IManagedProperty Property { get; set; }
+        IProperty Property { get; set; }
 
         /// <summary>
         /// 本属性在查询结果中使用的别名。

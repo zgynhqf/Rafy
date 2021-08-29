@@ -46,13 +46,11 @@ namespace Rafy.Domain.ORM.Query.Impl
             }
         }
 
-        public IManagedProperty Property { get; set; }
+        public IProperty Property { get; set; }
 
         QueryNodeType IQueryNode.NodeType
         {
             get { return QueryNodeType.Column; }
         }
-
-        internal IRdbColumnInfo DbColumn;
     }
 }

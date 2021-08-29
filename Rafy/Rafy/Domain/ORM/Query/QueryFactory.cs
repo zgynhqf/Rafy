@@ -130,20 +130,6 @@ namespace Rafy.Domain.ORM.Query
         }
 
         /// <summary>
-        /// 构造一个数组节点。
-        /// </summary>
-        /// <param name="nodes">所有数组中的项。</param>
-        /// <returns></returns>
-        internal IArray AutoSelectionColumns(IEnumerable<IQueryNode> nodes)
-        {
-            IArray array = new AutoSelectionColumns();
-
-            array.Items = new List<IQueryNode>(nodes);
-
-            return array;
-        }
-
-        /// <summary>
         /// 构造一个 SelectAll 节点。
         /// </summary>
         /// <param name="table">如果本属性为空，表示选择所有数据源的所有属性；否则表示选择指定数据源的所有属性。</param>

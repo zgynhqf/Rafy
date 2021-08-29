@@ -42,6 +42,4 @@ namespace Rafy.Domain.ORM.Query.Impl
             }
         }
     }
-
-    class AutoSelectionColumns : ArrayNode { }
 }

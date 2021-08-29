@@ -21,7 +21,6 @@ namespace Rafy.Domain.ORM
     /// 数据表列
     /// </summary>
     internal interface IRdbColumnInfo
-
     {
         /// <summary>
         /// 对应的列的元数据。
