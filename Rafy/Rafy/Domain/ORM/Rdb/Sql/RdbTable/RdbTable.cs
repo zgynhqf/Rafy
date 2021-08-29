@@ -293,7 +293,7 @@ namespace Rafy.Domain.ORM
             sql.Write(" WHERE ");
 
             var generator = this.CreateSqlGenerator();
-            generator.Generate(where as SqlNode);
+            generator.Generate(where as ISqlNode);
             var whereSql = generator.Sql;
             sql.Write(whereSql.ToString());
 
@@ -444,13 +444,13 @@ namespace Rafy.Domain.ORM
         {
             var query = args.Query;
 
-            var autoSelection = AutoSelectionForLOB(query);
+            var readDataType = AutoSelection(query);
 
             var generator = this.CreateSqlGenerator();
             QueryFactory.Instance.Generate(generator, query);
             var sql = generator.Sql;
 
-            this.QueryDataReader(dba, args, autoSelection ? ReadDataType.ByIndex : ReadDataType.ByName, sql);
+            this.QueryDataReader(dba, args, readDataType, sql);
         }
 
         /// <summary>
@@ -482,26 +482,23 @@ namespace Rafy.Domain.ORM
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        protected bool AutoSelectionForLOB(IQuery query)
+        protected ReadDataType AutoSelection(IQuery query)
         {
-            if (query.Selection is AutoSelectionColumns) return true;
-
             if (query.Selection == null && !query.IsCounting && _hasLOB)
             {
-                //加载所有不是 LOB 的列。
-                var allColumns = (query.From.FindTable(_repository) as TableSource).LoadAllColumns();
-                var columns = allColumns.Where(n => n.Property.Category != PropertyCategory.LOB);
+                var table = query.From.FindTable(_repository) as TableSource;
+                if (table != null)
+                {
+                    var columns = table.LoadAllColumnsExceptLOB();
 
-                var array = new AutoSelectionColumns();
-                array.Items = new List<IQueryNode>(columns);
-                query.Selection = array;
-                return true;
+                    query.Selection = QueryFactory.Instance.Array(columns);
+
+                    return ReadDataType.ByIndex;
+                }
             }
 
-            return false;
+            return ReadDataType.ByName;
         }
-
-        private class AutoSelectionColumns : ArrayNode { }
 
         /// <summary>
         /// 使用 Sql 进行查询。

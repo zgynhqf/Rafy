@@ -674,19 +674,19 @@ namespace RafyUnitTest
                     //数据库结构
                     var database = context.DatabaseMetaReader.Read();
                     var table = database.FindTable("TestingTable");
-                    Assert.IsTrue(table.Columns.Count == 2);
+                    Assert.AreEqual(2, table.Columns.Count);
                     var pk = table.FindPrimaryColumn();
                     Assert.IsTrue(pk.Name.EqualsIgnoreCase("Id"));
-                    Assert.IsTrue(pk.DbType == DbType.Int32);
+                    Assert.AreEqual(DbType.Int32, pk.DbType);
 
                     //数据库数据
                     using (var db = DbAccesserFactory.Create(context.DbSetting))
                     {
                         var rows = db.QueryDataTable("select * from TestingTable");
-                        Assert.IsTrue(rows.Rows.Count == 2);
+                        Assert.AreEqual(2, rows.Rows.Count);
                     }
                     var repo = RF.Find<TestUser>();
-                    Assert.IsTrue(repo.CountAll() == 10);
+                    Assert.AreEqual(10, repo.CountAll());
                 }
                 finally
                 {
@@ -696,7 +696,7 @@ namespace RafyUnitTest
                         context.RollbackAll(RollbackAction.DeleteHistory);
 
                         var database = context.DatabaseMetaReader.Read();
-                        Assert.IsTrue(database.FindTable("TestingTable") == null);
+                        Assert.IsNull(database.FindTable("TestingTable"));
                     }
                     else
                     {

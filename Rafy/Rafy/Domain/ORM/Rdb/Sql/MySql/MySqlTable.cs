@@ -38,7 +38,7 @@ namespace Rafy.Domain.ORM.MySql
             {
                 var generatedSql = this.GenerateInsertSQL(false);
                 return $@"{generatedSql};
-SELECT @@IDENTITY;";
+SELECT @@IDENTITY";
             });
         }
 

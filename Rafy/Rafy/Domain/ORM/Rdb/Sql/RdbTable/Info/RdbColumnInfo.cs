@@ -17,11 +17,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Rafy.DbMigration;
+using Rafy.Domain.ORM.Query;
+using Rafy.Domain.ORM.SqlTree;
 using Rafy.MetaModel;
 using Rafy.Reflection;
 
 namespace Rafy.Domain.ORM
 {
+    /// <summary>
+    /// 实现 ISqlSelectionColumn 接口，是为了在大量生成列时，直接使用本类的对象，而不再生成新的对象，这样可以大量减少无用对象的生成。
+    /// </summary>
     class RdbColumnInfo : IRdbColumnInfo
     {
         internal RdbColumnInfo(
@@ -50,17 +55,29 @@ namespace Rafy.Domain.ORM
 
         public DbType DbType { get; private set; }
 
+        public IProperty Property { get; private set; }
+
         public bool IsIdentity => this.Meta.IsIdentity;
 
         public bool IsPrimaryKey => this.Meta.IsPrimaryKey;
 
         public bool HasIndex => this.Meta.HasIndex;
 
-        public IProperty Property { get; private set; }
+        public IHasName Owner => this.Table;
 
-        IRdbTableInfo IRdbColumnInfo.Table
-        {
-            get { return this.Table; }
-        }
+        QueryNodeType IQueryNode.NodeType => QueryNodeType.Column;
+
+        SqlNodeType ISqlNode.NodeType => SqlNodeType.SqlSelectionColumn;
+
+        string ISqlSelectionColumn.ColumnName => this.Name;
+
+        /// <summary>
+        /// 使用本对象的列，都没有别名。
+        /// </summary>
+        string ISqlSelectionColumn.Alias => null;
+
+        IHasName ISqlSelectionColumn.Table => this.Table;
+
+        IRdbTableInfo IRdbColumnInfo.Table => this.Table;
     }
 }

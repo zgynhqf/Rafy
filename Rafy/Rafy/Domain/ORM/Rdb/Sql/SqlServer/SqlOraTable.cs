@@ -136,7 +136,7 @@ namespace Rafy.Domain.ORM
             {
                 var query = args.Query;
 
-                var autoSelection = AutoSelectionForLOB(query);
+                var readDataType = AutoSelection(query);
 
                 //生成分页 Sql
                 var generator = this.CreateSqlGenerator();
@@ -148,7 +148,7 @@ namespace Rafy.Domain.ORM
                 {
                     //填充到列表中。
                     this.FillDataIntoList(
-                        reader, autoSelection ? ReadDataType.ByIndex : ReadDataType.ByName,
+                        reader, readDataType,
                         args.List, false, pagingInfo, args.MarkTreeFullLoaded
                         );
                 }

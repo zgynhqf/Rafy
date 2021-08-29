@@ -35,8 +35,9 @@ namespace Rafy.Domain.ORM.SqlTree
                     return this.VisitSqlNodeList(node as SqlNodeList);
                 case SqlNodeType.SqlSelect:
                     return this.VisitSqlSelect(node as SqlSelect);
+                case SqlNodeType.SqlSelectionColumn:
                 case SqlNodeType.SqlColumn:
-                    return this.VisitSqlColumn(node as SqlColumn);
+                    return this.VisitSqlColumn(node as ISqlSelectionColumn) as ISqlNode;
                 case SqlNodeType.SqlTable:
                     return this.VisitSqlTable(node as SqlTable);
                 case SqlNodeType.SqlColumnConstraint:
@@ -67,7 +68,7 @@ namespace Rafy.Domain.ORM.SqlTree
             throw new NotImplementedException();
         }
 
-        protected virtual SqlNode VisitSqlNodeList(SqlNodeList sqlNodeList)
+        protected virtual SqlNodeList VisitSqlNodeList(SqlNodeList sqlNodeList)
         {
             for (int i = 0, c = sqlNodeList.Items.Count; i < c; i++)
             {
@@ -110,7 +111,7 @@ namespace Rafy.Domain.ORM.SqlTree
             {
                 for (int i = 0, c = sqlSelect.OrderBy.Count; i < c; i++)
                 {
-                    var item = sqlSelect.OrderBy.Items[i] as SqlNode;
+                    var item = sqlSelect.OrderBy.Items[i] as ISqlNode;
                     this.Visit(item);
                 }
             }
@@ -122,7 +123,7 @@ namespace Rafy.Domain.ORM.SqlTree
             return sqlTable;
         }
 
-        protected virtual SqlColumn VisitSqlColumn(SqlColumn sqlColumn)
+        protected virtual ISqlSelectionColumn VisitSqlColumn(ISqlSelectionColumn sqlColumn)
         {
             return sqlColumn;
         }
@@ -142,7 +143,7 @@ namespace Rafy.Domain.ORM.SqlTree
         {
             for (int i = 0, c = sqlArray.Items.Count; i < c; i++)
             {
-                var item = sqlArray.Items[i] as SqlNode;
+                var item = sqlArray.Items[i] as ISqlNode;
                 this.Visit(item);
             }
             return sqlArray;

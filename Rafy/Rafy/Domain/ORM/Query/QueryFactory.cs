@@ -172,9 +172,7 @@ namespace Rafy.Domain.ORM.Query
 
             //构造一个 TableSource 对象。
             //在构造 TableSource 时，不必立刻为所有属性生成相应的列。必须使用懒加载。
-            var table = new TableSource(tableInfo);
-            table.EntityRepository = repository;
-            table.TableName = tableInfo.Name;
+            var table = new TableSource(tableInfo, repository);
             table.Alias = alias;
 
             return table;
@@ -449,7 +447,7 @@ namespace Rafy.Domain.ORM.Query
             }
 
             throw new InvalidProgramException(string.Format(
-                "没有从 {0} 到 {1} 的引用关系，请指定具体的对比条件。", left.GetName(), right.GetName()
+                "没有从 {0} 到 {1} 的引用关系，请指定具体的对比条件。", left.Name, right.Name
                 ));
         }
 

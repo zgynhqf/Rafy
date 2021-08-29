@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Rafy.Domain.ORM.SqlTree;
 using Rafy.ManagedProperty;
 
 namespace Rafy.Domain.ORM.Query
@@ -22,21 +23,16 @@ namespace Rafy.Domain.ORM.Query
     /// <summary>
     /// 一个列节点
     /// </summary>
-    public interface IColumnNode : IQueryNode
+    public interface IColumnNode : IQueryNode, ISqlSelectionColumn
     {
         /// <summary>
         /// 本列属于指定的数据源
         /// </summary>
-        INamedSource Owner { get; set; }
+        IHasName Owner { get; }
 
         /// <summary>
         /// 本属性对应一个实体的托管属性
         /// </summary>
-        IProperty Property { get; set; }
-
-        /// <summary>
-        /// 本属性在查询结果中使用的别名。
-        /// </summary>
-        string Alias { get; set; }
+        IProperty Property { get; }
     }
 }

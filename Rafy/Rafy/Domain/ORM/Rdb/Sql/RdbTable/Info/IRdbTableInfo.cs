@@ -22,17 +22,12 @@ namespace Rafy.Domain.ORM
     /// 某个实体类型对应的‘逻辑表’的元数据。
     /// 这个表并不一定就是数据库中的表，而可能是 MongoDb 中的表、一个 XML 文档等。
     /// </summary>
-    internal interface IRdbTableInfo
+    internal interface IRdbTableInfo : IHasName
     {
         /// <summary>
         /// 对应的实体类型
         /// </summary>
         Type EntityType { get; }
-
-        /// <summary>
-        /// 表名
-        /// </summary>
-        string Name { get; }
 
         /// <summary>
         /// 主键列（每个表肯定有一个主键列）

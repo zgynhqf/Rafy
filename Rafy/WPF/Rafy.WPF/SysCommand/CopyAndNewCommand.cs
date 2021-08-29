@@ -248,30 +248,30 @@ namespace Rafy.WPF.Command
                 //return newObject;
             }
 
-            /// <summary>
-            /// 有必要的话，就修改Name
-            /// </summary>
-            /// <param name="newObject"></param>
-            private void TryModifyName(Entity newObject, bool modifyName)
-            {
-                if (modifyName)
-                {
-                    if (newObject is IHasHame)
-                    {
-                        var no = newObject as IHasHame;
-                        no.Name += "-新增";
-                    }
-                    else
-                    {
-                        var mp = newObject.PropertiesContainer.GetAvailableProperties().Find("Name");
-                        if (mp != null && !mp.IsReadOnly)
-                        {
-                            string name = newObject.GetProperty(mp).ToString();
-                            newObject.SetProperty(mp, name + "-新增");
-                        }
-                    }
-                }
-            }
+            ///// <summary>
+            ///// 有必要的话，就修改Name
+            ///// </summary>
+            ///// <param name="newObject"></param>
+            //private void TryModifyName(Entity newObject, bool modifyName)
+            //{
+            //    if (modifyName)
+            //    {
+            //        if (newObject is IHasName)
+            //        {
+            //            var no = newObject as IHasName;
+            //            no.Name += "-新增";
+            //        }
+            //        else
+            //        {
+            //            var mp = newObject.PropertiesContainer.GetAvailableProperties().Find("Name");
+            //            if (mp != null && !mp.IsReadOnly)
+            //            {
+            //                string name = newObject.GetProperty(mp).ToString();
+            //                newObject.SetProperty(mp, name + "-新增");
+            //            }
+            //        }
+            //    }
+            //}
 
             //Debug 用。
             //private void ListenSelfDirtyChange(Entity src)

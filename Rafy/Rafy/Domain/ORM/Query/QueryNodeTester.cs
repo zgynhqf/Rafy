@@ -33,7 +33,7 @@ namespace Rafy.Domain.ORM.Query
         public static FormattedSql GenerateTestSql(IQueryNode node)
         {
             var generator = new SqlServerSqlGenerator { AutoQuota = false };
-            generator.Generate(node as SqlNode);
+            generator.Generate(node as ISqlNode);
             return generator.Sql;
         }
     }

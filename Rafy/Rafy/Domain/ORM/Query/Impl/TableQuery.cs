@@ -63,7 +63,7 @@ namespace Rafy.Domain.ORM.Query.Impl
             }
             set
             {
-                base.Selection = value as SqlNode;
+                base.Selection = value as ISqlNode;
             }
         }
 

@@ -79,11 +79,6 @@ namespace Rafy.Domain.ORM.Query.Impl
             return property;
         }
 
-        string INamedSource.GetName()
-        {
-            return base.GetName();
-        }
-
         private TableSourceFinder _finder;
 
         ITableSource ISource.FindTable(IRepository repo, string alias)

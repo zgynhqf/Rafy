@@ -13,6 +13,8 @@
 
 using System;
 using System.Data;
+using Rafy.Domain.ORM.Query;
+using Rafy.Domain.ORM.SqlTree;
 using Rafy.MetaModel;
 
 namespace Rafy.Domain.ORM
@@ -20,7 +22,7 @@ namespace Rafy.Domain.ORM
     /// <summary>
     /// 数据表列
     /// </summary>
-    internal interface IRdbColumnInfo
+    internal interface IRdbColumnInfo : IColumnNode, ISqlSelectionColumn, ISqlNode, IHasName
     {
         /// <summary>
         /// 对应的列的元数据。
@@ -30,23 +32,13 @@ namespace Rafy.Domain.ORM
         /// <summary>
         /// 对应的表
         /// </summary>
-        IRdbTableInfo Table { get; }
-
-        /// <summary>
-        /// 列名
-        /// </summary>
-        string Name { get; }
+        new IRdbTableInfo Table { get; }
 
         /// <summary>
         /// 属性的类型。
         /// 如果属性是可空类型。这里会去除可空类型，返回内部的真实属性类型。
         /// </summary>
         Type PropertyType { get; }
-
-        /// <summary>
-        /// 该列的列类型。
-        /// </summary>
-        DbType DbType { get; }
 
         /// <summary>
         /// 是否为自增长主键列。
@@ -57,15 +49,5 @@ namespace Rafy.Domain.ORM
         /// 是否主键列
         /// </summary>
         bool IsPrimaryKey { get; }
-
-        /// <summary>
-        /// 该列是否拥有索引。
-        /// </summary>
-        bool HasIndex { get; }
-
-        /// <summary>
-        /// 对应的托管属性
-        /// </summary>
-        IProperty Property { get; }
     }
 }

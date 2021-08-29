@@ -45,18 +45,6 @@ namespace Rafy.Domain.ORM.Query.Impl
             }
         }
 
-        object IColumnConstraint.Value
-        {
-            get
-            {
-                return base.Value;
-            }
-            set
-            {
-                base.Value = value;
-            }
-        }
-
         QueryNodeType IQueryNode.NodeType
         {
             get { return QueryNodeType.ColumnConstraint; }

@@ -27,7 +27,7 @@ namespace Rafy.Domain.ORM.Query
         /// <summary>
         /// 本表数据源来对应这个实体仓库。
         /// </summary>
-        IRepository EntityRepository { get; set; }
+        IRepository EntityRepository { get;  }
 
         /// <summary>
         /// 同一个实体仓库可以表示多个不同的数据源。这时，需要这些不同的数据源指定不同的别名。

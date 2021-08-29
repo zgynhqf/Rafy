@@ -158,7 +158,7 @@ namespace Rafy.DataTableMigration.Services
         {
             if (isSupportTree)
             {
-                var treeEntityList = TreeHelper.ConvertToList<Entity>(component);
+                var treeEntityList = TreeComponentHelper.ConvertToList<Entity>(component);
                 ChangeEntityPersistenceStatus(treeEntityList, PersistenceStatus.New);
                 using (
                  RdbDataProvider.RedirectDbSetting(DataTableMigrationPlugin.DbSettingName,

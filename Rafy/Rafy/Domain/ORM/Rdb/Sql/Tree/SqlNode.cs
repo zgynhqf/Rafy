@@ -55,6 +55,7 @@ namespace Rafy.Domain.ORM.SqlTree
         SqlArray,
         SqlSelect,
         SqlTable,
+        SqlSelectionColumn,
         SqlColumn,
         SqlJoin,
         SqlOrderBy,
@@ -65,18 +66,6 @@ namespace Rafy.Domain.ORM.SqlTree
         SqlBinaryConstraint,
         SqlColumnsComparisonConstraint,
         SqlExistsConstraint,
-        SqlNotConstraint,
-        //XXXXXXXXXXXXXXXXXXX,
-        //XXXXXXXXXXXXXXXXXXX,
-        //XXXXXXXXXXXXXXXXXXX,
-        //XXXXXXXXXXXXXXXXXXX,
-        //XXXXXXXXXXXXXXXXXXX,
-        //XXXXXXXXXXXXXXXXXXX,
-        //XXXXXXXXXXXXXXXXXXX,
-        //XXXXXXXXXXXXXXXXXXX,
-        //XXXXXXXXXXXXXXXXXXX,
-        //XXXXXXXXXXXXXXXXXXX,
-        //XXXXXXXXXXXXXXXXXXX,
-        //XXXXXXXXXXXXXXXXXXX,
+        SqlNotConstraint
     }
 }

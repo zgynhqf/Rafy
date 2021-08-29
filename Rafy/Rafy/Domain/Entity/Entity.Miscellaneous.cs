@@ -36,7 +36,7 @@ namespace Rafy.Domain
             {
                 var name = base.DebuggerDisplay;
 
-                if (this is IHasHame) { name += " IHasName:" + (this as IHasHame).Name; }
+                if (this is IHasName) { name += " IHasName:" + (this as IHasName).Name; }
                 if (this.SupportTree) { name += " TreeIndex:" + this.TreeIndex; }
 
                 return name + " Id:" + this.Id;

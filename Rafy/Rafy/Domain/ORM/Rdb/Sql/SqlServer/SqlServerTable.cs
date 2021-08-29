@@ -29,14 +29,14 @@ namespace Rafy.Domain.ORM.SqlServer
             {
                 var generatedSql = this.GenerateInsertSQL(false);
                 return $@"{generatedSql};
-SELECT @@IDENTITY;";
+SELECT @@IDENTITY";
             });
             _insertSqlWithId = new Lazy<string>(() =>
             {
                 var generatedSql = this.GenerateInsertSQL(true);
                 return $@"SET IDENTITY_INSERT {this.Name} ON;
 {generatedSql};
-SET IDENTITY_INSERT {this.Name} OFF;";
+SET IDENTITY_INSERT {this.Name} OFF";
             });
         }
 

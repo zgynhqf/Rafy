@@ -1,60 +1,52 @@
 ﻿/*******************************************************
  * 
  * 作者：胡庆访
- * 创建日期：20131210
+ * 创建日期：20210830
  * 说明：此文件只包含一个类，具体内容见类型注释。
  * 运行环境：.NET 4.0
  * 版本号：1.0.0
  * 
  * 历史记录：
- * 创建文件 胡庆访 20131210 10:53
+ * 创建文件 胡庆访 20210830 04:39
  * 
 *******************************************************/
 
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Text;
 
 namespace Rafy.Domain.ORM.SqlTree
 {
     /// <summary>
-    /// 表示某个表、或者查询结果中的某一列。
+    /// 表示查询结果中的一个列。
     /// </summary>
-    class SqlColumn : SqlNode, ISqlSelectionColumn
+    public interface ISqlSelectionColumn //: ISqlNode
     {
-        public override SqlNodeType NodeType
-        {
-            get { return SqlNodeType.SqlColumn; }
-        }
-
         /// <summary>
         /// 只能是 <see cref="SqlTable"/>、<see cref="SqlSubSelect"/>
         /// </summary>
-        public SqlNamedSource Table { get; set; }
+        IHasName Table { get; }
 
         /// <summary>
         /// 列名
         /// </summary>
-        public string ColumnName { get; set; }
+        string ColumnName { get; }
 
         /// <summary>
         /// 别名。
         /// 列的别名只用在 Select 语句之后。
         /// </summary>
-        public string Alias { get; set; }
+        string Alias { get; }
 
         /// <summary>
-        /// 该列所对应的数据库的类型。
+        /// 该列的列类型。
         /// </summary>
-        public DbType DbType { get; set; }
+        DbType DbType { get; }
 
         /// <summary>
         /// 该列是否拥有索引。
         /// </summary>
-        public bool HasIndex { get; set; }
-
-        IHasName ISqlSelectionColumn.Table => this.Table;
+        bool HasIndex { get; }
     }
 }

@@ -130,7 +130,7 @@ namespace Rafy.Domain.ORM
         /// 访问 sql 语法树中的每一个结点，并生成相应的 Sql 语句。
         /// </summary>
         /// <param name="tree">The tree.</param>
-        public void Generate(SqlNode tree)
+        public void Generate(ISqlNode tree)
         {
             base.Visit(tree);
         }
@@ -245,13 +245,6 @@ namespace Rafy.Domain.ORM
             }
         }
 
-        protected override SqlColumn VisitSqlColumn(SqlColumn sqlColumn)
-        {
-            this.AppendColumnDeclaration(sqlColumn);
-
-            return sqlColumn;
-        }
-
         protected override SqlTable VisitSqlTable(SqlTable sqlTable)
         {
             this.QuoteAppend(sqlTable.TableName);
@@ -262,6 +255,30 @@ namespace Rafy.Domain.ORM
             }
 
             return sqlTable;
+        }
+
+        protected override ISqlSelectionColumn VisitSqlColumn(ISqlSelectionColumn sqlColumn)
+        {
+            this.AppendColumnUsage(sqlColumn);
+
+            if (!string.IsNullOrEmpty(sqlColumn.Alias))
+            {
+                this.AppendNameCast();
+                this.QuoteAppend(sqlColumn.Alias);
+            }
+
+            return sqlColumn;
+        }
+
+        protected virtual void AppendColumnUsage(ISqlSelectionColumn sqlColumn)
+        {
+            var table = sqlColumn.Table;
+            if (table != null)
+            {
+                this.QuoteAppend(table.Name);
+                _sql.Append(".");
+            }
+            this.QuoteAppend(sqlColumn.ColumnName);
         }
 
         protected override SqlJoin VisitSqlJoin(SqlJoin sqlJoin)
@@ -302,7 +319,7 @@ namespace Rafy.Domain.ORM
         {
             for (int i = 0, c = sqlArray.Items.Count; i < c; i++)
             {
-                var item = sqlArray.Items[i] as SqlNode;
+                var item = sqlArray.Items[i] as ISqlNode;
                 if (i > 0)
                 {
                     _sql.Append(", ");
@@ -496,11 +513,11 @@ namespace Rafy.Domain.ORM
                             //_sql.AppendParameter(item);
                         }
                     }
-                    else if (value is SqlNode)
+                    else if (value is ISqlNode)
                     {
                         _sql.AppendLine();
                         this.Indent++;
-                        this.Visit(value as SqlNode);
+                        this.Visit(value as ISqlNode);
                         this.Indent--;
                         _sql.AppendLine();
                     }
@@ -561,7 +578,7 @@ namespace Rafy.Domain.ORM
         {
             if (sqlSelectStar.Table != null)
             {
-                this.QuoteAppend(sqlSelectStar.Table.GetName());
+                this.QuoteAppend(sqlSelectStar.Table.Name);
                 _sql.Append(".*");
             }
             else
@@ -699,28 +716,6 @@ namespace Rafy.Domain.ORM
         protected string Prepare(string identifier)
         {
             return _identifierProvider.Prepare(identifier);
-        }
-
-        private void AppendColumnDeclaration(SqlColumn sqlColumn)
-        {
-            this.AppendColumnUsage(sqlColumn);
-
-            if (!string.IsNullOrEmpty(sqlColumn.Alias))
-            {
-                this.AppendNameCast();
-                this.QuoteAppend(sqlColumn.Alias);
-            }
-        }
-
-        protected virtual void AppendColumnUsage(SqlColumn sqlColumn)
-        {
-            var table = sqlColumn.Table;
-            if (table != null)
-            {
-                this.QuoteAppend(table.GetName());
-                _sql.Append(".");
-            }
-            this.QuoteAppend(sqlColumn.ColumnName);
         }
 
         protected virtual void AppendNameCast()

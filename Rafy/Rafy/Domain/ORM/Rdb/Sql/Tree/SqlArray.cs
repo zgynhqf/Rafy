@@ -31,7 +31,7 @@ namespace Rafy.Domain.ORM.SqlTree
         {
             if (initItems)
             {
-                this.Items = new List<SqlNode>();
+                this.Items = new List<ISqlNode>();
             }
         }
 

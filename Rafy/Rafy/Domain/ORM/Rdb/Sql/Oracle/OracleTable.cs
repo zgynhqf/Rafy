@@ -119,9 +119,7 @@ namespace Rafy.Domain.ORM.Oracle
             var values = inClause.Value as IEnumerable;
             var parameters = values as IList ?? values.Cast<object>().ToArray();
 
-            var autoSelection = AutoSelectionForLOB(query);
-
-            var readType = autoSelection ? ReadDataType.ByIndex : ReadDataType.ByName;
+            var readType = AutoSelection(query);
 
             /*********************** 代码块解释 *********************************
              * 以下分批进行查询。算法：

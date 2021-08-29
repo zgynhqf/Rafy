@@ -330,11 +330,11 @@ namespace Rafy.Domain.ORM
                             }
                         }
                     }
-                    else if (value is SqlNode)
+                    else if (value is ISqlNode)
                     {
                         Sql.AppendLine();
                         this.Indent++;
-                        this.Visit(value as SqlNode);
+                        this.Visit(value as ISqlNode);
                         this.Indent--;
                         Sql.AppendLine();
                     }

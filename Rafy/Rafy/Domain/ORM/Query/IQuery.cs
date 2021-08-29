@@ -38,6 +38,7 @@ namespace Rafy.Domain.ORM.Query
         /// <summary>
         /// 要查询的内容。
         /// 如果本属性为空，表示要查询所有数据源的所有属性。
+        /// 可以是单列、多列的数组、ISelectAll 等节点。
         /// </summary>
         IQueryNode Selection { get; set; }
 

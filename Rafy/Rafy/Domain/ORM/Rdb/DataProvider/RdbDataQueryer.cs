@@ -157,7 +157,7 @@ namespace Rafy.Domain.ORM
         public override LiteDataTable QueryTable(IQuery query, PagingInfo paging = null)
         {
             var generator = RdbDataProvider.Get(this.Repo).DbTable.CreateSqlGenerator();
-            generator.Generate(query as SqlNode);
+            generator.Generate(query as ISqlNode);
             var sql = generator.Sql;
 
             return this.QueryTable(sql, paging);
