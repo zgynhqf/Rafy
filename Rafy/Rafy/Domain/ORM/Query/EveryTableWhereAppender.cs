@@ -86,13 +86,13 @@ namespace Rafy.Domain.ORM.Query
             return node;
         }
 
-        protected override ITableSource VisitEntitySource(ITableSource node)
+        protected override ITableSource VisitTableSource(ITableSource node)
         {
             if (_tableSourceList != null)
             {
                 _tableSourceList.Add(node);
             }
-            return base.VisitEntitySource(node);
+            return base.VisitTableSource(node);
         }
 
         /// <summary>

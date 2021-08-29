@@ -184,13 +184,10 @@ namespace Rafy.Domain.ORM.Query
                 ORMHelper.ThrowBasePropertyNotMappedException(repository.EntityType);
             }
 
-            //构造一个 EntitySource 对象。
+            //构造一个 TableSource 对象。
             //在构造 TableSource 时，不必立刻为所有属性生成相应的列。必须使用懒加载。
-            var table = new TableSource();
-            table._tableInfo = tableInfo;
-
-            var res = table as ITableSource;
-            res.EntityRepository = repository;
+            var table = new TableSource(tableInfo);
+            table.EntityRepository = repository;
             table.TableName = tableInfo.Name;
             table.Alias = alias;
 

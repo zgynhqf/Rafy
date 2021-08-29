@@ -56,7 +56,7 @@ namespace Rafy.Domain.ORM.Query.Impl
             return base.Visit(node);
         }
 
-        protected override ITableSource VisitEntitySource(ITableSource node)
+        protected override ITableSource VisitTableSource(ITableSource node)
         {
             if (_repo == null)
             {

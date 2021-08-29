@@ -37,7 +37,7 @@ namespace Rafy.Domain.ORM.Query
                 case QueryNodeType.Array:
                     return this.VisitArray(node as IArray);
                 case QueryNodeType.TableSource:
-                    return this.VisitEntitySource(node as ITableSource);
+                    return this.VisitTableSource(node as ITableSource);
                 case QueryNodeType.SelectAll:
                     return this.VisitSelectAll(node as ISelectAll);
                 case QueryNodeType.Join:
@@ -101,7 +101,7 @@ namespace Rafy.Domain.ORM.Query
             return node;
         }
 
-        protected virtual ITableSource VisitEntitySource(ITableSource node)
+        protected virtual ITableSource VisitTableSource(ITableSource node)
         {
             return node;
         }

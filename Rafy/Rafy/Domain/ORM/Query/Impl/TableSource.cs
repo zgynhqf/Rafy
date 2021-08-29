@@ -22,23 +22,16 @@ namespace Rafy.Domain.ORM.Query.Impl
 {
     class TableSource : SqlTable, ITableSource
     {
+        public TableSource(IRdbTableInfo tableInfo)
+        {
+            _tableInfo = tableInfo;
+        }
+
         public IRepository EntityRepository { get; set; }
 
         public IColumnNode IdColumn
         {
             get { return this.Column(Entity.IdProperty); }
-        }
-
-        string ITableSource.Alias
-        {
-            get
-            {
-                return base.Alias;
-            }
-            set
-            {
-                base.Alias = value;
-            }
         }
 
         public IColumnNode Column(IManagedProperty property)
@@ -60,21 +53,16 @@ namespace Rafy.Domain.ORM.Query.Impl
             get { return QueryNodeType.TableSource; }
         }
 
-        string INamedSource.GetName()
-        {
-            return base.GetName();
-        }
-
         #region 列的懒加载
 
         /*********************** 代码块解释 *********************************
-         * EntitySource 在构造时，不必立刻为所有属性生成相应的列。必须使用懒加载。
+         * TableSource 在构造时，不必立刻为所有属性生成相应的列。必须使用懒加载。
         *********************************************************************/
 
         /// <summary>
         /// 对应 ORM 中的运行时表。
         /// </summary>
-        internal IRdbTableInfo _tableInfo;
+        private IRdbTableInfo _tableInfo;
 
         /// <summary>
         /// 这个表中的所有可用的列。

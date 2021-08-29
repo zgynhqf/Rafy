@@ -38,7 +38,7 @@ namespace Rafy.Domain.ORM.SqlTree
         /// </summary>
         public string Alias { get; set; }
 
-        internal override string GetName()
+        public override string GetName()
         {
             return this.Alias ?? this.TableName;
         }
