@@ -98,7 +98,7 @@ namespace Rafy.Data
         /// 获取内部的 TextWriter，用于直接面向字符串进行文本输出。
         /// 同时，也可以使用新的 TextWriter 来装饰当前的 TextWriter。
         /// </summary>
-        public TextWriter InnerWriter
+        internal TextWriter InnerWriter
         {
             get { return _writer; }
             set { _writer = value; }
