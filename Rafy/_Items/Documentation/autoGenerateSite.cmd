@@ -1,1 +1,1 @@
-docfx docfx.json
+"D:\Program Files (x86)\docfx\docfx.exe" docfx.json

@@ -44,8 +44,8 @@ public virtual ChapterList GetBy(string name, PagingInfo pi)
        同样，Rafy 没有象 Hibernate 框架定义一套新的基于字符串的查询语法（如 hql），也是因为开发者编写 hql，不但无法得到编译时的语法支持，而且性能上也需要消耗对 hql 进行解析并生成 SqlTree，不如直接使用更直接的 SqlTree。  
        当然，Rafy 在 SqlTree 的基础上再推出 Linq 查询的原因，是因为 SqlTree 本身需要一定的学习周期才能使用，而开发者则更熟悉使用 Linq 语法进行查询，基本可以认为是上手即用，所以支持 Linq 查询可以简化大部分的简单开发场景。
  - 希望编写更通用的查询。  
-     仓库基类 EntityRepository 中自带的 GetAll、GetById 等方法，都是面向所有实体类型的非常通用的查询。对于基于 Rafy 的上层框架的开发者而言，除了直接使用这些自带的通用查询，很多时候是需要自行编写一些类似的通用查询的。  
-       Linq 的 Labmda 语法中的属性表达式(e.Name)需要绑定具体的实体类型(Book e)，这导致了必须使用反射去生成表达式树，才能编写通条蚁。但是，SqlTree 的语法是基于托管属性框架的，它不需要使用确切的实体属性表达式，只需要使用托管属性的运行时对象 IManagedProperty 即可(Book.NameProperty)。这使得开发人员可以更加方便地编写通用查询。例如，仓库基类 EntityRepository 中的所有查询方法，都是直接通过使用实体的托管属性来实现的，例如：GetById、GetByParentId、GetAll 等。
+     仓库基类 EntityRepository 中自带的 GetAll、GetById 等方法，都是面向所有实体类型的非常通用的查询。对于基于 Rafy 的上层框架的开发者而言，除了直接使用这些自带的通用查询，很多时候是需要自行编写一些类似的通用查询。  
+       Linq 的 Labmda 语法中的属性表达式(e.Name)需要绑定到具体的实体类型(Book e)，这导致了必须使用反射去生成表达式树，才能编写通用查询。但是，SqlTree 的语法是基于托管属性框架的，它不需要使用确切的实体属性表达式，只需要使用托管属性的运行时对象 IManagedProperty 即可(Book.NameProperty)。这使得开发人员可以更加方便地编写通用查询。例如，仓库基类 EntityRepository 中的所有查询方法，都是直接通过使用实体的托管属性来实现的，例如：GetById、GetByParentId、GetAll 等。
  - 可以为扩展属性编写查询。  
      由于扩展属性写在额外的程序集插件中的，所以当无法通过 Linq 表达式进行查询。这时就不得不通过托管属性 IManagedProperty 来定义 SqlTree 完成查询了。  
        关于扩展属性，参见：[实体属性扩展](../../../领域实体框架\插件级扩展\实体属性扩展.html)。
