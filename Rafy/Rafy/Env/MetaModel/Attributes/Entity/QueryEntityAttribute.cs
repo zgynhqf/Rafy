@@ -21,7 +21,7 @@ namespace Rafy.MetaModel.Attributes
     /// <summary>
     /// 所有查询实体对象都应该标记这个属性。
     /// 
-    /// 如果是查询实体，那么这个类是没有对应的仓库的。
+    /// 如果是查询实体，那么这个类是没有对应的仓库的。但是查询实体会有自己的实体元数据、界面元数据等元数据。
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public class QueryEntityAttribute : EntityAttribute { }
