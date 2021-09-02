@@ -517,39 +517,6 @@ namespace RafyUnitTest
             }
         }
 
-        //[TestMethod]
-        //public void ORM_Query_Count_IPropertyQuery()
-        //{
-        //    var repo = RF.ResolveInstance<ChapterRepository>();
-        //    using (RF.TransactionScope(repo))
-        //    {
-        //        RF.Save(new Book
-        //        {
-        //            Name = "1",
-        //            ChapterList =
-        //            {
-        //                new Chapter { Name = "1.1"},
-        //                new Chapter { Name = "1.2"}
-        //            }
-        //        });
-        //        RF.Save(new Book
-        //        {
-        //            Name = "2",
-        //            ChapterList =
-        //            {
-        //                new Chapter { Name = "2.1"},
-        //                new Chapter { Name = "2.2"},
-        //                new Chapter { Name = "2.3"}
-        //            }
-        //        });
-
-        //        var count = repo.CountByBookName("1");
-        //        Assert.IsTrue(count == 2);
-        //        count = repo.CountByBookName("2");
-        //        Assert.IsTrue(count == 3);
-        //    }
-        //}
-
         [TestMethod]
         public void ORM_Query_Count()
         {

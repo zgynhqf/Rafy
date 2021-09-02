@@ -1142,77 +1142,6 @@ namespace RafyUnitTest
             }
         }
 
-        //[TestMethod]
-        //public void ET_Repository_Query_Lambda()
-        //{
-        //    var repository = RF.ResolveInstance<TestUserRepository>();
-        //    using (RF.TransactionScope(repository))
-        //    {
-        //        repository.Save(new TestUser { Name = "AAA" });
-
-        //        var list = repository.GetByName_Expression("AAA", PagingInfo.Empty);
-        //        Assert.IsTrue(list.Count == 1);
-        //    }
-        //}
-
-        //[TestMethod]
-        //public void ET_Repository_Query_Lambda_Count()
-        //{
-        //    var repository = RF.ResolveInstance<TestUserRepository>();
-        //    using (RF.TransactionScope(repository))
-        //    {
-        //        repository.Save(new TestUser { Name = "AAA" });
-
-        //        var count = repository.CountByName_Expression("AAA", PagingInfo.Empty);
-        //        Assert.IsTrue(count == 1);
-        //    }
-        //}
-
-        [TestMethod]
-        public void ET_Repository_TableQuery_ColumnConflict()
-        {
-            var repo = RF.ResolveInstance<ChapterRepository>();
-            bool success = false;
-            try
-            {
-                repo.QueryChapterTable(0, PagingInfo.Empty);
-                success = true;
-            }
-            catch { }
-
-            Assert.IsFalse(success, "列名相同时，必须报错。");
-        }
-
-        [TestMethod]
-        public void ET_Repository_TableQuery()
-        {
-            var repo = RF.ResolveInstance<ChapterRepository>();
-            using (RF.TransactionScope(repo))
-            {
-                RF.Save(new Book
-                {
-                    Name = "Book1",
-                    ChapterList =
-                    {
-                        new Chapter{Name = "Chapter1"},
-                    }
-                });
-                RF.Save(new Book
-                {
-                    Name = "Book2",
-                    ChapterList =
-                    {
-                        new Chapter{Name = "Chapter4"},
-                    }
-                });
-
-                var table = repo.QueryChapterTable(1, PagingInfo.Empty);
-                Assert.IsTrue(table.Rows.Count == 2);
-                var bookName = table[0].GetString("BookName");
-                Assert.IsTrue(bookName.Contains("Book"));
-            }
-        }
-
         [TestMethod]
         public void ET_Repository_ChangeDbSetting()
         {
@@ -1283,8 +1212,79 @@ namespace RafyUnitTest
             }
         }
 
+        //[TestMethod]
+        //public void ET_Repository_Query_Lambda()
+        //{
+        //    var repository = RF.ResolveInstance<TestUserRepository>();
+        //    using (RF.TransactionScope(repository))
+        //    {
+        //        repository.Save(new TestUser { Name = "AAA" });
+
+        //        var list = repository.GetByName_Expression("AAA", PagingInfo.Empty);
+        //        Assert.IsTrue(list.Count == 1);
+        //    }
+        //}
+
+        //[TestMethod]
+        //public void ET_Repository_Query_Lambda_Count()
+        //{
+        //    var repository = RF.ResolveInstance<TestUserRepository>();
+        //    using (RF.TransactionScope(repository))
+        //    {
+        //        repository.Save(new TestUser { Name = "AAA" });
+
+        //        var count = repository.CountByName_Expression("AAA", PagingInfo.Empty);
+        //        Assert.IsTrue(count == 1);
+        //    }
+        //}
+
         [TestMethod]
-        public void ET_Repository_TableQuery_Paging()
+        public void ET_Repository_QueryTable_ColumnConflict()
+        {
+            var repo = RF.ResolveInstance<ChapterRepository>();
+            bool success = false;
+            try
+            {
+                repo.QueryChapterTable(0, PagingInfo.Empty);
+                success = true;
+            }
+            catch { }
+
+            Assert.IsFalse(success, "列名相同时，必须报错。");
+        }
+
+        [TestMethod]
+        public void ET_Repository_QueryTable()
+        {
+            var repo = RF.ResolveInstance<ChapterRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                RF.Save(new Book
+                {
+                    Name = "Book1",
+                    ChapterList =
+                    {
+                        new Chapter{Name = "Chapter1"},
+                    }
+                });
+                RF.Save(new Book
+                {
+                    Name = "Book2",
+                    ChapterList =
+                    {
+                        new Chapter{Name = "Chapter4"},
+                    }
+                });
+
+                var table = repo.QueryChapterTable(1, PagingInfo.Empty);
+                Assert.IsTrue(table.Rows.Count == 2);
+                var bookName = table[0].GetString("BookName");
+                Assert.IsTrue(bookName.Contains("Book"));
+            }
+        }
+
+        [TestMethod]
+        public void ET_Repository_QueryTable_Paging()
         {
             var repo = RF.ResolveInstance<ChapterRepository>();
             using (RF.TransactionScope(repo))
@@ -1320,7 +1320,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ET_Repository_TableQuery_UseSqlTreeQuery()
+        public void ET_Repository_QueryTable_UseSqlTreeQuery()
         {
             var repo = RF.ResolveInstance<ChapterRepository>();
             using (RF.TransactionScope(repo))
