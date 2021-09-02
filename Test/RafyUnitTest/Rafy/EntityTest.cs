@@ -1212,6 +1212,37 @@ namespace RafyUnitTest
             }
         }
 
+        /// <summary>
+        /// 只查询部分列时，也可以进行实体的查询。
+        /// </summary>
+        [TestMethod]
+        public void ET_Repository_Query_SpecifyColumns()
+        {
+            var repo = RF.ResolveInstance<TestUserRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var name = "admin";
+
+                var user = new TestUser { Age = 100, Name = name, LoginName = "loginName"};
+                repo.Save(user);
+
+                var oldValue = ORMSettings.ErrorIfColumnNotFoundInSql;
+                try
+                {
+                    ORMSettings.ErrorIfColumnNotFoundInSql = false;
+                    var dbUser = repo.GetOnlyName(name);
+
+                    Assert.AreEqual(name, dbUser.Name);
+                    Assert.AreEqual(string.Empty, dbUser.LoginName);
+                    Assert.AreEqual(10, dbUser.Age);
+                }
+                finally
+                {
+                    ORMSettings.ErrorIfColumnNotFoundInSql = oldValue;
+                }
+            }
+        }
+
         //[TestMethod]
         //public void ET_Repository_Query_Lambda()
         //{

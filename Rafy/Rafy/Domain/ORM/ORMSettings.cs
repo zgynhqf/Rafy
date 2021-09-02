@@ -24,8 +24,8 @@ namespace Rafy.Domain.ORM
     {
         /// <summary>
         /// 如果在查询时，Sql 中没有给出实体需要映射的列时，是否抛出异常？
-        /// 默认为 false。这是因为目前 Update 只支持全字段更新，所以这里必须查询部分的列。否则会造成数据丢失。
+        /// 默认为 true。这是因为目前 Update 只支持全字段更新，所以这里必须查询部分的列。否则会造成数据丢失。
         /// </summary>
-        public static bool ErrorIfColumnNotFoundInSql { get; set; } = false;
+        public static bool ErrorIfColumnNotFoundInSql { get; set; } = true;
     }
 }

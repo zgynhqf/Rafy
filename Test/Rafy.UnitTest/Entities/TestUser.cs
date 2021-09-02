@@ -191,6 +191,24 @@ namespace UT
 
     public partial class TestUserRepository : UnitTestEntityRepository
     {
+        /// <summary>
+        /// 只查询一个列，其它的列，全部忽略
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        [RepositoryQuery]
+        public virtual TestUser GetOnlyName(string name)
+        {
+            var f = QueryFactory.Instance;
+            var source = f.Table(this);
+            var q = f.Query(
+                selection: source.Column(TestUser.NameProperty),
+                from: source,
+                where: source.Column(TestUser.NameProperty).Equal(name)
+            );
+            return (TestUser)this.QueryData(q);
+        }
+
         public TestUser GetByName(string name)
         {
             return this.GetFirstBy(new CommonQueryCriteria
