@@ -41,16 +41,30 @@ namespace Rafy.Domain
             DataSaver.SubmitInterceptors = new ReadOnlyCollection<Type>(DataSaver.SubmitInterceptors);
         }
 
+        #region 记录异常
+
+        /// <summary>
+        /// 是否在启动、退出时，记录过程中的异常
+        /// </summary>
+        public bool EnableExceptionLog { get; set; } = false;
+
         public void Startup()
         {
-            try
+            if (this.EnableExceptionLog)
+            {
+                try
+                {
+                    this.StartupApplication();
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError("领域应用程序在启动时发生异常", ex);
+                    throw;
+                }
+            }
+            else
             {
                 this.StartupApplication();
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError("领域应用程序在启动时发生异常", ex);
-                throw;
             }
         }
 
@@ -59,15 +73,24 @@ namespace Rafy.Domain
         /// </summary>
         public void NotifyExit()
         {
-            try
+            if (this.EnableExceptionLog)
+            {
+                try
+                {
+                    this.OnExit();
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError("领域应用程序退出时发生异常", ex);
+                    throw;
+                }
+            }
+            else
             {
                 this.OnExit();
             }
-            catch (Exception ex)
-            {
-                Logger.LogError("领域应用程序退出时发生异常", ex);
-                throw;
-            }
-        }
+        } 
+
+        #endregion
     }
 }
