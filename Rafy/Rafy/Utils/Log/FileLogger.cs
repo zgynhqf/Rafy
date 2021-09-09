@@ -49,13 +49,13 @@ namespace Rafy
 
         /// <summary>
         /// 常用信息的日志的文件名。
-        /// 默认为空。
+        /// 默认使用配置：Rafy.FileLogger.InfoLogFileName(default:ApplicationInfo.log)。
         /// </summary>
         public string InfoLogFileName { get; set; }
 
         /// <summary>
         /// 错误日志的文件名。
-        /// 默认为：ExceptionLog.txt。
+        /// 默认使用配置：Rafy.FileLogger.ExceptionLogFileName(default:Exception.log)。
         /// </summary>
         public string ExceptionLogFileName { get; set; }
 
