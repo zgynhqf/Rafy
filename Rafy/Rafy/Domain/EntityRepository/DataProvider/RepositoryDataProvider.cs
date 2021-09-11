@@ -30,8 +30,8 @@ namespace Rafy.Domain
     /// <summary>
     /// 通用的仓库数据层实现。
     /// </summary>
-    public abstract partial class RepositoryDataProvider : SubmitInterceptor,
-        IRepositoryDataProvider,
+    public abstract partial class RepositoryDataProvider : IRepositoryDataProvider,
+        ISubmitInterceptor, 
         IRepositoryDataProviderInternal
     {
         private EntityRepository _repository;
@@ -173,12 +173,14 @@ namespace Rafy.Domain
             _dataQueryer.OnQuerying(args);
         }
 
+        int ISubmitInterceptor.SubmitInterceptorIndex { get; set; }
+
         /// <summary>
-        /// DataProvider 提交拦截器中的最后一个拦截器。
+        /// DataProvider 提交拦截器中的最后一个拦截器，直接实现了提交方法。所以不需要调用 Link。
         /// </summary>
         /// <param name="e">The e.</param>
-        /// <param name="locator">The locator.</param>
-        internal protected sealed override void Submit(SubmitArgs e, ISubmitInterceptorLink locator)
+        /// <param name="link">link.</param>
+        void ISubmitInterceptor.Submit(SubmitArgs e, ISubmitInterceptorLink link)
         {
             this.Submit(e);
         }

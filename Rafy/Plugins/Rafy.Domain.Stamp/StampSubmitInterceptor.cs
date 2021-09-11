@@ -22,14 +22,16 @@ namespace Rafy.Domain.Stamp
     /// <summary>
     /// 拦截数据层的提交操作。在添加、更新实体时，设置实体的跟踪戳。
     /// </summary>
-    public class StampSubmitInterceptor : SubmitInterceptor
+    public class StampSubmitInterceptor : ISubmitInterceptor
     {
+        int ISubmitInterceptor.SubmitInterceptorIndex { get; set; }
+
         /// <summary>
         /// 提交指定的实体，并在添加、更新实体时，设置实体的跟踪戳。
         /// </summary>
         /// <param name="e">The e.</param>
         /// <param name="link">The link.</param>
-        protected override void Submit(SubmitArgs e, ISubmitInterceptorLink link)
+        void ISubmitInterceptor.Submit(SubmitArgs e, ISubmitInterceptorLink link)
         {
             bool disabled = false;
 

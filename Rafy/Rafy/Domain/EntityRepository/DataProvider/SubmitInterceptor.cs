@@ -27,12 +27,12 @@ namespace Rafy.Domain
     /// * 在扩展点中需要能够控制是否继续调用下一个被拦截的功能代码，。（传统事件需要使用 <see cref="System.ComponentModel.CancelEventArgs"/> 才可以。)
     /// * 线程安全。（DataSaver 本身是线程安全的）。
     /// </summary>
-    public abstract class SubmitInterceptor
+    public interface ISubmitInterceptor
     {
         /// <summary>
         /// 拦截器在拦截器链表中的位置。
         /// </summary>
-        internal int SubmitInterceptorIndex;
+        int SubmitInterceptorIndex { get; set; }
 
         /// <summary>
         /// 提交指定的实体。
@@ -40,7 +40,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="e">提交参数，其中封装了需要对实体进行的操作。</param>
         /// <param name="link">使用此定位器来调用被拦截的实际提交器。</param>
-        internal protected abstract void Submit(SubmitArgs e, ISubmitInterceptorLink link);
+        void Submit(SubmitArgs e, ISubmitInterceptorLink link);
     }
 
     /// <summary>
@@ -53,20 +53,20 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="current">传入当前的拦截器，框架会调用该拦截器之后的拦截器。</param>
         /// <param name="e">提交参数，其中封装了需要对实体进行的操作。</param>
-        void InvokeNext(SubmitInterceptor current, SubmitArgs e);
+        void InvokeNext(ISubmitInterceptor current, SubmitArgs e);
     }
 
     internal class SubmitInterceptorList : ISubmitInterceptorLink
     {
-        private List<SubmitInterceptor> _submitters = new List<SubmitInterceptor>();
+        private List<ISubmitInterceptor> _submitters = new List<ISubmitInterceptor>();
 
         internal void Add(Type submitterInterceptor)
         {
-            var instance = Activator.CreateInstance(submitterInterceptor) as SubmitInterceptor;
+            var instance = Activator.CreateInstance(submitterInterceptor) as ISubmitInterceptor;
             this.Add(instance);
         }
 
-        internal void Add(SubmitInterceptor submitterInterceptor)
+        internal void Add(ISubmitInterceptor submitterInterceptor)
         {
             if (submitterInterceptor == null) throw new ArgumentNullException("submitterInterceptor");
 
@@ -81,7 +81,7 @@ namespace Rafy.Domain
             first.Submit(e, this);
         }
 
-        void ISubmitInterceptorLink.InvokeNext(SubmitInterceptor current, SubmitArgs e)
+        void ISubmitInterceptorLink.InvokeNext(ISubmitInterceptor current, SubmitArgs e)
         {
             //不需要检查 Index。
             //因为作为最后一个 Submitter(DataProvider)，不能再调用 GetNext 方法。
