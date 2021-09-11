@@ -53,7 +53,7 @@ namespace Rafy.Domain
             {
                 _defaultLoader = RepositoryFactoryHost.Factory.FindByEntity(this.OwnerType);
             }
-            return _defaultLoader.GetEntityValue(entityId, this.Name);
+            return _defaultLoader.GetEntityValue(entityId, this);
         }
     }
 

@@ -337,9 +337,9 @@ namespace Rafy.Domain
         /// <param name="id"></param>
         /// <param name="property"></param>
         /// <returns></returns>
-        public object GetEntityValue(object id, string property)
+        public object GetEntityValue(object id, IManagedProperty property)
         {
-            var table = this.DoGetEntityValue(id, property);
+            var table = this.DoGetEntityValue(id, property.Name);
             return table[0, 0];
         }
 

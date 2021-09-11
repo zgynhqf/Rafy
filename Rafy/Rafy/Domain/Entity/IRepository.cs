@@ -222,7 +222,7 @@ namespace Rafy.Domain
         /// <param name="id"></param>
         /// <param name="property"></param>
         /// <returns></returns>
-        object GetEntityValue(object id, string property);
+        object GetEntityValue(object id, IManagedProperty property);
 
         /// <summary>
         /// 递归加载某个节点的所有父节点。
