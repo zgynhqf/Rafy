@@ -55,7 +55,7 @@ namespace Rafy.Domain
             //创建提交的拦截器列表。
             _submitter = new SubmitInterceptorList();
             _submitter.Add(dataProvider);
-            foreach (var type in _submitInterceptors)
+            foreach (var type in _submitInterceptors.Distinct())
             {
                 _submitter.Add(type);
             }

@@ -998,6 +998,30 @@ namespace Rafy.Domain
                 return null;
             }
 
+            internal IEnumerable<Entity> EnumerateNode(bool includeDeletedItems = false)
+            {
+                if (_nodes != null)
+                {
+                    for (int i = 0, c = _nodes.Count; i < c; i++)
+                    {
+                        foreach (var node in EnumerateTravelDepthFirst(_nodes[i]))
+                        {
+                            yield return node;
+                        }
+                    }
+                }
+                if (includeDeletedItems && _deleted != null)
+                {
+                    for (int i = 0, c = _deleted.Count; i < c; i++)
+                    {
+                        foreach (var node in EnumerateTravelDepthFirst(_deleted[i]))
+                        {
+                            yield return node;
+                        }
+                    }
+                }
+            }
+
             private static Entity TravelDepthFirst(Entity node, Func<Entity, bool> action)
             {
                 if (node == null) throw new ArgumentNullException("node");
@@ -1024,6 +1048,30 @@ namespace Rafy.Domain
                 }
 
                 return null;
+            }
+
+            private static IEnumerable<Entity> EnumerateTravelDepthFirst(Entity node)
+            {
+                if (node == null) throw new ArgumentNullException("node");
+
+                var stack = new Stack<Entity>();
+                stack.Push(node);
+
+                while (stack.Count > 0)
+                {
+                    var currentNode = stack.Pop();
+
+                    yield return currentNode; 
+
+                    var children = currentNode.TreeChildren._nodes;
+                    if (children != null)
+                    {
+                        for (int i = children.Count - 1; i >= 0; i--)
+                        {
+                            stack.Push(children[i]);
+                        }
+                    }
+                }
             }
 
             /// <summary>

@@ -21,26 +21,14 @@ namespace Rafy.MultiTenancy.Core.DataInterception
     {
         public static void Listen()
         {
-            RepositoryDataProvider.Inserting += RepositoryDataProvider_Inserting;
+            DataSaver.SubmitInterceptors.Add(typeof(TenanntSubmitInterceptor));
             RepositoryDataProvider.Querying += RepositoryDataProvider_Querying;
-        }
-
-        private static void RepositoryDataProvider_Inserting(object sender, EntityCUDEventArgs e)
-        {
-            var dp = sender as RepositoryDataProvider;
-            if (dp.Repository.EntityMeta.GetIsMultiTenancyEnabled())
-            {
-                TenantAwareEntityExtension.SetTenantId(
-                    e.Entity,
-                    MultiTenancyUtility.GetTenantId()
-                );
-            }
         }
 
         private static void RepositoryDataProvider_Querying(object sender, QueryingEventArgs e)
         {
             var dp = sender as RepositoryDataProvider;
-            
+
             //如果要查询的实体是一个多租户实体，则需要添加多租户查询的信息。
             if (dp.Repository.EntityMeta.GetIsMultiTenancyEnabled())
             {

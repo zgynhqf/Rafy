@@ -25,31 +25,18 @@ namespace Rafy.Domain.EntityPhantom
     /// </summary>
     internal static class PhantomDataInterceptor
     {
+        private static bool _added = false;
+
         internal static void Intercept()
         {
-            RepositoryDataProvider.Deleting += RepositoryDataProvider_Deleting;
-            RepositoryDataProvider.Querying += RepositoryDataProvider_Querying;
-        }
-
-        private static void RepositoryDataProvider_Deleting(object sender, EntityCUDEventArgs e)
-        {
-            var dp = sender as RepositoryDataProvider;
-            if (dp.Repository.EntityMeta.IsPhantomEnabled && !PhantomContext.DeleteRealData.Value)
+            if (!_added)
             {
-                var entity = e.Entity;
+                RepositoryDataProvider.Querying += RepositoryDataProvider_Querying;
 
-                //删除数据的主逻辑变为修改 IsPhantom
-                EntityPhantomExtension.SetIsPhantom(entity, true);
-
-                //然后调用 DataSaver 来保存数据。（不直接使用 Sql 语句，因为这里并不一定是使用 RDb 作为持久层。）
-                dp.DataSaver.UpdateToPersistence(entity);
-
-                //由于删除后的实体的状态会变为‘New’，所以需要把这个字段的值重置。
-                entity.ResetProperty(EntityPhantomExtension.IsPhantomProperty);
-
-                //不再使用默认的删除逻辑。
-                e.Cancel = true;
+                _added = true;
             }
+
+            DataSaver.SubmitInterceptors.Add(typeof(PhantomSubmitInterceptor));
         }
 
         private static void RepositoryDataProvider_Querying(object sender, QueryingEventArgs e)

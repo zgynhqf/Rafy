@@ -542,7 +542,7 @@ namespace UT
         {
             if (UpdateCurrent && e.Action == SubmitAction.ChildrenOnly)
             {
-                e.UpdateCurrent();
+                e.Action = SubmitAction.Update;
             }
 
             base.Submit(e);

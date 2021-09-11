@@ -445,7 +445,7 @@ namespace Rafy.Domain
 
         #endregion
 
-        #region IEntityOrList Members
+        #region IDomainComponent Members
 
         /// <summary>
         /// 实体所在的当前列表对象。
@@ -470,6 +470,46 @@ namespace Rafy.Domain
         IDomainComponent IDomainComponent.Parent
         {
             get { return _parent; }
+        }
+
+        /// <summary>
+        /// 递归遍历整个实体组合树节点。
+        /// 包含：实体、树子节点、已经加载的组合子实体列表。
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Entity> TravelComposition()
+        {
+            yield return this;
+
+            if (_treeChildren != null)
+            {
+                var res = _treeChildren.EnumerateNode(false);
+                foreach (var item in res)
+                {
+                    yield return item;
+                }
+            }
+
+            foreach (var child in this.GetLoadedChildren())
+            {
+                var childList = child.Value as EntityList;
+                if (childList != null)
+                {
+                    for (int i = 0, c = childList.Count; i < c; i++)
+                    {
+                        var item = childList[i];
+                        yield return item;
+                    }
+                }
+                else
+                {
+                    var childEntity = child.Value as Entity;
+                    foreach (var item in childEntity.TravelComposition())
+                    {
+                        yield return item;
+                    }
+                }
+            }
         }
 
         void IDomainComponent.SetParent(IDomainComponent parent)

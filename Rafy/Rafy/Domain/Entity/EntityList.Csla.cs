@@ -108,7 +108,7 @@ namespace Rafy.Domain
 
         #endregion
 
-        #region IEntityOrList Members
+        #region IDomainComponent Members
 
         [NonSerialized]
         private IDomainComponent _parent;

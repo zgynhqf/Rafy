@@ -29,9 +29,14 @@ namespace Rafy.Domain
 {
     /// <summary>
     /// 通用的仓库数据层实现。
+    /// 一般情况下，开发者都可以将查询的实现代码，直接编写在 EntityRepository 中。但是如果开发者想要实现更加通用的 CDUQ 的实现时，可以编写此类的子类来完成。
+    /// 
+    /// 职责：
+    /// * 仓库的数据层实现。
+    /// * 整合了 <seealso cref="DataSaver"/> 及 <seealso cref="DataQueryer"/>，及其对应的扩展点。大部分情况下，开发者只需要重写此类的方法即可。
     /// </summary>
     public abstract partial class RepositoryDataProvider : IRepositoryDataProvider,
-        ISubmitInterceptor, 
+        ISubmitInterceptor,
         IRepositoryDataProviderInternal
     {
         private EntityRepository _repository;
@@ -110,24 +115,6 @@ namespace Rafy.Domain
         **********************************************************************/
 
         /// <summary>
-        /// 某个实体增加前事件。
-        /// 静态事件，不能经常修改此列表。建议在插件初始化时使用。
-        /// </summary>
-        public static event EventHandler<EntityCUDEventArgs> Inserting;
-
-        /// <summary>
-        /// 某个实体修改前事件。
-        /// 静态事件，不能经常修改此列表。建议在插件初始化时使用。
-        /// </summary>
-        public static event EventHandler<EntityCUDEventArgs> Updating;
-
-        /// <summary>
-        /// 某个实体删除前事件。
-        /// 静态事件，不能经常修改此列表。建议在插件初始化时使用。
-        /// </summary>
-        public static event EventHandler<EntityCUDEventArgs> Deleting;
-
-        /// <summary>
         /// 查询实体的事件。
         /// 静态事件，不能经常修改此列表。建议在插件初始化时使用。
         /// </summary>
@@ -204,18 +191,10 @@ namespace Rafy.Domain
         /// 重写时，注意：
         /// 在插入完成后，把为实体新生成的 Id 赋值到实体中。否则组合子将插入失败。
         /// </summary>
-        /// <param name="entity"></param>
-        internal protected virtual void Insert(Entity entity)
+        /// <param name="data"></param>
+        internal protected virtual void Insert(Entity data)
         {
-            var handler = Inserting;
-            if (handler != null)
-            {
-                var args = new EntityCUDEventArgs(entity);
-                handler(this, args);
-                if (args.Cancel) return;
-            }
-
-            _dataSaver.InsertToPersistence(entity);
+            _dataSaver.InsertToPersistence(data);
         }
 
         /// <summary>
@@ -223,18 +202,10 @@ namespace Rafy.Domain
         /// 
         /// 子类重写此方法来实现非关系型数据库的更新逻辑。
         /// </summary>
-        /// <param name="entity"></param>
-        internal protected virtual void Update(Entity entity)
+        /// <param name="data"></param>
+        internal protected virtual void Update(Entity data)
         {
-            var handler = Updating;
-            if (handler != null)
-            {
-                var args = new EntityCUDEventArgs(entity);
-                handler(this, args);
-                if (args.Cancel) return;
-            }
-
-            _dataSaver.UpdateToPersistence(entity);
+            _dataSaver.UpdateToPersistence(data);
         }
 
         /// <summary>
@@ -242,18 +213,10 @@ namespace Rafy.Domain
         /// 
         /// 子类重写此方法来实现非关系型数据库的删除逻辑。
         /// </summary>
-        /// <param name="entity"></param>
-        internal protected virtual void Delete(Entity entity)
+        /// <param name="data"></param>
+        internal protected virtual void Delete(Entity data)
         {
-            var handler = Deleting;
-            if (handler != null)
-            {
-                var args = new EntityCUDEventArgs(entity);
-                handler(this, args);
-                if (args.Cancel) return;
-            }
-
-            _dataSaver.DeleteFromPersistence(entity);
+            _dataSaver.DeleteFromPersistence(data);
         }
 
         #endregion

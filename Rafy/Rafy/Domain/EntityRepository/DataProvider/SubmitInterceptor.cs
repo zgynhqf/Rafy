@@ -58,6 +58,9 @@ namespace Rafy.Domain
 
     internal class SubmitInterceptorList : ISubmitInterceptorLink
     {
+        /// <summary>
+        /// 倒序排列的拦截器
+        /// </summary>
         private List<ISubmitInterceptor> _submitters = new List<ISubmitInterceptor>();
 
         internal void Add(Type submitterInterceptor)

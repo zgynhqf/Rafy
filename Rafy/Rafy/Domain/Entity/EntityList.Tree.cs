@@ -178,6 +178,16 @@ namespace Rafy.Domain
                     var found = action(item);
                     if (found) return item;
                 }
+
+                if (includeDeletedItems && _deletedList != null)
+                {
+                    for (int i = 0, c = _deletedList.Count; i < c; i++)
+                    {
+                        var item = _deletedList[i];
+                        var found = action(item);
+                        if (found) return item;
+                    }
+                }
             }
 
             return null;

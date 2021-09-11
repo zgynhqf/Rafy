@@ -28,27 +28,9 @@ namespace Rafy.Domain.Stamp
     /// </summary>
     public class StampPlugin : DomainPlugin
     {
-        private static bool _added = false;
-
-        /// <summary>
-        /// 是否自动设置所有的 Stamp 的值。默认为 <see langword="true"/>。
-        /// </summary>
-        public bool AutoSetStamp { get; set; } = true;
-
-        /// <summary>
-        /// Initializes the specified application.
-        /// </summary>
-        /// <param name="app">The application.</param>
         public override void Initialize(IApp app)
         {
-            if (this.AutoSetStamp)
-            {
-                if (!_added)
-                {
-                    DataSaver.SubmitInterceptors.Add(typeof(StampSubmitInterceptor));
-                    _added = true;
-                }
-            }
+            DataSaver.SubmitInterceptors.Add(typeof(StampSubmitInterceptor));
         }
     }
 }
