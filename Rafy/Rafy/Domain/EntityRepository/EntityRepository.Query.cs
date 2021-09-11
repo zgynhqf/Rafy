@@ -710,7 +710,7 @@ namespace Rafy.Domain
 
         /// <summary>
         /// 通过某个具体的参数来调用数据层查询。
-        /// 子类重写此方法来实现 <see cref="GetEntityValue(object,string)" /> 的接口层逻辑。
+        /// 子类重写此方法来实现 <see cref="GetEntityValue(object,IManagedProperty)" /> 的接口层逻辑。
         /// </summary>
         /// <param name="id">The unique identifier.</param>
         /// <param name="property">The property.</param>

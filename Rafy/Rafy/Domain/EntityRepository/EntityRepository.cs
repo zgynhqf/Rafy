@@ -36,10 +36,18 @@ namespace Rafy.Domain
 {
     /// <summary>
     /// 仓库类
-    /// 用于某个实体类型及其实体列表类的管理
+    /// 用于某个实体类型及其实体列表类的管理。
+    /// 
     /// 注意：
     /// 1. 其子类必须是线程安全的！
     /// 2. 子类的构建函数建议使用protected，不要向外界暴露。使用者只能全部通过仓库工厂获取。
+    /// 
+    /// 职责：
+    /// * 提供了一系列默认的实体查询。
+    /// * 实现缓存。
+    /// * 提供了实体的保存方法。（CDU 内部调用的是 DataProvider）。
+    /// * CDUQ 支持无损切换远程调用、本地调用。
+    /// * 快速定位实体的元数据。
     /// </summary>
     /// <threadsafety static="true" instance="true" />
     public abstract partial class EntityRepository : EntityRepositoryQueryBase,
@@ -297,7 +305,7 @@ namespace Rafy.Domain
         /// 所有本实体中所有声明的冗余属性。
         /// </summary>
         /// <returns></returns>
-        public IList<IProperty> GetPropertiesInRedundancyPath()
+        internal IList<IProperty> GetPropertiesInRedundancyPath()
         {
             if (this._redundancies == null)
             {
@@ -308,6 +316,11 @@ namespace Rafy.Domain
             }
 
             return this._redundancies;
+        }
+
+        IList<IProperty> IEntityInfoHost.GetPropertiesInRedundancyPath()
+        {
+            return this.GetPropertiesInRedundancyPath();
         }
 
         private EntityMeta _entityMeta;
@@ -339,7 +352,7 @@ namespace Rafy.Domain
         /// 每一个子属性值可能是一个列表，也可能是一个单一实体。
         /// </summary>
         /// <returns></returns>
-        public IList<IProperty> GetChildProperties()
+        internal IList<IProperty> GetChildProperties()
         {
             if (_childProperties == null)
             {
@@ -363,6 +376,11 @@ namespace Rafy.Domain
             }
 
             return _childProperties;
+        }
+
+        IList<IProperty> IEntityInfoHost.GetChildProperties()
+        {
+            return this.GetChildProperties();
         }
 
         /// <summary>
