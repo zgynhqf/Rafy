@@ -223,26 +223,6 @@ namespace Rafy.Domain
     }
 
     /// <summary>
-    /// 某个实体被在数据层执行增加、删除、修改前的事件的参数。
-    /// </summary>
-    public class EntityCUDEventArgs : CancelEventArgs
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EntityCUDEventArgs"/> class.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        public EntityCUDEventArgs(Entity entity)
-        {
-            this.Entity = entity;
-        }
-
-        /// <summary>
-        /// 被操作的实体。
-        /// </summary>
-        public Entity Entity { get; private set; }
-    }
-
-    /// <summary>
     /// 查询实体前的事件的参数。
     /// </summary>
     public class QueryingEventArgs : EventArgs

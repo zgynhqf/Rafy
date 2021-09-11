@@ -35,6 +35,7 @@ namespace Rafy.Domain.EntityPhantom
                     //将整个组合的状态都设置好。
                     foreach (var item in entity.TravelComposition())
                     {
+                        (item.GetRepository() as EntityRepository).LoadAllChildren(item);
                         item.SetIsPhantom(true);
                     }
 
