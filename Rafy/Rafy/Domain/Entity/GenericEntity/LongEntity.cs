@@ -25,7 +25,7 @@ namespace Rafy.Domain
     /// <summary>
     /// 以 Int64 作为主键的实体基类。
     /// </summary>
-    [EntityKeyType(KeyTypeName = "System.Long")]
+    [EntityKeyType(KeyTypeName = "System.Int64")]
     public abstract class LongEntity : Entity<long>
     {
         #region 构造函数
