@@ -605,7 +605,11 @@ namespace Rafy.Domain
             internal List<Entity> DeletedListField
             {
                 get { return _deleted; }
-                set { _deleted = value; }
+            }
+
+            internal List<Entity> NodesField
+            {
+                get { return _nodes; }
             }
 
             #region 加载节点数据
@@ -796,13 +800,20 @@ namespace Rafy.Domain
                     }
                     else
                     {
-                        this.Load();
-                        (this as ITreeComponent).EachNode(n =>
-                        {
-                            n.TreeChildren.Load();
-                            return false;
-                        });
+                        LoadNodesRecur(this);
                     }
+                }
+            }
+
+            private static void LoadNodesRecur(EntityTreeChildren treeChildren)
+            {
+                treeChildren.Load();
+
+                var nodes = treeChildren._nodes;
+                for (int i = 0, c = nodes.Count; i < c; i++)
+                {
+                    var item = nodes[i];
+                    LoadNodesRecur(item.TreeChildren);
                 }
             }
 
@@ -978,100 +989,22 @@ namespace Rafy.Domain
             /// <returns>第一个被调用 action 后返回 true 的节点。</returns>
             public Entity EachNode(Func<Entity, bool> action, bool includeDeletedItems = false)
             {
-                if (_nodes != null)
+                foreach (var item in this.EnumerateNodes(includeDeletedItems))
                 {
-                    for (int i = 0, c = _nodes.Count; i < c; i++)
-                    {
-                        var found = TravelDepthFirst(_nodes[i], action);
-                        if (found != null) return found;
-                    }
-                }
-                if (includeDeletedItems && _deleted != null)
-                {
-                    for (int i = 0, c = _deleted.Count; i < c; i++)
-                    {
-                        var found = TravelDepthFirst(_deleted[i], action);
-                        if (found != null) return found;
-                    }
+                    if (action(item)) return item;
                 }
 
                 return null;
             }
 
-            internal IEnumerable<Entity> EnumerateNode(bool includeDeletedItems = false)
+            private CompositionEnumerator EnumerateNodes(bool includeDeletedItems = false)
             {
-                if (_nodes != null)
-                {
-                    for (int i = 0, c = _nodes.Count; i < c; i++)
-                    {
-                        foreach (var node in EnumerateTravelDepthFirst(_nodes[i]))
-                        {
-                            yield return node;
-                        }
-                    }
-                }
-                if (includeDeletedItems && _deleted != null)
-                {
-                    for (int i = 0, c = _deleted.Count; i < c; i++)
-                    {
-                        foreach (var node in EnumerateTravelDepthFirst(_deleted[i]))
-                        {
-                            yield return node;
-                        }
-                    }
-                }
-            }
-
-            private static Entity TravelDepthFirst(Entity node, Func<Entity, bool> action)
-            {
-                if (node == null) throw new ArgumentNullException("node");
-                if (action == null) throw new ArgumentNullException("action");
-
-                var stack = new Stack<Entity>();
-                stack.Push(node);
-
-                while (stack.Count > 0)
-                {
-                    var currentNode = stack.Pop();
-
-                    var found = action(currentNode);
-                    if (found) { return currentNode; }
-
-                    var children = currentNode.TreeChildren._nodes;
-                    if (children != null)
-                    {
-                        for (int i = children.Count - 1; i >= 0; i--)
-                        {
-                            stack.Push(children[i]);
-                        }
-                    }
-                }
-
-                return null;
-            }
-
-            private static IEnumerable<Entity> EnumerateTravelDepthFirst(Entity node)
-            {
-                if (node == null) throw new ArgumentNullException("node");
-
-                var stack = new Stack<Entity>();
-                stack.Push(node);
-
-                while (stack.Count > 0)
-                {
-                    var currentNode = stack.Pop();
-
-                    yield return currentNode; 
-
-                    var children = currentNode.TreeChildren._nodes;
-                    if (children != null)
-                    {
-                        for (int i = children.Count - 1; i >= 0; i--)
-                        {
-                            stack.Push(children[i]);
-                        }
-                    }
-                }
+                var enumerator = new CompositionEnumerator(new Stack<Entity>());
+                enumerator.IncludesChildren = false;
+                enumerator.IncludesTreeChildren = true;
+                enumerator.IncludeDeletedItems = includeDeletedItems;
+                enumerator.Push(this);
+                return enumerator;
             }
 
             /// <summary>

@@ -10,6 +10,10 @@
  * 
 *******************************************************/
 
+3.78.3932
+    添加接口
+        添加接口 Entity.TravelCompostion、CompositionEnumerator，来实现实体组合的遍历。
+
 3.77.3930
     ！删除接口
         删除 RepositoryDataProvider 中 CDU 的静态事件。全都通过 SubmitInterceptor 来实现。
