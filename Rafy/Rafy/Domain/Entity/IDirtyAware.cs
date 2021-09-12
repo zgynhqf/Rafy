@@ -34,11 +34,5 @@ namespace Rafy.Domain
         /// 同时，聚合中任意列表中其中已经删除的实体，也会在这个列表中被移除。
         /// </summary>
         void MarkSaved();
-
-        /// <summary>
-        /// 设置整个聚合为指定的状态。
-        /// </summary>
-        /// <param name="status">The status.</param>
-        void MarkAggregate(PersistenceStatus status);
     }
 }

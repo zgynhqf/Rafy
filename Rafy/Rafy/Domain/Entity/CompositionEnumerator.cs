@@ -19,7 +19,7 @@ using System.Text;
 namespace Rafy.Domain
 {
     /// <summary>
-    /// 使用尝试递归遍历实体的组合树。
+    /// 高效递归遍历整个实体组合树节点。
     /// 包含：实体、树子节点、已经加载的组合子实体列表。
     /// </summary>
     public struct CompositionEnumerator : IEnumerator<Entity>
@@ -42,20 +42,11 @@ namespace Rafy.Domain
         /// </summary>
         public bool IncludeDeletedItems { get; set; }
 
-        internal CompositionEnumerator(Stack<Entity> stock)
-        {
-            _stack = stock ?? new Stack<Entity>(10);
-            _current = null;
-            this.IncludesChildren = true;
-            this.IncludesTreeChildren = true;
-            this.IncludeDeletedItems = false;
-        }
-
         public Entity Current => _current;
 
         public bool MoveNext()
         {
-            if (_stack.Count > 0)
+            if (_stack != null && _stack.Count > 0)
             {
                 _current = _stack.Pop();
 
@@ -87,8 +78,41 @@ namespace Rafy.Domain
             return false;
         }
 
-        internal void Push(Entity item)
+        /// <summary>
+        /// 将本集合中的元素全部遍历，并返回 List。
+        /// 此操作不会变更本迭代器中的状态。
+        /// </summary>
+        /// <returns></returns>
+        public IList<Entity> ToList()
         {
+            var res = new List<Entity>();
+
+            if (_stack != null)
+            {
+                var cloned = this.Clone();
+                foreach (var item in cloned)
+                {
+                    res.Add(item);
+                }
+            }
+
+            return res;
+        }
+
+        /// <summary>
+        /// 完全复制一个迭代器。
+        /// </summary>
+        /// <returns></returns>
+        public CompositionEnumerator Clone()
+        {
+            var cloned = this;
+            cloned._stack = new Stack<Entity>(_stack.ToArray());
+            return cloned;
+        }
+
+        public void Push(Entity item)
+        {
+            this.InitStack();
             _stack.Push(item);
         }
 
@@ -104,14 +128,23 @@ namespace Rafy.Domain
             }
         }
 
-        internal void Push(EntityList list)
+        /// <summary>
+        /// 将指定的元素，加入的遍历列表中。
+        /// </summary>
+        /// <param name="nodes"></param>
+        public void Push(IList<Entity> nodes)
         {
-            if (list != null)
+            if (nodes != null)
             {
-                this.PushList(list);
+                this.PushList(nodes);
+
                 if (this.IncludeDeletedItems)
                 {
-                    this.PushList(list.DeletedListField);
+                    var el = nodes as EntityList;
+                    if (el != null)
+                    {
+                        this.PushList(el.DeletedListField);
+                    }
                 }
             }
         }
@@ -120,6 +153,8 @@ namespace Rafy.Domain
         {
             if (nodes != null)
             {
+                this.InitStack();
+
                 //倒序加入。
                 for (int i = nodes.Count - 1; i >= 0; i--)
                 {
@@ -128,11 +163,47 @@ namespace Rafy.Domain
             }
         }
 
+        private void InitStack()
+        {
+            if (_stack == null) _stack = new Stack<Entity>(10);
+        }
+
         public CompositionEnumerator GetEnumerator()
         {
             //添加此方法，使得可以使用 foreach 循环
             return this;
         }
+
+        #region 使用工厂，而非直接使用构造器
+
+        public static CompositionEnumerator Create(Entity entity, bool includesChildren = true, bool includesTreeChildren = true, bool includeDeletedItems = false)
+        {
+            var res = Create(includesChildren, includesTreeChildren, includeDeletedItems);
+            res.Push(entity);
+            return res;
+        }
+
+        public static CompositionEnumerator Create(IList<Entity> entityList, bool includesChildren = true, bool includesTreeChildren = true, bool includeDeletedItems = false)
+        {
+            var res = Create(includesChildren, includesTreeChildren, includeDeletedItems);
+            res.Push(entityList);
+            return res;
+        }
+
+        public static CompositionEnumerator Create(bool includesChildren = true, bool includesTreeChildren = true, bool includeDeletedItems = false)
+        {
+            var res = new CompositionEnumerator();
+            res._stack = null;
+            res._current = null;
+            res.IncludesChildren = includesChildren;
+            res.IncludesTreeChildren = includesTreeChildren;
+            res.IncludeDeletedItems = includeDeletedItems;
+            return res;
+        }
+
+        #endregion
+
+        #region IEnumerator.Elements
 
         object IEnumerator.Current => _current;
 
@@ -144,5 +215,7 @@ namespace Rafy.Domain
         void IDisposable.Dispose()
         {
         }
+
+        #endregion
     }
 }

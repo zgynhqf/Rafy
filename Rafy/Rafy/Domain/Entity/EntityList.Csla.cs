@@ -93,19 +93,6 @@ namespace Rafy.Domain
             }
         }
 
-        /// <summary>
-        /// 设置整个聚合为指定的状态。
-        /// </summary>
-        /// <param name="status">The status.</param>
-        void IDirtyAware.MarkAggregate(PersistenceStatus status)
-        {
-            for (int i = 0, c = this.Count; i < c; i++)
-            {
-                var child = this[i] as IDirtyAware;
-                child.MarkAggregate(status);
-            }
-        }
-
         #endregion
 
         #region IDomainComponent Members

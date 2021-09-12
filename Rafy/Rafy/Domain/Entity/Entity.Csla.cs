@@ -248,21 +248,6 @@ namespace Rafy.Domain
             #endregion
         }
 
-        void IDirtyAware.MarkAggregate(PersistenceStatus status)
-        {
-            this.PersistenceStatus = status;
-
-            foreach (var child in this.GetLoadedChildren())
-            {
-                child.Value.MarkAggregate(status);
-            }
-
-            if (_treeChildren != null)
-            {
-                (_treeChildren as IDirtyAware).MarkAggregate(status);
-            }
-        }
-
         #endregion
 
         #region LoadProperty
@@ -470,18 +455,6 @@ namespace Rafy.Domain
         IDomainComponent IDomainComponent.Parent
         {
             get { return _parent; }
-        }
-
-        /// <summary>
-        /// 高效递归遍历整个实体组合树节点。
-        /// 包含：实体、树子节点、已经加载的组合子实体列表。
-        /// </summary>
-        /// <returns></returns>
-        public CompositionEnumerator TravelComposition()
-        {
-            var enumerator = new CompositionEnumerator(null);
-            enumerator.Push(this);
-            return enumerator;
         }
 
         void IDomainComponent.SetParent(IDomainComponent parent)

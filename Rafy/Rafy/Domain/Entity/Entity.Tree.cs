@@ -679,22 +679,6 @@ namespace Rafy.Domain
                 }
             }
 
-            /// <summary>
-            /// 设置整个聚合为指定的状态。
-            /// </summary>
-            /// <param name="status">The status.</param>
-            void IDirtyAware.MarkAggregate(PersistenceStatus status)
-            {
-                if (_nodes != null)
-                {
-                    for (int i = 0, c = _nodes.Count; i < c; i++)
-                    {
-                        var child = _nodes[i];
-                        (child as IDirtyAware).MarkAggregate(status);
-                    }
-                }
-            }
-
             #endregion
 
             #region 懒加载节点
@@ -999,10 +983,7 @@ namespace Rafy.Domain
 
             private CompositionEnumerator EnumerateNodes(bool includeDeletedItems = false)
             {
-                var enumerator = new CompositionEnumerator(new Stack<Entity>());
-                enumerator.IncludesChildren = false;
-                enumerator.IncludesTreeChildren = true;
-                enumerator.IncludeDeletedItems = includeDeletedItems;
+                var enumerator = CompositionEnumerator.Create(false, true, includeDeletedItems);
                 enumerator.Push(this);
                 return enumerator;
             }

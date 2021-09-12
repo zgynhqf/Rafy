@@ -28,22 +28,29 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        public static DataTable ToDataTable(this EntityList list)
+        public static DataTable ToDataTable(this IList<Entity> list)
         {
             DataTable table = new DataTable();
 
             //找到属性容器
-            var container = list.GetRepository().EntityMeta.ManagedProperties;
-            var properties = container.GetCompiledProperties();
+            ManagedPropertyList properties = null;
 
-            foreach (var property in properties)
-            {
-                //table.Columns.Add(property.Name, property.PropertyType);
-                table.Columns.Add(property.Name, TypeHelper.IgnoreNullable(property.PropertyType));
-            }
+            var enumerator = CompositionEnumerator.Create(list, includesChildren: false, includesTreeChildren: true);
 
-            list.EachNode(item =>
+            foreach (var item in enumerator)
             {
+                if (properties == null)
+                {
+                    var container = item.GetRepository().EntityMeta.ManagedProperties;
+                    properties = container.GetCompiledProperties();
+
+                    foreach (var property in properties)
+                    {
+                        //table.Columns.Add(property.Name, property.PropertyType);
+                        table.Columns.Add(property.Name, TypeHelper.IgnoreNullable(property.PropertyType));
+                    }
+                }
+
                 var row = table.NewRow();
 
                 for (int j = 0, c2 = properties.Count; j < c2; j++)
@@ -54,9 +61,7 @@ namespace Rafy.Domain
                 }
 
                 table.Rows.Add(row);
-
-                return false;
-            });
+            }
 
             return table;
         }

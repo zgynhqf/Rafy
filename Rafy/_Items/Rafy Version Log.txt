@@ -10,9 +10,11 @@
  * 
 *******************************************************/
 
-3.78.3932
+3.78.3935
     添加接口
         添加接口 Entity.TravelCompostion、CompositionEnumerator，来实现实体组合的遍历。
+    ！删除接口
+        删除 IDirtyAware.MarkAggregate(PersistenceStatus status);
 
 3.77.3930
     ！删除接口
