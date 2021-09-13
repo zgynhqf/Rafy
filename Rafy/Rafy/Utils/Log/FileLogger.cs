@@ -107,7 +107,7 @@ Message：{ message }
 
             lock (this)
             {
-                File.AppendAllText(this.ExceptionLogFileName, 
+                File.AppendAllText(this.ExceptionLogFileName,
 $@"===================================================================
 ======== {title} =========
 ===================================================================
@@ -196,7 +196,11 @@ StockTrace：
             var pValues = parameters.Select(p =>
             {
                 var value = p.Value;
-                if (p.DbType == DbType.DateTime || p.DbType == DbType.Date)
+                if (value == null)
+                {
+                    value = "null";
+                }
+                else if (p.DbType == DbType.DateTime || p.DbType == DbType.Date)
                 {
                     if (isOracle)
                     {
@@ -216,10 +220,7 @@ StockTrace：
                 {
                     value = Convert.ToByte(value);
                 }
-                else if (value == null)
-                {
-                    value = "null";
-                }
+
                 return value;
             }).ToArray();
 
