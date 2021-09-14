@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：刘雷
  * 创建日期：20161226
@@ -90,15 +90,26 @@ namespace Rafy.DbMigration.MySql
                 //MySql 不支持外键修改备注，所以过滤掉外键修改备注
                 if (string.Compare(op.ColumnName, "id", true) != 0 && string.Compare(op.TableName, "BlogUser") != 0)
                 {
+                    string length = string.Empty;
+
+                    if (op.ColumnDbType == DbType.String)
+                    {
+                        length = DbMigrationSettings.StringColumnDbTypeLength;
+                    }
+                    else if (!string.IsNullOrEmpty(op.Length))
+                    {
+                        length = op.Length;
+                    }
+
                     this.AddRun(new SqlMigrationRun
                     {
                         Sql = string.Format(
-                            @"ALTER TABLE `{0}` MODIFY COLUMN `{1}` {2} COMMENT '{3}'",
-                            this.Prepare(op.TableName),
-                            this.Prepare(op.ColumnName),
-                            this.DbTypeCoverter.ConvertToDatabaseTypeName(op.ColumnDbType),
-                            op.Comment
-                            )
+                                @"ALTER TABLE `{0}` MODIFY COLUMN `{1}` {2} COMMENT '{3}'",
+                                this.Prepare(op.TableName),
+                                this.Prepare(op.ColumnName),
+                                this.DbTypeCoverter.ConvertToDatabaseTypeName(op.ColumnDbType, length),
+                                op.Comment
+                                )
                     });
                 }
             }

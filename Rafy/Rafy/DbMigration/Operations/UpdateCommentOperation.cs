@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建日期：20150926
@@ -42,6 +42,11 @@ namespace Rafy.DbMigration.Operations
         public DbType ColumnDbType { get; set; }
 
         /// <summary>
+        /// 字段长度
+        /// </summary>
+        public string Length { get; set; }
+
+        /// <summary>
         /// 注释内容
         /// </summary>
         public string Comment { get; set; }
@@ -53,7 +58,8 @@ namespace Rafy.DbMigration.Operations
                 TableName = this.TableName,
                 ColumnName = this.ColumnName,
                 ColumnDbType = this.ColumnDbType,
-                Comment = string.Empty
+                Comment = string.Empty,
+                Length = this.Length
             });
         }
     }
