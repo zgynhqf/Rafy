@@ -22,7 +22,7 @@ namespace Rafy.Domain.DataPortal.WCF
     /// 
     /// 标记了 ConcurrencyMode.Multiple 来表示多线程进行
     /// </summary>
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall, ConcurrencyMode = ConcurrencyMode.Multiple, UseSynchronizationContext = false)]
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple, UseSynchronizationContext = false)]
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
     public class ServerPortal : IWcfPortal
     {
