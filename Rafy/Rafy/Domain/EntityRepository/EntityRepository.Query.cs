@@ -300,7 +300,7 @@ namespace Rafy.Domain
 
         internal string GetMaxTreeIndex()
         {
-            var table  = this.DoGetMaxTreeIndex();
+            var table = this.DoGetMaxTreeIndex();
             if (table.Rows.Count > 0)
             {
                 return table.Rows[0].GetString(0);
@@ -732,7 +732,7 @@ namespace Rafy.Domain
                     table.Column(Entity.TreePIdProperty).Equal(id)
                 ));
 
-            return (EntityList)this.QueryData(query);
+            return (EntityList)this.QueryData(query, markTreeFullLoaded: false);
         }
 
         [RepositoryQuery]
@@ -875,7 +875,7 @@ namespace Rafy.Domain
 
         EntityList IRepositoryInternal.GetByIdOrTreePId(object id)
         {
-            var list =  this.GetByIdOrTreePId(id);
+            var list = this.GetByIdOrTreePId(id);
             if (list.Count > 0)
             {
                 list[0].TreeChildren.MarkLoaded();

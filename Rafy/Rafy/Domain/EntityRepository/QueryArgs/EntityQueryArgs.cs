@@ -73,7 +73,7 @@ namespace Rafy.Domain
         /// 如果某次查询结果是一棵完整的子树，那么必须设置此属性为 true ，才可以把整个树标记为完整加载。
         /// 否则，所有节点的子节点集合 TreeChildren 处在未加载完全的状态（IsLoaded = false）。
         /// </summary>
-        public bool MarkTreeFullLoaded { get; set; }
+        public bool MarkTreeFullLoaded { get; set; } = true;
 
         private PagingInfo _pagingInfo = PagingInfo.Empty;
 

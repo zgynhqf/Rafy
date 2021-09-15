@@ -10,13 +10,13 @@
  * 
 *******************************************************/
 
-3.78.3938
+3.78.3939
     添加接口
         添加接口 Entity.TravelCompostion、CompositionEnumerator，来实现实体组合的遍历。
     ！删除接口
         删除 IDirtyAware.MarkAggregate(PersistenceStatus status);
     内部修改
-        ServerPortal 的 ServiceBehavior.InstanceContextMode 修改为：InstanceContextMode.Single
+        markTreeFullLoaded 默认值改为 true。
 
 3.77.3930
     ！删除接口

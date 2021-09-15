@@ -114,7 +114,7 @@ namespace Rafy.Domain
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <param name="markTreeFullLoaded">如果某次查询结果是一棵完整的子树，那么必须设置此参数为 true ，才可以把整个树标记为完整加载。</param>
         /// <returns></returns>
-        protected object QueryData(IQuery query, PagingInfo paging = null, EagerLoadOptions eagerLoad = null, bool markTreeFullLoaded = false)
+        protected object QueryData(IQuery query, PagingInfo paging = null, EagerLoadOptions eagerLoad = null, bool markTreeFullLoaded = true)
         {
             return this.DataQueryer.QueryData(query, paging, eagerLoad, markTreeFullLoaded);
         }

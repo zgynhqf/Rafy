@@ -80,12 +80,13 @@ namespace Rafy.Domain
         /// <param name="queryable"></param>
         /// <param name="paging"></param>
         /// <param name="eagerLoad"></param>
+        /// <param name="markTreeFullLoaded">如果某次查询结果是一棵完整的子树，那么必须设置此参数为 true ，才可以把整个树标记为完整加载。</param>
         /// <returns></returns>
-        public object QueryData(IQueryable queryable, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public object QueryData(IQueryable queryable, PagingInfo paging = null, EagerLoadOptions eagerLoad = null, bool markTreeFullLoaded = true)
         {
             var query = ConvertToQuery(queryable);
 
-            return this.QueryData(query, paging, eagerLoad);
+            return this.QueryData(query, paging, eagerLoad, markTreeFullLoaded);
         }
 
         /// <summary>
@@ -122,7 +123,7 @@ namespace Rafy.Domain
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <param name="markTreeFullLoaded">如果某次查询结果是一棵完整的子树，那么必须设置此参数为 true ，才可以把整个树标记为完整加载。</param>
         /// <returns></returns>
-        public object QueryData(IQuery query, PagingInfo paging = null, EagerLoadOptions eagerLoad = null, bool markTreeFullLoaded = false)
+        public object QueryData(IQuery query, PagingInfo paging = null, EagerLoadOptions eagerLoad = null, bool markTreeFullLoaded = true)
         {
             var queryType = FinalDataPortal.CurrentIEQC.QueryType;
             if (queryType == RepositoryQueryType.Table)

@@ -50,7 +50,7 @@ namespace Rafy.Domain
             var query = f.Query(_repository);
             query.AddConstraint(Entity.TreePIdProperty, PropertyOperator.Equal, null);
 
-            return this.QueryData(query, null, eagerLoad);
+            return this.QueryData(query, null, eagerLoad, false);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Rafy.Domain
                 where: f.Constraint(table.IdColumn, id)
             );
 
-            return (Entity)this.QueryData(q, null, eagerLoad);
+            return (Entity)this.QueryData(q, null, eagerLoad, false);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Rafy.Domain
                 where: f.Constraint(table.IdColumn, PropertyOperator.In, idList)
             );
 
-            return (EntityList)this.QueryData(q, null, eagerLoad);
+            return (EntityList)this.QueryData(q, null, eagerLoad, false);
         }
 
         /// <summary>
@@ -173,7 +173,7 @@ namespace Rafy.Domain
                 where: table.Column(Entity.TreePIdProperty).Equal(treePId)
             );
 
-            return (EntityList)this.QueryData(q, null, eagerLoad);
+            return (EntityList)this.QueryData(q, null, eagerLoad, false);
         }
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace Rafy.Domain
                 where: table.Column(Entity.TreeIndexProperty).In(parentIndeces)
             );
 
-            return (EntityList)this.QueryData(q, null, eagerLoad);
+            return (EntityList)this.QueryData(q, null, eagerLoad, false);
         }
 
         /// <summary>
@@ -287,7 +287,7 @@ namespace Rafy.Domain
                 q.OrderBy.Add(table.Column(orderBy), dir);
             }
 
-            return this.QueryData(q, criteria.PagingInfo, criteria.EagerLoad);
+            return this.QueryData(q, criteria.PagingInfo, criteria.EagerLoad, true);
         }
 
         /// <summary>
@@ -426,7 +426,7 @@ namespace Rafy.Domain
         /// <param name="eagerLoad">需要贪婪加载的属性。</param>
         /// <param name="markTreeFullLoaded">如果某次查询结果是一棵完整的子树，那么必须设置此参数为 true，才可以把整个树标记为完整加载。</param>
         /// <returns></returns>
-        protected object QueryData(IQuery query, PagingInfo paging = null, EagerLoadOptions eagerLoad = null, bool markTreeFullLoaded = false)
+        protected object QueryData(IQuery query, PagingInfo paging = null, EagerLoadOptions eagerLoad = null, bool markTreeFullLoaded = true)
         {
             return this.DataQueryer.QueryData(query, paging, eagerLoad, markTreeFullLoaded);
         }
