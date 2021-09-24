@@ -445,6 +445,7 @@ namespace Rafy
 #if NS2
                 configs = Configuration.Section.DomainPlugins;
 #endif
+                if (configs == null) configs = new IPluginConfig[0];
                 _domainPluginConfigs = configs.Select(i => new PluginConfigItem
                 {
                     Plugin = i.Plugin,
@@ -466,6 +467,7 @@ namespace Rafy
 #if NS2
                 configs = Configuration.Section.UIPlugins;
 #endif
+                if (configs == null) configs = new IPluginConfig[0];
                 _uiPluginConfigs = configs.Select(i => new PluginConfigItem
                 {
                     Plugin = i.Plugin,
