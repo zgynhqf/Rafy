@@ -58,6 +58,7 @@ namespace Rafy
 
             return defaultValue;
 #elif NS2
+            key = key.Replace(".", ":");
             return Configuration.GetValue(key, defaultValue);
 #endif
         }
@@ -74,6 +75,7 @@ namespace Rafy
 #if NET45
             return ConfigurationManager.AppSettings[key] ?? defaultValue;
 #elif NS2
+            key = key.Replace(".", ":");
             return Configuration.GetValue(key, defaultValue);
 #endif
         }
