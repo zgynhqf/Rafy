@@ -94,6 +94,8 @@ Message：{ message }
         /// <param name="e"></param>
         public override void LogError(string title, Exception e)
         {
+            LogInfo(title);
+
             if (string.IsNullOrEmpty(this.ExceptionLogFileName)) return;
 
             var stackTrace = e.StackTrace;//需要记录完整的堆栈信息。
