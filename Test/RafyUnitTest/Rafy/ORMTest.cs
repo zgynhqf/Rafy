@@ -34,6 +34,28 @@ namespace RafyUnitTest
             ServerTestHelper.ClassInitialize(context);
         }
 
+        #region CDU - U
+
+        [TestMethod]
+        public void ORM_CDU_C_InsertAllDefaultValues()
+        {
+            var repo = RepositoryFacade.ResolveInstance<TestUserRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var entity = new TestUser();
+                repo.Save(entity);
+
+                var entity2 = repo.GetById(entity.Id);
+                Assert.AreEqual("DefaultName", entity2.Name);
+                Assert.AreEqual(10, entity2.Age);
+                Assert.AreEqual(null, entity2.NotEmptyCode);
+                Assert.AreEqual(string.Empty, entity2.LoginName);
+                Assert.AreEqual(2000, entity2.AddedTime.Year);
+            }
+        }
+
+        #endregion
+
         #region EntityContext
 
         [TestMethod]
@@ -3743,7 +3765,7 @@ WHERE Table1.Column1 = {0} OR (Table1.Column2 = {1} OR Table1.Column2 = {2}) AND
             {
                 Column = column2,
                 Operator = SqlColumnConstraintOperator.In,
-                Value = new string[] {"Hi","你好","123"}
+                Value = new string[] { "Hi", "你好", "123" }
             };
 
             var generator = new SqlServerSqlGenerator();
@@ -5660,7 +5682,7 @@ ORDER BY ASN.AsnCode ASC LIMIT 0,10");
             sqlB = sqlB.Replace("\r", string.Empty);
             Assert.AreEqual(sqlA, sqlB, message);
         }
-        
+
         #endregion
 
         #region TableQuery
@@ -6410,7 +6432,7 @@ WHERE Article.Id > {0}
 ORDER BY Article.Code ASC");
         }
 
-        #endregion
+        #endregion 
 
         #region 数据库映射
 
