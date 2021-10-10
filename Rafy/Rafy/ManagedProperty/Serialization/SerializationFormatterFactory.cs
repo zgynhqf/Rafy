@@ -4,9 +4,7 @@ using Rafy.Serialization.Mobile;
 namespace Rafy.Serialization
 {
     /// <summary>
-    /// Factory used to create the appropriate
-    /// serialization formatter object based
-    /// on the application configuration.
+    /// 序列化器工厂。
     /// </summary>
     public static class SerializationFormatterFactory
     {
