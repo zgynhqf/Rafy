@@ -323,12 +323,13 @@ namespace Rafy.Domain
         {
             for (int i = fromIndex, c = allEntities.Count; i < c; i++)
             {
-                var item = allEntities[i];
+                var entity = allEntities[i];
 
-                item.PersistenceStatus = PersistenceStatus.Unchanged;
+                entity.PersistenceStatus = PersistenceStatus.Unchanged;
+                entity.MarkPropertiesUnchanged();
 
                 //由于 OnDbLoaded 中可能会使用到关系，导致再次进行数据访问，所以不能放在 Reader 中。
-                _dataProvider.OnDbLoaded(item);
+                _dataProvider.OnDbLoaded(entity);
             }
         }
 

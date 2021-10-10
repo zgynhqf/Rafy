@@ -29,12 +29,22 @@ namespace Rafy.Domain.Serialization
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public static DataContractSerializer CreateSerializer(Entity entity)
+        public static XmlObjectSerializer CreateSerializer(Entity entity)
         {
+#if NET45
+            //IWcfPortal 上标记了，使用 NetDataContractSerializer 来进行序列化和反序列化。
+            //详见 UseNetDataContractAttribute 的类型注释。
+            return new NetDataContractSerializer();
+#endif
+#if NS2
             var graph = new SerializationEntityGraph();
             graph.DeepSearch(entity);
 
+            graph._knownTypes.Add(typeof(MPFValues));
+
             return new DataContractSerializer(entity.GetType(), graph._knownTypes);
+            //return new DataContractJsonSerializer(entity.GetType(), graph._knownTypes);
+#endif
         }
 
         private List<Type> _knownTypes;
@@ -69,7 +79,7 @@ namespace Rafy.Domain.Serialization
                     case PropertyCategory.List:
                         if (mp.GetMeta(repo.EntityType).Serializable)
                         {
-                            var  p = mp as IListProperty;
+                            var p = mp as IListProperty;
                             if (!_knownTypes.Contains(p.PropertyType))
                             {
                                 //列表类型同样需要加入到序列化类型列表中。

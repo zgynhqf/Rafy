@@ -51,6 +51,13 @@ namespace Rafy.Domain.ORM
             set { base.DataQueryer = value; }
         }
 
+        /// <summary>
+        /// 是否在更新时，生成的 Update 语句中，只更新已经变更的属性，而忽略未变更的属性。
+        /// 默认为 true。
+        /// 为优化关系型数据库的更新效率。
+        /// </summary>
+        public bool UpdateChangedPropertiesOnly { get; set; } = true;
+
         #region 数据库运行时对象
 
         /// <summary>

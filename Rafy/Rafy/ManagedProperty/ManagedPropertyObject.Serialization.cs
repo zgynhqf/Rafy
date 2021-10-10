@@ -170,9 +170,21 @@ namespace Rafy.ManagedProperty
                     if (meta.Serializable)
                     {
                         var value = field.Value;
-                        if (!object.Equals(value, meta.DefaultValue))
+                        if (!object.Equals(value, meta.DefaultValue) || field.IsChanged)
                         {
-                            info.AddValue(property.Name, value, property.PropertyType);
+                            if (field.IsChanged)
+                            {
+                                value = new MPFValues
+                                {
+                                    Value = value,
+                                    IsChanged = true
+                                };
+                                info.AddValue(property.Name, value, typeof(MPFValues));
+                            }
+                            else
+                            {
+                                info.AddValue(property.Name, value, property.PropertyType);
+                            }
                         }
                     }
                 }
@@ -220,7 +232,18 @@ namespace Rafy.ManagedProperty
                     var property = compiledProperties[i];
                     if (property.Name == name)
                     {
-                        this._LoadProperty(property, serializationEntry.Value);
+                        var value = serializationEntry.Value;
+                        if (value is MPFValues)
+                        {
+                            MPFValues mpfValues = (MPFValues)value;
+                            this._LoadProperty(property, mpfValues.Value);
+                            this.MarkChangedStatus(property, true);
+                        }
+                        else
+                        {
+                            this._LoadProperty(property, serializationEntry.Value);
+                        }
+
                         isManagedProperty = true;
                         break;
                     }
@@ -260,5 +283,12 @@ namespace Rafy.ManagedProperty
         /// </summary>
         /// <param name="e"></param>
         protected virtual void OnDeserialized(DesirializedArgs e) { }
+    }
+
+    [Serializable]
+    internal struct MPFValues
+    {
+        public object Value;
+        public bool IsChanged;
     }
 }

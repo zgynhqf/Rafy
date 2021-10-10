@@ -25,6 +25,7 @@ using Rafy.UnitTest.Repository;
 using Rafy.Utils;
 using UT;
 using Rafy.UnitTest;
+using Rafy.ManagedProperty;
 
 namespace RafyUnitTest
 {
@@ -892,23 +893,33 @@ namespace RafyUnitTest
             var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
             {
-                var book = new Book { Name = "1", Content = "Book1 Long Content........." };
-                repo.Save(book);
-
-                var book2 = repo.GetById(book.Id);
-                book2.Name = "name changed";
-
-                string updateSql = string.Empty;
-                Logger.ThreadDbAccessed += (o, e) =>
+                var dp = RdbDataProvider.Get(repo);
+                try
                 {
-                    updateSql = e.Sql.ToLower();
-                };
+                    dp.UpdateChangedPropertiesOnly = false;
 
-                repo.Save(book2);
+                    var book = new Book { Name = "1", Content = "Book1 Long Content........." };
+                    repo.Save(book);
 
-                Assert.IsTrue(updateSql.Contains("update"));
-                Assert.IsTrue(updateSql.Contains("bytes"));
-                Assert.IsTrue(!updateSql.Contains("content"), "LOB 属性未发生改变时，更新语句不更新该字段。");
+                    var book2 = repo.GetById(book.Id);
+                    book2.Name = "name changed";
+
+                    string updateSql = string.Empty;
+                    Logger.ThreadDbAccessed += (o, e) =>
+                    {
+                        updateSql = e.Sql.ToLower();
+                    };
+
+                    repo.Save(book2);
+
+                    Assert.IsTrue(updateSql.Contains("update"));
+                    Assert.IsTrue(updateSql.Contains("bytes"));
+                    Assert.IsTrue(!updateSql.Contains("content"), "LOB 属性未发生改变时，更新语句不更新该字段。");
+                }
+                finally
+                {
+                    dp.UpdateChangedPropertiesOnly = true;
+                }
             }
         }
 
@@ -1223,7 +1234,7 @@ namespace RafyUnitTest
             {
                 var name = "admin";
 
-                var user = new TestUser { Age = 100, Name = name, LoginName = "loginName"};
+                var user = new TestUser { Age = 100, Name = name, LoginName = "loginName" };
                 repo.Save(user);
 
                 var oldValue = ORMSettings.ErrorIfColumnNotFoundInSql;
@@ -2550,8 +2561,7 @@ namespace RafyUnitTest
             };
 
             //序列化。
-            var serializer = new DataContractSerializer(typeof(Article));
-            //var serializer = new NetDataContractSerializer();
+            var serializer = SerializationEntityGraph.CreateSerializer(model);
             var stream = new MemoryStream();
             serializer.WriteObject(stream, model);
 
@@ -2578,7 +2588,7 @@ namespace RafyUnitTest
             };
 
             //序列化。
-            var serializer = new DataContractSerializer(typeof(Article));
+            var serializer = SerializationEntityGraph.CreateSerializer(model);
             var stream = new MemoryStream();
             serializer.WriteObject(stream, model);
 
@@ -2609,7 +2619,6 @@ namespace RafyUnitTest
 
             //序列化。
             var serializer = SerializationEntityGraph.CreateSerializer(model);
-            //var serializer = new DataContractSerializer(typeof(Article));
             var stream = new MemoryStream();
             serializer.WriteObject(stream, model);
 
@@ -2650,15 +2659,7 @@ namespace RafyUnitTest
             };
 
             //序列化。
-#if NET45
-            var serializer = new NetDataContractSerializer();
-#endif
-#if NS2
-            var settings = new DataContractSerializerSettings();
-            settings.PreserveObjectReferences = true;
-            settings.KnownTypes = new List<Type>() { typeof(Book), typeof(ChapterList), typeof(Chapter) };
-            var serializer = new DataContractSerializer(typeof(Book), settings);
-#endif
+            var serializer = SerializationEntityGraph.CreateSerializer(model);
 
             var stream = new MemoryStream();
             serializer.WriteObject(stream, model);
@@ -3694,8 +3695,8 @@ namespace RafyUnitTest
         {
             var a = new TestUser();
             Assert.AreEqual("DefaultName", a.Name);
-            var b = new TestUser();
 
+            var b = new TestUser();
             b.Clone(a, new CloneOptions(CloneActions.NormalProperties));
 
             Assert.AreEqual("DefaultName", b.Name);

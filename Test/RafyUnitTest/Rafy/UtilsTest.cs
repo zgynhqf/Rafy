@@ -378,7 +378,6 @@ namespace RafyUnitTest
 
             //序列化。
             var serializer = new DataContractSerializer(typeof(LiteDataTable));
-            //var serializer = new NetDataContractSerializer();
             var stream = new MemoryStream();
             serializer.WriteObject(stream, table);
 

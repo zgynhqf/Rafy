@@ -6,10 +6,12 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rafy;
 using Rafy.Domain;
 using Rafy.Domain.Caching;
+using Rafy.Domain.ORM;
 using Rafy.Domain.ORM.DbMigration;
 using Rafy.Domain.Validation;
 using Rafy.ManagedProperty;
@@ -913,6 +915,267 @@ namespace RafyUnitTest
                 r = repo.GetById(r.Id);
                 Assert.AreEqual(r.MerchantItemList[0].RD_MerchantName, r.Name);
             }
+        }
+
+        #endregion
+
+        #region PropertyChangedStatus
+
+        /// <summary>
+        /// 保存后的实体，在某个属性变更后。MPF.IsChanged 属性为 true。
+        /// </summary>
+        [TestMethod]
+        public void MPT_ChangedStatus_IsChanged()
+        {
+            var user = new TestUser();
+            var fields = GetChangedProperties(user);
+            Assert.AreEqual(0, fields.Count);
+
+            user.Name = "1";
+            fields = GetChangedProperties(user);
+            Assert.AreEqual(1, fields.Count, "刚创建的实体，虽然还没有调用过 MarkPropertiesUnchanged 方法，但是也会跟踪属性的变更。");
+
+            user.MarkPropertiesUnchanged();
+            fields = GetChangedProperties(user);
+            Assert.AreEqual(0, fields.Count);
+
+            user.Name = "1";
+            fields = GetChangedProperties(user);
+            Assert.AreEqual(0, fields.Count, "由于属性未变更，所以属性变更状态不会变化。");
+
+            user.Name = "name changed.";
+            fields = GetChangedProperties(user);
+            Assert.AreEqual(1, fields.Count);
+            Assert.AreSame(TestUser.NameProperty, fields[0].Property);
+        }
+
+        /// <summary>
+        /// 可以手工控制所有属性的变更状态。
+        /// </summary>
+        [TestMethod]
+        public void MPT_ChangedStatus_IsChanged_Manually()
+        {
+            var user = new TestUser();
+            user.Name = "1";
+            user.MarkPropertiesUnchanged();
+
+            var fields = GetChangedProperties(user);
+            Assert.AreEqual(0, fields.Count);
+
+            user.Age = 100;
+            fields = GetChangedProperties(user);
+            Assert.AreEqual(1, fields.Count);
+            Assert.AreSame(TestUser.AgeProperty, fields[0].Property);
+
+            user.MarkChangedStatus(TestUser.NameProperty, true);
+            user.MarkChangedStatus(TestUser.AgeProperty, false);
+
+            fields = GetChangedProperties(user);
+            Assert.AreEqual(1, fields.Count);
+            Assert.AreSame(TestUser.NameProperty, fields[0].Property);
+
+            user.MarkPropertiesUnchanged();
+            fields = GetChangedProperties(user);
+            Assert.AreEqual(0, fields.Count);
+        }
+
+        ///// <summary>
+        ///// 克隆后，属性的变更状态不需要跟着拷贝。因为在克隆时，往往开发者需要拷贝的只是值。
+        ///// </summary>
+        //[TestMethod]
+        //public void MPT_ChangedStatus_Clone()
+        //{
+        //    var user = new TestUser();
+        //    user.Name = "1";
+        //    user.MarkPropertiesUnchanged();
+        //    user.Age = 100;
+
+        //    var fields = GetChangedProperties(user);
+        //    Assert.AreEqual(1, fields.Count);
+        //    Assert.AreSame(TestUser.AgeProperty, fields[0].Property);
+
+        //    var user2 = new TestUser();
+        //    user2.Clone(user);
+
+        //    fields = GetChangedProperties(user2);
+        //    Assert.AreEqual(1, fields.Count);
+        //    Assert.AreSame(TestUser.AgeProperty, fields[0].Property);
+        //}
+
+        /// <summary>
+        /// 属性的变更状态，需要支持序列化和反序列化。
+        /// </summary>
+        [TestMethod]
+        public void MPT_ChangedStatus_Serialization()
+        {
+            var user = new TestUser();
+            user.Name = "1";
+            user.MarkPropertiesUnchanged();
+            user.Age = 100;
+
+            var fields = GetChangedProperties(user);
+            Assert.AreEqual(1, fields.Count);
+            Assert.AreSame(TestUser.AgeProperty, fields[0].Property);
+
+            var user2 = ObjectCloner.Clone(user);
+
+            fields = GetChangedProperties(user2);
+            Assert.AreEqual(1, fields.Count);
+            Assert.AreSame(TestUser.AgeProperty, fields[0].Property);
+        }
+
+        /// <summary>
+        /// 保存后的实体，在某个属性变更后，在更新时，更新语句只更新这个属性。
+        /// </summary>
+        [TestMethod]
+        public void MPT_ChangedStatus_UpdateChangedPropertiesOnly()
+        {
+            var repo = RF.ResolveInstance<TestUserRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var rdp = RdbDataProvider.Get(repo);
+                if (rdp == null) return;
+
+                Assert.IsTrue(rdp.UpdateChangedPropertiesOnly, "默认值为 true。");
+
+                var user = new TestUser();
+                repo.Save(user);
+                Assert.AreEqual(0, GetChangedProperties(user).Count);
+
+                string[] setList = null;
+                EventHandler<Rafy.Logger.DbAccessedEventArgs> handler = (o, e) =>
+                {
+                    var sql = e.Sql;
+                    var m = Regex.Match(sql, @"set (?<setClause>.+?) where", RegexOptions.IgnoreCase);
+                    var setClause = m.Groups["setClause"].Value;
+                    setList = setClause.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                };
+                Logger.DbAccessed += handler;
+
+                user.Age = 100;
+                Assert.AreEqual(1, GetChangedProperties(user).Count);
+                repo.Save(user);
+                Assert.AreEqual(0, GetChangedProperties(user).Count);
+                Assert.AreEqual(1, setList.Length);
+                Assert.IsTrue(setList[0].Contains("Age"), "Update 语句中，只更新了 Age 字段。");
+
+                user.Name = "nameChanged;";
+                Assert.AreEqual(1, GetChangedProperties(user).Count);
+                repo.Save(user);
+                Assert.AreEqual(0, GetChangedProperties(user).Count);
+                Assert.AreEqual(1, setList.Length);
+                Assert.IsTrue(setList[0].Contains("Name"), "Update 语句中，只更新了 Name 字段。");
+
+                Logger.DbAccessed -= handler;
+            }
+        }
+
+        /// <summary>
+        /// 保存后的实体，在某个属性变更后，在更新时，更新语句只更新这个属性。
+        /// </summary>
+        [TestMethod]
+        public void MPT_ChangedStatus_UpdateChangedPropertiesOnly_AfterQueryFromDb()
+        {
+            var repo = RF.ResolveInstance<TestUserRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var rdp = RdbDataProvider.Get(repo);
+                if (rdp == null) return;
+
+                Assert.IsTrue(rdp.UpdateChangedPropertiesOnly, "默认值为 true。");
+
+                var user = new TestUser();
+                repo.Save(user);
+                Assert.AreEqual(0, GetChangedProperties(user).Count);
+
+                string[] setList = null;
+                EventHandler<Rafy.Logger.DbAccessedEventArgs> handler = (o, e) =>
+                {
+                    var sql = e.Sql;
+                    var m = Regex.Match(sql, @"set (?<setClause>.+?) where", RegexOptions.IgnoreCase);
+                    var setClause = m.Groups["setClause"].Value;
+                    setList = setClause.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                };
+                Logger.DbAccessed += handler;
+
+                user.Age = 100;
+                Assert.AreEqual(1, GetChangedProperties(user).Count);
+                repo.Save(user);
+                Assert.AreEqual(0, GetChangedProperties(user).Count);
+                Assert.AreEqual(1, setList.Length);
+                Assert.IsTrue(setList[0].Contains("Age"), "Update 语句中，只更新了 Age 字段。");
+
+                user.Name = "nameChanged;";
+                Assert.AreEqual(1, GetChangedProperties(user).Count);
+                repo.Save(user);
+                Assert.AreEqual(0, GetChangedProperties(user).Count);
+                Assert.AreEqual(1, setList.Length);
+                Assert.IsTrue(setList[0].Contains("Name"), "Update 语句中，只更新了 Name 字段。");
+            }
+        }
+
+        /// <summary>
+        /// 保存后的实体，在某个属性变更后，在更新时，可以选择更新所有的属性。
+        /// </summary>
+        [TestMethod]
+        public void MPT_ChangedStatus_UpdateChangedPropertiesOnly_false()
+        {
+            var repo = RF.ResolveInstance<TestUserRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var rdp = RdbDataProvider.Get(repo);
+                if (rdp == null) return;
+                Assert.IsTrue(rdp.UpdateChangedPropertiesOnly, "默认值为 true。");
+                try
+                {
+                    rdp.UpdateChangedPropertiesOnly = false;
+
+                    var user = new TestUser();
+                    user.Name = "1";
+                    repo.Save(user);
+
+                    string setClause = null;
+                    string[] setList = null;
+                    EventHandler<Rafy.Logger.DbAccessedEventArgs> handler = (o, e) =>
+                    {
+                        var sql = e.Sql;
+                        var m = Regex.Match(sql, @"set (?<setClause>.+?) where", RegexOptions.IgnoreCase);
+                        setClause = m.Groups["setClause"].Value;
+                        setList = setClause.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    };
+                    Logger.DbAccessed += handler;
+
+                    user.Age = 100;
+                    repo.Save(user);
+                    Assert.IsTrue(setList.Length > 3);
+                    Assert.IsTrue(setClause.Contains("Name"), "Update 语句中，更新了所有字段。");
+                    Assert.IsTrue(setClause.Contains("Age"), "Update 语句中，更新了所有字段。");
+
+                    user.Name = "nameChanged;";
+                    repo.Save(user);
+                    Assert.IsTrue(setList.Length > 3);
+                    Assert.IsTrue(setClause.Contains("Name"), "Update 语句中，更新了所有字段。");
+                    Assert.IsTrue(setClause.Contains("Age"), "Update 语句中，更新了所有字段。");
+
+                    Logger.DbAccessed -= handler;
+                }
+                finally
+                {
+                    rdp.UpdateChangedPropertiesOnly = true;
+                }
+            }
+        }
+
+        private static List<ManagedPropertyField> GetChangedProperties(ManagedPropertyObject mpo)
+        {
+            var res = new List<ManagedPropertyField>();
+
+            foreach (var mf in mpo.GetCompiledPropertyValues())
+            {
+                if (mf.IsChanged) res.Add(mf);
+            }
+
+            return res;
         }
 
         #endregion

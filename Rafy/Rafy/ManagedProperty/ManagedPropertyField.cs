@@ -37,23 +37,22 @@ namespace Rafy.ManagedProperty
 
         internal object _value;
 
+        internal bool _isChanged;
+
         /// <summary>
         /// 对应的托管属性
         /// </summary>
-        public IManagedProperty Property
-        {
-            get { return this._property; }
-            //internal set { this._property = value; }
-        }
+        public IManagedProperty Property { get { return this._property; } }
 
         /// <summary>
         /// 字段的值
         /// </summary>
-        public object Value
-        {
-            get { return this._value; }
-            //internal set { this._value = value; }
-        }
+        public object Value { get { return this._value; } }
+
+        /// <summary>
+        /// 当前的属性是否为变更状态。（相对于最近一次调用 <see cref="ManagedPropertyObject.MarkPropertiesUnchanged"/> 方法之后）
+        /// </summary>
+        public bool IsChanged { get { return _isChanged; } }
 
         /// <summary>
         /// 返回字段是否已经有值，而非使用默认值。

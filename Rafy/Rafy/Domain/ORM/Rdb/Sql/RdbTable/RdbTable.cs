@@ -61,7 +61,6 @@ namespace Rafy.Domain.ORM
             _columns = new List<RdbColumn>();
 
             _deleteSql = new Lazy<string>(this.GenerateDeleteSQL);
-            _updateSQL = new Lazy<string>(() => this.GenerateUpdateSQL(null));
             _insertSql = new Lazy<string>(() => this.GenerateInsertSQL(false));
             _insertSqlWithId = new Lazy<string>(() => this.GenerateInsertSQL(true));
         }
@@ -95,6 +94,17 @@ namespace Rafy.Domain.ORM
         public abstract SqlGenerator CreateSqlGenerator();
 
         #region 属性 及 元数据
+
+        private bool _updateChangedPropertiesOnly;
+        /// <summary>
+        /// 是否在更新时，生成的 Update 语句中，只更新已经变更的属性，而忽略未变更的属性。
+        /// 默认为 true。
+        /// </summary>
+        public bool UpdateChangedPropertiesOnly
+        {
+            get { return _updateChangedPropertiesOnly; }
+            set { _updateChangedPropertiesOnly = value; }
+        }
 
         /// <summary>
         /// 表名
@@ -185,8 +195,6 @@ namespace Rafy.Domain.ORM
         protected Lazy<string> _insertSqlWithId;
 
         private Lazy<string> _deleteSql;
-
-        private Lazy<string> _updateSQL;
 
         private bool _hasLOB;
 
@@ -304,73 +312,47 @@ namespace Rafy.Domain.ORM
         {
             EnsureMappingTable();
 
+            var updateColumns = new List<RdbColumn>();
             var parameters = new List<object>(10);
-            string updateSql = null;
 
-            //是否有需要更新的 lob 字段。
-            bool hasUpdatedLOBColumns = false;
-            List<RdbColumn> lobColumns = null;
-
-            if (_hasLOB)
-            {
-                lobColumns = new List<RdbColumn>();
-
-                for (int i = 0, c = _columns.Count; i < c; i++)
-                {
-                    var column = _columns[i];
-                    //如果一个 lob 属性的值存在，则表示需要更新。
-                    //（可能被设置了，也可能只是简单地读取了一下，没有变更值。这时也简单地处理。）
-                    if (column.IsLOB && item.FieldExists(column.Info.Property))
-                    {
-                        lobColumns.Add(column);
-                        hasUpdatedLOBColumns = true;
-                    }
-                }
-            }
-
-            if (!hasUpdatedLOBColumns)
-            {
-                //如果没有 LOB，则直接缓存上更新语句。
-                updateSql = _updateSQL.Value;
-            }
-            else
-            {
-                updateSql = this.GenerateUpdateSQL(lobColumns);
-            }
-
-            //更新所有非 lob 的字段
             for (int i = 0, c = _columns.Count; i < c; i++)
             {
                 var column = _columns[i];
-                if (!column.Info.IsPrimaryKey && !column.IsLOB)
+                if (!column.Info.IsPrimaryKey)
                 {
-                    var value = column.ReadDbParameterValue(item);
-                    parameters.Add(value);
-                }
-            }
-
-            //更新需要更新的 lob 字段
-            if (hasUpdatedLOBColumns)
-            {
-                for (int i = 0, c = lobColumns.Count; i < c; i++)
-                {
-                    var column = lobColumns[i];
-                    if (!column.Info.IsPrimaryKey)
+                    if (_updateChangedPropertiesOnly)
                     {
-                        var value = column.ReadDbParameterValue(item);
-                        parameters.Add(value);
+                        if (item.IsChanged(column.Info.Property))
+                        {
+                            updateColumns.Add(column);
+                            parameters.Add(column.ReadDbParameterValue(item));
+                        }
+                    }
+                    else
+                    {
+                        //在全列更新情况下，需要排除未读取的属性。
+                        if (!column.IsLOB || item.IsAvailable(column.Info.Property))
+                        {
+                            updateColumns.Add(column);
+                            parameters.Add(column.ReadDbParameterValue(item));
+                        }
                     }
                 }
             }
 
-            //Id 最后加入
+            if (updateColumns.Count == 0) return 1;
+
+            //sql
+            var updateSql = this.GenerateUpdateSQL(updateColumns);
             parameters.Add(item.Id);
 
+            //execute
             int res = dba.ExecuteText(updateSql, parameters.ToArray());
+
             return res;
         }
 
-        private string GenerateUpdateSQL(IList<RdbColumn> lobColumns)
+        private string GenerateUpdateSQL(IList<RdbColumn> updateColumns)
         {
             var sql = new StringWriter();
             sql.Write("UPDATE ");
@@ -381,34 +363,20 @@ namespace Rafy.Domain.ORM
             var paramIndex = 0;
 
             //先更新所有非 lob 字段。
-            for (int i = 0, c = _columns.Count; i < c; i++)
+            if (updateColumns == null) { updateColumns = _columns; }
+            for (int i = 0, c = updateColumns.Count; i < c; i++)
             {
-                var column = _columns[i];
-                if (!column.Info.IsPrimaryKey && !column.IsLOB)
-                {
-                    if (comma) { sql.Write(','); }
-                    else { comma = true; }
+                var column = updateColumns[i];
 
-                    sql.AppendQuote(this, column.Name).Write(" = {");
-                    sql.Write(paramIndex++);
-                    sql.Write('}');
-                }
-            }
-            //再更新所有 lob 字段。
-            if (lobColumns != null)
-            {
-                for (int i = 0, c = lobColumns.Count; i < c; i++)
-                {
-                    if (comma) { sql.Write(','); }
-                    else { comma = true; }
+                if (comma) { sql.Write(','); }
+                else { comma = true; }
 
-                    var column = lobColumns[i];
-                    sql.AppendQuote(this, column.Name);
-                    sql.Write(" = {");
-                    sql.Write(paramIndex++);
-                    sql.Write('}');
-                }
+                sql.AppendQuote(this, column.Name);
+                sql.Write(" = {");
+                sql.Write(paramIndex++);
+                sql.Write('}');
             }
+
             sql.Write(" WHERE ");
             sql.AppendQuote(this, _pkColumn.Name);
             sql.Write(" = {");
