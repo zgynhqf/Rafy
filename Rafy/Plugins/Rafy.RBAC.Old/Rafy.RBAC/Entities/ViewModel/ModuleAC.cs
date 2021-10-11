@@ -108,7 +108,7 @@ namespace Rafy.RBAC.Old
                 (childModule as ITreeEntity).TreeParent = item;
             }
 
-            item.PersistenceStatus = PersistenceStatus.Unchanged;
+            item.PersistenceStatus = PersistenceStatus.Saved;
 
             return item;
         }

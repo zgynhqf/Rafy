@@ -89,12 +89,12 @@ namespace Rafy.Domain.ORM.BatchSubmit
                     if (batch.InsertBatch.Count > 0)
                     {
                         this.ImportInsert(batch);
-                        this.SetStatus(batch.InsertBatch, PersistenceStatus.Unchanged);
+                        this.SetStatus(batch.InsertBatch, PersistenceStatus.Saved);
                     }
                     if (batch.UpdateBatch.Count > 0)
                     {
                         this.ImportUpdate(batch);
-                        this.SetStatus(batch.UpdateBatch, PersistenceStatus.Unchanged);
+                        this.SetStatus(batch.UpdateBatch, PersistenceStatus.Saved);
                     }
                 }
 

@@ -1282,7 +1282,7 @@ namespace RafyUnitTest
             where TEntity : Entity, new()
         {
             var e = new TEntity();
-            e.PersistenceStatus = PersistenceStatus.Unchanged;
+            e.PersistenceStatus = PersistenceStatus.Saved;
             return e;
         }
 

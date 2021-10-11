@@ -71,7 +71,7 @@ namespace Rafy.Domain
         /// 
         /// 只有实体的状态是 Unchanged 状态时（其它状态已经算是 Dirty 了），调用本方法才会把实体的状态改为 Modified。
         /// </summary>
-        void MarkModifiedIfUnchanged();
+        void MarkModifiedIfSaved();
 
         /// <summary>
         /// 清空实体的 IsDeleted 状态，使其还原到删除之前的状态。

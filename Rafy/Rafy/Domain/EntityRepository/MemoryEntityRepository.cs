@@ -158,7 +158,7 @@ namespace Rafy.Domain.ORM
 
                 this.MemoryClone(row, entity);
 
-                entity.PersistenceStatus = PersistenceStatus.Unchanged;
+                entity.PersistenceStatus = PersistenceStatus.Saved;
 
                 return entity;
 

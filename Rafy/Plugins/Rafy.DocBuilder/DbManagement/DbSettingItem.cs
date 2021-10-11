@@ -93,7 +93,7 @@ namespace Rafy.DevTools.DbManagement
                 var entity = new DbSettingItem();
                 entity.Id = id++;
                 entity.Name = name;
-                entity.PersistenceStatus = PersistenceStatus.Unchanged;
+                entity.PersistenceStatus = PersistenceStatus.Saved;
 
                 list.Add(entity);
             }

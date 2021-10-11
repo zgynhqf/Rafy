@@ -289,7 +289,7 @@ namespace Rafy.Domain.Validation
         {
             switch (entity.PersistenceStatus)
             {
-                case PersistenceStatus.Unchanged:
+                case PersistenceStatus.Saved:
                     return meta.HasScope(EntityStatusScopes.Add) || meta.HasScope(EntityStatusScopes.Update);
                 case PersistenceStatus.Modified:
                     return meta.HasScope(EntityStatusScopes.Update);

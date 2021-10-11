@@ -115,7 +115,7 @@ namespace Rafy.Domain.Serialization.Json
                 else
                 {
                     entity = Activator.CreateInstance(type) as Entity;
-                    entity.PersistenceStatus = PersistenceStatus.Unchanged;
+                    entity.PersistenceStatus = PersistenceStatus.Saved;
                 }
             }
             if (entity == null)
@@ -393,7 +393,7 @@ namespace Rafy.Domain.Serialization.Json
                 //在创建实体时，如果有 Id，表示是更新，这时创建的实体的初始状态应该是   
                 if (id != null)
                 {
-                    child.PersistenceStatus = PersistenceStatus.Unchanged;
+                    child.PersistenceStatus = PersistenceStatus.Saved;
                 }
             }
             return child;

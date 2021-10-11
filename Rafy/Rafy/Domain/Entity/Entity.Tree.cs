@@ -768,7 +768,7 @@ namespace Rafy.Domain
                     {
                         var treeIndex = _owner.TreeIndex;
 
-                        if (!forceOwnerTreeIndex && _owner.PersistenceStatus != PersistenceStatus.Unchanged)
+                        if (!forceOwnerTreeIndex && _owner.PersistenceStatus != PersistenceStatus.Saved)
                         {
                             var dbOwner = repo.GetById(_owner.Id);
                             if (dbOwner == null)

@@ -88,7 +88,7 @@ namespace Rafy.Domain.ORM.BatchSubmit
         {
             switch (entity.PersistenceStatus)
             {
-                case PersistenceStatus.Unchanged:
+                case PersistenceStatus.Saved:
                     break;
                 case PersistenceStatus.Modified:
                     batch.UpdateBatch.Add(entity);

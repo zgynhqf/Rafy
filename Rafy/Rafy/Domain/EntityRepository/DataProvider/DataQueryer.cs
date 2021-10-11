@@ -325,7 +325,7 @@ namespace Rafy.Domain
             {
                 var entity = allEntities[i];
 
-                entity.PersistenceStatus = PersistenceStatus.Unchanged;
+                entity.PersistenceStatus = PersistenceStatus.Saved;
                 entity.MarkPropertiesUnchanged();
 
                 //由于 OnDbLoaded 中可能会使用到关系，导致再次进行数据访问，所以不能放在 Reader 中。

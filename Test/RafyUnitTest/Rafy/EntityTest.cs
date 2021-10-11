@@ -44,10 +44,10 @@ namespace RafyUnitTest
             var entity = new TestUser();
             Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.New, "刚创建的对象的状态应该是 New。");
 
-            entity.PersistenceStatus = PersistenceStatus.Unchanged;
-            Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.Unchanged);
+            entity.PersistenceStatus = PersistenceStatus.Saved;
+            Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.Saved);
 
-            (entity as IEntityWithStatus).MarkModifiedIfUnchanged();
+            (entity as IEntityWithStatus).MarkModifiedIfSaved();
             Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.Modified);
 
             entity.PersistenceStatus = PersistenceStatus.Deleted;
@@ -135,7 +135,7 @@ namespace RafyUnitTest
                 Assert.IsTrue(user.IsDeleted);
                 repo.Save(user);
 
-                Assert.AreEqual(PersistenceStatus.Unchanged, user.PersistenceStatus);
+                Assert.AreEqual(PersistenceStatus.Saved, user.PersistenceStatus);
             }
         }
 
@@ -154,16 +154,16 @@ namespace RafyUnitTest
         public void ET_PersistenceStatus_Delete_RevertDeletedStatus()
         {
             var entity = new TestUser();
-            entity.PersistenceStatus = PersistenceStatus.Unchanged;
-            Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.Unchanged);
+            entity.PersistenceStatus = PersistenceStatus.Saved;
+            Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.Saved);
 
             entity.PersistenceStatus = PersistenceStatus.Deleted;
             Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.Deleted);
 
             (entity as IEntityWithStatus).RevertDeletedStatus();
-            Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.Unchanged, "之前的状态是 Unchanged");
+            Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.Saved, "之前的状态是 Unchanged");
 
-            (entity as IEntityWithStatus).MarkModifiedIfUnchanged();
+            (entity as IEntityWithStatus).MarkModifiedIfSaved();
             Assert.IsTrue(entity.PersistenceStatus == PersistenceStatus.Modified);
 
             entity.PersistenceStatus = PersistenceStatus.Deleted;
@@ -185,7 +185,7 @@ namespace RafyUnitTest
                 user.PersistenceStatus = PersistenceStatus.Deleted;
                 repo.Save(user);
 
-                Assert.AreEqual(PersistenceStatus.Unchanged, user.PersistenceStatus);
+                Assert.AreEqual(PersistenceStatus.Saved, user.PersistenceStatus);
 
                 user.Name = "name changed.";
                 repo.Save(user);
@@ -210,7 +210,7 @@ namespace RafyUnitTest
                 user.Id = -1;
                 repo.Save(user);
                 Assert.AreNotEqual(oldId, user.Id, "重新插入此实体，需要生成新的行。");
-                Assert.AreEqual(PersistenceStatus.Unchanged, user.PersistenceStatus);
+                Assert.AreEqual(PersistenceStatus.Saved, user.PersistenceStatus);
             }
         }
 
@@ -236,7 +236,7 @@ namespace RafyUnitTest
 
                 Assert.AreEqual(1, users.Count);
                 Assert.AreEqual(0, users.DeletedList.Count);
-                Assert.AreEqual(PersistenceStatus.Unchanged, users[0].PersistenceStatus);
+                Assert.AreEqual(PersistenceStatus.Saved, users[0].PersistenceStatus);
                 var oldId = users[0].Id;
 
                 users[0].PersistenceStatus = PersistenceStatus.New;
@@ -245,7 +245,7 @@ namespace RafyUnitTest
 
                 Assert.AreEqual(1, users.Count);
                 Assert.AreEqual(0, users.DeletedList.Count);
-                Assert.AreEqual(PersistenceStatus.Unchanged, users[0].PersistenceStatus);
+                Assert.AreEqual(PersistenceStatus.Saved, users[0].PersistenceStatus);
                 Assert.AreNotEqual(oldId, users[0].Id, "重新插入此实体，需要生成新的行。");
             }
         }
@@ -675,10 +675,10 @@ namespace RafyUnitTest
         public void ET_Property_AffectStatus()
         {
             var user = new TestUser();
-            user.PersistenceStatus = PersistenceStatus.Unchanged;
+            user.PersistenceStatus = PersistenceStatus.Saved;
 
             user.TemporaryName = "ET_Property_AffectStatus";
-            Assert.IsTrue(user.PersistenceStatus == PersistenceStatus.Unchanged, "TemporaryName 不能引起实体状态的变更。");
+            Assert.IsTrue(user.PersistenceStatus == PersistenceStatus.Saved, "TemporaryName 不能引起实体状态的变更。");
 
             user.Name = "ET_Property_AffectStatus";
             Assert.IsTrue(user.IsDirty, "一般属性应该引起实体状态的变更。");
@@ -692,19 +692,19 @@ namespace RafyUnitTest
                 Id = 1,
                 BookCategoryId = 1
             };
-            book.PersistenceStatus = PersistenceStatus.Unchanged;
+            book.PersistenceStatus = PersistenceStatus.Saved;
 
             book.BookCategory = new BookCategory
             {
                 Id = 1,
             };
-            Assert.AreEqual(PersistenceStatus.Unchanged, book.PersistenceStatus, "BookCategoryId 没有变，虽然 BookCategory 从 null 变为 cate1，但是状态也不会改变。");
+            Assert.AreEqual(PersistenceStatus.Saved, book.PersistenceStatus, "BookCategoryId 没有变，虽然 BookCategory 从 null 变为 cate1，但是状态也不会改变。");
 
             book.BookCategory = new BookCategory
             {
                 Id = 1,
             };
-            Assert.AreEqual(PersistenceStatus.Unchanged, book.PersistenceStatus, "BookCategoryId 没有变，虽然 BookCategory 改变了对象，但是状态也不会改变。");
+            Assert.AreEqual(PersistenceStatus.Saved, book.PersistenceStatus, "BookCategoryId 没有变，虽然 BookCategory 改变了对象，但是状态也不会改变。");
 
             book.BookCategory = new BookCategory
             {
@@ -985,8 +985,8 @@ namespace RafyUnitTest
                 new TestUser{ Name = "2" },
             };
             list.MarkSaved();
-            Assert.IsTrue(list[0].PersistenceStatus == PersistenceStatus.Unchanged);
-            Assert.IsTrue(list[1].PersistenceStatus == PersistenceStatus.Unchanged);
+            Assert.IsTrue(list[0].PersistenceStatus == PersistenceStatus.Saved);
+            Assert.IsTrue(list[1].PersistenceStatus == PersistenceStatus.Saved);
 
             using (list.MovingItems())
             {
@@ -994,8 +994,8 @@ namespace RafyUnitTest
                 list[0] = list[1];
                 list[1] = tmp;
             }
-            Assert.IsTrue(list[0].PersistenceStatus == PersistenceStatus.Unchanged);
-            Assert.IsTrue(list[1].PersistenceStatus == PersistenceStatus.Unchanged);
+            Assert.IsTrue(list[0].PersistenceStatus == PersistenceStatus.Saved);
+            Assert.IsTrue(list[1].PersistenceStatus == PersistenceStatus.Saved);
             Assert.IsTrue(list[0].Name == "2");
             Assert.IsTrue(list[1].Name == "1");
         }
@@ -1575,7 +1575,7 @@ namespace RafyUnitTest
             var customer = new MemoryCustomer { Name = "Huqf", Age = 10 };
             repo.Save(customer);
             Assert.IsTrue(repo.CountAll() == 1);
-            Assert.IsTrue(customer.PersistenceStatus == PersistenceStatus.Unchanged);
+            Assert.IsTrue(customer.PersistenceStatus == PersistenceStatus.Saved);
 
             //更新
             items = repo.GetAll();
@@ -1602,7 +1602,7 @@ namespace RafyUnitTest
             customer.Age = 12;
             repo.Save(customer);
             Assert.IsTrue(customer.Version == 5);
-            Assert.IsTrue(customer.PersistenceStatus == PersistenceStatus.Unchanged, "第二个版本号的添加，使用 LoadProperty");
+            Assert.IsTrue(customer.PersistenceStatus == PersistenceStatus.Saved, "第二个版本号的添加，使用 LoadProperty");
 
             var customer2 = repo.GetById(customer.Id) as MemoryCustomer;
             Assert.IsTrue(customer != customer2);
@@ -1624,8 +1624,8 @@ namespace RafyUnitTest
                 root.PBSList.Add(pbs);
                 repo.Save(root);
 
-                Assert.IsTrue(root.PersistenceStatus == PersistenceStatus.Unchanged);
-                Assert.IsTrue(pbs.PersistenceStatus == PersistenceStatus.Unchanged);
+                Assert.IsTrue(root.PersistenceStatus == PersistenceStatus.Saved);
+                Assert.IsTrue(pbs.PersistenceStatus == PersistenceStatus.Saved);
 
                 int count = 0;
                 EventHandler<Rafy.Logger.DbAccessedEventArgs> handler = (o, e) =>
@@ -1635,13 +1635,13 @@ namespace RafyUnitTest
                 Logger.DbAccessed += handler;
 
                 pbs.Name = "DDDDDDDDDD";
-                Assert.IsTrue(root.PersistenceStatus == PersistenceStatus.Unchanged);
+                Assert.IsTrue(root.PersistenceStatus == PersistenceStatus.Saved);
                 Assert.IsTrue(pbs.PersistenceStatus == PersistenceStatus.Modified);
 
                 var c = count;
                 repo.Save(root);
-                Assert.IsTrue(root.PersistenceStatus == PersistenceStatus.Unchanged);
-                Assert.IsTrue(pbs.PersistenceStatus == PersistenceStatus.Unchanged);
+                Assert.IsTrue(root.PersistenceStatus == PersistenceStatus.Saved);
+                Assert.IsTrue(pbs.PersistenceStatus == PersistenceStatus.Saved);
                 Assert.IsTrue(count == c + 1, "只进行了一次数据访问，即子对象的保存。");
 
                 Logger.DbAccessed -= handler;
@@ -2057,7 +2057,7 @@ namespace RafyUnitTest
                 for (int i = 0, c = books.Count; i < c; i++)
                 {
                     var book = books[i];
-                    Assert.AreEqual(PersistenceStatus.Unchanged, book.PersistenceStatus);
+                    Assert.AreEqual(PersistenceStatus.Saved, book.PersistenceStatus);
                 }
             }
         }
@@ -2091,10 +2091,10 @@ namespace RafyUnitTest
                 for (int i = 0, c = books.Count; i < c; i++)
                 {
                     var book = books[i];
-                    Assert.AreEqual(PersistenceStatus.Unchanged, book.PersistenceStatus);
+                    Assert.AreEqual(PersistenceStatus.Saved, book.PersistenceStatus);
                     foreach (var chapter in book.ChapterList)
                     {
-                        Assert.AreEqual(PersistenceStatus.Unchanged, book.PersistenceStatus);
+                        Assert.AreEqual(PersistenceStatus.Saved, book.PersistenceStatus);
                     }
                 }
             }
@@ -2197,7 +2197,7 @@ namespace RafyUnitTest
                 for (int i = 0, c = books.Count; i < c; i++)
                 {
                     var book = books[i];
-                    Assert.AreEqual(PersistenceStatus.Unchanged, book.PersistenceStatus);
+                    Assert.AreEqual(PersistenceStatus.Saved, book.PersistenceStatus);
                 }
 
                 for (int i = 0; i < size; i++)
@@ -2214,7 +2214,7 @@ namespace RafyUnitTest
                 for (int i = 0, c = books.Count; i < c; i++)
                 {
                     var book = books[i];
-                    Assert.AreEqual(PersistenceStatus.Unchanged, book.PersistenceStatus);
+                    Assert.AreEqual(PersistenceStatus.Saved, book.PersistenceStatus);
                 }
             }
         }
@@ -2245,10 +2245,10 @@ namespace RafyUnitTest
                 for (int i = 0, c = books.Count; i < c; i++)
                 {
                     var book = books[i];
-                    Assert.AreEqual(PersistenceStatus.Unchanged, book.PersistenceStatus);
+                    Assert.AreEqual(PersistenceStatus.Saved, book.PersistenceStatus);
                     foreach (var chapter in book.ChapterList)
                     {
-                        Assert.AreEqual(PersistenceStatus.Unchanged, book.PersistenceStatus);
+                        Assert.AreEqual(PersistenceStatus.Saved, book.PersistenceStatus);
                     }
                 }
 
@@ -2268,8 +2268,8 @@ namespace RafyUnitTest
                 for (int i = 0, c = books.Count; i < c; i++)
                 {
                     var book = books[i];
-                    Assert.AreEqual(PersistenceStatus.Unchanged, book.PersistenceStatus);
-                    Assert.AreEqual(PersistenceStatus.Unchanged, book.ChapterList[0].PersistenceStatus);
+                    Assert.AreEqual(PersistenceStatus.Saved, book.PersistenceStatus);
+                    Assert.AreEqual(PersistenceStatus.Saved, book.ChapterList[0].PersistenceStatus);
                 }
             }
         }

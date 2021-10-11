@@ -433,7 +433,7 @@ namespace Rafy.Domain
                     return SubmitAction.Insert;
                 case PersistenceStatus.Modified:
                     return SubmitAction.Update;
-                case PersistenceStatus.Unchanged:
+                case PersistenceStatus.Saved:
                 default:
                     return SubmitAction.ChildrenOnly;
             }

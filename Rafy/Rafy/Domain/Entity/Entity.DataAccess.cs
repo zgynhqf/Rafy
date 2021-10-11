@@ -37,7 +37,7 @@ namespace Rafy.Domain
 
             if (this.PersistenceStatus != PersistenceStatus.New)
             {
-                this.PersistenceStatus = PersistenceStatus.Unchanged;
+                this.PersistenceStatus = PersistenceStatus.Saved;
             }
         }
 

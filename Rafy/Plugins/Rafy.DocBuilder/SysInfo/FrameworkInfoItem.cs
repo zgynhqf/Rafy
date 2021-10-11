@@ -158,7 +158,7 @@ namespace Rafy.DevTools.SysInfo
                 Key = key,
                 Value = value.ToString()
             };
-            item.PersistenceStatus = PersistenceStatus.Unchanged;
+            item.PersistenceStatus = PersistenceStatus.Saved;
 
             this.Add(item);
         }

@@ -61,7 +61,7 @@ namespace Rafy.Domain.ORM
                         {
                             var cloned = repository.New();
                             cloned.Clone(e, cloneOptions);
-                            cloned.PersistenceStatus = PersistenceStatus.Unchanged;
+                            cloned.PersistenceStatus = PersistenceStatus.Saved;
 
                             oldList.Add(cloned);
                             return false;

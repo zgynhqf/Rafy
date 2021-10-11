@@ -27,12 +27,15 @@ namespace Rafy.Domain
         /// <summary>
         /// 已保存。
         /// <para>表示该实体当前的所有状态已经持久化到数据库中。</para>
+        /// <para>注意，它只表示当前实体状态被持久化。而不包含聚合子实体。</para>
         /// <para>
         /// The object has not been modified since it was loaded into the memory or since
         /// the last time that the Repository.Save method was
         /// called.
         /// </para>
         /// </summary>
+        Saved = 0,
+        [Obsolete("此枚举将不再可用，请使用 PersistenceStatus.Saved。")]
         Unchanged = 0,
         /// <summary>
         /// 数据变更。

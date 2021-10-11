@@ -866,7 +866,7 @@ namespace Rafy.Domain
             var opt = CloneOptions.ReadDbRow();
             opt.Method = CloneValueMethod.LoadProperty;
             entity.Clone(row, opt);
-            entity.PersistenceStatus = PersistenceStatus.Unchanged;
+            entity.PersistenceStatus = PersistenceStatus.Saved;
 
             this.NotifyLoaded(entity);
 

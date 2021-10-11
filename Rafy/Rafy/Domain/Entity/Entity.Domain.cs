@@ -78,13 +78,13 @@ namespace Rafy.Domain
                     return Domain.PersistenceStatus.Modified;
                 }
 
-                return PersistenceStatus.Unchanged;
+                return PersistenceStatus.Saved;
             }
             set
             {
                 switch (value)
                 {
-                    case PersistenceStatus.Unchanged:
+                    case PersistenceStatus.Saved:
                         //把当前对象标记为未更改状态。（即刚从仓库中取出的状态。）
                         SetFlags(EntitySerializableFlags.PersistenceAll, false);
                         break;
@@ -136,10 +136,10 @@ namespace Rafy.Domain
         /// 
         /// 只有实体的状态是 Unchanged 状态时（其它状态已经算是 Dirty 了），调用本方法才会把实体的状态改为 Modified。
         /// </summary>
-        void IEntityWithStatus.MarkModifiedIfUnchanged()
+        void IEntityWithStatus.MarkModifiedIfSaved()
         {
             //只有 Unchanged 状态时，才需要标记，这是因为其它状态已经算是 Dirty 了。
-            if (this.PersistenceStatus == PersistenceStatus.Unchanged)
+            if (this.PersistenceStatus == PersistenceStatus.Saved)
             {
                 this.PersistenceStatus = PersistenceStatus.Modified;
             }
@@ -172,7 +172,7 @@ namespace Rafy.Domain
         {
             get
             {
-                if (this.PersistenceStatus != PersistenceStatus.Unchanged) return true;
+                if (this.PersistenceStatus != PersistenceStatus.Saved) return true;
 
                 foreach (var field in this.GetLoadedChildren())
                 {
@@ -209,7 +209,7 @@ namespace Rafy.Domain
                 _treeChildren.MarkSaved();
             }
 
-            this.PersistenceStatus = PersistenceStatus.Unchanged;
+            this.PersistenceStatus = PersistenceStatus.Saved;
 
             #region 设计说明：Deleted 后的数据的状态不再改为 New
 
@@ -305,7 +305,7 @@ namespace Rafy.Domain
             var meta = e.Property.DefaultMeta as IPropertyMetadata;
             if (meta.AffectStatus)
             {
-                (this as IEntityWithStatus).MarkModifiedIfUnchanged();
+                (this as IEntityWithStatus).MarkModifiedIfSaved();
 
                 this.NotifyIfInRedundancyPath(e.Property as IProperty);
             }
