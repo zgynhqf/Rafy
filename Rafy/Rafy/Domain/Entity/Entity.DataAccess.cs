@@ -29,17 +29,13 @@ namespace Rafy.Domain
     {
         /// <summary>
         /// 从 EntityRepository 中加载完成，并从中返回时，都会执行此方法。
-        /// 为方便查找。此方法不要直接调用，而是应该调用 EntityRepository.NotifyLoaded.
+        /// 主动设置 Repository，主要是为了提升 Entity 查找 EntityRepository 的性能。
+        /// 为方便查找。此方法不要直接调用，而是应该调用 EntityRepository.SetRepo.
         /// </summary>
-        internal void NotifyLoaded(IRepository repository)
+        internal void SetRepo(IRepository repository)
         {
             _repository = repository;
             _repositoryLoaded = true;
-
-            if (this.PersistenceStatus != PersistenceStatus.New)
-            {
-                this.PersistenceStatus = PersistenceStatus.Saved;
-            }
         }
 
         #region 冗余属性处理

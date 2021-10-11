@@ -173,7 +173,7 @@ namespace Rafy.DevTools.SysInfo
             var list = new FrameworkInfoItemList();
             list.CreateItems();
 
-            this.NotifyLoaded(list);
+            this.SetRepo(list);
 
             return list;
         }

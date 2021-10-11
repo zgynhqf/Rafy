@@ -176,7 +176,7 @@ namespace Rafy.Domain
                 }
             }
 
-            this.NotifyLoaded(null);
+            this.SetRepo(null);
         }
 
         #endregion

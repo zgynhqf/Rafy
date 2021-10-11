@@ -746,6 +746,8 @@ namespace Rafy.Domain.ORM
 
                 entity = _owner.TryReplaceByContext(entity) as Entity;
 
+                entity.PersistenceStatus = PersistenceStatus.Saved;
+
                 return entity;
             }
 

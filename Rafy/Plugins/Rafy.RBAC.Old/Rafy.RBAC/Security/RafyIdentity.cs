@@ -115,7 +115,7 @@ namespace Rafy.RBAC.Old.Security
 
             res.LoadChildrenProperties();
 
-            this.NotifyLoaded(res);
+            this.SetRepo(res);
 
             return res;
         }
@@ -129,7 +129,7 @@ namespace Rafy.RBAC.Old.Security
 
             res.LoadChildrenProperties();
 
-            this.NotifyLoaded(res);
+            this.SetRepo(res);
 
             return res;
         }

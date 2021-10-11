@@ -359,8 +359,8 @@ namespace Rafy.Domain
         {
             if (args.EntityList == null)
             {
-                //必须使用 NewListFast，否则使用 NewList 会导致调用了 NotifyLoaded，
-                //这样，不但不符合设计（这个列表需要在客户端才调用 NotifyLoaded），还会引发树型实体列表的多次关系重建。
+                //必须使用 NewListFast，否则使用 NewList 会导致调用了 SetRepo，
+                //这样，不但不符合设计（这个列表需要在客户端才调用 SetRepo），还会引发树型实体列表的多次关系重建。
                 args.EntityList = Repo.NewListFast();
             }
 

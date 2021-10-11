@@ -377,7 +377,7 @@ namespace Rafy.Domain
 
             if (result != null)
             {
-                this.NotifyLoaded(result);
+                this.SetRepo(result);
             }
             else
             {
@@ -416,7 +416,7 @@ namespace Rafy.Domain
 
             if (result != null)
             {
-                this.NotifyLoaded(result);
+                this.SetRepo(result);
             }
             else
             {
@@ -455,7 +455,7 @@ namespace Rafy.Domain
 
             if (result != null)
             {
-                this.NotifyLoaded(result);
+                this.SetRepo(result);
             }
             else
             {
@@ -811,17 +811,17 @@ namespace Rafy.Domain
 
         #endregion
 
-        #region NotifyLoaded
+        #region SetRepo
 
         /// <summary>
         /// 当一个实体最终要出仓库时，才调用此方法完成加载。
         /// </summary>
         /// <param name="entity">The entity.</param>
-        internal protected virtual void NotifyLoaded(Entity entity)
+        internal protected void SetRepo(Entity entity)
         {
             if (entity != null)
             {
-                entity.NotifyLoaded(this);
+                entity.SetRepo(this);
             }
         }
 
@@ -830,15 +830,15 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        internal protected void NotifyLoaded(EntityList list)
+        internal protected void SetRepo(EntityList list)
         {
             if (list != null)
             {
-                list.NotifyLoaded(this);
+                list.SetRepo(this);
 
                 list.EachNode(e =>
                 {
-                    this.NotifyLoaded(e);
+                    this.SetRepo(e);
                     return false;
                 });
             }

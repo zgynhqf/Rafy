@@ -141,7 +141,7 @@ namespace Rafy.RBAC.Old
 
             list.SetParentEntity(parent);
 
-            this.NotifyLoaded(list);
+            this.SetRepo(list);
 
             return list;
         }

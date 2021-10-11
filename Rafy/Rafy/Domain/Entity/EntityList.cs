@@ -442,7 +442,7 @@ namespace Rafy.Domain
                 base.RemoveItem(sourceList.Count);
             }
 
-            this.NotifyLoaded(sourceList._repository);
+            this.SetRepo(sourceList._repository);
         }
 
         #endregion

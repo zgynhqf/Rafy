@@ -88,11 +88,6 @@ namespace UT
                 this.DataSaver = new MemoryCustomerSaver();
             }
 
-            protected override IEnumerable<Entity> LoadAll()
-            {
-                return Enumerable.Empty<Entity>();
-            }
-
             private class MemoryCustomerSaver : MemoryEntityRepository.MemoryRepositoryDataProvider.MemorySaver
             {
                 protected override void Submit(SubmitArgs e)

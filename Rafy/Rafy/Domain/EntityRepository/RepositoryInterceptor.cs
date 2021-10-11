@@ -125,17 +125,17 @@ namespace Rafy.Domain
                 invocation.ReturnValue = DataPortalApi.Fetch(invocation.TargetType, ieqc, repo.DataPortalLocation);
             }
 
-            #region Repository.NotifyLoaded
+            #region Repository.SetRepo
 
             switch (fetchType)
             {
                 case RepositoryQueryType.List:
                     var list = invocation.ReturnValue as EntityList;
-                    repo.NotifyLoaded(list);
+                    repo.SetRepo(list);
                     break;
                 case RepositoryQueryType.First:
                     var entity = invocation.ReturnValue as Entity;
-                    repo.NotifyLoaded(entity);
+                    repo.SetRepo(entity);
                     break;
                 case RepositoryQueryType.Count:
                 case RepositoryQueryType.Table:

@@ -89,15 +89,15 @@ namespace Rafy.Domain.ORM
             return DataProvider.FromRow(row);
         }
 
-        protected internal override void NotifyLoaded(Entity entity)
-        {
-            base.NotifyLoaded(entity);
+        //protected internal override void SetRepo(Entity entity)
+        //{
+        //    base.SetRepo(entity);
 
-            if (entity != null)
-            {
-                this.DataProvider.Saver.InsertInternal(entity);
-            }
-        }
+        //    if (entity != null)
+        //    {
+        //        this.DataProvider.Saver.InsertInternal(entity);
+        //    }
+        //}
 
         public abstract class MemoryRepositoryDataProvider : RepositoryDataProvider
         {
@@ -175,7 +175,7 @@ namespace Rafy.Domain.ORM
                 {
                     _memoryRows = new Dictionary<string, Entity>();
 
-                    var items = this.LoadAll();
+                    var items = this.InitData();
 
                     foreach (var item in items)
                     {
@@ -188,7 +188,10 @@ namespace Rafy.Domain.ORM
             /// 子类重写此方法来实现一次性加载所有对象到内存中的逻辑。
             /// </summary>
             /// <returns></returns>
-            protected abstract IEnumerable<Entity> LoadAll();
+            protected virtual IEnumerable<Entity> InitData()
+            {
+                return Enumerable.Empty<Entity>();
+            }
 
             public override LiteDataTable GetEntityValue(object entityId, string property)
             {

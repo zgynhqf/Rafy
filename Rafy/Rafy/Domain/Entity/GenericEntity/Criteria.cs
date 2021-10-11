@@ -41,7 +41,6 @@ namespace Rafy.Domain
 
         public Criteria()
         {
-            //    this.NotifyLoaded(null);
         }
 
         [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]

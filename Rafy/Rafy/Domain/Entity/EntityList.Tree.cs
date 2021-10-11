@@ -206,7 +206,11 @@ namespace Rafy.Domain
             this.TryAutoIndex(0, true);
         }
 
-        internal void NotifyLoaded(IRepository repository)
+        /// <summary>
+        /// 主动设置 Repository，主要是为了提升 Entity 查找 EntityRepository 的性能。
+        /// </summary>
+        /// <param name="repository"></param>
+        internal void SetRepo(IRepository repository)
         {
             _repository = repository;
         }

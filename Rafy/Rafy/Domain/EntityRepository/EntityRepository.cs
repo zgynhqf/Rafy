@@ -66,7 +66,7 @@ namespace Rafy.Domain
         {
             var entity = Entity.New(this.EntityType);
 
-            this.NotifyLoaded(entity);
+            this.SetRepo(entity);
 
             return entity;
         }
@@ -79,7 +79,7 @@ namespace Rafy.Domain
         {
             var list = NewListFast();
 
-            this.NotifyLoaded(list);
+            this.SetRepo(list);
 
             return list;
         }
@@ -439,7 +439,7 @@ namespace Rafy.Domain
 
             list.LoadData(srcList);
 
-            this.NotifyLoaded(list);
+            this.SetRepo(list);
 
             return list;
         }
