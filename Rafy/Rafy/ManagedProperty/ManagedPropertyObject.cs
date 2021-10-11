@@ -463,9 +463,21 @@ namespace Rafy.ManagedProperty
         /// </summary>
         public void MarkPropertiesUnchanged()
         {
+            this.MarkPropertiesChangedStatus(false);
+        }
+        /// <summary>
+        /// 标记所有的属性为变更状态。（主要用于想要强制更新所有属性时的场景。）
+        /// </summary>
+        public void MarkPropertiesChanged()
+        {
+            this.MarkPropertiesChangedStatus(true);
+        }
+
+        private void MarkPropertiesChangedStatus(bool value)
+        {
             for (int i = 0, c = _compiledFields.Length; i < c; i++)
             {
-                _compiledFields[i]._isChanged = false;
+                _compiledFields[i]._isChanged = value;
             }
 
             if (_runtimeFields != null)
@@ -475,7 +487,7 @@ namespace Rafy.ManagedProperty
                     var field = kv.Value;
                     if (field._isChanged)
                     {
-                        field._isChanged = false;
+                        field._isChanged = value;
                         _runtimeFields[kv.Key] = field;
                     }
                 }

@@ -145,7 +145,7 @@ namespace Rafy.Domain.Caching
                 var item = GetDbEntity(region, scopeClass, scopeId);
                 if (item != null)
                 {
-                    (item as IEntityWithStatus).MarkModifiedIfSaved();
+                    MarkModifiedIfSaved(item);
                     RF.Save(item);
 
                     _versionListCache.Expire();
@@ -213,7 +213,7 @@ namespace Rafy.Domain.Caching
                         var item = GetDbEntity(saveItem.Region, saveItem.ScopeClass, saveItem.ScopeId);
                         if (item != null)
                         {
-                            (item as IEntityWithStatus).MarkModifiedIfSaved();
+                            MarkModifiedIfSaved(item);
                             RF.Save(item);
                         }
                     }
@@ -228,6 +228,15 @@ namespace Rafy.Domain.Caching
                 public Type Region;
                 public Type ScopeClass;
                 public string ScopeId;
+            }
+        }
+
+        private static void MarkModifiedIfSaved(ScopeVersion item)
+        {
+            if (item.PersistenceStatus == PersistenceStatus.Saved)
+            {
+                item.PersistenceStatus = PersistenceStatus.Modified;
+                item.MarkPropertiesChanged();
             }
         }
 

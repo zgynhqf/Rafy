@@ -105,7 +105,7 @@ namespace RafyUnitTest
 
                 using (RF.EnterEntityContext())
                 {
-                    (user as IEntityWithStatus).MarkModifiedIfSaved();
+                    user.MarkModifiedIfSaved();
                     repo.Save(user);
 
                     var user2 = repo.GetById(user.Id);

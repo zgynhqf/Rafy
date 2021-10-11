@@ -67,21 +67,14 @@ namespace Rafy.Domain
         PersistenceStatus PersistenceStatus { get; set; }
 
         /// <summary>
-        /// 标记当前对象为需要保存的状态。
-        /// 
-        /// 只有实体的状态是 Unchanged 状态时（其它状态已经算是 Dirty 了），调用本方法才会把实体的状态改为 Modified。
-        /// </summary>
-        void MarkModifiedIfSaved();
-
-        /// <summary>
         /// 清空实体的 IsDeleted 状态，使其还原到删除之前的状态。
         /// </summary>
         void RevertDeletedStatus();
 
-        /// <summary>
-        /// 清空实体的 IsNew 状态，使其还原到之前的状态。
-        /// </summary>
-        void RevertNewStatus();
+        ///// <summary>
+        ///// 清空实体的 IsNew 状态，使其还原到之前的状态。
+        ///// </summary>
+        //void RevertNewStatus();
     }
 
     /// <summary>
