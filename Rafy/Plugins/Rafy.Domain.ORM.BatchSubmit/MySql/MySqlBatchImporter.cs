@@ -98,6 +98,8 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
         /// <returns>返回拼接完成的、批量插入的Sql语句</returns>
         private string GenerateBatchInsertStatement(EntityBatch meta, IList<Entity> entities)
         {
+            //其它方案：https://www.cnblogs.com/yinzhou/p/11093033.html
+
             var dba = meta.DBA.RawAccesser;
             var table = meta.Table;
 
