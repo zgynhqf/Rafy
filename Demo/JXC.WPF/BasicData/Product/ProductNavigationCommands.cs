@@ -51,7 +51,7 @@ namespace JXC.Commands
     {
         public override void Execute(QueryLogicalView view)
         {
-            var moduleMeta = CommonModel.Modules[typeof(ProductCategory)] as WPFModuleMeta;
+            var moduleMeta = CommonModel.Modules["商品类别"] as WPFModuleMeta;
             if (PermissionMgr.CanShowModule(moduleMeta))
             {
                 var page = App.Current.CreateModule(moduleMeta);
