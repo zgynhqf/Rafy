@@ -114,13 +114,13 @@ namespace Rafy.Domain.Serialization.Json
                 }
                 else
                 {
-                    entity = Activator.CreateInstance(type) as Entity;
+                    entity = Entity.New(type);
                     entity.PersistenceStatus = PersistenceStatus.Saved;
                 }
             }
-            if (entity == null)
+            else
             {
-                entity = Activator.CreateInstance(type) as Entity;
+                entity = Entity.New(type);
             }
 
             //反序列化一般属性
