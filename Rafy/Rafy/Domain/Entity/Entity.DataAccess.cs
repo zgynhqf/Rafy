@@ -29,6 +29,7 @@ namespace Rafy.Domain
     {
         /// <summary>
         /// 从 EntityRepository 中加载完成，并从中返回时，都会执行此方法。
+        /// 为方便查找。此方法不要直接调用，而是应该调用 EntityRepository.NotifyLoaded.
         /// </summary>
         internal void NotifyLoaded(IRepository repository)
         {

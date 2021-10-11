@@ -161,8 +161,6 @@ namespace Rafy.Domain.ORM
                 entity.PersistenceStatus = PersistenceStatus.Saved;
 
                 return entity;
-
-                //return row;
             }
 
             internal Entity ToRow(Entity item)

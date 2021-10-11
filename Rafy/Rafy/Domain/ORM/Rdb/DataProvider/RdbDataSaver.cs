@@ -74,7 +74,8 @@ namespace Rafy.Domain.ORM
                 table.Insert(dba, data);
 
                 //放到 Insert 语句之后，否则 Id 不会有值。
-                table.NotifyLoaded(data);
+                table.AddIntoEntityContext(data);
+
                 data.MarkPropertiesUnchanged();
             }
         }
@@ -92,7 +93,9 @@ namespace Rafy.Domain.ORM
                 var table = _dataProvider.DbTable;
                 table.UpdateChangedPropertiesOnly = _dataProvider.UpdateChangedPropertiesOnly;
                 table.Update(dba, data);
-                table.NotifyLoaded(data);
+
+                table.AddIntoEntityContext(data);
+
                 data.MarkPropertiesUnchanged();
             }
         }

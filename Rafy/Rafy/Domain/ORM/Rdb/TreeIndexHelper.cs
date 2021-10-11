@@ -56,6 +56,8 @@ namespace Rafy.Domain.ORM
                     else
                     {
                         var cloneOptions = CloneOptions.ReadSingleEntity();
+                        cloneOptions.Method = CloneValueMethod.LoadProperty;
+
                         var oldList = new List<Entity>();
                         all.EachNode(e =>
                         {

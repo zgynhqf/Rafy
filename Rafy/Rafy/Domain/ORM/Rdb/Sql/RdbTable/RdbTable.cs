@@ -746,8 +746,6 @@ namespace Rafy.Domain.ORM
 
                 entity = _owner.TryReplaceByContext(entity) as Entity;
 
-                entity.PersistenceStatus = PersistenceStatus.Saved;
-
                 return entity;
             }
 
@@ -961,7 +959,7 @@ namespace Rafy.Domain.ORM
         /// 如果目前使用了 EntityContext，则应该把加载好的对象都存储在内存中。
         /// </summary>
         /// <param name="entity"></param>
-        internal void NotifyLoaded(IEntity entity)
+        internal void AddIntoEntityContext(IEntity entity)
         {
             var current = EntityContext.Current;
             if (current != null)

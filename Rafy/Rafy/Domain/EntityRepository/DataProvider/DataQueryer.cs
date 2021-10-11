@@ -164,7 +164,7 @@ namespace Rafy.Domain
                 //在加载数据时，自动索引功能都不可用。
                 entityList.AutoTreeIndexEnabled = false;
 
-                QueryDataCore(args, entityList);
+                this.QueryDataCore(args, entityList);
             }
             finally
             {
@@ -326,7 +326,9 @@ namespace Rafy.Domain
                 var entity = allEntities[i];
 
                 entity.PersistenceStatus = PersistenceStatus.Saved;
-                entity.MarkPropertiesUnchanged();
+
+                //这些实体的属性的加载，应该是通过 LoadProperty 来完成的。这时，不需要使用下述方法来对属性进行循环。
+                //entity.MarkPropertiesUnchanged();
 
                 //由于 OnDbLoaded 中可能会使用到关系，导致再次进行数据访问，所以不能放在 Reader 中。
                 _dataProvider.OnDbLoaded(entity);

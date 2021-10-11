@@ -210,6 +210,7 @@ namespace Rafy.Domain
             }
 
             this.PersistenceStatus = PersistenceStatus.Saved;
+            this.MarkPropertiesUnchanged();
 
             #region 设计说明：Deleted 后的数据的状态不再改为 New
 

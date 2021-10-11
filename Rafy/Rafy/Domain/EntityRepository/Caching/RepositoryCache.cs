@@ -196,7 +196,7 @@ namespace Rafy.Domain.Caching
             entity.Clone(row, opt);
             entity.PersistenceStatus = PersistenceStatus.Saved;
 
-            entity.NotifyLoaded(_repository);
+            (_repository as EntityRepository).NotifyLoaded(entity);
 
             return entity;
         }

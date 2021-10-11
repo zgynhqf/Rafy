@@ -979,6 +979,21 @@ namespace RafyUnitTest
             Assert.AreEqual(0, fields.Count);
         }
 
+        /// <summary>
+        /// 可以手工控制所有属性的变更状态。
+        /// </summary>
+        [TestMethod]
+        public void MPT_ChangedStatus_IsChanged_Manually_MarkSaved()
+        {
+            var user = new TestUser();
+            user.Name = "1";
+            Assert.AreEqual(1, GetChangedProperties(user).Count);
+
+            (user as IDirtyAware).MarkSaved();
+
+            Assert.AreEqual(0, GetChangedProperties(user).Count);
+        }
+
         ///// <summary>
         ///// 克隆后，属性的变更状态不需要跟着拷贝。因为在克隆时，往往开发者需要拷贝的只是值。
         ///// </summary>
