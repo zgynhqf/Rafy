@@ -188,14 +188,20 @@ namespace Rafy.Domain
         }
 
         /// <summary>
-        /// 递归将整个组合对象树都标记为未变更状态。
+        /// <para>聚合操作：递归将整个组合对象树都标记为已保存。（IsDirty 为 false）。同时：                            </para>
+        /// <para>* 实体所有属性的状态，都将改为已保存。                                               </para>
+        /// <para>* 递归将聚合子列表中的实体，都标记为已保存。(聚合子列表中已经删除的实体，也会在这个列表中被移除。)                               </para>
+        /// <para>* 递归将树型子列表中的实体，都标记为已保存。                               </para>
         /// </summary>
-        void IDirtyAware.MarkSaved()
+        public void MarkSaved()
         {
-            this.MarkSaved();
+            this.DoMarkSaved();
         }
 
-        protected virtual void MarkSaved()
+        /// <summary>
+        /// 子类重写此方法来重写 MarkSaved 方法的逻辑。
+        /// </summary>
+        protected virtual void DoMarkSaved()
         {
             //聚合子需要都调用 MarkSaved。
             var enumerator = this.GetLoadedChildren();
@@ -204,6 +210,7 @@ namespace Rafy.Domain
                 var child = enumerator.Current.Value;
                 child.MarkSaved();
             }
+
             if (_treeChildren != null)
             {
                 _treeChildren.MarkSaved();

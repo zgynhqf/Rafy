@@ -30,8 +30,11 @@ namespace Rafy.Domain
         bool IsDirty { get; }
 
         /// <summary>
-        /// 标记为已经保存（IsDirty 为 false）。
-        /// 同时，聚合中任意列表中其中已经删除的实体，也会在这个列表中被移除。
+        /// 递归将整个组合对象树都标记为已保存。（IsDirty 为 false）。
+        /// 同时：
+        /// * 实体所有属性的状态，都将改为已保存。
+        /// * 递归将聚合子列表、树型子列表中的实体，都标记为已保存。
+        /// * 聚合子列表中已经删除的实体，也会在这个列表中被移除。（EntityList 会被标记为已保存）
         /// </summary>
         void MarkSaved();
     }

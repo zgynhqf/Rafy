@@ -13,6 +13,8 @@
 3.79.3955
     ★★公布、添加功能
         在关系数据库中更新实体时，支持在生成更新语句时，只更新变更后的字段。
+    添加接口
+        Entity.MarkSaved 方法，用于同时操作 PersistenceStatus.Saved 及 MarkPropertiesUnchanged()。
     ！修改接口
         PersistenceStatus.Unchanged 更名为 PersistenceStatus.Saved。
     ！删除接口

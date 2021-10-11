@@ -28,6 +28,7 @@ namespace Rafy.Domain
         /// 已保存。
         /// <para>表示该实体当前的所有状态已经持久化到数据库中。</para>
         /// <para>注意，它只表示当前实体状态被持久化。而不包含聚合子实体。</para>
+        /// <para>注意，如果要设置实体的持久化状态为 Saved，请使用 <see cref="Entity.MarkSaved"/> 方法。该方法会同时重置所有属性的变更状态。</para>
         /// <para>
         /// The object has not been modified since it was loaded into the memory or since
         /// the last time that the Repository.Save method was

@@ -78,7 +78,7 @@ namespace Rafy.Domain.ORM.BatchSubmit
                     if (batch.DeleteBatch.Count > 0)
                     {
                         this.ImportDelete(batch);
-                        this.SetStatus(batch.DeleteBatch, PersistenceStatus.New);
+                        this.MarkNew(batch.DeleteBatch);
                     }
                 }
 
@@ -89,12 +89,12 @@ namespace Rafy.Domain.ORM.BatchSubmit
                     if (batch.InsertBatch.Count > 0)
                     {
                         this.ImportInsert(batch);
-                        this.SetStatus(batch.InsertBatch, PersistenceStatus.Saved);
+                        this.MarkSaved(batch.InsertBatch);
                     }
                     if (batch.UpdateBatch.Count > 0)
                     {
                         this.ImportUpdate(batch);
-                        this.SetStatus(batch.UpdateBatch, PersistenceStatus.Saved);
+                        this.MarkSaved(batch.UpdateBatch);
                     }
                 }
 
@@ -227,11 +227,18 @@ namespace Rafy.Domain.ORM.BatchSubmit
             }
         }
 
-        private void SetStatus(IList<Entity> list, PersistenceStatus value)
+        private void MarkNew(IList<Entity> list)
         {
             for (int j = 0, jc = list.Count; j < jc; j++)
             {
-                list[j].PersistenceStatus = value;
+                list[j].PersistenceStatus = PersistenceStatus.New;
+            }
+        }
+        private void MarkSaved(IList<Entity> list)
+        {
+            for (int j = 0, jc = list.Count; j < jc; j++)
+            {
+                list[j].MarkSaved();
             }
         }
     }
