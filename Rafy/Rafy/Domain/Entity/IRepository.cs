@@ -319,15 +319,6 @@ namespace Rafy.Domain
         /// <returns></returns>
         EntityList GetLazyListByParent(Entity parent);
 
-        /// <summary>
-        /// 把行转换为对象
-        /// 
-        /// （复制出一个新的实体对象）
-        /// </summary>
-        /// <param name="row"></param>
-        /// <returns></returns>
-        Entity ConvertRow(Entity row);
-
         EntityList GetByIdOrTreePId(object id);
 
         //DbTable DbTable { get; }

@@ -130,7 +130,7 @@ namespace Rafy.Domain.Caching
                     }
                     else
                     {
-                        entity = converter.ConvertRow(row);
+                        entity = this.CloneRowData(row);
                         typeContext.Add(id, entity);
                     }
 
@@ -141,7 +141,7 @@ namespace Rafy.Domain.Caching
             {
                 for (int i = 0, c = table.Count; i < c; i++)
                 {
-                    var item = converter.ConvertRow(table[i]);
+                    var item = this.CloneRowData(table[i]);
                     newList.Add(item);
                 }
             }
@@ -169,14 +169,34 @@ namespace Rafy.Domain.Caching
                 }
                 else
                 {
-                    entity = converter.ConvertRow(row);
+                    entity = this.CloneRowData(row);
                     typeContext.Add(id, entity);
                 }
             }
             else
             {
-                entity = converter.ConvertRow(row);
+                entity = this.CloneRowData(row);
             }
+
+            return entity;
+        }
+
+        /// <summary>
+        /// 把一行数据转换为一个实体。
+        /// </summary>
+        /// <param name="row"></param>
+        /// <returns></returns>
+        private Entity CloneRowData(Entity row)
+        {
+            var entity = Entity.New(row.GetType());
+
+            //返回的子对象的属性只是简单的完全Copy参数data的数据。
+            var opt = CloneOptions.ReadDbRow();
+            opt.Method = CloneValueMethod.LoadProperty;
+            entity.Clone(row, opt);
+            entity.PersistenceStatus = PersistenceStatus.Saved;
+
+            entity.NotifyLoaded(_repository);
 
             return entity;
         }

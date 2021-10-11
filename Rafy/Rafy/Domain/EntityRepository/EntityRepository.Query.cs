@@ -853,26 +853,6 @@ namespace Rafy.Domain
             return this.DoGetByParent(parent);
         }
 
-        /// <summary>
-        /// 把一行数据转换为一个实体。
-        /// </summary>
-        /// <param name="row"></param>
-        /// <returns></returns>
-        Entity IRepositoryInternal.ConvertRow(Entity row)
-        {
-            var entity = Entity.New(row.GetType());
-
-            //返回的子对象的属性只是简单的完全Copy参数data的数据。
-            var opt = CloneOptions.ReadDbRow();
-            opt.Method = CloneValueMethod.LoadProperty;
-            entity.Clone(row, opt);
-            entity.PersistenceStatus = PersistenceStatus.Saved;
-
-            this.NotifyLoaded(entity);
-
-            return entity;
-        }
-
         EntityList IRepositoryInternal.GetByIdOrTreePId(object id)
         {
             var list = this.GetByIdOrTreePId(id);
