@@ -22,6 +22,7 @@ using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.Domain.ORM;
 using Rafy.Utils;
+using Rafy.Reflection;
 
 namespace Rafy.Domain
 {
@@ -71,7 +72,10 @@ namespace Rafy.Domain
                                 //如果是第一个，说明冗余属性和这个引用属性是在当前类型中声明的，
                                 //此时，直接更新冗余属性的值。
                                 object value = this.GetRedundancyValue(path);
-                                this.SetProperty(path.Redundancy.Property, value);
+                                if (value != null || !TypeHelper.IgnoreNullable(path.Redundancy.Property.PropertyType).IsValueType)
+                                {
+                                    this.SetProperty(path.Redundancy.Property, value);
+                                }
                             }
                             else
                             {

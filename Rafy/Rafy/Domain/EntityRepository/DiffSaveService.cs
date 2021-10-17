@@ -208,7 +208,7 @@ namespace Rafy.Domain
                 var mp = item.ManagedProperty;
 
                 //如果是懒加载属性，并且没有加载数据时，不需要遍历此属性值
-                if (!diffEntity.FieldExists(mp)) continue;
+                if (!diffEntity.HasLocalValue(mp)) continue;
                 var children = diffEntity.GetProperty(mp) as EntityList;
                 if (children == null) continue;
 
@@ -240,7 +240,7 @@ namespace Rafy.Domain
                 var mp = item.ManagedProperty as IListProperty;
 
                 //如果是懒加载属性，并且没有加载数据时，不需要遍历此属性值
-                if (!oldEntity.FieldExists(mp)) continue;
+                if (!oldEntity.HasLocalValue(mp)) continue;
 
                 var children = oldEntity.GetProperty(mp) as EntityList;
                 if (children == null) continue;

@@ -87,7 +87,7 @@ namespace RafyUnitTest
 
                 var file2 = repo.GetById(file.Id);
 
-                Assert.IsFalse(file2.FieldExists(FileInfo.ContentProperty), "该属性需要懒加载");
+                Assert.IsFalse(file2.HasLocalValue(FileInfo.ContentProperty), "该属性需要懒加载");
             }
         }
 

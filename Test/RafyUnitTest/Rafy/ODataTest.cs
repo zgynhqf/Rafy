@@ -389,8 +389,8 @@ WHERE T0.UserName LIKE {0}");
                 }) as SectionList;
 
                 Assert.AreEqual(list.Count, 2);
-                Assert.IsTrue(list[0].FieldExists(Section.ChapterProperty));
-                Assert.IsTrue(list[1].FieldExists(Section.ChapterProperty));
+                Assert.IsTrue(list[0].HasLocalValue(Section.ChapterProperty));
+                Assert.IsTrue(list[1].HasLocalValue(Section.ChapterProperty));
                 Assert.IsTrue(list[0].Chapter == list[1].Chapter);
                 Assert.IsTrue(list[0].Chapter.Name == "c1");
             }
@@ -592,8 +592,8 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
                 }) as SectionList;
 
                 Assert.AreEqual(list.Count, 2);
-                Assert.IsTrue(list[0].FieldExists(Section.ChapterProperty));
-                Assert.IsTrue(list[1].FieldExists(Section.ChapterProperty));
+                Assert.IsTrue(list[0].HasLocalValue(Section.ChapterProperty));
+                Assert.IsTrue(list[1].HasLocalValue(Section.ChapterProperty));
                 Assert.IsTrue(list[0].Chapter == list[1].Chapter);
             }
         }
@@ -628,11 +628,11 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
                 }) as SectionList;
 
                 Assert.AreEqual(list.Count, 2);
-                Assert.IsTrue(list[0].FieldExists(Section.ChapterProperty));
-                Assert.IsTrue(list[1].FieldExists(Section.ChapterProperty));
+                Assert.IsTrue(list[0].HasLocalValue(Section.ChapterProperty));
+                Assert.IsTrue(list[1].HasLocalValue(Section.ChapterProperty));
                 Assert.IsTrue(list[0].Chapter == list[1].Chapter);
-                Assert.IsTrue(list[0].FieldExists(Section.SectionOwnerProperty));
-                Assert.IsTrue(list[1].FieldExists(Section.SectionOwnerProperty));
+                Assert.IsTrue(list[0].HasLocalValue(Section.SectionOwnerProperty));
+                Assert.IsTrue(list[1].HasLocalValue(Section.SectionOwnerProperty));
                 Assert.IsTrue(list[0].SectionOwner == list[1].SectionOwner);
             }
         }
@@ -665,10 +665,10 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
                 }) as SectionList;
 
                 Assert.AreEqual(list.Count, 2);
-                Assert.IsTrue(list[0].FieldExists(Section.ChapterProperty));
-                Assert.IsTrue(list[1].FieldExists(Section.ChapterProperty));
+                Assert.IsTrue(list[0].HasLocalValue(Section.ChapterProperty));
+                Assert.IsTrue(list[1].HasLocalValue(Section.ChapterProperty));
                 Assert.IsTrue(list[0].Chapter == list[1].Chapter);
-                Assert.IsTrue(list[0].Chapter.FieldExists(Chapter.BookProperty), "Chapter.Book 也已经加载");
+                Assert.IsTrue(list[0].Chapter.HasLocalValue(Chapter.BookProperty), "Chapter.Book 也已经加载");
             }
         }
 
@@ -703,13 +703,13 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
                 }) as SectionList;
 
                 Assert.AreEqual(list.Count, 2);
-                Assert.IsTrue(list[0].FieldExists(Section.ChapterProperty));
-                Assert.IsTrue(list[1].FieldExists(Section.ChapterProperty));
+                Assert.IsTrue(list[0].HasLocalValue(Section.ChapterProperty));
+                Assert.IsTrue(list[1].HasLocalValue(Section.ChapterProperty));
                 Assert.IsTrue(list[0].Chapter == list[1].Chapter);
-                Assert.IsTrue(list[0].FieldExists(Section.SectionOwnerProperty));
-                Assert.IsTrue(list[1].FieldExists(Section.SectionOwnerProperty));
+                Assert.IsTrue(list[0].HasLocalValue(Section.SectionOwnerProperty));
+                Assert.IsTrue(list[1].HasLocalValue(Section.SectionOwnerProperty));
                 Assert.IsTrue(list[0].SectionOwner == list[1].SectionOwner);
-                Assert.IsTrue(list[0].Chapter.FieldExists(Chapter.BookProperty), "Chapter.Book 也已经加载");
+                Assert.IsTrue(list[0].Chapter.HasLocalValue(Chapter.BookProperty), "Chapter.Book 也已经加载");
             }
         }
 

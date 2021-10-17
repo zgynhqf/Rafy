@@ -162,7 +162,7 @@ namespace Rafy.FileStorage
                 case SubmitAction.ChildrenOnly:
                 case SubmitAction.Insert:
                 case SubmitAction.Update:
-                    if (entity.FieldExists(FileInfo.ContentProperty))
+                    if (entity.HasLocalValue(FileInfo.ContentProperty))
                     {
                         FileStoragePlugin.ContentProvider.SaveContent(entity, entity.Content);
                     }

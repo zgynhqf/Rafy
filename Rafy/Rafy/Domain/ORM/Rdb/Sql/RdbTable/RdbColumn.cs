@@ -87,7 +87,9 @@ namespace Rafy.Domain.ORM
 
         private object Read(Entity entity)
         {
-            var refIdProperty = _columnInfo.Property as IRefIdProperty;
+            var property = _columnInfo.Property;
+
+            var refIdProperty = property as IRefIdProperty;
             if (refIdProperty != null)
             {
                 object id = refIdProperty.Nullable ?
@@ -95,13 +97,16 @@ namespace Rafy.Domain.ORM
                 return id;
             }
 
-            var value = entity.GetProperty(_columnInfo.Property);
+            var value = entity.GetProperty(property);
+
             return value;
         }
 
         private void Write(Entity entity, object value)
         {
-            var refIdProperty = _columnInfo.Property as IRefIdProperty;
+            var property = _columnInfo.Property;
+
+            var refIdProperty = property as IRefIdProperty;
             if (refIdProperty != null)
             {
                 if (value != null)
@@ -112,7 +117,43 @@ namespace Rafy.Domain.ORM
                 return;
             }
 
-            entity.LoadProperty(_columnInfo.Property, value);
+            if (this.ForceReset(value, property))
+            {
+                entity.ResetProperty(property);
+            }
+            else
+            {
+                entity.LoadProperty(property, value);
+            }
+        }
+
+        /// <summary>
+        /// 判断在设置指定的值时，是否直接使用重设方法。
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        private bool ForceReset(object value, IProperty property)
+        {
+            //如果把 null 赋值给一个值类型，则直接还原此属性为默认值。
+            bool reset = false;
+            if (value == null)
+            {
+                var propertyType = property.PropertyType;
+                //值类型，且这个值类型不是 Nullable时，设置为 null 表示需要重设
+                if (propertyType.IsValueType && (!propertyType.IsGenericType || propertyType.GetGenericTypeDefinition() != typeof(Nullable<>)))
+                {
+                    reset = true;
+                }
+            }
+            else
+            {
+                //如果是默认值，为节省内存、传输空间，那么不需要设置本地值。
+                var meta = property.GetMeta(this);
+                reset = object.Equals(value, meta.DefaultValue);
+            }
+
+            return reset;
         }
     }
 }

@@ -135,8 +135,9 @@ namespace Rafy.ManagedProperty
 
             if (property.LifeCycle == ManagedPropertyLifeCycle.Compile)
             {
-                _compiledFields[property.TypeCompiledIndex].ResetValue();
-                _compiledFields[property.TypeCompiledIndex]._isChanged = false;
+                var index = property.TypeCompiledIndex;
+                _compiledFields[index].ResetValue();
+                _compiledFields[index]._isChanged = false;
             }
             else
             {
@@ -195,20 +196,13 @@ namespace Rafy.ManagedProperty
         {
             object finalValue;
 
-            CheckEditing(property);
+            this.CheckEditing(property);
 
             var meta = property.GetMeta(this) as IManagedPropertyMetadataInternal;
             var defaultValue = meta.DefaultValue;
             finalValue = defaultValue;
 
             value = CoerceType(property, value);
-
-            bool isValueReset = false;
-            if (NeedReset(property, value, defaultValue))
-            {
-                value = defaultValue;
-                isValueReset = true;
-            }
 
             bool cancel = meta.RaisePropertyChangingMetaEvent(this, ref value, source);
             if (!cancel)
@@ -227,7 +221,7 @@ namespace Rafy.ManagedProperty
                         oldValue = field.Value;
                     }
 
-                    if (isValueReset)
+                    if (object.Equals(defaultValue, value))
                     {
                         field.ResetValue();
                     }
@@ -304,35 +298,52 @@ namespace Rafy.ManagedProperty
         /// <param name="value"></param>
         private void _LoadProperty(IManagedProperty property, object value)
         {
-            CheckEditing(property);
+            this.CheckEditing(property);
 
             value = CoerceType(property, value);
 
-            var meta = property.GetMeta(this) as IManagedPropertyMetadataInternal;
+            var meta = property.GetMeta(this);
 
-            if (NeedReset(property, value, meta.DefaultValue))
+            if (!object.Equals(value, meta.DefaultValue))
             {
-                _ResetProperty(property);
-                return;
-            }
+                if (property.LifeCycle == ManagedPropertyLifeCycle.Compile)
+                {
+                    _compiledFields[property.TypeCompiledIndex]._value = value;
+                }
+                else
+                {
+                    if (_runtimeFields == null)
+                    {
+                        _runtimeFields = new Dictionary<IManagedProperty, ManagedPropertyField>();
+                    }
 
-            if (property.LifeCycle == ManagedPropertyLifeCycle.Compile)
-            {
-                _compiledFields[property.TypeCompiledIndex]._value = value;
+                    if (!_runtimeFields.TryGetValue(property, out ManagedPropertyField field))
+                    {
+                        field = new ManagedPropertyField
+                        {
+                            _property = property
+                        };
+                    }
+
+                    field._value = value;
+                    _runtimeFields[property] = field;
+                }
             }
             else
             {
-                if (_runtimeFields == null)
+                //如果传入的是默认值，那么直接 ResetValue
+                if (property.LifeCycle == ManagedPropertyLifeCycle.Compile)
                 {
-                    _runtimeFields = new Dictionary<IManagedProperty, ManagedPropertyField>();
+                    _compiledFields[property.TypeCompiledIndex].ResetValue();
                 }
-
-                var field = new ManagedPropertyField
+                else
                 {
-                    _property = property,
-                    _value = value
-                };
-                _runtimeFields[property] = field;
+                    if (_runtimeFields.TryGetValue(property, out ManagedPropertyField field))
+                    {
+                        field.ResetValue();
+                        _runtimeFields[property] = field;
+                    }
+                }
             }
         }
 
@@ -346,40 +357,20 @@ namespace Rafy.ManagedProperty
             if (property.IsReadOnly) throw new InvalidOperationException("属性是只读的！");
         }
 
-        /// <summary>
-        /// 如果把 null 赋值给一个值类型，则直接还原此属性为默认值。
-        /// </summary>
-        /// <param name="property"></param>
-        /// <param name="value"></param>
-        /// <param name="defaultValue"></param>
-        /// <returns></returns>
-        private static bool NeedReset(IManagedProperty property, object value, object defaultValue)
-        {
-            if (value == null)
-            {
-                var propertyType = property.PropertyType;
-                //值类型，且这个值类型不是 Nullable时，设置为 null 表示需要重设
-                if (propertyType.IsValueType && (!propertyType.IsGenericType || propertyType.GetGenericTypeDefinition() != typeof(Nullable<>)))
-                {
-                    return true;
-                }
-            }
-            else
-            {
-                if (value.Equals(defaultValue))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
         private static object CoerceType(IManagedProperty property, object value)
         {
             if (value != null)
             {
                 value = TypeHelper.CoerceValue(property.PropertyType, value.GetType(), value);
+            }
+            else
+            {
+                //如果给一个非 Nullable 的值类型设置 null，则需要抛出异常。
+                var propertyType = property.PropertyType;
+                if (propertyType.IsValueType && !TypeHelper.IsNullable(propertyType))
+                {
+                    throw new InvalidProgramException($"不能给值类型属性 {property.OwnerType}.{property.Name} 设置 null。");
+                }
             }
             return value;
         }
@@ -389,7 +380,7 @@ namespace Rafy.ManagedProperty
         #region GetProperty / SetProperty / ClearProperty
 
         /// <summary>
-        /// 重设属性为默认值
+        /// 重设属性为默认值、未变更状态。
         /// </summary>
         /// <param name="property"></param>
         public void ResetProperty(IManagedProperty property)
@@ -445,7 +436,7 @@ namespace Rafy.ManagedProperty
         }
 
         /// <summary>
-        /// LoadProperty 以最快的方式直接加载值，不发生 PropertyChanged 事件。
+        /// LoadProperty 以最快的方式直接加载值，不发生 PropertyChanged 事件，也不变更属性的“变更状态”
         /// </summary>
         /// <param name="property"></param>
         /// <param name="value"></param>
@@ -557,7 +548,7 @@ namespace Rafy.ManagedProperty
         /// <returns></returns>
         internal bool IsAvailable(IManagedProperty property)
         {
-            return this.FieldExists(property);
+            return this.HasLocalValue(property);
         }
 
         /// <summary>
@@ -834,11 +825,14 @@ namespace Rafy.ManagedProperty
         #endregion
 
         /// <summary>
-        /// 是否存在主动设置/加载的字段值（本地值）。
+        /// 返回是否存在本地值。（开发者是否存在主动设置/加载的字段值（本地值）。）
+        /// 没有本地值的属性，是不占用过多的内存的，在序列化、反序列化的过程中也将被忽略，网络传输时，也不需要传输值。
+        /// * 一个属性，如果调用过 LoadProperty、SetProperty 更新了值后，字段都会有本地值。
+        /// * 如果调用过 <see cref="ResetProperty(IManagedProperty)"/>  来设置默认值，都会清空其本地值；那么，此时这个方法也会返回 false。
         /// </summary>
         /// <param name="property">托管属性</param>
         /// <returns></returns>
-        public bool FieldExists(IManagedProperty property)
+        public bool HasLocalValue(IManagedProperty property)
         {
             if (property == null) throw new ArgumentNullException("property");
 

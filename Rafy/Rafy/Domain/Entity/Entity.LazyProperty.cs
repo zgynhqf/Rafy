@@ -62,7 +62,7 @@ namespace Rafy.Domain
         {
             EntityList data = null;
 
-            if (this.FieldExists(listProperty))
+            if (this.HasLocalValue(listProperty))
             {
                 data = this.GetProperty(listProperty) as EntityList;
                 if (data != null) return data;
@@ -385,7 +385,7 @@ namespace Rafy.Domain
         /// <returns></returns>
         public object GetLOBProperty(ILOBProperty property)
         {
-            if (!this.IsNew && !this.FieldExists(property))
+            if (!this.IsNew && !this.HasLocalValue(property))
             {
                 var value = (property as ILOBPropertyInternal).LoadLOBValue(this.Id);
                 base.LoadProperty(property, value);

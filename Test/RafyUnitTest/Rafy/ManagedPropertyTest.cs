@@ -42,6 +42,40 @@ namespace RafyUnitTest
             Assert.AreEqual(user.Age, 10);
         }
 
+        /// <summary>
+        /// 值类型的属性，如果是不可空的，那么设置 null 时，应该报错。
+        /// 如果是可空类型的值类型，那么设置 null 时，应该成功。
+        /// </summary>
+        [TestMethod]
+        public void MPT_ValueType()
+        {
+            var entity = new Favorate();
+            bool success = false;
+            try
+            {
+                entity.SetProperty(Favorate.FavorateTypeProperty, null);
+                success = true;
+            }
+            catch { }
+            Assert.IsFalse(success, "值类型的属性，如果是不可空的，那么设置 null 时，应该报错。");
+
+            try
+            {
+                entity.LoadProperty(Favorate.FavorateTypeProperty, null);
+                success = true;
+            }
+            catch { }
+            Assert.IsFalse(success, "值类型的属性，如果是不可空的，那么设置 null 时，应该报错。");
+
+            entity.NullableFavorateType = FavorateType.B;
+            entity.SetProperty(Favorate.NullableFavorateTypeProperty, null);
+            Assert.AreEqual(null, entity.NullableFavorateType);
+
+            entity.NullableFavorateType = FavorateType.B;
+            entity.LoadProperty(Favorate.NullableFavorateTypeProperty, null);
+            Assert.AreEqual(null, entity.NullableFavorateType);
+        }
+
         [TestMethod]
         public void MPT_CoerceGetValue()
         {
@@ -210,7 +244,7 @@ namespace RafyUnitTest
                 repo.Save(user);
 
                 var user2 = repo.GetById(user.Id);
-                Assert.IsTrue(!user2.FieldExists(TestUserExt.TestUserLogListProperty));
+                Assert.IsTrue(!user2.HasLocalValue(TestUserExt.TestUserLogListProperty));
                 Assert.IsTrue(user2.GetProperty(TestUserExt.TestUserLogListProperty) == null);
                 Assert.IsTrue(user2.GetTestUserLogList().Count == 2);
             }
@@ -293,7 +327,7 @@ namespace RafyUnitTest
                 user.SetProperty(TestUser.ReadOnlyNameAgeProperty, "name");
                 Assert.IsFalse(true, "只读属性不能设置成功。");
             }
-            catch
+            catch (InvalidOperationException)
             {
             }
         }

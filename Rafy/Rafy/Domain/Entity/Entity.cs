@@ -342,7 +342,7 @@ namespace Rafy.Domain
                 {
                     if (childrenRecur || grabChildren)
                     {
-                        if (!source.FieldExists(property))
+                        if (!source.HasLocalValue(property))
                         {
                             this.ResetProperty(property);
                         }

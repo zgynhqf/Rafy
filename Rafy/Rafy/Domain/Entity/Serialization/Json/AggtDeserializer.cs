@@ -336,7 +336,7 @@ namespace Rafy.Domain.Serialization.Json
         {
             //构造 List 对象
             EntityList list = null;
-            if (entity.FieldExists(listProperty) || entity.IsNew)
+            if (entity.HasLocalValue(listProperty) || entity.IsNew)
             {
                 list = entity.GetLazyList(listProperty);
             }

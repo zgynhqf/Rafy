@@ -96,6 +96,13 @@ namespace UT
             set { this.SetProperty(FavorateTypeProperty, value); }
         }
 
+        public static readonly Property<FavorateType?> NullableFavorateTypeProperty = P<Favorate>.Register(e => e.NullableFavorateType);
+        public FavorateType? NullableFavorateType
+        {
+            get { return this.GetProperty(NullableFavorateTypeProperty); }
+            set { this.SetProperty(NullableFavorateTypeProperty, value); }
+        }
+
         public static readonly Property<FavorateTypeWithLabel> FavorateTypeWithLabelProperty = P<Favorate>.Register(e => e.FavorateTypeWithLabel);
         public FavorateTypeWithLabel FavorateTypeWithLabel
         {

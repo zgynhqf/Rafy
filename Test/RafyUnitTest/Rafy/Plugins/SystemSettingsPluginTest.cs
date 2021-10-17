@@ -78,12 +78,14 @@ namespace RafyUnitTest
                 var value = controller.GetValue(key);
                 Assert.AreEqual("1", value);
 
+                var success = false;
                 try
                 {
                     Assert.AreEqual(1, value);
-                    Assert.IsTrue(false, "两个值的类型不一致，应该抛出异常。");
+                    success = true;
                 }
-                catch (Exception) { }
+                catch { }
+                Assert.IsFalse(success, "两个值的类型不一致，应该抛出异常。");
             }
         }
 

@@ -437,7 +437,7 @@ namespace RafyUnitTest
             Assert.IsTrue(TestRole.TestUserProperty.DefaultMeta.Serializable, "默认在服务端，应该是可以序列化实体的。");
 
             var roleCloned = ObjectCloner.Clone(role);
-            var loaded = roleCloned.FieldExists(TestRole.TestUserProperty);
+            var loaded = roleCloned.HasLocalValue(TestRole.TestUserProperty);
             Assert.IsTrue(loaded, "服务端到客户端，需要序列化实体。");
         }
 
@@ -462,7 +462,7 @@ namespace RafyUnitTest
 
                 var roleCloned = ObjectCloner.Clone(role);
 
-                var loaded = roleCloned.FieldExists(TestRole.TestUserProperty);
+                var loaded = roleCloned.HasLocalValue(TestRole.TestUserProperty);
                 Assert.IsFalse(loaded, "引用属性在 Serializable 设置为 false 时，不应该被序列化。");
             }
             finally
@@ -788,7 +788,7 @@ namespace RafyUnitTest
                 repo.Save(book);
 
                 var book2 = repo.GetById(book.Id);
-                Assert.IsTrue(!book2.FieldExists(Book.ChapterListProperty));
+                Assert.IsTrue(!book2.HasLocalValue(Book.ChapterListProperty));
                 Assert.IsTrue(book2.GetProperty(Book.ChapterListProperty) == null);
                 Assert.IsTrue(book2.ChapterList.Count == 2);
             }
@@ -829,7 +829,7 @@ namespace RafyUnitTest
                 repo.Save(book);
 
                 var book2 = repo.GetById(book.Id);
-                Assert.IsFalse(book2.FieldExists(Book.ContentProperty));
+                Assert.IsFalse(book2.HasLocalValue(Book.ContentProperty));
 
                 var c = Logger.ThreadDbAccessedCount;
                 var content = book2.Content;
@@ -848,8 +848,8 @@ namespace RafyUnitTest
                 repo.Save(new Book { Name = "2", Content = "Book2 Long Content........." });
 
                 var books = repo.GetAll();
-                Assert.IsFalse(books[0].FieldExists(Book.ContentProperty));
-                Assert.IsFalse(books[1].FieldExists(Book.ContentProperty));
+                Assert.IsFalse(books[0].HasLocalValue(Book.ContentProperty));
+                Assert.IsFalse(books[1].HasLocalValue(Book.ContentProperty));
 
                 var c = Logger.ThreadDbAccessedCount;
                 Assert.IsTrue(books[0].Content == "Book1 Long Content.........");
@@ -2481,14 +2481,17 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_QueryExt_QueryError()
         {
+            var success = false;
             try
             {
                 var repo = RF.ResolveInstance<TestUserRepository>();
                 var userList = repo.GetBy(new NotImplementCriteria());
 
-                Assert.IsTrue(false, "本方法没有在仓库及扩展中实现，应该抛出异常。");
+                success = true;
             }
             catch { }
+
+            Assert.IsFalse(success, "本方法没有在仓库及扩展中实现，应该抛出异常。");
         }
 
         /// <summary>
@@ -3004,7 +3007,8 @@ namespace RafyUnitTest
   ""favorateType"": 0,
   ""favorateTypeWithLabel"": 0,
   ""listValue"": null,
-  ""name"": ""name""
+  ""name"": ""name"",
+  ""nullableFavorateType"": null
 }");
         }
 
@@ -3684,7 +3688,7 @@ namespace RafyUnitTest
             Assert.AreEqual("name", b.Name);
             Assert.AreEqual(20, b.Age);
 
-            Assert.IsFalse(b.FieldExists(TestUser.ReadOnlyNameAgeProperty));
+            Assert.IsFalse(b.HasLocalValue(TestUser.ReadOnlyNameAgeProperty));
         }
 
         [TestMethod]
@@ -3697,7 +3701,7 @@ namespace RafyUnitTest
             b.Clone(a, new CloneOptions(CloneActions.NormalProperties));
 
             Assert.AreEqual("DefaultName", b.Name);
-            Assert.IsFalse(b.FieldExists(TestUser.NameProperty));
+            Assert.IsFalse(b.HasLocalValue(TestUser.NameProperty));
         }
 
         [TestMethod]
