@@ -20,7 +20,7 @@ using Rafy.Data;
 using Rafy.Domain.ORM;
 using Rafy.ManagedProperty;
 
-namespace Rafy.Domain.ORM
+namespace Rafy.Domain
 {
     /// <summary>
     /// 本地实体的仓库基类。

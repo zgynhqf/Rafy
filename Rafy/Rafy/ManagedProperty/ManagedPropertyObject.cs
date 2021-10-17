@@ -465,6 +465,7 @@ namespace Rafy.ManagedProperty
         {
             this.MarkPropertiesChangedStatus(false);
         }
+
         /// <summary>
         /// 标记所有的属性为变更状态。（主要用于想要强制更新所有属性时的场景。）
         /// </summary>
