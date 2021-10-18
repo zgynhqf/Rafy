@@ -10,13 +10,14 @@
  * 
 *******************************************************/
 
-3.80.3965
+3.80.3966
     ！修改接口
         EagerLoadOptions 重命名为 LoadOptions。
         ManagedPropertyObject.FieldExists 更名为 HasLocalValue。
     内部修改
         ManagedPropertyObject.LoadProperty 方法不再主动调用 ResetProperty。
         ManagedPropertyObject中，不能给非空的值类型属性设置 null。
+        优化 Entity._flags 的类型。
 
 3.79.3959
     ★★公布、添加功能

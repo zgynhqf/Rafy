@@ -34,23 +34,22 @@ namespace Rafy.Domain
         /// <summary>
         /// 所有需要序列化的 bool 值，都可以存储在这里。减少传输数据量。
         /// </summary>
-        private uint _flags = (uint)EntitySerializableFlags.IsNew;
+        private EntitySerializableFlags _flags = EntitySerializableFlags.IsNew;
 
         private bool GetFlags(EntitySerializableFlags flag)
         {
-            var flagValue = (uint)flag;
-            return (_flags & flagValue) == flagValue;
+            return (_flags & flag) == flag;
         }
 
         private void SetFlags(EntitySerializableFlags flag, bool value)
         {
             if (value)
             {
-                _flags |= (uint)flag;
+                _flags |= flag;
             }
             else
             {
-                _flags &= (uint)(EntitySerializableFlags.AllMask ^ flag);
+                _flags &= ~flag;
             }
         }
 

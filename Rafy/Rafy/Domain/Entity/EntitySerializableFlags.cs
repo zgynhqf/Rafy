@@ -20,9 +20,10 @@ namespace Rafy.Domain
 {
     /// <summary>
     /// 前三位一起表示 PersistenceStatus，其它位表示一些 boolean 值。
+    /// 继承自 Byte，只占用 1 个字节。
     /// </summary>
     [Flags]
-    internal enum EntitySerializableFlags
+    internal enum EntitySerializableFlags : byte
     {
         #region Persistence
 
@@ -52,8 +53,6 @@ namespace Rafy.Domain
         /// <summary>
         /// 是否为树的叶子节点。
         /// </summary>
-        isTreeLeaf = 16,
-
-        AllMask = 0xFFFF
+        isTreeLeaf = 16
     }
 }
