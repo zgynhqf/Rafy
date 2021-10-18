@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20101101
@@ -132,43 +132,43 @@ namespace Rafy.Domain
         /// 通过Id获取指定的实体对象
         /// </summary>
         /// <param name="id">The identifier.</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        Entity GetById(object id, EagerLoadOptions eagerLoad = null);
+        Entity GetById(object id, LoadOptions loadOptions = null);
 
         /// <summary>
         /// 以分页的方式查询所有实体。
         /// </summary>
         /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        EntityList GetAll(PagingInfo paging = null, EagerLoadOptions eagerLoad = null);
+        EntityList GetAll(PagingInfo paging = null, LoadOptions loadOptions = null);
 
         /// <summary>
         /// 获取指定 id 集合的实体列表。
         /// </summary>
         /// <param name="idList">The identifier list.</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        EntityList GetByIdList(object[] idList, EagerLoadOptions eagerLoad = null);
+        EntityList GetByIdList(object[] idList, LoadOptions loadOptions = null);
 
         /// <summary>
         /// 通过父对象的 Id 列表查询所有的实体。
         /// </summary>
         /// <param name="parentIdList">The parent identifier list.</param>
         /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        EntityList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, EagerLoadOptions eagerLoad = null);
+        EntityList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, LoadOptions loadOptions = null);
 
         /// <summary>
         /// 通过父对象 Id 分页查询子对象的集合。
         /// </summary>
         /// <param name="parentId"></param>
         /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        EntityList GetByParentId(object parentId, PagingInfo paging = null, EagerLoadOptions eagerLoad = null);
+        EntityList GetByParentId(object parentId, PagingInfo paging = null, LoadOptions loadOptions = null);
 
         /// <summary>
         /// 通过 CommonQueryCriteria 来查询实体列表。
@@ -195,26 +195,26 @@ namespace Rafy.Domain
         /// 递归查找指定父索引的所有子节点。
         /// </summary>
         /// <param name="treeIndex"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        EntityList GetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad = null);
+        EntityList GetByTreeParentIndex(string treeIndex, LoadOptions loadOptions = null);
 
         /// <summary>
         /// 获取指定节点的直接子节点。
         /// </summary>
         /// <param name="treePId"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        EntityList GetByTreePId(object treePId, EagerLoadOptions eagerLoad = null);
+        EntityList GetByTreePId(object treePId, LoadOptions loadOptions = null);
 
         /// <summary>
         /// 查询所有的根节点。
         /// 
         /// 与 GetAll 的区别在于：只查询所有的根节点，不查询子节点。
         /// </summary>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        EntityList GetTreeRoots(EagerLoadOptions eagerLoad = null);
+        EntityList GetTreeRoots(LoadOptions loadOptions = null);
 
         /// <summary>
         /// 查询某个实体的某个属性的值。

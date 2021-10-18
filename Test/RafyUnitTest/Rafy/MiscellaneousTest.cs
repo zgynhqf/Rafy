@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建日期：20160123
@@ -85,9 +85,9 @@ namespace RafyUnitTest
         #region Serialization
 
         [TestMethod]
-        public void MT_Serialization_EagerLoadOptions()
+        public void MT_Serialization_LoadOptions()
         {
-            var elo = new EagerLoadOptions();
+            var elo = new LoadOptions();
             elo.LoadWith(Book.ChapterListProperty);
             elo.LoadWith(Chapter.SectionListProperty);
             elo.LoadWith(Section.SectionOwnerProperty);

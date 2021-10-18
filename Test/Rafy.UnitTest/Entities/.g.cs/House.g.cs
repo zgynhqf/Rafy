@@ -183,47 +183,47 @@ namespace UT
         /// 通过Id在数据层中查询指定的对象
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new House GetById(object id, EagerLoadOptions eagerLoad = null)
+        public new House GetById(object id, LoadOptions loadOptions = null)
         {
-            return base.GetById(id, eagerLoad) as House;
+            return base.GetById(id, loadOptions) as House;
         }
 
         /// <summary>
         /// 查询第一个实体类
         /// </summary>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new House GetFirst(EagerLoadOptions eagerLoad = null)
+        public new House GetFirst(LoadOptions loadOptions = null)
         {
-            return base.GetFirst(eagerLoad) as House;
+            return base.GetFirst(loadOptions) as House;
         }
 
         /// <summary>
         /// 分页查询所有的实体类
         /// </summary>
         /// <param name="paging"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new HouseList GetAll(PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new HouseList GetAll(PagingInfo paging = null, LoadOptions loadOptions = null)
         {
-            return base.GetAll(paging, eagerLoad) as HouseList;
+            return base.GetAll(paging, loadOptions) as HouseList;
         }
 
         /// <summary>
         /// 获取指定 id 集合的实体列表。
         /// </summary>
         /// <param name="idList"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new HouseList GetByIdList(object[] idList, EagerLoadOptions eagerLoad = null)
+        public new HouseList GetByIdList(object[] idList, LoadOptions loadOptions = null)
         {
-            return base.GetByIdList(idList, eagerLoad) as HouseList;
+            return base.GetByIdList(idList, loadOptions) as HouseList;
         }
 
         /// <summary>
@@ -231,12 +231,12 @@ namespace UT
         /// </summary>
         /// <param name="parentIdList"></param>
         /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new HouseList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new HouseList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, LoadOptions loadOptions = null)
         {
-            return base.GetByParentIdList(parentIdList, paging, eagerLoad) as HouseList;
+            return base.GetByParentIdList(parentIdList, paging, loadOptions) as HouseList;
         }
 
         /// <summary>
@@ -244,12 +244,12 @@ namespace UT
         /// </summary>
         /// <param name="parentId"></param>
         /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new HouseList GetByParentId(object parentId, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new HouseList GetByParentId(object parentId, PagingInfo paging = null, LoadOptions loadOptions = null)
         {
-            return base.GetByParentId(parentId, paging, eagerLoad) as HouseList;
+            return base.GetByParentId(parentId, paging, loadOptions) as HouseList;
         }
 
         /// <summary>
@@ -278,24 +278,24 @@ namespace UT
         /// 递归查找所有树型子
         /// </summary>
         /// <param name="treeIndex"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new HouseList GetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad = null)
+        public new HouseList GetByTreeParentIndex(string treeIndex, LoadOptions loadOptions = null)
         {
-            return base.GetByTreeParentIndex(treeIndex, eagerLoad) as HouseList;
+            return base.GetByTreeParentIndex(treeIndex, loadOptions) as HouseList;
         }
 
         /// <summary>
         /// 查找指定树节点的直接子节点。
         /// </summary>
         /// <param name="treePId">需要查找的树节点的Id.</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new HouseList GetByTreePId(object treePId, EagerLoadOptions eagerLoad = null)
+        public new HouseList GetByTreePId(object treePId, LoadOptions loadOptions = null)
         {
-            return base.GetByTreePId(treePId, eagerLoad) as HouseList;
+            return base.GetByTreePId(treePId, loadOptions) as HouseList;
         }
 
         #endregion

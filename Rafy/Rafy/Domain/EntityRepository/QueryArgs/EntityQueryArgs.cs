@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建日期：2012
@@ -92,7 +92,7 @@ namespace Rafy.Domain
             get { return this.MemoryList ?? this.EntityList; }
         }
 
-        internal EagerLoadOptions EagerLoadOptions;
+        internal LoadOptions LoadOptions;
 
         /// <summary>
         /// 贪婪加载某个属性
@@ -110,34 +110,34 @@ namespace Rafy.Domain
         /// <param name="property">需要贪婪加载的托管属性。可以是一个引用属性，也可以是一个组合子属性。</param>
         private void EagerLoad(ConcreteProperty property)
         {
-            if (this.EagerLoadOptions == null)
+            if (this.LoadOptions == null)
             {
-                this.EagerLoadOptions = new EagerLoadOptions();
+                this.LoadOptions = new LoadOptions();
             }
 
-            this.EagerLoadOptions.CoreList.Add(property);
+            this.LoadOptions.CoreList.Add(property);
         }
 
-        internal void SetDataLoadOptions(PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        internal void SetDataLoadOptions(PagingInfo paging = null, LoadOptions loadOptions = null)
         {
             if (!PagingInfo.IsNullOrEmpty(paging))
             {
                 this.PagingInfo = paging;
             }
 
-            if (eagerLoad != null && eagerLoad.CoreList.Count > 0)
+            if (loadOptions != null && loadOptions.CoreList.Count > 0)
             {
-                if (this.EagerLoadOptions != null)
+                if (this.LoadOptions != null)
                 {
-                    for (int i = 0, c = eagerLoad.CoreList.Count; i < c; i++)
+                    for (int i = 0, c = loadOptions.CoreList.Count; i < c; i++)
                     {
-                        var item = eagerLoad.CoreList[i];
+                        var item = loadOptions.CoreList[i];
                         this.EagerLoad(item);
                     }
                 }
                 else
                 {
-                    this.EagerLoadOptions = eagerLoad;
+                    this.LoadOptions = loadOptions;
                 }
             }
         }

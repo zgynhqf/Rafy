@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -328,9 +328,9 @@ namespace UT
         //    });
         //}
 
-        //public override Entity GetById(object id, EagerLoadOptions eagerLoad = null)
+        //public override Entity GetById(object id, LoadOptions loadOptions = null)
         //{
-        //    return base.GetById(id, eagerLoad);
+        //    return base.GetById(id, loadOptions);
         //}
 
         //public TestUserList GetByEmptyArgument()

@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20120327
@@ -55,7 +55,7 @@ namespace Rafy.Domain
             return DataProvider._memoryRows.Count;
         }
 
-        protected sealed override EntityList DoGetAll(PagingInfo paging, EagerLoadOptions eagerLoad)
+        protected sealed override EntityList DoGetAll(PagingInfo paging, LoadOptions loadOptions)
         {
             if (!PagingInfo.IsNullOrEmpty(paging)) { throw new NotSupportedException(); }
 
@@ -71,9 +71,9 @@ namespace Rafy.Domain
         /// 通过本地 Id 查找实体。
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        protected sealed override Entity DoGetById(object id, EagerLoadOptions eagerLoad)
+        protected sealed override Entity DoGetById(object id, LoadOptions loadOptions)
         {
             DataProvider.EnsureStore();
 

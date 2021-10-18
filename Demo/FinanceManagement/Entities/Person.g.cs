@@ -183,47 +183,47 @@ namespace FM
         /// 通过Id在数据层中查询指定的对象
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new Person GetById(object id, EagerLoadOptions eagerLoad = null)
+        public new Person GetById(object id, LoadOptions loadOptions = null)
         {
-            return base.GetById(id, eagerLoad) as Person;
+            return base.GetById(id, loadOptions) as Person;
         }
 
         /// <summary>
         /// 查询第一个实体类
         /// </summary>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new Person GetFirst(EagerLoadOptions eagerLoad = null)
+        public new Person GetFirst(LoadOptions loadOptions = null)
         {
-            return base.GetFirst(eagerLoad) as Person;
+            return base.GetFirst(loadOptions) as Person;
         }
 
         /// <summary>
         /// 分页查询所有的实体类
         /// </summary>
         /// <param name="paging"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new PersonList GetAll(PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new PersonList GetAll(PagingInfo paging = null, LoadOptions loadOptions = null)
         {
-            return base.GetAll(paging, eagerLoad) as PersonList;
+            return base.GetAll(paging, loadOptions) as PersonList;
         }
 
         /// <summary>
         /// 获取指定 id 集合的实体列表。
         /// </summary>
         /// <param name="idList"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new PersonList GetByIdList(object[] idList, EagerLoadOptions eagerLoad = null)
+        public new PersonList GetByIdList(object[] idList, LoadOptions loadOptions = null)
         {
-            return base.GetByIdList(idList, eagerLoad) as PersonList;
+            return base.GetByIdList(idList, loadOptions) as PersonList;
         }
 
         /// <summary>
@@ -231,12 +231,12 @@ namespace FM
         /// </summary>
         /// <param name="parentIdList"></param>
         /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new PersonList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new PersonList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, LoadOptions loadOptions = null)
         {
-            return base.GetByParentIdList(parentIdList, paging, eagerLoad) as PersonList;
+            return base.GetByParentIdList(parentIdList, paging, loadOptions) as PersonList;
         }
 
         /// <summary>
@@ -244,12 +244,12 @@ namespace FM
         /// </summary>
         /// <param name="parentId"></param>
         /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new PersonList GetByParentId(object parentId, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new PersonList GetByParentId(object parentId, PagingInfo paging = null, LoadOptions loadOptions = null)
         {
-            return base.GetByParentId(parentId, paging, eagerLoad) as PersonList;
+            return base.GetByParentId(parentId, paging, loadOptions) as PersonList;
         }
     
         /// <summary>
@@ -278,24 +278,24 @@ namespace FM
         /// 递归查找所有树型子
         /// </summary>
         /// <param name="treeIndex"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new PersonList GetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad = null)
+        public new PersonList GetByTreeParentIndex(string treeIndex, LoadOptions loadOptions = null)
         {
-            return base.GetByTreeParentIndex(treeIndex, eagerLoad) as PersonList;
+            return base.GetByTreeParentIndex(treeIndex, loadOptions) as PersonList;
         }
 
         /// <summary>
         /// 查找指定树节点的直接子节点。
         /// </summary>
         /// <param name="treePId">需要查找的树节点的Id.</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new PersonList GetByTreePId(object treePId, EagerLoadOptions eagerLoad = null)
+        public new PersonList GetByTreePId(object treePId, LoadOptions loadOptions = null)
         {
-            return base.GetByTreePId(treePId, eagerLoad) as PersonList;
+            return base.GetByTreePId(treePId, loadOptions) as PersonList;
         }
 
         #endregion

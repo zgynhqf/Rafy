@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建日期：20150114
@@ -170,12 +170,12 @@ namespace Rafy.Domain.ORM
         /// </summary>
         /// <param name="sql"></param>
         /// <param name="paging"></param>
-        /// <param name="eagerLoad"></param>
+        /// <param name="loadOptions"></param>
         /// <returns></returns>
-        public object QueryData(FormattedSql sql, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public object QueryData(FormattedSql sql, PagingInfo paging = null, LoadOptions loadOptions = null)
         {
             var args = new SqlQueryArgs(sql);
-            args.SetDataLoadOptions(paging, eagerLoad);
+            args.SetDataLoadOptions(paging, loadOptions);
             return this.QueryData(args);
         }
 

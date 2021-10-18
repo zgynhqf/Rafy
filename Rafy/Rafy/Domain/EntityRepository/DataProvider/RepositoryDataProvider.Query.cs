@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建日期：20150314
@@ -30,36 +30,36 @@ namespace Rafy.Domain
         /// 子类可以重写这个方法，用于实现 GetAll 的数据层查询逻辑。
         /// </summary>
         /// <param name="paging">The paging information.</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        public virtual object GetAll(PagingInfo paging, EagerLoadOptions eagerLoad)
+        public virtual object GetAll(PagingInfo paging, LoadOptions loadOptions)
         {
             var query = f.Query(_repository);
 
-            return this.QueryData(query, paging, eagerLoad, true);
+            return this.QueryData(query, paging, loadOptions, true);
         }
 
         /// <summary>
         /// 子类可以重写这个方法，用于实现 GetTreeRoots 的数据层查询逻辑。
         /// </summary>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        public virtual object GetTreeRoots(EagerLoadOptions eagerLoad)
+        public virtual object GetTreeRoots(LoadOptions loadOptions)
         {
             var query = f.Query(_repository);
             query.AddConstraint(Entity.TreePIdProperty, PropertyOperator.Equal, null);
 
-            return this.QueryData(query, null, eagerLoad, false);
+            return this.QueryData(query, null, loadOptions, false);
         }
 
         /// <summary>
         /// 子类可以重写这个方法，用于实现 GetById 的数据层查询逻辑。
         /// </summary>
         /// <param name="id">The unique identifier.</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        public virtual Entity GetById(object id, EagerLoadOptions eagerLoad)
+        public virtual Entity GetById(object id, LoadOptions loadOptions)
         {
             var table = f.Table(_repository);
             var q = f.Query(
@@ -67,16 +67,16 @@ namespace Rafy.Domain
                 where: f.Constraint(table.IdColumn, id)
             );
 
-            return (Entity)this.QueryData(q, null, eagerLoad, false);
+            return (Entity)this.QueryData(q, null, loadOptions, false);
         }
 
         /// <summary>
         /// 子类重写此方法，来实现自己的 GetByIdList 方法的数据层代码。
         /// </summary>
         /// <param name="idList"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        public virtual EntityList GetByIdList(object[] idList, EagerLoadOptions eagerLoad)
+        public virtual EntityList GetByIdList(object[] idList, LoadOptions loadOptions)
         {
             var table = f.Table(_repository);
             var q = f.Query(
@@ -84,7 +84,7 @@ namespace Rafy.Domain
                 where: f.Constraint(table.IdColumn, PropertyOperator.In, idList)
             );
 
-            return (EntityList)this.QueryData(q, null, eagerLoad, false);
+            return (EntityList)this.QueryData(q, null, loadOptions, false);
         }
 
         /// <summary>
@@ -92,9 +92,9 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="parentId"></param>
         /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        public virtual object GetByParentId(object parentId, PagingInfo paging, EagerLoadOptions eagerLoad)
+        public virtual object GetByParentId(object parentId, PagingInfo paging, LoadOptions loadOptions)
         {
             var parentProperty = _repository.EntityMeta.FindParentReferenceProperty(true);
             var mp = (parentProperty.ManagedProperty as IRefEntityProperty).RefIdProperty;
@@ -105,7 +105,7 @@ namespace Rafy.Domain
                 where: f.Constraint(table.Column(mp), parentId)
             );
 
-            var list = this.QueryData(q, paging, eagerLoad, true);
+            var list = this.QueryData(q, paging, loadOptions, true);
 
             return list;
         }
@@ -115,9 +115,9 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="parentIdList">The parent identifier list.</param>
         /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        public virtual EntityList GetByParentIdList(object[] parentIdList, PagingInfo paging, EagerLoadOptions eagerLoad)
+        public virtual EntityList GetByParentIdList(object[] parentIdList, PagingInfo paging, LoadOptions loadOptions)
         {
             var parentProperty = _repository.EntityMeta.FindParentReferenceProperty(true);
             var mp = (parentProperty.ManagedProperty as IRefEntityProperty).RefIdProperty;
@@ -131,7 +131,7 @@ namespace Rafy.Domain
                 //orderBy: _repository.SupportTree ? null : new List<IOrderBy> { f.OrderBy(parentColumn) }
             );
 
-            var list = (EntityList)this.QueryData(q, paging, eagerLoad, true);
+            var list = (EntityList)this.QueryData(q, paging, loadOptions, true);
 
             return list;
         }
@@ -140,9 +140,9 @@ namespace Rafy.Domain
         /// 通过树型编码，找到所有对应的子节点。
         /// </summary>
         /// <param name="treeIndex"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        public virtual EntityList GetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad)
+        public virtual EntityList GetByTreeParentIndex(string treeIndex, LoadOptions loadOptions)
         {
             if (string.IsNullOrEmpty(treeIndex)) throw new ArgumentNullException(nameof(treeIndex));
 
@@ -154,7 +154,7 @@ namespace Rafy.Domain
                 where: f.Constraint(table.Column(Entity.TreeIndexProperty), PropertyOperator.Like, childCode)
             );
 
-            var list = (EntityList)this.QueryData(q, null, eagerLoad, true);
+            var list = (EntityList)this.QueryData(q, null, loadOptions, true);
 
             return list;
         }
@@ -163,9 +163,9 @@ namespace Rafy.Domain
         /// 查找指定树节点的直接子节点。
         /// </summary>
         /// <param name="treePId">需要查找的树节点的Id.</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        public virtual EntityList GetByTreePId(object treePId, EagerLoadOptions eagerLoad)
+        public virtual EntityList GetByTreePId(object treePId, LoadOptions loadOptions)
         {
             var table = f.Table(_repository);
             var q = f.Query(
@@ -173,16 +173,16 @@ namespace Rafy.Domain
                 where: table.Column(Entity.TreePIdProperty).Equal(treePId)
             );
 
-            return (EntityList)this.QueryData(q, null, eagerLoad, false);
+            return (EntityList)this.QueryData(q, null, loadOptions, false);
         }
 
         /// <summary>
         /// 获取指定树节点的所有父节点。
         /// </summary>
         /// <param name="treeIndex">Index of the tree.</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        public virtual EntityList GetAllTreeParents(string treeIndex, EagerLoadOptions eagerLoad)
+        public virtual EntityList GetAllTreeParents(string treeIndex, LoadOptions loadOptions)
         {
             var parentIndeces = new List<string>();
             var option = _repository.TreeIndexOption;
@@ -206,7 +206,7 @@ namespace Rafy.Domain
                 where: table.Column(Entity.TreeIndexProperty).In(parentIndeces)
             );
 
-            return (EntityList)this.QueryData(q, null, eagerLoad, false);
+            return (EntityList)this.QueryData(q, null, loadOptions, false);
         }
 
         /// <summary>
@@ -287,7 +287,7 @@ namespace Rafy.Domain
                 q.OrderBy.Add(table.Column(orderBy), dir);
             }
 
-            return this.QueryData(q, criteria.PagingInfo, criteria.EagerLoad, true);
+            return this.QueryData(q, criteria.PagingInfo, criteria.LoadOptions, true);
         }
 
         /// <summary>
@@ -339,7 +339,7 @@ namespace Rafy.Domain
 
             if (!string.IsNullOrWhiteSpace(criteria.Expand))
             {
-                var eagerLoad = new EagerLoadOptions();
+                var loadOptions = new LoadOptions();
 
                 var expandProperties = criteria.Expand.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 var splitter = new char[] { '.' };
@@ -366,12 +366,12 @@ namespace Rafy.Domain
                                 var refProperty = mp as IRefEntityProperty;
                                 if (refProperty != null)
                                 {
-                                    eagerLoad.LoadWith(refProperty);
+                                    loadOptions.LoadWith(refProperty);
                                     nextEntityType = refProperty.RefEntityType;
                                 }
                                 else if (mp is IListProperty)
                                 {
-                                    eagerLoad.LoadWith(mp as IListProperty);
+                                    loadOptions.LoadWith(mp as IListProperty);
                                     nextEntityType = (mp as IListProperty).ListEntityType;
                                 }
                             }
@@ -384,26 +384,26 @@ namespace Rafy.Domain
                         {
                             if (mp is IListProperty)
                             {
-                                eagerLoad.LoadWith(mp as IListProperty);
+                                loadOptions.LoadWith(mp as IListProperty);
                             }
                             else if (mp is IRefEntityProperty)
                             {
-                                eagerLoad.LoadWith(mp as IRefEntityProperty);
+                                loadOptions.LoadWith(mp as IRefEntityProperty);
                             }
                         }
                         else if (expand == EntityConvention.TreeChildrenPropertyName)
                         {
-                            eagerLoad.LoadWithTreeChildren();
+                            loadOptions.LoadWithTreeChildren();
                         }
                     }
 
-                    criteria.EagerLoad = eagerLoad;
+                    criteria.LoadOptions = loadOptions;
                 }
             }
 
             #endregion
 
-            return this.QueryData(q, criteria.PagingInfo, criteria.EagerLoad, criteria.MarkTreeFullLoaded);
+            return this.QueryData(q, criteria.PagingInfo, criteria.LoadOptions, criteria.MarkTreeFullLoaded);
         }
 
         /// <summary>
@@ -423,12 +423,12 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="query">查询对象。</param>
         /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <param name="markTreeFullLoaded">如果某次查询结果是一棵完整的子树，那么必须设置此参数为 true，才可以把整个树标记为完整加载。</param>
         /// <returns></returns>
-        protected object QueryData(IQuery query, PagingInfo paging = null, EagerLoadOptions eagerLoad = null, bool markTreeFullLoaded = true)
+        protected object QueryData(IQuery query, PagingInfo paging = null, LoadOptions loadOptions = null, bool markTreeFullLoaded = true)
         {
-            return this.DataQueryer.QueryData(query, paging, eagerLoad, markTreeFullLoaded);
+            return this.DataQueryer.QueryData(query, paging, loadOptions, markTreeFullLoaded);
         }
 
         /// <summary>
@@ -450,11 +450,11 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="queryable"></param>
         /// <param name="paging"></param>
-        /// <param name="eagerLoad"></param>
+        /// <param name="loadOptions"></param>
         /// <returns></returns>
-        protected object QueryData(IQueryable queryable, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        protected object QueryData(IQueryable queryable, PagingInfo paging = null, LoadOptions loadOptions = null)
         {
-            return this.DataQueryer.QueryData(queryable, paging, eagerLoad);
+            return this.DataQueryer.QueryData(queryable, paging, loadOptions);
         }
 
         /// <summary>

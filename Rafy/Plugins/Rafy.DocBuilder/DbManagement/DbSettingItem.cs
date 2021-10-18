@@ -76,7 +76,7 @@ namespace Rafy.DevTools.DbManagement
         };
 
         [RepositoryQuery]
-        public override object GetAll(PagingInfo paging, EagerLoadOptions eagerLoad)
+        public override object GetAll(PagingInfo paging, LoadOptions loadOptions)
         {
             var list = new DbSettingItemList();
 

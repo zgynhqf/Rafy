@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20130307 09:37
@@ -78,11 +78,11 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="queryable"></param>
         /// <param name="paging"></param>
-        /// <param name="eagerLoad"></param>
+        /// <param name="loadOptions"></param>
         /// <returns></returns>
-        protected object QueryData(IQueryable queryable, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        protected object QueryData(IQueryable queryable, PagingInfo paging = null, LoadOptions loadOptions = null)
         {
-            return this.DataQueryer.QueryData(queryable, paging, eagerLoad);
+            return this.DataQueryer.QueryData(queryable, paging, loadOptions);
         }
 
         /// <summary>
@@ -111,12 +111,12 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="query">查询对象。</param>
         /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <param name="markTreeFullLoaded">如果某次查询结果是一棵完整的子树，那么必须设置此参数为 true ，才可以把整个树标记为完整加载。</param>
         /// <returns></returns>
-        protected object QueryData(IQuery query, PagingInfo paging = null, EagerLoadOptions eagerLoad = null, bool markTreeFullLoaded = true)
+        protected object QueryData(IQuery query, PagingInfo paging = null, LoadOptions loadOptions = null, bool markTreeFullLoaded = true)
         {
-            return this.DataQueryer.QueryData(query, paging, eagerLoad, markTreeFullLoaded);
+            return this.DataQueryer.QueryData(query, paging, loadOptions, markTreeFullLoaded);
         }
 
         /// <summary>
@@ -151,11 +151,11 @@ namespace Rafy.Domain
         ///// </summary>
         ///// <param name="sql">sql 语句，返回的结果集的字段，需要保证与属性映射的字段名相同。</param>
         ///// <param name="paging">分页信息。</param>
-        ///// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        ///// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         ///// <returns></returns>
-        //protected EntityList QueryList(FormattedSql sql, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        //protected EntityList QueryList(FormattedSql sql, PagingInfo paging = null, LoadOptions loadOptions = null)
         //{
-        //    return Queryer.QueryList(sql, paging, eagerLoad);
+        //    return Queryer.QueryList(sql, paging, loadOptions);
         //}
 
         ///// <summary>

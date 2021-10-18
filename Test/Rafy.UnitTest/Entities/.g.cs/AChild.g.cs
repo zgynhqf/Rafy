@@ -183,47 +183,47 @@ namespace UT
         /// 通过Id在数据层中查询指定的对象
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new AChild GetById(object id, EagerLoadOptions eagerLoad = null)
+        public new AChild GetById(object id, LoadOptions loadOptions = null)
         {
-            return base.GetById(id, eagerLoad) as AChild;
+            return base.GetById(id, loadOptions) as AChild;
         }
 
         /// <summary>
         /// 查询第一个实体类
         /// </summary>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new AChild GetFirst(EagerLoadOptions eagerLoad = null)
+        public new AChild GetFirst(LoadOptions loadOptions = null)
         {
-            return base.GetFirst(eagerLoad) as AChild;
+            return base.GetFirst(loadOptions) as AChild;
         }
 
         /// <summary>
         /// 分页查询所有的实体类
         /// </summary>
         /// <param name="paging"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new AChildList GetAll(PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new AChildList GetAll(PagingInfo paging = null, LoadOptions loadOptions = null)
         {
-            return base.GetAll(paging, eagerLoad) as AChildList;
+            return base.GetAll(paging, loadOptions) as AChildList;
         }
 
         /// <summary>
         /// 获取指定 id 集合的实体列表。
         /// </summary>
         /// <param name="idList"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new AChildList GetByIdList(object[] idList, EagerLoadOptions eagerLoad = null)
+        public new AChildList GetByIdList(object[] idList, LoadOptions loadOptions = null)
         {
-            return base.GetByIdList(idList, eagerLoad) as AChildList;
+            return base.GetByIdList(idList, loadOptions) as AChildList;
         }
 
         /// <summary>
@@ -231,12 +231,12 @@ namespace UT
         /// </summary>
         /// <param name="parentIdList"></param>
         /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new AChildList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new AChildList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, LoadOptions loadOptions = null)
         {
-            return base.GetByParentIdList(parentIdList, paging, eagerLoad) as AChildList;
+            return base.GetByParentIdList(parentIdList, paging, loadOptions) as AChildList;
         }
 
         /// <summary>
@@ -244,12 +244,12 @@ namespace UT
         /// </summary>
         /// <param name="parentId"></param>
         /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new AChildList GetByParentId(object parentId, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new AChildList GetByParentId(object parentId, PagingInfo paging = null, LoadOptions loadOptions = null)
         {
-            return base.GetByParentId(parentId, paging, eagerLoad) as AChildList;
+            return base.GetByParentId(parentId, paging, loadOptions) as AChildList;
         }
 
         /// <summary>
@@ -278,24 +278,24 @@ namespace UT
         /// 递归查找所有树型子
         /// </summary>
         /// <param name="treeIndex"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new AChildList GetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad = null)
+        public new AChildList GetByTreeParentIndex(string treeIndex, LoadOptions loadOptions = null)
         {
-            return base.GetByTreeParentIndex(treeIndex, eagerLoad) as AChildList;
+            return base.GetByTreeParentIndex(treeIndex, loadOptions) as AChildList;
         }
 
         /// <summary>
         /// 查找指定树节点的直接子节点。
         /// </summary>
         /// <param name="treePId">需要查找的树节点的Id.</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new AChildList GetByTreePId(object treePId, EagerLoadOptions eagerLoad = null)
+        public new AChildList GetByTreePId(object treePId, LoadOptions loadOptions = null)
         {
-            return base.GetByTreePId(treePId, eagerLoad) as AChildList;
+            return base.GetByTreePId(treePId, loadOptions) as AChildList;
         }
 
         #endregion

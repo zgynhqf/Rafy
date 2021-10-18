@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -427,7 +427,7 @@ namespace RafyUnitTest
         //        //查询的数据访问测试。
         //        var oldCount = Logger.DbAccessedCount;
         //        var all = repo.GetAll(
-        //            eagerLoad: new EagerLoadOptions().LoadWith(Book.BookCategoryProperty)
+        //            loadOptions: new LoadOptions().LoadWith(Book.BookCategoryProperty)
         //            );
         //        var newCount = Logger.DbAccessedCount;
         //        Assert.IsTrue(newCount - oldCount == 2, "应该只进行了 2 次数据库查询。");
@@ -475,8 +475,8 @@ namespace RafyUnitTest
 
                 //查询的数据访问次数测试。
                 var oldCount = Logger.DbAccessedCount;
-                var eagerLoad = new EagerLoadOptions().LoadWithTreeChildren().LoadWith(Folder.FileListProperty);
-                var all = repo.GetAll(PagingInfo.Empty, eagerLoad);
+                var loadOptions = new LoadOptions().LoadWithTreeChildren().LoadWith(Folder.FileListProperty);
+                var all = repo.GetAll(PagingInfo.Empty, loadOptions);
                 var newCount = Logger.DbAccessedCount;
                 Assert.IsTrue(newCount - oldCount == 2, "应该只进行了 2 次数据库查询。查询时直接查出整个树，此时 LoadTreeChildren 不会再有数据加载。");
 
@@ -527,8 +527,8 @@ namespace RafyUnitTest
                 //查询的数据访问次数测试。
                 var oldCount = Logger.DbAccessedCount;
 
-                var eagerLoad = new EagerLoadOptions().LoadWithTreeChildren().LoadWith(Folder.FileListProperty);
-                folder = repo.GetById(folder.Id, eagerLoad);
+                var loadOptions = new LoadOptions().LoadWithTreeChildren().LoadWith(Folder.FileListProperty);
+                folder = repo.GetById(folder.Id, loadOptions);
 
                 var newCount = Logger.DbAccessedCount;
                 Assert.IsTrue(newCount - oldCount == 3, "应该只进行了 3 次数据库查询。查询时直接查出某个节点（部分树），此时 LoadTreeChildren 会根据节点数再发起。");

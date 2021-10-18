@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：吴中坡
  * 创建日期：20170315
@@ -87,22 +87,22 @@ namespace Rafy.DataTableMigration.Services
 
                 this.Report(new DataTableMigrationEventArgs($"共有 {totalCount} 个聚合根 {parameter.FullName} 需要归档。"));
 
-                var eagerLoadOptions = new EagerLoadOptions();
+                var loadOptionsOptions = new LoadOptions();
 
                 bool isHasChild = false;
 
-                LoadChildListProperty(ref isHasChild, repository.EntityMeta, eagerLoadOptions);
+                LoadChildListProperty(ref isHasChild, repository.EntityMeta, loadOptionsOptions);
 
                 bool isSupportTree = repository.SupportTree;
 
                 if (isSupportTree)
                 {
-                    eagerLoadOptions.LoadWithTreeChildren();
+                    loadOptionsOptions.LoadWithTreeChildren();
                 }
 
                 if (isHasChild||isSupportTree)
                 {
-                    condition.EagerLoad = eagerLoadOptions;
+                    condition.LoadOptions = loadOptionsOptions;
                 }
 
                 var entityList = repository.GetBy(condition);
@@ -206,8 +206,8 @@ namespace Rafy.DataTableMigration.Services
         /// </summary>
         /// <param name="isHasChild"></param>
         /// <param name="entityMeta"></param>
-        /// <param name="eagerLoadOptions"></param>
-        private static void LoadChildListProperty(ref bool isHasChild, EntityMeta entityMeta, EagerLoadOptions eagerLoadOptions)
+        /// <param name="loadOptionsOptions"></param>
+        private static void LoadChildListProperty(ref bool isHasChild, EntityMeta entityMeta, LoadOptions loadOptionsOptions)
         {
             var childProperties = entityMeta.ChildrenProperties;
             if (childProperties != null && childProperties.Count > 0)
@@ -221,9 +221,9 @@ namespace Rafy.DataTableMigration.Services
                         {
                             isHasChild = true;
                         }
-                        eagerLoadOptions.LoadWith(listProperty);
+                        loadOptionsOptions.LoadWith(listProperty);
                     }
-                    LoadChildListProperty(ref isHasChild, childPropertyMeta.ChildType, eagerLoadOptions);
+                    LoadChildListProperty(ref isHasChild, childPropertyMeta.ChildType, loadOptionsOptions);
                 }
             }
         }

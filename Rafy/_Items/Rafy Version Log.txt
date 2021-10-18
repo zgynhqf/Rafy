@@ -10,9 +10,9 @@
  * 
 *******************************************************/
 
-
-3.79.3962
+3.80.3965
     ！修改接口
+        EagerLoadOptions 重命名为 LoadOptions。
         ManagedPropertyObject.FieldExists 更名为 HasLocalValue。
     内部修改
         ManagedPropertyObject.LoadProperty 方法不再主动调用 ResetProperty。

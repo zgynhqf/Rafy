@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建日期：20140502
@@ -30,53 +30,53 @@ namespace Rafy.Domain
         /// 通过Id在数据层中查询指定的对象
         /// </summary>
         /// <param name="id">The unique identifier.</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        Entity GetById(object id, EagerLoadOptions eagerLoad);
+        Entity GetById(object id, LoadOptions loadOptions);
         /// <summary>
         /// 分页查询所有的实体类
         /// </summary>
         /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        object GetAll(PagingInfo paging, EagerLoadOptions eagerLoad);
+        object GetAll(PagingInfo paging, LoadOptions loadOptions);
         /// <summary>
         /// 通过父对象 Id 分页查询子对象的集合。
         /// </summary>
         /// <param name="parentId"></param>
         /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        object GetByParentId(object parentId, PagingInfo paging, EagerLoadOptions eagerLoad);
+        object GetByParentId(object parentId, PagingInfo paging, LoadOptions loadOptions);
         /// <summary>
         /// 通过父对象 Id 分页查询子对象的集合。
         /// </summary>
         /// <param name="parentIdList">The parent identifier list.</param>
         /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        EntityList GetByParentIdList(object[] parentIdList, PagingInfo paging, EagerLoadOptions eagerLoad);
+        EntityList GetByParentIdList(object[] parentIdList, PagingInfo paging, LoadOptions loadOptions);
         /// <summary>
         /// 获取指定 id 集合的实体列表。
         /// </summary>
         /// <param name="idList"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        EntityList GetByIdList(object[] idList, EagerLoadOptions eagerLoad);
+        EntityList GetByIdList(object[] idList, LoadOptions loadOptions);
 
         /// <summary>
         /// 递归查找所有树型子
         /// </summary>
         /// <param name="treeIndex"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        EntityList GetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad);
+        EntityList GetByTreeParentIndex(string treeIndex, LoadOptions loadOptions);
         /// <summary>
         /// 查询所有的根节点。
         /// </summary>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        object GetTreeRoots(EagerLoadOptions eagerLoad);
+        object GetTreeRoots(LoadOptions loadOptions);
 
         /// <summary>
         /// 通过 <see cref="CommonQueryCriteria"/> 来查询数据。

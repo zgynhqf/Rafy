@@ -183,7 +183,7 @@ namespace Rafy.DevTools.SysInfo
     public partial class FrameworkInfoItemDataProvider : RdbDataProvider
     {
         [RepositoryQuery]
-        public override object GetAll(PagingInfo paging, EagerLoadOptions eagerLoad)
+        public override object GetAll(PagingInfo paging, LoadOptions loadOptions)
         {
             var list = new FrameworkInfoItemList();
 

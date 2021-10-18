@@ -109,7 +109,7 @@ namespace Rafy.Customization
     public partial class ViewConfigurationPropertyDataProvider : RdbDataProvider
     {
         [RepositoryQuery]
-        public override object GetByParentId(object pId, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public override object GetByParentId(object pId, PagingInfo paging = null, LoadOptions loadOptions = null)
         {
             int parentId = (int)pId;
 

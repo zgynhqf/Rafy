@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20101101
@@ -111,21 +111,21 @@ namespace Rafy.Domain
         /// 分页查询所有的实体类
         /// </summary>
         /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        public EntityList GetAll(PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public EntityList GetAll(PagingInfo paging = null, LoadOptions loadOptions = null)
         {
-            return this.DoGetAll(paging, eagerLoad);
+            return this.DoGetAll(paging, loadOptions);
         }
 
         /// <summary>
         /// 查询第一个实体。
         /// </summary>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        public Entity GetFirst(EagerLoadOptions eagerLoad = null)
+        public Entity GetFirst(LoadOptions loadOptions = null)
         {
-            return this.DoGetFirst(eagerLoad);
+            return this.DoGetFirst(loadOptions);
         }
 
         /// <summary>
@@ -150,22 +150,22 @@ namespace Rafy.Domain
         /// 通过Id在数据层中查询指定的对象
         /// </summary>
         /// <param name="id">The unique identifier.</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        public Entity GetById(object id, EagerLoadOptions eagerLoad = null)
+        public Entity GetById(object id, LoadOptions loadOptions = null)
         {
-            return this.DoGetById(id, eagerLoad);
+            return this.DoGetById(id, loadOptions);
         }
 
         /// <summary>
         /// 获取指定 id 集合的实体列表。
         /// </summary>
         /// <param name="idList"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        public EntityList GetByIdList(object[] idList, EagerLoadOptions eagerLoad = null)
+        public EntityList GetByIdList(object[] idList, LoadOptions loadOptions = null)
         {
-            return this.DoGetByIdList(idList, eagerLoad);
+            return this.DoGetByIdList(idList, loadOptions);
         }
 
         /// <summary>
@@ -173,11 +173,11 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="parentIdList">The parent identifier list.</param>
         /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        public EntityList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public EntityList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, LoadOptions loadOptions = null)
         {
-            return this.DoGetByParentIdList(parentIdList, paging, eagerLoad);
+            return this.DoGetByParentIdList(parentIdList, paging, loadOptions);
         }
 
         /// <summary>
@@ -185,11 +185,11 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="parentId"></param>
         /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        public EntityList GetByParentId(object parentId, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public EntityList GetByParentId(object parentId, PagingInfo paging = null, LoadOptions loadOptions = null)
         {
-            return this.DoGetByParentId(parentId, paging, eagerLoad);
+            return this.DoGetByParentId(parentId, paging, loadOptions);
         }
 
         /// <summary>
@@ -256,13 +256,13 @@ namespace Rafy.Domain
         /// 递归查找指定父索引号的节点下的所有子节点。
         /// </summary>
         /// <param name="treeIndex"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        public EntityList GetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad = null)
+        public EntityList GetByTreeParentIndex(string treeIndex, LoadOptions loadOptions = null)
         {
             if (string.IsNullOrEmpty(treeIndex)) throw new ArgumentNullException(nameof(treeIndex));
 
-            return this.DoGetByTreeParentIndex(treeIndex, eagerLoad);
+            return this.DoGetByTreeParentIndex(treeIndex, loadOptions);
         }
 
         /// <summary>
@@ -270,32 +270,32 @@ namespace Rafy.Domain
         /// 查询出的父节点同样以一个部分树的形式返回。
         /// </summary>
         /// <param name="treeIndex"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        public EntityList GetAllTreeParents(string treeIndex, EagerLoadOptions eagerLoad = null)
+        public EntityList GetAllTreeParents(string treeIndex, LoadOptions loadOptions = null)
         {
-            return this.DoGetAllTreeParents(treeIndex, eagerLoad);
+            return this.DoGetAllTreeParents(treeIndex, loadOptions);
         }
 
         /// <summary>
         /// 查找指定树节点的直接子节点。
         /// </summary>
         /// <param name="treePId">需要查找的树节点的Id.</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        public EntityList GetByTreePId(object treePId, EagerLoadOptions eagerLoad = null)
+        public EntityList GetByTreePId(object treePId, LoadOptions loadOptions = null)
         {
-            return this.DoGetByTreePId(treePId, eagerLoad);
+            return this.DoGetByTreePId(treePId, loadOptions);
         }
 
         /// <summary>
         /// 查询所有的根节点。
         /// </summary>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        public EntityList GetTreeRoots(EagerLoadOptions eagerLoad = null)
+        public EntityList GetTreeRoots(LoadOptions loadOptions = null)
         {
-            return this.DoGetTreeRoots(eagerLoad);
+            return this.DoGetTreeRoots(loadOptions);
         }
 
         internal string GetMaxTreeIndex()
@@ -483,46 +483,46 @@ namespace Rafy.Domain
         /// 分页查询所有实体
         /// </summary>
         /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [RepositoryQuery]
-        protected virtual EntityList DoGetAll(PagingInfo paging, EagerLoadOptions eagerLoad)
+        protected virtual EntityList DoGetAll(PagingInfo paging, LoadOptions loadOptions)
         {
-            return (EntityList)_dataProvider.GetAll(paging, eagerLoad);
+            return (EntityList)_dataProvider.GetAll(paging, loadOptions);
         }
 
         /// <summary>
         /// 查询第一个实体
         /// </summary>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [RepositoryQuery]
-        protected virtual Entity DoGetFirst(EagerLoadOptions eagerLoad)
+        protected virtual Entity DoGetFirst(LoadOptions loadOptions)
         {
-            return (Entity)_dataProvider.GetAll(null, eagerLoad);
+            return (Entity)_dataProvider.GetAll(null, loadOptions);
         }
 
         /// <summary>
         /// 通过 Id 查询某个实体
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [RepositoryQuery]
-        protected virtual Entity DoGetById(object id, EagerLoadOptions eagerLoad)
+        protected virtual Entity DoGetById(object id, LoadOptions loadOptions)
         {
-            return _dataProvider.GetById(id, eagerLoad);
+            return _dataProvider.GetById(id, loadOptions);
         }
 
         /// <summary>
         /// 查询所有的根节点、数量。
         /// </summary>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [RepositoryQuery]
-        protected virtual EntityList DoGetTreeRoots(EagerLoadOptions eagerLoad)
+        protected virtual EntityList DoGetTreeRoots(LoadOptions loadOptions)
         {
-            return (EntityList)_dataProvider.GetTreeRoots(eagerLoad);
+            return (EntityList)_dataProvider.GetTreeRoots(loadOptions);
         }
 
         /// <summary>
@@ -539,12 +539,12 @@ namespace Rafy.Domain
         /// 通过 Id 列表查询实体列表。
         /// </summary>
         /// <param name="idList"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [RepositoryQuery]
-        protected virtual EntityList DoGetByIdList(object[] idList, EagerLoadOptions eagerLoad)
+        protected virtual EntityList DoGetByIdList(object[] idList, LoadOptions loadOptions)
         {
-            return _dataProvider.GetByIdList(idList, eagerLoad);
+            return _dataProvider.GetByIdList(idList, loadOptions);
         }
 
         /// <summary>
@@ -552,12 +552,12 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="parentIdList">The parent identifier list.</param>
         /// <param name="paging">The paging information.</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [RepositoryQuery]
-        protected virtual EntityList DoGetByParentIdList(object[] parentIdList, PagingInfo paging, EagerLoadOptions eagerLoad)
+        protected virtual EntityList DoGetByParentIdList(object[] parentIdList, PagingInfo paging, LoadOptions loadOptions)
         {
-            return _dataProvider.GetByParentIdList(parentIdList, paging, eagerLoad);
+            return _dataProvider.GetByParentIdList(parentIdList, paging, loadOptions);
         }
 
         /// <summary>
@@ -565,12 +565,12 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="parentId"></param>
         /// <param name="paging"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [RepositoryQuery]
-        protected virtual EntityList DoGetByParentId(object parentId, PagingInfo paging, EagerLoadOptions eagerLoad)
+        protected virtual EntityList DoGetByParentId(object parentId, PagingInfo paging, LoadOptions loadOptions)
         {
-            return (EntityList)_dataProvider.GetByParentId(parentId, paging, eagerLoad);
+            return (EntityList)_dataProvider.GetByParentId(parentId, paging, loadOptions);
         }
 
         /// <summary>
@@ -643,24 +643,24 @@ namespace Rafy.Domain
         /// 递归查找所有树型子
         /// </summary>
         /// <param name="treeIndex"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [RepositoryQuery]
-        protected virtual EntityList DoGetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad)
+        protected virtual EntityList DoGetByTreeParentIndex(string treeIndex, LoadOptions loadOptions)
         {
-            return _dataProvider.GetByTreeParentIndex(treeIndex, eagerLoad);
+            return _dataProvider.GetByTreeParentIndex(treeIndex, loadOptions);
         }
 
         /// <summary>
         /// 查找指定树节点的直接子节点。
         /// </summary>
         /// <param name="treePId">需要查找的树节点的Id.</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [RepositoryQuery]
-        protected virtual EntityList DoGetByTreePId(object treePId, EagerLoadOptions eagerLoad)
+        protected virtual EntityList DoGetByTreePId(object treePId, LoadOptions loadOptions)
         {
-            return _dataProvider.GetByTreePId(treePId, eagerLoad);
+            return _dataProvider.GetByTreePId(treePId, loadOptions);
         }
 
         /// <summary>
@@ -753,12 +753,12 @@ namespace Rafy.Domain
         /// 查询出的父节点同样以一个部分树的形式返回。
         /// </summary>
         /// <param name="treeIndex"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [RepositoryQuery]
-        protected virtual EntityList DoGetAllTreeParents(string treeIndex, EagerLoadOptions eagerLoad)
+        protected virtual EntityList DoGetAllTreeParents(string treeIndex, LoadOptions loadOptions)
         {
-            return _dataProvider.GetAllTreeParents(treeIndex, eagerLoad);
+            return _dataProvider.GetAllTreeParents(treeIndex, loadOptions);
         }
 
         #endregion

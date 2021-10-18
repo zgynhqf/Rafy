@@ -183,47 +183,47 @@ namespace JXC
         /// 通过Id在数据层中查询指定的对象
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new ClientCategory GetById(object id, EagerLoadOptions eagerLoad = null)
+        public new ClientCategory GetById(object id, LoadOptions loadOptions = null)
         {
-            return base.GetById(id, eagerLoad) as ClientCategory;
+            return base.GetById(id, loadOptions) as ClientCategory;
         }
 
         /// <summary>
         /// 查询第一个实体类
         /// </summary>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new ClientCategory GetFirst(EagerLoadOptions eagerLoad = null)
+        public new ClientCategory GetFirst(LoadOptions loadOptions = null)
         {
-            return base.GetFirst(eagerLoad) as ClientCategory;
+            return base.GetFirst(loadOptions) as ClientCategory;
         }
 
         /// <summary>
         /// 分页查询所有的实体类
         /// </summary>
         /// <param name="paging"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new ClientCategoryList GetAll(PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new ClientCategoryList GetAll(PagingInfo paging = null, LoadOptions loadOptions = null)
         {
-            return base.GetAll(paging, eagerLoad) as ClientCategoryList;
+            return base.GetAll(paging, loadOptions) as ClientCategoryList;
         }
 
         /// <summary>
         /// 获取指定 id 集合的实体列表。
         /// </summary>
         /// <param name="idList"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new ClientCategoryList GetByIdList(object[] idList, EagerLoadOptions eagerLoad = null)
+        public new ClientCategoryList GetByIdList(object[] idList, LoadOptions loadOptions = null)
         {
-            return base.GetByIdList(idList, eagerLoad) as ClientCategoryList;
+            return base.GetByIdList(idList, loadOptions) as ClientCategoryList;
         }
 
         /// <summary>
@@ -231,12 +231,12 @@ namespace JXC
         /// </summary>
         /// <param name="parentIdList"></param>
         /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new ClientCategoryList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new ClientCategoryList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, LoadOptions loadOptions = null)
         {
-            return base.GetByParentIdList(parentIdList, paging, eagerLoad) as ClientCategoryList;
+            return base.GetByParentIdList(parentIdList, paging, loadOptions) as ClientCategoryList;
         }
 
         /// <summary>
@@ -244,12 +244,12 @@ namespace JXC
         /// </summary>
         /// <param name="parentId"></param>
         /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new ClientCategoryList GetByParentId(object parentId, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new ClientCategoryList GetByParentId(object parentId, PagingInfo paging = null, LoadOptions loadOptions = null)
         {
-            return base.GetByParentId(parentId, paging, eagerLoad) as ClientCategoryList;
+            return base.GetByParentId(parentId, paging, loadOptions) as ClientCategoryList;
         }
     
         /// <summary>
@@ -278,24 +278,24 @@ namespace JXC
         /// 递归查找所有树型子
         /// </summary>
         /// <param name="treeIndex"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new ClientCategoryList GetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad = null)
+        public new ClientCategoryList GetByTreeParentIndex(string treeIndex, LoadOptions loadOptions = null)
         {
-            return base.GetByTreeParentIndex(treeIndex, eagerLoad) as ClientCategoryList;
+            return base.GetByTreeParentIndex(treeIndex, loadOptions) as ClientCategoryList;
         }
 
         /// <summary>
         /// 查找指定树节点的直接子节点。
         /// </summary>
         /// <param name="treePId">需要查找的树节点的Id.</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new ClientCategoryList GetByTreePId(object treePId, EagerLoadOptions eagerLoad = null)
+        public new ClientCategoryList GetByTreePId(object treePId, LoadOptions loadOptions = null)
         {
-            return base.GetByTreePId(treePId, eagerLoad) as ClientCategoryList;
+            return base.GetByTreePId(treePId, loadOptions) as ClientCategoryList;
         }
 
         #endregion

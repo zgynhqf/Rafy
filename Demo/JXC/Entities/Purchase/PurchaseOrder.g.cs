@@ -183,47 +183,47 @@ namespace JXC
         /// 通过Id在数据层中查询指定的对象
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new PurchaseOrder GetById(object id, EagerLoadOptions eagerLoad = null)
+        public new PurchaseOrder GetById(object id, LoadOptions loadOptions = null)
         {
-            return base.GetById(id, eagerLoad) as PurchaseOrder;
+            return base.GetById(id, loadOptions) as PurchaseOrder;
         }
 
         /// <summary>
         /// 查询第一个实体类
         /// </summary>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new PurchaseOrder GetFirst(EagerLoadOptions eagerLoad = null)
+        public new PurchaseOrder GetFirst(LoadOptions loadOptions = null)
         {
-            return base.GetFirst(eagerLoad) as PurchaseOrder;
+            return base.GetFirst(loadOptions) as PurchaseOrder;
         }
 
         /// <summary>
         /// 分页查询所有的实体类
         /// </summary>
         /// <param name="paging"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new PurchaseOrderList GetAll(PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new PurchaseOrderList GetAll(PagingInfo paging = null, LoadOptions loadOptions = null)
         {
-            return base.GetAll(paging, eagerLoad) as PurchaseOrderList;
+            return base.GetAll(paging, loadOptions) as PurchaseOrderList;
         }
 
         /// <summary>
         /// 获取指定 id 集合的实体列表。
         /// </summary>
         /// <param name="idList"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new PurchaseOrderList GetByIdList(object[] idList, EagerLoadOptions eagerLoad = null)
+        public new PurchaseOrderList GetByIdList(object[] idList, LoadOptions loadOptions = null)
         {
-            return base.GetByIdList(idList, eagerLoad) as PurchaseOrderList;
+            return base.GetByIdList(idList, loadOptions) as PurchaseOrderList;
         }
 
         /// <summary>
@@ -231,12 +231,12 @@ namespace JXC
         /// </summary>
         /// <param name="parentIdList"></param>
         /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new PurchaseOrderList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new PurchaseOrderList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, LoadOptions loadOptions = null)
         {
-            return base.GetByParentIdList(parentIdList, paging, eagerLoad) as PurchaseOrderList;
+            return base.GetByParentIdList(parentIdList, paging, loadOptions) as PurchaseOrderList;
         }
 
         /// <summary>
@@ -244,12 +244,12 @@ namespace JXC
         /// </summary>
         /// <param name="parentId"></param>
         /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new PurchaseOrderList GetByParentId(object parentId, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new PurchaseOrderList GetByParentId(object parentId, PagingInfo paging = null, LoadOptions loadOptions = null)
         {
-            return base.GetByParentId(parentId, paging, eagerLoad) as PurchaseOrderList;
+            return base.GetByParentId(parentId, paging, loadOptions) as PurchaseOrderList;
         }
     
         /// <summary>
@@ -278,24 +278,24 @@ namespace JXC
         /// 递归查找所有树型子
         /// </summary>
         /// <param name="treeIndex"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new PurchaseOrderList GetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad = null)
+        public new PurchaseOrderList GetByTreeParentIndex(string treeIndex, LoadOptions loadOptions = null)
         {
-            return base.GetByTreeParentIndex(treeIndex, eagerLoad) as PurchaseOrderList;
+            return base.GetByTreeParentIndex(treeIndex, loadOptions) as PurchaseOrderList;
         }
 
         /// <summary>
         /// 查找指定树节点的直接子节点。
         /// </summary>
         /// <param name="treePId">需要查找的树节点的Id.</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new PurchaseOrderList GetByTreePId(object treePId, EagerLoadOptions eagerLoad = null)
+        public new PurchaseOrderList GetByTreePId(object treePId, LoadOptions loadOptions = null)
         {
-            return base.GetByTreePId(treePId, eagerLoad) as PurchaseOrderList;
+            return base.GetByTreePId(treePId, loadOptions) as PurchaseOrderList;
         }
 
         #endregion

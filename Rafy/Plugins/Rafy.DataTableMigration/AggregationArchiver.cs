@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：吴中坡
  * 创建日期：20170315
@@ -76,16 +76,16 @@ namespace Rafy.DataArchiver
 
                     #region 构造一个查完整聚合的条件对象 CommonQueryCriteria
 
-                    //设置 EagerLoadOptions，加载整个聚合。
+                    //设置 LoadOptions，加载整个聚合。
                     var criteria = new CommonQueryCriteria() { updatedTimeCondition };
                     criteria.PagingInfo = new PagingInfo(1, context.BatchSize);
-                    var eagerLoadOptions = new EagerLoadOptions();
-                    EagerLoadAggregationRecur(eagerLoadOptions, repository.EntityMeta);
+                    var loadOptionsOptions = new LoadOptions();
+                    EagerLoadAggregationRecur(loadOptionsOptions, repository.EntityMeta);
                     if (repository.SupportTree)
                     {
-                        eagerLoadOptions.LoadWithTreeChildren();
+                        loadOptionsOptions.LoadWithTreeChildren();
                     }
-                    criteria.EagerLoad = eagerLoadOptions;
+                    criteria.LoadOptions = loadOptionsOptions;
 
                     #endregion
 
@@ -195,10 +195,10 @@ namespace Rafy.DataArchiver
         /// <summary>
         /// 贪婪加载聚合子实体
         /// </summary>
-        /// <param name="eagerLoadOptions"></param>
+        /// <param name="loadOptionsOptions"></param>
         /// <param name="entityMeta"></param>
         /// 
-        private static void EagerLoadAggregationRecur(EagerLoadOptions eagerLoadOptions, EntityMeta entityMeta)
+        private static void EagerLoadAggregationRecur(LoadOptions loadOptionsOptions, EntityMeta entityMeta)
         {
             var childProperties = entityMeta.ChildrenProperties;
             if (childProperties.Count > 0)
@@ -208,9 +208,9 @@ namespace Rafy.DataArchiver
                     var listProperty = childPropertyMeta.ManagedProperty as IListProperty;
                     if (listProperty != null)
                     {
-                        eagerLoadOptions.LoadWith(listProperty);
+                        loadOptionsOptions.LoadWith(listProperty);
                     }
-                    EagerLoadAggregationRecur(eagerLoadOptions, childPropertyMeta.ChildType);
+                    EagerLoadAggregationRecur(loadOptionsOptions, childPropertyMeta.ChildType);
                 }
             }
         }

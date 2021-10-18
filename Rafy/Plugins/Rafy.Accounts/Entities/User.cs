@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建日期：20151209
@@ -210,21 +210,21 @@ namespace Rafy.Accounts
         /// 获取所有激活的用户。<see cref="User.IsDisabledProperty"/>
         /// </summary>
         /// <returns></returns>
-        public UserList GetActiveUsers(PagingInfo pi = null, EagerLoadOptions eagerLoad = null)
+        public UserList GetActiveUsers(PagingInfo pi = null, LoadOptions loadOptions = null)
         {
-            return this.GetIsDisabledUsers(BooleanBoxes.False, pi, eagerLoad);
+            return this.GetIsDisabledUsers(BooleanBoxes.False, pi, loadOptions);
         }
 
         /// <summary>
         /// 获取所有禁用的用户。<see cref="User.IsDisabledProperty"/>
         /// </summary>
         /// <returns></returns>
-        public UserList GetDisabledUsers(PagingInfo pi = null, EagerLoadOptions eagerLoad = null)
+        public UserList GetDisabledUsers(PagingInfo pi = null, LoadOptions loadOptions = null)
         {
-            return this.GetIsDisabledUsers(BooleanBoxes.True, pi, eagerLoad);
+            return this.GetIsDisabledUsers(BooleanBoxes.True, pi, loadOptions);
         }
 
-        private UserList GetIsDisabledUsers(object isDisabled, PagingInfo pi = null, EagerLoadOptions eagerLoad = null)
+        private UserList GetIsDisabledUsers(object isDisabled, PagingInfo pi = null, LoadOptions loadOptions = null)
         {
             var criteria = new CommonQueryCriteria
             {
@@ -232,7 +232,7 @@ namespace Rafy.Accounts
             };
 
             criteria.PagingInfo = pi;
-            criteria.EagerLoad = eagerLoad;
+            criteria.LoadOptions = loadOptions;
 
             return this.GetBy(criteria);
         }

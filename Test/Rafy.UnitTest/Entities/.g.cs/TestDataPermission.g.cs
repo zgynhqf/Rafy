@@ -183,47 +183,47 @@ namespace Rafy.UnitTest
         /// 通过Id在数据层中查询指定的对象
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestDataPermission GetById(object id, EagerLoadOptions eagerLoad = null)
+        public new TestDataPermission GetById(object id, LoadOptions loadOptions = null)
         {
-            return base.GetById(id, eagerLoad) as TestDataPermission;
+            return base.GetById(id, loadOptions) as TestDataPermission;
         }
 
         /// <summary>
         /// 查询第一个实体类
         /// </summary>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestDataPermission GetFirst(EagerLoadOptions eagerLoad = null)
+        public new TestDataPermission GetFirst(LoadOptions loadOptions = null)
         {
-            return base.GetFirst(eagerLoad) as TestDataPermission;
+            return base.GetFirst(loadOptions) as TestDataPermission;
         }
 
         /// <summary>
         /// 分页查询所有的实体类
         /// </summary>
         /// <param name="paging"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestDataPermissionList GetAll(PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new TestDataPermissionList GetAll(PagingInfo paging = null, LoadOptions loadOptions = null)
         {
-            return base.GetAll(paging, eagerLoad) as TestDataPermissionList;
+            return base.GetAll(paging, loadOptions) as TestDataPermissionList;
         }
 
         /// <summary>
         /// 获取指定 id 集合的实体列表。
         /// </summary>
         /// <param name="idList"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestDataPermissionList GetByIdList(object[] idList, EagerLoadOptions eagerLoad = null)
+        public new TestDataPermissionList GetByIdList(object[] idList, LoadOptions loadOptions = null)
         {
-            return base.GetByIdList(idList, eagerLoad) as TestDataPermissionList;
+            return base.GetByIdList(idList, loadOptions) as TestDataPermissionList;
         }
 
         /// <summary>
@@ -231,12 +231,12 @@ namespace Rafy.UnitTest
         /// </summary>
         /// <param name="parentIdList"></param>
         /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestDataPermissionList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new TestDataPermissionList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, LoadOptions loadOptions = null)
         {
-            return base.GetByParentIdList(parentIdList, paging, eagerLoad) as TestDataPermissionList;
+            return base.GetByParentIdList(parentIdList, paging, loadOptions) as TestDataPermissionList;
         }
 
         /// <summary>
@@ -244,12 +244,12 @@ namespace Rafy.UnitTest
         /// </summary>
         /// <param name="parentId"></param>
         /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestDataPermissionList GetByParentId(object parentId, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new TestDataPermissionList GetByParentId(object parentId, PagingInfo paging = null, LoadOptions loadOptions = null)
         {
-            return base.GetByParentId(parentId, paging, eagerLoad) as TestDataPermissionList;
+            return base.GetByParentId(parentId, paging, loadOptions) as TestDataPermissionList;
         }
 
         /// <summary>
@@ -278,24 +278,24 @@ namespace Rafy.UnitTest
         /// 递归查找所有树型子
         /// </summary>
         /// <param name="treeIndex"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestDataPermissionList GetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad = null)
+        public new TestDataPermissionList GetByTreeParentIndex(string treeIndex, LoadOptions loadOptions = null)
         {
-            return base.GetByTreeParentIndex(treeIndex, eagerLoad) as TestDataPermissionList;
+            return base.GetByTreeParentIndex(treeIndex, loadOptions) as TestDataPermissionList;
         }
 
         /// <summary>
         /// 查找指定树节点的直接子节点。
         /// </summary>
         /// <param name="treePId">需要查找的树节点的Id.</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new TestDataPermissionList GetByTreePId(object treePId, EagerLoadOptions eagerLoad = null)
+        public new TestDataPermissionList GetByTreePId(object treePId, LoadOptions loadOptions = null)
         {
-            return base.GetByTreePId(treePId, eagerLoad) as TestDataPermissionList;
+            return base.GetByTreePId(treePId, loadOptions) as TestDataPermissionList;
         }
 
         #endregion

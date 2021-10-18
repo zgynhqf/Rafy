@@ -62,7 +62,7 @@ namespace Rafy.Domain
         /// <summary>
         /// 需要贪婪加载的属性列表。默认为 null 表示不进行贪婪加载。
         /// </summary>
-        public EagerLoadOptions EagerLoad { get; set; }
+        public LoadOptions LoadOptions { get; set; }
 
         /// <summary>
         /// 此属性指示当前查询条件类型是否用于本地过滤。
@@ -106,8 +106,8 @@ namespace Rafy.Domain
         PagingInfo PagingInfo { get; set; }
 
         /// <summary>
-        /// 需要贪婪加载的属性列表。默认为 null 表示不进行贪婪加载。
+        /// 数据加载时选项（贪婪加载等）。
         /// </summary>
-        EagerLoadOptions EagerLoad { get; set; }
+        LoadOptions LoadOptions { get; set; }
     }
 }

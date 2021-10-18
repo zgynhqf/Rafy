@@ -183,47 +183,47 @@ namespace Rafy.DevTools.DbManagement
         /// 通过Id在数据层中查询指定的对象
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new DbSettingItem GetById(object id, EagerLoadOptions eagerLoad = null)
+        public new DbSettingItem GetById(object id, LoadOptions loadOptions = null)
         {
-            return base.GetById(id, eagerLoad) as DbSettingItem;
+            return base.GetById(id, loadOptions) as DbSettingItem;
         }
 
         /// <summary>
         /// 查询第一个实体类
         /// </summary>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new DbSettingItem GetFirst(EagerLoadOptions eagerLoad = null)
+        public new DbSettingItem GetFirst(LoadOptions loadOptions = null)
         {
-            return base.GetFirst(eagerLoad) as DbSettingItem;
+            return base.GetFirst(loadOptions) as DbSettingItem;
         }
 
         /// <summary>
         /// 分页查询所有的实体类
         /// </summary>
         /// <param name="paging"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new DbSettingItemList GetAll(PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new DbSettingItemList GetAll(PagingInfo paging = null, LoadOptions loadOptions = null)
         {
-            return base.GetAll(paging, eagerLoad) as DbSettingItemList;
+            return base.GetAll(paging, loadOptions) as DbSettingItemList;
         }
 
         /// <summary>
         /// 获取指定 id 集合的实体列表。
         /// </summary>
         /// <param name="idList"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new DbSettingItemList GetByIdList(object[] idList, EagerLoadOptions eagerLoad = null)
+        public new DbSettingItemList GetByIdList(object[] idList, LoadOptions loadOptions = null)
         {
-            return base.GetByIdList(idList, eagerLoad) as DbSettingItemList;
+            return base.GetByIdList(idList, loadOptions) as DbSettingItemList;
         }
 
         /// <summary>
@@ -231,12 +231,12 @@ namespace Rafy.DevTools.DbManagement
         /// </summary>
         /// <param name="parentIdList"></param>
         /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new DbSettingItemList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new DbSettingItemList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, LoadOptions loadOptions = null)
         {
-            return base.GetByParentIdList(parentIdList, paging, eagerLoad) as DbSettingItemList;
+            return base.GetByParentIdList(parentIdList, paging, loadOptions) as DbSettingItemList;
         }
 
         /// <summary>
@@ -244,12 +244,12 @@ namespace Rafy.DevTools.DbManagement
         /// </summary>
         /// <param name="parentId"></param>
         /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new DbSettingItemList GetByParentId(object parentId, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new DbSettingItemList GetByParentId(object parentId, PagingInfo paging = null, LoadOptions loadOptions = null)
         {
-            return base.GetByParentId(parentId, paging, eagerLoad) as DbSettingItemList;
+            return base.GetByParentId(parentId, paging, loadOptions) as DbSettingItemList;
         }
     
         /// <summary>
@@ -278,24 +278,24 @@ namespace Rafy.DevTools.DbManagement
         /// 递归查找所有树型子
         /// </summary>
         /// <param name="treeIndex"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new DbSettingItemList GetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad = null)
+        public new DbSettingItemList GetByTreeParentIndex(string treeIndex, LoadOptions loadOptions = null)
         {
-            return base.GetByTreeParentIndex(treeIndex, eagerLoad) as DbSettingItemList;
+            return base.GetByTreeParentIndex(treeIndex, loadOptions) as DbSettingItemList;
         }
 
         /// <summary>
         /// 查找指定树节点的直接子节点。
         /// </summary>
         /// <param name="treePId">需要查找的树节点的Id.</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new DbSettingItemList GetByTreePId(object treePId, EagerLoadOptions eagerLoad = null)
+        public new DbSettingItemList GetByTreePId(object treePId, LoadOptions loadOptions = null)
         {
-            return base.GetByTreePId(treePId, eagerLoad) as DbSettingItemList;
+            return base.GetByTreePId(treePId, loadOptions) as DbSettingItemList;
         }
 
         #endregion

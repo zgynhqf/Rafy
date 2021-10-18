@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建日期：20150114
@@ -79,14 +79,14 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="queryable"></param>
         /// <param name="paging"></param>
-        /// <param name="eagerLoad"></param>
+        /// <param name="loadOptions"></param>
         /// <param name="markTreeFullLoaded">如果某次查询结果是一棵完整的子树，那么必须设置此参数为 true ，才可以把整个树标记为完整加载。</param>
         /// <returns></returns>
-        public object QueryData(IQueryable queryable, PagingInfo paging = null, EagerLoadOptions eagerLoad = null, bool markTreeFullLoaded = true)
+        public object QueryData(IQueryable queryable, PagingInfo paging = null, LoadOptions loadOptions = null, bool markTreeFullLoaded = true)
         {
             var query = ConvertToQuery(queryable);
 
-            return this.QueryData(query, paging, eagerLoad, markTreeFullLoaded);
+            return this.QueryData(query, paging, loadOptions, markTreeFullLoaded);
         }
 
         /// <summary>
@@ -120,10 +120,10 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="query">查询对象。</param>
         /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <param name="markTreeFullLoaded">如果某次查询结果是一棵完整的子树，那么必须设置此参数为 true ，才可以把整个树标记为完整加载。</param>
         /// <returns></returns>
-        public object QueryData(IQuery query, PagingInfo paging = null, EagerLoadOptions eagerLoad = null, bool markTreeFullLoaded = true)
+        public object QueryData(IQuery query, PagingInfo paging = null, LoadOptions loadOptions = null, bool markTreeFullLoaded = true)
         {
             var queryType = FinalDataPortal.CurrentIEQC.QueryType;
             if (queryType == RepositoryQueryType.Table)
@@ -133,7 +133,7 @@ namespace Rafy.Domain
 
             var args = new EntityQueryArgs(query);
             args.MarkTreeFullLoaded = markTreeFullLoaded;
-            args.SetDataLoadOptions(paging, eagerLoad);
+            args.SetDataLoadOptions(paging, loadOptions);
 
             return this.QueryData(args);
         }
@@ -263,7 +263,7 @@ namespace Rafy.Domain
                     {
                         args.PagingInfo = userCriteria.PagingInfo;
                     }
-                    args.EagerLoadOptions = userCriteria.EagerLoad;
+                    args.LoadOptions = userCriteria.LoadOptions;
                 }
             }
         }
@@ -280,7 +280,7 @@ namespace Rafy.Domain
             {
                 if (args.QueryType == RepositoryQueryType.First || args.QueryType == RepositoryQueryType.List)
                 {
-                    var elOptions = args.EagerLoadOptions;
+                    var elOptions = args.LoadOptions;
                     if (elOptions != null)
                     {
                         //先加载树子节点。
@@ -402,13 +402,13 @@ namespace Rafy.Domain
         /// 对列表加载指定的贪婪属性。
         /// </summary>
         /// <param name="list"></param>
-        /// <param name="eagerLoadProperties">所有需要贪婪加载的属性。</param>
-        private void EagerLoad(EntityList list, IList<ConcreteProperty> eagerLoadProperties)
+        /// <param name="loadOptionsProperties">所有需要贪婪加载的属性。</param>
+        private void EagerLoad(EntityList list, IList<ConcreteProperty> loadOptionsProperties)
         {
-            if (list.Count > 0 && eagerLoadProperties.Count > 0)
+            if (list.Count > 0 && loadOptionsProperties.Count > 0)
             {
                 //为了不修改外面传入的列表，这里缓存一个新的列表。
-                var eagerCache = eagerLoadProperties.ToList();
+                var eagerCache = loadOptionsProperties.ToList();
 
                 //找到这个列表需要加载的所有贪婪加载属性。
                 var listEagerProperties = new List<ConcreteProperty>();
@@ -452,8 +452,8 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="list"></param>
         /// <param name="listProperty">贪婪加载的列表子属性。</param>
-        /// <param name="eagerLoadProperties">所有还需要贪婪加载的属性。</param>
-        private void EagerLoadChildren(EntityList list, IListProperty listProperty, List<ConcreteProperty> eagerLoadProperties)
+        /// <param name="loadOptionsProperties">所有还需要贪婪加载的属性。</param>
+        private void EagerLoadChildren(EntityList list, IListProperty listProperty, List<ConcreteProperty> loadOptionsProperties)
         {
             //查询一个大的实体集合，包含列表中所有实体所需要的所有子实体。
             var idList = new List<object>(10);
@@ -469,7 +469,7 @@ namespace Rafy.Domain
                 var allChildren = targetRepo.GetByParentIdList(idList.ToArray());
 
                 //继续递归加载它的贪婪属性。
-                this.EagerLoad(allChildren, eagerLoadProperties);
+                this.EagerLoad(allChildren, loadOptionsProperties);
 
                 #region 把父实体全部放到排序列表中
 
@@ -556,8 +556,8 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="list"></param>
         /// <param name="refProperty">贪婪加载的引用属性。</param>
-        /// <param name="eagerLoadProperties">所有还需要贪婪加载的属性。</param>
-        private void EagerLoadRef(EntityList list, IRefProperty refProperty, List<ConcreteProperty> eagerLoadProperties)
+        /// <param name="loadOptionsProperties">所有还需要贪婪加载的属性。</param>
+        private void EagerLoadRef(EntityList list, IRefProperty refProperty, List<ConcreteProperty> loadOptionsProperties)
         {
             var refIdProperty = refProperty.RefIdProperty;
             //查询一个大的实体集合，包含列表中所有实体所需要的所有引用实体。
@@ -579,7 +579,7 @@ namespace Rafy.Domain
                 var refList = targetRepo.GetByIdList(idList.ToArray());
 
                 //继续递归加载它的贪婪属性。
-                this.EagerLoad(refList, eagerLoadProperties);
+                this.EagerLoad(refList, loadOptionsProperties);
 
                 #endregion
 

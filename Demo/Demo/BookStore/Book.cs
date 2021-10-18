@@ -148,7 +148,7 @@ namespace Demo
     //[DataProviderFor(typeof(BookRepository))]
     //public partial class BookDataProvider : DemoEntityDataProvider
     //{
-    //    public override object GetAll(PagingInfo paging, EagerLoadOptions eagerLoad)
+    //    public override object GetAll(PagingInfo paging, LoadOptions loadOptions)
     //    {
     //        var list = new BookList();
 

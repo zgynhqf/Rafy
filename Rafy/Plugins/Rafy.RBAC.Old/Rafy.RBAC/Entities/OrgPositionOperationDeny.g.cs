@@ -183,47 +183,47 @@ namespace Rafy.RBAC.Old
         /// 通过Id在数据层中查询指定的对象
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new OrgPositionOperationDeny GetById(object id, EagerLoadOptions eagerLoad = null)
+        public new OrgPositionOperationDeny GetById(object id, LoadOptions loadOptions = null)
         {
-            return base.GetById(id, eagerLoad) as OrgPositionOperationDeny;
+            return base.GetById(id, loadOptions) as OrgPositionOperationDeny;
         }
 
         /// <summary>
         /// 查询第一个实体类
         /// </summary>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new OrgPositionOperationDeny GetFirst(EagerLoadOptions eagerLoad = null)
+        public new OrgPositionOperationDeny GetFirst(LoadOptions loadOptions = null)
         {
-            return base.GetFirst(eagerLoad) as OrgPositionOperationDeny;
+            return base.GetFirst(loadOptions) as OrgPositionOperationDeny;
         }
 
         /// <summary>
         /// 分页查询所有的实体类
         /// </summary>
         /// <param name="paging"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new OrgPositionOperationDenyList GetAll(PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new OrgPositionOperationDenyList GetAll(PagingInfo paging = null, LoadOptions loadOptions = null)
         {
-            return base.GetAll(paging, eagerLoad) as OrgPositionOperationDenyList;
+            return base.GetAll(paging, loadOptions) as OrgPositionOperationDenyList;
         }
 
         /// <summary>
         /// 获取指定 id 集合的实体列表。
         /// </summary>
         /// <param name="idList"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new OrgPositionOperationDenyList GetByIdList(object[] idList, EagerLoadOptions eagerLoad = null)
+        public new OrgPositionOperationDenyList GetByIdList(object[] idList, LoadOptions loadOptions = null)
         {
-            return base.GetByIdList(idList, eagerLoad) as OrgPositionOperationDenyList;
+            return base.GetByIdList(idList, loadOptions) as OrgPositionOperationDenyList;
         }
 
         /// <summary>
@@ -231,12 +231,12 @@ namespace Rafy.RBAC.Old
         /// </summary>
         /// <param name="parentIdList"></param>
         /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new OrgPositionOperationDenyList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new OrgPositionOperationDenyList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, LoadOptions loadOptions = null)
         {
-            return base.GetByParentIdList(parentIdList, paging, eagerLoad) as OrgPositionOperationDenyList;
+            return base.GetByParentIdList(parentIdList, paging, loadOptions) as OrgPositionOperationDenyList;
         }
 
         /// <summary>
@@ -244,12 +244,12 @@ namespace Rafy.RBAC.Old
         /// </summary>
         /// <param name="parentId"></param>
         /// <param name="paging">分页信息。</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new OrgPositionOperationDenyList GetByParentId(object parentId, PagingInfo paging = null, EagerLoadOptions eagerLoad = null)
+        public new OrgPositionOperationDenyList GetByParentId(object parentId, PagingInfo paging = null, LoadOptions loadOptions = null)
         {
-            return base.GetByParentId(parentId, paging, eagerLoad) as OrgPositionOperationDenyList;
+            return base.GetByParentId(parentId, paging, loadOptions) as OrgPositionOperationDenyList;
         }
     
         /// <summary>
@@ -278,24 +278,24 @@ namespace Rafy.RBAC.Old
         /// 递归查找所有树型子
         /// </summary>
         /// <param name="treeIndex"></param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new OrgPositionOperationDenyList GetByTreeParentIndex(string treeIndex, EagerLoadOptions eagerLoad = null)
+        public new OrgPositionOperationDenyList GetByTreeParentIndex(string treeIndex, LoadOptions loadOptions = null)
         {
-            return base.GetByTreeParentIndex(treeIndex, eagerLoad) as OrgPositionOperationDenyList;
+            return base.GetByTreeParentIndex(treeIndex, loadOptions) as OrgPositionOperationDenyList;
         }
 
         /// <summary>
         /// 查找指定树节点的直接子节点。
         /// </summary>
         /// <param name="treePId">需要查找的树节点的Id.</param>
-        /// <param name="eagerLoad">需要贪婪加载的属性。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public new OrgPositionOperationDenyList GetByTreePId(object treePId, EagerLoadOptions eagerLoad = null)
+        public new OrgPositionOperationDenyList GetByTreePId(object treePId, LoadOptions loadOptions = null)
         {
-            return base.GetByTreePId(treePId, eagerLoad) as OrgPositionOperationDenyList;
+            return base.GetByTreePId(treePId, loadOptions) as OrgPositionOperationDenyList;
         }
 
         #endregion
