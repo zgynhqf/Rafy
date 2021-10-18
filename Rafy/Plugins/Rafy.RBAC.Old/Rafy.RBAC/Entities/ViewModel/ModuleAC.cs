@@ -72,7 +72,7 @@ namespace Rafy.RBAC.Old
         /// 重写此方法，直接把模块元数据读取到界面上
         /// </summary>
         /// <returns></returns>
-        protected override IEnumerable<Entity> LoadAll()
+        protected override IEnumerable<Entity> InitData()
         {
             var list = new List<Entity>();
 

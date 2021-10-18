@@ -304,7 +304,7 @@ namespace Rafy.RBAC.Old
     [DataProviderFor(typeof(OperationACRepository))]
     public partial class OperationACDataProvider : MemoryEntityRepository.MemoryRepositoryDataProvider
     {
-        protected override IEnumerable<Entity> LoadAll()
+        protected override IEnumerable<Entity> InitData()
         {
             return Enumerable.Empty<OperationAC>();
         }
