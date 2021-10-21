@@ -43,7 +43,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
 
             foreach (var section in this.EnumerateAllBatches(entities))
             {
-                var table = this.ToDataTable(batch.Table, section);
+                var table = ToDataTable(batch.Table, section);
 
                 this.SaveBulk(table, batch, false);
 

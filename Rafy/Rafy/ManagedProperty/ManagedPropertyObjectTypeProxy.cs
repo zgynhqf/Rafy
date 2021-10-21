@@ -44,11 +44,8 @@ namespace Rafy.ManagedProperty
                 {
                     return _mpo.PropertiesContainer.GetAvailableProperties()
                         .Where(mp => mp.IsExtension)
-                        .Select(mp => new ManagedPropertyField
-                        {
-                            _property = mp,
-                            _value = _mpo.GetProperty(mp)
-                        }).ToList();
+                        .Select(mp => _mpo.GetField(mp))
+                        .ToList();
                 }
             }
 
@@ -58,11 +55,8 @@ namespace Rafy.ManagedProperty
                 {
                     return _mpo.PropertiesContainer.GetAvailableProperties()
                         .Where(mp => mp.IsReadOnly)
-                        .Select(mp => new ManagedPropertyField
-                        {
-                            _property = mp,
-                            _value = _mpo.GetProperty(mp)
-                        }).ToList();
+                        .Select(mp => _mpo.GetField(mp))
+                        .ToList();
                 }
             }
 

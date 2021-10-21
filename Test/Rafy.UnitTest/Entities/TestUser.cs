@@ -297,8 +297,8 @@ namespace UT
             var args = new EntityQueryArgs
             {
                 Query = this.ConvertToQuery(q),
+                LoadOptions = new LoadOptions().LoadWith(TestUser.TestTreeTaskListProperty)
             };
-            args.EagerLoad(TestUser.TestTreeTaskListProperty);
             return (TestUser)this.QueryData(args);
         }
 

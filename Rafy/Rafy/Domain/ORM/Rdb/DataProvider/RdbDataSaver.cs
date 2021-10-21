@@ -91,8 +91,7 @@ namespace Rafy.Domain.ORM
             using (var dba = _dataProvider.CreateDbAccesser())
             {
                 var table = _dataProvider.DbTable;
-                table.UpdateChangedPropertiesOnly = _dataProvider.UpdateChangedPropertiesOnly;
-                table.Update(dba, data);
+                table.Update(dba, data, _dataProvider.UpdateChangedPropertiesOnly);
 
                 table.AddIntoEntityContext(data);
 

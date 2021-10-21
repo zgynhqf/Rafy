@@ -309,7 +309,7 @@ namespace Rafy.Domain
         {
             if (this._redundancies == null)
             {
-                this._redundancies = this.EntityMeta.ManagedProperties.GetCompiledProperties()
+                this._redundancies = this.EntityMeta.ManagedProperties.GetNonReadOnlyCompiledProperties()
                     .Cast<IProperty>()
                     .Where(p => p.IsInRedundantPath)
                     .ToArray();
@@ -356,7 +356,7 @@ namespace Rafy.Domain
         {
             if (_childProperties == null)
             {
-                _childProperties = this.EntityMeta.ManagedProperties.GetCompiledProperties()
+                _childProperties = this.EntityMeta.ManagedProperties.GetNonReadOnlyCompiledProperties()
                     .Where(p =>
                     {
                         if (p is IListProperty)

@@ -22,7 +22,7 @@ using Rafy.Domain.ORM.Query;
 namespace Rafy.Domain
 {
     /// <summary>
-    /// IDb 的查询参数。
+    /// 查询结果为实体时的参数。
     /// </summary>
     internal interface ISelectArgs : IQueryArgs
     {
@@ -32,7 +32,7 @@ namespace Rafy.Domain
         IList<Entity> List { get; }
 
         /// <summary>
-        /// 是否只支持一个实体。
+        /// 是否只查询一个实体。
         /// </summary>
         bool FetchingFirst { get; }
 
@@ -48,10 +48,8 @@ namespace Rafy.Domain
         bool MarkTreeFullLoaded { get; }
 
         /// <summary>
-        /// 贪婪加载某个属性
+        /// 数据加载选项
         /// </summary>
-        /// <param name="property">需要贪婪加载的托管属性。可以是一个引用属性，也可以是一个组合子属性。</param>
-        /// <param name="propertyOwner">这个属性的拥有者类型。</param>
-        void EagerLoad(IProperty property, Type propertyOwner = null);
+        LoadOptions LoadOptions { get; }
     }
 }

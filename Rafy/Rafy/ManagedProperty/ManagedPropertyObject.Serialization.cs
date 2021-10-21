@@ -78,7 +78,7 @@ namespace Rafy.ManagedProperty
             //只序列化 compiled property, 不序列化 runtime property
             foreach (var field in this._compiledFields)
             {
-                if (field.HasValue)
+                if (field.HasLocalValue)
                 {
                     var p = field.Property;
 
@@ -111,7 +111,7 @@ namespace Rafy.ManagedProperty
             var formatter = context.RefFormatter;
             bool isState = context.IsProcessingState;
 
-            var compiledProperties = this._container.GetNonReadOnlyCompiledProperties();
+            var compiledProperties = _container.GetNonReadOnlyCompiledProperties();
 
             if (isState)
             {
@@ -159,35 +159,21 @@ namespace Rafy.ManagedProperty
         {
             base.Serialize(info, context);
 
-            //只序列化非默认值的编译期属性, 不序列化运行时属性
-            foreach (var field in this._compiledFields)
+            //只序列化非默认状态、非默认值的编译期属性（不序列化运行时属性）
+            foreach (var field in _compiledFields)
             {
-                if (field.HasValue)
-                {
-                    var property = field.Property;
+                if (field.IsDefault()) continue;//默认状态
 
-                    var meta = property.GetMeta(this);
-                    if (meta.Serializable)
-                    {
-                        var value = field.Value;
-                        if (!object.Equals(value, meta.DefaultValue) || field.IsChanged)
-                        {
-                            if (field.IsChanged)
-                            {
-                                value = new MPFValues
-                                {
-                                    Value = value,
-                                    IsChanged = true
-                                };
-                                info.AddValue(property.Name, value, typeof(MPFValues));
-                            }
-                            else
-                            {
-                                info.AddValue(property.Name, value, property.PropertyType);
-                            }
-                        }
-                    }
-                }
+                var property = field.Property;
+
+                var meta = property.GetMeta(this);
+                if (!meta.Serializable) continue;//不可序列化。
+
+                var value = field.Serialize();
+                if (object.Equals(value, meta.DefaultValue)) continue;//默认值
+
+                var fieldType = value?.GetType() ?? property.PropertyType;
+                info.AddValue(property.Name, value, fieldType);
             }
 
             //同时，还需要序列化未标记 NonSerialized 的字段。
@@ -232,18 +218,7 @@ namespace Rafy.ManagedProperty
                     var property = compiledProperties[i];
                     if (property.Name == name)
                     {
-                        var value = serializationEntry.Value;
-                        if (value is MPFValues)
-                        {
-                            MPFValues mpfValues = (MPFValues)value;
-                            this._LoadProperty(property, mpfValues.Value);
-                            this.MarkChangedStatus(property, true);
-                        }
-                        else
-                        {
-                            this._LoadProperty(property, serializationEntry.Value);
-                        }
-
+                        _compiledFields[property.TypeCompiledIndex].Deserialize(serializationEntry.Value);
                         isManagedProperty = true;
                         break;
                     }
@@ -283,12 +258,5 @@ namespace Rafy.ManagedProperty
         /// </summary>
         /// <param name="e"></param>
         protected virtual void OnDeserialized(DesirializedArgs e) { }
-    }
-
-    [Serializable]
-    internal struct MPFValues
-    {
-        public object Value;
-        public bool IsChanged;
     }
 }

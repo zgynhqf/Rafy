@@ -21,7 +21,7 @@ namespace Rafy.ManagedProperty
     /// <summary>
     /// 托管属性生命周期
     /// </summary>
-    public enum ManagedPropertyLifeCycle
+    public enum ManagedPropertyLifeCycle : byte
     {
         /// <summary>
         /// 编译期、启动期

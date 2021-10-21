@@ -86,8 +86,11 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
         /// <param name="entities"></param>
         private void ImportBatch(EntityBatch meta, IList<Entity> entities)
         {
-            var sql = this.GenerateBatchInsertStatement(meta,entities);
-            meta.DBA.RawAccesser.ExecuteText(sql);
+            if (entities.Count > 0)
+            {
+                var sql = this.GenerateBatchInsertStatement(meta, entities);
+                meta.DBA.RawAccesser.ExecuteText(sql);
+            }
         }
 
         /// <summary>
@@ -108,15 +111,20 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
             sql.AppendQuote(table, table.Name).Write("(");
 
             var columns = table.Columns;
+            var dataColumns = new List<RdbColumn>(columns.Count);
             for (int i = 0, c = columns.Count; i < c; i++)
             {
+                var column = columns[i];
+                if (entities[0].IsDisabled(column.Info.Property)) continue;
+
                 if (i != 0) { sql.Write(','); }
 
-                sql.AppendQuote(table, columns[i].Name);
+                sql.AppendQuote(table, column.Name);
+                dataColumns.Add(column);
             }
             sql.Write(")VALUES");
 
-            this.GenerateValuesSql(sql, entities, table);
+            this.GenerateValuesSql(sql, entities, dataColumns);
 
             return sql.ToString();
         }
@@ -145,8 +153,11 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
         /// <param name="entities">需要更新的实例集合</param>
         private void ImportUpdate(EntityBatch meta, IList<Entity> entities)
         {
-            var sql = this.GenerateBatchUpdateStatement(meta, entities);
-            meta.DBA.RawAccesser.ExecuteText(sql);
+            if (entities.Count > 0)
+            {
+                var sql = this.GenerateBatchUpdateStatement(meta, entities);
+                meta.DBA.RawAccesser.ExecuteText(sql);
+            }
         }
 
         /// <summary>
@@ -164,16 +175,25 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
             sql.Write("REPLACE INTO ");
             sql.AppendQuote(table, table.Name).Write("(");
 
+            var updateLOB = this.UpdateLOB;
+            var first = entities[0];//第一个实体的禁用状态，就表示了整个列表的禁用状态。
+
             var columns = table.Columns;
+            var dataColumns = new List<RdbColumn>(columns.Count);
             for (int i = 0, c = columns.Count; i < c; i++)
             {
-                if (i != 0) { sql.Write(','); }
+                var column = columns[i];
+                if (!first.IsDisabled(column.Info.Property) && (updateLOB || !column.IsLOB))
+                {
+                    if (i != 0) { sql.Write(','); }
 
-                sql.AppendQuote(table, columns[i].Name);
+                    sql.AppendQuote(table, column.Name);
+                    dataColumns.Add(column);
+                }
             }
             sql.Write(")VALUES");
 
-            this.GenerateValuesSql(sql, entities, table);
+            this.GenerateValuesSql(sql, entities, dataColumns);
 
             return sql.ToString();
         }
@@ -182,10 +202,8 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
 
         #region 公用方法
 
-        private void GenerateValuesSql(StringWriter sql, IList<Entity> entities, RdbTable table)
+        private void GenerateValuesSql(StringWriter sql, IList<Entity> entities, List<RdbColumn> columns)
         {
-            var columns = table.Columns;
-
             for (int e = 0, ec = entities.Count; e < ec; e++)
             {
                 var entity = entities[e];
@@ -198,6 +216,8 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
                 {
                     var column = columns[i];
                     if (i != 0) { sql.Write(','); }
+
+                    if (entity.IsDisabled(column.Info.Property)) ThrowInvalidPropertyException(entity, column.Info.Property, e);
 
                     //获取数据类型及值。
                     var dbType = column.Info.DbType;

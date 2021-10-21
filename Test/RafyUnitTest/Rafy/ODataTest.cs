@@ -733,7 +733,7 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
             var q = f.Query(repo);
             var parser = new ODataFilterParser
             {
-                _properties = repo.EntityMeta.ManagedProperties.GetCompiledProperties()
+                _properties = repo.EntityMeta.ManagedProperties.GetNonReadOnlyCompiledProperties()
             };
 
             parser.Parse(filter, q);

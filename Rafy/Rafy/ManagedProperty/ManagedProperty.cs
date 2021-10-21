@@ -105,7 +105,16 @@ namespace Rafy.ManagedProperty
 
         new bool IsUnregistered { get; set; }
 
+        /// <summary>
+        /// 如果当前属性被其它的只读属性所依赖，那么这个集合表示依赖当前属性的所有只读属性的集合。
+        /// </summary>
         IList<IManagedProperty> ReadonlyDependencies { get; }
+
+        /// <summary>
+        /// 如果当前属性是一个只读属性，那么这个集合表示这个只读属性所依赖的所有属性的集合。
+        /// 当前属性不是只读属性时，此值为 null。
+        /// </summary>
+        IList<IManagedProperty> Dependencies { get; set; }
 
         object ProvideReadOnlyValue(ManagedPropertyObject component);
 
@@ -200,7 +209,15 @@ namespace Rafy.ManagedProperty
 
         private Func<ManagedPropertyObject, TPropertyType> _readOnlyValueProvider;
 
+        /// <summary>
+        /// 如果当前属性被其它的只读属性所依赖，那么这个集合表示依赖当前属性的所有只读属性的集合。
+        /// </summary>
         private List<IManagedProperty> _readonlyDependencies = new List<IManagedProperty>();
+
+        /// <summary>
+        /// 如果当前属性是一个只读属性，那么这个集合表示这个只读属性所依赖的所有属性的集合。
+        /// </summary>
+        private IList<IManagedProperty> _dependencies;
 
         /// <summary>
         /// 是否只读
@@ -218,11 +235,12 @@ namespace Rafy.ManagedProperty
         public void AsReadOnly(Func<ManagedPropertyObject, TPropertyType> readOnlyValueProvider, params IManagedProperty[] dependencies)
         {
             if (this.GlobalIndex >= 0) throw new InvalidOperationException("属性已经注册完毕，不能修改！");
-
             if (readOnlyValueProvider == null) throw new ArgumentNullException("readOnlyValueProvider");
+            if (dependencies == null || dependencies.Length == 0) throw new InvalidOperationException($"只读属性 {this.OwnerType.FullName}.{this.Name} 在注册时，需要指定其依赖的属性集合。");
 
-            this._readOnlyValueProvider = readOnlyValueProvider;
+            _readOnlyValueProvider = readOnlyValueProvider;
 
+            _dependencies = dependencies;
             foreach (IManagedPropertyInternal property in dependencies)
             {
                 var list = property.ReadonlyDependencies;
@@ -421,13 +439,19 @@ namespace Rafy.ManagedProperty
 
         int IManagedPropertyInternal.TypeCompiledIndex
         {
-            get { return this._typeCompiledIndex; }
-            set { this._typeCompiledIndex = value; }
+            get { return _typeCompiledIndex; }
+            set { _typeCompiledIndex = value; }
         }
 
         IList<IManagedProperty> IManagedPropertyInternal.ReadonlyDependencies
         {
-            get { return this._readonlyDependencies; }
+            get { return _readonlyDependencies; }
+        }
+
+        IList<IManagedProperty> IManagedPropertyInternal.Dependencies
+        {
+            get { return _dependencies; }
+            set { _dependencies = value; }
         }
 
         bool IManagedPropertyInternal.IsUnregistered

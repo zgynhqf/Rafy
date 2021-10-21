@@ -13,6 +13,7 @@ using Rafy.Domain;
 using Rafy.Domain.Caching;
 using Rafy.Domain.ORM;
 using Rafy.Domain.ORM.DbMigration;
+using Rafy.Domain.Serialization.Json;
 using Rafy.Domain.Validation;
 using Rafy.ManagedProperty;
 using Rafy.MetaModel;
@@ -47,7 +48,7 @@ namespace RafyUnitTest
         /// 如果是可空类型的值类型，那么设置 null 时，应该成功。
         /// </summary>
         [TestMethod]
-        public void MPT_ValueType()
+        public void MPT_ValueType_ConvertNull()
         {
             var entity = new Favorate();
             bool success = false;
@@ -271,28 +272,6 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void zzzMPT_ExtensionProperties_CreateListControl()
-        {
-            //var grid = AutoUI.BlockUIFactory.CreateTreeListControl(
-            //    AppModel.EntityViews.FindViewMeta(typeof(TestUser)), ShowInWhere.List
-            //    );
-            //var grid2 = AutoUI.BlockUIFactory.CreateTreeListControl(
-            //    AppModel.EntityViews.FindViewMeta(typeof(TestAdministrator)), ShowInWhere.List
-            //    );
-
-            //if (RafyEnvironment.Location.IsOnClient())
-            //{
-            //    Assert.AreEqual(grid.Columns.Count(), 5);
-            //    Assert.AreEqual(grid2.Columns.Count(), 6);
-            //}
-            //else
-            //{
-            //    Assert.AreEqual(grid.Columns.Count(), 4);
-            //    Assert.AreEqual(grid2.Columns.Count(), 4);
-            //}
-        }
-
-        [TestMethod]
         public void MPT_ReadOnlyProperties()
         {
             var user = Get<TestUser>();
@@ -442,66 +421,6 @@ namespace RafyUnitTest
             user.SetDynamicProperty("DN", "Value2");
             value = user.GetDynamicPropertyOrDefault("DN", "HAHA");
             Assert.AreEqual("Value2", value);
-        }
-
-        [TestMethod]
-        public void MPT_Serialization()
-        {
-            var e1 = Get<TestUser>();
-            e1.Age = 15;
-            e1._mySelfReference = e1;
-            TestUserExt.SetUserCode(e1, "TestUserExt_UserCode");
-
-            Assert.AreEqual(e1.Validate().Count, 1);
-
-            //在这里可以查看序列化后传输的字符串
-            var serializedString = MobileFormatter.SerializeToString(e1);
-            Assert.IsNotNull(serializedString);
-            var serializedXml = MobileFormatter.SerializeToXml(e1);
-            Assert.IsNotNull(serializedXml);
-
-            #region 复制对象（序列化+反序列化）
-
-            var e2 = ObjectCloner.Clone(e1).CastTo<TestUser>();
-
-            //实体直接定义的字段
-            Assert.AreEqual(e1._ageNonserailizable, 15);
-            Assert.AreEqual(e1._ageSerailizable, 15);
-            Assert.AreEqual(e2._ageSerailizable, 15);
-            Assert.AreEqual(e2._ageNonserailizable, 0);
-            Assert.AreEqual(e2._mySelfReference, e2);
-            Assert.AreEqual(e2._now, DateTime.Today);
-
-            //Rafy属性
-            Assert.IsTrue(e2.IsDirty);
-            Assert.IsFalse(e2.IsNew);
-            Assert.IsFalse(e2.IsDeleted);
-
-            //一般属性
-            Assert.AreEqual(e2.Age, 15);
-            Assert.AreEqual(e1.Age, 15);
-
-            //默认属性
-            Assert.AreEqual(e2.Id, e1.Id);
-            Assert.AreEqual(e2.Name, "DefaultName");
-            Assert.AreEqual(e1.Name, "DefaultName");
-
-            #endregion
-
-            #region 检测具体的序列化的值
-
-            var si = new SerializationContainerContext(new SerializationInfoContainer(0), null);
-            si.IsProcessingState = true;
-            e1.CastTo<IMobileObject>().SerializeState(si);
-
-            var list = si.States.Keys.ToArray();
-
-            Assert.IsTrue(list.Contains("Age"), "Age 是属性值，需要序列化");
-            Assert.IsTrue(list.Contains("TestUserExt_UserCode"), "UserCode 是扩展属性值，需要序列化");
-            Assert.IsTrue(!list.Contains("Name"), "Name 是默认值，不需要序列化");
-            Assert.IsTrue(!list.Contains("Id"), "Id 是默认值，不需要序列化");
-
-            #endregion
         }
 
         [TestMethod]
@@ -953,7 +872,7 @@ namespace RafyUnitTest
 
         #endregion
 
-        #region PropertyChangedStatus
+        #region MPT_Status_Changed
 
         /// <summary>
         /// 保存后的实体，在某个属性变更后。MPF.IsChanged 属性为 true。
@@ -1050,28 +969,6 @@ namespace RafyUnitTest
         //    Assert.AreEqual(1, fields.Count);
         //    Assert.AreSame(TestUser.AgeProperty, fields[0].Property);
         //}
-
-        /// <summary>
-        /// 属性的变更状态，需要支持序列化和反序列化。
-        /// </summary>
-        [TestMethod]
-        public void MPT_ChangedStatus_Serialization()
-        {
-            var user = new TestUser();
-            user.Name = "1";
-            user.MarkPropertiesUnchanged();
-            user.Age = 100;
-
-            var fields = GetChangedProperties(user);
-            Assert.AreEqual(1, fields.Count);
-            Assert.AreSame(TestUser.AgeProperty, fields[0].Property);
-
-            var user2 = ObjectCloner.Clone(user);
-
-            fields = GetChangedProperties(user2);
-            Assert.AreEqual(1, fields.Count);
-            Assert.AreSame(TestUser.AgeProperty, fields[0].Property);
-        }
 
         /// <summary>
         /// 保存后的实体，在某个属性变更后，在更新时，更新语句只更新这个属性。
@@ -1215,13 +1112,395 @@ namespace RafyUnitTest
             }
         }
 
-        private static List<ManagedPropertyField> GetChangedProperties(ManagedPropertyObject mpo)
+        public static List<ManagedPropertyField> GetChangedProperties(ManagedPropertyObject mpo)
         {
             var res = new List<ManagedPropertyField>();
 
-            foreach (var mf in mpo.GetCompiledPropertyValues())
+            foreach (var p in mpo.PropertiesContainer.GetAvailableProperties())
             {
-                if (mf.IsChanged) res.Add(mf);
+                var f = mpo.GetField(p);
+                if (f.IsChanged) res.Add(f);
+            }
+
+            return res;
+        }
+
+        #endregion
+
+        #region MPT_Status_Disabled
+
+        /// <summary>
+        /// 刚创建的实体，所有属性都是可用的
+        /// </summary>
+        [TestMethod]
+        public void MPT_DisabledStatus_New()
+        {
+            var entity = new Book();
+            Assert.AreEqual(0, GetDisabledProperties(entity).Count);
+        }
+
+        /// <summary>
+        /// * 可标记或读取某个属性的禁用状态
+        /// </summary>
+        [TestMethod]
+        public void MPT_DisabledStatus_CanChange()
+        {
+            var entity = new Book();
+            Assert.AreEqual(0, GetDisabledProperties(entity).Count);
+
+            entity.Disable(Book.NameProperty);
+            Assert.AreEqual(1, GetDisabledProperties(entity).Count);
+        }
+
+        /// <summary>
+        /// 只读属性的依赖性被禁用时，只读属性也自动被禁用。
+        /// </summary>
+        [TestMethod]
+        public void MPT_DisabledStatus_ReadonlyProperty()
+        {
+            var entity = new TestUser();
+            Assert.AreEqual(0, GetDisabledProperties(entity).Count);
+
+            entity.Disable(TestUser.NameProperty);
+            Assert.AreEqual(2, GetDisabledProperties(entity).Count);
+            Assert.IsTrue(entity.IsDisabled(TestUser.ReadOnlyNameAgeProperty));
+        }
+
+        /// <summary>
+        /// * 禁用状态的属性，读取时，应该抛出异常：该值不可用
+        /// </summary>
+        [TestMethod]
+        public void MPT_DisabledStatus_Exception_GetProperty()
+        {
+            var entity = new Book();
+            entity.Disable(Book.NameProperty);
+
+            try
+            {
+                var name = entity.Name;
+                Assert.IsFalse(true, "禁用状态下，GetProperty 需要抛出异常。");
+            }
+            catch (InvalidOperationException) { }
+        }
+
+        /// <summary>
+        /// 开发者可通过重新解禁属性，然后再进行赋值。
+        /// </summary>
+        [TestMethod]
+        public void MPT_DisabledStatus_Exception_GetProperty_ReChange()
+        {
+            var entity = new Book();
+            entity.Name = "name";
+            entity.Disable(Book.NameProperty);
+            try
+            {
+                var name = entity.Name;
+                Assert.IsFalse(true, "禁用状态下，SetProperty 需要抛出异常。");
+            }
+            catch (InvalidOperationException) { }
+
+            entity.Disable(Book.NameProperty, false);
+            Assert.AreEqual("name", entity.Name);
+        }
+
+        //[TestMethod]
+        //public void MPT_DisabledStatus_Exception_SetProperty()
+        //{
+        //    var entity = new Book();
+        //    entity.Disable(Book.NameProperty);
+        //    try
+        //    {
+        //        entity.Name = "changed";
+        //        Assert.IsFalse(true, "禁用状态下，SetProperty 需要抛出异常。");
+        //    }
+        //    catch (InvalidOperationException) { }
+        //}
+
+        //[TestMethod]
+        //public void MPT_DisabledStatus_Exception_LoadProperty()
+        //{
+        //    var entity = new Book();
+        //    entity.Disable(Book.NameProperty);
+
+        //    try
+        //    {
+        //        entity.LoadProperty(Book.NameProperty, "changed");
+        //        Assert.IsFalse(true, "禁用状态下，LoadProperty 需要抛出异常。");
+        //    }
+        //    catch (InvalidOperationException) { }
+        //}
+
+        /// <summary>
+        /// 在 WPF 等客户端界面绑定了属性，并使用反射读取属性时，虽然该属性被禁用，也不应该报出异常，而是返回默认值。
+        /// </summary>
+        [TestMethod]
+        public void MPT_DisabledStatus_Exception_GetProperty_IgnoredWPF()
+        {
+            var entity = new TestUser();
+            entity.Disable(TestUser.NameProperty);
+
+            var descriptor = new RafyPropertyDescriptor(TestUser.NameProperty);
+            var name = descriptor.GetValue(entity);
+            Assert.AreEqual("DefaultName", name, "返回默认值");
+        }
+
+        /// <summary>
+        /// * 从数据库中读取的实体，如果只查询了部分属性，则其余值类型的属性，应该是被禁用的。
+        /// * 实体的子列表、引用实体属性，永远都是可用的。
+        /// </summary>
+        [TestMethod]
+        public void MPT_DisabledStatus_PartAvaiable()
+        {
+            var repo = RF.ResolveInstance<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                repo.Save(new Book { Name = "user1", Code = "001" });
+
+                var entity = repo.GetFirst(loadOptions: new LoadOptions().SelectProperties(
+                    Book.NameProperty
+                    ));
+
+                var disabled = GetDisabledProperties(entity);
+                Assert.IsTrue(disabled.Contains(Book.CodeProperty), "除 Name 以外的值属性，都是被禁用的。");
+                Assert.IsTrue(disabled.Contains(Book.BookCategoryIdProperty), "除 Name 以外的值属性，都是被禁用的。");
+                Assert.IsTrue(!disabled.Contains(Book.BookCategoryProperty), "实体的子列表、引用实体属性，永远都是可用的。");
+                Assert.IsTrue(!disabled.Contains(Book.ChapterListProperty), "实体的子列表、引用实体属性，永远都是可用的。");
+                Assert.IsTrue(!disabled.Contains(Book.ContentProperty), "LOB 属性，永远都是可用的。");
+            }
+        }
+
+        /// <summary>
+        /// 这个功能可以被关闭：禁用实体中未查询到的列所对应的属性。
+        /// </summary>
+        [TestMethod]
+        public void MPT_DisabledStatus_PartAvaiable_FunctionDisabled()
+        {
+            try
+            {
+                ORMSettings.EnablePropertiesIfNotFoundInSqlQuery = true;
+                ORMSettings.ErrorIfColumnNotFoundInSql = false;
+
+                var repo = RF.ResolveInstance<BookRepository>();
+                using (RF.TransactionScope(repo))
+                {
+                    repo.Save(new Book { Name = "user1", Code = "001" });
+
+                    var entity = repo.GetFirst(loadOptions: new LoadOptions().SelectProperties(
+                        Book.NameProperty
+                        ));
+
+                    var disabled = GetDisabledProperties(entity);
+                    Assert.IsTrue(!disabled.Contains(Book.CodeProperty));
+                    Assert.IsTrue(!disabled.Contains(Book.BookCategoryIdProperty));
+                    Assert.IsTrue(!disabled.Contains(Book.BookCategoryProperty));
+                    Assert.IsTrue(!disabled.Contains(Book.ChapterListProperty));
+                    Assert.IsTrue(!disabled.Contains(Book.ContentProperty));
+                }
+            }
+            finally
+            {
+                ORMSettings.EnablePropertiesIfNotFoundInSqlQuery = false;
+                ORMSettings.ErrorIfColumnNotFoundInSql = true;
+            }
+        }
+
+        /// <summary>
+        /// 只查出少量的字段后，修改，再更新时，禁用的属性是不会被更新的（就算是变更状态也不可以）。
+        /// </summary>
+        [TestMethod]
+        public void MPT_DisabledStatus_Repository_Save()
+        {
+            var repo = RF.ResolveInstance<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                repo.Save(new Book { Name = "user1", Code = "001" });
+
+                var entity = repo.GetFirst(loadOptions: new LoadOptions().SelectProperties(
+                    Book.NameProperty
+                    ));
+
+                Assert.IsTrue(!entity.IsDisabled(Book.IdProperty));
+                Assert.IsTrue(!entity.IsDisabled(Book.NameProperty));
+                Assert.IsTrue(entity.IsDisabled(Book.BookCategoryIdProperty));
+                Assert.IsTrue(entity.IsDisabled(Book.CodeProperty));
+
+                string[] setList = null;
+                EventHandler<Rafy.Logger.DbAccessedEventArgs> handler = (o, e) =>
+                {
+                    var sql = e.Sql;
+                    var m = Regex.Match(sql, @"set (?<setClause>.+?) where", RegexOptions.IgnoreCase);
+                    var setClause = m.Groups["setClause"].Value;
+                    setList = setClause.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                };
+                Logger.DbAccessed += handler;
+
+                entity.Name = "changed";
+                repo.Save(entity);
+
+                Assert.AreEqual(1, setList.Length);
+                Assert.IsTrue(setList[0].Contains("Name"), "Update 语句中，只更新了 Name 字段。");
+
+                entity.Name = "name changed twice!";
+                entity.MarkChangedStatus(Book.CodeProperty, true);
+                repo.Save(entity);
+                Assert.AreEqual(1, setList.Length);
+                Assert.IsTrue(setList[0].Contains("Name"), "虽然强制设置了 Code 属性的变更状态。但是由于 Code 属性处于禁用状态。所以 Update 语句中，也只更新了 Name 字段。");
+
+                Logger.DbAccessed -= handler;
+            }
+        }
+
+        /// <summary>
+        /// UpdateChangedPropertiesOnly 时，依然不能保存禁用的字段。
+        /// </summary>
+        [TestMethod]
+        public void MPT_DisabledStatus_Repository_Save_UpdateAllProperties()
+        {
+            var repo = RF.ResolveInstance<BookRepository>();
+            var dp = RdbDataProvider.Get(repo);
+            using (RF.TransactionScope(repo))
+            {
+                try
+                {
+                    repo.Save(new Book { Name = "user1", Code = "001" });
+
+                    var entity = repo.GetFirst();
+                    entity.Name = "name changed";
+                    entity.Code = "code changed";
+                    entity.Disable(Book.CodeProperty);
+
+                    dp.UpdateChangedPropertiesOnly = false;
+
+                    repo.Save(entity);
+
+                    var entity2 = repo.GetFirst();
+                    Assert.AreEqual("name changed", entity2.Name);
+                    Assert.AreEqual("001", entity2.Code, "由于 Code 被禁用了，所以更新失效。");
+                }
+                finally
+                {
+                    dp.UpdateChangedPropertiesOnly = true;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 批量更新时，所有批量保存的实体，都需要有统一的禁用属性列表，即可更新成功。
+        /// </summary>
+        [TestMethod]
+        public void MPT_DisabledStatus_Repository_BatchImport()
+        {
+            var repo = RF.ResolveInstance<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var size = 2;
+
+                var books = new BookList();
+                for (int i = 0; i < size; i++)
+                {
+                    books.Add(new Book { Name = "raw" });
+                }
+
+                var importer = repo.CreateImporter();
+                importer.Save(books);
+
+                Assert.AreEqual(size, repo.CountAll());
+
+                for (int i = 0; i < size; i++)
+                {
+                    books[i].Code = i.ToString();
+                    books[i].Disable(Book.NameProperty);
+                }
+                importer.Save(books);
+
+                var res = repo.GetByIdList(new object[] { books[0].Id, books[books.Count - 1].Id });
+                Assert.AreEqual("0", res[0].Code);
+                Assert.AreEqual("raw", res[0].Name, "Name 被统一禁用了，所以其它的属性都被批量更新成功。");
+            }
+        }
+
+        /// <summary>
+        /// 批量更新时，所有批量保存的实体，如果没有统一的禁用属性列表，则应该抛出异常。
+        /// </summary>
+        [TestMethod]
+        public void MPT_DisabledStatus_Repository_BatchImport_NotSameColumns()
+        {
+            var repo = RF.ResolveInstance<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var size = 2;
+
+                var books = new BookList();
+                for (int i = 0; i < size; i++)
+                {
+                    books.Add(new Book { Name = "raw" });
+                }
+
+                var importer = repo.CreateImporter();
+                importer.Save(books);
+
+                Assert.AreEqual(size, repo.CountAll());
+
+                for (int i = 0; i < size; i++)
+                {
+                    books[i].Code = i.ToString();
+                    books[i].Name = "name changed";
+                }
+
+                //把第一条的 Name 禁用，第二条的 Code 禁用。
+                books[0].Disable(Book.NameProperty);
+                books[1].Disable(Book.CodeProperty);
+
+                try
+                {
+                    importer.Save(books);
+                    Assert.IsTrue(false, "批量更新时，所有批量保存的实体，如果没有统一的禁用属性列表，则应该抛出异常。");
+                }
+                catch (InvalidOperationException) { }
+            }
+        }
+
+        /// <summary>
+        /// 在拷贝实体的 Id 时，目标实体的禁用状态将会被设置，但是值不会拷贝。
+        /// </summary>
+        [TestMethod]
+        public void MPT_DisabledStatus_Clone()
+        {
+            var book1 = new Book { Id = 1, Name = "name", Code = "code" };
+            book1.Disable(Book.NameProperty);
+
+            var book2 = new Book();
+            book2.Clone(book1, CloneOptions.ReadDbRow());
+
+            Assert.IsTrue(book2.IsDisabled(Book.NameProperty), "在拷贝实体的 Id 时，目标实体的禁用状态将会被设置，但是值不会拷贝。");
+            book2.Disable(Book.NameProperty, false);
+            Assert.AreEqual(string.Empty, book2.Name, "此值未进行拷贝");
+        }
+
+        /// <summary>
+        /// 在不拷贝实体的 Id 时，目标实体的禁用状态的属性将会被忽略。
+        /// </summary>
+        [TestMethod]
+        public void MPT_DisabledStatus_Clone_WithoutId()
+        {
+            var book1 = new Book { Id = 1, Name = "name", Code = "code" };
+            book1.Disable(Book.NameProperty);
+
+            var book2 = new Book();
+            book2.Clone(book1, CloneOptions.NewSingleEntity());
+
+            Assert.IsTrue(!book2.IsDisabled(Book.NameProperty), "在不拷贝实体的 Id 时，目标实体的禁用状态的属性将会被忽略。");
+            Assert.AreEqual(string.Empty, book2.Name, "此值未进行拷贝");
+            Assert.AreEqual("code", book2.Code);
+        }
+
+        private static List<IManagedProperty> GetDisabledProperties(ManagedPropertyObject mpo)
+        {
+            var res = new List<IManagedProperty>();
+
+            foreach (var p in mpo.PropertiesContainer.GetAvailableProperties())
+            {
+                if (mpo.IsDisabled(p)) res.Add(p);
             }
 
             return res;
@@ -1272,55 +1551,6 @@ namespace RafyUnitTest
             model.SetRefId(Book.BookCategoryIdProperty, null);
             value = model.GetProperty(Book.BookCategoryIdProperty);
             Assert.AreEqual(value, 0);
-        }
-
-        #endregion
-
-        #region Other
-
-        [TestMethod]
-        public void MPT_GetCompiledPropertyValues()
-        {
-            var a = new A { Id = 1 };
-            var properties = new List<IManagedProperty>();
-            foreach (var pv in a.GetCompiledPropertyValues())
-            {
-                properties.Add(pv.Property);
-            }
-            Assert.IsTrue(properties.Contains(Entity.IdProperty));
-            Assert.IsTrue(properties.Contains(Entity.TreePIdProperty));
-            Assert.IsTrue(properties.Contains(Entity.TreeIndexProperty));
-            Assert.IsTrue(properties.Contains(A.NameProperty));
-            Assert.IsTrue(properties.Contains(A.AChildListProperty));
-        }
-
-        [TestMethod]
-        public void MPT_GetCompiledPropertyValues_ReadOnly()
-        {
-            var user = Get<TestUser>();
-
-            foreach (var pv in user.GetCompiledPropertyValues())
-            {
-                if (pv.Property == TestUser.ReadOnlyNameAgeProperty)
-                {
-                    Assert.AreEqual(pv.Value, "DefaultName 的年龄是 10");
-                    return;
-                }
-            }
-
-            Assert.IsTrue(false, "没有找到只读属性。");
-        }
-
-        [TestMethod]
-        public void MPT_GetNonDefaultPropertyValues()
-        {
-            var a = new A { Id = 1 };
-            var properties = new List<string>();
-            foreach (var pv in a.GetNonDefaultPropertyValues())
-            {
-                properties.Add(pv.Property.Name);
-            }
-            Assert.AreEqual(properties.Count, 1);
         }
 
         #endregion

@@ -76,7 +76,7 @@ namespace Rafy.MetaModel
         /// <returns></returns>
         internal static IList<IManagedProperty> GetChildrenProperties(EntityMeta entityMeta)
         {
-            return entityMeta.ManagedProperties.GetCompiledProperties()
+            return entityMeta.ManagedProperties.GetNonReadOnlyCompiledProperties()
                 .Where(mp => mp is IListProperty)
                 .ToArray();
         }

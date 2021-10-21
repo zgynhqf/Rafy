@@ -40,7 +40,7 @@ namespace Rafy.Domain.Serialization
             var graph = new SerializationEntityGraph();
             graph.DeepSearch(entity);
 
-            graph._knownTypes.Add(typeof(MPFValues));
+            graph._knownTypes.Add(typeof(MPFV));
 
             return new DataContractSerializer(entity.GetType(), graph._knownTypes);
             //return new DataContractJsonSerializer(entity.GetType(), graph._knownTypes);
@@ -108,10 +108,9 @@ namespace Rafy.Domain.Serialization
 
         private void DeepSearchRecur_Instance(Entity entity)
         {
-            var values = entity.GetNonDefaultPropertyValues();
-            foreach (var value in values)
+            var properties = entity.PropertiesContainer.GetNonReadOnlyCompiledProperties();
+            foreach (IProperty mp in properties)
             {
-                var mp = value.Property as IProperty;
                 switch (mp.Category)
                 {
                     case PropertyCategory.ReferenceEntity:

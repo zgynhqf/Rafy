@@ -119,13 +119,6 @@ namespace RafyUnitTest
         #region Query
 
         [TestMethod]
-        public void ORM_Query_EmptyPaging_SingletonSerialization()
-        {
-            var cloned = ObjectCloner.Clone(PagingInfo.Empty);
-            Assert.IsTrue(cloned == PagingInfo.Empty, "EmptyPagingInfo 只有在单例情况下，才能使用它作为空的分页参数。");
-        }
-
-        [TestMethod]
         public void ORM_Query_OrderBy()
         {
             var repo = RF.ResolveInstance<TestUserRepository>();

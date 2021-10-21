@@ -375,7 +375,18 @@ namespace Rafy.Domain
                 }
                 else
                 {
-                    this.CopyProperty(source, property, options);
+                    //在拷贝 Id 的同时，由于属性的禁用状态会涉及到数据库的值，可能会被错误的值覆盖，所以此时这些禁用状态也将被拷贝。
+                    if (source.IsDisabled(property))
+                    {
+                        if (copyId)
+                        {
+                            this.Disable(property);
+                        }
+                    }
+                    else
+                    {
+                        this.CopyProperty(source, property, options);
+                    }
                 }
             }
 

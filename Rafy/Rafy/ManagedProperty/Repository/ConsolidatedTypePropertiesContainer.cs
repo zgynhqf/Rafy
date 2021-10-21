@@ -60,16 +60,17 @@ namespace Rafy.ManagedProperty
         /// <returns></returns>
         public ManagedPropertyList GetNonReadOnlyCompiledProperties()
         {
-            return this._nonReadOnlyCompiledProperties;
+            return _nonReadOnlyCompiledProperties;
         }
 
         /// <summary>
         /// 获取编译时属性列表。
+        /// 此集合包含只读属性，如果想遍历
         /// </summary>
         /// <returns></returns>
         public ManagedPropertyList GetCompiledProperties()
         {
-            return this._compiledProperties;
+            return _compiledProperties;
         }
 
         /// <summary>
@@ -78,9 +79,9 @@ namespace Rafy.ManagedProperty
         /// <returns></returns>
         public ManagedPropertyList GetRuntimeProperties()
         {
-            if (this._runtimeProperties == null) { this.ResetRuntimeProperties(); }
+            if (_runtimeProperties == null) { this.ResetRuntimeProperties(); }
 
-            return this._runtimeProperties;
+            return _runtimeProperties;
         }
 
         /// <summary>
@@ -165,8 +166,8 @@ namespace Rafy.ManagedProperty
 
         private void NotifyRuntimeChanged()
         {
-            this._runtimeProperties = null;
-            this._availableCache = null;
+            _runtimeProperties = null;
+            _availableCache = null;
 
             var handler = this.RuntimePropertiesChanged;
             if (handler != null) handler(this, EventArgs.Empty);

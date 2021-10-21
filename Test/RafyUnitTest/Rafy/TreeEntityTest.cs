@@ -650,60 +650,6 @@ namespace RafyUnitTest
 
         #endregion
 
-        #region 序列化
-
-        /// <summary>
-        /// 二进制正反序列化后，数据对比正确。
-        /// </summary>
-        [TestMethod]
-        public void TET_Serialization_ByBit()
-        {
-            var list = new FolderList
-            {
-                new Folder
-                {
-                    TreeChildren =
-                    {
-                        new Folder(),
-                        new Folder(),
-                    }
-                },
-                new Folder
-                {
-                    TreeChildren =
-                    {
-                        new Folder(),
-                    }
-                },
-            };
-
-            list = ObjectCloner.Clone(list);
-
-            Assert.IsTrue(list.Count == 2);
-            var a = list[0];
-            Assert.IsTrue(a.TreeChildren.Count == 2);
-            var b = list[1];
-            Assert.IsTrue(b.TreeChildren.Count == 1);
-        }
-
-        /// <summary>
-        /// WCF 正反序列化后，数据对比正确。
-        /// </summary>
-        [TestMethod]
-        public void zzzTET_Serialization_ByWCF()
-        {
-        }
-
-        /// <summary>
-        /// Web 正反序列化后，数据对比正确。
-        /// </summary>
-        [TestMethod]
-        public void zzzTET_Serialization_ByWeb()
-        {
-        }
-
-        #endregion
-
         #region 查询
 
         /// <summary>
@@ -980,6 +926,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void zzzTET_Query_EntityContext()
         {
+            throw new NotImplementedException();
         }
 
         #endregion

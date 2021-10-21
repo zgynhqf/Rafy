@@ -52,7 +52,10 @@ namespace Rafy.WPF.Command
                 //修改按钮如果使用新的 Id，则它下面子对象的父外键都将是错误的值。
                 listEntity.Clone(tmp);
 
-                (listEntity as IEntityWithStatus).MarkModifiedIfUnchanged();
+                if (listEntity.PersistenceStatus == PersistenceStatus.Saved)
+                {
+                    listEntity.PersistenceStatus = PersistenceStatus.Modified;
+                }
 
                 view.RefreshControl();
             }

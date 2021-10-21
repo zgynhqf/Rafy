@@ -85,7 +85,19 @@ namespace Rafy
                 var stateType = state.GetType();
                 if (stateType.IsEnum)
                 {
-                    state = (int)state;
+                    var ut = stateType.GetEnumUnderlyingType();
+                    if (ut == typeof(int))
+                    {
+                        state = (int)state;
+                    }
+                    else if (ut == typeof(byte))
+                    {
+                        state = (byte)state;
+                    }
+                    else if (ut == typeof(long))
+                    {
+                        state = (long)state;
+                    }
                 }
                 else if (stateType == typeof(bool))
                 {
@@ -130,7 +142,7 @@ namespace Rafy
         private object GetFieldValue(string name, Type targetType)
         {
             object value = null;
-            if (this._values.TryGetValue(name, out value))
+            if (_values.TryGetValue(name, out value))
             {
                 if (value != null)
                 {

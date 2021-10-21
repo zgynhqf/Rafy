@@ -62,7 +62,7 @@ namespace Rafy.Domain.ORM
                 using (var reader = dba.QueryDataReader(parts.PagingSql, args.Parameters))
                 {
                     this.FillDataIntoList(
-                        reader, ReadDataType.ByName,
+                        reader, args.LoadOptions?.SelectionProperties,
                         args.List, args.FetchingFirst, PagingInfo.Empty, args.MarkTreeFullLoaded
                         );
                 }
@@ -136,7 +136,8 @@ namespace Rafy.Domain.ORM
             {
                 var query = args.Query;
 
-                var readDataType = AutoSelection(query);
+                var selectionProperties = args.LoadOptions?.SelectionProperties;
+                this.AutoSelection(query, selectionProperties);
 
                 //生成分页 Sql
                 var generator = this.CreateSqlGenerator();
@@ -148,7 +149,7 @@ namespace Rafy.Domain.ORM
                 {
                     //填充到列表中。
                     this.FillDataIntoList(
-                        reader, readDataType,
+                        reader, selectionProperties,
                         args.List, false, pagingInfo, args.MarkTreeFullLoaded
                         );
                 }

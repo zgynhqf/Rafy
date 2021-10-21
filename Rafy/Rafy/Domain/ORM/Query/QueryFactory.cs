@@ -429,7 +429,7 @@ namespace Rafy.Domain.ORM.Query
         {
             //通过实体的对比，找到从左实体到右实体之间的第一个的引用属性。
             var rightEntity = right.EntityRepository.EntityType;
-            var properties = left.EntityRepository.EntityMeta.ManagedProperties.GetCompiledProperties();
+            var properties = left.EntityRepository.EntityMeta.ManagedProperties.GetNonReadOnlyCompiledProperties();
             for (int i = 0, c = properties.Count; i < c; i++)
             {
                 var refProperty = properties[i] as IRefEntityProperty;

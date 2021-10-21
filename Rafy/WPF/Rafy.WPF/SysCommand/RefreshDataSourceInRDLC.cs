@@ -195,7 +195,7 @@ namespace Rafy.WPF.Command
                 var label = FormatPropertyLabel(property);
                 var propertyType = property.PropertyMeta.Runtime.PropertyType;
 
-                if (TypeHelper.IsEnumNullable(propertyType)) propertyType = typeof(string);
+                if (TypeHelper.IgnoreNullable(propertyType).IsEnum) propertyType = typeof(string);
 
                 fields.Add(new XElement(n + "Field", new XAttribute("Name", label),
                     new XElement(n + "DataField", property.Name),

@@ -62,7 +62,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
 
             foreach (var section in this.EnumerateAllBatches(entities))
             {
-                var table = this.ToDataTable(batch.Table, section);
+                var table = ToDataTable(batch.Table, section);
 
                 this.SaveBulk(table, batch);
             }
@@ -131,15 +131,33 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
 
         #endregion
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="list"></param>
+        /// <param name="isUpdating"></param>
+        /// <returns></returns>
         internal DataTable ToDataTable(RdbTable meta, IList<Entity> list, bool isUpdating = false)
         {
             //创建表格式
             var table = new DataTable();
-            var columns = meta.Columns;
-            foreach (var column in columns)
+            var columns = new List<RdbColumn>();
+
+            if (list.Count > 0)
             {
-                var dataType = TypeHelper.IgnoreNullable(column.Info.PropertyType);
-                table.Columns.Add(new DataColumn(column.Name, dataType));
+                var first = list[0];//第一个实体的禁用状态，就表示了整个列表的禁用状态。
+
+                var updateLOB = this.UpdateLOB;
+                foreach (var column in meta.Columns)
+                {
+                    if (!first.IsDisabled(column.Info.Property) && (!isUpdating || updateLOB || !column.IsLOB))
+                    {
+                        var dataType = TypeHelper.IgnoreNullable(column.Info.PropertyType);
+                        table.Columns.Add(new DataColumn(column.Name, dataType));
+                        columns.Add(column);
+                    }
+                }
             }
 
             //从实体中读取数据
@@ -151,6 +169,8 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
                 for (int j = 0, jc = columns.Count; j < jc; j++)
                 {
                     var column = columns[j];
+                    var property = column.Info.Property;
+                    if (entity.IsDisabled(property)) ThrowInvalidPropertyException(entity, property, i);
                     row[j] = column.ReadDbParameterValue(entity);
                 }
                 rows.Add(row);
@@ -188,7 +208,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
 
                 try
                 {
-                    this.SetMappings(bulkCopy.ColumnMappings, meta.Table);
+                    this.SetMappings(bulkCopy.ColumnMappings, table);
 
 #if NET45
                     bulkCopy.WriteToServer(table);
@@ -213,11 +233,11 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
         /// </summary>
         /// <param name="mappings">The mappings.</param>
         /// <param name="table">The table.</param>
-        private void SetMappings(SqlBulkCopyColumnMappingCollection mappings, RdbTable table)
+        private void SetMappings(SqlBulkCopyColumnMappingCollection mappings, DataTable table)
         {
-            foreach (var column in table.Columns)
+            foreach (DataColumn column in table.Columns)
             {
-                mappings.Add(column.Name, column.Name);
+                mappings.Add(column.ColumnName, column.ColumnName);
             }
 
             //暂留：通过查询的真实列名来实现 Mapping。
@@ -248,12 +268,16 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
         /// <param name="batch"></param>
         protected override void ImportUpdate(EntityBatch batch)
         {
-            var sql = this.GenerateUpdateSQL(batch.Table);
+            var table = ToDataTable(batch.Table, batch.UpdateBatch, true);
+            var updateColumns = table.Columns.Cast<DataColumn>()//顺序必须一致。
+                .Select(dtc => batch.Table.Columns.First(c => c.Name == dtc.ColumnName))
+                .Where(c => !c.Info.IsPrimaryKey)//不更新主键
+                .ToList();
+
+            var sql = GenerateUpdateSQL(batch.Table, this.UpdateLOB, '@', updateColumns);
 
             //生成对应的参数列表。
-            var parameters = this.GenerateUpdateParameters(batch);
-
-            var table = ToDataTable(batch.Table, batch.UpdateBatch, true);
+            var parameters = this.GenerateUpdateParameters(batch, updateColumns);
 
             var command = batch.DBA.RawAccesser.CommandFactory.CreateCommand(sql, CommandType.Text, parameters);
             var adapter = new SqlDataAdapter();
@@ -265,69 +289,27 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
         }
 
         /// <summary>
-        /// 生成 Update 语句。
-        /// 注意，此方法不会更新 LOB 字段。
-        /// </summary>
-        /// <param name="table"></param>
-        /// <returns></returns>
-        private string GenerateUpdateSQL(RdbTable table)
-        {
-            //代码参考 RdbTable.GenerateUpdateSQL() 方法。
-
-            var sql = new StringWriter();
-            sql.Write("UPDATE ");
-            sql.AppendQuoteName(table);
-            sql.Write(" SET ");
-
-            var updateLOB = this.UpdateLOB;
-            bool comma = false;
-            var columns = table.Columns;
-            for (int i = 0, c = columns.Count; i < c; i++)
-            {
-                var column = columns[i];
-                if (!column.Info.IsPrimaryKey && (updateLOB || !column.IsLOB))
-                {
-                    if (comma) { sql.Write(','); }
-                    else { comma = true; }
-
-                    sql.AppendQuote(table, column.Name).Write(" = @");
-                    sql.Write(column.Name);
-                }
-            }
-
-            sql.Write(" WHERE ");
-            sql.AppendQuote(table, table.PKColumn.Name);
-            sql.Write(" = @");
-            sql.Write(table.PKColumn.Name);
-
-            return sql.ToString();
-        }
-
-        /// <summary>
         /// 生成与 Sql 配套的参数列表。
         /// </summary>
-        /// <param name="meta">The meta.</param>
+        /// <param name="batch">The meta.</param>
+        /// <param name="dataColumns"></param>
         /// <returns></returns>
-        private IDbDataParameter[] GenerateUpdateParameters(EntityBatch meta)
+        private IDbDataParameter[] GenerateUpdateParameters(EntityBatch batch, IReadOnlyList<RdbColumn> dataColumns)
         {
-            var dba = meta.DBA.RawAccesser;
-            var table = meta.Table;
+            var dba = batch.DBA.RawAccesser;
+            var table = batch.Table;
 
             //把所有实体中所有属性的值读取到数组中，参数的值就是这个数组。
-            var updateLOB = this.UpdateLOB;
             var parameters = new List<IDbDataParameter>();
-            var columns = table.Columns;
-            for (int i = 0, c = columns.Count; i < c; i++)
+
+            for (int i = 0, c = dataColumns.Count; i < c; i++)
             {
-                var column = columns[i];
-                if (!column.Info.IsPrimaryKey && (updateLOB || !column.IsLOB))
-                {
-                    var parameter = dba.ParameterFactory.CreateParameter();
-                    parameter.ParameterName = '@' + column.Name;
-                    parameter.SourceColumn = column.Name;//额外地，需要设置 SourceColumn
-                    parameter.DbType = column.Info.DbType;
-                    parameters.Add(parameter);
-                }
+                var column = dataColumns[i];
+                var parameter = dba.ParameterFactory.CreateParameter();
+                parameter.ParameterName = '@' + column.Name;
+                parameter.SourceColumn = column.Name;//额外地，需要设置 SourceColumn
+                parameter.DbType = column.Info.DbType;
+                parameters.Add(parameter);
             }
 
             //主键列放在最后。

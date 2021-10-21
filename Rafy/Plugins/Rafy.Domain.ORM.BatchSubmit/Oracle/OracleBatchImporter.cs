@@ -118,9 +118,10 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
         {
             var rowsCount = entities.Count;
 
-            var sql = this.GenerateInsertSQL(meta.Table);
-
             var parameters = this.GenerateInsertParameters(meta, entities);
+            var parametersColumns = meta.Table.Columns.Where(c => parameters.Any(p => p.ParameterName == c.Name)).ToList();
+
+            var sql = this.GenerateInsertSQL(meta.Table, parametersColumns);
 
             //设置 ArrayBindCount 后再执行，就是批量导入功能。
             var command = meta.DBA.RawAccesser.CommandFactory.CreateCommand(sql, CommandType.Text, parameters);
@@ -133,15 +134,14 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
         /// 生成 Insert 语句
         /// </summary>
         /// <param name="table"></param>
+        /// <param name="columns"></param>
         /// <returns></returns>
-        private string GenerateInsertSQL(RdbTable table)
+        private string GenerateInsertSQL(RdbTable table, IReadOnlyList<RdbColumn> columns)
         {
             //代码参考 RdbTable.GenerateInsertSQL() 方法。
             var sql = new StringWriter();
             sql.Write("INSERT INTO ");
             sql.AppendQuote(table, table.Name).Write("(");
-
-            var columns = table.Columns;
 
             bool comma = false;
             for (int i = 0, c = columns.Count; i < c; i++)
@@ -186,7 +186,10 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
             for (int i = 0, c = columns.Count; i < c; i++)
             {
                 var parameter = this.ReadIntoBatchParameter(entities, columns[i], dba);
-                parameters.Add(parameter);
+                if (parameter != null)
+                {
+                    parameters.Add(parameter);
+                }
             }
             return parameters.ToArray();
         }
@@ -287,72 +290,35 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
             }
         }
 
-        private void ImportUpdate(EntityBatch meta, IList<Entity> entities)
+        private void ImportUpdate(EntityBatch batch, IList<Entity> entities)
         {
-            //生成 Sql
-            var sql = this.GenerateUpdateSQL(meta.Table);
-
             //生成对应的参数列表。
-            var parameters = this.GenerateUpdateParameters(meta, entities);
+            var parameters = this.GenerateUpdateParameters(batch, entities);
+            var parametersColumns = parameters//顺序必须一致。
+                .Select(p => batch.Table.Columns.First(c => c.Name == p.ParameterName))
+                .Where(c => !c.Info.IsPrimaryKey)//不更新主键
+                .ToList();
+
+            //生成 Sql
+            var sql = GenerateUpdateSQL(batch.Table, this.UpdateLOB, ':', parametersColumns);
 
             //设置 ArrayBindCount 后再执行，就是批量导入功能。
-            var command = meta.DBA.RawAccesser.CommandFactory.CreateCommand(sql, CommandType.Text, parameters);
+            var command = batch.DBA.RawAccesser.CommandFactory.CreateCommand(sql, CommandType.Text, parameters);
             (command as OracleCommand).ArrayBindCount = entities.Count;
 
             command.ExecuteNonQuery();
         }
 
         /// <summary>
-        /// 生成 Update 语句。
-        /// 注意，此方法不会更新 LOB 字段。
-        /// </summary>
-        /// <param name="table"></param>
-        /// <returns></returns>
-        private string GenerateUpdateSQL(RdbTable table)
-        {
-            //代码参考 RdbTable.GenerateUpdateSQL() 方法。
-
-            var sql = new StringWriter();
-            sql.Write("UPDATE ");
-            sql.AppendQuoteName(table);
-            sql.Write(" SET ");
-
-            bool comma = false;
-
-            var updateLOB = this.UpdateLOB;
-
-            var columns = table.Columns;
-            for (int i = 0, c = columns.Count; i < c; i++)
-            {
-                var column = columns[i];
-                if (!column.Info.IsPrimaryKey && (updateLOB || !column.IsLOB))
-                {
-                    if (comma) { sql.Write(','); }
-                    else { comma = true; }
-
-                    sql.AppendQuote(table, column.Name).Write(" = :");
-                    sql.Write(column.Name);
-                }
-            }
-
-            sql.Write(" WHERE ");
-            sql.AppendQuote(table, table.PKColumn.Name);
-            sql.Write(" = :");
-            sql.Write(table.PKColumn.Name);
-
-            return sql.ToString();
-        }
-
-        /// <summary>
         /// 生成与 Sql 配套的参数列表。
         /// </summary>
-        /// <param name="meta"></param>
+        /// <param name="batch"></param>
         /// <param name="entities"></param>
         /// <returns></returns>
-        private IDbDataParameter[] GenerateUpdateParameters(EntityBatch meta, IList<Entity> entities)
+        private IDbDataParameter[] GenerateUpdateParameters(EntityBatch batch, IList<Entity> entities)
         {
-            var dba = meta.DBA.RawAccesser;
-            var table = meta.Table;
+            var dba = batch.DBA.RawAccesser;
+            var table = batch.Table;
             var updateLOB = this.UpdateLOB;
 
             //把所有实体中所有属性的值读取到数组中，参数的值就是这个数组。
@@ -364,12 +330,13 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
                 if (!column.Info.IsPrimaryKey && (updateLOB || !column.IsLOB))
                 {
                     var parameter = this.ReadIntoBatchParameter(entities, column, dba);
-                    parameters.Add(parameter);
+                    if (parameter != null) parameters.Add(parameter);
                 }
             }
 
             //主键列放在最后。
             var pkParameter = this.ReadIntoBatchParameter(entities, table.PKColumn, dba);
+            if (pkParameter == null) throw new InvalidOperationException("主键被禁用，批量更新失败！");
             parameters.Add(pkParameter);
             return parameters.ToArray();
         }
@@ -378,8 +345,20 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
 
         #region 帮助方法
 
+        /// <summary>
+        /// 读取实体中的数据到 IDbDataParameter 中。
+        /// 如果这个属性是禁用状态，则返回 null。
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <param name="column"></param>
+        /// <param name="dba"></param>
+        /// <returns></returns>
         private IDbDataParameter ReadIntoBatchParameter(IList<Entity> entities, RdbColumn column, IRawDbAccesser dba)
         {
+            var property = column.Info.Property;
+            bool disabled = entities[0].IsDisabled(property);
+            if (disabled) return null;
+
             var parameter = dba.ParameterFactory.CreateParameter();
             parameter.ParameterName = column.Name;
 
@@ -422,6 +401,8 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
             for (int j = 0; j < rowsCount; j++)
             {
                 var entity = entities[j];
+                if (entity.IsDisabled(property)) ThrowInvalidPropertyException(entity, property, j);
+
                 var value = column.ReadDbParameterValue(entity);
                 valueArray[j] = value;
             }

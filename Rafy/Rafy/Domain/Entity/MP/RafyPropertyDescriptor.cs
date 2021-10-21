@@ -55,7 +55,7 @@ namespace Rafy.Domain
                 var value = base.PropertyType;
 
                 //枚举类型应该向界面层输出字符串
-                if (TypeHelper.IsEnumNullable(value)) return typeof(string);
+                if (TypeHelper.IgnoreNullable(value).IsEnum) return typeof(string);
 
                 return value;
             }
@@ -83,10 +83,16 @@ namespace Rafy.Domain
                 return entity.GetLazyList(mp as IListProperty);
             }
 
+            //如果属性处于禁用状态。那么直接使用默认值。
+            if (entity.IsDisabled(mp))
+            {
+                return mp.GetMeta(entity).DefaultValue;
+            }
+
             var value = entity.GetProperty(mp);
 
             //枚举值在为界面返回值时，应该返回 Label
-            if (value != null && TypeHelper.IsEnumNullable(mp.PropertyType))
+            if (value != null && TypeHelper.IgnoreNullable(mp.PropertyType).IsEnum)
             {
                 value = EnumViewModel.EnumToLabel((Enum)value).Translate();
             }

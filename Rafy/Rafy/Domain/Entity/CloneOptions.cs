@@ -185,6 +185,7 @@ namespace Rafy.Domain
         /// <summary>
         /// 拷贝Id
         /// 注意，如果是为新构建的实体进行拷贝，那么目标实体的持久化状态也完全拷贝。
+        /// 另外，在拷贝 Id 的同时，由于属性的禁用状态会涉及到数据库的值可能会被错误的值覆盖，所以此时这些禁用状态也将被拷贝。
         /// </summary>
         IdProperty = 1,
         /// <summary>
@@ -207,7 +208,11 @@ namespace Rafy.Domain
         /// 抢夺对方的组合子。
         /// 组合子集合属性中的所有孩子对象的父指针也已经被更改为新实体。
         /// </summary>
-        GrabChildren = 32
+        GrabChildren = 32,
+        ///// <summary>
+        ///// 是否不要拷贝各属性的禁用状态。（默认是拷贝的。由于禁用状态涉及到数据库的值可能会被错误的值覆盖，所以默认需要拷贝。）
+        ///// </summary>
+        //WithoutDisabledStatus = 64,
     }
 
     /// <summary>

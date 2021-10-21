@@ -60,6 +60,11 @@ namespace Rafy.Domain.Serialization.Json
         public bool UnknownAsDynamicProperties { get; set; }
 
         /// <summary>
+        /// 没有反序列化的属性，是否需要禁用。
+        /// </summary>
+        public bool DisableUndeserializedProperties { get; set; } = false;
+
+        /// <summary>
         /// 实体或实体列表的自定义反序列化方法。
         /// </summary>
         /// <param name="type">传入实体类型或实体列表类型。</param>
@@ -174,6 +179,9 @@ namespace Rafy.Domain.Serialization.Json
         private void DeserializeProperties(JObject jObject, Entity entity)
         {
             var properties = entity.PropertiesContainer.GetAvailableProperties();
+            var disableUndeserialized = this.DisableUndeserializedProperties;
+            List<IProperty> deserializedList = disableUndeserialized ? new List<IProperty>(10) : null;
+
             foreach (var propertyValue in jObject)
             {
                 var propertyName = propertyValue.Key;
@@ -181,6 +189,8 @@ namespace Rafy.Domain.Serialization.Json
                 var mp = properties.Find(propertyName, true) as IProperty;
                 if (mp != null)
                 {
+                    if (disableUndeserialized) deserializedList.Add(mp);
+
                     //只读属性不需要反序列化。
                     if (mp.IsReadOnly) continue;
                     //幽灵属性也不需要处理。
@@ -321,6 +331,19 @@ namespace Rafy.Domain.Serialization.Json
 
                         #endregion
                     }
+                }
+            }
+
+            //对于未反序列化的属性，需要将其禁用。
+            if (disableUndeserialized)
+            {
+                for (int i = 0, c = properties.Count; i < c; i++)
+                {
+                    var property = properties[i];
+                    if (property.IsReadOnly) continue;
+                    if (deserializedList.Contains(property)) continue;
+
+                    entity.Disable(property);
                 }
             }
 

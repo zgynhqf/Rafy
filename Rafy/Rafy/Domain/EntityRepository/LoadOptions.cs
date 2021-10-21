@@ -22,19 +22,40 @@ using Rafy.ManagedProperty;
 namespace Rafy.Domain
 {
     /// <summary>
-    /// 数据加载选项。
-    /// 其中的每一个项都是一个需要即时加载属性。
+    /// <para>数据加载选项。包含：                                    </para>
+    /// <para>* 贪婪加载选项：需要即时加载属性的列表                   </para>
+    /// <para>* 贪婪加载选项：是否需要同时即时加载实体的树子节点。      </para>
+    /// <para>* 可选择部分列进行查询。                                </para>
     /// </summary>
     [Serializable]
     public sealed class LoadOptions
     {
         private List<ConcreteProperty> _eagerList = new List<ConcreteProperty>();
 
+        private List<ConcreteProperty> _selectionProperties;
+
         internal bool LoadTreeChildren;
 
-        internal List<ConcreteProperty> CoreList
+        internal List<ConcreteProperty> CoreList { get { return _eagerList; } }
+
+        internal List<IManagedProperty> SelectionProperties
         {
-            get { return _eagerList; }
+            get
+            {
+                return _selectionProperties?.Select(p => p.Property).ToList();
+            }
+        }
+
+        /// <summary>
+        /// 为读取时间、减少内存、网络传输等内容，可以设置只查询实体的指定属性。
+        /// 其余的属性将处于“禁用”的状态。
+        /// </summary>
+        /// <param name="properties"></param>
+        /// <returns></returns>
+        public LoadOptions SelectProperties(params IManagedProperty[] properties)
+        {
+            _selectionProperties = properties.Select(p => new ConcreteProperty(p)).ToList();
+            return this;
         }
 
         /// <summary>

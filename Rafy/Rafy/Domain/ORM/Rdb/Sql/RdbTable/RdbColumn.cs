@@ -30,7 +30,7 @@ namespace Rafy.Domain.ORM
 
         public RdbTable Table
         {
-            get { return this._table; }
+            get { return _table; }
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Rafy.Domain.ORM
         /// </summary>
         public IRdbColumnInfo Info
         {
-            get { return this._columnInfo; }
+            get { return _columnInfo; }
         }
 
         public bool IsLOB

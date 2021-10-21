@@ -20,7 +20,7 @@ using Rafy.Domain.ORM.Query;
 namespace Rafy.Domain
 {
     /// <summary>
-    /// IDb Select 方法的参数。
+    /// 使用 IQuery 进行实体查询的参数。
     /// </summary>
     internal interface IEntitySelectArgs : ISelectArgs
     {

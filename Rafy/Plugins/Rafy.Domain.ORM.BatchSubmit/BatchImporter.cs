@@ -14,6 +14,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -234,12 +235,58 @@ namespace Rafy.Domain.ORM.BatchSubmit
                 list[j].PersistenceStatus = PersistenceStatus.New;
             }
         }
+
         private void MarkSaved(IList<Entity> list)
         {
             for (int j = 0, jc = list.Count; j < jc; j++)
             {
                 list[j].MarkSaved();
             }
+        }
+
+        /// <summary>
+        /// 生成 Update 语句。
+        /// 注意，此方法不会更新 LOB 字段。
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="updateLOB"></param>
+        /// <param name="paramBegin"></param>
+        /// <param name="updateColumns">需要更新的列。</param>
+        /// <returns></returns>
+        internal static string GenerateUpdateSQL(RdbTable table, bool updateLOB, char paramBegin, IReadOnlyList<RdbColumn> updateColumns)
+        {
+            //代码 90% 拷贝自： RdbTable.GenerateUpdateSQL() 方法。
+
+            var sql = new StringWriter();
+            sql.Write("UPDATE ");
+            sql.AppendQuoteName(table);
+            sql.Write(" SET ");
+
+            bool comma = false;
+
+            for (int i = 0, c = updateColumns.Count; i < c; i++)
+            {
+                if (comma) { sql.Write(','); }
+                else { comma = true; }
+
+                var column = updateColumns[i];
+                sql.AppendQuote(table, column.Name).Write(" = ");
+                sql.Write(paramBegin);
+                sql.Write(column.Name);
+            }
+
+            sql.Write(" WHERE ");
+            sql.AppendQuote(table, table.PKColumn.Name);
+            sql.Write(" = ");
+            sql.Write(paramBegin);
+            sql.Write(table.PKColumn.Name);
+
+            return sql.ToString();
+        }
+
+        internal static void ThrowInvalidPropertyException(Entity entity, IProperty property, int entityIndex)
+        {
+            throw new InvalidOperationException($"第 {entityIndex + 1} 个实体（{entity}，Id：{entity.Id}）的属性 {property.Name} 被禁用，无法批量保存。注意：要批量保存的所有实体，需要有完全一致的禁用属性列表。");
         }
     }
 }

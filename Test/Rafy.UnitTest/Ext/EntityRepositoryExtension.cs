@@ -31,8 +31,7 @@ namespace UT
         public virtual EntityList GetBy(SinglePropertyCriteira criteria)
         {
             var property = Repository.EntityMeta.ManagedProperties
-                .GetCompiledProperties()
-                .Find(criteria.PropertyName);
+                .GetNonReadOnlyCompiledProperties().Find(criteria.PropertyName);
             if (property != null)
             {
                 var q = QueryFactory.Instance.Query(this.Repository);

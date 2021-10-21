@@ -131,17 +131,6 @@ namespace Rafy.Reflection
         }
 
         /// <summary>
-        /// 判断指定的类型是否是一个枚举类型，或者是一个可空的枚举类型。
-        /// </summary>
-        /// <param name="targetType"></param>
-        /// <returns></returns>
-        public static bool IsEnumNullable(Type targetType)
-        {
-            var enumType = TypeHelper.IgnoreNullable(targetType);
-            return enumType.IsEnum;
-        }
-
-        /// <summary>
         /// 根据引用关系来排列程序集。
         /// </summary>
         /// <param name="assemblies"></param>

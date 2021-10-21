@@ -98,14 +98,18 @@ namespace Rafy.Domain.ORM.Query.Impl
         }
 
         /// <summary>
-        /// 返回所有不是 LOB 的列对应的节点。
+        /// 返回指定的用于查询的列，不包含 LOB 列。
         /// </summary>
+        /// <param name="readProperties">需要返回的列所对应的属性的列表。如果为 null，表示查询全部属性。</param>
         /// <returns></returns>
-        internal IEnumerable<IColumnNode> LoadAllColumnsExceptLOB()
+        internal IEnumerable<IColumnNode> CacheSelectionColumnsExceptsLOB(List<IManagedProperty> readProperties)
         {
             for (int i = 0, c = _tableInfoColumns.Count; i < c; i++)
             {
-                if (_tableInfoColumns[i].Property.Category == PropertyCategory.LOB) continue;
+                var property = _tableInfoColumns[i].Property;
+
+                if (property.Category == PropertyCategory.LOB) continue;
+                if (property != Entity.IdProperty && readProperties != null &&  !readProperties.Contains(property)) continue;
 
                 var item = GetCache(i, null, true);
                 yield return item;

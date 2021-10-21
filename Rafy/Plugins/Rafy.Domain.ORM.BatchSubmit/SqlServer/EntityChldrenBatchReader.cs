@@ -64,31 +64,22 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
         /// <param name="entity"></param>
         private void ReadChildren(Entity entity)
         {
-            var allProperties = entity.PropertiesContainer.GetNonReadOnlyCompiledProperties();
-
-            var childrenList = new List<IList<Entity>>();
-
             //遍历所有子属性，读取孩子列表
-            for (int i = 0, c = allProperties.Count; i < c; i++)
+            foreach (var childrenField in entity.GetLoadedChildren())
             {
-                var property = allProperties[i];
-                if (property is IListProperty)
+                var children = childrenField.Value as IList<Entity>;
+                if (children != null)
                 {
-                    var children = entity.GetProperty(property) as IList<Entity>;
-                    if (children != null && children.Count > 0)
+                    //所有孩子列表中的实体，都加入到对应的实体列表中。
+                    //并递归读取孩子的孩子实体。
+                    var entityType = children[0].GetType();
+                    var list = this.FindAggregateList(entityType);
+                    for (int j = 0, c2 = children.Count; j < c2; j++)
                     {
-                        //所有孩子列表中的实体，都加入到对应的实体列表中。
-                        //并递归读取孩子的孩子实体。
-                        var entityType = children[0].GetType();
-                        var list = this.FindAggregateList(entityType);
-                        childrenList.Add(list);
-                        for (int j = 0, c2 = children.Count; j < c2; j++)
-                        {
-                            var child = children[j];
+                        var child = children[j];
 
-                            list.Add(child);
-                            this.ReadChildren(child);
-                        }
+                        list.Add(child);
+                        this.ReadChildren(child);
                     }
                 }
             }

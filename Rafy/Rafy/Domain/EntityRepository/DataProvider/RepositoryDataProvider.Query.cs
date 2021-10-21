@@ -300,7 +300,7 @@ namespace Rafy.Domain
 
             var q = f.Query(from: t);
 
-            var properties = this.Repository.EntityMeta.ManagedProperties.GetCompiledProperties();
+            var properties = this.Repository.EntityMeta.ManagedProperties.GetNonReadOnlyCompiledProperties();
 
             #region Filter
 
@@ -357,7 +357,7 @@ namespace Rafy.Domain
                             if (nextEntityType != null)
                             {
                                 var meta = CommonModel.Entities.Find(nextEntityType);
-                                container = meta.ManagedProperties.GetCompiledProperties();
+                                container = meta.ManagedProperties.GetNonReadOnlyCompiledProperties();
                             }
 
                             var mp = container.Find(property, true);

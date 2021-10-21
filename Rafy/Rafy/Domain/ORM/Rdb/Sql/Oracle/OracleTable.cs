@@ -119,7 +119,8 @@ namespace Rafy.Domain.ORM.Oracle
             var values = inClause.Value as IEnumerable;
             var parameters = values as IList ?? values.Cast<object>().ToArray();
 
-            var readType = AutoSelection(query);
+            var selectionProperties = args.LoadOptions?.SelectionProperties;
+            this.AutoSelection(query, selectionProperties);
 
             /*********************** 代码块解释 *********************************
              * 以下分批进行查询。算法：
@@ -145,7 +146,7 @@ namespace Rafy.Domain.ORM.Oracle
                 var generator = this.CreateSqlGenerator();
                 QueryFactory.Instance.Generate(generator, query);
                 var sql = generator.Sql;
-                base.QueryDataReader(dba, args, readType, sql);
+                base.QueryDataReader(dba, args, sql, selectionProperties);
 
                 start += paramSection.Count;
             }

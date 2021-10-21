@@ -51,8 +51,9 @@ namespace Rafy.ManagedProperty
         /// <param name="property"></param>
         /// <param name="value"></param>
         /// <param name="source">本次值设置的来源。</param>
+        /// <param name="resetDisabledStatus">如果本字段处于禁用状态，那么是否在设置新值时，将禁用状态解除？</param>
         /// <returns>返回最终使用的值。</returns>
-        object SetProperty(ManagedProperty<bool> property, bool value, ManagedPropertyChangedSource source = ManagedPropertyChangedSource.FromProperty);
+        object SetProperty(ManagedProperty<bool> property, bool value, ManagedPropertyChangedSource source = ManagedPropertyChangedSource.FromProperty, bool resetDisabledStatus = true);
 
         /// <summary>
         /// 设置某个托管属性的值。
@@ -60,8 +61,9 @@ namespace Rafy.ManagedProperty
         /// <param name="property"></param>
         /// <param name="value"></param>
         /// <param name="source">本次值设置的来源。</param>
+        /// <param name="resetDisabledStatus">如果本字段处于禁用状态，那么是否在设置新值时，将禁用状态解除？</param>
         /// <returns>返回最终使用的值。</returns>
-        object SetProperty(IManagedProperty property, object value, ManagedPropertyChangedSource source = ManagedPropertyChangedSource.FromProperty);
+        object SetProperty(IManagedProperty property, object value, ManagedPropertyChangedSource source = ManagedPropertyChangedSource.FromProperty, bool resetDisabledStatus = true);
 
         /// <summary>
         /// LoadProperty 以最快的方式直接加载值，不发生 PropertyChanged 事件。
@@ -69,27 +71,5 @@ namespace Rafy.ManagedProperty
         /// <param name="property"></param>
         /// <param name="value"></param>
         void LoadProperty(IManagedProperty property, object value);
-
-        /// <summary>
-        /// 是否存在主动设置/加载的字段值（本地值）。
-        /// 没有本地值的属性，是不占用过多的内存的，在序列化、反序列化的过程中也将被忽略，网络传输时，也不需要传输值。
-        /// * 一个属性，如果调用过 LoadProperty、SetProperty 更新了值后，如果这个值不是默认值，那么字段就会有本地值。
-        /// * 如果调用过 <see cref="ResetProperty(IManagedProperty)"/>  来设置默认值，都会清空其本地值；那么，此时这个方法也会返回 false。
-        /// </summary>
-        /// <param name="property">托管属性</param>
-        /// <returns></returns>
-        bool HasLocalValue(IManagedProperty property);
-
-        /// <summary>
-        /// 获取编译期属性值集合
-        /// </summary>
-        /// <returns></returns>
-        ManagedPropertyObject.CompiledPropertyValuesEnumerator GetCompiledPropertyValues();
-
-        /// <summary>
-        /// 获取当前对象所有非默认值的属性值集合。
-        /// </summary>
-        /// <returns></returns>
-        ManagedPropertyObject.NonDefaultPropertyValuesEnumerator GetNonDefaultPropertyValues();
     }
 }

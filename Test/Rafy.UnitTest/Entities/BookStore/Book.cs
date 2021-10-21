@@ -176,12 +176,12 @@ namespace UT
         {
             var args = new EntityQueryArgs
             {
-                Query = QueryFactory.Instance.Query(this)
+                Query = QueryFactory.Instance.Query(this),
+                LoadOptions = new LoadOptions()
+                    .LoadWith(Book.ChapterListProperty)
+                    .LoadWith(Chapter.SectionListProperty)
+                    .LoadWith(Section.SectionOwnerProperty)
             };
-
-            args.EagerLoad(Book.ChapterListProperty);
-            args.EagerLoad(Chapter.SectionListProperty);
-            args.EagerLoad(Section.SectionOwnerProperty);
 
             return (BookList)this.QueryData(args);
         }

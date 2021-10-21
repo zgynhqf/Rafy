@@ -92,31 +92,10 @@ namespace Rafy.Domain
             get { return this.MemoryList ?? this.EntityList; }
         }
 
-        internal LoadOptions LoadOptions;
-
         /// <summary>
-        /// 贪婪加载某个属性
+        /// 数据加载选项
         /// </summary>
-        /// <param name="property">需要贪婪加载的托管属性。可以是一个引用属性，也可以是一个组合子属性。</param>
-        /// <param name="propertyOwner">这个属性的拥有者类型。</param>
-        public void EagerLoad(IProperty property, Type propertyOwner = null)
-        {
-            this.EagerLoad(new ConcreteProperty(property, propertyOwner ?? property.OwnerType));
-        }
-
-        /// <summary>
-        /// 贪婪加载某个属性
-        /// </summary>
-        /// <param name="property">需要贪婪加载的托管属性。可以是一个引用属性，也可以是一个组合子属性。</param>
-        private void EagerLoad(ConcreteProperty property)
-        {
-            if (this.LoadOptions == null)
-            {
-                this.LoadOptions = new LoadOptions();
-            }
-
-            this.LoadOptions.CoreList.Add(property);
-        }
+        public LoadOptions LoadOptions { get; set; }
 
         internal void SetDataLoadOptions(PagingInfo paging = null, LoadOptions loadOptions = null)
         {
@@ -125,21 +104,7 @@ namespace Rafy.Domain
                 this.PagingInfo = paging;
             }
 
-            if (loadOptions != null && loadOptions.CoreList.Count > 0)
-            {
-                if (this.LoadOptions != null)
-                {
-                    for (int i = 0, c = loadOptions.CoreList.Count; i < c; i++)
-                    {
-                        var item = loadOptions.CoreList[i];
-                        this.EagerLoad(item);
-                    }
-                }
-                else
-                {
-                    this.LoadOptions = loadOptions;
-                }
-            }
+            this.LoadOptions = loadOptions;
         }
     }
 

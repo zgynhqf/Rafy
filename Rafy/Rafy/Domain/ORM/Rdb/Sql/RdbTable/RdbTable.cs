@@ -33,7 +33,7 @@ using Rafy.Utils;
 namespace Rafy.Domain.ORM
 {
     /// <summary>
-    /// 数据表的 ORM 运行时对象
+    /// 数据表的 CDUQ 最终实现类。
     /// </summary>
     internal abstract class RdbTable
     {
@@ -94,17 +94,6 @@ namespace Rafy.Domain.ORM
         public abstract SqlGenerator CreateSqlGenerator();
 
         #region 属性 及 元数据
-
-        private bool _updateChangedPropertiesOnly;
-        /// <summary>
-        /// 是否在更新时，生成的 Update 语句中，只更新已经变更的属性，而忽略未变更的属性。
-        /// 默认为 true。
-        /// </summary>
-        public bool UpdateChangedPropertiesOnly
-        {
-            get { return _updateChangedPropertiesOnly; }
-            set { _updateChangedPropertiesOnly = value; }
-        }
 
         /// <summary>
         /// 表名
@@ -308,7 +297,7 @@ namespace Rafy.Domain.ORM
             return dba.ExecuteText(sql.ToString(), whereSql.Parameters);
         }
 
-        public virtual int Update(IDbAccesser dba, Entity item)
+        public virtual int Update(IDbAccesser dba, Entity item, bool updateChangedPropertiesOnly)
         {
             EnsureMappingTable();
 
@@ -320,22 +309,13 @@ namespace Rafy.Domain.ORM
                 var column = _columns[i];
                 if (!column.Info.IsPrimaryKey)
                 {
-                    if (_updateChangedPropertiesOnly)
+                    var field = item.GetField(column.Info.Property);
+                    if (field.IsDisabled) continue;
+
+                    if (!updateChangedPropertiesOnly || field.IsChanged)
                     {
-                        if (item.IsChanged(column.Info.Property))
-                        {
-                            updateColumns.Add(column);
-                            parameters.Add(column.ReadDbParameterValue(item));
-                        }
-                    }
-                    else
-                    {
-                        //在全列更新情况下，需要排除未读取的属性。
-                        if (!column.IsLOB || item.IsAvailable(column.Info.Property))
-                        {
-                            updateColumns.Add(column);
-                            parameters.Add(column.ReadDbParameterValue(item));
-                        }
+                        updateColumns.Add(column);
+                        parameters.Add(column.ReadDbParameterValue(item));
                     }
                 }
             }
@@ -362,8 +342,6 @@ namespace Rafy.Domain.ORM
             bool comma = false;
             var paramIndex = 0;
 
-            //先更新所有非 lob 字段。
-            if (updateColumns == null) { updateColumns = _columns; }
             for (int i = 0, c = updateColumns.Count; i < c; i++)
             {
                 var column = updateColumns[i];
@@ -412,13 +390,14 @@ namespace Rafy.Domain.ORM
         {
             var query = args.Query;
 
-            var readDataType = AutoSelection(query);
+            var selectionProperties = args.LoadOptions?.SelectionProperties;
+            this.AutoSelection(query, selectionProperties);
 
             var generator = this.CreateSqlGenerator();
             QueryFactory.Instance.Generate(generator, query);
             var sql = generator.Sql;
 
-            this.QueryDataReader(dba, args, readDataType, sql);
+            this.QueryDataReader(dba, args, sql, selectionProperties);
         }
 
         /// <summary>
@@ -426,9 +405,9 @@ namespace Rafy.Domain.ORM
         /// </summary>
         /// <param name="dba">The dba.</param>
         /// <param name="args">The arguments.</param>
-        /// <param name="readType">Type of the read.</param>
         /// <param name="sql">The SQL.</param>
-        protected void QueryDataReader(IDbAccesser dba, IEntitySelectArgs args, ReadDataType readType, FormattedSql sql)
+        /// <param name="readProperties">只读取这些属性。</param>
+        protected void QueryDataReader(IDbAccesser dba, IEntitySelectArgs args, FormattedSql sql, List<IManagedProperty> readProperties)
         {
             //查询数据库
             using (var reader = dba.QueryDataReader(sql, sql.Parameters))
@@ -436,7 +415,7 @@ namespace Rafy.Domain.ORM
                 //填充到列表中。
                 this.FillDataIntoList(
                     reader,
-                    readType,
+                    readProperties,
                     args.List,
                     args.FetchingFirst,
                     args.PagingInfo,
@@ -446,26 +425,23 @@ namespace Rafy.Domain.ORM
         }
 
         /// <summary>
-        /// 如果没有选择项，而且有 LOB 字段时，Selection 需要被自动生成，则按生成的属性的顺序来生成列的获取。
+        /// 如果没有选择项，而且有 LOB 字段或限定了只读取某些属性时，Selection 将被自动生成。
         /// </summary>
         /// <param name="query"></param>
+        /// <param name="readProperties"></param>
         /// <returns></returns>
-        protected ReadDataType AutoSelection(IQuery query)
+        protected void AutoSelection(IQuery query, List<IManagedProperty> readProperties)
         {
-            if (query.Selection == null && !query.IsCounting && _hasLOB)
+            if (query.Selection == null && !query.IsCounting && (_hasLOB || readProperties != null))
             {
                 var table = query.From.FindTable(_repository) as TableSource;
                 if (table != null)
                 {
-                    var columns = table.LoadAllColumnsExceptLOB();
+                    var columns = table.CacheSelectionColumnsExceptsLOB(readProperties);
 
                     query.Selection = QueryFactory.Instance.Array(columns);
-
-                    return ReadDataType.ByIndex;
                 }
             }
-
-            return ReadDataType.ByName;
         }
 
         /// <summary>
@@ -478,14 +454,15 @@ namespace Rafy.Domain.ORM
         {
             if (_hasLOB)
             {
-                args.FormattedSql = this.ReplaceLOBColumns(args.FormattedSql);
+                args.FormattedSql = this.ReplaceLOBColumnsInConvention(args.FormattedSql);
             }
 
             using (var reader = dba.QueryDataReader(args.FormattedSql, args.Parameters))
             {
                 this.FillDataIntoList(
-                    reader, ReadDataType.ByName,
-                    args.List, args.FetchingFirst, args.PagingInfo, args.MarkTreeFullLoaded
+                    reader, args.LoadOptions?.SelectionProperties,
+                    args.List,
+                    args.FetchingFirst, args.PagingInfo, args.MarkTreeFullLoaded
                     );
             }
         }
@@ -500,7 +477,7 @@ namespace Rafy.Domain.ORM
         {
             if (_hasLOB)
             {
-                args.FormattedSql = this.ReplaceLOBColumns(args.FormattedSql);
+                args.FormattedSql = this.ReplaceLOBColumnsInConvention(args.FormattedSql);
             }
 
             using (var reader = dba.QueryDataReader(args.FormattedSql, args.Parameters))
@@ -531,7 +508,12 @@ namespace Rafy.Domain.ORM
 
         private const string LOBColumnsToken = "{*}";
 
-        private string ReplaceLOBColumns(string sql)
+        /// <summary>
+        /// 如果 sql 的 select 中使用了 {*} ，则需要将其替换为把 LOB 属性排除之后的列名。
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        private string ReplaceLOBColumnsInConvention(string sql)
         {
             //如果 sql 中编写了 LOBColumnsToken 这个符号，则表示需要进行列名替换。
             var tokenIndex = sql.IndexOf(LOBColumnsToken);
@@ -635,19 +617,18 @@ namespace Rafy.Domain.ORM
         /// 此方法中会释放 Reader。外层不能再用 Using。
         /// </summary>
         /// <param name="reader">表格类数据。</param>
-        /// <param name="readType">是否索引还是名称去读取 IDataReader。</param>
+        /// <param name="readProperties">如果为 null，表示尽力读取。否则，表示只读取给定的属性。</param>
         /// <param name="list">需要把读取的实体，加入到这个列表中。</param>
         /// <param name="fetchingFirst">是否只读取一条数据即返回。</param>
         /// <param name="pagingInfo">如果不是只取一行数据，则这个参数表示列表内存分页的信息。</param>
         /// <param name="markTreeFullLoaded">如果某次查询结果是一棵完整的子树，那么必须设置此参数为 true ，才可以把整个树标记为完整加载。</param>
         internal protected void FillDataIntoList(
-            IDataReader reader, ReadDataType readType,
-            IList<Entity> list, bool fetchingFirst, PagingInfo pagingInfo, bool markTreeFullLoaded
-            )
+            IDataReader reader, List<IManagedProperty> readProperties, IList<Entity> list,
+            bool fetchingFirst, PagingInfo pagingInfo, bool markTreeFullLoaded)
         {
             if (_repository.SupportTree)
             {
-                this.FillTreeIntoList(reader, readType, list, markTreeFullLoaded, pagingInfo);
+                this.FillTreeIntoList(reader, readProperties, list, markTreeFullLoaded, pagingInfo);
                 return;
             }
 
@@ -657,7 +638,7 @@ namespace Rafy.Domain.ORM
                 pagingInfo = null;
             }
 
-            var entityReader = CreateEntityReader(readType);
+            var entityReader = CreateEntityReader(readProperties);
             Action<IDataReader> rowReader = dr =>
             {
                 var entity = entityReader.Read(dr);
@@ -680,15 +661,15 @@ namespace Rafy.Domain.ORM
         /// 在内存中对 IDataReader 进行读取，并以树的方式进行节点的加载。
         /// </summary>
         /// <param name="reader">表格类数据。</param>
-        /// <param name="readType">是否索引还是名称去读取 IDataReader。</param>
+        /// <param name="readProperties">如果为 null，表示尽力读取。否则，表示只读取给定的属性。</param>
         /// <param name="list">需要把读取的实体中的第一级的节点，加入到这个列表中。</param>
         /// <param name="markTreeFullLoaded">如果某次查询结果是一棵完整的子树，那么必须设置此参数为 true ，才可以把整个树标记为完整加载。</param>
         /// <param name="pagingInfo">对根节点进行分页的信息。</param>
         private void FillTreeIntoList(
-            IDataReader reader, ReadDataType readType, IList<Entity> list,
-            bool markTreeFullLoaded, PagingInfo pagingInfo)
+            IDataReader reader, List<IManagedProperty> readProperties, IList<Entity> list, bool markTreeFullLoaded,
+            PagingInfo pagingInfo)
         {
-            var entities = this.ReadToEntity(reader, readType);
+            var entities = this.ReadToEntity(reader, readProperties);
             if (PagingInfo.IsNullOrEmpty(pagingInfo))
             {
                 TreeComponentHelper.LoadTreeData(list, entities, _repository.TreeIndexOption);
@@ -707,9 +688,9 @@ namespace Rafy.Domain.ORM
             }
         }
 
-        private IEnumerable<Entity> ReadToEntity(IDataReader reader, ReadDataType readType)
+        private IEnumerable<Entity> ReadToEntity(IDataReader reader, List<IManagedProperty> readProperties)
         {
-            var entityReader = this.CreateEntityReader(readType);
+            var entityReader = this.CreateEntityReader(readProperties);
 
             while (reader.Read())
             {
@@ -720,18 +701,13 @@ namespace Rafy.Domain.ORM
 
         #region EntityReader
 
-        private EntityReader _createByIndexReader;
-
-        private EntityReader CreateEntityReader(ReadDataType readType)
+        private EntityReader CreateEntityReader(List<IManagedProperty> readProperties)
         {
-            if (_createByIndexReader == null)
+            return new CreateByNameReader
             {
-                _createByIndexReader = new CreateByIndexReader { _owner = this };
-            }
-
-            return readType == ReadDataType.ByIndex ?
-                _createByIndexReader ://可以缓存。
-                new CreateByNameReader { _owner = this };//CreateByNameReader 由于每个 SQL 的列的顺序不一定一致，所以不能进行缓存。
+                _owner = this,
+                _readProperties = readProperties
+            };//CreateByNameReader 由于每个 SQL 的列的顺序不一定一致，所以不能进行缓存。
         }
 
         private abstract class EntityReader
@@ -754,26 +730,37 @@ namespace Rafy.Domain.ORM
             protected abstract void ReadProperties(Entity entity, IDataReader reader, IList<RdbColumn> columns);
         }
 
-        private class CreateByIndexReader : EntityReader
-        {
-            protected override void ReadProperties(Entity entity, IDataReader reader, IList<RdbColumn> columns)
-            {
-                var index = 0;
-                for (int i = 0, c = columns.Count; i < c; i++)
-                {
-                    var column = columns[i];
-                    if (!column.IsLOB)
-                    {
-                        object val = reader.GetValue(index++);
-                        column.WritePropertyValue(entity, val);
-                    }
-                }
-            }
-        }
+        //private class CreateByIndexReader : EntityReader
+        //{
+        //    protected override void ReadProperties(Entity entity, IDataReader reader, IList<RdbColumn> columns)
+        //    {
+        //        var index = 0;
+        //        for (int i = 0, c = columns.Count; i < c; i++)
+        //        {
+        //            var column = columns[i];
+        //            if (!column.IsLOB)
+        //            {
+        //                object val = reader.GetValue(index++);
+        //                column.WritePropertyValue(entity, val);
+        //            }
+        //        }
+        //    }
+        //}
 
         private class CreateByNameReader : EntityReader
         {
             private int[] _columnIndeces;
+
+            internal List<IManagedProperty> _readProperties;
+
+            private bool NeedRead(IProperty property)
+            {
+                if (property == Entity.IdProperty) return true;
+                if (_readProperties == null) return true;
+                if (_readProperties.Contains(property)) return true;
+
+                return false;
+            }
 
             protected override void ReadProperties(Entity entity, IDataReader reader, IList<RdbColumn> columns)
             {
@@ -784,17 +771,25 @@ namespace Rafy.Domain.ORM
                     for (int i = 0, c = columns.Count; i < c; i++)
                     {
                         var column = columns[i];
-                        try
+
+                        if (this.NeedRead(column.Info.Property))
                         {
-                            _columnIndeces[i] = reader.GetOrdinal(column.Name);
-                        }
-                        catch (IndexOutOfRangeException)
-                        {
-                            //如果 Reader 中没有这一列时，这里会抛出异常。
-                            if (ORMSettings.ErrorIfColumnNotFoundInSql)
+                            try
                             {
-                                throw new InvalidProgramException($"Sql 查询中没有给出必须的列：{column.Table}.{column.Name}，无法读取并转换实体。");
+                                _columnIndeces[i] = reader.GetOrdinal(column.Name);
                             }
+                            catch (IndexOutOfRangeException)
+                            {
+                                //如果 Reader 中没有这一列时，这里会抛出异常。
+                                if (ORMSettings.EnablePropertiesIfNotFoundInSqlQuery && ORMSettings.ErrorIfColumnNotFoundInSql)
+                                {
+                                    throw new InvalidProgramException($"Sql 查询中没有给出必须的列：{column.Table}.{column.Name}，无法读取并转换实体。");
+                                }
+                                _columnIndeces[i] = -1;
+                            }
+                        }
+                        else
+                        {
                             _columnIndeces[i] = -1;
                         }
                     }
@@ -808,6 +803,14 @@ namespace Rafy.Domain.ORM
                     {
                         object val = reader[index];
                         column.WritePropertyValue(entity, val);
+                    }
+                    else
+                    {
+                        //未读取的属性，都需要被禁用。
+                        if (!ORMSettings.EnablePropertiesIfNotFoundInSqlQuery)
+                        {
+                            entity.Disable(column.Info.Property);
+                        }
                     }
                 }
             }
@@ -1076,8 +1079,6 @@ namespace Rafy.Domain.ORM
         }
 
         #endregion
-
-        internal protected enum ReadDataType { ByIndex, ByName }
     }
 
     /// <summary>

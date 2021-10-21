@@ -121,8 +121,32 @@ namespace Rafy.ManagedProperty
             for (int i = 0; i < compiledFieldsCount; i++)
             {
                 var property = compiledProperties[i];
-                _compiledFields[i].ResetToProperty(property);
+                _compiledFields[i]._property = property;
             }
+        }
+
+        /// <summary>
+        /// 获取指定托管属性的字段状态
+        /// </summary>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        public ManagedPropertyField GetField(IManagedProperty property)
+        {
+            if (!property.IsReadOnly)
+            {
+                if (property.LifeCycle == ManagedPropertyLifeCycle.Compile)
+                {
+                    return _compiledFields[property.TypeCompiledIndex];
+                }
+
+                if (_runtimeFields != null && _runtimeFields.TryGetValue(property, out ManagedPropertyField field))
+                {
+                    return field;
+                }
+            }
+
+            //返回一个默认状态的字段。
+            return new ManagedPropertyField { _property = property };
         }
 
         /// <summary>
@@ -131,13 +155,13 @@ namespace Rafy.ManagedProperty
         /// <param name="property"></param>
         private void _ResetProperty(IManagedProperty property)
         {
-            CheckEditing(property);
+            this.CheckEditable(property);
 
             if (property.LifeCycle == ManagedPropertyLifeCycle.Compile)
             {
                 var index = property.TypeCompiledIndex;
                 _compiledFields[index].ResetValue();
-                _compiledFields[index]._isChanged = false;
+                _compiledFields[index].IsChanged = false;
             }
             else
             {
@@ -160,7 +184,9 @@ namespace Rafy.ManagedProperty
                 if (property.LifeCycle == ManagedPropertyLifeCycle.Compile)
                 {
                     var field = _compiledFields[property.TypeCompiledIndex];
-                    if (field.HasValue)
+                    if (field.IsDisabled) { ThrowPropertyDisabled(property); }
+
+                    if (field.HasLocalValue)
                     {
                         result = field.Value;
                         useDefault = false;
@@ -170,6 +196,8 @@ namespace Rafy.ManagedProperty
                 {
                     if (_runtimeFields != null && _runtimeFields.TryGetValue(property, out ManagedPropertyField field))
                     {
+                        if (field.IsDisabled) { ThrowPropertyDisabled(property); }
+
                         result = field.Value;
                         useDefault = false;
                     }
@@ -191,12 +219,13 @@ namespace Rafy.ManagedProperty
         /// <param name="property"></param>
         /// <param name="value"></param>
         /// <param name="source"></param>
+        /// <param name="resetDisabledStatus"></param>
         /// <returns>返回最终使用的值。</returns>
-        private object _SetProperty(IManagedProperty property, object value, ManagedPropertyChangedSource source)
+        private object _SetProperty(IManagedProperty property, object value, ManagedPropertyChangedSource source, bool resetDisabledStatus)
         {
             object finalValue;
 
-            this.CheckEditing(property);
+            this.CheckEditable(property);
 
             var meta = property.GetMeta(this) as IManagedPropertyMetadataInternal;
             var defaultValue = meta.DefaultValue;
@@ -205,110 +234,131 @@ namespace Rafy.ManagedProperty
             value = CoerceType(property, value);
 
             bool cancel = meta.RaisePropertyChangingMetaEvent(this, ref value, source);
-            if (!cancel)
+            if (cancel) return finalValue;
+
+            object oldValue = defaultValue;
+            bool valueChanged;
+
+            //这个 if 块中的代码：查找或创建对应 property 的 field，同时记录可能存在的历史值。
+            if (property.LifeCycle == ManagedPropertyLifeCycle.Compile)
             {
-                object oldValue = defaultValue;
-                bool valueChanged;
-
-                //这个 if 块中的代码：查找或创建对应 property 的 field，同时记录可能存在的历史值。
-                var isCompileProperty = property.LifeCycle == ManagedPropertyLifeCycle.Compile;
-                if (isCompileProperty)
+                var index = property.TypeCompiledIndex;
+                var field = _compiledFields[index];
+                if (field.IsDisabled)
                 {
-                    var index = property.TypeCompiledIndex;
-                    var field = _compiledFields[index];
-                    if (field.HasValue)
+                    if (resetDisabledStatus)
                     {
-                        oldValue = field.Value;
-                    }
-
-                    if (object.Equals(defaultValue, value))
-                    {
-                        field.ResetValue();
+                        _compiledFields[index].IsDisabled = false;
                     }
                     else
                     {
-                        field._value = value;
+                        ThrowPropertyDisabled(property);
                     }
+                }
 
-                    valueChanged = !object.Equals(oldValue, value);
-                    if (valueChanged)
-                    {
-                        field._isChanged = true;
-                    }
+                if (field.HasLocalValue)
+                {
+                    oldValue = field.Value;
+                }
 
-                    _compiledFields[index] = field;
+                if (object.Equals(defaultValue, value))
+                {
+                    field.ResetValue();
                 }
                 else
                 {
-                    bool hasOldValue = false;
-                    ManagedPropertyField oldField = default(ManagedPropertyField);
-                    if (_runtimeFields == null)
-                    {
-                        _runtimeFields = new Dictionary<IManagedProperty, ManagedPropertyField>();
-                    }
-                    else
-                    {
-                        if (_runtimeFields.TryGetValue(property, out oldField))
-                        {
-                            oldValue = oldField.Value;
-                            hasOldValue = true;
-                        }
-                    }
-                    valueChanged = !object.Equals(oldValue, value);
-
-                    //使用新的 field
-                    var field = new ManagedPropertyField
-                    {
-                        _property = property,
-                        _value = value,
-                        _isChanged = valueChanged || hasOldValue && oldField._isChanged//值不论是之前已经改过，还是现在才改的，都需要设置为 true
-                    };
-
-                    if (hasOldValue)
-                    {
-                        _runtimeFields[property] = field;
-                    }
-                    else
-                    {
-                        _runtimeFields.Add(property, field);
-                    }
+                    field.Value = value;
                 }
 
+                valueChanged = !object.Equals(oldValue, value);
                 if (valueChanged)
                 {
-                    var args = new ManagedPropertyChangedEventArgs(property, oldValue, value, source);
-
-                    //发生 Meta 中的回调事件
-                    meta.RaisePropertyChangedMetaEvent(this, args);
-
-                    //发生外部事件
-                    this.RaisePropertyChanged(args);
-
-                    finalValue = value;
+                    field.IsChanged = true;
                 }
+
+                _compiledFields[index] = field;
+            }
+            else
+            {
+                bool hasOldValue = false;
+                ManagedPropertyField oldField = default(ManagedPropertyField);
+                if (_runtimeFields == null)
+                {
+                    _runtimeFields = new Dictionary<IManagedProperty, ManagedPropertyField>();
+                }
+                else
+                {
+                    if (_runtimeFields.TryGetValue(property, out oldField))
+                    {
+                        if (oldField.IsDisabled)
+                        {
+                            if (resetDisabledStatus)
+                            {
+                                oldField.IsDisabled = false;
+                                _runtimeFields[property] = oldField;
+                            }
+                            else
+                            {
+                                ThrowPropertyDisabled(property);
+                            }
+                        }
+
+                        oldValue = oldField.Value;
+                        hasOldValue = true;
+                    }
+                }
+                valueChanged = !object.Equals(oldValue, value);
+
+                //使用新的 field
+                var field = new ManagedPropertyField
+                {
+                    _property = property,
+                    Value = value,
+                    IsChanged = valueChanged || hasOldValue && oldField.IsChanged//值不论是之前已经改过，还是现在才改的，都需要设置为 true
+                };
+
+                if (hasOldValue)
+                {
+                    _runtimeFields[property] = field;
+                }
+                else
+                {
+                    _runtimeFields.Add(property, field);
+                }
+            }
+
+            if (valueChanged)
+            {
+                var args = new ManagedPropertyChangedEventArgs(property, oldValue, value, source);
+
+                //发生 Meta 中的回调事件
+                meta.RaisePropertyChangedMetaEvent(this, args);
+
+                //发生外部事件
+                this.RaisePropertyChanged(args);
+
+                finalValue = value;
             }
 
             return finalValue;
         }
 
         /// <summary>
-        /// LoadProperty 直接设置值，不发生 PropertyChanged 事件。
+        /// 注释见：<see cref="LoadProperty(IManagedProperty, object)"/>
         /// </summary>
         /// <param name="property"></param>
         /// <param name="value"></param>
         private void _LoadProperty(IManagedProperty property, object value)
         {
-            this.CheckEditing(property);
+            this.CheckEditable(property);
 
             value = CoerceType(property, value);
 
-            var meta = property.GetMeta(this);
-
-            if (!object.Equals(value, meta.DefaultValue))
+            if (!object.Equals(value, property.GetMeta(this).DefaultValue))
             {
                 if (property.LifeCycle == ManagedPropertyLifeCycle.Compile)
                 {
-                    _compiledFields[property.TypeCompiledIndex]._value = value;
+                    _compiledFields[property.TypeCompiledIndex].Value = value;
                 }
                 else
                 {
@@ -325,13 +375,14 @@ namespace Rafy.ManagedProperty
                         };
                     }
 
-                    field._value = value;
+                    field.Value = value;
                     _runtimeFields[property] = field;
                 }
             }
             else
             {
                 //如果传入的是默认值，那么直接 ResetValue
+                //性能：这样虽然损失了一点加载速度，但是所有装箱的值类型的对象，都不会存储在内存中。
                 if (property.LifeCycle == ManagedPropertyLifeCycle.Compile)
                 {
                     _compiledFields[property.TypeCompiledIndex].ResetValue();
@@ -348,7 +399,7 @@ namespace Rafy.ManagedProperty
         }
 
         //[TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
-        private void CheckEditing(IManagedProperty property)
+        private void CheckEditable(IManagedProperty property)
         {
             if (!property.OwnerType.IsInstanceOfType(this))
             {
@@ -385,7 +436,7 @@ namespace Rafy.ManagedProperty
         /// <param name="property"></param>
         public void ResetProperty(IManagedProperty property)
         {
-            _ResetProperty(property);
+            this._ResetProperty(property);
         }
 
         /// <summary>
@@ -395,7 +446,7 @@ namespace Rafy.ManagedProperty
         /// <returns></returns>
         public object GetProperty(IManagedProperty property)
         {
-            return _GetProperty(property);
+            return this._GetProperty(property);
         }
 
         /// <summary>
@@ -407,7 +458,7 @@ namespace Rafy.ManagedProperty
         public TPropertyType GetProperty<TPropertyType>(ManagedProperty<TPropertyType> property)
         {
             //属性拆箱
-            return (TPropertyType)_GetProperty(property);
+            return (TPropertyType)this._GetProperty(property);
         }
 
         /// <summary>
@@ -416,11 +467,12 @@ namespace Rafy.ManagedProperty
         /// <param name="property"></param>
         /// <param name="value"></param>
         /// <param name="source">本次值设置的来源。</param>
+        /// <param name="resetDisabledStatus">如果本字段处于禁用状态，那么是否在设置新值时，将禁用状态解除？</param>
         /// <returns>返回最终使用的值。</returns>
-        public object SetProperty(ManagedProperty<bool> property, bool value, ManagedPropertyChangedSource source = ManagedPropertyChangedSource.FromProperty)
+        public object SetProperty(ManagedProperty<bool> property, bool value, ManagedPropertyChangedSource source = ManagedPropertyChangedSource.FromProperty, bool resetDisabledStatus = true)
         {
             //使用 BooleanBoxes 来防止装箱操作。
-            return _SetProperty(property, BooleanBoxes.Box(value), source);
+            return this._SetProperty(property, BooleanBoxes.Box(value), source, resetDisabledStatus);
         }
 
         /// <summary>
@@ -429,20 +481,101 @@ namespace Rafy.ManagedProperty
         /// <param name="property"></param>
         /// <param name="value"></param>
         /// <param name="source">本次值设置的来源。</param>
+        /// <param name="resetDisabledStatus">如果本字段处于禁用状态，那么是否在设置新值时，将禁用状态解除？</param>
         /// <returns>返回最终使用的值。</returns>
-        public virtual object SetProperty(IManagedProperty property, object value, ManagedPropertyChangedSource source = ManagedPropertyChangedSource.FromProperty)
+        public virtual object SetProperty(IManagedProperty property, object value, ManagedPropertyChangedSource source = ManagedPropertyChangedSource.FromProperty, bool resetDisabledStatus = true)
         {
-            return _SetProperty(property, value, source);
+            return this._SetProperty(property, value, source, resetDisabledStatus);
         }
 
         /// <summary>
-        /// LoadProperty 以最快的方式直接加载值，不发生 PropertyChanged 事件，也不变更属性的“变更状态”
+        /// LoadProperty 将以最快的方式直接加载值。
+        /// * 不发生 PropertyChanged 事件；
+        /// * 不变更属性的“变更状态”；
+        /// * 不检查属性的“禁用状态”。
         /// </summary>
         /// <param name="property"></param>
         /// <param name="value"></param>
         public virtual void LoadProperty(IManagedProperty property, object value)
         {
-            _LoadProperty(property, value);
+            this._LoadProperty(property, value);
+        }
+
+        #endregion
+
+        #region 属性禁用状态
+
+        /// <summary>
+        /// 禁用或解禁某个属性。
+        /// 属性一旦进入禁用状态，则对这个属性调用 Get、Set 都将会抛出异常；除非重新解禁。
+        /// 另外，只读属性因为有可能依赖了被禁用的属性，所以只读属性的依赖性被禁用时，只读属性也自动被禁用。
+        /// </summary>
+        /// <param name="property"></param>
+        /// <param name="value"></param>
+        public void Disable(IManagedProperty property, bool value = true)
+        {
+            this.DisableCore(property, value);
+        }
+        internal virtual void DisableCore(IManagedProperty property, bool value = true)
+        {
+            if (property.IsReadOnly) throw new InvalidOperationException("禁用只读属性时，无需调用此方法。只需要禁用其任一依赖的属性即可。");
+
+            if (property.LifeCycle == ManagedPropertyLifeCycle.Compile)
+            {
+                _compiledFields[property.TypeCompiledIndex].IsDisabled = value;
+                return;
+            }
+
+            if (_runtimeFields == null)
+            {
+                _runtimeFields = new Dictionary<IManagedProperty, ManagedPropertyField>();
+            }
+
+            if (!_runtimeFields.TryGetValue(property, out ManagedPropertyField field))
+            {
+                field._property = property;
+                //var meta = property.GetMeta(this) as IManagedPropertyMetadataInternal;
+                //field._value = meta.DefaultValue;
+            }
+
+            field.IsDisabled = value;
+            _runtimeFields[property] = field;
+        }
+
+        /// <summary>
+        /// 获取指定的属性的值是否可用状态。
+        /// </summary>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        public bool IsDisabled(IManagedProperty property)
+        {
+            if (property.IsReadOnly)
+            {
+                var dependencies = (property as IManagedPropertyInternal).Dependencies;
+                for (int i = 0, c = dependencies.Count; i < c; i++)
+                {
+                    var dependency = dependencies[i];
+                    if (this.IsDisabled(dependency)) return true;
+                }
+                return false;
+            }
+
+            if (property.LifeCycle == ManagedPropertyLifeCycle.Compile)
+            {
+                return _compiledFields[property.TypeCompiledIndex].IsDisabled;
+            }
+
+            if (_runtimeFields != null && _runtimeFields.TryGetValue(property, out ManagedPropertyField field))
+            {
+                return field.IsDisabled;
+            }
+
+            return false;
+        }
+
+        private static void ThrowPropertyDisabled(IManagedProperty property)
+        {
+            throw new InvalidOperationException($"{property.OwnerType.FullName}.{property.Name} 属性的值被禁用，不能使用。");
         }
 
         #endregion
@@ -469,7 +602,7 @@ namespace Rafy.ManagedProperty
         {
             for (int i = 0, c = _compiledFields.Length; i < c; i++)
             {
-                _compiledFields[i]._isChanged = value;
+                _compiledFields[i].IsChanged = value;
             }
 
             if (_runtimeFields != null)
@@ -477,9 +610,9 @@ namespace Rafy.ManagedProperty
                 foreach (var kv in _runtimeFields)
                 {
                     var field = kv.Value;
-                    if (field._isChanged)
+                    if (field.IsChanged)
                     {
-                        field._isChanged = value;
+                        field.IsChanged = value;
                         _runtimeFields[kv.Key] = field;
                     }
                 }
@@ -497,7 +630,7 @@ namespace Rafy.ManagedProperty
 
             if (property.LifeCycle == ManagedPropertyLifeCycle.Compile)
             {
-                _compiledFields[property.TypeCompiledIndex]._isChanged = isChanged;
+                _compiledFields[property.TypeCompiledIndex].IsChanged = isChanged;
             }
             else
             {
@@ -509,12 +642,11 @@ namespace Rafy.ManagedProperty
                 if (!_runtimeFields.TryGetValue(property, out ManagedPropertyField field))
                 {
                     field._property = property;
-                    field.ResetValue();
                     //var meta = property.GetMeta(this) as IManagedPropertyMetadataInternal;
                     //field._value = meta.DefaultValue;
                 }
 
-                field._isChanged = isChanged;
+                field.IsChanged = isChanged;
                 _runtimeFields[property] = field;
             }
         }
@@ -530,25 +662,15 @@ namespace Rafy.ManagedProperty
 
             if (property.LifeCycle == ManagedPropertyLifeCycle.Compile)
             {
-                return _compiledFields[property.TypeCompiledIndex]._isChanged;
+                return _compiledFields[property.TypeCompiledIndex].IsChanged;
             }
 
             if (_runtimeFields != null && _runtimeFields.TryGetValue(property, out ManagedPropertyField field))
             {
-                return field._isChanged;
+                return field.IsChanged;
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// 获取指定的属性的值是否可用状态。
-        /// </summary>
-        /// <param name="property"></param>
-        /// <returns></returns>
-        internal bool IsAvailable(IManagedProperty property)
-        {
-            return this.HasLocalValue(property);
         }
 
         /// <summary>
@@ -648,187 +770,12 @@ namespace Rafy.ManagedProperty
 
         #region 其它接口
 
-        #region public CompiledPropertyValuesEnumerator GetCompiledPropertyValues
-
-        /// <summary>
-        /// 获取编译期属性值集合
-        /// </summary>
-        /// <returns></returns>
-        public CompiledPropertyValuesEnumerator GetCompiledPropertyValues()
-        {
-            return new CompiledPropertyValuesEnumerator(this);
-        }
-
-        public struct CompiledPropertyValuesEnumerator
-        {
-            private ManagedPropertyObject _mpo;
-            private ManagedPropertyField _current;
-            private IList<IManagedProperty> _properties;
-            private int _index;
-
-            internal CompiledPropertyValuesEnumerator(ManagedPropertyObject mpo)
-            {
-                _index = -1;
-                _mpo = mpo;
-                _current = new ManagedPropertyField();
-                _properties = mpo.PropertiesContainer.GetCompiledProperties();
-            }
-
-            public ManagedPropertyField Current
-            {
-                get { return _current; }
-            }
-
-            public bool MoveNext()
-            {
-                if (++_index >= _properties.Count) return false;
-
-                var property = _properties[_index];
-                if (property.IsReadOnly)
-                {
-                    _current = new ManagedPropertyField
-                    {
-                        _property = property,
-                        _value = (property as IManagedPropertyInternal).ProvideReadOnlyValue(_mpo)
-                    };
-                }
-                else
-                {
-                    _current = _mpo._compiledFields[property.TypeCompiledIndex];
-                    if (!_current.HasValue)
-                    {
-                        _current = new ManagedPropertyField
-                        {
-                            _property = property,
-                            _value = property.GetMeta(_mpo).DefaultValue
-                        };
-                    }
-                }
-
-                return true;
-            }
-
-            public CompiledPropertyValuesEnumerator GetEnumerator()
-            {
-                //添加此方法，使得可以使用 foreach 循环
-                return this;
-            }
-        }
-
-        #endregion
-
-        #region public NonDefaultPropertyValuesEnumerator GetNonDefaultPropertyValues
-
-        /// <summary>
-        /// 获取当前对象所有非默认值的属性值集合。
-        /// </summary>
-        /// <returns></returns>
-        public NonDefaultPropertyValuesEnumerator GetNonDefaultPropertyValues()
-        {
-            return new NonDefaultPropertyValuesEnumerator(this);
-        }
-
-        public struct NonDefaultPropertyValuesEnumerator
-        {
-            private ManagedPropertyObject _mpo;
-            private ManagedPropertyField[] _runtimeFields;
-            private ManagedPropertyField _current;
-            private int _index;
-            private bool _enumerateRuntimeFields;
-
-            internal NonDefaultPropertyValuesEnumerator(ManagedPropertyObject mpo)
-            {
-                _index = -1;
-                _mpo = mpo;
-                _current = new ManagedPropertyField();
-                _runtimeFields = null;
-                _enumerateRuntimeFields = false;
-            }
-
-            public ManagedPropertyField Current
-            {
-                get { return _current; }
-            }
-
-            public bool MoveNext()
-            {
-                _index++;
-
-                var compiledFields = _mpo._compiledFields;
-
-                //编译期属性
-                var compiledFieldLength = compiledFields.Length;
-                while (_index < compiledFieldLength)
-                {
-                    var field = compiledFields[_index];
-                    if (field.HasValue)
-                    {
-                        var defaultValue = field.Property.GetMeta(this).DefaultValue;
-                        if (!object.Equals(field.Value, defaultValue))
-                        {
-                            _current = field;
-                            return true;
-                        }
-                    }
-
-                    _index++;
-                }
-
-                //第一次进入运行时属性遍历
-                if (!_enumerateRuntimeFields)
-                {
-                    var rf = _mpo._runtimeFields;
-                    if (rf != null)
-                    {
-                        var values = rf.Values;
-                        _runtimeFields = new ManagedPropertyField[values.Count];
-                        values.CopyTo(_runtimeFields, 0);
-                    }
-
-                    _enumerateRuntimeFields = true;
-                }
-
-                //开始遍历运行时属性。
-                if (_runtimeFields != null)
-                {
-                    var runtimeFieldsCount = _runtimeFields.Length;
-                    while (true)
-                    {
-                        var runtimeIndex = _index - compiledFieldLength;
-                        if (runtimeIndex >= runtimeFieldsCount) { break; }
-
-                        var field = _runtimeFields[runtimeIndex];
-                        if (field.HasValue)
-                        {
-                            var defaultValue = field.Property.GetMeta(this).DefaultValue;
-                            if (!object.Equals(field.Value, defaultValue))
-                            {
-                                _current = field;
-                                return true;
-                            }
-                        }
-
-                        _index++;
-                    }
-                }
-
-                return false;
-            }
-
-            public NonDefaultPropertyValuesEnumerator GetEnumerator()
-            {
-                //添加此方法，使得可以使用 foreach 循环
-                return this;
-            }
-        }
-
-        #endregion
-
         /// <summary>
         /// 返回是否存在本地值。（开发者是否存在主动设置/加载的字段值（本地值）。）
         /// 没有本地值的属性，是不占用过多的内存的，在序列化、反序列化的过程中也将被忽略，网络传输时，也不需要传输值。
         /// * 一个属性，如果调用过 LoadProperty、SetProperty 更新了值后，字段都会有本地值。
         /// * 如果调用过 <see cref="ResetProperty(IManagedProperty)"/>  来设置默认值，都会清空其本地值；那么，此时这个方法也会返回 false。
+        /// 见：<see cref="ManagedPropertyField.HasLocalValue()"/>
         /// </summary>
         /// <param name="property">托管属性</param>
         /// <returns></returns>
@@ -840,7 +787,7 @@ namespace Rafy.ManagedProperty
 
             if (property.LifeCycle == ManagedPropertyLifeCycle.Compile)
             {
-                return _compiledFields[property.TypeCompiledIndex].HasValue;
+                return _compiledFields[property.TypeCompiledIndex].HasLocalValue;
             }
             else
             {
@@ -925,10 +872,13 @@ namespace Rafy.ManagedProperty
                 var nameProperty = this.PropertiesContainer.GetAvailableProperties().Find("Name");
                 if (nameProperty != null)
                 {
-                    var value = this.GetProperty(nameProperty);
-                    if (value != null)
+                    if (!this.IsDisabled(nameProperty))
                     {
-                        res += " Name:" + value;
+                        var value = this.GetProperty(nameProperty);
+                        if (value != null)
+                        {
+                            res += " Name:" + value;
+                        }
                     }
                 }
 

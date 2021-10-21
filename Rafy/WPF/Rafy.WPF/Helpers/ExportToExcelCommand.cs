@@ -195,7 +195,7 @@ namespace Rafy.WPF
                         var value = this._currentRow.GetProperty(mp);
                         if (value != null)
                         {
-                            if (TypeHelper.IsEnumNullable(mp.PropertyType))
+                            if (TypeHelper.IgnoreNullable(mp.PropertyType).IsEnum)
                             {
                                 data = EnumViewModel.EnumToLabel((Enum)value).Translate();
                             }

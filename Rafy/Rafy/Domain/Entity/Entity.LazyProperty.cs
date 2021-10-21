@@ -325,8 +325,9 @@ namespace Rafy.Domain
         /// <param name="property"></param>
         /// <param name="value"></param>
         /// <param name="source"></param>
+        /// <param name="resetDisabledStatus">如果本字段处于禁用状态，那么是否在设置新值时，将禁用状态解除？</param>
         /// <returns></returns>
-        public override object SetProperty(IManagedProperty property, object value, ManagedPropertyChangedSource source = ManagedPropertyChangedSource.FromProperty)
+        public override object SetProperty(IManagedProperty property, object value, ManagedPropertyChangedSource source = ManagedPropertyChangedSource.FromProperty, bool resetDisabledStatus = true)
         {
             //防止外界使用 SetProperty 方法来操作引用属性。
             if (property is IRefProperty)
@@ -335,23 +336,23 @@ namespace Rafy.Domain
                 {
                     return this.SetRefId(property as IRefIdProperty, value, source);
                 }
-                else
-                {
-                    return this.SetRefEntity(property as IRefEntityProperty, value as Entity, source);
-                }
+
+                return this.SetRefEntity(property as IRefEntityProperty, value as Entity, source);
             }
+
             //防止外界使用 SetProperty 方法来操作列表属性。
-            else if (property is IListProperty)
+            if (property is IListProperty)
             {
                 throw new InvalidOperationException(string.Format("{0} 是列表属性，不能使用 SetProperty 方法直接设置。请使用 GetLazyList 方法获取，或使用 LoadProperty 方法进行加载。", property));
             }
-            else if (property == IdProperty || property == TreePIdProperty && value != null)
+
+            if (property == IdProperty || property == TreePIdProperty && value != null)
             {
                 //由于 Id 属性的托管属性类型是 object，这里需要强制为具体的主键类型。
                 value = TypeHelper.CoerceValue(this.IdProvider.KeyType, value);
             }
 
-            return base.SetProperty(property, value, source);
+            return base.SetProperty(property, value, source, resetDisabledStatus);
         }
 
         private static void ThrowRefPropertyChangingConflict(IRefIdProperty property)
@@ -389,6 +390,7 @@ namespace Rafy.Domain
             {
                 var value = (property as ILOBPropertyInternal).LoadLOBValue(this.Id);
                 base.LoadProperty(property, value);
+                this.Disable(property, false);
                 return value;
             }
 
@@ -405,6 +407,22 @@ namespace Rafy.Domain
         {
             //直接调用父类的 SetProperty 方法，而不是本类重写的 SetProperty 方法。
             base.SetProperty(property, value, source);
+        }
+
+        internal override void DisableCore(IManagedProperty property, bool value = true)
+        {
+            switch ((property as IProperty).Category)
+            {
+                case PropertyCategory.ReferenceEntity:
+                case PropertyCategory.List:
+                case PropertyCategory.LOB:
+                case PropertyCategory.Readonly:
+                    //以上三类属性，在禁用时，都需要被忽略。
+                    break;
+                default:
+                    base.DisableCore(property, value);
+                    break;
+            }
         }
 
         #endregion

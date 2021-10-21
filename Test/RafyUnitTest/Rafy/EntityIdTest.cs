@@ -62,7 +62,9 @@ namespace RafyUnitTest.StringEntity
                 bool error = false;
                 try
                 {
-                    repo.Save(new House { Id = null });
+                    var entity = new House();
+                    entity.Id = null;
+                    repo.Save(entity);
                 }
                 catch
                 {

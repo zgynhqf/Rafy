@@ -212,15 +212,17 @@ namespace Rafy.Domain.Serialization.Json
         {
             var isTree = entity.SupportTree;
 
-            foreach (var field in entity.GetCompiledPropertyValues())
+            var properties = entity.PropertiesContainer.GetAvailableProperties();
+            for (int i = 0, c = properties.Count; i < c; i++)
             {
-                var property = field.Property as IProperty;
+                var property = properties[i] as IProperty;
+                if (entity.IsDisabled(property)) continue;
 
                 if (property.IsReadOnly && this.IgnoreROProperties) continue;
                 if (!isTree && (property == Entity.TreePIdProperty || property == Entity.TreeIndexProperty)) { continue; }
                 if (!this.SerializeIsPhantom && property == EntityConvention.Property_IsPhantom) continue;
 
-                var value = field.Value;
+                var value = entity.GetProperty(property);
                 if (this.IgnoreDefault)
                 {
                     var defaultValue = property.GetMeta(entity).DefaultValue;

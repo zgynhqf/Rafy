@@ -33,29 +33,29 @@ namespace Rafy.Domain
             DataTable table = new DataTable();
 
             //找到属性容器
-            ManagedPropertyList properties = null;
+            List<IManagedProperty> availableProperties = null;
 
             var enumerator = CompositionEnumerator.Create(list, includesChildren: false, includesTreeChildren: true);
 
             foreach (var item in enumerator)
             {
-                if (properties == null)
+                if (availableProperties == null)
                 {
-                    var container = item.GetRepository().EntityMeta.ManagedProperties;
-                    properties = container.GetCompiledProperties();
+                    availableProperties = new List<IManagedProperty>();
 
-                    foreach (var property in properties)
+                    foreach (var property in item.GetRepository().EntityMeta.ManagedProperties.GetCompiledProperties())
                     {
-                        //table.Columns.Add(property.Name, property.PropertyType);
+                        if (item.IsDisabled(property)) continue;
                         table.Columns.Add(property.Name, TypeHelper.IgnoreNullable(property.PropertyType));
+                        availableProperties.Add(property);
                     }
                 }
 
                 var row = table.NewRow();
 
-                for (int j = 0, c2 = properties.Count; j < c2; j++)
+                for (int j = 0, c2 = availableProperties.Count; j < c2; j++)
                 {
-                    var property = properties[j];
+                    var property = availableProperties[j];
                     var value = item.GetProperty(property);
                     row[j] = value ?? DBNull.Value;
                 }
