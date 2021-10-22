@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.81.4011
+3.81.4012
     删除接口
         删除 ManagedPropertyChangedSource 类型。
         删除 SetProperty(IManagedProperty, object, ManagedPropertyChangedSource) 中的第三个参数。

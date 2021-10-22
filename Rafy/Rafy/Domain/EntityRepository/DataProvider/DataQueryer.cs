@@ -284,7 +284,7 @@ namespace Rafy.Domain
                     if (elOptions != null)
                     {
                         //先加载树子节点。
-                        if (elOptions.LoadTreeChildren)
+                        if (elOptions.LoadTreeChildren && _repository.SupportTree)
                         {
                             /*********************** 代码块解释 *********************************
                              * 加载树时，EntityList.LoadAllNodes 方法只加载根节点的子节点。
