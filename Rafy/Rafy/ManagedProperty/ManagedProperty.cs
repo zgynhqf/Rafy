@@ -118,7 +118,7 @@ namespace Rafy.ManagedProperty
 
         object ProvideReadOnlyValue(ManagedPropertyObject component);
 
-        void RaiseReadOnlyPropertyChanged(ManagedPropertyObject sender, ManagedPropertyChangedSource source);
+        void RaiseReadOnlyPropertyChanged(ManagedPropertyObject sender);
     }
 
     [DebuggerDisplay("{OwnerType.Name}.{Name}")]
@@ -258,11 +258,11 @@ namespace Rafy.ManagedProperty
             return this._readOnlyValueProvider(component);
         }
 
-        void IManagedPropertyInternal.RaiseReadOnlyPropertyChanged(ManagedPropertyObject sender, ManagedPropertyChangedSource source)
+        void IManagedPropertyInternal.RaiseReadOnlyPropertyChanged(ManagedPropertyObject sender)
         {
             //直接装箱，以免下行代码装箱两次。
             object nonValue = default(TPropertyType);
-            sender.RaisePropertyChanged(new ManagedPropertyChangedEventArgs(this, nonValue, nonValue, source));
+            sender.RaisePropertyChanged(new ManagedPropertyChangedEventArgs(this, nonValue, nonValue));
         }
 
         #endregion

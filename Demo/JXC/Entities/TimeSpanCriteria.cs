@@ -114,7 +114,7 @@ namespace JXC
 
         private void OnTimeChanged(ManagedPropertyChangedEventArgs e)
         {
-            if (e.Source == ManagedPropertyChangedSource.FromUIOperating)
+            if (RafyPropertyDescriptor.IsOperating)
             {
                 this.TimeSpanType = TimeSpanType.Custom;
             }

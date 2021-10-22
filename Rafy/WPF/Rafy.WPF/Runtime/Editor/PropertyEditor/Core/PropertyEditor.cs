@@ -110,11 +110,11 @@ namespace Rafy.WPF.Editors
                         var rp = mp as IRefProperty;
                         if (rp != null)
                         {
-                            currentObject.SetRefNullableId(rp.RefIdProperty, value, ManagedPropertyChangedSource.FromUIOperating);
+                            currentObject.SetRefNullableId(rp.RefIdProperty, value);
                         }
                         else
                         {
-                            currentObject.SetProperty(mp, value, ManagedPropertyChangedSource.FromUIOperating);
+                            currentObject.SetProperty(mp, value);
                         }
 
                         this.OnPropertyValueChanged();

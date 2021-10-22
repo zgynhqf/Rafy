@@ -218,10 +218,9 @@ namespace Rafy.ManagedProperty
         /// </summary>
         /// <param name="property"></param>
         /// <param name="value"></param>
-        /// <param name="source"></param>
         /// <param name="resetDisabledStatus"></param>
         /// <returns>返回最终使用的值。</returns>
-        private object _SetProperty(IManagedProperty property, object value, ManagedPropertyChangedSource source, bool resetDisabledStatus)
+        private object _SetProperty(IManagedProperty property, object value, bool resetDisabledStatus)
         {
             object finalValue;
 
@@ -233,7 +232,7 @@ namespace Rafy.ManagedProperty
 
             value = CoerceType(property, value);
 
-            bool cancel = meta.RaisePropertyChangingMetaEvent(this, ref value, source);
+            bool cancel = meta.RaisePropertyChangingMetaEvent(this, ref value);
             if (cancel) return finalValue;
 
             object oldValue = defaultValue;
@@ -329,7 +328,7 @@ namespace Rafy.ManagedProperty
 
             if (valueChanged)
             {
-                var args = new ManagedPropertyChangedEventArgs(property, oldValue, value, source);
+                var args = new ManagedPropertyChangedEventArgs(property, oldValue, value);
 
                 //发生 Meta 中的回调事件
                 meta.RaisePropertyChangedMetaEvent(this, args);
@@ -466,13 +465,12 @@ namespace Rafy.ManagedProperty
         /// </summary>
         /// <param name="property"></param>
         /// <param name="value"></param>
-        /// <param name="source">本次值设置的来源。</param>
         /// <param name="resetDisabledStatus">如果本字段处于禁用状态，那么是否在设置新值时，将禁用状态解除？</param>
         /// <returns>返回最终使用的值。</returns>
-        public object SetProperty(ManagedProperty<bool> property, bool value, ManagedPropertyChangedSource source = ManagedPropertyChangedSource.FromProperty, bool resetDisabledStatus = true)
+        public object SetProperty(ManagedProperty<bool> property, bool value, bool resetDisabledStatus = true)
         {
             //使用 BooleanBoxes 来防止装箱操作。
-            return this._SetProperty(property, BooleanBoxes.Box(value), source, resetDisabledStatus);
+            return this._SetProperty(property, BooleanBoxes.Box(value), resetDisabledStatus);
         }
 
         /// <summary>
@@ -480,12 +478,11 @@ namespace Rafy.ManagedProperty
         /// </summary>
         /// <param name="property"></param>
         /// <param name="value"></param>
-        /// <param name="source">本次值设置的来源。</param>
         /// <param name="resetDisabledStatus">如果本字段处于禁用状态，那么是否在设置新值时，将禁用状态解除？</param>
         /// <returns>返回最终使用的值。</returns>
-        public virtual object SetProperty(IManagedProperty property, object value, ManagedPropertyChangedSource source = ManagedPropertyChangedSource.FromProperty, bool resetDisabledStatus = true)
+        public virtual object SetProperty(IManagedProperty property, object value, bool resetDisabledStatus = true)
         {
-            return this._SetProperty(property, value, source, resetDisabledStatus);
+            return this._SetProperty(property, value, resetDisabledStatus);
         }
 
         /// <summary>
@@ -700,7 +697,7 @@ namespace Rafy.ManagedProperty
                 for (int i = 0, c = dependencies.Count; i < c; i++)
                 {
                     var dp = dependencies[i] as IManagedPropertyInternal;
-                    dp.RaiseReadOnlyPropertyChanged(this, e.Source);
+                    dp.RaiseReadOnlyPropertyChanged(this);
                 }
             }
         }
@@ -710,18 +707,17 @@ namespace Rafy.ManagedProperty
         /// 注意，这个方法发布的事件，NewValue、OldValue 将不可用。
         /// </summary>
         /// <param name="property"></param>
-        /// <param name="source"></param>
-        public void NotifyPropertyChanged(IManagedProperty property, ManagedPropertyChangedSource source = ManagedPropertyChangedSource.FromProperty)
+        public void NotifyPropertyChanged(IManagedProperty property)
         {
             var propertyInternal = property as IManagedPropertyInternal;
             if (property.IsReadOnly)
             {
-                propertyInternal.RaiseReadOnlyPropertyChanged(this, source);
+                propertyInternal.RaiseReadOnlyPropertyChanged(this);
             }
             else
             {
                 var defaultValue = property.GetMeta(this).DefaultValue;
-                var args = new ManagedPropertyChangedEventArgs(property, defaultValue, defaultValue, source);
+                var args = new ManagedPropertyChangedEventArgs(property, defaultValue, defaultValue);
                 this.RaisePropertyChanged(args);
             }
         }

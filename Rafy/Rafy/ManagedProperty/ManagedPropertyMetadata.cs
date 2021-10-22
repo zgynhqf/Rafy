@@ -41,7 +41,7 @@ namespace Rafy.ManagedProperty
     {
         object CoerceGetValue(ManagedPropertyObject sender, object value);
 
-        bool RaisePropertyChangingMetaEvent(ManagedPropertyObject sender, ref object value, ManagedPropertyChangedSource source);
+        bool RaisePropertyChangingMetaEvent(ManagedPropertyObject sender, ref object value);
 
         void RaisePropertyChangedMetaEvent(ManagedPropertyObject sender, ManagedPropertyChangedEventArgs e);
     }
@@ -169,11 +169,11 @@ namespace Rafy.ManagedProperty
 
         #region RaisePropertyChanging
 
-        internal bool RaisePropertyChangingMetaEvent(ManagedPropertyObject sender, ref TPropertyType value, ManagedPropertyChangedSource source)
+        internal bool RaisePropertyChangingMetaEvent(ManagedPropertyObject sender, ref TPropertyType value)
         {
             if (this._propertyChangingCallBack != null)
             {
-                var e = new ManagedPropertyChangingEventArgs<TPropertyType>(this._property, value, source);
+                var e = new ManagedPropertyChangingEventArgs<TPropertyType>(this._property, value);
 
                 this._propertyChangingCallBack(sender, e);
 
@@ -186,12 +186,11 @@ namespace Rafy.ManagedProperty
         }
 
         bool IManagedPropertyMetadataInternal.RaisePropertyChangingMetaEvent(
-            ManagedPropertyObject sender, ref object value, ManagedPropertyChangedSource source
-            )
+            ManagedPropertyObject sender, ref object value)
         {
             if (this._propertyChangingCallBack != null)
             {
-                var e = new ManagedPropertyChangingEventArgs<TPropertyType>(this._property, (TPropertyType)value, source);
+                var e = new ManagedPropertyChangingEventArgs<TPropertyType>(this._property, (TPropertyType)value);
 
                 this._propertyChangingCallBack(sender, e);
 

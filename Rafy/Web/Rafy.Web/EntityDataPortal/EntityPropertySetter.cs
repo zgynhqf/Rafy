@@ -80,7 +80,7 @@ namespace Rafy.Web.EntityDataPortal
 
                     rawValue = EntityJsonConverter.ToServerValue(pm.PropertyType, rawValue);
 
-                    e.SetProperty(mp, rawValue, ManagedPropertyChangedSource.FromUIOperating);
+                    e.SetProperty(mp, rawValue);
                 }
             }
             else

@@ -33,6 +33,16 @@ namespace Rafy.Domain
     /// </summary>
     public class RafyPropertyDescriptor : ManagedPropertyDescriptor
     {
+        public static readonly AppContextItem<bool> IsOperatingItem = new AppContextItem<bool>("RafyPropertyDescriptor.IsOperating");
+
+        /// <summary>
+        /// 此值表示是否正在使用这个类型在操作实体的属性。
+        /// </summary>
+        public static bool IsOperating
+        {
+            get { return IsOperatingItem.Value; }
+        }
+
         public RafyPropertyDescriptor(IManagedProperty property) : base(property) { }
 
         public override bool IsReadOnly
@@ -105,24 +115,27 @@ namespace Rafy.Domain
             var mp = this.Property;
             var entity = component as Entity;
 
-            if (mp is IRefIdProperty)
+            using (IsOperatingItem.UseScopeValue(true))
             {
-                entity.SetRefNullableId(mp as IRefIdProperty, value, ManagedPropertyChangedSource.FromUIOperating);
-                return;
-            }
-
-            //枚举值在为界面返回值时，应该返回 Label
-            if (value != null)
-            {
-                var enumType = TypeHelper.IgnoreNullable(mp.PropertyType);
-                if (enumType.IsEnum)
+                if (mp is IRefIdProperty)
                 {
-                    value = EnumViewModel.Parse((value as string).TranslateReverse(), enumType);
+                    entity.SetRefNullableId(mp as IRefIdProperty, value);
+                    return;
                 }
-            }
 
-            //使用 PropertyDescriptor 来进行操作属性时，都是作为 UI 层操作。
-            entity.SetProperty(mp, value, ManagedPropertyChangedSource.FromUIOperating);
+                //枚举值在为界面返回值时，应该返回 Label
+                if (value != null)
+                {
+                    var enumType = TypeHelper.IgnoreNullable(mp.PropertyType);
+                    if (enumType.IsEnum)
+                    {
+                        value = EnumViewModel.Parse((value as string).TranslateReverse(), enumType);
+                    }
+                }
+
+                //使用 PropertyDescriptor 来进行操作属性时，都是作为 UI 层操作。
+                entity.SetProperty(mp, value);
+            }
         }
     }
 }

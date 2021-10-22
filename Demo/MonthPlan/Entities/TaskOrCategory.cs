@@ -121,7 +121,7 @@ namespace MP
         }
         protected virtual void OnObjectiveNumChanging(ManagedPropertyChangingEventArgs<int?> e)
         {
-            if (e.Source == ManagedPropertyChangedSource.FromUIOperating)
+            if (RafyPropertyDescriptor.IsOperating)
             {
                 if (this.IsTaskRO && !e.Value.HasValue || e.Value <= 0) { e.Cancel = true; }
             }
@@ -145,7 +145,7 @@ namespace MP
         }
         protected virtual void OnWeightInCategoryChanging(ManagedPropertyChangingEventArgs<int?> e)
         {
-            if (e.Source == ManagedPropertyChangedSource.FromUIOperating)
+            if (RafyPropertyDescriptor.IsOperating)
             {
                 if (this.IsTaskRO && !e.Value.HasValue || e.Value <= 0) { e.Cancel = true; }
             }
@@ -165,7 +165,7 @@ namespace MP
         }
         protected virtual void OnMonthPercentChanging(ManagedPropertyChangingEventArgs<int?> e)
         {
-            if (e.Source == ManagedPropertyChangedSource.FromUIOperating)
+            if (RafyPropertyDescriptor.IsOperating)
             {
                 if (this.IsCategoryRO && !e.Value.HasValue || e.Value <= 0) { e.Cancel = true; }
             }

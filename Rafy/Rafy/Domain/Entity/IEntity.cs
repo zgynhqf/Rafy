@@ -96,9 +96,8 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="property"></param>
         /// <param name="value">本方法为兼容值类型而使用。不论外键是否为值类型，都可以传入 null。</param>
-        /// <param name="source"></param>
         /// <returns></returns>
-        object SetRefNullableId(IRefIdProperty property, object value, ManagedPropertyChangedSource source = ManagedPropertyChangedSource.FromProperty);
+        object SetRefNullableId(IRefIdProperty property, object value);
 
         /// <summary>
         /// 获取指定引用 id 属性对应的 id 的返回值。
@@ -114,9 +113,9 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="property"></param>
         /// <param name="value">外键如果是值类型，则不能传入 null。</param>
-        /// <param name="source"></param>
+        /// 
         /// <returns></returns>
-        object SetRefId(IRefIdProperty property, object value, ManagedPropertyChangedSource source = ManagedPropertyChangedSource.FromProperty);
+        object SetRefId(IRefIdProperty property, object value);
 
         /// <summary>
         /// 以懒加载的方式获取某个引用实体的值。
@@ -139,9 +138,9 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="entityProperty">The entity property.</param>
         /// <param name="value">The value.</param>
-        /// <param name="source">The source.</param>
+        /// 
         /// <returns></returns>
-        Entity SetRefEntity(IRefEntityProperty entityProperty, Entity value, ManagedPropertyChangedSource source = ManagedPropertyChangedSource.FromProperty);
+        Entity SetRefEntity(IRefEntityProperty entityProperty, Entity value);
 
         #endregion
 
@@ -168,8 +167,8 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="property"></param>
         /// <param name="value"></param>
-        /// <param name="source"></param>
-        void SetLOBProperty(ILOBProperty property, object value, ManagedPropertyChangedSource source = ManagedPropertyChangedSource.FromProperty);
+        /// 
+        void SetLOBProperty(ILOBProperty property, object value);
 
         #endregion
 

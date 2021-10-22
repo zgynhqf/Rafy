@@ -144,7 +144,9 @@ namespace RafyUnitTest
             Assert.AreEqual(user.AgeChangedInternally_Property, 1);
             Assert.AreEqual(user.AgeChangedInternally_UIOperating, 0);
 
-            user.SetProperty(TestUser.AgeProperty, 2, ManagedPropertyChangedSource.FromUIOperating);
+            var uiOperating = new RafyPropertyDescriptor(TestUser.AgeProperty);
+            uiOperating.SetValue(user, 2);
+            //user.SetProperty(TestUser.AgeProperty, 2);
             Assert.AreEqual(user.AgeChangedInternally_Property, 1);
             Assert.AreEqual(user.AgeChangedInternally_UIOperating, 2);
         }

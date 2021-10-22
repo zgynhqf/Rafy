@@ -284,7 +284,7 @@ namespace Rafy.Domain.Serialization.Json
 
                         #endregion
 
-                        entity.SetProperty(mp, value, ManagedPropertyChangedSource.FromUIOperating);
+                        entity.SetProperty(mp, value);
                     }
                 }
                 else

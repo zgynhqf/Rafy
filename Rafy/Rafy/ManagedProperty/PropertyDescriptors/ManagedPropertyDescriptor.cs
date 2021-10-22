@@ -82,10 +82,5 @@ namespace Rafy.ManagedProperty
         {
             (component as ManagedPropertyObject).SetProperty(this._property, value);
         }
-
-        public void SetValue(object component, object value, ManagedPropertyChangedSource source)
-        {
-            (component as ManagedPropertyObject).SetProperty(this._property, value, source);
-        }
     }
 }

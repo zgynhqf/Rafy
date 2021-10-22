@@ -167,7 +167,7 @@ namespace Rafy.WPF.Editors
 
                     //设置实体到本引用属性上。
                     this.OnReferenceEntityChanging();
-                    curEntity.SetRefEntity(rp.RefEntityProperty, selectedEntity, ManagedPropertyChangedSource.FromUIOperating);
+                    curEntity.SetRefEntity(rp.RefEntityProperty, selectedEntity);
                     success = curEntity.GetRefEntity(rp.RefEntityProperty) == selectedEntity;
                     if (success) { this.OnReferenceEntityChanged(); }
                 }
@@ -178,7 +178,7 @@ namespace Rafy.WPF.Editors
                     success = this.PropertyValue == value;
                     if (success && svm.RefIdHost != null)
                     {
-                        curEntity.SetProperty(svm.RefIdHost, selectedEntity.Id, ManagedPropertyChangedSource.FromUIOperating);
+                        curEntity.SetProperty(svm.RefIdHost, selectedEntity.Id);
                     }
                 }
             }
@@ -187,7 +187,7 @@ namespace Rafy.WPF.Editors
                 if (rp != null)
                 {
                     this.OnReferenceEntityChanging();
-                    curEntity.SetRefEntity(rp.RefEntityProperty, null, ManagedPropertyChangedSource.FromUIOperating);
+                    curEntity.SetRefEntity(rp.RefEntityProperty, null);
                     success = curEntity.GetRefEntity(rp.RefEntityProperty) == null;
                     if (success) { this.OnReferenceEntityChanged(); }
                 }
@@ -197,7 +197,7 @@ namespace Rafy.WPF.Editors
                     success = this.PropertyValue == null;
                     if (success && svm.RefIdHost != null)
                     {
-                        curEntity.SetProperty(svm.RefIdHost, null, ManagedPropertyChangedSource.FromUIOperating);
+                        curEntity.SetProperty(svm.RefIdHost, null);
                     }
                 }
             }
@@ -225,7 +225,7 @@ namespace Rafy.WPF.Editors
                 if (rvm.RefIdHost != null)
                 {
                     var idArray = selectedEntities.Select(i => i.Id).ToArray();
-                    curEntity.SetProperty(rvm.RefIdHost, idArray, ManagedPropertyChangedSource.FromUIOperating);
+                    curEntity.SetProperty(rvm.RefIdHost, idArray);
                 }
             }
 

@@ -69,7 +69,7 @@ namespace UT
         {
             var newValue = (int)e.NewValue;
 
-            if (e.Source == ManagedPropertyChangedSource.FromProperty)
+            if (!RafyPropertyDescriptor.IsOperating)
             {
                 this.AgeChangedInternally_Property = newValue;
             }
@@ -113,7 +113,7 @@ namespace UT
 
             if (e.Property == AgeProperty)
             {
-                if (e.Source == ManagedPropertyChangedSource.FromUIOperating)
+                if (RafyPropertyDescriptor.IsOperating)
                 {
                     this.AgeChangedInternally_UIOperating = this.Age;
                 }

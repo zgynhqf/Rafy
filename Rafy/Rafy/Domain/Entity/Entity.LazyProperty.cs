@@ -113,12 +113,11 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="property"></param>
         /// <param name="value">本方法为兼容值类型而使用。不论外键是否为值类型，都可以传入 null。</param>
-        /// <param name="source"></param>
         /// <returns></returns>
-        public object SetRefNullableId(IRefIdProperty property, object value, ManagedPropertyChangedSource source = ManagedPropertyChangedSource.FromProperty)
+        public object SetRefNullableId(IRefIdProperty property, object value)
         {
             if (value == null) { value = GetEmptyIdForRefIdProperty(property); }
-            var finalValue = this.SetRefId(property, value, source);
+            var finalValue = this.SetRefId(property, value);
             return property.KeyProvider.ToNullableValue(finalValue);
         }
 
@@ -139,9 +138,9 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="property"></param>
         /// <param name="value">外键如果是值类型，则不能传入 null。</param>
-        /// <param name="source"></param>
+        /// 
         /// <returns></returns>
-        public object SetRefId(IRefIdProperty property, object value, ManagedPropertyChangedSource source = ManagedPropertyChangedSource.FromProperty)
+        public object SetRefId(IRefIdProperty property, object value)
         {
             //引用属性的托管属性类型是 object，这里需要强制为指定的主键类型。
             value = TypeHelper.CoerceValue(property.KeyProvider.KeyType, value);
@@ -163,7 +162,7 @@ namespace Rafy.Domain
                 try
                 {
                     //此时发生 OnIdChanged 事件。
-                    finalId = base.SetProperty(property, value, source);
+                    finalId = base.SetProperty(property, value);
                 }
                 finally
                 {
@@ -178,13 +177,13 @@ namespace Rafy.Domain
                     if (entity != null)
                     {
                         //重新设置 Entity 的值，此时发生 OnEntityChanged 事件。
-                        var finalEntity = base.SetProperty(entityProperty, null, source) as Entity;
+                        var finalEntity = base.SetProperty(entityProperty, null) as Entity;
 
                         //如果外部事件取消了属性的设置，那么实际使用的实体将不会为 null，
                         if (finalEntity != null)
                         {
                             //此时，需要重设 Id 的值。
-                            finalId = base.SetProperty(property, finalEntity.Id, source);
+                            finalId = base.SetProperty(property, finalEntity.Id);
                             if (!object.Equals(finalId, finalEntity.Id))
                             {
                                 ThrowRefPropertyChangingConflict(property);
@@ -249,9 +248,9 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="entityProperty">The entity property.</param>
         /// <param name="value">The value.</param>
-        /// <param name="source">The source.</param>
+        /// 
         /// <returns></returns>
-        public Entity SetRefEntity(IRefEntityProperty entityProperty, Entity value, ManagedPropertyChangedSource source = ManagedPropertyChangedSource.FromProperty)
+        public Entity SetRefEntity(IRefEntityProperty entityProperty, Entity value)
         {
             var oldEntity = base.GetProperty(entityProperty) as Entity;
             Entity finalEntity = oldEntity;
@@ -273,7 +272,7 @@ namespace Rafy.Domain
                     try
                     {
                         //此时再发生 OnEntityChanged 事件，外界可以获取到一致的 id 和 entity 值。
-                        finalEntity = base.SetProperty(entityProperty, value, source) as Entity;
+                        finalEntity = base.SetProperty(entityProperty, value) as Entity;
                     }
                     finally
                     {
@@ -288,12 +287,12 @@ namespace Rafy.Domain
                         if (!object.Equals(oldId, newId))
                         {
                             //尝试设置 id 值，如果成功，则同时会发生 OnIdChanged 事件。
-                            var finalId = base.SetProperty(idProperty, newId, source);
+                            var finalId = base.SetProperty(idProperty, newId);
 
                             //如果设置 id 值失败，则应该还原 entity 的值。
                             if (!object.Equals(finalId, newId))
                             {
-                                finalEntity = base.SetProperty(entityProperty, oldEntity, source) as Entity;
+                                finalEntity = base.SetProperty(entityProperty, oldEntity) as Entity;
 
                                 //还原 entity 值失败，向个界抛出冲突的异常。
                                 if (finalEntity != oldEntity)
@@ -324,20 +323,20 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="property"></param>
         /// <param name="value"></param>
-        /// <param name="source"></param>
         /// <param name="resetDisabledStatus">如果本字段处于禁用状态，那么是否在设置新值时，将禁用状态解除？</param>
+        /// 
         /// <returns></returns>
-        public override object SetProperty(IManagedProperty property, object value, ManagedPropertyChangedSource source = ManagedPropertyChangedSource.FromProperty, bool resetDisabledStatus = true)
+        public override object SetProperty(IManagedProperty property, object value, bool resetDisabledStatus = true)
         {
             //防止外界使用 SetProperty 方法来操作引用属性。
             if (property is IRefProperty)
             {
                 if (property is IRefIdProperty)
                 {
-                    return this.SetRefId(property as IRefIdProperty, value, source);
+                    return this.SetRefId(property as IRefIdProperty, value);
                 }
 
-                return this.SetRefEntity(property as IRefEntityProperty, value as Entity, source);
+                return this.SetRefEntity(property as IRefEntityProperty, value as Entity);
             }
 
             //防止外界使用 SetProperty 方法来操作列表属性。
@@ -352,7 +351,7 @@ namespace Rafy.Domain
                 value = TypeHelper.CoerceValue(this.IdProvider.KeyType, value);
             }
 
-            return base.SetProperty(property, value, source, resetDisabledStatus);
+            return base.SetProperty(property, value, resetDisabledStatus);
         }
 
         private static void ThrowRefPropertyChangingConflict(IRefIdProperty property)
@@ -402,11 +401,11 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="property"></param>
         /// <param name="value"></param>
-        /// <param name="source"></param>
-        public void SetLOBProperty(ILOBProperty property, object value, ManagedPropertyChangedSource source = ManagedPropertyChangedSource.FromProperty)
+        /// 
+        public void SetLOBProperty(ILOBProperty property, object value)
         {
             //直接调用父类的 SetProperty 方法，而不是本类重写的 SetProperty 方法。
-            base.SetProperty(property, value, source);
+            base.SetProperty(property, value);
         }
 
         internal override void DisableCore(IManagedProperty property, bool value = true)

@@ -47,7 +47,7 @@ namespace JXC
             base.OnAmountChanging(e);
 
             //如果出库的数据大于当前库存，应该修改错误的值为当前库存。
-            if (e.Source == ManagedPropertyChangedSource.FromUIOperating && e.Value > this.Product.StorageAmount)
+            if (RafyPropertyDescriptor.IsOperating && e.Value > this.Product.StorageAmount)
             {
                 e.CoercedValue = this.Product.StorageAmount;
             }

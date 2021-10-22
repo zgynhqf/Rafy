@@ -48,11 +48,6 @@ namespace Rafy.ManagedProperty
         /// 对应的属性
         /// </summary>
         IManagedProperty Property { get; }
-
-        /// <summary>
-        /// 变更源
-        /// </summary>
-        ManagedPropertyChangedSource Source { get; }
     }
 
     /// <summary>
@@ -69,12 +64,9 @@ namespace Rafy.ManagedProperty
 
         private IManagedProperty _property;
 
-        private ManagedPropertyChangedSource _source;
-
-        public ManagedPropertyChangingEventArgs(IManagedProperty property, TPropertyType value, ManagedPropertyChangedSource source)
+        public ManagedPropertyChangingEventArgs(IManagedProperty property, TPropertyType value)
         {
             this._property = property;
-            this._source = source;
             this._value = value;
         }
 
@@ -113,14 +105,6 @@ namespace Rafy.ManagedProperty
         public IManagedProperty Property
         {
             get { return this._property; }
-        }
-
-        /// <summary>
-        /// 变更源
-        /// </summary>
-        public ManagedPropertyChangedSource Source
-        {
-            get { return this._source; }
         }
 
         object IManagedPropertyChangingEventArgs.Value

@@ -50,20 +50,18 @@ namespace Rafy.ManagedProperty
         /// </summary>
         /// <param name="property"></param>
         /// <param name="value"></param>
-        /// <param name="source">本次值设置的来源。</param>
         /// <param name="resetDisabledStatus">如果本字段处于禁用状态，那么是否在设置新值时，将禁用状态解除？</param>
         /// <returns>返回最终使用的值。</returns>
-        object SetProperty(ManagedProperty<bool> property, bool value, ManagedPropertyChangedSource source = ManagedPropertyChangedSource.FromProperty, bool resetDisabledStatus = true);
+        object SetProperty(ManagedProperty<bool> property, bool value, bool resetDisabledStatus = true);
 
         /// <summary>
         /// 设置某个托管属性的值。
         /// </summary>
         /// <param name="property"></param>
         /// <param name="value"></param>
-        /// <param name="source">本次值设置的来源。</param>
         /// <param name="resetDisabledStatus">如果本字段处于禁用状态，那么是否在设置新值时，将禁用状态解除？</param>
         /// <returns>返回最终使用的值。</returns>
-        object SetProperty(IManagedProperty property, object value, ManagedPropertyChangedSource source = ManagedPropertyChangedSource.FromProperty, bool resetDisabledStatus = true);
+        object SetProperty(IManagedProperty property, object value, bool resetDisabledStatus = true);
 
         /// <summary>
         /// LoadProperty 以最快的方式直接加载值，不发生 PropertyChanged 事件。

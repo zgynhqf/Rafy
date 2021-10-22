@@ -93,7 +93,7 @@ namespace JXC
         protected virtual void OnIsDefaultChanged(ManagedPropertyChangedEventArgs e)
         {
             //整个列表中只有一个默认仓库。
-            if (e.Source == ManagedPropertyChangedSource.FromUIOperating && (bool)e.NewValue)
+            if ((bool)e.NewValue && RafyPropertyDescriptor.IsOperating)
             {
                 var list = (this as IEntity).ParentList;
                 if (list != null)

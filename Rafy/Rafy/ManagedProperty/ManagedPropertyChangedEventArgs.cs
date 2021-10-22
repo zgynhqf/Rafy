@@ -31,14 +31,12 @@ namespace Rafy.ManagedProperty
 
         private IManagedProperty _property;
 
-        private ManagedPropertyChangedSource _source;
 
-        public ManagedPropertyChangedEventArgs(IManagedProperty property, object oldValue, object newValue, ManagedPropertyChangedSource source)
+        public ManagedPropertyChangedEventArgs(IManagedProperty property, object oldValue, object newValue)
         {
             this._property = property;
             this._oldValue = oldValue;
             this._newValue = newValue;
-            this._source = source;
         }
 
         /// <summary>
@@ -67,14 +65,6 @@ namespace Rafy.ManagedProperty
         public IManagedProperty Property
         {
             get { return this._property; }
-        }
-
-        /// <summary>
-        /// 变更源
-        /// </summary>
-        public ManagedPropertyChangedSource Source
-        {
-            get { return this._source; }
         }
     }
 }

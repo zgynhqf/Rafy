@@ -10,7 +10,14 @@
  * 
 *******************************************************/
 
-3.80.4006
+3.81.4010
+    删除接口
+        删除 ManagedPropertyChangedSource 类型。
+        删除 SetProperty(IManagedProperty, object, ManagedPropertyChangedSource) 中的第三个参数。
+    添加接口
+        添加 RafyPropertyDescriptor.IsOperating 来替换上述功能。
+
+3.81.4006
     添加功能
         当开发者没有为实体定义仓库时，自动生成一个内部的仓库类型。
     内部修改
