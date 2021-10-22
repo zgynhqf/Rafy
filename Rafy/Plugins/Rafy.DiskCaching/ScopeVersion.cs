@@ -175,7 +175,7 @@ namespace Rafy.Domain.Caching
                 sv.LoadProperty(ScopeVersion.ValueProperty, new DateTime(sv.AccurateValue));
             }
 
-            protected override void OnEntityQueryed(EntityQueryArgsBase args)
+            protected override void OnEntityQueryed(EntityQueryArgs args)
             {
                 base.OnEntityQueryed(args);
 

@@ -197,7 +197,7 @@ namespace Rafy.RBAC.Old.Audit
 
         private class AuditItemRepositoryQueryer : RdbDataQueryer
         {
-            protected override void OnQuerying(EntityQueryArgs args)
+            protected override void OnQuerying(ORMQueryArgs args)
             {
                 var query = args.Query;
                 query.OrderBy.Add(query.MainTable.Column(AuditItem.LogTimeProperty), OrderDirection.Descending);

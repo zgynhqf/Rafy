@@ -221,7 +221,7 @@ namespace MP
         [DataProviderFor(typeof(MonthPlanRepository))]
         private class MonthPlanRepositoryDataProvider : RdbDataProvider
         {
-            protected override void OnQuerying(EntityQueryArgs args)
+            protected override void OnQuerying(ORMQueryArgs args)
             {
                 var query = args.Query;
                 query.OrderBy.Add(query.MainTable.Column(MonthPlan.MonthProperty), OrderDirection.Descending);

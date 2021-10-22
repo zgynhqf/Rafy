@@ -73,7 +73,7 @@ namespace FM
         [DataProviderFor(typeof(TagRepository))]
         private class TagRepositoryDataProvider : RdbDataProvider
         {
-            protected override void OnQuerying(EntityQueryArgs args)
+            protected override void OnQuerying(ORMQueryArgs args)
             {
                 var query = args.Query;
                 query.OrderBy.Add(query.MainTable.Column(Tag.OrderNoProperty));

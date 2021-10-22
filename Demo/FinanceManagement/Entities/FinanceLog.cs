@@ -144,7 +144,7 @@ namespace FM
         [DataProviderFor(typeof(FinanceLogRepository))]
         private class FinanceLogRepositoryDataProvider : RdbDataProvider
         {
-            protected override void OnQuerying(EntityQueryArgs args)
+            protected override void OnQuerying(ORMQueryArgs args)
             {
                 var query = args.Query;
                 query.OrderBy.Add(query.MainTable.Column(FinanceLog.DateProperty), OrderDirection.Descending);
