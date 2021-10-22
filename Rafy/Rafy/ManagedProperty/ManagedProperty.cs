@@ -236,12 +236,12 @@ namespace Rafy.ManagedProperty
         {
             if (this.GlobalIndex >= 0) throw new InvalidOperationException("属性已经注册完毕，不能修改！");
             if (readOnlyValueProvider == null) throw new ArgumentNullException("readOnlyValueProvider");
-            if (dependencies == null || dependencies.Length == 0) throw new InvalidOperationException($"只读属性 {this.OwnerType.FullName}.{this.Name} 在注册时，需要指定其依赖的属性集合。");
+            //if (dependencies == null || dependencies.Length == 0) throw new InvalidOperationException($"只读属性 {this.OwnerType.FullName}.{this.Name} 在注册时，需要指定其依赖的属性集合。");
 
             _readOnlyValueProvider = readOnlyValueProvider;
 
-            _dependencies = dependencies;
-            foreach (IManagedPropertyInternal property in dependencies)
+            _dependencies = dependencies ?? new IManagedProperty[0];
+            foreach (IManagedPropertyInternal property in _dependencies)
             {
                 var list = property.ReadonlyDependencies;
                 if (!list.Contains(this)) list.Add(this);
