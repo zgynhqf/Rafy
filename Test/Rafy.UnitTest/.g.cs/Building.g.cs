@@ -113,4 +113,191 @@ namespace UT
 
         #endregion
     }
+
+    partial class BuildingRepository
+    {
+        #region 私有方法，本类内部使用
+
+        /// <summary>
+        /// 创建一个实体类的 Linq 查询器
+        /// </summary>
+        /// <returns></returns>
+        [DebuggerStepThrough]
+        private IQueryable<Building> CreateLinqQuery()
+        {
+            return base.CreateLinqQuery<Building>();
+        }
+
+        #endregion
+
+        #region 强类型公有接口
+
+        /// <summary>
+        /// 创建一个新的实体。
+        /// </summary>
+        /// <returns></returns>
+        [DebuggerStepThrough]
+        public new Building New()
+        {
+            return base.New() as Building;
+        }
+
+        /// <summary>
+        /// 创建一个全新的列表
+        /// </summary>
+        /// <returns></returns>
+        [DebuggerStepThrough]
+        public new BuildingList NewList()
+        {
+            return base.NewList() as BuildingList;
+        }
+
+        /// <summary>
+        /// 优先使用缓存中的数据来通过 Id 获取指定的实体对象
+        /// 
+        /// 如果该实体的缓存没有打开，则本方法会直接调用 GetById 并返回结果。
+        /// 如果缓存中没有这些数据，则本方法同时会把数据缓存起来。
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [DebuggerStepThrough]
+        public new Building CacheById(object id)
+        {
+            return base.CacheById(id) as Building;
+        }
+
+        /// <summary>
+        /// 优先使用缓存中的数据来查询所有的实体类
+        /// 
+        /// 如果该实体的缓存没有打开，则本方法会直接调用 GetAll 并返回结果。
+        /// 如果缓存中没有这些数据，则本方法同时会把数据缓存起来。
+        /// </summary>
+        /// <returns></returns>
+        [DebuggerStepThrough]
+        public new BuildingList CacheAll()
+        {
+            return base.CacheAll() as BuildingList;
+        }
+
+        /// <summary>
+        /// 通过Id在数据层中查询指定的对象
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
+        /// <returns></returns>
+        [DebuggerStepThrough]
+        public new Building GetById(object id, LoadOptions loadOptions = null)
+        {
+            return base.GetById(id, loadOptions) as Building;
+        }
+
+        /// <summary>
+        /// 查询第一个实体类
+        /// </summary>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
+        /// <returns></returns>
+        [DebuggerStepThrough]
+        public new Building GetFirst(LoadOptions loadOptions = null)
+        {
+            return base.GetFirst(loadOptions) as Building;
+        }
+
+        /// <summary>
+        /// 分页查询所有的实体类
+        /// </summary>
+        /// <param name="paging"></param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
+        /// <returns></returns>
+        [DebuggerStepThrough]
+        public new BuildingList GetAll(PagingInfo paging = null, LoadOptions loadOptions = null)
+        {
+            return base.GetAll(paging, loadOptions) as BuildingList;
+        }
+
+        /// <summary>
+        /// 获取指定 id 集合的实体列表。
+        /// </summary>
+        /// <param name="idList"></param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
+        /// <returns></returns>
+        [DebuggerStepThrough]
+        public new BuildingList GetByIdList(object[] idList, LoadOptions loadOptions = null)
+        {
+            return base.GetByIdList(idList, loadOptions) as BuildingList;
+        }
+
+        /// <summary>
+        /// 通过组合父对象的 Id 列表，查找所有的组合子对象的集合。
+        /// </summary>
+        /// <param name="parentIdList"></param>
+        /// <param name="paging">分页信息。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
+        /// <returns></returns>
+        [DebuggerStepThrough]
+        public new BuildingList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, LoadOptions loadOptions = null)
+        {
+            return base.GetByParentIdList(parentIdList, paging, loadOptions) as BuildingList;
+        }
+
+        /// <summary>
+        /// 通过父对象 Id 分页查询子对象的集合。
+        /// </summary>
+        /// <param name="parentId"></param>
+        /// <param name="paging">分页信息。</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
+        /// <returns></returns>
+        [DebuggerStepThrough]
+        public new BuildingList GetByParentId(object parentId, PagingInfo paging = null, LoadOptions loadOptions = null)
+        {
+            return base.GetByParentId(parentId, paging, loadOptions) as BuildingList;
+        }
+
+        /// <summary>
+        /// 通过 CommonQueryCriteria 来查询实体列表。
+        /// </summary>
+        /// <param name="criteria">常用查询条件。</param>
+        /// <returns></returns>
+        [DebuggerStepThrough]
+        public new BuildingList GetBy(CommonQueryCriteria criteria)
+        {
+            return base.GetBy(criteria) as BuildingList;
+        }
+
+        /// <summary>
+        /// 通过 CommonQueryCriteria 来查询单一实体。
+        /// </summary>
+        /// <param name="criteria">常用查询条件。</param>
+        /// <returns></returns>
+        [DebuggerStepThrough]
+        public new Building GetFirstBy(CommonQueryCriteria criteria)
+        {
+            return base.GetFirstBy(criteria) as Building;
+        }
+
+        /// <summary>
+        /// 递归查找所有树型子
+        /// </summary>
+        /// <param name="treeIndex"></param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
+        /// <returns></returns>
+        [DebuggerStepThrough]
+        public new BuildingList GetByTreeParentIndex(string treeIndex, LoadOptions loadOptions = null)
+        {
+            return base.GetByTreeParentIndex(treeIndex, loadOptions) as BuildingList;
+        }
+
+        /// <summary>
+        /// 查找指定树节点的直接子节点。
+        /// </summary>
+        /// <param name="treePId">需要查找的树节点的Id.</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
+        /// <returns></returns>
+        [DebuggerStepThrough]
+        public new BuildingList GetByTreePId(object treePId, LoadOptions loadOptions = null)
+        {
+            return base.GetByTreePId(treePId, loadOptions) as BuildingList;
+        }
+
+        #endregion
+    }
 }

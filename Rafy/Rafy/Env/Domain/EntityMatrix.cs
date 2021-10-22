@@ -67,10 +67,10 @@ namespace Rafy.Domain
             var attri = repositoryType.GetSingleAttribute<RepositoryForAttribute>();
             if (attri != null)
             {
-                Type entityType  = attri.EntityType;
+                Type entityType = attri.EntityType;
                 var listType = Convention_ListForEntity(entityType);
                 var item = new EntityMatrix(entityType, listType, repositoryType);
-                Add(item);
+                Set(item);
             }
         }
 
@@ -90,7 +90,7 @@ namespace Rafy.Domain
                 var listType = Convention_ListForEntity(entityType);
                 var rpType = Convention_RepositoryForEntity(entityType);
                 item = new EntityMatrix(entityType, listType, rpType);
-                Add(item);
+                Set(item);
             }
 
             return item;
@@ -112,7 +112,7 @@ namespace Rafy.Domain
                 var entityType = Convention_EntityForList(listType);
                 var rpType = Convention_RepositoryForEntity(entityType);
                 item = new EntityMatrix(entityType, listType, rpType);
-                Add(item);
+                Set(item);
             }
 
             return item;
@@ -136,7 +136,7 @@ namespace Rafy.Domain
                 var entityType = Convention_EntityForRepository(repositoryType);
                 var listType = Convention_ListForEntity(entityType);
                 item = new EntityMatrix(entityType, listType, repositoryType);
-                Add(item);
+                Set(item);
             }
 
             return item;
@@ -215,23 +215,20 @@ namespace Rafy.Domain
             }
         }
 
-        private static void Add(EntityMatrix item)
+        internal static void Set(EntityMatrix item)
         {
             try
             {
                 _rwLock.EnterWriteLock();
 
-                if (!_entityIndex.ContainsKey(item.EntityType))
+                _entityIndex[item.EntityType] = item;
+                if (item.ListType != null)
                 {
-                    _entityIndex.Add(item.EntityType, item);
-                    if (item.ListType != null)
-                    {
-                        _listIndex.Add(item.ListType, item);
-                    }
-                    if (item.RepositoryType != null)
-                    {
-                        _repositoryIndex.Add(item.RepositoryType, item);
-                    }
+                    _listIndex[item.ListType] = item;
+                }
+                if (item.RepositoryType != null)
+                {
+                    _repositoryIndex[item.RepositoryType] = item;
                 }
             }
             finally

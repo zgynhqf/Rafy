@@ -954,9 +954,24 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Repository_AutoGenearteDefaultRepository()
         {
-            var repo = RF.Find<Building>();
+            var repo = RF.Find<NoRepoEntity>();
             Assert.IsNotNull(repo);
         }
+
+        //[TestMethod]
+        //public void ET_Repository_CantHasNoRepo()
+        //{
+        //    bool success = false;
+        //    try
+        //    {
+        //        var repo = RF.Find<NoRepoEntity>();
+        //        success = true;
+        //    }
+        //    catch (TypeInitializationException)
+        //    {
+        //    }
+        //    Assert.IsFalse(success, "没有编写仓库类型的实体，获取其相应的仓库时应该报错。");
+        //}
 
         [TestMethod]
         public void ET_Repository_CDUQ_C()
@@ -1685,21 +1700,6 @@ namespace RafyUnitTest
             var repo = RF.ResolveInstance<CarRepository>();
             var item = repo.GetByReplacableDAL();
             Assert.IsTrue(item.Name == "ImplementationReplaced");
-        }
-
-        [TestMethod]
-        public void ET_Repository_CantHasNoRepo()
-        {
-            bool success = false;
-            try
-            {
-                var repo = RF.Find<NoRepoEntity>();
-                success = true;
-            }
-            catch (TypeInitializationException)
-            {
-            }
-            Assert.IsFalse(success, "没有编写仓库类型的实体，获取其相应的仓库时应该报错。");
         }
 
         #endregion
