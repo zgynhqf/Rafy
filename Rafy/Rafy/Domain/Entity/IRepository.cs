@@ -277,32 +277,32 @@ namespace Rafy.Domain
     /// <summary>
     /// ILazyProvider的抽象工厂
     /// </summary>
-    internal interface IRepositoryFactory
+    public interface IRepositoryFactory
     {
         /// <summary>
         /// 用于查找指定实体的仓库。
         /// </summary>
         /// <param name="entityType"></param>
         /// <returns></returns>
-        IRepositoryInternal FindByEntity(Type entityType);
+        IRepository FindByEntity(Type entityType);
 
         /// <summary>
         /// 通过仓库类型查找指定的仓库。
         /// </summary>
         /// <param name="repoType"></param>
         /// <returns></returns>
-        IRepositoryInternal Find(Type repoType);
+        IRepository Find(Type repoType);
     }
 
     /// <summary>
-    /// 这个类主要用于依赖注入ILazyProviderFactory
+    /// 这个类主要用于依赖注入 <see cref="IRepositoryFactory"/>
     /// </summary>
-    internal static class RepositoryFactoryHost
+    public static class RepositoryFactoryHost
     {
         /// <summary>
-        /// 依赖注入的ILazyProviderFactory。
+        /// 依赖注入的 <see cref="IRepositoryFactory"/>。
         /// </summary>
-        public static IRepositoryFactory Factory;
+        public static IRepositoryFactory Factory { get; set; }
     }
 
     internal interface IRepositoryInternal : IRepository, IEntityInfoHost

@@ -948,6 +948,16 @@ namespace RafyUnitTest
 
         #region 仓库
 
+        /// <summary>
+        /// 当开发者没有为实体定义仓库时，自动生成一个内部的仓库类型。
+        /// </summary>
+        [TestMethod]
+        public void ET_Repository_AutoGenearteDefaultRepository()
+        {
+            var repo = RF.Find<Building>();
+            Assert.IsNotNull(repo);
+        }
+
         [TestMethod]
         public void ET_Repository_CDUQ_C()
         {
@@ -2480,7 +2490,7 @@ namespace RafyUnitTest
                 return;
             }
 
-            var repo = RF.ResolveInstance<BuildingRepository>();
+            var repo = RF.Find<Building>();
             using (RF.TransactionScope(repo))
             {
                 var model = new Building();

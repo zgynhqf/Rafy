@@ -61,17 +61,17 @@ namespace UT
     [Serializable]
     public partial class BuildingList : UnitTestEntityList { }
 
-    /// <summary>
-    /// 建筑 仓库类。
-    /// 负责 建筑 类的查询、保存。
-    /// </summary>
-    public partial class BuildingRepository : UnitTestEntityRepository
-    {
-        /// <summary>
-        /// 单例模式，外界不可以直接构造本对象。
-        /// </summary>
-        protected BuildingRepository() { }
-    }
+    ///// <summary>
+    ///// 建筑 仓库类。
+    ///// 负责 建筑 类的查询、保存。
+    ///// </summary>
+    //public partial class BuildingRepository : UnitTestEntityRepository
+    //{
+    //    /// <summary>
+    //    /// 单例模式，外界不可以直接构造本对象。
+    //    /// </summary>
+    //    protected BuildingRepository() { }
+    //}
 
     /// <summary>
     /// 建筑 配置类。

@@ -35,7 +35,7 @@ namespace Rafy.Domain.ORM.Linq
         /// 正在组织的查询对象。
         /// </summary>
         private IQuery _query;
-        private IRepositoryInternal _repo;
+        private IRepository _repo;
         private QueryFactory f = QueryFactory.Instance;
 
         /// <summary>
@@ -44,9 +44,9 @@ namespace Rafy.Domain.ORM.Linq
         /// </summary>
         private bool _reverseWhere = false;
 
-        public EntityQueryBuilder(IRepositoryInternal repo) : this(repo, false) { }
+        public EntityQueryBuilder(IRepository repo) : this(repo, false) { }
 
-        internal EntityQueryBuilder(IRepositoryInternal repo, bool reverseWhere)
+        internal EntityQueryBuilder(IRepository repo, bool reverseWhere)
         {
             _repo = repo;
             _reverseWhere = reverseWhere;
