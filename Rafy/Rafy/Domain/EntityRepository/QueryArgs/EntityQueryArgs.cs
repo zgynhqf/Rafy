@@ -27,7 +27,7 @@ namespace Rafy.Domain
     /// <summary>
     /// 所有实体查询的参数类型的基类。
     /// </summary>
-    public abstract class EntityQueryArgsBase : QueryArgs, ISelectArgs
+    public abstract class EntityQueryArgs : QueryArgs, IEntityQueryArgs
     {
         #region QueryType
 
@@ -47,7 +47,7 @@ namespace Rafy.Domain
             _queryType = value;
         }
 
-        bool ISelectArgs.FetchingFirst
+        bool IEntityQueryArgs.FetchingFirst
         {
             get { return this.QueryType == RepositoryQueryType.First; }
         }
@@ -87,7 +87,7 @@ namespace Rafy.Domain
             set { _pagingInfo = value; }
         }
 
-        IList<Entity> ISelectArgs.List
+        IList<Entity> IEntityQueryArgs.List
         {
             get { return this.MemoryList ?? this.EntityList; }
         }
@@ -107,41 +107,4 @@ namespace Rafy.Domain
             this.LoadOptions = loadOptions;
         }
     }
-
-    /// <summary>
-    /// 使用 IQuery 进行查询的参数。
-    /// </summary>
-    public class EntityQueryArgs : EntityQueryArgsBase, IEntitySelectArgs
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EntityQueryArgs"/> class.
-        /// </summary>
-        public EntityQueryArgs() { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EntityQueryArgs"/> class.
-        /// </summary>
-        /// <param name="query">The query.</param>
-        public EntityQueryArgs(IQuery query)
-        {
-            this.Query = query;
-        }
-
-        /// <summary>
-        /// 对应的查询条件定义。
-        /// </summary>
-        public IQuery Query { get; set; }
-    }
-
-    ///// <summary>
-    ///// 使用 Linq 进行查询的参数。
-    ///// </summary>
-    //public class LinqQueryArgs : EntityQueryArgs
-    //{
-    //    /// <summary>
-    //    /// 对应的 Linq 查询条件表达式。
-    //    /// 此条件在内部会被转换为 IQuery 对象来描述整个查询。
-    //    /// </summary>
-    //    public IQueryable Queryable { get; set; }
-    //}
 }

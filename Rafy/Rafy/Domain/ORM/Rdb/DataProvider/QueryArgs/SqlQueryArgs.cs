@@ -22,7 +22,7 @@ namespace Rafy.Domain.ORM
     /// <summary>
     /// 使用 Sql 查询的参数。
     /// </summary>
-    public class SqlQueryArgs : EntityQueryArgsBase, ISqlSelectArgs
+    public class SqlQueryArgs : EntityQueryArgs, ISqlSelectArgs
     {
         private object[] _parameters;
         internal Type EntityType;

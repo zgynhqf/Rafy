@@ -21,7 +21,7 @@ namespace Rafy.Domain.ORM
     /// <summary>
     /// IDb Select 方法的参数。
     /// </summary>
-    internal interface ISqlSelectArgs : ISelectArgs
+    internal interface ISqlSelectArgs : IEntityQueryArgs
     {
         /// <summary>
         /// 查询的实体类型

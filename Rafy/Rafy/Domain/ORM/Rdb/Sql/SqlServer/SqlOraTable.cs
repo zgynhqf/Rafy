@@ -119,7 +119,7 @@ namespace Rafy.Domain.ORM
 
         #region 以 IQuery 查询的方式
 
-        public override void QueryList(IDbAccesser dba, IEntitySelectArgs args)
+        public override void QueryList(IDbAccesser dba, IORMQueryArgs args)
         {
             /*********************** 代码块解释 *********************************
              * 

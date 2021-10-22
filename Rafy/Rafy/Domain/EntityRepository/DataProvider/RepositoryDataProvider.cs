@@ -137,7 +137,7 @@ namespace Rafy.Domain
         /// 子类可重写此方法来实现查询完成后的数据修整工具。
         /// </summary>
         /// <param name="args"></param>
-        internal protected virtual void OnEntityQueryed(EntityQueryArgsBase args)
+        internal protected virtual void OnEntityQueryed(EntityQueryArgs args)
         {
             _dataQueryer.OnEntityQueryed(args);
         }
@@ -152,7 +152,7 @@ namespace Rafy.Domain
         /// * 如果单一参数实现了 IPagingCriteria 接口，则使用其中的分页信息进行分页。
         /// </summary>
         /// <param name="args"></param>
-        internal protected virtual void OnQuerying(EntityQueryArgs args)
+        internal protected virtual void OnQuerying(ORMQueryArgs args)
         {
             var h = Querying;
             if (h != null) { h(this, new QueryingEventArgs { Args = args }); }
@@ -230,6 +230,6 @@ namespace Rafy.Domain
         /// <summary>
         /// 查询参数
         /// </summary>
-        public EntityQueryArgs Args { get; internal set; }
+        public ORMQueryArgs Args { get; internal set; }
     }
 }

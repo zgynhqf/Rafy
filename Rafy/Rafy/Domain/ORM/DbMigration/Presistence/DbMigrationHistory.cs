@@ -155,7 +155,7 @@ namespace Rafy.Domain.ORM.DbMigration.Presistence
 
             private class DbMigrationHistoryQueryer : RdbDataQueryer
             {
-                internal protected override void OnQuerying(EntityQueryArgs args)
+                internal protected override void OnQuerying(ORMQueryArgs args)
                 {
                     var f = QueryFactory.Instance;
 

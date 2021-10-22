@@ -174,7 +174,7 @@ namespace UT
         [RepositoryQuery]
         public virtual BookList GetWithEager2()
         {
-            var args = new EntityQueryArgs
+            var args = new ORMQueryArgs
             {
                 Query = QueryFactory.Instance.Query(this),
                 LoadOptions = new LoadOptions()

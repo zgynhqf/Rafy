@@ -131,7 +131,7 @@ namespace Rafy.Domain
                 return this.QueryTable(query, paging);
             }
 
-            var args = new EntityQueryArgs(query);
+            var args = new ORMQueryArgs(query);
             args.MarkTreeFullLoaded = markTreeFullLoaded;
             args.SetDataLoadOptions(paging, loadOptions);
 
@@ -145,7 +145,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="args">The arguments.</param>
         /// <returns></returns>
-        public object QueryData(EntityQueryArgs args)
+        public object QueryData(ORMQueryArgs args)
         {
             if (args.Query == null) throw new ArgumentException("EntityQueryArgs.Query 属性不能为空。");
 
@@ -189,9 +189,9 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="args">The arguments.</param>
         /// <param name="entityList">The entity list.</param>
-        protected abstract void QueryDataCore(EntityQueryArgs args, EntityList entityList);
+        protected abstract void QueryDataCore(ORMQueryArgs args, EntityList entityList);
 
-        private void BuildDefaultQuerying(EntityQueryArgs args)
+        private void BuildDefaultQuerying(ORMQueryArgs args)
         {
             var query = args.Query;
 
@@ -250,7 +250,7 @@ namespace Rafy.Domain
         /// * 如果单一参数实现了 IPagingCriteria 接口，则使用其中的分页信息进行分页。
         /// </summary>
         /// <param name="args"></param>
-        internal protected virtual void OnQuerying(EntityQueryArgs args)
+        internal protected virtual void OnQuerying(ORMQueryArgs args)
         {
             //默认对分页进行处理。
             var pList = FinalDataPortal.CurrentIEQC.Parameters;
@@ -274,7 +274,7 @@ namespace Rafy.Domain
         /// <param name="args"></param>
         /// <param name="entityList"></param>
         /// <param name="oldCount"></param>
-        protected void EagerLoadOnCompleted(EntityQueryArgsBase args, EntityList entityList, int oldCount)
+        protected void EagerLoadOnCompleted(EntityQueryArgs args, EntityList entityList, int oldCount)
         {
             if (entityList.Count > 0)
             {
@@ -353,9 +353,9 @@ namespace Rafy.Domain
         /// 子类可重写此方法来实现查询完成后的数据修整工具。
         /// </summary>
         /// <param name="args"></param>
-        internal protected virtual void OnEntityQueryed(EntityQueryArgsBase args) { }
+        internal protected virtual void OnEntityQueryed(EntityQueryArgs args) { }
 
-        protected void PrepareArgs(EntityQueryArgsBase args)
+        protected void PrepareArgs(EntityQueryArgs args)
         {
             if (args.EntityList == null)
             {
@@ -367,7 +367,7 @@ namespace Rafy.Domain
             args.SetQueryType(FinalDataPortal.CurrentIEQC.QueryType);
         }
 
-        internal void LoadByFilter(EntityQueryArgsBase args)
+        internal void LoadByFilter(EntityQueryArgs args)
         {
             var entityList = args.EntityList;
             var filter = args.Filter;

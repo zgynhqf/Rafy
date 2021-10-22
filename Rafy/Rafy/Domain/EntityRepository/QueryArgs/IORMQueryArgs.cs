@@ -22,7 +22,7 @@ namespace Rafy.Domain
     /// <summary>
     /// 使用 IQuery 进行实体查询的参数。
     /// </summary>
-    internal interface IEntitySelectArgs : ISelectArgs
+    internal interface IORMQueryArgs : IEntityQueryArgs
     {
         /// <summary>
         /// 对应的查询条件定义。

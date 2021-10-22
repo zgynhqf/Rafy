@@ -386,7 +386,7 @@ namespace Rafy.Domain.ORM
         /// </summary>
         /// <param name="dba">The dba.</param>
         /// <param name="args">The arguments.</param>
-        public virtual void QueryList(IDbAccesser dba, IEntitySelectArgs args)
+        public virtual void QueryList(IDbAccesser dba, IORMQueryArgs args)
         {
             var query = args.Query;
 
@@ -407,7 +407,7 @@ namespace Rafy.Domain.ORM
         /// <param name="args">The arguments.</param>
         /// <param name="sql">The SQL.</param>
         /// <param name="readProperties">只读取这些属性。</param>
-        protected void QueryDataReader(IDbAccesser dba, IEntitySelectArgs args, FormattedSql sql, List<IManagedProperty> readProperties)
+        protected void QueryDataReader(IDbAccesser dba, IORMQueryArgs args, FormattedSql sql, List<IManagedProperty> readProperties)
         {
             //查询数据库
             using (var reader = dba.QueryDataReader(sql, sql.Parameters))

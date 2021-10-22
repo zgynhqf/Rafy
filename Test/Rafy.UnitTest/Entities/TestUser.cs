@@ -294,7 +294,7 @@ namespace UT
         {
             var q = this.CreateLinqQuery();
             q = q.Where(e => e.Id == userId);
-            var args = new EntityQueryArgs
+            var args = new ORMQueryArgs
             {
                 Query = this.ConvertToQuery(q),
                 LoadOptions = new LoadOptions().LoadWith(TestUser.TestTreeTaskListProperty)

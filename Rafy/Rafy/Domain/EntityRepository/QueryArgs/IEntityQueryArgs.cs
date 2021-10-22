@@ -24,7 +24,7 @@ namespace Rafy.Domain
     /// <summary>
     /// 查询结果为实体时的参数。
     /// </summary>
-    internal interface ISelectArgs : IQueryArgs
+    internal interface IEntityQueryArgs : IQueryArgs
     {
         /// <summary>
         /// 用于存储结果的实体列表

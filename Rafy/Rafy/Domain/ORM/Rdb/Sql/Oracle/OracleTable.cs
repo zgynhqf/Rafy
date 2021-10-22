@@ -79,7 +79,7 @@ namespace Rafy.Domain.ORM.Oracle
             return generator;
         }
 
-        public override void QueryList(IDbAccesser dba, IEntitySelectArgs args)
+        public override void QueryList(IDbAccesser dba, IORMQueryArgs args)
         {
             try
             {
@@ -104,7 +104,7 @@ namespace Rafy.Domain.ORM.Oracle
         /// <param name="dba">The dba.</param>
         /// <param name="args">The arguments.</param>
         /// <returns></returns>
-        private bool TryBatchQuery(IDbAccesser dba, IEntitySelectArgs args)
+        private bool TryBatchQuery(IDbAccesser dba, IORMQueryArgs args)
         {
             if (!PagingInfo.IsNullOrEmpty(args.PagingInfo)) { return false; }
 

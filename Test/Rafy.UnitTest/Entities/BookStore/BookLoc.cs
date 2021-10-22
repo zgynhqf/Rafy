@@ -137,7 +137,7 @@ namespace UT
             base.Submit(e);
         }
 
-        protected override void OnQuerying(EntityQueryArgs args)
+        protected override void OnQuerying(ORMQueryArgs args)
         {
             var f = QueryFactory.Instance;
             var q = args.Query;

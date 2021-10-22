@@ -438,7 +438,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="args">The arguments.</param>
         /// <returns></returns>
-        protected object QueryData(EntityQueryArgs args)
+        protected object QueryData(ORMQueryArgs args)
         {
             return this.DataQueryer.QueryData(args);
         }
