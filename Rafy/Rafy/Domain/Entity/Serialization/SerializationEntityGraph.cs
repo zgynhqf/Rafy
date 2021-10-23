@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
 using System.Text;
 using Rafy.ManagedProperty;
 
@@ -31,12 +32,6 @@ namespace Rafy.Domain.Serialization
         /// <returns></returns>
         public static XmlObjectSerializer CreateSerializer(Entity entity)
         {
-#if NET45
-            //IWcfPortal 上标记了，使用 NetDataContractSerializer 来进行序列化和反序列化。
-            //详见 UseNetDataContractAttribute 的类型注释。
-            return new NetDataContractSerializer();
-#endif
-#if NS2
             var graph = new SerializationEntityGraph();
             graph.DeepSearch(entity);
 
@@ -44,7 +39,6 @@ namespace Rafy.Domain.Serialization
 
             return new DataContractSerializer(entity.GetType(), graph._knownTypes);
             //return new DataContractJsonSerializer(entity.GetType(), graph._knownTypes);
-#endif
         }
 
         private List<Type> _knownTypes;

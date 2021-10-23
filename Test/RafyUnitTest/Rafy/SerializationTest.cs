@@ -47,7 +47,7 @@ namespace RafyUnitTest
     public class SerializationTest
     {
         [ClassInitialize]
-        public static void ST_ClassInitialize(TestContext context)
+        public static void SrlzT_ClassInitialize(TestContext context)
         {
             ServerTestHelper.ClassInitialize(context);
         }
@@ -55,27 +55,7 @@ namespace RafyUnitTest
         #region 二进制序列化
 
         [TestMethod]
-        public void ST_Binary_MPT_String()
-        {
-            var e1 = new TestUser();
-            e1.Age = 15;
-            e1._mySelfReference = e1;
-            TestUserExt.SetUserCode(e1, "TestUserExt_UserCode");
-
-            Assert.AreEqual(e1.Validate().Count, 1);
-
-            //在这里可以查看序列化后传输的字符串
-            var serializedString = MobileFormatter.SerializeToString(e1);
-            Assert.IsNotNull(serializedString);
-            var serializedXml = MobileFormatter.SerializeToXml(e1);
-            Assert.IsNotNull(serializedXml);
-
-            Assert.IsTrue(serializedXml.Contains("Age"));
-            Assert.IsTrue(serializedXml.Contains("UserCode"));
-        }
-
-        [TestMethod]
-        public void ST_Binary_MPT()
+        public void SrlzT_Binary_MPT()
         {
             var e1 = new TestUser();
             e1.PersistenceStatus = PersistenceStatus.Saved;
@@ -130,7 +110,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Binary_LazyRef_OnServer()
+        public void SrlzT_Binary_LazyRef_OnServer()
         {
             var role = new TestRole
             {
@@ -149,7 +129,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Binary_LazyRef_Manual()
+        public void SrlzT_Binary_LazyRef_Manual()
         {
             var defaultMeta = TestRole.TestUserProperty.DefaultMeta;
             var oldValue = defaultMeta.Serializable;
@@ -180,7 +160,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Binary_IDomainComponent_Parent_Serialization()
+        public void SrlzT_Binary_IDomainComponent_Parent_Serialization()
         {
             var user = new TestUser
             {
@@ -224,7 +204,7 @@ namespace RafyUnitTest
         /// 属性的变更状态，需要支持序列化和反序列化。
         /// </summary>
         [TestMethod]
-        public void ST_Binary_MPT_ChangedStatus()
+        public void SrlzT_Binary_MPT_ChangedStatus()
         {
             var user = new TestUser();
             user.Name = "1";
@@ -243,7 +223,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Binary_LoadOptions()
+        public void SrlzT_Binary_LoadOptions()
         {
             var elo = new LoadOptions();
             elo.LoadWith(Book.ChapterListProperty);
@@ -259,14 +239,14 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Binary_ORM_Query_EmptyPaging()
+        public void SrlzT_Binary_ORM_Query_EmptyPaging()
         {
             var cloned = ObjectCloner.Clone(PagingInfo.Empty);
             Assert.IsTrue(cloned == PagingInfo.Empty, "EmptyPagingInfo 只有在单例情况下，才能使用它作为空的分页参数。");
         }
 
         [TestMethod]
-        public void ST_Binary_TET_ByBit()
+        public void SrlzT_Binary_TET_ByBit()
         {
             var list = new FolderList
             {
@@ -297,7 +277,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Binary_UtilsTest_LiteDataTable_Serialization_Binary()
+        public void SrlzT_Binary_UtilsTeSrlzT_LiteDataTable_Serialization_Binary()
         {
             var table = new LiteDataTable();
             table.Columns.Add(new LiteDataColumn("UserName", typeof(string)));
@@ -331,7 +311,7 @@ namespace RafyUnitTest
         /// 序列化及反序列化
         /// </summary>
         [TestMethod]
-        public void ST_WCF()
+        public void SrlzT_WCF()
         {
             var model = new Article
             {
@@ -340,7 +320,7 @@ namespace RafyUnitTest
             };
 
             //序列化。
-            var serializer = SerializationEntityGraph.CreateSerializer(model);
+            var serializer = CreateWCFSerializer(model);
             var stream = new MemoryStream();
             serializer.WriteObject(stream, model);
 
@@ -362,7 +342,7 @@ namespace RafyUnitTest
         /// 属性的变更状态，需要支持序列化和反序列化。
         /// </summary>
         [TestMethod]
-        public void ST_WCF_MP_ChangedStatus()
+        public void SrlzT_WCF_MP_ChangedStatus()
         {
             var user = new TestUser();
             user.Name = "1";
@@ -374,7 +354,7 @@ namespace RafyUnitTest
             Assert.AreSame(TestUser.AgeProperty, fields[0].Property);
 
             //序列化。
-            var serializer = SerializationEntityGraph.CreateSerializer(user);
+            var serializer = CreateWCFSerializer(user);
             var stream = new MemoryStream();
             serializer.WriteObject(stream, user);
             //反序列化
@@ -390,7 +370,7 @@ namespace RafyUnitTest
         /// 被禁用的属性，经过序列化和反序列化后，应该还是禁用状态的。
         /// </summary>
         [TestMethod]
-        public void ST_WCF_MP_DisabledStatus()
+        public void SrlzT_WCF_MP_DisabledStatus()
         {
             var user = new TestUser();
             user.Name = "1";
@@ -399,7 +379,7 @@ namespace RafyUnitTest
             user.Disable(TestUser.NameProperty);
 
             //序列化。
-            var serializer = SerializationEntityGraph.CreateSerializer(user);
+            var serializer = CreateWCFSerializer(user);
             var stream = new MemoryStream();
             serializer.WriteObject(stream, user);
 
@@ -415,7 +395,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_WCF_RefId()
+        public void SrlzT_WCF_RefId()
         {
             var model = new Article
             {
@@ -423,7 +403,7 @@ namespace RafyUnitTest
             };
 
             //序列化。
-            var serializer = SerializationEntityGraph.CreateSerializer(model);
+            var serializer = CreateWCFSerializer(model);
             var stream = new MemoryStream();
             serializer.WriteObject(stream, model);
 
@@ -441,7 +421,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_WCF_Ref()
+        public void SrlzT_WCF_Ref()
         {
             var model = new Article
             {
@@ -453,7 +433,7 @@ namespace RafyUnitTest
             };
 
             //序列化。
-            var serializer = SerializationEntityGraph.CreateSerializer(model);
+            var serializer = CreateWCFSerializer(model);
             var stream = new MemoryStream();
             serializer.WriteObject(stream, model);
 
@@ -476,7 +456,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_WCF_List()
+        public void SrlzT_WCF_List()
         {
             var model = new Book
             {
@@ -494,7 +474,7 @@ namespace RafyUnitTest
             };
 
             //序列化。
-            var serializer = SerializationEntityGraph.CreateSerializer(model);
+            var serializer = CreateWCFSerializer(model);
 
             var stream = new MemoryStream();
             serializer.WriteObject(stream, model);
@@ -523,7 +503,7 @@ namespace RafyUnitTest
         /// 序列化及反序列化
         /// </summary>
         [TestMethod]
-        public void ST_WCF_LiteDataTable()
+        public void SrlzT_WCF_LiteDataTable()
         {
             var table = new LiteDataTable();
             table.Columns.Add(new LiteDataColumn("UserName", typeof(string)));
@@ -563,9 +543,21 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void zzzST_WCF_TET()
+        public void zzzSrlzT_WCF_TET()
         {
             throw new NotImplementedException();
+        }
+
+        private static XmlObjectSerializer CreateWCFSerializer(Entity entity)
+        {
+#if NET45
+            //IWcfPortal 上标记了，使用 NetDataContractSerializer 来进行序列化和反序列化。
+            //详见 UseNetDataContractAttribute 的类型注释。
+            return new NetDataContractSerializer();
+#endif
+#if NS2
+            return SerializationEntityGraph.CreateSerializer(entity);
+#endif
         }
 
         #endregion
@@ -573,7 +565,27 @@ namespace RafyUnitTest
         #region Json 序列化
 
         [TestMethod]
-        public void ST_Json()
+        public void SrlzT_Json_MPT_String()
+        {
+            var e1 = new TestUser();
+            e1.Age = 15;
+            e1._mySelfReference = e1;
+            TestUserExt.SetUserCode(e1, "TestUserExt_UserCode");
+
+            Assert.AreEqual(e1.Validate().Count, 1);
+
+            //在这里可以查看序列化后传输的字符串
+            var serializedString = MobileFormatter.SerializeToString(e1);
+            Assert.IsNotNull(serializedString);
+            var serializedXml = MobileFormatter.SerializeToXml(e1);
+            Assert.IsNotNull(serializedXml);
+
+            Assert.IsTrue(serializedXml.Contains("Age"));
+            Assert.IsTrue(serializedXml.Contains("UserCode"));
+        }
+
+        [TestMethod]
+        public void SrlzT_Json()
         {
             var entity = new Favorate
             {
@@ -594,7 +606,7 @@ namespace RafyUnitTest
         /// 序列化时，如果属性处于禁用状态，则不需要进行序列化。
         /// </summary>
         [TestMethod]
-        public void ST_Json_IgnoreDisabledStatusProperties()
+        public void SrlzT_Json_IgnoreDisabledStatusProperties()
         {
             var entity = new Favorate
             {
@@ -615,7 +627,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Json_Enum()
+        public void SrlzT_Json_Enum()
         {
             var entity = new Favorate
             {
@@ -634,7 +646,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Json_EnumString()
+        public void SrlzT_Json_EnumString()
         {
             var entity = new Favorate
             {
@@ -653,7 +665,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Json_EnumWithLabel()
+        public void SrlzT_Json_EnumWithLabel()
         {
             var entity = new Favorate
             {
@@ -672,7 +684,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Json_Aggt()
+        public void SrlzT_Json_Aggt()
         {
             var entity = new Book
             {
@@ -721,7 +733,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Json_Ref()
+        public void SrlzT_Json_Ref()
         {
             var entity = new Favorate
             {
@@ -747,7 +759,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Json_EntityList()
+        public void SrlzT_Json_EntityList()
         {
             var list = new FavorateList
             {
@@ -773,7 +785,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Json_OutputListTotalCount()
+        public void SrlzT_Json_OutputListTotalCount()
         {
             var list = new BookList
             {
@@ -806,7 +818,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Json_OutputListTotalCount_Aggt()
+        public void SrlzT_Json_OutputListTotalCount_Aggt()
         {
             var list = new BookList
             {
@@ -868,7 +880,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Json_NoCamel()
+        public void SrlzT_Json_NoCamel()
         {
             var entity = new Favorate
             {
@@ -889,7 +901,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Json_IgnoreDefault()
+        public void SrlzT_Json_IgnoreDefault()
         {
             var entity = new Favorate
             {
@@ -921,7 +933,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Json_ArrayValue()
+        public void SrlzT_Json_ArrayValue()
         {
             var entity = new Favorate
             {
@@ -951,7 +963,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Json_Bytes()
+        public void SrlzT_Json_Bytes()
         {
             var entity = new Favorate
             {
@@ -971,7 +983,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Json_TreeEntity()
+        public void SrlzT_Json_TreeEntity()
         {
             var list = new FolderList
             {
@@ -1030,7 +1042,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Json_DynamicProperty()
+        public void SrlzT_Json_DynamicProperty()
         {
             var now = new DateTime(2016, 5, 25, 1, 1, 1);
 
@@ -1058,7 +1070,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Json_Deserialization()
+        public void SrlzT_Json_Deserialization()
         {
             var json =
 @"{
@@ -1070,7 +1082,7 @@ namespace RafyUnitTest
         }
 
         //[TestMethod]
-        //public void ST_Json_Deserialization_DisabledPropertyStatus()
+        //public void SrlzT_Json_Deserialization_DisabledPropertyStatus()
         //{
         //    var json = @"{}";
         //    var deserializer = new AggtDeserializer();
@@ -1080,7 +1092,7 @@ namespace RafyUnitTest
         //}
 
         [TestMethod]
-        public void ST_Json_Deserialization_Update_CreateNewInstance()
+        public void SrlzT_Json_Deserialization_Update_CreateNewInstance()
         {
             var json = @"{
 ""id"": 1,
@@ -1097,7 +1109,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Json_Deserialization_Update_RequeryFromRepository()
+        public void SrlzT_Json_Deserialization_Update_RequeryFromRepository()
         {
             var repo = RF.ResolveInstance<FavorateRepository>();
             using (RF.TransactionScope(repo))
@@ -1123,7 +1135,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Json_Deserialization_ROProperty()
+        public void SrlzT_Json_Deserialization_ROProperty()
         {
             var json = @"{
 ""favorateType"": ""B"",
@@ -1139,7 +1151,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Json_Deserialization_RedundancyProperty1()
+        public void SrlzT_Json_Deserialization_RedundancyProperty1()
         {
             var repoA = RF.ResolveInstance<ARepository>();
             var repo = RF.ResolveInstance<BRepository>();
@@ -1161,7 +1173,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Json_Deserialization_RedundancyProperty2()
+        public void SrlzT_Json_Deserialization_RedundancyProperty2()
         {
             var repoA = RF.ResolveInstance<ARepository>();
             var repo = RF.ResolveInstance<BRepository>();
@@ -1184,7 +1196,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Json_Deserialization_Enum()
+        public void SrlzT_Json_Deserialization_Enum()
         {
             var json =
 @"{
@@ -1196,7 +1208,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Json_Deserialization_EnumString()
+        public void SrlzT_Json_Deserialization_EnumString()
         {
             var json =
 @"{
@@ -1208,7 +1220,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Json_Deserialization_EnumWithLabel()
+        public void SrlzT_Json_Deserialization_EnumWithLabel()
         {
             var json =
 @"{
@@ -1220,7 +1232,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Json_Deserialization_Ref()
+        public void SrlzT_Json_Deserialization_Ref()
         {
             var json =
 @"{
@@ -1239,7 +1251,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Json_Deserialization_Aggt()
+        public void SrlzT_Json_Deserialization_Aggt()
         {
             var json = @"{
   ""chapterList"": [
@@ -1270,7 +1282,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Json_Deserialization_EntityList()
+        public void SrlzT_Json_Deserialization_EntityList()
         {
             var json = @"[
   {
@@ -1290,7 +1302,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Json_Deserialization_Status()
+        public void SrlzT_Json_Deserialization_Status()
         {
             var repo = RF.ResolveInstance<FavorateRepository>();
             using (RF.TransactionScope(repo))
@@ -1331,7 +1343,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Json_Deserialization_ArrayValue()
+        public void SrlzT_Json_Deserialization_ArrayValue()
         {
             var json = @"
 {
@@ -1346,7 +1358,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Json_Deserialization_Bytes()
+        public void SrlzT_Json_Deserialization_Bytes()
         {
             var json = @"
 {
@@ -1361,7 +1373,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Json_Deserialization_TreeEntity()
+        public void SrlzT_Json_Deserialization_TreeEntity()
         {
             var json = @"[
   {
@@ -1408,7 +1420,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ST_Json_Deserialization_DynamicProperty()
+        public void SrlzT_Json_Deserialization_DynamicProperty()
         {
             var json =
 @"{
@@ -1433,7 +1445,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void zzzST_Json_TET()
+        public void zzzSrlzT_Json_TET()
         {
             throw new NotImplementedException();
         }
