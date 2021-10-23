@@ -562,7 +562,7 @@ namespace RafyUnitTest
 
         #endregion
 
-        #region Json 序列化
+        #region AggtSerializer Web 序列化
 
         [TestMethod]
         public void SrlzT_Json_MPT_String()
@@ -585,7 +585,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Json()
+        public void SrlzT_Web()
         {
             var entity = new Favorate
             {
@@ -606,7 +606,7 @@ namespace RafyUnitTest
         /// 序列化时，如果属性处于禁用状态，则不需要进行序列化。
         /// </summary>
         [TestMethod]
-        public void SrlzT_Json_IgnoreDisabledStatusProperties()
+        public void SrlzT_Web_IgnoreDisabledStatusProperties()
         {
             var entity = new Favorate
             {
@@ -627,7 +627,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Json_Enum()
+        public void SrlzT_Web_Enum()
         {
             var entity = new Favorate
             {
@@ -646,7 +646,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Json_EnumString()
+        public void SrlzT_Web_EnumString()
         {
             var entity = new Favorate
             {
@@ -665,7 +665,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Json_EnumWithLabel()
+        public void SrlzT_Web_EnumWithLabel()
         {
             var entity = new Favorate
             {
@@ -684,7 +684,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Json_Aggt()
+        public void SrlzT_Web_Aggt()
         {
             var entity = new Book
             {
@@ -733,7 +733,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Json_Ref()
+        public void SrlzT_Web_Ref()
         {
             var entity = new Favorate
             {
@@ -759,7 +759,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Json_EntityList()
+        public void SrlzT_Web_EntityList()
         {
             var list = new FavorateList
             {
@@ -785,7 +785,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Json_OutputListTotalCount()
+        public void SrlzT_Web_OutputListTotalCount()
         {
             var list = new BookList
             {
@@ -818,7 +818,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Json_OutputListTotalCount_Aggt()
+        public void SrlzT_Web_OutputListTotalCount_Aggt()
         {
             var list = new BookList
             {
@@ -880,7 +880,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Json_NoCamel()
+        public void SrlzT_Web_NoCamel()
         {
             var entity = new Favorate
             {
@@ -901,7 +901,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Json_IgnoreDefault()
+        public void SrlzT_Web_IgnoreDefault()
         {
             var entity = new Favorate
             {
@@ -933,7 +933,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Json_ArrayValue()
+        public void SrlzT_Web_ArrayValue()
         {
             var entity = new Favorate
             {
@@ -963,7 +963,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Json_Bytes()
+        public void SrlzT_Web_Bytes()
         {
             var entity = new Favorate
             {
@@ -983,7 +983,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Json_TreeEntity()
+        public void SrlzT_Web_TreeEntity()
         {
             var list = new FolderList
             {
@@ -1042,7 +1042,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Json_DynamicProperty()
+        public void SrlzT_Web_DynamicProperty()
         {
             var now = new DateTime(2016, 5, 25, 1, 1, 1);
 
@@ -1070,7 +1070,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Json_Deserialization()
+        public void SrlzT_Web_Deserialization()
         {
             var json =
 @"{
@@ -1082,7 +1082,7 @@ namespace RafyUnitTest
         }
 
         //[TestMethod]
-        //public void SrlzT_Json_Deserialization_DisabledPropertyStatus()
+        //public void SrlzT_Web_Deserialization_DisabledPropertyStatus()
         //{
         //    var json = @"{}";
         //    var deserializer = new AggtDeserializer();
@@ -1092,7 +1092,7 @@ namespace RafyUnitTest
         //}
 
         [TestMethod]
-        public void SrlzT_Json_Deserialization_Update_CreateNewInstance()
+        public void SrlzT_Web_Deserialization_Update_CreateNewInstance()
         {
             var json = @"{
 ""id"": 1,
@@ -1109,7 +1109,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Json_Deserialization_Update_RequeryFromRepository()
+        public void SrlzT_Web_Deserialization_Update_RequeryFromRepository()
         {
             var repo = RF.ResolveInstance<FavorateRepository>();
             using (RF.TransactionScope(repo))
@@ -1135,7 +1135,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Json_Deserialization_ROProperty()
+        public void SrlzT_Web_Deserialization_ROProperty()
         {
             var json = @"{
 ""favorateType"": ""B"",
@@ -1151,7 +1151,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Json_Deserialization_RedundancyProperty1()
+        public void SrlzT_Web_Deserialization_RedundancyProperty1()
         {
             var repoA = RF.ResolveInstance<ARepository>();
             var repo = RF.ResolveInstance<BRepository>();
@@ -1173,7 +1173,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Json_Deserialization_RedundancyProperty2()
+        public void SrlzT_Web_Deserialization_RedundancyProperty2()
         {
             var repoA = RF.ResolveInstance<ARepository>();
             var repo = RF.ResolveInstance<BRepository>();
@@ -1196,7 +1196,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Json_Deserialization_Enum()
+        public void SrlzT_Web_Deserialization_Enum()
         {
             var json =
 @"{
@@ -1208,7 +1208,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Json_Deserialization_EnumString()
+        public void SrlzT_Web_Deserialization_EnumString()
         {
             var json =
 @"{
@@ -1220,7 +1220,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Json_Deserialization_EnumWithLabel()
+        public void SrlzT_Web_Deserialization_EnumWithLabel()
         {
             var json =
 @"{
@@ -1232,7 +1232,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Json_Deserialization_Ref()
+        public void SrlzT_Web_Deserialization_Ref()
         {
             var json =
 @"{
@@ -1251,7 +1251,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Json_Deserialization_Aggt()
+        public void SrlzT_Web_Deserialization_Aggt()
         {
             var json = @"{
   ""chapterList"": [
@@ -1282,7 +1282,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Json_Deserialization_EntityList()
+        public void SrlzT_Web_Deserialization_EntityList()
         {
             var json = @"[
   {
@@ -1302,7 +1302,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Json_Deserialization_Status()
+        public void SrlzT_Web_Deserialization_Status()
         {
             var repo = RF.ResolveInstance<FavorateRepository>();
             using (RF.TransactionScope(repo))
@@ -1343,7 +1343,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Json_Deserialization_ArrayValue()
+        public void SrlzT_Web_Deserialization_ArrayValue()
         {
             var json = @"
 {
@@ -1358,7 +1358,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Json_Deserialization_Bytes()
+        public void SrlzT_Web_Deserialization_Bytes()
         {
             var json = @"
 {
@@ -1373,7 +1373,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Json_Deserialization_TreeEntity()
+        public void SrlzT_Web_Deserialization_TreeEntity()
         {
             var json = @"[
   {
@@ -1420,7 +1420,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Json_Deserialization_DynamicProperty()
+        public void SrlzT_Web_Deserialization_DynamicProperty()
         {
             var json =
 @"{
@@ -1445,7 +1445,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void zzzSrlzT_Json_TET()
+        public void zzzSrlzT_Web_TET()
         {
             throw new NotImplementedException();
         }
