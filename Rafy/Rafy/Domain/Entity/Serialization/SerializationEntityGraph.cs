@@ -18,6 +18,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using Rafy.ManagedProperty;
+using Rafy.MetaModel;
 
 namespace Rafy.Domain.Serialization
 {
@@ -28,17 +29,17 @@ namespace Rafy.Domain.Serialization
         /// 此过程会通过引用属性、列表属性，递归搜索实体类中所涉及到的其它所有实体类型，
         /// 并传递给 DataContractSerializer 作为已知类型，否则，将无法序列化。
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="entityMeta"></param>
         /// <returns></returns>
-        public static XmlObjectSerializer CreateSerializer(Entity entity)
+        public static XmlObjectSerializer CreateSerializer(EntityMeta entityMeta)
         {
             var graph = new SerializationEntityGraph();
-            graph.DeepSearch(entity);
+            graph.DeepSearch(entityMeta);
 
             graph._knownTypes.Add(typeof(MPFV));
 
-            return new DataContractSerializer(entity.GetType(), graph._knownTypes);
-            //return new DataContractJsonSerializer(entity.GetType(), graph._knownTypes);
+            return new DataContractSerializer(entityMeta.EntityType, graph._knownTypes);
+            //return new DataContractJsonSerializer(entityMeta.EntityType, graph._knownTypes);
         }
 
         private List<Type> _knownTypes;
@@ -46,18 +47,18 @@ namespace Rafy.Domain.Serialization
         /// <summary>
         /// 通过引用属性、列表属性，递归搜索实体类中所涉及到的所有实体类型。
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="entityMeta"></param>
         /// <returns></returns>
-        private void DeepSearch(Entity entity)
+        private void DeepSearch(EntityMeta entityMeta)
         {
-            _knownTypes = new List<Type>() { entity.GetType() };
+            _knownTypes = new List<Type>() { entityMeta.EntityType };
 
-            DeepSearchRecur(entity.GetRepository());
+            DeepSearchRecur(entityMeta);
         }
 
-        private void DeepSearchRecur(IRepository repo)
+        private void DeepSearchRecur(EntityMeta entityMeta)
         {
-            var properties = repo.EntityMeta.ManagedProperties.GetNonReadOnlyCompiledProperties();
+            var properties = entityMeta.ManagedProperties.GetNonReadOnlyCompiledProperties();
             for (int i = 0, c = properties.Count; i < c; i++)
             {
                 var mp = properties[i] as IProperty;
@@ -65,13 +66,13 @@ namespace Rafy.Domain.Serialization
                 switch (mp.Category)
                 {
                     case PropertyCategory.ReferenceEntity:
-                        if (mp.GetMeta(repo.EntityType).Serializable)
+                        if (mp.GetMeta(entityMeta.EntityType).Serializable)
                         {
                             relativeType = (mp as IRefEntityProperty).RefEntityType;
                         }
                         break;
                     case PropertyCategory.List:
-                        if (mp.GetMeta(repo.EntityType).Serializable)
+                        if (mp.GetMeta(entityMeta.EntityType).Serializable)
                         {
                             var p = mp as IListProperty;
                             if (!_knownTypes.Contains(p.PropertyType))
@@ -93,51 +94,10 @@ namespace Rafy.Domain.Serialization
                     {
                         _knownTypes.Add(relativeType);
 
-                        var repo2 = RepositoryFactoryHost.Factory.FindByEntity(relativeType);
-                        DeepSearchRecur(repo2);
+                        var relativeTypeMeta = CommonModel.Entities.Find(relativeType);
+                        DeepSearchRecur(relativeTypeMeta);
                     }
                 }
-            }
-        }
-
-        private void DeepSearchRecur_Instance(Entity entity)
-        {
-            var properties = entity.PropertiesContainer.GetNonReadOnlyCompiledProperties();
-            foreach (IProperty mp in properties)
-            {
-                switch (mp.Category)
-                {
-                    case PropertyCategory.ReferenceEntity:
-                        if (mp.GetMeta(entity).Serializable)
-                        {
-                            var refEntity = entity.GetRefEntity(mp as IRefEntityProperty);
-                            AddEntityType(refEntity.GetType());
-                            DeepSearchRecur_Instance(refEntity);
-                        }
-                        break;
-                    case PropertyCategory.List:
-                        if (mp.GetMeta(entity).Serializable)
-                        {
-                            var list = entity.GetLazyList(mp as IListProperty);
-                            for (int i = 0, c = list.Count; i < c; i++)
-                            {
-                                var child = list[i];
-                                if (i == 0) { AddEntityType(child.GetType()); }
-                                DeepSearchRecur_Instance(child);
-                            }
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-
-        private void AddEntityType(Type entityType)
-        {
-            if (!_knownTypes.Contains(entityType))
-            {
-                _knownTypes.Add(entityType);
             }
         }
     }

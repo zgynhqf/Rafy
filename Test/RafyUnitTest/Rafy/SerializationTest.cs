@@ -556,7 +556,7 @@ namespace RafyUnitTest
             return new NetDataContractSerializer();
 #endif
 #if NS2
-            return SerializationEntityGraph.CreateSerializer(entity);
+            return SerializationEntityGraph.CreateSerializer(entity.GetRepository().EntityMeta);
 #endif
         }
 
