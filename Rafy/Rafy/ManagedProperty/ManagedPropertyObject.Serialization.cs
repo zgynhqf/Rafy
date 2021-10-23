@@ -194,7 +194,6 @@ namespace Rafy.ManagedProperty
         /// <param name="context"></param>
         [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
         protected ManagedPropertyObject(SerializationInfo info, StreamingContext context)
-            : base(info, context)
         {
             var compiledProperties = this.PropertiesContainer.GetNonReadOnlyCompiledProperties();
 
@@ -243,7 +242,7 @@ namespace Rafy.ManagedProperty
         /// <param name="context"></param>
         protected override sealed void OnDeserialized(StreamingContext context)
         {
-            if (this._compiledFields == null)
+            if (_compiledFields == null)
             {
                 this.InitFields();
             }

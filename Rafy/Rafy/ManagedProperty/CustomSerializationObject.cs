@@ -33,16 +33,6 @@ namespace Rafy
         protected CustomSerializationObject() { }
 
         /// <summary>
-        /// 反序列化构造函数。
-        /// 
-        /// 需要更高安全性，加上 SecurityPermissionAttribute 标记。
-        /// </summary>
-        /// <param name="info"></param>
-        /// <param name="context"></param>
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected CustomSerializationObject(SerializationInfo info, StreamingContext context) { }
-
-        /// <summary>
         /// 序列化数据到 info 中。
         /// </summary>
         /// <param name="info"></param>

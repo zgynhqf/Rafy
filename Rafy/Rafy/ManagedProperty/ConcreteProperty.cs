@@ -100,7 +100,7 @@ namespace Rafy.ManagedProperty
         /// <param name="info"></param>
         /// <param name="context"></param>
         [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        private ConcreteProperty(SerializationInfo info, StreamingContext context) : base(info, context)
+        private ConcreteProperty(SerializationInfo info, StreamingContext context)
         {
             var propertyName = info.GetString("PropertyName");
             var ownerType = info.GetValue("OwnerType", typeof(Type)) as Type;
