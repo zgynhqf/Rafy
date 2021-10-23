@@ -67,7 +67,7 @@ namespace RafyUnitTest
 
             #region 复制对象（序列化+反序列化）
 
-            var e2 = ObjectCloner.Clone(e1).CastTo<TestUser>();
+            var e2 = ObjectCloner.Clone(e1);
 
             //实体直接定义的字段
             Assert.AreEqual(e1._ageNonserailizable, 15);
@@ -319,20 +319,10 @@ namespace RafyUnitTest
                 CreateDate = DateTime.Today,
             };
 
-            //序列化。
-            var serializer = CreateWCFSerializer(model);
-            var stream = new MemoryStream();
-            serializer.WriteObject(stream, model);
+            var model2 = CloneByWCFSerializer(model, out string content);
 
-            //读取 xml
-            byte[] bytes = stream.ToArray();
-            string xml = Encoding.UTF8.GetString(bytes, 0, bytes.Length);
-            Assert.IsTrue(xml.Contains("Article"));
-            Assert.IsTrue(xml.Contains("Code11"));
-
-            //反序列化
-            stream.Seek(0, SeekOrigin.Begin);
-            var model2 = (Article)serializer.ReadObject(stream);
+            Assert.IsTrue(content.Contains("Article"));
+            Assert.IsTrue(content.Contains("Code11"));
 
             Assert.IsTrue(model2.Code == "Code11");
             Assert.IsTrue(model2.CreateDate == DateTime.Today);
@@ -353,13 +343,7 @@ namespace RafyUnitTest
             Assert.AreEqual(1, fields.Count);
             Assert.AreSame(TestUser.AgeProperty, fields[0].Property);
 
-            //序列化。
-            var serializer = CreateWCFSerializer(user);
-            var stream = new MemoryStream();
-            serializer.WriteObject(stream, user);
-            //反序列化
-            stream.Seek(0, SeekOrigin.Begin);
-            var user2 = (TestUser)serializer.ReadObject(stream);
+            var user2 = CloneByWCFSerializer(user);
 
             fields = ManagedPropertyTest.GetChangedProperties(user2);
             Assert.AreEqual(1, fields.Count);
@@ -378,18 +362,7 @@ namespace RafyUnitTest
 
             user.Disable(TestUser.NameProperty);
 
-            //序列化。
-            var serializer = CreateWCFSerializer(user);
-            var stream = new MemoryStream();
-            serializer.WriteObject(stream, user);
-
-            ////读取 xml
-            //byte[] bytes = stream.ToArray();
-            //string xml = Encoding.UTF8.GetString(bytes, 0, bytes.Length);
-
-            //反序列化
-            stream.Seek(0, SeekOrigin.Begin);
-            var user2 = (TestUser)serializer.ReadObject(stream);
+            var user2 = CloneByWCFSerializer(user);
 
             Assert.IsTrue(user2.IsDisabled(TestUser.NameProperty), "被禁用的属性，反序列化后，也应该是禁用状态。");
         }
@@ -402,20 +375,9 @@ namespace RafyUnitTest
                 UserId = 111,
             };
 
-            //序列化。
-            var serializer = CreateWCFSerializer(model);
-            var stream = new MemoryStream();
-            serializer.WriteObject(stream, model);
-
-            //读取 xml
-            byte[] bytes = stream.ToArray();
-            string xml = Encoding.UTF8.GetString(bytes, 0, bytes.Length);
-            Assert.IsTrue(xml.Contains("Article"));
-            Assert.IsTrue(xml.Contains("111"));
-
-            //反序列化
-            stream.Seek(0, SeekOrigin.Begin);
-            var model2 = (Article)serializer.ReadObject(stream);
+            var model2 = CloneByWCFSerializer(model, out string content);
+            Assert.IsTrue(content.Contains("Article"));
+            Assert.IsTrue(content.Contains("111"));
 
             Assert.IsTrue(model2.UserId == 111);
         }
@@ -432,23 +394,13 @@ namespace RafyUnitTest
                 }
             };
 
-            //序列化。
-            var serializer = CreateWCFSerializer(model);
-            var stream = new MemoryStream();
-            serializer.WriteObject(stream, model);
+            var model2 = CloneByWCFSerializer(model, out string content);
 
-            //读取 xml
-            byte[] bytes = stream.ToArray();
-            string xml = Encoding.UTF8.GetString(bytes, 0, bytes.Length);
-            Assert.IsTrue(xml.Contains("Article"));
-            Assert.IsTrue(xml.Contains("<User"));
-            Assert.IsTrue(xml.Contains("111"));
-            Assert.IsTrue(xml.Contains("<UserName"));
-            Assert.IsTrue(xml.Contains("HuQingFang"));
-
-            //反序列化
-            stream.Seek(0, SeekOrigin.Begin);
-            var model2 = (Article)serializer.ReadObject(stream);
+            Assert.IsTrue(content.Contains("Article"));
+            Assert.IsTrue(content.Contains("<User"));
+            Assert.IsTrue(content.Contains("111"));
+            Assert.IsTrue(content.Contains("<UserName"));
+            Assert.IsTrue(content.Contains("HuQingFang"));
 
             Assert.IsTrue(model2.UserId == 111);
             Assert.IsTrue(model2.GetProperty(Article.UserProperty) != null);
@@ -473,30 +425,25 @@ namespace RafyUnitTest
                 }
             };
 
-            //序列化。
-            var serializer = CreateWCFSerializer(model);
+            var model2 = CloneByWCFSerializer(model, out string content);
 
-            var stream = new MemoryStream();
-            serializer.WriteObject(stream, model);
-
-            //读取 xml
-            byte[] bytes = stream.ToArray();
-            string xml = Encoding.UTF8.GetString(bytes, 0, bytes.Length);
-            Assert.IsTrue(xml.Contains("<Book"));
-            Assert.IsTrue(xml.Contains("<ChapterList"));
-            Assert.IsTrue(xml.Contains("<Chapter"));
-            Assert.IsTrue(xml.Contains("111"));
-            Assert.IsTrue(xml.Contains("<Name"));
-            Assert.IsTrue(xml.Contains("Chapter1"));
-
-            //反序列化
-            stream.Seek(0, SeekOrigin.Begin);
-            var model2 = (Book)serializer.ReadObject(stream);
+            Assert.IsTrue(content.Contains("<Book"));
+            Assert.IsTrue(content.Contains("<ChapterList"));
+            Assert.IsTrue(content.Contains("<Chapter"));
+            Assert.IsTrue(content.Contains("111"));
+            Assert.IsTrue(content.Contains("<Name"));
+            Assert.IsTrue(content.Contains("Chapter1"));
 
             Assert.IsTrue(model2.GetProperty(Book.ChapterListProperty) != null);
             Assert.IsTrue(model2.ChapterList.Count == 2);
             Assert.IsTrue(model2.ChapterList[0].Id == 111);
             Assert.IsTrue(model2.ChapterList[0].Name == "Chapter1");
+        }
+
+        [TestMethod]
+        public void zzzSrlzT_WCF_TET()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -542,10 +489,28 @@ namespace RafyUnitTest
             Assert.IsTrue(table2[1].GetInt32("Age") == 25);
         }
 
-        [TestMethod]
-        public void zzzSrlzT_WCF_TET()
+        private static T CloneByWCFSerializer<T>(T entity)
+            where T: Entity
         {
-            throw new NotImplementedException();
+            return CloneByWCFSerializer(entity, out string xml);
+        }
+
+        private static T CloneByWCFSerializer<T>(T entity, out string content)
+            where T: Entity
+        {
+            //序列化。
+            var serializer = CreateWCFSerializer(entity);
+            var stream = new MemoryStream();
+            serializer.WriteObject(stream, entity);
+
+            byte[] bytes = stream.ToArray();
+            content = Encoding.UTF8.GetString(bytes, 0, bytes.Length);
+
+            //反序列化
+            stream.Seek(0, SeekOrigin.Begin);
+            var entity2 = serializer.ReadObject(stream);
+
+            return (T)entity2;
         }
 
         private static XmlObjectSerializer CreateWCFSerializer(Entity entity)
