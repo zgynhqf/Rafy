@@ -33,23 +33,24 @@ namespace Rafy.Domain
 
         /// <summary>
         /// 所有需要序列化的 bool 值，都可以存储在这里。减少传输数据量。
+        /// 使用 byte 类型，主要是方便序列化，不需要再定制。
         /// </summary>
-        private EntitySerializableFlags _flags = EntitySerializableFlags.IsNew;
+        private byte _flags = (byte)EntitySerializableFlags.IsNew;
 
         private bool GetFlags(EntitySerializableFlags flag)
         {
-            return (_flags & flag) == flag;
+            return ((EntitySerializableFlags)_flags & flag) == flag;
         }
 
         private void SetFlags(EntitySerializableFlags flag, bool value)
         {
             if (value)
             {
-                _flags |= flag;
+                _flags |= (byte)flag;
             }
             else
             {
-                _flags &= ~flag;
+                _flags &= (byte)~flag;
             }
         }
 
