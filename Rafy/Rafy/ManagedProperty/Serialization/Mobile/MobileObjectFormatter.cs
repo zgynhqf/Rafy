@@ -20,7 +20,7 @@ namespace Rafy.Serialization.Mobile
 #if TESTING
   [System.Diagnostics.DebuggerStepThrough]
 #endif
-    public sealed class MobileFormatter : ISerializationFormatter
+    public sealed class MobileObjectFormatter : ISerializationFormatter
     {
         #region 实例门面接口
 
@@ -82,7 +82,7 @@ namespace Rafy.Serialization.Mobile
             var sw = new StringWriter();
             using (var xw = XmlWriter.Create(sw))
             {
-                var formatter = new MobileFormatter();
+                var formatter = new MobileObjectFormatter();
                 formatter.Serialize(xw, obj);
             }
             return sw.ToString();
@@ -100,7 +100,7 @@ namespace Rafy.Serialization.Mobile
         {
             using (var buffer = new MemoryStream())
             {
-                var formatter = new MobileFormatter();
+                var formatter = new MobileObjectFormatter();
                 formatter.Serialize(buffer, obj);
                 return buffer.ToArray();
             }
@@ -122,7 +122,7 @@ namespace Rafy.Serialization.Mobile
         {
             using (var buffer = new MemoryStream(data))
             {
-                var formatter = new MobileFormatter();
+                var formatter = new MobileObjectFormatter();
                 return formatter.Deserialize(buffer);
             }
         }

@@ -575,9 +575,9 @@ namespace RafyUnitTest
             Assert.AreEqual(e1.Validate().Count, 1);
 
             //在这里可以查看序列化后传输的字符串
-            var serializedString = MobileFormatter.SerializeToString(e1);
+            var serializedString = MobileObjectFormatter.SerializeToString(e1);
             Assert.IsNotNull(serializedString);
-            var serializedXml = MobileFormatter.SerializeToXml(e1);
+            var serializedXml = MobileObjectFormatter.SerializeToXml(e1);
             Assert.IsNotNull(serializedXml);
 
             Assert.IsTrue(serializedXml.Contains("Age"));

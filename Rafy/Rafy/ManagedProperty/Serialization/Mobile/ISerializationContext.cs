@@ -13,7 +13,7 @@ namespace Rafy.Serialization.Mobile
 
         //SerializationInfoContainer Container { get; }
 
-        MobileFormatter RefFormatter { get; }
+        MobileObjectFormatter RefFormatter { get; }
 
         Dictionary<string, int> References { get; }
 

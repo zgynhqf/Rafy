@@ -22,9 +22,9 @@ namespace Rafy.Serialization.Mobile
     {
         private SerializationInfoContainer _core;
 
-        private MobileFormatter _refFormatter;
+        private MobileObjectFormatter _refFormatter;
 
-        public SerializationContainerContext(SerializationInfoContainer core, MobileFormatter refFormatter)
+        public SerializationContainerContext(SerializationInfoContainer core, MobileObjectFormatter refFormatter)
         {
             this._core = core;
             this._refFormatter = refFormatter;
@@ -35,7 +35,7 @@ namespace Rafy.Serialization.Mobile
         /// </summary>
         public bool IsProcessingState { get; set; }
 
-        public MobileFormatter RefFormatter
+        public MobileObjectFormatter RefFormatter
         {
             get { return this._refFormatter; }
             internal set { this._refFormatter = value; }

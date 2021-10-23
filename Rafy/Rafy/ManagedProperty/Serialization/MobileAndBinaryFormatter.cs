@@ -17,7 +17,7 @@ namespace Rafy.Serialization
         {
             try
             {
-                var result = new MobileFormatter().Deserialize(serializationStream);
+                var result = new MobileObjectFormatter().Deserialize(serializationStream);
 
                 var sysValue = result as SysState;
                 if (sysValue != null)
@@ -54,7 +54,7 @@ namespace Rafy.Serialization
                 return;
             }
 
-            new MobileFormatter().Serialize(serializationStream, value);
+            new MobileObjectFormatter().Serialize(serializationStream, value);
         }
     }
 }
