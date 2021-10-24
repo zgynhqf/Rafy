@@ -21,6 +21,8 @@ using Rafy.Serialization.Mobile;
 using System.Reflection;
 using Rafy.Serialization;
 using System.Collections;
+using System.Runtime.Serialization;
+using Rafy.Reflection;
 
 namespace Rafy.ManagedProperty
 {
@@ -29,65 +31,50 @@ namespace Rafy.ManagedProperty
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [Serializable]
-    public class ManagedPropertyObjectList<T> : MobileCollection<T>//, IListSource
+    public class ManagedPropertyObjectList<T> : ObservableCollection<T>, ICustomSerializationObject
     {
-        #region Mobile Srialization
-
-        protected override void OnSerializeRef(ISerializationContext info)
+        /// <summary>
+        /// 序列化数据到 info 中。
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        protected virtual void Serialize(SerializationInfo info, StreamingContext context)
         {
-            base.OnSerializeRef(info);
-
-            FieldsSerializationHelper.SerialzeFields(this, info);
+            FieldsSerializationHelper.SerializeFields(this, info);
         }
 
-        protected override void OnSerializeState(ISerializationContext info)
+        /// <summary>
+        /// 从 info 中反序列化数据。
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        protected virtual void Deserialize(SerializationInfo info, StreamingContext context)
         {
-            base.OnSerializeState(info);
+            var clrFields = FieldsSerializationHelper.EnumerateSerializableFields(info.ObjectType);
 
-            FieldsSerializationHelper.SerialzeFields(this, info);
+            //遍历所有已经序列化的属性值序列
+            var allValues = info.GetEnumerator();
+            while (allValues.MoveNext())
+            {
+                var serializationEntry = allValues.Current;
+
+                var f = FieldsSerializationHelper.FindSingleField(clrFields, serializationEntry.Name);
+                if (f != null)
+                {
+                    var value = TypeHelper.CoerceValue(f.FieldType, serializationEntry.Value);
+                    f.SetValue(this, value);
+                }
+            }
         }
 
-        protected override void OnDeserializeState(ISerializationContext info)
+        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            FieldsSerializationHelper.DeserialzeFields(this, info);
-
-            base.OnDeserializeState(info);
+            this.Serialize(info, context);
         }
 
-        protected override void OnDeserializeRef(ISerializationContext info)
+        void ICustomSerializationObject.SetObjectData(SerializationInfo info, StreamingContext context)
         {
-            FieldsSerializationHelper.DeserialzeFields(this, info);
-
-            base.OnDeserializeRef(info);
+            this.Deserialize(info, context);
         }
-
-        #endregion
-
-        //#region IListSource Members
-
-        //bool IListSource.ContainsListCollection
-        //{
-        //    get { return false; }
-        //}
-
-        //[NonSerialized]
-        //private ManagedPropertyObjectListView _viewCache;
-
-        //public ManagedPropertyObjectListView ViewCache
-        //{
-        //    get { return this._viewCache; }
-        //}
-
-        //IList IListSource.GetList()
-        //{
-        //    if (this._viewCache == null)
-        //    {
-        //        this._viewCache = new ManagedPropertyObjectListView(this);
-        //    }
-
-        //    return this._viewCache;
-        //}
-
-        //#endregion
     }
 }

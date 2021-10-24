@@ -36,15 +36,6 @@ namespace UT
     //[KnownType(typeof(BlogUser))]
     public partial class Article : UnitTestEntity
     {
-        #region 构造函数
-
-        public Article() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected Article(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         public static readonly IRefIdProperty UserIdProperty =

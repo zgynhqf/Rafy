@@ -11,16 +11,6 @@
  * 
 *******************************************************/
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data.Common;
-using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Runtime.Serialization;
-using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rafy;
 using Rafy.Data;
@@ -31,15 +21,27 @@ using Rafy.Domain.ORM.DbMigration;
 using Rafy.Domain.Serialization;
 using Rafy.Domain.Serialization.Json;
 using Rafy.Domain.Validation;
+using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.Reflection;
+using Rafy.Serialization;
+using Rafy.Serialization.Mobile;
+using Rafy.UnitTest;
 using Rafy.UnitTest.IDataProvider;
 using Rafy.UnitTest.Repository;
 using Rafy.Utils;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data.Common;
+using System.IO;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text;
+using System.Xml;
 using UT;
-using Rafy.UnitTest;
-using Rafy.ManagedProperty;
-using Rafy.Serialization.Mobile;
 
 namespace RafyUnitTest
 {
@@ -67,7 +69,7 @@ namespace RafyUnitTest
 
             #region 复制对象（序列化+反序列化）
 
-            var e2 = ObjectCloner.Clone(e1);
+            var e2 = BinarySerializer.Clone(e1);
 
             //实体直接定义的字段
             Assert.AreEqual(e1._ageNonserailizable, 15);
@@ -95,16 +97,16 @@ namespace RafyUnitTest
 
             #region 检测具体的序列化的值
 
-            var si = new SerializationContainerContext(new SerializationInfoContainer(0), null);
-            si.IsProcessingState = true;
-            e1.CastTo<IMobileObject>().SerializeState(si);
+            //var si = new SerializationContainerContext(new SerializationInfoContainer(0), null);
+            //si.IsProcessingState = true;
+            //e1.CastTo<IMobileObject>().SerializeState(si);
 
-            var list = si.States.Keys.ToArray();
+            //var list = si.States.Keys.ToArray();
 
-            Assert.IsTrue(list.Contains("Age"), "Age 是属性值，需要序列化");
-            Assert.IsTrue(list.Contains("TestUserExt_UserCode"), "UserCode 是扩展属性值，需要序列化");
-            Assert.IsTrue(!list.Contains("Name"), "Name 是默认值，不需要序列化");
-            Assert.IsTrue(!list.Contains("Id"), "Id 是默认值，不需要序列化");
+            //Assert.IsTrue(list.Contains("Age"), "Age 是属性值，需要序列化");
+            //Assert.IsTrue(list.Contains("TestUserExt_UserCode"), "UserCode 是扩展属性值，需要序列化");
+            //Assert.IsTrue(!list.Contains("Name"), "Name 是默认值，不需要序列化");
+            //Assert.IsTrue(!list.Contains("Id"), "Id 是默认值，不需要序列化");
 
             #endregion
         }
@@ -123,7 +125,7 @@ namespace RafyUnitTest
 
             Assert.IsTrue(TestRole.TestUserProperty.DefaultMeta.Serializable, "默认在服务端，应该是可以序列化实体的。");
 
-            var roleCloned = ObjectCloner.Clone(role);
+            var roleCloned = BinarySerializer.Clone(role);
             var loaded = roleCloned.HasLocalValue(TestRole.TestUserProperty);
             Assert.IsTrue(loaded, "服务端到客户端，需要序列化实体。");
         }
@@ -147,7 +149,7 @@ namespace RafyUnitTest
                     }
                 };
 
-                var roleCloned = ObjectCloner.Clone(role);
+                var roleCloned = BinarySerializer.Clone(role);
 
                 var loaded = roleCloned.HasLocalValue(TestRole.TestUserProperty);
                 Assert.IsFalse(loaded, "引用属性在 Serializable 设置为 false 时，不应该被序列化。");
@@ -169,7 +171,7 @@ namespace RafyUnitTest
 
             Assert.IsTrue(user.TestTreeTaskList.Parent == user, "新列表的 Parent 应该会自动被设置。");
 
-            var userCloned = ObjectCloner.Clone(user);
+            var userCloned = BinarySerializer.Clone(user);
 
             Assert.IsTrue(userCloned.TestTreeTaskList.Parent == userCloned, "序列化、反序列化后列表的 Parent 应该会自动被设置。");
         }
@@ -215,7 +217,7 @@ namespace RafyUnitTest
             Assert.AreEqual(1, fields.Count);
             Assert.AreSame(TestUser.AgeProperty, fields[0].Property);
 
-            var user2 = ObjectCloner.Clone(user);
+            var user2 = BinarySerializer.Clone(user);
 
             fields = ManagedPropertyTest.GetChangedProperties(user2);
             Assert.AreEqual(1, fields.Count);
@@ -230,7 +232,7 @@ namespace RafyUnitTest
             elo.LoadWith(Chapter.SectionListProperty);
             elo.LoadWith(Section.SectionOwnerProperty);
 
-            var elo2 = ObjectCloner.Clone(elo);
+            var elo2 = BinarySerializer.Clone(elo);
 
             Assert.AreEqual(elo.CoreList.Count, 3);
             Assert.AreEqual(elo.CoreList[0].Property, Book.ChapterListProperty);
@@ -241,7 +243,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void SrlzT_Binary_ORM_Query_EmptyPaging()
         {
-            var cloned = ObjectCloner.Clone(PagingInfo.Empty);
+            var cloned = BinarySerializer.Clone(PagingInfo.Empty);
             Assert.IsTrue(cloned == PagingInfo.Empty, "EmptyPagingInfo 只有在单例情况下，才能使用它作为空的分页参数。");
         }
 
@@ -267,7 +269,7 @@ namespace RafyUnitTest
                 },
             };
 
-            list = ObjectCloner.Clone(list);
+            list = BinarySerializer.Clone(list);
 
             Assert.IsTrue(list.Count == 2);
             var a = list[0];
@@ -293,7 +295,7 @@ namespace RafyUnitTest
             row2["Age"] = 25;
             table.Rows.Add(row2);
 
-            var table2 = ObjectCloner.Clone(table);
+            var table2 = BinarySerializer.Clone(table);
 
             Assert.IsTrue(table2.Rows.Count == 2);
             Assert.IsTrue(table2[0]["UserName"].ToString() == "HuQingfang", "反序列化后，可以通过列名来获取列");
@@ -490,13 +492,13 @@ namespace RafyUnitTest
         }
 
         private static T CloneByWCFSerializer<T>(T entity)
-            where T: Entity
+            where T : Entity
         {
             return CloneByWCFSerializer(entity, out string xml);
         }
 
         private static T CloneByWCFSerializer<T>(T entity, out string content)
-            where T: Entity
+            where T : Entity
         {
             //序列化。
             var serializer = CreateWCFSerializer(entity);
@@ -518,7 +520,10 @@ namespace RafyUnitTest
 #if NET45
             //IWcfPortal 上标记了，使用 NetDataContractSerializer 来进行序列化和反序列化。
             //详见 UseNetDataContractAttribute 的类型注释。
-            return new NetDataContractSerializer();
+            return new NetDataContractSerializer
+            {
+                SurrogateSelector = new CustomSurrogateSelector()
+            };
 #endif
 #if NS2
             return SerializationEntityGraph.CreateSerializer(entity.GetRepository().EntityMeta);
@@ -528,26 +533,6 @@ namespace RafyUnitTest
         #endregion
 
         #region AggtSerializer Web 序列化
-
-        [TestMethod]
-        public void SrlzT_Json_MPT_String()
-        {
-            var e1 = new TestUser();
-            e1.Age = 15;
-            e1._mySelfReference = e1;
-            TestUserExt.SetUserCode(e1, "TestUserExt_UserCode");
-
-            Assert.AreEqual(e1.Validate().Count, 1);
-
-            //在这里可以查看序列化后传输的字符串
-            var serializedString = MobileObjectFormatter.SerializeToString(e1);
-            Assert.IsNotNull(serializedString);
-            var serializedXml = MobileObjectFormatter.SerializeToXml(e1);
-            Assert.IsNotNull(serializedXml);
-
-            Assert.IsTrue(serializedXml.Contains("Age"));
-            Assert.IsTrue(serializedXml.Contains("UserCode"));
-        }
 
         [TestMethod]
         public void SrlzT_Web()
@@ -1416,5 +1401,64 @@ namespace RafyUnitTest
         }
 
         #endregion
+
+        [TestMethod]
+        public void SrlzT_CompareSize()
+        {
+            var entity = new TestUser();
+            entity.Age = 15;
+            entity._mySelfReference = entity;
+            TestUserExt.SetUserCode(entity, "TestUserExt_UserCode");
+
+            using (MemoryStream buffer = new MemoryStream())
+            {
+                var formatter = new BinaryFormatterWrapper();
+                formatter.Serialize(buffer, entity);
+                byte[] bytes = buffer.ToArray();
+                var binaryContent = Encoding.UTF8.GetString(bytes, 0, bytes.Length);
+                Console.WriteLine("BinaryFormatter", binaryContent.Length);
+            }
+
+#if NET45
+            var netDataContractSerializer = new NetDataContractSerializer { SurrogateSelector = new CustomSurrogateSelector() };
+            var netXml = Serialize(netDataContractSerializer, entity);
+            Console.WriteLine("NetDataContractSerializer", netXml.Length);
+#endif
+
+            //var dataContractSerializer = SerializationEntityGraph.CreateSerializer(entity.GetRepository().EntityMeta, false);
+            //var xml = Serialize(dataContractSerializer, entity);
+            //Console.WriteLine("DataContractSerializer", xml.Length);
+
+            //var dataContractJsonSerializer = SerializationEntityGraph.CreateSerializer(entity.GetRepository().EntityMeta, true);
+            //var json = Serialize(dataContractJsonSerializer, entity);
+            //Console.WriteLine("DataContractJsonSerializer", json.Length);
+
+            //在这里可以查看序列化后传输的字符串
+            //var serializedString = MobileObjectFormatter.SerializeToString(e1);
+            //Assert.IsNotNull(serializedString);
+            //var serializedXml = MobileObjectFormatter.SerializeToXml(e1);
+            //Assert.IsNotNull(serializedXml);
+
+            //Assert.IsTrue(serializedXml.Contains("Age"));
+            //Assert.IsTrue(serializedXml.Contains("UserCode"));
+        }
+
+        private static string Serialize(XmlObjectSerializer serializer, object entity, bool forceXml = false)
+        {
+            if (forceXml)
+            {
+                var sw = new StringWriter();
+                var xw = XmlWriter.Create(sw);
+                serializer.WriteObject(xw, entity);
+                return sw.ToString();
+            }
+
+            var stream = new MemoryStream();
+            serializer.WriteObject(stream, entity);
+            byte[] bytes = stream.ToArray();
+            var content = Encoding.UTF8.GetString(bytes, 0, bytes.Length);
+
+            return content;
+        }
     }
 }

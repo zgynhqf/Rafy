@@ -10,6 +10,13 @@
  * 
 *******************************************************/
 
+3.82.4025
+    ★重要、重构
+        添加 CustomSurrogateSelector 实现 IFormatter 的自定义序列化。
+            ManagedPropertyObject 实现 ICustomSerializationObject 接口。
+        MobileObjectFormatter 不再使用。
+            ManagedPropertyObject 不再从 MobileObject 上继承。
+
 3.81.4017
     删除接口
         删除 ManagedPropertyChangedSource 类型。

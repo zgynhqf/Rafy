@@ -27,7 +27,7 @@ namespace Rafy.Serialization
     /// <summary>
     /// 序列化门户 API
     /// </summary>
-    public static class Serializer
+    public static class BinarySerializer
     {
         /// <summary>
         /// 使用二进制序列化对象。
@@ -39,7 +39,8 @@ namespace Rafy.Serialization
             if (value == null) return null;
 
             var stream = new MemoryStream();
-            new BinaryFormatter().Serialize(stream, value);
+            var formatter = CreateFormatter();
+            formatter.Serialize(stream, value);
 
             //调试使用
             //var dto = Encoding.UTF8.GetString(stream.GetBuffer());
@@ -62,9 +63,36 @@ namespace Rafy.Serialization
 
             var stream = new MemoryStream(bytes);
 
-            var result = new BinaryFormatter().Deserialize(stream);
+            var formatter = CreateFormatter();
+            var result = formatter.Deserialize(stream);
 
             return result;
+        }
+
+        /// <summary>
+        /// 使用序列化器来序列化反序列化的方式，深度复制一个对象
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static T Clone<T>(T obj)
+        {
+            using (MemoryStream buffer = new MemoryStream())
+            {
+                var formatter = CreateFormatter();
+
+                formatter.Serialize(buffer, obj);
+                buffer.Position = 0;
+                object temp = formatter.Deserialize(buffer);
+                return (T)temp;
+            }
+        }
+
+        private static IFormatter CreateFormatter()
+        {
+            return new BinaryFormatter
+            {
+                SurrogateSelector = new CustomSurrogateSelector()
+            };
         }
     }
 }

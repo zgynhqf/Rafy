@@ -23,6 +23,7 @@ using Rafy;
 using Rafy.Domain;
 using Rafy.ManagedProperty;
 using Rafy.MetaModel;
+using Rafy.Serialization;
 using Rafy.Utils;
 
 namespace Rafy.Domain
@@ -75,7 +76,7 @@ namespace Rafy.Domain
             else
             {
                 //清除数据
-                svc._diffEntity = ObjectCloner.Clone(entity);
+                svc._diffEntity = BinarySerializer.Clone(entity);
                 clear.ClearData(svc._diffEntity);
             }
 

@@ -34,6 +34,7 @@ using Rafy;
 using System.Runtime.Serialization;
 using System.Runtime;
 using System.Diagnostics;
+using Rafy.Serialization;
 
 namespace Rafy.ManagedProperty
 {
@@ -42,11 +43,10 @@ namespace Rafy.ManagedProperty
     /// 
     /// 从此类继承的子类，可以以托管属性的方式声明自己的所有属性。同时，其它的类型可以为其在扩展编译期属性，也可以在运行时动态扩展属性，
     /// </summary>
-    [Serializable]
     [CompiledPropertyDeclarer]
     [DebuggerDisplay("{DebuggerDisplay}")]
     [DebuggerTypeProxy(typeof(ManagedPropertyObjectTypeProxy))]
-    public abstract partial class ManagedPropertyObject : CustomSerializationObject, IManagedPropertyObject, INotifyPropertyChanged, ICustomTypeDescriptor
+    public abstract partial class ManagedPropertyObject : IManagedPropertyObject, INotifyPropertyChanged, ICustomTypeDescriptor
     {
         #region 构造函数
 

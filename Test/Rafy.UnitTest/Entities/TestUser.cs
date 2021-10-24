@@ -21,15 +21,6 @@ namespace UT
     [RootEntity, Label("单元测试 - 用户")]
     public partial class TestUser : UnitTestEntity
     {
-        #region 构造函数
-
-        public TestUser() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected TestUser(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static Property<string> NameProperty = P<TestUser>.Register(e => e.Name, new PropertyMetadata<string>
         {
             DefaultValue = "DefaultName",

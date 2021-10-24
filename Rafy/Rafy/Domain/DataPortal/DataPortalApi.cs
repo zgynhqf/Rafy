@@ -18,6 +18,7 @@ using System.Security.Principal;
 using System.Threading;
 using Rafy;
 using Rafy.Reflection;
+using Rafy.Serialization;
 using Rafy.Utils;
 
 namespace Rafy.Domain.DataPortal
@@ -114,7 +115,7 @@ namespace Rafy.Domain.DataPortal
                     if (FakeRemoteIfOnClient &&
                         RafyEnvironment.Location.IsWPFUI && RafyEnvironment.Location.ConnectDataDirectly && RafyEnvironment.ThreadPortalCount == 1)
                     {
-                        res = ObjectCloner.Clone(obj);
+                        res = BinarySerializer.Clone(obj);
                     }
                     else
                     {

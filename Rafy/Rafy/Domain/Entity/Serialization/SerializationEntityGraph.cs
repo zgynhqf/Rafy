@@ -30,16 +30,23 @@ namespace Rafy.Domain.Serialization
         /// 并传递给 DataContractSerializer 作为已知类型，否则，将无法序列化。
         /// </summary>
         /// <param name="entityMeta"></param>
+        /// <param name="json"></param>
         /// <returns></returns>
-        public static XmlObjectSerializer CreateSerializer(EntityMeta entityMeta)
+        public static XmlObjectSerializer CreateSerializer(EntityMeta entityMeta, bool json = true)
         {
             var graph = new SerializationEntityGraph();
             graph.DeepSearch(entityMeta);
 
             graph._knownTypes.Add(typeof(MPFV));
 
-            return new DataContractSerializer(entityMeta.EntityType, graph._knownTypes);
-            //return new DataContractJsonSerializer(entityMeta.EntityType, graph._knownTypes);
+            if (json)
+            {
+                var jsonSerializer = new DataContractJsonSerializer(entityMeta.EntityType, graph._knownTypes);
+                return jsonSerializer;
+            }
+
+            var serializer = new DataContractSerializer(entityMeta.EntityType, graph._knownTypes);
+            return serializer;
         }
 
         private List<Type> _knownTypes;

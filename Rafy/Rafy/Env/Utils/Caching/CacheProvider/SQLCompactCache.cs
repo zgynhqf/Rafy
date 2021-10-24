@@ -362,12 +362,12 @@ ALTER TABLE [Entities] ADD CONSTRAINT [PK__Entities__000000000000000D] PRIMARY K
 
         private byte[] Serialize(object value)
         {
-            return Serializer.SerializeBytes(value);
+            return BinarySerializer.SerializeBytes(value);
         }
 
         private object Deserialize(byte[] data)
         {
-            return Serializer.DeserializeBytes(data);
+            return BinarySerializer.DeserializeBytes(data);
         }
     }
 }

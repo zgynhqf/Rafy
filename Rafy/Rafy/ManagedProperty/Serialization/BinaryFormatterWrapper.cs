@@ -12,8 +12,10 @@ namespace Rafy.Serialization
     /// </summary>
     public class BinaryFormatterWrapper : ISerializationFormatter
     {
-        private BinaryFormatter _formatter =
-          new BinaryFormatter();
+        private BinaryFormatter _formatter = new BinaryFormatter
+        {
+            SurrogateSelector = new CustomSurrogateSelector()
+        };
 
         #region ISerializationFormatter Members
 

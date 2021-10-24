@@ -11,6 +11,7 @@
  * 
 *******************************************************/
 
+using Rafy.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -29,7 +30,7 @@ namespace Rafy.ManagedProperty
     /// </summary>
     [DebuggerDisplay("{FullName}")]
     [Serializable]
-    public class ConcreteProperty : CustomSerializationObject
+    public class ConcreteProperty : ICustomSerializationObject
     {
         private IManagedProperty _property;
 
@@ -92,15 +93,13 @@ namespace Rafy.ManagedProperty
 
         #region Serialization
 
-        /// <summary>
-        /// 反序列化构造函数。
-        /// 
-        /// 需要更高安全性，加上 SecurityPermissionAttribute 标记。
-        /// </summary>
-        /// <param name="info"></param>
-        /// <param name="context"></param>
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        private ConcreteProperty(SerializationInfo info, StreamingContext context)
+        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("PropertyName", _property.Name);
+            info.AddValue("OwnerType", _owner);
+        }
+
+        void ICustomSerializationObject.SetObjectData(SerializationInfo info, StreamingContext context)
         {
             var propertyName = info.GetString("PropertyName");
             var ownerType = info.GetValue("OwnerType", typeof(Type)) as Type;
@@ -109,14 +108,6 @@ namespace Rafy.ManagedProperty
 
             _owner = ownerType;
             _property = property;
-        }
-
-        protected override void Serialize(SerializationInfo info, StreamingContext context)
-        {
-            base.Serialize(info, context);
-
-            info.AddValue("PropertyName", _property.Name);
-            info.AddValue("OwnerType", _owner);
         }
 
         #endregion

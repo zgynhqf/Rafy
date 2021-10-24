@@ -86,7 +86,7 @@ namespace Rafy.WCF
         Message IClientMessageFormatter.SerializeRequest(MessageVersion messageVersion, object[] parameters)
         {
             var result = new object[parameters.Length];
-            for (int i = 0; i < parameters.Length; i++) { result[i] = Serializer.SerializeBytes(parameters[i]); }
+            for (int i = 0; i < parameters.Length; i++) { result[i] = BinarySerializer.SerializeBytes(parameters[i]); }
 
             return _innerClientFormatter.SerializeRequest(messageVersion, result);
         }
@@ -95,8 +95,8 @@ namespace Rafy.WCF
         {
             var result = _innerClientFormatter.DeserializeReply(message, parameters);
 
-            for (int i = 0; i < parameters.Length; i++) { parameters[i] = Serializer.DeserializeBytes(parameters[i] as byte[]); }
-            result = Serializer.DeserializeBytes(result as byte[]);
+            for (int i = 0; i < parameters.Length; i++) { parameters[i] = BinarySerializer.DeserializeBytes(parameters[i] as byte[]); }
+            result = BinarySerializer.DeserializeBytes(result as byte[]);
 
             return result;
         }
@@ -105,14 +105,14 @@ namespace Rafy.WCF
         {
             _innerDispatchFormatter.DeserializeRequest(message, parameters);
 
-            for (int i = 0; i < parameters.Length; i++) { parameters[i] = Serializer.DeserializeBytes(parameters[i] as byte[]); }
+            for (int i = 0; i < parameters.Length; i++) { parameters[i] = BinarySerializer.DeserializeBytes(parameters[i] as byte[]); }
         }
 
         Message IDispatchMessageFormatter.SerializeReply(MessageVersion messageVersion, object[] parameters, object result)
         {
             var seralizedParameters = new object[parameters.Length];
-            for (int i = 0; i < parameters.Length; i++) { seralizedParameters[i] = Serializer.SerializeBytes(parameters[i]); }
-            var serialzedResult = Serializer.SerializeBytes(result);
+            for (int i = 0; i < parameters.Length; i++) { seralizedParameters[i] = BinarySerializer.SerializeBytes(parameters[i]); }
+            var serialzedResult = BinarySerializer.SerializeBytes(result);
 
             return _innerDispatchFormatter.SerializeReply(messageVersion, seralizedParameters, serialzedResult);
         }

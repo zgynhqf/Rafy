@@ -11,6 +11,8 @@
  * 
 *******************************************************/
 
+using Rafy.Reflection;
+using Rafy.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,9 +20,6 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Text;
-using Rafy.Reflection;
-using Rafy.Serialization;
-using Rafy.Serialization.Mobile;
 
 namespace Rafy.ManagedProperty
 {
@@ -30,124 +29,8 @@ namespace Rafy.ManagedProperty
     /// 
     /// ManagedPropertyObject 继承自 MobileObject，使得其支持自定义序列化（JSON等各种格式）
     /// </summary>
-    [MobileNonSerialized]
-    public abstract partial class ManagedPropertyObject : ISerializationNotification
+    public abstract partial class ManagedPropertyObject : ICustomSerializationObject, IDeserializationCallback
     {
-        #region Mobile Serialization
-
-        protected override void OnMobileSerializeRef(ISerializationContext context)
-        {
-            base.OnMobileSerializeRef(context);
-
-            this.SerialzeCompiledProperties(context);
-        }
-
-        protected override void OnMobileSerializeState(ISerializationContext context)
-        {
-            base.OnMobileSerializeState(context);
-
-            this.SerialzeCompiledProperties(context);
-        }
-
-        protected override void OnMobileDeserializeState(ISerializationContext context)
-        {
-            this.InitFields();
-
-            this.DeserialzeCompiledProperties(context);
-
-            base.OnMobileDeserializeState(context);
-        }
-
-        protected override void OnMobileDeserializeRef(ISerializationContext context)
-        {
-            this.DeserialzeCompiledProperties(context);
-
-            base.OnMobileDeserializeRef(context);
-        }
-
-        void ISerializationNotification.Deserialized(ISerializationContext context)
-        {
-            this.OnDeserialized(null);
-        }
-
-        private void SerialzeCompiledProperties(ISerializationContext context)
-        {
-            var formatter = context.RefFormatter;
-            bool isState = context.IsProcessingState;
-
-            //只序列化 compiled property, 不序列化 runtime property
-            foreach (var field in this._compiledFields)
-            {
-                if (field.HasLocalValue)
-                {
-                    var p = field.Property;
-
-                    //如果是需要的类型
-                    if (context.IsState(p.PropertyType) == isState)
-                    {
-                        var v = field.Value;
-
-                        var defaultValue = p.GetMeta(this).DefaultValue;
-
-                        //如果不是默认值
-                        if (!object.Equals(v, defaultValue))
-                        {
-                            if (isState)
-                            {
-                                context.AddState(p.Name, v);
-                            }
-                            else
-                            {
-                                context.AddRef(p.Name, v);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        private void DeserialzeCompiledProperties(ISerializationContext context)
-        {
-            var formatter = context.RefFormatter;
-            bool isState = context.IsProcessingState;
-
-            var compiledProperties = _container.GetNonReadOnlyCompiledProperties();
-
-            if (isState)
-            {
-                var allStates = context.States;
-                foreach (var kv in allStates)
-                {
-                    var name = kv.Key;
-
-                    var property = compiledProperties.Find(name);
-                    if (property != null)
-                    {
-                        var state = kv.Value;
-                        this.LoadProperty(property, state);
-                    }
-                }
-            }
-            else
-            {
-                var allReferences = context.References;
-                foreach (var kv in allReferences)
-                {
-                    var name = kv.Key;
-
-                    var property = compiledProperties.Find(name);
-                    if (property != null)
-                    {
-                        var refId = kv.Value;
-                        var v = formatter.GetObject(refId);
-                        this.LoadProperty(property, v);
-                    }
-                }
-            }
-        }
-
-        #endregion
-
         #region 自定义 System Serialization / Deserialization
 
         /// <summary>
@@ -155,10 +38,8 @@ namespace Rafy.ManagedProperty
         /// </summary>
         /// <param name="info"></param>
         /// <param name="context"></param>
-        protected override void Serialize(SerializationInfo info, StreamingContext context)
+        protected virtual void Serialize(SerializationInfo info, StreamingContext context)
         {
-            base.Serialize(info, context);
-
             //只序列化非默认状态、非默认值的编译期属性（不序列化运行时属性）
             foreach (var field in _compiledFields)
             {
@@ -176,24 +57,15 @@ namespace Rafy.ManagedProperty
                 info.AddValue(property.Name, value, fieldType);
             }
 
-            //同时，还需要序列化未标记 NonSerialized 的字段。
-            var clrFields = FieldsSerializationHelper.EnumerateSerializableFields(info.ObjectType);
-            foreach (var f in clrFields)
-            {
-                var v = f.GetValue(this);
-                var vType = v != null ? v.GetType() : f.FieldType;
-
-                info.AddValue(f.Name, v, vType);
-            }
+            FieldsSerializationHelper.SerializeFields(this, info);
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ManagedPropertyObject"/> class.
+        /// 从 info 中反序列化数据。
         /// </summary>
         /// <param name="info"></param>
         /// <param name="context"></param>
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected ManagedPropertyObject(SerializationInfo info, StreamingContext context)
+        protected virtual void Deserialize(SerializationInfo info, StreamingContext context)
         {
             var compiledProperties = this.PropertiesContainer.GetNonReadOnlyCompiledProperties();
 
@@ -203,10 +75,8 @@ namespace Rafy.ManagedProperty
 
             //遍历所有已经序列化的属性值序列
             var compiledPropertiesCount = compiledProperties.Count;
-            var allValues = info.GetEnumerator();
-            while (allValues.MoveNext())
+            foreach (var serializationEntry in info)
             {
-                var serializationEntry = allValues.Current;
                 var name = serializationEntry.Name;
 
                 bool isManagedProperty = false;
@@ -237,25 +107,97 @@ namespace Rafy.ManagedProperty
         }
 
         /// <summary>
-        /// 反序列化完成时，调用此函数。
-        /// </summary>
-        /// <param name="context"></param>
-        protected override sealed void OnDeserialized(StreamingContext context)
-        {
-            if (_compiledFields == null)
-            {
-                this.InitFields();
-            }
-
-            this.OnDeserialized(null as DesirializedArgs);
-        }
-
-        #endregion
-
-        /// <summary>
-        /// 反序列化完成后的回调函数。
+        /// 所有反序列化完成时（包括对象间的引用关系），会调用此回调函数。 
         /// </summary>
         /// <param name="e"></param>
         protected virtual void OnDeserialized(DesirializedArgs e) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ManagedPropertyObject"/> class.
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected ManagedPropertyObject(SerializationInfo info, StreamingContext context)
+        {
+            throw new InvalidOperationException();
+        }
+
+        ///// <summary>
+        ///// 反序列化完成时，调用此函数。
+        ///// </summary>
+        ///// <param name="context"></param>
+        //protected override sealed void OnDeserialized(StreamingContext context)
+        //{
+        //    if (_compiledFields == null)
+        //    {
+        //        this.InitFields();
+        //    }
+
+        //    this.OnDeserialized(null as DesirializedArgs);
+        //}
+
+        #endregion
+
+        #region 系统接口
+
+        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            this.Serialize(info, context);
+        }
+
+        void ICustomSerializationObject.SetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            this.Deserialize(info, context);
+
+            //this.OnDeserialized(null as DesirializedArgs);
+        }
+
+        void IDeserializationCallback.OnDeserialization(object sender)
+        {
+            this.OnDeserialized(null as DesirializedArgs);
+        }
+
+        //不能使用这个回调。
+        //在 BinaryFormatter 中，它在 ICustomSerializationObject.SetObjectData 之前被回调。
+        //但是在 NetDataContractSerializer 中，它却在 ICustomSerializationObject.SetObjectData 之后被回调。
+        //[OnDeserialized]
+        //private void OnDeserialization(StreamingContext context)
+        //{
+        //    //this.OnDeserialized(null as DesirializedArgs);
+        //}
+
+        //NetDataContractSerializer:
+        //System.Runtime.Serialization.SerializationException: An object of type 'Rafy.Serialization.DeserializationFactory' which implements IObjectReference returned null from its GetRealObject method. Change the GetRealObject implementation to return a non-null value. 
+        //[Serializable]
+        //internal class DeserializationFactory : IObjectReference
+        //{
+        //    private static readonly string RealTypePropertyName = "DeserializationFactory_RealType";
+
+        //    [NonSerialized]
+        //    private object _realObject;
+
+        //    public DeserializationFactory(SerializationInfo info, StreamingContext context)
+        //    {
+        //        var type = info.GetString(RealTypePropertyName);
+        //        var realType = Type.GetType(type);
+        //        var cso = Domain.Entity.New(realType) as ICustomSerializationObject;
+        //        cso.SetObjectData(info, context);
+        //        _realObject = cso;
+        //    }
+
+        //    internal static void SetFactoryType(SerializationInfo info, object realType)
+        //    {
+        //        info.SetType(typeof(DeserializationFactory));
+        //        info.AddValue(DeserializationFactory.RealTypePropertyName, realType);
+        //    }
+
+        //    public object GetRealObject(StreamingContext context)
+        //    {
+        //        return _realObject;
+        //    }
+        //}
+
+        #endregion
     }
 }

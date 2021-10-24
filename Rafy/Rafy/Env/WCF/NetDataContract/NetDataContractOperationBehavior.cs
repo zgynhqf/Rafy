@@ -6,6 +6,7 @@ using System.ServiceModel;
 using System.Runtime.Serialization;
 using System.Xml;
 using System.ServiceModel.Description;
+using Rafy.Serialization;
 
 namespace Rafy.WCF
 {
@@ -47,7 +48,10 @@ namespace Rafy.WCF
         public override XmlObjectSerializer CreateSerializer(Type type, string name, string ns,
             IList<Type> knownTypes)
         {
-            return new NetDataContractSerializer(name, ns);
+            return new NetDataContractSerializer(name, ns)
+            {
+                SurrogateSelector = new CustomSurrogateSelector()
+            };
         }
 
         /// <summary>
@@ -57,7 +61,10 @@ namespace Rafy.WCF
         public override XmlObjectSerializer CreateSerializer(Type type, XmlDictionaryString name,
             XmlDictionaryString ns, IList<Type> knownTypes)
         {
-            return new NetDataContractSerializer(name, ns);
+            return new NetDataContractSerializer(name, ns)
+            {
+                SurrogateSelector = new CustomSurrogateSelector()
+            };
         }
 
         #endregion

@@ -15,15 +15,6 @@ namespace UT
     [RootEntity, Label("单元测试 - 管理员")]
     public partial class TestAdministrator : TestUser
     {
-        #region 构造函数
-
-        public TestAdministrator() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected TestAdministrator(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly Property<int?> LevelProperty = P<TestAdministrator>.Register(e => e.Level);
         public int? Level
         {

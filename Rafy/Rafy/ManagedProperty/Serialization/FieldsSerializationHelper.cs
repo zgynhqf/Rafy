@@ -19,8 +19,9 @@ using System.Reflection;
 using Rafy.ManagedProperty;
 using Rafy.Reflection;
 using System.Runtime.Serialization;
+using Rafy.Serialization.Mobile;
 
-namespace Rafy.Serialization.Mobile
+namespace Rafy.Serialization
 {
     /// <summary>
     /// 为了兼容系统的序列化机制，特写此类进行字段的序列化：
@@ -136,6 +137,19 @@ namespace Rafy.Serialization.Mobile
                         }
                     }
                 }
+            }
+        }
+
+        internal static void SerializeFields(object obj, SerializationInfo info)
+        {
+            //同时，还需要序列化未标记 NonSerialized 的字段。
+            var clrFields = FieldsSerializationHelper.EnumerateSerializableFields(info.ObjectType);
+            foreach (var f in clrFields)
+            {
+                var v = f.GetValue(obj);
+                var vType = v != null ? v.GetType() : f.FieldType;
+
+                info.AddValue(f.Name, v, vType);
             }
         }
     }
