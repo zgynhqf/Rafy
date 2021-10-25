@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -16,10 +16,8 @@ using Rafy.ManagedProperty;
 
 namespace $domainNamespace$
 {
-    [Serializable]
     public abstract class $domainName$Entity : LongEntity { }
 
-    [Serializable]
     public abstract class $domainName$EntityList : EntityList { }
 
     public abstract class $domainName$EntityRepository : EntityRepository

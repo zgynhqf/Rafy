@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建日期：20140504
@@ -57,7 +57,7 @@ namespace VSTemplates.Wizards
                     );
             }
 
-            p.entityAttributes = p.isRootEntity ? "[RootEntity, Serializable]" : "[ChildEntity, Serializable]";
+            p.entityAttributes = p.isRootEntity ? "[RootEntity]" : "[ChildEntity]";
 
             var result = DomainEntityCodeTemplate;
             foreach (var property in typeof(EntityFileCodeReplacements).GetFields())

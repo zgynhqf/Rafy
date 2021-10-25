@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -16,20 +16,8 @@ using Rafy.ManagedProperty;
 
 namespace $domainNamespace$
 {
-    [Serializable]
-    public abstract class $domainName$Entity : LongEntity
-    {
-        #region 构造函数
+    public abstract class $domainName$Entity : LongEntity { }
 
-        protected $domainName$Entity() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected $domainName$Entity(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-    }
-
-    [Serializable]
     public abstract class $domainName$EntityList : EntityList { }
 
     public abstract class $domainName$EntityRepository : EntityRepository
