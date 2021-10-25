@@ -28,12 +28,10 @@ using Rafy.ManagedProperty;
 
 namespace Rafy.FileStorage
 {
-    [Serializable]
     public abstract class FileStorageEntity : LongEntity
     {
     }
 
-    [Serializable]
     public abstract class FileStorageEntityList : EntityList { }
 
     public abstract class FileStorageEntityRepository : EntityRepository

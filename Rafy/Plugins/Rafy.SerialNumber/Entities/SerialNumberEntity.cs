@@ -28,7 +28,6 @@ using Rafy.ManagedProperty;
 
 namespace Rafy.SerialNumber
 {
-    [Serializable]
     public abstract class SerialNumberEntity : LongEntity
     {
         //#region 动态提供 SerialNumber 的主键的类型
@@ -49,7 +48,6 @@ namespace Rafy.SerialNumber
         //#endregion
     }
 
-    [Serializable]
     public abstract class SerialNumberEntityList : EntityList { }
 
     public abstract class SerialNumberEntityRepository : EntityRepository

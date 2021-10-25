@@ -32,7 +32,7 @@ namespace Rafy.MultiLanguages
     /// <summary>
     /// 某一语言下的映射信息
     /// </summary>
-    [ChildEntity, Serializable]
+    [ChildEntity]
     public partial class MappingInfo : MLEntity
     {
         #region 引用属性
@@ -107,7 +107,6 @@ namespace Rafy.MultiLanguages
         #endregion
     }
 
-    [Serializable]
     public partial class MappingInfoList : MLEntityList
     {
         public MappingInfo FindOrCreate(DevLanguageItem devLanguageItem)

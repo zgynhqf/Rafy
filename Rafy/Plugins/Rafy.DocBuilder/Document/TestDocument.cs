@@ -28,7 +28,7 @@ using Rafy.Domain.ORM;
 
 namespace Rafy.DevTools
 {
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class TestDocument : IntEntity
     {
         #region 引用属性
@@ -73,7 +73,6 @@ namespace Rafy.DevTools
         #endregion
     }
 
-    [Serializable]
     public partial class TestDocumentList : EntityList { }
 
     public partial class TestDocumentRepository : EntityRepository

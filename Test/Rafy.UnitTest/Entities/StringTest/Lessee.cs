@@ -20,7 +20,7 @@ namespace UT
     /// <summary>
     /// 承租人
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class Lessee : StringTestLongEntity
     {
         #region 引用属性
@@ -50,7 +50,6 @@ namespace UT
     /// <summary>
     /// 承租人 列表类。
     /// </summary>
-    [Serializable]
     public partial class LesseeList : StringTestEntityList { }
 
     /// <summary>

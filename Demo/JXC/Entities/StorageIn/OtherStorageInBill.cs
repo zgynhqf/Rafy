@@ -14,7 +14,7 @@ using Rafy.MetaModel.View;
 
 namespace JXC
 {
-    [RootEntity, Serializable]
+    [RootEntity]
     [ConditionQueryType(typeof(TimeSpanCriteria))]
     public partial class OtherStorageInBill : StorageInBill
     {
@@ -34,7 +34,6 @@ namespace JXC
         }
     }
 
-    [Serializable]
     public partial class OtherStorageInBillList : StorageInBillList { }
 
     public partial class OtherStorageInBillRepository : StorageInBillRepository

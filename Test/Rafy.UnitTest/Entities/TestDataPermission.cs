@@ -23,7 +23,7 @@ namespace Rafy.UnitTest
     /// <summary>
     /// 测试数据权限
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class TestDataPermission : UnitTestEntity
     {
         #region 引用属性
@@ -73,7 +73,6 @@ namespace Rafy.UnitTest
     /// <summary>
     /// 测试数据权限 列表类。
     /// </summary>
-    [Serializable]
     public partial class TestDataPermissionList : UnitTestEntityList { }
 
     /// <summary>

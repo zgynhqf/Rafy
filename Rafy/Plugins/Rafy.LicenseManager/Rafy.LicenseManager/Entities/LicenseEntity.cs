@@ -25,7 +25,7 @@ namespace Rafy.LicenseManager.Entities
     /// <summary>
     /// 授权信息实体的领域名称
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class LicenseEntity : LicenseManagerEntity
     {
         #region 引用属性
@@ -164,7 +164,6 @@ namespace Rafy.LicenseManager.Entities
     /// <summary>
     /// 授权信息实体的领域名称 列表类。
     /// </summary>
-    [Serializable]
     public partial class LicenseEntityList : LicenseManagerEntityList { }
 
     /// <summary>

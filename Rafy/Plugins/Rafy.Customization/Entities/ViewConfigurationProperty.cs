@@ -15,7 +15,7 @@ using Rafy.MetaModel.XmlConfig;
 
 namespace Rafy.Customization
 {
-    [ChildEntity, Serializable]
+    [ChildEntity]
     public partial class ViewConfigurationProperty : IntEntity
     {
         public static readonly IRefIdProperty ViewConfigurationModelIdProperty =
@@ -85,7 +85,6 @@ namespace Rafy.Customization
         All = DropDownList | List | Detail
     }
 
-    [Serializable]
     public partial class ViewConfigurationPropertyList : EntityList { }
 
     public partial class ViewConfigurationPropertyRepository : EntityRepository

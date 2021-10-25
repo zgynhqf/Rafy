@@ -31,7 +31,7 @@ namespace MP
     /// <summary>
     /// 每周说明
     /// </summary>
-    [ChildEntity, Serializable]
+    [ChildEntity]
     public partial class WeekNote : MPEntity
     {
         #region 引用属性
@@ -116,7 +116,6 @@ namespace MP
         #endregion
     }
 
-    [Serializable]
     public partial class WeekNoteList : MPEntityList { }
 
     public partial class WeekNoteRepository : MPEntityRepository

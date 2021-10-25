@@ -33,7 +33,7 @@ namespace Rafy.SerialNumber
     /// <summary>
     /// 生成的流水号的具体值
     /// </summary>
-    [ChildEntity, Serializable]
+    [ChildEntity]
     public partial class SerialNumberValue : SerialNumberEntity
     {
         #region 引用属性
@@ -136,7 +136,6 @@ namespace Rafy.SerialNumber
     /// <summary>
     /// 生成的流水号的具体值 列表类。
     /// </summary>
-    [Serializable]
     public partial class SerialNumberValueList : SerialNumberEntityList { }
 
     /// <summary>

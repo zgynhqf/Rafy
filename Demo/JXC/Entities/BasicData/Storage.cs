@@ -28,7 +28,7 @@ namespace JXC
     /// <summary>
     /// 仓库
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class Storage : JXCEntity
     {
         public static readonly ListProperty<StorageProductList> StorageProductListProperty = P<Storage>.RegisterList(e => e.StorageProductList);
@@ -146,7 +146,6 @@ namespace JXC
         }
     }
 
-    [Serializable]
     public partial class StorageList : JXCEntityList { }
 
     public partial class StorageRepository : JXCEntityRepository

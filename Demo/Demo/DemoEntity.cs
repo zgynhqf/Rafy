@@ -15,12 +15,10 @@ using Rafy.ManagedProperty;
 
 namespace Demo
 {
-    [Serializable]
     public abstract class DemoEntity : IntEntity
     {
     }
 
-    [Serializable]
     public abstract class DemoEntityList : EntityList { }
 
     public abstract class DemoEntityRepository : EntityRepository

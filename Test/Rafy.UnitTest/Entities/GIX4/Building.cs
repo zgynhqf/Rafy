@@ -19,7 +19,7 @@ namespace UT
     /// <summary>
     /// 建筑
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class Building : UnitTestEntity
     {
         #region 引用属性
@@ -49,7 +49,6 @@ namespace UT
     /// <summary>
     /// 建筑 列表类。
     /// </summary>
-    [Serializable]
     public partial class BuildingList : UnitTestEntityList { }
 
     /// <summary>

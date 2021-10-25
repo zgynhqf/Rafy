@@ -32,7 +32,7 @@ namespace MP
     /// <summary>
     /// 以本周为视角的计划与总结对象
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class WeekSummary : MPEntity
     {
         internal WeekCompletion WeekCompletion;
@@ -132,7 +132,6 @@ namespace MP
         #endregion
     }
 
-    [Serializable]
     public partial class WeekSummaryList : MPEntityList { }
 
     public partial class WeekSummaryRepository : MPEntityRepository

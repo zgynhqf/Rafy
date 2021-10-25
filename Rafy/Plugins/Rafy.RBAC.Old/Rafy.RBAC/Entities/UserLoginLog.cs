@@ -92,7 +92,6 @@ namespace Rafy.RBAC.Old
         }
     }
 
-    [Serializable]
     public partial class UserLoginLogList : EntityList { }
 
     public partial class UserLoginLogRepository : EntityRepository

@@ -93,7 +93,6 @@ namespace Rafy.Domain.Caching
         }
     }
 
-    [Serializable]
     public partial class ScopeVersionList : EntityList
     {
         public DateTime ServerTime { get; set; }

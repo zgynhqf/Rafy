@@ -37,7 +37,7 @@ namespace Rafy.RBAC.GroupManagement
     /// <summary>
     /// 用户组
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class Group : GroupManagementEntity
     {
         #region 引用属性
@@ -118,7 +118,6 @@ namespace Rafy.RBAC.GroupManagement
     /// <summary>
     /// 用户组 列表类。
     /// </summary>
-    [Serializable]
     public partial class GroupList : GroupManagementEntityList { }
 
     /// <summary>

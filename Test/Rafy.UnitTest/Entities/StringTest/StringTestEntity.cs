@@ -28,22 +28,18 @@ using Rafy.ManagedProperty;
 
 namespace UT
 {
-    [Serializable]
     public abstract class StringTestEntity : StringEntity
     {
     }
 
-    [Serializable]
     public abstract class StringTestIntEntity : IntEntity
     {
     }
 
-    [Serializable]
     public abstract class StringTestLongEntity : LongEntity
     {
     }
 
-    [Serializable]
     public abstract class StringTestEntityList : EntityList { }
 
     public abstract class StringTestEntityRepository : EntityRepository

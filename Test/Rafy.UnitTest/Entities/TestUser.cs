@@ -176,7 +176,6 @@ namespace UT
         }
     }
 
-    [Serializable]
     public partial class TestUserList : UnitTestEntityList { }
 
     public partial class TestUserRepository : UnitTestEntityRepository

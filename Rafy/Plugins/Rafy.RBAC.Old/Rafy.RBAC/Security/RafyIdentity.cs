@@ -32,7 +32,7 @@ namespace Rafy.RBAC.Old.Security
     /// <summary>
     /// 注意：防止重名，User增加Code区分唯一性，查询时通过Code查询，同时返回Code和Name
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class RafyIdentity : IntEntity, IRafyIdentity
     {
         public User User { get; internal set; }
@@ -90,7 +90,6 @@ namespace Rafy.RBAC.Old.Security
         }
     }
 
-    [Serializable]
     public partial class RafyIdentityList : EntityList { }
 
     public partial class RafyIdentityRepository : EntityRepository

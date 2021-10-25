@@ -29,7 +29,7 @@ namespace Rafy.RBAC.Old
     /// <summary>
     /// 岗位
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class Position : IntEntity
     {
         public static readonly Property<string> CodeProperty = P<Position>.Register(e => e.Code);
@@ -47,7 +47,6 @@ namespace Rafy.RBAC.Old
         }
     }
 
-    [Serializable]
     public partial class PositionList : EntityList { }
 
     public partial class PositionRepository : EntityRepository

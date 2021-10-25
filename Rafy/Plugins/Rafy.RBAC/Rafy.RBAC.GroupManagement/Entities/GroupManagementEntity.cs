@@ -29,12 +29,10 @@ using Rafy.ManagedProperty;
 
 namespace Rafy.RBAC.GroupManagement
 {
-    [Serializable]
     public abstract class GroupManagementEntity : LongEntity
     {
     }
 
-    [Serializable]
     public abstract class GroupManagementEntityList : EntityList { }
 
     public abstract class GroupManagementEntityRepository : EntityRepository

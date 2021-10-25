@@ -15,7 +15,7 @@ using Rafy;
 
 namespace JXC
 {
-    [ChildEntity, Serializable]
+    [ChildEntity]
     public partial class PurchaseOrderItem : ProductRefItem
     {
         public static readonly IRefIdProperty PurchaseOrderIdProperty =
@@ -83,7 +83,6 @@ namespace JXC
         }
     }
 
-    [Serializable]
     public partial class PurchaseOrderItemList : ProductRefItemList { }
 
     public partial class PurchaseOrderItemRepository : JXCEntityRepository

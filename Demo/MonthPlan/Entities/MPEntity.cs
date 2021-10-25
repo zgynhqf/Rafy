@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20121102 16:04
@@ -25,7 +25,6 @@ using Rafy.MetaModel.View;
 
 namespace MP
 {
-    [Serializable]
     public abstract class MPEntity : IntEntity
     {
         public MPEntity()
@@ -35,7 +34,6 @@ namespace MP
         }
     }
 
-    [Serializable]
     public abstract class MPEntityList : EntityList { }
 
     [Serializable]

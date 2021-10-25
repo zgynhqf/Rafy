@@ -14,7 +14,6 @@ namespace JXC
     /// <summary>
     /// 基类
     /// </summary>
-    [Serializable]
     public abstract class JXCEntity : IntEntity
     {
         //static JXCEntity()
@@ -27,7 +26,6 @@ namespace JXC
         //}
     }
 
-    [Serializable]
     public abstract class JXCEntityList : EntityList { }
 
     public abstract class JXCEntityRepository : EntityRepository { }

@@ -130,7 +130,6 @@ namespace UT
     /// <summary>
     /// 文章 列表类。
     /// </summary>
-    [Serializable]
     public partial class ArticleList : UnitTestEntityList { }
 
     /// <summary>

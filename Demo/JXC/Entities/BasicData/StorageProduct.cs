@@ -17,7 +17,7 @@ namespace JXC
     /// <summary>
     /// 库存货品
     /// </summary>
-    [ChildEntity, Serializable]
+    [ChildEntity]
     public partial class StorageProduct : ProductRefItem
     {
         public static readonly IRefIdProperty StorageIdProperty =
@@ -36,7 +36,6 @@ namespace JXC
         }
     }
 
-    [Serializable]
     public partial class StorageProductList : ProductRefItemList { }
 
     public partial class StorageProductRepository : JXCEntityRepository

@@ -31,7 +31,7 @@ namespace JXC
     /// <summary>
     /// 采购订单
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     [ConditionQueryType(typeof(ClientTimeSpanCriteria))]
     public partial class PurchaseOrder : JXCEntity
     {
@@ -200,7 +200,6 @@ namespace JXC
         Completed,
     }
 
-    [Serializable]
     public partial class PurchaseOrderList : JXCEntityList { }
 
     public partial class PurchaseOrderRepository : JXCEntityRepository

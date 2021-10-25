@@ -28,7 +28,7 @@ using Rafy.ManagedProperty;
 
 namespace UT
 {
-    [ChildEntity, Serializable]
+    [ChildEntity]
     public partial class PBS : UnitTestEntity
     {
         #region 引用属性
@@ -70,7 +70,6 @@ namespace UT
         #endregion
     }
 
-    [Serializable]
     public partial class PBSList : UnitTestEntityList { }
 
     public partial class PBSRepository : UnitTestEntityRepository

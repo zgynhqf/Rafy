@@ -15,7 +15,7 @@ using Rafy.ManagedProperty;
 
 namespace JXC
 {
-    [RootEntity, Serializable]
+    [RootEntity]
     [ConditionQueryType(typeof(TimeSpanCriteria))]
     public partial class StorageMove : JXCEntity
     {
@@ -84,7 +84,6 @@ namespace JXC
         }
     }
 
-    [Serializable]
     public partial class StorageMoveList : JXCEntityList
     {
     }

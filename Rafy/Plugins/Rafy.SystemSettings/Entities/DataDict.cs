@@ -34,7 +34,7 @@ namespace Rafy.SystemSettings
     /// <summary>
     /// 数据字典
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class DataDict : SystemSettingsEntity
     {
         #region 引用属性
@@ -103,7 +103,6 @@ namespace Rafy.SystemSettings
     /// <summary>
     /// 数据字典 列表类。
     /// </summary>
-    [Serializable]
     public partial class DataDictList : SystemSettingsEntityList { }
 
     /// <summary>

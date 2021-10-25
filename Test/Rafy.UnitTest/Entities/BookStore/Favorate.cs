@@ -21,7 +21,7 @@ namespace UT
     /// <summary>
     /// 收藏项
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class Favorate : UnitTestEntity
     {
         #region 引用属性
@@ -122,7 +122,6 @@ namespace UT
     /// <summary>
     /// 收藏项 列表类。
     /// </summary>
-    [Serializable]
     public partial class FavorateList : UnitTestEntityList { }
 
     /// <summary>

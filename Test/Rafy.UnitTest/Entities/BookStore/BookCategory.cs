@@ -19,7 +19,7 @@ namespace UT
     /// <summary>
     /// 书籍类别
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class BookCategory : UnitTestEntity
     {
         #region 引用属性
@@ -66,7 +66,6 @@ namespace UT
     /// <summary>
     /// 书籍类别 列表类。
     /// </summary>
-    [Serializable]
     public partial class BookCategoryList : UnitTestEntityList { }
 
     /// <summary>

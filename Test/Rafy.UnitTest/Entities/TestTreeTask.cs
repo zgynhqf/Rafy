@@ -102,7 +102,6 @@ namespace UT
         }
     }
 
-    [Serializable]
     public partial class TestTreeTaskList : UnitTestEntityList
     {
         public TestTreeTask AddNew()

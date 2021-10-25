@@ -15,7 +15,7 @@ using Rafy.MetaModel.XmlConfig;
 
 namespace Rafy.Customization
 {
-    [ChildEntity, Serializable]
+    [ChildEntity]
     public partial class ViewConfigurationCommand : IntEntity
     {
         public static readonly IRefIdProperty ViewConfigurationModelIdProperty =
@@ -55,7 +55,6 @@ namespace Rafy.Customization
         }
     }
 
-    [Serializable]
     public partial class ViewConfigurationCommandList : EntityList
     {
         internal void Add(int parentId, IEnumerable<WebCommand> webCommands)

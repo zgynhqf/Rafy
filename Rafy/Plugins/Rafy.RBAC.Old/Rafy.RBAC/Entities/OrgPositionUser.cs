@@ -35,7 +35,7 @@ namespace Rafy.RBAC.Old
     /// <summary>
     /// 部门岗位用户
     /// </summary>
-    [ChildEntity, Serializable]
+    [ChildEntity]
     public partial class OrgPositionUser : IntEntity
     {
         public static readonly IRefIdProperty OrgPositionIdProperty =
@@ -93,7 +93,6 @@ namespace Rafy.RBAC.Old
         #endregion
     }
 
-    [Serializable]
     public partial class OrgPositionUserList : EntityList { }
 
     public partial class OrgPositionUserRepository : EntityRepository

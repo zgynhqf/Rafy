@@ -33,7 +33,7 @@ namespace MP
     /// <summary>
     /// 每个月内的任务项
     /// </summary>
-    [ChildEntity, Serializable]
+    [ChildEntity]
     public partial class TaskOrCategory : MPEntity
     {
         #region 引用属性
@@ -395,7 +395,6 @@ namespace MP
         #endregion
     }
 
-    [Serializable]
     public partial class TaskOrCategoryList : MPEntityList { }
 
     public partial class TaskOrCategoryRepository : MPEntityRepository

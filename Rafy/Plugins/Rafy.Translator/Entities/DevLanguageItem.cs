@@ -32,7 +32,7 @@ namespace Rafy.MultiLanguages
     /// <summary>
     /// 开发语言项
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class DevLanguageItem : MLEntity
     {
         #region 引用属性
@@ -59,7 +59,6 @@ namespace Rafy.MultiLanguages
         #endregion
     }
 
-    [Serializable]
     public partial class DevLanguageItemList : MLEntityList
     {
         public DevLanguageItem Find(string content)

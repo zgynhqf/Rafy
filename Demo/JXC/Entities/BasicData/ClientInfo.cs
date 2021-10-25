@@ -29,7 +29,7 @@ namespace JXC
     /// <summary>
     /// 客户
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class ClientInfo : JXCEntity
     {
         public static readonly IRefIdProperty ClientCategoryIdProperty =
@@ -123,7 +123,6 @@ namespace JXC
         JiBie_3
     }
 
-    [Serializable]
     public partial class ClientInfoList : JXCEntityList { }
 
     public partial class ClientInfoRepository : JXCEntityRepository

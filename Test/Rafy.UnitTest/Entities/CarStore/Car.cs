@@ -33,7 +33,7 @@ namespace UT
     /// <summary>
     /// 车辆
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class Car : UnitTestEntity
     {
         #region 引用属性
@@ -77,7 +77,6 @@ namespace UT
     /// <summary>
     /// 车辆 列表类。
     /// </summary>
-    [Serializable]
     public partial class CarList : UnitTestEntityList { }
 
     /// <summary>

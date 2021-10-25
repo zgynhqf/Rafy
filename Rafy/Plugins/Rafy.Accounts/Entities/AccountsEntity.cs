@@ -28,7 +28,6 @@ using Rafy.ManagedProperty;
 
 namespace Rafy.Accounts
 {
-    [Serializable]
     public abstract class AccountsEntity : LongEntity
     {
         //#region 动态提供 AccountsEntity 的主键的类型
@@ -49,7 +48,6 @@ namespace Rafy.Accounts
         //#endregion
     }
 
-    [Serializable]
     public abstract class AccountsEntityList : EntityList { }
 
     public abstract class AccountsEntityRepository : EntityRepository

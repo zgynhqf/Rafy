@@ -30,7 +30,7 @@ using Rafy.Domain.ORM.Query;
 
 namespace UT
 {
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class Book : UnitTestEntity
     {
         #region 引用属性
@@ -155,7 +155,6 @@ namespace UT
         #endregion
     }
 
-    [Serializable]
     public partial class BookList : UnitTestEntityList { }
 
     public partial class BookRepository : UnitTestEntityRepository

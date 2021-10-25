@@ -24,7 +24,6 @@ using Rafy.MetaModel.View;
 
 namespace Rafy.MultiLanguages
 {
-    [Serializable]
     public abstract class MLEntity : IntEntity
     {
         //public static string ConnectionString = "MultiLanuages";
@@ -35,7 +34,6 @@ namespace Rafy.MultiLanguages
         //}
     }
 
-    [Serializable]
     public abstract class MLEntityList : EntityList { }
 
     [Serializable]

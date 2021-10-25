@@ -29,7 +29,7 @@ namespace Rafy.RBAC.Old.Audit
     /// <summary>
     /// 审查日志项
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     [ConditionQueryType(typeof(AuditItemConditionCriteria))]
     public partial class AuditItem : IntEntity
     {
@@ -126,7 +126,6 @@ namespace Rafy.RBAC.Old.Audit
         #endregion
     }
 
-    [Serializable]
     public partial class AuditItemList : EntityList { }
 
     public partial class AuditItemRepository : EntityRepository

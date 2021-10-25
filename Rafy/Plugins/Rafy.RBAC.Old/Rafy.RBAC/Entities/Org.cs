@@ -29,7 +29,7 @@ namespace Rafy.RBAC.Old
     /// <summary>
     /// 部门
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class Org : IntEntity
     {
         public static readonly Property<string> NameProperty = P<Org>.Register(e => e.Name);
@@ -75,7 +75,6 @@ namespace Rafy.RBAC.Old
         //#endregion
     }
 
-    [Serializable]
     public partial class OrgList : EntityList { }
 
     public partial class OrgRepository : EntityRepository

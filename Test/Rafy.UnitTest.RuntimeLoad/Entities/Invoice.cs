@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建日期：20210803
@@ -34,7 +34,7 @@ namespace Rafy.UnitTest.RuntimeLoad
     /// <summary>
     /// 发票
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class Invoice : RuntimeLoadEntity
     {
         #region 引用属性
@@ -57,7 +57,6 @@ namespace Rafy.UnitTest.RuntimeLoad
     /// <summary>
     /// 发票 列表类。
     /// </summary>
-    [Serializable]
     public partial class InvoiceList : RuntimeLoadEntityList { }
 
     /// <summary>

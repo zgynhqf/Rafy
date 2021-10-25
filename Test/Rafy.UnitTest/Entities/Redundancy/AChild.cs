@@ -33,7 +33,7 @@ namespace UT
     /// <summary>
     /// A的子实体
     /// </summary>
-    [ChildEntity, Serializable]
+    [ChildEntity]
     public partial class AChild : UnitTestEntity
     {
         #region 引用属性
@@ -88,7 +88,6 @@ namespace UT
     /// <summary>
     /// A的子实体 列表类。
     /// </summary>
-    [Serializable]
     public partial class AChildList : UnitTestEntityList { }
 
     /// <summary>

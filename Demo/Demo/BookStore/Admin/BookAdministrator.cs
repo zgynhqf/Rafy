@@ -26,7 +26,7 @@ using Rafy.MetaModel.View;
 
 namespace Demo
 {
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class BookAdministrator : DemoEntity
     {
         public static readonly Property<string> UserNameProperty = P<BookAdministrator>.Register(e => e.UserName);
@@ -127,7 +127,6 @@ namespace Demo
         }
     }
 
-    [Serializable]
     public partial class BookAdministratorList : DemoEntityList { }
 
     public partial class BookAdministratorRepository : DemoEntityRepository

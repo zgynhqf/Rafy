@@ -7,12 +7,10 @@ using Rafy.MetaModel;
 
 namespace Rafy.RBAC.RoleManagement
 {
-    [Serializable]
     public abstract class RoleManagementEntity : LongEntity
     {
     }
 
-    [Serializable]
     public abstract class RoleManagementEntityList : EntityList
     {
     }

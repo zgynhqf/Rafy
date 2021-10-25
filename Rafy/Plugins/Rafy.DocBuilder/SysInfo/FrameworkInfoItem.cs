@@ -32,7 +32,7 @@ namespace Rafy.DevTools.SysInfo
     /// <summary>
     /// Rafy 系统信息
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class FrameworkInfoItem : IntEntity
     {
         #region 引用属性
@@ -66,7 +66,6 @@ namespace Rafy.DevTools.SysInfo
         #endregion
     }
 
-    [Serializable]
     public partial class FrameworkInfoItemList : EntityList
     {
         internal void CreateItems()

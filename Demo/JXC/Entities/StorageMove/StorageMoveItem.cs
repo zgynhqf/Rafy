@@ -15,7 +15,7 @@ using Rafy.ManagedProperty;
 
 namespace JXC
 {
-    [ChildEntity, Serializable]
+    [ChildEntity]
     public partial class StorageMoveItem : ProductRefItem
     {
         public static readonly IRefIdProperty StorageMoveIdProperty =
@@ -34,7 +34,6 @@ namespace JXC
         }
     }
 
-    [Serializable]
     public partial class StorageMoveItemList : ProductRefItemList { }
 
     public partial class StorageMoveItemRepository : JXCEntityRepository

@@ -11,7 +11,7 @@ using Rafy.MetaModel.View;
 
 namespace Demo
 {
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class Province : DemoEntity
     {
         public static readonly Property<string> NameProperty = P<Province>.Register(e => e.Name);
@@ -28,7 +28,6 @@ namespace Demo
         }
     }
 
-    [Serializable]
     public partial class ProvinceList : DemoEntityList { }
 
     public partial class ProvinceRepository : DemoEntityRepository

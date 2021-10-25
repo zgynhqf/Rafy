@@ -108,7 +108,6 @@ namespace JXC
         #endregion
     }
 
-    [Serializable]
     public abstract class FileAttachementList : JXCEntityList { }
 
     public abstract class FileAttachementRepository : JXCEntityRepository

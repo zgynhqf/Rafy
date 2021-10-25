@@ -24,7 +24,7 @@ using Rafy.MetaModel.View;
 
 namespace JXC
 {
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class AutoCodeInfo : JXCEntity
     {
         public static readonly Property<string> MingChengProperty = P<AutoCodeInfo>.Register(e => e.MingCheng);
@@ -49,7 +49,6 @@ namespace JXC
         }
     }
 
-    [Serializable]
     public partial class AutoCodeInfoList : JXCEntityList
     {
     }

@@ -33,7 +33,7 @@ namespace UT
     /// <summary>
     /// 用户的行为日志
     /// </summary>
-    [ChildEntity, Serializable]
+    [ChildEntity]
     public partial class TestUserLog : UnitTestEntity
     {
         #region 引用属性
@@ -71,7 +71,6 @@ namespace UT
     /// <summary>
     /// 用户的行为日志 列表类。
     /// </summary>
-    [Serializable]
     public partial class TestUserLogList : UnitTestEntityList { }
 
     /// <summary>

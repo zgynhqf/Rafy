@@ -31,7 +31,7 @@ using Rafy.Data;
 
 namespace UT
 {
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class PBSType : UnitTestEntity
     {
         #region 引用属性
@@ -92,7 +92,6 @@ namespace UT
         #endregion
     }
 
-    [Serializable]
     public partial class PBSTypeList : UnitTestEntityList { }
 
     public partial class PBSTypeRepository : UnitTestEntityRepository

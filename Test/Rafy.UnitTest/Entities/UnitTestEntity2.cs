@@ -15,7 +15,6 @@ using Rafy.ManagedProperty;
 
 namespace UT
 {
-    [Serializable]
     public abstract class UnitTest2Entity : IntEntity
     {
         #region 兼容老接口
@@ -43,7 +42,6 @@ namespace UT
         #endregion
     }
 
-    [Serializable]
     public abstract class UnitTest2EntityList : EntityList { }
 
     public abstract class UnitTest2EntityRepository : EntityRepository

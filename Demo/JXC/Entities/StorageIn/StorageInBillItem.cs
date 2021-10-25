@@ -15,7 +15,7 @@ using Rafy;
 
 namespace JXC
 {
-    [ChildEntity, Serializable]
+    [ChildEntity]
     public partial class StorageInBillItem : ProductRefItem
     {
         public static readonly IRefIdProperty StorageInBillIdProperty =
@@ -68,7 +68,6 @@ namespace JXC
         }
     }
 
-    [Serializable]
     public partial class StorageInBillItemList : ProductRefItemList { }
 
     public partial class StorageInBillItemRepository : JXCEntityRepository

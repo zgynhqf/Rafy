@@ -34,7 +34,7 @@ namespace UT
     /// <summary>
     /// 发票明细
     /// </summary>
-    [ChildEntity, Serializable]
+    [ChildEntity]
     public partial class InvoiceItem : UnitTestEntity
     {
         #region 引用属性
@@ -92,7 +92,6 @@ namespace UT
     /// <summary>
     /// 发票明细 列表类。
     /// </summary>
-    [Serializable]
     public partial class InvoiceItemList : UnitTestEntityList { }
 
     /// <summary>

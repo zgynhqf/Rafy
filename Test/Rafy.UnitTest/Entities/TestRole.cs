@@ -89,7 +89,6 @@ namespace UT
         }
     }
 
-    [Serializable]
     public partial class TestRoleList : UnitTestEntityList { }
 
     public partial class TestRoleRepository : UnitTestEntityRepository

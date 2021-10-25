@@ -17,7 +17,7 @@ namespace JXC
     /// <summary>
     /// 产品附件
     /// </summary>
-    [ChildEntity, Serializable]
+    [ChildEntity]
     public partial class ProductAttachement : FileAttachement
     {
         public static readonly IRefIdProperty ProductIdProperty =
@@ -36,7 +36,6 @@ namespace JXC
         }
     }
 
-    [Serializable]
     public partial class ProductAttachementList : FileAttachementList { }
 
     public partial class ProductAttachementRepository : FileAttachementRepository

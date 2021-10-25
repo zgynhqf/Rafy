@@ -29,7 +29,7 @@ namespace Rafy.RBAC.Old
     /// <summary>
     /// 岗位下的被禁用的每一个功能（命令）的权限
     /// </summary>
-    [ChildEntity, Serializable]
+    [ChildEntity]
     public partial class OrgPositionOperationDeny : IntEntity
     {
         public static readonly IRefIdProperty OrgPositionIdProperty =
@@ -83,7 +83,6 @@ namespace Rafy.RBAC.Old
         }
     }
 
-    [Serializable]
     public partial class OrgPositionOperationDenyList : EntityList { }
 
     public partial class OrgPositionOperationDenyRepository : EntityRepository

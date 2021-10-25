@@ -95,7 +95,6 @@ namespace JXC
         #endregion
     }
 
-    [Serializable]
     public class ProductRefItemList : JXCEntityList
     {
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)

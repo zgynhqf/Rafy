@@ -1,4 +1,4 @@
-﻿using Rafy;
+using Rafy;
 using Rafy.ComponentModel;
 using Rafy.Domain;
 using Rafy.Domain.ORM;
@@ -16,10 +16,8 @@ using System.Text;
 
 namespace Rafy.UnitTest.RuntimeLoad
 {
-    [Serializable]
     public abstract class RuntimeLoadEntity : LongEntity { }
 
-    [Serializable]
     public abstract class RuntimeLoadEntityList : EntityList { }
 
     public abstract class RuntimeLoadEntityRepository : EntityRepository

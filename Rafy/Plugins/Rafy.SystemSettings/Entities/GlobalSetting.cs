@@ -34,7 +34,7 @@ namespace Rafy.SystemSettings
     /// <summary>
     /// 当前系统的全局配置项实体
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class GlobalSetting : SystemSettingsEntity
     {
         #region 引用属性
@@ -87,7 +87,6 @@ namespace Rafy.SystemSettings
     /// <summary>
     /// 当前系统的全局配置项实体 列表类。
     /// </summary>
-    [Serializable]
     public partial class GlobalSettingList : SystemSettingsEntityList { }
 
     /// <summary>

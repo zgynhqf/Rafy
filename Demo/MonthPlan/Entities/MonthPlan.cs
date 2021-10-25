@@ -34,7 +34,7 @@ namespace MP
     /// <summary>
     /// 月度计划
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class MonthPlan : MPEntity
     {
         #region 引用属性
@@ -202,7 +202,6 @@ namespace MP
         #endregion
     }
 
-    [Serializable]
     public partial class MonthPlanList : MPEntityList { }
 
     public partial class MonthPlanRepository : MPEntityRepository

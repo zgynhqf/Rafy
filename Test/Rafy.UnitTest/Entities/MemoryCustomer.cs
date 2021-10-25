@@ -18,7 +18,7 @@ namespace UT
     /// <summary>
     /// 序列化到 Xml 的用户
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class MemoryCustomer : IntEntity
     {
         #region 引用属性
@@ -59,7 +59,6 @@ namespace UT
         #endregion
     }
 
-    [Serializable]
     public partial class MemoryCustomerList : EntityList { }
 
     public partial class MemoryCustomerRepository : MemoryEntityRepository

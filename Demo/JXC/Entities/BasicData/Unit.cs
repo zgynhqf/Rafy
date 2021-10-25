@@ -1,4 +1,4 @@
-﻿///*******************************************************
+///*******************************************************
 // * 
 // * 作者：胡庆访
 // * 创建时间：20120413
@@ -22,7 +22,7 @@
 
 //namespace JXC
 //{
-//    [RootEntity, Serializable]
+//    [RootEntity]
 //    public class Unit : JXCEntity
 //    {
 //        public static readonly Property<string> CodeProperty = P<Unit>.Register(e => e.Code);

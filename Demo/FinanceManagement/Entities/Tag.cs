@@ -16,7 +16,7 @@ using Rafy.MetaModel.View;
 
 namespace FM
 {
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class Tag : FMEntity
     {
         public static readonly Property<string> NameProperty = P<Tag>.Register(e => e.Name);
@@ -48,7 +48,6 @@ namespace FM
         }
     }
 
-    [Serializable]
     public partial class TagList : FMEntityList { }
 
     public partial class TagRepository : FMEntityRepository

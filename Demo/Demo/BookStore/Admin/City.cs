@@ -13,7 +13,7 @@ using Rafy.MetaModel.View;
 
 namespace Demo
 {
-    [ChildEntity, Serializable]
+    [ChildEntity]
     public partial class City : DemoEntity
     {
         public static readonly IRefIdProperty ProvinceIdProperty =
@@ -45,7 +45,6 @@ namespace Demo
         }
     }
 
-    [Serializable]
     public partial class CityList : DemoEntityList { }
 
     public partial class CityRepository : DemoEntityRepository

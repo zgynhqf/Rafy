@@ -31,7 +31,7 @@ namespace Rafy.MultiLanguages
     /// <summary>
     /// 语言
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class Language : MLEntity
     {
         #region 引用属性
@@ -121,7 +121,6 @@ namespace Rafy.MultiLanguages
         //}
     }
 
-    [Serializable]
     public partial class LanguageList : MLEntityList { }
 
     public partial class LanguageRepository : MLEntityRepository

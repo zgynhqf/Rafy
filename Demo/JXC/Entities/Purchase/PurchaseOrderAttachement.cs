@@ -14,7 +14,7 @@ using Rafy.ManagedProperty;
 
 namespace JXC
 {
-    [ChildEntity, Serializable]
+    [ChildEntity]
     public partial class PurchaseOrderAttachement : FileAttachement
     {
         public static readonly IRefIdProperty PurchaseOrderIdProperty =
@@ -33,7 +33,6 @@ namespace JXC
         }
     }
 
-    [Serializable]
     public partial class PurchaseOrderAttachementList : FileAttachementList { }
 
     public partial class PurchaseOrderAttachementRepository : FileAttachementRepository

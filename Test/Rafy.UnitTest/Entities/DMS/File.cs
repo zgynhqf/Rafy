@@ -20,7 +20,7 @@ namespace UT
     /// <summary>
     /// 文件
     /// </summary>
-    [ChildEntity, Serializable]
+    [ChildEntity]
     public partial class File : UnitTestEntity
     {
         #region 引用属性
@@ -65,7 +65,6 @@ namespace UT
     /// <summary>
     /// 文件 列表类。
     /// </summary>
-    [Serializable]
     public partial class FileList : UnitTestEntityList { }
 
     /// <summary>

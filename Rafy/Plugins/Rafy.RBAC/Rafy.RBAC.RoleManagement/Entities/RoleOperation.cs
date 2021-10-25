@@ -27,7 +27,7 @@ namespace Rafy.RBAC.RoleManagement
     /// <summary>
     /// 角色功能
     /// </summary>
-    [ChildEntity, Serializable]
+    [ChildEntity]
     public class RoleOperation : RoleManagementEntity
     {
         #region 引用属性
@@ -80,7 +80,6 @@ namespace Rafy.RBAC.RoleManagement
     /// <summary>
     /// 角色功能 列表类。
     /// </summary>
-    [Serializable]
     public partial class RoleOperationList : RoleManagementEntityList
     {
     }

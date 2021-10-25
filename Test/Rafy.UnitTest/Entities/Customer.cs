@@ -20,7 +20,7 @@ namespace UT
     /// <summary>
     /// 客户
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class Customer : UnitTest2Entity
     {
         #region 引用属性
@@ -68,7 +68,6 @@ namespace UT
         #endregion
     }
 
-    [Serializable]
     public partial class CustomerList : UnitTest2EntityList { }
 
     public partial class CustomerRepository : UnitTest2EntityRepository

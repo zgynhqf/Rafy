@@ -15,7 +15,6 @@ using Rafy.ManagedProperty;
 
 namespace FM
 {
-    [Serializable]
     public abstract class FMEntity : IntEntity
     {
         #region 扩展字段
@@ -44,7 +43,6 @@ namespace FM
         #endregion
     }
 
-    [Serializable]
     public abstract class FMEntityList : EntityList { }
 
     public abstract class FMEntityRepository : EntityRepository

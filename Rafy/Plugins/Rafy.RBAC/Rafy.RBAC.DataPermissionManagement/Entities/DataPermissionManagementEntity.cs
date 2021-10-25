@@ -16,12 +16,10 @@ using Rafy.ManagedProperty;
 
 namespace Rafy.RBAC.DataPermissionManagement
 {
-    [Serializable]
     public abstract class DataPermissionManagementEntity : LongEntity
     {
     }
 
-    [Serializable]
     public abstract class DataPermissionManagementEntityList : EntityList { }
 
     public abstract class DataPermissionManagementEntityRepository : EntityRepository

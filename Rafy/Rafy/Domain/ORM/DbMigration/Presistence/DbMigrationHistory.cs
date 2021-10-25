@@ -27,7 +27,7 @@ using Rafy.Domain.ORM.Query;
 
 namespace Rafy.Domain.ORM.DbMigration.Presistence
 {
-    [RootEntity, Serializable]
+    [RootEntity]
     [ConditionQueryType(typeof(DbMigrationHistoryQueryCriteria))]
     public partial class DbMigrationHistory : IntEntity
     {
@@ -95,7 +95,6 @@ namespace Rafy.Domain.ORM.DbMigration.Presistence
         }
     }
 
-    [Serializable]
     public partial class DbMigrationHistoryList : EntityList { }
 
     public partial class DbMigrationHistoryRepository : EntityRepository

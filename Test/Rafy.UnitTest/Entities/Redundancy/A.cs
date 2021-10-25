@@ -15,7 +15,7 @@ using System.Runtime.Serialization;
 
 namespace UT
 {
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class A : UnitTestEntity
     {
         #region 引用属性
@@ -61,7 +61,6 @@ namespace UT
         #endregion
     }
 
-    [Serializable]
     public partial class AList : UnitTestEntityList { }
 
     public partial class ARepository : UnitTestEntityRepository

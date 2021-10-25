@@ -14,7 +14,7 @@ using Rafy.ManagedProperty;
 
 namespace JXC
 {
-    [RootEntity, Serializable]
+    [RootEntity]
     [ConditionQueryType(typeof(TimeSpanCriteria))]
     public partial class OrderStorageInBill : StorageInBill
     {
@@ -87,7 +87,6 @@ namespace JXC
         }
     }
 
-    [Serializable]
     public partial class OrderStorageInBillList : StorageInBillList
     {
     }

@@ -33,7 +33,7 @@ namespace UT
     /// <summary>
     /// 
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class House : StringTestEntity
     {
         #region 引用属性
@@ -88,7 +88,6 @@ namespace UT
     /// <summary>
     ///  列表类。
     /// </summary>
-    [Serializable]
     public partial class HouseList : StringTestEntityList { }
 
     /// <summary>

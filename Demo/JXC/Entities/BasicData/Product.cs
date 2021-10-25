@@ -33,7 +33,7 @@ namespace JXC
     /// <summary>
     /// 产品
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     [NavigationQueryType(typeof(ProductNavigationCriteria))]
     public partial class Product : JXCEntity
     {
@@ -222,7 +222,6 @@ namespace JXC
         #endregion
     }
 
-    [Serializable]
     public partial class ProductList : JXCEntityList
     {
     }

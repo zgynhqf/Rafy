@@ -32,7 +32,7 @@ namespace UT
     /// <summary>
     /// 博客用户
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class BlogUser : UnitTestEntity
     {
         #region 引用属性
@@ -65,7 +65,6 @@ namespace UT
     /// <summary>
     /// 博客用户 列表类。
     /// </summary>
-    [Serializable]
     public partial class BlogUserList : UnitTestEntityList { }
 
     /// <summary>

@@ -20,7 +20,7 @@ namespace UT
     /// <summary>
     /// 书籍货架
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class BookLoc : UnitTestEntity
     {
         #region 引用属性
@@ -67,7 +67,6 @@ namespace UT
     /// <summary>
     /// 书籍货架 列表类。
     /// </summary>
-    [Serializable]
     public partial class BookLocList : UnitTestEntityList { }
 
     /// <summary>

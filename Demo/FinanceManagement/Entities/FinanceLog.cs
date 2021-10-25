@@ -18,7 +18,7 @@ using Rafy.Utils;
 
 namespace FM
 {
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class FinanceLog : FMEntity
     {
         public static readonly Property<string> UsersProperty = P<FinanceLog>.Register(e => e.Users, new PropertyMetadata<string>
@@ -125,7 +125,6 @@ namespace FM
         #endregion
     }
 
-    [Serializable]
     public partial class FinanceLogList : FMEntityList { }
 
     public partial class FinanceLogRepository : FMEntityRepository

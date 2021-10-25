@@ -21,12 +21,10 @@ using Rafy.MetaModel;
 
 namespace Rafy.RBAC.UserRoleManagement
 {
-    [Serializable]
     public abstract class UserRoleManagementEntity : LongEntity
     {
     }
 
-    [Serializable]
     public abstract class UserRoleManagementEntityList : EntityList { }
 
     public abstract class UserRoleManagementEntityRepository : EntityRepository

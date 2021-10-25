@@ -28,7 +28,7 @@ namespace JXC
     /// <summary>
     /// 客户类别
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class ClientCategory : JXCEntity
     {
         public static readonly string SupplierName = "供应商";
@@ -43,7 +43,6 @@ namespace JXC
         }
     }
 
-    [Serializable]
     public partial class ClientCategoryList : JXCEntityList { }
 
     public partial class ClientCategoryRepository : JXCEntityRepository

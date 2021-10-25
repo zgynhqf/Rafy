@@ -33,7 +33,7 @@ namespace Rafy.FileStorage
     /// <summary>
     /// 文件信息
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class FileInfo : FileStorageEntity
     {
         #region 引用属性
@@ -123,7 +123,6 @@ namespace Rafy.FileStorage
     /// <summary>
     /// 文件信息 列表类。
     /// </summary>
-    [Serializable]
     public partial class FileInfoList : FileStorageEntityList { }
 
     /// <summary>

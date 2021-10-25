@@ -28,7 +28,7 @@ namespace Rafy.RBAC.Old
     /// <summary>
     /// 用户
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class User : IntEntity
     {
         public static readonly Property<string> CodeProperty = P<User>.Register(e => e.Code);
@@ -74,7 +74,6 @@ namespace Rafy.RBAC.Old
         }
     }
 
-    [Serializable]
     public partial class UserList : EntityList { }
 
     public partial class UserRepository : EntityRepository

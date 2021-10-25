@@ -16,7 +16,6 @@ using Rafy.Domain.ORM.Query;
 
 namespace UT
 {
-    [Serializable]
     public abstract class UnitTestEntity : IntEntity
     {
         #region 兼容老接口
@@ -44,7 +43,6 @@ namespace UT
         #endregion
     }
 
-    [Serializable]
     public abstract class UnitTestEntityList : EntityList { }
 
     public abstract class UnitTestEntityRepository : EntityRepository//PropertyQueryRepository

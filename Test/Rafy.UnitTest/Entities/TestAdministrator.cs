@@ -23,7 +23,6 @@ namespace UT
         }
     }
 
-    [Serializable]
     public partial class TestAdministratorList : TestUserList { }
 
     public partial class TestAdministratorRepository : TestUserRepository { }

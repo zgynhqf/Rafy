@@ -17,7 +17,7 @@ using Rafy.Domain.ORM;
 
 namespace Demo
 {
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class Book : DemoEntity
     {
         public static readonly Property<string> NameProperty = P<Book>.Register(e => e.Name);
@@ -97,7 +97,6 @@ namespace Demo
         }
     }
 
-    [Serializable]
     public partial class BookList : DemoEntityList
     {
     }

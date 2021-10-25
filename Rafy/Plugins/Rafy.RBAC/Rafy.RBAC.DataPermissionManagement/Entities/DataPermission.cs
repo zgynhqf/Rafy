@@ -25,7 +25,7 @@ namespace Rafy.RBAC.DataPermissionManagement
     /// <summary>
     /// 数据权限
     /// </summary>
-    [ChildEntity, Serializable]
+    [ChildEntity]
     public partial class DataPermission : DataPermissionManagementEntity
     {
         #region 引用属性
@@ -152,7 +152,6 @@ namespace Rafy.RBAC.DataPermissionManagement
     /// <summary>
     /// 数据权限 列表类。
     /// </summary>
-    [Serializable]
     public partial class DataPermissionList : DataPermissionManagementEntityList { }
 
     /// <summary>

@@ -20,7 +20,7 @@ namespace UT
     /// <summary>
     /// 商人的房产
     /// </summary>
-    [ChildEntity, Serializable]
+    [ChildEntity]
     public partial class MerchantItem : StringTestIntEntity
     {
         #region 引用属性
@@ -90,7 +90,6 @@ namespace UT
     /// <summary>
     /// 商人的房产 列表类。
     /// </summary>
-    [Serializable]
     public partial class MerchantItemList : StringTestEntityList { }
 
     /// <summary>

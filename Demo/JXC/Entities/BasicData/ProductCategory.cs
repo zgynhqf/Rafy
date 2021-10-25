@@ -27,7 +27,7 @@ namespace JXC
     /// <summary>
     /// 产品类别
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class ProductCategory : JXCEntity
     {
         public static readonly Property<string> NameProperty = P<ProductCategory>.Register(e => e.Name);
@@ -55,7 +55,6 @@ namespace JXC
         #endregion
     }
 
-    [Serializable]
     public partial class ProductCategoryList : JXCEntityList { }
 
     public partial class ProductCategoryRepository : JXCEntityRepository

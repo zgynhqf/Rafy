@@ -29,12 +29,10 @@ using Rafy.ManagedProperty;
 
 namespace Rafy.SystemSettings
 {
-    [Serializable]
     public abstract class SystemSettingsEntity : LongEntity
     {
     }
 
-    [Serializable]
     public abstract class SystemSettingsEntityList : EntityList { }
 
     public abstract class SystemSettingsEntityRepository : EntityRepository

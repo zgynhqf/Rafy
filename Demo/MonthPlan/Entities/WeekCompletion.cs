@@ -32,7 +32,7 @@ namespace MP
     /// <summary>
     /// 每周完成量
     /// </summary>
-    [ChildEntity, Serializable]
+    [ChildEntity]
     public partial class WeekCompletion : MPEntity
     {
         #region 引用属性
@@ -171,7 +171,6 @@ namespace MP
         #endregion
     }
 
-    [Serializable]
     public partial class WeekCompletionList : MPEntityList { }
 
     public partial class WeekCompletionRepository : MPEntityRepository

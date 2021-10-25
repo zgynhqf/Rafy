@@ -33,7 +33,7 @@ namespace Rafy.DevTools.DbManagement
     /// <summary>
     /// 数据库配置项
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class DbSettingItem : IntEntity
     {
         #region 一般属性
@@ -48,7 +48,6 @@ namespace Rafy.DevTools.DbManagement
         #endregion
     }
 
-    [Serializable]
     public partial class DbSettingItemList : EntityList
     {
     }

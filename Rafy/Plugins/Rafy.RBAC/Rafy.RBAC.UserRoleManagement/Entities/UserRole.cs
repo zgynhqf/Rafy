@@ -27,7 +27,7 @@ namespace Rafy.RBAC.UserRoleManagement
     /// <summary>
     /// 用户角色
     /// </summary>
-    [ChildEntity, Serializable]
+    [ChildEntity]
     public class UserRole : UserRoleManagementEntity
     {
         #region 引用属性
@@ -75,7 +75,6 @@ namespace Rafy.RBAC.UserRoleManagement
     /// <summary>
     /// 用户角色 列表类。
     /// </summary>
-    [Serializable]
     public partial class UserRoleList : UserRoleManagementEntityList
     {
     }

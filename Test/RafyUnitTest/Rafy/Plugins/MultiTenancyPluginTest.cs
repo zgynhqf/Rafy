@@ -483,7 +483,7 @@
 //    /// <summary>
 //    /// 订单
 //    /// </summary>
-//    [RootEntity, Serializable]
+//    [RootEntity]
 //    public partial class Order : MultiTenancyTestDomainEntity
 //    {
 //        #region 构造函数

@@ -34,7 +34,7 @@ namespace Rafy.Accounts
     /// <summary>
     /// 系统中的用户
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class User : AccountsEntity, IRafyIdentity
     {
         #region 引用属性
@@ -157,7 +157,6 @@ namespace Rafy.Accounts
     /// <summary>
     /// 系统中的用户 列表类。
     /// </summary>
-    [Serializable]
     public partial class UserList : AccountsEntityList { }
 
     /// <summary>

@@ -15,7 +15,7 @@ using System.Runtime.Serialization;
 
 namespace UT
 {
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class D : UnitTestEntity
     {
         public static readonly IRefIdProperty CIdProperty =
@@ -41,7 +41,6 @@ namespace UT
         }
     }
 
-    [Serializable]
     public partial class DList : UnitTestEntityList { }
 
     public partial class DRepository : UnitTestEntityRepository

@@ -15,7 +15,7 @@ using Rafy.MetaModel.View;
 
 namespace JXC
 {
-    [RootEntity, Serializable]
+    [RootEntity]
     public abstract class StorageOutBill : JXCEntity
     {
         public static readonly IRefIdProperty StorageIdProperty =
@@ -76,7 +76,6 @@ namespace JXC
         }
     }
 
-    [Serializable]
     public abstract class StorageOutBillList : JXCEntityList { }
 
     public abstract class StorageOutBillRepository : JXCEntityRepository

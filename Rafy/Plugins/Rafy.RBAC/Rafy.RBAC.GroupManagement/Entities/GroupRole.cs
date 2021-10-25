@@ -35,7 +35,7 @@ namespace Rafy.RBAC.GroupManagement
     /// <summary>
     /// 组和角色映射
     /// </summary>
-    [ChildEntity, Serializable]
+    [ChildEntity]
     public partial class GroupRole : GroupManagementEntity
     {
         #region 引用属性
@@ -102,7 +102,6 @@ namespace Rafy.RBAC.GroupManagement
     /// <summary>
     /// 组和角色映射 列表类。
     /// </summary>
-    [Serializable]
     public partial class GroupRoleList : GroupManagementEntityList { }
 
     /// <summary>

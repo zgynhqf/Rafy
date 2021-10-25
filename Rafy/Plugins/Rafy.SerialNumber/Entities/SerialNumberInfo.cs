@@ -33,7 +33,7 @@ namespace Rafy.SerialNumber
     /// <summary>
     /// 流水号生成规则信息
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class SerialNumberInfo : SerialNumberEntity
     {
         #region 引用属性
@@ -141,7 +141,6 @@ namespace Rafy.SerialNumber
     /// <summary>
     /// 流水号生成规则信息 列表类。
     /// </summary>
-    [Serializable]
     public partial class SerialNumberInfoList : SerialNumberEntityList { }
 
     /// <summary>

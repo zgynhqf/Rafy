@@ -33,7 +33,7 @@ namespace UT
     /// <summary>
     /// 
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class NoRepoEntity : StringTestEntity
     {
         #region 引用属性
@@ -63,6 +63,5 @@ namespace UT
     /// <summary>
     ///  列表类。
     /// </summary>
-    [Serializable]
     public partial class NoRepoEntityList : StringTestEntityList { }
 }

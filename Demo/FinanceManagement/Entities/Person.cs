@@ -14,7 +14,7 @@ using Rafy.ManagedProperty;
 
 namespace FM
 {
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class Person : FMEntity
     {
         public static readonly Property<string> NameProperty = P<Person>.Register(e => e.Name);
@@ -32,7 +32,6 @@ namespace FM
         }
     }
 
-    [Serializable]
     public partial class PersonList : FMEntityList { }
 
     public partial class PersonRepository : FMEntityRepository

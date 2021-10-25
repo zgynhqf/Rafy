@@ -352,7 +352,6 @@ namespace Rafy.Customization
         #endregion
     }
 
-    [Serializable]
     public partial class ViewConfigurationModelList : EntityList { }
 
     public partial class ViewConfigurationModelRepository : EntityRepository

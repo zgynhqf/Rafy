@@ -11,7 +11,7 @@ using Rafy.MetaModel.Attributes;
 
 namespace Rafy.Domain.ORM.DbMigration.Presistence
 {
-    [RootEntity, Serializable]
+    [RootEntity]
     public partial class DbVersion : IntEntity
     {
         public static readonly Property<string> DatabaseProperty = P<DbVersion>.Register(e => e.Database);
@@ -29,7 +29,6 @@ namespace Rafy.Domain.ORM.DbMigration.Presistence
         }
     }
 
-    [Serializable]
     public partial class DbVersionList : EntityList
     {
         protected DbVersionList() { }
