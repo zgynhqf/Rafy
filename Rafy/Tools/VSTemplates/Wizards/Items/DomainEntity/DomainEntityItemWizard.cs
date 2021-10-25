@@ -80,7 +80,7 @@ namespace VSTemplates.Wizards
 
             //开始动态输出模板内容
             _isChild = !string.IsNullOrWhiteSpace(_parentEntityName);
-            var entityAttributes = _isChild ? "[ChildEntity, Serializable]" : "[RootEntity, Serializable]";
+            var entityAttributes = _isChild ? "[ChildEntity]" : "[RootEntity]";
 
             RenderParentRefProperty(entityKeyType);
 
