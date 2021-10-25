@@ -277,7 +277,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
             var sql = GenerateUpdateSQL(batch.Table, this.UpdateLOB, '@', updateColumns);
 
             //生成对应的参数列表。
-            var parameters = this.GenerateUpdateParameters(batch, updateColumns);
+            var parameters = this.GenerateParametersInUpdateSql(batch, updateColumns);
 
             var command = batch.DBA.RawAccesser.CommandFactory.CreateCommand(sql, CommandType.Text, parameters);
             var adapter = new SqlDataAdapter();
@@ -294,7 +294,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
         /// <param name="batch">The meta.</param>
         /// <param name="dataColumns"></param>
         /// <returns></returns>
-        private IDbDataParameter[] GenerateUpdateParameters(EntityBatch batch, IReadOnlyList<RdbColumn> dataColumns)
+        private IDbDataParameter[] GenerateParametersInUpdateSql(EntityBatch batch, IReadOnlyList<RdbColumn> dataColumns)
         {
             var dba = batch.DBA.RawAccesser;
             var table = batch.Table;

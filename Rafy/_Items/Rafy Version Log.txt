@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.82.4025
+3.82.4026
     ★重要、重构
         添加 CustomSurrogateSelector 实现 IFormatter 的自定义序列化。
             ManagedPropertyObject 实现 ICustomSerializationObject 接口。

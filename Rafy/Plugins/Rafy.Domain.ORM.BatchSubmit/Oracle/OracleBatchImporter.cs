@@ -293,7 +293,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
         private void ImportUpdate(EntityBatch batch, IList<Entity> entities)
         {
             //生成对应的参数列表。
-            var parameters = this.GenerateUpdateParameters(batch, entities);
+            var parameters = this.GenerateParametersInUpdateSql(batch, entities);
             var parametersColumns = parameters//顺序必须一致。
                 .Select(p => batch.Table.Columns.First(c => c.Name == p.ParameterName))
                 .Where(c => !c.Info.IsPrimaryKey)//不更新主键
@@ -315,7 +315,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
         /// <param name="batch"></param>
         /// <param name="entities"></param>
         /// <returns></returns>
-        private IDbDataParameter[] GenerateUpdateParameters(EntityBatch batch, IList<Entity> entities)
+        private IDbDataParameter[] GenerateParametersInUpdateSql(EntityBatch batch, IList<Entity> entities)
         {
             var dba = batch.DBA.RawAccesser;
             var table = batch.Table;
