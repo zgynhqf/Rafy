@@ -172,7 +172,7 @@ namespace Rafy.MetaModel.View
         /// 3.显示代理属性。
         /// </summary>
         /// <returns></returns>
-        public List<IManagedProperty> DisplayPathProperties()
+        public virtual List<IManagedProperty> DisplayPathProperties()
         {
             var properties = new List<IManagedProperty>(2);
 
