@@ -24,14 +24,6 @@ namespace $domainNamespace$
     $entityAttributes$
     public partial class $domainEntityName$ : $domainBaseEntityName$
     {
-        #region 构造函数
-
-        public $domainEntityName$() { }
-
-        protected $domainEntityName$(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
         $refProperties$
         #endregion
