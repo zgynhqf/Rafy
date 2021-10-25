@@ -29,66 +29,6 @@ namespace Rafy.Serialization
     /// </summary>
     internal static class FieldsSerializationHelper
     {
-        internal static void SerialzeFields(object obj, ISerializationContext info)
-        {
-            bool isState = info.IsProcessingState;
-
-            var fields = EnumerateSerializableFields(obj.GetType());
-            foreach (var f in fields)
-            {
-                var v = f.GetValue(obj);
-                var vType = v != null ? v.GetType() : f.FieldType;
-
-                if (isState)
-                {
-                    if (info.IsState(vType)) { info.AddState(f.Name, v); }
-                }
-                else
-                {
-                    if (!info.IsState(vType)) { info.AddRef(f.Name, v); }
-                }
-            }
-        }
-
-        internal static void DeserialzeFields(object obj, ISerializationContext info)
-        {
-            var formatter = info.RefFormatter;
-            bool isState = info.IsProcessingState;
-
-            var fields = EnumerateSerializableFields(obj.GetType());
-
-            if (isState)
-            {
-                var allStates = info.States;
-                foreach (var kv in allStates)
-                {
-                    var name = kv.Key;
-
-                    var f = FindSingleField(fields, name);
-                    if (f != null)
-                    {
-                        var v = TypeHelper.CoerceValue(f.FieldType, kv.Value);
-                        f.SetValue(obj, v);
-                    }
-                }
-            }
-            else
-            {
-                var allReferences = info.References;
-                foreach (var kv in allReferences)
-                {
-                    var name = kv.Key;
-
-                    var f = FindSingleField(fields, name);
-                    if (f != null)
-                    {
-                        var v = formatter.GetObject(kv.Value);
-                        if (v != null) { f.SetValue(obj, v); }
-                    }
-                }
-            }
-        }
-
         internal static FieldInfo FindSingleField(IEnumerable<FieldInfo> fields, string name)
         {
             var result = fields.Where(p => p.Name == name).ToArray();
@@ -107,34 +47,26 @@ namespace Rafy.Serialization
 
         internal static IEnumerable<FieldInfo> EnumerateSerializableFields(Type objType)
         {
-            var hierarchy = TypeHelper.GetHierarchy(objType,
-                typeof(ManagedPropertyObject),
-                typeof(MobileObject), typeof(MobileCollection<>), typeof(MobileList<>), typeof(MobileDictionary<,>)
-                );
+            //下行代码中，特殊地，把 ManagedPropertyObject 排除，而不是逐一地排除其中的字段。这样性能更好。
+            var hierarchy = TypeHelper.GetHierarchy(objType, typeof(ManagedPropertyObject));
 
             foreach (var type in hierarchy)
             {
-                if (type.IsDefined(typeof(MobileNonSerializedAttribute), false)) break;
-
-                //由于本函数只为兼容，所以没有标记 [Serializable] 的类型就直接忽略它里面的所有字段。
-                if (type.IsSerializable)
+                var fields = type.GetFields(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.NonPublic | BindingFlags.Public);
+                for (int i = 0, c = fields.Length; i < c; i++)
                 {
-                    var fields = type.GetFields(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.NonPublic | BindingFlags.Public);
-                    for (int i = 0, c = fields.Length; i < c; i++)
+                    var field = fields[i];
+                    if (!field.IsDefined(typeof(NonSerializedAttribute), false))
                     {
-                        var field = fields[i];
-                        if (!field.IsDefined(typeof(NonSerializedAttribute), false))
+                        if (typeof(Delegate).IsAssignableFrom(field.FieldType))
                         {
-                            if (typeof(Delegate).IsAssignableFrom(field.FieldType))
-                            {
-                                throw new InvalidOperationException(string.Format(
-                                    "{0} 类中的字段 {1} 是代理类型，不能直接被序列化，请标记 NonSerializd 并重写 OnSerializeState 以自定义序列化。",
-                                    field.DeclaringType.Name, field.Name
-                                    ));
-                            }
-
-                            yield return field;
+                            throw new InvalidOperationException(string.Format(
+                                "{0} 类中的字段 {1} 是代理类型，不能直接被序列化，请标记 NonSerializd 并自定义序列化。",
+                                field.DeclaringType.Name, field.Name
+                                ));
                         }
+
+                        yield return field;
                     }
                 }
             }

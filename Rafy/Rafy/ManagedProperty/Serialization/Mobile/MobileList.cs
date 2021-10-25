@@ -67,7 +67,7 @@ namespace Rafy.Serialization.Mobile
         /// <param name="info">Object containing serialized values.</param>
         protected virtual void OnSerializeRef(ISerializationContext info)
         {
-            FieldsSerializationHelper.SerialzeFields(this, info);
+            MobileObjectFieldsSerializationHelper.SerialzeFields(this, info);
 
             bool mobileChildren = typeof(IMobileObject).IsAssignableFrom(typeof(T));
             if (mobileChildren)
@@ -109,7 +109,7 @@ namespace Rafy.Serialization.Mobile
         /// <param name="info">Object containing field values.</param>
         protected virtual void OnSerializeState(ISerializationContext info)
         {
-            FieldsSerializationHelper.SerialzeFields(this, info);
+            MobileObjectFieldsSerializationHelper.SerialzeFields(this, info);
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace Rafy.Serialization.Mobile
         /// <param name="info">Object containing field values.</param>
         protected virtual void OnDeserializeState(ISerializationContext info)
         {
-            FieldsSerializationHelper.DeserialzeFields(this, info);
+            MobileObjectFieldsSerializationHelper.DeserialzeFields(this, info);
         }
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace Rafy.Serialization.Mobile
         /// <param name="info">Object containing serialized values.</param>
         protected virtual void OnDeserializeRef(ISerializationContext info)
         {
-            FieldsSerializationHelper.DeserialzeFields(this, info);
+            MobileObjectFieldsSerializationHelper.DeserialzeFields(this, info);
 
             bool mobileChildren = typeof(IMobileObject).IsAssignableFrom(typeof(T));
             if (mobileChildren)

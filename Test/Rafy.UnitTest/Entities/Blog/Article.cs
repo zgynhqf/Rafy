@@ -32,7 +32,7 @@ namespace UT
     /// <summary>
     /// 文章
     /// </summary>
-    [RootEntity, Serializable]
+    [RootEntity]
     //[KnownType(typeof(BlogUser))]
     public partial class Article : UnitTestEntity
     {

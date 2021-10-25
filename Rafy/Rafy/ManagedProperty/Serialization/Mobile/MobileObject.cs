@@ -55,7 +55,7 @@ namespace Rafy.Serialization.Mobile
         /// <param name="context">Object containing the data to serialize.</param>
         protected virtual void OnMobileSerializeRef(ISerializationContext context)
         {
-            FieldsSerializationHelper.SerialzeFields(this, context);
+            MobileObjectFieldsSerializationHelper.SerialzeFields(this, context);
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Rafy.Serialization.Mobile
         /// <param name="context">Object containing the data to serialize.</param>
         protected virtual void OnMobileSerializeState(ISerializationContext context)
         {
-            FieldsSerializationHelper.SerialzeFields(this, context);
+            MobileObjectFieldsSerializationHelper.SerialzeFields(this, context);
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace Rafy.Serialization.Mobile
         /// <param name="context">Object containing the data to serialize.</param>
         protected virtual void OnMobileDeserializeState(ISerializationContext context)
         {
-            FieldsSerializationHelper.DeserialzeFields(this, context);
+            MobileObjectFieldsSerializationHelper.DeserialzeFields(this, context);
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace Rafy.Serialization.Mobile
         /// <param name="context">Object containing the data to serialize.</param>
         protected virtual void OnMobileDeserializeRef(ISerializationContext context)
         {
-            FieldsSerializationHelper.DeserialzeFields(this, context);
+            MobileObjectFieldsSerializationHelper.DeserialzeFields(this, context);
         }
     }
 }

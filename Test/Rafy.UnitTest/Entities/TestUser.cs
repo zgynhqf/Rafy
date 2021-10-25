@@ -17,7 +17,6 @@ using Rafy.Data;
 
 namespace UT
 {
-    [Serializable]
     [RootEntity, Label("单元测试 - 用户")]
     public partial class TestUser : UnitTestEntity
     {
