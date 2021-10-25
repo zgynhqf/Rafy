@@ -17,7 +17,17 @@ using Rafy.ManagedProperty;
 namespace $domainNamespace$
 {
     [Serializable]
-    public abstract class $domainName$Entity : LongEntity { }
+    public abstract class $domainName$Entity : LongEntity
+    {
+        #region 构造函数
+
+        protected $domainName$Entity() { }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected $domainName$Entity(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        #endregion
+    }
 
     [Serializable]
     public abstract class $domainName$EntityList : EntityList { }

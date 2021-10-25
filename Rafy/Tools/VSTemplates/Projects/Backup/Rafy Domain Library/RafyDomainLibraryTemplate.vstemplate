@@ -1,0 +1,33 @@
+﻿<VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
+    <TemplateData>
+        <Name>Rafy Domain Library</Name>
+        <Description>&lt;No description available&gt;</Description>
+        <ProjectType>CSharp</ProjectType>
+        <ProjectSubType>
+        </ProjectSubType>
+        <SortOrder>1000</SortOrder>
+        <CreateNewFolder>true</CreateNewFolder>
+        <DefaultName>Rafy Domain Library</DefaultName>
+        <ProvideDefaultName>true</ProvideDefaultName>
+        <LocationField>Enabled</LocationField>
+        <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
+        <Icon>__TemplateIcon.ico</Icon>
+    </TemplateData>
+    <TemplateContent>
+        <Project TargetFileName="DomainLibrary.csproj" File="DomainLibrary.csproj" ReplaceParameters="true">
+            <ProjectItem ReplaceParameters="true" TargetFileName="DomainLibraryPlugin.cs">DomainLibraryPlugin.cs</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="packages.config">packages.config</ProjectItem>
+            <Folder Name="Entities" TargetFolderName="Entities">
+                <ProjectItem ReplaceParameters="true" TargetFileName="DomainLibraryEntity.cs">DomainLibraryEntity.cs</ProjectItem>
+            </Folder>
+            <Folder Name="Properties" TargetFolderName="Properties">
+                <ProjectItem ReplaceParameters="true" TargetFileName="AssemblyInfo.cs">AssemblyInfo.cs</ProjectItem>
+            </Folder>
+            <!--<Folder Name="Services" TargetFolderName="Services" />-->
+        </Project>
+    </TemplateContent>
+    <WizardExtension>
+        <Assembly>RafySDK.Templates, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f7937325279b37cf</Assembly>
+        <FullClassName>VSTemplates.Wizards.DomainLibraryProjectWizard</FullClassName>
+    </WizardExtension>
+</VSTemplate>

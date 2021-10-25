@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="72E6AC0D-D19F-407E-B498-E73A69FD5384" Version="1.24.181" Language="en-US" Publisher="Rafy" />
+        <Identity Id="72E6AC0D-D19F-407E-B498-E73A69FD5384" Version="1.24.187" Language="en-US" Publisher="Rafy" />
         <DisplayName>RafySDK</DisplayName>
         <Description xml:space="preserve">Rafy Development Environment</Description>
         <Icon>Resources\Logo.gif</Icon>
@@ -16,8 +16,6 @@
         <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="%CurrentProject%.Templates" Path="|RafySDK.Templates|" AssemblyName="|RafySDK.Templates;AssemblyName|" />
         <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\DomainEntity.zip" />
         <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\DomainEntityRepository.zip" />
-        <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="File" Path="ProjectTemplates" d:TargetPath="ProjectTemplates\Rafy Console App.zip" />
-        <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="File" Path="ProjectTemplates" d:TargetPath="ProjectTemplates\Rafy Domain Library.zip" />
         <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="File" Path="ProjectTemplates" d:TargetPath="ProjectTemplates\Rafy Domain Library NET5.zip" />
         <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="File" Path="ProjectTemplates" d:TargetPath="ProjectTemplates\Rafy Console App NET5.zip" />
     </Assets>
