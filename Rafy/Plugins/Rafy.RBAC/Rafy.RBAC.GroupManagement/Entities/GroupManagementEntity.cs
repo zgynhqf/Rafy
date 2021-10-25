@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：刘雷
  * 创建日期：20161212
@@ -32,14 +32,6 @@ namespace Rafy.RBAC.GroupManagement
     [Serializable]
     public abstract class GroupManagementEntity : LongEntity
     {
-        #region 构造函数
-
-        protected GroupManagementEntity() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected GroupManagementEntity(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
     }
 
     [Serializable]

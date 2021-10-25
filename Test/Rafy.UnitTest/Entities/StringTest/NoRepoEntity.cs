@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建日期：20140519
@@ -36,15 +36,6 @@ namespace UT
     [RootEntity, Serializable]
     public partial class NoRepoEntity : StringTestEntity
     {
-        #region 构造函数
-
-        public NoRepoEntity() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected NoRepoEntity(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         #endregion

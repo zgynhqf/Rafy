@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -17,15 +17,6 @@ namespace JXC
     [Serializable]
     public abstract class JXCEntity : IntEntity
     {
-        #region 构造函数
-
-        public JXCEntity() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected JXCEntity(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         //static JXCEntity()
         //{
         //    //测试数据库升级的临时代码

@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建日期：20171104
@@ -32,14 +32,6 @@ namespace Rafy.SystemSettings
     [Serializable]
     public abstract class SystemSettingsEntity : LongEntity
     {
-        #region 构造函数
-
-        protected SystemSettingsEntity() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected SystemSettingsEntity(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
     }
 
     [Serializable]

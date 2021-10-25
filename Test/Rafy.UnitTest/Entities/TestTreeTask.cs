@@ -20,15 +20,6 @@ namespace UT
     [RootEntity, Label("单元测试 - 任务")]
     public partial class TestTreeTask : UnitTestEntity
     {
-        #region 构造函数
-
-        public TestTreeTask() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected TestTreeTask(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly IRefIdProperty TestUserIdProperty =
             P<TestTreeTask>.RegisterRefId(e => e.TestUserId, ReferenceType.Parent);
         public int TestUserId

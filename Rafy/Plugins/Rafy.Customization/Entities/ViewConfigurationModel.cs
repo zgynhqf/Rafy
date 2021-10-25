@@ -19,15 +19,6 @@ namespace Rafy.Customization
     [RootEntity]
     public partial class ViewConfigurationModel : IntEntity
     {
-        #region 构造函数
-
-        public ViewConfigurationModel() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected ViewConfigurationModel(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         /// <summary>
         /// 实体的客户端名称
         /// </summary>
@@ -432,15 +423,6 @@ namespace Rafy.Customization
     [QueryEntity, Serializable]
     public partial class ViewConfigurationModelNameCriteria : Criteria
     {
-        #region 构造函数
-
-        public ViewConfigurationModelNameCriteria() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected ViewConfigurationModelNameCriteria(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly Property<string> ClientEntityProperty = P<ViewConfigurationModelNameCriteria>.Register(e => e.EntityType);
         /// <summary>
         /// 实体的客户端名称

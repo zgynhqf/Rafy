@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -21,15 +21,6 @@ namespace UT
     [RootEntity, Serializable]
     public partial class MemoryCustomer : IntEntity
     {
-        #region 构造函数
-
-        public MemoryCustomer() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected MemoryCustomer(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         #endregion

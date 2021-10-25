@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20120416
@@ -29,15 +29,6 @@ namespace JXC
     [QueryEntity, Serializable]
     public class ClientTimeSpanCriteria : TimeSpanCriteria
     {
-        #region 构造函数
-
-        public ClientTimeSpanCriteria() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected ClientTimeSpanCriteria(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly IRefIdProperty ClientInfoIdProperty =
             P<ClientTimeSpanCriteria>.RegisterRefId(e => e.ClientInfoId, ReferenceType.Normal);
         public int? ClientInfoId

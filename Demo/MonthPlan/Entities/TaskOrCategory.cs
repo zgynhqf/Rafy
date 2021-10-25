@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20121102 16:03
@@ -36,15 +36,6 @@ namespace MP
     [ChildEntity, Serializable]
     public partial class TaskOrCategory : MPEntity
     {
-        #region 构造函数
-
-        public TaskOrCategory() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected TaskOrCategory(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         public static readonly IRefIdProperty MonthPlanIdProperty =

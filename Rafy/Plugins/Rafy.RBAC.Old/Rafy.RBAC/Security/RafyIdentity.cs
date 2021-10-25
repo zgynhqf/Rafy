@@ -35,15 +35,6 @@ namespace Rafy.RBAC.Old.Security
     [RootEntity, Serializable]
     public partial class RafyIdentity : IntEntity, IRafyIdentity
     {
-        #region 构造函数
-
-        public RafyIdentity() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected RafyIdentity(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public User User { get; internal set; }
 
         private OrgPositionList _roles;

@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：201111
@@ -31,15 +31,6 @@ namespace Rafy.Domain.ORM.DbMigration.Presistence
     [ConditionQueryType(typeof(DbMigrationHistoryQueryCriteria))]
     public partial class DbMigrationHistory : IntEntity
     {
-        #region 构造函数
-
-        public DbMigrationHistory() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected DbMigrationHistory(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly Property<string> DatabaseProperty = P<DbMigrationHistory>.Register(e => e.Database);
         public string Database
         {

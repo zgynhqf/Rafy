@@ -18,15 +18,6 @@ namespace UT
     [RootEntity, Serializable]
     public partial class E : UnitTestEntity
     {
-        #region 构造函数
-
-        public E() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected E(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly IRefIdProperty DIdProperty =
             P<E>.RegisterRefId(e => e.DId, ReferenceType.Normal);
         public int? DId

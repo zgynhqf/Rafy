@@ -31,15 +31,6 @@ namespace JXC
     [RootEntity, Serializable]
     public partial class ClientCategory : JXCEntity
     {
-        #region 构造函数
-
-        public ClientCategory() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected ClientCategory(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly string SupplierName = "供应商";
 
         public static readonly string CustomerName = "客户";

@@ -36,15 +36,6 @@ namespace Rafy.SerialNumber
     [ChildEntity, Serializable]
     public partial class SerialNumberValue : SerialNumberEntity
     {
-        #region 构造函数
-
-        public SerialNumberValue() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected SerialNumberValue(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         public static readonly IRefIdProperty SerialNumberInfoIdProperty =

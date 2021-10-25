@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建日期：20140516
@@ -36,15 +36,6 @@ namespace UT
     [RootEntity, Serializable]
     public partial class House : StringTestEntity
     {
-        #region 构造函数
-
-        public House() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected House(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         public static readonly IRefIdProperty LesseeIdProperty =

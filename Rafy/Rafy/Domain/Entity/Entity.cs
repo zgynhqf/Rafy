@@ -92,26 +92,18 @@ namespace Rafy.Domain
     {
         #region 构造函数
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Entity"/> class.
-        /// </summary>
-        /// <param name="info"></param>
-        /// <param name="context"></param>
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected Entity(SerializationInfo info, StreamingContext context) : base(info, context) { }
+        ///// <summary>
+        ///// Initializes a new instance of the <see cref="Entity"/> class.
+        ///// </summary>
+        //protected Entity()
+        //{
+        //    //int 等类型的标识属性的默认值，不能是 null。
+        //    //base.LoadProperty(IdProperty, KeyProvider.DefaultValue);
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Entity"/> class.
-        /// </summary>
-        protected Entity()
-        {
-            //int 等类型的标识属性的默认值，不能是 null。
-            //base.LoadProperty(IdProperty, KeyProvider.DefaultValue);
+        //    //ValidationRules.Validate();
 
-            //ValidationRules.Validate();
-
-            //this.MarkNew();
-        }
+        //    //this.MarkNew();
+        //}
 
         /// <summary>
         /// Initializes the <see cref="Entity"/> class.

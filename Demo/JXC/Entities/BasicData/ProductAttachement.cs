@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -20,15 +20,6 @@ namespace JXC
     [ChildEntity, Serializable]
     public partial class ProductAttachement : FileAttachement
     {
-        #region 构造函数
-
-        public ProductAttachement() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected ProductAttachement(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly IRefIdProperty ProductIdProperty =
             P<ProductAttachement>.RegisterRefId(e => e.ProductId, ReferenceType.Parent);
         public int ProductId

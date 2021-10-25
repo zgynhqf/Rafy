@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20121108 10:36
@@ -27,15 +27,6 @@ namespace Rafy.MultiLanguages
     [Serializable]
     public abstract class MLEntity : IntEntity
     {
-        #region 构造函数
-
-        public MLEntity() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected MLEntity(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         //public static string ConnectionString = "MultiLanuages";
 
         //protected override string ConnectionStringSettingName

@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建日期：20140507
@@ -36,15 +36,6 @@ namespace UT
     [RootEntity, Serializable]
     public partial class Car : UnitTestEntity
     {
-        #region 构造函数
-
-        public Car() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected Car(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         #endregion

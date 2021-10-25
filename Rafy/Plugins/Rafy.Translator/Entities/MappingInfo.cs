@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20121107 23:25
@@ -35,15 +35,6 @@ namespace Rafy.MultiLanguages
     [ChildEntity, Serializable]
     public partial class MappingInfo : MLEntity
     {
-        #region 构造函数
-
-        public MappingInfo() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected MappingInfo(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         public static readonly IRefIdProperty LanguageIdProperty =

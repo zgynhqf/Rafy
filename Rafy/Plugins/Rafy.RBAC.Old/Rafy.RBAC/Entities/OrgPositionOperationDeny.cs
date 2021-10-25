@@ -32,15 +32,6 @@ namespace Rafy.RBAC.Old
     [ChildEntity, Serializable]
     public partial class OrgPositionOperationDeny : IntEntity
     {
-        #region 构造函数
-
-        public OrgPositionOperationDeny() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected OrgPositionOperationDeny(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly IRefIdProperty OrgPositionIdProperty =
             P<OrgPositionOperationDeny>.RegisterRefId(e => e.OrgPositionId, ReferenceType.Parent);
         public int OrgPositionId

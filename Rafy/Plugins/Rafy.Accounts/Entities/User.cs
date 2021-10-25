@@ -37,15 +37,6 @@ namespace Rafy.Accounts
     [RootEntity, Serializable]
     public partial class User : AccountsEntity, IRafyIdentity
     {
-        #region 构造函数
-
-        public User() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected User(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         #endregion

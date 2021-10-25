@@ -32,19 +32,12 @@ namespace Rafy.RBAC.Old.Audit
     [QueryEntity, Serializable]
     public partial class AuditItemConditionCriteria : Criteria
     {
-        #region 构造函数
-
         public AuditItemConditionCriteria()
         {
             //默认的查询起始时间和终止时间
             this.StartTime = DateTime.Today.AddDays(-3);
             this.EndTime = DateTime.Today.AddDays(0);
         }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected AuditItemConditionCriteria(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
 
         #region Properties
 

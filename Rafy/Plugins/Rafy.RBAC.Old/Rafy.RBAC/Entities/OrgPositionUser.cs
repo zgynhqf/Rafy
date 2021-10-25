@@ -38,15 +38,6 @@ namespace Rafy.RBAC.Old
     [ChildEntity, Serializable]
     public partial class OrgPositionUser : IntEntity
     {
-        #region 构造函数
-
-        public OrgPositionUser() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected OrgPositionUser(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly IRefIdProperty OrgPositionIdProperty =
             P<OrgPositionUser>.RegisterRefId(e => e.OrgPositionId, ReferenceType.Parent);
         public int OrgPositionId

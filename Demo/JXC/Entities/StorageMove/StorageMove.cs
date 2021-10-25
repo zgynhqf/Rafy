@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -19,15 +19,6 @@ namespace JXC
     [ConditionQueryType(typeof(TimeSpanCriteria))]
     public partial class StorageMove : JXCEntity
     {
-        #region 构造函数
-
-        public StorageMove() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected StorageMove(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly IRefIdProperty StorageFromIdProperty =
             P<StorageMove>.RegisterRefId(e => e.StorageFromId, ReferenceType.Normal);
         public int StorageFromId

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -19,14 +19,6 @@ namespace Rafy.RBAC.DataPermissionManagement
     [Serializable]
     public abstract class DataPermissionManagementEntity : LongEntity
     {
-        #region 构造函数
-
-        protected DataPermissionManagementEntity() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected DataPermissionManagementEntity(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
     }
 
     [Serializable]

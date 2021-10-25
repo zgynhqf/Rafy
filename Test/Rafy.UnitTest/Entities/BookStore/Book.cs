@@ -33,15 +33,6 @@ namespace UT
     [RootEntity, Serializable]
     public partial class Book : UnitTestEntity
     {
-        #region 构造函数
-
-        public Book() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected Book(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         public static readonly IRefIdProperty BookCategoryIdProperty =

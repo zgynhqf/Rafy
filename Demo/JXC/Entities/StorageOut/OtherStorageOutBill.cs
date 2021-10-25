@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -17,15 +17,6 @@ namespace JXC
     [ConditionQueryType(typeof(TimeSpanCriteria))]
     public partial class OtherStorageOutBill : StorageOutBill
     {
-        #region 构造函数
-
-        public OtherStorageOutBill() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected OtherStorageOutBill(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly IRefIdProperty CustomerIdProperty =
             P<OtherStorageOutBill>.RegisterRefId(e => e.CustomerId, ReferenceType.Normal);
         public int CustomerId

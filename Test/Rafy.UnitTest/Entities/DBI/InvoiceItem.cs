@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建日期：20151024
@@ -37,15 +37,6 @@ namespace UT
     [ChildEntity, Serializable]
     public partial class InvoiceItem : UnitTestEntity
     {
-        #region 构造函数
-
-        public InvoiceItem() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected InvoiceItem(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         public static readonly IRefIdProperty InvoiceIdProperty =

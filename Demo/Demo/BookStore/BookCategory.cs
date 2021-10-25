@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -15,15 +15,6 @@ namespace Demo
     [RootEntity, Serializable]
     public partial class BookCategory : DemoEntity
     {
-        #region 构造函数
-
-        public BookCategory() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected BookCategory(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly Property<string> NameProperty = P<BookCategory>.Register(e => e.Name);
         public string Name
         {

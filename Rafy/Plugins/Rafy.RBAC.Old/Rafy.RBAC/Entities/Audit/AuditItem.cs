@@ -33,15 +33,6 @@ namespace Rafy.RBAC.Old.Audit
     [ConditionQueryType(typeof(AuditItemConditionCriteria))]
     public partial class AuditItem : IntEntity
     {
-        #region 构造函数
-
-        public AuditItem() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected AuditItem(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly Property<string> TitleProperty = P<AuditItem>.Register(e => e.Title);
         public string Title
         {

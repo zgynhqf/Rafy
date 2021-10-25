@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -19,15 +19,6 @@ namespace UT
     [Label("单元测试 - 角色")]
     public partial class TestRole : UnitTestEntity
     {
-        #region 构造函数
-
-        public TestRole() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected TestRole(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public bool IsLock { get; set; }
 
         public static readonly IRefIdProperty TestUserIdProperty =

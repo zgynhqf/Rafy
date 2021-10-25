@@ -28,17 +28,10 @@ namespace JXC
     [QueryEntity, Serializable]
     public class TimeSpanCriteria : Criteria
     {
-        #region 构造函数
-
         public TimeSpanCriteria()
         {
             this.TimeSpanType = TimeSpanType.LastMonth;
         }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected TimeSpanCriteria(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
 
         public static readonly Property<TimeSpanType> TimeSpanTypeProperty = P<TimeSpanCriteria>.Register(e => e.TimeSpanType, new PropertyMetadata<TimeSpanType>
         {

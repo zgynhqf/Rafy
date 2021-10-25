@@ -28,15 +28,6 @@ namespace Rafy.Domain
     [EntityKeyType(KeyTypeName = "System.String")]
     public abstract class StringEntity : Entity<string>
     {
-        #region 构造函数
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected StringEntity(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        protected StringEntity() { }
-
-        #endregion
-
         //static StringEntity()
         //{
         //    //注册自关联属性，并设置它的默认为 null。

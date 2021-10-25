@@ -28,18 +28,11 @@ namespace MP
     [Serializable]
     public abstract class MPEntity : IntEntity
     {
-        #region 构造函数
-
         public MPEntity()
         {
             //需要设置 Id 后，界面的选择行为才正常。
             this.Id = RafyEnvironment.NewLocalId();
         }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected MPEntity(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
     }
 
     [Serializable]

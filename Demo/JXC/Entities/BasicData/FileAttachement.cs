@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20120423
@@ -35,15 +35,6 @@ namespace JXC
     [Serializable]
     public abstract class FileAttachement : JXCEntity
     {
-        #region 构造函数
-
-        public FileAttachement() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected FileAttachement(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly Property<string> FileNameProperty = P<FileAttachement>.Register(e => e.FileName);
         public string FileName
         {

@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20130107 09:30
@@ -27,15 +27,6 @@ namespace Rafy.Domain.ORM.DbMigration.Presistence
     [Serializable, QueryEntity]
     public class DbMigrationHistoryQueryCriteria : Criteria
     {
-        #region 构造函数
-
-        public DbMigrationHistoryQueryCriteria() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected DbMigrationHistoryQueryCriteria(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly Property<string> DatabaseProperty = P<DbMigrationHistoryQueryCriteria>.Register(e => e.Database);
         public string Database
         {

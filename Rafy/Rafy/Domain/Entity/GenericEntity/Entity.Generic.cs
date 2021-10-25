@@ -28,16 +28,6 @@ namespace Rafy.Domain
     /// <typeparam name="TKey"></typeparam>
     public abstract class Entity<TKey> : Entity, IEntity, IEntityWithId
     {
-        #region 构造函数
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected Entity(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Entity"/> class.
-        /// </summary>
-        protected Entity() { }
-
         static Entity()
         {
             KeyProviderField = KeyProviders.Get(typeof(TKey));
@@ -47,8 +37,6 @@ namespace Rafy.Domain
                 m.DefaultValue = KeyProviderField.DefaultValue;
             });
         }
-
-        #endregion
 
         internal static IKeyProvider KeyProviderField;
 

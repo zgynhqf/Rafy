@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20121106 21:13
@@ -35,15 +35,6 @@ namespace MP
     [RootEntity, Serializable]
     public partial class WeekSummary : MPEntity
     {
-        #region 构造函数
-
-        public WeekSummary() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected WeekSummary(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         internal WeekCompletion WeekCompletion;
 
         #region 一般属性

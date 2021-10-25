@@ -37,15 +37,6 @@ namespace MP
     [RootEntity, Serializable]
     public partial class MonthPlan : MPEntity
     {
-        #region 构造函数
-
-        public MonthPlan() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected MonthPlan(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         #endregion

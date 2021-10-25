@@ -35,15 +35,6 @@ namespace Rafy.MultiLanguages
     [RootEntity, Serializable]
     public partial class DevLanguageItem : MLEntity
     {
-        #region 构造函数
-
-        public DevLanguageItem() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected DevLanguageItem(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         #endregion

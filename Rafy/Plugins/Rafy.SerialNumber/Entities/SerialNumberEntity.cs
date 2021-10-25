@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建日期：20160318
@@ -31,15 +31,6 @@ namespace Rafy.SerialNumber
     [Serializable]
     public abstract class SerialNumberEntity : LongEntity
     {
-        #region 构造函数
-
-        protected SerialNumberEntity() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected SerialNumberEntity(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         //#region 动态提供 SerialNumber 的主键的类型
 
         //static SerialNumberEntity()

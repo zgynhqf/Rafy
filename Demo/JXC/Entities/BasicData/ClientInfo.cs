@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20120413
@@ -32,15 +32,6 @@ namespace JXC
     [RootEntity, Serializable]
     public partial class ClientInfo : JXCEntity
     {
-        #region 构造函数
-
-        public ClientInfo() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected ClientInfo(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly IRefIdProperty ClientCategoryIdProperty =
             P<ClientInfo>.RegisterRefId(e => e.ClientCategoryId, ReferenceType.Normal);
         public int ClientCategoryId

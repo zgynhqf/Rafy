@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -17,15 +17,6 @@ namespace Demo
     [QueryEntity, Serializable]
     public class BookQueryCriteria : Criteria
     {
-        #region 构造函数
-
-        public BookQueryCriteria() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected BookQueryCriteria(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly IRefIdProperty BookCategoryIdProperty =
             P<BookQueryCriteria>.RegisterRefId(e => e.BookCategoryId, ReferenceType.Normal);
         public int? BookCategoryId

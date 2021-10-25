@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：吴中坡
  * 创建日期：20161130
@@ -30,19 +30,6 @@ namespace Rafy.RBAC.RoleManagement
     [ChildEntity, Serializable]
     public class RoleOperation : RoleManagementEntity
     {
-        #region 构造函数
-
-        public RoleOperation()
-        {
-        }
-
-        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
-        protected RoleOperation(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
-
-        #endregion
-
         #region 引用属性
         public static readonly IRefIdProperty RoleIdProperty =
             P<RoleOperation>.RegisterRefId(e => e.RoleId, ReferenceType.Parent);

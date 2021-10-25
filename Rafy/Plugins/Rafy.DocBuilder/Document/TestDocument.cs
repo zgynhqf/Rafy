@@ -31,15 +31,6 @@ namespace Rafy.DevTools
     [RootEntity, Serializable]
     public partial class TestDocument : IntEntity
     {
-        #region 构造函数
-
-        public TestDocument() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected TestDocument(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         #endregion

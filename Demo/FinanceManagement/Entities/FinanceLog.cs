@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -21,15 +21,6 @@ namespace FM
     [RootEntity, Serializable]
     public partial class FinanceLog : FMEntity
     {
-        #region 构造函数
-
-        public FinanceLog() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected FinanceLog(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly Property<string> UsersProperty = P<FinanceLog>.Register(e => e.Users, new PropertyMetadata<string>
         {
             PropertyChangingCallBack = (o, e) => (o as FinanceLog).OnUsersTagsChanging(e)

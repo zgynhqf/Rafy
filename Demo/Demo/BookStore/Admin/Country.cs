@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -16,15 +16,6 @@ namespace Demo
     [ChildEntity, Serializable]
     public partial class Country : DemoEntity
     {
-        #region 构造函数
-
-        public Country() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected Country(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly IRefIdProperty CityIdProperty =
             P<Country>.RegisterRefId(e => e.CityId, ReferenceType.Parent);
         public int CityId

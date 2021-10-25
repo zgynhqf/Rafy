@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：宋军瑞
  * 创建日期：20160921
@@ -28,15 +28,6 @@ namespace Rafy.LicenseManager.Entities
     [RootEntity, Serializable]
     public partial class LicenseEntity : LicenseManagerEntity
     {
-        #region 构造函数
-
-        public LicenseEntity() { }
-
-        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
-        protected LicenseEntity(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         #endregion

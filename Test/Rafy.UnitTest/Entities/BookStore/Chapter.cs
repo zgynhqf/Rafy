@@ -33,15 +33,6 @@ namespace UT
     [ChildEntity, Serializable]
     public partial class Chapter : UnitTestEntity
     {
-        #region 构造函数
-
-        public Chapter() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected Chapter(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         public static readonly IRefIdProperty BookIdProperty =

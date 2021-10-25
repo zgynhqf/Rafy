@@ -26,15 +26,6 @@ namespace Rafy.UnitTest
     [RootEntity, Serializable]
     public partial class TestDataPermission : UnitTestEntity
     {
-        #region 构造函数
-
-        public TestDataPermission() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected TestDataPermission(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         public static readonly IRefIdProperty GroupIdProperty =

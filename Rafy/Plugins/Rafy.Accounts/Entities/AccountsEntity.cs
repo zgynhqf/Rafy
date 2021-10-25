@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建日期：20151209
@@ -31,15 +31,6 @@ namespace Rafy.Accounts
     [Serializable]
     public abstract class AccountsEntity : LongEntity
     {
-        #region 构造函数
-
-        protected AccountsEntity() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected AccountsEntity(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         //#region 动态提供 AccountsEntity 的主键的类型
 
         //static AccountsEntity()

@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20120413
@@ -27,15 +27,6 @@ namespace JXC
     [RootEntity, Serializable]
     public partial class AutoCodeInfo : JXCEntity
     {
-        #region 构造函数
-
-        public AutoCodeInfo() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected AutoCodeInfo(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly Property<string> MingChengProperty = P<AutoCodeInfo>.Register(e => e.MingCheng);
         public string MingCheng
         {

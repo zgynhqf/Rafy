@@ -18,15 +18,6 @@ namespace UT
     [RootEntity, Serializable]
     public partial class A : UnitTestEntity
     {
-        #region 构造函数
-
-        public A() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected A(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         #endregion

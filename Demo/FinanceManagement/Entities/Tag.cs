@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -19,15 +19,6 @@ namespace FM
     [RootEntity, Serializable]
     public partial class Tag : FMEntity
     {
-        #region 构造函数
-
-        public Tag() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected Tag(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly Property<string> NameProperty = P<Tag>.Register(e => e.Name);
         public string Name
         {

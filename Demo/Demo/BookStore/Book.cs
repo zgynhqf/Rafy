@@ -20,15 +20,6 @@ namespace Demo
     [RootEntity, Serializable]
     public partial class Book : DemoEntity
     {
-        #region 构造函数
-
-        public Book() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected Book(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly Property<string> NameProperty = P<Book>.Register(e => e.Name);
         public string Name
         {

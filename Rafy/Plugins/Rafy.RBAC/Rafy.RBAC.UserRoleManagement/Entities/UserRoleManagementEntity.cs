@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：吴中坡
  * 创建日期：20161201
@@ -24,14 +24,6 @@ namespace Rafy.RBAC.UserRoleManagement
     [Serializable]
     public abstract class UserRoleManagementEntity : LongEntity
     {
-        #region 构造函数
-
-        protected UserRoleManagementEntity() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected UserRoleManagementEntity(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
     }
 
     [Serializable]

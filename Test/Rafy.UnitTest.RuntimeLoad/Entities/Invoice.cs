@@ -37,14 +37,6 @@ namespace Rafy.UnitTest.RuntimeLoad
     [RootEntity, Serializable]
     public partial class Invoice : RuntimeLoadEntity
     {
-        #region 构造函数
-
-        public Invoice() { }
-
-        protected Invoice(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         #endregion

@@ -36,15 +36,6 @@ namespace Rafy.RBAC.Old
     [RootEntity]
     public partial class UserLoginLog : IntEntity
     {
-        #region 构造函数
-
-        public UserLoginLog() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected UserLoginLog(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly IRefIdProperty UserIdProperty =
             P<UserLoginLog>.RegisterRefId(e => e.UserId, ReferenceType.Normal);
         public int UserId

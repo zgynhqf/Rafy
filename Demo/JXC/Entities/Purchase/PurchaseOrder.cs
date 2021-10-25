@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20120416
@@ -35,15 +35,6 @@ namespace JXC
     [ConditionQueryType(typeof(ClientTimeSpanCriteria))]
     public partial class PurchaseOrder : JXCEntity
     {
-        #region 构造函数
-
-        public PurchaseOrder() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected PurchaseOrder(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         public static readonly IRefIdProperty SupplierIdProperty =

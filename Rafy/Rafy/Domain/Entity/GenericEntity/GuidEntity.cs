@@ -28,15 +28,6 @@ namespace Rafy.Domain
     [EntityKeyType(KeyTypeName = "System.Guid")]
     public abstract class GuidEntity : Entity<Guid>
     {
-        #region 构造函数
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected GuidEntity(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        protected GuidEntity() { }
-
-        #endregion
-
         /// <summary>
         /// 树型父实体的 Id 属性
         /// 

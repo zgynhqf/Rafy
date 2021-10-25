@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20120413
@@ -31,15 +31,6 @@ namespace JXC
     [RootEntity, Serializable]
     public partial class Storage : JXCEntity
     {
-        #region 构造函数
-
-        public Storage() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected Storage(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly ListProperty<StorageProductList> StorageProductListProperty = P<Storage>.RegisterList(e => e.StorageProductList);
         public StorageProductList StorageProductList
         {

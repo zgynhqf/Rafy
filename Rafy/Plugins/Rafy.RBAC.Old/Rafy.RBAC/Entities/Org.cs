@@ -32,15 +32,6 @@ namespace Rafy.RBAC.Old
     [RootEntity, Serializable]
     public partial class Org : IntEntity
     {
-        #region 构造函数
-
-        public Org() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected Org(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly Property<string> NameProperty = P<Org>.Register(e => e.Name);
         public string Name
         {

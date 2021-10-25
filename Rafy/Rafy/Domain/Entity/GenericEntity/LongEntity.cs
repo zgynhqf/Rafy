@@ -28,18 +28,11 @@ namespace Rafy.Domain
     [EntityKeyType(KeyTypeName = "System.Int64")]
     public abstract class LongEntity : Entity<long>
     {
-        #region 构造函数
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected LongEntity(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        protected LongEntity()
-        {
-            //不需要此行，所有新增的实体的 Id 都是 -1.
-            //this.LoadProperty(IdProperty, RafyEnvironment.NewLocalId());
-        }
-
-        #endregion
+        //protected LongEntity()
+        //{
+        //    //不需要此行，所有新增的实体的 Id 都是 -1.
+        //    //this.LoadProperty(IdProperty, RafyEnvironment.NewLocalId());
+        //}
 
         /// <summary>
         /// 树型父实体的 Id 属性

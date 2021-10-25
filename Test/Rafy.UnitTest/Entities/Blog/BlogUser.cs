@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建日期：20131212
@@ -35,15 +35,6 @@ namespace UT
     [RootEntity, Serializable]
     public partial class BlogUser : UnitTestEntity
     {
-        #region 构造函数
-
-        public BlogUser() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected BlogUser(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         #endregion

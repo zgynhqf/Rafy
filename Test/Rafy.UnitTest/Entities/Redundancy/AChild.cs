@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建日期：20150529
@@ -36,15 +36,6 @@ namespace UT
     [ChildEntity, Serializable]
     public partial class AChild : UnitTestEntity
     {
-        #region 构造函数
-
-        public AChild() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected AChild(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         public static readonly IRefIdProperty AIdProperty =

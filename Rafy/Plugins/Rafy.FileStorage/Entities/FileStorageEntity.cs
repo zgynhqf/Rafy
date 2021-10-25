@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建日期：20160502
@@ -31,14 +31,6 @@ namespace Rafy.FileStorage
     [Serializable]
     public abstract class FileStorageEntity : LongEntity
     {
-        #region 构造函数
-
-        protected FileStorageEntity() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected FileStorageEntity(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
     }
 
     [Serializable]

@@ -22,15 +22,6 @@ namespace UT
     [RootEntity, Serializable]
     public partial class BookCategory : UnitTestEntity
     {
-        #region 构造函数
-
-        public BookCategory() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected BookCategory(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         #endregion

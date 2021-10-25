@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建日期：20160516
@@ -36,15 +36,6 @@ namespace UT
     [ChildEntity, Serializable]
     public partial class TestUserLog : UnitTestEntity
     {
-        #region 构造函数
-
-        public TestUserLog() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected TestUserLog(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         public static readonly IRefIdProperty TestUserIdProperty =

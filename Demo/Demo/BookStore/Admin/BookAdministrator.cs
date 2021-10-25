@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20120404
@@ -29,15 +29,6 @@ namespace Demo
     [RootEntity, Serializable]
     public partial class BookAdministrator : DemoEntity
     {
-        #region 构造函数
-
-        public BookAdministrator() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected BookAdministrator(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly Property<string> UserNameProperty = P<BookAdministrator>.Register(e => e.UserName);
         public string UserName
         {

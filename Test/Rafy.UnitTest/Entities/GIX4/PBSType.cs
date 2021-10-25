@@ -34,15 +34,6 @@ namespace UT
     [RootEntity, Serializable]
     public partial class PBSType : UnitTestEntity
     {
-        #region 构造函数
-
-        public PBSType() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected PBSType(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         #endregion

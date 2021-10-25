@@ -36,15 +36,6 @@ namespace Rafy.DevTools.DbManagement
     [RootEntity, Serializable]
     public partial class DbSettingItem : IntEntity
     {
-        #region 构造函数
-
-        public DbSettingItem() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected DbSettingItem(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 一般属性
 
         public static readonly Property<string> NameProperty = P<DbSettingItem>.Register(e => e.Name);

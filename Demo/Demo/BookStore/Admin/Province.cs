@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -14,15 +14,6 @@ namespace Demo
     [RootEntity, Serializable]
     public partial class Province : DemoEntity
     {
-        #region 构造函数
-
-        public Province() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected Province(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly Property<string> NameProperty = P<Province>.Register(e => e.Name);
         public string Name
         {

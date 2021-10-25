@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -18,15 +18,6 @@ namespace JXC
     [ChildEntity, Serializable]
     public partial class StorageOutBillItem : ProductRefItem
     {
-        #region 构造函数
-
-        public StorageOutBillItem() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected StorageOutBillItem(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly IRefIdProperty StorageOutBillIdProperty =
             P<StorageOutBillItem>.RegisterRefId(e => e.StorageOutBillId, ReferenceType.Parent);
         public int StorageOutBillId

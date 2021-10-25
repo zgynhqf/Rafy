@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：吴中坡
  * 创建日期：20161201
@@ -30,19 +30,6 @@ namespace Rafy.RBAC.UserRoleManagement
     [ChildEntity, Serializable]
     public class UserRole : UserRoleManagementEntity
     {
-        #region 构造函数
-
-        public UserRole()
-        {
-        }
-
-        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
-        protected UserRole(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
-
-        #endregion
-
         #region 引用属性
 
         public static readonly IRefIdProperty UserIdProperty = P<UserRole>.RegisterRefId(e => e.UserId, ReferenceType.Parent);

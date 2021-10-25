@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建日期：20151024
@@ -37,15 +37,6 @@ namespace UT
     [RootEntity, Serializable]
     public partial class Invoice : UnitTestEntity
     {
-        #region 构造函数
-
-        public Invoice() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected Invoice(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         #endregion

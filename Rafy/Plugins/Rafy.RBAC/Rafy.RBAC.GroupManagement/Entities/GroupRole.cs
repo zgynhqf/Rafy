@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：刘雷
  * 创建日期：20161212
@@ -38,15 +38,6 @@ namespace Rafy.RBAC.GroupManagement
     [ChildEntity, Serializable]
     public partial class GroupRole : GroupManagementEntity
     {
-        #region 构造函数
-
-        public GroupRole() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected GroupRole(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         public static readonly IRefIdProperty GroupIdProperty =

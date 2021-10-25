@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -18,15 +18,6 @@ namespace FM
     [Serializable]
     public abstract class FMEntity : IntEntity
     {
-        #region 构造函数
-
-        protected FMEntity() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected FMEntity(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 扩展字段
 
         public static readonly Property<string> Extend1Property = P<FMEntity>.Register(e => e.Extend1);

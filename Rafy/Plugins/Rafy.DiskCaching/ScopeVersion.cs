@@ -34,15 +34,6 @@ namespace Rafy.Domain.Caching
     [DebuggerDisplay("{ClassRegion} {ScopeClass} {ScopeId}")]
     public partial class ScopeVersion : IntEntity
     {
-        #region 构造函数
-
-        public ScopeVersion() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected ScopeVersion(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         /// <summary>
         /// 以此类作为缓存的“区域”划分
         /// </summary>

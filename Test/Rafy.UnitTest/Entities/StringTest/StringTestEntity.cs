@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建日期：20140515
@@ -31,40 +31,16 @@ namespace UT
     [Serializable]
     public abstract class StringTestEntity : StringEntity
     {
-        #region 构造函数
-
-        protected StringTestEntity() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected StringTestEntity(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
     }
 
     [Serializable]
     public abstract class StringTestIntEntity : IntEntity
     {
-        #region 构造函数
-
-        protected StringTestIntEntity() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected StringTestIntEntity(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
     }
 
     [Serializable]
     public abstract class StringTestLongEntity : LongEntity
     {
-        #region 构造函数
-
-        protected StringTestLongEntity() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected StringTestLongEntity(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
     }
 
     [Serializable]

@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建日期：20160502
@@ -36,15 +36,6 @@ namespace Rafy.FileStorage
     [RootEntity, Serializable]
     public partial class FileInfo : FileStorageEntity
     {
-        #region 构造函数
-
-        public FileInfo() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected FileInfo(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         #endregion

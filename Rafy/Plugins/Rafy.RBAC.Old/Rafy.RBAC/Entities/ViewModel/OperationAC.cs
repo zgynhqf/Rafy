@@ -313,15 +313,6 @@ namespace Rafy.RBAC.Old
     [QueryEntity, Serializable]
     public partial class OperationAC_GetDenyListCriteria : Criteria
     {
-        #region 构造函数
-
-        public OperationAC_GetDenyListCriteria() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected OperationAC_GetDenyListCriteria(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly Property<int> ModuleACIdProperty = P<OperationAC_GetDenyListCriteria>.Register(e => e.ModuleACId);
         public int ModuleACId
         {

@@ -31,15 +31,6 @@ namespace Rafy.RBAC.Old
     [RootEntity, Serializable]
     public partial class User : IntEntity
     {
-        #region 构造函数
-
-        public User() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected User(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly Property<string> CodeProperty = P<User>.Register(e => e.Code);
         public string Code
         {

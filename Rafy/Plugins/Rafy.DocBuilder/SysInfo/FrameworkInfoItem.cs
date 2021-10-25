@@ -35,15 +35,6 @@ namespace Rafy.DevTools.SysInfo
     [RootEntity, Serializable]
     public partial class FrameworkInfoItem : IntEntity
     {
-        #region 构造函数
-
-        public FrameworkInfoItem() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected FrameworkInfoItem(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         #endregion

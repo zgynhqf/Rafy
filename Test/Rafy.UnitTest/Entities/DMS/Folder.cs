@@ -23,15 +23,6 @@ namespace UT
     [RootEntity, Serializable]
     public partial class Folder : UnitTestEntity
     {
-        #region 构造函数
-
-        public Folder() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected Folder(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         #endregion

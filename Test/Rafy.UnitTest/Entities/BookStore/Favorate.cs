@@ -24,15 +24,6 @@ namespace UT
     [RootEntity, Serializable]
     public partial class Favorate : UnitTestEntity
     {
-        #region 构造函数
-
-        public Favorate() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected Favorate(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         public static readonly IRefIdProperty BookIdProperty =

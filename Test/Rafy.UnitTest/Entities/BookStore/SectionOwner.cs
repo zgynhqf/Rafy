@@ -31,15 +31,6 @@ namespace UT
     [RootEntity, Serializable]
     public partial class SectionOwner : UnitTestEntity
     {
-        #region 构造函数
-
-        public SectionOwner() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected SectionOwner(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         #endregion

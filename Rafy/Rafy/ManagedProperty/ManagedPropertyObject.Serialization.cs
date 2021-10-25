@@ -112,17 +112,6 @@ namespace Rafy.ManagedProperty
         /// <param name="e"></param>
         protected virtual void OnDeserialized(DesirializedArgs e) { }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ManagedPropertyObject"/> class.
-        /// </summary>
-        /// <param name="info"></param>
-        /// <param name="context"></param>
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected ManagedPropertyObject(SerializationInfo info, StreamingContext context)
-        {
-            throw new InvalidOperationException();
-        }
-
         ///// <summary>
         ///// 反序列化完成时，调用此函数。
         ///// </summary>

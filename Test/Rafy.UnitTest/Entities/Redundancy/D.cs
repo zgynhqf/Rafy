@@ -18,15 +18,6 @@ namespace UT
     [RootEntity, Serializable]
     public partial class D : UnitTestEntity
     {
-        #region 构造函数
-
-        public D() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected D(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly IRefIdProperty CIdProperty =
             P<D>.RegisterRefId(e => e.CId, ReferenceType.Normal);
         public int CId

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -16,15 +16,6 @@ namespace Demo
     [ChildEntity, Serializable]
     public partial class Chapter : DemoEntity
     {
-        #region 构造函数
-
-        public Chapter() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected Chapter(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly IRefIdProperty BookIdProperty =
             P<Chapter>.RegisterRefId(e => e.BookId, ReferenceType.Parent);
         public int BookId

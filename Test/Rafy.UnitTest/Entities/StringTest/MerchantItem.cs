@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -23,15 +23,6 @@ namespace UT
     [ChildEntity, Serializable]
     public partial class MerchantItem : StringTestIntEntity
     {
-        #region 构造函数
-
-        public MerchantItem() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected MerchantItem(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         public static readonly IRefIdProperty HouseMerchantIdProperty =

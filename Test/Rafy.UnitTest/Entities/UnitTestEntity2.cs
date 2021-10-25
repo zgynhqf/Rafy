@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -18,15 +18,6 @@ namespace UT
     [Serializable]
     public abstract class UnitTest2Entity : IntEntity
     {
-        #region 构造函数
-
-        protected UnitTest2Entity() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected UnitTest2Entity(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 兼容老接口
 
         /// <summary>

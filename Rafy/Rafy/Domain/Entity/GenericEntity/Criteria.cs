@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20110217
@@ -36,17 +36,6 @@ namespace Rafy.Domain
         private static IKeyProvider KeyProviderField = KeyProviders.Get(typeof(object));
 
         private PagingInfo _p;
-
-        #region 构造函数
-
-        public Criteria()
-        {
-        }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected Criteria(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
 
         /// <summary>
         /// 如果该条件类正在使用分页查询，则这个对象描述分页的信息。

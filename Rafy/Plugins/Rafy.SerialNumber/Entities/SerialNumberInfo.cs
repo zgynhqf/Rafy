@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建日期：20160318
@@ -36,15 +36,6 @@ namespace Rafy.SerialNumber
     [RootEntity, Serializable]
     public partial class SerialNumberInfo : SerialNumberEntity
     {
-        #region 构造函数
-
-        public SerialNumberInfo() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected SerialNumberInfo(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         #endregion

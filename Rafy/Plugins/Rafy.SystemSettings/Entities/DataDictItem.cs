@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建日期：20171106
@@ -37,15 +37,6 @@ namespace Rafy.SystemSettings
     [ChildEntity, Serializable]
     public partial class DataDictItem : SystemSettingsEntity
     {
-        #region 构造函数
-
-        public DataDictItem() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected DataDictItem(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         public static readonly IRefIdProperty DataDictIdProperty =

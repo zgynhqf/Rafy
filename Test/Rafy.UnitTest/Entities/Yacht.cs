@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：颜昌龙
  * 创建日期：20170912
@@ -38,15 +38,6 @@ namespace Rafy.UnitTest
     [RootEntity, Serializable]
     public partial class Yacht : UnitTestEntity
     {
-        #region 构造函数
-
-        public Yacht() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected Yacht(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         #endregion

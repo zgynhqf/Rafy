@@ -105,9 +105,6 @@ namespace Rafy.Domain
             this.Concat = concat;
         }
 
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected CommonQueryCriteria(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
         #endregion
 
         /// <summary>

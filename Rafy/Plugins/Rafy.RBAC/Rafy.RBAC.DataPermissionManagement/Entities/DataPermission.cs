@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -28,15 +28,6 @@ namespace Rafy.RBAC.DataPermissionManagement
     [ChildEntity, Serializable]
     public partial class DataPermission : DataPermissionManagementEntity
     {
-        #region 构造函数
-
-        public DataPermission() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected DataPermission(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         public static readonly IRefIdProperty RoleIdProperty =

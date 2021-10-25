@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20120413
@@ -37,15 +37,6 @@ namespace JXC
     [NavigationQueryType(typeof(ProductNavigationCriteria))]
     public partial class Product : JXCEntity
     {
-        #region 构造函数
-
-        public Product() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected Product(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly IRefIdProperty ProductCategoryIdProperty =
             P<Product>.RegisterRefId(e => e.ProductCategoryId, ReferenceType.Normal);
         public int ProductCategoryId

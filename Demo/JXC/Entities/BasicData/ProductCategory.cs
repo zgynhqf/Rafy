@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20120413
@@ -30,15 +30,6 @@ namespace JXC
     [RootEntity, Serializable]
     public partial class ProductCategory : JXCEntity
     {
-        #region 构造函数
-
-        public ProductCategory() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected ProductCategory(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly Property<string> NameProperty = P<ProductCategory>.Register(e => e.Name);
         public string Name
         {

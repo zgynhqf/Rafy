@@ -32,15 +32,6 @@ namespace Rafy.RBAC.Old
     [RootEntity, Serializable]
     public partial class Position : IntEntity
     {
-        #region 构造函数
-
-        public Position() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected Position(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly Property<string> CodeProperty = P<Position>.Register(e => e.Code);
         public string Code
         {

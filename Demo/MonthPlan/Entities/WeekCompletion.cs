@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20121102 16:03
@@ -35,15 +35,6 @@ namespace MP
     [ChildEntity, Serializable]
     public partial class WeekCompletion : MPEntity
     {
-        #region 构造函数
-
-        public WeekCompletion() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected WeekCompletion(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         public static readonly IRefIdProperty TaskOrCategoryIdProperty =

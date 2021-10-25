@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -17,15 +17,6 @@ namespace JXC
     [ChildEntity, Serializable]
     public partial class PurchaseOrderAttachement : FileAttachement
     {
-        #region 构造函数
-
-        public PurchaseOrderAttachement() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected PurchaseOrderAttachement(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly IRefIdProperty PurchaseOrderIdProperty =
             P<PurchaseOrderAttachement>.RegisterRefId(e => e.PurchaseOrderId, ReferenceType.Parent);
         public int PurchaseOrderId

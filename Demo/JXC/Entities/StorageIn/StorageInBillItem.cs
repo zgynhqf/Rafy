@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -18,15 +18,6 @@ namespace JXC
     [ChildEntity, Serializable]
     public partial class StorageInBillItem : ProductRefItem
     {
-        #region 构造函数
-
-        public StorageInBillItem() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected StorageInBillItem(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly IRefIdProperty StorageInBillIdProperty =
             P<StorageInBillItem>.RegisterRefId(e => e.StorageInBillId, ReferenceType.Parent);
         public int StorageInBillId

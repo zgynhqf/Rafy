@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建日期：20140313
@@ -27,15 +27,6 @@ namespace UT
     [QueryEntity, Serializable]
     public class TestUserQueryCriteria : Criteria
     {
-        #region 构造函数
-
-        public TestUserQueryCriteria() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected TestUserQueryCriteria(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly Property<string> CodeProperty = P<TestUserQueryCriteria>.Register(e => e.Code);
         public string Code
         {

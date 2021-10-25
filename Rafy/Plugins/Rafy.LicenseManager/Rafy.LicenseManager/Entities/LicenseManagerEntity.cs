@@ -21,17 +21,7 @@ using Rafy.MetaModel;
 namespace Rafy.LicenseManager.Entities
 {
     [Serializable]
-    public abstract class LicenseManagerEntity : IntEntity
-    {
-        #region ¹¹Ôìº¯Êý
-
-        protected LicenseManagerEntity() { }
-
-        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
-        protected LicenseManagerEntity(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-    }
+    public abstract class LicenseManagerEntity : IntEntity { }
 
     [Serializable]
     public abstract class LicenseManagerEntityList : EntityList { }

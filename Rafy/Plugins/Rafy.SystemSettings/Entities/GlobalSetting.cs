@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建日期：20171104
@@ -37,15 +37,6 @@ namespace Rafy.SystemSettings
     [RootEntity, Serializable]
     public partial class GlobalSetting : SystemSettingsEntity
     {
-        #region 构造函数
-
-        public GlobalSetting() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected GlobalSetting(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         #endregion

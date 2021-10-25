@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20120419
@@ -32,15 +32,6 @@ namespace JXC
     [Serializable]
     public abstract class ProductRefItem : JXCEntity
     {
-        #region 构造函数
-
-        public ProductRefItem() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected ProductRefItem(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly IRefIdProperty ProductIdProperty =
             P<ProductRefItem>.RegisterRefId(e => e.ProductId, ReferenceType.Normal);
         public int ProductId

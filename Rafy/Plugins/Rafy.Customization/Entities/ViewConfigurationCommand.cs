@@ -18,15 +18,6 @@ namespace Rafy.Customization
     [ChildEntity, Serializable]
     public partial class ViewConfigurationCommand : IntEntity
     {
-        #region 构造函数
-
-        public ViewConfigurationCommand() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected ViewConfigurationCommand(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly IRefIdProperty ViewConfigurationModelIdProperty =
             P<ViewConfigurationCommand>.RegisterRefId(e => e.ViewConfigurationModelId, ReferenceType.Parent);
         public int ViewConfigurationModelId

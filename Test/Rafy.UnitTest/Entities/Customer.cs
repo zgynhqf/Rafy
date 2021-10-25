@@ -23,15 +23,6 @@ namespace UT
     [RootEntity, Serializable]
     public partial class Customer : UnitTest2Entity
     {
-        #region 构造函数
-
-        public Customer() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected Customer(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         #region 引用属性
 
         #endregion

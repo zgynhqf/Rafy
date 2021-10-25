@@ -17,16 +17,7 @@ using System.Text;
 namespace Rafy.UnitTest.RuntimeLoad
 {
     [Serializable]
-    public abstract class RuntimeLoadEntity : LongEntity
-    {
-        #region 构造函数
-
-        protected RuntimeLoadEntity() { }
-
-        protected RuntimeLoadEntity(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-    }
+    public abstract class RuntimeLoadEntity : LongEntity { }
 
     [Serializable]
     public abstract class RuntimeLoadEntityList : EntityList { }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -14,15 +14,6 @@ namespace Rafy.Domain.ORM.DbMigration.Presistence
     [RootEntity, Serializable]
     public partial class DbVersion : IntEntity
     {
-        #region 构造函数
-
-        public DbVersion() { }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected DbVersion(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        #endregion
-
         public static readonly Property<string> DatabaseProperty = P<DbVersion>.Register(e => e.Database);
         public string Database
         {
