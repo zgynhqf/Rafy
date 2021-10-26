@@ -23,7 +23,7 @@ namespace Rafy.Configuration
 {
     public class RafyConfigurationSection : ConfigurationSection
     {
-#region 子元素
+        #region 子元素
 
         [ConfigurationProperty("wpf")]
         public WPFConfigurationElement WPF
@@ -53,7 +53,7 @@ namespace Rafy.Configuration
             set { this["uiPlugins"] = value; }
         }
 
-#endregion
+        #endregion
 
         /// <summary>
         /// 当前显示的语言文化。
