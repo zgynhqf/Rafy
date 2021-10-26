@@ -43,6 +43,7 @@ namespace Rafy.DbMigration
 
         /// <summary>
         /// 返回 CLR 类型默认映射的数据库的类型。
+        /// 此方法会自动忽略 Nullable 类型。
         /// </summary>
         /// <param name="clrType"></param>
         /// <returns></returns>

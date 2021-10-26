@@ -282,13 +282,7 @@ namespace Rafy.Domain.ORM.DbMigration
 
                     #endregion
 
-                    var dataType = TypeHelper.IgnoreNullable(propertyType);
-                    //对于支持多数据类型的 Id、TreePId 属性进行特殊处理。
-                    if (mp == Entity.IdProperty || mp == Entity.TreePIdProperty)
-                    {
-                        dataType = em.IdType;
-                    }
-                    var dbType = columnMeta.DbType.GetValueOrDefault(_dbTypeConverter.FromClrType(dataType));
+                    var dbType = columnMeta.DbType.GetValueOrDefault(_dbTypeConverter.FromClrType(propertyType));
                     var column = new Column(columnName, dbType, columnMeta.DbTypeLength, table);
                     if (columnMeta.IsRequired.HasValue)
                     {
