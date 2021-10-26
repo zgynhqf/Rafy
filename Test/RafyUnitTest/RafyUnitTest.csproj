@@ -65,4 +65,8 @@
         <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.12.0-beta2" />
         <PackageReference Include="Stub.System.Data.SQLite.Core.NetStandard" Version="1.0.114.3" />
     </ItemGroup>
+
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+      <Exec Command="xcopy &quot;$(SolutionDir)packages\Lib\SQLCE\&quot; &quot;$(TargetDir)&quot; /Y /E" />
+    </Target>
 </Project>

@@ -43,6 +43,6 @@
     </ItemGroup>
 
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-      <Exec Command="xcopy &quot;$(SolutionDir)packages\Lib\SQLCE&quot; &quot;$(ProjectDir)$(OutDir)&quot; /Y" />
+      <Exec Command="xcopy &quot;$(SolutionDir)packages\Lib\SQLCE\&quot; &quot;$(TargetDir)&quot; /Y /E" />
     </Target>
 </Project>
