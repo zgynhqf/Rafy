@@ -30,6 +30,12 @@ http://zgynhqf.github.io/Rafy</Description>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Domain\ORM\Rdb\AggregateSQL\**" />
+    <EmbeddedResource Remove="Domain\ORM\Rdb\AggregateSQL\**" />
+    <None Remove="Domain\ORM\Rdb\AggregateSQL\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Env\ComponentModel\WebOrThreadAppContextProvider.cs" />
     <Compile Remove="Env\Configuration\PluginsConfigurationSection.cs" />
     <Compile Remove="Env\Utils\Caching\CacheProvider\PerHttpRequestCache.cs" />

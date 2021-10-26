@@ -273,19 +273,19 @@ namespace Rafy.Domain.ORM
 
         #region 其它
 
-        private SQLColumnsGenerator _sqlColumnsGenerator;
+        //private SQLColumnsGenerator _sqlColumnsGenerator;
 
-        internal SQLColumnsGenerator SQLColumnsGenerator
-        {
-            get
-            {
-                if (_sqlColumnsGenerator == null)
-                {
-                    _sqlColumnsGenerator = new SQLColumnsGenerator(this.Repository);
-                }
-                return _sqlColumnsGenerator;
-            }
-        }
+        //internal SQLColumnsGenerator SQLColumnsGenerator
+        //{
+        //    get
+        //    {
+        //        if (_sqlColumnsGenerator == null)
+        //        {
+        //            _sqlColumnsGenerator = new SQLColumnsGenerator(this.Repository);
+        //        }
+        //        return _sqlColumnsGenerator;
+        //    }
+        //}
 
         /// <summary>
         /// 强制转换指定仓库的数据提供程序为关系数据库的数据提供程。
