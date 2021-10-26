@@ -1,0 +1,27 @@
+﻿
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
+        <Version>8.0.30703</Version>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <NoWarn>1701;1702;1705;1591</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Rafy\Rafy.csproj" />
+    </ItemGroup>
+
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+      <Exec Command="xcopy &quot;$(TargetPath)&quot; &quot;$(SolutionDir)Web\bin\Domain\&quot; /Y&#xD;&#xA;xcopy &quot;$(TargetPath)&quot; &quot;$(SolutionDir)WPFClient\bin\$(ConfigurationName)\Domain\&quot; /Y" />
+    </Target>
+</Project>

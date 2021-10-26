@@ -1,0 +1,33 @@
+﻿警告：
+    Rafy 框架中，目前只有领域实体框架发布了，是稳定的正式版本。有任何问题可以及时处理。
+    但是，UI 框架（WPF、Web）则目前还处于技术预览阶段，会有较多问题，API 也不稳定，大部分问题只能使用者自行处理。
+    建议初学者先使用 ConsoleApp 进行学习！！！
+
+配置帮助：
+自动数据库升级
+    首次生成数据库时，由于无法登录并进入开发工具模块，请添加以下配置以支持启动时生成数据库：
+    <add key="Rafy_DevTools_GenerateDbOnStartup" value="true"/>
+    初始学习时，更新 RafyPlugins、JXC 两个库即可。
+    
+'Rafy.FileLogger.SqlTraceFileName' 设置的文件路径，会为其创建 SQL 监听文件。
+    <add key="Rafy.FileLogger.SqlTraceFileName" value="C:\SQLTraceLog.txt"/>
+
+数据库配置：
+    当使用 SQLCE 4 时，修改连接字符串配置如下：
+    <add name="DbMigrationHistory" connectionString="Data Source=Data\DbMigrationHistory.sdf;Case Sensitive=True;" providerName="System.Data.SqlServerCe" />
+    <add name="RafyPlugins" connectionString="Data Source=Data\RafyPlugins.sdf;Case Sensitive=True;" providerName="System.Data.SqlServerCe" />
+    <add name="MonthPlan" connectionString="Data Source=Data\MonthPlan.sdf;Case Sensitive=True;" providerName="System.Data.SqlServerCe" />
+    <add name="JXC" connectionString="Data Source=Data\JXC.sdf;Case Sensitive=True;" providerName="System.Data.SqlServerCe" />
+    <add name="Demo" connectionString="Data Source=Data\Demo.sdf;Case Sensitive=True;" providerName="System.Data.SqlServerCe" />
+    <add name="FinanceManagement" connectionString="Data Source=Data\FinanceManagement.sdf;Case Sensitive=True;" providerName="System.Data.SqlServerCe" />
+        
+    当使用 SqlServer 2008 时，修改连接字符串配置如下：
+    <add name="DbMigrationHistory" connectionString="Data Source=.\SQLExpress;Initial Catalog=Rafy_DbMigrationHistory;User ID=sa;Password=GIX4" providerName="System.Data.SqlClient" />
+    <add name="RafyPlugins" connectionString="Data Source=.\SQLExpress;Initial Catalog=Rafy_RafyPlugins;User ID=sa;Password=GIX4" providerName="System.Data.SqlClient"/>
+    <add name="MonthPlan" connectionString="Data Source=.\SQLExpress;Initial Catalog=Rafy_MonthPlan;User ID=sa;Password=GIX4" providerName="System.Data.SqlClient"/>
+    <add name="JXC" connectionString="Data Source=.\SQLExpress;Initial Catalog=Rafy_JXC;User ID=sa;Password=GIX4" providerName="System.Data.SqlClient"/>
+    <add name="Demo" connectionString="Data Source=.\SQLExpress;Initial Catalog=Demo;User ID=sa;Password=GIX4" providerName="System.Data.SqlClient"/>
+    <add name="FinanceManagement" connectionString="Data Source=.\SQLExpress;Initial Catalog=FinanceManagement;User ID=sa;Password=GIX4" providerName="System.Data.SqlClient" />
+
+    当使用 Oracle 时，修改连接字符串配置如下：
+    <add name="FinanceManagement" connectionString="Data Source=HQFMIGRA;User Id=hqf;Password=123;" providerName="System.Data.OracleClient" />

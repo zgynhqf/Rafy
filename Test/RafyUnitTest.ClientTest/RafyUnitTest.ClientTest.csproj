@@ -22,7 +22,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\Rafy\Plugins\Rafy.ComponentModel.UnityAdapter\Rafy.ComponentModel.UnityAdapter.csproj" />
-        <ProjectReference Include="..\..\Rafy\Plugins\Rafy.DiskCaching\Rafy.DiskCaching.csproj" />
         <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.EntityPhantom\Rafy.Domain.EntityPhantom.csproj" />
         <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.Stamp\Rafy.Domain.Stamp.csproj" />
         <ProjectReference Include="..\..\Rafy\Rafy\Rafy.csproj" />

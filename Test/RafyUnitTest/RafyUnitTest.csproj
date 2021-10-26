@@ -33,7 +33,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.DiskCaching\Rafy.DiskCaching.csproj" />
       <ProjectReference Include="..\..\Rafy\Rafy\Rafy.csproj" />
       <ProjectReference Include="..\..\Rafy\Plugins\Rafy.ComponentModel.UnityAdapter\Rafy.ComponentModel.UnityAdapter.csproj" />
       <ProjectReference Include="..\..\Rafy\Plugins\Rafy.DataTableMigration\Rafy.DataArchiver.csproj" />
@@ -45,11 +44,6 @@
       <ProjectReference Include="..\..\Rafy\Plugins\Rafy.SystemSettings\Rafy.SystemSettings.csproj" />
       <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.Stamp\Rafy.Domain.Stamp.csproj" />
       <ProjectReference Include="..\..\Rafy\Plugins\Rafy.FileStorage\Rafy.FileStorage.csproj" />
-      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.LicenseManager\Rafy.LicenseManager.Encryption\Rafy.LicenseManager.Encryption.csproj" />
-      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.DataPermissionManagement\Rafy.RBAC.DataPermissionManagement.csproj" />
-      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.GroupManagement\Rafy.RBAC.GroupManagement.csproj" />
-      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.RoleManagement\Rafy.RBAC.RoleManagement.csproj" />
-      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.UserRoleManagement\Rafy.RBAC.UserRoleManagement.csproj" />
       <ProjectReference Include="..\Rafy.UnitTest.RuntimeLoad\Rafy.UnitTest.RuntimeLoad.csproj" />
       <ProjectReference Include="..\Rafy.UnitTest\Rafy.UnitTest.csproj" />
       <ProjectReference Include="..\Rafy.UnitTest.DataProvider\Rafy.UnitTest.DataProvider.csproj" />

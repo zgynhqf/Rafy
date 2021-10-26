@@ -27,29 +27,29 @@ namespace RafyUnitTest
 
         #region RuntimePlugins
 
-        [TestMethod]
-        public void EnvTest_Plugin_LazyLoad()
-        {
-            if (TestDbGenerator.ForceAllPluginsLoaded) return;
+        //[TestMethod]
+        //public void EnvTest_Plugin_LazyLoad()
+        //{
+        //    if (TestDbGenerator.ForceAllPluginsLoaded) return;
 
-            var plugin = RafyEnvironment.AllPlugins.Find(typeof(DiskCachingPlugin));
-            Assert.IsNull(plugin, "该插件是按需加载，此时应该还没有加载");
+        //    var plugin = RafyEnvironment.AllPlugins.Find(typeof(DiskCachingPlugin));
+        //    Assert.IsNull(plugin, "该插件是按需加载，此时应该还没有加载");
 
-            var em = CommonModel.Entities.FirstOrDefault(e => e.EntityType == typeof(ScopeVersion));
-            Assert.IsNull(em, "该插件是按需加载，此时应该还没有加载");
-            Assert.IsNull(VersionSyncMgr.Repository, "该插件是按需加载，此时应该还没有加载");
+        //    var em = CommonModel.Entities.FirstOrDefault(e => e.EntityType == typeof(ScopeVersion));
+        //    Assert.IsNull(em, "该插件是按需加载，此时应该还没有加载");
+        //    Assert.IsNull(VersionSyncMgr.Repository, "该插件是按需加载，此时应该还没有加载");
 
-            RafyEnvironment.LoadPlugin(typeof(DiskCachingPlugin).Assembly);
+        //    RafyEnvironment.LoadPlugin(typeof(DiskCachingPlugin).Assembly);
 
-            plugin = RafyEnvironment.AllPlugins.Find(typeof(DiskCachingPlugin));
-            Assert.IsNotNull(plugin, "可以通过实体类，按需加载其对应的插件");
+        //    plugin = RafyEnvironment.AllPlugins.Find(typeof(DiskCachingPlugin));
+        //    Assert.IsNotNull(plugin, "可以通过实体类，按需加载其对应的插件");
 
-            em = CommonModel.Entities.Find(typeof(ScopeVersion));
-            Assert.IsNotNull(em, "该插件是按需加载，此时应该加载");
-            Assert.IsNotNull(VersionSyncMgr.Repository, "按需加载的插件的 Initialize 方法也需要被调用。");
+        //    em = CommonModel.Entities.Find(typeof(ScopeVersion));
+        //    Assert.IsNotNull(em, "该插件是按需加载，此时应该加载");
+        //    Assert.IsNotNull(VersionSyncMgr.Repository, "按需加载的插件的 Initialize 方法也需要被调用。");
 
-            //本单元测试只用于演示。其实 DiskCachingPlugin 在使用时，必须启动时加载。
-        }
+        //    //本单元测试只用于演示。其实 DiskCachingPlugin 在使用时，必须启动时加载。
+        //}
 
         [TestMethod]
         public void EnvTest_Plugin_LazyLoad2()

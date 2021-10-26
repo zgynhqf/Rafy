@@ -52,7 +52,6 @@
       <Compile Include=".g.cs\Section.g.cs" />
       <Compile Include=".g.cs\SectionOwner.g.cs" />
       <Compile Include=".g.cs\TestAdministrator.g.cs" />
-      <Compile Include=".g.cs\TestDataPermission.g.cs" />
       <Compile Include=".g.cs\TestRole.g.cs" />
       <Compile Include=".g.cs\TestTreeTask.g.cs" />
       <Compile Include=".g.cs\TestUser.g.cs" />
@@ -69,8 +68,6 @@
     <ItemGroup>
         <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.EntityPhantom\Rafy.Domain.EntityPhantom.csproj" />
         <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.ORM.BatchSubmit\Rafy.Domain.ORM.BatchSubmit.csproj" />
-        <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.GroupManagement\Rafy.RBAC.GroupManagement.csproj" />
-        <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC\Rafy.RBAC.RoleManagement\Rafy.RBAC.RoleManagement.csproj" />
         <ProjectReference Include="..\..\Rafy\Rafy\Rafy.csproj" />
     </ItemGroup>
 
