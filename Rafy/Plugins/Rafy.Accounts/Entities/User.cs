@@ -121,7 +121,7 @@ namespace Rafy.Accounts
         /// <summary>
         /// 当前用户是否已经被禁用。
         /// </summary>
-        public bool IsDisabled
+        public new bool IsDisabled
         {
             get { return this.GetProperty(IsDisabledProperty); }
             set { this.SetProperty(IsDisabledProperty, value); }

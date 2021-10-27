@@ -363,9 +363,9 @@ namespace Rafy.Domain
                             var mp = container.Find(property, true);
                             if (mp != null)
                             {
-                                var refProperty = mp as IRefEntityProperty;
-                                if (refProperty != null)
+                                if (mp is IRefEntityProperty)
                                 {
+                                    var refProperty = mp as IRefEntityProperty;
                                     loadOptions.LoadWith(refProperty);
                                     nextEntityType = refProperty.RefEntityType;
                                 }

@@ -57,7 +57,7 @@ namespace UT
         /// </summary>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public IEnumerable<TestAdministrator> Concrete()
+        public new IEnumerable<TestAdministrator> Concrete()
         {
             return this.Cast<TestAdministrator>();
         }
