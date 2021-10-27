@@ -29,9 +29,12 @@ using System.Windows.Threading;
 using Rafy;
 using Rafy.ComponentModel;
 using Rafy.Domain;
+using Rafy.Domain.DataPortal;
 using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.MetaModel.View;
+using Rafy.Threading;
+using Rafy.UI;
 using Rafy.Utils;
 using Rafy.WPF;
 using Rafy.WPF.Command;
@@ -39,7 +42,7 @@ using Rafy.WPF.Controls;
 
 namespace Rafy.WPF.Shell
 {
-    public class ClientApp : AppImplementationBase, IClientApp
+    public class ClientApp : UIApp, IClientApp
     {
         #region 构造函数 & 注册
 
@@ -64,26 +67,44 @@ namespace Rafy.WPF.Shell
 
         #endregion
 
-        protected void Startup()
+        /// <summary>
+        /// 判断是否在客户端
+        /// 单机版，如果还没有进入数据门户中，则同样返回 true。
+        /// </summary>
+        /// <returns></returns>
+        public override bool IsOnClient()
         {
-            this._wpfApp.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            return !RafyEnvironment.ConnectDataDirectly ||
+                RafyEnvironment.ThreadPortalCount == 0;
+        }
 
-            try
+        public override void Startup()
+        {
+            _wpfApp.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
+            if (this.EnableExceptionLog)
+            {
+                try
+                {
+                    this.StartupApplication();
+                }
+                catch (Exception e)
+                {
+                    var baseException = e.GetBaseException();
+                    string msg = baseException.Message;
+                    App.MessageBox.Show("程序启动时出现异常，程序即将退出……\r\n" + msg, "程序启动异常");
+
+                    if (Debugger.IsAttached) { Debugger.Break(); }
+
+                    Logger.LogError("程序启动时出现异常。", e);
+
+                    //由于初始化时出现了异常，所以整个程序需要退出。
+                    this.Shutdown();
+                }
+            }
+            else
             {
                 this.StartupApplication();
-            }
-            catch (Exception e)
-            {
-                var baseException = e.GetBaseException();
-                string msg = baseException.Message;
-                App.MessageBox.Show("程序启动时出现异常，程序即将退出……\r\n" + msg, "程序启动异常");
-
-                if (Debugger.IsAttached) { Debugger.Break(); }
-
-                Logger.LogError("程序启动时出现异常。", e);
-
-                //由于初始化时出现了异常，所以整个程序需要退出。
-                this.Shutdown();
             }
         }
 
@@ -105,10 +126,16 @@ namespace Rafy.WPF.Shell
 
         protected override void InitEnvironment()
         {
-            RafyEnvironment.Location.IsWebUI = false;
-            RafyEnvironment.Location.IsWPFUI = true;
-            RafyEnvironment.Location.DataPortalMode = RafyEnvironment.Configuration.Section.DataPortalProxy == "Local" ?
+            DataPortalApi.FakeRemote = true;
+            AsyncHelper.DisableWrapping = true;
+
+            UIEnvironment.IsWPFUI = true;
+
+            RafyEnvironment.DataPortalMode = RafyEnvironment.Configuration.Section.DataPortalProxy == "Local" ?
                 DataPortalMode.ConnectDirectly : DataPortalMode.ThroughService;
+
+            //客户端所有线程使用一个身份（上下文）；
+            AppContext.SetProvider(new StaticAppContextProvider());
 
             base.InitEnvironment();
 
@@ -156,7 +183,7 @@ namespace Rafy.WPF.Shell
             base.OnRuntimeStarting();
 
             //运行时行为开始时，先设置好皮肤元素。
-            SkinManager.Apply(RafyEnvironment.Configuration.Section.WPF.Skin);
+            SkinManager.Apply(WPFConfigHelper.Skin);
         }
 
         protected override void StartMainProcess()
@@ -197,7 +224,7 @@ namespace Rafy.WPF.Shell
         /// </summary>
         private void ModifyPrivateBinPath()
         {
-            var dlls = RafyEnvironment.GetCustomerEntityDlls(false);
+            var dlls = UIEnvironment.GetCustomerEntityDlls(false);
             if (dlls.Length > 0)
             {
                 var pathes = new List<string> {
@@ -275,7 +302,7 @@ namespace Rafy.WPF.Shell
             }
             else
             {
-                var log = RafyEnvironment.BranchProvider.FindCustomerFile(SplashScreenContentFile);
+                var log = UIEnvironment.BranchProvider.FindCustomerFile(SplashScreenContentFile);
                 if (log != null)
                 {
                     //创建并显示一个闪屏窗口

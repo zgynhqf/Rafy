@@ -234,7 +234,7 @@ namespace Rafy.Domain
                     {
                         //对于所有插件中的实体仓库扩展类，都需要检测仓库扩展类。
                         var baseClass = typeof(EntityRepositoryExt);
-                        foreach (var plugin in RafyEnvironment.AllPlugins)
+                        foreach (var plugin in RafyEnvironment.Plugins)
                         {
                             var types = plugin.Assembly.GetTypes();
                             foreach (var type in types)

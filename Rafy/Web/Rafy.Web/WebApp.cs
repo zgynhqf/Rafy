@@ -24,6 +24,7 @@ using Rafy.ComponentModel;
 using Rafy.Domain;
 using Rafy.MetaModel;
 using Rafy.MetaModel.View;
+using Rafy.UI;
 using Rafy.Web.ClientMetaModel;
 
 namespace Rafy.Web
@@ -31,7 +32,7 @@ namespace Rafy.Web
     /// <summary>
     /// WebApp 启动环境
     /// </summary>
-    public class WebApp : DomainApp
+    public class WebApp : UIApp
     {
         protected override void PrepareToStartup()
         {
@@ -43,22 +44,22 @@ namespace Rafy.Web
         protected override void InitEnvironment()
         {
             //如果在初始化时发生异常，则会引发再次启动。这时应该保证之前的所有的初始化工作归零。
-            RafyEnvironment.Location.IsWebUI = true;
-            RafyEnvironment.Location.IsWPFUI = false;
-            RafyEnvironment.Location.DataPortalMode = DataPortalMode.ConnectDirectly;
+            UIEnvironment.IsWebUI = true;
 
+#if NET45
+            //如果是网站，则一个 HttpContext 使用一个身份（上下文）；否则，每个线程使用一个单独的身份（上下文）。
+            AppContext.SetProvider(new WebOrThreadAppContextProvider());
+
+#endif
             base.InitEnvironment();
 
-            if (RafyEnvironment.Location.IsWebUI)
-            {
-                JsonServiceRepository.LoadAllServices();
-            }
+            JsonServiceRepository.LoadAllServices();
         }
 
         protected override void CreateMeta()
         {
             //虽然是 WebApp，但是可能只是作为 WPFClient 的服务端。
-            if (RafyEnvironment.Location.IsWebUI)
+            if (UIEnvironment.IsWebUI)
             {
                 //webcommand 需要在实体前初始化好
                 this.InitCommandMetas();

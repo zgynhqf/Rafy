@@ -56,7 +56,7 @@ namespace RafyUnitTest
         {
             if (TestDbGenerator.ForceAllPluginsLoaded) return;
 
-            var plugin = RafyEnvironment.AllPlugins.Find(typeof(RuntimeLoadPlugin));
+            var plugin = RafyEnvironment.Plugins.Find(typeof(RuntimeLoadPlugin));
             Assert.IsNull(plugin, "该插件是按需加载，此时应该还没有加载");
 
             var configurations = RafyEnvironment.FindConfigurations(typeof(Invoice));
@@ -65,7 +65,7 @@ namespace RafyUnitTest
 
             RafyEnvironment.LoadPlugin(typeof(Invoice).Assembly);
 
-            plugin = RafyEnvironment.AllPlugins.Find(typeof(RuntimeLoadPlugin));
+            plugin = RafyEnvironment.Plugins.Find(typeof(RuntimeLoadPlugin));
             Assert.IsNotNull(plugin, "可以通过实体类，按需加载其对应的插件");
 
             var em = CommonModel.Entities.Find(typeof(Invoice));

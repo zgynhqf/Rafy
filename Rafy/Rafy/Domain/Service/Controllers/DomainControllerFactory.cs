@@ -81,7 +81,7 @@ namespace Rafy.Domain
         {
             if (!_intialized)
             {
-                foreach (var plugin in RafyEnvironment.AllPlugins)
+                foreach (var plugin in RafyEnvironment.Plugins)
                 {
                     Initialize(plugin);
                 }

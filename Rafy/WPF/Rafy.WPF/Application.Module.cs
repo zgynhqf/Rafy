@@ -77,7 +77,7 @@ namespace Rafy.WPF
             this.HookWorkspace();
 
             //使用权限进行过滤出所有在界面中显示的模块。
-            var userModules = CommonModel.Modules.GetRootsWithPermission().ToList();
+            var userModules = UIModel.Modules.GetRootsWithPermission().ToList();
 
             //初始化用户模块列表 - 视图模型
             this.UserRootModules.ReadEntityModules(userModules);
@@ -136,7 +136,7 @@ namespace Rafy.WPF
         public WorkspaceWindow OpenModuleOrAlert(string moduleName)
         {
             //在列表中获取指定类型的元数据
-            var module = CommonModel.Modules.FindModule(moduleName) as WPFModuleMeta;
+            var module = UIModel.Modules.FindModule(moduleName) as WPFModuleMeta;
             if (module == null) throw new ArgumentNullException("没有找到对应的模块：" + moduleName);
 
             return this.OpenModuleOrAlert(module);

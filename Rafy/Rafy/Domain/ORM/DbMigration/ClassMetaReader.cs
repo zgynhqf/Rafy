@@ -96,7 +96,7 @@ namespace Rafy.Domain.ORM.DbMigration
             var tableEntityTypes = new List<EntityMeta>();
 
             //程序集列表，生成数据库会反射找到程序集内的实体类型进行数据库映射
-            foreach (var assembly in RafyEnvironment.AllPlugins)
+            foreach (var assembly in RafyEnvironment.Plugins)
             {
                 foreach (var type in assembly.Assembly.GetTypes())
                 {

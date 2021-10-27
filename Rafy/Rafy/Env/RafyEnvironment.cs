@@ -51,6 +51,7 @@ namespace Rafy
         public static EnvironmentProvider Provider
         {
             get { return _provider; }
+            set { _provider = value; }
         }
 
         #endregion
@@ -114,7 +115,8 @@ namespace Rafy
         /// <returns></returns>
         public static string Translate(this string embadedValue)
         {
-            return _provider.Translator.Translate(embadedValue);
+            var translator = _provider.Translator;
+            return translator != null ? translator.Translate(embadedValue) : embadedValue;
         }
 
         /// <summary>
@@ -126,7 +128,8 @@ namespace Rafy
         /// <returns></returns>
         public static string TranslateReverse(this string translatedValue)
         {
-            return _provider.Translator.TranslateReverse(translatedValue);
+            var translator = _provider.Translator;
+            return translator != null ? translator.TranslateReverse(translatedValue) : translatedValue;
         }
 
         #endregion
@@ -146,62 +149,6 @@ namespace Rafy
         internal static void SetApp(IApp appCore)
         {
             _appCore = appCore;
-        }
-
-        #endregion
-
-        #region InitCustomizationPath
-
-        private static BranchPathProvider _branchProvider;
-
-        /// <summary>
-        /// 查找文件路径的查找算法提供器。
-        /// </summary>
-        public static BranchPathProvider BranchProvider
-        {
-            get { return _branchProvider; }
-        }
-
-        /// <summary>
-        /// 提供一个先初始化路径的方法，这个方法可以单独先被调用。
-        /// 这样，就可以通过路径找到需要的程序集，其它的初始化才能正常进行。
-        /// </summary>
-        internal static void InitCustomizationPath()
-        {
-            _branchProvider = new BranchPathProvider();
-
-            //分支版本名。
-            //同时，这个也是客户化文件夹的名字。
-            //分支版本定义，需要重写这个属性。
-            string customerDir = ConfigurationHelper.GetAppSettingOrDefault("BranchDirList");
-            if (!string.IsNullOrWhiteSpace(customerDir))
-            {
-                foreach (var branch in customerDir.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
-                {
-                    _branchProvider.AddBranch(branch);
-                }
-            }
-        }
-
-        private const string DomainPluginFolder = "Domain";
-        private const string UIPluginFolder = "UI";
-
-        /// <summary>
-        /// 获取所有此版本中需要加载的实体类Dll集合。
-        /// </summary>
-        /// <returns></returns>
-        public static string[] GetCustomerEntityDlls(bool toAbsolute = true)
-        {
-            return _branchProvider.MapAllPathes(DomainPluginFolder, toAbsolute);
-        }
-
-        /// <summary>
-        /// 获取所有此版本中需要加载的模块Dll集合。
-        /// </summary>
-        /// <returns></returns>
-        internal static string[] GetCustomerModuleDlls()
-        {
-            return _branchProvider.MapAllPathes(UIPluginFolder, false);
         }
 
         #endregion
@@ -253,30 +200,18 @@ namespace Rafy
         [ThreadStatic]
         private static int _threadPortalCount;
 
-        private static LocationInformation _location = new LocationInformation();
+        /// <summary>
+        /// 应用程序默认的数据门户模式。
+        /// </summary>
+        public static DataPortalMode DataPortalMode { get; set; } = DataPortalMode.ConnectDirectly;
 
         /// <summary>
-        /// 当前应用程序的位置信息。
-        /// 
-        /// 对应的位置：
-        /// 单机版：IsWPFUI = true, DataPortalMode = DirectConnect；
-        /// Web 服务器：IsWebUI = true, DataPortalMode = DirectConnect；
-        /// C/S 客户端：IsWPFUI = true, DataPortalMode = ThroughService；
-        /// C/S 服务端（默认值）：IsWPFUI = flase, IsWebUI = flase, DataPortalMode = DirectConnect；
+        /// 是否应用程序直接连接数据。
+        /// DataPortalMode == DataPortalMode.DirectConnect。
         /// </summary>
-        public static LocationInformation Location
+        public static bool ConnectDataDirectly
         {
-            get { return _location; }
-        }
-
-        /// <summary>
-        /// 使用这个方法后，Location 会被重置，这样可以再次对该属性进行设置。
-        /// </summary>
-        private static void ResetLocation()
-        {
-            _location.IsWebUI = false;
-            _location.IsWPFUI = false;
-            _location.DataPortalMode = DataPortalMode.ConnectDirectly;
+            get { return DataPortalMode == DataPortalMode.ConnectDirectly; }
         }
 
         /// <summary>
@@ -285,7 +220,14 @@ namespace Rafy
         public static int ThreadPortalCount
         {
             get { return _threadPortalCount; }
-            internal set { _threadPortalCount = value; }
+            internal set
+            {
+                //设置此值的位置如下：
+                //* Repository.Query
+                //* Repository.Save
+                //* Service.Invoke
+                _threadPortalCount = value;
+            }
         }
 
         ///// <summary>
@@ -314,13 +256,7 @@ namespace Rafy
         /// <returns></returns>
         public static bool IsOnServer()
         {
-            //当在服务端、或者是单机版模拟服务端时，默认值为直接在服务端运行。
-            if (_location.ConnectDataDirectly)
-            {
-                if (_location.IsWPFUI) return _threadPortalCount > 0;
-                return true;
-            }
-            return false;
+            return !IsOnClient();
         }
 
         /// <summary>
@@ -330,8 +266,7 @@ namespace Rafy
         /// <returns></returns>
         public static bool IsOnClient()
         {
-            return !_location.ConnectDataDirectly ||
-                (_location.IsWPFUI && _threadPortalCount == 0);
+            return _appCore.IsOnClient();
         }
 
         #endregion

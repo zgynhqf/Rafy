@@ -44,17 +44,17 @@ namespace RafyUnitTest.ClientTest
 
             RafyEnvironment.Provider.IsDebuggingEnabled = true;
 
-            RafyEnvironment.DomainPlugins.Add(new StampPlugin());
-            RafyEnvironment.DomainPlugins.Add(new EntityPhantomPlugin());
-            RafyEnvironment.DomainPlugins.Add(new UnityAdapterPlugin());
+            RafyEnvironment.Plugins.Add(new StampPlugin());
+            RafyEnvironment.Plugins.Add(new EntityPhantomPlugin());
+            RafyEnvironment.Plugins.Add(new UnityAdapterPlugin());
 
-            RafyEnvironment.DomainPlugins.Add(new UnitTestPlugin());
+            RafyEnvironment.Plugins.Add(new UnitTestPlugin());
             //RafyEnvironment.DomainPlugins.Add(new UnitTestDataProviderPlugin());
             //RafyEnvironment.DomainPlugins.Add(new UnitTestIDataProviderPlugin());
             //RafyEnvironment.DomainPlugins.Add(new UnitTestRepoPlugin());
             //RafyEnvironment.DomainPlugins.Add(new DiskCachingPlugin());
 
-            RafyEnvironment.DomainPlugins.Add(new UnitTestWPFPlugin());
+            RafyEnvironment.Plugins.Add(new UnitTestWPFPlugin());
 
             base.InitEnvironment();
         }

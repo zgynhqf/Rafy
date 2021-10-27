@@ -30,7 +30,7 @@ namespace Rafy.Domain.DataPortal
     public static class DataPortalApi
     {
         /// <summary>
-        /// 是否需要在客户端模式下，模拟远程调用（进行对象的复制）。
+        /// 是否需要在模拟远程调用（进行对象的复制）。
         /// 
         /// 由于开发人员平时会使用单机版本开发，而正式部署时，又会选用 C/S 架构。
         /// 所以需要保证单机版本和 C/S 架构版本的模式是一样的。也就是说，在单机模式下，
@@ -38,7 +38,7 @@ namespace Rafy.Domain.DataPortal
         /// 这样，在底层 Update 更改 obj 时，不会影响上层的实体。
         /// 而是以返回值的形式把这个被修改的实体返回给上层。
         /// </summary>
-        public static bool FakeRemoteIfOnClient { get; set; } = true;
+        public static bool FakeRemote { get; set; } = false;
 
         /// <summary>
         /// 使用门户查询
@@ -90,7 +90,7 @@ namespace Rafy.Domain.DataPortal
             object res = null;
 
             //只是不要纯客户端，都直接使用本地访问
-            if (loc == DataPortalLocation.Local || RafyEnvironment.Location.ConnectDataDirectly)
+            if (loc == DataPortalLocation.Local || RafyEnvironment.ConnectDataDirectly)
             {
                 /*********************** 代码块解释 *********************************
                  * 
@@ -112,8 +112,8 @@ namespace Rafy.Domain.DataPortal
                     RafyEnvironment.ThreadPortalCount++;
 
                     //ThreadPortalCount == 1 表示第一次进入数据门户
-                    if (FakeRemoteIfOnClient &&
-                        RafyEnvironment.Location.IsWPFUI && RafyEnvironment.Location.ConnectDataDirectly && RafyEnvironment.ThreadPortalCount == 1)
+                    if (FakeRemote &&
+                        RafyEnvironment.ConnectDataDirectly && RafyEnvironment.ThreadPortalCount == 1)
                     {
                         res = BinarySerializer.Clone(obj);
                     }

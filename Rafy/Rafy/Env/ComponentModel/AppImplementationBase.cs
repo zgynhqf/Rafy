@@ -23,7 +23,6 @@ using System.Threading.Tasks;
 using System.Web;
 using Rafy;
 using Rafy.MetaModel;
-using Rafy.MetaModel.View;
 using Rafy.Utils;
 
 namespace Rafy.ComponentModel
@@ -31,12 +30,22 @@ namespace Rafy.ComponentModel
     /// <summary>
     /// 这个类为 ClientApp、ServerApp、WebApp 等类提供了一致的基类。
     /// </summary>
-    public abstract class AppImplementationBase : IServerApp
+    public abstract class AppImplementationBase : IApp
     {
         /// <summary>
         /// 应用程序当前所处的阶段。
         /// </summary>
         public AppPhase Phase { get; private set; } = AppPhase.Created;
+
+        /// <summary>
+        /// 默认情况下，App 是一个服务端应用程序。
+        /// 子类需要重写此方法，来确定当前是否运行在客户端。
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool IsOnClient()
+        {
+            return false;
+        }
 
         /// <summary>
         /// 子类在合适的时间调用此方法来启动整个 Rafy 应用程序。
@@ -88,13 +97,13 @@ namespace Rafy.ComponentModel
         {
             RafyEnvironment.Reset();
             CommonModel.Instance.Reset();
-            UIModel.Reset();
-            WPFCommandNames.Clear();
+
+            RafyEnvironment.SetApp(this);
         }
 
         /// <summary>
         /// 初始化应用程序的环境。
-        /// 子类可在此方法中添加所需的插件、设置 <see cref="RafyEnvironment.Location"/> 等。
+        /// 子类可在此方法中添加所需的插件、设置 <see cref="RafyEnvironment"/> 的值等。
         /// </summary>
         protected virtual void InitEnvironment()
         {
@@ -109,43 +118,6 @@ namespace Rafy.ComponentModel
                 }
                 catch (CultureNotFoundException) { }
             }
-
-            //如果是客户端，则所有线程使用一个身份（上下文）；
-            if (RafyEnvironment.Location.IsWPFUI)
-            {
-                AppContext.SetProvider(new StaticAppContextProvider());
-            }
-#if NET45
-            //如果是网站，则一个 HttpContext 使用一个身份（上下文）；否则，每个线程使用一个单独的身份（上下文）。
-            else if (HttpContext.Current != null)
-            {
-                AppContext.SetProvider(new WebOrThreadAppContextProvider());
-            }
-#endif
-            RafyEnvironment.InitCustomizationPath();
-
-            RafyEnvironment.SetApp(this);
-
-            //设置多国语言
-            this.SetupLanguage();
-        }
-
-        /// <summary>
-        /// 设置当前语言
-        /// 
-        /// 需要在所有 Translator 依赖注入完成后调用。
-        /// </summary>
-        private void SetupLanguage()
-        {
-            //当前线程的文化名，就是 Rafy 多国语言的标识。
-            var culture = Thread.CurrentThread.CurrentUICulture.Name;
-            if (!Translator.IsDevCulture(culture))
-            {
-                var translator = RafyEnvironment.Provider.Translator;
-                //目前，在服务端进行翻译时，只支持一种语言。所以尽量在客户端进行翻译。
-                translator.CurrentCulture = culture;
-                translator.Enabled = true;
-            }
         }
 
         /// <summary>
@@ -158,7 +130,7 @@ namespace Rafy.ComponentModel
         /// </summary>
         protected virtual void StartMainProcess() { }
 
-        #region IServerApp 事件
+        #region IApp 事件
 
         /// <summary>
         /// 所有实体元数据初始化完毕，包括实体元数据之间的关系。
@@ -198,9 +170,6 @@ namespace Rafy.ComponentModel
         /// </summary>
         protected virtual void OnMetaCreated()
         {
-            //冻结模块的元数据
-            CommonModel.Modules.Freeze();
-
             var handler = this.MetaCreated;
             if (handler != null) handler(this, EventArgs.Empty);
         }

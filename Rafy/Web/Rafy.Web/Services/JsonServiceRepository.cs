@@ -209,7 +209,7 @@ namespace Rafy.Web
             //这个类型没有定义在插件程序集中，所以这里需要手动加入到仓库中。
             Add(typeof(GetCustomDataSourceService));
 
-            foreach (var plugin in RafyEnvironment.DomainPlugins)
+            foreach (var plugin in RafyEnvironment.Plugins)
             {
                 foreach (var type in plugin.Assembly.GetTypes())
                 {

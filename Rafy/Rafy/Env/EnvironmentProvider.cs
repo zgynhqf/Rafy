@@ -11,6 +11,7 @@
  * 
 *******************************************************/
 
+using Rafy.ManagedProperty;
 using Rafy.Utils;
 using System;
 using System.Collections.Generic;
@@ -73,27 +74,31 @@ namespace Rafy
         /// </summary>
         public bool IsDebuggingEnabled { get; set; }
 
-        private Translator _translator;
-
         /// <summary>
         /// 当前使用的翻译器
         /// </summary>
-        public Translator Translator
-        {
-            get
-            {
-                if (this._translator == null)
-                {
-                    this._translator = new EmptyTranslator();
-                }
-                return _translator;
-            }
-            set
-            {
-                if (value == null) throw new ArgumentNullException("value");
+        public ITranslator Translator { get; set; }
 
-                _translator = value;
-            }
+        /// <summary>
+        /// 如果当前 Rafy 运行时环境中，已经拥有 UI 层界面的元数据，则获取属性对应的的显示名称，并进行翻译后返回。
+        /// 否则，直接返回以下格式的字符串，方便替换：[属性名称]。（服务端一般都没有 UI 层元数据。）
+        /// </summary>
+        /// <param name="property">The property.</param>
+        /// <returns></returns>
+        public virtual string GetLabelForDisplay(IManagedProperty property)
+        {
+            return '[' + property.Name + ']';
+        }
+
+        /// <summary>
+        /// 如果当前 Rafy 运行时环境中，已经拥有 UI 层界面的元数据，则获取实体对应的的显示名称，并进行翻译后返回。
+        /// 否则，直接返回以下格式的字符串，方便替换：[实体类型名称]。（服务端一般都没有 UI 层元数据。）
+        /// </summary>
+        /// <param name="entityType">Type of the entity.</param>
+        /// <returns></returns>
+        public virtual string GetLabelForDisplay(Type entityType)
+        {
+            return '[' + entityType.FullName + ']';
         }
     }
 }

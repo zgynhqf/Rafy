@@ -21,14 +21,13 @@ using Rafy;
 using Rafy.Domain;
 using Rafy.ManagedProperty;
 using Rafy.MetaModel;
-using Rafy.MetaModel.View;
 using Rafy.MetaModel.Attributes;
 using Rafy.Domain.ORM.Query;
 
 namespace Rafy.Domain.ORM.DbMigration.Presistence
 {
     [RootEntity]
-    [ConditionQueryType(typeof(DbMigrationHistoryQueryCriteria))]
+    //[ConditionQueryType(typeof(DbMigrationHistoryQueryCriteria))]
     public partial class DbMigrationHistory : IntEntity
     {
         public static readonly Property<string> DatabaseProperty = P<DbMigrationHistory>.Register(e => e.Database);
@@ -177,43 +176,6 @@ namespace Rafy.Domain.ORM.DbMigration.Presistence
                 );
 
             Meta.Property(DbMigrationHistory.DatabaseProperty).MapColumn().HasColumnName("Db");
-        }
-    }
-
-    internal class DbMigrationHistoryConfig_WPF : WPFViewConfig<DbMigrationHistory>
-    {
-        protected internal override void ConfigView()
-        {
-            //View.UseWPFCommands(WPFCommandNames.Delete, WPFCommandNames.SaveList, WPFCommandNames.Cancel);
-
-            using (View.OrderProperties())
-            {
-                View.Property(DbMigrationHistory.DatabaseProperty).HasLabel("数据库名").ShowIn(ShowInWhere.List).Readonly();
-                View.Property(DbMigrationHistory.DescriptionProperty).HasLabel("描述").ShowIn(ShowInWhere.List).Readonly();
-                View.Property(DbMigrationHistory.TimeStringProperty).HasLabel("时间").ShowIn(ShowInWhere.List).Readonly();
-                View.Property(DbMigrationHistory.IsGeneratedProperty).HasLabel("是否生成").ShowIn(ShowInWhere.List).Readonly();
-                View.Property(DbMigrationHistory.MigrationClassProperty).HasLabel("升级类").ShowIn(ShowInWhere.List).Readonly();
-                View.Property(DbMigrationHistory.MigrationContentProperty).HasLabel("内容").ShowIn(ShowInWhere.List).Readonly()
-                    .UseEditor(WPFEditorNames.Memo);
-                View.Property(DbMigrationHistory.TimeIdProperty).HasLabel("时间Id").ShowIn(ShowInWhere.List).Readonly();
-            }
-        }
-    }
-
-    internal class DbMigrationHistoryConfig_Web : WebViewConfig<DbMigrationHistory>
-    {
-        protected internal override void ConfigView()
-        {
-            using (View.OrderProperties())
-            {
-                View.Property(DbMigrationHistory.DatabaseProperty).HasLabel("数据库名").ShowIn(ShowInWhere.List).Readonly();
-                View.Property(DbMigrationHistory.DescriptionProperty).HasLabel("描述").ShowIn(ShowInWhere.List).Readonly();
-                View.Property(DbMigrationHistory.TimeStringProperty).HasLabel("时间").ShowIn(ShowInWhere.List).Readonly();
-                View.Property(DbMigrationHistory.IsGeneratedProperty).HasLabel("是否生成").ShowIn(ShowInWhere.List).Readonly();
-                View.Property(DbMigrationHistory.MigrationClassProperty).HasLabel("升级类").ShowIn(ShowInWhere.List).Readonly();
-                View.Property(DbMigrationHistory.MigrationContentProperty).HasLabel("内容").ShowIn(ShowInWhere.List).Readonly();
-                View.Property(DbMigrationHistory.TimeIdProperty).HasLabel("时间Id").ShowIn(ShowInWhere.List).Readonly();
-            }
         }
     }
 }

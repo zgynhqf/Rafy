@@ -443,7 +443,7 @@ namespace Rafy.Domain.Serialization.Json
         String,
         /// <summary>
         /// 在枚举上标记的 Label。
-        /// 如果枚举没有标记 <see cref="Rafy.MetaModel.Attributes.LabelAttribute"/>，则直接输出名字。
+        /// 如果枚举没有标记 LabelAttribute，则直接输出名字。
         /// </summary>
         EnumLabel
     }

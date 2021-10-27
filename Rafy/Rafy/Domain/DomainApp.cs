@@ -48,7 +48,7 @@ namespace Rafy.Domain
         /// </summary>
         public bool EnableExceptionLog { get; set; } = false;
 
-        public void Startup()
+        public virtual void Startup()
         {
             if (this.EnableExceptionLog)
             {

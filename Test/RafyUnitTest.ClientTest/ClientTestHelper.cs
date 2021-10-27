@@ -19,6 +19,7 @@ using System.IO;
 using Rafy.Utils;
 using Rafy;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Rafy.UI;
 
 namespace RafyUnitTest.ClientTest
 {
@@ -42,7 +43,7 @@ namespace RafyUnitTest.ClientTest
         /// </summary>
         public static void ModifyPrivateBinPath()
         {
-            var dlls = RafyEnvironment.GetCustomerEntityDlls(false);
+            var dlls = UIEnvironment.GetCustomerEntityDlls(false);
             if (dlls.Length > 0)
             {
                 var pathes = new List<string> { 

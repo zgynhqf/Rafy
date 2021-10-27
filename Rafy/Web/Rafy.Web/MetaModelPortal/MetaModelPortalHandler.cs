@@ -49,7 +49,7 @@ namespace Rafy.Web
             //如果指定了 module，则直接返回模块的格式。
             if (!string.IsNullOrEmpty(moduleName))
             {
-                var module = CommonModel.Modules[moduleName];
+                var module = UIModel.Modules[moduleName];
                 var aggt = UIModel.AggtBlocks.GetModuleBlocks(module);
                 jsonResult = converter.ConvertToAggtMeta(aggt);
             }

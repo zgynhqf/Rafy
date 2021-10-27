@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.MetaModel.View;
 
@@ -108,7 +109,7 @@ namespace Rafy.Web.ClientMetaModel
                     if (groupBy != null)
                     {
                         var n = groupBy.Name;
-                        if (groupBy.IsReferenceEntity)
+                        if (groupBy.PropertyMeta.ManagedProperty is IRefEntityProperty)
                         {
                             n = EntityModelGenerator.LabeledRefProperty(n);
                         }
@@ -151,17 +152,17 @@ namespace Rafy.Web.ClientMetaModel
                     }
 
                     //对于引用属性需要分开来特殊处理
-                    if (!property.IsReferenceEntity)
-                    {
-                        column.dataIndex = property.Name;
-
-                        if (canEdit) { column.editor = ServerTypeHelper.GetTypeEditor(property); }
-                    }
-                    else
+                    if (property.PropertyMeta.ManagedProperty is IRefEntityProperty)
                     {
                         column.dataIndex = EntityModelGenerator.LabeledRefProperty(property.Name);
 
                         if (canEdit) { column.editor = ServerTypeHelper.CreateComboList(property); }
+                    }
+                    else
+                    {
+                        column.dataIndex = property.Name;
+
+                        if (canEdit) { column.editor = ServerTypeHelper.GetTypeEditor(property); }
                     }
 
                     grid.columns.Add(column);
@@ -192,15 +193,15 @@ namespace Rafy.Web.ClientMetaModel
                     FieldConfig field = null;
 
                     //对于引用属性需要分开来特殊处理
-                    if (!property.IsReferenceEntity)
-                    {
-                        field = ServerTypeHelper.GetTypeEditor(property);
-                        field.name = property.Name;
-                    }
-                    else
+                    if (property.PropertyMeta.ManagedProperty is IRefEntityProperty)
                     {
                         field = ServerTypeHelper.CreateComboList(property);
                         field.name = EntityModelGenerator.LabeledRefProperty(property.Name);
+                    }
+                    else
+                    {
+                        field = ServerTypeHelper.GetTypeEditor(property);
+                        field.name = property.Name;
                     }
 
                     field.fieldLabel = property.Label;

@@ -26,7 +26,6 @@ using Rafy.Domain.ORM.DbMigration;
 using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
-using Rafy.MetaModel.View;
 
 namespace Rafy.Domain
 {
@@ -51,7 +50,7 @@ namespace Rafy.Domain
 
         private void OnMetaCompiled(object sender, EventArgs e)
         {
-            var plugins = RafyEnvironment.AllPlugins;
+            var plugins = RafyEnvironment.Plugins;
             foreach (var plugin in plugins)
             {
                 ProcessTypesInPlugin(plugin);

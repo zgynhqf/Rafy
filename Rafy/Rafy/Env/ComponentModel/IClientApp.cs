@@ -51,9 +51,4 @@ namespace Rafy.ComponentModel
         /// </summary>
         void Shutdown();
     }
-
-    /// <summary>
-    /// 服务端应用程序生命周期定义
-    /// </summary>
-    public interface IServerApp : IApp { }
 }

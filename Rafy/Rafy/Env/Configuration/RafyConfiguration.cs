@@ -32,11 +32,6 @@ namespace Rafy
     {
         private RafyConfigurationSection _section;
 
-        public RafyConfiguration()
-        {
-            this.DevCulture = "zh-CN";
-        }
-
         /// <summary>
         /// 配置文件节对应的 WMSSection 配置节。相当于 Instance.WMSSection。
         /// </summary>
@@ -74,6 +69,6 @@ namespace Rafy
         /// <summary>
         /// 开发语言文化代码，默认值是 zh-CN。
         /// </summary>
-        public string DevCulture { get; set; }
+        public string DevCulture { get; set; } = "zh-CN";
     }
 }

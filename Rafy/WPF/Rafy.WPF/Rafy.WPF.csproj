@@ -165,6 +165,7 @@
     <Compile Include="AutoUI\AggtControlFactory\LayoutMethod\LayoutMethod.cs" />
     <Compile Include="AutoUI\AggtControlFactory\LayoutMethod\Region.cs" />
     <Compile Include="AutoUI\AggtControlFactory\LayoutMethod\RegionContainer.cs" />
+    <Compile Include="Helpers\WPFConfigHelper.cs" />
     <Compile Include="InstanceEventArgs.cs" />
     <Compile Include="NamedTypeFactory.cs" />
     <Compile Include="Runtime\Command\CommandExecuteFailedArgs.cs" />
@@ -606,6 +607,10 @@
     <Resource Include="Images\AddChild.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Rafy.UI\Rafy.UI.csproj">
+      <Project>{33aee526-9850-486b-a03c-c3b2a310abdc}</Project>
+      <Name>Rafy.UI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Rafy\Rafy.csproj">
       <Project>{966A5BF2-D690-426B-AD68-AD868BB8F855}</Project>
       <Name>Rafy</Name>

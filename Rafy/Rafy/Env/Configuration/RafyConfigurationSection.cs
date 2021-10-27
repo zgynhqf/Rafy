@@ -25,32 +25,11 @@ namespace Rafy.Configuration
     {
         #region 子元素
 
-        [ConfigurationProperty("wpf")]
-        public WPFConfigurationElement WPF
+        [ConfigurationProperty("plugins")]
+        public PluginsConfigurationElement Plugins
         {
-            get { return (WPFConfigurationElement)this["wpf"]; }
-            set { this["wpf"] = value; }
-        }
-
-        [ConfigurationProperty("web")]
-        public WebConfigurationElement Web
-        {
-            get { return (WebConfigurationElement)this["web"]; }
-            set { this["web"] = value; }
-        }
-
-        [ConfigurationProperty("domainPlugins")]
-        public PluginsConfigurationElement DomainPlugins
-        {
-            get { return (PluginsConfigurationElement)this["domainPlugins"]; }
-            set { this["domainPlugins"] = value; }
-        }
-
-        [ConfigurationProperty("uiPlugins")]
-        public PluginsConfigurationElement UIPlugins
-        {
-            get { return (PluginsConfigurationElement)this["uiPlugins"]; }
-            set { this["uiPlugins"] = value; }
+            get { return (PluginsConfigurationElement)this["plugins"]; }
+            set { this["plugins"] = value; }
         }
 
         #endregion
@@ -105,13 +84,6 @@ namespace Rafy.Configuration
 {
     public class RafyConfigurationSection
     {
-        public WPFConfigurationSection WPF { get; private set; } = new WPFConfigurationSection();
-
-        //public IConfigurationSection Web
-        //{
-        //    get { return this.GetSection("web"); }
-        //}
-
         /// <summary>
         /// 当前显示的语言文化。
         /// 如果没有设置本项，表明使用系统自带的语言文化。
@@ -132,9 +104,7 @@ namespace Rafy.Configuration
         /// </summary>
         public string DataPortalProxy { get; set; } = "Local";
 
-        public PluginSection[] DomainPlugins { get; set; }
-
-        public PluginSection[] UIPlugins { get; set; }
+        public PluginSection[] Plugins { get; set; }
     }
 
     public class PluginSection : IPluginConfig

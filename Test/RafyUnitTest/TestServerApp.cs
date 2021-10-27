@@ -59,10 +59,10 @@ namespace RafyUnitTest
             RafyEnvironment.Provider.IsDebuggingEnabled = true;
 
             //故意把下面两个插件的位置放反。测试 Config 中配置插件的顺序是否成功。
-            RafyEnvironment.DomainPlugins.Add(new EntityPhantomPlugin());
-            RafyEnvironment.DomainPlugins.Add(new StampPlugin());
+            RafyEnvironment.Plugins.Add(new EntityPhantomPlugin());
+            RafyEnvironment.Plugins.Add(new StampPlugin());
 
-            RafyEnvironment.DomainPlugins.Add(new UnitTestPlugin());
+            RafyEnvironment.Plugins.Add(new UnitTestPlugin());
             //RafyEnvironment.DomainPlugins.Add(new UnitTestDataProviderPlugin());//load as required
             //RafyEnvironment.DomainPlugins.Add(new UnitTestIDataProviderPlugin());//load as required
             //RafyEnvironment.DomainPlugins.Add(new UnitTestRepoPlugin());//load as required

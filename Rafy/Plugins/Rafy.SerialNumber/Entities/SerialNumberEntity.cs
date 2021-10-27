@@ -23,7 +23,6 @@ using Rafy.Domain.ORM;
 using Rafy.Domain.Validation;
 using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
-using Rafy.MetaModel.View;
 using Rafy.ManagedProperty;
 
 namespace Rafy.SerialNumber

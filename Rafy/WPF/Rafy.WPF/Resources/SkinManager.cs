@@ -68,7 +68,7 @@ namespace Rafy.WPF
         {
             var list = new List<ResourceDictionary>();
 
-            foreach (var modulePlugin in RafyEnvironment.AllPlugins)
+            foreach (var modulePlugin in RafyEnvironment.Plugins)
             {
                 string packUri = string.Format(@"Resources/Colors/{0}.xaml", skin);
                 var uri = Helper.GetPackUri(modulePlugin.Assembly, packUri);

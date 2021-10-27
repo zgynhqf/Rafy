@@ -82,7 +82,7 @@ namespace Rafy.Domain
             var repo = invocation.InvocationTarget as EntityRepository ?? repoExt.Repository as EntityRepository;
 
             //只是不要纯客户端，都直接使用本地访问
-            if (repo.DataPortalLocation == DataPortalLocation.Local || RafyEnvironment.Location.ConnectDataDirectly)
+            if (repo.DataPortalLocation == DataPortalLocation.Local || RafyEnvironment.ConnectDataDirectly)
             {
                 using (FinalDataPortal.CurrentQueryCriteriaItem.UseScopeValue(ieqc))
                 {

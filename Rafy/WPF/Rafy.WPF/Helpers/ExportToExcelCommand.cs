@@ -27,6 +27,7 @@ using Rafy.WPF.Command;
 using Rafy.MetaModel.Attributes;
 using Rafy.Reflection;
 using Rafy.Utils;
+using Rafy.ManagedProperty;
 
 namespace Rafy.WPF
 {
@@ -181,7 +182,7 @@ namespace Rafy.WPF
 
             try
             {
-                if (property.IsReferenceEntity)
+                if (property.PropertyMeta.ManagedProperty is IRefEntityProperty)
                 {
                     var displayPath = property.DisplayPath();
                     var value = ObjectHelper.GetPropertyValue(this._currentRow, displayPath);

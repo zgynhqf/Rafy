@@ -71,7 +71,7 @@ namespace Rafy.Web.EntityDataPortal
                     if (!isTree && (mp == Entity.TreeIndexProperty || mp == Entity.TreePIdProperty)) { continue; }
 
                     //引用属性
-                    if (propertyVM.IsReferenceEntity)
+                    if (mp is IRefEntityProperty)
                     {
                         var refMp = mp as IRefProperty;
                         object value = string.Empty;

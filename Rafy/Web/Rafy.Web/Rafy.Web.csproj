@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET45</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -159,6 +159,10 @@
     <Compile Include="WebAppStarter.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Rafy.UI\Rafy.UI.csproj">
+      <Project>{33aee526-9850-486b-a03c-c3b2a310abdc}</Project>
+      <Name>Rafy.UI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Rafy\Rafy.csproj">
       <Project>{966A5BF2-D690-426B-AD68-AD868BB8F855}</Project>
       <Name>Rafy</Name>

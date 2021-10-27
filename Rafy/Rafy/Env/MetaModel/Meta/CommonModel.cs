@@ -29,8 +29,6 @@ namespace Rafy.MetaModel
 
         private static EntityMetaRepository _entities;
 
-        private static ModulesContainer _modules;
-
         static CommonModel()
         {
             Instance.Reset();
@@ -49,25 +47,10 @@ namespace Rafy.MetaModel
             }
         }
 
-        /// <summary>
-        /// 所有模块的元数据
-        /// </summary>
-        public static ModulesContainer Modules
-        {
-            get { return _modules; }
-            set
-            {
-                if (value == null) throw new ArgumentNullException(nameof(value));
-                _modules = value;
-            }
-        }
-
         public virtual void Reset()
         {
             _entities = new EntityMetaRepository();
             _entities.FreezeItems();
-
-            _modules = new ModulesContainer();
         }
     }
 }

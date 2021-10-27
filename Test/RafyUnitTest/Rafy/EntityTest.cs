@@ -1670,7 +1670,7 @@ namespace RafyUnitTest
         public void ET_Repository_DAL_ComposeDataProvider()
         {
             var repo = RF.ResolveInstance<CarRepository>();
-            if (RafyEnvironment.Location.ConnectDataDirectly)
+            if (RafyEnvironment.ConnectDataDirectly)
             {
                 Assert.IsTrue(repo.DataProvider is ICarDataProvider);
             }

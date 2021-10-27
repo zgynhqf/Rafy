@@ -38,7 +38,7 @@ namespace Rafy.Web
         {
             var js = new StringBuilder();
             //按照 721 顺序加入所有 Library 中的 js Resource。
-            foreach (var plugin in RafyEnvironment.AllPlugins)
+            foreach (var plugin in RafyEnvironment.Plugins)
             {
                 this.WritePluginJs(plugin, js);
             }
@@ -80,7 +80,7 @@ namespace Rafy.Web
         {
             var result = new ModuleJson();
 
-            var roots = CommonModel.Modules.Roots;
+            var roots = UIModel.Modules.Roots;
             foreach (WebModuleMeta root in roots)
             {
                 var rootJson = ToJson(root);

@@ -17,8 +17,6 @@ using System.Linq;
 using System.Text;
 using Rafy.ManagedProperty;
 
-using Rafy.MetaModel.View;
-
 namespace Rafy.MetaModel
 {
     public abstract class EntityConfigBase

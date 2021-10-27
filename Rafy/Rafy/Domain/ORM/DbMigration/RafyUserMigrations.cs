@@ -25,7 +25,7 @@ namespace Rafy.Domain.ORM.DbMigration
         {
             base.OnInit();
 
-            foreach (var item in RafyEnvironment.AllPlugins)
+            foreach (var item in RafyEnvironment.Plugins)
             {
                 this.AddByAssembly(item.Assembly);
             }

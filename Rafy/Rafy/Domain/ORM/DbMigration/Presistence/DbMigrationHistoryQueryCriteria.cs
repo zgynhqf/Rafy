@@ -20,7 +20,6 @@ using System.Text;
 using Rafy.Domain;
 using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
-using Rafy.MetaModel.View;
 
 namespace Rafy.Domain.ORM.DbMigration.Presistence
 {
@@ -46,31 +45,6 @@ namespace Rafy.Domain.ORM.DbMigration.Presistence
         {
             get { return this.GetProperty(EndTimeProperty); }
             set { this.SetProperty(EndTimeProperty, value); }
-        }
-    }
-
-    internal class DbMigrationHistoryQueryCriteriaConfig_Web : WebViewConfig<DbMigrationHistoryQueryCriteria>
-    {
-        protected internal override void ConfigView()
-        {
-            using (View.OrderProperties())
-            {
-                View.Property(DbMigrationHistoryQueryCriteria.DatabaseProperty).HasLabel("数据库名").ShowIn(ShowInWhere.Detail);
-                View.Property(DbMigrationHistoryQueryCriteria.StartTimeProperty).HasLabel("开始时间").ShowIn(ShowInWhere.Detail);
-                View.Property(DbMigrationHistoryQueryCriteria.EndTimeProperty).HasLabel("结束时间").ShowIn(ShowInWhere.Detail);
-            }
-        }
-    }
-    internal class DbMigrationHistoryQueryCriteriaConfig_WPF : WPFViewConfig<DbMigrationHistoryQueryCriteria>
-    {
-        protected internal override void ConfigView()
-        {
-            using (View.OrderProperties())
-            {
-                View.Property(DbMigrationHistoryQueryCriteria.DatabaseProperty).HasLabel("数据库名").ShowIn(ShowInWhere.Detail);
-                View.Property(DbMigrationHistoryQueryCriteria.StartTimeProperty).HasLabel("开始时间").ShowIn(ShowInWhere.Detail);
-                View.Property(DbMigrationHistoryQueryCriteria.EndTimeProperty).HasLabel("结束时间").ShowIn(ShowInWhere.Detail);
-            }
         }
     }
 }

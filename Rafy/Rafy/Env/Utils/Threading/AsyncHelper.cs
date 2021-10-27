@@ -94,6 +94,11 @@ namespace Rafy.Threading
         }
 
         /// <summary>
+        /// 是否禁用 WrapByCurrentPrinciple 功能。
+        /// </summary>
+        public static bool DisableWrapping { get; set; }
+
+        /// <summary>
         /// 这里生成的wrapper会保证，在执行action前后，新开的线程和主线程都使用同一个Principel。
         /// 
         /// 解决问题：
@@ -107,10 +112,7 @@ namespace Rafy.Threading
         /// <returns></returns>
         public static Action WrapByCurrentPrinciple(this Action action)
         {
-            if (RafyEnvironment.Location.IsWPFUI)
-            {
-                return action;
-            }
+            if (DisableWrapping) { return action; }
 
             //当前线程的身份
             var principelNeed = RafyEnvironment.Principal;

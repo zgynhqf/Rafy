@@ -46,7 +46,7 @@ namespace Rafy
         {
             if (!ManagedPropertyRepository.Instance.IsExtensionRegistered)
             {
-                var allAssemblies = _allPlugins.Select(p => p.Assembly);
+                var allAssemblies = _plugins.Select(p => p.Assembly);
 
                 ManagedPropertyRepository.Instance.IntializeExtension(allAssemblies);
             }
@@ -57,34 +57,15 @@ namespace Rafy
         #region 获取所有 Plugins
 
         private static bool _allPluginsLoaded = false;
-        private static PluginCollection _domainPlugins;
-        private static PluginCollection _uiPlugins;
-        private static PluginCollection _allPlugins;
+        private static PluginCollection _plugins;
 
         /// <summary>
         /// 当前程序所有可运行的领域实体插件。
         /// 在 <see cref="AppImplementationBase.InitEnvironment"/> 中通过代码加入本集合中的插件，都会在启动时全部加载。
         /// </summary>
-        public static PluginCollection DomainPlugins
+        public static PluginCollection Plugins
         {
-            get { return _domainPlugins; }
-        }
-
-        /// <summary>
-        /// 当前程序所有可运行的界面插件程序集。
-        /// 在 <see cref="AppImplementationBase.InitEnvironment"/> 中通过代码加入本集合中的插件，都会在启动时全部加载。
-        /// </summary>
-        public static PluginCollection UIPlugins
-        {
-            get { return _uiPlugins; }
-        }
-
-        /// <summary>
-        /// 获取当前环境已经被加载的所有插件。
-        /// </summary>
-        public static PluginCollection AllPlugins
-        {
-            get { return _allPlugins; }
+            get { return _plugins; }
         }
 
         /// <summary>
@@ -120,7 +101,7 @@ namespace Rafy
         public static IPlugin LoadPlugin(string assemblyName)
         {
             //已经加载过的插件，不再加载。
-            var exists = _allPlugins.Find(assemblyName);
+            var exists = _plugins.Find(assemblyName);
             if (exists != null) return exists;
 
             var pluginFound = FindPluginConfigItem(assemblyName);
@@ -138,42 +119,22 @@ namespace Rafy
         internal static void Reset()
         {
             _allPluginsLoaded = false;
-            _domainPlugins = new PluginCollection();
-            _uiPlugins = new PluginCollection();
-            _allPlugins = new PluginCollection();
-
-            ResetLocation();
+            _plugins = new PluginCollection();
+            DataPortalMode = DataPortalMode.ConnectDirectly;
         }
 
         internal static void CreateStartupPlugins()
         {
             //所有插件（其中，DomainPlugins 在列表的前面，UIPlugins 在列表的后面。）
             //domain plugins.
-            IPluginConfig[] configPlugins = GetDomainPluginsConfig();
-            CreateStartupPluginsByConfig(_domainPlugins, configPlugins);
-            _domainPlugins.Insert(0, new Rafy.Domain.RafyDomainPlugin());//其实这里不应该使用上层的类，但是内部为了简单实现，且效率更高。
-            _domainPlugins.Lock();
+            IPluginConfig[] configPlugins = GetAllPluginsConfig();
+            CreateStartupPluginsByConfig(_plugins, configPlugins);
 
-            foreach (var item in _domainPlugins) { _allPlugins.Add(item); }
-
-            //ui plugins.
-            if (_location.IsUI)
-            {
-                configPlugins = GetUIPluginsConfig();
-                CreateStartupPluginsByConfig(_uiPlugins, configPlugins);
-                //if (_location.IsWPFUI)
-                //{
-                //    _uiPlugins.Insert(0, CreatePlugin("Rafy.WPF.RafyWPFPlugin, Rafy.WPF"));
-                //    //_uiPlugins.Insert(0, LoadRafyPlugin("Rafy.WPF"));
-                //}
-                _uiPlugins.Lock();
-
-                foreach (var item in _uiPlugins) { _allPlugins.Add(item); }
-            }
+            _plugins.Insert(0, new Rafy.Domain.RafyDomainPlugin());//其实这里不应该依赖上层的类，但是内部为了简单实现，且效率更高。
 
             CheckDuplucatePlugins();
 
-            _allPlugins.Lock();
+            _plugins.Lock();
         }
 
         /// <summary>
@@ -182,7 +143,7 @@ namespace Rafy
         internal static void InitializeStartupPlugins()
         {
             //先初始化实体插件，再初始化界面插件。
-            foreach (var plugin in _allPlugins)
+            foreach (var plugin in _plugins)
             {
                 plugin.Initialize(_appCore);
             }
@@ -233,28 +194,15 @@ namespace Rafy
             var plugin = CreatePlugin(pluginConfig);
 
             //已经加载过的插件，不再加载。
-            var existsPlugin = _allPlugins.Find(plugin.Assembly);
+            var existsPlugin = _plugins.Find(plugin.Assembly);
             if (existsPlugin != null) return existsPlugin;
 
             //先得加载这个程序集引用的其它程序集
             LoadReferences(plugin);
 
-            if (pluginConfig.PluginType == PluginType.Domain)
-            {
-                _domainPlugins.Unlock();
-                _domainPlugins.Add(plugin);
-                _domainPlugins.Lock();
-            }
-            else
-            {
-                _uiPlugins.Unlock();
-                _uiPlugins.Add(plugin);
-                _uiPlugins.Lock();
-            }
-
-            _allPlugins.Unlock();
-            _allPlugins.Add(plugin);
-            _allPlugins.Lock();
+            _plugins.Unlock();
+            _plugins.Add(plugin);
+            _plugins.Lock();
 
             //实体类型对应的集合需要重建。
             EntityConfigRepository.ClearCache();
@@ -264,8 +212,7 @@ namespace Rafy
             {
                 handler(null, new PluginEventArgs
                 {
-                    Plugin = plugin,
-                    PluginType = pluginConfig.PluginType
+                    Plugin = plugin
                 });
             }
 
@@ -404,9 +351,9 @@ namespace Rafy
 
         private static void CheckDuplucatePlugins()
         {
-            foreach (var a in _allPlugins)
+            foreach (var a in _plugins)
             {
-                foreach (var b in _allPlugins)
+                foreach (var b in _plugins)
                 {
                     if (a != b && a.Assembly == b.Assembly)
                     {
@@ -425,69 +372,29 @@ namespace Rafy
             /// 对应的运行时插件。
             /// </summary>
             public IPlugin Plugin { get; internal set; }
-
-            /// <summary>
-            /// 该插件所配置的插件类型。
-            /// </summary>
-            public PluginType PluginType { get; internal set; }
         }
 
-        private static PluginConfigItem[] _domainPluginConfigs, _uiPluginConfigs, _allPluginConfigs;
-
-        private static PluginConfigItem[] GetDomainPluginsConfig()
-        {
-            if (_domainPluginConfigs == null)
-            {
-                IPluginConfig[] configs = null;
-#if NET45
-                configs = Configuration.Section.DomainPlugins.OfType<PluginElement>().ToArray();
-#endif
-#if NS2
-                configs = Configuration.Section.DomainPlugins;
-#endif
-                if (configs == null) configs = new IPluginConfig[0];
-                _domainPluginConfigs = configs.Select(i => new PluginConfigItem
-                {
-                    Plugin = i.Plugin,
-                    LoadType = i.LoadType,
-                    PluginType = PluginType.Domain
-                }).ToArray();
-            }
-            return _domainPluginConfigs;
-        }
-
-        private static PluginConfigItem[] GetUIPluginsConfig()
-        {
-            if (_uiPluginConfigs == null)
-            {
-                IPluginConfig[] configs = null;
-#if NET45
-                configs = Configuration.Section.UIPlugins.OfType<PluginElement>().ToArray();
-#endif
-#if NS2
-                configs = Configuration.Section.UIPlugins;
-#endif
-                if (configs == null) configs = new IPluginConfig[0];
-                _uiPluginConfigs = configs.Select(i => new PluginConfigItem
-                {
-                    Plugin = i.Plugin,
-                    LoadType = i.LoadType,
-                    PluginType = PluginType.UI
-                }).ToArray();
-            }
-            return _uiPluginConfigs;
-        }
+        private static PluginConfigItem[] _allPluginConfigs;
 
         private static PluginConfigItem[] GetAllPluginsConfig()
         {
             if (_allPluginConfigs == null)
             {
-                _allPluginConfigs = GetDomainPluginsConfig();
-                if (_location.IsUI)
+                IPluginConfig[] configs = null;
+#if NET45
+                configs = Configuration.Section.Plugins.OfType<PluginElement>().ToArray();
+#endif
+#if NS2
+                configs = Configuration.Section.Plugins;
+#endif
+                if (configs == null) configs = new IPluginConfig[0];
+                _allPluginConfigs = configs.Select(i => new PluginConfigItem
                 {
-                    _allPluginConfigs = _allPluginConfigs.Union(GetUIPluginsConfig()).ToArray();
-                }
+                    Plugin = i.Plugin,
+                    LoadType = i.LoadType
+                }).ToArray();
             }
+
             return _allPluginConfigs;
         }
 
@@ -512,7 +419,6 @@ namespace Rafy
         {
             public string Plugin { get; set; }
             public PluginLoadType LoadType { get; set; }
-            public PluginType PluginType { get; set; }
         }
 
         #endregion
@@ -527,7 +433,7 @@ namespace Rafy
         {
             var result = new List<Type>();
 
-            foreach (var plugin in _allPlugins)
+            foreach (var plugin in _plugins)
             {
                 foreach (var type in plugin.Assembly.GetTypes())
                 {
@@ -639,7 +545,7 @@ namespace Rafy
                     var entityType = typeof(EntityConfig);
 
                     //实体配置一般只放在领域插件中。但是，一些只存在于客户端的实体，则会放到界面插件中，所以这里需要检查所有的插件。
-                    var allPlugins = RafyEnvironment.AllPlugins;
+                    var allPlugins = RafyEnvironment.Plugins;
                     for (int index = 0, c = allPlugins.Count; index < c; index++)
                     {
                         var plugin = allPlugins[index];
@@ -671,139 +577,6 @@ namespace Rafy
             public void ClearCache()
             {
                 _typeConfigurations = null;
-            }
-        }
-
-        #endregion
-
-        #region EntityViewConfig
-
-        /// <summary>
-        /// Web 视图配置仓库。
-        /// </summary>
-        public static IViewConfigRepository WebConfigurations { get; set; } = new ViewConfigFinder(typeof(WebViewConfig));
-
-        /// <summary>
-        /// WPF 视图配置仓库。
-        /// </summary>
-        public static IViewConfigRepository WPFConfigurations { get; set; } = new ViewConfigFinder(typeof(WPFViewConfig));
-
-        public class ViewConfigFinder : IViewConfigRepository
-        {
-            private Type _viewConfigType;
-
-            public ViewConfigFinder(Type viewConfigType)
-            {
-                _viewConfigType = viewConfigType;
-            }
-
-            private Dictionary<Type, List<ViewConfig>> _configurations;
-
-            private Dictionary<ExtendTypeKey, List<ViewConfig>> _extendConfigurations;
-
-            public IEnumerable<ViewConfig> FindViewConfigurations(Type entityType, string extendView = null)
-            {
-                InitConfigurations();
-
-                var hierachy = TypeHelper.GetHierarchy(entityType, typeof(ManagedPropertyObject)).Reverse();
-                if (extendView == null)
-                {
-                    foreach (var type in hierachy)
-                    {
-                        List<ViewConfig> configList = null;
-                        if (_configurations.TryGetValue(type, out configList))
-                        {
-                            var orderedList = configList.OrderBy(o => o.PluginIndex).ThenBy(o => o.InheritanceCount);
-                            foreach (var config in orderedList) { yield return config; }
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (var type in hierachy)
-                    {
-                        var key = new ExtendTypeKey { EntityType = type, ExtendView = extendView };
-
-                        List<ViewConfig> configList = null;
-                        if (_extendConfigurations.TryGetValue(key, out configList))
-                        {
-                            var orderedList = configList.OrderBy(o => o.PluginIndex).ThenBy(o => o.InheritanceCount);
-                            foreach (var config in orderedList) { yield return config; }
-                        }
-                    }
-                }
-            }
-
-            private void InitConfigurations()
-            {
-                if (_extendConfigurations == null)
-                {
-                    /*********************** 代码块解释 *********************************
-                     * 查找所有 EntityConfig 类型，并根据是否为扩展视图的配置类，
-                     * 分别加入到两个不同的列表中。
-                    **********************************************************************/
-
-                    var defaultRepo = new Dictionary<Type, List<ViewConfig>>(100);
-                    var extendRepo = new Dictionary<ExtendTypeKey, List<ViewConfig>>(100);
-
-                    //视图配置可以放在所有插件中。
-                    for (int index = 0, c = _allPlugins.Count; index < c; index++)
-                    {
-                        var plugin = _allPlugins[index];
-                        foreach (var type in plugin.Assembly.GetTypes())
-                        {
-                            if (!type.IsGenericTypeDefinition && !type.IsAbstract && _viewConfigType.IsAssignableFrom(type))
-                            {
-                                var config = Activator.CreateInstance(type) as ViewConfig;
-                                config.PluginIndex = index;
-                                config.InheritanceCount = TypeHelper.GetHierarchy(type, typeof(ManagedPropertyObject)).Count();
-
-                                List<ViewConfig> typeList = null;
-
-                                if (config.ExtendView == null)
-                                {
-                                    if (!defaultRepo.TryGetValue(config.EntityType, out typeList))
-                                    {
-                                        typeList = new List<ViewConfig>(2);
-                                        defaultRepo.Add(config.EntityType, typeList);
-                                    }
-                                }
-                                else
-                                {
-                                    var key = new ExtendTypeKey { EntityType = config.EntityType, ExtendView = config.ExtendView };
-                                    if (!extendRepo.TryGetValue(key, out typeList))
-                                    {
-                                        typeList = new List<ViewConfig>(2);
-                                        extendRepo.Add(key, typeList);
-                                    }
-                                }
-
-                                typeList.Add(config);
-                            }
-                        }
-                    }
-
-                    _configurations = defaultRepo;
-                    _extendConfigurations = extendRepo;
-                }
-            }
-
-            private struct ExtendTypeKey
-            {
-                public Type EntityType;
-
-                public string ExtendView;
-
-                public override int GetHashCode()
-                {
-                    return this.EntityType.GetHashCode() ^ this.ExtendView.GetHashCode();
-                }
-
-                public override bool Equals(object obj)
-                {
-                    var other = (ExtendTypeKey)obj;
-                    return other.EntityType == this.EntityType && other.ExtendView == this.ExtendView;
-                }
             }
         }
 
