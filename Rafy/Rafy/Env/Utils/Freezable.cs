@@ -59,6 +59,14 @@ namespace Rafy.Utils
         }
 
         /// <summary>
+        /// for unit test
+        /// </summary>
+        internal void Unfreeze()
+        {
+            this._frozen = false;
+        }
+
+        /// <summary>
         /// 调用此方法保证本对象还没有被冻结。否则会抛出异常。
         /// </summary>
         protected void CheckUnFrozen()
