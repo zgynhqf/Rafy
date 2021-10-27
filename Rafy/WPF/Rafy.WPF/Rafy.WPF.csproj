@@ -279,7 +279,7 @@
     <Compile Include="Controls\zzzSDG\SelectionDataGrid.cs" />
     <Compile Include="Helpers\zzzDynamicPropertyHelperBase.cs" />
     <Compile Include="Controls\ReverseBooleanConverter.cs" />
-    <Compile Include="Shell\ClientApp.cs" />
+    <Compile Include="ClientApp.cs" />
     <Compile Include="Helpers\ExcelHelper.cs" />
     <Compile Include="Helpers\ExportToExcelCommand.cs" />
     <Compile Include="Helpers\ITableSaver.cs" />
