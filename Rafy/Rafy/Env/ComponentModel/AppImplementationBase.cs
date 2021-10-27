@@ -105,20 +105,7 @@ namespace Rafy.ComponentModel
         /// 初始化应用程序的环境。
         /// 子类可在此方法中添加所需的插件、设置 <see cref="RafyEnvironment"/> 的值等。
         /// </summary>
-        protected virtual void InitEnvironment()
-        {
-            //如果配置了文化，则修改 UI 文化。否则使用系统默认的文化。
-            var cultureName = RafyEnvironment.Configuration.Section.CurrentCulture;
-            if (!string.IsNullOrWhiteSpace(cultureName))
-            {
-                try
-                {
-                    var culture = CultureInfo.GetCultureInfo(cultureName);
-                    Thread.CurrentThread.CurrentUICulture = culture;
-                }
-                catch (CultureNotFoundException) { }
-            }
-        }
+        protected virtual void InitEnvironment() { }
 
         /// <summary>
         /// 初始化必须在初始化期定义的各种元数据。

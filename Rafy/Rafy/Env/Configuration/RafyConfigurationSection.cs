@@ -35,18 +35,6 @@ namespace Rafy.Configuration
         #endregion
 
         /// <summary>
-        /// 当前显示的语言文化。
-        /// 如果没有设置本项，表明使用系统自带的语言文化。
-        /// 例如：zh-CN、en-US 等。
-        /// </summary>
-        [ConfigurationProperty("currentCulture")]
-        public string CurrentCulture
-        {
-            get { return (string)this["currentCulture"]; }
-            set { this["currentCulture"] = value; }
-        }
-
-        /// <summary>
         /// 在当前语言下是否执行收集操作。
         /// </summary>
         [ConfigurationProperty("collectDevLanguages", DefaultValue = DynamicBoolean.IsDebugging)]
