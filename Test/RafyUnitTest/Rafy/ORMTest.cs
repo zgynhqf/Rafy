@@ -349,9 +349,9 @@ namespace RafyUnitTest
                 RF.Save(book);
 
                 //查询的数据访问测试。
-                var oldCount = Logger.DbAccessedCount;
+                var oldCount = DbAccesserInterceptor.DbAccessingCount;
                 var all = repo.GetWithEager2();
-                var newCount = Logger.DbAccessedCount;
+                var newCount = DbAccesserInterceptor.DbAccessingCount;
                 Assert.IsTrue(newCount - oldCount == 4, "应该只进行了 4 次数据库查询。");
 
                 //无懒加载测试。
@@ -365,7 +365,7 @@ namespace RafyUnitTest
                         }
                     }
                 }
-                Assert.IsTrue(Logger.DbAccessedCount == newCount, "由于数据已经全部加载完成，所以这里不会发生懒加载。");
+                Assert.IsTrue(DbAccesserInterceptor.DbAccessingCount == newCount, "由于数据已经全部加载完成，所以这里不会发生懒加载。");
             }
         }
 
@@ -418,11 +418,11 @@ namespace RafyUnitTest
         //        }
 
         //        //查询的数据访问测试。
-        //        var oldCount = Logger.DbAccessedCount;
+        //        var oldCount = DbAccesserInterceptor.DbAccessedCount;
         //        var all = repo.GetAll(
         //            loadOptions: new LoadOptions().LoadWith(Book.BookCategoryProperty)
         //            );
-        //        var newCount = Logger.DbAccessedCount;
+        //        var newCount = DbAccesserInterceptor.DbAccessedCount;
         //        Assert.IsTrue(newCount - oldCount == 2, "应该只进行了 2 次数据库查询。");
 
         //        foreach (Book book2 in all)
@@ -467,10 +467,10 @@ namespace RafyUnitTest
                 });
 
                 //查询的数据访问次数测试。
-                var oldCount = Logger.DbAccessedCount;
+                var oldCount = DbAccesserInterceptor.DbAccessingCount;
                 var loadOptions = new LoadOptions().LoadWithTreeChildren().LoadWith(Folder.FileListProperty);
                 var all = repo.GetAll(PagingInfo.Empty, loadOptions);
-                var newCount = Logger.DbAccessedCount;
+                var newCount = DbAccesserInterceptor.DbAccessingCount;
                 Assert.IsTrue(newCount - oldCount == 2, "应该只进行了 2 次数据库查询。查询时直接查出整个树，此时 LoadTreeChildren 不会再有数据加载。");
 
                 //无懒加载测试。
@@ -478,7 +478,7 @@ namespace RafyUnitTest
                 Assert.IsTrue(all[1].FileList.Count == 2);
                 var nonRoot = all[1].TreeChildren[0] as Folder;
                 Assert.IsTrue(nonRoot.FileList.Count == 2);
-                Assert.IsTrue(Logger.DbAccessedCount == newCount, "由于数据已经全部加载完成，所以这里不会发生懒加载。");
+                Assert.IsTrue(DbAccesserInterceptor.DbAccessingCount == newCount, "由于数据已经全部加载完成，所以这里不会发生懒加载。");
             }
         }
 
@@ -518,17 +518,17 @@ namespace RafyUnitTest
                 });
 
                 //查询的数据访问次数测试。
-                var oldCount = Logger.DbAccessedCount;
+                var oldCount = DbAccesserInterceptor.DbAccessingCount;
 
                 var loadOptions = new LoadOptions().LoadWithTreeChildren().LoadWith(Folder.FileListProperty);
                 folder = repo.GetById(folder.Id, loadOptions);
 
-                var newCount = Logger.DbAccessedCount;
+                var newCount = DbAccesserInterceptor.DbAccessingCount;
                 Assert.IsTrue(newCount - oldCount == 3, "应该只进行了 3 次数据库查询。查询时直接查出某个节点（部分树），此时 LoadTreeChildren 会根据节点数再发起。");
 
                 //无懒加载测试。
                 Assert.IsTrue(folder.FileList.Count == 2);
-                Assert.IsTrue(Logger.DbAccessedCount == newCount, "由于数据已经全部加载完成，所以这里不会发生懒加载。");
+                Assert.IsTrue(DbAccesserInterceptor.DbAccessingCount == newCount, "由于数据已经全部加载完成，所以这里不会发生懒加载。");
             }
         }
 
@@ -2750,7 +2750,7 @@ namespace RafyUnitTest
         //        api.LoadEntities(entities, sql, loadOptions);
 
         //        //无懒加载测试。
-        //        var count = Logger.DbAccessedCount;
+        //        var count = DbAccesserInterceptor.DbAccessedCount;
         //        foreach (Book book2 in entities)
         //        {
         //            foreach (Chapter chapter in book2.ChapterList)
@@ -2761,7 +2761,7 @@ namespace RafyUnitTest
         //                }
         //            }
         //        }
-        //        Assert.IsTrue(Logger.DbAccessedCount == count, "由于数据已经全部加载完成，所以这里不会发生懒加载。");
+        //        Assert.IsTrue(DbAccesserInterceptor.DbAccessedCount == count, "由于数据已经全部加载完成，所以这里不会发生懒加载。");
         //    }
         //}
 
@@ -2794,7 +2794,7 @@ namespace RafyUnitTest
         //        api.LoadEntities(entities, sql, loadOptions);
 
         //        //无懒加载测试。
-        //        var count = Logger.DbAccessedCount;
+        //        var count = DbAccesserInterceptor.DbAccessedCount;
         //        foreach (Chapter chapter in entities)
         //        {
         //            foreach (Section section in chapter.SectionList)
@@ -2802,7 +2802,7 @@ namespace RafyUnitTest
         //                var so2 = section.SectionOwner;
         //            }
         //        }
-        //        Assert.IsTrue(Logger.DbAccessedCount == count, "由于数据已经全部加载完成，所以这里不会发生懒加载。");
+        //        Assert.IsTrue(DbAccesserInterceptor.DbAccessedCount == count, "由于数据已经全部加载完成，所以这里不会发生懒加载。");
         //    }
         //}
 
@@ -7121,9 +7121,9 @@ ORDER BY Article.Code ASC");
         //        RF.Save(book);
 
         //        //查询的数据访问测试。
-        //        var oldCount = Logger.DbAccessedCount;
+        //        var oldCount = DbAccesserInterceptor.DbAccessedCount;
         //        var all = repo.GetWithEager();
-        //        var newCount = Logger.DbAccessedCount;
+        //        var newCount = DbAccesserInterceptor.DbAccessedCount;
         //        Assert.IsTrue(newCount - oldCount == 4, "应该只进行了 4 次数据库查询。");
 
         //        //无懒加载测试。
@@ -7137,7 +7137,7 @@ ORDER BY Article.Code ASC");
         //                }
         //            }
         //        }
-        //        Assert.IsTrue(Logger.DbAccessedCount == newCount, "由于数据已经全部加载完成，所以这里不会发生懒加载。");
+        //        Assert.IsTrue(DbAccesserInterceptor.DbAccessedCount == newCount, "由于数据已经全部加载完成，所以这里不会发生懒加载。");
         //    }
         //}
 

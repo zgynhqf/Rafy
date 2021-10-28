@@ -126,7 +126,7 @@ StockTrace：
         /// <param name="parameters"></param>
         /// <param name="connectionSchema"></param>
         /// <param name="connection"></param>
-        public override void LogDbAccessed(string sql, IDbDataParameter[] parameters, DbConnectionSchema connectionSchema, IDbConnection connection)
+        public override void LogDbAccessing(string sql, IDbDataParameter[] parameters, DbConnectionSchema connectionSchema, IDbConnection connection)
         {
             if (string.IsNullOrEmpty(this.SqlTraceFileName)) return;
 

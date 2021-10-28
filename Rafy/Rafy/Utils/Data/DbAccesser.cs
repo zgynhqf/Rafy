@@ -533,7 +533,7 @@ namespace Rafy.Data
                 }
             }
 
-            Logger.LogDbAccessed(sql, parameters, _connectionSchema, _connection);
+            DbAccesserInterceptor.LogDbAccessing(sql, parameters, _connectionSchema, _connection);
 
             return command;
         }
@@ -640,7 +640,7 @@ namespace Rafy.Data
 
                 var rowsEffect = command.ExecuteNonQuery();
 
-                Logger.LogDbAccessedResult(rowsEffect);
+                DbAccesserInterceptor.LogDbAccessedResult(rowsEffect);
 
                 return rowsEffect;
             }

@@ -45,7 +45,7 @@ namespace Rafy
         /// <param name="parameters">The parameters.</param>
         /// <param name="connectionSchema">The connection schema.</param>
         /// <param name="connection">The connection.</param>
-        public virtual void LogDbAccessed(string sql, IDbDataParameter[] parameters, DbConnectionSchema connectionSchema, IDbConnection connection) { }
+        public virtual void LogDbAccessing(string sql, IDbDataParameter[] parameters, DbConnectionSchema connectionSchema, IDbConnection connection) { }
 
         /// <summary>
         /// 将上条 SQL 执行的结果记录到日志中。

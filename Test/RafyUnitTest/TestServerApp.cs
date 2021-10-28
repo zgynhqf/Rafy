@@ -35,6 +35,7 @@ using Rafy.SerialNumber;
 using Rafy.Accounts;
 using Rafy.DataArchiver;
 using Rafy.SystemSettings;
+using Rafy.Data;
 
 namespace RafyUnitTest
 {
@@ -51,7 +52,7 @@ namespace RafyUnitTest
 
         protected override void InitEnvironment()
         {
-            Logger.EnableSqlObervation = true;
+            DbAccesserInterceptor.ObserveSql = true;
 
             DbSettingNames.RafyPlugins = "Test_RafyPlugins";
             DbSettingNames.DbMigrationHistory = "Test_DbMigrationHistory";

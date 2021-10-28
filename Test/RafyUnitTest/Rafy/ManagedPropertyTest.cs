@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rafy;
+using Rafy.Data;
 using Rafy.Domain;
 using Rafy.Domain.Caching;
 using Rafy.Domain.ORM;
@@ -991,14 +992,14 @@ namespace RafyUnitTest
                 Assert.AreEqual(0, GetChangedProperties(user).Count);
 
                 string[] setList = null;
-                EventHandler<Rafy.Logger.DbAccessedEventArgs> handler = (o, e) =>
+                EventHandler<Rafy.Data.DbAccessingEventArgs> handler = (o, e) =>
                 {
                     var sql = e.Sql;
                     var m = Regex.Match(sql, @"set (?<setClause>.+?) where", RegexOptions.IgnoreCase);
                     var setClause = m.Groups["setClause"].Value;
                     setList = setClause.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 };
-                Logger.DbAccessed += handler;
+                DbAccesserInterceptor.DbAccessing += handler;
 
                 user.Age = 100;
                 Assert.AreEqual(1, GetChangedProperties(user).Count);
@@ -1014,7 +1015,7 @@ namespace RafyUnitTest
                 Assert.AreEqual(1, setList.Length);
                 Assert.IsTrue(setList[0].Contains("Name"), "Update 语句中，只更新了 Name 字段。");
 
-                Logger.DbAccessed -= handler;
+                DbAccesserInterceptor.DbAccessing -= handler;
             }
         }
 
@@ -1037,14 +1038,14 @@ namespace RafyUnitTest
                 Assert.AreEqual(0, GetChangedProperties(user).Count);
 
                 string[] setList = null;
-                EventHandler<Rafy.Logger.DbAccessedEventArgs> handler = (o, e) =>
+                EventHandler<Rafy.Data.DbAccessingEventArgs> handler = (o, e) =>
                 {
                     var sql = e.Sql;
                     var m = Regex.Match(sql, @"set (?<setClause>.+?) where", RegexOptions.IgnoreCase);
                     var setClause = m.Groups["setClause"].Value;
                     setList = setClause.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 };
-                Logger.DbAccessed += handler;
+                DbAccesserInterceptor.DbAccessing += handler;
 
                 user.Age = 100;
                 Assert.AreEqual(1, GetChangedProperties(user).Count);
@@ -1084,14 +1085,14 @@ namespace RafyUnitTest
 
                     string setClause = null;
                     string[] setList = null;
-                    EventHandler<Rafy.Logger.DbAccessedEventArgs> handler = (o, e) =>
+                    EventHandler<DbAccessingEventArgs> handler = (o, e) =>
                     {
                         var sql = e.Sql;
                         var m = Regex.Match(sql, @"set (?<setClause>.+?) where", RegexOptions.IgnoreCase);
                         setClause = m.Groups["setClause"].Value;
                         setList = setClause.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                     };
-                    Logger.DbAccessed += handler;
+                    DbAccesserInterceptor.DbAccessing += handler;
 
                     user.Age = 100;
                     repo.Save(user);
@@ -1105,7 +1106,7 @@ namespace RafyUnitTest
                     Assert.IsTrue(setClause.Contains("Name"), "Update 语句中，更新了所有字段。");
                     Assert.IsTrue(setClause.Contains("Age"), "Update 语句中，更新了所有字段。");
 
-                    Logger.DbAccessed -= handler;
+                    DbAccesserInterceptor.DbAccessing -= handler;
                 }
                 finally
                 {
@@ -1327,14 +1328,14 @@ namespace RafyUnitTest
                 Assert.IsTrue(entity.IsDisabled(Book.CodeProperty));
 
                 string[] setList = null;
-                EventHandler<Rafy.Logger.DbAccessedEventArgs> handler = (o, e) =>
+                EventHandler<Rafy.Data.DbAccessingEventArgs> handler = (o, e) =>
                 {
                     var sql = e.Sql;
                     var m = Regex.Match(sql, @"set (?<setClause>.+?) where", RegexOptions.IgnoreCase);
                     var setClause = m.Groups["setClause"].Value;
                     setList = setClause.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 };
-                Logger.DbAccessed += handler;
+                DbAccesserInterceptor.DbAccessing += handler;
 
                 entity.Name = "changed";
                 repo.Save(entity);
@@ -1348,7 +1349,7 @@ namespace RafyUnitTest
                 Assert.AreEqual(1, setList.Length);
                 Assert.IsTrue(setList[0].Contains("Name"), "虽然强制设置了 Code 属性的变更状态。但是由于 Code 属性处于禁用状态。所以 Update 语句中，也只更新了 Name 字段。");
 
-                Logger.DbAccessed -= handler;
+                DbAccesserInterceptor.DbAccessing -= handler;
             }
         }
 

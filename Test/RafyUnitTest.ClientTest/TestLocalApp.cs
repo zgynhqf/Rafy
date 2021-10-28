@@ -17,6 +17,7 @@ using Rafy.ComponentModel;
 using Rafy.ComponentModel.UnityAdapter;
 using Rafy.Domain.EntityPhantom;
 using Rafy.Domain.Stamp;
+using Rafy.Data;
 
 namespace RafyUnitTest.ClientTest
 {
@@ -33,7 +34,7 @@ namespace RafyUnitTest.ClientTest
 
         protected override void InitEnvironment()
         {
-            Logger.EnableSqlObervation = true;
+            DbAccesserInterceptor.ObserveSql = true;
 
             DbSettingNames.RafyPlugins = "Test_RafyPlugins";
             DbSettingNames.DbMigrationHistory = "Test_DbMigrationHistory";

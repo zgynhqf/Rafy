@@ -25,6 +25,7 @@ using Rafy.Domain.ORM.DbMigration;
 using Rafy.MetaModel;
 using Rafy.Utils.Caching;
 using UT;
+using Rafy.Data;
 #if NS2
 using Microsoft.AspNetCore.Http;
 #endif
@@ -86,10 +87,10 @@ namespace RafyUnitTest
                 var list1 = pbsRepo.CacheAll();
                 Assert.IsTrue(list1.Count == 5);
 
-                var count = Logger.DbAccessedCount;
+                var count = DbAccesserInterceptor.DbAccessingCount;
                 var list2 = pbsRepo.CacheAll();
                 Assert.IsTrue(list2.Count == 5);
-                Assert.IsTrue(Logger.DbAccessedCount == count, "GetAll 内存缓存应该命中，不会发生数据层访问。");
+                Assert.IsTrue(DbAccesserInterceptor.DbAccessingCount == count, "GetAll 内存缓存应该命中，不会发生数据层访问。");
             }
         }
 
@@ -118,10 +119,10 @@ namespace RafyUnitTest
                 var list1 = type1.PBSList;
                 Assert.IsTrue(list1.Count == 5);
 
-                var count = Logger.DbAccessedCount;
+                var count = DbAccesserInterceptor.DbAccessingCount;
                 var type2 = repo.CacheById(id) as PBSType;//Cache By Parent Id
                 var list2 = type2.PBSList;
-                Assert.IsTrue(Logger.DbAccessedCount == count, "CacheByParentId 内存缓存应该命中，不会发生数据层访问。");
+                Assert.IsTrue(DbAccesserInterceptor.DbAccessingCount == count, "CacheByParentId 内存缓存应该命中，不会发生数据层访问。");
 
                 Assert.IsTrue(list2.Count == 5);
             }
@@ -142,9 +143,9 @@ namespace RafyUnitTest
 
                 var type1 = repo.CacheById(id) as PBSType;
 
-                var count = Logger.DbAccessedCount;
+                var count = DbAccesserInterceptor.DbAccessingCount;
                 var type2 = repo.CacheById(id) as PBSType;
-                Assert.IsTrue(Logger.DbAccessedCount == count, "GetById 内存缓存应该命中，不会发生数据层访问。");
+                Assert.IsTrue(DbAccesserInterceptor.DbAccessingCount == count, "GetById 内存缓存应该命中，不会发生数据层访问。");
 
                 Assert.IsTrue(type1 != type2, "虽然是从缓存中获取，但是只缓存数据，所以对象不应该是同一个。");
             }
@@ -175,18 +176,18 @@ namespace RafyUnitTest
                 {
                     var type1 = repo.CacheById(id) as PBSType;
 
-                    var count = Logger.DbAccessedCount;
+                    var count = DbAccesserInterceptor.DbAccessingCount;
                     var type2 = repo.CacheById(id) as PBSType;
-                    Assert.IsTrue(Logger.DbAccessedCount == count, "GetById 内存缓存应该命中，不会发生数据层访问。");
+                    Assert.IsTrue(DbAccesserInterceptor.DbAccessingCount == count, "GetById 内存缓存应该命中，不会发生数据层访问。");
 
                     Assert.IsTrue(type1 == type2, "由于使用了 EntityContext，从缓存中读取的对象，也应该是同一个。");
 
                     var list1 = type1.PBSList;
                     Assert.IsTrue(list1.Count == 5);
 
-                    count = Logger.DbAccessedCount;
+                    count = DbAccesserInterceptor.DbAccessingCount;
                     var list2 = type2.PBSList;
-                    Assert.IsTrue(Logger.DbAccessedCount == count, "GetByParentId 内存缓存应该命中，不会发生数据层访问。");
+                    Assert.IsTrue(DbAccesserInterceptor.DbAccessingCount == count, "GetByParentId 内存缓存应该命中，不会发生数据层访问。");
 
                     foreach (var pbs1 in list1)
                     {

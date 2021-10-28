@@ -189,7 +189,7 @@ namespace RafyUnitTest
 
                 user.Name = "name changed.";
                 repo.Save(user);
-                Assert.AreEqual(0, Logger.LastRowEffected, "由于数据已经删除，所以这里影响的行号为 0。");
+                Assert.AreEqual(0, DbAccesserInterceptor.LastRowEffected, "由于数据已经删除，所以这里影响的行号为 0。");
             }
         }
 
@@ -784,9 +784,9 @@ namespace RafyUnitTest
                 var book2 = repo.GetById(book.Id);
                 Assert.IsFalse(book2.HasLocalValue(Book.ContentProperty));
 
-                var c = Logger.ThreadDbAccessedCount;
+                var c = DbAccesserInterceptor.ThreadDbAccessingCount;
                 var content = book2.Content;
-                Assert.IsTrue(Logger.ThreadDbAccessedCount == c + 1);
+                Assert.IsTrue(DbAccesserInterceptor.ThreadDbAccessingCount == c + 1);
                 Assert.IsTrue(content == book.Content);
             }
         }
@@ -804,10 +804,10 @@ namespace RafyUnitTest
                 Assert.IsFalse(books[0].HasLocalValue(Book.ContentProperty));
                 Assert.IsFalse(books[1].HasLocalValue(Book.ContentProperty));
 
-                var c = Logger.ThreadDbAccessedCount;
+                var c = DbAccesserInterceptor.ThreadDbAccessingCount;
                 Assert.IsTrue(books[0].Content == "Book1 Long Content.........");
                 Assert.IsTrue(books[1].Content == "Book2 Long Content.........");
-                Assert.IsTrue(Logger.ThreadDbAccessedCount == c + 2);
+                Assert.IsTrue(DbAccesserInterceptor.ThreadDbAccessingCount == c + 2);
             }
         }
 
@@ -825,7 +825,7 @@ namespace RafyUnitTest
                 book2.Content = "Content changed";
 
                 string updateSql = string.Empty;
-                Logger.ThreadDbAccessed += (o, e) =>
+                DbAccesserInterceptor.ThreadDbAccessing += (o, e) =>
                 {
                     updateSql = e.Sql.ToLower();
                 };
@@ -855,7 +855,7 @@ namespace RafyUnitTest
                 book2.Name = "name changed";
 
                 string updateSql = string.Empty;
-                Logger.ThreadDbAccessed += (o, e) =>
+                DbAccesserInterceptor.ThreadDbAccessing += (o, e) =>
                 {
                     updateSql = e.Sql.ToLower();
                 };
@@ -1591,11 +1591,11 @@ namespace RafyUnitTest
                 Assert.IsTrue(pbs.PersistenceStatus == PersistenceStatus.Saved);
 
                 int count = 0;
-                EventHandler<Rafy.Logger.DbAccessedEventArgs> handler = (o, e) =>
+                EventHandler<Rafy.Data.DbAccessingEventArgs> handler = (o, e) =>
                 {
                     if (e.ConnectionSchema == RdbDataProvider.Get(repo).DbSetting) count++;
                 };
-                Logger.DbAccessed += handler;
+                DbAccesserInterceptor.DbAccessing += handler;
 
                 pbs.Name = "DDDDDDDDDD";
                 Assert.IsTrue(root.PersistenceStatus == PersistenceStatus.Saved);
@@ -1607,7 +1607,7 @@ namespace RafyUnitTest
                 Assert.IsTrue(pbs.PersistenceStatus == PersistenceStatus.Saved);
                 Assert.IsTrue(count == c + 1, "只进行了一次数据访问，即子对象的保存。");
 
-                Logger.DbAccessed -= handler;
+                DbAccesserInterceptor.DbAccessing -= handler;
             }
         }
 
@@ -1631,9 +1631,9 @@ namespace RafyUnitTest
                 try
                 {
                     dp.UpdateCurrent = true;
-                    var c = Logger.ThreadDbAccessedCount;
+                    var c = DbAccesserInterceptor.ThreadDbAccessingCount;
                     repo.Save(book);
-                    Assert.AreEqual(Logger.ThreadDbAccessedCount, c + 2);
+                    Assert.AreEqual(DbAccesserInterceptor.ThreadDbAccessingCount, c + 2);
                 }
                 finally
                 {

@@ -67,64 +67,6 @@ namespace Rafy
             catch { }
         }
 
-        [ThreadStatic]
-        private static long _threadDbAccessedCount = 0;
-        [ThreadStatic]
-        private static int _lastRowEffected = 0;
-        private static long _dbAccessedCount = 0;
-
-        /// <summary>
-        /// 返回系统运行到现在，一共记录了多少次 Sql 语句。
-        /// </summary>
-        public static long DbAccessedCount
-        {
-            get { return _dbAccessedCount; }
-        }
-
-        /// <summary>
-        /// 返回当前线程运行到现在，一共记录了多少次 Sql 语句。
-        /// </summary>
-        public static long ThreadDbAccessedCount
-        {
-            get { return _threadDbAccessedCount; }
-        }
-
-        /// <summary>
-        /// 当前线程最近一次执行的非查询的 SQL 影响的行数。
-        /// </summary>
-        public static int LastRowEffected
-        {
-            get { return _lastRowEffected; }
-        }
-
-        /// <summary>
-        /// 是否启用 Sql 查询监听。 默认为 false。
-        /// 打开后，DbAccessed、ThreadDbAccessed 两个事件才会发生。这样才可以监听每一个被执行 Sql。
-        /// </summary>
-        public static bool EnableSqlObervation { get; set; }
-
-        /// <summary>
-        /// 发生了数据访问时的事件。
-        /// </summary>
-        public static event EventHandler<DbAccessedEventArgs> DbAccessed;
-
-        [ThreadStatic]
-        private static EventHandler<DbAccessedEventArgs> _threadDbAccessedHandler;
-        /// <summary>
-        /// 当前线程，发生了数据访问时的事件。
-        /// </summary>
-        public static event EventHandler<DbAccessedEventArgs> ThreadDbAccessed
-        {
-            add
-            {
-                _threadDbAccessedHandler = (EventHandler<DbAccessedEventArgs>)Delegate.Combine(_threadDbAccessedHandler, value);
-            }
-            remove
-            {
-                _threadDbAccessedHandler = (EventHandler<DbAccessedEventArgs>)Delegate.Remove(_threadDbAccessedHandler, value);
-            }
-        }
-
         /// <summary>
         /// 记录 Sql 执行过程。
         /// </summary>
@@ -132,32 +74,13 @@ namespace Rafy
         /// <param name="parameters">The parameters.</param>
         /// <param name="connectionSchema">The connection schema.</param>
         /// <param name="connection">The connection.</param>
-        public static void LogDbAccessed(string sql, IDbDataParameter[] parameters, DbConnectionSchema connectionSchema, IDbConnection connection)
+        public static void LogDbAccessing(string sql, IDbDataParameter[] parameters, DbConnectionSchema connectionSchema, IDbConnection connection)
         {
-            if (EnableSqlObervation)
-            {
-                _dbAccessedCount++;
-                _threadDbAccessedCount++;
-            }
-
             try
             {
-                _impl.LogDbAccessed(sql, parameters, connectionSchema, connection);
+                _impl.LogDbAccessing(sql, parameters, connectionSchema, connection);
             }
             catch { }
-
-            if (EnableSqlObervation)
-            {
-                var threadHandler = _threadDbAccessedHandler;
-                var handler = DbAccessed;
-                if (threadHandler != null || handler != null)
-                {
-                    var args = new DbAccessedEventArgs(sql, parameters, connectionSchema);
-
-                    if (threadHandler != null) { threadHandler(null, args); }
-                    if (handler != null) { handler(null, args); }
-                }
-            }
         }
 
         /// <summary>
@@ -166,40 +89,7 @@ namespace Rafy
         /// <param name="rowsEffect">The result.</param>
         public static void LogDbAccessedResult(int rowsEffect)
         {
-            if (EnableSqlObervation)
-            {
-                _lastRowEffected = rowsEffect;
-            }
-
             _impl.LogDbAccessedResult(rowsEffect);
-        }
-
-        /// <summary>
-        /// 数据访问事件参数。
-        /// </summary>
-        public struct DbAccessedEventArgs
-        {
-            public DbAccessedEventArgs(string sql, IDbDataParameter[] parameters, DbConnectionSchema connectionSchema)
-            {
-                this.Sql = sql;
-                this.Parameters = parameters;
-                this.ConnectionSchema = connectionSchema;
-            }
-
-            /// <summary>
-            /// 执行的 Sql
-            /// </summary>
-            public string Sql { get; private set; }
-
-            /// <summary>
-            /// 所有的参数值。
-            /// </summary>
-            public IDbDataParameter[] Parameters { get; private set; }
-
-            /// <summary>
-            /// 对应的数据库连接
-            /// </summary>
-            public DbConnectionSchema ConnectionSchema { get; private set; }
         }
     }
 }
