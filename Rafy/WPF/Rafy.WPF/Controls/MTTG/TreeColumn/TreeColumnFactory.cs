@@ -72,6 +72,7 @@ namespace Rafy.WPF
 
             treeColumn.HeaderLabel = (meta.Label ?? meta.Name).Translate();
             treeColumn.PropertyName = meta.Name;
+            treeColumn.HeaderStringFormat = meta.StringFormat;
             treeColumn.SortingProperty = meta.DisplayPath();
             treeColumn.DisplayTextBlockStyle = TypeHelper.IsNumber(TypeHelper.IgnoreNullable(meta.PropertyMeta.Runtime.PropertyType)) ?
                 RafyResources.TreeColumn_TextBlock_Number : RafyResources.TreeColumn_TextBlock;

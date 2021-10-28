@@ -935,6 +935,18 @@ namespace Rafy.MetaModel.View
         }
 
         /// <summary>
+        /// 格式化显示
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="format"></param>
+        /// <returns></returns>
+        public static WPFEntityPropertyViewMeta Format(this WPFEntityPropertyViewMeta meta, string format)
+        {
+            meta.StringFormat = format;
+            return meta;
+        }
+
+        /// <summary>
         /// 设置该属性为导航项。
         /// 此时，如果该属性变更，会自动触发导航查询
         /// </summary>
