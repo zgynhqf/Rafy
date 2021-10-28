@@ -501,6 +501,24 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void ET_Property_Bytes()
+        {
+            var repo = RF.ResolveInstance<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var book = new Book
+                {
+                    Bytes = Encoding.UTF8.GetBytes("test content")
+                };
+                repo.Save(book);
+
+                var newBook = repo.GetById(book.Id);
+
+                Assert.AreEqual("test content", Encoding.UTF8.GetString(newBook.Bytes));
+            }
+        }
+
+        [TestMethod]
         public void ET_Property_Boolean()
         {
             using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
