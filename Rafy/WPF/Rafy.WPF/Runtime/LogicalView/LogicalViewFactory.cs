@@ -17,6 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using Rafy;
+using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.MetaModel.View;
 using Rafy.WPF.Controls;
@@ -108,24 +109,26 @@ namespace Rafy.WPF
         /// 为某个实体类型生成逻辑视图。
         /// </summary>
         /// <param name="entityViewInfo">实体类的视图元数据</param>
+        /// <param name="isLookup"></param>
+        /// <param name="properties">如果提供了这个参数，则表示创建的列表控件，只显示给定的这些属性</param>
         /// <returns></returns>
-        public ListLogicalView CreateListView(WPFEntityViewMeta entityViewInfo, bool isLookup = false)
+        public ListLogicalView CreateListView(WPFEntityViewMeta entityViewInfo, bool isLookup = false, IList<IManagedProperty> properties = null)
         {
             var view = new ListLogicalView(entityViewInfo);
 
             if (isLookup) { view.ShowInWhere = ListShowInWhere.DropDown; }
 
-            this.InitListView(view);
+            this.InitListView(view, properties);
 
             this.OnViewCreated(view);
 
             return view;
         }
 
-        private void InitListView(ListLogicalView view)
+        private void InitListView(ListLogicalView view, IList<IManagedProperty> properties)
         {
             //如果是选择视图，则应该使用显示模型来创建控件。
-            var resultControl = this._uiFactory.CreateTreeGrid(view.Meta, view.ShowInWhere);
+            var resultControl = this._uiFactory.CreateTreeGrid(view.Meta, view.ShowInWhere, properties);
 
             //为 ListLogicalView 初始化 ListEditor
             var listEditor = new TreeGridListEditor(view);

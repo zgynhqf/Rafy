@@ -155,6 +155,16 @@ namespace Rafy.MetaModel.View
             set { this.SetValue(ref this._RefIdHost, value); }
         }
 
+        private IList<IManagedProperty> _ListDisplayProperties;
+        /// <summary>
+        /// 如果不为null，表示列表控件中需要显示的属性列的集合。
+        /// </summary>
+        public IList<IManagedProperty> ListDisplayProperties
+        {
+            get { return _ListDisplayProperties; }
+            set { this.SetValue(ref _ListDisplayProperties, value); }
+        }
+
         private RefSelectedCallBack _RefSelectedCallBack;
         /// <summary>
         /// 引用选择完毕后的回调函数

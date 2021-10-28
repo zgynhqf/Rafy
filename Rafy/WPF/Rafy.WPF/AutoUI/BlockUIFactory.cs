@@ -33,6 +33,7 @@ using Rafy.WPF.Command.UI;
 using Rafy.WPF.Controls;
 using Rafy.WPF.Editors;
 using Rafy.WPF.Command;
+using Rafy.ManagedProperty;
 
 namespace Rafy.WPF
 {
@@ -67,8 +68,9 @@ namespace Rafy.WPF
         /// 这个表格需要显示在哪个位置。
         /// <remarks>生成引擎根据元数据中各属性定义的显示逻辑来生成列。</remarks>
         /// </param>
+        /// <param name="properties">如果提供了这个参数，则表示创建的列表控件，只显示给定的这些属性</param>
         /// <returns></returns>
-        public RafyTreeGrid CreateTreeGrid(EntityViewMeta evm, ListShowInWhere listShowInWhere)
+        public RafyTreeGrid CreateTreeGrid(EntityViewMeta evm, ListShowInWhere listShowInWhere, IList<IManagedProperty> properties)
         {
             if (evm == null) throw new ArgumentNullException("vm");
 
@@ -94,7 +96,7 @@ namespace Rafy.WPF
             //使用list里面的属性生成每一列
             foreach (WPFEntityPropertyViewMeta property in evm.OrderedEntityProperties())
             {
-                if (property.CanShowIn(showInWhere))
+                if (property.CanShowIn(showInWhere) && (properties == null || properties.Contains(property.PropertyMeta.ManagedProperty)))
                 {
                     var column = this.TreeColumnFactory.Create(property);
 

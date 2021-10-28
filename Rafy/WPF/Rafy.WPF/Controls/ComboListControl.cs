@@ -32,6 +32,7 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using Rafy;
 using Rafy.Domain;
+using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.MetaModel.View;
 using Rafy.Reflection;
@@ -242,6 +243,11 @@ namespace Rafy.WPF.Controls
             }
         }
 
+        /// <summary>
+        /// 如果不为null，表示列表控件中需要显示的属性列的集合。
+        /// </summary>
+        public IList<IManagedProperty> DisplayProperties { get; set; }
+
         internal CLCProgress CurrentProgress
         {
             get { return this._curProgress; }
@@ -303,7 +309,7 @@ namespace Rafy.WPF.Controls
                 this._textPath = title.Name;
 
                 //创建一个只读的 ListLogicalView
-                var listView = AutoUI.ViewFactory.CreateListView(rvm, true);
+                var listView = AutoUI.ViewFactory.CreateListView(rvm, true, this.DisplayProperties);
                 listView.IsReadOnly = ReadOnlyStatus.ReadOnly;
                 if (this.IsMultiSelection) { listView.CheckingMode = CheckingMode.CheckingRow; }
                 listView.CurrentChanged += (s, e) => this.OnListViewSelectionChanged();

@@ -107,6 +107,7 @@ namespace Rafy.WPF.Editors
                 RefViewMeta = refTypeMeta,
                 IsMultiSelection = this.IsMultiSelection,
                 Name = this.Meta.Name,
+                DisplayProperties = this.Meta.SelectionViewMeta.ListDisplayProperties
             };
             this._cmbList.InnerListView.CheckItemsChanged += On_ListView_CurrentObjectChanged;
             this._cmbList.ListViewSelectionChanged += On_ListView_CurrentObjectChanged;
