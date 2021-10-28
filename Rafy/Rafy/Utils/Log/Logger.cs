@@ -72,24 +72,16 @@ namespace Rafy
         /// </summary>
         /// <param name="sql">The SQL.</param>
         /// <param name="parameters">The parameters.</param>
+        /// <param name="result">The result.</param>
         /// <param name="connectionSchema">The connection schema.</param>
         /// <param name="connection">The connection.</param>
-        public static void LogDbAccessing(string sql, IDbDataParameter[] parameters, DbConnectionSchema connectionSchema, IDbConnection connection)
+        public static void LogDbAccessed(string sql, IDbDataParameter[] parameters, object result, DbConnectionSchema connectionSchema, IDbConnection connection)
         {
             try
             {
-                _impl.LogDbAccessing(sql, parameters, connectionSchema, connection);
+                _impl.LogDbAccessed(sql, parameters, result, connectionSchema, connection);
             }
             catch { }
-        }
-
-        /// <summary>
-        /// 将上条 SQL 执行的结果记录到日志中。
-        /// </summary>
-        /// <param name="rowsEffect">The result.</param>
-        public static void LogDbAccessedResult(int rowsEffect)
-        {
-            _impl.LogDbAccessedResult(rowsEffect);
         }
     }
 }

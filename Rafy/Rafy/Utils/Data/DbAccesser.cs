@@ -533,8 +533,6 @@ namespace Rafy.Data
                 }
             }
 
-            DbAccesserInterceptor.LogDbAccessing(sql, parameters, _connectionSchema, _connection);
-
             return command;
         }
 
@@ -547,6 +545,7 @@ namespace Rafy.Data
             try
             {
                 this.MakeConnectionOpen();
+                this.LogDbAccessing(sql, parameters);
 
                 da.Fill(ds);
 
@@ -554,19 +553,31 @@ namespace Rafy.Data
             }
             finally
             {
+                this.LogDbAccessed(sql, parameters, ds);
                 this.MakeConnectionClose();
             }
         }
 
         private DataRow DoQueryDataRow(string sql, CommandType type, params IDbDataParameter[] parameters)
         {
-            using (DataTable dt = this.DoQueryDataTable(sql, type, parameters))
+            DataRow res = null;
+
+            try
             {
-                if (dt != null && dt.Rows.Count > 0)
+                this.LogDbAccessing(sql, parameters);
+
+                using (DataTable dt = this.DoQueryDataTable(sql, type, parameters))
                 {
-                    return dt.Rows[0];
+                    if (dt != null && dt.Rows.Count > 0)
+                    {
+                        res = dt.Rows[0];
+                    }
+                    return res;
                 }
-                return null;
+            }
+            finally
+            {
+                this.LogDbAccessed(sql, parameters, res);
             }
         }
 
@@ -578,13 +589,22 @@ namespace Rafy.Data
 
             IDataReader reader = null;
 
-            if (closeConnection)
+            try
             {
-                reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                this.LogDbAccessing(sql, parameters);
+
+                if (closeConnection)
+                {
+                    reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                }
+                else
+                {
+                    reader = cmd.ExecuteReader();
+                }
             }
-            else
+            finally
             {
-                reader = cmd.ExecuteReader();
+                this.LogDbAccessed(sql, parameters, reader);
             }
 
             return reader;
@@ -594,19 +614,23 @@ namespace Rafy.Data
         {
             IDbCommand cmd = this.PrepareCommand(sql, type, parameters);
 
+            object res = null;
             try
             {
                 this.MakeConnectionOpen();
+                this.LogDbAccessing(sql, parameters);
 
-                return cmd.ExecuteScalar();
+                res = cmd.ExecuteScalar();
+                return res;
             }
             finally
             {
+                this.LogDbAccessed(sql, parameters, res);
                 this.MakeConnectionClose();
             }
         }
 
-        private int DoExecuteProcedure(string procedureName, out int rowsAffect, params IDbDataParameter[] parameters)
+        private int DoExecuteProcedure(string procedureName, out int rowsAffected, params IDbDataParameter[] parameters)
         {
             IDbCommand command = this.PrepareCommand(procedureName, CommandType.StoredProcedure, parameters);
 
@@ -618,15 +642,18 @@ namespace Rafy.Data
             paraReturn.Size = 4;
             command.Parameters.Add(paraReturn);
 
+            rowsAffected = 0;
             try
             {
                 this.MakeConnectionOpen();
+                this.LogDbAccessing(procedureName, parameters);
 
-                rowsAffect = command.ExecuteNonQuery();
+                rowsAffected = command.ExecuteNonQuery();
                 return Convert.ToInt32(paraReturn.Value);
             }
             finally
             {
+                this.LogDbAccessed(procedureName, parameters, rowsAffected);
                 this.MakeConnectionClose();
             }
         }
@@ -634,18 +661,20 @@ namespace Rafy.Data
         private int DoExecuteText(string sql, params IDbDataParameter[] parameters)
         {
             IDbCommand command = this.PrepareCommand(sql, CommandType.Text, parameters);
+
+            var rowsAffected = 0;
             try
             {
                 this.MakeConnectionOpen();
+                this.LogDbAccessing(sql, parameters);
 
-                var rowsEffect = command.ExecuteNonQuery();
+                rowsAffected = command.ExecuteNonQuery();
 
-                DbAccesserInterceptor.LogDbAccessedResult(rowsEffect);
-
-                return rowsEffect;
+                return rowsAffected;
             }
             finally
             {
+                this.LogDbAccessed(sql, parameters, rowsAffected);
                 this.MakeConnectionClose();
             }
         }
@@ -1018,20 +1047,20 @@ namespace Rafy.Data
         /// <returns>The value returned by procedure</returns>
         int IRawDbAccesser.ExecuteProcedure(string procedureName, params IDbDataParameter[] parameters)
         {
-            int rowsAffect;
-            return this.DoExecuteProcedure(procedureName, out rowsAffect, parameters);
+            int rowsAffected;
+            return this.DoExecuteProcedure(procedureName, out rowsAffected, parameters);
         }
 
         /// <summary>
         /// Execute a procudure, and return the value returned by this procedure
         /// </summary>
         /// <param name="procedureName">The name of this procedure</param>
-        /// <param name="rowsAffect">The number of rows effected</param>
+        /// <param name="rowsAffected">The number of rows effected</param>
         /// <param name="parameters">If this sql has some parameters, these are its parameters.</param>
         /// <returns>The value returned by procedure</returns>
-        int IRawDbAccesser.ExecuteProcedure(string procedureName, out int rowsAffect, params IDbDataParameter[] parameters)
+        int IRawDbAccesser.ExecuteProcedure(string procedureName, out int rowsAffected, params IDbDataParameter[] parameters)
         {
-            return this.DoExecuteProcedure(procedureName, out rowsAffect, parameters);
+            return this.DoExecuteProcedure(procedureName, out rowsAffected, parameters);
         }
 
         /// <summary>
@@ -1140,6 +1169,21 @@ namespace Rafy.Data
                 //this._transaction = null;
             }
         }
+
+        #endregion
+
+        #region Helpers
+
+        private void LogDbAccessing(string sql, IDbDataParameter[] parameters)
+        {
+            DbAccesserInterceptor.LogDbAccessing(sql, parameters, _connectionSchema, _connection);
+        }
+
+        private void LogDbAccessed(string sql, IDbDataParameter[] parameters, object result)
+        {
+            DbAccesserInterceptor.LogDbAccessed(sql, parameters, result, _connectionSchema, _connection);
+        }
+
 
         #endregion
 

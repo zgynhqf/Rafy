@@ -23,61 +23,60 @@ namespace Rafy.Data
     /// </summary>
     public static class DbAccesserInterceptor
     {
+        private static bool _observeSql;
+        private static long _dbAccessedCount = 0;
         [ThreadStatic]
-        private static DbAccessingEventArgs _lastThreadDbAccessingEventArgs;
+        private static DbAccessedEventArgs _lastThreadDbAccessedArgs;
         [ThreadStatic]
-        private static long _threadDbAccessingCount = 0;
-        [ThreadStatic]
-        private static int _lastRowEffected = 0;
-        private static long _dbAccessingCount = 0;
+        private static long _threadDbAccessedCount = 0;
 
         /// <summary>
         /// 是否启用 Sql 查询监听。 默认为 false。
-        /// 打开后，<see cref="DbAccessing"/>、<see cref="ThreadDbAccessing"/> 两个事件才会发生。这样才可以监听每一个被执行 Sql。
+        /// 打开后，<see cref="DbAccessing"/> 两个事件才会发生。这样才可以监听每一个被执行 Sql。
         /// </summary>
-        public static bool ObserveSql { get; set; }
+        public static bool ObserveSql { get => _observeSql; set => _observeSql = value; }
 
         /// <summary>
         /// 返回系统运行到现在，一共记录了多少次 Sql 语句。
         /// </summary>
-        public static long DbAccessingCount { get => _dbAccessingCount; }
+        public static long DbAccessedCount { get => _dbAccessedCount; }
 
         /// <summary>
         /// 返回当前线程运行到现在，一共记录了多少次 Sql 语句。
         /// </summary>
-        public static long ThreadDbAccessingCount { get => _threadDbAccessingCount; }
-
-        /// <summary>
-        /// 当前线程最近一次执行的非查询的 SQL 影响的行数。
-        /// </summary>
-        public static int LastRowEffected { get => _lastRowEffected; }
+        public static long ThreadDbAccessedCount { get => _threadDbAccessedCount; }
 
         /// <summary>
         /// 当前线程最近一次数据库访问记录。
         /// </summary>
-        public static DbAccessingEventArgs LastThreadDbAccessingEventArgs { get => _lastThreadDbAccessingEventArgs; }
+        public static DbAccessedEventArgs ThreadLastDbAccessedArgs { get => _lastThreadDbAccessedArgs; }
 
         /// <summary>
-        /// 发生了数据访问时的事件。
+        /// 发生了数据访问前的事件。
         /// </summary>
-        public static event EventHandler<DbAccessingEventArgs> DbAccessing;
+        public static event EventHandler<DbAccessEventArgs> DbAccessing;
 
-        [ThreadStatic]
-        private static EventHandler<DbAccessingEventArgs> _threadDbAccessingHandler;
         /// <summary>
-        /// 当前线程，发生了数据访问时的事件。
+        /// 发生了数据访问后的事件。
         /// </summary>
-        public static event EventHandler<DbAccessingEventArgs> ThreadDbAccessing
-        {
-            add
-            {
-                _threadDbAccessingHandler = (EventHandler<DbAccessingEventArgs>)Delegate.Combine(_threadDbAccessingHandler, value);
-            }
-            remove
-            {
-                _threadDbAccessingHandler = (EventHandler<DbAccessingEventArgs>)Delegate.Remove(_threadDbAccessingHandler, value);
-            }
-        }
+        public static event EventHandler<DbAccessedEventArgs> DbAccessed;
+
+        //[ThreadStatic]
+        //private static EventHandler<DbAccessEventArgs> _threadDbAccessingHandler;
+        ///// <summary>
+        ///// 当前线程，发生了数据访问时的事件。
+        ///// </summary>
+        //public static event EventHandler<DbAccessEventArgs> ThreadDbAccessing
+        //{
+        //    add
+        //    {
+        //        _threadDbAccessingHandler = (EventHandler<DbAccessEventArgs>)Delegate.Combine(_threadDbAccessingHandler, value);
+        //    }
+        //    remove
+        //    {
+        //        _threadDbAccessingHandler = (EventHandler<DbAccessEventArgs>)Delegate.Remove(_threadDbAccessingHandler, value);
+        //    }
+        //}
 
         /// <summary>
         /// 记录 Sql 执行过程。
@@ -88,41 +87,46 @@ namespace Rafy.Data
         /// <param name="connection">The connection.</param>
         public static void LogDbAccessing(string sql, IDbDataParameter[] parameters, DbConnectionSchema connectionSchema, IDbConnection connection)
         {
-            if (ObserveSql)
+            if (_observeSql)
             {
-                _dbAccessingCount++;
-                _threadDbAccessingCount++;
-            }
-
-            Logger.LogDbAccessing(sql, parameters, connectionSchema, connection);
-
-            if (ObserveSql)
-            {
-                var args = new DbAccessingEventArgs(sql, parameters, connectionSchema);
-                _lastThreadDbAccessingEventArgs = args;
-
-                var threadHandler = _threadDbAccessingHandler;
                 var handler = DbAccessing;
-                if (threadHandler != null || handler != null)
+                if (handler != null)
                 {
-                    if (threadHandler != null) { threadHandler(null, args); }
-                    if (handler != null) { handler(null, args); }
+                    var args = new DbAccessEventArgs
+                    {
+                        Sql = sql,
+                        Parameters = parameters,
+                        ConnectionSchema = connectionSchema,
+                    };
+                    handler(null, args);
                 }
             }
         }
 
-        /// <summary>
-        /// 将上条 SQL 执行的结果记录到日志中。
-        /// </summary>
-        /// <param name="rowsEffect">The result.</param>
-        public static void LogDbAccessedResult(int rowsEffect)
+        public static void LogDbAccessed(string sql, IDbDataParameter[] parameters, object result, DbConnectionSchema connectionSchema, IDbConnection connection)
         {
-            if (ObserveSql)
+            if (_observeSql)
             {
-                _lastRowEffected = rowsEffect;
+                _dbAccessedCount++;
+                _threadDbAccessedCount++;
             }
 
-            Logger.LogDbAccessedResult(rowsEffect);
+            Logger.LogDbAccessed(sql, parameters, result, connectionSchema, connection);
+
+            if (_observeSql)
+            {
+                var args = new DbAccessedEventArgs
+                {
+                    Sql = sql,
+                    Parameters = parameters,
+                    ConnectionSchema = connectionSchema,
+                    Result = result
+                };
+                _lastThreadDbAccessedArgs = args;
+
+                var handler = DbAccessed;
+                if (handler != null) { handler(null, args); }
+            }
         }
     }
 }

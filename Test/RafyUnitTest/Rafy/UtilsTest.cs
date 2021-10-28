@@ -94,7 +94,7 @@ namespace RafyUnitTest
             using (RF.TransactionScope(repo))
             {
                 int count = 0;
-                EventHandler<DbAccessingEventArgs> handler = (o, e) =>
+                EventHandler<DbAccessEventArgs> handler = (o, e) =>
                 {
                     if (e.ConnectionSchema == RdbDataProvider.Get(repo).DbSetting) count++;
                 };
@@ -123,15 +123,15 @@ namespace RafyUnitTest
             using (RF.TransactionScope(repo))
             {
                 int count = 0;
-                EventHandler<DbAccessingEventArgs> handler = (o, e) =>
+                EventHandler<DbAccessEventArgs> handler = (o, e) =>
                 {
                     if (e.ConnectionSchema == RdbDataProvider.Get(repo).DbSetting) count++;
                 };
-                DbAccesserInterceptor.ThreadDbAccessing += handler;
+                DbAccesserInterceptor.DbAccessing += handler;
 
                 repo.Save(new TestUser());
 
-                DbAccesserInterceptor.ThreadDbAccessing -= handler;
+                DbAccesserInterceptor.DbAccessing -= handler;
 
                 var p = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName).ProviderName;
                 if (p == DbSetting.Provider_SqlClient || p == DbSetting.Provider_MySql || p == DbSetting.Provider_SQLite)
@@ -151,17 +151,17 @@ namespace RafyUnitTest
             var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
-                var c1 = DbAccesserInterceptor.DbAccessingCount;
+                var c1 = DbAccesserInterceptor.DbAccessedCount;
                 repo.Save(new TestUser());
 
                 var p = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName).ProviderName;
                 if (p == DbSetting.Provider_SqlClient || p == DbSetting.Provider_MySql || p == DbSetting.Provider_SQLite)
                 {
-                    Assert.IsTrue(DbAccesserInterceptor.DbAccessingCount == c1 + 1);
+                    Assert.IsTrue(DbAccesserInterceptor.DbAccessedCount == c1 + 1);
                 }
                 else
                 {
-                    Assert.IsTrue(DbAccesserInterceptor.DbAccessingCount == c1 + 2);
+                    Assert.IsTrue(DbAccesserInterceptor.DbAccessedCount == c1 + 2);
                 }
             }
         }
@@ -172,17 +172,17 @@ namespace RafyUnitTest
             var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
-                var c1 = DbAccesserInterceptor.ThreadDbAccessingCount;
+                var c1 = DbAccesserInterceptor.ThreadDbAccessedCount;
                 repo.Save(new TestUser());
 
                 var p = DbSetting.FindOrCreate(UnitTestEntityRepositoryDataProvider.DbSettingName).ProviderName;
                 if (p == DbSetting.Provider_SqlClient || p == DbSetting.Provider_MySql || p == DbSetting.Provider_SQLite)
                 {
-                    Assert.IsTrue(DbAccesserInterceptor.ThreadDbAccessingCount == c1 + 1);
+                    Assert.IsTrue(DbAccesserInterceptor.ThreadDbAccessedCount == c1 + 1);
                 }
                 else
                 {
-                    Assert.IsTrue(DbAccesserInterceptor.ThreadDbAccessingCount == c1 + 2);
+                    Assert.IsTrue(DbAccesserInterceptor.ThreadDbAccessedCount == c1 + 2);
                 }
             }
         }

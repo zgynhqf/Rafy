@@ -187,9 +187,16 @@ namespace RafyUnitTest
 
                 Assert.AreEqual(PersistenceStatus.Saved, user.PersistenceStatus);
 
+                var rowsAffected = -1;
+                EventHandler<DbAccessedEventArgs> handler = (o, e) =>
+                {
+                    rowsAffected = (int)e.Result;
+                };
+                DbAccesserInterceptor.DbAccessed += handler;
                 user.Name = "name changed.";
                 repo.Save(user);
-                Assert.AreEqual(0, DbAccesserInterceptor.LastRowEffected, "由于数据已经删除，所以这里影响的行号为 0。");
+                Assert.AreEqual(0, rowsAffected, "由于数据已经删除，所以这里影响的行号为 0。");
+                DbAccesserInterceptor.DbAccessed -= handler;
             }
         }
 
@@ -784,9 +791,9 @@ namespace RafyUnitTest
                 var book2 = repo.GetById(book.Id);
                 Assert.IsFalse(book2.HasLocalValue(Book.ContentProperty));
 
-                var c = DbAccesserInterceptor.ThreadDbAccessingCount;
+                var c = DbAccesserInterceptor.ThreadDbAccessedCount;
                 var content = book2.Content;
-                Assert.IsTrue(DbAccesserInterceptor.ThreadDbAccessingCount == c + 1);
+                Assert.IsTrue(DbAccesserInterceptor.ThreadDbAccessedCount == c + 1);
                 Assert.IsTrue(content == book.Content);
             }
         }
@@ -804,10 +811,10 @@ namespace RafyUnitTest
                 Assert.IsFalse(books[0].HasLocalValue(Book.ContentProperty));
                 Assert.IsFalse(books[1].HasLocalValue(Book.ContentProperty));
 
-                var c = DbAccesserInterceptor.ThreadDbAccessingCount;
+                var c = DbAccesserInterceptor.ThreadDbAccessedCount;
                 Assert.IsTrue(books[0].Content == "Book1 Long Content.........");
                 Assert.IsTrue(books[1].Content == "Book2 Long Content.........");
-                Assert.IsTrue(DbAccesserInterceptor.ThreadDbAccessingCount == c + 2);
+                Assert.IsTrue(DbAccesserInterceptor.ThreadDbAccessedCount == c + 2);
             }
         }
 
@@ -824,14 +831,9 @@ namespace RafyUnitTest
                 book2.Name = "name changed";
                 book2.Content = "Content changed";
 
-                string updateSql = string.Empty;
-                DbAccesserInterceptor.ThreadDbAccessing += (o, e) =>
-                {
-                    updateSql = e.Sql.ToLower();
-                };
-
                 repo.Save(book2);
 
+                string updateSql = DbAccesserInterceptor.ThreadLastDbAccessedArgs.Sql.ToLower();
                 Assert.IsTrue(updateSql.Contains("update"));
                 Assert.IsTrue(updateSql.Contains("content"), "LOB 属性改变时，更新语句需要同时更新该字段。");
 
@@ -854,14 +856,9 @@ namespace RafyUnitTest
                 var book2 = repo.GetById(book.Id);
                 book2.Name = "name changed";
 
-                string updateSql = string.Empty;
-                DbAccesserInterceptor.ThreadDbAccessing += (o, e) =>
-                {
-                    updateSql = e.Sql.ToLower();
-                };
-
                 repo.Save(book2);
 
+                string updateSql = DbAccesserInterceptor.ThreadLastDbAccessedArgs.Sql.ToLower();
                 Assert.IsTrue(updateSql.Contains("update"));
                 Assert.IsTrue(!updateSql.Contains("content"), "LOB 属性未发生改变时，更新语句不更新该字段。");
             }
@@ -1591,7 +1588,7 @@ namespace RafyUnitTest
                 Assert.IsTrue(pbs.PersistenceStatus == PersistenceStatus.Saved);
 
                 int count = 0;
-                EventHandler<Rafy.Data.DbAccessingEventArgs> handler = (o, e) =>
+                EventHandler<Rafy.Data.DbAccessEventArgs> handler = (o, e) =>
                 {
                     if (e.ConnectionSchema == RdbDataProvider.Get(repo).DbSetting) count++;
                 };
@@ -1631,9 +1628,9 @@ namespace RafyUnitTest
                 try
                 {
                     dp.UpdateCurrent = true;
-                    var c = DbAccesserInterceptor.ThreadDbAccessingCount;
+                    var c = DbAccesserInterceptor.ThreadDbAccessedCount;
                     repo.Save(book);
-                    Assert.AreEqual(DbAccesserInterceptor.ThreadDbAccessingCount, c + 2);
+                    Assert.AreEqual(DbAccesserInterceptor.ThreadDbAccessedCount, c + 2);
                 }
                 finally
                 {

@@ -91,10 +91,10 @@ namespace Rafy.Data
         /// Execute a procudure, and return the value returned by this procedure
         /// </summary>
         /// <param name="procedureName">The name of this procedure</param>
-        /// <param name="rowsAffect">The number of rows effected</param>
+        /// <param name="rowsAffected">The number of rows effected</param>
         /// <param name="parameters">If this sql has some parameters, these are its parameters.</param>
         /// <returns>The value returned by procedure</returns>
-        int ExecuteProcedure(string procedureName, out int rowsAffect, params IDbDataParameter[] parameters);
+        int ExecuteProcedure(string procedureName, out int rowsAffected, params IDbDataParameter[] parameters);
 
         /// <summary>
         /// Execute a sql which is not a database procudure, return rows effected.

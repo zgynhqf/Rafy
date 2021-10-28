@@ -124,9 +124,10 @@ StockTrace：
         /// </summary>
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
+        /// <param name="result"></param>
         /// <param name="connectionSchema"></param>
         /// <param name="connection"></param>
-        public override void LogDbAccessing(string sql, IDbDataParameter[] parameters, DbConnectionSchema connectionSchema, IDbConnection connection)
+        public override void LogDbAccessed(string sql, IDbDataParameter[] parameters, object result, DbConnectionSchema connectionSchema, IDbConnection connection)
         {
             if (string.IsNullOrEmpty(this.SqlTraceFileName)) return;
 
@@ -155,22 +156,11 @@ StockTrace：
 
             content.Append(';');
 
-            lock (this)
+            if (result is int)
             {
-                File.AppendAllText(this.SqlTraceFileName, content.ToString(), Encoding.UTF8);
+                content.AppendLine()
+                    .Append("Rows affected: ").Append(result).Append(";");
             }
-        }
-
-        public override void LogDbAccessedResult(int rowsEffect)
-        {
-            if (string.IsNullOrEmpty(this.SqlTraceFileName)) return;
-
-            var content = new StringBuilder();
-
-            content.AppendLine()
-                .Append("--").Append(DateTime.Now)
-                .AppendLine()
-                .Append("Rows effected: ").Append(rowsEffect).Append(";");
 
             lock (this)
             {

@@ -992,7 +992,7 @@ namespace RafyUnitTest
                 Assert.AreEqual(0, GetChangedProperties(user).Count);
 
                 string[] setList = null;
-                EventHandler<Rafy.Data.DbAccessingEventArgs> handler = (o, e) =>
+                EventHandler<Rafy.Data.DbAccessEventArgs> handler = (o, e) =>
                 {
                     var sql = e.Sql;
                     var m = Regex.Match(sql, @"set (?<setClause>.+?) where", RegexOptions.IgnoreCase);
@@ -1038,7 +1038,7 @@ namespace RafyUnitTest
                 Assert.AreEqual(0, GetChangedProperties(user).Count);
 
                 string[] setList = null;
-                EventHandler<Rafy.Data.DbAccessingEventArgs> handler = (o, e) =>
+                EventHandler<Rafy.Data.DbAccessEventArgs> handler = (o, e) =>
                 {
                     var sql = e.Sql;
                     var m = Regex.Match(sql, @"set (?<setClause>.+?) where", RegexOptions.IgnoreCase);
@@ -1085,7 +1085,7 @@ namespace RafyUnitTest
 
                     string setClause = null;
                     string[] setList = null;
-                    EventHandler<DbAccessingEventArgs> handler = (o, e) =>
+                    EventHandler<DbAccessEventArgs> handler = (o, e) =>
                     {
                         var sql = e.Sql;
                         var m = Regex.Match(sql, @"set (?<setClause>.+?) where", RegexOptions.IgnoreCase);
@@ -1328,7 +1328,7 @@ namespace RafyUnitTest
                 Assert.IsTrue(entity.IsDisabled(Book.CodeProperty));
 
                 string[] setList = null;
-                EventHandler<Rafy.Data.DbAccessingEventArgs> handler = (o, e) =>
+                EventHandler<Rafy.Data.DbAccessEventArgs> handler = (o, e) =>
                 {
                     var sql = e.Sql;
                     var m = Regex.Match(sql, @"set (?<setClause>.+?) where", RegexOptions.IgnoreCase);
