@@ -26,7 +26,7 @@ namespace Rafy.Threading
     /// 异步线程的帮助方法。
     /// 此类在提供方便使用的异步方法的基础上，封装了新线程的 CurrentPrincipal 与启动线程的同步。
     /// </summary>
-    public static class AsyncHelper
+    public static class PrincipalAsyncHelper
     {
         /// <summary>
         /// 是否禁用 WrapByCurrentPrinciple 功能。

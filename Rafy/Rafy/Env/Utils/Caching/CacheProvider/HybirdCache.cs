@@ -68,7 +68,7 @@ namespace Rafy.Utils.Caching
         internal protected override bool AddCore(string region, string key, StoredValue value)
         {
             //由于优先使用内存中的缓存，所以添加到硬盘缓存的操作可以异步执行。
-            AsyncHelper.InvokeSafe(() =>
+            PrincipalAsyncHelper.InvokeSafe(() =>
             {
                 this._disk.AddCore(region, key, value);
             });

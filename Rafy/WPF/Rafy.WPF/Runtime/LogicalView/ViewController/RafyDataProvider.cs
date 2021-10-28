@@ -126,7 +126,7 @@ namespace Rafy
 
             this.IsBusy = true;
 
-            AsyncHelper.Invoke(() => DoQuery(request));
+            PrincipalAsyncHelper.Invoke(() => DoQuery(request));
         }
 
         private void DoQuery(QueryRequest request)

@@ -127,7 +127,7 @@ namespace Rafy.WPF.Shell
         protected override void InitEnvironment()
         {
             DataPortalApi.FakeRemote = true;
-            AsyncHelper.DisableWrapping = true;
+            PrincipalAsyncHelper.DisableWrapping = true;
 
             UIEnvironment.IsWPFUI = true;
 

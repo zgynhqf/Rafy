@@ -271,7 +271,7 @@ namespace Rafy.WPF
 
         private AsyncMultiActionsWindow()
         {
-            this._actions = AsyncHelper.CreateObservableActions();
+            this._actions = PrincipalAsyncHelper.CreateObservableActions();
             this._actions.FirstActionStarted += new EventHandler(Actions_Started);
             this._actions.LastActionEnded += new EventHandler(Actions_Ended);
         }
