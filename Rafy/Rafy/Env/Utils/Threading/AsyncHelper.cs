@@ -24,9 +24,15 @@ namespace Rafy.Threading
 {
     /// <summary>
     /// 异步线程的帮助方法。
+    /// 此类在提供方便使用的异步方法的基础上，封装了新线程的 CurrentPrincipal 与启动线程的同步。
     /// </summary>
     public static class AsyncHelper
     {
+        /// <summary>
+        /// 是否禁用 WrapByCurrentPrinciple 功能。
+        /// </summary>
+        public static bool DisableWrapping { get; set; }
+
         /// <summary>
         /// 一个可监听 “任意开始，最终结束” 的任务管理器。
         /// </summary>
@@ -92,11 +98,6 @@ namespace Rafy.Threading
 
             ThreadPool.QueueUserWorkItem(o => action());
         }
-
-        /// <summary>
-        /// 是否禁用 WrapByCurrentPrinciple 功能。
-        /// </summary>
-        public static bool DisableWrapping { get; set; }
 
         /// <summary>
         /// 这里生成的wrapper会保证，在执行action前后，新开的线程和主线程都使用同一个Principel。
