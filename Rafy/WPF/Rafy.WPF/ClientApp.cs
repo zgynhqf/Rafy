@@ -127,14 +127,13 @@ namespace Rafy.WPF.Shell
         protected override void InitEnvironment()
         {
             DataPortalApi.FakeRemote = true;
-            PrincipalAsyncHelper.DisableWrapping = true;
 
             UIEnvironment.IsWPFUI = true;
-
             RafyEnvironment.DataPortalMode = RafyEnvironment.Configuration.Section.DataPortalProxy == "Local" ?
                 DataPortalMode.ConnectDirectly : DataPortalMode.ThroughService;
 
             //客户端所有线程使用一个身份（上下文）；
+            PrincipalAsyncHelper.DisableWrapping = true;
             AppContext.SetProvider(new StaticAppContextProvider());
 
             base.InitEnvironment();
