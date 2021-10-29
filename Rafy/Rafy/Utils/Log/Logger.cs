@@ -67,15 +67,7 @@ namespace Rafy
             catch { }
         }
 
-        /// <summary>
-        /// 记录 Sql 执行过程。
-        /// </summary>
-        /// <param name="sql">The SQL.</param>
-        /// <param name="parameters">The parameters.</param>
-        /// <param name="result">The result.</param>
-        /// <param name="connectionSchema">The connection schema.</param>
-        /// <param name="connection">The connection.</param>
-        public static void LogDbAccessed(string sql, IDbDataParameter[] parameters, object result, DbConnectionSchema connectionSchema, IDbConnection connection)
+        internal static void LogDbAccessed(string sql, IDbDataParameter[] parameters, object result, DbConnectionSchema connectionSchema, IDbConnection connection)
         {
             try
             {
