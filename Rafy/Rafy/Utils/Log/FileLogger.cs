@@ -161,6 +161,11 @@ StockTrace：
                 content.AppendLine()
                     .Append("Rows affected: ").Append(result).Append(";");
             }
+            else if (result is Exception)
+            {
+                content.AppendLine()
+                    .Append("Exception occurred: ").Append((result as Exception).Message).Append(";");
+            }
 
             lock (this)
             {

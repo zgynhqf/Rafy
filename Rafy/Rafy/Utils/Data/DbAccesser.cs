@@ -548,19 +548,23 @@ namespace Rafy.Data
                 this.LogDbAccessing(sql, parameters);
 
                 da.Fill(ds);
+                this.LogDbAccessed(sql, parameters, ds);
 
                 return ds.Tables[0];
             }
+            catch (Exception e)
+            {
+                this.LogDbAccessed(sql, parameters, e);
+                throw e;
+            }
             finally
             {
-                this.LogDbAccessed(sql, parameters, ds);
                 this.MakeConnectionClose();
             }
         }
 
         private DataRow DoQueryDataRow(string sql, CommandType type, params IDbDataParameter[] parameters)
         {
-            DataRow res = null;
 
             try
             {
@@ -568,16 +572,19 @@ namespace Rafy.Data
 
                 using (DataTable dt = this.DoQueryDataTable(sql, type, parameters))
                 {
+                    this.LogDbAccessed(sql, parameters, dt);
+
                     if (dt != null && dt.Rows.Count > 0)
                     {
-                        res = dt.Rows[0];
+                        return dt.Rows[0];
                     }
-                    return res;
+                    return null;
                 }
             }
-            finally
+            catch (Exception e)
             {
-                this.LogDbAccessed(sql, parameters, res);
+                this.LogDbAccessed(sql, parameters, e);
+                throw e;
             }
         }
 
@@ -587,12 +594,11 @@ namespace Rafy.Data
 
             if (this._connection.State == ConnectionState.Closed) { this._connection.Open(); }
 
-            IDataReader reader = null;
-
             try
             {
                 this.LogDbAccessing(sql, parameters);
 
+                IDataReader reader = null;
                 if (closeConnection)
                 {
                     reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
@@ -601,31 +607,36 @@ namespace Rafy.Data
                 {
                     reader = cmd.ExecuteReader();
                 }
-            }
-            finally
-            {
                 this.LogDbAccessed(sql, parameters, reader);
+                return reader;
             }
-
-            return reader;
+            catch (Exception e)
+            {
+                this.LogDbAccessed(sql, parameters, e);
+                throw e;
+            }
         }
 
         private object DoQueryValue(string sql, CommandType type, params IDbDataParameter[] parameters)
         {
             IDbCommand cmd = this.PrepareCommand(sql, type, parameters);
 
-            object res = null;
             try
             {
                 this.MakeConnectionOpen();
                 this.LogDbAccessing(sql, parameters);
 
-                res = cmd.ExecuteScalar();
+                var res = cmd.ExecuteScalar();
+                this.LogDbAccessed(sql, parameters, res);
                 return res;
+            }
+            catch (Exception e)
+            {
+                this.LogDbAccessed(sql, parameters, e);
+                throw e;
             }
             finally
             {
-                this.LogDbAccessed(sql, parameters, res);
                 this.MakeConnectionClose();
             }
         }
@@ -649,11 +660,16 @@ namespace Rafy.Data
                 this.LogDbAccessing(procedureName, parameters);
 
                 rowsAffected = command.ExecuteNonQuery();
+                this.LogDbAccessed(procedureName, parameters, rowsAffected);
                 return Convert.ToInt32(paraReturn.Value);
+            }
+            catch (Exception e)
+            {
+                this.LogDbAccessed(procedureName, parameters, e);
+                throw e;
             }
             finally
             {
-                this.LogDbAccessed(procedureName, parameters, rowsAffected);
                 this.MakeConnectionClose();
             }
         }
@@ -662,19 +678,23 @@ namespace Rafy.Data
         {
             IDbCommand command = this.PrepareCommand(sql, CommandType.Text, parameters);
 
-            var rowsAffected = 0;
             try
             {
                 this.MakeConnectionOpen();
                 this.LogDbAccessing(sql, parameters);
 
-                rowsAffected = command.ExecuteNonQuery();
+                var rowsAffected = command.ExecuteNonQuery();
+                this.LogDbAccessed(sql, parameters, rowsAffected);
 
                 return rowsAffected;
             }
+            catch (Exception e)
+            {
+                this.LogDbAccessed(sql, parameters, e);
+                throw e;
+            }
             finally
             {
-                this.LogDbAccessed(sql, parameters, rowsAffected);
                 this.MakeConnectionClose();
             }
         }
