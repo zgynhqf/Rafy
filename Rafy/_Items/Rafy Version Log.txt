@@ -10,11 +10,13 @@
  * 
 *******************************************************/
 
-3.83.4065
+3.83.4068
     ★★公布、★重要
         精简代码核心的领域层框架！将 Rafy.dll 分拆为 Rafy.dll 和 Rafy.UI.Dll，把视图、界面层相关的内容，都移植到 Rafy.UI 项目中。
     内部修改
         添加 DbAccesserInterceptor 类型。
+        DataProvider.GetEntityValue 使用 IQuery 来实现。
+        QueryFactory 可扩展。
 
 3.82.4032
     ★重要、重构

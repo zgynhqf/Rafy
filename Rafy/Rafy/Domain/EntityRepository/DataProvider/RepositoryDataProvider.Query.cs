@@ -412,7 +412,17 @@ namespace Rafy.Domain
         /// <param name="entityId"></param>
         /// <param name="property"></param>
         /// <returns></returns>
-        public abstract LiteDataTable GetEntityValue(object entityId, string property);
+        public virtual LiteDataTable GetEntityValue(object entityId, string property)
+        {
+            var mp = _repository.EntityMeta.ManagedProperties.GetNonReadOnlyCompiledProperties().Find(property, true);
+
+            var source = f.Table(_repository);
+            var selection = source.Column(mp);
+            var where = f.Constraint(source.IdColumn, entityId);
+            var query = f.Query(source, selection, where);
+
+            return this.QueryTable(query);
+        }
 
         #region 提供给子类的查询接口
 

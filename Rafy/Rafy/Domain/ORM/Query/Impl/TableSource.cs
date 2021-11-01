@@ -99,6 +99,8 @@ namespace Rafy.Domain.ORM.Query.Impl
 
         /// <summary>
         /// 返回指定的用于查询的列，不包含 LOB 列。
+        /// 注意！
+        /// 使用此方法生成列之后，不能再修改表的别名，因为这个方法有可能使用的是缓存的列，此时缓存列对应的表的列名无法修改！
         /// </summary>
         /// <param name="readProperties">需要返回的列所对应的属性的列表。如果为 null，表示查询全部属性。</param>
         /// <returns></returns>
@@ -133,7 +135,7 @@ namespace Rafy.Domain.ORM.Query.Impl
                 var dbColumn = _tableInfoColumns[index];
 
                 //如果表、列都没有别名的情况下，不再生成额外的对象，直接使用元数据对象。
-                if (this.Alias == null && aliasNeed == null && tryUseMeta) return dbColumn;
+                if (this.Alias == null && aliasNeed == null && tryUseMeta && this.Name == dbColumn.Table.Name) return dbColumn;
 
                 //如果别名不同，也需要生成一个新的 Column，这时，只存储最近一个使用 Column。
                 item = NewColumn(dbColumn, aliasNeed);

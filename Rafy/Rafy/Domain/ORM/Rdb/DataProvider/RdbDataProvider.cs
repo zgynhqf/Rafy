@@ -180,34 +180,6 @@ namespace Rafy.Domain.ORM
         #region 查询
 
         /// <summary>
-        /// 子类重写此方法，来实现自己的 GetEntityValue 方法的数据层代码。
-        /// </summary>
-        /// <param name="entityId"></param>
-        /// <param name="property"></param>
-        /// <returns></returns>
-        public override LiteDataTable GetEntityValue(object entityId, string property)
-        {
-            var table = this.DbTable;
-            var idColumn = table.PKColumn.Name;
-            var column = table.Translate(property);
-
-            var sql = new StringWriter();
-            sql.Write("SELECT ");
-            sql.AppendQuote(table, column);
-            sql.Write(" FROM ");
-            sql.AppendQuoteName(table);
-            sql.Write(" WHERE ");
-            sql.AppendQuote(table, idColumn);
-            sql.Write(" = {0}");
-
-            return this.QueryTable(new TableQueryArgs
-            {
-                FormattedSql = sql.ToString(),
-                Parameters = new object[] { entityId },
-            });
-        }
-
-        /// <summary>
         /// QueryTable 方法完成后调用。
         /// 
         /// 子类可重写此方法来实现查询完成后的数据修整工具。

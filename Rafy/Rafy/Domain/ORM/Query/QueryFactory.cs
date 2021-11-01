@@ -28,9 +28,9 @@ namespace Rafy.Domain.ORM.Query
     /// </summary>
     public class QueryFactory
     {
-        public static readonly QueryFactory Instance = new QueryFactory();
+        public static QueryFactory Instance = new QueryFactory();
 
-        private QueryFactory() { }
+        protected QueryFactory() { }
 
         /// <summary>
         /// 为指定的仓库构造一个查询。
@@ -75,7 +75,7 @@ namespace Rafy.Domain.ORM.Query
         /// </param>
         /// <param name="isDistinct">是否需要查询不同的结果。</param>
         /// <returns></returns>
-        public IQuery Query(
+        public virtual IQuery Query(
             ISource from,
             IQueryNode selection = null,
             IConstraint where = null,
@@ -120,7 +120,7 @@ namespace Rafy.Domain.ORM.Query
         /// </summary>
         /// <param name="nodes">所有数组中的项。</param>
         /// <returns></returns>
-        public IArray Array(IEnumerable<IQueryNode> nodes)
+        public virtual IArray Array(IEnumerable<IQueryNode> nodes)
         {
             IArray array = new ArrayNode();
 
@@ -134,7 +134,7 @@ namespace Rafy.Domain.ORM.Query
         /// </summary>
         /// <param name="table">如果本属性为空，表示选择所有数据源的所有属性；否则表示选择指定数据源的所有属性。</param>
         /// <returns></returns>
-        public ISelectAll SelectAll(ITableSource table = null)
+        public virtual ISelectAll SelectAll(ITableSource table = null)
         {
             ISelectAll res = new SelectAll();
             res.Source = table;
@@ -160,7 +160,7 @@ namespace Rafy.Domain.ORM.Query
         /// <param name="alias">同一个实体仓库可以表示多个不同的数据源。这时，需要这些不同的数据源指定不同的别名。</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">entityRepository</exception>
-        public ITableSource Table(IRepository repository, string alias = null)
+        public virtual ITableSource Table(IRepository repository, string alias = null)
         {
             if (repository == null) throw new ArgumentNullException("entityRepository");
 
@@ -224,7 +224,7 @@ namespace Rafy.Domain.ORM.Query
         /// <param name="op">对比操作符</param>
         /// <param name="value">要对比的值。</param>
         /// <returns></returns>
-        public IConstraint Constraint(
+        public virtual IConstraint Constraint(
             IColumnNode column,
             PropertyOperator op,
             object value
@@ -263,7 +263,7 @@ namespace Rafy.Domain.ORM.Query
         /// or
         /// rightProperty
         /// </exception>
-        public IConstraint Constraint(
+        public virtual IConstraint Constraint(
             IColumnNode leftColumn,
             PropertyOperator op,
             IColumnNode rightColumn
@@ -285,7 +285,7 @@ namespace Rafy.Domain.ORM.Query
         /// <param name="query">要检查的查询。</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">query</exception>
-        public IConstraint Exists(IQuery query)
+        public virtual IConstraint Exists(IQuery query)
         {
             if (query == null) throw new ArgumentNullException("query");
 
@@ -300,7 +300,7 @@ namespace Rafy.Domain.ORM.Query
         /// <param name="constraint">需要被取反的条件。</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">constraint</exception>
-        public IConstraint Not(IConstraint constraint)
+        public virtual IConstraint Not(IConstraint constraint)
         {
             if (constraint == null) throw new ArgumentNullException("constraint");
 
@@ -321,7 +321,7 @@ namespace Rafy.Domain.ORM.Query
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">text</exception>
-        public ILiteral Literal(string formattedSql, params object[] parameters)
+        public virtual ILiteral Literal(string formattedSql, params object[] parameters)
         {
             if (string.IsNullOrEmpty(formattedSql)) throw new ArgumentNullException("text");
 
@@ -399,7 +399,7 @@ namespace Rafy.Domain.ORM.Query
         /// or
         /// right
         /// </exception>
-        public IConstraint Binary(
+        public virtual IConstraint Binary(
             IConstraint left,
             BinaryOperator op,
             IConstraint right
@@ -514,7 +514,7 @@ namespace Rafy.Domain.ORM.Query
         /// or
         /// condition
         /// </exception>
-        public IJoin Join(
+        public virtual IJoin Join(
             ISource left,
             ITableSource right,
             IConstraint condition,
@@ -544,7 +544,7 @@ namespace Rafy.Domain.ORM.Query
         /// or
         /// alias
         /// </exception>
-        public ISubQuery SubQuery(IQuery query, string alias)
+        public virtual ISubQuery SubQuery(IQuery query, string alias)
         {
             if (query == null) throw new ArgumentNullException("query");
             if (string.IsNullOrEmpty(alias)) throw new ArgumentNullException("alias");
@@ -562,7 +562,7 @@ namespace Rafy.Domain.ORM.Query
         /// <param name="direction">使用这个方向进行排序。</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">property</exception>
-        public IOrderBy OrderBy(IColumnNode property, OrderDirection direction = OrderDirection.Ascending)
+        public virtual IOrderBy OrderBy(IColumnNode property, OrderDirection direction = OrderDirection.Ascending)
         {
             if (property == null) throw new ArgumentNullException("property");
 

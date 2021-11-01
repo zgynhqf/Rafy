@@ -193,11 +193,6 @@ namespace Rafy.Domain
                 return Enumerable.Empty<Entity>();
             }
 
-            public override LiteDataTable GetEntityValue(object entityId, string property)
-            {
-                throw new NotImplementedException();
-            }
-
             /// <summary>
             /// 从指定的对象中拷贝所有数据到另一对象中。
             /// 

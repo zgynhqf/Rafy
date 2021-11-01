@@ -93,6 +93,18 @@ namespace Rafy.Domain.ORM
 
         public abstract SqlGenerator CreateSqlGenerator();
 
+        /// <summary>
+        /// 此方法用于调试。
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        internal string DebugSql(IQueryNode node)
+        {
+            var generator = this.CreateSqlGenerator();
+            generator.Generate(node as ISqlNode);
+            return generator.Sql.ToString();
+        }
+
         #region 属性 及 元数据
 
         /// <summary>
