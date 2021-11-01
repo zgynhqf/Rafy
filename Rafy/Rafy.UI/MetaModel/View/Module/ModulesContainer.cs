@@ -83,21 +83,21 @@ namespace Rafy.MetaModel
             return null;
         }
 
-        ///// <summary>
-        ///// 找到第一个实体类型为指定类型的模块
-        ///// </summary>
-        ///// <param name="entityType"></param>
-        ///// <returns></returns>
-        //public ModuleMeta FindModule(Type entityType)
-        //{
-        //    foreach (var root in this._roots)
-        //    {
-        //        var m = this.FindModule(root, entityType);
-        //        if (m != null) return m;
-        //    }
+        /// <summary>
+        /// 找到第一个实体类型为指定类型的模块
+        /// </summary>
+        /// <param name="entityType"></param>
+        /// <returns></returns>
+        public ModuleMeta FindModule(Type entityType)
+        {
+            foreach (var root in this._roots)
+            {
+                var m = this.FindModule(root, entityType);
+                if (m != null) return m;
+            }
 
-        //    return null;
-        //}
+            return null;
+        }
 
         /// <summary>
         /// 直接获得某一个模块。
@@ -144,17 +144,17 @@ namespace Rafy.MetaModel
             return null;
         }
 
-        //private ModuleMeta FindModule(ModuleMeta module, Type entityType)
-        //{
-        //    if (module.EntityType == entityType) { return module; }
+        private ModuleMeta FindModule(ModuleMeta module, Type entityType)
+        {
+            if (module.EntityType == entityType) { return module; }
 
-        //    foreach (var child in module.Children)
-        //    {
-        //        var m = this.FindModule(child, entityType);
-        //        if (m != null) return m;
-        //    }
+            foreach (var child in module.Children)
+            {
+                var m = this.FindModule(child, entityType);
+                if (m != null) return m;
+            }
 
-        //    return null;
-        //}
+            return null;
+        }
     }
 }
