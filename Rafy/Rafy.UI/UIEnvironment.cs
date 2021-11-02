@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using Rafy.ComponentModel;
 
 namespace Rafy.UI
 {
@@ -70,6 +71,7 @@ namespace Rafy.UI
                 {
                     foreach (var type in hierachy)
                     {
+                        RafyEnvironment.LoadPlugin(type.Assembly);
                         List<ViewConfig> configList = null;
                         if (_configurations.TryGetValue(type, out configList))
                         {
@@ -82,6 +84,7 @@ namespace Rafy.UI
                 {
                     foreach (var type in hierachy)
                     {
+                        RafyEnvironment.LoadPlugin(type.Assembly);
                         var key = new ExtendTypeKey { EntityType = type, ExtendView = extendView };
 
                         List<ViewConfig> configList = null;
@@ -98,54 +101,77 @@ namespace Rafy.UI
             {
                 if (_extendConfigurations == null)
                 {
-                    /*********************** 代码块解释 *********************************
-                     * 查找所有 EntityConfig 类型，并根据是否为扩展视图的配置类，
-                     * 分别加入到两个不同的列表中。
-                    **********************************************************************/
-
-                    var defaultRepo = new Dictionary<Type, List<ViewConfig>>(100);
-                    var extendRepo = new Dictionary<ExtendTypeKey, List<ViewConfig>>(100);
-
-                    //视图配置可以放在所有插件中。
-                    var allPlugins = RafyEnvironment.Plugins;
-                    for (int index = 0, c = allPlugins.Count; index < c; index++)
+                    lock (this)
                     {
-                        var plugin = allPlugins[index];
-                        foreach (var type in plugin.Assembly.GetTypes())
+                        if (_extendConfigurations == null)
                         {
-                            if (!type.IsGenericTypeDefinition && !type.IsAbstract && _viewConfigType.IsAssignableFrom(type))
-                            {
-                                var config = Activator.CreateInstance(type) as ViewConfig;
-                                config.PluginIndex = index;
-                                config.InheritanceCount = TypeHelper.GetHierarchy(type, typeof(ManagedPropertyObject)).Count();
-
-                                List<ViewConfig> typeList = null;
-
-                                if (config.ExtendView == null)
-                                {
-                                    if (!defaultRepo.TryGetValue(config.EntityType, out typeList))
-                                    {
-                                        typeList = new List<ViewConfig>(2);
-                                        defaultRepo.Add(config.EntityType, typeList);
-                                    }
-                                }
-                                else
-                                {
-                                    var key = new ExtendTypeKey { EntityType = config.EntityType, ExtendView = config.ExtendView };
-                                    if (!extendRepo.TryGetValue(key, out typeList))
-                                    {
-                                        typeList = new List<ViewConfig>(2);
-                                        extendRepo.Add(key, typeList);
-                                    }
-                                }
-
-                                typeList.Add(config);
-                            }
+                            InitConfigurationsCore();
                         }
                     }
+                }
+            }
 
-                    _configurations = defaultRepo;
-                    _extendConfigurations = extendRepo;
+            private void InitConfigurationsCore()
+            {
+                /*********************** 代码块解释 *********************************
+                * 查找所有 EntityConfig 类型，并根据是否为扩展视图的配置类，
+                * 分别加入到两个不同的列表中。
+                **********************************************************************/
+
+                _configurations = new Dictionary<Type, List<ViewConfig>>(100);
+                _extendConfigurations = new Dictionary<ExtendTypeKey, List<ViewConfig>>(100);
+
+                //视图配置可以放在所有插件中。
+                var allPlugins = RafyEnvironment.Plugins;
+                for (int index = 0, c = allPlugins.Count; index < c; index++)
+                {
+                    var plugin = allPlugins[index];
+                    AddByPlugin(plugin);
+                }
+
+                RafyEnvironment.RuntimePluginLoaded += RafyEnvironment_RuntimePluginLoaded;
+            }
+
+            private void RafyEnvironment_RuntimePluginLoaded(object sender, RafyEnvironment.PluginEventArgs e)
+            {
+                lock (this)
+                {
+                    AddByPlugin(e.Plugin);
+                }
+            }
+
+            private void AddByPlugin(IPlugin plugin)
+            {
+                foreach (var type in plugin.Assembly.GetTypes())
+                {
+                    if (!type.IsGenericTypeDefinition && !type.IsAbstract && _viewConfigType.IsAssignableFrom(type))
+                    {
+                        var config = Activator.CreateInstance(type) as ViewConfig;
+                        config.PluginIndex = RafyEnvironment.Plugins.IndexOf(plugin);
+                        config.InheritanceCount = TypeHelper.GetHierarchy(type, typeof(ManagedPropertyObject)).Count();
+
+                        List<ViewConfig> typeList = null;
+
+                        if (config.ExtendView == null)
+                        {
+                            if (!_configurations.TryGetValue(config.EntityType, out typeList))
+                            {
+                                typeList = new List<ViewConfig>(2);
+                                _configurations.Add(config.EntityType, typeList);
+                            }
+                        }
+                        else
+                        {
+                            var key = new ExtendTypeKey { EntityType = config.EntityType, ExtendView = config.ExtendView };
+                            if (!_extendConfigurations.TryGetValue(key, out typeList))
+                            {
+                                typeList = new List<ViewConfig>(2);
+                                _extendConfigurations.Add(key, typeList);
+                            }
+                        }
+
+                        typeList.Add(config);
+                    }
                 }
             }
 
