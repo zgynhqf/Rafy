@@ -95,7 +95,7 @@ namespace Rafy.ManagedProperty
 
         /// <summary>
         /// 返回属性是否处于禁用状态。
-        /// 属性一旦进入禁用状态，则对这个属性调用 Get、Set、Load 都将会出错，除非重新解禁。
+        /// 属性一旦进入禁用状态，则对这个属性调用 Get、Set 都将会出错，除非重新解禁。
         /// </summary>
         public bool IsDisabled
         {

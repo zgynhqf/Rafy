@@ -27,7 +27,7 @@ namespace Rafy.Domain.ORM
         /// 默认为 false，表示如果在查询时，Sql 中没有给出实体需要映射的列时，默认会禁用这些属性。
         /// 可以通过配置此属性为 true，来关闭此功能。
         /// 注意：
-        /// 一旦关闭此功能，所有未查询出来的列所对应的属性，都被处于可用状态。这也意味着，这些属性的值虽然不可用，但是下次保存实体时，这些属性的值可能会被保存到数据库中。
+        /// 一旦关闭此功能，所有未查询出来的列所对应的属性，都被处于可用状态。这也意味着，这些属性的值虽然是之前没有被持久化的，但是下次保存实体时，这些新的属性值都会被保存到数据库中。
         /// 您也可以通过调用 <see cref="ManagedPropertyObject.Disable(ManagedProperty.IManagedProperty, bool)"/> 方法，来手动启用实体的指定属性。
         /// </summary>
         public static bool EnablePropertiesIfNotFoundInSqlQuery { get; set; }

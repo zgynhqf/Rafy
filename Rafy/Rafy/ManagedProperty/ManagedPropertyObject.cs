@@ -505,7 +505,6 @@ namespace Rafy.ManagedProperty
         /// <summary>
         /// 禁用或解禁某个属性。
         /// 属性一旦进入禁用状态，则对这个属性调用 Get、Set 都将会抛出异常；除非重新解禁。
-        /// 另外，只读属性因为有可能依赖了被禁用的属性，所以只读属性的依赖性被禁用时，只读属性也自动被禁用。
         /// </summary>
         /// <param name="property"></param>
         /// <param name="value"></param>
