@@ -191,7 +191,7 @@ namespace Rafy.Domain
         public IRepository GetRepository()
         {
             var repo = this.FindRepository();
-            if (repo == null) throw new InvalidProgramException(string.Format("类型 {0} 没有对应的仓库类。", this.GetType().Name));
+            if (repo == null) throw new InvalidProgramException($"类型 {this.GetType().Name} 没有对应的仓库类。");
 
             return repo;
         }

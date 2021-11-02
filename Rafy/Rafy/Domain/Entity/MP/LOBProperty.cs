@@ -25,14 +25,9 @@ namespace Rafy.Domain
     /// <remarks>大对象属性的查询，是使用懒加载的方式。</remarks>
     /// </summary>
     /// <typeparam name="TPropertyType">属性的类型，只支持两种类型：String，Byte[]</typeparam>
-    public sealed class LOBProperty<TPropertyType> : Property<TPropertyType>, ILOBProperty, ILOBPropertyInternal
+    public sealed class LOBProperty<TPropertyType> : Property<TPropertyType>, ILOBProperty
         where TPropertyType : class
     {
-        /// <summary>
-        /// 为了提高性能，在这个属性上添加一个 IRepository 的缓存字段。
-        /// </summary>
-        private IRepository _defaultLoader;
-
         internal LOBProperty(Type ownerType, Type declareType, string propertyName, ManagedPropertyMetadata<TPropertyType> defaultMeta) : base(ownerType, declareType, propertyName, defaultMeta) { }
 
         internal LOBProperty(Type ownerType, string propertyName, ManagedPropertyMetadata<TPropertyType> defaultMeta) : base(ownerType, propertyName, defaultMeta) { }
@@ -46,19 +41,5 @@ namespace Rafy.Domain
         /// LOB属性的类型
         /// </summary>
         public LOBType LOBType { get; internal set; }
-
-        object ILOBPropertyInternal.LoadLOBValue(object entityId)
-        {
-            if (_defaultLoader == null)
-            {
-                _defaultLoader = RepositoryFactoryHost.Factory.FindByEntity(this.OwnerType);
-            }
-            return _defaultLoader.GetEntityValue(entityId, this);
-        }
-    }
-
-    internal interface ILOBPropertyInternal : ILOBProperty
-    {
-        object LoadLOBValue(object entityId);
     }
 }

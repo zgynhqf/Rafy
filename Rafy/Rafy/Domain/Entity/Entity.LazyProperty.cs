@@ -387,7 +387,8 @@ namespace Rafy.Domain
         {
             if (!this.IsNew && !this.HasLocalValue(property))
             {
-                var value = (property as ILOBPropertyInternal).LoadLOBValue(this.Id);
+                var repo = this.GetRepository();
+                var value = repo.GetEntityValue(this.Id, property);
                 base.LoadProperty(property, value);
                 this.Disable(property, false);
                 return value;
