@@ -59,7 +59,7 @@ namespace Rafy.Domain.ORM
 
                 var columnName = identifierProvider.Prepare(columnMeta.ColumnName);
 
-                var dbType = columnMeta.DbType ?? dbTypeConverter.FromClrType(epm.PropertyType); ;
+                var dbType = columnMeta.DbType ?? dbTypeConverter.FromClrType(epm.PropertyType);
                 var column = new RdbColumnInfo(columnName, epm, columnMeta, table, dbType);
 
                 if (columnMeta.IsPrimaryKey)

@@ -225,7 +225,7 @@ namespace Rafy.MetaModel
         {
             if (!_parentPropertyCacheLoaded)
             {
-                var result = this.EntityProperties
+                var result = _entityProperties
                     .Where(p => p.ReferenceInfo != null && p.ReferenceInfo.Type == ReferenceType.Parent).ToArray();
 
                 if (result.Length > 1) throw new InvalidOperationException(string.Format("类 {0} 中定义了两个父引用属性。（一个类中只能定义一个父引用属性。）", this.Name));
@@ -245,10 +245,9 @@ namespace Rafy.MetaModel
         /// <returns></returns>
         public EntityPropertyMeta Property(IManagedProperty property)
         {
-            var list = this.EntityProperties;
-            for (int i = 0, c = list.Count; i < c; i++)
+            for (int i = 0, c = _entityProperties.Count; i < c; i++)
             {
-                var item = list[i];
+                var item = _entityProperties[i];
                 if (item.ManagedProperty == property)
                 {
                     return item;
@@ -258,18 +257,17 @@ namespace Rafy.MetaModel
         }
 
         /// <summary>
-        /// 根据名字查询实体属性（忽略大小写）
+        /// 根据名字查询实体属性
         /// 如果没有找到，则返回 null。
         /// </summary>
         /// <param name="property"></param>
         /// <returns></returns>
         public EntityPropertyMeta Property(string property)
         {
-            var list = this.EntityProperties;
-            for (int i = 0, c = list.Count; i < c; i++)
+            for (int i = 0, c = _entityProperties.Count; i < c; i++)
             {
-                var item = list[i];
-                if (item.Name.EqualsIgnoreCase(property))
+                var item = _entityProperties[i];
+                if (item.Name == property)
                 {
                     return item;
                 }
@@ -284,10 +282,9 @@ namespace Rafy.MetaModel
         /// <returns></returns>
         public ChildrenPropertyMeta ChildrenProperty(IManagedProperty property)
         {
-            var list = this.ChildrenProperties;
-            for (int i = 0, c = list.Count; i < c; i++)
+            for (int i = 0, c = _childrenProperties.Count; i < c; i++)
             {
-                var item = list[i];
+                var item = _childrenProperties[i];
                 if (item.ManagedProperty == property)
                 {
                     return item;
@@ -297,18 +294,17 @@ namespace Rafy.MetaModel
         }
 
         /// <summary>
-        /// 根据名字查询组合子属性（忽略大小写）
+        /// 根据名字查询组合子属性
         /// 如果没有找到，则返回 null。
         /// </summary>
         /// <param name="property"></param>
         /// <returns></returns>
         public ChildrenPropertyMeta ChildrenProperty(string property)
         {
-            var list = this.ChildrenProperties;
-            for (int i = 0, c = list.Count; i < c; i++)
+            for (int i = 0, c = _childrenProperties.Count; i < c; i++)
             {
-                var item = list[i];
-                if (item.Name.EqualsIgnoreCase(property))
+                var item = _childrenProperties[i];
+                if (item.Name == property)
                 {
                     return item;
                 }
