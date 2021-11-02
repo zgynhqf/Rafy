@@ -70,7 +70,7 @@ namespace Rafy.Domain
 
             if (this.IsNew || loadEmptyData)
             {
-                var listRepository = RepositoryFactoryHost.Factory.FindByEntity(listProperty.ListEntityType);
+                var listRepository = RepositoryFactoryHost.Factory.FindByEntity(listProperty.ListEntityType, true);
                 data = listRepository.NewList();
             }
             else
@@ -83,7 +83,7 @@ namespace Rafy.Domain
                 }
                 else
                 {
-                    var listRepository = RepositoryFactoryHost.Factory.FindByEntity(listProperty.ListEntityType) as IRepositoryInternal;
+                    var listRepository = RepositoryFactoryHost.Factory.FindByEntity(listProperty.ListEntityType, true) as IRepositoryInternal;
                     data = listRepository.GetLazyListByParent(this);
                 }
             }

@@ -32,10 +32,10 @@ namespace Rafy.Domain
         /// 用于查找指定实体的仓库。
         /// </summary>
         /// <returns></returns>
-        public static EntityRepository Find(Type entityType)
+        public static EntityRepository Find(Type entityType, bool throwIfNotfound = true)
         {
             var er = RepositoryFactoryHost.Factory.FindByEntity(entityType) as EntityRepository;
-            if (er == null) throw new InvalidProgramException($"无法初始化实体 {entityType} 对应的仓库，可能是其未正确添加实体标签。");
+            if (throwIfNotfound && er == null) throw new InvalidOperationException($"无法初始化实体 {entityType} 对应的仓库，可能是其未正确添加实体标签。");
             return er;
         }
 
@@ -69,7 +69,7 @@ namespace Rafy.Domain
         public static EntityRepository ResolveInstance(Type repositoryType)
         {
             var er = RepositoryFactoryHost.Factory.Find(repositoryType) as EntityRepository;
-            if (er == null) throw new InvalidProgramException($"无法初始化仓库 {repositoryType}，可能是其对应的实体未正确添加实体标签。");
+            if (er == null) throw new InvalidOperationException($"无法初始化仓库 {repositoryType}，可能是其对应的实体未正确添加实体标签。");
             return er;
         }
 

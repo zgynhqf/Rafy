@@ -102,7 +102,7 @@ namespace Rafy.Domain
             //通过默认的 CacheById 方法获取实体。
             if (this._defaultLoader == null)
             {
-                this._defaultLoader = RepositoryFactoryHost.Factory.FindByEntity(this.RefEntityType);
+                this._defaultLoader = RepositoryFactoryHost.Factory.FindByEntity(this.RefEntityType, true);
             }
             return this._defaultLoader.CacheById(id);
         }

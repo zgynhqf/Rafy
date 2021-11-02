@@ -185,7 +185,7 @@ namespace Rafy.Domain.ORM.Query.Impl
                 var f = QueryFactory.Instance;
 
                 var refEntityType = refProperty.RefEntityType;
-                var refRepo = RepositoryFactoryHost.Factory.FindByEntity(refEntityType);
+                var refRepo = RepositoryFactoryHost.Factory.FindByEntity(refEntityType, true);
                 var pkTable = f.Table(refRepo, QueryGenerationContext.Get(this).NextTableAlias());
 
                 refTableSource = AddJoinTable(propertyOwner, refProperty, pkTable, pkTable);

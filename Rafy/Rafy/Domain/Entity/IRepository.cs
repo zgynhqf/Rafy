@@ -283,15 +283,17 @@ namespace Rafy.Domain
         /// 用于查找指定实体的仓库。
         /// </summary>
         /// <param name="entityType"></param>
+        /// <param name="throwIfNotfound"></param>
         /// <returns></returns>
-        IRepository FindByEntity(Type entityType);
+        IRepository FindByEntity(Type entityType, bool throwIfNotfound = false);
 
         /// <summary>
         /// 通过仓库类型查找指定的仓库。
         /// </summary>
         /// <param name="repoType"></param>
+        /// <param name="throwIfNotfound"></param>
         /// <returns></returns>
-        IRepository Find(Type repoType);
+        IRepository Find(Type repoType, bool throwIfNotfound = false);
     }
 
     /// <summary>

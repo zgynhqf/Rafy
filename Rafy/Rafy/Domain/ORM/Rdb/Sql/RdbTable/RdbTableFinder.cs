@@ -37,7 +37,7 @@ namespace Rafy.Domain.ORM
         /// <returns></returns>
         internal static RdbTable TableFor(Type entityType)
         {
-            var repo = RepositoryFactoryHost.Factory.FindByEntity(entityType);
+            var repo = RepositoryFactoryHost.Factory.FindByEntity(entityType, true);
             return RdbDataProvider.Get(repo).DbTable;
         }
 

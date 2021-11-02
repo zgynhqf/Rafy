@@ -34,7 +34,7 @@ namespace Rafy.Domain.ORM.Query
         /// <returns></returns>
         public static ITableSource FindTable(this ISource source, Type entityType, string alias = null)
         {
-            var repo = RepositoryFactoryHost.Factory.FindByEntity(entityType);
+            var repo = RepositoryFactoryHost.Factory.FindByEntity(entityType, true);
             return source.FindTable(repo, alias);
         }
 

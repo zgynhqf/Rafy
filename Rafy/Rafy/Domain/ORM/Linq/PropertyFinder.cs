@@ -116,7 +116,7 @@ namespace Rafy.Domain.ORM.Linq
             {
                 //如果已经有引用属性在列表中，说明上层使用了 A.B.C.Name 这样的语法。
                 //这时，Name 应该是 C 这个实体的值属性。
-                ownerRepo = RepositoryFactoryHost.Factory.FindByEntity(_lastJoinRefResult.RefEntityType);
+                ownerRepo = RepositoryFactoryHost.Factory.FindByEntity(_lastJoinRefResult.RefEntityType, true);
                 ownerTable = _lastJoinTable;
                 _lastJoinRefResult = null;
                 _lastJoinTable = null;

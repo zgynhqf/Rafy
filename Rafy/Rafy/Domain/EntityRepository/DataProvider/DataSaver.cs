@@ -643,7 +643,7 @@ namespace Rafy.Domain
         {
             if (propertyOwner == null) propertyOwner = refProperty.OwnerType;
 
-            var refRepo = RepositoryFactoryHost.Factory.FindByEntity(propertyOwner);
+            var refRepo = RepositoryFactoryHost.Factory.FindByEntity(propertyOwner, true);
             var saver = (refRepo.DataProvider as IRepositoryDataProviderInternal).DataSaver;
             saver.DeleteRefCore(entity, refProperty);
         }

@@ -58,8 +58,9 @@ namespace Rafy.Domain
         /// 通过仓库类型查找指定的仓库。
         /// </summary>
         /// <param name="repositoryType"></param>
+        /// <param name="throwIfNotfound"></param>
         /// <returns></returns>
-        internal IRepositoryInternal Find(Type repositoryType)
+        internal IRepositoryInternal Find(Type repositoryType, bool throwIfNotfound)
         {
             var last = _lastRepository;
             if (last != null && last.GetType() == repositoryType) return last;
@@ -74,7 +75,7 @@ namespace Rafy.Domain
                     {
                         var matrix = EntityMatrix.FindByRepository(repositoryType);
                         var entityType = matrix.EntityType;
-                        result = this.FindByEntity(entityType) as EntityRepository;
+                        result = this.FindByEntity(entityType, throwIfNotfound) as EntityRepository;
 
                         _repoByType.Add(repositoryType, result);
                     }
@@ -91,8 +92,9 @@ namespace Rafy.Domain
         /// 如果还没有创建，则直接创建一个。
         /// </summary>
         /// <param name="entityType"></param>
+        /// <param name="throwIfNotfound"></param>
         /// <returns></returns>
-        internal IRepositoryInternal FindByEntity(Type entityType)
+        internal IRepositoryInternal FindByEntity(Type entityType, bool throwIfNotfound)
         {
             var last = _lastRepository;
             if (last != null && last.EntityType == entityType) return last;
@@ -113,6 +115,13 @@ namespace Rafy.Domain
 
                             _repoByEntityType.Add(entityType, result);
                         }
+                    }
+                }
+                else
+                {
+                    if (throwIfNotfound)
+                    {
+                        throw new InvalidOperationException($"没有找到实体 {entityType.FullName} 对应的仓库，可能是因为该实体没有添加相应的实体标签。");
                     }
                 }
             }
@@ -398,13 +407,13 @@ namespace Rafy.Domain
 
         #endregion
 
-        IRepository IRepositoryFactory.FindByEntity(Type entityType)
+        IRepository IRepositoryFactory.FindByEntity(Type entityType, bool throwIfNotfound)
         {
-            return this.FindByEntity(entityType);
+            return this.FindByEntity(entityType, throwIfNotfound);
         }
-        IRepository IRepositoryFactory.Find(Type repositoryType)
+        IRepository IRepositoryFactory.Find(Type repositoryType, bool throwIfNotfound)
         {
-            return this.Find(repositoryType);
+            return this.Find(repositoryType, throwIfNotfound);
         }
     }
 }

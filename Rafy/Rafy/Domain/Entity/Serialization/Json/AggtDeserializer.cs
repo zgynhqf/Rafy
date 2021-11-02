@@ -371,7 +371,7 @@ namespace Rafy.Domain.Serialization.Json
                 }
                 else
                 {
-                    var listRepository = RepositoryFactoryHost.Factory.FindByEntity(listProperty.ListEntityType);
+                    var listRepository = RepositoryFactoryHost.Factory.FindByEntity(listProperty.ListEntityType, true);
                     list = listRepository.NewList();
                     entity.LoadProperty(listProperty, list);
                 }

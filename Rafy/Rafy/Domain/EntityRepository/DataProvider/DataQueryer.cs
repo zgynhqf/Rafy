@@ -464,7 +464,7 @@ namespace Rafy.Domain
             });
             if (idList.Count > 0)
             {
-                var targetRepo = RepositoryFactoryHost.Factory.FindByEntity(listProperty.ListEntityType);
+                var targetRepo = RepositoryFactoryHost.Factory.FindByEntity(listProperty.ListEntityType, true);
 
                 var allChildren = targetRepo.GetByParentIdList(idList.ToArray());
 
@@ -575,7 +575,7 @@ namespace Rafy.Domain
             {
                 #region 加载所有的引用实体。
 
-                var targetRepo = RepositoryFactoryHost.Factory.FindByEntity(refProperty.RefEntityType);
+                var targetRepo = RepositoryFactoryHost.Factory.FindByEntity(refProperty.RefEntityType, true);
                 var refList = targetRepo.GetByIdList(idList.ToArray());
 
                 //继续递归加载它的贪婪属性。

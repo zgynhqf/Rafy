@@ -95,7 +95,7 @@ namespace Rafy.Domain.ORM.Linq
             if (listProperty == null) throw EntityQueryBuilder.OperationNotSupported(invoker);
 
             //为该列表对应的实体创建表对象、查询对象。
-            var childRepo = RepositoryFactoryHost.Factory.FindByEntity(listProperty.ListEntityType);
+            var childRepo = RepositoryFactoryHost.Factory.FindByEntity(listProperty.ListEntityType, true);
             var childTable = f.Table(childRepo);
             _query = f.Query(
                 from: childTable,
