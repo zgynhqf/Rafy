@@ -184,5 +184,15 @@ namespace RafyUnitTest
         }
 
         #endregion
+
+        protected override void AssertIsTrue(bool value)
+        {
+            Assert.IsTrue(value); 
+        }
+
+        protected override void AssertAreEqual(object value1, object value2)
+        {
+            Assert.AreEqual(value1, value2); 
+        }
     }
 }

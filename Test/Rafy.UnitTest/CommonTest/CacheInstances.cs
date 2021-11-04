@@ -29,7 +29,6 @@ namespace Rafy.Domain.Caching
         /// </summary>
         public static readonly string CACHE_FILE_NAME = "Rafy_Disk_Cache.sdf";
 
-        private static ICache _perHttpRequest;
         private static ICache _disk;
         private static ICache _memoryDisk;
 
@@ -85,9 +84,9 @@ namespace Rafy.Domain.Caching
             }
         }
 
-        /// <summary>
-        /// 获取一个当前 Http 请求的缓存提供者实例。
-        /// </summary>
-        public static ICache PerHttpRequest => _perHttpRequest ?? (_perHttpRequest = new PerHttpRequestCache());
+        ///// <summary>
+        ///// 获取一个当前 Http 请求的缓存提供者实例。
+        ///// </summary>
+        //public static ICache PerHttpRequest => _perHttpRequest ?? (_perHttpRequest = new PerHttpRequestCache());
     }
 }

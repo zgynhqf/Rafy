@@ -46,7 +46,7 @@ namespace RafyUnitTest.ClientTest
             var dlls = UIEnvironment.GetCustomerEntityDlls(false);
             if (dlls.Length > 0)
             {
-                var pathes = new List<string> { 
+                var pathes = new List<string> {
                     "Library", "Module", "Files", "Report"
                 };
 
@@ -55,14 +55,7 @@ namespace RafyUnitTest.ClientTest
 
                 var path = string.Join(";", pathes);
 
-                //ModifyPrivateBinPath
-#if NET45
                 PathHelper.ModifyPrivateBinPath(path);//NetFramework
-#endif
-#if NS2
-                AppDomain.CurrentDomain.SetData("PRIVATE_BINPATH", path);//NetCore
-                AppDomain.CurrentDomain.SetData("BINPATH_PROBE_ONLY", path);//NetCore
-#endif
             }
         }
 

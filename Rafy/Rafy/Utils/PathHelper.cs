@@ -12,7 +12,6 @@
  * 
 *******************************************************/
 
-#if NET45
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,12 +29,16 @@ namespace Rafy.Utils
         /// <param name="path"></param>
         public static void ModifyPrivateBinPath(string path)
         {
+#if NET45
             AppDomain.CurrentDomain.SetData("PRIVATE_BINPATH", path);
             AppDomain.CurrentDomain.SetData("BINPATH_PROBE_ONLY", path);
             var m = typeof(AppDomainSetup).GetMethod("UpdateContextProperty", BindingFlags.NonPublic | BindingFlags.Static);
             var funsion = typeof(AppDomain).GetMethod("GetFusionContext", BindingFlags.NonPublic | BindingFlags.Instance);
             m.Invoke(null, new object[] { funsion.Invoke(AppDomain.CurrentDomain, null), "PRIVATE_BINPATH", path });
+#else
+            AppDomain.CurrentDomain.SetData("PRIVATE_BINPATH", path);//NetCore
+            AppDomain.CurrentDomain.SetData("BINPATH_PROBE_ONLY", path);//NetCore
+#endif     
         }
     }
 }
-#endif

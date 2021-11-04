@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Rafy.Web</RootNamespace>
     <AssemblyName>Rafy.Web</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -157,6 +157,7 @@
     <Compile Include="Services\ServiceInvokerHandler.cs" />
     <Compile Include="WebApp.cs" />
     <Compile Include="WebAppStarter.cs" />
+    <Compile Include="WebOrThreadAppContextProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Rafy.UI\Rafy.UI.csproj">

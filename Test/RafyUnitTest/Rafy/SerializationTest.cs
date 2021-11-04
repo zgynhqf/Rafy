@@ -524,8 +524,7 @@ namespace RafyUnitTest
             {
                 SurrogateSelector = new CustomSurrogateSelector()
             };
-#endif
-#if NS2
+#else
             return SerializationEntityGraph.CreateSerializer(entity.GetRepository().EntityMeta);
 #endif
         }

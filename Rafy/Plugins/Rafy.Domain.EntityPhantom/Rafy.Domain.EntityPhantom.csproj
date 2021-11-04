@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
-    <Version>3.70.3800</Version>
+    <Version>3.84.4080</Version>
     <Authors>Hxy dev group</Authors>
     <Description>Rafy 幽灵数据插件。
 本插件用于为领域实体框架添加‘幽灵’功能（假删除），即在删除数据时，不是真实地在数据库中删除这行记录，而是把该实体的‘幽灵’标识标记为真。</Description>

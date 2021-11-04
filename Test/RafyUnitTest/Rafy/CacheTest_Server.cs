@@ -16,7 +16,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Web;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rafy;
 using Rafy.Domain;
@@ -26,9 +25,7 @@ using Rafy.MetaModel;
 using Rafy.Utils.Caching;
 using UT;
 using Rafy.Data;
-#if NS2
 using Microsoft.AspNetCore.Http;
-#endif
 
 namespace RafyUnitTest
 {
@@ -240,24 +237,10 @@ namespace RafyUnitTest
             Assert.IsTrue(wapper.Items.Count == 0);
         }
 
-#if NET45
-        private HttpContextWrapper MockHttpContext()
-        {
-            var request = new HttpRequest("", "http://www.rafy.org/", "");
-            var writer = new StringWriter();
-            var response = new HttpResponse(writer);
-            var httpContextMock = new HttpContext(request, response);
-            var wapper = new HttpContextWrapper(httpContextMock);
-
-            return wapper;
-        }
-#endif
-#if NS2
-        private DefaultHttpContext MockHttpContext()
+        private HttpContext MockHttpContext()
         {
             var context = new DefaultHttpContext();
             return context;
         }
-#endif
     }
 }

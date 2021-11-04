@@ -1,19 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>netcoreapp2.0;net45</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0</TargetFrameworks>
         <IsPackable>false</IsPackable>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
-        <DefineConstants>NET45</DefineConstants>
-        <DocumentationFile>bin\Debug\net45\Rafy.UnitTest.xml</DocumentationFile>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netcoreapp2.0'">
-        <DefineConstants>NS2</DefineConstants>
-        <DocumentationFile>bin\Debug\netcoreapp2.0\Rafy.UnitTest.xml</DocumentationFile>
+        <GenerateDocumentationFile>True</GenerateDocumentationFile>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -60,23 +51,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
-        <PackageReference Include="MSTest.TestAdapter" Version="1.1.18" />
-        <PackageReference Include="MSTest.TestFramework" Version="1.1.18" />
-    </ItemGroup>
-
-    <ItemGroup>
         <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.EntityPhantom\Rafy.Domain.EntityPhantom.csproj" />
         <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.ORM.BatchSubmit\Rafy.Domain.ORM.BatchSubmit.csproj" />
         <ProjectReference Include="..\..\Rafy\Rafy.UI\Rafy.UI.csproj" />
         <ProjectReference Include="..\..\Rafy\Rafy\Rafy.csproj" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
-        <Reference Include="System.Web" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
-        <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
     </ItemGroup>
 </Project>

@@ -10,12 +10,10 @@
  * 
 *******************************************************/
 
+using Microsoft.Extensions.Configuration;
 using Rafy.MultiTenancy.Exception;
 using System.Collections.Generic;
 using System.Configuration;
-#if NS2
-using Microsoft.Extensions.Configuration;
-#endif
 using System.Linq;
 
 namespace Rafy.MultiTenancy.ShardMap
@@ -42,39 +40,6 @@ namespace Rafy.MultiTenancy.ShardMap
             var shardMap = new ShardMapConfigModels();
             shardMap.Domains = new List<MultiTenancyDomain>();
 
-#if NET45
-            var config = (MultiTenancySection)ConfigurationManager.GetSection(ConfigKeyNet45);
-
-            if (config == null) throw new MultiTenancyConfigException();
-            
-            if (config.Domains == null) throw new MultiTenancyConfigException();
-
-            foreach (DomainElement domain in config.Domains)
-            {
-                var newdomain = new MultiTenancyDomain
-                {
-                    Name = domain.Name,
-                    Rule = domain.Rule
-                };
-
-                if (domain.DataNodes == null) throw new MultiTenancyConfigException();
-
-                newdomain.DataNodes = new List<MultiTenancyDataNode>();
-
-                foreach (DataNodeElement dn in domain.DataNodes)
-                {
-                    newdomain.DataNodes.Add(new MultiTenancyDataNode
-                    {
-                        Sort = dn.Sort,
-                        IdRightBound = dn.IdRightBound,
-                        DbSettingName = dn.DbSettingName
-                    });
-                }
-
-                shardMap.Domains.Add(newdomain);
-            }
-#endif
-#if NS2
             var rafyRawSection = ConfigurationHelper.Configuration.GetSection(ConfigKeyNotCore);
 
             if (rafyRawSection == null)
@@ -110,7 +75,6 @@ namespace Rafy.MultiTenancy.ShardMap
                 shardMap.Domains.Add(newdomain);
             }
 
-#endif
             ValidateAndSetDataNode(shardMap);
             InitShardMapList(shardMap);
         }
@@ -217,167 +181,6 @@ namespace Rafy.MultiTenancy.ShardMap
         }
     }
     
-#if NET45
-    /// <summary>
-    /// 配置节信息类
-    /// </summary>
-    public class MultiTenancySection : ConfigurationSection
-    {
-        [ConfigurationProperty("domains")]
-        public DomainsCollection Domains
-        {
-            get
-            {
-                return (DomainsCollection)this["domains"];
-            }
-            set
-            {
-                this["domains"] = value;
-            }
-        }
-    }
-
-    /// <summary>
-    /// 域配置节模型
-    /// </summary>
-    public class DomainElement : ConfigurationElement
-    {
-        [ConfigurationProperty("name", DefaultValue = "", IsRequired = true, IsKey = true)]
-        public string Name
-        {
-            get
-            {
-                return (string)this["name"];
-            }
-            set
-            {
-                this["name"] = value;
-            }
-        }
-
-        [ConfigurationProperty("rule", DefaultValue = "", IsRequired = true, IsKey = false)]
-        public string Rule
-        {
-            get
-            {
-                return (string)this["rule"];
-            }
-            set
-            {
-                this["rule"] = value;
-            }
-        }
-
-        [ConfigurationProperty("dataNodes")]
-        public DataNodesCollection DataNodes
-        {
-            get
-            {
-                return (DataNodesCollection)this["dataNodes"];
-            }
-            set
-            {
-                this["dataNodes"] = value;
-            }
-        }
-    }
-
-    /// <summary>
-    /// 域配置节集合类
-    /// </summary>
-    [ConfigurationCollection(typeof(DomainElement), AddItemName = "domain")]
-    public class DomainsCollection : ConfigurationElementCollection
-    {
-        public override ConfigurationElementCollectionType CollectionType
-        {
-            get
-            {
-                return ConfigurationElementCollectionType.AddRemoveClearMap;
-            }
-        }
-        
-        protected override ConfigurationElement CreateNewElement()
-        {
-            return new DomainElement();
-        }
-
-        protected override object GetElementKey(ConfigurationElement element)
-        {
-            return ((DomainElement)element).Name;
-        }
-    }
-
-    /// <summary>
-    /// 数据节点配置节类
-    /// </summary>
-    public class DataNodeElement : ConfigurationElement
-    {
-        [ConfigurationProperty("dbSettingName", DefaultValue = "", IsRequired = true, IsKey = true)]
-        public string DbSettingName
-        {
-            get
-            {
-                return (string)this["dbSettingName"];
-            }
-            set
-            {
-                this["dbSettingName"] = value;
-            }
-        }
-
-        [ConfigurationProperty("idRightBound", DefaultValue = "", IsRequired = true, IsKey = false)]
-        public string IdRightBound
-        {
-            get
-            {
-                return (string)this["idRightBound"];
-            }
-            set
-            {
-                this["idRightBound"] = value;
-            }
-        }
-
-        [ConfigurationProperty("sort", DefaultValue = 0, IsRequired = true, IsKey = false)]
-        public int Sort
-        {
-            get
-            {
-                return (int)this["sort"];
-            }
-            set
-            {
-                this["sort"] = value;
-            }
-        }
-    }
-
-    /// <summary>
-    /// 数据节点集合类
-    /// </summary>
-    [ConfigurationCollection(typeof(DataNodeElement), AddItemName = "dataNode")]
-    public class DataNodesCollection : ConfigurationElementCollection
-    {
-        public override ConfigurationElementCollectionType CollectionType
-        {
-            get
-            {
-                return ConfigurationElementCollectionType.AddRemoveClearMap;
-            }
-        }
-
-        protected override ConfigurationElement CreateNewElement()
-        {
-            return new DataNodeElement();
-        }
-
-        protected override object GetElementKey(ConfigurationElement element)
-        {
-            return ((DataNodeElement)element).DbSettingName;
-        }
-    }
-#endif
-#if NS2
     /// <summary>
     /// 配置类
     /// </summary>
@@ -405,6 +208,4 @@ namespace Rafy.MultiTenancy.ShardMap
         public string IdRightBound { get; set; }
         public int Sort { get; set; }
     }
-#endif
-
 }

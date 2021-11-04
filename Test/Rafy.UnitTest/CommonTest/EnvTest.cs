@@ -15,25 +15,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rafy.ComponentModel;
 
 namespace Rafy.UnitTest
 {
     public abstract class EnvTest
     {
+        protected abstract void AssertIsTrue(bool value);
+        protected abstract void AssertAreEqual(object value1, object value2);
+        protected void AssertIsFalse(bool value)
+        {
+            AssertIsTrue(!value);
+        }
+
         public virtual void EnvTest_IOC_Interface()
         {
             var container = ObjectContainerFactory.CreateContainer();
             container.RegisterType<IAnimal, Dog>();
 
             var instance = container.Resolve<IAnimal>();
-            Assert.IsTrue(instance is Dog);
+            AssertIsTrue(instance is Dog);
 
             var cat = new Cat();
             container.RegisterInstance<IAnimal>(cat);
             instance = container.Resolve<IAnimal>();
-            Assert.IsTrue(instance == cat);
+            AssertIsTrue(instance == cat);
         }
 
         public virtual void EnvTest_IOC_Interface_RegisterByType()
@@ -42,9 +48,9 @@ namespace Rafy.UnitTest
             container.RegisterInstance(typeof(IPlant), typeof(Tree));
 
             var instance = container.Resolve<IPlant>();
-            Assert.IsTrue(instance is Tree);
+            AssertIsTrue(instance is Tree);
             var instance2 = container.Resolve<IPlant>();
-            Assert.IsTrue(instance == instance2);
+            AssertIsTrue(instance == instance2);
         }
 
         /// <summary>
@@ -57,10 +63,10 @@ namespace Rafy.UnitTest
             container.RegisterInstance(typeof(IPlant), typeof(Tree));
 
             var instance = container.Resolve<IAnimal>();
-            Assert.IsTrue(instance is Rabbit);
+            AssertIsTrue(instance is Rabbit);
 
-            var rabbit =  instance as Rabbit;
-            Assert.IsTrue(rabbit.Food is Tree);
+            var rabbit = instance as Rabbit;
+            AssertIsTrue(rabbit.Food is Tree);
         }
 
         /// <summary>
@@ -77,7 +83,7 @@ namespace Rafy.UnitTest
                 success = true;
             }
             catch { }
-            Assert.IsFalse(success);
+            AssertIsFalse(success);
         }
 
         /// <summary>
@@ -95,7 +101,7 @@ namespace Rafy.UnitTest
             {
                 success = false;
             }
-            Assert.IsFalse(success);
+            AssertIsFalse(success);
         }
 
         public virtual void EnvTest_IOC_TypeByType()
@@ -104,12 +110,12 @@ namespace Rafy.UnitTest
             container.RegisterType<Dog, BigDog>();
 
             var instance = container.Resolve<Dog>();
-            Assert.IsTrue(instance is BigDog);
+            AssertIsTrue(instance is BigDog);
 
             var smallDog = new SmallDog(instance as BigDog);
             container.RegisterInstance<Dog>(smallDog);
             instance = container.Resolve<Dog>();
-            Assert.IsTrue(instance == smallDog);
+            AssertIsTrue(instance == smallDog);
         }
 
         public virtual void EnvTest_IOC_TypeBySelf()
@@ -118,28 +124,28 @@ namespace Rafy.UnitTest
             container.RegisterType<Dog, Dog>();
 
             var instance = container.Resolve<Dog>();
-            Assert.AreEqual(instance.GetType(), typeof(Dog));
+            AssertAreEqual(instance.GetType(), typeof(Dog));
         }
 
         public virtual void EnvTest_IOC_TypeWithoutRegister()
         {
             var container = ObjectContainerFactory.CreateContainer();
             var dog = container.Resolve<Dog>();
-            Assert.AreEqual(dog.GetType(), typeof(Dog));
+            AssertAreEqual(dog.GetType(), typeof(Dog));
             var bigDog = container.Resolve<BigDog>();
-            Assert.AreEqual(bigDog.GetType(), typeof(BigDog));
+            AssertAreEqual(bigDog.GetType(), typeof(BigDog));
         }
 
         public virtual void EnvTest_IOC_CtorNeedInterface()
         {
             var container = ObjectContainerFactory.CreateContainer();
             var smallDog = container.Resolve<SmallDog>();
-            Assert.IsNotNull(smallDog.Parent);
+            AssertIsTrue(smallDog.Parent != null);
 
             var bigDog = new BigDog();
             container.RegisterInstance(bigDog);
             var smallDog2 = container.Resolve<SmallDog>();
-            Assert.AreEqual(bigDog, smallDog2.Parent);
+            AssertAreEqual(bigDog, smallDog2.Parent);
         }
 
         public virtual void EnvTest_IOC_ResolveAll()
@@ -152,11 +158,11 @@ namespace Rafy.UnitTest
             container.RegisterInstance<IAnimal>(new Cat { Name = "another" }, "another");
 
             var instances = container.ResolveAll<IAnimal>();
-            Assert.AreEqual(instances.Count(), 3);
-            Assert.IsTrue(instances.Any(i => i is BigDog));
-            Assert.IsTrue(instances.Any(i => i is SmallDog));
-            Assert.IsTrue(instances.Any(i => i is Cat));
-            Assert.IsTrue(instances.Any(i =>
+            AssertAreEqual(instances.Count(), 3);
+            AssertIsTrue(instances.Any(i => i is BigDog));
+            AssertIsTrue(instances.Any(i => i is SmallDog));
+            AssertIsTrue(instances.Any(i => i is Cat));
+            AssertIsTrue(instances.Any(i =>
             {
                 var smallDog = i as SmallDog;
                 if (smallDog != null)
@@ -165,7 +171,7 @@ namespace Rafy.UnitTest
                 }
                 return true;
             }));
-            Assert.IsTrue(instances.Any(i =>
+            AssertIsTrue(instances.Any(i =>
             {
                 var cat = i as Cat;
                 if (cat != null)
@@ -187,7 +193,7 @@ namespace Rafy.UnitTest
             container.RegisterType<Dog, SmallDog>();
 
             var instance = container.Resolve<Dog>();
-            Assert.AreEqual(instance.GetType(), typeof(SmallDog));
+            AssertAreEqual(instance.GetType(), typeof(SmallDog));
         }
 
         #region Classes

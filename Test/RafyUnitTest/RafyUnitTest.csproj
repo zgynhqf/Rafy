@@ -1,66 +1,71 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>netcoreapp2.0;net45;</TargetFrameworks>
+        <TargetFrameworks>net6.0;net461;</TargetFrameworks>
         <IsPackable>false</IsPackable>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
-        <DefineConstants>DEBUG;</DefineConstants>
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
+        <DefineConstants>DEBUG;NET45</DefineConstants>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netcoreapp2.0'">
-        <DefineConstants>DEBUG;NS2</DefineConstants>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.0|AnyCPU'">
-      <NoWarn>1701;1702;NETSDK1138</NoWarn>
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp3.1|AnyCPU'">
+        <NoWarn>1701;1702;NETSDK1138</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
-      <Content Include="appsettings.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
+        <Content Include="appsettings.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+    <ItemGroup>
+        <None Update="App.config">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Castle.Core" Version="4.1.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+        <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+        <PackageReference Include="MySql.Data" Version="8.0.8-dmr" />
         <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
         <PackageReference Include="MSTest.TestAdapter" Version="1.2.1" />
         <PackageReference Include="MSTest.TestFramework" Version="1.2.1" />
+        <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Rafy\Rafy\Rafy.csproj" />
-      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.ComponentModel.UnityAdapter\Rafy.ComponentModel.UnityAdapter.csproj" />
-      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.DataTableMigration\Rafy.DataArchiver.csproj" />
-      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.EntityPhantom\Rafy.Domain.EntityPhantom.csproj" />
-      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.ORM.BatchSubmit\Rafy.Domain.ORM.BatchSubmit.csproj" />
-      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.MultiTenancy\Rafy.MultiTenancy.csproj" />
-      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Accounts\Rafy.Accounts.csproj" />
-      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.SerialNumber\Rafy.SerialNumber.csproj" />
-      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.SystemSettings\Rafy.SystemSettings.csproj" />
-      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.Stamp\Rafy.Domain.Stamp.csproj" />
-      <ProjectReference Include="..\..\Rafy\Plugins\Rafy.FileStorage\Rafy.FileStorage.csproj" />
-      <ProjectReference Include="..\Rafy.UnitTest.RuntimeLoad\Rafy.UnitTest.RuntimeLoad.csproj" />
-      <ProjectReference Include="..\Rafy.UnitTest\Rafy.UnitTest.csproj" />
-      <ProjectReference Include="..\Rafy.UnitTest.DataProvider\Rafy.UnitTest.DataProvider.csproj" />
-      <ProjectReference Include="..\Rafy.UnitTest.IDataProvider\Rafy.UnitTest.IDataProvider.csproj" />
-      <ProjectReference Include="..\Rafy.UnitTest.Repository\Rafy.UnitTest.Repository.csproj" />
+        <ProjectReference Include="..\..\Rafy\Rafy\Rafy.csproj" />
+        <ProjectReference Include="..\..\Rafy\Plugins\Rafy.ComponentModel.UnityAdapter\Rafy.ComponentModel.UnityAdapter.csproj" />
+        <ProjectReference Include="..\..\Rafy\Plugins\Rafy.DataTableMigration\Rafy.DataArchiver.csproj" />
+        <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.EntityPhantom\Rafy.Domain.EntityPhantom.csproj" />
+        <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.ORM.BatchSubmit\Rafy.Domain.ORM.BatchSubmit.csproj" />
+        <ProjectReference Include="..\..\Rafy\Plugins\Rafy.MultiTenancy\Rafy.MultiTenancy.csproj" />
+        <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Accounts\Rafy.Accounts.csproj" />
+        <ProjectReference Include="..\..\Rafy\Plugins\Rafy.SerialNumber\Rafy.SerialNumber.csproj" />
+        <ProjectReference Include="..\..\Rafy\Plugins\Rafy.SystemSettings\Rafy.SystemSettings.csproj" />
+        <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.Stamp\Rafy.Domain.Stamp.csproj" />
+        <ProjectReference Include="..\..\Rafy\Plugins\Rafy.FileStorage\Rafy.FileStorage.csproj" />
+        <ProjectReference Include="..\Rafy.UnitTest.RuntimeLoad\Rafy.UnitTest.RuntimeLoad.csproj" />
+        <ProjectReference Include="..\Rafy.UnitTest\Rafy.UnitTest.csproj" />
+        <ProjectReference Include="..\Rafy.UnitTest.DataProvider\Rafy.UnitTest.DataProvider.csproj" />
+        <ProjectReference Include="..\Rafy.UnitTest.IDataProvider\Rafy.UnitTest.IDataProvider.csproj" />
+        <ProjectReference Include="..\Rafy.UnitTest.Repository\Rafy.UnitTest.Repository.csproj" />
     </ItemGroup>
-    <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
+    <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
         <Reference Include="System.Web" />
         <PackageReference Include="Oracle.ManagedDataAccess" Version="12.2.1100" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
+    <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
         <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.12.0-beta2" />
         <PackageReference Include="Stub.System.Data.SQLite.Core.NetStandard" Version="1.0.114.3" />
     </ItemGroup>
 
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-      <Exec Command="xcopy &quot;$(SolutionDir)packages\Lib\SQLCE\&quot; &quot;$(TargetDir)&quot; /Y /E" />
+        <Exec Command="xcopy &quot;$(SolutionDir)packages\Lib\SQLCE\&quot; &quot;$(TargetDir)&quot; /Y /E" />
     </Target>
 </Project>

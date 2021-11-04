@@ -1,13 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>net45</TargetFrameworks>
+        <TargetFrameworks>net461;</TargetFrameworks>
         <IsPackable>false</IsPackable>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
-    </PropertyGroup>
-    
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net45|AnyCPU'">
-        <DefineConstants>DEBUG;NET45</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup>
@@ -16,8 +12,12 @@
         <PackageReference Include="MSTest.TestFramework" Version="1.1.18" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
-        <Reference Include="System.Security" />
+    <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
+        <!--<Reference Include="System.Security" />-->
+        <Reference Include="System.Data.SqlServerCe">
+            <HintPath>..\..\packages\Lib\SQLCE\System.Data.SqlServerCe.dll</HintPath>
+            <Private>true</Private>
+        </Reference>
     </ItemGroup>
 
     <ItemGroup>
@@ -34,14 +34,7 @@
         <ProjectReference Include="..\Rafy.UnitTest\Rafy.UnitTest.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Reference Include="System.Data.SqlServerCe">
-        <HintPath>..\..\packages\Lib\SQLCE\System.Data.SqlServerCe.dll</HintPath>
-        <Private>true</Private>
-      </Reference>
-    </ItemGroup>
-
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-      <Exec Command="xcopy &quot;$(SolutionDir)packages\Lib\SQLCE\&quot; &quot;$(TargetDir)&quot; /Y /E" />
+        <Exec Command="xcopy &quot;$(SolutionDir)packages\Lib\SQLCE\&quot; &quot;$(TargetDir)&quot; /Y /E" />
     </Target>
 </Project>
