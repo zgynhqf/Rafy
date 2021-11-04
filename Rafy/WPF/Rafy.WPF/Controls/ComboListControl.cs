@@ -438,7 +438,7 @@ namespace Rafy.WPF.Controls
 
         private string GetDisplay(object item)
         {
-            return ObjectHelper.GetPropertyValue<string>(item, this._textPath);
+            return ObjectHelper.GetPropertyValue(item, this._textPath) as string;
         }
 
         #endregion

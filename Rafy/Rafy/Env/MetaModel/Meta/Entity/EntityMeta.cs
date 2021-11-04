@@ -261,13 +261,14 @@ namespace Rafy.MetaModel
         /// 如果没有找到，则返回 null。
         /// </summary>
         /// <param name="property"></param>
+        /// <param name="ignoreCase"></param>
         /// <returns></returns>
-        public EntityPropertyMeta Property(string property)
+        public EntityPropertyMeta Property(string property, bool ignoreCase = false)
         {
             for (int i = 0, c = _entityProperties.Count; i < c; i++)
             {
                 var item = _entityProperties[i];
-                if (item.Name == property)
+                if (string.Compare(item.Name, property, ignoreCase) == 0)
                 {
                     return item;
                 }
@@ -298,13 +299,14 @@ namespace Rafy.MetaModel
         /// 如果没有找到，则返回 null。
         /// </summary>
         /// <param name="property"></param>
+        /// <param name="ignoreCase"></param>
         /// <returns></returns>
-        public ChildrenPropertyMeta ChildrenProperty(string property)
+        public ChildrenPropertyMeta ChildrenProperty(string property, bool ignoreCase = false)
         {
             for (int i = 0, c = _childrenProperties.Count; i < c; i++)
             {
                 var item = _childrenProperties[i];
-                if (item.Name == property)
+                if (string.Compare(item.Name, property, ignoreCase) == 0)
                 {
                     return item;
                 }

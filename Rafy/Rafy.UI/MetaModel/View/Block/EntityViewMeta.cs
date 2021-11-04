@@ -186,17 +186,22 @@ namespace Rafy.MetaModel.View
         /// <returns></returns>
         public EntityPropertyViewMeta Property(IManagedProperty property)
         {
-            return this.Property(property.Name);
+            var res = this.EntityProperties.FirstOrDefault(item => item.PropertyMeta.ManagedProperty == property);
+
+            if (res != null) { this.OnPropertyFound(res); }
+
+            return res;
         }
 
         /// <summary>
         /// 根据名字查询实体属性（忽略大小写）
         /// </summary>
         /// <param name="name"></param>
+        /// <param name="ignoreCase"></param>
         /// <returns></returns>
-        public EntityPropertyViewMeta Property(string name)
+        public EntityPropertyViewMeta Property(string name, bool ignoreCase = false)
         {
-            var res = this.EntityProperties.FirstOrDefault(item => item.Name.EqualsIgnoreCase(name));
+            var res = this.EntityProperties.FirstOrDefault(item => string.Compare(item.Name, name, ignoreCase) == 0);
 
             if (res != null) { this.OnPropertyFound(res); }
 

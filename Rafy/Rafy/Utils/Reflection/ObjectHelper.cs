@@ -27,17 +27,6 @@ namespace Rafy.Reflection
     {
         /// <summary>
         /// 获取指定属性的值
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <param name="propertyName"></param>
-        /// <returns></returns>
-        public static T GetPropertyValue<T>(object obj, string propertyName)
-        {
-            return (T)GetPropertyValue(obj, propertyName);
-        }
-
-        /// <summary>
-        /// 获取指定属性的值
         /// 
         /// 使用方法：
         /// var value = obj.GetStepPropertyValue("Property1.Property2.Property3");
@@ -49,17 +38,30 @@ namespace Rafy.Reflection
         /// <returns></returns>
         public static object GetPropertyValue(object obj, string propertyName)
         {
-            //if (string.IsNullOrEmpty(propertyName)) throw new ArgumentNullException("propertyName");
-
             //如果是层级属性
             if (propertyName.Contains('.'))
             {
                 return GetStepPropertyValue(obj, propertyName);
             }
 
-            var property = obj.GetType().GetProperty(propertyName);
-            if (property == null) throw new InvalidProgramException("类型" + obj.GetType().ToString() + "不存在属性" + propertyName);
-            return property.GetValue(obj, null);
+            var type = obj.GetType();
+            try
+            {
+                var property = type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty);
+                if (property == null) throw new InvalidProgramException("类型" + obj.GetType().ToString() + "不存在属性" + propertyName);
+                return property.GetValue(obj, null);
+            }
+            catch (AmbiguousMatchException)
+            {
+                var types = TypeHelper.GetHierarchy(type);
+                foreach (var singleType in types)
+                {
+                    var property = singleType.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty | BindingFlags.DeclaredOnly);
+                    if (property == null) continue;
+                    return property.GetValue(obj, null);
+                }
+                throw;
+            }
         }
 
         /// <summary>
@@ -70,9 +72,25 @@ namespace Rafy.Reflection
         /// <param name="value"></param>
         public static void SetPropertyValue(object obj, string propertyName, object value)
         {
-            var property = obj.GetType().GetProperty(propertyName);
-            if (property == null) throw new InvalidProgramException("类型" + obj.GetType().ToString() + "不存在属性" + propertyName);
-            property.SetValue(obj, value, null);
+            var type = obj.GetType();
+            try
+            {
+                var property = type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.SetProperty);
+                if (property == null) throw new InvalidProgramException("类型" + obj.GetType().ToString() + "不存在属性" + propertyName);
+                property.SetValue(obj, value, null);
+            }
+            catch (AmbiguousMatchException)
+            {
+                var types = TypeHelper.GetHierarchy(type);
+                foreach (var singleType in types)
+                {
+                    var property = singleType.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.SetProperty | BindingFlags.DeclaredOnly);
+                    if (property == null) continue;
+                    property.SetValue(obj, value, null);
+                    return;
+                }
+                throw;
+            }
         }
 
         private static object GetStepPropertyValue(object obj, string propertyName)
