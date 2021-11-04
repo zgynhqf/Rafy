@@ -387,10 +387,13 @@ namespace Rafy.Domain
         {
             if (!this.IsNew && !this.HasLocalValue(property))
             {
+                var id = this.Id;
+                if (!this.IdProvider.IsAvailable(id)) return null;
+                
                 var repo = this.GetRepository();
-                var value = repo.GetEntityValue(this.Id, property);
+                var value = repo.GetEntityValue(id, property);
                 base.LoadProperty(property, value);
-                this.Disable(property, false);
+
                 return value;
             }
 
@@ -402,7 +405,6 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="property"></param>
         /// <param name="value"></param>
-        /// 
         public void SetLOBProperty(ILOBProperty property, object value)
         {
             //直接调用父类的 SetProperty 方法，而不是本类重写的 SetProperty 方法。

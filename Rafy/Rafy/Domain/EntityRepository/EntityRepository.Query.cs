@@ -340,7 +340,8 @@ namespace Rafy.Domain
         public object GetEntityValue(object id, IManagedProperty property)
         {
             var table = this.DoGetEntityValue(id, property.Name);
-            return table[0, 0];
+            if (table.Rows.Count > 0) return table[0, 0];
+            return null;
         }
 
         #endregion
