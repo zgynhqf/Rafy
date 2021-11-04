@@ -101,11 +101,7 @@ namespace Rafy.MetaModel
         /// <returns></returns>
         public static EntityMeta MapTable(this EntityMeta meta)
         {
-            meta.TableMeta = new TableMeta(meta.EntityType.Name);
-
-            MapDefaultColumns(meta);
-
-            return meta;
+            return MapTable(meta, meta.EntityType.Name);
         }
 
         /// <summary>
@@ -117,7 +113,13 @@ namespace Rafy.MetaModel
         public static EntityMeta MapTable(this EntityMeta meta, string tableName)
         {
             if (tableName == null) throw new ArgumentNullException(nameof(tableName));
-            meta.TableMeta = new TableMeta(tableName);
+
+            if (meta.TableMeta == null)
+            {
+                meta.TableMeta = new TableMeta();
+            }
+
+            meta.TableMeta.TableName = tableName;
 
             MapDefaultColumns(meta);
 
@@ -138,7 +140,10 @@ namespace Rafy.MetaModel
         ///// </param>
         public static EntityMeta MapView(this EntityMeta meta, bool mapDefaultProperties = true)//, string viewSql = null)
         {
-            meta.TableMeta = new TableMeta(meta.EntityType.Name);
+            if (meta.TableMeta == null)
+            {
+                meta.TableMeta = new TableMeta(meta.EntityType.Name);
+            }
             meta.TableMeta.IsMappingView = true;
             //meta.TableMeta.ViewSql = viewSql;
 
@@ -150,12 +155,18 @@ namespace Rafy.MetaModel
             return meta;
         }
 
+        /// <summary>
+        /// 映射 Id、TreePId、TreeIndex 以及标记了 <see cref="ColumnAttribute"/> 的属性。
+        /// </summary>
+        /// <param name="meta"></param>
         private static void MapDefaultColumns(EntityMeta meta)
         {
             if (meta.TableMeta != null)
             {
                 foreach (var ep in meta.EntityProperties)
                 {
+                    if (ep.ColumnMeta != null) continue;
+
                     var mp = ep.ManagedProperty;
                     //Id 属性，默认的元数据中，即是主键，也是自增长列。应用层可以考虑再做配置。
                     if (mp == EntityConvention.Property_Id)
@@ -170,7 +181,7 @@ namespace Rafy.MetaModel
                             ep.ColumnMeta.IsIdentity = true;
                         }
                     }
-                    //其它属性
+                    //其它标记了 ColumnAttribute 的属性
                     else if (mp != EntityConvention.Property_TreeIndex && mp != EntityConvention.Property_TreePId)
                     {
                         var clrProperty = ep.CLRProperty;
@@ -194,10 +205,10 @@ namespace Rafy.MetaModel
                 if (meta.IsTreeEntity)
                 {
                     var p = meta.Property(EntityConvention.Property_TreeIndex);
-                    if (p != null) { p.MapColumn(); }
+                    if (p != null && p.ColumnMeta == null) { p.MapColumn(); }
 
                     p = meta.Property(EntityConvention.Property_TreePId);
-                    if (p != null) { p.MapColumn(); }
+                    if (p != null && p.ColumnMeta == null) { p.MapColumn(); }
                 }
             }
         }
