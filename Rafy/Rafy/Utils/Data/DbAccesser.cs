@@ -471,6 +471,7 @@ namespace Rafy.Data
                 value = dap.Value;
                 parameter.DbType = dap.DbType;
             }
+            //在 DbDataParameter 会自动实现类型推断。以下代码不需要了。
             //else
             //{
             //    if (value != null)

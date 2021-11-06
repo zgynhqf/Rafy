@@ -24,6 +24,9 @@ namespace Rafy.Data.Providers
         /// <returns></returns>
         string GetParameterName(int number);
 
+        /// <summary>
+        /// 存储过程中，返回参数的名称。
+        /// </summary>
         string ProcudureReturnParameterName { get; }
     }
 }
