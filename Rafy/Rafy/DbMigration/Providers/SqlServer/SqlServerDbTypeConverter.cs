@@ -88,6 +88,7 @@ namespace Rafy.DbMigration.SqlServer
         /// <exception cref="NotSupportedException"></exception>
         public override DbType ConvertToDbType(string databaseTypeName)
         {
+            //具体可参考：System.Data.SqlClient.MetaType
             switch (databaseTypeName.ToLower())
             {
                 case "uniqueidentifier":
@@ -123,6 +124,7 @@ namespace Rafy.DbMigration.SqlServer
                     return DbType.Byte;
                 case "date":
                 case "datetime":
+                case "smalldatetime":
                 case "time":
                     return DbType.DateTime;
                 case "datetimeoffset":
