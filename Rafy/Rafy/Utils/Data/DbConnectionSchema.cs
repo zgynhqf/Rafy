@@ -161,5 +161,34 @@ namespace Rafy.Data
             var dataSource = match.Groups["dataSource"].Value;
             return dataSource;
         }
+
+#if NET45
+        internal static string DisplayConnectionPerformanceCounters()
+        {
+            var res = new StringBuilder();
+
+            //https://docs.microsoft.com/zh-cn/dotnet/framework/data/adonet/performance-counters
+            var counters = new string[] {
+                "NumberOfActiveConnectionPools",
+                "NumberOfPooledConnections",
+                "NumberOfNonPooledConnections",
+                "NumberOfStasisConnections",
+            };
+
+            var instanceName = System.Reflection.Assembly.GetEntryAssembly().GetName().Name +
+                    "[" + System.Diagnostics.Process.GetCurrentProcess().Id + "]"; ;
+            foreach (var counterName in counters)
+            {
+                var counter = new System.Diagnostics.PerformanceCounter();
+                counter.CategoryName = ".NET Data Provider for SqlServer";
+                counter.CounterName = counterName;
+                counter.InstanceName = instanceName;
+
+                res.Append(counterName).Append(":").Append(counter.NextValue()).AppendLine();
+            }
+
+            return res.ToString();
+        }
+#endif
     }
 }
