@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.84.4086
+3.84.4087
     ★★公布、内部修改
         20211108 将发布 VS2022 正式版。由于 VS2022 最低支持开发 NET451 的程序，故升级 Rafy 为支持 NET451 及 NetStandard 2.0；
         而其它领域插件，则不再直接支持 NetFramework，而是完全基于 NetStandard2.0。
@@ -18,6 +18,7 @@
         解决反射时，找到多个同名属性的问题。
         GetLOBProperty 没有 Id 时，加载出错的问题。
         MapTable 不应该重置 TableMeta。
+        TransactionDependentConnectionManager 优化。
 
 3.83.4072
     ★★公布、重构

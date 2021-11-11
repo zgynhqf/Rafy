@@ -32,7 +32,7 @@ namespace Rafy.Domain.ORM
     /// </summary>
     public class SingleConnectionTransactionScope : LocalTransactionBlock
     {
-        private IConnectionManager _conMgr;
+        private IDbConnection _connection;
 
         /// <summary>
         /// 构造一个事务块
@@ -52,8 +52,9 @@ namespace Rafy.Domain.ORM
             //只要找到一个当前数据库的连接管理对象，直到发生 Dispose 前，
             //这个连接都一直不会被关闭，那么代码块中的数据访问方法都是使用同一个打开的连接。
             //这样就不会升级为分布式事务。
-            _conMgr = TransactionDependentConnectionManager.GetManager(this.DbSetting);
-            return _conMgr.Connection.BeginTransaction(this.IsolationLevel);
+            _connection = this.DbSetting.CreateConnection();
+            _connection.Open();
+            return _connection.BeginTransaction(this.IsolationLevel);
         }
 
         protected override void Dispose(bool disposing)
@@ -62,9 +63,9 @@ namespace Rafy.Domain.ORM
 
             if (disposing)
             {
-                if (_conMgr != null)
+                if (_connection != null)
                 {
-                    _conMgr.Dispose();
+                    _connection.Dispose();
                 }
             }
         }

@@ -30,6 +30,8 @@ namespace Rafy.Domain.ORM
     {
         private LocalTransactionBlock _block;
 
+        private bool _conCreatedByMe;
+
         private IDbConnection _connection;
 
         private DbSetting _dbSetting;
@@ -50,6 +52,7 @@ namespace Rafy.Domain.ORM
                 //没有定义事务范围时，无需共享连接。
                 res._connection = dbSetting.CreateConnection();
                 res._connection.Open();
+                res._conCreatedByMe = true;
             }
 
             res._dbSetting = dbSetting;
@@ -67,13 +70,31 @@ namespace Rafy.Domain.ORM
             get { return _dbSetting; }
         }
 
+        #region Dispose Pattern
+
+        ~TransactionDependentConnectionManager()
+        {
+            this.Dispose(false);
+        }
+
         public void Dispose()
         {
-            //如果连接是来自事务，则不需要本对象来析构连接。
-            if (_block == null)
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (disposing)
             {
-                _connection.Dispose();
+                //如果连接不是来自事务，则需要本对象来析构连接。
+                if (_conCreatedByMe)
+                {
+                    _connection.Dispose();
+                }
             }
         }
+
+        #endregion
     }
 }
