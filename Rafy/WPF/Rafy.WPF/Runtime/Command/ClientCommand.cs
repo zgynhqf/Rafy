@@ -230,33 +230,21 @@ namespace Rafy.WPF.Command
         /// <param name="param"></param>
         internal void Execute()
         {
-            //调试阶段如果接住了异常，会比较难以调试，所以调试期关闭异常事件。。
-            if (!RafyEnvironment.IsDebuggingEnabled)
-            {
-                try
-                {
-                    this.OnExecuting();
-
-                    this.ExecuteCore();
-
-                    this.OnExecuted(new CommandExecutedArgs(this.Parameter));
-                }
-                catch (Exception ex)
-                {
-                    var args = new CommandExecuteFailedArgs(ex, this.Parameter);
-
-                    this.OnExecuteFailed(args);
-
-                    if (!args.Cancel) throw ex;
-                }
-            }
-            else
+            try
             {
                 this.OnExecuting();
 
                 this.ExecuteCore();
 
                 this.OnExecuted(new CommandExecutedArgs(this.Parameter));
+            }
+            catch (Exception ex)
+            {
+                var args = new CommandExecuteFailedArgs(ex, this.Parameter);
+
+                this.OnExecuteFailed(args);
+
+                if (!args.Cancel) throw;
             }
         }
 
