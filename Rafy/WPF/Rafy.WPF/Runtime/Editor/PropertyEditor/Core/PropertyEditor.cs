@@ -24,6 +24,7 @@ using Rafy.Domain;
 using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.MetaModel.View;
+using Rafy.Reflection;
 using Rafy.WPF.Automation;
 using Rafy.WPF.Controls;
 
@@ -114,6 +115,10 @@ namespace Rafy.WPF.Editors
                         }
                         else
                         {
+                            if (value == null)
+                            {
+                                value = TypeHelper.GetDefaultValue(mp.PropertyType);
+                            }
                             currentObject.SetProperty(mp, value);
                         }
 

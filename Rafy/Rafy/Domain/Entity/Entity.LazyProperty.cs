@@ -389,7 +389,7 @@ namespace Rafy.Domain
             {
                 var id = this.Id;
                 if (!this.IdProvider.IsAvailable(id)) return null;
-                
+
                 var repo = this.GetRepository();
                 var value = repo.GetEntityValue(id, property);
                 base.LoadProperty(property, value);

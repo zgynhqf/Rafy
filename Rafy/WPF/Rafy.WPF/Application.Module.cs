@@ -166,6 +166,11 @@ namespace Rafy.WPF
         /// <returns></returns>
         public WorkspaceWindow OpenModuleOrAlert(WPFModuleMeta module)
         {
+            if (!module.IsCustomUI && module.EntityType == null)
+            {
+                return null;
+            }
+
             if (!PermissionMgr.CanShowModule(module))
             {
                 App.MessageBox.Show(string.Format(
