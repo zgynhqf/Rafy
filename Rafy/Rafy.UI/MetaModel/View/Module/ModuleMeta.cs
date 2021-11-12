@@ -80,7 +80,7 @@ namespace Rafy.MetaModel
             get
             {
                 return this.IsCustomUI ||
-                    this._EntityType != null ||
+                    this.EntityType != null ||
                     !string.IsNullOrEmpty(this._AggtBlocksName);
             }
         }
