@@ -131,9 +131,9 @@ namespace Rafy.MetaModel.View
 
         private IManagedProperty _SelectedValuePath;
         /// <summary>
-        /// 选择后的值在目标实体中对应的托管属性。
+        /// 将选中实体的这个托管属性的值，回写到当前实体属性中。
         /// 可选。
-        /// 如果是非引用属性，需要填写这个属性的值。否则默认为 Entity.IdProperty
+        /// 如果当前实体属性是一个非引用属性，则需要填写这个属性的值。否则默认为 Entity.IdProperty
         /// </summary>
         public IManagedProperty SelectedValuePath
         {

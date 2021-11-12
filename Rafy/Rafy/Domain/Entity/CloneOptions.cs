@@ -102,11 +102,18 @@ namespace Rafy.Domain
 
         /// <summary>
         /// 值在复制时使用的方法。
-        /// 默认值：<see cref="CloneValueMethod.SetProperty"/>。
+        /// 默认值：<see cref="CloneValueMethod.LoadProperty"/>。
         /// 
-        /// <note type="note">使用设置属性的方式来拷贝值，这样可以使得冗余属性知道自己变更了。</note>
+        /// <note type="note">
+        /// 如果使用 SetProperty，
+        /// 使用设置属性的方式来拷贝值，这样可以使得冗余属性知道自己变更了。
+        /// 但是最终确定还是默认使用 LoadProperty，因为 SetProperty 的缺点如下：
+        /// * 效率相对较低。
+        /// * 开发者写的属性变更前后逻辑，都会运行。
+        /// * 一般情况下，开发者只是希望所有底层的值进行拷贝，而非所有属性的逻辑都运行一遍。
+        /// </note>
         /// </summary>
-        public CloneValueMethod Method { get; set; } = CloneValueMethod.SetProperty;
+        public CloneValueMethod Method { get; set; } = CloneValueMethod.LoadProperty;
 
         #region CloneMappings
 
