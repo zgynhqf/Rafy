@@ -184,6 +184,8 @@ StockTrace：
         {
             var isOracle = DbConnectionSchema.IsOracleProvider(connectionSchema);
 
+            //code is copied from SqlGenerator.
+
             var pValues = parameters.Select(p =>
             {
                 var value = p.Value;
@@ -224,6 +226,10 @@ StockTrace：
             else
             {
                 content.Append(sql);
+            }
+
+            if (pValues.Length > 0)
+            {
                 content.AppendLine();
                 content.Append("Parameters:").Append(string.Join(",", pValues));
             }

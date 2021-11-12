@@ -45,6 +45,7 @@ namespace Rafy.Domain.ORM
         {
             _sql = new FormattedSql();
             _sql.InnerWriter = new IndentedTextWriter(_sql.InnerWriter);
+            this.EmbedParameters = ORMSettings.EmbedParametersInQuerySql;
         }
 
         /// <summary>
@@ -70,6 +71,12 @@ namespace Rafy.Domain.ORM
         /// 是否自动添加标识符的括号。默认为 true。
         /// </summary>
         public bool AutoQuota { get; set; } = true;
+
+        /// <summary>
+        /// 参数是否需要嵌入到 SQL 中来执行。默认为 false。
+        /// 对于非索引的参数，都会以参数化方式来执行，而不论此属性是否为真。
+        /// </summary>
+        public bool EmbedParameters { get; set; }
 
         /// <summary>
         /// 生成完毕后的 Sql 语句及参数。
@@ -538,7 +545,41 @@ namespace Rafy.Domain.ORM
                 value = new DbAccesserParameter(value, column.DbType);
             }
 
-            _sql.AppendParameter(value);
+            if (value is DbAccesserParameter)
+            {
+                _sql.AppendParameter(value);
+                return;
+            }
+
+            if (!this.EmbedParameters)
+            {
+                _sql.AppendParameter(value);
+                return;
+            }
+
+            this.EmbedParameterIntoSql(_sql.InnerWriter, value);
+        }
+
+        protected virtual void EmbedParameterIntoSql(TextWriter sql, object value)
+        {
+            if (value == null)
+            {
+                value = "NULL";
+            }
+            else if (value is DateTime)
+            {
+                value = '\'' + ((DateTime)value).ToString() + '\'';
+            }
+            else if (value is string)
+            {
+                value = '\'' + value.ToString() + '\'';
+            }
+            else if (value is bool)
+            {
+                value = Convert.ToByte(value);//bool 使用的是 1 或 0
+            }
+
+            sql.Write(value);
         }
 
         /// <summary>

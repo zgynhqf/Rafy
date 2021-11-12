@@ -13,6 +13,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Rafy.Data;
@@ -186,6 +187,18 @@ WHERE RN >= { startRow }")
                 };
             }
             return newConstraint;
+        }
+
+        protected override void EmbedParameterIntoSql(TextWriter sql, object value)
+        {
+            if (value is DateTime)
+            {
+                value = string.Format("to_date('{0}', 'yyyy-MM-dd hh24:mi:ss')", value);
+                sql.Write(value);
+                return;
+            }
+
+            base.EmbedParameterIntoSql(sql, value);
         }
     }
 }

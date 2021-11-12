@@ -5663,6 +5663,120 @@ WHERE ASN.Id > {0}
 ORDER BY ASN.AsnCode ASC LIMIT 0,10");
         }
 
+        [TestMethod]
+        public void ORM_SqlTree_Select_EmbedParameters()
+        {
+            var timeValue = new DateTime(2021, 11, 12, 19, 30, 0);
+
+            var select = new SqlSelect();
+            var table = new SqlTable { TableName = "Table1" };
+            select.Selection = new SqlSelectAll();
+            select.From = table;
+            select.Where = new SqlBinaryConstraint
+            {
+                Left = new SqlColumnConstraint
+                {
+                    Column = new SqlColumn { Table = table, ColumnName = "Column1" },
+                    Operator = SqlColumnConstraintOperator.Equal,
+                    Value = "String"
+                },
+                Opeartor = SqlBinaryConstraintType.Or,
+                Right = new SqlBinaryConstraint
+                {
+                    Left = new SqlBinaryConstraint
+                    {
+                        Left = new SqlColumnConstraint
+                        {
+                            Column = new SqlColumn { Table = table, ColumnName = "Column2" },
+                            Operator = SqlColumnConstraintOperator.Equal,
+                            Value = timeValue
+                        },
+                        Opeartor = SqlBinaryConstraintType.Or,
+                        Right = new SqlColumnConstraint
+                        {
+                            Column = new SqlColumn { Table = table, ColumnName = "Column2" },
+                            Operator = SqlColumnConstraintOperator.Equal,
+                            Value = 100
+                        }
+                    },
+                    Opeartor = SqlBinaryConstraintType.And,
+                    Right = new SqlColumnConstraint
+                    {
+                        Column = new SqlColumn { Table = table, ColumnName = "Column1" },
+                        Operator = SqlColumnConstraintOperator.Equal,
+                        Value = new DbAccesserParameter(100, DbType.Int32)
+                    }
+                }
+            };
+
+            var generator = new SqlServerSqlGenerator { AutoQuota = false };
+            generator.EmbedParameters = true;
+            generator.Generate(select);
+            var sql = generator.Sql;
+            AssertSqlEqual(sql.ToString(), $@"SELECT *
+FROM Table1
+WHERE Table1.Column1 = 'String' OR (Table1.Column2 = '{timeValue}' OR Table1.Column2 = 100) AND Table1.Column1 = {{0}}");
+            Assert.IsTrue(sql.Parameters.Count == 1);
+            Assert.AreEqual(typeof(DbAccesserParameter), sql.Parameters[0].GetType());
+        }
+
+        [TestMethod]
+        public void ORM_SqlTree_Select_EmbedParameters_ORA()
+        {
+            var timeValue = new DateTime(2021, 11, 12, 19, 30, 0);
+
+            var select = new SqlSelect();
+            var table = new SqlTable { TableName = "Table1" };
+            select.Selection = new SqlSelectAll();
+            select.From = table;
+            select.Where = new SqlBinaryConstraint
+            {
+                Left = new SqlColumnConstraint
+                {
+                    Column = new SqlColumn { Table = table, ColumnName = "Column1" },
+                    Operator = SqlColumnConstraintOperator.Equal,
+                    Value = "String"
+                },
+                Opeartor = SqlBinaryConstraintType.Or,
+                Right = new SqlBinaryConstraint
+                {
+                    Left = new SqlBinaryConstraint
+                    {
+                        Left = new SqlColumnConstraint
+                        {
+                            Column = new SqlColumn { Table = table, ColumnName = "Column2" },
+                            Operator = SqlColumnConstraintOperator.Equal,
+                            Value = timeValue
+                        },
+                        Opeartor = SqlBinaryConstraintType.Or,
+                        Right = new SqlColumnConstraint
+                        {
+                            Column = new SqlColumn { Table = table, ColumnName = "Column2" },
+                            Operator = SqlColumnConstraintOperator.Equal,
+                            Value = 100
+                        }
+                    },
+                    Opeartor = SqlBinaryConstraintType.And,
+                    Right = new SqlColumnConstraint
+                    {
+                        Column = new SqlColumn { Table = table, ColumnName = "Column1" },
+                        Operator = SqlColumnConstraintOperator.Equal,
+                        Value = new DbAccesserParameter(100, DbType.Int32)
+                    }
+                }
+            };
+
+            var generator = new OracleSqlGenerator { AutoQuota = false };
+            generator.EmbedParameters = true;
+            generator.Generate(select);
+            var sql = generator.Sql;
+            AssertSqlEqual(sql.ToString(), $@"SELECT *
+FROM TABLE1
+WHERE TABLE1.COLUMN1 = 'String' OR (TABLE1.COLUMN2 = to_date('{timeValue}', 'yyyy-MM-dd hh24:mi:ss') OR TABLE1.COLUMN2 = 100) AND TABLE1.COLUMN1 = {{0}}");
+            Assert.IsTrue(sql.Parameters.Count == 1);
+            Assert.AreEqual(typeof(DbAccesserParameter), sql.Parameters[0].GetType());
+        }
+
         /// <summary>
         /// 一些 Sql 语句上的换行符并不是 \r\n 而只是 \n，所以这里需要对其忽略后再进行对比。
         /// </summary>

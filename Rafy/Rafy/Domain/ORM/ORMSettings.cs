@@ -38,5 +38,11 @@ namespace Rafy.Domain.ORM
         /// 默认为 true。
         /// </summary>
         public static bool ErrorIfColumnNotFoundInSql { get; set; } = true;
+
+        /// <summary>
+        /// 参数是否需要嵌入到 SQL 中来执行。默认为 false。
+        /// 对于非索引的参数，都会以参数化方式来执行，而不论此属性是否为真。
+        /// </summary>
+        public static bool EmbedParametersInQuerySql { get; set; }
     }
 }
