@@ -72,7 +72,7 @@ namespace Rafy.MetaModel.View
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public new WebEntityPropertyViewMeta Property(string name)
+        public WebEntityPropertyViewMeta Property(string name)
         {
             return base.Property(name) as WebEntityPropertyViewMeta;
         }

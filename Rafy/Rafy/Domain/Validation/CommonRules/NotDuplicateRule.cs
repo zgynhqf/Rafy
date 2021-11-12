@@ -128,7 +128,7 @@ namespace Rafy.Domain.Validation
                 first = false;
 
                 var value = entity.GetProperty(property);
-                error.AppendFormat(propertyFormat, Display(property), value);
+                error.AppendFormat(propertyFormat, Display(property, entity), value);
             }
             error.Append(" 的实体 ".Translate())
                 .Append(Display(entity.GetType()));

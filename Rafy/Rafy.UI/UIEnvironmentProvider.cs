@@ -25,14 +25,13 @@ namespace Rafy.UI
     {
         private static EntityViewMeta _lastViewMeta;
 
-        public override string GetLabelForDisplay(IManagedProperty property)
+        public override string GetLabelForDisplay(IManagedProperty property, Type entityType)
         {
             //以线程安全的方式获取最后一次缓存的 View。
             EntityViewMeta safeView = _lastViewMeta;
-            var ownerType = property.OwnerType;
-            if (safeView == null || safeView.EntityType != ownerType)
+            if (safeView == null || safeView.EntityType != entityType)
             {
-                safeView = UIModel.Views.CreateBaseView(ownerType);
+                safeView = UIModel.Views.CreateBaseView(entityType);
                 _lastViewMeta = safeView;
             }
 
@@ -57,7 +56,7 @@ namespace Rafy.UI
                 return res.Translate();
             }
 
-            return base.GetLabelForDisplay(property);
+            return base.GetLabelForDisplay(property, entityType);
         }
 
         public override string GetLabelForDisplay(Type entityType)

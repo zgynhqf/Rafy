@@ -59,7 +59,7 @@ namespace Rafy.Domain.Validation
                 }
                 else
                 {
-                    e.BrokenDescription = string.Format("{0} 不能低于 {1}。".Translate(), e.DisplayProperty(), min);
+                    e.BrokenDescription = string.Format("{0} 不能低于 {1}。".Translate(), e.DisplayProperty(entity), min);
                 }
             }
             else
@@ -73,7 +73,7 @@ namespace Rafy.Domain.Validation
                     }
                     else
                     {
-                        e.BrokenDescription = string.Format("{0} 不能超过 {1}。".Translate(), e.DisplayProperty(), max);
+                        e.BrokenDescription = string.Format("{0} 不能超过 {1}。".Translate(), e.DisplayProperty(entity), max);
                     }
                 }
             }

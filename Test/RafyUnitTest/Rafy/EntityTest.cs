@@ -2542,7 +2542,7 @@ namespace RafyUnitTest
             var brokenRules = user.Validate();
             Assert.AreEqual(brokenRules.Count, 1);
             //由于当前没有界面层元数据，所以错误字符串中应该是属性的名称。
-            Assert.AreEqual(brokenRules[0].Description, "[NotEmptyCode] 里没有输入值。");
+            Assert.AreEqual(brokenRules[0].Description, "[UT.TestUser.NotEmptyCode] 里没有输入值。");
         }
 
         [TestMethod]
@@ -2559,7 +2559,7 @@ namespace RafyUnitTest
             var entity = new TestUserQueryCriteria();
             var brokenRules = entity.Validate();
             Assert.AreEqual(brokenRules.Count, 1);
-            Assert.AreEqual(brokenRules[0].Description, "[Name] 里没有输入值。");
+            Assert.AreEqual(brokenRules[0].Description, "[UT.TestUserQueryCriteria.Name] 里没有输入值。");
         }
 
         [TestMethod]

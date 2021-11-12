@@ -64,7 +64,7 @@ namespace Rafy.Domain.Validation
                     {
                         e.BrokenDescription = string.Format(
                             "{0} 不能低于 {1} 个字符。".Translate(),
-                            e.DisplayProperty(), min
+                            e.DisplayProperty(entity), min
                             );
                     }
                 }
@@ -81,7 +81,7 @@ namespace Rafy.Domain.Validation
                         {
                             e.BrokenDescription = string.Format(
                                 "{0} 不能超过 {1} 个字符。".Translate(),
-                                e.DisplayProperty(), max
+                                e.DisplayProperty(entity), max
                                 );
                         }
                     }

@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.84.4092
+3.84.4093
     ★★公布、内部修改
         * 20211108 将发布 VS2022 正式版。由于 VS2022 最低支持开发 NET451 的程序，故升级 Rafy 为支持 NET451 及 NetStandard 2.0；
         * 而其它领域插件，则不再直接支持 NetFramework，而是完全基于 NetStandard2.0。
@@ -23,6 +23,7 @@
         * MapTable 不应该重置 TableMeta。
         * TransactionDependentConnectionManager 优化。
         * ClientCommand 不能修改 StackTrace。
+        * RuleArgs.DisplayProperty() 需要使用运行时实体来计算显示的值。
 
 3.83.4072
     ★★公布、重构

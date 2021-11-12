@@ -84,10 +84,11 @@ namespace Rafy
         /// 否则，直接返回以下格式的字符串，方便替换：[属性名称]。（服务端一般都没有 UI 层元数据。）
         /// </summary>
         /// <param name="property">The property.</param>
+        /// <param name="entityType"></param>
         /// <returns></returns>
-        public virtual string GetLabelForDisplay(IManagedProperty property)
+        public virtual string GetLabelForDisplay(IManagedProperty property, Type entityType)
         {
-            return '[' + property.Name + ']';
+            return $"[{entityType.FullName}.{property.Name}]";
         }
 
         /// <summary>
@@ -98,7 +99,7 @@ namespace Rafy
         /// <returns></returns>
         public virtual string GetLabelForDisplay(Type entityType)
         {
-            return '[' + entityType.FullName + ']';
+            return $"[{entityType.FullName}]";
         }
     }
 }

@@ -49,10 +49,11 @@ namespace Rafy.Domain.Validation
         /// 否则，直接返回以下格式的字符串，方便替换：[属性名称]。（服务端一般都没有 UI 层元数据。）
         /// </summary>
         /// <param name="property">The property.</param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public static string Display(IManagedProperty property)
+        public static string Display(IManagedProperty property, object entity)
         {
-            return RuleArgs.Display(property);
+            return RuleArgs.Display(property, entity);
         }
 
         /// <summary>

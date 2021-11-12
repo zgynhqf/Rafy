@@ -42,7 +42,7 @@ namespace Rafy.Domain.Validation
                 }
                 else
                 {
-                    e.BrokenDescription = string.Format("{0} 需要是正数。".Translate(), e.DisplayProperty());
+                    e.BrokenDescription = string.Format("{0} 需要是正数。".Translate(), e.DisplayProperty(entity));
                 }
             }
         }

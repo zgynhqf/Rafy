@@ -64,7 +64,7 @@ namespace Rafy.Domain.Validation
                 }
                 else
                 {
-                    e.BrokenDescription = string.Format("{0} 里没有输入值。".Translate(), e.DisplayProperty());
+                    e.BrokenDescription = string.Format("{0} 里没有输入值。".Translate(), e.DisplayProperty(entity));
                 }
             }
         }

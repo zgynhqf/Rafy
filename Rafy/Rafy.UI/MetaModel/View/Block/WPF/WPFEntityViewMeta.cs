@@ -125,7 +125,7 @@ namespace Rafy.MetaModel.View
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public new WPFEntityPropertyViewMeta Property(string name)
+        public WPFEntityPropertyViewMeta Property(string name)
         {
             return base.Property(name) as WPFEntityPropertyViewMeta;
         }

@@ -58,7 +58,7 @@ namespace Rafy.Domain.Validation
                     {
                         e.BrokenDescription = string.Format(
                             "{0} 必须是 {1}。".Translate(),
-                            e.DisplayProperty(),
+                            e.DisplayProperty(entity),
                             this.RegexLabel.Translate()
                             );
                     }
