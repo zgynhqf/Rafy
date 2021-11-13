@@ -80,70 +80,85 @@ namespace Rafy.Domain
 
             var repoExt = invocation.InvocationTarget as IRepositoryExt;
             var repo = invocation.InvocationTarget as EntityRepository ?? repoExt.Repository as EntityRepository;
+            repo.OnQueryStarting(ieqc);
 
-            //只是不要纯客户端，都直接使用本地访问
-            if (repo.DataPortalLocation == DataPortalLocation.Local || RafyEnvironment.ConnectDataDirectly)
+            Exception exceptionOccurred = null;
+            try
             {
-                using (FinalDataPortal.CurrentQueryCriteriaItem.UseScopeValue(ieqc))
+                //只是不要纯客户端，都直接使用本地访问
+                if (repo.DataPortalLocation == DataPortalLocation.Local || RafyEnvironment.ConnectDataDirectly)
                 {
-                    try
+                    using (FinalDataPortal.CurrentQueryCriteriaItem.UseScopeValue(ieqc))
                     {
-                        RafyEnvironment.ThreadPortalCount++;
+                        try
+                        {
+                            RafyEnvironment.ThreadPortalCount++;
 
-                        if (repoExt != null)
-                        {
-                            //invoke repositoryExt
-                            invocation.Proceed();
-                        }
-                        else
-                        {
-                            //先尝试在 DataProvider 中调用指定的方法，如果没有找到，才会调用 Repository 中的方法。
-                            //这样可以使得 DataProvider 中定义同名方法即可直接重写仓库中的方法。
-                            object result = null;
-                            if (MethodCaller.CallMethodIfImplemented(
-                                repo.DataProvider, invocation.Method.Name, invocation.Arguments, out result
-                                ))
+                            if (repoExt != null)
                             {
-                                invocation.ReturnValue = result;
+                                //invoke repositoryExt
+                                invocation.Proceed();
                             }
                             else
                             {
-                                //invoke repository
-                                invocation.Proceed();
+                                //先尝试在 DataProvider 中调用指定的方法，如果没有找到，才会调用 Repository 中的方法。
+                                //这样可以使得 DataProvider 中定义同名方法即可直接重写仓库中的方法。
+                                object result = null;
+                                if (MethodCaller.CallMethodIfImplemented(
+                                    repo.DataProvider, invocation.Method.Name, invocation.Arguments, out result
+                                    ))
+                                {
+                                    invocation.ReturnValue = result;
+                                }
+                                else
+                                {
+                                    //invoke repository
+                                    invocation.Proceed();
+                                }
                             }
                         }
-                    }
-                    finally
-                    {
-                        RafyEnvironment.ThreadPortalCount--;
+                        finally
+                        {
+                            RafyEnvironment.ThreadPortalCount--;
+                        }
                     }
                 }
+                else
+                {
+                    //调用数据门户，使得在服务端才执行真正的数据层方法。
+                    invocation.ReturnValue = DataPortalApi.Fetch(invocation.TargetType, ieqc, repo.DataPortalLocation);
+                }
+
+                #region Repository.SetRepo
+
+                switch (fetchType)
+                {
+                    case RepositoryQueryType.List:
+                        var list = invocation.ReturnValue as EntityList;
+                        repo.SetRepo(list);
+                        break;
+                    case RepositoryQueryType.First:
+                        var entity = invocation.ReturnValue as Entity;
+                        repo.SetRepo(entity);
+                        break;
+                    case RepositoryQueryType.Count:
+                    case RepositoryQueryType.Table:
+                    default:
+                        break;
+                }
+
+                #endregion
+
             }
-            else
+            catch (Exception ex)
             {
-                //调用数据门户，使得在服务端才执行真正的数据层方法。
-                invocation.ReturnValue = DataPortalApi.Fetch(invocation.TargetType, ieqc, repo.DataPortalLocation);
+                exceptionOccurred = ex;
+                throw;
             }
-
-            #region Repository.SetRepo
-
-            switch (fetchType)
+            finally
             {
-                case RepositoryQueryType.List:
-                    var list = invocation.ReturnValue as EntityList;
-                    repo.SetRepo(list);
-                    break;
-                case RepositoryQueryType.First:
-                    var entity = invocation.ReturnValue as Entity;
-                    repo.SetRepo(entity);
-                    break;
-                case RepositoryQueryType.Count:
-                case RepositoryQueryType.Table:
-                default:
-                    break;
+                repo.OnQueryEnded(ieqc, exceptionOccurred ?? invocation.ReturnValue);
             }
-
-            #endregion
         }
     }
 }

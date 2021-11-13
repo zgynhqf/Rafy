@@ -57,6 +57,19 @@ namespace Rafy.Domain
             get { return this; }
         }
 
+        /// <summary>
+        /// 当标记了 <see cref="RepositoryQueryAttribute"/> 的查询方法开始执行前触发。
+        /// </summary>
+        /// <param name="criteria"></param>
+        internal protected virtual void OnQueryStarting(IEntityQueryCriteria criteria) { }
+
+        /// <summary>
+        /// 当标记了 <see cref="RepositoryQueryAttribute"/> 的查询方法开始执行完成后触发。
+        /// </summary>
+        /// <param name="criteria"></param>
+        /// <param name="result">结果对象。可能是 Entity、EntityList、LiteDataTable、Exception 等类型的对象</param>
+        internal protected virtual void OnQueryEnded(IEntityQueryCriteria criteria, object result) { }
+
         #region 缓存
 
         private ClientRepositoryCache _clientCache;
