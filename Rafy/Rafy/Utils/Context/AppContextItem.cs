@@ -31,9 +31,6 @@ namespace Rafy
         /// <param name="defaultValue">如果 <see cref="AppContext.Items" /> 中没有值时，本项对应的默认值。</param>
         public AppContextItem(string key, TValue defaultValue = default(TValue)) : base(key, defaultValue) { }
 
-        protected override IDictionary<string, object> ContextDataContainer
-        {
-            get { return AppContext.Items; }
-        }
+        protected override IDictionary<string, object> ContextDataContainer => AppContext.Items;
     }
 }
