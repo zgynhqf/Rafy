@@ -212,4 +212,9 @@ namespace Rafy.Domain
         /// </summary>
         public DomainController Controller { get; private set; }
     }
+
+    /// <summary>
+    /// <see cref="DomainControllerFactory"/> 的缩写。
+    /// </summary>
+    public abstract class DCF : DomainControllerFactory { }
 }
