@@ -280,14 +280,14 @@ namespace Rafy.Domain
         /// <summary>
         /// 生成仓库、仓库扩展的代理类型。
         /// </summary>
-        /// <param name="instanceType"></param>
+        /// <param name="repoOrExtType"></param>
         /// <returns></returns>
-        private object CreateInstanceProxy(Type instanceType)
+        private object CreateInstanceProxy(Type repoOrExtType)
         {
             var options = new ProxyGenerationOptions(DataPortalCallMethodHook.Instance);
             options.Selector = new InterceptorSelector();
 
-            var instance = _proxyGenerator.CreateClassProxy(instanceType, options);
+            var instance = _proxyGenerator.CreateClassProxy(repoOrExtType, options);
             return instance;
         }
 
