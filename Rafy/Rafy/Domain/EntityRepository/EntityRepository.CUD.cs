@@ -84,6 +84,8 @@ namespace Rafy.Domain
                     {
                         throw new NotSupportedException("只支持对 Entity、EntityList 进行保存。");
                     }
+
+                    component.MarkSaved();
                 }
 
                 //this.OnSaved(new SavedArgs

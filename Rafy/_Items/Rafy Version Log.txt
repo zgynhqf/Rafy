@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.85.4115
+3.85.4120
     ★重要、重构
         * 重构 DataPortal 内部结构。为 DomainController 更好地应用远程调用而做准备。
             * 添加 IDataPortalTarget、IDataPortalTargetFactory、DataPortalCallInterceptor 等类型。
@@ -18,6 +18,7 @@
             * 删除了无用的 DataPortalFacade 类型。
             * 将 FetchRequest、UpdateRequest 合并为 CallRequest。
             * 添加 FakeRemoteProxy。
+            * EntityRepositoryExt 支持远程调用。
 
 3.84.4098
     ★★公布、内部修改

@@ -207,9 +207,9 @@ namespace Rafy.Domain
         /// <param name="repository"></param>
         private void AddExtensions(EntityRepository repository)
         {
-            var list = new List<IRepositoryExt>();
+            var repoExtensions = new List<IRepositoryExt>();
 
-            this.LoadAllExtensions();
+            this.LoadAllExtensionTypes();
 
             //把对该类及它的基类的扩展都加入进来。
             var baseTypes = TypeHelper.GetHierarchy(repository.GetType(), typeof(EntityRepositoryQueryBase)).Reverse().ToArray();
@@ -221,20 +221,20 @@ namespace Rafy.Domain
                     foreach (var extType in extList)
                     {
                         var ext = this.CreateInstanceProxy(extType) as IRepositoryExt;
-                        list.Add(ext);
+                        repoExtensions.Add(ext);
 
                         (ext as IRepositoryExtInternal).BindRepository(repository);
                     }
                 }
             }
 
-            repository.Extensions = new ReadOnlyCollection<IRepositoryExt>(list);
+            repository.Extensions = new ReadOnlyCollection<IRepositoryExt>(repoExtensions);
         }
 
         /// <summary>
         /// 加载所有插件中的实体仓库扩展类
         /// </summary>
-        private void LoadAllExtensions()
+        private void LoadAllExtensionTypes()
         {
             if (!_extLoaded)
             {
@@ -311,11 +311,18 @@ namespace Rafy.Domain
 
         string IDataPortalTargetFactory.Name => RepositoryFactoryHost.RepositoryFactoryName;
 
-        IDataPortalTarget IDataPortalTargetFactory.GetTarget(string targetInfo)
+        IDataPortalTarget IDataPortalTargetFactory.GetTarget(DataPortalTargetFactoryInfo info)
         {
-            var type = Type.GetType(targetInfo);
-            if (type == null) throw new InvalidOperationException(targetInfo + " 不是可加载的类型，加载失败。");
-            return this.FindByEntity(type, true) as IDataPortalTarget;
+            var repositoryType = TypeSerializer.Deserialize(info.TargetInfo);
+            var repository = this.Find(repositoryType, true);
+
+            if (info is RepoExtInfo)
+            {
+                var extType = TypeSerializer.Deserialize((info as RepoExtInfo).ExtType);
+                return repository.Extensions.First(e => extType.IsInstanceOfType(e)) as IDataPortalTarget;
+            }
+
+            return repository as IDataPortalTarget;
         }
 
         //private void CheckVirtualMethods(Type type)

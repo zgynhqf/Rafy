@@ -203,11 +203,30 @@ namespace Rafy.Domain
         #region IDataPortalTarget
         DataPortalTargetFactoryInfo IDataPortalTarget.TryUseFactory()
         {
-            return new DataPortalTargetFactoryInfo
+            if (this is IRepository)//repository
             {
-                FactoryName = RepositoryFactoryHost.RepositoryFactoryName,
-                TargetInfo = Repo.EntityType.AssemblyQualifiedName
-            };
+                var repoType = this.GetType().BaseType;
+                return new DataPortalTargetFactoryInfo
+                {
+                    FactoryName = RepositoryFactoryHost.RepositoryFactoryName,
+                    TargetInfo = TypeSerializer.Serialize(repoType),
+                };
+            }
+            else if (this is IRepositoryExt) //repository Ext
+            {
+                var extType = this.GetType().BaseType;
+                var repoType = this.Repo.GetType().BaseType;
+                return new RepoExtInfo
+                {
+                    FactoryName = RepositoryFactoryHost.RepositoryFactoryName,
+                    TargetInfo = TypeSerializer.Serialize(repoType),
+                    ExtType = TypeSerializer.Serialize(extType),
+                };
+            }
+            else
+            {
+                throw new NotSupportedException();
+            }
         }
 
         void IDataPortalTarget.OnPortalCalling(DataPortalCallContext e)
@@ -263,5 +282,11 @@ namespace Rafy.Domain
         {
             get { return QueryFactory.Instance; }
         }
+    }
+
+    [Serializable]
+    public class RepoExtInfo : DataPortalTargetFactoryInfo
+    {
+        public string ExtType { get; set; }
     }
 }

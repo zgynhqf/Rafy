@@ -95,14 +95,14 @@ namespace Rafy.ManagedProperty
 
         void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("PropertyName", _property.Name);
-            info.AddValue("OwnerType", _owner);
+            info.AddValue("p", _property.Name);
+            info.AddValue("o", TypeSerializer.Serialize(_owner));
         }
 
         void ICustomSerializationObject.SetObjectData(SerializationInfo info, StreamingContext context)
         {
-            var propertyName = info.GetString("PropertyName");
-            var ownerType = info.GetValue("OwnerType", typeof(Type)) as Type;
+            var propertyName = info.GetString("p");
+            var ownerType = TypeSerializer.Deserialize(info.GetString("o"));
             var container = ManagedPropertyRepository.Instance.GetTypePropertiesContainer(ownerType);
             var property = container.GetAvailableProperties().Find(propertyName);
 

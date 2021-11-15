@@ -18,11 +18,11 @@ namespace UT
         /// <param name="value">对应的属性值，如果是字符串属性，会使用包含查询。</param>
         /// <returns></returns>
         [RepositoryQuery]
-        public virtual EntityList GetBySingleProperty(IManagedProperty property, object value)
+        public virtual EntityList GetBySingleProperty(ConcreteProperty property, object value)
         {
             var q = QueryFactory.Instance.Query(this.Repository);
-            var op = property.PropertyType == typeof(string) ? PropertyOperator.Contains : PropertyOperator.Equal;
-            q.AddConstraintIf(property, op, value);
+            var op = property.Property.PropertyType == typeof(string) ? PropertyOperator.Contains : PropertyOperator.Equal;
+            q.AddConstraintIf(property.Property, op, value);
 
             return (EntityList)this.QueryData(q);
         }

@@ -59,7 +59,7 @@ namespace Rafy.Domain.DataPortal
                 if (factoryInfo != null)
                 {
                     var factory = DataPortalTargetFactoryRegistry.Get(factoryInfo.FactoryName);
-                    obj = factory.GetTarget(factoryInfo.TargetInfo);
+                    obj = factory.GetTarget(factoryInfo);
                 }
 
                 //非工厂模式下，直接使用反射进行调用。

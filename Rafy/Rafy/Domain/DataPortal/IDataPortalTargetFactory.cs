@@ -19,6 +19,6 @@ namespace Rafy.Domain.DataPortal
         /// </summary>
         /// <param name="targetInfo"></param>
         /// <returns></returns>
-        IDataPortalTarget GetTarget(string targetInfo);
+        IDataPortalTarget GetTarget(DataPortalTargetFactoryInfo targetInfo);
     }
 }

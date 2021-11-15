@@ -2452,7 +2452,7 @@ namespace RafyUnitTest
                 var user = new TestUser { Age = 100 };
                 repo.Save(user);
 
-                var userList = repo.Extension<EntityRepositoryExtension>().GetBySingleProperty(TestUser.AgeProperty, 100);
+                var userList = repo.Extension<EntityRepositoryExtension>().GetBySingleProperty(new ConcreteProperty(TestUser.AgeProperty), 100);
                 Assert.IsTrue(userList.Count > 0);
 
                 var userList2 = repo.GetBy(new SinglePropertyCriteira
@@ -2467,12 +2467,12 @@ namespace RafyUnitTest
                 RF.Save(task);
 
                 var taskRepo = RF.ResolveInstance<TestTreeTaskRepository>();
-                var taskList = taskRepo.Extension<EntityRepositoryExtension>().GetBySingleProperty(TestTreeTask.TestUserIdProperty, user.Id);
+                var taskList = taskRepo.Extension<EntityRepositoryExtension>().GetBySingleProperty(new ConcreteProperty(TestTreeTask.TestUserIdProperty), user.Id);
                 Assert.IsTrue(taskList.Count > 0);
 
                 //查询 TestAdministrator
                 var adminRepo = RF.ResolveInstance<TestAdministratorRepository>();
-                var adminList = adminRepo.Extension<EntityRepositoryExtension>().GetBySingleProperty(TestUser.AgeProperty, 100);
+                var adminList = adminRepo.Extension<EntityRepositoryExtension>().GetBySingleProperty(new ConcreteProperty(TestUser.AgeProperty), 100);
                 Assert.IsTrue(adminList.Count > 0);
             }
         }
@@ -2483,11 +2483,14 @@ namespace RafyUnitTest
             var repo = RF.ResolveInstance<BookRepository>();
             try
             {
-                repo.GetBy(new { });
+                repo.GetBy(new NonsenceCriteria());
                 Assert.IsFalse(true, "这里需要发生异常，因为给定的参数并没有在仓库中找到对应的方法。");
             }
             catch (InvalidProgramException) { }
         }
+
+        [Serializable]
+        private class NonsenceCriteria { }
 
         #endregion
 
