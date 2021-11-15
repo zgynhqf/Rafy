@@ -105,7 +105,11 @@ namespace Rafy.ComponentModel
         /// 初始化应用程序的环境。
         /// 子类可在此方法中添加所需的插件、设置 <see cref="RafyEnvironment"/> 的值等。
         /// </summary>
-        protected virtual void InitEnvironment() { }
+        protected virtual void InitEnvironment()
+        {
+            RafyEnvironment.DataPortalMode = RafyEnvironment.Configuration.Section.DataPortalProxy == "Local" ?
+                DataPortalMode.ConnectDirectly : DataPortalMode.ThroughService;
+        }
 
         /// <summary>
         /// 初始化必须在初始化期定义的各种元数据。

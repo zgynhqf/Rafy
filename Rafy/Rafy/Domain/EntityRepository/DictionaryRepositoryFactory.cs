@@ -311,9 +311,10 @@ namespace Rafy.Domain
 
         string IDataPortalTargetFactory.Name => RepositoryFactoryHost.RepositoryFactoryName;
 
-        IDataPortalTarget IDataPortalTargetFactory.GetTarget(string name)
+        IDataPortalTarget IDataPortalTargetFactory.GetTarget(string targetInfo)
         {
-            var type = Type.GetType(name);
+            var type = Type.GetType(targetInfo);
+            if (type == null) throw new InvalidOperationException(targetInfo + " 不是可加载的类型，加载失败。");
             return this.FindByEntity(type, true) as IDataPortalTarget;
         }
 

@@ -43,7 +43,7 @@ namespace Rafy.Domain.DataPortal
         public static IDataPortalTargetFactory Get(string name)
         {
             var last = _lastFactoryCache;
-            if (_lastFactoryCache.Name == name) return last;
+            if (last != null && last.Name == name) return last;
 
             last = targetFactories[name];
             _lastFactoryCache = last;

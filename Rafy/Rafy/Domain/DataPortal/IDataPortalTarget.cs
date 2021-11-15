@@ -49,6 +49,7 @@ namespace Rafy.Domain.DataPortal
     /// <summary>
     /// 门户的目标对象对应的工厂及构造信息
     /// </summary>
+    [Serializable]
     public class DataPortalTargetFactoryInfo
     {
         /// <summary>

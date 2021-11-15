@@ -22,6 +22,7 @@ namespace Rafy.Domain.DataPortal
 {
     /// <summary>
     /// 最终调用实体的 IDataPortalServer 门户实现。
+    /// 不论是通过 WCFProxy、还是通过 FakeRemoteProxy，都会调用到 FinalDataPortal 中。
     /// </summary>
     internal class FinalDataPortal : IDataPortalServer
     {
@@ -32,7 +33,6 @@ namespace Rafy.Domain.DataPortal
                 SetContext(context);
 
                 var result = DoCall(obj, method, arguments);
-
                 return new DataPortalResult(result);
             }
             finally
@@ -48,18 +48,27 @@ namespace Rafy.Domain.DataPortal
         /// <param name="method"></param>
         /// <param name="arguments"></param>
         /// <returns></returns>
-        private static object DoCall(object obj, string method, object[] arguments)
+        internal static object DoCall(object obj, string method, object[] arguments)
         {
-            //如果目标对象需要使用工厂，那么先找到其对应的工厂，然后再通过工厂来获取对应的对象。
-            var factoryInfo = obj as DataPortalTargetFactoryInfo;
-            if (factoryInfo != null)
+            try
             {
-                var factory = DataPortalTargetFactoryRegistry.Get(factoryInfo.FactoryName);
-                obj = factory.GetTarget(factoryInfo.TargetInfo);
-            }
+                RafyEnvironment.ThreadPortalCount++;
 
-            //非工厂模式下，直接使用反射进行调用。
-            return MethodCaller.CallMethod(obj, method, arguments);
+                //如果目标对象需要使用工厂，那么先找到其对应的工厂，然后再通过工厂来获取对应的对象。
+                var factoryInfo = obj as DataPortalTargetFactoryInfo;
+                if (factoryInfo != null)
+                {
+                    var factory = DataPortalTargetFactoryRegistry.Get(factoryInfo.FactoryName);
+                    obj = factory.GetTarget(factoryInfo.TargetInfo);
+                }
+
+                //非工厂模式下，直接使用反射进行调用。
+                return MethodCaller.CallMethod(obj, method, arguments);
+            }
+            finally
+            {
+                RafyEnvironment.ThreadPortalCount--;
+            }
         }
 
         private static void SetContext(DataPortalContext context)

@@ -30,15 +30,9 @@ namespace Rafy.Domain.DataPortal
     public static class DataPortalApi
     {
         /// <summary>
-        /// 是否需要在模拟远程调用（进行对象的复制）。
-        /// 
-        /// 由于开发人员平时会使用单机版本开发，而正式部署时，又会选用 C/S 架构。
-        /// 所以需要保证单机版本和 C/S 架构版本的模式是一样的。也就是说，在单机模式下，
-        /// 在通过门户访问时，模拟网络版，clone 出一个新的对象。
-        /// 这样，在底层 Update 更改 obj 时，不会影响上层的实体。
-        /// 而是以返回值的形式把这个被修改的实体返回给上层。
+        /// 表示当前线程执行的代码是否正处于数据门户的调用中。
         /// </summary>
-        public static bool FakeRemote { get; set; } = false;
+        public static bool IsRunning => RafyEnvironment.ThreadPortalCount > 0;
 
         public static object Call(object obj, string method, object[] arguments)
         {

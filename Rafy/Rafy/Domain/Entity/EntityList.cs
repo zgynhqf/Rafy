@@ -77,7 +77,7 @@ namespace Rafy.Domain
         public IRepository GetRepository()
         {
             var repo = this.FindRepository();
-            if (repo == null) throw new InvalidProgramException(string.Format("类型 {0} 没有对应的仓库类，无法使用此方法。", this.EntityType.Name));
+            if (repo == null) throw new InvalidOperationException($"类型 {this.EntityType.FullName} 没有对应的仓库类，无法使用此方法。");
 
             return repo;
         }
@@ -442,7 +442,10 @@ namespace Rafy.Domain
                 base.RemoveItem(sourceList.Count);
             }
 
-            this.SetRepo(sourceList._repository);
+            if (sourceList._repository != null)
+            {
+                this.SetRepo(sourceList._repository);
+            }
         }
 
         #endregion

@@ -206,7 +206,7 @@ namespace Rafy.Domain
             return new DataPortalTargetFactoryInfo
             {
                 FactoryName = RepositoryFactoryHost.RepositoryFactoryName,
-                TargetInfo = Repo.EntityType.FullName
+                TargetInfo = Repo.EntityType.AssemblyQualifiedName
             };
         }
 
