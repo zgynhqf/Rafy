@@ -105,8 +105,7 @@ namespace Rafy.Domain
         [DataPortalCall]
         protected virtual IDomainComponent SaveByPortal(IDomainComponent component)
         {
-            //注意，这里的代码不会被执行，因为反射会直接调用数据层同名的方法。这里写出来，只是为了方便查看。
-            return _dataProvider.SaveByPortal(component);
+            return _dataProvider.SaveComponentByPortal(component);
         }
 
         /// <summary>

@@ -101,7 +101,7 @@ namespace Rafy.Domain
         /// 数据门户调用本接口来保存数据。
         /// </summary>
         /// <param name="component"></param>
-        internal IDomainComponent SaveByPortal(IDomainComponent component)
+        internal IDomainComponent SaveComponentByPortal(IDomainComponent component)
         {
             this.DataSaver.SubmitComposition(component);
             return component;
