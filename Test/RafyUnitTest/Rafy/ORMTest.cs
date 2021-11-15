@@ -61,6 +61,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_EntityContext_Query()
         {
+            if (!RafyEnvironment.ConnectDataDirectly) return;
+
             var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
@@ -82,6 +84,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_EntityContext_Insert()
         {
+            if (!RafyEnvironment.ConnectDataDirectly) return;
+
             var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             using (RF.EnterEntityContext())
@@ -97,6 +101,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_EntityContext_Update()
         {
+            if (!RafyEnvironment.ConnectDataDirectly) return;
+
             var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
             {
