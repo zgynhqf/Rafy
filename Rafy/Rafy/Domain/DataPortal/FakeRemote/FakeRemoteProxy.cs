@@ -53,6 +53,8 @@ namespace Rafy.Domain.DataPortal
 
             var result = FinalDataPortal.DoCall(obj, method, arguments);
 
+            result = BinarySerializer.Clone(result);
+
             return new DataPortalResult(result);
         }
     }
