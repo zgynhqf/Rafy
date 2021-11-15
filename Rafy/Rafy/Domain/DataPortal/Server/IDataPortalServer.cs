@@ -15,26 +15,18 @@ using System;
 namespace Rafy.Domain.DataPortal
 {
     /// <summary>
-    /// Interface implemented by server-side data portal
-    /// components.
+    /// 数据调用的提供程序
     /// </summary>
     public interface IDataPortalServer
     {
         /// <summary>
-        /// Get an existing business object.
+        /// 调用指定对象的指定方法，并返回其对应的返回值。
         /// </summary>
-        /// <param name="objectType">Type of business object to retrieve.</param>
-        /// <param name="criteria">Criteria object describing business object.</param>
-        /// <param name="context"><see cref="DataPortalContext" /> object passed to the server.</param>
+        /// <param name="obj"></param>
+        /// <param name="method"></param>
+        /// <param name="arguments"></param>
+        /// <param name="context"></param>
         /// <returns></returns>
-        DataPortalResult Fetch(Type objectType, object criteria, DataPortalContext context);
-
-        /// <summary>
-        /// Update a business object.
-        /// </summary>
-        /// <param name="obj">Business object to update.</param>
-        /// <param name="context"><see cref="DataPortalContext" /> object passed to the server.</param>
-        /// <returns></returns>
-        DataPortalResult Update(object obj, DataPortalContext context);
+        DataPortalResult Call(object obj, string method, object[] arguments, DataPortalContext context);
     }
 }

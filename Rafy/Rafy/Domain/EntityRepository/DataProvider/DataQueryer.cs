@@ -125,7 +125,7 @@ namespace Rafy.Domain
         /// <returns></returns>
         public object QueryData(IQuery query, PagingInfo paging = null, LoadOptions loadOptions = null, bool markTreeFullLoaded = true)
         {
-            var queryType = FinalDataPortal.CurrentIEQC.QueryType;
+            var queryType = IEQC.Current.QueryType;
             if (queryType == RepositoryQueryType.Table)
             {
                 return this.QueryTable(query, paging);
@@ -253,7 +253,7 @@ namespace Rafy.Domain
         internal protected virtual void OnQuerying(ORMQueryArgs args)
         {
             //默认对分页进行处理。
-            var pList = FinalDataPortal.CurrentIEQC.Parameters;
+            var pList = IEQC.Current.Parameters;
             if (pList.Length == 1)
             {
                 var userCriteria = pList[0] as ILoadOptionsCriteria;
@@ -364,7 +364,7 @@ namespace Rafy.Domain
                 args.EntityList = Repo.NewListFast();
             }
 
-            args.SetQueryType(FinalDataPortal.CurrentIEQC.QueryType);
+            args.SetQueryType(IEQC.Current.QueryType);
         }
 
         internal void LoadByFilter(EntityQueryArgs args)
@@ -660,7 +660,7 @@ namespace Rafy.Domain
         /// <returns></returns>
         protected static object ReturnForRepository(EntityList list)
         {
-            return ReturnForRepository(list, FinalDataPortal.CurrentIEQC.QueryType);
+            return ReturnForRepository(list, IEQC.Current.QueryType);
         }
 
         private static object ReturnForRepository(EntityList list, RepositoryQueryType queryType)

@@ -27,6 +27,7 @@ using Rafy.MetaModel.Attributes;
 using Rafy.Utils;
 using Castle.DynamicProxy;
 using Rafy.Domain.ORM;
+using Rafy.Domain.DataPortal;
 
 namespace Rafy.Domain
 {
@@ -37,7 +38,7 @@ namespace Rafy.Domain
     /// 
     /// Repository 全部使用单例模式
     /// </summary>
-    public class DictionaryRepositoryFactory : IRepositoryFactory
+    public class DictionaryRepositoryFactory : IRepositoryFactory, IDataPortalTargetFactory
     {
         /// <summary>
         /// 使用 EntityType 作为查询键的字典。
@@ -272,7 +273,7 @@ namespace Rafy.Domain
 
         #endregion
 
-        #region 生成代理、方法拦截
+        #region DataPortal 相关、生成代理、方法拦截
 
         private ProxyGenerator _proxyGenerator = new ProxyGenerator();
 
@@ -283,9 +284,37 @@ namespace Rafy.Domain
         /// <returns></returns>
         private object CreateInstanceProxy(Type instanceType)
         {
-            var options = new ProxyGenerationOptions(RepoQueryMethodDeterminationHook.Instance);
-            var instance = _proxyGenerator.CreateClassProxy(instanceType, options, RepositoryInterceptor.Instance);
+            var options = new ProxyGenerationOptions(DataPortalCallMethodHook.Instance);
+            options.Selector = new InterceptorSelector();
+
+            var instance = _proxyGenerator.CreateClassProxy(instanceType, options);
             return instance;
+        }
+
+        private class InterceptorSelector : IInterceptorSelector
+        {
+            public IInterceptor[] SelectInterceptors(Type type, MethodInfo method, IInterceptor[] interceptors)
+            {
+                //RepositoryInterceptor 需要拦截 RepositoryQueryAttribute 标记的方法。
+                //DataPortalCallInterceptor 需要拦截 RepositoryQueryAttribute 或 DataPortalCallAttribute 标记的方法。
+                if (method.HasMarked<RepositoryQueryAttribute>())
+                {
+                    return new IInterceptor[] { RepositoryInterceptor.Instance, DataPortalCallInterceptor.Instance };
+                }
+                if (method.HasMarked<DataPortalCallAttribute>())
+                {
+                    return new IInterceptor[] { DataPortalCallInterceptor.Instance };
+                }
+                return null;
+            }
+        }
+
+        string IDataPortalTargetFactory.Name => RepositoryFactoryHost.RepositoryFactoryName;
+
+        IDataPortalTarget IDataPortalTargetFactory.GetTarget(string name)
+        {
+            var type = Type.GetType(name);
+            return this.FindByEntity(type, true) as IDataPortalTarget;
         }
 
         //private void CheckVirtualMethods(Type type)
@@ -304,26 +333,6 @@ namespace Rafy.Domain
         //        }
         //    }
         //}
-
-        /// <summary>
-        /// 只有标记了 RepositoryQueryMethodAttribute 标记的方法，才需要进行拦截。
-        /// </summary>
-        private class RepoQueryMethodDeterminationHook : AllMethodsHook
-        {
-            public static readonly RepoQueryMethodDeterminationHook Instance = new RepoQueryMethodDeterminationHook();
-
-            private RepoQueryMethodDeterminationHook() { }
-
-            public override bool ShouldInterceptMethod(Type type, MethodInfo methodInfo)
-            {
-                var res = base.ShouldInterceptMethod(type, methodInfo);
-                if (res)
-                {
-                    res = methodInfo.HasMarked<RepositoryQueryAttribute>();
-                }
-                return res;
-            }
-        }
 
         #endregion
 

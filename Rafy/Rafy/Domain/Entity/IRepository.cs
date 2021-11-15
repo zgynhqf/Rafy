@@ -23,6 +23,7 @@ using Rafy.Domain.Caching;
 using Rafy;
 using Rafy.Domain.ORM.Linq;
 using System.Linq.Expressions;
+using Rafy.Domain.DataPortal;
 
 namespace Rafy.Domain
 {
@@ -301,10 +302,31 @@ namespace Rafy.Domain
     /// </summary>
     public static class RepositoryFactoryHost
     {
+        internal const string RepositoryFactoryName = "RepoFactory";
+
+        private static IRepositoryFactory _factory;
+
         /// <summary>
         /// 依赖注入的 <see cref="IRepositoryFactory"/>。
         /// </summary>
-        public static IRepositoryFactory Factory { get; set; }
+        public static IRepositoryFactory Factory
+        {
+            get => _factory;
+            set
+            {
+                if (value == null) throw new ArgumentNullException(nameof(value));
+
+                _factory = value;
+
+                //同时，需要注册到注册表中。
+                if (value is IDataPortalTargetFactory)
+                {
+                    var portalFactory = value as IDataPortalTargetFactory;
+                    if (portalFactory.Name != RepositoryFactoryName) throw new InvalidOperationException();
+                    DataPortalTargetFactoryRegistry.Register(portalFactory);
+                }
+            }
+        }
     }
 
     internal interface IRepositoryInternal : IRepository, IEntityInfoHost

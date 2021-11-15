@@ -33,13 +33,20 @@ namespace Rafy.Domain
     /// 数据仓库查询基类。
     /// 作为 EntityRepository、EntityRepositoryExt 两个类的基类，本类提取了所有数据访问的公共方法。
     /// </summary>
-    public abstract class EntityRepositoryQueryBase
+    public abstract class EntityRepositoryQueryBase : IDataPortalTarget
     {
         internal abstract IRepositoryInternal Repo { get; }
+
+        /// <summary>
+        /// 获取或设置本仓库数据门户所在位置。
+        /// </summary>
+        public DataPortalLocation DataPortalLocation { get; protected set; }
+
 
         public EntityRepositoryQueryBase()
         {
             _linqProvider = new EntityQueryProvider(this);
+            this.DataPortalLocation = DataPortalLocation.Dynamic;
         }
 
         /// <summary>
@@ -189,6 +196,33 @@ namespace Rafy.Domain
         //{
         //    return Queryer.QueryTable(args);
         //}
+
+        #endregion
+
+
+        #region IDataPortalTarget
+        DataPortalTargetFactoryInfo IDataPortalTarget.TryUseFactory()
+        {
+            return new DataPortalTargetFactoryInfo
+            {
+                FactoryName = RepositoryFactoryHost.RepositoryFactoryName,
+                TargetInfo = Repo.EntityType.FullName
+            };
+        }
+
+        void IDataPortalTarget.OnPortalCalling(DataPortalCallContext e)
+        {
+            this.OnPortalCalling(e);
+        }
+
+        void IDataPortalTarget.OnPortalCalled(DataPortalCallContext e)
+        {
+            this.OnPortalCalled(e);
+        }
+
+        protected virtual void OnPortalCalling(DataPortalCallContext e) { }
+
+        protected virtual void OnPortalCalled(DataPortalCallContext e) { }
 
         #endregion
 

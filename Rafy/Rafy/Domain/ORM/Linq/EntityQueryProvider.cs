@@ -115,7 +115,7 @@ namespace Rafy.Domain.ORM.Linq
                 QueryType = counting ? RepositoryQueryType.Count : RepositoryQueryType.List,
                 Parameters = new object[0]
             };
-            using (FinalDataPortal.CurrentQueryCriteriaItem.UseScopeValue(iqec))
+            using (IEQC.CurrentItem.UseScopeValue(iqec))
             {
                 var queryable = this.CreateQuery(expression);
 

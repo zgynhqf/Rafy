@@ -30,37 +30,20 @@ namespace Rafy.Domain.DataPortal.WCF
         /// Get an existing business object.
         /// </summary>
         /// <param name="request">The request parameter object.</param>
-        public WcfResponse Fetch(FetchRequest request)
+        public WcfResponse Call(CallRequest request)
         {
-            var portal = new DataPortalFacade();
-            object result;
-            try
-            {
-                result = portal.Fetch(request.ObjectType, request.Criteria, request.Context);
-            }
-            catch (Exception ex)
-            {
-                result = ex;
-            }
-            return new WcfResponse { Result = result };
-        }
+            var portal = new FinalDataPortal();
 
-        /// <summary>
-        /// Update a business object.
-        /// </summary>
-        /// <param name="request">The request parameter object.</param>
-        public WcfResponse Update(UpdateRequest request)
-        {
-            var portal = new DataPortalFacade();
             object result;
             try
             {
-                result = portal.Update(request.Object, request.Context);
+                result = portal.Call(request.Instance, request.Method, request.Arguments, request.Context);
             }
             catch (Exception ex)
             {
                 result = ex;
             }
+
             return new WcfResponse { Result = result };
         }
 

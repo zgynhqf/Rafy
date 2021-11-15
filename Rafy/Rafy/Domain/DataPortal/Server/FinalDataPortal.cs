@@ -1,21 +1,22 @@
 ﻿/*******************************************************
  * 
- * 作者：胡庆访
- * 创建时间：2011
+ * 作者：CSLA
+ * 创建时间：2008
  * 说明：此文件只包含一个类，具体内容见类型注释。
  * 运行环境：.NET 4.0
  * 版本号：1.0.0
  * 
  * 历史记录：
- * 创建文件 胡庆访 2011
+ * 创建文件 胡庆访 2010
  * 
 *******************************************************/
 
-using System;
 using Rafy.Reflection;
-using Rafy.Domain;
-using Rafy;
-using System.Diagnostics;
+using System;
+using System.Configuration;
+using System.Globalization;
+using System.Security.Principal;
+using System.Threading;
 
 namespace Rafy.Domain.DataPortal
 {
@@ -24,94 +25,62 @@ namespace Rafy.Domain.DataPortal
     /// </summary>
     internal class FinalDataPortal : IDataPortalServer
     {
-        /// <summary>
-        /// 当前查询正在使用的单一条件。
-        /// </summary>
-        internal static readonly AppContextItem<object> CurrentQueryCriteriaItem =
-            new AppContextItem<object>("Rafy.Domain.DataPortal.FinalDataPortal.CurrentCriteria");
-
-        /// <summary>
-        /// 当前正在使用的查询参数
-        /// </summary>
-        internal static IEQC CurrentIEQC
+        public DataPortalResult Call(object obj, string method, object[] arguments, DataPortalContext context)
         {
-            get
+            try
             {
-                var ieqc = CurrentQueryCriteriaItem.Value as IEQC;
-                if (ieqc == null) throw new InvalidProgramException("实体查询时必须使用正确的格式，查询方法必须是虚方法，并添加 RepositoryQuery 标记，否则无法判断查询中的返回值。");
-                return ieqc;
+                SetContext(context);
+
+                var result = DoCall(obj, method, arguments);
+
+                return new DataPortalResult(result);
+            }
+            finally
+            {
+                ClearContext(context);
             }
         }
 
         /// <summary>
-        /// Get an existing business object.
-        /// </summary>
-        /// <param name="objectType">Type of business object to retrieve.</param>
-        /// <param name="criteria">Criteria object describing business object.</param>
-        /// <param name="context"><see cref="DataPortalContext" /> object passed to the server.</param>
-        /// <returns></returns>
-        public DataPortalResult Fetch(Type objectType, object criteria, DataPortalContext context)
-        {
-            using (CurrentQueryCriteriaItem.UseScopeValue(criteria))
-            {
-                var instance = RepositoryFactoryHost.Factory.Find(objectType) as EntityRepository;
-
-                //如果是实体查询，则应该用其中的 Parameters 数组来查找对应的数据层方法。
-                var res = instance.PortalFetch(criteria as IEQC);
-
-                // return the populated business object as a result
-                return new DataPortalResult(res);
-            }
-        }
-
-        /// <summary>
-        /// Update a business object.
-        /// </summary>
-        /// <param name="obj">Business object to update.</param>
-        /// <param name="context">
-        /// <see cref="DataPortalContext" /> object passed to the server.
-        /// </param>
-        public DataPortalResult Update(object obj, DataPortalContext context)
-        {
-            Update(obj);
-
-            return new DataPortalResult(obj);
-        }
-
-        /// <summary>
-        /// 直接更新某个对象
+        /// 核心实现
         /// </summary>
         /// <param name="obj"></param>
-        internal static void Update(object obj)
+        /// <param name="method"></param>
+        /// <param name="arguments"></param>
+        /// <returns></returns>
+        private static object DoCall(object obj, string method, object[] arguments)
         {
-            var component = obj as IDomainComponent;
-            if (component != null)
+            //如果目标对象需要使用工厂，那么先找到其对应的工厂，然后再通过工厂来获取对应的对象。
+            var factoryInfo = obj as DataPortalTargetFactoryInfo;
+            if (factoryInfo != null)
             {
-                var repo = component.GetRepository() as EntityRepository;
-                repo.DataProvider.SubmitComposition(component);
+                var factory = DataPortalTargetFactoryRegistry.Get(factoryInfo.FactoryName);
+                obj = factory.GetTarget(factoryInfo.TargetInfo);
             }
-            else if (obj is Service)
-            {
-                (obj as Service).ExecuteByDataPortal();
-            }
-            else
-            {
-                throw new InvalidProgramException("目前只支持 Entity、EntityList、Service 三类对象的保存。");
-            }
-            //public interface IDataPortalUpdatable
-            //{
-            //    void DataPortal_Update();
-            //}
-            //// tell the business object to update itself
-            //var updatable = obj as IDataPortalUpdatable;
-            //if (updatable != null)
-            //{
-            //    updatable.DataPortal_Update();
-            //}
-            //else
-            //{
-            //    throw new InvalidProgramException(string.Format("{0} 对象需要实体接口：IDataPortalUpdatable。", obj.GetType()));
-            //}
+
+            //非工厂模式下，直接使用反射进行调用。
+            return MethodCaller.CallMethod(obj, method, arguments);
+        }
+
+        private static void SetContext(DataPortalContext context)
+        {
+            // set the app context to the value we got from the
+            // client
+            DistributionContext.ClientContextItem.Value = context.ClientContext;
+            DistributionContext.GlobalContextItem.Value = context.GlobalContext;
+
+            // set the thread's culture to match the client
+            Thread.CurrentThread.CurrentCulture = new CultureInfo(context.ClientCulture);
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo(context.ClientUICulture);
+
+            RafyEnvironment.Principal = context.Principal;
+        }
+
+        private static void ClearContext(DataPortalContext context)
+        {
+            DistributionContext.ClientContextItem.Value = null;
+            DistributionContext.GlobalContextItem.Value = null;
+            RafyEnvironment.Principal = null;
         }
     }
 }

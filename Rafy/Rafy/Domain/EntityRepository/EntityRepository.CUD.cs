@@ -57,7 +57,7 @@ namespace Rafy.Domain
             {
                 this.OnSaving(component);
 
-                result = this.SaveToPortal(component);
+                result = this.SaveByPortal(component);
 
                 //如果返回的对象与传入的对象不是同一个对象，表示已经通过了 WCF 来进行进行传输，
                 //这时需要把客户端对象的 Id 值与服务器对象的 Id 值统一。
@@ -102,9 +102,11 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="component"></param>
         /// <returns></returns>
-        private IDomainComponent SaveToPortal(IDomainComponent component)
+        [DataPortalCall]
+        protected virtual IDomainComponent SaveByPortal(IDomainComponent component)
         {
-            return DataPortalApi.Update(component, this.DataPortalLocation) as IDomainComponent;
+            //注意，这里的代码不会被执行，因为反射会直接调用数据层同名的方法。这里写出来，只是为了方便查看。
+            return _dataProvider.SaveByPortal(component);
         }
 
         /// <summary>

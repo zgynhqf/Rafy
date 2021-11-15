@@ -17,28 +17,20 @@ using System.Runtime.Serialization;
 namespace Rafy.Domain.DataPortal.WCF
 {
     /// <summary>
-    /// Request message for retrieving
-    /// an existing business object.
+    /// WCF 调用请求对象。
     /// </summary>
     [DataContract, Serializable]
-    public class FetchRequest
+    public class CallRequest
     {
-        /// <summary>
-        /// The type of the business object
-        /// to be retrieved.
-        /// </summary>
         [DataMember]
-        public Type ObjectType { get; set; }
+        public object Instance { get; set; }
 
-        /// <summary>
-        /// Criteria object describing business object.
-        /// </summary>
         [DataMember]
-        public object Criteria { get; set; }
+        public string Method { get; set; }
 
-        /// <summary>
-        /// Data portal context from client.
-        /// </summary>
+        [DataMember]
+        public object[] Arguments { get; set; }
+
         [DataMember]
         public DataPortalContext Context { get; set; }
     }

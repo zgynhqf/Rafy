@@ -302,7 +302,7 @@ namespace RafyUnitTest
                 //另一数据的事务。
                 using (var tranSub = RF.TransactionScope(repoCustomer))
                 {
-                    repoUser.Save(new Customer());
+                    repoCustomer.Save(new Customer());
                     Assert.IsTrue(repoCustomer.CountAll() == 1);
                     //内部不提交
                 }

@@ -24,6 +24,24 @@ namespace Rafy.Domain
     [Serializable]
     internal class IEQC : IEntityQueryCriteria
     {
+        /// <summary>
+        /// 当前查询正在使用的单一条件。
+        /// </summary>
+        internal static readonly AppContextItem<object> CurrentItem = new AppContextItem<object>("Rafy.Domain.IEQC.CurrentCriteria");
+
+        /// <summary>
+        /// 当前正在使用的查询参数
+        /// </summary>
+        internal static IEQC Current
+        {
+            get
+            {
+                var ieqc = CurrentItem.Value as IEQC;
+                if (ieqc == null) throw new InvalidProgramException("实体查询时必须使用正确的格式，查询方法必须是虚方法，并添加 RepositoryQuery 标记，否则无法判断查询中的返回值。");
+                return ieqc;
+            }
+        }
+
         private object[] _p;
         private string _m;
         private byte _f = (byte)RepositoryQueryType.List;

@@ -20,36 +20,38 @@ using System.Collections.Generic;
 namespace Rafy.Domain.DataPortal
 {
     /// <summary>
-    /// Provides consistent context information between the client
-    /// and server DataPortal objects. 
+    /// 每次调用需要传输的上下文对象
     /// </summary>
     [DataContract, Serializable]
     public class DataPortalContext
     {
         /// <summary>
-        /// The current principal object
-        /// if CSLA security is being used.
+        /// 由调用方向被调用方单向传输的当前用户对象。
         /// </summary>
         [DataMember]
         public IPrincipal Principal { get; set; }
 
         /// <summary>
-        /// The culture setting on the client
-        /// workstation.
+        /// 由调用方向被调用方单向传输的当前文化对象。
         /// </summary>
         [DataMember]
         public string ClientCulture { get; set; }
 
         /// <summary>
-        /// The culture setting on the client
-        /// workstation.
+        /// 由调用方向被调用方单向传输的当前界面文化对象。
         /// </summary>
         [DataMember]
         public string ClientUICulture { get; set; }
 
+        /// <summary>
+        /// 由调用方向被调用方单向传输的上下文集合。
+        /// </summary>
         [DataMember]
         public Dictionary<string, object> ClientContext { get; set; }
 
+        /// <summary>
+        /// 双向传输的上下文集合。
+        /// </summary>
         [DataMember]
         public Dictionary<string, object> GlobalContext { get; set; }
     }

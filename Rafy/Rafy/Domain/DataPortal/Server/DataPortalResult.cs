@@ -23,36 +23,29 @@ namespace Rafy.Domain.DataPortal
     /// use only.
     /// </summary>
     [Serializable]
-    public class DataPortalResult : MobileObject
+    public class DataPortalResult
     {
-        private object _returnObject;
-
-        private Dictionary<string,object> _globalContext;
+        private object _res;
+        private Dictionary<string, object> _gc;
 
         /// <summary>
         /// The business object being returned from
         /// the server.
         /// </summary>
-        public object ReturnObject
-        {
-            get { return _returnObject; }
-        }
+        public object ReturnObject => _res;
 
         /// <summary>
         /// The global context being returned from
         /// the server.
         /// </summary>
-        public Dictionary<string, object> GlobalContext
-        {
-            get { return _globalContext; }
-        }
+        public Dictionary<string, object> GlobalContext => _gc;
 
         /// <summary>
         /// Creates an instance of the object.
         /// </summary>
         public DataPortalResult()
         {
-            _globalContext = DistributionContext.GlobalContextItem.Value;
+            _gc = DistributionContext.GlobalContextItem.Value;
         }
 
         /// <summary>
@@ -62,8 +55,8 @@ namespace Rafy.Domain.DataPortal
         /// of the result.</param>
         public DataPortalResult(object returnObject)
         {
-            _returnObject = returnObject;
-            _globalContext = DistributionContext.GlobalContextItem.Value;
+            _res = returnObject;
+            _gc = DistributionContext.GlobalContextItem.Value;
         }
     }
 }

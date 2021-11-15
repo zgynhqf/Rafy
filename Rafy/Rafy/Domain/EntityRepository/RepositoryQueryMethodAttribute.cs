@@ -10,6 +10,7 @@
  * 
 *******************************************************/
 
+using Rafy.Domain.DataPortal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,5 +27,5 @@ namespace Rafy.Domain
     /// <para>3.查询完成后，调整查询结果的类型，与需要的类型一致。</para>
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
-    public class RepositoryQueryAttribute : Attribute { }
+    public class RepositoryQueryAttribute : DataPortalCallAttribute { }
 }

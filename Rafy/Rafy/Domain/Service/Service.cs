@@ -99,7 +99,7 @@ namespace Rafy.Domain
             }
             else
             {
-                var res = DataPortalApi.Update(this) as IService;
+                var res = DataPortalApi.Call(this, "ExecuteByDataPortal", new object[0]) as IService;
 
                 this.ReadOutput(res);
             }

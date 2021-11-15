@@ -42,33 +42,29 @@ namespace Rafy.Domain
     {
         protected EntityRepository()
         {
-            this.DataPortalLocation = DataPortalLocation.Dynamic;
             _clientCache = new ClientRepositoryCache(this);
             _serverCache = new ServerRepositoryCache(this);
         }
-
-        /// <summary>
-        /// 获取或设置本仓库数据门户所在位置。
-        /// </summary>
-        public DataPortalLocation DataPortalLocation { get; protected set; }
 
         internal override IRepositoryInternal Repo
         {
             get { return this; }
         }
 
-        /// <summary>
-        /// 当标记了 <see cref="RepositoryQueryAttribute"/> 的查询方法开始执行前触发。
-        /// </summary>
-        /// <param name="criteria"></param>
-        internal protected virtual void OnQueryStarting(IEntityQueryCriteria criteria) { }
+        protected override void OnPortalCalling(DataPortalCallContext e)
+        {
+            base.OnPortalCalling(e);
 
-        /// <summary>
-        /// 当标记了 <see cref="RepositoryQueryAttribute"/> 的查询方法开始执行完成后触发。
-        /// </summary>
-        /// <param name="criteria"></param>
-        /// <param name="result">结果对象。可能是 Entity、EntityList、LiteDataTable、Exception 等类型的对象</param>
-        internal protected virtual void OnQueryEnded(IEntityQueryCriteria criteria, object result) { }
+            if (e.CallType == PortalCallType.Local)
+            {
+                //先尝试在 DataProvider 中调用指定的方法，如果没有找到，才会调用 Repository 中的方法。
+                //这样可以使得 DataProvider 中定义同名方法即可直接重写仓库中的方法。
+                if (MethodCaller.CallMethodIfImplemented(_dataProvider, e.Method.Name, e.Arguments, out object result))
+                {
+                    e.Result = result;
+                }
+            }
+        }
 
         #region 缓存
 
@@ -792,30 +788,6 @@ namespace Rafy.Domain
         internal void InitDataProvider(RepositoryDataProvider value)
         {
             _dataProvider = value;
-        }
-
-        /// <summary>
-        /// 来自数据门户的数据查询
-        /// </summary>
-        /// <param name="criteria">The criteria.</param>
-        /// <returns></returns>
-        internal object PortalFetch(IEQC criteria)
-        {
-            //如果方法名为空，则使用约定的方法名。
-            var methodName = criteria.MethodName ?? EntityConvention.GetByCriteriaMethod;
-            var parameters = criteria.Parameters;
-
-            object result = null;
-
-            //先尝试在 DataProvider 中调用指定的方法，如果没有找到，才会调用 Repository 中的方法。
-            if (!MethodCaller.CallMethodIfImplemented(
-                _dataProvider, methodName, parameters, out result
-                ))
-            {
-                result = MethodCaller.CallMethod(this, methodName, parameters);
-            }
-
-            return result;
         }
 
         IRepositoryDataProvider IRepository.DataProvider

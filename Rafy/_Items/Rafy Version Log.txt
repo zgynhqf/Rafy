@@ -10,6 +10,14 @@
  * 
 *******************************************************/
 
+3.85.4110
+    ★重要、重构
+        * 重构 DataPortal 内部结构。为 DomainController 更好地应用远程调用而做准备。
+            * 添加 IDataPortalTarget、IDataPortalTargetFactory、DataPortalCallInterceptor 等类型。
+            * 删除一些冗余的远程调用判断逻辑，如 RepositoryInterceptor、DataPortaApi 等。
+            * 删除了无用的 DataPortalFacade 类型。
+            * 将 FetchRequest、UpdateRequest 合并为 CallRequest。
+
 3.84.4098
     ★★公布、内部修改
         * 20211108 将发布 VS2022 正式版。由于 VS2022 最低支持开发 NET451 的程序，故升级 Rafy 为支持 NET451 及 NetStandard 2.0；
