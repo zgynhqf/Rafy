@@ -296,7 +296,44 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Binary_ORM_Query_EmptyPaging()
+        public void SrlzT_Binary_Paging()
+        {
+            var userRepo = RF.ResolveInstance<TestUserRepository>();
+            using (RF.TransactionScope(userRepo))
+            {
+                userRepo.Save(new TestUser());
+
+                var pi = new PagingInfo(1, 10, true);
+                pi = BinarySerializer.Clone(pi);
+                Assert.AreEqual(1, pi.PageNumber);
+                Assert.AreEqual(10, pi.PageSize);
+                Assert.AreEqual(true, pi.IsNeedCount);
+
+                if (RafyEnvironment.DataPortalMode == DataPortalMode.ThroughService)
+                {
+                    //远程调用时，PagingInfo 实现了 IDataPortalOutArgument，所以有可能会由服务端传向客户端。
+                    userRepo.GetAll(pi);
+                    Assert.AreEqual(1, pi.TotalCount);
+                    Assert.AreEqual(false, pi.IsNeedCount);
+
+                    pi.PageNumber = 2;
+                    var cBefore = DbAccesserInterceptor.ThreadDbAccessedCount;
+                    userRepo.GetAll(pi);
+
+                    Assert.AreEqual(cBefore + 1, DbAccesserInterceptor.ThreadDbAccessedCount, "未发生 Count Sql 语句");
+                    Assert.AreEqual(1, pi.TotalCount, "TotalCount 未变化");
+                }
+                else
+                {
+                    pi.TotalCount = 100;
+                    Assert.AreEqual(100, pi.TotalCount);
+                    Assert.AreEqual(false, pi.IsNeedCount);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void SrlzT_Binary_Paging_Empty()
         {
             var cloned = BinarySerializer.Clone(PagingInfo.Empty);
             Assert.IsTrue(cloned == PagingInfo.Empty, "EmptyPagingInfo 只有在单例情况下，才能使用它作为空的分页参数。");

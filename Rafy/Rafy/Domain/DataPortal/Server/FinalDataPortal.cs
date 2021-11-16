@@ -79,13 +79,14 @@ namespace Rafy.Domain.DataPortal
         {
             if (parameters == null) return null;
 
-            var res = new object[parameters.Length];
+            object[] res = null;
 
             for (int i = 0; i < parameters.Length; i++)
             {
                 var arg = parameters[i];
-                if (arg is IDataPortalOutArgument || arg is PagingInfo)
+                if (arg is IDataPortalOutArgument && (arg as IDataPortalOutArgument).NeedTransferToClient())
                 {
+                    if (res == null) res = new object[parameters.Length];
                     res[i] = arg;
                 }
             }
@@ -118,5 +119,12 @@ namespace Rafy.Domain.DataPortal
     /// <summary>
     /// 如果远程调用方法时，某个传入的参数需要再次被传输到客户端时，需要将参数类型实现这个接口。
     /// </summary>
-    public interface IDataPortalOutArgument { }
+    public interface IDataPortalOutArgument
+    {
+        /// <summary>
+        /// 可以根据当前对象的状态。来决定当前是否需要将参数回传到客户端。
+        /// </summary>
+        /// <returns></returns>
+        bool NeedTransferToClient();
+    }
 }

@@ -19,6 +19,8 @@ using System.Web;
 using System.Xml.Linq;
 using System.Security.Permissions;
 using System.Runtime.Serialization;
+using Rafy.Serialization;
+using Rafy.Domain.DataPortal;
 
 namespace Rafy
 {
@@ -30,8 +32,15 @@ namespace Rafy
     /// </summary>
     [Serializable]
     [DataContract]
-    public class PagingInfo
+    public class PagingInfo : IDataPortalOutArgument, ICustomSerializationObject
     {
+        private const int TotalCount_NeedCount = -1;
+
+        /// <summary>
+        /// this field value will be set which at thr first time TotalCount is set.
+        /// and its value will be restore to default(false) when PagingInfo object is transferred;
+        /// </summary>
+        internal bool NeedTransferToClent;
         private long _pageNumber;
         private int _pageSize;
         /// <summary>
@@ -82,35 +91,22 @@ namespace Rafy
         }
 
         /// <summary>
-        /// 反序列化构造函数。
-        /// 
-        /// 需要更高安全性，加上以下这句：
-        /// </summary>
-        /// <param name="info"></param>
-        /// <param name="context"></param>
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected PagingInfo(SerializationInfo info, StreamingContext context) { }
-
-        /// <summary>
         /// Whether need to retrieve count of all records
         /// (if it's true, it means the DAL should retrieve count info from database.)
         /// </summary>
         [DataMember]
         public bool IsNeedCount
         {
-            get { return this._totalCount < 0; }
+            get { return _totalCount == TotalCount_NeedCount; }
             set
             {
                 if (value)
                 {
-                    if (_totalCount >= 0)
-                    {
-                        _totalCount = -1;
-                    }
+                    _totalCount = TotalCount_NeedCount;
                 }
                 else
                 {
-                    if (_totalCount < 0)
+                    if (_totalCount == TotalCount_NeedCount)
                     {
                         _totalCount = 0;
                     }
@@ -136,6 +132,7 @@ namespace Rafy
                     throw new ArgumentOutOfRangeException("value", "value can not be negative.");
                 }
                 this._totalCount = value;
+                this.NeedTransferToClent = true;//第一次设置时，需要传回客户端。后续就不再需要了。
             }
         }
 
@@ -230,6 +227,25 @@ namespace Rafy
             return pagingInfo == null || pagingInfo is EmptyPagingInfo;
         }
 
+        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("pn", _pageNumber);
+            info.AddValue("s", _pageSize);
+            info.AddValue("tc", _totalCount);
+        }
+
+        void ICustomSerializationObject.SetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            _pageNumber = info.GetInt64("pn");
+            _pageSize = info.GetInt32("s");
+            _totalCount = info.GetInt64("tc");
+        }
+
+        bool IDataPortalOutArgument.NeedTransferToClient()
+        {
+            return this.NeedTransferToClent;
+        }
+
         #endregion
     }
 
@@ -245,16 +261,6 @@ namespace Rafy
         internal EmptyPagingInfo() : base(1, 1) { }
 
         #region 单例序列化
-
-        /// <summary>
-        /// 反序列化构造函数。
-        /// 
-        /// 需要更高安全性，加上以下这句：
-        /// </summary>
-        /// <param name="info"></param>
-        /// <param name="context"></param>
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected EmptyPagingInfo(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
         void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
         {
