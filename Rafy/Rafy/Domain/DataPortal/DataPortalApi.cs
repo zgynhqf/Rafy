@@ -34,20 +34,18 @@ namespace Rafy.Domain.DataPortal
         /// </summary>
         public static bool IsRunning => RafyEnvironment.ThreadPortalCount > 0;
 
-        public static object Call(object obj, string method, object[] arguments)
+        public static object Call(object obj, string method, object[] parameters)
         {
             var proxy = GetDataPortalProxy();
 
             var dpContext = CreateDataPortalContext();
 
-            var result = proxy.Call(obj, method, arguments, dpContext);
+            var result = proxy.Call(obj, method, parameters, dpContext);
 
-            var res = ReadServerResult(result);
+            var res = DealServerResult(result, parameters);
 
             return res;
         }
-
-        #region Helpers
 
         private static Type _proxyType;
 
@@ -58,14 +56,6 @@ namespace Rafy.Domain.DataPortal
                 _proxyType = Type.GetType(RafyEnvironment.Configuration.Section.DataPortalProxy, true, true);
             }
             return Activator.CreateInstance(_proxyType) as IDataPortalProxy;
-        }
-
-        private static object ReadServerResult(DataPortalResult result)
-        {
-            //同步服务端返回的统一的上下文，到本地的上下文对象中。
-            DistributionContext.GlobalContextItem.Value = result.GlobalContext;
-
-            return result.ReturnObject;
         }
 
         /// <summary>
@@ -85,6 +75,26 @@ namespace Rafy.Domain.DataPortal
             return res;
         }
 
-        #endregion
+        private static object DealServerResult(DataPortalResult result, object[] parameters)
+        {
+            //同步服务端返回的统一的上下文，到本地的上下文对象中。
+            DistributionContext.GlobalContextItem.Value = result.GlobalContext;
+
+            //处理 OutParameters
+            var outParameters = result.OutParameters;
+            if (outParameters != null)
+            {
+                for (int i = 0, c = outParameters.Length; i < c; i++)
+                {
+                    var parameter = outParameters[i];
+                    if (parameter != null)
+                    {
+                        ObjectHelper.CloneFields(parameters[i], outParameters[i]);
+                    }
+                }
+            }
+
+            return result.ReturnObject;
+        }
     }
 }

@@ -24,9 +24,9 @@ namespace Rafy.Domain.DataPortal
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="method"></param>
-        /// <param name="arguments"></param>
+        /// <param name="parameters"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        DataPortalResult Call(object obj, string method, object[] arguments, DataPortalContext context);
+        DataPortalResult Call(object obj, string method, object[] parameters, DataPortalContext context);
     }
 }

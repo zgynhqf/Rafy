@@ -26,14 +26,15 @@ namespace Rafy.Domain.DataPortal
     /// </summary>
     internal class FinalDataPortal : IDataPortalServer
     {
-        public DataPortalResult Call(object obj, string method, object[] arguments, DataPortalContext context)
+        public DataPortalResult Call(object obj, string method, object[] parameters, DataPortalContext context)
         {
             try
             {
                 SetContext(context);
 
-                var result = DoCall(obj, method, arguments);
-                return new DataPortalResult(result);
+                var result = DoCall(obj, method, parameters);
+
+                return result;
             }
             finally
             {
@@ -46,9 +47,9 @@ namespace Rafy.Domain.DataPortal
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="method"></param>
-        /// <param name="arguments"></param>
+        /// <param name="parameters"></param>
         /// <returns></returns>
-        internal static object DoCall(object obj, string method, object[] arguments)
+        internal static DataPortalResult DoCall(object obj, string method, object[] parameters)
         {
             try
             {
@@ -63,12 +64,33 @@ namespace Rafy.Domain.DataPortal
                 }
 
                 //非工厂模式下，直接使用反射进行调用。
-                return MethodCaller.CallMethod(obj, method, arguments);
+                var res = MethodCaller.CallMethod(obj, method, parameters);
+                var outArgs = ReadOutParameters(parameters);
+
+                return new DataPortalResult(res, outArgs);
             }
             finally
             {
                 RafyEnvironment.ThreadPortalCount--;
             }
+        }
+
+        private static object[] ReadOutParameters(object[] parameters)
+        {
+            if (parameters == null) return null;
+
+            var res = new object[parameters.Length];
+
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                var arg = parameters[i];
+                if (arg is IDataPortalOutArgument || arg is PagingInfo)
+                {
+                    res[i] = arg;
+                }
+            }
+
+            return res;
         }
 
         private static void SetContext(DataPortalContext context)
@@ -92,4 +114,9 @@ namespace Rafy.Domain.DataPortal
             RafyEnvironment.Principal = null;
         }
     }
+
+    /// <summary>
+    /// 如果远程调用方法时，某个传入的参数需要再次被传输到客户端时，需要将参数类型实现这个接口。
+    /// </summary>
+    public interface IDataPortalOutArgument { }
 }

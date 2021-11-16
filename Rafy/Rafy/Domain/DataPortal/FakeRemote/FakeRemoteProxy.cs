@@ -34,31 +34,31 @@ namespace Rafy.Domain.DataPortal
     **********************************************************************/
     public class FakeRemoteProxy : IDataPortalProxy
     {
-        public DataPortalResult Call(object obj, string method, object[] arguments, DataPortalContext context)
+        public DataPortalResult Call(object obj, string method, object[] parameters, DataPortalContext context)
         {
             obj = BinarySerializer.Clone(obj);
 
-            if (arguments.Length > 0)
+            if (parameters.Length > 0)
             {
-                for (int i = 0, c = arguments.Length; i < c; i++)
+                var copiedParameters = new object[parameters.Length];
+                for (int i = 0, c = parameters.Length; i < c; i++)
                 {
-                    var item = arguments[i];
+                    var item = parameters[i];
                     if (item != null && item.GetType().IsClass && !(item is string))
                     {
                         item = BinarySerializer.Clone(item);
-                        arguments[i] = item;
                     }
+
+                    copiedParameters[i] = item;
                 }
+                parameters = copiedParameters;
             }
 
-            var result = FinalDataPortal.DoCall(obj, method, arguments);
+            var result = FinalDataPortal.DoCall(obj, method, parameters);
 
-            if (result != null)
-            {
-                result = BinarySerializer.Clone(result);
-            }
+            result = BinarySerializer.Clone(result);
 
-            return new DataPortalResult(result);
+            return result;
         }
     }
 }

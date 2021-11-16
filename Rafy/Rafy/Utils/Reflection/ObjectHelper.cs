@@ -48,17 +48,20 @@ namespace Rafy.Reflection
             try
             {
                 var property = type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty);
-                if (property == null) throw new InvalidProgramException("类型" + obj.GetType().ToString() + "不存在属性" + propertyName);
+                if (property == null) throw new InvalidOperationException("类型" + obj.GetType().ToString() + "不存在属性" + propertyName);
                 return property.GetValue(obj, null);
             }
             catch (AmbiguousMatchException)
             {
-                var types = TypeHelper.GetHierarchy(type);
-                foreach (var singleType in types)
+                while (type != typeof(object) && type != null)
                 {
-                    var property = singleType.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty | BindingFlags.DeclaredOnly);
-                    if (property == null) continue;
-                    return property.GetValue(obj, null);
+                    var property = type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty | BindingFlags.DeclaredOnly);
+                    if (property != null)
+                    {
+                        return property.GetValue(obj, null);
+                    }
+
+                    type = type.BaseType;
                 }
                 throw;
             }
@@ -76,18 +79,21 @@ namespace Rafy.Reflection
             try
             {
                 var property = type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.SetProperty);
-                if (property == null) throw new InvalidProgramException("类型" + obj.GetType().ToString() + "不存在属性" + propertyName);
+                if (property == null) throw new InvalidOperationException("类型" + obj.GetType().ToString() + "不存在属性" + propertyName);
                 property.SetValue(obj, value, null);
             }
             catch (AmbiguousMatchException)
             {
-                var types = TypeHelper.GetHierarchy(type);
-                foreach (var singleType in types)
+                while (type != typeof(object) && type != null)
                 {
-                    var property = singleType.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.SetProperty | BindingFlags.DeclaredOnly);
-                    if (property == null) continue;
-                    property.SetValue(obj, value, null);
-                    return;
+                    var property = type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.SetProperty | BindingFlags.DeclaredOnly);
+                    if (property != null)
+                    {
+                        property.SetValue(obj, value, null);
+                        return;
+                    }
+
+                    type = type.BaseType;
                 }
                 throw;
             }
@@ -107,6 +113,67 @@ namespace Rafy.Reflection
             }
 
             return value;
+        }
+
+        /// <summary>
+        /// 获取 obj 对象中指定字段的值。
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="fieldName"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public static object GetFieldValue(object obj, string fieldName)
+        {
+            var type = obj.GetType();
+            try
+            {
+                var field = type.GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField);
+                if (field == null) throw new InvalidOperationException("无法在类型 " + obj.GetType() + " 中找到字段 " + fieldName);
+                return field.GetValue(obj);
+            }
+            catch (AmbiguousMatchException)
+            {
+                while (type != typeof(object) && type != null)
+                {
+                    var field = type.GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField | BindingFlags.DeclaredOnly);
+                    if (field != null)
+                    {
+                        return field.GetValue(obj);
+                    }
+
+                    type = type.BaseType;
+                }
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// 将 source 对象类型中的每一个字段值，都依次拷贝进 obj 对象中。
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="source"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static void CloneFields(object obj, object source)
+        {
+            if (obj == null) throw new ArgumentNullException(nameof(obj));
+            if (source == null) throw new ArgumentNullException(nameof(source));
+
+            var type = source.GetType();
+            while (type != typeof(object) && type != null)
+            {
+                foreach (var field in type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic))
+                {
+                    var fieldValue = field.GetValue(source);
+                    if (fieldValue != null) { field.SetValue(obj, fieldValue); }
+                }
+
+                type = type.BaseType;
+            }
+        }
+
+        public static object CallMethod(object obj, string method, params object[] parameters)
+        {
+            return MethodCaller.CallMethod(obj, method, parameters);
         }
 
         //public static object CallMethod(object obj, string method)

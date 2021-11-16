@@ -26,7 +26,21 @@ namespace Rafy.Domain.DataPortal
     public class DataPortalResult
     {
         private object _res;
+        private object[] _outParameters;
         private Dictionary<string, object> _gc;
+
+        /// <summary>
+        /// Creates an instance of the object.
+        /// </summary>
+        /// <param name="returnObject">Object to return as part
+        /// of the result.</param>
+        /// <param name="outParameters"></param>
+        public DataPortalResult(object returnObject, object[] outParameters)
+        {
+            _res = returnObject;
+            _outParameters = outParameters;
+            _gc = DistributionContext.GlobalContextItem.Value;
+        }
 
         /// <summary>
         /// The business object being returned from
@@ -40,23 +54,6 @@ namespace Rafy.Domain.DataPortal
         /// </summary>
         public Dictionary<string, object> GlobalContext => _gc;
 
-        /// <summary>
-        /// Creates an instance of the object.
-        /// </summary>
-        public DataPortalResult()
-        {
-            _gc = DistributionContext.GlobalContextItem.Value;
-        }
-
-        /// <summary>
-        /// Creates an instance of the object.
-        /// </summary>
-        /// <param name="returnObject">Object to return as part
-        /// of the result.</param>
-        public DataPortalResult(object returnObject)
-        {
-            _res = returnObject;
-            _gc = DistributionContext.GlobalContextItem.Value;
-        }
+        public object[] OutParameters => _outParameters;
     }
 }
