@@ -179,6 +179,9 @@ namespace RafyUnitTest
 
             Assert.IsTrue(model2.HasLocalValue(Book.ChapterListProperty));
             Assert.IsNotNull(model2.GetProperty(Book.ChapterListProperty));
+            Assert.AreSame(model2, model2.ChapterList[0].GetProperty(Chapter.BookProperty));
+            Assert.AreSame(model2, model2.ChapterList[1].GetProperty(Chapter.BookProperty));
+
             Assert.AreEqual(2, model2.ChapterList.Count);
             Assert.AreEqual(111, model2.ChapterList[0].Id);
             Assert.AreEqual("Chapter1", model2.ChapterList[0].Name);

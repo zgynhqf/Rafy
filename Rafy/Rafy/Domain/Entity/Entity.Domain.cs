@@ -277,28 +277,37 @@ namespace Rafy.Domain
 
             base.LoadProperty(property, value);
 
-            this.OnChildLoaded(property, value);
+            this.OnDomainComponentLoaded(property, value);
         }
 
-        private void OnChildLoaded(IManagedProperty property, object value)
+        private void OnDomainComponentLoaded(IManagedProperty property, object value)
         {
             var component = value as IDomainComponent;
-            if (component != null)
+            if (component == null) return;
+
+            var listProperty = property as IListProperty;
+            if (listProperty != null)
             {
+                var list = value as EntityList;
+                list.InitListProperty(listProperty);
+
                 component.SetParent(this);
                 component.MarkSaved();
 
-                var listProperty = property as IListProperty;
-                if (listProperty != null)
+                if (listProperty.HasManyType == HasManyType.Composition)
                 {
-                    var list = value as EntityList;
-                    list.InitListProperty(listProperty);
-
-                    if (listProperty.HasManyType == HasManyType.Composition)
-                    {
-                        list.SetParentEntity(this);
-                    }
+                    list.SetParentEntity(this);
                 }
+                return;
+            }
+
+            var refProperty = property as IRefEntityProperty;
+            if (refProperty != null && refProperty.ReferenceType == ReferenceType.Child)
+            {
+                component.SetParent(this);
+                component.SetParentEntity(this);
+                component.MarkSaved();
+                return;
             }
         }
 
@@ -470,6 +479,11 @@ namespace Rafy.Domain
             _parent = parent;
         }
 
+        void IDomainComponent.SetParentEntity(IEntity parentEntity)
+        {
+            this.SetParentEntity(parentEntity as Entity);
+        }
+
         internal void DisconnectFromParent()
         {
             _parent = null;
@@ -497,6 +511,7 @@ namespace Rafy.Domain
             {
                 var child = enumerator.Current.Value;
                 child.SetParent(this);
+                child.SetParentEntity(this);
             }
 
             if (_treeChildren != null)

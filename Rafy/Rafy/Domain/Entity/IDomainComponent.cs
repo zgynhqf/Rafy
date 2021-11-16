@@ -27,7 +27,7 @@ namespace Rafy.Domain
         /// <summary>
         /// 获取父组件
         /// 
-        /// 列表的父组件是一个实体，而实体的父组件则是其所在的列表。
+        /// 列表的父组件是一个实体，而实体的父组件则是其所在的列表（也有少部分实体是以唯一孩子引用实体的形式挂接在父实体之下，此时 Parent 就是聚合父实体）。
         /// </summary>
         IDomainComponent Parent { get; }
 
@@ -50,5 +50,11 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="parent"></param>
         void SetParent(IDomainComponent parent);
+
+        /// <summary>
+        /// 设置聚合父实体。
+        /// </summary>
+        /// <param name="parentEntity"></param>
+        void SetParentEntity(IEntity parentEntity);
     }
 }

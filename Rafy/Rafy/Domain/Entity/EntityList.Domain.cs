@@ -133,6 +133,11 @@ namespace Rafy.Domain
             this._parent = parent;
         }
 
+        void IDomainComponent.SetParentEntity(IEntity parentEntity)
+        {
+            this.SetParentEntity(parentEntity as Entity);
+        }
+
         IDomainComponent IDomainComponent.Parent
         {
             get { return this._parent; }
