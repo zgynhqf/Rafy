@@ -379,8 +379,7 @@ namespace Rafy.Domain
                 RefIdProperty = refIdProperty
             };
 
-            //默认只从服务端序列化到客户端。
-            defaultMeta.Serializable = RafyEnvironment.IsOnServer();
+            SetReferenceSerializable(defaultMeta, refIdProperty);
 
             ManagedPropertyRepository.Instance.RegisterProperty(property);
 
@@ -409,8 +408,7 @@ namespace Rafy.Domain
                 Loader = args.Loader
             };
 
-            //默认只从服务端序列化到客户端。
-            (defaultMeta as PropertyMetadata<Entity>).Serializable = args.Serializable.GetValueOrDefault(RafyEnvironment.IsOnServer());
+            SetReferenceSerializable(defaultMeta, args.RefIdProperty);
 
             ManagedPropertyRepository.Instance.RegisterProperty(property);
 
@@ -442,13 +440,19 @@ namespace Rafy.Domain
             //简单地，直接把 Args 作为 meta
             property.OverrideMeta(typeof(TEntity), args, m =>
             {
-                //默认只从服务端序列化到客户端。
-                (m as PropertyMetadata<Entity>).Serializable = m.Serializable.GetValueOrDefault(RafyEnvironment.IsOnServer());
+                SetReferenceSerializable(m, m.RefIdProperty);
 
                 overrideValues(m);
             });
 
             return property;
+        }
+
+        private static void SetReferenceSerializable(PropertyMetadata<Entity> defaultMeta, IRefIdProperty refIdProperty)
+        {
+            //父引用不需要序列化，否则会因为子集合中的子实体引用了同一个父实体，而导致二进制序列化框架，会多次序列化这一个父实体，造成性能问题。
+            //另外，同时也会导致序列化失败，原因不祥。复现此问题的单元测试见：SerializationTest.SrlzT_Binary_List
+            defaultMeta.Serializable = refIdProperty.ReferenceType != ReferenceType.Parent;
         }
 
         #endregion
@@ -497,8 +501,7 @@ namespace Rafy.Domain
                 RefIdProperty = refIdProperty
             };
 
-            //默认只从服务端序列化到客户端。
-            defaultMeta.Serializable = RafyEnvironment.IsOnServer();
+            SetReferenceSerializable(defaultMeta, refIdProperty);
 
             ManagedPropertyRepository.Instance.RegisterProperty(property);
 
