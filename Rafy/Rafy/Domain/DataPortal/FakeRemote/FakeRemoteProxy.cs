@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rafy.Domain.DataPortal
+namespace Rafy.DataPortal
 {
     /*********************** 代码块解释 *********************************
      * 

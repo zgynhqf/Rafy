@@ -16,6 +16,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Runtime;
 using Rafy.Data;
+using Rafy.DataPortal;
 using Rafy.Domain.ORM;
 
 namespace Rafy.Domain

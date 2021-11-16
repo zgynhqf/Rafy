@@ -14,7 +14,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Rafy.Domain.DataPortal.WCF
+namespace Rafy.DataPortal.WCF
 {
     /// <summary>
     /// WCF 调用请求对象。

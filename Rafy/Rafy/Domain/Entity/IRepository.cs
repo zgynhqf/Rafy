@@ -23,7 +23,7 @@ using Rafy.Domain.Caching;
 using Rafy;
 using Rafy.Domain.ORM.Linq;
 using System.Linq.Expressions;
-using Rafy.Domain.DataPortal;
+using Rafy.DataPortal;
 
 namespace Rafy.Domain
 {

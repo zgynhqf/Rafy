@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-using Rafy.Domain.DataPortal;
+using Rafy.DataPortal;
 using System;
 using System.Collections.Generic;
 using System.Linq;

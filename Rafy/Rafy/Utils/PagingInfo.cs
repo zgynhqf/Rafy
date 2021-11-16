@@ -20,7 +20,7 @@ using System.Xml.Linq;
 using System.Security.Permissions;
 using System.Runtime.Serialization;
 using Rafy.Serialization;
-using Rafy.Domain.DataPortal;
+using Rafy.DataPortal;
 
 namespace Rafy
 {

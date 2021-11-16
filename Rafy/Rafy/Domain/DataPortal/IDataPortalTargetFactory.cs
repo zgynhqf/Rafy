@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rafy.Domain.DataPortal
+namespace Rafy.DataPortal
 {
     /// <summary>
     /// 数据门户目标对象的构造工厂

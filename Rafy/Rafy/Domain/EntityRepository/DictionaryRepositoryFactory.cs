@@ -27,7 +27,7 @@ using Rafy.MetaModel.Attributes;
 using Rafy.Utils;
 using Castle.DynamicProxy;
 using Rafy.Domain.ORM;
-using Rafy.Domain.DataPortal;
+using Rafy.DataPortal;
 
 namespace Rafy.Domain
 {

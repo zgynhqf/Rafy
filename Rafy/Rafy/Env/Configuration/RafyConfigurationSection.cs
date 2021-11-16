@@ -48,8 +48,8 @@ namespace Rafy.Configuration
         /// 配置使用哪个数据门户代理。
         /// 
         /// 如果直接连接数据源，则需要配置：Local（默认值）。
-        /// 如果使用 WCF，则需要配置：Rafy.Domain.DataPortal.WCF.ClientProxy, Rafy。
-        /// 如果使用 FakeRemote，则需要配置：Rafy.Domain.DataPortal.FakeRemoteProxy, Rafy。
+        /// 如果使用 WCF，则需要配置：Rafy.DataPortal.WCF.ClientProxy, Rafy。
+        /// 如果使用 FakeRemote，则需要配置：Rafy.DataPortal.FakeRemoteProxy, Rafy。
         /// </summary>
         [ConfigurationProperty("dataPortalProxy", DefaultValue = "Local")]
         public string DataPortalProxy
@@ -89,7 +89,7 @@ namespace Rafy.Configuration
         /// 配置使用哪个数据门户代理。
         /// 
         /// 如果直接连接数据源，则需要配置：Local（默认值）。
-        /// 如果使用 WCF，则需要配置：Rafy.Domain.DataPortal.WCF.ClientProxy, Rafy.Domain。
+        /// 如果使用 WCF，则需要配置：Rafy.DataPortal.WCF.ClientProxy, Rafy.Domain。
         /// </summary>
         public string DataPortalProxy { get; set; } = "Local";
 

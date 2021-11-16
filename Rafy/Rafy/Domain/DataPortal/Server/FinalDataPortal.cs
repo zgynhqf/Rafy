@@ -18,7 +18,7 @@ using System.Globalization;
 using System.Security.Principal;
 using System.Threading;
 
-namespace Rafy.Domain.DataPortal
+namespace Rafy.DataPortal
 {
     /// <summary>
     /// 最终调用实体的 IDataPortalServer 门户实现。

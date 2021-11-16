@@ -12,7 +12,7 @@
 
 using System;
 
-namespace Rafy.Domain.DataPortal
+namespace Rafy.DataPortal
 {
     /// <summary>
     /// 数据调用的提供程序

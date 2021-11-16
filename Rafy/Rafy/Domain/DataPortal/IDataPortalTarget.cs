@@ -15,7 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rafy.Domain.DataPortal
+namespace Rafy.DataPortal
 {
     /// <summary>
     /// 需要被数据门户来管理调用的目标对象，都需要实现这个接口。

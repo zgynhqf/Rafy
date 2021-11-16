@@ -12,14 +12,14 @@
 *******************************************************/
 
 using Castle.DynamicProxy;
-using Rafy.Domain.DataPortal;
+using Rafy.DataPortal;
 using Rafy.Reflection;
 using Rafy.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rafy.Domain.DataPortal
+namespace Rafy.DataPortal
 {
     /// <summary>
     /// 内部封装了对数据层的调用，如果是远程，则使用对应的代理来访问，这使得单机版、网络版的调用完全一致。详见：<see cref="DataPortalCallInterceptor"/>。

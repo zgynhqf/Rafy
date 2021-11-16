@@ -17,7 +17,7 @@ using System.Runtime.Serialization;
 using System.Threading;
 using System.Collections.Generic;
 
-namespace Rafy.Domain.DataPortal
+namespace Rafy.DataPortal
 {
     /// <summary>
     /// 每次调用需要传输的上下文对象

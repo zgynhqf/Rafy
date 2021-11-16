@@ -15,7 +15,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using Rafy.Serialization.Mobile;
 
-namespace Rafy.Domain.DataPortal
+namespace Rafy.DataPortal
 {
     /// <summary>
     /// Returns data from the server-side DataPortal to the 

@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using Rafy.Domain.DataPortal;
+using Rafy.DataPortal;
 using Rafy.Domain;
 using Rafy.Reflection;
 

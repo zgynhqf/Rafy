@@ -17,7 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Castle.DynamicProxy;
 using Rafy.Data;
-using Rafy.Domain.DataPortal;
+using Rafy.DataPortal;
 using Rafy.Reflection;
 
 namespace Rafy.Domain

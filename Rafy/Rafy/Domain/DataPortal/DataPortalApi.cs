@@ -21,7 +21,7 @@ using Rafy.Reflection;
 using Rafy.Serialization;
 using Rafy.Utils;
 
-namespace Rafy.Domain.DataPortal
+namespace Rafy.DataPortal
 {
     /// <summary>
     /// 数据门户。

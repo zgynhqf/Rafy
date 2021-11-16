@@ -29,7 +29,7 @@ using System.Windows.Threading;
 using Rafy;
 using Rafy.ComponentModel;
 using Rafy.Domain;
-using Rafy.Domain.DataPortal;
+using Rafy.DataPortal;
 using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.MetaModel.View;

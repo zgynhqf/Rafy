@@ -11,13 +11,12 @@
  * 
 *******************************************************/
 
-using Rafy.Domain.DataPortal;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
-namespace Rafy.Domain
+namespace Rafy.DataPortal
 {
     /// <summary>
     /// 数据门户调用参数

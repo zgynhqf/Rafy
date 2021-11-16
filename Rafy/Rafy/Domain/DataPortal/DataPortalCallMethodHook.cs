@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
-namespace Rafy.Domain.DataPortal
+namespace Rafy.DataPortal
 {
     /// <summary>
     /// 只有标记了 <see cref="DataPortalCallAttribute"/> 标记的方法，才需要进行拦截。

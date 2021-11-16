@@ -22,7 +22,7 @@ using System.Security.Principal;
 using System.Threading;
 using System.Web;
 
-namespace Rafy.Domain.DataPortal
+namespace Rafy.DataPortal
 {
     /// <summary>
     /// 分布式数据上下文。
@@ -33,10 +33,10 @@ namespace Rafy.Domain.DataPortal
         private static object _clientContextLock = new object();
 
         internal static readonly AppContextItem<Dictionary<string, object>> ClientContextItem =
-            new AppContextItem<Dictionary<string, object>>("Rafy.Domain.DataPortal.ClientContext");
+            new AppContextItem<Dictionary<string, object>>("Rafy.DataPortal.ClientContext");
 
         internal static readonly AppContextItem<Dictionary<string, object>> GlobalContextItem =
-            new AppContextItem<Dictionary<string, object>>("Rafy.Domain.DataPortal.GlobalContext");
+            new AppContextItem<Dictionary<string, object>>("Rafy.DataPortal.GlobalContext");
 
         /// <summary>
         /// 客户端提供的范围数据。

@@ -19,7 +19,7 @@ using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Xml;
 
-namespace Rafy.Domain.DataPortal.WCF
+namespace Rafy.DataPortal.WCF
 {
     /// <summary>
     /// Response message for returning
