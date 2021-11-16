@@ -79,9 +79,9 @@ namespace Rafy.Serialization
             foreach (var f in clrFields)
             {
                 var v = f.GetValue(obj);
-                var vType = v != null ? v.GetType() : f.FieldType;
+                if (v == null) continue;
 
-                info.AddValue(f.Name, v, vType);
+                info.AddValue(f.Name, v, v.GetType());
             }
         }
     }

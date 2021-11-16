@@ -39,7 +39,7 @@ namespace Rafy.Serialization
             if (value == null) return null;
 
             var stream = new MemoryStream();
-            var formatter = CreateFormatter();
+            var formatter = CreateBinaryFormatter();
             formatter.Serialize(stream, value);
 
             //调试使用
@@ -63,7 +63,7 @@ namespace Rafy.Serialization
 
             var stream = new MemoryStream(bytes);
 
-            var formatter = CreateFormatter();
+            var formatter = CreateBinaryFormatter();
             var result = formatter.Deserialize(stream);
 
             return result;
@@ -78,7 +78,7 @@ namespace Rafy.Serialization
         {
             using (MemoryStream buffer = new MemoryStream())
             {
-                var formatter = CreateFormatter();
+                var formatter = CreateBinaryFormatter();
 
                 formatter.Serialize(buffer, obj);
                 buffer.Position = 0;
@@ -87,7 +87,7 @@ namespace Rafy.Serialization
             }
         }
 
-        private static IFormatter CreateFormatter()
+        private static BinaryFormatter CreateBinaryFormatter()
         {
             return new BinaryFormatter
             {

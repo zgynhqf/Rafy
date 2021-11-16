@@ -254,7 +254,7 @@ namespace Rafy
         /// 如果是单机版，则当进入至少一次数据门户后，才能算作服务端，返回true。
         /// </summary>
         /// <returns></returns>
-        public static bool IsOnServer()
+        internal static bool IsOnServer()
         {
             return !IsOnClient();
         }
