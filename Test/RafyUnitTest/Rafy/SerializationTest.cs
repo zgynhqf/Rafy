@@ -112,33 +112,30 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_Binary_LazyRef_OnServer()
+        public void SrlzT_Binary_Ref_Normal()
         {
-            var role = new TestRole
+            var book = new Book
             {
-                TestUser = new TestUser
-                {
-                    Id = 1,
-                    Name = "TestUser"
-                }
+                BookCategory = new BookCategory()
             };
 
-            Assert.IsTrue(TestRole.TestUserProperty.DefaultMeta.Serializable, "默认在服务端，应该是可以序列化实体的。");
+            Assert.IsTrue(Book.BookCategoryProperty.DefaultMeta.Serializable, "一般引用属性，默认是进行序列化的。");
 
-            var roleCloned = BinarySerializer.Clone(role);
-            var loaded = roleCloned.HasLocalValue(TestRole.TestUserProperty);
-            Assert.IsTrue(loaded, "服务端到客户端，需要序列化实体。");
+            var bookCloned = BinarySerializer.Clone(book);
+            Assert.IsTrue(bookCloned.HasLocalValue(Book.BookCategoryProperty));
         }
 
         [TestMethod]
-        public void SrlzT_Binary_LazyRef_Manual()
+        public void SrlzT_Binary_Ref_Parent_Manual()
         {
             var defaultMeta = TestRole.TestUserProperty.DefaultMeta;
             var oldValue = defaultMeta.Serializable;
+            Assert.IsFalse(defaultMeta.Serializable, "父引用快很，默认应该是不序列化实体的。");
+
             defaultMeta.Unfreeze();
             try
             {
-                defaultMeta.Serializable = false;
+                defaultMeta.Serializable = true;
 
                 var role = new TestRole
                 {
@@ -152,12 +149,11 @@ namespace RafyUnitTest
                 var roleCloned = BinarySerializer.Clone(role);
 
                 var loaded = roleCloned.HasLocalValue(TestRole.TestUserProperty);
-                Assert.IsFalse(loaded, "引用属性在 Serializable 设置为 false 时，不应该被序列化。");
+                Assert.IsTrue(loaded, "引用属性在 Serializable 设置为 true 时，应该被序列化。");
             }
             finally
             {
                 defaultMeta.Serializable = oldValue;
-                defaultMeta.Serializable = true;
             }
         }
 
@@ -182,12 +178,39 @@ namespace RafyUnitTest
             var model2 = BinarySerializer.Clone(model);
 
             Assert.IsTrue(model2.HasLocalValue(Book.ChapterListProperty));
-            Assert.IsNotNull(model2.GetProperty(Book.ChapterListProperty).Count);
+            Assert.IsNotNull(model2.GetProperty(Book.ChapterListProperty));
             Assert.AreEqual(2, model2.ChapterList.Count);
             Assert.AreEqual(111, model2.ChapterList[0].Id);
             Assert.AreEqual("Chapter1", model2.ChapterList[0].Name);
             Assert.AreEqual(222, model2.ChapterList[1].Id);
             Assert.AreEqual("Chapter2", model2.ChapterList[1].Name);
+        }
+
+        /// <summary>
+        /// 测试当列表属性有一些状态时，是否可以正常序列化。
+        /// （其实正常情况下，列表属性，一般都不会设置其 ChangedStatus，本用例只用于测试序列化框架的理论场景）
+        /// </summary>
+        [TestMethod]
+        public void SrlzT_Binary_List_WithStatus()
+        {
+            var model = new Book
+            {
+                ChapterList =
+                {
+                    new Chapter { },
+                    new Chapter { },
+                }
+            };
+            model.MarkChangedStatus(Book.ChapterListProperty, true);
+            Assert.IsTrue(model.IsChanged(Book.ChapterListProperty));
+            Assert.IsTrue(model.HasLocalValue(Book.ChapterListProperty));
+
+            var model2 = BinarySerializer.Clone(model);
+
+            Assert.IsTrue(model2.HasLocalValue(Book.ChapterListProperty));
+            Assert.IsTrue(model2.IsChanged(Book.ChapterListProperty));
+            Assert.IsNotNull(model2.GetProperty(Book.ChapterListProperty));
+            Assert.AreEqual(2, model2.GetProperty(Book.ChapterListProperty).Count);
         }
 
         [TestMethod]

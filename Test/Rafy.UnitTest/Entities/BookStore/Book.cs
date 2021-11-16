@@ -275,7 +275,7 @@ namespace UT
         {
             var table = f.Table(this);
             var q = f.Query(
-                from :table,
+                from: table,
                 where: table.Column(Book.NameProperty).Equal(table.Column(Book.CodeProperty))
             );
             return (BookList)this.QueryData(q);

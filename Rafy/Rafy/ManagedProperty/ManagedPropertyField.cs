@@ -19,6 +19,7 @@ using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Security;
 using System.Diagnostics;
+using Rafy.Serialization;
 
 namespace Rafy.ManagedProperty
 {
@@ -28,17 +29,11 @@ namespace Rafy.ManagedProperty
     [DebuggerDisplay("{DebuggerDisplay}")]
     public struct ManagedPropertyField
     {
-        /// <summary>
-        /// 用于在字段中表示 null。
-        /// </summary>
-        private static readonly object Null = new ManagedPropertyField_Null();
-
         internal IManagedProperty _property;
 
         /// <summary>
         /// 由于本类型是结构体，所以使用以下三种方式来表示值：
         /// * null 表示默认值；
-        /// * <see cref="Null"/> 表示 null；
         /// * 其它值表示本地值；
         /// </summary>
         private object _value;
@@ -46,7 +41,7 @@ namespace Rafy.ManagedProperty
         /// <summary>
         /// 内部存储的状态。
         /// </summary>
-        internal MPFStatus _status;
+        private MPFStatus _status;
 
         /// <summary>
         /// 对应的托管属性
@@ -61,13 +56,11 @@ namespace Rafy.ManagedProperty
         /// </summary>
         internal object Value
         {
-            get
-            {
-                return _value == Null ? null : _value;
-            }
+            get => _value;
             set
             {
-                _value = value ?? Null;
+                _value = value;
+                this.HasLocalValue = true;
             }
         }
 
@@ -116,12 +109,6 @@ namespace Rafy.ManagedProperty
             }
         }
 
-        //_value = 默认值时，也可能表示默认值。所以不能以 IsDefault 进行命名。
-        ///// <summary>
-        ///// 当前的属性是否是默认值。
-        ///// </summary>
-        //public bool IsDefault { get { return _value == null; } }
-
         /// <summary>
         /// 返回是否存在本地值。（开发者是否存在主动设置/加载的字段值（本地值）。）
         /// 没有本地值的属性，是不占用过多的内存的，在序列化、反序列化的过程中也将被忽略，网络传输时，也不需要传输值。
@@ -130,7 +117,21 @@ namespace Rafy.ManagedProperty
         /// </summary>
         public bool HasLocalValue
         {
-            get { return _value != null; }
+            get
+            {
+                return (_status & MPFStatus.HasLocalValue) == MPFStatus.HasLocalValue;
+            }
+            private set
+            {
+                if (value)
+                {
+                    _status |= MPFStatus.HasLocalValue;
+                }
+                else
+                {
+                    _status &= ~MPFStatus.HasLocalValue;
+                }
+            }
         }
 
         /// <summary>
@@ -139,29 +140,31 @@ namespace Rafy.ManagedProperty
         internal void ResetValue()
         {
             _value = null;
+            this.HasLocalValue = false;
         }
 
         #region 序列化
 
-        /// <summary>
-        /// 判断是否所有状态处于默认状态（空值、默认状态）。
-        /// 如果是默认值的字段，是不需要进行序列化的。
-        /// </summary>
-        /// <returns></returns>
-        internal bool IsDefault()
+        internal bool TrySerialize(object defaultValue, out object result)
         {
-            return !this.HasLocalValue && _status == MPFStatus.Default;
-        }
+            result = null;
+            if (_status == MPFStatus.Default) return false;//默认状态的字段，不需要序列化。
+            if (object.Equals(_value, defaultValue)) return false;//默认值，不需要进行序列化。
 
-        internal object Serialize()
-        {
-            if (_status == MPFStatus.Default) { return this.Value; }
-
-            return new MPFV
+            if (_status == MPFStatus.HasLocalValue)
             {
-                v = this.Value,
-                s = (byte)_status,
-            };
+                //大部分的属性都只是这个状态，所以尽量不使用 MPFV 类型进行序列化。
+                result = _value;
+            }
+            else
+            {
+                result = new MPFV
+                {
+                    Value = _value,
+                    Status = (byte)_status,
+                };
+            }
+            return true;
         }
 
         internal void Deserialize(object value)
@@ -169,12 +172,14 @@ namespace Rafy.ManagedProperty
             if (value is MPFV)
             {
                 var mpfValues = (MPFV)value;
-                this.Value = mpfValues.v;
-                _status = (MPFStatus)mpfValues.s;
+
+                _value = mpfValues.Value;
+                _status = (MPFStatus)mpfValues.Status;
             }
             else
             {
-                this.Value = value;
+                _value = value;
+                _status = MPFStatus.HasLocalValue;
             }
         }
 
@@ -209,21 +214,6 @@ namespace Rafy.ManagedProperty
         }
     }
 
-    //internal class ManagedPropertyField_DefaultValue
-    //{
-    //    public override string ToString()
-    //    {
-    //        return "DefaultValue";
-    //    }
-    //}
-    internal class ManagedPropertyField_Null
-    {
-        public override string ToString()
-        {
-            return "null";
-        }
-    }
-
     /// <summary>
     /// Status of <see cref="ManagedPropertyField"/>.
     /// </summary>
@@ -235,29 +225,53 @@ namespace Rafy.ManagedProperty
         /// </summary>
         Default = 0,
         /// <summary>
+        /// 属性是否有本地值。
+        /// </summary>
+        HasLocalValue = 1,
+        /// <summary>
         /// 属性被禁用。
         /// </summary>
-        Disabled = 1,
+        Disabled = 2,
         /// <summary>
         /// 在加载了持久化的值之后，还被变更为新的值。
         /// </summary>
-        Changed = 2
+        Changed = 4
     }
-
+}
+namespace Rafy
+{
     /// <summary>
-    /// Values of <see cref="ManagedPropertyField"/>
+    /// Values of <see cref="Rafy.ManagedProperty.ManagedPropertyField"/>
     /// </summary>
     [Serializable]
-    internal struct MPFV
+    internal class MPFV : ICustomSerializationObject
     {
-        /// <summary>
-        /// Value
-        /// </summary>
-        public object v;
-        //public bool IsChanged;
-        /// <summary>
-        /// Status
-        /// </summary>
-        public byte s;
+        public object Value;
+
+        public byte Status;
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            if (Value != null)
+            {
+                info.AddValue("v", Value, Value.GetType());
+            }
+            info.AddValue("s", Status);
+        }
+
+        public void SetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            foreach (var item in info)
+            {
+                if (item.Name == "v")
+                {
+                    Value = item.Value;
+                }
+                else if (item.Name == "s")
+                {
+                    Status = (byte)item.Value;
+                }
+            }
+        }
     }
 }

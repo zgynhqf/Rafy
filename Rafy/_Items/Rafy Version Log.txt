@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.85.4127
+3.85.4130
     ★重要、重构
         * 重构 DataPortal 内部结构。为 DomainController 更好地应用远程调用而做准备。
             * 添加 IDataPortalTarget、IDataPortalTargetFactory、DataPortalCallInterceptor 等类型。
@@ -21,6 +21,7 @@
             * EntityRepositoryExt 支持远程调用。
             * 支持对指定的参数进行双向传输，如 PagingInfo。
             * 父引用属性默认不支持序列化。
+            * BugFix：列表属性的 ManagedPropertyField 在有状态时，使用 MPFV进行序列化，会出现无法反序列化的问题。
 
 3.84.4098
     ★★公布、内部修改

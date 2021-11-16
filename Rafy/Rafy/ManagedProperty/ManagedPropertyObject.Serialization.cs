@@ -43,15 +43,12 @@ namespace Rafy.ManagedProperty
             //只序列化非默认状态、非默认值的编译期属性（不序列化运行时属性）
             foreach (var field in _compiledFields)
             {
-                if (field.IsDefault()) continue;//默认状态
-
                 var property = field.Property;
 
                 var meta = property.GetMeta(this);
                 if (!meta.Serializable) continue;//不可序列化。
 
-                var value = field.Serialize();
-                if (object.Equals(value, meta.DefaultValue)) continue;//默认值
+                if(!field.TrySerialize(meta.DefaultValue, out var value)) continue;
 
                 var fieldType = value?.GetType() ?? property.PropertyType;
                 info.AddValue(property.Name, value, fieldType);

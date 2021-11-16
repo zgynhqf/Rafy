@@ -198,8 +198,11 @@ namespace Rafy.ManagedProperty
                     {
                         if (field.IsDisabled) { ThrowPropertyDisabled(property); }
 
-                        result = field.Value;
-                        useDefault = false;
+                        if (field.HasLocalValue)
+                        {
+                            result = field.Value;
+                            useDefault = false;
+                        }
                     }
                 }
             }
@@ -770,7 +773,7 @@ namespace Rafy.ManagedProperty
         /// 没有本地值的属性，是不占用过多的内存的，在序列化、反序列化的过程中也将被忽略，网络传输时，也不需要传输值。
         /// * 一个属性，如果调用过 LoadProperty、SetProperty 更新了值后，字段都会有本地值。
         /// * 如果调用过 <see cref="ResetProperty(IManagedProperty)"/>  来设置默认值，都会清空其本地值；那么，此时这个方法也会返回 false。
-        /// 见：<see cref="ManagedPropertyField.HasLocalValue()"/>
+        /// 见：<see cref="ManagedPropertyField.HasLocalValue"/>
         /// </summary>
         /// <param name="property">托管属性</param>
         /// <returns></returns>
@@ -778,20 +781,9 @@ namespace Rafy.ManagedProperty
         {
             if (property == null) throw new ArgumentNullException("property");
 
-            if (property.IsReadOnly) return false;
+            var field = this.GetField(property);
 
-            if (property.LifeCycle == ManagedPropertyLifeCycle.Compile)
-            {
-                return _compiledFields[property.TypeCompiledIndex].HasLocalValue;
-            }
-            else
-            {
-                if (_runtimeFields != null)
-                {
-                    return _runtimeFields.ContainsKey(property);
-                }
-                return false;
-            }
+            return field.HasLocalValue;
         }
 
         #endregion
