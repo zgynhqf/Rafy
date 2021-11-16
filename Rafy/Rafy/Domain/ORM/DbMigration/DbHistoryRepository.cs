@@ -77,7 +77,7 @@ namespace Rafy.Domain.ORM.DbMigration
             }
             catch (Exception ex)
             {
-                return "添加数据库更新日志 时出错：" + ex.Message;
+                return "添加数据库更新日志时出错：" + ex.Message;
             }
         }
 
@@ -94,7 +94,7 @@ namespace Rafy.Domain.ORM.DbMigration
             }
             catch (Exception ex)
             {
-                return "添加数据库更新日志 时出错：" + ex.Message;
+                return "添加数据库更新日志时出错：" + ex.Message;
             }
         }
     }

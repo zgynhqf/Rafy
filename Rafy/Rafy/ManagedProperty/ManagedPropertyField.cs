@@ -155,11 +155,11 @@ namespace Rafy.ManagedProperty
 
         internal object Serialize()
         {
-            if (_status == MPFStatus.Default) { return _value; }
+            if (_status == MPFStatus.Default) { return this.Value; }
 
             return new MPFV
             {
-                v = _value,
+                v = this.Value,
                 s = (byte)_status,
             };
         }
@@ -169,12 +169,12 @@ namespace Rafy.ManagedProperty
             if (value is MPFV)
             {
                 var mpfValues = (MPFV)value;
-                _value = mpfValues.v;
+                this.Value = mpfValues.v;
                 _status = (MPFStatus)mpfValues.s;
             }
             else
             {
-                _value = value;
+                this.Value = value;
             }
         }
 
@@ -209,13 +209,13 @@ namespace Rafy.ManagedProperty
         }
     }
 
-    internal class ManagedPropertyField_DefaultValue
-    {
-        public override string ToString()
-        {
-            return "DefaultValue";
-        }
-    }
+    //internal class ManagedPropertyField_DefaultValue
+    //{
+    //    public override string ToString()
+    //    {
+    //        return "DefaultValue";
+    //    }
+    //}
     internal class ManagedPropertyField_Null
     {
         public override string ToString()
