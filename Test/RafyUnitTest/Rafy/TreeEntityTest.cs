@@ -147,9 +147,9 @@ namespace RafyUnitTest
                 repo.Save(list);
 
                 var list2 = repo.GetAll();
-                Assert.IsTrue(list2.Count == 2);
-                Assert.IsTrue(list2[1].TreeIndex == "002.");
-                Assert.IsTrue(list2[1].TreeChildren.Count == 1);
+                Assert.AreEqual(2, list2.Count);
+                Assert.AreEqual("002.", list2[1].TreeIndex);
+                Assert.AreEqual(1, list2[1].TreeChildren.Count);
             }
         }
 
@@ -1448,15 +1448,15 @@ namespace RafyUnitTest
                 TreeIndexHelper.ResetTreeIndex(repo);
 
                 var tree = repo.GetAll();
-                Assert.IsTrue(tree.Count == 1);
+                Assert.AreEqual(1, tree.Count);
                 Assert.IsTrue((tree as ITreeComponent).IsFullLoaded);
                 var root = tree[0];
-                Assert.IsTrue(root.TreeIndex == "001.");
-                Assert.IsTrue(root.TreeChildren.Count == 2);
-                Assert.IsTrue(root.TreeChildren[0].TreeIndex == "001.001.");
-                Assert.IsTrue(root.TreeChildren[0].TreeChildren.Count == 1);
-                Assert.IsTrue(root.TreeChildren[0].TreeChildren[0].TreeIndex == "001.001.001.");
-                Assert.IsTrue(root.TreeChildren[1].TreeIndex == "001.002.");
+                Assert.AreEqual("001.", root.TreeIndex);
+                Assert.AreEqual(2, root.TreeChildren.Count);
+                Assert.AreEqual("001.001.", root.TreeChildren[0].TreeIndex);
+                Assert.AreEqual(1, root.TreeChildren[0].TreeChildren.Count);
+                Assert.AreEqual("001.001.001.", root.TreeChildren[0].TreeChildren[0].TreeIndex);
+                Assert.AreEqual("001.002.", root.TreeChildren[1].TreeIndex);
             }
         }
 

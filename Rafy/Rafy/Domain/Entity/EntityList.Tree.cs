@@ -25,15 +25,15 @@ namespace Rafy.Domain
         #region 配置属性
 
         [NonSerialized]
-        private bool _autoTreeIndexEnabled = true;
+        private bool _autoTreeIndexDisabled;
 
         /// <summary>
         /// 是否启用树型的自动生成索引功能。默认为 true。
         /// </summary>
         public bool AutoTreeIndexEnabled
         {
-            get { return _autoTreeIndexEnabled; }
-            set { _autoTreeIndexEnabled = value; }
+            get { return !_autoTreeIndexDisabled; }
+            set { _autoTreeIndexDisabled = !value; }
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace Rafy.Domain
         private void TryAutoIndex(int from = 0, bool force = false)
         {
             //向列表中添加根对象时，需要自动计算该实体及其后面实体的 TreeIndex
-            if (_autoTreeIndexEnabled)
+            if (this.AutoTreeIndexEnabled)
             {
                 var option = this.GetRepository().TreeIndexOption;
 
