@@ -162,6 +162,35 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void SrlzT_Binary_List()
+        {
+            var model = new Book
+            {
+                ChapterList =
+                {
+                    new Chapter {
+                        Id = 111,
+                        Name = "Chapter1",
+                    },
+                    new Chapter {
+                        Id = 222,
+                        Name = "Chapter2",
+                    },
+                }
+            };
+
+            var model2 = BinarySerializer.Clone(model);
+
+            Assert.IsTrue(model2.HasLocalValue(Book.ChapterListProperty));
+            Assert.IsNotNull(model2.GetProperty(Book.ChapterListProperty).Count);
+            Assert.AreEqual(2, model2.ChapterList.Count);
+            Assert.AreEqual(111, model2.ChapterList[0].Id);
+            Assert.AreEqual("Chapter1", model2.ChapterList[0].Name);
+            Assert.AreEqual(222, model2.ChapterList[1].Id);
+            Assert.AreEqual("Chapter2", model2.ChapterList[1].Name);
+        }
+
+        [TestMethod]
         public void SrlzT_Binary_IDomainComponent_Parent_Serialization()
         {
             var user = new TestUser
