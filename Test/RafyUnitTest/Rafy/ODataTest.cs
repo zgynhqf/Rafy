@@ -15,6 +15,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Rafy;
 using Rafy.Data;
 using Rafy.Domain;
 using Rafy.Domain.ORM.Query;
@@ -391,8 +392,11 @@ WHERE T0.UserName LIKE {0}");
                 Assert.AreEqual(list.Count, 2);
                 Assert.IsTrue(list[0].HasLocalValue(Section.ChapterProperty));
                 Assert.IsTrue(list[1].HasLocalValue(Section.ChapterProperty));
-                Assert.IsTrue(list[0].Chapter == list[1].Chapter);
                 Assert.IsTrue(list[0].Chapter.Name == "c1");
+                if (RafyEnvironment.ConnectDataDirectly)
+                {
+                    Assert.IsTrue(list[0].Chapter == list[1].Chapter);
+                }
             }
         }
 
@@ -567,9 +571,10 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
         [TestMethod]
         public void ODT_EagerLoad()
         {
-            using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
+            var repo = RF.ResolveInstance<BookRepository>();
+            using (RF.TransactionScope(repo))
             {
-                RF.Save(new Book
+                repo.Save(new Book
                 {
                     Name = "book",
                     ChapterList =
@@ -586,7 +591,8 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
                     }
                 });
 
-                var list = RF.ResolveInstance<SectionRepository>().GetBy(new ODataQueryCriteria
+                var sectionRepo = RF.ResolveInstance<SectionRepository>();
+                var list = sectionRepo.GetBy(new ODataQueryCriteria
                 {
                     Expand = "Chapter"
                 }) as SectionList;
@@ -594,7 +600,10 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
                 Assert.AreEqual(list.Count, 2);
                 Assert.IsTrue(list[0].HasLocalValue(Section.ChapterProperty));
                 Assert.IsTrue(list[1].HasLocalValue(Section.ChapterProperty));
-                Assert.IsTrue(list[0].Chapter == list[1].Chapter);
+                if (RafyEnvironment.ConnectDataDirectly)
+                {
+                    Assert.IsTrue(list[0].Chapter == list[1].Chapter);
+                }
             }
         }
 
@@ -630,10 +639,13 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
                 Assert.AreEqual(list.Count, 2);
                 Assert.IsTrue(list[0].HasLocalValue(Section.ChapterProperty));
                 Assert.IsTrue(list[1].HasLocalValue(Section.ChapterProperty));
-                Assert.IsTrue(list[0].Chapter == list[1].Chapter);
                 Assert.IsTrue(list[0].HasLocalValue(Section.SectionOwnerProperty));
                 Assert.IsTrue(list[1].HasLocalValue(Section.SectionOwnerProperty));
-                Assert.IsTrue(list[0].SectionOwner == list[1].SectionOwner);
+                if (RafyEnvironment.ConnectDataDirectly)
+                {
+                    Assert.IsTrue(list[0].Chapter == list[1].Chapter);
+                    Assert.IsTrue(list[0].SectionOwner == list[1].SectionOwner);
+                }
             }
         }
 
@@ -667,8 +679,11 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
                 Assert.AreEqual(list.Count, 2);
                 Assert.IsTrue(list[0].HasLocalValue(Section.ChapterProperty));
                 Assert.IsTrue(list[1].HasLocalValue(Section.ChapterProperty));
-                Assert.IsTrue(list[0].Chapter == list[1].Chapter);
                 Assert.IsTrue(list[0].Chapter.HasLocalValue(Chapter.BookProperty), "Chapter.Book 也已经加载");
+                if (RafyEnvironment.ConnectDataDirectly)
+                {
+                    Assert.IsTrue(list[0].Chapter == list[1].Chapter);
+                }
             }
         }
 
@@ -705,11 +720,14 @@ WHERE (Roles.Name = {0} OR T0.Age = {1} OR T0.AddedTime < {2}) AND T0.UserName L
                 Assert.AreEqual(list.Count, 2);
                 Assert.IsTrue(list[0].HasLocalValue(Section.ChapterProperty));
                 Assert.IsTrue(list[1].HasLocalValue(Section.ChapterProperty));
-                Assert.IsTrue(list[0].Chapter == list[1].Chapter);
                 Assert.IsTrue(list[0].HasLocalValue(Section.SectionOwnerProperty));
                 Assert.IsTrue(list[1].HasLocalValue(Section.SectionOwnerProperty));
-                Assert.IsTrue(list[0].SectionOwner == list[1].SectionOwner);
                 Assert.IsTrue(list[0].Chapter.HasLocalValue(Chapter.BookProperty), "Chapter.Book 也已经加载");
+                if (RafyEnvironment.ConnectDataDirectly)
+                {
+                    Assert.IsTrue(list[0].Chapter == list[1].Chapter);
+                    Assert.IsTrue(list[0].SectionOwner == list[1].SectionOwner);
+                }
             }
         }
 

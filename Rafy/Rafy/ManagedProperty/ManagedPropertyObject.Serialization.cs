@@ -31,6 +31,81 @@ namespace Rafy.ManagedProperty
     /// </summary>
     public abstract partial class ManagedPropertyObject : ICustomSerializationObject, IDeserializationCallback
     {
+        public bool IsSerializable(IManagedProperty property)
+        {
+            var field = this.GetField(property);
+            return field.ForceSerialize;
+        }
+
+        /// <summary>
+        /// 标记当前对象指定的属性的是否需要进行序列化。
+        /// </summary>
+        /// <param name="property"></param>
+        /// <param name="value">
+        /// true: 强制序列化；
+        /// false: 强制不序列化；
+        /// null: 恢复默认值；
+        /// </param>
+        public void SetSerializable(IManagedProperty property, bool? value)
+        {
+            if (property.IsReadOnly) return;
+
+            if (property.LifeCycle == ManagedPropertyLifeCycle.Compile)
+            {
+                if (value.HasValue)
+                {
+                    if (value.Value)
+                    {
+                        _compiledFields[property.TypeCompiledIndex].ForceSerialize = true;
+                        _compiledFields[property.TypeCompiledIndex].ForceIgnoreSerialize = false;
+                    }
+                    else
+                    {
+                        _compiledFields[property.TypeCompiledIndex].ForceSerialize = false;
+                        _compiledFields[property.TypeCompiledIndex].ForceIgnoreSerialize = true;
+                    }
+                }
+                else
+                {
+                    _compiledFields[property.TypeCompiledIndex].ForceSerialize = false;
+                    _compiledFields[property.TypeCompiledIndex].ForceIgnoreSerialize = false;
+                }
+            }
+            else
+            {
+                if (_runtimeFields == null)
+                {
+                    _runtimeFields = new Dictionary<IManagedProperty, ManagedPropertyField>();
+                }
+
+                if (!_runtimeFields.TryGetValue(property, out ManagedPropertyField field))
+                {
+                    field._property = property;
+                }
+
+                if (value.HasValue)
+                {
+                    if (value.Value)
+                    {
+                        field.ForceSerialize = true;
+                        field.ForceIgnoreSerialize = false;
+                    }
+                    else
+                    {
+                        field.ForceSerialize = false;
+                        field.ForceIgnoreSerialize = true;
+                    }
+                }
+                else
+                {
+                    field.ForceSerialize = false;
+                    field.ForceIgnoreSerialize = false;
+                }
+
+                _runtimeFields[property] = field;
+            }
+        }
+
         #region 自定义 System Serialization / Deserialization
 
         /// <summary>
@@ -46,9 +121,8 @@ namespace Rafy.ManagedProperty
                 var property = field.Property;
 
                 var meta = property.GetMeta(this);
-                if (!meta.Serializable) continue;//不可序列化。
 
-                if(!field.TrySerialize(meta.DefaultValue, out var value)) continue;
+                if(!field.TrySerialize(meta, out var value)) continue;
 
                 var fieldType = value?.GetType() ?? property.PropertyType;
                 info.AddValue(property.Name, value, fieldType);

@@ -65,24 +65,35 @@ namespace Rafy.ManagedProperty
         }
 
         /// <summary>
+        /// 返回是否存在本地值。（开发者是否存在主动设置/加载的字段值（本地值）。）
+        /// 没有本地值的属性，是不占用过多的内存的，在序列化、反序列化的过程中也将被忽略，网络传输时，也不需要传输值。
+        /// * 一个属性，如果调用过 LoadProperty、SetProperty 更新了值后，字段都会有本地值。
+        /// * 如果调用过 <see cref="ManagedPropertyObject.ResetProperty(IManagedProperty)"/>  来设置默认值，都会清空其本地值；那么，此时这个方法也会返回 false。
+        /// </summary>
+        public bool HasLocalValue
+        {
+            get
+            {
+                return this.GetStatusBit(MPFStatus.HasLocalValue);
+            }
+            private set
+            {
+                this.SetStatusBit(MPFStatus.HasLocalValue, value);
+            }
+        }
+
+        /// <summary>
         /// 当前的属性是否为变更状态。（相对于最近一次调用 <see cref="ManagedPropertyObject.MarkPropertiesUnchanged"/> 方法之后）
         /// </summary>
         public bool IsChanged
         {
             get
             {
-                return (_status & MPFStatus.Changed) == MPFStatus.Changed;
+                return this.GetStatusBit(MPFStatus.Changed);
             }
             internal set
             {
-                if (value)
-                {
-                    _status |= MPFStatus.Changed;
-                }
-                else
-                {
-                    _status &= ~MPFStatus.Changed;
-                }
+                this.SetStatusBit(MPFStatus.Changed, value);
             }
         }
 
@@ -94,43 +105,35 @@ namespace Rafy.ManagedProperty
         {
             get
             {
-                return (_status & MPFStatus.Disabled) == MPFStatus.Disabled;
+                return this.GetStatusBit(MPFStatus.Disabled);
             }
             internal set
             {
-                if (value)
-                {
-                    _status |= MPFStatus.Disabled;
-                }
-                else
-                {
-                    _status &= ~MPFStatus.Disabled;
-                }
+                this.SetStatusBit(MPFStatus.Disabled, value);
             }
         }
 
-        /// <summary>
-        /// 返回是否存在本地值。（开发者是否存在主动设置/加载的字段值（本地值）。）
-        /// 没有本地值的属性，是不占用过多的内存的，在序列化、反序列化的过程中也将被忽略，网络传输时，也不需要传输值。
-        /// * 一个属性，如果调用过 LoadProperty、SetProperty 更新了值后，字段都会有本地值。
-        /// * 如果调用过 <see cref="ManagedPropertyObject.ResetProperty(IManagedProperty)"/>  来设置默认值，都会清空其本地值；那么，此时这个方法也会返回 false。
-        /// </summary>
-        public bool HasLocalValue
+        internal bool ForceSerialize
         {
             get
             {
-                return (_status & MPFStatus.HasLocalValue) == MPFStatus.HasLocalValue;
+                return this.GetStatusBit(MPFStatus.ForceSerialize);
             }
-            private set
+            set
             {
-                if (value)
-                {
-                    _status |= MPFStatus.HasLocalValue;
-                }
-                else
-                {
-                    _status &= ~MPFStatus.HasLocalValue;
-                }
+                this.SetStatusBit(MPFStatus.ForceSerialize, value);
+            }
+        }
+
+        internal bool ForceIgnoreSerialize
+        {
+            get
+            {
+                return this.GetStatusBit(MPFStatus.ForceIgnoreSerialize);
+            }
+            set
+            {
+                this.SetStatusBit(MPFStatus.ForceIgnoreSerialize, value);
             }
         }
 
@@ -143,16 +146,37 @@ namespace Rafy.ManagedProperty
             this.HasLocalValue = false;
         }
 
+        private bool GetStatusBit(MPFStatus bit)
+        {
+            return (_status & bit) == bit;
+        }
+
+        private void SetStatusBit(MPFStatus bit, bool value)
+        {
+            if (value)
+            {
+                _status |= bit;
+            }
+            else
+            {
+                _status &= ~bit;
+            }
+        }
+
         #region 序列化
 
-        internal bool TrySerialize(object defaultValue, out object result)
+        internal bool TrySerialize(IManagedPropertyMetadata meta, out object result)
         {
             result = null;
-            if (_status == MPFStatus.Default) return false;//默认状态的字段，不需要序列化。
-            if (object.Equals(_value, defaultValue)) return false;//默认值，不需要进行序列化。
+
+            if (_status == MPFStatus.Default) return false;//默认状态的字段；（无本地值、无状态），不需要序列化。
+            if (this.GetStatusBit(MPFStatus.ForceIgnoreSerialize)) return false;//开发者设置了强制忽略序列化，不需要序列化。
+            if (!meta.Serializable && !this.GetStatusBit(MPFStatus.ForceSerialize)) return false;//属性默认不序列化，同时开发者也没有设置强制序列化，不需要序列化。
 
             if (_status == MPFStatus.HasLocalValue)
             {
+                if (object.Equals(_value, meta.DefaultValue)) return false;//仅传输值时，值如果是默认值，也不需要序列化。
+
                 //大部分的属性都只是这个状态，所以尽量不使用 MPFV 类型进行序列化。
                 result = _value;
             }
@@ -235,7 +259,13 @@ namespace Rafy.ManagedProperty
         /// <summary>
         /// 在加载了持久化的值之后，还被变更为新的值。
         /// </summary>
-        Changed = 4
+        Changed = 4,
+        /// <summary>
+        /// 对于默认不序列化的属性，可以强制某个字段为设置为必须序列化。
+        /// （例如在贪婪加载父实体属性时。见 UnitTest：ODataTest.ODT_EagerLoad）
+        /// </summary>
+        ForceSerialize = 8,
+        ForceIgnoreSerialize = 16,
     }
 }
 namespace Rafy

@@ -612,6 +612,7 @@ namespace Rafy.Domain
 
                 //把大的实体集合，根据 Id，设置到每一个实体上。
                 var refEntityProperty = refProperty.RefEntityProperty;
+                var needSerialize = refEntityProperty.ReferenceType == ReferenceType.Parent;
                 int refListIndex = 0, refListCount = sortedRefList.Count;
                 var refEntity = sortedRefList[refListIndex];
                 for (int i = 0, c = sortedList.Count; i < c; i++)
@@ -627,6 +628,10 @@ namespace Rafy.Domain
                             if (object.Equals(refId, refEntity.Id))
                             {
                                 entity.LoadProperty(refEntityProperty, refEntity);
+                                if (needSerialize)
+                                {
+                                    entity.SetSerializable(refEntityProperty, true);
+                                }
                                 break;
                             }
                             else
