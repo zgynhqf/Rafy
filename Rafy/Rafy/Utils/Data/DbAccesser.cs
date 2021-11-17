@@ -556,7 +556,7 @@ namespace Rafy.Data
             catch (Exception e)
             {
                 this.LogDbAccessed(sql, parameters, e);
-                throw e;
+                throw;
             }
             finally
             {
@@ -585,7 +585,7 @@ namespace Rafy.Data
             catch (Exception e)
             {
                 this.LogDbAccessed(sql, parameters, e);
-                throw e;
+                throw;
             }
         }
 
@@ -614,7 +614,7 @@ namespace Rafy.Data
             catch (Exception e)
             {
                 this.LogDbAccessed(sql, parameters, e);
-                throw e;
+                throw;
             }
         }
 
@@ -634,7 +634,7 @@ namespace Rafy.Data
             catch (Exception e)
             {
                 this.LogDbAccessed(sql, parameters, e);
-                throw e;
+                throw;
             }
             finally
             {
@@ -667,7 +667,7 @@ namespace Rafy.Data
             catch (Exception e)
             {
                 this.LogDbAccessed(procedureName, parameters, e);
-                throw e;
+                throw;
             }
             finally
             {
@@ -692,7 +692,7 @@ namespace Rafy.Data
             catch (Exception e)
             {
                 this.LogDbAccessed(sql, parameters, e);
-                throw e;
+                throw;
             }
             finally
             {
@@ -1251,7 +1251,7 @@ namespace Rafy.Data
 //        case 547://外键冲突
 //            return -1;
 //    }
-//    throw e;
+//    throw;
 //}
 
 /*************************sp_Common_PagingQuery存储过程**************************/
