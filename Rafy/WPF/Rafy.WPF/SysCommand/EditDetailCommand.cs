@@ -50,11 +50,10 @@ namespace Rafy.WPF.Command
             if (res == WindowButton.Yes)
             {
                 //修改按钮如果使用新的 Id，则它下面子对象的父外键都将是错误的值。
-                listEntity.Clone(tmp);
-
-                if (listEntity.PersistenceStatus == PersistenceStatus.Saved)
+                //需要使用 SetProperty，否则实体的状态、属性的状态，都不会发生改变。
+                if (tmp.IsDirty)
                 {
-                    listEntity.PersistenceStatus = PersistenceStatus.Modified;
+                    listEntity.Clone(tmp, CloneOptions.NewSingleEntity(CloneValueMethod.SetProperty));
                 }
 
                 view.RefreshControl();

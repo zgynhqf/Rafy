@@ -226,7 +226,7 @@ namespace Rafy.Domain
     }
 
     /// <summary>
-    /// 值在复制时的方法
+    /// 在复制属性值时，使用哪一种方式
     /// </summary>
     public enum CloneValueMethod
     {
@@ -235,7 +235,7 @@ namespace Rafy.Domain
         /// </summary>
         LoadProperty,
         /// <summary>
-        /// 使用较慢的设置值方法来拷贝值，但是发生对应的属性变更事件。
+        /// 使用较慢的设置值方法来拷贝值，但是发生对应的属性变更事件，同时会改变实体的变更状态。
         /// </summary>
         SetProperty
     }
