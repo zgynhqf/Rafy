@@ -31,27 +31,27 @@ namespace Rafy.Domain
         /// 读取单个实体的数据
         /// CloneActions.NormalProperties | CloneActions.IdProperty | CloneActions.RefEntities | CloneActions.ParentRefEntity
         /// </summary>
-        public static CloneOptions ReadSingleEntity()
+        public static CloneOptions ReadSingleEntity(CloneValueMethod method = CloneValueMethod.LoadProperty)
         {
-            return new CloneOptions(CloneActions.IdProperty | CloneActions.NormalProperties | CloneActions.RefEntities | CloneActions.ParentRefEntity);
+            return new CloneOptions(method, CloneActions.IdProperty | CloneActions.NormalProperties | CloneActions.RefEntities | CloneActions.ParentRefEntity);
         }
 
         /// <summary>
         /// 读取数据行的数据
         /// CloneActions.NormalProperties | CloneActions.IdProperty
         /// </summary>
-        public static CloneOptions ReadDbRow()
+        public static CloneOptions ReadDbRow(CloneValueMethod method = CloneValueMethod.LoadProperty)
         {
-            return new CloneOptions(CloneActions.IdProperty | CloneActions.NormalProperties);
+            return new CloneOptions(method, CloneActions.IdProperty | CloneActions.NormalProperties);
         }
 
         /// <summary>
         /// 拷贝新的实体的数据（不含 Id）。
         /// CloneActions.NormalProperties | CloneActions.RefEntities | CloneActions.ParentRefEntity
         /// </summary>
-        public static CloneOptions NewSingleEntity()
+        public static CloneOptions NewSingleEntity(CloneValueMethod method = CloneValueMethod.LoadProperty)
         {
-            return new CloneOptions(CloneActions.NormalProperties | CloneActions.RefEntities | CloneActions.ParentRefEntity);
+            return new CloneOptions(method, CloneActions.NormalProperties | CloneActions.RefEntities | CloneActions.ParentRefEntity);
         }
 
         /// <summary>
@@ -59,9 +59,9 @@ namespace Rafy.Domain
         /// 会克隆其所有的孩子对象。
         /// CloneActions.NormalProperties | CloneActions.RefEntities | CloneActions.ChildrenRecur
         /// </summary>
-        public static CloneOptions NewComposition()
+        public static CloneOptions NewComposition(CloneValueMethod method = CloneValueMethod.LoadProperty)
         {
-            return new CloneOptions(CloneActions.NormalProperties | CloneActions.RefEntities | CloneActions.ChildrenRecur);
+            return new CloneOptions(method, CloneActions.NormalProperties | CloneActions.RefEntities | CloneActions.ChildrenRecur);
         }
 
         ///// <summary>
@@ -95,9 +95,12 @@ namespace Rafy.Domain
 
         #endregion
 
-        public CloneOptions(CloneActions cloneActions)
+        internal CloneOptions(CloneActions cloneActions) : this(CloneValueMethod.LoadProperty, cloneActions) { }
+
+        public CloneOptions(CloneValueMethod method, CloneActions cloneActions)
         {
-            this._actions = cloneActions;
+            this.Method = method;
+            _actions = cloneActions;
         }
 
         /// <summary>
@@ -113,7 +116,7 @@ namespace Rafy.Domain
         /// * 一般情况下，开发者只是希望所有底层的值进行拷贝，而非所有属性的逻辑都运行一遍。
         /// </note>
         /// </summary>
-        public CloneValueMethod Method { get; set; } = CloneValueMethod.LoadProperty;
+        public CloneValueMethod Method { get; set; }
 
         #region CloneMappings
 

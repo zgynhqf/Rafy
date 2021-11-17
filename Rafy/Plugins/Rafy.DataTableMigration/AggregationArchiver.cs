@@ -129,9 +129,8 @@ namespace Rafy.DataArchiver
         /// <param name="entitiesToMigrate">实体集合</param>
         private void BackupToHistory(IRepository repository, EntityList entitiesToMigrate)
         {
-            var options = CloneOptions.NewComposition();
+            var options = CloneOptions.NewComposition(CloneValueMethod.LoadProperty);
             options.Actions |= CloneActions.IdProperty;//Id 也需要拷贝。
-            options.Method = CloneValueMethod.LoadProperty;
 
             var newList = repository.NewList();
             newList.Clone(entitiesToMigrate, options);

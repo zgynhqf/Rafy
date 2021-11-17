@@ -66,6 +66,7 @@ namespace Rafy.Domain
                 if (component != result)
                 {
                     var mergeCloneOptions = new CloneOptions(
+                        CloneValueMethod.LoadProperty,
                         CloneActions.IdProperty | //数据库生成的 Id，需要合并
                         CloneActions.NormalProperties | //TreePId、ParentEntityId 以及一些数据库生成的时间等属性，都需要合并
                         CloneActions.RefEntities | //实体引用，可有可无
