@@ -174,6 +174,31 @@ namespace Rafy.Reflection
             return sorted;
         }
 
+        /// <summary>
+        /// 获取指定类型中的指定的公开属性。
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
+        public static PropertyInfo GetProperty(Type type, string propertyName)
+        {
+            try
+            {
+                return type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty);
+            }
+            catch (AmbiguousMatchException)
+            {
+                while (type != typeof(object) && type != null)
+                {
+                    var property = type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty | BindingFlags.DeclaredOnly);
+                    if (property != null) return property;
+
+                    type = type.BaseType;
+                }
+                throw;
+            }
+        }
+
         #region CoerceValue
 
         /// <summary>

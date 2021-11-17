@@ -18,6 +18,7 @@ using System.Text;
 using System.Reflection;
 using Rafy.ManagedProperty;
 using Rafy.Utils;
+using Rafy.Reflection;
 
 namespace Rafy.MetaModel
 {
@@ -49,19 +50,9 @@ namespace Rafy.MetaModel
         {
             get
             {
-                if (this.Owner != null)
+                if (_owner != null)
                 {
-                    var entityType = _owner.EntityType;
-                    var name = this.ManagedProperty.Name;
-                    try
-                    {
-                        return entityType.GetProperty(name, this.ManagedProperty.PropertyType);
-                    }
-                    catch (AmbiguousMatchException)
-                    {
-                        //找到多个同名属性，返回 null
-                        return null;
-                    }
+                    return TypeHelper.GetProperty(_owner.EntityType, this.ManagedProperty.Name);
                 }
 
                 return null;

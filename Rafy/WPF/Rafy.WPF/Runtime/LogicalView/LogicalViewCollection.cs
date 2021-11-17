@@ -22,5 +22,31 @@ namespace Rafy.WPF
     /// <summary>
     /// LogicalView 的集合。
     /// </summary>
-    public class LogicalViewCollection : Collection<LogicalView> { }
+    public class LogicalViewCollection : Collection<LogicalView>
+    {
+        /// <summary>
+        /// 获取某一个关系视图
+        /// </summary>
+        /// <param name="entityType"></param>
+        /// <returns></returns>
+        public LogicalView this[Type entityType]
+        {
+            get
+            {
+                var res = this.Find(entityType);
+                if (res == null) throw new InvalidOperationException("没有找到指定的视图：" + entityType);
+                return res;
+            }
+        }
+
+        /// <summary>
+        /// 尝试找到某一个关系视图
+        /// </summary>
+        /// <param name="entityType"></param>
+        /// <returns></returns>
+        public LogicalView Find(Type entityType)
+        {
+            return this.FirstOrDefault(s => s.EntityType == entityType);
+        }
+    }
 }

@@ -29,7 +29,7 @@ namespace Rafy.Reflection
         /// 获取指定属性的值
         /// 
         /// 使用方法：
-        /// var value = obj.GetStepPropertyValue("Property1.Property2.Property3");
+        /// var value = obj.GetPropertyValue("Property1.Property2.Property3");
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="propertyName">
@@ -44,27 +44,8 @@ namespace Rafy.Reflection
                 return GetStepPropertyValue(obj, propertyName);
             }
 
-            var type = obj.GetType();
-            try
-            {
-                var property = type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty);
-                if (property == null) throw new InvalidOperationException("类型" + obj.GetType().ToString() + "不存在属性" + propertyName);
-                return property.GetValue(obj, null);
-            }
-            catch (AmbiguousMatchException)
-            {
-                while (type != typeof(object) && type != null)
-                {
-                    var property = type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty | BindingFlags.DeclaredOnly);
-                    if (property != null)
-                    {
-                        return property.GetValue(obj, null);
-                    }
-
-                    type = type.BaseType;
-                }
-                throw;
-            }
+            var property = TypeHelper.GetProperty(obj.GetType(), propertyName);
+            return property.GetValue(obj, null);
         }
 
         /// <summary>
