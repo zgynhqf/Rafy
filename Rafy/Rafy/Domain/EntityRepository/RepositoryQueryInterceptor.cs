@@ -26,11 +26,11 @@ namespace Rafy.Domain
     /// 仓库类型、仓库扩展类型的查询方法的拦截器。
     /// 使得在调用仓库的查询方法时，不是直接执行方法代码，而是调用数据门户去间接调用此方法。
     /// </summary>
-    class RepositoryInterceptor : Castle.DynamicProxy.IInterceptor
+    class RepositoryQueryInterceptor : Castle.DynamicProxy.IInterceptor
     {
-        internal static readonly RepositoryInterceptor Instance = new RepositoryInterceptor();
+        internal static readonly RepositoryQueryInterceptor Instance = new RepositoryQueryInterceptor();
 
-        private RepositoryInterceptor() { }
+        private RepositoryQueryInterceptor() { }
 
         public void Intercept(IInvocation invocation)
         {
@@ -51,8 +51,8 @@ namespace Rafy.Domain
             //完成后，调用 Repository.SetRepo
             if (invocation.ReturnValue is IDomainComponent)
             {
-                var repoExt = invocation.InvocationTarget as IRepositoryExt;
-                var repo = invocation.InvocationTarget as EntityRepository ?? repoExt.Repository as EntityRepository;
+                var target = invocation.InvocationTarget;
+                var repo = target as EntityRepository ?? (target as IRepositoryExt).Repository as EntityRepository;
 
                 switch (fetchType)
                 {
