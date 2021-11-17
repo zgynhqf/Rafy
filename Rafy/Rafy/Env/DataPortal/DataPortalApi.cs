@@ -34,6 +34,13 @@ namespace Rafy.DataPortal
         /// </summary>
         public static bool IsRunning => RafyEnvironment.ThreadPortalCount > 0;
 
+        /// <summary>
+        /// 远程调用指定对象的指定方法。
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="method"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
         public static object Call(object obj, string method, object[] parameters)
         {
             var proxy = GetDataPortalProxy();
