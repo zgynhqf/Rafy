@@ -27,11 +27,6 @@ namespace Rafy.Domain.Validation
     public static class Validator
     {
         /// <summary>
-        /// 默认的验证行为：ValidatorActions.ValidateChildren | ValidatorActions.StopOnFirstBroken。
-        /// </summary>
-        public static ValidatorActions DefaultActions = ValidatorActions.ValidateChildren | ValidatorActions.StopOnFirstBroken;
-
-        /// <summary>
         /// 检查某个属性是否满足规则
         /// </summary>
         /// <param name="target">要验证的实体。</param>
@@ -72,7 +67,7 @@ namespace Rafy.Domain.Validation
         /// property</exception>
         public static BrokenRulesCollection Validate(this Entity target, IManagedProperty property, Func<IRule, bool> ruleFilter = null)
         {
-            return Validate(target, property, DefaultActions, ruleFilter);
+            return Validate(target, property, ValidatorActions.StopOnFirstBroken, ruleFilter);
         }
 
         /// <summary>
@@ -121,7 +116,7 @@ namespace Rafy.Domain.Validation
         /// <exception cref="System.ArgumentNullException">target</exception>
         public static BrokenRulesCollection Validate(this Entity target)
         {
-            return Validate(target, DefaultActions);
+            return Validate(target, ValidatorActions.ValidateChildren | ValidatorActions.StopOnFirstBroken);
         }
 
         /// <summary>
@@ -145,7 +140,7 @@ namespace Rafy.Domain.Validation
         /// <exception cref="System.ArgumentNullException">target</exception>
         public static BrokenRulesCollection Validate(this Entity target, Func<IRule, bool> ruleFilter)
         {
-            return Validate(target, ruleFilter, DefaultActions);
+            return Validate(target, ruleFilter, ValidatorActions.ValidateChildren | ValidatorActions.StopOnFirstBroken);
         }
 
         ///// <summary>
