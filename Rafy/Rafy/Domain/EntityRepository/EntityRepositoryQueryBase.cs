@@ -199,7 +199,6 @@ namespace Rafy.Domain
 
         #endregion
 
-
         #region IDataPortalTarget
         DataPortalTargetFactoryInfo IDataPortalTarget.TryUseFactory()
         {

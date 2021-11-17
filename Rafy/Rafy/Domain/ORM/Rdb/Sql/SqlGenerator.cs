@@ -354,7 +354,7 @@ namespace Rafy.Domain.ORM
                 case SqlColumnConstraintOperator.EndsWith:
                     //如果是空字符串的模糊对比操作，直接认为是真。
                     var strValue = value as string;
-                    if (string.IsNullOrEmpty(strValue))
+                    if (string.IsNullOrEmpty(strValue) || strValue.Replace("%", string.Empty).Length == 0)
                     {
                         _sql.Append("1 = 1");
                         return node;
@@ -366,7 +366,7 @@ namespace Rafy.Domain.ORM
                 case SqlColumnConstraintOperator.NotEndsWith:
                     //如果是空字符串的模糊对比操作，直接认为是假。
                     var strValue2 = value as string;
-                    if (string.IsNullOrEmpty(strValue2))
+                    if (string.IsNullOrEmpty(strValue2) || strValue2.Replace("%", string.Empty).Length == 0)
                     {
                         _sql.Append("1 != 1");
                         return node;
