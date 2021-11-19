@@ -40,6 +40,11 @@ namespace Rafy.Domain.ORM
         public static bool ErrorIfColumnNotFoundInSql { get; set; } = true;
 
         /// <summary>
+        /// 在数据层通过 DataReader 读取字段的值时，如果字段的值无法转换并加载到实体类的属性类型中，是否抛出异常。
+        /// </summary>
+        public static bool ErrorIfColumnValueCantConvert { get; set; } = true;
+
+        /// <summary>
         /// 参数是否需要嵌入到 SQL 中来执行。默认为 false。
         /// 对于非索引的参数，都会以参数化方式来执行，而不论此属性是否为真。
         /// </summary>

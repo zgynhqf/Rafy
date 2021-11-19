@@ -98,7 +98,7 @@ Message：{ message }
 
             if (string.IsNullOrEmpty(this.ExceptionLogFileName)) return;
 
-            var stackTrace = e.StackTrace;//需要记录完整的堆栈信息。
+            var stackTrace = e.StackTrace;//使用最外层的 Exception，可以获取到最完整的堆栈信息。
             e = e.GetBaseException();
 
             lock (this)

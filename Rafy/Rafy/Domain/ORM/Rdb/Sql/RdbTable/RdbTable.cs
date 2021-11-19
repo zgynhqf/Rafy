@@ -814,7 +814,17 @@ namespace Rafy.Domain.ORM
                     if (index >= 0)
                     {
                         object val = reader[index];
-                        column.WritePropertyValue(entity, val);
+                        try
+                        {
+                            column.WritePropertyValue(entity, val);
+                        }
+                        catch
+                        {
+                            if (ORMSettings.ErrorIfColumnValueCantConvert)
+                            {
+                                throw;
+                            }
+                        }
                     }
                     else
                     {
