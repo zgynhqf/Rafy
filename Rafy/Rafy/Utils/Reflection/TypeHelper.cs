@@ -287,9 +287,6 @@ namespace Rafy.Reflection
 
             try
             {
-#if NETSTANDARD2_0 || NETCOREAPP2_0
-                if (value is JValue) value = ((JValue)value).Value;
-#endif
                 return Convert.ChangeType(value, desiredType);
             }
             catch
