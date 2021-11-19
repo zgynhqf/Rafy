@@ -75,7 +75,7 @@ namespace Rafy.Domain.ORM.Query.Impl
             }
             set
             {
-                base.From = value as SqlSource;
+                base.From = value as ISqlSource;
             }
         }
 
@@ -87,7 +87,7 @@ namespace Rafy.Domain.ORM.Query.Impl
             }
             set
             {
-                base.Where = value as SqlConstraint;
+                base.Where = value as ISqlConstraint;
             }
         }
 
