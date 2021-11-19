@@ -34,7 +34,8 @@ namespace Rafy.Domain
 
         public Service()
         {
-            this._dataPortalLocation = RafyEnvironment.IsOnServer() ? DataPortalLocation.Local : DataPortalLocation.Dynamic;
+            var isLocal = RafyEnvironment.ConnectDataDirectly || DataPortalApi.IsRunning;
+            _dataPortalLocation = isLocal ? DataPortalLocation.Local : DataPortalLocation.Dynamic;
         }
 
         /// <summary>
