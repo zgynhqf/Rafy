@@ -23,14 +23,14 @@ namespace Rafy.Data
     /// 分页算法帮助类
     /// </summary>
     public static class PagingHelper
-    {
-        /// <summary>
-        /// 使用 IDataReader 的内存分页读取方案。
-        /// </summary>
-        /// <param name="reader"></param>
-        /// <param name="rowReader">每一行数据，会调用此方法进行调取。</param>
-        /// <param name="pagingInfo">分页信息。如果这个参数不为空，则使用其中描述的分页规则进行内存分页查询。</param>
-        public static void MemoryPaging(IDataReader reader, Action<IDataReader> rowReader, PagingInfo pagingInfo)
+    {  /// <summary>
+       /// 使用 IDataReader 的内存分页读取方案。
+       /// </summary>
+       /// <param name="reader"></param>
+       /// <param name="rowReader">每一行数据，会调用此方法进行调取。</param>
+       /// <param name="pagingInfo">分页信息。如果这个参数不为空，则使用其中描述的分页规则进行内存分页查询。</param>
+       /// <param name="maxCount"></param>
+        public static void MemoryPaging(IDataReader reader, Action<IDataReader> rowReader, PagingInfo pagingInfo, int maxCount = int.MaxValue)
         {
             bool isPaging = !PagingInfo.IsNullOrEmpty(pagingInfo);
             bool needCount = isPaging && pagingInfo.IsNeedCount;
@@ -44,6 +44,7 @@ namespace Rafy.Data
                 endRow = startRow + pagingInfo.PageSize - 1;
             }
 
+            var itemsCount = 0;
             while (reader.Read())
             {
                 totalCount++;
@@ -52,22 +53,27 @@ namespace Rafy.Data
                 {
                     if (totalCount <= endRow)
                     {
-                        rowReader(reader);
+                        itemsCount++;
+                        if (itemsCount <= maxCount)
+                        {
+                            rowReader(reader);
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
                     else
                     {
-                        //如果已经超出该页，而且需要统计行数，则直接快速循环到最后。
-                        if (needCount)
-                        {
-                            while (reader.Read()) { totalCount++; }
-                            break;
-                        }
+                        break;
                     }
                 }
             }
 
             if (needCount)
             {
+                while (reader.Read()) { totalCount++; }
+
                 pagingInfo.TotalCount = totalCount;
             }
         }

@@ -299,7 +299,7 @@ namespace Rafy.Domain
                 //DataPortalCallInterceptor 需要拦截 RepositoryQueryAttribute 或 DataPortalCallAttribute 标记的方法。
                 if (method.HasMarked<RepositoryQueryAttribute>())
                 {
-                    return new IInterceptor[] { RepositoryInterceptor.Instance, DataPortalCallInterceptor.Instance };
+                    return new IInterceptor[] { RepositoryQueryInterceptor.Instance, DataPortalCallInterceptor.Instance };
                 }
                 if (method.HasMarked<DataPortalCallAttribute>())
                 {
