@@ -25,6 +25,7 @@ namespace Rafy.Domain
     /// <para>1.判断是需要在本地、还是服务端来执行此方法。如果需要在服务端执行，则框架会转而调用 WCF 数据门户。（如果需要分布式调用，所有参数需要支持可序列化。）</para>
     /// <para>2.根据方法的返回值，来确定底层查询时应该返回的类型（EntityList、Entity、int、LiteDataTable）。</para>
     /// <para>3.查询完成后，调整查询结果的类型，与需要的类型一致。</para>
+    /// <para>4.对于查询后的实体，设置其对应的仓库实例。</para>
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
     public class RepositoryQueryAttribute : DataPortalCallAttribute { }

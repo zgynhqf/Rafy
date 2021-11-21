@@ -349,24 +349,35 @@ namespace Rafy.Domain.ORM
             switch (op)
             {
                 case SqlColumnConstraintOperator.Like:
-                case SqlColumnConstraintOperator.Contains:
-                case SqlColumnConstraintOperator.StartsWith:
-                case SqlColumnConstraintOperator.EndsWith:
-                    //如果是空字符串的模糊对比操作，直接认为是真。
-                    var strValue = value as string;
-                    if (string.IsNullOrEmpty(strValue) || strValue.Replace("%", string.Empty).Length == 0)
+                    if (IsEmptyOrWildcard(value as string))
                     {
                         _sql.Append("1 = 1");
                         return node;
                     }
                     break;
                 case SqlColumnConstraintOperator.NotLike:
+                    //如果是空字符串的模糊对比操作，直接认为是假。
+                    if (IsEmptyOrWildcard(value as string))
+                    {
+                        _sql.Append("1 != 1");
+                        return node;
+                    }
+                    break;
+                case SqlColumnConstraintOperator.Contains:
+                case SqlColumnConstraintOperator.StartsWith:
+                case SqlColumnConstraintOperator.EndsWith:
+                    //如果是空字符串的模糊对比操作，直接认为是真。
+                    if (string.IsNullOrEmpty(value as string))
+                    {
+                        _sql.Append("1 = 1");
+                        return node;
+                    }
+                    break;
                 case SqlColumnConstraintOperator.NotContains:
                 case SqlColumnConstraintOperator.NotStartsWith:
                 case SqlColumnConstraintOperator.NotEndsWith:
                     //如果是空字符串的模糊对比操作，直接认为是假。
-                    var strValue2 = value as string;
-                    if (string.IsNullOrEmpty(strValue2) || strValue2.Replace("%", string.Empty).Length == 0)
+                    if (string.IsNullOrEmpty(value as string))
                     {
                         _sql.Append("1 != 1");
                         return node;
@@ -535,6 +546,15 @@ namespace Rafy.Domain.ORM
             }
 
             return node;
+        }
+
+        private static bool IsEmptyOrWildcard(string strValue)
+        {
+            return
+                string.IsNullOrEmpty(strValue) ||
+                !strValue.Contains(WILDCARD_ALL_ESCAPED) &&
+                !strValue.Contains(WILDCARD_SINGLE_ESCAPED) &&
+                strValue.Replace(WILDCARD_ALL, string.Empty).Replace(WILDCARD_SINGLE, string.Empty).Length == 0;
         }
 
         private void AppendParameter(object value, SqlColumn column)

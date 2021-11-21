@@ -33,7 +33,6 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
     /// <summary>
     /// SqlServer 数据库的实体批量导入器。
     /// </summary>
-    [Serializable]
     public class SqlServerBatchImporter : BatchImporter
     {
         /// <summary>

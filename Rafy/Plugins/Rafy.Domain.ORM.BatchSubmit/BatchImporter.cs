@@ -26,8 +26,7 @@ namespace Rafy.Domain.ORM.BatchSubmit
     /// <summary>
     /// 批量导入基类。
     /// </summary>
-    [Serializable]
-    public abstract class BatchImporter : Service, IBatchImporter
+    public abstract class BatchImporter : IBatchImporter
     {
         private IDomainComponent _entityOrList;
 
@@ -58,14 +57,6 @@ namespace Rafy.Domain.ORM.BatchSubmit
             if (entityOrList == null) throw new ArgumentNullException("entityOrList");
             _entityOrList = entityOrList;
 
-            this.Invoke();
-        }
-
-        /// <summary>
-        /// 核心的执行逻辑。
-        /// </summary>
-        protected override void Execute()
-        {
             //读取所有的要批处理的实体
             var reader = new EntityBatchReader(_entityOrList);
             var batchList = reader.Read();

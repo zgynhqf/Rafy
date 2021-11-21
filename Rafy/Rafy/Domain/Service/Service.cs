@@ -52,7 +52,7 @@ namespace Rafy.Domain
         /// <summary>
         /// 数据门户会调用此方法来实现执行逻辑。
         /// </summary>
-        internal void ExecuteByDataPortal()
+        internal Service ExecuteByDataPortal()
         {
             this.Execute();
 
@@ -78,6 +78,8 @@ namespace Rafy.Domain
                     }
                 }
             }
+
+            return this;
         }
 
         /// <summary>

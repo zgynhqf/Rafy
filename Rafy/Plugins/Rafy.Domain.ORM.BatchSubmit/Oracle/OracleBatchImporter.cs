@@ -31,7 +31,6 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
     /// Oracle 数据库的实体批量导入器
     /// 使用 ODP.NET 中的批量导入功能完成。
     /// </summary>
-    [Serializable]
     public class OracleBatchImporter : BatchImporter
     {
         private static OracleRunGenerator _oracleRunGenerator = new OracleRunGenerator();

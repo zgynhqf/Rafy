@@ -55,14 +55,28 @@ namespace RafyUnitTest
         public void DT_Controller_RunAtServer()
         {
             var bc = DCF.Create<BookController>();
-            Assert.AreEqual(true, bc.IsRunningAtServer());
+            if (RafyEnvironment.ConnectDataDirectly)
+            {
+                Assert.AreEqual(false, bc.IsRunningAtServer());
+            }
+            else
+            {
+                Assert.AreEqual(true, bc.IsRunningAtServer());
+            }
         }
 
         [TestMethod]
         public void DT_Controller_ThreadPortalCount()
         {
             var bc = DCF.Create<BookController>();
-            Assert.AreEqual(1, bc.GetThreadPortalCount(), "Controller 和 Repository 一起使用时，只进行了一次最外层的远程调用。");
+            if (RafyEnvironment.ConnectDataDirectly)
+            {
+                Assert.AreEqual(0, bc.GetThreadPortalCount(), "没有远程调用。");
+            }
+            else
+            {
+                Assert.AreEqual(1, bc.GetThreadPortalCount(), "Controller 和 Repository 一起使用时，只进行了一次最外层的远程调用。");
+            }
         }
 
         [TestMethod]

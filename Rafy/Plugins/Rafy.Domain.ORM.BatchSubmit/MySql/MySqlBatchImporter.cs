@@ -32,7 +32,6 @@ namespace Rafy.Domain.ORM.BatchSubmit.MySql
     /// <summary>
     /// MySql 数据库的实体批量导入器
     /// </summary>
-    [Serializable]
     public sealed class MySqlBatchImporter : BatchImporter
     {
         /// <summary>
