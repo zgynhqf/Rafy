@@ -448,6 +448,46 @@ namespace Rafy.MetaModel.View
             return meta;
         }
 
+        public static void ReplaceCmd(this WPFEntityViewMeta meta, object oldcommand, object newcommand)
+        {
+            if (!UIEnvironment.IsWebUI)
+            {
+                if (!(oldcommand is string || oldcommand is Type) || !(newcommand is string || newcommand is Type)) throw new ArgumentNullException("只支持两个类型：String、Type");
+
+                var metaCommands = meta.Commands;
+                var command = newcommand is string ? metaCommands.Find(newcommand as string) : metaCommands.Find(newcommand as Type);
+                if (command == null)
+                {
+                    command = newcommand is string ? UIModel.WPFCommands.Find(newcommand as string) : UIModel.WPFCommands.Find(newcommand as Type);
+                    command = command.CloneMutable();
+
+                    for (int i = 0, c = metaCommands.Count; i < c; i++)
+                    {
+                        var item = metaCommands[i];
+                        if (oldcommand is string)
+                        {
+                            if (item.Name == oldcommand.ToString())
+                            {
+                                metaCommands[i] = command;
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            if (item.GetType() == oldcommand as Type)
+                            {
+                                metaCommands[i] = command;
+                                return;
+                            }
+                        }
+                    }
+
+                    //没有找到旧命令，则直接加入到集合中。
+                    metaCommands.Add(command);
+                }
+            }
+        }
+
         #endregion
 
         #region WebEntityViewMeta
