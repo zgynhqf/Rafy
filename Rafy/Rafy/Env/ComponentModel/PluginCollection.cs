@@ -26,27 +26,40 @@ namespace Rafy.ComponentModel
     /// </summary>
     public class PluginCollection : Collection<IPlugin>
     {
+        private Dictionary<string, IPlugin> _nameCache = new Dictionary<string, IPlugin>();
+
         public IPlugin Find(Assembly assembly)
         {
-            for (int i = 0, c = this.Count; i < c; i++)
-            {
-                var item = this[i];
-                if (item.Assembly == assembly)
-                {
-                    return item;
-                }
-            }
-            return null;
+            return this.Find(assembly.GetName().Name);
+            //for (int i = 0, c = this.Count; i < c; i++)
+            //{
+            //    var item = this[i];
+            //    if (item.Assembly == assembly)
+            //    {
+            //        return item;
+            //    }
+            //}
+            //return null;
         }
 
         public IPlugin Find(Type pluginType)
         {
-            return this.FirstOrDefault(p => pluginType.IsInstanceOfType(p));
+            return this.Find(pluginType.Assembly);
+            //return this.FirstOrDefault(p => pluginType.IsInstanceOfType(p));
         }
 
         public IPlugin Find(string assemblyName)
         {
-            return this.FirstOrDefault(p => p.Assembly.GetName().Name == assemblyName);
+            if (_nameCache.TryGetValue(assemblyName, out var value))
+            {
+                return value;
+            }
+            return null;
+        }
+
+        private void OnItemAdded(IPlugin item)
+        {
+            _nameCache[item.Assembly.GetName().Name] = item;
         }
 
         #region Lockable
@@ -82,6 +95,7 @@ namespace Rafy.ComponentModel
                 this.EnsureWritable();
 
                 base.InsertItem(index, item);
+                this.OnItemAdded(item);
             }
         }
 
@@ -92,6 +106,7 @@ namespace Rafy.ComponentModel
                 this.EnsureWritable();
 
                 base.SetItem(index, item);
+                this.OnItemAdded(item);
             }
         }
 
