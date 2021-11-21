@@ -27,6 +27,7 @@ using Rafy.MetaModel.View;
 using Rafy.ManagedProperty;
 using Rafy.Data;
 using Rafy.Domain.ORM.Query;
+using Rafy.DataPortal;
 
 namespace UT
 {
@@ -160,6 +161,12 @@ namespace UT
     public partial class BookRepository : UnitTestEntityRepository
     {
         protected BookRepository() { }
+
+        [DataPortalCall]
+        public virtual int GetThreadPortalCount()
+        {
+            return RafyEnvironment.ThreadPortalCount;
+        }
 
         [RepositoryQuery]
         public virtual BookList GetWithEager2()

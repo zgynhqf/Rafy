@@ -11,8 +11,10 @@
  * 
 *******************************************************/
 
+using Rafy.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace Rafy.DataPortal
@@ -50,7 +52,7 @@ namespace Rafy.DataPortal
     /// 门户的目标对象对应的工厂及构造信息
     /// </summary>
     [Serializable]
-    public class DataPortalTargetFactoryInfo
+    public class DataPortalTargetFactoryInfo : ICustomSerializationObject
     {
         /// <summary>
         /// 工厂在 <see cref="DataPortalTargetFactoryRegistry"/> 中注册的名称。
@@ -61,5 +63,17 @@ namespace Rafy.DataPortal
         /// 通过该工厂构造本目标对象时，需要使用到的所有信息。（序列化后）
         /// </summary>
         public string TargetInfo { get; set; }
+
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("f", this.FactoryName);
+            info.AddValue("i", this.TargetInfo);
+        }
+
+        public virtual void SetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            this.FactoryName = info.GetString("f");
+            this.TargetInfo = info.GetString("i");
+        }
     }
 }

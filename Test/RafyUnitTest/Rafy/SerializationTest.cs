@@ -14,6 +14,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rafy;
 using Rafy.Data;
+using Rafy.DataPortal;
 using Rafy.Domain;
 using Rafy.Domain.ORM;
 using Rafy.Domain.ORM.BatchSubmit;
@@ -316,12 +317,15 @@ namespace RafyUnitTest
                     Assert.AreEqual(1, pi.TotalCount);
                     Assert.AreEqual(false, pi.IsNeedCount);
 
-                    pi.PageNumber = 2;
-                    var cBefore = DbAccesserInterceptor.ThreadDbAccessedCount;
-                    userRepo.GetAll(pi);
+                    if (DataPortalApi.IsFakeingRemote)
+                    {
+                        pi.PageNumber = 2;
+                        var cBefore = DbAccesserInterceptor.ThreadDbAccessedCount;
+                        userRepo.GetAll(pi);
 
-                    Assert.AreEqual(cBefore + 1, DbAccesserInterceptor.ThreadDbAccessedCount, "未发生 Count Sql 语句");
-                    Assert.AreEqual(1, pi.TotalCount, "TotalCount 未变化");
+                        Assert.AreEqual(cBefore + 1, DbAccesserInterceptor.ThreadDbAccessedCount, "未发生 Count Sql 语句");
+                        Assert.AreEqual(1, pi.TotalCount, "TotalCount 未变化");
+                    }
                 }
                 else
                 {

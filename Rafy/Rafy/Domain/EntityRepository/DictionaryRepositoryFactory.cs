@@ -309,7 +309,7 @@ namespace Rafy.Domain
             }
         }
 
-        string IDataPortalTargetFactory.Name => RepositoryFactoryHost.RepositoryFactoryName;
+        string IDataPortalTargetFactory.Name => RepositoryFactoryHost.DataPortalTargetFactoryName;
 
         IDataPortalTarget IDataPortalTargetFactory.GetTarget(DataPortalTargetFactoryInfo info)
         {

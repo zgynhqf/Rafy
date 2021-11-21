@@ -34,6 +34,8 @@ namespace Rafy.DataPortal
         /// </summary>
         public static bool IsRunning => RafyEnvironment.ThreadPortalCount > 0;
 
+        internal static bool IsFakeingRemote => GetDataPortalProxy() is FakeRemoteProxy;
+
         /// <summary>
         /// 远程调用指定对象的指定方法。
         /// </summary>

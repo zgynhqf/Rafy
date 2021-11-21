@@ -17,6 +17,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Castle.DynamicProxy;
+using Rafy.ComponentModel;
+using Rafy.DataPortal;
 using Rafy.Reflection;
 
 namespace Rafy.Domain
@@ -29,17 +32,29 @@ namespace Rafy.Domain
     /// * DomainController 的覆盖。
     /// * 管理控制器之间的依赖。（在创建 DomainController 时，为其建立监听程序。）
     /// </summary>
-    public abstract class DomainControllerFactory
+    public class DomainControllerFactory : IDataPortalTargetFactory
     {
+        internal const string DataPortalTargetFactoryName = "DCFty";
+
+        static DomainControllerFactory()
+        {
+            Default = new DomainControllerFactory();
+            DataPortalTargetFactoryRegistry.Register(Default);
+        }
+
+        public static DomainControllerFactory Default;
+
+        protected DomainControllerFactory() { }
+
         /// <summary>
         /// 创建指定类型的控制器。
         /// </summary>
         /// <typeparam name="TController"></typeparam>
         /// <returns></returns>
         public static TController Create<TController>()
-            where TController : DomainController
+            where TController : class
         {
-            return Create(typeof(TController)) as TController;
+            return Default.Create(typeof(TController)) as TController;
         }
 
         /// <summary>
@@ -47,15 +62,29 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="controllerType"></param>
         /// <returns></returns>
-        public static DomainController Create(Type controllerType)
+        public DomainController Create(Type controllerType)
         {
-            InitializeIf();
+            RafyEnvironment.LoadPlugin(controllerType.Assembly);
 
-            controllerType = GetOverride(controllerType);
+            this.InitializeIf();
 
-            var instance = Activator.CreateInstance(controllerType, true) as DomainController;
+            if (controllerType.IsInterface)
+            {
+                controllerType = this.GetImpl(controllerType);
+            }
+            else
+            {
+                if (!controllerType.IsSubclassOf(typeof(DomainController)))
+                {
+                    throw new InvalidOperationException($"无法为 {controllerType} 创建领域控制器实例，这是因为它没有从 {typeof(DomainController)} 上继承。");
+                }
+            }
 
-            CreateDependee(instance, controllerType);
+            controllerType = this.GetOverride(controllerType);
+
+            var instance = this.CreateInstanceProxy(controllerType);
+
+            this.CreateDependee(instance, controllerType);
 
             var handler = ControllerCreated;
             if (handler != null) handler(null, new ControllerCreatedEventArgs(instance));
@@ -68,44 +97,134 @@ namespace Rafy.Domain
         /// </summary>
         public static event EventHandler<ControllerCreatedEventArgs> ControllerCreated;
 
+        #region DataPortal 相关、生成代理、方法拦截
+
+        private ProxyGenerator _proxyGenerator = new ProxyGenerator();
+
+        private DomainController CreateInstanceProxy(Type controllerType)
+        {
+            var options = new ProxyGenerationOptions(DataPortalCallMethodHook.Instance);
+
+            //ProxyGenerator 内部对 Type 使用了 Cache。性能应该不是问题。
+            var instance = _proxyGenerator.CreateClassProxy(controllerType, options, DataPortalCallInterceptor.Instance) as DomainController;
+
+            return instance;
+        }
+
+        string IDataPortalTargetFactory.Name => DataPortalTargetFactoryName;
+
+        IDataPortalTarget IDataPortalTargetFactory.GetTarget(DataPortalTargetFactoryInfo info)
+        {
+            var ctrlType = TypeSerializer.Deserialize(info.TargetInfo);
+            var controller = Create(ctrlType);
+            return controller;
+        }
+
+        #endregion
+
         #region IntializeIf
 
-        private static bool _intialized;
+        private bool _intialized;
 
-        private static void ErrorIfIntialized()
+        private IList<Type> _controllers = new List<Type>();
+        private Dictionary<Type, Type> _interfaceToImpl = new Dictionary<Type, Type>();
+
+        private Type GetImpl(Type interfaceType)
+        {
+            if (_interfaceToImpl.TryGetValue(interfaceType, out var value))
+            {
+                return value;
+            }
+            if (!typeof(IDomainControllerContract).IsAssignableFrom(interfaceType))
+            {
+                throw new InvalidOperationException($"接口类型 {interfaceType} 未继承 {typeof(IDomainControllerContract)}，无法创建其对应的领域控制器。");
+            }
+            throw new InvalidOperationException($"没有找到实现接口类型 {interfaceType} 的具体 DomainController 类型。如果开发者已经正确编写实现类型，那么可能是这个类型所对应的领域插件还没有正确加载");
+        }
+
+        private void ErrorIfIntialized()
         {
             if (_intialized) throw new InvalidProgramException();
         }
 
-        private static void InitializeIf()
+        private void InitializeIf()
         {
             if (!_intialized)
             {
-                foreach (var plugin in RafyEnvironment.Plugins)
+                lock (this)
                 {
-                    Initialize(plugin);
+                    if (!_intialized)
+                    {
+                        foreach (var plugin in RafyEnvironment.Plugins)
+                        {
+                            this.Initialize(plugin);
+                        }
+
+                        RafyEnvironment.RuntimePluginLoaded += (o, e) =>
+                        {
+                            this.Initialize(e.Plugin);
+                        };
+
+                        _intialized = true;
+                    }
                 }
-
-                RafyEnvironment.RuntimePluginLoaded += (o, e) =>
-                {
-                    Initialize(e.Plugin);
-                };
-
-                _intialized = true;
             }
         }
 
-        private static void Initialize(ComponentModel.IPlugin plugin)
+        private void Initialize(IPlugin plugin)
         {
             var assembly = plugin.Assembly;
 
             var types = assembly.GetTypes()
-                .Where(t => t.IsSubclassOf(typeof(DomainController)))
+                .Where(t => !t.IsAbstract && t.IsSubclassOf(typeof(DomainController)))
                 .ToArray();
 
-            foreach (var item in types)
+            foreach (var controllerType in types)
             {
-                System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(item.TypeHandle);
+                this.Initialize(controllerType);
+            }
+        }
+
+        private void Initialize(Type controllerType)
+        {
+            if (_controllers.Contains(controllerType)) return;
+            _controllers.Add(controllerType);
+
+            //先处理基类。
+            var type = controllerType.BaseType;
+            while (type != typeof(DomainController))
+            {
+                Initialize(type);
+                type = type.BaseType;
+            }
+
+            //调用该类的静态构造函数。其中会进行建立控制器之间的依赖项。
+            System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(controllerType.TypeHandle);
+
+            //接下来，处理所有接口类型的领域控制器契约。
+            var contractType = typeof(IDomainControllerContract);
+            var interfaces = controllerType.GetInterfaces();
+            foreach (var interfaceType in interfaces)
+            {
+                var isContract = contractType.IsAssignableFrom(interfaceType);
+                if (isContract)
+                {
+                    if (_interfaceToImpl.TryGetValue(interfaceType, out var existType))
+                    {
+                        if (!contractType.IsSubclassOf(existType))
+                        {
+                            throw new InvalidOperationException($"{controllerType} 不可以实现契约 {interfaceType}。这是因为已经有注册了该契约的实现类型： {existType}，且目前只支持为契约注册唯一的实现。");
+                        }
+                        else
+                        {
+                            //如果是子类，则不做任何处理。由开发者调用 Override 将父类完全覆盖掉。
+                        }
+                    }
+                    else
+                    {
+                        _interfaceToImpl.Add(interfaceType, controllerType);
+                    }
+                }
             }
         }
 
@@ -117,28 +236,27 @@ namespace Rafy.Domain
         /// key: parent,
         /// value: child
         /// </summary>
-        private static Dictionary<Type, Type> _overriedList = new Dictionary<Type, Type>();
+        private Dictionary<Type, Type> _overriedList = new Dictionary<Type, Type>();
 
         /// <summary>
         /// 使用子控制器来覆盖父控制器。
         /// </summary>
         /// <typeparam name="TParent"></typeparam>
         /// <typeparam name="TChild"></typeparam>
-        public static void Override<TParent, TChild>()
+        public void Override<TParent, TChild>()
             where TParent : DomainController
             where TChild : TParent
         {
-            ErrorIfIntialized();
+            this.ErrorIfIntialized();
 
             _overriedList[typeof(TParent)] = typeof(TChild);
         }
 
-        private static Type GetOverride(Type parent)
+        private Type GetOverride(Type parent)
         {
             Type result = parent;
 
-            Type child = null;
-            while (_overriedList.TryGetValue(result, out child))
+            while (_overriedList.TryGetValue(result, out var child))
             {
                 result = child;
             }
@@ -154,16 +272,15 @@ namespace Rafy.Domain
         /// key: depended
         /// value: dependee list
         /// </summary>
-        private static Dictionary<Type, List<Type>> _dependency = new Dictionary<Type, List<Type>>();
+        private Dictionary<Type, List<Type>> _dependency = new Dictionary<Type, List<Type>>();
 
-        internal static void CreateDependency(Type dependee, Type depended)
+        internal void CreateDependency(Type dependee, Type depended)
         {
-            ErrorIfIntialized();
+            this.ErrorIfIntialized();
 
-            List<Type> dependeeList = null;
             lock (_dependency)
             {
-                if (!_dependency.TryGetValue(depended, out dependeeList))
+                if (!_dependency.TryGetValue(depended, out var dependeeList))
                 {
                     dependeeList = new List<Type>();
                     _dependency.Add(depended, dependeeList);
@@ -173,13 +290,12 @@ namespace Rafy.Domain
             }
         }
 
-        private static void CreateDependee(DomainController instance, Type controllerType)
+        private void CreateDependee(DomainController instance, Type controllerType)
         {
             var types = TypeHelper.GetHierarchy(controllerType, typeof(DomainController));
             foreach (var type in types)
             {
-                List<Type> dependeeList = null;
-                if (_dependency.TryGetValue(type, out dependeeList))
+                if (_dependency.TryGetValue(type, out var dependeeList))
                 {
                     foreach (var dependeeType in dependeeList)
                     {

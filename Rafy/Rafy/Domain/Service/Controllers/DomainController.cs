@@ -10,6 +10,7 @@
  * 
 *******************************************************/
 
+using Rafy.DataPortal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace Rafy.Domain
     /// 工作在 DDD 经典分层中的领域层中。
     /// 在具体的子类中编写具体业务的控制逻辑。
     /// </summary>
-    public abstract class DomainController
+    public abstract class DomainController : IDataPortalTarget
     {
         #region 依赖管理
 
@@ -99,7 +100,7 @@ namespace Rafy.Domain
             public void On<TListendController>()
                 where TListendController : DomainController
             {
-                DomainControllerFactory.CreateDependency(ControllerType, typeof(TListendController));
+                DomainControllerFactory.Default.CreateDependency(ControllerType, typeof(TListendController));
             }
 
             /// <summary>
@@ -110,10 +111,39 @@ namespace Rafy.Domain
             {
                 foreach (var item in controllerTypes)
                 {
-                    DomainControllerFactory.CreateDependency(ControllerType, item);
+                    DomainControllerFactory.Default.CreateDependency(ControllerType, item);
                 }
             }
         }
+
+        #endregion
+
+        #region IDataPortalTarget
+
+        public DataPortalLocation DataPortalLocation { get; protected set; }
+
+        DataPortalTargetFactoryInfo IDataPortalTarget.TryUseFactory()
+        {
+            return new DataPortalTargetFactoryInfo
+            {
+                FactoryName = DomainControllerFactory.DataPortalTargetFactoryName,
+                TargetInfo = TypeSerializer.Serialize(this.GetType().BaseType),
+            };
+        }
+
+        void IDataPortalTarget.OnPortalCalling(DataPortalCallContext e)
+        {
+            this.OnPortalCalling(e);
+        }
+
+        void IDataPortalTarget.OnPortalCalled(DataPortalCallContext e)
+        {
+            this.OnPortalCalled(e);
+        }
+
+        protected virtual void OnPortalCalling(DataPortalCallContext e) { }
+
+        protected virtual void OnPortalCalled(DataPortalCallContext e) { }
 
         #endregion
     }

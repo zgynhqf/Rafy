@@ -26,6 +26,7 @@ using Rafy.DataPortal;
 using Rafy.Domain.ORM.SqlTree;
 using Rafy.Domain.ORM.Query;
 using Rafy.Domain.ORM.Query.Impl;
+using System.Runtime.Serialization;
 
 namespace Rafy.Domain
 {
@@ -41,7 +42,6 @@ namespace Rafy.Domain
         /// 获取或设置本仓库数据门户所在位置。
         /// </summary>
         public DataPortalLocation DataPortalLocation { get; protected set; }
-
 
         public EntityRepositoryQueryBase()
         {
@@ -200,6 +200,7 @@ namespace Rafy.Domain
         #endregion
 
         #region IDataPortalTarget
+
         DataPortalTargetFactoryInfo IDataPortalTarget.TryUseFactory()
         {
             if (this is IRepository)//repository
@@ -207,7 +208,7 @@ namespace Rafy.Domain
                 var repoType = this.GetType().BaseType;
                 return new DataPortalTargetFactoryInfo
                 {
-                    FactoryName = RepositoryFactoryHost.RepositoryFactoryName,
+                    FactoryName = RepositoryFactoryHost.DataPortalTargetFactoryName,
                     TargetInfo = TypeSerializer.Serialize(repoType),
                 };
             }
@@ -217,7 +218,7 @@ namespace Rafy.Domain
                 var repoType = this.Repo.GetType().BaseType;
                 return new RepoExtInfo
                 {
-                    FactoryName = RepositoryFactoryHost.RepositoryFactoryName,
+                    FactoryName = RepositoryFactoryHost.DataPortalTargetFactoryName,
                     TargetInfo = TypeSerializer.Serialize(repoType),
                     ExtType = TypeSerializer.Serialize(extType),
                 };
@@ -287,5 +288,17 @@ namespace Rafy.Domain
     public class RepoExtInfo : DataPortalTargetFactoryInfo
     {
         public string ExtType { get; set; }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+            info.AddValue("ext", ExtType);
+        }
+
+        public override void SetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.SetObjectData(info, context);
+            this.ExtType = info.GetString("ext");
+        }
     }
 }

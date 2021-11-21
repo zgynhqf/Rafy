@@ -28,6 +28,7 @@ using Rafy.Domain.ORM.DbMigration;
 using Rafy.UnitTest;
 using Rafy.Utils;
 using UT;
+using Rafy.DataPortal;
 
 namespace RafyUnitTest
 {
@@ -39,6 +40,81 @@ namespace RafyUnitTest
         {
             ServerTestHelper.ClassInitialize(context);
         }
+
+        #region DT_Controller
+
+        [TestMethod]
+        public void DT_Controller()
+        {
+            var bc = DCF.Create<BookController>();
+            var count = bc.CountBook();
+            Assert.AreEqual(0, count);
+        }
+
+        [TestMethod]
+        public void DT_Controller_RunAtServer()
+        {
+            var bc = DCF.Create<BookController>();
+            Assert.AreEqual(true, bc.IsRunningAtServer());
+        }
+
+        [TestMethod]
+        public void DT_Controller_ThreadPortalCount()
+        {
+            var bc = DCF.Create<BookController>();
+            Assert.AreEqual(1, bc.GetThreadPortalCount(), "Controller 和 Repository 一起使用时，只进行了一次最外层的远程调用。");
+        }
+
+        [TestMethod]
+        public void DT_Controller_InterfaceContract()
+        {
+            var bc = DCF.Create<IBookController>();
+            var count = bc.CountBook();
+            Assert.AreEqual(0, count);
+        }
+
+        [TestMethod]
+        public void DT_Controller_ParameterSerialization()
+        {
+            if (RafyEnvironment.DataPortalMode != DataPortalMode.ThroughService) return;
+
+            var repo = RF.ResolveInstance<BookRepository>();
+            Assert.AreEqual(0, repo.CountAll(), "初始环境为空，这是因为最后会清空整个表。");
+            repo.Save(new Book { Name = "book1" });
+
+            try
+            {
+                var bc = DCF.Create<BookController>();
+
+                //远程调用时，PagingInfo 实现了 IDataPortalOutArgument，所以有可能会由服务端传向客户端。
+                var pi = new PagingInfo(1, 10, true);
+                var list = bc.GetBooks(pi);
+                Assert.AreEqual(1, list.Count);
+                Assert.AreEqual("book1", list[0].Name);
+                Assert.AreEqual(1, pi.TotalCount);
+                Assert.AreEqual(false, pi.IsNeedCount);
+
+                if (DataPortalApi.IsFakeingRemote)
+                {
+                    pi.PageNumber = 2;
+                    var cBefore = DbAccesserInterceptor.ThreadDbAccessedCount;
+                    bc.GetBooks(pi);
+
+                    Assert.AreEqual(cBefore + 1, DbAccesserInterceptor.ThreadDbAccessedCount, "未发生 Count Sql 语句");
+                    Assert.AreEqual(1, pi.TotalCount, "TotalCount 未变化");
+                }
+            }
+            finally
+            {
+                var all = repo.GetAll();
+                all.Clear();
+                repo.Save(all);
+            }
+        }
+
+        #endregion
+
+        #region DT_Service
 
         [TestMethod]
         public void DT_Service_InterfaceContract()
@@ -78,6 +154,8 @@ namespace RafyUnitTest
             service.Invoke();
             Assert.IsTrue(service.Result == 2);
         }
+
+        #endregion
 
         #region DT_POCO
 
@@ -361,6 +439,5 @@ namespace RafyUnitTest
         }
 
         #endregion
-
     }
 }

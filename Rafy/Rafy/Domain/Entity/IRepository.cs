@@ -302,7 +302,7 @@ namespace Rafy.Domain
     /// </summary>
     public static class RepositoryFactoryHost
     {
-        internal const string RepositoryFactoryName = "RepoFactory";
+        internal const string DataPortalTargetFactoryName = "RepoFty";
 
         private static IRepositoryFactory _factory;
 
@@ -322,7 +322,7 @@ namespace Rafy.Domain
                 if (value is IDataPortalTargetFactory)
                 {
                     var portalFactory = value as IDataPortalTargetFactory;
-                    if (portalFactory.Name != RepositoryFactoryName) throw new InvalidOperationException();
+                    if (portalFactory.Name != DataPortalTargetFactoryName) throw new InvalidOperationException();
                     DataPortalTargetFactoryRegistry.Register(portalFactory);
                 }
             }
