@@ -132,33 +132,19 @@ namespace Rafy.MetaModel.View
                 var cmdDir = ConfigurationHelper.GetAppSettingOrDefault("RafyCommandsDir", "Scripts/Commands/");
                 var dir = RafyEnvironment.MapAbsolutePath(cmdDir);
                 if (Directory.Exists(dir)) { _webCommands.AddByDirectory(dir); }
-
-                //加入所有 Library 中 Commands 文件夹下的 js Resource。
-                foreach (var plugin in RafyEnvironment.Plugins)
-                {
-                    _webCommands.AddByAssembly(plugin.Assembly);
-                }
-            }
-            else
-            {
-                //加入所有 Module 中 Commands。
-                foreach (var plugin in RafyEnvironment.Plugins)
-                {
-                    _wpfCommands.AddByAssembly(plugin.Assembly);
-                }
             }
 
-            RafyEnvironment.RuntimePluginLoaded += (o, e) =>
+            RafyEnvironment.HandleAllPlugins(plugin =>
             {
                 if (UIEnvironment.IsWebUI)
                 {
-                    _webCommands.AddByAssembly(e.Plugin.Assembly);
+                    _webCommands.AddByAssembly(plugin.Assembly);
                 }
                 else
                 {
-                    _wpfCommands.AddByAssembly(e.Plugin.Assembly);
+                    _wpfCommands.AddByAssembly(plugin.Assembly);
                 }
-            };
+            });
         }
 
         #endregion

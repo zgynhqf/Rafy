@@ -122,22 +122,7 @@ namespace Rafy.UI
                 _extendConfigurations = new Dictionary<ExtendTypeKey, List<ViewConfig>>(100);
 
                 //视图配置可以放在所有插件中。
-                var allPlugins = RafyEnvironment.Plugins;
-                for (int index = 0, c = allPlugins.Count; index < c; index++)
-                {
-                    var plugin = allPlugins[index];
-                    AddByPlugin(plugin);
-                }
-
-                RafyEnvironment.RuntimePluginLoaded += RafyEnvironment_RuntimePluginLoaded;
-            }
-
-            private void RafyEnvironment_RuntimePluginLoaded(object sender, RafyEnvironment.PluginEventArgs e)
-            {
-                lock (this)
-                {
-                    AddByPlugin(e.Plugin);
-                }
+                RafyEnvironment.HandleAllPlugins(AddByPlugin);
             }
 
             private void AddByPlugin(IPlugin plugin)

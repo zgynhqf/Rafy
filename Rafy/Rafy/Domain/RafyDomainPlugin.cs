@@ -50,16 +50,7 @@ namespace Rafy.Domain
 
         private void OnMetaCompiled(object sender, EventArgs e)
         {
-            var plugins = RafyEnvironment.Plugins;
-            foreach (var plugin in plugins)
-            {
-                ProcessTypesInPlugin(plugin);
-            }
-
-            RafyEnvironment.RuntimePluginLoaded += (o, ee) =>
-            {
-                ProcessTypesInPlugin(ee.Plugin);
-            };
+            RafyEnvironment.HandleAllPlugins(ProcessTypesInPlugin);
         }
 
         private static void ProcessTypesInPlugin(IPlugin plugin)

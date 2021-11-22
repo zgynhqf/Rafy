@@ -155,15 +155,7 @@ namespace Rafy.Domain
                 {
                     if (!_intialized)
                     {
-                        foreach (var plugin in RafyEnvironment.Plugins)
-                        {
-                            this.Initialize(plugin);
-                        }
-
-                        RafyEnvironment.RuntimePluginLoaded += (o, e) =>
-                        {
-                            this.Initialize(e.Plugin);
-                        };
+                        RafyEnvironment.HandleAllPlugins(this.Initialize);
 
                         _intialized = true;
                     }

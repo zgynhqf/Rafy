@@ -116,6 +116,23 @@ namespace Rafy
         /// </summary>
         public static event EventHandler<PluginEventArgs> RuntimePluginLoaded;
 
+        /// <summary>
+        /// 对于当前已经加载的插件调用 pluginHandler，并在未来加载新插件时，也都调用 pluginHandler。
+        /// </summary>
+        /// <param name="pluginHandler"></param>
+        public static void HandleAllPlugins(Action<IPlugin> pluginHandler)
+        {
+            foreach (var plugin in _plugins)
+            {
+                pluginHandler(plugin);
+            }
+
+            RuntimePluginLoaded += (o, e) =>
+            {
+                pluginHandler(e.Plugin);
+            };
+        }
+
         internal static void Reset()
         {
             _allPluginsLoaded = false;
