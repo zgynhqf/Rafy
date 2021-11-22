@@ -255,16 +255,7 @@ namespace Rafy.Domain.Validation
                 if (!IsMatchEntityStatus(target, rule.Meta)) { continue; }
 
                 var args = new RuleArgs(rule);
-
-                try
-                {
-                    args.BrokenDescription = null;
-                    rule.ValidationRule.Validate(target, args);
-                }
-                catch (Exception ex)
-                {
-                    throw new ValidationException("Properties.Resources.ValidationRulesException" + args.Property.Name + rule.Key, ex);
-                }
+                rule.ValidationRule.Validate(target, args);
 
                 if (args.IsBroken)
                 {
