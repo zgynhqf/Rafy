@@ -55,13 +55,13 @@ namespace RafyUnitTest
         public void DT_Controller_RunAtServer()
         {
             var bc = DCF.Create<BookController>();
-            if (RafyEnvironment.ConnectDataDirectly)
+            if (DataPortalApi.ConnectDataDirectly)
             {
-                Assert.AreEqual(false, bc.IsRunningAtServer());
+                Assert.AreEqual(false, bc.IsDataPortalRunning());
             }
             else
             {
-                Assert.AreEqual(true, bc.IsRunningAtServer());
+                Assert.AreEqual(true, bc.IsDataPortalRunning());
             }
         }
 
@@ -69,7 +69,7 @@ namespace RafyUnitTest
         public void DT_Controller_ThreadPortalCount()
         {
             var bc = DCF.Create<BookController>();
-            if (RafyEnvironment.ConnectDataDirectly)
+            if (DataPortalApi.ConnectDataDirectly)
             {
                 Assert.AreEqual(0, bc.GetThreadPortalCount(), "没有远程调用。");
             }
@@ -90,7 +90,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void DT_Controller_ParameterSerialization()
         {
-            if (RafyEnvironment.DataPortalMode != DataPortalMode.ThroughService) return;
+            if (DataPortalApi.DataPortalMode != DataPortalMode.ThroughService) return;
 
             var repo = RF.ResolveInstance<BookRepository>();
             Assert.AreEqual(0, repo.CountAll(), "初始环境为空，这是因为最后会清空整个表。");

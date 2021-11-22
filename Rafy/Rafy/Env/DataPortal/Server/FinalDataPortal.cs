@@ -53,7 +53,7 @@ namespace Rafy.DataPortal
         {
             try
             {
-                RafyEnvironment.ThreadPortalCount++;
+                DataPortalApi._threadPortalCount++;
 
                 //如果目标对象需要使用工厂，那么先找到其对应的工厂，然后再通过工厂来获取对应的对象。
                 var factoryInfo = obj as DataPortalTargetFactoryInfo;
@@ -71,7 +71,7 @@ namespace Rafy.DataPortal
             }
             finally
             {
-                RafyEnvironment.ThreadPortalCount--;
+                DataPortalApi._threadPortalCount--;
             }
         }
 

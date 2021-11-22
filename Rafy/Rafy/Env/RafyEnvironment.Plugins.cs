@@ -29,6 +29,7 @@ using Rafy.Reflection;
 using Rafy.ComponentModel;
 using Rafy.Configuration;
 using System.Collections;
+using Rafy.DataPortal;
 
 namespace Rafy
 {
@@ -137,7 +138,7 @@ namespace Rafy
         {
             _allPluginsLoaded = false;
             _plugins = new PluginCollection();
-            DataPortalMode = DataPortalMode.ConnectDirectly;
+            DataPortalApi.DataPortalMode = DataPortalMode.ConnectDirectly;
         }
 
         internal static void CreateStartupPlugins()

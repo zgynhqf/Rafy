@@ -45,7 +45,7 @@ namespace Rafy.DataPortal
             {
                 //如果目标确定了当前使用的是本地调用，或者当前环境只支持本地调用；那么都只使用本地调用，否则使用远程调用。
                 var isLocal = target.DataPortalLocation == DataPortalLocation.Local 
-                    || RafyEnvironment.ConnectDataDirectly
+                    || DataPortalApi.ConnectDataDirectly
                     || DataPortalApi.IsRunning;
                 context.CallType = isLocal ? PortalCallType.Local : PortalCallType.Remote;
 

@@ -40,12 +40,6 @@ namespace Rafy.Domain
 {
     partial class EntityRepository
     {
-        protected EntityRepository()
-        {
-            _clientCache = new ClientRepositoryCache(this);
-            _serverCache = new ServerRepositoryCache(this);
-        }
-
         internal override IRepositoryInternal Repo
         {
             get { return this; }
@@ -68,24 +62,11 @@ namespace Rafy.Domain
 
         #region 缓存
 
-        private ClientRepositoryCache _clientCache;
-        private ServerRepositoryCache _serverCache;
-
         /// <summary>
-        /// 基于版本号更新的客户端缓存 API
+        /// 当前仓库使用的缓存模型。
+        /// 子类如果要使用缓存，需要在仓库中设置此属性。
         /// </summary>
-        public ClientRepositoryCache ClientCache
-        {
-            get { return _clientCache; }
-        }
-
-        /// <summary>
-        /// 服务端内存缓存 API
-        /// </summary>
-        public ServerRepositoryCache ServerCache
-        {
-            get { return _serverCache; }
-        }
+        public RepositoryCache Cache { get; protected set; }
 
         #endregion
 
@@ -370,19 +351,10 @@ namespace Rafy.Domain
         {
             EntityList result = null;
 
-            if (RafyEnvironment.IsOnServer())
+            var cache = this.Cache;
+            if (cache != null && cache.IsEnabled)
             {
-                if (this._serverCache.IsEnabled)
-                {
-                    result = this._serverCache.FindAll();
-                }
-            }
-            else
-            {
-                if (this._clientCache.IsEnabled)
-                {
-                    result = this._clientCache.FindAll();
-                }
+                result = cache.FindAll();
             }
 
             if (result != null)
@@ -409,19 +381,10 @@ namespace Rafy.Domain
         {
             EntityList result = null;
 
-            if (RafyEnvironment.IsOnServer())
+            var cache = this.Cache;
+            if (cache != null && cache.IsEnabled)
             {
-                if (this._serverCache.IsEnabled)
-                {
-                    result = this._serverCache.FindByParent(parent);
-                }
-            }
-            else
-            {
-                if (this._clientCache.IsEnabled)
-                {
-                    result = this._clientCache.FindByParent(parent);
-                }
+                result = cache.FindByParent(parent);
             }
 
             if (result != null)
@@ -448,19 +411,10 @@ namespace Rafy.Domain
         {
             Entity result = null;
 
-            if (RafyEnvironment.IsOnServer())
+            var cache = this.Cache;
+            if (cache != null && cache.IsEnabled)
             {
-                if (this._serverCache.IsEnabled)
-                {
-                    result = this._serverCache.FindById(id);
-                }
-            }
-            else
-            {
-                if (this._clientCache.IsEnabled)
-                {
-                    result = this._clientCache.FindById(id);
-                }
+                result = cache.FindById(id);
             }
 
             if (result != null)

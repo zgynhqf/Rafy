@@ -22,6 +22,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Rafy;
+using Rafy.DataPortal;
 using Rafy.MetaModel;
 using Rafy.Utils;
 
@@ -36,16 +37,6 @@ namespace Rafy.ComponentModel
         /// 应用程序当前所处的阶段。
         /// </summary>
         public AppPhase Phase { get; private set; } = AppPhase.Created;
-
-        /// <summary>
-        /// 默认情况下，App 是一个服务端应用程序。
-        /// 子类需要重写此方法，来确定当前是否运行在客户端。
-        /// </summary>
-        /// <returns></returns>
-        public virtual bool IsOnClient()
-        {
-            return false;
-        }
 
         /// <summary>
         /// 子类在合适的时间调用此方法来启动整个 Rafy 应用程序。
@@ -107,7 +98,7 @@ namespace Rafy.ComponentModel
         /// </summary>
         protected virtual void InitEnvironment()
         {
-            RafyEnvironment.DataPortalMode = RafyEnvironment.Configuration.Section.DataPortalProxy == "Local" ?
+            DataPortalApi.DataPortalMode = RafyEnvironment.Configuration.Section.DataPortalProxy == "Local" ?
                 DataPortalMode.ConnectDirectly : DataPortalMode.ThroughService;
         }
 

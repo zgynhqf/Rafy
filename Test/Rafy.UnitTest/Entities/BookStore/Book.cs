@@ -165,7 +165,7 @@ namespace UT
         [DataPortalCall]
         public virtual int GetThreadPortalCount()
         {
-            return RafyEnvironment.ThreadPortalCount;
+            return DataPortalApi.ThreadPortalCount;
         }
 
         [RepositoryQuery]

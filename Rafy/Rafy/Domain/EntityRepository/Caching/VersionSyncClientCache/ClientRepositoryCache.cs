@@ -13,6 +13,7 @@
 
 using System;
 using System.Collections.Generic;
+using Rafy.Domain.ORM;
 using Rafy.MetaModel;
 using Rafy.Utils.Caching;
 
@@ -27,7 +28,7 @@ namespace Rafy.Domain.Caching
 
         private bool _clientCacheDefinitionLoaded;
 
-        internal ClientRepositoryCache(IRepository repository) : base(repository) { }
+        public ClientRepositoryCache(IRepository repository) : base(repository) { }
 
         /// <summary>
         /// 本缓存对象对应的实体类型。
@@ -65,15 +66,7 @@ namespace Rafy.Domain.Caching
         /// <summary>
         /// 指定当前的仓库是否支持Cache
         /// </summary>
-        public bool IsEnabled
-        {
-            get
-            {
-                return VersionSyncMgr.IsEnabled &&
-                    this.ClientCacheDefinition != null &&
-                    RafyEnvironment.IsOnClient();
-            }
-        }
+        public override bool IsEnabled => this.ClientCacheDefinition != null;
 
         /// <summary>
         /// 直接设置根对象为缓存
@@ -112,39 +105,6 @@ namespace Rafy.Domain.Caching
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// 在某实体更新时，通知服务器更新对象整张表的版本号。
-        /// </summary>
-        public void UpdateServerVersion()
-        {
-            if (VersionSyncMgr.IsEnabled && this.ClientCacheDefinition != null)
-            {
-                VersionSyncMgr.Repository.UpdateVersion(this.EntityType);
-            }
-        }
-
-        /// <summary>
-        /// 在某实体更新时，通知服务器更新指定范围内对象的版本号。
-        /// </summary>
-        public void UpdateServerVersion(Entity parent)
-        {
-            if (VersionSyncMgr.IsEnabled)
-            {
-                var scope = this.ClientCacheDefinition;
-                if (scope != null)
-                {
-                    string scopeId = null;
-                    if (scope.ScopeIdGetter != null)
-                    {
-                        if (parent == null) throw new InvalidOperationException("此列表没有父对象，调用 NotifyVersion 方法失败。");
-                        scopeId = scope.ScopeIdGetter(parent);
-                    }
-
-                    VersionSyncMgr.Repository.UpdateVersion(this.EntityType, scope.ScopeClass, scopeId);
-                }
-            }
         }
 
         /// <summary>

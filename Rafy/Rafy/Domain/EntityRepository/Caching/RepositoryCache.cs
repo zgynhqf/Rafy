@@ -42,6 +42,11 @@ namespace Rafy.Domain.Caching
         public ICache Cache { get; set; } = Utils.Caching.Cache.Default;
 
         /// <summary>
+        /// 返回当前状态是否启用中。
+        /// </summary>
+        public abstract bool IsEnabled { get; }
+
+        /// <summary>
         /// 使用Cache获取所有对象。
         /// </summary>
         /// <returns></returns>

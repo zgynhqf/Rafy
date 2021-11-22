@@ -28,9 +28,10 @@ namespace Rafy.UnitTest
     public class BookController : DomainController, IBookController
     {
         [DataPortalCall]
-        public virtual bool IsRunningAtServer()
+        public virtual bool IsDataPortalRunning()
         {
             return DataPortalApi.IsRunning;
+            //return !RafyEnvironment.IsOnClientSide();
         }
 
         [DataPortalCall]

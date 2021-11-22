@@ -61,12 +61,6 @@ namespace Rafy.ComponentModel
         /// 应用程序完全退出
         /// </summary>
         event EventHandler Exit;
-
-        /// <summary>
-        /// 判断是否在客户端。
-        /// </summary>
-        /// <returns></returns>
-        bool IsOnClient();
     }
 
     /// <summary>

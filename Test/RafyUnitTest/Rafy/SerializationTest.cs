@@ -310,7 +310,7 @@ namespace RafyUnitTest
                 Assert.AreEqual(10, pi.PageSize);
                 Assert.AreEqual(true, pi.IsNeedCount);
 
-                if (RafyEnvironment.DataPortalMode == DataPortalMode.ThroughService)
+                if (DataPortalApi.DataPortalMode == DataPortalMode.ThroughService)
                 {
                     //远程调用时，PagingInfo 实现了 IDataPortalOutArgument，所以有可能会由服务端传向客户端。
                     userRepo.GetAll(pi);

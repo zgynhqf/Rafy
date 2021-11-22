@@ -29,10 +29,38 @@ namespace Rafy.DataPortal
     /// </summary>
     public static class DataPortalApi
     {
+        [ThreadStatic]
+        internal static int _threadPortalCount;
+
+        /// <summary>
+        /// 获取当前线程目前已经进入的数据门户层数。
+        /// </summary>
+        public static int ThreadPortalCount
+        {
+            get { return _threadPortalCount; }
+        }
+
         /// <summary>
         /// 表示当前线程执行的代码是否正处于数据门户的调用中。
+        /// * 当环境为 C/S 架构的服务端时，所有通过服务访问的代码，应该始终处于门户的调用中。 
+        /// * 当环境为 C/S 架构的客户端时，所有访问服务以外的代码，应该都不处于门户的调用中。 
+        /// * 当环境为 直连数据 架构时，所有代码应该都不处于门户的调用中。 
         /// </summary>
-        public static bool IsRunning => RafyEnvironment.ThreadPortalCount > 0;
+        public static bool IsRunning => _threadPortalCount > 0;
+
+        /// <summary>
+        /// 应用程序默认的数据门户模式。
+        /// </summary>
+        public static DataPortalMode DataPortalMode { get; set; } = DataPortalMode.ConnectDirectly;
+
+        /// <summary>
+        /// 是否应用程序直接连接数据。
+        /// DataPortalMode == DataPortalMode.ConnectDirectly。
+        /// </summary>
+        public static bool ConnectDataDirectly
+        {
+            get { return DataPortalMode == DataPortalMode.ConnectDirectly; }
+        }
 
         internal static bool IsFakeingRemote => GetDataPortalProxy() is FakeRemoteProxy;
 

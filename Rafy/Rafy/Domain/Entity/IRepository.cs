@@ -54,14 +54,9 @@ namespace Rafy.Domain
         IList<IRepositoryExt> Extensions { get; }
 
         /// <summary>
-        /// 基于版本号更新的客户端缓存 API。
+        /// 当前使用的缓存对象。
         /// </summary>
-        ClientRepositoryCache ClientCache { get; }
-
-        /// <summary>
-        /// 服务端内存缓存 API
-        /// </summary>
-        ServerRepositoryCache ServerCache { get; }
+        RepositoryCache Cache { get; }
 
         /// <summary>
         /// 是否声明本仓库为本地仓库（客户端只在客户端查询，服务端在服务端查询）

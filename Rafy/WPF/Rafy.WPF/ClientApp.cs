@@ -67,18 +67,6 @@ namespace Rafy.WPF.Shell
 
         #endregion
 
-        /// <summary>
-        /// 判断是否在客户端
-        /// 单机版，如果还没有进入数据门户中，则同样返回 true。
-        /// </summary>
-        /// <returns></returns>
-        public override bool IsOnClient()
-        {
-            return !RafyEnvironment.ConnectDataDirectly ||
-                !DataPortalApi.IsRunning;
-                //RafyEnvironment.ThreadPortalCount == 0;
-        }
-
         public override void Startup()
         {
             _wpfApp.ShutdownMode = ShutdownMode.OnExplicitShutdown;

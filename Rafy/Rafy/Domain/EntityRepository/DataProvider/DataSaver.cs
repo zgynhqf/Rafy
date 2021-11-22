@@ -26,6 +26,8 @@ namespace Rafy.Domain
     /// </summary>
     public abstract class DataSaver
     {
+        private ClientCacheNotifier _clientCacheNotifier;
+
         private EntityRepository _repository;
 
         private RepositoryDataProvider _dataProvider;
@@ -51,6 +53,7 @@ namespace Rafy.Domain
         {
             _dataProvider = dataProvider;
             _repository = dataProvider.Repository;
+            _clientCacheNotifier = new ClientCacheNotifier(_repository);
 
             //创建提交的拦截器列表。
             _submitter = new SubmitInterceptorList();
@@ -126,7 +129,7 @@ namespace Rafy.Domain
             {
                 //从数据门户过来的更新时，一般都是根实体时，这时需要同时更新整张表的服务端缓存版本号。
                 //如果不是根实体，那也无法获取这个数据的版本号范围，所以也简单地更新整张表的版本号。
-                _repository.ClientCache.UpdateServerVersion();
+                _clientCacheNotifier.UpdateServerVersion();
 
                 this.SubmitComponent(component, true);
             }
@@ -141,7 +144,7 @@ namespace Rafy.Domain
         {
             if (child.IsDirty)
             {
-                _repository.ClientCache.UpdateServerVersion(parent);
+                _clientCacheNotifier.UpdateServerVersion(parent);
 
                 this.SubmitComponent(child, false);
             }

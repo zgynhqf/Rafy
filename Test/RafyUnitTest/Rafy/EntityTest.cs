@@ -26,6 +26,7 @@ using Rafy.Utils;
 using UT;
 using Rafy.UnitTest;
 using Rafy.ManagedProperty;
+using Rafy.DataPortal;
 
 namespace RafyUnitTest
 {
@@ -1685,7 +1686,7 @@ namespace RafyUnitTest
         public void ET_Repository_DAL_ComposeDataProvider()
         {
             var repo = RF.ResolveInstance<CarRepository>();
-            if (RafyEnvironment.ConnectDataDirectly)
+            if (DataPortalApi.ConnectDataDirectly)
             {
                 Assert.IsTrue(repo.DataProvider is ICarDataProvider);
             }

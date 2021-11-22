@@ -24,44 +24,27 @@ namespace Rafy.Domain.Caching
     /// </summary>
     public class ServerRepositoryCache : RepositoryCache
     {
-        private bool? _enabled;
-
-        internal ServerRepositoryCache(IRepository repository) : base(repository) { }
+        public ServerRepositoryCache(IRepository repository) : base(repository) { }
 
         /// <summary>
         /// 是否已经被启用。
         /// </summary>
-        public bool IsEnabled
-        {
-            get
-            {
-                //需要使用懒加载来使用 _repository.EntityMeta 属性，否则会造成过早加载 EntityMeta 属性。
-                if (this._enabled == null)
-                {
-                    this._enabled = this._repository.EntityMeta.ServerCacheEnabled;
-                }
-                return this._enabled.Value;
-            }
-            set
-            {
-                this._enabled = value;
-            }
-        }
+        public override bool IsEnabled => _repository.EntityMeta.ServerCacheEnabled;
 
         internal override IList<Entity> GetCachedTable()
         {
-            var className = this._repository.EntityType.Name;
+            var className = _repository.EntityType.Name;
 
-            return this.Cache.Get(CacheAllKey, () => this._repository.GetAll(), className);
+            return this.Cache.Get(CacheAllKey, () => _repository.GetAll(), className);
         }
 
         internal override IList<Entity> GetCachedTableByParent(Entity parent)
         {
-            var className = this._repository.EntityType.Name;
+            var className = _repository.EntityType.Name;
             var parentId = parent.Id;
             var key = string.Format(CacheByParentKeyFormat, parentId);
 
-            return this.Cache.Get(key, () => this._repository.GetByParentId(parentId), className);
+            return this.Cache.Get(key, () => _repository.GetByParentId(parentId), className);
         }
     }
 }

@@ -27,6 +27,7 @@ using System.Web;
 using System.Windows;
 using Rafy;
 using Rafy.ComponentModel;
+using Rafy.DataPortal;
 using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
 using Rafy.Utils;
@@ -195,82 +196,6 @@ namespace Rafy
             get { return Provider.IsDebuggingEnabled; }
         }
 
-        #region Location
-
-        [ThreadStatic]
-        private static int _threadPortalCount;
-
-        /// <summary>
-        /// 应用程序默认的数据门户模式。
-        /// </summary>
-        public static DataPortalMode DataPortalMode { get; set; } = DataPortalMode.ConnectDirectly;
-
-        /// <summary>
-        /// 是否应用程序直接连接数据。
-        /// DataPortalMode == DataPortalMode.DirectConnect。
-        /// </summary>
-        public static bool ConnectDataDirectly
-        {
-            get { return DataPortalMode == DataPortalMode.ConnectDirectly; }
-        }
-
-        /// <summary>
-        /// 获取当前线程目前已经进入的数据门户层数。
-        /// </summary>
-        public static int ThreadPortalCount
-        {
-            get { return _threadPortalCount; }
-            internal set
-            {
-                //设置此值的位置如下：
-                //* Repository.Query
-                //* Repository.Save
-                //* Service.Invoke
-                _threadPortalCount = value;
-            }
-        }
-
-        ///// <summary>
-        ///// 保证当前代码正在运行在服务端，否则抛出异常。
-        ///// </summary>
-        //[TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
-        //public static void EnsureOnServer()
-        //{
-        //    if (!IsOnServer()) throw new InvalidOperationException();
-        //}
-
-        ///// <summary>
-        ///// 保证当前代码正在运行在客户端，否则抛出异常。
-        ///// </summary>
-        //[TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
-        //public static void EnsureOnClient()
-        //{
-        //    if (!IsOnClient()) throw new InvalidOperationException();
-        //}
-
-        /// <summary>
-        /// 判断是否在服务端。
-        /// 
-        /// 如果是单机版，则当进入至少一次数据门户后，才能算作服务端，返回true。
-        /// </summary>
-        /// <returns></returns>
-        internal static bool IsOnServer()
-        {
-            return !IsOnClient();
-        }
-
-        /// <summary>
-        /// 判断是否在客户端
-        /// 单机版，如果还没有进入数据门户中，则同样返回 true。
-        /// </summary>
-        /// <returns></returns>
-        public static bool IsOnClient()
-        {
-            return _appCore.IsOnClient();
-        }
-
-        #endregion
-
         #region NewLocalId
 
         private static int _maxId = 1000000000;// 本地临时 Id 从 这个值开始（int.MaxValue:2147483647)
@@ -288,7 +213,7 @@ namespace Rafy
         #endregion
 
         /// <summary>
-        /// 帮助调试的变量，可随时把即时窗口中的临时对象放在这里进行查看。
+        /// 帮助调试的变量，可随时把即时窗口中的临时对象放在这里暂时存放。
         /// </summary>
         public static object DebugHelper;
     }

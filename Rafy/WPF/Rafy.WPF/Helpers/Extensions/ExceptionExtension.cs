@@ -39,20 +39,17 @@ namespace Rafy.WPF
         {
             Exception inner = null;
 
-            if (RafyEnvironment.IsOnClient())
+            var app = Application.Current;
+            if (app != null && app.Dispatcher != null && !app.CheckAccess())
             {
-                var app = Application.Current;
-                if (app != null && app.Dispatcher != null && !app.CheckAccess())
-                {
-                    app.Dispatcher.Invoke(new Action(() =>
-                    {
-                        inner = SafeShowError(ex);
-                    }));
-                }
-                else
+                app.Dispatcher.Invoke(new Action(() =>
                 {
                     inner = SafeShowError(ex);
-                }
+                }));
+            }
+            else
+            {
+                inner = SafeShowError(ex);
             }
 
             return inner;

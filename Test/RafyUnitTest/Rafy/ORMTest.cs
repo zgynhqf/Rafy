@@ -22,6 +22,7 @@ using Rafy.Reflection;
 using Rafy.Utils;
 using UT;
 using Rafy.Domain.ORM.MySql;
+using Rafy.DataPortal;
 
 namespace RafyUnitTest
 {
@@ -61,7 +62,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_EntityContext_Query()
         {
-            if (!RafyEnvironment.ConnectDataDirectly) return;
+            if (!DataPortalApi.ConnectDataDirectly) return;
 
             var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
@@ -84,7 +85,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_EntityContext_Insert()
         {
-            if (!RafyEnvironment.ConnectDataDirectly) return;
+            if (!DataPortalApi.ConnectDataDirectly) return;
 
             var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
@@ -101,7 +102,7 @@ namespace RafyUnitTest
         [TestMethod]
         public void ORM_EntityContext_Update()
         {
-            if (!RafyEnvironment.ConnectDataDirectly) return;
+            if (!DataPortalApi.ConnectDataDirectly) return;
 
             var repo = RF.ResolveInstance<TestUserRepository>();
             using (RF.TransactionScope(repo))
