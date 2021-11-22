@@ -25,6 +25,11 @@ namespace Rafy.Domain
     public interface IDomainComponent : IDirtyAware
     {
         /// <summary>
+        /// 所对应的实体类型。
+        /// </summary>
+        Type EntityType { get; }
+
+        /// <summary>
         /// 获取父组件
         /// 
         /// 列表的父组件是一个实体，而实体的父组件则是其所在的列表（也有少部分实体是以唯一孩子引用实体的形式挂接在父实体之下，此时 Parent 就是聚合父实体）。

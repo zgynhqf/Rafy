@@ -474,6 +474,8 @@ namespace Rafy.Domain
             get { return _parent; }
         }
 
+        Type IDomainComponent.EntityType => this.GetType();
+
         void IDomainComponent.SetParent(IDomainComponent parent)
         {
             _parent = parent;

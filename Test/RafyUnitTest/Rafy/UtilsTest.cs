@@ -349,9 +349,9 @@ namespace RafyUnitTest
                     Assert.IsTrue(columns.Find("Age") != null);
 
                     var rows = table.Rows;
-                    Assert.IsTrue(rows.Count == 3);
-                    Assert.IsTrue(rows[0].Values.Length == columns.Count);
-                    Assert.IsTrue(rows[0].GetInt32("Age") == 1);
+                    Assert.AreEqual(3, rows.Count);
+                    Assert.AreEqual(columns.Count, rows[0].Values.Length);
+                    Assert.AreEqual(1, rows[0].GetInt32("Age"));
                 }
             }
         }

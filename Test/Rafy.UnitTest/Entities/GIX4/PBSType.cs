@@ -96,7 +96,10 @@ namespace UT
 
     public partial class PBSTypeRepository : UnitTestEntityRepository
     {
-        protected PBSTypeRepository() { }
+        protected PBSTypeRepository()
+        {
+            this.Cache = new Rafy.Domain.Caching.ServerRepositoryCache(this);
+        }
 
         [RepositoryQuery]
         public virtual PBSTypeList LinqBySingleName(string name)

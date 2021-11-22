@@ -25,6 +25,7 @@ using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
 using Rafy.MetaModel.View;
 using Rafy.ManagedProperty;
+using Rafy.Domain.Caching;
 
 namespace UT
 {
@@ -77,7 +78,10 @@ namespace UT
         /// <summary>
         /// 单例模式，外界不可以直接构造本对象。
         /// </summary>
-        protected PBSRepository() { }
+        protected PBSRepository()
+        {
+            this.Cache = new ServerRepositoryCache(this);
+        }
     }
 
     internal class PBSConfig : UnitTestEntityConfig<PBS>

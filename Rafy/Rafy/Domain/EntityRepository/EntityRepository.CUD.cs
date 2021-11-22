@@ -55,7 +55,7 @@ namespace Rafy.Domain
 
             if (component.IsDirty)
             {
-                if (this != component.GetRepository()) throw new InvalidOperationException($"不能使用 {this.GetType()} 仓库来保存 {component.GetType()} 类型的对象。");
+                if (!this.EntityType.IsAssignableFrom(component.EntityType)) throw new InvalidOperationException($"不能使用 {this.GetType()} 仓库来保存 {component.GetType()} 类型的对象。");
 
                 this.OnSaving(component);
 
