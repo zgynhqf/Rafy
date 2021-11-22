@@ -156,9 +156,9 @@ namespace Rafy.Domain
         /// <param name="property"></param>
         public void IgnoreProperty(IManagedProperty property)
         {
-            if (this._ignoreList == null) this._ignoreList = new List<IManagedProperty>();
+            if (_ignoreList == null) _ignoreList = new List<IManagedProperty>();
 
-            this._ignoreList.Add(property);
+            if (!_ignoreList.Contains(property)) _ignoreList.Add(property);
         }
 
         /// <summary>
@@ -167,11 +167,11 @@ namespace Rafy.Domain
         /// <returns></returns>
         internal IList<IManagedProperty> RetrieveIgnoreList(bool clear)
         {
-            var value = this._ignoreList;
+            var value = _ignoreList;
 
             if (clear)
             {
-                this._ignoreList = null;
+                _ignoreList = null;
             }
 
             return value;
