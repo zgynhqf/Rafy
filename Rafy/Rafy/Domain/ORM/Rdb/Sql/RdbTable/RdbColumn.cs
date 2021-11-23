@@ -85,7 +85,7 @@ namespace Rafy.Domain.ORM
             this.Write(entity, value);
         }
 
-        private object Read(Entity entity)
+        protected virtual object Read(Entity entity)
         {
             var property = _columnInfo.Property;
 
@@ -102,7 +102,7 @@ namespace Rafy.Domain.ORM
             return value;
         }
 
-        private void Write(Entity entity, object value)
+        protected virtual void Write(Entity entity, object value)
         {
             var property = _columnInfo.Property;
 
