@@ -152,7 +152,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
                 {
                     if (!first.IsDisabled(column.Info.Property) && (!isUpdating || updateLOB || !column.IsLOB))
                     {
-                        var dataType = TypeHelper.IgnoreNullable(column.Info.PropertyType);
+                        var dataType = column.Info.CorePropertyType;
                         table.Columns.Add(new DataColumn(column.Name, dataType));
                         columns.Add(column);
                     }

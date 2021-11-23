@@ -81,7 +81,7 @@ namespace Rafy.Domain.ORM
         /// <param name="value"></param>
         public void WritePropertyValue(Entity entity, object value)
         {
-            value = _table.DbTypeConverter.ToClrValue(value, _columnInfo.PropertyType);
+            value = _table.DbTypeConverter.ToClrValue(value, _columnInfo.CorePropertyType);
             this.Write(entity, value);
         }
 

@@ -40,7 +40,7 @@ namespace Rafy.Domain.ORM
             this.Table = table;
             this.Name = name;
             this.Meta = columnMeta;
-            this.PropertyType = TypeHelper.IgnoreNullable(propertyMeta.PropertyType);
+            this.CorePropertyType = TypeHelper.IgnoreNullable(propertyMeta.PropertyType);
             this.DbType = dbType;
             this.Property = propertyMeta.ManagedProperty as IProperty;
         }
@@ -51,7 +51,7 @@ namespace Rafy.Domain.ORM
 
         public ColumnMeta Meta { get; private set; }
 
-        public Type PropertyType { get; private set; }
+        public Type CorePropertyType { get; private set; }
 
         public DbType DbType { get; private set; }
 
