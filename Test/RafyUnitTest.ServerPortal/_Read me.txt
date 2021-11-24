@@ -1,0 +1,2 @@
+﻿此项目用于测试
+* RafyServer.svc：作为 RafyUnitTest 的 WCF 服务端。

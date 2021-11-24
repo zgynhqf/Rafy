@@ -46,12 +46,15 @@ namespace Rafy.UnitTest.DataProvider
 
                 if (ClearDb && ConfigurationHelper.GetAppSettingOrDefault("Test_GenerateDb_Clear", false))
                 {
+                    Logger.LogInfo("dropping all tables...");
+
                     //不想手工去删除数据库，可以使用下面这个方法来在程序中删除所有的表。
                     DropAllTables();
 
                     ClearDb = false;
                 }
 
+                Logger.LogInfo("generating database...");
                 using (var c = new RafyDbMigrationContext(DbSettingNames.DbMigrationHistory))
                 {
                     c.RunDataLossOperation = DataLossOperation.All;

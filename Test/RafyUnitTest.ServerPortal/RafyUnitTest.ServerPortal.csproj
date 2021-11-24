@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>net461;</TargetFrameworks>
+        <IsPackable>false</IsPackable>
+        <OutputType>Exe</OutputType>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
+        <!--<Reference Include="System.Security" />-->
+        <Reference Include="System.Data.SqlServerCe">
+            <HintPath>..\..\packages\Lib\SQLCE\System.Data.SqlServerCe.dll</HintPath>
+            <Private>true</Private>
+        </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Accounts\Rafy.Accounts.csproj" />
+        <ProjectReference Include="..\..\Rafy\Plugins\Rafy.ComponentModel.UnityAdapter\Rafy.ComponentModel.UnityAdapter.csproj" />
+        <ProjectReference Include="..\..\Rafy\Plugins\Rafy.DataTableMigration\Rafy.DataArchiver.csproj" />
+        <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.EntityPhantom\Rafy.Domain.EntityPhantom.csproj" />
+        <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.ORM.BatchSubmit\Rafy.Domain.ORM.BatchSubmit.csproj" />
+        <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.Stamp\Rafy.Domain.Stamp.csproj" />
+        <ProjectReference Include="..\..\Rafy\Plugins\Rafy.FileStorage\Rafy.FileStorage.csproj" />
+        <ProjectReference Include="..\..\Rafy\Plugins\Rafy.MultiTenancy\Rafy.MultiTenancy.csproj" />
+        <ProjectReference Include="..\..\Rafy\Plugins\Rafy.SerialNumber\Rafy.SerialNumber.csproj" />
+        <ProjectReference Include="..\..\Rafy\Plugins\Rafy.SystemSettings\Rafy.SystemSettings.csproj" />
+        <ProjectReference Include="..\..\Rafy\Rafy\Rafy.csproj" />
+        <ProjectReference Include="..\Rafy.UnitTest.DataProvider\Rafy.UnitTest.DataProvider.csproj" />
+        <ProjectReference Include="..\Rafy.UnitTest.IDataProvider\Rafy.UnitTest.IDataProvider.csproj" />
+        <ProjectReference Include="..\Rafy.UnitTest.Repository\Rafy.UnitTest.Repository.csproj" />
+        <ProjectReference Include="..\Rafy.UnitTest.RuntimeLoad\Rafy.UnitTest.RuntimeLoad.csproj" />
+        <ProjectReference Include="..\Rafy.UnitTest\Rafy.UnitTest.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="System.ServiceModel" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="App.config">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+</Project>
