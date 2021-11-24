@@ -36,15 +36,17 @@ namespace Rafy.Domain
     {
         internal const string DataPortalTargetFactoryName = "DCFty";
 
-        static DomainControllerFactory()
+        private static DomainControllerFactory _default;
+        public static DomainControllerFactory Default
         {
-            Default = new DomainControllerFactory();
-            DataPortalTargetFactoryRegistry.Register(Default);
+            get => _default;
+            set
+            {
+                if(value == null) throw new ArgumentNullException(nameof(value));
+                _default = value;
+                DataPortalTargetFactoryRegistry.Register(value);
+            }
         }
-
-        public static DomainControllerFactory Default;
-
-        protected DomainControllerFactory() { }
 
         /// <summary>
         /// 创建指定类型的控制器。
@@ -54,7 +56,7 @@ namespace Rafy.Domain
         public static TController Create<TController>()
             where TController : class
         {
-            return Default.Create(typeof(TController)) as TController;
+            return _default.Create(typeof(TController)) as TController;
         }
 
         /// <summary>

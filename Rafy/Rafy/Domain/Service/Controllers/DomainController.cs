@@ -21,8 +21,9 @@ namespace Rafy.Domain
 {
     /// <summary>
     /// 领域层业务逻辑控制器。
-    /// 工作在 DDD 经典分层中的领域层中。
-    /// 在具体的子类中编写具体业务的控制逻辑。
+    /// 工作在 DDD 经典分层中的领域层中。在具体的子类中编写具体业务的控制逻辑。
+    /// 注意，
+    /// * 远程调用时，DomainController 是每次调用会生成一个，开发者不需要考虑并发问题。但是，DomainController 中的状态是不会进行传输的。
     /// </summary>
     public abstract class DomainController : IDataPortalTarget
     {

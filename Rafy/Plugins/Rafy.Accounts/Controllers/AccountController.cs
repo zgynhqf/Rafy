@@ -56,6 +56,7 @@ namespace Rafy.Accounts.Controllers
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
+        [ControllerLogic]
         public virtual Result Register(User user)
         {
             if (user == null) throw new ArgumentNullException("user");
@@ -142,6 +143,7 @@ namespace Rafy.Accounts.Controllers
         /// <param name="password">用户密码。</param>
         /// <param name="user">不论登录是否成功，都返回对应的用户。（如果找不到，则返回 null。）</param>
         /// <returns></returns>
+        [ControllerLogic]
         public virtual Result LoginByUserName(string userName, string password, out User user)
         {
             var repo = RF.ResolveInstance<UserRepository>();
@@ -162,6 +164,7 @@ namespace Rafy.Accounts.Controllers
         /// <param name="password">用户密码。</param>
         /// <param name="user">不论登录是否成功，都返回对应的用户。（如果找不到，则返回 null。）</param>
         /// <returns></returns>
+        [ControllerLogic]
         public virtual Result LoginByEmail(string email, string password, out User user)
         {
             var repo = RF.ResolveInstance<UserRepository>();

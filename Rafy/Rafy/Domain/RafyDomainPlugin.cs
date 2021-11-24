@@ -19,6 +19,7 @@ using Rafy;
 using Rafy.ComponentModel;
 using Rafy.Data;
 using Rafy.Data.Providers;
+using Rafy.DataPortal;
 using Rafy.DbMigration;
 using Rafy.DbMigration.SqlServer;
 using Rafy.Domain.Caching;
@@ -43,6 +44,10 @@ namespace Rafy.Domain
             if (!(PropertyDescriptorFactory.Current is RafyPropertyDescriptorFactory))
             {
                 PropertyDescriptorFactory.Current = new RafyPropertyDescriptorFactory();
+            }
+            if (DomainControllerFactory.Default == null)
+            {
+                DomainControllerFactory.Default = new DomainControllerFactory();
             }
 
             app.MetaCreating += OnMetaCompiled;

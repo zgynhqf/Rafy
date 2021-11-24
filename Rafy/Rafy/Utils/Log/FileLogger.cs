@@ -60,6 +60,11 @@ namespace Rafy
         public string SqlTraceFileName { get; set; }
 
         /// <summary>
+        /// 是否需要将 Info 的内容同时输出到 Console。默认为 false。
+        /// </summary>
+        public bool WriteConcole { get; set; }
+
+        /// <summary>
         /// 把所有的参数嵌入到 Sql 语句中。（方便开发者粘贴并调试）
         /// 默认为 true。
         /// </summary>
@@ -75,16 +80,13 @@ namespace Rafy
         {
             if (string.IsNullOrEmpty(this.InfoLogFileName)) return;
 
-            lock (this)
-            {
-                File.AppendAllText(this.InfoLogFileName,
+            this.WriteInfo(this.InfoLogFileName,
 $@"-----------------------------------------------------------------
 Time：{ DateTime.Now }
 Thread Id:[ { Thread.CurrentThread.ManagedThreadId } ]
 Message：{ message }
 
 ");
-            }
         }
 
         /// <summary>
@@ -101,9 +103,7 @@ Message：{ message }
             var stackTrace = e.StackTrace;//使用最外层的 Exception，可以获取到最完整的堆栈信息。
             e = e.GetBaseException();
 
-            lock (this)
-            {
-                File.AppendAllText(this.ExceptionLogFileName,
+            this.WriteInfo(this.ExceptionLogFileName,
 $@"===================================================================
 ======== {title} =========
 ===================================================================
@@ -114,6 +114,18 @@ StockTrace：
 {stackTrace}
 
 ");
+        }
+
+        private void WriteInfo(string fileName, string msg)
+        {
+            if (this.WriteConcole)
+            {
+                Console.WriteLine(msg);
+            }
+
+            lock (this)
+            {
+                File.AppendAllText(fileName, msg);
             }
         }
 

@@ -75,5 +75,10 @@ namespace Rafy.DataPortal
             this.FactoryName = info.GetString("f");
             this.TargetInfo = info.GetString("i");
         }
+
+        public override string ToString()
+        {
+            return $"{this.TargetInfo}({this.FactoryName})";
+        }
     }
 }
