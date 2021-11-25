@@ -313,7 +313,7 @@ namespace Rafy.Domain
 
         IDataPortalTarget IDataPortalTargetFactory.GetTarget(DataPortalTargetFactoryInfo info)
         {
-            var repositoryType = TypeSerializer.Deserialize(info.TargetInfo);
+            var repositoryType = TypeSerializer.Deserialize(info.TargetInfo as string);
             var repository = this.Find(repositoryType, true);
 
             if (info is RepoExtInfo)

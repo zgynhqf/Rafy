@@ -105,27 +105,9 @@ namespace Rafy.Reflection
         /// <exception cref="InvalidOperationException"></exception>
         public static object GetFieldValue(object obj, string fieldName)
         {
-            var type = obj.GetType();
-            try
-            {
-                var field = type.GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField);
-                if (field == null) throw new InvalidOperationException("无法在类型 " + obj.GetType() + " 中找到字段 " + fieldName);
-                return field.GetValue(obj);
-            }
-            catch (AmbiguousMatchException)
-            {
-                while (type != typeof(object) && type != null)
-                {
-                    var field = type.GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField | BindingFlags.DeclaredOnly);
-                    if (field != null)
-                    {
-                        return field.GetValue(obj);
-                    }
-
-                    type = type.BaseType;
-                }
-                throw;
-            }
+            var field = TypeHelper.GetField(obj.GetType(), fieldName);
+            if (field == null) throw new InvalidOperationException("无法在类型 " + obj.GetType() + " 中找到字段 " + fieldName);
+            return field.GetValue(obj);
         }
 
         /// <summary>
@@ -142,7 +124,7 @@ namespace Rafy.Reflection
             var type = source.GetType();
             while (type != typeof(object) && type != null)
             {
-                foreach (var field in type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic))
+                foreach (var field in type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.GetField))
                 {
                     var fieldValue = field.GetValue(source);
                     if (fieldValue != null) { field.SetValue(obj, fieldValue); }

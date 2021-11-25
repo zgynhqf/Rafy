@@ -16,7 +16,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
-using Rafy.ManagedProperty;
 using Rafy.Reflection;
 using System.Runtime.Serialization;
 using Rafy.Serialization.Mobile;
@@ -45,10 +44,15 @@ namespace Rafy.Serialization
             return null;
         }
 
-        internal static IEnumerable<FieldInfo> EnumerateSerializableFields(Type objType)
+        internal static IEnumerable<FieldInfo> EnumerateSerializableFields(Type objType, params Type[] exceptTypes)
         {
-            //下行代码中，特殊地，把 ManagedPropertyObject 排除，而不是逐一地排除其中的字段。这样性能更好。
-            var hierarchy = TypeHelper.GetHierarchy(objType, typeof(ManagedPropertyObject));
+            return EnumerateSerializableFields(objType, ignoreDelegate: false, exceptTypes);
+        }
+
+        internal static IEnumerable<FieldInfo> EnumerateSerializableFields(Type objType, bool ignoreDelegate, params Type[] exceptTypes)
+        {
+            //下行代码中，特殊地，把 exceptTypes 排除，而不是逐一地排除其中的字段。这样性能更好。
+            var hierarchy = TypeHelper.GetHierarchy(objType, exceptTypes);
 
             foreach (var type in hierarchy)
             {
@@ -60,6 +64,8 @@ namespace Rafy.Serialization
                     {
                         if (typeof(Delegate).IsAssignableFrom(field.FieldType))
                         {
+                            if (ignoreDelegate) continue;
+
                             throw new InvalidOperationException(string.Format(
                                 "{0} 类中的字段 {1} 是代理类型，不能直接被序列化，请标记 NonSerializd 并自定义序列化。",
                                 field.DeclaringType.Name, field.Name
@@ -72,10 +78,10 @@ namespace Rafy.Serialization
             }
         }
 
-        internal static void SerializeFields(object obj, SerializationInfo info)
+        internal static void SerializeFields(object obj, SerializationInfo info, params Type[] exceptTypes)
         {
             //同时，还需要序列化未标记 NonSerialized 的字段。
-            var clrFields = FieldsSerializationHelper.EnumerateSerializableFields(info.ObjectType);
+            var clrFields = FieldsSerializationHelper.EnumerateSerializableFields(info.ObjectType, exceptTypes);
             foreach (var f in clrFields)
             {
                 var v = f.GetValue(obj);

@@ -117,9 +117,7 @@ namespace Rafy.Domain
 
         IDataPortalTarget IDataPortalTargetFactory.GetTarget(DataPortalTargetFactoryInfo info)
         {
-            var ctrlType = TypeSerializer.Deserialize(info.TargetInfo);
-            var controller = Create(ctrlType);
-            return controller;
+            return ControllerSerializer.Instance.Deserialize(info.TargetInfo, this.Create);
         }
 
         #endregion

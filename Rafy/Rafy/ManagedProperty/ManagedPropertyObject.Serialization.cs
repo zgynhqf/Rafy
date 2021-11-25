@@ -128,7 +128,7 @@ namespace Rafy.ManagedProperty
                 info.AddValue(property.Name, value, fieldType);
             }
 
-            FieldsSerializationHelper.SerializeFields(this, info);
+            FieldsSerializationHelper.SerializeFields(this, info, _exceptTypes);
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace Rafy.ManagedProperty
 
             this.InitFields(compiledProperties);
 
-            var clrFields = FieldsSerializationHelper.EnumerateSerializableFields(info.ObjectType);
+            var clrFields = FieldsSerializationHelper.EnumerateSerializableFields(info.ObjectType, _exceptTypes);
 
             //遍历所有已经序列化的属性值序列
             var compiledPropertiesCount = compiledProperties.Count;
@@ -196,6 +196,11 @@ namespace Rafy.ManagedProperty
 
         //    this.OnDeserialized(null as DesirializedArgs);
         //}
+
+        private static Type[] _exceptTypes = new Type[]
+        {
+            typeof(ManagedPropertyObject),
+        };
 
         #endregion
 

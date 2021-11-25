@@ -35,7 +35,7 @@ namespace Rafy.Reflection
         /// <returns></returns>
         public static IEnumerable<Type> GetHierarchy(Type from, params Type[] exceptTypes)
         {
-            var needExcept = exceptTypes.Length > 0;
+            var needExcept = exceptTypes != null && exceptTypes.Length > 0;
 
             Type current = from;
             while (current != null && (!needExcept || !InExcept(current, exceptTypes)))
@@ -92,6 +92,18 @@ namespace Rafy.Reflection
         {
             if (targetType.IsValueType) return Activator.CreateInstance(targetType);
             return null;
+        }
+
+        /// <summary>
+        /// 返回类型是否为 Rafy 支持的原生类型。
+        /// return type.IsPrimitive || type.IsEnum || type == typeof(string) || type == typeof(DateTime) || type == typeof(decimal);
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static bool IsPrimitive(Type type)
+        {
+            //https://docs.microsoft.com/en-us/dotnet/api/system.type.isprimitiveimpl?view=net-6.0#System_Type_IsPrimitiveImpl
+            return type.IsPrimitive || type.IsEnum || type == typeof(string) || type == typeof(DateTime) || type == typeof(decimal);
         }
 
         /// <summary>
@@ -192,6 +204,32 @@ namespace Rafy.Reflection
                 {
                     var property = type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty | BindingFlags.DeclaredOnly);
                     if (property != null) return property;
+
+                    type = type.BaseType;
+                }
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// 获取指定类型中的指定的公开或私有的字段。
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="fieldName"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public static FieldInfo GetField(Type type, string fieldName)
+        {
+            try
+            {
+                return type.GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField);
+            }
+            catch (AmbiguousMatchException)
+            {
+                while (type != typeof(object) && type != null)
+                {
+                    var field = type.GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField | BindingFlags.DeclaredOnly);
+                    if (field != null) return field;
 
                     type = type.BaseType;
                 }

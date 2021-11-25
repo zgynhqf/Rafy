@@ -43,6 +43,7 @@ namespace Rafy.Accounts.Controllers
         /// <summary>
         /// 是否使用用户名为登录标识。默认 <see cref="UserIdentityMode.UserName"/>。
         /// </summary>
+        [ControllerClientSettings]
         public UserIdentityMode IdentityMode
         {
             get { return _identityMode; }
@@ -133,6 +134,7 @@ namespace Rafy.Accounts.Controllers
         /// 在指定时间间隔 <see cref="LoginFailedTimeSpan"/> 内，最多尝试登录失败的次数。
         /// 默认值：0，表示不需要检测。
         /// </summary>
+        [ControllerClientSettings]
         public int MaxLoginFailedTimes { get; set; }
 
         /// <summary>
@@ -143,17 +145,26 @@ namespace Rafy.Accounts.Controllers
         /// <param name="password">用户密码。</param>
         /// <param name="user">不论登录是否成功，都返回对应的用户。（如果找不到，则返回 null。）</param>
         /// <returns></returns>
+        public Result LoginByUserName(string userName, string password, out User user)
+        {
+            var res = this.LoginByUserName(userName, password);
+            user = res.Data as User;
+            return res;
+        }
+
         [ControllerLogic]
-        public virtual Result LoginByUserName(string userName, string password, out User user)
+        public virtual Result LoginByUserName(string userName, string password)
         {
             var repo = RF.ResolveInstance<UserRepository>();
-            user = repo.GetByUserName(userName);
+            var user = repo.GetByUserName(userName);
             if (user == null)
             {
-                return new Result(ResultCodes.LoginUserNotExists, string.Format("登录失败，没有找到用户名为：{0} 的用户。", userName));
+                return new Result(ResultCodes.LoginUserNotExists, string.Format("登录失败，没有找到用户名为：{0} 的用户。", userName)) { Data = user };
             }
 
-            return this.LoginCore(user, password);
+            var res = this.LoginCore(user, password);
+            res.Data = user;
+            return res;
         }
 
         /// <summary>
@@ -164,17 +175,26 @@ namespace Rafy.Accounts.Controllers
         /// <param name="password">用户密码。</param>
         /// <param name="user">不论登录是否成功，都返回对应的用户。（如果找不到，则返回 null。）</param>
         /// <returns></returns>
+        public Result LoginByEmail(string email, string password, out User user)
+        {
+            var res = this.LoginByEmail(email, password);
+            user = res.Data as User;
+            return res;
+        }
+
         [ControllerLogic]
-        public virtual Result LoginByEmail(string email, string password, out User user)
+        public virtual Result LoginByEmail(string email, string password)
         {
             var repo = RF.ResolveInstance<UserRepository>();
-            user = repo.GetByEmail(email);
+            var user = repo.GetByEmail(email);
             if (user == null)
             {
-                return new Result(ResultCodes.LoginUserNotExists, string.Format("登录失败，邮箱或密码不正确。没有找到用户名为：{0} 的用户。", email));
+                return new Result(ResultCodes.LoginUserNotExists, string.Format("登录失败，邮箱或密码不正确。没有找到用户名为：{0} 的用户。", email)) { Data = user };
             }
 
-            return this.LoginCore(user, password);
+            var res = this.LoginCore(user, password);
+            res.Data = user;
+            return res;
         }
 
         /// <summary>
@@ -224,7 +244,10 @@ namespace Rafy.Accounts.Controllers
 
             this.OnLoginSuccessed(user);
 
-            return true;
+            return new Result(true)
+            {
+                Data = user,
+            };
         }
 
         /// <summary>

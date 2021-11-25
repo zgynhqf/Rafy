@@ -10,11 +10,11 @@
  * 
 *******************************************************/
 
-3.86.4185
+3.86.4188
     ★★公布
         * DomainController 支持远程调用。
             * 场景及用例，见：DomainTest.DT_Controller。
-            * 添加 ControllerLogicAttribute。
+            * 添加 ControllerLogicAttribute、ControllerClientSettingsAttribute。
     重构
         * RafyEnvironment 中与 Location 相关的属性，都移动到 DataPortalApi 中。
         * Repository 中的 ClientCache 与 ServerCache 合并为 Cache。

@@ -62,7 +62,7 @@ namespace Rafy.DataPortal
         /// <summary>
         /// 通过该工厂构造本目标对象时，需要使用到的所有信息。（序列化后）
         /// </summary>
-        public string TargetInfo { get; set; }
+        public object TargetInfo { get; set; }
 
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
@@ -73,7 +73,15 @@ namespace Rafy.DataPortal
         public virtual void SetObjectData(SerializationInfo info, StreamingContext context)
         {
             this.FactoryName = info.GetString("f");
-            this.TargetInfo = info.GetString("i");
+            var stringValue = info.GetString("i");
+            if (stringValue == typeof(byte[]).FullName)
+            {
+                this.TargetInfo = info.GetValue("i", typeof(byte[]));
+            }
+            else
+            {
+                this.TargetInfo = stringValue;
+            }
         }
 
         public override string ToString()
