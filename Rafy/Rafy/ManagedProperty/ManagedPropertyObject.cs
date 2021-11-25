@@ -470,10 +470,21 @@ namespace Rafy.ManagedProperty
         /// <param name="value"></param>
         /// <param name="resetDisabledStatus">如果本字段处于禁用状态，那么是否在设置新值时，将禁用状态解除？</param>
         /// <returns>返回最终使用的值。</returns>
-        public object SetProperty(ManagedProperty<bool> property, bool value, bool resetDisabledStatus = true)
+        public object SetProperty(ManagedProperty<bool> property, bool value)
         {
             //使用 BooleanBoxes 来防止装箱操作。
-            return this._SetProperty(property, BooleanBoxes.Box(value), resetDisabledStatus);
+            return this.SetProperty(property, BooleanBoxes.Box(value), true);
+        }
+
+        /// <summary>
+        /// 设置某个托管属性的值。
+        /// </summary>
+        /// <param name="property"></param>
+        /// <param name="value"></param>
+        /// <returns>返回最终使用的值。</returns>
+        public object SetProperty(IManagedProperty property, object value)
+        {
+            return this.SetProperty(property, value, true);
         }
 
         /// <summary>
@@ -483,7 +494,7 @@ namespace Rafy.ManagedProperty
         /// <param name="value"></param>
         /// <param name="resetDisabledStatus">如果本字段处于禁用状态，那么是否在设置新值时，将禁用状态解除？</param>
         /// <returns>返回最终使用的值。</returns>
-        public virtual object SetProperty(IManagedProperty property, object value, bool resetDisabledStatus = true)
+        public virtual object SetProperty(IManagedProperty property, object value, bool resetDisabledStatus)
         {
             return this._SetProperty(property, value, resetDisabledStatus);
         }

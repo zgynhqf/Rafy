@@ -324,9 +324,8 @@ namespace Rafy.Domain
         /// <param name="property"></param>
         /// <param name="value"></param>
         /// <param name="resetDisabledStatus">如果本字段处于禁用状态，那么是否在设置新值时，将禁用状态解除？</param>
-        /// 
         /// <returns></returns>
-        public override object SetProperty(IManagedProperty property, object value, bool resetDisabledStatus = true)
+        public override object SetProperty(IManagedProperty property, object value, bool resetDisabledStatus)
         {
             //防止外界使用 SetProperty 方法来操作引用属性。
             if (property is IRefProperty)
