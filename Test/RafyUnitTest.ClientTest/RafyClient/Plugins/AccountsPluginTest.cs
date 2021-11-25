@@ -44,13 +44,16 @@ using System.Data;
 
 namespace RafyUnitTest.ClientTest
 {
+    /// <summary>
+    /// 本类主要用于在 远程调用 模式下，AccountsPluginTest 是否可以正常运行。
+    /// </summary>
     [TestClass]
     public class AccountsPluginTest : Rafy.UnitTest.AccountsPluginTest
     {
         [ClassInitialize]
         public static void APT_ClassInitialize(TestContext context)
         {
-            ServerTestHelper.ClassInitialize(context);
+            ClientTestHelper.ClassInitialize(context);
 
             APT_ClassInitialize_Base();
         }

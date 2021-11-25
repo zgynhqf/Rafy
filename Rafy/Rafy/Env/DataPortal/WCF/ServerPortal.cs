@@ -32,7 +32,7 @@ namespace Rafy.DataPortal.WCF
         /// <param name="request">The request parameter object.</param>
         public WcfResponse Call(CallRequest request)
         {
-            Logger.LogInfo($"Call invoked. request: instance: {request.Instance}, method:{request.Method}, arguments.length:{request.Arguments.Length}.");
+            Logger.LogInfo($"WCF Call invoked. request: method:{request.Method}, instance: {request.Instance}, arguments.length:{request.Arguments.Length}.");
 
             var portal = new FinalDataPortal();
 
@@ -43,7 +43,7 @@ namespace Rafy.DataPortal.WCF
             }
             catch (Exception ex)
             {
-                Logger.LogError($"Call Exception occurred! request: instance: {request.Instance}, method:{request.Method}, arguments.length:{request.Arguments.Length}.", ex);
+                Logger.LogError($"WCF Call Exception occurred! request: method:{request.Method}, instance: {request.Instance}, arguments.length:{request.Arguments.Length}.", ex);
                 result = ex;
             }
 
@@ -52,7 +52,7 @@ namespace Rafy.DataPortal.WCF
 
         public string Test(string msg)
         {
-            Logger.LogInfo("Test invoked. msg : " + msg);
+            Logger.LogInfo("WCF Test invoked. msg : " + msg);
 
             return msg + " recieved";
         }

@@ -20,6 +20,7 @@ using Rafy.Utils;
 using Rafy;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rafy.UI;
+using Rafy.UnitTest;
 
 namespace RafyUnitTest.ClientTest
 {
@@ -27,6 +28,7 @@ namespace RafyUnitTest.ClientTest
     {
         public static void ClassInitialize(TestContext context)
         {
+            CommonTestBase.Assert = new AssertAdapter();
             new TestLocalApp().Start();
         }
 

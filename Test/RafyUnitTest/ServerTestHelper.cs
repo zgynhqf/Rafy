@@ -6,6 +6,7 @@ using System.IO;
 using Rafy.Utils;
 using Rafy;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Rafy.UnitTest;
 
 namespace RafyUnitTest
 {
@@ -15,6 +16,8 @@ namespace RafyUnitTest
 
         public static void ClassInitialize(TestContext context)
         {
+            CommonTestBase.Assert = new AssertAdapter();
+
             if (!_runned)
             {
                 new TestServerApp().Start();

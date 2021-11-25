@@ -51,6 +51,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Accounts\Rafy.Accounts.csproj" />
         <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.EntityPhantom\Rafy.Domain.EntityPhantom.csproj" />
         <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.ORM.BatchSubmit\Rafy.Domain.ORM.BatchSubmit.csproj" />
         <ProjectReference Include="..\..\Rafy\Rafy.UI\Rafy.UI.csproj" />

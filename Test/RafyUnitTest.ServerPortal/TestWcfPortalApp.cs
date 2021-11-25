@@ -36,6 +36,7 @@ using Rafy.Accounts;
 using Rafy.DataArchiver;
 using Rafy.SystemSettings;
 using Rafy.Data;
+using Rafy.ComponentModel.UnityAdapter;
 
 namespace RafyUnitTest.ServerPortal
 {
@@ -62,31 +63,10 @@ namespace RafyUnitTest.ServerPortal
 
             RafyEnvironment.Provider.IsDebuggingEnabled = true;
 
-            //故意把下面两个插件的位置放反。测试 Config 中配置插件的顺序是否成功。
-            RafyEnvironment.Plugins.Add(new EntityPhantomPlugin());
             RafyEnvironment.Plugins.Add(new StampPlugin());
-
+            RafyEnvironment.Plugins.Add(new EntityPhantomPlugin());
+            RafyEnvironment.Plugins.Add(new UnityAdapterPlugin());
             RafyEnvironment.Plugins.Add(new UnitTestPlugin());
-            //RafyEnvironment.DomainPlugins.Add(new UnitTestDataProviderPlugin());//load as required
-            //RafyEnvironment.DomainPlugins.Add(new UnitTestIDataProviderPlugin());//load as required
-            //RafyEnvironment.DomainPlugins.Add(new UnitTestRepoPlugin());//load as required
-
-            //load as required, config in appsetting.json
-            //RafyEnvironment.DomainPlugins.Add(new DCPlugin());
-            //RafyEnvironment.DomainPlugins.Add(new AccountsPlugin());
-            //RafyEnvironment.DomainPlugins.Add(new SystemSettingsPlugin());
-            //RafyEnvironment.DomainPlugins.Add(new SerialNumberPlugin());
-            //RafyEnvironment.DomainPlugins.Add(new FileStoragePlugin());
-
-            //RafyEnvironment.DomainPlugins.Add(new RoleManagementPlugin());
-            //RafyEnvironment.DomainPlugins.Add(new GroupManagementPlugin());
-            //RafyEnvironment.DomainPlugins.Add(new UserRoleManagementPlugin());
-            //RafyEnvironment.DomainPlugins.Add(new DataPermissionManagementPlugin());
-
-            ////为了多次修改 Location 值，需要把修改值的操作放到 InitEnvironment 中。
-            //RafyEnvironment.Location.IsWebUI = false;
-            //RafyEnvironment.Location.IsWPFUI = false;
-            //RafyEnvironment.Location.DataPortalMode = DataPortalMode.ConnectDirectly;
 
             base.InitEnvironment();
         }

@@ -48,7 +48,6 @@ namespace RafyUnitTest.ClientTest
             RafyEnvironment.Plugins.Add(new StampPlugin());
             RafyEnvironment.Plugins.Add(new EntityPhantomPlugin());
             RafyEnvironment.Plugins.Add(new UnityAdapterPlugin());
-
             RafyEnvironment.Plugins.Add(new UnitTestPlugin());
             //RafyEnvironment.DomainPlugins.Add(new UnitTestDataProviderPlugin());
             //RafyEnvironment.DomainPlugins.Add(new UnitTestIDataProviderPlugin());

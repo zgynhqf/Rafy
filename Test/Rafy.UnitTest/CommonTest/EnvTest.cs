@@ -19,10 +19,18 @@ using Rafy.ComponentModel;
 
 namespace Rafy.UnitTest
 {
-    public abstract class EnvTest
+    public abstract class EnvTest : CommonTestBase
     {
-        protected abstract void AssertIsTrue(bool value);
-        protected abstract void AssertAreEqual(object value1, object value2);
+        protected virtual void AssertIsTrue(bool value)
+        {
+            Assert.IsTrue(value);
+        }
+
+        protected virtual void AssertAreEqual(object value1, object value2)
+        {
+            Assert.AreEqual(value1, value2);
+        }
+
         protected void AssertIsFalse(bool value)
         {
             AssertIsTrue(!value);
