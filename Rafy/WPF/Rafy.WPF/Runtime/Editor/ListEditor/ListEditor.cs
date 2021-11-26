@@ -35,7 +35,7 @@ namespace Rafy.WPF.Editors
     /// <summary>
     /// 列表编辑器
     /// </summary>
-    public abstract class ListEditor
+    public abstract class ListEditor : IDisposable
     {
         private IListEditorContext _context;
 
@@ -156,5 +156,13 @@ namespace Rafy.WPF.Editors
         /// 根集合用于分组的属性列表
         /// </summary>
         public abstract IEnumerable<string> RootGroupDescriptions { get; set; }
+
+        /// <summary>
+        /// 内存泄漏，尽量断开连接。
+        /// </summary>
+        public virtual void Dispose()
+        {
+            _control = null;
+        }
     }
 }

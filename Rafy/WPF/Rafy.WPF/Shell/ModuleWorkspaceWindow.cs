@@ -24,7 +24,7 @@ namespace Rafy.WPF
     /// <summary>
     /// 由模块生成的 WorkspaceWindow
     /// </summary>
-    public class ModuleWorkspaceWindow : WorkspaceWindow
+    public class ModuleWorkspaceWindow : WorkspaceWindow, IDisposable
     {
         internal ModuleWorkspaceWindow() { }
 
@@ -58,6 +58,20 @@ namespace Rafy.WPF
         {
             //这里直接通过控件树关系，而不能只通过视图的父子关系查询，这是因为环绕坏并不是主块的子块。
             return GetOuterWorkspaceWindow(view.GetRootView().Control as DependencyObject);
+        }
+
+        /// <summary>
+        /// 内存泄漏，尽量断开连接。
+        /// </summary>
+        public override void Dispose()
+        {
+            if (this.MainView != null)
+            {
+                this.MainView.Dispose();
+                this.MainView = null;
+            }
+
+            base.Dispose();
         }
     }
 }

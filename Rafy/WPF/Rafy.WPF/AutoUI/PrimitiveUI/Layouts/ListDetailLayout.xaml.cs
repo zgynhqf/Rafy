@@ -19,7 +19,7 @@ using Rafy.MetaModel.View;
 
 namespace Rafy.WPF.Layout
 {
-    public partial class ListDetailLayout : UserControl, ILayoutControl
+    public partial class ListDetailLayout : UserControl, ILayoutControl, IDisposable
     {
         public ListDetailLayout()
         {
@@ -100,6 +100,28 @@ namespace Rafy.WPF.Layout
             {
                 container.Orientation = components.LayoutMeta.IsLayoutChildrenHorizonal ?
                     Orientation.Horizontal : Orientation.Vertical;
+            }
+        }
+
+        /// <summary>
+        /// 内存泄漏，尽量断开连接。
+        /// </summary>
+        public void Dispose()
+        {
+            condition.Content = null;
+            navigate.Content = null;
+            main.Content = null;
+            toolBarContainer.Content = null;
+            if (childrenTab != null)
+            {
+                try
+                {
+                    childrenTab.ItemsSource = null;
+                    childrenTab.Items.Clear();
+                }
+                catch { }
+                childrenTab.RemoveFromParent(true);
+                childrenTab = null;
             }
         }
     }

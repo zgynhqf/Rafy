@@ -123,7 +123,7 @@ namespace Rafy.WPF.Editors
 
         public override Entity Current
         {
-            get { return this.Control.SelectedItem as Entity; }
+            get { return this.Control?.SelectedItem as Entity; }
             set { this.Control.SelectedItem = value; }
         }
 

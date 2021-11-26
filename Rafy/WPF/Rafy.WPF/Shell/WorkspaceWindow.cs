@@ -25,7 +25,7 @@ namespace Rafy.WPF
     /// <summary>
     /// 工作区的窗口定义。
     /// </summary>
-    public class WorkspaceWindow
+    public class WorkspaceWindow : IDisposable
     {
         private FrameworkElement _windowControl;
 
@@ -105,6 +105,17 @@ namespace Rafy.WPF
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// 内存泄漏，尽量断开连接。
+        /// </summary>
+        public virtual void Dispose()
+        {
+            if (_windowControl != null)
+            {
+                _windowControl.RemoveFromParent(false);
+            }
         }
     }
 }

@@ -126,6 +126,8 @@ namespace Rafy.WPF
 
         protected override void OnDataChanged()
         {
+            if (this.Disposed) return;
+
             var current = this.Data;
 
             this.BindCurrentObject(current);

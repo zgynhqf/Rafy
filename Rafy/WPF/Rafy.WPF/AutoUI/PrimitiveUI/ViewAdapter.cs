@@ -55,20 +55,21 @@ namespace Rafy.WPF
             childView.IsVisibleChanged += (o, e) =>
             {
                 var tabControl = control.GetLogicalParent<TabControl>();
-                Debug.Assert(tabControl != null, "tabControl != null");
-
-                if (childView.IsVisible)
+                if (tabControl != null)
                 {
-                    control.Visibility = Visibility.Visible;
-                    tabControl.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    control.Visibility = Visibility.Collapsed;
-
-                    if (tabControl.Items.OfType<TabItem>().All(i => i.Visibility == Visibility.Collapsed))
+                    if (childView.IsVisible)
                     {
-                        tabControl.Visibility = Visibility.Collapsed;
+                        control.Visibility = Visibility.Visible;
+                        tabControl.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        control.Visibility = Visibility.Collapsed;
+
+                        if (tabControl.Items.OfType<TabItem>().All(i => i.Visibility == Visibility.Collapsed))
+                        {
+                            tabControl.Visibility = Visibility.Collapsed;
+                        }
                     }
                 }
             };

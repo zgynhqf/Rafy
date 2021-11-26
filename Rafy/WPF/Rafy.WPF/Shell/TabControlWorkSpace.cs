@@ -92,7 +92,12 @@ namespace Rafy.WPF
                     }
 
                     this.OnWindowClosed(new WorkspaceWindowChangedEventArgs(window, null));
+
+                    dc.Content = null;
                 }
+
+                //内存泄漏，尽量断开连接。
+                window.Dispose();
 
                 return true;
             }

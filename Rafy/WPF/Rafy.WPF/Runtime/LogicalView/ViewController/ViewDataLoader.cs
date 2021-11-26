@@ -9,7 +9,7 @@ namespace Rafy.WPF
     /// <summary>
     /// LogicalView的数据加载器
     /// </summary>
-    internal class ViewDataLoader : IAsyncDataLoader
+    internal class ViewDataLoader : IAsyncDataLoader, IDisposable
     {
         private RafyDataSourceProvider _dataProvider;
 
@@ -205,6 +205,19 @@ namespace Rafy.WPF
                 this.OnDataChanged(EventArgs.Empty);
             }
         }
+
+        /// <summary>
+        /// 内存泄漏，尽量断开连接。
+        /// </summary>
+        public void Dispose()
+        {
+            if (_dataProvider != null)
+            {
+                _dataProvider.Dispose();
+                _dataProvider = null;
+            }
+        }
+
 
         LogicalView IAsyncDataLoader.View
         {

@@ -29,7 +29,7 @@ namespace Rafy
     /// <summary>
     /// 在 DataSourceProvider 的基础上增加了一个更加通用的数据获取方案器。
     /// </summary>
-    public class RafyDataSourceProvider : DataSourceProvider
+    public class RafyDataSourceProvider : DataSourceProvider, IDisposable
     {
         private bool _firstRun = true;
         private bool _endInitCompete = false;
@@ -176,6 +176,14 @@ namespace Rafy
                 Action<Exception> action = e => e.Alert();
                 Application.Current.Dispatcher.Invoke(action, error);
             }
+        }
+
+        /// <summary>
+        /// 内存泄漏，尽量断开连接。
+        /// </summary>
+        public void Dispose()
+        {
+            base.OnQueryFinished(null, null, null, null);
         }
 
         /// <summary>

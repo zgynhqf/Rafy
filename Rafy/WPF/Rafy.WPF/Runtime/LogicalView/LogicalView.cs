@@ -37,7 +37,7 @@ namespace Rafy.WPF
     /// </remarks>
     /// </summary>
     [DebuggerDisplay("{DebuggerDisplay}")]
-    public abstract class LogicalView : Extendable, IDataContext
+    public abstract class LogicalView : Extendable, IDataContext, IDisposable
     {
         #region 字段
 
@@ -102,6 +102,11 @@ namespace Rafy.WPF
                 this._childBlock = value;
             }
         }
+
+        /// <summary>
+        /// 是否已经被释放了。不再可用。
+        /// </summary>
+        public bool Disposed { get; private set; }
 
         #endregion
 
@@ -925,6 +930,60 @@ namespace Rafy.WPF
         }
 
         #endregion
+        public virtual void Dispose()
+        {
+            if (this.Disposed) return;//防止重入。
+            this.Disposed = true;
+
+            this.Data = null;//触发控件的清空逻辑。
+            if (this.DataLoader is IDisposable disposable)
+            {
+                disposable.Dispose();
+            }
+            this.DataLoader = null;
+
+            if (_relations != null)
+            {
+                foreach (var relation in _relations)
+                {
+                    relation.View.Dispose();
+                }
+                _relations = null;
+            }
+
+            if (_childrenViews != null)
+            {
+                foreach (var child in _childrenViews)
+                {
+                    child.Dispose();
+                }
+                _childrenViews = null;
+            }
+
+            if (_commands != null)
+            {
+                foreach (var command in _commands)
+                {
+                    command.Dispose();
+                }
+                _commands = null;
+            }
+
+            if (_commandsContainer != null)
+            {
+                _commandsContainer.SetServicedControl(null);
+                _commandsContainer = null;
+            }
+
+            if (this.LayoutControl is IDisposable disposableLayout)
+            {
+                disposableLayout.Dispose();
+            }
+            this.LayoutControl = null;
+
+            _parent = null;
+            _control = null;
+        }
 
         protected virtual string DebuggerDisplay
         {

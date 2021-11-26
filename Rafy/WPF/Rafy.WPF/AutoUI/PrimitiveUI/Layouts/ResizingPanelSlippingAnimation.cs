@@ -27,23 +27,31 @@ namespace Rafy.WPF.Layout
     /// <summary>
     /// 滑动布局动画定义。
     /// </summary>
-    public static class ResizingPanelSlippingAnimation
+    public class ResizingPanelSlippingAnimation : DependencyPropertyChangedListener
     {
         /// <summary>
         /// 初始化整个布局
         /// </summary>
         /// <param name="left"></param>
         /// <param name="right"></param>
-        /// <param name="layout"></param>
-        public static void Initialize(FrameworkElement left, FrameworkElement right, ParentChildProportion leftRightPercent = null)
+        /// <param name="parentChildProportion"></param>
+        public static void Initialize(FrameworkElement left, FrameworkElement right, ParentChildProportion parentChildProportion = null)
         {
             //layout.AggtBlocks.Layout.ParentChildProportion
-            leftRightPercent = leftRightPercent ?? ParentChildProportion.Default;
+            parentChildProportion = parentChildProportion ?? ParentChildProportion.Default;
 
-            ResizingPanelExt.SetStarGridLength(left, leftRightPercent.Parent);
-            ResizingPanelExt.SetStarGridLength(right, leftRightPercent.Children);
+            ResizingPanelExt.SetStarGridLength(left, parentChildProportion.Parent);
+            ResizingPanelExt.SetStarGridLength(right, parentChildProportion.Children);
 
-            AnimationTimeline show = new DoubleAnimationUsingKeyFrames
+            var animation = new ResizingPanelSlippingAnimation(parentChildProportion.Children);
+            animation.Attach(right);
+        }
+
+        private AnimationTimeline _show, _hide;
+
+        private ResizingPanelSlippingAnimation(double childrenPartition)
+        {
+            _show = new DoubleAnimationUsingKeyFrames
             {
                 KeyFrames = new DoubleKeyFrameCollection()
                 {
@@ -54,31 +62,57 @@ namespace Rafy.WPF.Layout
                     new EasingDoubleKeyFrame
                     {
                         KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(1)),
-                        Value = leftRightPercent.Children,
+                        Value = childrenPartition,
                         EasingFunction = new ElasticEase
                         {
                             EasingMode = EasingMode.EaseOut,
-                            Springiness = 10
+                            Springiness = 100  //子滑进秒数
                         }
                     }
                 }
             };
-            AnimationTimeline hide = new DoubleAnimation()
+            _hide = new DoubleAnimation()
             {
-                From = leftRightPercent.Children,
+                From = childrenPartition,
                 Duration = new Duration(TimeSpan.FromMilliseconds(100)),
                 To = 0
             };
-
-            //监听 childrenTab.VisiblityChanged 事件，播放动画效果
-            DependencyPropertyDescriptor.FromProperty(UIElement.VisibilityProperty, typeof(UIElement))
-                .AddValueChanged(right, (o, e) =>
-                {
-                    right.BeginAnimation(
-                        ResizingPanelExt.StarGridLengthProperty,
-                        right.Visibility == Visibility.Visible ? show : hide
-                        );
-                });
         }
+
+        private void Attach(FrameworkElement children)
+        {
+            var propertyDescriptor = DependencyPropertyDescriptor.FromProperty(UIElement.VisibilityProperty, typeof(UIElement));
+            this.Attach(propertyDescriptor, children);
+        }
+
+        protected override void OnPropertyChanged(object sender, EventArgs e)
+        {
+            _element.BeginAnimation(
+                ResizingPanelExt.StarGridLengthProperty,
+                _element.Visibility == Visibility.Visible ? _show : _hide
+                );
+        }
+    }
+
+    public abstract class DependencyPropertyChangedListener
+    {
+        protected FrameworkElement _element;
+
+        public void Attach(DependencyPropertyDescriptor property, FrameworkElement element)
+        {
+            _element = element;
+
+            EventHandler eventHandler = OnPropertyChanged;
+
+            property.RemoveValueChanged(element, eventHandler);
+            property.AddValueChanged(element, eventHandler);
+
+            element.Unloaded += (o, e) =>
+            {
+                property.RemoveValueChanged(element, eventHandler);
+            };
+        }
+
+        protected abstract void OnPropertyChanged(object sender, EventArgs e);
     }
 }

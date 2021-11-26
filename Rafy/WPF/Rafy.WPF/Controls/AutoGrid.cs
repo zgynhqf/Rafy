@@ -321,8 +321,21 @@ namespace Rafy.WPF.Controls
                 Grid.ColumnSpanProperty : Grid.RowSpanProperty;
             var descriptor = DependencyPropertyDescriptor.FromProperty(propertyToListen, typeof(Grid));
 
-            if (visualAdded != null) descriptor.AddValueChanged(visualAdded, OnChildIndexChanged);
-            if (visualRemoved != null) descriptor.RemoveValueChanged(visualRemoved, OnChildIndexChanged);
+            EventHandler handler = OnChildIndexChanged;
+            if (visualAdded != null)
+            {
+                descriptor.RemoveValueChanged(visualAdded, handler);
+                descriptor.AddValueChanged(visualAdded, handler);
+                if (visualAdded is FrameworkElement element)
+                {
+                    element.Unloaded += (o, e) =>
+                    {
+                        descriptor.RemoveValueChanged(visualAdded, handler);
+                    };
+                }
+            }
+            if (visualRemoved != null) descriptor.RemoveValueChanged(visualRemoved, handler);
+
         }
 
         private bool _isChildrenMeasuring = false;

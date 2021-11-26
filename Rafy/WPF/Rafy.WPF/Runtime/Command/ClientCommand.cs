@@ -33,7 +33,7 @@ namespace Rafy.WPF.Command
     /// <summary>
     /// 所有命令的基类
     /// </summary>
-    public abstract class ClientCommand : Extendable, IClientCommand, INotifyPropertyChanged
+    public abstract class ClientCommand : Extendable, IClientCommand, INotifyPropertyChanged, IDisposable
     {
         #region 私有字段
 
@@ -341,6 +341,11 @@ namespace Rafy.WPF.Command
         {
             this.Execute();
         }
+
+        /// <summary>
+        /// 内存泄漏，尽量断开连接。
+        /// </summary>
+        public void Dispose() { }
     }
 
     /// <summary>

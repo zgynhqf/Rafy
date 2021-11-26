@@ -186,6 +186,8 @@ namespace Rafy.WPF
         /// </summary>
         protected override void OnDataChanged()
         {
+            if (this.Disposed) return;
+
             //重设置数据源后，列表就没有当前行了。
             this.Current = null;
 
@@ -199,6 +201,8 @@ namespace Rafy.WPF
         /// </summary>
         protected override void RefreshCurrentEntityCore()
         {
+            if (this.Disposed) return;
+
             var curObj = this.Current;
             if (curObj != null)
             {
@@ -580,6 +584,12 @@ namespace Rafy.WPF
         }
 
         #endregion
+        public override void Dispose()
+        {
+            _listEditor.Dispose();
+
+            base.Dispose();
+        }
 
         //暂时不处理 动态可见性
         ///// <summary>
