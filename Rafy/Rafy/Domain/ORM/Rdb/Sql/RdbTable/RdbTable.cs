@@ -309,6 +309,17 @@ namespace Rafy.Domain.ORM
             return dba.ExecuteText(sql.ToString(), whereSql.Parameters);
         }
 
+        internal int DeleteAll(IDbAccesser dba)
+        {
+            EnsureMappingTable();
+
+            var sql = new StringWriter();
+            sql.Write("DELETE FROM ");
+            sql.AppendQuoteName(this);
+
+            return dba.ExecuteText(sql.ToString());
+        }
+
         public virtual int Update(IDbAccesser dba, Entity item, bool updateChangedPropertiesOnly)
         {
             EnsureMappingTable();

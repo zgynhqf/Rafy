@@ -114,6 +114,18 @@ namespace Rafy.Domain.ORM
         }
 
         /// <summary>
+        /// 注意！！！
+        /// 调用该方法，会删除表中的所有数据。
+        /// </summary>
+        public void DeleteAllData()
+        {
+            using (var dba = _dataProvider.CreateDbAccesser())
+            {
+                _dataProvider.DbTable.DeleteAll(dba);
+            }
+        }
+
+        /// <summary>
         /// 实现删除关联数据的逻辑。
         /// </summary>
         /// <param name="entity"></param>
