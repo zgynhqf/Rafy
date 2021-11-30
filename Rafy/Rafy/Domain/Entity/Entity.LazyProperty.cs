@@ -327,24 +327,13 @@ namespace Rafy.Domain
         /// <returns></returns>
         public override object SetProperty(IManagedProperty property, object value, bool resetDisabledStatus)
         {
-            //防止外界使用 SetProperty 方法来操作引用属性。
-            if (property is IRefProperty)
-            {
-                if (property is IRefIdProperty)
-                {
-                    return this.SetRefId(property as IRefIdProperty, value);
-                }
-
-                return this.SetRefEntity(property as IRefEntityProperty, value as Entity);
-            }
-
             //防止外界使用 SetProperty 方法来操作列表属性。
             if (property is IListProperty)
             {
-                throw new InvalidOperationException(string.Format("{0} 是列表属性，不能使用 SetProperty 方法直接设置。请使用 GetLazyList 方法获取，或使用 LoadProperty 方法进行加载。", property));
+                throw new InvalidOperationException($"{property} 是列表属性，不能使用 SetProperty 方法直接设置。请使用 GetLazyList 方法获取，或使用 LoadProperty 方法进行加载。");
             }
 
-            if (property == IdProperty || property == TreePIdProperty && value != null)
+            if ((property == IdProperty || property == TreePIdProperty) && value != null)
             {
                 //由于 Id 属性的托管属性类型是 object，这里需要强制为具体的主键类型。
                 value = TypeHelper.CoerceValue(this.IdProvider.KeyType, value);
