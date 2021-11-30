@@ -22,7 +22,7 @@ namespace Rafy.Domain.ORM.BatchSubmit
     /// <summary>
     /// 根实体的所有孩子的读取器
     /// </summary>
-    internal class EntityBatchReader
+    public class EntityBatchReader
     {
         private IDomainComponent _entityOrList;
 
@@ -33,7 +33,7 @@ namespace Rafy.Domain.ORM.BatchSubmit
         /// </summary>
         /// <param name="entityOrList">The entity or list.</param>
         /// <exception cref="System.ArgumentNullException">entityOrList</exception>
-        internal EntityBatchReader(IDomainComponent entityOrList)
+        public EntityBatchReader(IDomainComponent entityOrList)
         {
             if (entityOrList == null) throw new ArgumentNullException("entityOrList");
 
@@ -46,7 +46,7 @@ namespace Rafy.Domain.ORM.BatchSubmit
         /// 注意，本列表中实体类型的排序和聚合对象的父子关系顺序一致。即父实体在前，子实体在后。
         /// </summary>
         /// <returns></returns>
-        internal IList<EntityBatch> Read()
+        public IList<EntityBatch> Read()
         {
             _batches = new List<EntityBatch>();
 
@@ -60,6 +60,18 @@ namespace Rafy.Domain.ORM.BatchSubmit
                 var list = _entityOrList as EntityList;
                 var batch = this.FindBatch(list.EntityType);
                 ReadToBatchRecur(list, batch);
+            }
+
+            //移除空项。
+            for (int i = _batches.Count - 1; i >= 0; i--)
+            {
+                var batch = _batches[i];
+                if (batch.InsertBatch.Count == 0 &&
+                    batch.UpdateBatch.Count == 0 &&
+                    batch.DeleteBatch.Count == 0 )
+                {
+                    _batches.RemoveAt(i);
+                }
             }
 
             return _batches;

@@ -42,23 +42,23 @@ namespace Rafy.Domain.ORM.BatchSubmit
         /// <summary>
         /// 实体的类型
         /// </summary>
-        public Type EntityType;
+        public Type EntityType { get; internal set; }
         /// <summary>
         /// 实体对应的仓库。
         /// </summary>
-        public EntityRepository Repository;
+        public EntityRepository Repository { get; internal set; }
         /// <summary>
         /// 要批量插入的实体列表。
         /// </summary>
-        public IList<Entity> InsertBatch;
+        public IList<Entity> InsertBatch { get; private set; }
         /// <summary>
         /// 要批量更新的实体列表。
         /// </summary>
-        public IList<Entity> UpdateBatch;
+        public IList<Entity> UpdateBatch { get; private set; }
         /// <summary>
         /// 要删除的实体列表。
         /// </summary>
-        public IList<Entity> DeleteBatch;
+        public IList<Entity> DeleteBatch { get; private set; }
 
         /// <summary>
         /// 数据访问组件。
@@ -89,6 +89,11 @@ namespace Rafy.Domain.ORM.BatchSubmit
             }
         }
 
+        public override string ToString()
+        {
+            return $"Entity:{this.EntityType.FullName}: Inserts:{this.InsertBatch.Count}, Updates:{this.UpdateBatch.Count}, Deletes:{this.DeleteBatch.Count}";
+        }
+
         #region IDisposable Support
 
         private bool disposedValue = false; // To detect redundant calls
@@ -99,9 +104,12 @@ namespace Rafy.Domain.ORM.BatchSubmit
             {
                 if (disposing)
                 {
-
+                    if (_dba != null)
+                    {
+                        _dba.Dispose();
+                        _dba = null;
+                    }
                 }
-                if (_dba != null) _dba.Dispose();
 
                 disposedValue = true;
             }
@@ -122,6 +130,7 @@ namespace Rafy.Domain.ORM.BatchSubmit
             // TODO: uncomment the following line if the finalizer is overridden above.
             GC.SuppressFinalize(this);
         }
+
         #endregion
     }
 }
