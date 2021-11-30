@@ -35,7 +35,7 @@ namespace Rafy.WPF.Layout
         /// <param name="left"></param>
         /// <param name="right"></param>
         /// <param name="parentChildProportion"></param>
-        public static void Initialize(FrameworkElement left, FrameworkElement right, ParentChildProportion parentChildProportion = null)
+        public static IDisposable Initialize(FrameworkElement left, FrameworkElement right, ParentChildProportion parentChildProportion = null)
         {
             //layout.AggtBlocks.Layout.ParentChildProportion
             parentChildProportion = parentChildProportion ?? ParentChildProportion.Default;
@@ -45,6 +45,7 @@ namespace Rafy.WPF.Layout
 
             var animation = new ResizingPanelSlippingAnimation(parentChildProportion.Children);
             animation.Attach(right);
+            return animation;
         }
 
         private AnimationTimeline _show, _hide;
@@ -94,23 +95,25 @@ namespace Rafy.WPF.Layout
         }
     }
 
-    public abstract class DependencyPropertyChangedListener
+    public abstract class DependencyPropertyChangedListener : IDisposable
     {
         protected FrameworkElement _element;
+        private EventHandler _eventHandler;
+        private DependencyPropertyDescriptor _property;
 
         public void Attach(DependencyPropertyDescriptor property, FrameworkElement element)
         {
+            _property = property;
             _element = element;
+            _eventHandler = OnPropertyChanged;
 
-            EventHandler eventHandler = OnPropertyChanged;
+            property.RemoveValueChanged(element, _eventHandler);
+            property.AddValueChanged(element, _eventHandler);
+        }
 
-            property.RemoveValueChanged(element, eventHandler);
-            property.AddValueChanged(element, eventHandler);
-
-            element.Unloaded += (o, e) =>
-            {
-                property.RemoveValueChanged(element, eventHandler);
-            };
+        public void Dispose()
+        {
+            _property.RemoveValueChanged(_element, _eventHandler);
         }
 
         protected abstract void OnPropertyChanged(object sender, EventArgs e);

@@ -21,6 +21,8 @@ namespace Rafy.WPF.Layout
 {
     public partial class ListDetailLayout : UserControl, ILayoutControl, IDisposable
     {
+        private IDisposable _animation;
+
         public ListDetailLayout()
         {
             InitializeComponent();
@@ -28,7 +30,7 @@ namespace Rafy.WPF.Layout
 
         public void Arrange(UIComponents components)
         {
-            ResizingPanelSlippingAnimation.Initialize(main, childrenTab, components.LayoutMeta.ParentChildProportion);
+            _animation = ResizingPanelSlippingAnimation.Initialize(main, childrenTab, components.LayoutMeta.ParentChildProportion);
 
             this.TryArrangeMain(components.Main);
             this.TryArrangeCommandsContainer(components.CommandsContainer);
@@ -122,6 +124,11 @@ namespace Rafy.WPF.Layout
                 catch { }
                 childrenTab.RemoveFromParent(true);
                 childrenTab = null;
+            }
+            if (_animation != null)
+            {
+                _animation.Dispose();
+                _animation = null;
             }
         }
     }
