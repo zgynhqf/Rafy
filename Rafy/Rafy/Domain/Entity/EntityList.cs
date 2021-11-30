@@ -284,12 +284,13 @@ namespace Rafy.Domain
         {
             if (this.SupportTree)
             {
-                if (this.IsTreeRootList && item.TreePId != null && !item.IsDeleted)
-                {
-                    throw new InvalidOperationException(string.Format(
-                        "树的根节点列表中不能添加非根节点：{0}。", item
-                    ));
-                }
+                //注释的原因见：TreeComponentHelper.TryAddToList
+                //if (this.IsTreeRootList && item.TreePId != null && !item.IsDeleted)
+                //{
+                //    throw new InvalidOperationException(string.Format(
+                //        "树的根节点列表中不能添加非根节点：{0}。", item
+                //    ));
+                //}
 
                 if (this.Contains(item))
                     throw new InvalidOperationException(string.Format(

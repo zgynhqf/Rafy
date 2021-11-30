@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.86.4201
+3.86.4202
     ★★公布
         * DomainController 支持远程调用。
             * 场景及用例，见：DomainTest.DT_Controller。
@@ -20,6 +20,8 @@
         * Repository 中的 ClientCache 与 ServerCache 合并为 Cache。
     BUG修复
         * Rafy.WPF: 解决内存泄漏，尽量断开连接。
+    内部修改
+        树节点加载算法。
 
 3.85.4154
     ★重要、重构

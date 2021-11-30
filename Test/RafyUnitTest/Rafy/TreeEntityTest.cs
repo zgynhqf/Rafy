@@ -799,7 +799,7 @@ namespace RafyUnitTest
 
         /// <summary>
         /// 在查询时加载树节点，如果数据中有不属于这棵树的节点，
-        /// 或者某些节点的父节点被过滤了，那么不应该加到这个列表中。
+        /// 或者某些节点的父节点被过滤了，那么需要直接加到这个列表中。
         /// </summary>
         [TestMethod]
         public void TET_Query_LoadSubTreeIgnoreOtherNodes()
@@ -829,11 +829,9 @@ namespace RafyUnitTest
                 };
                 repo.Save(list);
 
-                var root = list[0];
-
                 list = repo.GetForIgnoreTest();
-                Assert.IsTrue(list.Count == 1);
-                Assert.IsTrue((list as ITreeComponent).CountNodes() == 2, "内存中只有 1 和 1.2 两个节点。");
+                Assert.AreEqual(4, list.Count);
+                Assert.AreEqual(4, (list as ITreeComponent).CountNodes(), "内存中只有 1 和 1.2 两个节点。");
             }
         }
 
@@ -933,37 +931,37 @@ namespace RafyUnitTest
 
         #region 结构 - 关系
 
-        /// <summary>
-        /// 树的根节点列表中不能添加非根节点。
-        /// </summary>
-        [TestMethod]
-        public void TET_Struc_Relation_CantAddNonRootIntoRootList()
-        {
-            var list = new FolderList
-            {
-                new Folder
-                {
-                    TreeChildren =
-                    {
-                        new Folder()
-                    }
-                },
-            };
-            var a = list[0];
-            var b = a.TreeChildren[0];
+        ///// <summary>
+        ///// 树的根节点列表中不能添加非根节点。
+        ///// </summary>
+        //[TestMethod]
+        //public void TET_Struc_Relation_CantAddNonRootIntoRootList()
+        //{
+        //    var list = new FolderList
+        //    {
+        //        new Folder
+        //        {
+        //            TreeChildren =
+        //            {
+        //                new Folder()
+        //            }
+        //        },
+        //    };
+        //    var a = list[0];
+        //    var b = a.TreeChildren[0];
 
-            var hasException = false;
-            try
-            {
-                list.Add(b);
-            }
-            catch (InvalidOperationException ex)
-            {
-                hasException = ex.Message.Contains("树的根节点列表中不能添加非根节点");
-            }
+        //    var hasException = false;
+        //    try
+        //    {
+        //        list.Add(b);
+        //    }
+        //    catch (InvalidOperationException ex)
+        //    {
+        //        hasException = ex.Message.Contains("树的根节点列表中不能添加非根节点");
+        //    }
 
-            Assert.IsTrue(hasException);
-        }
+        //    Assert.IsTrue(hasException);
+        //}
 
         /// <summary>
         /// 如果一个根节点变为非根节点，那么它应该从 List 中移除。

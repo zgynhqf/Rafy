@@ -143,32 +143,30 @@ namespace Rafy.Domain
             }
         }
 
-        /// <summary>
-        /// 必须要同一级的节点才能加入到实体列表中。
-        /// Test：TET_Query_LoadSubTreeIgnoreOtherNodes
-        /// </summary>
-        /// <param name="list"></param>
-        /// <param name="node"></param>
-        /// <param name="indexOption"></param>
         private static bool TryAddToList(IList<Entity> list, Entity node, TreeIndexOption indexOption)
         {
-            if (list.Count > 0)
-            {
-                var listLevel = indexOption.CountLevel(list[0].TreeIndex);
-                var nodeLevel = indexOption.CountLevel(node.TreeIndex);
-                if (listLevel == nodeLevel)
-                {
-                    list.Add(node);
-                    return true;
-                }
-            }
-            else
-            {
-                list.Add(node);
-                return true;
-            }
+            //由于开发者做一些模糊搜索数据时，可能会将满足同一匹配条件的实体查询出来显示。
+            //但是这些树，可能无法组成一棵树。这时，也需要把这些实体全部都显示出来。
+            //未来，EntityList 中的算法应该跟数据结构更加的松散耦合。又或者，将这种情况(根节点的 Level 不一致)排除在外即可。
+            ////必须要同一级的节点才能加入到实体列表中。
+            ////Test：TET_Query_LoadSubTreeIgnoreOtherNodes
+            //if (list.Count > 0)
+            //{
+            //    var listLevel = indexOption.CountLevel(list[0].TreeIndex);
+            //    var nodeLevel = indexOption.CountLevel(node.TreeIndex);
+            //    if (listLevel == nodeLevel)
+            //    {
+            //        list.Add(node);
+            //        return true;
+            //    }
+            //}
+            //else
+            //{
+            list.Add(node);
+            return true;
+            //}
 
-            return false;
+            //return false;
         }
 
         ///// <summary>
