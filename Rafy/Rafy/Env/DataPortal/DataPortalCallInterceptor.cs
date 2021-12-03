@@ -44,9 +44,9 @@ namespace Rafy.DataPortal
             try
             {
                 //如果目标确定了当前使用的是本地调用，或者当前环境只支持本地调用；那么都只使用本地调用，否则使用远程调用。
-                var isLocal = target.DataPortalLocation == DataPortalLocation.Local 
+                var isLocal = target.DataPortalLocation == DataPortalLocation.Local
                     || DataPortalApi.ConnectDataDirectly
-                    || DataPortalApi.IsRunning;
+                    || DataPortalApi.HasEntered;
                 context.CallType = isLocal ? PortalCallType.Local : PortalCallType.Remote;
 
                 //如果 OnRemoteCalling 已经得出结果，那么就结束整个调用了。
@@ -81,10 +81,8 @@ namespace Rafy.DataPortal
 
         private void CallOnRemote(IInvocation invocation, IDataPortalTarget target)
         {
-            var factoryInfo = target.TryUseFactory();
-
             //调用数据门户，使得在服务端才执行真正的数据层方法。
-            invocation.ReturnValue = DataPortalApi.Call(factoryInfo as object ?? target, invocation.Method.Name, invocation.Arguments);
+            invocation.ReturnValue = DataPortalApi.RemoteCall(target, invocation.Method.Name, invocation.Arguments);
         }
 
         private void CallOnLocal(IInvocation invocation)

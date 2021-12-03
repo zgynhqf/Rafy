@@ -57,11 +57,11 @@ namespace RafyUnitTest
             var bc = DCF.Create<BookController>();
             if (DataPortalApi.ConnectDataDirectly)
             {
-                Assert.AreEqual(false, bc.IsDataPortalRunning());
+                Assert.AreEqual(false, bc.HasEnteredDataPortal());
             }
             else
             {
-                Assert.AreEqual(true, bc.IsDataPortalRunning());
+                Assert.AreEqual(true, bc.HasEnteredDataPortal());
             }
         }
 

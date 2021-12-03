@@ -43,10 +43,10 @@ namespace Rafy.DataPortal
         /// <summary>
         /// 表示当前线程执行的代码是否正处于数据门户的调用中。
         /// * 当环境为 C/S 架构的服务端时，所有通过服务访问的代码，应该始终处于门户的调用中。 
-        /// * 当环境为 C/S 架构的客户端时，所有访问服务以外的代码，应该都不处于门户的调用中。 
+        /// * 当环境为 C/S 架构的客户端时，所有访问 DataPortalCall 标记的服务以外的代码，应该都不处于门户的调用中。 
         /// * 当环境为 直连数据 架构时，所有代码应该都不处于门户的调用中。 
         /// </summary>
-        public static bool IsRunning => _threadPortalCount > 0;
+        public static bool HasEntered => _threadPortalCount > 0;
 
         /// <summary>
         /// 应用程序默认的数据门户模式。
@@ -67,16 +67,18 @@ namespace Rafy.DataPortal
         /// <summary>
         /// 远程调用指定对象的指定方法。
         /// </summary>
-        /// <param name="obj"></param>
+        /// <param name="target"></param>
         /// <param name="method"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public static object Call(object obj, string method, object[] parameters)
+        public static object RemoteCall(IDataPortalTarget target, string method, object[] parameters)
         {
             var proxy = GetDataPortalProxy();
 
             var dpContext = CreateDataPortalContext();
 
+            var factoryInfo = target.TryUseFactory();
+            var obj = factoryInfo as object ?? target;
             var result = proxy.Call(obj, method, parameters, dpContext);
 
             var res = DealServerResult(result, parameters);

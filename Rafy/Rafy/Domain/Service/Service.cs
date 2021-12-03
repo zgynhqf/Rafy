@@ -27,14 +27,14 @@ namespace Rafy.Domain
     /// 注意，如果该服务要被使用到 B/S 上，输入和输出参数都应该是基本的数据类型、EntityList 类型。
     /// </summary>
     [Serializable]
-    public abstract class Service : IService
+    public abstract class Service : IService, IDataPortalTarget
     {
         [NonSerialized]
         private DataPortalLocation _dataPortalLocation;
 
         public Service()
         {
-            var isLocal = DataPortalApi.ConnectDataDirectly || DataPortalApi.IsRunning;
+            var isLocal = DataPortalApi.ConnectDataDirectly || DataPortalApi.HasEntered;
             _dataPortalLocation = isLocal ? DataPortalLocation.Local : DataPortalLocation.Dynamic;
         }
 
@@ -102,7 +102,7 @@ namespace Rafy.Domain
             }
             else
             {
-                var res = DataPortalApi.Call(this, "ExecuteByDataPortal", new object[0]) as IService;
+                var res = DataPortalApi.RemoteCall(this, "ExecuteByDataPortal", new object[0]) as IService;
 
                 this.ReadOutput(res);
             }
@@ -155,5 +155,13 @@ namespace Rafy.Domain
                 yield return attri.ContractType ?? serviceType;
             }
         }
+
+        #region IDataPortalTarget
+
+        DataPortalTargetFactoryInfo IDataPortalTarget.TryUseFactory() { return null; }
+        void IDataPortalTarget.OnPortalCalling(DataPortalCallContext e) { }
+        void IDataPortalTarget.OnPortalCalled(DataPortalCallContext e) { } 
+
+        #endregion
     }
 }
