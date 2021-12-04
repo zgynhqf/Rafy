@@ -40,7 +40,7 @@ using Rafy.ComponentModel.UnityAdapter;
 
 namespace RafyUnitTest.ServerPortal
 {
-    public class TestWcfPortalApp : AppImplementationBase
+    public class TestWcfPortalApp : DomainApp
     {
         internal void Start()
         {

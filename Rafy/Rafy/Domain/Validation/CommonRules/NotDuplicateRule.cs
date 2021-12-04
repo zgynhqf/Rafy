@@ -77,7 +77,7 @@ namespace Rafy.Domain.Validation
                 var property = e.Property as IProperty;
                 if (property == null)
                 {
-                    throw new InvalidProgramException("使用 PropertyNotExists 验证方法需要传入名称为 Properties 的参数。");
+                    throw new InvalidProgramException("使用 NotDuplicateRule 验证方法需要传入名称为 Properties 的参数。");
                 }
                 this.Properties.Add(property);
             }
@@ -146,7 +146,7 @@ namespace Rafy.Domain.Validation
                     break;
                 default:
                     throw new InvalidProgramException(string.Format(
-@"PropertyNotExists 不能验证类型为 {1} 的属性 {0}，该方法只接受三种类型的属性：Normal、ReferenceId、Redundancy。",
+@"NotDuplicateRule 不能验证类型为 {1} 的属性 {0}，该方法只接受三种类型的属性：Normal、ReferenceId、Redundancy。",
 property, property.Category
 ));
             }
