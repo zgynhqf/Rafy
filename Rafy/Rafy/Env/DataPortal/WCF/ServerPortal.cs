@@ -26,13 +26,22 @@ namespace Rafy.DataPortal.WCF
     //[AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
     public class ServerPortal : IWcfPortal
     {
+        public string Test(string msg)
+        {
+            Logger.LogInfo("WCF Test invoked. msg : " + msg);
+
+            return msg + " recieved";
+        }
+
         /// <summary>
         /// Get an existing business object.
         /// </summary>
         /// <param name="request">The request parameter object.</param>
         public WcfResponse Call(CallRequest request)
         {
-            Logger.LogInfo($"WCF Call invoked. request: method:{request.Method}, instance: {request.Instance}, arguments.length:{request.Arguments.Length}.");
+            LogCalling(request);
+
+            WCFSerializationWrapper.Deserialize(request);
 
             var portal = new FinalDataPortal();
 
@@ -43,18 +52,63 @@ namespace Rafy.DataPortal.WCF
             }
             catch (Exception ex)
             {
-                Logger.LogError($"WCF Call Exception occurred! request: method:{request.Method}, instance: {request.Instance}, arguments.length:{request.Arguments.Length}.", ex);
                 result = ex;
+                LogException(request, ex);
             }
 
-            return new WcfResponse { Result = result };
+            var response = new WcfResponse { Result = result };
+
+            WCFSerializationWrapper.Serialize(response);
+
+            if (!(result is Exception))
+            {
+                LogCalled(request, response);
+            }
+
+            return response;
         }
 
-        public string Test(string msg)
+        private void LogCalling(CallRequest request)
         {
-            Logger.LogInfo("WCF Test invoked. msg : " + msg);
+            var content = $"WCF Call invoking. request: method:{request.Method}, instance: {request.Instance}, arguments.length:{request.Arguments.Length}";
+            var totalBytes = GetTotalBytes(request);
+            if (totalBytes > 0)
+            {
+                content += $", arguments bytes:{totalBytes}";
+            }
+            Logger.LogInfo(content);
+        }
 
-            return msg + " recieved";
+        private void LogCalled(CallRequest request, WcfResponse response)
+        {
+            var content = $"WCF Call invoked. request: method:{request.Method}, instance: {request.Instance}, arguments.length:{request.Arguments.Length}";
+            if (response.Result is byte[] bytes)
+            {
+                content += $", result bytes:{bytes.Length}";
+            }
+            Logger.LogInfo(content);
+        }
+
+        private void LogException(CallRequest request, Exception ex)
+        {
+            Logger.LogError($"WCF Call Exception occurred! request: method:{request.Method}, instance: {request.Instance}, arguments.length:{request.Arguments.Length}.", ex);
+        }
+
+        private int GetTotalBytes(CallRequest request)
+        {
+            var totalBytes = 0;
+
+            var arguments = request.Arguments;
+            for (int i = 0, c = arguments.Length; i < c; i++)
+            {
+                var argument = arguments[i];
+                if (argument is byte[] bytes)
+                {
+                    totalBytes += bytes.Length;
+                }
+            }
+
+            return totalBytes;
         }
     }
 }

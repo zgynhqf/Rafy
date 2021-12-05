@@ -33,6 +33,8 @@ namespace Rafy.DataPortal.WCF
                 Context = context,
             };
 
+            WCFSerializationWrapper.Serialize(request);
+
             var cf = GetChannelFactory();
             var proxy = cf.CreateChannel();
             try
@@ -40,6 +42,8 @@ namespace Rafy.DataPortal.WCF
                 var response = proxy.Call(request);
 
                 cf.Close();
+
+                WCFSerializationWrapper.Deserialize(response);
 
                 object result = response.Result;
                 if (result is Exception)
