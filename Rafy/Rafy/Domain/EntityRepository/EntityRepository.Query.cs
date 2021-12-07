@@ -349,23 +349,17 @@ namespace Rafy.Domain
         /// <returns></returns>
         protected virtual EntityList DoCacheAll()
         {
-            EntityList result = null;
-
             var cache = this.Cache;
             if (cache != null && cache.IsEnabled)
             {
-                result = cache.FindAll();
+                var cacheResult = cache.FindAll();
+                if (cacheResult != null)
+                {
+                    this.SetRepo(cacheResult);
+                }
             }
 
-            if (result != null)
-            {
-                this.SetRepo(result);
-            }
-            else
-            {
-                result = this.DoGetAll(null, null);
-            }
-
+            var result = this.DoGetAll(null, null);
             return result;
         }
 
@@ -379,23 +373,18 @@ namespace Rafy.Domain
         /// <returns></returns>
         protected virtual EntityList DoCacheByParent(Entity parent)
         {
-            EntityList result = null;
-
             var cache = this.Cache;
             if (cache != null && cache.IsEnabled)
             {
-                result = cache.FindByParent(parent);
+                var cacheResult = cache.FindByParent(parent);
+                if (cacheResult != null)
+                {
+                    this.SetRepo(cacheResult);
+                    return cacheResult;
+                }
             }
 
-            if (result != null)
-            {
-                this.SetRepo(result);
-            }
-            else
-            {
-                result = this.GetByParentId(parent.Id);
-            }
-
+            var result = this.GetByParentId(parent.Id);
             return result;
         }
 
@@ -409,23 +398,17 @@ namespace Rafy.Domain
         /// <returns></returns>
         protected virtual Entity DoCacheById(object id)
         {
-            Entity result = null;
-
             var cache = this.Cache;
             if (cache != null && cache.IsEnabled)
             {
-                result = cache.FindById(id);
+                var cacheResult = cache.FindById(id);
+                if (cacheResult != null)
+                {
+                    this.SetRepo(cacheResult);
+                }
             }
 
-            if (result != null)
-            {
-                this.SetRepo(result);
-            }
-            else
-            {
-                result = this.DoGetById(id, null);
-            }
-
+            var result = this.DoGetById(id, null);
             return result;
         }
 
