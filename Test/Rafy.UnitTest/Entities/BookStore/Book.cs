@@ -28,6 +28,7 @@ using Rafy.ManagedProperty;
 using Rafy.Data;
 using Rafy.Domain.ORM.Query;
 using Rafy.DataPortal;
+using static Rafy.Domain.ORM.Query.FactoryMethods;
 
 namespace UT
 {
@@ -280,8 +281,8 @@ namespace UT
         [RepositoryQuery]
         public virtual BookList Get_NameEqualsCode2()
         {
-            var table = f.Table(this);
-            var q = f.Query(
+            var table = Table(this);
+            var q = Query(
                 from: table,
                 where: table.Column(Book.NameProperty).Equal(table.Column(Book.CodeProperty))
             );
@@ -328,11 +329,11 @@ namespace UT
         [RepositoryQuery]
         public virtual BookList GetIfChildrenExists()
         {
-            var bookTable = f.Table(this);
-            var chapterTable = f.Table<Chapter>();
-            var q = f.Query(
+            var bookTable = Table(this);
+            var chapterTable = Table<Chapter>();
+            var q = Query(
                 from: bookTable,
-                where: f.Exists(f.Query(
+                where: Exists(Query(
                     from: chapterTable,
                     where: chapterTable.Column(Chapter.BookIdProperty).Equal(bookTable.IdColumn)
                 ))
@@ -348,13 +349,13 @@ namespace UT
         [RepositoryQuery]
         public virtual BookList GetIfChildrenExists(string chapterName)
         {
-            var book = f.Table(this);
-            var chapter = f.Table<Chapter>();
-            var q = f.Query(
+            var book = Table(this);
+            var chapter = Table<Chapter>();
+            var q = Query(
                 from: book,
-                where: f.Exists(f.Query(
+                where: Exists(Query(
                     from: chapter,
-                    where: f.And(
+                    where: And(
                         chapter.Column(Chapter.BookIdProperty).Equal(book.IdColumn),
                         chapter.Column(Chapter.NameProperty).Equal(chapterName)
                     )
@@ -371,15 +372,15 @@ namespace UT
         [RepositoryQuery]
         public virtual BookList GetIfChildrenAll(string chapterName)
         {
-            var book = f.Table(this);
-            var chapter = f.Table<Chapter>();
-            var q = f.Query(
+            var book = Table(this);
+            var chapter = Table<Chapter>();
+            var q = Query(
                 from: book,
-                where: f.Not(f.Exists(f.Query(
+                where: Not(Exists(Query(
                     from: chapter,
-                    where: f.And(
-                        f.Constraint(chapter.Column(Chapter.BookIdProperty), book.IdColumn),
-                        f.Constraint(chapter.Column(Chapter.NameProperty), PropertyOperator.NotEqual, chapterName)
+                    where: And(
+                        Constraint(chapter.Column(Chapter.BookIdProperty), book.IdColumn),
+                        Constraint(chapter.Column(Chapter.NameProperty), PropertyOperator.NotEqual, chapterName)
                     )
                 )))
             );
@@ -498,8 +499,8 @@ namespace UT
         public virtual BookList GetBookListByIds(IEnumerable<int> ids)
         {
             var f = QueryFactory.Instance;
-            var table = f.Table<Book>();
-            var query = f.Query(
+            var table = Table<Book>();
+            var query = Query(
                 from: table,
                 where: table.Column(Entity.IdProperty).In(ids)
             );
