@@ -405,9 +405,9 @@ namespace Rafy.ManagedProperty
         {
             if (!property.OwnerType.IsInstanceOfType(this))
             {
-                throw new InvalidProgramException("属性与当前对象的类型不符，赋值错误！");
+                throw new InvalidOperationException($"属性赋值错误，无法给类型为 {this.GetType().FullName} 的对象 {this} 进行属性 {property.OwnerType.FullName}.{property.Name} 的赋值，因为属性的所属类型与对象的类型不匹配！");
             }
-            if (property.IsReadOnly) throw new InvalidOperationException("属性是只读的！");
+            if (property.IsReadOnly) throw new InvalidOperationException($"属性赋值错误，{property.OwnerType.FullName}.{property.Name}属性是只读的！");
         }
 
         private static object CoerceType(IManagedProperty property, object value)

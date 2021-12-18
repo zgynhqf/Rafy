@@ -75,10 +75,7 @@ namespace Rafy
         {
             get
             {
-                var user = Principal.Identity;
-                if (user != null) return user;
-
-                return new AnonymousIdentity();
+                return Principal.Identity ?? new AnonymousIdentity();
             }
         }
 
