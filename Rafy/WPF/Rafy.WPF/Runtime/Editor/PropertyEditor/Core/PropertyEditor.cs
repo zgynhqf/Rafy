@@ -117,7 +117,8 @@ namespace Rafy.WPF.Editors
                         {
                             if (value == null)
                             {
-                                value = TypeHelper.GetDefaultValue(mp.PropertyType);
+                                value = mp.GetMeta(currentObject).DefaultValue;
+                                //value = TypeHelper.GetDefaultValue(mp.PropertyType);
                             }
                             currentObject.SetProperty(mp, value);
                         }
