@@ -356,6 +356,7 @@ namespace Rafy.Domain
                 if (cacheResult != null)
                 {
                     this.SetRepo(cacheResult);
+                    return cacheResult;
                 }
             }
 
@@ -405,6 +406,7 @@ namespace Rafy.Domain
                 if (cacheResult != null)
                 {
                     this.SetRepo(cacheResult);
+                    return cacheResult;
                 }
             }
 
