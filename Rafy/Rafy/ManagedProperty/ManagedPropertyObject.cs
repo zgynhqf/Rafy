@@ -171,6 +171,8 @@ namespace Rafy.ManagedProperty
 
         private object _GetProperty(IManagedProperty property)
         {
+            this.CheckHasProperty(property);
+
             var useDefault = true;
             object result = null;
 
@@ -400,14 +402,23 @@ namespace Rafy.ManagedProperty
             }
         }
 
-        //[TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
         private void CheckEditable(IManagedProperty property)
+        {
+            this.CheckHasProperty(property);
+            if (property.IsReadOnly) throw new InvalidOperationException($"属性赋值错误，{property.OwnerType.FullName}.{property.Name}属性是只读的！");
+        }
+
+        /// <summary>
+        /// 确保当前对象，拥有指定的属性。
+        /// </summary>
+        /// <param name="property"></param>
+        /// <exception cref="InvalidOperationException"></exception>
+        private void CheckHasProperty(IManagedProperty property)
         {
             if (!property.OwnerType.IsInstanceOfType(this))
             {
-                throw new InvalidOperationException($"属性赋值错误，无法给类型为 {this.GetType().FullName} 的对象 {this} 进行属性 {property.OwnerType.FullName}.{property.Name} 的赋值，因为属性的所属类型与对象的类型不匹配！");
+                throw new InvalidOperationException($"无法在类型为 {this.GetType().FullName} 的对象上操作属性：{property.OwnerType.FullName}.{property.Name}，因为该对象并不拥有这个属性！");
             }
-            if (property.IsReadOnly) throw new InvalidOperationException($"属性赋值错误，{property.OwnerType.FullName}.{property.Name}属性是只读的！");
         }
 
         private static object CoerceType(IManagedProperty property, object value)
