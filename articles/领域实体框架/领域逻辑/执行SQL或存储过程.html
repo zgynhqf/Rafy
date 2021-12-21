@@ -8,7 +8,7 @@
     <title>IDbAccesser &#25509;&#21475; </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="IDbAccesser &#25509;&#21475; ">
-    <meta name="generator" content="docfx 2.34.0.0">
+    <meta name="generator" content="docfx 2.58.9.0">
     
     <link rel="shortcut icon" href="../../../favicon.ico">
     <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
@@ -20,7 +20,7 @@
     
     
   </head>
-  <body data-spy="scroll" data-target="#affix">
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
       <header>
         
@@ -76,149 +76,148 @@
 /// &lt;/summary&gt;
 public interface IDbAccesser : IDisposable
 {
-/// &lt;summary&gt;
-/// The underlying db connection
-/// &lt;/summary&gt;
-IDbConnection Connection { get; }
+    /// &lt;summary&gt;
+    /// The underlying db connection
+    /// &lt;/summary&gt;
+    IDbConnection Connection { get; }
 
-/// &lt;summary&gt;
-/// 数据连接结构
-/// &lt;/summary&gt;
-DbConnectionSchema ConnectionSchema { get; }
+    /// &lt;summary&gt;
+    /// 数据连接结构
+    /// &lt;/summary&gt;
+    DbConnectionSchema ConnectionSchema { get; }
 
-/// &lt;summary&gt;
-/// Gets a raw accesser which is oriented to raw sql and &lt;c&gt;IDbDataParameter&lt;/c&gt;。
-/// &lt;/summary&gt;
-IRawDbAccesser RawAccesser { get; }
+    /// &lt;summary&gt;
+    /// Gets a raw accesser which is oriented to raw sql and &lt;c&gt;IDbDataParameter&lt;/c&gt;。
+    /// &lt;/summary&gt;
+    IRawDbAccesser RawAccesser { get; }
 
-/// &lt;summary&gt;
-/// Execute a sql which is not a database procudure, return rows effected.
-/// &lt;/summary&gt;
-/// &lt;param name=&quot;formattedSql&quot;&gt;a formatted sql which format looks like the parameter of String.Format&lt;/param&gt;
-/// &lt;param name=&quot;parameters&quot;&gt;If this sql has some parameters, these are its parameters.&lt;/param&gt;
-/// &lt;returns&gt;The number of rows effected.&lt;/returns&gt;
-int ExecuteText(string formattedSql, params object[] parameters);
+    /// &lt;summary&gt;
+    /// Execute a sql which is not a database procudure, return rows effected.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;formattedSql&quot;&gt;a formatted sql which format looks like the parameter of String.Format&lt;/param&gt;
+    /// &lt;param name=&quot;parameters&quot;&gt;If this sql has some parameters, these are its parameters.&lt;/param&gt;
+    /// &lt;returns&gt;The number of rows effected.&lt;/returns&gt;
+    int ExecuteText(string formattedSql, params object[] parameters);
 
-/// &lt;summary&gt;
-/// Execute the sql, and return the element of first row and first column, ignore the other values.
-/// &lt;/summary&gt;
-/// &lt;param name=&quot;formattedSql&quot;&gt;a formatted sql which format looks like the parameter of String.Format&lt;/param&gt;
-/// &lt;param name=&quot;parameters&quot;&gt;If this sql has some parameters, these are its parameters.&lt;/param&gt;
-/// &lt;returns&gt;DBNull or value object.&lt;/returns&gt;
-object QueryValue(string formattedSql, params object[] parameters);
+    /// &lt;summary&gt;
+    /// Execute the sql, and return the element of first row and first column, ignore the other values.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;formattedSql&quot;&gt;a formatted sql which format looks like the parameter of String.Format&lt;/param&gt;
+    /// &lt;param name=&quot;parameters&quot;&gt;If this sql has some parameters, these are its parameters.&lt;/param&gt;
+    /// &lt;returns&gt;DBNull or value object.&lt;/returns&gt;
+    object QueryValue(string formattedSql, params object[] parameters);
 
-/// &lt;summary&gt;
-/// Query out some data from database.
-/// &lt;/summary&gt;
-/// &lt;param name=&quot;formattedSql&quot;&gt;a formatted sql which format looks like the parameter of String.Format&lt;/param&gt;
-/// &lt;param name=&quot;parameters&quot;&gt;If this sql has some parameters, these are its parameters.&lt;/param&gt;
-/// &lt;returns&gt;&lt;/returns&gt;
-IDataReader QueryDataReader(string formattedSql, params object[] parameters);
+    /// &lt;summary&gt;
+    /// Query out some data from database.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;formattedSql&quot;&gt;a formatted sql which format looks like the parameter of String.Format&lt;/param&gt;
+    /// &lt;param name=&quot;parameters&quot;&gt;If this sql has some parameters, these are its parameters.&lt;/param&gt;
+    /// &lt;returns&gt;&lt;/returns&gt;
+    IDataReader QueryDataReader(string formattedSql, params object[] parameters);
 
-/// &lt;summary&gt;
-/// Query out some data from database.
-/// &lt;/summary&gt;
-/// &lt;param name=&quot;formattedSql&quot;&gt;a formatted sql which format looks like the parameter of String.Format&lt;/param&gt;
-/// &lt;param name=&quot;closeConnection&quot;&gt;Indicates whether to close the corresponding connection when the reader is closed?&lt;/param&gt;
-/// &lt;param name=&quot;parameters&quot;&gt;If this sql has some parameters, these are its parameters.&lt;/param&gt;
-/// &lt;returns&gt;&lt;/returns&gt;
-IDataReader QueryDataReader(string formattedSql, bool closeConnection, params object[] parameters);
+    /// &lt;summary&gt;
+    /// Query out some data from database.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;formattedSql&quot;&gt;a formatted sql which format looks like the parameter of String.Format&lt;/param&gt;
+    /// &lt;param name=&quot;closeConnection&quot;&gt;Indicates whether to close the corresponding connection when the reader is closed?&lt;/param&gt;
+    /// &lt;param name=&quot;parameters&quot;&gt;If this sql has some parameters, these are its parameters.&lt;/param&gt;
+    /// &lt;returns&gt;&lt;/returns&gt;
+    IDataReader QueryDataReader(string formattedSql, bool closeConnection, params object[] parameters);
 
-/// &lt;summary&gt;
-/// Query out a row from database.
-/// If there is not any records, return null.
-/// &lt;/summary&gt;
-/// &lt;param name=&quot;formattedSql&quot;&gt;a formatted sql which format looks like the parameter of String.Format&lt;/param&gt;
-/// &lt;param name=&quot;parameters&quot;&gt;If this sql has some parameters, these are its parameters.&lt;/param&gt;
-/// &lt;returns&gt;&lt;/returns&gt;
-DataRow QueryDataRow(string formattedSql, params object[] parameters);
+    /// &lt;summary&gt;
+    /// Query out a row from database.
+    /// If there is not any records, return null.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;formattedSql&quot;&gt;a formatted sql which format looks like the parameter of String.Format&lt;/param&gt;
+    /// &lt;param name=&quot;parameters&quot;&gt;If this sql has some parameters, these are its parameters.&lt;/param&gt;
+    /// &lt;returns&gt;&lt;/returns&gt;
+    DataRow QueryDataRow(string formattedSql, params object[] parameters);
 
-/// &lt;summary&gt;
-/// Query out a DataTable object from database by the specific sql.
-/// &lt;/summary&gt;
-/// &lt;param name=&quot;formattedSql&quot;&gt;a formatted sql which format looks like the parameter of String.Format&lt;/param&gt;
-/// &lt;param name=&quot;parameters&quot;&gt;If this sql has some parameters, these are its parameters.&lt;/param&gt;
-/// &lt;returns&gt;&lt;/returns&gt;
-DataTable QueryDataTable(string formattedSql, params object[] parameters);
+    /// &lt;summary&gt;
+    /// Query out a DataTable object from database by the specific sql.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;formattedSql&quot;&gt;a formatted sql which format looks like the parameter of String.Format&lt;/param&gt;
+    /// &lt;param name=&quot;parameters&quot;&gt;If this sql has some parameters, these are its parameters.&lt;/param&gt;
+    /// &lt;returns&gt;&lt;/returns&gt;
+    DataTable QueryDataTable(string formattedSql, params object[] parameters);
 
-/// &lt;summary&gt;
-/// Query out a row from database.
-/// If there is not any records, return null.
-/// &lt;/summary&gt;
-/// &lt;param name=&quot;formattedSql&quot;&gt;a formatted sql which format looks like the parameter of String.Format&lt;/param&gt;
-/// &lt;param name=&quot;parameters&quot;&gt;If this sql has some parameters, these are its parameters.&lt;/param&gt;
-/// &lt;returns&gt;&lt;/returns&gt;
-LiteDataRow QueryLiteDataRow(string formattedSql, params object[] parameters);
+    /// &lt;summary&gt;
+    /// Query out a row from database.
+    /// If there is not any records, return null.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;formattedSql&quot;&gt;a formatted sql which format looks like the parameter of String.Format&lt;/param&gt;
+    /// &lt;param name=&quot;parameters&quot;&gt;If this sql has some parameters, these are its parameters.&lt;/param&gt;
+    /// &lt;returns&gt;&lt;/returns&gt;
+    LiteDataRow QueryLiteDataRow(string formattedSql, params object[] parameters);
 
-/// &lt;summary&gt;
-/// Query out a DataTable object from database by the specific sql.
-/// &lt;/summary&gt;
-/// &lt;param name=&quot;formattedSql&quot;&gt;a formatted sql which format looks like the parameter of String.Format&lt;/param&gt;
-/// &lt;param name=&quot;parameters&quot;&gt;If this sql has some parameters, these are its parameters.&lt;/param&gt;
-/// &lt;returns&gt;&lt;/returns&gt;
-LiteDataTable QueryLiteDataTable(string formattedSql, params object[] parameters);
+    /// &lt;summary&gt;
+    /// Query out a DataTable object from database by the specific sql.
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;formattedSql&quot;&gt;a formatted sql which format looks like the parameter of String.Format&lt;/param&gt;
+    /// &lt;param name=&quot;parameters&quot;&gt;If this sql has some parameters, these are its parameters.&lt;/param&gt;
+    /// &lt;returns&gt;&lt;/returns&gt;
+    LiteDataTable QueryLiteDataTable(string formattedSql, params object[] parameters);
 }
 </code></pre><p>该接口使用类似于 String.Format 中的字符串格式来表达 SQL 中的参数。并在连接不同的数据库时，生成相应数据库对应的参数格式。<br>具体使用方法如下：<br>执行查询代码示例：</p>
 <pre><code class="lang-cs">var bookRepo = RF.ResolveInstance&lt;BookRepository&gt;();
 using (var dba = DbAccesserFactory.Create(bookRepo))
 {
-DataTable table = dba.QueryDataTable(&quot;SELECT * FROM Books WHERE id &gt; {0}&quot;, 0);
+    DataTable table = dba.QueryDataTable(&quot;SELECT * FROM Books WHERE id &gt; {0}&quot;, 0);
 }
 </code></pre><p>执行非查询代码示例：</p>
 <pre><code class="lang-cs">var bookRepo = RF.ResolveInstance&lt;BookRepository&gt;();
 using (var dba = DbAccesserFactory.Create(bookRepo))
 {
-int linesAffected = dba.ExecuteText(&quot;DELETE FROM Books WHERE id &gt; {0}&quot;, 0);
+    int linesAffected = dba.ExecuteText(&quot;DELETE FROM Books WHERE id &gt; {0}&quot;, 0);
 }
 </code></pre><p>另外，DbAccesserFactory 中也提供了不通过仓库对象，而直接使用‘数据库连接的配置名’进行构建的方法，例如：</p>
 <pre><code class="lang-cs">using (var dba = DbAccesserFactory.Create(&quot;JXC&quot;))
 {
-int linesAffected = dba.ExecuteText(&quot;DELETE FROM Books WHERE id &gt; {0}&quot;, 0);
+    int linesAffected = dba.ExecuteText(&quot;DELETE FROM Books WHERE id &gt; {0}&quot;, 0);
 }
 </code></pre><p>参数过多时，则依次按顺序传入即可：</p>
-<pre><code class="lang-cs">            using (var dba = DbAccesserFactory.Create(bookRepo))
-            {
-                for (int i = 0; i &lt; 10; i++)
-                {
-                    dba.ExecuteText(
-                    &quot;INSERT INTO Book (Author,BookCategoryId,BookLocId,Code,Content,Name,Price,Publisher) VALUES ({0},{1},{2},{3},{4},{5},{6},{7})&quot;,
-                    string.Empty,
-                    null,
-                    null,
-                    string.Empty,
-                    string.Empty,
-                    i.ToString(),
-                    null,
-                    string.Empty
-                    );
-                }
-            }
+<pre><code class="lang-cs">using (var dba = DbAccesserFactory.Create(bookRepo))
+{
+    for (int i = 0; i &lt; 10; i++)
+    {
+        dba.ExecuteText(
+        &quot;INSERT INTO Book (Author,BookCategoryId,BookLocId,Code,Content,Name,Price,Publisher) VALUES ({0},{1},{2},{3},{4},{5},{6},{7})&quot;,
+        string.Empty,
+        null,
+        null,
+        string.Empty,
+        string.Empty,
+        i.ToString(),
+        null,
+        string.Empty
+        );
+    }
+}
 </code></pre><h2 id="irawdbaccesser-接口">IRawDbAccesser 接口</h2>
 <p>由于 IDbAccesser 接口封装了 SQL 语句中参数对应不同数据库中名称的变化，同时也更方便开发者使用，所以一般情况下，都推荐使用该接口。但是，IDbAccesser 接口并不支持存储过程的调用。另外，有时开发者希望自己来构建原生的 SQL 语句和参数，这时，就需要用到 IRawDbAccesser 接口了。（接口定义过长，这里不再贴出。）<br>该接口的使用方法与 IDbAccesser 类似，不同的地方在于 SQL 中需要传入特定数据库的参数名，并且参数需要自行构造，例如：</p>
-<pre><code class="lang-cs">
-            using (var dba = DbAccesserFactory.Create(bookRepo))
-            {
-                for (int i = 0; i &lt; 10; i++)
-                {
-                    dba.RawAccesser.ExecuteText(
-                        &quot;INSERT INTO Book (Author,BookCategoryId,BookLocId,Code,Content,Name,Price,Publisher,Id) VALUES (&#39;&#39;, NULL, NULL, &#39;&#39;, &#39;&#39;, :p0, NULL, &#39;&#39;, :p1)&quot;,
-                        dba.RawAccesser.ParameterFactory.CreateParameter(&quot;p0&quot;, i),
-                        dba.RawAccesser.ParameterFactory.CreateParameter(&quot;p1&quot;, i)
-                        );
-                }
-            }
+<pre><code class="lang-cs">using (var dba = DbAccesserFactory.Create(bookRepo))
+{
+    for (int i = 0; i &lt; 10; i++)
+    {
+        dba.RawAccesser.ExecuteText(
+            &quot;INSERT INTO Book (Author,BookCategoryId,BookLocId,Code,Content,Name,Price,Publisher,Id) VALUES (&#39;&#39;, NULL, NULL, &#39;&#39;, &#39;&#39;, :p0, NULL, &#39;&#39;, :p1)&quot;,
+            dba.RawAccesser.ParameterFactory.CreateParameter(&quot;p0&quot;, i),
+            dba.RawAccesser.ParameterFactory.CreateParameter(&quot;p1&quot;, i)
+            );
+    }
+}
 </code></pre><p>另外，接口也可以使用存储过程了，例如：</p>
-<pre><code class="lang-cs">            using (var dba = DbAccesserFactory.Create(bookRepo))
-            {
-                for (int i = 0; i &lt; 10; i++)
-                {
-                    dba.RawAccesser.ExecuteProcedure(
-                        &quot;InsertBookProcedure&quot;,
-                        dba.RawAccesser.ParameterFactory.CreateParameter(&quot;p0&quot;, i),
-                        dba.RawAccesser.ParameterFactory.CreateParameter(&quot;p1&quot;, i)
-                        );
-                }
-            }                 
+<pre><code class="lang-cs">using (var dba = DbAccesserFactory.Create(bookRepo))
+{
+    for (int i = 0; i &lt; 10; i++)
+    {
+        dba.RawAccesser.ExecuteProcedure(
+            &quot;InsertBookProcedure&quot;,
+            dba.RawAccesser.ParameterFactory.CreateParameter(&quot;p0&quot;, i),
+            dba.RawAccesser.ParameterFactory.CreateParameter(&quot;p1&quot;, i)
+            );
+    }
+}
 </code></pre></article>
           </div>
           
@@ -232,7 +231,8 @@ int linesAffected = dba.ExecuteText(&quot;DELETE FROM Books WHERE id &gt; {0}&qu
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+                <h5>In This Article</h5>
+                <div></div>
               </nav>
             </div>
           </div>

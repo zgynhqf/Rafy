@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title> </title>
+    <title>&#31034;&#20363;&#20195;&#30721; </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content=" ">
-    <meta name="generator" content="docfx 2.34.0.0">
+    <meta name="title" content="&#31034;&#20363;&#20195;&#30721; ">
+    <meta name="generator" content="docfx 2.58.9.0">
     
     <link rel="shortcut icon" href="../../../favicon.ico">
     <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
@@ -20,7 +20,7 @@
     
     
   </head>
-  <body data-spy="scroll" data-target="#affix">
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
       <header>
         
@@ -68,7 +68,40 @@
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
 
-<p>本文档正在整理中，敬请期待。  </p>
+<p>﻿实体的验证规则，是以一种声明的方式来为实体添加验证的逻辑。这即方便了规则本身、调用规则的代码的复用，也更有利于对实体的规则进行管理。</p>
+<h2 id="示例代码">示例代码</h2>
+<pre><code class="lang-c#">internal class BookConfig : EntityConfig&lt;Book&gt;
+{
+    protected override void AddValidations(IValidationDeclarer rules)
+    {
+        rules.AddRule(Book.CodeProperty, new NotDuplicateRule());
+
+        //书名和作者名不能同时一致。
+        rules.AddRule(new NotDuplicateRule
+        {
+            Properties = { Book.AuthorProperty, Book.NameProperty }
+        });
+    }
+}
+</code></pre><p>上述代码中：限制了 Book.Code 属性，在数据库中需要是唯一的；另外，还限制了  Book.Author 及 Book.Name 属性的组合，在数据库中也需要是唯一的（联合主键）。</p>
+<h2 id="调用验证">调用验证</h2>
+<pre><code class="lang-c#">BrokenRulesCollection brokenRules = Validator.Validate(entity);
+if (brokenRules.Count &gt; 0) errorMessage = brokenRules.ToString();
+</code></pre><p>通过上述代码，即可实现对某个实体的所有规则进行验证。brokenRules 中包含了所有不满足的规则及其对应的错误信息。开发者可以在保存实体前调用验证框架，满足所有验证后，再保存进仓库中。</p>
+<h2 id="更多规则">更多规则</h2>
+<p>Rafy 框架中自带了一些内置的验证规则，它们位于 Rafy.Domain.Validation 命名空间下，如：</p>
+<ul>
+<li>NotDuplicateRule：限制实体的某一个或几个属性的值在数据库中不重复的规则。</li>
+<li>NotUsedByReferenceRule：限制规则：实体的键必须没有被指定的引用属性对应的主表中的行所使用。</li>
+<li>NumberRangeRule：限制某数值类型属性的数据范围的规则。</li>
+<li>PositiveNumberRule：限制某数值类型属性正数限制规则。</li>
+<li>RegexMatchRule：限制某数值类型属性最小的数据限制规则。</li>
+<li>RequiredRule：约束某属性不能为空值（null）、字符串还应该不能为空字符串。</li>
+<li>StringLengthRangeRule：限制某字符串属性的字符长度范围的规则。</li>
+<li>HandlerRule：一个使用指定代理方法的验证器。</li>
+</ul>
+<h2 id="多级别配置">多级别配置</h2>
+<p>实体的验证规则，也是一项特殊的实体配置技术，其支持多级别配置，参见： <a href="实体配置.html">实体配置</a>。</p>
 </article>
           </div>
           
@@ -82,7 +115,8 @@
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+                <h5>In This Article</h5>
+                <div></div>
               </nav>
             </div>
           </div>

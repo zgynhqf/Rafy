@@ -65,7 +65,7 @@ $(function () {
   (function () {
     anchors.options = {
       placement: 'left',
-      visible: 'touch'
+      visible: 'hover'
     };
     anchors.add('article h2:not(.no-anchor), article h3:not(.no-anchor), article h4:not(.no-anchor)');
   })();
@@ -223,13 +223,16 @@ $(function () {
         $("body").bind("queryReady", function () {
           worker.postMessage({ q: query });
         });
+        if (query && (query.length >= 3)) {
+          worker.postMessage({ q: query });
+        }
       });
     }
 
     // Highlight the searching keywords
     function highlightKeywords() {
       var q = url('?q');
-      if (q !== null) {
+      if (q) {
         var keywords = q.split("%20");
         keywords.forEach(function (keyword) {
           if (keyword !== "") {
@@ -253,7 +256,7 @@ $(function () {
           } else {
             flipContents("hide");
             $("body").trigger("queryReady");
-            $('#search-results>.search-list').text('Search Results for "' + query + '"');
+            $('#search-results>.search-list>span').text('"' + query + '"');
           }
         }).off("keydown");
       });
@@ -298,12 +301,17 @@ $(function () {
 
     function handleSearchResults(hits) {
       var numPerPage = 10;
-      $('#pagination').empty();
-      $('#pagination').removeData("twbs-pagination");
+      var pagination = $('#pagination');
+      pagination.empty();
+      pagination.removeData("twbs-pagination");
       if (hits.length === 0) {
         $('#search-results>.sr-items').html('<p>No results found</p>');
-      } else {
-        $('#pagination').twbsPagination({
+      } else {        
+        pagination.twbsPagination({
+          first: pagination.data('first'),
+          prev: pagination.data('prev'),
+          next: pagination.data('next'),
+          last: pagination.data('last'),
           totalPages: Math.ceil(hits.length / numPerPage),
           visiblePages: 5,
           onPageClick: function (event, page) {
@@ -318,7 +326,7 @@ $(function () {
                 var itemBrief = extractContentBrief(hit.keywords);
 
                 var itemNode = $('<div>').attr('class', 'sr-item');
-                var itemTitleNode = $('<div>').attr('class', 'item-title').append($('<a>').attr('href', itemHref).attr("target", "_blank").text(itemTitle));
+                var itemTitleNode = $('<div>').attr('class', 'item-title').append($('<a>').attr('href', itemHref).attr("target", "_blank").attr("rel", "noopener noreferrer").text(itemTitle));
                 var itemHrefNode = $('<div>').attr('class', 'item-href').text(itemRawHref);
                 var itemBriefNode = $('<div>').attr('class', 'item-brief').text(itemBrief);
                 itemNode.append(itemTitleNode).append(itemHrefNode).append(itemBriefNode);
@@ -344,6 +352,14 @@ $(function () {
     } else {
       $('#navbar ul a.active').parents('li').addClass(active);
       renderBreadcrumb();
+      showSearch();
+    }
+    
+    function showSearch() {
+      if ($('#search-results').length !== 0) {
+          $('#search').show();
+          $('body').trigger("searchEvent");
+      }
     }
 
     function loadNavbar() {
@@ -356,17 +372,14 @@ $(function () {
       if (tocPath) tocPath = tocPath.replace(/\\/g, '/');
       $.get(navbarPath, function (data) {
         $(data).find("#toc>ul").appendTo("#navbar");
-        if ($('#search-results').length !== 0) {
-          $('#search').show();
-          $('body').trigger("searchEvent");
-        }
+        showSearch();
         var index = navbarPath.lastIndexOf('/');
         var navrel = '';
         if (index > -1) {
           navrel = navbarPath.substr(0, index + 1);
         }
         $('#navbar>ul').addClass('navbar-nav');
-        var currentAbsPath = util.getAbsolutePath(window.location.pathname);
+        var currentAbsPath = util.getCurrentWindowAbsolutePath();
         // set active item
         $('#navbar').find('a[href]').each(function (i, e) {
           var href = $(e).attr("href");
@@ -374,7 +387,6 @@ $(function () {
             href = navrel + href;
             $(e).attr("href", href);
 
-            // TODO: currently only support one level navbar
             var isActive = false;
             var originalHref = e.name;
             if (originalHref) {
@@ -384,7 +396,10 @@ $(function () {
               }
             } else {
               if (util.getAbsolutePath(href) === currentAbsPath) {
-                isActive = true;
+                var dropdown = $(e).attr('data-toggle') == "dropdown"
+                if (!dropdown) {
+                  isActive = true;
+                }
               }
             }
             if (isActive) {
@@ -412,6 +427,8 @@ $(function () {
       $('#toc a.active').parents('li').each(function (i, e) {
         $(e).addClass(active).addClass(expanded);
         $(e).children('a').addClass(active);
+      })
+      $('#toc a.active').parents('li').each(function (i, e) {
         top += $(e).position().top;
       })
       $('.sidetoc').scrollTop(top - 50);
@@ -424,20 +441,43 @@ $(function () {
     }
 
     function registerTocEvents() {
+      var tocFilterInput = $('#toc_filter_input');
+      var tocFilterClearButton = $('#toc_filter_clear');
+        
       $('.toc .nav > li > .expand-stub').click(function (e) {
         $(e.target).parent().toggleClass(expanded);
       });
       $('.toc .nav > li > .expand-stub + a:not([href])').click(function (e) {
         $(e.target).parent().toggleClass(expanded);
       });
-      $('#toc_filter_input').on('input', function (e) {
+      tocFilterInput.on('input', function (e) {
         var val = this.value;
+        //Save filter string to local session storage
+        if (typeof(Storage) !== "undefined") {
+          try {
+            sessionStorage.filterString = val;
+            }
+          catch(e)
+            {}
+        }
         if (val === '') {
           // Clear 'filtered' class
           $('#toc li').removeClass(filtered).removeClass(hide);
+          tocFilterClearButton.fadeOut();
           return;
         }
+        tocFilterClearButton.fadeIn();
 
+        // set all parent nodes status
+        $('#toc li>a').filter(function (i, e) {
+          return $(e).siblings().length > 0
+        }).each(function (i, anchor) {
+          var parent = $(anchor).parent();
+          parent.addClass(hide);
+          parent.removeClass(show);
+          parent.removeClass(filtered);
+        })
+        
         // Get leaf nodes
         $('#toc li>a').filter(function (i, e) {
           return $(e).siblings().length === 0
@@ -478,6 +518,30 @@ $(function () {
           return false;
         }
       });
+      
+      // toc filter clear button
+      tocFilterClearButton.hide();
+      tocFilterClearButton.on("click", function(e){
+        tocFilterInput.val("");
+        tocFilterInput.trigger('input');
+        if (typeof(Storage) !== "undefined") {
+          try {
+            sessionStorage.filterString = "";
+            }
+          catch(e)
+            {}
+        }
+      });
+
+      //Set toc filter from local session storage on page load
+      if (typeof(Storage) !== "undefined") {
+        try {
+          tocFilterInput.val(sessionStorage.filterString);
+          tocFilterInput.trigger('input');
+          }
+        catch(e)
+          {}
+      }
     }
 
     function loadToc() {
@@ -492,7 +556,10 @@ $(function () {
         if (index > -1) {
           tocrel = tocPath.substr(0, index + 1);
         }
-        var currentHref = util.getAbsolutePath(window.location.pathname);
+        var currentHref = util.getCurrentWindowAbsolutePath();
+        if(!currentHref.endsWith('.html')) {
+          currentHref += '.html';
+        }
         $('#sidetoc').find('a[href]').each(function (i, e) {
           var href = $(e).attr("href");
           if (util.isRelativePath(href)) {
@@ -534,36 +601,31 @@ $(function () {
   //Setup Affix
   function renderAffix() {
     var hierarchy = getHierarchy();
-    if (hierarchy.length > 0) {
-      var html = '<h5 class="title">In This Article</h5>'
-      html += util.formList(hierarchy, ['nav', 'bs-docs-sidenav']);
-      $("#affix").empty().append(html);
+    if (!hierarchy || hierarchy.length <= 0) {
+      $("#affix").hide();
+    }
+    else {
+      var html = util.formList(hierarchy, ['nav', 'bs-docs-sidenav']);
+      $("#affix>div").empty().append(html);
       if ($('footer').is(':visible')) {
         $(".sideaffix").css("bottom", "70px");
       }
-      $('#affix').on('activate.bs.scrollspy', function (e) {
-        if (e.target) {
-          if ($(e.target).find('li.active').length > 0) {
-            return;
-          }
-          var top = $(e.target).position().top;
-          $(e.target).parents('li').each(function (i, e) {
-            top += $(e).position().top;
-          });
-          var container = $('#affix > ul');
-          var height = container.height();
-          container.scrollTop(container.scrollTop() + top - height / 2);
+      $('#affix a').click(function(e) {
+        var scrollspy = $('[data-spy="scroll"]').data()['bs.scrollspy'];
+        var target = e.target.hash;
+        if (scrollspy && target) {
+          scrollspy.activate(target);
         }
-      })
+      });
     }
 
     function getHierarchy() {
       // supported headers are h1, h2, h3, and h4
-      var $headers = $($.map(['h1', 'h2', 'h3', 'h4'], function(h) { return ".article article " + h; }).join(", "));
+      var $headers = $($.map(['h1', 'h2', 'h3', 'h4'], function (h) { return ".article article " + h; }).join(", "));
 
       // a stack of hierarchy items that are currently being built
       var stack = [];
-      $headers.each(function(i, e){
+      $headers.each(function (i, e) {
         if (!e.id) {
           return;
         }
@@ -603,21 +665,24 @@ $(function () {
       while (stack.length > 1) {
         buildParent();
       }
-      
+
       function buildParent() {
         var childrenToAttach = stack.pop();
         var parentFrame = stack[stack.length - 1];
         var parent = parentFrame.siblings[parentFrame.siblings.length - 1];
-        $.each(childrenToAttach.siblings, function(i, child) {
+        $.each(childrenToAttach.siblings, function (i, child) {
           parent.items.push(child);
         });
       }
+      if (stack.length > 0) {
 
-      var topLevel = stack.pop().siblings;
-      if (topLevel.length === 1) {  // if there's only one topmost header, dump it
-        return topLevel[0].items;
+        var topLevel = stack.pop().siblings;
+        if (topLevel.length === 1) {  // if there's only one topmost header, dump it
+          return topLevel[0].items;
+        }
+        return topLevel;
       }
-      return topLevel;
+      return undefined;
     }
 
     function htmlEncode(str) {
@@ -856,7 +921,8 @@ $(function () {
             state.selectedTabs.splice(index, 1);
           }
         }
-        firstVisibleTab.selected = true;
+        var tab = firstVisibleTab;
+        tab.selected = true;
         state.selectedTabs.push(tab.tabIds[0]);
       }
     }
@@ -915,7 +981,7 @@ $(function () {
     function selectTabs(tabIds) {
       for (var _i = 0, tabIds_1 = tabIds; _i < tabIds_1.length; _i++) {
         var tabId = tabIds_1[_i];
-        var a = document$1.querySelector(".tabGroup > ul > li > a[data-tab=\"" + tabId + "\"]:not([hidden])");
+        var a = document.querySelector(".tabGroup > ul > li > a[data-tab=\"" + tabId + "\"]:not([hidden])");
         if (a === null) {
           return;
         }
@@ -924,7 +990,7 @@ $(function () {
     }
 
     function readTabsQueryStringParam() {
-      var qs = parseQueryString();
+      var qs = parseQueryString(window.location.search);
       var t = qs.tabs;
       if (t === undefined || t === '') {
         return [];
@@ -933,7 +999,7 @@ $(function () {
     }
 
     function updateTabsQueryStringParam(state) {
-      var qs = parseQueryString();
+      var qs = parseQueryString(window.location.search);
       qs.tabs = state.selectedTabs.join();
       var url = location.protocol + "//" + location.host + location.pathname + "?" + toQueryString(qs) + location.hash;
       if (location.href === url) {
@@ -991,14 +1057,25 @@ $(function () {
     this.getAbsolutePath = getAbsolutePath;
     this.isRelativePath = isRelativePath;
     this.isAbsolutePath = isAbsolutePath;
+    this.getCurrentWindowAbsolutePath = getCurrentWindowAbsolutePath;
     this.getDirectory = getDirectory;
     this.formList = formList;
 
     function getAbsolutePath(href) {
-      // Use anchor to normalize href
-      var anchor = $('<a href="' + href + '"></a>')[0];
-      // Ignore protocal, remove search and query
-      return anchor.host + anchor.pathname;
+      if (isAbsolutePath(href)) return href;
+      var currentAbsPath = getCurrentWindowAbsolutePath();
+      var stack = currentAbsPath.split("/");
+      stack.pop();
+      var parts = href.split("/");
+      for (var i=0; i< parts.length; i++) {
+        if (parts[i] == ".") continue;
+        if (parts[i] == ".." && stack.length > 0)
+          stack.pop();
+        else
+          stack.push(parts[i]);
+      }
+      var p = stack.join("/");
+      return p;
     }
 
     function isRelativePath(href) {
@@ -1012,6 +1089,9 @@ $(function () {
       return (/^(?:[a-z]+:)?\/\//i).test(href);
     }
 
+    function getCurrentWindowAbsolutePath() {
+      return window.location.origin + window.location.pathname;
+    }
     function getDirectory(href) {
       if (!href) return '';
       var index = href.lastIndexOf('/');
@@ -1080,7 +1160,7 @@ $(function () {
     function getFixedOffset() {
       return $('header').first().height();
     }
-  
+
     /**
      * If the provided href is an anchor which resolves to an element on the
      * page, scroll to it.
@@ -1090,26 +1170,26 @@ $(function () {
     function scrollIfAnchor(href, pushToHistory) {
       var match, rect, anchorOffset;
 
-      if(!ANCHOR_REGEX.test(href)) {
+      if (!ANCHOR_REGEX.test(href)) {
         return false;
       }
 
       match = document.getElementById(href.slice(1));
 
-      if(match) {
+      if (match) {
         rect = match.getBoundingClientRect();
         anchorOffset = window.pageYOffset + rect.top - getFixedOffset();
         window.scrollTo(window.pageXOffset, anchorOffset);
 
         // Add the state to history as-per normal anchor links
-        if(HISTORY_SUPPORT && pushToHistory) {
+        if (HISTORY_SUPPORT && pushToHistory) {
           history.pushState({}, document.title, location.pathname + href);
         }
       }
 
       return !!match;
     }
-  
+
     /**
      * Attempt to scroll to the current location's hash.
      */
@@ -1123,13 +1203,21 @@ $(function () {
     function delegateAnchors(e) {
       var elem = e.target;
 
-      if(scrollIfAnchor(elem.getAttribute('href'), true)) {
+      if (scrollIfAnchor(elem.getAttribute('href'), true)) {
         e.preventDefault();
       }
     }
 
     $(window).on('hashchange', scrollToCurrent);
-    $(document.body).click('a', delegateAnchors);
-    scrollToCurrent();
+
+    $(window).on('load', function () {
+        // scroll to the anchor if present, offset by the header
+        scrollToCurrent();
+    });
+
+    $(document).ready(function () {
+        // Exclude tabbed content case
+        $('a:not([data-tab])').click(function (e) { delegateAnchors(e); });
+    });
   }
 });

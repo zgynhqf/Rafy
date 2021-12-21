@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>&#25972;&#29702;&#20013;&#8230;&#8230; </title>
+    <title>&#31616;&#20171; </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="&#25972;&#29702;&#20013;&#8230;&#8230; ">
-    <meta name="generator" content="docfx 2.34.0.0">
+    <meta name="title" content="&#31616;&#20171; ">
+    <meta name="generator" content="docfx 2.58.9.0">
     
     <link rel="shortcut icon" href="../../../favicon.ico">
     <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
@@ -20,7 +20,7 @@
     
     
   </head>
-  <body data-spy="scroll" data-target="#affix">
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
       <header>
         
@@ -67,23 +67,152 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
+<h2 id="简介">简介</h2>
 
-<p>领域控制器用于封装领域的主要逻辑。  </p>
-<h2 id="整理中">整理中……</h2>
-</article>
+<p>领域控制器是 Rafy 框架中用于封装领域逻辑的主要方式。</p>
+<p>在控制器中，开发者可以封装大量的业务逻辑，并向外暴露业务接口。内部的逻辑在实现时，往往调用一个或多个实体仓库的 CDUQ 方法来实现。</p>
+<h2 id="示例">示例</h2>
+<p>以下代码为 <a href="....\插件\帐户插件.md">Rafy.Accounts 帐户插件</a> 中 AccountController 类型的真实代码。</p>
+<pre><code class="lang-c#">/// &lt;summary&gt;
+/// 帐户插件的领域控制器。
+/// &lt;/summary&gt;
+public class AccountController : DomainController
+{
+    /// &lt;summary&gt;
+    /// 注册指定的用户。
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;user&quot;&gt;&lt;/param&gt;
+    /// &lt;returns&gt;&lt;/returns&gt;
+    [ControllerLogic]
+    public virtual Result Register(User user)
+    {
+        if (user == null) throw new ArgumentNullException(&quot;user&quot;);
+        var userNameAsId = _identityMode.HasFlag(UserIdentityMode.UserName);
+        if (userNameAsId &amp;&amp; string.IsNullOrEmpty(user.UserName)) return new Result(ResultCodes.RegisterUserNameInvalid, &quot;用户名不能为空。&quot;);
+        var emailAsId = _identityMode.HasFlag(UserIdentityMode.Email);
+        if (emailAsId &amp;&amp; !TextFormatter.ReEmail.IsMatch(user.Email)) return new Result(ResultCodes.RegisterEmailInvalid, &quot;邮箱格式不正确。&quot;);
+        if (!userNameAsId &amp;&amp; !emailAsId) throw new InvalidProgramException(&quot;!userNameAsId &amp;&amp; !useEmailAsId&quot;);
+
+        //验证其它属性。
+        var brokenRules = Validator.Validate(user);
+        if (brokenRules.Count &gt; 0) return new Result(ResultCodes.RegisterPropertiesInvalid, brokenRules.ToString());
+
+        //检查用户名、邮箱的重复性。
+        var repo = RF.ResolveInstance&lt;UserRepository&gt;();
+        var criteria = new CommonQueryCriteria();
+        criteria.Concat = BinaryOperator.Or;
+        if (userNameAsId)
+        {
+            criteria.Add(new PropertyMatch(User.UserNameProperty, user.UserName));
+        }
+        if (emailAsId)
+        {
+            criteria.Add(new PropertyMatch(User.EmailProperty, user.Email));
+        }
+        var exists = repo.GetFirstBy(criteria);
+        if (exists != null)
+        {
+            if (emailAsId &amp;&amp; exists.Email == user.Email)
+            {
+                return new Result(ResultCodes.RegisterEmailDuplicated, string.Format(&quot;注册失败，已经存在邮箱为：{0} 的用户。&quot;, user.Email));
+            }
+            else
+            {
+                return new Result(ResultCodes.RegisterUserNameDuplicated, string.Format(&quot;注册失败，已经存在用户名为：{0} 的用户。&quot;, user.UserName));
+            }
+        }
+
+        //保存这个用户
+        user.PersistenceStatus = PersistenceStatus.New;
+        repo.Save(user);
+
+        this.OnRegisterSuccessed(user);
+
+        return true;
+    }
+
+    /// &lt;summary&gt;
+    /// 注册成功的事件。
+    /// &lt;/summary&gt;
+    public event EventHandler&lt;AccountEventArgs&gt; RegisterSuccessed;
+
+    /// &lt;summary&gt;
+    /// 注册成功的事件。
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;user&quot;&gt;&lt;/param&gt;
+    protected virtual void OnRegisterSuccessed(User user)
+    {
+        var handler = this.RegisterSuccessed;
+        if (handler != null) handler(this, new AccountEventArgs(user));
+    }
+}
+</code></pre><h2 id="特点">特点</h2>
+<ul>
+<li><p>支持本地调用，也支持分布式调用</p>
+<p>领域控制器是除了仓库查询以外，提供分布式数据传输的另一机制。控制器的调用，支持本地调用，也支持分布式调用。详见：<a href="../../领域实体框架\部署.html">部署</a>。</p>
+</li>
+<li><p>无状态</p>
+<p>领域控制器本身应该是无状态的。每次使用工厂创建时，都会创建一个新实例。特殊情况下，如果需要传递状态，需要对属性添加 [ControllerClientSettings] 标记。 </p>
+</li>
+<li><p>支持领域控制器事件及依赖管理</p>
+<p>详见后文。</p>
+</li>
+<li><p>支持使用接口来定义控制器契约。参见：IDomainControllerContract 接口。</p>
+</li>
+</ul>
+<h2 id="远程调用">远程调用</h2>
+<p>DomainController 中，所有可远程调用的方法，都需要满足：一、标记为虚方法；二、添加 [ControllerLogic] 标记。工厂会为在运行时创建控制器的子类，并这些方法实现远程调用。</p>
+<p>所以，此类方法需要注意，参数及返回值应该都是要支持序列化的。否则会在远程调用时失败。</p>
+<h2 id="领域控制器事件">领域控制器事件</h2>
+<p>各业务模块可以分别定义大量的领域控制器，而模块之间的业务，往往需要进行交互。除直接的调用关系以外，领域控制器还提供了事件依赖及管理功能。</p>
+<p>例如，我们往往希望在用户注册成功后，各业务模块（例如博客模块）再额外注册一些其它内容。这时，我们又不希望修改用户的注册代码。那么我们可以在博客模块的领域控制器中，指定该控制器依赖 AccountController，这时再监听 RegisterSuccessed 事件添加自己的业务逻辑。</p>
+<p>下面示例代码中，基础库存模块与入库管理插件，后者依赖前者。代码展示了，库存业务插件的 StockChanged 事件发生时，入库模块会发生一些特定的逻辑。</p>
+<pre><code class="lang-c#">//业务插件一：库存模块
+public class StockController : DomainController
+{
+    public event EventHandler StockChanged;
+
+    protected virtual void OnStockChanged()
+    {
+        var handler = this.StockChanged;
+        if (handler != null) handler(this, EventArgs.Empty);
+    }
+}
+
+//业务插件二：入库管理插件
+public class RecieveController : DomainController
+{
+    static RecieveController()
+    {
+        Depend&lt;RecieveController&gt;().On&lt;StockController&gt;();
+    }
+
+    protected override void OnAlwaysDependon(DomainController controller)
+    {
+        var sc = controller as StockController;
+        if (sc != null)
+        {
+            sc.StockChanged += OnStockChanged;
+        }
+    }
+
+    private void OnStockChanged(object sender, EventArgs e)
+    {
+        //根据库存变化信息，来实现特定功能
+    }
+}
+</code></pre></article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
             <div class="sideaffix">
               <div class="contribution">
                 <ul class="nav">
-                  <li>
-                    <a href="https://github.com/zgynhqf/rafy/blob/master/Rafy/_Items/Documentation/articles/&#39046;&#22495;&#23454;&#20307;&#26694;&#26550;/&#39046;&#22495;&#36923;&#36753;/&#39046;&#22495;&#25511;&#21046;&#22120;.md/#L1" class="contribution-link">Improve this Doc</a>
-                  </li>
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+                <h5>In This Article</h5>
+                <div></div>
               </nav>
             </div>
           </div>
