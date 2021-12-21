@@ -78,10 +78,22 @@ public virtual WarehouseList GetByCode(string warehouseCode)
     return (WarehouseList)this.QueryData(q);
 }
 </code></pre><ul>
-<li>必须标记为虚方法。<br>  这是因为框架需要对仓库生成代码，并对该方法进行拦截。</li>
-<li>方法需要标记：[RepositoryQuery]。<br>  不是所有的虚方法都会被拦截，所以需要显式标记来区分公有数据方法。<br>    添加此标记后的方法拥有以下的功能：<br>    1.判断是需要在本地、还是服务端来执行此方法。如果需要在服务端执行，则框架会转而调用 WCF 数据门户。（如果需要分布式调用，所有参数需要支持可序列化。）<br>    2.根据方法的返回值，来确定底层查询时应该返回的类型（EntityList、Entity、int、LiteDataTable）。<br>    3.查询完成后，调整查询结果的类型，与需要的类型一致。</li>
-<li>返回值<br>  方法的返回值只可以是以下几类，具体实体列表类型、具体的实体类型、int（查询数据条数）、LiteDataTable（轻量级数据表格类型）。</li>
-<li>方法体<br>  方法体中需要构造查询，并最终使用<code>QueryData()</code>来查询数据。<code>QueryData()</code>方法会根据当前查询方法的返回值，而决定底层需要执行的查询的类型（查全部实体、查单个实体、查数据条数），并返回相应类型的数据。</li>
+<li><p>必须标记为虚方法。</p>
+<p>  这是因为框架需要对仓库生成代码，并对该方法进行拦截。</p>
+</li>
+<li><p>方法需要标记：[RepositoryQuery]。</p>
+<p>  不是所有的虚方法都会被拦截，所以需要显式标记来区分公有数据方法。</p>
+<p>  添加此标记后的方法拥有以下的功能： </p>
+<p>  1.判断是需要在本地、还是服务端来执行此方法。如果需要在服务端执行，则框架会转而调用 WCF 数据门户。（如果需要分布式调用，所有参数需要支持可序列化。）</p>
+<p>  2.根据方法的返回值，来确定底层查询时应该返回的类型（EntityList、Entity、int、LiteDataTable）。</p>
+<p>  3.查询完成后，调整查询结果的类型，与需要的类型一致。</p>
+</li>
+<li><p>返回值</p>
+<p>  方法的返回值只可以是以下几类，具体实体列表类型、具体的实体类型、int（查询数据条数）、LiteDataTable（轻量级数据表格类型）。</p>
+</li>
+<li><p>方法体</p>
+<p>  方法体中需要构造查询，并最终使用<code>QueryData()</code>来查询数据。<code>QueryData()</code>方法会根据当前查询方法的返回值，而决定底层需要执行的查询的类型（查全部实体、查单个实体、查数据条数），并返回相应类型的数据。</p>
+</li>
 </ul>
 <h2 id="四种查询示例">四种查询示例</h2>
 <p>四种查询对应枚举 Rafy.Domain.RepositoryQueryType：</p>
@@ -108,7 +120,8 @@ public enum RepositoryQueryType
     Table = 3
 }
 </code></pre><ul>
-<li><p>查询实体列表<br>  返回具体实体列表类型。</p>
+<li><p>查询实体列表</p>
+<p>  返回具体实体列表类型。</p>
 <pre><code class="lang-cs">[RepositoryQuery]
 public virtual WarehouseList GetByCode(string warehouseCode)
 {
@@ -117,7 +130,9 @@ public virtual WarehouseList GetByCode(string warehouseCode)
  return (WarehouseList)this.QueryData(q);
 }
 </code></pre></li>
-<li><p>查询单个实体<br>  返回具体实体类型。<br>    查询实体个数的数据层实现中，与查询实体列表的实体层实现保持一致。如果查询出多条实体，则框架只会返回第一个实体。</p>
+<li><p>查询单个实体</p>
+<p>  返回具体实体类型。</p>
+<p>  查询实体个数的数据层实现中，与查询实体列表的实体层实现保持一致。如果查询出多条实体，则框架只会返回第一个实体。</p>
 <pre><code class="lang-cs">[RepositoryQuery]
 public virtual Warehouse GetByName(string name)
 {
@@ -126,7 +141,9 @@ public virtual Warehouse GetByName(string name)
  return (Warehouse)this.QueryData(q);
 }
 </code></pre></li>
-<li><p>查询实体个数<br>  返回整型。<br>    查询实体个数的数据层实现中，与查询实体列表的实体层实现保持一致。框架内部会自动转换为数据行数的查询。</p>
+<li><p>查询实体个数</p>
+<p>  返回整型。</p>
+<p>  查询实体个数的数据层实现中，与查询实体列表的实体层实现保持一致。框架内部会自动转换为数据行数的查询。</p>
 <pre><code class="lang-cs">[RepositoryQuery]
 public virtual long CountByDate(DateTime date)
 {
@@ -135,7 +152,9 @@ public virtual long CountByDate(DateTime date)
  return (long)this.QueryData(q);
 }
 </code></pre></li>
-<li><p>查询表格数据<br>  可返回一个简单的表格类型数据。LiteDataTable 类型是一个可直接用于网络传输的数据表格。<br>    根据 Command Query Responsibility Segregation（命令查询职责分离，简称 CQRS）模式，复杂查询一般使用表格查询，但是返回的数据只做只读查看，不支持修改。</p>
+<li><p>查询表格数据</p>
+<p>  可返回一个简单的表格类型数据。LiteDataTable 类型是一个可直接用于网络传输的数据表格。</p>
+<p>  根据 Command Query Responsibility Segregation（命令查询职责分离，简称 CQRS）模式，复杂查询一般使用表格查询，但是返回的数据只做只读查看，不支持修改。</p>
 <pre><code class="lang-cs">[RepositoryQuery]
 public virtual LiteDataTable GetTableByName(string name)
 {
@@ -145,13 +164,17 @@ public virtual LiteDataTable GetTableByName(string name)
 }
 </code></pre></li>
 </ul>
-<p>字符串可自动隐式转换为一个 FormattedSql 类型的对象。<br>FormattedSql 表格格式化的 Sql 语句，为了支持多个数据库，它其中的每一个参数都使用大括号括住的数字来代替，最终会通过 ADO.NET 来使用参数化的查询，而非使用 String.Format 简单地格式化 Sql 语句。</p>
 <h2 id="实体查询实现方式">实体查询实现方式</h2>
-<p>在数据层实现中，对于实体查询而言，目前支持以下三种查询方式：</p>
+<p>对于实体的查询的实现方式，目前支持以下查询方式：</p>
 <ul>
-<li>[Linq 查询](../../领域实体框架\实体仓库\编写查询\Linq 查询.html)</li>
-<li><a href="../../领域实体框架\实体仓库\编写查询\通用查询条件(CommonQueryCriteria).html">通用查询条件(CommonQueryCriteria)</a></li>
-<li>[Sql 查询](../../领域实体框架\实体仓库\编写查询\Sql 查询.html)</li>
+<li><p><a href="编写查询\通用查询条件(CommonQueryCriteria).html">通用查询条件</a></p>
+</li>
+<li><p>[Linq 查询](编写查询\Linq 查询.html)</p>
+</li>
+<li><p>[SqlTree 查询](编写查询\SqlTree 查询.html) </p>
+</li>
+<li><p>[Sql 查询](编写查询\Sql 查询.html)</p>
+</li>
 </ul>
 </article>
           </div>
@@ -160,9 +183,6 @@ public virtual LiteDataTable GetTableByName(string name)
             <div class="sideaffix">
               <div class="contribution">
                 <ul class="nav">
-                  <li>
-                    <a href="https://github.com/zgynhqf/rafy/blob/master/Rafy/_Items/Documentation/articles/&#39046;&#22495;&#23454;&#20307;&#26694;&#26550;/&#23454;&#20307;&#20179;&#24211;/&#32534;&#20889;&#26597;&#35810;.md/#L1" class="contribution-link">Improve this Doc</a>
-                  </li>
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">

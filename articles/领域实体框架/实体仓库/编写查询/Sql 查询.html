@@ -81,7 +81,9 @@ WHERE NAME = {0}&quot;;
 
    return (WarehouseList)(this.DataQueryer as RdbDataQueryer).QueryData(sql);
 }
-</code></pre><p>以上代码编写了一个自定义 Sql 字符串进行查询，这个 Sql 语句的查询结果是一个包含三个字段（Id, Code, Name）的表格。在传递给 QueryList 方法后，框架会执行这个 Sql 语句，并把返回的结果表转换为 Warehouse 实体类的集合，表中的每一行都会转换为一个 Warehouse 实体。<br>在使用 Sql 查询时，必须保证：实体所有映射数据库的属性，在 Sql 中查询出的表格中都有对应的列。（这包括 Entity 基类的属性 Id。）  </p>
+</code></pre><p>以上代码编写了一个自定义 Sql 字符串进行查询，这个 Sql 语句的查询结果是一个包含三个字段（Id, Code, Name）的表格。在传递给 QueryList 方法后，框架会执行这个 Sql 语句，并把返回的结果表转换为 Warehouse 实体类的集合，表中的每一行都会转换为一个 Warehouse 实体。  </p>
+<p>上面代码中，字符串被隐式转换为一个 FormattedSql 类型的对象。</p>
+<p>使用 FormattedSql 来格式化的 Sql 语句，可以支持在多种不同数据库上执行。它其中的每一个参数都使用大括号括住的数字来代替，最终会通过 ADO.NET 来使用参数化的查询。建议开发者多使用此类，而不是直接使用 String.Format 简单地格式化 Sql 语句。</p>
 </article>
           </div>
           
@@ -90,7 +92,7 @@ WHERE NAME = {0}&quot;;
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/zgynhqf/rafy/blob/master/Rafy/_Items/Documentation/articles/&#39046;&#22495;&#23454;&#20307;&#26694;&#26550;/&#23454;&#20307;&#20179;&#24211;/&#32534;&#20889;&#26597;&#35810;/Sql &#26597;&#35810;.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/zgynhqf/rafy/blob/current/Rafy/_Items/Documentation/articles/&#39046;&#22495;&#23454;&#20307;&#26694;&#26550;/&#23454;&#20307;&#20179;&#24211;/&#32534;&#20889;&#26597;&#35810;/Sql &#26597;&#35810;.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>

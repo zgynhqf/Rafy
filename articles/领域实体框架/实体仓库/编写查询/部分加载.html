@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>&#23450;&#20041;&#26597;&#35810; </title>
+    <title>&#31034;&#20363;&#20195;&#30721; </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="&#23450;&#20041;&#26597;&#35810; ">
+    <meta name="title" content="&#31034;&#20363;&#20195;&#30721; ">
     <meta name="generator" content="docfx 2.58.9.0">
     
     <link rel="shortcut icon" href="../../../../favicon.ico">
@@ -68,41 +68,15 @@
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
 
-<p>通过仓库查询出实体，在使用这些实体时，除了使用实体自身的一般属性，往往还需要使用它的一些关系实体。虽然，实体关系都支持懒加载，使用者可以在真正使用这些关系属性时才从数据库中加载相应的数据，但是过多地使用懒加载会造成 N+1 性能问题（关于 N+1 问题，本文中有相关的介绍：<a href="http://www.cnblogs.com/zgynhqf/archive/2012/08/10/2633047.html">OEA ORM 框架中的冗余属性设计</a> ）。为了解决 N+1 问题，除了使用上文中提到了定义冗余属性的方法，还可以使用本文将介绍的贪婪加载方法：在查询一个或一组实体的同时，一并查询出实体所拥有的这些关系属性所对应的实体。  </p>
-<h2 id="定义查询">定义查询</h2>
-<p>Rafy 中的关系有引用关系和组合关系，这些关系都可以声明为贪婪加载。<br>在仓库中编写的查询时，如果该查询需要支持贪婪加载，那么需要为查询添加一个额外的参数，类型为 LoadOptions。并将其从公有接口层一直传递给数据层，并由数据层传递给底层框架的查询 API，最终框架会根据其中的内容，来加载相应的实体关系。<br>以下代码示例通过添加 LoadOptions eagerLoad 可选参数，使得 SearchByCode 方法支持贪婪加载：</p>
-<pre><code class="lang-cs">[RepositoryQuery]
-public virtual WarehouseList SearchByCode(string code, LoadOptions eagerLoad = null)
-{
-    var q = this.CreateLinqQuery();
-    q = q.Where(e =&gt; e.Code.Contains(code));
-    return (WarehouseList)this.QueryData(q, eagerLoad: eagerLoad);
-}
-</code></pre><h2 id="如何使用">如何使用</h2>
-<p>使用者在使用查询时，可以通过 LoadOptions 参数来定义该查询所需要同时贪婪加载的实体的关系列表。<br>以下代码示例如何在搜索编码中含有&quot;001&quot;的仓库实体的同时，一并加载出仓库的管理员及仓库下所有的货品信息、货品类别信息（其中，管理员是仓库的引用属性；货品是仓库的组合子属性；货品类别是货品的引用属性）：</p>
-<pre><code class="lang-cs">//定义加载仓库时，需要同时加载的所有关系属性。
-var eagerLoad = new LoadOptions()
-    .LoadWith(Warehouse.AdministratorProperty)
-    .LoadWith(Warehouse.ProductListProperty)
-    .LoadWith(Product.ProductCategoryProperty);
-
-//一次性将数据全部加载到内存中。
-var repo = RF.ResolveInstance&lt;WarehouseRepository&gt;();
-var warehouseList = repo.SearchByCode(&quot;001&quot;, eagerLoad);
-
-//由于已经使用贪婪加载，所以数据都已经查询到内存中。下面的循环将不会再触发懒加载。
-foreach(var warehouse in warehouseList)
-{
-    var administrator = warehouse.Administrator;
-    foreach(var product in warehouse.ProductList)
-    {
-        var productCategory = product.ProductCategory;
-
-        //使用 warehouse、administrator、product、productCategory
-        doSomething(warehouse, administrator, product, productCategory);
-    }
-}
-</code></pre></article>
+<p>在查询实体时，还可以通过 LoadOptions 来指定只加载部分属性，而非实体的所有属性。这样可以减少查询的数据量，减少数据库查询压力、网络传输压力。</p>
+<h2 id="示例代码">示例代码</h2>
+<pre><code class="lang-c#">var repo = RF.ResolveInstance&lt;BookRepository&gt;();
+var entity = repo.GetAll(loadOptions: new LoadOptions().SelectProperties(
+    Book.NameProperty
+    ));
+</code></pre><p>上述代码在查询 Book 实体时，只查询了 Name、Id 两个属性（其中 Id 是必须加载的，所以不需要指定）。其它的属性则不会生成在 SQL 的 Select 语句中，也不会加载到内存中，处于不可用的状态。</p>
+<p>当属性处于不可用状态时，不可对这些未加载的属性进行 Get、Set 操作，在实体进行更新时，框架也会忽略这些属性。</p>
+</article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
