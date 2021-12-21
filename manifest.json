@@ -78,7 +78,7 @@
           "hash": "8V9b5NjKOURBaJbHmRT061kEmUtKqu3V66qswjzzmlY="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -1320,7 +1320,7 @@
           "hash": "x3804Awvp14SVEjDb62DcklXtVNPbkRbeoWmGLnQW2Q="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -2018,10 +2018,10 @@
       "output": {
         ".html": {
           "relative_path": "index.html",
-          "hash": "B14fhz70aqSFanYlfufTe9PYotac/69TvrBwaAJsXSo="
+          "hash": "WniSi6seR3kJ0/Nhvp+O7701p6Z/Vw7ylJate5tEZuA="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -2050,7 +2050,7 @@
           "can_incremental": true,
           "incrementalPhase": "build",
           "total_file_count": 104,
-          "skipped_file_count": 102
+          "skipped_file_count": 103
         },
         "ResourceDocumentProcessor": {
           "can_incremental": false,
