@@ -186,6 +186,21 @@ namespace Rafy.Domain
         }
 
         /// <summary>
+        /// 如果提供的值是不可空的，则为查询添加一个对应的约束条件，并以 And 与原条件进行连接。
+        /// </summary>
+        /// <param name="property">要约束的属性.</param>
+        /// <param name="op">约束条件操作符.</param>
+        /// <param name="value">当 value 不可空时，才添加这个对比约束条件。</param>
+        /// <returns></returns>
+        public void AddIf(IManagedProperty property, PropertyOperator op, object value)
+        {
+            if (DomainHelper.IsNotEmpty(value))
+            {
+                this.Add(new PropertyMatch(property, op, value));
+            }
+        }
+
+        /// <summary>
         /// 添加一个属性匹配条件到最后一个组中。
         /// 如果此时不没有任何一个组，则会自动创建一个新组。
         /// </summary>
