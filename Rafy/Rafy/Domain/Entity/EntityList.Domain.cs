@@ -47,12 +47,10 @@ namespace Rafy.Domain
                 id = TypeHelper.CoerceValue(idType, id);
             }
 
-            for (int i = 0, c = this.Count; i < c; i++)
+            return this.EachNode(n =>
             {
-                var e = this[i];
-                if (e.Id.Equals(id)) return e;
-            }
-            return null;
+                return n.Id.Equals(id);
+            });
         }
 
         #region Delete and Undelete child
