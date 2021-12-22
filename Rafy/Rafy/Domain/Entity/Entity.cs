@@ -143,6 +143,7 @@ namespace Rafy.Domain
         /// 通过实体类型反射构造一个新的实体。
         /// 
         /// 此方法功能与构造函数一致，主要用于不能显式调用的场景下。
+        /// 另外，实体的构造函数中，不应该使用 SetProperty 方法，而应该使用 LoadProperty，否则会造成新创建的实体的属性的状态是“已变更”的。
         /// </summary>
         /// <param name="entityType"></param>
         /// <returns></returns>

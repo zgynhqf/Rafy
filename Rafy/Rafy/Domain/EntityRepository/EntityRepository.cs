@@ -60,6 +60,8 @@ namespace Rafy.Domain
         /// 
         /// 如果在已经获取 Repository 的场景下，使用本方法返回的实体会设置好内部的 Repository 属性，
         /// 这会使得 FindRepository、GetRepository 方法更加快速。
+        /// 
+        /// 另外，子类可以重写此方法，来为实体设置一些初始值。（也就是说，这里返回的实体的属性变更状态、实体持久化状态，都可能都是已经变更的）
         /// </summary>
         /// <returns></returns>
         public virtual Entity New()
