@@ -35,7 +35,12 @@ namespace Rafy.ManagedProperty
 
             public List<ManagedPropertyField> CompiledProperties
             {
-                get { return _mpo._compiledFields.ToList(); }
+                get
+                {
+                    return _mpo._compiledFields
+                        .OrderBy(f => f.Property.Name)
+                        .ToList();
+                }
             }
 
             public List<ManagedPropertyField> ExtensionProperties
@@ -44,6 +49,7 @@ namespace Rafy.ManagedProperty
                 {
                     return _mpo.PropertiesContainer.GetAvailableProperties()
                         .Where(mp => mp.IsExtension)
+                        .OrderBy(mp => mp.Name)
                         .Select(mp => _mpo.GetField(mp))
                         .ToList();
                 }
@@ -55,6 +61,7 @@ namespace Rafy.ManagedProperty
                 {
                     return _mpo.PropertiesContainer.GetAvailableProperties()
                         .Where(mp => mp.IsReadOnly)
+                        .OrderBy(mp => mp.Name)
                         .Select(mp => _mpo.GetField(mp))
                         .ToList();
                 }
@@ -68,7 +75,9 @@ namespace Rafy.ManagedProperty
                     {
                         return new List<ManagedPropertyField>();
                     }
-                    return _mpo._runtimeFields.Select(kv => kv.Value).ToList();
+                    return _mpo._runtimeFields.Select(kv => kv.Value)
+                        .OrderBy(f => f.Property.Name)
+                        .ToList();
                 }
             }
 

@@ -26,6 +26,12 @@ namespace Rafy.ManagedProperty
     public class TypePropertiesContainer
     {
         /// <summary>
+        /// 是否启用属性的排序。（默认是 false）
+        /// 不启用时，开发者可以通过调整类型定义中的属性定义顺序，来控制属性在列表中的顺序，从而间接控制框架在属性遍历时的顺序。（CLR 属性就是以类型中属性定义的顺序来进行遍历的）
+        /// </summary>
+        public static bool EnablePropertiesSorting { get; set; } = false;
+
+        /// <summary>
         /// 在变更本容器时，都应该执行加锁操作。
         /// </summary>
         internal readonly object Lock = new object();
@@ -148,21 +154,27 @@ namespace Rafy.ManagedProperty
 
         private void ResortRuntimeProperties()
         {
-            if (this._runtimeProperties != null)
+            if (EnablePropertiesSorting)
             {
-                this._runtimeProperties.Sort((m1, m2) =>
+                if (_runtimeProperties != null)
                 {
-                    return m1.Name.CompareTo(m2.Name);
-                });
+                    _runtimeProperties.Sort((m1, m2) =>
+                    {
+                        return m1.Name.CompareTo(m2.Name);
+                    });
+                }
             }
         }
 
         internal void ResortCompiledProperties()
         {
-            this._compiledProperties.Sort((m1, m2) =>
+            if (EnablePropertiesSorting)
             {
-                return m1.Name.CompareTo(m2.Name);
-            });
+                _compiledProperties.Sort((m1, m2) =>
+                {
+                    return m1.Name.CompareTo(m2.Name);
+                });
+            }
         }
 
         /// <summary>

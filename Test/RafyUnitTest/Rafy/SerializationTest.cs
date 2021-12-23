@@ -758,23 +758,22 @@ namespace RafyUnitTest
             serializer.IgnoreDefault = true;
             serializer.IgnoreROProperties = true;
             var json = serializer.Serialize(entity);
-            Assert.AreEqual(json,
-    @"{
+            Assert.AreEqual(@"{
   ""chapterList"": [
     {
       ""name"": ""chapter1""
     },
     {
-      ""name"": ""chapter2"",
       ""sectionList"": [
         {
           ""name"": ""section""
         }
-      ]
+      ],
+      ""name"": ""chapter2""
     }
   ],
   ""name"": ""book""
-}");
+}", json);
         }
 
         [TestMethod]
@@ -792,15 +791,14 @@ namespace RafyUnitTest
             serializer.IgnoreROProperties = true;
             var json = serializer.Serialize(entity);
 
-            Assert.AreEqual(json,
-    @"{
+            Assert.AreEqual(@"{
+  ""bookId"": 100,
   ""book"": {
     ""id"": 100,
     ""name"": ""book""
   },
-  ""bookId"": 100,
   ""name"": ""name""
-}");
+}", json);
         }
 
         [TestMethod]
@@ -900,7 +898,7 @@ namespace RafyUnitTest
 
             var json = serializer.Serialize(list);
 
-            Assert.AreEqual(json,
+            Assert.AreEqual(
     @"{
   ""totalCount"": 1000,
   ""data"": [
@@ -910,18 +908,18 @@ namespace RafyUnitTest
           ""name"": ""chapter1""
         },
         {
-          ""name"": ""chapter2"",
           ""sectionList"": [
             {
               ""name"": ""section""
             }
-          ]
+          ],
+          ""name"": ""chapter2""
         }
       ],
       ""name"": ""book""
     }
   ]
-}");
+}", json);
         }
 
         [TestMethod]
@@ -959,22 +957,22 @@ namespace RafyUnitTest
             serializer.IgnoreROProperties = true;
             var json = serializer.Serialize(entity);
 
-            Assert.AreEqual(json,
+            Assert.AreEqual(
     @"{
   ""createdTime"": ""2000-01-01T00:00:00"",
-  ""createdUser"": """",
-  ""id"": 0,
   ""updatedTime"": ""2000-01-01T00:00:00"",
+  ""createdUser"": """",
   ""updatedUser"": """",
-  ""arrayValue"": null,
+  ""id"": 0,
   ""bookId"": 0,
+  ""name"": ""name"",
+  ""arrayValue"": null,
+  ""listValue"": null,
   ""bytesContent"": """",
   ""favorateType"": 0,
-  ""favorateTypeWithLabel"": 0,
-  ""listValue"": null,
-  ""name"": ""name"",
-  ""nullableFavorateType"": null
-}");
+  ""nullableFavorateType"": null,
+  ""favorateTypeWithLabel"": 0
+}", json);
         }
 
         [TestMethod]
