@@ -18,6 +18,7 @@ using System.Linq;
 using System.Text;
 using Rafy.Domain.ORM.Oracle;
 using Rafy.ManagedProperty;
+using static Rafy.Domain.ORM.Query.FactoryMethods;
 
 namespace Rafy.Domain.ORM.Query
 {
@@ -28,7 +29,6 @@ namespace Rafy.Domain.ORM.Query
     /// </summary>
     public static partial class QueryExtensions
     {
-
         /// <summary>
         /// 如果提供的值是不可空的，则为查询添加一个对应的约束条件，并以 And 与原条件进行连接。
         /// </summary>
@@ -81,6 +81,20 @@ namespace Rafy.Domain.ORM.Query
         /// 为查询添加一个对应的约束条件，并以 And 与原条件进行连接。
         /// </summary>
         /// <param name="query">查询.</param>
+        /// <param name="formattedSql">查询文本。</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns></returns>
+        public static IQuery AddConstraint(this IQuery query, string formattedSql, params object[] parameters)
+        {
+            var where = Literal(formattedSql, parameters);
+            query.Where = And(query.Where, where);
+            return query;
+        }
+
+        /// <summary>
+        /// 为查询添加一个对应的约束条件，并以 And 与原条件进行连接。
+        /// </summary>
+        /// <param name="query">查询.</param>
         /// <param name="property">要约束的属性.</param>
         /// <param name="value">对比的值。</param>
         /// <returns></returns>
@@ -118,19 +132,10 @@ namespace Rafy.Domain.ORM.Query
         /// <returns></returns>
         public static IQuery AddConstraint(this IQuery query, IManagedProperty property, PropertyOperator op, object value, ITableSource propertySource)
         {
-            var f = QueryFactory.Instance;
+            var column = propertySource.Column(property);
+            var where = Constraint(column, op, value);
 
-            var propertyNode = propertySource.Column(property);
-
-            var where = f.Constraint(propertyNode, op, value);
-            if (query.Where == null)
-            {
-                query.Where = where;
-            }
-            else
-            {
-                query.Where = f.And(query.Where, where);
-            }
+            query.Where = And(query.Where, where);
 
             return query;
         }
@@ -277,7 +282,6 @@ namespace Rafy.Domain.ORM.Query
 
             return res;
         }
-
         public static IConstraint Equal(this IColumnNode column, IColumnNode rightColumn)
         {
             return QueryFactory.Instance.Constraint(column, PropertyOperator.Equal, rightColumn);
