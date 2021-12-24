@@ -303,7 +303,10 @@ namespace Rafy.Domain
                         }
 
                         //再加载实体的属性。
-                        this.EagerLoad(entityList, elOptions.CoreList);
+                        if (elOptions.CoreList != null)
+                        {
+                            this.EagerLoad(entityList, elOptions.CoreList);
+                        }
                     }
 
                     //如果 entityList 列表中已经有数据，那么只能对新添加的实体进行 OnDbLoaded操作通知加载完成。
