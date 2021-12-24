@@ -14,6 +14,7 @@ using Rafy.Domain.Validation;
 using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
+using static Rafy.Domain.ORM.Query.FactoryMethods;
 
 namespace $domainNamespace$
 {

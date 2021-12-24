@@ -13,6 +13,7 @@ using Rafy.Domain.ORM.Query;
 using Rafy.Domain.Validation;
 using Rafy.ManagedProperty;
 using $domainNamespace$;
+using static Rafy.Domain.ORM.Query.FactoryMethods;
 
 namespace $rootnamespace$
 {

@@ -29,15 +29,13 @@
                 </Literal>
             </Declarations>
             <Code Language="csharp">
-                <![CDATA[var f = QueryFactory.Instance;
-            var q = f.Query<$EntityName$>();
+                <![CDATA[var q = Query<$EntityName$>();
             q.AddConstraintIf($EntityName$.$ConstraintProperty$, PropertyOperator.Equal, $ConstraintValue$);$end$
 
             //选择删除上下两种格式中不需要的格式。$end$
             
-            var f = QueryFactory.Instance;
-            var t = f.Table<$EntityName$>();
-            var q = f.Query(
+            var t = Table<$EntityName$>();
+            var q = Query(
                 from: t,
                 where: t.Column($EntityName$.$ConstraintProperty$).Equal($ConstraintValue$)
             );]]>
