@@ -165,6 +165,7 @@
     <Compile Include="AutoUI\AggtControlFactory\LayoutMethod\LayoutMethod.cs" />
     <Compile Include="AutoUI\AggtControlFactory\LayoutMethod\Region.cs" />
     <Compile Include="AutoUI\AggtControlFactory\LayoutMethod\RegionContainer.cs" />
+    <Compile Include="Helpers\DbTimeCache.cs" />
     <Compile Include="Helpers\WPFConfigHelper.cs" />
     <Compile Include="InstanceEventArgs.cs" />
     <Compile Include="NamedTypeFactory.cs" />
