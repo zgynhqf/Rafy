@@ -147,12 +147,25 @@ namespace Rafy.Domain.ORM
             var parameters = sqlLiteral.Parameters;
             if (parameters != null && parameters.Length > 0)
             {
+                Dictionary<int, int> indeces = null;
                 var sql = Regex.Replace(sqlLiteral.FormattedSql, @"\{(?<index>\d+)\}", m =>
                 {
                     var index = Convert.ToInt32(m.Groups["index"].Value);
                     var value = parameters[index];
-                    index = _sql.Parameters.Add(value);
-                    return "{" + index + "}";
+                    if (this.EmbedParameters)
+                    {
+                        return this.PrepareSqlEmbedParameter(value).ToString();
+                    }
+                    else
+                    {
+                        if (indeces == null) { indeces = new Dictionary<int, int>(); }
+                        if (!indeces.TryGetValue(index, out int targetIndex))
+                        {
+                            targetIndex = _sql.Parameters.Add(value);
+                            indeces[index] = targetIndex;
+                        }
+                        return "{" + targetIndex + "}";
+                    }
                 });
                 _sql.Append(sql);
             }
@@ -574,13 +587,15 @@ namespace Rafy.Domain.ORM
             if (!this.EmbedParameters)
             {
                 _sql.AppendParameter(value);
-                return;
             }
-
-            this.EmbedParameterIntoSql(_sql.InnerWriter, value);
+            else
+            {
+                value = this.PrepareSqlEmbedParameter(value);
+                _sql.InnerWriter.Write(value);
+            }
         }
 
-        protected virtual void EmbedParameterIntoSql(TextWriter sql, object value)
+        protected virtual object PrepareSqlEmbedParameter(object value)
         {
             if (value == null)
             {
@@ -598,8 +613,7 @@ namespace Rafy.Domain.ORM
             {
                 value = Convert.ToByte(value);//bool 使用的是 1 或 0
             }
-
-            sql.Write(value);
+            return value;
         }
 
         /// <summary>

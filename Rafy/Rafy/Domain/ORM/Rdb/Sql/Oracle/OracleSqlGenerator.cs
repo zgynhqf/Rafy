@@ -188,17 +188,14 @@ WHERE RN >= { startRow }")
             }
             return newConstraint;
         }
-
-        protected override void EmbedParameterIntoSql(TextWriter sql, object value)
+        protected override object PrepareSqlEmbedParameter(object value)
         {
             if (value is DateTime)
             {
-                value = string.Format("to_date('{0}', 'yyyy-MM-dd hh24:mi:ss')", value);
-                sql.Write(value);
-                return;
+                return string.Format("to_date('{0}', 'yyyy-MM-dd hh24:mi:ss')", value);
             }
 
-            base.EmbedParameterIntoSql(sql, value);
+            return base.PrepareSqlEmbedParameter(value);
         }
     }
 }
