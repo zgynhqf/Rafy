@@ -68,7 +68,7 @@
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
 
-<p>﻿实体的验证规则，是以一种声明的方式来为实体添加验证的逻辑。这即方便了规则本身、调用规则的代码的复用，也更有利于对实体的规则进行管理。</p>
+<p>﻿﻿实体的验证规则，是以一种声明的方式来为实体添加验证的逻辑。这即方便了规则本身、调用规则的代码的复用，也更有利于对实体的规则进行管理。</p>
 <h2 id="示例代码">示例代码</h2>
 <pre><code class="lang-c#">internal class BookConfig : EntityConfig&lt;Book&gt;
 {
@@ -100,6 +100,7 @@ if (brokenRules.Count &gt; 0) errorMessage = brokenRules.ToString();
 <li>StringLengthRangeRule：限制某字符串属性的字符长度范围的规则。</li>
 <li>HandlerRule：一个使用指定代理方法的验证器。</li>
 </ul>
+<p>对于上述规则，开发者可以检查每个规则的公有属性，在为实体配置时对这些规则进行更详细的参数定义。</p>
 <h2 id="多级别配置">多级别配置</h2>
 <p>实体的验证规则，也是一项特殊的实体配置技术，其支持多级别配置，参见： <a href="实体配置.html">实体配置</a>。</p>
 </article>

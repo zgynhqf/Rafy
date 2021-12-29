@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>&#31616;&#20171; </title>
+    <title>&#31034;&#20363; </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="&#31616;&#20171; ">
+    <meta name="title" content="&#31034;&#20363; ">
     <meta name="generator" content="docfx 2.58.9.0">
     
     <link rel="shortcut icon" href="../../../favicon.ico">
@@ -67,8 +67,8 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h2 id="简介">简介</h2>
 
+<p>﻿## 简介</p>
 <p>领域控制器是 Rafy 框架中用于封装领域逻辑的主要方式。</p>
 <p>在控制器中，开发者可以封装大量的业务逻辑，并向外暴露业务接口。内部的逻辑在实现时，往往调用一个或多个实体仓库的 CDUQ 方法来实现。</p>
 <h2 id="示例">示例</h2>
@@ -146,7 +146,17 @@ public class AccountController : DomainController
         if (handler != null) handler(this, new AccountEventArgs(user));
     }
 }
-</code></pre><h2 id="特点">特点</h2>
+</code></pre><p>调用方的代码如下：</p>
+<pre><code class="lang-c#">var controller = DomainControllerFactory.Create&lt;AccountController&gt;();
+
+var res = controller.Register(new User
+{
+    UserName = &quot;hqf&quot;,
+    RealName = &quot;hqf&quot;,
+    Password = controller.EncodePassword(&quot;hqf&quot;)
+});
+</code></pre><p>通过 DomainControllerFactory 来创建一个控制器（也可用简写 DCF），即可调用其中的方法。</p>
+<h2 id="特点">特点</h2>
 <ul>
 <li><p>支持本地调用，也支持分布式调用</p>
 <p>领域控制器是除了仓库查询以外，提供分布式数据传输的另一机制。控制器的调用，支持本地调用，也支持分布式调用。详见：<a href="../../领域实体框架\部署.html">部署</a>。</p>
@@ -208,6 +218,9 @@ public class RecieveController : DomainController
             <div class="sideaffix">
               <div class="contribution">
                 <ul class="nav">
+                  <li>
+                    <a href="https://github.com/zgynhqf/rafy/blob/master/Rafy/_Items/Documentation/articles/&#39046;&#22495;&#23454;&#20307;&#26694;&#26550;/&#39046;&#22495;&#36923;&#36753;/&#39046;&#22495;&#25511;&#21046;&#22120;.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
