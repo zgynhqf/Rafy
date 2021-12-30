@@ -44,7 +44,7 @@ namespace Rafy.MetaModel
         {
             var result = this.Find(entityType);
 
-            if (result == null) throw new InvalidProgramException("没有找到这个类型的实体：" + entityType + "，可能是没有标记 RootEntity/ChildEntity/Criteria 等标记，或是标记了 ChildEntity 但是没有对应的父实体。");
+            if (result == null) throw new InvalidOperationException("没有找到这个类型的实体：" + entityType + "，可能是该类为抽象类，或其没有标记 RootEntity/ChildEntity/Criteria 等标记，或是标记了 ChildEntity 但是没有对应的父实体。");
 
             return result;
         }
