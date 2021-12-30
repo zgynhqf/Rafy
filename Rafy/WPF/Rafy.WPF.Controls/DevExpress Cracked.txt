@@ -1,0 +1,2 @@
+﻿可以考虑使用更专业的控件集：DevExpress：
+https://www.dxper.net/thread-40506-1-1.html
