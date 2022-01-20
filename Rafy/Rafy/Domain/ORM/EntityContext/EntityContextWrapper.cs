@@ -24,7 +24,7 @@ namespace Rafy.Domain.ORM
     internal class EntityContextWrapper : IDisposable
     {
         [ThreadStatic]
-        private static int currentRef = 0;
+        private static int currentRef;
 
         public EntityContextWrapper()
         {

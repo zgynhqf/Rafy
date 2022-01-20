@@ -27,7 +27,7 @@ namespace Rafy.Domain
         /// <summary>
         /// 当前查询正在使用的单一条件。
         /// </summary>
-        internal static readonly AppContextItem<object> CurrentItem = new AppContextItem<object>("Rafy.Domain.IEQC.CurrentCriteria");
+        internal static readonly ContextItem<object> CurrentItem = new ThreadContextItem<object>("Rafy.Domain.IEQC.CurrentItem");
 
         /// <summary>
         /// 当前正在使用的查询参数

@@ -24,10 +24,22 @@ namespace Rafy
     public class ThreadContextItem<TValue> : ContextItem<TValue>
     {
         [ThreadStatic]
-        private static IDictionary<string, object> _items = new Dictionary<string, object>();
+        private static IDictionary<string, object> _items;
 
         public ThreadContextItem(string key, TValue defaultValue = default) : base(key, defaultValue) { }
 
-        protected override IDictionary<string, object> ContextDataContainer => _items;
+        protected override IDictionary<string, object> ContextDataContainer
+        {
+            get
+            {
+                var res = _items;
+                if (res == null)
+                {
+                    res = new Dictionary<string, object>();
+                    _items = res;
+                }
+                return res;
+            }
+        }
     }
 }

@@ -28,7 +28,7 @@ namespace Rafy.Data
         [ThreadStatic]
         private static DbAccessedEventArgs _lastThreadDbAccessedArgs;
         [ThreadStatic]
-        private static long _threadDbAccessedCount = 0;
+        private static long _threadDbAccessedCount;
 
         /// <summary>
         /// 是否启用 Sql 查询监听。 默认为 false。
