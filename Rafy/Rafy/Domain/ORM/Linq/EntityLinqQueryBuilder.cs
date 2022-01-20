@@ -29,7 +29,7 @@ namespace Rafy.Domain.ORM.Linq
     /// <summary>
     /// 通过 Linq 表达式，调用 SqlSelect 来构造查询。
     /// </summary>
-    class EntityQueryBuilder : ExpressionVisitor
+    class EntityLinqQueryBuilder : ExpressionVisitor
     {
         /// <summary>
         /// 正在组织的查询对象。
@@ -44,9 +44,9 @@ namespace Rafy.Domain.ORM.Linq
         /// </summary>
         private bool _reverseWhere = false;
 
-        public EntityQueryBuilder(IRepository repo) : this(repo, false) { }
+        public EntityLinqQueryBuilder(IRepository repo) : this(repo, false) { }
 
-        internal EntityQueryBuilder(IRepository repo, bool reverseWhere)
+        internal EntityLinqQueryBuilder(IRepository repo, bool reverseWhere)
         {
             _repo = repo;
             _reverseWhere = reverseWhere;

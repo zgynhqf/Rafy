@@ -42,7 +42,7 @@ namespace Rafy.Domain.ORM.Linq
         /// </summary>
         /// <param name="provider"></param>
         /// <param name="exp"></param>
-        public EntityQueryable(EntityQueryProvider provider, Expression exp)
+        public EntityQueryable(EntityLinqQueryProvider provider, Expression exp)
         {
             this.Provider = provider;
             this.Expression = exp;

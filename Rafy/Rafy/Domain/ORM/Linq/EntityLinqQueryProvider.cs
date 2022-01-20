@@ -27,9 +27,9 @@ namespace Rafy.Domain.ORM.Linq
     /// 
     /// 作为 EntityRepository 的一个字段，单例。
     /// </summary>
-    class EntityQueryProvider : IQueryProvider
+    class EntityLinqQueryProvider : IQueryProvider
     {
-        public EntityQueryProvider(EntityRepositoryQueryBase queryBase)
+        public EntityLinqQueryProvider(EntityRepositoryQueryBase queryBase)
         {
             _queryBase = queryBase;
             _repository = queryBase.Repo;
@@ -83,7 +83,7 @@ namespace Rafy.Domain.ORM.Linq
                 if (call.Method.DeclaringType == typeof(Queryable) &&
                     (call.Method.Name == LinqConsts.QueryableMethod_Count || call.Method.Name == LinqConsts.QueryableMethod_LongCount))
                 {
-                    if (call.Arguments.Count > 1) throw EntityQueryBuilder.OperationNotSupported(call.Method);
+                    if (call.Arguments.Count > 1) throw EntityLinqQueryBuilder.OperationNotSupported(call.Method);
 
                     forceCounting = true;
                     expression = call.Arguments[0];

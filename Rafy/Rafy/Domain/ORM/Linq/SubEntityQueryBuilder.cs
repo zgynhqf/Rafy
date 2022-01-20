@@ -92,7 +92,7 @@ namespace Rafy.Domain.ORM.Linq
             _parentPropertyFinder.Find(invoker);
             var listPropertyTable = _parentPropertyFinder.PropertyOwnerTable;
             var listProperty = _parentPropertyFinder.Property as IListProperty;
-            if (listProperty == null) throw EntityQueryBuilder.OperationNotSupported(invoker);
+            if (listProperty == null) throw EntityLinqQueryBuilder.OperationNotSupported(invoker);
 
             //为该列表对应的实体创建表对象、查询对象。
             var childRepo = RepositoryFactoryHost.Factory.FindByEntity(listProperty.ListEntityType, true);
@@ -109,7 +109,7 @@ namespace Rafy.Domain.ORM.Linq
             if (exp.Arguments.Count == 2)
             {
                 var reverseWhere = !_isAny;//如果是 All，则需要反转里面的所有操作符。
-                var queryBuilder = new EntityQueryBuilder(childRepo, reverseWhere);
+                var queryBuilder = new EntityLinqQueryBuilder(childRepo, reverseWhere);
                 queryBuilder.BuildQuery(exp.Arguments[1], _query);
             }
 

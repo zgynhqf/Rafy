@@ -103,7 +103,7 @@ namespace Rafy.Domain
 
             var expression = queryable.Expression;
             expression = Evaluator.PartialEval(expression);
-            var builder = new EntityQueryBuilder(this.Repo);
+            var builder = new EntityLinqQueryBuilder(this.Repo);
             var query = builder.BuildQuery(expression);
 
             return query;

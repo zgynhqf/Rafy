@@ -45,7 +45,7 @@ namespace Rafy.Domain
 
         public EntityRepositoryQueryBase()
         {
-            _linqProvider = new EntityQueryProvider(this);
+            _linqProvider = new EntityLinqQueryProvider(this);
             this.DataPortalLocation = DataPortalLocation.Dynamic;
         }
 
@@ -60,9 +60,9 @@ namespace Rafy.Domain
 
         #region 数据层查询接口 - Linq
 
-        private EntityQueryProvider _linqProvider;
+        private EntityLinqQueryProvider _linqProvider;
 
-        internal EntityQueryProvider LinqProvider
+        internal EntityLinqQueryProvider LinqProvider
         {
             get { return _linqProvider; }
         }

@@ -97,13 +97,13 @@ namespace Rafy.Domain.ORM.Linq
         {
             //只能访问属性
             var clrProperty = m.Member as PropertyInfo;
-            if (clrProperty == null) throw EntityQueryBuilder.OperationNotSupported(m.Member);
+            if (clrProperty == null) throw EntityLinqQueryBuilder.OperationNotSupported(m.Member);
             var ownerExp = m.Expression;
-            if (ownerExp == null) throw EntityQueryBuilder.OperationNotSupported(m.Member);
+            if (ownerExp == null) throw EntityLinqQueryBuilder.OperationNotSupported(m.Member);
 
             //exp 如果是: A 或者 A.B.C，都可以作为属性查询。
             var nodeType = ownerExp.NodeType;
-            if (nodeType != ExpressionType.Parameter && nodeType != ExpressionType.MemberAccess) throw EntityQueryBuilder.OperationNotSupported(m.Member);
+            if (nodeType != ExpressionType.Parameter && nodeType != ExpressionType.MemberAccess) throw EntityLinqQueryBuilder.OperationNotSupported(m.Member);
 
             //如果是 A.B.C.Name，则先读取 A.B.C，记录最后一个引用实体类型 C；剩下 .Name 给本行后面的代码读取。
             VisitRefEntity(ownerExp);
@@ -123,8 +123,8 @@ namespace Rafy.Domain.ORM.Linq
             }
 
             //查询托管属性
-            var mp = EntityQueryBuilder.FindProperty(ownerRepo, clrProperty);
-            if (mp == null) throw EntityQueryBuilder.OperationNotSupported("Linq 查询的属性必须是一个托管属性。");
+            var mp = EntityLinqQueryBuilder.FindProperty(ownerRepo, clrProperty);
+            if (mp == null) throw EntityLinqQueryBuilder.OperationNotSupported("Linq 查询的属性必须是一个托管属性。");
             if (mp is IRefEntityProperty)
             {
                 //如果是引用属性，说明需要使用关联查询。
@@ -147,7 +147,7 @@ namespace Rafy.Domain.ORM.Linq
 
             if (_visitRefProperties)
             {
-                throw EntityQueryBuilder.OperationNotSupported(string.Format("不支持使用属性：{0}。这是因为它的拥有者是一个值属性，值属性只支持直接对比。", mp.Name));
+                throw EntityLinqQueryBuilder.OperationNotSupported(string.Format("不支持使用属性：{0}。这是因为它的拥有者是一个值属性，值属性只支持直接对比。", mp.Name));
             }
 
             //访问值属性
