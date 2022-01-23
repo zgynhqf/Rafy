@@ -81,8 +81,7 @@ namespace Rafy
             if (string.IsNullOrEmpty(this.InfoLogFileName)) return;
 
             this.WriteInfo(this.InfoLogFileName,
-$@"-----------------------------------------------------------------
-Time：{ DateTime.Now }
+$@"<<{ DateTime.Now }>>
 Thread Id:[ { Thread.CurrentThread.ManagedThreadId } ]
 Message：{ message }
 
