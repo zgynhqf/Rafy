@@ -1,4 +1,6 @@
-﻿using Rafy.DataPortal.WCF;
+﻿using Grpc.Core;
+using Rafy.DataPortal.WCF;
+using Rafy.Grpc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +18,8 @@ namespace RafyUnitTest.ServerPortal
             var app = new TestWcfPortalApp();
             app.Start();
 
-            StartWCFHost();
+            //StartWCFHost();
+            StartGrpcHost();
         }
 
         private static void StartWCFHost()
@@ -39,10 +42,28 @@ namespace RafyUnitTest.ServerPortal
             //selfHost.Description.Behaviors.Add(smb);
             //6.打开 ServiceHost 并等待传入消息。用户按 Enter 键时，关闭 ServiceHost
             selfHost.Open();
+
             Console.WriteLine("The service is ready.");
             Console.WriteLine("Press <ENTER> to terminate service.");
             Console.ReadLine();
+
             selfHost.Close();
+        }
+
+        private static void StartGrpcHost()
+        {
+            Server server = new Server
+            {
+                Services = { DataTransferService.BindService(new RafyDataTransferService()) },
+                Ports = { new ServerPort("localhost", 9007, ServerCredentials.Insecure) }
+            };
+            server.Start();
+
+            Console.WriteLine("The service is ready.");
+            Console.WriteLine("Press <ENTER> to terminate service.");
+            Console.ReadLine();
+
+            server.ShutdownAsync().Wait();
         }
     }
 }

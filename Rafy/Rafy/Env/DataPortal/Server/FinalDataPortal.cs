@@ -24,7 +24,7 @@ namespace Rafy.DataPortal
     /// 最终调用实体的 IDataPortalServer 门户实现。
     /// 不论是通过 WCFProxy、还是通过 FakeRemoteProxy，都会调用到 FinalDataPortal 中。
     /// </summary>
-    internal class FinalDataPortal : IDataPortalServer
+    public class FinalDataPortal : IDataPortalServer
     {
         public DataPortalResult Call(object obj, string method, object[] parameters, DataPortalContext context)
         {

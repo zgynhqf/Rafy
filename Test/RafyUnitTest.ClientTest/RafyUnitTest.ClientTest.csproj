@@ -24,6 +24,7 @@
         <ProjectReference Include="..\..\Rafy\Plugins\Rafy.ComponentModel.UnityAdapter\Rafy.ComponentModel.UnityAdapter.csproj" />
         <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.EntityPhantom\Rafy.Domain.EntityPhantom.csproj" />
         <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.Stamp\Rafy.Domain.Stamp.csproj" />
+        <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Grpc\Rafy.Grpc.csproj" />
         <ProjectReference Include="..\..\Rafy\Rafy\Rafy.csproj" />
         <ProjectReference Include="..\..\Rafy\WPF\Rafy.WPF.Controls\Rafy.WPF.Controls.csproj" />
         <ProjectReference Include="..\..\Rafy\WPF\Rafy.WPF\Rafy.WPF.csproj" />
@@ -32,6 +33,12 @@
         <ProjectReference Include="..\Rafy.UnitTest.Repository\Rafy.UnitTest.Repository.csproj" />
         <ProjectReference Include="..\Rafy.UnitTest.WPF\Rafy.UnitTest.WPF.csproj" />
         <ProjectReference Include="..\Rafy.UnitTest\Rafy.UnitTest.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="App.config">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">

@@ -14,6 +14,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Grpc" Version="2.44.0" />
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Accounts\Rafy.Accounts.csproj" />
         <ProjectReference Include="..\..\Rafy\Plugins\Rafy.ComponentModel.UnityAdapter\Rafy.ComponentModel.UnityAdapter.csproj" />
         <ProjectReference Include="..\..\Rafy\Plugins\Rafy.DataTableMigration\Rafy.DataArchiver.csproj" />
@@ -21,6 +25,7 @@
         <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.ORM.BatchSubmit\Rafy.Domain.ORM.BatchSubmit.csproj" />
         <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Domain.Stamp\Rafy.Domain.Stamp.csproj" />
         <ProjectReference Include="..\..\Rafy\Plugins\Rafy.FileStorage\Rafy.FileStorage.csproj" />
+        <ProjectReference Include="..\..\Rafy\Plugins\Rafy.Grpc\Rafy.Grpc.csproj" />
         <ProjectReference Include="..\..\Rafy\Plugins\Rafy.MultiTenancy\Rafy.MultiTenancy.csproj" />
         <ProjectReference Include="..\..\Rafy\Plugins\Rafy.SerialNumber\Rafy.SerialNumber.csproj" />
         <ProjectReference Include="..\..\Rafy\Plugins\Rafy.SystemSettings\Rafy.SystemSettings.csproj" />

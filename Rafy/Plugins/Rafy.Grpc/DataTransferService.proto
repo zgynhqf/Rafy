@@ -1,0 +1,12 @@
+﻿syntax = "proto3";
+package Rafy.Grpc;
+service DataTransferService {
+  rpc Call (GrpcData) returns (GrpcData) {}
+}
+
+message GrpcData
+{
+    bytes data = 1;
+}
+
+//https://www.cnblogs.com/MicroHeart/p/13824612.html
