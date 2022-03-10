@@ -309,7 +309,15 @@ namespace Rafy.Reflection
 
             var call = Expression.Call(targetCasted, method, parametersExpList);
 
-            var body = Expression.Convert(call, typeof(object));
+            Expression body;
+            if (method.ReturnType != typeof(void))
+            {
+                body = Expression.Convert(call, typeof(object));
+            }
+            else
+            {
+                body = Expression.Block(call, target);
+            }
 
             var methodExp = Expression.Lambda<DynamicMethodDelegate>(body, target, args);
 
