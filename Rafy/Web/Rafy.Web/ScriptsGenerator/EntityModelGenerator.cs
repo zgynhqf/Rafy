@@ -42,11 +42,11 @@ namespace Rafy.Web
             this.WriteFields();
 
             //以下代码与 EXTJS 5 有冲突。
-            //this.WriteReference();
+            this.WriteReference();
 
-            //this.WriteChildren();
+            this.WriteChildren();
 
-            //this.WriteTreeAssociations();
+            this.WriteTreeAssociations();
 
             return _entityModel;
         }
@@ -68,11 +68,14 @@ namespace Rafy.Web
                     }
                 }
 
+                //引用属性在客户端输出一个引用 Id 属性和一个 Display 属性，而引用实体属性不显示在客户端。
+                if (mp is IRefEntityProperty) continue;
+
                 var propertyType = mp.PropertyType;
-                if (mp is IRefProperty)
+                var refIdProperty = mp as IRefIdProperty;
+                if (refIdProperty != null)
                 {
-                    var refProperty = mp as IRefProperty;
-                    propertyType = refProperty.RefIdProperty.KeyProvider.KeyType;
+                    propertyType = refIdProperty.KeyProvider.KeyType;
                 }
                 else if (mp == Entity.TreePIdProperty)
                 {
@@ -89,28 +92,24 @@ namespace Rafy.Web
                     type = serverType,
                     persist = property.Runtime.CanWrite,
                 };
+                _entityModel.fields.Add(field);
 
-                if (mp is IRefProperty)
+                if (mp is IRefIdProperty)
                 {
-                    //暂时去除。
-                    //为外键添加一个视图属性
-                    //_entityModel.fields.Add(field);
-
-                    //var refMp = mp as IRefProperty;
-                    //field = new EntityField
-                    //{
-                    //    name = LabeledRefProperty(pName),
-                    //    type = ServerTypeHelper.GetServerType(typeof(string)),
-                    //    persist = false,
-                    //};
+                    //由于 Id 不能用于显示，所以为引用属性添加一个纯视图属性，用于显示。
+                    field = new EntityField
+                    {
+                        name = DisplayRefProperty(refIdProperty),
+                        type = ServerTypeHelper.GetServerType(typeof(string)),
+                        persist = false,
+                    };
+                    _entityModel.fields.Add(field);
                 }
                 else
                 {
                     var v = mp.GetMeta(this.EntityMeta.EntityType).DefaultValue;
                     field.defaultValue = EntityJsonConverter.ToClientValue(property.PropertyType, v);
                 }
-
-                _entityModel.fields.Add(field);
             }
         }
 
@@ -191,9 +190,9 @@ namespace Rafy.Web
             }
         }
 
-        internal static string LabeledRefProperty(string refProperty)
+        internal static string DisplayRefProperty(IRefIdProperty refIdProperty)
         {
-            return refProperty + "_Display";
+            return refIdProperty.Name + "_Display";
         }
     }
 }

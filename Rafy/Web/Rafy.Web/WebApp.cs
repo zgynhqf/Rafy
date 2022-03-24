@@ -52,12 +52,12 @@ namespace Rafy.Web
 
 #endif
             base.InitEnvironment();
-
-            JsonServiceRepository.LoadAllServices();
         }
 
         protected override void CreateMeta()
         {
+            JsonServiceRepository.LoadAllServices();
+
             //虽然是 WebApp，但是可能只是作为 WPFClient 的服务端。
             if (UIEnvironment.IsWebUI)
             {

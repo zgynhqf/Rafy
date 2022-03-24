@@ -74,6 +74,10 @@ namespace Rafy.Web.EntityDataPortal
 
                     ListReader.JsonToEntity(value as JObject, repo, list);
                 }
+                else if(mp is IRefEntityProperty)
+                {
+                    //do nothing
+                }
                 else
                 {
                     var rawValue = (value as JValue).Value;

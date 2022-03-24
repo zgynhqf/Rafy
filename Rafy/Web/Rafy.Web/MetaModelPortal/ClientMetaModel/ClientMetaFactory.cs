@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Rafy.Domain;
 using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.MetaModel.View;
@@ -109,9 +110,9 @@ namespace Rafy.Web.ClientMetaModel
                     if (groupBy != null)
                     {
                         var n = groupBy.Name;
-                        if (groupBy.PropertyMeta.ManagedProperty is IRefEntityProperty)
+                        if (groupBy.PropertyMeta.ManagedProperty is IRefIdProperty refId)
                         {
-                            n = EntityModelGenerator.LabeledRefProperty(n);
+                            n = EntityModelGenerator.DisplayRefProperty(refId);
                         }
                         clientMeta.groupBy = n;
                     }
@@ -152,9 +153,9 @@ namespace Rafy.Web.ClientMetaModel
                     }
 
                     //对于引用属性需要分开来特殊处理
-                    if (property.PropertyMeta.ManagedProperty is IRefEntityProperty)
+                    if (property.PropertyMeta.ManagedProperty is IRefIdProperty refId)
                     {
-                        column.dataIndex = EntityModelGenerator.LabeledRefProperty(property.Name);
+                        column.dataIndex = EntityModelGenerator.DisplayRefProperty(refId);
 
                         if (canEdit) { column.editor = ServerTypeHelper.CreateComboList(property); }
                     }
@@ -193,10 +194,13 @@ namespace Rafy.Web.ClientMetaModel
                     FieldConfig field = null;
 
                     //对于引用属性需要分开来特殊处理
-                    if (property.PropertyMeta.ManagedProperty is IRefEntityProperty)
+                    if (property.PropertyMeta.ManagedProperty is IRefEntityProperty refEntityProperty)
                     {
-                        field = ServerTypeHelper.CreateComboList(property);
-                        field.name = EntityModelGenerator.LabeledRefProperty(property.Name);
+                        var comboList = ServerTypeHelper.CreateComboList(property);
+                        comboList.valueField = Entity.IdProperty.Name;
+                        comboList.name = refEntityProperty.RefIdProperty.Name;
+                        //field.name = EntityModelGenerator.LabeledRefProperty(property.Name);
+                        field = comboList;
                     }
                     else
                     {
