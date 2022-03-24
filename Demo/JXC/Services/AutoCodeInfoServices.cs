@@ -21,6 +21,7 @@ using Rafy;
 using System.Transactions;
 using Rafy.Domain;
 using Rafy.Web;
+using Rafy.UI;
 
 namespace JXC
 {
@@ -37,7 +38,7 @@ namespace JXC
 
         protected override void Execute()
         {
-            if (!RafyEnvironment.Location.IsWebUI) throw new InvalidOperationException("此命令只在 Web 模式下可用。");
+            if (!UIEnvironment.IsWebUI) throw new InvalidOperationException("此命令只在 Web 模式下可用。");
 
             var entityType = ClientEntities.Find(this.EntityType).EntityType;
 

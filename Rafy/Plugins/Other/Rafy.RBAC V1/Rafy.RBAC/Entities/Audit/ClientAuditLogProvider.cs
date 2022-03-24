@@ -12,6 +12,8 @@
 *******************************************************/
 
 using Rafy.Domain;
+using Rafy.UI;
+
 namespace Rafy.RBAC.Old.Audit
 {
     /// <summary>
@@ -30,7 +32,7 @@ namespace Rafy.RBAC.Old.Audit
         public void Log(AuditLogItem log)
         {
             //如果是单机版时，是否在服务端这个位置判断会变化，所以再进行一次判断，以防止死循环。
-            if (RafyEnvironment.IsOnClient())
+            if (UIEnvironment.IsWPFUI)
             {
                 var svc = ServiceFactory.Create<AuditServerService>();
                 svc.LogItem = log;

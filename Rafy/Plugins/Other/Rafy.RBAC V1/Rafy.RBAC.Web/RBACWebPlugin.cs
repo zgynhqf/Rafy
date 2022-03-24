@@ -31,7 +31,7 @@ namespace Rafy.RBAC.Old.WPF
         {
             app.MetaCreating += (o, e) =>
             {
-                var module = CommonModel.Modules.AddRoot(new WebModuleMeta
+                var module = UIModel.Modules.AddRoot(new WebModuleMeta
                 {
                     Label = "权限管理",
                     Children =

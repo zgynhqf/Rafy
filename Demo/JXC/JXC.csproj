@@ -146,11 +146,15 @@
     <Compile Include="Services\OrderStorageInBillServices.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Rafy\Rafy.UI\Rafy.UI.csproj">
+      <Project>{33aee526-9850-486b-a03c-c3b2a310abdc}</Project>
+      <Name>Rafy.UI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Rafy\Rafy\Rafy.csproj">
       <Project>{966A5BF2-D690-426B-AD68-AD868BB8F855}</Project>
       <Name>Rafy</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC.Old\Rafy.RBAC\Rafy.RBAC.Old.csproj">
+    <ProjectReference Include="..\..\Rafy\Plugins\Other\Rafy.RBAC V1\Rafy.RBAC\Rafy.RBAC.Old.csproj">
       <Project>{03D5A267-C106-42A9-8959-93D7AE3648DD}</Project>
       <Name>Rafy.RBAC.Old</Name>
     </ProjectReference>

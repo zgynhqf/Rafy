@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Rafy.RBAC.Old.Web</RootNamespace>
     <AssemblyName>Rafy.RBAC.Old.Web</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -69,7 +69,11 @@
     <EmbeddedResource Include="Scripts\RBACPlugin.js" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Rafy\Rafy.csproj">
+    <ProjectReference Include="..\..\..\..\Rafy.UI\Rafy.UI.csproj">
+      <Project>{33aee526-9850-486b-a03c-c3b2a310abdc}</Project>
+      <Name>Rafy.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Rafy\Rafy.csproj">
       <Project>{966a5bf2-d690-426b-ad68-ad868bb8f855}</Project>
       <Name>Rafy</Name>
     </ProjectReference>

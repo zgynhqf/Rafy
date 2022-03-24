@@ -64,7 +64,7 @@ namespace Rafy.RBAC.Old.Audit
 
             if (logItem == null) throw new ArgumentNullException("logItem");
 
-            AsyncHelper.InvokeSafe(() =>
+            PrincipalAsyncHelper.InvokeSafe(() =>
             {
                 _provider.Log(logItem);
             });

@@ -76,7 +76,7 @@ namespace Rafy.RBAC.Old
         {
             var list = new List<Entity>();
 
-            foreach (var root in CommonModel.Modules.Roots)
+            foreach (var root in UIModel.Modules.Roots)
             {
                 this.AddItemRecur(list, root);
             }

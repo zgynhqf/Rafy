@@ -67,9 +67,13 @@
     <Compile Include="ViewConfig\TimeSpanCriteriaConfig.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Rafy\Plugins\Rafy.RBAC.Old\Rafy.RBAC\Rafy.RBAC.Old.csproj">
+    <ProjectReference Include="..\..\Rafy\Plugins\Other\Rafy.RBAC V1\Rafy.RBAC\Rafy.RBAC.Old.csproj">
       <Project>{03d5a267-c106-42a9-8959-93d7ae3648dd}</Project>
       <Name>Rafy.RBAC.Old</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Rafy\Rafy.UI\Rafy.UI.csproj">
+      <Project>{33aee526-9850-486b-a03c-c3b2a310abdc}</Project>
+      <Name>Rafy.UI</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Rafy\Rafy\Rafy.csproj">
       <Project>{966a5bf2-d690-426b-ad68-ad868bb8f855}</Project>

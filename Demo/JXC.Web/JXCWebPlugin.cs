@@ -18,6 +18,7 @@ using JXC.Web.Templates;
 using Rafy;
 using Rafy.ComponentModel;
 using Rafy.MetaModel;
+using Rafy.MetaModel.View;
 
 namespace JXC.Web
 {
@@ -32,7 +33,7 @@ namespace JXC.Web
         {
             app.MetaCreating += (o, e) =>
             {
-                var moduleJXC = CommonModel.Modules.AddRoot(new WebModuleMeta
+                var moduleJXC = UIModel.Modules.AddRoot(new WebModuleMeta
                 {
                     Label = "进销存系统示例",
                     Children =

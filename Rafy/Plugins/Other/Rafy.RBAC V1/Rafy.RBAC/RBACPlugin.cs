@@ -24,6 +24,7 @@ using Rafy.MetaModel;
 using Rafy.MetaModel.View;
 using Rafy.RBAC.Old.Audit;
 using Rafy.RBAC.Old.Security;
+using Rafy.UI;
 using Rafy.Web;
 
 namespace Rafy.RBAC.Old
@@ -39,7 +40,7 @@ namespace Rafy.RBAC.Old
             PermissionMgr.Provider = new RafyPermissionProvider();
 
             //依赖注入
-            if (RafyEnvironment.IsOnServer())
+            if (!UIEnvironment.IsWPFUI)
             {
                 AuditLogService.SetProvider(new ServerAuditLogProvider());
             }
@@ -50,7 +51,7 @@ namespace Rafy.RBAC.Old
 
             #region 记录登录信息。
 
-            if (RafyEnvironment.IsOnClient())
+            if (UIEnvironment.IsWPFUI)
             {
                 (app as IClientApp).LoginSuccessed += (o, e) =>
                 {

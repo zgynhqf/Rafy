@@ -25,6 +25,7 @@ using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
 using Rafy.MetaModel.View;
+using Rafy.UI;
 
 namespace Rafy.RBAC.Old
 {
@@ -262,7 +263,7 @@ namespace Rafy.RBAC.Old
             //    Label = SystemOperationKeys.Edit.Translate(),
             //});
 
-            if (RafyEnvironment.Location.IsWebUI)
+            if (UIEnvironment.IsWebUI)
             {
                 //功能按钮权限
                 foreach (var cmd in mainBlock.ViewMeta.AsWebView().Commands)

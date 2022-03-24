@@ -156,7 +156,7 @@ namespace Rafy.RBAC.Old
         /// </param>
         private static void Log(User user, bool isIn)
         {
-            AsyncHelper.InvokeSafe(() =>
+            PrincipalAsyncHelper.InvokeSafe(() =>
             {
                 RF.Save(new UserLoginLog()
                 {

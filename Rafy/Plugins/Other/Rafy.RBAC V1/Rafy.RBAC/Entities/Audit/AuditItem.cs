@@ -23,6 +23,7 @@ using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
 using Rafy.MetaModel.View;
 using Rafy.RBAC.Old.Audit;
+using Rafy.UI;
 
 namespace Rafy.RBAC.Old.Audit
 {
@@ -146,7 +147,6 @@ namespace Rafy.RBAC.Old.Audit
             var f = QueryFactory.Instance;
             var q = f.Query(this);
 
-
             //拼装查询条件
             q.AddConstraint(AuditItem.LogTimeProperty, PropertyOperator.GreaterEqual, startDate);
             q.AddConstraint(AuditItem.LogTimeProperty, PropertyOperator.LessEqual, endDate);
@@ -156,7 +156,7 @@ namespace Rafy.RBAC.Old.Audit
             q.AddConstraintIf(AuditItem.MachineNameProperty, PropertyOperator.Contains, criteria.MachineKeyWords);
             q.AddConstraintIf(AuditItem.TitleProperty, PropertyOperator.Contains, criteria.TitleKeyWords);
 
-            if (RafyEnvironment.Location.IsWebUI)
+            if (UIEnvironment.IsWebUI)
             {
                 if (criteria.ModuleACId.HasValue)
                 {
