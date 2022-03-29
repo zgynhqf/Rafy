@@ -12,6 +12,7 @@
 *******************************************************/
 
 Rafy.defineCommand('Rafy.cmd.Add', {
+    extend: 'Rafy.cmd.Edit',
     meta: { text: "添加", group: "edit" },
     canExecute: function (listView) {
         var p = listView.getParent();
@@ -22,7 +23,24 @@ Rafy.defineCommand('Rafy.cmd.Add', {
         return c != null && !c.isNew();
     },
     execute: function (listView) {
-        var m = listView.addNew();
-        if (m) listView.startEdit(m, 0);
+        var entity = listView.addNew();
+        listView.setCurrent(entity);
+        this.callParent(arguments);
     }
 });
+
+//Rafy.defineCommand('Rafy.cmd.Add', {
+//    meta: { text: "添加", group: "edit" },
+//    canExecute: function (listView) {
+//        var p = listView.getParent();
+//        if (p == null) return true;
+
+//        //如果父对象是新加的对象，则不能使用
+//        var c = p.getCurrent();
+//        return c != null && !c.isNew();
+//    },
+//    execute: function (listView) {
+//        var m = listView.addNew();
+//        if (m) listView.startEdit(m, 0);
+//    }
+//});
