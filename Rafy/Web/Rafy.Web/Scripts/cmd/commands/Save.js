@@ -22,6 +22,7 @@ Rafy.defineCommand('Rafy.cmd.Save', {
                     //    setTimeout(function () { listView.expandSelection(); }, 200);
                     //}
                     //Ext.Msg.alert('提示', '保存成功！');
+                    listView.reloadData();
                 }
                 else {
                     Ext.Msg.alert('保存失败', res.Message);
