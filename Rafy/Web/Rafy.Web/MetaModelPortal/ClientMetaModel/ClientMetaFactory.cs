@@ -110,9 +110,9 @@ namespace Rafy.Web.ClientMetaModel
                     if (groupBy != null)
                     {
                         var n = groupBy.Name;
-                        if (groupBy.PropertyMeta.ManagedProperty is IRefIdProperty refId)
+                        if (groupBy.PropertyMeta.ManagedProperty is IRefEntityProperty refP)
                         {
-                            n = EntityModelGenerator.DisplayRefProperty(refId);
+                            n = EntityModelGenerator.DisplayRefProperty(refP);
                         }
                         clientMeta.groupBy = n;
                     }
@@ -153,9 +153,9 @@ namespace Rafy.Web.ClientMetaModel
                     }
 
                     //对于引用属性需要分开来特殊处理
-                    if (property.PropertyMeta.ManagedProperty is IRefIdProperty refId)
+                    if (property.PropertyMeta.ManagedProperty is IRefEntityProperty refEntity)
                     {
-                        column.dataIndex = EntityModelGenerator.DisplayRefProperty(refId);
+                        column.dataIndex = EntityModelGenerator.DisplayRefProperty(refEntity);
 
                         if (canEdit) { column.editor = ServerTypeHelper.CreateComboList(property); }
                     }
@@ -194,11 +194,11 @@ namespace Rafy.Web.ClientMetaModel
                     FieldConfig field = null;
 
                     //对于引用属性需要分开来特殊处理
-                    if (property.PropertyMeta.ManagedProperty is IRefEntityProperty refEntityProperty)
+                    if (property.PropertyMeta.ManagedProperty is IRefEntityProperty refProperty)
                     {
                         var comboList = ServerTypeHelper.CreateComboList(property);
                         comboList.valueField = Entity.IdProperty.Name;
-                        comboList.name = refEntityProperty.RefIdProperty.Name;
+                        comboList.name = refProperty.RefIdProperty.Name;
                         //field.name = EntityModelGenerator.LabeledRefProperty(property.Name);
                         field = comboList;
                     }

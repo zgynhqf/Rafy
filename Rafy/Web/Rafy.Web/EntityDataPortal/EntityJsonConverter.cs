@@ -98,7 +98,7 @@ namespace Rafy.Web.EntityDataPortal
                                     value = ObjectHelper.GetPropertyValue(lazyRefEntity, titleProperty.Name);
                                 }
 
-                                var name = EntityModelGenerator.DisplayRefProperty(refMp.RefIdProperty);
+                                var name = EntityModelGenerator.DisplayRefProperty(refMp);
                                 entityJson.SetProperty(name, value);
                             }
                         }
