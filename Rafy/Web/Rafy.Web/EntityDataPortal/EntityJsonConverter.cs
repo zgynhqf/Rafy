@@ -74,21 +74,19 @@ namespace Rafy.Web.EntityDataPortal
                     if (mp is IRefEntityProperty)
                     {
                         var refMp = mp as IRefProperty;
-                        object value = string.Empty;
                         var id = entity.GetRefNullableId(refMp.RefIdProperty);
-                        if (id != null) { value = id; }
-
-                        var idName = refMp.RefIdProperty.Name;
-                        entityJson.SetProperty(idName, value);
-
-                        //同时写入引用属性的视图属性，如 BookCategoryId_Display
-                        if (id != null && propertyVM.CanShowIn(ShowInWhere.List))
+                        if (id != null)
                         {
+                            entityJson.SetProperty(refMp.RefIdProperty.Name, id);
+
+                            //同时写入引用属性的视图属性，如 BookCategoryId_Display
                             var titleProperty = propertyVM.SelectionViewMeta.RefTypeDefaultView.TitleProperty;
                             if (titleProperty != null)
                             {
                                 var lazyRefEntity = entity.GetRefEntity(refMp.RefEntityProperty);
                                 var titleMp = titleProperty.PropertyMeta.ManagedProperty;
+
+                                object value;
                                 if (titleMp != null)
                                 {
                                     value = lazyRefEntity.GetProperty(titleMp);
@@ -102,6 +100,10 @@ namespace Rafy.Web.EntityDataPortal
                                 entityJson.SetProperty(name, value);
                             }
                         }
+                    }
+                    else if (mp is IRefProperty)
+                    {
+                        //ignore
                     }
                     //一般托管属性
                     else

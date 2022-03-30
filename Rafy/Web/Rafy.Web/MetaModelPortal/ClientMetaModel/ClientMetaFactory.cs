@@ -153,9 +153,9 @@ namespace Rafy.Web.ClientMetaModel
                     }
 
                     //对于引用属性需要分开来特殊处理
-                    if (property.PropertyMeta.ManagedProperty is IRefEntityProperty refEntity)
+                    if (property.PropertyMeta.ManagedProperty is IRefEntityProperty refProperty)
                     {
-                        column.dataIndex = EntityModelGenerator.DisplayRefProperty(refEntity);
+                        column.dataIndex = EntityModelGenerator.DisplayRefProperty(refProperty);
 
                         if (canEdit) { column.editor = ServerTypeHelper.CreateComboList(property); }
                     }
@@ -191,15 +191,13 @@ namespace Rafy.Web.ClientMetaModel
                 {
                     bool isReadonly = this.Option.isReadonly || property.IsReadonly || evm.NotAllowEdit;
 
-                    FieldConfig field = null;
+                    FieldConfig field;
 
                     //对于引用属性需要分开来特殊处理
                     if (property.PropertyMeta.ManagedProperty is IRefEntityProperty refProperty)
                     {
                         var comboList = ServerTypeHelper.CreateComboList(property);
-                        comboList.valueField = Entity.IdProperty.Name;
-                        comboList.name = refProperty.RefIdProperty.Name;
-                        //field.name = EntityModelGenerator.LabeledRefProperty(property.Name);
+                        comboList.name = EntityModelGenerator.DisplayRefProperty(refProperty);
                         field = comboList;
                     }
                     else

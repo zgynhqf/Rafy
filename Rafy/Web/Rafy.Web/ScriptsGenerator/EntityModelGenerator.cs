@@ -192,7 +192,7 @@ namespace Rafy.Web
 
         internal static string DisplayRefProperty(IRefProperty refProperty)
         {
-            return refProperty.RefEntityProperty.Name + "_Display";
+            return refProperty.RefIdProperty.Name + "_Display";
         }
     }
 }
