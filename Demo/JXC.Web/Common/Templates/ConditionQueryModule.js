@@ -1,6 +1,12 @@
 ﻿//abstract
 Ext.define('Jxc.ConditionQueryModule', {
-    extend: 'Rafy.ModuleRuntime',
+    extend: 'Rafy.UITemplate',
+    _serverTemplateType: 'JXC.Web.Templates.ConditionQueryBlocksTemplate, JXC.Web',
+    //constructor: function (meta) {
+    //    this.callParent(arguments);
+
+    //    this.setServerTemplate('JXC.Web.Templates.ConditionQueryBlocksTemplate, JXC.Web');
+    //},
     _onUIGenerated: function (ui) {
         var me = this;
 

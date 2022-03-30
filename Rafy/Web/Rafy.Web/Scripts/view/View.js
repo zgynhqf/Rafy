@@ -390,7 +390,7 @@ Ext.define('Rafy.view.View', {
 
         var data = this.getData();
 
-        var dto = Rafy.data.Serializer.serialize(data, !!withChildren);
+        var dto = Rafy.data.Serializer.serialize(data, withChildren);
 
         return dto;
     },

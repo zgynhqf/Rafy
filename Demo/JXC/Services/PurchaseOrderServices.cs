@@ -20,10 +20,12 @@ using System.Text;
 using Rafy;
 using System.Transactions;
 using Rafy.Domain;
+using Rafy.Web;
 
 namespace JXC
 {
     [Serializable]
+    [JsonService]
     [Contract, ContractImpl]
     public class AddPurchaseOrderService : AddService
     {

@@ -26,7 +26,7 @@ Ext.define('Rafy.App', {
             'startupCompleted',
             'moduleCreated',
             'exit'
-            );
+        );
     },
 
     //-------------------------------------  模块操作 -------------------------------------
@@ -201,23 +201,23 @@ Ext.define('Rafy.App', {
         /// <param name="module">客户端模块对象。</param>
         /// <returns type="">返回模块对应的控件对象。</returns>
 
-        //根据模块到服务器查找对象的界面元数据并生成。
-        var meta = null;
-        Rafy.AutoUI.getMeta({
-            async: false,
-            module: module.keyLabel,
-            callback: function (res) { meta = res; }
-        });
+        var ui = null;
 
-        var runtime = module.clientRuntime;
-
-        var ui = this._createAggtControl(meta, !runtime);//ControlResult;
-
-        //如果已经定义了客户端的模版类型 clientRuntime，则为运行时选入生成的界面。
-        if (runtime) {
-            var clientRuntime = Ext.create(runtime);
-            clientRuntime._setMeta(meta);
-            clientRuntime._notifyUIGenerated(ui);
+        var t = module.clientRuntime;//客户端的 UITemplate
+        if (t) {
+            var template = Ext.create(t);
+            if (!template.getModel() && module.model) { template.setModel(module.model); };
+            ui = template.createUI();
+        }
+        else {
+            //根据模块到服务器查找对象的界面元数据并生成。
+            var meta = null;
+            Rafy.AutoUI.getMeta({
+                async: false,
+                module: module.keyLabel,
+                callback: function (res) { meta = res; }
+            });
+            ui = this._createAggtControl(meta, true);//ControlResult;
         }
 
         return ui;

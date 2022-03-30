@@ -49,7 +49,7 @@ namespace Rafy.Web
                 "autoUI/ViewFactory.js", "autoUI/ControlResult.js", "autoUI/AggtUIGenerator.js",
                 //"control/ComboBoxTest.js",
                 "control/ComboList.js",
-                "AutoUI.js", "UITemplate.js", "ModuleRuntime.js",
+                "AutoUI.js", "UITemplate.js",// "ModuleRuntime.js",
                 "svc/ServiceInvoker.js",
                 "ModuleCollection.js", "App.js",
                 "Extension.js"

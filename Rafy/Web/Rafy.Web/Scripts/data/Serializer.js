@@ -30,17 +30,17 @@ Ext.define('Rafy.data.Serializer', {
             /// <returns type="Object">存放数据的对象。</returns>
 
             var instance = new Rafy.data.Serializer();
-            instance._withChildren = withChildren;
+            instance._withChildren = !!withChildren;
 
             var changeSet = new Rafy.data.ListChangeSet();
 
             if (component.isModel) {
-                changeSet._data = instance._serializeEntity(component);
-                changeSet._model = Ext.getClass(component);
+                changeSet = instance._serializeEntity(component);
+                changeSet.model = Ext.getClassName(component);
             }
             else {
-                changeSet._data = instance._serializeStore(component);
-                changeSet._model = component.model;
+                changeSet = instance._serializeStore(component);
+                changeSet.model = component.model;
             }
 
             return changeSet;
@@ -58,8 +58,8 @@ Ext.define('Rafy.data.Serializer', {
 
         //注意，单个实体的数据，依然是以 EntityList 的方式提交。
         //这样不但统一了数据的格式，而且还简单用实体列表的集合来分辨当前实体的状态（IsNew、IsDeleted）。
-        //添加属性 _isEntityHost 用于分辨二者。
-        var dto = { _isEntityHost: 1 };
+        //添加属性 _isEntity 用于分辨二者。
+        var dto = { _isEntity: 1 };
 
         if (entity.isNew()) {
             dto.c = [entity];

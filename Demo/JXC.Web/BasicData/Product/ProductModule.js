@@ -1,5 +1,6 @@
 ﻿Ext.define('Jxc.ProductModule', {
-    extend: 'Rafy.ModuleRuntime',
+    extend: 'Rafy.UITemplate',
+    _model: 'JXC.Product',
     _onUIGenerated: function (ui) {
         var me = this;
 

@@ -21,5 +21,6 @@ namespace Rafy.Web
     {
         public const string isEntityProperty = "_isEntity";
         public const string modelProperty = "model";
+        public const string dataProperty = "data";
     }
 }

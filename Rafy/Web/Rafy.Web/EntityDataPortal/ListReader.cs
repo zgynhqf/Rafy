@@ -38,8 +38,8 @@ namespace Rafy.Web.EntityDataPortal
         {
             if (repository == null)
             {
-                var modelProperty = jEntityList.Property("_model");
-                if (modelProperty == null) { throw new NotSupportedException("实体列表对应的 Json 应该有 _model 属性。"); }
+                var modelProperty = jEntityList.Property(Consts.modelProperty);
+                if (modelProperty == null) { throw new NotSupportedException($"实体列表对应的 Json 应该有 {Consts.modelProperty} 属性。"); }
                 var model = modelProperty.Value.CastTo<JValue>().Value.CastTo<string>();
                 var clientEntity = ClientEntities.Find(model);
                 repository = RF.Find(clientEntity.EntityType);

@@ -3,7 +3,7 @@
     constructor: function (meta) {
         this.callParent(arguments);
 
-        this.setServerTemplate('JXC.WPF.Templates.BillTemplate, JXC');
+        this.setServerTemplate('JXC.Web.Templates.BillTemplate, JXC.Web');
     }
 });
 
@@ -14,7 +14,7 @@ Ext.define('Jxc.ReadonlyBillTemplate', {
     constructor: function (meta) {
         this.callParent(arguments);
 
-        this.setServerTemplate('JXC.WPF.Templates.ReadonlyBillTemplate, JXC');
+        this.setServerTemplate('JXC.Web.Templates.ReadonlyBillTemplate, JXC.Web');
     }
     ////以下代码用于帮助调试
     //,

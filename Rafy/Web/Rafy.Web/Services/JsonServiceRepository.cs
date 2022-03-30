@@ -105,8 +105,6 @@ namespace Rafy.Web
                             //如果不是一般的属性，则表示这是一个引用属性，
                             //目前，引用属性只支持实体及实体列表。
                             var jEntityList = jToken as JObject;
-                            var modelProperty = jEntityList.Property("_model");
-                            if (modelProperty == null) { throw new NotSupportedException("目前，服务输入中的引用属性只支持实体及实体列表。"); }
                             var list = EntityJsonConverter.JsonToEntityList(jEntityList);
 
                             //如果有这个属性，表明这只是一个用实体列表包装起来的单个实体。

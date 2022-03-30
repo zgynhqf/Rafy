@@ -31,16 +31,16 @@ Rafy.defineCommand('Jxc.SelectProductCommand', {
             e.ui.getView().loadData();
         });
     },
-    canExecute: function (view) {
-        return this.isParentSelected(view);
-    },
+    //canExecute: function (view) {
+    //    return this.isParentSelected(view);
+    //},
 
     execute: function (listView, source) {
         var me = this;
         var ui = this._template.createUI();
 
         Rafy.Window.show({
-            title: "选择商品", items: ui.getControl(),
+            title: "选择商品", items: ui.getControl(), animateTarget: source,
             callback: function (btn) {
                 if (btn == "确定") {
                     Rafy.each(ui.getView().getSelection(), function (product) {

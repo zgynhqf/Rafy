@@ -56,7 +56,7 @@ namespace JXC.Web
                             Label = "采购管理",
                             Children =
                             {
-                                new WebModuleMeta{ Label = "采购订单", EntityType = typeof(PurchaseOrder), ClientRuntime = "Jxc.PurchaseOrderModule", BlocksTemplate=typeof(ConditionQueryBlocksTemplate)},
+                                new WebModuleMeta{ Label = "采购订单", EntityType = typeof(PurchaseOrder), ClientRuntime = "Jxc.PurchaseOrderModule"},
                                 new WebModuleMeta{ Label = "采购订单入库", EntityType = typeof(OrderStorageInBill)},
                             }
                         },

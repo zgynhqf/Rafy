@@ -180,7 +180,6 @@
     <EmbeddedResource Include="Scripts\Extension.js" />
     <EmbeddedResource Include="Scripts\cmd\CommandManager.js" />
     <Content Include="MetaModelPortal\ClientMetaModel\_ReadMe.txt" />
-    <EmbeddedResource Include="Scripts\ModuleRuntime.js" />
     <Content Include="Scripts\Javascript 类库开发规范.txt" />
     <EmbeddedResource Include="Scripts\data\Serializer.js" />
     <EmbeddedResource Include="Scripts\ModuleCollection.js" />

@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Templates\BillTemplate.cs" />
     <Compile Include="Common\Templates\ConditionQueryBlocksTemplate.cs" />
     <Compile Include="JXCWebPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -40,17 +40,17 @@ Ext.define('Rafy.UITemplate', {
         this._serverTemplateType = value;
     },
     getModel: function () {
-    	/// <summary>
+        /// <summary>
         /// 返回本模板对应的实体类型。
-    	/// </summary>
-    	/// <returns type=""></returns>
+        /// </summary>
+        /// <returns type=""></returns>
         return this._model;
     },
     setModel: function (value) {
-    	/// <summary>
+        /// <summary>
         /// 设置本模板对应的实体类型。
-    	/// </summary>
-    	/// <param name="value">可以是字符串，也可以是实体类型。</param>
+        /// </summary>
+        /// <param name="value">可以是字符串，也可以是实体类型。</param>
         this._model = value;
     },
 
@@ -103,18 +103,18 @@ Ext.define('Rafy.UITemplate', {
         return blocks;
     },
     _onBlockDefined: function (blocks) {
-    	/// <summary>
+        /// <summary>
         /// protected virtual
-    	/// </summary>
-    	/// <param name="blocks"></param>
+        /// </summary>
+        /// <param name="blocks"></param>
         this.fireEvent('blocksDefined', { blocks: blocks });
     },
     _createUICore: function (blocks) {
-    	/// <summary>
+        /// <summary>
         /// protected virtual
-    	/// </summary>
-    	/// <param name="blocks"></param>
-    	/// <returns type=""></returns>
+        /// </summary>
+        /// <param name="blocks"></param>
+        /// <returns type=""></returns>
         return Rafy.AutoUI.generateAggtControl(blocks);
     },
     _onUIGenerated: function (ui) {

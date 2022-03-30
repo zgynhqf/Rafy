@@ -25,7 +25,7 @@ Rafy.defineCommand('Jxc.AddPurchaseOrder', {
 
     //protected override
     onItemCreated: function (item) {
-        var model = this.getView().getModel();
+        var model = this.getOwnerView().getModel();
         item.set('Code', Jxc.AutoCodeHelper.generateCode(model));
     },
 
