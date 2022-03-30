@@ -35,12 +35,14 @@ Ext.define('Rafy.data.Serializer', {
             var changeSet = new Rafy.data.ListChangeSet();
 
             if (component.isModel) {
-                changeSet = instance._serializeEntity(component);
+                var data = instance._serializeEntity(component);
+                Ext.apply(changeSet, data);
                 changeSet.model = Ext.getClassName(component);
             }
             else {
-                changeSet = instance._serializeStore(component);
-                changeSet.model = component.model;
+                var storeData = instance._serializeStore(component);
+                Ext.apply(changeSet, storeData);
+                changeSet.model = Ext.getClassName(component.model || component);
             }
 
             return changeSet;

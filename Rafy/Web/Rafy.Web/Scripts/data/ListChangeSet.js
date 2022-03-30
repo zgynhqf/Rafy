@@ -13,12 +13,9 @@
 //internal
 //本类型用于封装从客户端实体中获取用于提交到服务端的变更集，所有实体都是以列表的形式来进行提交。
 Ext.define('Rafy.data.ListChangeSet', {
-    //internal
-    _data: null,
-
-    //internal
+    //internal string
     //根实体的类型
-    _model: null,
+    model: null,
 
     //-------------------------------------  Common -------------------------------------
     getModel: function () {
@@ -26,7 +23,7 @@ Ext.define('Rafy.data.ListChangeSet', {
         /// 获取根实体的类型。
         /// </summary>
         /// <returns type="Class"></returns>
-        return this._model;
+        return Rafy.getModel(this.model);
     },
     isEmpty: function () {
         /// <summary>
@@ -35,9 +32,9 @@ Ext.define('Rafy.data.ListChangeSet', {
         /// <param name="changeSetData"></param>
         /// <returns type=""></returns>
 
-        var d = this._data;
-
-        if (this._model.isTree) {
+        var d = this;
+        var modelClass = this.getModel();
+        if (modelClass.isTree) {
             return !(d.d && d.d.length
                 || d.roots && d.roots.length);
         }
@@ -47,19 +44,5 @@ Ext.define('Rafy.data.ListChangeSet', {
                 || d.d && d.d.length
                 || d.uc && d.uc.length);
         }
-    },
-    getSubmitData: function () {
-        /// <summary>
-        /// 转换为可以提交到服务端的 Json 对象（非字符串）。
-        /// </summary>
-        /// <returns type=""></returns>
-
-        //根实体，在数据提交到服务端前，我们需要在纯粹的数据上添加字符串属性 _model，
-        //用以告诉服务端这个数据应该解析为哪个实体类。
-        var d = this._data;
-        if (!d._model) {
-            d._model = Ext.getClassName(this._model);
-        }
-        return d;
     }
 });

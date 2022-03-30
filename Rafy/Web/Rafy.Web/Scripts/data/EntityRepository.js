@@ -118,7 +118,7 @@ Ext.define('Rafy.data.EntityRepository', {
 
         var model = opt._changeSetData.getModel();
         var proxyUrl = model.getProxy().url;
-        var data = opt._changeSetData.getSubmitData();
+        var data = opt._changeSetData;
         var ajaxCfg = {
             url: proxyUrl,
             params: {

@@ -59,7 +59,7 @@ Ext.define('Rafy.svc.ServiceInvoker', {
                 if (value.isModel || value.isStore) {
                     //都使用组合实体序列化方式，否则需要传入的实体本身没有加载任何子。
                     var changeSet = Rafy.data.Serializer.serialize(value, true);
-                    input[property] = changeSet.getSubmitData();
+                    input[property] = changeSet;
                 }
             }
         }
