@@ -1,0 +1,2 @@
+﻿* 冗余属性不起作用。（PurchaseOrder.SupplierName）
+* UseDataSource 方法来设置 DataSourceProvider 后，不起作用。（PurchaseOrderConfig）

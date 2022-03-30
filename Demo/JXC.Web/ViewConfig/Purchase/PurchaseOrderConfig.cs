@@ -35,10 +35,10 @@ namespace JXC.Web.ViewConfig.BasicData
             {
                 View.Property(PurchaseOrder.CodeProperty).HasLabel("订单编号").ShowIn(ShowInWhere.All);
                 View.Property(PurchaseOrder.DateProperty).HasLabel("订单日期").ShowIn(ShowInWhere.ListDetail);
-                View.Property(PurchaseOrder.SupplierNameProperty).HasLabel("供应商").ShowIn(ShowInWhere.List);
-                View.Property(PurchaseOrder.SupplierCategoryNameProperty).HasLabel("供应商客户类别").ShowIn(ShowInWhere.List);
-                View.Property(PurchaseOrder.SupplierProperty).HasLabel("供应商").ShowIn(ShowInWhere.Detail)
+                //View.Property(PurchaseOrder.SupplierNameProperty).HasLabel("供应商").ShowIn(ShowInWhere.List);
+                View.Property(PurchaseOrder.SupplierProperty).HasLabel("供应商").ShowIn(ShowInWhere.ListDetail)
                     .UseDataSource(EntityDataSources.Suppliers);
+                View.Property(PurchaseOrder.SupplierCategoryNameProperty).HasLabel("供应商客户类别").ShowIn(ShowInWhere.List);
                 View.Property(PurchaseOrder.PlanStorageInDateProperty).HasLabel("计划到货日期").ShowIn(ShowInWhere.ListDetail);
                 View.Property(PurchaseOrder.StorageInDirectlyProperty).HasLabel("直接入库").ShowIn(ShowInWhere.Detail);
                 View.Property(PurchaseOrder.TotalMoneyProperty).HasLabel("总金额(点击汇总)").ShowIn(ShowInWhere.ListDetail)

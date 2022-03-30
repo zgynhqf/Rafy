@@ -179,6 +179,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Scripts\Extension.js" />
     <EmbeddedResource Include="Scripts\cmd\CommandManager.js" />
+    <Content Include="Bugs Known.txt" />
     <Content Include="MetaModelPortal\ClientMetaModel\_ReadMe.txt" />
     <Content Include="Scripts\Javascript 类库开发规范.txt" />
     <EmbeddedResource Include="Scripts\data\Serializer.js" />
