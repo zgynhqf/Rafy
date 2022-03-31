@@ -55,9 +55,9 @@ namespace Rafy.MetaModel.View
 
         private SelectionViewMeta _selectionViewMeta;
         /// <summary>
-        /// 本属性需要选择实体的相关视图信息
+        /// 本属性需要选择实体的相关视图信息。
         /// 
-        /// 一般情况下，如果当前属性为引用实体属性，那么它默认带有这个值。其它的一般属性需要主动设置本值。
+        /// 一般情况下，如果当前属性为引用实体属性，且引用的实体不是抽象类，那么它默认带有这个值。其它的一般属性需要主动设置本值。
         /// </summary>
         public SelectionViewMeta SelectionViewMeta
         {

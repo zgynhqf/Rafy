@@ -80,7 +80,7 @@ namespace Rafy.Web.EntityDataPortal
                             entityJson.SetProperty(refMp.RefIdProperty.Name, id);
 
                             //同时写入引用属性的视图属性，如 BookCategoryId_Display
-                            var titleProperty = propertyVM.SelectionViewMeta.RefTypeDefaultView.TitleProperty;
+                            var titleProperty = propertyVM.SelectionViewMeta?.RefTypeDefaultView?.TitleProperty;
                             if (titleProperty != null)
                             {
                                 var lazyRefEntity = entity.GetRefEntity(refMp.RefEntityProperty);
