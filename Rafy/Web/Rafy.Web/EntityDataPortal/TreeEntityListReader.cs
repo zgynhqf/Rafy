@@ -34,16 +34,29 @@ namespace Rafy.Web.EntityDataPortal
             this.ReadDeleteList();
         }
 
-        protected void ReadRootList(JObject changeSet, IList<Entity> list)
+        protected void ReadRootList(JObject changeSet, EntityList list)
         {
             var p = changeSet.Property("roots");
             if (p != null)
             {
                 var roots = p.Value as JArray;
-                foreach (JObject root in roots)
+
+                var oldValue = list.AutoTreeIndexEnabled;
+                try
                 {
-                    this.ReadTreeEntityRecur(list, root, null);
+                    list.AutoTreeIndexEnabled = false;
+
+                    foreach (JObject root in roots)
+                    {
+                        this.ReadTreeEntityRecur(list, root, null);
+                    }
                 }
+                finally
+                {
+                    list.AutoTreeIndexEnabled = oldValue;
+                }
+
+                list.ResetTreeIndex();
             }
         }
 
@@ -53,19 +66,23 @@ namespace Rafy.Web.EntityDataPortal
             var treeChildrenProperty = item.Property("TreeChildren");
             if (treeChildrenProperty != null) { treeChildrenProperty.Remove(); }
             var newEntityMark = item.Property("isNew");
-            if (newEntityMark != null) { newEntityMark.Remove(); }
+            var isNew = newEntityMark != null;
+            if (isNew) { newEntityMark.Remove(); }
 
-            //先设置 TreeParent，再拷贝所有属性。
-            //（可以保证在后面设置 TreePId 时，不会引发数据查询。）
             var e = this.Repository.New();
+
             if (treeParent != null)
             {
+                //先设置 TreeParent，再拷贝所有属性。
+                //（可以保证在后面设置 TreePId 时，不会引发数据查询。）
                 e.TreeParent = treeParent;
             }
             else
             {
                 list.Add(e);
             }
+
+            //拷贝所有属性
             _setter.SetEntity(e, item);
 
             //如果有子节点，则转换加载所有子节点。
@@ -77,9 +94,10 @@ namespace Rafy.Web.EntityDataPortal
                     this.ReadTreeEntityRecur(list, treeChild, e);
                 }
             }
+            e.TreeChildren.MarkLoaded();
 
             //最后再清空节点的 IsNew 状态，使得节点在添加它的子节点时，TreeChildren 集合不会执行懒加载。
-            if (newEntityMark == null)
+            if (!isNew)
             {
                 e.PersistenceStatus = PersistenceStatus.Modified;
             }

@@ -28,7 +28,8 @@ namespace Rafy.Domain
         private bool _autoTreeIndexDisabled;
 
         /// <summary>
-        /// 是否启用树型的自动生成索引功能。默认为 true。
+        /// 是否启用在改变列表元素时，自动生成元素的树型索引功能。
+        /// 默认为 true。
         /// </summary>
         public bool AutoTreeIndexEnabled
         {
