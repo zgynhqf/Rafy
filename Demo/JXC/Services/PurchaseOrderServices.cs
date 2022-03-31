@@ -34,6 +34,11 @@ namespace JXC
             var po = this.Item as PurchaseOrder;
             var poRepo = RF.ResolveInstance<PurchaseOrderRepository>();
 
+            foreach (var item in po.PurchaseOrderItemList)
+            {
+                item.AmountLeft = item.Amount;
+            }
+
             using (var tran = RF.TransactionScope(poRepo))
             {
                 poRepo.Save(po);

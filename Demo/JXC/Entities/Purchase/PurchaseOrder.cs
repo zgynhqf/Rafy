@@ -219,7 +219,7 @@ namespace JXC
             var c = new CommonQueryCriteria
             {
                 new PropertyMatch(PurchaseOrder.DateProperty, PropertyOperator.GreaterEqual, criteria.From),
-                new PropertyMatch(PurchaseOrder.DateProperty, PropertyOperator.LessEqual, criteria.To),
+                new PropertyMatch(PurchaseOrder.DateProperty, PropertyOperator.LessEqual, criteria.To.AddDays(1d)),
             };
             if (criteria.ClientInfoId.HasValue)
             {

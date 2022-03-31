@@ -122,7 +122,7 @@ namespace JXC
                 from: t,
                 where: f.And(
                     t.Column(StorageInBill.DateProperty).GreaterEqual(criteria.From),
-                    t.Column(StorageInBill.DateProperty).LessEqual(criteria.To)
+                    t.Column(StorageInBill.DateProperty).LessEqual(criteria.To.AddDays(1d))
                 )
             );
             return (StorageInBillList)this.QueryData(q);
