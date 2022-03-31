@@ -76,7 +76,7 @@ namespace Rafy.Web
 
                 if (RafyEnvironment.IsDebuggingEnabled)
                 {
-                    SaveList(repo, list);
+                    repo.Save(list);
 
                     clientResult.Success = true;
                 }
@@ -84,7 +84,7 @@ namespace Rafy.Web
                 {
                     try
                     {
-                        SaveList(repo, list);
+                        repo.Save(list);
 
                         clientResult.Success = true;
                     }
@@ -99,16 +99,6 @@ namespace Rafy.Web
             }
 
             return clientResult;
-        }
-
-        private static void SaveList(EntityRepository repo, EntityList list)
-        {
-            using (var tran = RF.TransactionScope(repo))
-            {
-                repo.Save(list);
-
-                tran.Complete();
-            }
         }
 
         private JsonModel QueryEntityList(HttpRequest request, EntityViewMeta evm)
