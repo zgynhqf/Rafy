@@ -41,7 +41,7 @@ namespace JXC.Web.ViewConfig.BasicData
                 View.Property(PurchaseOrder.SupplierCategoryNameProperty).HasLabel("供应商客户类别").ShowIn(ShowInWhere.List);
                 View.Property(PurchaseOrder.PlanStorageInDateProperty).HasLabel("计划到货日期").ShowIn(ShowInWhere.ListDetail);
                 View.Property(PurchaseOrder.StorageInDirectlyProperty).HasLabel("直接入库").ShowIn(ShowInWhere.Detail);
-                View.Property(PurchaseOrder.TotalMoneyProperty).HasLabel("总金额(点击汇总)").ShowIn(ShowInWhere.ListDetail)
+                View.Property(PurchaseOrder.TotalMoneyProperty).HasLabel("总金额").ShowIn(ShowInWhere.ListDetail)
                     .Readonly();
                 View.Property(PurchaseOrder.StorageProperty).HasLabel("仓库").ShowIn(ShowInWhere.Detail)
                     .Visibility(PurchaseOrder.StorageInDirectlyProperty);//动态只读//.Readonly(PurchaseOrder.IsStorageReadonlyProperty);//动态只读

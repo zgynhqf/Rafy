@@ -27,6 +27,8 @@ Rafy.defineCommand('Jxc.AddPurchaseOrder', {
     onItemCreated: function (item) {
         var model = this.getOwnerView().getModel();
         item.set('Code', Jxc.AutoCodeHelper.generateCode(model));
+        item.setDate(new Date());
+        item.setPlanStorageInDate(new Date());
     },
 
     _attachCollectionBehavior: function () {
@@ -35,13 +37,9 @@ Rafy.defineCommand('Jxc.AddPurchaseOrder', {
         /// </summary>
         var me = this;
         this.getTemplate().on('uiGenerated', function (e) {
-            var view = e.ui.getView();
-            var tmEditor = view.findEditor('TotalMoney');
-            tmEditor.on('render', function () {
-                tmEditor.getEl().on('mousedown', function () {
-                    me._collectTotalMoney(view);
-                });
-            });
+            setInterval(function () {
+                me._collectTotalMoney(e.ui.getView());
+            }, 200);
         });
     },
     _collectTotalMoney: function (view) {
@@ -50,15 +48,18 @@ Rafy.defineCommand('Jxc.AddPurchaseOrder', {
         /// </summary>
         /// <param name="view"></param>
 
+        var isFormClosed = !view.getControl().getForm().monitor;
+        if (isFormClosed) return;
+
         var po = view.updateEntity();
 
         var list = po.PurchaseOrderItemList();
         var sum = Rafy.sum(list, function (i) {
-            var RawPrice = i.get("RawPrice");
-            var Amount = i.get("Amount");
+            var RawPrice = i.getRawPrice();
+            var Amount = i.getAmount();
             return RawPrice * Amount;
         });
-        po.set("TotalMoney", sum);
+        po.setTotalMoney(sum);
 
         view.updateControl();
     }
