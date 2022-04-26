@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Rafy.Data;
 using Rafy.ManagedProperty;
 
 namespace Rafy.Domain.ORM
@@ -160,7 +161,7 @@ namespace Rafy.Domain.ORM
                 };
             }
 
-            var sql = new ConditionalSql();
+            var sql = new FormattedSql();
             //SQL: UPDATE D SET AName = {0} WHERE
             var rdColumn = table.FindByPropertyName(redundancy.Property.Name);
             sql.Append("UPDATE ").AppendQuoteName(table)
