@@ -292,12 +292,11 @@ namespace Rafy.Domain
                 list.InitListProperty(listProperty);
 
                 component.SetParent(this);
-                component.MarkSaved();
-
                 if (listProperty.HasManyType == HasManyType.Composition)
                 {
                     list.SetParentEntity(this);
                 }
+                component.MarkSaved();
                 return;
             }
 
