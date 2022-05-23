@@ -214,7 +214,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
                 {
                     var table = RdbDataProvider.Get(repo).DbTable;
                     var seqName = _oracleRunGenerator.SequenceName(table.Name, table.IdentityColumn.Name);
-                    dba.ExecuteText(string.Format("ALTER SEQUENCE {0} INCREMENT BY {1} NOCACHE", seqName, sequenceStep));
+                    dba.ExecuteText(string.Format("ALTER SEQUENCE {0} INCREMENT BY {1} CACHE 1000", seqName, sequenceStep));
                 }
             }
         }

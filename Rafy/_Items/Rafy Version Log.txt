@@ -10,12 +10,13 @@
  * 
 *******************************************************/
 
-3.88.4243
+3.88.4244
     ★★公布、添加功能
         添加 Rafy.Grpc，以支持使用 Grpc 来作为底层数据传输信道。
     BUG修复
         解决在 NET6 版本下，Expression 生成时，无法将 Void 转换为 Object 类型的问题。
         解决 OnDomainComponentLoaded 方法中，SetParentEntity 后，没有将实体的状态设置为 Saved 的问题。
+        ORACLE 下调整 SEQUENCE 时，需要使用 CACHE。
 
 3.87.4229
     ★★公布、添加接口
