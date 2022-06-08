@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>&#37197;&#32622;&#25968;&#25454;&#25552;&#20379;&#31243;&#24207;&#21040;&#20179;&#24211; </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="&#37197;&#32622;&#25968;&#25454;&#25552;&#20379;&#31243;&#24207;&#21040;&#20179;&#24211; ">
+    <meta name="generator" content="docfx 2.58.9.0">
+    
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../../styles/docfx.css">
+    <link rel="stylesheet" href="../../../styles/main.css">
+    <meta property="docfx:navrel" content="../../../toc.html">
+    <meta property="docfx:tocrel" content="../../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../../index.html">
+                <img id="logo" class="svg" src="../../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+
+<p>每个实体仓库，都会对应一个数据提供程序（可以理解为数据层）。这个数据提供程序，继承自基类 RepositoryDataProvider。</p>
+<p>目前，框架内置了两种不同的数据提供程序：MemoryRepositoryDataProvider、RdbDataProvider。前者表示从内存中获取数据。后者是使用关系型数据库的数据提供程序，默认情况下，实体仓库都是使用这个数据提供程序。</p>
+<p>上述几个数据提供程序的基类，提供了许多基础的数据访问方法。开发者可通过重写这些方法来自定义数据访问逻辑。</p>
+<h2 id="配置数据提供程序到仓库">配置数据提供程序到仓库</h2>
+<p>编写完成自定义数据提供程序代码后，开发者可将其配置到对应的实体仓库类或实体仓库基类。如果是后者，则继承自该基类的所有实体仓库都会使用这个提供程序。</p>
+<p>配置方法示例如下：</p>
+<pre><code class="lang-c#">[DataProviderFor(typeof(RBACEntityRepository))]
+public class RBACRepositoryDataProvider : RdbDataProvider
+{
+    protected override string ConnectionStringSettingName
+    {
+        get { return &quot;RBAC&quot;; }
+    }
+}
+</code></pre><p>上述代码自定义了一个名为 RBACRepositoryDataProvider 的数据提供程序类，并将其设置到 RBACEntityRepository 及其子类上。</p>
+<p>另外，上述代码编写的是 RdbDataProvider 的子类，可以重写 ConnectionStringSettingName 属性，标识数据访问时使用的连接字符串配置。此配置是对应应用程序配置文件中的以下配置节名：</p>
+<pre><code class="lang-cs">&lt;connectionStrings&gt;
+   &lt;add name=&quot;RBAC&quot; connectionString=&quot;Data Source=Data\RBAC.sdf&quot; providerName=&quot;System.Data.SqlServerCe&quot; /&gt;
+&lt;/connectionStrings&gt;
+</code></pre></article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/zgynhqf/Rafy/blob/master/Rafy/_Items/Documentation/articles/&#39046;&#22495;&#23454;&#20307;&#26694;&#26550;/&#23454;&#20307;&#20179;&#24211;/&#20179;&#24211;&#25968;&#25454;&#25552;&#20379;&#31243;&#24207;.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span><strong>有问题请联系 <a id="HT_MailLink" href="mailto:9474649%40qq.com?Subject=Rafy User Guide">9474649@qq.com</a>。</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../../styles/main.js"></script>
+  </body>
+</html>

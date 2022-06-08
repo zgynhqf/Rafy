@@ -9,7 +9,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/toc.html",
-          "hash": "gOePvVFDYsFwo1Cwr1T49lSgdYjW2qrfa6yDfE9S4r8="
+          "hash": "lStf8x2QlQDYmBap85bC2E4UkiWLCY/p8LpY8ZJ4OK4="
         }
       },
       "is_incremental": false,
@@ -584,11 +584,11 @@
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "articles/领域实体框架/实体仓库/仓库数据层（RepositoryDataProvider）.md",
+      "source_relative_path": "articles/领域实体框架/实体仓库/仓库数据提供程序.md",
       "output": {
         ".html": {
-          "relative_path": "articles/领域实体框架/实体仓库/仓库数据层（RepositoryDataProvider）.html",
-          "hash": "pGeRk8vVOGC32KkB07TWZoms/48wq5K+ghJ4Qdvj7fs="
+          "relative_path": "articles/领域实体框架/实体仓库/仓库数据提供程序.html",
+          "hash": "z8uDpUjc+32kZ/W7IfSCbkoCAvbyfIOiKKUM41/DfiQ="
         }
       },
       "is_incremental": false,
@@ -2033,7 +2033,7 @@
           "hash": "SwUsJtSCWuAs3Kb/ZqepbI3qOrwdwIyEGui4s+p6qZY="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -2052,19 +2052,17 @@
   "incremental_info": [
     {
       "status": {
-        "can_incremental": false,
-        "details": "Cannot build incrementally because last build info is missing.",
+        "can_incremental": true,
         "incrementalPhase": "build",
         "total_file_count": 0,
-        "skipped_file_count": 0,
-        "full_build_reason_code": "NoAvailableBuildCache"
+        "skipped_file_count": 0
       },
       "processors": {
         "ConceptualDocumentProcessor": {
-          "can_incremental": false,
+          "can_incremental": true,
           "incrementalPhase": "build",
           "total_file_count": 105,
-          "skipped_file_count": 0
+          "skipped_file_count": 104
         },
         "ResourceDocumentProcessor": {
           "can_incremental": false,
@@ -2084,8 +2082,8 @@
     },
     {
       "status": {
-        "can_incremental": false,
-        "details": "Cannot support incremental post processing, the reason is: last post processor info is null.",
+        "can_incremental": true,
+        "details": "Can support incremental post processing.",
         "incrementalPhase": "postProcessing",
         "total_file_count": 0,
         "skipped_file_count": 0
