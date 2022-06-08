@@ -83,14 +83,6 @@ public partial class WarehouseRepository : EntityRepository
     /// 单例模式，外界不可以直接构造本对象。
     /// &lt;/summary&gt;
     protected WarehouseRepository() { }
-
-    /// &lt;summary&gt;
-    /// 此仓库存储实体对应的数据库连接配置名称。
-    /// &lt;/summary&gt;
-    protected override string ConnectionStringSettingName
-    {
-        get { return &quot;JXC&quot;; }
-    }
 }
 </code></pre><p>仓库类型有以下特点：</p>
 <ul>
@@ -98,14 +90,7 @@ public partial class WarehouseRepository : EntityRepository
 <li>仓库类型必须遵守以下命名约定：仓库类型名称 = 实体类型名称 + &quot;Repository&quot;。</li>
 <li>仓库类型必须直接或间接继承自 EntityRepository 类型。                        </li>
 <li>实体仓库，被设计为单例模式。<br>  即每个实体的仓库，在整个系统中只有唯一一个运行时对象。仓库类型的构建函数不能公开，通过仓库工厂来获取仓库对象。</li>
-<li><p>每个实体仓库，对应唯一一个连接字符串配置名称，需要重写 ConnectionStringSettingName 属性提供。
-  此配置是对应应用程序配置文件中的以下配置节名：</p>
-<pre><code class="lang-cs">&lt;connectionStrings&gt;
- &lt;add name=&quot;JXC&quot; connectionString=&quot;Data Source=Data\JXC.sdf&quot; providerName=&quot;System.Data.SqlServerCe&quot; /&gt;
-&lt;/connectionStrings&gt;
-</code></pre></li>
 </ul>
-<p>对应同一数据库的所有实体，一般需要申明一个仓库基类，在基类中重写此属性。</p>
 <h2 id="仓库外观-api">仓库外观 Api</h2>
 <p>由于仓库是单例的，在整个系统运行时只会存在一个仓库的实例。所以我们需要通过仓库工厂来获取唯一的这个仓库对象。
 类型是仓库相关的外观 Api，全称是 RepositoryFacade，其中包含了仓库工厂的 Api。（仓库外观 Api 的使用频率比较大，所以使用拼音缩写。另外，如果使用中觉得缩写不方便，框架提供了同样功能、全称的 RepositoryFacade 类型。）<br>
@@ -123,7 +108,7 @@ public partial class WarehouseRepository : EntityRepository
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/zgynhqf/rafy/blob/master/Rafy/_Items/Documentation/articles/&#39046;&#22495;&#23454;&#20307;&#26694;&#26550;/&#23454;&#20307;&#20179;&#24211;.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/zgynhqf/Rafy/blob/master/Rafy/_Items/Documentation/articles/&#39046;&#22495;&#23454;&#20307;&#26694;&#26550;/&#23454;&#20307;&#20179;&#24211;.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
