@@ -86,8 +86,8 @@
                  href: 领域实体框架\实体仓库\编写查询\表格查询.md			 
            - name: 大批量导入实体
              href: 领域实体框架\实体仓库\大批量导入实体.md
-           - name: 创建数据层（RepositoryDataProvider）
-             href: 领域实体框架\实体仓库\仓库数据层（RepositoryDataProvider）.md
+           - name: 仓库数据提供程序
+             href: 领域实体框架\实体仓库\仓库数据提供程序.md
        - name: 领域逻辑
          href: 领域实体框架\领域逻辑.md
          items:
