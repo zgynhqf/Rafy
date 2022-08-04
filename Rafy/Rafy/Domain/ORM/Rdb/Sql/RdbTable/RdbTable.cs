@@ -19,6 +19,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime;
 using System.Text;
+using System.Text.RegularExpressions;
 using Rafy;
 using Rafy.Data;
 using Rafy.DbMigration;
@@ -401,7 +402,12 @@ namespace Rafy.Domain.ORM
         /// </summary>
         /// <param name="pagingInfo">The paging information.</param>
         /// <returns></returns>
-        protected abstract PagingLocation GetPagingLocation(PagingInfo pagingInfo);
+        protected virtual PagingLocation GetPagingLocation(PagingInfo pagingInfo)
+        {
+            //虽然本类默认使用数据库分页，但是它的子类可以重写本方法来使用内存分页。
+            //所以本类中的所有方法，在重新实现时，都会分辨这两种情况。
+            return PagingLocation.Database;
+        }
 
         /// <summary>
         /// 使用 IQuery 条件进行查询。
@@ -411,16 +417,36 @@ namespace Rafy.Domain.ORM
         /// <param name="args">The arguments.</param>
         public virtual void QueryList(IDbAccesser dba, IORMQueryArgs args)
         {
+            //检查分页条件。（如果是树状实体，也不支持在数据库中进行分页。）
             var query = args.Query;
-
             var selectionProperties = args.LoadOptions?.SelectionProperties;
             this.AutoSelection(query, selectionProperties);
 
+            var pagingInfo = args.PagingInfo;
+            bool isDbPaging = this.IsDbPaging(pagingInfo);
+
             var generator = this.CreateSqlGenerator();
-            QueryFactory.Instance.Generate(generator, query);
+            QueryFactory.Instance.Generate(generator, query, isDbPaging ? pagingInfo : PagingInfo.Empty);
             var sql = generator.Sql;
 
-            this.QueryDataReader(dba, args, sql, selectionProperties);
+            this.QueryDataReader(dba, args, sql, sql.Parameters, selectionProperties);
+            if (isDbPaging && pagingInfo.IsNeedCount)
+            {
+                pagingInfo.TotalCount = this.Count(dba, query);
+            }
+        }
+
+        /// <summary>
+        /// 判断当前是否正在进行数据库层分页。
+        /// </summary>
+        /// <param name="pagingInfo"></param>
+        /// <returns></returns>
+        protected bool IsDbPaging(PagingInfo pagingInfo)
+        {
+            //最后，如果需要，则统计一下总行数。
+            return !PagingInfo.IsNullOrEmpty(pagingInfo) &&
+                this.GetPagingLocation(pagingInfo) == PagingLocation.Database &&
+                !Repository.SupportTree;
         }
 
         /// <summary>
@@ -430,10 +456,10 @@ namespace Rafy.Domain.ORM
         /// <param name="args">The arguments.</param>
         /// <param name="sql">The SQL.</param>
         /// <param name="readProperties">只读取这些属性。</param>
-        protected void QueryDataReader(IDbAccesser dba, IORMQueryArgs args, FormattedSql sql, List<IManagedProperty> readProperties)
+        protected void QueryDataReader(IDbAccesser dba, IEntityQueryArgs args, string sql, object[] sqlParamters, List<IManagedProperty> readProperties)
         {
             //查询数据库
-            using (var reader = dba.QueryDataReader(sql, sql.Parameters))
+            using (var reader = dba.QueryDataReader(sql, sqlParamters))
             {
                 //填充到列表中。
                 this.FillDataIntoList(
@@ -475,18 +501,27 @@ namespace Rafy.Domain.ORM
         /// <param name="args">The arguments.</param>
         public virtual void QueryList(IDbAccesser dba, ISqlSelectArgs args)
         {
-            if (_hasLOB)
+            var pagingInfo = args.PagingInfo;
+            var notPaging = !this.IsDbPaging(pagingInfo);
+            if (notPaging)
             {
-                args.FormattedSql = this.ReplaceLOBColumnsInConvention(args.FormattedSql);
-            }
+                if (_hasLOB)
+                {
+                    args.FormattedSql = this.ReplaceLOBColumnsInConvention(args.FormattedSql);
+                }
 
-            using (var reader = dba.QueryDataReader(args.FormattedSql, args.Parameters))
+                this.QueryDataReader(dba, args, args.FormattedSql, args.Parameters, args.LoadOptions?.SelectionProperties);
+            }
+            else
             {
-                this.FillDataIntoList(
-                    reader, args.LoadOptions?.SelectionProperties,
-                    args.List,
-                    args.FetchingFirst, args.PagingInfo, args.MarkTreeFullLoaded
-                    );
+                //转换为分页查询 SQL
+                var parts = ParsePagingSqlParts(args.FormattedSql);
+                CreatePagingSql(ref parts, pagingInfo);
+
+                //读取分页的实体
+                this.QueryDataReader(dba, args, parts.PagingSql, args.Parameters, args.LoadOptions?.SelectionProperties);
+
+                QueryTotalCountIf(dba, pagingInfo, parts, args.Parameters);
             }
         }
 
@@ -498,34 +533,54 @@ namespace Rafy.Domain.ORM
         /// <param name="args">The arguments.</param>
         public virtual void QueryTable(IDbAccesser dba, ITableQueryArgs args)
         {
-            if (_hasLOB)
+            var pagingInfo = args.PagingInfo;
+            var notPaging = !this.IsDbPaging(pagingInfo);
+            if (notPaging)
             {
-                args.FormattedSql = this.ReplaceLOBColumnsInConvention(args.FormattedSql);
-            }
-
-            using (var reader = dba.QueryDataReader(args.FormattedSql, args.Parameters))
-            {
-                var table = args.ResultTable;
-                if (table.Columns.Count == 0)
+                if (_hasLOB)
                 {
-                    LiteDataTableAdapter.AddColumns(table, reader);
+                    args.FormattedSql = this.ReplaceLOBColumnsInConvention(args.FormattedSql);
                 }
 
-                var columnsCount = table.Columns.Count;
-
-                PagingHelper.MemoryPaging(reader, r =>
+                using (var reader = dba.QueryDataReader(args.FormattedSql, args.Parameters))
                 {
-                    var row = table.NewRow();
-                    for (int i = 0; i < columnsCount; i++)
+                    var table = args.ResultTable;
+                    if (table.Columns.Count == 0)
                     {
-                        var value = reader[i];
-                        if (value != DBNull.Value)
-                        {
-                            row[i] = value;
-                        }
+                        LiteDataTableAdapter.AddColumns(table, reader);
                     }
-                    table.Rows.Add(row);
-                }, args.PagingInfo);
+
+                    var columnsCount = table.Columns.Count;
+
+                    PagingHelper.MemoryPaging(reader, r =>
+                    {
+                        var row = table.NewRow();
+                        for (int i = 0; i < columnsCount; i++)
+                        {
+                            var value = reader[i];
+                            if (value != DBNull.Value)
+                            {
+                                row[i] = value;
+                            }
+                        }
+                        table.Rows.Add(row);
+                    }, args.PagingInfo);
+                }
+            }
+            else
+            {
+                //转换为分页查询 SQL
+                var parts = ParsePagingSqlParts(args.FormattedSql);
+                CreatePagingSql(ref parts, pagingInfo);
+
+                //读取分页的数据
+                var table = args.ResultTable;
+                using (var reader = dba.QueryDataReader(parts.PagingSql, args.Parameters))
+                {
+                    LiteDataTableAdapter.Fill(table, reader);
+                }
+
+                QueryTotalCountIf(dba, pagingInfo, parts, args.Parameters);
             }
         }
 
@@ -630,6 +685,26 @@ namespace Rafy.Domain.ORM
             throw new InvalidOperationException("sql 语句无法查询出一个整型数值！返回的值是：" + value);
         }
 
+        /// <summary>
+        /// 如果需要统计，则生成统计语句进行查询。
+        /// </summary>
+        /// <param name="dba"></param>
+        /// <param name="pagingInfo"></param>
+        /// <param name="parts"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        private static void QueryTotalCountIf(IDbAccesser dba, PagingInfo pagingInfo, PagingSqlParts parts, object[] parameters)
+        {
+            if (pagingInfo.IsNeedCount)
+            {
+                var pagingCountSql = "SELECT COUNT(0) " + parts.FromWhere;
+
+                //查询值。（由于所有参数都不会在 OrderBy、Select 语句中，所以把所有参数都传入。
+                var value = dba.QueryValue(pagingCountSql, parameters);
+                pagingInfo.TotalCount = Convert.ToInt64(value);
+            }
+        }
+
         #endregion
 
         #region 从数据行读取、创建实体
@@ -643,22 +718,22 @@ namespace Rafy.Domain.ORM
         /// <param name="readProperties">如果为 null，表示尽力读取。否则，表示只读取给定的属性。</param>
         /// <param name="list">需要把读取的实体，加入到这个列表中。</param>
         /// <param name="fetchingFirst">是否只读取一条数据即返回。</param>
-        /// <param name="pagingInfo">如果不是只取一行数据，则这个参数表示列表内存分页的信息。</param>
+        /// <param name="memoryPagingInfo">内存分页信息：如果不是只取一行数据，则这个参数表示列表内存分页的信息，只在需要进行内存分页时会用到。</param>
         /// <param name="markTreeFullLoaded">如果某次查询结果是一棵完整的子树，那么必须设置此参数为 true ，才可以把整个树标记为完整加载。</param>
         internal protected void FillDataIntoList(
             IDataReader reader, List<IManagedProperty> readProperties, IList<Entity> list,
-            bool fetchingFirst, PagingInfo pagingInfo, bool markTreeFullLoaded)
+            bool fetchingFirst, PagingInfo memoryPagingInfo, bool markTreeFullLoaded)
         {
-            if (_repository.SupportTree)
+            //如果正在分页，而且支持数据库层面的分页，则不使用内存分页。
+            if (this.IsDbPaging(memoryPagingInfo))
             {
-                this.FillTreeIntoList(reader, readProperties, list, markTreeFullLoaded, pagingInfo);
-                return;
+                memoryPagingInfo = null;
             }
 
-            //如果正在分页，而且支持数据库层面的分页，则不使用内存分页。
-            if (!PagingInfo.IsNullOrEmpty(pagingInfo) && this.GetPagingLocation(pagingInfo) == PagingLocation.Database)
+            if (_repository.SupportTree)
             {
-                pagingInfo = null;
+                this.FillTreeIntoList(reader, readProperties, list, markTreeFullLoaded, memoryPagingInfo);
+                return;
             }
 
             var entityReader = CreateEntityReader(readProperties);
@@ -676,7 +751,7 @@ namespace Rafy.Domain.ORM
             }
             else
             {
-                PagingHelper.MemoryPaging(reader, rowReader, pagingInfo);
+                PagingHelper.MemoryPaging(reader, rowReader, memoryPagingInfo);
             }
         }
 
@@ -1005,6 +1080,87 @@ namespace Rafy.Domain.ORM
                 var typeContext = current.GetOrCreateTypeContext(this.Info.EntityType);
                 typeContext.Set(entity.Id, entity);
             }
+        }
+
+        #endregion
+
+        #region ToPagingSql
+
+        protected virtual void CreatePagingSql(ref PagingSqlParts parts, PagingInfo pagingInfo)
+        {
+            /*********************** 代码块解释 *********************************
+             * 
+             * 注意，这个方法只支持不太复杂 SQL 的转换。
+             *
+             * 源格式：
+             * select ...... from ...... order by xxxx asc, yyyy desc
+             * 不限于以上格式，只要满足没有复杂的嵌套查询，最外层是一个 Select 和 From 语句即可。
+             * 
+             * 目标格式：
+             * select * from (select ......, row_number() over(order by xxxx asc, yyyy desc) _rowNumber from ......) x where x._rowNumber<10 and x._rowNumber>5;
+            **********************************************************************/
+
+            var startRow = pagingInfo.PageSize * (pagingInfo.PageNumber - 1) + 1;
+            var endRow = startRow + pagingInfo.PageSize - 1;
+
+            var sql = new StringBuilder("SELECT * FROM (");
+
+            //在 Select 和 From 之间插入：
+            //,row_number() over(order by UPDDATETIME desc) rn 
+            sql.AppendLine().Append(parts.Select)
+                .Append(", row_number() over(")
+                .Append(parts.OrderBy);
+            //query.AppendSqlOrder(res, this);
+            sql.Append(") dataRowNumber ").Append(parts.FromWhere)
+                .Append(") x").AppendLine()
+                .Append("WHERE x.dataRowNumber >= ").Append(startRow)
+                .Append(" AND x.dataRowNumber <= ").Append(endRow);
+
+            parts.PagingSql = sql.ToString();
+        }
+
+        private static Regex FromRegex = new Regex(@"[^\w]FROM[^\w]", RegexOptions.IgnoreCase);
+
+        private static PagingSqlParts ParsePagingSqlParts(string sql)
+        {
+            var fromIndex = FromRegex.Match(sql).Index;
+            var orderByIndex = sql.LastIndexOf("ORDER BY", StringComparison.OrdinalIgnoreCase);
+            if (orderByIndex < 0) { throw new InvalidProgramException("使用数据库分页时，Sql 语句中必须指定 OrderBy 语句。"); }
+
+            var parts = new PagingSqlParts();
+            parts.RawSql = sql;
+            parts.Select = sql.Substring(0, fromIndex).Trim();
+            parts.FromWhere = sql.Substring(fromIndex, orderByIndex - fromIndex).Trim();
+            parts.OrderBy = sql.Substring(orderByIndex).Trim();
+            return parts;
+        }
+
+        protected struct PagingSqlParts
+        {
+            /// <summary>
+            /// 原始 SQL
+            /// </summary>
+            public string RawSql;
+
+            /// <summary>
+            /// Select 语句
+            /// </summary>
+            public string Select;
+
+            /// <summary>
+            /// From 以及 Where 语句
+            /// </summary>
+            public string FromWhere;
+
+            /// <summary>
+            /// OrderBy 语句
+            /// </summary>
+            public string OrderBy;
+
+            /// <summary>
+            /// 转换后的分页 SQL
+            /// </summary>
+            public string PagingSql;
         }
 
         #endregion

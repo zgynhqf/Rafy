@@ -30,11 +30,11 @@ namespace Rafy.Domain.ORM.SqlServer
     /// <summary>
     /// Sql Server 和 Sql ce 的基类。
     /// </summary>
-    internal abstract class SqlTable : SqlOraTable
+    internal abstract class SqlTable : RdbTable
     {
         public SqlTable(IRepositoryInternal repository, string dbProvider) : base(repository, dbProvider) { }
 
-        protected override void CreatePagingSql(ref SqlOraTable.PagingSqlParts parts, PagingInfo pagingInfo)
+        protected override void CreatePagingSql(ref RdbTable.PagingSqlParts parts, PagingInfo pagingInfo)
         {
             //Sql Server 中，如果是第一页，直接使用 TOP 语法。
             if (pagingInfo.PageNumber == 1)

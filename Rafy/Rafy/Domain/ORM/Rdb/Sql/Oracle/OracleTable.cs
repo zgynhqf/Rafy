@@ -30,7 +30,7 @@ using Rafy.Utils;
 
 namespace Rafy.Domain.ORM.Oracle
 {
-    internal class OracleTable : SqlOraTable
+    internal class OracleTable : RdbTable
     {
         private OracleRunGenerator _oracleRunGenerator = new OracleRunGenerator();
 
@@ -146,7 +146,7 @@ namespace Rafy.Domain.ORM.Oracle
                 var generator = this.CreateSqlGenerator();
                 QueryFactory.Instance.Generate(generator, query);
                 var sql = generator.Sql;
-                base.QueryDataReader(dba, args, sql, selectionProperties);
+                base.QueryDataReader(dba, args, sql, sql.Parameters, selectionProperties);
 
                 start += paramSection.Count;
             }
