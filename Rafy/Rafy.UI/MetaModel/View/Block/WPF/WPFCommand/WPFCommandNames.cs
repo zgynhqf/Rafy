@@ -23,11 +23,11 @@ namespace Rafy.MetaModel.View
     /// </summary>
     public class WPFCommandNames
     {
-        /// <summary>
-        /// 这个命令需要引入 Rafy.Customization 插件才可使用。
-        /// 否则值为 null。
-        /// </summary>
-        public static Type CustomizeUI;
+        ///// <summary>
+        ///// 这个命令需要引入 Rafy.Customization 插件才可使用。
+        ///// 否则值为 null。
+        ///// </summary>
+        //public static Type CustomizeUI;
 
         public static Type ExportToExcel;
         public static Type FireQuery;
