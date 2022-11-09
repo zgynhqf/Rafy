@@ -26,6 +26,12 @@ namespace Rafy.Customization
     /// </summary>
     public class CustomizationPlugin : DomainPlugin
     {
+        /// <summary>
+        /// 这个命令需要引入 Rafy.Customization 插件才可使用。
+        /// 否则值为 null。
+        /// </summary>
+        public static Type CustomizeUICommand;
+
         public override void Initialize(IApp app) { }
     }
 }

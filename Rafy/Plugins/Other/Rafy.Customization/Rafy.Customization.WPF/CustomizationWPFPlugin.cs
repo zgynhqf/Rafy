@@ -24,7 +24,7 @@ namespace Rafy.Customization.WPF
     {
         public override void Initialize(IApp app)
         {
-            WPFCommandNames.CustomizeUI = typeof(CustomizeUI);
+            CustomizationPlugin.CustomizeUICommand = typeof(CustomizeUI);
             if (RafyEnvironment.IsDebuggingEnabled)
             {
                 WPFCommandNames.SysCommands.Insert(0, typeof(CustomizeUI));

@@ -12,6 +12,7 @@ using Rafy.MetaModel.XmlConfig;
 using System.Security.Permissions;
 using System.Runtime.Serialization;
 using Rafy.Domain.ORM;
+using Rafy.UI;
 
 namespace Rafy.Customization
 {
@@ -164,7 +165,7 @@ namespace Rafy.Customization
 
         private void SerializeCommands(ConfigInputOutput io, BlockConfig blockConfig)
         {
-            bool isWeb = RafyEnvironment.Location.IsWebUI;
+            bool isWeb = UIEnvironment.IsWebUI;
 
             foreach (var cmdChanged in this.ViewConfigurationCommandList)
             {
@@ -249,7 +250,7 @@ namespace Rafy.Customization
                 }
             };
 
-            if (!RafyEnvironment.BranchProvider.HasBranch)
+            if (!UIEnvironment.BranchProvider.HasBranch)
             {
                 res.OutputBlockConfigKey.Type = BlockConfigType.Config;
 
@@ -292,26 +293,21 @@ namespace Rafy.Customization
 
             var entityType = evm.EntityType;
 
-            var res = _viewIds.FirstOrDefault(i => i.EntityType == entityType && i.ViewName == viewName);
-            if (res == null)
+            lock (_viewIds)
             {
-                lock (_viewIds)
+                var res = _viewIds.FirstOrDefault(i => i.EntityType == entityType && i.ViewName == viewName);
+                if (res == null)
                 {
-                    res = _viewIds.FirstOrDefault(i => i.EntityType == entityType && i.ViewName == viewName);
-                    if (res == null)
+                    res = new EVMUniqueId
                     {
-                        res = new EVMUniqueId
-                        {
-                            EntityType = entityType,
-                            ViewName = viewName,
-                            Id = RafyEnvironment.NewLocalId()
-                        };
-                        _viewIds.Add(res);
-                    }
+                        EntityType = entityType,
+                        ViewName = viewName,
+                        Id = RafyEnvironment.NewLocalId()
+                    };
+                    _viewIds.Add(res);
                 }
+                return res.Id;
             }
-
-            return res.Id;
         }
 
         internal static EVMUniqueId TryGetViewUniqueId(int id)
@@ -323,7 +319,7 @@ namespace Rafy.Customization
         {
             EntityViewMeta evm = null;
 
-            var dest = RafyEnvironment.BranchProvider.HasBranch ? BlockConfigType.Customization : BlockConfigType.Config;
+            var dest = UIEnvironment.BranchProvider.HasBranch ? BlockConfigType.Customization : BlockConfigType.Config;
 
             var viewId = TryGetViewUniqueId(parentId);
             if (viewId != null)
@@ -358,7 +354,7 @@ namespace Rafy.Customization
     {
         protected ViewConfigurationModelRepository()
         {
-            this.DataPortalLocation = DataPortalLocation.Local;
+            this.DataPortalLocation = Rafy.DataPortal.DataPortalLocation.Local;
         }
 
         [RepositoryQuery]

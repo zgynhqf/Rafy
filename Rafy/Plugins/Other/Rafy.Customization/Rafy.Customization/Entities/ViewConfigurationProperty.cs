@@ -91,7 +91,7 @@ namespace Rafy.Customization
     {
         protected ViewConfigurationPropertyRepository()
         {
-            this.DataPortalLocation = DataPortalLocation.Local;
+            this.DataPortalLocation = Rafy.DataPortal.DataPortalLocation.Local;
         }
     }
 

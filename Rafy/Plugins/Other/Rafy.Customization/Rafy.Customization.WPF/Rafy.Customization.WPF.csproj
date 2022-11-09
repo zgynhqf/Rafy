@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Rafy.Customization.WPF</RootNamespace>
     <AssemblyName>Rafy.Customization.WPF</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -55,15 +55,19 @@
     <Compile Include="ViewConfig\ViewConfigurationPropertyConfig.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Rafy\Rafy.csproj">
+    <ProjectReference Include="..\..\..\..\Rafy.UI\Rafy.UI.csproj">
+      <Project>{33aee526-9850-486b-a03c-c3b2a310abdc}</Project>
+      <Name>Rafy.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Rafy\Rafy.csproj">
       <Project>{966a5bf2-d690-426b-ad68-ad868bb8f855}</Project>
       <Name>Rafy</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\WPF\Rafy.WPF.Controls\Rafy.WPF.Controls.csproj">
+    <ProjectReference Include="..\..\..\..\WPF\Rafy.WPF.Controls\Rafy.WPF.Controls.csproj">
       <Project>{9107e3a0-e18a-49b5-a214-daccd5fe8723}</Project>
       <Name>Rafy.WPF.Controls</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\WPF\Rafy.WPF\Rafy.WPF.csproj">
+    <ProjectReference Include="..\..\..\..\WPF\Rafy.WPF\Rafy.WPF.csproj">
       <Project>{84399e4e-cc81-4b1f-9953-586b25b29792}</Project>
       <Name>Rafy.WPF</Name>
     </ProjectReference>

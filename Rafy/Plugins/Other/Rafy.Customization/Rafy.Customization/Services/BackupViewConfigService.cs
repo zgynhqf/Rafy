@@ -21,6 +21,7 @@ using Rafy.Domain;
 using Rafy.MetaModel;
 using Rafy.MetaModel.View;
 using Rafy.MetaModel.XmlConfig;
+using Rafy.UI;
 using Rafy.Web;
 
 namespace Rafy.Customization
@@ -32,7 +33,7 @@ namespace Rafy.Customization
     {
         public BackupViewConfigService()
         {
-            this.DataPortalLocation = DataPortalLocation.Local;
+            this.DataPortalLocation = Rafy.DataPortal.DataPortalLocation.Local;
         }
 
         [ServiceInput]
@@ -66,7 +67,7 @@ namespace Rafy.Customization
                 {
                     EntityType = ClientEntities.Find(this.Model).EntityType,
                     ExtendView = this.ViewName,
-                    Type = RafyEnvironment.BranchProvider.HasBranch ? BlockConfigType.Customization : BlockConfigType.Config
+                    Type = UIEnvironment.BranchProvider.HasBranch ? BlockConfigType.Customization : BlockConfigType.Config
                 };
 
                 var dv = ViewConfigurationModel.ViewNameProperty.GetMeta(typeof(ViewConfigurationModel)).DefaultValue;

@@ -12,6 +12,7 @@ using Rafy.MetaModel;
 using Rafy.MetaModel.Attributes;
 using Rafy.MetaModel.View;
 using Rafy.MetaModel.XmlConfig;
+using Rafy.UI;
 
 namespace Rafy.Customization
 {
@@ -80,7 +81,7 @@ namespace Rafy.Customization
         {
             foreach (var cmd in wpfCommands)
             {
-                if (cmd.RuntimeType != WPFCommandNames.CustomizeUI)
+                if (cmd.RuntimeType != CustomizationPlugin.CustomizeUICommand)
                 {
                     var m = new ViewConfigurationCommand();
 
@@ -100,7 +101,7 @@ namespace Rafy.Customization
     {
         protected ViewConfigurationCommandRepository()
         {
-            this.DataPortalLocation = DataPortalLocation.Local;
+            this.DataPortalLocation = Rafy.DataPortal.DataPortalLocation.Local;
         }
     }
 
@@ -116,7 +117,7 @@ namespace Rafy.Customization
 
             var evm = ViewConfigurationModel.GetEVMByParentId(parentId);
 
-            if (RafyEnvironment.Location.IsWebUI)
+            if (UIEnvironment.IsWebUI)
             {
                 list.Add(parentId, evm.AsWebView().Commands);
             }
