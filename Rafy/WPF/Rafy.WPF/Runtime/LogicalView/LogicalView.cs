@@ -942,13 +942,13 @@ namespace Rafy.WPF
             }
             this.DataLoader = null;
 
-            if (_relations != null)
+            if (_relations.Count > 0)
             {
                 foreach (var relation in _relations)
                 {
                     relation.View.Dispose();
                 }
-                _relations = null;
+                _relations.Clear();
             }
 
             if (_childrenViews != null)
