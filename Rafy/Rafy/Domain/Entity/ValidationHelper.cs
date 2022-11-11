@@ -54,6 +54,16 @@ namespace Rafy.Domain.Validation
             entity.NotifyRevalidate(property);
         }
 
+        /// <summary>
+        /// 获取指定实体类型对应的规则的管理器。
+        /// </summary>
+        /// <param name="entityType"></param>
+        /// <returns></returns>
+        public static IValidationRulesManager GetRulesManager(Type entityType)
+        {
+            return GetTypeRules(entityType);
+        }
+
         internal static ValidationRulesManager GetTypeRules(Type entityType)
         {
             //类型的规则，都放在 Repository 上。

@@ -20,10 +20,28 @@ using Rafy.MetaModel;
 namespace Rafy.Domain.Validation
 {
     /// <summary>
+    /// 一个类型对应的规则管理器。
+    /// </summary>
+    public interface IValidationRulesManager
+    {
+        /// <summary>
+        /// 对应整个类型的规则容器
+        /// </summary>
+        IRulesContainer TypeRules { get; }
+
+        /// <summary>
+        /// 获取指定属性对应的规则容器。
+        /// </summary>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        IRulesContainer FindRulesForProperty(IManagedProperty property);
+    }
+
+    /// <summary>
     /// Maintains rule methods for a business object
     /// or business object type.
     /// </summary>
-    internal class ValidationRulesManager
+    internal class ValidationRulesManager : IValidationRulesManager
     {
         private RulesContainer _typeRules = new RulesContainer();
 
@@ -114,5 +132,12 @@ namespace Rafy.Domain.Validation
         {
             _propertyRulesList.Remove(property);
         }
+
+        public IRulesContainer FindRulesForProperty(IManagedProperty property)
+        {
+            return this.GetRulesForProperty(property, false);
+        }
+
+        IRulesContainer IValidationRulesManager.TypeRules => this.TypeRules;
     }
 }

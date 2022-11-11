@@ -13,17 +13,31 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 
 namespace Rafy.Domain.Validation
 {
     /// <summary>
+    /// 一个规则的容器
+    /// </summary>
+    public interface IRulesContainer
+    {
+        /// <summary>
+        /// 判断容器中是否已经存在指定类型的规则。
+        /// </summary>
+        /// <param name="ruleType"></param>
+        /// <returns></returns>
+        bool HasRule(Type ruleType);
+    }
+
+    /// <summary>
     /// 简单的规则列表。
     /// 
     /// 提供排序的方法
     /// </summary>
-    internal class RulesContainer
+    internal class RulesContainer : IRulesContainer
     {
         private List<IRule> _list = new List<IRule>();
         private bool _sorted;
@@ -62,6 +76,11 @@ namespace Rafy.Domain.Validation
         {
             _list.Clear();
             _sorted = true;
+        }
+
+        public bool HasRule(Type ruleType)
+        {
+            return _list.Any(r => ruleType.IsInstanceOfType(r.ValidationRule));
         }
     }
 }
