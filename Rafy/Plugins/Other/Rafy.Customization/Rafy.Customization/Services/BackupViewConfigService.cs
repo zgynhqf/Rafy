@@ -49,7 +49,7 @@ namespace Rafy.Customization
             var key = this.GetInputKey();
             if (key != null)
             {
-                var file = key.GetFilePath();
+                var file = key.GetActiveBranchFilePath();
 
                 var dir = Path.GetDirectoryName(file);
                 var fileName = Path.GetFileName(file);
@@ -67,7 +67,6 @@ namespace Rafy.Customization
                 {
                     EntityType = ClientEntities.Find(this.Model).EntityType,
                     ExtendView = this.ViewName,
-                    Type = UIEnvironment.BranchProvider.HasBranch ? BlockConfigType.Customization : BlockConfigType.Config
                 };
 
                 var dv = ViewConfigurationModel.ViewNameProperty.GetMeta(typeof(ViewConfigurationModel)).DefaultValue;

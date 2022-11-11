@@ -48,7 +48,7 @@ namespace Rafy.MetaModel.View
         /// <param name="extendViewName"></param>
         /// <param name="destination"></param>
         /// <returns></returns>
-        public EntityViewMeta Create(Type entityType, string extendViewName = null, BlockConfigType? destination = BlockConfigType.Customization)
+        public EntityViewMeta Create(Type entityType, string extendViewName = null, BranchDestination destination = BranchDestination.ActiveBranch)
         {
             if (string.IsNullOrEmpty(extendViewName))
             {
@@ -64,7 +64,7 @@ namespace Rafy.MetaModel.View
         /// <param name="entityType"></param>
         /// <param name="destination"></param>
         /// <returns></returns>
-        public EntityViewMeta CreateBaseView(Type entityType, BlockConfigType? destination = BlockConfigType.Customization)
+        public EntityViewMeta CreateBaseView(Type entityType, BranchDestination destination = BranchDestination.ActiveBranch)
         {
             var res = this.CreateBaseViewCore(entityType, destination);
 
@@ -73,7 +73,7 @@ namespace Rafy.MetaModel.View
             return res;
         }
 
-        private EntityViewMeta CreateBaseViewCore(Type entityType, BlockConfigType? destination)
+        private EntityViewMeta CreateBaseViewCore(Type entityType, BranchDestination destination = BranchDestination.ActiveBranch)
         {
             var meta = CommonModel.Entities.Get(entityType);
 
@@ -105,29 +105,7 @@ namespace Rafy.MetaModel.View
                 }
             }
 
-            if (destination != null)
-            {
-                var key = new BlockConfigKey
-                {
-                    EntityType = entityType,
-                    Type = BlockConfigType.Config
-                };
-
-                var blockCfg = this._xmlCfgMgr.GetBlockConfig(key);
-                if (blockCfg != null) { blockCfg.Config(raw); }
-            }
-
-            if (destination == BlockConfigType.Customization)
-            {
-                var key = new BlockConfigKey
-                {
-                    EntityType = entityType,
-                    Type = BlockConfigType.Customization
-                };
-
-                var blockCfg = this._xmlCfgMgr.GetBlockConfig(key);
-                if (blockCfg != null) { blockCfg.Config(raw); }
-            }
+            this.ConfigBlock(raw, destination);
 
             return raw;
         }
@@ -167,9 +145,10 @@ namespace Rafy.MetaModel.View
         /// <param name="extendViewName"></param>
         /// <param name="destination"></param>
         /// <returns></returns>
-        public EntityViewMeta CreateExtendView(Type entityType, string extendViewName, BlockConfigType? destination = BlockConfigType.Customization)
+        public EntityViewMeta CreateExtendView(Type entityType, string extendViewName, BranchDestination destination = BranchDestination.ActiveBranch)
         {
             var raw = this.CreateBaseViewCore(entityType, destination);
+            raw.ExtendView = extendViewName;
 
             //使用扩展视图配置对象进行配置
             if (raw is WebEntityViewMeta)
@@ -195,39 +174,33 @@ namespace Rafy.MetaModel.View
                 }
             }
 
-            if (destination != null)
-            {
-                //Config
-                var key = new BlockConfigKey
-                {
-                    EntityType = entityType,
-                    ExtendView = extendViewName,
-                    Type = BlockConfigType.Config
-                };
-
-                var blockCfg = this._xmlCfgMgr.GetBlockConfig(key);
-                if (blockCfg != null) { blockCfg.Config(raw); }
-
-                //Customization
-                if (destination == BlockConfigType.Customization)
-                {
-                    key = new BlockConfigKey
-                    {
-                        EntityType = entityType,
-                        ExtendView = extendViewName,
-                        Type = BlockConfigType.Customization
-                    };
-
-                    blockCfg = this._xmlCfgMgr.GetBlockConfig(key);
-                    if (blockCfg != null) { blockCfg.Config(raw); }
-                }
-            }
-
-            raw.ExtendView = extendViewName;
+            this.ConfigBlock(raw, destination);
 
             //raw.Freeze();
 
             return raw;
+        }
+
+        /// <summary>
+        /// 使用 BlockConfig 配置界面
+        /// </summary>
+        /// <param name="raw"></param>
+        /// <param name="destination"></param>
+        private void ConfigBlock(EntityViewMeta raw, BranchDestination destination)
+        {
+            if (destination != BranchDestination.Empty)
+            {
+                var key = new BlockConfigKey
+                {
+                    EntityType = raw.EntityType,
+                    ExtendView = raw.ExtendView
+                };
+                var blockCfgs = _xmlCfgMgr.GetBlockConfig(key, destination);
+                foreach (var blockCfg in blockCfgs)
+                {
+                    blockCfg.Config(raw);
+                }
+            }
         }
 
         //public EntityPropertyViewMeta CreateExtensionPropertyViewMeta(IManagedProperty mp, EntityViewMeta evm)

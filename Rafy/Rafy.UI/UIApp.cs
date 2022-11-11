@@ -46,8 +46,6 @@ namespace Rafy.ComponentModel
         {
             base.InitEnvironment();
 
-            UIEnvironment.InitCustomizationPath();
-
             //设置多国语言
             this.SetupLanguage();
         }

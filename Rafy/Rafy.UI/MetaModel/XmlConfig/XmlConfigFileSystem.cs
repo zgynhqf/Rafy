@@ -24,15 +24,8 @@ namespace Rafy.MetaModel.XmlConfig
     /// </summary>
     internal static class XmlConfigFileSystem
     {
-        internal static bool IsCustomizing
+        internal static string[] GetBlockConfigFilePath(BlockConfigKey key, BranchDestination destination)
         {
-            get { return UIEnvironment.BranchProvider.HasBranch; }
-        }
-
-        internal static string GetBlockConfigFilePath(BlockConfigKey key)
-        {
-            if (!IsCustomizing && key.Type == BlockConfigType.Customization) { throw new InvalidProgramException("当前不在客户化状态中，无法找到客户化文件：" + key.GetDescription()); }
-
             var sb = new StringBuilder();
             if (key.IsDefaultView())
             {
@@ -51,12 +44,9 @@ namespace Rafy.MetaModel.XmlConfig
 
             var versionPath = sb.ToString();
 
-            //暂时只支持一个主干版本和一个客户化版本：common, customer
-            var pathes = UIEnvironment.BranchProvider.MapAllPathes(versionPath, true);
+            var pathes = UIEnvironment.BranchProvider.MapAllBranchPathes(versionPath, true, destination);
 
-            if (key.Type == BlockConfigType.Customization) { return pathes[1]; }
-
-            return pathes[0];
+            return pathes;
         }
 
         internal static string GetCompositeBlocksFilePath(string definedViewName)
@@ -64,7 +54,7 @@ namespace Rafy.MetaModel.XmlConfig
             var versionPath = "MetaModel/AggtBlocks/" + definedViewName + ".xml";
 
             //暂时只支持一个主干版本和一个客户化版本：common, customer
-            var pathes = UIEnvironment.BranchProvider.MapAllPathes(versionPath, true);
+            var pathes = UIEnvironment.BranchProvider.MapAllBranchPathes(versionPath, true);
 
             return pathes.Last();
         }

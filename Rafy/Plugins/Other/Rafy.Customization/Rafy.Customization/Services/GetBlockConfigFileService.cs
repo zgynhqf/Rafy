@@ -38,7 +38,7 @@ namespace Rafy.Customization
             var key = this.GetInputKey();
             if (key != null)
             {
-                var file = key.GetFilePath();
+                var file = key.GetActiveBranchFilePath();
                 if (File.Exists(file))
                 {
                     Process.Start(file);

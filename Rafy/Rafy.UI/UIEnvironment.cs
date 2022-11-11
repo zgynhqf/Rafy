@@ -206,7 +206,7 @@ namespace Rafy.UI
 
         #region InitCustomizationPath
 
-        private static BranchPathProvider _branchProvider;
+        private static BranchPathProvider _branchProvider = new BranchPathProvider();
 
         /// <summary>
         /// 查找文件路径的查找算法提供器。
@@ -214,27 +214,6 @@ namespace Rafy.UI
         public static BranchPathProvider BranchProvider
         {
             get { return _branchProvider; }
-        }
-
-        /// <summary>
-        /// 提供一个先初始化路径的方法，这个方法可以单独先被调用。
-        /// 这样，就可以通过路径找到需要的程序集，其它的初始化才能正常进行。
-        /// </summary>
-        internal static void InitCustomizationPath()
-        {
-            _branchProvider = new BranchPathProvider();
-
-            //分支版本名。
-            //同时，这个也是客户化文件夹的名字。
-            //分支版本定义，需要重写这个属性。
-            string customerDir = ConfigurationHelper.GetAppSettingOrDefault("BranchDirList");
-            if (!string.IsNullOrWhiteSpace(customerDir))
-            {
-                foreach (var branch in customerDir.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
-                {
-                    _branchProvider.AddBranch(branch);
-                }
-            }
         }
 
         private const string DomainPluginFolder = "Domain";
@@ -246,7 +225,7 @@ namespace Rafy.UI
         /// <returns></returns>
         public static string[] GetCustomerEntityDlls(bool toAbsolute = true)
         {
-            return _branchProvider.MapAllPathes(DomainPluginFolder, toAbsolute);
+            return _branchProvider.MapAllBranchPathes(DomainPluginFolder, toAbsolute);
         }
 
         /// <summary>
@@ -255,7 +234,7 @@ namespace Rafy.UI
         /// <returns></returns>
         internal static string[] GetCustomerModuleDlls()
         {
-            return _branchProvider.MapAllPathes(UIPluginFolder, false);
+            return _branchProvider.MapAllBranchPathes(UIPluginFolder, false);
         }
 
         #endregion

@@ -67,7 +67,7 @@ namespace Rafy.MetaModel
                 if (this._view == null)
                 {
                     //只获取 代码视图
-                    this._view = UIModel.Views.Create(this.EntityType, this.ExtendView, null) as WPFEntityViewMeta;
+                    this._view = UIModel.Views.Create(this.EntityType, this.ExtendView, BranchDestination.Empty) as WPFEntityViewMeta;
                 }
 
                 return this._view;
@@ -114,7 +114,7 @@ namespace Rafy.MetaModel
                 if (this._view == null)
                 {
                     //只获取 代码视图
-                    this._view = UIModel.Views.Create(this.EntityType, this.ExtendView, null) as WebEntityViewMeta;
+                    this._view = UIModel.Views.Create(this.EntityType, this.ExtendView, BranchDestination.Empty) as WebEntityViewMeta;
                 }
 
                 return this._view;

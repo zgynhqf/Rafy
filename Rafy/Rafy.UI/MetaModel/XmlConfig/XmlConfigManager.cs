@@ -33,7 +33,7 @@ namespace Rafy.MetaModel.XmlConfig
         /// <param name="blockCfg"></param>
         public void Save(BlockConfig blockCfg)
         {
-            var path = blockCfg.Key.GetFilePath();
+            var path = blockCfg.Key.GetActiveBranchFilePath();
 
             if (blockCfg.IsChanged())
             {
@@ -55,25 +55,45 @@ namespace Rafy.MetaModel.XmlConfig
         /// 通过 key 查找 BlockConfig。
         /// </summary>
         /// <param name="key"></param>
+        /// <param name="destination">需要获取到哪一个部分的分支列表。</param>
         /// <returns></returns>
-        public BlockConfig GetBlockConfig(BlockConfigKey key)
+        public IEnumerable<BlockConfig> GetBlockConfig(BlockConfigKey key, BranchDestination destination)
         {
-            if (key.Type == BlockConfigType.Config || XmlConfigFileSystem.IsCustomizing)
+            var pathes = key.GetFilePathes(destination);
+
+            foreach (var path in pathes)
             {
-                var path = key.GetFilePath();
+                var res = DeserializaXml(key, path);
+                if (res != null) yield return res;
+            }
+        }
 
-                if (File.Exists(path))
+        /// <summary>
+        /// 通过 key 查找当前使用的版本对应的 BlockConfig。
+        /// 如果没有对应的配置文件，则返回 null。
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public BlockConfig GetActiveBranchBlockConfig(BlockConfigKey key)
+        {
+            var path = key.GetActiveBranchFilePath();
+
+            return DeserializaXml(key, path);
+        }
+
+        private static BlockConfig DeserializaXml(BlockConfigKey key, string path)
+        {
+            if (File.Exists(path))
+            {
+                var xDoc = XDocument.Load(path);
+
+                var blockCfg = new BlockConfig
                 {
-                    var xDoc = XDocument.Load(path);
+                    Key = key,
+                    Xml = xDoc.Root
+                };
 
-                    var blockCfg = new BlockConfig
-                    {
-                        Key = key,
-                        Xml = xDoc.Root
-                    };
-
-                    return blockCfg;
-                }
+                return blockCfg;
             }
 
             return null;

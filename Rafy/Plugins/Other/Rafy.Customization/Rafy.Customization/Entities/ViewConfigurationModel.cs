@@ -83,7 +83,7 @@ namespace Rafy.Customization
             if (io.InputView == null) return;
 
             //先从 xml 文件中读取当前的配置。
-            var blockConfig = UIModel.XmlConfigMgr.GetBlockConfig(io.OutputBlockConfigKey);
+            var blockConfig = UIModel.XmlConfigMgr.GetActiveBranchBlockConfig(io.OutputBlockConfigKey);
             if (blockConfig == null)
             {
                 blockConfig = new BlockConfig
@@ -250,20 +250,7 @@ namespace Rafy.Customization
                 }
             };
 
-            if (!UIEnvironment.BranchProvider.HasBranch)
-            {
-                res.OutputBlockConfigKey.Type = BlockConfigType.Config;
-
-                //ConfigDefaultView/ConfigExtendView
-                res.InputView = UIModel.Views.Create(viewId.EntityType, viewId.ViewName, null);
-            }
-            else
-            {
-                res.OutputBlockConfigKey.Type = BlockConfigType.Customization;
-
-                //CustomizeDefaultView，CustomizeExtendView
-                res.InputView = UIModel.Views.Create(viewId.EntityType, viewId.ViewName, BlockConfigType.Config);
-            }
+            res.InputView = UIModel.Views.Create(viewId.EntityType, viewId.ViewName, BranchDestination.BeforeActiveBranch);
 
             return res;
         }
@@ -319,12 +306,10 @@ namespace Rafy.Customization
         {
             EntityViewMeta evm = null;
 
-            var dest = UIEnvironment.BranchProvider.HasBranch ? BlockConfigType.Customization : BlockConfigType.Config;
-
             var viewId = TryGetViewUniqueId(parentId);
             if (viewId != null)
             {
-                evm = UIModel.Views.Create(viewId.EntityType, viewId.ViewName, dest);
+                evm = UIModel.Views.Create(viewId.EntityType, viewId.ViewName);
             }
             //else
             //{

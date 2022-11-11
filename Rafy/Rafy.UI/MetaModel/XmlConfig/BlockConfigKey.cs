@@ -34,11 +34,6 @@ namespace Rafy.MetaModel.XmlConfig
         public string ExtendView { get; set; }
 
         /// <summary>
-        /// 配置文件的类型
-        /// </summary>
-        public BlockConfigType Type { get; set; }
-
-        /// <summary>
         /// 判断当前配置是否为默认视图
         /// </summary>
         /// <returns></returns>
@@ -60,25 +55,18 @@ namespace Rafy.MetaModel.XmlConfig
         /// 对应的 XML 文件路径地址。
         /// </summary>
         /// <returns></returns>
-        public string GetFilePath()
+        public string[] GetFilePathes(BranchDestination destination)
         {
-            return XmlConfigFileSystem.GetBlockConfigFilePath(this);
+            return XmlConfigFileSystem.GetBlockConfigFilePath(this, destination);
         }
-    }
-
-    /// <summary>
-    /// 块配置文件类型
-    /// </summary>
-    public enum BlockConfigType
-    {
-        /// <summary>
-        /// 此类配置文件是在主干版本开发时使用的。
-        /// </summary>
-        Config,
 
         /// <summary>
-        /// 一类配置文件是在客户化期才起作用的。
+        /// 获取激活的分支的 XML 文件路径地址。
         /// </summary>
-        Customization
+        /// <returns></returns>
+        public string GetActiveBranchFilePath()
+        {
+            return this.GetFilePathes(BranchDestination.ActiveBranch).Last();
+        }
     }
 }

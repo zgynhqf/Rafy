@@ -33,63 +33,71 @@ namespace Rafy.MetaModel
         /// <summary>
         /// 主干版本的文件夹名。
         /// </summary>
-        public const string CommonAppName = "Common";
+        public const string CommonBranchName = "Common";
 
         /// <summary>
-        /// 所有的应用列表。
+        /// 所有的分支列表。
         /// 第一个是Common
         /// </summary>
-        private List<string> _appNames;
+        private List<string> _brancNames;
 
         /// <summary>
-        /// 所有客户文件夹所在的父文件夹路径
+        /// 所有应用对应的根目录。
         /// </summary>
-        private string _rootPath;
+        private Dictionary<string, string> _branchDirs;
+
+        /// <summary>
+        /// 各版本文件夹所在的根文件夹路径
+        /// </summary>
+        private string _defaultRootPath;
 
         internal BranchPathProvider()
         {
-            this._appNames = new List<string>();
-            this._appNames.Add(CommonAppName);
-            _rootPath = RafyEnvironment.MapAbsolutePath(BranchFilesRootDir);
+            _brancNames = new List<string> { CommonBranchName };
+            _branchDirs = new Dictionary<string, string>();
+            _defaultRootPath = RafyEnvironment.MapAbsolutePath(BranchFilesRootDir);
         }
 
         /// <summary>
-        /// 返回当前是否已经有分支版本进行了客户化。
+        /// 当前正在使用的分支名称。
         /// </summary>
-        public bool HasBranch
-        {
-            get { return this._appNames.Count > 1; }
-        }
+        public string ActiveBranch { get; set; } = CommonBranchName;
 
         /// <summary>
         /// 按照优先级调用此方法添加分支版本的路径。
         /// </summary>
         /// <param name="branchAppName"></param>
-        internal void AddBranch(string branchAppName)
+        /// <param name="branchRootDir"></param>
+        public void AddBranch(string branchAppName, string branchRootDir = null)
         {
             if (string.IsNullOrWhiteSpace(branchAppName)) throw new ArgumentNullException("branchAppName");
-            if (branchAppName == CommonAppName) throw new ArgumentException("branchAppName 不能是" + CommonAppName);
+            if (branchAppName == CommonBranchName) throw new ArgumentException("branchAppName 不能是" + CommonBranchName);
 
-            if (!this._appNames.Contains(branchAppName))
+            if (!_brancNames.Contains(branchAppName))
             {
-                //所有新加的文件都比Common的优先级高。全部插入到 Common 之前
-                this._appNames.Insert(this._appNames.Count - 1, branchAppName);
+                _brancNames.Add(branchAppName);
+
+                if (branchRootDir != null)
+                {
+                    _branchDirs[branchAppName] = branchRootDir;
+                }
             }
         }
 
         /// <summary>
-        /// 根据提供的版本文件（夹）路径，按优先级返回所有版本对应的文件名。
+        /// 根据提供的版本文件（夹）路径，按版本优先级返回所有版本对应的文件名。
         /// </summary>
         /// <param name="versionPath"></param>
         /// <param name="toAbsolute"></param>
+        /// <param name="destination">需要获取到哪一个部分的分支列表。</param>
         /// <returns></returns>
-        public string[] MapAllPathes(string versionPath, bool toAbsolute)
+        public string[] MapAllBranchPathes(string versionPath, bool toAbsolute, BranchDestination destination = BranchDestination.ActiveBranch)
         {
             if (string.IsNullOrEmpty(versionPath)) throw new ArgumentNullException("relativePath");
 
             versionPath = versionPath.Replace('/', '\\');
 
-            var result = this._appNames.Select(n => Path.Combine(_rootPath, n, versionPath));
+            var result = this.GetBranches(destination).Select(app => CombineAppPath(app, versionPath));
 
             if (!toAbsolute) { result = result.Select(p => RafyEnvironment.MapRelativePath(p)); }
 
@@ -133,21 +141,82 @@ namespace Rafy.MetaModel
 
             versionPath = versionPath.Replace('/', '\\');
 
-            for (int i = 0, c = this._appNames.Count; i < c; i++)
+            //先找文件
+            foreach (var app in this.GetBranches())
             {
-                var app = this._appNames[i];
-                var path = Path.Combine(_rootPath, app, versionPath);
+                var path = CombineAppPath(app, versionPath);
                 if (File.Exists(path)) return path;
             }
 
-            for (int i = 0, c = this._appNames.Count; i < c; i++)
+            //再找文件夹
+            foreach (var app in this.GetBranches())
             {
-                var app = this._appNames[i];
-                var path = Path.Combine(_rootPath, app, versionPath);
+                var path = CombineAppPath(app, versionPath);
                 if (Directory.Exists(path)) return path;
             }
 
             return null;
         }
+
+        /// <summary>
+        /// 获取正在使用的分支列表名称。
+        /// </summary>
+        /// <param name="destination">需要获取到哪一个部分的分支列表。</param>
+        /// <returns></returns>
+        public IEnumerable<string> GetBranches(BranchDestination destination = BranchDestination.ActiveBranch)
+        {
+            if (destination != BranchDestination.Empty)
+            {
+                for (int i = 0, c = _brancNames.Count; i < c; i++)
+                {
+                    var app = _brancNames[i];
+
+                    //如果已经激活到需要的版本，则后续的版本都不再使用。
+                    if (app == this.ActiveBranch)
+                    {
+                        if (destination == BranchDestination.BeforeActiveBranch) break;
+
+                        yield return app;
+
+                        if (destination == BranchDestination.ActiveBranch) break;
+                    }
+                    else
+                    {
+                        yield return app;
+                    }
+                }
+            }
+        }
+
+        private string CombineAppPath(string branchName, string versionPath)
+        {
+            _branchDirs.TryGetValue(branchName, out var appDir);
+            if (appDir == null) { appDir = _defaultRootPath; }
+
+            var result = Path.Combine(appDir, branchName, versionPath);
+
+            return result;
+        }
+    }
+
+    /// <summary>
+    /// 视图模型在进行块配置时，需要配置到哪一步的分支版本。
+    /// </summary>
+    public enum BranchDestination
+    {
+        /// <summary>
+        /// 不需要任何分支配置。（获取到的只有代码配置）
+        /// </summary>
+        Empty,
+
+        /// <summary>
+        /// 配置到当前激活版本的前一个版本。
+        /// </summary>
+        BeforeActiveBranch,
+
+        /// <summary>
+        /// 配置到到当前激活版本。
+        /// </summary>
+        ActiveBranch
     }
 }
