@@ -19,6 +19,7 @@ using System.Threading;
 
 using System.Diagnostics;
 using Rafy;
+using System.Threading.Tasks;
 
 namespace Rafy.Threading
 {
@@ -57,11 +58,11 @@ namespace Rafy.Threading
         /// </summary>
         /// <param name="action"></param>
         /// <param name="errorHandler"></param>
-        public static void InvokeSafe(Action action, Action<Exception> errorHandler = null)
+        public static async Task InvokeSafe(Action action, Action<Exception> errorHandler = null)
         {
             action = action.WrapByCurrentPrinciple();
 
-            ThreadPool.QueueUserWorkItem(o =>
+            await Task.Run(() =>
             {
                 try
                 {
@@ -92,11 +93,11 @@ namespace Rafy.Threading
         /// 对任务进行异步调用。
         /// </summary>
         /// <param name="action"></param>
-        public static void Invoke(Action action)
+        public static async Task Invoke(Action action)
         {
             action = action.WrapByCurrentPrinciple();
 
-            ThreadPool.QueueUserWorkItem(o => action());
+            await Task.Run(() => action());
         }
 
         /// <summary>
