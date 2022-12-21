@@ -15,7 +15,7 @@
     <ItemGroup>
         <PackageReference Include="MySql.Data" Version="8.0.8-dmr" />
         <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.12.0-beta2" />
-        <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
+        <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
     </ItemGroup>
 
     <ItemGroup>
