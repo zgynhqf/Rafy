@@ -455,6 +455,7 @@ namespace Rafy.Domain.ORM
         /// <param name="dba">The dba.</param>
         /// <param name="args">The arguments.</param>
         /// <param name="sql">The SQL.</param>
+        /// <param name="sqlParamters"></param>
         /// <param name="readProperties">只读取这些属性。</param>
         protected void QueryDataReader(IDbAccesser dba, IEntityQueryArgs args, string sql, object[] sqlParamters, List<IManagedProperty> readProperties)
         {
