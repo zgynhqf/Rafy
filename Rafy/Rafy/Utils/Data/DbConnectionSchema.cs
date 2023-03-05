@@ -37,6 +37,7 @@ namespace Rafy.Data
 
         //PatrickLiu增加的有关MySql的链接客户端
         public const string Provider_MySql = "MySql.Data.MySqlClient";
+        public const string Provider_MongoDb = "MongoDb.Driver";
 
         public const string DbName_LocalServer = "LocalSqlServer";
 

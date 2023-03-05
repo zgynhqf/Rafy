@@ -23,6 +23,7 @@ using Rafy.DbMigration.SqlServerCe;
 using Rafy.DbMigration.Oracle;
 using Rafy.DbMigration.MySql;
 using Rafy.DbMigration.SQLite;
+using Rafy.DbMigration.MongoDb;
 
 namespace Rafy.DbMigration
 {
@@ -73,6 +74,8 @@ namespace Rafy.DbMigration
                 case DbConnectionSchema.Provider_MySql:
                 case DbConnectionSchema.Provider_SQLite:
                     return MySqlIdentifierQuoter.Instance;
+                case DbConnectionSchema.Provider_MongoDb:
+                    return EmptyIdentifierQuoter.Instance;
                 default:
                     if (DbConnectionSchema.IsOracleProvider(providerName))
                     {
@@ -94,6 +97,8 @@ namespace Rafy.DbMigration
                     return MySqlDbTypeConverter.Instance;
                 case DbConnectionSchema.Provider_SQLite:
                     return SQLiteDbTypeConverter.Instance;
+                case DbConnectionSchema.Provider_MongoDb:
+                    return MongoDbDbTypeConverter.Instance;
                 default:
                     if (DbConnectionSchema.IsOracleProvider(providerName))
                     {

@@ -58,7 +58,7 @@ namespace Rafy.Domain.ORM
         {
             _repository = repository;
             _meta = repository.EntityMeta;
-            _tableInfo = RdbTableInfoFactory.CreateTableInfo(_meta, dbProvider);
+            _tableInfo = RdbTableInfoFactory.FindOrCreateTableInfo(_meta, dbProvider);
             _columns = new List<RdbColumn>();
 
             _deleteSql = new Lazy<string>(this.GenerateDeleteSQL);

@@ -106,10 +106,14 @@ namespace Rafy.Domain.ORM.DbMigration
                         var em = CommonModel.Entities.Find(type);
                         if (em != null && em.TableMeta != null)
                         {
-                            var entityDb = RdbDataProvider.Get(RF.Find(type)).ConnectionStringSettingName;
-                            if (entityDb == EntityDbSettingName)
+                            var rdbDP = RF.Find(type).DataProvider as RdbDataProvider;
+                            if (rdbDP != null)
                             {
-                                tableEntityTypes.Add(em);
+                                var entityDb = rdbDP.ConnectionStringSettingName;
+                                if (entityDb == EntityDbSettingName)
+                                {
+                                    tableEntityTypes.Add(em);
+                                }
                             }
                         }
                     }

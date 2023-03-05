@@ -164,11 +164,9 @@ namespace Rafy.Domain.ORM.Query
         {
             if (repository == null) throw new ArgumentNullException("entityRepository");
 
-            var tableInfo = RdbDataProvider.Get(repository).DbTable.Info;
-            if (tableInfo == null)
-            {
-                ORMHelper.ThrowBasePropertyNotMappedException(repository.EntityType);
-            }
+            var dp = repository.DataProvider as RdbDataProvider;
+            var tableInfo = dp?.DbTable.Info ??
+                RdbTableInfoFactory.FindOrCreateTableInfo(repository.EntityMeta, repository.DataProvider.DbProviderName);
 
             //构造一个 TableSource 对象。
             //在构造 TableSource 时，不必立刻为所有属性生成相应的列。必须使用懒加载。

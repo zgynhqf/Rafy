@@ -52,7 +52,7 @@ namespace Rafy.Domain.ORM
         {
             RdbTable table = null;
 
-            var provider = RdbDataProvider.Get(repo).DbSetting.ProviderName;
+            var provider = repo.DataProvider.DbProviderName;
             table = this.CreateRdbTableCore(repo, provider);
 
             table.IdentifierProvider = DbMigrationProviderFactory.GetIdentifierProvider(provider);

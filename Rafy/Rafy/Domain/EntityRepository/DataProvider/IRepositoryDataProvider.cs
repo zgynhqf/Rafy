@@ -27,6 +27,12 @@ namespace Rafy.Domain
     public interface IRepositoryDataProvider
     {
         /// <summary>
+        /// 数据库提供程序。
+        /// 见：<see cref="DbConnectionSchema"/> 中支持的数据库提供程序类型。
+        /// </summary>
+        string DbProviderName { get; }
+
+        /// <summary>
         /// 通过Id在数据层中查询指定的对象
         /// </summary>
         /// <param name="id">The unique identifier.</param>

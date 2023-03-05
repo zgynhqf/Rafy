@@ -13,6 +13,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Rafy.DbMigration;
@@ -22,7 +23,25 @@ namespace Rafy.Domain.ORM
 {
     internal static class RdbTableInfoFactory
     {
-        internal static IRdbTableInfo CreateTableInfo(EntityMeta em, string dbProvider)
+        private static Dictionary<Type, RdbTableInfo> _cache = new Dictionary<Type, RdbTableInfo>(10);
+
+        internal static IRdbTableInfo FindOrCreateTableInfo(EntityMeta em, string dbProvider)
+        {
+            if (!_cache.TryGetValue(em.EntityType, out RdbTableInfo result))
+            {
+                lock (_cache)
+                {
+                    if (!_cache.TryGetValue(em.EntityType, out result))
+                    {
+                        result = CreateTableInfo(em, dbProvider);
+                        _cache.Add(em.EntityType, result);
+                    }
+                }
+            }
+            return result;
+        }
+
+        private static RdbTableInfo CreateTableInfo(EntityMeta em, string dbProvider)
         {
             if (em.TableMeta == null)
             {

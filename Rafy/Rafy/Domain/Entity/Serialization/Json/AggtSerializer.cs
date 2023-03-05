@@ -412,12 +412,17 @@ namespace Rafy.Domain.Serialization.Json
         {
             if (this.UseCamelProperty)
             {
-                property = this.ToCamel(property);
+                property = ToCamel(property);
             }
             _writer.WritePropertyName(property);
         }
 
-        private string ToCamel(string property)
+        /// <summary>
+        /// 返回驼峰式的属性命名。
+        /// </summary>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        public static string ToCamel(string property)
         {
             if (char.IsLower(property[0]))
             {

@@ -46,6 +46,12 @@ namespace Rafy.Domain
         private DataSaver _dataSaver;
 
         /// <summary>
+        /// 使用的数据库提供程序。
+        /// 见：<see cref="DbConnectionSchema"/> 中支持的数据库提供程序类型。
+        /// </summary>
+        public abstract string DbProviderName { get; }
+
+        /// <summary>
         /// 为此仓库提供数据。
         /// </summary>
         public EntityRepository Repository

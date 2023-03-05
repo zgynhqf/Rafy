@@ -98,6 +98,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.Customization", "Rafy\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.Customization.WPF", "Rafy\Plugins\Other\Rafy.Customization\Rafy.Customization.WPF\Rafy.Customization.WPF.csproj", "{1370C33E-858C-4A32-9D66-4CE324674E3C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rafy.MongoDb", "Rafy\Plugins\Rafy.MongoDb\Rafy.MongoDb.csproj", "{8025DE35-DED7-4587-8FC3-FDF24EBBD627}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		D_UIA_Standard|Any CPU = D_UIA_Standard|Any CPU
@@ -370,6 +372,14 @@ Global
 		{1370C33E-858C-4A32-9D66-4CE324674E3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1370C33E-858C-4A32-9D66-4CE324674E3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1370C33E-858C-4A32-9D66-4CE324674E3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8025DE35-DED7-4587-8FC3-FDF24EBBD627}.D_UIA_Standard|Any CPU.ActiveCfg = Debug|Any CPU
+		{8025DE35-DED7-4587-8FC3-FDF24EBBD627}.D_UIA_Standard|Any CPU.Build.0 = Debug|Any CPU
+		{8025DE35-DED7-4587-8FC3-FDF24EBBD627}.D_Web|Any CPU.ActiveCfg = Debug|Any CPU
+		{8025DE35-DED7-4587-8FC3-FDF24EBBD627}.D_Web|Any CPU.Build.0 = Debug|Any CPU
+		{8025DE35-DED7-4587-8FC3-FDF24EBBD627}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8025DE35-DED7-4587-8FC3-FDF24EBBD627}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8025DE35-DED7-4587-8FC3-FDF24EBBD627}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8025DE35-DED7-4587-8FC3-FDF24EBBD627}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -414,6 +424,7 @@ Global
 		{45F96867-1E44-456F-888A-0C18CC8954E6} = {DC52A572-512A-4D70-81C0-F0EF8B6FFC85}
 		{13713B6B-E00D-4B7E-A3C2-67988699EA85} = {45F96867-1E44-456F-888A-0C18CC8954E6}
 		{1370C33E-858C-4A32-9D66-4CE324674E3C} = {45F96867-1E44-456F-888A-0C18CC8954E6}
+		{8025DE35-DED7-4587-8FC3-FDF24EBBD627} = {DC52A572-512A-4D70-81C0-F0EF8B6FFC85}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3EE6CCD8-2729-4C3F-9779-1761004827A5}

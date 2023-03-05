@@ -156,6 +156,8 @@ namespace Rafy.Domain.ORM
             }
         }
 
+        public override string DbProviderName => this.DbSetting.ProviderName;
+
         private static readonly AppContextItem<Dictionary<string, string>> _dbSettingMappingAppItem = new AppContextItem<Dictionary<string, string>>("Rafy.Domain.ORM.RdbDataProvider._dbSettingMappingAppItem");
 
         /// <summary>

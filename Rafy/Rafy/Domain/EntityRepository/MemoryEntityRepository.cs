@@ -101,6 +101,8 @@ namespace Rafy.Domain
 
         public abstract class MemoryRepositoryDataProvider : RepositoryDataProvider
         {
+            public override string DbProviderName => throw new NotSupportedException();
+
             public MemoryRepositoryDataProvider()
             {
                 this.Saver = new MemorySaver();
