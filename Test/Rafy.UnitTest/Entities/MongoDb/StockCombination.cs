@@ -28,16 +28,6 @@ namespace UT
 
         #endregion
 
-        #region 组合子属性
-
-        public static readonly ListProperty<StockCombinationItemList> StocksProperty = P<StockCombination>.RegisterList(e => e.Stocks);
-        public StockCombinationItemList Stocks
-        {
-            get { return this.GetLazyList(StocksProperty); }
-        }
-
-        #endregion
-
         #region 一般属性
 
         public static readonly Property<string> CodeProperty = P<StockCombination>.Register(e => e.Code);
@@ -130,6 +120,16 @@ namespace UT
         {
             get { return this.GetProperty(GrIdProperty); }
             set { this.SetProperty(GrIdProperty, value); }
+        }
+
+        #endregion
+
+        #region 组合子属性
+
+        public static readonly ListProperty<StockCombinationItemList> StocksProperty = P<StockCombination>.RegisterList(e => e.Stocks);
+        public StockCombinationItemList Stocks
+        {
+            get { return this.GetLazyList(StocksProperty); }
         }
 
         #endregion
