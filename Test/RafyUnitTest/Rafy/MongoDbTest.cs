@@ -31,15 +31,20 @@ namespace RafyUnitTest
     [TestClass]
     public class MongoDbTest
     {
+        public static bool MongoDbEnabled = false;
+
         [ClassInitialize]
         public static void MongoT_ClassInitialize(TestContext context)
         {
             ServerTestHelper.ClassInitialize(context);
+            MongoDbEnabled = ConfigurationHelper.GetConnectionString("Test_MongoDb") != null;
         }
 
         [TestMethod]
         public void MongoT_Create()
         {
+            if (!MongoDbEnabled) return;
+
             var repo = RF.ResolveInstance<StockCombinationRepository>();
             try
             {
@@ -70,6 +75,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void MongoT_Delete()
         {
+            if (!MongoDbEnabled) return;
+
             var repo = RF.ResolveInstance<StockCombinationRepository>();
             try
             {
@@ -92,6 +99,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void MongoT_Delete_List()
         {
+            if (!MongoDbEnabled) return;
+
             var repo = RF.ResolveInstance<StockCombinationRepository>();
             try
             {
@@ -114,6 +123,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void MongoT_Update()
         {
+            if (!MongoDbEnabled) return;
+
             var repo = RF.ResolveInstance<StockCombinationRepository>();
             try
             {
@@ -163,6 +174,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void MongoT_Update_OnlyOnRoot()
         {
+            if (!MongoDbEnabled) return;
+
             var repo = RF.ResolveInstance<StockCombinationRepository>();
             try
             {
@@ -196,6 +209,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void MongoT_Query_GetAll()
         {
+            if (!MongoDbEnabled) return;
+
             var repo = RF.ResolveInstance<StockCombinationRepository>();
             var list = repo.GetAll();
             Assert.AreEqual(0, list.Count);
@@ -220,6 +235,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void MongoT_Query_GetAll_Paging()
         {
+            if (!MongoDbEnabled) return;
+
             var repo = RF.ResolveInstance<StockCombinationRepository>();
 
             try
@@ -247,6 +264,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void MongoT_Query_CountAll()
         {
+            if (!MongoDbEnabled) return;
+
             var repo = RF.ResolveInstance<StockCombinationRepository>();
             Assert.AreEqual(0, repo.CountAll());
 
@@ -265,6 +284,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void MongoT_Query_GetByMatchSingleProperty()
         {
+            if (!MongoDbEnabled) return;
+
             var repo = RF.ResolveInstance<StockCombinationRepository>();
             try
             {
@@ -283,6 +304,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void MongoT_Query_SearchBySingleProperty()
         {
+            if (!MongoDbEnabled) return;
+
             var repo = RF.ResolveInstance<StockCombinationRepository>();
             try
             {
@@ -316,6 +339,8 @@ namespace RafyUnitTest
         [TestMethod]
         public void MongoT_SearchByMultipleProperties()
         {
+            if (!MongoDbEnabled) return;
+
             var repo = RF.ResolveInstance<StockCombinationRepository>();
             try
             {
