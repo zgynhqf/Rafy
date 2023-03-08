@@ -15,6 +15,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Content Remove="C:\Users\zgynh\.nuget\packages\mysql.data\8.0.8-dmr\contentFiles\any\netstandard1.6\app.config.transform" />
+    </ItemGroup>
+
+    <ItemGroup>
         <Content Include="appsettings.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
