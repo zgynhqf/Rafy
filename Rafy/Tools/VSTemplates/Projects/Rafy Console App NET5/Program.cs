@@ -34,7 +34,7 @@ namespace $domainNamespace$
     {
         protected override void InitEnvironment()
         {
-            RafyEnvironment.DomainPlugins.Add(new $domainNamespace$Plugin());
+            RafyEnvironment.Plugins.Add(new $domainNamespace$Plugin());
 
             base.InitEnvironment();
         }

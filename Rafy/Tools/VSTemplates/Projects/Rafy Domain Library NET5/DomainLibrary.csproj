@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Rafy.Domain" Version="3.82.4028" />
+        <PackageReference Include="Rafy.Domain" Version="3.90.4280" />
     </ItemGroup>
     
     <ItemGroup>
