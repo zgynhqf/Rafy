@@ -4,6 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <SignAssembly>False</SignAssembly>
     <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
+    <Description>Rafy 的 MongoDb 连接程序</Description>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,7 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Rafy\Rafy.csproj" />
-    <ProjectReference Include="..\Rafy.Grpc\Rafy.Grpc.csproj" />
   </ItemGroup>
 
 </Project>
