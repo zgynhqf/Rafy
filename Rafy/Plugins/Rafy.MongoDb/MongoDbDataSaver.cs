@@ -16,6 +16,7 @@ using MongoDB.Driver;
 using Rafy.Domain;
 using Rafy.Domain.Serialization.Json;
 using Rafy.ManagedProperty;
+using SharpCompress.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,6 +25,17 @@ namespace Rafy.MongoDb
 {
     public class MongoDbDataSaver : DataSaver
     {
+        protected override void Submit(SubmitArgs e)
+        {
+            //只更新子实体时，也是更新整个聚合。
+            if (e.Action == SubmitAction.ChildrenOnly)
+            {
+                e.Action = SubmitAction.Update;
+            }
+
+            base.Submit(e);
+        }
+
         protected override void SubmitChildren(Entity entity)
         {
             //MongoDb 只处理聚合根类型；子类型不再处理。
