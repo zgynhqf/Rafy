@@ -91,7 +91,12 @@ namespace Rafy.MongoDb
             return collection;
         }
 
-        private static BsonDocument Serialize(Entity data)
+        /// <summary>
+        /// 将实体序列化为 BsonDocument，以存储到数据库中。
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        protected virtual BsonDocument Serialize(Entity data)
         {
             var serializer = new BsonAggtWriter();
             var json = serializer.Serialize(data);

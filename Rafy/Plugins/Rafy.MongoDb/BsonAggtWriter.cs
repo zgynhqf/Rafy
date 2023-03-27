@@ -28,7 +28,7 @@ namespace Rafy.MongoDb
     /// 实现将实体的属性值序列化为 BsonDocument 对象。
     /// 大部分代码都拷贝自：<see cref="Rafy.Domain.Serialization.Json.AggtSerializer"/>。
     /// </summary>
-    internal class BsonAggtWriter
+    public class BsonAggtWriter
     {
         /// <summary>
         /// 是否不输出动态属性。默认为 false。

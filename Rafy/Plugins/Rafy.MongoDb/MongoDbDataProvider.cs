@@ -32,6 +32,12 @@ namespace Rafy.MongoDb
             this.DataQueryer = new MongoDbDataQueryer();
         }
 
+        public MongoDbDataProvider(MongoDbDataSaver dataSaver, MongoDbDataQueryer dataQueryer)
+        {
+            this.DataSaver = dataSaver;
+            this.DataQueryer = dataQueryer;
+        }
+
         /// <summary>
         /// 数据的保存器。
         /// </summary>
