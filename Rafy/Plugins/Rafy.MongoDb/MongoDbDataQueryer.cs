@@ -16,6 +16,7 @@ using MongoDB.Driver;
 using Rafy.Data;
 using Rafy.Domain;
 using Rafy.Domain.ORM.Query;
+using Rafy.Domain.Serialization.Json;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -68,7 +69,26 @@ namespace Rafy.MongoDb
             var parser = new MongoFilterParser();
             var filter = parser.Parse(args.Query, Builders<BsonDocument>.Filter);
 
+            //filter
             var result = collection.Find(filter);
+
+            //order
+            if (args.Query.OrderBy.Count > 0)
+            {
+                foreach (var orderby in args.Query.OrderBy)
+                {
+                    var column = AggtSerializer.ToCamel(orderby.Column.ColumnName);
+                    if (orderby.Direction == Domain.ORM.OrderDirection.Ascending)
+                    {
+                        result = result.Sort(Builders<BsonDocument>.Sort.Ascending(column));
+                    }
+                    else
+                    {
+                        result = result.Sort(Builders<BsonDocument>.Sort.Descending(column));
+                    }
+                }
+            }
+
             if (args.QueryType == RepositoryQueryType.First)
             {
                 result = result.Limit(1);

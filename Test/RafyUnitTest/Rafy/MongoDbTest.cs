@@ -262,6 +262,33 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void MongoT_Query_Sort()
+        {
+            if (!MongoDbEnabled) return;
+
+            var repo = RF.ResolveInstance<StockCombinationRepository>();
+
+            try
+            {
+                CreateDemoData(repo, "501");
+                CreateDemoData(repo, "503");
+
+                var list = repo.GetBy(new CommonQueryCriteria
+                {
+                    OrderBy = StockCombination.CodeProperty.Name,
+                    OrderByAscending = false
+                });
+
+                Assert.AreEqual(2, list.Count);
+                Assert.AreEqual("503", list[0].Code);
+            }
+            finally
+            {
+                this.DeleteAllDatas();
+            }
+        }
+
+        [TestMethod]
         public void MongoT_Query_CountAll()
         {
             if (!MongoDbEnabled) return;
