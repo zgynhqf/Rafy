@@ -184,7 +184,7 @@ namespace UT
         protected override void ConfigMeta()
         {
             ////配置实体的所有属性都映射到数据表中。
-            Meta.MapTable("StockCombination2").MapAllProperties();
+            Meta.MapTable("StockCombination").MapAllProperties();
         }
     }
 }
