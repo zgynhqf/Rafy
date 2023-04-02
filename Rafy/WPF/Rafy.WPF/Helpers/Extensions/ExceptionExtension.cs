@@ -67,7 +67,7 @@ namespace Rafy.WPF
             try
             {
                 //记录异常信息
-                Logger.LogError("系统未捕获异常", ex);
+                Logger.LogException("系统未捕获异常", ex);
 
                 if (WPFConfigHelper.ShowErrorDetail.ToBoolean())
                 {

@@ -45,11 +45,11 @@ namespace Rafy
         /// </summary>
         /// <param name="title">异常对应的标题，用于描述当前异常的信息。</param>
         /// <param name="e"></param>
-        public static void LogError(string title, Exception e)
+        public static void LogException(string title, Exception e)
         {
             try
             {
-                _impl.LogError(title, e);
+                _impl.LogException(title, e);
             }
             catch { }
         }

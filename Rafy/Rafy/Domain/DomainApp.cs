@@ -58,7 +58,7 @@ namespace Rafy.Domain
                 }
                 catch (Exception ex)
                 {
-                    Logger.LogError("领域应用程序在启动时发生异常", ex);
+                    Logger.LogException("领域应用程序在启动时发生异常", ex);
                     throw;
                 }
             }
@@ -81,7 +81,7 @@ namespace Rafy.Domain
                 }
                 catch (Exception ex)
                 {
-                    Logger.LogError("领域应用程序退出时发生异常", ex);
+                    Logger.LogException("领域应用程序退出时发生异常", ex);
                     throw;
                 }
             }

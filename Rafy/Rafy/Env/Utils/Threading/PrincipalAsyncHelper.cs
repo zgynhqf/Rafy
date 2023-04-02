@@ -83,7 +83,7 @@ namespace Rafy.Threading
                     }
                     else
                     {
-                        Logger.LogError("异步线程在 SafeInvoke 时发生异常", ex);
+                        Logger.LogException("异步线程在 SafeInvoke 时发生异常", ex);
                     }
                 }
             });

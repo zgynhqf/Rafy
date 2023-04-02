@@ -85,7 +85,7 @@ namespace Rafy.WPF.Shell
 
                     if (Debugger.IsAttached) { Debugger.Break(); }
 
-                    Logger.LogError("程序启动时出现异常。", e);
+                    Logger.LogException("程序启动时出现异常。", e);
 
                     //由于初始化时出现了异常，所以整个程序需要退出。
                     this.Shutdown();
@@ -107,7 +107,7 @@ namespace Rafy.WPF.Shell
             catch (Exception ex)
             {
                 //由于这里无法弹出窗口，所以简单地记录异常信息。
-                Logger.LogError("系统退出代码异常", ex);
+                Logger.LogException("系统退出代码异常", ex);
             }
         }
 

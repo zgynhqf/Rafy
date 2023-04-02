@@ -91,7 +91,7 @@ namespace Rafy.DataPortal.WCF
 
         private void LogException(CallRequest request, Exception ex)
         {
-            Logger.LogError($"WCF Call Exception occurred! request: method:{request.Method}, instance: {request.Instance}, arguments.length:{request.Arguments.Length}.", ex);
+            Logger.LogException($"WCF Call Exception occurred! request: method:{request.Method}, instance: {request.Instance}, arguments.length:{request.Arguments.Length}.", ex);
         }
 
         private int GetTotalBytes(CallRequest request)

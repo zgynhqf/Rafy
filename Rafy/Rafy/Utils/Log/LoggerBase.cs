@@ -36,7 +36,7 @@ namespace Rafy
         /// </summary>
         /// <param name="title"></param>
         /// <param name="e"></param>
-        public virtual void LogError(string title, Exception e) { }
+        public virtual void LogException(string title, Exception e) { }
 
         /// <summary>
         /// 记录 Sql 执行过程。

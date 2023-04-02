@@ -171,7 +171,7 @@ namespace Rafy
 
             if (error != null)
             {
-                Logger.LogError("DataProvider 获取数据报错", error);
+                Logger.LogException("DataProvider 获取数据报错", error);
 
                 Action<Exception> action = e => e.Alert();
                 Application.Current.Dispatcher.Invoke(action, error);

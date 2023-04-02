@@ -70,7 +70,7 @@ namespace Rafy.Grpc
 
         private void LogException(GrpcCallRequest request, Exception ex)
         {
-            Logger.LogError($"Grpc Call Exception occurred! request: method:{request.Method}, instance: {request.Instance}, arguments.length:{request.Arguments.Length}.", ex);
+            Logger.LogException($"Grpc Call Exception occurred! request: method:{request.Method}, instance: {request.Instance}, arguments.length:{request.Arguments.Length}.", ex);
         }
 
         private int GetTotalBytes(GrpcCallRequest request)

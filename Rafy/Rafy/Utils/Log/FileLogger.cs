@@ -76,16 +76,13 @@ namespace Rafy
         ///// </summary>
         //public bool WriteSqlOnly { get; set; }
 
+        /// <summary>
+        /// 记录某个消息到 Log 日志中。
+        /// </summary>
+        /// <param name="message"></param>
         public override void LogInfo(string message)
         {
-            if (string.IsNullOrEmpty(this.InfoLogFileName)) return;
-
-            this.WriteInfo(this.InfoLogFileName,
-$@"<<{ DateTime.Now }>>
-Thread Id:[ { Thread.CurrentThread.ManagedThreadId } ]
-Message：{ message }
-
-");
+            this.WriteInfo(this.InfoLogFileName, $@"{DateTime.Now.ToString("MMdd HH:mm:ss.fff")}: {message}");
         }
 
         /// <summary>
@@ -93,7 +90,7 @@ Message：{ message }
         /// </summary>
         /// <param name="title">异常对应的标题，用于描述当前异常的信息。</param>
         /// <param name="e"></param>
-        public override void LogError(string title, Exception e)
+        public override void LogException(string title, Exception e)
         {
             LogInfo(title);
 
@@ -102,14 +99,12 @@ Message：{ message }
             var stackTrace = e.StackTrace;//使用最外层的 Exception，可以获取到最完整的堆栈信息。
             e = e.GetBaseException();
 
-            this.WriteInfo(this.ExceptionLogFileName,
-$@"===================================================================
-======== {title} =========
-===================================================================
+            this.WriteInfo(this.ExceptionLogFileName, 
+$@"=== {title} ===
 记录时间：{DateTime.Now}
-线程ID:[ {Thread.CurrentThread.ManagedThreadId} ]
-错误描述：{e.Message}
-StockTrace：
+Thread Id:[ {Thread.CurrentThread.ManagedThreadId} ]
+Exception Message：{e.Message}
+StackTrace：
 {stackTrace}
 
 ");
@@ -122,9 +117,12 @@ StockTrace：
                 Console.WriteLine(msg);
             }
 
-            lock (this)
+            if (!string.IsNullOrEmpty(fileName))
             {
-                File.AppendAllText(fileName, msg);
+                lock (this)
+                {
+                    File.AppendAllText(fileName, msg + Environment.NewLine);
+                }
             }
         }
 
