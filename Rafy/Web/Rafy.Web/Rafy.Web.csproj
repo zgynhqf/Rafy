@@ -107,6 +107,7 @@
     <Compile Include="Http\IdFromRouteFormatterParameterBinding.cs" />
     <Compile Include="Http\IdFromRouteHttpContent.cs" />
     <Compile Include="Http\HttpRegister.cs" />
+    <Compile Include="Http\NetCore\EntityInputFormatter.cs" />
     <Compile Include="Http\ODataQueryCriteriaBinder.cs" />
     <Compile Include="Json\DynamicJsonModel.cs" />
     <Compile Include="Json\JsonModel.cs" />
