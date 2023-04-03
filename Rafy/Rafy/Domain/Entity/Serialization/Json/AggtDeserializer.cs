@@ -92,23 +92,15 @@ namespace Rafy.Domain.Serialization.Json
         /// </summary>
         /// <param name="type">The type.</param>
         /// <param name="jObject">The j object.</param>
-        /// <returns></returns>
-        public Entity DeserializeEntity(Type type, JObject jObject)
-        {
-            var id = TryGetId(jObject);
-
-            return DeserializeEntity(type, jObject, id);
-        }
-
-        /// <summary>
-        /// 实体的自定义反序列化方法。
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <param name="jObject">The j object.</param>
         /// <param name="id">实体的标识。如果已经在 jObject 中指定时，此参数可以传入 null。</param>
         /// <returns></returns>
-        public Entity DeserializeEntity(Type type, JObject jObject, object id)
+        public Entity DeserializeEntity(Type type, JObject jObject, object id = null)
         {
+            if (id == null)
+            {
+                id = TryGetId(jObject);
+            }
+
             Entity entity = null;
             if (id != null)
             {
