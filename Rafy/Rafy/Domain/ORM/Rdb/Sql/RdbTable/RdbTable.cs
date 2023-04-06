@@ -265,8 +265,7 @@ namespace Rafy.Domain.ORM
                 var column = _columns[i];
                 if (column.ShouldInsert(withIdentity))
                 {
-                    var value = column.ReadDbParameterValue(item);
-                    parameters.Add(value);
+                    parameters.Add(ReadParamater(item, column));
                 }
             }
             return parameters.ToArray();
@@ -339,7 +338,7 @@ namespace Rafy.Domain.ORM
                     if (!updateChangedPropertiesOnly || field.IsChanged)
                     {
                         updateColumns.Add(column);
-                        parameters.Add(column.ReadDbParameterValue(item));
+                        parameters.Add(ReadParamater(item, column));
                     }
                 }
             }
@@ -391,6 +390,16 @@ namespace Rafy.Domain.ORM
         private void EnsureMappingTable()
         {
             if (_meta.TableMeta.IsMappingView) throw new NotSupportedException(string.Format("{0} 类映射视图，不能进行 CDU 操作。", _meta.EntityType.Name));
+        }
+
+        private static object ReadParamater(Entity item, RdbColumn column)
+        {
+            var value = column.ReadDbParameterValue(item);
+            if (value == DBNull.Value)
+            {
+                value = new DbAccesserParameter(value, column.Info.DbType);
+            }
+            return value;
         }
 
         #endregion

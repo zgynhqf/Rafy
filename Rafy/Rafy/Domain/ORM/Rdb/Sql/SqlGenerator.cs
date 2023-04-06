@@ -573,18 +573,12 @@ namespace Rafy.Domain.ORM
         private void AppendParameter(object value, SqlColumn column)
         {
             //如果只传入参数的值，那么 DbDataParameter 中是没有设置 DbType 的，这会造成索引无效。
-            if (column.HasIndex)
+            if (column.HasIndex || value == null)
             {
                 value = new DbAccesserParameter(value, column.DbType);
             }
 
-            if (value is DbAccesserParameter)
-            {
-                _sql.AppendParameter(value);
-                return;
-            }
-
-            if (!this.EmbedParameters)
+            if (value is DbAccesserParameter || !this.EmbedParameters)
             {
                 _sql.AppendParameter(value);
             }
