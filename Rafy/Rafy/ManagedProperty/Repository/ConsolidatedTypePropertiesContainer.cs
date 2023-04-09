@@ -39,7 +39,12 @@ namespace Rafy.ManagedProperty
 
         #endregion
 
-        internal TypePropertiesContainer SimpleContainer { get; set; }
+        internal ConsolidatedTypePropertiesContainer(TypePropertiesContainer simpleContainer)
+        {
+            this.SimpleContainer = simpleContainer;
+        }
+
+        internal TypePropertiesContainer SimpleContainer { get; private set; }
 
         /// <summary>
         /// 为界面层使用反射提供属性描述器集合。
@@ -114,6 +119,7 @@ namespace Rafy.ManagedProperty
             {
                 _compiledProperties.AddRange(item.GetCompiledProperties());
             });
+            this.CheckPropertiesNotDuplicate();
 
             _nonReadOnlyCompiledProperties = new ManagedPropertyList();
             _nonReadOnlyCompiledProperties.AddRange(
@@ -202,5 +208,32 @@ namespace Rafy.ManagedProperty
         }
 
         #endregion
+
+        /// <summary>
+        /// 检查属性的注册过程中，没有同名的属性。
+        /// </summary>
+        /// <exception cref="InvalidProgramException"></exception>
+        private void CheckPropertiesNotDuplicate()
+        {
+            for (int i = 0, c = _compiledProperties.Count; i < c; i++)
+            {
+                for (int j = i + 1; j < c; j++)
+                {
+                    var a = _compiledProperties[i];
+                    var b = _compiledProperties[j];
+                    if (a.Name == b.Name)
+                    {
+                        if (a.DeclareType == b.DeclareType)
+                        {
+                            throw new InvalidProgramException($"不允许为实体注册同名的属性。{this.OwnerType} 中发现注册了两个 {a.Name} 属性。");
+                        }
+                        else
+                        {
+                            throw new InvalidProgramException($"不允许为实体注册同名的属性。{this.OwnerType} 中发现注册了两个 {a.Name} 属性，分别声明在以下两个类型中：{a.DeclareType} 及 {b.DeclareType}");
+                        }
+                    }
+                }
+            }
+        }
     }
 }

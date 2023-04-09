@@ -369,8 +369,7 @@ namespace Rafy.ManagedProperty
         private static void CompleteCompileProperties(TypePropertiesContainer container)
         {
             //设置 ConsolidatedContainer
-            var consolidatedContainer = new ConsolidatedTypePropertiesContainer();
-            consolidatedContainer.SimpleContainer = container;
+            var consolidatedContainer = new ConsolidatedTypePropertiesContainer(container);
             consolidatedContainer.InitCompiledProperties();
 
             //consolidatedContainer 初始化编译期属性成功（无异常），才设置 container 的连接。
