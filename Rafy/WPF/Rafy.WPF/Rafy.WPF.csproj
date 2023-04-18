@@ -373,6 +373,8 @@
     <Compile Include="AutoUI\PrimitiveUI\Layouts\TraditionalRegions.cs" />
     <Compile Include="Controls\ResizingPanelExt.cs" />
     <Compile Include="Helpers\SqlErrorInfo.cs" />
+    <Compile Include="Utils\DateRange.cs" />
+    <Compile Include="Utils\NumberRange.cs" />
     <Compile Include="WPFHelper.cs" />
     <Compile Include="WPFMetaExtension.cs" />
     <Compile Include="RafyWPFPlugin.cs" />
