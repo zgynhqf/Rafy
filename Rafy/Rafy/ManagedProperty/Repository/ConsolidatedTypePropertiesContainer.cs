@@ -27,6 +27,11 @@ namespace Rafy.ManagedProperty
     /// </summary>
     public class ConsolidatedTypePropertiesContainer
     {
+        /// <summary>
+        /// 是否需要检查同一个类型中是否注册了同名的属性。
+        /// </summary>
+        public static bool CheckDuplicateProperties { get; set; } = true;
+
         #region 私有字段
 
         private ManagedPropertyList _compiledProperties = new ManagedPropertyList();
@@ -215,6 +220,8 @@ namespace Rafy.ManagedProperty
         /// <exception cref="InvalidProgramException"></exception>
         private void CheckPropertiesNotDuplicate()
         {
+            if (!CheckDuplicateProperties) return;
+
             for (int i = 0, c = _compiledProperties.Count; i < c; i++)
             {
                 for (int j = i + 1; j < c; j++)
