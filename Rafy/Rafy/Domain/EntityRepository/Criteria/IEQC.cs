@@ -20,9 +20,10 @@ namespace Rafy.Domain
     /// <summary>
     /// Internal Entity Query Criteria
     /// 实体查询的参数。一个多参数查询的对象容器。
+    /// 使用缩写，是因为其名称用于传输，这样可以减少传输量。
     /// </summary>
     [Serializable]
-    internal class IEQC : IEntityQueryCriteria
+    internal class IEQC : IEntityQueryInvocation
     {
         /// <summary>
         /// 当前查询正在使用的单一条件。
@@ -73,7 +74,7 @@ namespace Rafy.Domain
             set { _f = (byte)value; }
         }
 
-        IEnumerable<object> IEntityQueryCriteria.Parameters
+        IReadOnlyList<object> IEntityQueryInvocation.Parameters
         {
             get { return _p; }
         }
@@ -82,7 +83,7 @@ namespace Rafy.Domain
     /// <summary>
     /// 实体查询的参数。
     /// </summary>
-    public interface IEntityQueryCriteria
+    public interface IEntityQueryInvocation
     {
         /// <summary>
         /// 数据层查询方法。如果为空，表示使用约定的数据层方法。
@@ -92,7 +93,7 @@ namespace Rafy.Domain
         /// <summary>
         /// 所有的参数。
         /// </summary>
-        IEnumerable<object> Parameters { get; }
+        IReadOnlyList<object> Parameters { get; }
 
         /// <summary>
         /// 获取数据的类型

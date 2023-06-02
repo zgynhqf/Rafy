@@ -55,6 +55,11 @@ namespace Rafy.Domain
         #endregion
 
         /// <summary>
+        /// 实体查询对应的方法和参数信息。
+        /// </summary>
+        public IEntityQueryInvocation Invocation { get; internal set; }
+
+        /// <summary>
         /// 如果是内存加载，则使用这个列表。
         /// </summary>
         internal IList<Entity> MemoryList;

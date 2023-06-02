@@ -191,6 +191,12 @@ namespace Rafy.Domain
         /// <param name="entityList">The entity list.</param>
         protected abstract void QueryDataCore(ORMQueryArgs args, EntityList entityList);
 
+        /// <summary>
+        /// 默认的查询规则：
+        /// 目前只有树型实体的排序规则。
+        /// </summary>
+        /// <param name="args"></param>
+        /// <exception cref="InvalidOperationException"></exception>
         private void BuildDefaultQuerying(ORMQueryArgs args)
         {
             var query = args.Query;
@@ -241,32 +247,12 @@ namespace Rafy.Domain
         }
 
         /// <summary>
-        /// 所有使用 IQuery 的数据查询，在调用完应 queryBuilder 之后，都会执行此此方法。
+        /// 所有使用 IQuery 的数据查询，在调用 QueryData 之后，都会执行此此方法。
         /// 所以子类可以重写此方法实现统一的查询条件逻辑。
         /// （例如，对于映射同一张表的几个子类的查询，可以使用此方法统一对所有方法都过滤）。
-        /// 
-        /// 默认实现为：
-        /// * 如果还没有进行排序，则进行默认的排序。
-        /// * 如果单一参数实现了 IPagingCriteria 接口，则使用其中的分页信息进行分页。
         /// </summary>
         /// <param name="args"></param>
-        internal protected virtual void OnQuerying(ORMQueryArgs args)
-        {
-            //默认对分页进行处理。
-            var pList = IEQC.Current.Parameters;
-            if (pList.Length == 1)
-            {
-                var userCriteria = pList[0] as ILoadOptionsCriteria;
-                if (userCriteria != null)
-                {
-                    if (args.Filter == null)
-                    {
-                        args.PagingInfo = userCriteria.PagingInfo;
-                    }
-                    args.LoadOptions = userCriteria.LoadOptions;
-                }
-            }
-        }
+        internal protected virtual void OnQuerying(ORMQueryArgs args) { }
 
         /// <summary>
         /// 在数据加载完成后，完成其它的贪婪加载。
@@ -367,7 +353,23 @@ namespace Rafy.Domain
                 args.EntityList = Repo.NewListFast();
             }
 
-            args.SetQueryType(IEQC.Current.QueryType);
+            args.Invocation = IEQC.Current;
+
+            args.SetQueryType(args.Invocation.QueryType);
+
+            var pList = args.Invocation.Parameters;
+            if (pList.Count == 1)
+            {
+                var userCriteria = pList[0] as ILoadOptionsCriteria;
+                if (userCriteria != null)
+                {
+                    if (args.Filter == null)
+                    {
+                        args.PagingInfo = userCriteria.PagingInfo;
+                    }
+                    args.LoadOptions = userCriteria.LoadOptions;
+                }
+            }
         }
 
         internal void LoadByFilter(EntityQueryArgs args)
@@ -664,11 +666,11 @@ namespace Rafy.Domain
         /// <summary>
         /// 将查询出来的实体列表类型转换为与仓库查询方法返回值一致的类型。
         /// </summary>
-        /// <param name="list"></param>
+        /// <param name="args"></param>
         /// <returns></returns>
-        protected static object ReturnForRepository(EntityList list)
+        protected static object ReturnForRepository(EntityQueryArgs args)
         {
-            return ReturnForRepository(list, IEQC.Current.QueryType);
+            return ReturnForRepository(args.EntityList, args.Invocation.QueryType);
         }
 
         private static object ReturnForRepository(EntityList list, RepositoryQueryType queryType)

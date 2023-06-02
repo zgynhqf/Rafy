@@ -208,7 +208,7 @@ namespace Rafy.Domain.ORM
 
             this.EagerLoadOnCompleted(args, entityList, oldCount);
 
-            return ReturnForRepository(entityList);
+            return ReturnForRepository(args);
         }
 
         /// <summary>

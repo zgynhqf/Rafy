@@ -51,5 +51,10 @@ namespace Rafy.Domain
         /// 数据加载选项
         /// </summary>
         LoadOptions LoadOptions { get; }
+
+        /// <summary>
+        /// 实体查询对应的方法和参数信息。
+        /// </summary>
+        IEntityQueryInvocation Invocation { get; }
     }
 }
