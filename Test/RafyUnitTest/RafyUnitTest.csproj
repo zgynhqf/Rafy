@@ -44,6 +44,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\Rafy\Plugins\Rafy.MongoDb\Rafy.MongoDb.csproj" />
         <ProjectReference Include="..\..\Rafy\Rafy\Rafy.csproj" />
         <ProjectReference Include="..\..\Rafy\Plugins\Rafy.ComponentModel.UnityAdapter\Rafy.ComponentModel.UnityAdapter.csproj" />
         <ProjectReference Include="..\..\Rafy\Plugins\Rafy.DataTableMigration\Rafy.DataArchiver.csproj" />

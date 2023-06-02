@@ -42,7 +42,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Data;
 
-namespace RafyUnitTest.ClientTest
+namespace RafyUnitTest
 {
     [TestClass]
     public class AccountsPluginTest : Rafy.UnitTest.AccountsPluginTest
