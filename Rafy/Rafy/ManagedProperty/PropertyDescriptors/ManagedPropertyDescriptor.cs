@@ -38,11 +38,6 @@ namespace Rafy.ManagedProperty
             get { return _property; }
         }
 
-        public override void AddValueChanged(object component, EventHandler handler)
-        {
-            throw new NotSupportedException();
-        }
-
         public override Type ComponentType
         {
             get { return typeof(ManagedPropertyObject); }
