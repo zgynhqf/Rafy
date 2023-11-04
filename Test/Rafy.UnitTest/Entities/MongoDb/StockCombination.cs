@@ -122,6 +122,16 @@ namespace UT
             set { this.SetProperty(GrIdProperty, value); }
         }
 
+        public static readonly Property<StockCombinationType> TypeProperty = P<StockCombination>.Register(e => e.Type);
+        /// <summary>
+        /// 
+        /// </summary>
+        public StockCombinationType Type
+        {
+            get { return this.GetProperty(TypeProperty); }
+            set { this.SetProperty(TypeProperty, value); }
+        }
+
         #endregion
 
         #region 组合子属性
@@ -138,6 +148,8 @@ namespace UT
 
         #endregion
     }
+
+    public enum StockCombinationType { A, B, C, D }
 
     /// <summary>
     /// 股票投资组合 列表类。

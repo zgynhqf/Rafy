@@ -10,6 +10,12 @@
  * 
 *******************************************************/
 
+3.92.4286
+    添加接口
+        MongoDbDataProvider.EnumSerializationMode。
+    BUG修复
+        EnumSerializationMode 设置为 String 时，无法通过枚举值进行属性查询。
+
 3.91.4284
     ！修改接口
         Logger.LogError 更名为 Logger.LogException。

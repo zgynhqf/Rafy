@@ -28,9 +28,15 @@ namespace Rafy.MongoDb
     /// 访问 IQuery，将其中的查询条件转换为 MongoDb Driver 中的查询条件的解析器
     /// https://www.mongodb.com/docs/drivers/csharp/current/fundamentals/builders/#std-label-csharp-builders
     /// </summary>
-    internal class MongoFilterParser : QueryNodeVisitor
+    public class MongoFilterParser : QueryNodeVisitor
     {
         private FilterDefinitionBuilder<BsonDocument> f;
+
+        /// <summary>
+        /// 是把在序列化枚举时，把值输出为字符串。
+        /// 默认为 <see cref="EnumSerializationMode.Integer"/>。
+        /// </summary>
+        public EnumSerializationMode EnumSerializationMode { get; set; }
 
         public FilterDefinition<BsonDocument> Parse(IQuery query, FilterDefinitionBuilder<BsonDocument> filterFactory)
         {
@@ -83,6 +89,7 @@ namespace Rafy.MongoDb
         {
             var column = AggtSerializer.ToCamel(node.Column.ColumnName);
             var value = node.Value;
+            value = EnumSerializer.ConvertEnumValue(value, this.EnumSerializationMode);
             switch (node.Operator)
             {
                 case Domain.PropertyOperator.Equal:
@@ -90,7 +97,7 @@ namespace Rafy.MongoDb
                     break;
                 case Domain.PropertyOperator.NotEqual:
                     _current = f.Ne(column, value);
-                    break;
+                    break; 
                 case Domain.PropertyOperator.Greater:
                     _current = f.Gt(column, value);
                     break;

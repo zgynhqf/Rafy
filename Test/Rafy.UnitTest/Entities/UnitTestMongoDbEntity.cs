@@ -50,6 +50,11 @@ namespace UT
         {
             get { return DbSettingName; }
         }
+
+        public UnitTestMongoDbEntityRepositoryDataProvider()
+        {
+            this.EnumSerializationMode = Rafy.Domain.Serialization.Json.EnumSerializationMode.String;
+        }
     }
 
     public abstract class UnitTestMongoDbEntityConfig<TEntity> : EntityConfig<TEntity> { }

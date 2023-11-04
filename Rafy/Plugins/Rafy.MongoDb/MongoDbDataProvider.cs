@@ -14,6 +14,7 @@
 using MongoDB.Driver;
 using Rafy.Data;
 using Rafy.Domain;
+using Rafy.Domain.Serialization.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -31,6 +32,12 @@ namespace Rafy.MongoDb
             this.DataSaver = new MongoDbDataSaver();
             this.DataQueryer = new MongoDbDataQueryer();
         }
+
+        /// <summary>
+        /// 是把在序列化枚举时，把值输出为字符串。
+        /// 默认为 <see cref="EnumSerializationMode.Integer"/>。
+        /// </summary>
+        public EnumSerializationMode EnumSerializationMode { get; set; }
 
         public MongoDbDataProvider(MongoDbDataSaver dataSaver, MongoDbDataQueryer dataQueryer)
         {
