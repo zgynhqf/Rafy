@@ -430,6 +430,8 @@ namespace RafyUnitTest
             Assert.AreEqual(user.TasksTimeByAutoCollect, 3);
         }
 
+        #region 属性
+
         [TestMethod]
         public void ET_Property_Enum()
         {
@@ -596,8 +598,6 @@ namespace RafyUnitTest
             enumProperty.SetValue(entity, "一般");
             Assert.IsTrue(entity.RoleType == RoleType.Normal, "枚举属性被界面设置字符串的值时，应该转换为相应的枚举值。");
         }
-
-        #region 属性
 
         [TestMethod]
         public void ET_Property_Id_Default_Int()
