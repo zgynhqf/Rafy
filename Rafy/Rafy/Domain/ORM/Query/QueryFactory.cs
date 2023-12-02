@@ -434,8 +434,8 @@ namespace Rafy.Domain.ORM.Query
                 if (refProperty != null && refProperty.RefEntityType == rightEntity)
                 {
                     var condition = this.Constraint(
-                        left.Column(refProperty.RefIdProperty),
-                        right.Column(Entity.IdProperty)
+                        left.Column(refProperty.RefKeyProperty),
+                        right.Column(refProperty.KeyPropertyOfRefEntity)
                     );
 
                     var joinType = refProperty.Nullable ? JoinType.LeftOuter : JoinType.Inner;
@@ -488,8 +488,8 @@ namespace Rafy.Domain.ORM.Query
             var leftSource = left.FindTable(leftToRight.OwnerType);
 
             var condition = this.Constraint(
-                leftSource.Column(leftToRight),
-                right.Column(Entity.IdProperty)
+                leftSource.Column(leftToRight.RefKeyProperty),
+                right.Column(leftToRight.KeyPropertyOfRefEntity)
             );
 
             var joinType = leftToRight.Nullable ? JoinType.LeftOuter : JoinType.Inner;

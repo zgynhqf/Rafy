@@ -121,7 +121,7 @@ namespace Rafy.Domain.ORM
             //}
         }
 
-        protected override void UpdateRedundancy(Entity entity, ConcreteProperty redundancy, object newValue, IList<ConcreteProperty> refPathes, object lastRefId)
+        protected override void UpdateRedundancy(Entity entity, ConcreteProperty redundancy, object newValue, IList<ConcreteProperty> refPathes, Lazy<Entity> dbEntity)
         {
             /*********************** 代码块解释 *********************************
              * 
@@ -194,9 +194,19 @@ namespace Rafy.Domain.ORM
 
             //最后一个，生成SQL: BId = {1}
             var lastRef = refTables[refTables.Length - 1];
-            var refColumn = lastRef.OwnerTable.FindByPropertyName(lastRef.RefProperty.Property.Name);
+            var lastRefProperty = RefPropertyHelper.Find(lastRef.RefProperty.Property);
+            object lastRefKey = null;
+            if (lastRefProperty.KeyPropertyOfRefEntity != Entity.IdProperty)
+            {
+                lastRefKey = dbEntity.Value.GetProperty(lastRefProperty.KeyPropertyOfRefEntity);
+            }
+            else
+            {
+                lastRefKey = entity.Id;
+            }
+            var refColumn = lastRef.OwnerTable.FindByPropertyName(lastRefProperty.RefKeyProperty.Name);
             sql.AppendQuote(lastRef.OwnerTable, refColumn.Name)
-                .Append(" = ").AppendParameter(refColumn.Table.DbTypeConverter.ToDbParameterValue(lastRefId));
+                .Append(" = ").AppendParameter(refColumn.Table.DbTypeConverter.ToDbParameterValue(lastRefKey));
 
             while (quoteNeeded > 0)
             {

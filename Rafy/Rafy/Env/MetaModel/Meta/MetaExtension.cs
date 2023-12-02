@@ -246,7 +246,7 @@ namespace Rafy.MetaModel
                     ColumnName = meta.Name
                 };
 
-                if (meta.ManagedProperty is IRefIdProperty)
+                if (RefPropertyHelper.IsRefKeyProperty(meta.ManagedProperty, out var refP) && refP.KeyPropertyOfRefEntity == Entity.IdProperty)
                 {
                     meta.ColumnMeta.HasFKConstraint = true;
                 }

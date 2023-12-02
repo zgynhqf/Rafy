@@ -36,7 +36,7 @@ namespace UT
         public static readonly RefEntityProperty<TestUser> TestUserProperty =
             P<TestRole>.RegisterRef(e => e.TestUser, new RegisterRefArgs
             {
-                RefIdProperty = TestUserIdProperty,
+                RefKeyProperty = TestUserIdProperty,
                 PropertyChangingCallBack = (o, e) => (o as TestRole).OnTestUserChanging(e),
                 PropertyChangedCallBack = (o, e) => (o as TestRole).OnTestUserChanged(e)
             });

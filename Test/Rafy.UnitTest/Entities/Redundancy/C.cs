@@ -40,11 +40,11 @@ namespace UT
             get { return this.GetProperty(ANameProperty); }
         }
 
-        public static readonly Property<int> AIdOfBProperty = P<C>.RegisterRedundancy(e => e.AIdOfB,
-            new RedundantPath(BProperty, B.AIdProperty));
-        public int AIdOfB
+        public static readonly Property<string> ANameRefOfBProperty = P<C>.RegisterRedundancy(e => e.ANameRefOfB,
+            new RedundantPath(BProperty, B.ANameRefProperty));
+        public string ANameRefOfB
         {
-            get { return this.GetProperty(AIdOfBProperty); }
+            get { return this.GetProperty(ANameRefOfBProperty); }
         }
 
         public static readonly Property<int> AIdProperty = P<C>.RegisterRedundancy(e => e.AId,

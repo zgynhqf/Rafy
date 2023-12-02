@@ -73,11 +73,11 @@ namespace Rafy.Web.EntityDataPortal
                     //引用属性
                     if (mp is IRefEntityProperty)
                     {
-                        var refMp = mp as IRefProperty;
-                        var id = entity.GetRefNullableId(refMp.RefIdProperty);
-                        if (id != null)
+                        var refMp = mp as IRefEntityProperty;
+                        var key = entity.GetRefNullableKey(refMp);
+                        if (key != null)
                         {
-                            entityJson.SetProperty(refMp.RefIdProperty.Name, id);
+                            entityJson.SetProperty(refMp.RefKeyProperty.Name, key);
 
                             //同时写入引用属性的视图属性，如 BookCategoryId_Display
                             var titleProperty = propertyVM.SelectionViewMeta?.RefTypeDefaultView?.TitleProperty;

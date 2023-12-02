@@ -148,6 +148,18 @@ namespace Rafy.Domain
         }
 
         /// <summary>
+        /// 通过单一属性的精确匹配来查询单一实体。
+        /// </summary>
+        /// <param name="keyProperty"></param>
+        /// <param name="key"></param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
+        /// <returns></returns>
+        public Entity GetByKey(string keyProperty, object key, LoadOptions loadOptions = null)
+        {
+            return this.DoGetByKey(keyProperty, key, loadOptions);
+        }
+
+        /// <summary>
         /// 获取指定 id 集合的实体列表。
         /// </summary>
         /// <param name="idList"></param>
@@ -193,7 +205,7 @@ namespace Rafy.Domain
         }
 
         /// <summary>
-        /// 通过 CommonQueryCriteria 来查询实体列表。
+        /// 通过 CommonQueryCriteria 来查询唯一实体。
         /// </summary>
         /// <param name="criteria">常用查询条件。</param>
         /// <returns></returns>
@@ -461,6 +473,19 @@ namespace Rafy.Domain
         protected virtual Entity DoGetById(object id, LoadOptions loadOptions)
         {
             return _dataProvider.GetById(id, loadOptions);
+        }
+
+        /// <summary>
+        /// 通过单一属性的精确匹配来查询单一实体。
+        /// </summary>
+        /// <param name="keyProperty"></param>
+        /// <param name="key"></param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
+        /// <returns></returns>
+        [RepositoryQuery]
+        protected virtual Entity DoGetByKey(string keyProperty, object key, LoadOptions loadOptions)
+        {
+            return _dataProvider.GetByKey(keyProperty, key, loadOptions);
         }
 
         /// <summary>

@@ -409,7 +409,7 @@ namespace RafyUnitTest
         /// 序列化及反序列化
         /// </summary>
         [TestMethod]
-        public void SrlzT_WCF()
+        public void __SrlzT_WCF()
         {
             var model = new Article
             {
@@ -430,7 +430,7 @@ namespace RafyUnitTest
         /// 属性的变更状态，需要支持序列化和反序列化。
         /// </summary>
         [TestMethod]
-        public void SrlzT_WCF_MP_ChangedStatus()
+        public void __SrlzT_WCF_MP_ChangedStatus()
         {
             var user = new TestUser();
             user.Name = "1";
@@ -452,7 +452,7 @@ namespace RafyUnitTest
         /// 被禁用的属性，经过序列化和反序列化后，应该还是禁用状态的。
         /// </summary>
         [TestMethod]
-        public void SrlzT_WCF_MP_DisabledStatus()
+        public void __SrlzT_WCF_MP_DisabledStatus()
         {
             var user = new TestUser();
             user.Name = "1";
@@ -466,7 +466,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_WCF_RefId()
+        public void __SrlzT_WCF_RefId()
         {
             var model = new Article
             {
@@ -481,7 +481,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_WCF_Ref()
+        public void __SrlzT_WCF_Ref()
         {
             var model = new Article
             {
@@ -506,7 +506,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_WCF_List()
+        public void __SrlzT_WCF_List()
         {
             var model = new Book
             {
@@ -964,7 +964,7 @@ namespace RafyUnitTest
   ""createdUser"": """",
   ""updatedUser"": """",
   ""id"": 0,
-  ""bookId"": 0,
+  ""bookId"": null,
   ""name"": ""name"",
   ""arrayValue"": null,
   ""listValue"": null,
@@ -1205,13 +1205,13 @@ namespace RafyUnitTest
 
                 var json = @"{
 ""AName"": ""b"",
-""AId"": " + a.Id + @"
+""ANameRef"": """ + a.Name + @"""
 }";
 
                 var deserializer = new AggtDeserializer();
                 var entity = deserializer.Deserialize(typeof(B), json) as B;
 
-                Assert.AreEqual(entity.AName, "a", "冗余属性需要支持反序列化。同时，当反序列化的值是错的时候，应该以引用属性的值为主。");
+                Assert.AreEqual("a", entity.AName, "冗余属性需要支持反序列化。同时，当反序列化的值是错的时候，应该以引用属性的值为主。");
             }
         }
 
@@ -1226,7 +1226,7 @@ namespace RafyUnitTest
                 repoA.Save(a);
 
                 var json = @"{
-""AId"": " + a.Id + @",
+""ANameRef"": """ + a.Name + @""",
 ""AName"": ""b""
 }
             ";

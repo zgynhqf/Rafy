@@ -133,6 +133,15 @@ namespace Rafy.Domain
         Entity GetById(object id, LoadOptions loadOptions = null);
 
         /// <summary>
+        /// 通过单一属性的精确匹配来查询单一实体。
+        /// </summary>
+        /// <param name="keyProperty"></param>
+        /// <param name="key"></param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
+        /// <returns></returns>
+        Entity GetByKey(string keyProperty, object key, LoadOptions loadOptions = null);
+
+        /// <summary>
         /// 以分页的方式查询所有实体。
         /// </summary>
         /// <param name="paging">分页信息。</param>
@@ -172,6 +181,13 @@ namespace Rafy.Domain
         /// <param name="criteria">常用查询条件。</param>
         /// <returns></returns>
         EntityList GetBy(CommonQueryCriteria criteria);
+
+        /// <summary>
+        /// 通过 CommonQueryCriteria 来查询唯一实体。
+        /// </summary>
+        /// <param name="criteria">常用查询条件。</param>
+        /// <returns></returns>
+        Entity GetFirstBy(CommonQueryCriteria criteria);
 
         ///// <summary>
         ///// 递归统计所有树型子节点的个数。

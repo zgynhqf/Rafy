@@ -134,7 +134,8 @@ namespace Rafy.Domain.ORM
         {
             var f = QueryFactory.Instance;
             var table = f.Table(_dataProvider.Repository);
-            var where = f.Constraint(table.Column(refProperty.RefIdProperty), entity.Id);
+            var where = f.Constraint(table.Column(refProperty.RefKeyProperty), entity.GetProperty(refProperty.KeyPropertyOfRefEntity));
+
 
             using (var dba = _dataProvider.CreateDbAccesser())
             {

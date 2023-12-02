@@ -133,7 +133,7 @@ namespace Rafy.Domain.ORM.Linq
 
                 if (refProperty.Nullable)
                 {
-                    var column = ownerTable.Column(refProperty.RefIdProperty);
+                    var column = ownerTable.Column(refProperty.RefKeyProperty);
                     NullableRefConstraint = _reverseConstraint ?
                         f.Or(NullableRefConstraint, column.Equal(null as object)) :
                         f.And(NullableRefConstraint, column.NotEqual(null as object));

@@ -759,7 +759,7 @@ namespace RafyUnitTest
         {
             using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
             {
-                var a = new A { Type = AType.Y };
+                var a = new A { Name = "a1", Type = AType.Y };
                 Save(a);
 
                 var b = new B { A = a };
@@ -788,8 +788,8 @@ namespace RafyUnitTest
                 var c = new C { B = b };
                 Save(c);
 
-                Assert.AreEqual(c.AId, b.AId);
-                Assert.AreEqual(b.AId, a1.Id);
+                Assert.AreEqual(c.AId, a1.Id);
+                Assert.AreEqual(b.ANameRef, a1.Name);
 
                 b.A = a2;
                 Save(b);
@@ -814,14 +814,14 @@ namespace RafyUnitTest
                 var c = new C { B = b };
                 Save(c);
 
-                Assert.AreEqual(c.AIdOfB, b.AId);
-                Assert.AreEqual(b.AId, a1.Id);
+                Assert.AreEqual(c.ANameRefOfB, b.ANameRef);
+                Assert.AreEqual(b.ANameRef, a1.Name);
 
                 b.A = a2;
                 Save(b);
 
                 var cInDb = RF.ResolveInstance<CRepository>().GetById(c.Id) as C;
-                Assert.AreEqual(cInDb.AIdOfB, a2.Id);
+                Assert.AreEqual(cInDb.ANameRefOfB, a2.Name);
             }
         }
 
@@ -1549,11 +1549,11 @@ namespace RafyUnitTest
 
             model.SetRefNullableId(Book.BookCategoryIdProperty, null);
             var value = model.GetProperty(Book.BookCategoryIdProperty);
-            Assert.AreEqual(value, 0);
+            Assert.IsNull(value);
 
             model.SetRefId(Book.BookCategoryIdProperty, null);
             value = model.GetProperty(Book.BookCategoryIdProperty);
-            Assert.AreEqual(value, 0);
+            Assert.IsNull(value);
         }
 
         #endregion

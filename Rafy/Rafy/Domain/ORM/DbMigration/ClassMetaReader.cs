@@ -223,7 +223,7 @@ namespace Rafy.Domain.ORM.DbMigration
 
                     if (columnMeta.HasFKConstraint)
                     {
-                        var refProperty = mp as IRefProperty;
+                        var refProperty = RefPropertyHelper.Find(mp);
                         if (refProperty != null)
                         {
                             isNullableRef = refProperty.Nullable;
@@ -306,7 +306,7 @@ namespace Rafy.Domain.ORM.DbMigration
                     if (_readComment)
                     {
                         var commentProperty = mp;
-                        var refProperty = commentProperty as IRefProperty;
+                        var refProperty = RefPropertyHelper.Find(commentProperty);
                         if (refProperty != null)
                         {
                             commentProperty = refProperty.RefEntityProperty;

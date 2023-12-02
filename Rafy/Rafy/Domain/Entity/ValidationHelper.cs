@@ -132,9 +132,9 @@ namespace Rafy.Domain.Validation
             var properties = container.GetAvailableProperties();
             foreach (var p in properties)
             {
-                if (p is IRefIdProperty)
+                if (RefPropertyHelper.IsRefKeyProperty(p, out var refProperty))
                 {
-                    if (!(p as IRefIdProperty).Nullable)
+                    if (!refProperty.Nullable)
                     {
                         declarer.AddRule(p, new RequiredRule());
                     }

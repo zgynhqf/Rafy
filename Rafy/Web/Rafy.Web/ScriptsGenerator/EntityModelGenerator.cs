@@ -72,10 +72,10 @@ namespace Rafy.Web
                 if (mp is IRefEntityProperty) continue;
 
                 var propertyType = mp.PropertyType;
-                var refIdProperty = mp as IRefIdProperty;
-                if (refIdProperty != null)
+                var isRefKey = RefPropertyHelper.IsRefKeyProperty(mp, out var refProperty);
+                if (isRefKey)
                 {
-                    propertyType = refIdProperty.KeyProvider.KeyType;
+                    propertyType = refProperty.KeyProvider.KeyType;
                 }
                 else if (mp == Entity.TreePIdProperty)
                 {
@@ -94,12 +94,12 @@ namespace Rafy.Web
                 };
                 _entityModel.fields.Add(field);
 
-                if (mp is IRefIdProperty)
+                if (isRefKey)
                 {
                     //由于 Id 不能用于显示，所以为引用属性添加一个纯视图属性，用于显示。
                     field = new EntityField
                     {
-                        name = DisplayRefProperty(refIdProperty),
+                        name = DisplayRefProperty(refProperty),
                         type = ServerTypeHelper.GetServerType(typeof(string)),
                         persist = false,
                     };
@@ -125,7 +125,7 @@ namespace Rafy.Web
                     var association = new BelongsToAssociation
                     {
                         associationKey = refProperty.RefEntityProperty.Name,
-                        foreignKey = refProperty.RefIdProperty.Name,
+                        foreignKey = refProperty.RefKeyProperty.Name,
                         model = ClientEntities.GetClientName(refProperty.RefEntityType),
                     };
 
@@ -152,7 +152,7 @@ namespace Rafy.Web
                         var association = new HasManyAssociation
                         {
                             name = child.Name,
-                            foreignKey = (pRefMeta.ManagedProperty as IRefProperty).RefIdProperty.Name,
+                            foreignKey = RefPropertyHelper.Find(pRefMeta.ManagedProperty).RefKeyProperty.Name,
                             model = ClientEntities.GetClientName(childType),
                         };
                         _entityModel.associations.Add(association);
@@ -192,7 +192,7 @@ namespace Rafy.Web
 
         internal static string DisplayRefProperty(IRefProperty refProperty)
         {
-            return refProperty.RefIdProperty.Name + "_Display";
+            return refProperty.RefKeyProperty.Name + "_Display";
         }
     }
 }

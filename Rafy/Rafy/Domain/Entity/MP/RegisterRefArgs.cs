@@ -37,7 +37,12 @@ namespace Rafy.Domain
         /// <summary>
         /// 对应的引用 Id 属性
         /// </summary>
-        public IRefIdProperty RefIdProperty { get; set; }
+        public IManagedProperty RefKeyProperty { get; set; }
+
+        /// <summary>
+        /// 引用实体的键对应的托管属性。
+        /// </summary>
+        public IManagedProperty KeyPropertyOfRefEntity { get; set; }
 
         /// <summary>
         /// 实例加载器（使用外键拥有者作为加载上下文）

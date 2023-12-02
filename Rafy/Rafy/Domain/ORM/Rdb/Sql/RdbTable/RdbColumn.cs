@@ -89,12 +89,11 @@ namespace Rafy.Domain.ORM
         {
             var property = _columnInfo.Property;
 
-            var refIdProperty = property as IRefIdProperty;
-            if (refIdProperty != null)
+            if (RefPropertyHelper.IsRefKeyProperty(property, out var refProperty))
             {
-                object id = refIdProperty.Nullable ?
-                    entity.GetRefNullableId(refIdProperty) : entity.GetRefId(refIdProperty);
-                return id;
+                object key = refProperty.Nullable ?
+                    entity.GetRefNullableKey(refProperty) : entity.GetProperty(property);
+                return key;
             }
 
             var value = entity.GetProperty(property);
@@ -106,13 +105,12 @@ namespace Rafy.Domain.ORM
         {
             var property = _columnInfo.Property;
 
-            var refIdProperty = property as IRefIdProperty;
-            if (refIdProperty != null)
+            if (RefPropertyHelper.IsRefKeyProperty(property))
             {
                 if (value != null)
                 {
-                    var id = TypeHelper.CoerceValue(refIdProperty.PropertyType, value);
-                    entity.LoadProperty(refIdProperty, id);
+                    var id = TypeHelper.CoerceValue(property.PropertyType, value);
+                    entity.LoadProperty(property, id);
                 }
                 return;
             }

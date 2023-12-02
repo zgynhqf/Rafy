@@ -74,7 +74,7 @@ namespace Rafy.WPF
                 //var data = this.Parent.CurrentObject.GetPropertyValue(refEntityProperty);
 
                 var data = this.Parent.Current
-                    .GetRefEntity((this.ChildBlock.ChildrenProperty as IRefProperty).RefEntityProperty);
+                    .GetRefEntity(RefPropertyHelper.Find(this.ChildBlock.ChildrenProperty));
 
                 this.Data = data;
             }

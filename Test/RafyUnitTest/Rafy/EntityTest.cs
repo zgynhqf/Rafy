@@ -675,7 +675,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void ET_Property_LazyRef()
+        public void ET_Property_LazyRef_LazyLoad()
         {
             var repo = RF.ResolveInstance<BookRepository>();
             using (RF.TransactionScope(repo))
@@ -729,6 +729,64 @@ namespace RafyUnitTest
 
                 book.BookCategoryId = null;
                 Assert.IsTrue(book.BookCategory == null);
+            }
+        }
+
+        [TestMethod]
+        public void ET_Property_LazyRef_ValueProperty_LazyLoad()
+        {
+            var repo = RF.ResolveInstance<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var bc = new BookLoc
+                {
+                    Code = "bc1"
+                };
+                RF.Save(bc);
+
+                var book = new Book { BookLocCode = bc.Code };
+                Assert.IsTrue(book.BookLoc != null);
+                Assert.IsTrue(book.BookLoc.Code == bc.Code);
+            }
+        }
+
+        [TestMethod]
+        public void ET_Property_LazyRef_ValueProperty_SetEntity()
+        {
+            var repo = RF.ResolveInstance<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var bc = new BookLoc
+                {
+                    Code = "bc1"
+                };
+                RF.Save(bc);
+
+                var book = new Book { BookLoc = bc };
+                Assert.IsTrue(book.BookLocCode == bc.Code);
+
+                book.BookLoc = null;
+                Assert.IsTrue(string.IsNullOrEmpty(book.BookLocCode));
+            }
+        }
+
+        [TestMethod]
+        public void ET_Property_LazyRef_ValueProperty_SetValue()
+        {
+            var repo = RF.ResolveInstance<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var bc = new BookLoc
+                {
+                    Code = "bc1"
+                };
+                RF.Save(bc);
+
+                var book = new Book { BookLocCode = bc.Code };
+                Assert.IsTrue(book.BookLoc.Code == bc.Code);
+
+                book.BookLocCode = null;
+                Assert.IsTrue(book.BookLoc == null);
             }
         }
 
@@ -2686,28 +2744,28 @@ namespace RafyUnitTest
         [TestMethod]
         public void ET_Clone_ReadDbRow()
         {
-            var a = new A { Id = 1 };
+            var a = new A { Name = "a1", Id = 1 };
             var b = new B { Name = "b1", Id = 1, A = a };
             var b2 = new B();
             b2.Clone(b, CloneOptions.ReadDbRow());
 
             Assert.AreEqual("b1", b2.Name);
             Assert.AreEqual(1, b2.Id);
-            Assert.AreEqual(1, b2.AId);
+            Assert.AreEqual("a1", b2.ANameRef);
             Assert.IsNull(b2.GetProperty(B.AProperty));
         }
 
         [TestMethod]
         public void ET_Clone_NewSingleEntity()
         {
-            var a = new A { Id = 1 };
+            var a = new A { Name = "a1", Id = 1 };
             var b = new B { Name = "b1", Id = 1, A = a };
             var b2 = new B();
             b2.Clone(b, CloneOptions.NewSingleEntity());
 
             Assert.AreEqual("b1", b2.Name);
             Assert.AreEqual(0, b2.Id);
-            Assert.AreEqual(1, b2.AId);
+            Assert.AreEqual("a1", b2.ANameRef);
             Assert.IsNotNull(b2.GetProperty(B.AProperty));
         }
 

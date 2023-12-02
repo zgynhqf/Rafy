@@ -295,7 +295,7 @@ namespace Rafy.Domain.Serialization.Json
                     break;
                 //ReferenceId 也都全部直接输出。
                 //case PropertyCategory.ReferenceId:
-                //    var refProperty = property as IRefProperty;
+                //    var refProperty = RefPropertyHelper.Find(property);
                 //    switch (refProperty.ReferenceType)
                 //    {
                 //        case ReferenceType.Child:
@@ -310,7 +310,7 @@ namespace Rafy.Domain.Serialization.Json
                 //    }
                 //    break;
                 case PropertyCategory.ReferenceEntity:
-                    if (this.SerializeReference && value != null && (property as IRefProperty).ReferenceType != ReferenceType.Parent)
+                    if (this.SerializeReference && value != null && (property as IRefEntityProperty).ReferenceType != ReferenceType.Parent)
                     {
                         this.WritePropertyName(property.Name);
                         this.SerializeEntity(value as Entity);

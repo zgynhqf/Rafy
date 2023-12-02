@@ -55,15 +55,14 @@ namespace UT
             set { this.SetRefEntity(BookCategoryProperty, value); }
         }
 
-        public static readonly IRefIdProperty BookLocIdProperty =
-            P<Book>.RegisterRefId(e => e.BookLocId, ReferenceType.Normal);
-        public int? BookLocId
+        public static readonly Property<string> BookLocCodeProperty = P<Book>.Register(e => e.BookLocCode);
+        public string BookLocCode
         {
-            get { return this.GetRefNullableId(BookLocIdProperty); }
-            set { this.SetRefNullableId(BookLocIdProperty, value); }
+            get { return this.GetProperty(BookLocCodeProperty); }
+            set { this.SetProperty(BookLocCodeProperty, value); }
         }
         public static readonly RefEntityProperty<BookLoc> BookLocProperty =
-            P<Book>.RegisterRef(e => e.BookLoc, BookLocIdProperty);
+            P<Book>.RegisterRef(e => e.BookLoc, BookLocCodeProperty, BookLoc.CodeProperty);
         /// <summary>
         /// 书籍所在的货架
         /// </summary>
@@ -167,6 +166,19 @@ namespace UT
         public virtual int GetThreadPortalCount()
         {
             return DataPortalApi.ThreadPortalCount;
+        }
+
+        [RepositoryQuery]
+        public virtual BookList GetWithEager1()
+        {
+            var args = new ORMQueryArgs
+            {
+                Query = QueryFactory.Instance.Query(this),
+                LoadOptions = new LoadOptions()
+                    .LoadWith(Book.BookLocProperty)
+            };
+
+            return (BookList)this.QueryData(args);
         }
 
         [RepositoryQuery]
@@ -492,6 +504,14 @@ namespace UT
                 c.SectionList.Cast<Section>().All(s => s.SectionOwnerId != null)
                 ));
             q = q.OrderBy(b => b.Name);
+            return (BookList)this.QueryData(q);
+        }
+
+        [RepositoryQuery]
+        public virtual BookList LinqGetByBooklocName(string bookLocName)
+        {
+            var q = this.CreateLinqQuery();
+            q = q.Where(e => e.BookLoc.Name == bookLocName);
             return (BookList)this.QueryData(q);
         }
 

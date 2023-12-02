@@ -83,7 +83,7 @@ namespace Rafy.Domain
             var res = this.Redundancy.Owner.Name;
             foreach (var refProperty in this.RefPathes)
             {
-                res += "." + (refProperty.Property as IRefIdProperty).RefEntityType.Name;
+                res += "." + RefPropertyHelper.Find(refProperty.Property).RefEntityType.Name;
             }
             res += "." + ValueProperty.Property.Name;
             return res;
@@ -98,10 +98,10 @@ namespace Rafy.Domain
             var property = pathParameter as IProperty;
             if (property != null)
             {
-                var refProperty = property as IRefProperty;
+                var refProperty = RefPropertyHelper.Find(property);
                 if (refProperty != null)
                 {
-                    res = new ConcreteProperty(refProperty.RefIdProperty);
+                    res = new ConcreteProperty(refProperty.RefKeyProperty);
                 }
                 else
                 {
@@ -121,10 +121,10 @@ namespace Rafy.Domain
                 else
                 {
                     //如果给定的 ConcreteProperty 中使用的引用实体属性，那么需要转换为引用 Id 属性。
-                    var refProperty = res.Property as IRefProperty;
+                    var refProperty = RefPropertyHelper.Find(res.Property);
                     if (refProperty is IRefEntityProperty)
                     {
-                        res = new ConcreteProperty(refProperty.RefIdProperty, res.Owner);
+                        res = new ConcreteProperty(refProperty.RefKeyProperty, res.Owner);
                     }
                 }
             }

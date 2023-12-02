@@ -43,8 +43,7 @@ namespace Rafy.UI
             //如果是引用 Id 属性没有配置 Label，则尝试使用它对应的引用实体属性的 Label 来显示。
             if (string.IsNullOrEmpty(res))
             {
-                var refMP = property as IRefIdProperty;
-                if (refMP != null)
+                if (RefPropertyHelper.IsRefKeyProperty(property, out var refMP))
                 {
                     pvm = safeView.Property(refMP.RefEntityProperty);
                     if (pvm != null) res = pvm.Label;

@@ -20,15 +20,17 @@ namespace UT
     {
         #region 引用属性
 
-        public static readonly IRefIdProperty AIdProperty =
-            P<B>.RegisterRefId(e => e.AId, ReferenceType.Normal);
-        public int AId
+        public static readonly Property<string> ANameRefProperty = P<B>.Register(e => e.ANameRef);
+        /// <summary>
+        /// B 与 A 的关系，使用 Name 这个一般值属性来关联。
+        /// </summary>
+        public string ANameRef
         {
-            get { return this.GetRefId(AIdProperty); }
-            set { this.SetRefId(AIdProperty, value); }
+            get { return this.GetProperty(ANameRefProperty); }
+            set { this.SetProperty(ANameRefProperty, value); }
         }
         public static readonly RefEntityProperty<A> AProperty =
-            P<B>.RegisterRef(e => e.A, AIdProperty);
+            P<B>.RegisterRef(e => e.A, ANameRefProperty, A.NameProperty);
         public A A
         {
             get { return this.GetRefEntity(AProperty); }
