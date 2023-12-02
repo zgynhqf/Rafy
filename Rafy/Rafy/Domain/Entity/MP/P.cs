@@ -270,14 +270,12 @@ namespace Rafy.Domain
 
         #region RegisterRef
 
-
         /// <summary>
         /// 声明一个引用 Id 属性
         /// </summary>
         /// <param name="propertyExp">指向相应 CLR 的表达式。</param>
         /// <returns></returns>
         public static IRefIdProperty RegisterRefId<TKey>(Expression<Func<TEntity, TKey>> propertyExp)
-            where TKey : struct
         {
             return RegisterRefId(propertyExp, ReferenceType.Normal);
         }
@@ -423,26 +421,6 @@ namespace Rafy.Domain
         #endregion
 
         #region RegisterRefExtension
-
-        /// <summary>
-        /// 扩展一个引用属性
-        /// </summary>
-        /// <typeparam name="TKey">The type of the entity list.</typeparam>
-        /// <param name="propertyName">属性名称。</param>
-        /// <param name="declareType">声明此属性的类型。</param>
-        /// <returns></returns>
-        public static IRefIdProperty RegisterRefIdExtension<TKey>(string propertyName, Type declareType)
-            where TKey : struct
-        {
-            var property = new RefIdProperty<TKey>(typeof(TEntity), declareType, propertyName, new RegisterRefIdArgs<TKey>())
-            {
-                ReferenceType = ReferenceType.Normal
-            };
-
-            ManagedPropertyRepository.Instance.RegisterProperty(property);
-
-            return property;
-        }
 
         /// <summary>
         /// 扩展一个引用实体属性。
